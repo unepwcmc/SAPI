@@ -1,0 +1,32 @@
+== CITES Checklist
+
+Try to apply these coding guidelines:
+
+  http://pub.cozmixng.org/~the-rwiki/rw-cgi.rb?cmd=view;name=RubyCodingConvention
+
+== Importing data for development
+  FILE=lib/assets/files/20_animal_species.csv rake import:species
+
+== Taxonomic glossaries
+  http://ibot.sav.sk/icbn/no%20frames/0120AppendixVII.htm
+  http://bionomenclature-glossary.gbif.org/
+
+== Project glossary
+
+  - taxon concept - represents a unique combination of a name and a reference
+  - usage - represents an association of a taxon concept with a name (not necessarily the defining name). can be used to apply multiple name systems to a taxon concept
+
+An older standard for plants naming conventions (is there an up to date version of that?): http://www.nhm.ac.uk/hosted_sites/tdwg/plants.html
+
+===Taxon concept relationships:
+
+inter-designational:
+  - equal =
+  - includes <
+  - included in >
+  - overlaps ><
+  - disjunct |
+
+intra-designational:
+  - synonym
+  - homonym
