@@ -169,3 +169,15 @@ task :setup_production_database_configuration do
   put(spec.to_yaml, "#{shared_path}/config/database.yml")
 end
 after "deploy:setup", :setup_production_database_configuration
+
+namespace :seeds do
+  desc 'plants seeds, defined inside db/seeds.rb file'
+  task :plant do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake db:seed"
+  end
+
+  desc 'Imports data obtained from legacy database'
+  task :import do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} FILE='lib/assets/20_animal_species.csv' rake import:species"
+  end
+end
