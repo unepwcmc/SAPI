@@ -43,9 +43,7 @@ group :development do
       gem 'win32console'
       gem 'rb-notifu' if guard_notifications
   end
-end
 
-group :development do
   gem "guard-livereload"
   gem "yajl-ruby"
   gem "rack-livereload"
