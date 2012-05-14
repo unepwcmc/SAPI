@@ -5,7 +5,7 @@ require 'brightbox/passenger'
 
 # The name of your application.  Used for deployment directory and filenames
 # and Apache configs. Should be unique on the Brightbox
-set :application, "cites-checklist"
+set :application, "sapi"
 
 # Primary domain name of your application. Used in the Apache configs
 set :domain, "unepwcmc-005.vm.brightbox.net"
@@ -24,7 +24,7 @@ set(:deploy_to) { File.join("", "home", user, application) }
 # the local directory.  You should probably change this if you use
 # another repository, like git or subversion.
 
-set :repository,  "git@github.com:unepwcmc/cites-checklist.git"
+set :repository,  "git@github.com:unepwcmc/SAPI.git"
 set :scm, :git
 set :scm_username, "unepwcmc-read"
 set :deploy_via, :copy
