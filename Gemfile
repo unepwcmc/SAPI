@@ -54,6 +54,7 @@ group :development do
   gem 'ruby-debug19'
   # Deploy with Capistrano
   gem 'capistrano'
+  gem 'capistrano-ext'
   gem 'brightbox', '>=2.3.9'
 end
 

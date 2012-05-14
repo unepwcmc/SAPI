@@ -1,3 +1,5 @@
+set :default_stage, 'staging'
+require 'capistrano/ext/multistage'
 ## Generated with 'brightbox' on 2012-05-08 09:53:55 +0100
 gem 'brightbox', '>=2.3.9'
 require 'brightbox/recipes'
@@ -6,7 +8,6 @@ require 'brightbox/passenger'
 # The name of your application.  Used for deployment directory and filenames
 # and Apache configs. Should be unique on the Brightbox
 set :application, "sapi"
-set :default_stage, 'staging'
 
 # Target directory for the application on the web and app servers.
 set(:deploy_to) { File.join("", "home", user, application) }
