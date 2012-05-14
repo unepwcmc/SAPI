@@ -178,6 +178,6 @@ namespace :seeds do
 
   desc 'Imports data obtained from legacy database'
   task :import do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} FILE='lib/assets/20_animal_species.csv' rake import:species"
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} FILE='lib/assets/files/20_animal_species.csv' rake import:species"
   end
 end
