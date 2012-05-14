@@ -1,6 +1,3 @@
-require 'rbconfig'
-HOST_OS = RbConfig::CONFIG['host_os']
-
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.3'
@@ -29,19 +26,22 @@ gem 'awesome_nested_set'
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
-guard_notifications = true
 group :development do
+  require 'rbconfig'
+  HOST_OS = RbConfig::CONFIG['host_os']
+
+  guard_notifications = true
   case HOST_OS
-  when /darwin/i
-    gem 'rb-fsevent'
-    gem 'ruby_gntp' if guard_notifications
-  when /linux/i
-    gem 'libnotify'
-    gem 'rb-inotify'
-  when /mswin|windows/i
-    gem 'rb-fchange'
-    gem 'win32console'
-    gem 'rb-notifu' if guard_notifications
+    when /darwin/i
+      gem 'rb-fsevent'
+      gem 'ruby_gntp' if guard_notifications
+    when /linux/i
+      gem 'libnotify'
+      gem 'rb-inotify'
+    when /mswin|windows/i
+      gem 'rb-fchange'
+      gem 'win32console'
+      gem 'rb-notifu' if guard_notifications
   end
 end
 
