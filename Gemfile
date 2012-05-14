@@ -25,8 +25,6 @@ gem 'awesome_nested_set'
 # Use unicorn as the app server
 # gem 'unicorn'
 
-# Deploy with Capistrano
-gem 'capistrano', :group => :development
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
@@ -54,6 +52,9 @@ group :development do
   gem "guard-bundler"
   gem 'annotate', :git => 'git://github.com/ctran/annotate_models.git'
   gem 'ruby-debug19'
+  # Deploy with Capistrano
+  gem 'capistrano'
+  gem 'brightbox', '>=2.3.9'
 end
 
 gem "sqlite3", :group => [:test]

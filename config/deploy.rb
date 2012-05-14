@@ -6,16 +6,7 @@ require 'brightbox/passenger'
 # The name of your application.  Used for deployment directory and filenames
 # and Apache configs. Should be unique on the Brightbox
 set :application, "sapi"
-
-# Primary domain name of your application. Used in the Apache configs
-set :domain, "unepwcmc-005.vm.brightbox.net"
-
-## List of servers
-server "unepwcmc-005.vm.brightbox.net", :app, :web, :db, :primary => true
-
 set :default_stage, 'staging'
-
-load 'deploy/assets'
 
 # Target directory for the application on the web and app servers.
 set(:deploy_to) { File.join("", "home", user, application) }
