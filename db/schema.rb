@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120504142809) do
+ActiveRecord::Schema.define(:version => 20120516144812) do
 
   create_table "authors", :force => true do |t|
     t.string   "first_name"
@@ -21,15 +21,43 @@ ActiveRecord::Schema.define(:version => 20120504142809) do
     t.datetime "updated_at",  :null => false
   end
 
+  create_table "brus", :force => true do |t|
+    t.string   "code",       :null => false
+    t.integer  "level",      :null => false
+    t.string   "name"
+    t.integer  "parent_id"
+    t.integer  "country_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "countries", :force => true do |t|
+    t.string   "iso3166_name", :null => false
+    t.string   "iso2_code"
+    t.string   "iso3_code"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "region_id"
+  end
+
   create_table "designations", :force => true do |t|
     t.string   "name",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
+  create_table "distribution_components", :force => true do |t|
+    t.integer  "distribution_id", :null => false
+    t.integer  "component_id",    :null => false
+    t.string   "component_type",  :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
   create_table "distributions", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.integer  "taxon_concept_id", :null => false
   end
 
   create_table "ranks", :force => true do |t|
@@ -50,6 +78,12 @@ ActiveRecord::Schema.define(:version => 20120504142809) do
   create_table "references", :force => true do |t|
     t.string   "title",      :null => false
     t.string   "year"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "regions", :force => true do |t|
+    t.string   "name",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -102,6 +136,15 @@ ActiveRecord::Schema.define(:version => 20120504142809) do
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
   end
+
+  add_foreign_key "brus", "brus", :name => "brus_parent_id_fk", :column => "parent_id"
+  add_foreign_key "brus", "countries", :name => "brus_country_id_fk"
+
+  add_foreign_key "countries", "regions", :name => "countries_regions_id_fk"
+
+  add_foreign_key "distribution_components", "distributions", :name => "distribution_components_distribution_id_fk"
+
+  add_foreign_key "distributions", "taxon_concepts", :name => "distributions_taxon_concept_id_fk"
 
   add_foreign_key "ranks", "ranks", :name => "ranks_parent_id_fk", :column => "parent_id"
 
