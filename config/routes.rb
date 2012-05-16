@@ -1,5 +1,6 @@
 SAPI::Application.routes.draw do
   resources :checklists, :only => [:index]
+  match '/phones/phones.json' => 'cors#options', :constraints => {:method => 'OPTIONS'}
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
