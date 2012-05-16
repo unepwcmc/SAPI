@@ -1,3 +1,5 @@
+set :default_stage, 'staging'
+require 'capistrano/ext/multistage'
 ## Generated with 'brightbox' on 2012-05-08 09:53:55 +0100
 gem 'brightbox', '>=2.3.9'
 require 'brightbox/recipes'
@@ -5,17 +7,7 @@ require 'brightbox/passenger'
 
 # The name of your application.  Used for deployment directory and filenames
 # and Apache configs. Should be unique on the Brightbox
-set :application, "cites-checklist"
-
-# Primary domain name of your application. Used in the Apache configs
-set :domain, "unepwcmc-005.vm.brightbox.net"
-
-## List of servers
-server "unepwcmc-005.vm.brightbox.net", :app, :web, :db, :primary => true
-
-set :default_stage, 'staging'
-
-load 'deploy/assets'
+set :application, "sapi"
 
 # Target directory for the application on the web and app servers.
 set(:deploy_to) { File.join("", "home", user, application) }
@@ -24,7 +16,7 @@ set(:deploy_to) { File.join("", "home", user, application) }
 # the local directory.  You should probably change this if you use
 # another repository, like git or subversion.
 
-set :repository,  "git@github.com:unepwcmc/cites-checklist.git"
+set :repository,  "git@github.com:unepwcmc/SAPI.git"
 set :scm, :git
 set :scm_username, "unepwcmc-read"
 set :deploy_via, :copy
@@ -177,3 +169,15 @@ task :setup_production_database_configuration do
   put(spec.to_yaml, "#{shared_path}/config/database.yml")
 end
 after "deploy:setup", :setup_production_database_configuration
+
+namespace :seeds do
+  desc 'plants seeds, defined inside db/seeds.rb file'
+  task :plant do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake db:seed"
+  end
+
+  desc 'Imports data obtained from legacy database'
+  task :import do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} FILE='lib/assets/files/20_animal_species.csv' rake import:species"
+  end
+end

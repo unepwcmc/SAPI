@@ -5,7 +5,7 @@
 #   gem 'sqlite3'
 development:
   adapter: postgresql
-  database: cites-checklist_development
+  database: sapi_development
   pool: 5
   username: postgres
   password: postgres
@@ -16,7 +16,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   adapter: postgresql
-  database: cites-checklist_test
+  database: sapi_test
   pool: 5
   username: postgres
   password: postgres
