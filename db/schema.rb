@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120516144812) do
+ActiveRecord::Schema.define(:version => 20120517074054) do
 
   create_table "authors", :force => true do |t|
     t.string   "first_name"
@@ -19,6 +19,14 @@ ActiveRecord::Schema.define(:version => 20120516144812) do
     t.string   "last_name",   :null => false
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+  end
+
+  create_table "bru_distribution_components", :force => true do |t|
+    t.integer  "distribution_id", :null => false
+    t.integer  "component_id",    :null => false
+    t.string   "component_type",  :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "brus", :force => true do |t|
@@ -38,6 +46,14 @@ ActiveRecord::Schema.define(:version => 20120516144812) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
     t.integer  "region_id"
+  end
+
+  create_table "country_distribution_components", :force => true do |t|
+    t.integer  "distribution_id", :null => false
+    t.integer  "component_id",    :null => false
+    t.string   "component_type",  :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "designations", :force => true do |t|
@@ -80,6 +96,14 @@ ActiveRecord::Schema.define(:version => 20120516144812) do
     t.string   "year"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "region_distribution_components", :force => true do |t|
+    t.integer  "distribution_id", :null => false
+    t.integer  "component_id",    :null => false
+    t.string   "component_type",  :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "regions", :force => true do |t|
@@ -137,16 +161,22 @@ ActiveRecord::Schema.define(:version => 20120516144812) do
     t.datetime "updated_at",                 :null => false
   end
 
+  add_foreign_key "bru_distribution_components", "brus", :name => "bru_distribution_components_component_id_fkey", :column => "component_id"
+
   add_foreign_key "brus", "brus", :name => "brus_parent_id_fk", :column => "parent_id"
   add_foreign_key "brus", "countries", :name => "brus_country_id_fk"
 
   add_foreign_key "countries", "regions", :name => "countries_regions_id_fk"
+
+  add_foreign_key "country_distribution_components", "countries", :name => "country_distribution_components_component_id_fkey", :column => "component_id"
 
   add_foreign_key "distribution_components", "distributions", :name => "distribution_components_distribution_id_fk"
 
   add_foreign_key "distributions", "taxon_concepts", :name => "distributions_taxon_concept_id_fk"
 
   add_foreign_key "ranks", "ranks", :name => "ranks_parent_id_fk", :column => "parent_id"
+
+  add_foreign_key "region_distribution_components", "regions", :name => "region_distribution_components_component_id_fkey", :column => "component_id"
 
   add_foreign_key "taxon_concepts", "designations", :name => "taxon_concepts_designation_id_fk"
   add_foreign_key "taxon_concepts", "ranks", :name => "taxon_concepts_rank_id_fk"
