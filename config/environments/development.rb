@@ -34,4 +34,11 @@ SAPI::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  config.middleware.use Rack::Cors do
+    allow do
+      origins '*'
+      resource '*', :headers => :any, :methods => :any
+    end
+  end
 end
