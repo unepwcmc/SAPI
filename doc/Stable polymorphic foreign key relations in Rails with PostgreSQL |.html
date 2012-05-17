@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="de-DE"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title>Stable polymorphic foreign key relations in Rails with PostgreSQL | </title>
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="stylesheet" type="text/css" media="all" href="Stable%20polymorphic%20foreign%20key%20relations%20in%20Rails%20with%20PostgreSQL%20%7C_files/style.css">
+<link rel="pingback" href="http://blog.metaminded.com/xmlrpc.php">
+<link rel="alternate" type="application/rss+xml" title=" » Feed" href="http://blog.metaminded.com/feed/">
+<link rel="alternate" type="application/rss+xml" title=" » Kommentar Feed" href="http://blog.metaminded.com/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title=" » Stable polymorphic foreign key relations in Rails with PostgreSQL Kommentar Feed" href="http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-in-rails-with-postgresql/feed/">
+<link rel="stylesheet" id="social_shareSheets-css" href="Stable%20polymorphic%20foreign%20key%20relations%20in%20Rails%20with%20PostgreSQL%20%7C_files/simple-social-sharing.css" type="text/css" media="all">
+<script src="Stable%20polymorphic%20foreign%20key%20relations%20in%20Rails%20with%20PostgreSQL%20%7C_files/ga.js" async="" type="text/javascript"></script><script type="text/javascript" src="Stable%20polymorphic%20foreign%20key%20relations%20in%20Rails%20with%20PostgreSQL%20%7C_files/l10n.js"></script>
+<script type="text/javascript" src="Stable%20polymorphic%20foreign%20key%20relations%20in%20Rails%20with%20PostgreSQL%20%7C_files/jquery.js"></script>
+<script type="text/javascript" src="Stable%20polymorphic%20foreign%20key%20relations%20in%20Rails%20with%20PostgreSQL%20%7C_files/comment-reply.js"></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://blog.metaminded.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://blog.metaminded.com/wp-includes/wlwmanifest.xml"> 
+<link rel="index" title="" href="http://blog.metaminded.com/">
+<link rel="start" title="metaminded techblog" href="http://blog.metaminded.com/2010/11/18/metaminded-techblog/">
+<link rel="prev" title="Wie man Firmen bei Anwendungen fürs Netz hilft" href="http://blog.metaminded.com/2010/11/24/wie-man-firmen-bei-anwendungen-furs-netz-hilft/">
+<link rel="next" title="Magento Quick Tip: Einbinden von statischen Blöcken in Magento Templates und in CMS Seiten" href="http://blog.metaminded.com/2010/12/24/magento-quick-tip-einbinden-von-statischen-blocken-in-magento-templates-und-in-cms-seiten/">
+<meta name="generator" content="WordPress 3.2.1">
+<link rel="canonical" href="http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-in-rails-with-postgresql/">
+<link rel="shortlink" href="http://blog.metaminded.com/?p=71">
+	
+<!-- START: Syntax Highlighter ComPress -->
+<script type="text/javascript" src="Stable%20polymorphic%20foreign%20key%20relations%20in%20Rails%20with%20PostgreSQL%20%7C_files/shCore.js"></script>
+<script type="text/javascript" src="Stable%20polymorphic%20foreign%20key%20relations%20in%20Rails%20with%20PostgreSQL%20%7C_files/shAutoloader.js"></script>
+<link type="text/css" rel="stylesheet" href="Stable%20polymorphic%20foreign%20key%20relations%20in%20Rails%20with%20PostgreSQL%20%7C_files/shCoreDefault.css">
+<!-- END: Syntax Highlighter ComPress -->
+
+  <style type="text/css">
+body { background-color: #f0f0f0; }
+</style>
+</head>
+
+<body class="single single-post postid-71 single-format-standard">
+<div id="wrapper" class="hfeed">
+	<div id="header">
+		<div id="masthead">
+			<div id="branding" role="banner">
+								<div id="site-title">
+					<span>
+						<a href="http://blog.metaminded.com/" title="" rel="home"></a>
+					</span>
+				</div>
+				<div id="site-description"></div>
+
+										<img src="Stable%20polymorphic%20foreign%20key%20relations%20in%20Rails%20with%20PostgreSQL%20%7C_files/blog-new.png" alt="" width="940" height="198">
+								</div><!-- #branding -->
+
+			<div id="access" role="navigation">
+			  				<div class="skip-link screen-reader-text"><a href="#content" title="Springe zum Inhalt">Springe zum Inhalt</a></div>
+								<div class="menu"><ul><li><a href="http://blog.metaminded.com/" title="Home">Home</a></li><li class="page_item page-item-16"><a href="http://blog.metaminded.com/impressum/" title="Impressum">Impressum</a></li></ul></div>
+			</div><!-- #access -->
+		</div><!-- #masthead -->
+	</div><!-- #header -->
+
+	<div id="main">
+
+		<div id="container">
+			<div id="content" role="main">
+
+			
+
+				<div id="nav-above" class="navigation">
+					<div class="nav-previous"><a href="http://blog.metaminded.com/2010/11/24/wie-man-firmen-bei-anwendungen-furs-netz-hilft/" rel="prev"><span class="meta-nav">←</span> Wie man Firmen bei Anwendungen fürs Netz hilft</a></div>
+					<div class="nav-next"><a href="http://blog.metaminded.com/2010/12/24/magento-quick-tip-einbinden-von-statischen-blocken-in-magento-templates-und-in-cms-seiten/" rel="next">Magento Quick Tip: Einbinden von statischen Blöcken in Magento Templates und in CMS Seiten <span class="meta-nav">→</span></a></div>
+				</div><!-- #nav-above -->
+
+				<div id="post-71" class="post-71 post type-post status-publish format-standard hentry category-allgemein category-postgresql category-ruby-on-rails tag-polymorphic-association tag-postgres tag-rails tag-sql">
+					<h1 class="entry-title">Stable polymorphic foreign key relations in Rails with PostgreSQL</h1>
+
+					<div class="entry-meta">
+						<span class="meta-prep meta-prep-author">Publiziert am</span> <a href="http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-in-rails-with-postgresql/" title="10:18" rel="bookmark"><span class="entry-date">25. November 2010</span></a> <span class="meta-sep">von</span> <span class="author vcard"><a class="url fn n" href="http://blog.metaminded.com/author/peter/" title="Zeige alle Beiträge von Peter">Peter</a></span>					</div><!-- .entry-meta -->
+
+					<div class="entry-content">
+						<p>One of the nifty features of ActiveRecord is <i>Polymorphic Associations</i>, where you can have different objects of different classes which a certain object may belong to.</p>
+<p>Let’s think of an example where we have an <tt>ImageAttachment</tt> which belongs to either a <tt>Person</tt> or a <tt>Institution</tt>.</p>
+<p>In Ruby, this is</p>
+<div><div id="highlighter_242448" class="syntaxhighlighter  ruby"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="ruby keyword">class</code> <code class="ruby plain">ImageAttachment &lt; ActiveRecord::Base</code></div><div class="line number2 index1 alt1"><code class="ruby spaces">&nbsp;&nbsp;</code><code class="ruby plain">belongs_to </code><code class="ruby color2">:attachable</code><code class="ruby plain">, </code><code class="ruby color2">:polymorphic</code> <code class="ruby plain">=&gt; </code><code class="ruby keyword">true</code></div><div class="line number3 index2 alt2"><code class="ruby spaces">&nbsp;&nbsp;</code><code class="ruby comments"># ... stuff ...</code></div><div class="line number4 index3 alt1"><code class="ruby keyword">end</code></div><div class="line number5 index4 alt2">&nbsp;</div><div class="line number6 index5 alt1"><code class="ruby keyword">class</code> <code class="ruby plain">Person &lt; ActiveRecord::Base</code></div><div class="line number7 index6 alt2"><code class="ruby spaces">&nbsp;&nbsp;</code><code class="ruby plain">has_many </code><code class="ruby color2">:image_attachments</code><code class="ruby plain">, </code><code class="ruby color2">:as</code> <code class="ruby plain">=&gt; </code><code class="ruby color2">:attachable</code></div><div class="line number8 index7 alt1"><code class="ruby spaces">&nbsp;&nbsp;</code><code class="ruby comments"># ... stuff ...</code></div><div class="line number9 index8 alt2"><code class="ruby keyword">end</code></div><div class="line number10 index9 alt1">&nbsp;</div><div class="line number11 index10 alt2"><code class="ruby keyword">class</code> <code class="ruby plain">Institution &lt; ActiveRecord::Base</code></div><div class="line number12 index11 alt1"><code class="ruby spaces">&nbsp;&nbsp;</code><code class="ruby plain">has_many </code><code class="ruby color2">:image_attachments</code><code class="ruby plain">, </code><code class="ruby color2">:as</code> <code class="ruby plain">=&gt; </code><code class="ruby color2">:attachable</code></div><div class="line number13 index12 alt2"><code class="ruby spaces">&nbsp;&nbsp;</code><code class="ruby comments"># ... stuff ...</code></div><div class="line number14 index13 alt1"><code class="ruby keyword">end</code></div></div></td></tr></tbody></table></div></div>
+<p>This is implemented by adding two fields to the <tt>image_attachment</tt> table, namely <tt>attachable_id</tt> which – as usual – stores the id of the referenced row, and <tt>attachable_type</tt> which stores a string representation of the class/table which is referenced.</p>
+<div><div id="highlighter_255887" class="syntaxhighlighter  sql"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="sql keyword">CREATE</code> <code class="sql keyword">TABLE</code> <code class="sql string">"institutions"</code> <code class="sql plain">(</code></div><div class="line number2 index1 alt1"><code class="sql spaces">&nbsp;&nbsp;</code><code class="sql string">"id"</code>&nbsp; <code class="sql plain">serial </code><code class="sql keyword">primary</code> <code class="sql keyword">key</code> <code class="sql color1">not</code> <code class="sql color1">null</code><code class="sql plain">,</code></div><div class="line number3 index2 alt2"><code class="sql spaces">&nbsp;&nbsp;</code><code class="sql comments">-- ... some data</code></div><div class="line number4 index3 alt1"><code class="sql plain">);</code></div><div class="line number5 index4 alt2">&nbsp;</div><div class="line number6 index5 alt1"><code class="sql keyword">CREATE</code> <code class="sql keyword">TABLE</code> <code class="sql string">"persons"</code> <code class="sql plain">(</code></div><div class="line number7 index6 alt2"><code class="sql spaces">&nbsp;&nbsp;</code><code class="sql string">"id"</code>&nbsp; <code class="sql plain">serial </code><code class="sql keyword">primary</code> <code class="sql keyword">key</code> <code class="sql color1">not</code> <code class="sql color1">null</code><code class="sql plain">,</code></div><div class="line number8 index7 alt1"><code class="sql spaces">&nbsp;&nbsp;</code><code class="sql comments">-- ... some other data</code></div><div class="line number9 index8 alt2"><code class="sql plain">);</code></div><div class="line number10 index9 alt1">&nbsp;</div><div class="line number11 index10 alt2"><code class="sql keyword">CREATE</code> <code class="sql keyword">TABLE</code> <code class="sql string">"image_attachments"</code> <code class="sql plain">(</code></div><div class="line number12 index11 alt1"><code class="sql spaces">&nbsp;</code><code class="sql string">"id"</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code class="sql plain">serial </code><code class="sql color1">NOT</code> <code class="sql color1">NULL</code><code class="sql plain">,</code></div><div class="line number13 index12 alt2"><code class="sql spaces">&nbsp;</code><code class="sql string">"attachable_id"</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code class="sql keyword">integer</code> <code class="sql color1">NOT</code> <code class="sql color1">NULL</code><code class="sql plain">,</code></div><div class="line number14 index13 alt1"><code class="sql spaces">&nbsp;</code><code class="sql string">"attachable_type"</code>&nbsp;&nbsp;&nbsp;&nbsp; <code class="sql keyword">character</code> <code class="sql keyword">varying</code> <code class="sql color1">NOT</code> <code class="sql color1">NULL</code><code class="sql plain">,</code></div><div class="line number15 index14 alt2"><code class="sql spaces">&nbsp;</code><code class="sql string">"image_file_name"</code>&nbsp;&nbsp;&nbsp;&nbsp; <code class="sql keyword">character</code> <code class="sql keyword">varying</code> <code class="sql color1">NOT</code> <code class="sql color1">NULL</code><code class="sql plain">,</code></div><div class="line number16 index15 alt1"><code class="sql spaces">&nbsp;</code><code class="sql string">"caption"</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code class="sql plain">text</code></div><div class="line number17 index16 alt2"><code class="sql plain">);</code></div></div></td></tr></tbody></table></div></div>
+<p>There’s one obvious drawback with this: The reference can not be ‘secured’ by foreign key constraints. (The great book <a href="http://www.pragprog.com/titles/bksqla/sql-antipatterns" target="_blank">SQL Antipatterns</a> has a special chapter on Polymophic Associations and why to avoid the principle used in Rails.)</p>
+<p>But we are lucky to use <a href="http://www.postgresql.org/" target="_blank">PostgreSQL</a>, so we can use <a href="http://www.postgresql.org/docs/9.0/static/ddl-inherit.html" target="_blank">inheritance</a> and <a href="http://www.postgresql.org/docs/9.0/static/ddl-partitioning.html" target="_blank">partitioning</a>.</p>
+<p>For this purpose, we first derive special tables for attachments to 
+persons or institutions respectively. Don’t worry, Rails will never see 
+this tables explicitely.</p>
+<h2>The setup</h2>
+<div><div id="highlighter_846398" class="syntaxhighlighter  sql"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="sql keyword">CREATE</code> <code class="sql keyword">TABLE</code> <code class="sql string">"person_image_attachments"</code> <code class="sql plain">(</code></div><div class="line number2 index1 alt1"><code class="sql spaces">&nbsp;</code><code class="sql keyword">CHECK</code> <code class="sql plain">(</code><code class="sql string">"attachable_type"</code> <code class="sql plain">= </code><code class="sql string">'Person'</code><code class="sql plain">),</code></div><div class="line number3 index2 alt2"><code class="sql spaces">&nbsp;</code><code class="sql keyword">PRIMARY</code> <code class="sql keyword">KEY</code> <code class="sql plain">(</code><code class="sql string">"id"</code><code class="sql plain">),</code></div><div class="line number4 index3 alt1"><code class="sql spaces">&nbsp;</code><code class="sql keyword">FOREIGN</code> <code class="sql keyword">KEY</code> <code class="sql plain">(</code><code class="sql string">"attachable_id"</code><code class="sql plain">) </code><code class="sql keyword">REFERENCES</code> <code class="sql string">"persons"</code><code class="sql plain">(</code><code class="sql string">"id"</code><code class="sql plain">)</code></div><div class="line number5 index4 alt2"><code class="sql plain">) INHERITS (</code><code class="sql string">"image_attachments"</code><code class="sql plain">);</code></div><div class="line number6 index5 alt1">&nbsp;</div><div class="line number7 index6 alt2"><code class="sql keyword">CREATE</code> <code class="sql keyword">TABLE</code> <code class="sql string">"institution_image_attachments"</code> <code class="sql plain">(</code></div><div class="line number8 index7 alt1"><code class="sql spaces">&nbsp;</code><code class="sql keyword">CHECK</code> <code class="sql plain">(</code><code class="sql string">"attachable_type"</code> <code class="sql plain">= </code><code class="sql string">'Institution'</code><code class="sql plain">),</code></div><div class="line number9 index8 alt2"><code class="sql spaces">&nbsp;</code><code class="sql keyword">PRIMARY</code> <code class="sql keyword">KEY</code> <code class="sql plain">(</code><code class="sql string">"id"</code><code class="sql plain">),</code></div><div class="line number10 index9 alt1"><code class="sql spaces">&nbsp;</code><code class="sql keyword">FOREIGN</code> <code class="sql keyword">KEY</code> <code class="sql plain">(</code><code class="sql string">"attachable_id"</code><code class="sql plain">) </code><code class="sql keyword">REFERENCES</code> <code class="sql string">"institutions"</code><code class="sql plain">(</code><code class="sql string">"id"</code><code class="sql plain">)</code></div><div class="line number11 index10 alt2"><code class="sql plain">) INHERITS (</code><code class="sql string">"image_attachments"</code><code class="sql plain">);</code></div></div></td></tr></tbody></table></div></div>
+<p>So, we want to use different tables for attachments to <tt>Person</tt>s and <tt>Institution</tt>s. The structure of these tables are identical to that of <tt>image_attachments</tt> apart from the fact that we can only store the key <em>Person</em> or <em>Institution</em> in the <tt>attachable_type</tt> column, respectively. Furthermore, the <tt>attachable_id</tt> is a <strong>proper</strong> foreign key to the respective tables.</p>
+<p>Since we don’t want to use these tables explicitey, we need a trigger that intercepts every insert to <tt>image_attachments</tt> and redirects it to the appropriate subtable:</p>
+<div><div id="highlighter_551605" class="syntaxhighlighter  sql"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="sql keyword">CREATE</code> <code class="sql color1">OR</code> <code class="sql color2">REPLACE</code> <code class="sql keyword">FUNCTION</code> <code class="sql plain">image_attachment_insert_trigger_fun() </code><code class="sql keyword">RETURNS</code> <code class="sql keyword">TRIGGER</code> <code class="sql keyword">AS</code> <code class="sql plain">$$</code></div><div class="line number2 index1 alt1"><code class="sql keyword">BEGIN</code></div><div class="line number3 index2 alt2"><code class="sql spaces">&nbsp;&nbsp;</code><code class="sql plain">IF (NEW.</code><code class="sql string">"attachable_type"</code> <code class="sql plain">= </code><code class="sql string">'Institution'</code><code class="sql plain">) </code><code class="sql keyword">THEN</code></div><div class="line number4 index3 alt1"><code class="sql spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="sql keyword">INSERT</code> <code class="sql keyword">INTO</code> <code class="sql plain">institution_image_attachments </code><code class="sql keyword">VALUES</code> <code class="sql plain">(NEW.*);</code></div><div class="line number5 index4 alt2"><code class="sql spaces">&nbsp;&nbsp;</code><code class="sql plain">ELSIF (NEW.</code><code class="sql string">"attachable_type"</code> <code class="sql plain">= </code><code class="sql string">'Person'</code><code class="sql plain">) </code><code class="sql keyword">THEN</code></div><div class="line number6 index5 alt1"><code class="sql spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="sql keyword">INSERT</code> <code class="sql keyword">INTO</code> <code class="sql plain">person_image_attachments </code><code class="sql keyword">VALUES</code> <code class="sql plain">(NEW.*);</code></div><div class="line number7 index6 alt2"><code class="sql spaces">&nbsp;&nbsp;</code><code class="sql comments">-- add more types here if necessary...</code></div><div class="line number8 index7 alt1"><code class="sql spaces">&nbsp;&nbsp;</code><code class="sql keyword">ELSE</code></div><div class="line number9 index8 alt2"><code class="sql spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="sql plain">RAISE EXCEPTION </code><code class="sql string">'Wrong "attachable_type"="%", fix image_attachment_insert_trigger_fun() fun'</code><code class="sql plain">, NEW.</code><code class="sql string">"attachable_type"</code><code class="sql plain">;</code></div><div class="line number10 index9 alt1"><code class="sql spaces">&nbsp;&nbsp;</code><code class="sql keyword">END</code> <code class="sql plain">IF;</code></div><div class="line number11 index10 alt2"><code class="sql spaces">&nbsp;&nbsp;</code><code class="sql keyword">RETURN</code> <code class="sql color1">NULL</code><code class="sql plain">;</code></div><div class="line number12 index11 alt1"><code class="sql keyword">END</code><code class="sql plain">; $$ LANGUAGE plpgsql;</code></div></div></td></tr></tbody></table></div></div>
+<p>and then, we attach that trigger to inserts on the <tt>image_attachment</tt> table:</p>
+<div><div id="highlighter_455652" class="syntaxhighlighter  sql"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="sql keyword">CREATE</code> <code class="sql keyword">TRIGGER</code> <code class="sql plain">image_attachment_insert_trigger</code></div><div class="line number2 index1 alt1"><code class="sql spaces">&nbsp;&nbsp;</code><code class="sql plain">BEFORE </code><code class="sql keyword">INSERT</code> <code class="sql keyword">ON</code> <code class="sql plain">image_attachments</code></div><div class="line number3 index2 alt2"><code class="sql spaces">&nbsp;&nbsp;</code><code class="sql keyword">FOR</code> <code class="sql plain">EACH ROW </code><code class="sql keyword">EXECUTE</code> <code class="sql keyword">PROCEDURE</code> <code class="sql plain">image_attachment_insert_trigger_fun();</code></div></div></td></tr></tbody></table></div></div>
+<h2>What’s going on?</h2>
+<p>To see the actual effect of the trigger, we skip Rails for a moment and issue some <tt>INSERT</tt>s directly in PostgreSQL (we have a <tt>data</tt> varchar column for both <tt>persons</tt> and <tt>institutions</tt>):</p>
+<div><div id="highlighter_390677" class="syntaxhighlighter  sql"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="sql keyword">INSERT</code> <code class="sql keyword">INTO</code> <code class="sql string">"persons"</code> <code class="sql plain">(</code><code class="sql string">"data"</code><code class="sql plain">) </code><code class="sql keyword">VALUES</code> <code class="sql plain">(</code><code class="sql string">'person 1'</code><code class="sql plain">),(</code><code class="sql string">'person 2'</code><code class="sql plain">),(</code><code class="sql string">'person 3'</code><code class="sql plain">),(</code><code class="sql string">'person 4'</code><code class="sql plain">),(</code><code class="sql string">'person 5'</code><code class="sql plain">),(</code><code class="sql string">'person 6'</code><code class="sql plain">);</code></div><div class="line number2 index1 alt1"><code class="sql spaces">&nbsp;</code><code class="sql keyword">INSERT</code> <code class="sql keyword">INTO</code> <code class="sql string">"institutions"</code> <code class="sql plain">(</code><code class="sql string">"data"</code><code class="sql plain">) </code><code class="sql keyword">VALUES</code> <code class="sql plain">(</code><code class="sql string">'institution 1'</code><code class="sql plain">),(</code><code class="sql string">'institution 2'</code><code class="sql plain">),(</code><code class="sql string">'institution 3'</code><code class="sql plain">),(</code><code class="sql string">'institution 4'</code><code class="sql plain">),(</code><code class="sql string">'institution 5'</code><code class="sql plain">),(</code><code class="sql string">'institution 6'</code><code class="sql plain">);</code></div><div class="line number3 index2 alt2">&nbsp;</div><div class="line number4 index3 alt1"><code class="sql comments">-- Now, insert into the image_attachments table</code></div><div class="line number5 index4 alt2"><code class="sql spaces">&nbsp;</code><code class="sql keyword">INSERT</code> <code class="sql keyword">INTO</code> <code class="sql string">"image_attachments"</code> <code class="sql plain">( </code><code class="sql string">"attachable_id"</code><code class="sql plain">, </code><code class="sql string">"attachable_type"</code><code class="sql plain">, </code><code class="sql string">"image_file_name"</code> <code class="sql plain">)</code></div><div class="line number6 index5 alt1"><code class="sql spaces">&nbsp;</code><code class="sql keyword">VALUES</code></div><div class="line number7 index6 alt2"><code class="sql spaces">&nbsp;&nbsp;&nbsp;</code><code class="sql plain">(1, </code><code class="sql string">'Person'</code><code class="sql plain">, </code><code class="sql string">'PersonImage 1'</code><code class="sql plain">),</code></div><div class="line number8 index7 alt1"><code class="sql spaces">&nbsp;&nbsp;&nbsp;</code><code class="sql plain">(2, </code><code class="sql string">'Person'</code><code class="sql plain">, </code><code class="sql string">'PersonImage 2.1'</code><code class="sql plain">),</code></div><div class="line number9 index8 alt2"><code class="sql spaces">&nbsp;&nbsp;&nbsp;</code><code class="sql plain">(2, </code><code class="sql string">'Person'</code><code class="sql plain">, </code><code class="sql string">'PersonImage 2.2'</code><code class="sql plain">),</code></div><div class="line number10 index9 alt1"><code class="sql spaces">&nbsp;&nbsp;&nbsp;</code><code class="sql plain">(1, </code><code class="sql string">'Institution'</code><code class="sql plain">, </code><code class="sql string">'InstitutionImage 1'</code><code class="sql plain">),</code></div><div class="line number11 index10 alt2"><code class="sql spaces">&nbsp;&nbsp;&nbsp;</code><code class="sql plain">(3, </code><code class="sql string">'Institution'</code><code class="sql plain">, </code><code class="sql string">'InstitutionImage 3.1'</code><code class="sql plain">),</code></div><div class="line number12 index11 alt1"><code class="sql spaces">&nbsp;&nbsp;&nbsp;</code><code class="sql plain">(3, </code><code class="sql string">'Institution'</code><code class="sql plain">, </code><code class="sql string">'InstitutionImage 3.2'</code><code class="sql plain">);</code></div></div></td></tr></tbody></table></div></div>
+<p>When doing <tt>SELECT * FROM "image_attachments"</tt>, everything seems just normal (thanks to PostgreSQLs <tt>INHERITS</tt> machanism):</p>
+<pre> id | attachable_id | attachable_type  |   image_file_name     | caption
+----+---------------+------------------+-----------------------+---------
+  1 |             1 | Person           | PersonImage 1         |
+  2 |             2 | Person           | PersonImage 2.1       |
+  3 |             2 | Person           | PersonImage 2.2       |
+  4 |             1 | Institution      | InstitutionImage 1    |
+  5 |             3 | Institution      | InstitutionImage 3.1  |
+  6 |             3 | Institution      | InstitutionImage 3.2  |
+(6 rows)
+</pre>
+<p>but they are in fact moved to the correct sub-tables<br><br>
+<tt>SELECT * FROM "person_image_attachments"</tt>:</p>
+<pre> id | attachable_id | attachable_type | image_file_name  | caption
+----+---------------+-----------------+------------------+---------
+  1 |             1 | Person          | PersonImage 1    |
+  2 |             2 | Person          | PersonImage 2.1  |
+  3 |             2 | Person          | PersonImage 2.2  |
+(3 rows)
+</pre>
+<p>and <tt>SELECT * FROM "institution_image_attachments"</tt>:</p>
+<pre> id | attachable_id | attachable_type |   image_file_name    | caption
+----+---------------+-----------------+----------------------+---------
+  4 |             1 | Institution     | InstitutionImage 1   |
+  5 |             3 | Institution     | InstitutionImage 3.1 |
+  6 |             3 | Institution     | InstitutionImage 3.2 |
+(3 rows)
+</pre>
+<h2>The Advantages</h2>
+<p>So, now we have distributed the attachments to the correct subtables, but what do we gain from that?</p>
+<p>Firstly, foreign keys work as expectet.</p>
+<pre>psql= delete from institutions where id=3;
+ERROR:  update or delete on table "institutions" violates foreign key
+constraint "institution_image_attachments_attachable_id_fkey" on table
+"institution_image_attachments"
+DETAIL:  Key (id)=(3) is still referenced from table
+"institution_image_attachments".
+</pre>
+<p>whereas</p>
+<pre>delete from persons where id=3;
+DELETE 1
+</pre>
+<p>The other advantage is partitioning. When you request the attachments to a <tt>Person</tt>, a query containg the condition <tt>WHERE "attachable_type"='Person' AND "attachable_id"=42</tt> is issued. From the <tt>CHECK</tt> during table creation, PostgreSQL knows in wich table too look for the entries, such that only a subset of all <tt>image_attachments</tt> needs to be searched, and you even have a proper index from the foreign key.</p>
+<p>And – most importantly – Rails doesn’t know about the things going on
+ behind the scenes, so you can use the convenient polymorphic 
+association stuff from rails and get stability for (almost) free.</p>
+<h2>Drawbacks</h2>
+<p>As always, there can be no light without shadow:</p>
+<ul>
+<li>This setup is slightly more difficult to set up, for you need to interact directly with the database.</li>
+<li>It is not portable to e.g. MySQL. </li>
+<li>You need to add special ‘derived’ tables for every model, you want to attach images to, and to alter the trigger function.</li>
+</ul>
+<p>but when you application has reached a ‘stable’ state, you can still add this w/o messing with the other code.</p>
+<div class="simple_socialmedia"><ul><li class="sharetext">Share This:</li><li class="twitter"><a href="http://twitter.com/share?url=http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-in-rails-with-postgresql/&amp;text=Stable%20polymorphic%20foreign%20key%20relations%20in%20Rails%20with%20PostgreSQL" target="_blank">Tweet</a></li><li class="facebook"><a target="_blank" title="Share on Facebook" rel="nofollow" href="http://www.facebook.com/sharer.php?u=http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-in-rails-with-postgresql/&amp;t=Stable%20polymorphic%20foreign%20key%20relations%20in%20Rails%20with%20PostgreSQL">Facebook</a></li><li class="stumble"><a target="_blank" title="Share on StumbleUpon" rel="nofollow" href="http://www.stumbleupon.com/submit?url=http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-in-rails-with-postgresql/">StumbleUpon</a></li><li class="digg"><a target="_blank" title="Share on Digg" rel="nofollow" href="http://www.digg.com/submit?phase=2&amp;url=http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-in-rails-with-postgresql/">Digg</a></li><li class="delicious"><a target="_blank" title="Share on Delicious" rel="nofollow" href="http://del.icio.us/post?url=http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-in-rails-with-postgresql/&amp;title=INSERT_TITLE">Delicious</a></li></ul></div>											</div><!-- .entry-content -->
+
+
+					<div class="entry-utility">
+						Dieser Beitrag wurde unter <a href="http://blog.metaminded.com/category/allgemein/" title="Alle Artikel in Allgemein ansehen" rel="category tag">Allgemein</a>, <a href="http://blog.metaminded.com/category/postgresql/" title="Alle Artikel in PostgreSQL ansehen" rel="category tag">PostgreSQL</a>, <a href="http://blog.metaminded.com/category/ruby-on-rails/" title="Alle Artikel in Ruby on Rails ansehen" rel="category tag">Ruby on Rails</a> abgelegt und mit <a href="http://blog.metaminded.com/tag/polymorphic-association/" rel="tag">polymorphic association</a>, <a href="http://blog.metaminded.com/tag/postgres/" rel="tag">postgres</a>, <a href="http://blog.metaminded.com/tag/rails/" rel="tag">rails</a>, <a href="http://blog.metaminded.com/tag/sql/" rel="tag">sql</a> verschlagwortet. Setze ein Lesezeichen auf den <a href="http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-in-rails-with-postgresql/" title="Permalink zu Stable polymorphic foreign key relations in Rails with PostgreSQL" rel="bookmark">Permalink</a>.											</div><!-- .entry-utility -->
+				</div><!-- #post-## -->
+
+				<div id="nav-below" class="navigation">
+					<div class="nav-previous"><a href="http://blog.metaminded.com/2010/11/24/wie-man-firmen-bei-anwendungen-furs-netz-hilft/" rel="prev"><span class="meta-nav">←</span> Wie man Firmen bei Anwendungen fürs Netz hilft</a></div>
+					<div class="nav-next"><a href="http://blog.metaminded.com/2010/12/24/magento-quick-tip-einbinden-von-statischen-blocken-in-magento-templates-und-in-cms-seiten/" rel="next">Magento Quick Tip: Einbinden von statischen Blöcken in Magento Templates und in CMS Seiten <span class="meta-nav">→</span></a></div>
+				</div><!-- #nav-below -->
+
+				
+			<div id="comments">
+
+
+
+
+								<div id="respond">
+				<h3 id="reply-title">Hinterlasse eine Antwort <small><a rel="nofollow" id="cancel-comment-reply-link" href="http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-in-rails-with-postgresql/#respond" style="display: none;">Antworten abbrechen</a></small></h3>
+									<p class="must-log-in">Du musst <a href="http://blog.metaminded.com/wp-login.php?redirect_to=http%3A%2F%2Fblog.metaminded.com%2F2010%2F11%2F25%2Fstable-polymorphic-foreign-key-relations-in-rails-with-postgresql%2F">angemeldet</a> sein, um einen Kommentar abzugeben.</p>												</div><!-- #respond -->
+						
+</div><!-- #comments -->
+
+
+			</div><!-- #content -->
+		</div><!-- #container -->
+
+
+		<div id="primary" class="widget-area" role="complementary">
+			<ul class="xoxo">
+
+
+			<li id="search" class="widget-container widget_search">
+				<form role="search" method="get" id="searchform" action="http://blog.metaminded.com/">
+	<div><label class="screen-reader-text" for="s">Suche nach:</label>
+	<input name="s" id="s" type="text">
+	<input id="searchsubmit" value="Suchen" type="submit">
+	</div>
+	</form>			</li>
+
+			<li id="archives" class="widget-container">
+				<h3 class="widget-title">Archive</h3>
+				<ul>
+						<li><a href="http://blog.metaminded.com/2011/11/" title="November 2011">November 2011</a></li>
+	<li><a href="http://blog.metaminded.com/2011/03/" title="März 2011">März 2011</a></li>
+	<li><a href="http://blog.metaminded.com/2011/02/" title="Februar 2011">Februar 2011</a></li>
+	<li><a href="http://blog.metaminded.com/2010/12/" title="Dezember 2010">Dezember 2010</a></li>
+	<li><a href="http://blog.metaminded.com/2010/11/" title="November 2010">November 2010</a></li>
+				</ul>
+			</li>
+
+			<li id="meta" class="widget-container">
+				<h3 class="widget-title">Meta</h3>
+				<ul>
+										<li><a href="http://blog.metaminded.com/wp-login.php">Anmelden</a></li>
+									</ul>
+			</li>
+
+					</ul>
+		</div><!-- #primary .widget-area -->
+
+	</div><!-- #main -->
+
+	<div id="footer" role="contentinfo">
+		<div id="colophon">
+
+
+
+			<div id="site-info">
+				<a href="http://blog.metaminded.com/" title="" rel="home">
+									</a>
+			</div><!-- #site-info -->
+
+			<div id="site-generator">
+								<a href="http://wordpress.org/" title="Semantic Personal Publishing Platform" rel="generator">Proudly powered by WordPress.</a>
+			</div><!-- #site-generator -->
+
+		</div><!-- #colophon -->
+	</div><!-- #footer -->
+
+</div><!-- #wrapper -->
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-12686328-7']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+	
+<!-- START: Syntax Highlighter ComPress -->
+<script type="text/javascript">
+    SyntaxHighlighter.autoloader(
+        'applescript			http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushAppleScript.js',
+        'actionscript3 as3		http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushAS3.js',
+        'bash shell				http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushBash.js',
+        'coldfusion cf			http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushColdFusion.js',
+        'cpp c					http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushCpp.js',
+        'c# c-sharp csharp		http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushCSharp.js',
+        'css					http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushCss.js',
+        'delphi pascal pas		http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushDelphi.js',
+        'diff patch			    http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushDiff.js',
+        'erl erlang				http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushErlang.js',
+        'groovy					http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushGroovy.js',
+        'java					http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushJava.js',
+        'jfx javafx				http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushJavaFX.js',
+        'js jscript javascript	http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushJScript.js',
+        'perl pl				http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushPerl.js',
+        'php					http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushPhp.js',
+        'text plain				http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushPlain.js',
+        'powershell ps          http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushPowerShell.js',
+        'py python				http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushPython.js',
+        'ruby rails ror rb		http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushRuby.js',
+        'sass scss              http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushSass.js',
+        'scala					http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushScala.js',
+        'sql					http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushSql.js',
+        'vb vbnet				http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushVb.js',
+        'xml xhtml xslt html	http://blog.metaminded.com/wp-content/plugins/syntax-highlighter-compress/scripts/shBrushXml.js'
+    );
+                        SyntaxHighlighter.defaults['tab-size'] = 4;
+    SyntaxHighlighter.all();
+</script>
+<!-- END: Syntax Highlighter ComPress -->
+
+	
+
+</body></html>

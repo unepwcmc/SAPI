@@ -9,7 +9,13 @@ Gems are packaged, following this article:
 
   http://ryan.mcgeary.org/2011/02/09/vendor-everything-still-applies/
 
-== Importing data for development
+== Database
+
+We use PostgreSQL. Polymorphic associations are enhanced with this referential integrity pattern:
+http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-in-rails-with-postgresql/
+(hard copy in doc)
+
+=== Importing data for development
   FILE=lib/assets/files/20_animal_species.csv rake import:species
 
 == Taxonomic glossaries

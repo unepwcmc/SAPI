@@ -1,0 +1,38 @@
+/* Social Media Links */
+.simple_socialmedia {
+	overflow: hidden;
+	padding: 0;
+	text-align:center;
+	color: #0B0B0B;
+	font-size: 11px;
+	border-top: 1px solid #e1e1e0;
+	border-bottom: 1px solid #e1e1e0;
+	width:100%;
+}
+
+.simple_socialmedia ul {
+	list-style-type:none;
+	margin:0;
+	padding:5px 0;
+}
+
+.simple_socialmedia ul li {
+	padding: 5px 10px 5px 20px;
+	line-height:18px;
+	display:inline;
+	margin:0;
+	}
+
+.simple_socialmedia ul li a{
+	color:#000000;
+	text-decoration:none;
+	}
+	
+.simple_socialmedia ul li a:hover {text-decoration:none;}
+
+.simple_socialmedia ul li.sharetext {font-weight:bold;padding: 5px 5px 5px 0;}
+.simple_socialmedia ul li.twitter {background:url(images/mini_twitter.png) no-repeat left;}
+.simple_socialmedia ul li.facebook {background:url(images/mini_facebook.png) no-repeat left;}
+.simple_socialmedia ul li.stumble {background:url(images/mini_stumble.png) no-repeat left;}
+.simple_socialmedia ul li.digg {background:url(images/mini_digg.png) no-repeat left;}
+.simple_socialmedia ul li.delicious {background:url(images/mini_delicious.png) no-repeat left;}
