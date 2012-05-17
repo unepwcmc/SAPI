@@ -19,7 +19,7 @@ set(:deploy_to) { File.join("", "home", user, application) }
 set :repository,  "git@github.com:unepwcmc/SAPI.git"
 set :scm, :git
 set :scm_username, "unepwcmc-read"
-set :deploy_via, :copy
+set :deploy_via, :remote_cache
 
 ### Other options you can set ##
 # Comma separated list of additional domains for Apache
