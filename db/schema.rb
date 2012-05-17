@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120517074054) do
+ActiveRecord::Schema.define(:version => 20120517081442) do
 
   create_table "authors", :force => true do |t|
     t.string   "first_name"
@@ -40,11 +40,11 @@ ActiveRecord::Schema.define(:version => 20120517074054) do
   end
 
   create_table "countries", :force => true do |t|
-    t.string   "iso3166_name", :null => false
+    t.string   "iso_name",   :null => false
     t.string   "iso2_code"
     t.string   "iso3_code"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.integer  "region_id"
   end
 
