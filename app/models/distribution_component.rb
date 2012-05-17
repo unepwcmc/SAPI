@@ -1,3 +1,3 @@
 class DistributionComponent < ActiveRecord::Base
-  # attr_accessible :title, :body
+  belongs_to :component, :polymorphic => true
 end

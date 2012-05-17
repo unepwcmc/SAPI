@@ -1,3 +1,3 @@
 class Region < ActiveRecord::Base
-  # attr_accessible :title, :body
+  has_many :distribution_components, :as => :component
 end
