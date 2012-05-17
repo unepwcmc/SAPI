@@ -37,6 +37,7 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-ext'
   gem 'brightbox', '>=2.3.9'
+  gem 'rack-cors', :require => 'rack/cors'
 end
 
 gem "sqlite3", :group => [:test]
