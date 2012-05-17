@@ -9,6 +9,19 @@ Gems are packaged, following this article:
 
   http://ryan.mcgeary.org/2011/02/09/vendor-everything-still-applies/
 
+CORS using a rack middleware:
+
+  http://blog.carbonfive.com/2012/02/27/supporting-cross-domain-ajax-in-rails-using-jsonp-and-cors/
+
+for now we use the rack-cors middleware for development, staging has the appropriate headers defined in Apache config:
+
+  <VirtualHost *:80>
+    Header set Access-Control-Allow-Origin *
+    Header set Access-Control-Allow-Methods "POST, GET, OPTIONS"
+    Header set Access-Control-Allow-Headers "X-Requested-With, X-Prototype-Version"
+    Header set Access-Control-Max-Age 1728000
+    ...
+
 == Database
 
 We use PostgreSQL. Polymorphic associations are enhanced with this referential integrity pattern:
