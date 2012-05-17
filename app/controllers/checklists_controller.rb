@@ -1,11 +1,6 @@
 class ChecklistsController < ApplicationController
   def index
-    @animalia = TaxonConcept.find_by_taxon_name_id(
-      TaxonName.find_by_scientific_name('Animalia').id
-    )
-    @plantae = TaxonConcept.find_by_taxon_name_id(
-      TaxonName.find_by_scientific_name('Plantae').id
-    )
-    render :json => {:animalia => @animalia, :plantae => @plantae}
+    roots = TaxonConcept.where(:parent_id => nil).includes(:taxon_name)
+    render :json => roots.to_json(:include => :taxon_name)
   end
 end
