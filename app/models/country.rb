@@ -9,6 +9,7 @@
 #  created_at :datetime        not null
 #  updated_at :datetime        not null
 #  region_id  :integer
+#  legacy_id  :integer
 #
 
 class Country < ActiveRecord::Base

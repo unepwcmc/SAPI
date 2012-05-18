@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120517081442) do
+ActiveRecord::Schema.define(:version => 20120518112955) do
 
   create_table "authors", :force => true do |t|
     t.string   "first_name"
@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(:version => 20120517081442) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "region_id"
+    t.integer  "legacy_id"
   end
 
   create_table "country_distribution_components", :force => true do |t|
@@ -112,19 +113,6 @@ ActiveRecord::Schema.define(:version => 20120517081442) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "species_import", :id => false, :force => true do |t|
-    t.string  "kingdom",    :limit => nil
-    t.string  "phylum",     :limit => nil
-    t.string  "class",      :limit => nil
-    t.string  "taxonorder", :limit => nil
-    t.string  "family",     :limit => nil
-    t.string  "genus",      :limit => nil
-    t.string  "species",    :limit => nil
-    t.string  "spcinfra",   :limit => nil
-    t.integer "spcrecid"
-    t.string  "spcstatus",  :limit => nil
-  end
-
   create_table "taxon_concepts", :force => true do |t|
     t.integer  "parent_id"
     t.integer  "lft"
@@ -136,6 +124,7 @@ ActiveRecord::Schema.define(:version => 20120517081442) do
     t.integer  "depth"
     t.integer  "designation_id", :null => false
     t.integer  "taxon_name_id",  :null => false
+    t.integer  "legacy_id"
   end
 
   create_table "taxon_distributions", :force => true do |t|

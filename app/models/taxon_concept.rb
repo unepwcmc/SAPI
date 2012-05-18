@@ -13,6 +13,7 @@
 #  depth          :integer
 #  designation_id :integer         not null
 #  taxon_name_id  :integer         not null
+#  legacy_id      :integer
 #
 
 class TaxonConcept < ActiveRecord::Base
