@@ -35,4 +35,10 @@ class TaxonConcept < ActiveRecord::Base
   def synonyms
     related_taxon_concepts.includes(:relationships => :taxon_relationship_type).where(:taxon_relationship_types => {:name => 'is_synonym'})
   end
+
+  def as_json(options={})
+    super(:include =>[:taxon_name])
+  end
+
+
 end
