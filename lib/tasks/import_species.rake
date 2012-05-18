@@ -38,7 +38,7 @@ namespace :import do
 
   namespace :species do
     desc 'Removes species_import table'
-    task :remove_table do
+    task :remove_table => :environment do
       TMP_TABLE = 'species_import'
       begin
         ActiveRecord::Base.connection.execute "DROP TABLE #{TMP_TABLE};"

@@ -5,7 +5,7 @@ namespace :import do
   ## So:
   ### 1- check current character encoding with: file path/to/file
   ### 2- change character encoding: iconv -f original_charset -t utf-8 originalfile > newfile
-  desc 'Omport countries from csv file [usage: FILE=[path/to/file] rake import:countries'
+  desc 'Import countries from csv file [usage: FILE=[path/to/file] rake import:countries'
   task :countries => :environment do
     TMP_TABLE = 'countries_import'
     if !ENV["FILE"] || !File.file?(Rails.root+ENV["FILE"]) #if the file is not defined, explain and leave.
@@ -48,7 +48,7 @@ namespace :import do
 
   namespace :countries do
     desc 'Removes countries_import table'
-    task :remove_table do
+    task :remove_table => :environment do
       TMP_TABLE = 'countries_import'
       begin
         ActiveRecord::Base.connection.execute "DROP TABLE #{TMP_TABLE};"
