@@ -1,23 +1,23 @@
 namespace :import do
+
   desc "Import species records from csv file [usage: FILE=[path/to/file] rake import:species"
   task :species => :environment do
+    TMP_TABLE = 'species_import'
     if !ENV["FILE"] || !File.file?(Rails.root+ENV["FILE"]) #if the file is not defined, explain and leave.
       puts "Please specify a valid csv file from which to import species data"
       puts "Usage: FILE=[path/to/file] rake import:species"
       next
     end
 
-    TMP_TABLE = 'species_import'
-    puts "Remove tmp table before starting the import"
     begin
-      ActiveRecord::Base.connection.execute "DROP TABLE #{TMP_TABLE};"
-      puts "Table removed"
+      puts "Creating tmp table"
+      ActiveRecord::Base.connection.execute "CREATE TABLE #{TMP_TABLE} ( Kingdom varchar, Phylum varchar, Class varchar, TaxonOrder varchar, Family varchar, Genus varchar, Species varchar, SpcInfra varchar, SpcRecId integer, SpcStatus varchar)"
+      puts "Table created"
     rescue Exception => e
-      puts "Could not drop table #{TMP_TABLE}. It might not exist if this is the first time you are running this rake task.. carry on"
+      puts "Tmp already exists removing data from tmp table before starting the import"
+      ActiveRecord::Base.connection.execute "DELETE FROM #{TMP_TABLE};"
+      puts "Data removed"
     end
-    puts "Creating tmp table"
-    ActiveRecord::Base.connection.execute "CREATE TABLE #{TMP_TABLE} ( Kingdom varchar, Phylum varchar, Class varchar, TaxonOrder varchar, Family varchar, Genus varchar, Species varchar, SpcInfra varchar, SpcRecId integer, SpcStatus varchar)"
-    puts "Table created"
     puts "Copying data from #{ENV["FILE"]} into tmp table"
     sql = <<-SQL
       COPY #{TMP_TABLE} ( Kingdom, Phylum, Class, TaxonOrder, Family, Genus, Species, SpcInfra, SpcRecId, SpcStatus)
@@ -34,6 +34,19 @@ namespace :import do
     import_data_for 'Family', 'TaxonOrder'
     import_data_for 'Genus', 'Family'
     import_data_for 'Species', 'Genus'
+  end
+
+  namespace :species do
+    desc 'Removes species_import table'
+    task :remove_table do
+      TMP_TABLE = 'species_import'
+      begin
+        ActiveRecord::Base.connection.execute "DROP TABLE #{TMP_TABLE};"
+        puts "Table removed"
+      rescue Exception => e
+        puts "Could not drop table #{TMP_TABLE}. It might not exist if this is the first time you are running this rake task."
+      end
+    end
   end
 end
 
