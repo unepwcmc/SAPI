@@ -112,6 +112,19 @@ ActiveRecord::Schema.define(:version => 20120517081442) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "species_import", :id => false, :force => true do |t|
+    t.string  "kingdom",    :limit => nil
+    t.string  "phylum",     :limit => nil
+    t.string  "class",      :limit => nil
+    t.string  "taxonorder", :limit => nil
+    t.string  "family",     :limit => nil
+    t.string  "genus",      :limit => nil
+    t.string  "species",    :limit => nil
+    t.string  "spcinfra",   :limit => nil
+    t.integer "spcrecid"
+    t.string  "spcstatus",  :limit => nil
+  end
+
   create_table "taxon_concepts", :force => true do |t|
     t.integer  "parent_id"
     t.integer  "lft"
