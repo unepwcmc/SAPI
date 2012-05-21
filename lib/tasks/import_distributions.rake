@@ -1,11 +1,11 @@
 namespace :import do
 
-  desc 'Import distribution from csv file [usage: FILE=[path/to/file] rake import:distribution'
-  task :distribution => :environment do
+  desc 'Import distributions from csv file [usage: FILE=[path/to/file] rake import:distributions'
+  task :distributions => :environment do
     TMP_TABLE = 'distribution_import'
     if !ENV["FILE"] || !File.file?(Rails.root+ENV["FILE"]) #if the file is not defined, explain and leave.
       puts "Please specify a valid csv file for the distribution from which to import distribution data"
-      puts "Usage: FILE=[path/to/file] rake import:distribution"
+      puts "Usage: FILE=[path/to/file] rake import:distributions"
       next
     end
     begin
@@ -57,7 +57,7 @@ namespace :import do
   end
 
 
-  namespace :distribution do
+  namespace :distributions do
     desc 'Removes distribution_import table'
     task :remove_table => :environment do
       TMP_TABLE = 'distribution_import'
