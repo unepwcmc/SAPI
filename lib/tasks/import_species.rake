@@ -34,6 +34,12 @@ namespace :import do
     import_data_for 'Family', 'TaxonOrder'
     import_data_for 'Genus', 'Family'
     import_data_for 'Species', 'Genus'
+    #set the depth on all nodes
+    TaxonConcept.roots.each do |root|
+      TaxonConcept.each_with_level(root.self_and_descendants) do |node, level|
+        node.send(:"set_depth!")
+      end
+    end
   end
 
   namespace :species do
