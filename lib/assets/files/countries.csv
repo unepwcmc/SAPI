@@ -1,0 +1,258 @@
+old_id,iso2,iso3,name,long_name
+111,KI,KIR,Kiribati,Republic of Kiribati
+112,KP,PRK,Democratic People's Republic of Korea,"Korea, Democratic People's Republic of"
+113,KR,KOR,Republic of Korea ,Republic of Korea 
+114,KW,KWT,Kuwait,State of Kuwait
+115,KG,KGZ,Kyrgyzstan,Kyrgyz Republic
+116,LA,LAO,Lao People's Democratic Republic,Lao People's Democratic Republic
+117,LV,LVA,Latvia,Republic of Latvia
+118,LB,LBN,Lebanon,Lebanese Republic
+119,LS,LSO,Lesotho,Kingdom of Lesotho
+120,LR,LBR,Liberia,Republic of Liberia
+121,LY,LBY,Libyan Arab Jamahiriya,Socialist People's Libyan Arab Jamahiriya
+122,LI,LIE,Liechtenstein,Principality of Liechtenstein
+123,LT,LTU,Lithuania,Republic of Lithuania
+269,MF,NULL,Saint-Martin,Saint-Martin(French part)
+270,SS,SSD,South Sudan,Republic of South Sudan
+271,SD,SDN,Sudan,Republic of Sudan
+77,TF,ATF,French Southern and Antarctic Territories,French Southern and Antarctic Territories
+82,GH,GHA,Ghana,Republic of Ghana
+83,GI,GIB,Gibraltar,Gibraltar
+84,GR,GRC,Greece,Hellenic Republic
+85,GL,GRL,Greenland,Greenland
+86,GD,GRD,Grenada,Grenada
+87,GP,GLP,Guadeloupe,Department of Guadeloupe
+88,GU,GUM,Guam,Guam
+89,GT,GTM,Guatemala,Republic of Guatemala
+90,GN,GIN,Guinea,Republic of Guinea
+91,GW,GNB,Guinea Bissau,Republic of Guinea-Bissau
+92,GY,GUY,Guyana,Republic of Guyana
+93,HT,HTI,Haiti,Republic of Haiti
+94,HM,HMD,Heard Island and McDonald Islands,Heard Island and McDonald Islands
+95,HN,HND,Honduras,Republic of Honduras
+1,AF,AFG,Afghanistan,Afghanistan
+33,BG,BGR,Bulgaria,Republic of Bulgaria
+34,BF,BFA,Burkina Faso,Burkina Faso
+35,BI,BDI,Burundi,Republic of Burundi
+97,HU,HUN,Hungary,Republic of Hungary
+98,IS,ISL,Iceland,Republic of Iceland
+99,IN,IND,India,Republic of India
+100,ID,IDN,Indonesia,Republic of Indonesia
+101,IR,IRN,Iran (Islamic Republic of),Islamic Republic of Iran
+102,IQ,IRQ,Iraq,Republic of Iraq
+103,IE,IRL,Ireland,Republic of Ireland
+104,IL,ISR,Israel,State of Israel
+105,IT,ITA,Italy,Italian Republic
+106,JM,JAM,Jamaica,Jamaica
+107,JP,JPN,Japan,Japan
+108,JO,JOR,Jordan,Hashemite Kingdom of Jordan
+109,KZ,KAZ,Kazakhstan,Republic of Kazakhstan
+110,KE,KEN,Kenya,Republic of Kenya
+16,BS,BHS,Bahamas,Commonwealth of the Bahamas
+17,BH,BHR,Bahrain,Kingdom of Bahrain
+18,BD,BGD,Bangladesh,People's Republic of Bangladesh
+19,BB,BRB,Barbados,Barbados
+20,BY,BLR,Belarus,Republic of Belarus
+21,BE,BEL,Belgium,Kingdom of Belgium
+22,BZ,BLZ,Belize,Belize
+23,BJ,BEN,Benin,Republic of Benin
+24,BM,BMU,Bermuda,Bermuda
+25,BT,BTN,Bhutan,Kingdom of Bhutan
+26,BO,BOL,Bolivia,Republic of Bolivia
+27,BA,BIH,Bosnia and Herzegovina,Bosnia and Herzegovina
+28,BW,BWA,Botswana,Republic of Botswana
+29,BV,BVT,Bouvet Island,Bouvet Island
+30,BR,BRA,Brazil,Federative Republic of Brazil
+31,IO,IOT,British Indian Ocean Territory,British Indian Ocean Territory
+36,KH,KHM,Cambodia,Kingdom of Cambodia
+66,ER,ERI,Eritrea,Eritrea
+67,EE,EST,Estonia,Republic of Estonia
+68,ET,ETH,Ethiopia,Ethiopia
+69,FK,FLK,Falkland Islands (Malvinas),Falkland Islands (Malvinas)
+70,FO,FRO,Faeroe Islands,Faeroe Islands
+71,FJ,FJI,Fiji,Republic of the Fiji Islands
+72,FI,FIN,Finland,Republic of Finland
+73,FR,FRA,France,French Republic
+74,FX,FXX,"France, Metropolitan","France, Metropolitan"
+75,GF,GUF,French Guiana,Department of Guiana
+76,PF,PYF,French Polynesia,French Polynesia
+78,GA,GAB,Gabon,Gabonese Republic
+79,GM,GMB,Gambia,Republic of the Gambia
+80,GE,GEO,Georgia,Republic of Georgia
+81,DE,DEU,Germany,Federal Republic of Germany
+50,CK,COK,Cook Islands,Cook Islands
+51,CR,CRI,Costa Rica,Republic of Costa Rica
+52,HR,HRV,Croatia,Republic of Croatia
+53,CU,CUB,Cuba,Republic of Cuba
+54,CY,CYP,Cyprus,Republic of Cyprus
+55,CZ,CZE,Czech Republic,Czech Republic
+56,CI,CIV,C๔te d'Ivoire,Republic of C๔te d'Ivoire
+57,DK,DNK,Denmark,Kingdom of Denmark
+58,DJ,DJI,Djibouti,Republic of Djibouti
+59,DM,DMA,Dominica,Commonwealth of Dominica
+60,DO,DOM,Dominican Republic,Dominican Republic
+62,EC,ECU,Ecuador,Republic of Ecuador
+63,EG,EGY,Egypt,Arab Republic of Egypt
+64,SV,SLV,El Salvador,Republic of El Salvador
+65,GQ,GNQ,Equatorial Guinea,Republic of Equatorial Guinea
+96,HK,HKG,Hong Kong SAR,Hong Kong Special Administrative Region of China
+2,AL,ALB,Albania,Republic of Albania
+3,DZ,DZA,Algeria,People's Democratic Republic of Algeria
+4,AS,ASM,American Samoa,American Samoa
+5,AD,AND,Andorra,Principality of Andorra
+6,AO,AGO,Angola,Republic of Angola
+7,AI,AIA,Anguilla,Anguilla
+8,AQ,ATA,Antarctica,Antarctica
+9,AG,ATG,Antigua and Barbuda,Antigua and Barbuda
+10,AR,ARG,Argentina,Argentine Republic
+11,AM,ARM,Armenia,Republic of Armenia
+12,AW,ABW,Aruba,Aruba
+13,AU,AUS,Australia,Australia
+14,AT,AUT,Austria,Republic of Austria
+15,AZ,AZE,Azerbaijan,Republic of Azerbaijan
+169,PL,POL,Poland,Republic of Poland
+170,PT,PRT,Portugal,Portuguese Republic
+171,PR,PRI,Puerto Rico,Puerto Rico
+172,QA,QAT,Qatar,State of Qatar
+173,RO,ROM,Romania,Romania
+174,RU,RUS,Russian Federation,Russian Federation
+175,RW,RWA,Rwanda,Rwandese Republic
+176,RE,REU,R้union,Department of R้union
+177,SH,SHN,Saint Helena,Saint Helena
+178,KN,KNA,Saint Kitts and Nevis,Saint Kitts and Nevis
+179,LC,LCA,Saint Lucia,Saint Lucia
+180,PM,SPM,Saint Pierre and Miquelon,Territorial collectivity of St. Pierre and Miquelon
+182,WS,WSM,Samoa,Independent State of Samoa
+183,SM,SMR,San Marino,Republic of San Marino
+185,SA,SAU,Saudi Arabia,Kingdom of Saudi Arabia
+32,BN,BRN,Brunei Darussalam,Brunei Darussalam
+37,CM,CMR,Cameroon,Republic of Cameroon
+38,CA,CAN,Canada,Canada
+39,CV,CPV,Cape Verde,Republic of Cape Verde
+40,KY,CYM,Cayman Islands,Cayman Islands
+41,CF,CAF,Central African Republic,Central African Republic
+42,TD,TCD,Chad,Republic of Chad
+43,CL,CHL,Chile,Republic of Chile
+44,CN,CHN,China,People's Republic of China
+45,CX,CXR,Christmas Island,Christmas Island
+46,CC,CCK,Cocos (Keeling) Islands,Cocos (Keeling) Islands
+47,CO,COL,Colombia,Republic of Colombia
+48,KM,COM,Comoros,Union of the Comoros
+49,CG,COG,Congo,Republic of the Congo
+195,GS,SGS,South Georgia and the South Sandwich Islands,South Georgia and the South Sandwich Islands
+196,ES,ESP,Spain,Kingdom of Spain
+197,LK,LKA,Sri Lanka,Democratic Socialist Republic of Sri Lanka
+198,SD,SDN,Sudan [prior to secession of South Sudan],Republic of the Sudan [prior to secession of South Sudan]
+199,SR,SUR,Suriname,Republic of Suriname
+200,SJ,SJM,Svalbard and Jan Mayen Islands,Svalbard and Jan Mayen Islands
+201,SZ,SWZ,Swaziland,Kingdom of Swaziland
+202,SE,SWE,Sweden,Kingdom of Sweden
+203,CH,CHE,Switzerland,Swiss Confederation
+204,SY,SYR,Syrian Arab Republic,Syrian Arab Republic
+205,TW,TWN,"Taiwan, Province of China","Taiwan, Province of China"
+206,TJ,TJK,Tajikistan,Republic of Tajikistan
+208,TH,THA,Thailand,Kingdom of Thailand
+209,TG,TGO,Togo,Togolese Republic
+210,TK,TKL,Tokelau,Tokelau
+211,TO,TON,Tonga,Kingdom of Tonga
+212,TT,TTO,Trinidad and Tobago,Republic of Trinidad and Tobago
+154,NE,NER,Niger,Republic of the Niger
+155,NG,NGA,Nigeria,Federal Republic of Nigeria
+156,NU,NIU,Niue,Republic of Niue
+157,NF,NFK,Norfolk Island,Norfolk Island
+158,MP,MNP,Northern Mariana Islands,Commonwealth of the Northern Mariana Islands
+159,NO,NOR,Norway,Kingdom of Norway
+160,OM,OMN,Oman,Sultanate of Oman
+161,PK,PAK,Pakistan,Islamic Republic of Pakistan
+162,PW,PLW,Palau,Republic of Palau
+163,PA,PAN,Panama,Republic of Panama
+164,PG,PNG,Papua New Guinea,Papua New Guinea
+165,PY,PRY,Paraguay,Republic of Paraguay
+166,PE,PER,Peru,Republic of Peru
+167,PH,PHL,Philippines,Republic of the Philippines
+221,GB,GBR,United Kingdom of Great Britain and Northern Ireland,United Kingdom of Great Britain and Northern Ireland
+223,UM,UMI,United States Minor Outlying Islands,United States Minor Outlying Islands
+227,VA,VAT,Holy See,Vatican City State (Holy See)
+228,VE,VEN,Venezuela (Bolivarian Republic of),Venezuela (Bolivarian Republic of)
+229,VN,VNM,Viet Nam,Socialist Republic of Viet Nam
+230,VG,VGB,British Virgin Islands,Virgin Islands (British)
+231,VI,VIR,United States Virgin Islands,Virgin Islands of the United States
+232,WF,WLF,Wallis and Futuna Islands ,Wallis and Futuna Islands
+233,EH,ESH,Western Sahara,Western Sahara
+234,YE,YEM,Yemen,Republic of Yemen
+235,YU,YUG,Yugoslavia,Federal Republic of Yugoslavia
+237,ZM,ZMB,Zambia,Republic of Zambia
+238,ZW,ZWE,Zimbabwe,Republic of Zimbabwe
+181,VC,VCT,Saint Vincent and the Grenadines,Saint Vincent and the Grenadines
+184,ST,STP,Sใo Tom้ and Principe,Democratic Republic of Sใo Tom้ and Principe
+186,SN,SEN,Senegal,Republic of Senegal
+187,SC,SYC,Seychelles,Republic of Seychelles
+188,SL,SLE,Sierra Leone,Republic of Sierra Leone
+189,SG,SGP,Singapore,Republic of Singapore
+190,SK,SVK,Slovakia,Slovak Republic
+191,SI,SVN,Slovenia,Republic of Slovenia
+192,SB,SLB,Solomon Islands,Solomon Islands
+193,SO,SOM,Somalia,Somali Republic
+194,ZA,ZAF,South Africa,Republic of South Africa
+168,PN,PCN,Pitcairn,Pitcairn
+138,FM,FSM,Micronesia (Federated States of),Federated States of Micronesia
+140,MC,MCO,Monaco,Principality of Monaco
+141,MN,MNG,Mongolia,Mongolia
+142,MS,MSR,Montserrat,Montserrat
+143,MA,MAR,Morocco,Kingdom of Morocco
+144,MZ,MOZ,Mozambique,Republic of Mozambique
+145,MM,MMR,Myanmar,Union of Myanmar
+146,NA,NAM,Namibia,Republic of Namibia
+147,NR,NRU,Nauru,Republic of Nauru
+148,NP,NPL,Nepal,Kingdom of Nepal
+149,NL,NLD,Netherlands,Kingdom of the Netherlands
+150,AN,ANT,Netherlands Antilles,Netherlands Antilles
+151,NC,NCL,New Caledonia,New Caledonia
+152,NZ,NZL,New Zealand,New Zealand
+153,NI,NIC,Nicaragua,Republic of Nicaragua
+241,SU,SUN,former USSR,NULL
+236,CD,COD,Democratic Republic of the Congo,Democratic Republic of the Congo
+239,MK,MKD,The former Yugoslav Republic of Macedonia,the former Yugoslav Republic of Macedonia
+242,NULL,NULL,All countries,All countries
+243,NULL,NULL,All others,All other countries
+244,IM,IMN,Isle of Man,Isle of Man
+250,PS,PSE,Occupied Palestinian Territory,Occupied Palestinian Territory
+252,NULL,NULL,Czechoslovakia,Czechoslovakia
+259,NULL,NULL,Coral Sea Is. Terr.,Coral Sea Island Territory
+260,EY,ECY,European Community,European Community
+261,GG,GGY,Guernsey,Guernsey
+262,JE,JEY,Jersey,Jersey
+263,AX,ALA,ลland Islands,ลland Islands
+264,NULL,NULL,Serbia and Montenegro,Serbia and Montenegro
+265,TL,TLS,Timor-Leste,Democratic Republic of Timor-Leste
+266,NULL,NULL,South China Sea,South China Sea
+267,CS,SCG,Serbia,Republic of Serbia
+268,ME,MNE,Montenegro,Montenegro
+124,LU,LUX,Luxembourg,Grand Duchy of Luxembourg
+125,MO,MAC,Macao,Macao Special Administrative Region of China
+126,MG,MDG,Madagascar,Republic of Madagascar
+127,MW,MWI,Malawi,Republic of Malawi
+128,MY,MYS,Malaysia,Malaysia
+129,MV,MDV,Maldives,Republic of Maldives
+130,ML,MLI,Mali,Republic of Mali
+131,MT,MLT,Malta,Republic of Malta
+132,MH,MHL,Marshall Islands,Republic of the Marshall Islands
+133,MQ,MTQ,Martinique,Department of Martinique
+134,MR,MRT,Mauritania,Islamic Republic of Mauritania
+135,MU,MUS,Mauritius,Republic of Mauritius
+136,YT,MYT,Mayotte,Territorial collectivity of Mayotte
+137,MX,MEX,Mexico,United Mexican States
+139,MD,MDA,Republic of Moldova,Republic of Moldova
+207,TZ,TZA,United Republic of Tanzania,"Tanzania, United Republic of"
+213,TN,TUN,Tunisia,Republic of Tunisia
+214,TR,TUR,Turkey,Republic of Turkey
+215,TM,TKM,Turkmenistan,Turkmenistan
+216,TC,TCA,Turks and Caicos Islands,Turks and Caicos Islands
+217,TV,TUV,Tuvalu,Tuvalu
+218,UG,UGA,Uganda,Republic of Uganda
+219,UA,UKR,Ukraine,Ukraine
+220,AE,ARE,United Arab Emirates,United Arab Emirates
+222,US,USA,United States of America,United States of America
+224,UY,URY,Uruguay,Eastern Republic of Uruguay
+225,UZ,UZB,Uzbekistan,Republic of Uzbekistan
+226,VU,VUT,Vanuatu,Republic of Vanuatu

@@ -178,6 +178,16 @@ namespace :seeds do
 
   desc 'Imports data obtained from legacy database'
   task :import do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} FILE='lib/assets/files/20_animal_species.csv' rake import:species"
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} FILE='lib/assets/files/larger_set_animals_and_plants_species.csv' rake import:species && RAILS_ENV=#{rails_env} rake import:distributions:remove_table"
+  end
+
+  desc 'Import countries from legacy database'
+  task :import_countries do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} FILE='lib/assets/files/countries.csv' rake import:countries && RAILS_ENV=#{rails_env} rake import:distributions:remove_table"
+  end
+
+  desc 'Import distributions from legacy database'
+  task :import_distributions do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} FILE='lib/assets/files/animals_distributions.csv' rake import:distributions && RAILS_ENV=#{rails_env} rake import:distributions:remove_table"
   end
 end
