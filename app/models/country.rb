@@ -15,4 +15,9 @@
 class Country < ActiveRecord::Base
   has_many :distribution_components, :as => :component
   belongs_to :region
+
+  def as_json(options={})
+    super(:only =>[:id, :region_id, :iso_name, :iso2_code])
+  end
+
 end
