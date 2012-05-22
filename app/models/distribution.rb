@@ -9,5 +9,5 @@
 #
 
 class Distribution < ActiveRecord::Base
-  
+  has_many :distribution_components
 end

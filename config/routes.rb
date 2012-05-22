@@ -1,6 +1,6 @@
 SAPI::Application.routes.draw do
 
-  resources :taxon_trees, :only => [:index]
+  resources :taxon_concepts, :only => [:index]
   resources :countries, :only => [:index]
 
   # The priority is based upon order of creation:

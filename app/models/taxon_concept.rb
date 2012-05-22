@@ -24,8 +24,14 @@ class TaxonConcept < ActiveRecord::Base
   belongs_to :taxon_name
   has_many :relationships, :class_name => 'TaxonRelationship', :dependent => :destroy
   has_many :related_taxon_concepts, :class_name => 'TaxonConcept', :through => :relationships
+  has_many :distributions
 
   acts_as_nested_set
+
+  scope :with_distribution, joins(:distributions => :distribution_components)
+  scope :with_country_distribution, with_distribution.
+    where(:"distribution_components.component_type" => 'Country').
+    joins('LEFT JOIN countries ON (countries.id = distribution_components.component_id)')
 
   def wholes
     related_taxon_concepts.includes(:relationships => :taxon_relationship_type).where(:taxon_relationship_types => {:name => 'has_part'})
@@ -41,5 +47,8 @@ class TaxonConcept < ActiveRecord::Base
     super(:include =>[:taxon_name])
   end
 
+  def self.by_country(country_id)
+    TaxonConcept.with_country_distribution.where(:"countries.id" => country_id)
+  end
 
 end
