@@ -1,32 +1,8 @@
 namespace :import do
 
   desc "Import species records from csv file [usage: FILE=[path/to/file] rake import:species"
-  task :species => :environment do
+  task :species => [:environment, "species:copy_data"] do
     TMP_TABLE = 'species_import'
-    if !ENV["FILE"] || !File.file?(Rails.root+ENV["FILE"]) #if the file is not defined, explain and leave.
-      puts "Please specify a valid csv file from which to import species data"
-      puts "Usage: FILE=[path/to/file] rake import:species"
-      next
-    end
-
-    begin
-      puts "Creating tmp table"
-      ActiveRecord::Base.connection.execute "CREATE TABLE #{TMP_TABLE} ( Kingdom varchar, Phylum varchar, Class varchar, TaxonOrder varchar, Family varchar, Genus varchar, Species varchar, SpcInfra varchar, SpcRecId integer, SpcStatus varchar)"
-      puts "Table created"
-    rescue Exception => e
-      puts "Tmp already exists removing data from tmp table before starting the import"
-      ActiveRecord::Base.connection.execute "DELETE FROM #{TMP_TABLE};"
-      puts "Data removed"
-    end
-    puts "Copying data from #{ENV["FILE"]} into tmp table"
-    sql = <<-SQL
-      COPY #{TMP_TABLE} ( Kingdom, Phylum, Class, TaxonOrder, Family, Genus, Species, SpcInfra, SpcRecId, SpcStatus)
-      FROM '#{Rails.root + ENV["FILE"]}'
-      WITH DElIMITER ','
-      CSV HEADER;
-    SQL
-    ActiveRecord::Base.connection.execute(sql)
-    puts "Data copied to tmp table"
     import_data_for 'Kingdom'
     import_data_for 'Phylum', 'Kingdom'
     import_data_for 'Class', 'Phylum'
@@ -43,6 +19,37 @@ namespace :import do
   end
 
   namespace :species do
+    desc 'Creates species_import table'
+    task :create_table => :environment do
+      TMP_TABLE = 'species_import'
+      begin
+        puts "Creating tmp table"
+        ActiveRecord::Base.connection.execute "CREATE TABLE #{TMP_TABLE} ( Kingdom varchar, Phylum varchar, Class varchar, TaxonOrder varchar, Family varchar, Genus varchar, Species varchar, SpcInfra varchar, SpcRecId integer, SpcStatus varchar)"
+        puts "Table created"
+      rescue Exception => e
+        puts "Tmp already exists removing data from tmp table before starting the import"
+        ActiveRecord::Base.connection.execute "DELETE FROM #{TMP_TABLE};"
+        puts "Data removed"
+      end
+    end
+    desc 'Copy data into species_import table'
+    task :copy_data => :create_table do
+      TMP_TABLE = 'species_import'
+      if !ENV["FILE"] || !File.file?(Rails.root+ENV["FILE"]) #if the file is not defined, explain and leave.
+        puts "Please specify a valid csv file from which to import species data"
+        puts "Usage: FILE=[path/to/file] rake import:species"
+        next
+      end
+      puts "Copying data from #{ENV["FILE"]} into tmp table #{TMP_TABLE}"
+      sql = <<-SQL
+        COPY #{TMP_TABLE} ( Kingdom, Phylum, Class, TaxonOrder, Family, Genus, Species, SpcInfra, SpcRecId, SpcStatus)
+        FROM '#{Rails.root + ENV["FILE"]}'
+        WITH DElIMITER ','
+        CSV HEADER;
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
+      puts "Data copied to tmp table"
+    end
     desc 'Removes species_import table'
     task :remove_table => :environment do
       TMP_TABLE = 'species_import'

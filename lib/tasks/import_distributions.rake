@@ -1,31 +1,8 @@
 namespace :import do
 
   desc 'Import distributions from csv file [usage: FILE=[path/to/file] rake import:distributions'
-  task :distributions => :environment do
+  task :distributions => [:environment, "distributions:copy_data"] do
     TMP_TABLE = 'distribution_import'
-    if !ENV["FILE"] || !File.file?(Rails.root+ENV["FILE"]) #if the file is not defined, explain and leave.
-      puts "Please specify a valid csv file for the distribution from which to import distribution data"
-      puts "Usage: FILE=[path/to/file] rake import:distributions"
-      next
-    end
-    begin
-      puts "Creating tmp table: #{TMP_TABLE}"
-      ActiveRecord::Base.connection.execute "CREATE TABLE #{TMP_TABLE} ( species_id integer, country_id integer, country_name varchar);"
-      puts "Table created"
-    rescue Exception => e
-      puts "Tmp already exists removing data from tmp table before starting the import"
-      ActiveRecord::Base.connection.execute "DELETE FROM #{TMP_TABLE};"
-      puts "Data removed"
-    end
-    puts "Copying data from #{ENV["FILE"]} into tmp table"
-    sql = <<-SQL
-      COPY #{TMP_TABLE} (species_id, country_id, country_name)
-      FROM '#{Rails.root + ENV["FILE"]}'
-      WITH DElIMITER ','
-      CSV HEADER;
-    SQL
-    ActiveRecord::Base.connection.execute(sql)
-    puts "Data copied to tmp table"
     puts "There are #{Distribution.count} distributions in the database."
     sql = <<-SQL
       INSERT INTO distributions(taxon_concept_id, created_at, updated_at)
@@ -56,8 +33,38 @@ namespace :import do
     puts "There are now #{DistributionComponent.count} distributions components in the database"
   end
 
-
   namespace :distributions do
+    desc 'Creates distribution_import table'
+    task :create_table => :environment do
+      TMP_TABLE = 'distribution_import'
+      begin
+        puts "Creating tmp table: #{TMP_TABLE}"
+        ActiveRecord::Base.connection.execute "CREATE TABLE #{TMP_TABLE} ( species_id integer, country_id integer, country_name varchar);"
+        puts "Table created"
+      rescue Exception => e
+        puts "Tmp already exists removing data from tmp table before starting the import"
+        ActiveRecord::Base.connection.execute "DELETE FROM #{TMP_TABLE};"
+        puts "Data removed"
+      end
+    end
+    desc 'Copy data into distribution_import table'
+    task :copy_data => :create_table do
+      TMP_TABLE = 'distribution_import'
+      if !ENV["FILE"] || !File.file?(Rails.root+ENV["FILE"]) #if the file is not defined, explain and leave.
+        puts "Please specify a valid csv file for the distribution from which to import distribution data"
+        puts "Usage: FILE=[path/to/file] rake import:distributions"
+        next
+      end
+      puts "Copying data from #{ENV["FILE"]} into tmp table #{TMP_TABLE}"
+      sql = <<-SQL
+        COPY #{TMP_TABLE} (species_id, country_id, country_name)
+        FROM '#{Rails.root + ENV["FILE"]}'
+        WITH DElIMITER ','
+        CSV HEADER;
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
+      puts "Data copied to tmp table"
+    end
     desc 'Removes distribution_import table'
     task :remove_table => :environment do
       TMP_TABLE = 'distribution_import'

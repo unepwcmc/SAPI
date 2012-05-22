@@ -6,31 +6,8 @@ namespace :import do
   ### 1- check current character encoding with: file path/to/file
   ### 2- change character encoding: iconv -f original_charset -t utf-8 originalfile > newfile
   desc 'Import countries from csv file [usage: FILE=[path/to/file] rake import:countries'
-  task :countries => :environment do
+  task :countries => [:environment, "countries:copy_data"] do
     TMP_TABLE = 'countries_import'
-    if !ENV["FILE"] || !File.file?(Rails.root+ENV["FILE"]) #if the file is not defined, explain and leave.
-      puts "Please specify a valid csv file from which to import countries data"
-      puts "Usage: FILE=[path/to/file] rake import:countries"
-      next
-    end
-    begin
-      puts "Creating tmp table: #{TMP_TABLE}"
-      ActiveRecord::Base.connection.execute "CREATE TABLE #{TMP_TABLE} ( legacy_id integer, iso2 varchar, iso3 varchar, name varchar, long_name varchar);"
-      puts "Table created"
-    rescue Exception => e
-      puts "Tmp already exists removing data from tmp table before starting the import"
-      ActiveRecord::Base.connection.execute "DELETE FROM #{TMP_TABLE};"
-      puts "Data removed"
-    end
-    puts "Copying data from #{ENV["FILE"]} into tmp table"
-    sql = <<-SQL
-      COPY #{TMP_TABLE} ( legacy_id, iso2, iso3, name, long_name)
-      FROM '#{Rails.root + ENV["FILE"]}'
-      WITH DElIMITER ','
-      CSV HEADER;
-    SQL
-    ActiveRecord::Base.connection.execute(sql)
-    puts "Data copied to tmp table"
     puts "There are #{Country.count} countries in the database."
     sql = <<-SQL
       INSERT INTO countries(iso_name, iso2_code, iso3_code, legacy_id, created_at, updated_at)
@@ -45,8 +22,38 @@ namespace :import do
     puts "There are now #{Country.count} countries in the database"
   end
 
-
   namespace :countries do
+    desc 'Creates countries_import table'
+    task :create_table => :environment do
+      TMP_TABLE = 'countries_import'
+      begin
+        puts "Creating tmp table: #{TMP_TABLE}"
+        ActiveRecord::Base.connection.execute "CREATE TABLE #{TMP_TABLE} ( legacy_id integer, iso2 varchar, iso3 varchar, name varchar, long_name varchar);"
+        puts "Table created"
+      rescue Exception => e
+        puts "Tmp already exists removing data from tmp table before starting the import"
+        ActiveRecord::Base.connection.execute "DELETE FROM #{TMP_TABLE};"
+        puts "Data removed"
+      end
+    end
+    desc 'Copy data into countries_import table'
+    task :copy_data => :create_table do
+      TMP_TABLE = 'countries_import'
+      if !ENV["FILE"] || !File.file?(Rails.root+ENV["FILE"]) #if the file is not defined, explain and leave.
+        puts "Please specify a valid csv file from which to import countries data"
+        puts "Usage: FILE=[path/to/file] rake import:countries"
+        next
+      end
+      puts "Copying data from #{ENV["FILE"]} into tmp table #{TMP_TABLE}"
+      sql = <<-SQL
+        COPY #{TMP_TABLE} ( legacy_id, iso2, iso3, name, long_name)
+        FROM '#{Rails.root + ENV["FILE"]}'
+        WITH DElIMITER ','
+        CSV HEADER;
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
+      puts "Data copied to tmp table"
+    end
     desc 'Removes countries_import table'
     task :remove_table => :environment do
       TMP_TABLE = 'countries_import'
