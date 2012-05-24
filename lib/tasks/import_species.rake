@@ -49,7 +49,8 @@ namespace :import do
   WITH DElIMITER ','
   CSV HEADER;
 PSQL
-      system("psql -c \"#{psql}\" #{ActiveRecord::Base.connection.current_database}")
+      db_conf = YAML.load(File.open(Rails.root + "config/database.yml"))[Rails.env]
+      system("export PGPASSWORD=#{db_conf["password"]} && psql -h #{db_conf["host"] || "localhost"} -U#{db_conf["username"]} -c \"#{psql}\" #{db_conf["database"]}")
       puts "Data copied to tmp table"
     end
     desc 'Removes species_import table'
