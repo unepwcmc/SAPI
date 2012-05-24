@@ -7,7 +7,7 @@ class Checklist
     #TODO
     #filter by countries
     @countries = options[:country_ids] || nil
-    @taxon_concepts_rel = @taxon_concepts_rel.by_country(@countries)
+    @taxon_concepts_rel = @taxon_concepts_rel.by_country(@countries) if @countries
     #filter by higher taxa
     @higher_taxa = options[:higher_taxon_ids] || nil
     #TODO
@@ -16,6 +16,7 @@ class Checklist
     #checklist (flat, alphabetical order)
     @output_layout = options[:output_layout] || :taxonomy
     #TODO
+    @taxon_concepts_rel = @taxon_concepts_rel.order(:lft) unless @countries
     @taxon_concepts = []
     @added = {}
   end
@@ -33,8 +34,6 @@ class Checklist
 
   def generate
     #start with a naive implementation
-    res = []
-    fetched = {}
     @taxon_concepts_rel.all.each do |tc|
       ancestors = tc.ancestors.cites_checklist
       add_ary ancestors
