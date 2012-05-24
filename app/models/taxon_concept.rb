@@ -26,7 +26,8 @@ class TaxonConcept < ActiveRecord::Base
     :dependent => :destroy
   has_many :related_taxon_concepts, :class_name => 'TaxonConcept',
     :through => :relationships
-  has_many :distributions
+  has_many :taxon_concept_geo_entities
+  has_many :geo_entities, :through => :taxon_concept_geo_entities
 
   scope :checklist, select('taxon_concepts.id, taxon_concepts.depth,
     taxon_concepts.lft, taxon_concepts.rgt, taxon_concepts.parent_id,
@@ -53,16 +54,8 @@ class TaxonConcept < ActiveRecord::Base
 
 class << self
   def by_country(country_ids)
-   joins(
-  "LEFT JOIN
-    (
-      SELECT DISTINCT distributions.taxon_concept_id, countries.id AS country_id
-      FROM distributions
-      LEFT JOIN distribution_components ON (distribution_components.distribution_id = distributions.id)
-      LEFT JOIN countries ON (countries.id = distribution_components.component_id)
-      WHERE distribution_components.component_type = 'Country'
-    ) country_distributions ON taxon_concepts.id = country_distributions.taxon_concept_id"
-  ).where("country_distributions.country_id" => country_ids)
+    joins(:geo_entities => :geo_entity_type).where(:"geo_entity_types.name" => 'COUNTRY').
+    where("geo_entities.id" => country_ids)
   end
 end
 

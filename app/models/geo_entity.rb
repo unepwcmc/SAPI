@@ -7,4 +7,9 @@ class GeoEntity < ActiveRecord::Base
   has_many :related_geo_entities, :class_name => 'GeoEntity',
     :through => :relationships
   has_many :taxon_concept_geo_entities
+
+  def as_json(options={})
+    super(:only =>[:id, :name])
+  end
+
 end
