@@ -3,34 +3,16 @@ namespace :import do
   desc 'Import distributions from csv file [usage: FILE=[path/to/file] rake import:distributions'
   task :distributions => [:environment, "distributions:copy_data"] do
     TMP_TABLE = 'distribution_import'
-    puts "There are #{Distribution.count} distributions in the database."
+    puts "There are #{TaxonConceptGeoEntity.count} taxon concept geo entities in the database."
     sql = <<-SQL
-      INSERT INTO distributions(taxon_concept_id, created_at, updated_at)
-      SELECT DISTINCT taxon_concepts.id, current_date, current_date
-        FROM 
-          public.taxon_concepts, 
-          public.distribution_import
-          WHERE 
-            distribution_import.species_id = taxon_concepts.legacy_id
-          AND NOT EXISTS (
-            SELECT id from distributions
-            WHERE taxon_concept_id = taxon_concepts.id
-          );
-    SQL
-    ActiveRecord::Base.connection.execute(sql)
-    puts "There are now #{Distribution.count} distributions in the database"
-    puts "Added distribution, going to add distribution components"
-    puts "There are #{DistributionComponent.count} distributions components in the database."
-    sql = <<-SQL
-      INSERT INTO distribution_components(distribution_id, component_id, component_type, created_at, updated_at)
-      SELECT DISTINCT distributions.id, countries.id, 'Country', current_date, current_date
+      INSERT INTO taxon_concept_geo_entities(taxon_concept_id, geo_entity_id, created_at, updated_at)
+      SELECT DISTINCT species.id, geo_entities.id, current_date, current_date
         FROM #{TMP_TABLE}
-        LEFT JOIN countries ON countries.legacy_id = country_id
+        LEFT JOIN geo_entities ON geo_entities.legacy_id = country_id AND geo_entities.legacy_type = 'COUNTRY'
         LEFT JOIN taxon_concepts as species ON species.legacy_id = species_id
-        LEFT JOIN distributions ON distributions.taxon_concept_id = species.id
     SQL
     ActiveRecord::Base.connection.execute(sql)
-    puts "There are now #{DistributionComponent.count} distributions components in the database"
+    puts "There are now #{TaxonConceptGeoEntity.count} taxon concept geo entities in the database"
   end
 
   namespace :distributions do
