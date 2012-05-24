@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120524123107) do
+ActiveRecord::Schema.define(:version => 20120524140245) do
 
   create_table "authors", :force => true do |t|
     t.string   "first_name"
@@ -19,34 +19,6 @@ ActiveRecord::Schema.define(:version => 20120524123107) do
     t.string   "last_name",   :null => false
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-  end
-
-  create_table "bru_distribution_components", :force => true do |t|
-    t.integer  "distribution_id", :null => false
-    t.integer  "component_id",    :null => false
-    t.string   "component_type",  :null => false
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
-  end
-
-  create_table "brus", :force => true do |t|
-    t.string   "code",       :null => false
-    t.integer  "level",      :null => false
-    t.string   "name"
-    t.integer  "parent_id"
-    t.integer  "country_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "countries", :force => true do |t|
-    t.string   "iso_name",   :null => false
-    t.string   "iso2_code"
-    t.string   "iso3_code"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-    t.integer  "region_id"
-    t.integer  "legacy_id"
   end
 
   create_table "countries_import", :id => false, :force => true do |t|
@@ -57,38 +29,16 @@ ActiveRecord::Schema.define(:version => 20120524123107) do
     t.string  "long_name", :limit => nil
   end
 
-  create_table "country_distribution_components", :force => true do |t|
-    t.integer  "distribution_id", :null => false
-    t.integer  "component_id",    :null => false
-    t.string   "component_type",  :null => false
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
-  end
-
   create_table "designations", :force => true do |t|
     t.string   "name",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
-  create_table "distribution_components", :force => true do |t|
-    t.integer  "distribution_id", :null => false
-    t.integer  "component_id",    :null => false
-    t.string   "component_type",  :null => false
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
-  end
-
   create_table "distribution_import", :id => false, :force => true do |t|
     t.integer "species_id"
     t.integer "country_id"
     t.string  "country_name", :limit => nil
-  end
-
-  create_table "distributions", :force => true do |t|
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
-    t.integer  "taxon_concept_id", :null => false
   end
 
   create_table "geo_entities", :force => true do |t|
@@ -141,20 +91,6 @@ ActiveRecord::Schema.define(:version => 20120524123107) do
   create_table "references", :force => true do |t|
     t.string   "title",      :null => false
     t.string   "year"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "region_distribution_components", :force => true do |t|
-    t.integer  "distribution_id", :null => false
-    t.integer  "component_id",    :null => false
-    t.string   "component_type",  :null => false
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
-  end
-
-  create_table "regions", :force => true do |t|
-    t.string   "name",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -229,19 +165,6 @@ ActiveRecord::Schema.define(:version => 20120524123107) do
     t.datetime "updated_at",                 :null => false
   end
 
-  add_foreign_key "bru_distribution_components", "brus", :name => "bru_distribution_components_component_id_fkey", :column => "component_id"
-
-  add_foreign_key "brus", "brus", :name => "brus_parent_id_fk", :column => "parent_id"
-  add_foreign_key "brus", "countries", :name => "brus_country_id_fk"
-
-  add_foreign_key "countries", "regions", :name => "countries_regions_id_fk"
-
-  add_foreign_key "country_distribution_components", "countries", :name => "country_distribution_components_component_id_fkey", :column => "component_id"
-
-  add_foreign_key "distribution_components", "distributions", :name => "distribution_components_distribution_id_fk"
-
-  add_foreign_key "distributions", "taxon_concepts", :name => "distributions_taxon_concept_id_fk"
-
   add_foreign_key "geo_entities", "geo_entity_types", :name => "geo_entities_geo_entity_type_id_fk"
 
   add_foreign_key "geo_relationships", "geo_entities", :name => "geo_relationships_geo_entity_id_fk"
@@ -249,8 +172,6 @@ ActiveRecord::Schema.define(:version => 20120524123107) do
   add_foreign_key "geo_relationships", "geo_relationship_types", :name => "geo_relationships_geo_relationship_type_id_fk"
 
   add_foreign_key "ranks", "ranks", :name => "ranks_parent_id_fk", :column => "parent_id"
-
-  add_foreign_key "region_distribution_components", "regions", :name => "region_distribution_components_component_id_fkey", :column => "component_id"
 
   add_foreign_key "taxon_concept_geo_entities", "geo_entities", :name => "taxon_concept_geo_entities_geo_entity_id_fk"
   add_foreign_key "taxon_concept_geo_entities", "taxon_concepts", :name => "taxon_concept_geo_entities_taxon_concept_id_fk"
