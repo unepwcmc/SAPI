@@ -22,33 +22,48 @@ class TaxonConcept < ActiveRecord::Base
   belongs_to :rank
   belongs_to :designation
   belongs_to :taxon_name
-  has_many :relationships, :class_name => 'TaxonRelationship', :dependent => :destroy
-  has_many :related_taxon_concepts, :class_name => 'TaxonConcept', :through => :relationships
+  has_many :relationships, :class_name => 'TaxonRelationship',
+    :dependent => :destroy
+  has_many :related_taxon_concepts, :class_name => 'TaxonConcept',
+    :through => :relationships
   has_many :distributions
+
+  scope :checklist, select('taxon_concepts.id, taxon_concepts.depth,
+    taxon_concepts.lft, taxon_concepts.rgt, taxon_concepts.parent_id,
+    taxon_names.scientific_name, ranks.name AS rank_name').
+    joins(:taxon_name).
+    joins(:rank).
+    joins(:designation)
+  scope :cites_checklist, checklist.where('designations.name' => 'CITES')
 
   acts_as_nested_set
 
-  scope :with_distribution, joins(:distributions => :distribution_components)
-  scope :with_country_distribution, with_distribution.
-    where(:"distribution_components.component_type" => 'Country').
-    joins('LEFT JOIN countries ON (countries.id = distribution_components.component_id)')
-
   def wholes
-    related_taxon_concepts.includes(:relationships => :taxon_relationship_type).where(:taxon_relationship_types => {:name => 'has_part'})
+    related_taxon_concepts.includes(:relationships => :taxon_relationship_type).
+    where(:taxon_relationship_types => {:name => 'has_part'})
   end
   def parts
-    related_taxon_concepts.includes(:relationships => :taxon_relationship_type).where(:taxon_relationship_types => {:name => 'is_part_of'})
+    related_taxon_concepts.includes(:relationships => :taxon_relationship_type).
+    where(:taxon_relationship_types => {:name => 'is_part_of'})
   end
   def synonyms
-    related_taxon_concepts.includes(:relationships => :taxon_relationship_type).where(:taxon_relationship_types => {:name => 'is_synonym'})
+    related_taxon_concepts.includes(:relationships => :taxon_relationship_type).
+    where(:taxon_relationship_types => {:name => 'is_synonym'})
   end
 
-  def as_json(options={})
-    super(:include =>[:taxon_name])
+class << self
+  def by_country(country_ids)
+   joins(
+  "LEFT JOIN
+    (
+      SELECT DISTINCT distributions.taxon_concept_id, countries.id AS country_id
+      FROM distributions
+      LEFT JOIN distribution_components ON (distribution_components.distribution_id = distributions.id)
+      LEFT JOIN countries ON (countries.id = distribution_components.component_id)
+      WHERE distribution_components.component_type = 'Country'
+    ) country_distributions ON taxon_concepts.id = country_distributions.taxon_concept_id"
+  ).where("country_distributions.country_id" => country_ids)
   end
-
-  def self.by_country(country_id)
-    TaxonConcept.with_country_distribution.where(:"countries.id" => country_id)
-  end
+end
 
 end

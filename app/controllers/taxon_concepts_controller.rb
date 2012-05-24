@@ -1,10 +1,6 @@
 class TaxonConceptsController < ApplicationController
   def index
-    res = if params[:country_id]
-      TaxonConcept.by_country(params[:country_id])
-    else
-      TaxonConcept.all
-    end
-    render :json => res
+    c = Checklist.new(:country_ids => params[:country_id] ? [params[:country_id]] : nil)
+    render :json => c.generate
   end
 end
