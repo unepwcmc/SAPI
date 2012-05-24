@@ -43,13 +43,13 @@ namespace :import do
         next
       end
       puts "Copying data from #{ENV["FILE"]} into tmp table #{TMP_TABLE}"
-      sql = <<-SQL
-        COPY #{TMP_TABLE} ( Kingdom, Phylum, Class, TaxonOrder, Family, Genus, Species, SpcInfra, SpcRecId, SpcStatus)
-        FROM '#{Rails.root + ENV["FILE"]}'
-        WITH DElIMITER ','
-        CSV HEADER;
-      SQL
-      ActiveRecord::Base.connection.execute(sql)
+      psql = <<-PSQL
+\\COPY #{TMP_TABLE} ( Kingdom, Phylum, Class, TaxonOrder, Family, Genus, Species, SpcInfra, SpcRecId, SpcStatus)
+  FROM '#{Rails.root + ENV["FILE"]}'
+  WITH DElIMITER ','
+  CSV HEADER;
+PSQL
+      system("psql -c \"#{psql}\" #{ActiveRecord::Base.connection.current_database}")
       puts "Data copied to tmp table"
     end
     desc 'Removes species_import table'
