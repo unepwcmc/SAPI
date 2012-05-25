@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120524140245) do
+ActiveRecord::Schema.define(:version => 20120525071940) do
 
   create_table "authors", :force => true do |t|
     t.string   "first_name"
@@ -119,14 +119,17 @@ ActiveRecord::Schema.define(:version => 20120524140245) do
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
-    t.integer  "rank_id",        :null => false
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.integer  "rank_id",                                :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.integer  "spcrecid"
     t.integer  "depth"
-    t.integer  "designation_id", :null => false
-    t.integer  "taxon_name_id",  :null => false
+    t.integer  "designation_id",                         :null => false
+    t.integer  "taxon_name_id",                          :null => false
     t.integer  "legacy_id"
+    t.boolean  "inherit_distribution", :default => true, :null => false
+    t.boolean  "inherit_legislation",  :default => true, :null => false
+    t.boolean  "inherit_references",   :default => true, :null => false
   end
 
   create_table "taxon_distributions", :force => true do |t|

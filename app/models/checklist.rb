@@ -39,7 +39,7 @@ class Checklist
       add_ary ancestors
       add tc
       unless @level_of_listing
-        descendants = tc.descendants.cites_checklist
+        descendants = tc.descendants.cites_checklist.where(:inherit_distribution => true)
         add_ary descendants
       end
     end
