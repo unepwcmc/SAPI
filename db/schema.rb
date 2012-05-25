@@ -21,24 +21,10 @@ ActiveRecord::Schema.define(:version => 20120525074930) do
     t.datetime "updated_at",  :null => false
   end
 
-  create_table "countries_import", :id => false, :force => true do |t|
-    t.integer "legacy_id"
-    t.string  "iso2",      :limit => nil
-    t.string  "iso3",      :limit => nil
-    t.string  "name",      :limit => nil
-    t.string  "long_name", :limit => nil
-  end
-
   create_table "designations", :force => true do |t|
     t.string   "name",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-  end
-
-  create_table "distribution_import", :id => false, :force => true do |t|
-    t.integer "species_id"
-    t.integer "country_id"
-    t.string  "country_name", :limit => nil
   end
 
   create_table "geo_entities", :force => true do |t|
@@ -93,19 +79,6 @@ ActiveRecord::Schema.define(:version => 20120525074930) do
     t.string   "year"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-  end
-
-  create_table "species_import", :id => false, :force => true do |t|
-    t.string  "kingdom",    :limit => nil
-    t.string  "phylum",     :limit => nil
-    t.string  "class",      :limit => nil
-    t.string  "taxonorder", :limit => nil
-    t.string  "family",     :limit => nil
-    t.string  "genus",      :limit => nil
-    t.string  "species",    :limit => nil
-    t.string  "spcinfra",   :limit => nil
-    t.integer "spcrecid"
-    t.string  "spcstatus",  :limit => nil
   end
 
   create_table "taxon_concept_geo_entities", :force => true do |t|
