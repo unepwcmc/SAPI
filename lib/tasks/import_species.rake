@@ -47,7 +47,7 @@ namespace :import do
 \\COPY #{TMP_TABLE} ( Kingdom, Phylum, Class, TaxonOrder, Family, Genus, Species, SpcInfra, SpcRecId, SpcStatus)
   FROM '#{Rails.root + ENV["FILE"]}'
   WITH DElIMITER ','
-  CSV HEADER;
+  CSV HEADER
 PSQL
       db_conf = YAML.load(File.open(Rails.root + "config/database.yml"))[Rails.env]
       system("export PGPASSWORD=#{db_conf["password"]} && psql -h #{db_conf["host"] || "localhost"} -U#{db_conf["username"]} -c \"#{psql}\" #{db_conf["database"]}")
