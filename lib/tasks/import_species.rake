@@ -45,7 +45,7 @@ namespace :import do
       end
       puts "Copying data from #{ENV["FILE"]} into tmp table #{TMP_TABLE}"
       psql = <<-PSQL
-      \\COPY #{TMP_TABLE} ( Kingdom, Phylum, Class, TaxonOrder, Family, Genus, Species, SpcInfra, SpcRecId, SpcStatus)
+\\COPY #{TMP_TABLE} ( Kingdom, Phylum, Class, TaxonOrder, Family, Genus, Species, SpcInfra, SpcRecId, SpcStatus)
         FROM '#{Rails.root + ENV["FILE"]}'
         WITH DElIMITER ','
         CSV HEADER
