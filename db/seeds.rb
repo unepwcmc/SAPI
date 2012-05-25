@@ -6,6 +6,7 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+puts "#{TaxonConceptGeoEntity.delete_all} taxon concept geo entities deleted"
 puts "#{TaxonRelationship.delete_all} taxon relationships deleted"
 puts "#{TaxonRelationshipType.delete_all} taxon relationship types deleted"
 puts "#{TaxonConcept.delete_all} taxon_concepts deleted"
@@ -53,7 +54,7 @@ name = TaxonName.create(:scientific_name => 'Mellivora')
 genus = TaxonConcept.create(:rank_id => Rank.find_by_name('Genus').id,
   :taxon_name_id => name.id, :parent_id => family.id,
   :designation_id => cites.id)
-name = TaxonName.create(:scientific_name => 'Mellivora capensis')
+name = TaxonName.create(:scientific_name => 'Capensis')
 species = TaxonConcept.create(:rank_id => Rank.find_by_name('Species').id,
   :taxon_name_id => name.id, :parent_id => genus.id,
   :designation_id => cites.id)
@@ -72,19 +73,19 @@ genus = TaxonConcept.create(:rank_id => Rank.find_by_name('Genus').id,
   :taxon_name_id => name.id, :parent_id => family.id,
   :designation_id => cites.id)
 #loxodonta africana CITES
-name = TaxonName.create(:scientific_name => 'Loxodonta africana')
+name = TaxonName.create(:scientific_name => 'Africana')
 loxodonta_cites = TaxonConcept.create(
   :rank_id => Rank.find_by_name('Species').id,
   :taxon_name_id => name.id, :parent_id => genus.id,
   :designation_id => cites.id)
 #loxodonta africana CMS
-name = TaxonName.create(:scientific_name => 'Loxodonta africana')
+name = TaxonName.create(:scientific_name => 'Africana')
 loxodonta_cms1 = TaxonConcept.create(
   :rank_id => Rank.find_by_name('Species').id,
   :taxon_name_id => name.id, :parent_id => genus.id,
   :designation_id => cms.id
 )
-name = TaxonName.create(:scientific_name => 'Loxodonta cyclotis')
+name = TaxonName.create(:scientific_name => 'Cyclotis')
 loxodonta_cms2 = TaxonConcept.create(
   :rank_id => Rank.find_by_name('Species').id,
   :taxon_name_id => name.id, :parent_id => genus.id,
@@ -128,15 +129,15 @@ name = TaxonName.create(:scientific_name => 'Viola')
 genus = TaxonConcept.create(:rank_id => Rank.find_by_name('Genus').id,
   :taxon_name_id => name.id, :parent_id => family.id,
   :designation_id => cites.id)
-name = TaxonName.create(:scientific_name => 'Viola montana L.')
+name = TaxonName.create(:scientific_name => 'Montana L.')
 viola_montana = TaxonConcept.create(:rank_id => Rank.find_by_name('Species').id,
   :taxon_name_id => name.id, :parent_id => genus.id,
   :designation_id => cites.id)
-name = TaxonName.create(:scientific_name => 'Viola canina L.')
+name = TaxonName.create(:scientific_name => 'Canina L.')
 viola_canina = TaxonConcept.create(:rank_id => Rank.find_by_name('Species').id,
   :taxon_name_id => name.id, :parent_id => genus.id,
   :designation_id => cites.id)
-name = TaxonName.create(:scientific_name => 'Viola canina L. ssp. montana (L.) Hartman')
+name = TaxonName.create(:scientific_name => 'Montana (L.) Hartman')
 viola_canina_ssp = TaxonConcept.create(:rank_id => Rank.find_by_name('Subspecies').id,
   :taxon_name_id => name.id, :parent_id => viola_canina.id,
   :designation_id => cites.id)
