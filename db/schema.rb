@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120525071940) do
+ActiveRecord::Schema.define(:version => 20120525074930) do
 
   create_table "authors", :force => true do |t|
     t.string   "first_name"
@@ -131,6 +131,8 @@ ActiveRecord::Schema.define(:version => 20120525071940) do
     t.boolean  "inherit_legislation",  :default => true, :null => false
     t.boolean  "inherit_references",   :default => true, :null => false
   end
+
+  add_index "taxon_concepts", ["lft"], :name => "index_taxon_concepts_on_lft"
 
   create_table "taxon_distributions", :force => true do |t|
     t.integer  "taxon_id",        :null => false

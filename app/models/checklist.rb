@@ -17,33 +17,40 @@ class Checklist
     @output_layout = options[:output_layout] || :taxonomy
     #TODO
     @taxon_concepts_rel = @taxon_concepts_rel.order(:lft) unless @countries
-    @taxon_concepts = []
-    @added = {}
-  end
-
-  def add(tc)
-    unless @added[tc.id]
-      @added[tc.id]=true
-      @taxon_concepts << tc
-    end
-  end
-  
-  def add_ary(tc_ary)
-    tc_ary.each{ |tc| add(tc) }
   end
 
   def generate
-    #start with a naive implementation
-    @taxon_concepts_rel.all.each do |tc|
-      ancestors = tc.ancestors.cites_checklist
-      add_ary ancestors
-      add tc
-      unless @level_of_listing
-        descendants = tc.descendants.cites_checklist.where(:inherit_distribution => true)
-        add_ary descendants
+    ancestor_ranges = []
+    descendant_ranges = []
+    @taxon_concepts_rel.each do |tc|
+      ancestor_ranges << (tc.lft..tc.rgt)
+      descendant_ranges << (tc.lft...tc.rgt)
+    end
+    ancestor_ranges = Checklist.merge_ranges(ancestor_ranges)
+    ancestor_conditions = ancestor_ranges.map{ |r| "(lft <= #{r.begin} AND rgt >= #{r.end})" }
+    descendant_ranges = Checklist.merge_ranges(descendant_ranges)
+    descendant_conditions = descendant_ranges.map{ |r| "(lft >= #{r.begin} AND lft < #{r.end})" }
+    TaxonConcept.cites_checklist.
+      where((ancestor_conditions.join(' OR ') +
+        ' OR ' +
+        '((' + descendant_conditions.join(' OR ') + ') AND ' + "inherit_distribution = true)")).
+      order('lft')
+  end
+
+  private
+  def self.merge_ranges(ranges)
+    ranges = ranges.sort_by {|r| r.first }
+    *outages = ranges.shift
+    ranges.each do |r|
+      lastr = outages[-1]
+      if lastr.last >= r.first - 1
+        outages[-1] = lastr.first..[r.last, lastr.last].max
+      else
+        outages.push(r)
       end
     end
-    @taxon_concepts
+    outages
   end
+
 
 end
