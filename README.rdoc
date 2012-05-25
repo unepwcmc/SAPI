@@ -61,6 +61,7 @@ intra-designational:
 === Geographic Entities
 
 ==== Geographic Entity types
+  - CITES Region
   - Region
   - Country
   - BRU

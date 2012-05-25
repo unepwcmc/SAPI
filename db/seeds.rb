@@ -13,6 +13,20 @@ puts "#{TaxonConcept.delete_all} taxon_concepts deleted"
 puts "#{TaxonName.delete_all} taxon_names deleted"
 puts "#{Rank.delete_all} ranks deleted"
 puts "#{Designation.delete_all} designations deleted"
+puts "#{GeoEntityType.delete_all} geo entity types deleted"
+puts "#{GeoRelationshipType.delete_all} geo relationship types deleted"
+
+#Create GeoEntityTypes
+["CITES REGION", "REGION", "COUNTRY", "STATE", "BRU", "TERRITORY", "AQUATIC TERRITORY"].each do |type|
+  entity_type = GeoEntityType.create(name: type)
+  puts "Added GeoEntityType #{type}, with id: #{entity_type.id}"
+end
+
+#Create GeoRelationshipTypes
+["Contains", "Intersects"].each do |type|
+  rel_type = GeoRelationshipType.create(name: type)
+  puts "Added GeoRelationshipType #{type}, with id: #{rel_type.id}"
+end
 
 #Create rank seeds
 parent_rank = nil

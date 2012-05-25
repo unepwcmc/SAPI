@@ -32,7 +32,7 @@ namespace :import do
     desc 'Copy data into distribution_import table'
     task :copy_data => :create_table do
       TMP_TABLE = 'distribution_import'
-      ENV["FILE"] ||= '/lib/assets/files/species_distributions.csv'
+      ENV["FILE"] ||= 'lib/assets/files/species_distributions.csv'
       if !ENV["FILE"] || !File.file?(Rails.root+ENV["FILE"]) #if the file is not defined, explain and leave.
         puts "Please specify a valid csv file for the distribution from which to import distribution data"
         puts "Usage: FILE=[path/to/file] rake import:distributions"
