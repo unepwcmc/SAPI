@@ -32,6 +32,7 @@ namespace :import do
     desc 'Copy data into distribution_import table'
     task :copy_data => :create_table do
       TMP_TABLE = 'distribution_import'
+      ENV["FILE"] ||= 'lib/assets/files/species_distributions.csv'
       if !ENV["FILE"] || !File.file?(Rails.root+ENV["FILE"]) #if the file is not defined, explain and leave.
         puts "Please specify a valid csv file for the distribution from which to import distribution data"
         puts "Usage: FILE=[path/to/file] rake import:distributions"
@@ -39,11 +40,11 @@ namespace :import do
       end
       puts "Copying data from #{ENV["FILE"]} into tmp table #{TMP_TABLE}"
       psql = <<-PSQL
-\\COPY #{TMP_TABLE} (species_id, country_id, country_name)
-  FROM '#{Rails.root + ENV["FILE"]}'
-  WITH DElIMITER ','
-  CSV HEADER
-PSQL
+        \\COPY #{TMP_TABLE} (species_id, country_id, country_name)
+          FROM '#{Rails.root + ENV["FILE"]}'
+          WITH DElIMITER ','
+          CSV HEADER
+      PSQL
       db_conf = YAML.load(File.open(Rails.root + "config/database.yml"))[Rails.env]
       system("export PGPASSWORD=#{db_conf["password"]} && psql -h #{db_conf["host"] || "localhost"} -U#{db_conf["username"]} -c \"#{psql}\" #{db_conf["database"]}")
       puts "Data copied to tmp table"

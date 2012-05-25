@@ -28,6 +28,9 @@ We use PostgreSQL. Polymorphic associations are enhanced with this referential i
 http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-in-rails-with-postgresql/
 (hard copy in doc)
 
+=== We are adding foreign_keys to the database by using the following gem:
+  foreigner: https://github.com/matthuhiggins/foreigner
+
 === Importing data for development
   FILE=lib/assets/files/20_animal_species.csv rake import:species
 
@@ -54,3 +57,20 @@ inter-designational:
 intra-designational:
   - synonym
   - homonym
+
+=== Geographic Entities
+
+==== Geographic Entity types
+  - CITES Region
+  - Region
+  - Country
+  - BRU
+  - State
+  - Special Administrative Region
+  - Territory
+  - Overseas Territory
+  - Aquatic Territory
+
+====Geo entities relationships (non-final list):
+  - Contains
+  - Intersects

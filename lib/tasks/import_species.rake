@@ -37,6 +37,7 @@ namespace :import do
     desc 'Copy data into species_import table'
     task :copy_data => :create_table do
       TMP_TABLE = 'species_import'
+      ENV["FILE"] ||= 'lib/assets/files/species.csv'
       if !ENV["FILE"] || !File.file?(Rails.root+ENV["FILE"]) #if the file is not defined, explain and leave.
         puts "Please specify a valid csv file from which to import species data"
         puts "Usage: FILE=[path/to/file] rake import:species"
@@ -44,11 +45,11 @@ namespace :import do
       end
       puts "Copying data from #{ENV["FILE"]} into tmp table #{TMP_TABLE}"
       psql = <<-PSQL
-\\COPY #{TMP_TABLE} ( Kingdom, Phylum, Class, TaxonOrder, Family, Genus, Species, SpcInfra, SpcRecId, SpcStatus)
-  FROM '#{Rails.root + ENV["FILE"]}'
-  WITH DElIMITER ','
-  CSV HEADER
-PSQL
+      \\COPY #{TMP_TABLE} ( Kingdom, Phylum, Class, TaxonOrder, Family, Genus, Species, SpcInfra, SpcRecId, SpcStatus)
+        FROM '#{Rails.root + ENV["FILE"]}'
+        WITH DElIMITER ','
+        CSV HEADER
+      PSQL
       db_conf = YAML.load(File.open(Rails.root + "config/database.yml"))[Rails.env]
       system("export PGPASSWORD=#{db_conf["password"]} && psql -h #{db_conf["host"] || "localhost"} -U#{db_conf["username"]} -c \"#{psql}\" #{db_conf["database"]}")
       puts "Data copied to tmp table"

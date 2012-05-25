@@ -24,22 +24,6 @@ namespace :import do
   end
 
   namespace :countries do
-    desc 'Inserts basic geo entity types'
-    task :insert_geo_entity_types do
-    puts "There are #{GeoEntityType.count} geo entity types in the database."
-    ['COUNTRY','SUB_NATIONAL','REGION','BRU','AQUATIC'].each do |t|
-      sql = <<-SQL
-        INSERT INTO geo_entity_types(name, created_at, updated_at)
-        SELECT '#{t}', current_date, current_date
-        WHERE NOT EXISTS (
-          SELECT * FROM geo_entity_types
-          WHERE name = '#{t}'
-        );
-      SQL
-      ActiveRecord::Base.connection.execute(sql)
-    end
-    puts "There are now #{GeoEntityType.count} geo entity types in the database"
-    end
     desc 'Creates countries_import table'
     task :create_table => :environment do
       TMP_TABLE = 'countries_import'
@@ -56,6 +40,7 @@ namespace :import do
     desc 'Copy data into countries_import table'
     task :copy_data => :create_table do
       TMP_TABLE = 'countries_import'
+      ENV["FILE"] ||= 'lib/assets/files/countries.csv'
       if !ENV["FILE"] || !File.file?(Rails.root+ENV["FILE"]) #if the file is not defined, explain and leave.
         puts "Please specify a valid csv file from which to import countries data"
         puts "Usage: FILE=[path/to/file] rake import:countries"
@@ -63,11 +48,11 @@ namespace :import do
       end
       puts "Copying data from #{ENV["FILE"]} into tmp table #{TMP_TABLE}"
       psql = <<-PSQL
-\\COPY #{TMP_TABLE} ( legacy_id, iso2, iso3, name, long_name)
-  FROM '#{Rails.root + ENV["FILE"]}'
-  WITH DElIMITER ','
-  CSV HEADER
-PSQL
+        \\COPY #{TMP_TABLE} ( legacy_id, iso2, iso3, name, long_name)
+          FROM '#{Rails.root + ENV["FILE"]}'
+          WITH DElIMITER ','
+          CSV HEADER
+      PSQL
       db_conf = YAML.load(File.open(Rails.root + "config/database.yml"))[Rails.env]
       system("export PGPASSWORD=#{db_conf["password"]} && psql -h #{db_conf["host"] || "localhost"} -U#{db_conf["username"]} -c \"#{psql}\" #{db_conf["database"]}")
       puts "Data copied to tmp table"
