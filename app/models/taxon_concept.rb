@@ -36,9 +36,7 @@ class TaxonConcept < ActiveRecord::Base
     taxon_concepts.lft, taxon_concepts.rgt, taxon_concepts.parent_id,
     taxon_names.scientific_name, ranks.name AS rank_name').
     joins(:taxon_name).
-    joins(:rank).
-    joins(:designation)
-  scope :cites_checklist, checklist.where('designations.name' => 'CITES')
+    joins(:rank)
 
   acts_as_nested_set
 
@@ -56,9 +54,17 @@ class TaxonConcept < ActiveRecord::Base
   end
 
 class << self
-  def by_country(country_ids)
-    joins(:geo_entities => :geo_entity_type).where(:"geo_entity_types.name" => 'COUNTRY').
-    where("geo_entities.id" => country_ids)
+  # options is a hash like 'CITES REGION' => [1,2,3]
+  def by_geo_entities(options)
+    res = joins(:geo_entities => :geo_entity_type)
+    conds = [[]]
+    options.each do |k, v|
+      conds[0] << "geo_entity_types.name = ? AND geo_entities.id = ?"
+      conds << k
+      conds << v
+    end
+    conds[0] = conds[0].join(' OR ')
+    res.where(conds)
   end
 end
 

@@ -1,13 +1,21 @@
 class Checklist
 
   def initialize(options)
-    @taxon_concepts_rel = TaxonConcept.cites_checklist
+    @taxon_concepts_rel = TaxonConcept.scoped.
+      select([:"taxon_concepts.id", :lft, :rgt, :parent_id])
+    @designation = options[:designation] || 'CITES'
+    @taxon_concepts_rel = @taxon_concepts_rel.
+      joins(:designation).
+      where('designations.name' => @designation)
     #limit to the level of listing
     @level_of_listing = options[:level_of_listing] || false
     #TODO
-    #filter by countries
-    @countries = options[:country_ids] || nil
-    @taxon_concepts_rel = @taxon_concepts_rel.by_country(@countries) if @countries
+    #filter by geo entities
+    @geo_options = {}
+    @geo_options['COUNTRY'] = options[:country_ids] unless options[:country_ids].nil?
+    @geo_options['CITES REGION'] = options[:cites_region_ids] unless options[:cites_region_ids].nil?
+    @taxon_concepts_rel = @taxon_concepts_rel.by_geo_entities(@geo_options)
+
     #filter by higher taxa
     @higher_taxa = options[:higher_taxon_ids] || nil
     #TODO
@@ -15,8 +23,6 @@ class Checklist
     #taxonomy (hierarchic, taxonomic order)
     #checklist (flat, alphabetical order)
     @output_layout = options[:output_layout] || :taxonomy
-    #TODO
-    @taxon_concepts_rel = @taxon_concepts_rel.order(:lft) unless @countries
   end
 
   def generate
@@ -26,14 +32,21 @@ class Checklist
       ancestor_ranges << (tc.lft..tc.rgt)
       descendant_ranges << (tc.lft...tc.rgt)
     end
-    ancestor_ranges = Checklist.merge_ranges(ancestor_ranges)
-    ancestor_conditions = ancestor_ranges.map{ |r| "(lft <= #{r.begin} AND rgt >= #{r.end})" }
-    descendant_ranges = Checklist.merge_ranges(descendant_ranges)
-    descendant_conditions = descendant_ranges.map{ |r| "(lft >= #{r.begin} AND lft < #{r.end})" }
-    TaxonConcept.cites_checklist.
-      where((ancestor_conditions.join(' OR ') +
-        ' OR ' +
-        '((' + descendant_conditions.join(' OR ') + ') AND ' + "inherit_distribution = true)")).
+
+    unless ancestor_ranges.empty?
+      ancestor_ranges = Checklist.merge_ranges(ancestor_ranges)
+      ancestor_conditions = ancestor_ranges.map{ |r| "(lft <= #{r.begin} AND rgt >= #{r.end})" }
+      ancestor_conditions = '(' + ancestor_conditions.join(' OR ') + ')'
+    end
+    unless descendant_ranges.empty?
+      descendant_ranges = Checklist.merge_ranges(descendant_ranges)
+      descendant_conditions = descendant_ranges.map{ |r| "(lft >= #{r.begin} AND lft < #{r.end})" }
+      descendant_conditions = '(' + descendant_conditions.join(' OR ') + ')'
+      descendant_conditions = [descendant_conditions, 'inherit_distribution = true'].join(' AND ')
+    end
+    return [] unless ancestor_conditions || descendant_conditions
+    TaxonConcept.checklist.
+      where([ancestor_conditions, descendant_conditions].compact.join(' OR ')).
       order('lft')
   end
 
