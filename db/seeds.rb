@@ -13,6 +13,7 @@ puts "#{TaxonConcept.delete_all} taxon_concepts deleted"
 puts "#{TaxonName.delete_all} taxon_names deleted"
 puts "#{Rank.delete_all} ranks deleted"
 puts "#{Designation.delete_all} designations deleted"
+puts "#{GeoEntity.delete_all} geo entities deleted"
 puts "#{GeoEntityType.delete_all} geo entity types deleted"
 puts "#{GeoRelationshipType.delete_all} geo relationship types deleted"
 
