@@ -40,8 +40,11 @@ http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-i
 
 == Project glossary
 
-  - taxon concept - represents a unique combination of a name and a reference
-  - usage - represents an association of a taxon concept with a name (not necessarily the defining name). can be used to apply multiple name systems to a taxon concept
+  - taxon concept: represents a unique combination of a name and a reference;
+  - usage: represents an association of a taxon concept with a name (not necessarily the defining name). can be used to apply multiple name systems to a taxon concept;
+  - rank: represents the taxonomic rank of a taxon concept. From kingdom to species. The rank model supports hierarchical relations between different ranks;
+  - geo entity: represents any geographic entity from different types (through the geo entity type model);
+  - geo relationship: gives support to relationships between geo entities. For instance a geo entity of type Region may contain multiple geo entities of type Country, this would be managed through a geo relationship of 'Contains'. Where the Region Contains the Countries;
 
 An older standard for plants naming conventions (is there an up to date version of that?): http://www.nhm.ac.uk/hosted_sites/tdwg/plants.html
 
