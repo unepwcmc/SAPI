@@ -21,24 +21,23 @@ ActiveRecord::Schema.define(:version => 20120525074930) do
     t.datetime "updated_at",  :null => false
   end
 
+  create_table "cites_regions_import", :id => false, :force => true do |t|
+    t.string "name", :limit => nil
+  end
+
   create_table "countries_import", :id => false, :force => true do |t|
     t.integer "legacy_id"
-    t.string  "iso2",      :limit => nil
-    t.string  "iso3",      :limit => nil
-    t.string  "name",      :limit => nil
-    t.string  "long_name", :limit => nil
+    t.string  "iso2",          :limit => nil
+    t.string  "iso3",          :limit => nil
+    t.string  "name",          :limit => nil
+    t.string  "long_name",     :limit => nil
+    t.string  "region_number", :limit => nil
   end
 
   create_table "designations", :force => true do |t|
     t.string   "name",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-  end
-
-  create_table "distribution_import", :id => false, :force => true do |t|
-    t.integer "species_id"
-    t.integer "country_id"
-    t.string  "country_name", :limit => nil
   end
 
   create_table "geo_entities", :force => true do |t|
