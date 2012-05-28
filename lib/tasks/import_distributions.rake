@@ -3,7 +3,7 @@ namespace :import do
   desc 'Import distributions from csv file [usage: FILE=[path/to/file] rake import:distributions'
   task :distributions => [:environment, "distributions:copy_data"] do
     TMP_TABLE = 'distribution_import'
-    puts "There are #{TaxonConceptGeoEntity.count} taxon concept geo entities in the database."
+    puts "There are #{TaxonConceptGeoEntity.count} taxon concept distributions in the database."
     sql = <<-SQL
       INSERT INTO taxon_concept_geo_entities(taxon_concept_id, geo_entity_id, created_at, updated_at)
       SELECT DISTINCT species.id, geo_entities.id, current_date, current_date
@@ -12,7 +12,7 @@ namespace :import do
         LEFT JOIN taxon_concepts as species ON species.legacy_id = species_id
     SQL
     ActiveRecord::Base.connection.execute(sql)
-    puts "There are now #{TaxonConceptGeoEntity.count} taxon concept geo entities in the database"
+    puts "There are now #{TaxonConceptGeoEntity.count} taxon concept distributions in the database"
   end
 
   namespace :distributions do
@@ -40,7 +40,7 @@ namespace :import do
       end
       puts "Copying data from #{ENV["FILE"]} into tmp table #{TMP_TABLE}"
       psql = <<-PSQL
-        \\COPY #{TMP_TABLE} (species_id, country_id, country_name)
+\\COPY #{TMP_TABLE} (species_id, country_id, country_name)
           FROM '#{Rails.root + ENV["FILE"]}'
           WITH DElIMITER ','
           CSV HEADER
