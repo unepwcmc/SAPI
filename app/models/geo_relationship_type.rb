@@ -10,4 +10,12 @@
 
 class GeoRelationshipType < ActiveRecord::Base
   attr_accessible :name
+
+  CONTAINS = 'CONTAINS'
+  INTERSECTS = 'INTERSECTS'
+
+  def self.dict
+    [CONTAINS, INTERSECTS]
+  end
+
 end

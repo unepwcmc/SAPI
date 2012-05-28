@@ -10,4 +10,12 @@
 
 class TaxonRelationshipType < ActiveRecord::Base
   attr_accessible :name
+
+  CONTAINS = 'CONTAINS'
+  SYNONYM = 'SYNONYM'
+
+  def self.dict
+    [CONTAINS, SYNONYM]
+  end
+
 end

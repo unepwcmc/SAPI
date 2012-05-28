@@ -10,4 +10,11 @@
 
 class Designation < ActiveRecord::Base
   attr_accessible :name
+
+  CITES = 'CITES'
+
+  def self.dict
+    [CITES]
+  end
+
 end

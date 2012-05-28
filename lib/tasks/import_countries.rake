@@ -8,15 +8,15 @@ namespace :import do
   desc 'Import countries from csv file [usage: FILE=[path/to/file] rake import:countries'
   task :countries => [:environment, "countries:copy_data"] do
     TMP_TABLE = 'countries_import'
-    country_type = GeoEntityType.find_by_name('COUNTRY')
+    country_type = GeoEntityType.find_by_name(GeoEntityType::COUNTRY)
     puts "There are #{GeoEntity.count(conditions: {geo_entity_type_id: country_type.id})} countries in the database."
     sql = <<-SQL
       INSERT INTO geo_entities(name, iso_code2, iso_code3, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at)
-      SELECT DISTINCT INITCAP(BTRIM(TMP.name)), INITCAP(BTRIM(TMP.iso2)), INITCAP(BTRIM(TMP.iso3)), #{country_type.id}, TMP.legacy_id, 'COUNTRY', current_date, current_date
+      SELECT DISTINCT INITCAP(BTRIM(TMP.name)), INITCAP(BTRIM(TMP.iso2)), INITCAP(BTRIM(TMP.iso3)), #{country_type.id}, TMP.legacy_id, '#{GeoEntityType::COUNTRY}', current_date, current_date
       FROM #{TMP_TABLE} AS TMP
       WHERE NOT EXISTS (
         SELECT * FROM geo_entities
-        WHERE legacy_id = TMP.legacy_id AND legacy_type = 'COUNTRY'
+        WHERE legacy_id = TMP.legacy_id AND legacy_type = '#{GeoEntityType::COUNTRY}'
       );
     SQL
     ActiveRecord::Base.connection.execute(sql)
@@ -89,10 +89,10 @@ namespace :import do
           public.geo_entities as countries
         WHERE
           geo_entity_types.id = geo_entities.geo_entity_type_id AND
-          geo_entity_types."name" ilike 'CITES REGION' AND
+          geo_entity_types."name" ilike '#{GeoEntityType::CITES_REGION}' AND
           geo_entities."name" LIKE countries_import.region_number||'%' AND
-          geo_relationship_types."name" ilike 'CONTAINS' AND
-          countries.legacy_id = countries_import.legacy_id AND countries.legacy_type ilike 'COUNTRY' AND
+          geo_relationship_types."name" ilike '#{GeoRelationshipType::CONTAINS}' AND
+          countries.legacy_id = countries_import.legacy_id AND countries.legacy_type ilike '#{GeoEntityType::COUNTRY}' AND
           NOT EXISTS (
             SELECT *
             FROM geo_relationships

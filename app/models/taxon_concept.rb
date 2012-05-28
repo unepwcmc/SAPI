@@ -74,7 +74,7 @@ class << self
     WHERE
       related_taxon_concept_geo_entities.geo_entity_id IN (#{in_clause})
       AND 
-      geo_relationship_types.name = 'Contains'
+      geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'
     )
   SQL
 

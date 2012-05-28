@@ -13,155 +13,148 @@ puts "#{TaxonConcept.delete_all} taxon_concepts deleted"
 puts "#{TaxonName.delete_all} taxon_names deleted"
 puts "#{Rank.delete_all} ranks deleted"
 puts "#{Designation.delete_all} designations deleted"
+puts "#{GeoRelationship.delete_all} geo relationships deleted"
 puts "#{GeoEntity.delete_all} geo entities deleted"
 puts "#{GeoEntityType.delete_all} geo entity types deleted"
 puts "#{GeoRelationshipType.delete_all} geo relationship types deleted"
 
 #Create GeoEntityTypes
-["CITES REGION", "REGION", "COUNTRY", "STATE", "BRU", "TERRITORY", "AQUATIC TERRITORY"].each do |type|
+GeoEntityType.dict.each do |type|
   entity_type = GeoEntityType.create(name: type)
   puts "Added GeoEntityType #{type}, with id: #{entity_type.id}"
 end
 
 #Create GeoRelationshipTypes
-["Contains", "Intersects"].each do |type|
+GeoRelationshipType.dict.each do |type|
   rel_type = GeoRelationshipType.create(name: type)
   puts "Added GeoRelationshipType #{type}, with id: #{rel_type.id}"
 end
 
 #Create rank seeds
 parent_rank = nil
-['Kingdom', 'Phylum', 'Class', 'Order', 'Family', 'Genus', 'Species', 'Subspecies'].each do |rank|
+Rank.dict.each do |rank|
   rank = Rank.create(:name => rank, :parent_id => parent_rank)
   parent_rank = rank.id
   puts "Added rank #{rank.name}, with id #{rank.id}"
 end
 
 #Create designation seeds
-['CITES', 'CMS'].each do |designation|
+[Designation::CITES, 'CMS'].each do |designation|
   Designation.create(:name => designation)
 end
-cites = Designation.find_by_name('CITES')
+cites = Designation.find_by_name(Designation::CITES)
 cms = Designation.find_by_name('CMS')
 #Create taxon seeds
 name = TaxonName.create(:scientific_name => 'Animalia')
-kingdom = TaxonConcept.create(:rank_id => Rank.find_by_name('Kingdom').id,
+kingdom = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::KINGDOM).id,
   :taxon_name_id => name.id, :designation_id => cites.id)
 name = TaxonName.create(:scientific_name => 'Chordata')
-phylum = TaxonConcept.create(:rank_id => Rank.find_by_name('Phylum').id,
+phylum = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::PHYLUM).id,
   :taxon_name_id => name.id, :parent_id => kingdom.id,
   :designation_id => cites.id)
 name = TaxonName.create(:scientific_name => 'Mammalia')
-klass = TaxonConcept.create(:rank_id => Rank.find_by_name('Class').id,
+klass = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::CLASS).id,
   :taxon_name_id => name.id, :parent_id => phylum.id,
   :designation_id => cites.id)
 
 #honey badger
 name = TaxonName.create(:scientific_name => 'Carnivora')
-order = TaxonConcept.create(:rank_id => Rank.find_by_name('Order').id,
+order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
   :taxon_name_id => name.id, :parent_id => klass.id,
   :designation_id => cites.id)
 name = TaxonName.create(:scientific_name => 'Mustelidae')
-family = TaxonConcept.create(:rank_id => Rank.find_by_name('Family').id,
+family = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::FAMILY).id,
   :taxon_name_id => name.id, :parent_id => order.id,
   :designation_id => cites.id)
 name = TaxonName.create(:scientific_name => 'Mellivora')
-genus = TaxonConcept.create(:rank_id => Rank.find_by_name('Genus').id,
+genus = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
   :taxon_name_id => name.id, :parent_id => family.id,
   :designation_id => cites.id)
 name = TaxonName.create(:scientific_name => 'Capensis')
-species = TaxonConcept.create(:rank_id => Rank.find_by_name('Species').id,
+species = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SPECIES).id,
   :taxon_name_id => name.id, :parent_id => genus.id,
   :designation_id => cites.id)
 
 #loxodonta
 name = TaxonName.create(:scientific_name => 'Proboscidea')
-order = TaxonConcept.create(:rank_id => Rank.find_by_name('Order').id,
+order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
   :taxon_name_id => name.id, :parent_id => klass.id,
   :designation_id => cites.id)
 name = TaxonName.create(:scientific_name => 'Elephantidae')
-family = TaxonConcept.create(:rank_id => Rank.find_by_name('Family').id,
+family = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::FAMILY).id,
   :taxon_name_id => name.id, :parent_id => order.id,
   :designation_id => cites.id)
 name = TaxonName.create(:scientific_name => 'Loxodonta')
-genus = TaxonConcept.create(:rank_id => Rank.find_by_name('Genus').id,
+genus = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
   :taxon_name_id => name.id, :parent_id => family.id,
   :designation_id => cites.id)
 #loxodonta africana CITES
 name = TaxonName.create(:scientific_name => 'Africana')
 loxodonta_cites = TaxonConcept.create(
-  :rank_id => Rank.find_by_name('Species').id,
+  :rank_id => Rank.find_by_name(Rank::SPECIES).id,
   :taxon_name_id => name.id, :parent_id => genus.id,
   :designation_id => cites.id)
 #loxodonta africana CMS
 name = TaxonName.create(:scientific_name => 'Africana')
 loxodonta_cms1 = TaxonConcept.create(
-  :rank_id => Rank.find_by_name('Species').id,
+  :rank_id => Rank.find_by_name(Rank::SPECIES).id,
   :taxon_name_id => name.id, :parent_id => genus.id,
   :designation_id => cms.id
 )
 name = TaxonName.create(:scientific_name => 'Cyclotis')
 loxodonta_cms2 = TaxonConcept.create(
-  :rank_id => Rank.find_by_name('Species').id,
+  :rank_id => Rank.find_by_name(Rank::SPECIES).id,
   :taxon_name_id => name.id, :parent_id => genus.id,
   :designation_id => cms.id)
 
 #Create taxon relationship type seeds
-['has_part', 'is_part_of', 'is_synonym'].each do |relationship|
+TaxonRelationshipType.dict.each do |relationship|
   TaxonRelationshipType.create(:name => relationship)
 end
 
 #Create loxodonta relationship seeds
 TaxonRelationship.create(
   :taxon_concept_id => loxodonta_cites.id, :other_taxon_concept_id => loxodonta_cms1.id,
-  :taxon_relationship_type_id => TaxonRelationshipType.find_by_name('has_part').id
+  :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::CONTAINS).id
 )
 TaxonRelationship.create(
   :taxon_concept_id => loxodonta_cites.id, :other_taxon_concept_id => loxodonta_cms2.id,
-  :taxon_relationship_type_id => TaxonRelationshipType.find_by_name('has_part').id
-)
-TaxonRelationship.create(
-  :taxon_concept_id => loxodonta_cms1.id, :other_taxon_concept_id => loxodonta_cites.id,
-  :taxon_relationship_type_id => TaxonRelationshipType.find_by_name('is_part_of').id
-)
-TaxonRelationship.create(
-  :taxon_concept_id => loxodonta_cms2.id, :other_taxon_concept_id => loxodonta_cites.id,
-  :taxon_relationship_type_id => TaxonRelationshipType.find_by_name('is_part_of').id
+  :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::CONTAINS).id
 )
 
 name = TaxonName.create(:scientific_name => 'Plantae')
-kingdom = TaxonConcept.create(:rank_id => Rank.find_by_name('Kingdom').id,
+kingdom = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::KINGDOM).id,
   :taxon_name_id => name.id, :designation_id => cites.id)
 name = TaxonName.create(:scientific_name => 'Violales')
-order = TaxonConcept.create(:rank_id => Rank.find_by_name('Order').id,
+order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
   :taxon_name_id => name.id, :parent_id => kingdom.id,
   :designation_id => cites.id)
 name = TaxonName.create(:scientific_name => 'Violaceae')
-family = TaxonConcept.create(:rank_id => Rank.find_by_name('Family').id,
+family = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::FAMILY).id,
   :taxon_name_id => name.id, :parent_id => order.id,
   :designation_id => cites.id)
 name = TaxonName.create(:scientific_name => 'Viola')
-genus = TaxonConcept.create(:rank_id => Rank.find_by_name('Genus').id,
+genus = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
   :taxon_name_id => name.id, :parent_id => family.id,
   :designation_id => cites.id)
 name = TaxonName.create(:scientific_name => 'Montana L.')
-viola_montana = TaxonConcept.create(:rank_id => Rank.find_by_name('Species').id,
+viola_montana = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SPECIES).id,
   :taxon_name_id => name.id, :parent_id => genus.id,
   :designation_id => cites.id)
 name = TaxonName.create(:scientific_name => 'Canina L.')
-viola_canina = TaxonConcept.create(:rank_id => Rank.find_by_name('Species').id,
+viola_canina = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SPECIES).id,
   :taxon_name_id => name.id, :parent_id => genus.id,
   :designation_id => cites.id)
 name = TaxonName.create(:scientific_name => 'Montana (L.) Hartman')
-viola_canina_ssp = TaxonConcept.create(:rank_id => Rank.find_by_name('Subspecies').id,
+viola_canina_ssp = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SUBSPECIES).id,
   :taxon_name_id => name.id, :parent_id => viola_canina.id,
   :designation_id => cites.id)
 
 TaxonRelationship.create(
   :taxon_concept_id => viola_montana.id, :other_taxon_concept_id => viola_canina_ssp.id,
-  :taxon_relationship_type_id => TaxonRelationshipType.find_by_name('is_synonym').id
+  :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::SYNONYM).id
 )
 TaxonRelationship.create(
   :taxon_concept_id => viola_canina_ssp.id, :other_taxon_concept_id => viola_montana.id,
-  :taxon_relationship_type_id => TaxonRelationshipType.find_by_name('is_synonym').id
+  :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::SYNONYM).id
 )

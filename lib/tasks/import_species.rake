@@ -3,13 +3,13 @@ namespace :import do
   desc "Import species records from csv file [usage: FILE=[path/to/file] rake import:species"
   task :species => [:environment, "species:copy_data"] do
     TMP_TABLE = 'species_import'
-    import_data_for 'Kingdom'
-    import_data_for 'Phylum', 'Kingdom'
-    import_data_for 'Class', 'Phylum'
-    import_data_for 'Order', 'Class', 'TaxonOrder'
-    import_data_for 'Family', 'TaxonOrder'
-    import_data_for 'Genus', 'Family'
-    import_data_for 'Species', 'Genus'
+    import_data_for Rank::KINGDOM
+    import_data_for Rank::PHYLUM, Rank::KINGDOM
+    import_data_for Rank::CLASS, Rank::PHYLUM
+    import_data_for Rank::ORDER, Rank::CLASS, 'TaxonOrder'
+    import_data_for Rank::FAMILY, 'TaxonOrder'
+    import_data_for Rank::GENUS, Rank::FAMILY
+    import_data_for Rank::SPECIES, Rank::GENUS
     #rebuild the tree
     TaxonConcept.rebuild!
     #set the depth on all nodes
@@ -91,10 +91,10 @@ def import_data_for which, parent_column=nil, column_name=nil
   SQL
   ActiveRecord::Base.connection.execute(sql)
 
-  cites = Designation.find_by_name('CITES')
+  cites = Designation.find_by_name(Designation::CITES)
   if parent_column
     sql = <<-SQL
-      INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id, parent_id, created_at, updated_at #{if which == 'Species' then ', legacy_id' end})
+      INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id, parent_id, created_at, updated_at #{if which == Rank::SPECIES then ', legacy_id' end})
          SELECT
            tmp.taxon_name_id
            ,#{rank_id}
@@ -102,10 +102,10 @@ def import_data_for which, parent_column=nil, column_name=nil
            ,taxon_concepts.id
            ,current_date
            ,current_date
-           #{ if which == 'Species' then ',tmp.spcrecid' end}
+           #{ if which == Rank::SPECIES then ',tmp.spcrecid' end}
          FROM
           (
-            SELECT DISTINCT taxon_names.id AS taxon_name_id, #{TMP_TABLE}.#{parent_column}, #{cites.id} AS designation_id #{if which == 'Species' then ", #{TMP_TABLE}.spcrecid" end}
+            SELECT DISTINCT taxon_names.id AS taxon_name_id, #{TMP_TABLE}.#{parent_column}, #{cites.id} AS designation_id #{if which == Rank::SPECIES then ", #{TMP_TABLE}.spcrecid" end}
             FROM #{TMP_TABLE}
             LEFT JOIN taxon_names ON (INITCAP(BTRIM(#{TMP_TABLE}.#{column_name})) LIKE INITCAP(BTRIM(taxon_names.scientific_name)))
             WHERE NOT EXISTS (

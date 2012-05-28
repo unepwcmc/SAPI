@@ -3,7 +3,7 @@ namespace :import do
   desc "Import CITES Regions records from csv file [usage: FILE=[path/to/file] rake import:cites_regions"
   task :cites_regions => [:environment, "cites_regions:copy_data"] do
     TMP_TABLE = 'cites_regions_import'
-    regions_type = GeoEntityType.find_by_name('CITES REGION')
+    regions_type = GeoEntityType.find_by_name(GeoEntityType::CITES_REGION)
     puts "There are #{GeoEntity.count(conditions: {geo_entity_type_id: regions_type.id})} CITES Regions in the database."
     sql = <<-SQL
       INSERT INTO geo_entities(name, geo_entity_type_id, created_at, updated_at)

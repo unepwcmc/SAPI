@@ -3,7 +3,7 @@ class Checklist
   def initialize(options)
     @taxon_concepts_rel = TaxonConcept.scoped.
       select([:"taxon_concepts.id", :lft, :rgt, :parent_id])
-    @designation = options[:designation] || 'CITES'
+    @designation = options[:designation] || Designation::CITES
     @taxon_concepts_rel = @taxon_concepts_rel.
       joins(:designation).
       where('designations.name' => @designation)

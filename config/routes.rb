@@ -2,7 +2,7 @@ SAPI::Application.routes.draw do
 
   resources :taxon_concepts, :only => [:index]
   match 'geo_entities/:geo_entity_type' => 'geo_entities#index',
-    :constraints => {:geo_entity_type => /COUNTRY|CITES_REGION/}
+    :constraints => {:geo_entity_type => /#{GeoEntityType::COUNTRY}|#{GeoEntityType::CITES_REGION}/}
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

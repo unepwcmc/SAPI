@@ -11,4 +11,18 @@
 
 class Rank < ActiveRecord::Base
   attr_accessible :name, :parent_id
+
+  KINGDOM = 'KINGDOM'
+  PHYLUM  = 'PHYLUM'
+  CLASS = 'CLASS'
+  ORDER = 'ORDER'
+  FAMILY = 'FAMILY'
+  GENUS = 'GENUS'
+  SPECIES = 'SPECIES'
+  SUBSPECIES = 'SUBSPECIES'
+
+  def self.dict
+    [KINGDOM, PHYLUM, CLASS, ORDER, FAMILY, GENUS, SPECIES, SUBSPECIES]
+  end
+
 end
