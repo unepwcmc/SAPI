@@ -40,31 +40,44 @@ class TaxonConcept < ActiveRecord::Base
 
   acts_as_nested_set
 
-  def wholes
-    related_taxon_concepts.includes(:relationships => :taxon_relationship_type).
-    where(:taxon_relationship_types => {:name => 'has_part'})
-  end
-  def parts
-    related_taxon_concepts.includes(:relationships => :taxon_relationship_type).
-    where(:taxon_relationship_types => {:name => 'is_part_of'})
-  end
-  def synonyms
-    related_taxon_concepts.includes(:relationships => :taxon_relationship_type).
-    where(:taxon_relationship_types => {:name => 'is_synonym'})
-  end
-
 class << self
-  # options is a hash like 'CITES REGION' => [1,2,3]
-  def by_geo_entities(options)
-    res = joins(:geo_entities => :geo_entity_type)
-    conds = [[]]
-    options.each do |k, v|
-      conds[0] << "geo_entity_types.name = ? AND geo_entities.id = ?"
-      conds << k
-      conds << v
-    end
-    conds[0] = conds[0].join(' OR ')
-    res.where(conds)
+  def by_geo_entities(geo_entities_ids)
+    return scoped if geo_entities_ids.empty?
+    in_clause = geo_entities_ids.join(',')
+    where(:"geo_relationship_types.name" => 'CONTAINS')
+
+    where <<-SQL
+    taxon_concepts.id IN 
+    (
+    SELECT taxon_concepts.id
+    FROM taxon_concepts
+    INNER JOIN taxon_concept_geo_entities
+      ON taxon_concepts.id = taxon_concept_geo_entities.taxon_concept_id
+    WHERE taxon_concept_geo_entities.geo_entity_id IN (#{in_clause})
+
+    UNION
+
+    SELECT DISTINCT taxon_concepts.id
+    FROM taxon_concepts
+    INNER JOIN taxon_concept_geo_entities
+      ON taxon_concepts.id = taxon_concept_geo_entities.taxon_concept_id
+    INNER JOIN geo_entities
+      ON taxon_concept_geo_entities.geo_entity_id = geo_entities.id
+    INNER JOIN geo_relationships
+      ON geo_entities.id = geo_relationships.other_geo_entity_id
+    INNER JOIN geo_relationship_types
+      ON geo_relationships.geo_relationship_type_id = geo_relationship_types.id
+    INNER JOIN geo_entities related_geo_entities
+      ON geo_relationships.geo_entity_id = related_geo_entities.id
+    INNER JOIN taxon_concept_geo_entities related_taxon_concept_geo_entities
+      ON related_geo_entities.id = related_taxon_concept_geo_entities.geo_entity_id
+    WHERE
+      related_taxon_concept_geo_entities.geo_entity_id IN (#{in_clause})
+      AND 
+      geo_relationship_types.name = 'Contains'
+    )
+  SQL
+
   end
 end
 

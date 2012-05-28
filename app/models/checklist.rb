@@ -11,11 +11,12 @@ class Checklist
     @level_of_listing = options[:level_of_listing] || false
     #TODO
     #filter by geo entities
-    @geo_options = {}
-    @geo_options['COUNTRY'] = options[:country_ids] unless options[:country_ids].nil?
-    @geo_options['CITES REGION'] = options[:cites_region_ids] unless options[:cites_region_ids].nil?
-    @taxon_concepts_rel = @taxon_concepts_rel.by_geo_entities(@geo_options)
-
+    @geo_options = []
+    @geo_options += options[:country_ids] unless options[:country_ids].nil?
+    @geo_options += options[:cites_region_ids] unless options[:cites_region_ids].nil?
+    unless @geo_options.empty?
+      @taxon_concepts_rel = @taxon_concepts_rel.by_geo_entities(@geo_options)
+    end
     #filter by higher taxa
     @higher_taxa = options[:higher_taxon_ids] || nil
     #TODO
