@@ -41,16 +41,16 @@ namespace :import do
     desc 'Copy data into countries_import table'
     task :copy_data => :create_table do
       TMP_TABLE = 'countries_import'
-      ENV["FILE"] ||= 'lib/assets/files/countries.csv'
-      if !ENV["FILE"] || !File.file?(Rails.root+ENV["FILE"]) #if the file is not defined, explain and leave.
+      file = ENV["FILE"] || 'lib/assets/files/countries.csv'
+      if !file || !File.file?(Rails.root+file) #if the file is not defined, explain and leave.
         puts "Please specify a valid csv file from which to import countries data"
         puts "Usage: FILE=[path/to/file] rake import:countries"
         next
       end
-      puts "Copying data from #{ENV["FILE"]} into tmp table #{TMP_TABLE}"
+      puts "Copying data from #{file} into tmp table #{TMP_TABLE}"
       psql = <<-PSQL
 \\COPY #{TMP_TABLE} ( legacy_id, iso2, iso3, name, long_name, region_number)
-          FROM '#{Rails.root + ENV["FILE"]}'
+          FROM '#{Rails.root + file}'
           WITH DElIMITER ','
           CSV HEADER
       PSQL

@@ -171,6 +171,11 @@ end
 after "deploy:setup", :setup_production_database_configuration
 
 namespace :seeds do
+
+  desc 'Runs all import tasks, including rake db:seed'
+  task :import_all do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:all"
+  end
   desc 'plants seeds, defined inside db/seeds.rb file'
   task :plant do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} rake db:seed"
