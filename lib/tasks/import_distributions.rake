@@ -8,7 +8,7 @@ namespace :import do
       INSERT INTO taxon_concept_geo_entities(taxon_concept_id, geo_entity_id, created_at, updated_at)
       SELECT DISTINCT species.id, geo_entities.id, current_date, current_date
         FROM #{TMP_TABLE}
-        LEFT JOIN geo_entities ON geo_entities.legacy_id = country_id AND geo_entities.legacy_type = 'COUNTRY'
+        LEFT JOIN geo_entities ON geo_entities.legacy_id = country_id AND geo_entities.legacy_type = '#{GeoEntityType::COUNTRY}'
         LEFT JOIN taxon_concepts as species ON species.legacy_id = species_id
     SQL
     ActiveRecord::Base.connection.execute(sql)
