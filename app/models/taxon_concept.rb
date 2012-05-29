@@ -69,10 +69,8 @@ class << self
       ON geo_relationships.geo_relationship_type_id = geo_relationship_types.id
     INNER JOIN geo_entities related_geo_entities
       ON geo_relationships.geo_entity_id = related_geo_entities.id
-    INNER JOIN taxon_concept_geo_entities related_taxon_concept_geo_entities
-      ON related_geo_entities.id = related_taxon_concept_geo_entities.geo_entity_id
     WHERE
-      related_taxon_concept_geo_entities.geo_entity_id IN (#{in_clause})
+      related_geo_entities.id IN (#{in_clause})
       AND 
       geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'
     )
