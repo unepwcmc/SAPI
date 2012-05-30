@@ -1,5 +1,5 @@
 class Checklist
-
+  attr_accessor :taxon_concepts_rel
   def initialize(options)
     @taxon_concepts_rel = TaxonConcept.scoped.
       select([:"taxon_concepts.id", :lft, :rgt, :parent_id])
@@ -19,39 +19,59 @@ class Checklist
     end
     #filter by higher taxa
     @higher_taxa = options[:higher_taxon_ids] || nil
-    #TODO
     #possible output layouts are:
     #taxonomy (hierarchic, taxonomic order)
     #checklist (flat, alphabetical order)
-    @output_layout = options[:output_layout] || :taxonomy
+    @output_layout = options[:output_layout] || :alphabetical
   end
 
   def generate
+    prepare_ancestor_and_descendants_conditions
+    return [] unless @ancestor_conditions || @descendant_conditions
+    if @output_layout == :taxonomic
+      @taxon_concepts = TaxonConcept.checklist_with_parents.
+        where([@ancestor_conditions, @descendant_conditions].compact.join(' OR ')).
+        order('lft, scientific_name')
+    else
+      @taxon_concepts = TaxonConcept.checklist_with_parents.
+        where([@ancestor_conditions, @descendant_conditions].compact.join(' OR ')).
+        where("rank_name IN (?)", [Rank::GENUS, Rank::SPECIES, Rank::SUBSPECIES]).
+        order('names')
+    end
+    @taxon_concepts.each do |tc|
+      parent_names = tc.names.gsub(/[{}]/,'').split(',')
+      parent_ranks = tc.ranks.gsub(/[{}]/,'').split(',')
+      parent_ranks.each_with_index do |pr, idx|
+        if Rank.dict.include? pr
+          tc.send(pr.downcase+'_name=', parent_names[idx])
+        end
+      end
+    end
+  end
+
+  private
+
+  def prepare_ancestor_and_descendants_conditions
     ancestor_ranges = []
     descendant_ranges = []
+    puts @taxon_concepts_rel.inspect
     @taxon_concepts_rel.each do |tc|
       ancestor_ranges << (tc.lft..tc.rgt)
       descendant_ranges << (tc.lft...tc.rgt)
     end
-
     unless ancestor_ranges.empty?
       ancestor_ranges = Checklist.merge_ranges(ancestor_ranges)
-      ancestor_conditions = ancestor_ranges.map{ |r| "(lft <= #{r.begin} AND rgt >= #{r.end})" }
-      ancestor_conditions = '(' + ancestor_conditions.join(' OR ') + ')'
+      @ancestor_conditions = ancestor_ranges.map{ |r| "(lft <= #{r.begin} AND rgt >= #{r.end})" }
+      @ancestor_conditions = '(' + @ancestor_conditions.join(' OR ') + ')'
     end
     unless descendant_ranges.empty?
       descendant_ranges = Checklist.merge_ranges(descendant_ranges)
-      descendant_conditions = descendant_ranges.map{ |r| "(lft >= #{r.begin} AND lft < #{r.end})" }
-      descendant_conditions = '(' + descendant_conditions.join(' OR ') + ')'
-      descendant_conditions = [descendant_conditions, 'inherit_distribution = true'].join(' AND ')
+      @descendant_conditions = descendant_ranges.map{ |r| "(lft >= #{r.begin} AND lft < #{r.end})" }
+      @descendant_conditions = '(' + @descendant_conditions.join(' OR ') + ')'
+      @descendant_conditions = [@descendant_conditions, 'inherit_distribution = true'].join(' AND ')
     end
-    return [] unless ancestor_conditions || descendant_conditions
-    TaxonConcept.checklist.
-      where([ancestor_conditions, descendant_conditions].compact.join(' OR ')).
-      order('lft')
   end
 
-  private
   def self.merge_ranges(ranges)
     ranges = ranges.sort_by {|r| r.first }
     *outages = ranges.shift

@@ -22,6 +22,8 @@
 class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :rank_id, :parent_id,
     :designation_id, :taxon_name_id
+  attr_accessor :kingdom_name, :phylum_name, :class_name, :order_name,
+    :family_name, :genus_name, :species_name, :subspecies_name
   belongs_to :rank
   belongs_to :designation
   belongs_to :taxon_name
@@ -40,7 +42,58 @@ class TaxonConcept < ActiveRecord::Base
 
   acts_as_nested_set
 
+  def species_name
+    read_attribute(:species_name) ? read_attribute(:species_name).downcase : nil
+  end
+
+  def as_json(options={})
+    super(
+      :only =>[:id, :parent_id, :scientific_name, :rank_name, :depth],
+      :methods => [:class_name, :order_name, :family_name, :genus_name,
+        :species_name, :subspecies_name]
+    )
+  end
+
 class << self
+  def checklist_with_parents
+    TaxonConcept.select('*').from <<-SQL
+    (WITH RECURSIVE q AS
+    (
+    SELECT  h, 1 AS level, ARRAY[taxon_names.scientific_name] AS names_ary, ARRAY[ranks.name] AS ranks_ary
+    FROM    taxon_concepts h
+    INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
+    INNER JOIN ranks ON h.rank_id = ranks.id
+    -- WHERE   ranks.name IN ('CLASS')
+    WHERE h.parent_id IS NULL
+    UNION ALL
+    SELECT  hi, q.level + 1 AS level,
+    CAST(names_ary || taxon_names.scientific_name as character varying(255)[]),
+    CAST(ranks_ary || ranks.name as character varying(255)[])
+    FROM    q
+    JOIN    taxon_concepts hi
+    ON      hi.parent_id = (q.h).id
+    INNER JOIN taxon_names ON hi.taxon_name_id = taxon_names.id
+    INNER JOIN ranks ON hi.rank_id = ranks.id
+    )
+    SELECT
+    (q.h).id,
+    (q.h).parent_id,
+    (q.h).lft,
+    (q.h).rgt,
+    (q.h).depth,
+    (q.h).inherit_distribution,
+    taxon_names.scientific_name,
+    ranks.name AS rank_name,
+    level,
+    names_ary::VARCHAR AS names,
+    ranks_ary::VARCHAR AS ranks
+    FROM    q 
+    INNER JOIN taxon_names ON ((q.h).taxon_name_id = taxon_names.id)
+    INNER JOIN ranks ON ((q.h).rank_id = ranks.id)
+    ) recursive
+    SQL
+  end
+
   def by_geo_entities(geo_entities_ids)
     return scoped if geo_entities_ids.empty?
     in_clause = geo_entities_ids.join(',')
@@ -74,8 +127,7 @@ class << self
       AND 
       geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'
     )
-  SQL
-
+    SQL
   end
 end
 
