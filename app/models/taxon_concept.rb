@@ -83,6 +83,7 @@ class << self
     (q.h).depth,
     (q.h).inherit_distribution,
     taxon_names.scientific_name,
+    taxon_names.abbreviation,
     ranks.name AS rank_name,
     level,
     names_ary::VARCHAR AS names,

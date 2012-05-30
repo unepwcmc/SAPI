@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120525074930) do
+ActiveRecord::Schema.define(:version => 20120530125027) do
 
   create_table "authors", :force => true do |t|
     t.string   "first_name"
@@ -38,6 +38,12 @@ ActiveRecord::Schema.define(:version => 20120525074930) do
     t.string   "name",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "distribution_import", :id => false, :force => true do |t|
+    t.integer "species_id"
+    t.integer "country_id"
+    t.string  "country_name", :limit => nil
   end
 
   create_table "geo_entities", :force => true do |t|
@@ -141,10 +147,11 @@ ActiveRecord::Schema.define(:version => 20120525074930) do
   end
 
   create_table "taxon_names", :force => true do |t|
-    t.string   "scientific_name", :null => false
+    t.string   "scientific_name",               :null => false
     t.integer  "basionym_id"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.string   "abbreviation",    :limit => 64
   end
 
   create_table "taxon_references", :force => true do |t|

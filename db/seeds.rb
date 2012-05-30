@@ -45,19 +45,138 @@ end
 end
 cites = Designation.find_by_name(Designation::CITES)
 cms = Designation.find_by_name('CMS')
-#Create taxon seeds
-name = TaxonName.create(:scientific_name => 'Animalia')
-kingdom = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::KINGDOM).id,
-  :taxon_name_id => name.id, :designation_id => cites.id)
-name = TaxonName.create(:scientific_name => 'Chordata')
-phylum = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::PHYLUM).id,
-  :taxon_name_id => name.id, :parent_id => kingdom.id,
-  :designation_id => cites.id)
-name = TaxonName.create(:scientific_name => 'Mammalia')
-klass = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::CLASS).id,
-  :taxon_name_id => name.id, :parent_id => phylum.id,
-  :designation_id => cites.id)
 
+#Create taxon seeds
+
+higher_taxa = [
+  {
+    :name => 'Animalia',
+    :sub_taxa => [
+      {
+        :name => 'Annelida',
+        :sub_taxa => [
+          {
+            :name => 'Hirudinoidea',
+            :abbreviation => 'Hi'
+          }
+        ]
+      },
+      {
+        :name => 'Arthropoda',
+        :sub_taxa => [
+          {
+            :name => 'Arachnida',
+            :abbreviation => 'Ar'
+          },
+          {
+            :name => 'Insecta',
+            :abbreviation => 'In'
+          }
+        ]
+      },
+      {
+        :name => 'Chordata',
+        :sub_taxa => [
+          {
+            :name => 'Actinopterygii',
+            :abbreviation => 'Ac'
+          },
+          {
+            :name => 'Amphibia',
+            :abbreviation => 'Am'
+          },
+          {
+            :name => 'Aves',
+            :abbreviation => 'Av'
+          },
+          {
+            :name => 'Elasmobranchii',
+            :abbreviation => 'El'
+          },
+          {
+            :name => 'Mammalia',
+            :abbreviation => 'MA'
+          },
+          {
+            :name => 'Reptilia',
+            :abbreviation => 'Re'
+          },
+          {
+            :name => 'Sarcopterygii',
+            :abbreviation => 'Sa'
+          }
+        ]
+      },
+      {
+        :name => 'Cnidaria',
+        :sub_taxa => [
+          {
+            :name => 'Anthozoa',
+            :abbreviation => 'An'
+          },
+          {
+            :name => 'Hydrozoa',
+            :abbreviation => 'Hy'
+          }
+        ]
+      },
+      {
+        :name => 'Echinodermata',
+        :sub_taxa => []
+      },
+      {
+        :name => 'Mollusca',
+        :sub_taxa => [
+          {
+            :name => 'Bivalvia',
+            :abbreviation => 'Bi'
+          },
+          {
+            :name => 'Gastropoda',
+            :abbreviation => 'Ga'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    :name => 'Plantae',
+    :sub_taxa => []
+  }
+]
+
+rank_id = Rank.find_by_name(Rank::KINGDOM).id
+higher_taxa.each do |kingdom_props|
+  kingdom_name = kingdom_props[:name]
+  name = TaxonName.create(:scientific_name => kingdom_name)
+  kingdom = TaxonConcept.create(:rank_id => rank_id,
+    :taxon_name_id => name.id, :designation_id => cites.id)
+  phyla = kingdom_props[:sub_taxa]
+  rank_id = Rank.find_by_name(Rank::PHYLUM).id
+  phyla.each do |phylum_props|
+    phylum_name = phylum_props[:name]
+    name = TaxonName.create(:scientific_name => phylum_name)
+    phylum = TaxonConcept.create(:rank_id => rank_id,
+      :taxon_name_id => name.id, :designation_id => cites.id)
+    klasses = phylum_props[:sub_taxa]
+    rank_id = Rank.find_by_name(Rank::CLASS).id
+    klasses.each do |klass_props|
+      klass_name = klass_props[:name]
+      klass_abbr = klass_props[:abbreviation]
+      name = TaxonName.create(
+        :scientific_name => klass_name,
+        :abbreviation => klass_abbr
+      )
+      klass = TaxonConcept.create(:rank_id => rank_id,
+      :taxon_name_id => name.id, :designation_id => cites.id)
+    end
+  end
+end
+
+#phyla
+
+klass = TaxonConcept.joins(:taxon_name).
+  where(:"taxon_names.scientific_name" => 'Mammalia').first
 #honey badger
 name = TaxonName.create(:scientific_name => 'Carnivora')
 order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
@@ -123,9 +242,8 @@ TaxonRelationship.create(
   :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::CONTAINS).id
 )
 
-name = TaxonName.create(:scientific_name => 'Plantae')
-kingdom = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::KINGDOM).id,
-  :taxon_name_id => name.id, :designation_id => cites.id)
+kingdom = TaxonConcept.joins(:taxon_name).
+  where(:"taxon_names.scientific_name" => 'Plantae').first
 name = TaxonName.create(:scientific_name => 'Violales')
 order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
   :taxon_name_id => name.id, :parent_id => kingdom.id,

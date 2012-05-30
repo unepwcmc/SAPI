@@ -7,8 +7,9 @@
 #  basionym_id     :integer
 #  created_at      :datetime        not null
 #  updated_at      :datetime        not null
+#  abbreviation    :string(255)
 #
 
 class TaxonName < ActiveRecord::Base
-  attr_accessible :basionym_id, :scientific_name
+  attr_accessible :basionym_id, :scientific_name, :abbreviation
 end
