@@ -8,6 +8,7 @@ gem 'rails', '3.2.3'
 gem 'rails-api'
 
 gem 'pg'
+gem 'activerecord-postgres-hstore'
 gem 'foreigner'
 gem 'immigrant'
 gem 'awesome_nested_set'

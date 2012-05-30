@@ -24,7 +24,20 @@ for now we use the rack-cors middleware for development, staging has the appropr
 
 == Database
 
-We use PostgreSQL. Polymorphic associations are enhanced with this referential integrity pattern:
+We use PostgreSQL with the hstore extension. The extension needs to be installed separately from the contrib package.
+
+Ubuntu:
+
+  sudo apt-get install postgresql-contrib-9.1
+
+(make sure the version matches your installation)
+
+We're using a BTREE index on the hstore column in some places to be able to use hstore column in order by expressions:
+
+  SELECT * FROM "taxon_concepts" ORDER BY (data -> 'some_hstore_col')
+
+NOTE: we may use the polymorphic associations for references
+Polymorphic associations are enhanced with this referential integrity pattern:
 http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-in-rails-with-postgresql/
 (hard copy in doc)
 
