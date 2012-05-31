@@ -32,6 +32,21 @@ Ubuntu:
 
 (make sure the version matches your installation)
 
+To load the module into your db in postgres >= 9.1:
+
+  CREATE EXTENSION hstore
+
+
+In lower versions (but > 8.4):
+
+  psql -d dbname -f SHAREDIR/contrib/hstore.sql
+
+where SHAREDIR can be found with:
+
+  pg_config --sharedir
+
+You need to be running as db superuser to do that, which is why this operation is not covered by migrations.
+
 We're using a BTREE index on the hstore column in some places to be able to use hstore column in order by expressions:
 
   SELECT * FROM "taxon_concepts" ORDER BY (data -> 'some_hstore_col')
