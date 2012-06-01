@@ -145,21 +145,22 @@ higher_taxa = [
   }
 ]
 
-rank_id = Rank.find_by_name(Rank::KINGDOM).id
+kingdom_rank_id = Rank.find_by_name(Rank::KINGDOM).id
 higher_taxa.each do |kingdom_props|
   kingdom_name = kingdom_props[:name]
   name = TaxonName.create(:scientific_name => kingdom_name)
-  kingdom = TaxonConcept.create(:rank_id => rank_id,
+  kingdom = TaxonConcept.create(:rank_id => kingdom_rank_id,
     :taxon_name_id => name.id, :designation_id => cites.id)
   phyla = kingdom_props[:sub_taxa]
-  rank_id = Rank.find_by_name(Rank::PHYLUM).id
+  phylum_rank_id = Rank.find_by_name(Rank::PHYLUM).id
   phyla.each do |phylum_props|
     phylum_name = phylum_props[:name]
     name = TaxonName.create(:scientific_name => phylum_name)
-    phylum = TaxonConcept.create(:rank_id => rank_id,
-      :taxon_name_id => name.id, :designation_id => cites.id)
+    phylum = TaxonConcept.create(:rank_id => phylum_rank_id,
+      :taxon_name_id => name.id, :designation_id => cites.id,
+      :parent_id => kingdom.id)
     klasses = phylum_props[:sub_taxa]
-    rank_id = Rank.find_by_name(Rank::CLASS).id
+    klass_rank_id = Rank.find_by_name(Rank::CLASS).id
     klasses.each do |klass_props|
       klass_name = klass_props[:name]
       klass_abbr = klass_props[:abbreviation]
@@ -167,8 +168,9 @@ higher_taxa.each do |kingdom_props|
         :scientific_name => klass_name,
         :abbreviation => klass_abbr
       )
-      klass = TaxonConcept.create(:rank_id => rank_id,
-      :taxon_name_id => name.id, :designation_id => cites.id)
+      klass = TaxonConcept.create(:rank_id => klass_rank_id,
+      :taxon_name_id => name.id, :designation_id => cites.id,
+      :parent_id => phylum.id)
     end
   end
 end
