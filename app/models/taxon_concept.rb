@@ -34,6 +34,7 @@ class TaxonConcept < ActiveRecord::Base
     :through => :relationships
   has_many :taxon_concept_geo_entities
   has_many :geo_entities, :through => :taxon_concept_geo_entities
+  has_many :listing_changes
 
   scope :checklist, select('taxon_concepts.id, taxon_concepts.depth,
     taxon_concepts.lft, taxon_concepts.rgt, taxon_concepts.parent_id,
