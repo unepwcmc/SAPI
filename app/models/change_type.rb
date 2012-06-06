@@ -10,5 +10,7 @@
 
 class ChangeType < ActiveRecord::Base
   attr_accessible :listing_change_id, :name
-  has_many :listing_changes
+  include Dictionary
+
+  build_dictionary :addition, :deletion, :reservation, :reservation_withdrawal
 end
