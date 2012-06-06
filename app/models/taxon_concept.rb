@@ -17,6 +17,7 @@
 #  inherit_distribution :boolean         default(TRUE), not null
 #  inherit_legislation  :boolean         default(TRUE), not null
 #  inherit_references   :boolean         default(TRUE), not null
+#  data                 :hstore
 #
 
 class TaxonConcept < ActiveRecord::Base
