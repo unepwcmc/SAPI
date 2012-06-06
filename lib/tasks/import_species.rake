@@ -37,7 +37,7 @@ namespace :import do
     desc 'Copy data into species_import table'
     task :copy_data => :create_table do
       TMP_TABLE = 'species_import'
-      file= ENV["FILE"] || 'lib/assets/files/species.csv'
+      file= ENV["FILE"] || 'lib/assets/files/animals.csv'
       if !file || !File.file?(Rails.root+file) #if the file is not defined, explain and leave.
         puts "Please specify a valid csv file from which to import species data"
         puts "Usage: FILE=[path/to/file] rake import:species"
