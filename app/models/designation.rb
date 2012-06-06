@@ -11,6 +11,8 @@
 class Designation < ActiveRecord::Base
   attr_accessible :name
 
+  has_many :species_listings
+
   CITES = 'CITES'
 
   def self.dict
