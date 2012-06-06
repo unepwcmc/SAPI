@@ -6,6 +6,7 @@
 #  species_listing_id :integer
 #  taxon_concept_id   :integer
 #  change_type_id     :integer
+#  reference_id       :integer
 #  lft                :integer
 #  rgt                :integer
 #  parent_id          :integer
