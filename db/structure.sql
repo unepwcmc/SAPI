@@ -45,8 +45,79 @@ SET search_path = public, pg_catalog;
 CREATE TYPE taxon_concept_with_ancestors AS (
 	id integer,
 	names character varying(255)[],
-	ranks character varying(255)[]
+	ranks character varying(255)[],
+	taxonomic_positions character varying(64)[]
 );
+
+
+--
+-- Name: get_ancestor_taxonomic_position(integer, integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION get_ancestor_taxonomic_position(integer, integer) RETURNS character varying
+    LANGUAGE plpgsql
+    AS $_$
+  DECLARE
+    in_lft ALIAS FOR $1;
+    in_rgt ALIAS FOR $2;
+    out_taxonomic_position CHARACTER VARYING(64);
+  BEGIN
+    SELECT data -> 'taxonomic_position'
+    INTO out_taxonomic_position
+    FROM taxon_concepts
+    WHERE lft <= in_lft AND rgt >= in_rgt
+    AND CAST(data -> 'taxonomic_position' AS CHARACTER VARYING(64)) IS NOT NULL
+    ORDER BY data -> 'taxonomic_position' DESC
+    LIMIT 1;
+    RETURN out_taxonomic_position;
+  END;
+$_$;
+
+
+--
+-- Name: FUNCTION get_ancestor_taxonomic_position(integer, integer); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION get_ancestor_taxonomic_position(integer, integer) IS 'Returns the taxonomic position of the closest ancestor that has the position set for taxon concept given by its lft and rgt';
+
+
+--
+-- Name: get_full_name(character varying, character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION get_full_name(character varying, character varying, character varying, character varying) RETURNS character varying
+    LANGUAGE plpgsql
+    AS $_$
+  DECLARE
+    rank_name ALIAS FOR $1;
+    genus_name ALIAS FOR $2;
+    species_name ALIAS FOR $3;
+    scientific_name ALIAS FOR $4;
+    full_name CHARACTER VARYING(255);
+  BEGIN
+    -- construct the full name for display purposes
+    IF rank_name = 'SPECIES' THEN
+      -- now create a binomen for full name
+      full_name := genus_name || ' ' ||
+      LOWER(scientific_name);
+    ELSIF rank_name = 'SUBSPECIES' THEN
+      -- now create a trinomen for full name
+      full_name := genus_name || ' ' ||
+      LOWER(species_name) || ' ' ||
+      scientific_name;
+    ELSE
+       full_name := scientific_name;
+    END IF;
+    RETURN full_name;
+  END;
+$_$;
+
+
+--
+-- Name: FUNCTION get_full_name(character varying, character varying, character varying, character varying); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION get_full_name(character varying, character varying, character varying, character varying) IS 'Returns the full name constructed as a single name, binomen or trinomen depending on rank';
 
 
 --
@@ -65,15 +136,17 @@ CREATE FUNCTION taxon_concept_with_ancestors(param_id integer) RETURNS taxon_con
       (
       SELECT  h,
       ARRAY[taxon_names.scientific_name] AS names_ary,
-      ARRAY[ranks.name] AS ranks_ary
+      ARRAY[ranks.name] AS ranks_ary,
+      ARRAY[CAST(data -> 'taxonomic_position' AS CHARACTER VARYING(64))] AS taxonomic_positions_ary
       FROM    taxon_concepts h
       INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
       INNER JOIN ranks ON h.rank_id = ranks.id
       WHERE h.parent_id IS NULL
       UNION ALL
       SELECT  hi,
-      CAST(names_ary || taxon_names.scientific_name as character varying(255)[]),
-      CAST(ranks_ary || ranks.name as character varying(255)[])
+      CAST(names_ary || taxon_names.scientific_name AS CHARACTER VARYING(255)[]),
+      CAST(ranks_ary || ranks.name AS CHARACTER VARYING(255)[]),
+      CAST(taxonomic_positions_ary || CAST(data -> 'taxonomic_position' AS CHARACTER VARYING(64)) AS CHARACTER VARYING(64)[])
       FROM    q
       JOIN    taxon_concepts hi
       ON      hi.parent_id = (q.h).id
@@ -83,20 +156,14 @@ CREATE FUNCTION taxon_concept_with_ancestors(param_id integer) RETURNS taxon_con
       SELECT
       (q.h).id,
       names_ary::VARCHAR AS names,
-      ranks_ary::VARCHAR AS ranks
+      ranks_ary::VARCHAR AS ranks,
+      taxonomic_positions_ary::VARCHAR AS taxonomic_positions
       INTO tmp_rec
       FROM    q
       WHERE (q.h).id = param_id;
     return tmp_rec;
   END;
 $$;
-
-
---
--- Name: FUNCTION taxon_concept_with_ancestors(param_id integer); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION taxon_concept_with_ancestors(param_id integer) IS 'Returns ordered ancestor names and ranks for given taxon concept id';
 
 
 --
@@ -114,49 +181,36 @@ CREATE FUNCTION update_taxon_concept_hstore_trigger() RETURNS trigger
     scientific_name CHARACTER VARYING(255);
     full_name CHARACTER VARYING(255);
   BEGIN
-    res := ''::hstore;
+    IF NEW.data IS NULL THEN
+      res := ''::hstore;
+    ELSE
+      res := NEW.data;
+    END IF;
+
     SELECT * FROM taxon_concept_with_ancestors(NEW.id) INTO taxon_data_rec;
     IF FOUND THEN
       upper = array_upper(taxon_data_rec.ranks, 1);
       IF upper IS NOT NULL THEN
         rank_name := taxon_data_rec.ranks[upper];
-        if rank_name = 'PHYLUM' then
-          raise notice 'phylum %', NEW.id;
-        end if;
         scientific_name := taxon_data_rec.names[upper];
         -- for each ancestor create a field in the hstore
         FOR i IN array_lower(taxon_data_rec.ranks, 1)..upper
         LOOP
-          res := res || (LOWER(taxon_data_rec.ranks[i]) || '_name' => taxon_data_rec.names[i]);
+          IF rank_name <> taxon_data_rec.ranks[i] THEN
+            res := res || (LOWER(taxon_data_rec.ranks[i]) || '_name' => taxon_data_rec.names[i]);
+          END IF;
         END LOOP;
-        if rank_name = 'PHYLUM' then
-          raise notice '%',res;
-        end if;
-        -- construct the full name for display purposes
-        IF rank_name = 'SPECIES' THEN
-          -- now create a binomen for full name
-          full_name := CAST(res -> 'genus_name' AS character varying(255)) || ' ' ||
-          LOWER(scientific_name);
-        ELSIF rank_name = 'SUBSPECIES' THEN
-          -- now create a trinomen for full name
-          full_name := CAST(res -> 'genus_name' AS character varying(255)) || ' ' ||
-          LOWER(CAST(res -> 'species_name' AS character varying(255))) || ' ' ||
-          scientific_name;
-        ELSE
-           full_name := scientific_name;
-        END IF;
-        if rank_name = 'PHYLUM' then
-          raise notice '%',full_name;
-        end if;
+        full_name := get_full_name(rank_name, res -> 'genus_name', res -> 'species_name', scientific_name);
+        -- taxonomic_position := res -> 'taxonomic_position';
         res := res || 
-        ('scientific_name' => scientific_name) ||
-        ('full_name' => full_name) ||
-        ('rank_name' => rank_name);
-        if rank_name = 'PHYLUM' then
-          raise notice '%',res;
-        end if;
-      END IF;
+          ('scientific_name' => scientific_name) ||
+          ('full_name' => full_name) ||
+          ('rank_name' => rank_name);
+        END IF;
       UPDATE taxon_concepts SET data = res WHERE id = NEW.id;
+      IF CAST(res -> 'taxonomic_position' AS CHARACTER VARYING(64)) IS NULL THEN
+        PERFORM update_taxonomic_position(NEW.parent_id);
+      END IF;
     END IF;
     RETURN NULL;
   END;
@@ -168,6 +222,44 @@ $$;
 --
 
 COMMENT ON FUNCTION update_taxon_concept_hstore_trigger() IS 'Trigger function that updates additional fields in the hstore column';
+
+
+--
+-- Name: update_taxonomic_position(integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION update_taxonomic_position(integer) RETURNS void
+    LANGUAGE plpgsql
+    AS $_$
+    DECLARE
+      in_parent_id ALIAS FOR $1;
+      taxon_concept_id INTEGER;
+    BEGIN
+      UPDATE taxon_concepts
+      SET data = data || 
+       ('taxonomic_position' => CAST(parent_part || '.' || child_part AS CHARACTER VARYING))
+      FROM (
+        SELECT
+        children.id, parent.data->'taxonomic_position' AS parent_part,
+        row_number() OVER (ORDER BY children.data -> 'full_name') AS child_part
+        FROM taxon_concepts AS children
+        LEFT JOIN taxon_concepts AS parent ON children.parent_id = parent.id
+        WHERE parent.id = in_parent_id
+      ) children_with_positions
+      WHERE taxon_concepts.id = children_with_positions.id;
+      FOR taxon_concept_id IN (SELECT * FROM taxon_concepts WHERE parent_id = in_parent_id)
+      LOOP
+        PERFORM update_taxonomic_position(taxon_concept_id);
+      END LOOP;
+    END;
+$_$;
+
+
+--
+-- Name: FUNCTION update_taxonomic_position(integer); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION update_taxonomic_position(integer) IS 'Updates the taxonomic position by taking the parent value and adding another ordinal to reflect alphabetical order';
 
 
 SET default_tablespace = '';
@@ -867,6 +959,26 @@ ALTER SEQUENCE taxon_relationships_id_seq OWNED BY taxon_relationships.id;
 
 
 --
+-- Name: taxonomic_position; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE taxonomic_position (
+    "?column?" text
+);
+
+
+--
+-- Name: tmp_rec; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE tmp_rec (
+    id integer,
+    names character varying,
+    ranks character varying
+);
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1180,6 +1292,13 @@ CREATE TRIGGER taxon_concept_insert_trigger AFTER INSERT ON taxon_concepts FOR E
 
 
 --
+-- Name: taxon_concept_update_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER taxon_concept_update_trigger AFTER UPDATE ON taxon_concepts FOR EACH ROW WHEN ((old.parent_id IS DISTINCT FROM new.parent_id)) EXECUTE PROCEDURE update_taxon_concept_hstore_trigger();
+
+
+--
 -- Name: geo_entities_geo_entity_type_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1362,3 +1481,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120606131036');
 INSERT INTO schema_migrations (version) VALUES ('20120606132104');
 
 INSERT INTO schema_migrations (version) VALUES ('20120607073043');
+
+INSERT INTO schema_migrations (version) VALUES ('20120607132022');

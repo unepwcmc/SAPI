@@ -183,7 +183,7 @@ Spcrecid, CtyRecID, CtyShort
 136, 18, Bangladesh
 136, 36, Cambodia
 136, 116, Lao People's Democratic Republic
-136, 205, Taiwan, Province of China
+136, 205, "Taiwan, Province of China"
 136, 208, Thailand
 136, 229, Viet Nam
 136, 161, Pakistan
@@ -199,7 +199,7 @@ Spcrecid, CtyRecID, CtyShort
 134, 18, Bangladesh
 136, 100, Indonesia
 134, 197, Sri Lanka
-134, 205, Taiwan, Province of China
+134, 205, "Taiwan, Province of China"
 134, 208, Thailand
 134, 145, Myanmar
 134, 148, Nepal
@@ -228,7 +228,7 @@ Spcrecid, CtyRecID, CtyShort
 132, 78, Gabon
 132, 79, Gambia
 132, 82, Ghana
-132, 56, Côte d'Ivoire
+132, 56, Cï¿½te d'Ivoire
 132, 65, Equatorial Guinea
 132, 68, Ethiopia
 132, 37, Cameroon
@@ -311,7 +311,7 @@ Spcrecid, CtyRecID, CtyShort
 128, 138, Micronesia (Federated States of)
 128, 167, Philippines
 128, 189, Singapore
-128, 205, Taiwan, Province of China
+128, 205, "Taiwan, Province of China"
 128, 116, Lao People's Democratic Republic
 128, 145, Myanmar
 128, 164, Papua New Guinea
@@ -368,7 +368,7 @@ Spcrecid, CtyRecID, CtyShort
 121, 155, Nigeria
 121, 237, Zambia
 121, 238, Zimbabwe
-121, 56, Côte d'Ivoire
+121, 56, Cï¿½te d'Ivoire
 121, 194, South Africa
 121, 209, Togo
 121, 236, Democratic Republic of the Congo
@@ -398,7 +398,7 @@ Spcrecid, CtyRecID, CtyShort
 119, 27, Bosnia and Herzegovina
 119, 110, Kenya
 119, 193, Somalia
-119, 205, Taiwan, Province of China
+119, 205, "Taiwan, Province of China"
 119, 70, Faeroe Islands
 119, 79, Gambia
 119, 98, Iceland
@@ -547,7 +547,7 @@ Spcrecid, CtyRecID, CtyShort
 115, 78, Gabon
 115, 82, Ghana
 115, 49, Congo
-115, 56, Côte d'Ivoire
+115, 56, Cï¿½te d'Ivoire
 115, 65, Equatorial Guinea
 115, 35, Burundi
 115, 37, Cameroon
@@ -579,7 +579,7 @@ Spcrecid, CtyRecID, CtyShort
 106, 96, Hong Kong SAR
 106, 99, India
 106, 116, Lao People's Democratic Republic
-106, 205, Taiwan, Province of China
+106, 205, "Taiwan, Province of China"
 106, 32, Brunei Darussalam
 106, 36, Cambodia
 106, 113, Republic of Korea 
@@ -598,7 +598,7 @@ Spcrecid, CtyRecID, CtyShort
 104, 190, Slovakia
 104, 27, Bosnia and Herzegovina
 104, 161, Pakistan
-104, 205, Taiwan, Province of China
+104, 205, "Taiwan, Province of China"
 104, 213, Tunisia
 104, 121, Libyan Arab Jamahiriya
 104, 137, Mexico
@@ -699,7 +699,7 @@ Spcrecid, CtyRecID, CtyShort
 101, 82, Ghana
 101, 91, Guinea Bissau
 101, 120, Liberia
-101, 56, Côte d'Ivoire
+101, 56, Cï¿½te d'Ivoire
 101, 78, Gabon
 101, 79, Gambia
 101, 37, Cameroon
@@ -857,7 +857,7 @@ Spcrecid, CtyRecID, CtyShort
 89, 79, Gambia
 89, 44, China
 89, 49, Congo
-89, 56, Côte d'Ivoire
+89, 56, Cï¿½te d'Ivoire
 89, 37, Cameroon
 89, 41, Central African Republic
 89, 42, Chad
@@ -953,7 +953,7 @@ Spcrecid, CtyRecID, CtyShort
 138, 100, Indonesia
 139, 167, Philippines
 282, 126, Madagascar
-282, 176, Réunion
+282, 176, Rï¿½union
 283, 126, Madagascar
 355, 182, Samoa
 355, 4, American Samoa
@@ -969,14 +969,14 @@ Spcrecid, CtyRecID, CtyShort
 353, 229, Viet Nam
 353, 211, Tonga
 353, 4, American Samoa
-353, 205, Taiwan, Province of China
+353, 205, "Taiwan, Province of China"
 353, 208, Thailand
 353, 226, Vanuatu
 353, 187, Seychelles
 353, 192, Solomon Islands
 353, 197, Sri Lanka
 353, 168, Pitcairn
-353, 176, Réunion
+353, 176, Rï¿½union
 353, 185, Saudi Arabia
 353, 164, Papua New Guinea
 353, 167, Philippines
@@ -1012,7 +1012,7 @@ Spcrecid, CtyRecID, CtyShort
 351, 211, Tonga
 351, 182, Samoa
 351, 167, Philippines
-351, 205, Taiwan, Province of China
+351, 205, "Taiwan, Province of China"
 351, 208, Thailand
 351, 100, Indonesia
 351, 107, Japan
@@ -1022,7 +1022,7 @@ Spcrecid, CtyRecID, CtyShort
 351, 13, Australia
 349, 193, Somalia
 349, 58, Djibouti
-349, 205, Taiwan, Province of China
+349, 205, "Taiwan, Province of China"
 349, 226, Vanuatu
 349, 229, Viet Nam
 349, 110, Kenya
@@ -1033,7 +1033,7 @@ Spcrecid, CtyRecID, CtyShort
 349, 189, Singapore
 349, 192, Solomon Islands
 349, 167, Philippines
-349, 176, Réunion
+349, 176, Rï¿½union
 349, 185, Saudi Arabia
 349, 135, Mauritius
 349, 144, Mozambique
@@ -1065,7 +1065,7 @@ Spcrecid, CtyRecID, CtyShort
 348, 217, Tuvalu
 348, 222, United States of America
 348, 223, United States Minor Outlying Islands
-348, 205, Taiwan, Province of China
+348, 205, "Taiwan, Province of China"
 348, 207, United Republic of Tanzania
 348, 208, Thailand
 348, 192, Solomon Islands
@@ -1076,7 +1076,7 @@ Spcrecid, CtyRecID, CtyShort
 348, 189, Singapore
 348, 167, Philippines
 348, 168, Pitcairn
-348, 176, Réunion
+348, 176, Rï¿½union
 348, 144, Mozambique
 348, 151, New Caledonia
 348, 164, Papua New Guinea
@@ -1104,7 +1104,7 @@ Spcrecid, CtyRecID, CtyShort
 345, 226, Vanuatu
 345, 229, Viet Nam
 345, 211, Tonga
-345, 205, Taiwan, Province of China
+345, 205, "Taiwan, Province of China"
 345, 207, United Republic of Tanzania
 345, 217, Tuvalu
 345, 167, Philippines
@@ -1146,14 +1146,14 @@ Spcrecid, CtyRecID, CtyShort
 340, 226, Vanuatu
 340, 229, Viet Nam
 340, 71, Fiji
-340, 205, Taiwan, Province of China
+340, 205, "Taiwan, Province of China"
 340, 207, United Republic of Tanzania
 340, 208, Thailand
 340, 187, Seychelles
 340, 194, South Africa
 340, 197, Sri Lanka
 340, 167, Philippines
-340, 176, Réunion
+340, 176, Rï¿½union
 340, 185, Saudi Arabia
 340, 144, Mozambique
 340, 160, Oman
@@ -1225,14 +1225,14 @@ Spcrecid, CtyRecID, CtyShort
 336, 223, United States Minor Outlying Islands
 336, 226, Vanuatu
 336, 192, Solomon Islands
-336, 205, Taiwan, Province of China
+336, 205, "Taiwan, Province of China"
 336, 208, Thailand
 336, 185, Saudi Arabia
 336, 187, Seychelles
 336, 189, Singapore
 336, 164, Papua New Guinea
 336, 167, Philippines
-336, 176, Réunion
+336, 176, Rï¿½union
 336, 135, Mauritius
 336, 144, Mozambique
 336, 162, Palau
@@ -1261,7 +1261,7 @@ Spcrecid, CtyRecID, CtyShort
 335, 107, Japan
 335, 13, Australia
 334, 229, Viet Nam
-334, 205, Taiwan, Province of China
+334, 205, "Taiwan, Province of China"
 334, 211, Tonga
 334, 167, Philippines
 334, 208, Thailand
@@ -1282,7 +1282,7 @@ Spcrecid, CtyRecID, CtyShort
 333, 13, Australia
 334, 192, Solomon Islands
 330, 229, Viet Nam
-330, 205, Taiwan, Province of China
+330, 205, "Taiwan, Province of China"
 330, 4, American Samoa
 330, 88, Guam
 330, 13, Australia
@@ -1291,7 +1291,7 @@ Spcrecid, CtyRecID, CtyShort
 330, 192, Solomon Islands
 330, 151, New Caledonia
 329, 229, Viet Nam
-329, 205, Taiwan, Province of China
+329, 205, "Taiwan, Province of China"
 329, 192, Solomon Islands
 329, 189, Singapore
 329, 207, United Republic of Tanzania
@@ -1311,7 +1311,7 @@ Spcrecid, CtyRecID, CtyShort
 329, 208, Thailand
 329, 138, Micronesia (Federated States of)
 329, 88, Guam
-328, 205, Taiwan, Province of China
+328, 205, "Taiwan, Province of China"
 328, 229, Viet Nam
 328, 71, Fiji
 328, 4, American Samoa
@@ -1330,7 +1330,7 @@ Spcrecid, CtyRecID, CtyShort
 327, 229, Viet Nam
 327, 128, Malaysia
 327, 194, South Africa
-327, 205, Taiwan, Province of China
+327, 205, "Taiwan, Province of China"
 327, 208, Thailand
 327, 167, Philippines
 327, 185, Saudi Arabia
@@ -1354,7 +1354,7 @@ Spcrecid, CtyRecID, CtyShort
 327, 192, Solomon Islands
 327, 151, New Caledonia
 327, 48, Comoros
-327, 176, Réunion
+327, 176, Rï¿½union
 327, 31, British Indian Ocean Territory
 325, 229, Viet Nam
 325, 126, Madagascar
@@ -1364,7 +1364,7 @@ Spcrecid, CtyRecID, CtyShort
 325, 226, Vanuatu
 325, 185, Saudi Arabia
 325, 192, Solomon Islands
-325, 205, Taiwan, Province of China
+325, 205, "Taiwan, Province of China"
 325, 145, Myanmar
 325, 164, Papua New Guinea
 325, 167, Philippines
@@ -1393,7 +1393,7 @@ Spcrecid, CtyRecID, CtyShort
 323, 50, Cook Islands
 323, 189, Singapore
 323, 194, South Africa
-323, 205, Taiwan, Province of China
+323, 205, "Taiwan, Province of China"
 323, 226, Vanuatu
 323, 164, Papua New Guinea
 323, 167, Philippines
@@ -1416,7 +1416,7 @@ Spcrecid, CtyRecID, CtyShort
 319, 229, Viet Nam
 319, 211, Tonga
 319, 189, Singapore
-319, 205, Taiwan, Province of China
+319, 205, "Taiwan, Province of China"
 319, 208, Thailand
 319, 226, Vanuatu
 319, 132, Marshall Islands
@@ -1444,7 +1444,7 @@ Spcrecid, CtyRecID, CtyShort
 318, 58, Djibouti
 318, 126, Madagascar
 318, 229, Viet Nam
-318, 205, Taiwan, Province of China
+318, 205, "Taiwan, Province of China"
 318, 211, Tonga
 318, 197, Sri Lanka
 318, 208, Thailand
@@ -1518,7 +1518,7 @@ Spcrecid, CtyRecID, CtyShort
 398, 229, Viet Nam
 398, 135, Mauritius
 398, 50, Cook Islands
-398, 205, Taiwan, Province of China
+398, 205, "Taiwan, Province of China"
 398, 208, Thailand
 398, 226, Vanuatu
 398, 192, Solomon Islands
@@ -1550,7 +1550,7 @@ Spcrecid, CtyRecID, CtyShort
 398, 271, Sudan
 398, 110, Kenya
 398, 160, Oman
-398, 176, Réunion
+398, 176, Rï¿½union
 397, 126, Madagascar
 398, 223, United States Minor Outlying Islands
 398, 189, Singapore
@@ -1560,9 +1560,9 @@ Spcrecid, CtyRecID, CtyShort
 397, 207, United Republic of Tanzania
 397, 217, Tuvalu
 397, 226, Vanuatu
-397, 176, Réunion
+397, 176, Rï¿½union
 397, 192, Solomon Islands
-397, 205, Taiwan, Province of China
+397, 205, "Taiwan, Province of China"
 397, 164, Papua New Guinea
 397, 167, Philippines
 397, 168, Pitcairn
@@ -1603,7 +1603,7 @@ Spcrecid, CtyRecID, CtyShort
 395, 229, Viet Nam
 395, 50, Cook Islands
 395, 187, Seychelles
-395, 205, Taiwan, Province of China
+395, 205, "Taiwan, Province of China"
 395, 208, Thailand
 395, 164, Papua New Guinea
 395, 167, Philippines
@@ -1632,7 +1632,7 @@ Spcrecid, CtyRecID, CtyShort
 393, 226, Vanuatu
 393, 229, Viet Nam
 393, 234, Yemen
-393, 205, Taiwan, Province of China
+393, 205, "Taiwan, Province of China"
 393, 208, Thailand
 393, 211, Tonga
 393, 192, Solomon Islands
@@ -1664,7 +1664,7 @@ Spcrecid, CtyRecID, CtyShort
 392, 229, Viet Nam
 392, 167, Philippines
 392, 168, Pitcairn
-392, 205, Taiwan, Province of China
+392, 205, "Taiwan, Province of China"
 392, 132, Marshall Islands
 392, 144, Mozambique
 392, 164, Papua New Guinea
@@ -1689,7 +1689,7 @@ Spcrecid, CtyRecID, CtyShort
 391, 50, Cook Islands
 391, 211, Tonga
 391, 58, Djibouti
-391, 205, Taiwan, Province of China
+391, 205, "Taiwan, Province of China"
 391, 226, Vanuatu
 391, 229, Viet Nam
 391, 168, Pitcairn
@@ -1717,7 +1717,7 @@ Spcrecid, CtyRecID, CtyShort
 388, 111, Kiribati
 388, 156, Niue
 388, 50, Cook Islands
-388, 205, Taiwan, Province of China
+388, 205, "Taiwan, Province of China"
 388, 211, Tonga
 388, 208, Thailand
 388, 226, Vanuatu
@@ -1796,7 +1796,7 @@ Spcrecid, CtyRecID, CtyShort
 385, 187, Seychelles
 385, 226, Vanuatu
 385, 229, Viet Nam
-385, 205, Taiwan, Province of China
+385, 205, "Taiwan, Province of China"
 385, 167, Philippines
 385, 189, Singapore
 385, 208, Thailand
@@ -1820,7 +1820,7 @@ Spcrecid, CtyRecID, CtyShort
 385, 162, Palau
 384, 226, Vanuatu
 384, 229, Viet Nam
-384, 205, Taiwan, Province of China
+384, 205, "Taiwan, Province of China"
 384, 168, Pitcairn
 384, 208, Thailand
 384, 211, Tonga
@@ -1856,7 +1856,7 @@ Spcrecid, CtyRecID, CtyShort
 382, 50, Cook Islands
 382, 192, Solomon Islands
 382, 194, South Africa
-382, 205, Taiwan, Province of China
+382, 205, "Taiwan, Province of China"
 382, 164, Papua New Guinea
 382, 167, Philippines
 382, 168, Pitcairn
@@ -1880,7 +1880,7 @@ Spcrecid, CtyRecID, CtyShort
 382, 129, Maldives
 382, 110, Kenya
 382, 187, Seychelles
-382, 176, Réunion
+382, 176, Rï¿½union
 381, 135, Mauritius
 381, 192, Solomon Islands
 382, 189, Singapore
@@ -1914,13 +1914,13 @@ Spcrecid, CtyRecID, CtyShort
 377, 211, Tonga
 377, 222, United States of America
 377, 226, Vanuatu
-377, 205, Taiwan, Province of China
+377, 205, "Taiwan, Province of China"
 377, 207, United Republic of Tanzania
 377, 208, Thailand
 377, 189, Singapore
 377, 192, Solomon Islands
 377, 194, South Africa
-377, 176, Réunion
+377, 176, Rï¿½union
 377, 185, Saudi Arabia
 377, 187, Seychelles
 377, 164, Papua New Guinea
@@ -1970,13 +1970,13 @@ Spcrecid, CtyRecID, CtyShort
 376, 211, Tonga
 376, 194, South Africa
 376, 197, Sri Lanka
-376, 205, Taiwan, Province of China
+376, 205, "Taiwan, Province of China"
 376, 185, Saudi Arabia
 376, 187, Seychelles
 376, 192, Solomon Islands
 376, 167, Philippines
 376, 168, Pitcairn
-376, 176, Réunion
+376, 176, Rï¿½union
 376, 151, New Caledonia
 376, 162, Palau
 376, 164, Papua New Guinea
@@ -2016,7 +2016,7 @@ Spcrecid, CtyRecID, CtyShort
 375, 229, Viet Nam
 375, 50, Cook Islands
 375, 211, Tonga
-375, 205, Taiwan, Province of China
+375, 205, "Taiwan, Province of China"
 375, 207, United Republic of Tanzania
 375, 208, Thailand
 375, 164, Papua New Guinea
@@ -2041,7 +2041,7 @@ Spcrecid, CtyRecID, CtyShort
 373, 207, United Republic of Tanzania
 373, 108, Jordan
 373, 129, Maldives
-373, 176, Réunion
+373, 176, Rï¿½union
 373, 185, Saudi Arabia
 373, 104, Israel
 373, 99, India
@@ -2060,10 +2060,10 @@ Spcrecid, CtyRecID, CtyShort
 372, 229, Viet Nam
 372, 185, Saudi Arabia
 372, 187, Seychelles
-372, 205, Taiwan, Province of China
+372, 205, "Taiwan, Province of China"
 372, 164, Papua New Guinea
 372, 167, Philippines
-372, 176, Réunion
+372, 176, Rï¿½union
 372, 128, Malaysia
 372, 129, Maldives
 372, 132, Marshall Islands
@@ -2090,7 +2090,7 @@ Spcrecid, CtyRecID, CtyShort
 371, 229, Viet Nam
 371, 185, Saudi Arabia
 371, 192, Solomon Islands
-371, 205, Taiwan, Province of China
+371, 205, "Taiwan, Province of China"
 371, 162, Palau
 371, 164, Papua New Guinea
 371, 167, Philippines
@@ -2106,7 +2106,7 @@ Spcrecid, CtyRecID, CtyShort
 368, 187, Seychelles
 371, 189, Singapore
 371, 129, Maldives
-368, 205, Taiwan, Province of China
+368, 205, "Taiwan, Province of China"
 368, 229, Viet Nam
 368, 50, Cook Islands
 368, 100, Indonesia
@@ -2134,7 +2134,7 @@ Spcrecid, CtyRecID, CtyShort
 367, 229, Viet Nam
 367, 50, Cook Islands
 367, 185, Saudi Arabia
-367, 205, Taiwan, Province of China
+367, 205, "Taiwan, Province of China"
 367, 208, Thailand
 367, 164, Papua New Guinea
 367, 167, Philippines
@@ -2173,7 +2173,7 @@ Spcrecid, CtyRecID, CtyShort
 365, 211, Tonga
 365, 226, Vanuatu
 365, 197, Sri Lanka
-365, 205, Taiwan, Province of China
+365, 205, "Taiwan, Province of China"
 365, 207, United Republic of Tanzania
 365, 185, Saudi Arabia
 365, 189, Singapore
@@ -2204,14 +2204,14 @@ Spcrecid, CtyRecID, CtyShort
 365, 182, Samoa
 365, 234, Yemen
 365, 48, Comoros
-365, 176, Réunion
+365, 176, Rï¿½union
 364, 50, Cook Islands
 364, 182, Samoa
 364, 126, Madagascar
 364, 211, Tonga
 364, 226, Vanuatu
 364, 229, Viet Nam
-364, 205, Taiwan, Province of China
+364, 205, "Taiwan, Province of China"
 364, 207, United Republic of Tanzania
 364, 208, Thailand
 364, 189, Singapore
@@ -2237,7 +2237,7 @@ Spcrecid, CtyRecID, CtyShort
 364, 138, Micronesia (Federated States of)
 363, 164, Papua New Guinea
 364, 110, Kenya
-364, 176, Réunion
+364, 176, Rï¿½union
 363, 226, Vanuatu
 363, 71, Fiji
 363, 192, Solomon Islands
@@ -2250,7 +2250,7 @@ Spcrecid, CtyRecID, CtyShort
 362, 189, Singapore
 362, 234, Yemen
 362, 71, Fiji
-362, 205, Taiwan, Province of China
+362, 205, "Taiwan, Province of China"
 362, 211, Tonga
 362, 192, Solomon Islands
 362, 226, Vanuatu
@@ -2279,7 +2279,7 @@ Spcrecid, CtyRecID, CtyShort
 360, 100, Indonesia
 358, 222, United States of America
 358, 226, Vanuatu
-358, 205, Taiwan, Province of China
+358, 205, "Taiwan, Province of China"
 358, 189, Singapore
 358, 192, Solomon Islands
 358, 208, Thailand
@@ -2306,7 +2306,7 @@ Spcrecid, CtyRecID, CtyShort
 356, 126, Madagascar
 356, 226, Vanuatu
 356, 229, Viet Nam
-356, 205, Taiwan, Province of China
+356, 205, "Taiwan, Province of China"
 356, 167, Philippines
 356, 185, Saudi Arabia
 356, 208, Thailand
@@ -2332,7 +2332,7 @@ Spcrecid, CtyRecID, CtyShort
 355, 229, Viet Nam
 355, 211, Tonga
 355, 189, Singapore
-355, 205, Taiwan, Province of China
+355, 205, "Taiwan, Province of China"
 355, 208, Thailand
 355, 167, Philippines
 355, 185, Saudi Arabia
