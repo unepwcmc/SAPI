@@ -4,39 +4,115 @@
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
+SET standard_conforming_strings = off;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
+SET escape_string_warning = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+-- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: -
 --
 
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
---
--- Name: hstore; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
-
-
---
--- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
+CREATE OR REPLACE PROCEDURAL LANGUAGE plpgsql;
 
 
 SET search_path = public, pg_catalog;
+
+--
+-- Name: ghstore; Type: SHELL TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE ghstore;
+
+
+--
+-- Name: ghstore_in(cstring); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION ghstore_in(cstring) RETURNS ghstore
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'ghstore_in';
+
+
+--
+-- Name: ghstore_out(ghstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION ghstore_out(ghstore) RETURNS cstring
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'ghstore_out';
+
+
+--
+-- Name: ghstore; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE ghstore (
+    INTERNALLENGTH = variable,
+    INPUT = ghstore_in,
+    OUTPUT = ghstore_out,
+    ALIGNMENT = int4,
+    STORAGE = plain
+);
+
+
+--
+-- Name: hstore; Type: SHELL TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE hstore;
+
+
+--
+-- Name: hstore_in(cstring); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_in(cstring) RETURNS hstore
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_in';
+
+
+--
+-- Name: hstore_out(hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_out(hstore) RETURNS cstring
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_out';
+
+
+--
+-- Name: hstore_recv(internal); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_recv(internal) RETURNS hstore
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_recv';
+
+
+--
+-- Name: hstore_send(hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_send(hstore) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_send';
+
+
+--
+-- Name: hstore; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE hstore (
+    INTERNALLENGTH = variable,
+    INPUT = hstore_in,
+    OUTPUT = hstore_out,
+    RECEIVE = hstore_recv,
+    SEND = hstore_send,
+    ALIGNMENT = int4,
+    STORAGE = extended
+);
+
 
 --
 -- Name: taxon_concept_with_ancestors; Type: TYPE; Schema: public; Owner: -
@@ -47,6 +123,420 @@ CREATE TYPE taxon_concept_with_ancestors AS (
 	names character varying(255)[],
 	ranks character varying(255)[]
 );
+
+
+--
+-- Name: akeys(hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION akeys(hstore) RETURNS text[]
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_akeys';
+
+
+--
+-- Name: avals(hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION avals(hstore) RETURNS text[]
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_avals';
+
+
+--
+-- Name: defined(hstore, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION defined(hstore, text) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_defined';
+
+
+--
+-- Name: delete(hstore, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION delete(hstore, text) RETURNS hstore
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_delete';
+
+
+--
+-- Name: delete(hstore, text[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION delete(hstore, text[]) RETURNS hstore
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_delete_array';
+
+
+--
+-- Name: delete(hstore, hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION delete(hstore, hstore) RETURNS hstore
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_delete_hstore';
+
+
+--
+-- Name: each(hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION each(hs hstore, OUT key text, OUT value text) RETURNS SETOF record
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_each';
+
+
+--
+-- Name: exist(hstore, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION exist(hstore, text) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_exists';
+
+
+--
+-- Name: exists_all(hstore, text[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION exists_all(hstore, text[]) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_exists_all';
+
+
+--
+-- Name: exists_any(hstore, text[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION exists_any(hstore, text[]) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_exists_any';
+
+
+--
+-- Name: fetchval(hstore, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION fetchval(hstore, text) RETURNS text
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_fetchval';
+
+
+--
+-- Name: ghstore_compress(internal); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION ghstore_compress(internal) RETURNS internal
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'ghstore_compress';
+
+
+--
+-- Name: ghstore_consistent(internal, internal, integer, oid, internal); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION ghstore_consistent(internal, internal, integer, oid, internal) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'ghstore_consistent';
+
+
+--
+-- Name: ghstore_decompress(internal); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION ghstore_decompress(internal) RETURNS internal
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'ghstore_decompress';
+
+
+--
+-- Name: ghstore_penalty(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION ghstore_penalty(internal, internal, internal) RETURNS internal
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'ghstore_penalty';
+
+
+--
+-- Name: ghstore_picksplit(internal, internal); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION ghstore_picksplit(internal, internal) RETURNS internal
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'ghstore_picksplit';
+
+
+--
+-- Name: ghstore_same(internal, internal, internal); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION ghstore_same(internal, internal, internal) RETURNS internal
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'ghstore_same';
+
+
+--
+-- Name: ghstore_union(internal, internal); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION ghstore_union(internal, internal) RETURNS internal
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'ghstore_union';
+
+
+--
+-- Name: gin_consistent_hstore(internal, smallint, internal, integer, internal, internal); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION gin_consistent_hstore(internal, smallint, internal, integer, internal, internal) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'gin_consistent_hstore';
+
+
+--
+-- Name: gin_extract_hstore(internal, internal); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION gin_extract_hstore(internal, internal) RETURNS internal
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'gin_extract_hstore';
+
+
+--
+-- Name: gin_extract_hstore_query(internal, internal, smallint, internal, internal); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION gin_extract_hstore_query(internal, internal, smallint, internal, internal) RETURNS internal
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'gin_extract_hstore_query';
+
+
+--
+-- Name: hs_concat(hstore, hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hs_concat(hstore, hstore) RETURNS hstore
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_concat';
+
+
+--
+-- Name: hs_contained(hstore, hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hs_contained(hstore, hstore) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_contained';
+
+
+--
+-- Name: hs_contains(hstore, hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hs_contains(hstore, hstore) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_contains';
+
+
+--
+-- Name: hstore(text[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore(text[]) RETURNS hstore
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_from_array';
+
+
+--
+-- Name: hstore(record); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore(record) RETURNS hstore
+    LANGUAGE c IMMUTABLE
+    AS '$libdir/hstore', 'hstore_from_record';
+
+
+--
+-- Name: hstore(text, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore(text, text) RETURNS hstore
+    LANGUAGE c IMMUTABLE
+    AS '$libdir/hstore', 'hstore_from_text';
+
+
+--
+-- Name: hstore(text[], text[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore(text[], text[]) RETURNS hstore
+    LANGUAGE c IMMUTABLE
+    AS '$libdir/hstore', 'hstore_from_arrays';
+
+
+--
+-- Name: hstore_cmp(hstore, hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_cmp(hstore, hstore) RETURNS integer
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_cmp';
+
+
+--
+-- Name: hstore_eq(hstore, hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_eq(hstore, hstore) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_eq';
+
+
+--
+-- Name: hstore_ge(hstore, hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_ge(hstore, hstore) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_ge';
+
+
+--
+-- Name: hstore_gt(hstore, hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_gt(hstore, hstore) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_gt';
+
+
+--
+-- Name: hstore_hash(hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_hash(hstore) RETURNS integer
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_hash';
+
+
+--
+-- Name: hstore_le(hstore, hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_le(hstore, hstore) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_le';
+
+
+--
+-- Name: hstore_lt(hstore, hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_lt(hstore, hstore) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_lt';
+
+
+--
+-- Name: hstore_ne(hstore, hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_ne(hstore, hstore) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_ne';
+
+
+--
+-- Name: hstore_to_array(hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_to_array(hstore) RETURNS text[]
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_to_array';
+
+
+--
+-- Name: hstore_to_matrix(hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_to_matrix(hstore) RETURNS text[]
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_to_matrix';
+
+
+--
+-- Name: hstore_version_diag(hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION hstore_version_diag(hstore) RETURNS integer
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_version_diag';
+
+
+--
+-- Name: isdefined(hstore, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION isdefined(hstore, text) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_defined';
+
+
+--
+-- Name: isexists(hstore, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION isexists(hstore, text) RETURNS boolean
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_exists';
+
+
+--
+-- Name: populate_record(anyelement, hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION populate_record(anyelement, hstore) RETURNS anyelement
+    LANGUAGE c IMMUTABLE
+    AS '$libdir/hstore', 'hstore_populate_record';
+
+
+--
+-- Name: skeys(hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION skeys(hstore) RETURNS SETOF text
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_skeys';
+
+
+--
+-- Name: slice(hstore, text[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION slice(hstore, text[]) RETURNS hstore
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_slice_to_hstore';
+
+
+--
+-- Name: slice_array(hstore, text[]); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION slice_array(hstore, text[]) RETURNS text[]
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_slice_to_array';
+
+
+--
+-- Name: svals(hstore); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION svals(hstore) RETURNS SETOF text
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/hstore', 'hstore_svals';
 
 
 --
@@ -100,6 +590,15 @@ COMMENT ON FUNCTION taxon_concept_with_ancestors(param_id integer) IS 'Returns o
 
 
 --
+-- Name: tconvert(text, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION tconvert(text, text) RETURNS hstore
+    LANGUAGE c IMMUTABLE
+    AS '$libdir/hstore', 'hstore_from_text';
+
+
+--
 -- Name: update_taxon_concept_hstore_trigger(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -120,18 +619,12 @@ CREATE FUNCTION update_taxon_concept_hstore_trigger() RETURNS trigger
       upper = array_upper(taxon_data_rec.ranks, 1);
       IF upper IS NOT NULL THEN
         rank_name := taxon_data_rec.ranks[upper];
-        if rank_name = 'PHYLUM' then
-          raise notice 'phylum %', NEW.id;
-        end if;
         scientific_name := taxon_data_rec.names[upper];
         -- for each ancestor create a field in the hstore
         FOR i IN array_lower(taxon_data_rec.ranks, 1)..upper
         LOOP
           res := res || (LOWER(taxon_data_rec.ranks[i]) || '_name' => taxon_data_rec.names[i]);
         END LOOP;
-        if rank_name = 'PHYLUM' then
-          raise notice '%',res;
-        end if;
         -- construct the full name for display purposes
         IF rank_name = 'SPECIES' THEN
           -- now create a binomen for full name
@@ -145,16 +638,10 @@ CREATE FUNCTION update_taxon_concept_hstore_trigger() RETURNS trigger
         ELSE
            full_name := scientific_name;
         END IF;
-        if rank_name = 'PHYLUM' then
-          raise notice '%',full_name;
-        end if;
         res := res || 
         ('scientific_name' => scientific_name) ||
         ('full_name' => full_name) ||
         ('rank_name' => rank_name);
-        if rank_name = 'PHYLUM' then
-          raise notice '%',res;
-        end if;
       END IF;
       UPDATE taxon_concepts SET data = res WHERE id = NEW.id;
     END IF;
@@ -169,6 +656,374 @@ $$;
 
 COMMENT ON FUNCTION update_taxon_concept_hstore_trigger() IS 'Trigger function that updates additional fields in the hstore column';
 
+
+--
+-- Name: #<#; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR #<# (
+    PROCEDURE = hstore_lt,
+    LEFTARG = hstore,
+    RIGHTARG = hstore,
+    COMMUTATOR = #>#,
+    NEGATOR = #>=#,
+    RESTRICT = scalarltsel,
+    JOIN = scalarltjoinsel
+);
+
+
+--
+-- Name: #<=#; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR #<=# (
+    PROCEDURE = hstore_le,
+    LEFTARG = hstore,
+    RIGHTARG = hstore,
+    COMMUTATOR = #>=#,
+    NEGATOR = #>#,
+    RESTRICT = scalarltsel,
+    JOIN = scalarltjoinsel
+);
+
+
+--
+-- Name: #=; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR #= (
+    PROCEDURE = populate_record,
+    LEFTARG = anyelement,
+    RIGHTARG = hstore
+);
+
+
+--
+-- Name: #>#; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR #># (
+    PROCEDURE = hstore_gt,
+    LEFTARG = hstore,
+    RIGHTARG = hstore,
+    COMMUTATOR = #<#,
+    NEGATOR = #<=#,
+    RESTRICT = scalargtsel,
+    JOIN = scalargtjoinsel
+);
+
+
+--
+-- Name: #>=#; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR #>=# (
+    PROCEDURE = hstore_ge,
+    LEFTARG = hstore,
+    RIGHTARG = hstore,
+    COMMUTATOR = #<=#,
+    NEGATOR = #<#,
+    RESTRICT = scalargtsel,
+    JOIN = scalargtjoinsel
+);
+
+
+--
+-- Name: %#; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR %# (
+    PROCEDURE = hstore_to_matrix,
+    RIGHTARG = hstore
+);
+
+
+--
+-- Name: %%; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR %% (
+    PROCEDURE = hstore_to_array,
+    RIGHTARG = hstore
+);
+
+
+--
+-- Name: -; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR - (
+    PROCEDURE = delete,
+    LEFTARG = hstore,
+    RIGHTARG = text
+);
+
+
+--
+-- Name: -; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR - (
+    PROCEDURE = delete,
+    LEFTARG = hstore,
+    RIGHTARG = text[]
+);
+
+
+--
+-- Name: -; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR - (
+    PROCEDURE = delete,
+    LEFTARG = hstore,
+    RIGHTARG = hstore
+);
+
+
+--
+-- Name: ->; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR -> (
+    PROCEDURE = fetchval,
+    LEFTARG = hstore,
+    RIGHTARG = text
+);
+
+
+--
+-- Name: ->; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR -> (
+    PROCEDURE = slice_array,
+    LEFTARG = hstore,
+    RIGHTARG = text[]
+);
+
+
+--
+-- Name: <>; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR <> (
+    PROCEDURE = hstore_ne,
+    LEFTARG = hstore,
+    RIGHTARG = hstore,
+    COMMUTATOR = <>,
+    NEGATOR = =,
+    RESTRICT = neqsel,
+    JOIN = neqjoinsel
+);
+
+
+--
+-- Name: <@; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR <@ (
+    PROCEDURE = hs_contained,
+    LEFTARG = hstore,
+    RIGHTARG = hstore,
+    COMMUTATOR = @>,
+    RESTRICT = contsel,
+    JOIN = contjoinsel
+);
+
+
+--
+-- Name: =; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR = (
+    PROCEDURE = hstore_eq,
+    LEFTARG = hstore,
+    RIGHTARG = hstore,
+    COMMUTATOR = =,
+    NEGATOR = <>,
+    MERGES,
+    HASHES,
+    RESTRICT = eqsel,
+    JOIN = eqjoinsel
+);
+
+
+--
+-- Name: =>; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR => (
+    PROCEDURE = hstore,
+    LEFTARG = text,
+    RIGHTARG = text
+);
+
+
+--
+-- Name: ?; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR ? (
+    PROCEDURE = exist,
+    LEFTARG = hstore,
+    RIGHTARG = text,
+    RESTRICT = contsel,
+    JOIN = contjoinsel
+);
+
+
+--
+-- Name: ?&; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR ?& (
+    PROCEDURE = exists_all,
+    LEFTARG = hstore,
+    RIGHTARG = text[],
+    RESTRICT = contsel,
+    JOIN = contjoinsel
+);
+
+
+--
+-- Name: ?|; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR ?| (
+    PROCEDURE = exists_any,
+    LEFTARG = hstore,
+    RIGHTARG = text[],
+    RESTRICT = contsel,
+    JOIN = contjoinsel
+);
+
+
+--
+-- Name: @; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR @ (
+    PROCEDURE = hs_contains,
+    LEFTARG = hstore,
+    RIGHTARG = hstore,
+    COMMUTATOR = ~,
+    RESTRICT = contsel,
+    JOIN = contjoinsel
+);
+
+
+--
+-- Name: @>; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR @> (
+    PROCEDURE = hs_contains,
+    LEFTARG = hstore,
+    RIGHTARG = hstore,
+    COMMUTATOR = <@,
+    RESTRICT = contsel,
+    JOIN = contjoinsel
+);
+
+
+--
+-- Name: ||; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR || (
+    PROCEDURE = hs_concat,
+    LEFTARG = hstore,
+    RIGHTARG = hstore
+);
+
+
+--
+-- Name: ~; Type: OPERATOR; Schema: public; Owner: -
+--
+
+CREATE OPERATOR ~ (
+    PROCEDURE = hs_contained,
+    LEFTARG = hstore,
+    RIGHTARG = hstore,
+    COMMUTATOR = @,
+    RESTRICT = contsel,
+    JOIN = contjoinsel
+);
+
+
+--
+-- Name: btree_hstore_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
+--
+
+CREATE OPERATOR CLASS btree_hstore_ops
+    DEFAULT FOR TYPE hstore USING btree AS
+    OPERATOR 1 #<#(hstore,hstore) ,
+    OPERATOR 2 #<=#(hstore,hstore) ,
+    OPERATOR 3 =(hstore,hstore) ,
+    OPERATOR 4 #>=#(hstore,hstore) ,
+    OPERATOR 5 #>#(hstore,hstore) ,
+    FUNCTION 1 hstore_cmp(hstore,hstore);
+
+
+--
+-- Name: gin_hstore_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
+--
+
+CREATE OPERATOR CLASS gin_hstore_ops
+    DEFAULT FOR TYPE hstore USING gin AS
+    STORAGE text ,
+    OPERATOR 7 @>(hstore,hstore) ,
+    OPERATOR 9 ?(hstore,text) ,
+    OPERATOR 10 ?|(hstore,text[]) ,
+    OPERATOR 11 ?&(hstore,text[]) ,
+    FUNCTION 1 bttextcmp(text,text) ,
+    FUNCTION 2 gin_extract_hstore(internal,internal) ,
+    FUNCTION 3 gin_extract_hstore_query(internal,internal,smallint,internal,internal) ,
+    FUNCTION 4 gin_consistent_hstore(internal,smallint,internal,integer,internal,internal);
+
+
+--
+-- Name: gist_hstore_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
+--
+
+CREATE OPERATOR CLASS gist_hstore_ops
+    DEFAULT FOR TYPE hstore USING gist AS
+    STORAGE ghstore ,
+    OPERATOR 7 @>(hstore,hstore) ,
+    OPERATOR 9 ?(hstore,text) ,
+    OPERATOR 10 ?|(hstore,text[]) ,
+    OPERATOR 11 ?&(hstore,text[]) ,
+    OPERATOR 13 @(hstore,hstore) ,
+    FUNCTION 1 ghstore_consistent(internal,internal,integer,oid,internal) ,
+    FUNCTION 2 ghstore_union(internal,internal) ,
+    FUNCTION 3 ghstore_compress(internal) ,
+    FUNCTION 4 ghstore_decompress(internal) ,
+    FUNCTION 5 ghstore_penalty(internal,internal,internal) ,
+    FUNCTION 6 ghstore_picksplit(internal,internal) ,
+    FUNCTION 7 ghstore_same(internal,internal,internal);
+
+
+--
+-- Name: hash_hstore_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
+--
+
+CREATE OPERATOR CLASS hash_hstore_ops
+    DEFAULT FOR TYPE hstore USING hash AS
+    OPERATOR 1 =(hstore,hstore) ,
+    FUNCTION 1 hstore_hash(hstore);
+
+
+SET search_path = pg_catalog;
+
+--
+-- Name: CAST (text[] AS public.hstore); Type: CAST; Schema: pg_catalog; Owner: -
+--
+
+CREATE CAST (text[] AS public.hstore) WITH FUNCTION public.hstore(text[]);
+
+
+SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
 
@@ -585,8 +1440,6 @@ CREATE TABLE schema_migrations (
 
 CREATE TABLE species_import (
     kingdom character varying,
-    phylum character varying,
-    class character varying,
     taxonorder character varying,
     family character varying,
     genus character varying,
@@ -606,7 +1459,8 @@ CREATE TABLE species_listings (
     designation_id integer,
     name character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    abbreviation character varying(255)
 );
 
 
@@ -870,133 +1724,133 @@ ALTER SEQUENCE taxon_relationships_id_seq OWNED BY taxon_relationships.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY authors ALTER COLUMN id SET DEFAULT nextval('authors_id_seq'::regclass);
+ALTER TABLE authors ALTER COLUMN id SET DEFAULT nextval('authors_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY change_types ALTER COLUMN id SET DEFAULT nextval('change_types_id_seq'::regclass);
+ALTER TABLE change_types ALTER COLUMN id SET DEFAULT nextval('change_types_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY designations ALTER COLUMN id SET DEFAULT nextval('designations_id_seq'::regclass);
+ALTER TABLE designations ALTER COLUMN id SET DEFAULT nextval('designations_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY geo_entities ALTER COLUMN id SET DEFAULT nextval('geo_entities_id_seq'::regclass);
+ALTER TABLE geo_entities ALTER COLUMN id SET DEFAULT nextval('geo_entities_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY geo_entity_types ALTER COLUMN id SET DEFAULT nextval('geo_entity_types_id_seq'::regclass);
+ALTER TABLE geo_entity_types ALTER COLUMN id SET DEFAULT nextval('geo_entity_types_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY geo_relationship_types ALTER COLUMN id SET DEFAULT nextval('geo_relationship_types_id_seq'::regclass);
+ALTER TABLE geo_relationship_types ALTER COLUMN id SET DEFAULT nextval('geo_relationship_types_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY geo_relationships ALTER COLUMN id SET DEFAULT nextval('geo_relationships_id_seq'::regclass);
+ALTER TABLE geo_relationships ALTER COLUMN id SET DEFAULT nextval('geo_relationships_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY listing_changes ALTER COLUMN id SET DEFAULT nextval('listing_changes_id_seq'::regclass);
+ALTER TABLE listing_changes ALTER COLUMN id SET DEFAULT nextval('listing_changes_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY ranks ALTER COLUMN id SET DEFAULT nextval('ranks_id_seq'::regclass);
+ALTER TABLE ranks ALTER COLUMN id SET DEFAULT nextval('ranks_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY reference_authors ALTER COLUMN id SET DEFAULT nextval('reference_authors_id_seq'::regclass);
+ALTER TABLE reference_authors ALTER COLUMN id SET DEFAULT nextval('reference_authors_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY "references" ALTER COLUMN id SET DEFAULT nextval('references_id_seq'::regclass);
+ALTER TABLE "references" ALTER COLUMN id SET DEFAULT nextval('references_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY species_listings ALTER COLUMN id SET DEFAULT nextval('species_listings_id_seq'::regclass);
+ALTER TABLE species_listings ALTER COLUMN id SET DEFAULT nextval('species_listings_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY taxon_concept_geo_entities ALTER COLUMN id SET DEFAULT nextval('taxon_concept_geo_entities_id_seq'::regclass);
+ALTER TABLE taxon_concept_geo_entities ALTER COLUMN id SET DEFAULT nextval('taxon_concept_geo_entities_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY taxon_concepts ALTER COLUMN id SET DEFAULT nextval('taxon_concepts_id_seq'::regclass);
+ALTER TABLE taxon_concepts ALTER COLUMN id SET DEFAULT nextval('taxon_concepts_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY taxon_distributions ALTER COLUMN id SET DEFAULT nextval('taxon_distributions_id_seq'::regclass);
+ALTER TABLE taxon_distributions ALTER COLUMN id SET DEFAULT nextval('taxon_distributions_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY taxon_names ALTER COLUMN id SET DEFAULT nextval('taxon_names_id_seq'::regclass);
+ALTER TABLE taxon_names ALTER COLUMN id SET DEFAULT nextval('taxon_names_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY taxon_references ALTER COLUMN id SET DEFAULT nextval('taxon_references_id_seq'::regclass);
+ALTER TABLE taxon_references ALTER COLUMN id SET DEFAULT nextval('taxon_references_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY taxon_relationship_types ALTER COLUMN id SET DEFAULT nextval('taxon_relationship_types_id_seq'::regclass);
+ALTER TABLE taxon_relationship_types ALTER COLUMN id SET DEFAULT nextval('taxon_relationship_types_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY taxon_relationships ALTER COLUMN id SET DEFAULT nextval('taxon_relationships_id_seq'::regclass);
+ALTER TABLE taxon_relationships ALTER COLUMN id SET DEFAULT nextval('taxon_relationships_id_seq'::regclass);
 
 
 --
@@ -1177,6 +2031,13 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 --
 
 CREATE TRIGGER taxon_concept_insert_trigger AFTER INSERT ON taxon_concepts FOR EACH ROW EXECUTE PROCEDURE update_taxon_concept_hstore_trigger();
+
+
+--
+-- Name: taxon_concept_update_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER taxon_concept_update_trigger AFTER UPDATE ON taxon_concepts FOR EACH ROW WHEN ((old.parent_id IS DISTINCT FROM new.parent_id)) EXECUTE PROCEDURE update_taxon_concept_hstore_trigger();
 
 
 --
@@ -1362,3 +2223,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120606131036');
 INSERT INTO schema_migrations (version) VALUES ('20120606132104');
 
 INSERT INTO schema_migrations (version) VALUES ('20120607073043');
+
+INSERT INTO schema_migrations (version) VALUES ('20120607143941');
