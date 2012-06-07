@@ -4,7 +4,7 @@ namespace :import do
   task :cites_listings => [:environment, "cites_listings:defaults", "cites_listings:copy_data"] do
     TMP_TABLE = 'cites_listings_import'
     change_type = ChangeType.find_by_name(ChangeType::ADDITION)
-    designation = Designation.find_by_name("CITES")
+    designation = Designation.find_by_name(Designation::CITES)
     listings_count = ListingChange.count
     sql = <<-SQL
       INSERT INTO listing_changes(species_listing_id, taxon_concept_id, change_type_id, created_at, updated_at)
