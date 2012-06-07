@@ -11,15 +11,6 @@
 class GeoEntityType < ActiveRecord::Base
   attr_accessible :name
 
-  COUNTRY           = 'COUNTRY'
-  CITES_REGION      = 'CITES_REGION'
-  REGION            = 'REGION'
-  STATE             = 'STATE'
-  TERRITORY         = 'TERRITORY'
-  AQUATIC_TERRITORY = 'AQUATIC_TERRITORY'
-
-  def self.dict
-    [COUNTRY, CITES_REGION, REGION, STATE, TERRITORY, AQUATIC_TERRITORY]
-  end
-
+  include Dictionary
+  build_dictionary :country, :cites_region, :region, :state, :territory, :aquatic_territory
 end
