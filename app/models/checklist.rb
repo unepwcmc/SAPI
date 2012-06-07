@@ -29,23 +29,14 @@ class Checklist
     prepare_ancestor_and_descendants_conditions
     return [] unless @ancestor_conditions || @descendant_conditions
     if @output_layout == :taxonomic
-      @taxon_concepts = TaxonConcept.checklist_with_parents.
+      @taxon_concepts = TaxonConcept.
         where([@ancestor_conditions, @descendant_conditions].compact.join(' OR ')).
-        order('lft, scientific_name')
+        order("lft, data -> 'full_name'")
     else
-      @taxon_concepts = TaxonConcept.checklist_with_parents.
+      @taxon_concepts = TaxonConcept.
         where([@ancestor_conditions, @descendant_conditions].compact.join(' OR ')).
-        where("rank_name IN (?)", [Rank::GENUS, Rank::SPECIES, Rank::SUBSPECIES]).
-        order('names')
-    end
-    @taxon_concepts.each do |tc|
-      parent_names = tc.names.gsub(/[{}]/,'').split(',')
-      parent_ranks = tc.ranks.gsub(/[{}]/,'').split(',')
-      parent_ranks.each_with_index do |pr, idx|
-        if Rank.dict.include? pr
-          tc.send(pr.downcase+'_name=', parent_names[idx])
-        end
-      end
+        where("data -> 'rank_name' IN (?)", [Rank::GENUS, Rank::SPECIES, Rank::SUBSPECIES]).
+        order("data -> 'full_name'")
     end
   end
 
