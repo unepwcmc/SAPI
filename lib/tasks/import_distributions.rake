@@ -10,6 +10,7 @@ namespace :import do
         FROM #{TMP_TABLE}
         LEFT JOIN geo_entities ON geo_entities.legacy_id = country_id AND geo_entities.legacy_type = '#{GeoEntityType::COUNTRY}'
         LEFT JOIN taxon_concepts as species ON species.legacy_id = species_id
+        WHERE Species.id IS NOT NULL
     SQL
     ActiveRecord::Base.connection.execute(sql)
     puts "There are now #{TaxonConceptGeoEntity.count} taxon concept distributions in the database"

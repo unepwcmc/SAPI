@@ -94,10 +94,10 @@ Spcrecid, CtyRecID, CtyShort
 31399, 148, Nepal
 31597, 148, Nepal
 31597, 174, Russian Federation
-31597, 205, Taiwan, Province of China
+31597, 205, "Taiwan, Province of China"
 31597, 107, Japan
 31597, 112, Democratic People's Republic of Korea
-31597, 113, Korea, Republic of
+31597, 113, "Korea, Republic of"
 31597, 25, Bhutan
 31597, 44, China
 31597, 99, India
@@ -156,7 +156,7 @@ Spcrecid, CtyRecID, CtyShort
 54889, 163, Panama
 54889, 228, Venezuela
 56014, 163, Panama
-58390, 184, São Tomé and Principe
+58390, 184, Sao Tome and Principe
 58673, 51, Costa Rica
 58735, 137, Mexico
 60818, 39, Cape Verde
@@ -168,10 +168,10 @@ Spcrecid, CtyRecID, CtyShort
 61711, 137, Mexico
 62284, 107, Japan
 62600, 107, Japan
-62600, 205, Taiwan, Province of China
+62600, 205, "Taiwan, Province of China"
 62600, 44, China
 63003, 107, Japan
-63003, 205, Taiwan, Province of China
+63003, 205, "Taiwan, Province of China"
 67745, 128, Malaysia
 68437, 137, Mexico
 68437, 222, United States
@@ -303,7 +303,7 @@ Spcrecid, CtyRecID, CtyShort
 159997, 194, South Africa
 160571, 126, Madagascar
 161383, 135, Mauritius
-161383, 176, Réunion
+161383, 176, Reunion
 161443, 194, South Africa
 169947, 137, Mexico
 170184, 30, Brazil
