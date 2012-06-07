@@ -19,18 +19,12 @@ CREATE OR REPLACE FUNCTION update_taxon_concept_hstore_trigger() RETURNS trigger
       upper = array_upper(taxon_data_rec.ranks, 1);
       IF upper IS NOT NULL THEN
         rank_name := taxon_data_rec.ranks[upper];
-        if rank_name = 'PHYLUM' then
-          raise notice 'phylum %', NEW.id;
-        end if;
         scientific_name := taxon_data_rec.names[upper];
         -- for each ancestor create a field in the hstore
         FOR i IN array_lower(taxon_data_rec.ranks, 1)..upper
         LOOP
           res := res || (LOWER(taxon_data_rec.ranks[i]) || '_name' => taxon_data_rec.names[i]);
         END LOOP;
-        if rank_name = 'PHYLUM' then
-          raise notice '%',res;
-        end if;
         -- construct the full name for display purposes
         IF rank_name = 'SPECIES' THEN
           -- now create a binomen for full name
@@ -44,16 +38,10 @@ CREATE OR REPLACE FUNCTION update_taxon_concept_hstore_trigger() RETURNS trigger
         ELSE
            full_name := scientific_name;
         END IF;
-        if rank_name = 'PHYLUM' then
-          raise notice '%',full_name;
-        end if;
         res := res || 
         ('scientific_name' => scientific_name) ||
         ('full_name' => full_name) ||
         ('rank_name' => rank_name);
-        if rank_name = 'PHYLUM' then
-          raise notice '%',res;
-        end if;
       END IF;
       UPDATE taxon_concepts SET data = res WHERE id = NEW.id;
     END IF;
