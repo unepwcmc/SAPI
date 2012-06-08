@@ -5,7 +5,8 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-
+puts "#{ListingChange.delete_all} listing changes deleted"
+puts "#{SpeciesListing.delete_all} species listings deleted"
 puts "#{TaxonConceptGeoEntity.delete_all} taxon concept geo entities deleted"
 puts "#{TaxonRelationship.delete_all} taxon relationships deleted"
 puts "#{TaxonRelationshipType.delete_all} taxon relationship types deleted"
