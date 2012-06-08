@@ -33,6 +33,7 @@ class TaxonConcept < ActiveRecord::Base
   has_many :taxon_concept_geo_entities
   has_many :geo_entities, :through => :taxon_concept_geo_entities
   has_many :listing_changes
+  has_many :species_listings, :through => :listing_changes
 
   scope :checklist, select('taxon_concepts.id, taxon_concepts.depth,
     taxon_concepts.lft, taxon_concepts.rgt, taxon_concepts.parent_id,
@@ -55,10 +56,14 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
+  def current_listing
+    species_listings.select('species_listings.abbreviation').order('listing_changes.created_at').limit(1).first.try(:abbreviation)
+  end
+
   def as_json(options={})
     super(
       :only =>[:id, :parent_id, :depth],
-      :methods => [:class_name_abbr, :family_name, :full_name, :rank_name]
+      :methods => [:class_name_abbr, :family_name, :full_name, :rank_name, :current_listing]
     )
   end
 
