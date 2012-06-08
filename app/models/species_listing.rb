@@ -7,6 +7,7 @@
 #  name           :string(255)
 #  created_at     :datetime        not null
 #  updated_at     :datetime        not null
+#  abbreviation   :string(255)
 #
 
 class SpeciesListing < ActiveRecord::Base

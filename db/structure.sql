@@ -1415,6 +1415,38 @@ ALTER SEQUENCE listing_changes_id_seq OWNED BY listing_changes.id;
 
 
 --
+-- Name: listing_distributions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE listing_distributions (
+    id integer NOT NULL,
+    listing_change_id integer,
+    geo_entity_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: listing_distributions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE listing_distributions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: listing_distributions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE listing_distributions_id_seq OWNED BY listing_distributions.id;
+
+
+--
 -- Name: ranks; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1526,6 +1558,8 @@ CREATE TABLE schema_migrations (
 
 CREATE TABLE species_import (
     kingdom character varying,
+    phylum character varying,
+    class character varying,
     taxonorder character varying,
     family character varying,
     genus character varying,
@@ -1866,6 +1900,13 @@ ALTER TABLE listing_changes ALTER COLUMN id SET DEFAULT nextval('listing_changes
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE listing_distributions ALTER COLUMN id SET DEFAULT nextval('listing_distributions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ranks ALTER COLUMN id SET DEFAULT nextval('ranks_id_seq'::regclass);
 
 
@@ -2001,6 +2042,14 @@ ALTER TABLE ONLY geo_relationships
 
 ALTER TABLE ONLY listing_changes
     ADD CONSTRAINT listing_changes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: listing_distributions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY listing_distributions
+    ADD CONSTRAINT listing_distributions_pkey PRIMARY KEY (id);
 
 
 --
@@ -2199,6 +2248,22 @@ ALTER TABLE ONLY listing_changes
 
 
 --
+-- Name: listing_distributions_geo_entity_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY listing_distributions
+    ADD CONSTRAINT listing_distributions_geo_entity_id_fk FOREIGN KEY (geo_entity_id) REFERENCES geo_entities(id);
+
+
+--
+-- Name: listing_distributions_listing_change_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY listing_distributions
+    ADD CONSTRAINT listing_distributions_listing_change_id_fk FOREIGN KEY (listing_change_id) REFERENCES listing_changes(id);
+
+
+--
 -- Name: ranks_parent_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2313,3 +2378,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120607073043');
 INSERT INTO schema_migrations (version) VALUES ('20120607132022');
 
 INSERT INTO schema_migrations (version) VALUES ('20120607143941');
+
+INSERT INTO schema_migrations (version) VALUES ('20120608151332');
