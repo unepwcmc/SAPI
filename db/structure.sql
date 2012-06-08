@@ -698,7 +698,8 @@ CREATE TABLE species_listings (
     designation_id integer,
     name character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    abbreviation character varying(255)
 );
 
 
@@ -1483,3 +1484,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120606132104');
 INSERT INTO schema_migrations (version) VALUES ('20120607073043');
 
 INSERT INTO schema_migrations (version) VALUES ('20120607132022');
+
+INSERT INTO schema_migrations (version) VALUES ('20120607143941');

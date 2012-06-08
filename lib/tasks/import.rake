@@ -6,5 +6,6 @@ namespace :import do
     Rake::Task["import:cites_regions"].invoke
     Rake::Task["import:countries"].invoke
     Rake::Task["import:distributions"].invoke
+    Rake::Task["import:cites_listings"].invoke
   end
 end

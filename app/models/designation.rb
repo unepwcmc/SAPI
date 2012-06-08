@@ -10,13 +10,8 @@
 
 class Designation < ActiveRecord::Base
   attr_accessible :name
+  include Dictionary
+  build_dictionary :cites
 
   has_many :species_listings
-
-  CITES = 'CITES'
-
-  def self.dict
-    [CITES]
-  end
-
 end

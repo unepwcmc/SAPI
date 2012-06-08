@@ -12,6 +12,7 @@ gem 'activerecord-postgres-hstore'
 gem 'foreigner'
 gem 'immigrant'
 gem 'awesome_nested_set'
+gem 'exception_notification', :require => 'exception_notifier'
 
 
 # To use ActiveModel has_secure_password
