@@ -3,19 +3,42 @@ namespace :import do
   desc "Import CITES species listings from csv file [usage: FILE=[path/to/file] rake import:cites_listings"
   task :cites_listings => [:environment, "cites_listings:defaults", "cites_listings:copy_data"] do
     TMP_TABLE = 'cites_listings_import'
-    change_type = ChangeType.find_by_name(ChangeType::ADDITION)
     designation = Designation.find_by_name(Designation::CITES)
+    appendix_1 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'I')
+    appendix_2 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'II')
+    appendix_3 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'III')
+    a = ChangeType.find_by_name(ChangeType::ADDITION)
+    d = ChangeType.find_by_name(ChangeType::DELETION)
+    r = ChangeType.find_by_name(ChangeType::RESERVATION)
+    rw = ChangeType.find_by_name(ChangeType::RESERVATION_WITHDRAWAL)
     listings_count = ListingChange.count
     sql = <<-SQL
-      INSERT INTO listing_changes(species_listing_id, taxon_concept_id, change_type_id, created_at, updated_at)
-      SELECT DISTINCT species_listings.id, taxon_concepts.id,  #{change_type.id}, current_date, current_date
+      INSERT INTO listing_changes(species_listing_id, taxon_concept_id, change_type_id, created_at, updated_at, effective_at)
+      SELECT DISTINCT
+        CASE
+          WHEN TMP.appendix like 'III%' THEN #{appendix_3.id}
+          WHEN TMP.appendix like 'II%' THEN #{appendix_2.id}
+          WHEN TMP.appendix like 'I%' THEN #{appendix_1.id}
+        END, taxon_concepts.id,
+        CASE
+          WHEN TMP.appendix like '%/r' THEN #{r.id}
+          WHEN TMP.appendix like '%/w' THEN #{rw.id}
+          WHEN TMP.appendix  ilike 'DELETED' THEN #{d.id}
+          ELSE #{a.id}
+        END, current_date, current_date, TMP.listing_date
       FROM #{TMP_TABLE} AS TMP
       INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = TMP.spc_rec_id
-      INNER JOIN species_listings ON INITCAP(BTRIM(species_listings.abbreviation)) = INITCAP(BTRIM(TMP.appendix)) AND species_listings.designation_id = #{designation.id}
-      WHERE NOT EXISTS (
-        SELECT * from listing_changes
-        WHERE species_listing_id = species_listings.id AND taxon_concept_id = taxon_concepts.id AND change_type_id = #{change_type.id}
-      );
+      WHERE TMP.appendix <> 'Deleted' AND
+        NOT EXISTS (
+          SELECT * from listing_changes
+          WHERE species_listing_id = species_listings.id AND taxon_concept_id = taxon_concepts.id AND
+            change_type_id = CASE
+              WHEN TMP.appendix like '%/r' THEN #{r.id}
+              WHEN TMP.appendix like '%/w' THEN #{rw.id}
+              WHEN TMP.appendix  ilike 'DELETED' THEN #{d.id}
+              ELSE #{a.id}
+            END
+        );
     SQL
     ActiveRecord::Base.connection.execute(sql)
     puts "#{ListingChange.count - listings_count} CITES listings were added to the database"
@@ -27,7 +50,7 @@ namespace :import do
       TMP_TABLE = 'cites_listings_import'
       begin
         puts "Creating tmp table: #{TMP_TABLE}"
-        ActiveRecord::Base.connection.execute "CREATE TABLE #{TMP_TABLE} ( spc_rec_id integer, appendix varchar);"
+        ActiveRecord::Base.connection.execute "CREATE TABLE #{TMP_TABLE} ( spc_rec_id integer, appendix varchar, listing_date date, country_legacy_id varchar, notes varchar );"
         puts "Table created"
       rescue Exception => e
         puts "Tmp already exists removing data from tmp table before starting the import"
@@ -39,7 +62,7 @@ namespace :import do
     desc 'Copy data into cites_listings_import table'
     task :copy_data => :create_table do
       TMP_TABLE = 'cites_listings_import'
-      file = ENV["FILE"] || 'lib/assets/files/animals_CITES_listings.csv'
+      file = ENV["FILE"] || 'lib/assets/files/animals_complex_CITES_listings.csv'
       if !file || !File.file?(Rails.root+file) #if the file is not defined, explain and leave.
         puts "Please specify a valid csv file from which to import cites_listings data"
         puts "Usage: FILE=[path/to/file] rake import:cites_listings"
@@ -47,7 +70,7 @@ namespace :import do
       end
       puts "Copying data from #{file} into tmp table #{TMP_TABLE}"
       psql = <<-PSQL
-\\COPY #{TMP_TABLE} (spc_rec_id, appendix)
+\\COPY #{TMP_TABLE} (spc_rec_id, appendix, listing_date, country_legacy_id, notes)
           FROM '#{Rails.root + file}'
           WITH DElIMITER ','
           CSV HEADER
