@@ -28,18 +28,19 @@ namespace :import do
         END, current_date, current_date, TMP.listing_date
       FROM #{TMP_TABLE} AS TMP
       INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = TMP.spc_rec_id
-      WHERE TMP.appendix <> 'Deleted' AND
-        NOT EXISTS (
-          SELECT * from listing_changes
-          WHERE species_listing_id = species_listings.id AND taxon_concept_id = taxon_concepts.id AND
-            change_type_id = CASE
-              WHEN TMP.appendix like '%/r' THEN #{r.id}
-              WHEN TMP.appendix like '%/w' THEN #{rw.id}
-              WHEN TMP.appendix  ilike 'DELETED' THEN #{d.id}
-              ELSE #{a.id}
-            END
-        );
+      WHERE TMP.appendix <> 'Deleted' 
     SQL
+#AND
+#        NOT EXISTS (
+#          SELECT * from listing_changes
+#          WHERE species_listing_id = species_listings.id AND taxon_concept_id = taxon_concepts.id AND
+#            change_type_id = CASE
+#              WHEN TMP.appendix like '%/r' THEN #{r.id}
+#              WHEN TMP.appendix like '%/w' THEN #{rw.id}
+#              WHEN TMP.appendix  ilike 'DELETED' THEN #{d.id}
+#              ELSE #{a.id}
+#            END
+#        );
     ActiveRecord::Base.connection.execute(sql)
     puts "#{ListingChange.count - listings_count} CITES listings were added to the database"
   end
