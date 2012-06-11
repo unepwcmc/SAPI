@@ -225,6 +225,45 @@ CREATE FUNCTION fetchval(hstore, text) RETURNS text
 
 
 --
+-- Name: get_full_name(character varying, character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION get_full_name(character varying, character varying, character varying, character varying) RETURNS character varying
+    LANGUAGE plpgsql
+    AS $_$
+  DECLARE
+    rank_name ALIAS FOR $1;
+    genus_name ALIAS FOR $2;
+    species_name ALIAS FOR $3;
+    scientific_name ALIAS FOR $4;
+    full_name CHARACTER VARYING(255);
+  BEGIN
+    -- construct the full name for display purposes
+    IF rank_name = 'SPECIES' THEN
+      -- now create a binomen for full name
+      full_name := genus_name || ' ' ||
+      LOWER(scientific_name);
+    ELSIF rank_name = 'SUBSPECIES' THEN
+      -- now create a trinomen for full name
+      full_name := genus_name || ' ' ||
+      LOWER(species_name) || ' ' ||
+      scientific_name;
+    ELSE
+       full_name := scientific_name;
+    END IF;
+    RETURN full_name;
+  END;
+$_$;
+
+
+--
+-- Name: FUNCTION get_full_name(character varying, character varying, character varying, character varying); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION get_full_name(character varying, character varying, character varying, character varying) IS 'Returns the full name constructed as a single name, binomen or trinomen depending on rank';
+
+
+--
 -- Name: ghstore_compress(internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -613,7 +652,12 @@ CREATE FUNCTION update_taxon_concept_hstore_trigger() RETURNS trigger
     scientific_name CHARACTER VARYING(255);
     full_name CHARACTER VARYING(255);
   BEGIN
-    res := ''::hstore;
+    IF NEW.data IS NULL THEN
+      res := ''::hstore;
+    ELSE
+      res := NEW.data;
+    END IF;
+
     SELECT * FROM taxon_concept_with_ancestors(NEW.id) INTO taxon_data_rec;
     IF FOUND THEN
       upper = array_upper(taxon_data_rec.ranks, 1);
@@ -623,27 +667,21 @@ CREATE FUNCTION update_taxon_concept_hstore_trigger() RETURNS trigger
         -- for each ancestor create a field in the hstore
         FOR i IN array_lower(taxon_data_rec.ranks, 1)..upper
         LOOP
-          res := res || (LOWER(taxon_data_rec.ranks[i]) || '_name' => taxon_data_rec.names[i]);
+          IF rank_name <> taxon_data_rec.ranks[i] THEN
+            res := res || (LOWER(taxon_data_rec.ranks[i]) || '_name' => taxon_data_rec.names[i]);
+          END IF;
         END LOOP;
-        -- construct the full name for display purposes
-        IF rank_name = 'SPECIES' THEN
-          -- now create a binomen for full name
-          full_name := CAST(res -> 'genus_name' AS character varying(255)) || ' ' ||
-          LOWER(scientific_name);
-        ELSIF rank_name = 'SUBSPECIES' THEN
-          -- now create a trinomen for full name
-          full_name := CAST(res -> 'genus_name' AS character varying(255)) || ' ' ||
-          LOWER(CAST(res -> 'species_name' AS character varying(255))) || ' ' ||
-          scientific_name;
-        ELSE
-           full_name := scientific_name;
-        END IF;
+        full_name := get_full_name(rank_name, res -> 'genus_name', res -> 'species_name', scientific_name);
+        -- taxonomic_position := res -> 'taxonomic_position';
         res := res || 
-        ('scientific_name' => scientific_name) ||
-        ('full_name' => full_name) ||
-        ('rank_name' => rank_name);
-      END IF;
+          ('scientific_name' => scientific_name) ||
+          ('full_name' => full_name) ||
+          ('rank_name' => rank_name);
+        END IF;
       UPDATE taxon_concepts SET data = res WHERE id = NEW.id;
+      IF CAST(res -> 'taxonomic_position' AS CHARACTER VARYING(64)) IS NULL THEN
+        PERFORM update_taxonomic_position(NEW.parent_id);
+      END IF;
     END IF;
     RETURN NULL;
   END;
@@ -655,6 +693,44 @@ $$;
 --
 
 COMMENT ON FUNCTION update_taxon_concept_hstore_trigger() IS 'Trigger function that updates additional fields in the hstore column';
+
+
+--
+-- Name: update_taxonomic_position(integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION update_taxonomic_position(integer) RETURNS void
+    LANGUAGE plpgsql
+    AS $_$
+    DECLARE
+      in_parent_id ALIAS FOR $1;
+      taxon_concept_id INTEGER;
+    BEGIN
+      UPDATE taxon_concepts
+      SET data = data || 
+       ('taxonomic_position' => CAST(parent_part || '.' || child_part AS CHARACTER VARYING))
+      FROM (
+        SELECT
+        children.id, parent.data->'taxonomic_position' AS parent_part,
+        row_number() OVER (ORDER BY children.data -> 'full_name') AS child_part
+        FROM taxon_concepts AS children
+        LEFT JOIN taxon_concepts AS parent ON children.parent_id = parent.id
+        WHERE parent.id = in_parent_id
+      ) children_with_positions
+      WHERE taxon_concepts.id = children_with_positions.id;
+      FOR taxon_concept_id IN (SELECT * FROM taxon_concepts WHERE parent_id = in_parent_id)
+      LOOP
+        PERFORM update_taxonomic_position(taxon_concept_id);
+      END LOOP;
+    END;
+$_$;
+
+
+--
+-- Name: FUNCTION update_taxonomic_position(integer); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION update_taxonomic_position(integer) IS 'Updates the taxonomic position by taking the parent value and adding another ordinal to reflect alphabetical order';
 
 
 --
@@ -1094,6 +1170,16 @@ ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
 
 
 --
+-- Name: cites_listings_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cites_listings_import (
+    spc_rec_id integer,
+    appendix character varying
+);
+
+
+--
 -- Name: cites_regions_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1329,6 +1415,38 @@ ALTER SEQUENCE listing_changes_id_seq OWNED BY listing_changes.id;
 
 
 --
+-- Name: listing_distributions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE listing_distributions (
+    id integer NOT NULL,
+    listing_change_id integer,
+    geo_entity_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: listing_distributions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE listing_distributions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: listing_distributions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE listing_distributions_id_seq OWNED BY listing_distributions.id;
+
+
+--
 -- Name: ranks; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1440,6 +1558,8 @@ CREATE TABLE schema_migrations (
 
 CREATE TABLE species_import (
     kingdom character varying,
+    phylum character varying,
+    class character varying,
     taxonorder character varying,
     family character varying,
     genus character varying,
@@ -1780,6 +1900,13 @@ ALTER TABLE listing_changes ALTER COLUMN id SET DEFAULT nextval('listing_changes
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE listing_distributions ALTER COLUMN id SET DEFAULT nextval('listing_distributions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ranks ALTER COLUMN id SET DEFAULT nextval('ranks_id_seq'::regclass);
 
 
@@ -1915,6 +2042,14 @@ ALTER TABLE ONLY geo_relationships
 
 ALTER TABLE ONLY listing_changes
     ADD CONSTRAINT listing_changes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: listing_distributions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY listing_distributions
+    ADD CONSTRAINT listing_distributions_pkey PRIMARY KEY (id);
 
 
 --
@@ -2113,6 +2248,22 @@ ALTER TABLE ONLY listing_changes
 
 
 --
+-- Name: listing_distributions_geo_entity_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY listing_distributions
+    ADD CONSTRAINT listing_distributions_geo_entity_id_fk FOREIGN KEY (geo_entity_id) REFERENCES geo_entities(id);
+
+
+--
+-- Name: listing_distributions_listing_change_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY listing_distributions
+    ADD CONSTRAINT listing_distributions_listing_change_id_fk FOREIGN KEY (listing_change_id) REFERENCES listing_changes(id);
+
+
+--
 -- Name: ranks_parent_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2224,4 +2375,8 @@ INSERT INTO schema_migrations (version) VALUES ('20120606132104');
 
 INSERT INTO schema_migrations (version) VALUES ('20120607073043');
 
+INSERT INTO schema_migrations (version) VALUES ('20120607132022');
+
 INSERT INTO schema_migrations (version) VALUES ('20120607143941');
+
+INSERT INTO schema_migrations (version) VALUES ('20120608151332');

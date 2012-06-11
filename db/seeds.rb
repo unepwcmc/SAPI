@@ -5,7 +5,8 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-
+puts "#{ListingChange.delete_all} listing changes deleted"
+puts "#{SpeciesListing.delete_all} species listings deleted"
 puts "#{TaxonConceptGeoEntity.delete_all} taxon concept geo entities deleted"
 puts "#{TaxonRelationship.delete_all} taxon relationships deleted"
 puts "#{TaxonRelationshipType.delete_all} taxon relationship types deleted"
@@ -51,88 +52,114 @@ cms = Designation.find_by_name('CMS')
 higher_taxa = [
   {
     :name => 'Animalia',
+    :taxonomic_position => '1',
     :sub_taxa => [
       {
         :name => 'Annelida',
+        :taxonomic_position => '1.4',
         :sub_taxa => [
           {
             :name => 'Hirudinoidea',
+            :taxonomic_position => '1.4.1',
             :abbreviation => 'Hi'
           }
         ]
       },
       {
         :name => 'Arthropoda',
+        :taxonomic_position => '1.3',
         :sub_taxa => [
           {
             :name => 'Arachnida',
+            :taxonomic_position => '1.3.1',
             :abbreviation => 'Ar'
           },
           {
             :name => 'Insecta',
+            :taxonomic_position => '1.3.2',
             :abbreviation => 'In'
           }
         ]
       },
       {
         :name => 'Chordata',
+        :taxonomic_position => '1.1',
         :sub_taxa => [
           {
             :name => 'Actinopterygii',
+            :taxonomic_position => '1.1.6',
             :abbreviation => 'Ac'
           },
           {
             :name => 'Amphibia',
+            :taxonomic_position => '1.1.4',
             :abbreviation => 'Am'
           },
           {
             :name => 'Aves',
+            :taxonomic_position => '1.1.2',
             :abbreviation => 'Av'
           },
           {
             :name => 'Elasmobranchii',
+            :taxonomic_position => '1.1.5',
             :abbreviation => 'El'
           },
           {
             :name => 'Mammalia',
+            :taxonomic_position => '1.1.1',
             :abbreviation => 'MA'
           },
           {
             :name => 'Reptilia',
+            :taxonomic_position => '1.1.3',
             :abbreviation => 'Re'
           },
           {
             :name => 'Sarcopterygii',
+            :taxonomic_position => '1.1.7',
             :abbreviation => 'Sa'
           }
         ]
       },
       {
         :name => 'Cnidaria',
+        :taxonomic_position => '1.6',
         :sub_taxa => [
           {
             :name => 'Anthozoa',
+            :taxonomic_position => '1.6.1',
             :abbreviation => 'An'
           },
           {
             :name => 'Hydrozoa',
+            :taxonomic_position => '1.6.2',
             :abbreviation => 'Hy'
           }
         ]
       },
       {
         :name => 'Echinodermata',
-        :sub_taxa => []
+        :taxonomic_position => '1.2',
+        :sub_taxa => [
+          {
+            :name => 'Holothuroidea',
+            :taxonomic_position => '1.2.1'
+          }
+        ]
       },
       {
         :name => 'Mollusca',
+        :taxonomic_position => '1.5',
         :sub_taxa => [
           {
             :name => 'Bivalvia',
+            :taxonomic_position => '1.5.1',
             :abbreviation => 'Bi'
           },
           {
             :name => 'Gastropoda',
+            :taxonomic_position => '1.5.2',
             :abbreviation => 'Ga'
           }
         ]
@@ -141,6 +168,7 @@ higher_taxa = [
   },
   {
     :name => 'Plantae',
+    :taxonomic_position => '2',
     :sub_taxa => []
   }
 ]
@@ -150,7 +178,8 @@ higher_taxa.each do |kingdom_props|
   kingdom_name = kingdom_props[:name]
   name = TaxonName.create(:scientific_name => kingdom_name)
   kingdom = TaxonConcept.create(:rank_id => kingdom_rank_id,
-    :taxon_name_id => name.id, :designation_id => cites.id)
+    :taxon_name_id => name.id, :designation_id => cites.id,
+    :data => {'taxonomic_position' => kingdom_props[:taxonomic_position]})
   phyla = kingdom_props[:sub_taxa]
   phylum_rank_id = Rank.find_by_name(Rank::PHYLUM).id
   phyla.each do |phylum_props|
@@ -158,7 +187,8 @@ higher_taxa.each do |kingdom_props|
     name = TaxonName.create(:scientific_name => phylum_name)
     phylum = TaxonConcept.create(:rank_id => phylum_rank_id,
       :taxon_name_id => name.id, :designation_id => cites.id,
-      :parent_id => kingdom.id)
+      :parent_id => kingdom.id,
+      :data => {'taxonomic_position' => phylum_props[:taxonomic_position]})
     klasses = phylum_props[:sub_taxa]
     klass_rank_id = Rank.find_by_name(Rank::CLASS).id
     klasses.each do |klass_props|
@@ -170,7 +200,8 @@ higher_taxa.each do |kingdom_props|
       )
       klass = TaxonConcept.create(:rank_id => klass_rank_id,
       :taxon_name_id => name.id, :designation_id => cites.id,
-      :parent_id => phylum.id)
+      :parent_id => phylum.id,
+      :data => {'taxonomic_position' => klass_props[:taxonomic_position]})
     end
   end
 end

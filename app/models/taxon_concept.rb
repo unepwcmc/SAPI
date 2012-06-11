@@ -22,7 +22,7 @@
 
 class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :rank_id, :parent_id,
-    :designation_id, :taxon_name_id
+    :designation_id, :taxon_name_id, :data
   belongs_to :rank
   belongs_to :designation
   belongs_to :taxon_name
@@ -45,7 +45,8 @@ class TaxonConcept < ActiveRecord::Base
 
   [
     :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
-    :genus_name, :species_name, :subspecies_name, :full_name, :rank_name
+    :genus_name, :species_name, :subspecies_name, :full_name, :rank_name,
+    :taxonomic_position
   ].each do |attr_name|
     define_method(attr_name) { data && data[attr_name.to_s] }
   end
@@ -63,7 +64,8 @@ class TaxonConcept < ActiveRecord::Base
   def as_json(options={})
     super(
       :only =>[:id, :parent_id, :depth],
-      :methods => [:class_name_abbr, :family_name, :full_name, :rank_name, :current_listing]
+      :methods => [:class_name_abbr, :family_name, :full_name, :rank_name,
+      :taxonomic_position, :current_listing]
     )
   end
 
