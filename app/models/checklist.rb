@@ -46,7 +46,6 @@ class Checklist
   def prepare_ancestor_and_descendants_conditions
     ancestor_ranges = []
     descendant_ranges = []
-    puts @taxon_concepts_rel.inspect
     @taxon_concepts_rel.each do |tc|
       ancestor_ranges << (tc.lft..tc.rgt)
       descendant_ranges << (tc.lft...tc.rgt)

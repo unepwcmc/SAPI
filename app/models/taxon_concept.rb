@@ -51,12 +51,6 @@ class TaxonConcept < ActiveRecord::Base
     define_method(attr_name) { data && data[attr_name.to_s] }
   end
 
-  def class_name_abbr
-    if kingdom_name == 'Animalia'
-      class_name && class_name[0..1]
-    end
-  end
-
   def current_listing
     species_listings.select('species_listings.abbreviation').order('listing_changes.created_at').limit(1).first.try(:abbreviation)
   end
@@ -64,7 +58,7 @@ class TaxonConcept < ActiveRecord::Base
   def as_json(options={})
     super(
       :only =>[:id, :parent_id, :depth],
-      :methods => [:class_name_abbr, :family_name, :full_name, :rank_name,
+      :methods => [:family_name, :class_name, :full_name, :rank_name,
       :taxonomic_position, :current_listing]
     )
   end
