@@ -24,9 +24,9 @@ namespace :import do
             ELSE NULL
           END, taxon_concepts.id,
           CASE
-            WHEN INITCAP(BTRIM(TMP.appendix)) like '%/r' THEN #{r.id}
-            WHEN INITCAP(BTRIM(TMP.appendix)) like '%/w' THEN #{rw.id}
-            WHEN INITCAP(BTRIM(TMP.appendix))  ilike '%DELETED%' THEN #{d.id}
+            WHEN TMP.appendix like '%/r' THEN #{r.id}
+            WHEN TMP.appendix like '%/w' THEN #{rw.id}
+            WHEN TMP.appendix ilike '%DELETED%' THEN #{d.id}
             ELSE #{a.id}
           END, current_date, current_date, TMP.listing_date
         FROM #{TMP_TABLE} AS TMP
@@ -43,9 +43,9 @@ namespace :import do
                 ELSE NULL
               END AND
           listing_changes.change_type_id = CASE
-                WHEN INITCAP(BTRIM(TMP.appendix)) like '%/r' THEN #{r.id}
-                WHEN INITCAP(BTRIM(TMP.appendix)) like '%/w' THEN #{rw.id}
-                WHEN INITCAP(BTRIM(TMP.appendix))  ilike '%DELETED%' THEN #{d.id}
+                WHEN TMP.appendix like '%/r' THEN #{r.id}
+                WHEN TMP.appendix like '%/w' THEN #{rw.id}
+                WHEN TMP.appendix ilike '%DELETED%' THEN #{d.id}
                 ELSE #{a.id}
               END AND
           listing_changes.effective_at = TMP.listing_date
