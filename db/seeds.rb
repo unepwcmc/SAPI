@@ -60,8 +60,7 @@ higher_taxa = [
         :sub_taxa => [
           {
             :name => 'Hirudinoidea',
-            :taxonomic_position => '1.4.1',
-            :abbreviation => 'Hi'
+            :taxonomic_position => '1.4.1'
           }
         ]
       },
@@ -71,13 +70,11 @@ higher_taxa = [
         :sub_taxa => [
           {
             :name => 'Arachnida',
-            :taxonomic_position => '1.3.1',
-            :abbreviation => 'Ar'
+            :taxonomic_position => '1.3.1'
           },
           {
             :name => 'Insecta',
-            :taxonomic_position => '1.3.2',
-            :abbreviation => 'In'
+            :taxonomic_position => '1.3.2'
           }
         ]
       },
@@ -87,38 +84,31 @@ higher_taxa = [
         :sub_taxa => [
           {
             :name => 'Actinopterygii',
-            :taxonomic_position => '1.1.6',
-            :abbreviation => 'Ac'
+            :taxonomic_position => '1.1.6'
           },
           {
             :name => 'Amphibia',
-            :taxonomic_position => '1.1.4',
-            :abbreviation => 'Am'
+            :taxonomic_position => '1.1.4'
           },
           {
             :name => 'Aves',
-            :taxonomic_position => '1.1.2',
-            :abbreviation => 'Av'
+            :taxonomic_position => '1.1.2'
           },
           {
             :name => 'Elasmobranchii',
-            :taxonomic_position => '1.1.5',
-            :abbreviation => 'El'
+            :taxonomic_position => '1.1.5'
           },
           {
             :name => 'Mammalia',
-            :taxonomic_position => '1.1.1',
-            :abbreviation => 'MA'
+            :taxonomic_position => '1.1.1'
           },
           {
             :name => 'Reptilia',
-            :taxonomic_position => '1.1.3',
-            :abbreviation => 'Re'
+            :taxonomic_position => '1.1.3'
           },
           {
             :name => 'Sarcopterygii',
-            :taxonomic_position => '1.1.7',
-            :abbreviation => 'Sa'
+            :taxonomic_position => '1.1.7'
           }
         ]
       },
@@ -128,13 +118,11 @@ higher_taxa = [
         :sub_taxa => [
           {
             :name => 'Anthozoa',
-            :taxonomic_position => '1.6.1',
-            :abbreviation => 'An'
+            :taxonomic_position => '1.6.1'
           },
           {
             :name => 'Hydrozoa',
-            :taxonomic_position => '1.6.2',
-            :abbreviation => 'Hy'
+            :taxonomic_position => '1.6.2'
           }
         ]
       },
@@ -154,13 +142,11 @@ higher_taxa = [
         :sub_taxa => [
           {
             :name => 'Bivalvia',
-            :taxonomic_position => '1.5.1',
-            :abbreviation => 'Bi'
+            :taxonomic_position => '1.5.1'
           },
           {
             :name => 'Gastropoda',
-            :taxonomic_position => '1.5.2',
-            :abbreviation => 'Ga'
+            :taxonomic_position => '1.5.2'
           }
         ]
       }
@@ -193,10 +179,8 @@ higher_taxa.each do |kingdom_props|
     klass_rank_id = Rank.find_by_name(Rank::CLASS).id
     klasses.each do |klass_props|
       klass_name = klass_props[:name]
-      klass_abbr = klass_props[:abbreviation]
       name = TaxonName.create(
-        :scientific_name => klass_name,
-        :abbreviation => klass_abbr
+        :scientific_name => klass_name
       )
       klass = TaxonConcept.create(:rank_id => klass_rank_id,
       :taxon_name_id => name.id, :designation_id => cites.id,
