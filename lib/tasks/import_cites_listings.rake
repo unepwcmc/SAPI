@@ -12,37 +12,51 @@ namespace :import do
     r = ChangeType.find_by_name(ChangeType::RESERVATION)
     rw = ChangeType.find_by_name(ChangeType::RESERVATION_WITHDRAWAL)
     listings_count = ListingChange.count
+    listings_d_count = ListingDistribution.count
     sql = <<-SQL
-      INSERT INTO listing_changes(species_listing_id, taxon_concept_id, change_type_id, created_at, updated_at, effective_at)
-      SELECT DISTINCT
-        CASE
-          WHEN TMP.appendix like 'III%' THEN #{appendix_3.id}
-          WHEN TMP.appendix like 'II%' THEN #{appendix_2.id}
-          WHEN TMP.appendix like 'I%' THEN #{appendix_1.id}
-        END, taxon_concepts.id,
-        CASE
-          WHEN TMP.appendix like '%/r' THEN #{r.id}
-          WHEN TMP.appendix like '%/w' THEN #{rw.id}
-          WHEN TMP.appendix  ilike 'DELETED' THEN #{d.id}
-          ELSE #{a.id}
-        END, current_date, current_date, TMP.listing_date
-      FROM #{TMP_TABLE} AS TMP
-      INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = TMP.spc_rec_id
-      WHERE TMP.appendix <> 'Deleted' 
+      BEGIN;
+        INSERT INTO listing_changes(species_listing_id, taxon_concept_id, change_type_id, created_at, updated_at, effective_at)
+        SELECT DISTINCT
+          CASE
+            WHEN INITCAP(BTRIM(TMP.appendix)) like 'III%' THEN #{appendix_3.id}
+            WHEN INITCAP(BTRIM(TMP.appendix)) like 'II%' THEN #{appendix_2.id}
+            WHEN INITCAP(BTRIM(TMP.appendix)) like 'I%' THEN #{appendix_1.id}
+            ELSE NULL
+          END, taxon_concepts.id,
+          CASE
+            WHEN INITCAP(BTRIM(TMP.appendix)) like '%/r' THEN #{r.id}
+            WHEN INITCAP(BTRIM(TMP.appendix)) like '%/w' THEN #{rw.id}
+            WHEN INITCAP(BTRIM(TMP.appendix))  ilike '%DELETED%' THEN #{d.id}
+            ELSE #{a.id}
+          END, current_date, current_date, TMP.listing_date
+        FROM #{TMP_TABLE} AS TMP
+        INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = TMP.spc_rec_id;
+
+        INSERT INTO listing_distributions(listing_change_id, geo_entity_id, created_at, updated_at)
+        SELECT DISTINCT listing_changes.id, geo_entities.id, current_date, current_date
+        FROM #{TMP_TABLE} AS TMP
+        INNER JOIN listing_changes ON
+          listing_changes.species_listing_id = CASE
+                WHEN INITCAP(BTRIM(TMP.appendix)) like 'III%' THEN #{appendix_3.id}
+                WHEN INITCAP(BTRIM(TMP.appendix)) like 'II%' THEN #{appendix_2.id}
+                WHEN INITCAP(BTRIM(TMP.appendix)) like 'I%' THEN #{appendix_1.id}
+                ELSE NULL
+              END AND
+          listing_changes.change_type_id = CASE
+                WHEN INITCAP(BTRIM(TMP.appendix)) like '%/r' THEN #{r.id}
+                WHEN INITCAP(BTRIM(TMP.appendix)) like '%/w' THEN #{rw.id}
+                WHEN INITCAP(BTRIM(TMP.appendix))  ilike '%DELETED%' THEN #{d.id}
+                ELSE #{a.id}
+              END AND
+          listing_changes.effective_at = TMP.listing_date
+        INNER JOIN taxon_concepts ON taxon_concepts.id = listing_changes.taxon_concept_id AND taxon_concepts.legacy_id = TMP.spc_rec_id
+        INNER JOIN geo_entities ON geo_entities.legacy_id = cast(TMP.country_legacy_id as integer)
+        WHERE TMP.country_legacy_id <> ' NULL';
+      COMMIT;
     SQL
-#AND
-#        NOT EXISTS (
-#          SELECT * from listing_changes
-#          WHERE species_listing_id = species_listings.id AND taxon_concept_id = taxon_concepts.id AND
-#            change_type_id = CASE
-#              WHEN TMP.appendix like '%/r' THEN #{r.id}
-#              WHEN TMP.appendix like '%/w' THEN #{rw.id}
-#              WHEN TMP.appendix  ilike 'DELETED' THEN #{d.id}
-#              ELSE #{a.id}
-#            END
-#        );
     ActiveRecord::Base.connection.execute(sql)
     puts "#{ListingChange.count - listings_count} CITES listings were added to the database"
+    puts "#{ListingDistribution.count - listings_d_count} listing distributions were added to the database"
   end
 
   namespace :cites_listings do
