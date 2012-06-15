@@ -46,6 +46,7 @@ where SHAREDIR can be found with:
   pg_config --sharedir
 
 You need to be running as db superuser to do that, which is why this operation is not covered by migrations.
+Note that you may need to edit that in structure.sql to be able to load the dumped structure.
 
 We're using a BTREE index on the hstore column in some places to be able to use hstore column in order by expressions:
 
