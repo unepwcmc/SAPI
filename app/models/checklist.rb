@@ -31,7 +31,7 @@ class Checklist
     if @output_layout == :taxonomic
       @taxon_concepts = TaxonConcept.
         where([@ancestor_conditions, @descendant_conditions].compact.join(' OR ')).
-        where("data -> 'rank_name' <> 'GENUS'").
+        where("data -> 'rank_name' <> 'GENUS'").#TODO verify if joining with ranks would be faster
         order("data -> 'taxonomic_position'")
     else
       @taxon_concepts = TaxonConcept.
