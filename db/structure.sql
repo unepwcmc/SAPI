@@ -111,16 +111,16 @@ CREATE FUNCTION rebuild_names_and_ranks() RETURNS void
         BEGIN
           WITH RECURSIVE q AS (
             SELECT h, h.id, ranks.name as rank_name,
-            (ranks.name => taxon_names.scientific_name) AS ancestors
+            (LOWER(ranks.name) || '_name' => taxon_names.scientific_name) AS ancestors
             FROM taxon_concepts h
             INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
             INNER JOIN ranks ON h.rank_id = ranks.id
             WHERE h.parent_id IS NULL
-          
+
             UNION ALL
-          
+
             SELECT hi, hi.id, ranks.name,
-            ancestors || (ranks.name => taxon_names.scientific_name)
+            ancestors || (LOWER(ranks.name) || '_name' => taxon_names.scientific_name)
             FROM q
             JOIN taxon_concepts hi
             ON hi.parent_id = (q.h).id
@@ -129,15 +129,18 @@ CREATE FUNCTION rebuild_names_and_ranks() RETURNS void
           )
           UPDATE taxon_concepts
           SET data = data || ancestors || ('full_name' => 
-            CASE 
-              WHEN rank_name = 'SPECIES' THEN 
-                CAST(ancestors -> 'GENUS' AS VARCHAR) || ' ' || 
-                LOWER(CAST(ancestors -> 'SPECIES' AS VARCHAR))
-              WHEN rank_name = 'SUBSPECIES' THEN 
-                CAST(ancestors -> 'GENUS' AS VARCHAR) || ' ' || 
-                LOWER(CAST(ancestors -> 'SPECIES' AS VARCHAR)) ||
-                CAST(ancestors -> 'SUBSPECIES' AS VARCHAR)
-              ELSE  ancestors -> rank_name END
+            CASE
+              WHEN rank_name = 'SPECIES' THEN
+                -- now create a binomen for full name
+                CAST(ancestors -> 'genus_name' AS VARCHAR) || ' ' ||
+                LOWER(CAST(ancestors -> 'species_name' AS VARCHAR))
+              WHEN rank_name = 'SUBSPECIES' THEN
+                -- now create a trinomen for full name
+                CAST(ancestors -> 'genus_name' AS VARCHAR) || ' ' ||
+                LOWER(CAST(ancestors -> 'species_name' AS VARCHAR)) ||
+                CAST(ancestors -> 'subspecies_name' AS VARCHAR)
+              ELSE ancestors -> LOWER(rank_name || '_name')
+            END
           ) || ('rank_name' => rank_name)
           FROM q
           WHERE taxon_concepts.id = q.id;
@@ -1537,3 +1540,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120615122741');
 INSERT INTO schema_migrations (version) VALUES ('20120615141606');
 
 INSERT INTO schema_migrations (version) VALUES ('20120617222553');
+
+INSERT INTO schema_migrations (version) VALUES ('20120618070625');

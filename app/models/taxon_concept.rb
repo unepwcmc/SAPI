@@ -52,7 +52,8 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def current_listing
-    species_listings.select('species_listings.abbreviation').order('listing_changes.created_at').limit(1).first.try(:abbreviation)
+    listing && listing['cites_listing']
+    #species_listings.select('species_listings.abbreviation').order('listing_changes.created_at').limit(1).first.try(:abbreviation)
   end
 
   def as_json(options={})
