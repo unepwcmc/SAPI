@@ -39,6 +39,59 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 SET search_path = public, pg_catalog;
 
 --
+-- Name: rebuild_ancestor_listings(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rebuild_ancestor_listings() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+        BEGIN
+          WITH qq AS (
+            WITH RECURSIVE q AS (
+              SELECT h, id, listing
+              FROM taxon_concepts h
+
+              UNION ALL
+
+              SELECT hi, hi.id,
+              CASE 
+                WHEN hi.listing IS NULL THEN q.listing
+                ELSE hi.listing || q.listing
+              END
+              FROM taxon_concepts hi
+              INNER JOIN    q
+              ON      hi.id = (q.h).parent_id
+            )
+            SELECT id,
+            ('cites_I' => MAX((listing -> 'cites_I')::VARCHAR)) ||
+            ('cites_II' => MAX((listing -> 'cites_II')::VARCHAR)) ||
+            ('cites_III' => MAX((listing -> 'cites_III')::VARCHAR)) ||
+            ('cites_listing' => ARRAY_TO_STRING(
+              -- unnest to filter out the nulls
+              ARRAY(SELECT * FROM UNNEST(
+                ARRAY[MAX((listing -> 'cites_I')::VARCHAR), MAX((listing -> 'cites_II')::VARCHAR), MAX((listing -> 'cites_III')::VARCHAR)]) s WHERE s IS NOT NULL),
+                '/'
+              )
+            ) AS listing
+            FROM q 
+            GROUP BY (id)
+          )
+          UPDATE taxon_concepts
+          SET listing = qq.listing
+          FROM qq
+          WHERE taxon_concepts.id = qq.id;
+        END;
+      $$;
+
+
+--
+-- Name: FUNCTION rebuild_ancestor_listings(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION rebuild_ancestor_listings() IS 'Procedure to rebuild the computed ancestor listings in taxon_concepts.';
+
+
+--
 -- Name: rebuild_listings(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -218,6 +271,8 @@ CREATE FUNCTION sapi_rebuild() RETURNS void
           PERFORM rebuild_names_and_ranks();
           RAISE NOTICE 'listings';
           PERFORM rebuild_listings();
+          RAISE NOTICE 'ancestor listings';
+          PERFORM rebuild_ancestor_listings();
         END;
       $$;
 
@@ -1542,3 +1597,7 @@ INSERT INTO schema_migrations (version) VALUES ('20120615141606');
 INSERT INTO schema_migrations (version) VALUES ('20120617222553');
 
 INSERT INTO schema_migrations (version) VALUES ('20120618070625');
+
+INSERT INTO schema_migrations (version) VALUES ('20120618105456');
+
+INSERT INTO schema_migrations (version) VALUES ('20120618132628');
