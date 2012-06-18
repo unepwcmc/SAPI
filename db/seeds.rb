@@ -232,6 +232,37 @@ loxodonta_cites = TaxonConcept.create(
   :rank_id => Rank.find_by_name(Rank::SPECIES).id,
   :taxon_name_id => name.id, :parent_id => genus.id,
   :designation_id => cites.id)
+
+  
+
+#listing changes for loxodonta africana
+
+ChangeType.dict.each { |name| ChangeType.create(:name => name) }
+appendix_II = SpeciesListing.create(:name => 'Appendix II', :abbreviation => 'II',
+  :designation_id => cites.id)
+ListingChange.create(
+  :taxon_concept_id => loxodonta_cites.id,
+  :species_listing_id => appendix_II.id,
+  :effective_at => '1977-02-04',
+  :change_type_id => ChangeType.find_by_name('ADDITION').id)
+ListingChange.create(
+  :taxon_concept_id => loxodonta_cites.id,
+  :species_listing_id => appendix_II.id,
+  :effective_at => '1990-01-18',
+  :change_type_id => ChangeType.find_by_name('DELETION').id)
+appendix_I = SpeciesListing.create(:name => 'Appendix I', :abbreviation => 'I',
+  :designation_id => cites.id)
+ListingChange.create(
+  :taxon_concept_id => loxodonta_cites.id,
+  :species_listing_id => appendix_I.id,
+  :effective_at => '1990-01-18',
+  :change_type_id => ChangeType.find_by_name('ADDITION').id)
+app_II_change = ListingChange.create(
+  :taxon_concept_id => loxodonta_cites.id,
+  :species_listing_id => appendix_II.id,
+  :effective_at => '1997-09-18',
+  :change_type_id => ChangeType.find_by_name('ADDITION').id)
+
 #loxodonta africana CMS
 name = TaxonName.create(:scientific_name => 'Africana')
 loxodonta_cms1 = TaxonConcept.create(
