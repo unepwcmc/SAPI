@@ -190,8 +190,8 @@ CREATE FUNCTION rebuild_names_and_ranks() RETURNS void
               WHEN rank_name = 'SUBSPECIES' THEN
                 -- now create a trinomen for full name
                 CAST(ancestors -> 'genus_name' AS VARCHAR) || ' ' ||
-                LOWER(CAST(ancestors -> 'species_name' AS VARCHAR)) ||
-                CAST(ancestors -> 'subspecies_name' AS VARCHAR)
+                LOWER(CAST(ancestors -> 'species_name' AS VARCHAR)) || ' ' ||
+                LOWER(CAST(ancestors -> 'subspecies_name' AS VARCHAR))
               ELSE ancestors -> LOWER(rank_name || '_name')
             END
           ) || ('rank_name' => rank_name)
@@ -1601,3 +1601,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120618070625');
 INSERT INTO schema_migrations (version) VALUES ('20120618105456');
 
 INSERT INTO schema_migrations (version) VALUES ('20120618132628');
+
+INSERT INTO schema_migrations (version) VALUES ('20120618143304');
