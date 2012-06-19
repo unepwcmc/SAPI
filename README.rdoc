@@ -109,13 +109,50 @@ intra-designational:
 
 === CITES listing
 
+==== Cases of split listing
+
+1. on species level: populations listed separately: Loxodonta africana I/II, Caiman latirostris I/II
+2. on species level: subspecies listed separately: Boa constrictor I/II
+3. on genus level: species listed separately: Arctocephalus spp I/II
+4. on family level: species listed separately: Lutrinae spp I/II, Tapiridae spp I/II
+5. on order level: species listed separately: Acipenseriformes spp I/II
+
+==== Cases of NC listing
+
+1. some populations not listed: Panax ginseng II/NC, Antilocapra americana I/NC
+2. some subtaxa not listed: Psittaciformes spp I/II/NC
+3. taxon not listed and subtaxa not listed: Aloe vera NC, Pereskia NC
+4. taxon not listed when subtaxa listed: Cervus elaphus I/II/III/NC, Axis porcinus I/NC
+
+==== Steps to calculate the current listing
+
 These are the steps taken to calculate the current listing of a taxon concept:
 
 1. For every taxon listed directly determine their current listing based on listing history.
-Note there may be a split listing case on taxon level (cases of split listing such that some populations are listed differently).
+   Note there may be a split listing case on taxon level (cases of split listing such that some populations are listed differently).
 
 2. Traverse the taxonomic tree from the root down
-Cascade listings from higher taxa to lower, except for cases where a current listing is already present.
+   Cascade listings from higher taxa to lower, except for cases where a current listing is already present.
 
 3. Traverse the tree from the leaves up
-Cascade listings for higher taxa (cases of split listing such that some subtaxa are listed differently).
+   Cascade listings for higher taxa (cases of split listing such that some subtaxa are listed differently).
+
+==== Parameters that affect the current listign
+
+There are three parameters that help resolve the listing status:
+1. designation_id -- we need to check whether or not a taxon_concept belongs to the CITES taxonomy
+2. not_in_cites -- there are cases of taxon concepts that are not listed, but still need to be present in the checklist.
+   Examples:
+   * Pereskia spp, Aloe vera -- entire subtrees excluded from the listing
+   * Cervus elaphus, Axis porcinus -- species is excluded, but subspecies are listed
+   Those will have the not_in_cites flag set and 'NC' appended to their listing.
+3. all_covered -- there are cases of taxon concepts that are listed, but some of their populations or descendants are not.
+   Examples:
+   * Panax ginseng, Antilocapra americana -- only certain populations listed
+   * Psittaciformes spp -- some subtaxa not listed
+   Those will have all_covered set to false and 'NC' appended to their current listing.
+
+Note: the fully_covered flag could be inferred with a high degree of probability from other data. It should probably be false when:
+* there are subspecies that do not belong to the designation
+* there are population related comments in the listing changes
+It makes sense to try to infer that. However, data incompleteness in the first case and inconsistent comment wording in the second case make it unreliable.
