@@ -92,6 +92,45 @@ COMMENT ON FUNCTION rebuild_ancestor_listings() IS 'Procedure to rebuild the com
 
 
 --
+-- Name: rebuild_descendant_listings(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rebuild_descendant_listings() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+        BEGIN
+          WITH RECURSIVE q AS (
+            SELECT h, id, listing
+            FROM taxon_concepts h
+            WHERE parent_id IS NULL
+
+            UNION ALL
+
+            SELECT hi, hi.id, CASE
+              WHEN CAST(hi.listing -> 'cites_listing' AS VARCHAR) IS NOT NULL THEN hi.listing
+              WHEN  hi.listing IS NOT NULL THEN hi.listing || q.listing
+              ELSE q.listing
+            END
+            FROM q
+            JOIN taxon_concepts hi
+            ON hi.parent_id = (q.h).id
+          )
+          UPDATE taxon_concepts
+          SET listing = q.listing
+          FROM q
+          WHERE taxon_concepts.id = q.id;
+        END;
+      $$;
+
+
+--
+-- Name: FUNCTION rebuild_descendant_listings(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION rebuild_descendant_listings() IS 'Procedure to rebuild the computed descendant listings in taxon_concepts.';
+
+
+--
 -- Name: rebuild_listings(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -271,6 +310,8 @@ CREATE FUNCTION sapi_rebuild() RETURNS void
           PERFORM rebuild_names_and_ranks();
           RAISE NOTICE 'listings';
           PERFORM rebuild_listings();
+          RAISE NOTICE 'descendant listings';
+          PERFORM rebuild_descendant_listings();
           RAISE NOTICE 'ancestor listings';
           PERFORM rebuild_ancestor_listings();
         END;
@@ -1603,3 +1644,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120618105456');
 INSERT INTO schema_migrations (version) VALUES ('20120618132628');
 
 INSERT INTO schema_migrations (version) VALUES ('20120618143304');
+
+INSERT INTO schema_migrations (version) VALUES ('20120619081335');

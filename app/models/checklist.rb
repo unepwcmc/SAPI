@@ -32,7 +32,7 @@ class Checklist
         order("data -> 'taxonomic_position'")
     else
       @taxon_concepts = @taxon_concepts_rel.
-        where("data -> 'rank_name' IN (?)", [Rank::GENUS, Rank::SPECIES, Rank::SUBSPECIES]).
+        where("data -> 'rank_name' NOT IN (?)", [Rank::CLASS, Rank::PHYLUM, Rank::KINGDOM]).
         order("data -> 'full_name'")
     end
   end

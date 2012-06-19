@@ -335,6 +335,42 @@ ListingChange.create(:taxon_concept_id => subspecies.id,
   :change_type_id => ChangeType.find_by_name('ADDITION').id,
   :effective_at => '1987-10-22')
 
+# tapiridae spp
+mammalia = TaxonConcept.joins(:taxon_name).
+  where(:"taxon_names.scientific_name" => 'Mammalia').first
+name = TaxonName.create(:scientific_name => 'Perissodactyla')
+order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
+  :taxon_name_id => name.id, :parent_id => mammalia.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Tapiridae')
+family = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::FAMILY).id,
+  :taxon_name_id => name.id, :parent_id => order.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Tapirus')
+genus = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
+  :taxon_name_id => name.id, :parent_id => family.id,
+  :designation_id => cites.id)
+['Bairdii', 'Indicus', 'Pinchaque'].each do |spc_name|
+  name = TaxonName.create(:scientific_name => spc_name)
+  species = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SPECIES).id,
+    :taxon_name_id => name.id, :parent_id => genus.id,
+    :designation_id => cites.id)
+end
+name = TaxonName.create(:scientific_name => 'Terrestris')
+species = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SPECIES).id,
+  :taxon_name_id => name.id, :parent_id => genus.id,
+  :designation_id => cites.id)
+
+ListingChange.create(:taxon_concept_id => family.id,
+  :species_listing_id => appendix_I.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '1975-07-01')
+
+ListingChange.create(:taxon_concept_id => species.id,
+  :species_listing_id => appendix_II.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '1977-02-04')
+
 kingdom = TaxonConcept.joins(:taxon_name).
   where(:"taxon_names.scientific_name" => 'Plantae').first
 name = TaxonName.create(:scientific_name => 'Violales')
