@@ -152,7 +152,7 @@ CREATE FUNCTION rebuild_listings() RETURNS void
         WHERE not_in_cites = 't' OR fully_covered <> 't';
 
         UPDATE taxon_concepts
-        SET listing = qqq.listing
+        SET listing = taxon_concepts.listing || qqq.listing
         FROM (
           SELECT taxon_concept_id, listing ||
           ('cites_listing' => ARRAY_TO_STRING(
@@ -1674,3 +1674,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120619121756');
 INSERT INTO schema_migrations (version) VALUES ('20120619123910');
 
 INSERT INTO schema_migrations (version) VALUES ('20120619124109');
+
+INSERT INTO schema_migrations (version) VALUES ('20120619145616');
