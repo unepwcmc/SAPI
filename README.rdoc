@@ -106,3 +106,16 @@ intra-designational:
 ====Geo entities relationships (non-final list):
   - Contains
   - Intersects
+
+=== CITES listing
+
+These are the steps taken to calculate the current listing of a taxon concept:
+
+1. For every taxon listed directly determine their current listing based on listing history.
+Note there may be a split listing case on taxon level (cases of split listing such that some populations are listed differently).
+
+2. Traverse the taxonomic tree from the root down
+Cascade listings from higher taxa to lower, except for cases where a current listing is already present.
+
+3. Traverse the tree from the leaves up
+Cascade listings for higher taxa (cases of split listing such that some subtaxa are listed differently).
