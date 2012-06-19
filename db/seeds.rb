@@ -406,3 +406,30 @@ TaxonRelationship.create(
   :taxon_concept_id => viola_canina_ssp.id, :other_taxon_concept_id => viola_montana.id,
   :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::SYNONYM).id
 )
+
+# Pereskia NC
+name = TaxonName.create(:scientific_name => 'Caryophyllales')
+order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
+  :taxon_name_id => name.id, :parent_id => kingdom.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Cactacea')
+family = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::FAMILY).id,
+  :taxon_name_id => name.id, :parent_id => order.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Pereskia')
+genus1 = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
+  :taxon_name_id => name.id, :parent_id => family.id,
+  :designation_id => cites.id, :not_in_cites => true)
+name = TaxonName.create(:scientific_name => 'Ariocarpus')
+genus2 = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
+  :taxon_name_id => name.id, :parent_id => family.id,
+  :designation_id => cites.id)
+
+ListingChange.create(:taxon_concept_id => family.id,
+  :species_listing_id => appendix_II.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '2010-06-23')
+ListingChange.create(:taxon_concept_id => genus2.id,
+  :species_listing_id => appendix_I.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '1992-06-11')

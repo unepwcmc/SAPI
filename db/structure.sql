@@ -66,10 +66,16 @@ CREATE FUNCTION rebuild_ancestor_listings() RETURNS void
             ('cites_I' => MAX((listing -> 'cites_I')::VARCHAR)) ||
             ('cites_II' => MAX((listing -> 'cites_II')::VARCHAR)) ||
             ('cites_III' => MAX((listing -> 'cites_III')::VARCHAR)) ||
+            ('not_in_cites' => MAX((listing -> 'not_in_cites')::VARCHAR)) ||
             ('cites_listing' => ARRAY_TO_STRING(
               -- unnest to filter out the nulls
               ARRAY(SELECT * FROM UNNEST(
-                ARRAY[MAX((listing -> 'cites_I')::VARCHAR), MAX((listing -> 'cites_II')::VARCHAR), MAX((listing -> 'cites_III')::VARCHAR)]) s WHERE s IS NOT NULL),
+                ARRAY[
+                  MAX((listing -> 'cites_I')::VARCHAR),
+                  MAX((listing -> 'cites_II')::VARCHAR),
+                  MAX((listing -> 'cites_III')::VARCHAR),
+                  MAX((listing -> 'not_in_cites')::VARCHAR)
+                ]) s WHERE s IS NOT NULL),
                 '/'
               )
             ) AS listing
@@ -107,7 +113,10 @@ CREATE FUNCTION rebuild_descendant_listings() RETURNS void
             UNION ALL
 
             SELECT hi, hi.id, CASE
-              WHEN CAST(hi.listing -> 'cites_listing' AS VARCHAR) IS NOT NULL THEN hi.listing
+              WHEN
+                CAST(hi.listing -> 'cites_listing' AS VARCHAR) IS NOT NULL
+                OR hi.not_in_cites = 't'
+                THEN hi.listing
               WHEN  hi.listing IS NOT NULL THEN hi.listing || q.listing
               ELSE q.listing
             END
@@ -139,13 +148,18 @@ CREATE FUNCTION rebuild_listings() RETURNS void
     AS $$
         BEGIN
         UPDATE taxon_concepts
+        SET listing = ('not_in_cites' => 'NC') || ('cites_listing' => 'NC')
+        WHERE not_in_cites = 't';
+
+        UPDATE taxon_concepts
         SET listing = qqq.listing
         FROM (
           SELECT taxon_concept_id, listing ||
           ('cites_listing' => ARRAY_TO_STRING(
             -- unnest to filter out the nulls
             ARRAY(SELECT * FROM UNNEST(
-              ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III']) s WHERE s IS NOT NULL),
+              ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III']) s 
+              WHERE s IS NOT NULL),
               '/'
             )
           ) AS listing
@@ -173,8 +187,8 @@ CREATE FUNCTION rebuild_listings() RETURNS void
                 ELSE 0
               END AS cites_III
               FROM listing_changes 
-              LEFT JOIN species_listings on species_listing_id = species_listings.id
-              LEFT JOIN change_types on change_type_id = change_types.id
+              LEFT JOIN species_listings ON species_listing_id = species_listings.id
+              LEFT JOIN change_types ON change_type_id = change_types.id
               AND change_types.name IN ('ADDITION','DELETION')
               AND effective_at <= NOW()
             ) AS q
@@ -884,7 +898,8 @@ CREATE TABLE taxon_concepts (
     inherit_legislation boolean DEFAULT true NOT NULL,
     inherit_references boolean DEFAULT true NOT NULL,
     data hstore DEFAULT ''::hstore,
-    listing hstore
+    listing hstore,
+    not_in_cites boolean DEFAULT false NOT NULL
 );
 
 
@@ -1646,3 +1661,11 @@ INSERT INTO schema_migrations (version) VALUES ('20120618132628');
 INSERT INTO schema_migrations (version) VALUES ('20120618143304');
 
 INSERT INTO schema_migrations (version) VALUES ('20120619081335');
+
+INSERT INTO schema_migrations (version) VALUES ('20120619095737');
+
+INSERT INTO schema_migrations (version) VALUES ('20120619100341');
+
+INSERT INTO schema_migrations (version) VALUES ('20120619102316');
+
+INSERT INTO schema_migrations (version) VALUES ('20120619121756');
