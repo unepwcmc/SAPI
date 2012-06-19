@@ -1175,7 +1175,10 @@ ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
 
 CREATE TABLE cites_listings_import (
     spc_rec_id integer,
-    appendix character varying
+    appendix character varying,
+    listing_date date,
+    country_legacy_id character varying,
+    notes character varying
 );
 
 
@@ -1186,6 +1189,39 @@ CREATE TABLE cites_listings_import (
 CREATE TABLE cites_regions_import (
     name character varying
 );
+
+
+--
+-- Name: common_names; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE common_names (
+    id integer NOT NULL,
+    name character varying(255),
+    reference_id integer,
+    language_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: common_names_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE common_names_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: common_names_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE common_names_id_seq OWNED BY common_names.id;
 
 
 --
@@ -1374,6 +1410,38 @@ CREATE SEQUENCE geo_relationships_id_seq
 --
 
 ALTER SEQUENCE geo_relationships_id_seq OWNED BY geo_relationships.id;
+
+
+--
+-- Name: languages; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE languages (
+    id integer NOT NULL,
+    name character varying(255),
+    abbreviation character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: languages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE languages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: languages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE languages_id_seq OWNED BY languages.id;
 
 
 --
@@ -1602,6 +1670,38 @@ CREATE SEQUENCE species_listings_id_seq
 --
 
 ALTER SEQUENCE species_listings_id_seq OWNED BY species_listings.id;
+
+
+--
+-- Name: taxon_commons; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE taxon_commons (
+    id integer NOT NULL,
+    taxon_concept_id integer,
+    common_name_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: taxon_commons_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE taxon_commons_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: taxon_commons_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE taxon_commons_id_seq OWNED BY taxon_commons.id;
 
 
 --
@@ -1859,6 +1959,13 @@ ALTER TABLE change_types ALTER COLUMN id SET DEFAULT nextval('change_types_id_se
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE common_names ALTER COLUMN id SET DEFAULT nextval('common_names_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE designations ALTER COLUMN id SET DEFAULT nextval('designations_id_seq'::regclass);
 
 
@@ -1888,6 +1995,13 @@ ALTER TABLE geo_relationship_types ALTER COLUMN id SET DEFAULT nextval('geo_rela
 --
 
 ALTER TABLE geo_relationships ALTER COLUMN id SET DEFAULT nextval('geo_relationships_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE languages ALTER COLUMN id SET DEFAULT nextval('languages_id_seq'::regclass);
 
 
 --
@@ -1930,6 +2044,13 @@ ALTER TABLE "references" ALTER COLUMN id SET DEFAULT nextval('references_id_seq'
 --
 
 ALTER TABLE species_listings ALTER COLUMN id SET DEFAULT nextval('species_listings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE taxon_commons ALTER COLUMN id SET DEFAULT nextval('taxon_commons_id_seq'::regclass);
 
 
 --
@@ -1998,6 +2119,14 @@ ALTER TABLE ONLY change_types
 
 
 --
+-- Name: common_names_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY common_names
+    ADD CONSTRAINT common_names_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: designations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2035,6 +2164,14 @@ ALTER TABLE ONLY geo_relationship_types
 
 ALTER TABLE ONLY geo_relationships
     ADD CONSTRAINT geo_relationships_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: languages_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY languages
+    ADD CONSTRAINT languages_pkey PRIMARY KEY (id);
 
 
 --
@@ -2083,6 +2220,14 @@ ALTER TABLE ONLY "references"
 
 ALTER TABLE ONLY species_listings
     ADD CONSTRAINT species_listings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: taxon_commons_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY taxon_commons
+    ADD CONSTRAINT taxon_commons_pkey PRIMARY KEY (id);
 
 
 --
@@ -2383,3 +2528,9 @@ INSERT INTO schema_migrations (version) VALUES ('20120607143941');
 INSERT INTO schema_migrations (version) VALUES ('20120608151332');
 
 INSERT INTO schema_migrations (version) VALUES ('20120611081843');
+
+INSERT INTO schema_migrations (version) VALUES ('20120613152325');
+
+INSERT INTO schema_migrations (version) VALUES ('20120613152427');
+
+INSERT INTO schema_migrations (version) VALUES ('20120613152604');
