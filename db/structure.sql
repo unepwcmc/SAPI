@@ -149,7 +149,7 @@ CREATE FUNCTION rebuild_listings() RETURNS void
         BEGIN
         UPDATE taxon_concepts
         SET listing = ('not_in_cites' => 'NC') || ('cites_listing' => 'NC')
-        WHERE not_in_cites = 't';
+        WHERE not_in_cites = 't' OR fully_covered <> 't';
 
         UPDATE taxon_concepts
         SET listing = qqq.listing
@@ -899,7 +899,8 @@ CREATE TABLE taxon_concepts (
     inherit_references boolean DEFAULT true NOT NULL,
     data hstore DEFAULT ''::hstore,
     listing hstore,
-    not_in_cites boolean DEFAULT false NOT NULL
+    not_in_cites boolean DEFAULT false NOT NULL,
+    fully_covered boolean DEFAULT true NOT NULL
 );
 
 
@@ -1669,3 +1670,7 @@ INSERT INTO schema_migrations (version) VALUES ('20120619100341');
 INSERT INTO schema_migrations (version) VALUES ('20120619102316');
 
 INSERT INTO schema_migrations (version) VALUES ('20120619121756');
+
+INSERT INTO schema_migrations (version) VALUES ('20120619123910');
+
+INSERT INTO schema_migrations (version) VALUES ('20120619124109');

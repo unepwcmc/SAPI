@@ -371,6 +371,33 @@ ListingChange.create(:taxon_concept_id => species.id,
   :change_type_id => ChangeType.find_by_name('ADDITION').id,
   :effective_at => '1977-02-04')
 
+name = TaxonName.create(:scientific_name => 'Carnivora')
+order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
+  :taxon_name_id => name.id, :parent_id => mammalia.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Canidae')
+family = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::FAMILY).id,
+  :taxon_name_id => name.id, :parent_id => order.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Canis')
+genus = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
+  :taxon_name_id => name.id, :parent_id => family.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Lupus')
+species = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SPECIES).id,
+  :taxon_name_id => name.id, :parent_id => genus.id,
+  :designation_id => cites.id, :fully_covered => false)
+
+ListingChange.create(:taxon_concept_id => species.id,
+  :species_listing_id => appendix_I.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '2010-06-23')
+
+ListingChange.create(:taxon_concept_id => species.id,
+  :species_listing_id => appendix_II.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '2010-06-23')
+
 kingdom = TaxonConcept.joins(:taxon_name).
   where(:"taxon_names.scientific_name" => 'Plantae').first
 name = TaxonName.create(:scientific_name => 'Violales')
@@ -433,3 +460,26 @@ ListingChange.create(:taxon_concept_id => genus2.id,
   :species_listing_id => appendix_I.id,
   :change_type_id => ChangeType.find_by_name('ADDITION').id,
   :effective_at => '1992-06-11')
+
+# Panax ginseng II/NC
+name = TaxonName.create(:scientific_name => 'Apiales')
+order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
+  :taxon_name_id => name.id, :parent_id => kingdom.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Araliaceae')
+family = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::FAMILY).id,
+  :taxon_name_id => name.id, :parent_id => order.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Panax')
+genus = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
+  :taxon_name_id => name.id, :parent_id => family.id,
+  :designation_id => cites.id, :not_in_cites => true)
+name = TaxonName.create(:scientific_name => 'Ginseng')
+species = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SPECIES).id,
+  :taxon_name_id => name.id, :parent_id => genus.id,
+  :designation_id => cites.id, :fully_covered => false)
+
+ListingChange.create(:taxon_concept_id => species.id,
+  :species_listing_id => appendix_II.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '2000-07-19')
