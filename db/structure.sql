@@ -152,7 +152,18 @@ CREATE FUNCTION rebuild_listings() RETURNS void
         WHERE not_in_cites = 't' OR fully_covered <> 't';
 
         UPDATE taxon_concepts
-        SET listing = taxon_concepts.listing || qqq.listing
+        SET listing =
+        CASE
+          WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
+          ELSE ''::hstore
+        END
+        || qqq.listing || ('level_of_listing' => 't'),
+        data = taxon_concepts.data || CASE
+          WHEN taxon_concepts.data -> 'rank_name' <> 'SUBSPECIES' AND
+            taxon_concepts.data -> 'rank_name' <> 'SPECIES'
+          THEN ('spp' => 'spp.')
+          ELSE ('spp' => NULL)
+        END
         FROM (
           SELECT taxon_concept_id, listing ||
           ('cites_listing' => ARRAY_TO_STRING(
@@ -1676,3 +1687,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120619123910');
 INSERT INTO schema_migrations (version) VALUES ('20120619124109');
 
 INSERT INTO schema_migrations (version) VALUES ('20120619145616');
+
+INSERT INTO schema_migrations (version) VALUES ('20120620071138');

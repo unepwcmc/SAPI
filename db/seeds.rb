@@ -315,6 +315,11 @@ subspecies = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SUBSPECIES)
   :taxon_name_id => name.id, :parent_id => species.id,
   :designation_id => cites.id)
 
+ListingChange.create(:taxon_concept_id => family.id,
+  :species_listing_id => appendix_II.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '1977-02-04')
+
 ListingChange.create(:taxon_concept_id => species.id,
   :species_listing_id => appendix_II.id,
   :change_type_id => ChangeType.find_by_name('ADDITION').id,

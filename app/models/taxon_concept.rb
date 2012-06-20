@@ -50,20 +50,23 @@ class TaxonConcept < ActiveRecord::Base
   [
     :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
     :genus_name, :species_name, :subspecies_name, :full_name, :rank_name,
-    :taxonomic_position
+    :taxonomic_position, :spp
   ].each do |attr_name|
     define_method(attr_name) { data && data[attr_name.to_s] }
   end
 
+  def level_of_listing
+    listing && listing['level_of_listing']
+  end
+
   def current_listing
     listing && listing['cites_listing']
-    #species_listings.select('species_listings.abbreviation').order('listing_changes.created_at').limit(1).first.try(:abbreviation)
   end
 
   def as_json(options={})
     super(
       :only =>[:id, :parent_id, :depth],
-      :methods => [:family_name, :class_name, :full_name, :rank_name,
+      :methods => [:family_name, :class_name, :full_name, :rank_name, :spp,
       :taxonomic_position, :current_listing]
     )
   end
