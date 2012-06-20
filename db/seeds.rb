@@ -5,6 +5,7 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+puts "#{ListingDistribution.delete_all} listing distributions deleted"
 puts "#{ListingChange.delete_all} listing changes deleted"
 puts "#{SpeciesListing.delete_all} species listings deleted"
 puts "#{TaxonConceptGeoEntity.delete_all} taxon concept geo entities deleted"
@@ -60,8 +61,7 @@ higher_taxa = [
         :sub_taxa => [
           {
             :name => 'Hirudinoidea',
-            :taxonomic_position => '1.4.1',
-            :abbreviation => 'Hi'
+            :taxonomic_position => '1.4.1'
           }
         ]
       },
@@ -71,13 +71,11 @@ higher_taxa = [
         :sub_taxa => [
           {
             :name => 'Arachnida',
-            :taxonomic_position => '1.3.1',
-            :abbreviation => 'Ar'
+            :taxonomic_position => '1.3.1'
           },
           {
             :name => 'Insecta',
-            :taxonomic_position => '1.3.2',
-            :abbreviation => 'In'
+            :taxonomic_position => '1.3.2'
           }
         ]
       },
@@ -87,38 +85,31 @@ higher_taxa = [
         :sub_taxa => [
           {
             :name => 'Actinopterygii',
-            :taxonomic_position => '1.1.6',
-            :abbreviation => 'Ac'
+            :taxonomic_position => '1.1.6'
           },
           {
             :name => 'Amphibia',
-            :taxonomic_position => '1.1.4',
-            :abbreviation => 'Am'
+            :taxonomic_position => '1.1.4'
           },
           {
             :name => 'Aves',
-            :taxonomic_position => '1.1.2',
-            :abbreviation => 'Av'
+            :taxonomic_position => '1.1.2'
           },
           {
             :name => 'Elasmobranchii',
-            :taxonomic_position => '1.1.5',
-            :abbreviation => 'El'
+            :taxonomic_position => '1.1.5'
           },
           {
             :name => 'Mammalia',
-            :taxonomic_position => '1.1.1',
-            :abbreviation => 'MA'
+            :taxonomic_position => '1.1.1'
           },
           {
             :name => 'Reptilia',
-            :taxonomic_position => '1.1.3',
-            :abbreviation => 'Re'
+            :taxonomic_position => '1.1.3'
           },
           {
             :name => 'Sarcopterygii',
-            :taxonomic_position => '1.1.7',
-            :abbreviation => 'Sa'
+            :taxonomic_position => '1.1.7'
           }
         ]
       },
@@ -128,13 +119,11 @@ higher_taxa = [
         :sub_taxa => [
           {
             :name => 'Anthozoa',
-            :taxonomic_position => '1.6.1',
-            :abbreviation => 'An'
+            :taxonomic_position => '1.6.1'
           },
           {
             :name => 'Hydrozoa',
-            :taxonomic_position => '1.6.2',
-            :abbreviation => 'Hy'
+            :taxonomic_position => '1.6.2'
           }
         ]
       },
@@ -154,13 +143,11 @@ higher_taxa = [
         :sub_taxa => [
           {
             :name => 'Bivalvia',
-            :taxonomic_position => '1.5.1',
-            :abbreviation => 'Bi'
+            :taxonomic_position => '1.5.1'
           },
           {
             :name => 'Gastropoda',
-            :taxonomic_position => '1.5.2',
-            :abbreviation => 'Ga'
+            :taxonomic_position => '1.5.2'
           }
         ]
       }
@@ -193,10 +180,8 @@ higher_taxa.each do |kingdom_props|
     klass_rank_id = Rank.find_by_name(Rank::CLASS).id
     klasses.each do |klass_props|
       klass_name = klass_props[:name]
-      klass_abbr = klass_props[:abbreviation]
       name = TaxonName.create(
-        :scientific_name => klass_name,
-        :abbreviation => klass_abbr
+        :scientific_name => klass_name
       )
       klass = TaxonConcept.create(:rank_id => klass_rank_id,
       :taxon_name_id => name.id, :designation_id => cites.id,
@@ -247,6 +232,37 @@ loxodonta_cites = TaxonConcept.create(
   :rank_id => Rank.find_by_name(Rank::SPECIES).id,
   :taxon_name_id => name.id, :parent_id => genus.id,
   :designation_id => cites.id)
+
+  
+
+#listing changes for loxodonta africana
+
+ChangeType.dict.each { |name| ChangeType.create(:name => name) }
+appendix_II = SpeciesListing.create(:name => 'Appendix II', :abbreviation => 'II',
+  :designation_id => cites.id)
+ListingChange.create(
+  :taxon_concept_id => loxodonta_cites.id,
+  :species_listing_id => appendix_II.id,
+  :effective_at => '1977-02-04',
+  :change_type_id => ChangeType.find_by_name('ADDITION').id)
+ListingChange.create(
+  :taxon_concept_id => loxodonta_cites.id,
+  :species_listing_id => appendix_II.id,
+  :effective_at => '1990-01-18',
+  :change_type_id => ChangeType.find_by_name('DELETION').id)
+appendix_I = SpeciesListing.create(:name => 'Appendix I', :abbreviation => 'I',
+  :designation_id => cites.id)
+ListingChange.create(
+  :taxon_concept_id => loxodonta_cites.id,
+  :species_listing_id => appendix_I.id,
+  :effective_at => '1990-01-18',
+  :change_type_id => ChangeType.find_by_name('ADDITION').id)
+app_II_change = ListingChange.create(
+  :taxon_concept_id => loxodonta_cites.id,
+  :species_listing_id => appendix_II.id,
+  :effective_at => '1997-09-18',
+  :change_type_id => ChangeType.find_by_name('ADDITION').id)
+
 #loxodonta africana CMS
 name = TaxonName.create(:scientific_name => 'Africana')
 loxodonta_cms1 = TaxonConcept.create(
@@ -274,6 +290,113 @@ TaxonRelationship.create(
   :taxon_concept_id => loxodonta_cites.id, :other_taxon_concept_id => loxodonta_cms2.id,
   :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::CONTAINS).id
 )
+
+# boa constrictor
+reptilia = TaxonConcept.joins(:taxon_name).
+  where(:"taxon_names.scientific_name" => 'Reptilia').first
+name = TaxonName.create(:scientific_name => 'Serpentes')
+order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
+  :taxon_name_id => name.id, :parent_id => reptilia.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Boidae')
+family = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::FAMILY).id,
+  :taxon_name_id => name.id, :parent_id => order.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Boa')
+genus = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
+  :taxon_name_id => name.id, :parent_id => family.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Constrictor')
+species = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SPECIES).id,
+  :taxon_name_id => name.id, :parent_id => genus.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Occidentalis')
+subspecies = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SUBSPECIES).id,
+  :taxon_name_id => name.id, :parent_id => species.id,
+  :designation_id => cites.id)
+
+ListingChange.create(:taxon_concept_id => species.id,
+  :species_listing_id => appendix_II.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '1975-07-01')
+
+ListingChange.create(:taxon_concept_id => subspecies.id,
+  :species_listing_id => appendix_II.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '1977-02-04')
+
+ListingChange.create(:taxon_concept_id => subspecies.id,
+  :species_listing_id => appendix_II.id,
+  :change_type_id => ChangeType.find_by_name('DELETION').id,
+  :effective_at => '1987-10-22')
+
+ListingChange.create(:taxon_concept_id => subspecies.id,
+  :species_listing_id => appendix_I.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '1987-10-22')
+
+# tapiridae spp
+mammalia = TaxonConcept.joins(:taxon_name).
+  where(:"taxon_names.scientific_name" => 'Mammalia').first
+name = TaxonName.create(:scientific_name => 'Perissodactyla')
+order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
+  :taxon_name_id => name.id, :parent_id => mammalia.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Tapiridae')
+family = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::FAMILY).id,
+  :taxon_name_id => name.id, :parent_id => order.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Tapirus')
+genus = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
+  :taxon_name_id => name.id, :parent_id => family.id,
+  :designation_id => cites.id)
+['Bairdii', 'Indicus', 'Pinchaque'].each do |spc_name|
+  name = TaxonName.create(:scientific_name => spc_name)
+  species = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SPECIES).id,
+    :taxon_name_id => name.id, :parent_id => genus.id,
+    :designation_id => cites.id)
+end
+name = TaxonName.create(:scientific_name => 'Terrestris')
+species = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SPECIES).id,
+  :taxon_name_id => name.id, :parent_id => genus.id,
+  :designation_id => cites.id)
+
+ListingChange.create(:taxon_concept_id => family.id,
+  :species_listing_id => appendix_I.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '1975-07-01')
+
+ListingChange.create(:taxon_concept_id => species.id,
+  :species_listing_id => appendix_II.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '1977-02-04')
+
+name = TaxonName.create(:scientific_name => 'Carnivora')
+order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
+  :taxon_name_id => name.id, :parent_id => mammalia.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Canidae')
+family = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::FAMILY).id,
+  :taxon_name_id => name.id, :parent_id => order.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Canis')
+genus = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
+  :taxon_name_id => name.id, :parent_id => family.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Lupus')
+species = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SPECIES).id,
+  :taxon_name_id => name.id, :parent_id => genus.id,
+  :designation_id => cites.id, :fully_covered => false)
+
+ListingChange.create(:taxon_concept_id => species.id,
+  :species_listing_id => appendix_I.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '2010-06-23')
+
+ListingChange.create(:taxon_concept_id => species.id,
+  :species_listing_id => appendix_II.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '2010-06-23')
 
 kingdom = TaxonConcept.joins(:taxon_name).
   where(:"taxon_names.scientific_name" => 'Plantae').first
@@ -310,3 +433,53 @@ TaxonRelationship.create(
   :taxon_concept_id => viola_canina_ssp.id, :other_taxon_concept_id => viola_montana.id,
   :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::SYNONYM).id
 )
+
+# Pereskia NC
+name = TaxonName.create(:scientific_name => 'Caryophyllales')
+order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
+  :taxon_name_id => name.id, :parent_id => kingdom.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Cactacea')
+family = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::FAMILY).id,
+  :taxon_name_id => name.id, :parent_id => order.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Pereskia')
+genus1 = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
+  :taxon_name_id => name.id, :parent_id => family.id,
+  :designation_id => cites.id, :not_in_cites => true)
+name = TaxonName.create(:scientific_name => 'Ariocarpus')
+genus2 = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
+  :taxon_name_id => name.id, :parent_id => family.id,
+  :designation_id => cites.id)
+
+ListingChange.create(:taxon_concept_id => family.id,
+  :species_listing_id => appendix_II.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '2010-06-23')
+ListingChange.create(:taxon_concept_id => genus2.id,
+  :species_listing_id => appendix_I.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '1992-06-11')
+
+# Panax ginseng II/NC
+name = TaxonName.create(:scientific_name => 'Apiales')
+order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
+  :taxon_name_id => name.id, :parent_id => kingdom.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Araliaceae')
+family = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::FAMILY).id,
+  :taxon_name_id => name.id, :parent_id => order.id,
+  :designation_id => cites.id)
+name = TaxonName.create(:scientific_name => 'Panax')
+genus = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
+  :taxon_name_id => name.id, :parent_id => family.id,
+  :designation_id => cites.id, :not_in_cites => true)
+name = TaxonName.create(:scientific_name => 'Ginseng')
+species = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SPECIES).id,
+  :taxon_name_id => name.id, :parent_id => genus.id,
+  :designation_id => cites.id, :fully_covered => false)
+
+ListingChange.create(:taxon_concept_id => species.id,
+  :species_listing_id => appendix_II.id,
+  :change_type_id => ChangeType.find_by_name('ADDITION').id,
+  :effective_at => '2000-07-19')

@@ -13,10 +13,12 @@
 #  depth              :integer
 #  created_at         :datetime        not null
 #  updated_at         :datetime        not null
-#  effective_at       :datetime        default(2012-06-11 15:54:45 UTC), not null
+#  effective_at       :datetime        default(2012-06-11 08:19:53 UTC), not null
 #
 
 class ListingChange < ActiveRecord::Base
+
+  attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id, :effective_at
 
   belongs_to :species_listing
   belongs_to :taxon_concept

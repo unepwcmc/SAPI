@@ -18,11 +18,15 @@
 #  inherit_legislation  :boolean         default(TRUE), not null
 #  inherit_references   :boolean         default(TRUE), not null
 #  data                 :hstore
+#  listing              :hstore
+#  not_in_cites         :boolean         default(FALSE), not null
+#  fully_covered        :boolean         default(TRUE), not null
 #
 
 class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :rank_id, :parent_id,
-    :designation_id, :taxon_name_id, :data
+    :designation_id, :taxon_name_id, :not_in_cites, :fully_covered,
+    :data
   belongs_to :rank
   belongs_to :designation
   belongs_to :taxon_name
@@ -51,20 +55,15 @@ class TaxonConcept < ActiveRecord::Base
     define_method(attr_name) { data && data[attr_name.to_s] }
   end
 
-  def class_name_abbr
-    if kingdom_name == 'Animalia'
-      class_name && class_name[0..1]
-    end
-  end
-
   def current_listing
-    species_listings.select('species_listings.abbreviation').order('listing_changes.created_at').limit(1).first.try(:abbreviation)
+    listing && listing['cites_listing']
+    #species_listings.select('species_listings.abbreviation').order('listing_changes.created_at').limit(1).first.try(:abbreviation)
   end
 
   def as_json(options={})
     super(
       :only =>[:id, :parent_id, :depth],
-      :methods => [:class_name_abbr, :family_name, :full_name, :rank_name,
+      :methods => [:family_name, :class_name, :full_name, :rank_name,
       :taxonomic_position, :current_listing]
     )
   end
