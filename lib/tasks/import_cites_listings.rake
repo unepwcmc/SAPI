@@ -18,9 +18,9 @@ namespace :import do
         INSERT INTO listing_changes(species_listing_id, taxon_concept_id, change_type_id, created_at, updated_at, effective_at)
         SELECT DISTINCT
           CASE
-            WHEN INITCAP(BTRIM(TMP.appendix)) like 'III%' THEN #{appendix_3.id}
-            WHEN INITCAP(BTRIM(TMP.appendix)) like 'II%' THEN #{appendix_2.id}
-            WHEN INITCAP(BTRIM(TMP.appendix)) like 'I%' THEN #{appendix_1.id}
+            WHEN UPPER(BTRIM(TMP.appendix)) like 'III%' THEN #{appendix_3.id}
+            WHEN UPPER(BTRIM(TMP.appendix)) like 'II%' THEN #{appendix_2.id}
+            WHEN UPPER(BTRIM(TMP.appendix)) like 'I%' THEN #{appendix_1.id}
             ELSE NULL
           END, taxon_concepts.id,
           CASE
@@ -37,9 +37,9 @@ namespace :import do
         FROM #{TMP_TABLE} AS TMP
         INNER JOIN listing_changes ON
           listing_changes.species_listing_id = CASE
-                WHEN INITCAP(BTRIM(TMP.appendix)) like 'III%' THEN #{appendix_3.id}
-                WHEN INITCAP(BTRIM(TMP.appendix)) like 'II%' THEN #{appendix_2.id}
-                WHEN INITCAP(BTRIM(TMP.appendix)) like 'I%' THEN #{appendix_1.id}
+                WHEN UPPER(BTRIM(TMP.appendix)) like 'III%' THEN #{appendix_3.id}
+                WHEN UPPER(BTRIM(TMP.appendix)) like 'II%' THEN #{appendix_2.id}
+                WHEN UPPER(BTRIM(TMP.appendix)) like 'I%' THEN #{appendix_1.id}
                 ELSE NULL
               END AND
           listing_changes.change_type_id = CASE
