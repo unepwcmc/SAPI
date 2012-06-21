@@ -10,6 +10,7 @@ namespace :import do
     import_data_for Rank::FAMILY, 'TaxonOrder'
     import_data_for Rank::GENUS, Rank::FAMILY
     import_data_for Rank::SPECIES, Rank::GENUS
+    import_data_for Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra'
     #rebuild the tree
     TaxonConcept.rebuild!
     #set the depth on all nodes
@@ -87,7 +88,7 @@ def import_data_for which, parent_column=nil, column_name=nil
         SELECT scientific_name
         FROM taxon_names
         WHERE INITCAP(scientific_name) LIKE INITCAP(BTRIM(#{TMP_TABLE}.#{column_name}))
-      )
+      ) AND BTRIM(#{column_name}) <> 'NULL'
   SQL
   ActiveRecord::Base.connection.execute(sql)
 
@@ -112,6 +113,7 @@ def import_data_for which, parent_column=nil, column_name=nil
               SELECT taxon_name_id, rank_id
               FROM taxon_concepts
               WHERE taxon_concepts.taxon_name_id = taxon_names.id and taxon_concepts.rank_id = #{rank_id} )
+            AND taxon_names.id IS NOT NULL
           ) as tmp
           LEFT JOIN taxon_names ON (INITCAP(BTRIM(taxon_names.scientific_name)) LIKE INITCAP(BTRIM(tmp.#{parent_column})))
           LEFT JOIN taxon_concepts ON (taxon_concepts.taxon_name_id = taxon_names.id)
