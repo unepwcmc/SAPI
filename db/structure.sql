@@ -456,42 +456,6 @@ ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
 
 
 --
--- Name: cites_listings_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_listings_import (
-    spc_rec_id integer,
-    appendix character varying,
-    listing_date date,
-    country_legacy_id character varying,
-    notes character varying
-);
-
-
---
--- Name: cites_regions_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_regions_import (
-    name character varying
-);
-
-
---
--- Name: countries_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE countries_import (
-    legacy_id integer,
-    iso2 character varying,
-    iso3 character varying,
-    name character varying,
-    long_name character varying,
-    region_number character varying
-);
-
-
---
 -- Name: designations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -520,17 +484,6 @@ CREATE SEQUENCE designations_id_seq
 --
 
 ALTER SEQUENCE designations_id_seq OWNED BY designations.id;
-
-
---
--- Name: distribution_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE distribution_import (
-    species_id integer,
-    country_id integer,
-    country_name character varying
-);
 
 
 --
@@ -681,7 +634,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-06-11 08:19:53.944558'::timestamp without time zone NOT NULL
+    effective_at timestamp without time zone DEFAULT '2012-06-22 14:48:41.602334'::timestamp without time zone NOT NULL
 );
 
 
@@ -843,24 +796,6 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: species_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE species_import (
-    kingdom character varying,
-    phylum character varying,
-    class character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying
-);
-
-
---
 -- Name: species_listings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -946,9 +881,9 @@ CREATE TABLE taxon_concepts (
     inherit_legislation boolean DEFAULT true NOT NULL,
     inherit_references boolean DEFAULT true NOT NULL,
     data hstore DEFAULT ''::hstore,
-    listing hstore,
     not_in_cites boolean DEFAULT false NOT NULL,
-    fully_covered boolean DEFAULT true NOT NULL
+    fully_covered boolean DEFAULT true NOT NULL,
+    listing hstore
 );
 
 
@@ -1130,26 +1065,6 @@ CREATE SEQUENCE taxon_relationships_id_seq
 --
 
 ALTER SEQUENCE taxon_relationships_id_seq OWNED BY taxon_relationships.id;
-
-
---
--- Name: taxonomic_position; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE taxonomic_position (
-    "?column?" text
-);
-
-
---
--- Name: tmp_rec; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE tmp_rec (
-    id integer,
-    names character varying,
-    ranks character varying
-);
 
 
 --
@@ -1681,15 +1596,7 @@ INSERT INTO schema_migrations (version) VALUES ('20120608151332');
 
 INSERT INTO schema_migrations (version) VALUES ('20120611081843');
 
-INSERT INTO schema_migrations (version) VALUES ('20120613074226');
-
-INSERT INTO schema_migrations (version) VALUES ('20120613121701');
-
-INSERT INTO schema_migrations (version) VALUES ('20120613121702');
-
 INSERT INTO schema_migrations (version) VALUES ('20120613124612');
-
-INSERT INTO schema_migrations (version) VALUES ('20120615111552');
 
 INSERT INTO schema_migrations (version) VALUES ('20120615120151');
 
@@ -1728,3 +1635,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120619145616');
 INSERT INTO schema_migrations (version) VALUES ('20120620071138');
 
 INSERT INTO schema_migrations (version) VALUES ('20120620145200');
+
+INSERT INTO schema_migrations (version) VALUES ('20120622143404');
