@@ -8,6 +8,6 @@ namespace :import do
     Rake::Task["import:distributions"].invoke
     Rake::Task["import:cites_listings"].invoke
     ActiveRecord::Base.connection.execute('SELECT * FROM insert_cites_listing_deletions()')
-    ActiveRecord::Base.connection.execute('SELECT * FROM sapi_rebuild()')
+    Sapi::rebuild()
   end
 end
