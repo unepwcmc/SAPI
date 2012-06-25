@@ -24,29 +24,20 @@ for now we use the rack-cors middleware for development, staging has the appropr
 
 == Database
 
-We use PostgreSQL with the hstore extension. The extension needs to be installed separately from the contrib package.
+We use PostgreSQL 9.1 with the hstore extension. Unfortunately, lower versions don't seem to work with data modifying recursive CTEs.
+
+The hstore extension needs to be installed separately from the contrib package.
 
 Ubuntu:
 
-  sudo apt-get install postgresql-contrib-9.1
+  sudo apt-get install libpq-dev postgresql-9.1 postgresql-contrib-9.1
 
-(make sure the version matches your installation)
 
 To load the module into your db in postgres >= 9.1:
 
   CREATE EXTENSION hstore
 
-
-In lower versions (but > 8.4):
-
-  psql -d dbname -f SHAREDIR/contrib/hstore.sql
-
-where SHAREDIR can be found with:
-
-  pg_config --sharedir
-
-You need to be running as db superuser to do that, which is why this operation is not covered by migrations.
-Note that you may need to edit that in structure.sql to be able to load the dumped structure.
+This is done in one of the migrations.
 
 We're using a BTREE index on the hstore column in some places to be able to use hstore column in order by expressions:
 

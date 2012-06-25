@@ -634,7 +634,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-06-22 14:48:41.602334'::timestamp without time zone NOT NULL
+    effective_at timestamp without time zone DEFAULT '2012-06-25 07:16:53.406904'::timestamp without time zone NOT NULL
 );
 
 
@@ -1571,6 +1571,8 @@ ALTER TABLE ONLY taxon_relationships
 INSERT INTO schema_migrations (version) VALUES ('20120525074930');
 
 INSERT INTO schema_migrations (version) VALUES ('20120530125027');
+
+INSERT INTO schema_migrations (version) VALUES ('20120530135534');
 
 INSERT INTO schema_migrations (version) VALUES ('20120530135535');
 
