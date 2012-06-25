@@ -1,34 +1,21 @@
 FactoryGirl.define do
-  factory :designation do |d|
-    d.name 'designation'
-  end
-  factory :cites_designation, parent: :designation, class: Designation do |d|
-    d.name 'CITES'
+
+  factory :taxon_name do |f|
+    f.scientific_name 'lupus'
   end
 
-  factory :rank do |r|
-    r.name 'rank'
+  factory :taxon_concept do |f|
+    f.association :designation
+    f.association :rank
+    f.association :taxon_name
+    f.data {}
+    f.listing {}
   end
 
-  factory :taxon_name do |tn|
-    tn.scientific_name 'lupus'
-  end
-
-  factory :taxon_concept do |tc|
-    tc.association :designation
-    tc.association :rank
-    tc.association :taxon_name
-    tc.data {}
-  end
-  
   %w(kingdom phylum class order family genus species subspecies).each do |rank_name|
-    factory :"#{rank_name}_rank", parent: :rank, class: Rank do |r|
-      r.name rank_name.upcase
-    end
-
-    factory :"#{rank_name}", parent: :taxon_concept, class: TaxonConcept do |tc|
-      tc.association :designation, factory: :cites_designation
-      tc.association :rank, factory: :"#{rank_name}_rank"
+    factory :"#{rank_name}", parent: :taxon_concept, class: TaxonConcept do |f|
+      f.designation { Designation.find_by_name('CITES') }
+      f.rank { Rank.find_by_name(rank_name.upcase) }
     end
   end
 
