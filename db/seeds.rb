@@ -5,50 +5,62 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
 puts "#{ListingDistribution.delete_all} listing distributions deleted"
-puts "#{ListingChange.delete_all} listing changes deleted"
-puts "#{SpeciesListing.delete_all} species listings deleted"
+puts "#{GeoRelationship.delete_all} geo relationships deleted"
+puts "#{GeoRelationshipType.delete_all} geo relationship types deleted"
+GeoRelationshipType.dict.each do |type|
+  GeoRelationshipType.create(name: type)
+end
+puts "#{GeoRelationshipType.count} geo relationship types created"
+
 puts "#{TaxonConceptGeoEntity.delete_all} taxon concept geo entities deleted"
+puts "#{GeoEntity.delete_all} geo entities deleted"
+puts "#{GeoEntityType.delete_all} geo entity types deleted"
+GeoEntityType.dict.each do |type|
+  GeoEntityType.create(name: type)
+end
+puts "#{GeoEntityType.count} geo entity types created"
+
+puts "#{ListingChange.delete_all} listing changes deleted"
+puts "#{ChangeType.delete_all} change types deleted"
+ChangeType.dict.each { |change_type_name| ChangeType.create(:name => change_type_name) }
+puts "#{ChangeType.count} change types created"
+
 puts "#{TaxonRelationship.delete_all} taxon relationships deleted"
 puts "#{TaxonRelationshipType.delete_all} taxon relationship types deleted"
+TaxonRelationshipType.dict.each do |relationship|
+  TaxonRelationshipType.create(:name => relationship)
+end
+puts "#{TaxonRelationshipType.count} taxon relationship types created"
+
 puts "#{TaxonConcept.delete_all} taxon_concepts deleted"
 puts "#{TaxonName.delete_all} taxon_names deleted"
 puts "#{Rank.delete_all} ranks deleted"
-puts "#{Designation.delete_all} designations deleted"
-puts "#{TaxonDistribution.delete_all} taxon distributions deleted"
-puts "#{GeoRelationship.delete_all} geo relationships deleted"
-puts "#{GeoEntity.delete_all} geo entities deleted"
-puts "#{GeoEntityType.delete_all} geo entity types deleted"
-puts "#{GeoRelationshipType.delete_all} geo relationship types deleted"
 
-#Create GeoEntityTypes
-GeoEntityType.dict.each do |type|
-  entity_type = GeoEntityType.create(name: type)
-  puts "Added GeoEntityType #{type}, with id: #{entity_type.id}"
-end
-
-#Create GeoRelationshipTypes
-GeoRelationshipType.dict.each do |type|
-  rel_type = GeoRelationshipType.create(name: type)
-  puts "Added GeoRelationshipType #{type}, with id: #{rel_type.id}"
-end
-
-#Create rank seeds
 parent_rank = nil
 Rank.dict.each do |rank|
   rank = Rank.create(:name => rank, :parent_id => parent_rank)
   parent_rank = rank.id
-  puts "Added rank #{rank.name}, with id #{rank.id}"
 end
+puts "#{Rank.count} ranks created"
 
-#Create designation seeds
+puts "#{SpeciesListing.delete_all} species listings deleted"
+puts "#{Designation.delete_all} designations deleted"
 [Designation::CITES, 'CMS'].each do |designation|
   Designation.create(:name => designation)
 end
 cites = Designation.find_by_name(Designation::CITES)
 cms = Designation.find_by_name('CMS')
-
-#Create taxon seeds
+puts "#{Designation.count} designations created"
+%w(I II III).each do |app_abbr|
+  SpeciesListing.create(
+    :name => "Appendix #{app_abbr}",
+    :abbreviation => app_abbr,
+    :designation_id => cites.id
+  )
+end
+puts "#{SpeciesListing.count} species listings created"
 
 higher_taxa = [
   {
@@ -191,41 +203,5 @@ higher_taxa.each do |kingdom_props|
   end
 end
 
-ChangeType.dict.each { |change_type_name| ChangeType.create(:name => change_type_name) }
-
-%w(I II III).each do |app_abbr|
-  SpeciesListing.create(
-    :name => "Appendix #{app_abbr}",
-    :abbreviation => app_abbr,
-    :designation_id => cites.id
-  )
-end
-
-#phyla
-
-klass = TaxonConcept.joins(:taxon_name).
-  where(:"taxon_names.scientific_name" => 'Mammalia').first
-#honey badger
-name = TaxonName.create(:scientific_name => 'Carnivora')
-order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
-  :taxon_name_id => name.id, :parent_id => klass.id,
-  :designation_id => cites.id)
-name = TaxonName.create(:scientific_name => 'Mustelidae')
-family = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::FAMILY).id,
-  :taxon_name_id => name.id, :parent_id => order.id,
-  :designation_id => cites.id)
-name = TaxonName.create(:scientific_name => 'Mellivora')
-genus = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
-  :taxon_name_id => name.id, :parent_id => family.id,
-  :designation_id => cites.id)
-name = TaxonName.create(:scientific_name => 'Capensis')
-species = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SPECIES).id,
-  :taxon_name_id => name.id, :parent_id => genus.id,
-  :designation_id => cites.id)
-
-
-
-#Create taxon relationship type seeds
-TaxonRelationshipType.dict.each do |relationship|
-  TaxonRelationshipType.create(:name => relationship)
-end
+puts "#{TaxonConcept.count} taxon_concepts created"
+puts "#{TaxonName.count} taxon_names created"
