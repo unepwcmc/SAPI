@@ -26,6 +26,9 @@ class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :rank_id, :parent_id,
     :designation_id, :taxon_name_id, :not_in_cites, :fully_covered,
     :data
+  serialize :data, ActiveRecord::Coders::Hstore
+  serialize :listing, ActiveRecord::Coders::Hstore
+
   belongs_to :rank
   belongs_to :designation
   belongs_to :taxon_name
