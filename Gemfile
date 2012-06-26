@@ -46,5 +46,9 @@ gem "sqlite3", :group => [:test]
 
 group :test, :development do
   gem "rspec-rails"
+end
+
+group :test do
   gem "factory_girl"
+  gem "factory_girl_rails"
 end

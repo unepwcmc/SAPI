@@ -8,6 +8,7 @@
 /.bundle
 
 # Ignore all logfiles and tempfiles.
+/rdoc
 /log/*.log
 /tmp
 /public/system

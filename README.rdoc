@@ -24,29 +24,20 @@ for now we use the rack-cors middleware for development, staging has the appropr
 
 == Database
 
-We use PostgreSQL with the hstore extension. The extension needs to be installed separately from the contrib package.
+We use PostgreSQL 9.1 with the hstore extension. Unfortunately, lower versions don't seem to work with data modifying recursive CTEs.
+
+The hstore extension needs to be installed separately from the contrib package.
 
 Ubuntu:
 
-  sudo apt-get install postgresql-contrib-9.1
+  sudo apt-get install libpq-dev postgresql-9.1 postgresql-contrib-9.1
 
-(make sure the version matches your installation)
 
 To load the module into your db in postgres >= 9.1:
 
   CREATE EXTENSION hstore
 
-
-In lower versions (but > 8.4):
-
-  psql -d dbname -f SHAREDIR/contrib/hstore.sql
-
-where SHAREDIR can be found with:
-
-  pg_config --sharedir
-
-You need to be running as db superuser to do that, which is why this operation is not covered by migrations.
-Note that you may need to edit that in structure.sql to be able to load the dumped structure.
+This is done in one of the migrations.
 
 We're using a BTREE index on the hstore column in some places to be able to use hstore column in order by expressions:
 
@@ -108,6 +99,40 @@ intra-designational:
   - Intersects
 
 === CITES listing
+CITES lists taxon concepts in appendices on various taxonomic levels. Practically, the highest rank at which taxa seem to be listed is order.
+
+Example of explicit listing when taxa are listed at lower ranks:
+* [SUBSPECIES] Boa constrictor occidentalis : *I* BOIDAE (Reptilia) (E) Argentine Boa Constrictor, (F) Boa constrictor occidental
+* [SPECIES]  Boa constrictor : *II* BOIDAE (Reptilia) (E) Ampalagua, Boa Constrictor, Giboya, Masacuate, (S) Boa constrictor, (F) Boa constrictor
+* [FAMILY] BOIDAE spp. : *II* (Reptilia) (E) Boas (S) Boas, (F) Boas
+
+
+Implicit listing can be inferred for all taxon concepts in the hierarchy. It affects taxa that don't have explicit listing assigned as well as those that have one assigned, as listings can be carried over from lower taxa to higher and thus produce split listings.
+
+Following the previous example, after we infer the listings we get:
+* [SUBSPECIES] Boa constrictor occidentalis: *I* BOIDAE (Reptilia) (E) Argentine Boa Constrictor, (F) Boa constrictor occidental
+* [SPECIES] Boa constrictor: *I/II* BOIDAE (Reptilia) (E) Ampalagua, Boa Constrictor, Giboya, Masacuate, (S) Boa constrictor, (F) Boa constrictor
+* [GENUS omitted]
+* [FAMILY] BOIDAE spp.: *I/II* (Reptilia) (E) Boas (S) Boas, (F) Boas
+
+There goes another example to show the difference between explicit and implicit listing when taxa are listed at a higher rank:
+
+Explicit listing:
+* [GENUS] Chamaeleo spp.: *II* CHAMAELEONIDAE (Reptilia) (E) Chameleons, (S) Camaleónes, (F) Caméléons, Caméléons vrais
+
+Implicit listing:
+* [GENUS] Chamaeleo spp.: *II* CHAMAELEONIDAE (Reptilia) (E) Chameleons, (S) Camaleónes, (F) Caméléons, Caméléons vrais
+* [SPECIES] Chamaeleo affinis: *II* CHAMAELEONIDAE (Reptilia) (E) Ethiopian Highland Chameleon, Rüppell's Desert Chameleon
+* [SPECIES] Chamaeleo africanus: *II* CHAMAELEONIDAE (Reptilia) (E) African Chameleon, Sahel Chameleon, (S) Camaleón africano, (F) Caméléon africain
+* [SPECIES] Chamaeleo etc
+
+The current checklist is constructed like the implicit listing examples, with the additional rules that:
+* it does not include subspecies unless they're listed explicitly
+* it does not include taxa higher than species unless they're listed explicitly
+
+So that's why the Boa genus is ommitted in the first example or any subspecies of the Chamaeleo in the second example.
+
+Regarding the output, there is no substantial difference in how these lists are presented, except that obviously the explicit one is shorter.
 
 ==== Cases of split listing
 
@@ -120,16 +145,17 @@ intra-designational:
 ==== Cases of NC listing
 
 1. some populations not listed: Panax ginseng II/NC, Antilocapra americana I/NC
-2. some subtaxa not listed: Psittaciformes spp I/II/NC
+2. taxon listed and some subtaxa not listed: Psittaciformes spp I/II/NC
 3. taxon not listed and subtaxa not listed: Aloe vera NC, Pereskia NC
-4. taxon not listed when subtaxa listed: Cervus elaphus I/II/III/NC, Axis porcinus I/NC
+4. taxon not listed and subtaxa listed: Cervus elaphus I/II/III/NC, Axis porcinus I/NC
+5. subtaxa deleted from appendices: ? cannot find clear example of that happening
 
 ==== Steps to calculate the current listing
 
 These are the steps taken to calculate the current listing of a taxon concept:
 
 1. For every taxon listed directly determine their current listing based on listing history.
-   Note there may be a split listing case on taxon level (cases of split listing such that some populations are listed differently).
+   Note there may be a split listing case on species level (cases of split listing such that some populations are listed differently).
 
 2. Traverse the taxonomic tree from the root down
    Cascade listings from higher taxa to lower, except for cases where a current listing is already present.
@@ -146,7 +172,7 @@ There are three parameters that help resolve the listing status:
    * Pereskia spp, Aloe vera -- entire subtrees excluded from the listing
    * Cervus elaphus, Axis porcinus -- species is excluded, but subspecies are listed
    Those will have the not_in_cites flag set and 'NC' appended to their listing.
-3. all_covered -- there are cases of taxon concepts that are listed, but some of their populations or descendants are not.
+3. fully_covered -- there are cases of taxon concepts that are listed, but some of their populations or descendants are not.
    Examples:
    * Panax ginseng, Antilocapra americana -- only certain populations listed
    * Psittaciformes spp -- some subtaxa not listed

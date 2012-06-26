@@ -237,9 +237,15 @@ loxodonta_cites = TaxonConcept.create(
 
 #listing changes for loxodonta africana
 
-ChangeType.dict.each { |name| ChangeType.create(:name => name) }
-appendix_II = SpeciesListing.create(:name => 'Appendix II', :abbreviation => 'II',
-  :designation_id => cites.id)
+ChangeType.dict.each { |change_type_name| ChangeType.create(:name => change_type_name) }
+%w(I II III).each do |app_abbr|
+  SpeciesListing.create(
+    :name => "Appendix #{app_abbr}",
+    :abbreviation => app_abbr,
+    :designation_id => cites.id
+  )
+end
+appendix_II = SpeciesListing.find_by_abbreviation('II')
 ListingChange.create(
   :taxon_concept_id => loxodonta_cites.id,
   :species_listing_id => appendix_II.id,
@@ -250,8 +256,7 @@ ListingChange.create(
   :species_listing_id => appendix_II.id,
   :effective_at => '1990-01-18',
   :change_type_id => ChangeType.find_by_name('DELETION').id)
-appendix_I = SpeciesListing.create(:name => 'Appendix I', :abbreviation => 'I',
-  :designation_id => cites.id)
+appendix_I = SpeciesListing.find_by_abbreviation('I')
 ListingChange.create(
   :taxon_concept_id => loxodonta_cites.id,
   :species_listing_id => appendix_I.id,
@@ -290,50 +295,6 @@ TaxonRelationship.create(
   :taxon_concept_id => loxodonta_cites.id, :other_taxon_concept_id => loxodonta_cms2.id,
   :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::CONTAINS).id
 )
-
-# boa constrictor
-reptilia = TaxonConcept.joins(:taxon_name).
-  where(:"taxon_names.scientific_name" => 'Reptilia').first
-name = TaxonName.create(:scientific_name => 'Serpentes')
-order = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::ORDER).id,
-  :taxon_name_id => name.id, :parent_id => reptilia.id,
-  :designation_id => cites.id)
-name = TaxonName.create(:scientific_name => 'Boidae')
-family = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::FAMILY).id,
-  :taxon_name_id => name.id, :parent_id => order.id,
-  :designation_id => cites.id)
-name = TaxonName.create(:scientific_name => 'Boa')
-genus = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::GENUS).id,
-  :taxon_name_id => name.id, :parent_id => family.id,
-  :designation_id => cites.id)
-name = TaxonName.create(:scientific_name => 'Constrictor')
-species = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SPECIES).id,
-  :taxon_name_id => name.id, :parent_id => genus.id,
-  :designation_id => cites.id)
-name = TaxonName.create(:scientific_name => 'Occidentalis')
-subspecies = TaxonConcept.create(:rank_id => Rank.find_by_name(Rank::SUBSPECIES).id,
-  :taxon_name_id => name.id, :parent_id => species.id,
-  :designation_id => cites.id)
-
-ListingChange.create(:taxon_concept_id => species.id,
-  :species_listing_id => appendix_II.id,
-  :change_type_id => ChangeType.find_by_name('ADDITION').id,
-  :effective_at => '1975-07-01')
-
-ListingChange.create(:taxon_concept_id => subspecies.id,
-  :species_listing_id => appendix_II.id,
-  :change_type_id => ChangeType.find_by_name('ADDITION').id,
-  :effective_at => '1977-02-04')
-
-ListingChange.create(:taxon_concept_id => subspecies.id,
-  :species_listing_id => appendix_II.id,
-  :change_type_id => ChangeType.find_by_name('DELETION').id,
-  :effective_at => '1987-10-22')
-
-ListingChange.create(:taxon_concept_id => subspecies.id,
-  :species_listing_id => appendix_I.id,
-  :change_type_id => ChangeType.find_by_name('ADDITION').id,
-  :effective_at => '1987-10-22')
 
 # tapiridae spp
 mammalia = TaxonConcept.joins(:taxon_name).
