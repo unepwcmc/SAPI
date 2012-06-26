@@ -52,7 +52,9 @@ http://blog.metaminded.com/2010/11/25/stable-polymorphic-foreign-key-relations-i
   foreigner: https://github.com/matthuhiggins/foreigner
 
 === Importing data for development
-  FILE=lib/assets/files/20_animal_species.csv rake import:species
+  rake import:all 
+This task loads the db seeds, and imports species, cites_regions, countries, distributions, cites listings and cites listing deletions, from files saved in lib/assets/files/.
+There are specific tasks for each of the types of data. Run 'rake -T' to get the list of tasks.
 
 == Taxonomic glossaries
   http://ibot.sav.sk/icbn/no%20frames/0120AppendixVII.htm
@@ -163,7 +165,7 @@ These are the steps taken to calculate the current listing of a taxon concept:
 3. Traverse the tree from the leaves up
    Cascade listings for higher taxa (cases of split listing such that some subtaxa are listed differently).
 
-==== Parameters that affect the current listign
+==== Parameters that affect the current listing
 
 There are three parameters that help resolve the listing status:
 1. designation_id -- we need to check whether or not a taxon_concept belongs to the CITES taxonomy

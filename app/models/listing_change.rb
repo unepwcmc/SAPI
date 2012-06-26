@@ -13,7 +13,7 @@
 #  depth              :integer
 #  created_at         :datetime        not null
 #  updated_at         :datetime        not null
-#  effective_at       :datetime        default(2012-06-11 08:19:53 UTC), not null
+#  effective_at       :datetime        default(2012-06-26 10:13:03 UTC), not null
 #
 
 class ListingChange < ActiveRecord::Base
