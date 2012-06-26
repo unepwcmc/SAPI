@@ -18,7 +18,6 @@
 #  inherit_legislation  :boolean         default(TRUE), not null
 #  inherit_references   :boolean         default(TRUE), not null
 #  data                 :hstore
-#  listing              :hstore
 #  not_in_cites         :boolean         default(FALSE), not null
 #  fully_covered        :boolean         default(TRUE), not null
 #
