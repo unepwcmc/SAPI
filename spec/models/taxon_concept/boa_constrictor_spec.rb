@@ -1,9 +1,10 @@
 require 'spec_helper'
+require Rails.root.join("spec/models/shared/boa_constrictor")
 
 describe TaxonConcept do
-  context "when importing taxonomy data" do
-    include_context "Boa"
-    context "Boa constrictor" do
+  context "Boa constrictor" do
+    include_context "Boa constrictor"
+    context "TAXONOMY" do
       describe :full_name do
         it "should be trinomen for subspecies: Boa constrictor occidentalis" do
           @subspecies.full_name.should == 'Boa constrictor occidentalis'
@@ -32,10 +33,8 @@ describe TaxonConcept do
         end
       end
     end
-  end
-  context "when importing listing changes" do
-    include_context "Boa"
-    context "Boa constrictor" do
+
+    context "LISTING" do
       describe :current_listing do
         it "should be I at subspecies level Boa constrictor occidentalis" do
           @species.current_listing.should == 'I/II'
@@ -45,5 +44,6 @@ describe TaxonConcept do
         end
       end
     end
+
   end
 end

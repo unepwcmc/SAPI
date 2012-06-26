@@ -1,4 +1,4 @@
-shared_context "Boa" do
+shared_context "Boa constrictor" do
   before(:all) do
     @klass = TaxonConcept.find_by_taxon_name_id(TaxonName.find_by_scientific_name('Reptilia').id)
     @order = create(
