@@ -1,0 +1,101 @@
+shared_context "Falconiformes" do
+  before(:all) do
+    @klass = TaxonConcept.find_by_taxon_name_id(TaxonName.find_by_scientific_name('Aves').id)
+    @order = create(
+      :order,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Falconiformes'),
+      :parent => @klass
+    )
+    @family1 = create(
+      :family,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Cathartidae'),
+      :parent => @order,
+      :fully_covered => false
+    )
+    @genus1_1 = create(
+      :genus,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Gymnogyps'),
+      :parent => @family1
+    )
+    @species1_1 = create(
+      :species,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Californianus'),
+      :parent => @genus1_1
+    )
+    @genus1_2 = create(
+      :genus,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Sarcoramphus'),
+      :parent => @family1
+    )
+    @species1_2 = create(
+      :species,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Papa'),
+      :parent => @genus1_2
+    )
+    @family2 = create(
+      :family,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Falconidae'),
+      :parent => @order
+    )
+    @genus2_1 = create(
+      :genus,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Falco'),
+      :parent => @family2
+    )
+    @species2_1 = create(
+      :species,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Araeus'),
+      :parent => @genus2_1
+    )
+    @species2_2 = create(
+      :species,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Alopex'),
+      :parent => @genus2_1
+    )
+
+    create(
+     :cites_II_addition,
+     :taxon_concept => @order,
+     :effective_at => '1979-06-28'
+    )
+    create(
+     :cites_I_addition,
+     :taxon_concept => @species1_1,
+     :effective_at => '1975-07-01'
+    )
+    create(
+     :cites_III_addition,
+     :taxon_concept => @species1_2,
+     :effective_at => '1987-04-13'
+    )
+    create(
+     :cites_II_addition,
+     :taxon_concept => @family2,
+     :effective_at => '1975-07-01'
+    )
+    create(
+     :cites_II_addition,
+     :taxon_concept => @family2,
+     :effective_at => '1979-06-28'
+    )
+    create(
+     :cites_II_addition,
+     :taxon_concept => @species2_1,
+     :effective_at => '1975-07-01'
+    )
+    create(
+     :cites_I_addition,
+     :taxon_concept => @species2_1,
+     :effective_at => '1977-02-04'
+    )
+
+    Sapi::fix_listing_changes
+    Sapi::rebuild
+    [
+      @klass, @order, @family1, @family2, @genus1_1, @genus1_2, @genus2_1,
+      @species1_1, @species1_2, @species2_1
+    ].each do |t|
+      t.reload
+    end
+  end
+end
