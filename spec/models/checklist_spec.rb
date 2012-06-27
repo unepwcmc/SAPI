@@ -4,8 +4,10 @@ describe Checklist do
   include_context "Tapiridae"
   include_context "Psittaciformes"
   include_context "Falconiformes"
+
   context "when taxonomic order" do
     before(:all) do
+      Sapi::rebuild()
       @checklist = Checklist.new({:output_layout => :taxonomic})
       @taxon_concepts = @checklist.generate
     end
@@ -78,7 +80,7 @@ describe Checklist do
   end
   context "when alphabetical order" do
     before(:all) do
-      @checklist = Checklist.new({:output_layout => :taxonomic})
+      @checklist = Checklist.new({:output_layout => :alphabetical})
       @taxon_concepts = @checklist.generate
     end
     it "should not include phyla" do
@@ -103,8 +105,8 @@ describe Checklist do
       @taxon_concepts.index{ |tc| tc.full_name == 'Cathartidae' }.should <
         @taxon_concepts.index{ |tc| tc.full_name == 'Falconidae' }
     end
-    it "should include Cathartidae (Falconiformes) before Cacatuidae (Psittaciformes)" do
-      @taxon_concepts.index{ |tc| tc.full_name == 'Cathartidae' }.should <
+    it "should include Cathartidae (Falconiformes) after Cacatuidae (Psittaciformes)" do
+      @taxon_concepts.index{ |tc| tc.full_name == 'Cathartidae' }.should >
         @taxon_concepts.index{ |tc| tc.full_name == 'Cacatuidae' }
     end
   end

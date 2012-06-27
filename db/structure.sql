@@ -317,6 +317,10 @@ CREATE FUNCTION rebuild_taxonomic_positions() RETURNS void
     LANGUAGE plpgsql
     AS $$
         BEGIN
+        -- delete results of previous computations
+        UPDATE taxon_concepts
+        SET data = data || ('taxonomic_position' => NULL)
+        WHERE length(data->'taxonomic_position') > 5;
         WITH RECURSIVE q AS (
           SELECT h, id,
           data->'taxonomic_position' AS taxonomic_position
@@ -746,7 +750,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-06-25 07:15:43.038658'::timestamp without time zone NOT NULL
+    effective_at timestamp without time zone DEFAULT '2012-06-25 07:16:53.406904'::timestamp without time zone NOT NULL
 );
 
 
@@ -1807,3 +1811,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120620145200');
 INSERT INTO schema_migrations (version) VALUES ('20120622143404');
 
 INSERT INTO schema_migrations (version) VALUES ('20120626140446');
+
+INSERT INTO schema_migrations (version) VALUES ('20120627120930');
