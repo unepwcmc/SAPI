@@ -34,7 +34,6 @@ describe TaxonConcept do
           @species.level_of_listing.should be_false
         end
         it "should be true for subspecies Cervus elaphus bactrianus" do
-        puts @subspecies1.listing.inspect
           @subspecies1.level_of_listing.should be_true
         end
         it "should be true for subspecies Cervus elaphus barbarus" do
