@@ -39,28 +39,32 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 SET search_path = public, pg_catalog;
 
 --
--- Name: insert_cites_listing_deletions(); Type: FUNCTION; Schema: public; Owner: -
+-- Name: fix_cites_listing_changes(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION insert_cites_listing_deletions() RETURNS void
+CREATE FUNCTION fix_cites_listing_changes() RETURNS void
     LANGUAGE plpgsql
     AS $$
       BEGIN
       INSERT INTO listing_changes 
       (taxon_concept_id, species_listing_id, change_type_id, effective_at, created_at, updated_at)
       SELECT 
-      qq.taxon_concept_id, qq.species_listing_id, (SELECT id FROM change_types WHERE name = 'DELETION' LIMIT 1), qq.effective_at, NOW(), NOW()
+      qq.taxon_concept_id, qq.species_listing_id, (SELECT id FROM change_types WHERE name = 'DELETION' LIMIT 1), qq.effective_at - time '00:00:01', NOW(), NOW()
       FROM (
               WITH q AS (
                       SELECT taxon_concept_id, species_listing_id, change_type_id, change_types.name, effective_at, 
-                      ROW_NUMBER() OVER(ORDER BY taxon_concept_id, species_listing_id, effective_at) AS row_no
+                      ROW_NUMBER() OVER(ORDER BY taxon_concept_id, effective_at) AS row_no
                       FROM listing_changes
                       LEFT JOIN change_types on change_type_id = change_types.id
                       WHERE change_type_id IN (SELECT id FROM change_types WHERE name IN ('ADDITION','DELETION'))
-                      AND  taxon_concept_id=92008
+                      AND species_listing_id IN (
+                        SELECT species_listings.id FROM species_listings
+                        LEFT JOIN designations ON designations.id = species_listings.designation_id
+                        WHERE designations.name = 'CITES'
+                      )
               )
               SELECT q1.taxon_concept_id, q1.species_listing_id, q2.effective_at
-              FROM q q1 LEFT JOIN q q2 ON (q1.taxon_concept_id =q2.taxon_concept_id AND q1.row_no = q2.row_no - 1)
+              FROM q q1 LEFT JOIN q q2 ON (q1.taxon_concept_id =q2.taxon_concept_id AND q2.row_no = q1.row_no - 1)
               WHERE q2.taxon_concept_id IS NOT NULL
               AND q1.change_type_id = q2.change_type_id AND q1.change_type_id = (SELECT id FROM change_types WHERE name = 'ADDITION' LIMIT 1)
       ) qq;
@@ -69,10 +73,10 @@ CREATE FUNCTION insert_cites_listing_deletions() RETURNS void
 
 
 --
--- Name: FUNCTION insert_cites_listing_deletions(); Type: COMMENT; Schema: public; Owner: -
+-- Name: FUNCTION fix_cites_listing_changes(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION insert_cites_listing_deletions() IS 'Procedure to insert deletions between any two additions to appendices for a given taxon_concept.';
+COMMENT ON FUNCTION fix_cites_listing_changes() IS 'Procedure to insert deletions between any two additions to appendices for a given taxon_concept.';
 
 
 --
@@ -1813,3 +1817,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120622143404');
 INSERT INTO schema_migrations (version) VALUES ('20120626140446');
 
 INSERT INTO schema_migrations (version) VALUES ('20120627120930');
+
+INSERT INTO schema_migrations (version) VALUES ('20120627133057');
