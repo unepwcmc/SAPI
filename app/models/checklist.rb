@@ -2,7 +2,7 @@ class Checklist
   attr_accessor :taxon_concepts_rel
   def initialize(options)
     @taxon_concepts_rel = TaxonConcept.scoped.
-      select([:"taxon_concepts.id", :data, :listing])
+      select([:"taxon_concepts.id", :data, :listing, :depth])
     @designation = options[:designation] || Designation::CITES
     @taxon_concepts_rel = @taxon_concepts_rel.
       joins(:designation).
