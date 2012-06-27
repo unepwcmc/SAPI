@@ -1,5 +1,4 @@
 require 'spec_helper'
-require Rails.root.join("spec/models/shared/panax_ginseng")
 
 describe TaxonConcept do
   context "Panax ginseng" do

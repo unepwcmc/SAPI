@@ -1,5 +1,4 @@
 require 'spec_helper'
-require Rails.root.join("spec/models/shared/canis_lupus")
 
 describe TaxonConcept do
   context "Canis lupus" do

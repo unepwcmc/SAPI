@@ -1,5 +1,4 @@
 require 'spec_helper'
-require Rails.root.join("spec/models/shared/caiman_latirostris")
 
 describe TaxonConcept do
   context "Caiman latirostris" do

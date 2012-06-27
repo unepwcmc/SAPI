@@ -1,5 +1,4 @@
 require 'spec_helper'
-require Rails.root.join("spec/models/shared/loxodonta_africana")
 
 describe TaxonConcept do
   context "Loxodonta africana" do

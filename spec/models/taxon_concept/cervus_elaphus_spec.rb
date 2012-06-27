@@ -1,5 +1,4 @@
 require 'spec_helper'
-require Rails.root.join("spec/models/shared/cervus_elaphus")
 
 describe TaxonConcept do
   context "Cervus elaphus" do

@@ -1,5 +1,4 @@
 require 'spec_helper'
-require Rails.root.join("spec/models/shared/tapiridae")
 
 describe TaxonConcept do
   context "Tapiridae" do

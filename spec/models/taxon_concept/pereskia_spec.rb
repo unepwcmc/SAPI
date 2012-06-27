@@ -1,5 +1,4 @@
 require 'spec_helper'
-require Rails.root.join("spec/models/shared/pereskia")
 
 describe TaxonConcept do
   context "Pereskia" do

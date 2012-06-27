@@ -24,7 +24,6 @@
 #
 
 require 'spec_helper'
-require Rails.root.join("spec/models/shared/boa_constrictor")
 
 describe TaxonConcept do
   context "Boa constrictor" do
