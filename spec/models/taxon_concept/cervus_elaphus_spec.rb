@@ -4,6 +4,20 @@ describe TaxonConcept do
   context "Cervus elaphus" do
     include_context "Cervus elaphus"
 
+    context "TAXONOMY" do
+      describe :full_name do
+        it "should be trinomen for subspecies: Cervus elaphus bactrianus" do
+          @subspecies1.full_name.should == 'Cervus elaphus bactrianus'
+        end
+        it "should be binomen for species: Cervus elaphus" do
+          @species.full_name.should == 'Cervus elaphus'
+        end
+        it "should be single name for genus: Cervus" do
+          @genus.full_name.should == 'Cervus'
+        end
+      end
+    end
+
     context "LISTING" do
       describe :current_listing do
         it "should be I/II/III/NC at species level Cervus elaphus" do

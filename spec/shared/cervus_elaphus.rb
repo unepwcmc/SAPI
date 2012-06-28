@@ -22,17 +22,17 @@ shared_context "Cervus elaphus" do
       :parent => @genus
     )
     @subspecies1 = create(
-      :species,
+      :subspecies,
       :taxon_name => create(:taxon_name, :scientific_name => 'Bactrianus'),
       :parent => @species
     )
     @subspecies2 = create(
-      :species,
+      :subspecies,
       :taxon_name => create(:taxon_name, :scientific_name => 'Barbarus'),
       :parent => @species
     )
     @subspecies3 = create(
-      :species,
+      :subspecies,
       :taxon_name => create(:taxon_name, :scientific_name => 'Hanglu'),
       :parent => @species
     )
