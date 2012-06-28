@@ -48,10 +48,11 @@ shared_context "Canis lupus" do
      :taxon_concept => @species,
      :effective_at => '2010-06-23'
     )
+
     Sapi::fix_listing_changes
     Sapi::rebuild
-    [@klass, @order, @family, @genus, @species].each do |t|
-      t.reload
+    self.instance_variables.each do |t|
+      self.instance_variable_get(t).reload
     end
   end
 end

@@ -39,9 +39,10 @@ shared_context "Pereskia" do
      :effective_at => '1992-06-11'
     )
 
+    Sapi::fix_listing_changes
     Sapi::rebuild
-    [@kingdom, @order, @family, @genus1, @genus2].each do |t|
-      t.reload
+    self.instance_variables.each do |t|
+      self.instance_variable_get(t).reload
     end
   end
 end

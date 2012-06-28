@@ -35,9 +35,10 @@ shared_context "Tapiridae" do
      :effective_at => '1977-02-04'
     )
 
+    Sapi::fix_listing_changes
     Sapi::rebuild
-    [@klass, @order, @family, @genus, @species].each do |t|
-      t.reload
+    self.instance_variables.each do |t|
+      self.instance_variable_get(t).reload
     end
   end
 end

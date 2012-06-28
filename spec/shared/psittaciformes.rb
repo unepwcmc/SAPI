@@ -125,11 +125,8 @@ shared_context "Psittaciformes" do
 
     Sapi::fix_listing_changes
     Sapi::rebuild
-    [
-      @klass, @order, @family1, @family2, @genus1_1, @genus1_2, @genus2_1, @genus2_2,
-      @species1_1, @species1_2_1, @species1_2_2, @species2_1, @species2_2
-    ].each do |t|
-      t.reload
+    self.instance_variables.each do |t|
+      self.instance_variable_get(t).reload
     end
   end
 end

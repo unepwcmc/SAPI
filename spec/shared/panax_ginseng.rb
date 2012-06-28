@@ -29,9 +29,10 @@ shared_context "Panax ginseng" do
      :effective_at => '2000-07-19'
     )
 
+    Sapi::fix_listing_changes
     Sapi::rebuild
-    [@kingdom, @order, @family, @genus, @species].each do |t|
-      t.reload
+    self.instance_variables.each do |t|
+      self.instance_variable_get(t).reload
     end
   end
 end

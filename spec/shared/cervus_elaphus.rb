@@ -60,8 +60,8 @@ shared_context "Cervus elaphus" do
 
     Sapi::fix_listing_changes
     Sapi::rebuild
-    [@klass, @order, @family, @genus, @species, @subspecies1, @subspecies2, @subspecies3].each do |t|
-      t.reload
+    self.instance_variables.each do |t|
+      self.instance_variable_get(t).reload
     end
   end
 end
