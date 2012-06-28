@@ -13,7 +13,7 @@ describe TaxonConcept do
           @species2_1.current_listing.should == 'I'
         end
         it "should be II at species level Falco alopex (H)" do
-          @species2_1.current_listing.should == 'II'
+          @species2_2.current_listing.should == 'II'
         end
         it "should be I at species level Gymnogyps californianus" do
           @species1_1.current_listing.should == 'I'
