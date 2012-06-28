@@ -28,6 +28,14 @@ describe TaxonConcept do
           @species2_1.current_listing.should == 'NC'
         end
       end
+      describe :cites_show do
+        it "should not show Agapornis roseicollis (DEL)" do
+          @species2_1.cites_show.should_not be_true
+        end
+        it "should show Amazona aestiva" do
+          @species2_2.cites_show.should be_true
+        end
+      end
     end
   end
 end

@@ -761,7 +761,8 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-06-25 07:16:53.406904'::timestamp without time zone NOT NULL
+    effective_at timestamp without time zone DEFAULT '2012-06-25 07:15:43.038658'::timestamp without time zone NOT NULL,
+    party_id integer
 );
 
 
@@ -1612,6 +1613,14 @@ ALTER TABLE ONLY listing_changes
 
 
 --
+-- Name: listing_changes_party_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY listing_changes
+    ADD CONSTRAINT listing_changes_party_id_fk FOREIGN KEY (party_id) REFERENCES geo_entities(id);
+
+
+--
 -- Name: listing_changes_reference_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1836,3 +1845,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120628085124');
 INSERT INTO schema_migrations (version) VALUES ('20120628085253');
 
 INSERT INTO schema_migrations (version) VALUES ('20120628123444');
+
+INSERT INTO schema_migrations (version) VALUES ('20120628145332');

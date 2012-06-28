@@ -29,6 +29,7 @@ FactoryGirl.define do
     f.association :species_listing
     f.association :change_type
     f.association :taxon_concept
+    f.association :party, factory: :country
     f.effective_at '2012-01-01'
   end
 
