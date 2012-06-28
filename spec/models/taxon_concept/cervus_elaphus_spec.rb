@@ -33,27 +33,27 @@ describe TaxonConcept do
           @subspecies3.current_listing.should == 'I'
         end
       end
-      describe :level_of_listing do
+      describe :cites_listed do
         it "should be false for order Artiodactyla" do
-          @order.level_of_listing.should be_false
+          @order.cites_listed.should be_false
         end
         it "should be false for family Cervidae" do
-          @family.level_of_listing.should be_false
+          @family.cites_listed.should be_false
         end
         it "should be false for genus Cervus" do
-          @genus.level_of_listing.should be_false
+          @genus.cites_listed.should be_false
         end
         it "should be false for species Cervus elaphus" do
-          @species.level_of_listing.should be_false
+          @species.cites_listed.should be_false
         end
         it "should be true for subspecies Cervus elaphus bactrianus" do
-          @subspecies1.level_of_listing.should be_true
+          @subspecies1.cites_listed.should be_true
         end
         it "should be true for subspecies Cervus elaphus barbarus" do
-          @subspecies2.level_of_listing.should be_true
+          @subspecies2.cites_listed.should be_true
         end
         it "should be true for subspecies Cervus elaphus hanglu" do
-          @subspecies3.level_of_listing.should be_true
+          @subspecies3.cites_listed.should be_true
         end
       end
     end

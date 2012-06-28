@@ -123,7 +123,7 @@ CREATE FUNCTION rebuild_ancestor_listings() RETURNS void
             GROUP BY (id)
           )
           UPDATE taxon_concepts
-          SET listing = qq.listing
+          SET listing = taxon_concepts.listing || qq.listing
           FROM qq
           WHERE taxon_concepts.id = qq.id;
         END;
@@ -165,7 +165,11 @@ CREATE FUNCTION rebuild_descendant_listings() RETURNS void
             ON hi.parent_id = (q.h).id
           )
           UPDATE taxon_concepts
-          SET listing = q.listing
+          SET listing = 
+          CASE
+            WHEN taxon_concepts.listing IS NULL THEN ''::hstore
+            ELSE taxon_concepts.listing
+          END || q.listing
           FROM q
           WHERE taxon_concepts.id = q.id;
         END;
@@ -188,7 +192,7 @@ CREATE FUNCTION rebuild_listings() RETURNS void
     AS $$
         BEGIN
         UPDATE taxon_concepts
-        SET listing = ('not_in_cites' => 'NC') || ('cites_listing' => 'NC')
+        SET listing = ('not_in_cites' => 'NC') || ('cites_listing' => 'NC') || ('cites_show' => 't')
         WHERE not_in_cites = 't' OR fully_covered <> 't';
 
         UPDATE taxon_concepts
@@ -197,7 +201,7 @@ CREATE FUNCTION rebuild_listings() RETURNS void
           WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
           ELSE ''::hstore
         END
-        || qqq.listing || ('level_of_listing' => 't'),
+        || qqq.listing || ('cites_listed' => 't') || ('cites_show' => 't'),
         data = taxon_concepts.data || CASE
           WHEN taxon_concepts.data -> 'rank_name' <> 'SUBSPECIES' AND
             taxon_concepts.data -> 'rank_name' <> 'SPECIES'
@@ -1820,3 +1824,9 @@ INSERT INTO schema_migrations (version) VALUES ('20120627120930');
 INSERT INTO schema_migrations (version) VALUES ('20120627133057');
 
 INSERT INTO schema_migrations (version) VALUES ('20120628072610');
+
+INSERT INTO schema_migrations (version) VALUES ('20120628082509');
+
+INSERT INTO schema_migrations (version) VALUES ('20120628085124');
+
+INSERT INTO schema_migrations (version) VALUES ('20120628085253');

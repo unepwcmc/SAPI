@@ -57,8 +57,8 @@ class TaxonConcept < ActiveRecord::Base
     define_method(attr_name) { data && data[attr_name.to_s] }
   end
 
-  def level_of_listing
-    listing && listing['level_of_listing']
+  def cites_listed
+    listing && listing['cites_listed']
   end
 
   def current_listing

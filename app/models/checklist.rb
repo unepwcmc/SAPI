@@ -8,7 +8,7 @@ class Checklist
       joins(:designation).
       where('designations.name' => @designation)
     #limit to the level of listing
-    @level_of_listing = options[:level_of_listing] || false
+    @cites_listed = options[:cites_listed] || false
     #TODO
     #filter by geo entities
     @geo_options = []
