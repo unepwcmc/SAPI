@@ -201,7 +201,11 @@ CREATE FUNCTION rebuild_listings() RETURNS void
           WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
           ELSE ''::hstore
         END
-        || qqq.listing || ('cites_listed' => 't') || ('cites_show' => 't'),
+        || qqq.listing || ('cites_listed' => 't') ||
+        CASE
+          WHEN qqq.listing -> 'cites_listing' > '' THEN ('cites_show' => 't')
+          ELSE ('cites_show' => 'f')
+        END,
         data = taxon_concepts.data || CASE
           WHEN taxon_concepts.data -> 'rank_name' <> 'SUBSPECIES' AND
             taxon_concepts.data -> 'rank_name' <> 'SPECIES'
@@ -1830,3 +1834,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120628082509');
 INSERT INTO schema_migrations (version) VALUES ('20120628085124');
 
 INSERT INTO schema_migrations (version) VALUES ('20120628085253');
+
+INSERT INTO schema_migrations (version) VALUES ('20120628123444');

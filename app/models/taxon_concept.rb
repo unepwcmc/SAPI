@@ -61,6 +61,10 @@ class TaxonConcept < ActiveRecord::Base
     listing && listing['cites_listed']
   end
 
+  def cites_show
+    listing && listing['cites_show'] == 't'
+  end
+
   def current_listing
     listing && listing['cites_listing']
   end
