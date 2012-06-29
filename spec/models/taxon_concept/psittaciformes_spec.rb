@@ -24,8 +24,8 @@ describe TaxonConcept do
         it "should be II at species level Amazona aestiva" do
           @species2_2.current_listing.should == 'II'
         end
-        it "should be NC at species level Agapornis roseicollis" do
-          @species2_1.current_listing.should == 'NC'
+        it "should be blank at species level Agapornis roseicollis (not listed, not shown)" do
+          @species2_1.current_listing.should be_blank
         end
       end
       describe :cites_show do

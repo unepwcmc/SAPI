@@ -6,7 +6,7 @@ describe TaxonConcept do
 
     context "LISTING" do
       describe :current_listing do
-        it "should be NC at genus level Pereskia" do
+        it "should be NC at genus level Pereskia (not listed, shown)" do
           @genus1.current_listing.should == 'NC'
         end
         it "should be I at genus level Ariocarpus" do
