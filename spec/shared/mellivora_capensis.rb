@@ -19,8 +19,7 @@ shared_context "Mellivora capensis" do
     @species = create(
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Capensis'),
-      :parent => @genus,
-      :fully_covered => false
+      :parent => @genus
     )
 
     ghana = create(

@@ -15,6 +15,7 @@ end
 puts "#{GeoRelationshipType.count} geo relationship types created"
 
 puts "#{TaxonConceptGeoEntity.delete_all} taxon concept geo entities deleted"
+puts "#{ListingChange.delete_all} listing changes deleted"
 puts "#{GeoEntity.delete_all} geo entities deleted"
 puts "#{GeoEntityType.delete_all} geo entity types deleted"
 GeoEntityType.dict.each do |type|
@@ -22,7 +23,6 @@ GeoEntityType.dict.each do |type|
 end
 puts "#{GeoEntityType.count} geo entity types created"
 
-puts "#{ListingChange.delete_all} listing changes deleted"
 puts "#{ChangeType.delete_all} change types deleted"
 ChangeType.dict.each { |change_type_name| ChangeType.create(:name => change_type_name) }
 puts "#{ChangeType.count} change types created"

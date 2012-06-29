@@ -53,7 +53,9 @@ CREATE FUNCTION fix_cites_listing_changes() RETURNS void
       qq.effective_at - time '00:00:01', NOW(), NOW()
       FROM (
              WITH q AS (
-                      SELECT taxon_concept_id, species_listing_id, change_type_id, effective_at, change_types.name AS change_type_name,
+                      SELECT taxon_concept_id, species_listing_id, change_type_id,
+                      effective_at, change_types.name AS change_type_name, party_id,
+                      species_listings.abbreviation AS listing_name,
                       ROW_NUMBER() OVER(ORDER BY taxon_concept_id, effective_at) AS row_no
                       FROM listing_changes
                       LEFT JOIN change_types on change_type_id = change_types.id
@@ -66,6 +68,7 @@ CREATE FUNCTION fix_cites_listing_changes() RETURNS void
               FROM q q1 LEFT JOIN q q2 ON (q1.taxon_concept_id = q2.taxon_concept_id AND q2.row_no = q1.row_no + 1)
               WHERE q2.taxon_concept_id IS NOT NULL
               AND q1.change_type_id = q2.change_type_id AND q1.change_type_name = 'ADDITION'
+              AND NOT (q1.listing_name = 'III' AND q2.listing_name = 'III' AND q1.party_id <> q2.party_id)
       ) qq;
       END;
       $$;
@@ -761,7 +764,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-06-25 07:15:43.038658'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-06-25 07:16:53.406904'::timestamp without time zone NOT NULL,
     party_id integer
 );
 
@@ -1847,3 +1850,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120628085253');
 INSERT INTO schema_migrations (version) VALUES ('20120628123444');
 
 INSERT INTO schema_migrations (version) VALUES ('20120628145332');
+
+INSERT INTO schema_migrations (version) VALUES ('20120629090125');
