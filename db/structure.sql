@@ -384,15 +384,15 @@ CREATE FUNCTION sapi_rebuild() RETURNS void
     AS $$
         BEGIN
           RAISE NOTICE 'Rebuilding SAPI database';
-          RAISE NOTICE 'taxonomic positions';
+          --RAISE NOTICE 'taxonomic positions';
           PERFORM rebuild_taxonomic_positions();
-          RAISE NOTICE 'names and ranks';
+          --RAISE NOTICE 'names and ranks';
           PERFORM rebuild_names_and_ranks();
-          RAISE NOTICE 'listings';
+          --RAISE NOTICE 'listings';
           PERFORM rebuild_listings();
-          RAISE NOTICE 'descendant listings';
+          --RAISE NOTICE 'descendant listings';
           PERFORM rebuild_descendant_listings();
-          RAISE NOTICE 'ancestor listings';
+          --RAISE NOTICE 'ancestor listings';
           PERFORM rebuild_ancestor_listings();
         END;
       $$;
@@ -402,7 +402,7 @@ CREATE FUNCTION sapi_rebuild() RETURNS void
 -- Name: FUNCTION sapi_rebuild(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION sapi_rebuild() IS 'Procedure to rebuild the computed fields in the database.';
+COMMENT ON FUNCTION sapi_rebuild() IS 'Procedure to rebuild computed fields in the database.';
 
 
 SET default_tablespace = '';
@@ -764,7 +764,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-06-25 07:16:53.406904'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-06-25 07:15:43.038658'::timestamp without time zone NOT NULL,
     party_id integer
 );
 
