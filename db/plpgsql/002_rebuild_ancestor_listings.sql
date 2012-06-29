@@ -43,7 +43,11 @@ CREATE OR REPLACE FUNCTION rebuild_ancestor_listings() RETURNS void
             GROUP BY (id)
           )
           UPDATE taxon_concepts
-          SET listing = taxon_concepts.listing || qq.listing
+          SET listing = 
+            CASE
+            WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
+	    ELSE ''::hstore
+	    END || qq.listing
           FROM qq
           WHERE taxon_concepts.id = qq.id;
         END;
