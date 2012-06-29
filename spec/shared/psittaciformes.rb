@@ -61,6 +61,23 @@ shared_context "Psittaciformes" do
       :taxon_name => create(:taxon_name, :scientific_name => 'Aestiva'),
       :parent => @genus2_2
     )
+    @genus2_3 = create(
+      :genus,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Psittacula'),
+      :parent => @family2,
+      :fully_covered => false
+    )
+    @species2_3 = create(
+      :species,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Krameri'),
+      :parent => @genus2_3
+    )
+
+    ghana = create(
+      :country,
+      :name => 'Ghana',
+      :iso_code2 => 'GH'
+    )
 
     create(
      :cites_II_addition,
@@ -121,6 +138,18 @@ shared_context "Psittaciformes" do
      :cites_II_addition,
      :taxon_concept => @species2_2,
      :effective_at => '1981-06-06'
+    )
+    create(
+     :cites_III_addition,
+     :taxon_concept => @species2_3,
+     :effective_at => '1976-02-26',
+     :party => ghana
+    )
+    create(
+     :cites_III_deletion,
+     :taxon_concept => @species2_3,
+     :effective_at => '2007-03-04',
+     :party => ghana
     )
 
     Sapi::fix_listing_changes

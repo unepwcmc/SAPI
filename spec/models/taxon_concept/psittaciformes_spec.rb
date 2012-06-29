@@ -24,16 +24,22 @@ describe TaxonConcept do
         it "should be II at species level Amazona aestiva" do
           @species2_2.current_listing.should == 'II'
         end
-        it "should be blank at species level Agapornis roseicollis (not listed, not shown)" do
+        it "should be blank at species level Agapornis roseicollis (DEL II, not listed, not shown)" do
+          @species2_1.current_listing.should be_blank
+        end
+        it "should be blank at species level Psittacula krameri (DEL III, not listed, not shown)" do
           @species2_1.current_listing.should be_blank
         end
       end
       describe :cites_show do
-        it "should not show Agapornis roseicollis (DEL)" do
+        it "should not show Agapornis roseicollis (DEL II)" do
           @species2_1.cites_show.should_not be_true
         end
         it "should show Amazona aestiva" do
           @species2_2.cites_show.should be_true
+        end
+        it "should not show Psittacula krameri (DEL III)" do
+          @species2_3.cites_show.should_not be_true
         end
       end
     end
