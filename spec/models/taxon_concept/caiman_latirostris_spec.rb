@@ -6,7 +6,7 @@ describe TaxonConcept do
 
     context "LISTING" do
       describe :current_listing do
-        it "should be I/II at species level Caiman latirostris" do
+        it "should be I/II at species level Caiman latirostris (population split listing)" do
           @species.current_listing.should == 'I/II'
         end
       end

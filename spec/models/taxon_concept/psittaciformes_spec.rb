@@ -6,9 +6,6 @@ describe TaxonConcept do
 
     context "LISTING" do
       describe :current_listing do
-        it "should correctly interpret up / down listing" do
-          pending "fix history processing"
-        end
         it "should be I/II/NC at order level Psittaciformes" do
           @order.current_listing.should == 'I/II/NC'
         end

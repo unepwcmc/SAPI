@@ -23,26 +23,62 @@ shared_context "Canis lupus" do
       :fully_covered => false
     )
 
+    bhutan = create(
+      :country,
+      :name => 'Bhutan',
+      :iso_code2 => 'BT'
+    )
+    india = create(
+      :country,
+      :name => 'India',
+      :iso_code2 => 'IN'
+    )
+    nepal = create(
+      :country,
+      :name => 'Nepal',
+      :iso_code2 => 'NP'
+    )
+    pakistan = create(
+      :country,
+      :name => 'Pakistan',
+      :iso_code2 => 'PK'
+    )
     create(
      :cites_II_addition,
      :taxon_concept => @species,
      :effective_at => '1977-02-04'
     )
-    create(
+    l1 = create(
      :cites_I_addition,
      :taxon_concept => @species,
      :effective_at => '1979-06-28'
     )
+    [bhutan, india, nepal, pakistan].each do |country|
+      create(
+        :listing_distribution,
+        :geo_entity => country,
+        :listing_change => l1,
+        :is_party => false
+      )
+    end
     create(
      :cites_II_addition,
      :taxon_concept => @species,
      :effective_at => '1979-06-28'
     )
-    create(
+    l2 = create(
      :cites_I_addition,
      :taxon_concept => @species,
      :effective_at => '2010-06-23'
     )
+    [bhutan, india, nepal, pakistan].each do |country|
+      create(
+        :listing_distribution,
+        :geo_entity => country,
+        :listing_change => l2,
+        :is_party => false
+      )
+    end
     create(
      :cites_II_addition,
      :taxon_concept => @species,

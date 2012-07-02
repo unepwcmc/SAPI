@@ -22,10 +22,40 @@ shared_context "Loxodonta africana" do
       :parent => @genus
     )
 
-    create(
+    ghana = create(
+      :country,
+      :name => 'Ghana',
+      :iso_code2 => 'GH'
+    )
+    botswana = create(
+      :country,
+      :name => 'Botswana',
+      :iso_code2 => 'BW'
+    )
+    namibia = create(
+      :country,
+      :name => 'Namibia',
+      :iso_code2 => 'NA'
+    )
+    zambia = create(
+      :country,
+      :name => 'Zambia',
+      :iso_code2 => 'ZA'
+    )
+    zimbabwe = create(
+      :country,
+      :name => 'Zimbabwe',
+      :iso_code2 => 'ZW'
+    )
+    l1 = create(
      :cites_III_addition,
      :taxon_concept => @species,
      :effective_at => '1976-02-26'
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => ghana,
+      :listing_change => l1
     )
     create(
      :cites_II_addition,
@@ -37,12 +67,32 @@ shared_context "Loxodonta africana" do
      :taxon_concept => @species,
      :effective_at => '1990-01-18'
     )
-    create(
+    l2 = create(
      :cites_II_addition,
      :taxon_concept => @species,
      :effective_at => '1997-09-18'
     )
-
+    [botswana, namibia, zimbabwe].each do |country|
+      create(
+        :listing_distribution,
+        :geo_entity => country,
+        :listing_change => l2,
+        :is_party => false
+      )
+    end
+    l3 = create(
+     :cites_II_addition,
+     :taxon_concept => @species,
+     :effective_at => '2000-07-19'
+    )
+    [botswana, namibia, zambia, zimbabwe].each do |country|
+      create(
+        :listing_distribution,
+        :geo_entity => country,
+        :listing_change => l3,
+        :is_party => false
+      )
+    end
     Sapi::fix_listing_changes
     Sapi::rebuild
     self.instance_variables.each do |t|
