@@ -16,6 +16,16 @@ describe TaxonConcept do
           @family.current_listing.should == 'I/II/NC'
         end
       end
+
+      describe :cites_listed do
+        it "should be true for family Cactaceae" do
+          @family.cites_listed.should be_true
+        end
+        it "should be false for genus Pereskia" do
+          @genus1.cites_listed.should be_false
+        end
+      end
+
     end
   end
 end

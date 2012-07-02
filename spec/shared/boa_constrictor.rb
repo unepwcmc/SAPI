@@ -27,6 +27,13 @@ shared_context "Boa constrictor" do
       :parent => @species
     )
 
+  #Boidae
+    create(
+      :cites_II_addition,
+      :taxon_concept => @family,
+      :effective_at => '1977-02-04'
+    )
+
   #Boa constrictor
     create(
      :cites_II_addition,

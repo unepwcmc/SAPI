@@ -36,6 +36,13 @@ describe TaxonConcept do
           @species.current_listing.should == 'I/II'
         end
       end
+
+      describe :cites_listed do
+        it "should be true for species Loxodonta africana" do
+          @species.cites_listed.should be_true
+        end
+      end
+
     end
   end
 end

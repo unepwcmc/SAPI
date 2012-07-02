@@ -33,6 +33,7 @@ describe TaxonConcept do
           @subspecies3.current_listing.should == 'I'
         end
       end
+
       describe :cites_listed do
         it "should be false for order Artiodactyla" do
           @order.cites_listed.should be_false
@@ -56,6 +57,7 @@ describe TaxonConcept do
           @subspecies3.cites_listed.should be_true
         end
       end
+
     end
   end
 end

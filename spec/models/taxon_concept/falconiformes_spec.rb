@@ -22,6 +22,25 @@ describe TaxonConcept do
           @species1_2.current_listing.should == 'III'
         end
       end
+
+      describe :cites_listed do
+        it "should be true for order Falconiformes" do
+          @order.cites_listed.should be_true
+        end
+        it "should be false for family Falconidae (inclusion in higher taxa listing)" do
+          @family2.cites_listed.should be_false
+        end
+        it "should be false for genus Falco" do
+          @genus2_1.cites_listed.should be_false
+        end
+        it "should be true for species Falco araea" do
+          @species2_1.cites_listed.should be_true
+        end
+        it "should be false for species Falco alopex" do
+          @species2_2.cites_listed.should be_false
+        end
+      end
+
     end
   end
 end

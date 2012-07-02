@@ -43,6 +43,11 @@ shared_context "Caiman latirostris" do
       :listing_change => l1,
       :is_party => false
     )
+    create(
+     :cites_II_addition,
+     :taxon_concept => @family,
+     :effective_at => '1977-02-04'
+    )
 
     Sapi::fix_listing_changes
     Sapi::rebuild

@@ -28,6 +28,25 @@ describe TaxonConcept do
           @species2_1.current_listing.should be_blank
         end
       end
+
+      describe :cites_listed do
+        it "should be true for order Psittaciformes" do
+          @order.cites_listed.should be_true
+        end
+        it "should be false for family Cacatuidae" do
+          @family1.cites_listed.should be_false
+        end
+        it "should be false for genus Cacatua" do
+          @genus1_2.cites_listed.should be_false
+        end
+        it "should be true for species Cacatua goffiniana" do
+          @species1_2_1.cites_listed.should be_true
+        end
+        it "should be false for species Cacatua ducorpsi" do
+          @species1_2_2.cites_listed.should be_false
+        end
+      end
+
       describe :cites_show do
         it "should not show Agapornis roseicollis (DEL II)" do
           @species2_1.cites_show.should_not be_true
@@ -39,6 +58,7 @@ describe TaxonConcept do
           @species2_3.cites_show.should_not be_true
         end
       end
+
     end
   end
 end

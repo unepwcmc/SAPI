@@ -33,6 +33,19 @@ describe TaxonConcept do
           @species.current_listing.should == 'II'
         end
       end
+
+      describe :cites_listed do
+        it "should be true for family Tapiridae" do
+          @family.cites_listed.should be_true
+        end
+        it "should be false for genus Tapirus" do
+          @genus.cites_listed.should be_false
+        end
+        it "should be trye for species Tapirus terrestris" do
+          @species.cites_listed.should be_true
+        end
+      end
+
     end
   end
 end

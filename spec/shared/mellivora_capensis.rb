@@ -8,7 +8,7 @@ shared_context "Mellivora capensis" do
     )
     @family = create(
       :family,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Mustelidae'),
+      :taxon_name => create(:taxon_name, :scientific_name => 'Mustelinae'),
       :parent => @order
     )
     @genus = create(

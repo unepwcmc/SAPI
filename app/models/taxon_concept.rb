@@ -58,7 +58,7 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def cites_listed
-    listing && listing['cites_listed']
+    listing && listing['cites_listed'] == 't'
   end
 
   def cites_show
