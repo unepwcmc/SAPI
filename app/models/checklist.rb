@@ -17,6 +17,10 @@ class Checklist
     unless @geo_options.empty?
       @taxon_concepts_rel = @taxon_concepts_rel.by_geo_entities(@geo_options)
     end
+    #filter by species listing
+    unless options[:cites_appendices].nil?
+      @taxon_concepts_rel = @taxon_concepts_rel.by_cites_appendices(options[:cites_appendices])
+    end
     #filter by higher taxa
     @higher_taxa = options[:higher_taxon_ids] || nil
     #possible output layouts are:

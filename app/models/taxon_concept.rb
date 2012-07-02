@@ -79,6 +79,15 @@ class TaxonConcept < ActiveRecord::Base
 
 class << self
 
+  def by_cites_appendices(appendix_abbreviations)
+    return scoped if appendix_abbreviations.empty?
+    conds = []
+    appendix_abbreviations.each do |abbr|
+      conds << "listing->'cites_#{abbr}' = '#{abbr}'"
+    end
+    where(conds.join(' AND '))
+  end
+
   def by_geo_entities(geo_entities_ids)
     return scoped if geo_entities_ids.empty?
     in_clause = geo_entities_ids.join(',')
