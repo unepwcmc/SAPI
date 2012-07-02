@@ -32,23 +32,35 @@ shared_context "Mellivora capensis" do
       :name => 'Botswana',
       :iso_code2 => 'BW'
     )
-    create(
+    l1 = create(
      :cites_III_addition,
      :taxon_concept => @species,
-     :effective_at => '1976-02-26',
-     :party => ghana
+     :effective_at => '1976-02-26'
     )
     create(
+      :listing_distribution,
+      :geo_entity => ghana,
+      :listing_change => l1
+    )
+    l2 = create(
      :cites_III_addition,
      :taxon_concept => @species,
-     :effective_at => '1978-04-24',
-     :party => botswana
+     :effective_at => '1978-04-24'
     )
     create(
+      :listing_distribution,
+      :geo_entity => botswana,
+      :listing_change => l2
+    )
+    l3 = create(
      :cites_III_deletion,
      :taxon_concept => @species,
-     :effective_at => '2007-03-04',
-     :party => ghana
+     :effective_at => '2007-03-04'
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => ghana,
+      :listing_change => l3
     )
 
     Sapi::fix_listing_changes

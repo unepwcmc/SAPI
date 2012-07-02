@@ -32,8 +32,8 @@ namespace :import do
         FROM #{TMP_TABLE} AS TMP
         INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = TMP.spc_rec_id;
 
-        INSERT INTO listing_distributions(listing_change_id, geo_entity_id, created_at, updated_at)
-        SELECT DISTINCT listing_changes.id, geo_entities.id, current_date, current_date
+        INSERT INTO listing_distributions(listing_change_id, geo_entity_id, is_party, created_at, updated_at)
+        SELECT DISTINCT listing_changes.id, geo_entities.id, 't', current_date, current_date
         FROM #{TMP_TABLE} AS TMP
         INNER JOIN listing_changes ON
           listing_changes.species_listing_id = CASE

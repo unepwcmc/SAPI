@@ -139,17 +139,25 @@ shared_context "Psittaciformes" do
      :taxon_concept => @species2_2,
      :effective_at => '1981-06-06'
     )
-    create(
+    l1 = create(
      :cites_III_addition,
      :taxon_concept => @species2_3,
-     :effective_at => '1976-02-26',
-     :party => ghana
+     :effective_at => '1976-02-26'
     )
     create(
+      :listing_distribution,
+      :geo_entity => ghana,
+      :listing_change => l1
+    )
+    l2 = create(
      :cites_III_deletion,
      :taxon_concept => @species2_3,
-     :effective_at => '2007-03-04',
-     :party => ghana
+     :effective_at => '2007-03-04'
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => ghana,
+      :listing_change => l2
     )
 
     Sapi::fix_listing_changes

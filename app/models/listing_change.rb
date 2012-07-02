@@ -18,10 +18,10 @@
 
 class ListingChange < ActiveRecord::Base
 
-  attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id, :party_id, :effective_at
+  attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id, :effective_at
 
   belongs_to :species_listing
   belongs_to :taxon_concept
   belongs_to :change_type
-  belongs_to :party, :class_name => 'GeoEntity'
+  has_many :listing_distributions
 end

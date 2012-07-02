@@ -52,23 +52,27 @@ CREATE FUNCTION fix_cites_listing_changes() RETURNS void
       qq.taxon_concept_id, qq.species_listing_id, (SELECT id FROM change_types WHERE name = 'DELETION' LIMIT 1),
       qq.effective_at - time '00:00:01', NOW(), NOW()
       FROM (
-             WITH q AS (
-                      SELECT taxon_concept_id, species_listing_id, change_type_id,
-                      effective_at, change_types.name AS change_type_name, party_id,
-                      species_listings.abbreviation AS listing_name,
-                      ROW_NUMBER() OVER(ORDER BY taxon_concept_id, effective_at) AS row_no
-                      FROM listing_changes
-                      LEFT JOIN change_types on change_type_id = change_types.id
-                      LEFT JOIN species_listings on species_listing_id = species_listings.id
-                      LEFT JOIN designations ON designations.id = species_listings.designation_id
-                      WHERE change_types.name IN ('ADDITION','DELETION')
-                      AND designations.name = 'CITES'
-              )
-              SELECT q1.taxon_concept_id, q1.species_listing_id, q2.effective_at
-              FROM q q1 LEFT JOIN q q2 ON (q1.taxon_concept_id = q2.taxon_concept_id AND q2.row_no = q1.row_no + 1)
-              WHERE q2.taxon_concept_id IS NOT NULL
-              AND q1.change_type_id = q2.change_type_id AND q1.change_type_name = 'ADDITION'
-              AND NOT (q1.listing_name = 'III' AND q2.listing_name = 'III' AND q1.party_id <> q2.party_id)
+                    WITH q AS (
+                             SELECT taxon_concept_id, species_listing_id, change_type_id,
+                             effective_at, change_types.name AS change_type_name,
+                             species_listings.abbreviation AS listing_name,
+                             listing_distributions.geo_entity_id AS party_id,
+                             ROW_NUMBER() OVER(ORDER BY taxon_concept_id, effective_at) AS row_no
+                             FROM
+                             listing_changes
+                             LEFT JOIN change_types on change_type_id = change_types.id
+                             LEFT JOIN species_listings on species_listing_id = species_listings.id
+                             LEFT JOIN designations ON designations.id = species_listings.designation_id
+                             LEFT JOIN listing_distributions ON listing_changes.id = listing_distributions.listing_change_id
+                             WHERE change_types.name IN ('ADDITION','DELETION')
+                             AND designations.name = 'CITES'
+                             AND listing_distributions.is_party = 't'
+                     )
+                     SELECT q1.taxon_concept_id, q1.species_listing_id, q2.effective_at
+                     FROM q q1 LEFT JOIN q q2 ON (q1.taxon_concept_id = q2.taxon_concept_id AND q2.row_no = q1.row_no + 1)
+                     WHERE q2.taxon_concept_id IS NOT NULL
+                     AND q1.change_type_id = q2.change_type_id AND q1.change_type_name = 'ADDITION'
+                     AND NOT (q1.listing_name = 'III' AND q2.listing_name = 'III' AND q1.party_id <> q2.party_id)
       ) qq;
       END;
       $$;
@@ -126,7 +130,11 @@ CREATE FUNCTION rebuild_ancestor_listings() RETURNS void
             GROUP BY (id)
           )
           UPDATE taxon_concepts
-          SET listing = taxon_concepts.listing || qq.listing
+          SET listing = 
+            CASE
+            WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
+	    ELSE ''::hstore
+	    END || qq.listing
           FROM qq
           WHERE taxon_concepts.id = qq.id;
         END;
@@ -764,8 +772,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-06-25 07:16:53.406904'::timestamp without time zone NOT NULL,
-    party_id integer
+    effective_at timestamp without time zone DEFAULT '2012-06-25 07:16:53.406904'::timestamp without time zone NOT NULL
 );
 
 
@@ -794,10 +801,11 @@ ALTER SEQUENCE listing_changes_id_seq OWNED BY listing_changes.id;
 
 CREATE TABLE listing_distributions (
     id integer NOT NULL,
-    listing_change_id integer,
+    listing_change_id integer NOT NULL,
     geo_entity_id integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    is_party boolean DEFAULT true NOT NULL
 );
 
 
@@ -1616,14 +1624,6 @@ ALTER TABLE ONLY listing_changes
 
 
 --
--- Name: listing_changes_party_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY listing_changes
-    ADD CONSTRAINT listing_changes_party_id_fk FOREIGN KEY (party_id) REFERENCES geo_entities(id);
-
-
---
 -- Name: listing_changes_reference_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1852,3 +1852,9 @@ INSERT INTO schema_migrations (version) VALUES ('20120628123444');
 INSERT INTO schema_migrations (version) VALUES ('20120628145332');
 
 INSERT INTO schema_migrations (version) VALUES ('20120629090125');
+
+INSERT INTO schema_migrations (version) VALUES ('20120702072151');
+
+INSERT INTO schema_migrations (version) VALUES ('20120702072355');
+
+INSERT INTO schema_migrations (version) VALUES ('20120702073119');
