@@ -2,12 +2,12 @@
 #
 # Table name: geo_relationships
 #
-#  id                       :integer         not null, primary key
-#  geo_entity_id            :integer         not null
-#  other_geo_entity_id      :integer         not null
-#  geo_relationship_type_id :integer         not null
-#  created_at               :datetime        not null
-#  updated_at               :datetime        not null
+#  id                       :integer          not null, primary key
+#  geo_entity_id            :integer          not null
+#  other_geo_entity_id      :integer          not null
+#  geo_relationship_type_id :integer          not null
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
 #
 
 class GeoRelationship < ActiveRecord::Base

@@ -2,7 +2,7 @@
 #
 # Table name: listing_changes
 #
-#  id                 :integer         not null, primary key
+#  id                 :integer          not null, primary key
 #  species_listing_id :integer
 #  taxon_concept_id   :integer
 #  change_type_id     :integer
@@ -11,9 +11,9 @@
 #  rgt                :integer
 #  parent_id          :integer
 #  depth              :integer
-#  created_at         :datetime        not null
-#  updated_at         :datetime        not null
-#  effective_at       :datetime        default(2012-06-26 10:13:03 UTC), not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  effective_at       :datetime         default(2012-06-25 07:15:43 UTC), not null
 #
 
 class ListingChange < ActiveRecord::Base

@@ -2,11 +2,11 @@
 #
 # Table name: species_listings
 #
-#  id             :integer         not null, primary key
+#  id             :integer          not null, primary key
 #  designation_id :integer
 #  name           :string(255)
-#  created_at     :datetime        not null
-#  updated_at     :datetime        not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #  abbreviation   :string(255)
 #
 
