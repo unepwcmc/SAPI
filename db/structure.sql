@@ -798,7 +798,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-06-25 07:16:53.406904'::timestamp without time zone NOT NULL
+    effective_at timestamp without time zone DEFAULT '2012-06-25 07:15:43.038658'::timestamp without time zone NOT NULL
 );
 
 
@@ -1601,6 +1601,14 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
+-- Name: common_names_language_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY common_names
+    ADD CONSTRAINT common_names_language_id_fk FOREIGN KEY (language_id) REFERENCES languages(id);
+
+
+--
 -- Name: geo_entities_geo_entity_type_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1702,6 +1710,22 @@ ALTER TABLE ONLY ranks
 
 ALTER TABLE ONLY species_listings
     ADD CONSTRAINT species_listings_designation_id_fk FOREIGN KEY (designation_id) REFERENCES designations(id);
+
+
+--
+-- Name: taxon_commons_common_name_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY taxon_commons
+    ADD CONSTRAINT taxon_commons_common_name_id_fk FOREIGN KEY (common_name_id) REFERENCES common_names(id);
+
+
+--
+-- Name: taxon_commons_taxon_concept_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY taxon_commons
+    ADD CONSTRAINT taxon_commons_taxon_concept_id_fk FOREIGN KEY (taxon_concept_id) REFERENCES taxon_concepts(id);
 
 
 --
@@ -1885,3 +1909,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120702072355');
 INSERT INTO schema_migrations (version) VALUES ('20120702073119');
 
 INSERT INTO schema_migrations (version) VALUES ('20120703074243');
+
+INSERT INTO schema_migrations (version) VALUES ('20120703075419');
