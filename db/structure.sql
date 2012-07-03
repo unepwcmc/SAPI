@@ -202,7 +202,11 @@ CREATE FUNCTION rebuild_descendant_listings() RETURNS void
           CASE
             WHEN taxon_concepts.listing IS NULL THEN ''::hstore
             ELSE taxon_concepts.listing
-          END || q.listing
+          END || q.listing ||
+          CASE
+            WHEN taxon_concepts.listing->'cites_listed' = 't' THEN ''::hstore
+            ELSE ('cites_listed' => 'f')
+          END
           FROM q
           WHERE taxon_concepts.id = q.id;
         END;
@@ -1089,7 +1093,6 @@ CREATE TABLE taxon_concepts (
     taxon_name_id integer NOT NULL,
     legacy_id integer,
     inherit_distribution boolean DEFAULT true NOT NULL,
-    inherit_legislation boolean DEFAULT true NOT NULL,
     inherit_references boolean DEFAULT true NOT NULL,
     data hstore DEFAULT ''::hstore,
     not_in_cites boolean DEFAULT false NOT NULL,
@@ -1880,3 +1883,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120702072151');
 INSERT INTO schema_migrations (version) VALUES ('20120702072355');
 
 INSERT INTO schema_migrations (version) VALUES ('20120702073119');
+
+INSERT INTO schema_migrations (version) VALUES ('20120703074243');
