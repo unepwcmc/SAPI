@@ -7,6 +7,7 @@ namespace :import do
     Rake::Task["import:countries"].invoke
     Rake::Task["import:distributions"].invoke
     Rake::Task["import:cites_listings"].invoke
+    Rake::Task["import:common_names"].invoke
     Sapi::fix_listing_changes()
     Sapi::rebuild()
   end

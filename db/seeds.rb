@@ -34,6 +34,7 @@ TaxonRelationshipType.dict.each do |relationship|
 end
 puts "#{TaxonRelationshipType.count} taxon relationship types created"
 
+puts "#{TaxonCommon.delete_all} taxon commons deleted"
 puts "#{TaxonConcept.delete_all} taxon_concepts deleted"
 puts "#{TaxonName.delete_all} taxon_names deleted"
 puts "#{Rank.delete_all} ranks deleted"
@@ -205,3 +206,10 @@ end
 
 puts "#{TaxonConcept.count} taxon_concepts created"
 puts "#{TaxonName.count} taxon_names created"
+
+puts "#{CommonName.delete_all} common names deleted"
+puts "#{Language.delete_all} languages deleted"
+Language.create(:name => 'English', :abbreviation => 'en')
+Language.create(:name => 'Spanish', :abbreviation => 'es')
+Language.create(:name => 'French', :abbreviation => 'fr')
+puts "#{Language.count} languages created"
