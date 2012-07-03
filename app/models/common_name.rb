@@ -12,4 +12,5 @@
 
 class CommonName < ActiveRecord::Base
   attr_accessible :language_id, :name, :reference_id
+  belongs_to :language
 end

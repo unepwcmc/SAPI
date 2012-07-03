@@ -11,4 +11,5 @@
 
 class TaxonCommon < ActiveRecord::Base
   attr_accessible :common_name_id, :taxon_concept_id
+  belongs_to :common_name
 end

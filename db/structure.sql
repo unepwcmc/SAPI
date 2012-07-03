@@ -36,6 +36,20 @@ CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
 
 
+--
+-- Name: tablefunc; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS tablefunc WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION tablefunc; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION tablefunc IS 'functions that manipulate whole tables, including crosstab';
+
+
 SET search_path = public, pg_catalog;
 
 --
@@ -526,6 +540,17 @@ CREATE TABLE cites_listings_import (
 
 CREATE TABLE cites_regions_import (
     name character varying
+);
+
+
+--
+-- Name: common_name_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE common_name_import (
+    common_name character varying,
+    language_name character varying,
+    species_id integer
 );
 
 
@@ -1911,3 +1936,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120702073119');
 INSERT INTO schema_migrations (version) VALUES ('20120703074243');
 
 INSERT INTO schema_migrations (version) VALUES ('20120703075419');
+
+INSERT INTO schema_migrations (version) VALUES ('20120703141230');

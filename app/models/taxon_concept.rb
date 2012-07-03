@@ -40,6 +40,8 @@ class TaxonConcept < ActiveRecord::Base
   has_many :geo_entities, :through => :taxon_concept_geo_entities
   has_many :listing_changes
   has_many :species_listings, :through => :listing_changes
+  has_many :taxon_commons, :dependent => :destroy
+  has_many :common_names, :through => :taxon_commons
 
   scope :checklist, select('taxon_concepts.id, taxon_concepts.depth,
     taxon_concepts.lft, taxon_concepts.rgt, taxon_concepts.parent_id,
@@ -69,11 +71,18 @@ class TaxonConcept < ActiveRecord::Base
     listing && listing['cites_listing']
   end
 
+  def common_names_by_lng
+    res = {}
+    res.merge({:e => lng_e}) if respond_to?(:lng_e)
+    res.merge({:s => lng_s}) if respond_to?(:lng_s)
+    res.merge({:f => lng_f}) if respond_to?(:lng_f)
+  end
+
   def as_json(options={})
     super(
       :only =>[:id, :parent_id, :depth],
       :methods => [:family_name, :class_name, :full_name, :rank_name, :spp,
-      :taxonomic_position, :current_listing]
+      :taxonomic_position, :current_listing, :common_names_by_lng]
     )
   end
 
