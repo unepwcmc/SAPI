@@ -8,6 +8,7 @@ gem 'rails', '3.2.6'
 gem 'rails-api'
 
 gem 'pg'
+gem 'pg_array_parser'
 gem 'activerecord-postgres-hstore'
 gem 'foreigner'
 gem 'immigrant'

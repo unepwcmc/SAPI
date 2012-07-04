@@ -23,6 +23,7 @@
 #
 
 class TaxonConcept < ActiveRecord::Base
+  include PgArrayParser
   attr_accessible :lft, :parent_id, :rgt, :rank_id, :parent_id,
     :designation_id, :taxon_name_id, :not_in_cites, :fully_covered,
     :data
@@ -71,18 +72,22 @@ class TaxonConcept < ActiveRecord::Base
     listing && listing['cites_listing']
   end
 
-  def common_names_by_lng
-    res = {}
-    res.merge({:e => lng_e}) if respond_to?(:lng_e)
-    res.merge({:s => lng_s}) if respond_to?(:lng_s)
-    res.merge({:f => lng_f}) if respond_to?(:lng_f)
+  ['English', 'Spanish', 'French'].each do |lng|
+    define_method(lng.downcase) do
+      sym = :"lng_#{lng[0].downcase}"
+      if respond_to?(sym)
+        parse_pg_array(send(sym) || '').join(',')#TODO fix encoding...
+      else
+        nil
+      end
+    end
   end
 
   def as_json(options={})
     super(
       :only =>[:id, :parent_id, :depth],
       :methods => [:family_name, :class_name, :full_name, :rank_name, :spp,
-      :taxonomic_position, :current_listing, :common_names_by_lng]
+      :taxonomic_position, :current_listing, :english, :spanish, :french]
     )
   end
 
