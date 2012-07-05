@@ -20,12 +20,6 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
         CASE
           WHEN qqq.listing -> 'cites_listing' > '' THEN ('cites_show' => 't')
           ELSE ('cites_show' => 'f')
-        END,
-        data = taxon_concepts.data || CASE
-          WHEN taxon_concepts.data -> 'rank_name' <> 'SUBSPECIES' AND
-            taxon_concepts.data -> 'rank_name' <> 'SPECIES'
-          THEN ('spp' => 'spp.')
-          ELSE ('spp' => NULL)
         END
         FROM (
           SELECT taxon_concept_id, listing ||

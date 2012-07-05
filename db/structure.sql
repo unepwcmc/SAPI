@@ -256,12 +256,6 @@ CREATE FUNCTION rebuild_listings() RETURNS void
         CASE
           WHEN qqq.listing -> 'cites_listing' > '' THEN ('cites_show' => 't')
           ELSE ('cites_show' => 'f')
-        END,
-        data = taxon_concepts.data || CASE
-          WHEN taxon_concepts.data -> 'rank_name' <> 'SUBSPECIES' AND
-            taxon_concepts.data -> 'rank_name' <> 'SPECIES'
-          THEN ('spp' => 'spp.')
-          ELSE ('spp' => NULL)
         END
         FROM (
           SELECT taxon_concept_id, listing ||
@@ -544,17 +538,6 @@ CREATE TABLE cites_regions_import (
 
 
 --
--- Name: common_name_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE common_name_import (
-    common_name character varying,
-    language_name character varying,
-    species_id integer
-);
-
-
---
 -- Name: common_names; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -823,7 +806,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-06-25 07:15:43.038658'::timestamp without time zone NOT NULL
+    effective_at timestamp without time zone DEFAULT '2012-06-25 07:16:53.406904'::timestamp without time zone NOT NULL
 );
 
 
@@ -1112,7 +1095,6 @@ CREATE TABLE taxon_concepts (
     rank_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    spcrecid integer,
     depth integer,
     designation_id integer NOT NULL,
     taxon_name_id integer NOT NULL,
@@ -1938,3 +1920,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120703074243');
 INSERT INTO schema_migrations (version) VALUES ('20120703075419');
 
 INSERT INTO schema_migrations (version) VALUES ('20120703141230');
+
+INSERT INTO schema_migrations (version) VALUES ('20120704095341');
