@@ -36,7 +36,7 @@ class Checklist
       end).
       joins(
         <<-SQL
-        INNER JOIN (
+        LEFT JOIN (
           SELECT *
           FROM
           CROSSTAB(
