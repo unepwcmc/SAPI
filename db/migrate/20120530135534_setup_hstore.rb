@@ -3,7 +3,7 @@ class SetupHstore < ActiveRecord::Migration
     if Rails.env.staging? or Rails.env.production?
       puts "Please add extension by hand: CREATE EXTENSION hstore"
     else
-      execute "CREATE EXTENSION hstore"
+      execute "CREATE EXTENSION IF NOT EXISTS hstore"
     end
   end
 
