@@ -99,7 +99,7 @@ class << self
     appendix_abbreviations.each do |abbr|
       conds << "listing->'cites_#{abbr}' = '#{abbr}'"
     end
-    where(conds.join(' AND '))
+    where(conds.join(' OR '))
   end
 
   def by_geo_entities(geo_entities_ids)
