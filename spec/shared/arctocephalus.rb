@@ -1,3 +1,4 @@
+#Encoding: UTF-8
 shared_context "Arctocephalus" do
   before(:all) do
     @klass = TaxonConcept.find_by_taxon_name_id(TaxonName.find_by_scientific_name('Mammalia').id)
@@ -9,21 +10,56 @@ shared_context "Arctocephalus" do
     @family = create(
       :family,
       :taxon_name => create(:taxon_name, :scientific_name => 'Otariidae'),
-      :parent => @order
+      :parent => @order,
+      :common_names => [
+        create(:english_common_name, :name => 'Fur seals'),
+        create(:english_common_name, :name => 'Sealions'),
+        create(:spanish_common_name, :name => 'Focas'),
+        create(:spanish_common_name, :name => 'Leones marinos'),
+        create(:french_common_name, :name => 'Arctocéphales')
+      ]
     )
     @genus = create(
       :genus,
       :taxon_name => create(:taxon_name, :scientific_name => 'Arctocephalus'),
-      :parent => @family
+      :parent => @family,
+      :common_names => [
+        create(:english_common_name, :name => 'Fur seals'),
+        create(:english_common_name, :name => 'Southern fur seals'),
+        create(:spanish_common_name, :name => 'Osos marinos'),
+        create(:french_common_name, :name => 'Arctocéphales du sud'),
+        create(:french_common_name, :name => 'Otaries à fourrure'),
+        create(:french_common_name, :name => 'Otaries à fourrure du sud')
+      ]
     )
     @species1 = create(
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Australis'),
-      :parent => @genus
+      :parent => @genus,
+      :common_names => [
+        create(:english_common_name, :name => 'South American Fur Seal'),
+        create(:english_common_name, :name => 'Southern Fur Seal'),
+        create(:spanish_common_name, :name => 'Lobo fino sudamericano'),
+        create(:spanish_common_name, :name => 'Oso marino austral'),
+        create(:french_common_name, :name => 'Otarie à fourrure australe')
+      ]
     )
     @species2 = create(
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Townsendi'),
+      :parent => @genus,
+      :common_names => [
+        create(:english_common_name, :name => 'Guadalupe Fur Seal'),
+        create(:english_common_name, :name => 'Lower Californian Fur Seal'),
+        create(:spanish_common_name, :name => 'Oso marino de Guadalupe'),
+        create(:spanish_common_name, :name => 'Otaria americano'),
+        create(:french_common_name, :name => 'Arctocéphale de Guadalupe'),
+        create(:french_common_name, :name => 'Otarie à fourrure d\'Amérique')
+      ]
+    )
+    @species3 = create(
+      :species,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Pusillus'),
       :parent => @genus
     )
 
