@@ -44,12 +44,6 @@ class TaxonConcept < ActiveRecord::Base
   has_many :taxon_commons, :dependent => :destroy
   has_many :common_names, :through => :taxon_commons
 
-  scope :checklist, select('taxon_concepts.id, taxon_concepts.depth,
-    taxon_concepts.lft, taxon_concepts.rgt, taxon_concepts.parent_id,
-    taxon_names.scientific_name, ranks.name AS rank_name').
-    joins(:taxon_name).
-    joins(:rank)
-
   scope :taxonomic_layout, where("data -> 'rank_name' <> 'GENUS'").
     order("data -> 'taxonomic_position'")
   scope :alphabetical_layout, where(
@@ -57,7 +51,7 @@ class TaxonConcept < ActiveRecord::Base
       [Rank::CLASS, Rank::PHYLUM, Rank::KINGDOM]
     ).
     order("data -> 'full_name'")
-  scope :common_names, select(['E', 'S', 'F'].map do |lng|
+  scope :with_common_names, select(['E', 'S', 'F'].map do |lng|
         "lng_#{lng.downcase}"
       end).
       joins(

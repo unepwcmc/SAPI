@@ -1,3 +1,4 @@
+#Encoding: utf-8
 class Checklist
   attr_accessor :taxon_concepts_rel
   def initialize(options)
@@ -30,13 +31,71 @@ class Checklist
       @taxon_concepts_rel = @taxon_concepts_rel.alphabetical_layout
     end
     #include common names?
-    unless options[:common_names].blank?
-      @taxon_concepts_rel = @taxon_concepts_rel.common_names
-    end
+    @taxon_concepts_rel = @taxon_concepts_rel.with_common_names
   end
 
   def generate
     @taxon_concepts_rel.all
+  end
+
+  def pdf
+    Prawn::Document.generate("checklist.pdf") do |pdf|
+      pdf.text "CITES CHECKLIST", :align => :center, :size => 18
+      pdf.move_down 12
+      
+      pdf.column_box([0, pdf.cursor], :columns => 2, :width => pdf.bounds.width) do
+        generate.each do |tc|
+          unless tc.full_name.blank?
+            pdf.formatted_text [
+              {
+                :text =>
+                  if ['FAMILY','ORDER','CLASS'].include? tc.rank_name
+                    tc.full_name.upcase
+                  else
+                    tc.full_name
+                  end + ' ',
+                :styles => 
+                  if ['SPECIES', 'SUBSPECIES'].include? tc.rank_name
+                    [:italic]
+                  elsif tc.rank_name == 'GENUS'
+                    [:italic, :bold]
+                  else
+                    [:bold]
+                  end
+              },
+              {:text => tc.current_listing + ' ', :styles => [:bold]},
+              {:text => "#{tc.family_name} ".upcase},
+              {:text => "(#{tc.class_name}) "},
+              {
+                :text =>
+                  unless tc.english.blank?
+                    "(E) #{tc.english} "
+                  else
+                    ''
+                  end
+              },
+              {
+                :text =>
+                  unless tc.spanish.blank?
+                    "(S) #{tc.spanish} "
+                  else
+                    ''
+                  end
+              },
+              {
+                :text =>
+                  unless tc.french.blank?
+                    "(F) #{tc.french} "
+                  else
+                    ''
+                  end
+              }
+            ]
+          end
+        end
+
+      end
+    end
   end
 
 end

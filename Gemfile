@@ -15,6 +15,7 @@ gem 'immigrant'
 gem 'awesome_nested_set'
 gem 'exception_notification', :require => 'exception_notifier'
 
+gem 'prawn'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
