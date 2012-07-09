@@ -114,6 +114,14 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
+  def spp
+    if ['GENUS', 'FAMILY', 'ORDER'].include?(rank_name)
+      'spp.'
+    else
+      nil
+    end
+  end
+
   def as_json(options={})
     super(
       :only =>[:id, :parent_id, :depth],
