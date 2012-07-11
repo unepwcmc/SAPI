@@ -1,13 +1,19 @@
+#Encoding: utf-8
+require "prawn/measurement_extensions"
+
 class PdfChecklist < Checklist
 
   def generate
-    Prawn::Document.new do |pdf|
-      pdf.text "CITES CHECKLIST", :align => :center, :size => 18
-      pdf.move_down 12
-
+    Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm), :template => Rails.root.join("public/static.pdf")) do |pdf|
+      pdf.font_size 9
+      pdf.go_to_page(pdf.page_count)
+      pdf.start_new_page
       pdf.column_box([0, pdf.cursor], :columns => 2, :width => pdf.bounds.width) do
         @taxon_concepts_rel.each do |tc|
           unless tc.full_name.blank?
+            if tc.rank_name == 'ORDER'
+              bounding_box
+            end
             pdf.formatted_text [
               {
                 :text =>
@@ -58,6 +64,17 @@ class PdfChecklist < Checklist
         end
 
       end
+      #add page numbers
+      string = "CITES species index – <page>"
+      options = {
+        :at => [pdf.bounds.right / 2 - 75, 0],
+        :width => 150,
+        :align => :center,
+        :page_filter => lambda{ |p| p > 2 },
+        :start_count_at => 1,
+      }
+      pdf.number_pages string, options
+
     end
   end
 
