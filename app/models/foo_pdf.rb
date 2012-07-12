@@ -2,23 +2,29 @@ class FooPdf
 
   def initialize
     Prawn::Document.generate("foo.pdf",:page_size => 'A4') do
-      zonks = ('zonk ' * 300).split
-      zonk_footnotes = {10 => '* ' + "lalala " * 100, 70 => '* ' + "lololo " * 60}
+      #read 150 lorem ipsum records of various length 
+      records = File.read(Rails.root.join("lib/assets/lorem_ipsum_paragraphs.txt")).split("\n").reject(&:blank?)
+      #assign some random footnotes to the paragraphs
+      footnotes = {
+        1 => '* ' + records[120],
+        2 => '* ' + records[54],
+        11 => '* ' + records[2]
+      }
       footnotes_to_draw = []
       space_needed = 0
-      for i in 0..zonks.length
-        str = zonks[i]
-        if zonk_footnotes.keys.include? i
+      for i in 0..records.length
+        str = records[i]
+        if footnotes.keys.include? i
           str += '*'#this one has a footnote attached
-          space_needed += height_of(zonk_footnotes[i])
-          footnotes_to_draw << zonk_footnotes[i]
+          space_needed += (height_of(footnotes[i]) + 15)
+          footnotes_to_draw << footnotes[i]
         end
         text "#{str}"
         if space_needed > 0
           puts "space needed: #{space_needed}"
           space_available = cursor
           puts "space available: #{space_available}"
-          unless space_available - space_needed > 20#arbitrary mean space per zonk rekord
+          unless space_available - space_needed > height_of(records[i+1])
             #it might be that we won't be able to fit the footer on same page
             if space_available < space_needed
               start_new_page
@@ -27,9 +33,9 @@ class FooPdf
               #hopefully we can draw the footer now
               puts "draw footer"
               bounding_box [0,space_needed], :width => bounds.width, :height => space_needed do
-                stroke_bounds
+                stroke_horizontal_rule
                 footnotes_to_draw.each do |footnote|
-                  text footnote
+                  pad(10){text footnote}
                 end
               end
               footnotes_to_draw = []
