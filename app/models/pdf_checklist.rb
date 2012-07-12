@@ -11,9 +11,6 @@ class PdfChecklist < Checklist
       pdf.column_box([0, pdf.cursor], :columns => 2, :width => pdf.bounds.width) do
         @taxon_concepts_rel.each do |tc|
           unless tc.full_name.blank?
-            if tc.rank_name == 'ORDER'
-              bounding_box
-            end
             pdf.formatted_text [
               {
                 :text =>
