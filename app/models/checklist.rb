@@ -5,7 +5,7 @@ class Checklist
     @designation = options[:designation] || Designation::CITES
 
     @taxon_concepts_rel = TaxonConcept.scoped.
-      select([:"taxon_concepts.id", :data, :listing, :depth]).
+      select([:"taxon_concepts.id AS taxon_concept_id", :data, :listing, :"taxon_concepts.depth"]).
       joins(:designation).
       where('designations.name' => @designation)
 

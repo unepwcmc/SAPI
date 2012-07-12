@@ -60,7 +60,7 @@ class TaxonConcept < ActiveRecord::Base
           SELECT *
           FROM
           CROSSTAB(
-            'SELECT taxon_concepts.id AS taxon_concept_id,
+            'SELECT taxon_concepts.id AS taxon_concept_id_cn,
             SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
             ARRAY_AGG(common_names.name ORDER BY common_names.id) AS common_names_ary 
             FROM "taxon_concepts"
@@ -73,10 +73,10 @@ class TaxonConcept < ActiveRecord::Base
             GROUP BY taxon_concepts.id, SUBSTRING(languages.name FROM 1 FOR 1)
             ORDER BY 1,2'
           ) AS ct(
-            taxon_concept_id INTEGER,
+            taxon_concept_id_cn INTEGER,
             lng_E VARCHAR[], lng_F VARCHAR[], lng_S VARCHAR[]
           )
-        ) common_names ON taxon_concepts.id = common_names.taxon_concept_id
+        ) common_names ON taxon_concepts.id = common_names.taxon_concept_id_cn
         SQL
       )
 
