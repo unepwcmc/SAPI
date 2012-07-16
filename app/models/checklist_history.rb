@@ -1,9 +1,11 @@
 class ChecklistHistory < Checklist
 
+  attr_reader :taxon_concepts
+
   def initialize(options={})
     super(options.merge({:output_layout => :taxonomic}))
     @taxon_concepts_rel.select_values = [
-      "taxon_concepts.id AS taxon_concept_id", :data,
+      "taxon_concepts.id", :data,
       "lng_e", "lng_s", "lng_f",
       "listing_changes.effective_at",
       "listing_changes.notes AS listing_notes",
@@ -25,7 +27,32 @@ class ChecklistHistory < Checklist
         ON listing_changes.id = listing_distributions.listing_change_id
         AND listing_distributions.is_party = 't'").
       joins("LEFT JOIN geo_entities ON
-        geo_entities.id = listing_distributions.geo_entity_id")
+        geo_entities.id = listing_distributions.geo_entity_id").
+      #filter out deletion records that were added programatically to simplify
+      #current listing calculations - don't want them to show up
+      where("NOT (change_types.name = '#{ChangeType::DELETION}' AND species_listing_id IS NOT NULL)")
+
+    #ideally, instead of processing it this way it should be returned
+    #in the correct format from the db
+    prev_id = nil
+    current_listing_history = nil
+    @taxon_concepts = []
+    @taxon_concepts_rel.map do |tc|
+      listing_change = {
+        :effective_at => tc.effective_at,
+        :change_type => tc.change_type,
+        :species_listing => tc.species_listing,
+        :party => tc.party,
+        :listing_notes => tc.listing_notes
+      }
+      if tc.id != prev_id
+        tc.listing_history = []
+        current_listing_history = tc.listing_history
+        @taxon_concepts << tc
+        prev_id = tc.id
+      end
+      current_listing_history << listing_change
+    end
   end
 
 end

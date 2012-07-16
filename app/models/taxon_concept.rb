@@ -27,6 +27,7 @@ class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :rank_id, :parent_id,
     :designation_id, :taxon_name_id, :not_in_cites, :fully_covered,
     :data
+  attr_accessor :listing_history
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore
 
@@ -79,7 +80,6 @@ class TaxonConcept < ActiveRecord::Base
         ) common_names ON taxon_concepts.id = common_names.taxon_concept_id_cn
         SQL
       )
-
 
   acts_as_nested_set
 
