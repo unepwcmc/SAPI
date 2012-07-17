@@ -817,7 +817,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-06-25 07:15:43.038658'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-07-17 09:27:05.051795'::timestamp without time zone NOT NULL,
     notes text
 );
 

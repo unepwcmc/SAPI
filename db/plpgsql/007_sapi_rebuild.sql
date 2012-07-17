@@ -7,10 +7,10 @@ CREATE OR REPLACE FUNCTION sapi_rebuild() RETURNS void
     AS $$
         BEGIN
           RAISE NOTICE 'Rebuilding SAPI database';
-          --RAISE NOTICE 'taxonomic positions';
-          PERFORM rebuild_taxonomic_positions();
           --RAISE NOTICE 'names and ranks';
           PERFORM rebuild_names_and_ranks();
+          --RAISE NOTICE 'taxonomic positions';
+          PERFORM rebuild_taxonomic_positions();
           --RAISE NOTICE 'listings';
           PERFORM rebuild_listings();
           --RAISE NOTICE 'descendant listings';
