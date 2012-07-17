@@ -95,7 +95,7 @@ def import_data_for which, parent_column=nil, column_name=nil
   cites = Designation.find_by_name(Designation::CITES)
   if parent_column
     sql = <<-SQL
-      INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id, parent_id, created_at, updated_at #{if which == Rank::SPECIES then ', legacy_id' end})
+      INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id, parent_id, created_at, updated_at #{if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ', legacy_id' end})
          SELECT
            tmp.taxon_name_id
            ,#{rank_id}
@@ -103,10 +103,11 @@ def import_data_for which, parent_column=nil, column_name=nil
            ,taxon_concepts.id
            ,current_date
            ,current_date
-           #{ if which == Rank::SPECIES then ',tmp.spcrecid' end}
+           #{ if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ',tmp.spcrecid' end}
          FROM
           (
-            SELECT DISTINCT taxon_names.id AS taxon_name_id, #{TMP_TABLE}.#{parent_column}, #{cites.id} AS designation_id #{if which == Rank::SPECIES then ", #{TMP_TABLE}.spcrecid" end}
+            SELECT DISTINCT taxon_names.id AS taxon_name_id, #{TMP_TABLE}.#{parent_column}, #{cites.id} AS designation_id
+            #{if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ", #{TMP_TABLE}.spcrecid" end}
             FROM #{TMP_TABLE}
             LEFT JOIN taxon_names ON (INITCAP(BTRIM(#{TMP_TABLE}.#{column_name})) LIKE INITCAP(BTRIM(taxon_names.scientific_name)))
             WHERE NOT EXISTS (
@@ -114,6 +115,7 @@ def import_data_for which, parent_column=nil, column_name=nil
               FROM taxon_concepts
               WHERE taxon_concepts.taxon_name_id = taxon_names.id and taxon_concepts.rank_id = #{rank_id} )
             AND taxon_names.id IS NOT NULL
+            #{if which == Rank::SPECIES then " AND BTRIM(species_import.SpcInfra) = 'NULL'" end}
           ) as tmp
           LEFT JOIN taxon_names ON (INITCAP(BTRIM(taxon_names.scientific_name)) LIKE INITCAP(BTRIM(tmp.#{parent_column})))
           LEFT JOIN taxon_concepts ON (taxon_concepts.taxon_name_id = taxon_names.id)
