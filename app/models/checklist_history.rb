@@ -30,7 +30,14 @@ class ChecklistHistory < Checklist
         geo_entities.id = listing_distributions.geo_entity_id").
       #filter out deletion records that were added programatically to simplify
       #current listing calculations - don't want them to show up
-      where("NOT (change_types.name = '#{ChangeType::DELETION}' AND species_listing_id IS NOT NULL)")
+      where("NOT (change_types.name = '#{ChangeType::DELETION}' AND species_listing_id IS NOT NULL)").
+      #within the same effective date, listing changes should be ordered by operation
+      order("CASE
+        WHEN change_types.name = 'ADDITION' THEN 0
+        WHEN change_types.name = 'RESERVATION' THEN 1
+        WHEN change_types.name = 'RESERVATION_WITHDRAWAL' THEN 2
+        WHEN change_types.name = 'DELETION' THEN 3
+      END")
 
     #ideally, instead of processing it this way it should be returned
     #in the correct format from the db
