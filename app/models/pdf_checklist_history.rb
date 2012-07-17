@@ -73,12 +73,22 @@ class PdfChecklistHistory < ChecklistHistory
           )
 
           listings_table << [
-            pdf.text("<i>#{tc.full_name}</i>",
-              :inline_format => true),
+            pdf.make_cell(:content => "<i>#{tc.full_name}</i>", :inline_format => true),
             listings_subtable
           ]
         end
       end
+      #add page numbers
+      string = "History of CITES listings – <page>"
+      options = {
+        :at => [pdf.bounds.right / 2 - 75, 0],
+        :width => 150,
+        :align => :center,
+        :page_filter => lambda{ |p| p > 0 },
+        :start_count_at => 1,
+      }
+      pdf.number_pages string, options
+
     end
   end
 
