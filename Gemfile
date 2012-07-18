@@ -44,13 +44,12 @@ group :development do
   gem 'rack-cors', :require => 'rack/cors'
 end
 
-gem "sqlite3", :group => [:test]
-
 group :test, :development do
   gem "rspec-rails"
 end
 
 group :test do
+  gem "sqlite3"
   gem "factory_girl"
   gem "factory_girl_rails"
 end
