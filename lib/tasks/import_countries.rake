@@ -27,46 +27,22 @@ namespace :import do
   namespace :countries do
     desc 'Creates countries_import table'
     task :create_table => :environment do
-      TMP_TABLE = 'countries_import'
-      begin
-        puts "Creating tmp table: #{TMP_TABLE}"
-        ActiveRecord::Base.connection.execute "CREATE TABLE #{TMP_TABLE} ( legacy_id integer, iso2 varchar, iso3 varchar, name varchar, long_name varchar, region_number varchar);"
-        puts "Table created"
-      rescue Exception => e
-        puts "Tmp already exists removing data from tmp table before starting the import"
-        ActiveRecord::Base.connection.execute "DELETE FROM #{TMP_TABLE};"
-        puts "Data removed"
-      end
+      file= ENV["FILE"] || 'lib/assets/files/countries.csv'
+      create_table_from_csv_headers(file, 'countries_import')
     end
     desc 'Copy data into countries_import table'
     task :copy_data => :create_table do
-      TMP_TABLE = 'countries_import'
       file = ENV["FILE"] || 'lib/assets/files/countries.csv'
       if !file || !File.file?(Rails.root+file) #if the file is not defined, explain and leave.
         puts "Please specify a valid csv file from which to import countries data"
         puts "Usage: FILE=[path/to/file] rake import:countries"
         next
       end
-      puts "Copying data from #{file} into tmp table #{TMP_TABLE}"
-      psql = <<-PSQL
-\\COPY #{TMP_TABLE} ( legacy_id, iso2, iso3, name, long_name, region_number)
-          FROM '#{Rails.root + file}'
-          WITH DElIMITER ','
-          CSV HEADER
-      PSQL
-      db_conf = YAML.load(File.open(Rails.root + "config/database.yml"))[Rails.env]
-      system("export PGPASSWORD=#{db_conf["password"]} && psql -h #{db_conf["host"] || "localhost"} -U#{db_conf["username"]} -c \"#{psql}\" #{db_conf["database"]}")
-      puts "Data copied to tmp table"
+      copy_data(file, 'countries_import')
     end
     desc 'Removes countries_import table'
     task :remove_table => :environment do
-      TMP_TABLE = 'countries_import'
-      begin
-        ActiveRecord::Base.connection.execute "DROP TABLE #{TMP_TABLE};"
-        puts "Table removed"
-      rescue Exception => e
-        puts "Could not drop table #{TMP_TABLE}. It might not exist if this is the first time you are running this rake task."
-      end
+      drop_table('countries_import')
     end
 
     desc 'Link countries to the respective CITES Region'

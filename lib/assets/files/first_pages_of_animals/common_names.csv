@@ -1,0 +1,860 @@
+﻿ComName,LanDesc,SpcRecId
+Hunting Leopard,English,219
+Cheetah,English,219
+Chita,Spanish,219
+Guepardo,Spanish,219
+Guépard,French,219
+Addax,English,512
+Addax,Spanish,512
+Addax,French,512
+Addax à nez tacheté,French,512
+Antilope blanche,French,512
+Red Cat-bear,English,714
+Lesser Panda,English,714
+Red Panda,English,714
+Panda chico,Spanish,714
+Panda rojo,Spanish,714
+Petit panda,French,714
+Panda éclatant,French,714
+Pequeño panda,Spanish,714
+Arruí,Spanish,1151
+Mouflon à manchettes,French,1151
+Uaddan,English,1151
+Barbary Sheep,English,1151
+Aoudad,English,1151
+Aoudad,French,1151
+Mouflon à manchettes,French,1151
+Muflón del Atlas,Spanish,1151
+Antilocapre de Californie,French,1677
+Mexican Pronghorn,English,1677
+Berrendo,Spanish,1677
+Pronghorn,English,1677
+Antilope américaine,French,1677
+Antilocapre,French,1677
+Pronghorn,French,1677
+Antilocapre du Nouveau Mexique,French,1678
+Baja California Pronghorn,English,1679
+Antilocapre de la Basse-Californie,French,1679
+Peninsular Pronghorn,English,1679
+Sonoran Pronghorn,English,1680
+Antilocapre de Sonora,French,1680
+Cervicapre,French,1681
+Sasin,English,1681
+Blackbuck,English,1681
+Cervicapra,Spanish,1681
+Antilope cervicapre,French,1681
+Antílope negro indio,Spanish,1681
+Thai Hog Deer,English,2445
+Indochinese Hog Deer,English,2445
+Ciervo porquerizo de Indochina,Spanish,2445
+Cerf-cochon d'Indochine,French,2445
+Cerdo tailandés,Spanish,2445
+Ganges Hog Deer,English,2445
+Cerf-cochon de Thaïlande,French,2445
+Calamian Deer,English,2446
+Calamian Hog Deer,English,2446
+Ciervo porquerizo de los Calamianes,Spanish,2446
+Ciervo de los Calamianes,Spanish,2446
+Cerf-cochon calamien,French,2446
+Bawean Deer,English,2447
+Kuhl's Hog Deer,English,2447
+Ciervo porquerizo de Kuhl,Spanish,2447
+Ciervo de Kuhl,Spanish,2447
+Cerf-cochon de Bawean,French,2447
+Ciervo de Marjal,Spanish,2447
+Cerf-cochon de Kuhl,French,2447
+Cerdo de Kuhl,Spanish,2447
+Babiroussa,English,2461
+Babirusa,English,2461
+Deer Hog,English,2461
+Babirusa,Spanish,2461
+Babiroussa,French,2461
+Wood Bison,English,2813
+Bisonte americano de bosque,Spanish,2813
+Bison des forêts,French,2813
+Bisonte selvático de Athabascal,Spanish,2813
+American Bison,English,2815
+Buffalo,English,2815
+Marsh Deer,English,2828
+Ciervo de los pantanos,Spanish,2828
+Ciervo marismeño,Spanish,2828
+Cerf des marais,French,2828
+Indian Wild Ox,English,2887
+Gaur,English,2887
+Saladang,English,2887
+Indian Bison,English,2887
+Gaur,Spanish,2887
+Gaur,French,2887
+Gauru,Spanish,2887
+Wild Yak,English,2889
+Yak salvaje,Spanish,2889
+Yack sauvage,French,2889
+Yak,Spanish,2889
+Kouprey,English,2890
+Toro cuprey,Spanish,2890
+Kouprey,Spanish,2890
+Kouprey,French,2890
+Wild Water Buffalo,English,3125
+Wild Asiatic Buffalo,English,3125
+Búfalo arni,Spanish,3125
+Buffle de l'Inde,French,3125
+Buffle d'eau,French,3125
+Caraboa,Spanish,3125
+Búfalo acuático,Spanish,3125
+Buffle d'Asie ,French,3125
+Arni,French,3125
+Anoa,English,3126
+Lowland Anoa,English,3126
+Anoa de llanura,Spanish,3126
+Anoa des plaines,French,3126
+Anca de llanura,Spanish,3126
+Tamarou,English,3127
+Tamaraw,English,3127
+Búfalo de Mindoro,Spanish,3127
+Tamarau,Spanish,3127
+Tamarau,French,3127
+Tamarao,Spanish,3127
+Mountain Anoa,English,3128
+Anoa de montaña,Spanish,3128
+Anoa des montagnes,French,3128
+Anoa de Quarle,French,3128
+Takin,English,3160
+Takin,French,3160
+Takin,Spanish,3160
+Wild Bactrian Camel,English,3707
+Camello Bactriano,Spanish,3707
+Chameau de Bactriane,French,3707
+Chameau domestique,French,3707
+Golden Jackal,English,3744
+Chacal commun,French,3744
+Chacal doré,French,3744
+Common Jackal,English,3744
+Chacal,Spanish,3744
+Chacal doré,French,3744
+Timber Wolf,English,3746
+Grey Wolf,English,3746
+Wolf,English,3746
+Common Wolf,English,3746
+Lobo común,Spanish,3746
+Loup,French,3746
+Loup gris,French,3746
+Loup vulgaire,French,3746
+Lobo,Spanish,3746
+Loup,French,3746
+Northern Rocky Mountain Wolf,English,3750
+Texas Grey Wolf,English,3751
+Indian Grey Wolf,English,3752
+Loup des Indes,French,3752
+Markhor,English,3787
+Markhor,Spanish,3787
+Markhor,French,3787
+Markhor de Suleiman,French,3792
+Straight-horned Markhor,English,3793
+Markhor de Kaboul,French,3793
+Asian Caracal,English,3847
+African Caracal,English,3847
+Lince africano,Spanish,3847
+Caracal,Spanish,3847
+Caracal,French,3847
+Caracal,English,3847
+Desert Lynx,English,3847
+Lynx du désert,French,3847
+Lince caracal,Spanish,3847
+Tagua,English,4015
+Chacoan Peccary,English,4015
+Chaco argentino,Spanish,4015
+Quimilero,Spanish,4015
+Pécari du Chaco,French,4015
+Bornean Marbled Cat,English,4037
+Bay Cat,English,4037
+Chat bai,French,4037
+Temminck's Cat,English,4038
+Asian Golden Cat,English,4038
+Gato dorado asiático,Spanish,4038
+Chat doré d'Asie,French,4038
+Golden Cat,English,4038
+Chat de Temminck,French,4038
+Bay Duiker,English,4139
+Duiquero bayo,Spanish,4139
+Céphalophe bai,French,4139
+Céphalophe à bande dorsale noire,French,4139
+Jentink's Duiker,English,4140
+Duiquero de Jentink,Spanish,4140
+Céphalophe de Jentink,French,4140
+Blue Duiker,English,4143
+Duiquero azul,Spanish,4143
+Céphalophe bleu,French,4143
+Cefalofo azul,Spanish,4143
+Ogilby's Duiker,English,4148
+Duiquero de Ogilby,Spanish,4148
+Céphalophe d'Ogilby,French,4148
+Yellow-backed Duiker,English,4150
+Duiquero de lomo amarillo,Spanish,4150
+Céphalophe à dos jaune,French,4150
+Céphalophe géant,French,4150
+Cefalofo silvicultor,Spanish,4150
+Céphalophe rayé,French,4153
+Zebra Duiker,English,4153
+Banded Duiker,English,4153
+Zebra Antelope,English,4153
+Duiquero cebrado,Spanish,4153
+Céphalophe zèbré,French,4153
+Renard crabier,French,4248
+Common Zorro,English,4248
+Forest Fox,English,4248
+Zorro cangrejero,Spanish,4248
+Crab-eating Zorro,English,4248
+Zorro de monte,Spanish,4248
+Barasingha,English,4257
+Swamp Deer,English,4257
+Ciervo de Duvaucel,Spanish,4257
+Barasinga,Spanish,4257
+Barasingha,French,4257
+Barasinga,French,4257
+Cerf de Duvaucel,French,4257
+Bukhara Deer,English,4258
+Bactrian Wapiti,English,4258
+Bactrian Deer,English,4258
+Bokharan Deer,English,4258
+Bactrian Red Deer,English,4258
+Ciervo bactriano,Spanish,4258
+Cerf du Turkestan,French,4258
+Cerf de Bactriane,French,4258
+Cerf rouge du Turkestan,French,4258
+Cerf élaphe du Turkestan,French,4258
+Ciervo del Turquestán,Spanish,4258
+Barbary Red Deer,English,4259
+Barbary Deer,English,4259
+Barbary Stag,English,4259
+Atlas Deer,English,4259
+Ciervo de la Berberia,Spanish,4259
+Cerf de Barbarie,French,4259
+Kashmir Red Deer,English,4261
+Hangul,English,4261
+Kashmir Stag,English,4261
+Kashmir Deer,English,4261
+Ciervo de Cachemira,Spanish,4261
+Cerf élaphe du Cachemire,French,4261
+Hangul,French,4261
+Eld's Deer,English,4265
+Thamin,English,4265
+Brow-antlered Deer,English,4265
+Ciervo de Eld,Spanish,4265
+Cerf d'Eld,French,4265
+Maned Wolf,English,4819
+Lobo de crin,Spanish,4819
+Loup à crinière,French,4819
+Fossa,English,5760
+Gato fosa de Madagascar,Spanish,5760
+Cryptoprocte féroce,French,5760
+Fossa,French,5760
+Foussa,French,5760
+Fosa,English,5760
+Indian Wild Dog,English,5953
+Asiatic Wild Dog,English,5953
+Dhole,English,5953
+Red Dog,English,5953
+Perro salvaje asiático,Spanish,5953
+Cuon d'Asie,French,5953
+Dhole,French,5953
+Chien sauvage d'Asie,French,5953
+Cuon asiático,Spanish,5953
+Gamo de Mesopotamia,Spanish,6231
+Mesopotamian Fallow Deer,English,6231
+Persian Fallow Deer,English,6231
+Gacela de Irán,Spanish,6231
+Dama pérsico,Spanish,6231
+Daim de Mésopotamie,French,6231
+Tsessebi,English,6235
+Tsessebe,English,6235
+Damalisque,French,6235
+Sassaby,French,6235
+Hirola,French,6235
+Sasabi ,Spanish,6235
+Tiang,Spanish,6235
+Bontebok,English,6236
+Bontebok,Spanish,6236
+Topi gacela,Spanish,6236
+Bontebok,French,6236
+Slender Fanalouc,English,8327
+Falanouc,English,8327
+Malagasy Mongoose,English,8327
+Small-toothed Mongoose,English,8327
+Fanaloca,Spanish,8327
+Mangosta dentipequeno,Spanish,8327
+Euplère de Goudot,French,8327
+Chinese Desert Cat,English,8539
+Gato del desierto de China,Spanish,8539
+Gato de Biet,Spanish,8539
+Chat de Biet,French,8539
+Reed Cat,English,8540
+Jungle Cat,English,8540
+Swamp Cat,English,8540
+Gato de los pantanos,Spanish,8540
+Gato de la jungla,Spanish,8540
+Chat de jungle,French,8540
+Chat des marais,French,8540
+Sand Dune Cat,English,8541
+Sand Cat,English,8541
+Gato del Sahara,Spanish,8541
+Gato de las arenas,Spanish,8541
+Chat des sables,French,8541
+Small-spotted Cat,English,8542
+Black-footed Cat,English,8542
+Gato de pies negros,Spanish,8542
+Gato patinegro,Spanish,8542
+Chat à pieds noirs,French,8542
+Chat sauvage,French,8543
+Gato montés,Spanish,8543
+Wild Cat,English,8543
+Gato silvestre,Spanish,8543
+Gato montés,Spanish,8543
+Wildcat,English,8543
+Chat orné,French,8543
+Chat sauvage,French,8543
+Ethiopian Wild Cat,English,8544
+Northern African Wild Cat,English,8545
+Fanaloka,English,8668
+Malagasy Civet,English,8668
+Striped Civet,English,8668
+Cibeta de Madagascar,Spanish,8668
+Civette fossane,French,8668
+Civette malgache,French,8668
+Fossana,French,8668
+Fanaloka,French,8668
+Civeta,Spanish,8668
+Cuvier's Gazelle,English,8967
+Edmi Gazelle,English,8967
+Idmi,English,8967
+Gazelle de Cuvier,French,8967
+Gacela de Cuvier,Spanish,8967
+Addra Gazelle,English,8968
+Dama Gazelle,English,8968
+Gazelle dama,French,8968
+Dorcas Gazelle,English,8969
+Gazelle dorcas,French,8969
+Gacela dorcas,Spanish,8969
+Mountain Gazelle,English,8970
+Gazelle d'Arabie,French,8970
+Edmi,French,8970
+Sand Gazelle,English,8972
+Rhim Gazelle,English,8972
+Slender-horned Gazelle,English,8972
+Gazelle leptocère,French,8972
+Rhim,French,8972
+Gazelle à cornes fines,French,8972
+Rhim,Spanish,8972
+Eyra Cat,English,9948
+Jaguarundi,English,9948
+Yaguarundí,Spanish,9948
+Gato colorado,Spanish,9948
+Gato moro,Spanish,9948
+León brenero,Spanish,9948
+Leoncillo,Spanish,9948
+Onza,Spanish,9948
+Tigrillo,Spanish,9948
+Jaguarundi,French,9948
+Texas Jaguarundi,English,9949
+Pygmy Hippopotamus,English,10032
+Hipopótamo pigmeo,Spanish,10032
+Hipopótamo enano,Spanish,10032
+Hippopotame nain,French,10032
+Hippopotame pygmée,French,10032
+North Andean Huemul,English,10053
+North Andean Huemul,English,10053
+Peruvian Huemul,English,10053
+Peruvian Guemal,English,10053
+Taruca,English,10053
+Ciervo andino septentrional,Spanish,10053
+Taruca,Spanish,10053
+Guemal,Spanish,10053
+North Andean Deer,English,10053
+Cerf des Andes septentrionales,French,10053
+Guémal péruvien,French,10053
+Huémul des Andes septentrionales,French,10053
+Taruka de los Andes septentrionales,Spanish,10053
+Huemul,Spanish,10053
+Patagonian Huemul,English,10054
+South Andean Huemul,English,10054
+Chilean Huemul,English,10054
+Ciervo andino meridional,Spanish,10054
+Huemul,Spanish,10054
+South Andean Deer,English,10054
+Cerf des Andes méridionales,French,10054
+Huémul des Andes méridionales,French,10054
+Hippopotame amphibie,French,10103
+Hippopotamus,English,10103
+Hipopótamo anfibio,Spanish,10103
+Large Hippo,English,10103
+Hippopotame,French,10103
+Roan Antelope,English,10167
+Hippotrague,French,10167
+Antilope Rouane,French,10167
+Antilope chevaline,French,10167
+Giant Sable Antelope,English,10169
+Antílope sable negro,Spanish,10169
+Hippotrague géant de l'Angola,French,10169
+Hippotrague noir géant,French,10169
+Antílope negro gigante,Spanish,10169
+Sable Antelope,English,10170
+Water Chevrotain,English,10341
+Antilope amizclero enano de agua,Spanish,10341
+Chevrotain aquatique,French,10341
+Cervatillo almizclero acuático,Spanish,10341
+Lechwe,English,11033
+Cobo de Lechwe,Spanish,11033
+Cobe lechwe,French,11033
+Lechwe,French,11033
+Lechwe,Spanish,11033
+Guanaco,English,11186
+Guanaco,Spanish,11186
+Guanaco,French,11186
+Ocelot,English,11509
+Gato onza,Spanish,11509
+Ocelote,Spanish,11509
+Manigordo,Spanish,11509
+Ocelot,French,11509
+Oncilla,English,11510
+Little Spotted Cat,English,11510
+Tiger Cat,English,11510
+Gato atigrado,Spanish,11510
+Gato tigre,Spanish,11510
+Caucel,Spanish,11510
+Tigrillo,Spanish,11510
+Tirica,Spanish,11510
+Chat-tigre,French,11510
+Chat-tacheté,French,11510
+Oncille,French,11510
+Gato tigrillo,Spanish,11510
+Tree Ocelot,English,11511
+Margay,English,11511
+Gato montés,Spanish,11511
+Caucel,Spanish,11511
+Tigrillo,Spanish,11511
+Margay,French,11511
+Serval,English,11638
+Serval,Spanish,11638
+Chat-tigre,French,11638
+Serval,French,11638
+American Lynx,English,12518
+Lince del Canadá,Spanish,12518
+Canada Lynx,English,12518
+Lynx du Canada,French,12518
+Lince europeo,Spanish,12519
+Lynx boréal,French,12519
+Lynx d'Eurasie,French,12519
+Eurasian Lynx,English,12519
+Lince,Spanish,12519
+Lynx,French,12519
+Lince boreal,Spanish,12519
+Lince ibérico,Spanish,12520
+Lynx pardelle,French,12520
+Pardel Lynx,English,12520
+Iberian Lynx,English,12520
+Spanish Lynx,English,12520
+Lince ibérico,Spanish,12520
+Lynx d'Espagne,French,12520
+Lynx pardelle,French,12520
+Bay Lynx,English,12521
+Bobcat,English,12521
+Gato montés,Spanish,12521
+Lince rojo,Spanish,12521
+Chat sauvage,French,12521
+Lynx roux,French,12521
+Guatemalan Red Brocket,English,12912
+Middle American Red Brocket,English,12912
+Giant Muntjac,English,12992
+Muntjac géant,French,12992
+Large-antlered Muntjac,English,12992
+Muntjac gigante,Spanish,12992
+Chinese Forest Musk Deer,English,13894
+Dwarf Musk Deer,English,13894
+Forest Musk Deer,English,13894
+Alpine Musk Deer,English,13895
+Himalayan Musk Deer,English,13895
+Dusky Musk Deer,English,13896
+Black Musk Deer,English,13896
+Siberian Musk Deer,English,13897
+Ciervo almizclero,Spanish,13897
+Porte-musc,French,13897
+Cerf porte-musc,French,13897
+Chevrotain porte-musc,French,13897
+Himalayan Musk Deer,English,13901
+Black Muntjac,English,13924
+Muntjac negro,Spanish,13924
+Muntjac noir,French,13924
+Red Goral,English,14294
+Goral rouge,French,14294
+Chinese Goral,English,14295
+Goral à queue longue,French,14295
+Long-tailed Goral,English,14295
+Goral,English,14296
+Himalayan Goral,English,14296
+Goral,French,14296
+Bouquetin du Népal,French,14296
+Goral,Spanish,14296
+Serow,English,14297
+Mainland Serow,English,14297
+Serau,Spanish,14297
+Capricorne de Sumatra,French,14297
+Serow de Sumatra,Spanish,14297
+Sumatran Serow,English,14297
+Serow ,French,14297
+Southern Serow,English,14297
+South China Goral,English,14303
+Chinese Goral,English,14303
+Clouded Leopard,English,14519
+Pantera del Himalaya,Spanish,14519
+Pantera longibanda,Spanish,14519
+Pantera nebulosa,Spanish,14519
+Panthère longibande,French,14519
+Panthère nébuleuse,French,14519
+Guatemalan White-tailed Deer,English,15112
+Chilean Pampa Cat,English,15309
+Pampas Cat,English,15309
+Osio,Spanish,15309
+Gato pajero,Spanish,15309
+Gato de los pajonales,Spanish,15309
+Chat des pampas,French,15309
+Geoffroy's Cat,English,15310
+Gato montés común,Spanish,15310
+Gato de mato,Spanish,15310
+Chat de Geoffroy,French,15310
+Chilean Cat,English,15311
+Kodkod,English,15311
+Guina,Spanish,15311
+Guigna,French,15311
+Chat des pampas,French,15313
+Mountain Cat,English,15452
+Andean Cat,English,15452
+Osjo,Spanish,15452
+Gato andino,Spanish,15452
+Chinchay,Spanish,15452
+Gato lince,Spanish,15452
+Chat des Andes,French,15452
+Sahara Oryx,English,15568
+Scimitar-horned Oryx,English,15568
+Orix de Cimitarra,Spanish,15568
+Oryx algazelle,French,15568
+Oryx de Libye,French,15568
+Orix algacel,Spanish,15568
+White Oryx,English,15568
+White Oryx,English,15569
+Arabian Oryx,English,15569
+Orix de Arabia,Spanish,15569
+Oryx blanc,French,15569
+Oryx d'Arabie,French,15569
+Orix blanco,Spanish,15569
+Pallas's Cat,English,15640
+Gato de Pallas,Spanish,15640
+Gato manul,Spanish,15640
+Chat manul,French,15640
+Asian Wild Sheep,English,15733
+Argali,English,15733
+Marco Polo Sheep,English,15733
+Muflón de Marco Polo,Spanish,15733
+Muflón argal,Spanish,15733
+Mouflon d'Asie,French,15733
+Mouflon d'Eurasie,French,15733
+Argali,French,15733
+Mouflon vrai,French,15733
+Argalí,Spanish,15733
+Mouflon méditerranéen,French,15733
+Muflón,Spanish,15733
+Great Tibetan Sheep,English,15734
+Tibetan Argali,English,15734
+Nyan,English,15734
+Muflón argal tibetano,Spanish,15734
+Mouflon de l'Himalaya,French,15734
+Mouflon des montagnes,French,15734
+Argalí del Himalaya,Spanish,15734
+Mountain Sheep,English,15735
+Bighorn Sheep,English,15735
+Borrego cimarrón,Spanish,15735
+Carnero del Canadá,Spanish,15735
+Carnero salvaje,Spanish,15735
+Mouflon d'Amérique,French,15735
+Mouflon pachycère,French,15735
+Mouflon du Canada,French,15735
+Bighorn,French,15735
+Mexican Bighorn Sheep,English,15735
+Cyprian Wild Sheep,English,15737
+Cyprus Mouflon,English,15737
+Muflón de Chipre,Spanish,15737
+Mouflon de Chypre,French,15737
+Ladakh Urial,English,15738
+Mouflon du Ladak,French,15738
+Mouflon,English,15739
+Kara Tau Argali,English,15745
+Pampas Deer,English,15803
+Ciervo pampero,Spanish,15803
+Ciervo de las Pampas,Spanish,15803
+Venado de las pampas,Spanish,15803
+Venado campero,Spanish,15803
+Venado de campo,Spanish,15803
+Cerf des pampas,French,15803
+Goazu,French,15803
+Lion,English,15951
+León,Spanish,15951
+Lion d'Afrique,French,15951
+Indian Lion,English,15952
+Asiatic Lion,English,15952
+León indostánico,Spanish,15952
+Lion d'Asie,French,15952
+León asiático,Spanish,15952
+Jaguar,English,15953
+Yaguarete,Spanish,15953
+Jaguar,Spanish,15953
+Otorongo,Spanish,15953
+Tigre americano,Spanish,15953
+Tigre real,Spanish,15953
+Yaguar,Spanish,15953
+Jaguar,French,15953
+Leopard,English,15954
+Pantera,Spanish,15954
+Leopardo,Spanish,15954
+Léopard,French,15954
+Panthère,French,15954
+Panther,English,15954
+Tiger,English,15955
+Tigre,Spanish,15955
+Tigre,French,15955
+Amur Tiger,English,15956
+Tigre de Sibérie,French,15956
+Siberian Tiger,English,15956
+Orong,English,15967
+Chiru,English,15967
+Tibetan Antelope,English,15967
+Antílope del Tibet,Spanish,15967
+Antilope du Tibet,French,15967
+Tchirou,French,15967
+Antílope tibetano,Spanish,15967
+Marbled Cat,English,16218
+Gato jaspeado,Spanish,16218
+Chat marbré,French,16218
+Collared Peccary,English,16457
+Zaino javelina,Spanish,16457
+Pecarí de collar,Spanish,16457
+Pécari à collier,French,16457
+Chat-léopard de Chine,French,18146
+Gato leopardo chino,Spanish,18146
+Leopard Cat,English,18146
+Gato de Bengala,Spanish,18146
+Gato bengalí,Spanish,18146
+Chat-léopard du Bengale,French,18146
+Chat de Chine,French,18146
+Bengal Leopard Cat,English,18147
+Chat-tigre du Bengale,French,18147
+Flat-headed Cat,English,18148
+Gato cabeciancho,Spanish,18148
+Chat à tête plate,French,18148
+Gato de cabeza plana,Spanish,18148
+Rusty-spotted Cat,English,18149
+Gato rojizo,Spanish,18149
+Gato rubiginosa,Spanish,18149
+Chat rougeâtre,French,18149
+Chat-léopard de l'Inde,French,18149
+Chat rubigineux,French,18149
+Gato leopardo de la India,Spanish,18149
+Fishing Cat,English,18150
+Gato pescador,Spanish,18150
+Chat pêcheur,French,18150
+Iriomote Cat,English,18151
+African Golden Cat,English,18306
+Golden Cat,English,18306
+Gato dorado,Spanish,18306
+Chat doré,French,18306
+Red Fox,English,18439
+Colpeo Fox,English,18439
+Andean Wolf,English,18439
+Culpeo,English,18439
+Zorro andino,Spanish,18439
+Culpeo,Spanish,18439
+Zorro colorado,Spanish,18439
+Renard colfeo,French,18439
+Chiloe Fox,English,18440
+Argentine Grey Fox,English,18440
+Pampa Fox,English,18440
+Grey Zorro,English,18440
+Little Fox,English,18440
+Chico Grey Fox,English,18440
+Zorro de la Isla Chiloe,Spanish,18440
+Chilla,Spanish,18440
+Zorro gris argentino,Spanish,18440
+Zorro chico,Spanish,18440
+Renard gris d'Argentine,French,18440
+Renard de Chiloé,French,18440
+Renard de la pampa,French,18441
+Azara's Zorro,English,18441
+Pampa Fox,English,18441
+Renard d'Azara,French,18441
+Zorro de la Pampa,Spanish,18441
+Saola,English,18597
+Vu Quang Ox,English,18597
+Saola,French,18597
+Saola,Spanish,18597
+Ver nota pie de página,Spanish,18597
+Northern Pudu,English,18847
+Sachacabra,Spanish,18847
+Pudu norteño,Spanish,18847
+Venadito de los páramos,Spanish,18847
+Venado conejo,Spanish,18847
+Pudu du nord,French,18847
+Poudou du nord,French,18847
+Pudu sureño,Spanish,18848
+Chilean Pudu,English,18848
+Southern Pudu,English,18848
+Ciervo enano,Spanish,18848
+Pudu meridional,Spanish,18848
+Venadito,Spanish,18848
+Poudou du sud,French,18848
+Pudu du sud,French,18848
+Red Tiger,English,18868
+Puma,English,18868
+Cougar,English,18868
+Mountain Lion,English,18868
+Deer Tiger,English,18868
+Mitzli,Spanish,18868
+Puma,Spanish,18868
+León americano,Spanish,18868
+León bayo,Spanish,18868
+Onza bermeja,Spanish,18868
+Puma,French,18868
+Florida Panther,English,18869
+Florida Cougar,English,18869
+Florida Puma,English,18869
+León de Florida,Spanish,18869
+Puma de Florida,Spanish,18869
+Cougar de Floride,French,18869
+Puma de Floride,French,18869
+Central American Puma,English,18870
+Costa Rican Puma,English,18870
+León costarricense,Spanish,18870
+Puma costarricense,Spanish,18870
+Puma d'Amérique centrale,French,18870
+Puma de América Central,Spanish,18870
+Eastern Panther,English,18871
+Eastern Puma,English,18871
+Eastern Cougar,English,18871
+Puma oriental,Spanish,18871
+Puma de l'est de l'Amérique du nord,French,18871
+Cougouar,French,18871
+Puma del este de América del Norte,Spanish,18871
+Rebeco de los Apeninos,Spanish,19766
+Abruzzo Chamois,English,19766
+Gamuza de los Abruzzos,Spanish,19766
+Rebeco de los Abruzzos,Spanish,19766
+Apennine Chamois,English,19766
+Chamois des Abruzzes,French,19766
+Gamuza alpina,Spanish,19766
+Isard,French,19771
+Rebeco ibérico,Spanish,19771
+Pyrenean Chamois,English,19771
+Southern Chamois,English,19771
+Saiga Antelope,English,19832
+Saiga,English,19832
+Saïga,French,19832
+Saiga,Spanish,19832
+Antílope saiga,Spanish,19832
+Mongolian Saiga,English,19833
+Saïga de Mongolie,French,19833
+Savannah Dog,English,20468
+Bush Dog,English,20468
+Umba,Spanish,20468
+Zorro vinagre,Spanish,20468
+Cachorro vinagre,Spanish,20468
+Cachorro de mato vinagre,Spanish,20468
+Perro de monte,Spanish,20468
+Chien des buissons,French,20468
+Perro de los matorrales,Spanish,20468
+Pygmy Hog,English,21172
+Jabalí pigmeo,Spanish,21172
+Jabalí enano,Spanish,21172
+Sanglier nain,French,21172
+Sanglier pygmée,French,21172
+White-lipped Peccary,English,21552
+Pecarí de labio blanco,Spanish,21552
+Pécari aux babines blanches,French,21552
+Pécari à barbe blanche,French,21552
+Chousingha,English,21661
+Four-horned Antelope,English,21661
+Antílope de cuatrocuernos,Spanish,21661
+Tétracère,French,21661
+Bongo,English,22047
+Bongo,Spanish,22047
+Bongo,French,22047
+Marshbuck,English,22050
+Sitatunga,English,22050
+Sitatunga,Spanish,22050
+Guib d'eau,French,22050
+Sitatunga,French,22050
+Ounce,English,22732
+Snow Leopard,English,22732
+Pantera de la nieves,Spanish,22732
+Leopardo nival,Spanish,22732
+Irbis,French,22732
+Once,French,22732
+Panthère des neiges,French,22732
+Léopard des neiges,French,22732
+Leopardo de las nieves,Spanish,22732
+Vicugna,English,22956
+Vicuña,English,22956
+Vicuña,Spanish,22956
+Vigogne,French,22956
+Bengal Fox,English,23049
+Zorro de Bengala,Spanish,23049
+Renard du Bengale,French,23049
+Corsac,English,23050
+Blanford's Fox,English,23050
+Hoary Fox,English,23050
+Afghan Fox,English,23050
+Dog Fox,English,23050
+Steppe Fox,English,23050
+Zorro de Blanford,Spanish,23050
+Renard de Blanford,French,23050
+Northern Swift Fox,English,23054
+Fennec Fox,English,23058
+Fennec,Spanish,23058
+Fennec,French,23058
+Zorro del Sahara,Spanish,23058
+Red Fox,English,23062
+Renard roux,French,23062
+Zorro rojo,Spanish,23062
+Urial,French,29583
+Urial,Spanish,29583
+Red Sheep,English,29583
+Shapo,English,29583
+Shapu,English,29583
+Urial,English,29583
+Urial,French,29583
+Elk,English,29740
+Red Deer,English,29740
+Wapiti,English,29740
+Cerf élaphe,French,29740
+Ciervo rojo,Spanish,29740
+Fallow Deer,English,29741
+Daim européen,French,29741
+Gamo,Spanish,29741
+Hog Deer,English,30195
+White-tailed Deer,English,30202
+cerf de Virginie,French,30202
+Bontebok,English,30208
+Blesbok,English,30208
+Bukhara Urial,English,41607
+Transcaspian Urial,English,41608
+Afghan Urial,English,41609
+Punjab Urial,English,41610
+Severtzov's Urial,English,41611
+Anhui Musk Deer,English,74591
+Wisconsin Cougar,English,78891
+Kashmir Musk Deer,English,87090
+Himalayan Serow,English,87099
+Pantanal Cat,English,101175
+Pampas Cat,English,101179
+Bola Batu Babirusa,English,101195
+North Sulawesi Babirusa,English,101196
+Malenge Babirusa,English,101197
+Central American Red Brocket,English,101204
+Chinese Serow,English,101212
+Red Serow,English,101213
+Mongolian Saiga,English,101222

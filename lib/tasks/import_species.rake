@@ -1,68 +1,39 @@
+require Rails.root.join('lib/tasks/helpers_for_import.rb')
 namespace :import do
 
-  desc "Import species records from csv file [usage: FILE=[path/to/file] rake import:species"
-  task :species => [:environment, "species:copy_data"] do
+  desc "Import species records from csv files [usage: rake import:species[path/to/file,path/to/another]"
+  task :species, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     TMP_TABLE = 'species_import'
-    import_data_for Rank::KINGDOM
-    import_data_for Rank::PHYLUM, Rank::KINGDOM
-    import_data_for Rank::CLASS, Rank::PHYLUM
-    import_data_for Rank::ORDER, Rank::CLASS, 'TaxonOrder'
-    import_data_for Rank::FAMILY, 'TaxonOrder'
-    import_data_for Rank::GENUS, Rank::FAMILY
-    import_data_for Rank::SPECIES, Rank::GENUS
-    import_data_for Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra'
+    files = files_from_args(t, args)
+    files.each do |file|
+      drop_table(TMP_TABLE)
+      create_table_from_csv_headers(file, TMP_TABLE)
+      copy_data(file, TMP_TABLE)
+      db_columns = db_columns_from_csv_headers(file, TMP_TABLE, false)
+      import_data_for Rank::KINGDOM if db_columns.include? Rank::KINGDOM.capitalize
+      if db_columns.include?(Rank::PHYLUM.capitalize) && 
+        db_columns.include?(Rank::CLASS.capitalize) &&
+        db_columns.include?('TaxonOrder')
+        import_data_for Rank::PHYLUM, Rank::KINGDOM
+        import_data_for Rank::CLASS, Rank::PHYLUM
+        import_data_for Rank::ORDER, Rank::CLASS, 'TaxonOrder'
+      elsif db_columns.include?(Rank::CLASS.capitalize) && db_columns.include?('TaxonOrder')
+        import_data_for Rank::CLASS, Rank::KINGDOM
+        import_data_for Rank::ORDER, Rank::CLASS, 'TaxonOrder'
+      elsif db_columns.include? 'TaxonOrder'
+        import_data_for Rank::ORDER, Rank::KINGDOM, 'TaxonOrder'
+      end
+      import_data_for Rank::FAMILY, 'TaxonOrder' if db_columns.include? Rank::FAMILY.capitalize
+      import_data_for Rank::GENUS, Rank::FAMILY if db_columns.include? Rank::GENUS.capitalize
+      import_data_for Rank::SPECIES, Rank::GENUS if db_columns.include? Rank::SPECIES.capitalize
+      import_data_for Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra' if db_columns.include? Rank::SUBSPECIES.capitalize
+    end
     #rebuild the tree
     TaxonConcept.rebuild!
     #set the depth on all nodes
     TaxonConcept.roots.each do |root|
       TaxonConcept.each_with_level(root.self_and_descendants) do |node, level|
         node.send(:"set_depth!")
-      end
-    end
-  end
-
-  namespace :species do
-    desc 'Creates species_import table'
-    task :create_table => :environment do
-      TMP_TABLE = 'species_import'
-      begin
-        puts "Creating tmp table"
-        ActiveRecord::Base.connection.execute "CREATE TABLE #{TMP_TABLE} ( Kingdom varchar, Phylum varchar, Class varchar, TaxonOrder varchar, Family varchar, Genus varchar, Species varchar, SpcInfra varchar, SpcRecId integer, SpcStatus varchar)"
-        puts "Table created"
-      rescue Exception => e
-        puts "Tmp already exists removing data from tmp table before starting the import"
-        ActiveRecord::Base.connection.execute "DELETE FROM #{TMP_TABLE};"
-        puts "Data removed"
-      end
-    end
-    desc 'Copy data into species_import table'
-    task :copy_data => :create_table do
-      TMP_TABLE = 'species_import'
-      file= ENV["FILE"] || 'lib/assets/files/animals.csv'
-      if !file || !File.file?(Rails.root+file) #if the file is not defined, explain and leave.
-        puts "Please specify a valid csv file from which to import species data"
-        puts "Usage: FILE=[path/to/file] rake import:species"
-        next
-      end
-      puts "Copying data from #{file} into tmp table #{TMP_TABLE}"
-      psql = <<-PSQL
-\\COPY #{TMP_TABLE} ( Kingdom, Phylum, Class, TaxonOrder, Family, Genus, Species, SpcInfra, SpcRecId, SpcStatus)
-        FROM '#{Rails.root + file}'
-        WITH DElIMITER ','
-        CSV HEADER
-      PSQL
-      db_conf = YAML.load(File.open(Rails.root + "config/database.yml"))[Rails.env]
-      system("export PGPASSWORD=#{db_conf["password"]} && psql -h #{db_conf["host"] || "localhost"} -U#{db_conf["username"]} -c \"#{psql}\" #{db_conf["database"]}")
-      puts "Data copied to tmp table"
-    end
-    desc 'Removes species_import table'
-    task :remove_table => :environment do
-      TMP_TABLE = 'species_import'
-      begin
-        ActiveRecord::Base.connection.execute "DROP TABLE #{TMP_TABLE};"
-        puts "Table removed"
-      rescue Exception => e
-        puts "Could not drop table #{TMP_TABLE}. It might not exist if this is the first time you are running this rake task."
       end
     end
   end
