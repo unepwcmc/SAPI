@@ -10,11 +10,8 @@ gem 'rails-api'
 gem 'pg'
 gem 'pg_array_parser'
 gem 'activerecord-postgres-hstore'
-gem 'foreigner'
-gem 'immigrant'
 gem 'awesome_nested_set'
-gem 'exception_notification', :require => 'exception_notifier'
-
+gem 'foreigner'
 gem 'prawn'
 
 # To use ActiveModel has_secure_password
@@ -30,7 +27,12 @@ gem 'prawn'
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
+group :staging, :production do
+  gem 'exception_notification', :require => 'exception_notifier'
+end
+
 group :development do
+  gem 'immigrant'
   gem "guard-livereload"
   gem "yajl-ruby"
   gem "rack-livereload"
@@ -49,7 +51,6 @@ group :test, :development do
 end
 
 group :test do
-  gem "sqlite3"
   gem "factory_girl"
   gem "factory_girl_rails"
 end
