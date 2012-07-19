@@ -69,7 +69,7 @@ end
 
 def file_ok?(path_to_file)
   if !File.file?(Rails.root.join(path_to_file)) #if the file is not defined, explain and leave.
-    puts "Please specify a valid csv file from which to import species data"
+    puts "Please specify a valid csv file from which to import data"
     puts "Usage: FILE=[path/to/file] rake import:species"
     return false
   end

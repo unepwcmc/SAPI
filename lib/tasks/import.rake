@@ -6,8 +6,12 @@ namespace :import do
       'lib/assets/files/animals.csv',
       'lib/assets/files/plants.csv'
     )
-    Rake::Task["import:cites_regions"].invoke
-    Rake::Task["import:countries"].invoke
+    Rake::Task["import:cites_regions"].invoke(
+      'lib/assets/files/cites_regions.csv'
+    )
+    Rake::Task["import:countries"].invoke(
+      'lib/assets/files/countries.csv'
+    )
     Rake::Task["import:distributions"].invoke(
       'lib/assets/files/animals_distributions.csv',
       'lib/assets/files/plants_distributions.csv'
@@ -30,8 +34,12 @@ namespace :import do
       'lib/assets/files/first_pages_of_animals/taxon_concepts.csv',
       'lib/assets/files/first_pages_of_plants/taxon_concepts.csv'
     )
-    Rake::Task["import:cites_regions"].invoke
-    Rake::Task["import:countries"].invoke
+    Rake::Task["import:cites_regions"].invoke(
+      'lib/assets/files/cites_regions.csv'
+    )
+    Rake::Task["import:countries"].invoke(
+      'lib/assets/files/countries.csv'
+    )
     Rake::Task["import:distributions"].invoke(
       'lib/assets/files/first_pages_of_animals/distributions.csv',
       'lib/assets/files/first_pages_of_plants/distributions.csv'

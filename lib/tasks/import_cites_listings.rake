@@ -1,6 +1,6 @@
 namespace :import do
 
-  desc "Import CITES species listings from csv file [usage: FILE=[path/to/file] rake import:cites_listings"
+  desc "Import CITES species listings from csv file [usage: rake import:cites_listings[path/to/file,path/to/another]"
   task :cites_listings, 10.times.map { |i| "file_#{i}".to_sym } => [:environment, "cites_listings:defaults"] do |t, args|
     TMP_TABLE = 'cites_listings_import'
     designation = Designation.find_by_name(Designation::CITES)
@@ -57,7 +57,7 @@ namespace :import do
             listing_changes.effective_at = TMP.listing_date
           INNER JOIN taxon_concepts ON taxon_concepts.id = listing_changes.taxon_concept_id AND taxon_concepts.legacy_id = TMP.spc_rec_id
           INNER JOIN geo_entities ON geo_entities.legacy_id = CASE
-            WHEN TMP.country_legacy_id = 'NULL' THEN NULL
+            WHEN BTRIM(TMP.country_legacy_id) = 'NULL' THEN NULL
             ELSE TMP.country_legacy_id::INTEGER
           END;
         COMMIT;

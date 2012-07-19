@@ -1,6 +1,6 @@
 namespace :import do
 
-  desc 'Import common names from csv file [usage: FILE=[path/to/file] rake import:common_names'
+  desc 'Import common names from csv file [usage: rake import:common_names[path/to/file,path/to/another]'
   task :common_names, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     TMP_TABLE = 'common_name_import'
     puts "There are #{CommonName.count} common names in the database."
