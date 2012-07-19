@@ -166,7 +166,7 @@ These are the steps taken to calculate the current listing of a taxon concept:
    Note there may be a split listing case on species level (cases of split listing such that some populations are listed differently).
 
 2. Traverse the taxonomic tree from the root down
-   Cascade listings from higher taxa to lower, except for cases where a current listing is already present.
+   Cascade listings from higher taxa to lower, except for cases where a current listing is already present or taxon concept is NC.
 
 3. Traverse the tree from the leaves up
    Cascade listings for higher taxa (cases of split listing such that some subtaxa are listed differently).
