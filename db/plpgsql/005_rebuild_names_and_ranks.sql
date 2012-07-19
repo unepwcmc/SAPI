@@ -6,6 +6,8 @@ CREATE OR REPLACE FUNCTION rebuild_names_and_ranks() RETURNS void
     LANGUAGE plpgsql
     AS $$
         BEGIN
+	  UPDATE taxon_concepts SET data = ''::HSTORE WHERE data IS NULL;
+
           WITH RECURSIVE q AS (
             SELECT h, h.id, ranks.name as rank_name,
             (LOWER(ranks.name) || '_name' => taxon_names.scientific_name) AS ancestors
