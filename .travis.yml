@@ -1,0 +1,10 @@
+language: ruby
+rvm:
+  - 1.9.3
+# uncomment this line if your project needs to run something other than `rake`:
+before_script:
+  - psql -c 'create database sapi_test' -U postgres
+  - RAILS_ENV=test bundle exec rake db:migrate
+script: 
+  - bundle exec rspec spec
+
