@@ -1,6 +1,7 @@
 SAPI::Application.routes.draw do
 
-  resources :taxon_concepts, :only => [:index]
+  match 'taxon_concepts/' => 'taxon_concepts#index'
+  match 'taxon_concepts/history' => 'taxon_concepts#history'
   match 'geo_entities/:geo_entity_type' => 'geo_entities#index',
     :constraints => {:geo_entity_type => /#{GeoEntityType::COUNTRY}|#{GeoEntityType::CITES_REGION}/}
   match 'species_listings/:designation' => 'species_listings#index',

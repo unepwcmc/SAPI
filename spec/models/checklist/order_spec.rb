@@ -9,7 +9,7 @@ describe Checklist do
     before(:all) do
       Sapi::rebuild()
       @checklist = Checklist.new({:output_layout => :taxonomic})
-      @taxon_concepts = @checklist.generate
+      @taxon_concepts = @checklist.taxon_concepts_rel
     end
     it "should include phyla in specific order (Chordata, Echinodermata, ...)" do
       indexes = []
@@ -81,7 +81,7 @@ describe Checklist do
   context "when alphabetical order" do
     before(:all) do
       @checklist = Checklist.new({:output_layout => :alphabetical})
-      @taxon_concepts = @checklist.generate
+      @taxon_concepts = @checklist.taxon_concepts_rel
     end
     it "should not include phyla" do
       @taxon_concepts.index{ |tc| tc.rank == 'PHYLUM'}.should be_nil

@@ -10,7 +10,7 @@ describe Checklist do
         :output_layout => :alphabetical,
         :common_names => ['E','S','F']
       })
-      @taxon_concepts = @checklist.generate
+      @taxon_concepts = @checklist.taxon_concepts_rel
       @australis = @taxon_concepts.select{ |e| e.full_name == @species1.full_name }.first
       @arctocephalus = @taxon_concepts.select{ |e| e.full_name == @genus.full_name }.first
     end

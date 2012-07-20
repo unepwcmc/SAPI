@@ -3,9 +3,11 @@ require "prawn/measurement_extensions"
 class PdfChecklistHistory < ChecklistHistory
 
   def generate
-    Prawn::Document.generate("checklist_history.pdf", :page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
-      pdf.font_size 8
+    Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm), :template => Rails.root.join("public/static_history.pdf")) do |pdf|
       pdf.default_leading 0
+      pdf.font_size 9
+      pdf.go_to_page(pdf.page_count)
+      pdf.start_new_page
 
       listings_table = []
       @taxon_concepts.each do |tc|

@@ -1,6 +1,6 @@
 #Encoding: utf-8
 class Checklist
-  attr_accessor :taxon_concepts_rel
+  attr_accessor :taxon_concepts_rel, :animalia, :plantae
   def initialize(options)
     @designation = options[:designation] || Designation::CITES
 
@@ -34,8 +34,21 @@ class Checklist
     @taxon_concepts_rel = @taxon_concepts_rel.with_common_names
   end
 
-  def generate
-    @taxon_concepts_rel.all
+  def animalia
+    @animalia ||= @taxon_concepts_rel.where("data -> 'kingdom_name' = 'Animalia' ").all
+  end
+
+  def plantae
+    @plantae ||= @taxon_concepts_rel.where("data -> 'kingdom_name' = 'Plantae' ").all
+  end
+
+  #TODO find out what was wrong with 'as_json'
+  #(included all the fields in spite of 'only' filter)
+  def custom_json()
+    [{
+      :animalia => animalia,
+      :plantae => plantae
+    }]
   end
 
 end
