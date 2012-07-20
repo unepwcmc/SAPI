@@ -319,6 +319,8 @@ CREATE FUNCTION rebuild_names_and_ranks() RETURNS void
     LANGUAGE plpgsql
     AS $$
         BEGIN
+	  UPDATE taxon_concepts SET data = ''::HSTORE WHERE data IS NULL;
+
           WITH RECURSIVE q AS (
             SELECT h, h.id, ranks.name as rank_name,
             (LOWER(ranks.name) || '_name' => taxon_names.scientific_name) AS ancestors
@@ -516,6 +518,42 @@ ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
 
 
 --
+-- Name: cites_listings_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cites_listings_import (
+    spc_rec_id integer,
+    family character varying,
+    genus character varying,
+    species character varying,
+    appendix character varying,
+    listing_date date,
+    country_legacy_id character varying,
+    notes character varying
+);
+
+
+--
+-- Name: cites_regions_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cites_regions_import (
+    name character varying
+);
+
+
+--
+-- Name: common_name_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE common_name_import (
+    common_name character varying,
+    language_name character varying,
+    species_id integer
+);
+
+
+--
 -- Name: common_names; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -549,6 +587,20 @@ ALTER SEQUENCE common_names_id_seq OWNED BY common_names.id;
 
 
 --
+-- Name: countries_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE countries_import (
+    legacy_id integer,
+    iso2 character varying,
+    iso3 character varying,
+    name character varying,
+    long_name character varying,
+    region_number character varying
+);
+
+
+--
 -- Name: designations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -577,6 +629,17 @@ CREATE SEQUENCE designations_id_seq
 --
 
 ALTER SEQUENCE designations_id_seq OWNED BY designations.id;
+
+
+--
+-- Name: distribution_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE distribution_import (
+    species_id integer,
+    country_id integer,
+    country_name character varying
+);
 
 
 --
@@ -759,7 +822,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-06-22 14:48:41.602334'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-07-17 09:27:05.051795'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -919,6 +982,23 @@ ALTER SEQUENCE references_id_seq OWNED BY "references".id;
 
 CREATE TABLE schema_migrations (
     version character varying(255) NOT NULL
+);
+
+
+--
+-- Name: species_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE species_import (
+    kingdom character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfrarank character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying
 );
 
 

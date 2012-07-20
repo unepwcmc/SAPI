@@ -4,14 +4,15 @@ class PdfChecklistHistory < ChecklistHistory
 
   def generate
     Prawn::Document.generate("checklist_history.pdf", :page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
-      pdf.font_size 9
+      pdf.font_size 8
+      pdf.default_leading 0
 
       listings_table = []
       @taxon_concepts.each do |tc|
         unless listings_table.blank?
           pdf.table(listings_table,
             :column_widths => {0 => 142},
-            :cell_style => {:borders => []}
+            :cell_style => {:borders => [], :padding => [1,0,1,0]}
           )
           listings_table = []
         end
@@ -68,7 +69,7 @@ class PdfChecklistHistory < ChecklistHistory
           end,
             {
               :column_widths => [27, 24, 45, 243],
-              :cell_style => {:borders => []}
+              :cell_style => {:borders => [], :padding => [1,0,1,0]}
             }
           )
 

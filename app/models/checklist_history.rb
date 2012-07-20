@@ -31,6 +31,8 @@ class ChecklistHistory < Checklist
       #filter out deletion records that were added programatically to simplify
       #current listing calculations - don't want them to show up
       where("NOT (change_types.name = '#{ChangeType::DELETION}' AND species_listing_id IS NOT NULL)").
+      #filter out 'Subspecies xxx only' listings, as they should not show up in history
+      where("NOT (data->'rank_name' = 'SPECIES' AND listing_changes.notes LIKE 'Subspecies%only')").
       #within the same effective date, listing changes should be ordered by operation
       order("CASE
         WHEN change_types.name = 'ADDITION' THEN 0

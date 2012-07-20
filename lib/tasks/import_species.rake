@@ -23,10 +23,10 @@ namespace :import do
       elsif db_columns.include? 'TaxonOrder'
         import_data_for Rank::ORDER, Rank::KINGDOM, 'TaxonOrder'
       end
-      import_data_for Rank::FAMILY, 'TaxonOrder' if db_columns.include? Rank::FAMILY.capitalize
-      import_data_for Rank::GENUS, Rank::FAMILY if db_columns.include? Rank::GENUS.capitalize
-      import_data_for Rank::SPECIES, Rank::GENUS if db_columns.include? Rank::SPECIES.capitalize
-      import_data_for Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra' if db_columns.include? Rank::SUBSPECIES.capitalize
+      import_data_for Rank::FAMILY, 'TaxonOrder', nil, Rank::ORDER
+      import_data_for Rank::GENUS, Rank::FAMILY
+      import_data_for Rank::SPECIES, Rank::GENUS
+      import_data_for Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra'
     end
     #rebuild the tree
     TaxonConcept.rebuild!
@@ -44,10 +44,14 @@ end
 # @param [String] which the column to be copied. It's normally the name of the rank being copied
 # @param [String] parent_column to keep the hierarchy of the taxons the parent column should be passed
 # @param [String] column_name if the which object is different from the column name in the tmp table, specify the column name
-def import_data_for which, parent_column=nil, column_name=nil
+# @param [String] parent_rank if the parent_column is different from the rank name, specify parent rank
+def import_data_for which, parent_column=nil, column_name=nil, parent_rank=nil
   column_name ||= which
-  puts "Importing #{which} from #{column_name}"
+  puts "Importing #{which} from #{column_name} (#{parent_column})"
   rank_id = Rank.select(:id).where(:name => which).first.id
+  parent_rank ||= parent_column
+  parent_rank_id = ((r = Rank.select(:id).where(:name => parent_rank).first) && r.id || nil)
+  puts parent_rank_id
   existing = TaxonConcept.where(:rank_id => rank_id).count
   puts "There were #{existing} #{which} before we started"
 
@@ -66,7 +70,9 @@ def import_data_for which, parent_column=nil, column_name=nil
   cites = Designation.find_by_name(Designation::CITES)
   if parent_column
     sql = <<-SQL
-      INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id, parent_id, created_at, updated_at #{if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ', legacy_id' end})
+      INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id,
+      parent_id, created_at, updated_at
+      #{if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ', legacy_id' end})
          SELECT
            tmp.taxon_name_id
            ,#{rank_id}
@@ -74,22 +80,33 @@ def import_data_for which, parent_column=nil, column_name=nil
            ,taxon_concepts.id
            ,current_date
            ,current_date
-           #{ if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ',tmp.spcrecid' end}
+           #{ if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ', tmp.spcrecid' end}
          FROM
           (
-            SELECT DISTINCT taxon_names.id AS taxon_name_id, #{TMP_TABLE}.#{parent_column}, #{cites.id} AS designation_id
+            SELECT DISTINCT taxon_names.id AS taxon_name_id,
+            #{TMP_TABLE}.#{parent_column}, #{cites.id} AS designation_id
             #{if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ", #{TMP_TABLE}.spcrecid" end}
             FROM #{TMP_TABLE}
             LEFT JOIN taxon_names ON (INITCAP(BTRIM(#{TMP_TABLE}.#{column_name})) LIKE INITCAP(BTRIM(taxon_names.scientific_name)))
             WHERE NOT EXISTS (
-              SELECT taxon_name_id, rank_id
+              SELECT taxon_name_id, rank_id, designation_id
               FROM taxon_concepts
-              WHERE taxon_concepts.taxon_name_id = taxon_names.id and taxon_concepts.rank_id = #{rank_id} )
+              WHERE taxon_concepts.taxon_name_id = taxon_names.id AND
+                taxon_concepts.rank_id = #{rank_id} AND
+                taxon_concepts.designation_id = #{cites.id}
+            )
             AND taxon_names.id IS NOT NULL
-            #{if which == Rank::SPECIES then " AND BTRIM(species_import.SpcInfra) = 'NULL'" end}
+            #{
+              if which == Rank::SPECIES then " AND BTRIM(#{TMP_TABLE}.SpcInfra) = 'NULL'"
+              elsif which == Rank::SUBSPECIES then " AND BTRIM(#{TMP_TABLE}.SpcInfra) <> 'NULL'"
+              end
+            }
           ) as tmp
           LEFT JOIN taxon_names ON (INITCAP(BTRIM(taxon_names.scientific_name)) LIKE INITCAP(BTRIM(tmp.#{parent_column})))
-          LEFT JOIN taxon_concepts ON (taxon_concepts.taxon_name_id = taxon_names.id)
+          LEFT JOIN taxon_concepts ON (
+            taxon_concepts.taxon_name_id = taxon_names.id
+            AND taxon_concepts.rank_id = #{parent_rank_id}
+          )
       RETURNING id;
     SQL
   else
