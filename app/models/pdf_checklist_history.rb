@@ -3,11 +3,15 @@ require "prawn/measurement_extensions"
 class PdfChecklistHistory < ChecklistHistory
 
   def generate
-    Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm), :template => Rails.root.join("public/static_history.pdf")) do |pdf|
+    static_history_pdf = [Rails.root, "/public/static_history.pdf"].join
+    tmp_history_pdf    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
+
+    static_page_count = PDF::get_page_count(static_history_pdf)
+
+    Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
       pdf.default_leading 0
       pdf.font_size 9
       pdf.go_to_page(pdf.page_count)
-      pdf.start_new_page
 
       listings_table = []
       @taxon_concepts.each do |tc|
@@ -84,15 +88,21 @@ class PdfChecklistHistory < ChecklistHistory
       #add page numbers
       string = "History of CITES listings – <page>"
       options = {
-        :at => [pdf.bounds.right / 2 - 75, 0],
+        :at => [pdf.bounds.right / 2 - 75, pdf.bounds.top + 20],
         :width => 150,
         :align => :center,
-        :page_filter => lambda{ |p| p > 0 },
-        :start_count_at => 1,
+        :start_count_at => static_page_count - 2, # Ignore the first two cover pages
       }
       pdf.number_pages string, options
 
+      pdf.render_file tmp_history_pdf
     end
+
+    download_path = PDF::merge_pdfs(static_history_pdf, tmp_history_pdf)
+
+    FileUtils.rm tmp_history_pdf
+
+    return download_path
   end
 
 end
