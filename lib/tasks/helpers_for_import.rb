@@ -10,24 +10,14 @@ class CsvToDbMap
       'OrdName' => 'TaxonOrder varchar',
       'FamName' => 'Family varchar',
       'GenName' => 'Genus varchar',
-      'Spcname' => 'Species varchar',
+      'SpcName' => 'Species varchar',
       'SpcInfraRank' => 'SpcInfraRank varchar',
-      'SpcInfraepithet' => 'SpcInfra varchar',
-      'Spcrecid' => 'SpcRecId integer',
+      'SpcInfraEpithet' => 'SpcInfra varchar',
+      'SpcRecID' => 'SpcRecId integer',
       'SpcStatus' => 'SpcStatus varchar'
     },
     'cites_listings_import' => {
-      'Kingdom' => 'Kingdom varchar',
-      'PhyName' => 'Phylum varchar',
-      'ClaName' => 'Class varchar',
-      'OrdName' => 'TaxonOrder varchar',
-      'FamName' => 'Family varchar',
-      'GenName' => 'Genus varchar',
-      'SpcName' => 'Species varchar',
-      'SpcInfraRank' => 'SpcInfraRank varchar',
-      'SpcInfraepithet' => 'SpcInfra varchar',
       'SpcRecID' => 'spc_rec_id integer',
-      'Appendix' => 'appendix varchar',
       'LegListing' => 'appendix varchar',
       'LegDateListed' => 'listing_date date',
       'CountryRecID' => 'country_legacy_id varchar',
@@ -35,14 +25,14 @@ class CsvToDbMap
       'LegNotes' => 'notes varchar'
     },
     'distribution_import' => {
-      'Spcrecid' => 'species_id integer',
+      'SpcRecID' => 'species_id integer',
       'CtyRecID' => 'country_id integer',
       'CtyShort' => 'country_name varchar'
     },
     'common_name_import' => {
       'ComName' => 'common_name varchar',
       'LanDesc' => 'language_name varchar',
-      'SpcRecId' => 'species_id integer'
+      'SpcRecID' => 'species_id integer'
     },
     'cites_regions_import' => {
       'name' => 'name varchar'
@@ -70,7 +60,7 @@ end
 def file_ok?(path_to_file)
   if !File.file?(Rails.root.join(path_to_file)) #if the file is not defined, explain and leave.
     puts "Please specify a valid csv file from which to import data"
-    puts "Usage: FILE=[path/to/file] rake import:species"
+    puts "Usage: rake import:XXX[path/to/file,path/to/another]"
     return false
   end
   true

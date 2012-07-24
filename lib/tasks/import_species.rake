@@ -51,7 +51,6 @@ def import_data_for which, parent_column=nil, column_name=nil, parent_rank=nil
   rank_id = Rank.select(:id).where(:name => which).first.id
   parent_rank ||= parent_column
   parent_rank_id = ((r = Rank.select(:id).where(:name => parent_rank).first) && r.id || nil)
-  puts parent_rank_id
   existing = TaxonConcept.where(:rank_id => rank_id).count
   puts "There were #{existing} #{which} before we started"
 
