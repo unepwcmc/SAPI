@@ -4,7 +4,8 @@ class TaxonConceptsController < ApplicationController
     extract_checklist_params
     if params[:format] == 'pdf'
       send_data(PdfChecklist.new(@checklist_params).generate.render,
-        :filename => "index_of_CITES_species.pdf")
+        :filename => "index_of_CITES_species.pdf",
+        :type => :pdf)
     else
       render :json => Checklist.new(@checklist_params).custom_json
     end
