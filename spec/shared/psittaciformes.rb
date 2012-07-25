@@ -51,6 +51,11 @@ shared_context "Psittaciformes" do
       :taxon_name => create(:taxon_name, :scientific_name => 'Roseicollis'),
       :parent => @genus2_1
     )
+    @species2_1_2 = create(
+      :species,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Canus'),
+      :parent => @genus2_1
+    )
     @genus2_2 = create(
       :genus,
       :taxon_name => create(:taxon_name, :scientific_name => 'Amazona'),
@@ -130,7 +135,7 @@ shared_context "Psittaciformes" do
      :effective_at => '1981-06-06'
     )
     create(
-     :cites_II_deletion,
+     :cites_deletion,
      :taxon_concept => @species2_1,
      :effective_at => '2005-01-12'
     )
@@ -150,7 +155,7 @@ shared_context "Psittaciformes" do
       :listing_change => l1
     )
     l2 = create(
-     :cites_III_deletion,
+     :cites_deletion,
      :taxon_concept => @species2_3,
      :effective_at => '2007-03-04'
     )

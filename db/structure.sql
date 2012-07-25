@@ -169,8 +169,8 @@ CREATE FUNCTION rebuild_ancestor_listings() RETURNS void
           SET listing = 
             CASE
             WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
-	    ELSE ''::hstore
-	    END || qq.listing
+            ELSE ''::hstore
+            END || qq.listing
           FROM qq
           WHERE taxon_concepts.id = qq.id;
         END;
@@ -271,25 +271,34 @@ CREATE FUNCTION rebuild_listings() RETURNS void
             SELECT taxon_concept_id, 
               ('cites_I' => CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
               ('cites_II' => CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
-              ('cites_III' => CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END)
+              ('cites_III' => CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END) ||
+              ('cites_del' => CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END) ||
+              ('cites_nc' => CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
               AS listing
             FROM (
               SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type,
               CASE
                 WHEN species_listings.abbreviation = 'I' AND change_types.name = 'ADDITION' THEN 1
-                WHEN species_listings.abbreviation = 'I' AND change_types.name = 'DELETION' THEN -1
+                WHEN (species_listings.abbreviation = 'I' OR species_listing_id IS NULL)
+                  AND change_types.name = 'DELETION' THEN -1
                 ELSE 0
               END AS cites_I,
               CASE
                 WHEN species_listings.abbreviation = 'II' AND change_types.name = 'ADDITION' THEN 1
-                WHEN species_listings.abbreviation = 'II' AND change_types.name = 'DELETION' THEN -1
+                WHEN (species_listings.abbreviation = 'II' OR species_listing_id IS NULL)
+                  AND change_types.name = 'DELETION' THEN -1
                 ELSE 0
               END AS cites_II,
               CASE
                 WHEN species_listings.abbreviation = 'III' AND change_types.name = 'ADDITION' THEN 1
-                WHEN species_listings.abbreviation = 'III' AND change_types.name = 'DELETION' THEN -1
+                WHEN (species_listings.abbreviation = 'III' OR species_listing_id IS NULL)
+                  AND change_types.name = 'DELETION' THEN -1
                 ELSE 0
-              END AS cites_III
+              END AS cites_III,
+              CASE
+                WHEN species_listing_id IS NULL AND change_types.name = 'DELETION' THEN 1
+                ELSE 0
+              END AS cites_del
               FROM listing_changes 
               LEFT JOIN species_listings ON species_listing_id = species_listings.id
               LEFT JOIN change_types ON change_type_id = change_types.id
@@ -494,7 +503,8 @@ CREATE TABLE change_types (
     id integer NOT NULL,
     name character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    designation_id integer NOT NULL
 );
 
 
@@ -515,42 +525,6 @@ CREATE SEQUENCE change_types_id_seq
 --
 
 ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
-
-
---
--- Name: cites_listings_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_listings_import (
-    spc_rec_id integer,
-    family character varying,
-    genus character varying,
-    species character varying,
-    appendix character varying,
-    listing_date date,
-    country_legacy_id character varying,
-    notes character varying
-);
-
-
---
--- Name: cites_regions_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_regions_import (
-    name character varying
-);
-
-
---
--- Name: common_name_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE common_name_import (
-    common_name character varying,
-    language_name character varying,
-    species_id integer
-);
 
 
 --
@@ -587,20 +561,6 @@ ALTER SEQUENCE common_names_id_seq OWNED BY common_names.id;
 
 
 --
--- Name: countries_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE countries_import (
-    legacy_id integer,
-    iso2 character varying,
-    iso3 character varying,
-    name character varying,
-    long_name character varying,
-    region_number character varying
-);
-
-
---
 -- Name: designations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -629,17 +589,6 @@ CREATE SEQUENCE designations_id_seq
 --
 
 ALTER SEQUENCE designations_id_seq OWNED BY designations.id;
-
-
---
--- Name: distribution_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE distribution_import (
-    species_id integer,
-    country_id integer,
-    country_name character varying
-);
 
 
 --
@@ -822,7 +771,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-07-17 09:27:05.051795'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-07-25 13:37:28.482069'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -982,23 +931,6 @@ ALTER SEQUENCE references_id_seq OWNED BY "references".id;
 
 CREATE TABLE schema_migrations (
     version character varying(255) NOT NULL
-);
-
-
---
--- Name: species_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE species_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfrarank character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying
 );
 
 
@@ -1624,6 +1556,14 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
+-- Name: change_types_designation_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY change_types
+    ADD CONSTRAINT change_types_designation_id_fk FOREIGN KEY (designation_id) REFERENCES designations(id);
+
+
+--
 -- Name: common_names_language_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1940,3 +1880,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120703141230');
 INSERT INTO schema_migrations (version) VALUES ('20120704095341');
 
 INSERT INTO schema_migrations (version) VALUES ('20120712135238');
+
+INSERT INTO schema_migrations (version) VALUES ('20120725132210');

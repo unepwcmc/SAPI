@@ -35,25 +35,34 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
             SELECT taxon_concept_id, 
               ('cites_I' => CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
               ('cites_II' => CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
-              ('cites_III' => CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END)
+              ('cites_III' => CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END) ||
+              ('cites_del' => CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END) ||
+              ('cites_nc' => CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
               AS listing
             FROM (
               SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type,
               CASE
                 WHEN species_listings.abbreviation = 'I' AND change_types.name = 'ADDITION' THEN 1
-                WHEN species_listings.abbreviation = 'I' AND change_types.name = 'DELETION' THEN -1
+                WHEN (species_listings.abbreviation = 'I' OR species_listing_id IS NULL)
+                  AND change_types.name = 'DELETION' THEN -1
                 ELSE 0
               END AS cites_I,
               CASE
                 WHEN species_listings.abbreviation = 'II' AND change_types.name = 'ADDITION' THEN 1
-                WHEN species_listings.abbreviation = 'II' AND change_types.name = 'DELETION' THEN -1
+                WHEN (species_listings.abbreviation = 'II' OR species_listing_id IS NULL)
+                  AND change_types.name = 'DELETION' THEN -1
                 ELSE 0
               END AS cites_II,
               CASE
                 WHEN species_listings.abbreviation = 'III' AND change_types.name = 'ADDITION' THEN 1
-                WHEN species_listings.abbreviation = 'III' AND change_types.name = 'DELETION' THEN -1
+                WHEN (species_listings.abbreviation = 'III' OR species_listing_id IS NULL)
+                  AND change_types.name = 'DELETION' THEN -1
                 ELSE 0
-              END AS cites_III
+              END AS cites_III,
+              CASE
+                WHEN species_listing_id IS NULL AND change_types.name = 'DELETION' THEN 1
+                ELSE 0
+              END AS cites_del
               FROM listing_changes 
               LEFT JOIN species_listings ON species_listing_id = species_listings.id
               LEFT JOIN change_types ON change_type_id = change_types.id

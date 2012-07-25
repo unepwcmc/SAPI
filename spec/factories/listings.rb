@@ -18,6 +18,11 @@ FactoryGirl.define do
     f.is_party true
   end
 
+  factory :cites_deletion, class: ListingChange do |f|
+    f.change_type { ChangeType.find_by_name('DELETION') }
+    f.association :taxon_concept
+  end
+
   %w(I II III).each do |a|
     factory :"cites_#{a}_listing_change", parent: :listing_change, class: ListingChange do |f|
       f.species_listing { SpeciesListing.find_by_abbreviation(a) }

@@ -192,3 +192,9 @@ Note: the fully_covered flag could be inferred with a high degree of probability
 * there are subspecies that do not belong to the designation
 * there are population related comments in the listing changes
 It makes sense to try to infer that. However, data incompleteness in the first case and inconsistent comment wording in the second case make it unreliable.
+
+==== Filtering taxa by their listing information ====
+1. taxa listed in any of the 3 CITES appendices (both implicitly or explicitly) will have listing->'cites_X' and listing->'cites_listing' set
+2. taxa previously listed but then deleted from appendices will have listing->'cites_del' set to true and listing->'cites_listing' blank
+3. taxa listed as NC (e.g. Aloe vera, Pereskia spp.) will have not_in_cites set to true and listing->'cites_listing' blank
+4. taxa that have never been listed will have listing->'cites_listing' blank

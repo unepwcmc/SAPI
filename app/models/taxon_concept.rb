@@ -9,7 +9,6 @@
 #  rank_id              :integer          not null
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
-#  spcrecid             :integer
 #  depth                :integer
 #  designation_id       :integer          not null
 #  taxon_name_id        :integer          not null
@@ -91,8 +90,17 @@ class TaxonConcept < ActiveRecord::Base
     define_method(attr_name) { data && data[attr_name.to_s] }
   end
 
+  #this means the taxon is listed explicitly
   def cites_listed
     listing && listing['cites_listed'] == 't'
+  end
+
+  def cites_nc
+    listing && listing['cites_nc'] == 't'
+  end
+
+  def cites_del
+    listing && listing['cites_del'] == 't'
   end
 
   def cites_show
@@ -135,7 +143,13 @@ class << self
   def by_cites_appendices(appendix_abbreviations)
     return scoped if appendix_abbreviations.empty?
     conds = []
-    appendix_abbreviations.each do |abbr|
+    if appendix_abbreviations.include? 'del'
+      conds << "listing->'cites_del' = 't'"
+    end
+    if appendix_abbreviations.include? 'nc'
+      conds << "listing->'cites_listing'= ''"
+    end
+    (appendix_abbreviations - ['del','nc']).each do |abbr|
       conds << "listing->'cites_#{abbr}' = '#{abbr}'"
     end
     where(conds.join(' OR '))

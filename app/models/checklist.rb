@@ -19,6 +19,8 @@ class Checklist
     #filter by species listing
     unless options[:cites_appendices].nil?
       @taxon_concepts_rel = @taxon_concepts_rel.by_cites_appendices(options[:cites_appendices])
+    else
+      @taxon_concepts_rel = @taxon_concepts_rel.where("data->'rank_name' NOT IN ('SPECIES','SUBSPECIES') OR listing->'cites_listing' != ''")
     end
 
     #possible output layouts are:
