@@ -23,10 +23,6 @@ GeoEntityType.dict.each do |type|
 end
 puts "#{GeoEntityType.count} geo entity types created"
 
-puts "#{ChangeType.delete_all} change types deleted"
-ChangeType.dict.each { |change_type_name| ChangeType.create(:name => change_type_name) }
-puts "#{ChangeType.count} change types created"
-
 puts "#{TaxonRelationship.delete_all} taxon relationships deleted"
 puts "#{TaxonRelationshipType.delete_all} taxon relationship types deleted"
 TaxonRelationshipType.dict.each do |relationship|
@@ -47,6 +43,7 @@ end
 puts "#{Rank.count} ranks created"
 
 puts "#{SpeciesListing.delete_all} species listings deleted"
+puts "#{ChangeType.delete_all} change types deleted"
 puts "#{Designation.delete_all} designations deleted"
 [Designation::CITES, 'CMS'].each do |designation|
   Designation.create(:name => designation)
@@ -54,6 +51,10 @@ end
 cites = Designation.find_by_name(Designation::CITES)
 cms = Designation.find_by_name('CMS')
 puts "#{Designation.count} designations created"
+
+ChangeType.dict.each { |change_type_name| ChangeType.create(:name => change_type_name, :designation_id => cites.id) }
+puts "#{ChangeType.count} change types created"
+
 %w(I II III).each do |app_abbr|
   SpeciesListing.create(
     :name => "Appendix #{app_abbr}",
