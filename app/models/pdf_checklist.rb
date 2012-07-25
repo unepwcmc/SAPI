@@ -1,30 +1,40 @@
 #Encoding: utf-8
 require "prawn/measurement_extensions"
+include PDF
 
 class PdfChecklist < Checklist
 
   def generate
-    Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm), :template => Rails.root.join("public/static_index.pdf")) do |pdf|
+    static_index_pdf = [Rails.root, "/public/static_index.pdf"].join
+    tmp_index_pdf    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
+
+    static_page_count = PDF::get_page_count(static_index_pdf)
+
+    Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
       pdf.font_size 9
-      pdf.go_to_page(pdf.page_count)
       draw_kingdom(pdf, animalia, 'FAUNA')
       draw_kingdom(pdf, plantae, 'FLORA')
       #add page numbers
-      string = "CITES species index – <page>"
+      string = "CITES Species Index – <page>"
       options = {
-        :at => [pdf.bounds.right / 2 - 75, 0],
+        :at => [pdf.bounds.right / 2 - 75, pdf.bounds.top + 20],
         :width => 150,
         :align => :center,
-        :page_filter => lambda{ |p| p > 2 },
-        :start_count_at => 1,
+        :start_count_at => static_page_count - 2, # Ignore the first two cover pages
       }
       pdf.number_pages string, options
 
+      pdf.render_file tmp_index_pdf
     end
+
+    download_path = PDF::merge_pdfs(static_index_pdf, tmp_index_pdf)
+
+    FileUtils.rm tmp_index_pdf
+
+    return download_path
   end
 
   def draw_kingdom(pdf, kingdom, kingdom_name)
-    pdf.start_new_page
     pdf.text(kingdom_name, :size => 12, :align => :center)
     pdf.column_box([0, pdf.cursor], :columns => 2, :width => pdf.bounds.width) do
       kingdom.each do |tc|
