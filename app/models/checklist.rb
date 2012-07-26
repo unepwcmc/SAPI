@@ -27,30 +27,25 @@ class Checklist
     #taxonomic (hierarchic, taxonomic order)
     #checklist (flat, alphabetical order)
     @output_layout = options[:output_layout] || :alphabetical
-    if @output_layout == :taxonomic
-      @taxon_concepts_rel = @taxon_concepts_rel.taxonomic_layout
+    @taxon_concepts_rel = if @output_layout == :taxonomic
+      @taxon_concepts_rel.taxonomic_layout
     else
-      @taxon_concepts_rel = @taxon_concepts_rel.alphabetical_layout
-    end
+      @taxon_concepts_rel.alphabetical_layout
+    end.order("data->'kingdom_name'")#animalia first
     #include common names?
     @taxon_concepts_rel = @taxon_concepts_rel.with_common_names
   end
 
-  def animalia
-    @animalia ||= @taxon_concepts_rel.where("data -> 'kingdom_name' = 'Animalia' ").all
-  end
-
-  def plantae
-    @plantae ||= @taxon_concepts_rel.where("data -> 'kingdom_name' = 'Plantae' ").all
-  end
-
-  #TODO find out what was wrong with 'as_json'
-  #(included all the fields in spite of 'only' filter)
-  def custom_json()
+  def generate(page, per)
+    page ||= 0
+    per ||= 50
+    @taxon_concepts_rel = @taxon_concepts_rel.limit(per).offset(per * page)
     [{
-      :animalia => animalia,
-      :plantae => plantae
+      :taxon_concepts => @taxon_concepts_rel.all,
+      :animalia_idx => 0,
+      :plantae_idx => @taxon_concepts_rel.
+        where("data->'kingdom_name' = 'Animalia'").count,
+      :total_cnt => @taxon_concepts_rel.count
     }]
   end
-
 end

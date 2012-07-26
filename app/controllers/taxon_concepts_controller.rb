@@ -12,7 +12,8 @@ class TaxonConceptsController < ApplicationController
       # Clean up after ourselves
       FileUtils.rm download_path
     else
-      render :json => Checklist.new(@checklist_params).custom_json
+      render :json => Checklist.new(@checklist_params).
+        generate(params[:page], params[:per])
     end
   end
 
@@ -28,7 +29,8 @@ class TaxonConceptsController < ApplicationController
       # Clean up after ourselves
       FileUtils.rm download_path
     else
-      render :json => ChecklistHistory.new(@checklist_params).custom_json
+      render :json => ChecklistHistory.new(@checklist_params).
+        generate(params[:page], params[:per])
     end
   end
 
