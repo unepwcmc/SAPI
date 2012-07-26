@@ -24,6 +24,8 @@ for now we use the rack-cors middleware for development, staging has the appropr
     Header set Access-Control-Max-Age 1728000
     ...
 
+You also need pdftk installed (for merging pdfs).
+
 == Database
 
 We use PostgreSQL 9.1 with the hstore and tablefunc extensions. We also use data modifying recursive CTEs, which are not supported on versions lower than 9.1.
