@@ -16,8 +16,8 @@ CREATE OR REPLACE FUNCTION fix_cites_listing_changes() RETURNS void
                         SELECT listing_changes.id AS id, taxon_concept_id, species_listing_id, change_type_id,
                              effective_at, change_types.name AS change_type_name,
                              species_listings.abbreviation AS listing_name,
-                             listing_distributions.geo_entity_id AS party_id, geo_entities_ary, 
-                             ROW_NUMBER() OVER(ORDER BY taxon_concept_id, effective_at) AS row_no              
+                             listing_distributions.geo_entity_id AS party_id, geo_entities_ary,
+                             ROW_NUMBER() OVER(ORDER BY taxon_concept_id, effective_at) AS row_no
                              FROM
                              listing_changes
                              LEFT JOIN change_types ON change_type_id = change_types.id
@@ -30,7 +30,7 @@ CREATE OR REPLACE FUNCTION fix_cites_listing_changes() RETURNS void
                                FROM listing_distributions
                                WHERE listing_distributions.is_party <> 't'
                                GROUP BY listing_change_id
-                             ) listing_distributions_agr ON listing_distributions_agr.listing_change_id = listing_changes.id 
+                             ) listing_distributions_agr ON listing_distributions_agr.listing_change_id = listing_changes.id
                              WHERE change_types.name IN ('ADDITION','DELETION')
                              AND designations.name = 'CITES'
                      )

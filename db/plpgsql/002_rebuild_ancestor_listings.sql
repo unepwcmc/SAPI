@@ -23,11 +23,11 @@ CREATE OR REPLACE FUNCTION rebuild_ancestor_listings() RETURNS void
               ON      hi.id = (q.h).parent_id
             )
             SELECT id,
-            ('cites_I' => MAX((listing -> 'cites_I')::VARCHAR)) ||
-            ('cites_II' => MAX((listing -> 'cites_II')::VARCHAR)) ||
-            ('cites_III' => MAX((listing -> 'cites_III')::VARCHAR)) ||
-            ('not_in_cites' => MAX((listing -> 'not_in_cites')::VARCHAR)) ||
-            ('cites_listing' => ARRAY_TO_STRING(
+            hstore('cites_I', MAX((listing -> 'cites_I')::VARCHAR)) ||
+            hstore('cites_II', MAX((listing -> 'cites_II')::VARCHAR)) ||
+            hstore('cites_III', MAX((listing -> 'cites_III')::VARCHAR)) ||
+            hstore('not_in_cites', MAX((listing -> 'not_in_cites')::VARCHAR)) ||
+            hstore('cites_listing', ARRAY_TO_STRING(
               -- unnest to filter out the nulls
               ARRAY(SELECT * FROM UNNEST(
                 ARRAY[

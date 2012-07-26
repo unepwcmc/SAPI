@@ -33,7 +33,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings() RETURNS void
           END || q.listing ||
           CASE
             WHEN taxon_concepts.listing->'cites_listed' = 't' THEN ''::hstore
-            ELSE ('cites_listed' => 'f')
+            ELSE hstore('cites_listed', 'f')
           END
           FROM q
           WHERE taxon_concepts.id = q.id;

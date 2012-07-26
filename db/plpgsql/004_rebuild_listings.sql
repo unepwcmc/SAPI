@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
     AS $$
         BEGIN
         UPDATE taxon_concepts
-        SET listing = ('not_in_cites' => 'NC') || ('cites_listing' => 'NC') || ('cites_show' => 't')
+        SET listing = hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC') || hstore('cites_show', 't')
         WHERE not_in_cites = 't' OR fully_covered <> 't';
 
         UPDATE taxon_concepts
@@ -16,14 +16,14 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
           WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
           ELSE ''::hstore
         END
-        || qqq.listing || ('cites_listed' => 't') ||
+        || qqq.listing || hstore('cites_listed', 't') ||
         CASE
-          WHEN qqq.listing -> 'cites_listing' > '' THEN ('cites_show' => 't')
-          ELSE ('cites_show' => 'f')
+          WHEN qqq.listing -> 'cites_listing' > '' THEN hstore('cites_show', 't')
+          ELSE hstore('cites_show', 'f')
         END
         FROM (
           SELECT taxon_concept_id, listing ||
-          ('cites_listing' => ARRAY_TO_STRING(
+          hstore('cites_listing', ARRAY_TO_STRING(
             -- unnest to filter out the nulls
             ARRAY(SELECT * FROM UNNEST(
               ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III']) s 
@@ -33,11 +33,11 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
           ) AS listing
           FROM (
             SELECT taxon_concept_id, 
-              ('cites_I' => CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
-              ('cites_II' => CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
-              ('cites_III' => CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END) ||
-              ('cites_del' => CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END) ||
-              ('cites_nc' => CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
+              hstore('cites_I', CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
+              hstore('cites_II', CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
+              hstore('cites_III', CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END) ||
+              hstore('cites_del', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END) ||
+              hstore('cites_nc', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
               AS listing
             FROM (
               SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type,

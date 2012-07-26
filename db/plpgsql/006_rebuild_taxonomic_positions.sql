@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions() RETURNS void
         BEGIN
         -- delete results of previous computations
         UPDATE taxon_concepts
-        SET data = data || ('taxonomic_position' => NULL)
+        SET data = data || hstore('taxonomic_position', NULL)
         WHERE length(data->'taxonomic_position') > 5;
         WITH RECURSIVE q AS (
           SELECT h, id,
@@ -35,8 +35,8 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions() RETURNS void
         )
         UPDATE taxon_concepts
         SET data = CASE
-          WHEN data IS NULL THEN ('taxonomic_position' => taxonomic_position)
-          ELSE data || ('taxonomic_position' => taxonomic_position) END
+          WHEN data IS NULL THEN hstore('taxonomic_position', taxonomic_position)
+          ELSE data || hstore('taxonomic_position', taxonomic_position) END
         FROM q
         WHERE q.id = taxon_concepts.id;
         END;
