@@ -1,12 +1,14 @@
 #Encoding: utf-8
 require "prawn/measurement_extensions"
+require Rails.root.join("lib/modules/pdf.rb")
 class PdfChecklistHistory < ChecklistHistory
+  include PDF
 
   def generate
     static_history_pdf = [Rails.root, "/public/static_history.pdf"].join
     tmp_history_pdf    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
 
-    static_page_count = PDF::get_page_count(static_history_pdf)
+    static_page_count = get_page_count(static_history_pdf)
 
     Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
       pdf.default_leading 0
@@ -98,7 +100,7 @@ class PdfChecklistHistory < ChecklistHistory
       pdf.render_file tmp_history_pdf
     end
 
-    download_path = PDF::merge_pdfs(static_history_pdf, tmp_history_pdf)
+    download_path = merge_pdfs(static_history_pdf, tmp_history_pdf)
 
     FileUtils.rm tmp_history_pdf
 
