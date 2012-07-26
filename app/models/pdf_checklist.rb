@@ -1,14 +1,14 @@
 #Encoding: utf-8
 require "prawn/measurement_extensions"
-include PDF
-
+require Rails.root.join("lib/modules/pdf.rb")
 class PdfChecklist < Checklist
+  include PDF
 
   def generate
     static_index_pdf = [Rails.root, "/public/static_index.pdf"].join
     tmp_index_pdf    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
 
-    static_page_count = PDF::get_page_count(static_index_pdf)
+    static_page_count = get_page_count(static_index_pdf)
 
     Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
       pdf.font_size 9
@@ -27,7 +27,7 @@ class PdfChecklist < Checklist
       pdf.render_file tmp_index_pdf
     end
 
-    download_path = PDF::merge_pdfs(static_index_pdf, tmp_index_pdf)
+    download_path = merge_pdfs(static_index_pdf, tmp_index_pdf)
 
     FileUtils.rm tmp_index_pdf
 
