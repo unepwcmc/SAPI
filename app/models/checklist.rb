@@ -36,16 +36,18 @@ class Checklist
     @taxon_concepts_rel = @taxon_concepts_rel.with_common_names
   end
 
-  def generate(page, per)
+  def generate(page, per_page)
     page ||= 0
-    per ||= 50
-    @taxon_concepts_rel = @taxon_concepts_rel.limit(per).offset(per * page)
+    per_page ||= 50
+    total_cnt = @taxon_concepts_rel.count
+    @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
     [{
       :taxon_concepts => @taxon_concepts_rel.all,
       :animalia_idx => 0,
       :plantae_idx => @taxon_concepts_rel.
         where("data->'kingdom_name' = 'Animalia'").count,
-      :total_cnt => @taxon_concepts_rel.count
+      :result_cnt => @taxon_concepts_rel.count,
+      :total_cnt => total_cnt
     }]
   end
 end

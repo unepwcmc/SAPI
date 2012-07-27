@@ -13,7 +13,7 @@ class TaxonConceptsController < ApplicationController
       FileUtils.rm download_path
     else
       render :json => Checklist.new(@checklist_params).
-        generate(params[:page], params[:per])
+        generate(params[:page], params[:per_page])
     end
   end
 
@@ -30,7 +30,7 @@ class TaxonConceptsController < ApplicationController
       FileUtils.rm download_path
     else
       render :json => ChecklistHistory.new(@checklist_params).
-        generate(params[:page], params[:per])
+        generate(params[:page], params[:per_page])
     end
   end
 
