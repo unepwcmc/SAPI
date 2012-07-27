@@ -70,8 +70,8 @@ CREATE FUNCTION fix_cites_listing_changes() RETURNS void
                         SELECT listing_changes.id AS id, taxon_concept_id, species_listing_id, change_type_id,
                              effective_at, change_types.name AS change_type_name,
                              species_listings.abbreviation AS listing_name,
-                             listing_distributions.geo_entity_id AS party_id, geo_entities_ary, 
-                             ROW_NUMBER() OVER(ORDER BY taxon_concept_id, effective_at) AS row_no              
+                             listing_distributions.geo_entity_id AS party_id, geo_entities_ary,
+                             ROW_NUMBER() OVER(ORDER BY taxon_concept_id, effective_at) AS row_no
                              FROM
                              listing_changes
                              LEFT JOIN change_types ON change_type_id = change_types.id
@@ -84,7 +84,7 @@ CREATE FUNCTION fix_cites_listing_changes() RETURNS void
                                FROM listing_distributions
                                WHERE listing_distributions.is_party <> 't'
                                GROUP BY listing_change_id
-                             ) listing_distributions_agr ON listing_distributions_agr.listing_change_id = listing_changes.id 
+                             ) listing_distributions_agr ON listing_distributions_agr.listing_change_id = listing_changes.id
                              WHERE change_types.name IN ('ADDITION','DELETION')
                              AND designations.name = 'CITES'
                      )
@@ -146,11 +146,11 @@ CREATE FUNCTION rebuild_ancestor_listings() RETURNS void
               ON      hi.id = (q.h).parent_id
             )
             SELECT id,
-            ('cites_I' => MAX((listing -> 'cites_I')::VARCHAR)) ||
-            ('cites_II' => MAX((listing -> 'cites_II')::VARCHAR)) ||
-            ('cites_III' => MAX((listing -> 'cites_III')::VARCHAR)) ||
-            ('not_in_cites' => MAX((listing -> 'not_in_cites')::VARCHAR)) ||
-            ('cites_listing' => ARRAY_TO_STRING(
+            hstore('cites_I', MAX((listing -> 'cites_I')::VARCHAR)) ||
+            hstore('cites_II', MAX((listing -> 'cites_II')::VARCHAR)) ||
+            hstore('cites_III', MAX((listing -> 'cites_III')::VARCHAR)) ||
+            hstore('not_in_cites', MAX((listing -> 'not_in_cites')::VARCHAR)) ||
+            hstore('cites_listing', ARRAY_TO_STRING(
               -- unnest to filter out the nulls
               ARRAY(SELECT * FROM UNNEST(
                 ARRAY[
@@ -219,7 +219,7 @@ CREATE FUNCTION rebuild_descendant_listings() RETURNS void
           END || q.listing ||
           CASE
             WHEN taxon_concepts.listing->'cites_listed' = 't' THEN ''::hstore
-            ELSE ('cites_listed' => 'f')
+            ELSE hstore('cites_listed', 'f')
           END
           FROM q
           WHERE taxon_concepts.id = q.id;
@@ -243,7 +243,7 @@ CREATE FUNCTION rebuild_listings() RETURNS void
     AS $$
         BEGIN
         UPDATE taxon_concepts
-        SET listing = ('not_in_cites' => 'NC') || ('cites_listing' => 'NC') || ('cites_show' => 't')
+        SET listing = hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC') || hstore('cites_show', 't')
         WHERE not_in_cites = 't' OR fully_covered <> 't';
 
         UPDATE taxon_concepts
@@ -252,14 +252,14 @@ CREATE FUNCTION rebuild_listings() RETURNS void
           WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
           ELSE ''::hstore
         END
-        || qqq.listing || ('cites_listed' => 't') ||
+        || qqq.listing || hstore('cites_listed', 't') ||
         CASE
-          WHEN qqq.listing -> 'cites_listing' > '' THEN ('cites_show' => 't')
-          ELSE ('cites_show' => 'f')
+          WHEN qqq.listing -> 'cites_listing' > '' THEN hstore('cites_show', 't')
+          ELSE hstore('cites_show', 'f')
         END
         FROM (
           SELECT taxon_concept_id, listing ||
-          ('cites_listing' => ARRAY_TO_STRING(
+          hstore('cites_listing', ARRAY_TO_STRING(
             -- unnest to filter out the nulls
             ARRAY(SELECT * FROM UNNEST(
               ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III']) s 
@@ -269,11 +269,11 @@ CREATE FUNCTION rebuild_listings() RETURNS void
           ) AS listing
           FROM (
             SELECT taxon_concept_id, 
-              ('cites_I' => CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
-              ('cites_II' => CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
-              ('cites_III' => CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END) ||
-              ('cites_del' => CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END) ||
-              ('cites_nc' => CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
+              hstore('cites_I', CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
+              hstore('cites_II', CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
+              hstore('cites_III', CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END) ||
+              hstore('cites_del', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END) ||
+              hstore('cites_nc', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
               AS listing
             FROM (
               SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type,
@@ -332,7 +332,7 @@ CREATE FUNCTION rebuild_names_and_ranks() RETURNS void
 
           WITH RECURSIVE q AS (
             SELECT h, h.id, ranks.name as rank_name,
-            (LOWER(ranks.name) || '_name' => taxon_names.scientific_name) AS ancestors
+            hstore(LOWER(ranks.name) || '_name', taxon_names.scientific_name) AS ancestors
             FROM taxon_concepts h
             INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
             INNER JOIN ranks ON h.rank_id = ranks.id
@@ -341,7 +341,7 @@ CREATE FUNCTION rebuild_names_and_ranks() RETURNS void
             UNION ALL
 
             SELECT hi, hi.id, ranks.name,
-            ancestors || (LOWER(ranks.name) || '_name' => taxon_names.scientific_name)
+            ancestors || hstore(LOWER(ranks.name) || '_name', taxon_names.scientific_name)
             FROM q
             JOIN taxon_concepts hi
             ON hi.parent_id = (q.h).id
@@ -349,7 +349,7 @@ CREATE FUNCTION rebuild_names_and_ranks() RETURNS void
             INNER JOIN ranks ON hi.rank_id = ranks.id
           )
           UPDATE taxon_concepts
-          SET data = data || ancestors || ('full_name' => 
+          SET data = data || ancestors || hstore('full_name',
             CASE
               WHEN rank_name = 'SPECIES' THEN
                 -- now create a binomen for full name
@@ -362,7 +362,7 @@ CREATE FUNCTION rebuild_names_and_ranks() RETURNS void
                 LOWER(CAST(ancestors -> 'subspecies_name' AS VARCHAR))
               ELSE ancestors -> LOWER(rank_name || '_name')
             END
-          ) || ('rank_name' => rank_name)
+          ) || hstore('rank_name', rank_name)
           FROM q
           WHERE taxon_concepts.id = q.id;
         END;
@@ -386,7 +386,7 @@ CREATE FUNCTION rebuild_taxonomic_positions() RETURNS void
         BEGIN
         -- delete results of previous computations
         UPDATE taxon_concepts
-        SET data = data || ('taxonomic_position' => NULL)
+        SET data = data || hstore('taxonomic_position', NULL)
         WHERE length(data->'taxonomic_position') > 5;
         WITH RECURSIVE q AS (
           SELECT h, id,
@@ -413,8 +413,8 @@ CREATE FUNCTION rebuild_taxonomic_positions() RETURNS void
         )
         UPDATE taxon_concepts
         SET data = CASE
-          WHEN data IS NULL THEN ('taxonomic_position' => taxonomic_position)
-          ELSE data || ('taxonomic_position' => taxonomic_position) END
+          WHEN data IS NULL THEN hstore('taxonomic_position', taxonomic_position)
+          ELSE data || hstore('taxonomic_position', taxonomic_position) END
         FROM q
         WHERE q.id = taxon_concepts.id;
         END;
@@ -528,6 +528,39 @@ ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
 
 
 --
+-- Name: cites_listings_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cites_listings_import (
+    spc_rec_id integer,
+    appendix character varying,
+    listing_date date,
+    country_legacy_id character varying,
+    notes character varying
+);
+
+
+--
+-- Name: cites_regions_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cites_regions_import (
+    name character varying
+);
+
+
+--
+-- Name: common_name_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE common_name_import (
+    common_name character varying,
+    language_name character varying,
+    species_id integer
+);
+
+
+--
 -- Name: common_names; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -561,6 +594,51 @@ ALTER SEQUENCE common_names_id_seq OWNED BY common_names.id;
 
 
 --
+-- Name: countries_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE countries_import (
+    legacy_id integer,
+    iso2 character varying,
+    iso3 character varying,
+    name character varying,
+    long_name character varying,
+    region_number character varying
+);
+
+
+--
+-- Name: designation_references; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE designation_references (
+    id integer NOT NULL,
+    designation_id integer NOT NULL,
+    reference_id integer NOT NULL,
+    is_standard boolean DEFAULT true NOT NULL
+);
+
+
+--
+-- Name: designation_references_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE designation_references_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: designation_references_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE designation_references_id_seq OWNED BY designation_references.id;
+
+
+--
 -- Name: designations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -589,6 +667,17 @@ CREATE SEQUENCE designations_id_seq
 --
 
 ALTER SEQUENCE designations_id_seq OWNED BY designations.id;
+
+
+--
+-- Name: distribution_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE distribution_import (
+    species_id integer,
+    country_id integer,
+    country_name character varying
+);
 
 
 --
@@ -771,7 +860,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-07-25 13:37:28.482069'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-07-25 13:26:52.281788'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -931,6 +1020,22 @@ ALTER SEQUENCE references_id_seq OWNED BY "references".id;
 
 CREATE TABLE schema_migrations (
     version character varying(255) NOT NULL
+);
+
+
+--
+-- Name: species_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE species_import (
+    kingdom character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying
 );
 
 
@@ -1229,6 +1334,13 @@ ALTER TABLE ONLY common_names ALTER COLUMN id SET DEFAULT nextval('common_names_
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY designation_references ALTER COLUMN id SET DEFAULT nextval('designation_references_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY designations ALTER COLUMN id SET DEFAULT nextval('designations_id_seq'::regclass);
 
 
@@ -1380,6 +1492,14 @@ ALTER TABLE ONLY change_types
 
 ALTER TABLE ONLY common_names
     ADD CONSTRAINT common_names_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: designation_references_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY designation_references
+    ADD CONSTRAINT designation_references_pkey PRIMARY KEY (id);
 
 
 --
@@ -1569,6 +1689,22 @@ ALTER TABLE ONLY change_types
 
 ALTER TABLE ONLY common_names
     ADD CONSTRAINT common_names_language_id_fk FOREIGN KEY (language_id) REFERENCES languages(id);
+
+
+--
+-- Name: designation_references_designation_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY designation_references
+    ADD CONSTRAINT designation_references_designation_id_fk FOREIGN KEY (designation_id) REFERENCES designations(id);
+
+
+--
+-- Name: designation_references_reference_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY designation_references
+    ADD CONSTRAINT designation_references_reference_id_fk FOREIGN KEY (reference_id) REFERENCES "references"(id);
 
 
 --
@@ -1882,3 +2018,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120704095341');
 INSERT INTO schema_migrations (version) VALUES ('20120712135238');
 
 INSERT INTO schema_migrations (version) VALUES ('20120725132210');
+
+INSERT INTO schema_migrations (version) VALUES ('20120727144007');
