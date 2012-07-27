@@ -9,6 +9,8 @@ class PdfChecklist < Checklist
     tmp_index_pdf    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
 
     static_page_count = get_page_count(static_index_pdf)
+    animalia = @taxon_concepts_rel.where("data->'kingdom_name' = 'Animalia'")
+    plantae = @taxon_concepts_rel.where("data->'kingdom_name' = 'Plantae'")
 
     Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
       pdf.font_size 9
