@@ -26,7 +26,7 @@ WHERE S.SpcRecID IN (
 ORDER BY 5,6,7;
 
 -- synonyms
-Select 'Plantae' as Kingdom, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcInfraRank, S.SpcInfraEpithet, S.SpcRecID, S.SpcStatus, SynSpcRecID AS AcceptedSpcRecID
+Select 'Plantae' as Kingdom, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcInfraRank, S.SpcInfraEpithet, S.SpcRecID AS SynonymSpcRecID, S.SpcStatus, SynSpcRecID AS AcceptedSpcRecID
 from Orwell.plants.dbo.Species S 
 inner join Orwell.plants.dbo.Genus G on S.Spcgenrecid = G.genrecid
 INNER JOIN	ORWELL.plants.dbo.Family F ON FamRecID = GenFamRecID

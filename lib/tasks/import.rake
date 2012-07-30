@@ -54,6 +54,10 @@ namespace :import do
       'lib/assets/files/first_pages_cites/animals_common_names.csv',
       'lib/assets/files/first_pages_cites/plants_common_names.csv'
     )
+    Rake::Task["import:synonyms"].invoke(
+      'lib/assets/files/first_pages_cites/animals_synonyms.csv',
+      'lib/assets/files/first_pages_cites/plants_synonyms.csv'
+    )
     Sapi::fix_listing_changes()
     Sapi::rebuild()
   end

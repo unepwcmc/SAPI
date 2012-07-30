@@ -14,7 +14,9 @@ class CsvToDbMap
       'SpcInfraRank' => 'SpcInfraRank varchar',
       'SpcInfraEpithet' => 'SpcInfra varchar',
       'SpcRecID' => 'SpcRecId integer',
-      'SpcStatus' => 'SpcStatus varchar'
+      'SpcStatus' => 'SpcStatus varchar',
+      #to facilitate reusing the species:import task for importing synonyms
+      'AcceptedSpcRecID' => 'accepted_species_id integer'
     },
     'cites_listings_import' => {
       'SpcRecID' => 'spc_rec_id integer',
@@ -33,6 +35,20 @@ class CsvToDbMap
       'ComName' => 'common_name varchar',
       'LanDesc' => 'language_name varchar',
       'SpcRecID' => 'species_id integer'
+    },
+    'synonym_import' => {
+      'Kingdom' => 'Kingdom varchar',
+      'PhyName' => 'Phylum varchar',
+      'ClaName' => 'Class varchar',
+      'OrdName' => 'TaxonOrder varchar',
+      'FamName' => 'Family varchar',
+      'GenName' => 'Genus varchar',
+      'SpcName' => 'Species varchar',
+      'SpcInfraRank' => 'SpcInfraRank varchar',
+      'SpcInfraEpithet' => 'SpcInfra varchar',
+      'SpcStatus' => 'SpcStatus varchar',
+      'SpcRecID' => 'species_id integer',
+      'AcceptedSpcRecID' => 'accepted_species_id integer'
     },
     'cites_regions_import' => {
       'name' => 'name varchar'
