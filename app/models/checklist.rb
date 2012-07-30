@@ -1,11 +1,11 @@
 #Encoding: utf-8
 class Checklist
-  attr_accessor :taxon_concepts_rel, :animalia, :plantae
+  attr_accessor :taxon_concepts_rel
   def initialize(options)
     @designation = options[:designation] || Designation::CITES
 
     @taxon_concepts_rel = TaxonConcept.scoped.
-      select([:"taxon_concepts.id", :data, :listing, :"taxon_concepts.depth"]).
+      select([:"taxon_concepts.id", :"taxon_concepts.data", :"taxon_concepts.listing", :"taxon_concepts.depth"]).
       joins(:designation).
       where('designations.name' => @designation)
 
@@ -20,7 +20,10 @@ class Checklist
     unless options[:cites_appendices].nil?
       @taxon_concepts_rel = @taxon_concepts_rel.by_cites_appendices(options[:cites_appendices])
     else
-      @taxon_concepts_rel = @taxon_concepts_rel.where("data->'rank_name' NOT IN ('SPECIES','SUBSPECIES') OR listing->'cites_listing' != ''")
+      @taxon_concepts_rel = @taxon_concepts_rel.where(
+        "taxon_concepts.data->'rank_name' NOT IN ('SPECIES','SUBSPECIES')
+        OR taxon_concepts.listing->'cites_listing' != ''"
+      )
     end
 
     #possible output layouts are:
@@ -31,9 +34,10 @@ class Checklist
       @taxon_concepts_rel.taxonomic_layout
     else
       @taxon_concepts_rel.alphabetical_layout
-    end.order("data->'kingdom_name'")#animalia first
-    #include common names?
-    @taxon_concepts_rel = @taxon_concepts_rel.with_common_names
+    end.order("taxon_concepts.data->'kingdom_name'")#animalia first
+    #TODO include common names?
+    #TODO include synonyms?
+    @taxon_concepts_rel = @taxon_concepts_rel.with_synonyms.with_common_names
   end
 
   def generate(page, per_page)
@@ -45,7 +49,7 @@ class Checklist
       :taxon_concepts => @taxon_concepts_rel.all,
       :animalia_idx => 0,
       :plantae_idx => @taxon_concepts_rel.
-        where("data->'kingdom_name' = 'Animalia'").count,
+        where("taxon_concepts.data->'kingdom_name' = 'Animalia'").count,
       :result_cnt => @taxon_concepts_rel.count,
       :total_cnt => total_cnt
     }]
