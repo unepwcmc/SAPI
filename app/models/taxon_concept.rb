@@ -143,11 +143,9 @@ class << self
   def by_cites_appendices(appendix_abbreviations)
     return scoped if appendix_abbreviations.empty?
     conds = []
-    if appendix_abbreviations.include? 'del'
-      conds << "listing->'cites_del' = 't'"
-    end
     if appendix_abbreviations.include? 'nc'
-      conds << "listing->'cites_listing'= ''"
+      conds << "(listing->'cites_del' = 't' OR listing->'not_in_cites'= 'NC')
+        AND listing->'cites_listing' = ''"
     end
     (appendix_abbreviations - ['del','nc']).each do |abbr|
       conds << "listing->'cites_#{abbr}' = '#{abbr}'"
