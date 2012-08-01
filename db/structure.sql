@@ -236,7 +236,7 @@ CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
           (q.h).listing->'cites_listed' <> 't' AND
           q.inherited_cites_listing = 't';
 
-        -- propagate the cites_exclusion flag to all subtaxa
+        -- propagate the usr_cites_exclusion flag to all subtaxa
         -- unless they have cites_listed = 't'
         WITH RECURSIVE q AS (
           SELECT h
@@ -250,7 +250,7 @@ CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
           JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
         )
         UPDATE taxon_concepts
-        SET listing = listing || hstore('cites_exclusion_inh', 't')
+        SET listing = listing || hstore('cites_exclusion', 't')
         FROM q
         WHERE taxon_concepts.id = (q.h).id;
 
@@ -263,7 +263,7 @@ CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
         UPDATE taxon_concepts
         SET listing = listing ||
         hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC')
-        WHERE listing->'cites_exclusion_inh' = 't';
+        WHERE listing->'cites_exclusion' = 't';
 
         UPDATE taxon_concepts
         SET listing = listing ||
@@ -319,7 +319,7 @@ CREATE FUNCTION rebuild_descendant_listings() RETURNS void
             ELSE hstore('cites_listed', 'f')
           END
           FROM q
-          WHERE taxon_concepts.id = q.id;
+          WHERE taxon_concepts.id = q.id AND taxon_concepts->'cites_listed' <> '';
         END;
       $$;
 
