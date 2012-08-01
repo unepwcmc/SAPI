@@ -16,7 +16,6 @@
 #  inherit_distribution :boolean          default(TRUE), not null
 #  inherit_references   :boolean          default(TRUE), not null
 #  data                 :hstore
-#  not_in_cites         :boolean          default(FALSE), not null
 #  fully_covered        :boolean          default(TRUE), not null
 #  listing              :hstore
 #
@@ -24,7 +23,7 @@
 class TaxonConcept < ActiveRecord::Base
   include PgArrayParser
   attr_accessible :lft, :parent_id, :rgt, :rank_id, :parent_id,
-    :designation_id, :taxon_name_id, :not_in_cites, :fully_covered,
+    :designation_id, :taxon_name_id, :fully_covered,
     :data
   attr_accessor :listing_history
   serialize :data, ActiveRecord::Coders::Hstore
@@ -93,8 +92,8 @@ class TaxonConcept < ActiveRecord::Base
   #here go the CITES listing flags
   [
     :cites_listed,#taxon is listed explicitly
-    :cites_exclusion,#taxon is excluded from it's parent's listing
-    :cites_exclusion_inh,#taxon's ancestor is excluded from it's parent's listing
+    :usr_cites_exclusion,#taxon is excluded from it's parent's listing
+    :cites_exclusion,#taxon's ancestor is excluded from it's parent's listing
     :cites_del,#taxon has been deleted from appendices
     :cites_nc,#TODO
     :cites_show#@taxon should be shown in checklist even if NC

@@ -35,24 +35,24 @@ describe TaxonConcept do
         end
       end
 
-      describe :not_in_cites do
+      describe :usr_cites_exclusion do
         it "should be false for species Falco alopex" do
-          @species2_2.not_in_cites.should be_false
+          @species2_2.usr_cites_exclusion.should be_false
         end
         it "should be true for genus Vultur" do
-          @genus1_3.not_in_cites.should be_true
+          @genus1_3.usr_cites_exclusion.should be_true
         end
         it "should be false for genus Vultur atratus" do
-          @species1_3.not_in_cites.should be_false
+          @species1_3.usr_cites_exclusion.should be_false
         end
       end
 
-      describe :cites_exclusion_inh do
+      describe :cites_exclusion do
         it "should be true for genus Vultur" do
-          @genus1_3.cites_exclusion_inh.should be_true
+          @genus1_3.cites_exclusion.should be_true
         end
         it "should be true for species Vultur atratus" do
-          @species1_3.cites_exclusion_inh.should be_true
+          @species1_3.cites_exclusion.should be_true
         end
       end
 

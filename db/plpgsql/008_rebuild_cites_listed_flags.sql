@@ -50,34 +50,34 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
           (q.h).listing->'cites_listed' <> 't' AND
           q.inherited_cites_listing = 't';
 
-        -- propagate the not_in_cites flag to all subtaxa
+        -- propagate the usr_cites_exclusion flag to all subtaxa
         -- unless they have cites_listed = 't'
-        WITH RECURSIVE not_in_cites AS (
+        WITH RECURSIVE q AS (
           SELECT h
           FROM taxon_concepts h
-          WHERE not_in_cites = 't'
+          WHERE listing->'usr_cites_exclusion' = 't'
 
           UNION ALL
 
           SELECT hi
-          FROM not_in_cites
-          JOIN taxon_concepts hi ON hi.parent_id = (not_in_cites.h).id
+          FROM q
+          JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
         )
         UPDATE taxon_concepts
-        SET listing = listing || hstore('cites_exclusion_inh', 't')
-        FROM not_in_cites
-        WHERE taxon_concepts.id = (not_in_cites.h).id;
+        SET listing = listing || hstore('cites_exclusion', 't')
+        FROM q
+        WHERE taxon_concepts.id = (q.h).id;
 
         -- set flags for exceptions
         UPDATE taxon_concepts
         SET listing = listing ||
         hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC') || hstore('cites_show', 't')
-        WHERE not_in_cites = 't';
+        WHERE listing->'usr_cites_exclusion' = 't';
 
         UPDATE taxon_concepts
         SET listing = listing ||
         hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC')
-        WHERE listing->'cites_exclusion_inh' = 't';
+        WHERE listing->'cites_exclusion' = 't';
 
         UPDATE taxon_concepts
         SET listing = listing ||

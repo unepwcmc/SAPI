@@ -37,7 +37,7 @@ shared_context "Falconiformes" do
       :genus,
       :taxon_name => create(:taxon_name, :scientific_name => 'Vultur'),
       :parent => @family1,
-      :not_in_cites => true
+      :listing => {:usr_cites_exclusion => 't'}
     )
     @species1_3 = create(
       :species,

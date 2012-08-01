@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings() RETURNS void
             SELECT hi, hi.id, CASE
               WHEN
                 CAST(hi.listing -> 'cites_listing' AS VARCHAR) IS NOT NULL
-                OR hi.not_in_cites = 't'
+                OR hi.listing->'usr_cites_exclusion' = 't'
                 THEN hi.listing
               WHEN  hi.listing IS NOT NULL THEN hi.listing || q.listing
               ELSE q.listing
