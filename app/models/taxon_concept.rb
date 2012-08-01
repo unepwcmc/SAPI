@@ -90,21 +90,16 @@ class TaxonConcept < ActiveRecord::Base
     define_method(attr_name) { data && data[attr_name.to_s] }
   end
 
-  #this means the taxon is listed explicitly
-  def cites_listed
-    listing && listing['cites_listed'] == 't'
-  end
-
-  def cites_nc
-    listing && listing['cites_nc'] == 't'
-  end
-
-  def cites_del
-    listing && listing['cites_del'] == 't'
-  end
-
-  def cites_show
-    listing && listing['cites_show'] == 't'
+  #here go the CITES listing flags
+  [
+    :cites_listed,#taxon is listed explicitly
+    :cites_exclusion,#taxon is excluded from it's parent's listing
+    :cites_exclusion_inh,#taxon's ancestor is excluded from it's parent's listing
+    :cites_del,#taxon has been deleted from appendices
+    :cites_nc,#TODO
+    :cites_show#@taxon should be shown in checklist even if NC
+  ].each do |attr_name|
+    define_method(attr_name) { listing && listing[attr_name.to_s] == 't' }
   end
 
   def current_listing

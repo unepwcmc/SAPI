@@ -185,6 +185,94 @@ COMMENT ON FUNCTION rebuild_ancestor_listings() IS 'Procedure to rebuild the com
 
 
 --
+-- Name: rebuild_cites_listed_flags(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+        BEGIN
+        -- set flags for exceptions. not sure if this should be here??? TODO
+        UPDATE taxon_concepts
+        SET listing = hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC') || hstore('cites_show', 't')
+        WHERE not_in_cites = 't' OR fully_covered <> 't';
+
+        -- set the cited_listed flag to true for all explicitly listed taxa
+        UPDATE taxon_concepts SET listing = 
+          CASE
+            WHEN listing IS NULL THEN ''::HSTORE
+            ELSE listing
+          END || hstore('cites_listed', 't')
+        FROM (
+          SELECT taxon_concepts.id
+          FROM taxon_concepts
+          INNER JOIN listing_changes ON taxon_concept_id = taxon_concepts.id
+        ) AS q
+        WHERE taxon_concepts.id = q.id;
+
+        -- set the cites_listed flag to false for all implicitly listed taxa
+        WITH RECURSIVE q AS
+        (
+          SELECT  h,
+          (listing->'cites_listed')::BOOLEAN AS inherited_cites_listing
+          FROM    taxon_concepts h
+          WHERE   parent_id IS NULL
+          UNION ALL
+          SELECT  hi,
+          CASE
+            WHEN (listing->'cites_listed')::BOOLEAN = 't' THEN 't'
+            ELSE inherited_cites_listing
+          END
+          FROM    q
+          JOIN    taxon_concepts hi
+          ON      hi.parent_id = (q.h).id
+        )
+        UPDATE taxon_concepts
+        SET listing = listing || hstore('cites_listed', 'f')
+        FROM q
+        WHERE taxon_concepts.id = (q.h).id AND
+          listing->'cites_listed' <> 't' AND
+          q.inherited_cites_listing = 't';
+
+        UPDATE taxon_concepts SET fully_covered = false
+        FROM (
+          WITH listed AS (
+            SELECT DISTINCT taxon_concepts.id, taxon_concepts.parent_id
+            FROM taxon_concepts
+            INNER JOIN listing_changes
+            ON listing_changes.taxon_concept_id = taxon_concepts.id
+          ),
+          unlisted AS (
+            SELECT DISTINCT taxon_concepts.id, taxon_concepts.parent_id
+            FROM taxon_concepts
+            LEFT JOIN listing_changes
+            ON listing_changes.taxon_concept_id = taxon_concepts.id
+            WHERE listing_changes.id IS NULL
+          )
+          SELECT DISTINCT taxon_concepts.id
+          FROM taxon_concepts
+          INNER JOIN listed
+          ON taxon_concepts.id = listed.parent_id
+          INNER JOIN unlisted
+          ON taxon_concepts.id = unlisted.parent_id
+          LEFT JOIN listing_changes
+          ON listing_changes.taxon_concept_id = taxon_concepts.id
+          WHERE listing_changes.id IS NULL
+        ) AS q
+        WHERE taxon_concepts.id = q.id;
+
+        END;
+      $$;
+
+
+--
+-- Name: FUNCTION rebuild_cites_listed_flags(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION rebuild_cites_listed_flags() IS 'Procedure to rebuild the cites_listed flag in taxon_concepts.data. The meaning of this flag is as follows: "t" - explicit cites listing, "f" - implicit cites listing, "" - N/A';
+
+
+--
 -- Name: rebuild_descendant_listings(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -243,41 +331,8 @@ CREATE FUNCTION rebuild_listings() RETURNS void
     AS $$
         BEGIN
 
-        UPDATE taxon_concepts SET fully_covered = false
-        FROM (
-          WITH listed AS (
-            SELECT DISTINCT taxon_concepts.id, taxon_concepts.parent_id
-            FROM taxon_concepts
-            INNER JOIN listing_changes
-            ON listing_changes.taxon_concept_id = taxon_concepts.id
-          ),
-          unlisted AS (
-            SELECT DISTINCT taxon_concepts.id, taxon_concepts.parent_id
-            FROM taxon_concepts
-            LEFT JOIN listing_changes
-            ON listing_changes.taxon_concept_id = taxon_concepts.id     
-            WHERE listing_changes.id IS NULL     
-          )
-          SELECT DISTINCT taxon_concepts.id
-          FROM taxon_concepts
-          INNER JOIN listed
-          ON taxon_concepts.id = listed.parent_id
-          INNER JOIN unlisted
-          ON taxon_concepts.id = unlisted.parent_id
-        ) AS q
-        WHERE taxon_concepts.id = q.id;
-
         UPDATE taxon_concepts
-        SET listing = hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC') || hstore('cites_show', 't')
-        WHERE not_in_cites = 't' OR fully_covered <> 't';
-
-        UPDATE taxon_concepts
-        SET listing =
-        CASE
-          WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
-          ELSE ''::hstore
-        END
-        || qqq.listing || hstore('cites_listed', 't') ||
+        SET listing = taxon_concepts.listing || qqq.listing ||
         CASE
           WHEN qqq.listing -> 'cites_listing' > '' THEN hstore('cites_show', 't')
           ELSE hstore('cites_show', 'f')
@@ -466,6 +521,7 @@ CREATE FUNCTION sapi_rebuild() RETURNS void
           PERFORM rebuild_names_and_ranks();
           --RAISE NOTICE 'taxonomic positions';
           PERFORM rebuild_taxonomic_positions();
+          PERFORM rebuild_cites_listed_flags();
           --RAISE NOTICE 'listings';
           PERFORM rebuild_listings();
           --RAISE NOTICE 'descendant listings';
@@ -553,6 +609,39 @@ ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
 
 
 --
+-- Name: cites_listings_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cites_listings_import (
+    spc_rec_id integer,
+    appendix character varying,
+    listing_date date,
+    country_legacy_id character varying,
+    notes character varying
+);
+
+
+--
+-- Name: cites_regions_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE cites_regions_import (
+    name character varying
+);
+
+
+--
+-- Name: common_name_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE common_name_import (
+    common_name character varying,
+    language_name character varying,
+    species_id integer
+);
+
+
+--
 -- Name: common_names; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -586,6 +675,51 @@ ALTER SEQUENCE common_names_id_seq OWNED BY common_names.id;
 
 
 --
+-- Name: countries_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE countries_import (
+    legacy_id integer,
+    iso2 character varying,
+    iso3 character varying,
+    name character varying,
+    long_name character varying,
+    region_number character varying
+);
+
+
+--
+-- Name: designation_references; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE designation_references (
+    id integer NOT NULL,
+    designation_id integer NOT NULL,
+    reference_id integer NOT NULL,
+    is_standard boolean DEFAULT true NOT NULL
+);
+
+
+--
+-- Name: designation_references_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE designation_references_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: designation_references_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE designation_references_id_seq OWNED BY designation_references.id;
+
+
+--
 -- Name: designations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -614,6 +748,17 @@ CREATE SEQUENCE designations_id_seq
 --
 
 ALTER SEQUENCE designations_id_seq OWNED BY designations.id;
+
+
+--
+-- Name: distribution_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE distribution_import (
+    species_id integer,
+    country_id integer,
+    country_name character varying
+);
 
 
 --
@@ -796,7 +941,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-07-25 13:37:28.482069'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-07-25 13:26:52.281788'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -960,6 +1105,25 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: species_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE species_import (
+    kingdom character varying,
+    phylum character varying,
+    class character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfrarank character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying
+);
+
+
+--
 -- Name: species_listings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -990,6 +1154,24 @@ CREATE SEQUENCE species_listings_id_seq
 --
 
 ALTER SEQUENCE species_listings_id_seq OWNED BY species_listings.id;
+
+
+--
+-- Name: synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE synonym_import (
+    kingdom character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfrarank character varying,
+    spcinfra character varying,
+    species_id integer,
+    spcstatus character varying,
+    accepted_species_id integer
+);
 
 
 --
@@ -1254,6 +1436,13 @@ ALTER TABLE ONLY common_names ALTER COLUMN id SET DEFAULT nextval('common_names_
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY designation_references ALTER COLUMN id SET DEFAULT nextval('designation_references_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY designations ALTER COLUMN id SET DEFAULT nextval('designations_id_seq'::regclass);
 
 
@@ -1405,6 +1594,14 @@ ALTER TABLE ONLY change_types
 
 ALTER TABLE ONLY common_names
     ADD CONSTRAINT common_names_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: designation_references_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY designation_references
+    ADD CONSTRAINT designation_references_pkey PRIMARY KEY (id);
 
 
 --
@@ -1594,6 +1791,22 @@ ALTER TABLE ONLY change_types
 
 ALTER TABLE ONLY common_names
     ADD CONSTRAINT common_names_language_id_fk FOREIGN KEY (language_id) REFERENCES languages(id);
+
+
+--
+-- Name: designation_references_designation_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY designation_references
+    ADD CONSTRAINT designation_references_designation_id_fk FOREIGN KEY (designation_id) REFERENCES designations(id);
+
+
+--
+-- Name: designation_references_reference_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY designation_references
+    ADD CONSTRAINT designation_references_reference_id_fk FOREIGN KEY (reference_id) REFERENCES "references"(id);
 
 
 --
@@ -1907,3 +2120,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120704095341');
 INSERT INTO schema_migrations (version) VALUES ('20120712135238');
 
 INSERT INTO schema_migrations (version) VALUES ('20120725132210');
+
+INSERT INTO schema_migrations (version) VALUES ('20120727144007');

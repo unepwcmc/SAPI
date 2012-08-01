@@ -7,44 +7,8 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
     AS $$
         BEGIN
 
-        UPDATE taxon_concepts SET fully_covered = false
-        FROM (
-          WITH listed AS (
-            SELECT DISTINCT taxon_concepts.id, taxon_concepts.parent_id
-            FROM taxon_concepts
-            INNER JOIN listing_changes
-            ON listing_changes.taxon_concept_id = taxon_concepts.id
-          ),
-          unlisted AS (
-            SELECT DISTINCT taxon_concepts.id, taxon_concepts.parent_id
-            FROM taxon_concepts
-            LEFT JOIN listing_changes
-            ON listing_changes.taxon_concept_id = taxon_concepts.id
-            WHERE listing_changes.id IS NULL
-          )
-          SELECT DISTINCT taxon_concepts.id
-          FROM taxon_concepts
-          INNER JOIN listed
-          ON taxon_concepts.id = listed.parent_id
-          INNER JOIN unlisted
-          ON taxon_concepts.id = unlisted.parent_id
-          LEFT JOIN listing_changes
-          ON listing_changes.taxon_concept_id = taxon_concepts.id
-          WHERE listing_changes.id IS NULL
-        ) AS q
-        WHERE taxon_concepts.id = q.id;
-
         UPDATE taxon_concepts
-        SET listing = hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC') || hstore('cites_show', 't')
-        WHERE not_in_cites = 't' OR fully_covered <> 't';
-
-        UPDATE taxon_concepts
-        SET listing =
-        CASE
-          WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
-          ELSE ''::hstore
-        END
-        || qqq.listing || hstore('cites_listed', 't') ||
+        SET listing = taxon_concepts.listing || qqq.listing ||
         CASE
           WHEN qqq.listing -> 'cites_listing' > '' THEN hstore('cites_show', 't')
           ELSE hstore('cites_show', 'f')
