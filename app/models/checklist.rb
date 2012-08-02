@@ -21,8 +21,8 @@ class Checklist
       @taxon_concepts_rel = @taxon_concepts_rel.by_cites_appendices(options[:cites_appendices])
     else
       @taxon_concepts_rel = @taxon_concepts_rel.where("
-        (data->'rank_name' NOT IN ('SPECIES','SUBSPECIES')
-        OR listing->'cites_listing' != '')
+        data->'rank_name' NOT IN ('SPECIES','SUBSPECIES')
+        OR listing->'cites_listing' != ''
         AND listing->'cites_listing' != 'NC'
       ")
     end

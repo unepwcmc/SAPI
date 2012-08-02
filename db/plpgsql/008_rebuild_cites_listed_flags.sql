@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
         UPDATE taxon_concepts SET listing =
           CASE
             WHEN listing IS NULL THEN ''::HSTORE
-            ELSE listing
+            ELSE listing - ARRAY['cites_listing','cites_I','cites_II','cites_III','not_in_cites']
           END || hstore('cites_listed', NULL);
 
         -- set the cited_listed flag to true for all explicitly listed taxa
@@ -44,7 +44,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
           ON      hi.parent_id = (q.h).id
         )
         UPDATE taxon_concepts
-        SET listing = listing || hstore('cites_listed', 'f')
+        SET listing = (listing - 'not_in_cites') || hstore('cites_listed', 'f')
         FROM q
         WHERE taxon_concepts.id = (q.h).id AND
           ((q.h).listing->'cites_listed')::BOOLEAN IS NULL AND
