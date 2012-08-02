@@ -44,7 +44,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
           ON      hi.parent_id = (q.h).id
         )
         UPDATE taxon_concepts
-        SET listing = (listing - 'not_in_cites') || hstore('cites_listed', 'f')
+        SET listing = listing || hstore('cites_listed', 'f')
         FROM q
         WHERE taxon_concepts.id = (q.h).id AND
           ((q.h).listing->'cites_listed')::BOOLEAN IS NULL AND
