@@ -12,8 +12,11 @@ describe TaxonConcept do
       end
 
       describe :cites_listed do
-        it "should be true for family Crocodylia" do
-          @family.cites_listed.should be_true
+        it "should be true for order Crocodylia" do
+          @order.cites_listed.should be_true
+        end
+        it "should be false for family Alligatoridae" do
+          @family.cites_listed.should be_false
         end
         it "should be false for genus Caiman" do
           @genus.cites_listed.should be_false

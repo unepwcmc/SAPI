@@ -15,11 +15,11 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings() RETURNS void
 
             SELECT hi, hi.id, CASE
               WHEN
-                CAST(hi.listing -> 'cites_listing' AS VARCHAR) IS NOT NULL
-                OR hi.listing->'usr_cites_exclusion' = 't'
-                THEN hi.listing
-              WHEN  hi.listing IS NOT NULL THEN hi.listing || q.listing
-              ELSE q.listing
+                hi.listing -> 'cites_listed' ='t'
+                OR hi.listing->'cites_exclusion' = 't'
+                THEN hi.listing || hstore('cites_listing',hi.listing->'cites_listing_original')
+              ELSE hi.listing || (q.listing::hstore - ARRAY['cites_listed','cites_listing_original'])
+                || hstore('cites_listing',q.listing->'cites_listing_original')
             END
             FROM q
             JOIN taxon_concepts hi
@@ -30,11 +30,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings() RETURNS void
           CASE
             WHEN taxon_concepts.listing IS NULL THEN ''::hstore
             ELSE taxon_concepts.listing
-          END || q.listing ||
-          CASE
-            WHEN taxon_concepts.listing->'cites_listed' = 't' THEN ''::hstore
-            ELSE hstore('cites_listed', 'f')
-          END
+          END || q.listing
           FROM q
           WHERE taxon_concepts.id = q.id;
         END;

@@ -47,7 +47,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
         SET listing = listing || hstore('cites_listed', 'f')
         FROM q
         WHERE taxon_concepts.id = (q.h).id AND
-          (q.h).listing->'cites_listed' <> 't' AND
+          ((q.h).listing->'cites_listed')::BOOLEAN IS NULL AND
           q.inherited_cites_listing = 't';
 
         -- propagate the usr_cites_exclusion flag to all subtaxa
@@ -71,18 +71,18 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
         -- set flags for exceptions
         UPDATE taxon_concepts
         SET listing = listing ||
-        hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC') || hstore('cites_show', 't')
+        hstore('not_in_cites', 'NC') || hstore('cites_listing_original', 'NC') || hstore('cites_show', 't')
         WHERE listing->'usr_cites_exclusion' = 't';
 
         UPDATE taxon_concepts
         SET listing = listing ||
-        hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC')
+        hstore('not_in_cites', 'NC') || hstore('cites_listing_original', 'NC')
         WHERE listing->'cites_exclusion' = 't';
 
         UPDATE taxon_concepts
         SET listing = listing ||
         hstore('not_in_cites', 'NC')
-        WHERE fully_covered <> 't';
+        WHERE fully_covered <> 't' OR (listing->'cites_listed')::BOOLEAN IS NULL;
 
         END;
       $$;

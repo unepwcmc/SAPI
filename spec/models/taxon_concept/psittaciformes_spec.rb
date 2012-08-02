@@ -71,18 +71,6 @@ describe TaxonConcept do
         end
       end
 
-      describe :cites_nc do
-        it "should be true for Agapornis roseicollis (DEL II)" do
-          @species2_1.cites_nc.should be_true
-        end
-        it "should be false for Amazona aestiva" do
-          @species2_2.cites_nc.should be_false
-        end
-        it "should be true for Psittacula krameri (DEL III)" do
-          @species2_3.cites_nc.should be_true
-        end
-      end
-
     end
   end
 end

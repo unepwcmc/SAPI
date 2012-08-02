@@ -133,6 +133,9 @@ CREATE FUNCTION rebuild_ancestor_listings() RETURNS void
             WITH RECURSIVE q AS (
               SELECT h, id, listing
               FROM taxon_concepts h
+              WHERE NOT EXISTS (
+                SELECT id FROM taxon_concepts WHERE parent_id = h.id
+              )
 
               UNION ALL
 
@@ -173,6 +176,7 @@ CREATE FUNCTION rebuild_ancestor_listings() RETURNS void
             END || qq.listing
           FROM qq
           WHERE taxon_concepts.id = qq.id;
+
         END;
       $$;
 
@@ -233,7 +237,7 @@ CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
         SET listing = listing || hstore('cites_listed', 'f')
         FROM q
         WHERE taxon_concepts.id = (q.h).id AND
-          (q.h).listing->'cites_listed' <> 't' AND
+          ((q.h).listing->'cites_listed')::BOOLEAN IS NULL AND
           q.inherited_cites_listing = 't';
 
         -- propagate the usr_cites_exclusion flag to all subtaxa
@@ -257,18 +261,18 @@ CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
         -- set flags for exceptions
         UPDATE taxon_concepts
         SET listing = listing ||
-        hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC') || hstore('cites_show', 't')
+        hstore('not_in_cites', 'NC') || hstore('cites_listing_original', 'NC') || hstore('cites_show', 't')
         WHERE listing->'usr_cites_exclusion' = 't';
 
         UPDATE taxon_concepts
         SET listing = listing ||
-        hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC')
+        hstore('not_in_cites', 'NC') || hstore('cites_listing_original', 'NC')
         WHERE listing->'cites_exclusion' = 't';
 
         UPDATE taxon_concepts
         SET listing = listing ||
         hstore('not_in_cites', 'NC')
-        WHERE fully_covered <> 't';
+        WHERE fully_covered <> 't' OR (listing->'cites_listed')::BOOLEAN IS NULL;
 
         END;
       $$;
@@ -298,11 +302,11 @@ CREATE FUNCTION rebuild_descendant_listings() RETURNS void
 
             SELECT hi, hi.id, CASE
               WHEN
-                CAST(hi.listing -> 'cites_listing' AS VARCHAR) IS NOT NULL
-                OR hi.listing->'usr_cites_exclusion' = 't'
-                THEN hi.listing
-              WHEN  hi.listing IS NOT NULL THEN hi.listing || q.listing
-              ELSE q.listing
+                hi.listing -> 'cites_listed' ='t'
+                OR hi.listing->'cites_exclusion' = 't'
+                THEN hi.listing || hstore('cites_listing',hi.listing->'cites_listing_original')
+              ELSE hi.listing || (q.listing::hstore - ARRAY['cites_listed','cites_listing_original'])
+                || hstore('cites_listing',q.listing->'cites_listing_original')
             END
             FROM q
             JOIN taxon_concepts hi
@@ -313,13 +317,9 @@ CREATE FUNCTION rebuild_descendant_listings() RETURNS void
           CASE
             WHEN taxon_concepts.listing IS NULL THEN ''::hstore
             ELSE taxon_concepts.listing
-          END || q.listing ||
-          CASE
-            WHEN taxon_concepts.listing->'cites_listed' = 't' THEN ''::hstore
-            ELSE hstore('cites_listed', 'f')
-          END
+          END || q.listing
           FROM q
-          WHERE taxon_concepts.id = q.id AND taxon_concepts->'cites_listed' <> '';
+          WHERE taxon_concepts.id = q.id;
         END;
       $$;
 
@@ -343,12 +343,12 @@ CREATE FUNCTION rebuild_listings() RETURNS void
         UPDATE taxon_concepts
         SET listing = taxon_concepts.listing || qqq.listing ||
         CASE
-          WHEN qqq.listing -> 'cites_listing' > '' THEN hstore('cites_show', 't')
+          WHEN qqq.listing -> 'cites_listing_original' > '' THEN hstore('cites_show', 't')
           ELSE hstore('cites_show', 'f')
         END
         FROM (
           SELECT taxon_concept_id, listing ||
-          hstore('cites_listing', ARRAY_TO_STRING(
+          hstore('cites_listing_original', ARRAY_TO_STRING(
             -- unnest to filter out the nulls
             ARRAY(SELECT * FROM UNNEST(
               ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III']) s 
@@ -361,8 +361,7 @@ CREATE FUNCTION rebuild_listings() RETURNS void
               hstore('cites_I', CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
               hstore('cites_II', CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
               hstore('cites_III', CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END) ||
-              hstore('cites_del', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END) ||
-              hstore('cites_nc', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
+              hstore('cites_del', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
               AS listing
             FROM (
               SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type,
@@ -861,7 +860,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-07-25 13:37:28.482069'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-07-25 22:25:53.868369'::timestamp without time zone NOT NULL,
     notes text
 );
 

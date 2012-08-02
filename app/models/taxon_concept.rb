@@ -95,7 +95,6 @@ class TaxonConcept < ActiveRecord::Base
     :usr_cites_exclusion,#taxon is excluded from it's parent's listing
     :cites_exclusion,#taxon's ancestor is excluded from it's parent's listing
     :cites_del,#taxon has been deleted from appendices
-    :cites_nc,#TODO
     :cites_show#@taxon should be shown in checklist even if NC
   ].each do |attr_name|
     define_method(attr_name) { listing && listing[attr_name.to_s] == 't' }
