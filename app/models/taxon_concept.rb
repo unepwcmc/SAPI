@@ -137,8 +137,8 @@ class << self
     return scoped if appendix_abbreviations.empty?
     conds = []
     if appendix_abbreviations.include? 'nc'
-      conds << "(listing->'cites_del' = 't' OR listing->'not_in_cites'= 'NC')
-        AND listing->'cites_listing' = ''"
+      conds << "(listing->'cites_del' = 't' AND listing->'cites_listing' = ''
+        OR listing->'not_in_cites'= 'NC')"
     end
     (appendix_abbreviations - ['del','nc']).each do |abbr|
       conds << "listing->'cites_#{abbr}' = '#{abbr}'"
