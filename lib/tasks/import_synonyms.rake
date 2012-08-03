@@ -1,7 +1,7 @@
 namespace :import do
 
   desc 'Import synonyms from csv file [usage: rake import:synonyms[path/to/file,path/to/another]'
-  task :synonyms, 10.times.map { |i| "file_#{i}".to_sym } => [:environment,"import:species"] do |t, args|
+  task :synonyms, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     TMP_TABLE = 'synonym_import'
     puts "There are #{
       TaxonRelationship.
@@ -19,6 +19,28 @@ namespace :import do
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
+
+      #[BEGIN]copied over from import:species
+      db_columns = db_columns_from_csv_headers(file, TMP_TABLE, false)
+      import_data_for Rank::KINGDOM if db_columns.include? Rank::KINGDOM.capitalize
+      if db_columns.include?(Rank::PHYLUM.capitalize) && 
+        db_columns.include?(Rank::CLASS.capitalize) &&
+        db_columns.include?('TaxonOrder')
+        import_data_for Rank::PHYLUM, Rank::KINGDOM
+        import_data_for Rank::CLASS, Rank::PHYLUM
+        import_data_for Rank::ORDER, Rank::CLASS, 'TaxonOrder'
+      elsif db_columns.include?(Rank::CLASS.capitalize) && db_columns.include?('TaxonOrder')
+        import_data_for Rank::CLASS, Rank::KINGDOM
+        import_data_for Rank::ORDER, Rank::CLASS, 'TaxonOrder'
+      elsif db_columns.include? 'TaxonOrder'
+        import_data_for Rank::ORDER, Rank::KINGDOM, 'TaxonOrder'
+      end
+      import_data_for Rank::FAMILY, 'TaxonOrder', nil, Rank::ORDER
+      import_data_for Rank::GENUS, Rank::FAMILY
+      import_data_for Rank::SPECIES, Rank::GENUS
+      import_data_for Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra'
+      #[END]copied over from import:species
+
       sql = <<-SQL
         INSERT INTO taxon_relationships(taxon_relationship_type_id,
           taxon_concept_id, other_taxon_concept_id,
@@ -30,7 +52,7 @@ namespace :import do
           INNER JOIN taxon_concepts AS accepted
             ON accepted.legacy_id = #{TMP_TABLE}.accepted_species_id
           INNER JOIN taxon_concepts AS synonym
-            ON synonym.legacy_id = #{TMP_TABLE}.species_id
+            ON synonym.legacy_id = #{TMP_TABLE}.SpcRecId
           WHERE NOT EXISTS (
             SELECT * FROM taxon_relationships
             LEFT JOIN taxon_concepts AS accepted

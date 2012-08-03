@@ -133,7 +133,9 @@ class TaxonConcept < ActiveRecord::Base
 
   def synonyms
     if respond_to?(:synonyms_ary)
-      parse_pg_array(synonyms_ary || '').map{ |e| e.force_encoding('utf-8') }.join(', ')
+      parse_pg_array(synonyms_ary || '').compact.map do |e|
+        e.force_encoding('utf-8')
+      end.join(', ')
     else
       nil
     end
