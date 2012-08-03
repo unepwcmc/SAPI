@@ -32,6 +32,9 @@ describe TaxonConcept do
         it "should be I at subspecies level Cervus elaphus hanglu" do
           @subspecies3.current_listing.should == 'I'
         end
+        it "should be NC at subspecies level Cervus elaphus canadensis" do
+          @subspecies4.current_listing.should == 'NC'
+        end
       end
 
       describe :cites_listed do
@@ -55,6 +58,9 @@ describe TaxonConcept do
         end
         it "should be true for subspecies Cervus elaphus hanglu" do
           @subspecies3.cites_listed.should be_true
+        end
+        it "should be blank for subspecies Cervus elaphus canadensis" do
+          @subspecies4.cites_listed.should be_blank
         end
       end
 

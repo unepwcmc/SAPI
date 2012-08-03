@@ -5,8 +5,7 @@ class SpeciesListingsController < ApplicationController
       joins(:designation).
       where(:"designations.name" => params[:designation]).
       order(:abbreviation).all + [
-        {id: 0, abbreviation: 'nc'},
-        {id: 0, abbreviation: 'del'}
+        {id: 0, abbreviation: 'nc'}
       ]
   end
 end

@@ -6,24 +6,16 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
     LANGUAGE plpgsql
     AS $$
         BEGIN
-        UPDATE taxon_concepts
-        SET listing = hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC') || hstore('cites_show', 't')
-        WHERE not_in_cites = 't' OR fully_covered <> 't';
 
         UPDATE taxon_concepts
-        SET listing =
+        SET listing = taxon_concepts.listing || qqq.listing ||
         CASE
-          WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
-          ELSE ''::hstore
-        END
-        || qqq.listing || hstore('cites_listed', 't') ||
-        CASE
-          WHEN qqq.listing -> 'cites_listing' > '' THEN hstore('cites_show', 't')
+          WHEN qqq.listing -> 'cites_listing_original' > '' THEN hstore('cites_show', 't')
           ELSE hstore('cites_show', 'f')
         END
         FROM (
           SELECT taxon_concept_id, listing ||
-          hstore('cites_listing', ARRAY_TO_STRING(
+          hstore('cites_listing_original', ARRAY_TO_STRING(
             -- unnest to filter out the nulls
             ARRAY(SELECT * FROM UNNEST(
               ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III']) s 
@@ -36,8 +28,7 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
               hstore('cites_I', CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
               hstore('cites_II', CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
               hstore('cites_III', CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END) ||
-              hstore('cites_del', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END) ||
-              hstore('cites_nc', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
+              hstore('cites_del', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
               AS listing
             FROM (
               SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type,

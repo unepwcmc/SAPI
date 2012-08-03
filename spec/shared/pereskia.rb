@@ -15,7 +15,7 @@ shared_context "Pereskia" do
       :genus,
       :taxon_name => create(:taxon_name, :scientific_name => 'Pereskia'),
       :parent => @family,
-      :not_in_cites => true
+      :listing => {:usr_cites_exclusion => 't'}
     )
     @genus2 = create(
       :genus,

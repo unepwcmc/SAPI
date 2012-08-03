@@ -21,6 +21,39 @@ describe TaxonConcept do
         it "should be III at species level Sarcoramphus papa" do
           @species1_2.current_listing.should == 'III'
         end
+        it "should be blank at species level Vultur atratus" do
+          @species1_3.current_listing.should == 'NC'
+        end
+      end
+
+      describe :fully_covered do
+        it "should be false for family Cathartidae" do
+          @family1.fully_covered.should be_false
+        end
+        it "should be true for family Falconidae" do
+          @family2.fully_covered.should be_true
+        end
+      end
+
+      describe :usr_cites_exclusion do
+        it "should be false for species Falco alopex" do
+          @species2_2.usr_cites_exclusion.should be_false
+        end
+        it "should be true for genus Vultur" do
+          @genus1_3.usr_cites_exclusion.should be_true
+        end
+        it "should be false for genus Vultur atratus" do
+          @species1_3.usr_cites_exclusion.should be_false
+        end
+      end
+
+      describe :cites_exclusion do
+        it "should be true for genus Vultur" do
+          @genus1_3.cites_exclusion.should be_true
+        end
+        it "should be true for species Vultur atratus" do
+          @species1_3.cites_exclusion.should be_true
+        end
       end
 
       describe :cites_listed do
@@ -39,6 +72,9 @@ describe TaxonConcept do
         end
         it "should be false for species Falco alopex" do
           @species2_2.cites_listed.should be_false
+        end
+        it "should be blank for species Vultur atratus" do
+          @species1_3.cites_listed.should be_blank
         end
       end
 

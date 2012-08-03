@@ -197,6 +197,6 @@ It makes sense to try to infer that. However, data incompleteness in the first c
 
 ==== Filtering taxa by their listing information ====
 1. taxa listed in any of the 3 CITES appendices (both implicitly or explicitly) will have listing->'cites_X' and listing->'cites_listing' set
-2. taxa previously listed but then deleted from appendices will have listing->'cites_del' set to true and listing->'cites_listing' blank
-3. taxa listed as NC (e.g. Aloe vera, Pereskia spp.) will have not_in_cites set to true and listing->'cites_listing' blank
+2. taxa previously listed but then deleted from appendices will have listing->'cites_del' set to true and listing->'cites_listing' blank while listing->'cites_listed' is still set
+3. taxa listed as NC (e.g. Aloe vera, Pereskia spp.) will have listing->'usr_cites_exclusion' set to true and listing->'cites_listing' blank
 4. taxa that have never been listed will have listing->'cites_listing' blank

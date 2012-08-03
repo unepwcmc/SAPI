@@ -28,6 +28,11 @@ shared_context "Caiman latirostris" do
       :iso_code2 => 'AR'
     )
     create(
+      :cites_II_addition,
+      :taxon_concept => @order,
+      :effective_at => '1977-02-04'
+    )
+    create(
      :cites_I_addition,
      :taxon_concept => @species,
      :effective_at => '1975-07-01'
@@ -42,11 +47,6 @@ shared_context "Caiman latirostris" do
       :geo_entity => argentina,
       :listing_change => l1,
       :is_party => false
-    )
-    create(
-     :cites_II_addition,
-     :taxon_concept => @family,
-     :effective_at => '1977-02-04'
     )
 
     Sapi::fix_listing_changes

@@ -32,6 +32,18 @@ shared_context "Falconiformes" do
       :taxon_name => create(:taxon_name, :scientific_name => 'Papa'),
       :parent => @genus1_2
     )
+    #this one is not listed
+    @genus1_3 = create(
+      :genus,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Vultur'),
+      :parent => @family1,
+      :listing => {:usr_cites_exclusion => 't'}
+    )
+    @species1_3 = create(
+      :species,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Atratus'),
+      :parent => @genus1_3
+    )
     @family2 = create(
       :family,
       :taxon_name => create(:taxon_name, :scientific_name => 'Falconidae'),

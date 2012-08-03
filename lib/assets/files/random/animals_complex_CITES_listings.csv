@@ -74,10 +74,10 @@ SpcRecID, LegListing, LegDateListed, CountryRecID, LegNotes
 849, II/r, 1981-06-06,203, NULL
 849, II/w, 1987-03-20,122, NULL
 849, II/w, 1987-03-20,203, NULL
-866, I/r, 1976-10-31,221,"On behalf of HK"
-866, I/w, 1978-07-03,221,"On behalf of HK"
-867, I/r, 1976-10-31,221,"On behalf of HK"
-867, I/w, 1978-07-03,221,"On behalf of HK"
+866, I/r, 1976-10-31,221,On behalf of HK
+866, I/w, 1978-07-03,221,On behalf of HK
+867, I/r, 1976-10-31,221,On behalf of HK
+867, I/w, 1978-07-03,221,On behalf of HK
 901, III/r, 1977-10-24,57, NULL
 901, III/w, 1984-01-01,57, NULL
 901, III, 1976-02-26,82, Originally listed as Anatidae spp.
@@ -353,8 +353,8 @@ SpcRecID, LegListing, LegDateListed, CountryRecID, LegNotes
 2475, II/r, 1977-02-04,194, NULL
 2475, II/w, 1979-06-28,38, Reservation withdrawn as species transferred from II to I
 2475, II/w, 1979-06-28,194, Reservation withdrawn as species transferred from II to I
-2475, I/r, 1981-06-06,107,"Reservation not applicable to stocks (A) in North Pacific and (B) in area 0 longitude to 70 east longitude from the equator to the Antarctic continent"
-2475, I/r, 1981-06-06,159,"Reservation not applicable to stocks (A) in North Pacific and (B) in area 0 longitude from the equator to the Antarctic continent"
+2475, I/r, 1981-06-06,107,Reservation not applicable to stocks (A) in North Pacific and (B) in area 0 longitude to 70 east longitude from the equator to the Antarctic continent
+2475, I/r, 1981-06-06,159,Reservation not applicable to stocks (A) in North Pacific and (B) in area 0 longitude from the equator to the Antarctic continent
 2475, I/r, 1977-02-04,13, NULL
 2475, I/r, 1977-02-04,38, NULL
 2475, I/r, 1977-02-04,241, NULL
@@ -377,7 +377,7 @@ SpcRecID, LegListing, LegDateListed, CountryRecID, LegNotes
 2477, I/w, 1978-08-11,38, NULL
 2478, I/r, 1977-02-04,13, NULL
 2478, I/r, 1977-02-04,38, NULL
-2478, I/r, 1980-11-04,107,"Stocks in N. Atlantic off Iceland and off Newfoundland; stock in area from 40S to the Antarctic continent form 120W to 60W"
+2478, I/r, 1980-11-04,107,Stocks in N. Atlantic off Iceland and off Newfoundland; stock in area from 40S to the Antarctic continent form 120W to 60W
 2478, I/r, 1977-02-04,241, NULL
 2478, I/r, 1977-02-04,194, NULL
 2478, I/w, 1981-08-27,13, NULL
@@ -970,7 +970,7 @@ SpcRecID, LegListing, LegDateListed, CountryRecID, LegNotes
 5685, III, 1987-04-13,95, NULL
 5792, III, 1976-04-22,213, NULL
 5984, II/r, 1981-06-06,203, NULL
-5984, II/r, 1981-06-06,122,"Reservation not applicable to C. p. bloxami"
+5984, II/r, 1981-06-06,122,Reservation not applicable to C. p. bloxami
 5985, II/r, 1979-06-28,203, NULL
 5993, II/r, 1981-06-06,122, NULL
 5993, II/r, 1981-06-06,203, NULL
@@ -1389,7 +1389,7 @@ SpcRecID, LegListing, LegDateListed, CountryRecID, LegNotes
 1059, II, 1981-06-06, NULL, NULL
 1060, II, 1981-06-06, NULL, Listed under PSITTACIFORMES spp.
 1060, II, 2003-02-13, NULL, Except subspecies listed in App. I
-1060, II, 2007-09-13, NULL,"Taxonomic change adopted at CoP14 means that _A. auropalliata_ and _A. oratrix_ (and their constituent subspecies) are no longer included in this species."
+1060, II, 2007-09-13, NULL,Taxonomic change adopted at CoP14 means that _A. auropalliata_ and _A. oratrix_ (and their constituent subspecies) are no longer included in this species.
 1061, I, 2003-02-13, NULL, NULL
 1061, II, 1981-06-06, NULL, NULL
 1062, I, 1975-07-01, NULL, NULL
@@ -1464,11 +1464,11 @@ SpcRecID, LegListing, LegDateListed, CountryRecID, LegNotes
 1632, II, 1987-10-22, NULL, NULL
 1677, I, 1992-06-11, NULL, Popn of MX (note that the US popn is now excluded from CITES controls)
 1678, II, 1975-07-01, NULL, All popns
-1678, I, 1992-06-11, NULL,"Popn of MX; included with A. americana; no other population is included in the Appendices"
-1679, I, 1992-06-11, NULL,"Popn of MX; included with A. americana; no other population is included in the Appendices"
+1678, I, 1992-06-11, NULL,Popn of MX; included with A. americana; no other population is included in the Appendices
+1679, I, 1992-06-11, NULL,Popn of MX; included with A. americana; no other population is included in the Appendices
 1679, I, 1975-07-01, NULL, All popns
 1680, I, 1975-07-01, NULL, NULL
-1680, I, 1992-06-11, NULL,"Popn of MX; included with A. americana; no other population is included in the Appendices"
+1680, I, 1992-06-11, NULL,Popn of MX; included with A. americana; no other population is included in the Appendices
 1682, II, 1981-06-06, NULL, NULL
 1683, II, 1981-06-06, NULL, NULL
 1684, II, 1981-06-06, NULL, NULL
@@ -1714,8 +1714,8 @@ SpcRecID, LegListing, LegDateListed, CountryRecID, LegNotes
 2276, II, 1977-02-04, NULL, NULL
 2277, II, 1977-02-04, NULL, NULL
 2278, II, 1977-02-04, NULL, NULL
-2279, II, 1977-02-04, NULL,"Except A.g. frontatus and A.g. panamensis which are listed on I"
-2279, I, 1975-07-01, NULL,"A. g. frontatus and A. g. panamensis only"
+2279, II, 1977-02-04, NULL,Except A.g. frontatus and A.g. panamensis which are listed on I
+2279, I, 1975-07-01, NULL,A. g. frontatus and A. g. panamensis only
 2280, I, 1975-07-01, NULL, NULL
 2281, I, 1975-07-01, NULL, NULL
 2282, II, 1977-02-04, NULL, NULL
@@ -1852,7 +1852,6 @@ SpcRecID, LegListing, LegDateListed, CountryRecID, LegNotes
 2831, II, 1990-01-18, NULL, NULL
 2833, II, 1990-01-18, NULL, NULL
 2836, II, 1977-02-04, NULL, Included with Boidae spp.
-2836, I, 1987-10-22, NULL, B. c. occidentalis only
 2836, II, 1975-07-01, NULL, NULL
 2837, I, 1987-10-22, NULL, NULL
 2837, II, 1977-02-04, NULL, Listed under Boidae spp.
@@ -1867,8 +1866,8 @@ SpcRecID, LegListing, LegDateListed, CountryRecID, LegNotes
 2856, II, 1981-06-06, NULL, NULL
 2864, I, 1977-02-04, NULL, NULL
 2876, II, 1990-01-18, NULL, NULL
-2887, I, 1975-07-01, NULL,"Excludes the domestic form of Bos gaurus referenced as Bos frontalis (see CITES Doc. 11.11.4.2)"
-2889, I, 1975-07-01, NULL,"Excludes the domestic form of Bos mutus referenced as Bos grunniens (see CITES Doc. 11.11.4.2)"
+2887, I, 1975-07-01, NULL,Excludes the domestic form of Bos gaurus referenced as Bos frontalis (see CITES Doc. 11.11.4.2)
+2889, I, 1975-07-01, NULL,Excludes the domestic form of Bos mutus referenced as Bos grunniens (see CITES Doc. 11.11.4.2)
 2890, I, 1975-07-01, NULL, NULL
 2916, Deleted, 2002-12-15, NULL, NULL
 2918, Deleted, 2002-12-15, NULL, NULL
@@ -1889,7 +1888,7 @@ SpcRecID, LegListing, LegDateListed, CountryRecID, LegNotes
 2975, II, 1995-02-16, NULL, NULL
 2976, II, 1995-02-16, NULL, NULL
 2977, II, 1985-08-01, NULL, NULL
-2977, II, 1995-02-16, NULL,"Included with Brachypelma spp."
+2977, II, 1995-02-16, NULL,Included with Brachypelma spp.
 2978, II, 1995-02-16, NULL, NULL
 2980, II, 1995-02-16, NULL, NULL
 2993, I, 1975-07-01, NULL, NULL

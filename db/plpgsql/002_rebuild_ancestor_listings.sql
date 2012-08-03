@@ -50,6 +50,7 @@ CREATE OR REPLACE FUNCTION rebuild_ancestor_listings() RETURNS void
             END || qq.listing
           FROM qq
           WHERE taxon_concepts.id = qq.id;
+
         END;
       $$;
 

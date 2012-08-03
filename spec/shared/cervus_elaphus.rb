@@ -36,6 +36,11 @@ shared_context "Cervus elaphus" do
       :taxon_name => create(:taxon_name, :scientific_name => 'Hanglu'),
       :parent => @species
     )
+    @subspecies4 = create(
+      :subspecies,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Canadensis'),
+      :parent => @species
+    )
 
     create(
      :cites_II_addition,

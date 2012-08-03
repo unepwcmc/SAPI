@@ -16,7 +16,6 @@
 #  inherit_distribution :boolean          default(TRUE), not null
 #  inherit_references   :boolean          default(TRUE), not null
 #  data                 :hstore
-#  not_in_cites         :boolean          default(FALSE), not null
 #  fully_covered        :boolean          default(TRUE), not null
 #  listing              :hstore
 #
@@ -24,7 +23,7 @@
 class TaxonConcept < ActiveRecord::Base
   include PgArrayParser
   attr_accessible :lft, :parent_id, :rgt, :rank_id, :parent_id,
-    :designation_id, :taxon_name_id, :not_in_cites, :fully_covered,
+    :designation_id, :taxon_name_id, :fully_covered,
     :data
   attr_accessor :listing_history
   serialize :data, ActiveRecord::Coders::Hstore
@@ -106,21 +105,15 @@ class TaxonConcept < ActiveRecord::Base
     define_method(attr_name) { data && data[attr_name.to_s] }
   end
 
-  #this means the taxon is listed explicitly
-  def cites_listed
-    listing && listing['cites_listed'] == 't'
-  end
-
-  def cites_nc
-    listing && listing['cites_nc'] == 't'
-  end
-
-  def cites_del
-    listing && listing['cites_del'] == 't'
-  end
-
-  def cites_show
-    listing && listing['cites_show'] == 't'
+  #here go the CITES listing flags
+  [
+    :cites_listed,#taxon is listed explicitly
+    :usr_cites_exclusion,#taxon is excluded from it's parent's listing
+    :cites_exclusion,#taxon's ancestor is excluded from it's parent's listing
+    :cites_del,#taxon has been deleted from appendices
+    :cites_show#@taxon should be shown in checklist even if NC
+  ].each do |attr_name|
+    define_method(attr_name) { listing && listing[attr_name.to_s] == 't' }
   end
 
   def current_listing
@@ -168,11 +161,9 @@ class << self
   def by_cites_appendices(appendix_abbreviations)
     return scoped if appendix_abbreviations.empty?
     conds = []
-    if appendix_abbreviations.include? 'del'
-      conds << "listing->'cites_del' = 't'"
-    end
     if appendix_abbreviations.include? 'nc'
-      conds << "listing->'cites_listing'= ''"
+      conds << "(listing->'cites_del' = 't' AND listing->'cites_listing' = ''
+        OR listing->'not_in_cites'= 'NC')"
     end
     (appendix_abbreviations - ['del','nc']).each do |abbr|
       conds << "listing->'cites_#{abbr}' = '#{abbr}'"
