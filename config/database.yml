@@ -21,4 +21,3 @@ test:
   username: postgres
   password: postgres
   timeout: 5000
-

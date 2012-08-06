@@ -14,6 +14,9 @@ gem 'awesome_nested_set'
 gem 'foreigner'
 gem 'prawn'
 
+# Link to MSSQL Server 2008
+gem 'tiny_tds'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

@@ -5,28 +5,29 @@ namespace :import do
   ## So:
   ### 1- check current character encoding with: file path/to/file
   ### 2- change character encoding: iconv -f original_charset -t utf-8 originalfile > newfile
-  desc 'Import countries from csv file [usage: rake import:countries[path/to/file,path/to/another]'
-  task :countries, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  desc 'Import countries'
+  task :countries => [:environment] do
     TMP_TABLE = 'countries_import'
     country_type = GeoEntityType.find_by_name(GeoEntityType::COUNTRY)
     puts "There are #{GeoEntity.count(conditions: {geo_entity_type_id: country_type.id})} countries in the database."
-    files = files_from_args(t, args)
-    files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
-      sql = <<-SQL
-        INSERT INTO geo_entities(name, iso_code2, iso_code3, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at)
-        SELECT DISTINCT INITCAP(BTRIM(TMP.name)), INITCAP(BTRIM(TMP.iso2)), INITCAP(BTRIM(TMP.iso3)), #{country_type.id}, TMP.legacy_id, '#{GeoEntityType::COUNTRY}', current_date, current_date
+    drop_table(TMP_TABLE)
+    create_table(TMP_TABLE)
+    query = <<-SQL
+      SELECT [CtyRecID] AS old_id, [CtyISO2], [CtyISO3], [CtyShort] AS name, [CtyLong], NULL
+      FROM [Animals].[dbo].[Country];
+    SQL
+    copy_data(TMP_TABLE, query)
+    sql = <<-SQL
+        INSERT INTO geo_entities(name, iso_code2, iso_code3, long_name, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at)
+        SELECT DISTINCT INITCAP(BTRIM(TMP.name)), INITCAP(BTRIM(TMP.iso2)), INITCAP(BTRIM(TMP.iso3)), INITCAP(BTRIM(TMP.long_name)), #{country_type.id}, TMP.legacy_id, '#{GeoEntityType::COUNTRY}', current_date, current_date
         FROM #{TMP_TABLE} AS TMP
         WHERE NOT EXISTS (
           SELECT * FROM geo_entities
           WHERE legacy_id = TMP.legacy_id AND legacy_type = '#{GeoEntityType::COUNTRY}'
         );
-      SQL
-      ActiveRecord::Base.connection.execute(sql)
-      link_countries()
-    end
+    SQL
+    ActiveRecord::Base.connection.execute(sql)
+    #link_countries()
     puts "There are now #{GeoEntity.count(conditions: {geo_entity_type_id: country_type.id})} countries in the database"
   end
 
