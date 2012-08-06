@@ -12,7 +12,7 @@ describe Checklist do
       @taxon_concepts = @checklist.taxon_concepts_rel
     end
 
-    it "should return Alligator cynocephalus for Caiman latirostris" do
+    it "should return Alligator cynocephalus as synonym for Caiman latirostris" do
       @caiman_latirostris = @taxon_concepts.select{ |e| e.full_name == @species.full_name }.first
       @caiman_latirostris.synonyms.should == 'Alligator cynocephalus'
     end
