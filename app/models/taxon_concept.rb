@@ -124,7 +124,9 @@ class TaxonConcept < ActiveRecord::Base
     define_method(lng.downcase) do
       sym = :"lng_#{lng[0].downcase}"
       if respond_to?(sym)
-        parse_pg_array(send(sym) || '').map{ |e| e.force_encoding('utf-8') }.join(', ')
+        parse_pg_array(send(sym) || '').map do |e|
+          e.force_encoding('utf-8')
+        end.join(', ')
       else
         nil
       end
