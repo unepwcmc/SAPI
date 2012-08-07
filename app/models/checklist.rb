@@ -16,6 +16,7 @@ class Checklist
     unless @geo_options.empty?
       @taxon_concepts_rel = @taxon_concepts_rel.by_geo_entities(@geo_options)
     end
+
     #filter by species listing
     unless options[:cites_appendices].nil?
       @taxon_concepts_rel = @taxon_concepts_rel.by_cites_appendices(options[:cites_appendices])
@@ -38,6 +39,19 @@ class Checklist
     end.order("data->'kingdom_name'")#animalia first
     #include common names?
     @taxon_concepts_rel = @taxon_concepts_rel.with_common_names
+
+    #filter by scientific name
+    unless options[:scientific_name].nil?
+      @taxon_concepts_rel = @taxon_concepts_rel.joins(
+        <<-SQL
+        INNER JOIN (
+          SELECT t, t.id, data->'full_name' AS full_name
+          FROM taxon_concepts t
+          WHERE data->'full_name' LIKE '%#{options[:scientific_name]}%'
+        ) result ON taxon_concepts.data->'full_name' = result.full_name
+        SQL
+      )
+    end
   end
 
   def generate(page, per_page)
