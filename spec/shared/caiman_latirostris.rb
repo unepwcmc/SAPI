@@ -1,3 +1,4 @@
+#Encoding: utf-8
 shared_context "Caiman latirostris" do
   before(:all) do
     @klass = TaxonConcept.find_by_taxon_name_id(TaxonName.find_by_scientific_name('Reptilia').id)
@@ -37,6 +38,15 @@ shared_context "Caiman latirostris" do
       :taxon_concept => @species,
       :other_taxon_concept => @species1
     )
+
+    ref = create(
+      :cites_reference,
+      :title => 'Schildkröte, Krokodile, Brückenechsen',
+      :author => 'Wermuth, H. & Mertens, R.',
+      :year => 1996
+    )
+
+    @species.references << ref
 
     argentina = create(
       :country,
