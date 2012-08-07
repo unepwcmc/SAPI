@@ -57,6 +57,7 @@ class Checklist
         ) result ON taxon_concepts.data->'full_name' = result.full_name
         SQL
       )
+    end
   end
 
   def generate(page, per_page)
