@@ -48,13 +48,27 @@ class Checklist
 
     #filter by scientific name
     unless options[:scientific_name].nil?
-      @taxon_concepts_rel = @taxon_concepts_rel.joins(
+      @taxon_concepts_prev = @taxon_concepts_rel
+
+      @taxon_concepts_rel = @taxon_concepts_rel.where("data->'full_name' LIKE '%#{options[:scientific_name]}%'")
+      ids = @taxon_concepts_rel.map { |hash| hash.id }.join(', ')
+
+      @taxon_concepts_rel = @taxon_concepts_prev.joins(
         <<-SQL
         INNER JOIN (
-          SELECT t, t.id, data->'full_name' AS full_name
-          FROM taxon_concepts t
-          WHERE data->'full_name' LIKE '%#{options[:scientific_name]}%'
-        ) result ON taxon_concepts.data->'full_name' = result.full_name
+          WITH RECURSIVE q AS (
+            SELECT h, h.id, data->'full_name' AS full_name
+            FROM taxon_concepts h
+            WHERE id IN (#{ids})
+
+            UNION ALL
+
+            SELECT hi, hi.id, data->'full_name'
+            FROM q
+            JOIN taxon_concepts hi
+            ON hi.parent_id = (q.h).id
+          ) SELECT id, full_name FROM q
+        ) descendants ON taxon_concepts.id = descendants.id
         SQL
       )
     end
