@@ -36,9 +36,14 @@ class Checklist
     else
       @taxon_concepts_rel.alphabetical_layout
     end.order("taxon_concepts.data->'kingdom_name'")#animalia first
-    #TODO include common names?
-    #TODO include synonyms?
-    @taxon_concepts_rel = @taxon_concepts_rel.with_synonyms.with_common_names
+    #show synonyms?
+    unless options[:synonyms].nil?
+      @taxon_concepts_rel = @taxon_concepts_rel.with_synonyms
+    end
+    #show common names?
+    unless options[:common_names].nil?
+      @taxon_concepts_rel = @taxon_concepts_rel.with_common_names(options[:common_names])
+    end
   end
 
   def generate(page, per_page)

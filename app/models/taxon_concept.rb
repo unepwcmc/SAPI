@@ -50,7 +50,8 @@ class TaxonConcept < ActiveRecord::Base
       [Rank::CLASS, Rank::PHYLUM, Rank::KINGDOM]
     ).
     order("taxon_concepts.data -> 'full_name'")
-  scope :with_common_names, select(['E', 'S', 'F'].map do |lng|
+  scope :with_common_names, lambda { |lng_ary|
+      select(lng_ary.map do |lng|
         "lng_#{lng.downcase}"
       end).
       joins(
@@ -78,6 +79,7 @@ class TaxonConcept < ActiveRecord::Base
         ) common_names ON taxon_concepts.id = common_names.taxon_concept_id_cn
         SQL
       )
+  }
   scope :with_synonyms, select(:synonyms_ary).
     joins(
       <<-SQL

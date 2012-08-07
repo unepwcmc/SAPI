@@ -45,7 +45,12 @@ class TaxonConceptsController < ApplicationController
       :output_layout =>
         params[:output_layout] ? params[:output_layout].to_sym : nil,
       :common_names =>
-        params[:common_names] ? params[:common_names] : ['E','F','S']
+        [
+          (params[:show_english] ? 'E' : nil),
+          (params[:show_spanish] ? 'S' : nil),
+          (params[:show_french] ? 'F' : nil)
+        ].compact,
+      :synonyms => params[:show_synonyms]
     }
   end
 
