@@ -173,6 +173,7 @@ CREATE FUNCTION rebuild_ancestor_listings() RETURNS void
             END || qq.listing
           FROM qq
           WHERE taxon_concepts.id = qq.id;
+
         END;
       $$;
 
@@ -298,11 +299,11 @@ CREATE FUNCTION rebuild_descendant_listings() RETURNS void
 
             SELECT hi, hi.id, CASE
               WHEN
-                CAST(hi.listing -> 'cites_listing' AS VARCHAR) IS NOT NULL
-                OR hi.not_in_cites = 't'
-                THEN hi.listing
-              WHEN  hi.listing IS NOT NULL THEN hi.listing || q.listing
-              ELSE q.listing
+                hi.listing -> 'cites_listed' ='t'
+                OR hi.listing->'cites_exclusion' = 't'
+                THEN hi.listing || hstore('cites_listing',hi.listing->'cites_listing_original')
+              ELSE hi.listing || (q.listing::hstore - ARRAY['cites_listed','cites_listing_original'])
+                || hstore('cites_listing',q.listing->'cites_listing_original')
             END
             FROM q
             JOIN taxon_concepts hi
@@ -313,11 +314,7 @@ CREATE FUNCTION rebuild_descendant_listings() RETURNS void
           CASE
             WHEN taxon_concepts.listing IS NULL THEN ''::hstore
             ELSE taxon_concepts.listing
-          END || q.listing ||
-          CASE
-            WHEN taxon_concepts.listing->'cites_listed' = 't' THEN ''::hstore
-            ELSE hstore('cites_listed', 'f')
-          END
+          END || q.listing
           FROM q
           WHERE taxon_concepts.id = q.id;
         END;
@@ -339,24 +336,16 @@ CREATE FUNCTION rebuild_listings() RETURNS void
     LANGUAGE plpgsql
     AS $$
         BEGIN
-        UPDATE taxon_concepts
-        SET listing = hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC') || hstore('cites_show', 't')
-        WHERE not_in_cites = 't' OR fully_covered <> 't';
 
         UPDATE taxon_concepts
-        SET listing =
+        SET listing = taxon_concepts.listing || qqq.listing ||
         CASE
-          WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
-          ELSE ''::hstore
-        END
-        || qqq.listing || hstore('cites_listed', 't') ||
-        CASE
-          WHEN qqq.listing -> 'cites_listing' > '' THEN hstore('cites_show', 't')
+          WHEN qqq.listing -> 'cites_listing_original' > '' THEN hstore('cites_show', 't')
           ELSE hstore('cites_show', 'f')
         END
         FROM (
           SELECT taxon_concept_id, listing ||
-          hstore('cites_listing', ARRAY_TO_STRING(
+          hstore('cites_listing_original', ARRAY_TO_STRING(
             -- unnest to filter out the nulls
             ARRAY(SELECT * FROM UNNEST(
               ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III']) s 
@@ -369,8 +358,7 @@ CREATE FUNCTION rebuild_listings() RETURNS void
               hstore('cites_I', CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
               hstore('cites_II', CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
               hstore('cites_III', CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END) ||
-              hstore('cites_del', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END) ||
-              hstore('cites_nc', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
+              hstore('cites_del', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
               AS listing
             FROM (
               SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type,
@@ -538,6 +526,7 @@ CREATE FUNCTION sapi_rebuild() RETURNS void
           PERFORM rebuild_names_and_ranks();
           --RAISE NOTICE 'taxonomic positions';
           PERFORM rebuild_taxonomic_positions();
+          PERFORM rebuild_cites_listed_flags();
           --RAISE NOTICE 'listings';
           PERFORM rebuild_listings();
           --RAISE NOTICE 'descendant listings';
@@ -558,39 +547,6 @@ COMMENT ON FUNCTION sapi_rebuild() IS 'Procedure to rebuild computed fields in t
 SET default_tablespace = '';
 
 SET default_with_oids = false;
-
---
--- Name: authors; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE authors (
-    id integer NOT NULL,
-    first_name character varying(255),
-    middle_name character varying(255),
-    last_name character varying(255) NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: authors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE authors_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: authors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE authors_id_seq OWNED BY authors.id;
-
 
 --
 -- Name: change_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -711,8 +667,7 @@ CREATE TABLE countries_import (
 CREATE TABLE designation_references (
     id integer NOT NULL,
     designation_id integer NOT NULL,
-    reference_id integer NOT NULL,
-    is_standard boolean DEFAULT false NOT NULL
+    reference_id integer NOT NULL
 );
 
 
@@ -1088,7 +1043,8 @@ CREATE TABLE "references" (
     title character varying(255) NOT NULL,
     year character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    author character varying(255)
 );
 
 
@@ -1180,7 +1136,7 @@ CREATE TABLE synonym_import (
     genus character varying,
     species character varying,
     spcinfra character varying,
-    species_id integer,
+    spcrecid integer,
     spcstatus character varying,
     accepted_species_id integer
 );
@@ -1248,6 +1204,67 @@ CREATE SEQUENCE taxon_concept_geo_entities_id_seq
 --
 
 ALTER SEQUENCE taxon_concept_geo_entities_id_seq OWNED BY taxon_concept_geo_entities.id;
+
+
+--
+-- Name: taxon_concept_geo_entity_references; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE taxon_concept_geo_entity_references (
+    id integer NOT NULL,
+    taxon_concept_geo_entity_id integer,
+    reference_id integer
+);
+
+
+--
+-- Name: taxon_concept_geo_entity_references_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE taxon_concept_geo_entity_references_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: taxon_concept_geo_entity_references_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE taxon_concept_geo_entity_references_id_seq OWNED BY taxon_concept_geo_entity_references.id;
+
+
+--
+-- Name: taxon_concept_references; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE taxon_concept_references (
+    id integer NOT NULL,
+    taxon_concept_id integer NOT NULL,
+    reference_id integer NOT NULL,
+    is_author boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: taxon_concept_references_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE taxon_concept_references_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: taxon_concept_references_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE taxon_concept_references_id_seq OWNED BY taxon_concept_references.id;
 
 
 --
@@ -1326,39 +1343,6 @@ ALTER SEQUENCE taxon_names_id_seq OWNED BY taxon_names.id;
 
 
 --
--- Name: taxon_references; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE taxon_references (
-    id integer NOT NULL,
-    referenceable_id integer,
-    referenceable_type character varying(255) DEFAULT 'Taxon'::character varying NOT NULL,
-    reference_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: taxon_references_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE taxon_references_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: taxon_references_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE taxon_references_id_seq OWNED BY taxon_references.id;
-
-
---
 -- Name: taxon_relationship_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1420,13 +1404,6 @@ CREATE SEQUENCE taxon_relationships_id_seq
 --
 
 ALTER SEQUENCE taxon_relationships_id_seq OWNED BY taxon_relationships.id;
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY authors ALTER COLUMN id SET DEFAULT nextval('authors_id_seq'::regclass);
 
 
 --
@@ -1552,6 +1529,20 @@ ALTER TABLE ONLY taxon_concept_geo_entities ALTER COLUMN id SET DEFAULT nextval(
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY taxon_concept_geo_entity_references ALTER COLUMN id SET DEFAULT nextval('taxon_concept_geo_entity_references_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY taxon_concept_references ALTER COLUMN id SET DEFAULT nextval('taxon_concept_references_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY taxon_concepts ALTER COLUMN id SET DEFAULT nextval('taxon_concepts_id_seq'::regclass);
 
 
@@ -1566,13 +1557,6 @@ ALTER TABLE ONLY taxon_names ALTER COLUMN id SET DEFAULT nextval('taxon_names_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY taxon_references ALTER COLUMN id SET DEFAULT nextval('taxon_references_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY taxon_relationship_types ALTER COLUMN id SET DEFAULT nextval('taxon_relationship_types_id_seq'::regclass);
 
 
@@ -1581,14 +1565,6 @@ ALTER TABLE ONLY taxon_relationship_types ALTER COLUMN id SET DEFAULT nextval('t
 --
 
 ALTER TABLE ONLY taxon_relationships ALTER COLUMN id SET DEFAULT nextval('taxon_relationships_id_seq'::regclass);
-
-
---
--- Name: authors_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY authors
-    ADD CONSTRAINT authors_pkey PRIMARY KEY (id);
 
 
 --
@@ -1728,6 +1704,22 @@ ALTER TABLE ONLY taxon_concept_geo_entities
 
 
 --
+-- Name: taxon_concept_geo_entity_references_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY taxon_concept_geo_entity_references
+    ADD CONSTRAINT taxon_concept_geo_entity_references_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: taxon_concept_references_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY taxon_concept_references
+    ADD CONSTRAINT taxon_concept_references_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: taxon_concepts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1741,14 +1733,6 @@ ALTER TABLE ONLY taxon_concepts
 
 ALTER TABLE ONLY taxon_names
     ADD CONSTRAINT taxon_names_pkey PRIMARY KEY (id);
-
-
---
--- Name: taxon_references_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY taxon_references
-    ADD CONSTRAINT taxon_references_pkey PRIMARY KEY (id);
 
 
 --
@@ -1957,6 +1941,38 @@ ALTER TABLE ONLY taxon_concept_geo_entities
 
 
 --
+-- Name: taxon_concept_geo_entity_references_reference_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY taxon_concept_geo_entity_references
+    ADD CONSTRAINT taxon_concept_geo_entity_references_reference_id_fk FOREIGN KEY (reference_id) REFERENCES "references"(id);
+
+
+--
+-- Name: taxon_concept_geo_entity_references_taxon_concept_geo_entity_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY taxon_concept_geo_entity_references
+    ADD CONSTRAINT taxon_concept_geo_entity_references_taxon_concept_geo_entity_fk FOREIGN KEY (taxon_concept_geo_entity_id) REFERENCES taxon_concept_geo_entities(id);
+
+
+--
+-- Name: taxon_concept_references_reference_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY taxon_concept_references
+    ADD CONSTRAINT taxon_concept_references_reference_id_fk FOREIGN KEY (reference_id) REFERENCES "references"(id);
+
+
+--
+-- Name: taxon_concept_references_taxon_concepts_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY taxon_concept_references
+    ADD CONSTRAINT taxon_concept_references_taxon_concepts_id_fk FOREIGN KEY (taxon_concept_id) REFERENCES taxon_concepts(id);
+
+
+--
 -- Name: taxon_concepts_designation_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2135,3 +2151,15 @@ INSERT INTO schema_migrations (version) VALUES ('20120725132210');
 INSERT INTO schema_migrations (version) VALUES ('20120727144007');
 
 INSERT INTO schema_migrations (version) VALUES ('20120801134301');
+
+INSERT INTO schema_migrations (version) VALUES ('20120807105444');
+
+INSERT INTO schema_migrations (version) VALUES ('20120807115736');
+
+INSERT INTO schema_migrations (version) VALUES ('20120807115924');
+
+INSERT INTO schema_migrations (version) VALUES ('20120807120807');
+
+INSERT INTO schema_migrations (version) VALUES ('20120807121035');
+
+INSERT INTO schema_migrations (version) VALUES ('20120807122112');
