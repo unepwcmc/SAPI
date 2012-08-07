@@ -3,53 +3,9 @@ require 'csv'
 # TinyTds::Client.new(:username => 'sapi', :password => 'conserveworld', :host => 'wcmc-gis-01.unep-wcmc.org', :port => 1539, :database => 'Animals')
 
 MAPPING = {
-    'species_import' => {
-      'Kingdom' => 'Kingdom varchar',
-      'PhyName' => 'Phylum varchar',
-      'ClaName' => 'Class varchar',
-      'OrdName' => 'TaxonOrder varchar',
-      'FamName' => 'Family varchar',
-      'GenName' => 'Genus varchar',
-      'SpcName' => 'Species varchar',
-      'SpcInfraRank' => 'SpcInfraRank varchar',
-      'SpcInfraEpithet' => 'SpcInfra varchar',
-      'SpcRecID' => 'SpcRecId integer',
-      'SpcStatus' => 'SpcStatus varchar'
-  },
-    'cites_listings_import' => {
-      'SpcRecID' => 'spc_rec_id integer',
-      'LegListing' => 'appendix varchar',
-      'LegDateListed' => 'listing_date date',
-      'CountryRecID' => 'country_legacy_id varchar',
-      'CtyRecID' => 'country_legacy_id varchar',
-      'LegNotes' => 'notes varchar'
-  },
-    'distribution_import' => {
-      'SpcRecID' => 'species_id integer',
-      'CtyRecID' => 'country_id integer',
-      'CtyShort' => 'country_name varchar'
-  },
-    'common_name_import' => {
-      'ComName' => 'common_name varchar',
-      'LanDesc' => 'language_name varchar',
-      'SpcRecID' => 'species_id integer'
-    },
-    'synonym_import' => {
-      'Kingdom' => 'Kingdom varchar',
-      'PhyName' => 'Phylum varchar',
-      'ClaName' => 'Class varchar',
-      'OrdName' => 'TaxonOrder varchar',
-      'FamName' => 'Family varchar',
-      'GenName' => 'Genus varchar',
-      'SpcName' => 'Species varchar',
-      'SpcInfraRank' => 'SpcInfraRank varchar',
-      'SpcInfraEpithet' => 'SpcInfra varchar',
-      'SpcStatus' => 'SpcStatus varchar',
-      'SpcRecID' => 'SpcRecID integer',
-      'AcceptedSpcRecID' => 'accepted_species_id integer'
-    },
     'cites_regions_import' => {
-    'name' => 'name varchar'
+      :create_tmp => "name varchar",
+      :tmp_columns => ["name"]
   },
     'countries_import' => {
       :create_tmp => "legacy_id integer, iso2 varchar, iso3 varchar, name varchar, long_name varchar, region_number varchar",
@@ -62,11 +18,31 @@ MAPPING = {
     'plants_import' => {
       :create_tmp => "Kingdom varchar, TaxonOrder varchar, Family varchar, Genus varchar, Species varchar, SpcInfra varchar, SpcRecId integer, SpcStatus varchar",
       :tmp_columns => ['Kingdom', 'TaxonOrder', 'Family', 'Genus', 'Species', 'SpcInfra', 'SpcRecId', 'SpcStatus']
-  }
+  },
+    'cites_listings_import' => {
+      :create_tmp => "spc_rec_id integer, appendix varchar, listing_date date, country_legacy_id varchar, notes varchar",
+      :tmp_columns => ['spc_rec_id', 'appendix', 'listing_date', 'country_legacy_id', 'notes']
+  },
+    'distribution_import' => {
+      :create_tmp => "species_id integer, country_id integer, country_name varchar",
+      :tmp_columns => ["species_id", "country_id", "country_name"]
+  },
+    'common_name_import' => {
+      :create_tmp => 'common_name varchar, language_name varchar, species_id integer',
+      :tmp_columns => ["common_name", "language_name", "species_id"]
+  },
+    'animals_synonym_import' => {
+      :create_tmp => "Kingdom varchar, Phylum varchar, Class varchar, TaxonOrder varchar, Family varchar, Genus varchar, Species varchar, SpcInfra varchar, SpcRecID integer, SpcStatus varchar, accepted_species_id integer",
+      :tmp_columns => ["Kingdom", "Phylum", "Class", "TaxonOrder", "Family", "Genus", "Species", "SpcInfra", "SpcRecID", "SpcStatus", "accepted_species_id"]
+  },
+    'plants_synonym_import' => {
+      :create_tmp => "Kingdom varchar, TaxonOrder varchar, Family varchar, Genus varchar, Species varchar, SpcInfra varchar, SpcRecID integer, SpcStatus varchar, accepted_species_id integer",
+      :tmp_columns => ["Kingdom", "TaxonOrder", "Family", "Genus", "Species", "SpcInfra", "SpcRecID", "SpcStatus", "accepted_species_id"]
+    }
 }
 
 def result_to_sql_values(result)
-  result.to_a.map{|a| a.values.inspect.sub('[', '(').sub(/]$/, ')')}.join(',').gsub("'", "''").gsub('"', "'").gsub('nil', 'NULL')
+  result.to_a.map{|a| a.values.inspect.sub('[', '(').sub(/]$/, ')')}.join(',').gsub('\"', '').gsub("'", "''").gsub('"', "'").gsub('nil', 'NULL')
 end
 
 def create_table table_name
@@ -99,12 +75,43 @@ def copy_data(table_name, query)
   client.execute('SET ANSI_NULLS ON')
   client.execute('SET ANSI_WARNINGS ON')
   result = client.execute(query)
-  cmd = <<-PSQL
+  cmd = <<-SQL
+    SET DateStyle = \"ISO,DMY\";
     INSERT INTO #{table_name} (#{tmp_columns.join(',')})
     VALUES
     #{result_to_sql_values(result)}
+  SQL
+  ActiveRecord::Base.connection.execute(cmd)
+  puts "Data copied to tmp table"
+end
+
+def copy_data_from_file(table_name, path_to_file)
+  puts "Copying data from #{path_to_file} into tmp table #{table_name}"
+  tmp_columns = MAPPING[table_name][:tmp_columns]
+  cmd = <<-PSQL
+      SET DateStyle = \"ISO,DMY\";
+\\COPY #{table_name} (#{tmp_columns.join(', ')})
+FROM '#{Rails.root + path_to_file}'
+WITH DElIMITER ','
+CSV HEADER
   PSQL
+
   db_conf = YAML.load(File.open(Rails.root + "config/database.yml"))[Rails.env]
   system("export PGPASSWORD=#{db_conf["password"]} && echo \"#{cmd.split("\n").join(' ')}\" | psql -h #{db_conf["host"] || "localhost"} -U#{db_conf["username"]} #{db_conf["database"]}")
   puts "Data copied to tmp table"
+end
+
+def files_from_args(t, args)
+  files = t.arg_names.map{ |a| args[a] }.compact
+  files = ['lib/assets/files/animals.csv'] if files.empty?
+  files.reject { |file| !file_ok?(file) }
+end
+
+def file_ok?(path_to_file)
+  if !File.file?(Rails.root.join(path_to_file)) #if the file is not defined, explain and leave.
+    puts "Please specify a valid csv file from which to import data"
+    puts "Usage: rake import:XXX[path/to/file,path/to/another]"
+    return false
+  end
+  true
 end

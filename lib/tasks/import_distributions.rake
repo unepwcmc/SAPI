@@ -1,15 +1,28 @@
 namespace :import do
 
   desc 'Import distributions from csv file [usage: rake import:distributions[path/to/file,path/to/another]'
-  task :distributions, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :distributions => [:environment] do
+    ANIMALS_QUERY = <<-SQL
+      Select S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
+      from ORWELL.animals.dbo.Species S 
+      INNER JOIN ORWELL.animals.dbo.DistribCty Dcty ON S.SpcRecID = Dcty.DCtSpcRecID
+      INNER JOIN ORWELL.animals.dbo.Country Cty ON Dcty.DCtCtyRecID = Cty.CtyRecID
+      WHERE S.SpcRecID IN (#{TaxonConcept.where("data -> 'kingdom_name' = 'Animalia' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
+    SQL
+    PLANTS_QUERY = <<-SQL
+      Select S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
+      from ORWELL.plants.dbo.Species S 
+      INNER JOIN ORWELL.plants.dbo.DistribCty Dcty ON S.SpcRecID = Dcty.DCtSpcRecID
+      INNER JOIN ORWELL.plants.dbo.Country Cty ON Dcty.DCtCtyRecID = Cty.CtyRecID
+      WHERE S.SpcRecID IN (#{TaxonConcept.where("data -> 'kingdom_name' = 'Plantae' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
+    SQL
     TMP_TABLE = 'distribution_import'
-    puts "There are #{TaxonConceptGeoEntity.count} taxon concept distributions in the database."
-    files = files_from_args(t, args)
-    files.each do |file|
+    ["animals", "plants"].each do |t|
+      puts "There are #{TaxonConceptGeoEntity.count} taxon concept distributions in the database."
       drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
-
+      create_table(TMP_TABLE)
+      query = "#{t.upcase}_QUERY".constantize
+      copy_data(TMP_TABLE, query)
       sql = <<-SQL
         INSERT INTO taxon_concept_geo_entities(taxon_concept_id, geo_entity_id, created_at, updated_at)
         SELECT DISTINCT species.id, geo_entities.id, current_date, current_date

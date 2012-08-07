@@ -8,8 +8,8 @@ namespace :import do
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      create_table(TMP_TABLE)
+      copy_data_from_file(TMP_TABLE, file)
       sql = <<-SQL
         INSERT INTO geo_entities(name, geo_entity_type_id, created_at, updated_at)
         SELECT DISTINCT INITCAP(BTRIM(TMP.name)), #{regions_type.id}, current_date, current_date

@@ -173,7 +173,6 @@ CREATE FUNCTION rebuild_ancestor_listings() RETURNS void
             END || qq.listing
           FROM qq
           WHERE taxon_concepts.id = qq.id;
-
         END;
       $$;
 
@@ -183,103 +182,6 @@ CREATE FUNCTION rebuild_ancestor_listings() RETURNS void
 --
 
 COMMENT ON FUNCTION rebuild_ancestor_listings() IS 'Procedure to rebuild the computed ancestor listings in taxon_concepts.';
-
-
---
--- Name: rebuild_cites_listed_flags(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-        BEGIN
-
-        -- set the cites_listed flag to NULL for all taxa (so we start clear)
-        UPDATE taxon_concepts SET listing =
-          CASE
-            WHEN listing IS NULL THEN ''::HSTORE
-            ELSE listing - ARRAY['cites_listing','cites_I','cites_II','cites_III','not_in_cites']
-          END || hstore('cites_listed', NULL);
-
-        -- set the cited_listed flag to true for all explicitly listed taxa
-        UPDATE taxon_concepts
-        SET listing = listing || hstore('cites_listed', 't')
-        FROM (
-          SELECT taxon_concepts.id
-          FROM taxon_concepts
-          INNER JOIN listing_changes ON taxon_concept_id = taxon_concepts.id
-        ) AS q
-        WHERE taxon_concepts.id = q.id;
-
-        -- set the cites_listed flag to false for all implicitly listed taxa
-        WITH RECURSIVE q AS
-        (
-          SELECT  h,
-          (listing->'cites_listed')::BOOLEAN AS inherited_cites_listing
-          FROM    taxon_concepts h
-          WHERE   parent_id IS NULL
-
-          UNION ALL
-
-          SELECT  hi,
-          CASE
-            WHEN (listing->'cites_listed')::BOOLEAN = 't' THEN 't'
-            ELSE inherited_cites_listing
-          END
-          FROM    q
-          JOIN    taxon_concepts hi
-          ON      hi.parent_id = (q.h).id
-        )
-        UPDATE taxon_concepts
-        SET listing = listing || hstore('cites_listed', 'f')
-        FROM q
-        WHERE taxon_concepts.id = (q.h).id AND
-          ((q.h).listing->'cites_listed')::BOOLEAN IS NULL AND
-          q.inherited_cites_listing = 't';
-
-        -- propagate the usr_cites_exclusion flag to all subtaxa
-        -- unless they have cites_listed = 't'
-        WITH RECURSIVE q AS (
-          SELECT h
-          FROM taxon_concepts h
-          WHERE listing->'usr_cites_exclusion' = 't'
-
-          UNION ALL
-
-          SELECT hi
-          FROM q
-          JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
-        )
-        UPDATE taxon_concepts
-        SET listing = listing || hstore('cites_exclusion', 't')
-        FROM q
-        WHERE taxon_concepts.id = (q.h).id;
-
-        -- set flags for exceptions
-        UPDATE taxon_concepts
-        SET listing = listing ||
-        hstore('not_in_cites', 'NC') || hstore('cites_listing_original', 'NC') || hstore('cites_show', 't')
-        WHERE listing->'usr_cites_exclusion' = 't';
-
-        UPDATE taxon_concepts
-        SET listing = listing ||
-        hstore('not_in_cites', 'NC') || hstore('cites_listing_original', 'NC')
-        WHERE listing->'cites_exclusion' = 't';
-
-        UPDATE taxon_concepts
-        SET listing = listing ||
-        hstore('not_in_cites', 'NC')
-        WHERE fully_covered <> 't' OR (listing->'cites_listed')::BOOLEAN IS NULL;
-
-        END;
-      $$;
-
-
---
--- Name: FUNCTION rebuild_cites_listed_flags(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION rebuild_cites_listed_flags() IS 'Procedure to rebuild the cites_listed flag in taxon_concepts.data. The meaning of this flag is as follows: "t" - explicit cites listing, "f" - implicit cites listing, "" - N/A';
 
 
 --
@@ -299,11 +201,11 @@ CREATE FUNCTION rebuild_descendant_listings() RETURNS void
 
             SELECT hi, hi.id, CASE
               WHEN
-                hi.listing -> 'cites_listed' ='t'
-                OR hi.listing->'cites_exclusion' = 't'
-                THEN hi.listing || hstore('cites_listing',hi.listing->'cites_listing_original')
-              ELSE hi.listing || (q.listing::hstore - ARRAY['cites_listed','cites_listing_original'])
-                || hstore('cites_listing',q.listing->'cites_listing_original')
+                CAST(hi.listing -> 'cites_listing' AS VARCHAR) IS NOT NULL
+                OR hi.not_in_cites = 't'
+                THEN hi.listing
+              WHEN  hi.listing IS NOT NULL THEN hi.listing || q.listing
+              ELSE q.listing
             END
             FROM q
             JOIN taxon_concepts hi
@@ -314,7 +216,11 @@ CREATE FUNCTION rebuild_descendant_listings() RETURNS void
           CASE
             WHEN taxon_concepts.listing IS NULL THEN ''::hstore
             ELSE taxon_concepts.listing
-          END || q.listing
+          END || q.listing ||
+          CASE
+            WHEN taxon_concepts.listing->'cites_listed' = 't' THEN ''::hstore
+            ELSE hstore('cites_listed', 'f')
+          END
           FROM q
           WHERE taxon_concepts.id = q.id;
         END;
@@ -336,16 +242,24 @@ CREATE FUNCTION rebuild_listings() RETURNS void
     LANGUAGE plpgsql
     AS $$
         BEGIN
+        UPDATE taxon_concepts
+        SET listing = hstore('not_in_cites', 'NC') || hstore('cites_listing', 'NC') || hstore('cites_show', 't')
+        WHERE not_in_cites = 't' OR fully_covered <> 't';
 
         UPDATE taxon_concepts
-        SET listing = taxon_concepts.listing || qqq.listing ||
+        SET listing =
         CASE
-          WHEN qqq.listing -> 'cites_listing_original' > '' THEN hstore('cites_show', 't')
+          WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
+          ELSE ''::hstore
+        END
+        || qqq.listing || hstore('cites_listed', 't') ||
+        CASE
+          WHEN qqq.listing -> 'cites_listing' > '' THEN hstore('cites_show', 't')
           ELSE hstore('cites_show', 'f')
         END
         FROM (
           SELECT taxon_concept_id, listing ||
-          hstore('cites_listing_original', ARRAY_TO_STRING(
+          hstore('cites_listing', ARRAY_TO_STRING(
             -- unnest to filter out the nulls
             ARRAY(SELECT * FROM UNNEST(
               ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III']) s 
@@ -358,7 +272,8 @@ CREATE FUNCTION rebuild_listings() RETURNS void
               hstore('cites_I', CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
               hstore('cites_II', CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
               hstore('cites_III', CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END) ||
-              hstore('cites_del', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
+              hstore('cites_del', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END) ||
+              hstore('cites_nc', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
               AS listing
             FROM (
               SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type,
@@ -526,7 +441,6 @@ CREATE FUNCTION sapi_rebuild() RETURNS void
           PERFORM rebuild_names_and_ranks();
           --RAISE NOTICE 'taxonomic positions';
           PERFORM rebuild_taxonomic_positions();
-          PERFORM rebuild_cites_listed_flags();
           --RAISE NOTICE 'listings';
           PERFORM rebuild_listings();
           --RAISE NOTICE 'descendant listings';
@@ -547,6 +461,24 @@ COMMENT ON FUNCTION sapi_rebuild() IS 'Procedure to rebuild computed fields in t
 SET default_tablespace = '';
 
 SET default_with_oids = false;
+
+--
+-- Name: animals_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE animals_import (
+    kingdom character varying,
+    phylum character varying,
+    class character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying
+);
+
 
 --
 -- Name: change_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -590,26 +522,6 @@ CREATE TABLE cites_listings_import (
     listing_date date,
     country_legacy_id character varying,
     notes character varying
-);
-
-
---
--- Name: cites_regions_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_regions_import (
-    name character varying
-);
-
-
---
--- Name: common_name_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE common_name_import (
-    common_name character varying,
-    language_name character varying,
-    species_id integer
 );
 
 
@@ -912,7 +824,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-08-02 11:19:46.727231'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-07-25 13:37:28.482069'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -967,6 +879,22 @@ CREATE SEQUENCE listing_distributions_id_seq
 --
 
 ALTER SEQUENCE listing_distributions_id_seq OWNED BY listing_distributions.id;
+
+
+--
+-- Name: plants_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE plants_import (
+    kingdom character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying
+);
 
 
 --
@@ -1077,22 +1005,6 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: species_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE species_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying
-);
-
-
---
 -- Name: species_listings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1123,23 +1035,6 @@ CREATE SEQUENCE species_listings_id_seq
 --
 
 ALTER SEQUENCE species_listings_id_seq OWNED BY species_listings.id;
-
-
---
--- Name: synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE synonym_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying,
-    accepted_species_id integer
-);
 
 
 --
@@ -1965,11 +1860,11 @@ ALTER TABLE ONLY taxon_concept_references
 
 
 --
--- Name: taxon_concept_references_taxon_concepts_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: taxon_concept_references_taxon_concept_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY taxon_concept_references
-    ADD CONSTRAINT taxon_concept_references_taxon_concepts_id_fk FOREIGN KEY (taxon_concept_id) REFERENCES taxon_concepts(id);
+    ADD CONSTRAINT taxon_concept_references_taxon_concept_id_fk FOREIGN KEY (taxon_concept_id) REFERENCES taxon_concepts(id);
 
 
 --
