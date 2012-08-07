@@ -42,6 +42,7 @@ class TaxonConcept < ActiveRecord::Base
   has_many :species_listings, :through => :listing_changes
   has_many :taxon_commons, :dependent => :destroy
   has_many :common_names, :through => :taxon_commons
+  has_and_belongs_to_many :references, :join_table => :taxon_concept_references
 
   scope :taxonomic_layout, where("taxon_concepts.data -> 'rank_name' <> 'GENUS'").
     order("taxon_concepts.data -> 'taxonomic_position'")
