@@ -43,14 +43,15 @@ class TaxonConcept < ActiveRecord::Base
   has_many :taxon_commons, :dependent => :destroy
   has_many :common_names, :through => :taxon_commons
 
-  scope :taxonomic_layout, where("data -> 'rank_name' <> 'GENUS'").
-    order("data -> 'taxonomic_position'")
+  scope :taxonomic_layout, where("taxon_concepts.data -> 'rank_name' <> 'GENUS'").
+    order("taxon_concepts.data -> 'taxonomic_position'")
   scope :alphabetical_layout, where(
-      "data -> 'rank_name' NOT IN (?)",
+      "taxon_concepts.data -> 'rank_name' NOT IN (?)",
       [Rank::CLASS, Rank::PHYLUM, Rank::KINGDOM]
     ).
-    order("data -> 'full_name'")
-  scope :with_common_names, select(['E', 'S', 'F'].map do |lng|
+    order("taxon_concepts.data -> 'full_name'")
+  scope :with_common_names, lambda { |lng_ary|
+      select(lng_ary.map do |lng|
         "lng_#{lng.downcase}"
       end).
       joins(
@@ -78,6 +79,23 @@ class TaxonConcept < ActiveRecord::Base
         ) common_names ON taxon_concepts.id = common_names.taxon_concept_id_cn
         SQL
       )
+  }
+  scope :with_synonyms, select(:synonyms_ary).
+    joins(
+      <<-SQL
+      LEFT JOIN (
+        SELECT taxon_concepts.id AS taxon_concept_id_s, ARRAY_AGG(synonym.data->'full_name') AS synonyms_ary
+        FROM taxon_concepts
+        INNER JOIN "taxon_relationships"
+          ON "taxon_relationships"."taxon_concept_id" = "taxon_concepts"."id"
+        INNER JOIN "taxon_relationship_types"
+          ON "taxon_relationship_types"."id" = "taxon_relationships"."taxon_relationship_type_id"
+        LEFT JOIN taxon_concepts AS synonym
+          ON synonym.id = taxon_relationships.other_taxon_concept_id
+        GROUP BY taxon_concepts.id
+      ) synonyms ON taxon_concepts.id = synonyms.taxon_concept_id_s
+      SQL
+    )
 
   acts_as_nested_set
 
@@ -108,10 +126,22 @@ class TaxonConcept < ActiveRecord::Base
     define_method(lng.downcase) do
       sym = :"lng_#{lng[0].downcase}"
       if respond_to?(sym)
-        parse_pg_array(send(sym) || '').map{ |e| e.force_encoding('utf-8') }.join(', ')
+        parse_pg_array(send(sym) || '').map do |e|
+          e.force_encoding('utf-8')
+        end.join(', ')
       else
         nil
       end
+    end
+  end
+
+  def synonyms
+    if respond_to?(:synonyms_ary)
+      parse_pg_array(synonyms_ary || '').compact.map do |e|
+        e.force_encoding('utf-8')
+      end.join(', ')
+    else
+      nil
     end
   end
 
@@ -127,7 +157,8 @@ class TaxonConcept < ActiveRecord::Base
     super(
       :only =>[:id, :parent_id, :depth],
       :methods => [:family_name, :class_name, :full_name, :rank_name, :spp,
-      :taxonomic_position, :current_listing, :english, :spanish, :french]
+      :taxonomic_position, :current_listing, :english, :spanish, :french, 
+        :synonyms]
     )
   end
 

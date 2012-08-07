@@ -12,10 +12,10 @@ class TaxonRelationshipType < ActiveRecord::Base
   attr_accessible :name
 
   CONTAINS = 'CONTAINS'
-  SYNONYM = 'SYNONYM'
+  HAS_SYNONYM = 'HAS_SYNONYM'
 
   def self.dict
-    [CONTAINS, SYNONYM]
+    [CONTAINS, HAS_SYNONYM]
   end
 
 end

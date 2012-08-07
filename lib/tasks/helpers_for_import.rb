@@ -14,7 +14,7 @@ class CsvToDbMap
       'SpcInfraRank' => 'SpcInfraRank varchar',
       'SpcInfraEpithet' => 'SpcInfra varchar',
       'SpcRecID' => 'SpcRecId integer',
-      'SpcStatus' => 'SpcStatus varchar'
+      'SpcStatus' => 'SpcStatus varchar',
     },
     'cites_listings_import' => {
       'SpcRecID' => 'spc_rec_id integer',
@@ -33,6 +33,20 @@ class CsvToDbMap
       'ComName' => 'common_name varchar',
       'LanDesc' => 'language_name varchar',
       'SpcRecID' => 'species_id integer'
+    },
+    'synonym_import' => {
+      'Kingdom' => 'Kingdom varchar',
+      'PhyName' => 'Phylum varchar',
+      'ClaName' => 'Class varchar',
+      'OrdName' => 'TaxonOrder varchar',
+      'FamName' => 'Family varchar',
+      'GenName' => 'Genus varchar',
+      'SpcName' => 'Species varchar',
+      'SpcInfraRank' => 'SpcInfraRank varchar',
+      'SpcInfraEpithet' => 'SpcInfra varchar',
+      'SpcStatus' => 'SpcStatus varchar',
+      'SpcRecID' => 'SpcRecID integer',
+      'AcceptedSpcRecID' => 'accepted_species_id integer'
     },
     'cites_regions_import' => {
       'name' => 'name varchar'
@@ -89,9 +103,8 @@ end
 def create_table_from_csv_headers(path_to_file, table_name)
     db_columns = db_columns_from_csv_headers(path_to_file, table_name)
     begin
-      puts "Creating tmp table"
       ActiveRecord::Base.connection.execute "CREATE TABLE #{table_name} (#{db_columns.join(', ')})"
-      puts "Table created"
+      puts "Table #{table_name} created"
     rescue Exception => e
       puts e.inspect
       puts "Tmp already exists removing data from tmp table before starting the import"
@@ -103,7 +116,7 @@ end
 def drop_table(table_name)
   begin
     ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS #{table_name};"
-    puts "Table removed"
+    puts "Table #{table_name} removed"
   rescue Exception => e
     puts "Could not drop table #{table_name}. It might not exist if this is the first time you are running this rake task."
   end

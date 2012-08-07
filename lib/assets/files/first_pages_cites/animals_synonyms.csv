@@ -1,4 +1,4 @@
-Kingdom,OrdName,FamName,GenName,SpcName,SpcInfraRank,SpcInfraEpithet,SpcRecID,SpcStatus,AcceptedSpcRecID,,
+Kingdom,PhyName,ClaName,OrdName,FamName,GenName,SpcName,SpcInfraRank,SpcInfraEpithet,SpcRecID,SpcStatus,AcceptedSpcRecID
 Animalia,ARTHROPODA,INSECTA,LEPIDOPTERA,LYCAENIDAE,Phasis,wallengrenii,NULL,NULL,73788,S,714
 Animalia,CHORDATA,MAMMALIA,PERISSODACTYLA,RHINOCEROTIDAE,Didermocerus,sumatrensis,NULL,NULL,28113,S,6553
 Animalia,CHORDATA,MAMMALIA,PERISSODACTYLA,TAPIRIDAE,Tapirus,roulinii,NULL,NULL,28694,S,21473

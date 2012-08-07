@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120628145332) do
+ActiveRecord::Schema.define(:version => 20120727144007) do
 
   create_table "authors", :force => true do |t|
     t.string   "first_name"
@@ -23,8 +23,9 @@ ActiveRecord::Schema.define(:version => 20120628145332) do
 
   create_table "change_types", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "designation_id", :null => false
   end
 
   create_table "cites_listings_import", :id => false, :force => true do |t|
@@ -37,6 +38,12 @@ ActiveRecord::Schema.define(:version => 20120628145332) do
 
   create_table "cites_regions_import", :id => false, :force => true do |t|
     t.string "name", :limit => nil
+  end
+
+  create_table "common_name_import", :id => false, :force => true do |t|
+    t.string  "common_name",   :limit => nil
+    t.string  "language_name", :limit => nil
+    t.integer "species_id"
   end
 
   create_table "common_names", :force => true do |t|
@@ -54,6 +61,12 @@ ActiveRecord::Schema.define(:version => 20120628145332) do
     t.string  "name",          :limit => nil
     t.string  "long_name",     :limit => nil
     t.string  "region_number", :limit => nil
+  end
+
+  create_table "designation_references", :force => true do |t|
+    t.integer "designation_id",                   :null => false
+    t.integer "reference_id",                     :null => false
+    t.boolean "is_standard",    :default => true, :null => false
   end
 
   create_table "designations", :force => true do |t|
@@ -118,15 +131,16 @@ ActiveRecord::Schema.define(:version => 20120628145332) do
     t.integer  "depth"
     t.datetime "created_at",                                            :null => false
     t.datetime "updated_at",                                            :null => false
-    t.datetime "effective_at",       :default => '2012-06-25 07:15:43', :null => false
-    t.integer  "party_id"
+    t.datetime "effective_at",       :default => '2012-07-25 13:26:52', :null => false
+    t.text     "notes"
   end
 
   create_table "listing_distributions", :force => true do |t|
-    t.integer  "listing_change_id"
-    t.integer  "geo_entity_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.integer  "listing_change_id",                   :null => false
+    t.integer  "geo_entity_id",                       :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.boolean  "is_party",          :default => true, :null => false
   end
 
   create_table "ranks", :force => true do |t|
@@ -153,8 +167,6 @@ ActiveRecord::Schema.define(:version => 20120628145332) do
 
   create_table "species_import", :id => false, :force => true do |t|
     t.string  "kingdom",    :limit => nil
-    t.string  "phylum",     :limit => nil
-    t.string  "class",      :limit => nil
     t.string  "taxonorder", :limit => nil
     t.string  "family",     :limit => nil
     t.string  "genus",      :limit => nil
@@ -193,13 +205,11 @@ ActiveRecord::Schema.define(:version => 20120628145332) do
     t.integer  "rank_id",                                 :null => false
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false
-    t.integer  "spcrecid"
     t.integer  "depth"
     t.integer  "designation_id",                          :null => false
     t.integer  "taxon_name_id",                           :null => false
     t.integer  "legacy_id"
     t.boolean  "inherit_distribution", :default => true,  :null => false
-    t.boolean  "inherit_legislation",  :default => true,  :null => false
     t.boolean  "inherit_references",   :default => true,  :null => false
     t.hstore   "data"
     t.boolean  "not_in_cites",         :default => false, :null => false
@@ -239,6 +249,13 @@ ActiveRecord::Schema.define(:version => 20120628145332) do
     t.datetime "updated_at",                 :null => false
   end
 
+  add_foreign_key "change_types", "designations", :name => "change_types_designation_id_fk"
+
+  add_foreign_key "common_names", "languages", :name => "common_names_language_id_fk"
+
+  add_foreign_key "designation_references", "designations", :name => "designation_references_designation_id_fk"
+  add_foreign_key "designation_references", "references", :name => "designation_references_reference_id_fk"
+
   add_foreign_key "geo_entities", "geo_entity_types", :name => "geo_entities_geo_entity_type_id_fk"
 
   add_foreign_key "geo_relationships", "geo_entities", :name => "geo_relationships_geo_entity_id_fk"
@@ -246,7 +263,6 @@ ActiveRecord::Schema.define(:version => 20120628145332) do
   add_foreign_key "geo_relationships", "geo_relationship_types", :name => "geo_relationships_geo_relationship_type_id_fk"
 
   add_foreign_key "listing_changes", "change_types", :name => "listing_changes_change_type_id_fk"
-  add_foreign_key "listing_changes", "geo_entities", :name => "listing_changes_party_id_fk", :column => "party_id"
   add_foreign_key "listing_changes", "listing_changes", :name => "listing_changes_parent_id_fk", :column => "parent_id"
   add_foreign_key "listing_changes", "references", :name => "listing_changes_reference_id_fk"
   add_foreign_key "listing_changes", "species_listings", :name => "listing_changes_species_listing_id_fk"
@@ -258,6 +274,9 @@ ActiveRecord::Schema.define(:version => 20120628145332) do
   add_foreign_key "ranks", "ranks", :name => "ranks_parent_id_fk", :column => "parent_id"
 
   add_foreign_key "species_listings", "designations", :name => "species_listings_designation_id_fk"
+
+  add_foreign_key "taxon_commons", "common_names", :name => "taxon_commons_common_name_id_fk"
+  add_foreign_key "taxon_commons", "taxon_concepts", :name => "taxon_commons_taxon_concept_id_fk"
 
   add_foreign_key "taxon_concept_geo_entities", "geo_entities", :name => "taxon_concept_geo_entities_geo_entity_id_fk"
   add_foreign_key "taxon_concept_geo_entities", "taxon_concepts", :name => "taxon_concept_geo_entities_taxon_concept_id_fk"

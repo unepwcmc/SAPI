@@ -1,25 +1,20 @@
 FactoryGirl.define do
 
-  factory :language do |f|
-    f.name 'English'
-    f.abbreviation 'E'
+  factory :language do
+    name 'English'
+    abbreviation 'E'
   end
 
-  factory :common_name do |f|
-    f.name 'Honey badger'
-    f.association :language
-  end
+  factory :common_name do
+    name 'Honey badger'
+    association :language
 
-  factory :english_common_name, parent: :common_name, class: CommonName do |f|
-    f.language { Language.find_by_name('English') }
-  end
+    ['English', 'Spanish', 'French'].each do |lng|
+      factory :"#{lng.downcase}_common_name" do
+        language { Language.find_by_name(lng) }
+      end
+    end
 
-  factory :spanish_common_name, parent: :common_name, class: CommonName do |f|
-    f.language { Language.find_by_name('Spanish') }
-  end
-
-  factory :french_common_name, parent: :common_name, class: CommonName do |f|
-    f.language { Language.find_by_name('French') }
   end
 
 end

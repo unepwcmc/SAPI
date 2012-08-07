@@ -21,6 +21,22 @@ shared_context "Caiman latirostris" do
       :taxon_name => create(:taxon_name, :scientific_name => 'Latirostris'),
       :parent => @genus
     )
+    @genus1 = create(
+      :genus,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Alligator'),
+      :parent => @family
+    )
+    @species1 = create(
+      :species,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Cynocephalus'),
+      :parent => @genus1
+    )
+
+    create(
+      :has_synonym,
+      :taxon_concept => @species,
+      :other_taxon_concept => @species1
+    )
 
     argentina = create(
       :country,

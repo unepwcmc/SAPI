@@ -13,5 +13,6 @@
 class TaxonRelationship < ActiveRecord::Base
   attr_accessible :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id
   belongs_to :taxon_relationship_type
-  belongs_to :related_taxon_concept, :foreign_key => :other_taxon_concept_id
+  belongs_to :taxon_concept
+  belongs_to :other_taxon_concept, :foreign_key => :other_taxon_concept_id, :class_name => 'TaxonConcept'
 end

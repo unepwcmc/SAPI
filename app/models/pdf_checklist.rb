@@ -85,6 +85,14 @@ class PdfChecklist < Checklist
                 else
                   ''
                 end
+            },
+            {
+              :text =>
+                unless tc.synonyms.blank?
+                  "(SYN) #{tc.synonyms} "
+                else
+                  ''
+                end
             }
           ]
         end

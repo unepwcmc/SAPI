@@ -26,7 +26,7 @@ WHERE S.SpcRecID IN (
 ORDER BY 2;
 
 -- synonyms
-Select 'Animalia' as Kingdom , P.PhyName, C.ClaName, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcInfraRank, S.SpcInfraEpithet, S.SpcRecID, S.SpcStatus, SynSpcRecID AS AcceptedSpcRecID
+Select 'Animalia' as Kingdom , P.PhyName, C.ClaName, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcInfraRank, S.SpcInfraEpithet, S.SpcRecID AS SynonymSpcRecID, S.SpcStatus, SynSpcRecID AS AcceptedSpcRecID
 from Orwell.animals.dbo.Species S 
 INNER JOIN  ORWELL.animals.dbo.Genus G on S.Spcgenrecid = G.genrecid
 INNER JOIN  ORWELL.animals.dbo.Family F ON FamRecID = GenFamRecID

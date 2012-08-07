@@ -1,4 +1,4 @@
-Kingdom,OrdName,FamName,GenName,SpcName,SpcInfraRank,SpcInfraEpithet,SpcRecID,SpcStatus,AcceptedSpcRecID,,
+Kingdom,PhyName,ClaName,OrdName,FamName,GenName,SpcName,SpcInfraRank,SpcInfraEpithet,SpcRecID,SpcStatus,AcceptedSpcRecID
 Animalia,ARTHROPODA,INSECTA,LEPIDOPTERA,LYCAENIDAE,Phasis,wallengrenii,NULL,NULL,73788,S,714
 Animalia,CHORDATA,MAMMALIA,RODENTIA,CRICETIDAE,Phaulomys,smithii,NULL,NULL,44071,S,16900
 Animalia,CHORDATA,MAMMALIA,RODENTIA,CRICETIDAE,Phaulomys,andersoni,NULL,NULL,101300,S,16899
