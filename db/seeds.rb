@@ -14,6 +14,7 @@ GeoRelationshipType.dict.each do |type|
 end
 puts "#{GeoRelationshipType.count} geo relationship types created"
 
+ActiveRecord::Base.connection.execute('DELETE FROM taxon_concept_geo_entity_references')
 puts "#{TaxonConceptGeoEntity.delete_all} taxon concept geo entities deleted"
 puts "#{ListingChange.delete_all} listing changes deleted"
 puts "#{GeoEntity.delete_all} geo entities deleted"
@@ -31,6 +32,7 @@ end
 puts "#{TaxonRelationshipType.count} taxon relationship types created"
 
 puts "#{TaxonCommon.delete_all} taxon commons deleted"
+ActiveRecord::Base.connection.execute('DELETE FROM taxon_concept_references')
 puts "#{TaxonConcept.delete_all} taxon_concepts deleted"
 puts "#{TaxonName.delete_all} taxon_names deleted"
 puts "#{Rank.delete_all} ranks deleted"
@@ -44,6 +46,7 @@ puts "#{Rank.count} ranks created"
 
 puts "#{SpeciesListing.delete_all} species listings deleted"
 puts "#{ChangeType.delete_all} change types deleted"
+ActiveRecord::Base.connection.execute('DELETE FROM designation_references')
 puts "#{Designation.delete_all} designations deleted"
 [Designation::CITES, 'CMS'].each do |designation|
   Designation.create(:name => designation)
@@ -214,3 +217,4 @@ Language.create(:name => 'English', :abbreviation => 'en')
 Language.create(:name => 'Spanish', :abbreviation => 'es')
 Language.create(:name => 'French', :abbreviation => 'fr')
 puts "#{Language.count} languages created"
+puts "#{Reference.delete_all} references deleted"

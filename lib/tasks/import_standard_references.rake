@@ -26,7 +26,7 @@ namespace :import do
 # domestic forms): Bos gaurus, Bos mutus, Bubalus arnee, Equus africanus, Equus przewalskii, Ovis orientalis
 # ophion; and with the exception of the species mentioned below]
 
-    mammalia = TaxonConcept.where("data->'full_name' = 'Mammalia'").first
+    mammalia = TaxonConcept.joins(:taxon_name).where('taxon_names.scientific_name' => 'Mammalia').first
     if mammalia
       mammalia.references << ref1
     end
@@ -38,7 +38,7 @@ namespace :import do
     )
 # [for Orcaella heinsohni]
 
-    orcaella = TaxonConcept.where("data->'full_name' = 'Orcaella heinsohni'").first
+    orcaella = TaxonConcept.where(:legacy_id => 99482).first
     if orcaella
       orcaella.references << ref2
     end
@@ -50,11 +50,11 @@ namespace :import do
     )
 # [for Sotalia fluviatilis and Sotalia guianensis]
 
-    sotalia_f = TaxonConcept.where("data->'full_name' = 'Sotalia fluviatilis'").first
+    sotalia_f = TaxonConcept.where(:legacy_id => 20422).first
     if sotalia_f
       sotalia_f.references << ref3
     end
-    sotalia_g = TaxonConcept.where("data->'full_name' = 'Sotalia guianensis'").first
+    sotalia_g = TaxonConcept.where(:legacy_id => 28657).first
     if sotalia_g
       sotalia_g.references << ref3
     end
@@ -66,7 +66,7 @@ namespace :import do
     )
 # [for Tarsius lariang]
 
-    tarsius = TaxonConcept.where("data->'full_name' = 'Tarsius lariang'").first
+    tarsius = TaxonConcept.where(:legacy_id => 101536).first
     if tarsius
       tarsius.references << ref4
     end
@@ -78,12 +78,12 @@ namespace :import do
     )
 # [for Physeter macrocephalus and Platanista gangetica]
 
-    physeter = TaxonConcept.where("data->'full_name' = 'Physeter macrocephalus'").first
+    physeter = TaxonConcept.where(:legacy_id => 17244).first
     if physeter
       physeter.references << ref5
     end
 
-    platanista = TaxonConcept.where("data->'full_name' = 'Platanista gangetica'").first
+    platanista = TaxonConcept.where(:legacy_id => 17488).first
     if platanista
       platanista.references << ref5
     end
@@ -95,7 +95,7 @@ namespace :import do
     )
 # [for Balaenoptera omurai]
 
-    balaenoptera = TaxonConcept.where("data->'full_name' = 'Balaenoptera omurai'").first
+    balaenoptera = TaxonConcept.where(:legacy_id => 87572).first
     if balaenoptera
       balaenoptera.references << ref6
     end
@@ -107,17 +107,17 @@ namespace :import do
     )
 # [for Loxodonta africana, Puma concolor, Lama guanicoe and Ovis vignei]
 
-    loxodonta = TaxonConcept.where("data->'full_name' = 'Loxodonta africana'").first
+    loxodonta = TaxonConcept.where(:legacy_id => 12392).first
     if loxodonta
       loxodonta.references << ref7
     end
 
-    puma = TaxonConcept.where("data->'full_name' = 'Puma concolor'").first
+    puma = TaxonConcept.where(:legacy_id => 18868).first
     if puma
       puma.references << ref7
     end
 
-    ovis = TaxonConcept.where("data->'full_name' = 'Ovis vignei'").first
+    ovis = TaxonConcept.where(:legacy_id => 29583).first
     if ovis
       ovis.references << ref7
     end
