@@ -11,21 +11,10 @@ namespace :import do
     Rake::Task["import:countries"].invoke(
       'lib/assets/files/countries.csv'
     )
-    Rake::Task["import:distributions"].invoke(
-      'lib/assets/files/random/animals_distributions.csv',
-      'lib/assets/files/random/plants_distributions.csv'
-    )
-    Rake::Task["import:cites_listings"].invoke(
-      'lib/assets/files/random/animals_complex_CITES_listings.csv'#TODO missing 'complex' listing for plants
-    )
-    Rake::Task["import:common_names"].invoke(
-      'lib/assets/files/random/animals_common_names.csv',
-      'lib/assets/files/random/plants_common_names.csv'
-    )
-    Rake::Task["import:synonyms"].invoke(
-      'lib/assets/files/random/animals_synonyms.csv',
-      'lib/assets/files/random/plants_synonyms.csv'
-    )
+    Rake::Task["import:distributions"].invoke
+    Rake::Task["import:cites_listings"].invoke
+    Rake::Task["import:common_names"].invoke
+    Rake::Task["import:synonyms"].invoke
     Rake::Task["import:standard_references"].invoke
     Sapi::fix_listing_changes()
     Sapi::rebuild()
