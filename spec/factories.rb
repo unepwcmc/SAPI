@@ -1,3 +1,4 @@
+#Encoding: utf-8
 FactoryGirl.define do
 
   factory :designation do
@@ -23,6 +24,16 @@ FactoryGirl.define do
         designation { Designation.find_by_name('CITES') }
         rank { Rank.find_by_name(rank_name.upcase) }
       end
+    end
+
+  end
+
+  factory :reference do
+    author 'Bolek'
+    title 'Przygód kilka wróbla ćwirka'
+
+    factory :cites_reference do
+      designations { [Designation.find_by_name('CITES')] }
     end
 
   end

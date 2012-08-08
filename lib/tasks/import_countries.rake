@@ -13,16 +13,16 @@ namespace :import do
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      create_table(TMP_TABLE)
+      copy_data_from_file(TMP_TABLE, file)
       sql = <<-SQL
-        INSERT INTO geo_entities(name, iso_code2, iso_code3, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at)
-        SELECT DISTINCT INITCAP(BTRIM(TMP.name)), INITCAP(BTRIM(TMP.iso2)), INITCAP(BTRIM(TMP.iso3)), #{country_type.id}, TMP.legacy_id, '#{GeoEntityType::COUNTRY}', current_date, current_date
-        FROM #{TMP_TABLE} AS TMP
-        WHERE NOT EXISTS (
+          INSERT INTO geo_entities(name, iso_code2, iso_code3, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at)
+          SELECT DISTINCT INITCAP(BTRIM(TMP.name)), INITCAP(BTRIM(TMP.iso2)), INITCAP(BTRIM(TMP.iso3)), #{country_type.id}, TMP.legacy_id, '#{GeoEntityType::COUNTRY}', current_date, current_date
+          FROM #{TMP_TABLE} AS TMP
+          WHERE NOT EXISTS (
           SELECT * FROM geo_entities
           WHERE legacy_id = TMP.legacy_id AND legacy_type = '#{GeoEntityType::COUNTRY}'
-        );
+          );
       SQL
       ActiveRecord::Base.connection.execute(sql)
       link_countries()

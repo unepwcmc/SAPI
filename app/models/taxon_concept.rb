@@ -42,6 +42,7 @@ class TaxonConcept < ActiveRecord::Base
   has_many :species_listings, :through => :listing_changes
   has_many :taxon_commons, :dependent => :destroy
   has_many :common_names, :through => :taxon_commons
+  has_and_belongs_to_many :references, :join_table => :taxon_concept_references
 
   scope :taxonomic_layout, where("taxon_concepts.data -> 'rank_name' <> 'GENUS'").
     order("taxon_concepts.data -> 'taxonomic_position'")
@@ -102,7 +103,7 @@ class TaxonConcept < ActiveRecord::Base
   [
     :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
     :genus_name, :species_name, :subspecies_name, :full_name, :rank_name,
-    :taxonomic_position
+    :taxonomic_position, :cites_accepted
   ].each do |attr_name|
     define_method(attr_name) { data && data[attr_name.to_s] }
   end
@@ -158,7 +159,7 @@ class TaxonConcept < ActiveRecord::Base
       :only =>[:id, :parent_id, :depth],
       :methods => [:family_name, :class_name, :full_name, :rank_name, :spp,
       :taxonomic_position, :current_listing, :english, :spanish, :french, 
-        :synonyms]
+      :synonyms, :cites_accepted]
     )
   end
 

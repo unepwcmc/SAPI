@@ -50,15 +50,18 @@ class PdfChecklist < Checklist
                   tc.full_name
                 end + ' ',
               :styles => 
-                if ['SPECIES', 'SUBSPECIES'].include? tc.rank_name
-                  [:italic]
-                elsif tc.rank_name == 'GENUS'
-                  [:italic, :bold]
-                else
-                  [:bold]
+                [] <<
+                if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? tc.rank_name
+                  :italic
+                end <<
+                if tc.cites_accepted
+                  :bold
                 end
             },
-            {:text => "#{tc.spp} ", :styles => [:bold]},
+            {
+              :text => "#{tc.spp} ",
+              :styles =>  (tc.cites_accepted ? [:bold] : [])
+            },
             {:text => tc.current_listing + ' ', :styles => [:bold]},
             {:text => "#{tc.family_name} ".upcase},
             {:text => "(#{tc.class_name}) "},

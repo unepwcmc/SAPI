@@ -4,6 +4,16 @@ describe TaxonConcept do
   context "Caiman latirostris" do
     include_context "Caiman latirostris"
 
+    context "TAXONOMY" do
+      describe :cites_accepted do
+        it "should be true for Caiman latirostris" do
+          @species.cites_accepted.should be_true
+        end
+        it "should be false for Alligator cynocephalus" do
+          @species1.cites_accepted.should be_false
+        end
+      end
+    end
     context "LISTING" do
       describe :current_listing do
         it "should be I/II at species level Caiman latirostris (population split listing)" do

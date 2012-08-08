@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.6'
+gem 'rails', '3.2.7'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -13,6 +13,9 @@ gem 'activerecord-postgres-hstore'
 gem 'awesome_nested_set'
 gem 'foreigner'
 gem 'prawn'
+
+# Link to MSSQL Server 2008
+gem 'tiny_tds'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

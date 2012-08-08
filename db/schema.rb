@@ -11,39 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120727144007) do
-
-  create_table "authors", :force => true do |t|
-    t.string   "first_name"
-    t.string   "middle_name"
-    t.string   "last_name",   :null => false
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-  end
+ActiveRecord::Schema.define(:version => 20120807122112) do
 
   create_table "change_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
     t.integer  "designation_id", :null => false
-  end
-
-  create_table "cites_listings_import", :id => false, :force => true do |t|
-    t.integer "spc_rec_id"
-    t.string  "appendix",          :limit => nil
-    t.date    "listing_date"
-    t.string  "country_legacy_id", :limit => nil
-    t.string  "notes",             :limit => nil
-  end
-
-  create_table "cites_regions_import", :id => false, :force => true do |t|
-    t.string "name", :limit => nil
-  end
-
-  create_table "common_name_import", :id => false, :force => true do |t|
-    t.string  "common_name",   :limit => nil
-    t.string  "language_name", :limit => nil
-    t.integer "species_id"
   end
 
   create_table "common_names", :force => true do |t|
@@ -54,31 +28,15 @@ ActiveRecord::Schema.define(:version => 20120727144007) do
     t.datetime "updated_at",   :null => false
   end
 
-  create_table "countries_import", :id => false, :force => true do |t|
-    t.integer "legacy_id"
-    t.string  "iso2",          :limit => nil
-    t.string  "iso3",          :limit => nil
-    t.string  "name",          :limit => nil
-    t.string  "long_name",     :limit => nil
-    t.string  "region_number", :limit => nil
-  end
-
   create_table "designation_references", :force => true do |t|
-    t.integer "designation_id",                   :null => false
-    t.integer "reference_id",                     :null => false
-    t.boolean "is_standard",    :default => true, :null => false
+    t.integer "designation_id", :null => false
+    t.integer "reference_id",   :null => false
   end
 
   create_table "designations", :force => true do |t|
     t.string   "name",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-  end
-
-  create_table "distribution_import", :id => false, :force => true do |t|
-    t.integer "species_id"
-    t.integer "country_id"
-    t.string  "country_name", :limit => nil
   end
 
   create_table "geo_entities", :force => true do |t|
@@ -131,7 +89,7 @@ ActiveRecord::Schema.define(:version => 20120727144007) do
     t.integer  "depth"
     t.datetime "created_at",                                            :null => false
     t.datetime "updated_at",                                            :null => false
-    t.datetime "effective_at",       :default => '2012-07-25 13:26:52', :null => false
+    t.datetime "effective_at",       :default => '2012-08-02 10:56:45', :null => false
     t.text     "notes"
   end
 
@@ -163,17 +121,7 @@ ActiveRecord::Schema.define(:version => 20120727144007) do
     t.string   "year"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-  end
-
-  create_table "species_import", :id => false, :force => true do |t|
-    t.string  "kingdom",    :limit => nil
-    t.string  "taxonorder", :limit => nil
-    t.string  "family",     :limit => nil
-    t.string  "genus",      :limit => nil
-    t.string  "species",    :limit => nil
-    t.string  "spcinfra",   :limit => nil
-    t.integer "spcrecid"
-    t.string  "spcstatus",  :limit => nil
+    t.string   "author"
   end
 
   create_table "species_listings", :force => true do |t|
@@ -198,22 +146,32 @@ ActiveRecord::Schema.define(:version => 20120727144007) do
     t.datetime "updated_at",       :null => false
   end
 
+  create_table "taxon_concept_geo_entity_references", :force => true do |t|
+    t.integer "taxon_concept_geo_entity_id"
+    t.integer "reference_id"
+  end
+
+  create_table "taxon_concept_references", :force => true do |t|
+    t.integer "taxon_concept_id",                    :null => false
+    t.integer "reference_id",                        :null => false
+    t.boolean "is_author",        :default => false, :null => false
+  end
+
   create_table "taxon_concepts", :force => true do |t|
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
-    t.integer  "rank_id",                                 :null => false
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
+    t.integer  "rank_id",                                :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.integer  "depth"
-    t.integer  "designation_id",                          :null => false
-    t.integer  "taxon_name_id",                           :null => false
+    t.integer  "designation_id",                         :null => false
+    t.integer  "taxon_name_id",                          :null => false
     t.integer  "legacy_id"
-    t.boolean  "inherit_distribution", :default => true,  :null => false
-    t.boolean  "inherit_references",   :default => true,  :null => false
+    t.boolean  "inherit_distribution", :default => true, :null => false
+    t.boolean  "inherit_references",   :default => true, :null => false
     t.hstore   "data"
-    t.boolean  "not_in_cites",         :default => false, :null => false
-    t.boolean  "fully_covered",        :default => true,  :null => false
+    t.boolean  "fully_covered",        :default => true, :null => false
     t.hstore   "listing"
   end
 
@@ -225,14 +183,6 @@ ActiveRecord::Schema.define(:version => 20120727144007) do
     t.integer  "basionym_id"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
-  end
-
-  create_table "taxon_references", :force => true do |t|
-    t.integer  "referenceable_id"
-    t.string   "referenceable_type", :default => "Taxon", :null => false
-    t.integer  "reference_id",                            :null => false
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
   end
 
   create_table "taxon_relationship_types", :force => true do |t|
@@ -280,6 +230,12 @@ ActiveRecord::Schema.define(:version => 20120727144007) do
 
   add_foreign_key "taxon_concept_geo_entities", "geo_entities", :name => "taxon_concept_geo_entities_geo_entity_id_fk"
   add_foreign_key "taxon_concept_geo_entities", "taxon_concepts", :name => "taxon_concept_geo_entities_taxon_concept_id_fk"
+
+  add_foreign_key "taxon_concept_geo_entity_references", "references", :name => "taxon_concept_geo_entity_references_reference_id_fk"
+  add_foreign_key "taxon_concept_geo_entity_references", "taxon_concept_geo_entities", :name => "taxon_concept_geo_entity_references_taxon_concept_geo_entity_fk"
+
+  add_foreign_key "taxon_concept_references", "references", :name => "taxon_concept_references_reference_id_fk"
+  add_foreign_key "taxon_concept_references", "taxon_concepts", :name => "taxon_concept_references_taxon_concept_id_fk"
 
   add_foreign_key "taxon_concepts", "designations", :name => "taxon_concepts_designation_id_fk"
   add_foreign_key "taxon_concepts", "ranks", :name => "taxon_concepts_rank_id_fk"
