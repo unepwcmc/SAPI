@@ -45,7 +45,7 @@ def result_to_sql_values(result)
   result.to_a.map{|a| a.values.inspect.sub('[', '(').sub(/]$/, ')')}.join(',').gsub('\"', '').gsub("'", "''").gsub('"', "'").gsub('nil', 'NULL')
 end
 
-def create_table table_name
+def create_import_table table_name
   create_tmp = MAPPING[table_name][:create_tmp]
   begin
     puts "Creating tmp table"

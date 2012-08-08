@@ -35,7 +35,7 @@ namespace :import do
     ["animals", "plants"].each do |t|
       TMP_TABLE = "#{t}_synonym_import"
       drop_table(TMP_TABLE)
-      create_table(TMP_TABLE)
+      create_import_table(TMP_TABLE)
       query = "#{t.upcase}_QUERY".constantize
       copy_data(TMP_TABLE, query)
 

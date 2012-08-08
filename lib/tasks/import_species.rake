@@ -88,7 +88,7 @@ namespace :import do
       puts "Importing #{t.capitalize}"
       TMP_TABLE = "#{t}_import"
       drop_table(TMP_TABLE)
-      create_table(TMP_TABLE)
+      create_import_table(TMP_TABLE)
       query = "#{t.upcase}_QUERY".constantize
       copy_data(TMP_TABLE, query)
       tmp_columns = MAPPING[TMP_TABLE][:tmp_columns]
