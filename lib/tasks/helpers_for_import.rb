@@ -42,6 +42,10 @@ MAPPING = {
     'references_import' => {
       :create_tmp => "DscRecID integer, DscTitle varchar, DscAuthors varchar, DscPubYear varchar",
       :tmp_columns => ['DscRecID', 'DscTitle', 'DscAuthors', 'DscPubYear']
+    },
+    'reference_links_import' => {
+      :create_tmp => "DslSpcRecID integer, DslDscRecID integer, DslCode varchar, DslCodeRecID integer",
+      :tmp_columns => ['DslSpcRecID', 'DslDscRecID', 'DslCode', 'DslCodeRecID']
     }
 }
 

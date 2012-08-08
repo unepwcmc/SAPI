@@ -3,7 +3,7 @@ namespace :import do
   desc 'Import references from SQL Server [usage: rake import:references]'
   task :references => [:environment] do
     ANIMALS_QUERY = <<-SQL
-      SELECT TOP 1000
+      SELECT
            [DscRecID]
           ,[DscTitle]
           ,[DscAuthors]
@@ -14,7 +14,7 @@ namespace :import do
       FROM [Animals].[dbo].[DataSource];
     SQL
     PLANTS_QUERY = <<-SQL
-      SELECT TOP 1000
+      SELECT
            [DscRecID]
           ,[DscTitle]
           ,[DscAuthors]
@@ -37,7 +37,7 @@ namespace :import do
         SELECT '#{t}' AS legacy_type, DscRecID, DscAuthors, DscTitle, DscPubYear,
           current_date, current_date
           FROM #{TMP_TABLE}
-          WHERE NOT EXISTS (
+          WHERE DscTitle IS NOT NULL AND NOT EXISTS (
             SELECT legacy_type, legacy_id
             FROM "references"
             WHERE "references".legacy_id = #{TMP_TABLE}.DscRecID AND
