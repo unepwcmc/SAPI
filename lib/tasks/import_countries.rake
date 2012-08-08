@@ -13,7 +13,7 @@ namespace :import do
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(TMP_TABLE)
-      create_table(TMP_TABLE)
+      create_import_table(TMP_TABLE)
       copy_data_from_file(TMP_TABLE, file)
       sql = <<-SQL
           INSERT INTO geo_entities(name, iso_code2, iso_code3, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at)

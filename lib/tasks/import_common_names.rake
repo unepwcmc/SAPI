@@ -21,7 +21,7 @@ namespace :import do
     puts "There are #{TaxonCommon.count} taxon commons in the database."
     ["animals", "plants"].each do |t|
       drop_table(TMP_TABLE)
-      create_table(TMP_TABLE)
+      create_import_table(TMP_TABLE)
       query = "#{t.upcase}_QUERY".constantize
       copy_data(TMP_TABLE, query)
       sql = <<-SQL
