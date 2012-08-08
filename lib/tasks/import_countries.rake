@@ -7,18 +7,18 @@ namespace :import do
   ### 2- change character encoding: iconv -f original_charset -t utf-8 originalfile > newfile
   desc 'Import countries from csv file [usage: rake import:countries[path/to/file,path/to/another]'
   task :countries, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
-    TMP_TABLE = 'countries_import'
+    tmp_table = 'countries_import'
     country_type = GeoEntityType.find_by_name(GeoEntityType::COUNTRY)
     puts "There are #{GeoEntity.count(conditions: {geo_entity_type_id: country_type.id})} countries in the database."
     files = files_from_args(t, args)
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_import_table(TMP_TABLE)
-      copy_data_from_file(TMP_TABLE, file)
+      drop_table(tmp_table)
+      create_import_table(tmp_table)
+      copy_data_from_file(tmp_table, file)
       sql = <<-SQL
           INSERT INTO geo_entities(name, iso_code2, iso_code3, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at)
           SELECT DISTINCT INITCAP(BTRIM(TMP.name)), INITCAP(BTRIM(TMP.iso2)), INITCAP(BTRIM(TMP.iso3)), #{country_type.id}, TMP.legacy_id, '#{GeoEntityType::COUNTRY}', current_date, current_date
-          FROM #{TMP_TABLE} AS TMP
+          FROM #{tmp_table} AS TMP
           WHERE NOT EXISTS (
           SELECT * FROM geo_entities
           WHERE legacy_id = TMP.legacy_id AND legacy_type = '#{GeoEntityType::COUNTRY}'

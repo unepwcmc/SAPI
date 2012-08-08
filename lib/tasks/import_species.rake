@@ -3,7 +3,7 @@ namespace :import do
 
   desc "Import species records from csv files [usage: rake import:species[path/to/file,path/to/another]"
   task :species => [:environment] do
-    ANIMALS_QUERY = <<-SQL
+    animals_query = <<-SQL
       SELECT 'Animalia' as Kingdom, P.PhyName, C.ClaName, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcInfraEpithet, S.SpcRecID, S.SpcStatus
       FROM [Animals].[dbo].[Species] S
       inner join ORWELL.animals.dbo.Genus G on S.Spcgenrecid = G.genrecid
@@ -57,7 +57,7 @@ namespace :import do
         --ORDER BY 2;
     SQL
 
-    PLANTS_QUERY = <<-SQL
+    plants_query = <<-SQL
       Select 'Plantae' as Kingdom, O.OrdName, F.FamName, G.GenName, S.Spcname, S.SpcInfraepithet, S.Spcrecid, S.SpcStatus
       from ORWELL.plants.dbo.Species S 
       inner join ORWELL.plants.dbo.Genus G on S.Spcgenrecid = G.genrecid
@@ -86,29 +86,29 @@ namespace :import do
     SQL
     ["animals", "plants"].each do |t|
       puts "Importing #{t.capitalize}"
-      TMP_TABLE = "#{t}_import"
-      drop_table(TMP_TABLE)
-      create_import_table(TMP_TABLE)
-      query = "#{t.upcase}_QUERY".constantize
-      copy_data(TMP_TABLE, query)
-      tmp_columns = MAPPING[TMP_TABLE][:tmp_columns]
-      import_data_for Rank::KINGDOM if tmp_columns.include? Rank::KINGDOM.capitalize
+      tmp_table = "#{t}_import"
+      drop_table(tmp_table)
+      create_import_table(tmp_table)
+      query = eval("#{t}_query")
+      copy_data(tmp_table, query)
+      tmp_columns = MAPPING[tmp_table][:tmp_columns]
+      import_data_for tmp_table, Rank::KINGDOM if tmp_columns.include? Rank::KINGDOM.capitalize
       if tmp_columns.include?(Rank::PHYLUM.capitalize) && 
         tmp_columns.include?(Rank::CLASS.capitalize) &&
         tmp_columns.include?('TaxonOrder')
-        import_data_for Rank::PHYLUM, Rank::KINGDOM
-        import_data_for Rank::CLASS, Rank::PHYLUM
-        import_data_for Rank::ORDER, Rank::CLASS, 'TaxonOrder'
+        import_data_for tmp_table, Rank::PHYLUM, Rank::KINGDOM
+        import_data_for tmp_table, Rank::CLASS, Rank::PHYLUM
+        import_data_for tmp_table, Rank::ORDER, Rank::CLASS, 'TaxonOrder'
       elsif tmp_columns.include?(Rank::CLASS.capitalize) && tmp_columns.include?('TaxonOrder')
-        import_data_for Rank::CLASS, Rank::KINGDOM
-        import_data_for Rank::ORDER, Rank::CLASS, 'TaxonOrder'
+        import_data_for tmp_table, Rank::CLASS, Rank::KINGDOM
+        import_data_for tmp_table, Rank::ORDER, Rank::CLASS, 'TaxonOrder'
       elsif tmp_columns.include? 'TaxonOrder'
-        import_data_for Rank::ORDER, Rank::KINGDOM, 'TaxonOrder'
+        import_data_for tmp_table, Rank::ORDER, Rank::KINGDOM, 'TaxonOrder'
       end
-      import_data_for Rank::FAMILY, 'TaxonOrder', nil, Rank::ORDER
-      import_data_for Rank::GENUS, Rank::FAMILY
-      import_data_for Rank::SPECIES, Rank::GENUS
-      import_data_for Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra'
+      import_data_for tmp_table, Rank::FAMILY, 'TaxonOrder', nil, Rank::ORDER
+      import_data_for tmp_table, Rank::GENUS, Rank::FAMILY
+      import_data_for tmp_table, Rank::SPECIES, Rank::GENUS
+      import_data_for tmp_table, Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra'
       #rebuild the tree
       TaxonConcept.rebuild!
       #set the depth on all nodes
@@ -128,7 +128,7 @@ end
 # @param [String] parent_column to keep the hierarchy of the taxons the parent column should be passed
 # @param [String] column_name if the which object is different from the column name in the tmp table, specify the column name
 # @param [String] parent_rank if the parent_column is different from the rank name, specify parent rank
-def import_data_for which, parent_column=nil, column_name=nil, parent_rank=nil
+def import_data_for tmp_table, which, parent_column=nil, column_name=nil, parent_rank=nil
   column_name ||= which
   puts "Importing #{which} from #{column_name} (#{parent_column})"
   rank_id = Rank.select(:id).where(:name => which).first.id
@@ -140,11 +140,11 @@ def import_data_for which, parent_column=nil, column_name=nil, parent_rank=nil
   sql = <<-SQL
     INSERT INTO taxon_names(scientific_name, created_at, updated_at)
       SELECT DISTINCT INITCAP(BTRIM(#{column_name})), current_date, current_date
-      FROM #{TMP_TABLE}
+      FROM #{tmp_table}
       WHERE NOT EXISTS (
         SELECT scientific_name
         FROM taxon_names
-        WHERE INITCAP(scientific_name) LIKE INITCAP(BTRIM(#{TMP_TABLE}.#{column_name}))
+        WHERE INITCAP(scientific_name) LIKE INITCAP(BTRIM(#{tmp_table}.#{column_name}))
       ) AND BTRIM(#{column_name}) <> 'NULL'
   SQL
   ActiveRecord::Base.connection.execute(sql)
@@ -165,10 +165,10 @@ def import_data_for which, parent_column=nil, column_name=nil, parent_rank=nil
          FROM
           (
             SELECT DISTINCT taxon_names.id AS taxon_name_id,
-           #{TMP_TABLE}.#{parent_column}, #{cites.id} AS designation_id
-           #{if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ", #{TMP_TABLE}.spcrecid" end}
-            FROM #{TMP_TABLE}
-            LEFT JOIN taxon_names ON (INITCAP(BTRIM(#{TMP_TABLE}.#{column_name})) LIKE INITCAP(BTRIM(taxon_names.scientific_name)))
+           #{tmp_table}.#{parent_column}, #{cites.id} AS designation_id
+           #{if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ", #{tmp_table}.spcrecid" end}
+            FROM #{tmp_table}
+            LEFT JOIN taxon_names ON (INITCAP(BTRIM(#{tmp_table}.#{column_name})) LIKE INITCAP(BTRIM(taxon_names.scientific_name)))
             WHERE NOT EXISTS (
               SELECT taxon_name_id, rank_id, designation_id
               FROM taxon_concepts
@@ -178,8 +178,8 @@ def import_data_for which, parent_column=nil, column_name=nil, parent_rank=nil
             )
             AND taxon_names.id IS NOT NULL
                 #{
-                if which == Rank::SPECIES then " AND (BTRIM(#{TMP_TABLE}.SpcInfra) IS NULL OR BTRIM(#{TMP_TABLE}.SpcInfra) = '' )"
-                elsif which == Rank::SUBSPECIES then " AND (BTRIM(#{TMP_TABLE}.SpcInfra) IS NOT NULL OR BTRIM(#{TMP_TABLE}.SpcInfra) <> '')"
+                if which == Rank::SPECIES then " AND (BTRIM(#{tmp_table}.SpcInfra) IS NULL OR BTRIM(#{tmp_table}.SpcInfra) = '' )"
+                elsif which == Rank::SUBSPECIES then " AND (BTRIM(#{tmp_table}.SpcInfra) IS NOT NULL OR BTRIM(#{tmp_table}.SpcInfra) <> '')"
                 end
                 }
           ) as tmp
@@ -194,7 +194,7 @@ def import_data_for which, parent_column=nil, column_name=nil, parent_rank=nil
     sql = <<-SQL
       INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id, created_at, updated_at)
         SELECT DISTINCT taxon_names.id, #{rank_id}, #{cites.id} AS designation_id, current_date, current_date
-        FROM #{TMP_TABLE} LEFT JOIN taxon_names ON (INITCAP(BTRIM(#{TMP_TABLE}.#{column_name})) LIKE INITCAP(BTRIM(taxon_names.scientific_name)))
+        FROM #{tmp_table} LEFT JOIN taxon_names ON (INITCAP(BTRIM(#{tmp_table}.#{column_name})) LIKE INITCAP(BTRIM(taxon_names.scientific_name)))
         WHERE NOT EXISTS (
           SELECT taxon_name_id, rank_id
           FROM taxon_concepts

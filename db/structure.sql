@@ -616,6 +616,43 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: animals_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE animals_import (
+    kingdom character varying,
+    phylum character varying,
+    class character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying
+);
+
+
+--
+-- Name: animals_synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE animals_synonym_import (
+    kingdom character varying,
+    phylum character varying,
+    class character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying,
+    accepted_species_id integer
+);
+
+
+--
 -- Name: change_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -979,7 +1016,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-08-08 07:40:24.957509'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-07-25 13:37:28.482069'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -1034,6 +1071,39 @@ CREATE SEQUENCE listing_distributions_id_seq
 --
 
 ALTER SEQUENCE listing_distributions_id_seq OWNED BY listing_distributions.id;
+
+
+--
+-- Name: plants_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE plants_import (
+    kingdom character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying
+);
+
+
+--
+-- Name: plants_synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE plants_synonym_import (
+    kingdom character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying,
+    accepted_species_id integer
+);
 
 
 --
@@ -1111,22 +1181,6 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: species_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE species_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying
-);
-
-
---
 -- Name: species_listings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1157,23 +1211,6 @@ CREATE SEQUENCE species_listings_id_seq
 --
 
 ALTER SEQUENCE species_listings_id_seq OWNED BY species_listings.id;
-
-
---
--- Name: synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE synonym_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying,
-    accepted_species_id integer
-);
 
 
 --
