@@ -14,9 +14,6 @@ gem 'awesome_nested_set'
 gem 'foreigner'
 gem 'prawn'
 
-# Link to MSSQL Server 2008
-gem 'tiny_tds'
-
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
@@ -32,6 +29,11 @@ gem 'tiny_tds'
 
 group :staging, :production do
   gem 'exception_notification', :require => 'exception_notifier'
+end
+
+group :staging, :production, :development do
+  # Link to MSSQL Server 2008
+  gem 'tiny_tds'
 end
 
 group :development do
