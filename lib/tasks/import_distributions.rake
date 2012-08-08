@@ -1,6 +1,6 @@
 namespace :import do
 
-  desc 'Import distributions from csv file [usage: rake import:distributions[path/to/file,path/to/another]'
+  desc 'Import distributions from SQL Server [usage: rake import:distributions]'
   task :distributions => [:environment] do
     ANIMALS_QUERY = <<-SQL
       Select S.SpcRecID, Cty.CtyRecID, Cty.CtyShort

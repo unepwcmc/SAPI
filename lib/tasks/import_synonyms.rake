@@ -1,6 +1,6 @@
 namespace :import do
 
-  desc 'Import synonyms from csv file [usage: rake import:synonyms[path/to/file,path/to/another]'
+  desc 'Import synonyms from SQL Server [usage: rake import:synonyms]'
   task :synonyms => [:environment] do
     ANIMALS_QUERY = <<-SQL
       Select 'Animalia' as Kingdom , P.PhyName, C.ClaName, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcInfraEpithet, S.SpcRecID AS SynonymSpcRecID, S.SpcStatus, SynSpcRecID AS AcceptedSpcRecID

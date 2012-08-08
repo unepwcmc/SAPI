@@ -37,17 +37,13 @@ namespace :import do
     Rake::Task["import:cites_regions"].invoke(
       'lib/assets/files/cites_regions.csv'
     )
-    Rake::Task["import:countries"].invoke
+    Rake::Task["import:countries"].invoke(
+      'lib/assets/files/countries.csv'
+    )
     Rake::Task["import:distributions"].invoke
     Rake::Task["import:cites_listings"].invoke
-    Rake::Task["import:common_names"].invoke(
-      'lib/assets/files/first_pages_cites/animals_common_names.csv',
-      'lib/assets/files/first_pages_cites/plants_common_names.csv'
-    )
-    Rake::Task["import:synonyms"].invoke(
-      'lib/assets/files/first_pages_cites/animals_synonyms.csv',
-      'lib/assets/files/first_pages_cites/plants_synonyms.csv'
-    )
+    Rake::Task["import:common_names"].invoke
+    Rake::Task["import:synonyms"].invoke
     Sapi::fix_listing_changes()
     Sapi::rebuild()
   end

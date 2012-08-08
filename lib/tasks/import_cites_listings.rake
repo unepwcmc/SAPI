@@ -1,6 +1,6 @@
 namespace :import do
 
-  desc "Import CITES species listings from csv file [usage: rake import:cites_listings[path/to/file,path/to/another]"
+  desc "Import CITES species listings from SQL Server [usage: rake import:cites_listings]"
   task :cites_listings => [:environment, "cites_listings:defaults"] do
     ANIMALS_QUERY = <<-SQL
       SELECT S.SpcRecID, L.LegListing, convert(varchar(10), L.LegDateListed, 120), C.CtyRecID, L.LegNotes

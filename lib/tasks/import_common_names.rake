@@ -1,6 +1,6 @@
 namespace :import do
 
-  desc 'Import common names from csv file [usage: rake import:common_names[path/to/file,path/to/another]'
+  desc 'Import common names from SQL server [usage: rake import:common_names]'
   task :common_names => [:environment] do
     ANIMALS_QUERY = <<-SQL
       Select C.ComName, L.LanDesc, S.SpcRecID
