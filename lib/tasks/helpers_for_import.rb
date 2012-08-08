@@ -38,6 +38,10 @@ MAPPING = {
     'plants_synonym_import' => {
       :create_tmp => "Kingdom varchar, TaxonOrder varchar, Family varchar, Genus varchar, Species varchar, SpcInfra varchar, SpcRecID integer, SpcStatus varchar, accepted_species_id integer",
       :tmp_columns => ["Kingdom", "TaxonOrder", "Family", "Genus", "Species", "SpcInfra", "SpcRecID", "SpcStatus", "accepted_species_id"]
+    },
+    'references_import' => {
+      :create_tmp => "DscRecID integer, DscTitle varchar, DscAuthors varchar, DscPubYear varchar",
+      :tmp_columns => ['DscRecID', 'DscTitle', 'DscAuthors', 'DscPubYear']
     }
 }
 

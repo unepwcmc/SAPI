@@ -616,6 +616,43 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: animals_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE animals_import (
+    kingdom character varying,
+    phylum character varying,
+    class character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying
+);
+
+
+--
+-- Name: animals_synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE animals_synonym_import (
+    kingdom character varying,
+    phylum character varying,
+    class character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying,
+    accepted_species_id integer
+);
+
+
+--
 -- Name: change_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1037,6 +1074,39 @@ ALTER SEQUENCE listing_distributions_id_seq OWNED BY listing_distributions.id;
 
 
 --
+-- Name: plants_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE plants_import (
+    kingdom character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying
+);
+
+
+--
+-- Name: plants_synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE plants_synonym_import (
+    kingdom character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying,
+    accepted_species_id integer
+);
+
+
+--
 -- Name: ranks; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1074,11 +1144,13 @@ ALTER SEQUENCE ranks_id_seq OWNED BY ranks.id;
 
 CREATE TABLE "references" (
     id integer NOT NULL,
-    title character varying(255) NOT NULL,
+    title text NOT NULL,
     year character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    author character varying(255)
+    author character varying(255),
+    legacy_id integer,
+    legacy_type character varying(255)
 );
 
 
@@ -1099,6 +1171,18 @@ CREATE SEQUENCE references_id_seq
 --
 
 ALTER SEQUENCE references_id_seq OWNED BY "references".id;
+
+
+--
+-- Name: references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE references_import (
+    dscrecid integer,
+    dsctitle character varying,
+    dscauthors character varying,
+    dscpubyear character varying
+);
 
 
 --
@@ -2184,3 +2268,9 @@ INSERT INTO schema_migrations (version) VALUES ('20120807121035');
 INSERT INTO schema_migrations (version) VALUES ('20120807122112');
 
 INSERT INTO schema_migrations (version) VALUES ('20120808074811');
+
+INSERT INTO schema_migrations (version) VALUES ('20120808125231');
+
+INSERT INTO schema_migrations (version) VALUES ('20120808131608');
+
+INSERT INTO schema_migrations (version) VALUES ('20120808134006');
