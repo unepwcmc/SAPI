@@ -26,6 +26,7 @@ namespace :import do
       'lib/assets/files/random/animals_synonyms.csv',
       'lib/assets/files/random/plants_synonyms.csv'
     )
+    Rake::Task["import:standard_references"].invoke
     Sapi::fix_listing_changes()
     Sapi::rebuild()
   end

@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION sapi_rebuild() RETURNS void
           PERFORM rebuild_descendant_listings();
           --RAISE NOTICE 'ancestor listings';
           PERFORM rebuild_ancestor_listings();
+          PERFORM rebuild_cites_accepted_flags();
         END;
       $$;
 

@@ -103,7 +103,7 @@ class TaxonConcept < ActiveRecord::Base
   [
     :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
     :genus_name, :species_name, :subspecies_name, :full_name, :rank_name,
-    :taxonomic_position
+    :taxonomic_position, :cites_accepted
   ].each do |attr_name|
     define_method(attr_name) { data && data[attr_name.to_s] }
   end
@@ -159,7 +159,7 @@ class TaxonConcept < ActiveRecord::Base
       :only =>[:id, :parent_id, :depth],
       :methods => [:family_name, :class_name, :full_name, :rank_name, :spp,
       :taxonomic_position, :current_listing, :english, :spanish, :french, 
-        :synonyms]
+      :synonyms, :cites_accepted]
     )
   end
 
