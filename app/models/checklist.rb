@@ -16,6 +16,7 @@ class Checklist
     unless @geo_options.empty?
       @taxon_concepts_rel = @taxon_concepts_rel.by_geo_entities(@geo_options)
     end
+
     #filter by species listing
     unless options[:cites_appendices].nil?
       @taxon_concepts_rel = @taxon_concepts_rel.by_cites_appendices(options[:cites_appendices])
@@ -43,6 +44,33 @@ class Checklist
     #show common names?
     unless options[:common_names].nil?
       @taxon_concepts_rel = @taxon_concepts_rel.with_common_names(options[:common_names])
+    end
+
+    #filter by scientific name
+    unless options[:scientific_name].nil?
+      @taxon_concepts_prev = @taxon_concepts_rel
+
+      @taxon_concepts_rel = @taxon_concepts_rel.where("data->'full_name' LIKE '%#{options[:scientific_name]}%'")
+      ids = @taxon_concepts_rel.map { |hash| hash.id }.join(', ')
+
+      @taxon_concepts_rel = @taxon_concepts_prev.joins(
+        <<-SQL
+        INNER JOIN (
+          WITH RECURSIVE q AS (
+            SELECT h, h.id, data->'full_name' AS full_name
+            FROM taxon_concepts h
+            WHERE id IN (#{ids})
+
+            UNION ALL
+
+            SELECT hi, hi.id, data->'full_name'
+            FROM q
+            JOIN taxon_concepts hi
+            ON hi.parent_id = (q.h).id
+          ) SELECT id, full_name FROM q
+        ) descendants ON taxon_concepts.id = descendants.id
+        SQL
+      )
     end
   end
 
