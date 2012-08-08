@@ -31,6 +31,11 @@ group :staging, :production do
   gem 'exception_notification', :require => 'exception_notifier'
 end
 
+group :staging, :production, :development do
+  # Link to MSSQL Server 2008
+  gem 'tiny_tds'
+end
+
 group :development do
   gem 'immigrant'
   gem "guard-livereload"
