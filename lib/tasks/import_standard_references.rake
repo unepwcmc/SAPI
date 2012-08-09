@@ -81,6 +81,69 @@ namespace :import do
       WHERE qqq.standard_reference_id = standard_references.id
       SQL
       ActiveRecord::Base.connection.execute(sql)
+      #add exceptions -- taxa that do not have a standard reference defined
+      exceptions = [
+      # Note that no standard references have been adopted for Hoplodactylus spp. (G),
+        'Hoplodactylus',
+        # Naultinus spp. (G), Uroplatus spp. (G) (except for Uroplatus giganteus),
+        'Naultinus', 'Uroplatus',
+        # Dracaena spp. and Heloderma spp.
+        'Dracaena', 'Heloderma',
+      # Note that no standard references have been adopted for Agalychnis spp. (G)
+        'Agalychnis',
+        # and Neurergus kaiseri.
+        'Neurergus kaiseri',
+      # Note that no standard references have been adopted for Colophon spp. (G)
+        'Colophon',
+        # (except for Colophon endroedyi), Bhutanitis spp. (G) and Teinopalpus spp. (G)
+        'Bhutanitis', 'Teinopalpus',
+      # No standard references have been adopted for Tridacnidae spp. (F)
+        'Tridacnidae',
+      # No standard references have been adopted for Achatinella spp. (G)
+        'Achatinella',
+      # No standard references have been adopted for Antipatharia spp. (O),
+        'Antipatharia',
+        # Scleractinia spp. (O), Milleporidae spp. (F), Stylasteridae spp. (F) and Tubiporidae spp. (F)
+        'Scleractinia', 'Milleporidae', 'Stylasteridae', 'Tubiporidae'
+      ]
+      sql = <<-SQL
+      UPDATE taxon_concepts
+      SET data = data || hstore('usr_no_std_ref', 't')
+      FROM (
+        SELECT id FROM taxon_concepts
+        WHERE data->'full_name' IN
+        (#{exceptions.map{|e| "'#{e}'"}.join(', ')})
+      ) q WHERE q.id = taxon_concepts.id
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
+      #add taxon_concept_references where missing
+      sql = <<-SQL
+      INSERT INTO taxon_concept_references (taxon_concept_id, reference_id)
+      SELECT taxon_concept_id, reference_id
+      FROM standard_references
+      WHERE NOT EXISTS (
+        SELECT * FROM taxon_concept_references
+        WHERE taxon_concept_id = standard_references.taxon_concept_id
+        AND reference_id = standard_references.reference_id
+      )
+      AND taxon_concept_id IS NOT NULL AND
+        reference_id IS NOT NULL
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
+      #set is_std_ref flags
+      sql = <<-SQL
+      UPDATE taxon_concept_references
+      SET is_std_ref = true
+      FROM (
+        SELECT taxon_concept_references.id
+        FROM taxon_concept_references
+        INNER JOIN taxon_concepts
+          ON taxon_concept_references.taxon_concept_id = taxon_concepts.id
+        INNER JOIN standard_references
+          ON taxon_concept_references.reference_id = standard_references.reference_id
+      ) q WHERE q.id = taxon_concept_references.id
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
     end
     puts "There are now #{StandardReference.count} standard references in the database"
   end

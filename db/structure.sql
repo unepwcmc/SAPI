@@ -1444,7 +1444,8 @@ CREATE TABLE taxon_concept_references (
     id integer NOT NULL,
     taxon_concept_id integer NOT NULL,
     reference_id integer NOT NULL,
-    is_author boolean DEFAULT false NOT NULL
+    is_author boolean DEFAULT false NOT NULL,
+    is_std_ref boolean DEFAULT false NOT NULL
 );
 
 
@@ -2373,3 +2374,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120808131608');
 INSERT INTO schema_migrations (version) VALUES ('20120808134006');
 
 INSERT INTO schema_migrations (version) VALUES ('20120809084541');
+
+INSERT INTO schema_migrations (version) VALUES ('20120809141929');
