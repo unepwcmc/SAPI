@@ -1,131 +1,88 @@
 #Encoding: utf-8
+
 namespace :import do
 
-  desc "Import hardcoded CITES standard references"
-  task :standard_references => [:environment] do
-
-    cites = Designation.find_by_name('CITES')
-    cites_reference_ids = cites.reference_ids
-    cites.references.delete_all
-    unless cites_reference_ids.empty?
+  desc "Import standard references records from csv file [usage: rake import:standard_references[path/to/file,path/to/another]"
+  task :standard_references, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+    tmp_table = 'standard_references_import'
+    puts "There are #{StandardReference.count} standard references in the database."
+    files = files_from_args(t, args)
+    files.each do |file|
+      drop_table(tmp_table)
+      create_import_table(tmp_table)
+      copy_data_from_file(tmp_table, file)
+      ActiveRecord::Base.connection.execute('DELETE FROM standard_references')
+      ranks = {
+        :kingdom => 'Kingdom',
+        :phylum => 'Phylum',
+        :class => 'Class',
+        :order => 'TaxonOrder',
+        :family => 'Family',
+        :genus => 'Genus',
+        :species => 'Species'
+      }
+      ranks.each do |k,v|
+        sql = <<-SQL
+          INSERT INTO standard_references (author, title, year,
+            taxon_concept_name, taxon_concept_rank, position,
+            created_at, updated_at)
+          SELECT author, title, "year",
+            UNNEST(STRING_TO_ARRAY(#{v},';')) AS taxon_concept_name,
+            '#{k.to_s.upcase}' AS taxon_concept_rank, row_number() OVER(),
+            current_date, current_date
+          FROM #{tmp_table}
+        SQL
+        ActiveRecord::Base.connection.execute(sql)
+      end
+      #insert the ones without taxon concept mapping
       sql = <<-SQL
-      DELETE FROM taxon_concept_references
-      WHERE reference_id IN (#{cites_reference_ids.join(',')})
+        INSERT INTO standard_references (author, title, year,
+          created_at, updated_at)
+        SELECT author, title, "year",
+          current_date, current_date
+        FROM #{tmp_table}
+        WHERE #{ranks.values.map{ |r| "#{r} IS NULL" }.join(' AND ')}
       SQL
       ActiveRecord::Base.connection.execute(sql)
-      Reference.where(:id => cites_reference_ids).delete_all
+      #update the taxon_concept_id and species_legacy_id
+      sql = <<-SQL
+        UPDATE standard_references
+        SET taxon_concept_id = q.id, species_legacy_id = q.legacy_id
+        FROM (
+        SELECT taxon_concept_name, taxon_concepts.id, taxon_concepts.legacy_id
+        FROM standard_references
+        INNER JOIN taxon_concepts
+        ON taxon_concept_name = taxon_concepts.data->'full_name'
+        ) q WHERE q.taxon_concept_name = standard_references.taxon_concept_name
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
+      #update the reference_id and reference_legacy_id
+      sql = <<-SQL
+      UPDATE standard_references
+      SET reference_id = qqq.reference_id, reference_legacy_id = qqq.reference_legacy_id
+      FROM (
+        SELECT DISTINCT q.id AS reference_id, q.legacy_id AS reference_legacy_id, qq.id AS standard_reference_id
+        FROM
+        (         
+          SELECT id,
+          (REGEXP_SPLIT_TO_ARRAY("standard_references".author,'[\s,.]')::VARCHAR[])[1] AS author_match,
+          SUBSTR(REGEXP_REPLACE(LOWER("standard_references".title),'[ .,:;_]','','g'), 0, 50) AS title_match
+          FROM standard_references
+        ) qq 
+        INNER JOIN
+        (
+          SELECT id, legacy_id,
+          (REGEXP_SPLIT_TO_ARRAY("references".author,'[\s,.]')::VARCHAR[])[1] AS author_match,
+          SUBSTR(REGEXP_REPLACE(LOWER("references".title),'[ .,:;_]','','g'), 0, 50) AS title_match
+          FROM "references"
+        ) q   
+        ON q.title_match = qq.title_match AND q.author_match = qq.author_match
+      ) qqq
+      WHERE qqq.standard_reference_id = standard_references.id
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
     end
-
-    ref1 = Reference.create(
-      :author => 'Wilson, D. E. & Reeder, D. M. (Third edition 2005)',
-      :title => 'Mammal Species of the World. A Taxonomic and Geographic Reference',
-      :year => 2005
-    )
-# [for all mammals –
-# with the exception of the recognition of the following names for wild forms of species (in preference to names for
-# domestic forms): Bos gaurus, Bos mutus, Bubalus arnee, Equus africanus, Equus przewalskii, Ovis orientalis
-# ophion; and with the exception of the species mentioned below]
-
-    mammalia = TaxonConcept.joins(:taxon_name).where('taxon_names.scientific_name' => 'Mammalia').first
-    if mammalia
-      mammalia.references << ref1
-    end
-
-    ref2 = Reference.create(
-      :author => 'Beasley, I., Robertson, K. M. & Arnold, P. W.',
-      :title => 'Description of a new dolphin, the Australian Snubfin Dolphin, Orcaella heinsohni sp. n. (Cetacea, Delphinidae).',
-      :year => 2005
-    )
-# [for Orcaella heinsohni]
-
-    orcaella = TaxonConcept.where(:legacy_id => 99482).first
-    if orcaella
-      orcaella.references << ref2
-    end
-
-    ref3 = Reference.create(
-      :author => 'Caballero, S., Trujillo, F., Vianna, J. A., Barrios-Garrido, H., Montiel, M. G., Beltrán-Pedreros, S. Marmontel, M., Santos, M. C., Rossi-Santos, M. R., Santos, F. R. & Baker, C. S.',
-      :title => 'Taxonomic status of the genus Sotalia: species level ranking for "tucuxi" (Sotalia fluviatilis) and "costero" (Sotalia guianensis) dolphins.',
-      :year => 2007
-    )
-# [for Sotalia fluviatilis and Sotalia guianensis]
-
-    sotalia_f = TaxonConcept.where(:legacy_id => 20422).first
-    if sotalia_f
-      sotalia_f.references << ref3
-    end
-    sotalia_g = TaxonConcept.where(:legacy_id => 28657).first
-    if sotalia_g
-      sotalia_g.references << ref3
-    end
-
-    ref4 = Reference.create(
-      :author => 'Merker, S. & Groves, C. P.',
-      :title => 'Tarsius lariang: A new primate species from Western Central Sulawesi.',
-      :year => 2006
-    )
-# [for Tarsius lariang]
-
-    tarsius = TaxonConcept.where(:legacy_id => 101536).first
-    if tarsius
-      tarsius.references << ref4
-    end
-
-    ref5 = Reference.create(
-      :author => 'Rice, D. W.',
-      :title => 'Marine Mammals of the World: Systematics and Distribution',
-      :year => 1998
-    )
-# [for Physeter macrocephalus and Platanista gangetica]
-
-    physeter = TaxonConcept.where(:legacy_id => 17244).first
-    if physeter
-      physeter.references << ref5
-    end
-
-    platanista = TaxonConcept.where(:legacy_id => 17488).first
-    if platanista
-      platanista.references << ref5
-    end
-
-    ref6 = Reference.create(
-      :author => 'Wada, S., Oishi, M. & Yamada, T. K.',
-      :title => 'A newly discovered species of living baleen whales.',
-      :year => 2003
-    )
-# [for Balaenoptera omurai]
-
-    balaenoptera = TaxonConcept.where(:legacy_id => 87572).first
-    if balaenoptera
-      balaenoptera.references << ref6
-    end
-
-    ref7 = Reference.create(
-      :author => 'Wilson, D. E. & Reeder, D. M.',
-      :title => 'Mammal Species of the World: a Taxonomic and Geographic Reference. (Second edition 1993)',
-      :year => 1993
-    )
-# [for Loxodonta africana, Puma concolor, Lama guanicoe and Ovis vignei]
-
-    loxodonta = TaxonConcept.where(:legacy_id => 12392).first
-    if loxodonta
-      loxodonta.references << ref7
-    end
-
-    puma = TaxonConcept.where(:legacy_id => 18868).first
-    if puma
-      puma.references << ref7
-    end
-
-    ovis = TaxonConcept.where(:legacy_id => 29583).first
-    if ovis
-      ovis.references << ref7
-    end
-
-    [ref1, ref2, ref3, ref4, ref5, ref6, ref7].each do |ref|
-      cites.references << ref
-    end
-
+    puts "There are now #{StandardReference.count} standard references in the database"
   end
 
 end

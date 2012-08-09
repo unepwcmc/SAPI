@@ -1016,7 +1016,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-07-25 13:37:28.482069'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-08-08 07:40:24.957509'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -1139,6 +1139,30 @@ ALTER SEQUENCE ranks_id_seq OWNED BY ranks.id;
 
 
 --
+-- Name: reference_links; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE reference_links (
+    dslspcrecid integer,
+    dsldscrecid integer,
+    dslcode character varying,
+    dslcoderecid integer
+);
+
+
+--
+-- Name: reference_links_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE reference_links_import (
+    dslspcrecid integer,
+    dsldscrecid integer,
+    dslcode character varying,
+    dslcoderecid integer
+);
+
+
+--
 -- Name: references; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1195,6 +1219,22 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: species_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE species_import (
+    kingdom character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying
+);
+
+
+--
 -- Name: species_listings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1225,6 +1265,81 @@ CREATE SEQUENCE species_listings_id_seq
 --
 
 ALTER SEQUENCE species_listings_id_seq OWNED BY species_listings.id;
+
+
+--
+-- Name: standard_references; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE standard_references (
+    id integer NOT NULL,
+    author character varying(255),
+    title text,
+    year integer,
+    reference_id integer,
+    reference_legacy_id integer,
+    taxon_concept_name character varying(255),
+    taxon_concept_rank character varying(255),
+    taxon_concept_id integer,
+    species_legacy_id integer,
+    "position" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: standard_references_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE standard_references_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: standard_references_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE standard_references_id_seq OWNED BY standard_references.id;
+
+
+--
+-- Name: standard_references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE standard_references_import (
+    author character varying,
+    year integer,
+    title text,
+    kingdom character varying,
+    phylum character varying,
+    class character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying
+);
+
+
+--
+-- Name: synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE synonym_import (
+    kingdom character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    spcinfra character varying,
+    spcrecid integer,
+    spcstatus character varying,
+    accepted_species_id integer
+);
 
 
 --
@@ -1593,6 +1708,13 @@ ALTER TABLE ONLY species_listings ALTER COLUMN id SET DEFAULT nextval('species_l
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY standard_references ALTER COLUMN id SET DEFAULT nextval('standard_references_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY taxon_commons ALTER COLUMN id SET DEFAULT nextval('taxon_commons_id_seq'::regclass);
 
 
@@ -1755,6 +1877,14 @@ ALTER TABLE ONLY "references"
 
 ALTER TABLE ONLY species_listings
     ADD CONSTRAINT species_listings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: standard_references_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY standard_references
+    ADD CONSTRAINT standard_references_pkey PRIMARY KEY (id);
 
 
 --
@@ -2241,3 +2371,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120808125231');
 INSERT INTO schema_migrations (version) VALUES ('20120808131608');
 
 INSERT INTO schema_migrations (version) VALUES ('20120808134006');
+
+INSERT INTO schema_migrations (version) VALUES ('20120809084541');
