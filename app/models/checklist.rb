@@ -50,7 +50,7 @@ class Checklist
     unless options[:scientific_name].nil?
       @taxon_concepts_prev = @taxon_concepts_rel
 
-      @taxon_concepts_rel = @taxon_concepts_rel.where("data->'full_name' ILIKE '%#{options[:scientific_name]}%'")
+      @taxon_concepts_rel = @taxon_concepts_rel.where("data->'full_name' ILIKE '#{options[:scientific_name]}%'")
       ids = @taxon_concepts_rel.map { |hash| hash.id }.join(', ')
 
       @taxon_concepts_rel = @taxon_concepts_prev.joins(
@@ -67,7 +67,7 @@ class Checklist
             FROM q
             JOIN taxon_concepts hi
             ON hi.parent_id = (q.h).id
-          ) SELECT id, full_name FROM q
+          ) SELECT DISTINCT id, full_name FROM q
         ) descendants ON taxon_concepts.id = descendants.id
         SQL
       ) unless ids.empty?
