@@ -103,9 +103,13 @@ class TaxonConcept < ActiveRecord::Base
   [
     :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
     :genus_name, :species_name, :subspecies_name, :full_name, :rank_name,
-    :taxonomic_position, :cites_accepted
+    :taxonomic_position
   ].each do |attr_name|
     define_method(attr_name) { data && data[attr_name.to_s] }
+  end
+
+  def cites_accepted
+    data && data['cites_accepted'] == 't'
   end
 
   #here go the CITES listing flags
