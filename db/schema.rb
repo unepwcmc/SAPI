@@ -11,7 +11,34 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120808074811) do
+ActiveRecord::Schema.define(:version => 20120810084818) do
+
+  create_table "animals_import", :id => false, :force => true do |t|
+    t.string  "kingdom",    :limit => nil
+    t.string  "phylum",     :limit => nil
+    t.string  "class",      :limit => nil
+    t.string  "taxonorder", :limit => nil
+    t.string  "family",     :limit => nil
+    t.string  "genus",      :limit => nil
+    t.string  "species",    :limit => nil
+    t.string  "spcinfra",   :limit => nil
+    t.integer "spcrecid"
+    t.string  "spcstatus",  :limit => nil
+  end
+
+  create_table "animals_synonym_import", :id => false, :force => true do |t|
+    t.string  "kingdom",             :limit => nil
+    t.string  "phylum",              :limit => nil
+    t.string  "class",               :limit => nil
+    t.string  "taxonorder",          :limit => nil
+    t.string  "family",              :limit => nil
+    t.string  "genus",               :limit => nil
+    t.string  "species",             :limit => nil
+    t.string  "spcinfra",            :limit => nil
+    t.integer "spcrecid"
+    t.string  "spcstatus",           :limit => nil
+    t.integer "accepted_species_id"
+  end
 
   create_table "change_types", :force => true do |t|
     t.string   "name"
@@ -53,11 +80,6 @@ ActiveRecord::Schema.define(:version => 20120808074811) do
     t.string  "name",          :limit => nil
     t.string  "long_name",     :limit => nil
     t.string  "region_number", :limit => nil
-  end
-
-  create_table "designation_references", :force => true do |t|
-    t.integer "designation_id", :null => false
-    t.integer "reference_id",   :null => false
   end
 
   create_table "designations", :force => true do |t|
@@ -134,6 +156,29 @@ ActiveRecord::Schema.define(:version => 20120808074811) do
     t.boolean  "is_party",          :default => true, :null => false
   end
 
+  create_table "plants_import", :id => false, :force => true do |t|
+    t.string  "kingdom",    :limit => nil
+    t.string  "taxonorder", :limit => nil
+    t.string  "family",     :limit => nil
+    t.string  "genus",      :limit => nil
+    t.string  "species",    :limit => nil
+    t.string  "spcinfra",   :limit => nil
+    t.integer "spcrecid"
+    t.string  "spcstatus",  :limit => nil
+  end
+
+  create_table "plants_synonym_import", :id => false, :force => true do |t|
+    t.string  "kingdom",             :limit => nil
+    t.string  "taxonorder",          :limit => nil
+    t.string  "family",              :limit => nil
+    t.string  "genus",               :limit => nil
+    t.string  "species",             :limit => nil
+    t.string  "spcinfra",            :limit => nil
+    t.integer "spcrecid"
+    t.string  "spcstatus",           :limit => nil
+    t.integer "accepted_species_id"
+  end
+
   create_table "ranks", :force => true do |t|
     t.string   "name",       :null => false
     t.integer  "parent_id"
@@ -141,12 +186,35 @@ ActiveRecord::Schema.define(:version => 20120808074811) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "reference_links", :id => false, :force => true do |t|
+    t.integer "dslspcrecid"
+    t.integer "dsldscrecid"
+    t.string  "dslcode",      :limit => nil
+    t.integer "dslcoderecid"
+  end
+
+  create_table "reference_links_import", :id => false, :force => true do |t|
+    t.integer "dslspcrecid"
+    t.integer "dsldscrecid"
+    t.string  "dslcode",      :limit => nil
+    t.integer "dslcoderecid"
+  end
+
   create_table "references", :force => true do |t|
-    t.string   "title",      :null => false
+    t.text     "title",       :null => false
     t.string   "year"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.string   "author"
+    t.integer  "legacy_id"
+    t.string   "legacy_type"
+  end
+
+  create_table "references_import", :id => false, :force => true do |t|
+    t.integer "dscrecid"
+    t.string  "dsctitle",   :limit => nil
+    t.string  "dscauthors", :limit => nil
+    t.string  "dscpubyear", :limit => nil
   end
 
   create_table "species_import", :id => false, :force => true do |t|
@@ -166,6 +234,34 @@ ActiveRecord::Schema.define(:version => 20120808074811) do
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
     t.string   "abbreviation"
+  end
+
+  create_table "standard_references", :force => true do |t|
+    t.string   "author"
+    t.text     "title"
+    t.integer  "year"
+    t.integer  "reference_id"
+    t.integer  "reference_legacy_id"
+    t.string   "taxon_concept_name"
+    t.string   "taxon_concept_rank"
+    t.integer  "taxon_concept_id"
+    t.integer  "species_legacy_id"
+    t.integer  "position"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  create_table "standard_references_import", :id => false, :force => true do |t|
+    t.string  "author",     :limit => nil
+    t.integer "year"
+    t.text    "title"
+    t.string  "kingdom",    :limit => nil
+    t.string  "phylum",     :limit => nil
+    t.string  "class",      :limit => nil
+    t.string  "taxonorder", :limit => nil
+    t.string  "family",     :limit => nil
+    t.string  "genus",      :limit => nil
+    t.string  "species",    :limit => nil
   end
 
   create_table "synonym_import", :id => false, :force => true do |t|
@@ -203,6 +299,7 @@ ActiveRecord::Schema.define(:version => 20120808074811) do
     t.integer "taxon_concept_id",                    :null => false
     t.integer "reference_id",                        :null => false
     t.boolean "is_author",        :default => false, :null => false
+    t.boolean "is_std_ref",       :default => false, :null => false
   end
 
   create_table "taxon_concepts", :force => true do |t|
@@ -250,9 +347,6 @@ ActiveRecord::Schema.define(:version => 20120808074811) do
   add_foreign_key "change_types", "designations", :name => "change_types_designation_id_fk"
 
   add_foreign_key "common_names", "languages", :name => "common_names_language_id_fk"
-
-  add_foreign_key "designation_references", "designations", :name => "designation_references_designation_id_fk"
-  add_foreign_key "designation_references", "references", :name => "designation_references_reference_id_fk"
 
   add_foreign_key "geo_entities", "geo_entity_types", :name => "geo_entities_geo_entity_type_id_fk"
 

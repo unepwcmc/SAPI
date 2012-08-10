@@ -31,11 +31,6 @@ FactoryGirl.define do
   factory :reference do
     author 'Bolek'
     title 'Przygód kilka wróbla ćwirka'
-
-    factory :cites_reference do
-      designations { [Designation.find_by_name('CITES')] }
-    end
-
   end
 
 end

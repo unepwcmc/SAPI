@@ -40,7 +40,7 @@ shared_context "Caiman latirostris" do
     )
 
     ref = create(
-      :cites_reference,
+      :reference,
       :title => 'Schildkröte, Krokodile, Brückenechsen',
       :author => 'Wermuth, H. & Mertens, R.',
       :year => 1996

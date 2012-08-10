@@ -228,7 +228,7 @@ CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           INNER JOIN designations
             ON designations.id = taxon_concepts.designation_id
           WHERE designations.name = 'CITES'
-            AND taxon_relationships_types.name = 'HAS_SYNONYM'
+            AND taxon_relationship_types.name = 'HAS_SYNONYM'
         ) AS q
         WHERE taxon_concepts.id = q.id;
 
@@ -699,36 +699,6 @@ CREATE SEQUENCE common_names_id_seq
 --
 
 ALTER SEQUENCE common_names_id_seq OWNED BY common_names.id;
-
-
---
--- Name: designation_references; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE designation_references (
-    id integer NOT NULL,
-    designation_id integer NOT NULL,
-    reference_id integer NOT NULL
-);
-
-
---
--- Name: designation_references_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE designation_references_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: designation_references_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE designation_references_id_seq OWNED BY designation_references.id;
 
 
 --
@@ -1431,13 +1401,6 @@ ALTER TABLE ONLY common_names ALTER COLUMN id SET DEFAULT nextval('common_names_
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY designation_references ALTER COLUMN id SET DEFAULT nextval('designation_references_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY designations ALTER COLUMN id SET DEFAULT nextval('designations_id_seq'::regclass);
 
 
@@ -1588,14 +1551,6 @@ ALTER TABLE ONLY change_types
 
 ALTER TABLE ONLY common_names
     ADD CONSTRAINT common_names_pkey PRIMARY KEY (id);
-
-
---
--- Name: designation_references_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY designation_references
-    ADD CONSTRAINT designation_references_pkey PRIMARY KEY (id);
 
 
 --
@@ -1793,22 +1748,6 @@ ALTER TABLE ONLY change_types
 
 ALTER TABLE ONLY common_names
     ADD CONSTRAINT common_names_language_id_fk FOREIGN KEY (language_id) REFERENCES languages(id);
-
-
---
--- Name: designation_references_designation_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY designation_references
-    ADD CONSTRAINT designation_references_designation_id_fk FOREIGN KEY (designation_id) REFERENCES designations(id);
-
-
---
--- Name: designation_references_reference_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY designation_references
-    ADD CONSTRAINT designation_references_reference_id_fk FOREIGN KEY (reference_id) REFERENCES "references"(id);
 
 
 --
@@ -2182,3 +2121,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120808134006');
 INSERT INTO schema_migrations (version) VALUES ('20120809084541');
 
 INSERT INTO schema_migrations (version) VALUES ('20120809141929');
+
+INSERT INTO schema_migrations (version) VALUES ('20120810084818');
