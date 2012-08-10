@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           INNER JOIN taxon_concept_references
             ON taxon_concept_references.taxon_concept_id = taxon_concepts.id
           INNER JOIN designations ON taxon_concepts.designation_id = designations.id
-          WHERE designations.name = 'CITES' AND taxon_concept_references.is_std_ref = 't'
+          WHERE designations.name = 'CITES' AND (taxon_concept_references.data->'is_std_ref')::BOOLEAN = 't'
         ) AS q
         WHERE taxon_concepts.id = q.id;
 

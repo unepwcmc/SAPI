@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120810084818) do
+ActiveRecord::Schema.define(:version => 20120810145423) do
 
   create_table "animals_import", :id => false, :force => true do |t|
     t.string  "kingdom",    :limit => nil
@@ -299,7 +299,7 @@ ActiveRecord::Schema.define(:version => 20120810084818) do
     t.integer "taxon_concept_id",                    :null => false
     t.integer "reference_id",                        :null => false
     t.boolean "is_author",        :default => false, :null => false
-    t.boolean "is_std_ref",       :default => false, :null => false
+    t.hstore  "data",                                :null => false
   end
 
   create_table "taxon_concepts", :force => true do |t|
@@ -314,7 +314,6 @@ ActiveRecord::Schema.define(:version => 20120810084818) do
     t.integer  "taxon_name_id",                          :null => false
     t.integer  "legacy_id"
     t.boolean  "inherit_distribution", :default => true, :null => false
-    t.boolean  "inherit_references",   :default => true, :null => false
     t.hstore   "data"
     t.boolean  "fully_covered",        :default => true, :null => false
     t.hstore   "listing"

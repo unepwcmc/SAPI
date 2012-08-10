@@ -46,7 +46,7 @@ shared_context "Caiman latirostris" do
       :year => 1996
     )
 
-    @species.references << ref
+    @species.references << ref #TODO this should be marked as a std ref
 
     argentina = create(
       :country,

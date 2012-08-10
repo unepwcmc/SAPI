@@ -210,7 +210,7 @@ CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           INNER JOIN taxon_concept_references
             ON taxon_concept_references.taxon_concept_id = taxon_concepts.id
           INNER JOIN designations ON taxon_concepts.designation_id = designations.id
-          WHERE designations.name = 'CITES' AND taxon_concept_references.is_std_ref = 't'
+          WHERE designations.name = 'CITES' AND (taxon_concept_references.data->'is_std_ref')::BOOLEAN = 't'
         ) AS q
         WHERE taxon_concepts.id = q.id;
 
@@ -1221,7 +1221,7 @@ CREATE TABLE taxon_concept_references (
     taxon_concept_id integer NOT NULL,
     reference_id integer NOT NULL,
     is_author boolean DEFAULT false NOT NULL,
-    is_std_ref boolean DEFAULT false NOT NULL
+    data hstore DEFAULT ''::hstore NOT NULL
 );
 
 
@@ -1261,7 +1261,6 @@ CREATE TABLE taxon_concepts (
     taxon_name_id integer NOT NULL,
     legacy_id integer,
     inherit_distribution boolean DEFAULT true NOT NULL,
-    inherit_references boolean DEFAULT true NOT NULL,
     data hstore DEFAULT ''::hstore,
     fully_covered boolean DEFAULT true NOT NULL,
     listing hstore
@@ -2123,3 +2122,9 @@ INSERT INTO schema_migrations (version) VALUES ('20120809084541');
 INSERT INTO schema_migrations (version) VALUES ('20120809141929');
 
 INSERT INTO schema_migrations (version) VALUES ('20120810084818');
+
+INSERT INTO schema_migrations (version) VALUES ('20120810101954');
+
+INSERT INTO schema_migrations (version) VALUES ('20120810102226');
+
+INSERT INTO schema_migrations (version) VALUES ('20120810145423');

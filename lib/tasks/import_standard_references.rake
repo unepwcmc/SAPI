@@ -133,7 +133,7 @@ namespace :import do
       #set is_std_ref flags
       sql = <<-SQL
       UPDATE taxon_concept_references
-      SET is_std_ref = true
+      SET data = data || hstore('is_std_ref', 't')
       FROM (
         SELECT taxon_concept_references.id
         FROM taxon_concept_references
