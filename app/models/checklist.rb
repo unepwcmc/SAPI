@@ -110,39 +110,66 @@ class Checklist
   # @param [Hash] a hash of search params and their values
   # @return [String] a summary of the search params
   def self.summarise_filters(options)
-    summary = ["Results from"]
+    return ""  if options.length == 0
+
+    summary = []
 
     # country
     unless options[:country_ids].nil?
-        countries = GeoEntity.find_all_by_id(options[:country_ids])
-        if countries.count <= 3
-          summary << countries.map { |c| c.name }.join(", ")
-        else
-          summary << "#{countries.count} countries"
-        end
+      summary = ["Results from"]  if summary.length == 0
+
+      countries = GeoEntity.find_all_by_id(options[:country_ids])
+
+      @countries_count = countries.count
+      if (1..3).include?(@countries_count)
+        summary << countries.map { |c| c.name }.join(", ")
+      elsif @countries_count > 3
+        summary << "#{@countries_count} countries"
+      end
     end
 
     # region
     unless options[:cites_region_ids].nil?
-        regions = GeoEntity.find_all_by_id(options[:cites_region_ids])
+      summary = ["Results from"]  if summary.length == 0
 
-        summary << "(within #{helpers.pluralize(regions.count, 'region')})"
+      regions = GeoEntity.find_all_by_id(options[:cites_region_ids])
+
+      @regions_count = regions.count
+      if @regions_count > 0
+        summary << "within"  if @countries_count > 0
+        summary << "#{helpers.pluralize(regions.count, 'region')}"
+      end
     end
 
     # appendix
     unless options[:cites_appendices].nil?
-      summary << "on appx"
+      summary = ["Results from"]  if summary.length == 0
+
+      if (!options[:cites_region_ids].nil? ||
+          !options[:country_ids].nil?) &&
+         (@countries_count > 0 ||
+          @regions_count > 0)
+        summary << "on"
+      end
+
+      summary << "appx"
       summary << options[:cites_appendices].join(", ")
     end
 
     # name
     unless options[:scientific_name].nil?
+      summary = ["Results"]  if summary.length == 0
+
       summary << "for '#{options[:scientific_name]}'"
     end
 
     # synonyms
     unless options[:synonyms].nil?
-      summary << "(showing synonyms)"
+      if summary.length == 0
+        summary << "All results including synonyms"
+      else
+        summary << "(showing synonyms)"
+      end
     end
 
     summary.join(" ")
