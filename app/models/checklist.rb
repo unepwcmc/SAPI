@@ -1,6 +1,11 @@
 #Encoding: utf-8
 class Checklist
   attr_accessor :taxon_concepts_rel
+
+  # Constructs a query to retrieve taxon concepts based on user defined
+  # parameters
+  #
+  # @param [Hash] a hash of search params and their values
   def initialize(options)
     @designation = options[:designation] || Designation::CITES
 
@@ -37,10 +42,12 @@ class Checklist
     else
       @taxon_concepts_rel.alphabetical_layout
     end.order("taxon_concepts.data->'kingdom_name'")#animalia first
+
     #show synonyms?
     unless options[:synonyms].nil?
       @taxon_concepts_rel = @taxon_concepts_rel.with_synonyms
     end
+
     #show common names?
     unless options[:common_names].nil?
       @taxon_concepts_rel = @taxon_concepts_rel.with_common_names(options[:common_names])
@@ -74,6 +81,12 @@ class Checklist
     end
   end
 
+  # Takes the current search query, paginates it and adds metadata
+  #
+  # @param [Integer] page the current page number to offset by
+  # @param [Integer] per_page the number of results per page
+  # @return [Array] an array containing a hash of search results and
+  #   related metadata
   def generate(page, per_page)
     page ||= 0
     per_page ||= 50
@@ -87,5 +100,57 @@ class Checklist
       :result_cnt => @taxon_concepts_rel.count,
       :total_cnt => total_cnt
     }]
+  end
+
+  # Converts a list of search filters into a limited length
+  # summary of what the search covers
+  #
+  # e.g. Results from 4 countries on appx I or II for 'Abyssopathes'
+  #
+  # @param [Hash] a hash of search params and their values
+  # @return [String] a summary of the search params
+  def self.summarise_filters(options)
+    summary = ["Results from"]
+
+    # country
+    unless options[:country_ids].nil?
+        countries = GeoEntity.find_all_by_id(options[:country_ids])
+        if countries.count <= 3
+          summary << countries.map { |c| c.name }.join(", ")
+        else
+          summary << "#{countries.count} countries"
+        end
+    end
+
+    # region
+    unless options[:cites_region_ids].nil?
+        regions = GeoEntity.find_all_by_id(options[:cites_region_ids])
+
+        summary << "(within #{helpers.pluralize(regions.count, 'region')})"
+    end
+
+    # appendix
+    unless options[:cites_appendices].nil?
+      summary << "on appx"
+      summary << options[:cites_appendices].join(", ")
+    end
+
+    # name
+    unless options[:scientific_name].nil?
+      summary << "for '#{options[:scientific_name]}'"
+    end
+
+    # synonyms
+    unless options[:synonyms].nil?
+      summary << "(showing synonyms)"
+    end
+
+    summary.join(" ")
+  end
+
+  private
+
+  def self.helpers
+    ActionController::Base.helpers
   end
 end
