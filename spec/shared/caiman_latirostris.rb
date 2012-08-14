@@ -39,14 +39,19 @@ shared_context "Caiman latirostris" do
       :other_taxon_concept => @species1
     )
 
-    ref = create(
+    @ref = create(
       :reference,
       :title => 'Schildkröte, Krokodile, Brückenechsen',
       :author => 'Wermuth, H. & Mertens, R.',
       :year => 1996
     )
 
-    @species.references << ref #TODO this should be marked as a std ref
+    create(
+      :taxon_concept_reference,
+      :taxon_concept => @species,
+      :reference => @ref,
+      :data => {:usr_is_std_ref => 't'}
+    )
 
     argentina = create(
       :country,

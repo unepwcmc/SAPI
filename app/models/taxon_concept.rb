@@ -97,6 +97,66 @@ class TaxonConcept < ActiveRecord::Base
       ) synonyms ON taxon_concepts.id = synonyms.taxon_concept_id_s
       SQL
     )
+  scope :with_standard_references, select(:std_ref_ary).joins(
+    <<-SQL
+    LEFT JOIN (
+      WITH RECURSIVE q AS (
+        SELECT
+          h, h.id,
+          taxon_concept_references.reference_id AS std_ref_id,
+          taxon_concept_references.reference_id AS inh_std_ref_id
+        FROM
+          taxon_concepts h
+        LEFT JOIN taxon_concept_references
+          ON h.id = taxon_concept_references.taxon_concept_id AND taxon_concept_references.data -> 'usr_is_std_ref' = 't'
+        WHERE parent_id IS NULL
+
+      UNION ALL
+
+        SELECT
+          hi, hi.id,
+          taxon_concept_references.reference_id AS std_ref_id,
+        CASE
+          WHEN taxon_concept_references.reference_id IS NULL THEN inh_std_ref_id
+          ELSE taxon_concept_references.reference_id
+        END
+        FROM
+        q
+        JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
+        LEFT JOIN taxon_concept_references
+          ON hi.id = taxon_concept_references.taxon_concept_id AND taxon_concept_references.data -> 'usr_is_std_ref' = 't'
+      )
+
+      SELECT (q.h).id AS taxon_concept_id_sr,
+      ARRAY(SELECT DISTINCT UNNEST(ARRAY_AGG(std_ref_id) || ARRAY_AGG(inh_std_ref_id))) AS std_ref_ary
+      FROM q
+      GROUP BY (q.h).id
+    ) standard_references ON taxon_concepts.id = standard_references.taxon_concept_id_sr
+    SQL
+  )
+
+# TODO maybe along these lines:
+# WITH taxon_concepts_with_std_refs AS (
+  # SELECT taxon_concepts.id, parent_id, ARRAY_AGG(taxon_concept_references) AS std_ref_ary
+  # FROM taxon_concepts
+  # LEFT JOIN taxon_concept_references
+  # ON taxon_concepts.id = taxon_concept_references.taxon_concept_id
+  # GROUP BY taxon_concepts.id
+# )
+# SELECT * FROM (
+  # WITH RECURSIVE q1 AS (
+    # SELECT h, h.id
+    # FROM taxon_concepts_with_std_refs h
+    # WHERE h.parent_id IS NULL
+#     
+    # UNION ALL
+#     
+    # SELECT hi, hi.id
+    # FROM q1
+    # JOIN taxon_concepts_with_std_refs hi ON hi.parent_id = (q1.h).id
+  # )
+  # SELECT * FROM q1
+# ) q2
 
   acts_as_nested_set
 
@@ -145,6 +205,22 @@ class TaxonConcept < ActiveRecord::Base
       parse_pg_array(synonyms_ary || '').compact.map do |e|
         e.force_encoding('utf-8')
       end.join(', ')
+    else
+      nil
+    end
+  end
+
+  #note this will probably return external reference ids in the future
+  def standard_references
+    me = unless respond_to?(:std_ref_ary)
+      TaxonConcept.with_standard_references.where(:id => self.id).first
+    else
+      self
+    end
+    if me.respond_to?(:std_ref_ary)
+      parse_pg_array(me.std_ref_ary || '').compact.map do |e|
+        e.force_encoding('utf-8')
+      end.map(&:to_i)
     else
       nil
     end

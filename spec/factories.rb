@@ -33,4 +33,10 @@ FactoryGirl.define do
     title 'Przygód kilka wróbla ćwirka'
   end
 
+  factory :taxon_concept_reference do
+    taxon_concept
+    reference
+    data {}
+  end
+
 end
