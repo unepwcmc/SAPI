@@ -90,7 +90,7 @@ class PdfChecklistHistory < ChecklistHistory
       #add page numbers
       string = "History of CITES listings – <page>"
       options = {
-        :at => [pdf.bounds.right / 2 - 75, pdf.bounds.top + 20],
+        :at => [pdf.bounds.right / 2 - 75, 0],
         :width => 150,
         :align => :center,
         :start_count_at => static_page_count - 2, # Ignore the first two cover pages

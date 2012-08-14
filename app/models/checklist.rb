@@ -7,6 +7,8 @@ class Checklist
   #
   # @param [Hash] a hash of search params and their values
   def initialize(options)
+    @params = options
+
     @designation = options[:designation] || Designation::CITES
 
     @taxon_concepts_rel = TaxonConcept.scoped.
@@ -54,7 +56,7 @@ class Checklist
     end
 
     #filter by scientific name
-    unless options[:scientific_name].nil?
+    unless options[:scientific_name].nil? || options[:scientific_name] == ""
       @taxon_concepts_prev = @taxon_concepts_rel
 
       @taxon_concepts_rel = @taxon_concepts_rel.where("data->'full_name' ILIKE '#{options[:scientific_name]}%'")
@@ -110,11 +112,16 @@ class Checklist
   # @param [Hash] a hash of search params and their values
   # @return [String] a summary of the search params
   def self.summarise_filters(options)
+    # Remove empty and nil params
+    options = options.delete_if { |_, v| v.nil? || v == "" }
     return ""  if options.length == 0
+
+    options = options.symbolize_keys
 
     summary = []
 
     # country
+    @countries_count = 0
     unless options[:country_ids].nil?
       summary = ["Results from"]  if summary.length == 0
 
@@ -129,6 +136,7 @@ class Checklist
     end
 
     # region
+    @regions_count = 0
     unless options[:cites_region_ids].nil?
       summary = ["Results from"]  if summary.length == 0
 
@@ -164,7 +172,7 @@ class Checklist
     end
 
     # synonyms
-    unless options[:synonyms].nil?
+    unless options[:synonyms].nil? || options[:synonyms] == false
       if summary.length == 0
         summary << "All results including synonyms"
       else
