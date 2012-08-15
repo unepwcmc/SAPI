@@ -46,7 +46,7 @@ class Checklist
     end.order("taxon_concepts.data->'kingdom_name'")#animalia first
 
     #show synonyms?
-    unless options[:synonyms].nil?
+    unless options[:synonyms].nil? || options[:synonyms] == false
       @taxon_concepts_rel = @taxon_concepts_rel.with_synonyms
     end
 
