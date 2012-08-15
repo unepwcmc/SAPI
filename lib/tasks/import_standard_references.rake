@@ -81,6 +81,7 @@ namespace :import do
       WHERE qqq.standard_reference_id = standard_references.id
       SQL
       ActiveRecord::Base.connection.execute(sql)
+=begin
       #add exceptions -- taxa that do not have a standard reference defined
       exceptions = [
       # Note that no standard references have been adopted for Hoplodactylus spp. (G),
@@ -116,6 +117,7 @@ namespace :import do
       ) q WHERE q.id = taxon_concepts.id
       SQL
       ActiveRecord::Base.connection.execute(sql)
+=end
       #add taxon_concept_references where missing
       sql = <<-SQL
       INSERT INTO taxon_concept_references (taxon_concept_id, reference_id)
@@ -133,7 +135,7 @@ namespace :import do
       #set is_std_ref flags
       sql = <<-SQL
       UPDATE taxon_concept_references
-      SET data = data || hstore('is_std_ref', 't')
+      SET data = data || hstore('usr_is_std_ref', 't')
       FROM (
         SELECT taxon_concept_references.id
         FROM taxon_concept_references
