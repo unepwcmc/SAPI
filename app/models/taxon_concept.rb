@@ -105,6 +105,7 @@ class TaxonConcept < ActiveRecord::Base
         FROM taxon_concepts h
         LEFT JOIN taxon_concept_references
         ON h.id = taxon_concept_references.taxon_concept_id
+          AND taxon_concept_references.data->'usr_is_std_ref' = 't'
         WHERE h.parent_id IS NULL
         GROUP BY h.id
 
@@ -116,6 +117,7 @@ class TaxonConcept < ActiveRecord::Base
         JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
         LEFT JOIN taxon_concept_references
         ON hi.id = taxon_concept_references.taxon_concept_id
+          AND taxon_concept_references.data->'usr_is_std_ref' = 't'
       )
       SELECT id AS taxon_concept_id_sr,
       ARRAY(SELECT DISTINCT * FROM UNNEST(std_ref_ary) s WHERE s IS NOT NULL)
