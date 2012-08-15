@@ -48,7 +48,11 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         -- set the cites_accepted flag to true for all implicitly listed taxa
         WITH RECURSIVE q AS
         (
-          SELECT  h, data->'cites_accepted' AS inherited_cites_accepted
+          SELECT  h,
+            CASE
+              WHEN (data->'usr_no_std_ref')::BOOLEAN = 't' THEN 'f'
+              ELSE (data->'cites_accepted')::BOOLEAN
+            END AS inherited_cites_accepted
           FROM    taxon_concepts h
           WHERE   parent_id IS NULL
 
@@ -57,6 +61,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           SELECT  hi,
           CASE
             WHEN (data->'cites_accepted')::BOOLEAN = 't' THEN 't'
+            WHEN (data->'usr_no_std_ref')::BOOLEAN = 't' THEN 'f'
             ELSE inherited_cites_accepted
           END
           FROM    q
