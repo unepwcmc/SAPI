@@ -19,13 +19,12 @@ class PdfChecklist < Checklist
 
       # Add summary line
       summary = Checklist.summarise_filters(@params)
-      options = {
-        :at => [0, pdf.bounds.top + 20],
-        :width => 400,
-        :align => :center,
-        :start_count_at => static_page_count - 2, # Ignore the first two cover pages
-      }
-      pdf.number_pages summary, options
+      pdf.repeat :all do
+        pdf.bounding_box [pdf.bounds.left, pdf.bounds.top + 20], :width  => pdf.bounds.width do
+            pdf.text summary, :align => :center, :size => 8
+            pdf.stroke_horizontal_rule
+        end
+      end
 
       #add page numbers
       string = "CITES Species Index – <page>"
