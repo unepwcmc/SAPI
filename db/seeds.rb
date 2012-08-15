@@ -46,7 +46,6 @@ puts "#{Rank.count} ranks created"
 
 puts "#{SpeciesListing.delete_all} species listings deleted"
 puts "#{ChangeType.delete_all} change types deleted"
-ActiveRecord::Base.connection.execute('DELETE FROM designation_references')
 puts "#{Designation.delete_all} designations deleted"
 [Designation::CITES, 'CMS'].each do |designation|
   Designation.create(:name => designation)

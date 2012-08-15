@@ -207,18 +207,39 @@ CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         FROM (
           SELECT taxon_concepts.id
           FROM taxon_concepts
-          INNER JOIN taxon_concept_references ON taxon_concept_references.taxon_concept_id = taxon_concepts.id
-          INNER JOIN designation_references ON taxon_concept_references.reference_id = designation_references.reference_id
-          INNER JOIN designations ON designation_references.designation_id = designations.id
-          WHERE designations.name = 'CITES'
+          INNER JOIN taxon_concept_references
+            ON taxon_concept_references.taxon_concept_id = taxon_concepts.id
+          INNER JOIN designations ON taxon_concepts.designation_id = designations.id
+          WHERE designations.name = 'CITES' AND (taxon_concept_references.data->'usr_is_std_ref')::BOOLEAN = 't'
         ) AS q
         WHERE taxon_concepts.id = q.id;
 
-        -- set the cites_listed flag to true for all implicitly listed taxa
+        -- set the cites_accepted flag to false for all synonyms
+        UPDATE taxon_concepts
+        SET data = data || hstore('cites_accepted', 'f')
+        FROM (
+          SELECT taxon_relationships.other_taxon_concept_id AS id
+          FROM taxon_relationships
+          INNER JOIN taxon_relationship_types
+            ON taxon_relationship_types.id =
+              taxon_relationships.taxon_relationship_type_id
+          INNER JOIN taxon_concepts
+            ON taxon_concepts.id = taxon_relationships.other_taxon_concept_id
+          INNER JOIN designations
+            ON designations.id = taxon_concepts.designation_id
+          WHERE designations.name = 'CITES'
+            AND taxon_relationship_types.name = 'HAS_SYNONYM'
+        ) AS q
+        WHERE taxon_concepts.id = q.id;
+
+        -- set the cites_accepted flag to true for all implicitly listed taxa
         WITH RECURSIVE q AS
         (
           SELECT  h,
-          (data->'cites_accepted')::BOOLEAN AS inherited_cites_accepted
+          CASE
+            WHEN (data->'usr_no_std_ref')::BOOLEAN = 't' THEN 'f'
+            ELSE (data->'cites_accepted')::BOOLEAN
+          END AS inherited_cites_accepted
           FROM    taxon_concepts h
           WHERE   parent_id IS NULL
 
@@ -227,6 +248,7 @@ CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           SELECT  hi,
           CASE
             WHEN (data->'cites_accepted')::BOOLEAN = 't' THEN 't'
+            WHEN (data->'usr_no_std_ref')::BOOLEAN = 't' THEN 'f'
             ELSE inherited_cites_accepted
           END
           FROM    q
@@ -237,8 +259,8 @@ CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         SET data = data || hstore('cites_accepted', 't')
         FROM q
         WHERE taxon_concepts.id = (q.h).id AND
-          ((q.h).data->'cites_accepted')::BOOLEAN IS NULL AND
-          q.inherited_cites_accepted = 't';
+          ((q.h).data->'cites_accepted')::BOOLEAN IS NULL
+          AND inherited_cites_accepted = 't';
 
         END;
       $$;
@@ -616,43 +638,6 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: animals_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE animals_import (
-    kingdom character varying,
-    phylum character varying,
-    class character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying
-);
-
-
---
--- Name: animals_synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE animals_synonym_import (
-    kingdom character varying,
-    phylum character varying,
-    class character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying,
-    accepted_species_id integer
-);
-
-
---
 -- Name: change_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -682,39 +667,6 @@ CREATE SEQUENCE change_types_id_seq
 --
 
 ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
-
-
---
--- Name: cites_listings_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_listings_import (
-    spc_rec_id integer,
-    appendix character varying,
-    listing_date date,
-    country_legacy_id character varying,
-    notes character varying
-);
-
-
---
--- Name: cites_regions_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_regions_import (
-    name character varying
-);
-
-
---
--- Name: common_name_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE common_name_import (
-    common_name character varying,
-    language_name character varying,
-    species_id integer
-);
 
 
 --
@@ -751,50 +703,6 @@ ALTER SEQUENCE common_names_id_seq OWNED BY common_names.id;
 
 
 --
--- Name: countries_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE countries_import (
-    legacy_id integer,
-    iso2 character varying,
-    iso3 character varying,
-    name character varying,
-    long_name character varying,
-    region_number character varying
-);
-
-
---
--- Name: designation_references; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE designation_references (
-    id integer NOT NULL,
-    designation_id integer NOT NULL,
-    reference_id integer NOT NULL
-);
-
-
---
--- Name: designation_references_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE designation_references_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: designation_references_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE designation_references_id_seq OWNED BY designation_references.id;
-
-
---
 -- Name: designations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -823,17 +731,6 @@ CREATE SEQUENCE designations_id_seq
 --
 
 ALTER SEQUENCE designations_id_seq OWNED BY designations.id;
-
-
---
--- Name: distribution_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE distribution_import (
-    species_id integer,
-    country_id integer,
-    country_name character varying
-);
 
 
 --
@@ -1016,7 +913,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-07-25 13:37:28.482069'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-08-08 07:36:14.291884'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -1071,39 +968,6 @@ CREATE SEQUENCE listing_distributions_id_seq
 --
 
 ALTER SEQUENCE listing_distributions_id_seq OWNED BY listing_distributions.id;
-
-
---
--- Name: plants_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE plants_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying
-);
-
-
---
--- Name: plants_synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE plants_synonym_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying,
-    accepted_species_id integer
-);
 
 
 --
@@ -1174,18 +1038,6 @@ ALTER SEQUENCE references_id_seq OWNED BY "references".id;
 
 
 --
--- Name: references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE references_import (
-    dscrecid integer,
-    dsctitle character varying,
-    dscauthors character varying,
-    dscpubyear character varying
-);
-
-
---
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1225,6 +1077,46 @@ CREATE SEQUENCE species_listings_id_seq
 --
 
 ALTER SEQUENCE species_listings_id_seq OWNED BY species_listings.id;
+
+
+--
+-- Name: standard_references; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE standard_references (
+    id integer NOT NULL,
+    author character varying(255),
+    title text,
+    year integer,
+    reference_id integer,
+    reference_legacy_id integer,
+    taxon_concept_name character varying(255),
+    taxon_concept_rank character varying(255),
+    taxon_concept_id integer,
+    species_legacy_id integer,
+    "position" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: standard_references_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE standard_references_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: standard_references_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE standard_references_id_seq OWNED BY standard_references.id;
 
 
 --
@@ -1329,7 +1221,7 @@ CREATE TABLE taxon_concept_references (
     id integer NOT NULL,
     taxon_concept_id integer NOT NULL,
     reference_id integer NOT NULL,
-    is_author boolean DEFAULT false NOT NULL
+    data hstore DEFAULT ''::hstore NOT NULL
 );
 
 
@@ -1369,7 +1261,6 @@ CREATE TABLE taxon_concepts (
     taxon_name_id integer NOT NULL,
     legacy_id integer,
     inherit_distribution boolean DEFAULT true NOT NULL,
-    inherit_references boolean DEFAULT true NOT NULL,
     data hstore DEFAULT ''::hstore,
     fully_covered boolean DEFAULT true NOT NULL,
     listing hstore
@@ -1509,13 +1400,6 @@ ALTER TABLE ONLY common_names ALTER COLUMN id SET DEFAULT nextval('common_names_
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY designation_references ALTER COLUMN id SET DEFAULT nextval('designation_references_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY designations ALTER COLUMN id SET DEFAULT nextval('designations_id_seq'::regclass);
 
 
@@ -1593,6 +1477,13 @@ ALTER TABLE ONLY species_listings ALTER COLUMN id SET DEFAULT nextval('species_l
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY standard_references ALTER COLUMN id SET DEFAULT nextval('standard_references_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY taxon_commons ALTER COLUMN id SET DEFAULT nextval('taxon_commons_id_seq'::regclass);
 
 
@@ -1659,14 +1550,6 @@ ALTER TABLE ONLY change_types
 
 ALTER TABLE ONLY common_names
     ADD CONSTRAINT common_names_pkey PRIMARY KEY (id);
-
-
---
--- Name: designation_references_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY designation_references
-    ADD CONSTRAINT designation_references_pkey PRIMARY KEY (id);
 
 
 --
@@ -1755,6 +1638,14 @@ ALTER TABLE ONLY "references"
 
 ALTER TABLE ONLY species_listings
     ADD CONSTRAINT species_listings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: standard_references_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY standard_references
+    ADD CONSTRAINT standard_references_pkey PRIMARY KEY (id);
 
 
 --
@@ -1856,22 +1747,6 @@ ALTER TABLE ONLY change_types
 
 ALTER TABLE ONLY common_names
     ADD CONSTRAINT common_names_language_id_fk FOREIGN KEY (language_id) REFERENCES languages(id);
-
-
---
--- Name: designation_references_designation_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY designation_references
-    ADD CONSTRAINT designation_references_designation_id_fk FOREIGN KEY (designation_id) REFERENCES designations(id);
-
-
---
--- Name: designation_references_reference_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY designation_references
-    ADD CONSTRAINT designation_references_reference_id_fk FOREIGN KEY (reference_id) REFERENCES "references"(id);
 
 
 --
@@ -2241,3 +2116,17 @@ INSERT INTO schema_migrations (version) VALUES ('20120808125231');
 INSERT INTO schema_migrations (version) VALUES ('20120808131608');
 
 INSERT INTO schema_migrations (version) VALUES ('20120808134006');
+
+INSERT INTO schema_migrations (version) VALUES ('20120809084541');
+
+INSERT INTO schema_migrations (version) VALUES ('20120809141929');
+
+INSERT INTO schema_migrations (version) VALUES ('20120810084818');
+
+INSERT INTO schema_migrations (version) VALUES ('20120810101954');
+
+INSERT INTO schema_migrations (version) VALUES ('20120810102226');
+
+INSERT INTO schema_migrations (version) VALUES ('20120810145423');
+
+INSERT INTO schema_migrations (version) VALUES ('20120814102042');

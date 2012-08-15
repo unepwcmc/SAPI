@@ -11,5 +11,4 @@
 
 class Reference < ActiveRecord::Base
   attr_accessible :title, :author, :year
-  has_and_belongs_to_many :designations, :join_table => :designation_references
 end

@@ -20,18 +20,35 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         FROM (
           SELECT taxon_concepts.id
           FROM taxon_concepts
-          INNER JOIN taxon_concept_references ON taxon_concept_references.taxon_concept_id = taxon_concepts.id
-          INNER JOIN designation_references ON taxon_concept_references.reference_id = designation_references.reference_id
-          INNER JOIN designations ON designation_references.designation_id = designations.id
-          WHERE designations.name = 'CITES'
+          INNER JOIN taxon_concept_references
+            ON taxon_concept_references.taxon_concept_id = taxon_concepts.id
+          INNER JOIN designations ON taxon_concepts.designation_id = designations.id
+          WHERE designations.name = 'CITES' AND (taxon_concept_references.data->'usr_is_std_ref')::BOOLEAN = 't'
         ) AS q
         WHERE taxon_concepts.id = q.id;
 
-        -- set the cites_listed flag to true for all implicitly listed taxa
+        -- set the cites_accepted flag to false for all synonyms
+        UPDATE taxon_concepts
+        SET data = data || hstore('cites_accepted', 'f')
+        FROM (
+          SELECT taxon_relationships.other_taxon_concept_id AS id
+          FROM taxon_relationships
+          INNER JOIN taxon_relationship_types
+            ON taxon_relationship_types.id =
+              taxon_relationships.taxon_relationship_type_id
+          INNER JOIN taxon_concepts
+            ON taxon_concepts.id = taxon_relationships.other_taxon_concept_id
+          INNER JOIN designations
+            ON designations.id = taxon_concepts.designation_id
+          WHERE designations.name = 'CITES'
+            AND taxon_relationship_types.name = 'HAS_SYNONYM'
+        ) AS q
+        WHERE taxon_concepts.id = q.id;
+
+        -- set the cites_accepted flag to true for all implicitly listed taxa
         WITH RECURSIVE q AS
         (
-          SELECT  h,
-          (data->'cites_accepted')::BOOLEAN AS inherited_cites_accepted
+          SELECT  h, data->'cites_accepted' AS inherited_cites_accepted
           FROM    taxon_concepts h
           WHERE   parent_id IS NULL
 
@@ -50,8 +67,8 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         SET data = data || hstore('cites_accepted', 't')
         FROM q
         WHERE taxon_concepts.id = (q.h).id AND
-          ((q.h).data->'cites_accepted')::BOOLEAN IS NULL AND
-          q.inherited_cites_accepted = 't';
+          ((q.h).data->'cites_accepted')::BOOLEAN IS NULL
+          AND inherited_cites_accepted = 't';
 
         END;
       $$;

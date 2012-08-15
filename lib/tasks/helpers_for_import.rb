@@ -46,6 +46,10 @@ MAPPING = {
     'reference_links_import' => {
       :create_tmp => "DslSpcRecID integer, DslDscRecID integer, DslCode varchar, DslCodeRecID integer",
       :tmp_columns => ['DslSpcRecID', 'DslDscRecID', 'DslCode', 'DslCodeRecID']
+    },
+    'standard_references_import' => {
+      :create_tmp => 'Author varchar, Year integer, Title text, Kingdom varchar, Phylum varchar, Class varchar, TaxonOrder varchar, Family varchar, Genus varchar, Species varchar',
+      :tmp_columns => ['Author', 'Year', 'Title', 'Kingdom', 'Phylum', 'Class', 'TaxonOrder', 'Family', 'Genus', 'Species']
     }
 }
 

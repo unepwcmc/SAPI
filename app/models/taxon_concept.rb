@@ -97,15 +97,48 @@ class TaxonConcept < ActiveRecord::Base
       ) synonyms ON taxon_concepts.id = synonyms.taxon_concept_id_s
       SQL
     )
+  scope :with_standard_references, select(:std_ref_ary).joins(
+    <<-SQL
+    LEFT JOIN (
+      WITH RECURSIVE q AS (
+        SELECT h, h.id, ARRAY_AGG(reference_id) AS std_ref_ary
+        FROM taxon_concepts h
+        LEFT JOIN taxon_concept_references
+        ON h.id = taxon_concept_references.taxon_concept_id
+          AND taxon_concept_references.data->'usr_is_std_ref' = 't'
+        WHERE h.parent_id IS NULL
+        GROUP BY h.id
+
+        UNION ALL
+
+        SELECT hi, hi.id,
+          std_ref_ary || reference_id
+        FROM q
+        JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
+        LEFT JOIN taxon_concept_references
+        ON hi.id = taxon_concept_references.taxon_concept_id
+          AND taxon_concept_references.data->'usr_is_std_ref' = 't'
+      )
+      SELECT id AS taxon_concept_id_sr,
+      ARRAY(SELECT DISTINCT * FROM UNNEST(std_ref_ary) s WHERE s IS NOT NULL)
+      AS std_ref_ary
+      FROM q
+    ) standard_references ON taxon_concepts.id = standard_references.taxon_concept_id_sr
+    SQL
+  )
 
   acts_as_nested_set
 
   [
     :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
     :genus_name, :species_name, :subspecies_name, :full_name, :rank_name,
-    :taxonomic_position, :cites_accepted
+    :taxonomic_position
   ].each do |attr_name|
     define_method(attr_name) { data && data[attr_name.to_s] }
+  end
+
+  def cites_accepted
+    data && data['cites_accepted'] == 't'
   end
 
   #here go the CITES listing flags
@@ -141,6 +174,22 @@ class TaxonConcept < ActiveRecord::Base
       parse_pg_array(synonyms_ary || '').compact.map do |e|
         e.force_encoding('utf-8')
       end.join(', ')
+    else
+      nil
+    end
+  end
+
+  #note this will probably return external reference ids in the future
+  def standard_references
+    me = unless respond_to?(:std_ref_ary)
+      TaxonConcept.with_standard_references.where(:id => self.id).first
+    else
+      self
+    end
+    if me.respond_to?(:std_ref_ary)
+      parse_pg_array(me.std_ref_ary || '').compact.map do |e|
+        e.force_encoding('utf-8')
+      end.map(&:to_i)
     else
       nil
     end

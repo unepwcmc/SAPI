@@ -4,13 +4,18 @@ describe TaxonConcept do
   context "Caiman latirostris" do
     include_context "Caiman latirostris"
 
-    context "TAXONOMY" do
+    context "REFERENCES" do
       describe :cites_accepted do
         it "should be true for Caiman latirostris" do
           @species.cites_accepted.should be_true
         end
         it "should be false for Alligator cynocephalus" do
           @species1.cites_accepted.should be_false
+        end
+      end
+      describe :standard_references do
+        it "should be Wermuth for species Caiman latirostris" do
+          @species.standard_references.should include @ref.id
         end
       end
     end
