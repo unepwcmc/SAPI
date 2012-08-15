@@ -101,62 +101,29 @@ class TaxonConcept < ActiveRecord::Base
     <<-SQL
     LEFT JOIN (
       WITH RECURSIVE q AS (
-        SELECT
-          h, h.id,
-          taxon_concept_references.reference_id AS std_ref_id,
-          taxon_concept_references.reference_id AS inh_std_ref_id
-        FROM
-          taxon_concepts h
+        SELECT h, h.id, ARRAY_AGG(reference_id) AS std_ref_ary
+        FROM taxon_concepts h
         LEFT JOIN taxon_concept_references
-          ON h.id = taxon_concept_references.taxon_concept_id AND taxon_concept_references.data -> 'usr_is_std_ref' = 't'
-        WHERE parent_id IS NULL
+        ON h.id = taxon_concept_references.taxon_concept_id
+        WHERE h.parent_id IS NULL
+        GROUP BY h.id
 
-      UNION ALL
+        UNION ALL
 
-        SELECT
-          hi, hi.id,
-          taxon_concept_references.reference_id AS std_ref_id,
-        CASE
-          WHEN taxon_concept_references.reference_id IS NULL THEN inh_std_ref_id
-          ELSE taxon_concept_references.reference_id
-        END
-        FROM
-        q
+        SELECT hi, hi.id,
+          std_ref_ary || reference_id
+        FROM q
         JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
         LEFT JOIN taxon_concept_references
-          ON hi.id = taxon_concept_references.taxon_concept_id AND taxon_concept_references.data -> 'usr_is_std_ref' = 't'
+        ON hi.id = taxon_concept_references.taxon_concept_id
       )
-
-      SELECT (q.h).id AS taxon_concept_id_sr,
-      ARRAY(SELECT DISTINCT UNNEST(ARRAY_AGG(std_ref_id) || ARRAY_AGG(inh_std_ref_id))) AS std_ref_ary
+      SELECT id AS taxon_concept_id_sr,
+      ARRAY(SELECT DISTINCT * FROM UNNEST(std_ref_ary) s WHERE s IS NOT NULL)
+      AS std_ref_ary
       FROM q
-      GROUP BY (q.h).id
     ) standard_references ON taxon_concepts.id = standard_references.taxon_concept_id_sr
     SQL
   )
-
-# TODO maybe along these lines:
-# WITH taxon_concepts_with_std_refs AS (
-  # SELECT taxon_concepts.id, parent_id, ARRAY_AGG(taxon_concept_references) AS std_ref_ary
-  # FROM taxon_concepts
-  # LEFT JOIN taxon_concept_references
-  # ON taxon_concepts.id = taxon_concept_references.taxon_concept_id
-  # GROUP BY taxon_concepts.id
-# )
-# SELECT * FROM (
-  # WITH RECURSIVE q1 AS (
-    # SELECT h, h.id
-    # FROM taxon_concepts_with_std_refs h
-    # WHERE h.parent_id IS NULL
-#     
-    # UNION ALL
-#     
-    # SELECT hi, hi.id
-    # FROM q1
-    # JOIN taxon_concepts_with_std_refs hi ON hi.parent_id = (q1.h).id
-  # )
-  # SELECT * FROM q1
-# ) q2
 
   acts_as_nested_set
 
