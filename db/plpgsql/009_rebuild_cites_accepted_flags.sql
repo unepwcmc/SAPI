@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           INNER JOIN taxon_concept_references
             ON taxon_concept_references.taxon_concept_id = taxon_concepts.id
           INNER JOIN designations ON taxon_concepts.designation_id = designations.id
-          WHERE designations.name = 'CITES' AND (taxon_concept_references.data->'is_std_ref')::BOOLEAN = 't'
+          WHERE designations.name = 'CITES' AND (taxon_concept_references.data->'usr_is_std_ref')::BOOLEAN = 't'
         ) AS q
         WHERE taxon_concepts.id = q.id;
 
@@ -48,11 +48,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         -- set the cites_accepted flag to true for all implicitly listed taxa
         WITH RECURSIVE q AS
         (
-          SELECT  h,
-          CASE
-            WHEN (data->'usr_no_std_ref')::BOOLEAN = 't' THEN 'f'
-            ELSE (data->'cites_accepted')::BOOLEAN
-          END AS inherited_cites_accepted
+          SELECT  h, data->'cites_accepted' AS inherited_cites_accepted
           FROM    taxon_concepts h
           WHERE   parent_id IS NULL
 
@@ -61,7 +57,6 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           SELECT  hi,
           CASE
             WHEN (data->'cites_accepted')::BOOLEAN = 't' THEN 't'
-            WHEN (data->'usr_no_std_ref')::BOOLEAN = 't' THEN 'f'
             ELSE inherited_cites_accepted
           END
           FROM    q
@@ -72,7 +67,8 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         SET data = data || hstore('cites_accepted', 't')
         FROM q
         WHERE taxon_concepts.id = (q.h).id AND
-          ((q.h).data->'cites_accepted')::BOOLEAN IS NULL;
+          ((q.h).data->'cites_accepted')::BOOLEAN IS NULL
+          AND inherited_cites_accepted = 't';
 
         END;
       $$;

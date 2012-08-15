@@ -210,7 +210,7 @@ CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           INNER JOIN taxon_concept_references
             ON taxon_concept_references.taxon_concept_id = taxon_concepts.id
           INNER JOIN designations ON taxon_concepts.designation_id = designations.id
-          WHERE designations.name = 'CITES' AND (taxon_concept_references.data->'is_std_ref')::BOOLEAN = 't'
+          WHERE designations.name = 'CITES' AND (taxon_concept_references.data->'usr_is_std_ref')::BOOLEAN = 't'
         ) AS q
         WHERE taxon_concepts.id = q.id;
 
@@ -259,7 +259,8 @@ CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         SET data = data || hstore('cites_accepted', 't')
         FROM q
         WHERE taxon_concepts.id = (q.h).id AND
-          ((q.h).data->'cites_accepted')::BOOLEAN IS NULL;
+          ((q.h).data->'cites_accepted')::BOOLEAN IS NULL
+          AND inherited_cites_accepted = 't';
 
         END;
       $$;
@@ -637,43 +638,6 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: animals_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE animals_import (
-    kingdom character varying,
-    phylum character varying,
-    class character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying
-);
-
-
---
--- Name: animals_synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE animals_synonym_import (
-    kingdom character varying,
-    phylum character varying,
-    class character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying,
-    accepted_species_id integer
-);
-
-
---
 -- Name: change_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -703,39 +667,6 @@ CREATE SEQUENCE change_types_id_seq
 --
 
 ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
-
-
---
--- Name: cites_listings_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_listings_import (
-    spc_rec_id integer,
-    appendix character varying,
-    listing_date date,
-    country_legacy_id character varying,
-    notes character varying
-);
-
-
---
--- Name: cites_regions_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_regions_import (
-    name character varying
-);
-
-
---
--- Name: common_name_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE common_name_import (
-    common_name character varying,
-    language_name character varying,
-    species_id integer
-);
 
 
 --
@@ -772,20 +703,6 @@ ALTER SEQUENCE common_names_id_seq OWNED BY common_names.id;
 
 
 --
--- Name: countries_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE countries_import (
-    legacy_id integer,
-    iso2 character varying,
-    iso3 character varying,
-    name character varying,
-    long_name character varying,
-    region_number character varying
-);
-
-
---
 -- Name: designations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -814,17 +731,6 @@ CREATE SEQUENCE designations_id_seq
 --
 
 ALTER SEQUENCE designations_id_seq OWNED BY designations.id;
-
-
---
--- Name: distribution_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE distribution_import (
-    species_id integer,
-    country_id integer,
-    country_name character varying
-);
 
 
 --
@@ -1007,7 +913,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-08-08 07:40:24.957509'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-08-08 07:36:14.291884'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -1065,39 +971,6 @@ ALTER SEQUENCE listing_distributions_id_seq OWNED BY listing_distributions.id;
 
 
 --
--- Name: plants_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE plants_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying
-);
-
-
---
--- Name: plants_synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE plants_synonym_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying,
-    accepted_species_id integer
-);
-
-
---
 -- Name: ranks; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1127,30 +1000,6 @@ CREATE SEQUENCE ranks_id_seq
 --
 
 ALTER SEQUENCE ranks_id_seq OWNED BY ranks.id;
-
-
---
--- Name: reference_links; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE reference_links (
-    dslspcrecid integer,
-    dsldscrecid integer,
-    dslcode character varying,
-    dslcoderecid integer
-);
-
-
---
--- Name: reference_links_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE reference_links_import (
-    dslspcrecid integer,
-    dsldscrecid integer,
-    dslcode character varying,
-    dslcoderecid integer
-);
 
 
 --
@@ -1189,39 +1038,11 @@ ALTER SEQUENCE references_id_seq OWNED BY "references".id;
 
 
 --
--- Name: references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE references_import (
-    dscrecid integer,
-    dsctitle character varying,
-    dscauthors character varying,
-    dscpubyear character varying
-);
-
-
---
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE schema_migrations (
     version character varying(255) NOT NULL
-);
-
-
---
--- Name: species_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE species_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying
 );
 
 
@@ -1296,41 +1117,6 @@ CREATE SEQUENCE standard_references_id_seq
 --
 
 ALTER SEQUENCE standard_references_id_seq OWNED BY standard_references.id;
-
-
---
--- Name: standard_references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE standard_references_import (
-    author character varying,
-    year integer,
-    title text,
-    kingdom character varying,
-    phylum character varying,
-    class character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying
-);
-
-
---
--- Name: synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE synonym_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying,
-    accepted_species_id integer
-);
 
 
 --
