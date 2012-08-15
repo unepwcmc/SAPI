@@ -14,5 +14,4 @@ class Designation < ActiveRecord::Base
   build_dictionary :cites
 
   has_many :species_listings
-  has_and_belongs_to_many :references, :join_table => :designation_references
 end

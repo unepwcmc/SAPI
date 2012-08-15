@@ -15,7 +15,11 @@ namespace :import do
     Rake::Task["import:cites_listings"].invoke
     Rake::Task["import:common_names"].invoke
     Rake::Task["import:synonyms"].invoke
-    Rake::Task["import:standard_references"].invoke
+    Rake::Task["import:references"].invoke
+    Rake::Task["import:reference_links"].invoke
+    Rake::Task["import:standard_references"].invoke(
+      'lib/assets/standard_nomenclature.csv'
+    )
     Sapi::fix_listing_changes()
     Sapi::rebuild()
   end
