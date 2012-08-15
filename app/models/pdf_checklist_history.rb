@@ -87,10 +87,20 @@ class PdfChecklistHistory < ChecklistHistory
           ]
         end
       end
+
+      # Add summary line
+      summary = Checklist.summarise_filters(@params)
+      pdf.repeat :all do
+        pdf.bounding_box [pdf.bounds.left, pdf.bounds.top + 20], :width  => pdf.bounds.width do
+            pdf.text summary, :align => :center, :size => 8
+            pdf.stroke_horizontal_rule
+        end
+      end
+
       #add page numbers
       string = "History of CITES listings – <page>"
       options = {
-        :at => [pdf.bounds.right / 2 - 75, 0],
+        :at => [pdf.bounds.right / 2 - 75, -30],
         :width => 150,
         :align => :center,
         :start_count_at => static_page_count - 2, # Ignore the first two cover pages
