@@ -30,7 +30,7 @@ namespace :import do
       drop_table(TMP_TABLE)
       create_import_table(TMP_TABLE)
       query = "#{t.upcase}_QUERY".constantize
-      copy_data(TMP_TABLE, query)
+      copy_data(TMP_TABLE, query, 'DscRecID')
       sql = <<-SQL
         INSERT INTO "references" (legacy_type, legacy_id, author, title, year,
           created_at, updated_at)

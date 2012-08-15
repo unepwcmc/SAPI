@@ -3,14 +3,14 @@ namespace :import do
   desc 'Import common names from SQL server [usage: rake import:common_names]'
   task :common_names => [:environment] do
     animals_query = <<-SQL
-      Select C.ComName, L.LanDesc, S.SpcRecID
+      Select ComRecID, C.ComName, L.LanDesc, S.SpcRecID
       from Orwell.animals.dbo.Species S 
       inner join Orwell.animals.dbo.CommonName C on C.ComSpcRecID = S.SpcRecID
       INNER JOIN ORWELL.animals.dbo.Language L ON L.LanRecID = C.ComLanRecID
       WHERE S.SpcRecID IN (#{TaxonConcept.where("data -> 'kingdom_name' = 'Animalia' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
     SQL
     plants_query = <<-SQL
-      Select C.ComName, L.LanDesc, S.SpcRecID
+      Select ComRecID, C.ComName, L.LanDesc, S.SpcRecID
       from Orwell.plants.dbo.Species S 
       inner join Orwell.plants.dbo.CommonName C on C.ComSpcRecID = S.SpcRecID
       INNER JOIN ORWELL.plants.dbo.Language L ON L.LanRecID = C.ComLanRecID
@@ -23,7 +23,7 @@ namespace :import do
       drop_table(tmp_table)
       create_import_table(tmp_table)
       query = eval("#{t}_query")
-      copy_data(tmp_table, query)
+      copy_data(tmp_table, query, 'ComRecID')
       sql = <<-SQL
         INSERT INTO common_names(name, language_id, created_at, updated_at)
         SELECT common_name, languages.id, current_date, current_date

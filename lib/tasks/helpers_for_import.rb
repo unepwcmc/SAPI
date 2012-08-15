@@ -80,20 +80,51 @@ def drop_table(table_name)
   end
 end
 
-def copy_data(table_name, query)
-  puts "Copying data from SQL Server into tmp table #{table_name}"
+#recid -- field to be used for ordering for batch load  (e.g. DscRecID)
+def copy_data(table_name, query, recid)
+  puts "Copying data from SQL Server into tmp table #{table_name} (#{recid})"
   tmp_columns = MAPPING[table_name][:tmp_columns]
   client = TinyTds::Client.new(:username => 'sapi', :password => 'conserveworld', :host => 'wcmc-gis-01.unep-wcmc.org', :port => 1539, :database => 'Animals')
   client.execute('SET ANSI_NULLS ON')
   client.execute('SET ANSI_WARNINGS ON')
-  result = client.execute(query)
-  cmd = <<-SQL
-    SET DateStyle = \"ISO,DMY\";
-    INSERT INTO #{table_name} (#{tmp_columns.join(',')})
-    VALUES
-    #{result_to_sql_values(result)}
-  SQL
-  ActiveRecord::Base.connection.execute(cmd)
+
+  #get the total count of matching records
+  query_cnt = query.sub(/SELECT(.+?)FROM/im,'SELECT COUNT(*) AS cnt FROM')
+  result = client.execute(query_cnt)
+  cnt = result.first['cnt']
+  puts "#{cnt} records to copy"
+
+  offset = 0
+  limit = 100
+
+  #process in batches of 5000
+  while offset < cnt
+    puts "offset: #{offset}"
+    offset += limit
+
+    query_limit = <<-SQL
+    SELECT * FROM 
+    (
+        SELECT Row_Number() OVER(order by #{recid}) As RowID,
+        COUNT (#{recid}) OVER (PARTITION BY null) AS TOTAL_ROWS, 
+        #{query}
+    ) 
+    As RowResults WHERE 
+    RowID Between #{offset} AND #{offset + limit}
+    SQL
+
+    #puts query_limit
+    result.do
+    result = client.execute(query)
+    cmd = <<-SQL
+      SET DateStyle = \"ISO,DMY\";
+      INSERT INTO #{table_name} (#{tmp_columns.join(',')})
+      VALUES
+      #{result_to_sql_values(result)}
+    SQL
+    ActiveRecord::Base.connection.execute(cmd)
+  end
+
   puts "Data copied to tmp table"
 end
 

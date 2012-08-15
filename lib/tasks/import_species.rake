@@ -58,7 +58,7 @@ namespace :import do
     SQL
 
     plants_query = <<-SQL
-      Select 'Plantae' as Kingdom, O.OrdName, F.FamName, G.GenName, S.Spcname, S.SpcInfraepithet, S.Spcrecid, S.SpcStatus
+      Select 'Plantae' as Kingdom, O.OrdName, F.FamName, G.GenName, S.Spcname, S.SpcInfraepithet, S.SpcRecID, S.SpcStatus
       from ORWELL.plants.dbo.Species S 
       inner join ORWELL.plants.dbo.Genus G on S.Spcgenrecid = G.genrecid
       INNER JOIN ORWELL.plants.dbo.Family F ON FamRecID = GenFamRecID
@@ -90,7 +90,7 @@ namespace :import do
       drop_table(tmp_table)
       create_import_table(tmp_table)
       query = eval("#{t}_query")
-      copy_data(tmp_table, query)
+      copy_data(tmp_table, query, 'SpcRecID')
       tmp_columns = MAPPING[tmp_table][:tmp_columns]
       import_data_for tmp_table, Rank::KINGDOM if tmp_columns.include? Rank::KINGDOM.capitalize
       if tmp_columns.include?(Rank::PHYLUM.capitalize) && 

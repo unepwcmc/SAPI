@@ -3,14 +3,14 @@ namespace :import do
   desc 'Import distributions from SQL Server [usage: rake import:distributions]'
   task :distributions => [:environment] do
     animals_query = <<-SQL
-      Select S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
+      Select DctRecID, S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
       from ORWELL.animals.dbo.Species S 
       INNER JOIN ORWELL.animals.dbo.DistribCty Dcty ON S.SpcRecID = Dcty.DCtSpcRecID
       INNER JOIN ORWELL.animals.dbo.Country Cty ON Dcty.DCtCtyRecID = Cty.CtyRecID
       WHERE S.SpcRecID IN (#{TaxonConcept.where("data -> 'kingdom_name' = 'Animalia' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
     SQL
     plants_query = <<-SQL
-      Select S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
+      Select DctRecID, S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
       from ORWELL.plants.dbo.Species S 
       INNER JOIN ORWELL.plants.dbo.DistribCty Dcty ON S.SpcRecID = Dcty.DCtSpcRecID
       INNER JOIN ORWELL.plants.dbo.Country Cty ON Dcty.DCtCtyRecID = Cty.CtyRecID
@@ -22,7 +22,7 @@ namespace :import do
       drop_table(tmp_table)
       create_import_table(tmp_table)
       query = eval("#{t}_query")
-      copy_data(tmp_table, query)
+      copy_data(tmp_table, query, 'DctRecID')
       sql = <<-SQL
         INSERT INTO taxon_concept_geo_entities(taxon_concept_id, geo_entity_id, created_at, updated_at)
         SELECT DISTINCT species.id, geo_entities.id, current_date, current_date

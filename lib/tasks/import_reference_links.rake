@@ -4,7 +4,8 @@ namespace :import do
   task :reference_links => [:environment] do
     ANIMALS_QUERY = <<-SQL
       SELECT
-          [DslSpcRecID]
+          [DslRecID]
+          ,[DslSpcRecID]
           ,[DslDscRecID]
           ,[DslCode]
           ,[DslCodeRecID]
@@ -13,7 +14,8 @@ namespace :import do
     SQL
     PLANTS_QUERY = <<-SQL
       SELECT
-          [DslSpcRecID]
+          [DslRecID]
+          ,[DslSpcRecID]
           ,[DslDscRecID]
           ,[DslCode]
           ,[DslCodeRecID]
@@ -26,7 +28,7 @@ namespace :import do
       drop_table(TMP_TABLE)
       create_import_table(TMP_TABLE)
       query = "#{t.upcase}_QUERY".constantize
-      copy_data(TMP_TABLE, query)
+      copy_data(TMP_TABLE, query, 'DslRecID')
       #copy 'SPC' links
       sql = <<-SQL
         INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id)
