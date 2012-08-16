@@ -67,63 +67,47 @@ class PdfChecklist < Checklist
                 if tc.cites_accepted
                   :bold
                 end
+            },
+            {
+              :text => "#{tc.spp} ",
+              :styles =>  (tc.cites_accepted ? [:bold] : [])
+            },
+            {:text => tc.current_listing + ' ', :styles => [:bold]},
+            {:text => "#{tc.family_name} ".upcase},
+            {:text => "(#{tc.class_name}) "},
+            {
+              :text =>
+                unless tc.english.blank?
+                  "(E) #{tc.english} "
+                else
+                  ''
+                end
+            },
+            {
+              :text =>
+                unless tc.spanish.blank?
+                  "(S) #{tc.spanish} "
+                else
+                  ''
+                end
+            },
+            {
+              :text =>
+                unless tc.french.blank?
+                  "(F) #{tc.french} "
+                else
+                  ''
+                end
+            },
+            {
+              :text =>
+                unless tc.synonyms.blank?
+                  "(SYN) #{tc.synonyms} "
+                else
+                  ''
+                end
             }
           ]
-
-          pdf.indent(10) do
-            pdf.formatted_text [
-              {
-                :text => "#{tc.spp} ",
-                :styles =>  (tc.cites_accepted ? [:bold] : [])
-              },
-              {:text => tc.current_listing + ' ', :styles => [:bold]},
-              {:text => "#{tc.family_name} ".upcase},
-              {:text => "(#{tc.class_name}) "},
-            ]
-          end
-
-          pdf.indent(15) do
-            pdf.formatted_text [
-              {
-                :text =>
-                  unless tc.english.blank?
-                    "(E) #{tc.english} "
-                  else
-                    ''
-                  end
-              }
-            ]
-            pdf.formatted_text [
-              {
-                :text =>
-                  unless tc.spanish.blank?
-                    "(S) #{tc.spanish} "
-                  else
-                    ''
-                  end
-              }
-            ]
-            pdf.formatted_text [
-              {
-                :text =>
-                  unless tc.french.blank?
-                    "(F) #{tc.french} "
-                  else
-                    ''
-                  end
-              }
-            ]
-            pdf.formatted_text [
-              {
-                :text =>
-                  unless tc.synonyms.blank?
-                    "(SYN) #{tc.synonyms} "
-                  else
-                    ''
-                  end
-              }
-            ]
-          end
         end
       end
     end
