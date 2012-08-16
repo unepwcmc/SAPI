@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120810145423) do
+ActiveRecord::Schema.define(:version => 20120814102042) do
 
   create_table "animals_import", :id => false, :force => true do |t|
     t.string  "kingdom",    :limit => nil
@@ -26,20 +26,6 @@ ActiveRecord::Schema.define(:version => 20120810145423) do
     t.string  "spcstatus",  :limit => nil
   end
 
-  create_table "animals_synonym_import", :id => false, :force => true do |t|
-    t.string  "kingdom",             :limit => nil
-    t.string  "phylum",              :limit => nil
-    t.string  "class",               :limit => nil
-    t.string  "taxonorder",          :limit => nil
-    t.string  "family",              :limit => nil
-    t.string  "genus",               :limit => nil
-    t.string  "species",             :limit => nil
-    t.string  "spcinfra",            :limit => nil
-    t.integer "spcrecid"
-    t.string  "spcstatus",           :limit => nil
-    t.integer "accepted_species_id"
-  end
-
   create_table "change_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at",     :null => false
@@ -47,22 +33,8 @@ ActiveRecord::Schema.define(:version => 20120810145423) do
     t.integer  "designation_id", :null => false
   end
 
-  create_table "cites_listings_import", :id => false, :force => true do |t|
-    t.integer "spc_rec_id"
-    t.string  "appendix",          :limit => nil
-    t.date    "listing_date"
-    t.string  "country_legacy_id", :limit => nil
-    t.string  "notes",             :limit => nil
-  end
-
   create_table "cites_regions_import", :id => false, :force => true do |t|
     t.string "name", :limit => nil
-  end
-
-  create_table "common_name_import", :id => false, :force => true do |t|
-    t.string  "common_name",   :limit => nil
-    t.string  "language_name", :limit => nil
-    t.integer "species_id"
   end
 
   create_table "common_names", :force => true do |t|
@@ -144,7 +116,7 @@ ActiveRecord::Schema.define(:version => 20120810145423) do
     t.integer  "depth"
     t.datetime "created_at",                                            :null => false
     t.datetime "updated_at",                                            :null => false
-    t.datetime "effective_at",       :default => '2012-08-08 07:40:24', :null => false
+    t.datetime "effective_at",       :default => '2012-08-15 12:42:00', :null => false
     t.text     "notes"
   end
 
@@ -167,30 +139,11 @@ ActiveRecord::Schema.define(:version => 20120810145423) do
     t.string  "spcstatus",  :limit => nil
   end
 
-  create_table "plants_synonym_import", :id => false, :force => true do |t|
-    t.string  "kingdom",             :limit => nil
-    t.string  "taxonorder",          :limit => nil
-    t.string  "family",              :limit => nil
-    t.string  "genus",               :limit => nil
-    t.string  "species",             :limit => nil
-    t.string  "spcinfra",            :limit => nil
-    t.integer "spcrecid"
-    t.string  "spcstatus",           :limit => nil
-    t.integer "accepted_species_id"
-  end
-
   create_table "ranks", :force => true do |t|
     t.string   "name",       :null => false
     t.integer  "parent_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-  end
-
-  create_table "reference_links", :id => false, :force => true do |t|
-    t.integer "dslspcrecid"
-    t.integer "dsldscrecid"
-    t.string  "dslcode",      :limit => nil
-    t.integer "dslcoderecid"
   end
 
   create_table "reference_links_import", :id => false, :force => true do |t|
@@ -217,17 +170,6 @@ ActiveRecord::Schema.define(:version => 20120810145423) do
     t.string  "dscpubyear", :limit => nil
   end
 
-  create_table "species_import", :id => false, :force => true do |t|
-    t.string  "kingdom",    :limit => nil
-    t.string  "taxonorder", :limit => nil
-    t.string  "family",     :limit => nil
-    t.string  "genus",      :limit => nil
-    t.string  "species",    :limit => nil
-    t.string  "spcinfra",   :limit => nil
-    t.integer "spcrecid"
-    t.string  "spcstatus",  :limit => nil
-  end
-
   create_table "species_listings", :force => true do |t|
     t.integer  "designation_id"
     t.string   "name"
@@ -251,31 +193,6 @@ ActiveRecord::Schema.define(:version => 20120810145423) do
     t.datetime "updated_at",          :null => false
   end
 
-  create_table "standard_references_import", :id => false, :force => true do |t|
-    t.string  "author",     :limit => nil
-    t.integer "year"
-    t.text    "title"
-    t.string  "kingdom",    :limit => nil
-    t.string  "phylum",     :limit => nil
-    t.string  "class",      :limit => nil
-    t.string  "taxonorder", :limit => nil
-    t.string  "family",     :limit => nil
-    t.string  "genus",      :limit => nil
-    t.string  "species",    :limit => nil
-  end
-
-  create_table "synonym_import", :id => false, :force => true do |t|
-    t.string  "kingdom",             :limit => nil
-    t.string  "taxonorder",          :limit => nil
-    t.string  "family",              :limit => nil
-    t.string  "genus",               :limit => nil
-    t.string  "species",             :limit => nil
-    t.string  "spcinfra",            :limit => nil
-    t.integer "spcrecid"
-    t.string  "spcstatus",           :limit => nil
-    t.integer "accepted_species_id"
-  end
-
   create_table "taxon_commons", :force => true do |t|
     t.integer  "taxon_concept_id"
     t.integer  "common_name_id"
@@ -296,10 +213,9 @@ ActiveRecord::Schema.define(:version => 20120810145423) do
   end
 
   create_table "taxon_concept_references", :force => true do |t|
-    t.integer "taxon_concept_id",                    :null => false
-    t.integer "reference_id",                        :null => false
-    t.boolean "is_author",        :default => false, :null => false
-    t.hstore  "data",                                :null => false
+    t.integer "taxon_concept_id", :null => false
+    t.integer "reference_id",     :null => false
+    t.hstore  "data",             :null => false
   end
 
   create_table "taxon_concepts", :force => true do |t|
