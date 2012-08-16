@@ -37,7 +37,7 @@ namespace :import do
       drop_table(tmp_table)
       create_import_table(tmp_table)
       query = eval("#{t}_query")
-      copy_data(tmp_table, query, 'SynonymSpcRecID')
+      copy_data(tmp_table, query)
 
       #[BEGIN]copied over from import:species
       tmp_columns = MAPPING[tmp_table][:tmp_columns]

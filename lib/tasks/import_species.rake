@@ -54,7 +54,6 @@ namespace :import do
         1033, 1034, 1035, 1036, 1036037, 1038, 1039, 1040, 1042, 1045, 1048, 1049, 1050, 1055, 1056, 1058,
         1062, 1063, 1066, 1067, 1069, 1077, 1092, 1093, 1095, 1181, 1184, 1192, 1194,   1195, 1196, 1197,
         1221, 1222, 1228, 1229, 1230, 1238, 1239, 125, 39798, 399, 400, 403, 404, 405, 406, 407, 409);
-        --ORDER BY 2;
     SQL
 
     plants_query = <<-SQL
@@ -82,7 +81,6 @@ namespace :import do
       106312, 106502, 106557, 106615, 106737, 106802, 106965, 107368, 107575, 107643, 
       107769, 107832, 107892, 109940, 111115, 119238, 154270, 155976, 156271, 156686, 
       157400, 158200, 158883, 159997, 160571, 161383, 161443);
-      --ORDER BY 2;
     SQL
     ["animals", "plants"].each do |t|
       puts "Importing #{t.capitalize}"
@@ -90,7 +88,7 @@ namespace :import do
       drop_table(tmp_table)
       create_import_table(tmp_table)
       query = eval("#{t}_query")
-      copy_data(tmp_table, query, 'SpcRecID')
+      copy_data(tmp_table, query)
       tmp_columns = MAPPING[tmp_table][:tmp_columns]
       import_data_for tmp_table, Rank::KINGDOM if tmp_columns.include? Rank::KINGDOM.capitalize
       if tmp_columns.include?(Rank::PHYLUM.capitalize) && 

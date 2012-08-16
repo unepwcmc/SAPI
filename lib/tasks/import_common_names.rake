@@ -23,7 +23,7 @@ namespace :import do
       drop_table(tmp_table)
       create_import_table(tmp_table)
       query = eval("#{t}_query")
-      copy_data(tmp_table, query, 'ComRecID')
+      copy_data(tmp_table, query)
       sql = <<-SQL
         INSERT INTO common_names(name, language_id, created_at, updated_at)
         SELECT common_name, languages.id, current_date, current_date

@@ -34,7 +34,7 @@ namespace :import do
       drop_table(tmp_table)
       create_import_table(tmp_table)
       query = eval("#{t}_query")
-      copy_data(tmp_table, query, 'LegRecID')
+      copy_data(tmp_table, query)
       sql = <<-SQL
         BEGIN;
           INSERT INTO listing_changes(species_listing_id, taxon_concept_id, change_type_id, notes, created_at, updated_at, effective_at)

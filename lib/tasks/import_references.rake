@@ -3,25 +3,11 @@ namespace :import do
   desc 'Import references from SQL Server [usage: rake import:references]'
   task :references => [:environment] do
     ANIMALS_QUERY = <<-SQL
-      SELECT
-           [DscRecID]
-          ,[DscTitle]
-          ,[DscAuthors]
-          --,[DscPubPlace]
-          --,[DscPublisher]
-          ,[DscPubYear]
-          --,[DscSource]
+      SELECT [DscRecID], [DscTitle], [DscAuthors], [DscPubYear]
       FROM [Animals].[dbo].[DataSource];
     SQL
     PLANTS_QUERY = <<-SQL
-      SELECT
-           [DscRecID]
-          ,[DscTitle]
-          ,[DscAuthors]
-          --,[DscPubPlace]
-          --,[DscPublisher]
-          ,[DscPubYear]
-          --,[DscSource]
+      SELECT [DscRecID], [DscTitle], [DscAuthors], [DscPubYear]
       FROM ORWELL.[Plants].[dbo].[DataSource];
     SQL
     TMP_TABLE = 'references_import'
@@ -30,7 +16,7 @@ namespace :import do
       drop_table(TMP_TABLE)
       create_import_table(TMP_TABLE)
       query = "#{t.upcase}_QUERY".constantize
-      copy_data(TMP_TABLE, query, 'DscRecID')
+      copy_data_in_batches(TMP_TABLE, query, 'DscRecID')
       sql = <<-SQL
         INSERT INTO "references" (legacy_type, legacy_id, author, title, year,
           created_at, updated_at)

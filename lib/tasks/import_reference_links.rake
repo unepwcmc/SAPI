@@ -28,7 +28,7 @@ namespace :import do
       drop_table(TMP_TABLE)
       create_import_table(TMP_TABLE)
       query = "#{t.upcase}_QUERY".constantize
-      copy_data(TMP_TABLE, query, 'DslRecID')
+      copy_data_in_batches(TMP_TABLE, query, 'DslRecID')
       #copy 'SPC' links
       sql = <<-SQL
         INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id)

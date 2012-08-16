@@ -22,7 +22,7 @@ namespace :import do
       drop_table(tmp_table)
       create_import_table(tmp_table)
       query = eval("#{t}_query")
-      copy_data(tmp_table, query, 'DctRecID')
+      copy_data(tmp_table, query)
       sql = <<-SQL
         INSERT INTO taxon_concept_geo_entities(taxon_concept_id, geo_entity_id, created_at, updated_at)
         SELECT DISTINCT species.id, geo_entities.id, current_date, current_date
