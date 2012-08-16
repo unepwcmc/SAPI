@@ -77,6 +77,7 @@ namespace :import do
     end
     puts "There are now #{TaxonConceptReference.count} taxon concept references in the database"
     puts "There are now #{TaxonConceptGeoEntityReference.count} taxon concept geo entity references in the database"
+    Sapi::rebuild_references
   end
 
 end

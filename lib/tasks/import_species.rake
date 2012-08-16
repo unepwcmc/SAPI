@@ -107,16 +107,16 @@ namespace :import do
       import_data_for tmp_table, Rank::GENUS, Rank::FAMILY
       import_data_for tmp_table, Rank::SPECIES, Rank::GENUS
       import_data_for tmp_table, Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra'
-      #rebuild the tree
-      TaxonConcept.rebuild!
-      #set the depth on all nodes
-      TaxonConcept.roots.each do |root|
-        TaxonConcept.each_with_level(root.self_and_descendants) do |node, level|
-          node.send(:"set_depth!")
-        end
+    end
+    #rebuild the tree
+    TaxonConcept.rebuild!
+    #set the depth on all nodes
+    TaxonConcept.roots.each do |root|
+      TaxonConcept.each_with_level(root.self_and_descendants) do |node, level|
+        node.send(:"set_depth!")
       end
     end
-    Sapi::rebuild()
+    Sapi::rebuild_taxonomy()
   end
 end
 

@@ -82,6 +82,8 @@ namespace :import do
       puts "#{ListingChange.count - listings_count} CITES listings were added to the database"
       puts "#{ListingDistribution.count - listings_d_count} listing distributions were added to the database"
     end
+    Sapi::fix_listing_changes()
+    Sapi::rebuild_listings()
   end
 
   namespace :cites_listings do
