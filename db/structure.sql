@@ -235,11 +235,7 @@ CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         -- set the cites_accepted flag to true for all implicitly listed taxa
         WITH RECURSIVE q AS
         (
-          SELECT  h,
-          CASE
-            WHEN (data->'usr_no_std_ref')::BOOLEAN = 't' THEN 'f'
-            ELSE (data->'cites_accepted')::BOOLEAN
-          END AS inherited_cites_accepted
+          SELECT  h, data->'cites_accepted' AS inherited_cites_accepted
           FROM    taxon_concepts h
           WHERE   parent_id IS NULL
 
@@ -248,7 +244,6 @@ CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           SELECT  hi,
           CASE
             WHEN (data->'cites_accepted')::BOOLEAN = 't' THEN 't'
-            WHEN (data->'usr_no_std_ref')::BOOLEAN = 't' THEN 'f'
             ELSE inherited_cites_accepted
           END
           FROM    q
@@ -913,7 +908,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-08-08 07:36:14.291884'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-08-15 11:03:49.27386'::timestamp without time zone NOT NULL,
     notes text
 );
 

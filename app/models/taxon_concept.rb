@@ -14,7 +14,6 @@
 #  taxon_name_id        :integer          not null
 #  legacy_id            :integer
 #  inherit_distribution :boolean          default(TRUE), not null
-#  inherit_references   :boolean          default(TRUE), not null
 #  data                 :hstore
 #  fully_covered        :boolean          default(TRUE), not null
 #  listing              :hstore
@@ -112,7 +111,10 @@ class TaxonConcept < ActiveRecord::Base
         UNION ALL
 
         SELECT hi, hi.id,
-          std_ref_ary || reference_id
+          CASE
+            WHEN (hi.data->'usr_no_std_ref')::BOOLEAN = 't' THEN ARRAY[]::INTEGER[]
+            ELSE std_ref_ary || reference_id
+          END
         FROM q
         JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
         LEFT JOIN taxon_concept_references
