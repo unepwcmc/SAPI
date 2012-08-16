@@ -13,7 +13,7 @@
 #  depth              :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  effective_at       :datetime         default(2012-07-25 13:26:52 UTC), not null
+#  effective_at       :datetime         default(2012-08-15 12:42:00 UTC), not null
 #  notes              :text
 #
 
