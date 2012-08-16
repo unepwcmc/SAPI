@@ -23,7 +23,7 @@ class Checklist
         @taxon_concepts_rel = @taxon_concepts_rel.with_synonyms
       end
 
-      return @taxon_concepts_rel = @taxon_concepts_rel.where("data->'full_name' ILIKE '#{options[:scientific_name]}%'")
+      return @taxon_concepts_rel = @taxon_concepts_rel.where("data->'full_name' ILIKE '#{options[:scientific_name]}%' AND data->'cites_accepted' = 't'")
     end
 
     #filter by geo entities
