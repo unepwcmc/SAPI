@@ -16,6 +16,12 @@ class Checklist
       joins(:designation).
       where('designations.name' => @designation)
 
+    # Ignore other params and only search by scientific name
+    # For example, if searching for autocomplete, only filter by name and stop
+    unless options[:name_only].nil?
+      return @taxon_concepts_rel = @taxon_concepts_rel.where("data->'full_name' ILIKE '#{options[:scientific_name]}%'")
+    end
+
     #filter by geo entities
     @geo_options = []
     @geo_options += options[:country_ids] unless options[:country_ids].nil?

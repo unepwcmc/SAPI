@@ -38,6 +38,7 @@ class TaxonConceptsController < ApplicationController
   def extract_checklist_params
     @checklist_params = {
       :scientific_name => params[:scientific_name] ? params[:scientific_name] : nil,
+      :name_only => params[:name_only] == '1',
       :country_ids => params[:country_ids] ? params[:country_ids] : nil,
       :cites_region_ids =>
         params[:cites_region_ids] ? params[:cites_region_ids] : nil,
