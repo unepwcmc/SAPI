@@ -116,9 +116,9 @@ def copy_data_in_batches(table_name, query, recid)
   puts "#{cnt} records to copy"
 
   offset = 0
-  limit = 5000
+  limit = 10000
 
-  #process in batches of 5000
+  #process in batches of 10000
   while offset < cnt
     puts "offset: #{offset}"
 
@@ -167,7 +167,7 @@ CSV HEADER
   PSQL
 
   db_conf = YAML.load(File.open(Rails.root + "config/database.yml"))[Rails.env]
-  puts "export PGPASSWORD=#{db_conf["password"]} && echo \"#{cmd.split("\n").join(' ')}\" | psql -h #{db_conf["host"] || "localhost"} -p #{db_conf["port"] || 5432} -U#{db_conf["username"]} #{db_conf["database"]}"
+
   system("export PGPASSWORD=#{db_conf["password"]} && echo \"#{cmd.split("\n").join(' ')}\" | psql -h #{db_conf["host"] || "localhost"} -p #{db_conf["port"] || 5432} -U#{db_conf["username"]} #{db_conf["database"]}")
   puts "Data copied to tmp table"
 end
