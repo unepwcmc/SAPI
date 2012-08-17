@@ -2,6 +2,7 @@ SAPI::Application.routes.draw do
 
   match 'taxon_concepts/' => 'taxon_concepts#index'
   match 'taxon_concepts/history' => 'taxon_concepts#history'
+  match 'taxon_concepts/autocomplete' => 'taxon_concepts#autocomplete'
   match 'geo_entities/:geo_entity_type' => 'geo_entities#index',
     :constraints => {:geo_entity_type => /#{GeoEntityType::COUNTRY}|#{GeoEntityType::CITES_REGION}/}
   match 'species_listings/:designation' => 'species_listings#index',

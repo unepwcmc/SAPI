@@ -34,11 +34,19 @@ class TaxonConceptsController < ApplicationController
     end
   end
 
+  def autocomplete
+    taxon_concepts = TaxonConcept.
+    select([:data, :primary_name]).
+      with_primary_name.
+      where("data->'full_name' ILIKE '#{params[:scientific_name]}%'").
+      order("data->'rank_name', primary_name")
+    render :text => taxon_concepts.to_json(:methods => [:full_name, :rank_name, :primary_name])
+  end
+
   private
   def extract_checklist_params
     @checklist_params = {
       :scientific_name => params[:scientific_name] ? params[:scientific_name] : nil,
-      :name_only => params[:name_only] == '1',
       :country_ids => params[:country_ids] ? params[:country_ids] : nil,
       :cites_region_ids =>
         params[:cites_region_ids] ? params[:cites_region_ids] : nil,
