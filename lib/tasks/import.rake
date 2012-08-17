@@ -5,6 +5,7 @@ namespace :import do
   task :random => :environment do
     Rake::Task["db:seed"].invoke
     Rake::Task["import:species"].invoke
+    Rake::Task["import:synonyms"].invoke
     Rake::Task["import:cites_regions"].invoke(
       'lib/assets/files/cites_regions.csv'
     )
@@ -14,7 +15,6 @@ namespace :import do
     Rake::Task["import:distributions"].invoke
     Rake::Task["import:cites_listings"].invoke
     Rake::Task["import:common_names"].invoke
-    Rake::Task["import:synonyms"].invoke
     Rake::Task["import:references"].invoke
     Rake::Task["import:reference_links"].invoke
     Rake::Task["import:standard_references"].invoke(
@@ -26,6 +26,7 @@ namespace :import do
   task :first_pages_cites => :environment do
     Rake::Task["db:seed"].invoke
     Rake::Task["import:species"].invoke
+    Rake::Task["import:synonyms"].invoke
     Rake::Task["import:cites_regions"].invoke(
       'lib/assets/files/cites_regions.csv'
     )
@@ -35,7 +36,6 @@ namespace :import do
     Rake::Task["import:distributions"].invoke
     Rake::Task["import:cites_listings"].invoke
     Rake::Task["import:common_names"].invoke
-    Rake::Task["import:synonyms"].invoke
   end
 
   desc 'Runs import tasks for the first pages of CITES animals history + non listed species'

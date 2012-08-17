@@ -148,6 +148,7 @@ namespace :import do
       ActiveRecord::Base.connection.execute(sql)
     end
     puts "There are now #{StandardReference.count} standard references in the database"
+    Sapi::rebuild_references
   end
 
 end

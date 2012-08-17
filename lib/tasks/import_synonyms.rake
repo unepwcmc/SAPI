@@ -92,6 +92,7 @@ SQL
         "taxon_relationship_types.name" => TaxonRelationshipType::HAS_SYNONYM
       ).count
     } synonyms in the database."
+    Sapi::rebuild_taxonomy()
   end
 
 end

@@ -22,9 +22,10 @@ namespace :import do
       FROM ORWELL.[Plants].[dbo].[DataSourceLink]
       WHERE DslSpcRecID IS NOT NULL
     SQL
+    puts "There are #{TaxonConceptReference.count} taxon concept references in the database."
+    puts "There are #{TaxonConceptGeoEntityReference.count} taxon concept geo entity references in the database."
     TMP_TABLE = 'reference_links_import'
     ["animals", "plants"].each do |t|
-      puts "There are #{TaxonConceptReference.count} taxon concept references in the database."
       drop_table(TMP_TABLE)
       create_import_table(TMP_TABLE)
       query = "#{t.upcase}_QUERY".constantize
@@ -48,7 +49,7 @@ namespace :import do
           )
       SQL
       ActiveRecord::Base.connection.execute(sql)
-      puts "There are #{TaxonConceptGeoEntityReference.count} taxon concept geo entity references in the database."
+
       # copy 'CTY' links
       sql = <<-SQL
         INSERT INTO "taxon_concept_geo_entity_references"
@@ -77,7 +78,6 @@ namespace :import do
     end
     puts "There are now #{TaxonConceptReference.count} taxon concept references in the database"
     puts "There are now #{TaxonConceptGeoEntityReference.count} taxon concept geo entity references in the database"
-    Sapi::rebuild_references
   end
 
 end
