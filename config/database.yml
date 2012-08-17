@@ -21,3 +21,12 @@ test:
   username: postgres
   password: postgres
   timeout: 5000
+
+staging:
+  adapter: postgresql
+  database: sapi_staging
+  username: wcmc
+  host: localhost
+  port: 15432
+  password: 
+  template: template0

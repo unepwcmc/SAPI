@@ -98,6 +98,7 @@ def copy_data(table_name, query)
   ActiveRecord::Base.connection.execute(cmd)
 
   puts "Data copied to tmp table"
+  client.close
 end
 
 #recid -- field to be used for ordering for batch load  (e.g. DscRecID)
@@ -151,6 +152,7 @@ def copy_data_in_batches(table_name, query, recid)
     SQL
     ActiveRecord::Base.connection.execute(cmd)
   end
+  client.close
 end
 
 def copy_data_from_file(table_name, path_to_file)
@@ -165,7 +167,8 @@ CSV HEADER
   PSQL
 
   db_conf = YAML.load(File.open(Rails.root + "config/database.yml"))[Rails.env]
-  system("export PGPASSWORD=#{db_conf["password"]} && echo \"#{cmd.split("\n").join(' ')}\" | psql -h #{db_conf["host"] || "localhost"} -U#{db_conf["username"]} #{db_conf["database"]}")
+  puts "export PGPASSWORD=#{db_conf["password"]} && echo \"#{cmd.split("\n").join(' ')}\" | psql -h #{db_conf["host"] || "localhost"} -p #{db_conf["port"] || 5432} -U#{db_conf["username"]} #{db_conf["database"]}"
+  system("export PGPASSWORD=#{db_conf["password"]} && echo \"#{cmd.split("\n").join(' ')}\" | psql -h #{db_conf["host"] || "localhost"} -p #{db_conf["port"] || 5432} -U#{db_conf["username"]} #{db_conf["database"]}")
   puts "Data copied to tmp table"
 end
 
