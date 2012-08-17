@@ -14,7 +14,7 @@ GeoRelationshipType.dict.each do |type|
 end
 puts "#{GeoRelationshipType.count} geo relationship types created"
 
-ActiveRecord::Base.connection.execute('DELETE FROM taxon_concept_geo_entity_references')
+puts "#{TaxonConceptGeoEntityReference.delete_all} taxon concept geo entity references deleted"
 puts "#{TaxonConceptGeoEntity.delete_all} taxon concept geo entities deleted"
 puts "#{ListingChange.delete_all} listing changes deleted"
 puts "#{GeoEntity.delete_all} geo entities deleted"
@@ -32,7 +32,7 @@ end
 puts "#{TaxonRelationshipType.count} taxon relationship types created"
 
 puts "#{TaxonCommon.delete_all} taxon commons deleted"
-ActiveRecord::Base.connection.execute('DELETE FROM taxon_concept_references')
+puts "#{TaxonConceptReference.delete_all} taxon_concept references deleted"
 puts "#{TaxonConcept.delete_all} taxon_concepts deleted"
 puts "#{TaxonName.delete_all} taxon_names deleted"
 puts "#{Rank.delete_all} ranks deleted"
