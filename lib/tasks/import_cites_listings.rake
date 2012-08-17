@@ -3,7 +3,7 @@ namespace :import do
   desc "Import CITES species listings from SQL Server [usage: rake import:cites_listings]"
   task :cites_listings => [:environment, "cites_listings:defaults"] do
     animals_query = <<-SQL
-      SELECT S.SpcRecID, L.LegListing, convert(varchar(10), L.LegDateListed, 120), C.CtyRecID, L.LegNotes
+      SELECT LegRecID, S.SpcRecID, L.LegListing, convert(varchar(10), L.LegDateListed, 120), C.CtyRecID, L.LegNotes
       FROM ORWELL.animals.dbo.species AS S INNER JOIN
         ORWELL.animals.dbo.legal AS L ON S.SpcRecID = L.LegSpcRecID INNER JOIN
         ORWELL.animals.dbo.legalname AS LN ON L.LegLnmRecID = LN.LnmRecID AND LN.LnmRecID = 3 INNER JOIN
@@ -12,7 +12,7 @@ namespace :import do
     SQL
 
     plants_query = <<-SQL
-      SELECT S.SpcRecID, L.LegListing, convert(varchar(10), L.LegDateListed, 120), C.CtyRecID, L.LegNotes
+      SELECT LegRecID, S.SpcRecID, L.LegListing, convert(varchar(10), L.LegDateListed, 120), C.CtyRecID, L.LegNotes
       FROM ORWELL.plants.dbo.species AS S INNER JOIN
         ORWELL.plants.dbo.legal AS L ON S.SpcRecID = L.LegSpcRecID AND L.LegListing IN ('I', 'II', 'III', 'I/II') INNER JOIN
         ORWELL.plants.dbo.legalname AS LN ON L.LegLnmRecID = LN.LnmRecID AND LN.LnmRecID = 3 INNER JOIN
@@ -82,6 +82,8 @@ namespace :import do
       puts "#{ListingChange.count - listings_count} CITES listings were added to the database"
       puts "#{ListingDistribution.count - listings_d_count} listing distributions were added to the database"
     end
+    Sapi::fix_listing_changes()
+    Sapi::rebuild_listings()
   end
 
   namespace :cites_listings do

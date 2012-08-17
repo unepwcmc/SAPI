@@ -49,6 +49,10 @@ This is done in migrations for your development and test environments. For stagi
 This task loads the db seeds, and imports species, distributions, cites listings, common names, synonyms, references and taxon concept references directly from MS SQL (you'll need freetds installed); we're still using files in lib/assets/files/ to import cites_regions, countries and standard references.
 There are specific tasks for each of the types of data. Run 'rake -T' to get the list of tasks.
 
+You need to run imports from a machine that has access to both the MSSQL db and PostgreSQL. Port forwarding might come in handy:
+
+  ssh -fNg -L 15432:localhost:5432 ssh_user@public-address-of-db-host
+
 ==Development
 
 === Coding guidelines

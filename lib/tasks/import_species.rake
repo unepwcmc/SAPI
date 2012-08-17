@@ -54,11 +54,10 @@ namespace :import do
         1033, 1034, 1035, 1036, 1036037, 1038, 1039, 1040, 1042, 1045, 1048, 1049, 1050, 1055, 1056, 1058,
         1062, 1063, 1066, 1067, 1069, 1077, 1092, 1093, 1095, 1181, 1184, 1192, 1194,   1195, 1196, 1197,
         1221, 1222, 1228, 1229, 1230, 1238, 1239, 125, 39798, 399, 400, 403, 404, 405, 406, 407, 409);
-        --ORDER BY 2;
     SQL
 
     plants_query = <<-SQL
-      Select 'Plantae' as Kingdom, O.OrdName, F.FamName, G.GenName, S.Spcname, S.SpcInfraepithet, S.Spcrecid, S.SpcStatus
+      Select 'Plantae' as Kingdom, O.OrdName, F.FamName, G.GenName, S.Spcname, S.SpcInfraepithet, S.SpcRecID, S.SpcStatus
       from ORWELL.plants.dbo.Species S 
       inner join ORWELL.plants.dbo.Genus G on S.Spcgenrecid = G.genrecid
       INNER JOIN ORWELL.plants.dbo.Family F ON FamRecID = GenFamRecID
@@ -82,7 +81,6 @@ namespace :import do
       106312, 106502, 106557, 106615, 106737, 106802, 106965, 107368, 107575, 107643, 
       107769, 107832, 107892, 109940, 111115, 119238, 154270, 155976, 156271, 156686, 
       157400, 158200, 158883, 159997, 160571, 161383, 161443);
-      --ORDER BY 2;
     SQL
     ["animals", "plants"].each do |t|
       puts "Importing #{t.capitalize}"
@@ -109,16 +107,16 @@ namespace :import do
       import_data_for tmp_table, Rank::GENUS, Rank::FAMILY
       import_data_for tmp_table, Rank::SPECIES, Rank::GENUS
       import_data_for tmp_table, Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra'
-      #rebuild the tree
-      TaxonConcept.rebuild!
-      #set the depth on all nodes
-      TaxonConcept.roots.each do |root|
-        TaxonConcept.each_with_level(root.self_and_descendants) do |node, level|
-          node.send(:"set_depth!")
-        end
+    end
+    #rebuild the tree
+    TaxonConcept.rebuild!
+    #set the depth on all nodes
+    TaxonConcept.roots.each do |root|
+      TaxonConcept.each_with_level(root.self_and_descendants) do |node, level|
+        node.send(:"set_depth!")
       end
     end
-    Sapi::rebuild()
+    Sapi::rebuild_taxonomy()
   end
 end
 

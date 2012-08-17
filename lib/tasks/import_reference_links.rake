@@ -4,7 +4,8 @@ namespace :import do
   task :reference_links => [:environment] do
     ANIMALS_QUERY = <<-SQL
       SELECT
-          [DslSpcRecID]
+          [DslRecID]
+          ,[DslSpcRecID]
           ,[DslDscRecID]
           ,[DslCode]
           ,[DslCodeRecID]
@@ -13,7 +14,8 @@ namespace :import do
     SQL
     PLANTS_QUERY = <<-SQL
       SELECT
-          [DslSpcRecID]
+          [DslRecID]
+          ,[DslSpcRecID]
           ,[DslDscRecID]
           ,[DslCode]
           ,[DslCodeRecID]
@@ -26,7 +28,7 @@ namespace :import do
       drop_table(TMP_TABLE)
       create_import_table(TMP_TABLE)
       query = "#{t.upcase}_QUERY".constantize
-      copy_data(TMP_TABLE, query)
+      copy_data_in_batches(TMP_TABLE, query, 'DslRecID')
       #copy 'SPC' links
       sql = <<-SQL
         INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id)
@@ -75,6 +77,7 @@ namespace :import do
     end
     puts "There are now #{TaxonConceptReference.count} taxon concept references in the database"
     puts "There are now #{TaxonConceptGeoEntityReference.count} taxon concept geo entity references in the database"
+    Sapi::rebuild_references
   end
 
 end

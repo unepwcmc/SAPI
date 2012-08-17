@@ -20,8 +20,6 @@ namespace :import do
     Rake::Task["import:standard_references"].invoke(
       'lib/assets/standard_nomenclature.csv'
     )
-    Sapi::fix_listing_changes()
-    Sapi::rebuild()
   end
 
   desc 'Runs import tasks for the first pages of CITES history (both animals and plants)'
@@ -38,8 +36,6 @@ namespace :import do
     Rake::Task["import:cites_listings"].invoke
     Rake::Task["import:common_names"].invoke
     Rake::Task["import:synonyms"].invoke
-    Sapi::fix_listing_changes()
-    Sapi::rebuild()
   end
 
   desc 'Runs import tasks for the first pages of CITES animals history + non listed species'
@@ -63,8 +59,6 @@ namespace :import do
     Rake::Task["import:common_names"].invoke(
       'lib/assets/files/first_pages_cites_with_nc//animals_common_names.csv'
     )
-    Sapi::fix_listing_changes()
-    Sapi::rebuild()
   end
 
 end

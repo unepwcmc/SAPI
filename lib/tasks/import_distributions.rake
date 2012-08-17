@@ -3,14 +3,14 @@ namespace :import do
   desc 'Import distributions from SQL Server [usage: rake import:distributions]'
   task :distributions => [:environment] do
     animals_query = <<-SQL
-      Select S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
+      Select DctRecID, S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
       from ORWELL.animals.dbo.Species S 
       INNER JOIN ORWELL.animals.dbo.DistribCty Dcty ON S.SpcRecID = Dcty.DCtSpcRecID
       INNER JOIN ORWELL.animals.dbo.Country Cty ON Dcty.DCtCtyRecID = Cty.CtyRecID
       WHERE S.SpcRecID IN (#{TaxonConcept.where("data -> 'kingdom_name' = 'Animalia' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
     SQL
     plants_query = <<-SQL
-      Select S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
+      Select DctRecID, S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
       from ORWELL.plants.dbo.Species S 
       INNER JOIN ORWELL.plants.dbo.DistribCty Dcty ON S.SpcRecID = Dcty.DCtSpcRecID
       INNER JOIN ORWELL.plants.dbo.Country Cty ON Dcty.DCtCtyRecID = Cty.CtyRecID
