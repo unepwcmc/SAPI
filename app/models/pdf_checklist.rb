@@ -4,6 +4,17 @@ require Rails.root.join("lib/modules/pdf.rb")
 class PdfChecklist < Checklist
   include PDF
 
+  #merge sort on taxon concepts, their synonyms and common names #TODO
+  def post_process(taxon_concepts)
+    if(@synonyms)
+      #synonyms = taxon_concepts.map(:synonyms).sort
+    end
+    if(@common_names)
+      #common_names = taxon_concepts.map(:english, :spanish, :french).sort
+    end
+    #merge sort
+  end
+
   def generate
     static_index_pdf = [Rails.root, "/public/static_index.pdf"].join
     tmp_index_pdf    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join

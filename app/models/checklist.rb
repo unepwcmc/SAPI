@@ -42,11 +42,13 @@ class Checklist
 
     #show synonyms?
     unless options[:synonyms].nil? || options[:synonyms] == false
+      @synonyms = true
       @taxon_concepts_rel = @taxon_concepts_rel.with_synonyms
     end
 
     #show common names?
     unless options[:common_names].nil?
+      @common_names = true
       @taxon_concepts_rel = @taxon_concepts_rel.with_common_names(options[:common_names])
     end
 
