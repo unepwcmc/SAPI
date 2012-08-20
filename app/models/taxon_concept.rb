@@ -83,10 +83,10 @@ class TaxonConcept < ActiveRecord::Base
   scope :with_synonyms, select(:synonyms_ary).
     joins(
       <<-SQL
-      LEFT JOIN (
+      INNER JOIN (
         SELECT taxon_concepts.id AS taxon_concept_id_ws, ARRAY_AGG(synonym_tc.data->'full_name') AS synonyms_ary
-        FROM taxon_concepts
-        INNER JOIN "taxon_relationships"
+        FROM taxon_relationships
+        INNER JOIN "taxon_concepts"
           ON "taxon_relationships"."taxon_concept_id" = "taxon_concepts"."id"
         INNER JOIN "taxon_relationship_types"
           ON "taxon_relationship_types"."id" = "taxon_relationships"."taxon_relationship_type_id"
@@ -94,21 +94,6 @@ class TaxonConcept < ActiveRecord::Base
           ON synonym_tc.id = taxon_relationships.other_taxon_concept_id
         GROUP BY taxon_concepts.id
       ) synonym_names ON taxon_concepts.id = synonym_names.taxon_concept_id_ws
-      SQL
-    )
-  scope :with_primary_name, select("primary_name").
-    joins(
-      <<-SQL
-      LEFT JOIN (
-        SELECT taxon_concepts.id AS taxon_concept_id_wp, primary_tc.data->'full_name' AS primary_name
-        FROM taxon_concepts
-        INNER JOIN "taxon_relationships"
-          ON "taxon_relationships"."other_taxon_concept_id" = "taxon_concepts"."id"
-        INNER JOIN "taxon_relationship_types"
-          ON "taxon_relationship_types"."id" = "taxon_relationships"."taxon_relationship_type_id"
-        LEFT JOIN taxon_concepts AS primary_tc
-          ON primary_tc.id = taxon_relationships.taxon_concept_id
-      ) primary_names ON taxon_concepts.id = primary_names.taxon_concept_id_wp
       SQL
     )
   scope :with_standard_references, select(:std_ref_ary).joins(
@@ -220,14 +205,18 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
-  # def as_json(options={})
-    # super(
-      # :only =>[:id, :parent_id, :depth],
-      # :methods => [:family_name, :class_name, :full_name, :rank_name, :spp,
-      # :taxonomic_position, :current_listing, :english, :spanish, :french, 
-      # :synonyms, :primary_name, :cites_accepted]
-    # )
-  # end
+  def as_json(options={})
+    puts options.inspect
+    unless options[:only] || options[:methods]
+      options = {
+        :only =>[:id, :parent_id, :depth],
+        :methods => [:family_name, :class_name, :full_name, :rank_name, :spp,
+        :taxonomic_position, :current_listing, :english, :spanish, :french, 
+        :synonyms, :primary_name, :cites_accepted]
+      }
+    end
+    super(options)
+  end
 
 class << self
 

@@ -36,11 +36,20 @@ class TaxonConceptsController < ApplicationController
 
   def autocomplete
     taxon_concepts = TaxonConcept.
-    select([:data, :primary_name]).
-      with_primary_name.
-      where("data->'full_name' ILIKE '#{params[:scientific_name]}%'").
-      order("data->'rank_name', primary_name")
-    render :text => taxon_concepts.to_json(:methods => [:full_name, :rank_name, :primary_name])
+      with_synonyms.
+      select("
+        data,
+        ARRAY(
+          SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
+        ) AS synonyms_ary"
+      ).
+      where("
+        data->'full_name' ILIKE '#{params[:scientific_name]}%'
+        OR
+        EXISTS (SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{params[:scientific_name]}%')
+      ").
+      order("LENGTH(data->'taxonomic_position'), data->'full_name'")
+    render :text => taxon_concepts.to_json(:methods => [:full_name, :rank_name, :synonyms])
   end
 
   private
