@@ -13,8 +13,7 @@ class Checklist
 
     @taxon_concepts_rel = TaxonConcept.scoped.
       select([:"taxon_concepts.id", :"taxon_concepts.data", :"taxon_concepts.listing", :"taxon_concepts.depth"]).
-      joins(:designation).
-      where('designations.name' => @designation)
+      by_designation(@designation)
 
     #filter by geo entities
     @geo_options = []
@@ -28,11 +27,7 @@ class Checklist
     unless options[:cites_appendices].nil?
       @taxon_concepts_rel = @taxon_concepts_rel.by_cites_appendices(options[:cites_appendices])
     else
-      @taxon_concepts_rel = @taxon_concepts_rel.where("
-        data->'rank_name' NOT IN ('SPECIES','SUBSPECIES')
-        OR listing->'cites_listing' != ''
-        AND listing->'cites_listing' != 'NC'
-      ")
+      @taxon_concepts_rel = @taxon_concepts_rel.without_nc
     end
 
     #possible output layouts are:

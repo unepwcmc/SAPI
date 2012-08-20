@@ -35,8 +35,8 @@ class TaxonConceptsController < ApplicationController
   end
 
   def autocomplete
-    taxon_concepts = TaxonConcept.
-      with_synonyms.
+    taxon_concepts = TaxonConcept.by_designation('CITES').
+      with_synonyms.without_nc.
       select("
         data,
         ARRAY(

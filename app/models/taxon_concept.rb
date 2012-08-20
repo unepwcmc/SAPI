@@ -43,8 +43,15 @@ class TaxonConcept < ActiveRecord::Base
   has_many :common_names, :through => :taxon_commons
   has_and_belongs_to_many :references, :join_table => :taxon_concept_references
 
-  scope :taxonomic_layout, where("taxon_concepts.data -> 'rank_name' <> 'GENUS'").
-    order("taxon_concepts.data -> 'taxonomic_position'")
+  scope :by_designation, lambda { |name|
+    joins(:designation).where('designations.name' => name)
+  }
+  scope :without_nc, where("
+    data->'rank_name' NOT IN ('SPECIES','SUBSPECIES')
+    OR listing->'cites_listing' != ''
+    AND listing->'cites_listing' != 'NC'
+  ")
+  scope :taxonomic_layout, order("taxon_concepts.data -> 'taxonomic_position'")
   scope :alphabetical_layout, where(
       "taxon_concepts.data -> 'rank_name' NOT IN (?)",
       [Rank::CLASS, Rank::PHYLUM, Rank::KINGDOM]
@@ -85,10 +92,10 @@ class TaxonConcept < ActiveRecord::Base
       <<-SQL
       INNER JOIN (
         SELECT taxon_concepts.id AS taxon_concept_id_ws, ARRAY_AGG(synonym_tc.data->'full_name') AS synonyms_ary
-        FROM taxon_relationships
-        INNER JOIN "taxon_concepts"
+        FROM taxon_concepts
+        LEFT JOIN taxon_relationships
           ON "taxon_relationships"."taxon_concept_id" = "taxon_concepts"."id"
-        INNER JOIN "taxon_relationship_types"
+        LEFT JOIN "taxon_relationship_types"
           ON "taxon_relationship_types"."id" = "taxon_relationships"."taxon_relationship_type_id"
         LEFT JOIN taxon_concepts AS synonym_tc
           ON synonym_tc.id = taxon_relationships.other_taxon_concept_id
