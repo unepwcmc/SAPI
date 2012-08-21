@@ -1,14 +1,13 @@
-class FooPdf
+class FooPdfFootnotes
 
   def initialize
-    Prawn::Document.generate("foo.pdf",:page_size => 'A4') do
+    Prawn::Document.generate("foo_footnotes.pdf",:page_size => 'A4') do
       #read 150 lorem ipsum records of various length 
       records = File.read(Rails.root.join("lib/assets/lorem_ipsum_paragraphs.txt")).split("\n").reject(&:blank?)
       #assign some random footnotes to the paragraphs
       footnotes = {
-        1 => '* ' + records[120],
-        2 => '* ' + records[54],
-        11 => '* ' + records[2]
+        1 => '* ' + records[3],
+        2 => '* ' + records[4],
       }
       footnotes_to_draw = []
       space_needed = 0
