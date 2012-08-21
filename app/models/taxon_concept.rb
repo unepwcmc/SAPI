@@ -231,7 +231,7 @@ class TaxonConcept < ActiveRecord::Base
       options = {
         :only =>[:id, :parent_id, :depth],
         :methods => [:family_name, :class_name, :full_name, :rank_name, :spp,
-        :taxonomic_position, :current_listing, :english, :spanish, :french, 
+        :taxonomic_position, :current_listing, :english_names_list, :spanish_names_list, :french_names_list, 
         :synonyms_list, :cites_accepted]
       }
     end
