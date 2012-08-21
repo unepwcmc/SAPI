@@ -90,81 +90,35 @@ class PdfChecklist < Checklist
 
   def draw_kingdom(pdf, kingdom, kingdom_name)
     pdf.text(kingdom_name, :size => 12, :align => :center)
-    pdf.column_box([0, pdf.cursor], :columns => 2, :width => pdf.bounds.width, :total_right_padding => 20) do
+    @indent = 15
+    pdf.column_box([0, pdf.cursor], :columns => 2, :width => pdf.bounds.width) do
       kingdom.each do |tc|
+        entry = 
         if tc[:entry_type]
           #it's a synonym or common name entry
           if tc[:entry_type] == :synonym
-            pdf.formatted_text [
-              {
-                :text => "#{tc[:secondary]} = #{tc[:primary]}",
-                :styles => [:italic]
-              }
-            ]
-          elsif tc[:entry_type] = :common
-            pdf.formatted_text [
-              {
-                :text => "#{tc[:secondary]} (#{tc[:lng][0].upcase}): "
-              },
-              {
-                :text => tc[:primary],
-                :styles => [:italic]
-              }
-            ]
+            "<i>#{tc[:secondary]} = #{tc[:primary]}</i>"
+          else
+            "#{tc[:secondary]} (#{tc[:lng][0].upcase}): <i>#{tc[:primary]}</i>"
           end
         else
-          unless tc.full_name.blank?
-            pdf.formatted_text [
-              {
-                :text =>
-                  if ['FAMILY','ORDER','CLASS'].include? tc.rank_name
-                    tc.full_name.upcase
-                  else
-                    tc.full_name
-                  end + ' ',
-                :styles => 
-                  [] <<
-                  if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? tc.rank_name
-                    :italic
-                  end <<
-                  if tc.cites_accepted
-                    :bold
-                  end
-              },
-              {
-                :text => "#{tc.spp} ",
-                :styles =>  (tc.cites_accepted ? [:bold] : [])
-              },
-              {:text => "#{tc.current_listing} ", :styles => [:bold]},
-              {:text => "#{tc.family_name} ".upcase},
-              {:text => "(#{tc.class_name}) "},
-              {
-                :text =>
-                  unless tc.english_names_list.blank?
-                    "(E) #{tc.english_names_list} "
-                  else
-                    ''
-                  end
-              },
-              {
-                :text =>
-                  unless tc.spanish_names_list.blank?
-                    "(S) #{tc.spanish_names_list} "
-                  else
-                    ''
-                  end
-              },
-              {
-                :text =>
-                  unless tc.french_names_list.blank?
-                    "(F) #{tc.french_names_list} "
-                  else
-                    ''
-                  end
-              }
-            ]
+          res = if ['FAMILY','ORDER','CLASS'].include? tc.rank_name
+            tc.full_name.upcase
+          else
+            tc.full_name
           end
+          res = "<i>#{res}</i>" if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? tc.rank_name
+          res = "#{res} #{tc.spp}"
+          res = "<b>#{res}</b>" if tc.cites_accepted
+          res += " <b>#{tc.current_listing}</b> #{"#{tc.family_name}".upcase} (#{tc.class_name})"
+          res += " (E) #{tc.english_names_list} " unless tc.english_names_list.blank?
+          res += " (S) #{tc.spanish_names_list} " unless tc.spanish_names_list.blank?
+          res += " (E) #{tc.french_names_list} " unless tc.french_names_list.blank?
+          res
         end
+        pdf.text entry,
+          #:indent_paragraphs => @indent,
+          :inline_format => true
       end
     end
   end
