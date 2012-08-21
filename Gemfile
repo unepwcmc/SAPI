@@ -12,7 +12,7 @@ gem 'pg_array_parser'
 gem 'activerecord-postgres-hstore'
 gem 'awesome_nested_set'
 gem 'foreigner'
-gem 'prawn'
+gem 'prawn', '0.12.0'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
