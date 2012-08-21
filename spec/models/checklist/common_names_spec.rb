@@ -16,27 +16,27 @@ describe Checklist do
     end
 
     it "should return all English names for Arctocephalus australis: 'South American Fur Seal, Southern Fur Seal'" do
-      @australis.english.should == 'South American Fur Seal, Southern Fur Seal'
+      @australis.english_names_list.should == 'South American Fur Seal, Southern Fur Seal'
     end
 
     it "should return all Spanish names for Arctocephalus australis: 'Lobo fino sudamericano, Oso marino austral'" do
-      @australis.spanish.should == 'Lobo fino sudamericano, Oso marino austral'
+      @australis.spanish_names_list.should == 'Lobo fino sudamericano, Oso marino austral'
     end
 
     it "should return all French names for Arctocephalus australis: 'Otarie à fourrure australe'" do
-      @australis.french.should == 'Otarie à fourrure australe'
+      @australis.french_names_list.should == 'Otarie à fourrure australe'
     end
 
     it "should return all English names for Arctocephalus spp.: 'Fur seals, Southern fur seals'" do
-      @arctocephalus.english.should == 'Fur seals, Southern fur seals'
+      @arctocephalus.english_names_list.should == 'Fur seals, Southern fur seals'
     end
 
     it "should return all Spanish names for Arctocephalus spp.: 'Osos marinos'" do
-      @arctocephalus.spanish.should == 'Osos marinos'
+      @arctocephalus.spanish_names_list.should == 'Osos marinos'
     end
 
     it "should return all French names for Arctocephalus spp.: 'Arctocéphales du sud, Otaries à fourrure, Otaries à fourrure du sud'" do
-      @arctocephalus.french.should == 'Arctocéphales du sud, Otaries à fourrure, Otaries à fourrure du sud'
+      @arctocephalus.french_names_list.should == 'Arctocéphales du sud, Otaries à fourrure, Otaries à fourrure du sud'
     end
 
     it "should include a species without any common names defined" do

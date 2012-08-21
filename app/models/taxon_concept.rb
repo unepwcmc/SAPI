@@ -166,26 +166,39 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   ['English', 'Spanish', 'French'].each do |lng|
-    define_method(lng.downcase) do
+    define_method("#{lng.downcase}_names") do
       sym = :"lng_#{lng[0].downcase}"
       if respond_to?(sym)
-        parse_pg_array(send(sym) || '').map do |e|
+        parse_pg_array(send(sym) || '').compact.map do |e|
           e.force_encoding('utf-8')
-        end.join(', ')
+        end
       else
-        nil
+        []
       end
+    end
+
+    define_method("#{lng.downcase}_names_list") do
+      self.send("#{lng.downcase}_names").join(', ')
     end
   end
 
   def synonyms
-    if respond_to?(:synonyms_ary)
-      parse_pg_array(synonyms_ary || '').compact.map do |e|
-        e.force_encoding('utf-8')
-      end.join(', ')
+    me = unless respond_to?(:synonyms_ary)
+      TaxonConcept.with_synonyms.where(:id => self.id).first
     else
-      nil
+      self
     end
+    if me.respond_to?(:synonyms_ary)
+      parse_pg_array(me.synonyms_ary || '').compact.map do |e|
+        e.force_encoding('utf-8')
+      end
+    else
+      []
+    end
+  end
+
+  def synonyms_list
+    synonyms.join(', ')
   end
 
   #note this will probably return external reference ids in the future
@@ -200,7 +213,7 @@ class TaxonConcept < ActiveRecord::Base
         e.force_encoding('utf-8')
       end.map(&:to_i)
     else
-      nil
+      []
     end
   end
 
@@ -219,7 +232,7 @@ class TaxonConcept < ActiveRecord::Base
         :only =>[:id, :parent_id, :depth],
         :methods => [:family_name, :class_name, :full_name, :rank_name, :spp,
         :taxonomic_position, :current_listing, :english, :spanish, :french, 
-        :synonyms, :primary_name, :cites_accepted]
+        :synonyms_list, :cites_accepted]
       }
     end
     super(options)
