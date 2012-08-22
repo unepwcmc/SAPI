@@ -2,21 +2,20 @@
 #
 # Table name: taxon_concepts
 #
-#  id                   :integer          not null, primary key
-#  parent_id            :integer
-#  lft                  :integer
-#  rgt                  :integer
-#  rank_id              :integer          not null
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  depth                :integer
-#  designation_id       :integer          not null
-#  taxon_name_id        :integer          not null
-#  legacy_id            :integer
-#  inherit_distribution :boolean          default(TRUE), not null
-#  data                 :hstore
-#  fully_covered        :boolean          default(TRUE), not null
-#  listing              :hstore
+#  id             :integer          not null, primary key
+#  parent_id      :integer
+#  lft            :integer
+#  rgt            :integer
+#  rank_id        :integer          not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  depth          :integer
+#  designation_id :integer          not null
+#  taxon_name_id  :integer          not null
+#  legacy_id      :integer
+#  data           :hstore
+#  fully_covered  :boolean          default(TRUE), not null
+#  listing        :hstore
 #
 
 class TaxonConcept < ActiveRecord::Base
