@@ -46,11 +46,7 @@ class TaxonConcept < ActiveRecord::Base
   scope :by_designation, lambda { |name|
     joins(:designation).where('designations.name' => name)
   }
-  scope :without_nc, where("
-    data->'rank_name' NOT IN ('SPECIES','SUBSPECIES')
-    OR listing->'cites_listing' != ''
-    AND listing->'cites_listing' != 'NC'
-  ")
+  scope :without_nc, where("(listing->'cites_listed')::BOOLEAN IS NOT NULL")
   scope :taxonomic_layout, order("taxon_concepts.data -> 'taxonomic_position'")
   scope :alphabetical_layout, where(
       "taxon_concepts.data -> 'rank_name' NOT IN (?)",
