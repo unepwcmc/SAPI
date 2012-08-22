@@ -48,9 +48,15 @@ class PdfChecklistHistory < ChecklistHistory
                 :styles => [:bold],
                 :size => 10
               },
-              { :text => (tc.english.blank? ? '' : "(E) #{tc.english} ") },
-              { :text => (tc.spanish.blank? ? '' : "(S) #{tc.spanish} ") },
-              { :text => (tc.french.blank? ? '' : "(F) #{tc.french} ") }
+              {
+                :text =>
+                (tc.english_names_list.blank? ? '' : "(E) #{tc.english_names_list} ") },
+              {
+                :text =>
+                (tc.spanish_names_list.blank? ? '' : "(S) #{tc.spanish_names_list} ") },
+              {
+                :text =>
+                (tc.french_names_list.blank? ? '' : "(F) #{tc.french_names_list} ") }
             ]
           }
         end
@@ -110,7 +116,10 @@ class PdfChecklistHistory < ChecklistHistory
       pdf.render_file tmp_history_pdf
     end
 
-    download_path = merge_pdfs(static_history_pdf, tmp_history_pdf)
+    download_path = attach_pdfs(
+      merge_pdfs(static_history_pdf, tmp_history_pdf),
+      Rails.root.join('/public/Historical_summary_of_CITES_annotations.pdf')
+    )
 
     FileUtils.rm tmp_history_pdf
 
