@@ -42,9 +42,73 @@ class TaxonConcept < ActiveRecord::Base
   has_many :common_names, :through => :taxon_commons
   has_and_belongs_to_many :references, :join_table => :taxon_concept_references
 
+  #scopes used for filtering
   scope :by_designation, lambda { |name|
     joins(:designation).where('designations.name' => name)
   }
+  scope :by_geo_entities, lambda { |geo_entities_ids|
+    in_clause = geo_entities_ids.join(',')
+
+    where <<-SQL
+    taxon_concepts.id IN 
+    (
+    SELECT taxon_concepts.id
+    FROM taxon_concepts
+    INNER JOIN taxon_concept_geo_entities
+      ON taxon_concepts.id = taxon_concept_geo_entities.taxon_concept_id
+    WHERE taxon_concept_geo_entities.geo_entity_id IN (#{in_clause})
+
+    UNION
+
+    SELECT DISTINCT taxon_concepts.id
+    FROM taxon_concepts
+    INNER JOIN taxon_concept_geo_entities
+      ON taxon_concepts.id = taxon_concept_geo_entities.taxon_concept_id
+    INNER JOIN geo_entities
+      ON taxon_concept_geo_entities.geo_entity_id = geo_entities.id
+    INNER JOIN geo_relationships
+      ON geo_entities.id = geo_relationships.other_geo_entity_id
+    INNER JOIN geo_relationship_types
+      ON geo_relationships.geo_relationship_type_id = geo_relationship_types.id
+    INNER JOIN geo_entities related_geo_entities
+      ON geo_relationships.geo_entity_id = related_geo_entities.id
+    WHERE
+      related_geo_entities.id IN (#{in_clause})
+      AND 
+      geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'
+    )
+    SQL
+  }
+
+  scope :by_cites_appendices, lambda { |appendix_abbreviations|
+    conds = 
+    (['I','II','III'] & appendix_abbreviations).map do |abbr|
+      "listing->'cites_#{abbr}' = '#{abbr}'"
+    end
+    where(conds.join(' OR '))
+  }
+
+  scope :by_scientific_name, lambda { |scientific_name|
+    joins(
+        <<-SQL
+        INNER JOIN (
+          WITH RECURSIVE q AS (
+            SELECT h, h.id, data->'full_name' AS full_name
+            FROM taxon_concepts h
+            WHERE data->'full_name' ILIKE '#{scientific_name}%'
+
+            UNION ALL
+
+            SELECT hi, hi.id, data->'full_name'
+            FROM q
+            JOIN taxon_concepts hi
+            ON hi.parent_id = (q.h).id
+          ) SELECT DISTINCT id, full_name FROM q
+        ) descendants ON taxon_concepts.id = descendants.id
+        SQL
+      )
+  }
+
   scope :without_nc, lambda { |layout|
     if layout.blank? || layout == :alphabetical
       where("(listing->'cites_listed')::BOOLEAN IS NOT NULL")
@@ -61,6 +125,7 @@ class TaxonConcept < ActiveRecord::Base
       [Rank::CLASS, Rank::PHYLUM, Rank::KINGDOM]
     ).
     order("taxon_concepts.data -> 'full_name'")
+  #scopes used to control scope of optional data to be returned
   scope :with_common_names, lambda { |lng_ary|
       select(lng_ary.map do |lng|
         "lng_#{lng.downcase}"
@@ -242,57 +307,5 @@ class TaxonConcept < ActiveRecord::Base
     end
     super(options)
   end
-
-class << self
-
-  def by_cites_appendices(appendix_abbreviations)
-    return scoped if appendix_abbreviations.empty?
-    conds = []
-    if appendix_abbreviations.include? 'nc'
-      conds << "(listing->'cites_del' = 't' AND listing->'cites_listing' = ''
-        OR listing->'not_in_cites'= 'NC')"
-    end
-    (appendix_abbreviations - ['del','nc']).each do |abbr|
-      conds << "listing->'cites_#{abbr}' = '#{abbr}'"
-    end
-    where(conds.join(' OR '))
-  end
-
-  def by_geo_entities(geo_entities_ids)
-    return scoped if geo_entities_ids.empty?
-    in_clause = geo_entities_ids.join(',')
-    where(:"geo_relationship_types.name" => 'CONTAINS')
-
-    where <<-SQL
-    taxon_concepts.id IN 
-    (
-    SELECT taxon_concepts.id
-    FROM taxon_concepts
-    INNER JOIN taxon_concept_geo_entities
-      ON taxon_concepts.id = taxon_concept_geo_entities.taxon_concept_id
-    WHERE taxon_concept_geo_entities.geo_entity_id IN (#{in_clause})
-
-    UNION
-
-    SELECT DISTINCT taxon_concepts.id
-    FROM taxon_concepts
-    INNER JOIN taxon_concept_geo_entities
-      ON taxon_concepts.id = taxon_concept_geo_entities.taxon_concept_id
-    INNER JOIN geo_entities
-      ON taxon_concept_geo_entities.geo_entity_id = geo_entities.id
-    INNER JOIN geo_relationships
-      ON geo_entities.id = geo_relationships.other_geo_entity_id
-    INNER JOIN geo_relationship_types
-      ON geo_relationships.geo_relationship_type_id = geo_relationship_types.id
-    INNER JOIN geo_entities related_geo_entities
-      ON geo_relationships.geo_entity_id = related_geo_entities.id
-    WHERE
-      related_geo_entities.id IN (#{in_clause})
-      AND 
-      geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'
-    )
-    SQL
-  end
-end
 
 end
