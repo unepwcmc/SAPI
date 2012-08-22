@@ -235,7 +235,11 @@ CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         -- set the cites_accepted flag to true for all implicitly listed taxa
         WITH RECURSIVE q AS
         (
-          SELECT  h, data->'cites_accepted' AS inherited_cites_accepted
+          SELECT  h,
+            CASE
+              WHEN (data->'usr_no_std_ref')::BOOLEAN = 't' THEN 'f'
+              ELSE (data->'cites_accepted')::BOOLEAN
+            END AS inherited_cites_accepted
           FROM    taxon_concepts h
           WHERE   parent_id IS NULL
 
@@ -244,6 +248,7 @@ CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           SELECT  hi,
           CASE
             WHEN (data->'cites_accepted')::BOOLEAN = 't' THEN 't'
+            WHEN (data->'usr_no_std_ref')::BOOLEAN = 't' THEN 'f'
             ELSE inherited_cites_accepted
           END
           FROM    q
@@ -353,6 +358,33 @@ CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
         SET listing = listing ||
         hstore('not_in_cites', 'NC')
         WHERE fully_covered <> 't' OR (listing->'cites_listed')::BOOLEAN IS NULL;
+
+        -- set the cites_listed_children flags to true to all ancestors of taxa
+        -- whose cites_listed IS NOT NULL
+        -- this is used for the taxonomic layout
+        WITH listed AS (
+          WITH RECURSIVE q AS (
+            SELECT h, ARRAY[]::INTEGER[] AS ancestors
+            FROM taxon_concepts h
+            WHERE parent_id IS NULL
+
+            UNION ALL
+
+            SELECT hi, ancestors || id
+            FROM q
+            JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
+          )
+          SELECT (q.h).id, (q.h).data->'full_name', (q.h).data->'taxonomic_position', ancestors
+          FROM q
+          WHERE ((q.h).listing->'cites_listed')::BOOLEAN IS NOT NULL
+        ) 
+        UPDATE taxon_concepts
+        SET listing = listing || hstore('cites_listed_children', 't')
+        FROM (
+          SELECT DISTINCT UNNEST(ancestors) AS ID
+          FROM listed
+        ) listed_ancestors
+        WHERE listed_ancestors.id = taxon_concepts.id;
 
         END;
       $$;
@@ -908,7 +940,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-08-15 11:03:49.27386'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-08-17 14:48:33.751384'::timestamp without time zone NOT NULL,
     notes text
 );
 

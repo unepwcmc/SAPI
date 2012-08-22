@@ -46,7 +46,16 @@ class TaxonConcept < ActiveRecord::Base
   scope :by_designation, lambda { |name|
     joins(:designation).where('designations.name' => name)
   }
-  scope :without_nc, where("(listing->'cites_listed')::BOOLEAN IS NOT NULL")
+  scope :without_nc, lambda { |layout|
+    if layout.blank? || layout == :alphabetical
+      where("(listing->'cites_listed')::BOOLEAN IS NOT NULL")
+    else
+      where(
+        "(listing->'cites_listed')::BOOLEAN IS NOT NULL
+        OR listing->'cites_listed_children' = 't'"
+      )
+    end
+  }
   scope :taxonomic_layout, order("taxon_concepts.data -> 'taxonomic_position'")
   scope :alphabetical_layout, where(
       "taxon_concepts.data -> 'rank_name' NOT IN (?)",
@@ -149,6 +158,7 @@ class TaxonConcept < ActiveRecord::Base
   #here go the CITES listing flags
   [
     :cites_listed,#taxon is listed explicitly
+    :cites_listed_children,#taxon has children listed
     :usr_cites_exclusion,#taxon is excluded from it's parent's listing
     :cites_exclusion,#taxon's ancestor is excluded from it's parent's listing
     :cites_del,#taxon has been deleted from appendices

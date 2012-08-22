@@ -41,6 +41,21 @@ describe TaxonConcept do
         it "should be true for species Loxodonta africana" do
           @species.cites_listed.should be_true
         end
+        it "should be false for family Elephantidae" do
+          @family.cites_listed.should be_false
+        end
+      end
+
+      describe :cites_listed_children do
+        it "should be true for family Elephantidae" do
+          @family.cites_listed_children.should be_true
+        end
+        it "should be true for order Proboscidea" do
+          @order.cites_listed_children.should be_true
+        end
+        it "should be true for class Mammalia" do
+          @klass.cites_listed_children.should be_true
+        end
       end
 
     end

@@ -15,6 +15,16 @@ class Checklist
       select([:"taxon_concepts.id", :"taxon_concepts.data", :"taxon_concepts.listing", :"taxon_concepts.depth"]).
       by_designation(@designation)
 
+    #possible output layouts are:
+    #taxonomic (hierarchic, taxonomic order)
+    #checklist (flat, alphabetical order)
+    @output_layout = options[:output_layout] || :alphabetical
+    @taxon_concepts_rel = if @output_layout == :taxonomic
+      @taxon_concepts_rel.taxonomic_layout
+    else
+      @taxon_concepts_rel.alphabetical_layout
+    end.order("taxon_concepts.data->'kingdom_name'")#animalia first
+
     #filter by geo entities
     @geo_options = []
     @geo_options += options[:country_ids] unless options[:country_ids].nil?
@@ -27,18 +37,8 @@ class Checklist
     unless options[:cites_appendices].nil?
       @taxon_concepts_rel = @taxon_concepts_rel.by_cites_appendices(options[:cites_appendices])
     else
-      @taxon_concepts_rel = @taxon_concepts_rel.without_nc
+      @taxon_concepts_rel = @taxon_concepts_rel.without_nc(@output_layout)
     end
-
-    #possible output layouts are:
-    #taxonomic (hierarchic, taxonomic order)
-    #checklist (flat, alphabetical order)
-    @output_layout = options[:output_layout] || :alphabetical
-    @taxon_concepts_rel = if @output_layout == :taxonomic
-      @taxon_concepts_rel.taxonomic_layout
-    else
-      @taxon_concepts_rel.alphabetical_layout
-    end.order("taxon_concepts.data->'kingdom_name'")#animalia first
 
     #show synonyms?
     unless options[:synonyms].nil? || options[:synonyms] == false
