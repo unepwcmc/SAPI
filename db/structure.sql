@@ -737,6 +737,7 @@ ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
 --
 
 CREATE TABLE cites_listings_import (
+    legrecid integer,
     spc_rec_id integer,
     appendix character varying,
     listing_date date,
@@ -759,6 +760,7 @@ CREATE TABLE cites_regions_import (
 --
 
 CREATE TABLE common_name_import (
+    comrecid integer,
     common_name character varying,
     language_name character varying,
     species_id integer
@@ -848,6 +850,7 @@ ALTER SEQUENCE designations_id_seq OWNED BY designations.id;
 --
 
 CREATE TABLE distribution_import (
+    dctrecid integer,
     species_id integer,
     country_id integer,
     country_name character varying
