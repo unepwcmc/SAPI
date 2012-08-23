@@ -7,14 +7,14 @@ namespace :import do
       from ORWELL.animals.dbo.Species S 
       INNER JOIN ORWELL.animals.dbo.DistribCty Dcty ON S.SpcRecID = Dcty.DCtSpcRecID
       INNER JOIN ORWELL.animals.dbo.Country Cty ON Dcty.DCtCtyRecID = Cty.CtyRecID
-      WHERE S.SpcRecID IN (#{TaxonConcept.where("data -> 'kingdom_name' = 'Animalia' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
+      WHERE S.SpcRecID IN (#{TaxonConcept.where("legacy_type = 'animals' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
     SQL
     plants_query = <<-SQL
       Select DctRecID, S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
       from ORWELL.plants.dbo.Species S 
       INNER JOIN ORWELL.plants.dbo.DistribCty Dcty ON S.SpcRecID = Dcty.DCtSpcRecID
       INNER JOIN ORWELL.plants.dbo.Country Cty ON Dcty.DCtCtyRecID = Cty.CtyRecID
-      WHERE S.SpcRecID IN (#{TaxonConcept.where("data -> 'kingdom_name' = 'Plantae' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
+      WHERE S.SpcRecID IN (#{TaxonConcept.where("legacy_type = 'plants' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
     SQL
     tmp_table = 'distribution_import'
     ["animals", "plants"].each do |t|

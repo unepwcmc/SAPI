@@ -89,15 +89,18 @@ def copy_data(table_name, query)
   result = client.execute(query)
 
   tmp_columns = MAPPING[table_name][:tmp_columns]
-  cmd = <<-SQL
-    SET DateStyle = \"ISO,DMY\";
-    INSERT INTO #{table_name} (#{tmp_columns.join(',')})
-    VALUES
-    #{result_to_sql_values(result)}
-  SQL
-  ActiveRecord::Base.connection.execute(cmd)
+  result_to_values = result_to_sql_values(result)
+  if !result_to_values.blank?
+    cmd = <<-SQL
+      SET DateStyle = \"ISO,DMY\";
+      INSERT INTO #{table_name} (#{tmp_columns.join(',')})
+      VALUES
+      #{result_to_sql_values(result)}
+    SQL
+    ActiveRecord::Base.connection.execute(cmd)
 
-  puts "Data copied to tmp table"
+    puts "Data copied to tmp table"
+  end
   client.close
 end
 

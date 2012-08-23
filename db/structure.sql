@@ -359,6 +359,32 @@ CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
         hstore('not_in_cites', 'NC')
         WHERE fully_covered <> 't' OR (listing->'cites_listed')::BOOLEAN IS NULL;
 
+        -- set the cites_listed_children flags to true to all ancestors of taxa
+        -- whose cites_listed IS NOT NULL
+        -- this is used for the taxonomic layout
+        WITH listed AS (
+          WITH RECURSIVE q AS (
+            SELECT h, ARRAY[]::INTEGER[] AS ancestors
+            FROM taxon_concepts h
+            WHERE parent_id IS NULL
+
+            UNION ALL
+
+            SELECT hi, ancestors || id
+            FROM q
+            JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
+          )
+          SELECT (q.h).id, (q.h).data->'full_name', (q.h).data->'taxonomic_position', ancestors
+          FROM q
+          WHERE ((q.h).listing->'cites_listed')::BOOLEAN IS NOT NULL
+        ) 
+        UPDATE taxon_concepts
+        SET listing = listing || hstore('cites_listed_children', 't')
+        FROM (
+          SELECT DISTINCT UNNEST(ancestors) AS ID
+          FROM listed
+        ) listed_ancestors
+        WHERE listed_ancestors.id = taxon_concepts.id;
         END;
       $$;
 
@@ -711,7 +737,6 @@ ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
 --
 
 CREATE TABLE cites_listings_import (
-    legrecid integer,
     spc_rec_id integer,
     appendix character varying,
     listing_date date,
@@ -734,7 +759,6 @@ CREATE TABLE cites_regions_import (
 --
 
 CREATE TABLE common_name_import (
-    comrecid integer,
     common_name character varying,
     language_name character varying,
     species_id integer
@@ -824,7 +848,6 @@ ALTER SEQUENCE designations_id_seq OWNED BY designations.id;
 --
 
 CREATE TABLE distribution_import (
-    dctrecid integer,
     species_id integer,
     country_id integer,
     country_name character varying
@@ -1011,7 +1034,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-08-17 10:40:29.594214'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-07-25 13:37:28.482069'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -1134,19 +1157,6 @@ ALTER SEQUENCE ranks_id_seq OWNED BY ranks.id;
 
 
 --
--- Name: reference_links_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE reference_links_import (
-    dslrecid integer,
-    dslspcrecid integer,
-    dsldscrecid integer,
-    dslcode character varying,
-    dslcoderecid integer
-);
-
-
---
 -- Name: references; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1179,18 +1189,6 @@ CREATE SEQUENCE references_id_seq
 --
 
 ALTER SEQUENCE references_id_seq OWNED BY "references".id;
-
-
---
--- Name: references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE references_import (
-    dscrecid integer,
-    dsctitle character varying,
-    dscauthors character varying,
-    dscpubyear character varying
-);
 
 
 --
@@ -1273,24 +1271,6 @@ CREATE SEQUENCE standard_references_id_seq
 --
 
 ALTER SEQUENCE standard_references_id_seq OWNED BY standard_references.id;
-
-
---
--- Name: standard_references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE standard_references_import (
-    author character varying,
-    year integer,
-    title text,
-    kingdom character varying,
-    phylum character varying,
-    class character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying
-);
 
 
 --
@@ -1436,7 +1416,8 @@ CREATE TABLE taxon_concepts (
     legacy_id integer,
     data hstore DEFAULT ''::hstore,
     fully_covered boolean DEFAULT true NOT NULL,
-    listing hstore
+    listing hstore,
+    legacy_type character varying(255)
 );
 
 
@@ -2305,3 +2286,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120810145423');
 INSERT INTO schema_migrations (version) VALUES ('20120814102042');
 
 INSERT INTO schema_migrations (version) VALUES ('20120822133521');
+
+INSERT INTO schema_migrations (version) VALUES ('20120822161608');

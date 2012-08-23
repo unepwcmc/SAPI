@@ -11,7 +11,7 @@ namespace :import do
       INNER JOIN ORWELL.animals.dbo.TaxClass C ON ClaRecID = OrdClaRecID
       INNER JOIN ORWELL.animals.dbo.TaxPhylum P ON PhyRecID = ClaPhyRecID
       INNER JOIN ORWELL.animals.dbo.SynLink Syn ON SynParentRecID = S.SpcRecID
-      WHERE SynSpcRecID IN (#{TaxonConcept.where("data -> 'kingdom_name' = 'Animalia' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
+      WHERE SynSpcRecID IN (#{TaxonConcept.where("legacy_type = 'animals' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
     SQL
     plants_query = <<-SQL
       Select 'Plantae' as Kingdom, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcInfraEpithet, S.SpcRecID AS SynonymSpcRecID, S.SpcStatus, SynSpcRecID AS AcceptedSpcRecID
@@ -20,7 +20,7 @@ namespace :import do
       INNER JOIN ORWELL.plants.dbo.Family F ON FamRecID = GenFamRecID
       INNER JOIN ORWELL.plants.dbo.TaxOrder O ON OrdRecID = FamOrdRecID
       INNER JOIN ORWELL.plants.dbo.SynLink Syn ON SynParentRecID = S.SpcRecID
-      WHERE SynSpcRecID IN (#{TaxonConcept.where("data -> 'kingdom_name' = 'Plantae' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
+      WHERE SynSpcRecID IN (#{TaxonConcept.where("legacy_type = 'plants' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
     SQL
     puts "There are #{
       TaxonRelationship.
@@ -41,23 +41,23 @@ namespace :import do
 
       #[BEGIN]copied over from import:species
       tmp_columns = MAPPING[tmp_table][:tmp_columns]
-      import_data_for tmp_table, Rank::KINGDOM if tmp_columns.include? Rank::KINGDOM.capitalize
+      import_data_for tmp_table, t, Rank::KINGDOM if tmp_columns.include? Rank::KINGDOM.capitalize
       if tmp_columns.include?(Rank::PHYLUM.capitalize) && 
         tmp_columns.include?(Rank::CLASS.capitalize) &&
         tmp_columns.include?('TaxonOrder')
-        import_data_for tmp_table, Rank::PHYLUM, Rank::KINGDOM
-        import_data_for tmp_table, Rank::CLASS, Rank::PHYLUM
-        import_data_for tmp_table, Rank::ORDER, Rank::CLASS, 'TaxonOrder'
+        import_data_for tmp_table, t, Rank::PHYLUM, Rank::KINGDOM
+        import_data_for tmp_table, t, Rank::CLASS, Rank::PHYLUM
+        import_data_for tmp_table, t, Rank::ORDER, Rank::CLASS, 'TaxonOrder'
       elsif tmp_columns.include?(Rank::CLASS.capitalize) && tmp_columns.include?('TaxonOrder')
-        import_data_for tmp_table, Rank::CLASS, Rank::KINGDOM
-        import_data_for tmp_table, Rank::ORDER, Rank::CLASS, 'TaxonOrder'
+        import_data_for tmp_table, t, Rank::CLASS, Rank::KINGDOM
+        import_data_for tmp_table, t, Rank::ORDER, Rank::CLASS, 'TaxonOrder'
       elsif tmp_columns.include? 'TaxonOrder'
-        import_data_for tmp_table, Rank::ORDER, Rank::KINGDOM, 'TaxonOrder'
+        import_data_for tmp_table, t, Rank::ORDER, Rank::KINGDOM, 'TaxonOrder'
       end
-      import_data_for tmp_table, Rank::FAMILY, 'TaxonOrder', nil, Rank::ORDER
-      import_data_for tmp_table, Rank::GENUS, Rank::FAMILY
-      import_data_for tmp_table, Rank::SPECIES, Rank::GENUS
-      import_data_for tmp_table, Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra'
+      import_data_for tmp_table, t, Rank::FAMILY, 'TaxonOrder', nil, Rank::ORDER
+      import_data_for tmp_table, t, Rank::GENUS, Rank::FAMILY
+      import_data_for tmp_table, t, Rank::SPECIES, Rank::GENUS
+      import_data_for tmp_table, t, Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra'
       #[END]copied over from import:species
 
       sql = <<-SQL
