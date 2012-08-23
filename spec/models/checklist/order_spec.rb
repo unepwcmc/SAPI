@@ -8,56 +8,12 @@ describe Checklist do
 
   context "when taxonomic order" do
     before(:all) do
-      Sapi::rebuild()
       @checklist = Checklist.new({:output_layout => :taxonomic})
       @taxon_concepts = @checklist.taxon_concepts_rel
     end
-    it "should include phyla in specific order (Chordata, Echinodermata, ...)" do
-      indexes =
-      %w(
-        Chordata
-        Echinodermata
-        Arthropoda
-        Annelida
-        Mollusca
-        Cnidaria
-      ).map do |t|
-        @taxon_concepts.index{ |tc| tc.full_name == t }
-      end.compact
-      indexes.should == indexes.sort
-    end
-    it "should include classes in specific order (Mammalia, Aves, ...)" do
-      indexes =
-      %w(
-        Mammalia
-        Aves
-        Reptilia
-        Amphibia
-        Elasmobranchii
-        Actinopterygii
-        Sarcopterygii
-        Holothuroidea
-        Arachnida
-        Insecta
-        Hirudinoidea
-        Bivalvia
-        Gastropoda
-        Anthozoa
-        Hydrozoa
-      ).map do |t|
-        @taxon_concepts.index{ |tc| tc.full_name == t }
-      end.compact
-      indexes.should == indexes.sort
-    end
-    it "should include Perissodactyla within Mammalia" do
-      @taxon_concepts.index{ |tc| tc.full_name == 'Perissodactyla' }.should >
-        @taxon_concepts.index{ |tc| tc.full_name == 'Mammalia' }
-      @taxon_concepts.index{ |tc| tc.full_name == 'Perissodactyla' }.should <
-        @taxon_concepts.index{ |tc| tc.full_name == 'Aves' }
-    end
-    it "should include Perissodactyla (Mammalia) before Falconiformes (Aves)" do
-      @taxon_concepts.index{ |tc| tc.full_name == 'Perissodactyla' }.should <
-        @taxon_concepts.index{ |tc| tc.full_name == 'Falconiformes' }
+    it "should include birds after last mammal" do
+      @taxon_concepts.index{ |tc| tc.full_name == 'Tapirus terrestris' }.should <
+        @taxon_concepts.index{ |tc| tc.full_name == 'Gymnogyps californianus' }
     end
     it "should include Falconiformes (Aves) before Psittaciformes (Aves)" do
       @taxon_concepts.index{ |tc| tc.full_name == 'Falconiformes' }.should <
@@ -76,6 +32,10 @@ describe Checklist do
     it "should include Cathartidae (Falconiformes) before Cacatuidae (Psittaciformes)" do
       @taxon_concepts.index{ |tc| tc.full_name == 'Cathartidae' }.should <
         @taxon_concepts.index{ |tc| tc.full_name == 'Cacatuidae' }
+    end
+    it "should include Hirudo medicinalis at the very end (after all Chordata)" do
+      @taxon_concepts.index{ |tc| tc.full_name == 'Hirudo medicinalis' }.should ==
+        @taxon_concepts.length - 1
     end
   end
   context "when alphabetical order" do
