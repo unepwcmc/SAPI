@@ -7,7 +7,7 @@ class Checklist
   #
   # @param [Hash] a hash of search params and their values
   def initialize(options)
-
+    @params = options
     #possible output layouts are:
     #taxonomic (hierarchic, taxonomic order)
     #checklist (flat, alphabetical order)
@@ -87,21 +87,21 @@ class Checklist
   #
   # @param [Hash] a hash of search params and their values
   # @return [String] a summary of the search params
-  def self.summarise_filters(options)
+  def summarise_filters
     # Remove empty and nil params
-    options = options.delete_if { |_, v| v.nil? || v == "" }
-    return ""  if options.length == 0
+    @params = @params.delete_if { |_, v| v.nil? || v == "" }
+    return ""  if @params.length == 0
 
-    options = options.symbolize_keys
+    @params = @params.symbolize_keys
 
     summary = []
 
     # country
     @countries_count = 0
-    unless options[:country_ids].nil?
+    unless @params[:country_ids].nil?
       summary = ["Results from"]  if summary.length == 0
 
-      countries = GeoEntity.find_all_by_id(options[:country_ids])
+      countries = GeoEntity.find_all_by_id(@params[:country_ids])
 
       @countries_count = countries.count
       if (1..3).include?(@countries_count)
@@ -113,10 +113,10 @@ class Checklist
 
     # region
     @regions_count = 0
-    unless options[:cites_region_ids].nil?
+    unless @params[:cites_region_ids].nil?
       summary = ["Results from"]  if summary.length == 0
 
-      regions = GeoEntity.find_all_by_id(options[:cites_region_ids])
+      regions = GeoEntity.find_all_by_id(@params[:cites_region_ids])
 
       @regions_count = regions.count
       if @regions_count > 0
@@ -126,29 +126,29 @@ class Checklist
     end
 
     # appendix
-    unless options[:cites_appendices].nil?
+    unless @params[:cites_appendices].nil?
       summary = ["Results from"]  if summary.length == 0
 
-      if (!options[:cites_region_ids].nil? ||
-          !options[:country_ids].nil?) &&
+      if (!@params[:cites_region_ids].nil? ||
+          !@params[:country_ids].nil?) &&
          (@countries_count > 0 ||
           @regions_count > 0)
         summary << "on"
       end
 
       summary << "appx"
-      summary << options[:cites_appendices].join(", ")
+      summary << @params[:cites_appendices].join(", ")
     end
 
     # name
-    unless options[:scientific_name].nil?
+    unless @params[:scientific_name].nil?
       summary = ["Results"]  if summary.length == 0
 
-      summary << "for '#{options[:scientific_name]}'"
+      summary << "for '#{@params[:scientific_name]}'"
     end
 
     # synonyms
-    unless options[:synonyms].nil? || options[:synonyms] == false
+    unless @params[:synonyms].nil? || @params[:synonyms] == false
       if summary.length == 0
         summary << "All results including synonyms"
       else

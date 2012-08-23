@@ -95,7 +95,7 @@ class PdfChecklistHistory < ChecklistHistory
       end
 
       # Add summary line
-      summary = Checklist.summarise_filters(@params)
+      summary = summarise_filters
       pdf.repeat :all do
         pdf.bounding_box [pdf.bounds.left, pdf.bounds.top + 20], :width  => pdf.bounds.width do
             pdf.text summary, :align => :center, :size => 8
