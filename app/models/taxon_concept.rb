@@ -222,7 +222,6 @@ class TaxonConcept < ActiveRecord::Base
   #here go the CITES listing flags
   [
     :cites_listed,#taxon is listed explicitly
-    :cites_listed_children,#taxon has children listed
     :usr_cites_exclusion,#taxon is excluded from it's parent's listing
     :cites_exclusion,#taxon's ancestor is excluded from it's parent's listing
     :cites_del,#taxon has been deleted from appendices
@@ -300,9 +299,12 @@ class TaxonConcept < ActiveRecord::Base
     unless options[:only] || options[:methods]
       options = {
         :only =>[:id, :parent_id, :depth],
-        :methods => [:family_name, :class_name, :full_name, :rank_name, :spp,
-        :taxonomic_position, :current_listing, :english_names_list, :spanish_names_list, :french_names_list, 
-        :synonyms_list, :cites_accepted]
+        :methods => [:species_name, :genus_name, :family_name, :order_name,
+          :class_name, :phylum_name, :full_name, :rank_name, :spp,
+          :taxonomic_position, :current_listing,
+          :english_names_list, :spanish_names_list, :french_names_list, 
+          :synonyms_list, :cites_accepted
+        ]
       }
     end
     super(options)

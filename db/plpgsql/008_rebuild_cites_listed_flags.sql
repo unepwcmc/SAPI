@@ -84,32 +84,6 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
         hstore('not_in_cites', 'NC')
         WHERE fully_covered <> 't' OR (listing->'cites_listed')::BOOLEAN IS NULL;
 
-        -- set the cites_listed_children flags to true to all ancestors of taxa
-        -- whose cites_listed IS NOT NULL
-        -- this is used for the taxonomic layout
-        WITH listed AS (
-          WITH RECURSIVE q AS (
-            SELECT h, ARRAY[]::INTEGER[] AS ancestors
-            FROM taxon_concepts h
-            WHERE parent_id IS NULL
-
-            UNION ALL
-
-            SELECT hi, ancestors || id
-            FROM q
-            JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
-          )
-          SELECT (q.h).id, (q.h).data->'full_name', (q.h).data->'taxonomic_position', ancestors
-          FROM q
-          WHERE ((q.h).listing->'cites_listed')::BOOLEAN IS NOT NULL
-        ) 
-        UPDATE taxon_concepts
-        SET listing = listing || hstore('cites_listed_children', 't')
-        FROM (
-          SELECT DISTINCT UNNEST(ancestors) AS ID
-          FROM listed
-        ) listed_ancestors
-        WHERE listed_ancestors.id = taxon_concepts.id;
         END;
       $$;
 

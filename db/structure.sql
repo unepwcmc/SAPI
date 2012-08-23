@@ -1037,7 +1037,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-07-25 13:37:28.482069'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-08-17 10:40:29.594214'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -1160,6 +1160,19 @@ ALTER SEQUENCE ranks_id_seq OWNED BY ranks.id;
 
 
 --
+-- Name: reference_links_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE reference_links_import (
+    dslrecid integer,
+    dslspcrecid integer,
+    dsldscrecid integer,
+    dslcode character varying,
+    dslcoderecid integer
+);
+
+
+--
 -- Name: references; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1192,6 +1205,18 @@ CREATE SEQUENCE references_id_seq
 --
 
 ALTER SEQUENCE references_id_seq OWNED BY "references".id;
+
+
+--
+-- Name: references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE references_import (
+    dscrecid integer,
+    dsctitle character varying,
+    dscauthors character varying,
+    dscpubyear character varying
+);
 
 
 --
@@ -1274,6 +1299,24 @@ CREATE SEQUENCE standard_references_id_seq
 --
 
 ALTER SEQUENCE standard_references_id_seq OWNED BY standard_references.id;
+
+
+--
+-- Name: standard_references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE standard_references_import (
+    author character varying,
+    year integer,
+    title text,
+    kingdom character varying,
+    phylum character varying,
+    class character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying
+);
 
 
 --
