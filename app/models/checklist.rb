@@ -19,17 +19,13 @@ class Checklist
       by_designation(@designation).without_nc(@output_layout)
 
     #filtering options
-    @geo_entities = [
-      options[:country_ids], options[:cites_region_ids]
-    ].compact
-
+    @cites_regions = options[:cites_region_ids] || []
+    @countries = options[:country_ids] || []
     @cites_appendices = options[:cites_appendices] || []
     @scientific_name = options[:scientific_name]
 
-
-
-    unless @geo_entities.empty?
-      @taxon_concepts_rel = @taxon_concepts_rel.by_geo_entities(@geo_entities)
+    unless @cites_regions.empty? && @countries.empty?
+      @taxon_concepts_rel = @taxon_concepts_rel.by_cites_regioons_and_countries(@cites_regions, @countries)
     end
 
     unless @cites_appendices.empty?
@@ -53,7 +49,7 @@ class Checklist
       @taxon_concepts_rel = @taxon_concepts_rel.with_common_names(options[:common_names])
     end
 
-      #order
+     #order
      @taxon_concepts_rel = @taxon_concepts_rel.order("taxon_concepts.data->'kingdom_name'")#animalia first
      @taxon_concepts_rel = if @output_layout == :taxonomic
       @taxon_concepts_rel.taxonomic_layout
