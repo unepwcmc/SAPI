@@ -222,7 +222,6 @@ class TaxonConcept < ActiveRecord::Base
   #here go the CITES listing flags
   [
     :cites_listed,#taxon is listed explicitly
-    :cites_listed_children,#taxon has children listed
     :usr_cites_exclusion,#taxon is excluded from it's parent's listing
     :cites_exclusion,#taxon's ancestor is excluded from it's parent's listing
     :cites_del,#taxon has been deleted from appendices

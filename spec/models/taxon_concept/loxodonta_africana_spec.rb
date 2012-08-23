@@ -46,18 +46,6 @@ describe TaxonConcept do
         end
       end
 
-      describe :cites_listed_children do
-        it "should be true for family Elephantidae" do
-          @family.cites_listed_children.should be_true
-        end
-        it "should be true for order Proboscidea" do
-          @order.cites_listed_children.should be_true
-        end
-        it "should be true for class Mammalia" do
-          @klass.cites_listed_children.should be_true
-        end
-      end
-
     end
   end
 end
