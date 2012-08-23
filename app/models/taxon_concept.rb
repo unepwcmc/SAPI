@@ -111,12 +111,12 @@ class TaxonConcept < ActiveRecord::Base
 
   scope :without_nc, lambda { |layout|
     if layout.blank? || layout == :alphabetical
-      where("(listing->'cites_listed')::BOOLEAN IS NOT NULL")
+      where("(listing->'cites_listed')::BOOLEAN IS NOT NULL
+      AND (listing->'cites_del' <> 't' OR (listing->'cites_del')::BOOLEAN IS NULL)")
     else
       where(
         "(listing->'cites_listed')::BOOLEAN IS NOT NULL
-        OR listing->'cites_listed_children' = 't'"
-      )
+        AND (listing->'cites_del' <> 't' OR (listing->'cites_del')::BOOLEAN IS NULL)")
     end
   }
   scope :taxonomic_layout, order("taxon_concepts.data -> 'taxonomic_position'")

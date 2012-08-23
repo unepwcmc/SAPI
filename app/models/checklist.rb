@@ -16,7 +16,7 @@ class Checklist
 
     @taxon_concepts_rel = TaxonConcept.scoped.
       select([:"taxon_concepts.id", :"taxon_concepts.data", :"taxon_concepts.listing", :"taxon_concepts.depth"]).
-      by_designation(@designation)#.without_nc(@output_layout)
+      by_designation(@designation).without_nc(@output_layout)
 
     #filtering options
     @geo_entities = [
