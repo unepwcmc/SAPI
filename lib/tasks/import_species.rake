@@ -116,7 +116,6 @@ namespace :import do
         node.send(:"set_depth!")
       end
     end
-    Sapi::rebuild_taxonomy()
   end
 end
 
