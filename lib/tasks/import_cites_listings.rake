@@ -8,7 +8,7 @@ namespace :import do
         INNER JOIN ORWELL.animals.dbo.legal AS L ON S.SpcRecID = L.LegSpcRecID
         INNER JOIN ORWELL.animals.dbo.legalname AS LN ON L.LegLnmRecID = LN.LnmRecID AND LN.LnmRecID = 3
         LEFT JOIN ORWELL.animals.dbo.Country as C ON L.LegISO2 = C.CtyISO2
-      WHERE S.SpcRecID IN (#{TaxonConcept.where("data -> 'kingdom_name' = 'Animalia' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
+      WHERE S.SpcRecID IN (#{TaxonConcept.where("legacy_type = 'animals' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
     SQL
 
     plants_query = <<-SQL
@@ -17,7 +17,7 @@ namespace :import do
         INNER JOIN ORWELL.plants.dbo.legal AS L ON S.SpcRecID = L.LegSpcRecID AND L.LegListing IN ('I', 'II', 'III', 'I/II')
         INNER JOIN ORWELL.plants.dbo.legalname AS LN ON L.LegLnmRecID = LN.LnmRecID AND LN.LnmRecID = 3
         LEFT JOIN ORWELL.animals.dbo.Country as C ON L.LegISO2 = C.CtyISO2 -- OR L.LegISO2 IS NULL
-      WHERE S.SpcRecID IN (#{TaxonConcept.where("data -> 'kingdom_name' = 'Plantae' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
+      WHERE S.SpcRecID IN (#{TaxonConcept.where("legacy_type = 'plants' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
     SQL
     tmp_table = 'cites_listings_import'
     designation = Designation.find_by_name(Designation::CITES)

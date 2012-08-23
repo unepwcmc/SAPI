@@ -90,23 +90,23 @@ namespace :import do
       query = eval("#{t}_query")
       copy_data(tmp_table, query)
       tmp_columns = MAPPING[tmp_table][:tmp_columns]
-      import_data_for tmp_table, Rank::KINGDOM if tmp_columns.include? Rank::KINGDOM.capitalize
+      import_data_for tmp_table, t, Rank::KINGDOM if tmp_columns.include? Rank::KINGDOM.capitalize
       if tmp_columns.include?(Rank::PHYLUM.capitalize) && 
         tmp_columns.include?(Rank::CLASS.capitalize) &&
         tmp_columns.include?('TaxonOrder')
-        import_data_for tmp_table, Rank::PHYLUM, Rank::KINGDOM
-        import_data_for tmp_table, Rank::CLASS, Rank::PHYLUM
-        import_data_for tmp_table, Rank::ORDER, Rank::CLASS, 'TaxonOrder'
+        import_data_for tmp_table, t, Rank::PHYLUM, Rank::KINGDOM
+        import_data_for tmp_table, t, Rank::CLASS, Rank::PHYLUM
+        import_data_for tmp_table, t, Rank::ORDER, Rank::CLASS, 'TaxonOrder'
       elsif tmp_columns.include?(Rank::CLASS.capitalize) && tmp_columns.include?('TaxonOrder')
-        import_data_for tmp_table, Rank::CLASS, Rank::KINGDOM
-        import_data_for tmp_table, Rank::ORDER, Rank::CLASS, 'TaxonOrder'
+        import_data_for tmp_table, t, Rank::CLASS, Rank::KINGDOM
+        import_data_for tmp_table, t, Rank::ORDER, Rank::CLASS, 'TaxonOrder'
       elsif tmp_columns.include? 'TaxonOrder'
-        import_data_for tmp_table, Rank::ORDER, Rank::KINGDOM, 'TaxonOrder'
+        import_data_for tmp_table, t, Rank::ORDER, Rank::KINGDOM, 'TaxonOrder'
       end
-      import_data_for tmp_table, Rank::FAMILY, 'TaxonOrder', nil, Rank::ORDER
-      import_data_for tmp_table, Rank::GENUS, Rank::FAMILY
-      import_data_for tmp_table, Rank::SPECIES, Rank::GENUS
-      import_data_for tmp_table, Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra'
+      import_data_for tmp_table, t, Rank::FAMILY, 'TaxonOrder', nil, Rank::ORDER
+      import_data_for tmp_table, t, Rank::GENUS, Rank::FAMILY
+      import_data_for tmp_table, t, Rank::SPECIES, Rank::GENUS
+      import_data_for tmp_table, t, Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra'
     end
     #rebuild the tree
     TaxonConcept.rebuild!
@@ -122,11 +122,12 @@ end
 
 # Copies data from the temporary table to the correct tables in the database
 #
+# @param [String] legacy_type either 'animals' or 'plants'
 # @param [String] which the column to be copied. It's normally the name of the rank being copied
 # @param [String] parent_column to keep the hierarchy of the taxons the parent column should be passed
 # @param [String] column_name if the which object is different from the column name in the tmp table, specify the column name
 # @param [String] parent_rank if the parent_column is different from the rank name, specify parent rank
-def import_data_for tmp_table, which, parent_column=nil, column_name=nil, parent_rank=nil
+def import_data_for tmp_table, legacy_type, which, parent_column=nil, column_name=nil, parent_rank=nil
   column_name ||= which
   puts "Importing #{which} from #{column_name} (#{parent_column})"
   rank_id = Rank.select(:id).where(:name => which).first.id
@@ -151,7 +152,7 @@ def import_data_for tmp_table, which, parent_column=nil, column_name=nil, parent
   if parent_column
     sql = <<-SQL
       INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id,
-      parent_id, created_at, updated_at #{if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ', legacy_id' end})
+      parent_id, created_at, updated_at, legacy_type #{if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ', legacy_id' end})
          SELECT
            tmp.taxon_name_id
            ,#{rank_id}
@@ -159,7 +160,8 @@ def import_data_for tmp_table, which, parent_column=nil, column_name=nil, parent
            ,taxon_concepts.id
            ,current_date
            ,current_date
-           #{ if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ', tmp.spcrecid' end}
+           ,'#{legacy_type}'
+           #{ if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ', tmp.spcrecid'end}
          FROM
           (
             SELECT DISTINCT taxon_names.id AS taxon_name_id,

@@ -7,14 +7,14 @@ namespace :import do
       from Orwell.animals.dbo.Species S 
       inner join Orwell.animals.dbo.CommonName C on C.ComSpcRecID = S.SpcRecID
       INNER JOIN ORWELL.animals.dbo.Language L ON L.LanRecID = C.ComLanRecID
-      WHERE S.SpcRecID IN (#{TaxonConcept.where("data -> 'kingdom_name' = 'Animalia' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
+      WHERE S.SpcRecID IN (#{TaxonConcept.where("legacy_type = 'animals' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
     SQL
     plants_query = <<-SQL
       Select ComRecID, C.ComName, L.LanDesc, S.SpcRecID
       from Orwell.plants.dbo.Species S 
       inner join Orwell.plants.dbo.CommonName C on C.ComSpcRecID = S.SpcRecID
       INNER JOIN ORWELL.plants.dbo.Language L ON L.LanRecID = C.ComLanRecID
-      WHERE S.SpcRecID IN (#{TaxonConcept.where("data -> 'kingdom_name' = 'Plantae' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
+      WHERE S.SpcRecID IN (#{TaxonConcept.where("legacy_type = 'plants' AND legacy_id IS NOT NULL").map(&:legacy_id).join(',')});
     SQL
     tmp_table = 'common_name_import'
     puts "There are #{CommonName.count} common names in the database."
