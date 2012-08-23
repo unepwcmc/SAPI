@@ -12,12 +12,12 @@ MAPPING = {
       :tmp_columns => ['legacy_id', 'iso2', 'iso3', 'name', 'long_name', 'region_number']
   },
     'animals_import' => {
-      :create_tmp => "Kingdom varchar, Phylum varchar, Class varchar, TaxonOrder varchar, Family varchar, Genus varchar, Species varchar, SpcInfra varchar, SpcRecId integer, SpcStatus varchar",
-      :tmp_columns => ['Kingdom', 'Phylum', 'Class', 'TaxonOrder', 'Family', 'Genus', 'Species', 'SpcInfra', 'SpcRecId', 'SpcStatus']
+      :create_tmp => "SpcRecId integer, Kingdom varchar, Phylum varchar, Class varchar, TaxonOrder varchar, Family varchar, Genus varchar, Species varchar, SpcInfra varchar, SpcStatus varchar",
+      :tmp_columns => ['SpcRecId', 'Kingdom', 'Phylum', 'Class', 'TaxonOrder', 'Family', 'Genus', 'Species', 'SpcInfra', 'SpcStatus']
   },
     'plants_import' => {
-      :create_tmp => "Kingdom varchar, TaxonOrder varchar, Family varchar, Genus varchar, Species varchar, SpcInfra varchar, SpcRecId integer, SpcStatus varchar",
-      :tmp_columns => ['Kingdom', 'TaxonOrder', 'Family', 'Genus', 'Species', 'SpcInfra', 'SpcRecId', 'SpcStatus']
+      :create_tmp => "SpcRecId integer, Kingdom varchar, TaxonOrder varchar, Family varchar, Genus varchar, Species varchar, SpcInfra varchar, SpcStatus varchar",
+      :tmp_columns => ['SpcRecId', 'Kingdom', 'TaxonOrder', 'Family', 'Genus', 'Species', 'SpcInfra', 'SpcStatus']
   },
     'cites_listings_import' => {
       :create_tmp => "LegRecID integer, spc_rec_id integer, appendix varchar, listing_date date, country_legacy_id varchar, notes varchar",
@@ -105,7 +105,7 @@ def copy_data(table_name, query)
 end
 
 #recid -- field to be used for ordering for batch load  (e.g. DscRecID)
-def copy_data_in_batches(table_name, query, recid)
+def copy_data_in_batches(table_name, query, recid, n_records=nil)
   puts "Copying data from SQL Server into tmp table #{table_name} (in batches)"
   client = TinyTds::Client.new(:username => 'sapi', :password => 'conserveworld', :host => 'wcmc-gis-01.unep-wcmc.org', :port => 1539, :database => 'Animals', :timeout => 10000)
   client.execute('SET ANSI_NULLS ON')
@@ -115,7 +115,7 @@ def copy_data_in_batches(table_name, query, recid)
   query_cnt = query.sub(/SELECT(.+?)FROM ([^\s;]+)/im,"SELECT COUNT(*) AS cnt FROM \\2")
   table = $2
   result = client.execute(query_cnt)
-  cnt = result.first['cnt']
+  cnt = n_records ? n_records : result.first['cnt']
   puts "#{cnt} records to copy"
 
   offset = 0
@@ -126,24 +126,22 @@ def copy_data_in_batches(table_name, query, recid)
     puts "offset: #{offset}"
 
     query_limit = <<-SQL
-
-    SELECT *
-    FROM (
-      SELECT TOP #{limit} #{recid} FROM (
-        SELECT TOP #{offset + limit} #{recid}
-        FROM #{table}
-        ORDER BY #{recid} ASC
-      ) AS t1
-      ORDER BY #{recid} DESC
-    ) AS t2
-    INNER JOIN (
-      #{query.sub(/[;\s]+$/,'')}
-    ) AS t ON t2.#{recid} = t.#{recid}
-    ORDER BY t2.#{recid} ASC
+      SELECT *
+      FROM (
+        SELECT TOP #{limit} #{recid} FROM (
+          SELECT TOP #{offset + limit} #{recid}
+          FROM #{table}
+          ORDER BY #{recid} ASC
+        ) AS t1
+        ORDER BY #{recid} DESC
+      ) AS t2
+      INNER JOIN (
+        #{query.sub(/[;\s]+$/,'')}
+      ) AS t ON t2.#{recid} = t.#{recid}
+      ORDER BY t2.#{recid} ASC
     SQL
 
     offset += limit
-
     result.do
     result = client.execute(query_limit)
     tmp_columns = MAPPING[table_name][:tmp_columns]
