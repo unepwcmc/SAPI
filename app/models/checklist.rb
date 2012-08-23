@@ -25,7 +25,7 @@ class Checklist
     @scientific_name = options[:scientific_name]
 
     unless @cites_regions.empty? && @countries.empty?
-      @taxon_concepts_rel = @taxon_concepts_rel.by_cites_regioons_and_countries(@cites_regions, @countries)
+      @taxon_concepts_rel = @taxon_concepts_rel.by_cites_regions_and_countries(@cites_regions, @countries)
     end
 
     unless @cites_appendices.empty?

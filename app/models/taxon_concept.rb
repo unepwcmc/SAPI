@@ -46,7 +46,7 @@ class TaxonConcept < ActiveRecord::Base
   scope :by_designation, lambda { |name|
     joins(:designation).where('designations.name' => name)
   }
-  scope :by_cites_regioons_and_countries, lambda { |cites_regions_ids, countries_ids|
+  scope :by_cites_regions_and_countries, lambda { |cites_regions_ids, countries_ids|
     in_clause = [cites_regions_ids, countries_ids].flatten.compact.join(',')
 
     where <<-SQL
