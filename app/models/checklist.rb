@@ -70,14 +70,24 @@ class Checklist
     per_page ||= 50
     total_cnt = @taxon_concepts_rel.count
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
+    #TODO since we need to go through all the results and post process, this query might be redundant
+    kingdom_split_idx = @taxon_concepts_rel.where("taxon_concepts.data->'kingdom_name' = 'Animalia'").count
+    taxon_concepts = @taxon_concepts_rel.all
+    @animalia = generate_kingdom(taxon_concepts[0...kingdom_split_idx])
+    @plantae = generate_kingdom(taxon_concepts[kingdom_split_idx..taxon_concepts.length])
+
     [{
-      :taxon_concepts => @taxon_concepts_rel.all,
-      :animalia_idx => 0,
-      :plantae_idx => @taxon_concepts_rel.
-        where("taxon_concepts.data->'kingdom_name' = 'Animalia'").count,
-      :result_cnt => @taxon_concepts_rel.count,
+      :animalia => @animalia,
+      :plantae => @plantae,
+      :result_cnt => @animalia.size + @plantae.size,
       :total_cnt => total_cnt
     }]
+  end
+
+  def generate_kingdom(kingdom)
+    kingdom.map do |tc|
+      tc.to_checklist_item
+    end
   end
 
   # Converts a list of search filters into a limited length
