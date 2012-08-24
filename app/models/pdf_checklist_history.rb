@@ -176,7 +176,6 @@ class PdfChecklistHistory < ChecklistHistory
         }
       end
       unless tc.new_record?
-      puts tc.inspect
         #filter out null records for higher taxa
         unless tc.change_type.blank?
           listings_subtable = pdf.make_table(tc.listing_history.map do |lh|
