@@ -1,18 +1,20 @@
 class ChecklistHistory < Checklist
 
-  attr_reader :taxon_concepts
-
   def initialize(options={})
     super(options.merge({:output_layout => :taxonomic}))
-    @taxon_concepts_rel.select_values = [
+    select_values = [
       "taxon_concepts.id", :data,
-      "lng_e", "lng_s", "lng_f",
       "listing_changes.effective_at",
       "listing_changes.notes AS listing_notes",
       "change_types.name AS change_type",
       "species_listings.abbreviation AS species_listing",
       "geo_entities.iso_code2 AS party"
     ]
+    (options[:common_names] || []).each do |lng|
+      select_values << "lng_#{lng.downcase}"
+    end
+    @taxon_concepts_rel.select_values = select_values
+
     @taxon_concepts_rel.order_values = [
       :"data -> 'taxonomic_position'", :effective_at
     ]
@@ -40,28 +42,6 @@ class ChecklistHistory < Checklist
         WHEN change_types.name = 'RESERVATION_WITHDRAWAL' THEN 2
         WHEN change_types.name = 'DELETION' THEN 3
       END")
-
-    #ideally, instead of processing it this way it should be returned
-    #in the correct format from the db
-    prev_id = nil
-    current_listing_history = nil
-    @taxon_concepts = []
-    @taxon_concepts_rel.map do |tc|
-      listing_change = {
-        :effective_at => tc.effective_at,
-        :change_type => tc.change_type,
-        :species_listing => tc.species_listing,
-        :party => tc.party,
-        :listing_notes => tc.listing_notes
-      }
-      if tc.id != prev_id
-        tc.listing_history = []
-        current_listing_history = tc.listing_history
-        @taxon_concepts << tc
-        prev_id = tc.id
-      end
-      current_listing_history << listing_change
-    end
   end
 
 end
