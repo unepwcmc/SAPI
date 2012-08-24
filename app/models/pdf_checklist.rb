@@ -44,6 +44,7 @@ class PdfChecklist < Checklist
 
   def generate
     static_index_pdf = [Rails.root, "/public/static_index.pdf"].join
+    attachment_pdf = [Rails.root, "/public/CITES_abbreviations_and_annotations.pdf"].join
     tmp_index_pdf    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
 
     static_page_count = get_page_count(static_index_pdf)
@@ -82,10 +83,7 @@ class PdfChecklist < Checklist
     end
 
     tmp_merged_pdf = merge_pdfs(static_index_pdf, tmp_index_pdf)
-    download_path = attach_pdfs(
-      tmp_merged_pdf,
-      Rails.root.join('/public/CITES_abbreviations_and_annotations.pdf')
-    )
+    download_path = attach_pdfs(tmp_merged_pdf, attachment_pdf)
 
     FileUtils.rm tmp_index_pdf
     FileUtils.rm tmp_merged_pdf

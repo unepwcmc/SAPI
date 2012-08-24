@@ -6,6 +6,7 @@ class PdfChecklistHistory < ChecklistHistory
 
   def generate
     static_history_pdf = [Rails.root, "/public/static_history.pdf"].join
+    attachment_pdf = [Rails.root, "/public/Historical_summary_of_CITES_annotations.pdf"].join
     tmp_history_pdf    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
 
     static_page_count = get_page_count(static_history_pdf)
@@ -117,10 +118,7 @@ class PdfChecklistHistory < ChecklistHistory
     end
 
     tmp_merged_pdf = merge_pdfs(static_history_pdf, tmp_history_pdf)
-    download_path = attach_pdfs(
-      tmp_merged_pdf,
-      Rails.root.join('/public/Historical_summary_of_CITES_annotations.pdf')
-    )
+    download_path = attach_pdfs(tmp_merged_pdf, attachment_pdf)
 
     FileUtils.rm tmp_history_pdf
     FileUtils.rm tmp_merged_pdf
