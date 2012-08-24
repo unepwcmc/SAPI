@@ -25,7 +25,7 @@ module PDF
 
     combined_pdf_index = [Rails.root, '/tmp/comb-', SecureRandom.hex(8), '.pdf'].join
     puts `pdftk #{args.join(' ')} output #{combined_pdf_index}`
-
+    puts "merged into #{combined_pdf_index}"
     combined_pdf_index
   end
 
@@ -43,7 +43,7 @@ module PDF
 
     combined_pdf_index = [Rails.root, '/tmp/comb-', SecureRandom.hex(8), '.pdf'].join
     puts `pdftk #{master} attach_files #{args.join(' ')} output #{combined_pdf_index}`
-
+    puts "attached into #{combined_pdf_index}"
     combined_pdf_index
   end
 

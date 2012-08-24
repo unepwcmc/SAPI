@@ -116,12 +116,14 @@ class PdfChecklistHistory < ChecklistHistory
       pdf.render_file tmp_history_pdf
     end
 
+    tmp_merged_pdf = merge_pdfs(static_history_pdf, tmp_history_pdf)
     download_path = attach_pdfs(
-      merge_pdfs(static_history_pdf, tmp_history_pdf),
+      tmp_merged_pdf,
       Rails.root.join('/public/Historical_summary_of_CITES_annotations.pdf')
     )
 
     FileUtils.rm tmp_history_pdf
+    FileUtils.rm tmp_merged_pdf
 
     return download_path
   end

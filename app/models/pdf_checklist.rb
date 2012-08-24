@@ -81,13 +81,14 @@ class PdfChecklist < Checklist
       pdf.render_file tmp_index_pdf
     end
 
-    merge_pdfs(static_index_pdf, tmp_index_pdf)
+    tmp_merged_pdf = merge_pdfs(static_index_pdf, tmp_index_pdf)
     download_path = attach_pdfs(
-      merge_pdfs(static_index_pdf, tmp_index_pdf),
+      tmp_merged_pdf,
       Rails.root.join('/public/CITES_abbreviations_and_annotations.pdf')
     )
 
     FileUtils.rm tmp_index_pdf
+    FileUtils.rm tmp_merged_pdf
 
     return download_path
   end
