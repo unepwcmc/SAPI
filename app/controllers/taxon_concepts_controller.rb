@@ -48,8 +48,9 @@ class TaxonConceptsController < ApplicationController
         OR
         EXISTS (SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{params[:scientific_name]}%')
       ").
+      limit(params[:per_page]).
       order("LENGTH(data->'taxonomic_position'), data->'full_name'")
-    render :text => taxon_concepts.to_json(:methods => [:full_name, :rank_name, :synonyms])
+    render :json => taxon_concepts.to_json(:methods => [:full_name, :rank_name, :synonyms])
   end
 
   private
