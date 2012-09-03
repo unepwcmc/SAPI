@@ -53,6 +53,12 @@ class TaxonConceptsController < ApplicationController
     render :json => taxon_concepts.to_json(:methods => [:full_name, :rank_name, :synonyms])
   end
 
+  def summarise_filters
+    extract_checklist_params
+
+    render :text => Checklist.new(@checklist_params).summarise_filters
+  end
+
   private
   def extract_checklist_params
     @checklist_params = {
