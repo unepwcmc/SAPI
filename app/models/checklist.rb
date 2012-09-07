@@ -121,7 +121,7 @@ class Checklist
       @regions_count = regions.count
       if @regions_count > 0
         summary << "within"  if @countries_count > 0
-        summary << "#{helpers.pluralize(regions.count, 'region')}"
+        summary << "#{Checklist.helpers.pluralize(regions.count, 'region')}"
       end
     end
 
