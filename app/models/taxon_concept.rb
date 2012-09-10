@@ -156,10 +156,27 @@ class TaxonConcept < ActiveRecord::Base
         SQL
       )
   }
+  scope :with_countries, select(:countries_ary).
+    joins(
+      <<-SQL
+      LEFT JOIN (
+        SELECT taxon_concepts.id AS taxon_concept_id_wc, ARRAY_AGG(geo_entities.name) AS countries_ary
+        FROM taxon_concepts
+        LEFT JOIN taxon_concept_geo_entities
+          ON "taxon_concept_geo_entities"."taxon_concept_id" = "taxon_concepts"."id"
+        LEFT JOIN geo_entities
+          ON taxon_concept_geo_entities.geo_entity_id = geo_entities.id
+        LEFT JOIN "geo_entity_types"
+          ON "geo_entity_types"."id" = "geo_entities"."geo_entity_type_id"
+            AND geo_entity_types.name = '#{GeoEntityType::COUNTRY}'
+        GROUP BY taxon_concepts.id
+      ) countries_names ON taxon_concepts.id = countries_names.taxon_concept_id_wc
+      SQL
+    )
   scope :with_synonyms, select(:synonyms_ary).
     joins(
       <<-SQL
-      INNER JOIN (
+      LEFT JOIN (
         SELECT taxon_concepts.id AS taxon_concept_id_ws, ARRAY_AGG(synonym_tc.data->'full_name') AS synonyms_ary
         FROM taxon_concepts
         LEFT JOIN taxon_relationships
@@ -251,6 +268,25 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
+  def countries
+    me = unless respond_to?(:countries_ary)
+      TaxonConcept.with_countries.where(:id => self.id).first
+    else
+      self
+    end
+    if me.respond_to?(:countries_ary)
+      parse_pg_array(me.countries_ary || '').compact.map do |e|
+        e.force_encoding('utf-8')
+      end
+    else
+      []
+    end
+  end
+
+  def countries_list
+    countries.join(', ')
+  end
+
   def synonyms
     me = unless respond_to?(:synonyms_ary)
       TaxonConcept.with_synonyms.where(:id => self.id).first
@@ -295,7 +331,6 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def as_json(options={})
-    puts options.inspect
     unless options[:only] || options[:methods]
       options = {
         :only =>[:id, :parent_id, :depth],
@@ -303,7 +338,7 @@ class TaxonConcept < ActiveRecord::Base
           :class_name, :phylum_name, :full_name, :rank_name, :spp,
           :taxonomic_position, :current_listing,
           :english_names_list, :spanish_names_list, :french_names_list, 
-          :synonyms_list, :cites_accepted
+          :synonyms_list, :countries_list, :cites_accepted
         ]
       }
     end
