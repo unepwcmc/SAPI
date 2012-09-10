@@ -18,4 +18,15 @@ module Sapi
   def self.fix_listing_changes
     ActiveRecord::Base.connection.execute('SELECT * FROM fix_cites_listing_changes()')
   end
+
+  def self.drop_indices
+    ActiveRecord::Base.connection.execute('DROP INDEX index_taxon_concepts_on_data')
+    ActiveRecord::Base.connection.execute('DROP INDEX index_taxon_concepts_on_lft')
+  end
+
+  def self.create_indices
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_data ON taxon_concepts USING btree (data)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_lft ON taxon_concepts USING btree (lft)')
+  end
+
 end
