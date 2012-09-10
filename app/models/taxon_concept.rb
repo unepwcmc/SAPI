@@ -209,8 +209,10 @@ class TaxonConcept < ActiveRecord::Base
 
   [
     :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
-    :genus_name, :species_name, :subspecies_name, :full_name, :rank_name,
-    :taxonomic_position
+    :genus_name, :species_name, :subspecies_name,
+    :kingdom_id, :phylum_id, :class_id, :order_id, :family_id,
+    :genus_id, :species_id, :subspecies_id,
+    :full_name, :rank_name, :taxonomic_position
   ].each do |attr_name|
     define_method(attr_name) { data && data[attr_name.to_s] }
   end
@@ -294,16 +296,19 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
+  EXPORTED_FIELDS = [
+    :id, :full_name, :spp, :rank_name, :current_listing, :cites_accepted,
+    :species_name, :genus_name, :family_name, :order_name,
+    :class_name, :phylum_name,
+    :species_id, :genus_id, :family_id, :order_id,
+    :class_id, :phylum_id,
+    :english_names_list, :spanish_names_list, :french_names_list, 
+    :synonyms_list
+  ]
+
   def to_checklist_item
-    fields = [
-      :id, :full_name, :spp, :rank_name, :current_listing, :cites_accepted,
-      :species_name, :genus_name, :family_name, :order_name,
-      :class_name, :phylum_name,
-      :english_names_list, :spanish_names_list, :french_names_list, 
-      :synonyms_list
-    ]
     Checklist::TaxonConceptItem.new(
-      Hash[fields.map{ |field| [field, self.send(field)] }]
+      Hash[EXPORTED_FIELDS.map{ |field| [field, self.send(field)] }]
     )
   end
 
