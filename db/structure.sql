@@ -359,32 +359,6 @@ CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
         hstore('not_in_cites', 'NC')
         WHERE fully_covered <> 't' OR (listing->'cites_listed')::BOOLEAN IS NULL;
 
-        -- set the cites_listed_children flags to true to all ancestors of taxa
-        -- whose cites_listed IS NOT NULL
-        -- this is used for the taxonomic layout
-        WITH listed AS (
-          WITH RECURSIVE q AS (
-            SELECT h, ARRAY[]::INTEGER[] AS ancestors
-            FROM taxon_concepts h
-            WHERE parent_id IS NULL
-
-            UNION ALL
-
-            SELECT hi, ancestors || id
-            FROM q
-            JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
-          )
-          SELECT (q.h).id, (q.h).data->'full_name', (q.h).data->'taxonomic_position', ancestors
-          FROM q
-          WHERE ((q.h).listing->'cites_listed')::BOOLEAN IS NOT NULL
-        ) 
-        UPDATE taxon_concepts
-        SET listing = listing || hstore('cites_listed_children', 't')
-        FROM (
-          SELECT DISTINCT UNNEST(ancestors) AS ID
-          FROM listed
-        ) listed_ancestors
-        WHERE listed_ancestors.id = taxon_concepts.id;
         END;
       $$;
 
@@ -668,6 +642,7 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE animals_import (
+    spcrecid integer,
     kingdom character varying,
     phylum character varying,
     class character varying,
@@ -676,7 +651,6 @@ CREATE TABLE animals_import (
     genus character varying,
     species character varying,
     spcinfra character varying,
-    spcrecid integer,
     spcstatus character varying
 );
 
@@ -1037,7 +1011,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-08-17 10:40:29.594214'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-07-25 13:37:28.482069'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -1099,13 +1073,13 @@ ALTER SEQUENCE listing_distributions_id_seq OWNED BY listing_distributions.id;
 --
 
 CREATE TABLE plants_import (
+    spcrecid integer,
     kingdom character varying,
     taxonorder character varying,
     family character varying,
     genus character varying,
     species character varying,
     spcinfra character varying,
-    spcrecid integer,
     spcstatus character varying
 );
 
@@ -1157,19 +1131,6 @@ CREATE SEQUENCE ranks_id_seq
 --
 
 ALTER SEQUENCE ranks_id_seq OWNED BY ranks.id;
-
-
---
--- Name: reference_links_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE reference_links_import (
-    dslrecid integer,
-    dslspcrecid integer,
-    dsldscrecid integer,
-    dslcode character varying,
-    dslcoderecid integer
-);
 
 
 --
@@ -1299,24 +1260,6 @@ CREATE SEQUENCE standard_references_id_seq
 --
 
 ALTER SEQUENCE standard_references_id_seq OWNED BY standard_references.id;
-
-
---
--- Name: standard_references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE standard_references_import (
-    author character varying,
-    year integer,
-    title text,
-    kingdom character varying,
-    phylum character varying,
-    class character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying
-);
 
 
 --
@@ -1910,20 +1853,6 @@ ALTER TABLE ONLY taxon_relationship_types
 
 ALTER TABLE ONLY taxon_relationships
     ADD CONSTRAINT taxon_relationships_pkey PRIMARY KEY (id);
-
-
---
--- Name: index_taxon_concepts_on_data; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_taxon_concepts_on_data ON taxon_concepts USING btree (data);
-
-
---
--- Name: index_taxon_concepts_on_lft; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_taxon_concepts_on_lft ON taxon_concepts USING btree (lft);
 
 
 --
