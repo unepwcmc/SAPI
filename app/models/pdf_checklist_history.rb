@@ -6,36 +6,15 @@ class PdfChecklistHistory < ChecklistHistory
 
   #add higher taxa headers TODO refactor
   def post_process(taxon_concepts)
-    #aggregate history
-    prev_id = nil
-    current_listing_history = nil
-    res1 = []
-    taxon_concepts.map do |tc|
-      listing_change = {
-        :effective_at => tc.effective_at,
-        :change_type => tc.change_type,
-        :species_listing => tc.species_listing,
-        :party => tc.party,
-        :listing_notes => tc.listing_notes
-      }
-      if tc.id != prev_id
-        tc.listing_history = []
-        current_listing_history = tc.listing_history
-        res1 << tc
-        prev_id = tc.id
-      end
-      current_listing_history << listing_change
-    end
-    #add higher taxa headers
     res2 = []
     ranks = ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'GENUS', 'SPECIES']
     header_ranks = 4 #use only this many from the ranks table for headers
-    res1.each_with_index do |tc, i|
+    taxon_concepts.each_with_index do |tc, i|
       # puts tc.full_name
       prev_path = if i==0
         ''
       else
-        res1[i-1].taxonomic_position
+        taxon_concepts[i-1].taxonomic_position
       end
       curr_path = tc.taxonomic_position
       prev_path_segments = prev_path.split('.')
@@ -177,36 +156,34 @@ class PdfChecklistHistory < ChecklistHistory
       end
       unless tc.new_record?
         #filter out null records for higher taxa
-        unless tc.change_type.blank?
-          listings_subtable = pdf.make_table(tc.listing_history.map do |lh|
-            [
-              "#{lh[:species_listing]}#{
-                if lh[:change_type] == ChangeType::RESERVATION
-                  '/r'
-                elsif lh[:change_type] == ChangeType::RESERVATION_WITHDRAWAL
-                  '/w'
-                elsif lh[:change_type] == ChangeType::DELETION
-                  'Del'
-                else
-                  nil
-                end
-              }",
-              "#{lh[:party]}".upcase,
-              "#{lh[:effective_at] ? Date.parse(lh[:effective_at]).strftime("%d/%m/%y") : nil}",
-              "#{lh[:listing_notes]}".sub(/NULL/,'')#TODO
-            ]
-          end,
-            {
-              :column_widths => [27, 24, 45, 243],
-              :cell_style => {:borders => [], :padding => [1,0,1,0]}
-            }
-          )
-  
-          listings_table << [
-            pdf.make_cell(:content => "<i>#{tc.full_name}</i>", :inline_format => true),
-            listings_subtable
+        listings_subtable = pdf.make_table(tc.listing_history.map do |lh|
+          [
+            "#{lh[:species_listing_name]}#{
+              if lh[:change_type_name] == ChangeType::RESERVATION
+                '/r'
+              elsif lh[:change_type_name] == ChangeType::RESERVATION_WITHDRAWAL
+                '/w'
+              elsif lh[:change_type_name] == ChangeType::DELETION
+                'Del'
+              else
+                nil
+              end
+            }",
+            "#{lh[:party_name]}".upcase,
+            "#{lh[:effective_at] ? Date.parse(lh[:effective_at]).strftime("%d/%m/%y") : nil}",
+            "#{lh[:notes]}".sub(/NULL/,'')#TODO
           ]
-        end
+        end,
+          {
+            :column_widths => [27, 24, 45, 243],
+            :cell_style => {:borders => [], :padding => [1,0,1,0]}
+          }
+        )
+
+        listings_table << [
+          pdf.make_cell(:content => "<i>#{tc.full_name}</i>", :inline_format => true),
+          listings_subtable
+        ]
       end
     end
   end

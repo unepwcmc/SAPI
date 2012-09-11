@@ -222,7 +222,19 @@ class TaxonConcept < ActiveRecord::Base
     ) standard_references ON taxon_concepts.id = standard_references.taxon_concept_id_sr
     SQL
   )
-
+  scope :with_history, select('effective_at_ary, change_type_name_ary, species_listing_name_ary, party_name_ary, notes_ary').
+    joins("LEFT JOIN (
+      SELECT taxon_concept_id, ARRAY_AGG(effective_at) AS effective_at_ary,
+      ARRAY_AGG(change_type_name) AS change_type_name_ary,
+      ARRAY_AGG(species_listing_name) AS species_listing_name_ary,
+      ARRAY_AGG(party_name) AS party_name_ary, ARRAY_AGG(notes) AS notes_ary
+      FROM listing_changes_view
+      --filter out deletion records that were added programatically to simplify
+      --current listing calculations - don't want them to show up
+      WHERE NOT (change_type_name = '#{ChangeType::DELETION}' AND species_listing_id IS NOT NULL)
+      GROUP BY taxon_concept_id
+    ) listing_changes_view_grouped
+    ON taxon_concepts.id = listing_changes_view_grouped.taxon_concept_id")
   acts_as_nested_set
 
   [
@@ -267,6 +279,61 @@ class TaxonConcept < ActiveRecord::Base
     define_method("#{lng.downcase}_names_list") do
       self.send("#{lng.downcase}_names").join(', ')
     end
+  end
+
+  def listing_history
+    [:effective_at_ary, :change_type_name_ary, :species_listing_name_ary,
+      :party_name_ary, :notes_ary
+    ].each do |ary|
+      parsed_ary = if respond_to?(ary)
+        parse_pg_array(send(ary) || '').compact.map do |e|
+          e.force_encoding('utf-8')
+        end
+        
+      else
+        []
+      end
+      instance_variable_set(:"@#{ary}", parsed_ary)
+    end
+    res = []
+    @effective_at_ary.each_with_index do |date, i|
+      event = {
+        :effective_at => date,
+        :change_type_name => @change_type_name_ary[i],
+        :species_listing_name => @species_listing_name_ary[i],
+        :party_name => @party_name_ary[i],
+        :notes => @notes_ary[i]
+      }
+      res << event
+    end
+    res
+  end
+
+  def listing_history_per_appdx
+    res = {
+      'I' => [], 'II' => [], 'III' => []
+    }
+    listing_history.each do |event|
+      res[event[:species_listing_name]] << event.delete_if do |k, v|
+        k == :species_listing_name
+      end
+    end
+    res
+  end
+
+  def listing_history_per_appdx_per_country
+    res = {
+      'I' => {}, 'II' => {}, 'III' => {}
+    }
+    listing_history.each do |event|
+      unless event[:party_name].blank?
+        res[event[:species_listing_name]][event[:party_name]] ||= []
+        res[event[:species_listing_name]][event[:party_name]] << event.delete_if do |k, v|
+          [:species_listing_name, :party_name].include? k
+        end
+      end
+    end
+    res
   end
 
   def countries_ids
@@ -332,8 +399,9 @@ class TaxonConcept < ActiveRecord::Base
         :methods => [:species_name, :genus_name, :family_name, :order_name,
           :class_name, :phylum_name, :full_name, :rank_name, :spp,
           :taxonomic_position, :current_listing,
-          :english_names_list, :spanish_names_list, :french_names_list, 
-          :synonyms_list, :countries_ids, :cites_accepted
+          :english_names_list, :spanish_names_list, :french_names_list,
+          :synonyms_list, :countries_ids, :cites_accepted,
+          :listing_history_per_appdx, :listing_history_per_appdx_per_country
         ]
       }
     end
