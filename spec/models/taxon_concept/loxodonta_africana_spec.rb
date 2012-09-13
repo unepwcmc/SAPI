@@ -42,7 +42,7 @@ describe TaxonConcept do
           @species.cites_listed.should be_true
         end
         it "should be false for family Elephantidae" do
-          @family.cites_listed.should be_false
+          @family.cites_listed.should == false
         end
       end
 

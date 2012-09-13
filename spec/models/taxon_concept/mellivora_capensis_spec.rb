@@ -12,10 +12,10 @@ describe TaxonConcept do
 
       describe :cites_listed do
         it "should be false for family Mustelinae" do
-          @family.cites_listed.should be_false
+          @family.cites_listed.should == false
         end
         it "should be false for genus Mellivora" do
-          @genus.cites_listed.should be_false
+          @genus.cites_listed.should == false
         end
         it "should be true for species Mellivora capensis" do
           @species.cites_listed.should be_true

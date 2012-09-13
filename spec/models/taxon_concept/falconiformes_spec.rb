@@ -28,7 +28,7 @@ describe TaxonConcept do
 
       describe :fully_covered do
         it "should be false for family Cathartidae" do
-          @family1.fully_covered.should be_false
+          @family1.fully_covered.should == false
         end
         it "should be true for family Falconidae" do
           @family2.fully_covered.should be_true
@@ -61,17 +61,17 @@ describe TaxonConcept do
           @order.cites_listed.should be_true
         end
         # it "should be false for family Falconidae (inclusion in higher taxa listing)" do
-          # @family2.cites_listed.should be_false
+          # @family2.cites_listed.should == false
         # end
         pending "should be false for family Falconidae (inclusion in higher taxa listing)"
         it "should be false for genus Falco" do
-          @genus2_1.cites_listed.should be_false
+          @genus2_1.cites_listed.should == false
         end
         it "should be true for species Falco araea" do
           @species2_1.cites_listed.should be_true
         end
         it "should be false for species Falco alopex" do
-          @species2_2.cites_listed.should be_false
+          @species2_2.cites_listed.should == false
         end
         it "should be blank for species Vultur atratus" do
           @species1_3.cites_listed.should be_blank

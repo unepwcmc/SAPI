@@ -14,7 +14,7 @@ describe TaxonConcept do
           @family.cites_accepted.should be_true
         end
         it "should be false for genus Agalychnis" do
-          @genus.cites_accepted.should be_false
+          @genus.cites_accepted.should == false
         end
       end
       describe :standard_references do
@@ -38,7 +38,7 @@ describe TaxonConcept do
 
       describe :cites_listed do
         it "should be false for family Hylidae" do
-          @family.cites_listed.should be_false
+          @family.cites_listed.should == false
         end
         it "should be true for genus Agalychnis" do
           @genus.cites_listed.should be_true

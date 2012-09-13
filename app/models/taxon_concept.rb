@@ -109,16 +109,9 @@ class TaxonConcept < ActiveRecord::Base
       )
   }
 
-  scope :without_nc, lambda { |layout|
-    if layout.blank? || layout == :alphabetical
-      where("(listing->'cites_listed')::BOOLEAN IS NOT NULL
+  scope :without_nc, where("(listing->'cites_listed')::BOOLEAN IS NOT NULL
       AND (listing->'cites_del' <> 't' OR (listing->'cites_del')::BOOLEAN IS NULL)")
-    else
-      where(
-        "(listing->'cites_listed')::BOOLEAN IS NOT NULL
-        AND (listing->'cites_del' <> 't' OR (listing->'cites_del')::BOOLEAN IS NULL)")
-    end
-  }
+
   scope :taxonomic_layout, order("taxon_concepts.data -> 'taxonomic_position'")
   scope :alphabetical_layout, where(
       "taxon_concepts.data -> 'rank_name' NOT IN (?)",
@@ -222,9 +215,11 @@ class TaxonConcept < ActiveRecord::Base
     ) standard_references ON taxon_concepts.id = standard_references.taxon_concept_id_sr
     SQL
   )
-  scope :with_history, select('effective_at_ary, change_type_name_ary, species_listing_name_ary, party_name_ary, notes_ary').
+  scope :with_history, select('listing_change_id_ary, effective_at_ary, change_type_name_ary,
+    species_listing_name_ary, party_name_ary, notes_ary').
     joins("LEFT JOIN (
-      SELECT taxon_concept_id, ARRAY_AGG(effective_at) AS effective_at_ary,
+      SELECT taxon_concept_id, ARRAY_AGG(id) AS listing_change_id_ary,
+      ARRAY_AGG(effective_at) AS effective_at_ary,
       ARRAY_AGG(change_type_name) AS change_type_name_ary,
       ARRAY_AGG(species_listing_name) AS species_listing_name_ary,
       ARRAY_AGG(party_name) AS party_name_ary, ARRAY_AGG(notes) AS notes_ary
@@ -257,7 +252,16 @@ class TaxonConcept < ActiveRecord::Base
     :cites_del,#taxon has been deleted from appendices
     :cites_show#@taxon should be shown in checklist even if NC
   ].each do |attr_name|
-    define_method(attr_name) { listing && listing[attr_name.to_s] == 't' }
+    define_method(attr_name) do
+      listing && case listing[attr_name.to_s]
+        when 't'
+          true
+        when 'f'
+          false
+        else
+          nil
+      end
+    end
   end
 
   def current_listing
@@ -282,8 +286,8 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def listing_history
-    [:effective_at_ary, :change_type_name_ary, :species_listing_name_ary,
-      :party_name_ary, :notes_ary
+    [:listing_change_id_ary, :effective_at_ary, :change_type_name_ary,
+      :species_listing_name_ary, :party_name_ary, :notes_ary
     ].each do |ary|
       parsed_ary = if respond_to?(ary)
         parse_pg_array(send(ary) || '').compact.map do |e|
@@ -298,6 +302,7 @@ class TaxonConcept < ActiveRecord::Base
     res = []
     @effective_at_ary.each_with_index do |date, i|
       event = {
+        :id => @listing_change_id_ary[i],
         :effective_at => date,
         :change_type_name => @change_type_name_ary[i],
         :species_listing_name => @species_listing_name_ary[i],
@@ -305,33 +310,6 @@ class TaxonConcept < ActiveRecord::Base
         :notes => @notes_ary[i]
       }
       res << event
-    end
-    res
-  end
-
-  def listing_history_per_appdx
-    res = {
-      'I' => [], 'II' => [], 'III' => []
-    }
-    listing_history.each do |event|
-      res[event[:species_listing_name]] << event.delete_if do |k, v|
-        k == :species_listing_name
-      end
-    end
-    res
-  end
-
-  def listing_history_per_appdx_per_country
-    res = {
-      'I' => {}, 'II' => {}, 'III' => {}
-    }
-    listing_history.each do |event|
-      unless event[:party_name].blank?
-        res[event[:species_listing_name]][event[:party_name]] ||= []
-        res[event[:species_listing_name]][event[:party_name]] << event.delete_if do |k, v|
-          [:species_listing_name, :party_name].include? k
-        end
-      end
     end
     res
   end
@@ -401,7 +379,7 @@ class TaxonConcept < ActiveRecord::Base
           :taxonomic_position, :current_listing,
           :english_names_list, :spanish_names_list, :french_names_list,
           :synonyms_list, :countries_ids, :cites_accepted,
-          :listing_history_per_appdx, :listing_history_per_appdx_per_country
+          :listing_history
         ]
       }
     end
