@@ -8,7 +8,7 @@ SAPI::Application.routes.draw do
     :constraints => {:geo_entity_type => /#{GeoEntityType::COUNTRY}|#{GeoEntityType::CITES_REGION}/}
   match 'species_listings/:designation' => 'species_listings#index',
     :constraints => {:designation => /#{Designation::CITES}/}
-
+  match 'timelines' => 'timelines#index'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
