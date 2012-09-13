@@ -1,7 +1,9 @@
 class TimelinesController < ApplicationController
   def index
-    #TODO
-    taxon_concept_id = params[:taxon_concept_ids].split(',').first
-    render :json => [TimelinesForTaxonConcept.new(taxon_concept_id).to_json]
+    taxon_concept_ids = params[:taxon_concept_ids].split(',')
+    res = taxon_concept_ids.map do |id|
+      TimelinesForTaxonConcept.new(id).to_json
+    end
+    render :json => res
   end
 end

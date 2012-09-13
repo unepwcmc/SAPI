@@ -67,8 +67,8 @@ class TimelinesForTaxonConcept
   end
 
   def to_json
-    res = {
-      :id => object_id,
+    {
+      :id => @taxon_concept_id,
       :taxon_concept_id => @taxon_concept_id,
       :listing_changes => @listing_changes.map do |ch| 
         {
@@ -78,18 +78,25 @@ class TimelinesForTaxonConcept
           :species_listing_name => ch.species_listing_name,
           :notes => ch.notes
         }
+      end,
+      :timelines => @timelines.values.sort do |t1, t2|
+        if t1.appendix == t2.appendix
+          if t1.party == t2.party
+            0
+          elsif t1.party && t1.party > t2.party
+            1
+          else
+            -1
+          end
+        else
+          if t1.appendix > t2.appendix
+            1
+          else
+            -1
+          end
+        end
       end
     }
-    timelines_values = @timelines.values
-    timelines = ['I', 'II', 'III'].each do |appdx|
-      res["timelines_#{appdx}"] = {
-        :main => @timelines[appdx],
-        :per_party => timelines_values.select do |tl|
-          tl.appendix == appdx && tl.party
-        end.sort{ |t1, t2| t1.party <=> t2.party }
-      }
-    end
-    res
   end
 
 end
