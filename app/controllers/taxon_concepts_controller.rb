@@ -36,7 +36,7 @@ class TaxonConceptsController < ApplicationController
 
   def autocomplete
     taxon_concepts = TaxonConcept.by_designation('CITES').
-      with_synonyms.without_nc(:taxonomic).
+      with_synonyms.without_nc.
       select("
         data,
         ARRAY(
@@ -48,8 +48,15 @@ class TaxonConceptsController < ApplicationController
         OR
         EXISTS (SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{params[:scientific_name]}%')
       ").
+      limit(params[:per_page]).
       order("LENGTH(data->'taxonomic_position'), data->'full_name'")
-    render :text => taxon_concepts.to_json(:methods => [:full_name, :rank_name, :synonyms])
+    render :json => taxon_concepts.to_json(:methods => [:full_name, :rank_name, :synonyms])
+  end
+
+  def summarise_filters
+    extract_checklist_params
+
+    render :text => Checklist.new(@checklist_params).summarise_filters
   end
 
   private

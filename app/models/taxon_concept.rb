@@ -109,16 +109,9 @@ class TaxonConcept < ActiveRecord::Base
       )
   }
 
-  scope :without_nc, lambda { |layout|
-    if layout.blank? || layout == :alphabetical
-      where("(listing->'cites_listed')::BOOLEAN IS NOT NULL
+  scope :without_nc, where("(listing->'cites_listed')::BOOLEAN IS NOT NULL
       AND (listing->'cites_del' <> 't' OR (listing->'cites_del')::BOOLEAN IS NULL)")
-    else
-      where(
-        "(listing->'cites_listed')::BOOLEAN IS NOT NULL
-        AND (listing->'cites_del' <> 't' OR (listing->'cites_del')::BOOLEAN IS NULL)")
-    end
-  }
+
   scope :taxonomic_layout, order("taxon_concepts.data -> 'taxonomic_position'")
   scope :alphabetical_layout, where(
       "taxon_concepts.data -> 'rank_name' NOT IN (?)",
@@ -156,10 +149,28 @@ class TaxonConcept < ActiveRecord::Base
         SQL
       )
   }
+  scope :with_countries_ids, select(:countries_ids_ary).
+    joins(
+      <<-SQL
+      LEFT JOIN (
+        SELECT taxon_concepts.id AS taxon_concept_id_wc,
+        ARRAY_AGG(geo_entities.id ORDER BY geo_entities.name) AS countries_ids_ary
+        FROM taxon_concepts
+        LEFT JOIN taxon_concept_geo_entities
+          ON "taxon_concept_geo_entities"."taxon_concept_id" = "taxon_concepts"."id"
+        LEFT JOIN geo_entities
+          ON taxon_concept_geo_entities.geo_entity_id = geo_entities.id
+        LEFT JOIN "geo_entity_types"
+          ON "geo_entity_types"."id" = "geo_entities"."geo_entity_type_id"
+            AND geo_entity_types.name = '#{GeoEntityType::COUNTRY}'
+        GROUP BY taxon_concepts.id
+      ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_wc
+      SQL
+    )
   scope :with_synonyms, select(:synonyms_ary).
     joins(
       <<-SQL
-      INNER JOIN (
+      LEFT JOIN (
         SELECT taxon_concepts.id AS taxon_concept_id_ws, ARRAY_AGG(synonym_tc.data->'full_name') AS synonyms_ary
         FROM taxon_concepts
         LEFT JOIN taxon_relationships
@@ -204,7 +215,21 @@ class TaxonConcept < ActiveRecord::Base
     ) standard_references ON taxon_concepts.id = standard_references.taxon_concept_id_sr
     SQL
   )
-
+  scope :with_history, select('listing_change_id_ary, effective_at_ary, change_type_name_ary,
+    species_listing_name_ary, party_name_ary, notes_ary').
+    joins("LEFT JOIN (
+      SELECT taxon_concept_id, ARRAY_AGG(id) AS listing_change_id_ary,
+      ARRAY_AGG(effective_at) AS effective_at_ary,
+      ARRAY_AGG(change_type_name) AS change_type_name_ary,
+      ARRAY_AGG(species_listing_name) AS species_listing_name_ary,
+      ARRAY_AGG(party_name) AS party_name_ary, ARRAY_AGG(notes) AS notes_ary
+      FROM listing_changes_view
+      --filter out deletion records that were added programatically to simplify
+      --current listing calculations - don't want them to show up
+      WHERE NOT (change_type_name = '#{ChangeType::DELETION}' AND species_listing_id IS NOT NULL)
+      GROUP BY taxon_concept_id
+    ) listing_changes_view_grouped
+    ON taxon_concepts.id = listing_changes_view_grouped.taxon_concept_id")
   acts_as_nested_set
 
   [
@@ -229,7 +254,16 @@ class TaxonConcept < ActiveRecord::Base
     :cites_del,#taxon has been deleted from appendices
     :cites_show#@taxon should be shown in checklist even if NC
   ].each do |attr_name|
-    define_method(attr_name) { listing && listing[attr_name.to_s] == 't' }
+    define_method(attr_name) do
+      listing && case listing[attr_name.to_s]
+        when 't'
+          true
+        when 'f'
+          false
+        else
+          nil
+      end
+    end
   end
 
   def current_listing
@@ -250,6 +284,48 @@ class TaxonConcept < ActiveRecord::Base
 
     define_method("#{lng.downcase}_names_list") do
       self.send("#{lng.downcase}_names").join(', ')
+    end
+  end
+
+  def listing_history
+    [:listing_change_id_ary, :effective_at_ary, :change_type_name_ary,
+      :species_listing_name_ary, :party_name_ary, :notes_ary
+    ].each do |ary|
+      parsed_ary = if respond_to?(ary)
+        parse_pg_array(send(ary) || '').compact.map do |e|
+          e.force_encoding('utf-8')
+        end
+        
+      else
+        []
+      end
+      instance_variable_set(:"@#{ary}", parsed_ary)
+    end
+    res = []
+    @effective_at_ary.each_with_index do |date, i|
+      event = {
+        :id => @listing_change_id_ary[i],
+        :effective_at => date,
+        :change_type_name => @change_type_name_ary[i],
+        :species_listing_name => @species_listing_name_ary[i],
+        :party_name => @party_name_ary[i],
+        :notes => @notes_ary[i]
+      }
+      res << event
+    end
+    res
+  end
+
+  def countries_ids
+    me = unless respond_to?(:countries_ids_ary)
+      TaxonConcept.with_countries.where(:id => self.id).first
+    else
+      self
+    end
+    if me.respond_to?(:countries_ids_ary)
+      parse_pg_array(me.countries_ids_ary || '').compact
+    else
+      []
     end
   end
 
@@ -310,6 +386,22 @@ class TaxonConcept < ActiveRecord::Base
     Checklist::TaxonConceptItem.new(
       Hash[EXPORTED_FIELDS.map{ |field| [field, self.send(field)] }]
     )
+  end
+
+  def as_json(options={})
+    unless options[:only] || options[:methods]
+      options = {
+        :only =>[:id, :parent_id, :depth],
+        :methods => [:species_name, :genus_name, :family_name, :order_name,
+          :class_name, :phylum_name, :full_name, :rank_name, :spp,
+          :taxonomic_position, :current_listing,
+          :english_names_list, :spanish_names_list, :french_names_list,
+          :synonyms_list, :countries_ids, :cites_accepted,
+          :listing_history
+        ]
+      }
+    end
+    super(options)
   end
 
 end

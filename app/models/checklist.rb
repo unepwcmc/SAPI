@@ -16,7 +16,8 @@ class Checklist
 
     @taxon_concepts_rel = TaxonConcept.scoped.
       select([:"taxon_concepts.id", :"taxon_concepts.data", :"taxon_concepts.listing", :"taxon_concepts.depth"]).
-      by_designation(@designation).without_nc(@output_layout)
+      by_designation(@designation).without_nc.
+      with_countries_ids.with_history
 
     #filtering options
     @cites_regions = options[:cites_region_ids] || []
@@ -199,7 +200,7 @@ class Checklist
       @regions_count = regions.count
       if @regions_count > 0
         summary << "within"  if @countries_count > 0
-        summary << "#{helpers.pluralize(regions.count, 'region')}"
+        summary << "#{Checklist.helpers.pluralize(regions.count, 'region')}"
       end
     end
 

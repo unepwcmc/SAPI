@@ -645,6 +645,7 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE animals_import (
+    spcrecid integer,
     kingdom character varying,
     phylum character varying,
     class character varying,
@@ -653,7 +654,6 @@ CREATE TABLE animals_import (
     genus character varying,
     species character varying,
     spcinfra character varying,
-    spcrecid integer,
     spcstatus character varying
 );
 
@@ -1014,7 +1014,7 @@ CREATE TABLE listing_changes (
     depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-08-17 10:40:29.594214'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-07-25 13:37:28.482069'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -1053,6 +1053,28 @@ CREATE TABLE listing_distributions (
 
 
 --
+-- Name: species_listings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE species_listings (
+    id integer NOT NULL,
+    designation_id integer,
+    name character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    abbreviation character varying(255)
+);
+
+
+--
+-- Name: listing_changes_view; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW listing_changes_view AS
+    SELECT listing_changes.id, listing_changes.taxon_concept_id, listing_changes.effective_at, listing_changes.species_listing_id, species_listings.abbreviation AS species_listing_name, listing_changes.change_type_id, change_types.name AS change_type_name, listing_distributions.geo_entity_id AS party_id, geo_entities.iso_code2 AS party_name, listing_changes.notes FROM ((((listing_changes LEFT JOIN change_types ON ((listing_changes.change_type_id = change_types.id))) LEFT JOIN species_listings ON ((listing_changes.species_listing_id = species_listings.id))) LEFT JOIN listing_distributions ON (((listing_changes.id = listing_distributions.listing_change_id) AND (listing_distributions.is_party = true)))) LEFT JOIN geo_entities ON ((geo_entities.id = listing_distributions.geo_entity_id))) ORDER BY listing_changes.taxon_concept_id, listing_changes.effective_at, CASE WHEN ((change_types.name)::text = 'ADDITION'::text) THEN 0 WHEN ((change_types.name)::text = 'RESERVATION'::text) THEN 1 WHEN ((change_types.name)::text = 'RESERVATION_WITHDRAWAL'::text) THEN 2 WHEN ((change_types.name)::text = 'DELETION'::text) THEN 3 ELSE NULL::integer END;
+
+
+--
 -- Name: listing_distributions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1076,13 +1098,13 @@ ALTER SEQUENCE listing_distributions_id_seq OWNED BY listing_distributions.id;
 --
 
 CREATE TABLE plants_import (
+    spcrecid integer,
     kingdom character varying,
     taxonorder character varying,
     family character varying,
     genus character varying,
     species character varying,
     spcinfra character varying,
-    spcrecid integer,
     spcstatus character varying
 );
 
@@ -1134,19 +1156,6 @@ CREATE SEQUENCE ranks_id_seq
 --
 
 ALTER SEQUENCE ranks_id_seq OWNED BY ranks.id;
-
-
---
--- Name: reference_links_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE reference_links_import (
-    dslrecid integer,
-    dslspcrecid integer,
-    dsldscrecid integer,
-    dslcode character varying,
-    dslcoderecid integer
-);
 
 
 --
@@ -1202,20 +1211,6 @@ CREATE TABLE references_import (
 
 CREATE TABLE schema_migrations (
     version character varying(255) NOT NULL
-);
-
-
---
--- Name: species_listings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE species_listings (
-    id integer NOT NULL,
-    designation_id integer,
-    name character varying(255),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    abbreviation character varying(255)
 );
 
 
@@ -1276,24 +1271,6 @@ CREATE SEQUENCE standard_references_id_seq
 --
 
 ALTER SEQUENCE standard_references_id_seq OWNED BY standard_references.id;
-
-
---
--- Name: standard_references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE standard_references_import (
-    author character varying,
-    year integer,
-    title text,
-    kingdom character varying,
-    phylum character varying,
-    class character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying
-);
 
 
 --
@@ -1890,20 +1867,6 @@ ALTER TABLE ONLY taxon_relationships
 
 
 --
--- Name: index_taxon_concepts_on_data; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_taxon_concepts_on_data ON taxon_concepts USING btree (data);
-
-
---
--- Name: index_taxon_concepts_on_lft; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_taxon_concepts_on_lft ON taxon_concepts USING btree (lft);
-
-
---
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2311,3 +2274,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120814102042');
 INSERT INTO schema_migrations (version) VALUES ('20120822133521');
 
 INSERT INTO schema_migrations (version) VALUES ('20120822161608');
+
+INSERT INTO schema_migrations (version) VALUES ('20120910120542');

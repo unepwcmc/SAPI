@@ -3,6 +3,7 @@ namespace :import do
 
   desc 'Runs import tasks for a random subset of CITES checklist (both animals and plants)'
   task :random => :environment do
+    Sapi::drop_indices
     Rake::Task["db:seed"].invoke
     Rake::Task["import:species"].invoke
     Rake::Task["import:synonyms"].invoke
@@ -21,10 +22,12 @@ namespace :import do
       'lib/assets/standard_nomenclature.csv'
     )
     Sapi::rebuild_taxonomy()
+    Sapi::create_indices
   end
 
   desc 'Runs import tasks for the first pages of CITES history (both animals and plants)'
   task :first_pages_cites => :environment do
+    Sapi::drop_indices
     Rake::Task["db:seed"].invoke
     Rake::Task["import:species"].invoke
     Rake::Task["import:synonyms"].invoke
@@ -38,10 +41,12 @@ namespace :import do
     Rake::Task["import:cites_listings"].invoke
     Rake::Task["import:common_names"].invoke
     Sapi::rebuild_taxonomy()
+    Sapi::create_indices
   end
 
   desc 'Runs import tasks for the first pages of CITES animals history + non listed species'
   task :first_pages_cites_with_nc => :environment do
+    Sapi::drop_indices
     Rake::Task["db:seed"].invoke
     Rake::Task["import:species"].invoke(
       'lib/assets/files/first_pages_cites_with_nc/animals_taxon_concepts.csv'
@@ -62,6 +67,7 @@ namespace :import do
       'lib/assets/files/first_pages_cites_with_nc//animals_common_names.csv'
     )
     Sapi::rebuild_taxonomy()
+    Sapi::create_indices
   end
 
 end

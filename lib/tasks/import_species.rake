@@ -11,7 +11,7 @@ namespace :import do
       INNER JOIN ORWELL.animals.dbo.TaxOrder O ON OrdRecID = FamOrdRecID
       INNER JOIN ORWELL.animals.dbo.TaxClass C ON ClaRecID = OrdClaRecID
       INNER JOIN ORWELL.animals.dbo.TaxPhylum P ON PhyRecID = ClaPhyRecID
-      WHERE S.SpcStatus = 'A'
+      WHERE S.SpcStatus = 'A' AND C.ClaName IN ('Mammalia', 'Reptilia')
     SQL
 
     plants_query = <<-SQL
@@ -20,7 +20,7 @@ namespace :import do
       inner join ORWELL.plants.dbo.Genus G on S.Spcgenrecid = G.genrecid
       INNER JOIN ORWELL.plants.dbo.Family F ON FamRecID = GenFamRecID
       INNER JOIN ORWELL.plants.dbo.TaxOrder O ON OrdRecID = FamOrdRecID
-      WHERE S.SpcStatus = 'A'
+      WHERE S.SpcStatus = 'A' AND O.OrdName IN ('ALISMATALES', 'TYPHALES', 'JUNCALES', 'ARISTOLOCHIALES')
     SQL
     ["animals", "plants"].each do |t|
       puts "Importing #{t.capitalize}"
@@ -28,7 +28,7 @@ namespace :import do
       drop_table(tmp_table)
       create_import_table(tmp_table)
       query = eval("#{t}_query")
-      copy_data_in_batches(tmp_table, query, 'SpcRecId', 10000)
+      copy_data_in_batches(tmp_table, query, 'SpcRecId', 5000)
       tmp_columns = MAPPING[tmp_table][:tmp_columns]
       import_data_for tmp_table, t, Rank::KINGDOM if tmp_columns.include? Rank::KINGDOM.capitalize
       if tmp_columns.include?(Rank::PHYLUM.capitalize) && 
