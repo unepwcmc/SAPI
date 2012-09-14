@@ -79,23 +79,27 @@ class TimelinesForTaxonConcept
           :notes => ch.notes
         }
       end,
-      :timelines => @timelines.values.sort do |t1, t2|
-        if t1.appendix == t2.appendix
-          if t1.party == t2.party
-            0
-          elsif t1.party && t1.party > t2.party
-            1
-          else
-            -1
-          end
-        else
-          if t1.appendix > t2.appendix
-            1
-          else
-            -1
-          end
-        end
-      end
+      :summary_timeline_I => @timelines['I'],
+      :summary_timeline_II => @timelines['II'],
+      :summary_timeline_III => @timelines['III']
+      # ,
+      # :timelines => @timelines.values.sort do |t1, t2|
+        # if t1.appendix == t2.appendix
+          # if t1.party == t2.party
+            # 0
+          # elsif t1.party && t2.party && t1.party > t2.party
+            # 1
+          # else
+            # -1
+          # end
+        # else
+          # if t1.appendix > t2.appendix
+            # 1
+          # else
+            # -1
+          # end
+        # end
+      # end
     }
   end
 
