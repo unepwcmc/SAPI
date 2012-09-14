@@ -4,7 +4,10 @@ class TimelineEvent
   #:listing_change_id
   #:pos - position (%)
   def initialize(options)
-    @listing_change_id = options[:listing_change_id]
+    @id = object_id
     @pos = options[:pos]
+    @change_type_name = options[:change_type_name]
+    @appendix = options[:appendix]
+    @effective_at = options[:effective_at]
   end
 end

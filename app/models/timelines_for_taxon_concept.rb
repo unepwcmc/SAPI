@@ -22,15 +22,18 @@ class TimelinesForTaxonConcept
       applicable_timelines.each do |tl|
         current_timeline = (@timelines[tl] ||= Timeline.new(:label => tl))
         timeline_event = TimelineEvent.new(
-          :listing_change_id => ch.id,
+          #:listing_change_id => ch.id,
+          :change_type_name => ch.change_type_name,
+          :appendix => ch.species_listing_name,
+          :effective_at => ch.effective_at,
           :pos => position
         )
-        current_timeline.events << timeline_event
+        current_timeline.timeline_events << timeline_event
         #now add the interval:
         #an ADDITION, RESERVATION or RESERVATION WITHDRAWAL event is followed
         #by a protection period that extends until a another event occurs
         #find previous interval
-        previous_interval = current_timeline.intervals.last
+        previous_interval = current_timeline.timeline_intervals.last
         if previous_interval
           previous_interval.end_pos = position
         end
@@ -38,13 +41,13 @@ class TimelinesForTaxonConcept
           timeline_interval = TimelineInterval.new(
             :start_pos => position
           )
-          current_timeline.intervals << timeline_interval
+          current_timeline.timeline_intervals << timeline_interval
         end
       end
     end
     @timelines.each do |name, timeline|
-      #close hanging intervals
-      last_interval = timeline.intervals.last
+      #close hanging timeline_intervals
+      last_interval = timeline.timeline_intervals.last
       if last_interval && last_interval.end_pos.nil?
         last_interval.end_pos = 100
       end
@@ -57,10 +60,10 @@ class TimelinesForTaxonConcept
     end
     @timelines.each do |name, timeline|
       puts name
-      timeline.events.each do |event|
+      timeline.timeline_events.each do |event|
         puts "#{event.listing_change_id} #{event.pos}"
       end
-      timeline.intervals.each do |interval|
+      timeline.timeline_intervals.each do |interval|
         puts "#{interval.start_pos} - #{interval.end_pos}"
       end
     end
@@ -79,9 +82,10 @@ class TimelinesForTaxonConcept
           :notes => ch.notes
         }
       end,
-      :summary_timeline_I => @timelines['I'],
-      :summary_timeline_II => @timelines['II'],
-      :summary_timeline_III => @timelines['III']
+      # :summary_timeline_I => @timelines['I'],
+      # :summary_timeline_II => @timelines['II'],
+      # :summary_timeline_III => @timelines['III'],
+      :summary_timelines => [@timelines['I'], @timelines['II'], @timelines['III']].compact
       # ,
       # :timelines => @timelines.values.sort do |t1, t2|
         # if t1.appendix == t2.appendix
