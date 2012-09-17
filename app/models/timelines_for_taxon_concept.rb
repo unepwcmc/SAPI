@@ -4,6 +4,9 @@ class TimelinesForTaxonConcept
     @listing_changes = ListingChange.select('listing_changes_view.*').from('listing_changes_view').
       where('listing_changes_view.taxon_concept_id' => taxon_concept_id)
     @timelines = {}
+    ['I', 'II', 'III'].each do |appdx|
+      @timelines[appdx] = Timeline.new(:appendix => appdx)
+    end
     @time_start = Time.new('1975-01-01')
     @time_end = Time.new("#{Time.now.year + 1}-01-01")
     generate_timelines
@@ -14,38 +17,69 @@ class TimelinesForTaxonConcept
     total_time_span = @time_end - @time_start
 
     @listing_changes.each_with_index do |ch, idx|
-      applicable_timelines = []
-      applicable_timelines << ch.species_listing_name if [ChangeType::ADDITION, ChangeType::DELETION].include? ch.change_type_name
-      applicable_timelines << "#{ch.species_listing_name}_#{ch.party_name}" if ch.party_name
       proportionate_time_span = ch.effective_at - @time_start
-      position = (proportionate_time_span / total_time_span) * 100
-      applicable_timelines.each do |tl|
-        current_timeline = (@timelines[tl] ||= Timeline.new(:label => tl))
-        timeline_event = TimelineEvent.new(
-          #:listing_change_id => ch.id,
-          :change_type_name => ch.change_type_name,
-          :appendix => ch.species_listing_name,
-          :effective_at => ch.effective_at,
-          :pos => position
+      position = (proportionate_time_span / total_time_span).round(2)
+      appendix = ch.species_listing_name
+      current_timeline = @timelines[appendix]
+      timeline_event = TimelineEvent.new(
+        :change_type_name => ch.change_type_name,
+        :effective_at => ch.effective_at,
+        :pos => position
+      )
+      party_timeline = if ch.party_name
+        unless (party_idx = current_timeline.parties.index(ch.party_name)).nil?
+          #fetch existing party timeline
+          current_timeline.timelines[party_idx]
+        else
+          #create party timeline
+          current_timeline.parties << ch.party_name
+          party_timeline = Timeline.new(
+            :appendix => appendix,
+            :party => ch.party_name
+          )
+          current_timeline.timelines << party_timeline
+          party_timeline
+        end
+      else
+        nil
+      end
+
+      if ch.change_type_name == ChangeType::ADDITION
+        timeline_interval = TimelineInterval.new(
+          :start_pos => position
         )
         current_timeline.timeline_events << timeline_event
-        #now add the interval:
-        #an ADDITION, RESERVATION or RESERVATION WITHDRAWAL event is followed
-        #by a protection period that extends until a another event occurs
-        #find previous interval
-        previous_interval = current_timeline.timeline_intervals.last
-        if previous_interval
-          previous_interval.end_pos = position
+        current_timeline.timeline_intervals << timeline_interval
+        if party_timeline
+          party_timeline.timeline_events << timeline_event
+          party_timeline.timeline_intervals << timeline_interval
         end
-        unless ch.change_type_name == 'DELETION'
-          timeline_interval = TimelineInterval.new(
-            :start_pos => position
-          )
-          current_timeline.timeline_intervals << timeline_interval
+      elsif ch.change_type_name == ChangeType::DELETION
+        current_timeline.timeline_events << timeline_event
+        last_interval = current_timeline.timeline_intervals.last
+        last_interval && last_interval.end_pos = position
+        if party_timeline
+          party_timeline.timeline_events << timeline_event
+          last_interval = party_timeline.timeline_intervals.last
+          last_interval && last_interval.end_pos = position
         end
+      elsif ch.change_type_name == ChangeType::RESERVATION && party_timeline
+        timeline_interval = TimelineInterval.new(
+          :start_pos => position
+        )
+        party_timeline.timeline_events << timeline_event
+        party_timeline.timeline_intervals << timeline_interval
+      elsif ch.change_type_name == ChangeType::RESERVATION_WITHDRAWAL && party_timeline
+        party_timeline.timeline_events << timeline_event
+        last_interval = party_timeline.timeline_intervals.last
+        last_interval && last_interval.end_pos = position
+      else
+        puts "Unrecognized event type: #{ch.change_type_name}"
       end
     end
-    @timelines.each do |name, timeline|
+    @timelines.map do |appdx, timeline|
+      timeline.timelines + [timeline]
+    end.flatten.each do |timeline|
       #close hanging timeline_intervals
       last_interval = timeline.timeline_intervals.last
       if last_interval && last_interval.end_pos.nil?
@@ -54,56 +88,11 @@ class TimelinesForTaxonConcept
     end
   end
 
-  def to_s
-    @listing_changes.each do |ch|
-      puts "#{ch.id} #{ch.effective_at} #{ch.species_listing_name} #{ch.change_type_name} #{ch.party_name}"
-    end
-    @timelines.each do |name, timeline|
-      puts name
-      timeline.timeline_events.each do |event|
-        puts "#{event.listing_change_id} #{event.pos}"
-      end
-      timeline.timeline_intervals.each do |interval|
-        puts "#{interval.start_pos} - #{interval.end_pos}"
-      end
-    end
-  end
-
   def to_json
     {
       :id => @taxon_concept_id,
       :taxon_concept_id => @taxon_concept_id,
-      :listing_changes => @listing_changes.map do |ch| 
-        {
-          :id => ch.id,
-          :effective_at => ch.effective_at,
-          :change_type_name => ch.change_type_name,
-          :species_listing_name => ch.species_listing_name,
-          :notes => ch.notes
-        }
-      end,
-      # :summary_timeline_I => @timelines['I'],
-      # :summary_timeline_II => @timelines['II'],
-      # :summary_timeline_III => @timelines['III'],
-      :summary_timelines => [@timelines['I'], @timelines['II'], @timelines['III']].compact
-      # ,
-      # :timelines => @timelines.values.sort do |t1, t2|
-        # if t1.appendix == t2.appendix
-          # if t1.party == t2.party
-            # 0
-          # elsif t1.party && t2.party && t1.party > t2.party
-            # 1
-          # else
-            # -1
-          # end
-        # else
-          # if t1.appendix > t2.appendix
-            # 1
-          # else
-            # -1
-          # end
-        # end
-      # end
+      :timelines => [@timelines['I'], @timelines['II'], @timelines['III']]
     }
   end
 
