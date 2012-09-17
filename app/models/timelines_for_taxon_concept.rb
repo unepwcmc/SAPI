@@ -83,16 +83,24 @@ class TimelinesForTaxonConcept
       #close hanging timeline_intervals
       last_interval = timeline.timeline_intervals.last
       if last_interval && last_interval.end_pos.nil?
-        last_interval.end_pos = 100
+        last_interval.end_pos = 1
       end
     end
+    @timeline_years = @time_start.year.step((@time_end.year - @time_end.year % 5 + 5), 5).
+      to_a.map do |year|
+        {
+          :year => year,
+          :pos => ((Time.new("#{year}-01-01") - @time_start) / total_time_span).round(2)
+        }
+      end
   end
 
   def to_json
     {
       :id => @taxon_concept_id,
       :taxon_concept_id => @taxon_concept_id,
-      :timelines => [@timelines['I'], @timelines['II'], @timelines['III']]
+      :timelines => [@timelines['I'], @timelines['II'], @timelines['III']],
+      :timeline_years => @timeline_years
     }
   end
 
