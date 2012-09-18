@@ -24,6 +24,7 @@ class TimelinesForTaxonConcept
       timeline_event = TimelineEvent.new(
         :change_type_name => ch.change_type_name,
         :effective_at => ch.effective_at,
+        :notes => ch.notes,
         :pos => position
       )
       party_timeline = if ch.party_name
@@ -35,7 +36,7 @@ class TimelinesForTaxonConcept
           current_timeline.parties << ch.party_name
           party_timeline = Timeline.new(
             :appendix => appendix,
-            :party => ch.party_name
+            :party => ch.party_name.upcase
           )
           current_timeline.timelines << party_timeline
           party_timeline
