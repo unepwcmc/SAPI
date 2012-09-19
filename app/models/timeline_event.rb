@@ -8,6 +8,7 @@ class TimelineEvent
   def initialize(options)
     @id = object_id
     @pos = options[:pos]
+    @party = options[:party]
     @change_type_name = options[:change_type_name]
     @notes = options[:notes]
     @effective_at = options[:effective_at].strftime("%d/%m/%y")
