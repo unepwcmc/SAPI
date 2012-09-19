@@ -59,9 +59,15 @@ class TimelinesForTaxonConcept
         current_timeline.timeline_events << timeline_event
         last_interval = current_timeline.timeline_intervals.last
         last_interval && last_interval.end_pos = position
-        if party_timeline
-          party_timeline.timeline_events << timeline_event
-          last_interval = party_timeline.timeline_intervals.last
+        party_timelines =  if ch.species_listing_name == 'III'
+          current_timeline.timelines
+        else
+          []
+        end
+        party_timelines << party_timeline if party_timeline
+        party_timelines.each do |pt|
+          pt.timeline_events << timeline_event
+          last_interval = pt.timeline_intervals.last
           last_interval && last_interval.end_pos = position
         end
       elsif ch.change_type_name == ChangeType::RESERVATION && party_timeline
