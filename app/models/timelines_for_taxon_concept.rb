@@ -9,16 +9,15 @@ class TimelinesForTaxonConcept
     end
     @time_start = Time.new('1975-01-01')
     @time_end = Time.new("#{Time.now.year + 1}-01-01")
+    @total_time_span = @time_end - @time_start
     generate_timelines
-
+    generate_timeline_years
   end
 
   def generate_timelines
-    total_time_span = @time_end - @time_start
-
     @listing_changes.each_with_index do |ch, idx|
       proportionate_time_span = ch.effective_at - @time_start
-      position = (proportionate_time_span / total_time_span).round(2)
+      position = (proportionate_time_span / @total_time_span).round(2)
       appendix = ch.species_listing_name
       current_timeline = @timelines[appendix]
       timeline_event = TimelineEvent.new(
@@ -84,22 +83,32 @@ class TimelinesForTaxonConcept
         puts "Unrecognized event type: #{ch.change_type_name}"
       end
     end
-    @timelines.map do |appdx, timeline|
-      timeline.timelines + [timeline]
-    end.flatten.each do |timeline|
-      #close hanging timeline_intervals
-      last_interval = timeline.timeline_intervals.last
-      if last_interval && last_interval.end_pos.nil?
-        last_interval.end_pos = 1
-      end
-    end
+    close_hanging_intervals
+  end
+
+  def generate_timeline_years
     @timeline_years = @time_start.year.step((@time_end.year - @time_end.year % 5 + 5), 5).
       to_a.map do |year|
         {
           :year => year,
-          :pos => ((Time.new("#{year}-01-01") - @time_start) / total_time_span).round(2)
+          :pos => ((Time.new("#{year}-01-01") - @time_start) / @total_time_span).round(2)
         }
       end
+  end
+
+  def close_hanging_intervals
+    @timelines.map do |appdx, timeline|
+      timeline.timelines + [timeline]
+    end.flatten.each do |timeline|
+      timeline.timeline_intervals.each_with_index do |interval, idx|
+        if interval.end_pos.nil? && idx == (timeline.timeline_intervals.size - 1)
+          interval.end_pos = 1
+        elsif interval.end_pos.nil?
+          next_interval = timeline.timeline_intervals[idx + 1]
+          interval.end_pos = next_interval.start_pos
+        end
+      end
+    end
   end
 
   def to_json
