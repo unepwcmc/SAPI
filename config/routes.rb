@@ -3,11 +3,12 @@ SAPI::Application.routes.draw do
   match 'taxon_concepts/' => 'taxon_concepts#index'
   match 'taxon_concepts/history' => 'taxon_concepts#history'
   match 'taxon_concepts/autocomplete' => 'taxon_concepts#autocomplete'
+  match 'taxon_concepts/summarise_filters' => 'taxon_concepts#summarise_filters'
   match 'geo_entities/:geo_entity_type' => 'geo_entities#index',
     :constraints => {:geo_entity_type => /#{GeoEntityType::COUNTRY}|#{GeoEntityType::CITES_REGION}/}
   match 'species_listings/:designation' => 'species_listings#index',
     :constraints => {:designation => /#{Designation::CITES}/}
-
+  match 'timelines' => 'timelines#index'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

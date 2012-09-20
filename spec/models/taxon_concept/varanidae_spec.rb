@@ -39,7 +39,7 @@ describe TaxonConcept do
 
       describe :cites_listed do
         it "should be false for family Varanidae" do
-          @family.cites_listed.should be_false
+          @family.cites_listed.should == false
         end
         it "should be true for genus Varanus" do
           @genus.cites_listed.should be_true

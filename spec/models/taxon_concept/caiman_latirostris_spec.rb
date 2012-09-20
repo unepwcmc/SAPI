@@ -10,7 +10,7 @@ describe TaxonConcept do
           @species.cites_accepted.should be_true
         end
         it "should be false for Alligator cynocephalus" do
-          @species1.cites_accepted.should be_false
+          @species1.cites_accepted.should == false
         end
       end
       describe :standard_references do
@@ -31,10 +31,10 @@ describe TaxonConcept do
           @order.cites_listed.should be_true
         end
         it "should be false for family Alligatoridae" do
-          @family.cites_listed.should be_false
+          @family.cites_listed.should == false
         end
         it "should be false for genus Caiman" do
-          @genus.cites_listed.should be_false
+          @genus.cites_listed.should == false
         end
         it "should be true for species Caiman latoristris" do
           @species.cites_listed.should be_true

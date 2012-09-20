@@ -109,16 +109,9 @@ class TaxonConcept < ActiveRecord::Base
       )
   }
 
-  scope :without_nc, lambda { |layout|
-    if layout.blank? || layout == :alphabetical
-      where("(listing->'cites_listed')::BOOLEAN IS NOT NULL
+  scope :without_nc, where("(listing->'cites_listed')::BOOLEAN IS NOT NULL
       AND (listing->'cites_del' <> 't' OR (listing->'cites_del')::BOOLEAN IS NULL)")
-    else
-      where(
-        "(listing->'cites_listed')::BOOLEAN IS NOT NULL
-        AND (listing->'cites_del' <> 't' OR (listing->'cites_del')::BOOLEAN IS NULL)")
-    end
-  }
+
   scope :taxonomic_layout, order("taxon_concepts.data -> 'taxonomic_position'")
   scope :alphabetical_layout, where(
       "taxon_concepts.data -> 'rank_name' NOT IN (?)",
@@ -156,10 +149,28 @@ class TaxonConcept < ActiveRecord::Base
         SQL
       )
   }
+  scope :with_countries_ids, select(:countries_ids_ary).
+    joins(
+      <<-SQL
+      LEFT JOIN (
+        SELECT taxon_concepts.id AS taxon_concept_id_wc,
+        ARRAY_AGG(geo_entities.id ORDER BY geo_entities.name) AS countries_ids_ary
+        FROM taxon_concepts
+        LEFT JOIN taxon_concept_geo_entities
+          ON "taxon_concept_geo_entities"."taxon_concept_id" = "taxon_concepts"."id"
+        LEFT JOIN geo_entities
+          ON taxon_concept_geo_entities.geo_entity_id = geo_entities.id
+        LEFT JOIN "geo_entity_types"
+          ON "geo_entity_types"."id" = "geo_entities"."geo_entity_type_id"
+            AND geo_entity_types.name = '#{GeoEntityType::COUNTRY}'
+        GROUP BY taxon_concepts.id
+      ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_wc
+      SQL
+    )
   scope :with_synonyms, select(:synonyms_ary).
     joins(
       <<-SQL
-      INNER JOIN (
+      LEFT JOIN (
         SELECT taxon_concepts.id AS taxon_concept_id_ws, ARRAY_AGG(synonym_tc.data->'full_name') AS synonyms_ary
         FROM taxon_concepts
         LEFT JOIN taxon_relationships
@@ -229,7 +240,16 @@ class TaxonConcept < ActiveRecord::Base
     :cites_del,#taxon has been deleted from appendices
     :cites_show#@taxon should be shown in checklist even if NC
   ].each do |attr_name|
-    define_method(attr_name) { listing && listing[attr_name.to_s] == 't' }
+    define_method(attr_name) do
+      listing && case listing[attr_name.to_s]
+        when 't'
+          true
+        when 'f'
+          false
+        else
+          nil
+      end
+    end
   end
 
   def current_listing
@@ -250,6 +270,19 @@ class TaxonConcept < ActiveRecord::Base
 
     define_method("#{lng.downcase}_names_list") do
       self.send("#{lng.downcase}_names").join(', ')
+    end
+  end
+
+  def countries_ids
+    me = unless respond_to?(:countries_ids_ary)
+      TaxonConcept.with_countries.where(:id => self.id).first
+    else
+      self
+    end
+    if me.respond_to?(:countries_ids_ary)
+      parse_pg_array(me.countries_ids_ary || '').compact
+    else
+      []
     end
   end
 
@@ -296,6 +329,7 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
+
   EXPORTED_FIELDS = [
     :id, :full_name, :spp, :rank_name, :current_listing, :cites_accepted,
     :species_name, :genus_name, :family_name, :order_name,
@@ -310,6 +344,21 @@ class TaxonConcept < ActiveRecord::Base
     Checklist::TaxonConceptItem.new(
       Hash[EXPORTED_FIELDS.map{ |field| [field, self.send(field)] }]
     )
+  end
+
+  def as_json(options={})
+    unless options[:only] || options[:methods]
+      options = {
+        :only =>[:id, :parent_id, :depth],
+        :methods => [:species_name, :genus_name, :family_name, :order_name,
+          :class_name, :phylum_name, :full_name, :rank_name, :spp,
+          :taxonomic_position, :current_listing,
+          :english_names_list, :spanish_names_list, :french_names_list,
+          :synonyms_list, :countries_ids, :cites_accepted
+        ]
+      }
+    end
+    super(options)
   end
 
 end

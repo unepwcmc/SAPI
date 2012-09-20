@@ -22,7 +22,7 @@ describe TaxonConcept do
           @family.cites_listed.should be_true
         end
         it "should be false for genus Pereskia" do
-          @genus1.cites_listed.should be_false
+          @genus1.cites_listed.should == false
         end
       end
 

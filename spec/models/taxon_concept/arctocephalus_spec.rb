@@ -25,7 +25,7 @@ describe TaxonConcept do
           @species2.cites_listed.should be_true
         end
         # it "should be false for species Arctocephalus australis (inclusion in higher taxa listing)" do
-          # @species1.cites_listed.should be_false
+          # @species1.cites_listed.should == false
         # end
         pending "should be false for species Arctocephalus australis (inclusion in higher taxa listing)"
       end

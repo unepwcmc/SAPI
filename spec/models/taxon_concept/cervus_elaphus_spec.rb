@@ -39,16 +39,16 @@ describe TaxonConcept do
 
       describe :cites_listed do
         it "should be false for order Artiodactyla" do
-          @order.cites_listed.should be_false
+          @order.cites_listed.should == false
         end
         it "should be false for family Cervidae" do
-          @family.cites_listed.should be_false
+          @family.cites_listed.should == false
         end
         it "should be false for genus Cervus" do
-          @genus.cites_listed.should be_false
+          @genus.cites_listed.should == false
         end
         it "should be false for species Cervus elaphus" do
-          @species.cites_listed.should be_false
+          @species.cites_listed.should == false
         end
         it "should be true for subspecies Cervus elaphus bactrianus" do
           @subspecies1.cites_listed.should be_true

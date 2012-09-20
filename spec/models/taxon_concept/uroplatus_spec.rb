@@ -8,10 +8,10 @@ describe TaxonConcept do
     context "REFERENCES" do
       describe :cites_accepted do
         it "should be false for genus Uroplatus" do
-          @genus.cites_accepted.should be_false
+          @genus.cites_accepted.should == false
         end
         it "should be false for species Uroplatus alluaudi" do
-          @species1.cites_accepted.should be_false
+          @species1.cites_accepted.should == false
         end
         it "should be true for species Uroplatus giganteus" do
           @species2.cites_accepted.should be_true
@@ -44,13 +44,13 @@ describe TaxonConcept do
 
       describe :cites_listed do
         it "should be false for family Gekkonidae" do
-          @family.cites_listed.should be_false
+          @family.cites_listed.should == false
         end
         it "should be true for genus Uroplatus" do
           @genus.cites_listed.should be_true
         end
         it "should be false for species Uroplatus giganteus" do
-          @species2.cites_listed.should be_false
+          @species2.cites_listed.should == false
         end
       end
 

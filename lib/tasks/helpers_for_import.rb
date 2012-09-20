@@ -119,7 +119,7 @@ def copy_data_in_batches(table_name, query, recid, n_records=nil)
   puts "#{cnt} records to copy"
 
   offset = 0
-  limit = 10000
+  limit = 5000
 
   #process in batches of 10000
   while offset < cnt
