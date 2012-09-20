@@ -4,7 +4,7 @@ class Checklist::HigherTaxaItem < Checklist::ChecklistItem
     super(options)
     taxa = ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY']
     current_idx = taxa.index(@rank_name) || 0
-    @ancestorsPath = 0.upto(current_idx - 1).map do |i|
+    @ancestors_path = 0.upto(current_idx - 1).map do |i|
       taxa[i]
     end.map do |rank|
       send("#{rank.downcase}_name")
