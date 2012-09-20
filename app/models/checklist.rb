@@ -126,7 +126,7 @@ class Checklist
         # puts ranks[k]
         # puts tc.send("#{ranks[k].downcase}_name")
         hti_properties = {
-          'id' => object_id,#TODOcurr_item.send("#{ranks[k].downcase}_id"),
+          'id' => curr_item.send("#{ranks[k].downcase}_id"),
           'rank_name' => ranks[k],
           'full_name' => curr_item.send("#{ranks[k].downcase}_name")
         }
