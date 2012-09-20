@@ -216,6 +216,22 @@ class TaxonConcept < ActiveRecord::Base
     SQL
   )
 
+  scope :with_history, select('listing_change_id_ary, effective_at_ary, change_type_name_ary,
+    species_listing_name_ary, party_name_ary, notes_ary').
+    joins("LEFT JOIN (
+      SELECT taxon_concept_id, ARRAY_AGG(id) AS listing_change_id_ary,
+      ARRAY_AGG(effective_at) AS effective_at_ary,
+      ARRAY_AGG(change_type_name) AS change_type_name_ary,
+      ARRAY_AGG(species_listing_name) AS species_listing_name_ary,
+      ARRAY_AGG(party_name) AS party_name_ary, ARRAY_AGG(notes) AS notes_ary
+      FROM listing_changes_view
+      --filter out deletion records that were added programatically to simplify
+      --current listing calculations - don't want them to show up
+      WHERE NOT (change_type_name = '#{ChangeType::DELETION}' AND species_listing_id IS NOT NULL)
+      GROUP BY taxon_concept_id
+    ) listing_changes_view_grouped
+    ON taxon_concepts.id = listing_changes_view_grouped.taxon_concept_id")
+
   acts_as_nested_set
 
   [
@@ -273,6 +289,36 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
+
+  def listing_history
+    [:listing_change_id_ary, :effective_at_ary, :change_type_name_ary,
+      :species_listing_name_ary, :party_name_ary, :notes_ary
+    ].each do |ary|
+      parsed_ary = if respond_to?(ary)
+        parse_pg_array(send(ary) || '').compact.map do |e|
+          e.force_encoding('utf-8')
+        end
+        
+      else
+        []
+      end
+      instance_variable_set(:"@#{ary}", parsed_ary)
+    end
+    res = []
+    @effective_at_ary.each_with_index do |date, i|
+      event = {
+        :id => @listing_change_id_ary[i],
+        :effective_at => date,
+        :change_type_name => @change_type_name_ary[i],
+        :species_listing_name => @species_listing_name_ary[i],
+        :party_name => @party_name_ary[i],
+        :notes => @notes_ary[i]
+      }
+      res << event
+    end
+    res
+  end
+
   def countries_ids
     me = unless respond_to?(:countries_ids_ary)
       TaxonConcept.with_countries.where(:id => self.id).first
@@ -328,7 +374,6 @@ class TaxonConcept < ActiveRecord::Base
       nil
     end
   end
-
 
   EXPORTED_FIELDS = [
     :id, :full_name, :spp, :rank_name, :current_listing, :cites_accepted,
