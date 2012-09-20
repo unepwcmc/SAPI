@@ -20,8 +20,8 @@ module Sapi
   end
 
   def self.drop_indices
-    ActiveRecord::Base.connection.execute('DROP INDEX index_taxon_concepts_on_data')
-    ActiveRecord::Base.connection.execute('DROP INDEX index_taxon_concepts_on_lft')
+    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_data')
+    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_lft')
   end
 
   def self.create_indices
