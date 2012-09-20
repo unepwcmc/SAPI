@@ -68,7 +68,7 @@ class Checklist
   #   related metadata
   def generate(page, per_page)
     page ||= 0
-    per_page ||= 50
+    per_page ||= 20
     total_cnt = @taxon_concepts_rel.count
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
     #TODO since we need to go through all the results and post process, this query might be redundant
