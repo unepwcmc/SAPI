@@ -125,17 +125,18 @@ class Checklist
       higher_bound.downto lower_bound do |k|
         # puts ranks[k]
         # puts tc.send("#{ranks[k].downcase}_name")
-        hti = Checklist::HigherTaxaItem.new({
-          'id' => curr_item.send("#{ranks[k].downcase}_id"),
+        hti_properties = {
+          'id' => object_id,#TODOcurr_item.send("#{ranks[k].downcase}_id"),
           'rank_name' => ranks[k],
           'full_name' => curr_item.send("#{ranks[k].downcase}_name")
-        })
+        }
         #copy ancestor ranks
         k.downto 0 do |l|
           ancestor_rank = ranks[l].downcase
-          hti.send("#{ancestor_rank}_name=", curr_item.send("#{ancestor_rank}_name"))
-          hti.send("#{ancestor_rank}_id=", curr_item.send("#{ancestor_rank}_id"))
+          hti_properties["#{ancestor_rank}_name"] = curr_item.send("#{ancestor_rank}_name")
+          hti_properties["#{ancestor_rank}_id"] = curr_item.send("#{ancestor_rank}_id")
         end
+        hti = Checklist::HigherTaxaItem.new(hti_properties)
         res << hti
         break unless all
       end

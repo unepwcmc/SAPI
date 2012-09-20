@@ -337,7 +337,7 @@ class TaxonConcept < ActiveRecord::Base
     :species_id, :genus_id, :family_id, :order_id,
     :class_id, :phylum_id,
     :english_names_list, :spanish_names_list, :french_names_list, 
-    :synonyms_list
+    :synonyms_list, :countries_ids, :cites_accepted
   ]
 
   def to_checklist_item
