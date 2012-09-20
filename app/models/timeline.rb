@@ -1,8 +1,12 @@
 class Timeline
-  attr_reader :appendix, :party, :events, :intervals
+  attr_reader :appendix, :party, :timeline_events, :timeline_intervals, :parties, :timelines
   def initialize(options)
-    @appendix, @party = options[:label].split('_')
-    @events = []
-    @intervals = []
+    @id = object_id
+    @appendix = options[:appendix]
+    @party = options[:party]
+    @timeline_events = []
+    @timeline_intervals = []
+    @parties = []
+    @timelines = []
   end
 end
