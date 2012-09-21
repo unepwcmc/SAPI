@@ -9,7 +9,7 @@ namespace :import do
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(tmp_table)
-      create_table_from_csv_headers(file, TMP_TABLE)
+      create_table_from_csv_headers(file, tmp_table)
       copy_data(file, tmp_table)
       ActiveRecord::Base.connection.execute('DELETE FROM standard_references')
       ranks = {
