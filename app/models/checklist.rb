@@ -94,6 +94,7 @@ class Checklist
     # puts tc.full_name
     prev_path = (prev_item.nil? ? '' : prev_item.taxonomic_position)
     curr_path = curr_item.taxonomic_position
+    return res unless prev_path && prev_path
     prev_path_segments = prev_path.split('.')
     curr_path_segments = curr_path.split('.')
     common_segments = 0
