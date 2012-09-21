@@ -109,16 +109,26 @@ class TaxonConcept < ActiveRecord::Base
       )
   }
 
-  scope :without_nc, where("(listing->'cites_listed')::BOOLEAN IS NOT NULL
-      AND (listing->'cites_del' <> 't' OR (listing->'cites_del')::BOOLEAN IS NULL)")
-
+  scope :without_nc, where(
+  <<-SQL
+  (listing->'cites_del' <> 't' OR (listing->'cites_del')::BOOLEAN IS NULL)
+  AND (
+    (
+      taxon_concepts.data -> 'rank_name' = '#{Rank::SPECIES}' AND
+        (listing->'cites_listed')::BOOLEAN IS NOT NULL
+    )
+    OR
+    (
+      taxon_concepts.data -> 'rank_name' <> '#{Rank::SPECIES}' AND
+      (listing->'cites_listed')::BOOLEAN = 't'
+    )
+  )
+  SQL
+  )
   scope :taxonomic_layout, order("taxon_concepts.data -> 'taxonomic_position'")
-  scope :alphabetical_layout, where(
-      "taxon_concepts.data -> 'rank_name' NOT IN (?)",
-      [Rank::CLASS, Rank::PHYLUM, Rank::KINGDOM]
-    ).
-    order("taxon_concepts.data -> 'full_name'")
-  #scopes used to control scope of optional data to be returned
+  scope :alphabetical_layout, order("taxon_concepts.data -> 'full_name'")
+
+  #scopes used to control presence of optional data to be returned
   scope :with_common_names, lambda { |lng_ary|
       select(lng_ary.map do |lng|
         "lng_#{lng.downcase}"
