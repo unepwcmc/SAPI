@@ -1,6 +1,6 @@
 --listing changes
 SELECT 
-  S.SpcRecID, L.LegListing, L.LegDateListed, C.CtyRecID, L.LegNotes
+  'Animalia' as Kingdom, S.SpcRecID, L.LegListing, L.LegDateListed, C.CtyRecID, L.LegNotes
 FROM ORWELL.animals.dbo.species AS S
   INNER JOIN ORWELL.animals.dbo.genus AS G ON S.SpcGenRecID = G.GenRecID 
   INNER JOIN ORWELL.animals.dbo.family AS F ON G.GenFamRecID = F.FamRecID 
@@ -13,7 +13,7 @@ WHERE S.SpcStatus = 'A' AND ClaName = 'MAMMALIA' AND LN.LnmRecID = 3
 ORDER BY S.SpcRecID;
 
 --species
-SELECT 'Animalia' as Kingdom , P.PhyName, C.ClaName, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcInfraRank, S.SpcInfraEpithet, S.SpcRecID, S.SpcStatus
+SELECT 'Animalia' as Kingdom, P.PhyName, C.ClaName, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcInfraRank, S.SpcInfraEpithet, S.SpcRecID, S.SpcStatus
 from Orwell.animals.dbo.Species S 
 inner join Orwell.animals.dbo.Genus G on S.Spcgenrecid = G.genrecid
 INNER JOIN  ORWELL.animals.dbo.Family F ON FamRecID = GenFamRecID
@@ -40,7 +40,7 @@ WHERE SynSpcRecID IN (
 ORDER BY 2;
 
 -- common names
-Select C.ComName, L.LanDesc, S.SpcRecID
+Select 'Animalia' as Kingdom, C.ComName, L.LanDesc, S.SpcRecID
 from Orwell.animals.dbo.Species S 
 inner join Orwell.animals.dbo.CommonName C on C.ComSpcRecID = S.SpcRecID
 INNER JOIN  ORWELL.animals.dbo.Language L ON L.LanRecID = C.ComLanRecID
@@ -51,7 +51,7 @@ WHERE S.SpcRecID IN (
 ORDER BY 3;
 
 -- country distributions
-Select S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
+Select 'Animalia' as Kingdom, S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
 from Orwell.animals.dbo.Species S 
 inner join Orwell.animals.dbo.Genus G on S.Spcgenrecid = G.genrecid
 INNER JOIN  ORWELL.animals.dbo.Family F ON FamRecID = GenFamRecID

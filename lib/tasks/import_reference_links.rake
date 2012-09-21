@@ -1,6 +1,6 @@
 namespace :import do
 
-  desc 'Import reference links from SQL Server [usage: rake import:reference_links]'
+  desc 'Import reference links from SQL Server (usage: rake import:reference_links]'
   task :reference_links => [:environment] do
     ANIMALS_QUERY = <<-SQL
       SELECT
@@ -27,7 +27,7 @@ namespace :import do
     TMP_TABLE = 'reference_links_import'
     ["animals", "plants"].each do |t|
       drop_table(TMP_TABLE)
-      create_import_table(TMP_TABLE)
+      create_table_from_csv_headers(file, TMP_TABLE)
       query = "#{t.upcase}_QUERY".constantize
       copy_data_in_batches(TMP_TABLE, query, 'DslRecID')
       #copy 'SPC' links

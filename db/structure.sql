@@ -505,7 +505,8 @@ CREATE FUNCTION rebuild_names_and_ranks() RETURNS void
 
           WITH RECURSIVE q AS (
             SELECT h, h.id, ranks.name as rank_name,
-            hstore(LOWER(ranks.name) || '_name', taxon_names.scientific_name) AS ancestors
+            hstore(LOWER(ranks.name) || '_name', taxon_names.scientific_name) ||
+            hstore(LOWER(ranks.name) || '_id', (h.id)::INTEGER) AS ancestors
             FROM taxon_concepts h
             INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
             INNER JOIN ranks ON h.rank_id = ranks.id
@@ -514,7 +515,9 @@ CREATE FUNCTION rebuild_names_and_ranks() RETURNS void
             UNION ALL
 
             SELECT hi, hi.id, ranks.name,
-            ancestors || hstore(LOWER(ranks.name) || '_name', taxon_names.scientific_name)
+            ancestors ||
+            hstore(LOWER(ranks.name) || '_name', taxon_names.scientific_name) ||
+            hstore(LOWER(ranks.name) || '_id', (hi.id)::INTEGER)
             FROM q
             JOIN taxon_concepts hi
             ON hi.parent_id = (q.h).id

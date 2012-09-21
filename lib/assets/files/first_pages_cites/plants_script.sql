@@ -1,6 +1,6 @@
 --listing changes
 SELECT TOP 3000 
-  S.SpcRecID, L.LegListing, L.LegDateListed, C.CtyRecID, L.LegNotes
+  'Plantae' as Kingdom, S.SpcRecID, L.LegListing, L.LegDateListed, C.CtyRecID, L.LegNotes
 FROM ORWELL.plants.dbo.species AS S
   INNER JOIN ORWELL.plants.dbo.genus AS G ON S.SpcGenRecID = G.GenRecID 
   INNER JOIN ORWELL.plants.dbo.family AS F ON G.GenFamRecID = F.FamRecID 
@@ -38,7 +38,7 @@ WHERE SynSpcRecID IN (
 ORDER BY 2;
 
 -- common names
-Select C.ComName, L.LanDesc, S.SpcRecID
+Select 'Plantae' as Kingdom, C.ComName, L.LanDesc, S.SpcRecID
 from Orwell.animals.dbo.Species S 
 inner join Orwell.animals.dbo.CommonName C on C.ComSpcRecID = S.SpcRecID
 INNER JOIN	ORWELL.animals.dbo.Language L ON L.LanRecID = C.ComLanRecID
@@ -48,7 +48,7 @@ WHERE S.SpcRecID IN (
 ORDER BY 3;
 
 -- distributions
-Select S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
+Select 'Plantae' as Kingdom, S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
 from Orwell.plants.dbo.Species S 
 INNER JOIN [Plants].[dbo].[DistribCty] Dcty ON S.SpcRecID = Dcty.DCtSpcRecID
 INNER JOIN [Plants].[dbo].[Country] Cty ON Dcty.DCtCtyRecID = Cty.CtyRecID

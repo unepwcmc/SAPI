@@ -1,6 +1,6 @@
 -- Get 1000 CITES Listings for animals
 SELECT TOP 1000 
-  S.SpcRecID, L.LegListing, L.LegDateListed, C.CtyRecID, L.LegNotes
+  'Animalia' as Kingdom, S.SpcRecID, L.LegListing, L.LegDateListed, C.CtyRecID, L.LegNotes
 FROM ORWELL.animals.dbo.species AS S INNER JOIN
   ORWELL.animals.dbo.legal AS L ON S.SpcRecID = L.LegSpcRecID INNER JOIN
   ORWELL.animals.dbo.legalname AS LN ON L.LegLnmRecID = LN.LnmRecID AND LN.LnmRecID = 3 INNER JOIN
@@ -92,7 +92,7 @@ WHERE S.SpcRecID IN (
 ORDER BY 2;
 
 -- Export synonyms for previously retrieved species
-Select 'Animalia' as Kingdom , P.PhyName, C.ClaName, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcInfraEpithet, S.SpcRecID AS SynonymSpcRecID, S.SpcStatus, SynSpcRecID AS AcceptedSpcRecID
+Select 'Animalia' as Kingdom, P.PhyName, C.ClaName, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcInfraEpithet, S.SpcRecID AS SynonymSpcRecID, S.SpcStatus, SynSpcRecID AS AcceptedSpcRecID
 from Orwell.animals.dbo.Species S 
 INNER JOIN  ORWELL.animals.dbo.Genus G on S.Spcgenrecid = G.genrecid
 INNER JOIN  ORWELL.animals.dbo.Family F ON FamRecID = GenFamRecID
@@ -173,7 +173,7 @@ WHERE SynSpcRecID IN (
 ORDER BY 2;
 
 -- Export Common Names in Spanish, French and Englis
-Select C.ComName, L.LanDesc, S.SpcRecID
+Select 'Animalia' as Kingdom, C.ComName, L.LanDesc, S.SpcRecID
 from Orwell.animals.dbo.Species S 
 inner join Orwell.animals.dbo.CommonName C on C.ComSpcRecID = S.SpcRecID
 INNER JOIN	ORWELL.animals.dbo.Language L ON L.LanRecID = C.ComLanRecID
@@ -251,7 +251,7 @@ WHERE S.SpcRecID IN (
 ORDER BY 3;
 
 -- Export Country Distribution for Animal Species.
-Select S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
+Select 'Animalia' as Kingdom, S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
 from Orwell.animals.dbo.Species S 
 inner join Orwell.animals.dbo.Genus G on S.Spcgenrecid = G.genrecid
 INNER JOIN	ORWELL.animals.dbo.Family F ON FamRecID = GenFamRecID
@@ -335,7 +335,7 @@ ORDER BY P.PhyName;
 
 -- Export Species' CITES Listing for plants
 SELECT TOP 1000 
-  S.SpcRecID, L.LegListing, L.LegDateListed, C.CtyRecID, L.LegNotes
+  'Plantae' as Kingdom, S.SpcRecID, L.LegListing, L.LegDateListed, C.CtyRecID, L.LegNotes
 FROM ORWELL.plants.dbo.species AS S INNER JOIN
   ORWELL.plants.dbo.legal AS L ON S.SpcRecID = L.LegSpcRecID AND L.LegListing IN ('I', 'II', 'III', 'I/II') INNER JOIN
   ORWELL.plants.dbo.legalname AS LN ON L.LegLnmRecID = LN.LnmRecID AND LN.LnmRecID = 3 INNER JOIN
@@ -399,10 +399,10 @@ WHERE SynSpcRecID IN (2220, 5114, 8039, 8277, 8359, 8843, 9200, 9258, 9314, 1036
 ORDER BY 2;
 
 -- Export Common Names in Spanish, French and English
-Select C.ComName, L.LanDesc, S.SpcRecID
-from Orwell.animals.dbo.Species S 
-inner join Orwell.animals.dbo.CommonName C on C.ComSpcRecID = S.SpcRecID
-INNER JOIN	ORWELL.animals.dbo.Language L ON L.LanRecID = C.ComLanRecID
+Select 'Plantae' as Kingdom, C.ComName, L.LanDesc, S.SpcRecID
+from Orwell.plants.dbo.Species S 
+inner join Orwell.plants.dbo.CommonName C on C.ComSpcRecID = S.SpcRecID
+INNER JOIN	ORWELL.plants.dbo.Language L ON L.LanRecID = C.ComLanRecID
 WHERE S.SpcRecID IN (2220, 5114, 8039, 8277, 8359, 8843, 9200, 9258, 9314, 10365, 10723, 10958, 
 11667, 11913, 11976, 12320, 12379, 12445, 12445, 12509, 12946, 13728, 14505, 
 14559, 15071, 15637, 15692, 15751, 16280, 16337, 16759, 16823, 17178, 17781, 
@@ -424,9 +424,9 @@ WHERE S.SpcRecID IN (2220, 5114, 8039, 8277, 8359, 8843, 9200, 9258, 9314, 10365
 157400, 158200, 158883, 159997, 160571, 161383, 161443) AND L.LanDesc IN ('English', 'Spanish', 'French')
 ORDER BY 3;
 
--- Export Country Distribution for Animal Species.
+-- Export Country Distribution for Plant Species.
 -- Keeping SqlServer Ids; 20 records for different Phylums
-Select S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
+Select 'Plantae' as Kingdom, S.SpcRecID, Cty.CtyRecID, Cty.CtyShort
 from Orwell.plants.dbo.Species S 
 INNER JOIN [Plants].[dbo].[DistribCty] Dcty ON S.SpcRecID = Dcty.DCtSpcRecID
 INNER JOIN [Plants].[dbo].[Country] Cty ON Dcty.DCtCtyRecID = Cty.CtyRecID
