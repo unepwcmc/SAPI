@@ -2,15 +2,15 @@
 
 namespace :import do
 
-  desc "Import standard references records from csv file [usage: rake import:standard_references[path/to/file,path/to/another]"
+  desc "Import standard references records from csv file (usage: rake import:standard_references[path/to/file,path/to/another])"
   task :standard_references, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     tmp_table = 'standard_references_import'
     puts "There are #{StandardReference.count} standard references in the database."
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(tmp_table)
-      create_import_table(tmp_table)
-      copy_data_from_file(tmp_table, file)
+      create_table_from_csv_headers(file, TMP_TABLE)
+      copy_data(file, tmp_table)
       ActiveRecord::Base.connection.execute('DELETE FROM standard_references')
       ranks = {
         :kingdom => 'Kingdom',

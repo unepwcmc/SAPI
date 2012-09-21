@@ -5,7 +5,7 @@ namespace :import do
   ## So:
   ### 1- check current character encoding with: file path/to/file
   ### 2- change character encoding: iconv -f original_charset -t utf-8 originalfile > newfile
-  desc 'Import countries from csv file [usage: rake import:countries[path/to/file,path/to/another]'
+  desc 'Import countries from csv file (usage: rake import:countries[path/to/file,path/to/another])'
   task :countries, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     tmp_table = 'countries_import'
     country_type = GeoEntityType.find_by_name(GeoEntityType::COUNTRY)
@@ -13,8 +13,8 @@ namespace :import do
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(tmp_table)
-      create_import_table(tmp_table)
-      copy_data_from_file(tmp_table, file)
+      create_table_from_csv_headers(file, tmp_table)
+      copy_data(file, tmp_table)
       sql = <<-SQL
           INSERT INTO geo_entities(name, iso_code2, iso_code3, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at)
           SELECT DISTINCT INITCAP(BTRIM(TMP.name)), INITCAP(BTRIM(TMP.iso2)), INITCAP(BTRIM(TMP.iso3)), #{country_type.id}, TMP.legacy_id, '#{GeoEntityType::COUNTRY}', current_date, current_date

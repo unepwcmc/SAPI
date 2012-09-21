@@ -1,33 +1,26 @@
 namespace :import do
 
-  desc 'Import references from SQL Server [usage: rake import:references]'
-  task :references => [:environment] do
-    ANIMALS_QUERY = <<-SQL
-      SELECT [DscRecID], [DscTitle], [DscAuthors], [DscPubYear]
-      FROM [Animals].[dbo].[DataSource];
-    SQL
-    PLANTS_QUERY = <<-SQL
-      SELECT [DscRecID], [DscTitle], [DscAuthors], [DscPubYear]
-      FROM ORWELL.[Plants].[dbo].[DataSource];
-    SQL
+  desc 'Import references from SQL Server (usage: rake import:references[path/to/file,path/to/another])'
+  task :references, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     TMP_TABLE = 'references_import'
-    ["animals", "plants"].each do |t|
-      puts "There are #{Reference.count} references in the database."
+    puts "There are #{Reference.count} references in the database."
+    files = files_from_args(t, args)
+    files.each do |file|
       drop_table(TMP_TABLE)
-      create_import_table(TMP_TABLE)
-      query = "#{t.upcase}_QUERY".constantize
-      copy_data_in_batches(TMP_TABLE, query, 'DscRecID')
+      create_table_from_csv_headers(file, TMP_TABLE)
+      copy_data(file, TMP_TABLE)
+
       sql = <<-SQL
         INSERT INTO "references" (legacy_type, legacy_id, author, title, year,
           created_at, updated_at)
-        SELECT '#{t}' AS legacy_type, DscRecID, DscAuthors, DscTitle, DscPubYear,
+        SELECT legacy_type, legacy_id, author, title, year,
           current_date, current_date
           FROM #{TMP_TABLE}
-          WHERE DscTitle IS NOT NULL AND NOT EXISTS (
+          WHERE title IS NOT NULL AND NOT EXISTS (
             SELECT legacy_type, legacy_id
             FROM "references"
-            WHERE "references".legacy_id = #{TMP_TABLE}.DscRecID AND
-              "references".legacy_type = '#{t}'
+            WHERE "references".legacy_id = #{TMP_TABLE}.legacy_id AND
+              "references".legacy_type = #{TMP_TABLE}.legacy_type
           )
       SQL
       ActiveRecord::Base.connection.execute(sql)
