@@ -15,7 +15,7 @@ class Checklist
     @designation = options[:designation] || Designation::CITES
 
     @taxon_concepts_rel = TaxonConcept.scoped.
-      select([:"taxon_concepts.id", :"taxon_concepts.data", :"taxon_concepts.listing", :"taxon_concepts.depth"]).
+      select([:"taxon_concepts.id", :"taxon_concepts.data", :"taxon_concepts.listing", :"taxon_concepts.depth", :"taxon_concepts.updated_at"]).
       by_designation(@designation).without_nc.
       with_countries_ids
 

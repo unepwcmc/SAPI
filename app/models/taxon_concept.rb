@@ -377,6 +377,10 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
+  def recently_changed
+    return (self.updated_at > 1.week.ago)
+  end
+
   def spp
     if ['GENUS', 'FAMILY', 'ORDER'].include?(rank_name)
       'spp.'
@@ -409,7 +413,7 @@ class TaxonConcept < ActiveRecord::Base
           :class_name, :phylum_name, :full_name, :rank_name, :spp,
           :taxonomic_position, :current_listing,
           :english_names_list, :spanish_names_list, :french_names_list,
-          :synonyms_list, :countries_ids, :cites_accepted
+          :synonyms_list, :countries_ids, :cites_accepted, :recently_changed
         ]
       }
     end
