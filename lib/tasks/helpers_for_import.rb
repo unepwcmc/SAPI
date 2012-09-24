@@ -164,13 +164,16 @@ end
 def copy_data(path_to_file, table_name)
   puts "Copying data from #{path_to_file} into tmp table #{table_name}"
   db_columns = db_columns_from_csv_headers(path_to_file, table_name, false)
-  psql = <<-PSQL
+  cmd = <<-PSQL
+SET DateStyle = \"ISO,DMY\";
 \\COPY #{table_name} (#{db_columns.join(', ')})
-          FROM '#{Rails.root + path_to_file}'
-          WITH DElIMITER ','
-          CSV HEADER
-      PSQL
+FROM '#{Rails.root + path_to_file}'
+WITH DELIMITER ','
+CSV HEADER
+PSQL
+
   db_conf = YAML.load(File.open(Rails.root + "config/database.yml"))[Rails.env]
-  system("export PGPASSWORD=#{db_conf["password"]} && psql -h #{db_conf["host"] || "localhost"} -U#{db_conf["username"]} -c \"#{psql}\" #{db_conf["database"]}")
+  system("export PGPASSWORD=#{db_conf["password"]} && echo \"#{cmd.split("\n").join(' ')}\" | psql -h #{db_conf["host"] || "localhost"} -p #{db_conf["port"] || 5432} -U#{db_conf["username"]} #{db_conf["database"]}")
+  #system("export PGPASSWORD=#{db_conf["password"]} && psql -h #{db_conf["host"] || "localhost"} -U#{db_conf["username"]} -c \"#{psql}\" #{db_conf["database"]}")
   puts "Data copied to tmp table"
 end
