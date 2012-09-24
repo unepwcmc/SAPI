@@ -1,45 +1,27 @@
 namespace :import do
 
-  desc 'Import reference links from SQL Server (usage: rake import:reference_links]'
-  task :reference_links => [:environment] do
-    ANIMALS_QUERY = <<-SQL
-      SELECT
-          [DslRecID]
-          ,[DslSpcRecID]
-          ,[DslDscRecID]
-          ,[DslCode]
-          ,[DslCodeRecID]
-      FROM ORWELL.[Animals].[dbo].[DataSourceLink]
-      WHERE DslSpcRecID IS NOT NULL
-    SQL
-    PLANTS_QUERY = <<-SQL
-      SELECT
-          [DslRecID]
-          ,[DslSpcRecID]
-          ,[DslDscRecID]
-          ,[DslCode]
-          ,[DslCodeRecID]
-      FROM ORWELL.[Plants].[dbo].[DataSourceLink]
-      WHERE DslSpcRecID IS NOT NULL
-    SQL
+  desc 'Import reference links from SQL Server (usage: rake import:reference_links[path/to/file,path/to/another])'
+  task :reference_links, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+    TMP_TABLE = 'reference_links_import'
     puts "There are #{TaxonConceptReference.count} taxon concept references in the database."
     puts "There are #{TaxonConceptGeoEntityReference.count} taxon concept geo entity references in the database."
-    TMP_TABLE = 'reference_links_import'
-    ["animals", "plants"].each do |t|
+
+    files = files_from_args(t, args)
+    files.each do |file|
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
-      query = "#{t.upcase}_QUERY".constantize
-      copy_data_in_batches(TMP_TABLE, query, 'DslRecID')
+      copy_data(file, TMP_TABLE)
       #copy 'SPC' links
       sql = <<-SQL
         INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id)
         SELECT taxon_concepts.id, "references".id
           FROM #{TMP_TABLE}
           INNER JOIN taxon_concepts
-            ON #{TMP_TABLE}.DslSpcRecID = taxon_concepts.legacy_id
+            ON #{TMP_TABLE}.SpcRecID = taxon_concepts.legacy_id
+              AND #{TMP_TABLE}.legacy_type = taxon_concepts.legacy_type
           INNER JOIN "references"
-            ON #{TMP_TABLE}.DslDscRecID = "references".legacy_id
-              AND "references".legacy_type = '#{t}'
+            ON #{TMP_TABLE}.DscRecID = "references".legacy_id
+              AND "references".legacy_type = #{TMP_TABLE}.legacy_type
           WHERE DslCode= 'SPC'
           AND NOT EXISTS (
             SELECT id
@@ -57,10 +39,11 @@ namespace :import do
         SELECT taxon_concept_geo_entities.id, "references".id
           FROM #{TMP_TABLE}
           INNER JOIN taxon_concepts
-            ON #{TMP_TABLE}.DslSpcRecID = taxon_concepts.legacy_id
+            ON #{TMP_TABLE}.SpcRecID = taxon_concepts.legacy_id
+              AND #{TMP_TABLE}.legacy_type = taxon_concepts.legacy_type
           INNER JOIN "references"
-            ON #{TMP_TABLE}.DslDscRecID = "references".legacy_id AND
-              "references".legacy_type = '#{t}'
+            ON #{TMP_TABLE}.DscRecID = "references".legacy_id
+            AND "references".legacy_type = #{TMP_TABLE}.legacy_type
           INNER JOIN geo_entities
             ON #{TMP_TABLE}.DslCodeRecID = geo_entities.legacy_id
           INNER JOIN taxon_concept_geo_entities

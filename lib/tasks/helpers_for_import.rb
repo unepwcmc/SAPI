@@ -12,8 +12,10 @@ class CsvToDbMap
       'FamName' => 'Family varchar',
       'GenName' => 'Genus varchar',
       'SpcName' => 'Species varchar',
+      'SpcAuthor' => 'SpeciesAuthor varchar',
       'SpcInfraRank' => 'SpcInfraRank varchar',
       'SpcInfraEpithet' => 'SpcInfra varchar',
+      'SpcInfraRankAuthor' => 'InfraRankAuthor varchar',
       'SpcRecID' => 'SpcRecId integer',
       'SpcStatus' => 'SpcStatus varchar',
     },
@@ -46,10 +48,12 @@ class CsvToDbMap
       'FamName' => 'Family varchar',
       'GenName' => 'Genus varchar',
       'SpcName' => 'Species varchar',
+      'SpcAuthor' => 'SpeciesAuthor varchar',
       'SpcInfraRank' => 'SpcInfraRank varchar',
       'SpcInfraEpithet' => 'SpcInfra varchar',
+      'SpcInfraRankAuthor' => 'InfraRankAuthor varchar',
       'SpcStatus' => 'SpcStatus varchar',
-      'SpcRecID' => 'SpcRecID integer',
+      'SynonymSpcRecID' => 'SpcRecID integer',
       'AcceptedSpcRecID' => 'accepted_species_id integer'
     },
     #TODO legacy type for regions?
@@ -71,6 +75,14 @@ class CsvToDbMap
       'author' => 'author varchar',
       'title' => 'title varchar',
       'year' => 'year varchar'
+    },
+    'reference_links_import' => {
+      'Kingdom' => 'legacy_type varchar',
+      'DslRecID' => 'legacy_id integer',
+      'DslSpcRecID' => 'SpcRecID integer',
+      'DslDscRecID' => 'DscRecID integer',
+      'DslCode' => 'DslCode varchar',
+      'DslCodeRecID' => 'DslCodeRecID integer'
     },
     'standard_references_import' => {
       "Author" => 'author varchar',
@@ -100,7 +112,7 @@ end
 def file_ok?(path_to_file)
   if !File.file?(Rails.root.join(path_to_file)) #if the file is not defined, explain and leave.
     puts "Please specify a valid csv file from which to import data"
-    puts "Usage: rake import:XXX[path/to/file,path/to/another])"
+    puts "Usage: rake import:XXX[path/to/file,path/to/another]"
     return false
   end
   true

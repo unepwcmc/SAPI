@@ -395,8 +395,8 @@ Plantae,CARYOPHYLLALES,CACTACEAE,Neochilenia,transitensis,(Ritter) Backeberg,NUL
 Plantae,CARYOPHYLLALES,CACTACEAE,Neodawsonia,apicicephalium,(Dawson) Backeberg,NULL,NULL,NULL,34529,S,27392
 Plantae,CARYOPHYLLALES,CACTACEAE,Neodawsonia,nizandensis,Bravo & Macdougall,NULL,NULL,NULL,34530,S,27392
 Plantae,CARYOPHYLLALES,CACTACEAE,Neodawsonia,totolapensis,Bravo & Macdougall,NULL,NULL,NULL,34531,S,27400
-Plantae,CARYOPHYLLALES,CACTACEAE,Neoevansia,zopilotensis,Sánchez-Mejorada,NULL,NULL,NULL,27557,S,68162
-Plantae,CARYOPHYLLALES,CACTACEAE,Neogomesia,agavoides,Castañeda,NULL,NULL,NULL,34463,S,27382
+Plantae,CARYOPHYLLALES,CACTACEAE,Neoevansia,zopilotensis,SÃ¡nchez-Mejorada,NULL,NULL,NULL,27557,S,68162
+Plantae,CARYOPHYLLALES,CACTACEAE,Neogomesia,agavoides,CastaÃ±eda,NULL,NULL,NULL,34463,S,27382
 Plantae,CARYOPHYLLALES,CACTACEAE,Neolloydia,erectocentra,(Coulter) L. Benson,var.,acunensis,(W. Marshall) L. Benson,26370,S,83207
 Plantae,CARYOPHYLLALES,CACTACEAE,Neolloydia,gautii,L. Benson,NULL,NULL,NULL,26371,S,104945
 Plantae,CARYOPHYLLALES,CACTACEAE,Neolloydia,warnockii,L. Benson,NULL,NULL,NULL,26373,S,104945
@@ -1472,7 +1472,7 @@ Plantae,CARYOPHYLLALES,CACTACEAE,Echinocactus,asterias,Karwinski ex Zuccarini,NU
 Plantae,CARYOPHYLLALES,CACTACEAE,Echinocactus,grandis,Rose,NULL,NULL,NULL,31715,S,29448
 Plantae,CARYOPHYLLALES,CACTACEAE,Echinocactus,ingens,Zuccarini ex Pfeiffer,NULL,NULL,NULL,31777,S,29448
 Plantae,CARYOPHYLLALES,CACTACEAE,Echinocereus,viereckii,Werdermann,ssp.,huastecensis,Blum et al.,11950,S,29493
-Plantae,CARYOPHYLLALES,CACTACEAE,Echinocereus,chloranthus,(Engelmann) Hort.F.A.Haage,ssp.,neocapillus,ÿ(Weniger) Fuersch,25475,S,11958
+Plantae,CARYOPHYLLALES,CACTACEAE,Echinocereus,chloranthus,(Engelmann) Hort.F.A.Haage,ssp.,neocapillus,Ã¿(Weniger) Fuersch,25475,S,11958
 Plantae,CARYOPHYLLALES,CACTACEAE,Echinocereus,lloydii,Britton & Rose,NULL,NULL,NULL,25481,S,106481
 Plantae,CARYOPHYLLALES,CACTACEAE,Echinocereus,leeanus,(Hooker) Lemaire,NULL,NULL,NULL,17687,S,27474
 Plantae,CARYOPHYLLALES,CACTACEAE,Echinocereus,leeanus,(Hook.) Lemaire,var.,multicostatus,(Cels) Schumann,29492,S,27474
@@ -2706,7 +2706,7 @@ Plantae,CARYOPHYLLALES,CACTACEAE,Melocactus,holguinensis,Areces,NULL,NULL,NULL,2
 Plantae,CARYOPHYLLALES,CACTACEAE,Melocactus,lobelii,Suringar,NULL,NULL,NULL,22151,S,68160
 Plantae,CARYOPHYLLALES,CACTACEAE,Melocactus,nagyi,Meszaros,NULL,NULL,NULL,22154,S,22146
 Plantae,CARYOPHYLLALES,CACTACEAE,Melocactus,evae,Meszaros,NULL,NULL,NULL,22144,S,22146
-Plantae,CARYOPHYLLALES,CACTACEAE,Melocactus,guitartii,León,NULL,NULL,NULL,22145,S,29530
+Plantae,CARYOPHYLLALES,CACTACEAE,Melocactus,guitartii,LeÃ³n,NULL,NULL,NULL,22145,S,29530
 Plantae,CARYOPHYLLALES,CACTACEAE,Melocactus,hispaniolicus,Vaupuel,NULL,NULL,NULL,22147,S,22150
 Plantae,CARYOPHYLLALES,CACTACEAE,Melocactus,acunae,Leon,ssp.,lagunaensis,Meszaros,22139,S,22146
 Plantae,CARYOPHYLLALES,CACTACEAE,Melocactus,borhidii,Meszaros,NULL,NULL,NULL,22141,S,22146
@@ -2908,7 +2908,7 @@ Plantae,CARYOPHYLLALES,CACTACEAE,Thelocactus,rinconensis,(Poselger) Britton & Ro
 Plantae,CARYOPHYLLALES,CACTACEAE,Thelocactus,rinconensis,(Poselger) Britton & Rose,ssp.,nidulans,(Quehl) Glass & R. Foster,27664,S,16544
 Plantae,CARYOPHYLLALES,CACTACEAE,Thelocactus,roseanus,(Boedeker) Borg,NULL,NULL,NULL,35734,S,27509
 Plantae,CARYOPHYLLALES,CACTACEAE,Thelocactus,krainzianus,Oehme,NULL,NULL,NULL,29603,S,27665
-Plantae,CARYOPHYLLALES,CACTACEAE,Thelocactus,matudae,Sánchez-Mej. & A. Lau,NULL,NULL,NULL,29605,S,75753
+Plantae,CARYOPHYLLALES,CACTACEAE,Thelocactus,matudae,SÃ¡nchez-Mej. & A. Lau,NULL,NULL,NULL,29605,S,75753
 Plantae,CARYOPHYLLALES,CACTACEAE,Thelocactus,flavidispinus,(Backe) Backeberg,NULL,NULL,NULL,106726,S,86921
 Plantae,CARYOPHYLLALES,CACTACEAE,Thelocactus,schwarzii,Backeb.,NULL,NULL,NULL,104955,S,108122
 Plantae,CARYOPHYLLALES,CACTACEAE,Thelocactus,aguirreanus,(Glass & Foster) Bravo,NULL,NULL,NULL,35709,S,75809
@@ -3151,7 +3151,7 @@ Plantae,GENTIANALES,APOCYNACEAE,Pachypodium,rosulatum,Baker,var.,delphinense,H.P
 Plantae,GENTIANALES,APOCYNACEAE,Pachypodium,tuberosum,Lindl.,var.,loddigesii,A.DC.,24998,S,106037
 Plantae,GENTIANALES,APOCYNACEAE,Pachypodium,baronii,Constantin & Bois,var.,erythreum,Poiss.,24365,A,8552
 Plantae,GENTIANALES,APOCYNACEAE,Pachypodium,rosulatum,Baker,var.,stenanthum,Costantin & Bois,152949,S,8607
-Plantae,GENTIANALES,APOCYNACEAE,Pachypodium,menabeum,Léandri,NULL,NULL,NULL,24553,A,24148
+Plantae,GENTIANALES,APOCYNACEAE,Pachypodium,menabeum,LÃ©andri,NULL,NULL,NULL,24553,A,24148
 Plantae,GENTIANALES,APOCYNACEAE,Pachypodium,ramosum,Constantin & Bois,NULL,NULL,NULL,24594,S,24148
 Plantae,GENTIANALES,APOCYNACEAE,Pachypodium,lamerei,Drake,var.,lamerei,NULL,8604,S,24148
 Plantae,GENTIANALES,APOCYNACEAE,Pachypodium,champenoisianum,Boiteau,NULL,NULL,NULL,24403,S,24148
@@ -3212,14 +3212,14 @@ Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.,majus (sic),Ten.,34265
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.,maximus,(Velen.) Stoj. & Stevanov,34266,S,150609
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.,hortensis,Herb.,34261,S,76435
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.,imperati,Mallet,34262,S,76435
-Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.,major,"sens. Fiori, non Redouté",34263,S,170747
+Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.,major,"sens. Fiori, non RedoutÃ©",34263,S,170747
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.:forma,europaeus:scharloki (sic),Beck:(Casp) Beck,34258,S,76435
-Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.,grandior,Schultÿ& Schult,34259,S,76435
+Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.,grandior,SchultÃ¿& Schult,34259,S,76435
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.,hololeucus,Celak,34260,S,76435
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.:forma,europaeus:hololeucus,Beck:(Celak) Beck,34255,S,76435
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.:forma,europaeus:hortensis,Beck:(Herb) Beck,34256,S,76435
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.:forma,europaeus:olgae,Beck:(Orph) Beck,34257,S,170752
-Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.,corcyrensis,(Beck) Halácasy,34251,S,170752
+Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.,corcyrensis,(Beck) HalÃ¡casy,34251,S,170752
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,(nivalis),NULL,var.,elsae,NULL,34253,S,170752
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.:forma,europaeus:corcyrensis,Beck:hort ex Beck,34254,S,170752
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.,caucasicus,(Baker) Beck,34248,S,170747
@@ -3317,7 +3317,7 @@ Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,elwesii,Hook.f.,var.,maximus,(Velen.) 
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,latifolius,Rupr,forma,typicus,Gottl.-Tann.,35846,S,80781
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,ssp.,reginae-olgae,(Orph.) Gottl.-Tann.,76367,S,170752
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,elwesii,Hook.f.,ssp.,minor,D.A.Webb,47725,S,106105
-Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.,major,Redouté ex Rupr.,35835,S,170747
+Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,var.,major,RedoutÃ© ex Rupr.,35835,S,170747
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,nivalis,L.,ssp.,cilicicus,(Baker) Gottl.-Tann.,76364,S,1482
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,latifolius,Rupr.,NULL,NULL,NULL,76365,S,80781
 Plantae,LILIALES,AMARYLLIDACEAE,Galanthus,byzantinus,Baker,NULL,NULL,NULL,76366,S,62326
@@ -3356,7 +3356,7 @@ Plantae,LILIALES,AMARYLLIDACEAE,Sternbergia,lutea,(L.) Spreng.,var.,graeca,Rchb.
 Plantae,LILIALES,AMARYLLIDACEAE,Sternbergia,lutea,(L.) Spreng,var.,sicula,(Tineo ex Guss.) Tornab.,34315,S,106035
 Plantae,LILIALES,AMARYLLIDACEAE,Sternbergia,fischeriana,(Herb) M.Roem.,ssp.,hissarica,(Kapinos) Artjush.,34309,S,31969
 Plantae,LILIALES,AMARYLLIDACEAE,Sternbergia,grandiflora,Boiss. ex Baker,NULL,NULL,NULL,34310,S,106036
-Plantae,LILIALES,AMARYLLIDACEAE,Sternbergia,latifolia,Boiss.ÿ& Hausskn. ex Baker,NULL,NULL,NULL,34311,S,106036
+Plantae,LILIALES,AMARYLLIDACEAE,Sternbergia,latifolia,Boiss.Ã¿& Hausskn. ex Baker,NULL,NULL,NULL,34311,S,106036
 Plantae,LILIALES,AMARYLLIDACEAE,Sternbergia,exscapa,Tineo ex Guss.,NULL,NULL,NULL,141247,S,47171
 Plantae,LILIALES,AMARYLLIDACEAE,Sternbergia,lutea,(L.) Spreng.,ssp.,sicula,(Tineo ex Guss.) D.A.Webb,111365,S,106035
 Plantae,LILIALES,AMARYLLIDACEAE,Sternbergia,alexandrae,Sosn.,NULL,NULL,NULL,106034,S,47171

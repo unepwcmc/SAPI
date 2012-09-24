@@ -28,15 +28,6 @@ namespace :import do
       import_data_for Rank::SPECIES, Rank::GENUS
       import_data_for Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra'
     end
-
-    #rebuild the tree
-    TaxonConcept.rebuild!
-    #set the depth on all nodes
-    TaxonConcept.roots.each do |root|
-      TaxonConcept.each_with_level(root.self_and_descendants) do |node, level|
-        node.send(:"set_depth!")
-      end
-    end
   end
 end
 

@@ -7,6 +7,15 @@ namespace :import do
       'lib/assets/files/all/animals_taxon_concepts.csv',
       'lib/assets/files/all/plants_taxon_concepts.csv'
     )
+    puts "rebuilding the nested set" #TODO remove depth calculations
+    #rebuild the tree
+    TaxonConcept.rebuild!
+    #set the depth on all nodes
+    TaxonConcept.roots.each do |root|
+      TaxonConcept.each_with_level(root.self_and_descendants) do |node, level|
+        node.send(:"set_depth!")
+      end
+    end
     Rake::Task["import:cites_regions"].invoke(
       'lib/assets/files/cites_regions.csv'
     )
@@ -48,6 +57,15 @@ namespace :import do
       'lib/assets/files/random/animals.csv',
       'lib/assets/files/random/plants.csv'
     )
+    puts "rebuilding the nested set" #TODO remove depth calculations
+    #rebuild the tree
+    TaxonConcept.rebuild!
+    #set the depth on all nodes
+    TaxonConcept.roots.each do |root|
+      TaxonConcept.each_with_level(root.self_and_descendants) do |node, level|
+        node.send(:"set_depth!")
+      end
+    end
     Rake::Task["import:cites_regions"].invoke(
       'lib/assets/files/cites_regions.csv'
     )
@@ -82,6 +100,15 @@ namespace :import do
       'lib/assets/files/first_pages_cites/animals_taxon_concepts.csv',
       'lib/assets/files/first_pages_cites/plants_taxon_concepts.csv'
     )
+    puts "rebuilding the nested set" #TODO remove depth calculations
+    #rebuild the tree
+    TaxonConcept.rebuild!
+    #set the depth on all nodes
+    TaxonConcept.roots.each do |root|
+      TaxonConcept.each_with_level(root.self_and_descendants) do |node, level|
+        node.send(:"set_depth!")
+      end
+    end
     Rake::Task["import:cites_regions"].invoke(
       'lib/assets/files/cites_regions.csv'
     )
@@ -106,6 +133,10 @@ namespace :import do
     )
     Rake::Task["import:references"].invoke(
       'lib/assets/files/references.csv'
+    )
+    Rake::Task["import:reference_links"].invoke(
+      'lib/assets/files/animals_reference_links.csv',
+      'lib/assets/files/plants_reference_links.csv'
     )
     Rake::Task["import:standard_references"].invoke(
       'lib/assets/files/standard_references.csv'

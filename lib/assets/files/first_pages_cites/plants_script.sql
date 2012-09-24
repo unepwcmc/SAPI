@@ -11,9 +11,9 @@ WHERE S.SpcStatus = 'A' AND LN.LnmRecID = 3 AND FamName < 'E'
 ORDER BY FamName, SpcRecID, LegDateListed;
 
 -- taxon_concepts
-Select 'Plantae' as Kingdom , 
+Select 'Plantae' as Kingdom, 
 --P.PhyName, C.ClaName, 
-O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcAuthor, S.SpcInfraRank, S.SpcInfraRank, S.SpcInfraEpithet, SpcInfraRankAuthor, S.SpcRecID, S.SpcStatus
+O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcAuthor, S.SpcInfraRank, S.SpcInfraEpithet, SpcInfraRankAuthor, S.SpcRecID, S.SpcStatus
 from Orwell.plants.dbo.Species S 
 inner join Orwell.plants.dbo.Genus G on S.Spcgenrecid = G.genrecid
 INNER JOIN	ORWELL.plants.dbo.Family F ON FamRecID = GenFamRecID
