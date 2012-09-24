@@ -1,4 +1,4 @@
-      SELECT S.SpcRecID as SpcRecID, 'Animalia' as Kingdom, P.PhyName, C.ClaName, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcInfraRank, S.SpcInfraEpithet, S.SpcStatus
+      SELECT S.SpcRecID as SpcRecID, 'Animalia' as Kingdom, P.PhyName, C.ClaName, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcAuthor, S.SpcInfraRank, S.SpcInfraEpithet, SpcInfraRankAuthor, S.SpcStatus
       FROM ORWELL.animals.dbo.Species S
       INNER JOIN ORWELL.animals.dbo.Genus G on G.GenRecID = SpcGenRecID
       INNER JOIN ORWELL.animals.dbo.Family F ON F.FamRecID = GenFamRecID

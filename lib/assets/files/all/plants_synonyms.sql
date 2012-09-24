@@ -1,4 +1,4 @@
-SELECT 'Plantae' as Kingdom , P.PhyName, C.ClaName, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcInfraRank, S.SpcInfraEpithet, S.SpcRecID AS SynonymSpcRecID, S.SpcStatus, SynSpcRecID AS AcceptedSpcRecID
+SELECT 'Plantae' as Kingdom , P.PhyName, C.ClaName, O.OrdName, F.FamName, G.GenName, S.SpcName, S.SpcAuthor, S.SpcInfraRank, S.SpcInfraEpithet, SpcInfraRankAuthor, S.SpcRecID AS SynonymSpcRecID, S.SpcStatus, SynSpcRecID AS AcceptedSpcRecID
 FROM ORWELL.plants.dbo.Species S 
 INNER JOIN  ORWELL.plants.dbo.Genus G on S.Spcgenrecid = G.genrecid
 INNER JOIN  ORWELL.plants.dbo.Family F ON FamRecID = GenFamRecID
