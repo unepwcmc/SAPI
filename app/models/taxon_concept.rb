@@ -378,7 +378,7 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def recently_changed
-    return (self.updated_at > 1.week.ago)
+    return self.listing_changes.where('effective_at > ?', 8.year.ago).any?
   end
 
   def spp
@@ -396,7 +396,7 @@ class TaxonConcept < ActiveRecord::Base
     :species_id, :genus_id, :family_id, :order_id,
     :class_id, :phylum_id,
     :english_names_list, :spanish_names_list, :french_names_list, 
-    :synonyms_list, :countries_ids, :cites_accepted
+    :synonyms_list, :countries_ids, :cites_accepted, :recently_changed
   ]
 
   def to_checklist_item
