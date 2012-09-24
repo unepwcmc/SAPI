@@ -39,6 +39,11 @@ class Checklist
         by_scientific_name(@scientific_name)
     end
 
+    unless options[:level_of_listing].nil? || options[:level_of_listing] == false
+      @level_of_listing = true
+      @taxon_concepts_rel = @taxon_concepts_rel.at_level_of_listing
+    end
+
     # optional data
     unless options[:synonyms].nil? || options[:synonyms] == false
       @synonyms = true

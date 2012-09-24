@@ -177,6 +177,7 @@ class TaxonConcept < ActiveRecord::Base
       ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_wc
       SQL
     )
+  scope :at_level_of_listing, where("listing -> 'cites_listed' = 't'")
   scope :with_synonyms, select(:synonyms_ary).
     joins(
       <<-SQL

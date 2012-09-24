@@ -76,7 +76,8 @@ class TaxonConceptsController < ApplicationController
           (params[:show_spanish] == '1' ? 'S' : nil),
           (params[:show_french] == '1' ? 'F' : nil)
         ].compact,
-      :synonyms => params[:show_synonyms] == '1'
+      :synonyms => params[:show_synonyms] == '1',
+      :level_of_listing => params[:level_of_listing] == '1'
     }
   end
 
