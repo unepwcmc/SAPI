@@ -11,13 +11,33 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120822133521) do
+ActiveRecord::Schema.define(:version => 20120925093218) do
 
   create_table "change_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
     t.integer  "designation_id", :null => false
+  end
+
+  create_table "cites_listings_import", :id => false, :force => true do |t|
+    t.string  "legacy_type",       :limit => nil
+    t.integer "spc_rec_id"
+    t.string  "appendix",          :limit => nil
+    t.date    "listing_date"
+    t.string  "country_legacy_id", :limit => nil
+    t.string  "notes",             :limit => nil
+  end
+
+  create_table "cites_regions_import", :id => false, :force => true do |t|
+    t.string "name", :limit => nil
+  end
+
+  create_table "common_name_import", :id => false, :force => true do |t|
+    t.string  "legacy_type",   :limit => nil
+    t.string  "common_name",   :limit => nil
+    t.string  "language_name", :limit => nil
+    t.integer "species_id"
   end
 
   create_table "common_names", :force => true do |t|
@@ -28,10 +48,26 @@ ActiveRecord::Schema.define(:version => 20120822133521) do
     t.datetime "updated_at",   :null => false
   end
 
+  create_table "countries_import", :id => false, :force => true do |t|
+    t.integer "legacy_id"
+    t.string  "iso2",          :limit => nil
+    t.string  "iso3",          :limit => nil
+    t.string  "name",          :limit => nil
+    t.string  "long_name",     :limit => nil
+    t.string  "region_number", :limit => nil
+  end
+
   create_table "designations", :force => true do |t|
     t.string   "name",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "distribution_import", :id => false, :force => true do |t|
+    t.string  "legacy_type",  :limit => nil
+    t.integer "species_id"
+    t.integer "country_id"
+    t.string  "country_name", :limit => nil
   end
 
   create_table "geo_entities", :force => true do |t|
@@ -81,10 +117,9 @@ ActiveRecord::Schema.define(:version => 20120822133521) do
     t.integer  "lft"
     t.integer  "rgt"
     t.integer  "parent_id"
-    t.integer  "depth"
     t.datetime "created_at",                                            :null => false
     t.datetime "updated_at",                                            :null => false
-    t.datetime "effective_at",       :default => '2012-08-17 14:48:33', :null => false
+    t.datetime "effective_at",       :default => '2012-09-21 07:32:20', :null => false
     t.text     "notes"
   end
 
@@ -103,6 +138,15 @@ ActiveRecord::Schema.define(:version => 20120822133521) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "reference_links_import", :id => false, :force => true do |t|
+    t.string  "legacy_type",  :limit => nil
+    t.integer "legacy_id"
+    t.integer "spcrecid"
+    t.integer "dscrecid"
+    t.string  "dslcode",      :limit => nil
+    t.integer "dslcoderecid"
+  end
+
   create_table "references", :force => true do |t|
     t.text     "title",       :null => false
     t.string   "year"
@@ -111,6 +155,28 @@ ActiveRecord::Schema.define(:version => 20120822133521) do
     t.string   "author"
     t.integer  "legacy_id"
     t.string   "legacy_type"
+  end
+
+  create_table "references_import", :id => false, :force => true do |t|
+    t.string  "author",      :limit => nil
+    t.string  "title",       :limit => nil
+    t.string  "year",        :limit => nil
+    t.integer "legacy_id"
+    t.string  "legacy_type", :limit => nil
+  end
+
+  create_table "species_import", :id => false, :force => true do |t|
+    t.string  "kingdom",         :limit => nil
+    t.string  "taxonorder",      :limit => nil
+    t.string  "family",          :limit => nil
+    t.string  "genus",           :limit => nil
+    t.string  "species",         :limit => nil
+    t.string  "speciesauthor",   :limit => nil
+    t.string  "spcinfrarank",    :limit => nil
+    t.string  "spcinfra",        :limit => nil
+    t.string  "infrarankauthor", :limit => nil
+    t.integer "spcrecid"
+    t.string  "spcstatus",       :limit => nil
   end
 
   create_table "species_listings", :force => true do |t|
@@ -134,6 +200,34 @@ ActiveRecord::Schema.define(:version => 20120822133521) do
     t.integer  "position"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
+  end
+
+  create_table "standard_references_import", :id => false, :force => true do |t|
+    t.string  "author",     :limit => nil
+    t.integer "year"
+    t.string  "title",      :limit => nil
+    t.string  "kingdom",    :limit => nil
+    t.string  "phylum",     :limit => nil
+    t.string  "class",      :limit => nil
+    t.string  "taxonorder", :limit => nil
+    t.string  "family",     :limit => nil
+    t.string  "genus",      :limit => nil
+    t.string  "species",    :limit => nil
+  end
+
+  create_table "synonym_import", :id => false, :force => true do |t|
+    t.string  "kingdom",             :limit => nil
+    t.string  "taxonorder",          :limit => nil
+    t.string  "family",              :limit => nil
+    t.string  "genus",               :limit => nil
+    t.string  "species",             :limit => nil
+    t.string  "speciesauthor",       :limit => nil
+    t.string  "spcinfrarank",        :limit => nil
+    t.string  "spcinfra",            :limit => nil
+    t.string  "infrarankauthor",     :limit => nil
+    t.integer "spcrecid"
+    t.string  "spcstatus",           :limit => nil
+    t.integer "accepted_species_id"
   end
 
   create_table "taxon_commons", :force => true do |t|
@@ -168,13 +262,13 @@ ActiveRecord::Schema.define(:version => 20120822133521) do
     t.integer  "rank_id",                          :null => false
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
-    t.integer  "depth"
     t.integer  "designation_id",                   :null => false
     t.integer  "taxon_name_id",                    :null => false
     t.integer  "legacy_id"
     t.hstore   "data"
     t.boolean  "fully_covered",  :default => true, :null => false
     t.hstore   "listing"
+    t.string   "legacy_type"
   end
 
   add_index "taxon_concepts", ["data"], :name => "index_taxon_concepts_on_data"

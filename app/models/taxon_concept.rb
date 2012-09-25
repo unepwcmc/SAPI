@@ -9,7 +9,6 @@
 #  rank_id        :integer          not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  depth          :integer
 #  designation_id :integer          not null
 #  taxon_name_id  :integer          not null
 #  legacy_id      :integer
@@ -406,10 +405,11 @@ class TaxonConcept < ActiveRecord::Base
     )
   end
 
+  #TODO ?
   def as_json(options={})
     unless options[:only] || options[:methods]
       options = {
-        :only =>[:id, :parent_id, :depth],
+        :only =>[:id, :parent_id],
         :methods => [:species_name, :genus_name, :family_name, :order_name,
           :class_name, :phylum_name, :full_name, :rank_name, :spp,
           :taxonomic_position, :current_listing,

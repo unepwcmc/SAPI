@@ -150,6 +150,7 @@ CREATE FUNCTION rebuild_ancestor_listings() RETURNS void
             hstore('cites_II', MAX((listing -> 'cites_II')::VARCHAR)) ||
             hstore('cites_III', MAX((listing -> 'cites_III')::VARCHAR)) ||
             hstore('not_in_cites', MAX((listing -> 'not_in_cites')::VARCHAR)) ||
+            hstore('cites_listed', MAX((listing -> 'cites_listed')::VARCHAR)) ||
             hstore('cites_listing', ARRAY_TO_STRING(
               -- unnest to filter out the nulls
               ARRAY(SELECT * FROM UNNEST(
@@ -170,7 +171,13 @@ CREATE FUNCTION rebuild_ancestor_listings() RETURNS void
             CASE
             WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
             ELSE ''::hstore
-            END || qq.listing
+            END ||
+            CASE
+            WHEN (taxon_concepts.listing -> 'cites_listed')::BOOLEAN IS NULL
+            AND qq.listing -> 'cites_listed' = 't'
+            THEN hstore('cites_listed', 'f')
+            ELSE ''::hstore
+            END || (qq.listing::HSTORE - 'cites_listed'::VARCHAR)
           FROM qq
           WHERE taxon_concepts.id = qq.id;
 
@@ -506,7 +513,7 @@ CREATE FUNCTION rebuild_names_and_ranks() RETURNS void
           WITH RECURSIVE q AS (
             SELECT h, h.id, ranks.name as rank_name,
             hstore(LOWER(ranks.name) || '_name', taxon_names.scientific_name) ||
-            hstore(LOWER(ranks.name) || '_id', (h.id)::INTEGER) AS ancestors
+            hstore(LOWER(ranks.name) || '_id', (h.id)::VARCHAR) AS ancestors
             FROM taxon_concepts h
             INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
             INNER JOIN ranks ON h.rank_id = ranks.id
@@ -517,7 +524,7 @@ CREATE FUNCTION rebuild_names_and_ranks() RETURNS void
             SELECT hi, hi.id, ranks.name,
             ancestors ||
             hstore(LOWER(ranks.name) || '_name', taxon_names.scientific_name) ||
-            hstore(LOWER(ranks.name) || '_id', (hi.id)::INTEGER)
+            hstore(LOWER(ranks.name) || '_id', (hi.id)::VARCHAR)
             FROM q
             JOIN taxon_concepts hi
             ON hi.parent_id = (q.h).id
@@ -641,43 +648,6 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: animals_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE animals_import (
-    spcrecid integer,
-    kingdom character varying,
-    phylum character varying,
-    class character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcstatus character varying
-);
-
-
---
--- Name: animals_synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE animals_synonym_import (
-    kingdom character varying,
-    phylum character varying,
-    class character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying,
-    accepted_species_id integer
-);
-
-
---
 -- Name: change_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -714,7 +684,7 @@ ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
 --
 
 CREATE TABLE cites_listings_import (
-    legrecid integer,
+    legacy_type character varying,
     spc_rec_id integer,
     appendix character varying,
     listing_date date,
@@ -737,7 +707,7 @@ CREATE TABLE cites_regions_import (
 --
 
 CREATE TABLE common_name_import (
-    comrecid integer,
+    legacy_type character varying,
     common_name character varying,
     language_name character varying,
     species_id integer
@@ -827,7 +797,7 @@ ALTER SEQUENCE designations_id_seq OWNED BY designations.id;
 --
 
 CREATE TABLE distribution_import (
-    dctrecid integer,
+    legacy_type character varying,
     species_id integer,
     country_id integer,
     country_name character varying
@@ -1011,10 +981,9 @@ CREATE TABLE listing_changes (
     lft integer,
     rgt integer,
     parent_id integer,
-    depth integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-07-25 13:37:28.482069'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-09-21 07:32:20.074068'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -1094,39 +1063,6 @@ ALTER SEQUENCE listing_distributions_id_seq OWNED BY listing_distributions.id;
 
 
 --
--- Name: plants_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE plants_import (
-    spcrecid integer,
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcstatus character varying
-);
-
-
---
--- Name: plants_synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE plants_synonym_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    spcinfra character varying,
-    spcrecid integer,
-    spcstatus character varying,
-    accepted_species_id integer
-);
-
-
---
 -- Name: ranks; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1156,6 +1092,20 @@ CREATE SEQUENCE ranks_id_seq
 --
 
 ALTER SEQUENCE ranks_id_seq OWNED BY ranks.id;
+
+
+--
+-- Name: reference_links_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE reference_links_import (
+    legacy_type character varying,
+    legacy_id integer,
+    spcrecid integer,
+    dscrecid integer,
+    dslcode character varying,
+    dslcoderecid integer
+);
 
 
 --
@@ -1198,10 +1148,11 @@ ALTER SEQUENCE references_id_seq OWNED BY "references".id;
 --
 
 CREATE TABLE references_import (
-    dscrecid integer,
-    dsctitle character varying,
-    dscauthors character varying,
-    dscpubyear character varying
+    author character varying,
+    title character varying,
+    year character varying,
+    legacy_id integer,
+    legacy_type character varying
 );
 
 
@@ -1211,6 +1162,25 @@ CREATE TABLE references_import (
 
 CREATE TABLE schema_migrations (
     version character varying(255) NOT NULL
+);
+
+
+--
+-- Name: species_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE species_import (
+    kingdom character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    speciesauthor character varying,
+    spcinfrarank character varying,
+    spcinfra character varying,
+    infrarankauthor character varying,
+    spcrecid integer,
+    spcstatus character varying
 );
 
 
@@ -1271,6 +1241,44 @@ CREATE SEQUENCE standard_references_id_seq
 --
 
 ALTER SEQUENCE standard_references_id_seq OWNED BY standard_references.id;
+
+
+--
+-- Name: standard_references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE standard_references_import (
+    author character varying,
+    year integer,
+    title character varying,
+    kingdom character varying,
+    phylum character varying,
+    class character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying
+);
+
+
+--
+-- Name: synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE synonym_import (
+    kingdom character varying,
+    taxonorder character varying,
+    family character varying,
+    genus character varying,
+    species character varying,
+    speciesauthor character varying,
+    spcinfrarank character varying,
+    spcinfra character varying,
+    infrarankauthor character varying,
+    spcrecid integer,
+    spcstatus character varying,
+    accepted_species_id integer
+);
 
 
 --
@@ -1410,7 +1418,6 @@ CREATE TABLE taxon_concepts (
     rank_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    depth integer,
     designation_id integer NOT NULL,
     taxon_name_id integer NOT NULL,
     legacy_id integer,
@@ -1867,6 +1874,20 @@ ALTER TABLE ONLY taxon_relationships
 
 
 --
+-- Name: index_taxon_concepts_on_data; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_taxon_concepts_on_data ON taxon_concepts USING btree (data);
+
+
+--
+-- Name: index_taxon_concepts_on_lft; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_taxon_concepts_on_lft ON taxon_concepts USING btree (lft);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2276,3 +2297,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120822133521');
 INSERT INTO schema_migrations (version) VALUES ('20120822161608');
 
 INSERT INTO schema_migrations (version) VALUES ('20120910120542');
+
+INSERT INTO schema_migrations (version) VALUES ('20120925093218');

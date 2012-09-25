@@ -10,7 +10,6 @@
 #  lft                :integer
 #  rgt                :integer
 #  parent_id          :integer
-#  depth              :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  effective_at       :datetime         default(2012-07-25 13:37:28 UTC), not null

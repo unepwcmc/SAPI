@@ -7,15 +7,10 @@ namespace :import do
       'lib/assets/files/all/animals_taxon_concepts.csv',
       'lib/assets/files/all/plants_taxon_concepts.csv'
     )
-    puts "rebuilding the nested set" #TODO remove depth calculations
+    puts "rebuilding the nested set"
     #rebuild the tree
     TaxonConcept.rebuild!
-    #set the depth on all nodes
-    TaxonConcept.roots.each do |root|
-      TaxonConcept.each_with_level(root.self_and_descendants) do |node, level|
-        node.send(:"set_depth!")
-      end
-    end
+
     Rake::Task["import:cites_regions"].invoke(
       'lib/assets/files/cites_regions.csv'
     )
@@ -57,15 +52,10 @@ namespace :import do
       'lib/assets/files/random/animals.csv',
       'lib/assets/files/random/plants.csv'
     )
-    puts "rebuilding the nested set" #TODO remove depth calculations
+    puts "rebuilding the nested set"
     #rebuild the tree
     TaxonConcept.rebuild!
-    #set the depth on all nodes
-    TaxonConcept.roots.each do |root|
-      TaxonConcept.each_with_level(root.self_and_descendants) do |node, level|
-        node.send(:"set_depth!")
-      end
-    end
+
     Rake::Task["import:cites_regions"].invoke(
       'lib/assets/files/cites_regions.csv'
     )
@@ -97,18 +87,13 @@ namespace :import do
     Sapi::drop_indices
     Rake::Task["db:seed"].invoke
     Rake::Task["import:species"].invoke(
-      'lib/assets/files/first_pages_cites/animals_taxon_concepts.csv',
+      #'lib/assets/files/first_pages_cites/animals_taxon_concepts.csv',
       'lib/assets/files/first_pages_cites/plants_taxon_concepts.csv'
     )
-    puts "rebuilding the nested set" #TODO remove depth calculations
+    puts "rebuilding the nested set"
     #rebuild the tree
     TaxonConcept.rebuild!
-    #set the depth on all nodes
-    TaxonConcept.roots.each do |root|
-      TaxonConcept.each_with_level(root.self_and_descendants) do |node, level|
-        node.send(:"set_depth!")
-      end
-    end
+
     Rake::Task["import:cites_regions"].invoke(
       'lib/assets/files/cites_regions.csv'
     )
