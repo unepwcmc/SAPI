@@ -1,5 +1,6 @@
 class TimelinesForTaxonConcept
   def initialize(taxon_concept_id)
+    puts "id: #{taxon_concept_id}"
     @taxon_concept_id = taxon_concept_id
     @listing_changes = ListingChange.select('listing_changes_view.*').from('listing_changes_view').
       where('listing_changes_view.taxon_concept_id' => taxon_concept_id)
@@ -19,6 +20,7 @@ class TimelinesForTaxonConcept
       proportionate_time_span = ch.effective_at - @time_start
       position = (proportionate_time_span / @total_time_span).round(2)
       appendix = ch.species_listing_name
+      puts "app #{appendix} #{ch.change_type_name}"
       party = (ch.party_name ? ch.party_name.upcase : nil)
       current_timeline = @timelines[appendix]
       timeline_event = TimelineEvent.new(
@@ -47,12 +49,23 @@ class TimelinesForTaxonConcept
       end
 
       if ch.change_type_name == ChangeType::ADDITION
-        current_timeline.timeline_events << timeline_event
+        if current_timeline
+          current_timeline.timeline_events << timeline_event
+        end
         if party_timeline
           party_timeline.timeline_events << timeline_event
         end
       elsif ch.change_type_name == ChangeType::DELETION
-        current_timeline.timeline_events << timeline_event
+        unless current_timeline
+          #add to every existing timeline
+          @timelines.each do |appdx, timeline|
+            unless timeline.timeline_events.empty?
+              timeline.timeline_events << timeline_event
+            end
+          end
+        else
+          current_timeline.timeline_events << timeline_event
+        end
         party_timelines =  if ch.species_listing_name == 'III'
           current_timeline.timelines
         else
