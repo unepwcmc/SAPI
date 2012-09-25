@@ -57,8 +57,8 @@ class PdfChecklist < Checklist
 
     Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
       pdf.font_size 9
-      draw_kingdom(pdf, animalia, 'FAUNA')
-      draw_kingdom(pdf, plantae, 'FLORA')
+      draw_kingdom(pdf, animalia, 'FAUNA') unless animalia.empty?
+      draw_kingdom(pdf, plantae, 'FLORA') unless plantae.empty?
 
       # Add summary line
       summary = summarise_filters

@@ -77,8 +77,8 @@ class PdfChecklistHistory < ChecklistHistory
       pdf.font_size 9
       pdf.go_to_page(pdf.page_count)
 
-      draw_kingdom(pdf, animalia, 'FAUNA')
-      draw_kingdom(pdf, plantae, 'FLORA')
+      draw_kingdom(pdf, animalia, 'FAUNA') unless animalia.empty?
+      draw_kingdom(pdf, plantae, 'FLORA') unless plantae.empty?
 
       # Add summary line
       summary = summarise_filters
