@@ -305,8 +305,8 @@ class TaxonConcept < ActiveRecord::Base
       :species_listing_name_ary, :party_name_ary, :notes_ary
     ].each do |ary|
       parsed_ary = if respond_to?(ary)
-        parse_pg_array(send(ary) || '').compact.map do |e|
-          e.force_encoding('utf-8')
+        parse_pg_array(send(ary) || '').map do |e|
+          e.force_encoding('utf-8') if e
         end
         
       else
