@@ -14,8 +14,9 @@ class Checklist
     @output_layout = options[:output_layout] || :alphabetical
     @designation = options[:designation] || Designation::CITES
 
-    @taxon_concepts_rel = TaxonConcept.scoped.
-      select([:"taxon_concepts.id", :"taxon_concepts.data", :"taxon_concepts.listing", :"taxon_concepts.updated_at"]).
+    @taxon_concepts_rel = TaxonConcept.scoped.with_all.
+      select([:"taxon_concepts.id", :"taxon_concepts.data", :"taxon_concepts.listing", :"taxon_concepts.updated_at",
+        'mat_taxon_concepts_view.kingdom_name', 'mat_taxon_concepts_view.full_name', 'mat_taxon_concepts_view.taxonomic_position']).
       by_designation(@designation).without_nc.
       with_countries_ids
 
@@ -47,17 +48,14 @@ class Checklist
     # optional data
     unless options[:synonyms].nil? || options[:synonyms] == false
       @synonyms = true
-      @taxon_concepts_rel = @taxon_concepts_rel.with_synonyms
     end
 
     unless options[:common_names].nil?
       @common_names = true
-      @taxon_concepts_rel = @taxon_concepts_rel.with_common_names(options[:common_names])
     end
 
-     #order
-     @taxon_concepts_rel = @taxon_concepts_rel.order("taxon_concepts.data->'kingdom_name'")#animalia first
-     @taxon_concepts_rel = if @output_layout == :taxonomic
+    #order
+    @taxon_concepts_rel = if @output_layout == :taxonomic
       @taxon_concepts_rel.taxonomic_layout
     else
       @taxon_concepts_rel.alphabetical_layout

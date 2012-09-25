@@ -36,9 +36,9 @@ class TaxonConceptsController < ApplicationController
 
   def autocomplete
     taxon_concepts = TaxonConcept.by_designation('CITES').
-      with_synonyms.without_nc.
+      with_all.without_nc.
       select("
-        data,
+        taxon_concepts.data,
         ARRAY(
           SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
         ) AS synonyms_ary"

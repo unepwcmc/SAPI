@@ -82,7 +82,7 @@ class TaxonConcept < ActiveRecord::Base
   scope :by_cites_appendices, lambda { |appendix_abbreviations|
     conds = 
     (['I','II','III'] & appendix_abbreviations).map do |abbr|
-      "listing->'cites_#{abbr}' = '#{abbr}'"
+      "cites_#{abbr} = '#{abbr}'"
     end
     where(conds.join(' OR '))
   }
@@ -110,54 +110,21 @@ class TaxonConcept < ActiveRecord::Base
 
   scope :without_nc, where(
   <<-SQL
-  (listing->'cites_del' <> 't' OR (listing->'cites_del')::BOOLEAN IS NULL)
+  (cites_del <> 't' OR cites_del IS NULL)
   AND (
     (
-      taxon_concepts.data -> 'rank_name' = '#{Rank::SPECIES}' AND
-        (listing->'cites_listed')::BOOLEAN IS NOT NULL
+      rank_name = '#{Rank::SPECIES}' AND cites_listed IS NOT NULL
     )
     OR
     (
-      taxon_concepts.data -> 'rank_name' <> '#{Rank::SPECIES}' AND
-      (listing->'cites_listed')::BOOLEAN = 't'
+      rank_name <> '#{Rank::SPECIES}' AND cites_listed = 't'
     )
   )
   SQL
   )
-  scope :taxonomic_layout, order("taxon_concepts.data -> 'taxonomic_position'")
-  scope :alphabetical_layout, order("taxon_concepts.data -> 'full_name'")
+  scope :taxonomic_layout, order('kingdom_name, taxonomic_position')
+  scope :alphabetical_layout, order('kingdom_name, full_name')
 
-  #scopes used to control presence of optional data to be returned
-  scope :with_common_names, lambda { |lng_ary|
-      select(lng_ary.map do |lng|
-        "lng_#{lng.downcase}"
-      end).
-      joins(
-        <<-SQL
-        LEFT JOIN (
-          SELECT *
-          FROM
-          CROSSTAB(
-            'SELECT taxon_concepts.id AS taxon_concept_id_cn,
-            SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
-            ARRAY_AGG(common_names.name ORDER BY common_names.id) AS common_names_ary 
-            FROM "taxon_concepts"
-            INNER JOIN "taxon_commons"
-              ON "taxon_commons"."taxon_concept_id" = "taxon_concepts"."id" 
-            INNER JOIN "common_names"
-              ON "common_names"."id" = "taxon_commons"."common_name_id" 
-            INNER JOIN "languages"
-              ON "languages"."id" = "common_names"."language_id"
-            GROUP BY taxon_concepts.id, SUBSTRING(languages.name FROM 1 FOR 1)
-            ORDER BY 1,2'
-          ) AS ct(
-            taxon_concept_id_cn INTEGER,
-            lng_E VARCHAR[], lng_F VARCHAR[], lng_S VARCHAR[]
-          )
-        ) common_names ON taxon_concepts.id = common_names.taxon_concept_id_cn
-        SQL
-      )
-  }
   scope :with_countries_ids, select(:countries_ids_ary).
     joins(
       <<-SQL
@@ -176,23 +143,8 @@ class TaxonConcept < ActiveRecord::Base
       ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_wc
       SQL
     )
-  scope :at_level_of_listing, where("listing -> 'cites_listed' = 't'")
-  scope :with_synonyms, select(:synonyms_ary).
-    joins(
-      <<-SQL
-      LEFT JOIN (
-        SELECT taxon_concepts.id AS taxon_concept_id_ws, ARRAY_AGG(synonym_tc.data->'full_name') AS synonyms_ary
-        FROM taxon_concepts
-        LEFT JOIN taxon_relationships
-          ON "taxon_relationships"."taxon_concept_id" = "taxon_concepts"."id"
-        LEFT JOIN "taxon_relationship_types"
-          ON "taxon_relationship_types"."id" = "taxon_relationships"."taxon_relationship_type_id"
-        LEFT JOIN taxon_concepts AS synonym_tc
-          ON synonym_tc.id = taxon_relationships.other_taxon_concept_id
-        GROUP BY taxon_concepts.id
-      ) synonym_names ON taxon_concepts.id = synonym_names.taxon_concept_id_ws
-      SQL
-    )
+  scope :at_level_of_listing, where("cites_listed = 't'")
+  scope :with_all, joins("LEFT JOIN mat_taxon_concepts_view ON taxon_concepts.id = mat_taxon_concepts_view.id")
   scope :with_standard_references, select(:std_ref_ary).joins(
     <<-SQL
     LEFT JOIN (
@@ -234,7 +186,7 @@ class TaxonConcept < ActiveRecord::Base
       ARRAY_AGG(change_type_name) AS change_type_name_ary,
       ARRAY_AGG(species_listing_name) AS species_listing_name_ary,
       ARRAY_AGG(party_name) AS party_name_ary, ARRAY_AGG(notes) AS notes_ary
-      FROM listing_changes_view
+      FROM mat_listing_changes_view
       --filter out deletion records that were added programatically to simplify
       --current listing calculations - don't want them to show up
       WHERE NOT (change_type_name = '#{ChangeType::DELETION}' AND species_listing_id IS NOT NULL)
@@ -344,7 +296,7 @@ class TaxonConcept < ActiveRecord::Base
 
   def synonyms
     me = unless respond_to?(:synonyms_ary)
-      TaxonConcept.with_synonyms.where(:id => self.id).first
+      TaxonConcept.with_all.where(:id => self.id).first
     else
       self
     end

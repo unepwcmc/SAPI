@@ -1063,6 +1063,52 @@ ALTER SEQUENCE listing_distributions_id_seq OWNED BY listing_distributions.id;
 
 
 --
+-- Name: mat_listing_changes_view; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE mat_listing_changes_view (
+    id integer,
+    taxon_concept_id integer,
+    effective_at timestamp without time zone,
+    species_listing_id integer,
+    species_listing_name character varying(255),
+    change_type_id integer,
+    change_type_name character varying(255),
+    party_id integer,
+    party_name character varying(255),
+    notes text,
+    dirty boolean,
+    expiry timestamp with time zone
+);
+
+
+--
+-- Name: mat_taxon_concepts_view; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE mat_taxon_concepts_view (
+    id integer,
+    full_name text,
+    rank_name text,
+    kingdom_name text,
+    taxonomic_position text,
+    cites_listed text,
+    cites_i text,
+    cites_ii text,
+    cites_iii text,
+    cites_del text,
+    taxon_concept_id_com integer,
+    lng_e character varying[],
+    lng_f character varying[],
+    lng_s character varying[],
+    taxon_concept_id_syn integer,
+    synonyms_ary text[],
+    dirty boolean,
+    expiry timestamp with time zone
+);
+
+
+--
 -- Name: ranks; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1448,6 +1494,51 @@ ALTER SEQUENCE taxon_concepts_id_seq OWNED BY taxon_concepts.id;
 
 
 --
+-- Name: taxon_relationship_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE taxon_relationship_types (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: taxon_relationships; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE taxon_relationships (
+    id integer NOT NULL,
+    taxon_concept_id integer NOT NULL,
+    other_taxon_concept_id integer NOT NULL,
+    taxon_relationship_type_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: taxon_concepts_view; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW taxon_concepts_view AS
+    SELECT taxon_concepts.id, (taxon_concepts.data -> 'full_name'::text) AS full_name, (taxon_concepts.data -> 'rank_name'::text) AS rank_name, (taxon_concepts.data -> 'kingdom_name'::text) AS kingdom_name, (taxon_concepts.data -> 'taxonomic_position'::text) AS taxonomic_position, (taxon_concepts.listing -> 'cites_listed'::text) AS cites_listed, (taxon_concepts.listing -> 'cites_I'::text) AS cites_i, (taxon_concepts.listing -> 'cites_II'::text) AS cites_ii, (taxon_concepts.listing -> 'cites_III'::text) AS cites_iii, (taxon_concepts.listing -> 'cites_del'::text) AS cites_del, common_names.taxon_concept_id_com, common_names.lng_e, common_names.lng_f, common_names.lng_s, synonyms.taxon_concept_id_syn, synonyms.synonyms_ary FROM ((taxon_concepts LEFT JOIN (SELECT ct.taxon_concept_id_com, ct.lng_e, ct.lng_f, ct.lng_s FROM crosstab('SELECT taxon_concepts.id AS taxon_concept_id_com,
+          SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
+          ARRAY_AGG(common_names.name ORDER BY common_names.id) AS common_names_ary 
+          FROM "taxon_concepts"
+          INNER JOIN "taxon_commons"
+            ON "taxon_commons"."taxon_concept_id" = "taxon_concepts"."id" 
+          INNER JOIN "common_names"
+            ON "common_names"."id" = "taxon_commons"."common_name_id" 
+          INNER JOIN "languages"
+            ON "languages"."id" = "common_names"."language_id"
+          GROUP BY taxon_concepts.id, SUBSTRING(languages.name FROM 1 FOR 1)
+          ORDER BY 1,2'::text) ct(taxon_concept_id_com integer, lng_e character varying[], lng_f character varying[], lng_s character varying[])) common_names ON ((taxon_concepts.id = common_names.taxon_concept_id_com))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_syn, array_agg((synonym_tc.data -> 'full_name'::text)) AS synonyms_ary FROM (((taxon_concepts LEFT JOIN taxon_relationships ON ((taxon_relationships.taxon_concept_id = taxon_concepts.id))) LEFT JOIN taxon_relationship_types ON ((taxon_relationship_types.id = taxon_relationships.taxon_relationship_type_id))) LEFT JOIN taxon_concepts synonym_tc ON ((synonym_tc.id = taxon_relationships.other_taxon_concept_id))) GROUP BY taxon_concepts.id) synonyms ON ((taxon_concepts.id = synonyms.taxon_concept_id_syn)));
+
+
+--
 -- Name: taxon_names; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1480,18 +1571,6 @@ ALTER SEQUENCE taxon_names_id_seq OWNED BY taxon_names.id;
 
 
 --
--- Name: taxon_relationship_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE taxon_relationship_types (
-    id integer NOT NULL,
-    name character varying(255) NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
 -- Name: taxon_relationship_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1508,20 +1587,6 @@ CREATE SEQUENCE taxon_relationship_types_id_seq
 --
 
 ALTER SEQUENCE taxon_relationship_types_id_seq OWNED BY taxon_relationship_types.id;
-
-
---
--- Name: taxon_relationships; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE taxon_relationships (
-    id integer NOT NULL,
-    taxon_concept_id integer NOT NULL,
-    other_taxon_concept_id integer NOT NULL,
-    taxon_relationship_type_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
 
 
 --
@@ -2299,3 +2364,9 @@ INSERT INTO schema_migrations (version) VALUES ('20120822161608');
 INSERT INTO schema_migrations (version) VALUES ('20120910120542');
 
 INSERT INTO schema_migrations (version) VALUES ('20120925093218');
+
+INSERT INTO schema_migrations (version) VALUES ('20120925122020');
+
+INSERT INTO schema_migrations (version) VALUES ('20120925133443');
+
+INSERT INTO schema_migrations (version) VALUES ('20120925141758');
