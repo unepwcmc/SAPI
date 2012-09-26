@@ -43,7 +43,7 @@ class TaxonConcept < ActiveRecord::Base
 
   #scopes used for filtering
   scope :by_designation, lambda { |name|
-    joins(:designation).where('designations.name' => name)
+    where("designation_is_#{name}" => 't')
   }
   scope :by_cites_regions_and_countries, lambda { |cites_regions_ids, countries_ids|
     in_clause = [cites_regions_ids, countries_ids].flatten.compact.join(',')
@@ -82,7 +82,7 @@ class TaxonConcept < ActiveRecord::Base
   scope :by_cites_appendices, lambda { |appendix_abbreviations|
     conds = 
     (['I','II','III'] & appendix_abbreviations).map do |abbr|
-      "cites_#{abbr} = '#{abbr}'"
+      "cites_#{abbr} = 't'"
     end
     where(conds.join(' OR '))
   }
@@ -122,8 +122,8 @@ class TaxonConcept < ActiveRecord::Base
   )
   SQL
   )
-  scope :taxonomic_layout, order('kingdom_name, taxonomic_position')
-  scope :alphabetical_layout, order('kingdom_name, full_name')
+  scope :taxonomic_layout, order('kingdom_position, taxonomic_position')
+  scope :alphabetical_layout, order('kingdom_position, full_name')
 
   scope :with_countries_ids, select(:countries_ids_ary).
     joins(
@@ -144,7 +144,7 @@ class TaxonConcept < ActiveRecord::Base
       SQL
     )
   scope :at_level_of_listing, where("cites_listed = 't'")
-  scope :with_all, joins("LEFT JOIN mat_taxon_concepts_view ON taxon_concepts.id = mat_taxon_concepts_view.id")
+  scope :with_all, joins("LEFT JOIN taxon_concepts_mview ON taxon_concepts.id = taxon_concepts_mview.id")
   scope :with_standard_references, select(:std_ref_ary).joins(
     <<-SQL
     LEFT JOIN (

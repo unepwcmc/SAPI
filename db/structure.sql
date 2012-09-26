@@ -1083,32 +1083,6 @@ CREATE TABLE mat_listing_changes_view (
 
 
 --
--- Name: mat_taxon_concepts_view; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE mat_taxon_concepts_view (
-    id integer,
-    full_name text,
-    rank_name text,
-    kingdom_name text,
-    taxonomic_position text,
-    cites_listed text,
-    cites_i text,
-    cites_ii text,
-    cites_iii text,
-    cites_del text,
-    taxon_concept_id_com integer,
-    lng_e character varying[],
-    lng_f character varying[],
-    lng_s character varying[],
-    taxon_concept_id_syn integer,
-    synonyms_ary text[],
-    dirty boolean,
-    expiry timestamp with time zone
-);
-
-
---
 -- Name: ranks; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1494,6 +1468,33 @@ ALTER SEQUENCE taxon_concepts_id_seq OWNED BY taxon_concepts.id;
 
 
 --
+-- Name: taxon_concepts_mview; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE taxon_concepts_mview (
+    id integer,
+    designation_is_cites text,
+    full_name text,
+    rank_name text,
+    kingdom_position integer,
+    taxonomic_position text,
+    cites_listed boolean,
+    cites_i text,
+    cites_ii text,
+    cites_iii text,
+    cites_del boolean,
+    taxon_concept_id_com integer,
+    lng_e character varying[],
+    lng_f character varying[],
+    lng_s character varying[],
+    taxon_concept_id_syn integer,
+    synonyms_ary text[],
+    dirty boolean,
+    expiry timestamp with time zone
+);
+
+
+--
 -- Name: taxon_relationship_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1524,7 +1525,7 @@ CREATE TABLE taxon_relationships (
 --
 
 CREATE VIEW taxon_concepts_view AS
-    SELECT taxon_concepts.id, (taxon_concepts.data -> 'full_name'::text) AS full_name, (taxon_concepts.data -> 'rank_name'::text) AS rank_name, (taxon_concepts.data -> 'kingdom_name'::text) AS kingdom_name, (taxon_concepts.data -> 'taxonomic_position'::text) AS taxonomic_position, (taxon_concepts.listing -> 'cites_listed'::text) AS cites_listed, (taxon_concepts.listing -> 'cites_I'::text) AS cites_i, (taxon_concepts.listing -> 'cites_II'::text) AS cites_ii, (taxon_concepts.listing -> 'cites_III'::text) AS cites_iii, (taxon_concepts.listing -> 'cites_del'::text) AS cites_del, common_names.taxon_concept_id_com, common_names.lng_e, common_names.lng_f, common_names.lng_s, synonyms.taxon_concept_id_syn, synonyms.synonyms_ary FROM ((taxon_concepts LEFT JOIN (SELECT ct.taxon_concept_id_com, ct.lng_e, ct.lng_f, ct.lng_s FROM crosstab('SELECT taxon_concepts.id AS taxon_concept_id_com,
+    SELECT taxon_concepts.id, CASE WHEN ((designations.name)::text = 'CITES'::text) THEN 't'::text ELSE 'f'::text END AS designation_is_cites, (taxon_concepts.data -> 'full_name'::text) AS full_name, (taxon_concepts.data -> 'rank_name'::text) AS rank_name, CASE WHEN ((taxon_concepts.data -> 'kingdom_name'::text) = 'Animalia'::text) THEN 0 ELSE 1 END AS kingdom_position, (taxon_concepts.data -> 'taxonomic_position'::text) AS taxonomic_position, ((taxon_concepts.listing -> 'cites_listed'::text))::boolean AS cites_listed, CASE WHEN ((taxon_concepts.listing -> 'cites_I'::text) = 'I'::text) THEN 't'::text ELSE 'f'::text END AS cites_i, CASE WHEN ((taxon_concepts.listing -> 'cites_II'::text) = 'II'::text) THEN 't'::text ELSE 'f'::text END AS cites_ii, CASE WHEN ((taxon_concepts.listing -> 'cites_III'::text) = 'III'::text) THEN 't'::text ELSE 'f'::text END AS cites_iii, ((taxon_concepts.listing -> 'cites_del'::text))::boolean AS cites_del, common_names.taxon_concept_id_com, common_names.lng_e, common_names.lng_f, common_names.lng_s, synonyms.taxon_concept_id_syn, synonyms.synonyms_ary FROM (((taxon_concepts LEFT JOIN designations ON ((designations.id = taxon_concepts.designation_id))) LEFT JOIN (SELECT ct.taxon_concept_id_com, ct.lng_e, ct.lng_f, ct.lng_s FROM crosstab('SELECT taxon_concepts.id AS taxon_concept_id_com,
           SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
           ARRAY_AGG(common_names.name ORDER BY common_names.id) AS common_names_ary 
           FROM "taxon_concepts"
@@ -1936,6 +1937,20 @@ ALTER TABLE ONLY taxon_relationship_types
 
 ALTER TABLE ONLY taxon_relationships
     ADD CONSTRAINT taxon_relationships_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_taxon_concepts_mview_on_full_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_taxon_concepts_mview_on_full_name ON taxon_concepts_mview USING btree (full_name);
+
+
+--
+-- Name: index_taxon_concepts_mview_on_taxonomic_position; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_taxon_concepts_mview_on_taxonomic_position ON taxon_concepts_mview USING btree (taxonomic_position);
 
 
 --
@@ -2370,3 +2385,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120925122020');
 INSERT INTO schema_migrations (version) VALUES ('20120925133443');
 
 INSERT INTO schema_migrations (version) VALUES ('20120925141758');
+
+INSERT INTO schema_migrations (version) VALUES ('20120926132500');

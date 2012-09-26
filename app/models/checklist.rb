@@ -16,7 +16,7 @@ class Checklist
 
     @taxon_concepts_rel = TaxonConcept.scoped.with_all.
       select([:"taxon_concepts.id", :"taxon_concepts.data", :"taxon_concepts.listing", :"taxon_concepts.updated_at",
-        'mat_taxon_concepts_view.kingdom_name', 'mat_taxon_concepts_view.full_name', 'mat_taxon_concepts_view.taxonomic_position']).
+        'taxon_concepts_mview.kingdom_position', 'taxon_concepts_mview.full_name', 'taxon_concepts_mview.taxonomic_position', 'taxon_concepts_mview.designation_is_cites']).
       by_designation(@designation).without_nc.
       with_countries_ids
 

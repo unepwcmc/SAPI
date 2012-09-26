@@ -1,7 +1,7 @@
 class CreateMaterializedTaxonConceptsView < ActiveRecord::Migration
   def up
     execute <<-SQL
-    CREATE TABLE mat_taxon_concepts_view AS
+    CREATE TABLE taxon_concepts_mview AS
     SELECT *,
     false as dirty,
     null::timestamp with time zone as expiry
@@ -10,6 +10,6 @@ class CreateMaterializedTaxonConceptsView < ActiveRecord::Migration
   end
 
   def down
-    drop_table :mat_taxon_concepts_view
+    drop_table :taxon_concepts_mview
   end
 end

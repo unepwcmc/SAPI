@@ -2,19 +2,37 @@ class CreateTaxonConceptsView < ActiveRecord::Migration
   def up
     execute <<-SQL
       CREATE OR REPLACE VIEW taxon_concepts_view AS
-      SELECT id, 
+      SELECT taxon_concepts.id, 
+      CASE
+        WHEN designations.name = 'CITES' THEN 't'
+        ELSE 'f'
+      END AS designation_is_cites,
       data->'full_name' AS full_name,
       data->'rank_name' AS rank_name,
-      data->'kingdom_name' AS kingdom_name,
+      CASE
+        WHEN data->'kingdom_name' = 'Animalia' THEN 0
+        ELSE 1
+      END AS kingdom_position,
       data->'taxonomic_position' AS taxonomic_position,
-      listing->'cites_listed' AS cites_listed,
-      listing->'cites_I' AS cites_I,
-      listing->'cites_II' AS cites_II,
-      listing->'cites_III' AS cites_III,
-      listing->'cites_del' AS cites_del,
+      (listing->'cites_listed')::BOOLEAN AS cites_listed,
+      CASE
+        WHEN listing->'cites_I' = 'I' THEN 't'
+        ELSE 'f'
+      END AS cites_I,
+      CASE
+        WHEN listing->'cites_II' = 'II' THEN 't'
+        ELSE 'f'
+      END AS cites_II,
+      CASE
+        WHEN listing->'cites_III' = 'III' THEN 't'
+        ELSE 'f'
+      END AS cites_III,
+      (listing->'cites_del')::BOOLEAN AS cites_del,
       common_names.*,
       synonyms.*
       FROM taxon_concepts
+      LEFT JOIN designations
+        ON designations.id = taxon_concepts.designation_id
       LEFT JOIN (
         SELECT *
         FROM
