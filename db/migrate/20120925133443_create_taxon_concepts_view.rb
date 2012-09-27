@@ -45,7 +45,7 @@ class CreateTaxonConceptsView < ActiveRecord::Migration
         ELSE 'f'
       END AS cites_III,
       (listing->'cites_del')::BOOLEAN AS cites_del,
-      listing->'current_listing' AS current_listing,
+      listing->'cites_listing' AS current_listing,
       common_names.*,
       synonyms.*
       FROM taxon_concepts

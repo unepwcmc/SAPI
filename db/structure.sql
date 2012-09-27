@@ -501,6 +501,41 @@ COMMENT ON FUNCTION rebuild_listings() IS 'Procedure to rebuild the computed lis
 
 
 --
+-- Name: rebuild_mviews(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rebuild_mviews() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+        BEGIN
+          RAISE NOTICE 'Dropping materialized views';
+          DROP table listing_changes_mview;
+          DROP table taxon_concepts_mview;
+
+          RAISE NOTICE 'Creating materialized views';
+          CREATE TABLE listing_changes_mview AS
+          SELECT *,
+          false as dirty,
+          null::timestamp with time zone as expiry
+          FROM listing_changes_view;
+
+          CREATE TABLE taxon_concepts_mview AS
+          SELECT *,
+          false as dirty,
+          null::timestamp with time zone as expiry
+          FROM taxon_concepts_view;
+        END;
+      $$;
+
+
+--
+-- Name: FUNCTION rebuild_mviews(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION rebuild_mviews() IS 'Procedure to rebuild materialized views in the database.';
+
+
+--
 -- Name: rebuild_names_and_ranks(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1398,7 +1433,7 @@ CREATE TABLE taxon_relationships (
 --
 
 CREATE VIEW taxon_concepts_view AS
-    SELECT taxon_concepts.id, CASE WHEN ((designations.name)::text = 'CITES'::text) THEN true ELSE false END AS designation_is_cites, (taxon_concepts.data -> 'full_name'::text) AS full_name, (taxon_concepts.data -> 'rank_name'::text) AS rank_name, ((taxon_concepts.data -> 'cites_accepted'::text))::boolean AS cites_accepted, CASE WHEN ((taxon_concepts.data -> 'kingdom_name'::text) = 'Animalia'::text) THEN 0 ELSE 1 END AS kingdom_position, (taxon_concepts.data -> 'taxonomic_position'::text) AS taxonomic_position, (taxon_concepts.data -> 'kingdom_name'::text) AS kingdom_name, (taxon_concepts.data -> 'phylum_name'::text) AS phylum_name, (taxon_concepts.data -> 'class_name'::text) AS class_name, (taxon_concepts.data -> 'order_name'::text) AS order_name, (taxon_concepts.data -> 'family_name'::text) AS family_name, (taxon_concepts.data -> 'genus_name'::text) AS genus_name, (taxon_concepts.data -> 'species_name'::text) AS species_name, (taxon_concepts.data -> 'subspecies_name'::text) AS subspecies_name, (taxon_concepts.data -> 'kingdom_id'::text) AS kingdom_id, (taxon_concepts.data -> 'phylum_id'::text) AS phylum_id, (taxon_concepts.data -> 'class_id'::text) AS class_id, (taxon_concepts.data -> 'order_id'::text) AS order_id, (taxon_concepts.data -> 'family_id'::text) AS family_id, (taxon_concepts.data -> 'genus_id'::text) AS genus_id, (taxon_concepts.data -> 'species_id'::text) AS species_id, (taxon_concepts.data -> 'subspecies_id'::text) AS subspecies_id, ((taxon_concepts.listing -> 'cites_listed'::text))::boolean AS cites_listed, CASE WHEN ((taxon_concepts.listing -> 'cites_I'::text) = 'I'::text) THEN 't'::text ELSE 'f'::text END AS cites_i, CASE WHEN ((taxon_concepts.listing -> 'cites_II'::text) = 'II'::text) THEN 't'::text ELSE 'f'::text END AS cites_ii, CASE WHEN ((taxon_concepts.listing -> 'cites_III'::text) = 'III'::text) THEN 't'::text ELSE 'f'::text END AS cites_iii, ((taxon_concepts.listing -> 'cites_del'::text))::boolean AS cites_del, (taxon_concepts.listing -> 'current_listing'::text) AS current_listing, common_names.taxon_concept_id_com, common_names.english_names_ary, common_names.french_names_ary, common_names.spanish_names_ary, synonyms.taxon_concept_id_syn, synonyms.synonyms_ary FROM ((((taxon_concepts LEFT JOIN designations ON ((designations.id = taxon_concepts.designation_id))) LEFT JOIN (SELECT ct.taxon_concept_id_com, ct.english_names_ary, ct.french_names_ary, ct.spanish_names_ary FROM crosstab('SELECT taxon_concepts.id AS taxon_concept_id_com,
+    SELECT taxon_concepts.id, CASE WHEN ((designations.name)::text = 'CITES'::text) THEN true ELSE false END AS designation_is_cites, (taxon_concepts.data -> 'full_name'::text) AS full_name, (taxon_concepts.data -> 'rank_name'::text) AS rank_name, ((taxon_concepts.data -> 'cites_accepted'::text))::boolean AS cites_accepted, CASE WHEN ((taxon_concepts.data -> 'kingdom_name'::text) = 'Animalia'::text) THEN 0 ELSE 1 END AS kingdom_position, (taxon_concepts.data -> 'taxonomic_position'::text) AS taxonomic_position, (taxon_concepts.data -> 'kingdom_name'::text) AS kingdom_name, (taxon_concepts.data -> 'phylum_name'::text) AS phylum_name, (taxon_concepts.data -> 'class_name'::text) AS class_name, (taxon_concepts.data -> 'order_name'::text) AS order_name, (taxon_concepts.data -> 'family_name'::text) AS family_name, (taxon_concepts.data -> 'genus_name'::text) AS genus_name, (taxon_concepts.data -> 'species_name'::text) AS species_name, (taxon_concepts.data -> 'subspecies_name'::text) AS subspecies_name, (taxon_concepts.data -> 'kingdom_id'::text) AS kingdom_id, (taxon_concepts.data -> 'phylum_id'::text) AS phylum_id, (taxon_concepts.data -> 'class_id'::text) AS class_id, (taxon_concepts.data -> 'order_id'::text) AS order_id, (taxon_concepts.data -> 'family_id'::text) AS family_id, (taxon_concepts.data -> 'genus_id'::text) AS genus_id, (taxon_concepts.data -> 'species_id'::text) AS species_id, (taxon_concepts.data -> 'subspecies_id'::text) AS subspecies_id, ((taxon_concepts.listing -> 'cites_listed'::text))::boolean AS cites_listed, CASE WHEN ((taxon_concepts.listing -> 'cites_I'::text) = 'I'::text) THEN 't'::text ELSE 'f'::text END AS cites_i, CASE WHEN ((taxon_concepts.listing -> 'cites_II'::text) = 'II'::text) THEN 't'::text ELSE 'f'::text END AS cites_ii, CASE WHEN ((taxon_concepts.listing -> 'cites_III'::text) = 'III'::text) THEN 't'::text ELSE 'f'::text END AS cites_iii, ((taxon_concepts.listing -> 'cites_del'::text))::boolean AS cites_del, (taxon_concepts.listing -> 'cites_listing'::text) AS current_listing, common_names.taxon_concept_id_com, common_names.english_names_ary, common_names.french_names_ary, common_names.spanish_names_ary, synonyms.taxon_concept_id_syn, synonyms.synonyms_ary FROM ((((taxon_concepts LEFT JOIN designations ON ((designations.id = taxon_concepts.designation_id))) LEFT JOIN (SELECT ct.taxon_concept_id_com, ct.english_names_ary, ct.french_names_ary, ct.spanish_names_ary FROM crosstab('SELECT taxon_concepts.id AS taxon_concept_id_com,
           SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
           ARRAY_AGG(common_names.name ORDER BY common_names.id) AS common_names_ary 
           FROM "taxon_concepts"

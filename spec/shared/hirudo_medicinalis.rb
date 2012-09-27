@@ -31,7 +31,11 @@ shared_context "Hirudo medicinalis" do
     Sapi::fix_listing_changes
     Sapi::rebuild
     self.instance_variables.each do |t|
-      self.instance_variable_get(t).reload
+      var = self.instance_variable_get(t)
+      if var.kind_of? TaxonConcept
+        self.instance_variable_set(t,MTaxonConcept.find(var.id))
+        self.instance_variable_get(t).reload
+      end
     end
 
   end

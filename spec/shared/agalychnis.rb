@@ -43,7 +43,10 @@ shared_context 'Agalychnis' do
     Sapi::fix_listing_changes
     Sapi::rebuild
     self.instance_variables.each do |t|
-      self.instance_variable_get(t).reload
+      var = self.instance_variable_get(t)#.reload
+      if var.kind_of? TaxonConcept
+        self.instance_variable_set(t,MTaxonConcept.find(var.id))
+      end
     end
   end
 end
