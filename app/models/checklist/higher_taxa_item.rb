@@ -1,4 +1,6 @@
 class Checklist::HigherTaxaItem < Checklist::ChecklistItem
+  attr_reader :phylum_name, :class_name, :order_name, :family_name, :rank_name,
+    :full_name, :english_names_list, :spanish_names_list, :french_names_list
   def initialize(options)
     @item_type = 'HigherTaxa'#TODO class name would do, if as_json would work
     super(options)

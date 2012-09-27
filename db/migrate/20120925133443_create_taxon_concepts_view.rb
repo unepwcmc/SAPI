@@ -4,8 +4,8 @@ class CreateTaxonConceptsView < ActiveRecord::Migration
       CREATE OR REPLACE VIEW taxon_concepts_view AS
       SELECT taxon_concepts.id, 
       CASE
-        WHEN designations.name = 'CITES' THEN 't'
-        ELSE 'f'
+        WHEN designations.name = 'CITES' THEN ('t')::BOOLEAN
+        ELSE ('f')::BOOLEAN
       END AS designation_is_cites,
       data->'full_name' AS full_name,
       data->'rank_name' AS rank_name,
@@ -69,7 +69,7 @@ class CreateTaxonConceptsView < ActiveRecord::Migration
           ORDER BY 1,2'
         ) AS ct(
           taxon_concept_id_com INTEGER,
-          lng_E VARCHAR[], lng_F VARCHAR[], lng_S VARCHAR[]
+          english_names_ary VARCHAR[], french_names_ary VARCHAR[], spanish_names_ary VARCHAR[]
         )
       ) common_names ON taxon_concepts.id = common_names.taxon_concept_id_com
       LEFT JOIN (

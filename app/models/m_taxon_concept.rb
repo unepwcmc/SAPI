@@ -1,8 +1,8 @@
-class TaxonConceptM < TaxonConcept
+class MTaxonConcept < TaxonConcept
   include PgArrayParser
-  set_table_name :taxon_concepts_mview
+  self.table_name = :taxon_concepts_mview
 
-  has_many :listing_changes, :foreign_key => :taxon_concept_id
+  has_many :m_listing_changes, :foreign_key => :taxon_concept_id
 
   scope :by_designation, lambda { |name|
     where("designation_is_#{name}".downcase => 't')
@@ -75,7 +75,7 @@ class TaxonConceptM < TaxonConcept
           JOIN taxon_concepts hi
           ON hi.parent_id = (q.h).id
         ) SELECT DISTINCT id, full_name FROM q
-      ) descendants ON taxon_concepts.id = descendants.id
+      ) descendants ON #{self.table_name}.id = descendants.id
       SQL
     )
   }
@@ -94,7 +94,7 @@ class TaxonConceptM < TaxonConcept
 
   ['English', 'Spanish', 'French'].each do |lng|
     define_method("#{lng.downcase}_names") do
-      sym = :"lng_#{lng[0].downcase}"
+      sym = :"#{lng.downcase}_names_ary"
       if respond_to?(sym)
         parse_pg_array(send(sym) || '').compact.map do |e|
           e.force_encoding('utf-8')
@@ -132,22 +132,24 @@ class TaxonConceptM < TaxonConcept
   end
 
   def recently_changed
-    return self.listing_changes.where('effective_at > ?', 8.year.ago).any?
+    return self.m_listing_changes.where('effective_at > ?', 8.year.ago).any?
   end
 
-  EXPORTED_FIELDS = [
-    :id, :full_name, :spp, :rank_name, :current_listing, :cites_accepted,
-    :species_name, :genus_name, :family_name, :order_name,
-    :class_name, :phylum_name,
-    :species_id, :genus_id, :family_id, :order_id,
-    :class_id, :phylum_id,
-    :english_names_list, :spanish_names_list, :french_names_list, 
-    :synonyms_list, :countries_ids, :cites_accepted, :recently_changed
-  ]
-
-  def to_checklist_item
-    Checklist::TaxonConceptItem.new(
-      Hash[EXPORTED_FIELDS.map{ |field| [field, self.send(field)] }]
-    )
+  def as_json(options={})
+    unless options[:only] || options[:methods]
+      options = {
+        :only =>[:id, :species_name, :genus_name, :family_name, :order_name,
+          :class_name, :phylum_name, :full_name, :rank_name,
+          :taxonomic_position, :current_listing, :cites_accepted,
+          :countries_ids],
+        :methods => [
+          :spp, :recently_changed,
+          :english_names_list, :spanish_names_list, :french_names_list,
+          :synonyms_list
+        ]
+      }
+    end
+    super(options)
   end
+
 end

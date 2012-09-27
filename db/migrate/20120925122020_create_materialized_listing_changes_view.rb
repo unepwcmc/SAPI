@@ -1,7 +1,7 @@
 class CreateMaterializedListingChangesView < ActiveRecord::Migration
   def up
     execute <<-SQL
-    CREATE TABLE mat_listing_changes_view AS
+    CREATE TABLE listing_changes_mview AS
     SELECT *,
     false as dirty,
     null::timestamp with time zone as expiry
@@ -10,6 +10,6 @@ class CreateMaterializedListingChangesView < ActiveRecord::Migration
   end
 
   def down
-    drop_table :mat_listing_changes_view
+    drop_table :listing_changes_mview
   end
 end

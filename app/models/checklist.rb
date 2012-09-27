@@ -14,9 +14,7 @@ class Checklist
     @output_layout = options[:output_layout] || :alphabetical
     @designation = options[:designation] || Designation::CITES
 
-    @taxon_concepts_rel = TaxonConceptM.scoped.
-      # select([:"taxon_concepts.id", :"taxon_concepts.data", :"taxon_concepts.listing", :"taxon_concepts.updated_at",
-        # 'taxon_concepts_mview.kingdom_position', 'taxon_concepts_mview.full_name', 'taxon_concepts_mview.taxonomic_position', 'taxon_concepts_mview.designation_is_cites']).
+    @taxon_concepts_rel = MTaxonConcept.scoped.select('*').
       by_designation(@designation).without_nc
 
     #filtering options
@@ -59,7 +57,6 @@ class Checklist
     else
       @taxon_concepts_rel.alphabetical_layout
     end
-
   end
 
   # Takes the current search query, paginates it and adds metadata
@@ -73,16 +70,13 @@ class Checklist
     per_page ||= 20
     total_cnt = @taxon_concepts_rel.count
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
-    #TODO since we need to go through all the results and post process, this query might be redundant
-    kingdom_split_idx = @taxon_concepts_rel.where(:kingdom_position => 0).count #animalia first
     taxon_concepts = @taxon_concepts_rel.all
-    @animalia = generate_kingdom(taxon_concepts[0...kingdom_split_idx])
-    @plantae = generate_kingdom(taxon_concepts[kingdom_split_idx..taxon_concepts.length])
+    @animalia, @plantae = taxon_concepts.partition{ |item| item.kingdom_name == 'Animalia' }
 
     [{
-      :animalia => @animalia,
-      :plantae => @plantae,
-      :result_cnt => @animalia.size + @plantae.size,
+      :animalia => generate_kingdom(@animalia),
+      :plantae => generate_kingdom(@plantae),
+      :result_cnt => taxon_concepts.size,
       :total_cnt => total_cnt
     }]
   end
@@ -96,7 +90,7 @@ class Checklist
     # puts tc.full_name
     prev_path = (prev_item.nil? ? '' : prev_item.taxonomic_position)
     curr_path = curr_item.taxonomic_position
-    return res unless prev_path && prev_path
+    return res unless prev_path && curr_path
     prev_path_segments = prev_path.split('.')
     curr_path_segments = curr_path.split('.')
     common_segments = 0
@@ -158,7 +152,7 @@ class Checklist
           false #just immediate parent
         )
       end
-      res << tc.to_checklist_item
+      res << tc
     end
     res
   end

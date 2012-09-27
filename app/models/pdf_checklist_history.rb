@@ -4,73 +4,20 @@ require Rails.root.join("lib/modules/pdf.rb")
 class PdfChecklistHistory < ChecklistHistory
   include PDF
 
-  #add higher taxa headers TODO refactor
-  def post_process(taxon_concepts)
-    res2 = []
-    ranks = ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'GENUS', 'SPECIES']
-    header_ranks = 4 #use only this many from the ranks table for headers
-    taxon_concepts.each_with_index do |tc, i|
-      # puts tc.full_name
-      prev_path = if i==0
-        ''
-      else
-        taxon_concepts[i-1].taxonomic_position
-      end
-      curr_path = tc.taxonomic_position
-      prev_path_segments = prev_path.split('.')
-      curr_path_segments = curr_path.split('.')
-      common_segments = 0
-      for j in 0..prev_path_segments.length-1
-        if curr_path_segments[j] == prev_path_segments[j]
-          common_segments += 1
-        else
-          break
-        end
-      end
-      # puts prev_path
-      # puts curr_path
-      # puts "common segments: #{common_segments}"
-      missing_segments = unless prev_path.blank?
-        if prev_path_segments.length < curr_path_segments.length
-          prev_path_segments.length - common_segments
-        else
-          curr_path_segments.length - common_segments
-        end
-      else
-        curr_path_segments.length - 1
-      end
-      # puts "missing segments: #{missing_segments}"
-      if missing_segments > 1
-        rank_idx = ranks.index(tc.rank_name)
-        rank_idx = (ranks.length - 1) if rank_idx.nil?
-        for k in (ranks.length - missing_segments)..(rank_idx > header_ranks - 1 ? header_ranks - 1 : rank_idx)
-          # puts ranks[k]
-          # puts tc.send("#{ranks[k].downcase}_name")
-          res2 << TaxonConcept.new({
-            :data => {
-              'rank_name' => ranks[k],
-              'full_name' => tc.send("#{ranks[k].downcase}_name")
-            }
-          })
-        end
-      end
-      res2 << tc
-    end
-    res2
-  end
-
   def generate
     static_history_pdf = [Rails.root, "/public/static_history.pdf"].join
     attachment_pdf = [Rails.root, "/public/Historical_summary_of_CITES_annotations.pdf"].join
-    tmp_history_pdf    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
+    tmp_history_pdf = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
 
     static_page_count = get_page_count(static_history_pdf)
-    animalia = post_process(
-      @taxon_concepts_rel.where("data->'kingdom_name' = 'Animalia'")
-    )
-    plantae = post_process(
-      @taxon_concepts_rel.where("data->'kingdom_name' = 'Plantae'")
-    )
+    animalia, plantae = [], []
+    page = 0
+    begin
+      res = super(page, 1000)
+      animalia += res[0][:animalia]
+      plantae += res[0][:plantae]
+      page += 1
+    end while res[0][:result_cnt] > 0
 
     Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
       pdf.default_leading 0
@@ -154,9 +101,9 @@ class PdfChecklistHistory < ChecklistHistory
           ]
         }
       end
-      unless tc.new_record?
+      unless tc.kind_of? Checklist::HigherTaxaItem
         #filter out null records for higher taxa
-        listings_subtable = pdf.make_table(tc.listing_history.map do |lh|
+        listings_subtable = pdf.make_table(tc.m_listing_changes.map do |lh|
           [
             "#{lh[:species_listing_name]}#{
               if lh[:change_type_name] == ChangeType::RESERVATION
@@ -170,7 +117,7 @@ class PdfChecklistHistory < ChecklistHistory
               end
             }",
             "#{lh[:party_name]}".upcase,
-            "#{lh[:effective_at] ? Date.parse(lh[:effective_at]).strftime("%d/%m/%y") : nil}",
+            "#{lh[:effective_at] ? lh[:effective_at].strftime("%d/%m/%y") : nil}",
             "#{lh[:notes]}".sub(/NULL/,'')#TODO
           ]
         end,

@@ -14,7 +14,7 @@ class PdfChecklist < Checklist
     if(@synonyms)
       synonyms_run = taxon_concepts.map do |tc|
         tc.synonyms.map do |s|
-          {:entry_type => :synonym, :secondary => s, :primary => tc.full_name}
+          Checklist::SynonymItem.new(:synonym_name => s, :full_name => tc.full_name)
         end
       end.flatten
       merge_runs << synonyms_run
@@ -23,22 +23,16 @@ class PdfChecklist < Checklist
       common_names_run = taxon_concepts.map do |tc|
         ['english', 'spanish', 'french'].map do |lng|
           tc.send("#{lng}_names").map do |c|
-            {:entry_type => :common, :secondary => c, :primary => tc.full_name, :lng => lng}
+            Checklist::CommonNameItem.new(
+              :common_name => c, :full_name => tc.full_name, :lng => lng
+            )
           end
         end
       end.flatten.compact
       merge_runs << common_names_run
     end
     merge_runs.flatten.sort do |a,b|
-      if a[:entry_type]
-        a[:secondary]
-      else
-        a.full_name
-      end <=> if b[:entry_type]
-        b[:secondary]
-      else
-        b.full_name
-      end
+      (a.full_name || '') <=> (b.full_name || '')
     end
   end
 
@@ -48,15 +42,22 @@ class PdfChecklist < Checklist
     tmp_index_pdf    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
 
     static_page_count = get_page_count(static_index_pdf)
-    animalia = post_process(
-      @taxon_concepts_rel.where("data->'kingdom_name' = 'Animalia'")
-    )
-    plantae = post_process(
-      @taxon_concepts_rel.where("data->'kingdom_name' = 'Plantae'")
-    )
+
+    animalia, plantae = [], []
+    page = 0
+    begin
+      res = super(page, 1000)
+      animalia += res[0][:animalia]
+      plantae += res[0][:plantae]
+      page += 1
+    end while res[0][:result_cnt] > 0
+
+    animalia = post_process(animalia)
+    plantae = post_process(plantae)
 
     Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
       pdf.font_size 9
+
       draw_kingdom(pdf, animalia, 'FAUNA') unless animalia.empty?
       draw_kingdom(pdf, plantae, 'FLORA') unless plantae.empty?
 
@@ -97,13 +98,11 @@ class PdfChecklist < Checklist
     pdf.column_box([0, pdf.cursor], :columns => 2, :width => pdf.bounds.width) do
       kingdom.each do |tc|
         entry = 
-        if tc[:entry_type]
+        if tc.kind_of? Checklist::SynonymItem
           #it's a synonym or common name entry
-          if tc[:entry_type] == :synonym
-            "<i>#{tc[:secondary]} = #{tc[:primary]}</i>"
-          else
-            "#{tc[:secondary]} (#{tc[:lng][0].upcase}): <i>#{tc[:primary]}</i>"
-          end
+          "<i>#{tc.synonym_name} = #{tc.full_name}</i>"
+        elsif tc.kind_of? Checklist::CommonNameItem
+          "#{tc.common_name} (#{tc.lng[0].upcase}): <i>#{tc.full_name}</i>"
         else
           res = if ['FAMILY','ORDER','CLASS'].include? tc.rank_name
             tc.full_name.upcase

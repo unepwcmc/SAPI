@@ -680,41 +680,6 @@ ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
 
 
 --
--- Name: cites_listings_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_listings_import (
-    legacy_type character varying,
-    spc_rec_id integer,
-    appendix character varying,
-    listing_date date,
-    country_legacy_id character varying,
-    notes character varying
-);
-
-
---
--- Name: cites_regions_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_regions_import (
-    name character varying
-);
-
-
---
--- Name: common_name_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE common_name_import (
-    legacy_type character varying,
-    common_name character varying,
-    language_name character varying,
-    species_id integer
-);
-
-
---
 -- Name: common_names; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -748,20 +713,6 @@ ALTER SEQUENCE common_names_id_seq OWNED BY common_names.id;
 
 
 --
--- Name: countries_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE countries_import (
-    legacy_id integer,
-    iso2 character varying,
-    iso3 character varying,
-    name character varying,
-    long_name character varying,
-    region_number character varying
-);
-
-
---
 -- Name: designations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -790,18 +741,6 @@ CREATE SEQUENCE designations_id_seq
 --
 
 ALTER SEQUENCE designations_id_seq OWNED BY designations.id;
-
-
---
--- Name: distribution_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE distribution_import (
-    legacy_type character varying,
-    species_id integer,
-    country_id integer,
-    country_name character varying
-);
 
 
 --
@@ -983,7 +922,7 @@ CREATE TABLE listing_changes (
     parent_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-09-21 07:32:20.074068'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-09-21 08:00:14.341268'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -1005,6 +944,26 @@ CREATE SEQUENCE listing_changes_id_seq
 --
 
 ALTER SEQUENCE listing_changes_id_seq OWNED BY listing_changes.id;
+
+
+--
+-- Name: listing_changes_mview; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE listing_changes_mview (
+    id integer,
+    taxon_concept_id integer,
+    effective_at timestamp without time zone,
+    species_listing_id integer,
+    species_listing_name character varying(255),
+    change_type_id integer,
+    change_type_name character varying(255),
+    party_id integer,
+    party_name character varying(255),
+    notes text,
+    dirty boolean,
+    expiry timestamp with time zone
+);
 
 
 --
@@ -1063,26 +1022,6 @@ ALTER SEQUENCE listing_distributions_id_seq OWNED BY listing_distributions.id;
 
 
 --
--- Name: mat_listing_changes_view; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE mat_listing_changes_view (
-    id integer,
-    taxon_concept_id integer,
-    effective_at timestamp without time zone,
-    species_listing_id integer,
-    species_listing_name character varying(255),
-    change_type_id integer,
-    change_type_name character varying(255),
-    party_id integer,
-    party_name character varying(255),
-    notes text,
-    dirty boolean,
-    expiry timestamp with time zone
-);
-
-
---
 -- Name: ranks; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1112,20 +1051,6 @@ CREATE SEQUENCE ranks_id_seq
 --
 
 ALTER SEQUENCE ranks_id_seq OWNED BY ranks.id;
-
-
---
--- Name: reference_links_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE reference_links_import (
-    legacy_type character varying,
-    legacy_id integer,
-    spcrecid integer,
-    dscrecid integer,
-    dslcode character varying,
-    dslcoderecid integer
-);
 
 
 --
@@ -1164,43 +1089,11 @@ ALTER SEQUENCE references_id_seq OWNED BY "references".id;
 
 
 --
--- Name: references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE references_import (
-    author character varying,
-    title character varying,
-    year character varying,
-    legacy_id integer,
-    legacy_type character varying
-);
-
-
---
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE schema_migrations (
     version character varying(255) NOT NULL
-);
-
-
---
--- Name: species_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE species_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    speciesauthor character varying,
-    spcinfrarank character varying,
-    spcinfra character varying,
-    infrarankauthor character varying,
-    spcrecid integer,
-    spcstatus character varying
 );
 
 
@@ -1261,44 +1154,6 @@ CREATE SEQUENCE standard_references_id_seq
 --
 
 ALTER SEQUENCE standard_references_id_seq OWNED BY standard_references.id;
-
-
---
--- Name: standard_references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE standard_references_import (
-    author character varying,
-    year integer,
-    title character varying,
-    kingdom character varying,
-    phylum character varying,
-    class character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying
-);
-
-
---
--- Name: synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE synonym_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    speciesauthor character varying,
-    spcinfrarank character varying,
-    spcinfra character varying,
-    infrarankauthor character varying,
-    spcrecid integer,
-    spcstatus character varying,
-    accepted_species_id integer
-);
 
 
 --
@@ -1473,7 +1328,7 @@ ALTER SEQUENCE taxon_concepts_id_seq OWNED BY taxon_concepts.id;
 
 CREATE TABLE taxon_concepts_mview (
     id integer,
-    designation_is_cites text,
+    designation_is_cites boolean,
     full_name text,
     rank_name text,
     cites_accepted boolean,
@@ -1502,9 +1357,9 @@ CREATE TABLE taxon_concepts_mview (
     cites_del boolean,
     current_listing text,
     taxon_concept_id_com integer,
-    lng_e character varying[],
-    lng_f character varying[],
-    lng_s character varying[],
+    english_names_ary character varying[],
+    french_names_ary character varying[],
+    spanish_names_ary character varying[],
     taxon_concept_id_syn integer,
     synonyms_ary text[],
     dirty boolean,
@@ -1543,7 +1398,7 @@ CREATE TABLE taxon_relationships (
 --
 
 CREATE VIEW taxon_concepts_view AS
-    SELECT taxon_concepts.id, CASE WHEN ((designations.name)::text = 'CITES'::text) THEN 't'::text ELSE 'f'::text END AS designation_is_cites, (taxon_concepts.data -> 'full_name'::text) AS full_name, (taxon_concepts.data -> 'rank_name'::text) AS rank_name, ((taxon_concepts.data -> 'cites_accepted'::text))::boolean AS cites_accepted, CASE WHEN ((taxon_concepts.data -> 'kingdom_name'::text) = 'Animalia'::text) THEN 0 ELSE 1 END AS kingdom_position, (taxon_concepts.data -> 'taxonomic_position'::text) AS taxonomic_position, (taxon_concepts.data -> 'kingdom_name'::text) AS kingdom_name, (taxon_concepts.data -> 'phylum_name'::text) AS phylum_name, (taxon_concepts.data -> 'class_name'::text) AS class_name, (taxon_concepts.data -> 'order_name'::text) AS order_name, (taxon_concepts.data -> 'family_name'::text) AS family_name, (taxon_concepts.data -> 'genus_name'::text) AS genus_name, (taxon_concepts.data -> 'species_name'::text) AS species_name, (taxon_concepts.data -> 'subspecies_name'::text) AS subspecies_name, (taxon_concepts.data -> 'kingdom_id'::text) AS kingdom_id, (taxon_concepts.data -> 'phylum_id'::text) AS phylum_id, (taxon_concepts.data -> 'class_id'::text) AS class_id, (taxon_concepts.data -> 'order_id'::text) AS order_id, (taxon_concepts.data -> 'family_id'::text) AS family_id, (taxon_concepts.data -> 'genus_id'::text) AS genus_id, (taxon_concepts.data -> 'species_id'::text) AS species_id, (taxon_concepts.data -> 'subspecies_id'::text) AS subspecies_id, ((taxon_concepts.listing -> 'cites_listed'::text))::boolean AS cites_listed, CASE WHEN ((taxon_concepts.listing -> 'cites_I'::text) = 'I'::text) THEN 't'::text ELSE 'f'::text END AS cites_i, CASE WHEN ((taxon_concepts.listing -> 'cites_II'::text) = 'II'::text) THEN 't'::text ELSE 'f'::text END AS cites_ii, CASE WHEN ((taxon_concepts.listing -> 'cites_III'::text) = 'III'::text) THEN 't'::text ELSE 'f'::text END AS cites_iii, ((taxon_concepts.listing -> 'cites_del'::text))::boolean AS cites_del, (taxon_concepts.listing -> 'current_listing'::text) AS current_listing, common_names.taxon_concept_id_com, common_names.lng_e, common_names.lng_f, common_names.lng_s, synonyms.taxon_concept_id_syn, synonyms.synonyms_ary FROM ((((taxon_concepts LEFT JOIN designations ON ((designations.id = taxon_concepts.designation_id))) LEFT JOIN (SELECT ct.taxon_concept_id_com, ct.lng_e, ct.lng_f, ct.lng_s FROM crosstab('SELECT taxon_concepts.id AS taxon_concept_id_com,
+    SELECT taxon_concepts.id, CASE WHEN ((designations.name)::text = 'CITES'::text) THEN true ELSE false END AS designation_is_cites, (taxon_concepts.data -> 'full_name'::text) AS full_name, (taxon_concepts.data -> 'rank_name'::text) AS rank_name, ((taxon_concepts.data -> 'cites_accepted'::text))::boolean AS cites_accepted, CASE WHEN ((taxon_concepts.data -> 'kingdom_name'::text) = 'Animalia'::text) THEN 0 ELSE 1 END AS kingdom_position, (taxon_concepts.data -> 'taxonomic_position'::text) AS taxonomic_position, (taxon_concepts.data -> 'kingdom_name'::text) AS kingdom_name, (taxon_concepts.data -> 'phylum_name'::text) AS phylum_name, (taxon_concepts.data -> 'class_name'::text) AS class_name, (taxon_concepts.data -> 'order_name'::text) AS order_name, (taxon_concepts.data -> 'family_name'::text) AS family_name, (taxon_concepts.data -> 'genus_name'::text) AS genus_name, (taxon_concepts.data -> 'species_name'::text) AS species_name, (taxon_concepts.data -> 'subspecies_name'::text) AS subspecies_name, (taxon_concepts.data -> 'kingdom_id'::text) AS kingdom_id, (taxon_concepts.data -> 'phylum_id'::text) AS phylum_id, (taxon_concepts.data -> 'class_id'::text) AS class_id, (taxon_concepts.data -> 'order_id'::text) AS order_id, (taxon_concepts.data -> 'family_id'::text) AS family_id, (taxon_concepts.data -> 'genus_id'::text) AS genus_id, (taxon_concepts.data -> 'species_id'::text) AS species_id, (taxon_concepts.data -> 'subspecies_id'::text) AS subspecies_id, ((taxon_concepts.listing -> 'cites_listed'::text))::boolean AS cites_listed, CASE WHEN ((taxon_concepts.listing -> 'cites_I'::text) = 'I'::text) THEN 't'::text ELSE 'f'::text END AS cites_i, CASE WHEN ((taxon_concepts.listing -> 'cites_II'::text) = 'II'::text) THEN 't'::text ELSE 'f'::text END AS cites_ii, CASE WHEN ((taxon_concepts.listing -> 'cites_III'::text) = 'III'::text) THEN 't'::text ELSE 'f'::text END AS cites_iii, ((taxon_concepts.listing -> 'cites_del'::text))::boolean AS cites_del, (taxon_concepts.listing -> 'current_listing'::text) AS current_listing, common_names.taxon_concept_id_com, common_names.english_names_ary, common_names.french_names_ary, common_names.spanish_names_ary, synonyms.taxon_concept_id_syn, synonyms.synonyms_ary FROM ((((taxon_concepts LEFT JOIN designations ON ((designations.id = taxon_concepts.designation_id))) LEFT JOIN (SELECT ct.taxon_concept_id_com, ct.english_names_ary, ct.french_names_ary, ct.spanish_names_ary FROM crosstab('SELECT taxon_concepts.id AS taxon_concept_id_com,
           SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
           ARRAY_AGG(common_names.name ORDER BY common_names.id) AS common_names_ary 
           FROM "taxon_concepts"
@@ -1554,7 +1409,7 @@ CREATE VIEW taxon_concepts_view AS
           INNER JOIN "languages"
             ON "languages"."id" = "common_names"."language_id"
           GROUP BY taxon_concepts.id, SUBSTRING(languages.name FROM 1 FOR 1)
-          ORDER BY 1,2'::text) ct(taxon_concept_id_com integer, lng_e character varying[], lng_f character varying[], lng_s character varying[])) common_names ON ((taxon_concepts.id = common_names.taxon_concept_id_com))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_syn, array_agg((synonym_tc.data -> 'full_name'::text)) AS synonyms_ary FROM (((taxon_concepts LEFT JOIN taxon_relationships ON ((taxon_relationships.taxon_concept_id = taxon_concepts.id))) LEFT JOIN taxon_relationship_types ON ((taxon_relationship_types.id = taxon_relationships.taxon_relationship_type_id))) LEFT JOIN taxon_concepts synonym_tc ON ((synonym_tc.id = taxon_relationships.other_taxon_concept_id))) GROUP BY taxon_concepts.id) synonyms ON ((taxon_concepts.id = synonyms.taxon_concept_id_syn))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_cnt, array_agg(geo_entities.id ORDER BY geo_entities.name) AS countries_ids_ary FROM (((taxon_concepts LEFT JOIN taxon_concept_geo_entities ON ((taxon_concept_geo_entities.taxon_concept_id = taxon_concepts.id))) LEFT JOIN geo_entities ON ((taxon_concept_geo_entities.geo_entity_id = geo_entities.id))) LEFT JOIN geo_entity_types ON (((geo_entity_types.id = geo_entities.geo_entity_type_id) AND ((geo_entity_types.name)::text = 'COUNTRY'::text)))) GROUP BY taxon_concepts.id) countries_ids ON ((taxon_concepts.id = countries_ids.taxon_concept_id_cnt)));
+          ORDER BY 1,2'::text) ct(taxon_concept_id_com integer, english_names_ary character varying[], french_names_ary character varying[], spanish_names_ary character varying[])) common_names ON ((taxon_concepts.id = common_names.taxon_concept_id_com))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_syn, array_agg((synonym_tc.data -> 'full_name'::text)) AS synonyms_ary FROM (((taxon_concepts LEFT JOIN taxon_relationships ON ((taxon_relationships.taxon_concept_id = taxon_concepts.id))) LEFT JOIN taxon_relationship_types ON ((taxon_relationship_types.id = taxon_relationships.taxon_relationship_type_id))) LEFT JOIN taxon_concepts synonym_tc ON ((synonym_tc.id = taxon_relationships.other_taxon_concept_id))) GROUP BY taxon_concepts.id) synonyms ON ((taxon_concepts.id = synonyms.taxon_concept_id_syn))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_cnt, array_agg(geo_entities.id ORDER BY geo_entities.name) AS countries_ids_ary FROM (((taxon_concepts LEFT JOIN taxon_concept_geo_entities ON ((taxon_concept_geo_entities.taxon_concept_id = taxon_concepts.id))) LEFT JOIN geo_entities ON ((taxon_concept_geo_entities.geo_entity_id = geo_entities.id))) LEFT JOIN geo_entity_types ON (((geo_entity_types.id = geo_entities.geo_entity_type_id) AND ((geo_entity_types.name)::text = 'COUNTRY'::text)))) GROUP BY taxon_concepts.id) countries_ids ON ((taxon_concepts.id = countries_ids.taxon_concept_id_cnt)));
 
 
 --
@@ -1955,6 +1810,13 @@ ALTER TABLE ONLY taxon_relationship_types
 
 ALTER TABLE ONLY taxon_relationships
     ADD CONSTRAINT taxon_relationships_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_listing_changes_mview_on_taxon_concept_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_listing_changes_mview_on_taxon_concept_id ON listing_changes_mview USING btree (taxon_concept_id);
 
 
 --
@@ -2405,3 +2267,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120925133443');
 INSERT INTO schema_migrations (version) VALUES ('20120925141758');
 
 INSERT INTO schema_migrations (version) VALUES ('20120926132500');
+
+INSERT INTO schema_migrations (version) VALUES ('20120927100016');
