@@ -32,6 +32,7 @@ class CreateTaxonConceptsView < ActiveRecord::Migration
       data->'species_id' AS species_id,
       data->'subspecies_id' AS subspecies_id,
       (listing->'cites_listed')::BOOLEAN AS cites_listed,
+      (listing->'cites_show')::BOOLEAN AS cites_show,
       CASE
         WHEN listing->'cites_I' = 'I' THEN 't'
         ELSE 'f'

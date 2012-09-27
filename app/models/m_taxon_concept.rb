@@ -113,7 +113,7 @@ class MTaxonConcept < TaxonConcept
       ARRAY(SELECT DISTINCT * FROM UNNEST(std_ref_ary) s WHERE s IS NOT NULL)
       AS std_ref_ary
       FROM q
-    ) standard_references ON taxon_concepts.id = standard_references.taxon_concept_id_sr
+    ) standard_references ON id = standard_references.taxon_concept_id_sr
     SQL
   )
 
