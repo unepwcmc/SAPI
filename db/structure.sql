@@ -1476,13 +1476,31 @@ CREATE TABLE taxon_concepts_mview (
     designation_is_cites text,
     full_name text,
     rank_name text,
+    cites_accepted boolean,
     kingdom_position integer,
     taxonomic_position text,
+    kingdom_name text,
+    phylum_name text,
+    class_name text,
+    order_name text,
+    family_name text,
+    genus_name text,
+    species_name text,
+    subspecies_name text,
+    kingdom_id text,
+    phylum_id text,
+    class_id text,
+    order_id text,
+    family_id text,
+    genus_id text,
+    species_id text,
+    subspecies_id text,
     cites_listed boolean,
     cites_i text,
     cites_ii text,
     cites_iii text,
     cites_del boolean,
+    current_listing text,
     taxon_concept_id_com integer,
     lng_e character varying[],
     lng_f character varying[],
@@ -1525,7 +1543,7 @@ CREATE TABLE taxon_relationships (
 --
 
 CREATE VIEW taxon_concepts_view AS
-    SELECT taxon_concepts.id, CASE WHEN ((designations.name)::text = 'CITES'::text) THEN 't'::text ELSE 'f'::text END AS designation_is_cites, (taxon_concepts.data -> 'full_name'::text) AS full_name, (taxon_concepts.data -> 'rank_name'::text) AS rank_name, CASE WHEN ((taxon_concepts.data -> 'kingdom_name'::text) = 'Animalia'::text) THEN 0 ELSE 1 END AS kingdom_position, (taxon_concepts.data -> 'taxonomic_position'::text) AS taxonomic_position, ((taxon_concepts.listing -> 'cites_listed'::text))::boolean AS cites_listed, CASE WHEN ((taxon_concepts.listing -> 'cites_I'::text) = 'I'::text) THEN 't'::text ELSE 'f'::text END AS cites_i, CASE WHEN ((taxon_concepts.listing -> 'cites_II'::text) = 'II'::text) THEN 't'::text ELSE 'f'::text END AS cites_ii, CASE WHEN ((taxon_concepts.listing -> 'cites_III'::text) = 'III'::text) THEN 't'::text ELSE 'f'::text END AS cites_iii, ((taxon_concepts.listing -> 'cites_del'::text))::boolean AS cites_del, common_names.taxon_concept_id_com, common_names.lng_e, common_names.lng_f, common_names.lng_s, synonyms.taxon_concept_id_syn, synonyms.synonyms_ary FROM (((taxon_concepts LEFT JOIN designations ON ((designations.id = taxon_concepts.designation_id))) LEFT JOIN (SELECT ct.taxon_concept_id_com, ct.lng_e, ct.lng_f, ct.lng_s FROM crosstab('SELECT taxon_concepts.id AS taxon_concept_id_com,
+    SELECT taxon_concepts.id, CASE WHEN ((designations.name)::text = 'CITES'::text) THEN 't'::text ELSE 'f'::text END AS designation_is_cites, (taxon_concepts.data -> 'full_name'::text) AS full_name, (taxon_concepts.data -> 'rank_name'::text) AS rank_name, ((taxon_concepts.data -> 'cites_accepted'::text))::boolean AS cites_accepted, CASE WHEN ((taxon_concepts.data -> 'kingdom_name'::text) = 'Animalia'::text) THEN 0 ELSE 1 END AS kingdom_position, (taxon_concepts.data -> 'taxonomic_position'::text) AS taxonomic_position, (taxon_concepts.data -> 'kingdom_name'::text) AS kingdom_name, (taxon_concepts.data -> 'phylum_name'::text) AS phylum_name, (taxon_concepts.data -> 'class_name'::text) AS class_name, (taxon_concepts.data -> 'order_name'::text) AS order_name, (taxon_concepts.data -> 'family_name'::text) AS family_name, (taxon_concepts.data -> 'genus_name'::text) AS genus_name, (taxon_concepts.data -> 'species_name'::text) AS species_name, (taxon_concepts.data -> 'subspecies_name'::text) AS subspecies_name, (taxon_concepts.data -> 'kingdom_id'::text) AS kingdom_id, (taxon_concepts.data -> 'phylum_id'::text) AS phylum_id, (taxon_concepts.data -> 'class_id'::text) AS class_id, (taxon_concepts.data -> 'order_id'::text) AS order_id, (taxon_concepts.data -> 'family_id'::text) AS family_id, (taxon_concepts.data -> 'genus_id'::text) AS genus_id, (taxon_concepts.data -> 'species_id'::text) AS species_id, (taxon_concepts.data -> 'subspecies_id'::text) AS subspecies_id, ((taxon_concepts.listing -> 'cites_listed'::text))::boolean AS cites_listed, CASE WHEN ((taxon_concepts.listing -> 'cites_I'::text) = 'I'::text) THEN 't'::text ELSE 'f'::text END AS cites_i, CASE WHEN ((taxon_concepts.listing -> 'cites_II'::text) = 'II'::text) THEN 't'::text ELSE 'f'::text END AS cites_ii, CASE WHEN ((taxon_concepts.listing -> 'cites_III'::text) = 'III'::text) THEN 't'::text ELSE 'f'::text END AS cites_iii, ((taxon_concepts.listing -> 'cites_del'::text))::boolean AS cites_del, (taxon_concepts.listing -> 'current_listing'::text) AS current_listing, common_names.taxon_concept_id_com, common_names.lng_e, common_names.lng_f, common_names.lng_s, synonyms.taxon_concept_id_syn, synonyms.synonyms_ary FROM ((((taxon_concepts LEFT JOIN designations ON ((designations.id = taxon_concepts.designation_id))) LEFT JOIN (SELECT ct.taxon_concept_id_com, ct.lng_e, ct.lng_f, ct.lng_s FROM crosstab('SELECT taxon_concepts.id AS taxon_concept_id_com,
           SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
           ARRAY_AGG(common_names.name ORDER BY common_names.id) AS common_names_ary 
           FROM "taxon_concepts"
@@ -1536,7 +1554,7 @@ CREATE VIEW taxon_concepts_view AS
           INNER JOIN "languages"
             ON "languages"."id" = "common_names"."language_id"
           GROUP BY taxon_concepts.id, SUBSTRING(languages.name FROM 1 FOR 1)
-          ORDER BY 1,2'::text) ct(taxon_concept_id_com integer, lng_e character varying[], lng_f character varying[], lng_s character varying[])) common_names ON ((taxon_concepts.id = common_names.taxon_concept_id_com))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_syn, array_agg((synonym_tc.data -> 'full_name'::text)) AS synonyms_ary FROM (((taxon_concepts LEFT JOIN taxon_relationships ON ((taxon_relationships.taxon_concept_id = taxon_concepts.id))) LEFT JOIN taxon_relationship_types ON ((taxon_relationship_types.id = taxon_relationships.taxon_relationship_type_id))) LEFT JOIN taxon_concepts synonym_tc ON ((synonym_tc.id = taxon_relationships.other_taxon_concept_id))) GROUP BY taxon_concepts.id) synonyms ON ((taxon_concepts.id = synonyms.taxon_concept_id_syn)));
+          ORDER BY 1,2'::text) ct(taxon_concept_id_com integer, lng_e character varying[], lng_f character varying[], lng_s character varying[])) common_names ON ((taxon_concepts.id = common_names.taxon_concept_id_com))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_syn, array_agg((synonym_tc.data -> 'full_name'::text)) AS synonyms_ary FROM (((taxon_concepts LEFT JOIN taxon_relationships ON ((taxon_relationships.taxon_concept_id = taxon_concepts.id))) LEFT JOIN taxon_relationship_types ON ((taxon_relationship_types.id = taxon_relationships.taxon_relationship_type_id))) LEFT JOIN taxon_concepts synonym_tc ON ((synonym_tc.id = taxon_relationships.other_taxon_concept_id))) GROUP BY taxon_concepts.id) synonyms ON ((taxon_concepts.id = synonyms.taxon_concept_id_syn))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_cnt, array_agg(geo_entities.id ORDER BY geo_entities.name) AS countries_ids_ary FROM (((taxon_concepts LEFT JOIN taxon_concept_geo_entities ON ((taxon_concept_geo_entities.taxon_concept_id = taxon_concepts.id))) LEFT JOIN geo_entities ON ((taxon_concept_geo_entities.geo_entity_id = geo_entities.id))) LEFT JOIN geo_entity_types ON (((geo_entity_types.id = geo_entities.geo_entity_type_id) AND ((geo_entity_types.name)::text = 'COUNTRY'::text)))) GROUP BY taxon_concepts.id) countries_ids ON ((taxon_concepts.id = countries_ids.taxon_concept_id_cnt)));
 
 
 --

@@ -14,11 +14,10 @@ class Checklist
     @output_layout = options[:output_layout] || :alphabetical
     @designation = options[:designation] || Designation::CITES
 
-    @taxon_concepts_rel = TaxonConcept.scoped.with_all.
-      select([:"taxon_concepts.id", :"taxon_concepts.data", :"taxon_concepts.listing", :"taxon_concepts.updated_at",
-        'taxon_concepts_mview.kingdom_position', 'taxon_concepts_mview.full_name', 'taxon_concepts_mview.taxonomic_position', 'taxon_concepts_mview.designation_is_cites']).
-      by_designation(@designation).without_nc.
-      with_countries_ids
+    @taxon_concepts_rel = TaxonConceptM.scoped.
+      # select([:"taxon_concepts.id", :"taxon_concepts.data", :"taxon_concepts.listing", :"taxon_concepts.updated_at",
+        # 'taxon_concepts_mview.kingdom_position', 'taxon_concepts_mview.full_name', 'taxon_concepts_mview.taxonomic_position', 'taxon_concepts_mview.designation_is_cites']).
+      by_designation(@designation).without_nc
 
     #filtering options
     @cites_regions = options[:cites_region_ids] || []
@@ -75,7 +74,7 @@ class Checklist
     total_cnt = @taxon_concepts_rel.count
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
     #TODO since we need to go through all the results and post process, this query might be redundant
-    kingdom_split_idx = @taxon_concepts_rel.where("taxon_concepts.data->'kingdom_name' = 'Animalia'").count
+    kingdom_split_idx = @taxon_concepts_rel.where(:kingdom_position => 0).count #animalia first
     taxon_concepts = @taxon_concepts_rel.all
     @animalia = generate_kingdom(taxon_concepts[0...kingdom_split_idx])
     @plantae = generate_kingdom(taxon_concepts[kingdom_split_idx..taxon_concepts.length])
