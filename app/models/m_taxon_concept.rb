@@ -22,7 +22,7 @@ class MTaxonConcept < TaxonConcept
     in_clause = [cites_regions_ids, countries_ids].flatten.compact.join(',')
 
     where <<-SQL
-    id IN 
+    taxon_concepts_mview.id IN 
     (
     SELECT taxon_concepts.id
     FROM taxon_concepts
@@ -64,7 +64,7 @@ class MTaxonConcept < TaxonConcept
       <<-SQL
       INNER JOIN (
         WITH RECURSIVE q AS (
-          SELECT h, h.id, data->'full_name' AS full_name
+          SELECT h, h.id, data->'full_name' AS full_name_sci
           FROM taxon_concepts h
           WHERE data->'full_name' ILIKE '#{scientific_name}%'
 
@@ -74,7 +74,7 @@ class MTaxonConcept < TaxonConcept
           FROM q
           JOIN taxon_concepts hi
           ON hi.parent_id = (q.h).id
-        ) SELECT DISTINCT id, full_name FROM q
+        ) SELECT DISTINCT id, full_name_sci FROM q
       ) descendants ON #{self.table_name}.id = descendants.id
       SQL
     )

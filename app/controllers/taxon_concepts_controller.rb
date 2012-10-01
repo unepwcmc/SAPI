@@ -35,21 +35,21 @@ class TaxonConceptsController < ApplicationController
   end
 
   def autocomplete
-    taxon_concepts = TaxonConcept.by_designation('CITES').
-      with_all.without_nc.
+    taxon_concepts = MTaxonConcept.by_designation('CITES').
+      without_nc.
       select("
-        taxon_concepts.data,
+        full_name, rank_name,
         ARRAY(
           SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
         ) AS synonyms_ary"
       ).
       where("
-        data->'full_name' ILIKE '#{params[:scientific_name]}%'
+        full_name ILIKE '#{params[:scientific_name]}%'
         OR
         EXISTS (SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{params[:scientific_name]}%')
       ").
       limit(params[:per_page]).
-      order("LENGTH(data->'taxonomic_position'), data->'full_name'")
+      order("LENGTH(taxonomic_position), full_name")
     render :json => taxon_concepts.to_json(:methods => [:full_name, :rank_name, :synonyms])
   end
 
