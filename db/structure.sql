@@ -205,7 +205,7 @@ CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         UPDATE taxon_concepts SET data =
           CASE
             WHEN data IS NULL THEN ''::HSTORE
-            ELSE data - ARRAY['cites_accepted']
+            ELSE data
           END || hstore('cites_accepted', NULL);
 
         -- set the cites_accepted flag to true for all explicitly referenced taxa
@@ -239,7 +239,7 @@ CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         ) AS q
         WHERE taxon_concepts.id = q.id;
 
-        -- set the cites_accepted flag to true for all implicitly listed taxa
+        -- set the cites_accepted flag to true for all implicitly referenced taxa
         WITH RECURSIVE q AS
         (
           SELECT  h,
@@ -263,11 +263,10 @@ CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           ON      hi.parent_id = (q.h).id
         )
         UPDATE taxon_concepts
-        SET data = data || hstore('cites_accepted', 't')
+        SET data = data || hstore('cites_accepted', (q.inherited_cites_accepted)::VARCHAR)
         FROM q
         WHERE taxon_concepts.id = (q.h).id AND
-          ((q.h).data->'cites_accepted')::BOOLEAN IS NULL
-          AND inherited_cites_accepted = 't';
+          ((q.h).data->'cites_accepted')::BOOLEAN IS NULL;
 
         END;
       $$;
@@ -957,7 +956,7 @@ CREATE TABLE listing_changes (
     parent_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-09-27 21:05:46.460954'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-09-21 08:00:14.341268'::timestamp without time zone NOT NULL,
     notes text
 );
 
@@ -1363,6 +1362,7 @@ ALTER SEQUENCE taxon_concepts_id_seq OWNED BY taxon_concepts.id;
 
 CREATE TABLE taxon_concepts_mview (
     id integer,
+    fully_covered boolean,
     designation_is_cites boolean,
     full_name text,
     rank_name text,
@@ -1392,60 +1392,68 @@ CREATE TABLE taxon_concepts_mview (
     cites_iii text,
     cites_del boolean,
     current_listing text,
+    usr_cites_exclusion boolean,
+    cites_exclusion boolean,
     taxon_concept_id_com integer,
     english_names_ary character varying[],
     french_names_ary character varying[],
     spanish_names_ary character varying[],
     taxon_concept_id_syn integer,
     synonyms_ary text[],
+    countries_ids_ary integer[],
+    standard_references_ids_ary integer[],
     dirty boolean,
     expiry timestamp with time zone
 );
 
 
 --
--- Name: taxon_relationship_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: taxon_concepts_view; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE TABLE taxon_relationship_types (
-    id integer NOT NULL,
-    name character varying(255) NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+CREATE TABLE taxon_concepts_view (
+    id integer,
+    fully_covered boolean,
+    designation_is_cites boolean,
+    full_name text,
+    rank_name text,
+    cites_accepted boolean,
+    kingdom_position integer,
+    taxonomic_position text,
+    kingdom_name text,
+    phylum_name text,
+    class_name text,
+    order_name text,
+    family_name text,
+    genus_name text,
+    species_name text,
+    subspecies_name text,
+    kingdom_id text,
+    phylum_id text,
+    class_id text,
+    order_id text,
+    family_id text,
+    genus_id text,
+    species_id text,
+    subspecies_id text,
+    cites_listed boolean,
+    cites_show boolean,
+    cites_i text,
+    cites_ii text,
+    cites_iii text,
+    cites_del boolean,
+    current_listing text,
+    usr_cites_exclusion boolean,
+    cites_exclusion boolean,
+    taxon_concept_id_com integer,
+    english_names_ary character varying[],
+    french_names_ary character varying[],
+    spanish_names_ary character varying[],
+    taxon_concept_id_syn integer,
+    synonyms_ary text[],
+    countries_ids_ary integer[],
+    standard_references_ids_ary integer[]
 );
-
-
---
--- Name: taxon_relationships; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE taxon_relationships (
-    id integer NOT NULL,
-    taxon_concept_id integer NOT NULL,
-    other_taxon_concept_id integer NOT NULL,
-    taxon_relationship_type_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: taxon_concepts_view; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW taxon_concepts_view AS
-    SELECT taxon_concepts.id, CASE WHEN ((designations.name)::text = 'CITES'::text) THEN true ELSE false END AS designation_is_cites, (taxon_concepts.data -> 'full_name'::text) AS full_name, (taxon_concepts.data -> 'rank_name'::text) AS rank_name, ((taxon_concepts.data -> 'cites_accepted'::text))::boolean AS cites_accepted, CASE WHEN ((taxon_concepts.data -> 'kingdom_name'::text) = 'Animalia'::text) THEN 0 ELSE 1 END AS kingdom_position, (taxon_concepts.data -> 'taxonomic_position'::text) AS taxonomic_position, (taxon_concepts.data -> 'kingdom_name'::text) AS kingdom_name, (taxon_concepts.data -> 'phylum_name'::text) AS phylum_name, (taxon_concepts.data -> 'class_name'::text) AS class_name, (taxon_concepts.data -> 'order_name'::text) AS order_name, (taxon_concepts.data -> 'family_name'::text) AS family_name, (taxon_concepts.data -> 'genus_name'::text) AS genus_name, (taxon_concepts.data -> 'species_name'::text) AS species_name, (taxon_concepts.data -> 'subspecies_name'::text) AS subspecies_name, (taxon_concepts.data -> 'kingdom_id'::text) AS kingdom_id, (taxon_concepts.data -> 'phylum_id'::text) AS phylum_id, (taxon_concepts.data -> 'class_id'::text) AS class_id, (taxon_concepts.data -> 'order_id'::text) AS order_id, (taxon_concepts.data -> 'family_id'::text) AS family_id, (taxon_concepts.data -> 'genus_id'::text) AS genus_id, (taxon_concepts.data -> 'species_id'::text) AS species_id, (taxon_concepts.data -> 'subspecies_id'::text) AS subspecies_id, ((taxon_concepts.listing -> 'cites_listed'::text))::boolean AS cites_listed, ((taxon_concepts.listing -> 'cites_show'::text))::boolean AS cites_show, CASE WHEN ((taxon_concepts.listing -> 'cites_I'::text) = 'I'::text) THEN 't'::text ELSE 'f'::text END AS cites_i, CASE WHEN ((taxon_concepts.listing -> 'cites_II'::text) = 'II'::text) THEN 't'::text ELSE 'f'::text END AS cites_ii, CASE WHEN ((taxon_concepts.listing -> 'cites_III'::text) = 'III'::text) THEN 't'::text ELSE 'f'::text END AS cites_iii, ((taxon_concepts.listing -> 'cites_del'::text))::boolean AS cites_del, (taxon_concepts.listing -> 'cites_listing'::text) AS current_listing, common_names.taxon_concept_id_com, common_names.english_names_ary, common_names.french_names_ary, common_names.spanish_names_ary, synonyms.taxon_concept_id_syn, synonyms.synonyms_ary FROM ((((taxon_concepts LEFT JOIN designations ON ((designations.id = taxon_concepts.designation_id))) LEFT JOIN (SELECT ct.taxon_concept_id_com, ct.english_names_ary, ct.french_names_ary, ct.spanish_names_ary FROM crosstab('SELECT taxon_concepts.id AS taxon_concept_id_com,
-          SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
-          ARRAY_AGG(common_names.name ORDER BY common_names.id) AS common_names_ary 
-          FROM "taxon_concepts"
-          INNER JOIN "taxon_commons"
-            ON "taxon_commons"."taxon_concept_id" = "taxon_concepts"."id" 
-          INNER JOIN "common_names"
-            ON "common_names"."id" = "taxon_commons"."common_name_id" 
-          INNER JOIN "languages"
-            ON "languages"."id" = "common_names"."language_id"
-          GROUP BY taxon_concepts.id, SUBSTRING(languages.name FROM 1 FOR 1)
-          ORDER BY 1,2'::text) ct(taxon_concept_id_com integer, english_names_ary character varying[], french_names_ary character varying[], spanish_names_ary character varying[])) common_names ON ((taxon_concepts.id = common_names.taxon_concept_id_com))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_syn, array_agg((synonym_tc.data -> 'full_name'::text)) AS synonyms_ary FROM (((taxon_concepts LEFT JOIN taxon_relationships ON ((taxon_relationships.taxon_concept_id = taxon_concepts.id))) LEFT JOIN taxon_relationship_types ON ((taxon_relationship_types.id = taxon_relationships.taxon_relationship_type_id))) LEFT JOIN taxon_concepts synonym_tc ON ((synonym_tc.id = taxon_relationships.other_taxon_concept_id))) GROUP BY taxon_concepts.id) synonyms ON ((taxon_concepts.id = synonyms.taxon_concept_id_syn))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_cnt, array_agg(geo_entities.id ORDER BY geo_entities.name) AS countries_ids_ary FROM (((taxon_concepts LEFT JOIN taxon_concept_geo_entities ON ((taxon_concept_geo_entities.taxon_concept_id = taxon_concepts.id))) LEFT JOIN geo_entities ON ((taxon_concept_geo_entities.geo_entity_id = geo_entities.id))) LEFT JOIN geo_entity_types ON (((geo_entity_types.id = geo_entities.geo_entity_type_id) AND ((geo_entity_types.name)::text = 'COUNTRY'::text)))) GROUP BY taxon_concepts.id) countries_ids ON ((taxon_concepts.id = countries_ids.taxon_concept_id_cnt)));
 
 
 --
@@ -1481,6 +1489,18 @@ ALTER SEQUENCE taxon_names_id_seq OWNED BY taxon_names.id;
 
 
 --
+-- Name: taxon_relationship_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE taxon_relationship_types (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
 -- Name: taxon_relationship_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1497,6 +1517,20 @@ CREATE SEQUENCE taxon_relationship_types_id_seq
 --
 
 ALTER SEQUENCE taxon_relationship_types_id_seq OWNED BY taxon_relationship_types.id;
+
+
+--
+-- Name: taxon_relationships; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE taxon_relationships (
+    id integer NOT NULL,
+    taxon_concept_id integer NOT NULL,
+    other_taxon_concept_id integer NOT NULL,
+    taxon_relationship_type_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
 
 
 --
@@ -1888,6 +1922,25 @@ CREATE INDEX index_taxon_concepts_on_lft ON taxon_concepts USING btree (lft);
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+--
+-- Name: _RETURN; Type: RULE; Schema: public; Owner: -
+--
+
+CREATE RULE "_RETURN" AS ON SELECT TO taxon_concepts_view DO INSTEAD SELECT taxon_concepts.id, taxon_concepts.fully_covered, CASE WHEN ((designations.name)::text = 'CITES'::text) THEN true ELSE false END AS designation_is_cites, (taxon_concepts.data -> 'full_name'::text) AS full_name, (taxon_concepts.data -> 'rank_name'::text) AS rank_name, ((taxon_concepts.data -> 'cites_accepted'::text))::boolean AS cites_accepted, CASE WHEN ((taxon_concepts.data -> 'kingdom_name'::text) = 'Animalia'::text) THEN 0 ELSE 1 END AS kingdom_position, (taxon_concepts.data -> 'taxonomic_position'::text) AS taxonomic_position, (taxon_concepts.data -> 'kingdom_name'::text) AS kingdom_name, (taxon_concepts.data -> 'phylum_name'::text) AS phylum_name, (taxon_concepts.data -> 'class_name'::text) AS class_name, (taxon_concepts.data -> 'order_name'::text) AS order_name, (taxon_concepts.data -> 'family_name'::text) AS family_name, (taxon_concepts.data -> 'genus_name'::text) AS genus_name, (taxon_concepts.data -> 'species_name'::text) AS species_name, (taxon_concepts.data -> 'subspecies_name'::text) AS subspecies_name, (taxon_concepts.data -> 'kingdom_id'::text) AS kingdom_id, (taxon_concepts.data -> 'phylum_id'::text) AS phylum_id, (taxon_concepts.data -> 'class_id'::text) AS class_id, (taxon_concepts.data -> 'order_id'::text) AS order_id, (taxon_concepts.data -> 'family_id'::text) AS family_id, (taxon_concepts.data -> 'genus_id'::text) AS genus_id, (taxon_concepts.data -> 'species_id'::text) AS species_id, (taxon_concepts.data -> 'subspecies_id'::text) AS subspecies_id, ((taxon_concepts.listing -> 'cites_listed'::text))::boolean AS cites_listed, ((taxon_concepts.listing -> 'cites_show'::text))::boolean AS cites_show, CASE WHEN ((taxon_concepts.listing -> 'cites_I'::text) = 'I'::text) THEN 't'::text ELSE 'f'::text END AS cites_i, CASE WHEN ((taxon_concepts.listing -> 'cites_II'::text) = 'II'::text) THEN 't'::text ELSE 'f'::text END AS cites_ii, CASE WHEN ((taxon_concepts.listing -> 'cites_III'::text) = 'III'::text) THEN 't'::text ELSE 'f'::text END AS cites_iii, ((taxon_concepts.listing -> 'cites_del'::text))::boolean AS cites_del, (taxon_concepts.listing -> 'cites_listing'::text) AS current_listing, ((taxon_concepts.listing -> 'usr_cites_exclusion'::text))::boolean AS usr_cites_exclusion, ((taxon_concepts.listing -> 'cites_exclusion'::text))::boolean AS cites_exclusion, common_names.taxon_concept_id_com, common_names.english_names_ary, common_names.french_names_ary, common_names.spanish_names_ary, synonyms.taxon_concept_id_syn, synonyms.synonyms_ary, countries_ids.countries_ids_ary, standard_references_ids.standard_references_ids_ary FROM (((((taxon_concepts LEFT JOIN designations ON ((designations.id = taxon_concepts.designation_id))) LEFT JOIN (SELECT ct.taxon_concept_id_com, ct.english_names_ary, ct.french_names_ary, ct.spanish_names_ary FROM crosstab('SELECT taxon_concepts.id AS taxon_concept_id_com,
+          SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
+          ARRAY_AGG(common_names.name ORDER BY common_names.id) AS common_names_ary 
+          FROM "taxon_concepts"
+          INNER JOIN "taxon_commons"
+            ON "taxon_commons"."taxon_concept_id" = "taxon_concepts"."id" 
+          INNER JOIN "common_names"
+            ON "common_names"."id" = "taxon_commons"."common_name_id" 
+          INNER JOIN "languages"
+            ON "languages"."id" = "common_names"."language_id"
+          GROUP BY taxon_concepts.id, SUBSTRING(languages.name FROM 1 FOR 1)
+          ORDER BY 1,2'::text) ct(taxon_concept_id_com integer, english_names_ary character varying[], french_names_ary character varying[], spanish_names_ary character varying[])) common_names ON ((taxon_concepts.id = common_names.taxon_concept_id_com))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_syn, array_agg((synonym_tc.data -> 'full_name'::text)) AS synonyms_ary FROM (((taxon_concepts LEFT JOIN taxon_relationships ON ((taxon_relationships.taxon_concept_id = taxon_concepts.id))) LEFT JOIN taxon_relationship_types ON ((taxon_relationship_types.id = taxon_relationships.taxon_relationship_type_id))) LEFT JOIN taxon_concepts synonym_tc ON ((synonym_tc.id = taxon_relationships.other_taxon_concept_id))) GROUP BY taxon_concepts.id) synonyms ON ((taxon_concepts.id = synonyms.taxon_concept_id_syn))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_cnt, array_agg(geo_entities.id ORDER BY geo_entities.name) AS countries_ids_ary FROM (((taxon_concepts LEFT JOIN taxon_concept_geo_entities ON ((taxon_concept_geo_entities.taxon_concept_id = taxon_concepts.id))) LEFT JOIN geo_entities ON ((taxon_concept_geo_entities.geo_entity_id = geo_entities.id))) LEFT JOIN geo_entity_types ON (((geo_entity_types.id = geo_entities.geo_entity_type_id) AND ((geo_entity_types.name)::text = 'COUNTRY'::text)))) GROUP BY taxon_concepts.id) countries_ids ON ((taxon_concepts.id = countries_ids.taxon_concept_id_cnt))) LEFT JOIN (WITH RECURSIVE q AS (SELECT h.*::taxon_concepts AS h, h.id, array_agg(taxon_concept_references.reference_id) AS standard_references_ids_ary FROM (taxon_concepts h LEFT JOIN taxon_concept_references ON (((h.id = taxon_concept_references.taxon_concept_id) AND ((taxon_concept_references.data -> 'usr_is_std_ref'::text) = 't'::text)))) WHERE (h.parent_id IS NULL) GROUP BY h.id UNION ALL SELECT hi.*::taxon_concepts AS hi, hi.id, CASE WHEN (((hi.data -> 'usr_no_std_ref'::text))::boolean = true) THEN ARRAY[]::integer[] ELSE (q.standard_references_ids_ary || taxon_concept_references.reference_id) END AS "case" FROM ((q JOIN taxon_concepts hi ON ((hi.parent_id = (q.h).id))) LEFT JOIN taxon_concept_references ON (((hi.id = taxon_concept_references.taxon_concept_id) AND ((taxon_concept_references.data -> 'usr_is_std_ref'::text) = 't'::text))))) SELECT q.id AS taxon_concept_id_sr, ARRAY(SELECT DISTINCT s.s FROM unnest(q.standard_references_ids_ary) s(s) WHERE (s.s IS NOT NULL)) AS standard_references_ids_ary FROM q) standard_references_ids ON ((taxon_concepts.id = standard_references_ids.taxon_concept_id_sr)));
+ALTER VIEW taxon_concepts_view SET ();
 
 
 --

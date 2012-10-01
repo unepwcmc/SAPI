@@ -84,39 +84,6 @@ class MTaxonConcept < TaxonConcept
   scope :taxonomic_layout, order([:kingdom_position, :taxonomic_position])
   scope :alphabetical_layout, order([:kingdom_position, :full_name])
 
-  scope :with_standard_references, select(:std_ref_ary).joins(
-    <<-SQL
-    LEFT JOIN (
-      WITH RECURSIVE q AS (
-        SELECT h, h.id, ARRAY_AGG(reference_id) AS std_ref_ary
-        FROM taxon_concepts h
-        LEFT JOIN taxon_concept_references
-        ON h.id = taxon_concept_references.taxon_concept_id
-          AND taxon_concept_references.data->'usr_is_std_ref' = 't'
-        WHERE h.parent_id IS NULL
-        GROUP BY h.id
-
-        UNION ALL
-
-        SELECT hi, hi.id,
-          CASE
-            WHEN (hi.data->'usr_no_std_ref')::BOOLEAN = 't' THEN ARRAY[]::INTEGER[]
-            ELSE std_ref_ary || reference_id
-          END
-        FROM q
-        JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
-        LEFT JOIN taxon_concept_references
-        ON hi.id = taxon_concept_references.taxon_concept_id
-          AND taxon_concept_references.data->'usr_is_std_ref' = 't'
-      )
-      SELECT id AS taxon_concept_id_sr,
-      ARRAY(SELECT DISTINCT * FROM UNNEST(std_ref_ary) s WHERE s IS NOT NULL)
-      AS std_ref_ary
-      FROM q
-    ) standard_references ON id = standard_references.taxon_concept_id_sr
-    SQL
-  )
-
   def spp
     if ['GENUS', 'FAMILY', 'ORDER'].include?(rank_name)
       'spp.'
@@ -170,8 +137,8 @@ class MTaxonConcept < TaxonConcept
 
   #note this will probably return external reference ids in the future
   def standard_references
-    if respond_to?(:std_ref_ary)
-      parse_pg_array(std_ref_ary || '').compact.map do |e|
+    if respond_to?(:standard_references_ids_ary)
+      parse_pg_array(standard_references_ids_ary || '').compact.map do |e|
         e.force_encoding('utf-8')
       end.map(&:to_i)
     else

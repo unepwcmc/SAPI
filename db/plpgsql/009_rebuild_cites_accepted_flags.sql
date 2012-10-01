@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         UPDATE taxon_concepts SET data =
           CASE
             WHEN data IS NULL THEN ''::HSTORE
-            ELSE data - ARRAY['cites_accepted']
+            ELSE data
           END || hstore('cites_accepted', NULL);
 
         -- set the cites_accepted flag to true for all explicitly referenced taxa
@@ -45,7 +45,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         ) AS q
         WHERE taxon_concepts.id = q.id;
 
-        -- set the cites_accepted flag to true for all implicitly listed taxa
+        -- set the cites_accepted flag to true for all implicitly referenced taxa
         WITH RECURSIVE q AS
         (
           SELECT  h,
@@ -69,11 +69,10 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           ON      hi.parent_id = (q.h).id
         )
         UPDATE taxon_concepts
-        SET data = data || hstore('cites_accepted', 't')
+        SET data = data || hstore('cites_accepted', (q.inherited_cites_accepted)::VARCHAR)
         FROM q
         WHERE taxon_concepts.id = (q.h).id AND
-          ((q.h).data->'cites_accepted')::BOOLEAN IS NULL
-          AND inherited_cites_accepted = 't';
+          ((q.h).data->'cites_accepted')::BOOLEAN IS NULL;
 
         END;
       $$;

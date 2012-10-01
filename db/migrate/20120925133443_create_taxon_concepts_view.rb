@@ -3,6 +3,7 @@ class CreateTaxonConceptsView < ActiveRecord::Migration
     execute <<-SQL
       CREATE OR REPLACE VIEW taxon_concepts_view AS
       SELECT taxon_concepts.id, 
+      fully_covered,
       CASE
         WHEN designations.name = 'CITES' THEN ('t')::BOOLEAN
         ELSE ('f')::BOOLEAN
@@ -47,8 +48,12 @@ class CreateTaxonConceptsView < ActiveRecord::Migration
       END AS cites_III,
       (listing->'cites_del')::BOOLEAN AS cites_del,
       listing->'cites_listing' AS current_listing,
+      (listing->'usr_cites_exclusion')::BOOLEAN AS usr_cites_exclusion,
+      (listing->'cites_exclusion')::BOOLEAN AS cites_exclusion,
       common_names.*,
-      synonyms.*
+      synonyms.*,
+      countries_ids_ary,
+      standard_references_ids_ary
       FROM taxon_concepts
       LEFT JOIN designations
         ON designations.id = taxon_concepts.designation_id
@@ -98,6 +103,34 @@ class CreateTaxonConceptsView < ActiveRecord::Migration
             AND geo_entity_types.name = '#{GeoEntityType::COUNTRY}'
         GROUP BY taxon_concepts.id
       ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt
+      LEFT JOIN (
+        WITH RECURSIVE q AS (
+          SELECT h, h.id, ARRAY_AGG(reference_id) AS standard_references_ids_ary
+          FROM taxon_concepts h
+          LEFT JOIN taxon_concept_references
+          ON h.id = taxon_concept_references.taxon_concept_id
+            AND taxon_concept_references.data->'usr_is_std_ref' = 't'
+          WHERE h.parent_id IS NULL
+          GROUP BY h.id
+
+          UNION ALL
+
+          SELECT hi, hi.id,
+            CASE
+              WHEN (hi.data->'usr_no_std_ref')::BOOLEAN = 't' THEN ARRAY[]::INTEGER[]
+              ELSE standard_references_ids_ary || reference_id
+            END
+          FROM q
+          JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
+          LEFT JOIN taxon_concept_references
+          ON hi.id = taxon_concept_references.taxon_concept_id
+            AND taxon_concept_references.data->'usr_is_std_ref' = 't'
+        )
+        SELECT id AS taxon_concept_id_sr,
+        ARRAY(SELECT DISTINCT * FROM UNNEST(standard_references_ids_ary) s WHERE s IS NOT NULL)
+        AS standard_references_ids_ary
+        FROM q
+      ) standard_references_ids ON taxon_concepts.id = standard_references_ids.taxon_concept_id_sr
     SQL
   end
 
