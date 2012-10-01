@@ -151,12 +151,11 @@ class MTaxonConcept < TaxonConcept
       options = {
         :only =>[:id, :species_name, :genus_name, :family_name, :order_name,
           :class_name, :phylum_name, :full_name, :rank_name,
-          :taxonomic_position, :current_listing, :cites_accepted,
-          :countries_ids],
+          :taxonomic_position, :current_listing, :cites_accepted],
         :methods => [
           :spp, :recently_changed,
           :english_names_list, :spanish_names_list, :french_names_list,
-          :synonyms_list
+          :synonyms_list, :countries_ids
         ]
       }
     end
