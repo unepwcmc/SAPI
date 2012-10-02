@@ -18,6 +18,7 @@ namespace :import do
     files.each do |file|
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
+      ActiveRecord::Base.connection.execute("ALTER TABLE #{TMP_TABLE} ADD COLUMN listing_change_id integer")
       copy_data(file, TMP_TABLE)
       sql = <<-SQL
         BEGIN;
@@ -37,25 +38,45 @@ namespace :import do
             END, notes, current_date, current_date, TMP.listing_date
           FROM #{TMP_TABLE} AS TMP
           INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = TMP.spc_rec_id AND taxon_concepts.legacy_type = TMP.legacy_type;
-  
+
+          WITH tt AS (
+                  WITH t AS (
+                    SELECT 
+                      TMP.appendix AS appendix,
+                      CASE
+                              WHEN UPPER(BTRIM(TMP.appendix)) like 'III%' THEN #{appendix_3.id}
+                              WHEN UPPER(BTRIM(TMP.appendix)) like 'II%' THEN #{appendix_2.id}
+                              WHEN UPPER(BTRIM(TMP.appendix)) like 'I%' THEN #{appendix_1.id}
+                        ELSE NULL
+                      END AS species_listing_id, taxon_concepts.id AS taxon_concept_id,
+                      CASE
+                              WHEN TMP.appendix like '%/r' THEN #{r.id}
+                              WHEN TMP.appendix like '%/w' THEN #{rw.id}
+                              WHEN TMP.appendix ilike '%DELETED%' THEN #{d.id}
+                              ELSE #{a.id}
+                      END AS change_type_id, TMP.listing_date,
+                      taxon_concepts.legacy_id,
+                      taxon_concepts.legacy_type
+                    FROM #{TMP_TABLE} AS TMP
+                    INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = TMP.spc_rec_id AND taxon_concepts.legacy_type = TMP.legacy_type
+                  )
+                  SELECT appendix, listing_date, legacy_id, legacy_type, listing_changes.id AS listing_change_id FROM t
+                  INNER JOIN listing_changes ON 
+                    t.taxon_concept_id = listing_changes.taxon_concept_id AND
+                    t.species_listing_id = listing_changes.species_listing_id AND
+                    t.change_type_id = listing_changes.change_type_id
+          )
+          UPDATE #{TMP_TABLE}
+          SET listing_change_id = tt.listing_change_id
+          FROM tt
+          WHERE #{TMP_TABLE}.legacy_type = tt.legacy_type
+          AND #{TMP_TABLE}.spc_rec_id = tt.legacy_id 
+          AND #{TMP_TABLE}.appendix = tt.appendix
+          AND #{TMP_TABLE}.listing_date = tt.listing_date;
+
           INSERT INTO listing_distributions(listing_change_id, geo_entity_id, is_party, created_at, updated_at)
-          SELECT DISTINCT listing_changes.id, geo_entities.id, 't'::BOOLEAN, current_date, current_date
+          SELECT DISTINCT listing_change_id, geo_entities.id, 't'::BOOLEAN, current_date, current_date
           FROM #{TMP_TABLE} AS TMP
-          INNER JOIN listing_changes ON
-            listing_changes.species_listing_id = CASE
-                  WHEN UPPER(BTRIM(TMP.appendix)) like 'III%' THEN #{appendix_3.id}
-                  WHEN UPPER(BTRIM(TMP.appendix)) like 'II%' THEN #{appendix_2.id}
-                  WHEN UPPER(BTRIM(TMP.appendix)) like 'I%' THEN #{appendix_1.id}
-                  ELSE NULL
-                END AND
-            listing_changes.change_type_id = CASE
-                  WHEN TMP.appendix like '%/r' THEN #{r.id}
-                  WHEN TMP.appendix like '%/w' THEN #{rw.id}
-                  WHEN TMP.appendix ilike '%DELETED%' THEN #{d.id}
-                  ELSE #{a.id}
-                END AND
-            listing_changes.effective_at = TMP.listing_date
-          INNER JOIN taxon_concepts ON taxon_concepts.id = listing_changes.taxon_concept_id AND taxon_concepts.legacy_id = TMP.spc_rec_id
           INNER JOIN geo_entities ON geo_entities.legacy_id = CASE
             WHEN BTRIM(TMP.country_legacy_id) = 'NULL' THEN NULL
             ELSE TMP.country_legacy_id::INTEGER
