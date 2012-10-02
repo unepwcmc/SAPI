@@ -15,6 +15,7 @@
 #  data           :hstore
 #  fully_covered  :boolean          default(TRUE), not null
 #  listing        :hstore
+#  legacy_type    :string(255)
 #
 
 class TaxonConcept < ActiveRecord::Base
