@@ -11,7 +11,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120925093218) do
+ActiveRecord::Schema.define(:version => 20121002124014) do
+
+  create_table "annotation_translations", :force => true do |t|
+    t.integer "annotation_id", :null => false
+    t.integer "language_id",   :null => false
+    t.string  "short_note"
+    t.text    "full_note",     :null => false
+  end
+
+  create_table "annotations", :force => true do |t|
+    t.string "symbol"
+    t.string "parent_symbol"
+  end
 
   create_table "change_types", :force => true do |t|
     t.string   "name"
@@ -70,6 +82,11 @@ ActiveRecord::Schema.define(:version => 20120925093218) do
     t.string  "country_name", :limit => nil
   end
 
+  create_table "foo", :id => false, :force => true do |t|
+    t.integer "id"
+    t.string  "name", :limit => nil
+  end
+
   create_table "geo_entities", :force => true do |t|
     t.integer  "geo_entity_type_id", :null => false
     t.string   "name",               :null => false
@@ -117,11 +134,30 @@ ActiveRecord::Schema.define(:version => 20120925093218) do
     t.integer  "lft"
     t.integer  "rgt"
     t.integer  "parent_id"
-    t.datetime "created_at",                                            :null => false
-    t.datetime "updated_at",                                            :null => false
-    t.datetime "effective_at",       :default => '2012-09-21 07:32:20', :null => false
+    t.datetime "created_at",                                                :null => false
+    t.datetime "updated_at",                                                :null => false
+    t.datetime "effective_at",           :default => '2012-09-21 07:32:20', :null => false
     t.text     "notes"
+    t.integer  "specific_annotation_id"
+    t.integer  "generic_annotation_id"
   end
+
+  create_table "listing_changes_mview", :id => false, :force => true do |t|
+    t.integer  "id"
+    t.integer  "taxon_concept_id"
+    t.datetime "effective_at"
+    t.integer  "species_listing_id"
+    t.string   "species_listing_name"
+    t.integer  "change_type_id"
+    t.string   "change_type_name"
+    t.integer  "party_id"
+    t.string   "party_name"
+    t.text     "notes"
+    t.boolean  "dirty"
+    t.datetime "expiry"
+  end
+
+  add_index "listing_changes_mview", ["taxon_concept_id"], :name => "index_listing_changes_mview_on_taxon_concept_id"
 
   create_table "listing_distributions", :force => true do |t|
     t.integer  "listing_change_id",                   :null => false
@@ -274,6 +310,55 @@ ActiveRecord::Schema.define(:version => 20120925093218) do
   add_index "taxon_concepts", ["data"], :name => "index_taxon_concepts_on_data"
   add_index "taxon_concepts", ["lft"], :name => "index_taxon_concepts_on_lft"
 
+  create_table "taxon_concepts_mview", :id => false, :force => true do |t|
+    t.integer  "id"
+    t.boolean  "fully_covered"
+    t.boolean  "designation_is_cites"
+    t.text     "full_name"
+    t.text     "rank_name"
+    t.boolean  "cites_accepted"
+    t.integer  "kingdom_position"
+    t.text     "taxonomic_position"
+    t.text     "kingdom_name"
+    t.text     "phylum_name"
+    t.text     "class_name"
+    t.text     "order_name"
+    t.text     "family_name"
+    t.text     "genus_name"
+    t.text     "species_name"
+    t.text     "subspecies_name"
+    t.text     "kingdom_id"
+    t.text     "phylum_id"
+    t.text     "class_id"
+    t.text     "order_id"
+    t.text     "family_id"
+    t.text     "genus_id"
+    t.text     "species_id"
+    t.text     "subspecies_id"
+    t.boolean  "cites_listed"
+    t.boolean  "cites_show"
+    t.text     "cites_i"
+    t.text     "cites_ii"
+    t.text     "cites_iii"
+    t.boolean  "cites_del"
+    t.text     "current_listing"
+    t.boolean  "usr_cites_exclusion"
+    t.boolean  "cites_exclusion"
+    t.integer  "taxon_concept_id_com"
+    t.string   "english_names_ary",           :limit => nil
+    t.string   "french_names_ary",            :limit => nil
+    t.string   "spanish_names_ary",           :limit => nil
+    t.integer  "taxon_concept_id_syn"
+    t.string   "synonyms_ary",                :limit => nil
+    t.string   "countries_ids_ary",           :limit => nil
+    t.string   "standard_references_ids_ary", :limit => nil
+    t.boolean  "dirty"
+    t.datetime "expiry"
+  end
+
+  add_index "taxon_concepts_mview", ["full_name"], :name => "index_taxon_concepts_mview_on_full_name"
+  add_index "taxon_concepts_mview", ["taxonomic_position"], :name => "index_taxon_concepts_mview_on_taxonomic_position"
+
   create_table "taxon_names", :force => true do |t|
     t.string   "scientific_name", :null => false
     t.integer  "basionym_id"
@@ -295,6 +380,9 @@ ActiveRecord::Schema.define(:version => 20120925093218) do
     t.datetime "updated_at",                 :null => false
   end
 
+  add_foreign_key "annotation_translations", "annotations", :name => "annotation_translations_annotation_id_fk"
+  add_foreign_key "annotation_translations", "languages", :name => "annotation_translations_language_id_fk"
+
   add_foreign_key "change_types", "designations", :name => "change_types_designation_id_fk"
 
   add_foreign_key "common_names", "languages", :name => "common_names_language_id_fk"
@@ -305,6 +393,8 @@ ActiveRecord::Schema.define(:version => 20120925093218) do
   add_foreign_key "geo_relationships", "geo_entities", :name => "geo_relationships_other_geo_entity_id_fk", :column => "other_geo_entity_id"
   add_foreign_key "geo_relationships", "geo_relationship_types", :name => "geo_relationships_geo_relationship_type_id_fk"
 
+  add_foreign_key "listing_changes", "annotations", :name => "listing_changes_generic_annotation_id_fk", :column => "generic_annotation_id"
+  add_foreign_key "listing_changes", "annotations", :name => "listing_changes_specific_annotation_id_fk", :column => "specific_annotation_id"
   add_foreign_key "listing_changes", "change_types", :name => "listing_changes_change_type_id_fk"
   add_foreign_key "listing_changes", "listing_changes", :name => "listing_changes_parent_id_fk", :column => "parent_id"
   add_foreign_key "listing_changes", "references", :name => "listing_changes_reference_id_fk"

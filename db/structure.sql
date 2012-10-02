@@ -682,6 +682,68 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: annotation_translations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE annotation_translations (
+    id integer NOT NULL,
+    annotation_id integer NOT NULL,
+    language_id integer NOT NULL,
+    short_note character varying(255),
+    full_note text NOT NULL
+);
+
+
+--
+-- Name: annotation_translations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE annotation_translations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: annotation_translations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE annotation_translations_id_seq OWNED BY annotation_translations.id;
+
+
+--
+-- Name: annotations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE annotations (
+    id integer NOT NULL,
+    symbol character varying(255),
+    parent_symbol character varying(255)
+);
+
+
+--
+-- Name: annotations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE annotations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: annotations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE annotations_id_seq OWNED BY annotations.id;
+
+
+--
 -- Name: change_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1701,6 +1763,20 @@ ALTER SEQUENCE taxon_relationships_id_seq OWNED BY taxon_relationships.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY annotation_translations ALTER COLUMN id SET DEFAULT nextval('annotation_translations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY annotations ALTER COLUMN id SET DEFAULT nextval('annotations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY change_types ALTER COLUMN id SET DEFAULT nextval('change_types_id_seq'::regclass);
 
 
@@ -1849,6 +1925,22 @@ ALTER TABLE ONLY taxon_relationship_types ALTER COLUMN id SET DEFAULT nextval('t
 --
 
 ALTER TABLE ONLY taxon_relationships ALTER COLUMN id SET DEFAULT nextval('taxon_relationships_id_seq'::regclass);
+
+
+--
+-- Name: annotation_translations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY annotation_translations
+    ADD CONSTRAINT annotation_translations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: annotations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY annotations
+    ADD CONSTRAINT annotations_pkey PRIMARY KEY (id);
 
 
 --
@@ -2086,6 +2178,22 @@ CREATE RULE "_RETURN" AS ON SELECT TO taxon_concepts_view DO INSTEAD SELECT taxo
           GROUP BY taxon_concepts.id, SUBSTRING(languages.name FROM 1 FOR 1)
           ORDER BY 1,2'::text) ct(taxon_concept_id_com integer, english_names_ary character varying[], french_names_ary character varying[], spanish_names_ary character varying[])) common_names ON ((taxon_concepts.id = common_names.taxon_concept_id_com))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_syn, array_agg((synonym_tc.data -> 'full_name'::text)) AS synonyms_ary FROM (((taxon_concepts LEFT JOIN taxon_relationships ON ((taxon_relationships.taxon_concept_id = taxon_concepts.id))) LEFT JOIN taxon_relationship_types ON ((taxon_relationship_types.id = taxon_relationships.taxon_relationship_type_id))) LEFT JOIN taxon_concepts synonym_tc ON ((synonym_tc.id = taxon_relationships.other_taxon_concept_id))) GROUP BY taxon_concepts.id) synonyms ON ((taxon_concepts.id = synonyms.taxon_concept_id_syn))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_cnt, array_agg(geo_entities.id ORDER BY geo_entities.name) AS countries_ids_ary FROM (((taxon_concepts LEFT JOIN taxon_concept_geo_entities ON ((taxon_concept_geo_entities.taxon_concept_id = taxon_concepts.id))) LEFT JOIN geo_entities ON ((taxon_concept_geo_entities.geo_entity_id = geo_entities.id))) LEFT JOIN geo_entity_types ON (((geo_entity_types.id = geo_entities.geo_entity_type_id) AND ((geo_entity_types.name)::text = 'COUNTRY'::text)))) GROUP BY taxon_concepts.id) countries_ids ON ((taxon_concepts.id = countries_ids.taxon_concept_id_cnt))) LEFT JOIN (WITH RECURSIVE q AS (SELECT h.*::taxon_concepts AS h, h.id, array_agg(taxon_concept_references.reference_id) AS standard_references_ids_ary FROM (taxon_concepts h LEFT JOIN taxon_concept_references ON (((h.id = taxon_concept_references.taxon_concept_id) AND ((taxon_concept_references.data -> 'usr_is_std_ref'::text) = 't'::text)))) WHERE (h.parent_id IS NULL) GROUP BY h.id UNION ALL SELECT hi.*::taxon_concepts AS hi, hi.id, CASE WHEN (((hi.data -> 'usr_no_std_ref'::text))::boolean = true) THEN ARRAY[]::integer[] ELSE (q.standard_references_ids_ary || taxon_concept_references.reference_id) END AS "case" FROM ((q JOIN taxon_concepts hi ON ((hi.parent_id = (q.h).id))) LEFT JOIN taxon_concept_references ON (((hi.id = taxon_concept_references.taxon_concept_id) AND ((taxon_concept_references.data -> 'usr_is_std_ref'::text) = 't'::text))))) SELECT q.id AS taxon_concept_id_sr, ARRAY(SELECT DISTINCT s.s FROM unnest(q.standard_references_ids_ary) s(s) WHERE (s.s IS NOT NULL)) AS standard_references_ids_ary FROM q) standard_references_ids ON ((taxon_concepts.id = standard_references_ids.taxon_concept_id_sr)));
 ALTER VIEW taxon_concepts_view SET ();
+
+
+--
+-- Name: annotation_translations_annotation_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY annotation_translations
+    ADD CONSTRAINT annotation_translations_annotation_id_fk FOREIGN KEY (annotation_id) REFERENCES annotations(id);
+
+
+--
+-- Name: annotation_translations_language_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY annotation_translations
+    ADD CONSTRAINT annotation_translations_language_id_fk FOREIGN KEY (language_id) REFERENCES languages(id);
 
 
 --
@@ -2503,3 +2611,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120925141758');
 INSERT INTO schema_migrations (version) VALUES ('20120926132500');
 
 INSERT INTO schema_migrations (version) VALUES ('20120927100016');
+
+INSERT INTO schema_migrations (version) VALUES ('20121002122832');
