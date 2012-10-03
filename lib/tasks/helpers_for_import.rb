@@ -142,6 +142,7 @@ def create_table_from_csv_headers(path_to_file, table_name)
     db_columns = db_columns_from_csv_headers(path_to_file, table_name)
     begin
       puts "Creating tmp table"
+      ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS #{table_name} CASCADE"
       ActiveRecord::Base.connection.execute "CREATE TABLE #{table_name} (#{db_columns.join(', ')})"
       puts "Table created"
     rescue Exception => e

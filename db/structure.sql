@@ -690,7 +690,9 @@ CREATE TABLE annotation_translations (
     annotation_id integer NOT NULL,
     language_id integer NOT NULL,
     short_note character varying(255),
-    full_note text NOT NULL
+    full_note text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -720,7 +722,10 @@ ALTER SEQUENCE annotation_translations_id_seq OWNED BY annotation_translations.i
 CREATE TABLE annotations (
     id integer NOT NULL,
     symbol character varying(255),
-    parent_symbol character varying(255)
+    parent_symbol character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    listing_change_id integer
 );
 
 
@@ -785,7 +790,8 @@ CREATE TABLE cites_listings_import (
     appendix character varying,
     listing_date date,
     country_legacy_id character varying,
-    notes character varying
+    notes character varying,
+    listing_change_id integer
 );
 
 
@@ -1080,7 +1086,8 @@ CREATE TABLE listing_changes (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     effective_at timestamp without time zone DEFAULT '2012-09-21 07:32:20.074068'::timestamp without time zone NOT NULL,
-    notes text
+    notes text,
+    annotation_id integer
 );
 
 
@@ -2197,6 +2204,14 @@ ALTER TABLE ONLY annotation_translations
 
 
 --
+-- Name: annotations_listing_changes_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY annotations
+    ADD CONSTRAINT annotations_listing_changes_id_fk FOREIGN KEY (listing_change_id) REFERENCES listing_changes(id);
+
+
+--
 -- Name: change_types_designation_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2242,6 +2257,14 @@ ALTER TABLE ONLY geo_relationships
 
 ALTER TABLE ONLY geo_relationships
     ADD CONSTRAINT geo_relationships_other_geo_entity_id_fk FOREIGN KEY (other_geo_entity_id) REFERENCES geo_entities(id);
+
+
+--
+-- Name: listing_changes_annotation_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY listing_changes
+    ADD CONSTRAINT listing_changes_annotation_id_fk FOREIGN KEY (annotation_id) REFERENCES annotations(id);
 
 
 --
@@ -2613,3 +2636,5 @@ INSERT INTO schema_migrations (version) VALUES ('20120926132500');
 INSERT INTO schema_migrations (version) VALUES ('20120927100016');
 
 INSERT INTO schema_migrations (version) VALUES ('20121002122832');
+
+INSERT INTO schema_migrations (version) VALUES ('20121002124014');
