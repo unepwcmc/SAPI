@@ -1,3 +1,52 @@
+# == Schema Information
+#
+# Table name: taxon_concepts_mview
+#
+#  id                          :integer          primary key
+#  fully_covered               :boolean
+#  designation_is_cites        :boolean
+#  full_name                   :text
+#  rank_name                   :text
+#  cites_accepted              :boolean
+#  kingdom_position            :integer
+#  taxonomic_position          :text
+#  kingdom_name                :text
+#  phylum_name                 :text
+#  class_name                  :text
+#  order_name                  :text
+#  family_name                 :text
+#  genus_name                  :text
+#  species_name                :text
+#  subspecies_name             :text
+#  kingdom_id                  :text
+#  phylum_id                   :text
+#  class_id                    :text
+#  order_id                    :text
+#  family_id                   :text
+#  genus_id                    :text
+#  species_id                  :text
+#  subspecies_id               :text
+#  cites_listed                :boolean
+#  cites_show                  :boolean
+#  cites_i                     :text
+#  cites_ii                    :text
+#  cites_iii                   :text
+#  cites_del                   :boolean
+#  current_listing             :text
+#  usr_cites_exclusion         :boolean
+#  cites_exclusion             :boolean
+#  taxon_concept_id_com        :integer
+#  english_names_ary           :string
+#  french_names_ary            :string
+#  spanish_names_ary           :string
+#  taxon_concept_id_syn        :integer
+#  synonyms_ary                :string
+#  countries_ids_ary           :string
+#  standard_references_ids_ary :string
+#  dirty                       :boolean
+#  expiry                      :datetime
+#
+
 class MTaxonConcept < TaxonConcept
   include PgArrayParser
   self.table_name = :taxon_concepts_mview
