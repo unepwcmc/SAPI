@@ -790,8 +790,7 @@ CREATE TABLE cites_listings_import (
     appendix character varying,
     listing_date date,
     country_legacy_id character varying,
-    notes character varying,
-    listing_change_id integer
+    notes character varying
 );
 
 
@@ -1086,7 +1085,6 @@ CREATE TABLE listing_changes (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     effective_at timestamp without time zone DEFAULT '2012-09-21 07:32:20.074068'::timestamp without time zone NOT NULL,
-    notes text,
     annotation_id integer
 );
 
@@ -1124,7 +1122,9 @@ CREATE TABLE listing_changes_mview (
     change_type_name character varying(255),
     party_id integer,
     party_name character varying(255),
-    notes text,
+    english_full_note text,
+    spanish_full_note text,
+    french_full_note text,
     dirty boolean,
     expiry timestamp with time zone
 );
@@ -1163,7 +1163,15 @@ CREATE TABLE species_listings (
 --
 
 CREATE VIEW listing_changes_view AS
-    SELECT listing_changes.id, listing_changes.taxon_concept_id, listing_changes.effective_at, listing_changes.species_listing_id, species_listings.abbreviation AS species_listing_name, listing_changes.change_type_id, change_types.name AS change_type_name, listing_distributions.geo_entity_id AS party_id, geo_entities.iso_code2 AS party_name, listing_changes.notes FROM ((((listing_changes LEFT JOIN change_types ON ((listing_changes.change_type_id = change_types.id))) LEFT JOIN species_listings ON ((listing_changes.species_listing_id = species_listings.id))) LEFT JOIN listing_distributions ON (((listing_changes.id = listing_distributions.listing_change_id) AND (listing_distributions.is_party = true)))) LEFT JOIN geo_entities ON ((geo_entities.id = listing_distributions.geo_entity_id))) ORDER BY listing_changes.taxon_concept_id, listing_changes.effective_at, CASE WHEN ((change_types.name)::text = 'ADDITION'::text) THEN 0 WHEN ((change_types.name)::text = 'RESERVATION'::text) THEN 1 WHEN ((change_types.name)::text = 'RESERVATION_WITHDRAWAL'::text) THEN 2 WHEN ((change_types.name)::text = 'DELETION'::text) THEN 3 ELSE NULL::integer END;
+    SELECT listing_changes.id, listing_changes.taxon_concept_id, listing_changes.effective_at, listing_changes.species_listing_id, species_listings.abbreviation AS species_listing_name, listing_changes.change_type_id, change_types.name AS change_type_name, listing_distributions.geo_entity_id AS party_id, geo_entities.iso_code2 AS party_name, multilingual_annotations.english_full_note, multilingual_annotations.spanish_full_note, multilingual_annotations.french_full_note FROM ((((((listing_changes LEFT JOIN change_types ON ((listing_changes.change_type_id = change_types.id))) LEFT JOIN species_listings ON ((listing_changes.species_listing_id = species_listings.id))) LEFT JOIN listing_distributions ON (((listing_changes.id = listing_distributions.listing_change_id) AND (listing_distributions.is_party = true)))) LEFT JOIN geo_entities ON ((geo_entities.id = listing_distributions.geo_entity_id))) LEFT JOIN annotations ON ((annotations.listing_change_id = listing_changes.id))) LEFT JOIN (SELECT ct.annotation_id_mul, ct.english_full_note, ct.spanish_full_note, ct.french_full_note FROM crosstab('SELECT annotations.id AS annotation_id_mul,
+            SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
+            annotation_translations.full_note
+            FROM "annotations"
+            INNER JOIN "annotation_translations"
+              ON "annotation_translations"."annotation_id" = "annotations"."id" 
+            INNER JOIN "languages"
+              ON "languages"."id" = "annotation_translations"."language_id"
+            ORDER BY 1,2'::text) ct(annotation_id_mul integer, english_full_note text, spanish_full_note text, french_full_note text)) multilingual_annotations ON ((annotations.id = multilingual_annotations.annotation_id_mul))) ORDER BY listing_changes.taxon_concept_id, listing_changes.effective_at, CASE WHEN ((change_types.name)::text = 'ADDITION'::text) THEN 0 WHEN ((change_types.name)::text = 'RESERVATION'::text) THEN 1 WHEN ((change_types.name)::text = 'RESERVATION_WITHDRAWAL'::text) THEN 2 WHEN ((change_types.name)::text = 'DELETION'::text) THEN 3 ELSE NULL::integer END;
 
 
 --
@@ -2127,27 +2135,6 @@ ALTER TABLE ONLY taxon_relationships
 
 
 --
--- Name: index_listing_changes_mview_on_taxon_concept_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_listing_changes_mview_on_taxon_concept_id ON listing_changes_mview USING btree (taxon_concept_id);
-
-
---
--- Name: index_taxon_concepts_mview_on_full_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_taxon_concepts_mview_on_full_name ON taxon_concepts_mview USING btree (full_name);
-
-
---
--- Name: index_taxon_concepts_mview_on_taxonomic_position; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_taxon_concepts_mview_on_taxonomic_position ON taxon_concepts_mview USING btree (taxonomic_position);
-
-
---
 -- Name: index_taxon_concepts_on_data; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2638,3 +2625,7 @@ INSERT INTO schema_migrations (version) VALUES ('20120927100016');
 INSERT INTO schema_migrations (version) VALUES ('20121002122832');
 
 INSERT INTO schema_migrations (version) VALUES ('20121002124014');
+
+INSERT INTO schema_migrations (version) VALUES ('20121003115504');
+
+INSERT INTO schema_migrations (version) VALUES ('20121003124722');

@@ -30,4 +30,31 @@ module Sapi
     ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_lft ON taxon_concepts USING btree (lft)')
   end
 
+  def self.rebuild_taxon_concept_mview
+    ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS taxon_concepts_mview"
+    ActiveRecord::Base.connection.execute <<-SQL
+    CREATE TABLE taxon_concepts_mview AS
+    SELECT *,
+    false as dirty,
+    null::timestamp with time zone as expiry
+    FROM taxon_concepts_view;
+    SQL
+  end
+
+  def self.rebuild_listing_changes_mview
+    ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS listing_changes_mview"
+    ActiveRecord::Base.connection.execute <<-SQL
+    CREATE TABLE listing_changes_mview AS
+    SELECT *,
+    false as dirty,
+    null::timestamp with time zone as expiry
+    FROM listing_changes_view;
+    SQL
+  end
+
+  def self.rebuild_mviews
+    rebuild_taxon_concept_mview
+    rebuild_listing_changes_mview
+  end
+
 end

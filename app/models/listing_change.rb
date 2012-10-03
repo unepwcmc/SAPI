@@ -2,20 +2,18 @@
 #
 # Table name: listing_changes
 #
-#  id                     :integer          not null, primary key
-#  species_listing_id     :integer
-#  taxon_concept_id       :integer
-#  change_type_id         :integer
-#  reference_id           :integer
-#  lft                    :integer
-#  rgt                    :integer
-#  parent_id              :integer
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  effective_at           :datetime         default(2012-09-21 07:32:20 UTC), not null
-#  notes                  :text
-#  specific_annotation_id :integer
-#  generic_annotation_id  :integer
+#  id                 :integer          not null, primary key
+#  species_listing_id :integer
+#  taxon_concept_id   :integer
+#  change_type_id     :integer
+#  reference_id       :integer
+#  lft                :integer
+#  rgt                :integer
+#  parent_id          :integer
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  effective_at       :datetime         default(2012-09-21 07:32:20 UTC), not null
+#  annotation_id      :integer
 #
 
 class ListingChange < ActiveRecord::Base

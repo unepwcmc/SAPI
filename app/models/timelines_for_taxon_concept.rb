@@ -25,7 +25,7 @@ class TimelinesForTaxonConcept
         :party => party,
         :change_type_name => ch.change_type_name,
         :effective_at => ch.effective_at,
-        :notes => ch.notes,
+        :notes => ch.english_full_note,
         :pos => position
       )
       party_timeline = if party

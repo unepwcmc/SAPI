@@ -7,6 +7,8 @@
 #  language_id   :integer          not null
 #  short_note    :string(255)
 #  full_note     :text             not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
 
 class AnnotationTranslation < ActiveRecord::Base

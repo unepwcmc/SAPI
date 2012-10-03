@@ -20,7 +20,7 @@ namespace :import do
     files.each do |file|
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
-      puts "CREATING temporary columns and view"
+      puts "CREATING temporary column and view"
       ActiveRecord::Base.connection.execute(<<-SQL
         CREATE VIEW #{TMP_TABLE}_view AS
         SELECT ROW_NUMBER() OVER () AS row_id, * FROM #{TMP_TABLE}
