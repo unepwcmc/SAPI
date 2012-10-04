@@ -131,7 +131,7 @@ class MTaxonConcept < ActiveRecord::Base
   }
   scope :at_level_of_listing, where(:cites_listed => 't')
 
-  scope :taxonomic_layout, order([:kingdom_position, :taxonomic_position])
+  scope :taxonomic_layout, order(:taxonomic_position)
   scope :alphabetical_layout, order([:kingdom_position, :full_name])
 
   def spp
