@@ -2,7 +2,7 @@
 #
 # Table name: taxon_concepts_mview
 #
-#  id                          :integer          primary key
+#  id                          :integer
 #  fully_covered               :boolean
 #  designation_is_cites        :boolean
 #  full_name                   :text
@@ -47,9 +47,10 @@
 #  expiry                      :datetime
 #
 
-class MTaxonConcept < TaxonConcept
+class MTaxonConcept < ActiveRecord::Base
   include PgArrayParser
   self.table_name = :taxon_concepts_mview
+  self.primary_key = :id
 
   has_many :m_listing_changes, :foreign_key => :taxon_concept_id
 

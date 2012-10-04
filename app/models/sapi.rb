@@ -30,7 +30,7 @@ module Sapi
     ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_lft ON taxon_concepts USING btree (lft)')
   end
 
-  def self.rebuild_taxon_concept_mview
+  def self.rebuild_taxon_concepts_mview
     ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS taxon_concepts_mview"
     ActiveRecord::Base.connection.execute <<-SQL
     CREATE TABLE taxon_concepts_mview AS
@@ -39,6 +39,7 @@ module Sapi
     null::timestamp with time zone as expiry
     FROM taxon_concepts_view;
     SQL
+    ActiveRecord::Base.connection.execute('CREATE UNIQUE INDEX taxon_concepts_mview_on_id ON taxon_concepts_mview (id)')
   end
 
   def self.rebuild_listing_changes_mview
@@ -50,11 +51,25 @@ module Sapi
     null::timestamp with time zone as expiry
     FROM listing_changes_view;
     SQL
+    ActiveRecord::Base.connection.execute('CREATE UNIQUE INDEX listing_changes_mview_on_id ON listing_changes_mview (id)')
+  end
+
+  def self.rebuild_annotations_mview
+    ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS annotations_mview"
+    ActiveRecord::Base.connection.execute <<-SQL
+    CREATE TABLE annotations_mview AS
+    SELECT *,
+    false as dirty,
+    null::timestamp with time zone as expiry
+    FROM annotations_view;
+    SQL
+    ActiveRecord::Base.connection.execute('CREATE UNIQUE INDEX annotations_mview_on_id ON annotations_mview (id)')
   end
 
   def self.rebuild_mviews
-    rebuild_taxon_concept_mview
+    rebuild_taxon_concepts_mview
     rebuild_listing_changes_mview
+    rebuild_annotations_mview
   end
 
 end

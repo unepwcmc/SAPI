@@ -50,10 +50,10 @@ describe Checklist do
       @taxon_concepts = @checklist.taxon_concepts_rel
     end
     it "should not include phyla" do
-      @taxon_concepts.index{ |tc| tc.rank == 'PHYLUM'}.should be_nil
+      @taxon_concepts.index{ |tc| tc.rank_name == 'PHYLUM'}.should be_nil
     end
     it "should not include classes" do
-      @taxon_concepts.index{ |tc| tc.rank == 'CLASS'}.should be_nil
+      @taxon_concepts.index{ |tc| tc.rank_name == 'CLASS'}.should be_nil
     end
     it "should include Falconiformes (Aves) before Psittaciformes (Aves)" do
       # @taxon_concepts.index{ |tc| tc.full_name == 'Falconiformes' }.should <

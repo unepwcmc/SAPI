@@ -15,8 +15,8 @@
 #  expiry               :datetime
 #
 
-class MListingChange < ActiveRecord::Base
-  self.table_name = :listing_changes_mview
+class MAnnotation < ActiveRecord::Base
+  self.table_name = :annotations_mview
   self.primary_key = :id
   has_many :m_annotations, :foreign_key => :listing_change_id
 end
