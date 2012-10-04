@@ -2,7 +2,7 @@
 #
 # Table name: taxon_concepts_mview
 #
-#  id                          :integer
+#  id                          :integer          primary key
 #  fully_covered               :boolean
 #  designation_is_cites        :boolean
 #  full_name                   :text

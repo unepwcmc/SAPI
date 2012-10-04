@@ -54,22 +54,9 @@ module Sapi
     ActiveRecord::Base.connection.execute('CREATE UNIQUE INDEX listing_changes_mview_on_id ON listing_changes_mview (id)')
   end
 
-  def self.rebuild_annotations_mview
-    ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS annotations_mview"
-    ActiveRecord::Base.connection.execute <<-SQL
-    CREATE TABLE annotations_mview AS
-    SELECT *,
-    false as dirty,
-    null::timestamp with time zone as expiry
-    FROM annotations_view;
-    SQL
-    ActiveRecord::Base.connection.execute('CREATE UNIQUE INDEX annotations_mview_on_id ON annotations_mview (id)')
-  end
-
   def self.rebuild_mviews
     rebuild_taxon_concepts_mview
     rebuild_listing_changes_mview
-    rebuild_annotations_mview
   end
 
 end
