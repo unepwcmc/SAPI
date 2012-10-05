@@ -17,7 +17,7 @@ class CreateAnnotations < ActiveRecord::Migration
   end
 
   def down
-    drop_table :annotations
-    drop_table :annotation_translations
+    execute "DROP TABLE IF EXISTS annotation_translations"
+    execute "DROP TABLE IF EXISTS annotations"
   end
 end
