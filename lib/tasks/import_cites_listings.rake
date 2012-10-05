@@ -3,6 +3,8 @@ namespace :import do
   desc "Import CITES species listings from csv file (usage: rake import:cites_listings[path/to/file,path/to/another])"
   task :cites_listings, 10.times.map { |i| "file_#{i}".to_sym } => [:environment, "cites_listings:defaults"] do |t, args|
     TMP_TABLE = 'cites_listings_import'
+    puts "There are #{ListingChange.count} CITES listings in the database"
+    puts "There are #{ListingDistribution.count} listing distributions in the database"
     designation = Designation.find_by_name(Designation::CITES)
     appendix_1 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'I')
     appendix_2 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'II')
@@ -20,7 +22,6 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
       sql = <<-SQL
-        BEGIN;
           INSERT INTO listing_changes(species_listing_id, taxon_concept_id, change_type_id, notes, created_at, updated_at, effective_at)
           SELECT DISTINCT
             CASE
@@ -37,7 +38,10 @@ namespace :import do
             END, notes, current_date, current_date, TMP.listing_date
           FROM #{TMP_TABLE} AS TMP
           INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = TMP.spc_rec_id AND taxon_concepts.legacy_type = TMP.legacy_type;
-  
+      SQL
+
+      ActiveRecord::Base.connection.execute(sql)
+      sql = <<-SQL
           INSERT INTO listing_distributions(listing_change_id, geo_entity_id, is_party, created_at, updated_at)
           SELECT DISTINCT listing_changes.id, geo_entities.id, 't'::BOOLEAN, current_date, current_date
           FROM #{TMP_TABLE} AS TMP
@@ -60,7 +64,6 @@ namespace :import do
             WHEN BTRIM(TMP.country_legacy_id) = 'NULL' THEN NULL
             ELSE TMP.country_legacy_id::INTEGER
           END;
-        COMMIT;
       SQL
       ActiveRecord::Base.connection.execute(sql)
     end
