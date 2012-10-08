@@ -3,7 +3,10 @@ class TimelineEvent
   #options to be passed:
   #:change_type_name
   #:effective_at
-  #:notes
+  #:generic_notes may be rich text (html)
+  #:specific_notes may be rich text (html)
+  #:symbol e.g. #4
+  #:parent_symbol e.g. CoP15
   #:pos - position (%)
   def initialize(options)
     @id = object_id
