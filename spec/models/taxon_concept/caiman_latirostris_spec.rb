@@ -41,6 +41,21 @@ describe TaxonConcept do
         end
       end
 
+      describe :cites_show do
+        it "should be true for order Crocodylia" do
+          @order.cites_show.should be_true
+        end
+        it "should be true for family Alligatoridae" do
+          @family.cites_show.should be_true
+        end
+        it "should be true for genus Caiman" do
+          @genus.cites_show.should be_true
+        end
+        it "should be true for species Caiman latoristris" do
+          @species.cites_show.should be_true
+        end
+      end
+
     end
   end
 end

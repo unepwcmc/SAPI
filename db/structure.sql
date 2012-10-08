@@ -305,7 +305,7 @@ CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
         ) AS q
         WHERE taxon_concepts.id = q.id;
 
-        -- set the cites_listed flag to false for all implicitly listed taxa
+        -- set the cites_listed flag to false for all implicitly listed taxa (children)
         WITH RECURSIVE q AS
         (
           SELECT  h,
@@ -330,6 +330,54 @@ CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
         WHERE taxon_concepts.id = (q.h).id AND
           ((q.h).listing->'cites_listed')::BOOLEAN IS NULL AND
           q.inherited_cites_listing = 't';
+
+        -- set the cites_listed flag to false for all implicitly listed taxa (parents)
+        WITH qq AS (
+          WITH RECURSIVE q AS
+          (
+            SELECT  h,
+            (listing->'cites_listed')::BOOLEAN AS inherited_cites_listing,
+            id AS listed_child_id,
+            id AS listed_parent_id
+            FROM    taxon_concepts h
+            WHERE   (listing->'cites_listed')::BOOLEAN = 't'
+
+            UNION ALL
+
+            SELECT  hi,
+            CASE
+              WHEN (listing->'cites_listed')::BOOLEAN IS NULL THEN 'f'
+              ELSE (listing->'cites_listed')::BOOLEAN
+            END,
+            listed_child_id,
+            id
+            FROM    q
+            JOIN    taxon_concepts hi
+            ON      hi.id = (q.h).parent_id
+          )
+          SELECT DISTINCT listed_parent_id, inherited_cites_listing
+          FROM q
+          WHERE inherited_cites_listing = 'f'
+        )
+        UPDATE taxon_concepts
+        SET listing = listing || hstore('cites_listed', 'f')
+        FROM qq
+        WHERE taxon_concepts.id = qq.listed_parent_id;
+
+        -- set cites_show to true for all explicitly or implicitly listed taxa
+        -- unless they're implicitly listed subspecies
+        -- or species of the family Orchidaceae
+        UPDATE taxon_concepts SET listing = listing || 
+        CASE
+          WHEN data->'rank_name' = 'SUBSPECIES'
+          AND (listing->'cites_listed')::BOOLEAN = 'f'
+          THEN hstore('cites_show', 'f')
+          WHEN data->'rank_name' <> 'FAMILY'
+          AND data->'family_name' = 'Orchidaceae'
+          THEN hstore('cites_show', 'f')
+          ELSE hstore('cites_show', 't')
+        END
+        WHERE (listing->'cites_listed')::BOOLEAN IS NOT NULL;
 
         -- propagate the usr_cites_exclusion flag to all subtaxa
         -- unless they have cites_listed = 't'
@@ -432,11 +480,7 @@ CREATE FUNCTION rebuild_listings() RETURNS void
         BEGIN
 
         UPDATE taxon_concepts
-        SET listing = taxon_concepts.listing || qqq.listing ||
-        CASE
-          WHEN qqq.listing -> 'cites_listing_original' > '' THEN hstore('cites_show', 't')
-          ELSE hstore('cites_show', 'f')
-        END
+        SET listing = taxon_concepts.listing || qqq.listing
         FROM (
           SELECT taxon_concept_id, listing ||
           hstore('cites_listing_original', ARRAY_TO_STRING(
@@ -771,6 +815,42 @@ CREATE TABLE annotations_mview (
 
 
 --
+-- Name: listing_changes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE listing_changes (
+    id integer NOT NULL,
+    species_listing_id integer,
+    taxon_concept_id integer,
+    change_type_id integer,
+    reference_id integer,
+    lft integer,
+    rgt integer,
+    parent_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-09-21 07:32:20.074068'::timestamp without time zone NOT NULL,
+    annotation_id integer
+);
+
+
+--
+-- Name: annotations_view; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW annotations_view AS
+    WITH multilingual_annotations AS (SELECT ct.annotation_id_mul, ct.english_note[1] AS english_full_note, ct.english_note[2] AS english_short_note, ct.spanish_note[1] AS spanish_full_note, ct.spanish_note[2] AS spanish_short_note, ct.french_note[1] AS french_full_note, ct.french_note[2] AS french_short_note FROM crosstab('SELECT annotations.id AS annotation_id_mul,
+          SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
+          ARRAY[annotation_translations.full_note, annotation_translations.short_note]
+          FROM "annotations"
+          INNER JOIN "annotation_translations"
+            ON "annotation_translations"."annotation_id" = "annotations"."id" 
+          INNER JOIN "languages"
+            ON "languages"."id" = "annotation_translations"."language_id"
+          ORDER BY 1,2'::text) ct(annotation_id_mul integer, english_note text[], spanish_note text[], french_note text[])) SELECT listing_changes.id, generic_annotations.symbol, generic_annotations.parent_symbol, multilingual_generic_annotations.english_full_note AS generic_english_full_note, multilingual_generic_annotations.spanish_full_note AS generic_spanish_full_note, multilingual_generic_annotations.french_full_note AS generic_french_full_note, multilingual_specific_annotations.english_full_note, multilingual_specific_annotations.spanish_full_note, multilingual_specific_annotations.french_full_note, multilingual_specific_annotations.english_short_note, multilingual_specific_annotations.spanish_short_note, multilingual_specific_annotations.french_short_note FROM ((((listing_changes LEFT JOIN annotations specific_annotations ON ((specific_annotations.listing_change_id = listing_changes.id))) LEFT JOIN annotations generic_annotations ON ((generic_annotations.id = listing_changes.annotation_id))) LEFT JOIN multilingual_annotations multilingual_specific_annotations ON ((specific_annotations.id = multilingual_specific_annotations.annotation_id_mul))) LEFT JOIN multilingual_annotations multilingual_generic_annotations ON ((generic_annotations.id = multilingual_generic_annotations.annotation_id_mul)));
+
+
+--
 -- Name: change_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1089,26 +1169,6 @@ CREATE SEQUENCE languages_id_seq
 --
 
 ALTER SEQUENCE languages_id_seq OWNED BY languages.id;
-
-
---
--- Name: listing_changes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE listing_changes (
-    id integer NOT NULL,
-    species_listing_id integer,
-    taxon_concept_id integer,
-    change_type_id integer,
-    reference_id integer,
-    lft integer,
-    rgt integer,
-    parent_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-09-21 07:32:20.074068'::timestamp without time zone NOT NULL,
-    annotation_id integer
-);
 
 
 --
@@ -2207,13 +2267,6 @@ CREATE UNIQUE INDEX listing_changes_mview_on_id ON listing_changes_mview USING b
 
 
 --
--- Name: taxon_concepts_mview_on_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX taxon_concepts_mview_on_id ON taxon_concepts_mview USING btree (id);
-
-
---
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2694,5 +2747,7 @@ INSERT INTO schema_migrations (version) VALUES ('20121002124014');
 INSERT INTO schema_migrations (version) VALUES ('20121003115504');
 
 INSERT INTO schema_migrations (version) VALUES ('20121003124722');
+
+INSERT INTO schema_migrations (version) VALUES ('20121004085428');
 
 INSERT INTO schema_migrations (version) VALUES ('20121004124447');

@@ -3,6 +3,8 @@ namespace :import do
   desc "Import CITES species listings from csv file (usage: rake import:cites_listings[path/to/file,path/to/another])"
   task :cites_listings, 10.times.map { |i| "file_#{i}".to_sym } => [:environment, "cites_listings:defaults"] do |t, args|
     TMP_TABLE = 'cites_listings_import'
+    puts "There are #{ListingChange.count} CITES listings in the database"
+    puts "There are #{ListingDistribution.count} listing distributions in the database"
     designation = Designation.find_by_name(Designation::CITES)
     appendix_1 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'I')
     appendix_2 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'II')
@@ -24,6 +26,7 @@ namespace :import do
       ActiveRecord::Base.connection.execute(<<-SQL
         CREATE VIEW #{TMP_TABLE}_view AS
         SELECT ROW_NUMBER() OVER () AS row_id, * FROM #{TMP_TABLE}
+        ORDER BY spc_rec_id, listing_date, appendix, country_legacy_id
       SQL
       )
       ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN IF EXISTS import_row_id")
@@ -49,6 +52,7 @@ namespace :import do
           FROM #{TMP_TABLE}_view AS TMP
           INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = TMP.spc_rec_id AND taxon_concepts.legacy_type = TMP.legacy_type;
       SQL
+
       puts "INSERTING listing_changes"
       ActiveRecord::Base.connection.execute(sql)
 

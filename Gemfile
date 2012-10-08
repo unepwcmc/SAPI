@@ -29,6 +29,7 @@ gem 'prawn', '0.12.0'
 
 group :staging, :production do
   gem 'exception_notification', :require => 'exception_notifier'
+  gem 'newrelic_rpm'
 end
 
 group :development do

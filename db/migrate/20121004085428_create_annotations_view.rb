@@ -47,7 +47,7 @@ class CreateAnnotationsView < ActiveRecord::Migration
         LEFT JOIN multilingual_annotations AS multilingual_generic_annotations
           ON generic_annotations.id = multilingual_generic_annotations.annotation_id_mul
     SQL
-    Sapi::rebuild_annotations_mview
+    Sapi::rebuild_listing_changes_mview
   end
 
   def down
