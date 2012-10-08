@@ -10,7 +10,10 @@ class TimelineEvent
     @pos = options[:pos]
     @party = options[:party]
     @change_type_name = options[:change_type_name]
-    @notes = options[:notes]
+    @specific_notes = options[:specific_notes]
+    @generic_notes = options[:generic_notes]
+    @symbol = options[:symbol]
+    @parent_symbol = options[:parent_symbol]
     @effective_at = options[:effective_at].strftime("%d/%m/%y")
   end
 end

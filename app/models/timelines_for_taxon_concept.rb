@@ -25,7 +25,7 @@ class TimelinesForTaxonConcept
         :party => party,
         :change_type_name => ch.change_type_name,
         :effective_at => ch.effective_at,
-        :notes => case I18n.locale
+        :specific_notes => case I18n.locale
           when :es
             ch.spanish_full_note
           when :fr
@@ -33,6 +33,16 @@ class TimelinesForTaxonConcept
           else
             ch.english_full_note
         end,
+        :generic_notes => case I18n.locale
+          when :es
+            ch.generic_spanish_full_note
+          when :fr
+            ch.generic_french_full_note
+          else
+            ch.generic_english_full_note
+        end,
+        :symbol => ch.symbol,
+        :parent_symbol => ch.parent_symbol,
         :pos => position
       )
       party_timeline = if party
