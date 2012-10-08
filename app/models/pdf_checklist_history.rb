@@ -10,6 +10,7 @@ class PdfChecklistHistory < ChecklistHistory
     tmp_history_pdf = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
 
     static_page_count = get_page_count(static_history_pdf)
+    #TODO refactor
     animalia, plantae = [], []
     page = 0
     begin
@@ -105,20 +106,20 @@ class PdfChecklistHistory < ChecklistHistory
         #filter out null records for higher taxa
         listings_subtable = pdf.make_table(tc.m_listing_changes.map do |lh|
           [
-            "#{lh[:species_listing_name]}#{
-              if lh[:change_type_name] == ChangeType::RESERVATION
+            "#{lh.species_listing_name}#{
+              if lh.change_type_name == ChangeType::RESERVATION
                 '/r'
-              elsif lh[:change_type_name] == ChangeType::RESERVATION_WITHDRAWAL
+              elsif lh.change_type_name == ChangeType::RESERVATION_WITHDRAWAL
                 '/w'
-              elsif lh[:change_type_name] == ChangeType::DELETION
+              elsif lh.change_type_name == ChangeType::DELETION
                 'Del'
               else
                 nil
               end
             }",
-            "#{lh[:party_name]}".upcase,
-            "#{lh[:effective_at] ? lh[:effective_at].strftime("%d/%m/%y") : nil}",
-            "#{lh[:notes]}".sub(/NULL/,'')#TODO
+            "#{lh.party_name}".upcase,
+            "#{lh.effective_at ? lh.effective_at.strftime("%d/%m/%y") : nil}",
+            "#{[lh.english_full_note, lh.spanish_full_note, lh.french_full_note].compact.join("\n")}".gsub(/NULL/,'')
           ]
         end,
           {
