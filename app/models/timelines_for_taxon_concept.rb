@@ -1,8 +1,8 @@
 class TimelinesForTaxonConcept
   def initialize(taxon_concept_id)
     @taxon_concept_id = taxon_concept_id
-    @listing_changes = ListingChange.select('listing_changes_view.*').from('listing_changes_view').
-      where('listing_changes_view.taxon_concept_id' => taxon_concept_id)
+    @listing_changes = MListingChange.select('listing_changes_mview.*').
+      where('listing_changes_mview.taxon_concept_id' => taxon_concept_id)
     @timelines = {}
     ['I', 'II', 'III'].each do |appdx|
       @timelines[appdx] = Timeline.new(:appendix => appdx)
@@ -25,7 +25,14 @@ class TimelinesForTaxonConcept
         :party => party,
         :change_type_name => ch.change_type_name,
         :effective_at => ch.effective_at,
-        :notes => ch.english_full_note,
+        :notes => case I18n.locale
+          when :es
+            ch.spanish_full_note
+          when :fr
+            ch.french_full_note
+          else
+            ch.english_full_note
+        end,
         :pos => position
       )
       party_timeline = if party
