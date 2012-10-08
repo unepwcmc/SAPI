@@ -369,7 +369,9 @@ CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
         -- or species of the family Orchidaceae
         UPDATE taxon_concepts SET listing = listing || 
         CASE
-          WHEN data->'rank_name' = 'SUBSPECIES'
+          WHEN (data->'rank_name' = 'SUBSPECIES'
+          OR data->'rank_name' = 'PHYLUM'
+          OR data->'rank_name' = 'CLASS')
           AND (listing->'cites_listed')::BOOLEAN = 'f'
           THEN hstore('cites_show', 'f')
           WHEN data->'rank_name' <> 'FAMILY'
@@ -532,6 +534,10 @@ CREATE FUNCTION rebuild_listings() RETURNS void
           ) AS qq
         ) AS qqq
         WHERE taxon_concepts.id = qqq.taxon_concept_id;
+
+        -- set cites_show to false for all deleted taxa
+        UPDATE taxon_concepts SET listing = listing || hstore('cites_show', 'f')
+        WHERE (listing->'cites_del')::BOOLEAN = 't';
         END;
       $$;
 
@@ -829,7 +835,7 @@ CREATE TABLE listing_changes (
     parent_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-09-21 07:32:20.074068'::timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-09-21 08:00:14.341268'::timestamp without time zone NOT NULL,
     annotation_id integer
 );
 
@@ -883,41 +889,6 @@ ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
 
 
 --
--- Name: cites_listings_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_listings_import (
-    legacy_type character varying,
-    spc_rec_id integer,
-    appendix character varying,
-    listing_date date,
-    country_legacy_id character varying,
-    notes character varying
-);
-
-
---
--- Name: cites_regions_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_regions_import (
-    name character varying
-);
-
-
---
--- Name: common_name_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE common_name_import (
-    legacy_type character varying,
-    common_name character varying,
-    language_name character varying,
-    species_id integer
-);
-
-
---
 -- Name: common_names; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -951,20 +922,6 @@ ALTER SEQUENCE common_names_id_seq OWNED BY common_names.id;
 
 
 --
--- Name: countries_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE countries_import (
-    legacy_id integer,
-    iso2 character varying,
-    iso3 character varying,
-    name character varying,
-    long_name character varying,
-    region_number character varying
-);
-
-
---
 -- Name: designations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -993,18 +950,6 @@ CREATE SEQUENCE designations_id_seq
 --
 
 ALTER SEQUENCE designations_id_seq OWNED BY designations.id;
-
-
---
--- Name: distribution_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE distribution_import (
-    legacy_type character varying,
-    species_id integer,
-    country_id integer,
-    country_name character varying
-);
 
 
 --
@@ -1316,20 +1261,6 @@ ALTER SEQUENCE ranks_id_seq OWNED BY ranks.id;
 
 
 --
--- Name: reference_links_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE reference_links_import (
-    legacy_type character varying,
-    legacy_id integer,
-    spcrecid integer,
-    dscrecid integer,
-    dslcode character varying,
-    dslcoderecid integer
-);
-
-
---
 -- Name: references; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1365,43 +1296,11 @@ ALTER SEQUENCE references_id_seq OWNED BY "references".id;
 
 
 --
--- Name: references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE references_import (
-    author character varying,
-    title character varying,
-    year character varying,
-    legacy_id integer,
-    legacy_type character varying
-);
-
-
---
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE schema_migrations (
     version character varying(255) NOT NULL
-);
-
-
---
--- Name: species_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE species_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    speciesauthor character varying,
-    spcinfrarank character varying,
-    spcinfra character varying,
-    infrarankauthor character varying,
-    spcrecid integer,
-    spcstatus character varying
 );
 
 
@@ -1462,44 +1361,6 @@ CREATE SEQUENCE standard_references_id_seq
 --
 
 ALTER SEQUENCE standard_references_id_seq OWNED BY standard_references.id;
-
-
---
--- Name: standard_references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE standard_references_import (
-    author character varying,
-    year integer,
-    title character varying,
-    kingdom character varying,
-    phylum character varying,
-    class character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying
-);
-
-
---
--- Name: synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE synonym_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    speciesauthor character varying,
-    spcinfrarank character varying,
-    spcinfra character varying,
-    infrarankauthor character varying,
-    spcrecid integer,
-    spcstatus character varying,
-    accepted_species_id integer
-);
 
 
 --
@@ -2239,13 +2100,6 @@ CREATE INDEX index_listing_changes_on_annotation_id ON listing_changes USING btr
 
 
 --
--- Name: index_listing_distributions_on_geo_entity_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_listing_distributions_on_geo_entity_id ON listing_distributions USING btree (geo_entity_id);
-
-
---
 -- Name: index_taxon_concepts_on_data; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2257,13 +2111,6 @@ CREATE INDEX index_taxon_concepts_on_data ON taxon_concepts USING btree (data);
 --
 
 CREATE INDEX index_taxon_concepts_on_lft ON taxon_concepts USING btree (lft);
-
-
---
--- Name: listing_changes_mview_on_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX listing_changes_mview_on_id ON listing_changes_mview USING btree (id);
 
 
 --

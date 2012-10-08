@@ -88,7 +88,10 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
         -- or species of the family Orchidaceae
         UPDATE taxon_concepts SET listing = listing || 
         CASE
-          WHEN data->'rank_name' = 'SUBSPECIES'
+          WHEN (data->'rank_name' = 'SUBSPECIES'
+          OR data->'rank_name' = 'CLASS'
+          OR data->'rank_name' = 'PHYLUM'
+          OR data->'rank_name' = 'KINGDOM')
           AND (listing->'cites_listed')::BOOLEAN = 'f'
           THEN hstore('cites_show', 'f')
           WHEN data->'rank_name' <> 'FAMILY'
