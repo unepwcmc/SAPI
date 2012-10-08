@@ -305,7 +305,7 @@ CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
         ) AS q
         WHERE taxon_concepts.id = q.id;
 
-        -- set the cites_listed flag to false for all implicitly listed taxa
+        -- set the cites_listed flag to false for all implicitly listed taxa (children)
         WITH RECURSIVE q AS
         (
           SELECT  h,
@@ -330,6 +330,54 @@ CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
         WHERE taxon_concepts.id = (q.h).id AND
           ((q.h).listing->'cites_listed')::BOOLEAN IS NULL AND
           q.inherited_cites_listing = 't';
+
+        -- set the cites_listed flag to false for all implicitly listed taxa (parents)
+        WITH qq AS (
+          WITH RECURSIVE q AS
+          (
+            SELECT  h,
+            (listing->'cites_listed')::BOOLEAN AS inherited_cites_listing,
+            id AS listed_child_id,
+            id AS listed_parent_id
+            FROM    taxon_concepts h
+            WHERE   (listing->'cites_listed')::BOOLEAN = 't'
+
+            UNION ALL
+
+            SELECT  hi,
+            CASE
+              WHEN (listing->'cites_listed')::BOOLEAN IS NULL THEN 'f'
+              ELSE (listing->'cites_listed')::BOOLEAN
+            END,
+            listed_child_id,
+            id
+            FROM    q
+            JOIN    taxon_concepts hi
+            ON      hi.id = (q.h).parent_id
+          )
+          SELECT DISTINCT listed_parent_id, inherited_cites_listing
+          FROM q
+          WHERE inherited_cites_listing = 'f'
+        )
+        UPDATE taxon_concepts
+        SET listing = listing || hstore('cites_listed', 'f')
+        FROM qq
+        WHERE taxon_concepts.id = qq.listed_parent_id;
+
+        -- set cites_show to true for all explicitly or implicitly listed taxa
+        -- unless they're implicitly listed subspecies
+        -- or species of the family Orchidaceae
+        UPDATE taxon_concepts SET listing = listing || 
+        CASE
+          WHEN data->'rank_name' = 'SUBSPECIES'
+          AND (listing->'cites_listed')::BOOLEAN = 'f'
+          THEN hstore('cites_show', 'f')
+          WHEN data->'rank_name' <> 'FAMILY'
+          AND data->'family_name' = 'Orchidaceae'
+          THEN hstore('cites_show', 'f')
+          ELSE hstore('cites_show', 't')
+        END
+        WHERE (listing->'cites_listed')::BOOLEAN IS NOT NULL;
 
         -- propagate the usr_cites_exclusion flag to all subtaxa
         -- unless they have cites_listed = 't'
@@ -432,11 +480,7 @@ CREATE FUNCTION rebuild_listings() RETURNS void
         BEGIN
 
         UPDATE taxon_concepts
-        SET listing = taxon_concepts.listing || qqq.listing ||
-        CASE
-          WHEN qqq.listing -> 'cites_listing_original' > '' THEN hstore('cites_show', 't')
-          ELSE hstore('cites_show', 'f')
-        END
+        SET listing = taxon_concepts.listing || qqq.listing
         FROM (
           SELECT taxon_concept_id, listing ||
           hstore('cites_listing_original', ARRAY_TO_STRING(
@@ -682,6 +726,131 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: annotation_translations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE annotation_translations (
+    id integer NOT NULL,
+    annotation_id integer NOT NULL,
+    language_id integer NOT NULL,
+    short_note character varying(255),
+    full_note text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: annotation_translations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE annotation_translations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: annotation_translations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE annotation_translations_id_seq OWNED BY annotation_translations.id;
+
+
+--
+-- Name: annotations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE annotations (
+    id integer NOT NULL,
+    symbol character varying(255),
+    parent_symbol character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    listing_change_id integer
+);
+
+
+--
+-- Name: annotations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE annotations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: annotations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE annotations_id_seq OWNED BY annotations.id;
+
+
+--
+-- Name: annotations_mview; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE annotations_mview (
+    id integer,
+    symbol character varying(255),
+    parent_symbol character varying(255),
+    generic_english_full_note text,
+    generic_spanish_full_note text,
+    generic_french_full_note text,
+    english_full_note text,
+    spanish_full_note text,
+    french_full_note text,
+    english_short_note text,
+    spanish_short_note text,
+    french_short_note text,
+    dirty boolean,
+    expiry timestamp with time zone
+);
+
+
+--
+-- Name: listing_changes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE listing_changes (
+    id integer NOT NULL,
+    species_listing_id integer,
+    taxon_concept_id integer,
+    change_type_id integer,
+    reference_id integer,
+    lft integer,
+    rgt integer,
+    parent_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    effective_at timestamp without time zone DEFAULT '2012-09-21 08:00:14.341268'::timestamp without time zone NOT NULL,
+    annotation_id integer
+);
+
+
+--
+-- Name: annotations_view; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW annotations_view AS
+    WITH multilingual_annotations AS (SELECT ct.annotation_id_mul, ct.english_note[1] AS english_full_note, ct.english_note[2] AS english_short_note, ct.spanish_note[1] AS spanish_full_note, ct.spanish_note[2] AS spanish_short_note, ct.french_note[1] AS french_full_note, ct.french_note[2] AS french_short_note FROM crosstab('SELECT annotations.id AS annotation_id_mul,
+          SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
+          ARRAY[annotation_translations.full_note, annotation_translations.short_note]
+          FROM "annotations"
+          INNER JOIN "annotation_translations"
+            ON "annotation_translations"."annotation_id" = "annotations"."id" 
+          INNER JOIN "languages"
+            ON "languages"."id" = "annotation_translations"."language_id"
+          ORDER BY 1,2'::text) ct(annotation_id_mul integer, english_note text[], spanish_note text[], french_note text[])) SELECT listing_changes.id, generic_annotations.symbol, generic_annotations.parent_symbol, multilingual_generic_annotations.english_full_note AS generic_english_full_note, multilingual_generic_annotations.spanish_full_note AS generic_spanish_full_note, multilingual_generic_annotations.french_full_note AS generic_french_full_note, multilingual_specific_annotations.english_full_note, multilingual_specific_annotations.spanish_full_note, multilingual_specific_annotations.french_full_note, multilingual_specific_annotations.english_short_note, multilingual_specific_annotations.spanish_short_note, multilingual_specific_annotations.french_short_note FROM ((((listing_changes LEFT JOIN annotations specific_annotations ON ((specific_annotations.listing_change_id = listing_changes.id))) LEFT JOIN annotations generic_annotations ON ((generic_annotations.id = listing_changes.annotation_id))) LEFT JOIN multilingual_annotations multilingual_specific_annotations ON ((specific_annotations.id = multilingual_specific_annotations.annotation_id_mul))) LEFT JOIN multilingual_annotations multilingual_generic_annotations ON ((generic_annotations.id = multilingual_generic_annotations.annotation_id_mul)));
+
+
+--
 -- Name: change_types; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -711,41 +880,6 @@ CREATE SEQUENCE change_types_id_seq
 --
 
 ALTER SEQUENCE change_types_id_seq OWNED BY change_types.id;
-
-
---
--- Name: cites_listings_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_listings_import (
-    legacy_type character varying,
-    spc_rec_id integer,
-    appendix character varying,
-    listing_date date,
-    country_legacy_id character varying,
-    notes character varying
-);
-
-
---
--- Name: cites_regions_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cites_regions_import (
-    name character varying
-);
-
-
---
--- Name: common_name_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE common_name_import (
-    legacy_type character varying,
-    common_name character varying,
-    language_name character varying,
-    species_id integer
-);
 
 
 --
@@ -782,20 +916,6 @@ ALTER SEQUENCE common_names_id_seq OWNED BY common_names.id;
 
 
 --
--- Name: countries_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE countries_import (
-    legacy_id integer,
-    iso2 character varying,
-    iso3 character varying,
-    name character varying,
-    long_name character varying,
-    region_number character varying
-);
-
-
---
 -- Name: designations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -824,18 +944,6 @@ CREATE SEQUENCE designations_id_seq
 --
 
 ALTER SEQUENCE designations_id_seq OWNED BY designations.id;
-
-
---
--- Name: distribution_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE distribution_import (
-    legacy_type character varying,
-    species_id integer,
-    country_id integer,
-    country_name character varying
-);
 
 
 --
@@ -1003,26 +1111,6 @@ ALTER SEQUENCE languages_id_seq OWNED BY languages.id;
 
 
 --
--- Name: listing_changes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE listing_changes (
-    id integer NOT NULL,
-    species_listing_id integer,
-    taxon_concept_id integer,
-    change_type_id integer,
-    reference_id integer,
-    lft integer,
-    rgt integer,
-    parent_id integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    effective_at timestamp without time zone DEFAULT '2012-09-21 07:32:20.074068'::timestamp without time zone NOT NULL,
-    notes text
-);
-
-
---
 -- Name: listing_changes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1055,7 +1143,6 @@ CREATE TABLE listing_changes_mview (
     change_type_name character varying(255),
     party_id integer,
     party_name character varying(255),
-    notes text,
     dirty boolean,
     expiry timestamp with time zone
 );
@@ -1094,7 +1181,7 @@ CREATE TABLE species_listings (
 --
 
 CREATE VIEW listing_changes_view AS
-    SELECT listing_changes.id, listing_changes.taxon_concept_id, listing_changes.effective_at, listing_changes.species_listing_id, species_listings.abbreviation AS species_listing_name, listing_changes.change_type_id, change_types.name AS change_type_name, listing_distributions.geo_entity_id AS party_id, geo_entities.iso_code2 AS party_name, listing_changes.notes FROM ((((listing_changes LEFT JOIN change_types ON ((listing_changes.change_type_id = change_types.id))) LEFT JOIN species_listings ON ((listing_changes.species_listing_id = species_listings.id))) LEFT JOIN listing_distributions ON (((listing_changes.id = listing_distributions.listing_change_id) AND (listing_distributions.is_party = true)))) LEFT JOIN geo_entities ON ((geo_entities.id = listing_distributions.geo_entity_id))) ORDER BY listing_changes.taxon_concept_id, listing_changes.effective_at, CASE WHEN ((change_types.name)::text = 'ADDITION'::text) THEN 0 WHEN ((change_types.name)::text = 'RESERVATION'::text) THEN 1 WHEN ((change_types.name)::text = 'RESERVATION_WITHDRAWAL'::text) THEN 2 WHEN ((change_types.name)::text = 'DELETION'::text) THEN 3 ELSE NULL::integer END;
+    SELECT listing_changes.id, listing_changes.taxon_concept_id, listing_changes.effective_at, listing_changes.species_listing_id, species_listings.abbreviation AS species_listing_name, listing_changes.change_type_id, change_types.name AS change_type_name, listing_distributions.geo_entity_id AS party_id, geo_entities.iso_code2 AS party_name FROM ((((listing_changes LEFT JOIN change_types ON ((listing_changes.change_type_id = change_types.id))) LEFT JOIN species_listings ON ((listing_changes.species_listing_id = species_listings.id))) LEFT JOIN listing_distributions ON (((listing_changes.id = listing_distributions.listing_change_id) AND (listing_distributions.is_party = true)))) LEFT JOIN geo_entities ON ((geo_entities.id = listing_distributions.geo_entity_id))) ORDER BY listing_changes.taxon_concept_id, listing_changes.effective_at, CASE WHEN ((change_types.name)::text = 'ADDITION'::text) THEN 0 WHEN ((change_types.name)::text = 'RESERVATION'::text) THEN 1 WHEN ((change_types.name)::text = 'RESERVATION_WITHDRAWAL'::text) THEN 2 WHEN ((change_types.name)::text = 'DELETION'::text) THEN 3 ELSE NULL::integer END;
 
 
 --
@@ -1149,20 +1236,6 @@ ALTER SEQUENCE ranks_id_seq OWNED BY ranks.id;
 
 
 --
--- Name: reference_links_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE reference_links_import (
-    legacy_type character varying,
-    legacy_id integer,
-    spcrecid integer,
-    dscrecid integer,
-    dslcode character varying,
-    dslcoderecid integer
-);
-
-
---
 -- Name: references; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1198,43 +1271,11 @@ ALTER SEQUENCE references_id_seq OWNED BY "references".id;
 
 
 --
--- Name: references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE references_import (
-    author character varying,
-    title character varying,
-    year character varying,
-    legacy_id integer,
-    legacy_type character varying
-);
-
-
---
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE schema_migrations (
     version character varying(255) NOT NULL
-);
-
-
---
--- Name: species_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE species_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    speciesauthor character varying,
-    spcinfrarank character varying,
-    spcinfra character varying,
-    infrarankauthor character varying,
-    spcrecid integer,
-    spcstatus character varying
 );
 
 
@@ -1295,44 +1336,6 @@ CREATE SEQUENCE standard_references_id_seq
 --
 
 ALTER SEQUENCE standard_references_id_seq OWNED BY standard_references.id;
-
-
---
--- Name: standard_references_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE standard_references_import (
-    author character varying,
-    year integer,
-    title character varying,
-    kingdom character varying,
-    phylum character varying,
-    class character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying
-);
-
-
---
--- Name: synonym_import; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE synonym_import (
-    kingdom character varying,
-    taxonorder character varying,
-    family character varying,
-    genus character varying,
-    species character varying,
-    speciesauthor character varying,
-    spcinfrarank character varying,
-    spcinfra character varying,
-    infrarankauthor character varying,
-    spcrecid integer,
-    spcstatus character varying,
-    accepted_species_id integer
-);
 
 
 --
@@ -1701,6 +1704,20 @@ ALTER SEQUENCE taxon_relationships_id_seq OWNED BY taxon_relationships.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY annotation_translations ALTER COLUMN id SET DEFAULT nextval('annotation_translations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY annotations ALTER COLUMN id SET DEFAULT nextval('annotations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY change_types ALTER COLUMN id SET DEFAULT nextval('change_types_id_seq'::regclass);
 
 
@@ -1849,6 +1866,22 @@ ALTER TABLE ONLY taxon_relationship_types ALTER COLUMN id SET DEFAULT nextval('t
 --
 
 ALTER TABLE ONLY taxon_relationships ALTER COLUMN id SET DEFAULT nextval('taxon_relationships_id_seq'::regclass);
+
+
+--
+-- Name: annotation_translations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY annotation_translations
+    ADD CONSTRAINT annotation_translations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: annotations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY annotations
+    ADD CONSTRAINT annotations_pkey PRIMARY KEY (id);
 
 
 --
@@ -2028,24 +2061,17 @@ ALTER TABLE ONLY taxon_relationships
 
 
 --
--- Name: index_listing_changes_mview_on_taxon_concept_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: annotations_mview_on_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_listing_changes_mview_on_taxon_concept_id ON listing_changes_mview USING btree (taxon_concept_id);
-
-
---
--- Name: index_taxon_concepts_mview_on_full_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_taxon_concepts_mview_on_full_name ON taxon_concepts_mview USING btree (full_name);
+CREATE INDEX annotations_mview_on_id ON annotations_mview USING btree (id);
 
 
 --
--- Name: index_taxon_concepts_mview_on_taxonomic_position; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_listing_changes_on_annotation_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_taxon_concepts_mview_on_taxonomic_position ON taxon_concepts_mview USING btree (taxonomic_position);
+CREATE INDEX index_listing_changes_on_annotation_id ON listing_changes USING btree (annotation_id);
 
 
 --
@@ -2086,6 +2112,30 @@ CREATE RULE "_RETURN" AS ON SELECT TO taxon_concepts_view DO INSTEAD SELECT taxo
           GROUP BY taxon_concepts.id, SUBSTRING(languages.name FROM 1 FOR 1)
           ORDER BY 1,2'::text) ct(taxon_concept_id_com integer, english_names_ary character varying[], french_names_ary character varying[], spanish_names_ary character varying[])) common_names ON ((taxon_concepts.id = common_names.taxon_concept_id_com))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_syn, array_agg((synonym_tc.data -> 'full_name'::text)) AS synonyms_ary FROM (((taxon_concepts LEFT JOIN taxon_relationships ON ((taxon_relationships.taxon_concept_id = taxon_concepts.id))) LEFT JOIN taxon_relationship_types ON ((taxon_relationship_types.id = taxon_relationships.taxon_relationship_type_id))) LEFT JOIN taxon_concepts synonym_tc ON ((synonym_tc.id = taxon_relationships.other_taxon_concept_id))) GROUP BY taxon_concepts.id) synonyms ON ((taxon_concepts.id = synonyms.taxon_concept_id_syn))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_cnt, array_agg(geo_entities.id ORDER BY geo_entities.name) AS countries_ids_ary FROM (((taxon_concepts LEFT JOIN taxon_concept_geo_entities ON ((taxon_concept_geo_entities.taxon_concept_id = taxon_concepts.id))) LEFT JOIN geo_entities ON ((taxon_concept_geo_entities.geo_entity_id = geo_entities.id))) LEFT JOIN geo_entity_types ON (((geo_entity_types.id = geo_entities.geo_entity_type_id) AND ((geo_entity_types.name)::text = 'COUNTRY'::text)))) GROUP BY taxon_concepts.id) countries_ids ON ((taxon_concepts.id = countries_ids.taxon_concept_id_cnt))) LEFT JOIN (WITH RECURSIVE q AS (SELECT h.*::taxon_concepts AS h, h.id, array_agg(taxon_concept_references.reference_id) AS standard_references_ids_ary FROM (taxon_concepts h LEFT JOIN taxon_concept_references ON (((h.id = taxon_concept_references.taxon_concept_id) AND ((taxon_concept_references.data -> 'usr_is_std_ref'::text) = 't'::text)))) WHERE (h.parent_id IS NULL) GROUP BY h.id UNION ALL SELECT hi.*::taxon_concepts AS hi, hi.id, CASE WHEN (((hi.data -> 'usr_no_std_ref'::text))::boolean = true) THEN ARRAY[]::integer[] ELSE (q.standard_references_ids_ary || taxon_concept_references.reference_id) END AS "case" FROM ((q JOIN taxon_concepts hi ON ((hi.parent_id = (q.h).id))) LEFT JOIN taxon_concept_references ON (((hi.id = taxon_concept_references.taxon_concept_id) AND ((taxon_concept_references.data -> 'usr_is_std_ref'::text) = 't'::text))))) SELECT q.id AS taxon_concept_id_sr, ARRAY(SELECT DISTINCT s.s FROM unnest(q.standard_references_ids_ary) s(s) WHERE (s.s IS NOT NULL)) AS standard_references_ids_ary FROM q) standard_references_ids ON ((taxon_concepts.id = standard_references_ids.taxon_concept_id_sr)));
 ALTER VIEW taxon_concepts_view SET ();
+
+
+--
+-- Name: annotation_translations_annotation_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY annotation_translations
+    ADD CONSTRAINT annotation_translations_annotation_id_fk FOREIGN KEY (annotation_id) REFERENCES annotations(id);
+
+
+--
+-- Name: annotation_translations_language_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY annotation_translations
+    ADD CONSTRAINT annotation_translations_language_id_fk FOREIGN KEY (language_id) REFERENCES languages(id);
+
+
+--
+-- Name: annotations_listing_changes_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY annotations
+    ADD CONSTRAINT annotations_listing_changes_id_fk FOREIGN KEY (listing_change_id) REFERENCES listing_changes(id);
 
 
 --
@@ -2134,6 +2184,14 @@ ALTER TABLE ONLY geo_relationships
 
 ALTER TABLE ONLY geo_relationships
     ADD CONSTRAINT geo_relationships_other_geo_entity_id_fk FOREIGN KEY (other_geo_entity_id) REFERENCES geo_entities(id);
+
+
+--
+-- Name: listing_changes_annotation_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY listing_changes
+    ADD CONSTRAINT listing_changes_annotation_id_fk FOREIGN KEY (annotation_id) REFERENCES annotations(id);
 
 
 --
@@ -2503,3 +2561,13 @@ INSERT INTO schema_migrations (version) VALUES ('20120925141758');
 INSERT INTO schema_migrations (version) VALUES ('20120926132500');
 
 INSERT INTO schema_migrations (version) VALUES ('20120927100016');
+
+INSERT INTO schema_migrations (version) VALUES ('20121002122832');
+
+INSERT INTO schema_migrations (version) VALUES ('20121002124014');
+
+INSERT INTO schema_migrations (version) VALUES ('20121003115504');
+
+INSERT INTO schema_migrations (version) VALUES ('20121003124722');
+
+INSERT INTO schema_migrations (version) VALUES ('20121004085428');

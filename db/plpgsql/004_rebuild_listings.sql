@@ -8,11 +8,7 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
         BEGIN
 
         UPDATE taxon_concepts
-        SET listing = taxon_concepts.listing || qqq.listing ||
-        CASE
-          WHEN qqq.listing -> 'cites_listing_original' > '' THEN hstore('cites_show', 't')
-          ELSE hstore('cites_show', 'f')
-        END
+        SET listing = taxon_concepts.listing || qqq.listing
         FROM (
           SELECT taxon_concept_id, listing ||
           hstore('cites_listing_original', ARRAY_TO_STRING(
@@ -64,6 +60,10 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
           ) AS qq
         ) AS qqq
         WHERE taxon_concepts.id = qqq.taxon_concept_id;
+
+        -- set cites_show to false for all deleted taxa
+        UPDATE taxon_concepts SET listing = listing || hstore('cites_show', 'f')
+        WHERE (listing->'cites_del')::BOOLEAN = 't';
         END;
       $$;
 

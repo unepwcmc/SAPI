@@ -59,13 +59,11 @@ class MTaxonConcept < TaxonConcept
   scope :without_nc, where(
     <<-SQL
     (cites_del <> 't' OR cites_del IS NULL)
-    AND (
-      (rank_name = '#{Rank::SPECIES}' AND cites_listed IS NOT NULL)
-      OR
-      (rank_name <> '#{Rank::SPECIES}' AND cites_listed = 't')
-    )
+    AND cites_listed IS NOT NULL
     SQL
   )
+
+  scope :without_hidden, where("cites_show = 't'")
 
   scope :by_cites_regions_and_countries, lambda { |cites_regions_ids, countries_ids|
     in_clause = [cites_regions_ids, countries_ids].flatten.compact.join(',')
