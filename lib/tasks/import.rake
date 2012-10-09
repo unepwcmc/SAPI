@@ -39,7 +39,7 @@ namespace :import do
     Rake::Task["import:standard_references"].invoke(
       'lib/assets/files/standard_references.csv'
     )
-    Sapi::fix_listing_changes()
+
     Sapi::rebuild()
     Sapi::create_indices
   end
@@ -88,7 +88,7 @@ namespace :import do
     Rake::Task["import:standard_references"].invoke(
       'lib/assets/files/standard_references.csv'
     )
-    Sapi::fix_listing_changes()
+
     Sapi::rebuild()
     Sapi::create_indices
   end

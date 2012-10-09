@@ -35,7 +35,7 @@ namespace :import do
       copy_data(file, TMP_TABLE)
 
       sql = <<-SQL
-          INSERT INTO listing_changes(import_row_id, species_listing_id, taxon_concept_id, change_type_id, created_at, updated_at, effective_at)
+          INSERT INTO listing_changes(import_row_id, species_listing_id, taxon_concept_id, change_type_id, created_at, updated_at, effective_at, is_current)
           SELECT row_id,
             CASE
               WHEN UPPER(BTRIM(TMP.appendix)) like 'III%' THEN #{appendix_3.id}
@@ -48,7 +48,11 @@ namespace :import do
               WHEN TMP.appendix like '%/w' THEN #{rw.id}
               WHEN TMP.appendix ilike '%DELETED%' THEN #{d.id}
               ELSE #{a.id}
-            END, current_date, current_date, TMP.listing_date
+            END, current_date, current_date, TMP.listing_date,
+            CASE
+              WHEN TMP.is_current IS NULL THEN 'f'
+              ELSE TMP.is_current
+            END
           FROM #{TMP_TABLE}_view AS TMP
           INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = TMP.spc_rec_id AND taxon_concepts.legacy_type = TMP.legacy_type;
       SQL

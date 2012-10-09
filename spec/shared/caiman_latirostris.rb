@@ -66,12 +66,14 @@ shared_context "Caiman latirostris" do
     create(
      :cites_I_addition,
      :taxon_concept => @species,
-     :effective_at => '1975-07-01'
+     :effective_at => '1975-07-01',
+     :is_current => true
     )
     l1 = create(
      :cites_II_addition,
      :taxon_concept => @species,
-     :effective_at => '1997-09-18'
+     :effective_at => '1997-09-18',
+     :is_current => true
     )
     create(
       :listing_distribution,
@@ -80,7 +82,6 @@ shared_context "Caiman latirostris" do
       :is_party => false
     )
 
-    Sapi::fix_listing_changes
     Sapi::rebuild
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)

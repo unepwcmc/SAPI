@@ -6,6 +6,37 @@ CREATE OR REPLACE FUNCTION fix_cites_listing_changes() RETURNS void
     LANGUAGE plpgsql
     AS $$
       BEGIN
+
+        UPDATE listing_changes
+        SET is_current = 't'
+        WHERE id IN (
+          SELECT id FROM (
+                SELECT taxon_concept_id, MAX(listing_changes.id) AS id, MAX(effective_at)
+                FROM listing_changes
+                LEFT JOIN change_types
+                  ON listing_changes.change_type_id = change_types.id
+                LEFT JOIN species_listings
+                  ON listing_changes.species_listing_id = species_listings.id
+                LEFT JOIN taxon_concepts
+                  ON listing_changes.taxon_concept_id = taxon_concepts.id
+                LEFT JOIN designations
+                  ON taxon_concepts.designation_id = designations.id
+                WHERE designations.name = 'CITES'
+                  AND change_types.name IN ('ADDITION', 'DELETION')
+                  AND taxon_concept_id IN (
+                        SELECT taxon_concept_id
+                        FROM listing_changes
+                        GROUP BY taxon_concept_id
+                        HAVING COUNT(
+                        CASE
+                          WHEN is_current = 't' THEN 1 
+                          ELSE NULL
+                        END) = 0
+                )
+                GROUP BY taxon_concept_id
+          ) q
+        );
+
       INSERT INTO listing_changes 
       (taxon_concept_id, species_listing_id, change_type_id, effective_at, created_at, updated_at)
       SELECT 
@@ -16,7 +47,7 @@ CREATE OR REPLACE FUNCTION fix_cites_listing_changes() RETURNS void
                         SELECT listing_changes.id AS id, taxon_concept_id, species_listing_id, change_type_id,
                              effective_at, change_types.name AS change_type_name,
                              species_listings.abbreviation AS listing_name,
-                             listing_distributions.geo_entity_id AS party_id, geo_entities_ary,
+                             listing_distributions.geo_entity_id AS party_id, geo_entities_ary, is_current,
                              ROW_NUMBER() OVER(ORDER BY taxon_concept_id, effective_at) AS row_no
                              FROM
                              listing_changes
@@ -37,8 +68,10 @@ CREATE OR REPLACE FUNCTION fix_cites_listing_changes() RETURNS void
                      SELECT q1.taxon_concept_id, q1.species_listing_id, q2.effective_at
                      FROM q q1 LEFT JOIN q q2 ON (q1.taxon_concept_id = q2.taxon_concept_id AND q2.row_no = q1.row_no + 1)
                      WHERE q2.taxon_concept_id IS NOT NULL
-                     -- only add a deletion record between two additiona records
+                     -- only add a deletion record between two addition records
                      AND q1.change_type_id = q2.change_type_id AND q1.change_type_name = 'ADDITION'
+                     -- do not add after a change that is marked as current
+                     AND q1.is_current <> 't'
                      -- do not add between consecutive app III additions by different countries
                      AND NOT (q1.listing_name = 'III' AND q2.listing_name = 'III' AND q1.party_id <> q2.party_id)
                      -- do not add between additions entered on the same day

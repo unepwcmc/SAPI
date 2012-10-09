@@ -16,9 +16,6 @@ module Sapi
   def self.rebuild_references
     ActiveRecord::Base.connection.execute('SELECT * FROM rebuild_cites_accepted_flags()')
   end
-  def self.fix_listing_changes
-    ActiveRecord::Base.connection.execute('SELECT * FROM fix_cites_listing_changes()')
-  end
 
   def self.drop_indices
     ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_data')

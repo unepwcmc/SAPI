@@ -84,7 +84,6 @@ shared_context "Arctocephalus" do
      :effective_at => '1979-06-28'
     )
 
-    Sapi::fix_listing_changes
     Sapi::rebuild
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)

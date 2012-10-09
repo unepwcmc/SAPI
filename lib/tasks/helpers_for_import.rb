@@ -26,7 +26,8 @@ class CsvToDbMap
       'LegDateListed' => 'listing_date date',
       'CountryRecID' => 'country_legacy_id varchar',
       'CtyRecID' => 'country_legacy_id varchar',
-      'LegNotes' => 'notes varchar'
+      'LegNotes' => 'notes varchar',
+      'IsCurrent' => 'is_current boolean'
     },
     'distribution_import' => {
       'Kingdom' => 'legacy_type varchar',

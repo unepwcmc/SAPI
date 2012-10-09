@@ -101,7 +101,6 @@ shared_context "Falconiformes" do
      :effective_at => '1977-02-04'
     )
 
-    Sapi::fix_listing_changes
     Sapi::rebuild
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)

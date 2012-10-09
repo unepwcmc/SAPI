@@ -69,7 +69,8 @@ shared_context "Canis lupus" do
     l2 = create(
      :cites_I_addition,
      :taxon_concept => @species,
-     :effective_at => '2010-06-23'
+     :effective_at => '2010-06-23',
+     :is_current => true
     )
     [bhutan, india, nepal, pakistan].each do |country|
       create(
@@ -82,10 +83,10 @@ shared_context "Canis lupus" do
     create(
      :cites_II_addition,
      :taxon_concept => @species,
-     :effective_at => '2010-06-23'
+     :effective_at => '2010-06-23',
+     :is_current => true
     )
 
-    Sapi::fix_listing_changes
     Sapi::rebuild
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)

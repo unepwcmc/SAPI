@@ -15,6 +15,7 @@ FactoryGirl.define do
     change_type
     taxon_concept
     effective_at '2012-01-01'
+    is_current false
   end
 
   factory :listing_distribution do

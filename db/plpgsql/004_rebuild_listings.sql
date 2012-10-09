@@ -7,6 +7,8 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
     AS $$
         BEGIN
 
+        PERFORM fix_cites_listing_changes();
+
         UPDATE taxon_concepts
         SET listing = taxon_concepts.listing || qqq.listing
         FROM (
@@ -51,10 +53,14 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
                 ELSE 0
               END AS cites_del
               FROM listing_changes 
-              LEFT JOIN species_listings ON species_listing_id = species_listings.id
+
               LEFT JOIN change_types ON change_type_id = change_types.id
               AND change_types.name IN ('ADDITION','DELETION')
               AND effective_at <= NOW()
+              LEFT JOIN species_listings ON species_listing_id = species_listings.id
+              LEFT JOIN designations ON species_listings.designation_id = designations.id
+              WHERE designations.name = 'CITES'
+              AND is_current = 't' 
             ) AS q
             GROUP BY taxon_concept_id
           ) AS qq

@@ -29,7 +29,6 @@ shared_context "Panax ginseng" do
      :effective_at => '2000-07-19'
     )
 
-    Sapi::fix_listing_changes
     Sapi::rebuild
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)

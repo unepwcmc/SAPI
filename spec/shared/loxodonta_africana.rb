@@ -65,7 +65,8 @@ shared_context "Loxodonta africana" do
     create(
      :cites_I_addition,
      :taxon_concept => @species,
-     :effective_at => '1990-01-18'
+     :effective_at => '1990-01-18',
+     :is_current => true
     )
     l2 = create(
      :cites_II_addition,
@@ -83,7 +84,8 @@ shared_context "Loxodonta africana" do
     l3 = create(
      :cites_II_addition,
      :taxon_concept => @species,
-     :effective_at => '2000-07-19'
+     :effective_at => '2000-07-19',
+     :is_current => true
     )
     [botswana, namibia, zambia, zimbabwe].each do |country|
       create(
@@ -93,7 +95,7 @@ shared_context "Loxodonta africana" do
         :is_party => false
       )
     end
-    Sapi::fix_listing_changes
+
     Sapi::rebuild
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)

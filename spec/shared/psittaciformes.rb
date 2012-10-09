@@ -165,7 +165,6 @@ shared_context "Psittaciformes" do
       :listing_change => l2
     )
 
-    Sapi::fix_listing_changes
     Sapi::rebuild
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
