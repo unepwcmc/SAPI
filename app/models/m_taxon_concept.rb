@@ -143,13 +143,7 @@ class MTaxonConcept < ActiveRecord::Base
   ['English', 'Spanish', 'French'].each do |lng|
     define_method("#{lng.downcase}_names") do
       sym = :"#{lng.downcase}_names_ary"
-      if respond_to?(sym)
-        parse_pg_array(send(sym) || '').compact.map do |e|
-          e.force_encoding('utf-8')
-        end
-      else
-        []
-      end
+      db_ary_to_array(sym)
     end
 
     define_method("#{lng.downcase}_names_list") do
@@ -158,8 +152,16 @@ class MTaxonConcept < ActiveRecord::Base
   end
 
   def synonyms
-    if respond_to?(:synonyms_ary)
-      parse_pg_array(synonyms_ary || '').compact.map do |e|
+    db_ary_to_array :synonyms_ary
+  end
+
+  def synonyms_list
+    synonyms.join(', ')
+  end
+
+  def db_ary_to_array ary
+    if respond_to?(ary)
+      parse_pg_array( send(ary)|| '').compact.map do |e|
         e.force_encoding('utf-8')
       end
     else
@@ -167,8 +169,8 @@ class MTaxonConcept < ActiveRecord::Base
     end
   end
 
-  def synonyms_list
-    synonyms.join(', ')
+  def matching_names
+    (synonyms + english_names + french_names + spanish_names).flatten
   end
 
   def countries_ids
