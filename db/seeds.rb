@@ -17,6 +17,7 @@ puts "#{GeoRelationshipType.count} geo relationship types created"
 puts "#{TaxonConceptGeoEntityReference.delete_all} taxon concept geo entity references deleted"
 puts "#{TaxonConceptGeoEntity.delete_all} taxon concept geo entities deleted"
 puts "#{AnnotationTranslation.delete_all} annotation translations deleted"
+ListingChange.update_all :annotation_id => nil
 puts "#{Annotation.delete_all} annotations deleted"
 puts "#{ListingChange.delete_all} listing changes deleted"
 puts "#{GeoEntity.delete_all} geo entities deleted"
