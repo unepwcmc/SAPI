@@ -19,7 +19,7 @@ class TimelinesForTaxonConcept
       proportionate_time_span = ch.effective_at - @time_start
       position = (proportionate_time_span / @total_time_span).round(2)
       appendix = ch.species_listing_name
-      party = (ch.party_name ? ch.party_name.upcase : nil)
+      party = (ch.party_id ? ch.party_id : nil)
       current_timeline = @timelines[appendix]
       timeline_event = TimelineEvent.new(
         :party => party,

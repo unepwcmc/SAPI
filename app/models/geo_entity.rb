@@ -22,7 +22,7 @@ class GeoEntity < ActiveRecord::Base
   has_many :taxon_concept_geo_entities
 
   def as_json(options={})
-    super(:only =>[:id, :name])
+    super(:only =>[:id, :name, :iso_code2])
   end
 
 end
