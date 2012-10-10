@@ -58,7 +58,8 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
               AND change_types.name IN ('ADDITION','DELETION')
               AND effective_at <= NOW()
               LEFT JOIN species_listings ON species_listing_id = species_listings.id
-              LEFT JOIN designations ON species_listings.designation_id = designations.id
+              LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
+              LEFT JOIN designations ON taxon_concepts.designation_id = designations.id
               WHERE designations.name = 'CITES'
               AND is_current = 't' 
             ) AS q

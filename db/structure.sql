@@ -52,6 +52,721 @@ COMMENT ON EXTENSION tablefunc IS 'functions that manipulate whole tables, inclu
 
 SET search_path = public, pg_catalog;
 
+--
+-- Name: fix_cites_listing_changes(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION fix_cites_listing_changes() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+      BEGIN
+
+        UPDATE listing_changes
+        SET is_current = 't'
+        WHERE id IN (
+          SELECT id FROM (
+                SELECT taxon_concept_id, MAX(listing_changes.id) AS id, MAX(effective_at)
+                FROM listing_changes
+                LEFT JOIN change_types
+                  ON listing_changes.change_type_id = change_types.id
+                LEFT JOIN species_listings
+                  ON listing_changes.species_listing_id = species_listings.id
+                LEFT JOIN taxon_concepts
+                  ON listing_changes.taxon_concept_id = taxon_concepts.id
+                LEFT JOIN designations
+                  ON taxon_concepts.designation_id = designations.id
+                WHERE designations.name = 'CITES'
+                  AND change_types.name IN ('ADDITION', 'DELETION')
+                  AND taxon_concept_id IN (
+                        SELECT taxon_concept_id
+                        FROM listing_changes
+                        GROUP BY taxon_concept_id
+                        HAVING COUNT(
+                        CASE
+                          WHEN is_current = 't' THEN 1 
+                          ELSE NULL
+                        END) = 0
+                )
+                GROUP BY taxon_concept_id
+          ) q
+        );
+
+      INSERT INTO listing_changes 
+      (taxon_concept_id, species_listing_id, change_type_id, effective_at, created_at, updated_at)
+      SELECT 
+      qq.taxon_concept_id, qq.species_listing_id, (SELECT id FROM change_types WHERE name = 'DELETION' LIMIT 1),
+      qq.effective_at - time '00:00:01', NOW(), NOW()
+      FROM (
+                    WITH q AS (
+                        SELECT listing_changes.id AS id, taxon_concept_id, species_listing_id, change_type_id,
+                             effective_at, change_types.name AS change_type_name,
+                             species_listings.abbreviation AS listing_name,
+                             listing_distributions.geo_entity_id AS party_id, geo_entities_ary, is_current,
+                             ROW_NUMBER() OVER(ORDER BY taxon_concept_id, effective_at) AS row_no
+                             FROM
+                             listing_changes
+                             LEFT JOIN change_types ON change_type_id = change_types.id
+                             LEFT JOIN species_listings ON species_listing_id = species_listings.id
+                             LEFT JOIN designations ON designations.id = species_listings.designation_id
+                             LEFT JOIN listing_distributions ON listing_changes.id = listing_distributions.listing_change_id
+                               AND listing_distributions.is_party = 't'
+                             LEFT JOIN (
+                               SELECT listing_change_id, ARRAY_AGG(geo_entity_id) AS geo_entities_ary
+                               FROM listing_distributions
+                               WHERE listing_distributions.is_party <> 't'
+                               GROUP BY listing_change_id
+                             ) listing_distributions_agr ON listing_distributions_agr.listing_change_id = listing_changes.id
+                             WHERE change_types.name IN ('ADDITION','DELETION')
+                             AND designations.name = 'CITES'
+                     )
+                     SELECT q1.taxon_concept_id, q1.species_listing_id, q2.effective_at
+                     FROM q q1 LEFT JOIN q q2 ON (q1.taxon_concept_id = q2.taxon_concept_id AND q2.row_no = q1.row_no + 1)
+                     WHERE q2.taxon_concept_id IS NOT NULL
+                     -- only add a deletion record between two addition records
+                     AND q1.change_type_id = q2.change_type_id AND q1.change_type_name = 'ADDITION'
+                     -- do not add after a change that is marked as current
+                     AND q1.is_current <> 't'
+                     -- do not add between consecutive app III additions by different countries
+                     AND NOT (q1.listing_name = 'III' AND q2.listing_name = 'III' AND q1.party_id <> q2.party_id)
+                     -- do not add between additions entered on the same day
+                     AND NOT (q1.effective_at = q2.effective_at)
+                     -- do not add between additions to different appendices where the distribution is different
+                     AND NOT (
+                     --q1.species_listing_id <> q2.species_listing_id
+                     --  AND (
+                         q1.geo_entities_ary IS NOT NULL AND q2.geo_entities_ary IS NOT NULL
+                           AND q1.geo_entities_ary <> q2.geo_entities_ary
+                         OR
+                         q1.geo_entities_ary IS NULL AND q2.geo_entities_ary IS NOT NULL
+                         OR
+                         q2.geo_entities_ary IS NULL AND q1.geo_entities_ary IS NOT NULL
+                     --  )
+                     )
+      ) qq;
+      END;
+      $$;
+
+
+--
+-- Name: FUNCTION fix_cites_listing_changes(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION fix_cites_listing_changes() IS 'Procedure to insert deletions between any two additions to appendices for a given taxon_concept.';
+
+
+--
+-- Name: rebuild_ancestor_listings(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rebuild_ancestor_listings() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+        BEGIN
+          WITH qq AS (
+            WITH RECURSIVE q AS (
+              SELECT h, id, listing
+              FROM taxon_concepts h
+
+              UNION ALL
+
+              SELECT hi, hi.id,
+              CASE 
+                WHEN hi.listing IS NULL THEN q.listing
+                ELSE hi.listing || q.listing
+              END
+              FROM taxon_concepts hi
+              INNER JOIN    q
+              ON      hi.id = (q.h).parent_id
+            )
+            SELECT id,
+            hstore('cites_I', MAX((listing -> 'cites_I')::VARCHAR)) ||
+            hstore('cites_II', MAX((listing -> 'cites_II')::VARCHAR)) ||
+            hstore('cites_III', MAX((listing -> 'cites_III')::VARCHAR)) ||
+            hstore('not_in_cites', MAX((listing -> 'not_in_cites')::VARCHAR)) ||
+            hstore('cites_listed', MAX((listing -> 'cites_listed')::VARCHAR)) ||
+            hstore('cites_listing', ARRAY_TO_STRING(
+              -- unnest to filter out the nulls
+              ARRAY(SELECT * FROM UNNEST(
+                ARRAY[
+                  MAX((listing -> 'cites_I')::VARCHAR),
+                  MAX((listing -> 'cites_II')::VARCHAR),
+                  MAX((listing -> 'cites_III')::VARCHAR),
+                  MAX((listing -> 'not_in_cites')::VARCHAR)
+                ]) s WHERE s IS NOT NULL),
+                '/'
+              )
+            ) AS listing
+            FROM q 
+            GROUP BY (id)
+          )
+          UPDATE taxon_concepts
+          SET listing = 
+            CASE
+            WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
+            ELSE ''::hstore
+            END ||
+            CASE
+            WHEN (taxon_concepts.listing -> 'cites_listed')::BOOLEAN IS NULL
+            AND qq.listing -> 'cites_listed' = 't'
+            THEN hstore('cites_listed', 'f')
+            ELSE ''::hstore
+            END || (qq.listing::HSTORE - 'cites_listed'::VARCHAR)
+          FROM qq
+          WHERE taxon_concepts.id = qq.id;
+
+        END;
+      $$;
+
+
+--
+-- Name: FUNCTION rebuild_ancestor_listings(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION rebuild_ancestor_listings() IS 'Procedure to rebuild the computed ancestor listings in taxon_concepts.';
+
+
+--
+-- Name: rebuild_cites_accepted_flags(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rebuild_cites_accepted_flags() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+        BEGIN
+
+        -- set the cites_accepted flag to null for all taxa (so we start clear)
+        UPDATE taxon_concepts SET data =
+          CASE
+            WHEN data IS NULL THEN ''::HSTORE
+            ELSE data
+          END || hstore('cites_accepted', NULL);
+
+        -- set the cites_accepted flag to true for all explicitly referenced taxa
+        UPDATE taxon_concepts
+        SET data = data || hstore('cites_accepted', 't')
+        FROM (
+          SELECT taxon_concepts.id
+          FROM taxon_concepts
+          INNER JOIN taxon_concept_references
+            ON taxon_concept_references.taxon_concept_id = taxon_concepts.id
+          INNER JOIN designations ON taxon_concepts.designation_id = designations.id
+          WHERE designations.name = 'CITES' AND (taxon_concept_references.data->'usr_is_std_ref')::BOOLEAN = 't'
+        ) AS q
+        WHERE taxon_concepts.id = q.id;
+
+        -- set the cites_accepted flag to false for all synonyms
+        UPDATE taxon_concepts
+        SET data = data || hstore('cites_accepted', 'f')
+        FROM (
+          SELECT taxon_relationships.other_taxon_concept_id AS id
+          FROM taxon_relationships
+          INNER JOIN taxon_relationship_types
+            ON taxon_relationship_types.id =
+              taxon_relationships.taxon_relationship_type_id
+          INNER JOIN taxon_concepts
+            ON taxon_concepts.id = taxon_relationships.other_taxon_concept_id
+          INNER JOIN designations
+            ON designations.id = taxon_concepts.designation_id
+          WHERE designations.name = 'CITES'
+            AND taxon_relationship_types.name = 'HAS_SYNONYM'
+        ) AS q
+        WHERE taxon_concepts.id = q.id;
+
+        -- set the cites_accepted flag to true for all implicitly referenced taxa
+        WITH RECURSIVE q AS
+        (
+          SELECT  h,
+            CASE
+              WHEN (data->'usr_no_std_ref')::BOOLEAN = 't' THEN 'f'
+              ELSE (data->'cites_accepted')::BOOLEAN
+            END AS inherited_cites_accepted
+          FROM    taxon_concepts h
+          WHERE   parent_id IS NULL
+
+          UNION ALL
+
+          SELECT  hi,
+          CASE
+            WHEN (data->'cites_accepted')::BOOLEAN = 't' THEN 't'
+            WHEN (data->'usr_no_std_ref')::BOOLEAN = 't' THEN 'f'
+            ELSE inherited_cites_accepted
+          END
+          FROM    q
+          JOIN    taxon_concepts hi
+          ON      hi.parent_id = (q.h).id
+        )
+        UPDATE taxon_concepts
+        SET data = data || hstore('cites_accepted', (q.inherited_cites_accepted)::VARCHAR)
+        FROM q
+        WHERE taxon_concepts.id = (q.h).id AND
+          ((q.h).data->'cites_accepted')::BOOLEAN IS NULL;
+
+        END;
+      $$;
+
+
+--
+-- Name: FUNCTION rebuild_cites_accepted_flags(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION rebuild_cites_accepted_flags() IS 'Procedure to rebuild the cites_accepted flag in taxon_concepts.data. The meaning of this flag is as follows: "t" - CITES accepted name, "f" - not accepted, but shows in Checklist, null - not accepted, doesn''t show';
+
+
+--
+-- Name: rebuild_cites_listed_flags(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rebuild_cites_listed_flags() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+        BEGIN
+
+        -- set the cites_listed flag to NULL for all taxa (so we start clear)
+        UPDATE taxon_concepts SET listing =
+          CASE
+            WHEN listing IS NULL THEN ''::HSTORE
+            ELSE listing - ARRAY['cites_listing','cites_I','cites_II','cites_III','not_in_cites']
+          END || hstore('cites_listed', NULL);
+
+        -- set the cited_listed flag to true for all explicitly listed taxa
+        UPDATE taxon_concepts
+        SET listing = listing || hstore('cites_listed', 't')
+        FROM (
+          SELECT taxon_concepts.id
+          FROM taxon_concepts
+          INNER JOIN listing_changes ON taxon_concept_id = taxon_concepts.id
+        ) AS q
+        WHERE taxon_concepts.id = q.id;
+
+        -- set the cites_listed flag to false for all implicitly listed taxa (children)
+        WITH RECURSIVE q AS
+        (
+          SELECT  h,
+          (listing->'cites_listed')::BOOLEAN AS inherited_cites_listing
+          FROM    taxon_concepts h
+          WHERE   parent_id IS NULL
+
+          UNION ALL
+
+          SELECT  hi,
+          CASE
+            WHEN (listing->'cites_listed')::BOOLEAN = 't' THEN 't'
+            ELSE inherited_cites_listing
+          END
+          FROM    q
+          JOIN    taxon_concepts hi
+          ON      hi.parent_id = (q.h).id
+        )
+        UPDATE taxon_concepts
+        SET listing = listing || hstore('cites_listed', 'f')
+        FROM q
+        WHERE taxon_concepts.id = (q.h).id AND
+          ((q.h).listing->'cites_listed')::BOOLEAN IS NULL AND
+          q.inherited_cites_listing = 't';
+
+        -- set the cites_listed flag to false for all implicitly listed taxa (parents)
+        WITH qq AS (
+          WITH RECURSIVE q AS
+          (
+            SELECT  h,
+            (listing->'cites_listed')::BOOLEAN AS inherited_cites_listing,
+            id AS listed_child_id,
+            id AS listed_parent_id
+            FROM    taxon_concepts h
+            WHERE   (listing->'cites_listed')::BOOLEAN = 't'
+
+            UNION ALL
+
+            SELECT  hi,
+            CASE
+              WHEN (listing->'cites_listed')::BOOLEAN IS NULL THEN 'f'
+              ELSE (listing->'cites_listed')::BOOLEAN
+            END,
+            listed_child_id,
+            id
+            FROM    q
+            JOIN    taxon_concepts hi
+            ON      hi.id = (q.h).parent_id
+          )
+          SELECT DISTINCT listed_parent_id, inherited_cites_listing
+          FROM q
+          WHERE inherited_cites_listing = 'f'
+        )
+        UPDATE taxon_concepts
+        SET listing = listing || hstore('cites_listed', 'f')
+        FROM qq
+        WHERE taxon_concepts.id = qq.listed_parent_id;
+
+        -- set cites_show to true for all explicitly or implicitly listed taxa
+        -- unless they're implicitly listed subspecies
+        -- or species of the family Orchidaceae
+        UPDATE taxon_concepts SET listing = listing || 
+        CASE
+          WHEN (data->'rank_name' = 'SUBSPECIES'
+          OR data->'rank_name' = 'CLASS'
+          OR data->'rank_name' = 'PHYLUM'
+          OR data->'rank_name' = 'KINGDOM')
+          AND (listing->'cites_listed')::BOOLEAN = 'f'
+          THEN hstore('cites_show', 'f')
+          WHEN data->'rank_name' <> 'FAMILY'
+          AND data->'family_name' = 'Orchidaceae'
+          THEN hstore('cites_show', 'f')
+          ELSE hstore('cites_show', 't')
+        END
+        WHERE (listing->'cites_listed')::BOOLEAN IS NOT NULL;
+
+        -- propagate the usr_cites_exclusion flag to all subtaxa
+        -- unless they have cites_listed = 't'
+        WITH RECURSIVE q AS (
+          SELECT h
+          FROM taxon_concepts h
+          WHERE listing->'usr_cites_exclusion' = 't'
+
+          UNION ALL
+
+          SELECT hi
+          FROM q
+          JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
+        )
+        UPDATE taxon_concepts
+        SET listing = listing || hstore('cites_exclusion', 't')
+        FROM q
+        WHERE taxon_concepts.id = (q.h).id;
+
+        -- set flags for exceptions
+        UPDATE taxon_concepts
+        SET listing = listing ||
+        hstore('not_in_cites', 'NC') || hstore('cites_listing_original', 'NC') || hstore('cites_show', 't')
+        WHERE listing->'usr_cites_exclusion' = 't';
+
+        UPDATE taxon_concepts
+        SET listing = listing ||
+        hstore('not_in_cites', 'NC') || hstore('cites_listing_original', 'NC')
+        WHERE listing->'cites_exclusion' = 't';
+
+        UPDATE taxon_concepts
+        SET listing = listing ||
+        hstore('not_in_cites', 'NC')
+        WHERE fully_covered <> 't' OR (listing->'cites_listed')::BOOLEAN IS NULL;
+
+        END;
+      $$;
+
+
+--
+-- Name: FUNCTION rebuild_cites_listed_flags(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION rebuild_cites_listed_flags() IS 'Procedure to rebuild the cites_listed flag in taxon_concepts.data. The meaning of this flag is as follows: "t" - explicit cites listing, "f" - implicit cites listing, "" - N/A';
+
+
+--
+-- Name: rebuild_descendant_listings(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rebuild_descendant_listings() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+        BEGIN
+          WITH RECURSIVE q AS (
+            SELECT h, id, listing
+            FROM taxon_concepts h
+            WHERE parent_id IS NULL
+
+            UNION ALL
+
+            SELECT hi, hi.id, CASE
+              WHEN
+                hi.listing -> 'cites_listed' ='t'
+                OR hi.listing->'cites_exclusion' = 't'
+                THEN hi.listing || hstore('cites_listing',hi.listing->'cites_listing_original')
+              ELSE hi.listing || (q.listing::hstore - ARRAY['cites_listed','cites_listing_original'])
+                || hstore('cites_listing',q.listing->'cites_listing_original')
+            END
+            FROM q
+            JOIN taxon_concepts hi
+            ON hi.parent_id = (q.h).id
+          )
+          UPDATE taxon_concepts
+          SET listing = 
+          CASE
+            WHEN taxon_concepts.listing IS NULL THEN ''::hstore
+            ELSE taxon_concepts.listing
+          END || q.listing
+          FROM q
+          WHERE taxon_concepts.id = q.id;
+        END;
+      $$;
+
+
+--
+-- Name: FUNCTION rebuild_descendant_listings(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION rebuild_descendant_listings() IS 'Procedure to rebuild the computed descendant listings in taxon_concepts.';
+
+
+--
+-- Name: rebuild_listings(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rebuild_listings() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+        BEGIN
+
+        PERFORM fix_cites_listing_changes();
+
+        UPDATE taxon_concepts
+        SET listing = taxon_concepts.listing || qqq.listing
+        FROM (
+          SELECT taxon_concept_id, listing ||
+          hstore('cites_listing_original', ARRAY_TO_STRING(
+            -- unnest to filter out the nulls
+            ARRAY(SELECT * FROM UNNEST(
+              ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III']) s 
+              WHERE s IS NOT NULL),
+              '/'
+            )
+          ) AS listing
+          FROM (
+            SELECT taxon_concept_id, 
+              hstore('cites_I', CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
+              hstore('cites_II', CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
+              hstore('cites_III', CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END) ||
+              hstore('cites_del', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
+              AS listing
+            FROM (
+              SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type,
+              CASE
+                WHEN species_listings.abbreviation = 'I' AND change_types.name = 'ADDITION' THEN 1
+                WHEN (species_listings.abbreviation = 'I' OR species_listing_id IS NULL)
+                  AND change_types.name = 'DELETION' THEN -1
+                ELSE 0
+              END AS cites_I,
+              CASE
+                WHEN species_listings.abbreviation = 'II' AND change_types.name = 'ADDITION' THEN 1
+                WHEN (species_listings.abbreviation = 'II' OR species_listing_id IS NULL)
+                  AND change_types.name = 'DELETION' THEN -1
+                ELSE 0
+              END AS cites_II,
+              CASE
+                WHEN species_listings.abbreviation = 'III' AND change_types.name = 'ADDITION' THEN 1
+                WHEN (species_listings.abbreviation = 'III' OR species_listing_id IS NULL)
+                  AND change_types.name = 'DELETION' THEN -1
+                ELSE 0
+              END AS cites_III,
+              CASE
+                WHEN species_listing_id IS NULL AND change_types.name = 'DELETION' THEN 1
+                ELSE 0
+              END AS cites_del
+              FROM listing_changes 
+
+              LEFT JOIN change_types ON change_type_id = change_types.id
+              AND change_types.name IN ('ADDITION','DELETION')
+              AND effective_at <= NOW()
+              LEFT JOIN species_listings ON species_listing_id = species_listings.id
+              LEFT JOIN designations ON species_listings.designation_id = designations.id
+              WHERE designations.name = 'CITES'
+              AND is_current = 't' 
+            ) AS q
+            GROUP BY taxon_concept_id
+          ) AS qq
+        ) AS qqq
+        WHERE taxon_concepts.id = qqq.taxon_concept_id;
+
+        -- set cites_show to false for all deleted taxa
+        UPDATE taxon_concepts SET listing = listing || hstore('cites_show', 'f')
+        WHERE (listing->'cites_del')::BOOLEAN = 't';
+        END;
+      $$;
+
+
+--
+-- Name: FUNCTION rebuild_listings(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION rebuild_listings() IS 'Procedure to rebuild the computed listings in taxon_concepts.';
+
+
+--
+-- Name: rebuild_mviews(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rebuild_mviews() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+        BEGIN
+          RAISE NOTICE 'Dropping materialized views';
+          DROP table listing_changes_mview;
+          DROP table taxon_concepts_mview;
+
+          RAISE NOTICE 'Creating materialized views';
+          CREATE TABLE listing_changes_mview AS
+          SELECT *,
+          false as dirty,
+          null::timestamp with time zone as expiry
+          FROM listing_changes_view;
+
+          CREATE TABLE taxon_concepts_mview AS
+          SELECT *,
+          false as dirty,
+          null::timestamp with time zone as expiry
+          FROM taxon_concepts_view;
+        END;
+      $$;
+
+
+--
+-- Name: FUNCTION rebuild_mviews(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION rebuild_mviews() IS 'Procedure to rebuild materialized views in the database.';
+
+
+--
+-- Name: rebuild_names_and_ranks(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rebuild_names_and_ranks() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+        BEGIN
+	  UPDATE taxon_concepts SET data = ''::HSTORE WHERE data IS NULL;
+
+          WITH RECURSIVE q AS (
+            SELECT h, h.id, ranks.name as rank_name,
+            hstore(LOWER(ranks.name) || '_name', taxon_names.scientific_name) ||
+            hstore(LOWER(ranks.name) || '_id', (h.id)::VARCHAR) AS ancestors
+            FROM taxon_concepts h
+            INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
+            INNER JOIN ranks ON h.rank_id = ranks.id
+            WHERE h.parent_id IS NULL
+
+            UNION ALL
+
+            SELECT hi, hi.id, ranks.name,
+            ancestors ||
+            hstore(LOWER(ranks.name) || '_name', taxon_names.scientific_name) ||
+            hstore(LOWER(ranks.name) || '_id', (hi.id)::VARCHAR)
+            FROM q
+            JOIN taxon_concepts hi
+            ON hi.parent_id = (q.h).id
+            INNER JOIN taxon_names ON hi.taxon_name_id = taxon_names.id
+            INNER JOIN ranks ON hi.rank_id = ranks.id
+          )
+          UPDATE taxon_concepts
+          SET data = data || ancestors || hstore('full_name',
+            CASE
+              WHEN rank_name = 'SPECIES' THEN
+                -- now create a binomen for full name
+                CAST(ancestors -> 'genus_name' AS VARCHAR) || ' ' ||
+                LOWER(CAST(ancestors -> 'species_name' AS VARCHAR))
+              WHEN rank_name = 'SUBSPECIES' THEN
+                -- now create a trinomen for full name
+                CAST(ancestors -> 'genus_name' AS VARCHAR) || ' ' ||
+                LOWER(CAST(ancestors -> 'species_name' AS VARCHAR)) || ' ' ||
+                LOWER(CAST(ancestors -> 'subspecies_name' AS VARCHAR))
+              ELSE ancestors -> LOWER(rank_name || '_name')
+            END
+          ) || hstore('rank_name', rank_name)
+          FROM q
+          WHERE taxon_concepts.id = q.id;
+        END;
+      $$;
+
+
+--
+-- Name: FUNCTION rebuild_names_and_ranks(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION rebuild_names_and_ranks() IS 'Procedure to rebuild the computed full name, rank and ancestor names fields in taxon_concepts.';
+
+
+--
+-- Name: rebuild_taxonomic_positions(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rebuild_taxonomic_positions() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+        BEGIN
+        -- delete results of previous computations
+        UPDATE taxon_concepts
+        SET data = data || hstore('taxonomic_position', NULL)
+        WHERE length(data->'taxonomic_position') > 5;
+        WITH RECURSIVE q AS (
+          SELECT h, id,
+          data->'taxonomic_position' AS taxonomic_position
+          FROM taxon_concepts h
+          WHERE parent_id IS NULL
+
+          UNION ALL
+
+          SELECT hi, hi.id,
+          CASE
+            WHEN CAST(data -> 'taxonomic_position' AS VARCHAR) IS NOT NULL THEN data -> 'taxonomic_position'
+            -- use generous zero padding to accommodate for orchidacea (30 thousand species in about 900 genera)
+            ELSE q.taxonomic_position || '.' || LPAD(
+              CAST(row_number() OVER (PARTITION BY parent_id ORDER BY data->'full_name') AS VARCHAR),
+              5,
+              '0'
+            )
+          END
+        
+          FROM q
+          JOIN    taxon_concepts hi
+          ON      hi.parent_id = (q.h).id
+        )
+        UPDATE taxon_concepts
+        SET data = CASE
+          WHEN data IS NULL THEN hstore('taxonomic_position', taxonomic_position)
+          ELSE data || hstore('taxonomic_position', taxonomic_position) END
+        FROM q
+        WHERE q.id = taxon_concepts.id;
+        END;
+      $$;
+
+
+--
+-- Name: FUNCTION rebuild_taxonomic_positions(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION rebuild_taxonomic_positions() IS 'Procedure to rebuild the computed taxonomic position fields in taxon_concepts.';
+
+
+--
+-- Name: sapi_rebuild(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION sapi_rebuild() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+        BEGIN
+          RAISE NOTICE 'Rebuilding SAPI database';
+          --RAISE NOTICE 'names and ranks';
+          PERFORM rebuild_names_and_ranks();
+          --RAISE NOTICE 'taxonomic positions';
+          PERFORM rebuild_taxonomic_positions();
+          PERFORM rebuild_cites_listed_flags();
+          --RAISE NOTICE 'listings';
+          PERFORM rebuild_listings();
+          --RAISE NOTICE 'descendant listings';
+          PERFORM rebuild_descendant_listings();
+          --RAISE NOTICE 'ancestor listings';
+          PERFORM rebuild_ancestor_listings();
+          PERFORM rebuild_cites_accepted_flags();
+        END;
+      $$;
+
+
+--
+-- Name: FUNCTION sapi_rebuild(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION sapi_rebuild() IS 'Procedure to rebuild computed fields in the database.';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -1391,20 +2106,6 @@ CREATE INDEX index_listing_distributions_on_geo_entity_id ON listing_distributio
 --
 
 CREATE INDEX index_taxon_concepts_on_lft ON taxon_concepts USING btree (lft);
-
-
---
--- Name: listing_changes_mview_on_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX listing_changes_mview_on_id ON listing_changes_mview USING btree (id);
-
-
---
--- Name: taxon_concepts_mview_on_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX taxon_concepts_mview_on_id ON taxon_concepts_mview USING btree (id);
 
 
 --
