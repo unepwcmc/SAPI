@@ -53,6 +53,7 @@ class MTaxonConcept < ActiveRecord::Base
   self.primary_key = :id
 
   has_many :m_listing_changes, :foreign_key => :taxon_concept_id
+  has_many :current_m_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange, :conditions => {:is_current => true}
 
   scope :by_designation, lambda { |name|
     where("designation_is_#{name}".downcase => 't')
@@ -196,7 +197,14 @@ class MTaxonConcept < ActiveRecord::Base
     end
   end
 
+  def current_listing_changes
+    current_m_listing_changes.map do |lc|
+      lc.listing_attributes
+    end
+  end
+
   def as_json(options={})
+
     unless options[:only] || options[:methods]
       options = {
         :only =>[:id, :species_name, :genus_name, :family_name, :order_name,
@@ -205,7 +213,7 @@ class MTaxonConcept < ActiveRecord::Base
         :methods => [
           :spp, :recently_changed,
           :english_names_list, :spanish_names_list, :french_names_list,
-          :synonyms_list, :countries_ids
+          :synonyms_list, :countries_ids, :current_listing_changes
         ]
       }
     end

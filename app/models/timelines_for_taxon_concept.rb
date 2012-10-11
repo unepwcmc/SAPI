@@ -23,34 +23,9 @@ class TimelinesForTaxonConcept
       if appendix.nil? && party && ch.change_type_name == ChangeType::DELETION
         appendix = 'III'
       end
-      puts "app: <<#{appendix}>> #{ch.id}"
-      
       current_timeline = @timelines[appendix]
-      timeline_event = TimelineEvent.new(
-        :party => party,
-        :change_type_name => ch.change_type_name,
-        :effective_at => ch.effective_at,
-        :is_current => ch.is_current,
-        :specific_notes => case I18n.locale
-          when :es
-            ch.spanish_full_note
-          when :fr
-            ch.french_full_note
-          else
-            ch.english_full_note
-        end,
-        :generic_notes => case I18n.locale
-          when :es
-            ch.generic_spanish_full_note
-          when :fr
-            ch.generic_french_full_note
-          else
-            ch.generic_english_full_note
-        end,
-        :symbol => ch.symbol,
-        :parent_symbol => ch.parent_symbol,
-        :pos => position
-      )
+      timeline_event = TimelineEvent.new(ch.listing_attributes)
+      timeline_event.pos = position
       party_timeline = if party &&
         ![ChangeType::ADDITION, ChangeType::DELETION].include?(ch.change_type_name)
         unless (party_idx = current_timeline.parties.index(ch.party_name)).nil?

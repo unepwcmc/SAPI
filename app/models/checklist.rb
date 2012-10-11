@@ -69,6 +69,7 @@ class Checklist
     page ||= 0
     per_page ||= 20
     total_cnt = @taxon_concepts_rel.count
+    @taxon_concepts_rel = @taxon_concepts_rel.includes(:current_m_listing_changes)
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
     taxon_concepts = @taxon_concepts_rel.all
     @animalia, @plantae = taxon_concepts.partition{ |item| item.kingdom_name == 'Animalia' }

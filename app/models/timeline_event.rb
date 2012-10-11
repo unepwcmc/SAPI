@@ -12,13 +12,13 @@ class TimelineEvent
   def initialize(options)
     @id = object_id
     @pos = options[:pos]
-    @party = options[:party]
+    @party_id = options[:party_id]
     @change_type_name = options[:change_type_name]
-    @specific_notes = options[:specific_notes]
-    @generic_notes = options[:generic_notes]
+    @specific_note = options[:specific_note]
+    @generic_note = options[:generic_note]
     @symbol = options[:symbol]
     @parent_symbol = options[:parent_symbol]
-    @effective_at = options[:effective_at].strftime("%d/%m/%y")
+    @effective_at = options[:effective_at]
     @is_current = options[:is_current]
   end
 end
