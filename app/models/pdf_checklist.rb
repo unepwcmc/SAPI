@@ -24,7 +24,7 @@ class PdfChecklist < Checklist
         ['english', 'spanish', 'french'].map do |lng|
           tc.send("#{lng}_names").map do |c|
             Checklist::CommonNameItem.new(
-              :common_name => c, :full_name => tc.full_name, :lng => lng
+              :common_name => (lng == 'english' ? CommonName.english_to_pdf(c) : c), :full_name => tc.full_name, :lng => lng
             )
           end
         end
@@ -32,7 +32,19 @@ class PdfChecklist < Checklist
       merge_runs << common_names_run
     end
     merge_runs.flatten.sort do |a,b|
-      (a.full_name || '') <=> (b.full_name || '')
+      if a.is_a?(Checklist::CommonNameItem)
+        a.common_name
+      elsif a.is_a?(Checklist::SynonymItem)
+        a.synonym_name
+      else
+        a.full_name
+      end <=> if b.is_a?(Checklist::CommonNameItem)
+        b.common_name
+      elsif b.is_a?(Checklist::SynonymItem)
+        b.synonym_name
+      else
+        b.full_name
+      end
     end
   end
 

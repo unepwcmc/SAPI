@@ -13,4 +13,10 @@
 class CommonName < ActiveRecord::Base
   attr_accessible :language_id, :name, :reference_id
   belongs_to :language
+
+  def self.english_to_pdf common_name
+    words = common_name.split
+    return common_name if words.size == 1
+    words.last + ", " + common_name.chomp(" "+words.last)
+  end
 end
