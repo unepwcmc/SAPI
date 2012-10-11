@@ -3,6 +3,7 @@ class TimelineEvent
   #options to be passed:
   #:change_type_name
   #:effective_at
+  #:is_current
   #:generic_notes may be rich text (html)
   #:specific_notes may be rich text (html)
   #:symbol e.g. #4
@@ -18,5 +19,6 @@ class TimelineEvent
     @symbol = options[:symbol]
     @parent_symbol = options[:parent_symbol]
     @effective_at = options[:effective_at].strftime("%d/%m/%y")
+    @is_current = options[:is_current]
   end
 end

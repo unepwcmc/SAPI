@@ -20,11 +20,17 @@ class TimelinesForTaxonConcept
       position = (proportionate_time_span / @total_time_span).round(2)
       appendix = ch.species_listing_name
       party = (ch.party_id ? ch.party_id : nil)
+      if appendix.nil? && party && ch.change_type_name == ChangeType::DELETION
+        appendix = 'III'
+      end
+      puts "app: <<#{appendix}>> #{ch.id}"
+      
       current_timeline = @timelines[appendix]
       timeline_event = TimelineEvent.new(
         :party => party,
         :change_type_name => ch.change_type_name,
         :effective_at => ch.effective_at,
+        :is_current => ch.is_current,
         :specific_notes => case I18n.locale
           when :es
             ch.spanish_full_note
@@ -45,7 +51,8 @@ class TimelinesForTaxonConcept
         :parent_symbol => ch.parent_symbol,
         :pos => position
       )
-      party_timeline = if party
+      party_timeline = if party &&
+        ![ChangeType::ADDITION, ChangeType::DELETION].include?(ch.change_type_name)
         unless (party_idx = current_timeline.parties.index(ch.party_name)).nil?
           #fetch existing party timeline
           current_timeline.timelines[party_idx]
