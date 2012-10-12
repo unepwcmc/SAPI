@@ -53,6 +53,10 @@ shared_context "Caiman latirostris" do
       :data => {:usr_is_std_ref => 't'}
     )
 
+   english = create(
+     :language,
+     :name => 'English'
+   )
     argentina = create(
       :country,
       :name => 'Argentina',
@@ -80,6 +84,15 @@ shared_context "Caiman latirostris" do
       :geo_entity => argentina,
       :listing_change => l1,
       :is_party => false
+    )
+    a1 = create(
+      :annotation,
+      :listing_change => l1
+    )
+    create(
+      :annotation_translation,
+      :language => english,
+      :full_note => 'Population of AR; included in CROCODYLIA spp.'
     )
 
     Sapi::rebuild

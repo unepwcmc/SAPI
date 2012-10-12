@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
         BEGIN
 
         PERFORM fix_cites_listing_changes();
+        PERFORM rebuild_annotation_symbols();
 
         UPDATE taxon_concepts
         SET listing = taxon_concepts.listing || qqq.listing

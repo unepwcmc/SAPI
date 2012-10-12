@@ -13,13 +13,17 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings() RETURNS void
 
             UNION ALL
 
-            SELECT hi, hi.id, CASE
-              WHEN
-                hi.listing -> 'cites_listed' ='t'
-                OR hi.listing->'cites_exclusion' = 't'
-                THEN hi.listing || hstore('cites_listing',hi.listing->'cites_listing_original')
-              ELSE hi.listing || (q.listing::hstore - ARRAY['cites_listed','cites_listing_original'])
-                || hstore('cites_listing',q.listing->'cites_listing_original')
+            SELECT hi, hi.id,
+            CASE
+            WHEN
+              hi.listing -> 'cites_listed' ='t' OR
+                hi.listing->'cites_exclusion' = 't'
+            THEN hi.listing || hstore('cites_listing',hi.listing->'cites_listing_original') ||
+              slice(hi.listing, ARRAY['generic_annotation_symbol', 'specific_annotation_symbol'])
+            ELSE hi.listing ||
+              (q.listing::hstore - ARRAY['cites_listed','cites_listing_original']) ||
+              hstore('cites_listing',q.listing->'cites_listing_original') ||
+              slice(q.listing, ARRAY['generic_annotation_symbol', 'specific_annotation_symbol'])
             END
             FROM q
             JOIN taxon_concepts hi
