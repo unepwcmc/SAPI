@@ -13,4 +13,6 @@
 
 class AnnotationTranslation < ActiveRecord::Base
   attr_accessible :annotation_id, :language_id, :short_note, :full_note
+  belongs_to :annotation
+  belongs_to :language
 end

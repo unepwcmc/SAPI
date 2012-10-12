@@ -6,7 +6,6 @@
 #  species_listing_id :integer
 #  taxon_concept_id   :integer
 #  change_type_id     :integer
-#  reference_id       :integer
 #  lft                :integer
 #  rgt                :integer
 #  parent_id          :integer
@@ -14,6 +13,7 @@
 #  updated_at         :datetime         not null
 #  effective_at       :datetime         default(2012-09-21 07:32:20 UTC), not null
 #  annotation_id      :integer
+#  is_current         :boolean          default(FALSE), not null
 #
 
 class ListingChange < ActiveRecord::Base
@@ -25,4 +25,5 @@ class ListingChange < ActiveRecord::Base
   belongs_to :taxon_concept
   belongs_to :change_type
   has_many :listing_distributions
+  belongs_to :annotation
 end
