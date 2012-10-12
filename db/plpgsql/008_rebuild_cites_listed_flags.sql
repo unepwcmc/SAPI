@@ -12,23 +12,25 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
           CASE
             WHEN listing IS NULL THEN ''::HSTORE
             ELSE listing - ARRAY['cites_listing','cites_I','cites_II','cites_III','not_in_cites']
-          END || hstore('cites_listed', NULL);
+          END || hstore('cites_listed', NULL) || hstore('listing_updated_at', NULL);
 
         -- set the cited_listed flag to true for all explicitly listed taxa
         UPDATE taxon_concepts
-        SET listing = listing || hstore('cites_listed', 't')
+        SET listing = listing || hstore('cites_listed', 't') ||
+          hstore('listing_updated_at', listing_updated_at::VARCHAR)
         FROM (
-          SELECT taxon_concepts.id
-          FROM taxon_concepts
-          INNER JOIN listing_changes ON taxon_concept_id = taxon_concepts.id
+          SELECT taxon_concept_id, MAX(effective_at) AS listing_updated_at
+          FROM listing_changes
+          GROUP BY taxon_concept_id
         ) AS q
-        WHERE taxon_concepts.id = q.id;
+        WHERE taxon_concepts.id = q.taxon_concept_id;
 
         -- set the cites_listed flag to false for all implicitly listed taxa (children)
         WITH RECURSIVE q AS
         (
           SELECT  h,
-          (listing->'cites_listed')::BOOLEAN AS inherited_cites_listing
+          (listing->'cites_listed')::BOOLEAN AS inherited_cites_listing,
+          listing->'listing_updated_at' AS inherited_listing_updated_at
           FROM    taxon_concepts h
           WHERE   parent_id IS NULL
 
@@ -38,13 +40,18 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
           CASE
             WHEN (listing->'cites_listed')::BOOLEAN = 't' THEN 't'
             ELSE inherited_cites_listing
+          END,
+          CASE
+            WHEN (listing->'listing_updated_at')::TIMESTAMP IS NOT NULL
+            THEN listing->'listing_updated_at'
+            ELSE inherited_listing_updated_at
           END
           FROM    q
           JOIN    taxon_concepts hi
           ON      hi.parent_id = (q.h).id
         )
         UPDATE taxon_concepts
-        SET listing = listing || hstore('cites_listed', 'f')
+        SET listing = listing || hstore('cites_listed', 'f') || hstore('listing_updated_at', inherited_listing_updated_at)
         FROM q
         WHERE taxon_concepts.id = (q.h).id AND
           ((q.h).listing->'cites_listed')::BOOLEAN IS NULL AND
@@ -56,6 +63,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
           (
             SELECT  h,
             (listing->'cites_listed')::BOOLEAN AS inherited_cites_listing,
+            (listing->'listing_updated_at')::TIMESTAMP AS inherited_listing_updated_at,
             id AS listed_child_id,
             id AS listed_parent_id
             FROM    taxon_concepts h
@@ -68,18 +76,25 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
               WHEN (listing->'cites_listed')::BOOLEAN IS NULL THEN 'f'
               ELSE (listing->'cites_listed')::BOOLEAN
             END,
+            CASE
+              WHEN (listing->'listing_updated_at')::TIMESTAMP IS NOT NULL
+              THEN (listing->'listing_updated_at')::TIMESTAMP
+              ELSE inherited_listing_updated_at
+            END,
             listed_child_id,
             id
             FROM    q
             JOIN    taxon_concepts hi
             ON      hi.id = (q.h).parent_id
           )
-          SELECT DISTINCT listed_parent_id, inherited_cites_listing
+          SELECT DISTINCT listed_parent_id, inherited_cites_listing,
+            inherited_listing_updated_at
           FROM q
           WHERE inherited_cites_listing = 'f'
         )
         UPDATE taxon_concepts
-        SET listing = listing || hstore('cites_listed', 'f')
+        SET listing = listing || hstore('cites_listed', 'f') ||
+          hstore('listing_updated_at', inherited_listing_updated_at::VARCHAR)
         FROM qq
         WHERE taxon_concepts.id = qq.listed_parent_id;
 

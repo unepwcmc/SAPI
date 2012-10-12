@@ -183,7 +183,7 @@ class MTaxonConcept < ActiveRecord::Base
   end
 
   def recently_changed
-    return self.m_listing_changes.where('effective_at > ?', 8.year.ago).any?
+    return listing_updated_at > 8.year.ago || updated_at > 8.year.ago
   end
 
   #note this will probably return external reference ids in the future
