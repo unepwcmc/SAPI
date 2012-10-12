@@ -45,6 +45,11 @@
 #  standard_references_ids_ary :string
 #  dirty                       :boolean
 #  expiry                      :datetime
+#  listing_updated_at          :datetime
+#  updated_at                  :datetime
+#  created_at                  :datetime
+#  specific_annotation_symbol  :string(255)
+#  generic_annotation_symbol   :string(255)
 #
 
 class MTaxonConcept < ActiveRecord::Base

@@ -5,7 +5,7 @@
 #  id               :integer          not null, primary key
 #  taxon_concept_id :integer          not null
 #  reference_id     :integer          not null
-#  data             :hstore           not null
+#  data             :hstore
 #
 
 class TaxonConceptReference < ActiveRecord::Base
