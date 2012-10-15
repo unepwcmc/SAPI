@@ -124,6 +124,7 @@ class TimelinesForTaxonConcept
       :id => @taxon_concept_id,
       :taxon_concept_id => @taxon_concept_id,
       :timelines => [@timelines['I'], @timelines['II'], @timelines['III']],
+      :timeline_event_count => @listing_changes.count,
       :timeline_years => @timeline_years
     }
   end
