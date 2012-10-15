@@ -2,15 +2,24 @@
 require 'spec_helper'
 
 describe Checklist do
+  include_context "Panax ginseng"
   include_context "Caiman latirostris"
-
-  describe "specific annotation" do
+  describe "specific_annotation_symbol" do
     before(:all) do
+      puts 'before all 3'
       @checklist = Checklist.new({
-        :scientific_name => 'Crocodylia',
+        :output_layout => 'alphabetical',
         :locale => 'en'
       })
       @taxon_concepts = @checklist.taxon_concepts_rel
+    end
+    context 'for species Caiman latirostris' do
+      subject { @taxon_concepts.select{ |e| e.full_name == 'Caiman latirostris' }.first }
+      specify { subject.specific_annotation_symbol.should == '1' }
+    end
+    context 'for species Panax ginseng' do
+      subject { @taxon_concepts.select{ |e| e.full_name == 'Panax ginseng' }.first }
+      specify { subject.specific_annotation_symbol.should == '2' }
     end
   end
 end

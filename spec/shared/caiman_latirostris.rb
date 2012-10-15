@@ -91,6 +91,7 @@ shared_context "Caiman latirostris" do
     )
     create(
       :annotation_translation,
+      :annotation => a1,
       :language => english,
       :full_note => 'Population of AR; included in CROCODYLIA spp.'
     )

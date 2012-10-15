@@ -15,10 +15,7 @@ CREATE OR REPLACE FUNCTION rebuild_annotation_symbols() RETURNS void
         -- and use row numbers as annotation symbols
         WITH taxon_concepts_with_specific_symbols AS (
           WITH taxon_concepts_with_specific_annotations AS (
-          -- need to find records, which have exceptions or addition records that have distributions attached
-          --CREATE INDEX ON annotations (listing_change_id)
-          --CREATE INDEX ON listing_changes (parent_id)
-          --CREATE INDEX ON listing_distributions (listing_change_id)
+          -- need to find addition records, which have exceptions or that have distributions attached
           SELECT taxon_concept_id, annotations.id AS annotation_id
           FROM 
           annotations

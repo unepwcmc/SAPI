@@ -124,7 +124,11 @@ class PdfChecklist < Checklist
           res = "<i>#{res}</i>" if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? tc.rank_name
           res = "#{res} #{tc.spp}"
           res = "<b>#{res}</b>" if tc.cites_accepted
-          res += " <b>#{tc.current_listing}</b> #{"#{tc.family_name}".upcase} (#{tc.class_name})"
+          res += " #{tc.generic_annotation_symbol}" unless tc.generic_annotation_symbol.blank?
+          res += " <b>#{tc.current_listing}</b> "
+          res += "<sup>#{tc.specific_annotation_symbol}</sup>" unless tc.specific_annotation_symbol.blank?
+          res += " #{"#{tc.family_name}".upcase}"
+          res += " (#{tc.class_name}) (#{tc.class_name})" unless tc.class_name.blank?
           res += " (E) #{tc.english_names_list} " unless tc.english_names_list.blank?
           res += " (S) #{tc.spanish_names_list} " unless tc.spanish_names_list.blank?
           res += " (E) #{tc.french_names_list} " unless tc.french_names_list.blank?

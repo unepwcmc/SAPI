@@ -11,6 +11,6 @@
 #
 
 class Annotation < ActiveRecord::Base
-  attr_accessible :symbol, :parent_symbol
+  attr_accessible :listing_change_id, :symbol, :parent_symbol
   belongs_to :listing_change
 end

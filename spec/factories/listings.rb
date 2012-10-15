@@ -8,6 +8,7 @@ FactoryGirl.define do
 
   factory :change_type do
     name 'ADDITION'
+    designation
   end
 
   factory :listing_change do
@@ -16,7 +17,7 @@ FactoryGirl.define do
     taxon_concept
     effective_at '2012-01-01'
     is_current false
-    annotation
+
   end
 
   factory :listing_distribution do
@@ -25,7 +26,7 @@ FactoryGirl.define do
   end
 
   factory :cites_deletion, class: ListingChange do
-    change_type { ChangeType.find_by_name('DELETION') }
+    change_type { ChangeType.find_by_name_and_designation_id('DELETION', Designation.find_by_name('CITES').id) }
     taxon_concept
   end
 
@@ -35,7 +36,7 @@ FactoryGirl.define do
     end
     %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL).each do |ch|
       factory :"cites_#{a}_#{ch.downcase}", parent: :"cites_#{a}_listing_change", class: ListingChange do
-        change_type { ChangeType.find_by_name(ch) }
+        change_type { ChangeType.find_by_name_and_designation_id(ch, Designation.find_by_name('CITES').id) }
       end
     end
   end
