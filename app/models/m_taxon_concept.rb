@@ -130,8 +130,8 @@ class MTaxonConcept < ActiveRecord::Base
   }
   scope :at_level_of_listing, where(:cites_listed => 't')
 
-  scope :taxonomic_layout, order(:taxonomic_position)
-  scope :alphabetical_layout, order([:kingdom_position, :full_name])
+  scope :taxonomic_layout, order('taxonomic_position')
+  scope :alphabetical_layout, order(['kingdom_position', 'full_name'])
 
   def spp
     if ['GENUS', 'FAMILY', 'ORDER'].include?(rank_name)
