@@ -1,5 +1,5 @@
 #Encoding: utf-8
-class Checklist
+class Checklist::Checklist
   attr_accessor :taxon_concepts_rel
 
   # Constructs a query to retrieve taxon concepts based on user defined

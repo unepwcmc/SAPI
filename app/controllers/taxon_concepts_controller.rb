@@ -12,7 +12,7 @@ class TaxonConceptsController < ApplicationController
       # Clean up after ourselves
       FileUtils.rm download_path
     else
-      render :json => Checklist.new(@checklist_params).
+      render :json => Checklist::Checklist.new(@checklist_params).
         generate(params[:page], params[:per_page])
     end
   end
@@ -28,9 +28,6 @@ class TaxonConceptsController < ApplicationController
 
       # Clean up after ourselves
       FileUtils.rm download_path
-    else
-      render :json => ChecklistHistory.new(@checklist_params).
-        generate(params[:page], params[:per_page])
     end
   end
 
@@ -73,7 +70,7 @@ class TaxonConceptsController < ApplicationController
   def summarise_filters
     extract_checklist_params
 
-    render :text => Checklist.new(@checklist_params).summarise_filters
+    render :text => Checklist::Checklist.new(@checklist_params).summarise_filters
   end
 
   private
