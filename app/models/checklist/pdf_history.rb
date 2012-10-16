@@ -1,7 +1,7 @@
 #Encoding: utf-8
 require "prawn/measurement_extensions"
 require Rails.root.join("lib/modules/pdf.rb")
-class PdfChecklistHistory < ChecklistHistory
+class Checklist::PdfHistory < ChecklistHistory
   include PDF
 
   def generate

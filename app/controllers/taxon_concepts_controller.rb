@@ -20,7 +20,7 @@ class TaxonConceptsController < ApplicationController
   def history
     extract_checklist_params
     if params[:format] == 'pdf'
-      download_path = PdfChecklistHistory.new(@checklist_params).generate
+      download_path = Checklist::PdfHistory.new(@checklist_params).generate
 
       send_file(download_path,
         :filename => "history_of_CITES_listings.pdf",
