@@ -74,37 +74,34 @@ class MTaxonConcept < ActiveRecord::Base
 
   scope :by_cites_regions_and_countries, lambda { |cites_regions_ids, countries_ids|
     in_clause = [cites_regions_ids, countries_ids].flatten.compact.join(',')
+    joins(
+      <<-SQL
+      INNER JOIN (
+        SELECT taxon_concept_geo_entities.id
+        FROM taxon_concept_geo_entities
+        WHERE taxon_concept_geo_entities.geo_entity_id IN (#{in_clause})
 
-    where <<-SQL
-    taxon_concepts_mview.id IN 
-    (
-    SELECT taxon_concepts.id
-    FROM taxon_concepts
-    INNER JOIN taxon_concept_geo_entities
-      ON taxon_concepts.id = taxon_concept_geo_entities.taxon_concept_id
-    WHERE taxon_concept_geo_entities.geo_entity_id IN (#{in_clause})
+        UNION
 
-    UNION
-
-    SELECT DISTINCT taxon_concepts.id
-    FROM taxon_concepts
-    INNER JOIN taxon_concept_geo_entities
-      ON taxon_concepts.id = taxon_concept_geo_entities.taxon_concept_id
-    INNER JOIN geo_entities
-      ON taxon_concept_geo_entities.geo_entity_id = geo_entities.id
-    INNER JOIN geo_relationships
-      ON geo_entities.id = geo_relationships.other_geo_entity_id
-    INNER JOIN geo_relationship_types
-      ON geo_relationships.geo_relationship_type_id = geo_relationship_types.id
-    INNER JOIN geo_entities related_geo_entities
-      ON geo_relationships.geo_entity_id = related_geo_entities.id
-    WHERE
-      related_geo_entities.id IN (#{in_clause})
-      AND 
-      geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'
+        SELECT DISTINCT taxon_concept_id
+        FROM taxon_concept_geo_entities
+        INNER JOIN geo_entities
+          ON taxon_concept_geo_entities.geo_entity_id = geo_entities.id
+        INNER JOIN geo_relationships
+          ON geo_entities.id = geo_relationships.other_geo_entity_id
+        INNER JOIN geo_relationship_types
+          ON geo_relationships.geo_relationship_type_id = geo_relationship_types.id
+        INNER JOIN geo_entities related_geo_entities
+          ON geo_relationships.geo_entity_id = related_geo_entities.id
+        WHERE
+          related_geo_entities.id IN (#{in_clause})
+          AND 
+          geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'
+      ) regions_and_countries ON #{self.table_name}.id = regions_and_countries.id
+      SQL
     )
-    SQL
   }
+
   scope :by_cites_appendices, lambda { |appendix_abbreviations|
     conds = 
     (['I','II','III'] & appendix_abbreviations).map do |abbr|

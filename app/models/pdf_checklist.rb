@@ -8,64 +8,37 @@ class PdfChecklist < Checklist
     super(options.merge({:output_layout => :alphabetical}))
   end
 
-  #sort taxon concepts, their synonyms and common names
-  def post_process(taxon_concepts)
-    merge_runs = [taxon_concepts]
-    if(@synonyms)
-      synonyms_run = taxon_concepts.map do |tc|
-        tc.synonyms.map do |s|
-          Checklist::SynonymItem.new(:synonym_name => s, :full_name => tc.full_name)
-        end
-      end.flatten
-      merge_runs << synonyms_run
-    end
-    if(@common_names)
-      common_names_run = taxon_concepts.map do |tc|
-        ['english', 'spanish', 'french'].map do |lng|
-          tc.send("#{lng}_names").map do |c|
-            Checklist::CommonNameItem.new(
-              :common_name => (lng == 'english' ? CommonName.english_to_pdf(c) : c), :full_name => tc.full_name, :lng => lng
-            )
-          end
-        end
-      end.flatten.compact
-      merge_runs << common_names_run
-    end
-    merge_runs.flatten.sort do |a,b|
-      if a.is_a?(Checklist::CommonNameItem)
-        a.common_name
-      elsif a.is_a?(Checklist::SynonymItem)
-        a.synonym_name
-      else
-        a.full_name
-      end <=> if b.is_a?(Checklist::CommonNameItem)
-        b.common_name
-      elsif b.is_a?(Checklist::SynonymItem)
-        b.synonym_name
-      else
-        b.full_name
-      end
-    end
-  end
-
   def generate
+
+    animalia = MTaxonConcept.find_by_sql(
+      Checklist::PdfIndexQuery.new(
+        @taxon_concepts_rel.where("kingdom_name = 'Animalia'"),
+        @common_names,
+        @synonyms
+      ).to_sql
+    )
+    plantae = MTaxonConcept.find_by_sql(
+      Checklist::PdfIndexQuery.new(
+        @taxon_concepts_rel.where("kingdom_name = 'Plantae'"),
+        @common_names,
+        @synonyms
+      ).to_sql
+    )
+
     static_index_pdf = [Rails.root, "/public/static_index.pdf"].join
     attachment_pdf = [Rails.root, "/public/CITES_abbreviations_and_annotations.pdf"].join
     tmp_index_pdf    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
 
     static_page_count = get_page_count(static_index_pdf)
 
-    animalia, plantae = [], []
-    page = 0
-    begin
-      res = super(page, 1000)
-      animalia += res[0][:animalia]
-      plantae += res[0][:plantae]
-      page += 1
-    end while res[0][:result_cnt] > 0
-
-    animalia = post_process(animalia)
-    plantae = post_process(plantae)
+    # animalia, plantae = [], []
+    # page = 0
+    # begin
+      # res = super(page, 1000)
+      # animalia += res[0][:animalia]
+      # plantae += res[0][:plantae]
+      # page += 1
+    # end while res[0][:result_cnt] > 0
 
     Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
       pdf.font_size 9
@@ -110,11 +83,11 @@ class PdfChecklist < Checklist
     pdf.column_box([0, pdf.cursor], :columns => 2, :width => pdf.bounds.width) do
       kingdom.each do |tc|
         entry = 
-        if tc.kind_of? Checklist::SynonymItem
+        if tc.read_attribute(:name_type) == 'synonym'
           #it's a synonym or common name entry
-          "<i>#{tc.synonym_name} = #{tc.full_name}</i>"
-        elsif tc.kind_of? Checklist::CommonNameItem
-          "#{tc.common_name} (#{tc.lng[0].upcase}): <i>#{tc.full_name}</i>"
+          "<i>#{tc.sort_name} = #{tc.full_name}</i>"
+        elsif tc.read_attribute(:name_type) == 'common'
+          "#{tc.sort_name} (#{tc.lng.upcase}): <i>#{tc.full_name}</i>"
         else
           res = if ['FAMILY','ORDER','CLASS'].include? tc.rank_name
             tc.full_name.upcase
@@ -128,7 +101,7 @@ class PdfChecklist < Checklist
           res += " <b>#{tc.current_listing}</b> "
           res += "<sup>#{tc.specific_annotation_symbol}</sup>" unless tc.specific_annotation_symbol.blank?
           res += " #{"#{tc.family_name}".upcase}"
-          res += " (#{tc.class_name}) (#{tc.class_name})" unless tc.class_name.blank?
+          res += " (#{tc.class_name})" unless tc.class_name.blank?
           res += " (E) #{tc.english_names_list} " unless tc.english_names_list.blank?
           res += " (S) #{tc.spanish_names_list} " unless tc.spanish_names_list.blank?
           res += " (E) #{tc.french_names_list} " unless tc.french_names_list.blank?

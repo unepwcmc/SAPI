@@ -1,3 +1,4 @@
+#this class is possibly redundant
 class Checklist::ChecklistItem
   #[:full_name].each { |f| attr_accessor f }
 
