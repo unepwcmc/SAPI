@@ -1,8 +1,10 @@
 class Checklist::PdfIndexQuery
-  def initialize(rel, common_names, synonyms)
+  def initialize(rel, common_names, synonyms, limit, offset)
     @rel = rel
     @common_names = common_names
     @synonyms = synonyms
+    @limit = limit
+    @offset = offset
     #we want common names and synonyms returned as separate records
     #and sorted alphabetically
     shared_columns = [:full_name, :rank_name, :family_name, :class_name,
@@ -60,7 +62,9 @@ class Checklist::PdfIndexQuery
     WITH name_matches AS (
       #{inner_query}
     )
-    SELECT * FROM name_matches WHERE sort_name IS NOT NULL ORDER BY sort_name
+    SELECT * FROM name_matches WHERE sort_name IS NOT NULL
+    ORDER BY sort_name
+    LIMIT #{@limit} OFFSET #{@offset}
     SQL
   end
 

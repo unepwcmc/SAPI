@@ -9,42 +9,17 @@ class PdfChecklist < Checklist
   end
 
   def generate
-
-    animalia = MTaxonConcept.find_by_sql(
-      Checklist::PdfIndexQuery.new(
-        @taxon_concepts_rel.where("kingdom_name = 'Animalia'"),
-        @common_names,
-        @synonyms
-      ).to_sql
-    )
-    plantae = MTaxonConcept.find_by_sql(
-      Checklist::PdfIndexQuery.new(
-        @taxon_concepts_rel.where("kingdom_name = 'Plantae'"),
-        @common_names,
-        @synonyms
-      ).to_sql
-    )
-
     static_index_pdf = [Rails.root, "/public/static_index.pdf"].join
     attachment_pdf = [Rails.root, "/public/CITES_abbreviations_and_annotations.pdf"].join
     tmp_index_pdf    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
 
     static_page_count = get_page_count(static_index_pdf)
 
-    # animalia, plantae = [], []
-    # page = 0
-    # begin
-      # res = super(page, 1000)
-      # animalia += res[0][:animalia]
-      # plantae += res[0][:plantae]
-      # page += 1
-    # end while res[0][:result_cnt] > 0
-
     Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
       pdf.font_size 9
 
-      draw_kingdom(pdf, animalia, 'FAUNA') unless animalia.empty?
-      draw_kingdom(pdf, plantae, 'FLORA') unless plantae.empty?
+      draw_kingdom(pdf, 'Animalia', 'FAUNA')
+      draw_kingdom(pdf, 'Plantae', 'FLORA')
 
       # Add summary line
       summary = summarise_filters
@@ -77,10 +52,27 @@ class PdfChecklist < Checklist
     return download_path
   end
 
-  def draw_kingdom(pdf, kingdom, kingdom_name)
-    pdf.text(kingdom_name, :size => 12, :align => :center)
+  def draw_kingdom(pdf, kingdom_name, kingdom_display_name)
+    limit = 5000
+    offset = 0
+    pdf.text(kingdom_display_name, :size => 12, :align => :center)
+
     @indent = 15
     pdf.column_box([0, pdf.cursor], :columns => 2, :width => pdf.bounds.width) do
+
+      begin
+
+      #fetch data
+      kingdom = MTaxonConcept.find_by_sql(
+        Checklist::PdfIndexQuery.new(
+          @taxon_concepts_rel.where("kingdom_name = '#{kingdom_name}'"),
+          @common_names,
+          @synonyms,
+          limit,
+          offset
+        ).to_sql
+      )
+      offset += limit
       kingdom.each do |tc|
         entry = 
         if tc.read_attribute(:name_type) == 'synonym'
@@ -111,6 +103,7 @@ class PdfChecklist < Checklist
           #:indent_paragraphs => @indent,
           :inline_format => true
       end
+      end while not kingdom.empty?
     end
   end
 
