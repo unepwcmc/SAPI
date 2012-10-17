@@ -1,7 +1,5 @@
 class Checklist::IndexFetcher
   def initialize(query)
-    puts "initialize with:"
-    puts query.inspect
     @query = query
     @limit = 5000
     @offset = 0
