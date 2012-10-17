@@ -19,7 +19,7 @@ class Checklist::PdfIndexQuery
       },
       :sort_name => {
         :basic => 'full_name',
-        :english => 'UNNEST(english_names_ary)',
+        :english => "REGEXP_REPLACE(UNNEST(english_names_ary), '(.+) (.+)', '\\2, \\1')",
         :spanish => 'UNNEST(spanish_names_ary)',
         :french => 'UNNEST(french_names_ary)',
         :synonym => 'UNNEST(synonyms_ary)'
