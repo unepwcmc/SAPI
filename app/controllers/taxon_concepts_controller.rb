@@ -11,6 +11,15 @@ class TaxonConceptsController < ApplicationController
 
       # Clean up after ourselves
       FileUtils.rm download_path
+    elsif params[:format] == 'csv'
+      download_path = Checklist::Csv::Index.new(@checklist_params).generate
+
+      send_file(download_path,
+        :filename => "index_of_CITES_species.csv",
+        :type => :pdf)
+
+      # Clean up after ourselves
+      FileUtils.rm download_path
     else
       render :json => Checklist::Checklist.new(@checklist_params).
         generate(params[:page], params[:per_page])

@@ -1,13 +1,11 @@
 class Checklist::IndexFetcher
-  def initialize(query)
-    @query = query
+  def initialize(relation)
+    @relation = relation
     @limit = 5000
     @offset = 0
   end
   def next
-    results = MTaxonConcept.find_by_sql(
-      @query.to_sql(@limit, @offset)
-    )
+    results = @relation.limit(@limit).offset(@offset)
     @offset += @limit
     results
   end
