@@ -35,6 +35,11 @@
 #  current_listing             :text
 #  usr_cites_exclusion         :boolean
 #  cites_exclusion             :boolean
+#  listing_updated_at          :datetime
+#  specific_annotation_symbol  :text
+#  generic_annotation_symbol   :text
+#  created_at                  :datetime
+#  updated_at                  :datetime
 #  taxon_concept_id_com        :integer
 #  english_names_ary           :string
 #  french_names_ary            :string
@@ -45,11 +50,7 @@
 #  standard_references_ids_ary :string
 #  dirty                       :boolean
 #  expiry                      :datetime
-#  listing_updated_at          :datetime
-#  updated_at                  :datetime
-#  created_at                  :datetime
-#  specific_annotation_symbol  :string(255)
-#  generic_annotation_symbol   :string(255)
+#  parent_id                   :integer
 #
 
 class MTaxonConcept < ActiveRecord::Base
@@ -111,19 +112,22 @@ class MTaxonConcept < ActiveRecord::Base
   }
 
   scope :by_scientific_name, lambda { |scientific_name|
+    scientific_name_next = scientific_name[0..scientific_name.length - 2] +
+      scientific_name[scientific_name.length - 1].next
     joins(
       <<-SQL
       INNER JOIN (
         WITH RECURSIVE q AS (
-          SELECT h, h.id, data->'full_name' AS full_name_sci
-          FROM taxon_concepts h
-          WHERE data->'full_name' ILIKE '#{scientific_name}%'
+          SELECT h, h.id, full_name AS full_name_sci
+          FROM taxon_concepts_mview h
+          WHERE full_name >= '#{scientific_name}'
+            AND full_name < '#{scientific_name_next}'
 
           UNION ALL
 
-          SELECT hi, hi.id, data->'full_name'
+          SELECT hi, hi.id, full_name
           FROM q
-          JOIN taxon_concepts hi
+          JOIN taxon_concepts_mview hi
           ON hi.parent_id = (q.h).id
         ) SELECT DISTINCT id, full_name_sci FROM q
       ) descendants ON #{self.table_name}.id = descendants.id

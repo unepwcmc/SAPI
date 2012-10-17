@@ -21,12 +21,16 @@ module Sapi
     ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_lft')
     ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_parent_id')
     ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_mview_on_parent_id')
+    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_mview_on_full_name')
+    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_listing_changes_mview_on_taxon_concept_id')
   end
 
   def self.create_indices
     ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_lft ON taxon_concepts USING btree (lft)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_parent_id ON taxon_concepts USING btree (parent_id)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_mview_on_parent_id ON taxon_concepts_mview USING btree (parent_id)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_mview_on_full_name ON taxon_concepts_mview USING btree (full_name)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_changes_mview_on_taxon_concept_id ON listing_changes_mview USING btree (taxon_concept_id)')
   end
 
   def self.rebuild_taxon_concepts_mview
