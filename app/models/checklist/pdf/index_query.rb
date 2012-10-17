@@ -1,4 +1,4 @@
-class Checklist::PdfIndexQuery
+class Checklist::Pdf::IndexQuery
   def initialize(rel, common_names, synonyms)
     @rel = rel
     @common_names = common_names

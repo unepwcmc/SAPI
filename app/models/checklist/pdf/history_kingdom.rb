@@ -1,4 +1,4 @@
-class Checklist::PdfHistoryKingdom
+class Checklist::Pdf::HistoryKingdom
   def initialize(pdf, fetcher, kingdom_display_name)
     @pdf = pdf
     @fetcher = fetcher

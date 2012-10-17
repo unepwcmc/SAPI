@@ -1,19 +1,7 @@
 require "prawn/measurement_extensions"
 require Rails.root.join("lib/modules/pdf.rb")
-class Checklist::PdfChecklist < Checklist::Checklist
+module Checklist::Pdf::Formatter
   include PDF
-
-  def prepare_queries
-    @animalia_rel = @taxon_concepts_rel.where("kingdom_name = 'Animalia'")
-    @plantae_rel = @taxon_concepts_rel.where("kingdom_name = 'Plantae'")
-  end
-
-  def generate
-    prepare_queries
-    generate_pdf
-    finalize
-    @download_path
-  end
 
   def generate_pdf
     Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm)) do |pdf|

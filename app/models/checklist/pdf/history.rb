@@ -1,5 +1,6 @@
 #Encoding: utf-8
-class Checklist::PdfHistory < Checklist::PdfChecklist
+class Checklist::Pdf::History < Checklist::Checklist
+  include Checklist::Pdf::Formatter
 
   def initialize(options={})
     super(options.merge({
@@ -13,14 +14,21 @@ class Checklist::PdfHistory < Checklist::PdfChecklist
     @footnote_title_string = "History of CITES listings – <page>"
   end
 
-  def generate_pdf
-    super do |pdf|
-      fetcher = Checklist::HistoryFetcher.new(@animalia_rel)
-      Checklist::PdfHistoryKingdom.new(pdf, fetcher, 'FAUNA').to_pdf
-      fetcher = Checklist::HistoryFetcher.new(@plantae_rel)
-      Checklist::PdfHistoryKingdom.new(pdf, fetcher, 'FLORA').to_pdf
-    end
+  def prepare_queries
+    @animalia_rel = @taxon_concepts_rel.where("kingdom_name = 'Animalia'")
+    @plantae_rel = @taxon_concepts_rel.where("kingdom_name = 'Plantae'")
+  end
 
+  def generate
+    prepare_queries
+    generate_pdf do |pdf|
+      fetcher = Checklist::HistoryFetcher.new(@animalia_rel)
+      Checklist::Pdf::HistoryKingdom.new(pdf, fetcher, 'FAUNA').to_pdf
+      fetcher = Checklist::HistoryFetcher.new(@plantae_rel)
+      Checklist::Pdf::HistoryKingdom.new(pdf, fetcher, 'FLORA').to_pdf
+    end
+    finalize
+    @download_path
   end
 
 end

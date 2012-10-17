@@ -1,5 +1,6 @@
 #Encoding: utf-8
-class Checklist::PdfIndex < Checklist::PdfChecklist
+class Checklist::Pdf::Index < Checklist::Checklist
+  include Checklist::Pdf::Formatter
 
   def initialize(options={})
     super(options.merge({:output_layout => :alphabetical}))
@@ -10,26 +11,30 @@ class Checklist::PdfIndex < Checklist::PdfChecklist
   end
 
   def prepare_queries
-    super
-    @animalia_query = Checklist::PdfIndexQuery.new(
+    @animalia_rel = @taxon_concepts_rel.where("kingdom_name = 'Animalia'")
+    @plantae_rel = @taxon_concepts_rel.where("kingdom_name = 'Plantae'")
+    @animalia_query = Checklist::Pdf::IndexQuery.new(
       @animalia_rel,
       @common_names,
       @synonyms
     )
-    @plantae_query = Checklist::PdfIndexQuery.new(
+    @plantae_query = Checklist::Pdf::IndexQuery.new(
       @plantae_rel,
       @common_names,
       @synonyms
     )
   end
 
-  def generate_pdf
-    super do |pdf|
+  def generate
+    prepare_queries
+    generate_pdf do |pdf|
       fetcher = Checklist::IndexFetcher.new(@animalia_query)
-      Checklist::PdfIndexKingdom.new(pdf, fetcher, 'FAUNA').to_pdf
+      Checklist::Pdf::IndexKingdom.new(pdf, fetcher, 'FAUNA').to_pdf
       fetcher = Checklist::IndexFetcher.new(@plantae_query)
-      Checklist::PdfIndexKingdom.new(pdf, fetcher, 'FLORA').to_pdf
+      Checklist::Pdf::IndexKingdom.new(pdf, fetcher, 'FLORA').to_pdf
     end
+    finalize
+    @download_path
   end
 
 end

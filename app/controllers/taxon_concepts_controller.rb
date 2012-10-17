@@ -3,7 +3,7 @@ class TaxonConceptsController < ApplicationController
   def index
     extract_checklist_params
     if params[:format] == 'pdf'
-      download_path = Checklist::PdfIndex.new(@checklist_params).generate
+      download_path = Checklist::Pdf::Index.new(@checklist_params).generate
 
       send_file(download_path,
         :filename => "index_of_CITES_species.pdf",
@@ -20,7 +20,7 @@ class TaxonConceptsController < ApplicationController
   def history
     extract_checklist_params
     if params[:format] == 'pdf'
-      download_path = Checklist::PdfHistory.new(@checklist_params).generate
+      download_path = Checklist::Pdf::History.new(@checklist_params).generate
 
       send_file(download_path,
         :filename => "history_of_CITES_listings.pdf",
