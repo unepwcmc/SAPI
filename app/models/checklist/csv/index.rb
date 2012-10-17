@@ -1,4 +1,3 @@
-#Encoding: utf-8
 class Checklist::Csv::Index < Checklist::Checklist
   include Checklist::Csv::Formatter
 

@@ -37,6 +37,15 @@ class TaxonConceptsController < ApplicationController
 
       # Clean up after ourselves
       FileUtils.rm download_path
+    elsif params[:format] == 'csv'
+      download_path = Checklist::Csv::History.new(@checklist_params).generate
+
+      send_file(download_path,
+        :filename => "history_of_CITES_listings.csv",
+        :type => :pdf)
+
+      # Clean up after ourselves
+      FileUtils.rm download_path
     end
   end
 
