@@ -1,26 +1,18 @@
 class Checklist::PdfIndexKingdom
-  def initialize(pdf, query, kingdom_display_name)
+  def initialize(pdf, fetcher, kingdom_display_name)
     @pdf = pdf
-    @query = query
+    @fetcher = fetcher
     @kingdom_display_name = kingdom_display_name
   end
 
   def to_pdf
     pdf = @pdf
-    limit = 5000
-    offset = 0
     pdf.text(@kingdom_display_name, :size => 12, :align => :center)
-
-    @indent = 15
     pdf.column_box([0, pdf.cursor], :columns => 2, :width => pdf.bounds.width) do
 
       begin
-
       #fetch data
-      kingdom = MTaxonConcept.find_by_sql(
-        @query.to_sql(limit, offset)
-      )
-      offset += limit
+      kingdom = @fetcher.next
       kingdom.each do |tc|
         entry = 
         if tc.read_attribute(:name_type) == 'synonym'
@@ -48,7 +40,6 @@ class Checklist::PdfIndexKingdom
           res
         end
         pdf.text entry,
-          #:indent_paragraphs => @indent,
           :inline_format => true
       end
       end while not kingdom.empty?

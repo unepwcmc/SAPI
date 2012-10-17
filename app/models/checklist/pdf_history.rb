@@ -15,8 +15,10 @@ class Checklist::PdfHistory < Checklist::PdfChecklist
 
   def generate_pdf
     super do |pdf|
-      Checklist::PdfHistoryKingdom.new(pdf, @animalia_rel, 'FAUNA').to_pdf
-      Checklist::PdfHistoryKingdom.new(pdf, @plantae_rel, 'FLORA').to_pdf
+      fetcher = Checklist::HistoryFetcher.new(@animalia_rel)
+      Checklist::PdfHistoryKingdom.new(pdf, fetcher, 'FAUNA').to_pdf
+      fetcher = Checklist::HistoryFetcher.new(@plantae_rel)
+      Checklist::PdfHistoryKingdom.new(pdf, fetcher, 'FLORA').to_pdf
     end
 
   end

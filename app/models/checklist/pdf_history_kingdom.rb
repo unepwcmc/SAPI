@@ -1,22 +1,20 @@
 class Checklist::PdfHistoryKingdom
-  def initialize(pdf, rel, kingdom_display_name)
+  def initialize(pdf, fetcher, kingdom_display_name)
     @pdf = pdf
-    @rel = rel
+    @fetcher = fetcher
     @kingdom_display_name = kingdom_display_name
   end
 
   def to_pdf
     pdf = @pdf
-    limit = 5000
-    offset = 0
     pdf.text(@kingdom_display_name, :size => 12, :align => :center)
 
     begin
       #fetch data
-      kingdom = @rel.limit(limit).offset(offset).all
-      offset += limit
+      kingdom = @fetcher.next
       listings_table = []
       kingdom.each do |tc|
+        puts "#{(tc.kind_of?(Checklist::HigherTaxaItem) ? 'H' : '')} #{tc.full_name}"
         unless listings_table.blank?
           pdf.table(listings_table,
             :column_widths => {0 => 142},

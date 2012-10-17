@@ -25,8 +25,10 @@ class Checklist::PdfIndex < Checklist::PdfChecklist
 
   def generate_pdf
     super do |pdf|
-      Checklist::PdfIndexKingdom.new(pdf, @animalia_query, 'FAUNA').to_pdf
-      Checklist::PdfIndexKingdom.new(pdf, @plantae_query, 'FLORA').to_pdf
+      fetcher = Checklist::IndexFetcher.new(@animalia_query)
+      Checklist::PdfIndexKingdom.new(pdf, fetcher, 'FAUNA').to_pdf
+      fetcher = Checklist::IndexFetcher.new(@plantae_query)
+      Checklist::PdfIndexKingdom.new(pdf, fetcher, 'FLORA').to_pdf
     end
   end
 
