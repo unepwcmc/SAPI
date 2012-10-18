@@ -49,6 +49,9 @@ class Checklist::Checklist
 
     unless options[:common_names].nil?
       @common_names = true
+      @english_common_names = options[:common_names].include? 'E'
+      @spanish_common_names = options[:common_names].include? 'S'
+      @french_common_names = options[:common_names].include? 'F'
     end
 
     #order
@@ -128,7 +131,7 @@ class Checklist::Checklist
       @regions_count = regions.count
       if @regions_count > 0
         summary << "within"  if @countries_count > 0
-        summary << "#{Checklist.helpers.pluralize(regions.count, 'region')}"
+        summary << "#{Checklist::Checklist.helpers.pluralize(regions.count, 'region')}"
       end
     end
 
@@ -164,6 +167,30 @@ class Checklist::Checklist
     end
 
     summary.join(" ")
+  end
+
+  def columns
+    [:id, :full_name, :rank_name, :author_year]
+  end
+
+  def column_headers
+    columns.map do |c|
+      column_export_name(c)
+    end
+  end
+
+  def column_export_name(col)
+    aliases = {
+      :change_type_name => 'ChangeType',
+      :species_listing_name => 'Appendix',
+      :generic_english_full_note => '#AnnotationEnglish',
+      :generic_spanish_full_note => '#AnnotationSpanish',
+      :generic_french_full_note => '#AnnotationFrench',
+      :english_full_note => 'AnnotationEnglish',
+      :spanish_full_note => 'AnnotationSpanish',
+      :french_full_note => 'AnnotationFrench'
+    }
+    aliases[col] || col.to_s.camelize
   end
 
   private

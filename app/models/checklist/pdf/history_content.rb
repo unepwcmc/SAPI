@@ -14,7 +14,7 @@ module Checklist::Pdf::HistoryContent
       kingdom = fetcher.next
       listings_table = []
       kingdom.each do |tc|
-        puts "#{(tc.kind_of?(Checklist::HigherTaxaItem) ? 'H' : '')} #{tc.full_name}"
+        #puts "#{(tc.kind_of?(Checklist::HigherTaxaItem) ? 'H' : '')} #{tc.full_name}"
         unless listings_table.blank?
           pdf.table(listings_table,
             :column_widths => {0 => 142},
