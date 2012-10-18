@@ -1,18 +1,18 @@
-class Checklist::Pdf::IndexKingdom
-  def initialize(pdf, fetcher, kingdom_display_name)
-    @pdf = pdf
-    @fetcher = fetcher
-    @kingdom_display_name = kingdom_display_name
+module Checklist::Pdf::IndexContent
+
+  def content(pdf)
+    pdf.column_box([0, pdf.cursor], :columns => 2, :width => pdf.bounds.width) do
+      fetcher = Checklist::Pdf::IndexFetcher.new(@animalia_query)
+      kingdom(pdf, fetcher, 'FAUNA')
+      fetcher = Checklist::Pdf::IndexFetcher.new(@plantae_query)
+      kingdom(pdf, fetcher, 'FLORA')
+    end
   end
 
-  def to_pdf
-    pdf = @pdf
-    pdf.text(@kingdom_display_name, :size => 12, :align => :center)
-    pdf.column_box([0, pdf.cursor], :columns => 2, :width => pdf.bounds.width) do
-
-      begin
-      #fetch data
-      kingdom = @fetcher.next
+  def kingdom(pdf, fetcher, kingdom_name)
+    pdf.text(kingdom_name, :size => 12, :align => :center)
+    begin
+      kingdom = fetcher.next
       kingdom.each do |tc|
         entry = 
         if tc.read_attribute(:name_type) == 'synonym'
@@ -42,7 +42,7 @@ class Checklist::Pdf::IndexKingdom
         pdf.text entry,
           :inline_format => true
       end
-      end while not kingdom.empty?
-    end
+    end while not kingdom.empty?
   end
+
 end

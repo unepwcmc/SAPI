@@ -3,7 +3,7 @@ class Checklist::Csv::Index < Checklist::Index
   include Checklist::Csv::IndexContent
 
   def initialize(options={})
-    super
+    super(options)
     @tmp_csv    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.csv'].join
   end
 

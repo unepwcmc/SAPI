@@ -1,17 +1,17 @@
-class Checklist::Pdf::HistoryKingdom
-  def initialize(pdf, fetcher, kingdom_display_name)
-    @pdf = pdf
-    @fetcher = fetcher
-    @kingdom_display_name = kingdom_display_name
+module Checklist::Pdf::HistoryContent
+
+  def content(pdf)
+    fetcher = Checklist::Pdf::HistoryFetcher.new(@animalia_rel)
+    kingdom(pdf, fetcher, 'FAUNA')
+    fetcher = Checklist::Pdf::HistoryFetcher.new(@plantae_rel)
+    kingdom(pdf, fetcher, 'FLORA')
   end
 
-  def to_pdf
-    pdf = @pdf
-    pdf.text(@kingdom_display_name, :size => 12, :align => :center)
-
+  def kingdom(pdf, fetcher, kingdom_name)
+    pdf.text(kingdom_name, :size => 12, :align => :center)
     begin
       #fetch data
-      kingdom = @fetcher.next
+      kingdom = fetcher.next
       listings_table = []
       kingdom.each do |tc|
         puts "#{(tc.kind_of?(Checklist::HigherTaxaItem) ? 'H' : '')} #{tc.full_name}"

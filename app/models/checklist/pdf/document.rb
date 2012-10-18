@@ -1,9 +1,9 @@
 require "prawn/measurement_extensions"
 require Rails.root.join("lib/modules/pdf.rb")
-module Checklist::Pdf::Formatter
+module Checklist::Pdf::Document
   include PDF
 
-  def generate_pdf
+  def document
     Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
       pdf.default_leading 0
       pdf.font_size 9
