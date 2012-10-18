@@ -113,6 +113,7 @@ class TimelinesForTaxonConcept
     @timeline_years = @time_start.year.step((@time_end.year - @time_end.year % 5 + 5), 5).
       to_a.map do |year|
         {
+          :id => year,
           :year => year,
           :pos => ((Time.new("#{year}-01-01") - @time_start) / @total_time_span).round(2)
         }
