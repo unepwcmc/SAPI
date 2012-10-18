@@ -4,13 +4,16 @@ class Checklist::History < Checklist::Checklist
     super(options.merge({:output_layout => :taxonomic}))
   end
 
-  def prepare_queries
+  def prepare_main_query
     @taxon_concepts_rel = @taxon_concepts_rel.where("cites_listed = 't'").
       joins(:m_listing_changes).select('taxon_concept_id').
       where("NOT (listing_changes_mview.change_type_name = 'DELETION' " +
         "AND listing_changes_mview.species_listing_name IS NOT NULL " +
         "AND listing_changes_mview.party_name IS NULL)"
       )
+  end
+
+  def prepare_kingdom_queries
     @animalia_rel = @taxon_concepts_rel.where("kingdom_position = 1")
     @plantae_rel = @taxon_concepts_rel.where("kingdom_position = 2")
   end

@@ -4,7 +4,11 @@ class Checklist::Index < Checklist::Checklist
     super(options.merge({:output_layout => :alphabetical}))
   end
 
-  def prepare_queries
+  def prepare_main_query
+    @taxon_concepts_rel = @taxon_concepts_rel.without_nc.without_hidden
+  end
+
+  def prepare_kingdom_queries
     @animalia_rel = @taxon_concepts_rel.where("kingdom_position = 1")
     @plantae_rel = @taxon_concepts_rel.where("kingdom_position = 2")
   end

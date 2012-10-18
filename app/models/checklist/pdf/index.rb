@@ -11,7 +11,7 @@ class Checklist::Pdf::Index < Checklist::Index
     @footnote_title_string = "CITES Species Index – <page>"
   end
 
-  def prepare_queries
+  def prepare_kingdom_queries
     super
     @animalia_query = Checklist::Pdf::IndexQuery.new(
       @animalia_rel,

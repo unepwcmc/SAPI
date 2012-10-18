@@ -15,7 +15,7 @@ class Checklist::Checklist
     @designation = options[:designation] || Designation::CITES
 
     @taxon_concepts_rel = MTaxonConcept.scoped.select('*').
-      by_designation(@designation).without_nc.without_hidden
+      by_designation(@designation)
 
     #filtering options
     @cites_regions = options[:cites_region_ids] || []
@@ -62,6 +62,11 @@ class Checklist::Checklist
     end
   end
 
+  def prepare_queries
+    prepare_main_query
+    prepare_kingdom_queries
+  end
+
   # Takes the current search query, paginates it and adds metadata
   #
   # @param [Integer] page the current page number to offset by
@@ -72,7 +77,9 @@ class Checklist::Checklist
     page ||= 0
     per_page ||= 20
     total_cnt = @taxon_concepts_rel.count
-    @taxon_concepts_rel = @taxon_concepts_rel.includes(:current_m_listing_changes)
+    @taxon_concepts_rel = @taxon_concepts_rel.
+      without_nc.without_hidden.
+      includes(:current_m_listing_changes)
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
     taxon_concepts = @taxon_concepts_rel.all
     @animalia, @plantae = taxon_concepts.partition{ |item| item.kingdom_name == 'Animalia' }
