@@ -1,7 +1,7 @@
 require 'csv'
-module Checklist::Csv::Formatter
+module Checklist::Csv::Document
 
-  def generate_csv
+  def document
     CSV.open(@tmp_csv, "wb") do |csv|
       yield csv
     end
