@@ -117,23 +117,15 @@ class MTaxonConcept < ActiveRecord::Base
     joins(
       <<-SQL
       INNER JOIN (
-        WITH RECURSIVE q AS (
-          SELECT h, h.id, full_name AS full_name_sci
-          FROM taxon_concepts_mview h
-          WHERE full_name >= '#{scientific_name}'
-            AND full_name < '#{scientific_name_next}'
-
-          UNION ALL
-
-          SELECT hi, hi.id, full_name
-          FROM q
-          JOIN taxon_concepts_mview hi
-          ON hi.parent_id = (q.h).id
-        ) SELECT DISTINCT id, full_name_sci FROM q
-      ) descendants ON #{self.table_name}.id = descendants.id
+        SELECT id FROM taxon_concepts_mview
+        WHERE full_name >= '#{scientific_name}'
+          AND full_name < '#{scientific_name_next}'
+      ) matches
+      ON matches.id IN (genus_id, family_id, order_id, class_id, phylum_id)
       SQL
     )
   }
+
   scope :at_level_of_listing, where(:cites_listed => 't')
 
   scope :taxonomic_layout, order('taxonomic_position')
@@ -207,6 +199,10 @@ class MTaxonConcept < ActiveRecord::Base
     current_m_listing_changes.map do |lc|
       lc.listing_attributes
     end
+  end
+
+  def author_year
+    '(author, 2000)'
   end
 
   def as_json(options={})
