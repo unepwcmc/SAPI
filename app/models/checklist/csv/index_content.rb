@@ -12,7 +12,7 @@ module Checklist::Csv::IndexContent
     begin
       kingdom = fetcher.next
       kingdom.each do |tc|
-        entry = columns.map do |c|
+        entry = column_values(tc).map do |c|
           val = tc.send(c)
           val = val.map{ |s| "\"#{s}\"" }.join(', ') if val.is_a? Array
           val

@@ -12,8 +12,9 @@ class Checklist::CountryDictionary
     ]
     puts @dictionary.inspect
   end
-  def getById(id)
-    @dictionary[id.to_i]
+  def getIsoCodeById(id)
+    country = @dictionary[id.to_i]
+    country && country.last || nil
   end
   def getNameById(id)
     country = @dictionary[id.to_i]
