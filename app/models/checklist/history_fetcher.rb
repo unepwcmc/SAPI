@@ -1,7 +1,7 @@
 class Checklist::HistoryFetcher
   def initialize(relation)
     @relation = relation
-    @limit = 100
+    @limit = 1000
     @offset = 0
   end
   def next
