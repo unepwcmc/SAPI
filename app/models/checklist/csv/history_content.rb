@@ -12,8 +12,7 @@ module Checklist::Csv::HistoryContent
     begin
       kingdom = fetcher.next
       kingdom.each do |tc|
-        entry = columns.map{ |c| tc.send(c) }
-        csv << entry
+        csv << column_values(tc)
       end
     end while not kingdom.empty?
   end

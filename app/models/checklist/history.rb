@@ -30,7 +30,7 @@ class Checklist::History < Checklist::Checklist
   def finalize; end
 
   def columns
-    #TODO populations, party name as country name
+    #TODO populations
     res = super + [
       :change_type_name, :species_listing_name,
       :party_name, :effective_at, :is_current,
