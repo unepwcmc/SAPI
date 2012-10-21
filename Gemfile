@@ -14,6 +14,8 @@ gem 'awesome_nested_set'
 gem 'foreigner'
 gem 'prawn', '0.12.0'
 
+gem 'sidekiq'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
@@ -38,7 +40,7 @@ group :development do
   gem "yajl-ruby"
   gem "rack-livereload"
   gem "guard-bundler"
-  gem 'annotate', :git => 'git://github.com/ctran/annotate_models.git'
+  gem 'annotate', ">=2.5.0"
   gem 'ruby-debug19'
   # Deploy with Capistrano
   gem 'capistrano'
