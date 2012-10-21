@@ -1,37 +1,20 @@
 class TaxonConceptsController < ApplicationController
+  before_filter :extract_checklist_params
 
   def index
-    extract_checklist_params
-    if params[:format] == 'pdf'
-      download_path = PdfChecklist.new(@checklist_params).generate
-
-      send_file(download_path,
-        :filename => "index_of_CITES_species.pdf",
-        :type => :pdf)
-
-      # Clean up after ourselves
-      FileUtils.rm download_path
-    else
-      render :json => Checklist.new(@checklist_params).
-        generate(params[:page], params[:per_page])
-    end
+    render :json => Checklist.new(@checklist_params).
+      generate(params[:page], params[:per_page])
   end
 
   def history
-    extract_checklist_params
-    if params[:format] == 'pdf'
-      download_path = PdfChecklistHistory.new(@checklist_params).generate
+    render :json => ChecklistHistory.new(@checklist_params).
+      generate(params[:page], params[:per_page])
+  end
 
-      send_file(download_path,
-        :filename => "history_of_CITES_listings.pdf",
-        :type => :pdf)
+  def download
+    job_id = DownloadWorker.perform_async(params[:type], params[:format], @checklist_params)
 
-      # Clean up after ourselves
-      FileUtils.rm download_path
-    else
-      render :json => ChecklistHistory.new(@checklist_params).
-        generate(params[:page], params[:per_page])
-    end
+    render :json => {:id => job_id}
   end
 
   def autocomplete
@@ -71,8 +54,6 @@ class TaxonConceptsController < ApplicationController
   end
 
   def summarise_filters
-    extract_checklist_params
-
     render :text => Checklist.new(@checklist_params).summarise_filters
   end
 

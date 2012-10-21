@@ -9,6 +9,7 @@ SAPI::Application.routes.draw do
   match 'species_listings/:designation' => 'species_listings#index',
     :constraints => {:designation => /#{Designation::CITES}/}
   match 'timelines' => 'timelines#index'
+  match 'download' => 'taxon_concepts#download'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
