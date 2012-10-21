@@ -15,6 +15,7 @@ gem 'foreigner'
 gem 'prawn', '0.12.0'
 
 gem 'sidekiq'
+gem 'sidekiq-status'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
