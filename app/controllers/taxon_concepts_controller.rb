@@ -12,9 +12,21 @@ class TaxonConceptsController < ApplicationController
   end
 
   def download
-    job_id = DownloadWorker.perform_async(params[:type], params[:format], @checklist_params)
+    if params[:id]
+      if Sidekiq::Status::get(params[:id]) == "complete"
+        # send file
+      else
+        render :json => {:error => "Download not processed"}
+      end
+    else
+      job_id = DownloadWorker.perform_async(params[:type], params[:format], @checklist_params)
 
-    render :json => {:id => job_id}
+      render :json => {:id => job_id}
+    end
+  end
+
+  def download_status
+    render :json => {:status => Sidekiq::Status::get(params[:id])}
   end
 
   def autocomplete
