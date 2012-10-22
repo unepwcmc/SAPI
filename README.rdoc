@@ -208,6 +208,18 @@ Note: the fully_covered flag could be inferred with a high degree of probability
 It makes sense to try to infer that. However, data incompleteness in the first case and inconsistent comment wording in the second case make it unreliable.
 
 ==== Filtering taxa by their listing information ====
+
+# TODO clean up the listing flags description
+
+There are several flags related to the CITES listing status of a taxon concept.
+* cites_listes: if true, then taxon_concept listed explicitly; if false, then implicitly; if null, then not listed
+NOTE: taxa deleted from appendices have this set to not null. should that be changed for consistency?
+* cites_del: if true, taxon concept has been deleted from the appendices
+* usr_cites_exclusion: if true, taxn concept is excluded from its parent listing (set by the user)
+* cites_exclusion: if true, taxon concept is excluded from its parent listing (calculated from ancestors usr_cites_exclusion flags)
+* cites_show: whether or not to show in the checklist. E.g. implicitly listed subspecies should have this set to false, whereas some NC taxon concepts such as Pereskia spp should have this set to true.
+
+Some things that follow from that:
 1. taxa listed in any of the 3 CITES appendices (both implicitly or explicitly) will have listing->'cites_X' and listing->'cites_listing' set
 2. taxa previously listed but then deleted from appendices will have listing->'cites_del' set to true and listing->'cites_listing' blank while listing->'cites_listed' is still set
 3. taxa listed as NC (e.g. Aloe vera, Pereskia spp.) will have listing->'usr_cites_exclusion' set to true and listing->'cites_listing' blank
