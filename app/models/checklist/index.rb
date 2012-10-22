@@ -9,8 +9,8 @@ class Checklist::Index < Checklist::Checklist
   end
 
   def prepare_kingdom_queries
-    @animalia_rel = @taxon_concepts_rel.where("kingdom_position = 1")
-    @plantae_rel = @taxon_concepts_rel.where("kingdom_position = 2")
+    @animalia_rel = @taxon_concepts_rel.where("kingdom_position = 0")
+    @plantae_rel = @taxon_concepts_rel.where("kingdom_position = 1")
   end
 
   def generate

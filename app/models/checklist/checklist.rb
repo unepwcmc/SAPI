@@ -82,7 +82,7 @@ class Checklist::Checklist
       includes(:current_m_listing_changes)
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
     taxon_concepts = @taxon_concepts_rel.all
-    @animalia, @plantae = taxon_concepts.partition{ |item| item.kingdom_name == 'Animalia' }
+    @animalia, @plantae = taxon_concepts.partition{ |item| item.kingdom_position == 0 }
     if @output_layout == :taxonomic
        injector = Checklist::HigherTaxaInjector.new(@animalia)
        @animalia = injector.run
