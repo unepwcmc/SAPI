@@ -25,10 +25,6 @@ class TaxonConceptsController < ApplicationController
     end
   end
 
-  def download_status
-    render :json => {:status => Sidekiq::Status::get(params[:id])}
-  end
-
   def autocomplete
     taxon_concepts = MTaxonConcept.by_designation('CITES').
       without_hidden.

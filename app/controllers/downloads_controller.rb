@@ -1,0 +1,2 @@
+class DownloadsController < ApplicationController
+end
