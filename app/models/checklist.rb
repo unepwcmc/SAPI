@@ -14,7 +14,7 @@ class Checklist
     @output_layout = options[:output_layout] || :alphabetical
     @designation = options[:designation] || Designation::CITES
 
-    @taxon_concepts_rel = MTaxonConcept.scoped.select('*').
+    @taxon_concepts_rel = MTaxonConcept.scoped.
       by_designation(@designation).without_nc.without_hidden
 
     #filtering options
@@ -47,8 +47,51 @@ class Checklist
       @synonyms = true
     end
 
+    unless options[:authors].nil? || options[:authors] == false
+      @authors = true
+    end
+
     unless options[:common_names].nil?
       @common_names = true
+    end
+
+    select_fields = ['taxon_concepts_mview.id', 
+      :species_name, :genus_name, :family_name, :order_name,
+      :class_name, :phylum_name, :kingdom_name,
+      :full_name, :rank_name,
+      :current_listing, :cites_accepted, :listing_updated_at,
+      :countries_ids_ary,
+      :kingdom_position, :taxonomic_position,
+      #TODO filter out by common names settings
+      :english_names_ary, :spanish_names_ary, :french_names_ary,
+      #TODO filter out by author setting
+      :author_year]
+
+    if @synonyms
+      if @authors
+        select_fields << <<-SEL
+      ARRAY(
+        SELECT synonym || 
+        CASE
+        WHEN author_year IS NOT NULL
+        THEN ' ' || author_year
+        ELSE ''
+        END
+        FROM ( 
+          (SELECT synonym, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_ary) AS synonym) q) synonyms 
+          LEFT JOIN
+          (SELECT author_year, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_author_years_ary) AS author_year) q) author_years
+          ON synonyms.id = author_years.id
+        )
+      ) AS synonyms_ary
+      SEL
+      else
+        select_fields << :synonyms_ary
+      end
+    end
+
+    if @output_layout == :taxonomic
+      select_fields += [:family_id, :order_id, :class_id, :phylum_id]
     end
 
     #order
@@ -57,6 +100,7 @@ class Checklist
     else
       @taxon_concepts_rel.alphabetical_layout
     end
+    @taxon_concepts_rel.select_values = select_fields
   end
 
   # Takes the current search query, paginates it and adds metadata
@@ -71,7 +115,10 @@ class Checklist
     total_cnt = @taxon_concepts_rel.count
     @taxon_concepts_rel = @taxon_concepts_rel.includes(:current_m_listing_changes)
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
-    taxon_concepts = @taxon_concepts_rel.all
+    #maybe one day Active Record will start to make sense
+    #which is when the below thing can hopefully be fixed
+    #https://github.com/rails/rails/pull/2303#issuecomment-3889821
+    taxon_concepts = MTaxonConcept.find_by_sql(@taxon_concepts_rel.to_sql)
     @animalia, @plantae = taxon_concepts.partition{ |item| item.kingdom_name == 'Animalia' }
 
     [{
