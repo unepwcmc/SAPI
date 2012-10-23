@@ -201,10 +201,6 @@ class MTaxonConcept < ActiveRecord::Base
     end
   end
 
-  def author_year
-    '(author, 2000)'
-  end
-
   def as_json(options={})
 
     unless options[:only] || options[:methods]
