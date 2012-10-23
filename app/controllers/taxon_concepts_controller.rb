@@ -2,14 +2,16 @@ class TaxonConceptsController < ApplicationController
 
   def index
     extract_checklist_params
-    send_checklist_index_file
-    unless @download_path
-      render :json => Checklist::Checklist.new(@checklist_params).
-        generate(params[:page], params[:per_page])
-    end
+    render :json => Checklist::Checklist.new(@checklist_params).
+      generate(params[:page], params[:per_page])
   end
 
-  def history
+  def download_index
+    extract_checklist_params
+    send_checklist_index_file
+  end
+
+  def download_history
     extract_checklist_params
     send_checklist_history_file
   end
@@ -62,6 +64,8 @@ class TaxonConceptsController < ApplicationController
       Checklist::Pdf::Index.new(@checklist_params)
     elsif params[:format] == 'csv'
       Checklist::Csv::Index.new(@checklist_params)
+    elsif params[:format] == 'json'
+      Checklist::Json::Index.new(@checklist_params)
     end
     send_checklist_file(ch) unless ch.blank?
   end
@@ -71,6 +75,8 @@ class TaxonConceptsController < ApplicationController
       Checklist::Pdf::History.new(@checklist_params)
     elsif params[:format] == 'csv'
       Checklist::Csv::History.new(@checklist_params)
+    elsif params[:format] == 'json'
+      Checklist::Json::History.new(@checklist_params)
     end
     send_checklist_file(ch) unless ch.blank?
   end

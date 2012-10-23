@@ -1,7 +1,8 @@
 SAPI::Application.routes.draw do
 
   match 'taxon_concepts/' => 'taxon_concepts#index'
-  match 'taxon_concepts/history' => 'taxon_concepts#history'
+  match 'taxon_concepts/download_index' => 'taxon_concepts#download_index'
+  match 'taxon_concepts/download_history' => 'taxon_concepts#download_history'
   match 'taxon_concepts/autocomplete' => 'taxon_concepts#autocomplete'
   match 'taxon_concepts/summarise_filters' => 'taxon_concepts#summarise_filters'
   match 'geo_entities/:geo_entity_type' => 'geo_entities#index',
