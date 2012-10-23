@@ -2,25 +2,8 @@ class TaxonConceptsController < ApplicationController
 
   def index
     extract_checklist_params
-    if params[:format] == 'pdf'
-      download_path = Checklist::Pdf::Index.new(@checklist_params).generate
-
-      send_file(download_path,
-        :filename => "index_of_CITES_species.pdf",
-        :type => :pdf)
-
-      # Clean up after ourselves
-      FileUtils.rm download_path
-    elsif params[:format] == 'csv'
-      download_path = Checklist::Csv::Index.new(@checklist_params).generate
-
-      send_file(download_path,
-        :filename => "index_of_CITES_species.csv",
-        :type => :pdf)
-
-      # Clean up after ourselves
-      FileUtils.rm download_path
-    else
+    send_checklist_index_file
+    unless @download_path
       render :json => Checklist::Checklist.new(@checklist_params).
         generate(params[:page], params[:per_page])
     end
@@ -28,25 +11,7 @@ class TaxonConceptsController < ApplicationController
 
   def history
     extract_checklist_params
-    if params[:format] == 'pdf'
-      download_path = Checklist::Pdf::History.new(@checklist_params).generate
-
-      send_file(download_path,
-        :filename => "history_of_CITES_listings.pdf",
-        :type => :pdf)
-
-      # Clean up after ourselves
-      FileUtils.rm download_path
-    elsif params[:format] == 'csv'
-      download_path = Checklist::Csv::History.new(@checklist_params).generate
-
-      send_file(download_path,
-        :filename => "history_of_CITES_listings.csv",
-        :type => :pdf)
-
-      # Clean up after ourselves
-      FileUtils.rm download_path
-    end
+    send_checklist_history_file
   end
 
   def autocomplete
@@ -92,6 +57,32 @@ class TaxonConceptsController < ApplicationController
   end
 
   private
+  def send_checklist_index_file
+    ch = if params[:format] == 'pdf'
+      Checklist::Pdf::Index.new(@checklist_params)
+    elsif params[:format] == 'csv'
+      Checklist::Csv::Index.new(@checklist_params)
+    end
+    send_checklist_file(ch) unless ch.blank?
+  end
+
+  def send_checklist_history_file
+    ch = if params[:format] == 'pdf'
+      Checklist::Pdf::History.new(@checklist_params)
+    elsif params[:format] == 'csv'
+      Checklist::Csv::History.new(@checklist_params)
+    end
+    send_checklist_file(ch) unless ch.blank?
+  end
+
+  def send_checklist_file(checklist)
+    @download_path = checklist.generate
+    send_file(@download_path,
+      :filename => checklist.download_name,
+      :type => checklist.ext)
+    FileUtils.rm @download_path
+  end
+
   def extract_checklist_params
     @checklist_params = {
       :scientific_name => params[:scientific_name] ? params[:scientific_name] : nil,
