@@ -6,11 +6,11 @@ describe Checklist do
   include_context "Caiman latirostris"
   describe "specific_annotation_symbol" do
     before(:all) do
-      puts 'before all 3'
-      @checklist = Checklist.new({
+      @checklist = Checklist::Checklist.new({
         :output_layout => 'alphabetical',
         :locale => 'en'
       })
+      @checklist.generate(0, 100)
       @taxon_concepts = @checklist.taxon_concepts_rel
     end
     context 'for species Caiman latirostris' do

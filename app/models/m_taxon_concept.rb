@@ -35,6 +35,11 @@
 #  current_listing             :text
 #  usr_cites_exclusion         :boolean
 #  cites_exclusion             :boolean
+#  listing_updated_at          :datetime
+#  specific_annotation_symbol  :text
+#  generic_annotation_symbol   :text
+#  created_at                  :datetime
+#  updated_at                  :datetime
 #  taxon_concept_id_com        :integer
 #  english_names_ary           :string
 #  french_names_ary            :string
@@ -45,11 +50,7 @@
 #  standard_references_ids_ary :string
 #  dirty                       :boolean
 #  expiry                      :datetime
-#  listing_updated_at          :datetime
-#  updated_at                  :datetime
-#  created_at                  :datetime
-#  specific_annotation_symbol  :string(255)
-#  generic_annotation_symbol   :string(255)
+#  parent_id                   :integer
 #
 
 class MTaxonConcept < ActiveRecord::Base
@@ -74,37 +75,34 @@ class MTaxonConcept < ActiveRecord::Base
 
   scope :by_cites_regions_and_countries, lambda { |cites_regions_ids, countries_ids|
     in_clause = [cites_regions_ids, countries_ids].flatten.compact.join(',')
+    joins(
+      <<-SQL
+      INNER JOIN (
+        SELECT taxon_concept_geo_entities.id
+        FROM taxon_concept_geo_entities
+        WHERE taxon_concept_geo_entities.geo_entity_id IN (#{in_clause})
 
-    where <<-SQL
-    taxon_concepts_mview.id IN 
-    (
-    SELECT taxon_concepts.id
-    FROM taxon_concepts
-    INNER JOIN taxon_concept_geo_entities
-      ON taxon_concepts.id = taxon_concept_geo_entities.taxon_concept_id
-    WHERE taxon_concept_geo_entities.geo_entity_id IN (#{in_clause})
+        UNION
 
-    UNION
-
-    SELECT DISTINCT taxon_concepts.id
-    FROM taxon_concepts
-    INNER JOIN taxon_concept_geo_entities
-      ON taxon_concepts.id = taxon_concept_geo_entities.taxon_concept_id
-    INNER JOIN geo_entities
-      ON taxon_concept_geo_entities.geo_entity_id = geo_entities.id
-    INNER JOIN geo_relationships
-      ON geo_entities.id = geo_relationships.other_geo_entity_id
-    INNER JOIN geo_relationship_types
-      ON geo_relationships.geo_relationship_type_id = geo_relationship_types.id
-    INNER JOIN geo_entities related_geo_entities
-      ON geo_relationships.geo_entity_id = related_geo_entities.id
-    WHERE
-      related_geo_entities.id IN (#{in_clause})
-      AND 
-      geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'
+        SELECT DISTINCT taxon_concept_id
+        FROM taxon_concept_geo_entities
+        INNER JOIN geo_entities
+          ON taxon_concept_geo_entities.geo_entity_id = geo_entities.id
+        INNER JOIN geo_relationships
+          ON geo_entities.id = geo_relationships.other_geo_entity_id
+        INNER JOIN geo_relationship_types
+          ON geo_relationships.geo_relationship_type_id = geo_relationship_types.id
+        INNER JOIN geo_entities related_geo_entities
+          ON geo_relationships.geo_entity_id = related_geo_entities.id
+        WHERE
+          related_geo_entities.id IN (#{in_clause})
+          AND 
+          geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'
+      ) regions_and_countries ON #{self.table_name}.id = regions_and_countries.id
+      SQL
     )
-    SQL
   }
+
   scope :by_cites_appendices, lambda { |appendix_abbreviations|
     conds = 
     (['I','II','III'] & appendix_abbreviations).map do |abbr|
@@ -114,25 +112,20 @@ class MTaxonConcept < ActiveRecord::Base
   }
 
   scope :by_scientific_name, lambda { |scientific_name|
+    scientific_name_next = scientific_name[0..scientific_name.length - 2] +
+      scientific_name[scientific_name.length - 1].next
     joins(
       <<-SQL
       INNER JOIN (
-        WITH RECURSIVE q AS (
-          SELECT h, h.id, data->'full_name' AS full_name_sci
-          FROM taxon_concepts h
-          WHERE data->'full_name' ILIKE '#{scientific_name}%'
-
-          UNION ALL
-
-          SELECT hi, hi.id, data->'full_name'
-          FROM q
-          JOIN taxon_concepts hi
-          ON hi.parent_id = (q.h).id
-        ) SELECT DISTINCT id, full_name_sci FROM q
-      ) descendants ON #{self.table_name}.id = descendants.id
+        SELECT id FROM taxon_concepts_mview
+        WHERE full_name >= '#{scientific_name}'
+          AND full_name < '#{scientific_name_next}'
+      ) matches
+      ON matches.id IN (genus_id, family_id, order_id, class_id, phylum_id)
       SQL
     )
   }
+
   scope :at_level_of_listing, where(:cites_listed => 't')
 
   scope :taxonomic_layout, order('taxonomic_position')
@@ -213,7 +206,7 @@ class MTaxonConcept < ActiveRecord::Base
     unless options[:only] || options[:methods]
       options = {
         :only =>[:id, :species_name, :genus_name, :family_name, :order_name,
-          :class_name, :phylum_name, :full_name, :rank_name,
+          :class_name, :phylum_name, :full_name, :rank_name, :author_year,
           :taxonomic_position, :current_listing, :cites_accepted],
         :methods => [
           :spp, :recently_changed,

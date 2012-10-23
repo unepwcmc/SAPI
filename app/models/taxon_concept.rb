@@ -43,24 +43,4 @@ class TaxonConcept < ActiveRecord::Base
 
   acts_as_nested_set
 
-  # #here go the CITES listing flags
-  # [
-    # :cites_listed,#taxon is listed explicitly
-    # :usr_cites_exclusion,#taxon is excluded from it's parent's listing
-    # :cites_exclusion,#taxon's ancestor is excluded from it's parent's listing
-    # :cites_del,#taxon has been deleted from appendices
-    # :cites_show#@taxon should be shown in checklist even if NC
-  # ].each do |attr_name|
-    # define_method(attr_name) do
-      # listing && case listing[attr_name.to_s]
-        # when 't'
-          # true
-        # when 'f'
-          # false
-        # else
-          # nil
-      # end
-    # end
-  # end
-
 end

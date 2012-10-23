@@ -7,7 +7,7 @@ describe Checklist do
   context "when filtering by appendix" do
     context "I" do
       before(:all) do
-        @checklist = Checklist.new({
+        @checklist = Checklist::Checklist.new({
           :cites_appendices => ['I']
         })
         @taxon_concepts = @checklist.taxon_concepts_rel

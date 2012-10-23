@@ -2,12 +2,7 @@ class TaxonConceptsController < ApplicationController
   before_filter :extract_checklist_params
 
   def index
-    render :json => Checklist.new(@checklist_params).
-      generate(params[:page], params[:per_page])
-  end
-
-  def history
-    render :json => ChecklistHistory.new(@checklist_params).
+    render :json => Checklist::Checklist.new(@checklist_params).
       generate(params[:page], params[:per_page])
   end
 
@@ -20,7 +15,7 @@ class TaxonConceptsController < ApplicationController
           SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
         ) AS synonyms_ary,
         ARRAY(
-          SELECT * FROM UNNEST(english_names_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
+          SELECT * FROM UNNEST(english_names_ary) name WHERE REGEXP_REPLACE(name, '(.+) (.+)', '\\2, \\1') ILIKE '#{params[:scientific_name]}%'
         ) AS english_names_ary,
         ARRAY(
           SELECT * FROM UNNEST(french_names_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
@@ -35,7 +30,7 @@ class TaxonConceptsController < ApplicationController
         EXISTS (
           SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
           UNION
-          SELECT * FROM UNNEST(english_names_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
+          SELECT * FROM UNNEST(english_names_ary) name WHERE REGEXP_REPLACE(name, '(.+) (.+)', '\\2, \\1') ILIKE '#{params[:scientific_name]}%'
           UNION
           SELECT * FROM UNNEST(french_names_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
           UNION
@@ -48,10 +43,11 @@ class TaxonConceptsController < ApplicationController
   end
 
   def summarise_filters
-    render :text => Checklist.new(@checklist_params).summarise_filters
+    render :text => Checklist::Checklist.new(@checklist_params).summarise_filters
   end
 
   private
+
   def extract_checklist_params
     @checklist_params = {
       :scientific_name => params[:scientific_name] ? params[:scientific_name] : nil,
@@ -69,6 +65,7 @@ class TaxonConceptsController < ApplicationController
           (params[:show_french] == '1' ? 'F' : nil)
         ].compact,
       :synonyms => params[:show_synonyms] == '1',
+      :authors => params[:show_author] == '1',
       :level_of_listing => params[:level_of_listing] == '1'
     }
   end

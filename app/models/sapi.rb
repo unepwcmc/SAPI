@@ -18,13 +18,34 @@ module Sapi
   end
 
   def self.drop_indices
-    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_data')
-    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_lft')
+    indices = %w(
+      index_taxon_concepts_on_lft
+      index_taxon_concepts_on_parent_id
+      index_taxon_concepts_mview_on_parent_id
+      index_taxon_concepts_mview_on_full_name
+      index_taxon_concepts_mview_on_history_filter
+      index_listing_changes_on_annotation_id
+      index_listing_changes_on_parent_id
+      index_listing_changes_mview_on_taxon_concept_id
+      index_annotations_on_listing_change_id
+      index_listing_distributions_on_geo_entity_id
+      index_listing_distributions_on_listing_change_id
+    )
+    indices.each { |i| ActiveRecord::Base.connection.execute("DROP INDEX IF EXISTS #{i}") }
   end
 
   def self.create_indices
-    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_data ON taxon_concepts USING btree (data)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_lft ON taxon_concepts USING btree (lft)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_parent_id ON taxon_concepts USING btree (parent_id)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_mview_on_parent_id ON taxon_concepts_mview USING btree (parent_id)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_mview_on_full_name ON taxon_concepts_mview USING btree (full_name)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_mview_on_history_filter ON taxon_concepts_mview USING btree (designation_is_cites, cites_listed, kingdom_position)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_changes_on_annotation_id ON listing_changes USING btree (annotation_id)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_changes_on_parent_id ON listing_changes USING btree (parent_id)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_changes_mview_on_taxon_concept_id ON listing_changes_mview USING btree (taxon_concept_id)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_annotations_on_listing_change_id ON annotations USING btree (listing_change_id)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_distributions_on_geo_entity_id ON listing_distributions USING btree (geo_entity_id)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_distributions_on_listing_change_id ON listing_distributions USING btree (listing_change_id)')
   end
 
   def self.rebuild_taxon_concepts_mview
