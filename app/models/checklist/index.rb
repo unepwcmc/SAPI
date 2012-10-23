@@ -1,7 +1,9 @@
 class Checklist::Index < Checklist::Checklist
+  attr_reader :download_name, :ext
 
   def initialize(options={})
     super(options.merge({:output_layout => :alphabetical}))
+    @download_name = "FullChecklist-#{Time.now}"
   end
 
   def prepare_main_query
