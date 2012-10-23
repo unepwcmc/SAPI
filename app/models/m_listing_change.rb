@@ -28,6 +28,7 @@
 #
 
 class MListingChange < ActiveRecord::Base
+  include PgArrayParser
   self.table_name = :listing_changes_mview
   self.primary_key = :id
 
@@ -58,6 +59,14 @@ class MListingChange < ActiveRecord::Base
       :symbol => symbol,
       :parent_symbol => parent_symbol
     }
+  end
+
+  def countries_ids
+    if respond_to?(:countries_ids_ary)
+      parse_pg_array(countries_ids_ary || '').compact
+    else
+      []
+    end
   end
 
 end
