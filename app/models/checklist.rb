@@ -60,6 +60,7 @@ class Checklist
       :class_name, :phylum_name, :kingdom_name,
       :full_name, :rank_name,
       :current_listing, :cites_accepted, :listing_updated_at,
+      :specific_annotation_symbol, :generic_annotation_symbol,
       :countries_ids_ary,
       :kingdom_position, :taxonomic_position,
       #TODO filter out by common names settings
