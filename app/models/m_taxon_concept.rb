@@ -112,7 +112,8 @@ class MTaxonConcept < ActiveRecord::Base
   }
 
   scope :by_scientific_name, lambda { |scientific_name|
-    lower = scientific_name.sub(/^\s+/, '').sub(/\s+$/, '').capitalize
+    lower = scientific_name.sub(/^\s+/, '').sub(/\s+$/, '').sub(/\s+/,' ').
+      capitalize
     upper = lower[0..lower.length - 2] +
       lower[lower.length - 1].next
     joins(
