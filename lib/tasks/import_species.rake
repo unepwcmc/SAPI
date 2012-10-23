@@ -71,7 +71,13 @@ def import_data_for which, parent_column=nil, column_name=nil, parent_rank=nil
            ,taxon_concepts.id
            ,current_date
            ,current_date
-           #{ if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ', tmp.speciesauthor, tmp.SpcRecID, tmp.Kingdom' end}
+           #{ if [Rank::SPECIES, Rank::SUBSPECIES].include? which then
+              ",CASE
+                  WHEN tmp.speciesauthor = 'Null' THEN NULL
+                  ELSE tmp.speciesauthor
+                END
+              ,tmp.SpcRecID, tmp.Kingdom" 
+            end}
          FROM
           (
             SELECT DISTINCT taxon_names.id AS taxon_name_id,
