@@ -118,8 +118,8 @@ class MTaxonConcept < ActiveRecord::Base
       <<-SQL
       INNER JOIN (
         SELECT id FROM taxon_concepts_mview
-        WHERE full_name >= '#{scientific_name}'
-          AND full_name < '#{scientific_name_next}'
+        WHERE full_name >= BTRIM(INITCAP('#{scientific_name}'))
+          AND full_name < BTRIM(INITCAP('#{scientific_name_next}'))
       ) matches
       ON matches.id IN (genus_id, family_id, order_id, class_id, phylum_id)
       SQL
