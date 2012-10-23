@@ -210,7 +210,7 @@ class MTaxonConcept < ActiveRecord::Base
     unless options[:only] || options[:methods]
       options = {
         :only =>[:id, :species_name, :genus_name, :family_name, :order_name,
-          :class_name, :phylum_name, :full_name, :rank_name,
+          :class_name, :phylum_name, :full_name, :rank_name, :author_year,
           :taxonomic_position, :current_listing, :cites_accepted],
         :methods => [
           :spp, :recently_changed,
