@@ -2,6 +2,11 @@ class DownloadsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, :with => :not_found
 
   # GET downloads/
+  #
+  # Lists a set of downloads for a given list of IDs
+  # TODO: if there is a current version of the download requested,
+  # ignore the requested downloaded and return the cached current
+  # version
   def index
     ids = params[:ids] || ""
     @downloads = Download.find(ids.split(","))

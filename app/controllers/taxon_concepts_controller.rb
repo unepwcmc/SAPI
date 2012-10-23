@@ -11,20 +11,6 @@ class TaxonConceptsController < ApplicationController
       generate(params[:page], params[:per_page])
   end
 
-  def download
-    if params[:id]
-      if Sidekiq::Status::get(params[:id]) == "complete"
-        # send file
-      else
-        render :json => {:error => "Download not processed"}
-      end
-    else
-      job_id = DownloadWorker.perform_async(params[:type], params[:format], @checklist_params)
-
-      render :json => {:id => job_id}
-    end
-  end
-
   def autocomplete
     taxon_concepts = MTaxonConcept.by_designation('CITES').
       without_hidden.
