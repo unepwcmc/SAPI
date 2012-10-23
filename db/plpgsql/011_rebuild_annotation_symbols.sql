@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION rebuild_annotation_symbols() RETURNS void
         BEGIN
         -- start clear
         UPDATE taxon_concepts
-        SET listing = listing - ARRAY['specific_annotation_symbol', 'generic_annotation_symbol'];
+        SET listing = listing - ARRAY['specific_annotation_symbol',
+          'generic_annotation_parent_symbol', 'generic_annotation_symbol'];
 
         -- update specific annotation symbols
         -- need to put all taxa with specific annotations in alphabetical order (as in the index pdf)
@@ -44,7 +45,9 @@ CREATE OR REPLACE FUNCTION rebuild_annotation_symbols() RETURNS void
 
         -- update generic annotation symbols
         WITH taxon_concepts_with_generic_symbols AS (
-                SELECT taxon_concept_id, MAX(annotations.symbol) as generic_symbol
+                SELECT taxon_concept_id,
+                MAX(annotations.symbol) AS generic_symbol,
+                MAX(annotations.parent_symbol) AS generic_parent_symbol
                 FROM 
                 taxon_concepts
                 LEFT JOIN designations ON designations.id = taxon_concepts.designation_id
@@ -55,7 +58,9 @@ CREATE OR REPLACE FUNCTION rebuild_annotation_symbols() RETURNS void
                   AND change_types.name = 'ADDITION'
                 GROUP BY taxon_concept_id
         )
-        UPDATE taxon_concepts SET listing = listing || hstore('generic_annotation_symbol', generic_symbol::VARCHAR)
+        UPDATE taxon_concepts SET listing = listing ||
+          hstore('generic_annotation_symbol', generic_symbol::VARCHAR) ||
+          hstore('generic_annotation_parent_symbol', generic_parent_symbol::VARCHAR)
         FROM taxon_concepts_with_generic_symbols
         WHERE taxon_concepts.id = taxon_concepts_with_generic_symbols.taxon_concept_id;
 
