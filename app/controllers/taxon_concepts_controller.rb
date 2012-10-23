@@ -16,7 +16,7 @@ class TaxonConceptsController < ApplicationController
 
   def autocomplete
     taxon_concepts = MTaxonConcept.by_designation('CITES').
-      without_hidden.
+      without_nc.
       select("
         full_name, rank_name,
         ARRAY(
