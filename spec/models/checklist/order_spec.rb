@@ -8,7 +8,8 @@ describe Checklist do
 
   context "when taxonomic order" do
     before(:all) do
-      @checklist = Checklist.new({:output_layout => :taxonomic})
+      @checklist = Checklist::Checklist.new({:output_layout => :taxonomic})
+      @checklist.generate(0, 100)
       @taxon_concepts = @checklist.taxon_concepts_rel
       #TODO higher taxa are no longer included in taxon_concepts_rel
     end
@@ -46,14 +47,8 @@ describe Checklist do
   end
   context "when alphabetical order" do
     before(:all) do
-      @checklist = Checklist.new({:output_layout => :alphabetical})
+      @checklist = Checklist::Checklist.new({:output_layout => :alphabetical})
       @taxon_concepts = @checklist.taxon_concepts_rel
-    end
-    it "should not include phyla" do
-      @taxon_concepts.index{ |tc| tc.rank_name == 'PHYLUM'}.should be_nil
-    end
-    it "should not include classes" do
-      @taxon_concepts.index{ |tc| tc.rank_name == 'CLASS'}.should be_nil
     end
     it "should include Falconiformes (Aves) before Psittaciformes (Aves)" do
       # @taxon_concepts.index{ |tc| tc.full_name == 'Falconiformes' }.should <

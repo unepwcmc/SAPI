@@ -6,7 +6,7 @@ describe Checklist do
 
   context "when synonyms displayed" do
     before(:all) do
-      @checklist = Checklist.new({
+      @checklist = Checklist::Checklist.new({
         :output_layout => :alphabetical,
         :synonyms => true
       })
