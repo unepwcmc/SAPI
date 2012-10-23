@@ -25,9 +25,9 @@ class Checklist::Index < Checklist::Checklist
   def finalize; end
 
   def columns
-    #TODO specific annotation text, generic annotation text, generic annotation full symbol
+    #TODO generic annotation full symbol
     res = super + [
-      :family_name, :order_name, :class_name, :phylum_name,
+      :phylum_name, :class_name, :order_name, :family_name,
       :cites_accepted, :current_listing,
       :generic_annotation_symbol,
       :english_names, :spanish_names, :french_names, :synonyms
