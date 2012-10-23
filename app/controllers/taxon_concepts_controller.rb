@@ -58,7 +58,7 @@ class TaxonConceptsController < ApplicationController
           SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
         ) AS synonyms_ary,
         ARRAY(
-          SELECT * FROM UNNEST(english_names_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
+          SELECT * FROM UNNEST(english_names_ary) name WHERE REGEXP_REPLACE(name, '(.+) (.+)', '\\2, \\1') ILIKE '#{params[:scientific_name]}%'
         ) AS english_names_ary,
         ARRAY(
           SELECT * FROM UNNEST(french_names_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
@@ -73,7 +73,7 @@ class TaxonConceptsController < ApplicationController
         EXISTS (
           SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
           UNION
-          SELECT * FROM UNNEST(english_names_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
+          SELECT * FROM UNNEST(english_names_ary) name WHERE REGEXP_REPLACE(name, '(.+) (.+)', '\\2, \\1') ILIKE '#{params[:scientific_name]}%'
           UNION
           SELECT * FROM UNNEST(french_names_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
           UNION

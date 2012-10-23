@@ -63,7 +63,7 @@ def import_data_for which, parent_column=nil, column_name=nil, parent_rank=nil
     sql = <<-SQL
       INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id,
       parent_id, created_at, updated_at
-      #{if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ', legacy_id, legacy_type' end})
+      #{if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ', author_year, legacy_id, legacy_type' end})
          SELECT
            tmp.taxon_name_id
            ,#{rank_id}
@@ -71,12 +71,12 @@ def import_data_for which, parent_column=nil, column_name=nil, parent_rank=nil
            ,taxon_concepts.id
            ,current_date
            ,current_date
-           #{ if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ', tmp.SpcRecID, tmp.Kingdom' end}
+           #{ if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ', tmp.speciesauthor, tmp.SpcRecID, tmp.Kingdom' end}
          FROM
           (
             SELECT DISTINCT taxon_names.id AS taxon_name_id,
             #{TMP_TABLE}.#{parent_column}, #{cites.id} AS designation_id
-            #{if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ", #{TMP_TABLE}.SpcRecID, #{TMP_TABLE}.Kingdom" end}
+            #{if [Rank::SPECIES, Rank::SUBSPECIES].include? which then ",INITCAP(BTRIM(#{which == Rank::SPECIES ? "#{TMP_TABLE}.speciesauthor" : "#{TMP_TABLE}.InfraRankAuthor"})) AS speciesauthor, #{TMP_TABLE}.SpcRecID, #{TMP_TABLE}.Kingdom" end}
             FROM #{TMP_TABLE}
             LEFT JOIN taxon_names ON (INITCAP(BTRIM(#{TMP_TABLE}.#{column_name})) LIKE INITCAP(BTRIM(taxon_names.scientific_name)))
             WHERE NOT EXISTS (
