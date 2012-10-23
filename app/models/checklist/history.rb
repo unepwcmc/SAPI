@@ -11,6 +11,13 @@ class Checklist::History < Checklist::Checklist
         "AND listing_changes_mview.species_listing_name IS NOT NULL " +
         "AND listing_changes_mview.party_name IS NULL)"
       )
+    @taxon_concepts_rel.select_values += [
+      :change_type_name, :species_listing_name, :party_id, :party_name,
+      :effective_at, :is_current, :"listing_changes_mview.countries_ids_ary",
+      :generic_english_full_note, :generic_spanish_full_note,
+      :generic_french_full_note, :english_full_note,
+      :spanish_full_note, :french_full_note
+    ]
   end
 
   def prepare_kingdom_queries
@@ -30,7 +37,6 @@ class Checklist::History < Checklist::Checklist
   def finalize; end
 
   def columns
-    #TODO populations
     res = super + [
       :change_type_name, :species_listing_name,
       :party_name, :effective_at, :is_current,

@@ -64,7 +64,7 @@ class Checklist::Checklist
       :full_name, :rank_name,
       :current_listing, :cites_accepted, :listing_updated_at,
       :specific_annotation_symbol, :generic_annotation_symbol,
-      :countries_ids_ary,
+      :"taxon_concepts_mview.countries_ids_ary",
       :kingdom_position, :taxonomic_position,
       #TODO filter out by common names settings
       :english_names_ary, :spanish_names_ary, :french_names_ary,
