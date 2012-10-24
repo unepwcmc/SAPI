@@ -1,10 +1,10 @@
 class Checklist::History < Checklist::Checklist
-  attr_reader :download_name, :ext
+  attr_reader :download_name
 
   def initialize(options={})
     super(options.merge({:output_layout => :taxonomic}))
     @ext = ''
-    @download_name = "ChecklistHistory-#{Time.now}.#{@ext}"
+    @download_name = "ChecklistHistory-#{Time.now}.#{ext}"
   end
 
   def prepare_main_query
