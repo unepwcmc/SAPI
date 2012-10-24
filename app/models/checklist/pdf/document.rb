@@ -3,7 +3,12 @@ require Rails.root.join("lib/modules/pdf.rb")
 module Checklist::Pdf::Document
   include PDF
 
+  def ext
+    'pdf'
+  end
+
   def document
+    @tmp_pdf    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
     Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
       pdf.default_leading 0
       pdf.font_size 9

@@ -3,9 +3,8 @@ class Checklist::Csv::Index < Checklist::Index
   include Checklist::Csv::IndexContent
 
   def initialize(options={})
-    @ext = 'csv'
+
     super(options)
-    @tmp_csv    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.csv'].join
   end
 
   def columns
@@ -39,26 +38,13 @@ class Checklist::Csv::Index < Checklist::Index
   end
 
   ['English', 'Spanish', 'French'].each do |lng|
-    define_method("column_value_for_generic_#{lng.downcase}_full_note") do |rec|
-      rec.current_m_listing_changes.map do |lc|
-        note = lc.send("generic_#{lng.downcase}_full_note")
-        if note
-          "Appendix #{lc.species_listing_name}:" + note
-        else
-          ''
-        end
-      end.join("\n")
-    end
-
-    define_method("column_value_for_#{lng.downcase}_full_note") do |rec|
-      rec.current_m_listing_changes.map do |lc|
-        note = lc.send("#{lng.downcase}_full_note")
-        if note
-          "Appendix #{lc.species_listing_name}:" + note
-        else
-          ''
-        end
-      end.join("\n")
+    ["generic_#{lng.downcase}_full_note", "#{lng.downcase}_full_note"].each do |method_name|
+      define_method("column_value_for_#{method_name}") do |rec|
+        rec.current_m_listing_changes.map do |lc|
+          note = lc.send("generic_#{lng.downcase}_full_note")
+          note && "Appendix #{lc.species_listing_name}:" + note || ''
+        end.join("\n")
+      end
     end
   end
 
