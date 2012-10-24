@@ -1,4 +1,4 @@
-= CITES Checklist {<img src="https://secure.travis-ci.org/unepwcmc/SAPI.png" />}[http://travis-ci.org/unepwcmc/SAPI]
+= CITES Checklist {<img src="https://secure.travis-ci.org/unepwcmc/SAPI.png" />}[http://travis-ci.org/unepwcmc/SAPI] {<img src="https://codeclimate.com/badge.png" />}[https://codeclimate.com/github/unepwcmc/SAPI]
 
 ==Dependencies
 
