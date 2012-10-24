@@ -7,21 +7,37 @@ class Checklist::Checklist
   #
   # @param [Hash] a hash of search params and their values
   def initialize(options)
-    @params = options
+    initialize_params(options)
+    initialize_query
+  end
+
+  def initialize_params(options)
     #possible output layouts are:
     #taxonomic (hierarchic, taxonomic order)
     #alphabetical (flat, alphabetical order)
-    @output_layout = options[:output_layout] || :alphabetical
-    @designation = options[:designation] || Designation::CITES
-
-    @taxon_concepts_rel = MTaxonConcept.scoped.
-      by_designation(@designation)
+    @output_layout = options[:output_layout] && options[:output_layout].to_sym || :alphabetical
+    @level_of_listing = (options[:level_of_listing] == '1')
 
     #filtering options
     @cites_regions = options[:cites_region_ids] || []
     @countries = options[:country_ids] || []
     @cites_appendices = options[:cites_appendices] || []
     @scientific_name = options[:scientific_name]
+
+    # optional data
+    @synonyms = (options[:show_synonyms] == '1')
+    @authors = (options[:show_author] == '1')
+
+    @english_common_names = (options[:show_english] == '1')
+    @spanish_common_names = (options[:show_spanish] == '1')
+    @french_common_names = (options[:show_french] == '1')
+    @common_names =
+      @english_common_names || @spanish_common_names || @french_common_names
+  end
+
+  def initialize_query
+    @taxon_concepts_rel = MTaxonConcept.scoped.
+      by_designation(Designation::CITES)
 
     unless @cites_regions.empty? && @countries.empty?
       @taxon_concepts_rel = @taxon_concepts_rel.by_cites_regions_and_countries(@cites_regions, @countries)
@@ -37,25 +53,8 @@ class Checklist::Checklist
         by_scientific_name(@scientific_name)
     end
 
-    unless options[:level_of_listing].nil? || options[:level_of_listing] == false
-      @level_of_listing = true
+    if @level_of_listing
       @taxon_concepts_rel = @taxon_concepts_rel.at_level_of_listing
-    end
-
-    # optional data
-    unless options[:synonyms].nil? || options[:synonyms] == false
-      @synonyms = true
-    end
-
-    unless options[:authors].nil? || options[:authors] == false
-      @authors = true
-    end
-
-    unless options[:common_names].nil?
-      @common_names = true
-      @english_common_names = options[:common_names].include? 'E'
-      @spanish_common_names = options[:common_names].include? 'S'
-      @french_common_names = options[:common_names].include? 'F'
     end
 
     select_fields = ['taxon_concepts_mview.id', 
@@ -110,6 +109,9 @@ class Checklist::Checklist
     prepare_kingdom_queries
   end
 
+  def prepare_main_query; end
+  def prepare_kindom_queries; end
+
   # Takes the current search query, paginates it and adds metadata
   #
   # @param [Integer] page the current page number to offset by
@@ -117,12 +119,12 @@ class Checklist::Checklist
   # @return [Array] an array containing a hash of search results and
   #   related metadata
   def generate(page, per_page)
-    page ||= 0
-    per_page ||= 20
-    total_cnt = @taxon_concepts_rel.count
     @taxon_concepts_rel = @taxon_concepts_rel.
       without_nc.without_hidden.
       includes(:current_m_listing_changes)
+    page ||= 0
+    per_page ||= 20
+    total_cnt = @taxon_concepts_rel.count
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
 
     #maybe one day Active Record will start to make sense
@@ -153,20 +155,14 @@ class Checklist::Checklist
   # @param [Hash] a hash of search params and their values
   # @return [String] a summary of the search params
   def summarise_filters
-    # Remove empty and nil params
-    @params = @params.delete_if { |_, v| v.nil? || v == "" }
-    return ""  if @params.length == 0
-
-    @params = @params.symbolize_keys
-
     summary = []
 
     # country
     @countries_count = 0
-    unless @params[:country_ids].nil?
+    unless @countries.empty?
       summary = ["Results from"]  if summary.length == 0
 
-      countries = GeoEntity.find_all_by_id(@params[:country_ids])
+      countries = GeoEntity.find_all_by_id(@countries)
 
       @countries_count = countries.count
       if (1..3).include?(@countries_count)
@@ -178,7 +174,7 @@ class Checklist::Checklist
 
     # region
     @regions_count = 0
-    unless @params[:cites_region_ids].nil?
+    unless @cites_regions.empty?
       summary = ["Results from"]  if summary.length == 0
 
       regions = GeoEntity.find_all_by_id(@params[:cites_region_ids])
@@ -191,35 +187,37 @@ class Checklist::Checklist
     end
 
     # appendix
-    unless @params[:cites_appendices].nil?
+    unless @cites_appendices.empty?
       summary = ["Results from"]  if summary.length == 0
 
-      if (!@params[:cites_region_ids].nil? ||
-          !@params[:country_ids].nil?) &&
+      if (!@cites_regions.empty? ||
+          !@countries.empty?) &&
          (@countries_count > 0 ||
           @regions_count > 0)
         summary << "on"
       end
 
       summary << "appx"
-      summary << @params[:cites_appendices].join(", ")
+      summary << @cites_appendices.join(", ")
     end
 
     # name
-    unless @params[:scientific_name].nil?
+    unless @scientific_name.blank?
       summary = ["Results"]  if summary.length == 0
 
       summary << "for '#{@params[:scientific_name]}'"
     end
 
     # synonyms
-    unless @params[:synonyms].nil? || @params[:synonyms] == false
+    if @synonyms
       if summary.length == 0
         summary << "All results including synonyms"
       else
         summary << "(showing synonyms)"
       end
     end
+
+    #TODO common names, authors
 
     summary.join(" ")
   end

@@ -2,20 +2,18 @@ class TaxonConceptsController < ApplicationController
   include ActionController::MimeResponds
 
   def index
-    extract_checklist_params
-    @checklist = Checklist::Checklist.new(@checklist_params)
-    #render :json => @checklist.generate(params[:page], params[:per_page])
+    @checklist = Checklist::Checklist.new(params)
+    puts  MultiJson.engine.inspect
+    render :json => @checklist.generate(params[:page], params[:per_page])
     #render Rabl::Renderer.json(@checklist, 'taxon_concepts/index')
-    respond_to :json
+    #respond_to :json
   end
 
   def download_index
-    extract_checklist_params
     send_checklist_index_file
   end
 
   def download_history
-    extract_checklist_params
     send_checklist_history_file
   end
 
@@ -56,19 +54,17 @@ class TaxonConceptsController < ApplicationController
   end
 
   def summarise_filters
-    extract_checklist_params
-
-    render :text => Checklist::Checklist.new(@checklist_params).summarise_filters
+    render :text => Checklist::Checklist.new(params).summarise_filters
   end
 
   private
   def send_checklist_index_file
     ch = if params[:format] == 'pdf'
-      Checklist::Pdf::Index.new(@checklist_params)
+      Checklist::Pdf::Index.new(params)
     elsif params[:format] == 'csv'
-      Checklist::Csv::Index.new(@checklist_params)
+      Checklist::Csv::Index.new(params)
     elsif params[:format] == 'json'
-      Checklist::Json::Index.new(@checklist_params)
+      Checklist::Json::Index.new(params)
     end
     send_checklist_file(ch) unless ch.blank?
   end
@@ -90,28 +86,6 @@ class TaxonConceptsController < ApplicationController
       :filename => checklist.download_name,
       :type => checklist.ext)
     FileUtils.rm @download_path
-  end
-
-  def extract_checklist_params
-    @checklist_params = {
-      :scientific_name => params[:scientific_name] ? params[:scientific_name] : nil,
-      :country_ids => params[:country_ids] ? params[:country_ids] : nil,
-      :cites_region_ids =>
-        params[:cites_region_ids] ? params[:cites_region_ids] : nil,
-      :cites_appendices =>
-        params[:cites_appendices] ? params[:cites_appendices] : nil,
-      :output_layout =>
-        params[:output_layout] ? params[:output_layout].to_sym : nil,
-      :common_names =>
-        [
-          (params[:show_english] == '1' ? 'E' : nil),
-          (params[:show_spanish] == '1' ? 'S' : nil),
-          (params[:show_french] == '1' ? 'F' : nil)
-        ].compact,
-      :synonyms => params[:show_synonyms] == '1',
-      :authors => params[:show_author] == '1',
-      :level_of_listing => params[:level_of_listing] == '1'
-    }
   end
 
 end
