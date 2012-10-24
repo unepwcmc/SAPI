@@ -57,7 +57,17 @@ class Checklist::Checklist
       @taxon_concepts_rel = @taxon_concepts_rel.at_level_of_listing
     end
 
-    select_fields = ['taxon_concepts_mview.id', 
+    #order
+    @taxon_concepts_rel = if @output_layout == :taxonomic
+      @taxon_concepts_rel.taxonomic_layout
+    else
+      @taxon_concepts_rel.alphabetical_layout
+    end
+    @taxon_concepts_rel.select_values = sql_columns
+  end
+
+  def sql_columns
+    sql_columns = [:"taxon_concepts_mview.id", 
       :species_name, :genus_name, :family_name, :order_name,
       :class_name, :phylum_name, :kingdom_name,
       :full_name, :rank_name,
@@ -71,7 +81,7 @@ class Checklist::Checklist
       :author_year]
 
     if @authors
-      select_fields << <<-SEL
+      sql_columns << <<-SEL
     ARRAY(
       SELECT synonym || 
       CASE
@@ -88,20 +98,14 @@ class Checklist::Checklist
     ) AS synonyms_ary
     SEL
     else
-      select_fields << :synonyms_ary
+      sql_columns << :synonyms_ary
     end
 
     if @output_layout == :taxonomic
-      select_fields += [:family_id, :order_id, :class_id, :phylum_id]
+      sql_columns += [:family_id, :order_id, :class_id, :phylum_id]
     end
 
-    #order
-    @taxon_concepts_rel = if @output_layout == :taxonomic
-      @taxon_concepts_rel.taxonomic_layout
-    else
-      @taxon_concepts_rel.alphabetical_layout
-    end
-    @taxon_concepts_rel.select_values = select_fields
+    sql_columns
   end
 
   def prepare_queries
