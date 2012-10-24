@@ -2,12 +2,6 @@ class Checklist::Json::Index < Checklist::Index
   include Checklist::Json::Document
   include Checklist::Json::IndexContent
 
-  def initialize(options={})
-    @ext = 'json'
-    super(options)
-    @tmp_json    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.json'].join
-  end
-
   def columns
     super + [:countries_iso_codes]
   end
