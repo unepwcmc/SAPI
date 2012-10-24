@@ -1,9 +1,12 @@
 class TaxonConceptsController < ApplicationController
+  include ActionController::MimeResponds
 
   def index
     extract_checklist_params
-    render :json => Checklist::Checklist.new(@checklist_params).
-      generate(params[:page], params[:per_page])
+    @checklist = Checklist::Checklist.new(@checklist_params)
+    #render :json => @checklist.generate(params[:page], params[:per_page])
+    #render Rabl::Renderer.json(@checklist, 'taxon_concepts/index')
+    respond_to :json
   end
 
   def download_index

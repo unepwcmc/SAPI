@@ -112,6 +112,7 @@ GEM
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
     newrelic_rpm (3.4.2.1)
+    oj (1.4.3)
     pdf-reader (1.1.1)
       Ascii85 (~> 1.0.0)
       ruby-rc4
@@ -121,6 +122,9 @@ GEM
     prawn (0.12.0)
       pdf-reader (>= 0.9.0)
       ttfunk (~> 1.0.2)
+    rabl (0.7.3)
+      activesupport (>= 2.3.14)
+      multi_json (~> 1.0)
     rack (1.4.1)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -214,9 +218,11 @@ DEPENDENCIES
   guard-livereload
   immigrant
   newrelic_rpm
+  oj
   pg
   pg_array_parser
   prawn (= 0.12.0)
+  rabl
   rack-cors
   rack-livereload
   rails (= 3.2.7)
