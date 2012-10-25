@@ -8,9 +8,10 @@ module Checklist::Json::IndexContent
   end
 
   def kingdom(json, fetcher)
+    puts self.json_options.inspect
     begin
       kingdom = fetcher.next
-      kingdom.each { |tc| json << tc.to_json; json << ','}
+      kingdom.each { |tc| json << tc.to_json(self.json_options); json << ",\n"}
     end while not kingdom.empty?
   end
 
