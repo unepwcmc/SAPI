@@ -15,7 +15,7 @@ class Checklist::Checklist
     @designation = options[:designation] || Designation::CITES
 
     @taxon_concepts_rel = MTaxonConcept.scoped.
-      by_designation(@designation)
+      by_designation(@designation).without_hidden
 
     #filtering options
     @cites_regions = options[:cites_region_ids] || []
