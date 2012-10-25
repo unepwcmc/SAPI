@@ -121,7 +121,7 @@ class Checklist::Checklist
     per_page ||= 20
     total_cnt = @taxon_concepts_rel.count
     @taxon_concepts_rel = @taxon_concepts_rel.
-      without_nc.without_hidden.
+      without_nc.
       includes(:current_m_listing_changes)
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
 
