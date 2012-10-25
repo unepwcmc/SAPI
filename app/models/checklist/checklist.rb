@@ -73,21 +73,21 @@ class Checklist::Checklist
 
     if @authors
       select_fields << <<-SEL
-    ARRAY(
-      SELECT synonym || 
-      CASE
-      WHEN author_year IS NOT NULL
-      THEN ' ' || author_year
-      ELSE ''
-      END
-      FROM ( 
-        (SELECT synonym, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_ary) AS synonym) q) synonyms 
-        LEFT JOIN
-        (SELECT author_year, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_author_years_ary) AS author_year) q) author_years
-        ON synonyms.id = author_years.id
-      )
-    ) AS synonyms_ary
-    SEL
+        ARRAY(
+          SELECT synonym || 
+          CASE
+          WHEN author_year IS NOT NULL
+          THEN ' ' || author_year
+          ELSE ''
+          END
+          FROM ( 
+            (SELECT synonym, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_ary) AS synonym) q) synonyms 
+            LEFT JOIN
+            (SELECT author_year, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_author_years_ary) AS author_year) q) author_years
+            ON synonyms.id = author_years.id
+          )
+        ) AS synonyms_ary
+        SEL
     else
       select_fields << :synonyms_ary
     end
