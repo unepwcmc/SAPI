@@ -76,13 +76,10 @@ class Checklist::Checklist
       :current_listing, :cites_accepted, :listing_updated_at,
       :specific_annotation_symbol, :generic_annotation_symbol,
       :"taxon_concepts_mview.countries_ids_ary",
-      :kingdom_position, :taxonomic_position,
-      #TODO filter out by common names settings
-      :english_names_ary, :spanish_names_ary, :french_names_ary,
-      #TODO filter out by author setting
-      :author_year]
+      :kingdom_position, :taxonomic_position
+    ]
 
-    if @authors
+    if @synonyms && @authors
       sql_columns << <<-SEL
     ARRAY(
       SELECT synonym || 
@@ -99,9 +96,14 @@ class Checklist::Checklist
       )
     ) AS synonyms_ary
     SEL
-    else
+    elsif @synonyms
       sql_columns << :synonyms_ary
     end
+
+    sql_columns << :author_year if @authors
+    sql_columns << :english_names_ary if @english_common_names
+    sql_columns << :spanish_names_ary if @spanish_common_names
+    sql_columns << :french_names_ary if @french_common_names
 
     if @output_layout == :taxonomic
       sql_columns += [:family_id, :order_id, :class_id, :phylum_id]
@@ -116,10 +118,10 @@ class Checklist::Checklist
       :species_name, :genus_name, :family_name, :order_name,
       :class_name, :phylum_name, :kingdom_name,
       :full_name, :rank_name,
-      :current_listing, :cites_accepted, :listing_updated_at,
+      :current_listing, :cites_accepted,
       :specific_annotation_symbol, :generic_annotation_symbol,
       :countries_ids],
-      :methods => [:ancestors_path],
+      :methods => [:ancestors_path, :recently_changed],
       :include => {
         :current_m_listing_changes => {
           :only => [:change_type_name, :species_listing_name,

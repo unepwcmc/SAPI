@@ -145,18 +145,10 @@ class MTaxonConcept < ActiveRecord::Base
       sym = :"#{lng.downcase}_names_ary"
       db_ary_to_array(sym)
     end
-
-    define_method("#{lng.downcase}_names_list") do
-      self.send("#{lng.downcase}_names").join(', ')
-    end
   end
 
   def synonyms
     db_ary_to_array :synonyms_ary
-  end
-
-  def synonyms_list
-    synonyms.join(', ')
   end
 
   def db_ary_to_array ary
