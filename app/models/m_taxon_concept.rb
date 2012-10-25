@@ -202,21 +202,4 @@ class MTaxonConcept < ActiveRecord::Base
     end
   end
 
-  def as_json(options={})
-
-    unless options[:only] || options[:methods]
-      options = {
-        :only =>[:id, :species_name, :genus_name, :family_name, :order_name,
-          :class_name, :phylum_name, :full_name, :rank_name, :author_year,
-          :taxonomic_position, :current_listing, :cites_accepted],
-        :methods => [
-          :spp, :recently_changed,
-          :english_names_list, :spanish_names_list, :french_names_list,
-          :synonyms_list, :countries_ids, :current_listing_changes
-        ]
-      }
-    end
-    super(options)
-  end
-
 end

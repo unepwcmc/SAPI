@@ -33,6 +33,7 @@ class Checklist::Checklist
     @french_common_names = (options[:show_french] == '1')
     @common_names =
       @english_common_names || @spanish_common_names || @french_common_names
+    @locale = options[:locale] || 'en'
   end
 
   def initialize_query
@@ -40,7 +41,8 @@ class Checklist::Checklist
       by_designation(Designation::CITES)
 
     unless @cites_regions.empty? && @countries.empty?
-      @taxon_concepts_rel = @taxon_concepts_rel.by_cites_regions_and_countries(@cites_regions, @countries)
+      @taxon_concepts_rel = @taxon_concepts_rel.
+        by_cites_regions_and_countries(@cites_regions, @countries)
     end
 
     unless @cites_appendices.empty?
@@ -108,6 +110,44 @@ class Checklist::Checklist
     sql_columns
   end
 
+  def json_options
+    json_options = {
+      :only => [:id,
+      :species_name, :genus_name, :family_name, :order_name,
+      :class_name, :phylum_name, :kingdom_name,
+      :full_name, :rank_name,
+      :current_listing, :cites_accepted, :listing_updated_at,
+      :specific_annotation_symbol, :generic_annotation_symbol,
+      :countries_ids],
+      :methods => [:ancestors_path],
+      :include => {
+        :current_m_listing_changes => {
+          :only => [:change_type_name, :species_listing_name,
+            :party_name, :effective_at, :is_current],
+          :methods => []
+        }
+      }
+    }
+
+    json_options[:only] << :author_year if @authors
+    json_options[:methods] << :english_names if @english_common_names
+    json_options[:methods] << :spanish_names if @spanish_common_names
+    json_options[:methods] << :french_names if @french_common_names
+    json_options[:methods] << :synonyms if @synonyms
+
+    if @locale == 'en'
+      json_options[:include][:current_m_listing_changes][:only] +=
+        [:generic_english_full_note, :english_full_note, :english_short_note]
+    elsif @locale == 'es'
+      json_options[:include][:current_m_listing_changes][:only] +=
+        [:generic_spanish_full_note, :spanish_full_note, :spanish_short_note]
+    elsif @locale == 'fr'
+      json_options[:include][:current_m_listing_changes][:only] +=
+        [:generic_french_full_note, :french_full_note, :french_short_note]
+    end
+    json_options
+  end
+
   def prepare_queries
     prepare_main_query
     prepare_kingdom_queries
@@ -128,26 +168,29 @@ class Checklist::Checklist
       includes(:current_m_listing_changes)
     page ||= 0
     per_page ||= 20
-    total_cnt = @taxon_concepts_rel.count
+    @total_cnt = @taxon_concepts_rel.count
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
 
     #maybe one day Active Record will start to make sense
     #which is when the below thing can hopefully be fixed
     #https://github.com/rails/rails/pull/2303#issuecomment-3889821
-    taxon_concepts = MTaxonConcept.find_by_sql(@taxon_concepts_rel.to_sql)
-    @animalia, @plantae = taxon_concepts.partition{ |item| item.kingdom_position == 0 }
+    @taxon_concepts = MTaxonConcept.find_by_sql(@taxon_concepts_rel.to_sql)
+    @animalia, @plantae = @taxon_concepts.partition{ |item| item.kingdom_position == 0 }
     if @output_layout == :taxonomic
        injector = Checklist::HigherTaxaInjector.new(@animalia)
        @animalia = injector.run
        injector = Checklist::HigherTaxaInjector.new(@plantae)
        @plantae = injector.run
     end
+    self
+  end
 
+  def as_json(options={})
     [{
-      :animalia => @animalia,
-      :plantae => @plantae,
-      :result_cnt => taxon_concepts.size,
-      :total_cnt => total_cnt
+      animalia: @animalia.as_json(json_options),
+      plantae: @plantae.as_json(json_options),
+      result_cnt: @taxon_concepts.size,
+      total_cnt: @total_cnt
     }]
   end
 
