@@ -2,12 +2,20 @@ class Checklist::Json::Index < Checklist::Index
   include Checklist::Json::Document
   include Checklist::Json::IndexContent
 
+  def initialize(options)
+    super(options)
+    @json_options = json_options
+  end
+
   def json_options
     json_options = super
     #just the simple set for the index
-    json_options.delete([:include, :methods])
+    json_options.delete(:include)
+    json_options[:methods] = [:countries_iso_codes]#TODO
+    json_options
   end
 
+  #TODO
   def columns
     super + [:countries_iso_codes]
   end
