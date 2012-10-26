@@ -3,10 +3,7 @@ class TaxonConceptsController < ApplicationController
 
   def index
     @checklist = Checklist::Checklist.new(params)
-    puts  MultiJson.engine.inspect
     render :json => @checklist.generate(params[:page], params[:per_page])
-    #render Rabl::Renderer.json(@checklist, 'taxon_concepts/index')
-    #respond_to :json
   end
 
   def download_index
@@ -71,11 +68,11 @@ class TaxonConceptsController < ApplicationController
 
   def send_checklist_history_file
     ch = if params[:format] == 'pdf'
-      Checklist::Pdf::History.new(@checklist_params)
+      Checklist::Pdf::History.new(params)
     elsif params[:format] == 'csv'
-      Checklist::Csv::History.new(@checklist_params)
+      Checklist::Csv::History.new(params)
     elsif params[:format] == 'json'
-      Checklist::Json::History.new(@checklist_params)
+      Checklist::Json::History.new(params)
     end
     send_checklist_file(ch) unless ch.blank?
   end

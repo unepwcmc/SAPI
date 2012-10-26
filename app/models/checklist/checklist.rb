@@ -109,6 +109,17 @@ class Checklist::Checklist
       sql_columns += [:family_id, :order_id, :class_id, :phylum_id]
     end
 
+    if @locale == 'en'
+      sql_columns +=
+        [:generic_english_full_note, :english_full_note, :english_short_note]
+    elsif @locale == 'es'
+      sql_columns +=
+        [:generic_spanish_full_note, :spanish_full_note, :spanish_short_note]
+    elsif @locale == 'fr'
+      sql_columns +=
+        [:generic_french_full_note, :french_full_note, :french_short_note]
+    end
+
     sql_columns
   end
 

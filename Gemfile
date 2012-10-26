@@ -14,7 +14,7 @@ gem 'awesome_nested_set'
 gem 'foreigner'
 gem 'prawn', '0.12.0'
 gem 'oj'
-gem 'rabl'
+gem 'jsonify'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

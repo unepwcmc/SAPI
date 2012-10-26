@@ -3,37 +3,37 @@ class Checklist::Json::Index < Checklist::Index
   include Checklist::Json::IndexContent
 
   def initialize(options)
-    super(options)
+    super(options.merge({:output_layout => :taxonomic}))
     @json_options = json_options
+  end
+
+  def sql_columns
+    sql_columns = super()
+    if @locale == 'en'
+      sql_columns +=
+        [:generic_english_full_note, :english_full_note]
+    elsif @locale == 'es'
+      sql_columns +=
+        [:generic_spanish_full_note, :spanish_full_note]
+    elsif @locale == 'fr'
+      sql_columns +=
+        [:generic_french_full_note, :french_full_note]
+    end
   end
 
   def json_options
     json_options = super
     #just the simple set for the index
-    json_options.delete(:include)
-    json_options[:methods] = [:countries_iso_codes]#TODO
+    json_options[:only] += [:taxonomic_position, :generic_annotation_symbol, :generic_annotation_parent_symbol]
+    json_options[:only] += [:specific_annotation_symbol]
+    json_options[:methods] = [:countries_iso_codes] #TODO
     json_options
   end
 
-  #TODO
-  def columns
-    super + [:countries_iso_codes]
-  end
-
-  def column_values(rec)
-    columns.map do |c|
-      unless rec.respond_to? c
-        send("column_value_for_#{c}", rec)
-      else
-        rec.send(c)
-      end
-    end
-  end
-
-  def column_value_for_countries_iso_codes(rec)
-    rec.countries_ids.map do |id|
-      Checklist::CountryDictionary.instance.getIsoCodeById(id)
-    end
+  def prepare_main_query
+    super()
+    @taxon_concepts_rel = @taxon_concepts_rel.
+      includes(:current_m_listing_changes)
   end
 
 end

@@ -1,19 +1,16 @@
 module Checklist::Json::IndexContent
 
-  def content(json)
-    json << '['
-    fetcher = Checklist::IndexFetcher.new(@animalia_rel)
-    kingdom(json, fetcher)
-    fetcher = Checklist::IndexFetcher.new(@plantae_rel)
-    kingdom(json, fetcher)
-    json << ']'
-  end
-
-  def kingdom(json, fetcher)
+  def content(json_file)
+    fetcher = Checklist::IndexFetcher.new(@taxon_concepts_rel)
+    puts @taxon_concepts_rel.to_sql
+    # use Jsonify to build json in batches
+    json = Jsonify::Builder.new(:format => :pretty)
     begin
       kingdom = fetcher.next
-      kingdom.each { |tc| json << tc.to_json(@json_options); json << ",\n"}
+      kingdom.each{ |tc| json << tc.as_json(@json_options) }
     end while not kingdom.empty?
+    # Evaluate the result to a string
+    json_file << json.compile!
   end
 
 end
