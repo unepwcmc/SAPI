@@ -2,8 +2,13 @@ class Checklist::Index < Checklist::Checklist
   attr_reader :download_name, :ext
 
   def initialize(options={})
-    super(options.merge({:output_layout => :alphabetical}))
-    @download_name = "FullChecklist-#{Time.now}"
+    @download_path = download_location(options, "index", @ext)
+
+    if !File.exists?(@download_path)
+      super(options.merge({:output_layout => :alphabetical}))
+    end
+
+    @download_name = "FullChecklist-#{Time.now}.#{@ext}"
   end
 
   def prepare_main_query
@@ -17,6 +22,8 @@ class Checklist::Index < Checklist::Checklist
   end
 
   def generate
+    return @download_path  if File.exists?(@download_path)
+
     prepare_queries
     document do |doc|
       content(doc)

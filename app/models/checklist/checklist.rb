@@ -248,6 +248,21 @@ class Checklist::Checklist
     aliases[col] || col.to_s.camelize
   end
 
+  # Returns a file path where a download can be stored.
+  #
+  # Used in Checklist::[Pdf|Csv]::[History|Index] to handle cached file
+  # names. A digest of the user's provided params and the document type
+  # is generated and used as the filename prior to any processing, so
+  # already generated documents are simply returned.
+  #
+  # @returns String download file path, including filename and ext
+  def download_location(params, type, format)
+    require 'digest/sha1'
+    @filename = Digest::SHA1.hexdigest(params.merge(type: type).to_s)
+
+    return [Rails.root, '/public/downloads/', @filename, '.', format].join
+  end
+
   private
 
   def self.helpers

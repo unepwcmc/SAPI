@@ -4,8 +4,8 @@ class Checklist::Csv::History < Checklist::History
 
   def initialize(options={})
     @ext = 'csv'
+
     super(options)
-    @tmp_csv    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.csv'].join
   end
 
   def columns

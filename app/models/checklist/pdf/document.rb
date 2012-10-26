@@ -32,8 +32,8 @@ module Checklist::Pdf::Document
       pdf.render_file @tmp_pdf
     end
 
-    @tmp_merged_pdf = merge_pdfs(@static_pdf, @tmp_pdf)
-    @download_path = attach_pdfs(@tmp_merged_pdf, @attachment_pdf)
+    merge_pdfs(@tmp_merged_pdf, @static_pdf, @tmp_pdf)
+    attach_pdfs(@download_path, @tmp_merged_pdf, @attachment_pdf)
   end
 
   def finalize
