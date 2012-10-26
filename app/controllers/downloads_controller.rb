@@ -34,6 +34,9 @@ class DownloadsController < ApplicationController
     @download = Download.find(params[:id])
 
     if @download.status == Download::COMPLETED
+      # Update access time for cache cleaning purposes
+      FileUtils.touch(@download.path)
+
       send_file(@download.path,
         :filename => @download.filename,
         :type => "pdf")
