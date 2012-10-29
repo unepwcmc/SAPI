@@ -58,7 +58,7 @@ class MTaxonConcept < ActiveRecord::Base
   self.table_name = :taxon_concepts_mview
   self.primary_key = :id
 
-  has_many :m_listing_changes, :foreign_key => :taxon_concept_id
+  has_many :listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange
   has_many :current_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange, :conditions => {:is_current => true}
 
   scope :by_designation, lambda { |name|

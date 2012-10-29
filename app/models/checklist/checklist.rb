@@ -273,7 +273,7 @@ class Checklist::Checklist
     unless @scientific_name.blank?
       summary = ["Results"]  if summary.length == 0
 
-      summary << "for '#{@params[:scientific_name]}'"
+      summary << "for '#{@scientific_name}'"
     end
 
     # synonyms

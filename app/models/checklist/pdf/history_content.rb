@@ -55,7 +55,7 @@ module Checklist::Pdf::HistoryContent
             }
           end
         else
-          listings_subtable = pdf.make_table(tc.m_listing_changes.map do |lh|
+          listings_subtable = pdf.make_table(tc.listing_changes.map do |lh|
             [
               "#{lh.species_listing_name}#{
                 if lh.change_type_name == ChangeType::RESERVATION

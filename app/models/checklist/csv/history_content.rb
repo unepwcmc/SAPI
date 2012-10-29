@@ -12,7 +12,7 @@ module Checklist::Csv::HistoryContent
     begin
       kingdom = fetcher.next
       kingdom.each do |tc|
-        tc.m_listing_changes.each do |lc|
+        tc.listing_changes.each do |lc|
           csv << taxon_concepts_csv_columns.map { |c| tc.send(c) } +
           listing_changes_csv_columns.map { |c| lc.send(c) }
         end

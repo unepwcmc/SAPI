@@ -23,7 +23,7 @@ class Checklist::History < Checklist::Checklist
 
   def prepare_main_query
     @taxon_concepts_rel = @taxon_concepts_rel.
-      includes(:m_listing_changes).
+      includes(:listing_changes).
       where("cites_listed = 't'").
       where("NOT (listing_changes_mview.change_type_name = 'DELETION' " +
         "AND listing_changes_mview.species_listing_name IS NOT NULL " +
@@ -77,7 +77,7 @@ class Checklist::History < Checklist::Checklist
   def json_options
     json_options = taxon_concepts_json_options
     json_options[:include] = {
-      :m_listing_changes => listing_changes_json_options
+      :listing_changes => listing_changes_json_options
     }
     json_options
   end
