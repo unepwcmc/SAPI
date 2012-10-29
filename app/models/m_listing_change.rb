@@ -27,6 +27,7 @@
 #  expiry                    :datetime
 #
 
+#TODO party_name should actually be renamed to party_iso_code
 class MListingChange < ActiveRecord::Base
   include PgArrayParser
   self.table_name = :listing_changes_mview
@@ -67,6 +68,18 @@ class MListingChange < ActiveRecord::Base
     else
       []
     end
+  end
+
+  def countries_iso_codes
+    CountryDictionary.instance.get_iso_codes_by_ids(countries_ids)
+  end
+
+  def countries_full_names
+    CountryDictionary.instance.get_names_by_ids(countries_ids)
+  end
+
+  def party_full_name
+    CountryDictionary.instance.get_name_by_id(party_id)
   end
 
 end

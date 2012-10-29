@@ -38,6 +38,7 @@ class Checklist::Checklist
 
   def initialize_query
     @taxon_concepts_rel = MTaxonConcept.scoped.
+      select(sql_columns).
       by_designation(Designation::CITES)
 
     unless @cites_regions.empty? && @countries.empty?
@@ -65,10 +66,9 @@ class Checklist::Checklist
     else
       @taxon_concepts_rel.alphabetical_layout
     end
-    @taxon_concepts_rel.select_values = sql_columns
   end
 
-  def sql_columns
+  def taxon_concepts_columns
     sql_columns = [:"taxon_concepts_mview.id", 
       :species_name, :genus_name, :family_name, :order_name,
       :class_name, :phylum_name, :kingdom_name,
@@ -108,7 +108,15 @@ class Checklist::Checklist
     if @output_layout == :taxonomic
       sql_columns += [:family_id, :order_id, :class_id, :phylum_id]
     end
+    sql_columns
+  end
 
+  def listing_changes_columns
+    sql_columns = [
+      :change_type_name, :species_listing_name,
+      :party_id, :party_name, :effective_at, :is_current,
+      :"listing_changes_mview.countries_ids_ary"
+    ]
     if @locale == 'en'
       sql_columns +=
         [:generic_english_full_note, :english_full_note, :english_short_note]
@@ -119,27 +127,23 @@ class Checklist::Checklist
       sql_columns +=
         [:generic_french_full_note, :french_full_note, :french_short_note]
     end
-
     sql_columns
   end
 
-  def json_options
+  def sql_columns
+    taxon_concepts_columns + listing_changes_columns
+  end
+
+  def taxon_concepts_json_options
     json_options = {
-      :only => [:id,
-      :species_name, :genus_name, :family_name, :order_name,
-      :class_name, :phylum_name, :kingdom_name,
-      :full_name, :rank_name,
-      :current_listing, :cites_accepted,
-      :specific_annotation_symbol, :generic_annotation_symbol,
-      :countries_ids],
-      :methods => [:ancestors_path, :recently_changed],
-      :include => {
-        :current_m_listing_changes => {
-          :only => [:change_type_name, :species_listing_name,
-            :party_name, :effective_at, :is_current],
-          :methods => []
-        }
-      }
+      :only => [
+        :id, :full_name, :rank_name, :current_listing, :cites_accepted,
+        :species_name, :genus_name, :family_name, :order_name,
+        :class_name, :phylum_name, :kingdom_name,
+        :specific_annotation_symbol, :generic_annotation_symbol,
+        :generic_annotation_parent_symbol
+      ],
+      :methods => [:countries_ids, :ancestors_path, :recently_changed]
     }
 
     json_options[:only] << :author_year if @authors
@@ -147,17 +151,33 @@ class Checklist::Checklist
     json_options[:methods] << :spanish_names if @spanish_common_names
     json_options[:methods] << :french_names if @french_common_names
     json_options[:methods] << :synonyms if @synonyms
+    json_options
+  end
 
+  def listing_changes_json_options
+    json_options = {
+      :only => [:change_type_name, :species_listing_name,
+        :party_name, :effective_at, :is_current],
+      :methods => [:countries_ids]
+    }
     if @locale == 'en'
-      json_options[:include][:current_m_listing_changes][:only] +=
+      json_options[:only] +=
         [:generic_english_full_note, :english_full_note, :english_short_note]
     elsif @locale == 'es'
-      json_options[:include][:current_m_listing_changes][:only] +=
+      json_options[:only] +=
         [:generic_spanish_full_note, :spanish_full_note, :spanish_short_note]
     elsif @locale == 'fr'
-      json_options[:include][:current_m_listing_changes][:only] +=
+      json_options[:only] +=
         [:generic_french_full_note, :french_full_note, :french_short_note]
     end
+    json_options
+  end
+
+  def json_options
+    json_options = taxon_concepts_json_options
+    json_options[:include] = {
+      :current_m_listing_changes => listing_changes_json_options
+    }
     json_options
   end
 
@@ -177,17 +197,13 @@ class Checklist::Checklist
   #   related metadata
   def generate(page, per_page)
     @taxon_concepts_rel = @taxon_concepts_rel.
-      without_nc.without_hidden.
-      includes(:current_m_listing_changes)
+      joins(:current_m_listing_changes).includes(:current_m_listing_changes).
+      without_nc.without_hidden
     page ||= 0
     per_page ||= 20
     @total_cnt = @taxon_concepts_rel.count
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
-
-    #maybe one day Active Record will start to make sense
-    #which is when the below thing can hopefully be fixed
-    #https://github.com/rails/rails/pull/2303#issuecomment-3889821
-    @taxon_concepts = MTaxonConcept.find_by_sql(@taxon_concepts_rel.to_sql)
+    @taxon_concepts = @taxon_concepts_rel.all
     @animalia, @plantae = @taxon_concepts.partition{ |item| item.kingdom_position == 0 }
     if @output_layout == :taxonomic
        injector = Checklist::HigherTaxaInjector.new(@animalia)
@@ -280,30 +296,6 @@ class Checklist::Checklist
     #TODO common names, authors
 
     summary.join(" ")
-  end
-
-  def columns
-    [:id, :full_name, :rank_name, :author_year]
-  end
-
-  def column_headers
-    columns.map do |c|
-      column_export_name(c)
-    end
-  end
-
-  def column_export_name(col)
-    aliases = {
-      :change_type_name => 'ChangeType',
-      :species_listing_name => 'Appendix',
-      :generic_english_full_note => '#AnnotationEnglish',
-      :generic_spanish_full_note => '#AnnotationSpanish',
-      :generic_french_full_note => '#AnnotationFrench',
-      :english_full_note => 'AnnotationEnglish',
-      :spanish_full_note => 'AnnotationSpanish',
-      :french_full_note => 'AnnotationFrench'
-    }
-    aliases[col] || col.to_s.camelize
   end
 
   private

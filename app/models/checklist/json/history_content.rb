@@ -6,7 +6,7 @@ module Checklist::Json::HistoryContent
     json = Jsonify::Builder.new(:format => :pretty)
     begin
       kingdom = fetcher.next
-      kingdom.each{ |tc| json << tc.as_json(@json_options) }
+      kingdom.each{ |tc| json << tc.as_json(json_options) }
     end while not kingdom.empty?
     # Evaluate the result to a string
     json_file << json.compile!

@@ -4,7 +4,6 @@ class Checklist::Json::Index < Checklist::Index
 
   def initialize(options)
     super(options.merge({:output_layout => :taxonomic}))
-    @json_options = json_options
   end
 
   def sql_columns
@@ -21,12 +20,9 @@ class Checklist::Json::Index < Checklist::Index
     end
   end
 
-  def json_options
+  def taxon_concepts_json_options
     json_options = super
-    #just the simple set for the index
-    json_options[:only] += [:taxonomic_position, :generic_annotation_symbol, :generic_annotation_parent_symbol]
-    json_options[:only] += [:specific_annotation_symbol]
-    json_options[:methods] = [:countries_iso_codes] #TODO
+    json_options[:methods] << :countries_iso_codes
     json_options
   end
 

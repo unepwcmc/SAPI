@@ -173,6 +173,20 @@ class MTaxonConcept < ActiveRecord::Base
     end
   end
 
+  def countries_iso_codes
+    CountryDictionary.instance.get_iso_codes_by_ids(countries_ids)
+  end
+
+  def countries_full_names
+    CountryDictionary.instance.get_names_by_ids(countries_ids)
+  end
+
+  def current_listing_changes
+    current_m_listing_changes.map do |lc|
+      lc.listing_attributes
+    end
+  end
+
   def recently_changed
     return listing_updated_at > 8.year.ago
   end
@@ -188,9 +202,14 @@ class MTaxonConcept < ActiveRecord::Base
     end
   end
 
-  def current_listing_changes
-    current_m_listing_changes.map do |lc|
-      lc.listing_attributes
+  ['English', 'Spanish', 'French'].each do |lng|
+    ["generic_#{lng.downcase}_full_note", "#{lng.downcase}_full_note"].each do |method_name|
+      define_method(method_name) do
+        current_m_listing_changes.map do |lc|
+          note = lc.send(method_name)
+          note && "Appendix #{lc.species_listing_name}:" + note || ''
+        end.join("\n")
+      end
     end
   end
 
