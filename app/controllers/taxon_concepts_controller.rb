@@ -56,28 +56,29 @@ class TaxonConceptsController < ApplicationController
 
   private
   def send_checklist_index_file
-    ch = if params[:format] == 'pdf'
-      Checklist::Pdf::Index.new(params)
+    klass = if params[:format] == 'pdf'
+      Checklist::Pdf::Index
     elsif params[:format] == 'csv'
-      Checklist::Csv::Index.new(params)
+      Checklist::Csv::Index
     elsif params[:format] == 'json'
-      Checklist::Json::Index.new(params)
+      Checklist::Json::Index
     end
-    send_checklist_file(ch) unless ch.blank?
+    send_checklist_file(klass)
   end
 
   def send_checklist_history_file
-    ch = if params[:format] == 'pdf'
-      Checklist::Pdf::History.new(params)
+    klass = if params[:format] == 'pdf'
+      Checklist::Pdf::History
     elsif params[:format] == 'csv'
-      Checklist::Csv::History.new(params)
+      Checklist::Csv::History
     elsif params[:format] == 'json'
-      Checklist::Json::History.new(params)
+      Checklist::Json::History
     end
-    send_checklist_file(ch) unless ch.blank?
+    send_checklist_file(klass)
   end
 
-  def send_checklist_file(checklist)
+  def send_checklist_file(klass)
+    checklist = klass.new(params)
     @download_path = checklist.generate
     send_file(@download_path,
       :filename => checklist.download_name,
