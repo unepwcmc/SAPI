@@ -18,7 +18,7 @@ class TimelineEvent
     @generic_note = options[:generic_note]
     @symbol = options[:symbol]
     @parent_symbol = options[:parent_symbol]
-    @effective_at = options[:effective_at]
+    @effective_at_formatted = options[:effective_at_formatted]
     @is_current = options[:is_current]
   end
 end

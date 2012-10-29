@@ -156,27 +156,19 @@ class Checklist::Checklist
 
   def listing_changes_json_options
     json_options = {
-      :only => [:change_type_name, :species_listing_name,
-        :party_name, :effective_at, :is_current],
-      :methods => [:countries_ids]
+      :only => [:id, :change_type_name, :species_listing_name,
+        :party_name, :is_current],
+      :methods => [:countries_ids, :effective_at_formatted]
     }
-    if @locale == 'en'
-      json_options[:only] +=
-        [:generic_english_full_note, :english_full_note, :english_short_note]
-    elsif @locale == 'es'
-      json_options[:only] +=
-        [:generic_spanish_full_note, :spanish_full_note, :spanish_short_note]
-    elsif @locale == 'fr'
-      json_options[:only] +=
-        [:generic_french_full_note, :french_full_note, :french_short_note]
-    end
+    json_options[:methods] += [:specific_note, :generic_note]
+
     json_options
   end
 
   def json_options
     json_options = taxon_concepts_json_options
     json_options[:include] = {
-      :current_m_listing_changes => listing_changes_json_options
+      :current_listing_changes => listing_changes_json_options
     }
     json_options
   end
@@ -197,7 +189,7 @@ class Checklist::Checklist
   #   related metadata
   def generate(page, per_page)
     @taxon_concepts_rel = @taxon_concepts_rel.
-      joins(:current_m_listing_changes).includes(:current_m_listing_changes).
+      joins(:current_listing_changes).includes(:current_listing_changes).
       without_nc.without_hidden
     page ||= 0
     per_page ||= 20

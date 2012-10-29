@@ -29,7 +29,7 @@ class Checklist::Json::Index < Checklist::Index
   def prepare_main_query
     super()
     @taxon_concepts_rel = @taxon_concepts_rel.
-      includes(:current_m_listing_changes)
+      includes(:current_listing_changes)
   end
 
 end

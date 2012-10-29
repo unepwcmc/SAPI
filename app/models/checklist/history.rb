@@ -58,6 +58,17 @@ class Checklist::History < Checklist::Checklist
 
   def listing_changes_json_options
     json_options = super
+    case I18n.locale
+    when :es
+      json_options[:only] +=
+        [:generic_spanish_full_note, :spanish_full_note, :spanish_short_note]
+    when :fr
+      json_options[:only] +=
+        [:generic_french_full_note, :french_full_note, :french_short_note]
+    else
+      json_options[:only] +=
+        [:generic_english_full_note, :english_full_note, :english_short_note]
+    end
     json_options[:methods] -= [:countries_ids]
     json_options[:methods] += [:countries_iso_codes]
     json_options

@@ -4,7 +4,7 @@ class Checklist::Csv::Index < Checklist::Index
 
   def prepare_main_query
     @taxon_concepts_rel = @taxon_concepts_rel.
-      includes(:current_m_listing_changes)
+      includes(:current_listing_changes)
   end
 
   def taxon_concepts_csv_columns

@@ -59,7 +59,7 @@ class MTaxonConcept < ActiveRecord::Base
   self.primary_key = :id
 
   has_many :m_listing_changes, :foreign_key => :taxon_concept_id
-  has_many :current_m_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange, :conditions => {:is_current => true}
+  has_many :current_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange, :conditions => {:is_current => true}
 
   scope :by_designation, lambda { |name|
     where("designation_is_#{name}".downcase => 't')
@@ -181,12 +181,6 @@ class MTaxonConcept < ActiveRecord::Base
     CountryDictionary.instance.get_names_by_ids(countries_ids)
   end
 
-  def current_listing_changes
-    current_m_listing_changes.map do |lc|
-      lc.listing_attributes
-    end
-  end
-
   def recently_changed
     return listing_updated_at > 8.year.ago
   end
@@ -205,7 +199,7 @@ class MTaxonConcept < ActiveRecord::Base
   ['English', 'Spanish', 'French'].each do |lng|
     ["generic_#{lng.downcase}_full_note", "#{lng.downcase}_full_note"].each do |method_name|
       define_method(method_name) do
-        current_m_listing_changes.map do |lc|
+        current_listing_changes.map do |lc|
           note = lc.send(method_name)
           note && "Appendix #{lc.species_listing_name}:" + note || ''
         end.join("\n")
