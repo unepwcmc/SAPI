@@ -8,6 +8,8 @@ packages as for Ubuntu:
   - freetds-bin freetds-common freetds-dev
   - pdftk
 
+Redis is used for the job queue.
+
 ==Installation
 
 === Gems
@@ -52,6 +54,23 @@ There are specific tasks for each of the types of data. Run 'rake -T' to get the
 You need to run imports from a machine that has access to both the MSSQL db and PostgreSQL. Port forwarding might come in handy:
 
   ssh -fNg -L 15432:localhost:5432 ssh_user@public-address-of-db-host
+
+== Job queue
+
+1. start redis
+  redis-server
+2. start sidekiq
+  bundle exec sidekiq
+3. create new download job
+  curl --data "output_layout=alphabetical&level_of_listing=0&show_synonyms=1&show_english=1&show_spanish=1&show_french=1&scientific_name=pediocactus&page=0&per_page=20&locale=en&download[format]=pdf&download[doc_type]=index" http://localhost:3000/downloads
+
+response:
+  {"downloads":[{"id":2,"doc_type":"index","format":"pdf","status":"working","created_at":"2012-10-30T11:44:21Z","updated_at":"2012-10-30T11:44:21Z"}]}
+3. get status of job
+  curl http://localhost:3000/downloads/2
+
+response:
+  {"status":"completed"}
 
 ==Development
 
