@@ -1,6 +1,6 @@
 #Encoding: utf-8
 class Checklist::Checklist
-  attr_accessor :taxon_concepts_rel
+  attr_accessor :taxon_concepts_rel, :taxon_concepts
 
   # Constructs a query to retrieve taxon concepts based on user defined
   # parameters
@@ -189,13 +189,17 @@ class Checklist::Checklist
   #   related metadata
   def generate(page, per_page)
     @taxon_concepts_rel = @taxon_concepts_rel.
-      joins(:current_listing_changes).includes(:current_listing_changes).
+      joins('LEFT JOIN "listing_changes_mview"
+        ON "listing_changes_mview"."taxon_concept_id" ="taxon_concepts_mview"."id"
+        AND "listing_changes_mview"."is_current" = \'t\'').
+      includes(:current_listing_changes).
       without_nc.without_hidden
     page ||= 0
     per_page ||= 20
     @total_cnt = @taxon_concepts_rel.count
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
     @taxon_concepts = @taxon_concepts_rel.all
+    puts @taxon_concepts_rel.to_sql
     @animalia, @plantae = @taxon_concepts.partition{ |item| item.kingdom_position == 0 }
     if @output_layout == :taxonomic
        injector = Checklist::HigherTaxaInjector.new(@animalia)

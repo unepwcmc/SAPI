@@ -8,14 +8,14 @@ describe Checklist do
     before(:all) do
       @checklist = Checklist::Checklist.new({
         :output_layout => :alphabetical,
-        :synonyms => true
+        :show_synonyms => '1'
       })
-      @taxon_concepts = @checklist.taxon_concepts_rel
+      @taxon_concepts = @checklist.generate(0,100).taxon_concepts
     end
 
     it "should return Alligator cynocephalus as synonym for Caiman latirostris" do
       @caiman_latirostris = @taxon_concepts.select{ |e| e.full_name == @species.full_name }.first
-      @caiman_latirostris.synonyms_list.should == 'Alligator cynocephalus'
+      @caiman_latirostris.synonyms.should == ['Alligator cynocephalus']
     end
 
   end
