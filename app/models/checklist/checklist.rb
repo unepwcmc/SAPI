@@ -15,7 +15,7 @@ class Checklist::Checklist
     @designation = options[:designation] || Designation::CITES
 
     @taxon_concepts_rel = MTaxonConcept.scoped.
-      by_designation(@designation)
+      by_designation(@designation).without_hidden
 
     #filtering options
     @cites_regions = options[:cites_region_ids] || []
@@ -73,21 +73,21 @@ class Checklist::Checklist
 
     if @authors
       select_fields << <<-SEL
-    ARRAY(
-      SELECT synonym || 
-      CASE
-      WHEN author_year IS NOT NULL
-      THEN ' ' || author_year
-      ELSE ''
-      END
-      FROM ( 
-        (SELECT synonym, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_ary) AS synonym) q) synonyms 
-        LEFT JOIN
-        (SELECT author_year, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_author_years_ary) AS author_year) q) author_years
-        ON synonyms.id = author_years.id
-      )
-    ) AS synonyms_ary
-    SEL
+        ARRAY(
+          SELECT synonym || 
+          CASE
+          WHEN author_year IS NOT NULL
+          THEN ' ' || author_year
+          ELSE ''
+          END
+          FROM ( 
+            (SELECT synonym, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_ary) AS synonym) q) synonyms 
+            LEFT JOIN
+            (SELECT author_year, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_author_years_ary) AS author_year) q) author_years
+            ON synonyms.id = author_years.id
+          )
+        ) AS synonyms_ary
+        SEL
     else
       select_fields << :synonyms_ary
     end
@@ -121,7 +121,7 @@ class Checklist::Checklist
     per_page ||= 20
     total_cnt = @taxon_concepts_rel.count
     @taxon_concepts_rel = @taxon_concepts_rel.
-      without_nc.without_hidden.
+      without_nc.
       includes(:current_m_listing_changes)
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
 

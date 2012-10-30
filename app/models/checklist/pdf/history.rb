@@ -5,13 +5,11 @@ class Checklist::Pdf::History < Checklist::History
 
   def initialize(options={})
     @ext = 'pdf'
-
     super(options)
     @static_pdf     = [Rails.root, "/public/static_history.pdf"].join
     @attachment_pdf = [Rails.root, "/public/Historical_summary_of_CITES_annotations.pdf"].join
     @tmp_pdf        = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
     @tmp_merged_pdf = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
-
     @footnote_title_string = "History of CITES listings – <page>"
   end
 

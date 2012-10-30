@@ -1,5 +1,5 @@
 class Checklist::Index < Checklist::Checklist
-  attr_reader :download_name, :ext
+  attr_reader :download_name
 
   def initialize(options={})
     @download_path = download_location(options, "index", @ext)
