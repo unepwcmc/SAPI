@@ -122,7 +122,7 @@ class MTaxonConcept < ActiveRecord::Base
         SELECT id FROM taxon_concepts_mview
         WHERE full_name >= '#{lower}' AND full_name < '#{upper}'
       ) matches
-      ON matches.id IN (#{self.table_name}.id, genus_id, family_id, order_id, class_id, phylum_id)
+      ON matches.id IN (taxon_concepts_mview.id, family_id, order_id, class_id, phylum_id)
       SQL
     )
   }

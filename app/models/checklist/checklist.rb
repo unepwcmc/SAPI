@@ -199,7 +199,6 @@ class Checklist::Checklist
     @total_cnt = @taxon_concepts_rel.count
     @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
     @taxon_concepts = @taxon_concepts_rel.all
-    puts @taxon_concepts_rel.to_sql
     @animalia, @plantae = @taxon_concepts.partition{ |item| item.kingdom_position == 0 }
     if @output_layout == :taxonomic
        injector = Checklist::HigherTaxaInjector.new(@animalia)
