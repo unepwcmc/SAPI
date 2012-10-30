@@ -11,16 +11,18 @@ class Checklist::Index < Checklist::Checklist
     @download_name = "FullChecklist-#{Time.now}.#{@ext}"
   end
 
-  def sql_columns
-    res = super()
-    res -= [
+  def taxon_concepts_columns
+    super +
+    [:generic_annotation_parent_symbol] -
+    [:specific_annotation_symbol]
+  end
+
+  def listing_changes_columns
+    super - [
       :generic_english_full_note, :english_full_note, :english_short_note,
       :generic_spanish_full_note, :spanish_full_note, :spanish_short_note,
-      :generic_french_full_note, :french_full_note, :french_short_note,
-      :specific_annotation_symbol
+      :generic_french_full_note, :french_full_note, :french_short_note
     ]
-    res << :generic_annotation_parent_symbol
-    res
   end
 
   def prepare_main_query

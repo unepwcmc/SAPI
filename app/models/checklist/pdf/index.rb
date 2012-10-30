@@ -13,6 +13,16 @@ class Checklist::Pdf::Index < Checklist::Index
     @footnote_title_string = "CITES Species Index – <page>"
   end
 
+  def taxon_concepts_columns
+    res = super
+    res << :specific_annotation_symbol
+    res
+  end
+
+  def listing_changes_columns
+    []
+  end
+
   def prepare_kingdom_queries
     super
     @animalia_query = Checklist::Pdf::IndexQuery.new(
