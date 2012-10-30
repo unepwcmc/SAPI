@@ -12,7 +12,10 @@ module Checklist::Csv::IndexContent
     begin
       kingdom = fetcher.next
       kingdom.each do |tc|
-        entry = column_values(tc).map do |val|
+        values = taxon_concepts_csv_columns.map do |c|
+          tc.send(c)
+        end
+        entry = values.map do |val|
           val = val.map{ |s| "\"#{s}\"" }.join(', ') if val.is_a? Array
           val
         end

@@ -24,7 +24,12 @@ class TimelinesForTaxonConcept
         appendix = 'III'
       end
       current_timeline = @timelines[appendix]
-      timeline_event = TimelineEvent.new(ch.listing_attributes)
+      timeline_event = TimelineEvent.new(
+        ch.as_json(
+          :only => [:id, :change_type_name, :is_current, :parent_symbol, :party_id, :species_listing_name, :symbol],
+          :methods => [:specific_note, :generic_note, :effective_at_formatted, :countries_ids]
+        ).symbolize_keys
+      )
       timeline_event.pos = position
       party_timeline = if party &&
         ![ChangeType::ADDITION, ChangeType::DELETION].include?(ch.change_type_name)

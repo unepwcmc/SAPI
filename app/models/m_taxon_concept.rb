@@ -58,8 +58,8 @@ class MTaxonConcept < ActiveRecord::Base
   self.table_name = :taxon_concepts_mview
   self.primary_key = :id
 
-  has_many :m_listing_changes, :foreign_key => :taxon_concept_id
-  has_many :current_m_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange, :conditions => {:is_current => true}
+  has_many :listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange
+  has_many :current_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange, :conditions => {:is_current => true}
 
   scope :by_designation, lambda { |name|
     where("designation_is_#{name}".downcase => 't')
@@ -145,18 +145,10 @@ class MTaxonConcept < ActiveRecord::Base
       sym = :"#{lng.downcase}_names_ary"
       db_ary_to_array(sym)
     end
-
-    define_method("#{lng.downcase}_names_list") do
-      self.send("#{lng.downcase}_names").join(', ')
-    end
   end
 
   def synonyms
     db_ary_to_array :synonyms_ary
-  end
-
-  def synonyms_list
-    synonyms.join(', ')
   end
 
   def db_ary_to_array ary
@@ -181,6 +173,14 @@ class MTaxonConcept < ActiveRecord::Base
     end
   end
 
+  def countries_iso_codes
+    CountryDictionary.instance.get_iso_codes_by_ids(countries_ids)
+  end
+
+  def countries_full_names
+    CountryDictionary.instance.get_names_by_ids(countries_ids)
+  end
+
   def recently_changed
     return listing_updated_at > 8.year.ago
   end
@@ -196,27 +196,15 @@ class MTaxonConcept < ActiveRecord::Base
     end
   end
 
-  def current_listing_changes
-    current_m_listing_changes.map do |lc|
-      lc.listing_attributes
+  ['English', 'Spanish', 'French'].each do |lng|
+    ["generic_#{lng.downcase}_full_note", "#{lng.downcase}_full_note"].each do |method_name|
+      define_method(method_name) do
+        current_listing_changes.map do |lc|
+          note = lc.send(method_name)
+          note && "Appendix #{lc.species_listing_name}:" + note || ''
+        end.join("\n")
+      end
     end
-  end
-
-  def as_json(options={})
-
-    unless options[:only] || options[:methods]
-      options = {
-        :only =>[:id, :species_name, :genus_name, :family_name, :order_name,
-          :class_name, :phylum_name, :full_name, :rank_name, :author_year,
-          :taxonomic_position, :current_listing, :cites_accepted],
-        :methods => [
-          :spp, :recently_changed,
-          :english_names_list, :spanish_names_list, :french_names_list,
-          :synonyms_list, :countries_ids, :current_listing_changes
-        ]
-      }
-    end
-    super(options)
   end
 
 end

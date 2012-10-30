@@ -13,6 +13,8 @@ gem 'activerecord-postgres-hstore'
 gem 'awesome_nested_set'
 gem 'foreigner'
 gem 'prawn', '0.12.0'
+gem 'oj'
+gem 'jsonify'
 
 gem 'sidekiq'
 gem 'sidekiq-status'

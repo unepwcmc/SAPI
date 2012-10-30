@@ -1,8 +1,7 @@
 class TaxonConceptsController < ApplicationController
-  before_filter :extract_checklist_params
 
   def index
-    render :json => Checklist::Checklist.new(@checklist_params).
+    render :json => Checklist::Checklist.new(params).
       generate(params[:page], params[:per_page])
   end
 
@@ -44,30 +43,6 @@ class TaxonConceptsController < ApplicationController
 
   def summarise_filters
     render :text => Checklist::Checklist.new(@checklist_params).summarise_filters
-  end
-
-  private
-
-  def extract_checklist_params
-    @checklist_params = {
-      :scientific_name => params[:scientific_name] ? params[:scientific_name] : nil,
-      :country_ids => params[:country_ids] ? params[:country_ids] : nil,
-      :cites_region_ids =>
-        params[:cites_region_ids] ? params[:cites_region_ids] : nil,
-      :cites_appendices =>
-        params[:cites_appendices] ? params[:cites_appendices] : nil,
-      :output_layout =>
-        params[:output_layout] ? params[:output_layout].to_sym : nil,
-      :common_names =>
-        [
-          (params[:show_english] == '1' ? 'E' : nil),
-          (params[:show_spanish] == '1' ? 'S' : nil),
-          (params[:show_french] == '1' ? 'F' : nil)
-        ].compact,
-      :synonyms => params[:show_synonyms] == '1',
-      :authors => params[:show_author] == '1',
-      :level_of_listing => params[:level_of_listing] == '1'
-    }
   end
 
 end

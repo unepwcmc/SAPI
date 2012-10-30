@@ -1,4 +1,4 @@
-class Checklist::CountryDictionary
+class CountryDictionary
   include Singleton
 
   def initialize
@@ -10,14 +10,24 @@ class Checklist::CountryDictionary
     @dictionary = Hash[
       @collection.map { |c| [c.id, [c.name, c.iso_code2] ] }
     ]
-    puts @dictionary.inspect
   end
-  def getIsoCodeById(id)
+
+  def get_iso_code_by_id(id)
     country = @dictionary[id.to_i]
     country && country.last || nil
   end
-  def getNameById(id)
+
+  def get_name_by_id(id)
     country = @dictionary[id.to_i]
     country && country.first || nil
   end
+
+  def get_iso_codes_by_ids(ids_ary)
+    ids_ary.map { |id| get_iso_code_by_id(id) }
+  end
+
+  def get_names_by_ids(ids_ary)
+    ids_ary.map { |id| get_name_by_id(id) }
+  end
+
 end

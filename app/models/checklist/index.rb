@@ -11,9 +11,20 @@ class Checklist::Index < Checklist::Checklist
     @download_name = "FullChecklist-#{Time.now}.#{@ext}"
   end
 
+  def sql_columns
+    res = super()
+    res -= [
+      :generic_english_full_note, :english_full_note, :english_short_note,
+      :generic_spanish_full_note, :spanish_full_note, :spanish_short_note,
+      :generic_french_full_note, :french_full_note, :french_short_note,
+      :specific_annotation_symbol
+    ]
+    res << :generic_annotation_parent_symbol
+    res
+  end
+
   def prepare_main_query
     @taxon_concepts_rel = @taxon_concepts_rel.without_nc.without_hidden
-    @taxon_concepts_rel.select_values += [:generic_annotation_parent_symbol]
   end
 
   def prepare_kingdom_queries
@@ -35,7 +46,6 @@ class Checklist::Index < Checklist::Checklist
   def finalize; end
 
   def columns
-    #TODO generic annotation full symbol
     res = super + [
       :phylum_name, :class_name, :order_name, :family_name,
       :cites_accepted, :current_listing,
