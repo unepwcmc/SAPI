@@ -12,28 +12,7 @@ class Checklist::Checklist
   end
 
   def initialize_params(options)
-    #possible output layouts are:
-    #taxonomic (hierarchic, taxonomic order)
-    #alphabetical (flat, alphabetical order)
-    @output_layout = options[:output_layout] && options[:output_layout].to_sym || :alphabetical
-    @level_of_listing = (options[:level_of_listing] == '1')
-
-    #filtering options
-    @cites_regions = options[:cites_region_ids] || []
-    @countries = options[:country_ids] || []
-    @cites_appendices = options[:cites_appendices] || []
-    @scientific_name = options[:scientific_name]
-
-    # optional data
-    @synonyms = (options[:show_synonyms] == '1')
-    @authors = (options[:show_author] == '1')
-
-    @english_common_names = (options[:show_english] == '1')
-    @spanish_common_names = (options[:show_spanish] == '1')
-    @french_common_names = (options[:show_french] == '1')
-    @common_names =
-      @english_common_names || @spanish_common_names || @french_common_names
-    @locale = options[:locale] || 'en'
+    options.keys.each { |k| instance_variable_set("@#{k}", options[k]) }
   end
 
   def initialize_query
@@ -189,10 +168,9 @@ class Checklist::Checklist
   #   related metadata
   def generate(page, per_page)
     @taxon_concepts_rel = @taxon_concepts_rel.
-      joins('LEFT JOIN "listing_changes_mview"
+      joins('LEFT OUTER JOIN "listing_changes_mview"
         ON "listing_changes_mview"."taxon_concept_id" ="taxon_concepts_mview"."id"
         AND "listing_changes_mview"."is_current" = \'t\'').
-      includes(:current_listing_changes).
       without_nc.without_hidden
     page ||= 0
     per_page ||= 20

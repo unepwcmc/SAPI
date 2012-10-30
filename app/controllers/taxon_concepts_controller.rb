@@ -1,7 +1,7 @@
 class TaxonConceptsController < ApplicationController
 
   def index
-    render :json => Checklist::Checklist.new(params).
+    render :json => Checklist::Checklist.new(checklist_params).
       generate(params[:page], params[:per_page])
   end
 

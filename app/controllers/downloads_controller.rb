@@ -67,30 +67,4 @@ class DownloadsController < ApplicationController
     render :json => {error: "No downloads available"}
   end
 
-  # Returns a normalised list of parameters, with non-recognised params
-  # removed.
-  #
-  # Array parameters are sorted for caching purposes.
-  def checklist_params
-    return {
-      :scientific_name => params[:scientific_name] ? params[:scientific_name] : nil,
-      :country_ids => params[:country_ids] ? params[:country_ids].sort : nil,
-      :cites_region_ids =>
-        params[:cites_region_ids] ? params[:cites_region_ids].sort : nil,
-      :cites_appendices =>
-        params[:cites_appendices] ? params[:cites_appendices].sort : nil,
-      :output_layout =>
-        params[:output_layout] ? params[:output_layout].to_sym : nil,
-      :common_names =>
-        [
-          (params[:show_english] == '1' ? 'E' : nil),
-          (params[:show_spanish] == '1' ? 'S' : nil),
-          (params[:show_french] == '1' ? 'F' : nil)
-        ].compact.sort,
-      :synonyms => params[:show_synonyms] == '1',
-      :authors => params[:show_author] == '1',
-      :level_of_listing => params[:level_of_listing] == '1'
-    }
-  end
-
 end
