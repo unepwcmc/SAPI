@@ -10,6 +10,9 @@ SAPI::Application.routes.draw do
     :constraints => {:designation => /#{Designation::CITES}/}
   match 'timelines' => 'timelines#index'
 
+  match 'downloads/index'   => 'downloads#download_index'
+  match 'downloads/history' => 'downloads#download_history'
+
   resources :downloads do
     member do
       get :download

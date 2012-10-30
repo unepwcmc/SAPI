@@ -2,7 +2,8 @@ namespace :downloads do
   namespace :cache do
     desc "Remove all cached downloads in /public/downloads/"
     task :clear => :environment do
-      Dir["#{Rails.root}/public/downloads/*"].each do |file|
+      files = "#{Rails.root}/public/downloads/*"
+      Dir[files].each do |file|
         File.delete file
       end
     end

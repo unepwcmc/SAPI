@@ -4,12 +4,14 @@ class DownloadsController < ApplicationController
   # GET downloads/
   #
   # Lists a set of downloads for a given list of IDs
-  # TODO: if there is a current version of the download requested,
-  # ignore the requested downloaded and return the cached current
-  # version
   def index
     ids = params[:ids] || ""
     @downloads = Download.find(ids.split(","))
+
+    @downloads.map! { |v| v.attributes.except("filename", "path") }
+    @downloads.each do |v|
+      v["updated_at"] = v["updated_at"].strftime("%A, %e %b %Y %H:%M")
+    end
 
     render :json => @downloads
   end
@@ -43,6 +45,20 @@ class DownloadsController < ApplicationController
     else
       render :json => {error: "Download not processed"}
     end
+  end
+
+  def download_index
+    @download_path = Checklist::Pdf::Index.new(params).generate
+    send_file(@download_path,
+      :filename => "FullChecklist-#{Time.now}.pdf",
+      :type => "pdf")
+  end
+
+  def download_history
+    @download_path = Checklist::Pdf::History.new(params).generate
+    send_file(@download_path,
+      :filename => "ChecklistHistory-#{Time.now}.pdf",
+      :type => "pdf")
   end
 
   private
