@@ -10,7 +10,7 @@ class Checklist::ChecklistParams < Hash
       #alphabetical (flat, alphabetical order)
       :output_layout =>
         params[:output_layout] ? params[:output_layout].to_sym : nil,
-      :level_of_listing => params[:level_of_listing] == '1',
+      :level_of_listing => params[:level_of_listing] && params[:level_of_listing] != '0',
       #filtering options
       :scientific_name => params[:scientific_name] ? params[:scientific_name] : nil,
       :countries => params[:country_ids] ? params[:country_ids].sort : [],
@@ -19,14 +19,22 @@ class Checklist::ChecklistParams < Hash
       :cites_appendices =>
         params[:cites_appendices] ? params[:cites_appendices].sort : [],
       # optional data
-      :english_common_names => params[:show_english] == '1',
-      :spanish_common_names => params[:show_spanish] == '1',
-      :french_common_names => params[:show_french] == '1',
-      :synonyms => params[:show_synonyms] == '1',
-      :authors => params[:show_author] == '1',
+      :english_common_names => params[:show_english] && params[:show_english] != '0',
+      :spanish_common_names => params[:show_spanish] && params[:show_spanish] != '0',
+      :french_common_names => params[:show_french] && params[:show_french] != '0',
+      :synonyms => params[:show_synonyms] && params[:show_synonyms] != '0',
+      :authors => params[:show_authors] && params[:show_author] != '0',
       :locale => params[:locale] || 'en' #TODO this is probably redundant
     }
+    unless [:taxonomic, :alphabetical, :appendix].include? sanitized_params[:output_layout]
+      sanitized_params[:output_layout] = :alphabetical
+    end
     super(sanitized_params)
     self.merge!(sanitized_params)
   end
+
+  def self.sanitize(params)
+    new(params)
+  end
+
 end

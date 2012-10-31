@@ -1,7 +1,7 @@
 class TaxonConceptsController < ApplicationController
 
   def index
-    render :json => Checklist::Checklist.new(checklist_params).
+    render :json => Checklist::Checklist.new(params).
       generate(params[:page], params[:per_page])
   end
 
@@ -50,7 +50,7 @@ class TaxonConceptsController < ApplicationController
   end
 
   def summarise_filters
-    render :text => Checklist::Checklist.new(checklist_params).summarise_filters
+    render :text => Checklist::Checklist.new(params).summarise_filters
   end
 
   private
@@ -77,7 +77,7 @@ class TaxonConceptsController < ApplicationController
   end
 
   def send_checklist_file(klass)
-    checklist = klass.new(checklist_params)
+    checklist = klass.new(params)
     @download_path = checklist.generate
     send_file(@download_path,
       :filename => checklist.download_name,

@@ -2,13 +2,13 @@ class Checklist::Index < Checklist::Checklist
   attr_reader :download_name
 
   def initialize(options={})
-    @download_path = download_location(options, "index", @ext)
+    @download_path = download_location(options, "index", ext)
 
     if !File.exists?(@download_path)
       super(options.merge({:output_layout => :alphabetical}))
     end
 
-    @download_name = "FullChecklist-#{Time.now}.#{@ext}"
+    @download_name = "FullChecklist-#{Time.now}.#{ext}"
   end
 
   def taxon_concepts_columns

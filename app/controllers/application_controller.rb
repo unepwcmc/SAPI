@@ -5,9 +5,4 @@ class ApplicationController < ActionController::API
     I18n.locale = params[:locale]
   end
 
-private
-  def checklist_params
-    Checklist::ChecklistParams.new(params)
-  end
-
 end

@@ -4,7 +4,6 @@ class Checklist::Pdf::Index < Checklist::Index
   include Checklist::Pdf::IndexContent
 
   def initialize(options={})
-    @ext = 'pdf'
     super(options)
     @static_pdf     = [Rails.root, "/public/static_index.pdf"].join
     @attachment_pdf = [Rails.root, "/public/CITES_abbreviations_and_annotations.pdf"].join
