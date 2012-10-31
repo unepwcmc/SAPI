@@ -23,7 +23,7 @@ class Checklist::ChecklistParams < Hash
       :spanish_common_names => params[:show_spanish] && params[:show_spanish] != '0',
       :french_common_names => params[:show_french] && params[:show_french] != '0',
       :synonyms => params[:show_synonyms] && params[:show_synonyms] != '0',
-      :authors => params[:show_authors] && params[:show_author] != '0',
+      :authors => params[:show_author] && params[:show_author] != '0',
       :locale => params[:locale] || 'en' #TODO this is probably redundant
     }
     unless [:taxonomic, :alphabetical, :appendix].include? sanitized_params[:output_layout]
