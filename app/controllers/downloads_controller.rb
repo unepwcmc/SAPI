@@ -19,7 +19,7 @@ class DownloadsController < ApplicationController
   # POST downloads/
   def create
     @download = Download.create(params[:download])
-    DownloadWorker.perform_async(@download.id, checklist_params)
+    DownloadWorker.perform_async(@download.id, params)
 
     render :json => {downloads: [@download.attributes.except("filename", "path")]}
   end

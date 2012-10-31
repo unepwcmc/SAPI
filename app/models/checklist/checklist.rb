@@ -12,6 +12,7 @@ class Checklist::Checklist
   end
 
   def initialize_params(options)
+    options = Checklist::ChecklistParams.sanitize(options)
     options.keys.each { |k| instance_variable_set("@#{k}", options[k]) }
   end
 

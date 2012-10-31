@@ -2,13 +2,12 @@ class Checklist::History < Checklist::Checklist
   attr_reader :download_name
 
   def initialize(options={})
-    @download_path = download_location(options, "history", @ext)
+    @download_path = download_location(options, "history", ext)
 
     if !File.exists?(@download_path)
       super(options.merge({:output_layout => :taxonomic}))
     end
 
-    @ext = ''
     @download_name = "ChecklistHistory-#{Time.now}.#{ext}"
   end
 

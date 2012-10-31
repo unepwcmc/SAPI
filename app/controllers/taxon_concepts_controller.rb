@@ -1,8 +1,16 @@
 class TaxonConceptsController < ApplicationController
 
   def index
-    render :json => Checklist::Checklist.new(checklist_params).
+    render :json => Checklist::Checklist.new(params).
       generate(params[:page], params[:per_page])
+  end
+
+  def download_index
+    send_checklist_index_file
+  end
+
+  def download_history
+    send_checklist_history_file
   end
 
   def autocomplete
@@ -42,7 +50,39 @@ class TaxonConceptsController < ApplicationController
   end
 
   def summarise_filters
-    render :text => Checklist::Checklist.new(@checklist_params).summarise_filters
+    render :text => Checklist::Checklist.new(params).summarise_filters
+  end
+
+  private
+  def send_checklist_index_file
+    klass = if params[:format] == 'pdf'
+      Checklist::Pdf::Index
+    elsif params[:format] == 'csv'
+      Checklist::Csv::Index
+    elsif params[:format] == 'json'
+      Checklist::Json::Index
+    end
+    send_checklist_file(klass)
+  end
+
+  def send_checklist_history_file
+    klass = if params[:format] == 'pdf'
+      Checklist::Pdf::History
+    elsif params[:format] == 'csv'
+      Checklist::Csv::History
+    elsif params[:format] == 'json'
+      Checklist::Json::History
+    end
+    send_checklist_file(klass)
+  end
+
+  def send_checklist_file(klass)
+    checklist = klass.new(params)
+    @download_path = checklist.generate
+    send_file(@download_path,
+      :filename => checklist.download_name,
+      :type => checklist.ext)
+    FileUtils.rm @download_path
   end
 
 end

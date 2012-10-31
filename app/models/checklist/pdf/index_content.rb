@@ -34,9 +34,9 @@ module Checklist::Pdf::IndexContent
           res += "<sup>#{tc.specific_annotation_symbol}</sup>" unless tc.specific_annotation_symbol.blank?
           res += " #{"#{tc.family_name}".upcase}"
           res += " (#{tc.class_name})" unless tc.class_name.blank?
-          res += " (E) #{tc.english_names_list} " unless tc.english_names_list.blank?
-          res += " (S) #{tc.spanish_names_list} " unless tc.spanish_names_list.blank?
-          res += " (E) #{tc.french_names_list} " unless tc.french_names_list.blank?
+          res += " (E) #{tc.english_names.join(', ')} " unless tc.english_names.empty?
+          res += " (S) #{tc.spanish_names.join(', ')} " unless tc.spanish_names.empty?
+          res += " (E) #{tc.french_names.join(', ')} " unless tc.french_names.empty?
           res
         end
         pdf.text entry,
