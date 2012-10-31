@@ -1,0 +1,24 @@
+\documentclass[a4paper]{article}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{pdfpages}
+\usepackage{pax}
+\usepackage[none]{hyphenat}
+\usepackage[cm]{fullpage}
+\usepackage{attachfile}
+
+\begin{document}
+
+\newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
+\newcommand{\csection}[1]{\addcontentsline{toc}{section}{#1}\section*{\centering #1}}
+
+\includepdf[pages={-}]{../../public/latex/static_index.pdf}
+
+\leftskip 0.1in
+\parindent -0.1in
+
+\include{_index}
+
+\attachfile[icon=Paperclip]{../../public/latex/CITES_abbreviations_and_annotations.pdf}
+
+\end{document}

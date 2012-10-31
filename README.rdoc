@@ -10,6 +10,12 @@ packages as for Ubuntu:
 
 Redis is used for the job queue.
 
+
+LaTeX:
+  texlive
+
+pdfpages:
+  texlive-latex-recommended
 ==Installation
 
 === Gems

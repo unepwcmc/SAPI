@@ -13,6 +13,11 @@
 /tmp
 /public/system
 /public/downloads
+#LaTeX
+/public/latex/*.aux
+/public/latex/*.out
+/public/latex/*.log
+/public/latex/*.gz
 # Ruby
 /vendor/ruby
 
