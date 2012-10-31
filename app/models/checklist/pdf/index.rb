@@ -23,16 +23,20 @@ class Checklist::Pdf::Index < Checklist::Index
   end
 
   def prepare_kingdom_queries
+    options = {
+      :synonyms => @synonyms,
+      :english_common_names => @english_common_names,
+      :spanish_common_names => @spanish_common_names,
+      :french_common_names => @french_common_names
+    }
     super
     @animalia_query = Checklist::Pdf::IndexQuery.new(
       @animalia_rel,
-      @common_names,
-      @synonyms
+      options
     )
     @plantae_query = Checklist::Pdf::IndexQuery.new(
       @plantae_rel,
-      @common_names,
-      @synonyms
+      options
     )
   end
 
