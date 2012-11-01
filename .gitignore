@@ -18,6 +18,8 @@
 /public/latex/*.out
 /public/latex/*.log
 /public/latex/*.gz
+/public/latex/index.pdf
+/public/latex/history.pdf
 # Ruby
 /vendor/ruby
 

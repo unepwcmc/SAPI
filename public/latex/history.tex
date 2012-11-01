@@ -8,6 +8,7 @@
 \usepackage{attachfile}
 \usepackage[utf8]{inputenc}
 \usepackage{longtable}
+\usepackage{hyperref}
 
 \begin{document}
 
@@ -19,7 +20,21 @@
 \newcommand{\kingdomsection}[1]{\addcontentsline{toc}{part}{#1}\part*{\centering #1}}
 \newcommand{\phylumsection}[1]{\addcontentsline{toc}{section}{#1}\section*{\centering #1}}
 
-%%\includepdf[pages={-}]{../../public/latex/static_history.pdf}
+\newcommand{\footlabel}[2]{%
+    \addtocounter{footnote}{1}%
+    \footnotetext[\thefootnote]{%
+        \addtocounter{footnote}{-1}%
+        \refstepcounter{footnote}\label{#1}%
+        #2%
+    }%
+    $^{\ref{#1}}$%
+}
+
+\newcommand{\footref}[1]{%
+    $^{\ref{#1}}$%
+}
+
+\includepdf[pages={-}]{../../public/latex/static_history.pdf}
 
 \include{_history}
 
