@@ -34,7 +34,13 @@
     $^{\ref{#1}}$%
 }
 
-\includepdf[pages={-}]{../../public/latex/static_history.pdf}
+%%Command to allow for page breaks inside a table cell
+%%usage: specialcell[t]{line1\\line2\\line3} 
+%%[t]: sets the text to be vertically aligned to the top
+\newcommand{\specialcell}[2][c]{%
+  \begin{longtable}[#1]{@{}l@{}}#2\end{longtable}}
+
+%%\includepdf[pages={-}]{../../public/latex/static_history.pdf}
 
 \include{_history}
 
