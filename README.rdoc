@@ -16,6 +16,8 @@ LaTeX:
 
 pdfpages:
   texlive-latex-recommended
+  texlive-fonts-recommended
+
 ==Installation
 
 === Gems
