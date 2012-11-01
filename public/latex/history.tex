@@ -19,6 +19,12 @@
 \newcommand{\kingdomsection}[1]{\addcontentsline{toc}{part}{#1}\part*{\centering #1}}
 \newcommand{\phylumsection}[1]{\addcontentsline{toc}{section}{#1}\section*{\centering #1}}
 
+%%Command to allow for page breaks inside a table cell
+%%usage: specialcell[t]{line1\\line2\\line3} 
+%%[t]: sets the text to be vertically aligned to the top
+\newcommand{\specialcell}[2][c]{%
+  \begin{tabular}[#1]{@{}l@{}}#2\end{tabular}}
+
 %%\includepdf[pages={-}]{../../public/latex/static_history.pdf}
 
 \include{_history}
