@@ -7,21 +7,22 @@
 \usepackage[cm]{fullpage}
 \usepackage{attachfile}
 \usepackage[utf8]{inputenc}
+\usepackage{longtable}
 
 \begin{document}
 
 \renewcommand{\rmdefault}{phv}
+
 \newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
-\newcommand{\cpart}[1]{\addcontentsline{toc}{part}{#1}\part*{\centering #1}}
 \newcommand{\csection}[1]{\addcontentsline{toc}{section}{#1}\section*{\centering #1}}
 
-\includepdf[pages={-}]{../../public/latex/static_index.pdf}
-\rmfamily
-\leftskip 0.1in
-\parindent -0.1in
+\newcommand{\kingdomsection}[1]{\addcontentsline{toc}{part}{#1}\part*{\centering #1}}
+\newcommand{\phylumsection}[1]{\addcontentsline{toc}{section}{#1}\section*{\centering #1}}
 
-\include{_index}
+%%\includepdf[pages={-}]{../../public/latex/static_history.pdf}
 
-\attachfile[icon=Paperclip]{../../public/latex/CITES_abbreviations_and_annotations.pdf}
+\include{_history}
+
+\attachfile[icon=Paperclip]{../../public/latex/Historical_summary_of_CITES_annotations.pdf}
 
 \end{document}
