@@ -6,7 +6,7 @@ class Checklist::HigherTaxaInjector
     @taxon_concepts = taxon_concepts
     # fetch all higher taxa first
     higher_taxa_ids = @taxon_concepts.map do |tc|
-      [tc.kingdom_id, tc.phylum_id, tc.class_id, tc.order_id, tc.family_id]
+      [tc.phylum_id, tc.class_id, tc.order_id, tc.family_id]
     end.flatten.uniq
     @higher_taxa = Hash[
       MTaxonConcept.where(:id => higher_taxa_ids).map { |tc| [tc.id, tc] }

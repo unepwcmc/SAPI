@@ -1,11 +1,13 @@
 class Checklist::HigherTaxaItem
-  attr_reader :rank_name, :full_name, :english_names, :spanish_names, :french_names
+  attr_reader :rank_name, :full_name, :english_names, :spanish_names, :french_names,
+    :kingdom_id, :phylum_id, :class_id, :order_id, :family_id
 
   def initialize(taxon_concept)
     @item_type = 'HigherTaxa'#TODO class name would do, if as_json would work
     @taxon_concept = taxon_concept
     [
-      :rank_name, :full_name, :english_names, :spanish_names, :french_names
+      :rank_name, :full_name, :english_names, :spanish_names, :french_names,
+      :kingdom_id, :phylum_id, :class_id, :order_id, :family_id
     ].each do |attribute|
     instance_variable_set("@#{attribute}", @taxon_concept.send(attribute))
   end
