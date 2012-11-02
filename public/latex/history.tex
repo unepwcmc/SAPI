@@ -8,6 +8,7 @@
 \usepackage{attachfile}
 \usepackage[utf8]{inputenc}
 \usepackage{tabularx}
+\usepackage{longtable}
 \usepackage{hyperref}
 
 \begin{document}
@@ -33,19 +34,15 @@
     $^{\ref{#1}}$%
 }
 
-\newcommand{\tabularlisting}[1]{
-  \begin{tabularx}{\linewidth}{
-    >{\hsize=1.5\hsize}X |
-    >{\hsize=.3\hsize}X |
-    >{\hsize=.4\hsize}X |
-    >{\hsize=1.8\hsize}X
-  }
+\newcommand{\listingtable}[1]{
+  \begin{longtable}[l]{m{6cm}m{2cm}m{2cm}m{6cm}}
   #1
-  \end{tabularx}
+  \end{longtable}
 }
 
 %%\includepdf[pages={-}]{../../public/latex/static_history.pdf}
 
+\rmfamily
 \include{_history}
 
 \attachfile[icon=Paperclip]{../../public/latex/Historical_summary_of_CITES_annotations.pdf}

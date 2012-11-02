@@ -14,4 +14,13 @@ class Checklist::HigherTaxaItem
       send("#{rank.downcase}_name")
     end.join(',')
   end
+  def english_names
+    ['TODO']
+  end
+  def spanish_names
+    ['TODO']
+  end
+  def french_names
+    ['TODO']
+  end
 end

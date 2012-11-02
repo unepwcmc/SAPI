@@ -1,90 +1,116 @@
 module Checklist::Pdf::HistoryContent
 
-  def content(pdf)
+  def content(tex)
     fetcher = Checklist::Pdf::HistoryFetcher.new(@animalia_rel)
-    kingdom(pdf, fetcher, 'FAUNA')
+    kingdom(tex, fetcher, 'FAUNA')
     fetcher = Checklist::Pdf::HistoryFetcher.new(@plantae_rel)
-    kingdom(pdf, fetcher, 'FLORA')
+    kingdom(tex, fetcher, 'FLORA')
   end
 
-  def kingdom(pdf, fetcher, kingdom_name)
-    pdf.text(kingdom_name, :size => 12, :align => :center)
+  def kingdom(tex, fetcher, kingdom_name)
+    kingdom = fetcher.next
+    return if kingdom.empty?
+    tex << "\\cpart{#{kingdom_name}}\n"
     begin
-      #fetch data
-      kingdom = fetcher.next
-      listings_table = []
+      listed_taxa_ary = []
       kingdom.each do |tc|
-        #puts "#{(tc.kind_of?(Checklist::HigherTaxaItem) ? 'H' : '')} #{tc.full_name}"
-        unless listings_table.blank?
-          pdf.table(listings_table,
-            :column_widths => {0 => 142},
-            :cell_style => {:borders => [], :padding => [1,0,1,0]}
-          )
-          listings_table = []
-        end
         if tc.kind_of? Checklist::HigherTaxaItem
-          if tc.rank_name == 'PHYLUM'
-            pdf.text "<b>#{tc.full_name.upcase}</b>",
-              :size => 16,
-              :align => :center,
-              :inline_format => true
-          elsif tc.rank_name == 'CLASS'
-            pdf.pad(20){
-              pdf.text "<b><u>#{tc.full_name.upcase}</u></b>",
-              :size => 12,
-              :inline_format => true
-            }
-          elsif ['ORDER','FAMILY'].include? tc.rank_name
-            pdf.pad(10){
-                pdf.formatted_text [
-                {
-                  :text => tc.full_name.upcase,
-                  :styles => [:bold],
-                  :size => 10
-                },
-                {
-                  :text =>
-                  (tc.english_names_list.blank? ? '' : "(E) #{tc.english_names_list} ") },
-                {
-                  :text =>
-                  (tc.spanish_names_list.blank? ? '' : "(S) #{tc.spanish_names_list} ") },
-                {
-                  :text =>
-                  (tc.french_names_list.blank? ? '' : "(F) #{tc.french_names_list} ") }
-              ]
-            }
+          unless listed_taxa_ary.empty?
+            listed_taxa(tex, listed_taxa_ary)
+            listed_taxa_ary = []
           end
+          higher_taxa(tex, tc)
         else
-          listings_subtable = pdf.make_table(tc.listing_changes.map do |lh|
-            [
-              "#{lh.species_listing_name}#{
-                if lh.change_type_name == ChangeType::RESERVATION
-                  '/r'
-                elsif lh.change_type_name == ChangeType::RESERVATION_WITHDRAWAL
-                  '/w'
-                elsif lh.change_type_name == ChangeType::DELETION
-                  'Del'
-                else
-                  nil
-                end
-              }",
-              "#{lh.party_name}".upcase,
-              "#{lh.effective_at ? lh.effective_at.strftime("%d/%m/%y") : nil}",
-              "#{[lh.english_full_note, lh.spanish_full_note, lh.french_full_note].compact.join("\n")}".gsub(/NULL/,'')
-            ]
-          end,
-            {
-              :column_widths => [27, 24, 45, 243],
-              :cell_style => {:borders => [], :padding => [1,0,1,0]}
-            }
-          )
-
-          listings_table << [
-            pdf.make_cell(:content => "<i>#{tc.full_name}</i>", :inline_format => true),
-            listings_subtable
-          ]
+          listed_taxa_ary << tc
         end
       end
+      unless listed_taxa_ary.empty?
+        listed_taxa(tex, listed_taxa_ary)
+        listed_taxa_ary = []
+      end
+      kingdom = fetcher.next
     end while not kingdom.empty?
   end
+
+  def higher_taxa(tex, taxon_concept)
+    if taxon_concept.rank_name == 'PHYLUM'
+      tex << "\\csection{#{taxon_concept.full_name.upcase}}\n"
+    elsif taxon_concept.rank_name == 'CLASS'
+      tex << "\\section*{#{taxon_concept.full_name.upcase}}\n"
+    elsif ['ORDER','FAMILY'].include? taxon_concept.rank_name
+      tex << "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names_str(taxon_concept)}}\n"
+    end
+  end
+
+  def listed_taxa(tex, listed_taxa_ary)
+    tex << "\\listingtable{"
+    rows = []
+    listed_taxa_ary.each do |tc|
+      is_tc_row = true #it is the first row per taxon concept
+      tc.listing_changes.each do |lc|
+        is_lc_row = true #it is the first row per listing change
+        multilingual_annotations(lc).each do |ann|
+          row = []
+          # tc fields
+          row << (is_tc_row ? tc.full_name : '')
+          is_tc_row = false
+          # lc fields
+          row << (is_lc_row ? species_listing_str(lc) : '')
+          row << (is_lc_row ? lc.effective_at_formatted : '')
+          is_lc_row = false
+          # ann fields
+          row << ann
+          rows << row.join(' & ')
+        end
+      end
+    end
+    tex << rows.join("\\\\\n")
+    tex << "}"
+  end
+
+  def species_listing_str(listing_change)
+    "#{listing_change.species_listing_name}#{
+      if listing_change.change_type_name == ChangeType::RESERVATION
+        '/r'
+      elsif listing_change.change_type_name == ChangeType::RESERVATION_WITHDRAWAL
+        '/w'
+      elsif listing_change.change_type_name == ChangeType::DELETION
+        'Del'
+      else
+        nil
+      end
+    }"
+  end
+
+  def common_names_str(taxon_concept)#TODO
+    res = ''
+    if @english_common_names && !taxon_concept.english_names.empty?
+      res << taxon_concept.english_names.join(', ')
+    end
+    if @spanish_common_names && !taxon_concept.spanish_names.empty?
+      res << taxon_concept.spanish_names.join(', ')
+    end
+    if @french_common_names && !taxon_concept.french_names.empty?
+      res << taxon_concept.french_names.join(', ')
+    end
+    res
+  end
+
+  def multilingual_annotations(listing_change)
+    ['english', 'spanish', 'french'].map do |lng|
+      if instance_variable_get("@#{lng}_common_names")
+        full_note = listing_change.send("#{lng}_full_note")
+        short_note = listing_change.send("#{lng}_short_note")
+        annotation = if full_note && short_note
+          "\\footnote{#{full_note}} #{short_note}"
+        elsif full_note
+          full_note
+        end
+        LatexToPdf.escape_latex annotation
+      else
+        nil
+      end
+    end.compact
+  end
+
 end

@@ -5,10 +5,7 @@ class Checklist::Pdf::Index < Checklist::Index
 
   def initialize(options={})
     super(options)
-    @static_pdf     = [Rails.root, "/public/static_index.pdf"].join
-    @attachment_pdf = [Rails.root, "/public/CITES_abbreviations_and_annotations.pdf"].join
-    @tmp_pdf        = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
-    @tmp_merged_pdf = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
+    @input_name = 'index'
     @footnote_title_string = "CITES Species Index – <page>"
   end
 

@@ -10,10 +10,9 @@ module Checklist::Pdf::IndexContent
   def kingdom(tex, fetcher, kingdom_name)
     kingdom = fetcher.next
     return if kingdom.empty?
-    tex << "\\csection{#{kingdom_name}}\n"
+    tex << "\\cpart{#{kingdom_name}}\n"
     tex << "\\begin{multicols}{2}{" #start multicols
     begin
-      
       kingdom.each do |tc|
         entry = 
         if tc.read_attribute(:name_type) == 'synonym'

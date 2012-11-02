@@ -5,20 +5,8 @@ class Checklist::Pdf::History < Checklist::History
 
   def initialize(options={})
     super(options)
-    @static_pdf     = [Rails.root, "/public/static_history.pdf"].join
-    @attachment_pdf = [Rails.root, "/public/Historical_summary_of_CITES_annotations.pdf"].join
-    @tmp_pdf        = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
-    @tmp_merged_pdf = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
+    @input_name = 'history'
     @footnote_title_string = "History of CITES listings – <page>"
-  end
-
-  def prepare_main_query
-    @taxon_concepts_rel = @taxon_concepts_rel.where("cites_listed = 't'").
-      includes(:listing_changes).
-      where("NOT (listing_changes_mview.change_type_name = 'DELETION' " +
-        "AND listing_changes_mview.species_listing_name IS NOT NULL " +
-        "AND listing_changes_mview.party_name IS NULL)"
-      )
   end
 
 end
