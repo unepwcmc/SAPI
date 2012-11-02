@@ -21,7 +21,7 @@ class DownloadsController < ApplicationController
     @download = Download.create(params[:download])
     DownloadWorker.perform_async(@download.id, params)
 
-    render :json => {downloads: [@download.attributes.except("filename", "path")]}
+    render :json => @download.attributes.except("filename", "path")
   end
 
   # GET downloads/:id/
@@ -48,14 +48,26 @@ class DownloadsController < ApplicationController
   end
 
   def download_index
-    @download_path = Checklist::Pdf::Index.new(params).generate
+    download_module = {
+      "pdf" => Checklist::Pdf,
+      "csv" => Checklist::Csv,
+      "json" => Checklist::Json
+    }
+
+    @download_path = download_module[params[:format]]::Index.new(params).generate
     send_file(@download_path,
       :filename => "FullChecklist-#{Time.now}.pdf",
       :type => "pdf")
   end
 
   def download_history
-    @download_path = Checklist::Pdf::History.new(params).generate
+    download_module = {
+      "pdf" => Checklist::Pdf,
+      "csv" => Checklist::Csv,
+      "json" => Checklist::Json
+    }
+
+    @download_path = download_module[params[:format]]::History.new(params).generate
     send_file(@download_path,
       :filename => "ChecklistHistory-#{Time.now}.pdf",
       :type => "pdf")
