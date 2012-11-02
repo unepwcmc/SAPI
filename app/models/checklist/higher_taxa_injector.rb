@@ -1,5 +1,8 @@
 class Checklist::HigherTaxaInjector
-  def initialize(taxon_concepts)
+  attr_reader :last_seen_id
+  # last_seen_id can be used to pass the id of lat higher taxon added
+  # so that the injector does not repeat higher taxa headers across fetches
+  def initialize(taxon_concepts, skip_id=nil)
     @taxon_concepts = taxon_concepts
     # fetch all higher taxa first
     higher_taxa_ids = @taxon_concepts.map do |tc|
@@ -8,6 +11,7 @@ class Checklist::HigherTaxaInjector
     @higher_taxa = Hash[
       MTaxonConcept.where(:id => higher_taxa_ids).map { |tc| [tc.id, tc] }
     ]
+    @skip_id = skip_id
   end
 
   def run
@@ -63,8 +67,9 @@ class Checklist::HigherTaxaInjector
       higher_bound = (rank_idx > header_ranks - 1 ? header_ranks - 1 : rank_idx)
       higher_bound.downto lower_bound do |k|
         higher_taxon_id = curr_item.send("#{ranks[k].downcase}_id")
+        @last_seen_id = higher_taxon_id
         higher_taxon = @higher_taxa[higher_taxon_id]
-        if higher_taxon
+        if higher_taxon && higher_taxon.id != @skip_id
           hti = Checklist::HigherTaxaItem.new(higher_taxon)
           res << hti
         end
