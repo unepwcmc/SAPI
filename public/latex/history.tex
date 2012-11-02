@@ -33,7 +33,16 @@
     $^{\ref{#1}}$%
 }
 
-
+\newcommand{\tabularlisting}[1]{
+  \begin{tabularx}{\linewidth}{
+    >{\hsize=1.5\hsize}X |
+    >{\hsize=.3\hsize}X |
+    >{\hsize=.4\hsize}X |
+    >{\hsize=1.8\hsize}X
+  }
+  #1
+  \end{tabularx}
+}
 
 %%\includepdf[pages={-}]{../../public/latex/static_history.pdf}
 
