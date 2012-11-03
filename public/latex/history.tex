@@ -7,9 +7,14 @@
 \usepackage[cm]{fullpage}
 \usepackage{attachfile}
 \usepackage[utf8]{inputenc}
-\usepackage{tabularx}
 \usepackage{longtable}
 \usepackage{hyperref}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyfoot{}
+\fancyfoot[C]{History of CITES listings – \thepage}
+\renewcommand{\headrulewidth}{0pt}
 
 \begin{document}
 
@@ -35,12 +40,12 @@
 }
 
 \newcommand{\listingtable}[1]{
-  \begin{longtable}[t]{p{6cm}p{2cm}p{2cm}p{6cm}}
+  \begin{longtable}[t]{p{5cm}p{0.5cm}p{0.5cm}p{1.5cm}p{8.5cm}}
   #1
   \end{longtable}
 }
 
-%%\includepdf[pages={-}]{../../public/latex/static_history.pdf}
+\includepdf[pages={-}]{../../public/latex/static_history.pdf}
 
 \rmfamily
 \include{_history}

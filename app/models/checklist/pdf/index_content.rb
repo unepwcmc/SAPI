@@ -21,22 +21,11 @@ module Checklist::Pdf::IndexContent
         elsif tc.read_attribute(:name_type) == 'common'
           "#{tc.sort_name} (#{tc.lng.upcase}): \\textit{#{tc.full_name}}"
         else
-          res = if ['FAMILY','ORDER','CLASS'].include? tc.rank_name
-            tc.full_name.upcase
-          else
-            tc.full_name
-          end
-          res = "\\textit{#{res}}" if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? tc.rank_name
-          res = "#{res} #{tc.spp}"
-          res = "\\textbf{#{res}}" if tc.cites_accepted
-          res += " #{tc.generic_annotation_symbol}" unless tc.generic_annotation_symbol.blank?
-          res += " \\textbf{#{tc.current_listing}} "
-          res += "\\superscript{#{tc.specific_annotation_symbol}}" unless tc.specific_annotation_symbol.blank?
+          res = listed_taxon_name(tc)
+          res += current_listing_with_annotations(tc)
           res += " #{"#{tc.family_name}".upcase}"
           res += " (#{tc.class_name})" unless tc.class_name.blank?
-          res += " (E) #{tc.english_names.join(', ')} " unless !tc.english_names_ary? || tc.english_names.empty?
-          res += " (S) #{tc.spanish_names.join(', ')} " unless !tc.spanish_names_ary? || tc.spanish_names.empty?
-          res += " (E) #{tc.french_names.join(', ')} " unless !tc.french_names_ary? || tc.french_names.empty?
+          res += common_names_with_lng_initials(tc)
           res
         end
         tex << entry + "\n\n"
@@ -44,6 +33,46 @@ module Checklist::Pdf::IndexContent
       kingdom = fetcher.next
     end while not kingdom.empty?
     tex << '}\\end{multicols}' #end multicols
+  end
+
+  def listed_taxon_name(taxon_concept)
+    res = if ['FAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
+      taxon_concept.full_name.upcase
+    else
+      if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? taxon_concept.rank_name
+        "\\textit{#{taxon_concept.full_name}}"
+      else
+        taxon_concept.full_name
+      end
+    end
+    res += " #{taxon_concept.spp}" if taxon_concept.spp
+    res = "\\textbf{#{res}}" if taxon_concept.cites_accepted
+    res
+  end
+
+  def current_listing_with_annotations(taxon_concept)
+    res = " \\textbf{#{taxon_concept.current_listing}} "
+    unless taxon_concept.generic_annotation_symbol.blank?
+      res = " #{taxon_concept.generic_annotation_symbol}#{res}"
+    end
+    unless taxon_concept.specific_annotation_symbol.blank?
+      res += "\\superscript{#{taxon_concept.specific_annotation_symbol}}"
+    end
+    res
+  end
+
+  def common_names_with_lng_initials(taxon_concept)
+    res = ''
+    unless !@english_common_names || taxon_concept.english_names.empty?
+      res += " (E) #{taxon_concept.english_names.join(', ')} "
+    end
+    unless !@spanish_common_names || taxon_concept.spanish_names.empty?
+      res += " (S) #{taxon_concept.spanish_names.join(', ')} "
+    end
+    unless !@french_common_names || taxon_concept.french_names.empty?
+      res += " (E) #{taxon_concept.french_names.join(', ')} "
+    end
+    res
   end
 
 end

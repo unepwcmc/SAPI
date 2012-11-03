@@ -6,7 +6,6 @@ class Checklist::Pdf::History < Checklist::History
   def initialize(options={})
     super(options)
     @input_name = 'history'
-    @footnote_title_string = "History of CITES listings – <page>"
   end
 
 end

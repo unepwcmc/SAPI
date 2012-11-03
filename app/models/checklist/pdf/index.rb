@@ -6,7 +6,6 @@ class Checklist::Pdf::Index < Checklist::Index
   def initialize(options={})
     super(options)
     @input_name = 'index'
-    @footnote_title_string = "CITES Species Index – <page>"
   end
 
   def taxon_concepts_columns

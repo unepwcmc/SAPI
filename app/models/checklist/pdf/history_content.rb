@@ -19,7 +19,7 @@ module Checklist::Pdf::HistoryContent
             listed_taxa(tex, listed_taxa_ary)
             listed_taxa_ary = []
           end
-          higher_taxa(tex, tc)
+          tex << higher_taxon_name(tc)
         else
           listed_taxa_ary << tc
         end
@@ -32,30 +32,22 @@ module Checklist::Pdf::HistoryContent
     end while not kingdom.empty?
   end
 
-  def higher_taxa(tex, taxon_concept)
-    if taxon_concept.rank_name == 'PHYLUM'
-      tex << "\\csection{#{taxon_concept.full_name.upcase}}\n"
-    elsif taxon_concept.rank_name == 'CLASS'
-      tex << "\\section*{#{taxon_concept.full_name.upcase}}\n"
-    elsif ['ORDER','FAMILY'].include? taxon_concept.rank_name
-      tex << "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names_str(taxon_concept)}}\n"
-    end
-  end
-
   def listed_taxa(tex, listed_taxa_ary)
     tex << "\\listingtable{"
     rows = []
     listed_taxa_ary.each do |tc|
+      listed_taxon_name = listed_taxon_name(tc)
       is_tc_row = true #it is the first row per taxon concept
       tc.listing_changes.each do |lc|
         is_lc_row = true #it is the first row per listing change
         multilingual_annotations(lc).each do |ann|
           row = []
           # tc fields
-          row << (is_tc_row ? tc.full_name : '')
+          row << (is_tc_row ? listed_taxon_name : '')
           is_tc_row = false
           # lc fields
-          row << (is_lc_row ? species_listing_str(lc) : '')
+          row << (is_lc_row ? listing_with_change_type(lc) : '')
+          row << (is_lc_row && lc.party_name ? lc.party_name.upcase : '')
           row << (is_lc_row ? lc.effective_at_formatted : '')
           is_lc_row = false
           # ann fields
@@ -68,7 +60,7 @@ module Checklist::Pdf::HistoryContent
     tex << "}"
   end
 
-  def species_listing_str(listing_change)
+  def listing_with_change_type(listing_change)
     "#{listing_change.species_listing_name}#{
       if listing_change.change_type_name == ChangeType::RESERVATION
         '/r'
@@ -82,16 +74,16 @@ module Checklist::Pdf::HistoryContent
     }"
   end
 
-  def common_names_str(taxon_concept)#TODO
+  def common_names_with_lng_initials(taxon_concept)
     res = ''
-    if @english_common_names && !taxon_concept.english_names.empty?
-      res << taxon_concept.english_names.join(', ')
+    unless !@english_common_names || taxon_concept.english_names.empty?
+      res += " (E) #{taxon_concept.english_names.join(', ')} "
     end
-    if @spanish_common_names && !taxon_concept.spanish_names.empty?
-      res << taxon_concept.spanish_names.join(', ')
+    unless !@spanish_common_names || taxon_concept.spanish_names.empty?
+      res += " (S) #{taxon_concept.spanish_names.join(', ')} "
     end
-    if @french_common_names && !taxon_concept.french_names.empty?
-      res << taxon_concept.french_names.join(', ')
+    unless !@french_common_names || taxon_concept.french_names.empty?
+      res += " (E) #{taxon_concept.french_names.join(', ')} "
     end
     res
   end
@@ -106,11 +98,34 @@ module Checklist::Pdf::HistoryContent
         elsif full_note
           full_note
         end
-        LatexToPdf.escape_latex annotation
+        annotation && LatexToPdf.escape_latex(annotation) || nil
       else
         nil
       end
     end.compact
+  end
+
+  def listed_taxon_name(taxon_concept)
+    res = if ['FAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
+      taxon_concept.full_name.upcase
+    else
+      taxon_concept.full_name
+    end
+    if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? taxon_concept.rank_name
+      res = "\\textit{#{res}}"
+    end
+    res += " #{taxon_concept.spp}" if taxon_concept.spp
+    res
+  end
+
+  def higher_taxon_name(taxon_concept)
+    if taxon_concept.rank_name == 'PHYLUM'
+      "\\csection{#{taxon_concept.full_name.upcase}}\n"
+    elsif taxon_concept.rank_name == 'CLASS'
+      "\\section*{#{taxon_concept.full_name.upcase}}\n"
+    elsif ['ORDER','FAMILY'].include? taxon_concept.rank_name
+      "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names_with_lng_initials(taxon_concept)}}\n"
+    end
   end
 
 end
