@@ -1,3 +1,6 @@
+# TODO replace rank name strings with constants from the Rank model
+# or better yet, define methods such as "ranks_below_family"
+# in the rank class to clean up the code here
 module Checklist::Pdf::IndexContent
 
   def content(tex)
@@ -23,8 +26,10 @@ module Checklist::Pdf::IndexContent
         else
           res = listed_taxon_name(tc)
           res += current_listing_with_annotations(tc)
-          res += " #{"#{tc.family_name}".upcase}"
-          res += " (#{tc.class_name})" unless tc.class_name.blank?
+          if ['SPECIES', 'SUBSPECIES', 'GENUS', 'FAMILY'].include? tc.rank_name
+            res += " #{"#{tc.family_name}".upcase}" if tc.rank_name != 'FAMILY'
+            res += " (#{tc.class_name})" unless tc.class_name.blank?
+          end
           res += common_names_with_lng_initials(tc)
           res
         end
