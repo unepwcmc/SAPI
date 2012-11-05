@@ -1,7 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    Ascii85 (1.0.1)
     actionmailer (3.2.7)
       actionpack (= 3.2.7)
       mail (~> 2.4.4)
@@ -116,15 +115,9 @@ GEM
       net-ssh (>= 1.99.1)
     newrelic_rpm (3.4.2.1)
     oj (1.4.3)
-    pdf-reader (1.1.1)
-      Ascii85 (~> 1.0.0)
-      ruby-rc4
     pg (0.14.0)
     pg_array_parser (0.0.1)
     polyglot (0.3.3)
-    prawn (0.12.0)
-      pdf-reader (>= 0.9.0)
-      ttfunk (~> 1.0.2)
     rack (1.4.1)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -187,7 +180,6 @@ GEM
       columnize (>= 0.3.1)
       linecache19 (>= 0.5.11)
       ruby-debug-base19 (>= 0.11.19)
-    ruby-rc4 (0.1.5)
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
     sidekiq (2.4.0)
@@ -208,7 +200,6 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
-    ttfunk (1.0.3)
     tzinfo (0.3.33)
     whenever (0.7.3)
       activesupport (>= 2.3.4)
@@ -237,7 +228,6 @@ DEPENDENCIES
   oj
   pg
   pg_array_parser
-  prawn (= 0.12.0)
   rack-cors
   rack-livereload
   rails (= 3.2.7)

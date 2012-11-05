@@ -55,7 +55,7 @@ class Checklist::Checklist
       :full_name, :rank_name,
       :current_listing, :cites_accepted, :listing_updated_at,
       :specific_annotation_symbol, :generic_annotation_symbol,
-      :"taxon_concepts_mview.countries_ids_ary",
+      :"taxon_concepts_mview.countries_ids_ary AS tc_countries_ids_ary",
       :kingdom_position, :taxonomic_position
     ]
 
@@ -95,7 +95,7 @@ class Checklist::Checklist
     sql_columns = [
       :change_type_name, :species_listing_name,
       :party_id, :party_name, :effective_at, :is_current,
-      :"listing_changes_mview.countries_ids_ary"
+      :"listing_changes_mview.countries_ids_ary AS lc_countries_ids_ary"
     ]
     if @locale == 'en'
       sql_columns +=
