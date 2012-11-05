@@ -15,8 +15,10 @@ LaTeX:
   texlive
 
 pdfpages:
-  texlive-latex-recommended
-  texlive-fonts-recommended
+  - texlive
+  - texlive-full
+  - texlive-latex-recommended
+  - texlive-fonts-recommended
 
 ==Installation
 
