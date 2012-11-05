@@ -10,7 +10,8 @@ class DownloadWorker
     begin
       format_modules = {
         'pdf' => Checklist::Pdf,
-        'csv' => Checklist::Csv
+        'csv' => Checklist::Csv,
+        'json' => Checklist::Json
       }
 
       format_module = format_modules[@download.format]
