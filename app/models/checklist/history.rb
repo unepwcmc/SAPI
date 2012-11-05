@@ -32,7 +32,15 @@ class Checklist::History < Checklist::Checklist
       where("NOT (listing_changes_mview.change_type_name = 'DELETION' " +
         "AND listing_changes_mview.species_listing_name IS NOT NULL " +
         "AND listing_changes_mview.party_name IS NULL)"
-      )
+      ).order <<-SQL
+      taxon_concept_id, effective_at,
+      CASE
+        WHEN change_type_name = 'ADDITION' THEN 0
+        WHEN change_type_name = 'RESERVATION' THEN 1
+        WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
+        WHEN change_type_name = 'DELETION' THEN 3
+      END
+      SQL
   end
 
   def generate

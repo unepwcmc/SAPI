@@ -166,8 +166,10 @@ class MTaxonConcept < ActiveRecord::Base
   end
 
   def countries_ids
-    if respond_to?(:countries_ids_ary)
+    if respond_to?(:countries_ids_ary) && countries_ids_ary?
       parse_pg_array(countries_ids_ary || '').compact
+    elsif respond_to? :tc_countries_ids_ary
+      parse_pg_array(tc_countries_ids_ary || '').compact
     else
       []
     end

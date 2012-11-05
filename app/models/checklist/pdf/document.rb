@@ -1,49 +1,25 @@
-require "prawn/measurement_extensions"
-require Rails.root.join("lib/modules/pdf.rb")
 module Checklist::Pdf::Document
-  include PDF
 
   def ext
     'pdf'
   end
 
   def document
-    @tmp_pdf    = [Rails.root, "/tmp/", SecureRandom.hex(8), '.pdf'].join
-    Prawn::Document.new(:page_size => 'A4', :margin => 2.send(:cm)) do |pdf|
-      pdf.default_leading 0
-      pdf.font_size 9
-      pdf.go_to_page(pdf.page_count)
-
-      yield(pdf)
-
-      # Add summary line
-      summary = summarise_filters
-      pdf.repeat :all do
-        pdf.bounding_box [pdf.bounds.left, pdf.bounds.top + 20], :width  => pdf.bounds.width do
-            pdf.text summary, :align => :center, :size => 8
-            pdf.stroke_horizontal_rule
-        end
-      end
-
-      #add page numbers
-      options = {
-        :at => [pdf.bounds.right / 2 - 75, -30],
-        :width => 150,
-        :align => :center,
-        :start_count_at => get_page_count(@static_pdf) - 2, # Ignore the first two cover pages
-      }
-      pdf.number_pages @footnote_title_string, options
-
-      pdf.render_file @tmp_pdf
+    # create directory for intermediate files
+    tmp_dir_path = [Rails.root, "/tmp/", SecureRandom.hex(8)].join
+    FileUtils.mkdir tmp_dir_path
+    # copy the template to intermediate directory
+    FileUtils.cp [Rails.root, "/public/latex/", "#{@input_name}.tex"].join, tmp_dir_path
+    @template_tex = [tmp_dir_path, "/#{@input_name}.tex"].join
+    @tmp_tex    = [tmp_dir_path, "/_#{@input_name}.tex"].join
+    # create the dynamic part
+    File.open(@tmp_tex, "wb") do |tex|
+      yield tex
     end
-
-    merge_pdfs(@tmp_merged_pdf, @static_pdf, @tmp_pdf)
-    attach_pdfs(@download_path, @tmp_merged_pdf, @attachment_pdf)
-  end
-
-  def finalize
-    FileUtils.rm @tmp_pdf
-    FileUtils.rm @tmp_merged_pdf
+    output = LatexToPdf.generate_pdf_from_file(tmp_dir_path, @input_name)
+    #save output at download path
+    FileUtils.cp output, @download_path
+    FileUtils.rm_rf(tmp_dir_path)
   end
 
 end

@@ -1,0 +1,55 @@
+\documentclass[a4paper]{article}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{pdfpages}
+\usepackage{pax}
+\usepackage[none]{hyphenat}
+\usepackage[cm]{fullpage}
+\usepackage{attachfile}
+\usepackage[utf8]{inputenc}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyfoot{}
+\fancyfoot[C]{History of CITES listings – \thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\begin{document}
+
+\renewcommand{\rmdefault}{phv}
+
+\newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
+
+\newcommand{\cpart}[1]{\addcontentsline{toc}{part}{#1}\part*{\centering #1}}
+\newcommand{\csection}[1]{\addcontentsline{toc}{section}{#1}\section*{\centering #1}}
+
+\newcommand{\footlabel}[2]{%
+    \addtocounter{footnote}{1}%
+    \footnotetext[\thefootnote]{%
+        \addtocounter{footnote}{-1}%
+        \refstepcounter{footnote}\label{#1}%
+        #2%
+    }%
+    $^{\ref{#1}}$%
+}
+
+\newcommand{\footref}[1]{%
+    $^{\ref{#1}}$%
+}
+
+\newcommand{\listingtable}[1]{
+  \begin{longtable}[t]{p{5cm}p{0.5cm}p{0.5cm}p{1.5cm}p{8.5cm}}
+  #1
+  \end{longtable}
+}
+
+\includepdf[pages={-}]{../../public/latex/static_history.pdf}
+
+\rmfamily
+\include{_history}
+
+\attachfile[icon=Paperclip]{../../public/latex/Historical_summary_of_CITES_annotations.pdf}
+
+\end{document}
