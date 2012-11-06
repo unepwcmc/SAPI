@@ -94,28 +94,32 @@ module Checklist::Pdf::HistoryContent
   def multilingual_annotations(listing_change)
     res = ['english', 'spanish', 'french'].map do |lng|
       if instance_variable_get("@#{lng}_common_names")
-        full_note = listing_change.send("#{lng}_full_note")
-        annotation = if !full_note.blank?
-          full_note = LatexToPdf.escape_latex(
-            full_note.force_encoding('UTF-8')
-          )
-          short_note = listing_change.send("#{lng}_short_note")
-          if !short_note.blank?
-            short_note = LatexToPdf.escape_latex(
-              short_note.force_encoding('UTF-8')
-            )
-            "\\footnote{#{full_note}} #{short_note}"
-          else
-            full_note
-          end
-        else
-          nil
-        end
+        annotation_for_language(listing_change, lng)
       else
         nil
       end
     end.compact
     (res.empty? ? [nil] : res)
+  end
+
+  def annotation_for_language(listing_change, lng)
+    full_note = listing_change.send("#{lng}_full_note")
+    if !full_note.blank?
+      full_note = LatexToPdf.escape_latex(
+        full_note.force_encoding('UTF-8')
+      )
+      short_note = listing_change.send("#{lng}_short_note")
+      if !short_note.blank?
+        short_note = LatexToPdf.escape_latex(
+          short_note.force_encoding('UTF-8')
+        )
+        "\\footnote{#{full_note}} #{short_note}"
+      else
+        full_note
+      end
+    else
+      nil
+    end
   end
 
   def listed_taxon_name(taxon_concept)
