@@ -6,7 +6,9 @@
 \usepackage[none]{hyphenat}
 \usepackage[cm]{fullpage}
 \usepackage{attachfile}
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{lmodern}
 \usepackage{longtable}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
@@ -39,8 +41,14 @@
     $^{\ref{#1}}$%
 }
 
-\newcommand{\listingtable}[1]{
+\newcommand{\listingtablefauna}[1]{
   \begin{longtable}[t]{p{5cm}p{0.5cm}p{0.5cm}p{1.5cm}p{8.5cm}}
+  #1
+  \end{longtable}
+}
+
+\newcommand{\listingtableflora}[1]{
+  \begin{longtable}[t]{p{4.4cm}p{0.4cm}p{0.4cm}p{1.4cm}p{1.4cm}p{8cm}}
   #1
   \end{longtable}
 }

@@ -16,7 +16,7 @@ module Checklist::Pdf::HistoryContent
       kingdom.each do |tc|
         if tc.kind_of? Checklist::HigherTaxaItem
           unless listed_taxa_ary.empty?
-            listed_taxa(tex, listed_taxa_ary)
+            listed_taxa(tex, listed_taxa_ary, kingdom_name)
             listed_taxa_ary = []
           end
           tex << higher_taxon_name(tc)
@@ -25,15 +25,15 @@ module Checklist::Pdf::HistoryContent
         end
       end
       unless listed_taxa_ary.empty?
-        listed_taxa(tex, listed_taxa_ary)
+        listed_taxa(tex, listed_taxa_ary, kingdom_name)
         listed_taxa_ary = []
       end
       kingdom = fetcher.next
     end while not kingdom.empty?
   end
 
-  def listed_taxa(tex, listed_taxa_ary)
-    tex << "\\listingtable{"
+  def listed_taxa(tex, listed_taxa_ary, kingdom_name='FAUNA')
+    tex << "\\listingtable#{kingdom_name.downcase}{"
     rows = []
     listed_taxa_ary.each do |tc|
       listed_taxon_name = listed_taxon_name(tc)
@@ -49,6 +49,9 @@ module Checklist::Pdf::HistoryContent
           row << (is_lc_row ? listing_with_change_type(lc) : '')
           row << (is_lc_row && lc.party_name ? lc.party_name.upcase : '')
           row << (is_lc_row ? lc.effective_at_formatted : '')
+          if kingdom_name == 'FLORA'
+            row << (is_lc_row ? "#{LatexToPdf.escape_latex(lc.symbol)}#{lc.parent_symbol}" : '')
+          end
           is_lc_row = false
           # ann fields
           row << ann
@@ -92,13 +95,22 @@ module Checklist::Pdf::HistoryContent
     res = ['english', 'spanish', 'french'].map do |lng|
       if instance_variable_get("@#{lng}_common_names")
         full_note = listing_change.send("#{lng}_full_note")
-        short_note = listing_change.send("#{lng}_short_note")
-        annotation = if full_note && short_note
-          "\\footnote{#{full_note}} #{short_note}"
-        elsif full_note
-          full_note
+        annotation = if !full_note.blank?
+          full_note = LatexToPdf.escape_latex(
+            full_note.force_encoding('UTF-8')
+          )
+          short_note = listing_change.send("#{lng}_short_note")
+          if !short_note.blank?
+            short_note = LatexToPdf.escape_latex(
+              short_note.force_encoding('UTF-8')
+            )
+            "\\footnote{#{full_note}} #{short_note}"
+          else
+            full_note
+          end
+        else
+          nil
         end
-        annotation && LatexToPdf.escape_latex(annotation) || nil
       else
         nil
       end
