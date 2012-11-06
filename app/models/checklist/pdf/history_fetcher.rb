@@ -5,7 +5,7 @@ class Checklist::Pdf::HistoryFetcher < Checklist::HistoryFetcher
   end
   def next
     results = super
-    injector = Checklist::HigherTaxaInjector.new(results, @last_seen_id)
+    injector = Checklist::HigherTaxaInjector.new(results, @last_seen_id, true)
     res = injector.run
     @last_seen_id = injector.last_seen_id
     res
