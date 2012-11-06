@@ -89,7 +89,7 @@ module Checklist::Pdf::HistoryContent
   end
 
   def multilingual_annotations(listing_change)
-    ['english', 'spanish', 'french'].map do |lng|
+    res = ['english', 'spanish', 'french'].map do |lng|
       if instance_variable_get("@#{lng}_common_names")
         full_note = listing_change.send("#{lng}_full_note")
         short_note = listing_change.send("#{lng}_short_note")
@@ -103,6 +103,7 @@ module Checklist::Pdf::HistoryContent
         nil
       end
     end.compact
+    (res.empty? ? [nil] : res)
   end
 
   def listed_taxon_name(taxon_concept)
