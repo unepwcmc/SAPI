@@ -77,20 +77,6 @@ module Checklist::Pdf::HistoryContent
     }"
   end
 
-  def common_names_with_lng_initials(taxon_concept)
-    res = ''
-    unless !@english_common_names || taxon_concept.english_names.empty?
-      res += " (E) #{taxon_concept.english_names.join(', ')} "
-    end
-    unless !@spanish_common_names || taxon_concept.spanish_names.empty?
-      res += " (S) #{taxon_concept.spanish_names.join(', ')} "
-    end
-    unless !@french_common_names || taxon_concept.french_names.empty?
-      res += " (E) #{taxon_concept.french_names.join(', ')} "
-    end
-    res
-  end
-
   def multilingual_annotations(listing_change)
     res = ['english', 'spanish', 'french'].map do |lng|
       if instance_variable_get("@#{lng}_common_names")
@@ -136,12 +122,13 @@ module Checklist::Pdf::HistoryContent
   end
 
   def higher_taxon_name(taxon_concept)
+    common_names = common_names_with_lng_initials(taxon_concept)
     if taxon_concept.rank_name == 'PHYLUM'
       "\\csection{#{taxon_concept.full_name.upcase}}\n"
     elsif taxon_concept.rank_name == 'CLASS'
-      "\\section*{#{taxon_concept.full_name.upcase}}\n"
+      "\\section*{\\underline{#{taxon_concept.full_name.upcase}} #{common_names}}\n"
     elsif ['ORDER','FAMILY'].include? taxon_concept.rank_name
-      "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names_with_lng_initials(taxon_concept)}}\n"
+      "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names}}\n"
     end
   end
 

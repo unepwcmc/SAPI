@@ -22,4 +22,18 @@ module Checklist::Pdf::Document
     FileUtils.rm_rf(tmp_dir_path)
   end
 
+  def common_names_with_lng_initials(taxon_concept)
+    res = ''
+    unless !@english_common_names || taxon_concept.english_names.empty?
+      res += " (E) #{taxon_concept.english_names.join(', ')} "
+    end
+    unless !@spanish_common_names || taxon_concept.spanish_names.empty?
+      res += " (S) #{taxon_concept.spanish_names.join(', ')} "
+    end
+    unless !@french_common_names || taxon_concept.french_names.empty?
+      res += " (E) #{taxon_concept.french_names.join(', ')} "
+    end
+    res
+  end
+
 end
