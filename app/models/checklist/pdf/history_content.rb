@@ -92,12 +92,12 @@ module Checklist::Pdf::HistoryContent
     full_note = listing_change.send("#{lng}_full_note")
     if !full_note.blank?
       full_note = LatexToPdf.escape_latex(
-        full_note.force_encoding('UTF-8')
+        full_note
       )
       short_note = listing_change.send("#{lng}_short_note")
       if !short_note.blank?
         short_note = LatexToPdf.escape_latex(
-          short_note.force_encoding('UTF-8')
+          short_note
         )
         "\\footnote{#{full_note}} #{short_note}"
       else

@@ -5,8 +5,6 @@
 packages as for Ubuntu:
 
   - libpq-dev postgresql-9.1 postgresql-contrib-9.1
-  - freetds-bin freetds-common freetds-dev
-  - pdftk
 
 Redis is used for the job queue.
 
@@ -64,6 +62,12 @@ There are specific tasks for each of the types of data. Run 'rake -T' to get the
 You need to run imports from a machine that has access to both the MSSQL db and PostgreSQL. Port forwarding might come in handy:
 
   ssh -fNg -L 15432:localhost:5432 ssh_user@public-address-of-db-host
+
+Note: if there is some issue with data encoding on the way, we may end up with the utf8 unknown symbol �, which, sadly, crashes latex. Ideal solution: get the data right. Quick solution (for annotations, which seem to be most affected):
+
+  update annotation_translations set full_note = replace(full_note, '�', '') where id in (select id from annotation_translations where full_note like '%�%');
+
+  update listing_changes_mview set english_full_note = replace(english_full_note, '�', ''), spanish_full_note = replace(spanish_full_note, '�',''), french_full_note = replace(french_full_note, '�', '')  where id in (select id from listing_changes_mview where english_full_note like '%�%' or spanish_full_note like '%�%' or french_full_note like '%�%');
 
 == Job queue
 
