@@ -54,11 +54,8 @@ class Checklist::History < Checklist::Checklist
     document do |doc|
       content(doc)
     end
-    finalize
     @download_path
   end
-
-  def finalize; end
 
   def taxon_concepts_json_options
     json_options = super
