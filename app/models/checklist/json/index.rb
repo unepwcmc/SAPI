@@ -6,22 +6,33 @@ class Checklist::Json::Index < Checklist::Index
     super(options.merge({:output_layout => :taxonomic}))
   end
 
-  def sql_columns
+  def listing_changes_columns
     sql_columns = super()
-    if @locale == 'en'
-      sql_columns +=
-        [:generic_english_full_note, :english_full_note]
-    elsif @locale == 'es'
+    case I18n.locale
+    when :es
       sql_columns +=
         [:generic_spanish_full_note, :spanish_full_note]
-    elsif @locale == 'fr'
+    when :fr
       sql_columns +=
         [:generic_french_full_note, :french_full_note]
+    else
+      sql_columns +=
+        [:generic_english_full_note, :english_full_note]
     end
   end
 
   def taxon_concepts_json_options
     json_options = super
+    json_options[:methods] -= [
+      :ancestors_path, :specific_annotation_symbol, :countries_ids
+    ]
+    json_options[:methods] << :countries_iso_codes
+    json_options
+  end
+
+  def listing_changes_json_options
+    json_options = super
+    json_options[:methods] -= [:countries_ids]
     json_options[:methods] << :countries_iso_codes
     json_options
   end
