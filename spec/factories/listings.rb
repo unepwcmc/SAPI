@@ -17,7 +17,7 @@ FactoryGirl.define do
     taxon_concept
     effective_at '2012-01-01'
     is_current false
-
+    inclusion_taxon_concept_id nil
   end
 
   factory :listing_distribution do

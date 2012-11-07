@@ -68,17 +68,20 @@ shared_context "Falconiformes" do
     create(
      :cites_II_addition,
      :taxon_concept => @order,
-     :effective_at => '1979-06-28'
+     :effective_at => '1979-06-28',
+     :is_current => true
     )
     create(
      :cites_I_addition,
      :taxon_concept => @species1_1,
-     :effective_at => '1975-07-01'
+     :effective_at => '1975-07-01',
+     :is_current => true
     )
     create(
      :cites_III_addition,
      :taxon_concept => @species1_2,
-     :effective_at => '1987-04-13'
+     :effective_at => '1987-04-13',
+     :is_current => true
     )
     create(
      :cites_II_addition,
@@ -88,7 +91,9 @@ shared_context "Falconiformes" do
     create(
      :cites_II_addition,
      :taxon_concept => @family2,
-     :effective_at => '1979-06-28'
+     :effective_at => '1979-06-28',
+     :inclusion_taxon_concept_id => @order.id,
+     :is_current => true
     )
     create(
      :cites_II_addition,
@@ -98,7 +103,8 @@ shared_context "Falconiformes" do
     create(
      :cites_I_addition,
      :taxon_concept => @species2_1,
-     :effective_at => '1977-02-04'
+     :effective_at => '1977-02-04',
+     :is_current => true
     )
 
     Sapi::rebuild

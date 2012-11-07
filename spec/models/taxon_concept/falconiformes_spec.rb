@@ -60,10 +60,9 @@ describe TaxonConcept do
         it "should be true for order Falconiformes" do
           @order.cites_listed.should be_true
         end
-        # it "should be false for family Falconidae (inclusion in higher taxa listing)" do
-          # @family2.cites_listed.should == false
-        # end
-        pending "should be false for family Falconidae (inclusion in higher taxa listing)"
+        it "should be false for family Falconidae (inclusion in higher taxa listing)" do
+          @family2.cites_listed.should == false
+        end
         it "should be false for genus Falco" do
           @genus2_1.cites_listed.should == false
         end

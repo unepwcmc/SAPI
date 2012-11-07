@@ -150,6 +150,16 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
         hstore('not_in_cites', 'NC')
         WHERE fully_covered <> 't' OR (listing->'cites_listed')::BOOLEAN IS NULL;
 
+        -- set the cites_listed flag to false for taxa included in parent listing
+        UPDATE taxon_concepts
+        SET listing = listing || hstore('cites_listed', 'f')
+        FROM
+        listing_changes
+        WHERE
+        taxon_concepts.id = listing_changes.taxon_concept_id
+        AND is_current = 't'
+        AND inclusion_taxon_concept_id IS NOT NULL;
+
         END;
       $$;
 
