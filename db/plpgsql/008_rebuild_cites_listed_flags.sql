@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
         UPDATE taxon_concepts SET listing =
           CASE
             WHEN listing IS NULL THEN ''::HSTORE
-            ELSE listing - ARRAY['cites_listing','cites_I','cites_II','cites_III','not_in_cites']
+            ELSE listing - ARRAY['cites_listing','cites_I','cites_II','cites_III','cites_deleted','not_in_cites']
           END || hstore('cites_listed', NULL) || hstore('listing_updated_at', NULL);
 
         -- set the cited_listed flag to true for all explicitly listed taxa
@@ -115,40 +115,6 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
           ELSE hstore('cites_show', 't')
         END
         WHERE (listing->'cites_listed')::BOOLEAN IS NOT NULL;
-
-        -- propagate the usr_cites_exclusion flag to all subtaxa
-        -- unless they have cites_listed = 't'
-        WITH RECURSIVE q AS (
-          SELECT h
-          FROM taxon_concepts h
-          WHERE listing->'usr_cites_exclusion' = 't'
-
-          UNION ALL
-
-          SELECT hi
-          FROM q
-          JOIN taxon_concepts hi ON hi.parent_id = (q.h).id
-        )
-        UPDATE taxon_concepts
-        SET listing = listing || hstore('cites_exclusion', 't')
-        FROM q
-        WHERE taxon_concepts.id = (q.h).id;
-
-        -- set flags for exceptions
-        UPDATE taxon_concepts
-        SET listing = listing ||
-        hstore('not_in_cites', 'NC') || hstore('cites_listing_original', 'NC') || hstore('cites_show', 't')
-        WHERE listing->'usr_cites_exclusion' = 't';
-
-        UPDATE taxon_concepts
-        SET listing = listing ||
-        hstore('not_in_cites', 'NC') || hstore('cites_listing_original', 'NC')
-        WHERE listing->'cites_exclusion' = 't';
-
-        UPDATE taxon_concepts
-        SET listing = listing ||
-        hstore('not_in_cites', 'NC')
-        WHERE fully_covered <> 't' OR (listing->'cites_listed')::BOOLEAN IS NULL;
 
         -- set the cites_listed flag to false for taxa included in parent listing
         UPDATE taxon_concepts

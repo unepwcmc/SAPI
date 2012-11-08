@@ -19,8 +19,7 @@ shared_context "Canis lupus" do
     @species = create(
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Lupus'),
-      :parent => @genus,
-      :fully_covered => false
+      :parent => @genus
     )
 
     bhutan = create(

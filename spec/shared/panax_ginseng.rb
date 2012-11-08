@@ -19,8 +19,7 @@ shared_context "Panax ginseng" do
     @species = create(
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Ginseng'),
-      :parent => @genus,
-      :fully_covered => false
+      :parent => @genus
     )
 
    english = create(

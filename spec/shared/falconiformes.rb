@@ -9,8 +9,7 @@ shared_context "Falconiformes" do
     @family1 = create(
       :family,
       :taxon_name => create(:taxon_name, :scientific_name => 'Cathartidae'),
-      :parent => @order,
-      :fully_covered => false
+      :parent => @order
     )
     @genus1_1 = create(
       :genus,

@@ -69,8 +69,7 @@ shared_context "Psittaciformes" do
     @genus2_3 = create(
       :genus,
       :taxon_name => create(:taxon_name, :scientific_name => 'Psittacula'),
-      :parent => @family2,
-      :fully_covered => false
+      :parent => @family2
     )
     @species2_3 = create(
       :species,
@@ -157,7 +156,8 @@ shared_context "Psittaciformes" do
     l2 = create(
      :cites_deletion,
      :taxon_concept => @species2_3,
-     :effective_at => '2007-03-04'
+     :effective_at => '2007-03-04',
+     :is_current => true
     )
     create(
       :listing_distribution,

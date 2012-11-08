@@ -26,8 +26,7 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
             SELECT taxon_concept_id, 
               hstore('cites_I', CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
               hstore('cites_II', CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
-              hstore('cites_III', CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END) ||
-              hstore('cites_del', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
+              hstore('cites_III', CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END)
               AS listing
             FROM (
               SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type,
@@ -48,11 +47,7 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
                 WHEN (species_listings.abbreviation = 'III' OR species_listing_id IS NULL)
                   AND change_types.name = 'DELETION' THEN -1
                 ELSE 0
-              END AS cites_III,
-              CASE
-                WHEN species_listing_id IS NULL AND change_types.name = 'DELETION' THEN 1
-                ELSE 0
-              END AS cites_del
+              END AS cites_III
               FROM listing_changes 
 
               LEFT JOIN change_types ON change_type_id = change_types.id
@@ -71,7 +66,7 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
 
         -- set cites_show to false for all deleted taxa
         UPDATE taxon_concepts SET listing = listing || hstore('cites_show', 'f')
-        WHERE (listing->'cites_del')::BOOLEAN = 't';
+        WHERE (listing->'cites_deleted')::BOOLEAN = 't';
         END;
       $$;
 

@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings() RETURNS void
             CASE
             WHEN
               hi.listing -> 'cites_listed' ='t' OR
-                hi.listing->'cites_exclusion' = 't'
+                hi.listing->'cites_excluded' = 't'
             THEN hi.listing || hstore('cites_listing',hi.listing->'cites_listing_original') ||
               slice(hi.listing, ARRAY['generic_annotation_symbol', 'specific_annotation_symbol'])
             ELSE hi.listing ||
