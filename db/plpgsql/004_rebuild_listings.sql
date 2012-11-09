@@ -45,17 +45,20 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
               CASE
                 WHEN species_listings.abbreviation = 'III' AND change_types.name = 'ADDITION' THEN 1
                 WHEN (species_listings.abbreviation = 'III' OR species_listing_id IS NULL)
-                  AND change_types.name = 'DELETION' THEN -1
+                  AND change_types.name = 'DELETION' AND
+                    (listing_distributions.id IS NULL OR NOT listing_distributions.is_party) THEN -1
                 ELSE 0
               END AS cites_III
               FROM listing_changes 
 
-              LEFT JOIN change_types ON change_type_id = change_types.id
+              INNER JOIN change_types ON change_type_id = change_types.id
               AND change_types.name IN ('ADDITION','DELETION')
               AND effective_at <= NOW()
-              LEFT JOIN species_listings ON species_listing_id = species_listings.id
-              LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
-              LEFT JOIN designations ON taxon_concepts.designation_id = designations.id
+              INNER JOIN species_listings ON species_listing_id = species_listings.id
+              INNER JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
+              INNER JOIN designations ON taxon_concepts.designation_id = designations.id
+              LEFT JOIN listing_distributions
+                ON listing_distributions.listing_change_id = listing_changes.id
               WHERE designations.name = 'CITES'
               AND is_current = 't' 
             ) AS q

@@ -50,22 +50,24 @@ CREATE OR REPLACE FUNCTION rebuild_fully_covered_flags() RETURNS void
         -- set the fully_covered flag to false for taxa which only have some
         -- populations listed
         WITH incomplete_distributions AS (
-          SELECT taxon_concept_id AS id FROM listing_distributions
+          SELECT taxon_concept_id AS id
+          FROM listing_distributions
           INNER JOIN listing_changes
             ON listing_changes.id = listing_distributions.listing_change_id
           INNER JOIN taxon_concepts
             ON taxon_concepts.id = listing_changes.taxon_concept_id
           WHERE is_current = 't' AND designation_id = cites_id
-          
+            AND NOT listing_distributions.is_party
+
           EXCEPT
-          
+
           SELECT taxon_concept_id AS id FROM listing_distributions
           RIGHT JOIN listing_changes
             ON listing_changes.id = listing_distributions.listing_change_id
           INNER JOIN taxon_concepts
             ON taxon_concepts.id = listing_changes.taxon_concept_id
           WHERE is_current = 't' AND designation_id = cites_id
-            AND listing_distributions.id IS NULL
+            AND listing_distributions.id IS NULL OR listing_distributions.is_party
         )
         UPDATE taxon_concepts
         SET listing = listing || hstore('cites_fully_covered', 'f')
