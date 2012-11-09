@@ -6,7 +6,6 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
     LANGUAGE plpgsql
     AS $$
         BEGIN
-
         -- set the cites_listed flag to NULL for all taxa (so we start clear)
         UPDATE taxon_concepts SET listing =
           CASE

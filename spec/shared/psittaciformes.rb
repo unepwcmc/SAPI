@@ -136,7 +136,8 @@ shared_context "Psittaciformes" do
     create(
      :cites_deletion,
      :taxon_concept => @species2_1,
-     :effective_at => '2005-01-12'
+     :effective_at => '2005-01-12',
+     :is_current => true
     )
     create(
      :cites_II_addition,

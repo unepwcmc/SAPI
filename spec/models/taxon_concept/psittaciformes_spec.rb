@@ -22,10 +22,10 @@ describe TaxonConcept do
           specify { @species2_2.current_listing.should == 'II' }
         end
         context "should be blank at species level Agapornis roseicollis (DEL II, not listed, not shown)" do
-          specify { @species2_1.current_listing.should be_blank }
+          specify { @species2_1.current_listing.should == 'NC' }
         end
         context "should be blank at species level Psittacula krameri (DEL III, not listed, not shown)" do
-          specify { @species2_1.current_listing.should be_blank }
+          specify { @species2_1.current_listing.should == 'NC' }
         end
       end
 
