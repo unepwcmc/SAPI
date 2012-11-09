@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION sapi_rebuild() RETURNS void
           PERFORM rebuild_cites_listed_flags();
           PERFORM rebuild_cites_deleted_flags();
           PERFORM rebuild_cites_excluded_flags();
+          PERFORM rebuild_fully_covered_flags();
           --RAISE NOTICE 'listings';
           PERFORM rebuild_listings();
           --RAISE NOTICE 'descendant listings';
@@ -21,7 +22,6 @@ CREATE OR REPLACE FUNCTION sapi_rebuild() RETURNS void
           --RAISE NOTICE 'ancestor listings';
           PERFORM rebuild_ancestor_listings();
           PERFORM rebuild_cites_accepted_flags();
-          PERFORM rebuild_fully_covered_flags();
         END;
       $$;
 

@@ -46,7 +46,33 @@ CREATE OR REPLACE FUNCTION rebuild_fully_covered_flags() RETURNS void
         SET listing = listing || hstore('cites_fully_covered', (qq.fully_covered)::VARCHAR)
         FROM qq
         WHERE taxon_concepts.id = qq.id;
- 
+
+        -- set the fully_covered flag to false for taxa which only have some
+        -- populations listed
+        WITH incomplete_distributions AS (
+          SELECT taxon_concept_id AS id FROM listing_distributions
+          INNER JOIN listing_changes
+            ON listing_changes.id = listing_distributions.listing_change_id
+          INNER JOIN taxon_concepts
+            ON taxon_concepts.id = listing_changes.taxon_concept_id
+          WHERE is_current = 't' AND designation_id = cites_id
+          
+          EXCEPT
+          
+          SELECT taxon_concept_id AS id FROM listing_distributions
+          RIGHT JOIN listing_changes
+            ON listing_changes.id = listing_distributions.listing_change_id
+          INNER JOIN taxon_concepts
+            ON taxon_concepts.id = listing_changes.taxon_concept_id
+          WHERE is_current = 't' AND designation_id = cites_id
+            AND listing_distributions.id IS NULL
+        )
+        UPDATE taxon_concepts
+        SET listing = listing || hstore('cites_fully_covered', 'f')
+          || hstore('not_in_cites', 'NC')
+        FROM incomplete_distributions
+        WHERE taxon_concepts.id = incomplete_distributions.id;
+        
         END;
       $$;
 

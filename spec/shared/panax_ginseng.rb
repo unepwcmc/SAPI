@@ -51,7 +51,8 @@ shared_context "Panax ginseng" do
       :cites_II_addition,
       :taxon_concept => @species,
       :effective_at => '2000-07-19',
-      :annotation_id => a1.id
+      :annotation_id => a1.id,
+      :is_current => true
     )
 
     create(
