@@ -27,4 +27,5 @@ class ListingChange < ActiveRecord::Base
   belongs_to :change_type
   has_many :listing_distributions
   belongs_to :annotation
+  belongs_to :parent, :class_name => 'ListingChange'
 end

@@ -7,8 +7,10 @@ CREATE OR REPLACE FUNCTION rebuild_fully_covered_flags() RETURNS void
     AS $$
         DECLARE
           cites_id int;
+          exception_id int;
         BEGIN
         SELECT id INTO cites_id FROM designations WHERE name = 'CITES';
+        SELECT id INTO exception_id FROM change_types WHERE name = 'EXCEPTION';
 
         -- set the fully_covered flag to true for all taxa (so we start clear)
         UPDATE taxon_concepts SET listing =
@@ -74,7 +76,12 @@ CREATE OR REPLACE FUNCTION rebuild_fully_covered_flags() RETURNS void
           || hstore('not_in_cites', 'NC')
         FROM incomplete_distributions
         WHERE taxon_concepts.id = incomplete_distributions.id;
-        
+
+        UPDATE taxon_concepts
+        SET listing = listing ||
+        hstore('not_in_cites', 'NC')
+        WHERE (data->'cites_fully_covered')::BOOLEAN <> 't' OR (listing->'cites_listed')::BOOLEAN IS NULL;
+
         END;
       $$;
 

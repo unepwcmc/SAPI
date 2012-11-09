@@ -15,7 +15,7 @@ shared_context "Pereskia" do
       :genus,
       :taxon_name => create(:taxon_name, :scientific_name => 'Pereskia'),
       :parent => @family,
-      :listing => {:usr_cites_exclusion => 't'}
+      :listing => {:usr_cites_excluded => 't'}
     )
     @genus2 = create(
       :genus,
@@ -23,10 +23,17 @@ shared_context "Pereskia" do
       :parent => @family
     )
 
-    create(
+    l1 = create(
      :cites_II_addition,
      :taxon_concept => @family,
-     :effective_at => '2010-06-23'
+     :effective_at => '2010-06-23',
+     :is_current => true
+    )
+    create(
+     :cites_II_addition_exception,
+     :taxon_concept => @genus1,
+     :effective_at => '2010-06-23',
+     :parent_id => l1.id
     )
     create(
      :cites_II_addition,

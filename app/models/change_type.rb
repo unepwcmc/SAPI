@@ -14,5 +14,5 @@ class ChangeType < ActiveRecord::Base
   include Dictionary
   belongs_to :designation
 
-  build_dictionary :addition, :deletion, :reservation, :reservation_withdrawal
+  build_dictionary :addition, :deletion, :reservation, :reservation_withdrawal, :exception
 end
