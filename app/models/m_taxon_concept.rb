@@ -69,7 +69,7 @@ class MTaxonConcept < ActiveRecord::Base
   }
   scope :without_nc, where(
     <<-SQL
-    (cites_del <> 't' OR cites_del IS NULL)
+    (cites_deleted <> 't' OR cites_deleted IS NULL)
     AND cites_listed IS NOT NULL
     SQL
   )
