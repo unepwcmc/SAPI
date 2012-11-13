@@ -5,13 +5,18 @@
 CREATE OR REPLACE FUNCTION rebuild_cites_listed_flags() RETURNS void
     LANGUAGE plpgsql
     AS $$
+        DECLARE
+          cites_id int;
         BEGIN
+        SELECT id INTO cites_id FROM designations WHERE name = 'CITES';
+
         -- set the cites_listed flag to NULL for all taxa (so we start clear)
         UPDATE taxon_concepts SET listing =
           CASE
             WHEN listing IS NULL THEN ''::HSTORE
             ELSE listing - ARRAY['cites_listing','cites_I','cites_II','cites_III','cites_deleted','not_in_cites']
-          END || hstore('cites_listed', NULL) || hstore('listing_updated_at', NULL);
+          END || hstore('cites_listed', NULL) || hstore('listing_updated_at', NULL)
+        WHERE designation_id = cites_id;
 
         -- set the cited_listed flag to true for all explicitly listed taxa
         UPDATE taxon_concepts

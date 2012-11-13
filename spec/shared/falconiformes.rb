@@ -31,13 +31,12 @@ shared_context "Falconiformes" do
       :taxon_name => create(:taxon_name, :scientific_name => 'Papa'),
       :parent => @genus1_2
     )
-    #this one is not listed
     @genus1_3 = create(
       :genus,
       :taxon_name => create(:taxon_name, :scientific_name => 'Vultur'),
-      :parent => @family1,
-      :listing => {:usr_cites_exclusion => 't'}
+      :parent => @family1
     )
+    #this one is not listed
     @species1_3 = create(
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Atratus'),
@@ -64,11 +63,17 @@ shared_context "Falconiformes" do
       :parent => @genus2_1
     )
 
-    create(
+    l1 = create(
      :cites_II_addition,
      :taxon_concept => @order,
      :effective_at => '1979-06-28',
      :is_current => true
+    )
+    create(
+     :cites_II_addition_exception,
+     :taxon_concept => @family1,
+     :effective_at => '1979-06-28',
+     :parent_id => l1.id
     )
     create(
      :cites_I_addition,

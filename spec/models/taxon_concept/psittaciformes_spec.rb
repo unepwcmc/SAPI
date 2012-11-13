@@ -71,9 +71,12 @@ describe TaxonConcept do
         end
       end
 
-      describe :fully_covered do
+      describe :cites_fully_covered do
+        context "for family Psittacidae" do
+          specify { @family2.cites_fully_covered.should_not be_true }
+        end
         context "for order Psittaciformes" do
-          specify { @order.fully_covered.should_not be_true }
+          specify { @order.cites_fully_covered.should_not be_true }
         end
       end
 

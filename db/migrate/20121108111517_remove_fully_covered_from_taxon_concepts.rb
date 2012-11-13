@@ -33,7 +33,7 @@ class RemoveFullyCoveredFromTaxonConcepts < ActiveRecord::Migration
     (data->'genus_id')::INTEGER AS genus_id,
     (data->'species_id')::INTEGER AS species_id,
     (data->'subspecies_id')::INTEGER AS subspecies_id,
-    (listing->'cites_fully_covered')::BOOLEAN AS fully_covered,
+    (listing->'cites_fully_covered')::BOOLEAN AS cites_fully_covered,
     (listing->'cites_listed')::BOOLEAN AS cites_listed,
     (listing->'cites_show')::BOOLEAN AS cites_show,
     CASE

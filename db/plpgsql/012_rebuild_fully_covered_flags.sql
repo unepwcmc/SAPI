@@ -13,11 +13,8 @@ CREATE OR REPLACE FUNCTION rebuild_fully_covered_flags() RETURNS void
         SELECT id INTO exception_id FROM change_types WHERE name = 'EXCEPTION';
 
         -- set the fully_covered flag to true for all taxa (so we start clear)
-        UPDATE taxon_concepts SET listing =
-          CASE
-            WHEN listing IS NULL THEN ''::HSTORE
-            ELSE listing
-          END || hstore('cites_fully_covered', 't')
+        UPDATE taxon_concepts SET listing = listing ||
+          hstore('cites_fully_covered', 't')
         WHERE designation_id = cites_id;
 
         -- set the fully_covered flag to false for taxa with descendants who:
@@ -29,25 +26,31 @@ CREATE OR REPLACE FUNCTION rebuild_fully_covered_flags() RETURNS void
               (listing->'cites_deleted')::BOOLEAN AS cites_deleted,
               (listing->'cites_excluded')::BOOLEAN AS cites_excluded
             FROM taxon_concepts h
-            WHERE designation_id = cites_id
-  
+            WHERE designation_id = cites_id AND (
+              listing->'cites_deleted' = 't' OR listing->'cites_excluded' = 't'
+            )
+
             UNION ALL
-  
+
             SELECT hi, hi.id,
-              (listing->'cites_deleted')::BOOLEAN,
-              (listing->'cites_excluded')::BOOLEAN
+              (listing->'cites_deleted')::BOOLEAN = 't' OR cites_deleted,
+              (listing->'cites_excluded')::BOOLEAN = 't' OR cites_excluded
             FROM taxon_concepts hi
             INNER JOIN    q
             ON      hi.id = (q.h).parent_id
           )
-          SELECT id, BOOL_OR(cites_deleted OR cites_excluded) AS fully_covered
+          SELECT id, BOOL_OR(
+            cites_deleted AND cites_deleted IS NOT NULL
+            OR
+            cites_excluded AND cites_excluded IS NOT NULL
+          ) AS not_fully_covered
           FROM q 
           GROUP BY id
         )
         UPDATE taxon_concepts
-        SET listing = listing || hstore('cites_fully_covered', (qq.fully_covered)::VARCHAR)
+        SET listing = listing || hstore('cites_fully_covered', 'f')
         FROM qq
-        WHERE taxon_concepts.id = qq.id;
+        WHERE taxon_concepts.id = qq.id AND qq.not_fully_covered = 't';
 
         -- set the fully_covered flag to false for taxa which only have some
         -- populations listed
@@ -80,7 +83,7 @@ CREATE OR REPLACE FUNCTION rebuild_fully_covered_flags() RETURNS void
         UPDATE taxon_concepts
         SET listing = listing ||
         hstore('not_in_cites', 'NC')
-        WHERE (data->'cites_fully_covered')::BOOLEAN <> 't' OR (listing->'cites_listed')::BOOLEAN IS NULL;
+        WHERE (listing->'cites_fully_covered')::BOOLEAN <> 't' OR (listing->'cites_listed')::BOOLEAN IS NULL;
 
         END;
       $$;

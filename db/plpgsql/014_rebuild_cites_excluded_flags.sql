@@ -12,6 +12,10 @@ CREATE OR REPLACE FUNCTION rebuild_cites_excluded_flags() RETURNS void
         SELECT id INTO cites_id FROM designations WHERE name = 'CITES';
         SELECT id INTO exception_id FROM change_types WHERE name = 'EXCEPTION';
 
+        -- set the cites_excluded flag to false for all taxa (so we start clear)
+        UPDATE taxon_concepts SET listing = listing || hstore('cites_excluded', 'f')
+        WHERE designation_id = cites_id;
+
         -- propagate the usr_cites_excluded flag to all subtaxa
         -- unless they have cites_listed = 't'
         WITH RECURSIVE q AS (

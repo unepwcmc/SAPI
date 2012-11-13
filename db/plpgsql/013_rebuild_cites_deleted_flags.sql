@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_deleted_flags() RETURNS void
         SELECT id INTO addition_id FROM change_types WHERE name = 'ADDITION';
 
         -- set the cites_deleted flag to false for all taxa (so we start clear)
-        UPDATE taxon_concepts SET listing = listing|| hstore('cites_deleted', 'f')
+        UPDATE taxon_concepts SET listing = listing || hstore('cites_deleted', 'f')
         WHERE designation_id = cites_id;
 
         -- set the cites_deleted flag to true for appendix taxa,
