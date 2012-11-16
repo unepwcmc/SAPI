@@ -67,9 +67,6 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
         ) AS qqq
         WHERE taxon_concepts.id = qqq.taxon_concept_id;
 
-        -- set cites_show to false for all deleted taxa
-        UPDATE taxon_concepts SET listing = listing || hstore('cites_show', 'f')
-        WHERE (listing->'cites_deleted')::BOOLEAN = 't';
         END;
       $$;
 

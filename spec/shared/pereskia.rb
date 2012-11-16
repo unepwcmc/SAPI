@@ -43,7 +43,8 @@ shared_context "Pereskia" do
     create(
      :cites_I_addition,
      :taxon_concept => @genus2,
-     :effective_at => '1992-06-11'
+     :effective_at => '1992-06-11',
+     :is_current => true
     )
 
     Sapi::rebuild

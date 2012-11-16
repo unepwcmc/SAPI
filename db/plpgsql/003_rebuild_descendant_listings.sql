@@ -9,30 +9,28 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings() RETURNS void
 
           WITH RECURSIVE q AS (
             SELECT h, id,
-            listing - ARRAY['cites_listed'] ||
-            hstore('current_listing', -- listing->'cites_listing_original')
+            listing - ARRAY['cites_status', 'cites_status_original', 'cites_NC'] ||
+            hstore('cites_listing', -- listing->'cites_listing_original')
               CASE
-                WHEN listing->'cites_deleted' = 't' OR listing->'cites_excluded' = 't'
-                THEN listing->'not_in_cites'
-                WHEN listing->'cites_listed' = 't'
+                WHEN listing->'cites_NC' = 'NC'
+                THEN listing->'cites_NC'
+                WHEN listing->'cites_status' = 'LISTED'
                 THEN listing->'cites_listing_original'
                 ELSE NULL
               END
             )
             AS inherited_listing
             FROM taxon_concepts h
-            WHERE listing-> 'cites_listed' = 't' OR listing->'cites_deleted' = 't' OR listing->'cites_excluded' = 't'
+            WHERE listing->'cites_status_original' = 't'
 
             UNION ALL
 
             SELECT hi, hi.id,
             CASE
             WHEN
-              hi.listing -> 'cites_listed' ='t' OR
-                hi.listing->'cites_excluded' = 't' OR
-                hi.listing->'cites_deleted' = 't'
+              hi.listing->'cites_status_original' = 't'
             THEN
-              hstore('current_listing',hi.listing->'cites_listing_original') ||
+              hstore('cites_listing',hi.listing->'cites_listing_original') ||
               slice(hi.listing, ARRAY['generic_annotation_symbol', 'specific_annotation_symbol'])
             ELSE
               inherited_listing

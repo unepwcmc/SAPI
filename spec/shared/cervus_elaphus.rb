@@ -45,22 +45,20 @@ shared_context "Cervus elaphus" do
     create(
      :cites_II_addition,
      :taxon_concept => @subspecies1,
-     :effective_at => '1975-07-01'
+     :effective_at => '1975-07-01',
+     :is_current => true
     )
     create(
      :cites_III_addition,
      :taxon_concept => @subspecies2,
-     :effective_at => '1976-04-22'
+     :effective_at => '1976-04-22',
+     :is_current => true
     )
     create(
      :cites_I_addition,
      :taxon_concept => @subspecies3,
-     :effective_at => '1975-07-01'
-    )
-    create(
-     :cites_I_addition,
-     :taxon_concept => @species2,
-     :effective_at => '1979-06-28'
+     :effective_at => '1975-07-01',
+     :is_current => true
     )
 
     Sapi::rebuild

@@ -6,61 +6,61 @@ describe TaxonConcept do
 
     context "TAXONOMY" do
       describe :full_name do
-        it "should be trinomen for subspecies: Cervus elaphus bactrianus" do
-          @subspecies1.full_name.should == 'Cervus elaphus bactrianus'
+        context "for subspecies Cervus elaphus bactrianus" do
+          specify { @subspecies1.full_name.should == 'Cervus elaphus bactrianus' }
         end
-        it "should be binomen for species: Cervus elaphus" do
-          @species.full_name.should == 'Cervus elaphus'
+        context "for species Cervus elaphus" do
+          specify { @species.full_name.should == 'Cervus elaphus' }
         end
-        it "should be single name for genus: Cervus" do
-          @genus.full_name.should == 'Cervus'
+        context "for genus Cervus" do
+          specify { @genus.full_name.should == 'Cervus' }
         end
       end
     end
 
     context "LISTING" do
       describe :current_listing do
-        it "should be I/II/III/NC at species level Cervus elaphus" do
-          @species.current_listing.should == 'I/II/III/NC'
+        context "for species Cervus elaphus" do
+          specify { @species.current_listing.should == 'I/II/III/NC' }
         end
-        it "should be II at subspecies level Cervus elaphus bactrianus" do
-          @subspecies1.current_listing.should == 'II'
+        context "for subspecies Cervus elaphus bactrianus" do
+          specify { @subspecies1.current_listing.should == 'II' }
         end
-        it "should be III at subspecies level Cervus elaphus barbarus" do
-          @subspecies2.current_listing.should == 'III'
+        context "for subspecies Cervus elaphus barbarus" do
+          specify { @subspecies2.current_listing.should == 'III' }
         end
-        it "should be I at subspecies level Cervus elaphus hanglu" do
-          @subspecies3.current_listing.should == 'I'
+        context "for subspecies Cervus elaphus hanglu" do
+          specify { @subspecies3.current_listing.should == 'I' }
         end
-        it "should be NC at subspecies level Cervus elaphus canadensis" do
-          @subspecies4.current_listing.should == 'NC'
+        context "for subspecies Cervus elaphus canadensis" do
+          specify { @subspecies4.current_listing.should == 'NC' }
         end
       end
 
       describe :cites_listed do
-        it "should be false for order Artiodactyla" do
-          @order.cites_listed.should == false
+        context "for order Artiodactyla" do
+          specify { @order.cites_listed.should == false }
         end
-        it "should be false for family Cervidae" do
-          @family.cites_listed.should == false
+        context "for family Cervidae" do
+          specify { @family.cites_listed.should == false }
         end
-        it "should be false for genus Cervus" do
-          @genus.cites_listed.should == false
+        context "for genus Cervus" do
+          specify { @genus.cites_listed.should == false }
         end
-        it "should be false for species Cervus elaphus" do
-          @species.cites_listed.should == false
+        context "for species Cervus elaphus" do
+          specify { @species.cites_listed.should == false }
         end
-        it "should be true for subspecies Cervus elaphus bactrianus" do
-          @subspecies1.cites_listed.should be_true
+        context "for subspecies Cervus elaphus bactrianus" do
+          specify { @subspecies1.cites_listed.should be_true }
         end
-        it "should be true for subspecies Cervus elaphus barbarus" do
-          @subspecies2.cites_listed.should be_true
+        context "for subspecies Cervus elaphus barbarus" do
+          specify { @subspecies2.cites_listed.should be_true }
         end
-        it "should be true for subspecies Cervus elaphus hanglu" do
-          @subspecies3.cites_listed.should be_true
+        context "for subspecies Cervus elaphus hanglu" do
+          specify { @subspecies3.cites_listed.should be_true }
         end
-        it "should be blank for subspecies Cervus elaphus canadensis" do
-          @subspecies4.cites_listed.should be_blank
+        context "for subspecies Cervus elaphus canadensis" do
+          specify { @subspecies4.cites_listed.should be_blank }
         end
       end
 

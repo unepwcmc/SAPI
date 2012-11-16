@@ -27,12 +27,14 @@ shared_context "Tapiridae" do
     create(
      :cites_I_addition,
      :taxon_concept => @family,
-     :effective_at => '1975-07-01'
+     :effective_at => '1975-07-01',
+     :is_current => true
     )
     create(
      :cites_II_addition,
      :taxon_concept => @species,
-     :effective_at => '1977-02-04'
+     :effective_at => '1977-02-04',
+     :is_current => true
     )
 
     Sapi::rebuild

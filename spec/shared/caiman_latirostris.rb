@@ -65,7 +65,8 @@ shared_context "Caiman latirostris" do
     create(
       :cites_II_addition,
       :taxon_concept => @order,
-      :effective_at => '1977-02-04'
+      :effective_at => '1977-02-04',
+      :is_current => true
     )
     create(
      :cites_I_addition,

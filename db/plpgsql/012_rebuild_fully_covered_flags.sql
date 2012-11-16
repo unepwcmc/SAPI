@@ -23,27 +23,31 @@ CREATE OR REPLACE FUNCTION rebuild_fully_covered_flags() RETURNS void
         WITH qq AS (
           WITH RECURSIVE q AS (
             SELECT h, id,
-              (listing->'cites_deleted')::BOOLEAN AS cites_deleted,
-              (listing->'cites_excluded')::BOOLEAN AS cites_excluded
+            CASE
+              WHEN (listing->'cites_status')::VARCHAR = 'DELETED'
+                OR (listing->'cites_status')::VARCHAR = 'EXCLUDED'
+              THEN 't'
+              ELSE 'f'
+            END AS not_listed
             FROM taxon_concepts h
             WHERE designation_id = cites_id AND (
-              listing->'cites_deleted' = 't' OR listing->'cites_excluded' = 't'
+              listing->'cites_status' = 'DELETED' OR listing->'cites_status' = 'EXCLUDED'
             )
 
             UNION ALL
 
             SELECT hi, hi.id,
-              (listing->'cites_deleted')::BOOLEAN = 't' OR cites_deleted,
-              (listing->'cites_excluded')::BOOLEAN = 't' OR cites_excluded
+            CASE
+              WHEN (listing->'cites_status')::VARCHAR = 'DELETED'
+                OR (listing->'cites_status')::VARCHAR = 'EXCLUDED'
+              THEN 't'
+              ELSE not_listed
+            END
             FROM taxon_concepts hi
             INNER JOIN    q
             ON      hi.id = (q.h).parent_id
           )
-          SELECT id, BOOL_OR(
-            cites_deleted AND cites_deleted IS NOT NULL
-            OR
-            cites_excluded AND cites_excluded IS NOT NULL
-          ) AS not_fully_covered
+          SELECT id, BOOL_OR((not_listed)::BOOLEAN) AS not_fully_covered
           FROM q 
           GROUP BY id
         )
@@ -76,14 +80,14 @@ CREATE OR REPLACE FUNCTION rebuild_fully_covered_flags() RETURNS void
         )
         UPDATE taxon_concepts
         SET listing = listing || hstore('cites_fully_covered', 'f')
-          || hstore('not_in_cites', 'NC')
+          || hstore('cites_NC', 'NC')
         FROM incomplete_distributions
         WHERE taxon_concepts.id = incomplete_distributions.id;
 
         UPDATE taxon_concepts
         SET listing = listing ||
-        hstore('not_in_cites', 'NC')
-        WHERE (listing->'cites_fully_covered')::BOOLEAN <> 't' OR (listing->'cites_listed')::BOOLEAN IS NULL;
+        hstore('cites_NC', 'NC')
+        WHERE (listing->'cites_fully_covered')::BOOLEAN <> 't' OR (listing->'cites_status')::VARCHAR IS NULL;
 
         END;
       $$;

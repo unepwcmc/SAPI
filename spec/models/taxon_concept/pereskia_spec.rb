@@ -22,7 +22,7 @@ describe TaxonConcept do
           specify { @family.cites_listed.should be_true }
         end
         context "for genus Pereskia" do
-          specify { @genus1.cites_listed.should == false }
+          specify { @genus1.cites_listed.should be_nil }
         end
       end
 

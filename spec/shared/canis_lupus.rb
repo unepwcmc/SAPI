@@ -21,6 +21,11 @@ shared_context "Canis lupus" do
       :taxon_name => create(:taxon_name, :scientific_name => 'Lupus'),
       :parent => @genus
     )
+    @subspecies = create(
+      :subspecies,
+      :taxon_name => create(:taxon_name, :scientific_name => 'familiaris'),
+      :parent => @species
+    )
 
     bhutan = create(
       :country,
@@ -84,6 +89,12 @@ shared_context "Canis lupus" do
      :taxon_concept => @species,
      :effective_at => '2010-06-23',
      :is_current => true
+    )
+    create(
+      :cites_I_addition_exception,
+      :taxon_concept => @subspecies,
+      :effective_at => '2010-06-23',
+      :parent_id => l2.id
     )
 
     Sapi::rebuild

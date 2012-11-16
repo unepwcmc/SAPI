@@ -91,7 +91,8 @@ shared_context "Psittaciformes" do
     create(
      :cites_II_addition,
      :taxon_concept => @order,
-     :effective_at => '2005-01-12'
+     :effective_at => '2005-01-12',
+     :is_current => true
     )
     create(
      :cites_II_addition,
@@ -101,7 +102,8 @@ shared_context "Psittaciformes" do
     create(
      :cites_I_addition,
      :taxon_concept => @species1_1,
-     :effective_at => '1987-10-22'
+     :effective_at => '1987-10-22',
+     :is_current => true
     )
     create(
      :cites_II_addition,
@@ -111,7 +113,8 @@ shared_context "Psittaciformes" do
     create(
      :cites_I_addition,
      :taxon_concept => @species1_2_1,
-     :effective_at => '1992-06-11'
+     :effective_at => '1992-06-11',
+     :is_current => true
     )
     create(
      :cites_III_addition,
@@ -121,7 +124,8 @@ shared_context "Psittaciformes" do
     create(
      :cites_II_addition,
      :taxon_concept => @family2,
-     :effective_at => '1981-06-06'
+     :effective_at => '1981-06-06',
+     :is_current => true
     )
     create(
      :cites_II_addition,
@@ -142,7 +146,8 @@ shared_context "Psittaciformes" do
     create(
      :cites_II_addition,
      :taxon_concept => @species2_2,
-     :effective_at => '1981-06-06'
+     :effective_at => '1981-06-06',
+     :is_current => true
     )
     l1 = create(
      :cites_III_addition,
