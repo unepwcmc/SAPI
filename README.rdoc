@@ -8,15 +8,28 @@ packages as for Ubuntu:
 
 Redis is used for the job queue.
 
+LaTex (pdflatex) is used for generating pdfs. We're using the texlive distribution.
 
-LaTeX:
-  texlive
+==LaTeX
 
-pdfpages:
+=== packages
   - texlive
   - texlive-full
   - texlive-latex-recommended
   - texlive-fonts-recommended
+
+=== handling hyperlinks in included pdf documents
+Latex does not preserve hyperlinks from an included pdf document, but there is a workaround to get this to work in order to be able to embed the intro pages in the checklist pdfs. The following needs to be when the intro pdfs are changed:
+  
+  - get pdfannotextractor.pl -- should be in texlive-extra package (?)
+  - get libfile-which-perl
+  - run this to install PDFBox (that's a Java jar required by pdfannotextractor that needs to be v. 0.7.2 or 0.7.3 -- not the current from apt-get))
+      pdfannotextractor --install
+  - run this command on every file to be included, this will generate a .pax file:
+      pdfannotextractor static_index.pdf
+  - finally, pdflatex should pick the pax files and use to reinsert hyperlinks into the included pdfs. It's considered an experimental feature.
+
+More info: http://anorien.csc.warwick.ac.uk/mirrors/CTAN/macros/latex/contrib/pax/README
 
 ==Installation
 
