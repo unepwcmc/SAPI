@@ -95,14 +95,12 @@ class TimelinesForTaxonConcept
     end.flatten.each do |timeline|
       prev_event = nil
       timeline.timeline_events.each_with_index do |event, idx|
-        puts "#{prev_event.effective_at} #{prev_event.change_type_name}" if prev_event
         if prev_event && (
           prev_event.change_type_name == ChangeType::ADDITION ||
             prev_event.change_type_name == 'AMENDMENT'
           ) &&
           event.change_type_name == ChangeType::ADDITION
           event.change_type_name = 'AMENDMENT'
-          puts "change to AMENDMENT"
         end
         prev_event = event
       end
