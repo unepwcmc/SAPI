@@ -5,19 +5,14 @@ class CsvToDbMap
 
   MAPPING = {
     'species_import' => {
-      'Kingdom' => 'Kingdom varchar',
-      'PhyName' => 'Phylum varchar',
-      'ClaName' => 'Class varchar',
-      'OrdName' => 'TaxonOrder varchar',
-      'FamName' => 'Family varchar',
-      'GenName' => 'Genus varchar',
-      'SpcName' => 'Species varchar',
-      'SpcAuthor' => 'SpeciesAuthor varchar',
-      'SpcInfraRank' => 'SpcInfraRank varchar',
-      'SpcInfraEpithet' => 'SpcInfra varchar',
-      'SpcInfraRankAuthor' => 'InfraRankAuthor varchar',
+      'Scientific Name' => 'Name varchar',
+      'Rank' => 'Rank varchar'
       'SpcRecID' => 'SpcRecId integer',
-      'SpcStatus' => 'SpcStatus varchar',
+      'ParentRank' => 'ParentRank varchar',
+      'ParentRecID' => 'ParentRecID integer',
+      'SpeciesAuthor' => 'SpeciesAuthor varchar',
+      'Notes' => 'Notes varchar',
+      'Designation' => 'Designation varchar'
     },
     'cites_listings_import' => {
       'Kingdom' => 'legacy_type varchar',
