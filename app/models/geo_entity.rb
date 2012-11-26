@@ -21,6 +21,14 @@ class GeoEntity < ActiveRecord::Base
   has_many :related_geo_entities, :class_name => 'GeoEntity', :through => :relationships
   has_many :taxon_concept_geo_entities
 
+  scope :contained_geo_entities, lambda { |geo_entity_ids|
+    select("related_geo_entities_geo_relationships.*").
+    where(:id => geo_entity_ids).
+    joins(:relationships => [:geo_relationship_type, :related_geo_entity]).
+    where("geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'")
+
+  }
+
   def as_json(options={})
     super(:only =>[:id, :name, :iso_code2])
   end

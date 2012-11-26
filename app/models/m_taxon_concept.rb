@@ -76,32 +76,70 @@ class MTaxonConcept < ActiveRecord::Base
 
   scope :without_hidden, where("cites_show = 't'")
 
-  scope :by_cites_regions_and_countries, lambda { |cites_regions_ids, countries_ids|
-    in_clause = [cites_regions_ids, countries_ids].flatten.compact.join(',')
+  scope :by_cites_populations_and_appendices, lambda { |cites_regions_ids, countries_ids, appendix_abbreviations=nil|
+    geo_entity_ids = countries_ids
+    if cites_regions_ids
+      geo_entity_ids += GeoEntity.contained_geo_entities(cites_regions_ids)
+    end
+    geo_entities_in_clause = geo_entity_ids.compact.join(',')
+    appendices_in_clause = if appendix_abbreviations
+      appendix_abbreviations.compact.map{ |a| "'#{a}'"}.join(',')
+    else
+      ''
+    end
+    appendices_where_clause = if appendix_abbreviations
+      (['I','II','III'] & appendix_abbreviations).map do |abbr|
+        "cites_#{abbr} = 't'"
+      end
+    else
+      ''
+    end
     joins(
       <<-SQL
       INNER JOIN (
-        SELECT taxon_concept_geo_entities.id
-        FROM taxon_concept_geo_entities
-        WHERE taxon_concept_geo_entities.geo_entity_id IN (#{in_clause})
+        -- listed in specified geo entities
+        SELECT taxon_concept_id
+        FROM listing_changes
+        INNER JOIN change_types ON change_types.id = listing_changes.change_type_id
+        INNER JOIN listing_distributions ON listing_changes.id = listing_distributions.listing_change_id AND NOT is_party
+        #{(appendix_abbreviations ? 'INNER JOIN species_listings ON species_listings.id = listing_changes.species_listing_id' : '')}
+        WHERE is_current = 't' AND change_types.name = 'ADDITION'
+        AND listing_distributions.geo_entity_id IN (#{geo_entities_in_clause})
+        #{(appendix_abbreviations ? "AND species_listings.abbreviation IN (#{appendices_in_clause})" : '')}
 
         UNION
+        (
+          -- occurs in specified geo entities
+          SELECT taxon_concept_geo_entities.taxon_concept_id
+          FROM taxon_concept_geo_entities
+          WHERE taxon_concept_geo_entities.geo_entity_id IN (#{geo_entities_in_clause})
 
-        SELECT DISTINCT taxon_concept_id
-        FROM taxon_concept_geo_entities
-        INNER JOIN geo_entities
-          ON taxon_concept_geo_entities.geo_entity_id = geo_entities.id
-        INNER JOIN geo_relationships
-          ON geo_entities.id = geo_relationships.other_geo_entity_id
-        INNER JOIN geo_relationship_types
-          ON geo_relationships.geo_relationship_type_id = geo_relationship_types.id
-        INNER JOIN geo_entities related_geo_entities
-          ON geo_relationships.geo_entity_id = related_geo_entities.id
-        WHERE
-          related_geo_entities.id IN (#{in_clause})
-          AND 
-          geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'
-      ) regions_and_countries ON #{self.table_name}.id = regions_and_countries.id
+          INTERSECT
+
+          -- has listing changes that do not have distribution attached
+          SELECT taxon_concept_id
+          FROM listing_changes
+          INNER JOIN change_types ON change_types.id = listing_changes.change_type_id
+          #{(appendix_abbreviations ? 'INNER JOIN species_listings ON species_listings.id = listing_changes.species_listing_id' : '')}
+          LEFT JOIN listing_distributions ON listing_changes.id = listing_distributions.listing_change_id AND NOT is_party
+          WHERE is_current = 't' AND change_types.name = 'ADDITION'
+          #{(appendix_abbreviations ? "AND species_listings.abbreviation IN (#{appendices_in_clause})" : '')}
+          AND listing_distributions.id IS NULL
+
+          EXCEPT
+
+          -- and does not have an exclusion for the specified geo entities
+          SELECT taxon_concept_id
+          FROM listing_changes
+          INNER JOIN change_types ON change_types.id = listing_changes.change_type_id
+          INNER JOIN listing_distributions ON listing_changes.id = listing_distributions.listing_change_id AND NOT is_party
+          #{(appendix_abbreviations ? 'INNER JOIN species_listings ON species_listings.id = listing_changes.species_listing_id' : '')}
+          WHERE is_current = 't' AND change_types.name = 'EXCEPTION'
+          #{(appendix_abbreviations ? "AND species_listings.abbreviation IN (#{appendices_in_clause})" : '')}
+          AND listing_distributions.geo_entity_id IN (#{geo_entities_in_clause})
+
+        )
+      ) taxa_in_populations ON #{self.table_name}.id = taxa_in_populations.taxon_concept_id
       SQL
     )
   }

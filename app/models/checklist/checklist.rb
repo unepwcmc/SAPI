@@ -21,15 +21,16 @@ class Checklist::Checklist
       select(sql_columns).
       by_designation(Designation::CITES)
 
-    unless @cites_regions.empty? && @countries.empty?
-      @taxon_concepts_rel = @taxon_concepts_rel.
-        by_cites_regions_and_countries(@cites_regions, @countries)
-    end
-
-    unless @cites_appendices.empty?
-      @taxon_concepts_rel = @taxon_concepts_rel.
+      if @cites_regions.empty? && @countries.empty? && !@cites_appendices.empty?
+        @taxon_concepts_rel = @taxon_concepts_rel.
         by_cites_appendices(@cites_appendices)
-    end
+      elsif !(@cites_regions.empty? && @countries.empty?)
+        @taxon_concepts_rel = @taxon_concepts_rel.
+          by_cites_populations_and_appendices(
+            @cites_regions, @countries,
+            @cites_appendices.empty? ? nil : @cites_appendices
+          )
+      end
 
     unless @scientific_name.blank?
       @taxon_concepts_rel = @taxon_concepts_rel.
