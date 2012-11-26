@@ -2,11 +2,7 @@ class TimelinesForTaxonConcept
   def initialize(taxon_concept_id)
     @taxon_concept_id = taxon_concept_id
     @listing_changes = MListingChange.select('listing_changes_mview.*').
-      where('listing_changes_mview.taxon_concept_id' => taxon_concept_id).
-      where("NOT (listing_changes_mview.change_type_name = 'DELETION' " +
-        "AND listing_changes_mview.species_listing_name IS NOT NULL " +
-        "AND listing_changes_mview.party_name IS NULL)"
-      )
+      where('listing_changes_mview.taxon_concept_id' => taxon_concept_id)
     @timelines = {}
     ['I', 'II', 'III'].each do |appdx|
       @timelines[appdx] = Timeline.new(:appendix => appdx)
@@ -99,12 +95,14 @@ class TimelinesForTaxonConcept
     end.flatten.each do |timeline|
       prev_event = nil
       timeline.timeline_events.each_with_index do |event, idx|
+        puts "#{prev_event.effective_at} #{prev_event.change_type_name}" if prev_event
         if prev_event && (
           prev_event.change_type_name == ChangeType::ADDITION ||
             prev_event.change_type_name == 'AMENDMENT'
           ) &&
           event.change_type_name == ChangeType::ADDITION
           event.change_type_name = 'AMENDMENT'
+          puts "change to AMENDMENT"
         end
         prev_event = event
       end

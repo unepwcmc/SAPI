@@ -7,7 +7,6 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
     AS $$
         BEGIN
 
-        PERFORM fix_cites_listing_changes();
         PERFORM rebuild_annotation_symbols();
 
         UPDATE taxon_concepts
