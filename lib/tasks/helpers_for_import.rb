@@ -10,6 +10,7 @@ class CsvToDbMap
       'SpcRecID' => 'SpcRecId integer',
       'ParentRank' => 'ParentRank varchar',
       'ParentRecID' => 'ParentRecID integer',
+      'Status' => 'Status varchar',
       'SpeciesAuthor' => 'SpeciesAuthor varchar',
       'Notes' => 'Notes varchar',
       'Designation' => 'Designation varchar'
