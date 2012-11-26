@@ -27,8 +27,11 @@ describe TaxonConcept do
       end
 
       describe :cites_fully_covered do
+        context "for order Falconiformes" do
+          specify { @order.cites_fully_covered.should be_false }
+        end
         context "for family Cathartidae" do
-          specify { @family1.cites_fully_covered.should == false }
+          specify { @family1.cites_fully_covered.should be_false }
         end
         context "for family Falconidae" do
           specify { @family2.cites_fully_covered.should be_true }
@@ -55,7 +58,7 @@ describe TaxonConcept do
           specify { @species1_3.cites_excluded.should be_true }
         end
         context "for species Falco alopex (H)" do
-          specify { @species2_2.cites_fully_covered.should be_false }
+          specify { @species2_2.cites_excluded.should be_false }
         end
       end
 

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings() RETURNS void
 
           WITH RECURSIVE q AS (
             SELECT h, id,
-            listing - ARRAY['cites_status', 'cites_status_original', 'cites_NC'] ||
+            listing - ARRAY['cites_status', 'cites_status_original', 'cites_NC', 'cites_fully_covered'] ||
             hstore('cites_listing', -- listing->'cites_listing_original')
               CASE
                 WHEN listing->'cites_NC' = 'NC'
