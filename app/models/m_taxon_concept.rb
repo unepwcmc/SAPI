@@ -87,13 +87,7 @@ class MTaxonConcept < ActiveRecord::Base
     else
       ''
     end
-    appendices_where_clause = if appendix_abbreviations
-      (['I','II','III'] & appendix_abbreviations).map do |abbr|
-        "cites_#{abbr} = 't'"
-      end
-    else
-      ''
-    end
+
     joins(
       <<-SQL
       INNER JOIN (
