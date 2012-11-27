@@ -12,5 +12,5 @@
 class Rank < ActiveRecord::Base
   attr_accessible :name, :parent_id
   include Dictionary
-  build_dictionary :kingdom, :phylum, :class, :order, :family, :genus, :species, :subspecies
+  build_dictionary :kingdom, :phylum, :class, :order, :family, :subfamily, :genus, :species, :subspecies
 end

@@ -5,13 +5,13 @@ class CsvToDbMap
 
   MAPPING = {
     'species_import' => {
-      'Scientific Name' => 'Name varchar',
-      'Rank' => 'Rank varchar'
-      'SpcRecID' => 'SpcRecId integer',
+      'Name' => 'Name varchar',
+      'Rank' => 'Rank varchar',
+      'RecID' => 'RecID integer',
       'ParentRank' => 'ParentRank varchar',
       'ParentRecID' => 'ParentRecID integer',
       'Status' => 'Status varchar',
-      'SpeciesAuthor' => 'SpeciesAuthor varchar',
+      'Author' => 'Author varchar',
       'Notes' => 'Notes varchar',
       'Designation' => 'Designation varchar'
     },
