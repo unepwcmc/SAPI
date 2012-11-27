@@ -46,7 +46,7 @@ def import_data_for rank
 
   cites = Designation.find_by_name(Designation::CITES)
   sql = <<-SQL
-    INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id, parent_id, created_at, updated_at, author_year, legacy_id, legacy_type )
+    INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id, parent_id, created_at, updated_at, author_year, legacy_id, legacy_type, notes )
        SELECT
          tmp.taxon_name_id
          ,#{rank_id}
@@ -58,11 +58,11 @@ def import_data_for rank
             WHEN tmp.author = 'Null' THEN NULL
             ELSE tmp.author
           END
-         ,tmp.RecID, 'Animalia'
+         ,tmp.RecID, 'Animalia', tmp.notes
        FROM
         (
           SELECT DISTINCT taxon_names.id AS taxon_name_id,#{TMP_TABLE}.ParentRank, #{TMP_TABLE}.ParentRecID,
-           #{cites.id} AS designation_id,INITCAP(BTRIM(#{TMP_TABLE}.author)) AS author, #{TMP_TABLE}.RecID, 'Animalia'
+           #{cites.id} AS designation_id,INITCAP(BTRIM(#{TMP_TABLE}.author)) AS author, #{TMP_TABLE}.RecID, 'Animalia', #{TMP_TABLE}.notes
           FROM #{TMP_TABLE}
           LEFT JOIN taxon_names ON (INITCAP(BTRIM(#{TMP_TABLE}.Name)) LIKE INITCAP(BTRIM(taxon_names.scientific_name)))
           WHERE NOT EXISTS (
@@ -75,6 +75,7 @@ def import_data_for rank
           AND taxon_names.id IS NOT NULL
           AND BTRIM(#{TMP_TABLE}.rank) ilike '#{rank}'
           AND BTRIM(#{TMP_TABLE}.designation) ilike '%CITES%'
+          AND BTRIM(#{TMP_TABLE}.status) like 'A'
         ) as tmp
         LEFT JOIN ranks ON INITCAP(BTRIM(ranks.name)) LIKE INITCAP(BTRIM(tmp.ParentRank))
         LEFT JOIN taxon_concepts ON (

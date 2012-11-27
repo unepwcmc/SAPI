@@ -56,12 +56,12 @@ namespace :import do
     #rebuild the tree
     TaxonConcept.rebuild!
 
-#    Rake::Task["import:cites_regions"].invoke(
-#      'lib/assets/files/cites_regions.csv'
-#    )
-#    Rake::Task["import:countries"].invoke(
-#      'lib/assets/files/countries.csv'
-#    )
+    Rake::Task["import:cites_regions"].invoke(
+      'lib/assets/files/cites_regions.csv'
+    )
+    Rake::Task["import:countries"].invoke(
+      'lib/assets/files/countries.csv'
+    )
 #    Rake::Task["import:distributions"].invoke(
 #      'lib/assets/files/first_pages_cites/animals_distributions.csv',
 #      'lib/assets/files/first_pages_cites/plants_distributions.csv'
