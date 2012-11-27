@@ -16,6 +16,7 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  author_year    :string(255)
+#  notes          :text
 #
 
 class TaxonConcept < ActiveRecord::Base
