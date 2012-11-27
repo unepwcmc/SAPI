@@ -59,12 +59,14 @@ class CsvToDbMap
     },
     #TODO legacy type for countries?
     'countries_import' => {
-      'old_id' => 'legacy_id integer',
+      'country_id' => 'country_id integer',
       'iso2' => 'iso2 varchar',
-      'iso3' => 'iso3 varchar',
       'name' => 'name varchar',
       'long_name' => 'long_name varchar',
-      'Region' => 'region_number varchar'
+      'Geo_entity' => 'Geo_entity varchar',
+      'Current_name' => 'Current_name varchar',
+      'BRU_under' => 'BRU_under varchar',
+      'CITES_Region' => 'CITES_Region varchar'
     },
     'references_import' => {
       'legacy_type' => 'legacy_type varchar',

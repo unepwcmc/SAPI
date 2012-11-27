@@ -60,7 +60,7 @@ namespace :import do
       'lib/assets/files/cites_regions.csv'
     )
     Rake::Task["import:countries"].invoke(
-      'lib/assets/files/countries.csv'
+      'lib/assets/files/cleaned/countries_utf8.csv'
     )
 #    Rake::Task["import:distributions"].invoke(
 #      'lib/assets/files/first_pages_cites/animals_distributions.csv',

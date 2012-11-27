@@ -16,13 +16,14 @@ namespace :import do
       create_table_from_csv_headers(file, tmp_table)
       copy_data(file, tmp_table)
       sql = <<-SQL
-          INSERT INTO geo_entities(name, iso_code2, iso_code3, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at)
-          SELECT DISTINCT INITCAP(BTRIM(TMP.name)), INITCAP(BTRIM(TMP.iso2)), INITCAP(BTRIM(TMP.iso3)), #{country_type.id}, TMP.legacy_id, '#{GeoEntityType::COUNTRY}', current_date, current_date
+          INSERT INTO geo_entities(name, iso_code2, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at, long_name)
+          SELECT DISTINCT INITCAP(BTRIM(TMP.name)), INITCAP(BTRIM(TMP.iso2)), #{country_type.id}, TMP.country_id, '#{GeoEntityType::COUNTRY}', current_date, current_date, INITCAP(BTRIM(TMP.long_name))
           FROM #{tmp_table} AS TMP
           WHERE NOT EXISTS (
-          SELECT * FROM geo_entities
-          WHERE legacy_id = TMP.legacy_id AND legacy_type = '#{GeoEntityType::COUNTRY}'
-          );
+            SELECT * FROM geo_entities
+            WHERE legacy_id = TMP.country_id AND legacy_type = '#{GeoEntityType::COUNTRY}'
+          )
+          AND INITCAP(BTRIM(TMP.Geo_entity)) ilike '#{GeoEntityType::COUNTRY}'
       SQL
       ActiveRecord::Base.connection.execute(sql)
       link_countries()
@@ -52,9 +53,9 @@ def link_countries
     WHERE
       geo_entity_types.id = geo_entities.geo_entity_type_id AND
       geo_entity_types."name" ilike '#{GeoEntityType::CITES_REGION}' AND
-      geo_entities."name" LIKE countries_import.region_number||'%' AND
+      geo_entities."name" LIKE countries_import.CITES_Region||'%' AND
       geo_relationship_types."name" ilike '#{GeoRelationshipType::CONTAINS}' AND
-      countries.legacy_id = countries_import.legacy_id AND countries.legacy_type ilike '#{GeoEntityType::COUNTRY}' AND
+      countries.legacy_id = countries_import.country_id AND countries.legacy_type ilike '#{GeoEntityType::COUNTRY}' AND
       NOT EXISTS (
         SELECT *
         FROM geo_relationships
