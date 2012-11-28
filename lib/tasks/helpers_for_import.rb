@@ -26,10 +26,14 @@ class CsvToDbMap
       'IsCurrent' => 'is_current boolean'
     },
     'distribution_import' => {
-      'Rank' => 'Rank varchar',
-      'RecID' => 'RecID integer',
-      'CountryID' => 'CountryID integer',
-      'CountryISO' => 'CountryISO varchar'
+      'rank' => 'rank varchar',
+      'legacy_id' => 'legacy_id integer',
+      'country_legacy_id' => 'country_legacy_id integer',
+      'country_iso2' => 'country_iso2 varchar',
+      'country_name' => 'country_name varchar',
+      'reference_id' => 'reference_id integer',
+      'tags' => 'tags varchar',
+      'designation' => 'designation varchar'
     },
     'common_name_import' => {
       'Kingdom' => 'legacy_type varchar',
