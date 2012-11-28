@@ -5,15 +5,15 @@ class CsvToDbMap
 
   MAPPING = {
     'species_import' => {
-      'Name' => 'Name varchar',
-      'Rank' => 'Rank varchar',
-      'RecID' => 'RecID integer',
-      'ParentRank' => 'ParentRank varchar',
-      'ParentRecID' => 'ParentRecID integer',
-      'Status' => 'Status varchar',
-      'Author' => 'Author varchar',
-      'Notes' => 'Notes varchar',
-      'Designation' => 'Designation varchar'
+      'name' => 'name varchar',
+      'rank' => 'rank varchar',
+      'legacy_id' => 'legacy_id integer',
+      'parent_rank' => 'parent_rank varchar',
+      'parent_legacy_id' => 'parent_legacy_id integer',
+      'status' => 'status varchar',
+      'author' => 'author varchar',
+      'notes' => 'notes varchar',
+      'designation' => 'designation varchar'
     },
     'cites_listings_import' => {
       'Kingdom' => 'legacy_type varchar',
@@ -26,10 +26,10 @@ class CsvToDbMap
       'IsCurrent' => 'is_current boolean'
     },
     'distribution_import' => {
-      'Kingdom' => 'legacy_type varchar',
-      'SpcRecID' => 'species_id integer',
-      'CtyRecID' => 'country_id integer',
-      'CtyShort' => 'country_name varchar'
+      'Rank' => 'Rank varchar',
+      'RecID' => 'RecID integer',
+      'CountryID' => 'CountryID integer',
+      'CountryISO' => 'CountryISO varchar'
     },
     'common_name_import' => {
       'Kingdom' => 'legacy_type varchar',
@@ -59,14 +59,14 @@ class CsvToDbMap
     },
     #TODO legacy type for countries?
     'countries_import' => {
-      'country_id' => 'country_id integer',
+      'legacy_id' => 'legacy_id integer',
       'iso2' => 'iso2 varchar',
       'name' => 'name varchar',
       'long_name' => 'long_name varchar',
-      'Geo_entity' => 'Geo_entity varchar',
-      'Current_name' => 'Current_name varchar',
-      'BRU_under' => 'BRU_under varchar',
-      'CITES_Region' => 'CITES_Region varchar'
+      'geo_entity' => 'geo_entity varchar',
+      'current_name' => 'current_name varchar',
+      'bru_under' => 'bru_under varchar',
+      'cites_region' => 'cites_region varchar'
     },
     'references_import' => {
       'legacy_type' => 'legacy_type varchar',
