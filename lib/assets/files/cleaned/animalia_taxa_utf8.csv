@@ -1,4 +1,4 @@
-Name,Rank,RecID,ParentRank,ParentRecID,Status,Author,Notes,Designation
+name,rank,legacy_id,parent_rank,parent_legacy_id,status,author,notes,designation
 Aonyx,Genus,318,SubFamily,1,A,"Lesson, 1827",,"CITES,EU"
 Eira,Genus,1536,SubFamily,2,A,"C. D. H. Smith, 1842",,"CITES,EU"
 Enhydra,Genus,1590,SubFamily,1,A,"Fleming, 1822",,"CITES,EU"

@@ -1,4 +1,4 @@
-country_id,iso2,name,long_name,Geo_entity,Current_name,BRU_under,CITES_Region
+legacy_id,iso2,name,long_name,geo_entity,current_name,bru_under,cites_region
 1,AF,Afghanistan,Islamic Republic of Afghanistan,Country,Y,,2
 2,AL,Albania,Republic of Albania,Country,Y,,4
 3,DZ,Algeria,People's Democratic Republic of Algeria,Country,Y,,1

@@ -58,13 +58,13 @@ def import_data_for rank
             WHEN tmp.author = 'Null' THEN NULL
             ELSE tmp.author
           END
-         ,tmp.RecID, 'Animalia', tmp.notes
+         ,tmp.legacy_id, 'Animalia', tmp.notes
        FROM
         (
-          SELECT DISTINCT taxon_names.id AS taxon_name_id,#{TMP_TABLE}.ParentRank, #{TMP_TABLE}.ParentRecID,
-           #{cites.id} AS designation_id,INITCAP(BTRIM(#{TMP_TABLE}.author)) AS author, #{TMP_TABLE}.RecID, 'Animalia', #{TMP_TABLE}.notes
+          SELECT DISTINCT taxon_names.id AS taxon_name_id, #{TMP_TABLE}.parent_rank, #{TMP_TABLE}.parent_legacy_id,
+           #{cites.id} AS designation_id, INITCAP(BTRIM(#{TMP_TABLE}.author)) AS author, #{TMP_TABLE}.legacy_id, 'Animalia', #{TMP_TABLE}.notes
           FROM #{TMP_TABLE}
-          LEFT JOIN taxon_names ON (INITCAP(BTRIM(#{TMP_TABLE}.Name)) LIKE INITCAP(BTRIM(taxon_names.scientific_name)))
+          LEFT JOIN taxon_names ON (INITCAP(BTRIM(#{TMP_TABLE}.name)) LIKE INITCAP(BTRIM(taxon_names.scientific_name)))
           WHERE NOT EXISTS (
             SELECT taxon_name_id, rank_id, designation_id
             FROM taxon_concepts
@@ -77,12 +77,12 @@ def import_data_for rank
           AND BTRIM(#{TMP_TABLE}.designation) ilike '%CITES%'
           AND BTRIM(#{TMP_TABLE}.status) like 'A'
         ) as tmp
-        LEFT JOIN ranks ON INITCAP(BTRIM(ranks.name)) LIKE INITCAP(BTRIM(tmp.ParentRank))
+        LEFT JOIN ranks ON INITCAP(BTRIM(ranks.name)) LIKE INITCAP(BTRIM(tmp.parent_rank))
         LEFT JOIN taxon_concepts ON (
-          taxon_concepts.legacy_id = tmp.ParentRecID AND
+          taxon_concepts.legacy_id = tmp.parent_legacy_id AND
           taxon_concepts.rank_id = ranks.id AND
           taxon_concepts.legacy_type = 'Animalia' AND
-          (tmp.ParentRank <> NULL OR tmp.ParentRank <> 'Null')
+          (tmp.parent_rank <> NULL OR tmp.parent_rank <> 'Null')
         )
     RETURNING id;
   SQL
