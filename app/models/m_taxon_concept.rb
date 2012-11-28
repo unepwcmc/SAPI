@@ -62,7 +62,9 @@ class MTaxonConcept < ActiveRecord::Base
   self.primary_key = :id
 
   has_many :listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange
-  has_many :current_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange, :conditions => {:is_current => true}
+  has_many :current_listing_changes, :foreign_key => :taxon_concept_id,
+    :class_name => MListingChange,
+    :conditions => "is_current = 't' AND change_type_name <> 'EXCEPTION'"
 
   scope :by_designation, lambda { |name|
     where("designation_is_#{name}".downcase => 't')
