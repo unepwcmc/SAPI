@@ -12,7 +12,7 @@ Mellivora,Genus,2835,SubFamily,2,A,"Storr, 1780",,"CITES,EU"
 Melogale,Genus,2836,SubFamily,2,A,"I. Geoffroy Saint-Hilaire, 1831 ",,EU
 Mustela,Genus,3022,SubFamily,2,A,"Linneaus, 1758",,"CITES,EU"
 Pteronura,Genus,4123,SubFamily,1,A,"Gray, 1837",,"CITES,EU"
-Taxidea,Genus,4746,SubFamily,2,A,"Waterhouse, 1839",,EU
+Taxidea,Genus,4746,Family,2,A,"Waterhouse, 1839",,EU
 Hydrictis,Genus,6388,SubFamily,1,A,"Pocock, 1921",,"CITES,EU"
 LUTRINAE,SubFamily,1,Family,515,A,"Bonaparte, 1838",,"CITES,EU"
 MUSTELINAE,SubFamily,2,Family,515,A,"Fischer, 1817",,"CITES,EU"
@@ -69,7 +69,7 @@ SARCOPTERYGII,Class,24,Phylum,3,A,,,"CITES,EU"
 CARCHARINIFORMES,Order,25,Class,11,A,,,CITES
 APODIDAE,Family,63,Order,12,A,,,EU
 CARNIVORA,Order,26,Class,17,A,,,"CITES,EU,CMS"
-STELLEROIDEA,Class,26,Phylum,6,,,,"CITES,EU"
+STELLEROIDEA,Class,26,Phylum,6,A,,,"CITES,EU"
 TROCHILIDAE,Family,828,Order,12,A,,,"CITES,EU"
 CASUARIIFORMES,Order,27,Class,5,A,,,EU
 CAPRIMULGIDAE,Family,139,Order,24,A,,,EU
@@ -93,7 +93,7 @@ COLEOPTERA,Order,38,Class,16,A,,,"CITES,EU"
 ANABANTIDAE,Family,40,Order,113,A,,,EU
 COLUMBIFORMES,Order,40,Class,5,A,,,"CITES,EU"
 ANABLEPIDAE,Family,41,Order,47,A,,,EU
-HOLOTHUROIDEA,Class,41,Phylum,6,,,,"CITES,EU"
+HOLOTHUROIDEA,Class,41,Phylum,6,A,,,"CITES,EU"
 Acinonyx,Genus,42,Family,312,A,"Brookes, 1828",,"CITES,EU"
 CORACIIFORMES,Order,42,Class,5,A,,,"CITES,EU,CMS"
 Acipenser,Genus,43,Family,9,A,"Linnaeus, 1758",,"CITES,EU"
@@ -337,7 +337,7 @@ Alouatta,Genus,172,Family,7176,A,"Lacepède, 1799",,"CITES,EU"
 CHELIDAE,Family,172,Order,153,A,,,"CITES,EU"
 caesia,Species,173,Genus,37,A,"Gulick, 1858",,"CITES,EU"
 CHELONIIDAE,Family,173,Order,153,A,,,"CITES,EU"
-VALVATIDA,Order,173,Class,26,,,,"CITES,EU"
+VALVATIDA,Order,173,Class,26,A,,,"CITES,EU"
 casta,Species,174,Genus,37,A,"Newcomb, 1853",,"CITES,EU"
 CHELYDRIDAE,Family,174,Order,153,A,,,"CITES,EU"
 cestus,Species,175,Genus,37,A,"Newcomb, 1853",,"CITES,EU"
@@ -354,7 +354,7 @@ Amandava,Genus,180,Family,301,A,"Blyth, 1836",,"CITES,EU"
 elegans,Species,181,Genus,37,A,"Newcomb, 1853",,"CITES,EU"
 fulgens,Species,182,Genus,37,A,"Newcomb, 1853",,"CITES,EU"
 fuscobasis,Species,183,Genus,37,A,"(Smith, 1873)",,"CITES,EU"
-ANGUILLIFORMES,Order,183,Class,1,,,,"CITES,EU"
+ANGUILLIFORMES,Order,183,Class,1,A,,,"CITES,EU"
 juddii,Species,184,Genus,37,A,"Baldwin, 1895",,"CITES,EU"
 juncea,Species,185,Genus,37,A,"Gulick, 1856",,"CITES,EU"
 Amaurornis,Genus,185,Family,697,A,"Reichenbach, 1853",,CMS-AEWA
@@ -389,7 +389,7 @@ thaanumi,Species,202,Genus,37,A,"Pilsbry & Cooke, 1914",,"CITES,EU"
 turgida,Species,203,Genus,37,A,"Newcomb, 1853",,"CITES,EU"
 valida,Species,204,Genus,37,A,"Pfeiffer, 1855",,"CITES,EU"
 COLUBRIDAE,Family,204,Order,141,A,,,"CITES,EU"
-ZEIFORMES,Order,204,Class,1,,,,EU
+ZEIFORMES,Order,204,Class,1,A,,,EU
 viridans,Species,205,Genus,37,A,"Mighels, 1845",,"CITES,EU"
 THRESKIORNITHIDAE,Family,809,Order,34,A,,,"CITES,EU,CMS"
 vulpina,Species,207,Genus,37,A,"(Férussac, 1824)",,"CITES,EU"
@@ -440,7 +440,7 @@ Anastomus,Genus,241,Family,188,A,"Bonnaterre, 1791",,"EU,CMS-AEWA"
 DASYPODIDAE,Family,241,Order,889,A,"Gray, 1821",,"CITES,EU"
 Anathana,Genus,242,Family,835,A,"Lyon, 1913",,"CITES,EU"
 DASYPROCTIDAE,Family,242,Order,134,A,"Bonaparte, 1838",,"CITES,EU"
-ASPIDOCHIROTIDA,Order,242,Class,41,,,,"CITES,EU"
+ASPIDOCHIROTIDA,Order,242,Class,41,A,,,"CITES,EU"
 DASYURIDAE,Family,243,Order,48,A,"Goldfuss, 1820",,CITES
 baerii,Species,244,Genus,43,A,"Brandt, 1869",,"CITES,EU"
 DAUBENTONIIDAE,Family,244,Order,124,A,"Gray, 1863",,"CITES,EU"
@@ -707,7 +707,7 @@ Atthis,Genus,464,Family,828,A,"Reichenbach, 1854",,"CITES,EU"
 MANIDAE,Family,465,Order,118,A,"Gray, 1821",,"CITES,EU"
 Augastes,Genus,466,Family,828,A,"Gould, 1849",,"CITES,EU"
 branchi,Species,467,Genus,55,A,"Riegl, 1995",,"CITES,EU"
-HELIOPORACEA,Order,467,Class,3,,,,"CITES,EU"
+HELIOPORACEA,Order,467,Class,3,A,,,"CITES,EU"
 desalwii,Species,468,Genus,55,A,"Wallace, 1994",,"CITES,EU"
 indiana,Species,469,Genus,55,A,"Wallace, 1994",,"CITES,EU"
 jacquelineae,Species,470,Genus,55,A,"Wallace, 1994",,"CITES,EU"
@@ -888,9 +888,9 @@ Bradypterus,Genus,643,Family,512,A,"Swainson, 1837",,CMS
 Bradypus,Genus,644,Family,112,A,"Linnaeus, 1758",,"CITES,EU"
 PLETHODONTIDAE,Family,645,Order,28,A,,,EU
 Branta,Genus,647,Family,43,A,"Scopoli, 1769",,"CITES,EU,CMS"
-ESOCIFORMES,Order,648,Class,1,,,,EU
+ESOCIFORMES,Order,648,Class,1,A,,,EU
 ORIOLIDAE,Family,563,Order,109,A,,,EU
-OSMERIFORMES,Order,649,Class,1,,,,EU
+OSMERIFORMES,Order,649,Class,1,A,,,EU
 POCILLOPORIDAE,Family,651,Order,137,A,Gray 1842,,"CITES,EU"
 Brookesia,Genus,652,Family,167,A,"Gray, 1865",,"CITES,EU"
 Brotogeris,Genus,653,Family,683,A,"Vigors, 1825",,"CITES,EU"
@@ -999,7 +999,7 @@ Caloperdix,Genus,730,Family,613,A,"Blyth, 1861",,"CITES,EU"
 SCIAENIDAE,Family,730,Order,113,A,,,"CITES,EU"
 Caloprymnus,Genus,731,Family,666,A,"Thomas, 1888",,"CITES,EU"
 SCINCIDAE,Family,731,Order,136,A,,,"CITES,EU"
-SCANDENTIA,Order,731,Class,17,,,,"CITES,EU"
+SCANDENTIA,Order,731,Class,17,A,,,"CITES,EU"
 SCIURIDAE,Family,732,Order,134,A,"Hemprich, 1820",,"CITES,EU"
 PELECANIDAE,Family,591,Order,111,A,,,"CITES,EU,CMS,CMS-AEWA"
 Calothorax,Genus,735,Family,828,A,"Gray, 1840",,"CITES,EU"
@@ -1161,12 +1161,12 @@ maculata,Species,881,Genus,165,A,"Smith & Miller, 1980",,EU
 Cetorhinus,Genus,882,Family,164,A,"Blainville, 1816",,"CITES,EU"
 Cettia,Genus,883,Family,512,A,"Bonaparte, 1834",,"EU,CMS"
 Ceyx,Genus,885,Family,27,A,"Lacépède, 1799",,EU
-SORICOMORPHA,Order,886,Class,17,,,,EU
+SORICOMORPHA,Order,886,Class,17,A,,,EU
 Chaeropus,Genus,887,Family,7171,A,"Ogilby, 1838",,"CITES,EU"
-ERINACEOMORPHA,Order,888,Class,17,,,,CITES
+ERINACEOMORPHA,Order,888,Class,17,A,,,CITES
 Chaetocercus,Genus,889,Family,828,A,"Gray, 1855",,"CITES,EU"
-CINGULATA,Order,889,Class,17,,,,"CITES,EU"
-PILOSA,Order,890,Class,17,,,,"CITES,EU"
+CINGULATA,Order,889,Class,17,A,,,"CITES,EU"
+PILOSA,Order,890,Class,17,A,,,"CITES,EU"
 Chaetodon,Genus,891,Family,166,A,"Linnaeus, 1758",,EU
 Chaetodontoplus,Genus,892,Family,659,A,"Bleeker, 1876",,EU
 Chaetomys,Genus,893,Family,298,A,"Gray, 1843",,EU
