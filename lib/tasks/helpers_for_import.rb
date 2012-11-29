@@ -67,7 +67,7 @@ class CsvToDbMap
       'Geo_entity' => 'geo_entity varchar',
       'Current_name' => 'current_name varchar',
       'BRU_under' => 'bru_under varchar',
-      'CITES_Region' => 'cites_region varchar'
+      'CITES Region' => 'cites_region varchar'
     },
     'references_import' => {
       'legacy_type' => 'legacy_type varchar',

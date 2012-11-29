@@ -73,6 +73,8 @@ higher_taxa = [
   {
     :name => 'Animalia',
     :taxonomic_position => '1',
+    :legacy_id => '1',
+    :legacy_type => 'Animalia',
     :sub_taxa => [
       {
         :name => 'Annelida',
@@ -175,6 +177,8 @@ higher_taxa = [
   {
     :name => 'Plantae',
     :taxonomic_position => '2',
+    :legacy_id => '2',
+    :legacy_type => 'Plantae',
     :sub_taxa => []
   }
 ]
@@ -185,6 +189,7 @@ higher_taxa.each do |kingdom_props|
   name = TaxonName.create(:scientific_name => kingdom_name)
   kingdom = TaxonConcept.create(:rank_id => kingdom_rank_id,
     :taxon_name_id => name.id, :designation_id => cites.id,
+    :legacy_id => kingdom_props[:legacy_id], :legacy_type => kingdom_props[:legacy_type],
     :data => {'taxonomic_position' => kingdom_props[:taxonomic_position]})
   phyla = kingdom_props[:sub_taxa]
   phylum_rank_id = Rank.find_by_name(Rank::PHYLUM).id
