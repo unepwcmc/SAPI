@@ -1,8 +1,9 @@
 class TimelinesForTaxonConcept
   def initialize(taxon_concept_id)
     @taxon_concept_id = taxon_concept_id
-    @listing_changes = MListingChange.select('listing_changes_mview.*').
-      where('listing_changes_mview.taxon_concept_id' => taxon_concept_id)
+    @taxon_concept = MTaxonConcept.joins(:listing_changes).includes(:listing_changes).where(:"taxon_concepts_mview.id" => taxon_concept_id).first
+    @listing_changes = @taxon_concept ? @taxon_concept.listing_changes : []#MListingChange.select('listing_changes_mview.*').
+      #where('listing_changes_mview.taxon_concept_id' => taxon_concept_id)
     @timelines = {}
     ['I', 'II', 'III'].each do |appdx|
       @timelines[appdx] = Timeline.new(:appendix => appdx)
@@ -27,7 +28,7 @@ class TimelinesForTaxonConcept
       timeline_event = TimelineEvent.new(
         ch.as_json(
           :only => [:id, :change_type_name, :is_current, :parent_symbol, :party_id, :species_listing_name, :symbol],
-          :methods => [:specific_note, :generic_note, :effective_at_formatted, :countries_ids]
+          :methods => [:specific_short_note, :specific_full_note, :generic_note, :effective_at_formatted, :countries_ids]
         ).symbolize_keys
       )
       timeline_event.pos = position
@@ -99,7 +100,8 @@ class TimelinesForTaxonConcept
           prev_event.change_type_name == ChangeType::ADDITION ||
             prev_event.change_type_name == 'AMENDMENT'
           ) &&
-          event.change_type_name == ChangeType::ADDITION
+          event.change_type_name == ChangeType::ADDITION &&
+          (event.party_id.nil? || event.party_id == prev_event.party_id)
           event.change_type_name = 'AMENDMENT'
         end
         prev_event = event
@@ -119,7 +121,7 @@ class TimelinesForTaxonConcept
             :end_pos => next_event.pos
           )
         else
-          if [ChangeType::ADDITION, ChangeType::RESERVATION, 'AMENDMENT'].include? event.change_type_name
+          if @taxon_concept.send("cites_#{timeline.appendix.downcase}?") && @taxon_concept.send("cites_#{timeline.appendix.downcase}")
             TimelineInterval.new(
               :start_pos => event.pos,
               :end_pos => 1

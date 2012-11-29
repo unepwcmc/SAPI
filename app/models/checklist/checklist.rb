@@ -137,11 +137,11 @@ class Checklist::Checklist
 
   def listing_changes_json_options
     json_options = {
-      :only => [:id, :change_type_name, :species_listing_name,
-        :party_name, :is_current],
+      :only => [:id, :change_type_name, :species_listing_name, :party_name,
+        :party_id, :is_current, :symbol, :parent_symbol],
       :methods => [:countries_ids, :effective_at_formatted]
     }
-    json_options[:methods] += [:specific_note, :generic_note]
+    json_options[:methods] += [:specific_short_note, :specific_full_note, :generic_note]
 
     json_options
   end
