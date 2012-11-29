@@ -71,8 +71,8 @@ namespace :import do
 #      'lib/assets/files/first_pages_cites/plants_listing_changes.csv'
 #    )
 #    Rake::Task["import:common_names"].invoke(
-#      'lib/assets/files/first_pages_cites/animals_common_names.csv',
-#      'lib/assets/files/first_pages_cites/plants_common_names.csv'
+#      'lib/assets/files/cleaned/animalia_common_names_utf8.csv',
+##      'lib/assets/files/first_pages_cites/plants_common_names.csv'
 #    )
 #    Rake::Task["import:synonyms"].invoke(
 #      'lib/assets/files/first_pages_cites/animals_synonyms.csv',

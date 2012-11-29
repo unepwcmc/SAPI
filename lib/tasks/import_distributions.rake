@@ -18,6 +18,7 @@ namespace :import do
           LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = 'Animalia'
           LEFT JOIN ranks ON INITCAP(ranks.name) = INITCAP(BTRIM(#{TMP_TABLE}.rank)) AND taxon_concepts.rank_id = ranks.id
           WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL
+          AND BTRIM(#{TMP_TABLE}.designation) ilike '%CITES%'
       SQL
       #TODO do sth about those unknown distributions!
       ActiveRecord::Base.connection.execute(sql)

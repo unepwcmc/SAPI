@@ -1,4 +1,4 @@
-legacy_id,iso2,name,long_name,geo_entity,current_name,bru_under,cites_region
+country id,iso2,name,long_name,Geo_entity,Current_name,BRU_under,CITES Region
 1,AF,Afghanistan,Islamic Republic of Afghanistan,Country,Y,,2
 2,AL,Albania,Republic of Albania,Country,Y,,4
 3,DZ,Algeria,People's Democratic Republic of Algeria,Country,Y,,1
@@ -39,7 +39,7 @@ legacy_id,iso2,name,long_name,geo_entity,current_name,bru_under,cites_region
 48,KM,Comoros,Union of the Comoros,Country,Y,,1
 49,CG,Congo,Republic of the Congo,Country,Y,,1
 51,CR,Costa Rica,Republic of Costa Rica,Country,Y,,3
-56,CI,Côte d'Ivoire,Republic of Côte d'Ivoire,Country,Y,,1
+56,CI,Cte d'Ivoire,Republic of Cte d'Ivoire,Country,Y,,1
 52,HR,Croatia,Republic of Croatia,Country,Y,,4
 53,CU,Cuba,Republic of Cuba,Country,Y,,3
 54,CY,Cyprus,Republic of Cyprus,Country,Y,,4

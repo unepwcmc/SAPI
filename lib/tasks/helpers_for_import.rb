@@ -5,15 +5,15 @@ class CsvToDbMap
 
   MAPPING = {
     'species_import' => {
-      'name' => 'name varchar',
-      'rank' => 'rank varchar',
-      'legacy_id' => 'legacy_id integer',
-      'parent_rank' => 'parent_rank varchar',
-      'parent_legacy_id' => 'parent_legacy_id integer',
-      'status' => 'status varchar',
-      'author' => 'author varchar',
+      'Scientific name' => 'name varchar',
+      'Rank' => 'rank varchar',
+      'RecID' => 'legacy_id integer',
+      'ParentRank' => 'parent_rank varchar',
+      'ParentRecID' => 'parent_legacy_id integer',
+      'Status' => 'status varchar',
+      'Species Author' => 'author varchar',
       'notes' => 'notes varchar',
-      'designation' => 'designation varchar'
+      'Designation' => 'designation varchar'
     },
     'cites_listings_import' => {
       'Kingdom' => 'legacy_type varchar',
@@ -26,36 +26,33 @@ class CsvToDbMap
       'IsCurrent' => 'is_current boolean'
     },
     'distribution_import' => {
-      'rank' => 'rank varchar',
-      'legacy_id' => 'legacy_id integer',
-      'country_legacy_id' => 'country_legacy_id integer',
-      'country_iso2' => 'country_iso2 varchar',
-      'country_name' => 'country_name varchar',
-      'reference_id' => 'reference_id integer',
-      'tags' => 'tags varchar',
-      'designation' => 'designation varchar'
+      'Rank' => 'rank varchar',
+      'Species RecID' => 'legacy_id integer',
+      'Country Legacy ID' => 'country_legacy_id integer',
+      'Country ISO Code 2' => 'country_iso2 varchar',
+      'Country Short Name' => 'country_name varchar',
+      'Reference IDs' => 'reference_id integer',
+      'Tags' => 'tags varchar',
+      'Designation' => 'designation varchar'
     },
     'common_name_import' => {
-      'Kingdom' => 'legacy_type varchar',
-      'SpcRecID' => 'species_id integer',
-      'ComName' => 'common_name varchar',
-      'LanDesc' => 'language_name varchar'
+      'ComName' => 'name varchar',
+      'LangShort' => 'language varchar',
+      'RecId' => 'legacy_id integer',
+      'Rank' => 'rank varchar',
+      'Designation' => 'designation varchar',
+      'ReferenceID' => 'reference_id varchar'
     },
     'synonym_import' => {
-      'Kingdom' => 'Kingdom varchar',
-      'PhyName' => 'Phylum varchar',
-      'ClaName' => 'Class varchar',
-      'OrdName' => 'TaxonOrder varchar',
-      'FamName' => 'Family varchar',
-      'GenName' => 'Genus varchar',
-      'SpcName' => 'Species varchar',
-      'SpcAuthor' => 'SpeciesAuthor varchar',
-      'SpcInfraRank' => 'SpcInfraRank varchar',
-      'SpcInfraEpithet' => 'SpcInfra varchar',
-      'SpcInfraRankAuthor' => 'InfraRankAuthor varchar',
-      'SpcStatus' => 'SpcStatus varchar',
-      'SynonymSpcRecID' => 'SpcRecID integer',
-      'AcceptedSpcRecID' => 'accepted_species_id integer'
+      'Scientific name' => 'name varchar',
+      'Rank' => 'rank varchar',
+      'RecID' => 'legacy_id integer',
+      'Status' => 'status varchar',
+      'Species Author' => 'author varchar',
+      'notes' => 'notes varchar',
+      'Designation' => 'designation varchar',
+      'AcceptedRank' => 'accepted_rank varchar',
+      'AcceptedRecID' => 'accepted_legacy_id integer'
     },
     #TODO legacy type for regions?
     'cites_regions_import' => {
@@ -63,14 +60,14 @@ class CsvToDbMap
     },
     #TODO legacy type for countries?
     'countries_import' => {
-      'legacy_id' => 'legacy_id integer',
+      'country id' => 'legacy_id integer',
       'iso2' => 'iso2 varchar',
       'name' => 'name varchar',
       'long_name' => 'long_name varchar',
-      'geo_entity' => 'geo_entity varchar',
-      'current_name' => 'current_name varchar',
-      'bru_under' => 'bru_under varchar',
-      'cites_region' => 'cites_region varchar'
+      'Geo_entity' => 'geo_entity varchar',
+      'Current_name' => 'current_name varchar',
+      'BRU_under' => 'bru_under varchar',
+      'CITES_Region' => 'cites_region varchar'
     },
     'references_import' => {
       'legacy_type' => 'legacy_type varchar',

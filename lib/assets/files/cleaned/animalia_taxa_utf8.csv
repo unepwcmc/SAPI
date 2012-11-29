@@ -1,4 +1,4 @@
-name,rank,legacy_id,parent_rank,parent_legacy_id,status,author,notes,designation
+Scientific name,Rank,RecID,ParentRank,ParentRecID,Status,Species Author,notes,Designation
 Aonyx,Genus,318,SubFamily,1,A,"Lesson, 1827",,"CITES,EU"
 Eira,Genus,1536,SubFamily,2,A,"C. D. H. Smith, 1842",,"CITES,EU"
 Enhydra,Genus,1590,SubFamily,1,A,"Fleming, 1822",,"CITES,EU"
@@ -2592,7 +2592,7 @@ Mimodes,Genus,2939,Family,497,A,Ridgway 1882,,EU
 Miniopterus,Genus,2941,Family,851,A,,,"CITES,CMS"
 Miopithecus,Genus,2942,Family,160,A,,,"CITES,EU"
 Mirounga,Genus,2946,Family,618,A,,,"CITES,EU"
-Mirza,Genus,2947,Family,171,S,"Gray, 1870",,"CITES,EU"
+Mirza,Genus,2947,Family,171,A,"Gray, 1870",,"CITES,EU"
 Mistichthys,Genus,2949,Family,343,A,,,EU
 Mitu,Genus,2952,Family,217,A,Lesson 1831,,"CITES,EU"
 stellulatus,Species,2954,Genus,624,A,"(Cairns, 1984)",,"CITES,EU"
@@ -4766,7 +4766,7 @@ inustus,Species,6431,Genus,1367,A,"Müller, 1840",,"CITES,EU"
 lumholtzi,Species,6432,Genus,1367,A,"Collett, 1884",,"CITES,EU"
 matschiei,Species,6433,Genus,1367,A,"Forster & Rothschild, 1907",,EU
 ursinus,Species,6434,Genus,1367,A,"(Temminck, 1836)",,"CITES,EU"
-Philantomba,Genus,6441,Family,108,S,,,"CITES,EU"
+Philantomba,Genus,6441,Family,108,A,,,"CITES,EU"
 Phoeniconaias,Genus,6443,Family,620,A,,,"CITES,EU"
 Phonygammus,Genus,6445,Family,576,A,,,"CITES,EU"
 alcocki,Species,6450,Genus,1370,A,"(Wells, 1954)",,"CITES,EU"
@@ -5023,7 +5023,6 @@ GEOEMYDIDAE,Family,7134,Order,153,A,,,"CITES,EU"
 PODOCNEMIDIDAE,Family,7135,Order,153,A,,,"CITES,EU"
 maximus,Species,7140,Genus,1554,A,"Linnaeus, 1758",,"CITES,EU"
 Pseudopotto,Genus,7153,Family,451,A,Schwartz 1996,,"CITES,EU"
-Sibbaldius,Genus,7154,Family,91,S,"Gray, 1864",,"CITES,EU"
 CHAEROPODIDAE,Family,7171,Order,112,A,,,"CITES,EU"
 THYLACOMYIDAE,Family,7172,Order,112,A,,,"CITES,EU"
 HYPSIPRYMNODONTIDAE,Family,7173,Order,54,A,,,EU
@@ -5055,8 +5054,8 @@ Leiopython,Genus,7526,Family,969,A,"Hubrecht, 1879",,"CITES,EU"
 Gongylophis,Genus,7527,Family,106,A,"Wagler, 1830",,"CITES,EU"
 Leptolebias,Genus,7591,Family,61,A,"Myers, 1952",,"CITES,EU"
 Dysmoropelia,Genus,7597,Family,205,A,,,"CITES,EU"
-Caracara,Genus,7599,Family,310,S,"Merrem, 1826",,"CITES,EU"
-Phoebastria,Genus,7609,Family,258,S,"Reichenbach, 1853",,"CITES,EU"
+Caracara,Genus,7599,Family,310,A,"Merrem, 1826",,"CITES,EU"
+Phoebastria,Genus,7609,Family,258,A,"Reichenbach, 1853",,"CITES,EU"
 Necropsittacus,Genus,7612,Family,683,A,,,"CITES,EU"
 Mascarenotus,Genus,7614,Family,772,A,,,"CITES,EU"
 quercinus,Species,7618,Genus,1559,A,"(Linnaeus, 1766)",,CITES
@@ -5076,7 +5075,7 @@ cia,Species,7679,Genus,1571,A,"Linnaeus, 1766",,EU
 cirlus,Species,7681,Genus,1571,A,"Linnaeus, 1766",,EU
 citrinella,Species,7682,Genus,1571,A,"Linnaeus, 1758",,EU
 hortulana,Species,7683,Genus,1571,A,"Linnaeus, 1758",,EU
-Phoenicoparrus,Genus,7684,Family,620,S,,,"CITES,EU"
+Phoenicoparrus,Genus,7684,Family,620,A,,,"CITES,EU"
 melanocephala,Species,7685,Genus,1571,A,"Scopoli, 1769",,EU
 pusilla,Species,7687,Genus,1571,A,"Pallas, 1776",,EU
 schoeniclus,Species,7689,Genus,1571,A,"(Linnaeus, 1758)",,EU
@@ -5118,9 +5117,9 @@ leptorhynchus,Species,7775,Genus,1592,A,"(King, 1831)",,"CITES,EU"
 ensifera,Species,7776,Genus,1593,A,"(Boissonneau, 1839)",,"CITES,EU"
 roseicapilla,Species,7785,Genus,1600,A,"(Vieillot, 1817)",,"CITES,EU"
 rubra,Species,7789,Genus,1603,A,"(Gmelin, 1788)",,"CITES,EU"
-Houbaropsis,Genus,7789,Family,569,S,,,"CITES,EU"
+Houbaropsis,Genus,7789,Family,569,A,,,"CITES,EU"
 cyanogenia,Species,7790,Genus,1603,A,"Bonaparte, 1850",,"CITES,EU"
-Sypheotides,Genus,7790,Family,569,S,,,"CITES,EU"
+Sypheotides,Genus,7790,Family,569,A,,,"CITES,EU"
 histrio,Species,7791,Genus,1603,A,"(P. L. S. Müller, 1776)",,"CITES,EU"
 reticulata,Species,7792,Genus,1603,A,"(S. Müller, 1841)",,"CITES,EU"
 semilarvata,Species,7793,Genus,1603,A,"Bonaparte, 1850",,"CITES,EU"
@@ -5158,9 +5157,9 @@ ebii,Species,7899,Genus,1620,A,"(Temminck, 1853)",,"CITES,EU"
 nilssonii,Species,7910,Genus,1623,A,"(Keyserling & Blasius, 1839)",,CMS
 serotinus,Species,7911,Genus,1623,A,"(Schreber, 1774)",,CMS
 bottae,Species,7915,Genus,1623,A,"(Peters, 1869)",,CMS
-Eulipoa,Genus,7923,Family,478,S,,,EU
-Xanthopsar,Genus,7925,Family,404,S,,,"CITES,EU"
-Guarouba,Genus,7928,Family,683,S,,,"CITES,EU"
+Eulipoa,Genus,7923,Family,478,A,,,EU
+Xanthopsar,Genus,7925,Family,404,A,,,"CITES,EU"
+Guarouba,Genus,7928,Family,683,A,,,"CITES,EU"
 Symphalangus,Genus,7938,Family,398,A,,,"CITES,EU"
 africanus,Species,7949,Genus,1625,A,"Heuglin & Fitzinger, 1866",,"CITES,EU"
 grevyi,Species,7950,Genus,1625,A,"Oustalet, 1882",,"CITES,EU"
@@ -5176,7 +5175,7 @@ Micromussa,Genus,7957,Family,514,A,,,"CITES,EU"
 hartmannae,Subspecies,7958,Species,7960,A,"Matschie, 1898",,"CITES,EU"
 zebra,Subspecies,7959,Species,7960,A,"Linnaeus, 1758",,"CITES,EU"
 zebra,Species,7960,Genus,1625,A,"Linnaeus, 1758",,"CITES,EU"
-Ibycter,Genus,7966,Family,310,S,,,"CITES,EU"
+Ibycter,Genus,7966,Family,310,A,,,"CITES,EU"
 burchellii,Species,7970,Genus,1625,N,"(Gray, 1824)",,"CITES,EU"
 sudetica,Species,7985,Genus,1626,A,"Staudinger, 1861",,EU
 acros,Species,7993,Genus,1629,A,"Hubbs & Miller, 1948",,EU
@@ -5185,8 +5184,8 @@ Cylicia,Genus,8000,Family,715,A,"Milne-Edwards & Haime, 1857",,"CITES,EU"
 imbricata,Species,8005,Genus,1638,A,"(Linnaeus, 1766)",,"CITES,EU"
 bissa,Subspecies,8006,Species,8005,A,"(Rüppell, 1835)",,CITES
 imbricata,Subspecies,8007,Species,8005,A,"(Linnaeus, 1766)",,CITES
-Ptilopsis,Genus,8008,Family,772,S,,,"CITES,EU"
-Hedydipna,Genus,8013,Family,532,S,,,EU
+Ptilopsis,Genus,8008,Family,772,A,,,"CITES,EU"
+Hedydipna,Genus,8013,Family,532,A,,,EU
 alinae,Species,8019,Genus,1645,A,"(Bourcier, 1842)",,"CITES,EU"
 cupreoventris,Species,8020,Genus,1645,A,"(Fraser, 1840)",,"CITES,EU"
 derbyi,Species,8021,Genus,1645,A,"(DeLattre & Bourcier, 1846)",,"CITES,EU"
@@ -5228,7 +5227,7 @@ pourtalesii,Species,8065,Genus,1652,A,"(Dall, 1884)",,"CITES,EU"
 stylifera,Species,8066,Genus,1652,A,"(Broch, 1935)",,"CITES,EU"
 zarhyncha,Species,8067,Genus,1652,A,"Fisher, 1938",,"CITES,EU"
 fenestrata,Species,8068,Genus,1653,A,"Cairns, 1983",,"CITES,EU"
-Calyptophractus,Genus,8068,Family,241,S,"Fitzinger, 1871",,EU
+Calyptophractus,Genus,8068,Family,241,A,"Fitzinger, 1871",,EU
 reticulum,Species,8069,Genus,1653,A,"Broch, 1951",,"CITES,EU"
 madagascariensis,Species,8070,Genus,1654,A,"(Grandidier, 1867)",,"CITES,EU"
 flabellata,Species,8071,Genus,1655,A,"Scheer & Pillai, 1983",,"CITES,EU"
@@ -5251,13 +5250,13 @@ whitakeri,Species,8096,Genus,1660,A,"Das, 1991",,"CITES,EU"
 robustus,Species,8097,Genus,1661,A,"(Lilljeborg, 1861)",,"CITES,EU"
 astrild,Species,8100,Genus,1662,A,"(Linnaeus, 1758)",,"CITES,EU"
 caerulescens,Species,8101,Genus,1662,A,"(Vieillot, 1817)",,"CITES,EU"
-Piliocolobus,Genus,8101,Family,160,S,,,"CITES,EU"
+Piliocolobus,Genus,8101,Family,160,A,,,"CITES,EU"
 melpoda,Species,8102,Genus,1662,A,"(Vieillot, 1817)",,"CITES,EU"
 troglodytes,Species,8105,Genus,1662,A,"(Lichtenstein, 1823)",,"CITES,EU"
 acuticeps,Species,8107,Genus,1663,A,"Bailey, 1959",,EU
 aquali,Species,8108,Genus,1663,A,"Williams & Etnier, 1978",,EU
 australe,Species,8109,Genus,1663,A,"Jordan, 1889",,EU
-Primolius,Genus,8109,Family,683,S,"Bonaparte, 1857",,"CITES,EU"
+Primolius,Genus,8109,Family,683,A,"Bonaparte, 1857",,"CITES,EU"
 boschungi,Species,8110,Genus,1663,A,"Wall & Williams, 1974",,EU
 cinereum,Species,8111,Genus,1663,A,"Storer, 1845",,EU
 cragini,Species,8112,Genus,1663,A,"Gilbert, 1885",,EU
@@ -5798,7 +5797,7 @@ melanolophus,Species,9411,Genus,1922,A,"(Raffles, 1822)",,EU
 cristata,Species,9412,Genus,1923,A,"(Pallas, 1764)",,"CITES,EU"
 scheepmakeri,Species,9413,Genus,1923,A,"Finsch, 1876",,"CITES,EU"
 victoria,Species,9414,Genus,1923,A,"(Fraser, 1844)",,"CITES,EU"
-Pavonia,Genus,9424,Family,22,S,"Lamarck, 1816",,"CITES,EU"
+Pavonia,Genus,9424,Family,22,A,"Lamarck, 1816",,"CITES,EU"
 religiosa,Species,9425,Genus,1925,A,"Linnaeus, 1758",,"CITES,EU"
 ptilogenys,Species,9426,Genus,1925,N,"Blyth, 1846",,"CITES,EU"
 griseus,Species,9461,Genus,1930,A,"(G. Cuvier, 1812)",,"CITES,EU"
@@ -5818,7 +5817,7 @@ pulchra,Species,9506,Genus,1939,A,"Baur, 1893",,"CITES,EU"
 brachyurus,Species,9508,Genus,1941,A,"(Kuhl, 1820)",,"CITES,EU"
 americana,Species,9513,Genus,1944,A,"(Linnaeus, 1758)",,"CITES,EU"
 antigone,Species,9514,Genus,1944,A,"(Linnaeus, 1758)",,"CITES,EU"
-Diopsittaca,Genus,9514,Family,683,S,,,"CITES,EU"
+Diopsittaca,Genus,9514,Family,683,A,,,"CITES,EU"
 canadensis,Species,9515,Genus,1944,A,"(Linnaeus, 1758)",,"CITES,EU"
 nesiotes,Subspecies,9516,Species,9515,A,"Bangs & Zappey, 1905",,"CITES,EU"
 pulla,Subspecies,9517,Species,9515,A,"Aldrich, 1972",,"CITES,EU"
@@ -6550,7 +6549,7 @@ pardinus,Species,12520,Genus,2666,A,"(Temminck, 1827)",,"CITES,EU"
 rufus,Species,12521,Genus,2666,A,"(Schreber, 1777)",,"CITES,EU"
 isabellinus,Subspecies,12522,Species,12519,A,"(Blyth, 1847)",,CITES
 escuinapae,Subspecies,12523,Species,12521,A,"Allen, 1903",,CITES
-Hypsugo,Genus,12526,Family,851,S,"Kolenati, 1856",,CMS
+Hypsugo,Genus,12526,Family,851,A,"Kolenati, 1856",,CMS
 arctoides,Species,12548,Genus,2672,A,"(I. Geoffroy, 1831)",,"CITES,EU"
 assamensis,Species,12549,Genus,2672,A,"(McClelland, 1840)",,"CITES,EU"
 cyclopis,Species,12550,Genus,2672,A,"(Swinhoe, 1863)",,"CITES,EU"
@@ -6604,10 +6603,10 @@ phasianella,Species,12642,Genus,2700,N,"(Temminck, 1821)",,"CITES,EU"
 coctei,Species,12644,Genus,2702,A,"(Duméril & Bibron, 1839)",,EU
 lagotis,Species,12650,Genus,2706,A,"(Reid, 1837)",,"CITES,EU"
 leucura,Species,12651,Genus,2706,A,"(Thomas, 1887)",,"CITES,EU"
-Orthopsittaca,Genus,12652,Family,683,S,,,"CITES,EU"
-Psilopsiagon,Genus,12653,Family,683,S,"Ridgway, 1912",,"CITES,EU"
+Orthopsittaca,Genus,12652,Family,683,A,,,"CITES,EU"
+Psilopsiagon,Genus,12653,Family,683,A,"Ridgway, 1912",,"CITES,EU"
 elegans,Species,12655,Genus,2709,A,"Stein, 1933",,EU
-Corynorhinus,Genus,12662,Family,851,S,"Allen, 1865",,EU
+Corynorhinus,Genus,12662,Family,851,A,"Allen, 1865",,EU
 asanoi,Species,12671,Genus,2714,A,"Yabe & Sugiyama, 1936",,"CITES,EU"
 asperula,Species,12672,Genus,2714,A,"Milne Edwards & Haime, 1849",,"CITES,EU"
 brueggemanni,Species,12673,Genus,2714,A,"(Ridley, 1881)",,"CITES,EU"
@@ -6738,7 +6737,7 @@ scheeri,Species,13204,Genus,2852,A,"Head, 1983",,"CITES,EU"
 Cryptophyllobates,Genus,13204,Family,247,A,,,"CITES,EU"
 cayennensis,Species,13210,Genus,2856,A,"(Gmelin, 1789)",,EU
 Isostichopus,Genus,13228,Family,2383,A,"Deichmann, 1958",,"CITES,EU"
-Leucocephalon,Genus,13232,Family,7134,S,,,"CITES,EU"
+Leucocephalon,Genus,13232,Family,7134,A,,,"CITES,EU"
 bidens,Species,13241,Genus,2869,A,"(Sowerby, 1804)",,"CITES,EU"
 bowdoini,Species,13242,Genus,2869,A,"Andrews, 1908",,"CITES,EU"
 carlhubbsi,Species,13243,Genus,2869,A,"Moore, 1963",,"CITES,EU"
@@ -6942,7 +6941,7 @@ latifrons,Species,13919,Genus,3003,A,"(Boulenger, 1897)",,EU
 decemlineata,Species,13923,Genus,3005,A,"(A. Grandidier, 1867)",,EU
 crinifrons,Species,13924,Genus,3006,A,"(Sclater, 1885)",,"CITES,EU"
 feae,Species,13925,Genus,3006,A,"(Thomas & Doria, 1889)",,EU
-Lycalopex,Genus,13936,Family,135,S,,,"CITES,EU"
+Lycalopex,Genus,13936,Family,135,A,,,"CITES,EU"
 dauurica,Species,13993,Genus,3014,A,"Pallas, 1811",,CMS
 striata,Species,13995,Genus,3014,A,"(Pallas, 1764)",,CMS
 muttui,Species,13998,Genus,3014,A,"(Layard, 1854)",,CMS
@@ -7320,7 +7319,7 @@ silvicola,Species,15707,Genus,3436,A,"(Wallace, 1864)",,"CITES,EU"
 spilocephalus,Species,15708,Genus,3436,A,"(Blyth, 1846)",,"CITES,EU"
 trichopsis,Species,15709,Genus,3436,A,"(Wagler, 1832)",,"CITES,EU"
 umbra,Species,15710,Genus,3436,A,"(Richmond, 1903)",,"CITES,EU"
-Arachnopathes,Genus,15710,Family,58,S,"Milne Edwards & Haime, 1857",,"CITES,EU"
+Arachnopathes,Genus,15710,Family,58,A,"Milne Edwards & Haime, 1857",,"CITES,EU"
 vermiculatus,Species,15711,Genus,3436,A,"(Ridgway, 1887)",,"CITES,EU"
 watsonii,Species,15712,Genus,3436,A,"(Cassin, 1848)",,"CITES,EU"
 newtoni,Subspecies,15713,Species,15698,A,"(Lawrence, 1860)",,CITES
@@ -7351,9 +7350,9 @@ lacera,Species,15798,Genus,3454,A,"(Verrill, 1864)",,"CITES,EU"
 rotundifolia,Species,15801,Genus,3455,A,"(Milne Edwards & Haime, 1848)",,"CITES,EU"
 leucocephala,Species,15802,Genus,3456,A,"(Scopoli, 1769)",,"CITES,EU"
 bezoarticus,Species,15803,Genus,3457,A,"(Linnaeus, 1758)",,"CITES,EU"
-Rhipidipathes,Genus,15821,Family,7107,S,"Milne Edwards & Haime, 1857",,"CITES,EU"
+Rhipidipathes,Genus,15821,Family,7107,A,"Milne Edwards & Haime, 1857",,"CITES,EU"
 superciliosus,Species,15840,Genus,3886,A,"(Shelley, 1873)",,"CITES,EU"
-Tylopathes,Genus,15845,Family,7133,S,"Brook, 1889",,"CITES,EU"
+Tylopathes,Genus,15845,Family,7133,A,"Brook, 1889",,"CITES,EU"
 foliosa,Species,15860,Genus,3464,A,"Veron, 1990",,"CITES,EU"
 gemmae,Species,15861,Genus,3464,A,"Nemenzo, 1955",,"CITES,EU"
 rugosa,Species,15862,Genus,3464,A,"(Lamarck, 1801)",,"CITES,EU"
@@ -7479,7 +7478,7 @@ salifana,Species,16280,Genus,3591,A,"Crampton, 1925",,EU
 suturalis,Species,16281,Genus,3591,A,"Pfeiffer, 1855",,EU
 taeniata,Species,16282,Genus,3591,A,"Mörch, 1850",,EU
 tohiveana,Species,16283,Genus,3591,A,"Crampton, 1925",,EU
-Pangshura,Genus,16353,Family,7134,S,,,"CITES,EU"
+Pangshura,Genus,16353,Family,7134,A,,,"CITES,EU"
 ater,Species,16377,Genus,3595,A,"Linnaeus, 1758",,EU
 caeruleus,Species,16378,Genus,3595,A,"Linnaeus, 1758",,EU
 cristatus,Species,16379,Genus,3595,A,"Linnaeus, 1758",,EU
@@ -7911,7 +7910,7 @@ stormi,Species,17628,Genus,3874,A,"Highton & Brame, 1965",,EU
 clava,Species,17665,Genus,3875,A,"(Lamarck, 1819)",,"CITES,EU"
 plenum,Species,17669,Genus,3875,A,"(I. Lea, 1840)",,"CITES,EU"
 poireti,Species,17707,Genus,3877,A,"(Gervais, 1835)",,CITES
-Rucervus,Genus,17711,Family,163,S,"Hodgson, 1838",,"CITES,EU"
+Rucervus,Genus,17711,Family,163,A,"Hodgson, 1838",,"CITES,EU"
 echinatus,Species,17717,Genus,3884,A,"Cairns, 1986",,"CITES,EU"
 gracilis,Species,17718,Genus,3884,A,"Zibrowius & Cairns, 1992",,"CITES,EU"
 symmetricus,Species,17720,Genus,3884,A,"Pourtalès, 1868",,"CITES,EU"
@@ -8075,10 +8074,10 @@ densa,Species,18012,Genus,3951,A,"Vaughan, 1918",,"CITES,EU"
 Trissopathes,Genus,18012,Family,6981,A,"Opresko, 2003",,"CITES,EU"
 Heliopathes,Genus,18013,Family,6981,A,"Opresko, 2003",,"CITES,EU"
 echinulata,Species,18014,Genus,3951,A,"Klunzinger, 1879",,"CITES,EU"
-Pteropathes,Genus,18014,Family,58,S,"Brook, 1889",,"CITES,EU"
+Pteropathes,Genus,18014,Family,58,A,"Brook, 1889",,"CITES,EU"
 eridani,Species,18015,Genus,3951,A,"Umbgrove, 1940",,"CITES,EU"
 evermanni,Species,18017,Genus,3951,A,"Vaughan, 1907",,"CITES,EU"
-Beatragus,Genus,18017,Family,108,S,,,EU
+Beatragus,Genus,18017,Family,108,A,,,EU
 hawaiiensis,Species,18024,Genus,3951,A,"Vaughan, 1907",,"CITES,EU"
 heronensis,Species,18025,Genus,3951,A,"Veron, 1985",,"CITES,EU"
 horizontalata,Species,18026,Genus,3951,A,"Hoffmeister, 1925",,"CITES,EU"
@@ -8146,9 +8145,9 @@ platenae,Species,18157,Genus,3977,A,"W. Blasius, 1888",,"CITES,EU"
 platurus,Species,18158,Genus,3977,A,"(Vieillot, 1818)",,"CITES,EU"
 verticalis,Species,18159,Genus,3977,A,"Sharpe, 1893",,"CITES,EU"
 linsang,Species,18161,Genus,3978,A,"(Hardwicke, 1821)",,"CITES,EU"
-Gymnoris,Genus,18161,Family,649,S,"J. E. Gray, 1831",,"CITES,EU"
+Gymnoris,Genus,18161,Family,649,A,"J. E. Gray, 1831",,"CITES,EU"
 pardicolor,Species,18162,Genus,3978,A,"Hodgson, 1842",,"CITES,EU"
-Heteroglaux,Genus,18162,Family,772,S,"Hume, 1873",,"CITES,EU"
+Heteroglaux,Genus,18162,Family,772,A,"Hume, 1873",,"CITES,EU"
 microdon,Species,18174,Genus,3984,A,"Latham, 1794",,"CITES,EU"
 pectinata,Species,18175,Genus,3984,A,"Latham, 1794",,"CITES,EU"
 perotteti,Species,18176,Genus,3984,A,"Müller & Henle, 1841",,"CITES,EU"
@@ -8200,7 +8199,7 @@ stellata,Species,18414,Genus,4031,A,"(Verrill, 1866)",,"CITES,EU"
 superficialis,Species,18415,Genus,4031,A,"Gardiner, 1898",,"CITES,EU"
 vaughani,Species,18416,Genus,4031,A,"Yabe & Sugiyama, 1936",,"CITES,EU"
 verrilli,Species,18417,Genus,4031,A,"Vaughan, 1907",,"CITES,EU"
-Trioceros,Genus,18421,Family,167,S,"Swainson, 1839",,"CITES,EU"
+Trioceros,Genus,18421,Family,167,A,"Swainson, 1839",,"CITES,EU"
 chrysopterygius,Species,18423,Genus,4035,A,"Gould, 1858",,"CITES,EU"
 dissimilis,Species,18424,Genus,4035,A,"Collett, 1898",,"CITES,EU"
 haematonotus,Species,18425,Genus,4035,A,"(Gould, 1838)",,"CITES,EU"
@@ -8221,7 +8220,7 @@ burchelli,Species,18472,Genus,4054,A,"(Smith, 1841)",,EU
 burgi,Species,18473,Genus,4054,A,"(Boulenger, 1911)",,EU
 phlegethon,Species,18474,Genus,4054,A,"(Barnard, 1938)",,EU
 quathlambae,Species,18475,Genus,4054,A,"(Barnard, 1938)",,EU
-Asarcornis,Genus,18495,Family,43,S,"Salvadori, 1895",,"CITES,EU"
+Asarcornis,Genus,18495,Family,43,A,"Salvadori, 1895",,"CITES,EU"
 Entosphenus,Genus,18497,Family,606,A,,,EU
 sirintarae,Species,18500,Genus,4061,A,"Kitti, 1968",,"CITES,EU"
 dinellianus,Species,18511,Genus,4065,A,"Lillo, 1905",,CMS
@@ -8573,9 +8572,9 @@ hipposideros,Species,19518,Genus,4242,A,"(Bechstein, 1800)",,"CITES,CMS"
 mehelyi,Species,19519,Genus,4242,A,"Matschie, 1901",,CMS
 Homo,Genus,19549,Family,385,A,"Linnaeus, 1758",,"CITES,EU"
 Rungwecebus,Genus,19560,Family,160,A,"Davenport, Stanley, Sargis, de Luca, et al., 2006",,"CITES,EU"
-Przewalskium,Genus,19564,Family,163,S,"Flerov, 1930",,EU
-Eudorcas,Genus,19565,Family,108,S,"Fitzinger, 1869",,EU
-Nanger,Genus,19566,Family,108,S,"Lataste, 1885",,"CITES,EU"
+Przewalskium,Genus,19564,Family,163,A,"Flerov, 1930",,EU
+Eudorcas,Genus,19565,Family,108,A,"Fitzinger, 1869",,EU
+Nanger,Genus,19566,Family,108,A,"Lataste, 1885",,"CITES,EU"
 brunneata,Species,19581,Genus,4243,A,"(Slater, 1897)",,CMS
 Ameerega,Genus,19635,Family,247,A,"Bauer, 1986",,"CITES,EU"
 Ranitomeya,Genus,19640,Family,247,A,"Bauer, 1988",,"CITES,EU"
@@ -8597,7 +8596,7 @@ flabelliformis,Species,19663,Genus,4259,A,"Cairns, 1989",,"CITES,EU"
 levidensis,Species,19664,Genus,4259,A,"Gardiner, 1899",,"CITES,EU"
 typus,Species,19666,Genus,4259,A,"Milne Edwards & Haime, 1848",,"CITES,EU"
 sericeus,Species,19671,Genus,4262,A,"(Pallas, 1776)",,EU
-Stigmochelys,Genus,19672,Family,801,S,,,"CITES,EU"
+Stigmochelys,Genus,19672,Family,801,A,,,"CITES,EU"
 caryophyllacea,Species,19675,Genus,4264,A,"(Latham, 1790)",,"CITES,EU"
 githaginea,Species,19676,Genus,4265,A,"(Lichtenstein, 1823)",,EU
 vesper,Species,19677,Genus,4266,A,"(Lesson, 1829)",,"CITES,EU"
