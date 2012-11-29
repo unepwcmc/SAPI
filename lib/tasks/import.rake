@@ -75,12 +75,12 @@ namespace :import do
 #      'lib/assets/files/first_pages_cites/plants_common_names.csv'
     )
 #    Rake::Task["import:synonyms"].invoke(
-#      'lib/assets/files/first_pages_cites/animals_synonyms.csv',
-#      'lib/assets/files/first_pages_cites/plants_synonyms.csv'
+#      'lib/assets/files/cleaned/animalia_synonyms_utf8.csv',
+##      'lib/assets/files/first_pages_cites/plants_synonyms.csv'
 #    )
-#    Rake::Task["import:references"].invoke(
-#      'lib/assets/files/references.csv'
-#    )
+    Rake::Task["import:references"].invoke(
+      'lib/assets/files/references.csv'
+    )
 #    Rake::Task["import:reference_links"].invoke(
 #      'lib/assets/files/animals_reference_links.csv',
 #      'lib/assets/files/plants_reference_links.csv'
@@ -89,8 +89,8 @@ namespace :import do
 #      'lib/assets/files/standard_references.csv'
 #    )
 #
-#    Sapi::rebuild()
-#    Sapi::create_indices
+    Sapi::rebuild()
+    Sapi::create_indices
   end
 
 end

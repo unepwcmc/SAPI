@@ -62,7 +62,7 @@ namespace :import do
             WHERE taxon_relationships.taxon_relationship_type_id = #{rel.id}
           )
         ) q
-SQL
+      SQL
       ActiveRecord::Base.connection.execute(sql)
     end
 

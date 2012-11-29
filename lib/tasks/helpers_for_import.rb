@@ -50,6 +50,7 @@ class CsvToDbMap
       'Status' => 'status varchar',
       'Species Author' => 'author varchar',
       'notes' => 'notes varchar',
+      'ReferenceIDs' => 'reference_ids varchar',
       'Designation' => 'designation varchar',
       'AcceptedRank' => 'accepted_rank varchar',
       'AcceptedRecID' => 'accepted_legacy_id integer'
