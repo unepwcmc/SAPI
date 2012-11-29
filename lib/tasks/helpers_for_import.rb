@@ -86,16 +86,13 @@ class CsvToDbMap
       'DslCodeRecID' => 'DslCodeRecID integer'
     },
     'standard_references_import' => {
-      "Author" => 'author varchar',
-      "Year" => 'year integer',
-      "Title" => 'title varchar',
-      "Kingdom" => 'Kingdom varchar',
-      "Phylum" => 'Phylum varchar',
-      "Class" => 'Class varchar',
-      "Order" => 'TaxonOrder varchar',
-      "Family" => 'Family varchar',
-      "Genus" => 'Genus varchar',
-      "Species" => 'Species varchar'
+      'Scientific name' => 'name varchar',
+      'Rank' => 'rank varchar',
+      'RecID' => 'taxon_legacy_id integer',
+      'DesignationStandardReferenceID' => 'ref_legacy_id integer',
+      'Excludes' => 'exclusions varchar',
+      'Cascade' => 'cascade boolean',
+      'Designation' => 'designation varchar'
     }
   }
 

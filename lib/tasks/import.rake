@@ -78,16 +78,16 @@ namespace :import do
 #      'lib/assets/files/cleaned/animalia_synonyms_utf8.csv',
 ##      'lib/assets/files/first_pages_cites/plants_synonyms.csv'
 #    )
-    Rake::Task["import:references"].invoke(
-      'lib/assets/files/references.csv'
-    )
+    # Rake::Task["import:references"].invoke(
+      # 'lib/assets/files/references.csv'
+    # )
 #    Rake::Task["import:reference_links"].invoke(
 #      'lib/assets/files/animals_reference_links.csv',
 #      'lib/assets/files/plants_reference_links.csv'
 #    )
-#    Rake::Task["import:standard_references"].invoke(
-#      'lib/assets/files/standard_references.csv'
-#    )
+   Rake::Task["import:standard_references"].invoke(
+     'lib/assets/files/cleaned/animalia_standard_refs_utf8.csv'
+   )
 #
     Sapi::rebuild()
     Sapi::create_indices
