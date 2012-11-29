@@ -125,14 +125,22 @@ class MTaxonConcept < ActiveRecord::Base
           EXCEPT
 
           -- and does not have an exclusion for the specified geo entities
-          SELECT taxon_concept_id
-          FROM listing_changes
-          INNER JOIN change_types ON change_types.id = listing_changes.change_type_id
-          INNER JOIN listing_distributions ON listing_changes.id = listing_distributions.listing_change_id AND NOT is_party
-          #{(appendix_abbreviations ? 'INNER JOIN species_listings ON species_listings.id = listing_changes.species_listing_id' : '')}
-          WHERE is_current = 't' AND change_types.name = 'EXCEPTION'
-          #{(appendix_abbreviations ? "AND species_listings.abbreviation IN (#{appendices_in_clause})" : '')}
-          AND listing_distributions.geo_entity_id IN (#{geo_entities_in_clause})
+          (
+          #{
+          geo_entity_ids.map do |geo_entity_id|
+          <<-GEO_SQL
+            SELECT taxon_concept_id
+            FROM listing_changes
+            INNER JOIN change_types ON change_types.id = listing_changes.change_type_id
+            INNER JOIN listing_distributions ON listing_changes.id = listing_distributions.listing_change_id AND NOT is_party
+            #{(appendix_abbreviations ? 'INNER JOIN species_listings ON species_listings.id = listing_changes.species_listing_id' : '')}
+            WHERE is_current = 't' AND change_types.name = 'EXCEPTION'
+            #{(appendix_abbreviations ? "AND species_listings.abbreviation IN (#{appendices_in_clause})" : '')}
+            AND listing_distributions.geo_entity_id = #{geo_entity_id}
+            GEO_SQL
+          end.join ("\n            INTERSECT\n\n")
+          }
+          )
 
         )
       ) taxa_in_populations ON #{self.table_name}.id = taxa_in_populations.taxon_concept_id
