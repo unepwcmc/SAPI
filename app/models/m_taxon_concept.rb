@@ -136,7 +136,7 @@ class MTaxonConcept < ActiveRecord::Base
   scope :alphabetical_layout, order(['kingdom_position', 'full_name'])
 
   def spp
-    if ['GENUS', 'FAMILY', 'ORDER'].include?(rank_name)
+    if ['GENUS', 'FAMILY', 'SUBFAMILY', 'ORDER'].include?(rank_name)
       'spp.'
     else
       nil
