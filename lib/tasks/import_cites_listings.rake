@@ -26,7 +26,7 @@ namespace :import do
       ActiveRecord::Base.connection.execute(<<-SQL
         CREATE VIEW #{TMP_TABLE}_view AS
         SELECT ROW_NUMBER() OVER () AS row_id, * FROM #{TMP_TABLE}
-        ORDER BY spc_rec_id, listing_date, appendix, country_legacy_id
+        ORDER BY legacy_id, listing_date, appendix, country_iso2
       SQL
       )
       ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN IF EXISTS import_row_id")
@@ -38,15 +38,15 @@ namespace :import do
           INSERT INTO listing_changes(import_row_id, species_listing_id, taxon_concept_id, change_type_id, created_at, updated_at, effective_at, is_current)
           SELECT row_id,
             CASE
-              WHEN UPPER(BTRIM(TMP.appendix)) like 'III%' THEN #{appendix_3.id}
-              WHEN UPPER(BTRIM(TMP.appendix)) like 'II%' THEN #{appendix_2.id}
-              WHEN UPPER(BTRIM(TMP.appendix)) like 'I%' THEN #{appendix_1.id}
+              WHEN UPPER(BTRIM(TMP.appendix)) like '%III%' THEN #{appendix_3.id}
+              WHEN UPPER(BTRIM(TMP.appendix)) like '%II%' THEN #{appendix_2.id}
+              WHEN UPPER(BTRIM(TMP.appendix)) like '%I%' THEN #{appendix_1.id}
               ELSE NULL
             END, taxon_concepts.id,
             CASE
               WHEN TMP.appendix like '%/r' THEN #{r.id}
               WHEN TMP.appendix like '%/w' THEN #{rw.id}
-              WHEN TMP.appendix ilike '%DELETED%' THEN #{d.id}
+              WHEN TMP.appendix ilike 'DEL%' THEN #{d.id}
               ELSE #{a.id}
             END, current_date, current_date, TMP.listing_date,
             CASE
@@ -54,7 +54,7 @@ namespace :import do
               ELSE TMP.is_current
             END
           FROM #{TMP_TABLE}_view AS TMP
-          INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = TMP.spc_rec_id AND taxon_concepts.legacy_type = TMP.legacy_type;
+          INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = TMP.legacy_id AND taxon_concepts.legacy_type = 'Animalia';
       SQL
 
       puts "INSERTING listing_changes"
@@ -64,11 +64,9 @@ namespace :import do
           INSERT INTO listing_distributions(listing_change_id, geo_entity_id, is_party, created_at, updated_at)
           SELECT DISTINCT listing_changes.id, geo_entities.id, 't'::BOOLEAN, current_date, current_date
           FROM #{TMP_TABLE}_view AS TMP
-          INNER JOIN geo_entities ON geo_entities.legacy_id = CASE
-            WHEN BTRIM(TMP.country_legacy_id) = 'NULL' THEN NULL
-            ELSE TMP.country_legacy_id::INTEGER
-          END
+          INNER JOIN geo_entities ON geo_entities.iso_code2 like INITCAP(BTRIM(TMP.country_iso2))
           INNER JOIN listing_changes ON TMP.row_id = listing_changes.import_row_id
+          WHERE TMP.country_iso2 <> 'Null' AND TMP.country_iso2 IS NOT NULL
       SQL
       puts "INSERTING listing distributions"
       ActiveRecord::Base.connection.execute(sql)
@@ -79,11 +77,16 @@ namespace :import do
             SELECT DISTINCT listing_changes.id, current_date, current_date
             FROM #{TMP_TABLE}_view AS TMP
             INNER JOIN listing_changes ON TMP.row_id = listing_changes.import_row_id
-            WHERE TMP.notes IS NOT NULL AND TMP.notes <> 'NULL'
+            WHERE TMP.short_note_en IS NOT NULL AND TMP.short_note_en <> 'NULL'
             RETURNING *
           )
-          INSERT INTO annotation_translations(annotation_id, language_id, full_note, created_at, updated_at)
-          SELECT t.id, #{english.id}, TMP.notes, current_date, current_date
+          INSERT INTO annotation_translations(annotation_id, language_id, short_note, full_note, created_at, updated_at)
+          SELECT t.id, #{english.id}, '',
+            CASE
+              WHEN TMP.full_note_en like 'NULL' OR TMP.full_note_en IS NULL THEN TMP.short_note_en
+              ELSE TMP.full_note_en
+            END
+          , current_date, current_date
           FROM t
           INNER JOIN listing_changes ON t.listing_change_id = listing_changes.id
           INNER JOIN #{TMP_TABLE}_view AS TMP ON listing_changes.import_row_id = TMP.row_id

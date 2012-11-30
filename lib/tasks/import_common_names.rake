@@ -12,23 +12,24 @@ namespace :import do
       copy_data(file, TMP_TABLE)
       sql = <<-SQL
         INSERT INTO common_names(name, language_id, created_at, updated_at)
-        SELECT common_name, languages.id, current_date, current_date
+        SELECT #{TMP_TABLE}.name, languages.id, current_date, current_date
           FROM #{TMP_TABLE}
-          LEFT JOIN languages ON #{TMP_TABLE}.language_name = languages.name
+          LEFT JOIN languages ON #{TMP_TABLE}.language = languages.abbreviation
           WHERE NOT EXISTS (
             SELECT common_names.name
               FROM common_names
               LEFT JOIN languages ON common_names.language_id = languages.id
-              WHERE common_names.name = #{TMP_TABLE}.common_name AND #{TMP_TABLE}.language_name = languages.name
-          );
-  
+              WHERE common_names.name = #{TMP_TABLE}.name AND #{TMP_TABLE}.language = languages.name
+          ) AND BTRIM(#{TMP_TABLE}.designation) ilike '%CITES%';
+
         INSERT INTO taxon_commons(taxon_concept_id, common_name_id, created_at, updated_at)
-        SELECT DISTINCT species.id, common_names.id, current_date, current_date
+        SELECT DISTINCT taxon_concepts.id, common_names.id, current_date, current_date
           FROM #{TMP_TABLE}
-          LEFT JOIN common_names ON #{TMP_TABLE}.common_name = common_names.name
-          LEFT JOIN languages ON #{TMP_TABLE}.language_name = languages.name
-          LEFT JOIN taxon_concepts as species ON species.legacy_id = species_id AND species.legacy_type = #{TMP_TABLE}.legacy_type
-          WHERE Species.id IS NOT NULL
+          LEFT JOIN common_names ON #{TMP_TABLE}.name = common_names.name
+          LEFT JOIN languages ON #{TMP_TABLE}.language = languages.abbreviation
+          LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = 'Animalia'
+          LEFT JOIN ranks ON ranks.id = taxon_concepts.rank_id AND INITCAP(BTRIM(#{TMP_TABLE}.rank)) = INITCAP(ranks.name)
+          WHERE taxon_concepts.id IS NOT NULL;
       SQL
       ActiveRecord::Base.connection.execute(sql)
     end

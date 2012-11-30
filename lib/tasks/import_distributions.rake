@@ -12,11 +12,13 @@ namespace :import do
 
       sql = <<-SQL
         INSERT INTO taxon_concept_geo_entities(taxon_concept_id, geo_entity_id, created_at, updated_at)
-        SELECT DISTINCT species.id, geo_entities.id, current_date, current_date
+        SELECT DISTINCT taxon_concepts.id, geo_entities.id, current_date, current_date
           FROM #{TMP_TABLE}
-          LEFT JOIN geo_entities ON geo_entities.legacy_id = country_id AND geo_entities.legacy_type = '#{GeoEntityType::COUNTRY}'
-          LEFT JOIN taxon_concepts as species ON species.legacy_id = species_id AND species.legacy_type = #{TMP_TABLE}.legacy_type
-          WHERE Species.id IS NOT NULL AND geo_entities.id IS NOT NULL
+          LEFT JOIN geo_entities ON geo_entities.legacy_id = #{TMP_TABLE}.country_legacy_id AND geo_entities.legacy_type = '#{GeoEntityType::COUNTRY}'
+          LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = 'Animalia'
+          LEFT JOIN ranks ON INITCAP(ranks.name) = INITCAP(BTRIM(#{TMP_TABLE}.rank)) AND taxon_concepts.rank_id = ranks.id
+          WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL
+          AND BTRIM(#{TMP_TABLE}.designation) ilike '%CITES%'
       SQL
       #TODO do sth about those unknown distributions!
       ActiveRecord::Base.connection.execute(sql)

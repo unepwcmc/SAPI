@@ -49,7 +49,7 @@ shared_context 'Uroplatus' do
       :taxon_concept_reference,
       :taxon_concept => @species2,
       :reference => @ref,
-      :data => {:usr_is_std_ref => 't'}
+      :data => {:usr_is_std_ref => 't', :cascade => 't'}
     )
 
     Sapi::rebuild

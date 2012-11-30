@@ -43,7 +43,7 @@ module Checklist::Pdf::IndexContent
   def main_entry(tc)
     res = listed_taxon_name(tc)
     res += current_listing_with_annotations(tc)
-    if ['SPECIES', 'SUBSPECIES', 'GENUS', 'FAMILY'].include? tc.rank_name
+    if ['SPECIES', 'SUBSPECIES', 'GENUS', 'FAMILY', 'SUBFAMILY'].include? tc.rank_name
       res += " #{"#{tc.family_name}".upcase}" if tc.rank_name != 'FAMILY'
       res += " (#{tc.class_name})" unless tc.class_name.blank?
     end
@@ -52,7 +52,7 @@ module Checklist::Pdf::IndexContent
   end
 
   def listed_taxon_name(taxon_concept)
-    res = if ['FAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
+    res = if ['FAMILY','SUBFAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
       taxon_concept.full_name.upcase
     else
       if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? taxon_concept.rank_name

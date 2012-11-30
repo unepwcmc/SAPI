@@ -109,7 +109,7 @@ module Checklist::Pdf::HistoryContent
   end
 
   def listed_taxon_name(taxon_concept)
-    res = if ['FAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
+    res = if ['FAMILY','SUBFAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
       taxon_concept.full_name.upcase
     else
       taxon_concept.full_name
@@ -127,7 +127,7 @@ module Checklist::Pdf::HistoryContent
       "\\csection{#{taxon_concept.full_name.upcase}}\n"
     elsif taxon_concept.rank_name == 'CLASS'
       "\\section*{\\underline{#{taxon_concept.full_name.upcase}} #{common_names}}\n"
-    elsif ['ORDER','FAMILY'].include? taxon_concept.rank_name
+    elsif ['ORDER','FAMILY','SUBFAMILY'].include? taxon_concept.rank_name
       "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names}}\n"
     end
   end
