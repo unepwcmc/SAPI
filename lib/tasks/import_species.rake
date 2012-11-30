@@ -25,7 +25,7 @@ end
 # Copies data from the temporary table to the correct tables in the database
 #
 # @param [String] which the rank to be copied.
-def import_data_for rank
+def import_data_for rank, synonyms=nil
   puts "Importing #{rank}"
   rank_id = Rank.select(:id).where(:name => rank).first.id
   existing = TaxonConcept.where(:rank_id => rank_id).count
@@ -74,7 +74,7 @@ def import_data_for rank
           AND taxon_names.id IS NOT NULL
           AND BTRIM(#{TMP_TABLE}.rank) ilike '#{rank}'
           AND BTRIM(#{TMP_TABLE}.designation) ilike '%CITES%'
-          AND BTRIM(#{TMP_TABLE}.status) like 'A'
+          #{ unless synonyms then "AND BTRIM(#{TMP_TABLE}.status) like 'A'" end }
         ) as tmp
         LEFT JOIN ranks ON INITCAP(BTRIM(ranks.name)) LIKE INITCAP(BTRIM(tmp.parent_rank))
         LEFT JOIN taxon_concepts ON (
@@ -85,7 +85,6 @@ def import_data_for rank
         )
     RETURNING id;
   SQL
-
   ActiveRecord::Base.connection.execute(sql)
   puts "#{TaxonConcept.where(:rank_id => rank_id).count - existing} #{rank} added"
 end

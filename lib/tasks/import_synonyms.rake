@@ -21,14 +21,14 @@ namespace :import do
       copy_data(file, TMP_TABLE)
 
       #[BEGIN]copied over from import:species
-      import_data_for Rank::PHYLUM
-      import_data_for Rank::CLASS
-      import_data_for Rank::ORDER
-      import_data_for Rank::FAMILY
-      import_data_for Rank::SUBFAMILY
-      import_data_for Rank::GENUS
-      import_data_for Rank::SPECIES
-      import_data_for Rank::SUBSPECIES
+      import_data_for Rank::PHYLUM, true
+      import_data_for Rank::CLASS, true
+      import_data_for Rank::ORDER, true
+      import_data_for Rank::FAMILY, true
+      import_data_for Rank::SUBFAMILY, true
+      import_data_for Rank::GENUS, true
+      import_data_for Rank::SPECIES, true
+      import_data_for Rank::SUBSPECIES, true
       #[END]copied over from import:species
 
       sql = <<-SQL
@@ -39,10 +39,10 @@ namespace :import do
         FROM (
           SELECT accepted.id AS accepted_id, synonym.id AS synonym_id
           FROM #{TMP_TABLE}
-          INNER JOIN ranks ON ranks.name like BTRIM(#{TMP_TABLE}.accepted_legacy_rank)
+          INNER JOIN ranks ON ranks.name ilike BTRIM(#{TMP_TABLE}.accepted_rank)
           INNER JOIN taxon_concepts AS accepted
             ON accepted.legacy_id = #{TMP_TABLE}.accepted_legacy_id AND accepted.rank_id = ranks.id and accepted.legacy_type = 'Animalia'
-          INNER JOIN ranks as synonyms_rank ON synonyms_rank.name like BTRIM(#{TMP_TABLE}.rank)
+          INNER JOIN ranks as synonyms_rank ON synonyms_rank.name ilike BTRIM(#{TMP_TABLE}.rank)
           INNER JOIN taxon_concepts AS synonym
             ON synonym.legacy_id = #{TMP_TABLE}.legacy_id AND synonym.rank_id = synonyms_rank.id and synonym.legacy_type = 'Animalia'
           WHERE NOT EXISTS (
