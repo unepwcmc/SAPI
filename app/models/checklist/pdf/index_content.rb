@@ -33,11 +33,11 @@ module Checklist::Pdf::IndexContent
   end
 
   def synonym_entry(tc)
-    "\\textit{#{tc.sort_name} = #{tc.full_name}}"
+    "\\textit{#{LatexToPdf.escape_latex(tc.sort_name)} = #{tc.full_name}}"
   end
 
   def common_name_entry(tc)
-    "#{tc.sort_name} (#{tc.lng.upcase}): \\textit{#{tc.full_name}}"
+    "#{LatexToPdf.escape_latex(tc.sort_name)} (#{tc.lng.upcase}): \\textit{#{tc.full_name}}"
   end
 
   def main_entry(tc)
@@ -62,7 +62,7 @@ module Checklist::Pdf::IndexContent
       end
     end
     res += " #{taxon_concept.spp}" if taxon_concept.spp
-    res = "\\textbf{#{res}}" if taxon_concept.cites_accepted
+    res = "\\textbf{#{LatexToPdf.escape_latex(res)}}" if taxon_concept.cites_accepted
     res
   end
 
