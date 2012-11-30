@@ -21,15 +21,16 @@ class Checklist::Checklist
       select(sql_columns).
       by_designation(Designation::CITES)
 
-    unless @cites_regions.empty? && @countries.empty?
-      @taxon_concepts_rel = @taxon_concepts_rel.
-        by_cites_regions_and_countries(@cites_regions, @countries)
-    end
-
-    unless @cites_appendices.empty?
-      @taxon_concepts_rel = @taxon_concepts_rel.
+      if @cites_regions.empty? && @countries.empty? && !@cites_appendices.empty?
+        @taxon_concepts_rel = @taxon_concepts_rel.
         by_cites_appendices(@cites_appendices)
-    end
+      elsif !(@cites_regions.empty? && @countries.empty?)
+        @taxon_concepts_rel = @taxon_concepts_rel.
+          by_cites_populations_and_appendices(
+            @cites_regions, @countries,
+            @cites_appendices.empty? ? nil : @cites_appendices
+          )
+      end
 
     unless @scientific_name.blank?
       @taxon_concepts_rel = @taxon_concepts_rel.
@@ -136,11 +137,11 @@ class Checklist::Checklist
 
   def listing_changes_json_options
     json_options = {
-      :only => [:id, :change_type_name, :species_listing_name,
-        :party_name, :is_current],
+      :only => [:id, :change_type_name, :species_listing_name, :party_name,
+        :party_id, :is_current, :symbol, :parent_symbol],
       :methods => [:countries_ids, :effective_at_formatted]
     }
-    json_options[:methods] += [:specific_note, :generic_note]
+    json_options[:methods] += [:specific_short_note, :specific_full_note, :generic_note]
 
     json_options
   end
@@ -169,9 +170,10 @@ class Checklist::Checklist
   #   related metadata
   def generate(page, per_page)
     @taxon_concepts_rel = @taxon_concepts_rel.
-      joins('LEFT OUTER JOIN "listing_changes_mview"
-        ON "listing_changes_mview"."taxon_concept_id" ="taxon_concepts_mview"."id"
-        AND "listing_changes_mview"."is_current" = \'t\'').
+      includes(:current_listing_changes).
+      # joins('LEFT OUTER JOIN "listing_changes_mview"
+        # ON "listing_changes_mview"."taxon_concept_id" ="taxon_concepts_mview"."id"
+        # AND "listing_changes_mview"."is_current" = \'t\'').
       without_nc.without_hidden
     page ||= 0
     per_page ||= 20

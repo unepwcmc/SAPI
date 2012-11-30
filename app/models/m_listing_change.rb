@@ -38,7 +38,18 @@ class MListingChange < ActiveRecord::Base
     effective_at.strftime("%d/%m/%y")
   end
 
-  def specific_note
+  def specific_short_note
+    case I18n.locale
+      when :es
+        spanish_short_note
+      when :fr
+        french_short_note
+      else
+        english_short_note
+    end
+  end
+
+  def specific_full_note
     case I18n.locale
       when :es
         spanish_full_note
