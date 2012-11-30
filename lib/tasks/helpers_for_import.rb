@@ -16,14 +16,21 @@ class CsvToDbMap
       'Designation' => 'designation varchar'
     },
     'cites_listings_import' => {
-      'Kingdom' => 'legacy_type varchar',
-      'SpcRecID' => 'spc_rec_id integer',
-      'LegListing' => 'appendix varchar',
-      'LegDateListed' => 'listing_date date',
-      'CountryRecID' => 'country_legacy_id varchar',
-      'CtyRecID' => 'country_legacy_id varchar',
-      'LegNotes' => 'notes varchar',
-      'IsCurrent' => 'is_current boolean'
+      'rank_name' => 'rank varchar',
+      'rec_id' => 'legacy_id integer',
+      'listing' => 'appendix varchar',
+      'effective_from' => 'listing_date date',
+      'party_iso2' => 'country_iso2 varchar',
+      'is_curre0t' => 'is_current boolean',
+      'hash_note' => 'hash_note varchar',
+      'populations_iso2' => 'populations_iso2 varchar',
+      'EXCLUDEDpopulations_iso' => 'excluded_populations_iso2 varchar',
+      'is_inclusion' => 'is_inclusion boolean',
+      'excluded_rec_ids' => 'excluded_taxa varchar',
+      'short_note_en' => 'short_note_en varchar',
+      'short_note_es' => 'short_note_es varchar',
+      'short_note_fr' => 'short_note_fr varchar',
+      'full_note_en' => 'full_note_en varchar'
     },
     'distribution_import' => {
       'Rank' => 'rank varchar',
