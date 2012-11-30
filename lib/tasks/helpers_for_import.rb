@@ -5,57 +5,66 @@ class CsvToDbMap
 
   MAPPING = {
     'species_import' => {
-      'Kingdom' => 'Kingdom varchar',
-      'PhyName' => 'Phylum varchar',
-      'ClaName' => 'Class varchar',
-      'OrdName' => 'TaxonOrder varchar',
-      'FamName' => 'Family varchar',
-      'GenName' => 'Genus varchar',
-      'SpcName' => 'Species varchar',
-      'SpcAuthor' => 'SpeciesAuthor varchar',
-      'SpcInfraRank' => 'SpcInfraRank varchar',
-      'SpcInfraEpithet' => 'SpcInfra varchar',
-      'SpcInfraRankAuthor' => 'InfraRankAuthor varchar',
-      'SpcRecID' => 'SpcRecId integer',
-      'SpcStatus' => 'SpcStatus varchar',
-    },
-    'cites_listings_import' => {
-      'Kingdom' => 'legacy_type varchar',
-      'SpcRecID' => 'spc_rec_id integer',
-      'LegListing' => 'appendix varchar',
-      'LegDateListed' => 'listing_date date',
-      'CountryRecID' => 'country_legacy_id varchar',
-      'CtyRecID' => 'country_legacy_id varchar',
-      'LegNotes' => 'notes varchar',
-      'IsCurrent' => 'is_current boolean'
-    },
-    'distribution_import' => {
-      'Kingdom' => 'legacy_type varchar',
-      'SpcRecID' => 'species_id integer',
-      'CtyRecID' => 'country_id integer',
-      'CtyShort' => 'country_name varchar'
-    },
-    'common_name_import' => {
-      'Kingdom' => 'legacy_type varchar',
-      'SpcRecID' => 'species_id integer',
-      'ComName' => 'common_name varchar',
-      'LanDesc' => 'language_name varchar'
+      'Scientific name' => 'name varchar',
+      'Rank' => 'rank varchar',
+      'RecID' => 'legacy_id integer',
+      'ParentRank' => 'parent_rank varchar',
+      'ParentRecID' => 'parent_legacy_id integer',
+      'Status' => 'status varchar',
+      'Species Author' => 'author varchar',
+      'notes' => 'notes varchar',
+      'Designation' => 'designation varchar'
     },
     'synonym_import' => {
-      'Kingdom' => 'Kingdom varchar',
-      'PhyName' => 'Phylum varchar',
-      'ClaName' => 'Class varchar',
-      'OrdName' => 'TaxonOrder varchar',
-      'FamName' => 'Family varchar',
-      'GenName' => 'Genus varchar',
-      'SpcName' => 'Species varchar',
-      'SpcAuthor' => 'SpeciesAuthor varchar',
-      'SpcInfraRank' => 'SpcInfraRank varchar',
-      'SpcInfraEpithet' => 'SpcInfra varchar',
-      'SpcInfraRankAuthor' => 'InfraRankAuthor varchar',
-      'SpcStatus' => 'SpcStatus varchar',
-      'SynonymSpcRecID' => 'SpcRecID integer',
-      'AcceptedSpcRecID' => 'accepted_species_id integer'
+      'Scientific name' => 'name varchar',
+      'Rank' => 'rank varchar',
+      'RecID' => 'legacy_id integer',
+      'ParentRank' => 'parent_rank varchar',
+      'Parent recID' => 'parent_legacy_id integer',
+      'Status' => 'status varchar',
+      'Species Author' => 'author varchar',
+      'notes' => 'notes varchar',
+      'ReferenceIDs' => 'reference_ids varchar',
+      'Designation' => 'designation varchar',
+      'AcceptedRank' => 'accepted_rank varchar',
+      'AcceptedRecID' => 'accepted_legacy_id integer'
+    },
+    'cites_listings_import' => {
+      'rank_name' => 'rank varchar',
+      'rec_id' => 'legacy_id integer',
+      'listing' => 'appendix varchar',
+      'effective_from' => 'listing_date date',
+      'party_iso2' => 'country_iso2 varchar',
+      'is_current' => 'is_current boolean',
+      'hash_note' => 'hash_note varchar',
+      'populations_iso2' => 'populations_iso2 varchar',
+      'EXCLUDEDpopulations_iso' => 'excluded_populations_iso2 varchar',
+      'is_inclusion' => 'is_inclusion boolean',
+      'included_in_RecID' => 'included_in_rec_id integer',
+      'RankforInclusions' => 'rank_for_inclusions varchar',
+      'excluded_rec_ids' => 'excluded_taxa varchar',
+      'short_note_en' => 'short_note_en varchar',
+      'short_note_es' => 'short_note_es varchar',
+      'short_note_fr' => 'short_note_fr varchar',
+      'full_note_en' => 'full_note_en varchar'
+    },
+    'distribution_import' => {
+      'Rank' => 'rank varchar',
+      'Species RecID' => 'legacy_id integer',
+      'Country Legacy ID' => 'country_legacy_id integer',
+      'Country ISO Code 2' => 'country_iso2 varchar',
+      'Country Short Name' => 'country_name varchar',
+      'Reference IDs' => 'reference_id integer',
+      'Tags' => 'tags varchar',
+      'Designation' => 'designation varchar'
+    },
+    'common_name_import' => {
+      'ComName' => 'name varchar',
+      'LangShort' => 'language varchar',
+      'RecId' => 'legacy_id integer',
+      'Rank' => 'rank varchar',
+      'Designation' => 'designation varchar',
+      'ReferenceID' => 'reference_id varchar'
     },
     #TODO legacy type for regions?
     'cites_regions_import' => {
@@ -63,12 +72,14 @@ class CsvToDbMap
     },
     #TODO legacy type for countries?
     'countries_import' => {
-      'old_id' => 'legacy_id integer',
+      'country id' => 'legacy_id integer',
       'iso2' => 'iso2 varchar',
-      'iso3' => 'iso3 varchar',
       'name' => 'name varchar',
       'long_name' => 'long_name varchar',
-      'Region' => 'region_number varchar'
+      'Geo_entity' => 'geo_entity varchar',
+      'Current_name' => 'current_name varchar',
+      'BRU_under' => 'bru_under varchar',
+      'CITES Region' => 'cites_region varchar'
     },
     'references_import' => {
       'legacy_type' => 'legacy_type varchar',
@@ -86,16 +97,13 @@ class CsvToDbMap
       'DslCodeRecID' => 'DslCodeRecID integer'
     },
     'standard_references_import' => {
-      "Author" => 'author varchar',
-      "Year" => 'year integer',
-      "Title" => 'title varchar',
-      "Kingdom" => 'Kingdom varchar',
-      "Phylum" => 'Phylum varchar',
-      "Class" => 'Class varchar',
-      "Order" => 'TaxonOrder varchar',
-      "Family" => 'Family varchar',
-      "Genus" => 'Genus varchar',
-      "Species" => 'Species varchar'
+      'Scientific name' => 'name varchar',
+      'Rank' => 'rank varchar',
+      'RecID' => 'taxon_legacy_id integer',
+      'DesignationStandardReferenceID' => 'ref_legacy_id integer',
+      'Excludes' => 'exclusions varchar',
+      'Cascade' => 'cascade boolean',
+      'Designation' => 'designation varchar'
     }
   }
 
