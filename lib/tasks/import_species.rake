@@ -9,7 +9,6 @@ namespace :import do
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
-      db_columns = db_columns_from_csv_headers(file, TMP_TABLE, false)
       #import_data_for Rank::KINGDOM
       import_data_for Rank::PHYLUM
       import_data_for Rank::CLASS
