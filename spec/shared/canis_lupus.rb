@@ -1,4 +1,36 @@
 shared_context "Canis lupus" do
+
+    let(:bhutan){ create(
+      :country,
+      :name => 'Bhutan',
+      :iso_code2 => 'BT'
+    )}
+    let(:india){ create(
+      :country,
+      :name => 'India',
+      :iso_code2 => 'IN'
+    )}
+    let(:nepal){ create(
+      :country,
+      :name => 'Nepal',
+      :iso_code2 => 'NP'
+    )}
+    let(:pakistan){ create(
+      :country,
+      :name => 'Pakistan',
+      :iso_code2 => 'PK'
+    )}
+    let(:poland){ create(
+      :country,
+      :name => 'Poland',
+      :iso_code2 => 'PL'
+    )}
+    let(:argentina){ create(
+      :country,
+      :name => 'Argentina',
+      :iso_code2 => 'AR'
+    )}
+
   before(:all) do
     @klass = TaxonConcept.find_by_taxon_name_id(TaxonName.find_by_scientific_name('Mammalia').id)
     @order = create(
@@ -27,26 +59,7 @@ shared_context "Canis lupus" do
       :parent => @species
     )
 
-    bhutan = create(
-      :country,
-      :name => 'Bhutan',
-      :iso_code2 => 'BT'
-    )
-    india = create(
-      :country,
-      :name => 'India',
-      :iso_code2 => 'IN'
-    )
-    nepal = create(
-      :country,
-      :name => 'Nepal',
-      :iso_code2 => 'NP'
-    )
-    pakistan = create(
-      :country,
-      :name => 'Pakistan',
-      :iso_code2 => 'PK'
-    )
+
     create(
      :cites_II_addition,
      :taxon_concept => @species,
@@ -70,10 +83,31 @@ shared_context "Canis lupus" do
      :taxon_concept => @species,
      :effective_at => '1979-06-28'
     )
+
     l2 = create(
      :cites_I_addition,
      :taxon_concept => @species,
      :effective_at => '2010-06-23',
+     :is_current => true
+    )
+    create(
+      :cites_I_addition_exception,
+      :taxon_concept => @subspecies,
+      :effective_at => '2010-06-23',
+      :parent_id => l2.id,
+     :is_current => true
+    )
+    l3 = create(
+     :cites_II_addition,
+     :taxon_concept => @species,
+     :effective_at => '2010-06-23',
+     :is_current => true
+    )
+    l3_exc = create(
+      :cites_II_addition_exception,
+      :taxon_concept => @species,
+      :effective_at => '1979-06-28',
+      :parent_id => l3.id,
      :is_current => true
     )
     [bhutan, india, nepal, pakistan].each do |country|
@@ -83,19 +117,21 @@ shared_context "Canis lupus" do
         :listing_change => l2,
         :is_party => false
       )
+      create(
+        :listing_distribution,
+        :geo_entity => country,
+        :listing_change => l3_exc,
+        :is_party => false
+      )
     end
-    create(
-     :cites_II_addition,
-     :taxon_concept => @species,
-     :effective_at => '2010-06-23',
-     :is_current => true
-    )
-    create(
-      :cites_I_addition_exception,
-      :taxon_concept => @subspecies,
-      :effective_at => '2010-06-23',
-      :parent_id => l2.id
-    )
+
+    [bhutan, india, nepal, pakistan, poland].each do |country|
+      create(
+        :taxon_concept_geo_entity,
+        :taxon_concept => @species,
+        :geo_entity => country
+      )
+    end
 
     Sapi::rebuild
     self.instance_variables.each do |t|
