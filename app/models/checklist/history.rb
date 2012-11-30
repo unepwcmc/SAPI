@@ -11,13 +11,17 @@ class Checklist::History < Checklist::Checklist
     @download_name = "ChecklistHistory-#{Time.now}.#{ext}"
   end
 
-  def sql_columns
+  def taxon_concepts_columns
     super() - [:current_listing, :cites_accepted,
       :specific_annotation_symbol,
-      :countries_ids_ary,
       :english_names_ary, :spanish_names_ary, :french_names_ary, :synonyms_ary,
-      :listing_updated_at, :"taxon_concepts_mview.countries_ids_ary",
-      :kingdom_position, :taxon_concept_id]
+      :listing_updated_at,
+      :"taxon_concepts_mview.countries_ids_ary AS tc_countries_ids_ary",
+      :kingdom_position]
+  end
+
+  def listing_changes_columns
+    super - [:taxon_concept_id] + [:symbol, :parent_symbol]
   end
 
   def prepare_kingdom_queries
@@ -50,11 +54,8 @@ class Checklist::History < Checklist::Checklist
     document do |doc|
       content(doc)
     end
-    finalize
     @download_path
   end
-
-  def finalize; end
 
   def taxon_concepts_json_options
     json_options = super

@@ -7,7 +7,6 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
     AS $$
         BEGIN
 
-        PERFORM fix_cites_listing_changes();
         PERFORM rebuild_annotation_symbols();
 
         UPDATE taxon_concepts
@@ -26,8 +25,7 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
             SELECT taxon_concept_id, 
               hstore('cites_I', CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
               hstore('cites_II', CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
-              hstore('cites_III', CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END) ||
-              hstore('cites_del', CASE WHEN SUM(cites_del) > 0 THEN 't' ELSE 'f' END)
+              hstore('cites_III', CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END)
               AS listing
             FROM (
               SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type,
@@ -46,21 +44,20 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
               CASE
                 WHEN species_listings.abbreviation = 'III' AND change_types.name = 'ADDITION' THEN 1
                 WHEN (species_listings.abbreviation = 'III' OR species_listing_id IS NULL)
-                  AND change_types.name = 'DELETION' THEN -1
+                  AND change_types.name = 'DELETION' AND
+                    (listing_distributions.id IS NULL OR NOT listing_distributions.is_party) THEN -1
                 ELSE 0
-              END AS cites_III,
-              CASE
-                WHEN species_listing_id IS NULL AND change_types.name = 'DELETION' THEN 1
-                ELSE 0
-              END AS cites_del
+              END AS cites_III
               FROM listing_changes 
 
-              LEFT JOIN change_types ON change_type_id = change_types.id
+              INNER JOIN change_types ON change_type_id = change_types.id
               AND change_types.name IN ('ADDITION','DELETION')
               AND effective_at <= NOW()
-              LEFT JOIN species_listings ON species_listing_id = species_listings.id
-              LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
-              LEFT JOIN designations ON taxon_concepts.designation_id = designations.id
+              INNER JOIN species_listings ON species_listing_id = species_listings.id
+              INNER JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
+              INNER JOIN designations ON taxon_concepts.designation_id = designations.id
+              LEFT JOIN listing_distributions
+                ON listing_distributions.listing_change_id = listing_changes.id
               WHERE designations.name = 'CITES'
               AND is_current = 't' 
             ) AS q
@@ -69,9 +66,6 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
         ) AS qqq
         WHERE taxon_concepts.id = qqq.taxon_concept_id;
 
-        -- set cites_show to false for all deleted taxa
-        UPDATE taxon_concepts SET listing = listing || hstore('cites_show', 'f')
-        WHERE (listing->'cites_del')::BOOLEAN = 't';
         END;
       $$;
 

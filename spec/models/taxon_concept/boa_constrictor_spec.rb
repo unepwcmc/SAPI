@@ -50,10 +50,9 @@ describe TaxonConcept do
         it "should be false for genus Boa" do
           @genus.cites_listed.should == false
         end
-        # it "should be false for species Boa constrictor (inclusion in higher taxa listing)" do
-          # @species.cites_listed.should == false
-        # end
-        pending "should be false for species Boa constrictor (inclusion in higher taxa listing)"
+        it "should be false for species Boa constrictor (inclusion in higher taxa listing)" do
+          @species.cites_listed.should == false
+        end
         it "should be true for subspecies Boa constrictor occidentalis" do
           @subspecies.cites_listed.should be_true
         end

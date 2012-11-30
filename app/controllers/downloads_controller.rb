@@ -59,10 +59,11 @@ class DownloadsController < ApplicationController
       "json" => Checklist::Json
     }
 
-    @download_path = download_module[params[:format]]::Index.new(params).generate
+    doc = download_module[params[:format]]::Index.new(params)
+    @download_path = doc.generate
     send_file(@download_path,
-      :filename => "FullChecklist-#{Time.now}.pdf",
-      :type => "pdf")
+      :filename => doc.download_name,
+      :type => doc.ext)
   end
 
   def download_history
@@ -72,10 +73,11 @@ class DownloadsController < ApplicationController
       "json" => Checklist::Json
     }
 
-    @download_path = download_module[params[:format]]::History.new(params).generate
+    doc = download_module[params[:format]]::History.new(params)
+    @download_path = doc.generate
     send_file(@download_path,
-      :filename => "ChecklistHistory-#{Time.now}.pdf",
-      :type => "pdf")
+      :filename => doc.download_name,
+      :type => doc.ext)
   end
 
   private

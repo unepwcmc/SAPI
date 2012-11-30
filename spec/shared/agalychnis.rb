@@ -22,7 +22,8 @@ shared_context 'Agalychnis' do
     create(
      :cites_II_addition,
      :taxon_concept => @genus,
-     :effective_at => '2010-06-23'
+     :effective_at => '2010-06-23',
+     :is_current => true
     )
 
     @ref = create(

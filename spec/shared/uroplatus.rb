@@ -32,7 +32,8 @@ shared_context 'Uroplatus' do
     create(
      :cites_II_addition,
      :taxon_concept => @genus,
-     :effective_at => '2005-01-12'
+     :effective_at => '2005-01-12',
+     :is_current => true
     )
 
     @ref = create(

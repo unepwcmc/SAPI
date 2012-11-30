@@ -23,6 +23,7 @@
 #  spanish_short_note        :text
 #  french_short_note         :text
 #  is_current                :boolean
+#  countries_ids_ary         :string
 #  dirty                     :boolean
 #  expiry                    :datetime
 #

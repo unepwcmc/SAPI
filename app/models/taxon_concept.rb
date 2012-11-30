@@ -7,21 +7,20 @@
 #  lft            :integer
 #  rgt            :integer
 #  rank_id        :integer          not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
 #  designation_id :integer          not null
 #  taxon_name_id  :integer          not null
 #  legacy_id      :integer
-#  data           :hstore
-#  fully_covered  :boolean          default(TRUE), not null
-#  listing        :hstore
 #  legacy_type    :string(255)
+#  data           :hstore
+#  listing        :hstore
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  author_year    :string(255)
 #
 
 class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :rank_id, :parent_id,
-    :designation_id, :taxon_name_id, :fully_covered,
-    :data
+    :designation_id, :taxon_name_id, :data
 
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore

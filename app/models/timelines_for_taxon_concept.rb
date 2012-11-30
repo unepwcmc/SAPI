@@ -85,7 +85,26 @@ class TimelinesForTaxonConcept
         puts "Unrecognized event type: #{ch.change_type_name}"
       end
     end
+    change_consecutive_additions_to_amendments
     generate_intervals
+  end
+
+  def change_consecutive_additions_to_amendments
+    @timelines.map do |appdx, timeline|
+      timeline.timelines + [timeline]
+    end.flatten.each do |timeline|
+      prev_event = nil
+      timeline.timeline_events.each_with_index do |event, idx|
+        if prev_event && (
+          prev_event.change_type_name == ChangeType::ADDITION ||
+            prev_event.change_type_name == 'AMENDMENT'
+          ) &&
+          event.change_type_name == ChangeType::ADDITION
+          event.change_type_name = 'AMENDMENT'
+        end
+        prev_event = event
+      end
+    end
   end
 
   def generate_intervals
@@ -100,7 +119,7 @@ class TimelinesForTaxonConcept
             :end_pos => next_event.pos
           )
         else
-          if [ChangeType::ADDITION, ChangeType::RESERVATION].include? event.change_type_name
+          if [ChangeType::ADDITION, ChangeType::RESERVATION, 'AMENDMENT'].include? event.change_type_name
             TimelineInterval.new(
               :start_pos => event.pos,
               :end_pos => 1

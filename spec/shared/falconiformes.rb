@@ -9,8 +9,7 @@ shared_context "Falconiformes" do
     @family1 = create(
       :family,
       :taxon_name => create(:taxon_name, :scientific_name => 'Cathartidae'),
-      :parent => @order,
-      :fully_covered => false
+      :parent => @order
     )
     @genus1_1 = create(
       :genus,
@@ -32,13 +31,12 @@ shared_context "Falconiformes" do
       :taxon_name => create(:taxon_name, :scientific_name => 'Papa'),
       :parent => @genus1_2
     )
-    #this one is not listed
     @genus1_3 = create(
       :genus,
       :taxon_name => create(:taxon_name, :scientific_name => 'Vultur'),
-      :parent => @family1,
-      :listing => {:usr_cites_exclusion => 't'}
+      :parent => @family1
     )
+    #this one is not listed
     @species1_3 = create(
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Atratus'),
@@ -65,20 +63,29 @@ shared_context "Falconiformes" do
       :parent => @genus2_1
     )
 
-    create(
+    l1 = create(
      :cites_II_addition,
      :taxon_concept => @order,
-     :effective_at => '1979-06-28'
+     :effective_at => '1979-06-28',
+     :is_current => true
+    )
+    create(
+     :cites_II_addition_exception,
+     :taxon_concept => @family1,
+     :effective_at => '1979-06-28',
+     :parent_id => l1.id
     )
     create(
      :cites_I_addition,
      :taxon_concept => @species1_1,
-     :effective_at => '1975-07-01'
+     :effective_at => '1975-07-01',
+     :is_current => true
     )
     create(
      :cites_III_addition,
      :taxon_concept => @species1_2,
-     :effective_at => '1987-04-13'
+     :effective_at => '1987-04-13',
+     :is_current => true
     )
     create(
      :cites_II_addition,
@@ -88,7 +95,9 @@ shared_context "Falconiformes" do
     create(
      :cites_II_addition,
      :taxon_concept => @family2,
-     :effective_at => '1979-06-28'
+     :effective_at => '1979-06-28',
+     :inclusion_taxon_concept_id => @order.id,
+     :is_current => true
     )
     create(
      :cites_II_addition,
@@ -98,7 +107,8 @@ shared_context "Falconiformes" do
     create(
      :cites_I_addition,
      :taxon_concept => @species2_1,
-     :effective_at => '1977-02-04'
+     :effective_at => '1977-02-04',
+     :is_current => true
     )
 
     Sapi::rebuild

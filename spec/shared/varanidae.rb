@@ -31,12 +31,14 @@ shared_context 'Varanidae' do
     create(
      :cites_II_addition,
      :taxon_concept => @genus,
-     :effective_at => '1975-07-01'
+     :effective_at => '1975-07-01',
+     :is_current => true
     )
     create(
      :cites_I_addition,
      :taxon_concept => @species1,
-     :effective_at => '1975-07-01'
+     :effective_at => '1975-07-01',
+     :is_current => true
     )
 
     @ref1 = create(

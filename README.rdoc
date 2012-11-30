@@ -5,20 +5,31 @@
 packages as for Ubuntu:
 
   - libpq-dev postgresql-9.1 postgresql-contrib-9.1
-  - freetds-bin freetds-common freetds-dev
-  - pdftk
 
 Redis is used for the job queue.
 
+LaTex (pdflatex) is used for generating pdfs. We're using the texlive distribution.
 
-LaTeX:
-  texlive
+==LaTeX
 
-pdfpages:
+=== packages
   - texlive
   - texlive-full
   - texlive-latex-recommended
   - texlive-fonts-recommended
+
+=== handling hyperlinks in included pdf documents
+Latex does not preserve hyperlinks from an included pdf document, but there is a workaround to get this to work in order to be able to embed the intro pages in the checklist pdfs. The following needs to be when the intro pdfs are changed:
+  
+  - get pdfannotextractor.pl -- should be in texlive-extra package (?)
+  - get libfile-which-perl
+  - run this to install PDFBox (that's a Java jar required by pdfannotextractor that needs to be v. 0.7.2 or 0.7.3 -- not the current from apt-get))
+      pdfannotextractor --install
+  - run this command on every file to be included, this will generate a .pax file:
+      pdfannotextractor static_index.pdf
+  - finally, pdflatex should pick the pax files and use to reinsert hyperlinks into the included pdfs. It's considered an experimental feature.
+
+More info: http://anorien.csc.warwick.ac.uk/mirrors/CTAN/macros/latex/contrib/pax/README
 
 ==Installation
 
@@ -64,6 +75,12 @@ There are specific tasks for each of the types of data. Run 'rake -T' to get the
 You need to run imports from a machine that has access to both the MSSQL db and PostgreSQL. Port forwarding might come in handy:
 
   ssh -fNg -L 15432:localhost:5432 ssh_user@public-address-of-db-host
+
+Note: if there is some issue with data encoding on the way, we may end up with the utf8 unknown symbol �, which, sadly, crashes latex. Ideal solution: get the data right. Quick solution (for annotations, which seem to be most affected):
+
+  update annotation_translations set full_note = replace(full_note, '�', '') where id in (select id from annotation_translations where full_note like '%�%');
+
+  update listing_changes_mview set english_full_note = replace(english_full_note, '�', ''), spanish_full_note = replace(spanish_full_note, '�',''), french_full_note = replace(french_full_note, '�', '')  where id in (select id from listing_changes_mview where english_full_note like '%�%' or spanish_full_note like '%�%' or french_full_note like '%�%');
 
 == Job queue
 
@@ -201,58 +218,28 @@ Regarding the output, there is no substantial difference in how these lists are 
 2. taxon listed and some subtaxa not listed: Psittaciformes spp I/II/NC
 3. taxon not listed and subtaxa not listed: Aloe vera NC, Pereskia NC
 4. taxon not listed and subtaxa listed: Cervus elaphus I/II/III/NC, Axis porcinus I/NC
-5. subtaxa deleted from appendices: ? cannot find clear example of that happening
+5. subtaxa deleted from appendices: Psittaciformes spp I/II/NC
 
-==== Steps to calculate the current listing
+==== Current listing calculations
 
-These are the steps taken to calculate the current listing of a taxon concept:
+Calculating the current listing is carried out by a set of stored procedures which need to be run in the correct order, as they use their intermediate results to come up with the final listing. These are roughly the steps to be taken:
+1. calculation of the cites_listed flag: this flag is initially set to true for taxa with current listings. It is then cascaded to ancestors and descendants, with the value being set to false (to be able to differentiate between taxa at level of listing and taxa with inherited listing)
+2. next, there are a couple of flags to be calculated that have to do with taxa that are NC-listed. These are: cites_deleted, cites_excluded, cites_fully_covered, not_in_cites
+3. next, the actual listing is calculated for explicitly listed taxa (this will take into consideration the not_in_cites flag)
+4. finally, the current listing is cascaded to descendants and then to ancestors
 
-1. For every taxon listed directly determine their current listing based on listing history.
-   Note there may be a split listing case on species level (cases of split listing such that some populations are listed differently).
+TODO: the cites_show flag should be calculated properly to allow for filtering the checklist using that flag only
 
-2. Traverse the taxonomic tree from the root down
-   Cascade listings from higher taxa to lower, except for cases where a current listing is already present or taxon concept is NC.
-
-3. Traverse the tree from the leaves up
-   Cascade listings for higher taxa (cases of split listing such that some subtaxa are listed differently).
-
-==== Parameters that affect the current listing
-
-There are three parameters that help resolve the listing status:
-1. designation_id -- we need to check whether or not a taxon_concept belongs to the CITES taxonomy
-2. not_in_cites -- there are cases of taxon concepts that are not listed, but still need to be present in the checklist.
-   Examples:
-   * Pereskia spp, Aloe vera -- entire subtrees excluded from the listing
-   * Cervus elaphus, Axis porcinus -- species is excluded, but subspecies are listed
-   Those will have the not_in_cites flag set and 'NC' appended to their listing.
-3. fully_covered -- there are cases of taxon concepts that are listed, but some of their populations or descendants are not.
-   Examples:
-   * Panax ginseng, Antilocapra americana -- only certain populations listed
-   * Psittaciformes spp -- some subtaxa not listed
-   Those will have all_covered set to false and 'NC' appended to their current listing.
-
-Note: the fully_covered flag could be inferred with a high degree of probability from other data. It should probably be false when:
-* there are subspecies that do not belong to the designation
-* there are population related comments in the listing changes
-It makes sense to try to infer that. However, data incompleteness in the first case and inconsistent comment wording in the second case make it unreliable.
-
-==== Filtering taxa by their listing information ====
+==== Description of the listing flags ====
 
 # TODO clean up the listing flags description
 
 There are several flags related to the CITES listing status of a taxon concept.
 * cites_listes: if true, then taxon_concept listed explicitly; if false, then implicitly; if null, then not listed
 NOTE: taxa deleted from appendices have this set to not null. should that be changed for consistency?
-* cites_del: if true, taxon concept has been deleted from the appendices
-* usr_cites_exclusion: if true, taxn concept is excluded from its parent listing (set by the user)
-* cites_exclusion: if true, taxon concept is excluded from its parent listing (calculated from ancestors usr_cites_exclusion flags)
+* cites_deleted: if true, taxon concept has been deleted from the appendices (in case of Appendix III it needs to be deleted by all parties that added it)
+* cites_excluded: if true, taxon concept is excluded from its parent listing (calculated from ancestors usr_cites_exclusion flags and exceptions)
 * cites_show: whether or not to show in the checklist. E.g. implicitly listed subspecies should have this set to false, whereas some NC taxon concepts such as Pereskia spp should have this set to true.
-
-Some things that follow from that:
-1. taxa listed in any of the 3 CITES appendices (both implicitly or explicitly) will have listing->'cites_X' and listing->'cites_listing' set
-2. taxa previously listed but then deleted from appendices will have listing->'cites_del' set to true and listing->'cites_listing' blank while listing->'cites_listed' is still set
-3. taxa listed as NC (e.g. Aloe vera, Pereskia spp.) will have listing->'usr_cites_exclusion' set to true and listing->'cites_listing' blank
-4. taxa that have never been listed will have listing->'cites_listing' blank
 
 === References
 References are meant to be kept in an external system accessed by a web based API. For now we are using references imported from the old system.

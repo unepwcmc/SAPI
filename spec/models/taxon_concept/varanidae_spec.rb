@@ -7,45 +7,45 @@ describe TaxonConcept do
 
     context "REFERENCES" do
       describe :cites_accepted do
-        it "should be true for species Varanus bengalensis" do
-          @species1.cites_accepted.should be_true
+        context "for species Varanus bengalensis" do
+          specify { @species1.cites_accepted.should be_true }
         end
       end
       describe :standard_references do
-        it "should be nil for order Sauria" do
-          @order.standard_references.should be_empty
+        context "for order Sauria" do
+          specify { @order.standard_references.should be_empty }
         end
-        it "should be Böhme for family Varanidae" do
-          @family.standard_references.should include @ref1.id
+        context "for family Varanidae" do
+          specify { @family.standard_references.should include @ref1.id }
         end
-        it "should be Böhme for species Varanus bengalensis" do
-          @species1.standard_references.should include @ref1.id
+        context "for species Varanus bengalensis" do
+          specify { @species1.standard_references.should include @ref1.id }
         end
-        it "should be Böhme and Aplin for species Varanus bushi" do
-          @species2.standard_references.should include @ref1.id
-          @species2.standard_references.should include @ref2.id
+        context "for species Varanus bushi" do
+          specify { @species2.standard_references.should include @ref1.id }
+          specify { @species2.standard_references.should include @ref2.id }
         end
       end
     end
     context "LISTING" do
       describe :current_listing do
-        it "should be I/II at genus level Varanus" do
-          @genus.current_listing.should == 'I/II'
+        context "for genus Varanus" do
+          specify { @genus.current_listing.should == 'I/II' }
         end
-        it "should be I at species level Varanus bengalensis" do
-          @species1.current_listing.should == 'I'
+        context "for species Varanus bengalensis" do
+          specify { @species1.current_listing.should == 'I' }
         end
       end
 
       describe :cites_listed do
-        it "should be false for family Varanidae" do
-          @family.cites_listed.should == false
+        context "for family Varanidae" do
+          specify { @family.cites_listed.should == false }
         end
-        it "should be true for genus Varanus" do
-          @genus.cites_listed.should be_true
+        context "for genus Varanus" do
+          specify { @genus.cites_listed.should be_true }
         end
-        it "should be true for species Varanus bengalensis" do
-          @species1.cites_listed.should be_true
+        context "for species Varanus bengalensis" do
+          specify { @species1.cites_listed.should be_true }
         end
       end
 

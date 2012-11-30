@@ -26,8 +26,7 @@ CREATE OR REPLACE FUNCTION rebuild_ancestor_listings() RETURNS void
             hstore('cites_I', MAX((listing -> 'cites_I')::VARCHAR)) ||
             hstore('cites_II', MAX((listing -> 'cites_II')::VARCHAR)) ||
             hstore('cites_III', MAX((listing -> 'cites_III')::VARCHAR)) ||
-            hstore('not_in_cites', MAX((listing -> 'not_in_cites')::VARCHAR)) ||
-            hstore('cites_listed', MAX((listing -> 'cites_listed')::VARCHAR)) ||
+            hstore('cites_NC', MAX((listing -> 'cites_NC')::VARCHAR)) ||
             hstore('cites_listing', ARRAY_TO_STRING(
               -- unnest to filter out the nulls
               ARRAY(SELECT * FROM UNNEST(
@@ -35,7 +34,7 @@ CREATE OR REPLACE FUNCTION rebuild_ancestor_listings() RETURNS void
                   MAX((listing -> 'cites_I')::VARCHAR),
                   MAX((listing -> 'cites_II')::VARCHAR),
                   MAX((listing -> 'cites_III')::VARCHAR),
-                  MAX((listing -> 'not_in_cites')::VARCHAR)
+                  MAX((listing -> 'cites_NC')::VARCHAR)
                 ]) s WHERE s IS NOT NULL),
                 '/'
               )
@@ -44,17 +43,7 @@ CREATE OR REPLACE FUNCTION rebuild_ancestor_listings() RETURNS void
             GROUP BY (id)
           )
           UPDATE taxon_concepts
-          SET listing = 
-            CASE
-            WHEN taxon_concepts.listing IS NOT NULL THEN taxon_concepts.listing
-            ELSE ''::hstore
-            END ||
-            CASE
-            WHEN (taxon_concepts.listing -> 'cites_listed')::BOOLEAN IS NULL
-            AND qq.listing -> 'cites_listed' = 't'
-            THEN hstore('cites_listed', 'f')
-            ELSE ''::hstore
-            END || (qq.listing::HSTORE - 'cites_listed'::VARCHAR)
+          SET listing = taxon_concepts.listing || (qq.listing - 'cites_status'::VARCHAR)
           FROM qq
           WHERE taxon_concepts.id = qq.id;
 

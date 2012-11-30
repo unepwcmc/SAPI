@@ -2,55 +2,58 @@
 #
 # Table name: taxon_concepts_mview
 #
-#  id                          :integer          primary key
-#  fully_covered               :boolean
-#  designation_is_cites        :boolean
-#  full_name                   :text
-#  rank_name                   :text
-#  cites_accepted              :boolean
-#  kingdom_position            :integer
-#  taxonomic_position          :text
-#  kingdom_name                :text
-#  phylum_name                 :text
-#  class_name                  :text
-#  order_name                  :text
-#  family_name                 :text
-#  genus_name                  :text
-#  species_name                :text
-#  subspecies_name             :text
-#  kingdom_id                  :text
-#  phylum_id                   :text
-#  class_id                    :text
-#  order_id                    :text
-#  family_id                   :text
-#  genus_id                    :text
-#  species_id                  :text
-#  subspecies_id               :text
-#  cites_listed                :boolean
-#  cites_show                  :boolean
-#  cites_i                     :text
-#  cites_ii                    :text
-#  cites_iii                   :text
-#  cites_del                   :boolean
-#  current_listing             :text
-#  usr_cites_exclusion         :boolean
-#  cites_exclusion             :boolean
-#  listing_updated_at          :datetime
-#  specific_annotation_symbol  :text
-#  generic_annotation_symbol   :text
-#  created_at                  :datetime
-#  updated_at                  :datetime
-#  taxon_concept_id_com        :integer
-#  english_names_ary           :string
-#  french_names_ary            :string
-#  spanish_names_ary           :string
-#  taxon_concept_id_syn        :integer
-#  synonyms_ary                :string
-#  countries_ids_ary           :string
-#  standard_references_ids_ary :string
-#  dirty                       :boolean
-#  expiry                      :datetime
-#  parent_id                   :integer
+#  id                               :integer          primary key
+#  parent_id                        :integer
+#  cites_fully_covered              :boolean
+#  designation_is_cites             :boolean
+#  full_name                        :text
+#  rank_name                        :text
+#  cites_accepted                   :boolean
+#  kingdom_position                 :integer
+#  taxonomic_position               :text
+#  kingdom_name                     :text
+#  phylum_name                      :text
+#  class_name                       :text
+#  order_name                       :text
+#  family_name                      :text
+#  genus_name                       :text
+#  species_name                     :text
+#  subspecies_name                  :text
+#  kingdom_id                       :integer
+#  phylum_id                        :integer
+#  class_id                         :integer
+#  order_id                         :integer
+#  family_id                        :integer
+#  genus_id                         :integer
+#  species_id                       :integer
+#  subspecies_id                    :integer
+#  cites_listed                     :boolean
+#  cites_show                       :boolean
+#  cites_i                          :text
+#  cites_ii                         :text
+#  cites_iii                        :text
+#  cites_deleted                    :boolean
+#  current_listing                  :text
+#  usr_cites_excluded               :boolean
+#  cites_excluded                   :boolean
+#  listing_updated_at               :datetime
+#  specific_annotation_symbol       :text
+#  generic_annotation_symbol        :text
+#  generic_annotation_parent_symbol :text
+#  author_year                      :string(255)
+#  created_at                       :datetime
+#  updated_at                       :datetime
+#  taxon_concept_id_com             :integer
+#  english_names_ary                :string
+#  french_names_ary                 :string
+#  spanish_names_ary                :string
+#  taxon_concept_id_syn             :integer
+#  synonyms_ary                     :string
+#  synonyms_author_years_ary        :string
+#  countries_ids_ary                :string
+#  standard_references_ids_ary      :string
+#  dirty                            :boolean
+#  expiry                           :datetime
 #
 
 class MTaxonConcept < ActiveRecord::Base
@@ -59,46 +62,88 @@ class MTaxonConcept < ActiveRecord::Base
   self.primary_key = :id
 
   has_many :listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange
-  has_many :current_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange, :conditions => {:is_current => true}
+  has_many :current_listing_changes, :foreign_key => :taxon_concept_id,
+    :class_name => MListingChange,
+    :conditions => "is_current = 't' AND change_type_name <> 'EXCEPTION'"
 
   scope :by_designation, lambda { |name|
     where("designation_is_#{name}".downcase => 't')
   }
   scope :without_nc, where(
     <<-SQL
-    (cites_del <> 't' OR cites_del IS NULL)
+    (cites_deleted <> 't' OR cites_deleted IS NULL)
     AND cites_listed IS NOT NULL
     SQL
   )
 
   scope :without_hidden, where("cites_show = 't'")
 
-  scope :by_cites_regions_and_countries, lambda { |cites_regions_ids, countries_ids|
-    in_clause = [cites_regions_ids, countries_ids].flatten.compact.join(',')
+  scope :by_cites_populations_and_appendices, lambda { |cites_regions_ids, countries_ids, appendix_abbreviations=nil|
+    geo_entity_ids = countries_ids
+    if cites_regions_ids
+      geo_entity_ids += GeoEntity.contained_geo_entities(cites_regions_ids)
+    end
+    geo_entities_in_clause = geo_entity_ids.compact.join(',')
+    appendices_in_clause = if appendix_abbreviations
+      appendix_abbreviations.compact.map{ |a| "'#{a}'"}.join(',')
+    else
+      ''
+    end
+
     joins(
       <<-SQL
       INNER JOIN (
-        SELECT taxon_concept_geo_entities.id
-        FROM taxon_concept_geo_entities
-        WHERE taxon_concept_geo_entities.geo_entity_id IN (#{in_clause})
+        -- listed in specified geo entities
+        SELECT taxon_concept_id
+        FROM listing_changes
+        INNER JOIN change_types ON change_types.id = listing_changes.change_type_id
+        INNER JOIN listing_distributions ON listing_changes.id = listing_distributions.listing_change_id AND NOT is_party
+        #{(appendix_abbreviations ? 'INNER JOIN species_listings ON species_listings.id = listing_changes.species_listing_id' : '')}
+        WHERE is_current = 't' AND change_types.name = 'ADDITION'
+        AND listing_distributions.geo_entity_id IN (#{geo_entities_in_clause})
+        #{(appendix_abbreviations ? "AND species_listings.abbreviation IN (#{appendices_in_clause})" : '')}
 
         UNION
+        (
+          -- occurs in specified geo entities
+          SELECT taxon_concept_geo_entities.taxon_concept_id
+          FROM taxon_concept_geo_entities
+          WHERE taxon_concept_geo_entities.geo_entity_id IN (#{geo_entities_in_clause})
 
-        SELECT DISTINCT taxon_concept_id
-        FROM taxon_concept_geo_entities
-        INNER JOIN geo_entities
-          ON taxon_concept_geo_entities.geo_entity_id = geo_entities.id
-        INNER JOIN geo_relationships
-          ON geo_entities.id = geo_relationships.other_geo_entity_id
-        INNER JOIN geo_relationship_types
-          ON geo_relationships.geo_relationship_type_id = geo_relationship_types.id
-        INNER JOIN geo_entities related_geo_entities
-          ON geo_relationships.geo_entity_id = related_geo_entities.id
-        WHERE
-          related_geo_entities.id IN (#{in_clause})
-          AND 
-          geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'
-      ) regions_and_countries ON #{self.table_name}.id = regions_and_countries.id
+          INTERSECT
+
+          -- has listing changes that do not have distribution attached
+          SELECT taxon_concept_id
+          FROM listing_changes
+          INNER JOIN change_types ON change_types.id = listing_changes.change_type_id
+          #{(appendix_abbreviations ? 'INNER JOIN species_listings ON species_listings.id = listing_changes.species_listing_id' : '')}
+          LEFT JOIN listing_distributions ON listing_changes.id = listing_distributions.listing_change_id AND NOT is_party
+          WHERE is_current = 't' AND change_types.name = 'ADDITION'
+          #{(appendix_abbreviations ? "AND species_listings.abbreviation IN (#{appendices_in_clause})" : '')}
+          AND listing_distributions.id IS NULL
+
+          EXCEPT
+
+          -- and does not have an exclusion for the specified geo entities
+          (
+          #{
+          geo_entity_ids.map do |geo_entity_id|
+          <<-GEO_SQL
+            SELECT taxon_concept_id
+            FROM listing_changes
+            INNER JOIN change_types ON change_types.id = listing_changes.change_type_id
+            INNER JOIN listing_distributions ON listing_changes.id = listing_distributions.listing_change_id AND NOT is_party
+            #{(appendix_abbreviations ? 'INNER JOIN species_listings ON species_listings.id = listing_changes.species_listing_id' : '')}
+            WHERE is_current = 't' AND change_types.name = 'EXCEPTION'
+            #{(appendix_abbreviations ? "AND species_listings.abbreviation IN (#{appendices_in_clause})" : '')}
+            AND listing_distributions.geo_entity_id = #{geo_entity_id}
+            GEO_SQL
+          end.join ("\n            INTERSECT\n\n")
+          }
+          )
+
+        )
+      ) taxa_in_populations ON #{self.table_name}.id = taxa_in_populations.taxon_concept_id
       SQL
     )
   }

@@ -56,7 +56,8 @@ shared_context "Mellivora capensis" do
     l3 = create(
      :cites_III_deletion,
      :taxon_concept => @species,
-     :effective_at => '2007-03-04'
+     :effective_at => '2007-03-04',
+     :is_current => true
     )
     create(
       :listing_distribution,

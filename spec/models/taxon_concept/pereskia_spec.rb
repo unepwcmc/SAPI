@@ -6,23 +6,29 @@ describe TaxonConcept do
 
     context "LISTING" do
       describe :current_listing do
-        it "should be NC at genus level Pereskia (not listed, shown)" do
-          @genus1.current_listing.should == 'NC'
+        context "for genus Pereskia (not listed, shown)" do
+          specify { @genus1.current_listing.should == 'NC' }
         end
-        it "should be I at genus level Ariocarpus" do
-          @genus2.current_listing.should == 'I'
+        context "for genus Ariocarpus" do
+          specify { @genus2.current_listing.should == 'I' }
         end
-        it "should be II at family level Cactaceae" do
-          @family.current_listing.should == 'I/II/NC'
+        context "for family Cactaceae" do
+          specify { @family.current_listing.should == 'I/II/NC' }
         end
       end
 
       describe :cites_listed do
-        it "should be true for family Cactaceae" do
-          @family.cites_listed.should be_true
+        context "for family Cactaceae" do
+          specify { @family.cites_listed.should be_true }
         end
-        it "should be false for genus Pereskia" do
-          @genus1.cites_listed.should == false
+        context "for genus Pereskia" do
+          specify { @genus1.cites_listed.should be_nil }
+        end
+      end
+
+      describe :cites_excluded do
+        context "for genus Pereskia" do
+          specify { @genus1.cites_excluded.should be_true }
         end
       end
 

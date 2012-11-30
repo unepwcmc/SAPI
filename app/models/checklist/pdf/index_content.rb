@@ -16,28 +16,39 @@ module Checklist::Pdf::IndexContent
     tex << "\\cpart{#{kingdom_name}}\n"
     tex << "\\begin{multicols}{2}{" #start multicols
     begin
-      kingdom.each do |tc|
-        entry = 
+      entries = kingdom.map do |tc|
         if tc.read_attribute(:name_type) == 'synonym'
-          #it's a synonym or common name entry
-          "\\textit{#{tc.sort_name} = #{tc.full_name}}"
+          synonym_entry(tc)
+          
         elsif tc.read_attribute(:name_type) == 'common'
-          "#{tc.sort_name} (#{tc.lng.upcase}): \\textit{#{tc.full_name}}"
+          common_name_entry(tc)
         else
-          res = listed_taxon_name(tc)
-          res += current_listing_with_annotations(tc)
-          if ['SPECIES', 'SUBSPECIES', 'GENUS', 'FAMILY'].include? tc.rank_name
-            res += " #{"#{tc.family_name}".upcase}" if tc.rank_name != 'FAMILY'
-            res += " (#{tc.class_name})" unless tc.class_name.blank?
-          end
-          res += common_names_with_lng_initials(tc)
-          res
+          main_entry(tc)
         end
-        tex << entry + "\n\n"
       end
+      tex << entries.join("\n\n")
       kingdom = fetcher.next
     end while not kingdom.empty?
     tex << '}\\end{multicols}' #end multicols
+  end
+
+  def synonym_entry(tc)
+    "\\textit{#{tc.sort_name} = #{tc.full_name}}"
+  end
+
+  def common_name_entry(tc)
+    "#{tc.sort_name} (#{tc.lng.upcase}): \\textit{#{tc.full_name}}"
+  end
+
+  def main_entry(tc)
+    res = listed_taxon_name(tc)
+    res += current_listing_with_annotations(tc)
+    if ['SPECIES', 'SUBSPECIES', 'GENUS', 'FAMILY'].include? tc.rank_name
+      res += " #{"#{tc.family_name}".upcase}" if tc.rank_name != 'FAMILY'
+      res += " (#{tc.class_name})" unless tc.class_name.blank?
+    end
+    res += common_names_with_lng_initials(tc)
+    res
   end
 
   def listed_taxon_name(taxon_concept)
@@ -58,24 +69,11 @@ module Checklist::Pdf::IndexContent
   def current_listing_with_annotations(taxon_concept)
     res = " \\textbf{#{taxon_concept.current_listing}} "
     unless taxon_concept.generic_annotation_symbol.blank?
-      res = " #{taxon_concept.generic_annotation_symbol}#{res}"
+      symbol = LatexToPdf.escape_latex(taxon_concept.generic_annotation_symbol)
+      res = " #{symbol}#{res}"
     end
     unless taxon_concept.specific_annotation_symbol.blank?
       res += "\\superscript{#{taxon_concept.specific_annotation_symbol}}"
-    end
-    res
-  end
-
-  def common_names_with_lng_initials(taxon_concept)
-    res = ''
-    unless !@english_common_names || taxon_concept.english_names.empty?
-      res += " (E) #{taxon_concept.english_names.join(', ')} "
-    end
-    unless !@spanish_common_names || taxon_concept.spanish_names.empty?
-      res += " (S) #{taxon_concept.spanish_names.join(', ')} "
-    end
-    unless !@french_common_names || taxon_concept.french_names.empty?
-      res += " (E) #{taxon_concept.french_names.join(', ')} "
     end
     res
   end

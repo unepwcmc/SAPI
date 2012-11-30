@@ -31,14 +31,16 @@ shared_context "Boa constrictor" do
     create(
       :cites_II_addition,
       :taxon_concept => @family,
-      :effective_at => '1977-02-04'
+      :effective_at => '1977-02-04',
+      :is_current => true
     )
 
   #Boa constrictor
     create(
      :cites_II_addition,
      :taxon_concept => @species,
-     :effective_at => '1975-07-01'
+     :effective_at => '1975-07-01',
+     :is_current => true
     )
     # create(
     # :cites_II_reservation,
@@ -49,7 +51,9 @@ shared_context "Boa constrictor" do
     create(
      :cites_II_addition,
      :taxon_concept => @species,
-     :effective_at => '1977-02-04'
+     :effective_at => '1977-02-04',
+     :inclusion_taxon_concept_id => @family.id,
+     :is_current => true
     )
     # create(
     # :cites_II_withdrawal,
@@ -61,7 +65,8 @@ shared_context "Boa constrictor" do
     create(
      :cites_II_addition,
      :taxon_concept => @subspecies,
-     :effective_at => '1977-02-04'
+     :effective_at => '1977-02-04',
+     :inclusion_taxon_concept_id => @family.id
     )
     # create(
     # :cites_II_deletion,
@@ -71,7 +76,8 @@ shared_context "Boa constrictor" do
     create(
      :cites_I_addition,
      :taxon_concept => @subspecies,
-     :effective_at => '1987-10-22'
+     :effective_at => '1987-10-22',
+     :is_current => true
     )
 
     Sapi::rebuild

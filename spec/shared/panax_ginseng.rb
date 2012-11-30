@@ -1,4 +1,18 @@
 shared_context "Panax ginseng" do
+  let(:russia){
+    create(
+      :country,
+      :name => 'Russia',
+      :iso_code2 => 'RU'
+    )
+  }
+  let(:china){
+    create(
+      :country,
+      :name => 'China',
+      :iso_code2 => 'CN'
+    )
+  }
   before(:all) do
     @kingdom = TaxonConcept.find_by_taxon_name_id(TaxonName.find_by_scientific_name('Plantae').id)
     @order = create(
@@ -19,8 +33,7 @@ shared_context "Panax ginseng" do
     @species = create(
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Ginseng'),
-      :parent => @genus,
-      :fully_covered => false
+      :parent => @genus
     )
 
    english = create(
@@ -42,17 +55,12 @@ shared_context "Panax ginseng" do
       :full_note => 'generic'
     )
 
-    russia = create(
-      :country,
-      :name => 'Russia',
-      :iso_code2 => 'RU'
-    )
-
     l1 = create(
       :cites_II_addition,
       :taxon_concept => @species,
       :effective_at => '2000-07-19',
-      :annotation_id => a1.id
+      :annotation_id => a1.id,
+      :is_current => true
     )
 
     create(
@@ -73,6 +81,14 @@ shared_context "Panax ginseng" do
       :annotation => a2,
       :full_note => 'specific'
     )
+
+    [china, russia].each do |country|
+      create(
+        :taxon_concept_geo_entity,
+        :taxon_concept => @species,
+        :geo_entity => country
+      )
+    end
 
     Sapi::rebuild
     self.instance_variables.each do |t|

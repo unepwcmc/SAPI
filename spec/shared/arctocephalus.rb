@@ -65,11 +65,6 @@ shared_context "Arctocephalus" do
 
     create(
      :cites_II_addition,
-     :taxon_concept => @genus,
-     :effective_at => '1977-02-04'
-    )
-    create(
-     :cites_II_addition,
      :taxon_concept => @species1,
      :effective_at => '1975-07-01'
     )
@@ -79,9 +74,29 @@ shared_context "Arctocephalus" do
      :effective_at => '1975-07-01'
     )
     create(
+     :cites_II_addition,
+     :taxon_concept => @genus,
+     :effective_at => '1977-02-04',
+     :is_current => true
+    )
+    create(
+     :cites_II_addition,
+     :taxon_concept => @species1,
+     :effective_at => '1977-02-04',
+     :inclusion_taxon_concept_id => @genus.id,
+     :is_current => true
+    )
+    create(
+     :cites_II_addition,
+     :taxon_concept => @species2,
+     :effective_at => '1977-02-04',
+     :inclusion_taxon_concept_id => @genus.id
+    )
+    create(
      :cites_I_addition,
      :taxon_concept => @species2,
-     :effective_at => '1979-06-28'
+     :effective_at => '1979-06-28',
+     :is_current => true
     )
 
     Sapi::rebuild

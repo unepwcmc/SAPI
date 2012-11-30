@@ -6,37 +6,44 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings() RETURNS void
     LANGUAGE plpgsql
     AS $$
         BEGIN
+
           WITH RECURSIVE q AS (
-            SELECT h, id, listing
+            SELECT h, id,
+            listing - ARRAY['cites_status', 'cites_status_original', 'cites_NC', 'cites_fully_covered'] ||
+            hstore('cites_listing', -- listing->'cites_listing_original')
+              CASE
+                WHEN listing->'cites_NC' = 'NC'
+                THEN listing->'cites_NC'
+                WHEN listing->'cites_status' = 'LISTED'
+                THEN listing->'cites_listing_original'
+                ELSE NULL
+              END
+            )
+            AS inherited_listing
             FROM taxon_concepts h
-            WHERE parent_id IS NULL
+            WHERE listing->'cites_status_original' = 't'
 
             UNION ALL
 
             SELECT hi, hi.id,
             CASE
             WHEN
-              hi.listing -> 'cites_listed' ='t' OR
-                hi.listing->'cites_exclusion' = 't'
-            THEN hi.listing || hstore('cites_listing',hi.listing->'cites_listing_original') ||
+              hi.listing->'cites_status_original' = 't'
+            THEN
+              hstore('cites_listing',hi.listing->'cites_listing_original') ||
               slice(hi.listing, ARRAY['generic_annotation_symbol', 'specific_annotation_symbol'])
-            ELSE hi.listing ||
-              (q.listing::hstore - ARRAY['cites_listed','cites_listing_original']) ||
-              hstore('cites_listing',q.listing->'cites_listing_original') ||
-              slice(q.listing, ARRAY['generic_annotation_symbol', 'specific_annotation_symbol'])
+            ELSE
+              inherited_listing
             END
             FROM q
             JOIN taxon_concepts hi
             ON hi.parent_id = (q.h).id
           )
           UPDATE taxon_concepts
-          SET listing = 
-          CASE
-            WHEN taxon_concepts.listing IS NULL THEN ''::hstore
-            ELSE taxon_concepts.listing
-          END || q.listing
+          SET listing = listing || q.inherited_listing
           FROM q
           WHERE taxon_concepts.id = q.id;
+
         END;
       $$;
 
