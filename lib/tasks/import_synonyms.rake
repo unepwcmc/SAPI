@@ -21,24 +21,14 @@ namespace :import do
       copy_data(file, TMP_TABLE)
 
       #[BEGIN]copied over from import:species
-      db_columns = db_columns_from_csv_headers(file, TMP_TABLE, false)
-      import_data_for Rank::KINGDOM if db_columns.include? Rank::KINGDOM.capitalize
-      if db_columns.include?(Rank::PHYLUM.capitalize) && 
-        db_columns.include?(Rank::CLASS.capitalize) &&
-        db_columns.include?('TaxonOrder')
-        import_data_for Rank::PHYLUM, Rank::KINGDOM
-        import_data_for Rank::CLASS, Rank::PHYLUM
-        import_data_for Rank::ORDER, Rank::CLASS, 'TaxonOrder'
-      elsif db_columns.include?(Rank::CLASS.capitalize) && db_columns.include?('TaxonOrder')
-        import_data_for Rank::CLASS, Rank::KINGDOM
-        import_data_for Rank::ORDER, Rank::CLASS, 'TaxonOrder'
-      elsif db_columns.include? 'TaxonOrder'
-        import_data_for Rank::ORDER, Rank::KINGDOM, 'TaxonOrder'
-      end
-      import_data_for Rank::FAMILY, 'TaxonOrder', nil, Rank::ORDER
-      import_data_for Rank::GENUS, Rank::FAMILY
-      import_data_for Rank::SPECIES, Rank::GENUS
-      import_data_for Rank::SUBSPECIES, Rank::SPECIES, 'SpcInfra'
+      import_data_for Rank::PHYLUM
+      import_data_for Rank::CLASS
+      import_data_for Rank::ORDER
+      import_data_for Rank::FAMILY
+      import_data_for Rank::SUBFAMILY
+      import_data_for Rank::GENUS
+      import_data_for Rank::SPECIES
+      import_data_for Rank::SUBSPECIES
       #[END]copied over from import:species
 
       sql = <<-SQL
@@ -49,10 +39,12 @@ namespace :import do
         FROM (
           SELECT accepted.id AS accepted_id, synonym.id AS synonym_id
           FROM #{TMP_TABLE}
+          INNER JOIN ranks ON ranks.name like BTRIM(#{TMP_TABLE}.accepted_legacy_rank)
           INNER JOIN taxon_concepts AS accepted
-            ON accepted.legacy_id = #{TMP_TABLE}.accepted_species_id
+            ON accepted.legacy_id = #{TMP_TABLE}.accepted_legacy_id AND accepted.rank_id = ranks.id and accepted.legacy_type = 'Animalia'
+          INNER JOIN ranks as synonyms_rank ON synonyms_rank.name like BTRIM(#{TMP_TABLE}.rank)
           INNER JOIN taxon_concepts AS synonym
-            ON synonym.legacy_id = #{TMP_TABLE}.SpcRecId
+            ON synonym.legacy_id = #{TMP_TABLE}.legacy_id AND synonym.rank_id = synonyms_rank.id and synonym.legacy_type = 'Animalia'
           WHERE NOT EXISTS (
             SELECT * FROM taxon_relationships
             LEFT JOIN taxon_concepts AS accepted

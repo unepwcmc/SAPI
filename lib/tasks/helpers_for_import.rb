@@ -15,17 +15,33 @@ class CsvToDbMap
       'notes' => 'notes varchar',
       'Designation' => 'designation varchar'
     },
+    'synonym_import' => {
+      'Scientific name' => 'name varchar',
+      'Rank' => 'rank varchar',
+      'RecID' => 'legacy_id integer',
+      'ParentRank' => 'parent_rank varchar',
+      'Parent recID' => 'parent_legacy_id integer',
+      'Status' => 'status varchar',
+      'Species Author' => 'author varchar',
+      'notes' => 'notes varchar',
+      'ReferenceIDs' => 'reference_ids varchar',
+      'Designation' => 'designation varchar',
+      'AcceptedRank' => 'accepted_rank varchar',
+      'AcceptedRecID' => 'accepted_legacy_id integer'
+    },
     'cites_listings_import' => {
       'rank_name' => 'rank varchar',
       'rec_id' => 'legacy_id integer',
       'listing' => 'appendix varchar',
       'effective_from' => 'listing_date date',
       'party_iso2' => 'country_iso2 varchar',
-      'is_curre0t' => 'is_current boolean',
+      'is_current' => 'is_current boolean',
       'hash_note' => 'hash_note varchar',
       'populations_iso2' => 'populations_iso2 varchar',
       'EXCLUDEDpopulations_iso' => 'excluded_populations_iso2 varchar',
       'is_inclusion' => 'is_inclusion boolean',
+      'included_in_RecID' => 'included_in_rec_id integer',
+      'RankforInclusions' => 'rank_for_inclusions varchar',
       'excluded_rec_ids' => 'excluded_taxa varchar',
       'short_note_en' => 'short_note_en varchar',
       'short_note_es' => 'short_note_es varchar',
@@ -49,18 +65,6 @@ class CsvToDbMap
       'Rank' => 'rank varchar',
       'Designation' => 'designation varchar',
       'ReferenceID' => 'reference_id varchar'
-    },
-    'synonym_import' => {
-      'Scientific name' => 'name varchar',
-      'Rank' => 'rank varchar',
-      'RecID' => 'legacy_id integer',
-      'Status' => 'status varchar',
-      'Species Author' => 'author varchar',
-      'notes' => 'notes varchar',
-      'ReferenceIDs' => 'reference_ids varchar',
-      'Designation' => 'designation varchar',
-      'AcceptedRank' => 'accepted_rank varchar',
-      'AcceptedRecID' => 'accepted_legacy_id integer'
     },
     #TODO legacy type for regions?
     'cites_regions_import' => {
