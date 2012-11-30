@@ -6,7 +6,9 @@ class DownloadsController < ApplicationController
   # Lists a set of downloads for a given list of IDs
   def index
     ids = params[:ids] || ""
-    @downloads = Download.find(ids.split(","))
+    @downloads = Download.find(ids.split(","),
+                         :order => "updated_at desc",
+                         :limit => 5)
 
     @downloads.map! { |v| v.attributes.except("filename", "path") }
     @downloads.each do |v|
@@ -21,7 +23,10 @@ class DownloadsController < ApplicationController
     @download = Download.create(params[:download])
     DownloadWorker.perform_async(@download.id, params)
 
-    render :json => @download.attributes.except("filename", "path")
+    @download = @download.attributes.except("filename", "path")
+    @download["updated_at"] = @download["updated_at"].strftime("%A, %e %b %Y %H:%M")
+
+    render :json => @download
   end
 
   # GET downloads/:id/
