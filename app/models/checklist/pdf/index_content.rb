@@ -19,7 +19,7 @@ module Checklist::Pdf::IndexContent
       entries = kingdom.map do |tc|
         if tc.read_attribute(:name_type) == 'synonym'
           synonym_entry(tc)
-          
+
         elsif tc.read_attribute(:name_type) == 'common'
           common_name_entry(tc)
         else
@@ -53,16 +53,16 @@ module Checklist::Pdf::IndexContent
 
   def listed_taxon_name(taxon_concept)
     res = if ['FAMILY','SUBFAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
-      taxon_concept.full_name.upcase
+      LatexToPdf.escape_latex(taxon_concept.full_name.upcase)
     else
       if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? taxon_concept.rank_name
-        "\\textit{#{taxon_concept.full_name}}"
+        "\\textit{#{LatexToPdf.escape_latex(taxon_concept.full_name)}}"
       else
-        taxon_concept.full_name
+        LatexToPdf.escape_latex(taxon_concept.full_name)
       end
     end
-    res += " #{taxon_concept.spp}" if taxon_concept.spp
-    res = "\\textbf{#{LatexToPdf.escape_latex(res)}}" if taxon_concept.cites_accepted
+    res += " #{LatexToPdf.escape_latex(taxon_concept.spp)}" if taxon_concept.spp
+    res = "\\textbf{#{res}}" if taxon_concept.cites_accepted
     res
   end
 
