@@ -114,6 +114,7 @@ namespace :import do
     puts "#{ListingChange.count - listings_count} CITES listings were added to the database"
     puts "#{ListingDistribution.count - listings_d_count} listing distributions were added to the database"
     puts "#{Annotation.count - annotations_count} CITES annotations were added to the database"
+
   end
 
   namespace :cites_listings do
@@ -129,6 +130,13 @@ namespace :import do
         ChangeType.find_or_create_by_name(c_type)
       end
       puts 'Created appendices and change type defaults'
+    end
+    desc "Drop CITES species listings"
+    task :delete_all => :environment do
+      AnnotationTranslation.delete_all
+      Annotation.delete_all
+      ListingDistribution.delete_all
+      ListingChange.delete_all
     end
   end
 end
