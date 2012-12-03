@@ -45,16 +45,42 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         ) AS q
         WHERE taxon_concepts.id = q.id;
 
+        -- set the usr_no_std_ref for exclusions
+        UPDATE taxon_concepts
+        SET data = data || hstore('usr_no_std_ref', 't')
+        FROM (
+          WITH RECURSIVE cascading_refs AS (
+            SELECT h, h.id, (taxon_concept_references.data->'exclusions')::INTEGER[] AS exclusions, false AS i_am_excluded
+            FROM taxon_concept_references
+            INNER JOIN taxon_concepts h
+              ON h.id = taxon_concept_references.taxon_concept_id
+            WHERE (taxon_concept_references.data->'cascade')::BOOLEAN
+  
+            UNION ALL
+  
+            SELECT hi, hi.id, exclusions, exclusions @> ARRAY[hi.id]
+            FROM cascading_refs
+            JOIN taxon_concepts hi
+            ON hi.parent_id = (cascading_refs.h).id
+          )
+          SELECT id, BOOL_AND(i_am_excluded) AS i_am_excluded --excluded from all parent refs
+          FROM cascading_refs
+          GROUP BY id
+        ) AS q
+        WHERE taxon_concepts.id = q.id AND i_am_excluded;
+
         -- set the cites_accepted flag to true for all implicitly referenced taxa
         WITH RECURSIVE q AS
         (
           SELECT  h,
             CASE
-              WHEN (data->'usr_no_std_ref')::BOOLEAN = 't' THEN 'f'
-              ELSE (data->'cites_accepted')::BOOLEAN
+              WHEN (h.data->'usr_no_std_ref')::BOOLEAN = 't' THEN 'f'
+              ELSE (h.data->'cites_accepted')::BOOLEAN
             END AS inherited_cites_accepted
-          FROM    taxon_concepts h
-          WHERE   parent_id IS NULL
+          FROM taxon_concept_references
+          INNER JOIN taxon_concepts h
+            ON h.id = taxon_concept_references.taxon_concept_id
+          WHERE (taxon_concept_references.data->'cascade')::BOOLEAN
 
           UNION ALL
 
@@ -73,6 +99,11 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         FROM q
         WHERE taxon_concepts.id = (q.h).id AND
           ((q.h).data->'cites_accepted')::BOOLEAN IS NULL;
+
+        -- set the cites_accepted flag to false where it is not set
+        UPDATE taxon_concepts
+        SET data = data || hstore('cites_accepted', 'f')
+        WHERE (data->'cites_accepted')::BOOLEAN IS NULL;
 
         END;
       $$;

@@ -1,0 +1,258 @@
+country id,iso2,name,long_name,Geo_entity,Current_name,BRU_under,CITES Region
+1,AF,Afghanistan,Islamic Republic of Afghanistan,Country,Y,,2
+2,AL,Albania,Republic of Albania,Country,Y,,4
+3,DZ,Algeria,People's Democratic Republic of Algeria,Country,Y,,1
+5,AD,Andorra,Principality of Andorra,Country,Y,,-1
+6,AO,Angola,Republic of Angola,Country,Y,,-1
+9,AG,Antigua and Barbuda,Antigua and Barbuda,Country,Y,,3
+10,AR,Argentina,Argentine Republic,Country,Y,,3
+11,AM,Armenia,Republic of Armenia,Country,Y,,4
+13,AU,Australia,Australia,Country,Y,,6
+14,AT,Austria,Republic of Austria,Country,Y,,4
+15,AZ,Azerbaijan,Republic of Azerbaijan,Country,Y,,4
+16,BS,Bahamas,Commonwealth of the Bahamas,Country,Y,,3
+17,BH,Bahrain,Kingdom of Bahrain,Country,Y,,-1
+18,BD,Bangladesh,People's Republic of Bangladesh,Country,Y,,2
+19,BB,Barbados,Barbados,Country,Y,,3
+20,BY,Belarus,Republic of Belarus,Country,Y,,4
+21,BE,Belgium,Kingdom of Belgium,Country,Y,,4
+22,BZ,Belize,Belize,Country,Y,,3
+23,BJ,Benin,Republic of Benin,Country,Y,,1
+25,BT,Bhutan,Kingdom of Bhutan,Country,Y,,2
+26,BO,Bolivia (Plurinational State of),Plurinational State of Bolivia,Country,Y,,-1
+27,BA,Bosnia and Herzegovina,Bosnia and Herzegovina,Country,Y,,4
+28,BW,Botswana,Republic of Botswana,Country,Y,,1
+30,BR,Brazil,Federative Republic of Brazil,Country,Y,,3
+32,BN,Brunei Darussalam,Brunei Darussalam,Country,Y,,2
+33,BG,Bulgaria,Republic of Bulgaria,Country,Y,,4
+34,BF,Burkina Faso,Burkina Faso,Country,Y,,1
+35,BI,Burundi,Republic of Burundi,Country,Y,,1
+36,KH,Cambodia,Kingdom of Cambodia,Country,Y,,2
+37,CM,Cameroon,Republic of Cameroon,Country,Y,,1
+38,CA,Canada,Canada,Country,Y,,5
+39,CV,Cape Verde,Republic of Cape Verde,Country,Y,,1
+41,CF,Central African Republic,Central African Republic,Country,Y,,1
+42,TD,Chad,Republic of Chad,Country,Y,,1
+43,CL,Chile,Republic of Chile,Country,Y,,3
+44,CN,China,People's Republic of China,Country,Y,,2
+47,CO,Colombia,Republic of Colombia,Country,Y,,3
+48,KM,Comoros,Union of the Comoros,Country,Y,,1
+49,CG,Congo,Republic of the Congo,Country,Y,,1
+51,CR,Costa Rica,Republic of Costa Rica,Country,Y,,3
+56,CI,Cte d'Ivoire,Republic of Cte d'Ivoire,Country,Y,,1
+52,HR,Croatia,Republic of Croatia,Country,Y,,4
+53,CU,Cuba,Republic of Cuba,Country,Y,,3
+54,CY,Cyprus,Republic of Cyprus,Country,Y,,4
+55,CZ,Czech Republic,Czech Republic,Country,Y,,4
+112,KP,Democratic People's Republic of Korea,Democratic People's Republic of Korea,Country,Y,,-1
+236,CD,Democratic Republic of the Congo,Democratic Republic of the Congo,Country,Y,,1
+57,DK,Denmark,Kingdom of Denmark,Country,Y,,4
+58,DJ,Djibouti,Republic of Djibouti,Country,Y,,1
+59,DM,Dominica,Commonwealth of Dominica,Country,Y,,3
+60,DO,Dominican Republic,Dominican Republic,Country,Y,,3
+62,EC,Ecuador,Republic of Ecuador,Country,Y,,3
+63,EG,Egypt,Arab Republic of Egypt,Country,Y,,1
+64,SV,El Salvador,Republic of El Salvador,Country,Y,,3
+65,GQ,Equatorial Guinea,Republic of Equatorial Guinea,Country,Y,,1
+66,ER,Eritrea,Eritrea,Country,Y,,1
+67,EE,Estonia,Republic of Estonia,Country,Y,,4
+68,ET,Ethiopia,Federal Democratic Republic of Ethiopia,Country,Y,,1
+71,FJ,Fiji,Republic of Fiji,Country,Y,,6
+72,FI,Finland,Republic of Finland,Country,Y,,4
+73,FR,France,French Republic,Country,Y,,4
+78,GA,Gabon,Gabonese Republic,Country,Y,,1
+79,GM,Gambia,Republic of the Gambia,Country,Y,,1
+80,GE,Georgia,Georgia,Country,Y,,4
+81,DE,Germany,Federal Republic of Germany,Country,Y,,4
+82,GH,Ghana,Republic of Ghana,Country,Y,,1
+84,GR,Greece,Hellenic Republic,Country,Y,,4
+86,GD,Grenada,Grenada,Country,Y,,3
+89,GT,Guatemala,Republic of Guatemala,Country,Y,,3
+90,GN,Guinea,Republic of Guinea,Country,Y,,1
+91,GW,Guinea Bissau,Republic of Guinea-Bissau,Country,Y,,-1
+92,GY,Guyana,Republic of Guyana,Country,Y,,3
+93,HT,Haiti,Republic of Haiti,Country,Y,,-1
+95,HN,Honduras,Republic of Honduras,Country,Y,,3
+97,HU,Hungary,Republic of Hungary,Country,Y,,4
+98,IS,Iceland,Republic of Iceland,Country,Y,,4
+99,IN,India,Republic of India,Country,Y,,2
+100,ID,Indonesia,Republic of Indonesia,Country,Y,,2
+101,IR,Iran (Islamic Republic of),Islamic Republic of Iran,Country,Y,,2
+102,IQ,Iraq,Republic of Iraq,Country,Y,,-1
+103,IE,Ireland,Ireland,Country,Y,,4
+104,IL,Israel,State of Israel,Country,Y,,4
+105,IT,Italy,Republic of Italy,Country,Y,,4
+106,JM,Jamaica,Jamaica,Country,Y,,3
+107,JP,Japan,Japan,Country,Y,,2
+108,JO,Jordan,Hashemite Kingdom of Jordan,Country,Y,,2
+109,KZ,Kazakhstan,Republic of Kazakhstan,Country,Y,,2
+110,KE,Kenya,Republic of Kenya,Country,Y,,1
+114,KW,Kuwait,State of Kuwait,Country,Y,,2
+115,KG,Kyrgyzstan,Kyrgyz Republic,Country,Y,,2
+116,LA,Lao People's Democratic Republic,Lao People's Democratic Republic,Country,Y,,2
+117,LV,Latvia,Republic of Latvia,Country,Y,,4
+118,LB,Lebanon,Lebanese Republic,Country,Y,,-1
+119,LS,Lesotho,Kingdom of Lesotho,Country,Y,,1
+120,LR,Liberia,Republic of Liberia,Country,Y,,1
+121,LY,Libya,Libya,Country,Y,,-1
+122,LI,Liechtenstein,Principality of Liechtenstein,Country,Y,,4
+123,LT,Lithuania,Republic of Lithuania,Country,Y,,4
+124,LU,Luxembourg,Grand Duchy of Luxembourg,Country,Y,,4
+126,MG,Madagascar,Republic of Madagascar,Country,Y,,1
+127,MW,Malawi,Republic of Malawi,Country,Y,,1
+128,MY,Malaysia,Malaysia,Country,Y,,2
+129,MV,Maldives,Republic of Maldives,Country,Y,,-1
+130,ML,Mali,Republic of Mali,Country,Y,,1
+131,MT,Malta,Republic of Malta,Country,Y,,4
+132,MH,Marshall Islands,Republic of the Marshall Islands,Country,Y,,-1
+134,MR,Mauritania,Islamic Republic of Mauritania,Country,Y,,1
+135,MU,Mauritius,Republic of Mauritius,Country,Y,,1
+137,MX,Mexico,United Mexican States,Country,Y,,5
+138,FM,Micronesia (Federated States of),Federated States of Micronesia,Country,Y,,-1
+141,MN,Mongolia,Mongolia,Country,Y,,2
+143,MA,Morocco,Kingdom of Morocco,Country,Y,,1
+144,MZ,Mozambique,Republic of Mozambique,Country,Y,,1
+145,MM,Myanmar,Union of Myanmar,Country,Y,,2
+146,NA,Namibia,Republic of Namibia,Country,Y,,1
+148,NP,Nepal,Federal Democratic Republic of Nepal,Country,Y,,2
+149,NL,Netherlands,Kingdom of the Netherlands,Country,Y,,4
+152,NZ,New Zealand,New Zealand,Country,Y,,6
+153,NI,Nicaragua,Republic of Nicaragua,Country,Y,,3
+154,NE,Niger,Republic of the Niger,Country,Y,,1
+155,NG,Nigeria,Federal Republic of Nigeria,Country,Y,,1
+159,NO,Norway,Kingdom of Norway,Country,Y,,4
+160,OM,Oman,Sultanate of Oman,Country,Y,,2
+161,PK,Pakistan,Islamic Republic of Pakistan,Country,Y,,2
+162,PW,Palau,Republic of Palau,Country,Y,,6
+163,PA,Panama,Republic of Panama,Country,Y,,3
+164,PG,Papua New Guinea,Papua New Guinea,Country,Y,,6
+165,PY,Paraguay,Republic of Paraguay,Country,Y,,3
+166,PE,Peru,Republic of Peru,Country,Y,,3
+167,PH,Philippines,Republic of the Philippines,Country,Y,,2
+169,PL,Poland,Republic of Poland,Country,Y,,4
+170,PT,Portugal,Portuguese Republic,Country,Y,,4
+172,QA,Qatar,State of Qatar,Country,Y,,2
+113,KR,Republic of Korea,Republic of Korea,Country,Y,,-1
+139,MD,Republic of Moldova,Republic of Moldova,Country,Y,,4
+173,RO,Romania,Romania,Country,Y,,4
+174,RU,Russian Federation,Russian Federation,Country,Y,,4
+175,RW,Rwanda,Republic of Rwanda,Country,Y,,1
+178,KN,Saint Kitts and Nevis,Saint Kitts and Nevis,Country,Y,,3
+179,LC,Saint Lucia,Saint Lucia,Country,Y,,3
+181,VC,Saint Vincent and the Grenadines,Saint Vincent and the Grenadines,Country,Y,,3
+184,ST,Sao Tome and Principe,Democratic Republic of Sao Tome and Principe,Country,Y,,-1
+185,SA,Saudi Arabia,Kingdom of Saudi Arabia,Country,Y,,2
+186,SN,Senegal,Republic of Senegal,Country,Y,,1
+187,SC,Seychelles,Republic of Seychelles,Country,Y,,1
+188,SL,Sierra Leone,Republic of Sierra Leone,Country,Y,,1
+189,SG,Singapore,Republic of Singapore,Country,Y,,2
+190,SK,Slovakia,Slovak Republic,Country,Y,,4
+191,SI,Slovenia,Republic of Slovenia,Country,Y,,4
+192,SB,Solomon Islands,Solomon Islands,Country,Y,,6
+193,SO,Somalia,Somali Republic,Country,Y,,1
+194,ZA,South Africa,Republic of South Africa,Country,Y,,1
+196,ES,Spain,Kingdom of Spain,Country,Y,,4
+197,LK,Sri Lanka,Democratic Socialist Republic of Sri Lanka,Country,Y,,2
+271,SD,Sudan,Republic of the Sudan,Country,Y,,1
+199,SR,Suriname,Republic of Suriname,Country,Y,,3
+201,SZ,Swaziland,Kingdom of Swaziland,Country,Y,,1
+202,SE,Sweden,Kingdom of Sweden,Country,Y,,4
+203,CH,Switzerland,Swiss Confederation,Country,Y,,4
+204,SY,Syrian Arab Republic,Syrian Arab Republic,Country,Y,,2
+206,TJ,Tajikistan,Republic of Tajikistan,Country,Y,,-1
+208,TH,Thailand,Kingdom of Thailand,Country,Y,,2
+209,TG,Togo,Togolese Republic,Country,Y,,1
+211,TO,Tonga,Kingdom of Tonga,Country,Y,,-1
+212,TT,Trinidad and Tobago,Republic of Trinidad and Tobago,Country,Y,,3
+213,TN,Tunisia,Republic of Tunisia,Country,Y,,1
+214,TR,Turkey,Republic of Turkey,Country,Y,,4
+215,TM,Turkmenistan,Turkmenistan,Country,Y,,-1
+217,TV,Tuvalu,Tuvalu,Country,Y,,-1
+218,UG,Uganda,Republic of Uganda,Country,Y,,1
+219,UA,Ukraine,Ukraine,Country,Y,,4
+220,AE,United Arab Emirates,United Arab Emirates,Country,Y,,2
+221,GB,United Kingdom of Great Britain and Northern Ireland,United Kingdom of Great Britain and Northern Ireland,Country,Y,,4
+207,TZ,United Republic of Tanzania,United Republic of Tanzania,Country,Y,,1
+222,US,United States of America,United States of America,Country,Y,,5
+224,UY,Uruguay,Eastern Republic of Uruguay,Country,Y,,3
+225,UZ,Uzbekistan,Republic of Uzbekistan,Country,Y,,2
+226,VU,Vanuatu,Republic of Vanuatu,Country,Y,,6
+228,VE,Venezuela (Bolivarian Republic of),Bolivarian Republic of Venezuela,Country,Y,,3
+229,VN,Viet Nam,Socialist Republic of Viet Nam,Country,Y,,2
+234,YE,Yemen,Republic of Yemen,Country,Y,,2
+237,ZM,Zambia,Republic of Zambia,Country,Y,,1
+238,ZW,Zimbabwe,Republic of Zimbabwe,Country,Y,,1
+241,SU,former USSR,former Union of Soviet Socialist Republics,Country,N,,-1
+198,SD,Sudan [prior to secession of South Sudan],Republic of the Sudan [prior to secession of South Sudan],Country,N,,-1
+50,CK,Cook Islands,Cook Islands,Country,Y,,-1
+227,VA,Holy See,Holy See,Country,Y,,-1
+111,KI,Kiribati,Republic of Kiribati,Country,Y,,-1
+140,MC,Monaco,Principality of Monaco,Country,Y,,4
+268,ME,Montenegro,Montenegro,Country,Y,,4
+147,NR,Nauru,Republic of Nauru,Country,Y,,-1
+250,PS,Occupied Palestinian Territory,Occupied Palestinian Territory,Country,Y,,-1
+182,WS,Samoa,Independent State of Samoa,Country,Y,,6
+183,SM,San Marino,Republic of San Marino,Country,Y,,4
+267,CS,Serbia,Republic of Serbia,Country,Y,,4
+270,SS,South Sudan,Republic of South Sudan,Country,Y,,-1
+239,MK,The former Yugoslav Republic of Macedonia,The former Yugoslav Republic of Macedonia,Country,Y,,4
+265,TL,Timor-Leste,Democratic Republic of Timor-Leste,Country,Y,,-1
+252,,Czechoslovakia,Czechoslovakia,Country,N,,-1
+264,,Serbia and Montenegro,Serbia and Montenegro,Country,N,,-1
+235,YU,Yugoslavia,Federal Republic of Yugoslavia,Country,N,,-1
+263,AX,land Islands,land Islands,BRU,,FI,-1
+4,AS,American Samoa,American Samoa,BRU,,US,-1
+7,AI,Anguilla,Anguilla,BRU,,GB,-1
+12,AW,Aruba,Aruba,BRU,,NL,-1
+24,BM,Bermuda,Bermuda,BRU,,GB,-1
+29,BV,Bouvet Island,Bouvet Island,BRU,,NO,-1
+31,IO,British Indian Ocean Territory,British Indian Ocean Territory,BRU,,GB,-1
+230,VG,British Virgin Islands,Virgin Islands (British),BRU,,GB,-1
+40,KY,Cayman Islands,Cayman Islands,BRU,,GB,-1
+45,CX,Christmas Island,Christmas Island,BRU,,AU,-1
+46,CC,Cocos (Keeling) Islands,Cocos (Keeling) Islands,BRU,,AU,-1
+259,NULL,Coral Sea Is. Terr.,Coral Sea Island Territory,BRU,,AU,-1
+70,FO,Faeroe Islands,Faeroe Islands,BRU,,DK,-1
+69,FK,Falkland Islands (Malvinas),Falkland Islands (Malvinas),BRU,,GB,-1
+74,FX,"France, Metropolitan","France, Metropolitan",BRU,,FR,-1
+75,GF,French Guiana,Department of Guiana,BRU,,FR,-1
+76,PF,French Polynesia,French Polynesia,BRU,,FR,-1
+77,TF,French Southern and Antarctic Territories,French Southern and Antarctic Territories,BRU,,FR,-1
+83,GI,Gibraltar,Gibraltar,BRU,,GB,-1
+85,GL,Greenland,Greenland,BRU,,DK,-1
+87,GP,Guadeloupe,Department of Guadeloupe,BRU,,FR,-1
+88,GU,Guam,Guam,BRU,,US,-1
+261,GG,Guernsey,Guernsey,BRU,,GB,-1
+94,HM,Heard Island and McDonald Islands,Heard Island and McDonald Islands,BRU,,AU,-1
+96,HK,Hong Kong SAR,Hong Kong Special Administrative Region of China,BRU,,CN,-1
+244,IM,Isle of Man,Isle of Man,BRU,,GB,-1
+262,JE,Jersey,Jersey,BRU,,GB,-1
+125,MO,Macao,Macao Special Administrative Region of China,BRU,,CN,-1
+133,MQ,Martinique,Department of Martinique,BRU,,FR,-1
+136,YT,Mayotte,Territorial collectivity of Mayotte,BRU,,FR,-1
+142,MS,Montserrat,Montserrat,BRU,,GB,-1
+150,AN,Netherlands Antilles,Netherlands Antilles,BRU,,NL,-1
+151,NC,New Caledonia,New Caledonia,BRU,,FR,-1
+156,NU,Niue,Republic of Niue,BRU,,NZ,-1
+157,NF,Norfolk Island,Norfolk Island,BRU,,AU,-1
+158,MP,Northern Mariana Islands,Commonwealth of the Northern Mariana Islands,BRU,,US,-1
+168,PN,Pitcairn,Pitcairn,BRU,,GB,-1
+171,PR,Puerto Rico,Puerto Rico,BRU,,US,-1
+176,RE,Runion,Department of Runion,BRU,,FR,-1
+177,SH,Saint Helena,Saint Helena,BRU,,GB,-1
+180,PM,Saint Pierre and Miquelon,Territorial collectivity of St. Pierre and Miquelon,BRU,,FR,-1
+269,MF,Saint-Martin,Saint-Martin(French part),BRU,,FR,-1
+195,GS,South Georgia and the South Sandwich Islands,South Georgia and the South Sandwich Islands,BRU,,GB,-1
+200,SJ,Svalbard and Jan Mayen Islands,Svalbard and Jan Mayen Islands,BRU,,NO,-1
+205,TW,"Taiwan, Province of China","Taiwan, Province of China",BRU,,CN,-1
+210,TK,Tokelau,Tokelau,BRU,,NZ,-1
+216,TC,Turks and Caicos Islands,Turks and Caicos Islands,BRU,,GB,-1
+223,UM,United States Minor Outlying Islands,United States Minor Outlying Islands,BRU,,US,-1
+231,VI,United States Virgin Islands,Virgin Islands of the United States,BRU,,US,-1
+232,WF,Wallis and Futuna Islands,Wallis and Futuna Islands,BRU,,FR,-1
+8,AQ,Antarctica,Antarctica,Region,,,-1
+260,EY,European Community,European Community,Region,,,-1
+266,NULL,South China Sea,South China Sea,Region,,,-1
+233,EH,Western Sahara,Western Sahara,Country,,,-1
+242,NULL,All countries,All countries,Region,,,-1
+243,NULL,All others,All other countries,Region,,,-1

@@ -38,7 +38,7 @@ shared_context 'Agalychnis' do
       :taxon_concept_reference,
       :taxon_concept => @klass,
       :reference => @ref,
-      :data => {:usr_is_std_ref => 't'}
+      :data => {:usr_is_std_ref => 't', :cascade => 't'}
     )
 
     Sapi::rebuild

@@ -30,7 +30,7 @@ class Checklist::HigherTaxaInjector
   #returns array of HigherTaxaItems that need to be inserted
   #between prev_item and curr_item in the taxonomic layout
   def higher_taxa_headers(prev_item, curr_item)
-    ranks = ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'GENUS', 'SPECIES']
+    ranks = ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY', 'GENUS', 'SPECIES']
     header_ranks = 4 #use only this many from the ranks table for headers
     res = []
     # puts curr_item.full_name

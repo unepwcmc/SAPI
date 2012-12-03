@@ -16,11 +16,12 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  author_year    :string(255)
+#  notes          :text
 #
 
 class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :rank_id, :parent_id,
-    :designation_id, :taxon_name_id, :data
+    :designation_id, :taxon_name_id, :data, :legacy_id, :legacy_type
 
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore

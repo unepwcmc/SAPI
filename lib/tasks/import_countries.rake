@@ -7,22 +7,23 @@ namespace :import do
   ### 2- change character encoding: iconv -f original_charset -t utf-8 originalfile > newfile
   desc 'Import countries from csv file (usage: rake import:countries[path/to/file,path/to/another])'
   task :countries, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
-    tmp_table = 'countries_import'
+    TMP_TABLE = 'countries_import'
     country_type = GeoEntityType.find_by_name(GeoEntityType::COUNTRY)
     puts "There are #{GeoEntity.count(conditions: {geo_entity_type_id: country_type.id})} countries in the database."
     files = files_from_args(t, args)
     files.each do |file|
-      drop_table(tmp_table)
-      create_table_from_csv_headers(file, tmp_table)
-      copy_data(file, tmp_table)
+      drop_table(TMP_TABLE)
+      create_table_from_csv_headers(file, TMP_TABLE)
+      copy_data(file, TMP_TABLE)
       sql = <<-SQL
-          INSERT INTO geo_entities(name, iso_code2, iso_code3, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at)
-          SELECT DISTINCT INITCAP(BTRIM(TMP.name)), INITCAP(BTRIM(TMP.iso2)), INITCAP(BTRIM(TMP.iso3)), #{country_type.id}, TMP.legacy_id, '#{GeoEntityType::COUNTRY}', current_date, current_date
-          FROM #{tmp_table} AS TMP
+          INSERT INTO geo_entities(name, iso_code2, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at, long_name)
+          SELECT DISTINCT INITCAP(BTRIM(TMP.name)), INITCAP(BTRIM(TMP.iso2)), #{country_type.id}, TMP.legacy_id, '#{GeoEntityType::COUNTRY}', current_date, current_date, INITCAP(BTRIM(TMP.long_name))
+          FROM #{TMP_TABLE} AS TMP
           WHERE NOT EXISTS (
-          SELECT * FROM geo_entities
-          WHERE legacy_id = TMP.legacy_id AND legacy_type = '#{GeoEntityType::COUNTRY}'
-          );
+            SELECT * FROM geo_entities
+            WHERE geo_entities.legacy_id = TMP.legacy_id AND geo_entities.legacy_type = '#{GeoEntityType::COUNTRY}'
+          )
+          AND INITCAP(BTRIM(TMP.geo_entity)) ilike '#{GeoEntityType::COUNTRY}'
       SQL
       ActiveRecord::Base.connection.execute(sql)
       link_countries()
@@ -43,8 +44,8 @@ def link_countries
       geo_relationship_types.id,
       current_date,
       current_date
-    FROM 
-      public.countries_import,
+    FROM
+      public.#{TMP_TABLE},
       public.geo_entities,
       public.geo_entity_types,
       public.geo_relationship_types,
@@ -52,9 +53,9 @@ def link_countries
     WHERE
       geo_entity_types.id = geo_entities.geo_entity_type_id AND
       geo_entity_types."name" ilike '#{GeoEntityType::CITES_REGION}' AND
-      geo_entities."name" LIKE countries_import.region_number||'%' AND
+      geo_entities."name" LIKE #{TMP_TABLE}.cites_region||'%' AND
       geo_relationship_types."name" ilike '#{GeoRelationshipType::CONTAINS}' AND
-      countries.legacy_id = countries_import.legacy_id AND countries.legacy_type ilike '#{GeoEntityType::COUNTRY}' AND
+      countries.legacy_id = #{TMP_TABLE}.legacy_id AND countries.legacy_type ilike '#{GeoEntityType::COUNTRY}' AND
       NOT EXISTS (
         SELECT *
         FROM geo_relationships
