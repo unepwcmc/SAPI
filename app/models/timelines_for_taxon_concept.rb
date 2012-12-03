@@ -121,7 +121,7 @@ class TimelinesForTaxonConcept
             :end_pos => next_event.pos
           )
         else
-          if @taxon_concept.send("cites_#{timeline.appendix.downcase}?") && @taxon_concept.send("cites_#{timeline.appendix.downcase}") == 't'
+          if @taxon_concept.send("cites_#{timeline.appendix.downcase}?") && @taxon_concept.send("cites_#{timeline.appendix.downcase}")
             TimelineInterval.new(
               :start_pos => event.pos,
               :end_pos => 1
