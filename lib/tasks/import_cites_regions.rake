@@ -12,7 +12,7 @@ namespace :import do
       copy_data(file, tmp_table)
       sql = <<-SQL
         INSERT INTO geo_entities(name, geo_entity_type_id, created_at, updated_at)
-        SELECT DISTINCT INITCAP(BTRIM(TMP.name)), #{regions_type.id}, current_date, current_date
+        SELECT DISTINCT BTRIM(TMP.name), #{regions_type.id}, current_date, current_date
         FROM #{tmp_table} AS TMP
         WHERE NOT EXISTS (
           SELECT * FROM geo_entities

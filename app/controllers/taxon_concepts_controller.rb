@@ -17,6 +17,7 @@ class TaxonConceptsController < ApplicationController
     taxon_concepts = MTaxonConcept.by_designation('CITES').
       without_nc.
       select("
+        DISTINCT id, LENGTH(taxonomic_position),
         full_name, rank_name,
         ARRAY(
           SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{params[:scientific_name]}%'
