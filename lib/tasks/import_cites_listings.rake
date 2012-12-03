@@ -72,6 +72,93 @@ namespace :import do
       puts "INSERTING listing_changes"
       ActiveRecord::Base.connection.execute(sql)
 
+      #add taxonomic exceptions
+      sql = <<-SQL
+      INSERT INTO listing_changes (parent_id, taxon_concept_id, species_listing_id, change_type_id, effective_at, is_current, created_at, updated_at)
+      SELECT * FROM (
+        WITH cites_listings_import_per_taxon_exclusion AS (
+          SELECT row_id, 
+          split_part(regexp_split_to_table(excluded_taxa,','),':',1) AS exclusion_rank,
+          split_part(regexp_split_to_table(excluded_taxa,','),':',2) AS exclusion_legacy_id
+          FROM cites_listings_import_view
+          WHERE excluded_taxa IS NOT NULL
+        )
+        SELECT
+        --cites_listings_import_per_taxon_exclusion.*,
+        --exclusion_ranks.name, 
+        listing_changes.id, 
+        exclusion_taxon_concepts.id AS exclusion_id,
+        listing_changes.species_listing_id, 
+        change_types.id,
+        effective_at,
+        false AS is_current,
+        NOW(), NOW()
+        FROM cites_listings_import_per_taxon_exclusion
+        INNER JOIN ranks exclusion_ranks
+          ON BTRIM(LOWER(exclusion_ranks.name)) = BTRIM(LOWER(exclusion_rank))
+        INNER JOIN taxon_concepts exclusion_taxon_concepts
+          ON exclusion_taxon_concepts.legacy_id = exclusion_legacy_id::INTEGER
+          AND exclusion_taxon_concepts.legacy_type = 'Animalia'
+          AND exclusion_taxon_concepts.rank_id = exclusion_ranks.id
+        INNER JOIN listing_changes
+          ON row_id = import_row_id
+        INNER JOIN change_types ON change_types.name = 'EXCEPTION'
+      ) q
+      SQL
+
+      puts "INSERTING taxonomic exceptions"
+      ActiveRecord::Base.connection.execute(sql)
+
+      #add population exceptions
+      sql =<<-SQL
+      WITH exceptions AS (
+              -- first insert the exception records -- there's just one / listing change
+              INSERT INTO listing_changes (parent_id, taxon_concept_id, species_listing_id, change_type_id, effective_at, is_current, created_at, updated_at)
+              SELECT
+              listing_changes.id, 
+              listing_changes.taxon_concept_id,
+              listing_changes.species_listing_id,
+              change_types.id,
+              effective_at,
+              false AS is_current,
+              NOW(), NOW()
+              FROM cites_listings_import_view 
+              INNER JOIN listing_changes
+                ON row_id = import_row_id
+              INNER JOIN change_types ON change_types.name = 'EXCEPTION'
+              WHERE excluded_populations_iso2 IS NOT NULL
+              RETURNING id, parent_id
+      ),
+      excluded_populations AS ( 
+      SELECT exceptions.*, split_part(regexp_split_to_table(excluded_populations_iso2,','),':',1) AS iso_code2
+      FROM exceptions
+      INNER JOIN listing_changes ON exceptions.parent_id = listing_changes.id
+      INNER JOIN cites_listings_import_view ON cites_listings_import_view.row_id = listing_changes.import_row_id
+      )
+      INSERT INTO listing_distributions (listing_change_id, geo_entity_id, is_party, created_at, updated_at)
+      SELECT excluded_populations.id, geo_entities.id, 'f', NOW(), NOW() 
+      FROM excluded_populations
+      INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(excluded_populations.iso_code2)
+      SQL
+
+      puts "INSERTING population exceptions (listing distributions)"
+      ActiveRecord::Base.connection.execute(sql)
+
+      sql = <<-SQL
+      WITH listed_populations AS (
+        SELECT listing_changes.id, split_part(regexp_split_to_table(populations_iso2,','),':',1) AS iso_code2
+        FROM cites_listings_import_view AS TMP
+        INNER JOIN listing_changes ON TMP.row_id = listing_changes.import_row_id
+      )
+      INSERT INTO listing_distributions (listing_change_id, geo_entity_id, is_party, created_at, updated_at)
+      SELECT listed_populations.id, geo_entities.id, 'f', NOW(), NOW()
+      FROM listed_populations
+      INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(listed_populations.iso_code2)
+      SQL
+
+      puts "INSERTING listed populations (listing distributions)"
+      ActiveRecord::Base.connection.execute(sql)
+
       sql = <<-SQL
           INSERT INTO listing_distributions(listing_change_id, geo_entity_id, is_party, created_at, updated_at)
           SELECT DISTINCT listing_changes.id, geo_entities.id, 't'::BOOLEAN, current_date, current_date
@@ -80,7 +167,7 @@ namespace :import do
           INNER JOIN listing_changes ON TMP.row_id = listing_changes.import_row_id
           WHERE TMP.country_iso2 <> 'Null' AND TMP.country_iso2 IS NOT NULL
       SQL
-      puts "INSERTING listing distributions"
+      puts "INSERTING parties (listing distributions)"
       ActiveRecord::Base.connection.execute(sql)
 
       sql = <<-SQL
@@ -108,8 +195,8 @@ namespace :import do
     end
 
     puts "DROPPING temporary column and view"
-    ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN import_row_id")
-    ActiveRecord::Base.connection.execute("DROP VIEW cites_listings_import_view")
+    #TODO ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN import_row_id")
+    #TODO ActiveRecord::Base.connection.execute("DROP VIEW cites_listings_import_view")
 
     puts "#{ListingChange.count - listings_count} CITES listings were added to the database"
     puts "#{ListingDistribution.count - listings_d_count} listing distributions were added to the database"
