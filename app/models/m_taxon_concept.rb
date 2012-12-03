@@ -3,7 +3,6 @@
 # Table name: taxon_concepts_mview
 #
 #  id                               :integer          primary key
-#  parent_id                        :integer
 #  cites_fully_covered              :boolean
 #  designation_is_cites             :boolean
 #  full_name                        :text
@@ -36,24 +35,25 @@
 #  current_listing                  :text
 #  usr_cites_excluded               :boolean
 #  cites_excluded                   :boolean
-#  listing_updated_at               :datetime
-#  specific_annotation_symbol       :text
-#  generic_annotation_symbol        :text
-#  generic_annotation_parent_symbol :text
-#  author_year                      :string(255)
-#  created_at                       :datetime
-#  updated_at                       :datetime
 #  taxon_concept_id_com             :integer
 #  english_names_ary                :string
 #  french_names_ary                 :string
 #  spanish_names_ary                :string
 #  taxon_concept_id_syn             :integer
 #  synonyms_ary                     :string
-#  synonyms_author_years_ary        :string
 #  countries_ids_ary                :string
 #  standard_references_ids_ary      :string
 #  dirty                            :boolean
 #  expiry                           :datetime
+#  listing_updated_at               :datetime
+#  updated_at                       :datetime
+#  created_at                       :datetime
+#  specific_annotation_symbol       :string(255)
+#  generic_annotation_symbol        :string(255)
+#  parent_id                        :integer
+#  author_year                      :string(255)
+#  synonyms_author_years_ary        :string
+#  generic_annotation_parent_symbol :string(255)
 #
 
 class MTaxonConcept < ActiveRecord::Base

@@ -1,3 +1,61 @@
+# == Schema Information
+#
+# Table name: taxon_concepts_mview
+#
+#  id                               :integer          primary key
+#  cites_fully_covered              :boolean
+#  designation_is_cites             :boolean
+#  full_name                        :text
+#  rank_name                        :text
+#  cites_accepted                   :boolean
+#  kingdom_position                 :integer
+#  taxonomic_position               :text
+#  kingdom_name                     :text
+#  phylum_name                      :text
+#  class_name                       :text
+#  order_name                       :text
+#  family_name                      :text
+#  genus_name                       :text
+#  species_name                     :text
+#  subspecies_name                  :text
+#  kingdom_id                       :integer
+#  phylum_id                        :integer
+#  class_id                         :integer
+#  order_id                         :integer
+#  family_id                        :integer
+#  genus_id                         :integer
+#  species_id                       :integer
+#  subspecies_id                    :integer
+#  cites_listed                     :boolean
+#  cites_show                       :boolean
+#  cites_i                          :text
+#  cites_ii                         :text
+#  cites_iii                        :text
+#  cites_deleted                    :boolean
+#  current_listing                  :text
+#  usr_cites_excluded               :boolean
+#  cites_excluded                   :boolean
+#  taxon_concept_id_com             :integer
+#  english_names_ary                :string
+#  french_names_ary                 :string
+#  spanish_names_ary                :string
+#  taxon_concept_id_syn             :integer
+#  synonyms_ary                     :string
+#  countries_ids_ary                :string
+#  standard_references_ids_ary      :string
+#  dirty                            :boolean
+#  expiry                           :datetime
+#  listing_updated_at               :datetime
+#  updated_at                       :datetime
+#  created_at                       :datetime
+#  specific_annotation_symbol       :string(255)
+#  generic_annotation_symbol        :string(255)
+#  parent_id                        :integer
+#  author_year                      :string(255)
+#  synonyms_author_years_ary        :string
+#  generic_annotation_parent_symbol :string(255)
+#
+
 require 'spec_helper'
 
 describe MTaxonConcept do
