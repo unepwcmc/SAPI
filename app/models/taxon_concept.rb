@@ -2,21 +2,22 @@
 #
 # Table name: taxon_concepts
 #
-#  id             :integer          not null, primary key
-#  parent_id      :integer
-#  lft            :integer
-#  rgt            :integer
-#  rank_id        :integer          not null
-#  designation_id :integer          not null
-#  taxon_name_id  :integer          not null
-#  legacy_id      :integer
-#  legacy_type    :string(255)
-#  data           :hstore
-#  listing        :hstore
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  author_year    :string(255)
-#  notes          :text
+#  id                :integer          not null, primary key
+#  parent_id         :integer
+#  lft               :integer
+#  rgt               :integer
+#  rank_id           :integer          not null
+#  designation_id    :integer          not null
+#  taxon_name_id     :integer          not null
+#  legacy_id         :integer
+#  legacy_type       :string(255)
+#  data              :hstore
+#  listing           :hstore
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  author_year       :string(255)
+#  notes             :text
+#  cites_name_status :string(255)
 #
 
 class TaxonConcept < ActiveRecord::Base
