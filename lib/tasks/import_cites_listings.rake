@@ -35,7 +35,7 @@ namespace :import do
       copy_data(file, TMP_TABLE)
 
       sql = <<-SQL
-          INSERT INTO listing_changes(import_row_id, species_listing_id, taxon_concept_id, change_type_id, created_at, updated_at, effective_at, is_current)
+          INSERT INTO listing_changes(import_row_id, species_listing_id, taxon_concept_id, change_type_id, created_at, updated_at, effective_at, is_current, inclusion_taxon_concept_id)
           SELECT row_id,
             CASE
               WHEN UPPER(BTRIM(TMP.appendix)) like '%III%' THEN #{appendix_3.id}
@@ -52,9 +52,21 @@ namespace :import do
             CASE
               WHEN TMP.is_current IS NULL THEN 'f'
               ELSE TMP.is_current
-            END
+            END,
+            inclusion_taxon_concepts.id
           FROM #{TMP_TABLE}_view AS TMP
-          INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = TMP.legacy_id AND taxon_concepts.legacy_type = 'Animalia';
+          INNER JOIN ranks
+          ON LOWER(ranks.name) = LOWER(TMP.rank)
+          LEFT JOIN ranks inclusion_ranks
+          ON LOWER(inclusion_ranks.name) = LOWER(rank_for_inclusions)
+          INNER JOIN taxon_concepts
+          ON taxon_concepts.legacy_id = TMP.legacy_id
+          AND taxon_concepts.legacy_type = 'Animalia'
+          AND taxon_concepts.rank_id = ranks.id
+          LEFT JOIN taxon_concepts inclusion_taxon_concepts
+          ON inclusion_taxon_concepts.legacy_id = TMP.included_in_rec_id
+          AND inclusion_taxon_concepts.legacy_type = 'Animalia'
+          AND inclusion_taxon_concepts.rank_id = inclusion_ranks.id;
       SQL
 
       puts "INSERTING listing_changes"
@@ -102,6 +114,7 @@ namespace :import do
     puts "#{ListingChange.count - listings_count} CITES listings were added to the database"
     puts "#{ListingDistribution.count - listings_d_count} listing distributions were added to the database"
     puts "#{Annotation.count - annotations_count} CITES annotations were added to the database"
+
   end
 
   namespace :cites_listings do
@@ -117,6 +130,13 @@ namespace :import do
         ChangeType.find_or_create_by_name(c_type)
       end
       puts 'Created appendices and change type defaults'
+    end
+    desc "Drop CITES species listings"
+    task :delete_all => :environment do
+      AnnotationTranslation.delete_all
+      Annotation.delete_all
+      ListingDistribution.delete_all
+      ListingChange.delete_all
     end
   end
 end
