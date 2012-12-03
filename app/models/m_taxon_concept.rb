@@ -26,15 +26,14 @@
 #  genus_id                         :integer
 #  species_id                       :integer
 #  subspecies_id                    :integer
-#  cites_name_status                :text
 #  cites_fully_covered              :boolean
 #  cites_listed                     :boolean
 #  cites_deleted                    :boolean
 #  cites_excluded                   :boolean
 #  cites_show                       :boolean
-#  cites_i                          :boolean
-#  cites_ii                         :boolean
-#  cites_iii                        :boolean
+#  cites_i                          :text
+#  cites_ii                         :text
+#  cites_iii                        :text
 #  current_listing                  :text
 #  listing_updated_at               :datetime
 #  specific_annotation_symbol       :text
@@ -72,7 +71,7 @@ class MTaxonConcept < ActiveRecord::Base
   scope :without_nc, where(
     <<-SQL
     (cites_deleted <> 't' OR cites_deleted IS NULL)
-    AND cites_listed IS NOT NULL AND cites_status_name = 'A'
+    AND cites_listed IS NOT NULL AND cites_name_status = 'A'
     SQL
   )
 

@@ -45,7 +45,7 @@ def import_data_for rank, synonyms=nil
 
   cites = Designation.find_by_name(Designation::CITES)
   sql = <<-SQL
-    INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id, parent_id, created_at, updated_at, author_year, legacy_id, legacy_type, notes, cites_name_status )
+    INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id, parent_id, created_at, updated_at, author_year, legacy_id, legacy_type, notes, data)
        SELECT
          tmp.taxon_name_id
          ,#{rank_id}
@@ -57,7 +57,7 @@ def import_data_for rank, synonyms=nil
             WHEN tmp.author = 'Null' THEN NULL
             ELSE tmp.author
           END
-         ,tmp.legacy_id, 'Animalia', tmp.notes, '#{synonyms ? 'S' : 'A'}'
+         ,tmp.legacy_id, 'Animalia', tmp.notes, '"cites_name_status"=>"#{synonyms ? 'S' : 'A'}"'
        FROM
         (
           SELECT DISTINCT taxon_names.id AS taxon_name_id, #{TMP_TABLE}.parent_rank, #{TMP_TABLE}.parent_legacy_id,
