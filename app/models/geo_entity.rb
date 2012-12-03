@@ -29,6 +29,7 @@ class GeoEntity < ActiveRecord::Base
     where("geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'")
 
   }
+  scope :current, where(:is_current => true)
 
   def as_json(options={})
     super(:only =>[:id, :name, :iso_code2])

@@ -35,7 +35,7 @@ namespace :import do
         INSERT INTO taxon_relationships(taxon_relationship_type_id,
           taxon_concept_id, other_taxon_concept_id,
           created_at, updated_at)
-        SELECT #{rel.id}, accepted_id, synonym_id, current_date, current_date
+        SELECT DISTINCT #{rel.id}, accepted_id, synonym_id, current_date, current_date
         FROM (
           SELECT accepted.id AS accepted_id, synonym.id AS synonym_id
           FROM #{TMP_TABLE}
@@ -47,10 +47,8 @@ namespace :import do
             ON synonym.legacy_id = #{TMP_TABLE}.legacy_id AND synonym.rank_id = synonyms_rank.id and synonym.legacy_type = 'Animalia'
           WHERE NOT EXISTS (
             SELECT * FROM taxon_relationships
-            LEFT JOIN taxon_concepts AS accepted
-            ON accepted.id = taxon_relationships.taxon_concept_id
-            LEFT JOIN taxon_concepts AS synonym
-            ON synonym.id = taxon_relationships.other_taxon_concept_id
+            LEFT JOIN taxon_concepts AS accepted ON accepted.id = taxon_relationships.taxon_concept_id
+            LEFT JOIN taxon_concepts AS synonym ON synonym.id = taxon_relationships.other_taxon_concept_id
             WHERE taxon_relationships.taxon_relationship_type_id = #{rel.id}
           )
         ) q

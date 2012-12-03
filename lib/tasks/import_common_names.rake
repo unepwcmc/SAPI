@@ -27,8 +27,8 @@ namespace :import do
           FROM #{TMP_TABLE}
           LEFT JOIN common_names ON #{TMP_TABLE}.name = common_names.name
           LEFT JOIN languages ON #{TMP_TABLE}.language = languages.abbreviation
-          LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = 'Animalia'
-          LEFT JOIN ranks ON ranks.id = taxon_concepts.rank_id AND INITCAP(BTRIM(#{TMP_TABLE}.rank)) = INITCAP(ranks.name)
+          LEFT JOIN ranks ON INITCAP(BTRIM(#{TMP_TABLE}.rank)) = INITCAP(ranks.name)
+          LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = 'Animalia' AND taxon_concepts.rank_id = ranks.id
           WHERE taxon_concepts.id IS NOT NULL;
       SQL
       ActiveRecord::Base.connection.execute(sql)

@@ -63,7 +63,7 @@ def import_data_for rank, synonyms=nil
           SELECT DISTINCT taxon_names.id AS taxon_name_id, #{TMP_TABLE}.parent_rank, #{TMP_TABLE}.parent_legacy_id,
            #{cites.id} AS designation_id, INITCAP(BTRIM(#{TMP_TABLE}.author)) AS author, #{TMP_TABLE}.legacy_id, 'Animalia', #{TMP_TABLE}.notes
           FROM #{TMP_TABLE}
-          LEFT JOIN taxon_names ON (INITCAP(BTRIM(#{TMP_TABLE}.name)) LIKE INITCAP(BTRIM(taxon_names.scientific_name)))
+          LEFT JOIN taxon_names ON INITCAP(BTRIM(#{TMP_TABLE}.name)) LIKE INITCAP(BTRIM(taxon_names.scientific_name))
           WHERE NOT EXISTS (
             SELECT taxon_name_id, rank_id, designation_id
             FROM taxon_concepts
@@ -72,7 +72,7 @@ def import_data_for rank, synonyms=nil
               taxon_concepts.designation_id = #{cites.id}
           )
           AND taxon_names.id IS NOT NULL
-          AND BTRIM(#{TMP_TABLE}.rank) ilike '#{rank}'
+          AND INITCAP(BTRIM(#{TMP_TABLE}.rank)) like INITCAP('#{rank}')
           AND BTRIM(#{TMP_TABLE}.designation) ilike '%CITES%'
           #{ unless synonyms then "AND BTRIM(#{TMP_TABLE}.status) like 'A'" end }
         ) as tmp
@@ -82,6 +82,19 @@ def import_data_for rank, synonyms=nil
           taxon_concepts.rank_id = ranks.id AND
           taxon_concepts.legacy_type = 'Animalia' AND
           (tmp.parent_rank <> NULL OR tmp.parent_rank <> 'Null')
+        )
+        WHERE NOT EXISTS (
+          SELECT * FROM taxon_concepts AS tc2
+          WHERE tc2.taxon_name_id = tmp.taxon_name_id AND
+          tc2.rank_id = #{rank_id} AND
+          tc2.designation_id = tmp.designation_id AND
+          tc2.parent_id = taxon_concepts.id AND
+          tc2.legacy_id = tmp.legacy_id AND
+          tc2.legacy_type = 'Animalia' AND
+          tc2.author_year = CASE
+            WHEN tmp.author = 'Null' THEN NULL
+            ELSE tmp.author
+          END
         )
     RETURNING id;
   SQL

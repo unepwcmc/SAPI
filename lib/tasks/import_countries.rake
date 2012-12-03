@@ -17,9 +17,9 @@ namespace :import do
       copy_data(file, TMP_TABLE)
       sql = <<-SQL
           INSERT INTO geo_entities(name, iso_code2, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at, long_name, is_current)
-          SELECT DISTINCT INITCAP(BTRIM(TMP.name)), INITCAP(BTRIM(TMP.iso2)), #{country_type.id}, TMP.legacy_id, '#{GeoEntityType::COUNTRY}', current_date, current_date, INITCAP(BTRIM(TMP.long_name)),
+          SELECT DISTINCT BTRIM(TMP.name), BTRIM(TMP.iso2), #{country_type.id}, TMP.legacy_id, '#{GeoEntityType::COUNTRY}', current_date, current_date, INITCAP(BTRIM(TMP.long_name)),
           CASE
-            WHEN current_name ilike 'N' THEN 't'::BOOLEAN
+            WHEN current_name ilike 'Y' THEN 't'::BOOLEAN
             ELSE 'f'::BOOLEAN
           END
           FROM #{TMP_TABLE} AS TMP
