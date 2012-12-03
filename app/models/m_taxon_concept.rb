@@ -80,7 +80,7 @@ class MTaxonConcept < ActiveRecord::Base
   scope :by_cites_populations_and_appendices, lambda { |cites_regions_ids, countries_ids, appendix_abbreviations=nil|
     geo_entity_ids = countries_ids
     if cites_regions_ids
-      geo_entity_ids += GeoEntity.contained_geo_entities(cites_regions_ids)
+      geo_entity_ids += GeoEntity.contained_geo_entities(cites_regions_ids).map(&:id)
     end
     geo_entities_in_clause = geo_entity_ids.compact.join(',')
     appendices_in_clause = if appendix_abbreviations
@@ -126,18 +126,18 @@ class MTaxonConcept < ActiveRecord::Base
           -- and does not have an exclusion for the specified geo entities
           (
           #{
-          geo_entity_ids.map do |geo_entity_id|
-          <<-GEO_SQL
-            SELECT taxon_concept_id
-            FROM listing_changes
-            INNER JOIN change_types ON change_types.id = listing_changes.change_type_id
-            INNER JOIN listing_distributions ON listing_changes.id = listing_distributions.listing_change_id AND NOT is_party
-            #{(appendix_abbreviations ? 'INNER JOIN species_listings ON species_listings.id = listing_changes.species_listing_id' : '')}
-            WHERE is_current = 't' AND change_types.name = 'EXCEPTION'
-            #{(appendix_abbreviations ? "AND species_listings.abbreviation IN (#{appendices_in_clause})" : '')}
-            AND listing_distributions.geo_entity_id = #{geo_entity_id}
-            GEO_SQL
-          end.join ("\n            INTERSECT\n\n")
+            geo_entity_ids.map do |geo_entity_id|
+              <<-GEO_SQL
+                SELECT taxon_concept_id
+                FROM listing_changes
+                INNER JOIN change_types ON change_types.id = listing_changes.change_type_id
+                INNER JOIN listing_distributions ON listing_changes.id = listing_distributions.listing_change_id AND NOT is_party
+                #{(appendix_abbreviations ? 'INNER JOIN species_listings ON species_listings.id = listing_changes.species_listing_id' : '')}
+                WHERE is_current = 't' AND change_types.name = 'EXCEPTION'
+                #{(appendix_abbreviations ? "AND species_listings.abbreviation IN (#{appendices_in_clause})" : '')}
+                AND listing_distributions.geo_entity_id = #{geo_entity_id}
+              GEO_SQL
+            end.join ("\n            INTERSECT\n\n")
           }
           )
 
