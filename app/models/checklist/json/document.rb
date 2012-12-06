@@ -5,12 +5,11 @@ module Checklist::Json::Document
   end
 
   def document
-    @tmp_json    = [Rails.root, "/tmp/", SecureRandom.hex(8), ".#{ext}"].join
-    File.open(@tmp_json, "wb") do |json|
+    File.open(@download_path, "wb") do |json|
       yield json
     end
 
-    @download_path = @tmp_json
+    @download_path
   end
 
 end

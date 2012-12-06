@@ -19,7 +19,8 @@ shared_context "Hirudo medicinalis" do
     @species = create(
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Medicinalis'),
-      :parent => @genus
+      :parent => @genus,
+      :data => {:cites_name_status => 'A'}
     )
 
     create(

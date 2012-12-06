@@ -228,7 +228,7 @@ class MTaxonConcept < ActiveRecord::Base
   end
 
   def recently_changed
-    return listing_updated_at > 8.year.ago
+    return (listing_updated_at ? listing_updated_at > 8.year.ago : false)
   end
 
   #note this will probably return external reference ids in the future

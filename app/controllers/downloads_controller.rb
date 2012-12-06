@@ -46,7 +46,7 @@ class DownloadsController < ApplicationController
 
       send_file(@download.path,
         :filename => @download.filename,
-        :type => "pdf")
+        :type => @download.format)
     else
       render :json => {error: "Download not processed"}
     end
