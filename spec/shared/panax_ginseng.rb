@@ -28,12 +28,14 @@ shared_context "Panax ginseng" do
     @genus = create(
       :genus,
       :taxon_name => create(:taxon_name, :scientific_name => 'Panax'),
-      :parent => @family
+      :parent => @family,
+      :data => {:cites_name_status => 'A'}
     )
     @species = create(
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Ginseng'),
-      :parent => @genus
+      :parent => @genus,
+      :data => {:cites_name_status => 'A'}
     )
 
    english = create(

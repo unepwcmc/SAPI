@@ -20,7 +20,8 @@ shared_context "Tapiridae" do
       @species = create(
         :species,
         :taxon_name => create(:taxon_name, :scientific_name => n),
-        :parent => @genus
+        :parent => @genus,
+      :data => {:cites_name_status => 'A'}
       )
     end
 
