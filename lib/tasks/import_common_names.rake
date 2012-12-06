@@ -37,4 +37,11 @@ namespace :import do
     puts "There are #{TaxonCommon.count} taxon commons in the database."
   end
 
+  namespace :common_names do
+    desc 'Delete all existing common names, and taxon commons'
+    task :delete_all => :environment do
+      puts "Deleting #{TaxonCommon.delete_all} taxon commons"
+      puts "Deleting #{CommonName.delete_all} common names"
+    end
+  end
 end
