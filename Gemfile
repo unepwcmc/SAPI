@@ -35,7 +35,7 @@ gem 'whenever', :require => false
 
 group :staging, :production do
   gem 'exception_notification', :require => 'exception_notifier'
-  gem 'newrelic_rpm'
+  gem 'newrelic_rpm', '>=3.5.3.25'
 end
 
 group :development do
