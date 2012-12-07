@@ -5,6 +5,7 @@ class Checklist::Pdf::IndexQuery
     @spanish_common_names = options[:spanish_common_names]
     @french_common_names = options[:french_common_names]
     @synonyms = options[:synonyms]
+    @authors = options[:authors]
     #we want common names and synonyms returned as separate records
     #and sorted alphabetically
     shared_columns = [:full_name, :rank_name, :family_name, :class_name,
@@ -13,6 +14,8 @@ class Checklist::Pdf::IndexQuery
     shared_columns << :english_names_ary if @english_common_names
     shared_columns << :spanish_names_ary if @spanish_common_names
     shared_columns << :french_names_ary if @french_common_names
+    shared_columns << :author_year if @authors
+
     distinct_columns = [:name_type, :sort_name, :lng]
     distinct_columns_values = {
       :name_type => {:basic => "'basic'",
@@ -24,7 +27,7 @@ class Checklist::Pdf::IndexQuery
       :sort_name => {
         :basic => 'full_name',
         :english => "REGEXP_REPLACE(UNNEST(english_names_ary), '(.+) (.+)', '\\2, \\1')",
-        :sanish => 'UNNEST(spanish_names_ary)',
+        :spanish => 'UNNEST(spanish_names_ary)',
         :french => 'UNNEST(french_names_ary)',
         :synonym => 'UNNEST(synonyms_ary)'
       },

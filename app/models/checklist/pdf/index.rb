@@ -21,6 +21,7 @@ class Checklist::Pdf::Index < Checklist::Index
   def prepare_kingdom_queries
     options = {
       :synonyms => @synonyms,
+      :authors => @authors,
       :english_common_names => @english_common_names,
       :spanish_common_names => @spanish_common_names,
       :french_common_names => @french_common_names

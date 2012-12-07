@@ -19,7 +19,6 @@ module Checklist::Pdf::IndexContent
       entries = kingdom.map do |tc|
         if tc.read_attribute(:name_type) == 'synonym'
           synonym_entry(tc)
-
         elsif tc.read_attribute(:name_type) == 'common'
           common_name_entry(tc)
         else
@@ -42,6 +41,7 @@ module Checklist::Pdf::IndexContent
 
   def main_entry(tc)
     res = listed_taxon_name(tc)
+    res += " \\textit{#{LatexToPdf.escape_latex(tc.author_year)}}" if @authors
     res += current_listing_with_annotations(tc)
     if ['SPECIES', 'SUBSPECIES', 'GENUS', 'FAMILY', 'SUBFAMILY'].include? tc.rank_name
       res += " #{"#{tc.family_name}".upcase}" if tc.rank_name != 'FAMILY'
