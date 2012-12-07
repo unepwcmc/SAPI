@@ -5,7 +5,7 @@
 :verbose: false
 :pidfile: ./tmp/pids/sidekiq.pid
 :namespace: sidekiq_<%= stage %>
-:concurrency:  25
+:concurrency:  10
 :queues:
   - [often, 7]
   - [default, 5]

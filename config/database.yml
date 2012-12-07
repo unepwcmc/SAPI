@@ -25,6 +25,7 @@ test:
 staging:
   adapter: postgresql
   database: sapi_staging
+  pool: 10
   username: wcmc
   host: localhost
   port: 15432
