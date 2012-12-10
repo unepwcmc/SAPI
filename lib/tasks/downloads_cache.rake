@@ -25,7 +25,9 @@ namespace :downloads do
     desc "Update the cache for the featured downloads"
     task :update => :environment do
       modules = [
-        Checklist::Json
+        Checklist::Pdf,
+        Checklist::Json,
+        Checklist::Csv
       ]
 
       # Default l
