@@ -21,5 +21,28 @@ namespace :downloads do
         end
       end
     end
+
+    desc "Update the cache for the featured downloads"
+    task :update => :environment do
+      modules = [
+        Checklist::Json
+      ]
+
+      # Default l
+      params = {
+        show_synonyms: "1",
+        show_author: "1",
+        show_english: "1",
+        show_spanish: "1",
+        show_french: "1",
+        locale: "en",
+        format: "json"
+      }
+
+      modules.each do |m|
+        puts m::Index.new(params).generate
+        puts m::History.new(params).generate
+      end
+    end
   end
 end
