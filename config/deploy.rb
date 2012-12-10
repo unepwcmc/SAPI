@@ -202,3 +202,22 @@ namespace :seeds do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:distributions && RAILS_ENV=#{rails_env} rake import:distributions:remove_table"
   end
 end
+
+namespace :downloads do
+  namespace :cache do
+    desc "Clear cache"
+    task :clear do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} rake downloads:cache:clear"
+    end
+
+    desc "Populate cache"
+    task :populate do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} rake downloads:cache:update"
+    end
+
+    desc "Rotate cache"
+    task :rotate do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} rake downloads:cache:rotate"
+    end
+  end
+end
