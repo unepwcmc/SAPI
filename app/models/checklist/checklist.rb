@@ -271,7 +271,11 @@ class Checklist::Checklist
 
     #TODO common names, authors
 
-    summary.join(" ")
+    if summary.length > 0
+      summary.join(" ")
+    else
+      "All results"
+    end
   end
 
   # Returns a file path where a download can be stored.
