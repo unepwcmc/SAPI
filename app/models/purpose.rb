@@ -1,0 +1,1 @@
+class Purpose < TradeCode; end

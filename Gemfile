@@ -13,6 +13,7 @@ gem 'awesome_nested_set'
 gem 'foreigner'
 gem 'oj'
 gem 'jsonify'
+gem 'inherited_resources'
 
 gem 'sidekiq'
 gem 'sidekiq-status'

@@ -1,4 +1,4 @@
-class ApplicationController < ActionController::API
+class ApplicationController < ActionController::Base
   before_filter :set_locale
   def set_locale
     # if params[:locale] is nil then I18n.default_locale will be used

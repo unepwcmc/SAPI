@@ -1,0 +1,1 @@
+class Source < TradeCode; end
