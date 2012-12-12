@@ -271,7 +271,11 @@ class Checklist::Checklist
 
     #TODO common names, authors
 
-    summary.join(" ")
+    if summary.length > 0
+      summary.join(" ")
+    else
+      "All results"
+    end
   end
 
   # Returns a file path where a download can be stored.
@@ -284,7 +288,16 @@ class Checklist::Checklist
   # @returns String download file path, including filename and ext
   def download_location(params, type, format)
     require 'digest/sha1'
-    @filename = Digest::SHA1.hexdigest(params.merge(type: type).to_s)
+
+    params.delete(:action)
+    params.delete(:controller)
+
+    @filename = Digest::SHA1.hexdigest(params
+                                       .merge(type: type)
+                                       .to_hash
+                                       .symbolize_keys!
+                                       .sort
+                                       .to_s)
 
     return [Rails.root, '/public/downloads/', @filename, '.', format].join
   end
