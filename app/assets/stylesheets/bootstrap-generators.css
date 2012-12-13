@@ -1,0 +1,18 @@
+/*
+ *= require bootstrap
+ *= require_self
+ *= require bootstrap-responsive
+*/
+
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+.page-header a.btn {
+  float: right;
+}
+
+.page-header a.btn + a.btn {
+  margin-right: 8px;
+}
