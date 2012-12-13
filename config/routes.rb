@@ -10,6 +10,7 @@ SAPI::Application.routes.draw do
     resources :sources, :only => [:index]
     resources :purposes, :only => [:index]
     resources :units, :only => [:index]
+    root :to => 'home#index'
   end
 
   match 'taxon_concepts/' => 'taxon_concepts#index'

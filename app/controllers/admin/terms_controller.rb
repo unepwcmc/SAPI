@@ -1,2 +1,3 @@
-class Admin::TermsController < InheritedResources::Base
+class Admin::TermsController < Admin::AdminController
+  inherit_resources
 end
