@@ -27,6 +27,8 @@ class DownloadWorker
       @download.filename = document_module.download_name
       @download.path     = document_module.generate
 
+      @download.display_name = document_module.summarise_filters
+
       @download.status = "completed"
 
       @download.save!

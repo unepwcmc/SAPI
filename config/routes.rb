@@ -1,4 +1,16 @@
 SAPI::Application.routes.draw do
+  namespace :api do
+    resources :terms, :only => [:index]
+    resources :sources, :only => [:index]
+    resources :purposes, :only => [:index]
+    resources :units, :only => [:index]
+  end
+  namespace :admin do
+    resources :terms, :only => [:index]
+    resources :sources, :only => [:index]
+    resources :purposes, :only => [:index]
+    resources :units, :only => [:index]
+  end
 
   match 'taxon_concepts/' => 'taxon_concepts#index'
   match 'taxon_concepts/autocomplete' => 'taxon_concepts#autocomplete'

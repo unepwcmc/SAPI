@@ -1,19 +1,19 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.7'
+gem 'rails', '3.2.8'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'rails-api'
-
 gem 'pg'
 gem 'pg_array_parser'
 gem 'activerecord-postgres-hstore'
+#gem 'partitioned', :git => 'git@github.com:agnessa/partitioned.git'
 gem 'awesome_nested_set'
 gem 'foreigner'
 gem 'oj'
 gem 'jsonify'
+gem 'inherited_resources'
 
 gem 'sidekiq'
 gem 'sidekiq-status'
