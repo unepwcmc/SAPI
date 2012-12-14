@@ -14,6 +14,7 @@ gem 'foreigner'
 gem 'oj'
 gem 'jsonify'
 gem 'inherited_resources'
+gem 'traco'
 
 gem 'sidekiq'
 gem 'sidekiq-status'
@@ -22,6 +23,7 @@ gem 'whenever', :require => false
 
 gem 'jquery-rails'
 gem 'bootstrap-generators', '~> 2.1'
+gem 'bootstrap-editable-rails'
 
 # Gems used only for assets and not required
 # in production environments by default.

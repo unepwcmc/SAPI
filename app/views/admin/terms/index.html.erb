@@ -1,3 +1,80 @@
-welcome to the admin list of terms
+<h1>Terms <button id="new-btn" class="btn btn-primary">Add new term</button></h1>
 
-<%= render @terms || 'There are no terms defined.' %>
+<table id="terms" class="table table-bordered table-striped" style="clear: both">
+  <thead>
+    <th width="10%">Code</th>
+    <th width="20%">Name</th>
+    <th>Description</th>
+  </thead>
+  <tbody>
+
+    <% @terms.each do |trade_code| -%>
+      <tr>
+        <td>
+          <a href="#" class="code" data-type="text" data-resource="term" data-name="code
+            data-placeholder="Required" data-original-title="Enter the code"
+            data-url="/api/terms/<%= trade_code.id %>">
+            <%= trade_code.code %>
+          </a>
+        </td>
+        <td>
+          <dl>
+            <dt>EN</dt>
+            <dd>
+              <a href="#" class="name" data-type="text" data-resource="term" data-name="name_en"
+                data-placeholder="Required" data-original-title="Enter the name in English"
+                data-url="/api/terms/<%= trade_code.id %>">
+                <%= trade_code.name_en %>
+              </a>
+            </dd>
+            <dt>ES</dt>
+            <dd>
+              <a href="#" class="name" data-type="text" data-resource="term" data-name="name_en"
+                data-placeholder="Required" data-original-title="Enter the name in Spanish"
+                data-url="/api/terms/<%= trade_code.id %>">
+                <%= trade_code.name_es %>
+              </a>
+            </dd>
+            <dt>FR</dt>
+            <dd>
+              <a href="#" class="name" data-type="text" data-resource="term" data-name="name_en"
+                data-placeholder="Required" data-original-title="Enter the name in French"
+                data-url="/api/terms/<%= trade_code.id %>">
+                <%= trade_code.name_fr %>
+              </a>
+            </dd>
+          </dl>
+        </td>
+        <td>
+          <dl>
+            <dt>EN</dt>
+            <dd>
+              <a href="#" class="description" data-type="text" data-resource="term" data-name="description_en"
+                data-original-title="Enter the description in English"
+                data-url="/api/terms/<%= trade_code.id %>">
+                <%= trade_code.description_en %>
+              </a>
+            </dd>
+            <dt>ES</dt>
+            <dd>
+              <a href="#" class="description" data-type="text" data-resource="term" data-name="description_en"
+                data-original-title="Enter the description in Spanish"
+                data-url="/api/terms/<%= trade_code.id %>">
+                <%= trade_code.description_es %>
+              </a>
+            </dd>
+            <dt>FR</dt>
+            <dd>
+              <a href="#" class="description" data-type="text" data-resource="term" data-name="description_en"
+                data-original-title="Enter the description in French"
+                data-url="/api/terms/<%= trade_code.id %>">
+                <%= trade_code.description_fr %>
+              </a>
+            </dd>
+          </dl>
+        </td>
+      </tr>
+    <% end -%>
+  </tbody>
+</table>
+
