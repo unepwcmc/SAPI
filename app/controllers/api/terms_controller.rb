@@ -3,11 +3,9 @@ class Api::TermsController < ApplicationController
   inherit_resources
 
   def create
-    @term = Term.new(params[:term])
-    if @term.save
-      render :json => @term
-    else
-      render :json => {:errors => @term.errors}
+    create! do |success, failure|
+      success.json { render :json => @term }
+      failure.json { render :json => { :errors => @term.errors } }
     end
   end
 end
