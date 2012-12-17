@@ -26,7 +26,6 @@ class AdminInPlaceEditor
       $('.admin-in-place-editor-new').find('.editable').editable
         placement: 'right'
     $('.admin-in-place-editor-new').find('.modal-footer').find('.save-button').click () =>
-      console.log('save')
       form = $('.admin-in-place-editor-new').find('form')
       params = form.serialize()
       $.ajax
@@ -34,17 +33,18 @@ class AdminInPlaceEditor
         data: params
         dataType: 'JSON'
         type: 'POST'
-        success: (data) -> 
-          console.log(data)
+        success: (data) ->
           if data && data.id
-            console.log 'saved'
-            msg = 'New user created! Now editables submit individually.'
+            msg = 'New record created!'
             $('#msg').addClass('alert-success').removeClass('alert-error').html(msg).show()
             $('#save-btn').hide()
           else if data && data.errors
-            console.log 'errors'
+            msg = ''
             #server-side validation error, response like {"errors": {"username": "username already exist"} }
-            config.error.call(this, data.errors)
+            $.each data.errors, (field, errorsArray) ->
+              $.each errorsArray, (idx, error) ->
+                msg += (field + ": " + error + "<br>")
+            $('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show()
         error: (errors) ->
           msg = ''
           if (errors && errors.responseText) #ajax error, errors = xhr object

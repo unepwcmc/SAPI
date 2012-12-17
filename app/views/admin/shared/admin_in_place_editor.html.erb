@@ -6,7 +6,7 @@
   <h3 id="new-<%= controller_name.singularize %>-label">Add new <%= controller_name.singularize %></h3>
   </div>
   <div class="modal-body">
-
+  <div id="msg"></div>
   <%= form_for controller_name.singularize.to_sym, :url => send("api_#{controller_name}_path".to_sym) do |f| %>
     Code: <%= f.text_field :code %><br />
     Name in English : <%= f.text_field :name_en %><br />
