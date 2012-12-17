@@ -1,9 +1,9 @@
 SAPI::Application.routes.draw do
   namespace :api do
     resources :terms, :only => [:index, :create, :update]
-    resources :sources, :only => [:index]
-    resources :purposes, :only => [:index]
-    resources :units, :only => [:index]
+    resources :sources, :only => [:index, :create, :update]
+    resources :purposes, :only => [:index, :create, :update]
+    resources :units, :only => [:index, :create, :update]
     resources :languages, :only => [:index, :create, :update]
     resources :users, :only => [:index, :create, :update]
   end
