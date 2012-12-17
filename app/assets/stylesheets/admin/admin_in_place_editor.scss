@@ -1,4 +1,14 @@
 @import "bootstrap-variables";
 h1 {
-  color: $grayDark;
+  color: $grayLight;
+}
+.admin-in-place-editor {
+  dl {
+    margin: 0;
+    dt {
+      color: $grayLight;
+      width: 50px;
+      float: left;
+    }
+  }
 }

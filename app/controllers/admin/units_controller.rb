@@ -1,7 +1,7 @@
-class Admin::TermsController < Admin::AdminController
+class Admin::UnitsController < Admin::AdminController
   inherit_resources
   def index
-    @resources = Term.order('code').all
+    @resources = Unit.order('code').all
     render :template => 'admin/shared/admin_in_place_editor.html.erb'
   end
 end
