@@ -7,27 +7,14 @@
   </div>
   <div class="modal-body">
 
-    <table class="table table-bordered table-striped" id="user">
-      <tbody> 
-        <tr>
-          <td width="40%">iso_code1</td>
-          <td><a data-original-title="Enter iso_code1" data-name="iso_code1" data-type="text" id="newiso_code1" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
-        </tr>
-        <tr>
-          <td>English name</td>
-          <td><a data-original-title="English name" data-name="name_en" data-type="text" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
-        </tr>
-        <tr>
-          <td>Spanish name</td>
-          <td><a data-original-title="Spanish name" data-name="name_es" data-type="text" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
-        </tr>
-        <tr>
-          <td>French name</td>
-          <td><a data-original-title="French name" data-name="name_fr" data-type="text" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
-        </tr>
-      </tbody>
-    </table>
-
+    <div id="msg"></div>
+    <%= form_for :language, :url => api_languages_path do |f| %>
+      <label>Iso code 1</label><%= f.text_field :iso_code1 %><br />
+      <p>Name</p>
+      <label>EN</label> <%= f.text_field :name_en %><br />
+      <label>ES</label> <%= f.text_field :name_es %><br />
+      <label>FR</label> <%= f.text_field :name_fr %><br />
+    <% end %>
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
