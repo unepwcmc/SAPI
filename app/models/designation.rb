@@ -13,5 +13,6 @@ class Designation < ActiveRecord::Base
   include Dictionary
   build_dictionary :cites
 
+  validates :name, :presence => true, :uniqueness => true
   has_many :species_listings
 end

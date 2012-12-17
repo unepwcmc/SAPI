@@ -6,6 +6,8 @@ SAPI::Application.routes.draw do
     resources :units, :only => [:index, :create, :update]
     resources :languages, :only => [:index, :create, :update]
     resources :users, :only => [:index, :create, :update]
+    resources :designations, :only => [:index, :create, :update]
+    resources :species_listings, :only => [:index, :create, :update]
   end
   namespace :admin do
     resources :terms, :only => [:index]
@@ -14,6 +16,8 @@ SAPI::Application.routes.draw do
     resources :units, :only => [:index]
     resources :languages, :only => [:index]
     resources :users, :only => [:index]
+    resources :designations, :only => [:index]
+    resources :species_listings, :only => [:index]
     root :to => 'home#index'
   end
 
