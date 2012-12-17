@@ -1,16 +1,25 @@
 $(document).ready ->
-  objName = $('.admin-in-place-editor').attr('id')
-  new AdminInPlaceEditor(objName).init()
+  resName = $('.admin-in-place-editor').attr('id')
+  new AdminInPlaceEditor(resName).init()
 
 class AdminInPlaceEditor
   constructor: (@name) ->
 
   init: () ->
     $('#' + @name).find('.editable').editable
-      placement: 'right'
-    $('#' + @name).find('.editable-required').editable('option', 'validate', (v) ->
+      placement: 'right',
+      ajaxOptions:
+        dataType: 'json'
+        type: 'put'
+      params: (params) ->
+        #originally params contain pk, name and value
+        newParams =
+          'id': params.pk
+        newParams[$(@).attr 'data-resource'] = {}
+        newParams[$(@).attr('data-resource')][params.name] = params.value
+        return newParams
+    $('#' + @name).find('.editable-required').editable 'option', 'validate', (v) ->
       return 'Required field!' if (v == '')
-    )
 
     $('.new-button').click () =>
       $('.admin-in-place-editor-new').modal()
@@ -21,6 +30,13 @@ class AdminInPlaceEditor
         url: '/api/' + @name
         ajaxOptions:
           dataType: 'json'
+        params: (params) ->
+          console.log @
+          console.log $(@).attr('data-resource')
+          #originally params contain pk, name and value
+          console.log(params)
+          params.zonk = 1;
+          return params;
         success: (data, config) ->
           if data && data.id #record created, response like {"id": 2}
             #set pk
