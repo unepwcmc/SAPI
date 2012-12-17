@@ -3,7 +3,7 @@
 <div id="new-<%= controller_name.singularize %>" class="admin-in-place-editor-new modal hide fade" tabindex="-1" role="dialog" aria-labelledby="new-<%= controller_name.singularize %>-label" aria-hidden="true">
   <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-  <h3 id="new-term-laber">Add new term</h3>
+  <h3 id="new-<%= controller_name.singularize %>-label">Add new <%= controller_name.singularize %></h3>
   </div>
   <div class="modal-body">
 
@@ -11,31 +11,31 @@
     <tbody> 
       <tr>
         <td width="40%">Code</td>
-        <td><a data-original-title="Enter code" data-name="code" data-type="text" id="newcode" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
+        <td><a data-original-title="Enter code" data-name="code" data-type="text" id="newcode" class="editable editable-click editable-empty" href="#">Empty</a></td>
       </tr>
       <tr>
         <td>English name</td>
-        <td><a data-original-title="English name" data-name="name_en" data-type="text" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
+        <td><a data-original-title="English name" data-name="name_en" data-type="text" class="editable editable-click editable-empty" href="#">Empty</a></td>
       </tr>
       <tr>
         <td>Spanish name</td>
-        <td><a data-original-title="Spanish name" data-name="name_es" data-type="text" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
+        <td><a data-original-title="Spanish name" data-name="name_es" data-type="text" class="editable editable-click editable-empty" href="#">Empty</a></td>
       </tr>
       <tr>
         <td>French name</td>
-        <td><a data-original-title="French name" data-name="name_fr" data-type="text" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
+        <td><a data-original-title="French name" data-name="name_fr" data-type="text" class="editable editable-click editable-empty" href="#">Empty</a></td>
       </tr>
       <tr>
         <td>English description</td>
-        <td><a data-original-title="English description" data-name="description_en" data-type="text" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
+        <td><a data-original-title="English description" data-name="description_en" data-type="text" class="editable editable-click editable-empty" href="#">Empty</a></td>
       </tr>
       <tr>
         <td>Spanish description</td>
-        <td><a data-original-title="Spanish description" data-name="description_es" data-type="text" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
+        <td><a data-original-title="Spanish description" data-name="description_es" data-type="text" class="editable editable-click editable-empty" href="#">Empty</a></td>
       </tr>
       <tr>
         <td>French description</td>
-        <td><a data-original-title="French description" data-name="description_fr" data-type="text" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
+        <td><a data-original-title="French description" data-name="description_fr" data-type="text" class="editable editable-click editable-empty" href="#">Empty</a></td>
       </tr>
     </tbody>
   </table>
@@ -58,7 +58,7 @@
     <% @resources.each do |trade_code| -%>
       <tr>
         <td>
-          <a href="#" class="required" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="code"
+          <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="code"
             data-placeholder="Required" data-original-title="Enter the code"
             data-url="/api/<%= controller_name %>/<%= trade_code.id %>" data-pk="<%= trade_code.id %>">
             <%= trade_code.code %>
@@ -68,7 +68,7 @@
           <dl>
             <dt>EN</dt>
             <dd>
-              <a href="#" class="required" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_en"
+              <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_en"
                 data-placeholder="Required" data-original-title="Enter the name in English"
                 data-url="/api/<%= controller_name %>/<%= trade_code.id %>" data-pk="<%= trade_code.id %>">
                 <%= trade_code.name_en %>
@@ -76,7 +76,7 @@
             </dd>
             <dt>ES</dt>
             <dd>
-              <a href="#" class="required" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_es"
+              <a href="#" class="editable editable-click" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_es"
                 data-placeholder="Required" data-original-title="Enter the name in Spanish"
                 data-url="/api/<%= controller_name %>/<%= trade_code.id %>" data-pk="<%= trade_code.id %>">
                 <%= trade_code.name_es %>
@@ -84,7 +84,7 @@
             </dd>
             <dt>FR</dt>
             <dd>
-              <a href="#" class="required" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_fr"
+              <a href="#" class="editable editable-click" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_fr"
                 data-placeholder="Required" data-original-title="Enter the name in French"
                 data-url="/api/<%= controller_name %>/<%= trade_code.id %>" data-pk="<%= trade_code.id %>">
                 <%= trade_code.name_fr %>
@@ -96,7 +96,7 @@
           <dl>
             <dt>EN</dt>
             <dd>
-              <a href="#" class="description" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="description_en"
+              <a href="#" class="editable editable-click" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="description_en"
                 data-original-title="Enter the description in English"
                 data-url="/api/<%= controller_name %>/<%= trade_code.id %>" data-pk="<%= trade_code.id %>">
                 <%= trade_code.description_en %>
@@ -104,7 +104,7 @@
             </dd>
             <dt>ES</dt>
             <dd>
-              <a href="#" class="description" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="description_es"
+              <a href="#" class="editable editable-click" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="description_es"
                 data-original-title="Enter the description in Spanish"
                 data-url="/api/<%= controller_name %>/<%= trade_code.id %>" data-pk="<%= trade_code.id %>">
                 <%= trade_code.description_es %>
@@ -112,7 +112,7 @@
             </dd>
             <dt>FR</dt>
             <dd>
-              <a href="#" class="description" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="description_fr"
+              <a href="#" class="editable editable-click" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="description_fr"
                 data-original-title="Enter the description in French"
                 data-url="/api/<%= controller_name %>/<%= trade_code.id %>" data-pk="<%= trade_code.id %>">
                 <%= trade_code.description_fr %>

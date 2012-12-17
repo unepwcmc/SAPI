@@ -6,23 +6,18 @@ class AdminInPlaceEditor
   constructor: (@name) ->
 
   init: () ->
-    $('#' + @name).find('.myeditable').editable
+    $('#' + @name).find('.editable').editable
       placement: 'right'
-    $('#' + @name).find('.code').editable('option', 'validate', (v) ->
-      return 'Required field!' if (v == '')
-    )
-    $('#' + @name).find('.name').editable('option', 'validate', (v) ->
+    $('#' + @name).find('.editable-required').editable('option', 'validate', (v) ->
       return 'Required field!' if (v == '')
     )
 
     $('.new-button').click () =>
       $('.admin-in-place-editor-new').modal()
-      $('.admin-in-place-editor-new').find('.myeditable').editable
+      $('.admin-in-place-editor-new').find('.editable').editable
         placement: 'right'
-        pk: null
-        send: 'auto'
     $('.admin-in-place-editor-new').find('.modal-footer').find('.save-button').click () =>
-      $('.admin-in-place-editor-new').find('.myeditable').editable 'submit',
+      $('.admin-in-place-editor-new').find('.editable').editable 'submit',
         url: '/api/' + @name
         ajaxOptions:
           dataType: 'json'
