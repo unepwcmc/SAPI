@@ -2,6 +2,13 @@ class Api::DesignationsController < ApplicationController
   respond_to :json
   inherit_resources
 
+  def create
+    create! do |success, failure|
+      success.json { render :json => @designation }
+      failure.json { render :json => { :errors => @designation.errors } }
+    end
+  end
+
   protected
 
   def collection

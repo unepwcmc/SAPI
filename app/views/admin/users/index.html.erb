@@ -7,18 +7,11 @@
   </div>
   <div class="modal-body">
 
-    <table class="table table-bordered table-striped">
-      <tbody> 
-        <tr>
-          <td width="40%">Name</td>
-          <td><a data-original-title="Enter name" data-name="name" data-type="text" id="newname" class="editable editable-click editable-empty" href="#">Empty</a></td>
-        </tr>
-        <tr>
-          <td>Email</td>
-          <td><a data-original-title="Email" data-name="email" data-type="text" class="editable editable-click editable-empty" href="#">Empty</a></td>
-        </tr>
-      </tbody>
-    </table>
+    <div id="msg"></div>
+    <%= form_for :user, :url => api_users_path do |f| %>
+      <label>Name</label><%= f.text_field :name %><br />
+      <label>Email</label> <%= f.text_field :email %><br />
+    <% end %>
 
   </div>
   <div class="modal-footer">
