@@ -14,7 +14,7 @@ namespace :import do
         INSERT INTO common_names(name, language_id, created_at, updated_at)
         SELECT #{TMP_TABLE}.name, languages.id, current_date, current_date
           FROM #{TMP_TABLE}
-          LEFT JOIN languages ON #{TMP_TABLE}.language = languages.abbreviation
+          LEFT JOIN languages ON #{TMP_TABLE}.language = languages.iso_code1
           WHERE NOT EXISTS (
             SELECT common_names.name
               FROM common_names
@@ -26,7 +26,7 @@ namespace :import do
         SELECT DISTINCT taxon_concepts.id, common_names.id, current_date, current_date
           FROM #{TMP_TABLE}
           LEFT JOIN common_names ON #{TMP_TABLE}.name = common_names.name
-          LEFT JOIN languages ON #{TMP_TABLE}.language = languages.abbreviation
+          LEFT JOIN languages ON #{TMP_TABLE}.language = languages.iso_code1
           LEFT JOIN ranks ON INITCAP(BTRIM(#{TMP_TABLE}.rank)) = INITCAP(ranks.name)
           LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = 'Animalia' AND taxon_concepts.rank_id = ranks.id
           WHERE taxon_concepts.id IS NOT NULL;

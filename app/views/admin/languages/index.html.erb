@@ -10,8 +10,8 @@
     <table class="table table-bordered table-striped" id="user">
       <tbody> 
         <tr>
-          <td width="40%">Abbreviation</td>
-          <td><a data-original-title="Enter abbreviation" data-name="abbreviation" data-type="text" id="newabbreviation" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
+          <td width="40%">iso_code1</td>
+          <td><a data-original-title="Enter iso_code1" data-name="iso_code1" data-type="text" id="newiso_code1" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
         </tr>
         <tr>
           <td>English name</td>
@@ -37,7 +37,7 @@
 
 <table id="languages" class="table table-bordered table-striped" style="clear: both">
   <thead>
-    <th width="10%">Abbreviation</th>
+    <th width="10%">iso_code1</th>
     <th width="20%">Name</th>
   </thead>
   <tbody>
@@ -45,10 +45,10 @@
     <% @languages.each do |language| -%>
       <tr>
         <td>
-          <a href="#" class="abbreviation" data-type="text" data-resource="language" data-name="abbreviation"
-            data-placeholder="Required" data-original-title="Enter the language abbreviation"
+          <a href="#" class="iso_code1" data-type="text" data-resource="language" data-name="iso_code1"
+            data-placeholder="Required" data-original-title="Enter the language iso_code1"
             data-url="/api/languages/<%= language.id %>">
-            <%= language.abbreviation %>
+            <%= language.iso_code1 %>
           </a>
         </td>
         <td>

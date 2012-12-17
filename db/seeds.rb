@@ -264,8 +264,8 @@ puts "#{TaxonName.count} taxon_names created"
 
 puts "#{CommonName.delete_all} common names deleted"
 puts "#{Language.delete_all} languages deleted"
-Language.create(:name => 'English', :abbreviation => 'en')
-Language.create(:name => 'Spanish', :abbreviation => 'es')
-Language.create(:name => 'French', :abbreviation => 'fr')
+Language.create(:name_en => 'English', :iso_code1 => 'en')
+Language.create(:name_en => 'Spanish', :iso_code1 => 'es')
+Language.create(:name_en => 'French', :iso_code1 => 'fr')
 puts "#{Language.count} languages created"
 puts "#{Reference.delete_all} references deleted"
