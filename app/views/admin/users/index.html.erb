@@ -1,21 +1,21 @@
-<h1>users <a href="#new-user" role="button" class="btn" data-toggle="modal">Add new user</a></h1>
+<h1>Users <a href="#new-user" role="button" class="btn new-button">Add new user</a></h1>
 
-<div id="new-user" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="new-user-label" aria-hidden="true">
+<div id="new-user" class="admin-in-place-editor-new modal hide fade" tabindex="-1" role="dialog" aria-labelledby="new-user-label" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="new-user-laber">Add new user</h3>
   </div>
   <div class="modal-body">
 
-    <table class="table table-bordered table-striped" id="user">
+    <table class="table table-bordered table-striped">
       <tbody> 
         <tr>
           <td width="40%">Name</td>
-          <td><a data-original-title="Enter name" data-name="name" data-type="text" id="newname" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
+          <td><a data-original-title="Enter name" data-name="name" data-type="text" id="newname" class="editable editable-click editable-empty" href="#">Empty</a></td>
         </tr>
         <tr>
           <td>Email</td>
-          <td><a data-original-title="Email" data-name="email" data-type="text" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
+          <td><a data-original-title="Email" data-name="email" data-type="text" class="editable editable-click editable-empty" href="#">Empty</a></td>
         </tr>
       </tbody>
     </table>
@@ -23,11 +23,11 @@
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-    <button class="btn btn-primary">Save changes</button>
+    <button class="btn btn-primary save-button">Save changes</button>
   </div>
 </div>
 
-<table id="users" class="table table-bordered table-striped" style="clear: both">
+<table id="users" class="table table-bordered table-striped admin-in-place-editor" style="clear: both">
   <thead>
     <th width="10%">Name</th>
     <th width="20%">Email</th>
@@ -37,14 +37,14 @@
     <% @users.each do |user| -%>
       <tr>
         <td>
-          <a href="#" class="name" data-type="text" data-resource="user" data-name="name"
+          <a href="#" class="editable-required" data-type="text" data-resource="user" data-name="name"
             data-placeholder="Required" data-original-title="Enter the user's name"
             data-url="/api/users/<%= user.id %>">
             <%= user.name %>
           </a>
         </td>
         <td>
-            <a href="#" class="email" data-type="text" data-resource="user" data-name="email"
+            <a href="#" class="editable-required" data-type="text" data-resource="user" data-name="email"
               data-placeholder="Required" data-original-title="Enter the user's email"
               data-url="/api/users/<%= user.id %>">
               <%= user.email %>
