@@ -12,7 +12,8 @@
 #
 
 class Language < ActiveRecord::Base
-  attr_accessible :abbreviation, :name
+  attr_accessible :abbreviation, :name_en, :name_fr, :name_es
+  translates :name
 
   validates :abbreviation, :presence => true, :uniqueness => true
 end

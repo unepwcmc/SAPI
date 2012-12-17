@@ -1,0 +1,87 @@
+<h1>Languages <a href="#new-language" role="button" class="btn" data-toggle="modal">Add new language</a></h1>
+
+<div id="new-language" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="new-language-label" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="new-language-laber">Add new language</h3>
+  </div>
+  <div class="modal-body">
+
+    <table class="table table-bordered table-striped" id="user">
+      <tbody> 
+        <tr>
+          <td width="40%">Abbreviation</td>
+          <td><a data-original-title="Enter code" data-name="abbreviation" data-type="text" id="newcode" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
+        </tr>
+        <tr>
+          <td>English name</td>
+          <td><a data-original-title="English name" data-name="name_en" data-type="text" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
+        </tr>
+        <tr>
+          <td>Spanish name</td>
+          <td><a data-original-title="Spanish name" data-name="name_es" data-type="text" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
+        </tr>
+        <tr>
+          <td>French name</td>
+          <td><a data-original-title="French name" data-name="name_fr" data-type="text" class="myeditable editable editable-click editable-empty" href="#">Empty</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    <button class="btn btn-primary">Save changes</button>
+  </div>
+</div>
+
+<table id="languages" class="table table-bordered table-striped" style="clear: both">
+  <thead>
+    <th width="10%">Abbreviation</th>
+    <th width="20%">Name</th>
+  </thead>
+  <tbody>
+
+    <% @languages.each do |language| -%>
+      <tr>
+        <td>
+          <a href="#" class="abbreviation" data-type="text" data-resource="language" data-name="abbreviation"
+            data-placeholder="Required" data-original-title="Enter the language abbreviation"
+            data-url="/api/languages/<%= language.id %>">
+            <%= language.abbreviation %>
+          </a>
+        </td>
+        <td>
+          <dl>
+            <dt>EN</dt>
+            <dd>
+            <a href="#" class="name" data-type="text" data-resource="language" data-name="name_en"
+              data-placeholder="Required" data-original-title="Enter the name in English"
+              data-url="/api/languages/<%= language.id %>">
+              <%= language.name_en %>
+            </a>
+            </dd>
+            <dt>ES</dt>
+            <dd>
+            <a href="#" class="name" data-type="text" data-resource="language" data-name="name_en"
+              data-placeholder="Required" data-original-title="Enter the name in Spanish"
+              data-url="/api/languages/<%= language.id %>">
+              <%= language.name_es %>
+            </a>
+            </dd>
+            <dt>FR</dt>
+            <dd>
+            <a href="#" class="name" data-type="text" data-resource="language" data-name="name_en"
+              data-placeholder="Required" data-original-title="Enter the name in French"
+              data-url="/api/languages/<%= language.id %>">
+              <%= language.name_fr %>
+            </a>
+            </dd>
+          </dl>
+        </td>
+      </tr>
+    <% end -%>
+  </tbody>
+</table>
+
+
