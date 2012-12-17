@@ -39,14 +39,14 @@
         <td>
           <a href="#" class="editable-required" data-type="text" data-resource="user" data-name="name"
             data-placeholder="Required" data-original-title="Enter the user's name"
-            data-url="/api/users/<%= user.id %>">
+            data-url="/api/users/<%= user.id %>" data-pk="<%= user.id %>">
             <%= user.name %>
           </a>
         </td>
         <td>
             <a href="#" class="editable-required" data-type="text" data-resource="user" data-name="email"
               data-placeholder="Required" data-original-title="Enter the user's email"
-              data-url="/api/users/<%= user.id %>">
+              data-url="/api/users/<%= user.id %>" data-pk="<%= user.id %>">
               <%= user.email %>
             </a>
         </td>
