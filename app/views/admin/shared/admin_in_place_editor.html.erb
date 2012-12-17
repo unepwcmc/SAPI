@@ -8,13 +8,15 @@
   <div class="modal-body">
   <div id="msg"></div>
   <%= form_for controller_name.singularize.to_sym, :url => send("api_#{controller_name}_path".to_sym) do |f| %>
-    Code: <%= f.text_field :code %><br />
-    Name in English : <%= f.text_field :name_en %><br />
-    Name in Spanish : <%= f.text_field :name_es %><br />
-    Name in French : <%= f.text_field :name_fr %><br />
-    Description in English : <%= f.text_field :description_en %><br />
-    Description in Spanish : <%= f.text_field :description_es %><br />
-    Description in French : <%= f.text_field :description_fr %><br />
+    <label>Code</label><%= f.text_field :code %><br />
+    <p>Name</p>
+    <label>EN</label> <%= f.text_field :name_en %><br />
+    <label>ES</label> <%= f.text_field :name_es %><br />
+    <label>FR</label> <%= f.text_field :name_fr %><br />
+    <p>Description</p>
+    <label>EN</label> <%= f.text_field :description_en %><br />
+    <label>ES</label> <%= f.text_field :description_es %><br />
+    <label>FR</label> <%= f.text_field :description_fr %><br />
   <% end %>
 
   </div>

@@ -1,4 +1,13 @@
 @import "bootstrap-variables";
+
+@mixin boldGrayLabel($width) {
+  color: $grayLight;
+  float: left;
+  width: $width;
+  display: block;
+  font-weight: bold;
+}
+
 h1 {
   color: $grayLight;
 }
@@ -6,9 +15,15 @@ h1 {
   dl {
     margin: 0;
     dt {
-      color: $grayLight;
-      width: 50px;
-      float: left;
+      @include boldGrayLabel(50px);
+    }
+  }
+}
+
+.admin-in-place-editor-new {
+  form {
+    label {
+      @include boldGrayLabel(50px);
     }
   }
 }
