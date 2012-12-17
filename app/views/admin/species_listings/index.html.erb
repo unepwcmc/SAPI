@@ -38,25 +38,24 @@
     <th width="20%">Abbreviation</th>
   </thead>
   <tbody>
-
     <% @species_listings.each do |species_listing| -%>
       <tr>
         <td>
-            <a href="#" class="editable-required" data-type="text" data-resource="species_listing" data-name="designation_id"
-              data-placeholder="Required" data-original-title="Enter the species_listing's designation"
+            <a href="#" class="editable editable-click editable-required" data-type="select" data-resource="species_listing" data-name="designation_id"
+              data-placeholder="Required" data-original-title="Enter the species_listing's designation" data-source="/api/designations/"
               data-url="/api/species_listings/<%= species_listing.id %>" data-pk="<%= species_listing.id %>">
               <%= species_listing.designation.name %>
             </a>
         </td>
         <td>
-          <a href="#" class="editable-required" data-type="text" data-resource="species_listing" data-name="name"
+          <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="species_listing" data-name="name"
             data-placeholder="Required" data-original-title="Enter the species_listing's name"
             data-url="/api/species_listings/<%= species_listing.id %>" data-pk="<%= species_listing.id %>">
             <%= species_listing.name %>
           </a>
         </td>
         <td>
-          <a href="#" class="editable-required" data-type="text" data-resource="species_listing" data-name="abbreviation"
+          <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="species_listing" data-name="abbreviation"
             data-placeholder="Required" data-original-title="Enter the species_listing's abbreviation"
             data-url="/api/species_listings/<%= species_listing.id %>" data-pk="<%= species_listing.id %>">
             <%= species_listing.abbreviation %>

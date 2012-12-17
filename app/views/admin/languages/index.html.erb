@@ -45,7 +45,7 @@
     <% @languages.each do |language| -%>
       <tr>
         <td>
-          <a href="#" class="editable-required" data-type="text" data-resource="language" data-name="iso_code1"
+          <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="language" data-name="iso_code1"
             data-placeholder="Required" data-original-title="Enter the language iso_code1"
             data-url="/api/languages/<%= language.id %>" data-pk="<%= language.id %>">
             <%= language.iso_code1 %>
@@ -55,7 +55,7 @@
           <dl>
             <dt>EN</dt>
             <dd>
-            <a href="#" class="editable" data-type="text" data-resource="language" data-name="name_en"
+            <a href="#" class="editable editable-click" data-type="text" data-resource="language" data-name="name_en"
               data-original-title="Enter the name in English"
               data-url="/api/languages/<%= language.id %>" data-pk="<%= language.id %>">
               <%= language.name_en %>
@@ -63,7 +63,7 @@
             </dd>
             <dt>ES</dt>
             <dd>
-            <a href="#" class="editable" data-type="text" data-resource="language" data-name="name_es"
+            <a href="#" class="editable editable-click" data-type="text" data-resource="language" data-name="name_es"
               data-original-title="Enter the name in Spanish"
               data-url="/api/languages/<%= language.id %>" data-pk="<%= language.id %>">
               <%= language.name_es %>

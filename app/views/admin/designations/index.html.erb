@@ -32,7 +32,7 @@
     <% @designations.each do |designation| -%>
       <tr>
         <td>
-          <a href="#" class="editable-required" data-type="text" data-resource="designation" data-name="name"
+          <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="designation" data-name="name"
             data-placeholder="Required" data-original-title="Enter the designation's name"
             data-url="/api/designations/<%= designation.id %>" data-pk="<%= designation.id %>">
             <%= designation.name %>
