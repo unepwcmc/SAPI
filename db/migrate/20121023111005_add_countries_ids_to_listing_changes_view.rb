@@ -11,7 +11,7 @@ class AddCountriesIdsToListingChangesView < ActiveRecord::Migration
       FROM
       CROSSTAB(
         'SELECT annotations.id AS annotation_id_mul,
-        SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
+        SUBSTRING(languages.name_en FROM 1 FOR 1) AS lng,
         ARRAY[annotation_translations.full_note, annotation_translations.short_note]
         FROM "annotations"
         INNER JOIN "annotation_translations"
@@ -94,7 +94,7 @@ class AddCountriesIdsToListingChangesView < ActiveRecord::Migration
       FROM
       CROSSTAB(
         'SELECT annotations.id AS annotation_id_mul,
-        SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
+        SUBSTRING(languages.name_en FROM 1 FOR 1) AS lng,
         ARRAY[annotation_translations.full_note, annotation_translations.short_note]
         FROM "annotations"
         INNER JOIN "annotation_translations"

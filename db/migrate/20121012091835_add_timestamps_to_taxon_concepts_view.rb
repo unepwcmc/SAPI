@@ -66,7 +66,7 @@ class AddTimestampsToTaxonConceptsView < ActiveRecord::Migration
       FROM
       CROSSTAB(
         'SELECT taxon_concepts.id AS taxon_concept_id_com,
-        SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
+        SUBSTRING(languages.name_en FROM 1 FOR 1) AS lng,
         ARRAY_AGG(common_names.name ORDER BY common_names.id) AS common_names_ary 
         FROM "taxon_concepts"
         INNER JOIN "taxon_commons"
@@ -75,7 +75,7 @@ class AddTimestampsToTaxonConceptsView < ActiveRecord::Migration
           ON "common_names"."id" = "taxon_commons"."common_name_id" 
         INNER JOIN "languages"
           ON "languages"."id" = "common_names"."language_id"
-        GROUP BY taxon_concepts.id, SUBSTRING(languages.name FROM 1 FOR 1)
+        GROUP BY taxon_concepts.id, SUBSTRING(languages.name_en FROM 1 FOR 1)
         ORDER BY 1,2'
       ) AS ct(
         taxon_concept_id_com INTEGER,
@@ -201,7 +201,7 @@ class AddTimestampsToTaxonConceptsView < ActiveRecord::Migration
       FROM
       CROSSTAB(
         'SELECT taxon_concepts.id AS taxon_concept_id_com,
-        SUBSTRING(languages.name FROM 1 FOR 1) AS lng,
+        SUBSTRING(languages.name_en FROM 1 FOR 1) AS lng,
         ARRAY_AGG(common_names.name ORDER BY common_names.id) AS common_names_ary 
         FROM "taxon_concepts"
         INNER JOIN "taxon_commons"
@@ -210,7 +210,7 @@ class AddTimestampsToTaxonConceptsView < ActiveRecord::Migration
           ON "common_names"."id" = "taxon_commons"."common_name_id" 
         INNER JOIN "languages"
           ON "languages"."id" = "common_names"."language_id"
-        GROUP BY taxon_concepts.id, SUBSTRING(languages.name FROM 1 FOR 1)
+        GROUP BY taxon_concepts.id, SUBSTRING(languages.name_en FROM 1 FOR 1)
         ORDER BY 1,2'
       ) AS ct(
         taxon_concept_id_com INTEGER,

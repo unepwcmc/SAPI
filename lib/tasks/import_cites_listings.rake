@@ -13,7 +13,7 @@ namespace :import do
     d = ChangeType.find_by_name(ChangeType::DELETION)
     r = ChangeType.find_by_name(ChangeType::RESERVATION)
     rw = ChangeType.find_by_name(ChangeType::RESERVATION_WITHDRAWAL)
-    english = Language.find_by_name('English')
+    english = Language.find_by_name_en('English')
     listings_count = ListingChange.count
     listings_d_count = ListingDistribution.count
     annotations_count = Annotation.count

@@ -19,7 +19,7 @@ namespace :import do
             SELECT common_names.name
               FROM common_names
               LEFT JOIN languages ON common_names.language_id = languages.id
-              WHERE common_names.name = #{TMP_TABLE}.name AND #{TMP_TABLE}.language = languages.name
+              WHERE common_names.name = #{TMP_TABLE}.name AND #{TMP_TABLE}.language = languages.iso_code1
           ) AND BTRIM(#{TMP_TABLE}.designation) ilike '%CITES%';
 
         INSERT INTO taxon_commons(taxon_concept_id, common_name_id, created_at, updated_at)
