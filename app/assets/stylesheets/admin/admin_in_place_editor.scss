@@ -11,7 +11,7 @@
 h1 {
   color: $grayLight;
 }
-.admin-in-place-editor {
+#admin-in-place-editor {
   dl {
     margin: 0;
     dt {
@@ -20,7 +20,7 @@ h1 {
   }
 }
 
-.admin-in-place-editor-new {
+#admin-in-place-editor-new {
   form {
     label {
       @include boldGrayLabel(50px);

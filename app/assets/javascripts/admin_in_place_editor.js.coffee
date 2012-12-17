@@ -1,12 +1,9 @@
 $(document).ready ->
-  resName = $('.admin-in-place-editor').attr('id')
-  new AdminInPlaceEditor(resName).init()
+  new AdminInPlaceEditor().init()
 
 class AdminInPlaceEditor
-  constructor: (@name) ->
-
   init: () ->
-    $('#' + @name).find('.editable').editable
+    $('#admin-in-place-editor .editable').editable
       placement: 'right',
       ajaxOptions:
         dataType: 'json'
@@ -18,15 +15,18 @@ class AdminInPlaceEditor
         newParams[$(@).attr 'data-resource'] = {}
         newParams[$(@).attr('data-resource')][params.name] = params.value
         return newParams
-    $('#' + @name).find('.editable-required').editable 'option', 'validate', (v) ->
+    $('#admin-in-place-editor .editable-required').editable 'option', 'validate', (v) ->
       return 'Required field!' if (v == '')
 
     $('.new-button').click () =>
-      $('.admin-in-place-editor-new').modal()
-      $('.admin-in-place-editor-new').find('.editable').editable
-        placement: 'right'
-    $('.admin-in-place-editor-new').find('.modal-footer').find('.save-button').click () =>
-      form = $('.admin-in-place-editor-new').find('form')
+      modalEl = $('#admin-in-place-editor-new')
+      console.log modalEl
+      modalEl.on 'hidden', () ->
+        $(@).find('#msg').html('')
+        $(@).find('form')[0].reset()
+      modalEl.modal()
+    $('#admin-in-place-editor-new .modal-footer .save-button').click () =>
+      form = $('#admin-in-place-editor-new').find('form')
       params = form.serialize()
       $.ajax
         url: form.attr('action')

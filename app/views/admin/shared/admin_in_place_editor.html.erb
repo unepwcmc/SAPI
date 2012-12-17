@@ -1,6 +1,6 @@
 <h1><%= controller_name.titleize %> <a href="#new-<%= controller_name.singularize %>" role="button" class="btn new-button">Add new <%= controller_name.singularize %></a></h1>
 
-<div id="new-<%= controller_name.singularize %>" class="admin-in-place-editor-new modal hide fade" tabindex="-1" role="dialog" aria-labelledby="new-<%= controller_name.singularize %>-label" aria-hidden="true">
+<div id="admin-in-place-editor-new" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="new-<%= controller_name.singularize %>-label" aria-hidden="true">
   <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
   <h3 id="new-<%= controller_name.singularize %>-label">Add new <%= controller_name.singularize %></h3>
@@ -26,7 +26,7 @@
   </div>
 </div>
 
-<table id="<%= controller_name %>" class="table table-bordered table-striped admin-in-place-editor" style="clear: both">
+<table id="admin-in-place-editor" class="table table-bordered table-striped" style="clear: both">
   <thead>
     <th width="10%">Code</th>
     <th width="20%">Name</th>
