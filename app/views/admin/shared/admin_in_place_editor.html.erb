@@ -1,6 +1,6 @@
 <h1><%= controller_name %> <a href="#new-<%= controller_name.singularize %>" role="button" class="btn new-button">Add new <%= controller_name.singularize %></a></h1>
 
-<div id="new-<%= controller_name.singularize %>" class="admin-in-place-editor-new modal hide fade" tabindex="-1" role="dialog" aria-labelledby="new-term-label" aria-hidden="true">
+<div id="new-<%= controller_name.singularize %>" class="admin-in-place-editor-new modal hide fade" tabindex="-1" role="dialog" aria-labelledby="new-<%= controller_name.singularize %>-label" aria-hidden="true">
   <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
   <h3 id="new-term-laber">Add new term</h3>
@@ -58,7 +58,7 @@
     <% @resources.each do |trade_code| -%>
       <tr>
         <td>
-          <a href="#" class="code" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="code
+          <a href="#" class="required" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="code"
             data-placeholder="Required" data-original-title="Enter the code"
             data-url="/api/<%= controller_name %>/<%= trade_code.id %>" data-pk="<%= trade_code.id %>">
             <%= trade_code.code %>
@@ -68,7 +68,7 @@
           <dl>
             <dt>EN</dt>
             <dd>
-              <a href="#" class="name" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_en"
+              <a href="#" class="required" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_en"
                 data-placeholder="Required" data-original-title="Enter the name in English"
                 data-url="/api/<%= controller_name %>/<%= trade_code.id %>" data-pk="<%= trade_code.id %>">
                 <%= trade_code.name_en %>
@@ -76,7 +76,7 @@
             </dd>
             <dt>ES</dt>
             <dd>
-              <a href="#" class="name" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_es"
+              <a href="#" class="required" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_es"
                 data-placeholder="Required" data-original-title="Enter the name in Spanish"
                 data-url="/api/<%= controller_name %>/<%= trade_code.id %>" data-pk="<%= trade_code.id %>">
                 <%= trade_code.name_es %>
@@ -84,7 +84,7 @@
             </dd>
             <dt>FR</dt>
             <dd>
-              <a href="#" class="name" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_fr"
+              <a href="#" class="required" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_fr"
                 data-placeholder="Required" data-original-title="Enter the name in French"
                 data-url="/api/<%= controller_name %>/<%= trade_code.id %>" data-pk="<%= trade_code.id %>">
                 <%= trade_code.name_fr %>
