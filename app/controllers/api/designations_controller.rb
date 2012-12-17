@@ -5,6 +5,8 @@ class Api::DesignationsController < ApplicationController
   protected
 
   def collection
-    @designations ||= end_of_association_chain.order(:name).select([:id, :name]).map{|d| {value: d.id, text: d.name}}
+    @designations ||= end_of_association_chain.order(:name).
+      select([:id, :name]).
+      map{|d| {:value => d.id, :text => d.name}}
   end
 end
