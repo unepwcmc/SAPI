@@ -7,38 +7,15 @@
   </div>
   <div class="modal-body">
 
-  <table class="table table-bordered table-striped">
-    <tbody> 
-      <tr>
-        <td width="40%">Code</td>
-        <td><a data-original-title="Enter code" data-name="code" data-type="text" id="newcode" class="editable editable-click editable-empty" href="#">Empty</a></td>
-      </tr>
-      <tr>
-        <td>English name</td>
-        <td><a data-original-title="English name" data-name="name_en" data-type="text" class="editable editable-click editable-empty" href="#">Empty</a></td>
-      </tr>
-      <tr>
-        <td>Spanish name</td>
-        <td><a data-original-title="Spanish name" data-name="name_es" data-type="text" class="editable editable-click editable-empty" href="#">Empty</a></td>
-      </tr>
-      <tr>
-        <td>French name</td>
-        <td><a data-original-title="French name" data-name="name_fr" data-type="text" class="editable editable-click editable-empty" href="#">Empty</a></td>
-      </tr>
-      <tr>
-        <td>English description</td>
-        <td><a data-original-title="English description" data-name="description_en" data-type="text" class="editable editable-click editable-empty" href="#">Empty</a></td>
-      </tr>
-      <tr>
-        <td>Spanish description</td>
-        <td><a data-original-title="Spanish description" data-name="description_es" data-type="text" class="editable editable-click editable-empty" href="#">Empty</a></td>
-      </tr>
-      <tr>
-        <td>French description</td>
-        <td><a data-original-title="French description" data-name="description_fr" data-type="text" class="editable editable-click editable-empty" href="#">Empty</a></td>
-      </tr>
-    </tbody>
-  </table>
+  <%= form_for controller_name.singularize.to_sym, :url => send("api_#{controller_name}_path".to_sym) do |f| %>
+    Code: <%= f.text_field :code %><br />
+    Name in English : <%= f.text_field :name_en %><br />
+    Name in Spanish : <%= f.text_field :name_es %><br />
+    Name in French : <%= f.text_field :name_fr %><br />
+    Description in English : <%= f.text_field :description_en %><br />
+    Description in Spanish : <%= f.text_field :description_es %><br />
+    Description in French : <%= f.text_field :description_fr %><br />
+  <% end %>
 
   </div>
   <div class="modal-footer">

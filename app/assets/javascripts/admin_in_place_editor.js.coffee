@@ -26,29 +26,23 @@ class AdminInPlaceEditor
       $('.admin-in-place-editor-new').find('.editable').editable
         placement: 'right'
     $('.admin-in-place-editor-new').find('.modal-footer').find('.save-button').click () =>
-      $('.admin-in-place-editor-new').find('.editable').editable 'submit',
-        url: '/api/' + @name
-        ajaxOptions:
-          dataType: 'json'
-        params: (params) ->
-          console.log @
-          console.log $(@).attr('data-resource')
-          #originally params contain pk, name and value
-          console.log(params)
-          params.zonk = 1;
-          return params;
-        success: (data, config) ->
-          if data && data.id #record created, response like {"id": 2}
-            #set pk
-            $(this).editable('option', 'pk', data.id)
-            #remove unsaved class
-            $(this).removeClass('editable-unsaved')
-            #show messages
+      console.log('save')
+      form = $('.admin-in-place-editor-new').find('form')
+      params = form.serialize()
+      $.ajax
+        url: form.attr('action')
+        data: params
+        dataType: 'JSON'
+        type: 'POST'
+        success: (data) -> 
+          console.log(data)
+          if data && data.id
+            console.log 'saved'
             msg = 'New user created! Now editables submit individually.'
             $('#msg').addClass('alert-success').removeClass('alert-error').html(msg).show()
             $('#save-btn').hide()
-            $(this).off('save.newuser')
           else if data && data.errors
+            console.log 'errors'
             #server-side validation error, response like {"errors": {"username": "username already exist"} }
             config.error.call(this, data.errors)
         error: (errors) ->
