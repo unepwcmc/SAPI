@@ -89,6 +89,8 @@ namespace :import do
      'lib/assets/files/cleaned/animalia_standard_refs_utf8.csv'
    )
 #
+    Rake::Task["import:trade_codes"].invoke
+
     Sapi::rebuild()
     Sapi::create_indices
   end
