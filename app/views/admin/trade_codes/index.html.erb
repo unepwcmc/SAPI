@@ -29,12 +29,12 @@
 <table id="admin-in-place-editor" class="table table-bordered table-striped" style="clear: both">
   <thead>
     <th width="10%">Code</th>
-    <th width="20%">Name</th>
+    <th width="25%">Name</th>
     <th>Description</th>
   </thead>
   <tbody>
 
-    <% @resources.each do |trade_code| -%>
+    <% collection.each do |trade_code| -%>
       <tr>
         <td>
           <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="code"
@@ -104,3 +104,4 @@
   </tbody>
 </table>
 
+<%= paginate collection %>

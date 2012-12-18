@@ -1,7 +1,3 @@
-class Admin::SourcesController < Admin::AdminController
+class Admin::SourcesController < Admin::TradeCodesController
   inherit_resources
-  def index
-    @resources = Source.order('code').all
-    render :template => 'admin/shared/admin_in_place_editor'
-  end
 end

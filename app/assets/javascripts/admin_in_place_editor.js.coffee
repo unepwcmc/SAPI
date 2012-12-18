@@ -35,9 +35,8 @@ class AdminInPlaceEditor
         type: 'POST'
         success: (data) ->
           if data && data.id
-            msg = 'New record created!'
-            $('#msg').addClass('alert-success').removeClass('alert-error').html(msg).show()
-            $('#save-btn').hide()
+            $('#admin-in-place-editor-new').modal('hide')
+            window.location.reload()
           else if data && data.errors
             msg = ''
             #server-side validation error, response like {"errors": {"username": "username already exist"} }

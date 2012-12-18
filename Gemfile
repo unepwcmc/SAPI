@@ -23,6 +23,7 @@ gem 'whenever', :require => false
 
 gem 'jquery-rails'
 gem 'bootstrap-generators', '~> 2.1'
+gem 'kaminari'
 
 # Gems used only for assets and not required
 # in production environments by default.
