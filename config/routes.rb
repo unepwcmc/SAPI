@@ -1,9 +1,9 @@
 SAPI::Application.routes.draw do
   namespace :api do
-    resources :terms, :only => [:index, :create, :update]
-    resources :sources, :only => [:index, :create, :update]
-    resources :purposes, :only => [:index, :create, :update]
-    resources :units, :only => [:index, :create, :update]
+    resources :terms, :only => [:index]
+    resources :sources, :only => [:index]
+    resources :purposes, :only => [:index]
+    resources :units, :only => [:index]
     resources :languages, :only => [:index, :create, :update]
     resources :users, :only => [:index, :create, :update]
     resources :designations, :only => [:index, :create, :update]
@@ -12,10 +12,10 @@ SAPI::Application.routes.draw do
     resources :ranks, :only => [:index, :create, :update]
   end
   namespace :admin do
-    resources :terms, :only => [:index]
-    resources :sources, :only => [:index]
-    resources :purposes, :only => [:index]
-    resources :units, :only => [:index]
+    resources :terms, :only => [:index, :create, :update, :destroy]
+    resources :sources, :only => [:index, :create, :update, :destroy]
+    resources :purposes, :only => [:index, :create, :update, :destroy]
+    resources :units, :only => [:index, :create, :update, :destroy]
     resources :languages, :only => [:index]
     resources :users, :only => [:index]
     resources :designations, :only => [:index]

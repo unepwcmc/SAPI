@@ -27,28 +27,6 @@ class AdminInPlaceEditor
       modalEl.modal()
     $('#admin-in-place-editor-new .modal-footer .save-button').click () =>
       form = $('#admin-in-place-editor-new').find('form')
-      params = form.serialize()
-      $.ajax
-        url: form.attr('action')
-        data: params
-        dataType: 'JSON'
-        type: 'POST'
-        success: (data) ->
-          if data && data.id
-            $('#admin-in-place-editor-new').modal('hide')
-            window.location.reload()
-          else if data && data.errors
-            msg = ''
-            #server-side validation error, response like {"errors": {"username": "username already exist"} }
-            $.each data.errors, (field, errorsArray) ->
-              $.each errorsArray, (idx, error) ->
-                msg += (field + ": " + error + "<br>")
-            $('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show()
-        error: (errors) ->
-          msg = ''
-          if (errors && errors.responseText) #ajax error, errors = xhr object
-            msg = errors.responseText
-          else #validation error (client-side or server-side)
-          $.each errors, (k, v) ->
-            msg += (k + ": " + v + "<br>")
-          $('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show()
+      form.submit()
+
+      #TODO: have a look here: https://github.com/cailinanne/ujsdemo/blob/master/app/assets/javascripts/articles.js
