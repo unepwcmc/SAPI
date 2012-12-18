@@ -8,6 +8,7 @@ SAPI::Application.routes.draw do
     resources :users, :only => [:index, :create, :update]
     resources :designations, :only => [:index, :create, :update]
     resources :species_listings, :only => [:index, :create, :update]
+    resources :change_types, :only => [:index, :create, :update]
   end
   namespace :admin do
     resources :terms, :only => [:index]
@@ -18,6 +19,7 @@ SAPI::Application.routes.draw do
     resources :users, :only => [:index]
     resources :designations, :only => [:index]
     resources :species_listings, :only => [:index]
+    resources :change_types, :only => [:index]
     root :to => 'home#index'
   end
 

@@ -10,7 +10,7 @@
 #
 
 class ChangeType < ActiveRecord::Base
-  attr_accessible :listing_change_id, :designation_id, :name
+  attr_accessible :designation_id, :name
   include Dictionary
   belongs_to :designation
 
