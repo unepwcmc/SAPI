@@ -1,25 +1,25 @@
-  <div id="msg"></div>
-  <%= form_for controller_name.singularize.to_sym, :url => collection_url, :remote => true do |f| %>
+<%= form_for controller_name.singularize.to_sym, :url => collection_url, :remote => true do |f| %>
 
-    <div class="errors">
-        <% if @term && @term.errors.any? %>
-            <h2><%= pluralize(@term.errors.count, "error") %> prohibited this term from being saved:</h2>
+  <% if @term && @term.errors.any? %>
+    <div class="alert alert-error">
+    <a class="close" href="#" data-dismiss="alert">×</a>
+      <p><%= pluralize(@term.errors.count, "error") %> prohibited this term from being saved:</p>
 
-            <ul>
-                <% @term.errors.full_messages.each do |msg| %>
-                    <li><%= msg %></li>
-                <% end %>
-            </ul>
-        <% end %>
+      <ul>
+          <% @term.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+          <% end %>
+      </ul>
     </div>
-
-    <label>Code</label><%= f.text_field :code %><br />
-    <p>Name</p>
-    <label>EN</label> <%= f.text_field :name_en %><br />
-    <label>ES</label> <%= f.text_field :name_es %><br />
-    <label>FR</label> <%= f.text_field :name_fr %><br />
-    <p>Description</p>
-    <label>EN</label> <%= f.text_field :description_en %><br />
-    <label>ES</label> <%= f.text_field :description_es %><br />
-    <label>FR</label> <%= f.text_field :description_fr %><br />
   <% end %>
+
+  <label>Code</label><%= f.text_field :code %><br />
+  <p>Name</p>
+  <label>EN</label> <%= f.text_field :name_en %><br />
+  <label>ES</label> <%= f.text_field :name_es %><br />
+  <label>FR</label> <%= f.text_field :name_fr %><br />
+  <p>Description</p>
+  <label>EN</label> <%= f.text_field :description_en %><br />
+  <label>ES</label> <%= f.text_field :description_es %><br />
+  <label>FR</label> <%= f.text_field :description_fr %><br />
+<% end %>

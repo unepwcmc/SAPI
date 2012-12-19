@@ -9,41 +9,14 @@ class Admin::TermsController < Admin::AdminController
     end
   end
 
-    def create
-        @term = Term.new(params[:term])
-
-        respond_to do |format|
-            if @term.save
-                format.html { redirect_to @term, :notice => 'Term was successfully created.' }
-                # Send back the new term, we'll render it on the client side
-                format.json { render :json => @term, :status => :created, :location => @term }
-            else
-                format.html { render :action => "new" }
-                # Send back the errors as JSON, we'll render them on the client side
-                format.json { render :json => @term.errors, :status => :unprocessable_entity }
-                # Renders update.js.erb which replaces the body of the form with a newly
-                # rendered version that will include the form errors
-                format.js { render :template => 'admin/trade_codes/create' }
-            end
-        end
+  def create
+    create! do |success, failure|
+      success.html { redirect_to collection_url, :notice => 'Operation succeeded' }
+      success.js { render :template => 'admin/trade_codes/create' }
+      failure.html { redirect_to collection_url, :alert => 'Operation failed' }
+      failure.js { render :template => 'admin/trade_codes/new' }
     end
-
-    def update
-        @term = Term.find(params[:id])
-
-        respond_to do |format|
-            if @term.update_attributes(params[:term])
-                # Redirect to the term template
-                format.html { redirect_to @term, :notice => 'Term was successfully updated.' }
-                format.js { render :js => "window.location.replace('#{term_path(@term)}');"}
-            else
-                format.html { render :action => "edit" }
-                # Renders update.js.erb which replaces the body of the form with a newly
-                # rendered version that will include the form errors
-                format.js {}
-            end
-        end
-    end
+  end
 
   def destroy
     destroy! do |success, failure|

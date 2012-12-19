@@ -1,11 +1,11 @@
 <h1><%= controller_name.titleize %> <a href="#new-<%= controller_name.singularize %>" role="button" class="btn new-button">Add new <%= controller_name.singularize %></a></h1>
 
-<div id="admin-in-place-editor-new" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="new-<%= controller_name.singularize %>-label" aria-hidden="true">
+<div id="admin-new-record-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="new-<%= controller_name.singularize %>-label" aria-hidden="true">
   <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
   <h3 id="new-<%= controller_name.singularize %>-label">Add new <%= controller_name.singularize %></h3>
   </div>
-  <div id="new-trade-code-form" class="modal-body">
+  <div id="admin-new-record-form" class="modal-body">
     <%= render :partial => 'admin/trade_codes/form' %>
   </div>
   <div class="modal-footer">
@@ -22,77 +22,7 @@
     <th width="10%">Actions</th>
   </thead>
   <tbody>
-
-    <% collection.each do |trade_code| -%>
-      <tr>
-        <td>
-          <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="code"
-            data-placeholder="Required" data-original-title="Enter the code"
-            data-url="<%= resource_url(trade_code) %>" data-pk="<%= trade_code.id %>">
-            <%= trade_code.code %>
-          </a>
-        </td>
-        <td>
-          <dl>
-            <dt>EN</dt>
-            <dd>
-              <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_en"
-                data-placeholder="Required" data-original-title="Enter the name in English"
-                data-url="<%= resource_url(trade_code) %>" data-pk="<%= trade_code.id %>">
-                <%= trade_code.name_en %>
-              </a>
-            </dd>
-            <dt>ES</dt>
-            <dd>
-              <a href="#" class="editable editable-click" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_es"
-                data-placeholder="Required" data-original-title="Enter the name in Spanish"
-                data-url="<%= resource_url(trade_code) %>" data-pk="<%= trade_code.id %>">
-                <%= trade_code.name_es %>
-              </a>
-            </dd>
-            <dt>FR</dt>
-            <dd>
-              <a href="#" class="editable editable-click" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="name_fr"
-                data-placeholder="Required" data-original-title="Enter the name in French"
-                data-url="<%= resource_url(trade_code) %>" data-pk="<%= trade_code.id %>">
-                <%= trade_code.name_fr %>
-              </a>
-            </dd>
-          </dl>
-        </td>
-        <td>
-          <dl>
-            <dt>EN</dt>
-            <dd>
-              <a href="#" class="editable editable-click" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="description_en"
-                data-original-title="Enter the description in English"
-                data-url="<%= resource_url(trade_code) %>" data-pk="<%= trade_code.id %>">
-                <%= trade_code.description_en %>
-              </a>
-            </dd>
-            <dt>ES</dt>
-            <dd>
-              <a href="#" class="editable editable-click" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="description_es"
-                data-original-title="Enter the description in Spanish"
-                data-url="<%= resource_url(trade_code) %>" data-pk="<%= trade_code.id %>">
-                <%= trade_code.description_es %>
-              </a>
-            </dd>
-            <dt>FR</dt>
-            <dd>
-              <a href="#" class="editable editable-click" data-type="text" data-resource="<%= controller_name.singularize %>" data-name="description_fr"
-                data-original-title="Enter the description in French"
-                data-url="<%= resource_url(trade_code) %>" data-pk="<%= trade_code.id %>">
-                <%= trade_code.description_fr %>
-              </a>
-            </dd>
-          </dl>
-        </td>
-        <td>
-          <%= link_to 'Delete', resource_url(trade_code), :confirm => "Are you sure?", :method => :delete %>
-        </td>
-      </tr>
-    <% end -%>
+    <%= render :partial => 'admin/trade_codes/list', :locals => {:collection => collection} %>
   </tbody>
 </table>
 
