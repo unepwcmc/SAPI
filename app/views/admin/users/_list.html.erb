@@ -1,0 +1,29 @@
+<thead>
+  <th>Name</th>
+  <th width="20%">Email</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+
+  <% collection.each do |user| -%>
+    <tr>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="user" data-name="name"
+          data-placeholder="Required" data-original-title="Enter the user's name"
+          data-url="<%= resource_url(user) %>" data-pk="<%= user.id %>">
+          <%= user.name %>
+        </a>
+      </td>
+      <td>
+          <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="user" data-name="email"
+            data-placeholder="Required" data-original-title="Enter the user's email"
+            data-url="<%= resource_url(user) %>" data-pk="<%= user.id %>">
+            <%= user.email %>
+          </a>
+      </td>
+      <td>
+        <%= link_to 'Delete', resource_url(user), :confirm => "Are you sure?", :method => :delete %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>
