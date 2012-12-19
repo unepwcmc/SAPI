@@ -16,4 +16,20 @@ class Language < ActiveRecord::Base
   translates :name
 
   validates :iso_code1, :presence => true, :uniqueness => true
+
+  before_destroy :check_destroy_allowed
+
+  private
+
+  def check_destroy_allowed
+    unless can_be_deleted?
+      errors.add(:base, "not allowed")
+      return false
+    end
+  end
+
+  def can_be_deleted?
+    false
+  end
+
 end

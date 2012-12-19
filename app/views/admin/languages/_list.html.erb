@@ -1,0 +1,50 @@
+<thead>
+  <th width="10%">iso_code1</th>
+  <th>Name</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+
+  <% collection.each do |language| -%>
+    <tr>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="language" data-name="iso_code1"
+          data-placeholder="Required" data-original-title="Enter the language iso_code1"
+          data-url="<%= resource_url(language) %>" data-pk="<%= language.id %>">
+          <%= language.iso_code1 %>
+        </a>
+      </td>
+      <td>
+        <dl>
+          <dt>EN</dt>
+          <dd>
+          <a href="#" class="editable editable-click" data-type="text" data-resource="language" data-name="name_en"
+            data-original-title="Enter the name in English"
+            data-url="<%= resource_url(language) %>" data-pk="<%= language.id %>">
+            <%= language.name_en %>
+          </a>
+          </dd>
+          <dt>ES</dt>
+          <dd>
+          <a href="#" class="editable editable-click" data-type="text" data-resource="language" data-name="name_es"
+            data-original-title="Enter the name in Spanish"
+            data-url="<%= resource_url(language) %>" data-pk="<%= language.id %>">
+            <%= language.name_es %>
+          </a>
+          </dd>
+          <dt>FR</dt>
+          <dd>
+          <a href="#" class="editable" data-type="text" data-resource="language" data-name="name_fr"
+            data-original-title="Enter the name in French"
+            data-url="<%= resource_url(language) %>" data-pk="<%= language.id %>">
+            <%= language.name_fr %>
+          </a>
+          </dd>
+        </dl>
+      </td>
+      <td>
+        <%= link_to 'Delete', resource_url(language), :confirm => "Are you sure?", :method => :delete %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>

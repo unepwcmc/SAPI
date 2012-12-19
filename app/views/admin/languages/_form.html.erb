@@ -1,0 +1,10 @@
+<%= form_for :language, :url => collection_url, :remote => true do |f| %>
+
+  <%= error_messages_for(@language) %>
+
+  <label>Iso code 1</label><%= f.text_field :iso_code1 %><br />
+  <p>Name</p>
+  <label>EN</label> <%= f.text_field :name_en %><br />
+  <label>ES</label> <%= f.text_field :name_es %><br />
+  <label>FR</label> <%= f.text_field :name_fr %><br />
+<% end %>
