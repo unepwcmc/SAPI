@@ -1,8 +1,14 @@
-class Admin::RanksController < Admin::AdminController
+class Admin::RanksController < Admin::SimpleCrudController
   inherit_resources
 
-  def index
+  def create
     @ranks = Rank.all
-    index!
+    super
+  end
+
+  protected
+
+  def collection
+    @ranks ||= end_of_association_chain.page(params[:page])
   end
 end

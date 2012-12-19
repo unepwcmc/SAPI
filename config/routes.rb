@@ -9,7 +9,7 @@ SAPI::Application.routes.draw do
     resources :designations, :only => [:index]
     resources :species_listings, :only => [:index, :create, :update]
     resources :change_types, :only => [:index]
-    resources :ranks, :only => [:index, :create, :update]
+    resources :ranks, :only => [:index]
   end
   namespace :admin do
     resources :terms, :only => [:index, :create, :update, :destroy]
@@ -21,7 +21,7 @@ SAPI::Application.routes.draw do
     resources :designations, :only => [:index, :create, :update, :destroy]
     resources :species_listings, :only => [:index]
     resources :change_types, :only => [:index, :create, :update, :destroy]
-    resources :ranks, :only => [:index]
+    resources :ranks, :only => [:index, :create, :update, :destroy]
     root :to => 'home#index'
   end
 

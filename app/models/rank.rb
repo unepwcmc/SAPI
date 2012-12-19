@@ -15,4 +15,22 @@ class Rank < ActiveRecord::Base
   build_dictionary :kingdom, :phylum, :class, :order, :family, :subfamily, :genus, :species, :subspecies
 
   belongs_to :parent, :class_name => Rank
+
+  validates :name, :presence => true, :uniqueness => true
+
+  before_destroy :check_destroy_allowed
+
+  private
+
+  def check_destroy_allowed
+    unless can_be_deleted?
+      errors.add(:base, "not allowed")
+      return false
+    end
+  end
+
+  def can_be_deleted?
+    false
+  end
+
 end
