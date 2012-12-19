@@ -7,6 +7,13 @@ class Admin::PurposesController < Admin::AdminController
     end
   end
 
+  def create
+    create! do |success, failure|
+      success.js { render :template => 'admin/trade_codes/create' }
+      failure.js { render :template => 'admin/trade_codes/new' }
+    end
+  end
+
   protected
 
   def collection

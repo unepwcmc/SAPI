@@ -1,7 +1,5 @@
-class Admin::TermsController < Admin::AdminController
+class Admin::TermsController < Admin::SimpleCrudController
   inherit_resources
-  respond_to :js, :only => [:create]
-  respond_to :json, :only => [:update]
 
   def index
     index! do |format|
@@ -11,17 +9,8 @@ class Admin::TermsController < Admin::AdminController
 
   def create
     create! do |success, failure|
-      success.html { redirect_to collection_url, :notice => 'Operation succeeded' }
       success.js { render :template => 'admin/trade_codes/create' }
-      failure.html { redirect_to collection_url, :alert => 'Operation failed' }
       failure.js { render :template => 'admin/trade_codes/new' }
-    end
-  end
-
-  def destroy
-    destroy! do |success, failure|
-      success.html { redirect_to collection_url, :notice => 'Operation succeeded' }
-      failure.html { redirect_to collection_url, :alert => 'Operation failed' }
     end
   end
 

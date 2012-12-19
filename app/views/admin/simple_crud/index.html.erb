@@ -6,7 +6,7 @@
   <h3 id="new-<%= controller_name.singularize %>-label">Add new <%= controller_name.singularize %></h3>
   </div>
   <div id="admin-new-record-form" class="modal-body">
-    <%= render :partial => 'admin/trade_codes/form' %>
+    <%= render :partial => 'form' %>
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -15,7 +15,7 @@
 </div>
 
 <table id="admin-in-place-editor" class="table table-bordered table-striped" style="clear: both">
-  <%= render :partial => 'admin/trade_codes/list', :locals => {:collection => collection} %>
+  <%= render :partial => 'list', :locals => {:collection => collection} %>
 </table>
 
 <%= paginate collection %>

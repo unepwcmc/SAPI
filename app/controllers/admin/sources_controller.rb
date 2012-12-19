@@ -1,9 +1,16 @@
-class Admin::SourcesController < Admin::AdminController
+class Admin::SourcesController < Admin::SimpleCrudController
   inherit_resources
 
   def index
     index! do |format|
       format.html { render :template => 'admin/trade_codes/index' }
+    end
+  end
+
+  def create
+    create! do |success, failure|
+      success.js { render :template => 'admin/trade_codes/create' }
+      failure.js { render :template => 'admin/trade_codes/new' }
     end
   end
 
