@@ -14,5 +14,22 @@ class ChangeType < ActiveRecord::Base
   include Dictionary
   belongs_to :designation
 
+  validates :name, :presence => true, :uniqueness => {:scope => :designation_id}
+
   build_dictionary :addition, :deletion, :reservation, :reservation_withdrawal, :exception
+
+  before_destroy :check_destroy_allowed
+
+  private
+
+  def check_destroy_allowed
+    unless can_be_deleted?
+      errors.add(:base, "not allowed")
+      return false
+    end
+  end
+
+  def can_be_deleted?
+    false
+  end
 end

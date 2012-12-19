@@ -1,0 +1,28 @@
+<thead>
+  <th width="20%">Designation</th>
+  <th width="10%">Name</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |change_type| -%>
+    <tr>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="select" data-resource="change_type" data-name="designation_id"
+          data-placeholder="Required" data-original-title="Enter the change type's designation" data-source="/api/designations/"
+          data-url="<%= resource_url(change_type) %>" data-pk="<%= change_type.id %>">
+          <%= change_type.designation.name %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="change_type" data-name="name"
+          data-placeholder="Required" data-original-title="Enter the change type's name"
+          data-url="<%= resource_url(change_type) %>" data-pk="<%= change_type.id %>">
+          <%= change_type.name %>
+        </a>
+      </td>
+      <td>
+        <%= link_to 'Delete', resource_url(change_type), :confirm => "Are you sure?", :method => :delete %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>
