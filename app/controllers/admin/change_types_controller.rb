@@ -13,7 +13,9 @@ class Admin::ChangeTypesController < Admin::SimpleCrudController
 
   protected
     def collection
-      @change_types ||= end_of_association_chain.includes(:designation).order('designation_id, name').page(params[:page])
+      @change_types ||= end_of_association_chain.includes(:designation).
+        order('designation_id, name').
+        page(params[:page])
     end
 end
 
