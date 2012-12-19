@@ -1,5 +1,6 @@
 $(document).ready ->
-  new AdminInPlaceEditor().init()
+  window.adminInPlaceEditor = new AdminInPlaceEditor()
+  window.adminInPlaceEditor.init()
 
 class AdminInPlaceEditor
   init: () ->
@@ -19,36 +20,16 @@ class AdminInPlaceEditor
       return 'Required field!' if (v == '')
 
     $('.new-button').click () =>
-      modalEl = $('#admin-in-place-editor-new')
-      console.log modalEl
+      modalEl = $('#admin-new-record-modal')
       modalEl.on 'hidden', () ->
-        $(@).find('#msg').html('')
         $(@).find('form')[0].reset()
       modalEl.modal()
-    $('#admin-in-place-editor-new .modal-footer .save-button').click () =>
-      form = $('#admin-in-place-editor-new').find('form')
-      params = form.serialize()
-      $.ajax
-        url: form.attr('action')
-        data: params
-        dataType: 'JSON'
-        type: 'POST'
-        success: (data) ->
-          if data && data.id
-            $('#admin-in-place-editor-new').modal('hide')
-            window.location.reload()
-          else if data && data.errors
-            msg = ''
-            #server-side validation error, response like {"errors": {"username": "username already exist"} }
-            $.each data.errors, (field, errorsArray) ->
-              $.each errorsArray, (idx, error) ->
-                msg += (field + ": " + error + "<br>")
-            $('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show()
-        error: (errors) ->
-          msg = ''
-          if (errors && errors.responseText) #ajax error, errors = xhr object
-            msg = errors.responseText
-          else #validation error (client-side or server-side)
-          $.each errors, (k, v) ->
-            msg += (k + ": " + v + "<br>")
-          $('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show()
+    $('#admin-new-record-modal .modal-footer .save-button').click () ->
+      $('#admin-new-record-modal').find('form').submit()
+  alertSuccess: (txt) ->
+    $('.alert').remove()
+    alert = "<div class=\"alert alert-success\">" +
+      "<a class=\"close\" href=\"#\" data-dismiss=\"alert\">×</a>" +
+      txt +
+      "</div>"
+    $(alert).insertBefore($('h1'))

@@ -21,4 +21,20 @@ class TradeCode < ActiveRecord::Base
   translates :name, :description
 
   validates :code, :presence => true, :uniqueness => {:scope => :type}
+
+  before_destroy :check_destroy_allowed
+
+  private
+
+  def check_destroy_allowed
+    puts "############## before_destroy ####################"
+    unless can_be_deleted?
+      errors.add(:base, "not allowed")
+      return false
+    end
+  end
+
+  def can_be_deleted?
+    false
+  end
 end
