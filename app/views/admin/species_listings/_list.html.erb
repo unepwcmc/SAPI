@@ -1,0 +1,36 @@
+<thead>
+  <th width="20%">Designation</th>
+  <th>Name</th>
+  <th width="20%">Abbreviation</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |species_listing| -%>
+    <tr>
+      <td>
+          <a href="#" class="editable editable-click editable-required" data-type="select" data-resource="species_listing" data-name="designation_id"
+            data-placeholder="Required" data-original-title="Enter the species listing's designation" data-source="/api/designations/"
+            data-url="<%= resource_url(species_listing) %>" data-pk="<%= species_listing.id %>">
+            <%= species_listing.designation.name %>
+          </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="species_listing" data-name="name"
+          data-placeholder="Required" data-original-title="Enter the species listing's name"
+          data-url="<%= resource_url(species_listing) %>" data-pk="<%= species_listing.id %>">
+          <%= species_listing.name %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="species_listing" data-name="abbreviation"
+          data-placeholder="Required" data-original-title="Enter the species listing's abbreviation"
+          data-url="<%= resource_url(species_listing) %>" data-pk="<%= species_listing.id %>">
+          <%= species_listing.abbreviation %>
+        </a>
+      </td>
+      <td>
+        <%= link_to 'Delete', resource_url(species_listing), :confirm => "Are you sure?", :method => :delete %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>

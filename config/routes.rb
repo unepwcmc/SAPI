@@ -7,7 +7,7 @@ SAPI::Application.routes.draw do
     resources :languages, :only => [:index]
     resources :users, :only => [:index, :create, :update]
     resources :designations, :only => [:index]
-    resources :species_listings, :only => [:index, :create, :update]
+    resources :species_listings, :only => [:index]
     resources :change_types, :only => [:index]
     resources :ranks, :only => [:index]
   end
@@ -19,7 +19,7 @@ SAPI::Application.routes.draw do
     resources :languages, :only => [:index, :create, :update, :destroy]
     resources :users, :only => [:index]
     resources :designations, :only => [:index, :create, :update, :destroy]
-    resources :species_listings, :only => [:index]
+    resources :species_listings, :only => [:index, :create, :update, :destroy]
     resources :change_types, :only => [:index, :create, :update, :destroy]
     resources :ranks, :only => [:index, :create, :update, :destroy]
     root :to => 'home#index'

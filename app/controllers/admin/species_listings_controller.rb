@@ -1,4 +1,4 @@
-class Admin::SpeciesListingsController < Admin::AdminController
+class Admin::SpeciesListingsController < Admin::SimpleCrudController
   inherit_resources
 
   def index
@@ -6,9 +6,16 @@ class Admin::SpeciesListingsController < Admin::AdminController
     index!
   end
 
+  def create
+    @designations = Designation.order(:name)
+    super
+  end
+
   protected
     def collection
-      @species_listings ||= end_of_association_chain.order('designation_id, name')
+      @species_listings ||= end_of_association_chain.includes(:designation).
+        order('designation_id, name').
+        page(params[:page])
     end
 end
 

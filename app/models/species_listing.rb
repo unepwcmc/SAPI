@@ -15,4 +15,23 @@ class SpeciesListing < ActiveRecord::Base
 
   belongs_to :designation
   has_many :listing_changes
+
+  validates :name, :presence => true, :uniqueness => {:scope => :designation_id}
+  validates :abbreviation, :presence => true, :uniqueness => {:scope => :designation_id}
+
+  before_destroy :check_destroy_allowed
+
+  private
+
+  def check_destroy_allowed
+    unless can_be_deleted?
+      errors.add(:base, "not allowed")
+      return false
+    end
+  end
+
+  def can_be_deleted?
+    false
+  end
+
 end
