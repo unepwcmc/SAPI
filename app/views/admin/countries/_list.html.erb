@@ -1,10 +1,10 @@
 <thead>
-  <th width="10%">iso_code2</th>
+  <th width="10%">Iso code 2</th>
+  <th width="10%">Iso code 3</th>
   <th>Name</th>
-  <th width="10%">Actions</th>
+  <th width="20%">Actions</th>
 </thead>
 <tbody>
-
   <% collection.each do |geo_entity| -%>
     <tr>
       <td>
@@ -15,10 +15,17 @@
         </a>
       </td>
       <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="geo_entity" data-name="iso_code3"
+          data-placeholder="Required" data-original-title="Enter the geo_entity iso_code3"
+          data-url="<%= resource_url(geo_entity) %>" data-pk="<%= geo_entity.id %>">
+          <%= geo_entity.iso_code3 %>
+        </a>
+      </td>
+      <td>
         <dl>
           <dt>EN</dt>
           <dd>
-          <a href="#" class="editable editable-click" data-type="text" data-resource="geo_entity" data-name="name_en"
+          <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="geo_entity" data-name="name_en"
             data-original-title="Enter the name in English"
             data-url="<%= resource_url(geo_entity) %>" data-pk="<%= geo_entity.id %>">
             <%= geo_entity.name_en %>
@@ -43,7 +50,21 @@
         </dl>
       </td>
       <td>
+
         <%= link_to 'Delete', resource_url(geo_entity), :confirm => "Are you sure?", :method => :delete %>
+        <br>
+        <a href="#geo-entity-contains">
+          Geo entities contained in <%= geo_entity.name_en %>
+        </a>
+        <br>
+        <a href="#geo-entity-is-part-of">
+          Geo entities that contain <%= geo_entity.name_en %>
+        </a>
+        <br>
+        <a href="#geo-entity-aliased-as>">
+          Aliases
+        </a>
+
       </td>
     </tr>
   <% end -%>

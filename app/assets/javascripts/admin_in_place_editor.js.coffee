@@ -1,4 +1,5 @@
 $(document).ready ->
+  #editorClass = $('.editor').attr('id')
   window.adminInPlaceEditor = new AdminInPlaceEditor()
   window.adminInPlaceEditor.init()
 
@@ -18,14 +19,7 @@ class AdminInPlaceEditor
         return newParams
     $('#admin-in-place-editor .editable-required').editable 'option', 'validate', (v) ->
       return 'Required field!' if (v == '')
-
-    $('.new-button').click () =>
-      modalEl = $('#admin-new-record-modal')
-      modalEl.on 'hidden', () ->
-        $(@).find('form')[0].reset()
-      modalEl.modal()
-    $('#admin-new-record-modal .modal-footer .save-button').click () ->
-      $('#admin-new-record-modal').find('form').submit()
+    @.initModals()
   alertSuccess: (txt) ->
     $('.alert').remove()
     alert = "<div class=\"alert alert-success\">" +
@@ -33,3 +27,9 @@ class AdminInPlaceEditor
       txt +
       "</div>"
     $(alert).insertBefore($('h1'))
+  initModals: () =>
+    $('.modal .modal-footer .save-button').click () ->
+      $(@).closest('.modal').find('form').submit()
+    $('.modal').on 'hidden', () ->
+      $(@).find('form')[0].reset()
+      $(@).find('.alert').remove()

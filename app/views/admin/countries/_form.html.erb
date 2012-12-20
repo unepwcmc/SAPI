@@ -2,7 +2,9 @@
 
   <%= error_messages_for(@geo_entity) %>
 
+  <%= f.hidden_field :geo_entity_type_id, :value => @geo_entity_type.id %>
   <label>Iso code 2</label><%= f.text_field :iso_code2 %><br />
+  <label>Iso code 3</label><%= f.text_field :iso_code3 %><br />
   <p>Name</p>
   <label>EN</label> <%= f.text_field :name_en %><br />
   <label>ES</label> <%= f.text_field :name_es %><br />
