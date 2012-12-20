@@ -22,8 +22,7 @@ SAPI::Application.routes.draw do
     resources :species_listings, :only => [:index, :create, :update, :destroy]
     resources :change_types, :only => [:index, :create, :update, :destroy]
     resources :ranks, :only => [:index, :create, :update, :destroy]
-    resources :countries, :only => [:index, :create, :update, :destroy]
-    resources :regions, :only => [:index, :create, :update, :destroy]
+    resources :countries, :only => [:index, :show, :create, :update, :destroy]
     root :to => 'home#index'
   end
 

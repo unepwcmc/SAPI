@@ -50,21 +50,8 @@
         </dl>
       </td>
       <td>
-
         <%= link_to 'Delete', resource_url(geo_entity), :confirm => "Are you sure?", :method => :delete %>
-        <br>
-        <a href="#geo-entity-contains">
-          Geo entities contained in <%= geo_entity.name_en %>
-        </a>
-        <br>
-        <a href="#geo-entity-is-part-of">
-          Geo entities that contain <%= geo_entity.name_en %>
-        </a>
-        <br>
-        <a href="#geo-entity-aliased-as>">
-          Aliases
-        </a>
-
+        <%= link_to 'Edit relationships', edit_relationships_admin_country_url(geo_entity) %>
       </td>
     </tr>
   <% end -%>

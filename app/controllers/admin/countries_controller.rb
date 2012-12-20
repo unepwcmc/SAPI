@@ -1,6 +1,8 @@
 class Admin::CountriesController < Admin::SimpleCrudController
   inherit_resources
-  defaults :resource_class => GeoEntity
+  defaults :resource_class => GeoEntity, 
+    :collection_name => 'geo_entities',
+    :instance_name => 'geo_entity'
 
   def index
     @geo_entity_type = GeoEntityType.find_by_name(GeoEntityType::COUNTRY)
@@ -9,14 +11,8 @@ class Admin::CountriesController < Admin::SimpleCrudController
 
   protected
 
-  def resource
-    @country ||= end_of_association_chain.
-      joins(:geo_entity_type).
-      where(:"geo_entity_types.name" => GeoEntityType::COUNTRY)
-  end
-
   def collection
-    @countries ||= end_of_association_chain.
+    @geo_entities ||= end_of_association_chain.
       joins(:geo_entity_type).
       where(:"geo_entity_types.name" => GeoEntityType::COUNTRY).
       order(:name_en).

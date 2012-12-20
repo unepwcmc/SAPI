@@ -21,18 +21,34 @@ class GeoEntity < ActiveRecord::Base
   translates :name
   belongs_to :geo_entity_type
   has_many :relationships, :class_name => 'GeoRelationship', :dependent => :destroy
-  has_many :related_geo_entities, :class_name => 'GeoEntity', :through => :relationships
   has_many :taxon_concept_geo_entities
   #validates if it is a country, it should have an iso code TODO
 
+  # geo entities containing those given by ids
+  scope :containing_geo_entities, lambda { |geo_entity_ids|
+    select("#{table_name}.*").
+    joins(:relationships => [:geo_relationship_type, :related_geo_entity]).
+    where("geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'").
+    where("related_geo_entities_geo_relationships.id" => geo_entity_ids)
+  }
+
+  # geo entities contained in those given by ids
   scope :contained_geo_entities, lambda { |geo_entity_ids|
     select("related_geo_entities_geo_relationships.*").
     where(:id => geo_entity_ids).
     joins(:relationships => [:geo_relationship_type, :related_geo_entity]).
     where("geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'")
-
   }
+
   scope :current, where(:is_current => true)
+
+  def containing_geo_entities
+    GeoEntity.containing_geo_entities(self.id)
+  end
+
+  def contained_geo_entities
+    GeoEntity.contained_geo_entities(self.id)
+  end
 
   def as_json(options={})
     super(:only =>[:id, :name, :iso_code2])
