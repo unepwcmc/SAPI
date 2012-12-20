@@ -11,7 +11,7 @@ namespace :import do
       create_table_from_csv_headers(file, tmp_table)
       copy_data(file, tmp_table)
       sql = <<-SQL
-        INSERT INTO geo_entities(name, geo_entity_type_id, created_at, updated_at)
+        INSERT INTO geo_entities(name_en, geo_entity_type_id, created_at, updated_at)
         SELECT DISTINCT BTRIM(TMP.name), #{regions_type.id}, current_date, current_date
         FROM #{tmp_table} AS TMP
         WHERE NOT EXISTS (

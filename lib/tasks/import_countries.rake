@@ -16,7 +16,7 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
       sql = <<-SQL
-          INSERT INTO geo_entities(name, iso_code2, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at, long_name, is_current)
+          INSERT INTO geo_entities(name_en, iso_code2, geo_entity_type_id, legacy_id, legacy_type, created_at, updated_at, long_name, is_current)
           SELECT DISTINCT BTRIM(TMP.name), BTRIM(TMP.iso2), #{country_type.id}, TMP.legacy_id, '#{GeoEntityType::COUNTRY}', current_date, current_date, INITCAP(BTRIM(TMP.long_name)),
           CASE
             WHEN current_name ilike 'Y' THEN 't'::BOOLEAN
@@ -57,7 +57,7 @@ def link_countries
     WHERE
       geo_entity_types.id = geo_entities.geo_entity_type_id AND
       geo_entity_types."name" ilike '#{GeoEntityType::CITES_REGION}' AND
-      geo_entities."name" LIKE #{TMP_TABLE}.cites_region||'%' AND
+      geo_entities."name_en" LIKE #{TMP_TABLE}.cites_region||'%' AND
       geo_relationship_types."name" ilike '#{GeoRelationshipType::CONTAINS}' AND
       countries.legacy_id = #{TMP_TABLE}.legacy_id AND countries.legacy_type ilike '#{GeoEntityType::COUNTRY}' AND
       NOT EXISTS (
