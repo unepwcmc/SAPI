@@ -10,6 +10,8 @@ SAPI::Application.routes.draw do
     resources :species_listings, :only => [:index]
     resources :change_types, :only => [:index]
     resources :ranks, :only => [:index]
+    resources :geo_entities, :only => [:index]
+    resources :geo_relationship_types, :only => [:index]
   end
   namespace :admin do
     resources :terms, :only => [:index, :create, :update, :destroy]
@@ -22,7 +24,10 @@ SAPI::Application.routes.draw do
     resources :species_listings, :only => [:index, :create, :update, :destroy]
     resources :change_types, :only => [:index, :create, :update, :destroy]
     resources :ranks, :only => [:index, :create, :update, :destroy]
-    resources :countries, :only => [:index, :show, :create, :update, :destroy]
+    resources :countries, :only => [:index, :create, :update, :destroy]
+    resources :geo_entities, :only => [:index, :create, :update, :destroy] do
+      resources :geo_relationships, :only => [:index, :create, :update, :destroy]
+    end
     root :to => 'home#index'
   end
 

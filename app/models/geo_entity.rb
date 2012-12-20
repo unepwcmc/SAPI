@@ -20,14 +20,14 @@ class GeoEntity < ActiveRecord::Base
     :legacy_id, :legacy_type, :long_name, :name_en, :name_es, :name_fr
   translates :name
   belongs_to :geo_entity_type
-  has_many :relationships, :class_name => 'GeoRelationship', :dependent => :destroy
+  has_many :geo_relationships, :dependent => :destroy
   has_many :taxon_concept_geo_entities
   #validates if it is a country, it should have an iso code TODO
 
   # geo entities containing those given by ids
   scope :containing_geo_entities, lambda { |geo_entity_ids|
     select("#{table_name}.*").
-    joins(:relationships => [:geo_relationship_type, :related_geo_entity]).
+    joins(:geo_relationships => [:geo_relationship_type, :related_geo_entity]).
     where("geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'").
     where("related_geo_entities_geo_relationships.id" => geo_entity_ids)
   }
@@ -36,7 +36,7 @@ class GeoEntity < ActiveRecord::Base
   scope :contained_geo_entities, lambda { |geo_entity_ids|
     select("related_geo_entities_geo_relationships.*").
     where(:id => geo_entity_ids).
-    joins(:relationships => [:geo_relationship_type, :related_geo_entity]).
+    joins(:geo_relationships => [:geo_relationship_type, :related_geo_entity]).
     where("geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'")
   }
 

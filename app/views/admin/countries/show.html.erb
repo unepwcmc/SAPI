@@ -11,7 +11,12 @@
   <h3 id="new-containing-geo-entity-label">Add new containing geo entity</h3>
   </div>
   <div id="admin-new-record-form" class="modal-body">
-    TODO
+    <%= form_for :geo_relationship, :url => admin_geo_relationships_url, :remote => true do |f| %>
+      <label>Relationship type</label>
+      <%= f.select :geo_relationship_type_id, options_from_collection_for_select(@geo_relationship_types, :id, :name) %>
+      <label>Related geo entity</label>
+      <%= f.select :other_geo_entity_id, options_from_collection_for_select(@geo_entities, :id, :name) %>
+    <% end %>
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
