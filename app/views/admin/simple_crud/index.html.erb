@@ -1,4 +1,9 @@
-<h1><%= controller_name.titleize %> <a href="#new-<%= controller_name.singularize %>" role="button" class="btn new-button">Add new <%= controller_name.singularize %></a></h1>
+<h1>
+  <%= controller_name.titleize %>
+  <a href="#new-<%= controller_name.singularize %>" role="button" class="btn new-button">
+    Add new <%= controller_name.titleize.singularize %>
+  </a>
+</h1>
 
 <div id="admin-new-record-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="new-<%= controller_name.singularize %>-label" aria-hidden="true">
   <div class="modal-header">
