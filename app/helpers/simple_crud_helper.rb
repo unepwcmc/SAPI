@@ -20,7 +20,13 @@ module SimpleCrudHelper
 
   def admin_title
     content_tag(:div, :class => 'admin-header') do
-      content_tag(:h1, controller_name.titleize) +
+      content_tag(:h1, 
+        if block_given?
+          yield
+        else
+          controller_name.titleize
+        end
+      ) +
       link_to("Add new #{controller_name.titleize.singularize}",
         "#new-#{controller_name.singularize}",
         :role => "button", :"data-toggle" => "modal",

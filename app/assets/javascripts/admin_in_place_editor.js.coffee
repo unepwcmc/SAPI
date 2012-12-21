@@ -19,6 +19,15 @@ class AdminInPlaceEditor
         return newParams
     $('#admin-in-place-editor .editable-required').editable 'option', 'validate', (v) ->
       return 'Required field!' if (v == '')
+    $('#admin-in-place-editor .editable-geo-entity-type').editable(
+      'option', 'source', window.geoEntityTypes
+    )
+    $('#admin-in-place-editor .editable-geo-relationship-type').editable(
+      'option', 'source', window.geoRelationshipTypes
+    )
+    $('#admin-in-place-editor .editable-geo-entity').editable(
+      'option', 'source', window.geoEntities
+    )
     @.initModals()
   alertSuccess: (txt) ->
     $('.alert').remove()

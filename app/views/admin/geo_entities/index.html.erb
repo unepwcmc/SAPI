@@ -1,5 +1,9 @@
 <%= admin_title %>
 
+<script>
+  window.geoEntityTypes = <%= @geo_entity_types_for_dropdown.to_json.html_safe %>
+</script>
+
 <div style="clear:both"></div>
 
 <ul class="nav nav-pills">

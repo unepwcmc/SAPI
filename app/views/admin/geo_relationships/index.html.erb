@@ -1,0 +1,41 @@
+<%= admin_title { "#{@geo_entity.name} relationships" } %>
+
+<script>
+  window.geoRelationshipTypes = <%= @geo_relationship_types_for_dropdown.to_json.html_safe %>
+  window.geoEntities = <%= @geo_entities_for_dropdown.to_json.html_safe %>
+</script>
+
+<div style="clear:both"></div>
+
+<ul class="nav nav-pills">
+  <% GeoRelationshipType.dict.each do |geo_relationship_type| %>
+    <li class="<%= (@geo_relationship_type.name == geo_relationship_type ? 'active' : '') %>">
+      <%= link_to geo_relationship_type.titleize, collection_url(:type => geo_relationship_type) %>
+    </li>
+  <% end %>
+</ul>
+<%= admin_new_modal %>
+
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#home">
+    <%= "#{@geo_entity.name} #{@geo_relationship_type.name} ..." %>
+  </a></li>
+  <li ><a data-toggle="tab" href="#inverse">
+    <%= "... #{@geo_relationship_type.name} #{@geo_entity.name}" %>
+  </a></li>
+</ul>
+
+<div class="tab-content">
+  <div id="home" class="tab-pane fade active in">
+    <%= admin_table %>
+
+    <%= paginate collection %>
+  </div>
+  <div id="inverse" class="tab-pane fade">
+    <%= admin_table do %>
+      <%= render :partial => 'list', :locals => {:collection => @inverse_geo_relationships} %>
+    <% end %>
+    
+    <%= paginate @inverse_geo_relationships%>
+  </div>
+</div>

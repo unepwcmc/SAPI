@@ -1,6 +1,7 @@
 <thead>
+  <th>Geo entity</th>
   <th width="20%">Relationship type</th>
-  <th>Name</th>
+  <th>Related geo entity</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
@@ -8,8 +9,19 @@
     <tr>
       <td>
         <a href="#"
+          class="editable editable-click editable-required editable-geo-entity"
+          data-type="select" data-resource="geo_relationship"
+          data-name="geo_entity_id" data-placeholder="Required"
+          data-original-title="Enter the related entity's name"
+          data-url="<%= resource_url(geo_relationship) %>"
+          data-pk="<%= geo_relationship.id %>">
+          <%= geo_relationship.geo_entity.name %>
+        </a>
+      </td>
+      <td>
+        <a href="#"
           id="geo-relationship-<%= geo_relationship.id %>"
-          class="editable editable-click editable-required"
+          class="editable editable-click editable-required editable-geo-relationship-type"
           data-type="select" data-resource="geo_relationship"
           data-name="designation_id" data-placeholder="Required"
           data-original-title="Enter the geo relationship's type"
@@ -19,18 +31,20 @@
         </a>
       </td>
       <td>
-        <a href="#" class="editable editable-click editable-required"
-          data-type="text" data-resource="geo_relationship"
+        <a href="#"
+          class="editable editable-click editable-required editable-geo-entity"
+          data-type="select" data-resource="geo_relationship"
           data-name="other_geo_entity_id" data-placeholder="Required"
           data-original-title="Enter the related entity's name"
-          data-source="/api/geo_relationship_types/"
           data-url="<%= resource_url(geo_relationship) %>"
           data-pk="<%= geo_relationship.id %>">
           <%= geo_relationship.related_geo_entity.name %>
         </a>
       </td>
       <td>
-        <%= link_to 'Delete', resource_url(geo_relationship), :confirm => "Are you sure?", :method => :delete %>
+        <%= link_to 'Delete', resource_url(geo_relationship),
+          :confirm => "Are you sure?", :method => :delete
+        %>
       </td>
     </tr>
   <% end -%>

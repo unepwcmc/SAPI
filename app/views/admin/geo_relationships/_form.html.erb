@@ -1,5 +1,7 @@
 <%= form_for :geo_relationship, :url => collection_url, :remote => true do |f| %>
   <%= error_messages_for(@change_type) %>
+  <label>Geo entity</label>
+  <%= f.select :geo_entity_id, options_from_collection_for_select(@geo_entities, :id, :name) %>
   <label>Relationship type</label>
   <%= f.select :geo_relationship_type_id, options_from_collection_for_select(@geo_relationship_types, :id, :name) %><br />
   <label>Related geo entity</label>

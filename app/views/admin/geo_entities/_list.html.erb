@@ -1,8 +1,9 @@
 <thead>
   <th width="10%">Iso code 2</th>
   <th width="10%">Iso code 3</th>
+  <th width="10%">Type</th>
   <th>Name</th>
-  <th width="20%">Actions</th>
+  <th width="10%">Actions</th>
 </thead>
 <tbody>
   <% collection.each do |geo_entity| -%>
@@ -15,10 +16,24 @@
         </a>
       </td>
       <td>
-        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="geo_entity" data-name="iso_code3"
-          data-placeholder="Required" data-original-title="Enter the geo_entity iso_code3"
-          data-url="<%= resource_url(geo_entity) %>" data-pk="<%= geo_entity.id %>">
+        <a href="#" class="editable editable-click editable-required"
+          data-type="text" data-resource="geo_entity" data-name="iso_code3"
+          data-placeholder="Required"
+          data-original-title="Enter the geo_entity iso_code3"
+          data-url="<%= resource_url(geo_entity) %>"
+          data-pk="<%= geo_entity.id %>">
           <%= geo_entity.iso_code3 %>
+        </a>
+      </td>
+      <td>
+        <a href="#" id="geo-entity-type-<%= geo_entity.id %>"
+          class="editable editable-click editable-required editable-geo-entity-type" data-type="select"
+          data-resource="geo_entity" data-name="geo_entity_type_id"
+          data-placeholder="Required"
+          data-original-title="Enter the geo_entity type"
+          data-url="<%= resource_url(geo_entity) %>"
+          data-pk="<%= geo_entity.id %>">
+          <%= geo_entity.geo_entity_type.name %>
         </a>
       </td>
       <td>
