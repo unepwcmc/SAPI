@@ -1,26 +1,7 @@
-<h1>
-  <%= controller_name.titleize %>
-  <a href="#new-<%= controller_name.singularize %>" role="button" data-toggle="modal" class="btn new-button">
-    Add new <%= controller_name.titleize.singularize %>
-  </a>
-</h1>
+<%= admin_title %>
 
-<div id="new-<%= controller_name.singularize %>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="new-<%= controller_name.singularize %>-label" aria-hidden="true">
-  <div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-  <h3 id="new-<%= controller_name.singularize %>-label">Add new <%= controller_name.titleize.singularize %></h3>
-  </div>
-  <div id="admin-new-record-form" class="modal-body">
-    <%= render :partial => 'form' %>
-  </div>
-  <div class="modal-footer">
-    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-    <button class="btn btn-primary save-button">Save changes</button>
-  </div>
-</div>
+<%= admin_new_modal %>
 
-<table id="admin-in-place-editor" class="table table-bordered table-striped <%= collection.class %>-editor" style="clear: both">
-  <%= render :partial => 'list', :locals => {:collection => collection} %>
-</table>
+<%= admin_table %>
 
 <%= paginate collection %>

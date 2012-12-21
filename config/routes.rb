@@ -24,7 +24,6 @@ SAPI::Application.routes.draw do
     resources :species_listings, :only => [:index, :create, :update, :destroy]
     resources :change_types, :only => [:index, :create, :update, :destroy]
     resources :ranks, :only => [:index, :create, :update, :destroy]
-    resources :countries, :only => [:index, :create, :update, :destroy]
     resources :geo_entities, :only => [:index, :create, :update, :destroy] do
       resources :geo_relationships, :only => [:index, :create, :update, :destroy]
     end

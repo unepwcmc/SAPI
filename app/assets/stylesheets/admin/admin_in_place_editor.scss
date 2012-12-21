@@ -8,8 +8,16 @@
   font-weight: bold;
 }
 
-h1 {
-  color: $grayLight;
+.admin-header {
+  h1 {
+    color: $grayLight;
+    float:left;
+    width: 50%;
+  }
+  a {
+    float:right;
+  }
+  clear:both;
 }
 #admin-in-place-editor {
   dl {
