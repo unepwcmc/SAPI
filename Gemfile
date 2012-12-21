@@ -69,6 +69,8 @@ group :development do
   gem 'capistrano-ext'
   gem 'brightbox', '>=2.3.9'
   gem 'rack-cors', :require => 'rack/cors'
+  gem 'quiet_assets'
+  gem 'webrick', '1.3.1'
 end
 
 group :test, :development do
