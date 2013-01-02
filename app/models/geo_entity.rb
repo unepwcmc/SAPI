@@ -51,7 +51,7 @@ class GeoEntity < ActiveRecord::Base
   end
 
   def as_json(options={})
-    super(:only =>[:id, :name, :iso_code2])
+    super(:only =>[:id, :iso_code2], :methods => [:name])
   end
 
 end
