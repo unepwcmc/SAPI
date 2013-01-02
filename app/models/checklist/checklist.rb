@@ -89,6 +89,7 @@ class Checklist::Checklist
     if @output_layout == :taxonomic
       sql_columns += [:family_id, :order_id, :class_id, :phylum_id]
     end
+
     sql_columns
   end
 
@@ -170,10 +171,10 @@ class Checklist::Checklist
   #   related metadata
   def generate(page, per_page)
     @taxon_concepts_rel = @taxon_concepts_rel.
-      includes(:current_listing_changes).
-      # joins('LEFT OUTER JOIN "listing_changes_mview"
-        # ON "listing_changes_mview"."taxon_concept_id" ="taxon_concepts_mview"."id"
-        # AND "listing_changes_mview"."is_current" = \'t\'').
+    # if you change this join make sure synonym author names are displayed
+      joins('LEFT OUTER JOIN "listing_changes_mview"
+        ON "listing_changes_mview"."taxon_concept_id" ="taxon_concepts_mview"."id"
+        AND "listing_changes_mview"."is_current" = \'t\'').
       without_nc.without_hidden
     page ||= 0
     per_page ||= 20

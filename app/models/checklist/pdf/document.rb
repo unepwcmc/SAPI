@@ -31,7 +31,7 @@ module Checklist::Pdf::Document
       res += " (S) #{taxon_concept.spanish_names.join(', ')} "
     end
     unless !@french_common_names || taxon_concept.french_names.empty?
-      res += " (E) #{taxon_concept.french_names.join(', ')} "
+      res += " (F) #{taxon_concept.french_names.join(', ')} "
     end
     res
   end
