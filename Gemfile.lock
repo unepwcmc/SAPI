@@ -273,6 +273,7 @@ DEPENDENCIES
   rack-cors
   rack-livereload
   rails (= 3.2.8)
+  rake (~> 10.0.3)
   rspec-rails
   ruby-debug19
   sass-rails (~> 3.2.3)
