@@ -38,11 +38,6 @@ shared_context "Panax ginseng" do
       :data => {:cites_name_status => 'A'}
     )
 
-   english = create(
-     :language,
-     :name => 'English'
-   )
-
     a1 = create(
       :annotation,
       :symbol => '#3',
@@ -52,7 +47,7 @@ shared_context "Panax ginseng" do
 
     at1 = create(
       :annotation_translation,
-      :language => english,
+      :language => Language.find_by_iso_code1('en'),
       :annotation => a1,
       :full_note => 'generic'
     )
@@ -79,7 +74,7 @@ shared_context "Panax ginseng" do
 
     at2 = create(
       :annotation_translation,
-      :language => english,
+      :language => Language.find_by_iso_code1('en'),
       :annotation => a2,
       :full_note => 'specific'
     )

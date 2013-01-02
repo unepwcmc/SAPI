@@ -55,10 +55,6 @@ shared_context "Caiman latirostris" do
       :data => {:usr_is_std_ref => 't'}
     )
 
-   english = create(
-     :language,
-     :name => 'English'
-   )
     argentina = create(
       :country,
       :name => 'Argentina',
@@ -95,7 +91,7 @@ shared_context "Caiman latirostris" do
     create(
       :annotation_translation,
       :annotation => a1,
-      :language => english,
+      :language => Language.find_by_iso_code1('en'),
       :full_note => 'Population of AR; included in CROCODYLIA spp.'
     )
 
