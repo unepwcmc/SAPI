@@ -5,6 +5,7 @@ gem 'brightbox', '>=2.3.9'
 require 'brightbox/recipes'
 require 'brightbox/passenger'
 require 'sidekiq/capistrano'
+load "deploy/assets"
 
 # The name of your application.  Used for deployment directory and filenames
 # and Apache configs. Should be unique on the Brightbox
