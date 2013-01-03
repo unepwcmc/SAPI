@@ -1,8 +1,10 @@
 <thead>
   <th width="10%">Iso code 2</th>
   <th width="10%">Iso code 3</th>
-  <th width="10%">Type</th>
-  <th>Name</th>
+  <th>Type</th>
+  <th width="15%">Name (EN)</th>
+  <th width="15%">Name (ES)</th>
+  <th width="15%">Name (FR)</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
@@ -37,32 +39,25 @@
         </a>
       </td>
       <td>
-        <dl>
-          <dt>EN</dt>
-          <dd>
-          <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="geo_entity" data-name="name_en"
-            data-original-title="Enter the name in English"
-            data-url="<%= resource_url(geo_entity) %>" data-pk="<%= geo_entity.id %>">
-            <%= geo_entity.name_en %>
-          </a>
-          </dd>
-          <dt>ES</dt>
-          <dd>
-          <a href="#" class="editable editable-click" data-type="text" data-resource="geo_entity" data-name="name_es"
-            data-original-title="Enter the name in Spanish"
-            data-url="<%= resource_url(geo_entity) %>" data-pk="<%= geo_entity.id %>">
-            <%= geo_entity.name_es %>
-          </a>
-          </dd>
-          <dt>FR</dt>
-          <dd>
-          <a href="#" class="editable" data-type="text" data-resource="geo_entity" data-name="name_fr"
-            data-original-title="Enter the name in French"
-            data-url="<%= resource_url(geo_entity) %>" data-pk="<%= geo_entity.id %>">
-            <%= geo_entity.name_fr %>
-          </a>
-          </dd>
-        </dl>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="geo_entity" data-name="name_en"
+          data-original-title="Enter the name in English"
+          data-url="<%= resource_url(geo_entity) %>" data-pk="<%= geo_entity.id %>">
+          <%= geo_entity.name_en %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click" data-type="text" data-resource="geo_entity" data-name="name_es"
+          data-original-title="Enter the name in Spanish"
+          data-url="<%= resource_url(geo_entity) %>" data-pk="<%= geo_entity.id %>">
+          <%= geo_entity.name_es %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable" data-type="text" data-resource="geo_entity" data-name="name_fr"
+          data-original-title="Enter the name in French"
+          data-url="<%= resource_url(geo_entity) %>" data-pk="<%= geo_entity.id %>">
+          <%= geo_entity.name_fr %>
+        </a>
       </td>
       <td>
         <%= link_to 'Delete', resource_url(geo_entity), :confirm => "Are you sure?", :method => :delete %>

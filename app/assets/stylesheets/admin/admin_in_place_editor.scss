@@ -1,13 +1,5 @@
 @import "bootstrap-variables";
 
-@mixin boldGrayLabel($width) {
-  color: $grayLight;
-  float: left;
-  width: $width;
-  display: block;
-  font-weight: bold;
-}
-
 .admin-header {
   h1 {
     color: $grayLight;
@@ -19,19 +11,4 @@
   }
   clear:both;
 }
-#admin-in-place-editor {
-  dl {
-    margin: 0;
-    dt {
-      @include boldGrayLabel(50px);
-    }
-  }
-}
 
-#admin-new-record-modal {
-  form {
-    label {
-      @include boldGrayLabel(90px);
-    }
-  }
-}
