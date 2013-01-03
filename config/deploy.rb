@@ -6,7 +6,7 @@ require 'brightbox/recipes'
 require 'brightbox/passenger'
 require 'sidekiq/capistrano'
 load "deploy/assets"
-
+set :rake, 'bundle exec rake'
 # The name of your application.  Used for deployment directory and filenames
 # and Apache configs. Should be unique on the Brightbox
 set :application, "sapi"
