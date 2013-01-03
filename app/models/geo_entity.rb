@@ -24,6 +24,8 @@ class GeoEntity < ActiveRecord::Base
   has_many :taxon_concept_geo_entities
   #validates if it is a country, it should have an iso code TODO
 
+  before_destroy :check_destroy_allowed
+
   # geo entities containing those given by ids
   scope :containing_geo_entities, lambda { |geo_entity_ids|
     select("#{table_name}.*").
@@ -52,6 +54,19 @@ class GeoEntity < ActiveRecord::Base
 
   def as_json(options={})
     super(:only =>[:id, :iso_code2], :methods => [:name])
+  end
+
+  private
+
+  def check_destroy_allowed
+    unless can_be_deleted?
+      errors.add(:base, "not allowed")
+      return false
+    end
+  end
+
+  def can_be_deleted?
+    taxon_concept_geo_entities.count == 0
   end
 
 end

@@ -15,6 +15,8 @@ class Designation < ActiveRecord::Base
 
   validates :name, :presence => true, :uniqueness => true
   has_many :species_listings
+  has_many :change_types
+  has_many :taxon_concepts
 
   before_destroy :check_destroy_allowed
 
@@ -28,7 +30,9 @@ class Designation < ActiveRecord::Base
   end
 
   def can_be_deleted?
-    false
+    species_listings.count == 0 &&
+    change_types.count == 0 &&
+    taxon_concepts.count == 0
   end
 
 end

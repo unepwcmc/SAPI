@@ -13,6 +13,7 @@ class ChangeType < ActiveRecord::Base
   attr_accessible :designation_id, :name
   include Dictionary
   belongs_to :designation
+  has_many :listing_changes
 
   validates :name, :presence => true, :uniqueness => {:scope => :designation_id}
 
@@ -24,12 +25,12 @@ class ChangeType < ActiveRecord::Base
 
   def check_destroy_allowed
     unless can_be_deleted?
-      errors.add(:base, "not allowed")
+      errors.add(:base, "not allowed (listing changes present)")
       return false
     end
   end
 
   def can_be_deleted?
-    false
+    listing_changes.count == 0
   end
 end

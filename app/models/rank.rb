@@ -15,6 +15,7 @@ class Rank < ActiveRecord::Base
   build_dictionary :kingdom, :phylum, :class, :order, :family, :subfamily, :genus, :species, :subspecies
 
   belongs_to :parent, :class_name => Rank
+  has_many :taxon_concepts
 
   validates :name, :presence => true, :uniqueness => true
 
@@ -30,7 +31,7 @@ class Rank < ActiveRecord::Base
   end
 
   def can_be_deleted?
-    false
+    taxon_concepts.count == 0
   end
 
 end

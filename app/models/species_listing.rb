@@ -25,13 +25,13 @@ class SpeciesListing < ActiveRecord::Base
 
   def check_destroy_allowed
     unless can_be_deleted?
-      errors.add(:base, "not allowed")
+      errors.add(:base, "not allowed (listing changes present)")
       return false
     end
   end
 
   def can_be_deleted?
-    false
+    listing_changes.count == 0
   end
 
 end

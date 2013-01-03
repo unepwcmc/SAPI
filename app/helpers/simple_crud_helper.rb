@@ -8,7 +8,7 @@ module SimpleCrudHelper
       content_tag(
         :p,
         "#{pluralize(resource.errors.count, "error")} " +
-        "prohibited this designation from being saved:"
+        "prohibited this record from being saved:"
       ) +
       content_tag(:ul) do
         resource.errors.full_messages.collect do |item|

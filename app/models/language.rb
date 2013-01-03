@@ -15,6 +15,9 @@ class Language < ActiveRecord::Base
   attr_accessible :iso_code1, :name_en, :name_fr, :name_es
   translates :name
 
+  has_many :common_names
+  has_many :annotation_translations
+
   validates :iso_code1, :presence => true, :uniqueness => true
 
   before_destroy :check_destroy_allowed
@@ -29,7 +32,7 @@ class Language < ActiveRecord::Base
   end
 
   def can_be_deleted?
-    false
+    common_names.count == 0 && annotation_translations.count == 0
   end
 
 end

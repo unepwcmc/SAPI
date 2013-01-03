@@ -2,8 +2,8 @@ class Admin::RanksController < Admin::SimpleCrudController
   inherit_resources
 
   def create
-    @ranks = Rank.all
     super
+    @ranks = Rank.all
   end
 
   protected
