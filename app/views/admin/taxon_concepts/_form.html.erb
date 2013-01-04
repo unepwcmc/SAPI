@@ -1,0 +1,11 @@
+<%= form_for :taxon_concept, :url => collection_url, :remote => true do |f| %>
+
+  <%= error_messages_for(@taxon_concept) %>
+
+  <label>Designation</label> <%= f.select :designation_id, options_from_collection_for_select(@designations, :id, :name) %><br />
+  <label>Rank</label> <%= f.select :rank_id, options_from_collection_for_select(@ranks, :id, :name) %><br />
+  <label>Parent</label> <%= f.text_field :parent_id %><br />
+  <%= f.fields_for :taxon_name_attributes do |ff| %>
+    <label>Scientific name</label> <%= ff.text_field :scientific_name %><br />
+  <% end %>
+<% end %>

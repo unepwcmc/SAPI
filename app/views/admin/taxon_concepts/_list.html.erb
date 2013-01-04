@@ -1,0 +1,38 @@
+<thead>
+  <th width="5%">ID</th>
+  <th width="10%">Designation</th>
+  <th width="10%">Rank</th>
+  <th width="15%">Scientific name</th>
+  <th width="15%">Author year</th>
+  <th width="15%">Parent</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+
+  <% collection.each do |taxon_concept| -%>
+    <tr>
+      <td>
+        <%= taxon_concept.id %>
+      </td>
+      <td>
+        <%= taxon_concept.designation.name %>
+      </td>
+      <td>
+        <%= taxon_concept.rank.name %>
+      </td>
+      <td>
+        <%= taxon_concept.taxon_name.scientific_name %>
+      </td>
+      <td>
+        <%= taxon_concept.author_year %>
+      </td>
+      <td>
+        <%= taxon_concept.parent && taxon_concept.parent.full_name %>
+      </td>
+      <td>
+        <%= link_to 'Delete', resource_url(taxon_concept), :confirm => "Are you sure?", :method => :delete %><br />
+        <%= link_to 'Edit', edit_resource_url(taxon_concept) %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>

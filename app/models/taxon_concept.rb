@@ -21,7 +21,8 @@
 
 class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :rank_id, :parent_id,
-    :designation_id, :taxon_name_id, :data, :legacy_id, :legacy_type
+    :designation_id, :taxon_name_id, :data, :legacy_id, :legacy_type,
+    :taxon_name_attributes
 
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore
@@ -41,6 +42,35 @@ class TaxonConcept < ActiveRecord::Base
   has_many :common_names, :through => :taxon_commons
   has_and_belongs_to_many :references, :join_table => :taxon_concept_references
 
+  accepts_nested_attributes_for :taxon_name, :update_only => true
+
+  validates :parent_id, :presence => true, :unless => :is_kingdom?
+
+  before_destroy :check_destroy_allowed
+
   acts_as_nested_set
+
+  def is_kingdom?
+    rank && rank.name == Rank::KINGDOM
+  end
+
+  def full_name
+    data['full_name']
+  end
+
+  private
+
+  def check_destroy_allowed
+    unless can_be_deleted?
+      errors.add(:base, "not allowed")
+      return false
+    end
+  end
+
+  def can_be_deleted?
+    relationships.count == 0 &&
+    children.count == 0 &&
+    listing_changes.count == 0
+  end
 
 end

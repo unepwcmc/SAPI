@@ -27,6 +27,7 @@ SAPI::Application.routes.draw do
     resources :geo_entities, :only => [:index, :create, :update, :destroy] do
       resources :geo_relationships, :only => [:index, :create, :update, :destroy]
     end
+    resources :taxon_concepts, :only => [:index, :create, :edit, :update, :destroy]
     root :to => 'home#index'
   end
 
