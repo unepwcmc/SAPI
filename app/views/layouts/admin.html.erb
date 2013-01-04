@@ -36,18 +36,44 @@
       </div>
     </div>
   </div>
-  <div class="container">
-    <% flash.each do |name, msg| %>
-      <%= content_tag :div, :class => "alert #{name == :error ? "alert-error" : "alert-success" }" do %>
-        <a class="close" data-dismiss="alert" href="#">×</a>
-        <%= msg %>
-      <% end %>
-    <% end %>
-    <%= yield %>
+
+    <div class="container">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav sidebar-nav-fixed">
+          <ul class="nav nav-list">
+            <li class="nav-header">Basic types</li>
+            <li><%= link_to 'Designations', admin_designations_path %></li>
+            <li><%= link_to 'Species listings', admin_species_listings_path %></li>
+            <li><%= link_to 'Ranks', admin_ranks_path %></li>
+            <li><%= link_to 'Change types', admin_change_types_path %></li>
+            <li><%= link_to 'Languages', admin_languages_path %></li>
+            <li><%= link_to 'Geo entities', admin_geo_entities_path %></li>
+            <li class="nav-header">Trade codes</li>
+            <li><%= link_to 'Purposes', admin_purposes_path %></li>
+            <li><%= link_to 'Sources', admin_sources_path %></li>
+            <li><%= link_to 'Terms', admin_terms_path %></li>
+            <li><%= link_to 'Units', admin_units_path %></li>
+            <li class="nav-header">Users & Roles</li>
+            <li><%= link_to 'Users', admin_users_path %></li>
+          </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+          <% flash.each do |name, msg| %>
+            <%= content_tag :div, :class => "alert #{name == :alert ? "alert-error" : "alert-success" }" do %>
+              <a class="close" data-dismiss="alert" href="#">×</a>
+              <%= msg %>
+            <% end %>
+          <% end %>
+          <%= yield %>
+        </div><!--/span-->
+      </div><!--/row-->
     <hr>
     <footer>
       <p>&copy; UNEP-WCMC 2012</p>
     </footer>
-  </div>
+    </div><!--/.fluid-container-->
+
 </body>
 </html>
