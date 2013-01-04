@@ -4,7 +4,7 @@
 #
 #  id                 :integer          not null, primary key
 #  geo_entity_type_id :integer          not null
-#  name               :string(255)      not null
+#  name_en            :string(255)      not null
 #  long_name          :string(255)
 #  iso_code2          :string(255)
 #  iso_code3          :string(255)
@@ -13,6 +13,8 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  is_current         :boolean          default(TRUE)
+#  name_fr            :string(255)
+#  name_es            :string(255)
 #
 
 class GeoEntity < ActiveRecord::Base
@@ -22,7 +24,12 @@ class GeoEntity < ActiveRecord::Base
   belongs_to :geo_entity_type
   has_many :geo_relationships, :dependent => :destroy
   has_many :taxon_concept_geo_entities
-  #validates if it is a country, it should have an iso code TODO
+  validates :geo_entity_type_id, :presence => true
+  validates :iso_code2, :uniqueness => true, :allow_blank => true
+  validates :iso_code2, :presence => true, :length => {:is => 2},
+    :if => :is_country?
+  validates :iso_code3, :uniqueness => true, :length => {:is => 3},
+    :allow_blank => true, :if => :is_country?
 
   before_destroy :check_destroy_allowed
 
@@ -43,6 +50,10 @@ class GeoEntity < ActiveRecord::Base
   }
 
   scope :current, where(:is_current => true)
+
+  def is_country?
+    geo_entity_type.name == GeoEntityType::COUNTRY
+  end
 
   def containing_geo_entities
     GeoEntity.containing_geo_entities(self.id)

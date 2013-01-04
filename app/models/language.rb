@@ -18,7 +18,7 @@ class Language < ActiveRecord::Base
   has_many :common_names
   has_many :annotation_translations
 
-  validates :iso_code1, :presence => true, :uniqueness => true
+  validates :iso_code1, :presence => true, :uniqueness => true, :length => {:is => 2}
 
   before_destroy :check_destroy_allowed
 
