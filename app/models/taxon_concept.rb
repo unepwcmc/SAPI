@@ -50,12 +50,25 @@ class TaxonConcept < ActiveRecord::Base
 
   acts_as_nested_set
 
+  scope :by_scientific_name, lambda { |scientific_name|
+    where(
+      <<-SQL
+      data->'full_name' >= '#{TaxonName.lower_bound(scientific_name)}'
+        AND data->'full_name' < '#{TaxonName.upper_bound(scientific_name)}'
+      SQL
+    )
+  }
+
   def is_kingdom?
     rank && rank.name == Rank::KINGDOM
   end
 
   def full_name
     data['full_name']
+  end
+
+  def rank_name
+    data['rank_name']
   end
 
   private

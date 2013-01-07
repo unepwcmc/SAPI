@@ -11,4 +11,12 @@
 
 class TaxonName < ActiveRecord::Base
   attr_accessible :basionym_id, :scientific_name
+
+  def self.lower_bound(scientific_name)
+    scientific_name.sub(/^\s+/, '').sub(/\s+$/, '').sub(/\s+/,' ').capitalize
+  end
+  def self.upper_bound(scientific_name)
+    lower = lower_bound(scientific_name)
+    lower[0..lower.length - 2] + lower[lower.length - 1].next
+  end
 end

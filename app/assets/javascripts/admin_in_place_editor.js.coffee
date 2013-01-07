@@ -4,6 +4,8 @@ $(document).ready ->
   window.adminInPlaceEditor.init()
 
 class AdminInPlaceEditor
+  constructor: ->
+    @parentsMap = {}
   init: () ->
     $('#admin-in-place-editor .editable').editable
       placement: 'right',
@@ -36,9 +38,34 @@ class AdminInPlaceEditor
       txt +
       "</div>"
     $(alert).insertBefore($('h1'))
+
   initModals: () =>
     $('.modal .modal-footer .save-button').click () ->
       $(@).closest('.modal').find('form').submit()
     $('.modal').on 'hidden', () ->
       $(@).find('form')[0].reset()
       $(@).find('.alert').remove()
+
+    $('.typeahead').typeahead
+      source: (query, process) =>
+        designation_id = $('#taxon_concept_designation_id').attr('value')
+        rank_id = $('#taxon_concept_rank_id').attr('value')
+        $.get('http://localhost:3000/admin/taxon_concepts/autocomplete',
+        {
+          scientific_name: query,
+          designation_id: designation_id,
+          rank_id: rank_id,
+          limit: 25
+        }, (data) =>
+          @parentsMap = {}
+          labels = []
+          $.each(data, (i, item) =>
+            label = item.designation_name + ' ' + item.full_name + ' ' + item.rank_name
+            @parentsMap[label] = item.id
+            labels.push(label)
+          )
+          return process(labels)
+        )
+      updater: (item) =>
+        $('#taxon_concept_parent_id').attr('value', @parentsMap[item])
+        return item;
