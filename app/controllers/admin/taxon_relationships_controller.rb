@@ -2,7 +2,6 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
   inherit_resources
   belongs_to :taxon_concept
   before_filter :load_taxon_relationship_types, :only => [:index, :create]
-  before_filter :load_taxon_concepts, :only => [:index, :create]
 
   def index
     index! do
@@ -17,16 +16,6 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
       params[:type] || TaxonRelationshipType::EQUAL_TO
     )
     @taxon_relationship_types = TaxonRelationshipType.order(:name)
-    @taxon_relationship_types_for_dropdown = @taxon_relationship_types.map do |t|
-      {:value => t.id, :text => t.name}
-    end
-  end
-
-  def load_taxon_concepts
-    @taxon_concepts = TaxonConcept.order(:id)
-    @taxon_concepts_for_dropdown = @taxon_concepts.map do |t|
-      {:value => t.id, :text => t.full_name}
-    end
   end
 
   def collection

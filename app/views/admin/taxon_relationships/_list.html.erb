@@ -15,7 +15,7 @@
           data-original-title="Enter the related entity's name"
           data-url="<%= resource_url(taxon_relationship) %>"
           data-pk="<%= taxon_relationship.id %>">
-          <%= taxon_relationship.taxon_concept.full_name %>
+          <%= taxon_relationship.taxon_concept.full_name %> (<%= taxon_relationship.taxon_concept.designation.name %>)
         </a>
       </td>
       <td>
@@ -38,7 +38,7 @@
           data-original-title="Enter the related entity's name"
           data-url="<%= resource_url(taxon_relationship) %>"
           data-pk="<%= taxon_relationship.id %>">
-          <%= taxon_relationship.other_taxon_concept.full_name %>
+          <%= taxon_relationship.other_taxon_concept.full_name %> (<%= taxon_relationship.other_taxon_concept.designation.name %>)
         </a>
       </td>
       <td>

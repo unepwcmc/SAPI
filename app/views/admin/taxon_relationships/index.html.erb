@@ -1,8 +1,8 @@
 <%= admin_title { "#{@taxon_concept.designation.name}::#{@taxon_concept.full_name} relationships" } %>
 
 <script>
-  window.geoRelationshipTypes = <%= @taxon_relationship_types_for_dropdown.to_json.html_safe %>
-  window.geoEntities = <%= @taxon_concepts_for_dropdown.to_json.html_safe %>
+  window.taxonRelationshipTypes = <%= @taxon_relationship_types_for_dropdown.to_json.html_safe %>
+  window.taxon_concepts = <%= @taxon_concepts_for_dropdown.to_json.html_safe %>
 </script>
 
 <div style="clear:both"></div>
