@@ -157,15 +157,12 @@ class MTaxonConcept < ActiveRecord::Base
   }
 
   scope :by_scientific_name, lambda { |scientific_name|
-    lower = scientific_name.sub(/^\s+/, '').sub(/\s+$/, '').sub(/\s+/,' ').
-      capitalize
-    upper = lower[0..lower.length - 2] +
-      lower[lower.length - 1].next
     joins(
       <<-SQL
       INNER JOIN (
         SELECT id FROM taxon_concepts_mview
-        WHERE full_name >= '#{lower}' AND full_name < '#{upper}'
+        WHERE full_name >= '#{TaxonName.lower_bound(scientific_name)}'
+          AND full_name < '#{TaxonName.upper_bound(scientific_name)}'
       ) matches
       ON matches.id IN (taxon_concepts_mview.id, family_id, order_id, class_id, phylum_id)
       SQL
