@@ -24,6 +24,9 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     if params[:designation_id]
       @taxon_concepts = @taxon_concepts.where(:designation_id => params[:designation_id])
     end
+    if params[:rank_id]
+      @taxon_concepts = @taxon_concepts.where(:rank_id => Rank.scoped.above_rank(params[:rank_id]).map(&:id))
+    end
     render :json => @taxon_concepts.to_json(:only => [:id, :designation_name], :methods => [:rank_name, :full_name])#map{ |tc| tc.attributes.slice(:full_name, :rank_name, :id) }
   end
 
