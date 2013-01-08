@@ -4,13 +4,13 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
 
   def index
     @designations = Designation.order(:name)
-    @ranks = Rank.order(:name)
+    @ranks = Rank.order(:taxonomic_position)
     index!
   end
 
   def create
     @designations = Designation.order(:name)
-    @ranks = Rank.order(:name)
+    @ranks = Rank.order(:taxonomic_position)
     super
   end
 
@@ -25,9 +25,13 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
       @taxon_concepts = @taxon_concepts.where(:designation_id => params[:designation_id])
     end
     if params[:rank_id]
-      @taxon_concepts = @taxon_concepts.where(:rank_id => Rank.scoped.above_rank(params[:rank_id]).map(&:id))
+      rank = Rank.find(params[:rank_id])
+      @taxon_concepts = @taxon_concepts.at_parent_ranks(rank)
     end
-    render :json => @taxon_concepts.to_json(:only => [:id, :designation_name], :methods => [:rank_name, :full_name])#map{ |tc| tc.attributes.slice(:full_name, :rank_name, :id) }
+    render :json => @taxon_concepts.to_json(
+      :only => [:id, :designation_name],
+      :methods => [:rank_name, :full_name]
+    )
   end
 
   protected

@@ -40,11 +40,16 @@ puts "#{TaxonConcept.delete_all} taxon_concepts deleted"
 puts "#{TaxonName.delete_all} taxon_names deleted"
 puts "#{Rank.delete_all} ranks deleted"
 
-parent_rank = nil
-Rank.dict.each do |rank|
-  rank = Rank.create(:name => rank, :parent_id => parent_rank)
-  parent_rank = rank.id
-end
+Rank.create(:name => Rank::KINGDOM, :taxonomic_position => '1')
+Rank.create(:name => Rank::PHYLUM, :taxonomic_position => '2')
+Rank.create(:name => Rank::CLASS, :taxonomic_position => '3')
+Rank.create(:name => Rank::ORDER, :taxonomic_position => '4')
+Rank.create(:name => Rank::FAMILY, :taxonomic_position => '5')
+Rank.create(:name => Rank::SUBFAMILY, :taxonomic_position => '5.1')
+Rank.create(:name => Rank::GENUS, :taxonomic_position => '6')
+Rank.create(:name => Rank::SPECIES, :taxonomic_position => '7')
+Rank.create(:name => Rank::SUBSPECIES, :taxonomic_position => '8')
+
 puts "#{Rank.count} ranks created"
 
 puts "#{SpeciesListing.delete_all} species listings deleted"

@@ -59,6 +59,16 @@ class TaxonConcept < ActiveRecord::Base
     )
   }
 
+  scope :at_parent_ranks, lambda{ |rank|
+    joins(
+    <<-SQL
+      INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
+        AND ranks.taxonomic_position >= '#{rank.parent_rank_lower_bound}'
+        AND ranks.taxonomic_position < '#{rank.taxonomic_position}'
+    SQL
+    )
+  }
+
   def is_kingdom?
     rank && rank.name == Rank::KINGDOM
   end
