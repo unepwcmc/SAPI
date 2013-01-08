@@ -15,10 +15,6 @@ class TaxonRelationshipType < ActiveRecord::Base
   include Dictionary
   build_dictionary :equal_to, :includes, :included_in, :overlaps, :disjunct, :has_homonym, :has_synonym
 
-  def inter_designational
-    where(:is_inter_designational => true)
-  end
-  def intra_designational
-    where(:is_inter_designational => false)
-  end
+  scope :inter_designational, where(:is_inter_designational => true)
+  scope :intra_designational, where(:is_inter_designational => false)
 end

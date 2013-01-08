@@ -8,7 +8,7 @@
 <div style="clear:both"></div>
 
 <ul class="nav nav-pills">
-  <% TaxonRelationshipType.dict.each do |taxon_relationship_type| %>
+  <% @taxon_relationship_types.map(&:name).each do |taxon_relationship_type| %>
     <li class="<%= (@taxon_relationship_type.name == taxon_relationship_type ? 'active' : '') %>">
       <%= link_to taxon_relationship_type.titleize, collection_url(:type => taxon_relationship_type) %>
     </li>

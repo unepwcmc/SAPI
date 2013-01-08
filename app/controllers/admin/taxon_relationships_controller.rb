@@ -15,7 +15,7 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
     @taxon_relationship_type = TaxonRelationshipType.find_by_name(
       params[:type] || TaxonRelationshipType::EQUAL_TO
     )
-    @taxon_relationship_types = TaxonRelationshipType.order(:name)
+    @taxon_relationship_types = TaxonRelationshipType.order(:name).inter_designational
   end
 
   def collection
