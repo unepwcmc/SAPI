@@ -63,7 +63,8 @@ class Checklist::History < Checklist::Checklist
     json_options[:only] -= [
       :current_listing, :cites_accepted, :specific_annotation_symbol,
       :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
-      :genus_name, :species_name
+      :genus_name, :species_name,
+      :generic_annotation_symbol, :generic_annotation_parent_symbol
     ]
     json_options[:methods] -= [:recently_changed, :countries_ids,
       :english_names, :spanish_names, :french_names, :synonyms,
@@ -86,6 +87,8 @@ class Checklist::History < Checklist::Checklist
     end
     json_options[:methods] -= [:countries_ids]
     json_options[:methods] += [:countries_iso_codes]
+    #these only make sense for the online checklist
+    json_options[:methods] -= [:specific_short_note, :specific_full_note, :generic_note]
     json_options
   end
 
