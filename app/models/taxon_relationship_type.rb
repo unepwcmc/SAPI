@@ -12,5 +12,5 @@ class TaxonRelationshipType < ActiveRecord::Base
   attr_accessible :name
 
   include Dictionary
-  build_dictionary :contains, :has_synonym
+  build_dictionary :equal_to, :contains, :has_synonym
 end

@@ -1,0 +1,10 @@
+<%= form_for :taxon_relationship, :url => collection_url, :remote => true do |f| %>
+  <%= error_messages_for(@change_type) %>
+  <label>Geo entity</label>
+  <%= f.select :taxon_concept_id, options_from_collection_for_select(@taxon_concepts, :id, :full_name) %>
+  <label>Relationship type</label>
+  <%= f.select :taxon_relationship_type_id, options_from_collection_for_select(@taxon_relationship_types, :id, :name) %><br />
+  <label>Related geo entity</label>
+  <%= f.select :other_taxon_concept_id, options_from_collection_for_select(@taxon_concepts, :id, :full_name) %>
+<% end %>
+

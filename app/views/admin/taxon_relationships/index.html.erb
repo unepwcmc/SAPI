@@ -1,0 +1,41 @@
+<%= admin_title { "#{@taxon_concept.designation.name}::#{@taxon_concept.full_name} relationships" } %>
+
+<script>
+  window.geoRelationshipTypes = <%= @taxon_relationship_types_for_dropdown.to_json.html_safe %>
+  window.geoEntities = <%= @taxon_concepts_for_dropdown.to_json.html_safe %>
+</script>
+
+<div style="clear:both"></div>
+
+<ul class="nav nav-pills">
+  <% TaxonRelationshipType.dict.each do |taxon_relationship_type| %>
+    <li class="<%= (@taxon_relationship_type.name == taxon_relationship_type ? 'active' : '') %>">
+      <%= link_to taxon_relationship_type.titleize, collection_url(:type => taxon_relationship_type) %>
+    </li>
+  <% end %>
+</ul>
+<%= admin_new_modal %>
+
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#home">
+    <%= "#{@taxon_concept.full_name} #{@taxon_relationship_type.name} ..." %>
+  </a></li>
+  <li ><a data-toggle="tab" href="#inverse">
+    <%= "... #{@taxon_relationship_type.name} #{@taxon_concept.full_name}" %>
+  </a></li>
+</ul>
+
+<div class="tab-content">
+  <div id="home" class="tab-pane fade active in">
+    <%= admin_table %>
+
+    <%= paginate collection %>
+  </div>
+  <div id="inverse" class="tab-pane fade">
+    <%= admin_table do %>
+      <%= render :partial => 'list', :locals => {:collection => @inverse_taxon_relationships} %>
+    <% end %>
+    
+    <%= paginate @inverse_taxon_relationships%>
+  </div>
+</div>
