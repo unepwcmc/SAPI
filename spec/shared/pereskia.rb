@@ -1,10 +1,20 @@
 shared_context "Pereskia" do
   before(:all) do
     @kingdom = TaxonConcept.find_by_taxon_name_id(TaxonName.find_by_scientific_name('Plantae').id)
+    @phylum = create(
+      :phylum,
+      :taxon_name => create(:taxon_name, :scientific_name => 'not really sure'),
+      :parent => @kingdom
+    )
+    @klass = create(
+      :class,
+      :taxon_name => create(:taxon_name, :scientific_name => 'not really sure'),
+      :parent => @phylum
+    )
     @order = create(
       :order,
       :taxon_name => create(:taxon_name, :scientific_name => 'Caryophyllales'),
-      :parent => @kingdom
+      :parent => @klass
     )
     @family = create(
       :family,
