@@ -1,5 +1,6 @@
 <thead>
   <th>Name</th>
+  <th>Sort order</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
@@ -11,6 +12,13 @@
           data-placeholder="Required" data-original-title="Enter the rank name"
           data-url="<%= resource_url(rank) %>" data-pk="<%= rank.id %>">
           <%= rank.name %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="rank" data-name="taxonomic_position"
+          data-placeholder="Required" data-original-title="Enter the sort order position"
+          data-url="<%= resource_url(rank) %>" data-pk="<%= rank.id %>">
+          <%= rank.taxonomic_position %>
         </a>
       </td>
       <td>

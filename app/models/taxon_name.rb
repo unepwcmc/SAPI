@@ -12,6 +12,8 @@
 class TaxonName < ActiveRecord::Base
   attr_accessible :basionym_id, :scientific_name
 
+  validates :scientific_name, :presence => true
+
   def self.lower_bound(scientific_name)
     scientific_name.sub(/^\s+/, '').sub(/\s+$/, '').sub(/\s+/,' ').capitalize
   end

@@ -1,0 +1,52 @@
+<thead>
+  <th>Taxon Concept</th>
+  <th width="20%">Relationship type</th>
+  <th>Related taxon concept</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |taxon_relationship| -%>
+    <tr>
+      <td>
+        <a href="#"
+          class="editable editable-click editable-required editable-geo-entity"
+          data-type="select" data-resource="taxon_relationship"
+          data-name="geo_entity_id" data-placeholder="Required"
+          data-original-title="Enter the related entity's name"
+          data-url="<%= resource_url(taxon_relationship) %>"
+          data-pk="<%= taxon_relationship.id %>">
+          <%= taxon_relationship.taxon_concept.full_name %> (<%= taxon_relationship.taxon_concept.designation.name %>)
+        </a>
+      </td>
+      <td>
+        <a href="#"
+          id="geo-relationship-<%= taxon_relationship.id %>"
+          class="editable editable-click editable-required editable-geo-relationship-type"
+          data-type="select" data-resource="taxon_relationship"
+          data-name="designation_id" data-placeholder="Required"
+          data-original-title="Enter the geo relationship's type"
+          data-url="<%= resource_url(taxon_relationship) %>"
+          data-pk="<%= taxon_relationship.id %>">
+          <%= taxon_relationship.taxon_relationship_type.name %>
+        </a>
+      </td>
+      <td>
+        <a href="#"
+          class="editable editable-click editable-required editable-geo-entity"
+          data-type="select" data-resource="taxon_relationship"
+          data-name="other_geo_entity_id" data-placeholder="Required"
+          data-original-title="Enter the related entity's name"
+          data-url="<%= resource_url(taxon_relationship) %>"
+          data-pk="<%= taxon_relationship.id %>">
+          <%= taxon_relationship.other_taxon_concept.full_name %> (<%= taxon_relationship.other_taxon_concept.designation.name %>)
+        </a>
+      </td>
+      <td>
+        <%= link_to 'Delete', resource_url(taxon_relationship),
+          :confirm => "Are you sure?", :method => :delete
+        %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>
+

@@ -10,10 +10,12 @@ FactoryGirl.define do
   end
 
   factory :rank do
-    name 'family'
+    name 'Kingdom'
+    taxonomic_position '1'
   end
 
   factory :taxon_concept, :aliases => [:other_taxon_concept] do
+    designation
     rank
     taxon_name
     data {}

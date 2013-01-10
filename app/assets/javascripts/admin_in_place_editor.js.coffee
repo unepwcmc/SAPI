@@ -48,6 +48,7 @@ class AdminInPlaceEditor
 
     $('.typeahead').typeahead
       source: (query, process) =>
+        $('#taxon_concept_parent_id').attr('value', null)
         designation_id = $('#taxon_concept_designation_id').attr('value')
         rank_id = $('#taxon_concept_rank_id').attr('value')
         $.get('/admin/taxon_concepts/autocomplete',
