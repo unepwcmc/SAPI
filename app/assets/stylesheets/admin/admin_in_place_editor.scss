@@ -15,3 +15,24 @@
 ul.dropdown-menu {
   z-index: 1100
 }
+
+.editableform-loading {
+  background: image-url('loading.gif') center center no-repeat;  
+  height: 20px;
+}
+
+.popover.editable-container {
+  width: 300px;
+
+  .form-inline.editableform {
+    margin: 0;
+  }
+
+  .editable-input, .editable-buttons {
+    display: inline;
+  }
+
+  .editable-input {
+    margin-right: 10px;
+  }
+}
