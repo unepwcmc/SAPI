@@ -12,7 +12,8 @@ describe TaxonConcept do
         :taxon_concept,
         :designation_id => cites.id,
         :rank_id => kingdom.id,
-        :taxonomic_position => '1'
+        :taxonomic_position => '1',
+        :taxon_name => build(:taxon_name, :scientific_name => 'Foobaria')
       )
     }
     context "all fine" do
@@ -78,7 +79,28 @@ describe TaxonConcept do
           :taxon_name => build(:taxon_name, :scientific_name => nil)
         )
       }
-      specify { tc.should be_invalid }
+      specify { tc.should have(1).error_on(:taxon_name_id) }
+    end
+    context "scientific name is not unique within designation and parent" do
+      let(:original_tc) {
+        create(
+          :taxon_concept,
+          :designation_id => cites.id,
+          :parent_id => kingdom_tc.id,
+          :rank_id => phylum.id,
+          :taxon_name => build(:taxon_name, :scientific_name => 'Foobaria')
+        )
+      }
+      let(:tc) {
+        build(
+          :taxon_concept,
+          :designation_id => cites.id,
+          :parent_id => kingdom_tc.id,
+          :rank_id => phylum.id,
+          :taxon_name => build(:taxon_name, :scientific_name => original_tc.taxon_name.scientific_name)
+        )
+      }
+      specify { tc.should have(1).error_on(:taxon_name_id) }
     end
   end
 end

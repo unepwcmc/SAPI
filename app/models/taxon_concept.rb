@@ -47,8 +47,9 @@ class TaxonConcept < ActiveRecord::Base
   validates :rank_id, :presence => true
   validate :parent_in_same_designation
   validate :parent_at_immediately_higher_rank
-  validate :taxon_name_id, :presence => true,
+  validates :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
+  validates :taxon_name_id, :uniqueness => { :scope => [:designation_id, :parent_id] }
   validates :taxonomic_position,
     :presence => true,
     :format => { :with => /\d(\.\d*)*/, :message => "Use prefix notation, e.g. 1.2" },
@@ -114,6 +115,7 @@ class TaxonConcept < ActiveRecord::Base
     tn = taxon_name && TaxonName.where(["UPPER(scientific_name) = UPPER(?)", taxon_name.scientific_name]).first
     if tn
       self.taxon_name = tn
+      self.taxon_name_id = tn.id
     end
     true
   end
