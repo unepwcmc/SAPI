@@ -18,6 +18,7 @@ FactoryGirl.define do
     designation
     rank
     taxon_name
+    taxonomic_position '1'
     data {}
     listing {}
 

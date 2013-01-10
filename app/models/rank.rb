@@ -10,7 +10,7 @@
 #
 
 class Rank < ActiveRecord::Base
-  attr_accessible :name, :taxonomic_position
+  attr_accessible :name, :taxonomic_position, :fixed_order
   include Dictionary
   build_dictionary :kingdom, :phylum, :class, :order, :family, :subfamily, :genus, :species, :subspecies
 

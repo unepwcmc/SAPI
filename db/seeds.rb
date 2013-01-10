@@ -40,15 +40,15 @@ puts "#{TaxonConcept.delete_all} taxon_concepts deleted"
 puts "#{TaxonName.delete_all} taxon_names deleted"
 puts "#{Rank.delete_all} ranks deleted"
 
-Rank.create(:name => Rank::KINGDOM, :taxonomic_position => '1')
-Rank.create(:name => Rank::PHYLUM, :taxonomic_position => '2')
-Rank.create(:name => Rank::CLASS, :taxonomic_position => '3')
-Rank.create(:name => Rank::ORDER, :taxonomic_position => '4')
-Rank.create(:name => Rank::FAMILY, :taxonomic_position => '5')
-Rank.create(:name => Rank::SUBFAMILY, :taxonomic_position => '5.1')
-Rank.create(:name => Rank::GENUS, :taxonomic_position => '6')
-Rank.create(:name => Rank::SPECIES, :taxonomic_position => '7')
-Rank.create(:name => Rank::SUBSPECIES, :taxonomic_position => '8')
+Rank.create(:name => Rank::KINGDOM, :taxonomic_position => '1', :fixed_order => true)
+Rank.create(:name => Rank::PHYLUM, :taxonomic_position => '2', :fixed_order => true)
+Rank.create(:name => Rank::CLASS, :taxonomic_position => '3', :fixed_order => true)
+Rank.create(:name => Rank::ORDER, :taxonomic_position => '4', :fixed_order => false)
+Rank.create(:name => Rank::FAMILY, :taxonomic_position => '5', :fixed_order => false)
+Rank.create(:name => Rank::SUBFAMILY, :taxonomic_position => '5.1', :fixed_order => false)
+Rank.create(:name => Rank::GENUS, :taxonomic_position => '6', :fixed_order => false)
+Rank.create(:name => Rank::SPECIES, :taxonomic_position => '7', :fixed_order => false)
+Rank.create(:name => Rank::SUBSPECIES, :taxonomic_position => '8', :fixed_order => false)
 
 puts "#{Rank.count} ranks created"
 
@@ -237,7 +237,7 @@ higher_taxa.each do |kingdom_props|
   kingdom = TaxonConcept.create(:rank_id => kingdom_rank_id,
     :taxon_name_id => name.id, :designation_id => cites.id,
     :legacy_id => kingdom_props[:legacy_id], :legacy_type => kingdom_props[:legacy_type],
-    :data => {'taxonomic_position' => kingdom_props[:taxonomic_position]})
+    :taxonomic_position => kingdom_props[:taxonomic_position])
   phyla = kingdom_props[:sub_taxa]
   phylum_rank_id = Rank.find_by_name(Rank::PHYLUM).id
   phyla.each do |phylum_props|
@@ -247,7 +247,7 @@ higher_taxa.each do |kingdom_props|
       :taxon_name_id => name.id, :designation_id => cites.id,
       :legacy_id => phylum_props[:legacy_id], :legacy_type => phylum_props[:legacy_type],
       :parent_id => kingdom.id,
-      :data => {'taxonomic_position' => phylum_props[:taxonomic_position]})
+      :taxonomic_position => phylum_props[:taxonomic_position])
     klasses = phylum_props[:sub_taxa]
     klass_rank_id = Rank.find_by_name(Rank::CLASS).id
     klasses.each do |klass_props|
@@ -259,7 +259,7 @@ higher_taxa.each do |kingdom_props|
       :taxon_name_id => name.id, :designation_id => cites.id,
       :legacy_id => klass_props[:legacy_id], :legacy_type => klass_props[:legacy_type],
       :parent_id => phylum.id,
-      :data => {'taxonomic_position' => klass_props[:taxonomic_position]})
+      :taxonomic_position => klass_props[:taxonomic_position])
     end
   end
 end

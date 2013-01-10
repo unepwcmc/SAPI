@@ -67,16 +67,6 @@ describe TaxonConcept do
       }
       specify { tc.should have(1).error_on(:parent_id) }
     end
-    context "parent is missing (unless root)" do
-      let(:tc) {
-        build(
-          :taxon_concept,
-          :designation_id => cites.id,
-          :rank_id => phylum.id
-        )
-      }
-      specify { tc.should have(1).error_on(:parent_id) }
-    end
     context "scientific name is not given" do
       let(:tc) {
         build(

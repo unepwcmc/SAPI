@@ -38,6 +38,6 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     def collection
       @taxon_concepts ||= end_of_association_chain.
         includes([:rank, :designation, :taxon_name, :parent]).
-        order("data->'taxonomic_position'").page(params[:page])
+        order(:taxonomic_position).page(params[:page])
     end
 end

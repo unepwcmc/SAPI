@@ -21,8 +21,8 @@
 
 class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :rank_id, :parent_id, :author_year,
-    :designation_id, :taxon_name_id, :data, :legacy_id, :legacy_type,
-    :taxon_name_attributes
+    :designation_id, :taxon_name_id, :taxon_name_attributes,
+    :taxonomic_position, :legacy_id, :legacy_type
 
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore
@@ -44,13 +44,13 @@ class TaxonConcept < ActiveRecord::Base
 
   accepts_nested_attributes_for :taxon_name, :update_only => true
 
-  validates :parent_id, :presence => true, :unless => :is_root?
   validates :designation_id, :presence => true
   validates :rank_id, :presence => true
   validate :parent_in_same_designation
   validate :parent_at_immediately_higher_rank
   validate :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
+  validates :taxonomic_position, :presence => true, :if => :fixed_order_required?
 
   before_validation :check_taxon_name_exists
   before_destroy :check_destroy_allowed
@@ -76,8 +76,8 @@ class TaxonConcept < ActiveRecord::Base
     )
   }
 
-  def is_root?
-    rank && rank.name == Rank::KINGDOM
+  def fixed_order_required?
+    rank && rank.fixed_order
   end
 
   def full_name
