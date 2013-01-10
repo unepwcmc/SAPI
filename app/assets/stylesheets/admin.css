@@ -11,3 +11,21 @@
  *= require_self
  *= require_tree ./admin
  */
+
+/***********
+ * Styles for the TaxonRelationships CRUD page
+ * TODO: Not sure if this should go into its own file
+ */
+ul.relationship_parts{
+  list-style-type: none;
+  overflow: hidden;
+}
+.relationship_parts li{
+  width: 225px;
+  float: left;
+  margin-right: 15px;
+}
+#new-taxon_relationship{ /* modal window */
+  width: 780px;
+  margin-left: -390px; /* half the width */
+}

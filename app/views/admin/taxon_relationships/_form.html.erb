@@ -1,33 +1,23 @@
 <%= form_for :taxon_relationship, :url => collection_url, :remote => true do |f| %>
   <%= error_messages_for(@change_type) %>
+  <%= f.hidden_field :taxon_concept_id, :value => @taxon_concept.id %>
+  <%= f.hidden_field :other_taxon_concept_id %>
   <ul class="relationship_parts">
-    <li>
-      <label>Taxon concept</label>
-      <input type="text" class="typeahead"><br />
-      <%= f.text_field :taxon_concept_id, :class => 'typeahead', :"data-source" => taxon_concepts_autocomplete_url %>
+    <li id="left">
+      <div class="elements">
+        <strong><%= @taxon_concept.designation.name %></strong><br />
+        <span><%= "#{@taxon_concept.full_name} #{@taxon_concept.data["rank_name"].upcase}" %></span><br />
+      </div>
     </li>
     <li>
-      <label>Relationship type</label>
       <%= f.select :taxon_relationship_type_id, options_from_collection_for_select(@taxon_relationship_types, :id, :name) %>
+      <a id="swap_taxa" class="btn btn-block" href="#"><i class='icon-refresh'></i> Swap</a>
     </li>
-    <li>
-      <label>Related taxon concept</label><input type="text" class="typeahead"><br />
-      <%= f.text_field :other_taxon_concept_id, :class => 'typeahead', :"data-source" => taxon_concepts_autocomplete_url %>
+    <li id="right">
+      <div class="elements">
+        <%= select_tag :designation_id, options_from_collection_for_select(@designations, :id, :name), :class => "designation_selector" %><br />
+        <input type="text" class="tr_autocomplete"><br />
+      </div>
     </li>
   </ul>
 <% end %>
-
-<style>
-  ul.relationship_parts{
-    list-style-type: none;
-    overflow: hidden;
-  }
-  .relationship_parts li{
-    width: 240px;
-    float: left;
-  }
-  .modal{
-    width: 780px;
-    margin-left: -390px;
-  }
-</style>
