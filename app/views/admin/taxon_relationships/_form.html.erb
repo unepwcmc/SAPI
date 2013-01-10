@@ -1,10 +1,33 @@
 <%= form_for :taxon_relationship, :url => collection_url, :remote => true do |f| %>
   <%= error_messages_for(@change_type) %>
-  <label>Taxon concept</label><input type="text" class="typeahead"><br />
-  <%= f.text_field :taxon_concept_id, :class => 'typeahead', :"data-source" => taxon_concepts_autocomplete_url %><br />
-  <label>Relationship type</label>
-  <%= f.select :taxon_relationship_type_id, options_from_collection_for_select(@taxon_relationship_types, :id, :name) %><br />
-  <label>Related taxon concept</label><input type="text" class="typeahead"><br />
-  <%= f.text_field :other_taxon_concept_id, :class => 'typeahead', :"data-source" => taxon_concepts_autocomplete_url %><br />
+  <ul class="relationship_parts">
+    <li>
+      <label>Taxon concept</label>
+      <input type="text" class="typeahead"><br />
+      <%= f.text_field :taxon_concept_id, :class => 'typeahead', :"data-source" => taxon_concepts_autocomplete_url %>
+    </li>
+    <li>
+      <label>Relationship type</label>
+      <%= f.select :taxon_relationship_type_id, options_from_collection_for_select(@taxon_relationship_types, :id, :name) %>
+    </li>
+    <li>
+      <label>Related taxon concept</label><input type="text" class="typeahead"><br />
+      <%= f.text_field :other_taxon_concept_id, :class => 'typeahead', :"data-source" => taxon_concepts_autocomplete_url %>
+    </li>
+  </ul>
 <% end %>
 
+<style>
+  ul.relationship_parts{
+    list-style-type: none;
+    overflow: hidden;
+  }
+  .relationship_parts li{
+    width: 240px;
+    float: left;
+  }
+  .modal{
+    width: 780px;
+    margin-left: -390px;
+  }
+</style>
