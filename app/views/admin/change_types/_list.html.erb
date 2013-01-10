@@ -9,7 +9,7 @@
       <td>
         <a href="#" class="editable editable-click editable-required" data-type="select" data-resource="change_type" data-name="designation_id"
           data-placeholder="Required" data-original-title="Enter the change type's designation" data-source="/api/designations/"
-          data-url="<%= resource_url(change_type) %>" data-pk="<%= change_type.id %>">
+          data-url="<%= resource_url(change_type) %>" data-pk="<%= change_type.id %>" data-value="<%= change_type.designation.id %>">
           <%= change_type.designation.name %>
         </a>
       </td>

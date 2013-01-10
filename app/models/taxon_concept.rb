@@ -30,10 +30,9 @@ class TaxonConcept < ActiveRecord::Base
   belongs_to :rank
   belongs_to :designation
   belongs_to :taxon_name
-  has_many :relationships, :class_name => 'TaxonRelationship',
-    :dependent => :destroy
+  has_many :taxon_relationships, :dependent => :destroy
   has_many :related_taxon_concepts, :class_name => 'TaxonConcept',
-    :through => :relationships
+    :through => :taxon_relationships
   has_many :taxon_concept_geo_entities
   has_many :geo_entities, :through => :taxon_concept_geo_entities
   has_many :listing_changes
@@ -123,7 +122,7 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def can_be_deleted?
-    relationships.count == 0 &&
+    taxon_relationships.count == 0 &&
     children.count == 0 &&
     listing_changes.count == 0
   end

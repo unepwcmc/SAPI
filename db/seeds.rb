@@ -29,8 +29,11 @@ puts "#{GeoEntityType.count} geo entity types created"
 
 puts "#{TaxonRelationship.delete_all} taxon relationships deleted"
 puts "#{TaxonRelationshipType.delete_all} taxon relationship types deleted"
-TaxonRelationshipType.dict.each do |relationship|
-  TaxonRelationshipType.create(:name => relationship)
+['EQUAL_TO', 'INCLUDES', 'INCLUDED_IN', 'OVERLAPS', 'DISJUNCT'].each do |relationship|
+  TaxonRelationshipType.create(:name => relationship, :is_inter_designational => true)
+end
+['HAS_SYNONYM', 'HAS_HOMONYM'].each do |relationship|
+  TaxonRelationshipType.create(:name => relationship, :is_inter_designational => false)
 end
 puts "#{TaxonRelationshipType.count} taxon relationship types created"
 
