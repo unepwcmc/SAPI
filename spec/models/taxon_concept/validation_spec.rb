@@ -11,7 +11,8 @@ describe TaxonConcept do
       create(
         :taxon_concept,
         :designation_id => cites.id,
-        :rank_id => kingdom.id
+        :rank_id => kingdom.id,
+        :taxonomic_position => '1'
       )
     }
     context "all fine" do

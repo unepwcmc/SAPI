@@ -31,11 +31,15 @@
         <%= taxon_concept.parent && taxon_concept.parent.full_name %>
       </td>
       <td>
+        <% if taxon_concept.fixed_order_required? %>
         <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="taxon_concept" data-name="taxonomic_position"
           data-placeholder="Required" data-original-title="Enter the sort order position"
           data-url="<%= resource_url(taxon_concept) %>" data-pk="<%= taxon_concept.id %>">
           <%= taxon_concept.taxonomic_position %>
         </a>
+        <% else %>
+          N/A
+        <% end %>
       </td>
       <td>
         <%= link_to 'Delete', resource_url(taxon_concept), :confirm => "Are you sure?", :method => :delete %><br />

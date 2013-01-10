@@ -49,9 +49,13 @@ class TaxonConcept < ActiveRecord::Base
   validate :parent_at_immediately_higher_rank
   validate :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
-  validates :taxonomic_position, :presence => true, :if => :fixed_order_required?
+  validates :taxonomic_position,
+    :presence => true,
+    :format => { :with => /\d(\.\d*)*/, :message => "Use prefix notation, e.g. 1.2" },
+    :if => :fixed_order_required?
 
   before_validation :check_taxon_name_exists
+  before_validation :ensure_taxonomic_position
   before_destroy :check_destroy_allowed
 
   acts_as_nested_set
@@ -110,6 +114,23 @@ class TaxonConcept < ActiveRecord::Base
     tn = taxon_name && TaxonName.where(["UPPER(scientific_name) = UPPER(?)", taxon_name.scientific_name]).first
     if tn
       self.taxon_name = tn
+    end
+    true
+  end
+
+  def ensure_taxonomic_position
+    if new_record? && fixed_order_required? && taxonomic_position.blank?
+      prev_taxonomic_position =
+      if parent
+        last_sibling = TaxonConcept.where(:parent_id => parent_id).maximum(:taxonomic_position)
+        last_sibling || (parent.taxonomic_position + '.0')
+      else
+        last_root = TaxonConcept.where(:parent_id => nil).maximum(:taxonomic_position)
+        last_root || '0'
+      end
+      prev_taxonomic_position_parts = prev_taxonomic_position.split('.')
+      prev_taxonomic_position_parts << (prev_taxonomic_position_parts.pop || 0).to_i + 1
+      self.taxonomic_position = prev_taxonomic_position_parts.join('.')
     end
     true
   end

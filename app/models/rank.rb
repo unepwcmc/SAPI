@@ -17,7 +17,8 @@ class Rank < ActiveRecord::Base
   has_many :taxon_concepts
 
   validates :name, :presence => true, :uniqueness => true
-  validates :taxonomic_position, :presence => true
+  validates :taxonomic_position, :presence => true,
+    :format => { :with => /\d(\.\d*)*/, :message => "Use prefix notation, e.g. 1.2" }
 
   before_destroy :check_destroy_allowed
 

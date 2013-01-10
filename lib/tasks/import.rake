@@ -2,6 +2,7 @@ namespace :import do
   desc 'Runs import tasks for all taxa in the CITES checklist'
   task :all => :environment do
     Sapi::drop_indices
+    Sapi::disable_triggers
     Rake::Task["db:seed"].invoke
     Rake::Task["import:species"].invoke(
       'lib/assets/files/all/animals_taxon_concepts.csv',
@@ -41,12 +42,14 @@ namespace :import do
     )
 
     Sapi::rebuild()
+    Sapi::enable_triggers
     Sapi::create_indices
   end
 
   desc 'Runs import tasks for the first pages of CITES history (both animals and plants)'
   task :first_pages_cites => :environment do
     Sapi::drop_indices
+    Sapi::disable_triggers
     Rake::Task["db:seed"].invoke
     Rake::Task["import:species"].invoke(
       'lib/assets/files/cleaned/animalia_taxa_utf8.csv'
@@ -92,7 +95,10 @@ namespace :import do
     Rake::Task["import:trade_codes"].invoke
 
     Sapi::rebuild()
+    Sapi::enable_triggers
     Sapi::create_indices
   end
 
+  desc 'Drops and reimports db'
+  task :redo => ["db:drop", "db:create", "db:migrate", "db:seed", "import:first_pages_cites"]
 end

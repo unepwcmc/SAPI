@@ -17,6 +17,14 @@ module Sapi
     ActiveRecord::Base.connection.execute('SELECT * FROM rebuild_cites_accepted_flags()')
   end
 
+  def self.disable_triggers
+    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_concepts DISABLE TRIGGER ALL")
+  end
+
+  def self.enable_triggers
+    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_concepts ENABLE TRIGGER ALL")
+  end
+
   def self.drop_indices
     indices = %w(
       index_taxon_concepts_on_lft
