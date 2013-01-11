@@ -84,10 +84,6 @@ class TaxonConcept < ActiveRecord::Base
     rank && rank.fixed_order
   end
 
-  def full_name
-    data['full_name']
-  end
-
   def rank_name
     data['rank_name']
   end

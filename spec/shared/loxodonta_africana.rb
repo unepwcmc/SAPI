@@ -96,10 +96,11 @@ shared_context "Loxodonta africana" do
       )
     end
 
-    Sapi::rebuild
+    Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
+        puts var.reload.inspect
         self.instance_variable_set(t,MTaxonConcept.find(var.id))
         self.instance_variable_get(t).reload
       end
