@@ -1,3 +1,40 @@
+CREATE OR REPLACE FUNCTION ancestors_data(rec_id INTEGER) RETURNS HSTORE
+  LANGUAGE plpgsql
+  AS $$
+  DECLARE
+    result HSTORE;
+    ancestor_row RECORD;
+  BEGIN
+    result := ''::HSTORE;
+    FOR ancestor_row IN 
+      WITH RECURSIVE q AS (
+        SELECT h.id, h.parent_id, ranks.name AS rank_name, taxon_names.scientific_name AS scientific_name
+        FROM taxon_concepts h
+        INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
+        INNER JOIN ranks ON h.rank_id = ranks.id
+        WHERE h.id = 27
+
+        UNION
+
+        SELECT hi.id, hi.parent_id, ranks.name, taxon_names.scientific_name
+
+        FROM q
+        JOIN taxon_concepts hi
+        ON hi.id = q.parent_id
+        INNER JOIN taxon_names ON hi.taxon_name_id = taxon_names.id
+        INNER JOIN ranks ON hi.rank_id = ranks.id
+      )
+      SELECT 
+      id, rank_name, scientific_name
+      FROM q
+    LOOP
+      result := result || HSTORE(LOWER(rank_name) || '_name', scientific_name) ||
+        HSTORE(LOWER(rank_name) || '_id', id);
+    END LOOP;
+    RETURN result;
+  END;
+  $$;
+
 --
 -- Name: rebuild_names_and_ranks_from_root(root_id integer); Type: FUNCTION; Schema: public; Owner: -
 --
