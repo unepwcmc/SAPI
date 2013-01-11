@@ -10,7 +10,7 @@
 <ul class="nav nav-pills">
   <% @taxon_relationship_types.map(&:name).each do |taxon_relationship_type| %>
     <li class="<%= (@taxon_relationship_type.name == taxon_relationship_type ? 'active' : '') %>">
-      <%= link_to taxon_relationship_type.titleize, collection_url(:type => taxon_relationship_type) %>
+    <%= link_to taxon_relationship_type.titleize, collection_url(:type => taxon_relationship_type) %>
     </li>
   <% end %>
 </ul>
@@ -20,9 +20,11 @@
   <li class="active"><a data-toggle="tab" href="#home">
     <%= "#{@taxon_concept.full_name} #{@taxon_relationship_type.name} ..." %>
   </a></li>
-  <li ><a data-toggle="tab" href="#inverse">
-    <%= "... #{@taxon_relationship_type.name} #{@taxon_concept.full_name}" %>
-  </a></li>
+  <% unless @taxon_relationship_type.is_bidirectional? %>
+    <li ><a data-toggle="tab" href="#inverse">
+      <%= "... #{@taxon_relationship_type.name} #{@taxon_concept.full_name}" %>
+    </a></li>
+  <% end %>
 </ul>
 
 <div class="tab-content">
@@ -31,11 +33,13 @@
 
     <%= paginate collection %>
   </div>
-  <div id="inverse" class="tab-pane fade">
-    <%= admin_table do %>
-      <%= render :partial => 'list', :locals => {:collection => @inverse_taxon_relationships} %>
-    <% end %>
+  <% unless @taxon_relationship_type.is_bidirectional? %>
+    <div id="inverse" class="tab-pane fade">
+      <%= admin_table do %>
+        <%= render :partial => 'list', :locals => {:collection => @inverse_taxon_relationships} %>
+      <% end %>
 
-    <%= paginate @inverse_taxon_relationships%>
-  </div>
+      <%= paginate @inverse_taxon_relationships%>
+    </div>
+  <% end %>
 </div>
