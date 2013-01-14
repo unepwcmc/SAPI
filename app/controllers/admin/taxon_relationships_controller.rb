@@ -5,9 +5,17 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
 
   def index
     index! do
-      @designations = Designation.order(:name).where('id <> ?', @taxon_concept.designation_id)
+      @designations = Designation.order(:name).where('id <> ?', @taxon_concept.designation_id) #for Inter-designational relationships
       @inverse_taxon_relationships = TaxonRelationship.where(:other_taxon_concept_id => @taxon_concept.id).page(params[:page])
     end
+  end
+
+  def create
+    @taxon_relationship = TaxonRelationship.new(params[:taxon_relationship])
+    if @taxon_relationship.save
+      @taxon_relationship.create_opposite if @taxon_relationship.is_bidirectional?
+    end
+    create!
   end
 
   protected
