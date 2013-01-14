@@ -7,6 +7,7 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  taxonomic_position :string(255)      default("0"), not null
+#  fixed_order        :boolean          default(FALSE), not null
 #
 
 class Rank < ActiveRecord::Base

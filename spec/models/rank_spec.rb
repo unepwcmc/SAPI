@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: ranks
+#
+#  id                 :integer          not null, primary key
+#  name               :string(255)      not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  taxonomic_position :string(255)      default("0"), not null
+#  fixed_order        :boolean          default(FALSE), not null
+#
+
 require 'spec_helper'
 
 describe Rank do

@@ -9,7 +9,7 @@
 #  rank_name                        :text
 #  cites_accepted                   :boolean
 #  kingdom_position                 :integer
-#  taxonomic_position               :text
+#  taxonomic_position               :string(255)
 #  kingdom_name                     :text
 #  phylum_name                      :text
 #  class_name                       :text
