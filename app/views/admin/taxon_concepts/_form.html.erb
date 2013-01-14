@@ -1,13 +1,28 @@
 <%= form_for :taxon_concept, :url => collection_url, :remote => true do |f| %>
 
   <%= error_messages_for(@taxon_concept) %>
-
-  <label>Designation</label> <%= f.select :designation_id, options_from_collection_for_select(@designations, :id, :name) %><br />
-  <label>Rank</label> <%= f.select :rank_id, options_from_collection_for_select(@ranks, :id, :name) %><br />
-  <label>Parent</label> <input type="text" class="typeahead"><br />
-  <%= f.text_field :parent_id, :class => 'typeahead', :"data-source" => taxon_concepts_autocomplete_url %><br />
-  <%= f.fields_for :taxon_name_attributes do |ff| %>
-    <label>Scientific name</label> <%= ff.text_field :scientific_name %><br />
-  <% end %>
-  <label>Author & year</label> <%= f.text_field :author_year %><br />
+  <div class="control-group">
+    <label>Designation</label>
+    <%= f.select :designation_id, options_from_collection_for_select(@designations, :id, :name) %>
+  </div>
+  <div class="control-group">
+    <label>Rank</label>
+    <%= f.select :rank_id, options_from_collection_for_select(@ranks, :id, :name) %>
+  </div>
+  <div class="control-group">
+    <%= f.fields_for :parent_taxon_name_attributes do |ff| %>
+      <label>Parent</label>
+      <%= ff.text_field :scientific_name, :class => 'typeahead' %>
+    <% end %>
+  </div>
+  <div class="control-group">
+    <%= f.fields_for :taxon_name_attributes do |ff| %>
+      <label>Scientific name</label>
+      <%= ff.text_field :scientific_name %>
+    <% end %>
+  </div>
+  <div class="control-group">
+    <label>Author & year</label>
+    <%= f.text_field :author_year %>
+  </div>
 <% end %>

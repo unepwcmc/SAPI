@@ -1,6 +1,9 @@
 $(document).ready ->
-  #editorClass = $('.editor').attr('id')
-  window.adminInPlaceEditor = new AdminInPlaceEditor()
+  editorClass = $('#admin-in-place-editor').attr('data-editor-for')
+  if editorClass == 'taxon_concept'
+    window.adminInPlaceEditor = new TaxonConceptsEditor()
+  else
+    window.adminInPlaceEditor = new AdminInPlaceEditor()
   window.adminInPlaceEditor.init()
 
 class AdminInPlaceEditor
@@ -46,9 +49,20 @@ class AdminInPlaceEditor
       $(@).find('form')[0].reset()
       $(@).find('.alert').remove()
 
+  alertSuccess: (txt) ->
+    $('.alert').remove()
+
+    alert = $('<div class="alert alert-success">')
+    alert.append('<a class="close" href="#" data-dismiss="alert">x</a>')
+    alert.append(txt)
+
+    $(alert).insertBefore($('h1'))
+
+class TaxonConceptsEditor extends AdminInPlaceEditor
+  initModals: () ->
+    super
     $('.typeahead').typeahead
       source: (query, process) =>
-        $('#taxon_concept_parent_id').attr('value', null)
         designation_id = $('#taxon_concept_designation_id').attr('value')
         rank_id = $('#taxon_concept_rank_id').attr('value')
         $.get('/admin/taxon_concepts/autocomplete',
@@ -58,24 +72,10 @@ class AdminInPlaceEditor
           rank_id: rank_id,
           limit: 25
         }, (data) =>
-          @parentsMap = {}
           labels = []
           $.each(data, (i, item) =>
-            label = item.designation_name + ' ' + item.full_name + ' ' + item.rank_name
-            @parentsMap[label] = item.id
+            label = item.full_name + ' ' + item.rank_name
             labels.push(label)
           )
           return process(labels)
         )
-      updater: (item) =>
-        $('#taxon_concept_parent_id').attr('value', @parentsMap[item])
-        return item
-
-  alertSuccess: (txt) ->
-    $('.alert').remove()
-
-    alert = $('<div class="alert alert-success">')
-    alert.append('<a class="close" href="#" data-dismiss="alert">x</a>')
-    alert.append(txt)
-
-    $(alert).insertBefore($('h1'))

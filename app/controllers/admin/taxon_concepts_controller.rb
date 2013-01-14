@@ -16,7 +16,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
 
   def autocomplete
     @taxon_concepts = TaxonConcept.
-      select("data, #{TaxonConcept.table_name}.id, #{Designation.table_name}.name AS designation_name").
+      select("data, #{TaxonConcept.table_name}.id, full_name, #{Designation.table_name}.name AS designation_name").
       joins(:designation)
     if params[:scientific_name]
       @taxon_concepts = @taxon_concepts.by_scientific_name(params[:scientific_name])

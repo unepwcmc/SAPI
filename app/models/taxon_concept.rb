@@ -57,6 +57,7 @@ class TaxonConcept < ActiveRecord::Base
     :if => :fixed_order_required?
 
   before_validation :check_taxon_name_exists
+  before_validation :check_parent_taxon_name_exists
   before_validation :ensure_taxonomic_position
   before_destroy :check_destroy_allowed
 
@@ -89,6 +90,11 @@ class TaxonConcept < ActiveRecord::Base
     data['rank_name']
   end
 
+  def parent_scientific_name
+    parent && parent.taxon_name && parent.taxon_name.scientific_name ||
+      read_attribute(:parent_scientific_name)
+  end
+
   private
 
   def parent_in_same_designation
@@ -113,6 +119,24 @@ class TaxonConcept < ActiveRecord::Base
     if tn
       self.taxon_name = tn
       self.taxon_name_id = tn.id
+    end
+    true
+  end
+
+  def check_parent_taxon_name_exists
+    return true if parent_scientific_name.nil?
+    # strip rank from string
+    if parent_scientific_name =~ /(.+)\s*#{Rank.dict.join('|')}\s*$/
+      self.parent_scientific_name = $1
+    end
+    # strip all but last element of a multinomial
+    if parent_scientific_name =~ /.+ (.+)$/
+      self.parent_scientific_name = $1
+    end
+    p = TaxonConcept.joins(:taxon_name).
+      where(["UPPER(taxon_names.scientific_name) = UPPER(?)", parent_scientific_name]).first
+    if p
+      self.parent_id = p.id
     end
     true
   end

@@ -76,8 +76,8 @@ module SimpleCrudHelper
   def admin_table
     content_tag(
       :table, :id => "admin-in-place-editor",
-      :class => "table table-bordered table-striped " +
-        "#{collection.class}-editor",
+      :class => "table table-bordered table-striped ",
+      :"data-editor-for" => "#{controller_name.singularize}",
       :style => "clear: both"
     ) do
       if block_given?
