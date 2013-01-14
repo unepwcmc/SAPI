@@ -11,6 +11,8 @@ module Sapi
     :ancestor_listings,
     :cites_accepted_flags,
     :cites_show_flags,
+    :taxon_concepts_mview,
+    :listing_changes_mview,
     :mviews
   ]
 

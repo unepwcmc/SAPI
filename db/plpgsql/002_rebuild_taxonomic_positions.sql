@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_from_root(root_id integer
         WHEN (ranks.fixed_order) THEN hi.taxonomic_position
         -- use generous zero padding to accommodate for orchidacea (30 thousand species in about 900 genera)
         ELSE (q.taxonomic_position || '.' || LPAD(
-          (row_number() OVER (PARTITION BY parent_id ORDER BY data->'full_name')::VARCHAR(64)),
+          (row_number() OVER (PARTITION BY parent_id ORDER BY full_name)::VARCHAR(64)),
           5,
           '0'
         ))::VARCHAR(255)

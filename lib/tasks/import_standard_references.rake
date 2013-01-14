@@ -38,8 +38,8 @@ namespace :import do
           FROM standard_references_import
         )
         SELECT --standard_references_import_per_exclusion.*,
-        taxon_concepts.id AS taxon_concept_id,-- ranks.id AS original_rank_id, ranks.name, taxon_concepts.rank_id AS actual_rank_id, taxon_concepts.data->'full_name' AS full_name,
-        exclusion_taxon_concepts.id AS exclusion_id,-- exclusion_ranks.name, exclusion_taxon_concepts.data->'full_name' AS exclusion_name,
+        taxon_concepts.id AS taxon_concept_id,-- ranks.id AS original_rank_id, ranks.name, taxon_concepts.rank_id AS actual_rank_id, taxon_concepts.full_name AS full_name,
+        exclusion_taxon_concepts.id AS exclusion_id,-- exclusion_ranks.name, exclusion_taxon_concepts.full_name AS exclusion_name,
         "references".id AS reference_id, 
         "cascade"
         FROM standard_references_import_per_exclusion

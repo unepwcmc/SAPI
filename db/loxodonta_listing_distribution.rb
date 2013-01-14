@@ -1,5 +1,5 @@
 #paste into rails console to add current Listing distribution for loxodonta africana
-tc = TaxonConcept.where("data->'full_name' = 'Loxodonta africana'").first
+tc = TaxonConcept.where(:full_name => 'Loxodonta africana').first
 #find the current listing changes
 lc1 = tc.listing_changes.where(:effective_at => '1990-01-18').first
 lc2 = tc.listing_changes.where(:effective_at => '2007-09-13').first

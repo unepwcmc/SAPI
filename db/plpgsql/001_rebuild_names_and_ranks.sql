@@ -1,4 +1,23 @@
-CREATE OR REPLACE FUNCTION ancestors_data(rec_id INTEGER) RETURNS HSTORE
+CREATE OR REPLACE FUNCTION full_name(rank_name VARCHAR(255), ancestors HSTORE) RETURNS VARCHAR(255)
+  LANGUAGE plpgsql
+  AS $$
+  BEGIN
+    RETURN CASE
+      WHEN rank_name = 'SPECIES' THEN
+        -- now create a binomen for full name
+        CAST(ancestors -> 'genus_name' AS VARCHAR) || ' ' ||
+        LOWER(CAST(ancestors -> 'species_name' AS VARCHAR))
+      WHEN rank_name = 'SUBSPECIES' THEN
+        -- now create a trinomen for full name
+        CAST(ancestors -> 'genus_name' AS VARCHAR) || ' ' ||
+        LOWER(CAST(ancestors -> 'species_name' AS VARCHAR)) || ' ' ||
+        LOWER(CAST(ancestors -> 'subspecies_name' AS VARCHAR))
+      ELSE ancestors -> LOWER(rank_name || '_name')
+    END;
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION ancestors_data(node_id INTEGER) RETURNS HSTORE
   LANGUAGE plpgsql
   AS $$
   DECLARE
@@ -12,7 +31,7 @@ CREATE OR REPLACE FUNCTION ancestors_data(rec_id INTEGER) RETURNS HSTORE
         FROM taxon_concepts h
         INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
         INNER JOIN ranks ON h.rank_id = ranks.id
-        WHERE h.id = 27
+        WHERE h.id = node_id
 
         UNION
 
@@ -28,10 +47,30 @@ CREATE OR REPLACE FUNCTION ancestors_data(rec_id INTEGER) RETURNS HSTORE
       id, rank_name, scientific_name
       FROM q
     LOOP
-      result := result || HSTORE(LOWER(rank_name) || '_name', scientific_name) ||
-        HSTORE(LOWER(rank_name) || '_id', id);
+      result := result ||
+        HSTORE(LOWER(ancestor_row.rank_name) || '_name', ancestor_row.scientific_name) ||
+        HSTORE(LOWER(ancestor_row.rank_name) || '_id', ancestor_row.id::VARCHAR);
     END LOOP;
     RETURN result;
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION rebuild_names_and_ranks_for_node(node_id integer) RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  BEGIN
+    WITH q AS (
+      SELECT taxon_concepts.id, ranks.name AS rank_name, ancestors_data(node_id) AS ancestors
+      FROM taxon_concepts
+      INNER JOIN ranks ON taxon_concepts.rank_id = ranks.id
+      WHERE taxon_concepts.id = node_id
+    )
+    UPDATE taxon_concepts
+    SET full_name = full_name(rank_name, ancestors),
+      data = CASE WHEN data IS NULL THEN ''::HSTORE ELSE data END ||
+        ancestors || hstore('rank_name', rank_name)
+    FROM q
+    WHERE taxon_concepts.id = q.id;
   END;
   $$;
 
@@ -67,19 +106,7 @@ CREATE OR REPLACE FUNCTION rebuild_names_and_ranks_from_root(root_id integer) RE
     )
     UPDATE taxon_concepts
     SET
-    full_name = 
-      CASE
-        WHEN rank_name = 'SPECIES' THEN
-          -- now create a binomen for full name
-          CAST(ancestors -> 'genus_name' AS VARCHAR) || ' ' ||
-          LOWER(CAST(ancestors -> 'species_name' AS VARCHAR))
-        WHEN rank_name = 'SUBSPECIES' THEN
-          -- now create a trinomen for full name
-          CAST(ancestors -> 'genus_name' AS VARCHAR) || ' ' ||
-          LOWER(CAST(ancestors -> 'species_name' AS VARCHAR)) || ' ' ||
-          LOWER(CAST(ancestors -> 'subspecies_name' AS VARCHAR))
-        ELSE ancestors -> LOWER(rank_name || '_name')
-      END,
+    full_name = full_name(rank_name, ancestors),
     data = data || ancestors || hstore('rank_name', rank_name)
     FROM q
     WHERE taxon_concepts.id = q.id;
@@ -87,7 +114,7 @@ CREATE OR REPLACE FUNCTION rebuild_names_and_ranks_from_root(root_id integer) RE
   END;
   $$;
 
-COMMENT ON FUNCTION rebuild_names_and_ranks() IS 'Procedure to rebuild the computed full name, rank and ancestor names fields in taxon_concepts.';
+COMMENT ON FUNCTION rebuild_names_and_ranks_from_root(root_id integer) IS 'Procedure to rebuild the computed full name, rank and ancestor names fields in taxon_concepts.';
 
 --
 -- Name: rebuild_names_and_ranks(); Type: FUNCTION; Schema: public; Owner: -
@@ -100,7 +127,7 @@ CREATE OR REPLACE FUNCTION rebuild_names_and_ranks() RETURNS void
     root_id integer;
   BEGIN
     FOR root_id IN SELECT id FROM taxon_concepts
-    WHERE parent_id IS NULL
+    WHERE parent_id IS NULL AND data->'cites_name_status' = 'A'
     LOOP
       PERFORM rebuild_names_and_ranks_from_root(root_id);
     END LOOP;

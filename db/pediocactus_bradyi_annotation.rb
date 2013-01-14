@@ -1,5 +1,5 @@
 #paste into rails console to get both generic + specific annotation for Pediocactus winkleri
-tc = TaxonConcept.where("data->'full_name' = 'Pediocactus bradyi winkleri'").first
+tc = TaxonConcept.where(:full_name => 'Pediocactus bradyi winkleri').first
 lc = tc.listing_changes.order(:effective_at).last
 
 english = Language.find_by_name('English')

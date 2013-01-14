@@ -103,7 +103,7 @@ class ChangeFullNameInTaxonConceptsView < ActiveRecord::Migration
     ) common_names ON taxon_concepts.id = common_names.taxon_concept_id_com
     LEFT JOIN (
       SELECT taxon_concepts.id AS taxon_concept_id_syn,
-      ARRAY_AGG(synonym_tc.data->'full_name') AS synonyms_ary,
+      ARRAY_AGG(synonym_tc.full_name) AS synonyms_ary,
       ARRAY_AGG(synonym_tc.author_year) AS synonyms_author_years_ary
       FROM taxon_concepts
       LEFT JOIN taxon_relationships

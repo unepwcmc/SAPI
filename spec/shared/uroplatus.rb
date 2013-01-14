@@ -52,7 +52,7 @@ shared_context 'Uroplatus' do
       :data => {:usr_is_std_ref => 't', :cascade => 't'}
     )
 
-    Sapi::rebuild
+    Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

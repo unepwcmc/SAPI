@@ -178,7 +178,7 @@ shared_context "Psittaciformes" do
       :listing_change => l2
     )
 
-    Sapi::rebuild
+    Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

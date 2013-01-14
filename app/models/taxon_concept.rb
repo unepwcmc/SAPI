@@ -64,8 +64,8 @@ class TaxonConcept < ActiveRecord::Base
   scope :by_scientific_name, lambda { |scientific_name|
     where(
       <<-SQL
-      data->'full_name' >= '#{TaxonName.lower_bound(scientific_name)}'
-        AND data->'full_name' < '#{TaxonName.upper_bound(scientific_name)}'
+      full_name >= '#{TaxonName.lower_bound(scientific_name)}'
+        AND full_name < '#{TaxonName.upper_bound(scientific_name)}'
       SQL
     )
   }
