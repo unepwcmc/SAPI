@@ -12,11 +12,6 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
 
   def create
     create! do |success, failure|
-      success.js {
-        @taxon_relationship.create_opposite if @taxon_relationship.is_bidirectional?
-        collection
-        render 'admin/simple_crud/create'
-      }
       failure.js {
         @designations = Designation.order(:name). #for Inter-designational relationships
           where('id <> ?', TaxonConcept.find(params[:taxon_relationship][:taxon_concept_id]).
