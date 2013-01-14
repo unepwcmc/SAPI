@@ -16,7 +16,7 @@ class TaxonRelationship < ActiveRecord::Base
   belongs_to :taxon_concept
   belongs_to :other_taxon_concept, :class_name => 'TaxonConcept'
 
-  validates :taxon_concept_id, :uniqueness => { :scope => [:taxon_relationship_type_id, :other_taxon_concept_id] }
+  validates :taxon_concept_id, :uniqueness => { :scope => [:taxon_relationship_type_id, :other_taxon_concept_id], :message => 'This particular relationship already exists' }
 
   delegate :is_bidirectional?, :to => :taxon_relationship_type
 

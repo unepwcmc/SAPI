@@ -11,20 +11,40 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
   end
 
   def create
-    @taxon_relationship = TaxonRelationship.new(params[:taxon_relationship])
-    if @taxon_relationship.save
-      @taxon_relationship.create_opposite if @taxon_relationship.is_bidirectional?
+    create! do |success, failure|
+      success.js {
+        @taxon_relationship.create_opposite if @taxon_relationship.is_bidirectional?
+        collection
+        render 'admin/simple_crud/create'
+      }
+      failure.js {
+        @designations = Designation.order(:name). #for Inter-designational relationships
+          where('id <> ?', TaxonConcept.find(params[:taxon_relationship][:taxon_concept_id]).
+          try(:designation_id))
+        render 'admin/simple_crud/new'
+      }
     end
-    create!
+  end
+
+  def destroy
+    destroy! do |success, failure|
+      success.html { redirect_to collection_url(:type => params[:type]), :notice => 'Operation succeeded' }
+    end
   end
 
   protected
 
   def load_taxon_relationship_types
-    @taxon_relationship_type = TaxonRelationshipType.find_by_name(
-      params[:type] || TaxonRelationshipType::EQUAL_TO
-    )
-    @taxon_relationship_types = TaxonRelationshipType.order(:name).inter_designational
+    if params[:taxon_relationship]
+      @taxon_relationship_type = TaxonRelationshipType.find(
+        params[:taxon_relationship][:taxon_relationship_type_id])
+    else
+      @taxon_relationship_type = TaxonRelationshipType.find_by_name(
+        params[:type] || TaxonRelationshipType::EQUAL_TO
+      )
+    end
+    @taxon_relationship_types = TaxonRelationshipType.order(:name).
+      inter_designational
   end
 
   def collection
@@ -33,6 +53,5 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
       where(:"taxon_relationship_types.name" => @taxon_relationship_type.name).
       page(params[:page])
   end
-
 end
 
