@@ -19,7 +19,7 @@ class TaxonRelationship < ActiveRecord::Base
   validates :taxon_concept_id, :uniqueness => { :scope => [:taxon_relationship_type_id, :other_taxon_concept_id], :message => 'This particular relationship already exists' }
 
   delegate :is_bidirectional?, :to => :taxon_relationship_type
-  before_destroy :destroy_opposite, :if => Proc.new { self.is_bidirectional? && !self.has_opposite? }
+  before_destroy :destroy_opposite, :if => Proc.new { self.is_bidirectional? && self.has_opposite? }
   after_create :create_opposite, :if => Proc.new { self.is_bidirectional? && !self.has_opposite? }
 
   def has_opposite?

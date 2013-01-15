@@ -6,7 +6,7 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
   def index
     index! do
       @designations = Designation.order(:name).where('id <> ?', @taxon_concept.designation_id) #for Inter-designational relationships
-      @inverse_taxon_relationships = TaxonRelationship.where(:other_taxon_concept_id => @taxon_concept.id).page(params[:page])
+      @inverse_taxon_relationships = TaxonRelationship.where(:other_taxon_concept_id => @taxon_concept.id, :taxon_relationship_type_id => @taxon_relationship_type.id).page(params[:page])
     end
   end
 

@@ -8,38 +8,15 @@
   <% collection.each do |taxon_relationship| -%>
     <tr>
       <td>
-        <a href="#"
-          class="editable editable-click editable-required editable-geo-entity"
-          data-type="select" data-resource="taxon_relationship"
-          data-name="geo_entity_id" data-placeholder="Required"
-          data-original-title="Enter the related entity's name"
-          data-url="<%= resource_url(taxon_relationship) %>"
-          data-pk="<%= taxon_relationship.id %>">
-          <%= taxon_relationship.taxon_concept.full_name %> (<%= taxon_relationship.taxon_concept.designation.name %>)
-        </a>
+        <%= link_to taxon_relationship.taxon_concept.full_name, edit_admin_taxon_concept_path(taxon_relationship.taxon_concept) %> 
+        (<%= link_to taxon_relationship.taxon_concept.designation.name, admin_designation_path(taxon_relationship.taxon_concept.designation) %>)
       </td>
       <td>
-        <a href="#"
-          id="geo-relationship-<%= taxon_relationship.id %>"
-          class="editable editable-click editable-required editable-geo-relationship-type"
-          data-type="select" data-resource="taxon_relationship"
-          data-name="designation_id" data-placeholder="Required"
-          data-original-title="Enter the geo relationship's type"
-          data-url="<%= resource_url(taxon_relationship) %>"
-          data-pk="<%= taxon_relationship.id %>">
-          <%= taxon_relationship.taxon_relationship_type.name %>
-        </a>
+        <%= taxon_relationship.taxon_relationship_type.name %>
       </td>
       <td>
-        <a href="#"
-          class="editable editable-click editable-required editable-geo-entity"
-          data-type="select" data-resource="taxon_relationship"
-          data-name="other_geo_entity_id" data-placeholder="Required"
-          data-original-title="Enter the related entity's name"
-          data-url="<%= resource_url(taxon_relationship) %>"
-          data-pk="<%= taxon_relationship.id %>">
-          <%= taxon_relationship.other_taxon_concept.full_name %> (<%= taxon_relationship.other_taxon_concept.designation.name %>)
-        </a>
+        <%= link_to taxon_relationship.other_taxon_concept.full_name, edit_admin_taxon_concept_path(taxon_relationship.other_taxon_concept) %>
+        (<%= link_to taxon_relationship.other_taxon_concept.designation.name, admin_designation_path(taxon_relationship.other_taxon_concept.designation) %>)
       </td>
       <td>
         <%= link_to 'Delete', resource_url(taxon_relationship, :type => params[:type]),

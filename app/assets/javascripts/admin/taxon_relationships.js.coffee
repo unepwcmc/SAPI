@@ -36,6 +36,7 @@ class TaxonRelationshipForm
           $("#taxon_concept_id").val(@parentsMap[item])
           $("#taxon_concept_id").val(@parentsMap[item])
         return item
+
   swapTaxa: () ->
     left_elms = $("#left").children(".elements")
     right_elms = $("#right").children(".elements")
