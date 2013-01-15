@@ -22,10 +22,14 @@ class TaxonRelationship < ActiveRecord::Base
   before_destroy :destroy_opposite, :if => Proc.new { self.is_bidirectional? && self.has_opposite? }
   after_create :create_opposite, :if => Proc.new { self.is_bidirectional? && !self.has_opposite? }
 
-  def has_opposite?
+  def opposite
     TaxonRelationship.where(:taxon_concept_id => self.other_taxon_concept_id,
       :other_taxon_concept_id => self.taxon_concept_id,
-      :taxon_relationship_type_id => self.taxon_relationship_type_id).any?
+      :taxon_relationship_type_id => self.taxon_relationship_type_id).first
+  end
+
+  def has_opposite?
+    opposite.present?
   end
 
   private
