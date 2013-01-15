@@ -1,8 +1,3 @@
-//update pills
-$("li.active").removeClass("active");
-$("li.trt<%= @taxon_relationship_type.id %>").addClass("active");
-$("#directional_nav").html("<%= escape_javascript(render(:partial => 'directional_nav', :locals => {:taxon_concept => @taxon_concept, :taxon_relationship_type => @taxon_relationship_type})) %>");
-
 $('.modal').modal('hide');
 $('#admin-in-place-editor').html("<%= escape_javascript(render('list')) %>");
 window.adminInPlaceEditor.initEditors();

@@ -12,6 +12,7 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
 
   def create
     create! do |success, failure|
+      success.js { render 'create' }
       failure.js {
         @designations = Designation.order(:name). #for Inter-designational relationships
           where('id <> ?', TaxonConcept.find(params[:taxon_relationship][:taxon_concept_id]).
