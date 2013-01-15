@@ -1,7 +1,7 @@
 FactoryGirl.define do
 
   factory :taxon_relationship_type do
-    name 'INCLUDES'
+    sequence(:name) {|n| "INCLUDES#{n}" }
     is_bidirectional true
     is_interdesignational true
   end
@@ -9,7 +9,7 @@ FactoryGirl.define do
   factory :taxon_relationship do
     taxon_relationship_type 
     taxon_concept
-    other_taxon_concepts
+    other_taxon_concept
   end
 
   TaxonRelationshipType.dict.each do |type|

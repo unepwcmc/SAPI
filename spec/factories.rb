@@ -2,15 +2,15 @@
 FactoryGirl.define do
 
   factory :designation do
-    name 'CITES'
+    sequence(:name) {|n| "CITES#{n}"}
   end
 
   factory :taxon_name do
-    scientific_name 'lupus'
+    sequence(:scientific_name) {|n| "lupus#{n}"}
   end
 
   factory :rank do
-    name 'Kingdom'
+    sequence(:name) {|n| "Kingdom#{n}"}
     taxonomic_position '1'
   end
 
