@@ -22,9 +22,11 @@
 #
 
 class TaxonConcept < ActiveRecord::Base
-  attr_accessible :lft, :parent_id, :rgt, :rank_id, :parent_id, :author_year,
-    :designation_id, :taxon_name_id, :taxon_name_attributes,
-    :taxonomic_position, :legacy_id, :legacy_type, :parent_scientific_name
+  attr_accessible :lft, :parent_id, :rgt, :designation_id, :rank_id,
+    :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
+    :legacy_id, :legacy_type,
+    :taxon_name_attributes, :common_names_attributes,
+    :parent_scientific_name
   attr_writer :parent_scientific_name
 
   serialize :data, ActiveRecord::Coders::Hstore
@@ -45,6 +47,7 @@ class TaxonConcept < ActiveRecord::Base
   has_and_belongs_to_many :references, :join_table => :taxon_concept_references
 
   accepts_nested_attributes_for :taxon_name, :update_only => true
+  accepts_nested_attributes_for :common_names, :allow_destroy => true
 
   validates :designation_id, :presence => true
   validates :rank_id, :presence => true

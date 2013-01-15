@@ -7,3 +7,16 @@
 Designation: <%= @taxon_concept.designation.name %><br>
 Rank: <%= @taxon_concept.rank.name %><br>
 Parent: <%= @taxon_concept.parent.try(:full_name) %><br>
+
+<%= nested_form_for @taxon_concept, :url => admin_taxon_concept_url(@taxon_concept) do |f| %>
+  <%= error_messages_for(@taxon_concept) %>
+  <%= f.fields_for :common_names do |ff| %>
+      <label>Name</label>
+      <%= ff.text_field :name %>
+      <label>Language</label>
+      <%= ff.select :language_id, options_from_collection_for_select(@languages, :id, :name_en) %>
+      <%= ff.link_to_remove "Remove this common name" %>
+  <% end%>
+  <p><%= f.link_to_add "Add a common name", :common_names %></p>
+  <%= f.submit %>
+<% end %>

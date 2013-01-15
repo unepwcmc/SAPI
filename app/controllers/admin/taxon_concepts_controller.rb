@@ -8,10 +8,29 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     index!
   end
 
+  def edit
+    edit! do
+      @languages = Language.order(:name_en)
+    end
+  end
+
   def create
     @designations = Designation.order(:name)
     @ranks = Rank.order(:taxonomic_position)
     super
+  end
+
+  def update
+    update! do |success, failure|
+      success.html {
+        redirect_to edit_admin_taxon_concept_url(@taxon_concept),
+          :notice => 'Operation successful'
+      }
+      failure.html {
+        @languages = Language.order(:name_en)
+        render 'edit'
+      }
+    end
   end
 
   def autocomplete
