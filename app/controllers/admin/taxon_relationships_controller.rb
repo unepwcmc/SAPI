@@ -40,7 +40,7 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
       )
     end
     @taxon_relationship_types = TaxonRelationshipType.order(:name).
-      inter_designational
+      interdesignational
   end
 
   def collection

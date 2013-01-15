@@ -18,6 +18,7 @@
 #  author_year        :string(255)
 #  notes              :text
 #  taxonomic_position :string(255)      default("0"), not null
+#  full_name          :string(255)
 #
 
 class TaxonConcept < ActiveRecord::Base

@@ -5,7 +5,7 @@
 #  id                               :integer          primary key
 #  parent_id                        :integer
 #  designation_is_cites             :boolean
-#  full_name                        :text
+#  full_name                        :string(255)
 #  rank_name                        :text
 #  cites_accepted                   :boolean
 #  kingdom_position                 :integer

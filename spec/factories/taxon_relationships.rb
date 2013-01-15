@@ -1,13 +1,15 @@
 FactoryGirl.define do
 
   factory :taxon_relationship_type do
-    name 'HAS_SYNONYM'
+    name 'INCLUDES'
+    is_bidirectional true
+    is_interdesignational true
   end
 
   factory :taxon_relationship do
     taxon_relationship_type 
     taxon_concept
-    other_taxon_concept
+    other_taxon_concepts
   end
 
   TaxonRelationshipType.dict.each do |type|
