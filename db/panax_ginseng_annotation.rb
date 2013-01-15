@@ -1,5 +1,5 @@
 #paste into rails console to get both generic + specific annotation for Panax ginseng
-tc = TaxonConcept.where("data->'full_name' = 'Panax ginseng'").first
+tc = TaxonConcept.where(:full_name => 'Panax ginseng').first
 lc1 = tc.listing_changes.where(:effective_at => '2000-07-19').first
 lc2 = tc.listing_changes.where(:effective_at => '2007-09-13').first
 

@@ -29,7 +29,7 @@ shared_context "Hirudo medicinalis" do
      :effective_at => '1987-10-22'
     )
 
-    Sapi::rebuild
+    Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

@@ -95,7 +95,7 @@ shared_context "Caiman latirostris" do
       :full_note => 'Population of AR; included in CROCODYLIA spp.'
     )
 
-    Sapi::rebuild
+    Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

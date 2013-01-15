@@ -23,7 +23,8 @@
 class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :rank_id, :parent_id, :author_year,
     :designation_id, :taxon_name_id, :taxon_name_attributes,
-    :taxonomic_position, :legacy_id, :legacy_type
+    :taxonomic_position, :legacy_id, :legacy_type, :parent_scientific_name
+  attr_writer :parent_scientific_name
 
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore
@@ -57,6 +58,7 @@ class TaxonConcept < ActiveRecord::Base
     :if => :fixed_order_required?
 
   before_validation :check_taxon_name_exists
+  before_validation :check_parent_taxon_name_exists
   before_validation :ensure_taxonomic_position
   before_destroy :check_destroy_allowed
 
@@ -65,8 +67,8 @@ class TaxonConcept < ActiveRecord::Base
   scope :by_scientific_name, lambda { |scientific_name|
     where(
       <<-SQL
-      data->'full_name' >= '#{TaxonName.lower_bound(scientific_name)}'
-        AND data->'full_name' < '#{TaxonName.upper_bound(scientific_name)}'
+      full_name >= '#{TaxonName.lower_bound(scientific_name)}'
+        AND full_name < '#{TaxonName.upper_bound(scientific_name)}'
       SQL
     )
   }
@@ -85,12 +87,13 @@ class TaxonConcept < ActiveRecord::Base
     rank && rank.fixed_order
   end
 
-  def full_name
-    data['full_name']
-  end
-
   def rank_name
     data['rank_name']
+  end
+
+  def parent_scientific_name
+    @parent_scientific_name || 
+    parent && parent.taxon_name && parent.taxon_name.scientific_name
   end
 
   private
@@ -118,6 +121,26 @@ class TaxonConcept < ActiveRecord::Base
       self.taxon_name = tn
       self.taxon_name_id = tn.id
     end
+    true
+  end
+
+  def check_parent_taxon_name_exists
+    return true if @parent_scientific_name.nil?
+    # strip rank from string
+    if @parent_scientific_name =~ /(.+)\s*(#{Rank.dict.join('|')})\s*$/
+      @parent_scientific_name = $1
+    end
+    # strip all but last element of a multinomial
+    if @parent_scientific_name =~ /.+ (.+)$/
+      @parent_scientific_name = $1
+    end
+    p = TaxonConcept.joins(:taxon_name).
+      where(["UPPER(taxon_names.scientific_name) = UPPER(BTRIM(?))", @parent_scientific_name]).first
+    unless p
+      errors.add(:parent_id, "does not exist")
+      return false
+    end
+    self.parent_id = p.id
     true
   end
 

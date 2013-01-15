@@ -33,7 +33,7 @@ CREATE OR REPLACE FUNCTION rebuild_annotation_symbols() RETURNS void
                 SELECT * FROM listing_distributions
                 WHERE listing_changes.id = listing_distributions.listing_change_id AND is_party = 'f'
               )
-          ORDER BY data->'kingdom_name', data->'full_name'
+          ORDER BY data->'kingdom_name', full_name
           )
           SELECT taxon_concept_id, ROW_NUMBER() OVER() AS specific_symbol
           FROM taxon_concepts_with_specific_annotations

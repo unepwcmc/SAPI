@@ -1,5 +1,5 @@
 #paste into rails console to get both generic + specific annotation for Cactaceae
-tc = TaxonConcept.where("data->'full_name' = 'Cactaceae' AND data->'rank_name' = 'FAMILY'").first
+tc = TaxonConcept.where("full_name = 'Cactaceae' AND data->'rank_name' = 'FAMILY'").first
 lc = ListingChange.create(
   :taxon_concept_id => tc.id,
   :effective_at => '2010-06-23',
@@ -8,7 +8,7 @@ lc = ListingChange.create(
 )
 
 lc_exc = ListingChange.create(
-  :taxon_concept_id => TaxonConcept.where("data->'full_name' = 'Pereskia'").first.id,
+  :taxon_concept_id => TaxonConcept.where(:full_name => 'Pereskia').first.id,
   :parent_id => lc.id,
   :effective_at => '2010-06-23',
   :species_listing_id => SpeciesListing.find_by_abbreviation('II').id,
