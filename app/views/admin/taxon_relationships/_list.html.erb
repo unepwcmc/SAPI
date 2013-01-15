@@ -42,7 +42,7 @@
         </a>
       </td>
       <td>
-        <%= link_to 'Delete', resource_url(taxon_relationship),
+        <%= link_to 'Delete', resource_url(taxon_relationship, :type => params[:type]),
           :confirm => "Are you sure?", :method => :delete
         %>
       </td>

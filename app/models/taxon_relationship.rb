@@ -16,11 +16,19 @@ class TaxonRelationship < ActiveRecord::Base
   belongs_to :taxon_concept
   belongs_to :other_taxon_concept, :class_name => 'TaxonConcept'
 
-  validate :taxon_concept_id, :uniqueness => { :scope => [:taxon_relationship_type_id, :other_taxon_concept_id] }
+  validates :taxon_concept_id, :uniqueness => { :scope => [:taxon_relationship_type_id, :other_taxon_concept_id], :message => 'This particular relationship already exists' }
+
   delegate :is_bidirectional?, :to => :taxon_relationship_type
+  before_destroy :destroy_opposite, :if => Proc.new { self.is_bidirectional? && !self.has_opposite? }
+  after_create :create_opposite, :if => Proc.new { self.is_bidirectional? && !self.has_opposite? }
 
-  before_destroy :destroy_opposite
+  def has_opposite?
+    TaxonRelationship.where(:taxon_concept_id => self.other_taxon_concept_id,
+      :other_taxon_concept_id => self.taxon_concept_id,
+      :taxon_relationship_type_id => self.taxon_relationship_type_id).any?
+  end
 
+  private
   def create_opposite
     TaxonRelationship.create(
       :taxon_concept_id => self.other_taxon_concept_id,
@@ -28,7 +36,6 @@ class TaxonRelationship < ActiveRecord::Base
       :taxon_relationship_type_id => self.taxon_relationship_type_id)
   end
 
-  private
   def destroy_opposite
     TaxonRelationship.where(
         :taxon_concept_id => self.other_taxon_concept_id,

@@ -1,5 +1,5 @@
-<%= form_for :taxon_relationship, :url => collection_url, :remote => true do |f| %>
-  <%= error_messages_for(@change_type) %>
+<%= form_for :taxon_relationship, :url => collection_url(:type => params[:type]), :remote => true do |f| %>
+  <%= error_messages_for(@taxon_relationship) %>
   <%= f.hidden_field :taxon_concept_id, :value => @taxon_concept.id %>
   <%= f.hidden_field :other_taxon_concept_id %>
   <ul class="relationship_parts">
@@ -10,13 +10,18 @@
       </div>
     </li>
     <li>
-      <%= f.select :taxon_relationship_type_id, options_from_collection_for_select(@taxon_relationship_types, :id, :name) %>
-      <a id="swap_taxa" class="btn btn-block" href="#"><i class='icon-refresh'></i> Swap</a>
+    <%= f.select :taxon_relationship_type_id, options_from_collection_for_select(
+      @taxon_relationship_types,
+      :id,
+      :name,
+      @taxon_relationship ? @taxon_relationship.try(:taxon_relationship_type_id) : @taxon_relationship_types.find_by_name(params[:type]).try(:id)
+    ) %>
+      <a id="swap-taxa" class="btn btn-block" href="#"><i class='icon-refresh'></i> Swap</a>
     </li>
     <li id="right">
       <div class="elements">
         <%= select_tag :designation_id, options_from_collection_for_select(@designations, :id, :name), :class => "designation_selector" %><br />
-        <input type="text" class="tr_autocomplete"><br />
+        <input type="text" class="tr-autocomplete"><br />
       </div>
     </li>
   </ul>
