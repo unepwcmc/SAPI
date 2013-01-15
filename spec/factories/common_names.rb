@@ -1,8 +1,8 @@
 FactoryGirl.define do
 
   factory :language do
-    name_en 'English'
-    iso_code1 'E'
+    sequence(:name_en) { |n| "lng#{n}" }
+    sequence(:iso_code1) { |n| "#{n.chr}#{(n+1).chr}" }
   end
 
   factory :common_name do
