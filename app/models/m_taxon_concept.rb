@@ -6,6 +6,7 @@
 #  parent_id                        :integer
 #  designation_is_cites             :boolean
 #  full_name                        :string(255)
+#  name_status                      :string(255)
 #  rank_name                        :text
 #  cites_accepted                   :boolean
 #  kingdom_position                 :integer
@@ -26,7 +27,6 @@
 #  genus_id                         :integer
 #  species_id                       :integer
 #  subspecies_id                    :integer
-#  cites_name_status                :string
 #  cites_fully_covered              :boolean
 #  cites_listed                     :boolean
 #  cites_deleted                    :boolean
@@ -72,7 +72,7 @@ class MTaxonConcept < ActiveRecord::Base
   scope :without_nc, where(
     <<-SQL
     (cites_deleted <> 't' OR cites_deleted IS NULL)
-    AND cites_listed IS NOT NULL AND cites_name_status = 'A'
+    AND cites_listed IS NOT NULL AND name_status = 'A'
     SQL
   )
 

@@ -127,7 +127,7 @@ CREATE OR REPLACE FUNCTION rebuild_names_and_ranks() RETURNS void
     root_id integer;
   BEGIN
     FOR root_id IN SELECT id FROM taxon_concepts
-    WHERE parent_id IS NULL AND data->'cites_name_status' = 'A'
+    WHERE parent_id IS NULL AND name_status = 'A'
     LOOP
       PERFORM rebuild_names_and_ranks_from_root(root_id);
     END LOOP;

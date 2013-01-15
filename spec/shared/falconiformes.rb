@@ -20,7 +20,7 @@ shared_context "Falconiformes" do
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Californianus'),
       :parent => @genus1_1,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
     @genus1_2 = create(
       :genus,
@@ -31,7 +31,7 @@ shared_context "Falconiformes" do
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Papa'),
       :parent => @genus1_2,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
     @genus1_3 = create(
       :genus,
@@ -43,7 +43,7 @@ shared_context "Falconiformes" do
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Atratus'),
       :parent => @genus1_3,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
     @family2 = create(
       :family,
@@ -59,13 +59,13 @@ shared_context "Falconiformes" do
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Araeus'),
       :parent => @genus2_1,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
     @species2_2 = create(
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Alopex'),
       :parent => @genus2_1,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
 
     l1 = create(

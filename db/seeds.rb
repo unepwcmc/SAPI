@@ -240,7 +240,8 @@ higher_taxa.each do |kingdom_props|
   kingdom = TaxonConcept.create(:rank_id => kingdom_rank_id,
     :taxon_name_id => name.id, :designation_id => cites.id,
     :legacy_id => kingdom_props[:legacy_id], :legacy_type => kingdom_props[:legacy_type],
-    :taxonomic_position => kingdom_props[:taxonomic_position])
+    :taxonomic_position => kingdom_props[:taxonomic_position],
+    :name_status => 'A')
   phyla = kingdom_props[:sub_taxa]
   phylum_rank_id = Rank.find_by_name(Rank::PHYLUM).id
   phyla.each do |phylum_props|
@@ -250,7 +251,8 @@ higher_taxa.each do |kingdom_props|
       :taxon_name_id => name.id, :designation_id => cites.id,
       :legacy_id => phylum_props[:legacy_id], :legacy_type => phylum_props[:legacy_type],
       :parent_id => kingdom.id,
-      :taxonomic_position => phylum_props[:taxonomic_position])
+      :taxonomic_position => phylum_props[:taxonomic_position],
+      :name_status => 'A')
     klasses = phylum_props[:sub_taxa]
     klass_rank_id = Rank.find_by_name(Rank::CLASS).id
     klasses.each do |klass_props|
@@ -262,7 +264,8 @@ higher_taxa.each do |kingdom_props|
       :taxon_name_id => name.id, :designation_id => cites.id,
       :legacy_id => klass_props[:legacy_id], :legacy_type => klass_props[:legacy_type],
       :parent_id => phylum.id,
-      :taxonomic_position => klass_props[:taxonomic_position])
+      :taxonomic_position => klass_props[:taxonomic_position],
+      :name_status => 'A')
     end
   end
 end

@@ -21,7 +21,7 @@ shared_context "Caiman latirostris" do
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Latirostris'),
       :parent => @genus,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
     @genus1 = create(
       :genus,
@@ -32,7 +32,7 @@ shared_context "Caiman latirostris" do
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Cynocephalus'),
       :parent => @genus1,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
 
     create(

@@ -19,12 +19,13 @@
 #  notes              :text
 #  taxonomic_position :string(255)      default("0"), not null
 #  full_name          :string(255)
+#  name_status        :string(255)      default("A"), not null
 #
 
 class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :designation_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
-    :legacy_id, :legacy_type,
+    :legacy_id, :legacy_type, :full_name, :name_status,
     :taxon_name_attributes, :common_names_attributes,
     :parent_scientific_name
   attr_writer :parent_scientific_name

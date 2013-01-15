@@ -31,7 +31,7 @@ shared_context "Arctocephalus" do
         create(:french_common_name, :name => 'Otaries à fourrure'),
         create(:french_common_name, :name => 'Otaries à fourrure du sud')
       ],
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
     @species1 = create(
       :species,
@@ -44,7 +44,7 @@ shared_context "Arctocephalus" do
         create(:spanish_common_name, :name => 'Oso marino austral'),
         create(:french_common_name, :name => 'Otarie à fourrure australe')
       ],
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
     @species2 = create(
       :species,
@@ -58,13 +58,13 @@ shared_context "Arctocephalus" do
         create(:french_common_name, :name => 'Arctocéphale de Guadalupe'),
         create(:french_common_name, :name => 'Otarie à fourrure d\'Amérique')
       ],
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
     @species3 = create(
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Pusillus'),
       :parent => @genus,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
 
     create(

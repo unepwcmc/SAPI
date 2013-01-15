@@ -6,6 +6,7 @@
 #  parent_id                        :integer
 #  designation_is_cites             :boolean
 #  full_name                        :string(255)
+#  name_status                      :string(255)
 #  rank_name                        :text
 #  cites_accepted                   :boolean
 #  kingdom_position                 :integer
@@ -26,7 +27,6 @@
 #  genus_id                         :integer
 #  species_id                       :integer
 #  subspecies_id                    :integer
-#  cites_name_status                :string
 #  cites_fully_covered              :boolean
 #  cites_listed                     :boolean
 #  cites_deleted                    :boolean

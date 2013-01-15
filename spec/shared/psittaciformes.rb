@@ -20,7 +20,7 @@ shared_context "Psittaciformes" do
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Aterrimus'),
       :parent => @genus1_1,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
     @genus1_2 = create(
       :genus,
@@ -31,13 +31,13 @@ shared_context "Psittaciformes" do
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Goffiniana'),
       :parent => @genus1_2,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
     @species1_2_2 = create(
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Ducorpsi'),
       :parent => @genus1_2,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
     @family2 = create(
       :family,
@@ -53,13 +53,13 @@ shared_context "Psittaciformes" do
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Roseicollis'),
       :parent => @genus2_1,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
     @species2_1_2 = create(
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Canus'),
       :parent => @genus2_1,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
     @genus2_2 = create(
       :genus,
@@ -70,7 +70,7 @@ shared_context "Psittaciformes" do
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Aestiva'),
       :parent => @genus2_2,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
     @genus2_3 = create(
       :genus,
@@ -81,7 +81,7 @@ shared_context "Psittaciformes" do
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Krameri'),
       :parent => @genus2_3,
-      :data => {:cites_name_status => 'A'}
+      :name_status => 'A'
     )
 
     ghana = create(

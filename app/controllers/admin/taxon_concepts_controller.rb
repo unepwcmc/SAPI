@@ -57,7 +57,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     def collection
       @taxon_concepts ||= end_of_association_chain.
         includes([:rank, :designation, :taxon_name, :parent]).
-        where("data->'cites_name_status' = 'A'" ).
+        where(:name_status => 'A').
         order(:taxonomic_position).page(params[:page])
     end
 end
