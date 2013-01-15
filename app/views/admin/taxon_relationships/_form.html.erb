@@ -1,4 +1,4 @@
-<%= form_for :taxon_relationship, :url => collection_url, :remote => true do |f| %>
+<%= form_for :taxon_relationship, :url => collection_url(:type => params[:type]), :remote => true do |f| %>
   <%= error_messages_for(@taxon_relationship) %>
   <%= f.hidden_field :taxon_concept_id, :value => @taxon_concept.id %>
   <%= f.hidden_field :other_taxon_concept_id %>

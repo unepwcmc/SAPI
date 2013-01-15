@@ -14,7 +14,7 @@ class TaxonRelationshipType < ActiveRecord::Base
   attr_accessible :name, :is_inter_designational, :is_bidirectional
 
   include Dictionary
-  build_dictionary :equal_to, :includes, :included_in, :overlaps, :disjunct, :has_homonym, :has_synonym
+  build_dictionary :equal_to, :includes, :overlaps, :disjunct, :has_homonym, :has_synonym
 
   scope :inter_designational, where(:is_inter_designational => true)
   scope :intra_designational, where(:is_inter_designational => false)
