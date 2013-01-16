@@ -231,7 +231,7 @@ Calculating the current listing is carried out by a set of stored procedures whi
 
 TODO: the cites_show flag should be calculated properly to allow for filtering the checklist using that flag only
 
-==== Description of the listing flags ====
+==== Description of the listing flags
 
 # TODO clean up the listing flags description
 
