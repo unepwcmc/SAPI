@@ -37,6 +37,8 @@ class TaxonConcept < ActiveRecord::Base
   belongs_to :designation
   belongs_to :taxon_name
   has_many :taxon_relationships, :dependent => :destroy
+  has_many :inverse_taxon_relationships, :class_name => 'TaxonRelationship',
+    :foreign_key => :other_taxon_concept_id, :dependent => :destroy
   has_many :related_taxon_concepts, :class_name => 'TaxonConcept',
     :through => :taxon_relationships
   has_many :taxon_concept_geo_entities
@@ -99,6 +101,12 @@ class TaxonConcept < ActiveRecord::Base
   def parent_scientific_name
     @parent_scientific_name || 
     parent && parent.taxon_name && parent.taxon_name.scientific_name
+  end
+
+  def accepted_taxon_concept
+     inverse_taxon_relationships.joins(:taxon_relationship_type).
+       where("taxon_relationship_types.name = '#{TaxonRelationshipType::HAS_SYNONYM}'").
+       includes(:other_taxon_concept).first.taxon_concept
   end
 
   private
