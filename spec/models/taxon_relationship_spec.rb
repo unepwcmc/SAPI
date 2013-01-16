@@ -24,12 +24,8 @@ describe TaxonRelationship do
     context 'with an opposite' do
       TaxonRelationship.delete_all
       TaxonRelationshipType.delete_all
-      let(:taxon_relationship_type) {create(:taxon_relationship_type, :is_bidirectional => false)}
+      let(:taxon_relationship_type) {create(:taxon_relationship_type, :is_bidirectional => true)}
       let(:taxon_relationship) { create(:taxon_relationship, :taxon_relationship_type_id => taxon_relationship_type.id) }
-      let!(:taxon_relationship2) { create(:taxon_relationship, 
-                                          :taxon_concept_id => taxon_relationship.other_taxon_concept_id,
-                                          :other_taxon_concept_id => taxon_relationship.taxon_concept_id,
-                                          :taxon_relationship_type_id => taxon_relationship_type.id )}
       specify { taxon_relationship.has_opposite?.should == true }
     end
   end

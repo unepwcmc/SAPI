@@ -22,7 +22,7 @@ class TaxonRelationship < ActiveRecord::Base
   before_destroy :destroy_opposite, :if => Proc.new { self.is_bidirectional? && self.has_opposite? }
   after_create :create_opposite, :if => Proc.new { self.is_bidirectional? && !self.has_opposite? }
 
-  validates :taxon_concept_id, :uniqueness => { :scope => [:taxon_relationship_type_id, :other_taxon_concept_id], :message => 'This particular relationship already exists' }
+  validates :taxon_concept_id, :uniqueness => { :scope => [:taxon_relationship_type_id, :other_taxon_concept_id], :message => 'This relationship already exists, choose another taxa.' }
   validate :interdesignational_relationship_uniqueness, :if => "taxon_relationship_type.is_interdesignational?"
 
   def opposite
@@ -51,12 +51,19 @@ class TaxonRelationship < ActiveRecord::Base
       delete_all
   end
 
+  #A taxon concept can only be related with another taxon concept through
+  # ONE interdesignational Taxon Relationship. Unless the TaxonRelationships
+  # share the same TaxonRelationshipType and this is bidirectional
   def interdesignational_relationship_uniqueness
     if TaxonRelationship.where(:taxon_concept_id => self.taxon_concept_id,
          :other_taxon_concept_id => self.other_taxon_concept_id).
          joins(:taxon_relationship_type).
-         where(:taxon_relationship_types => { :is_interdesignational => true }).any? == true
-      errors.add(:taxon_concept_id, "these taxon are already related through another relationship")
+         where(:taxon_relationship_types => { :is_interdesignational => true }).any? ||
+      TaxonRelationship.where(:taxon_concept_id => self.other_taxon_concept_id,
+         :other_taxon_concept_id => self.taxon_concept_id).
+         joins(:taxon_relationship_type).
+         where(:taxon_relationship_types => { :is_interdesignational => true }).where('taxon_relationship_types.id <> ?', self.taxon_relationship_type_id).any?
+      errors.add(:taxon_concept_id, "these taxon are already related through another relationship.")
     end
   end
 end
