@@ -32,7 +32,7 @@ shared_context "Caiman latirostris" do
       :species,
       :taxon_name => create(:taxon_name, :scientific_name => 'Cynocephalus'),
       :parent => @genus1,
-      :name_status => 'A'
+      :name_status => 'S'
     )
 
     create(

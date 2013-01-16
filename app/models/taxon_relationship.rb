@@ -14,7 +14,8 @@ class TaxonRelationship < ActiveRecord::Base
   attr_accessible :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id
   belongs_to :taxon_relationship_type
   belongs_to :taxon_concept
-  belongs_to :other_taxon_concept, :class_name => 'TaxonConcept'
+  belongs_to :other_taxon_concept, :class_name => 'TaxonConcept',
+    :foreign_key => :other_taxon_concept_id
 
   validates :taxon_concept_id, :uniqueness => { :scope => [:taxon_relationship_type_id, :other_taxon_concept_id], :message => 'This particular relationship already exists' }
 
