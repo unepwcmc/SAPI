@@ -11,17 +11,15 @@
 <tbody>
   <% collection.each do |listing_change| -%>
     <tr>
+      <td><%= listing_change.species_listing.name %></td>
+      <td><%= listing_change.change_type.name %></td>
+      <td><%= listing_change.annotation.try(:id) %></td>
+      <td><%= listing_change.effective_at.strftime('%d/%B/%Y') %></td>
+      <td><%= listing_change.is_current %></td>
+      <td><%= listing_change.inclusion_taxon_concept_id %></td>
+      <td><%= listing_change.parent_id %></td>
       <td>
-        <%= listing_change.species_listing.name %> 
-      </td>
-      <td>
-        <%= listing_change.change_type.name %>
-      </td>
-      <td>
-        <%= listing_change.other_taxon_concept.full_name %>
-      </td>
-      <td>
-        <%= link_to 'Delete', resource_url(listing_change, :type => params[:type]),
+        <%= link_to 'Delete', admin_listing_change_path(listing_change),
           :confirm => "Are you sure?", :method => :delete
         %>
       </td>

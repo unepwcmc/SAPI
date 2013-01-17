@@ -5,7 +5,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   protected
   def collection
     @listing_changes ||= end_of_association_chain.
-      order('effective_at desc').
+      order('effective_at desc, is_current desc').
       page(params[:page])
   end
 end

@@ -29,8 +29,9 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
 
   def destroy
     @taxon_relationship = TaxonRelationship.find(params[:id])
+    type = @taxon_relationship.taxon_relationship_type.name
     destroy! do |success, failure|
-      success.html { redirect_to collection_url(:type => params[:type]), :notice => 'Operation succeeded' }
+      success.html { redirect_to collection_url(:type => type), :notice => 'Operation succeeded' }
     end
   end
 
