@@ -1,4 +1,4 @@
-<%= form_for :taxon_concept, :url => admin_taxon_concepts_url, :remote => true do |f| %>
+<%= form_for :taxon_concept, :url => admin_taxon_concepts_url, :remote => true, :namespace => 'synonym' do |f| %>
   <%= error_messages_for(@taxon_concept) %>
   <%= f.hidden_field :name_status, :value => 'S'%>
   <div class="control-group">

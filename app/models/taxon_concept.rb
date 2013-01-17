@@ -217,9 +217,11 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def can_be_deleted?
+    puts taxon_commons.inspect
     taxon_relationships.count == 0 &&
     children.count == 0 &&
-    listing_changes.count == 0
+    listing_changes.count == 0 &&
+    taxon_commons.count == 0
   end
 
 end

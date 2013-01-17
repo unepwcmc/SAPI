@@ -28,16 +28,11 @@
       <%= render "form" %>
     </div>
     <div class="span4">
-      <h3>Common Names</h3>
-
-      <%= form_for :taxon_concept, :url => collection_url, :remote => true do |f| %>
-        <label>Taxon Concept</label>
-        <%= f.text_field :parent_id, :class => 'typeahead', :"data-source" => taxon_concepts_autocomplete_url %>
-      <% end %>
-
+      <h3>Synonyms</h3>
+      <%= render "synonym_form" %>
       <hr>
 
-      <div class="common-names-list">
+      <div class="synonyms-list">
       </div>
     </div>
     <div class="span4">

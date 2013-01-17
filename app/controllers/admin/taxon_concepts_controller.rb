@@ -39,7 +39,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   end
 
   def autocomplete
-    @taxon_concepts = TaxonConcept.
+    @taxon_concepts = TaxonConcept.where(:name_status => 'A').
       select("data, #{TaxonConcept.table_name}.id, full_name, #{Designation.table_name}.name AS designation_name").
       joins(:designation)
     if params[:scientific_name]
