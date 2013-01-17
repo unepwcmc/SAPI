@@ -1,0 +1,25 @@
+<%= form_for :taxon_concept, :url => collection_url, :remote => true do |f| %>
+  <%= error_messages_for(@taxon_concept) %>
+  <div class="control-group">
+    <label>Designation</label>
+    <%= f.select :designation_id, options_from_collection_for_select(@designations, :id, :name) %>
+  </div>
+  <div class="control-group">
+    <label>Rank</label>
+    <%= f.select :rank_id, options_from_collection_for_select(@ranks, :id, :name) %>
+  </div>
+  <div class="control-group">
+    <label>Parent</label>
+    <%= f.text_field :accepted_scientific_name, :class => 'typeahead' %>
+  </div>
+  <div class="control-group">
+    <%= f.fields_for :taxon_name_attributes do |ff| %>
+      <label>Scientific name</label>
+      <%= ff.text_field :scientific_name %>
+    <% end %>
+  </div>
+  <div class="control-group">
+    <label>Author & year</label>
+    <%= f.text_field :author_year %>
+  </div>
+<% end %>

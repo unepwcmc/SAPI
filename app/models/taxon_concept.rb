@@ -27,8 +27,9 @@ class TaxonConcept < ActiveRecord::Base
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
     :taxon_name_attributes, :common_names_attributes,
+    :accepted_scientific_name,
     :parent_scientific_name
-  attr_writer :parent_scientific_name
+  attr_writer :parent_scientific_name, :accepted_scientific_name
 
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore
@@ -66,6 +67,7 @@ class TaxonConcept < ActiveRecord::Base
 
   before_validation :check_taxon_name_exists
   before_validation :check_parent_taxon_name_exists
+  before_validation :check_accepted_taxon_name_exists
   before_validation :ensure_taxonomic_position
   before_destroy :check_destroy_allowed
 
@@ -104,9 +106,9 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def accepted_taxon_concept
-     inverse_taxon_relationships.joins(:taxon_relationship_type).
-       where("taxon_relationship_types.name = '#{TaxonRelationshipType::HAS_SYNONYM}'").
-       includes(:other_taxon_concept).first.taxon_concept
+    inverse_taxon_relationships.joins(:taxon_relationship_type).
+      where("taxon_relationship_types.name = '#{TaxonRelationshipType::HAS_SYNONYM}'").
+      includes(:other_taxon_concept).first.taxon_concept
   end
 
   private
@@ -137,6 +139,26 @@ class TaxonConcept < ActiveRecord::Base
     true
   end
 
+  def check_accepted_taxon_name_exists
+    if @accepted_scientific_name =~ /(.+)\s*(#{Rank.dict.join('|')})\s*$/
+      @accepted_scientific_name = $1
+    end
+
+    if @accepted_scientific_name =~ /.+ (.+)$/
+      @accepted_scientific_name = $1
+    end
+
+    p = TaxonConcept.joins(:taxon_name).
+      where(["UPPER(taxon_names.scientific_name) = UPPER(BTRIM(?))", @accepted_scientific_name]).first
+    unless p
+      errors.add(:parent_id, "does not exist")
+      return false
+    end
+
+    inverse_taxon_relationships.build(
+      :taxon_concept_id => p.id)
+  end
+
   def check_parent_taxon_name_exists
     return true if @parent_scientific_name.nil?
     # strip rank from string
@@ -154,6 +176,7 @@ class TaxonConcept < ActiveRecord::Base
       return false
     end
     self.parent_id = p.id
+
     true
   end
 
