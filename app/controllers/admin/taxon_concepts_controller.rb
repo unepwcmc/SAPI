@@ -48,7 +48,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     if params[:designation_id]
       @taxon_concepts = @taxon_concepts.where(:designation_id => params[:designation_id])
     end
-    if params[:rank_id]
+    if params[:rank_id] && params[:name_status] == 'A'
       rank = Rank.find(params[:rank_id])
       @taxon_concepts = @taxon_concepts.at_parent_ranks(rank)
     end

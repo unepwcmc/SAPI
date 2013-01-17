@@ -63,13 +63,12 @@ class TaxonConceptsEditor extends AdminInPlaceEditor
     super
     $('.typeahead').typeahead
       source: (query, process) =>
-        designation_id = $('#taxon_concept_designation_id').attr('value')
-        rank_id = $('#taxon_concept_rank_id').attr('value')
         $.get('/admin/taxon_concepts/autocomplete',
         {
           scientific_name: query,
-          designation_id: designation_id,
-          rank_id: rank_id,
+          designation_id: $('#taxon_concept_designation_id').attr('value'),
+          rank_id: $('#taxon_concept_rank_id').attr('value'),
+          name_status: $('#taxon_concept_name_status').attr('value'),
           limit: 25
         }, (data) =>
           labels = []
