@@ -25,6 +25,7 @@ SAPI::Application.routes.draw do
     resources :change_types, :only => [:index, :create, :update, :destroy]
     resources :ranks, :only => [:index, :create, :update, :destroy]
     resources :geo_entities, :only => [:index, :create, :update, :destroy] do
+      get :autocomplete, :on => :collection
       resources :geo_relationships, :only => [:index, :create, :update, :destroy]
     end
     resources :taxon_concepts, :only => [:index, :create, :edit, :update, :destroy] do

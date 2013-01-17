@@ -9,6 +9,8 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   end
 
   def edit
+    @designations = Designation.order(:name)
+    @ranks = Rank.order(:taxonomic_position)
     edit! do
       @languages = Language.order(:name_en)
     end
