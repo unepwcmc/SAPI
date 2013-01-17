@@ -15,6 +15,7 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
   end
 
   def create
+    @taxon_relationship = TaxonRelationship.new(params[:taxon_relationship])
     create! do |success, failure|
       success.js { render 'create' }
       failure.js {
@@ -27,6 +28,7 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
   end
 
   def destroy
+    @taxon_relationship = TaxonRelationship.find(params[:id])
     destroy! do |success, failure|
       success.html { redirect_to collection_url(:type => params[:type]), :notice => 'Operation succeeded' }
     end

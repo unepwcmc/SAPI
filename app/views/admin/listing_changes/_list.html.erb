@@ -1,0 +1,31 @@
+<thead>
+  <th>Listing</th>
+  <th>Change type</th>
+  <th>Annotation</th>
+  <th>Effective at</th>
+  <th>Current</th>
+  <th>Inclusion</th>
+  <th>Parent</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |listing_change| -%>
+    <tr>
+      <td>
+        <%= listing_change.species_listing.name %> 
+      </td>
+      <td>
+        <%= listing_change.change_type.name %>
+      </td>
+      <td>
+        <%= listing_change.other_taxon_concept.full_name %>
+      </td>
+      <td>
+        <%= link_to 'Delete', resource_url(listing_change, :type => params[:type]),
+          :confirm => "Are you sure?", :method => :delete
+        %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>
+
