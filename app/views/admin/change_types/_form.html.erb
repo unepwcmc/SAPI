@@ -1,5 +1,8 @@
 <%= form_for :change_type, :url => collection_url, :remote => true do |f| %>
   <%= error_messages_for(@change_type) %>
-  <label>Designation</label><%= f.select :designation_id, options_from_collection_for_select(@designations, :id, :name) %><br />
+  <label>Designation</label>
+  <%= f.select :designation_id,
+    options_from_collection_for_select(@designations, :id, :name, @change_type && @change_type.designation_id)
+  %><br />
   <label>Name</label><%= f.text_field :name %><br />
 <% end %>

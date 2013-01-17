@@ -14,7 +14,9 @@ Parent: <%= @taxon_concept.parent.try(:full_name) %><br>
       <label>Name</label>
       <%= ff.text_field :name %>
       <label>Language</label>
-      <%= ff.select :language_id, options_from_collection_for_select(@languages, :id, :name_en) %>
+      <%= ff.select :language_id,
+        options_from_collection_for_select(@languages, :id, :name_en, ff.object.language_id )
+      %>
       <%= ff.link_to_remove "Remove this common name" %>
   <% end%>
   <p><%= f.link_to_add "Add a common name", :common_names %></p>

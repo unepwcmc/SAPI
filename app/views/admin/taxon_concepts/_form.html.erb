@@ -3,11 +3,15 @@
   <%= error_messages_for(@taxon_concept) %>
   <div class="control-group">
     <label>Designation</label>
-    <%= f.select :designation_id, options_from_collection_for_select(@designations, :id, :name) %>
+    <%= f.select :designation_id,
+      options_from_collection_for_select(@designations, :id, :name, @taxon_concept && @taxon_concept.designation_id)
+    %>
   </div>
   <div class="control-group">
     <label>Rank</label>
-    <%= f.select :rank_id, options_from_collection_for_select(@ranks, :id, :name) %>
+    <%= f.select :rank_id,
+      options_from_collection_for_select(@ranks, :id, :name, @taxon_concept && @taxon_concept.rank_id)
+    %>
   </div>
   <div class="control-group">
     <label>Parent</label>
