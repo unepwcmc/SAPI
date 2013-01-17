@@ -3,7 +3,9 @@
   <%= error_messages_for(@geo_entity) %>
 
   <label>Geo entity type</label>
-  <%= f.select :geo_entity_type_id, options_from_collection_for_select(@geo_entity_types, :id, :name) %><br />
+  <%= f.select :geo_entity_type_id,
+    options_from_collection_for_select(@geo_entity_types, :id, :name, @geo_entity && @geo_entity.geo_entity_type_id)
+  %><br />
   <label>Iso code 2</label><%= f.text_field :iso_code2 %><br />
   <label>Iso code 3</label><%= f.text_field :iso_code3 %><br />
   <p>Name</p>

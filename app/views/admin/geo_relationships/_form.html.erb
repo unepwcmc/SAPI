@@ -1,9 +1,15 @@
 <%= form_for :geo_relationship, :url => collection_url, :remote => true do |f| %>
-  <%= error_messages_for(@change_type) %>
+  <%= error_messages_for(@geo_relationship) %>
   <label>Geo entity</label>
-  <%= f.select :geo_entity_id, options_from_collection_for_select(@geo_entities, :id, :name) %>
+  <%= f.select :geo_entity_id,
+    options_from_collection_for_select(@geo_entities, :id, :name, @geo_relationship && @geo_relationship.geo_entity_id)
+  %>
   <label>Relationship type</label>
-  <%= f.select :geo_relationship_type_id, options_from_collection_for_select(@geo_relationship_types, :id, :name) %><br />
+  <%= f.select :geo_relationship_type_id,
+    options_from_collection_for_select(@geo_relationship_types, :id, :name, @geo_relationship && @geo_relationship.geo_relationship_type_id)
+  %><br />
   <label>Related geo entity</label>
-  <%= f.select :other_geo_entity_id, options_from_collection_for_select(@geo_entities, :id, :name) %>
+  <%= f.select :other_geo_entity_id,
+    options_from_collection_for_select(@geo_entities, :id, :name, @geo_relationship && @geo_relationship.other_geo_entity_id)
+  %>
 <% end %>
