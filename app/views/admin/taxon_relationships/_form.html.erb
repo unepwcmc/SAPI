@@ -11,10 +11,8 @@
     </li>
     <li>
     <%= f.select :taxon_relationship_type_id, options_from_collection_for_select(
-      @taxon_relationship_types,
-      :id,
-      :name,
-      @taxon_relationship ? @taxon_relationship.try(:taxon_relationship_type_id) : @taxon_relationship_types.find_by_name(params[:type]).try(:id)
+      @taxon_relationship_types, :id, :name,
+      @taxon_relationship ? @taxon_relationship.try(:taxon_relationship_type_id) : @taxon_relationship_types.find_by_name(params[:type]||"EQUAL_TO").try(:id)
     ) %>
       <a id="swap-taxa" class="btn btn-block" href="#"><i class='icon-refresh'></i> Swap</a>
     </li>
