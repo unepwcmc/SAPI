@@ -116,9 +116,10 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def accepted_taxon_concept
-    inverse_taxon_relationships.joins(:taxon_relationship_type).
+    rel = inverse_taxon_relationships.joins(:taxon_relationship_type).
       where("taxon_relationship_types.name = '#{TaxonRelationshipType::HAS_SYNONYM}'").
-      includes(:other_taxon_concept).first.taxon_concept
+      includes(:other_taxon_concept)
+    rel.size > 0 ? rel.first.taxon_concept : nil
   end
 
   private
@@ -178,7 +179,7 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def check_parent_taxon_name_exists
-    return true if @parent_scientific_name.nil?
+    return true if @parent_scientific_name.blank?
     @parent_scientific_name = TaxonConcept.normalize_full_name(@parent_scientific_name)
 
     p = TaxonConcept.
