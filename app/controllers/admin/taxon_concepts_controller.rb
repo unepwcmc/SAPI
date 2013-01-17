@@ -17,9 +17,12 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   end
 
   def create
-    @designations = Designation.order(:name)
-    @ranks = Rank.order(:taxonomic_position)
-    super
+    create! do |success, failure|
+      @designations = Designation.order(:name)
+      @ranks = Rank.order(:taxonomic_position)
+      success.js { render 'create' }
+      failure.js { @taxon_concept.is_synonym? ? render('new_synonym') : render('new') }
+    end
   end
 
   def update

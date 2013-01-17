@@ -64,6 +64,7 @@ class TaxonConcept < ActiveRecord::Base
     :presence => true,
     :format => { :with => /\d(\.\d*)*/, :message => "Use prefix notation, e.g. 1.2" },
     :if => :fixed_order_required?
+  validates :accepted_scientific_name, :presence => true, :if => :is_synonym?
 
   before_validation :check_taxon_name_exists
   before_validation :check_parent_taxon_name_exists
@@ -96,13 +97,22 @@ class TaxonConcept < ActiveRecord::Base
     rank && rank.fixed_order
   end
 
+  def is_synonym?
+    name_status == 'S'
+  end
+
   def rank_name
     data['rank_name']
   end
 
   def parent_scientific_name
     @parent_scientific_name || 
-    parent && parent.taxon_name && parent.taxon_name.scientific_name
+    parent && parent.full_name
+  end
+
+  def accepted_scientific_name
+    @accepted_scientific_name || 
+    accepted_taxon_concept && accepted_taxon_concept.full_name
   end
 
   def accepted_taxon_concept
@@ -112,6 +122,15 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   private
+
+  def self.normalize_full_name(some_full_name)
+    #strip ranks
+    if some_full_name =~ /(.+)\s*(#{Rank.dict.join('|')})\s*$/
+      some_full_name = $1
+    end
+    #strip redundant whitespace between words
+    some_full_name = some_full_name.split(/\s/).join(' ').capitalize
+  end
 
   def parent_in_same_designation
     return true unless parent
@@ -140,43 +159,35 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def check_accepted_taxon_name_exists
-    if @accepted_scientific_name =~ /(.+)\s*(#{Rank.dict.join('|')})\s*$/
-      @accepted_scientific_name = $1
-    end
+    return true if name_status == 'A'
+    return true if @accepted_scientific_name.blank?
+    @accepted_scientific_name = TaxonConcept.normalize_full_name(@accepted_scientific_name)
 
-    if @accepted_scientific_name =~ /.+ (.+)$/
-      @accepted_scientific_name = $1
-    end
-
-    p = TaxonConcept.joins(:taxon_name).
-      where(["UPPER(taxon_names.scientific_name) = UPPER(BTRIM(?))", @accepted_scientific_name]).first
-    unless p
-      errors.add(:parent_id, "does not exist")
-      return false
+    atc = TaxonConcept.
+      where(["UPPER(full_name) = UPPER(BTRIM(?))", @accepted_scientific_name]).first
+    unless atc
+      errors.add(:accepted_scientific_name, "does not exist")
+      return true
     end
 
     inverse_taxon_relationships.build(
-      :taxon_concept_id => p.id)
+      :taxon_concept_id => atc.id,
+      :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
+    )
+    true
   end
 
   def check_parent_taxon_name_exists
     return true if @parent_scientific_name.nil?
-    # strip rank from string
-    if @parent_scientific_name =~ /(.+)\s*(#{Rank.dict.join('|')})\s*$/
-      @parent_scientific_name = $1
-    end
-    # strip all but last element of a multinomial
-    if @parent_scientific_name =~ /.+ (.+)$/
-      @parent_scientific_name = $1
-    end
-    p = TaxonConcept.joins(:taxon_name).
-      where(["UPPER(taxon_names.scientific_name) = UPPER(BTRIM(?))", @parent_scientific_name]).first
+    @parent_scientific_name = TaxonConcept.normalize_full_name(@parent_scientific_name)
+
+    p = TaxonConcept.
+      where(["UPPER(full_name) = UPPER(BTRIM(?))", @parent_scientific_name]).first
     unless p
-      errors.add(:parent_id, "does not exist")
-      return false
+      errors.add(:parent_scientific_name, "does not exist")
+      return true
     end
     self.parent_id = p.id
-
     true
   end
 

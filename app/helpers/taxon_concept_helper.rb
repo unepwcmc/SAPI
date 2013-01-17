@@ -9,7 +9,7 @@ module TaxonConceptHelper
           controller_name.titleize
         end
       ) +
-      link_to("Add new #{controller_name.titleize.singularize} synonym",
+      link_to("Add new synonym",
         "#new-#{controller_name.singularize}-synonym",
         :role => "button", :"data-toggle" => "modal",
         :class => "btn new-button"
@@ -22,7 +22,7 @@ module TaxonConceptHelper
     end
   end
 
-  def admin_new_modal
+  def admin_new_synonym_modal
     content_tag(
       :div,
       :id => "new-#{controller_name.singularize}-synonym",
