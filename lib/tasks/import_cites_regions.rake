@@ -16,7 +16,7 @@ namespace :import do
         FROM #{tmp_table} AS TMP
         WHERE NOT EXISTS (
           SELECT * FROM geo_entities
-          WHERE INITCAP(BTRIM(name)) = INITCAP(BTRIM(TMP.name)) AND geo_entity_type_id = #{regions_type.id}
+          WHERE UPPER(BTRIM(name)) = UPPER(BTRIM(TMP.name)) AND geo_entity_type_id = #{regions_type.id}
         );
       SQL
       ActiveRecord::Base.connection.execute(sql)

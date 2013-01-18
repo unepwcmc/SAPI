@@ -38,66 +38,70 @@ def import_data_for rank, synonyms=nil
       WHERE NOT EXISTS (
         SELECT scientific_name
         FROM taxon_names
-        WHERE INITCAP(scientific_name) LIKE INITCAP(BTRIM(#{TMP_TABLE}.Name))
-      ) AND BTRIM(#{TMP_TABLE}.Name) <> 'NULL' AND BTRIM(#{TMP_TABLE}.Rank) iLIKE '#{rank}' AND BTRIM(#{TMP_TABLE}.Designation) iLIKE '%CITES%'
+        WHERE UPPER(scientific_name) LIKE UPPER(BTRIM(#{TMP_TABLE}.Name))
+      ) AND BTRIM(#{TMP_TABLE}.Name) <> 'NULL' AND BTRIM(#{TMP_TABLE}.Rank) iLIKE '#{rank}' AND
+      ( BTRIM(#{TMP_TABLE}.Designation) iLIKE '%CITES%' OR BTRIM(#{TMP_TABLE}.Designation) iLike '%CMS%')
   SQL
   ActiveRecord::Base.connection.execute(sql)
 
-  cites = Designation.find_by_name(Designation::CITES)
-  sql = <<-SQL
-    INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id, parent_id, created_at, updated_at, author_year, legacy_id, legacy_type, notes, name_status)
-       SELECT
-         tmp.taxon_name_id
-         ,#{rank_id}
-         ,tmp.designation_id
-         ,taxon_concepts.id
-         ,current_date
-         ,current_date
-         ,CASE
-            WHEN tmp.author = 'Null' THEN NULL
-            ELSE tmp.author
-          END
-         ,tmp.legacy_id, 'Animalia', tmp.notes, '#{synonyms ? 'S' : 'A'}'
-       FROM
-        (
-          SELECT DISTINCT taxon_names.id AS taxon_name_id, #{TMP_TABLE}.parent_rank, #{TMP_TABLE}.parent_legacy_id,
-           #{cites.id} AS designation_id, INITCAP(BTRIM(#{TMP_TABLE}.author)) AS author, #{TMP_TABLE}.legacy_id, 'Animalia', #{TMP_TABLE}.notes
-          FROM #{TMP_TABLE}
-          LEFT JOIN taxon_names ON INITCAP(BTRIM(#{TMP_TABLE}.name)) LIKE INITCAP(BTRIM(taxon_names.scientific_name))
-          WHERE NOT EXISTS (
-            SELECT taxon_name_id, rank_id, designation_id
-            FROM taxon_concepts
-            WHERE taxon_concepts.taxon_name_id = taxon_names.id AND
-              taxon_concepts.rank_id = #{rank_id} AND
-              taxon_concepts.designation_id = #{cites.id}
+  [Designation::CITES, Designation::CMS].each do |designation|
+    designation = Designation.find_by_name(designation)
+    sql = <<-SQL
+      INSERT INTO taxon_concepts(taxon_name_id, rank_id, designation_id, parent_id, created_at, updated_at, author_year, legacy_id, legacy_type, notes, name_status)
+         SELECT
+           tmp.taxon_name_id
+           ,#{rank_id}
+           ,tmp.designation_id
+           ,taxon_concepts.id
+           ,current_date
+           ,current_date
+           ,CASE
+              WHEN tmp.author = 'Null' THEN NULL
+              ELSE tmp.author
+            END
+           ,tmp.legacy_id, 'Animalia', tmp.notes, '#{synonyms ? 'S' : 'A'}'
+         FROM
+          (
+            SELECT DISTINCT taxon_names.id AS taxon_name_id, #{TMP_TABLE}.parent_rank, #{TMP_TABLE}.parent_legacy_id,
+             #{designation.id} AS designation_id, INITCAP(BTRIM(#{TMP_TABLE}.author)) AS author, #{TMP_TABLE}.legacy_id, 'Animalia', #{TMP_TABLE}.notes
+            FROM #{TMP_TABLE}
+            LEFT JOIN taxon_names ON UPPER(BTRIM(#{TMP_TABLE}.name)) LIKE UPPER(BTRIM(taxon_names.scientific_name))
+            WHERE NOT EXISTS (
+              SELECT taxon_name_id, rank_id, designation_id
+              FROM taxon_concepts
+              WHERE taxon_concepts.taxon_name_id = taxon_names.id AND
+                taxon_concepts.rank_id = #{rank_id} AND
+                taxon_concepts.designation_id = #{designation.id}
+            )
+            AND taxon_names.id IS NOT NULL
+            AND UPPER(BTRIM(#{TMP_TABLE}.rank)) like UPPER('#{rank}')
+            AND BTRIM(#{TMP_TABLE}.designation) ilike '%#{designation.name}%'
+            #{ unless synonyms then "AND BTRIM(#{TMP_TABLE}.status) like 'A'" end }
+          ) as tmp
+          LEFT JOIN ranks ON UPPER(BTRIM(ranks.name)) LIKE UPPER(BTRIM(tmp.parent_rank))
+          LEFT JOIN taxon_concepts ON (
+            taxon_concepts.legacy_id = tmp.parent_legacy_id AND
+            taxon_concepts.rank_id = ranks.id AND
+            taxon_concepts.legacy_type = 'Animalia' AND
+            taxon_concepts.designation_id = #{designation.id} AND
+            (tmp.parent_rank <> NULL OR tmp.parent_rank <> 'Null')
           )
-          AND taxon_names.id IS NOT NULL
-          AND INITCAP(BTRIM(#{TMP_TABLE}.rank)) like INITCAP('#{rank}')
-          AND BTRIM(#{TMP_TABLE}.designation) ilike '%CITES%'
-          #{ unless synonyms then "AND BTRIM(#{TMP_TABLE}.status) like 'A'" end }
-        ) as tmp
-        LEFT JOIN ranks ON INITCAP(BTRIM(ranks.name)) LIKE INITCAP(BTRIM(tmp.parent_rank))
-        LEFT JOIN taxon_concepts ON (
-          taxon_concepts.legacy_id = tmp.parent_legacy_id AND
-          taxon_concepts.rank_id = ranks.id AND
-          taxon_concepts.legacy_type = 'Animalia' AND
-          (tmp.parent_rank <> NULL OR tmp.parent_rank <> 'Null')
-        )
-        WHERE NOT EXISTS (
-          SELECT * FROM taxon_concepts AS tc2
-          WHERE tc2.taxon_name_id = tmp.taxon_name_id AND
-          tc2.rank_id = #{rank_id} AND
-          tc2.designation_id = tmp.designation_id AND
-          tc2.parent_id = taxon_concepts.id AND
-          tc2.legacy_id = tmp.legacy_id AND
-          tc2.legacy_type = 'Animalia' AND
-          tc2.author_year = CASE
-            WHEN tmp.author = 'Null' THEN NULL
-            ELSE tmp.author
-          END
-        )
-    RETURNING id;
-  SQL
-  ActiveRecord::Base.connection.execute(sql)
-  puts "#{TaxonConcept.where(:rank_id => rank_id).count - existing} #{rank} added"
+          WHERE NOT EXISTS (
+            SELECT * FROM taxon_concepts AS tc2
+            WHERE tc2.taxon_name_id = tmp.taxon_name_id AND
+            tc2.rank_id = #{rank_id} AND
+            tc2.designation_id = tmp.designation_id AND
+            tc2.parent_id = taxon_concepts.id AND
+            tc2.legacy_id = tmp.legacy_id AND
+            tc2.legacy_type = 'Animalia' AND
+            tc2.author_year = CASE
+              WHEN tmp.author = 'Null' THEN NULL
+              ELSE tmp.author
+            END
+          )
+      RETURNING id;
+    SQL
+    ActiveRecord::Base.connection.execute(sql)
+    puts "#{TaxonConcept.where(:rank_id => rank_id).count - existing} #{rank} added"
+  end
 end

@@ -27,7 +27,7 @@ namespace :import do
             SELECT * FROM geo_entities
             WHERE geo_entities.legacy_id = TMP.legacy_id AND geo_entities.legacy_type = '#{GeoEntityType::COUNTRY}'
           )
-          AND INITCAP(BTRIM(TMP.geo_entity)) ilike '#{GeoEntityType::COUNTRY}'
+          AND UPPER(BTRIM(TMP.geo_entity)) ilike UPPER('#{GeoEntityType::COUNTRY}')
       SQL
       ActiveRecord::Base.connection.execute(sql)
       link_countries()

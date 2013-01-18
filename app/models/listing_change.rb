@@ -15,7 +15,6 @@
 #  annotation_id              :integer
 #  is_current                 :boolean          default(FALSE), not null
 #  inclusion_taxon_concept_id :integer
-#  import_row_id              :integer
 #
 
 class ListingChange < ActiveRecord::Base
