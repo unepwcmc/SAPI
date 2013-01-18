@@ -26,21 +26,30 @@ module SimpleCrudHelper
         else
           controller_name.titleize
         end
-      ) +
-      link_to("Add new #{controller_name.titleize.singularize}",
-        "#new-#{controller_name.singularize}",
-        :role => "button", :"data-toggle" => "modal",
-        :class => "btn new-button"
-      )
+      ) + admin_add_new_button
+
     end
   end
 
-  def admin_new_modal
+  def admin_add_new_button(options = {})
+    resource = options[:resource] || controller_name.singularize
+    href = options[:href] || "#new-#{resource}"
+    name = options[:name] || "Add new #{resource.titleize}"
+    link_to(name, href,
+      :role => "button", :"data-toggle" => "modal",
+      :class => "btn new-button"
+    )
+  end
+
+  def admin_new_modal(options = {})
+    resource = options[:resource] || controller_name.singularize
+    id = options[:id] || "new-#{resource}"
+    title = options[:title] || "Add new #{resource.titleize}"
     content_tag(
       :div,
-      :id => "new-#{controller_name.singularize}",
+      :id => id,
       :class => "modal hide fade", :tabindex => "-1", :role => "dialog",
-      :"aria-labelledby" => "new-#{controller_name.singularize}-label",
+      :"aria-labelledby" => "#{id}-label",
       :"aria-hidden" => "true") do
 
       content_tag(:div, :class => "modal-header") do
@@ -49,11 +58,11 @@ module SimpleCrudHelper
           :"aria-hidden" => true
         ){'×'} +
         content_tag(:h3, 
-          :id => "new-#{controller_name.singularize}-label"
-        ){"Add new #{controller_name.titleize.singularize}"}
+          :id => "#{id}-label"
+        ){title}
       end +
       content_tag(
-        :div, :id => "admin-new-record-form", :class => "modal-body"
+        :div, :id => "admin-new-#{resource}-form", :class => "modal-body" #TODO
       ) do
         if block_given?
           yield

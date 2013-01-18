@@ -122,6 +122,12 @@ class TaxonConcept < ActiveRecord::Base
     rel.size > 0 ? rel.first.taxon_concept : nil
   end
 
+  def synonym_taxon_concepts
+    rel = taxon_relationships.joins(:taxon_relationship_type).
+      where("taxon_relationship_types.name = '#{TaxonRelationshipType::HAS_SYNONYM}'").
+      includes(:other_taxon_concept).map(&:other_taxon_concept)
+  end
+
   private
 
   def self.normalize_full_name(some_full_name)

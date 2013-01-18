@@ -9,78 +9,59 @@
   });
 </script>
 
-<h1><%= @taxon_concept.full_name %></h1>
+<h1><%= @taxon_concept.full_name || @taxon_concept.full_name %></h1>
 
 <%= link_to "Taxon Relationships", admin_taxon_concept_taxon_relationships_path(@taxon_concept) %><br>
 
-<%= @taxon_concept.author_year %><br>
+ID: <%= @taxon_concept.id %><br>
+Full name: <%= @taxon_concept.full_name %><br>
+Author & year: <%= @taxon_concept.author_year %><br>
+
+
 
 <ul id="taxon-concept-tabs" class="nav nav-tabs">
   <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
-  <li><a href="#common-names" data-toggle="tab">Common Names</a></li>
   <li><a href="#legislation" data-toggle="tab">Legislation</a></li>
 </ul>
 
 <div class="tab-content">
   <div class="row-fluid tab-pane fade active in" id="details">
-    <div class="span4">
-      <h3>Details</h3>
-      <%= render "form" %>
-    </div>
-    <div class="span4">
-      <h3>Synonyms</h3>
-      <%= render "synonym_form" %>
-      <hr>
 
-      <div class="synonyms-list">
-      </div>
-    </div>
-    <div class="span4">
-      <h3>Distribution</h3>
+    <h3>Details</h3>
+    <%= render "form" %>
 
-      <%= form_tag do %>
-        <label>Geo Entity</label>
-        <%= text_field_tag :geo_entity, nil, :class => 'typeahead geo_entity' %>
-      <% end %>
-
-      <hr>
-
-      <div class="geo-entities-list">
-      </div>
-    </div>
-  </div>
-
-  <div class="row-fluid tab-pane fade" id="common-names">
-    <div class="span12">
-      <%= nested_form_for @taxon_concept, :url => admin_taxon_concept_url(@taxon_concept) do |f| %>
-        <%= error_messages_for(@taxon_concept) %>
-        <%= f.link_to_add "Add a common name", :common_names, :class => '.pull-right' %>
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Language</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <%= f.fields_for :common_names, :wrapper => false do |ff| %>
-              <tr class="fields">
-                <td><%= ff.text_field :name %></td>
-                <td><%= ff.select :language_id, options_from_collection_for_select(@languages, :id, :name_en) %></td>
-                <td>
-                  <%= ff.select :language_id,
-                    options_from_collection_for_select(@languages, :id, :name_en, ff.object.language_id )
-                  %>
-                </td>
-                <td><%= ff.link_to_remove "Remove" %></td>
-              </tr>
-            <% end%>
-          </tbody>
-        </table>
-        <%= f.submit %>
+    <h3>Synonyms</h3>
+    <%= admin_add_new_synonym_button %>
+    <%= admin_new_synonym_modal %>
+    <hr>
+    <div class="synonyms-list">
+      <% @taxon_concept.synonym_taxon_concepts.each do |s| %>
+        <%= s.full_name %> edit delete <br>
       <% end %>
     </div>
+
+    <h3>Common name</h3>
+    <%= admin_add_new_common_name_button %>
+    <%= admin_new_common_name_modal %>
+    <hr>
+    <div class="synonyms-list">
+      <% @taxon_concept.synonym_taxon_concepts.each do |s| %>
+        <%= s.full_name %> edit delete <br>
+      <% end %>
+    </div>
+
+    <h3>Distribution</h3>
+
+    <%= form_tag do %>
+      <label>Geo Entity</label>
+      <%= text_field_tag :geo_entity, nil, :class => 'typeahead geo_entity' %>
+    <% end %>
+
+    <hr>
+
+    <div class="geo-entities-list">
+    </div>
+
   </div>
 
   <div class="row-fluid tab-pane" id="legislation">
