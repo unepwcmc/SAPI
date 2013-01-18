@@ -21,6 +21,11 @@ class ChangeType < ActiveRecord::Base
 
   before_destroy :check_destroy_allowed
 
+  def abbreviation
+    self.name.split('_').
+      map{|a| a[0]}.join('')
+  end
+
   private
 
   def check_destroy_allowed
