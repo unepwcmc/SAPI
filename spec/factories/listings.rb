@@ -16,8 +16,8 @@ FactoryGirl.define do
     change_type
     taxon_concept
     effective_at '2012-01-01'
-    is_current false
-    inclusion_taxon_concept_id nil
+    #is_current false
+    #inclusion_taxon_concept_id nil
     parent_id nil
   end
 

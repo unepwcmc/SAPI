@@ -57,7 +57,7 @@ def import_data_for rank, synonyms=nil
             WHEN tmp.author = 'Null' THEN NULL
             ELSE tmp.author
           END
-         ,tmp.legacy_id, 'Animalia', tmp.notes, #{synonyms ? 'S' : 'A'}
+         ,tmp.legacy_id, 'Animalia', tmp.notes, '#{synonyms ? 'S' : 'A'}'
        FROM
         (
           SELECT DISTINCT taxon_names.id AS taxon_name_id, #{TMP_TABLE}.parent_rank, #{TMP_TABLE}.parent_legacy_id,
