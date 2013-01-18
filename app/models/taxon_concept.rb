@@ -26,7 +26,7 @@ class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :designation_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
-    :taxon_name_attributes, :common_names_attributes,
+    :taxon_name_attributes,
     :accepted_scientific_name,
     :parent_scientific_name
   attr_writer :parent_scientific_name, :accepted_scientific_name
@@ -46,12 +46,11 @@ class TaxonConcept < ActiveRecord::Base
   has_many :geo_entities, :through => :taxon_concept_geo_entities
   has_many :listing_changes
   has_many :species_listings, :through => :listing_changes
-  has_many :taxon_commons, :dependent => :destroy
+  has_many :taxon_commons, :dependent => :destroy, :include => :common_name
   has_many :common_names, :through => :taxon_commons
   has_and_belongs_to_many :references, :join_table => :taxon_concept_references
 
   accepts_nested_attributes_for :taxon_name, :update_only => true
-  accepts_nested_attributes_for :common_names, :allow_destroy => true
 
   validates :designation_id, :presence => true
   validates :rank_id, :presence => true

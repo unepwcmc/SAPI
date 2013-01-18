@@ -33,11 +33,14 @@ module SimpleCrudHelper
 
   def admin_add_new_button(options = {})
     resource = options[:resource] || controller_name.singularize
-    href = options[:href] || "#new-#{resource}"
-    name = options[:name] || "Add new #{resource.titleize}"
+    href = options.delete(:href) || "#new-#{resource}"
+    name = options.delete(:name) || "Add new #{resource.titleize}"
     link_to(name, href,
-      :role => "button", :"data-toggle" => "modal",
-      :class => "btn new-button"
+      {
+        :role => "button",
+        :"data-toggle" => "modal",
+        :class => "btn new-button"
+      }.merge(options)
     )
   end
 

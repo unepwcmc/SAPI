@@ -28,13 +28,17 @@ module TaxonConceptHelper
 
   def admin_add_new_common_name_button
     admin_add_new_button(
-      :resource => 'common_name'
+      :resource => 'common_name',
+      :href => new_admin_taxon_concept_taxon_common_url(@taxon_concept),
+      :remote => true,
+      :"data-toggle" => nil,
+      :role => nil
     )
   end
 
   def admin_new_common_name_modal
     admin_new_modal(
       :resource => 'common_name'
-    ){ render 'common_name_form' }
+    ){ '' }
   end
 end

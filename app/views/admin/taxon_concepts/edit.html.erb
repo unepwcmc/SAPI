@@ -44,10 +44,8 @@ Author & year: <%= @taxon_concept.author_year %><br>
     <%= admin_add_new_common_name_button %>
     <%= admin_new_common_name_modal %>
     <hr>
-    <div class="synonyms-list">
-      <% @taxon_concept.synonym_taxon_concepts.each do |s| %>
-        <%= s.full_name %> edit delete <br>
-      <% end %>
+    <div id="taxon-commons-list">
+      <%= render "admin/taxon_commons/list" %>
     </div>
 
     <h3>Distribution</h3>

@@ -32,6 +32,7 @@ SAPI::Application.routes.draw do
       get :autocomplete, :on => :collection
       resources :taxon_relationships, :only => [:index, :create, :destroy]
       resources :listing_changes, :only => [:index, :create ]
+      resources :taxon_commons, :only => [:new, :create, :edit, :update, :destroy]
     end
     resources :listing_changes, :only => [ :update, :destroy ]
     root :to => 'home#index'
