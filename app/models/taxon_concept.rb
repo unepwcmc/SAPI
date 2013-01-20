@@ -161,6 +161,7 @@ class TaxonConcept < ActiveRecord::Base
       self.taxon_name = tn
       self.taxon_name_id = tn.id
     end
+    self.full_name = taxon_name.scientific_name if name_status == 'S' && taxon_name
     true
   end
 

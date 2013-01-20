@@ -1,21 +1,38 @@
-<%= form_for :taxon_concept, :url => admin_taxon_concepts_url, :remote => true, :namespace => 'synonym' do |f| %>
-  <%= error_messages_for(@taxon_concept) %>
+<%= form_for [:admin, synonym], :remote => true, :namespace => 'synonym' do |f| %>
+  <%= error_messages_for(synonym) %>
   <%= f.hidden_field :name_status, :value => 'S'%>
-  <div class="control-group">
-    <label>Designation</label>
-    <%= f.select :designation_id, options_from_collection_for_select(@designations, :id, :name) %>
-  </div>
+  <% if accepted_taxon_concept %>
+    <%= f.hidden_field :designation_id, :value => accepted_taxon_concept.designation_id %>
+  <% else %>
+    <div class="control-group">
+      <label>Designation</label>
+      <%= f.select :designation_id,
+        options_from_collection_for_select(
+          @designations, :id, :name, synonym && synonym.designation_id
+        )
+      %>
+    </div>
+  <% end %>
   <div class="control-group">
     <label>Rank</label>
-    <%= f.select :rank_id, options_from_collection_for_select(@ranks, :id, :name) %>
+    <%= f.select :rank_id,
+      options_from_collection_for_select(
+        @ranks, :id, :name,
+        synonym && synonym.rank_id || accepted_taxon_concept && accepted_taxon_concept.rank.id
+      )
+    %>
   </div>
+  <% if accepted_taxon_concept %>
+    <%= f.hidden_field :accepted_scientific_name %>
+  <% else %>
+    <div class="control-group">
+      <label>Accepted name</label>
+      <%= f.text_field :accepted_scientific_name, :class => 'typeahead' %>
+    </div>
+  <% end %>
   <div class="control-group">
-    <label>Accepted name</label>
-    <%= f.text_field :accepted_scientific_name, :class => 'typeahead' %>
-  </div>
-  <div class="control-group">
-    <%= f.fields_for :taxon_name_attributes do |ff| %>
-      <label>Scientific name</label>
+    <%= f.fields_for :taxon_name do |ff| %>
+      <label>Synonym</label>
       <%= ff.text_field :scientific_name %>
     <% end %>
   </div>

@@ -32,12 +32,10 @@ Author & year: <%= @taxon_concept.author_year %><br>
 
     <h3>Synonyms</h3>
     <%= admin_add_new_synonym_button %>
-    <%= admin_new_synonym_modal %>
+    <%= admin_new_synonym_modal(@synonym, @taxon_concept) %>
     <hr>
     <div class="synonyms-list">
-      <% @taxon_concept.synonym_taxon_concepts.each do |s| %>
-        <%= s.full_name %> edit delete <br>
-      <% end %>
+      <%= render 'synonym_list' %>
     </div>
 
     <h3>Common name</h3>

@@ -20,10 +20,13 @@ module TaxonConceptHelper
     )
   end
 
-  def admin_new_synonym_modal
+  def admin_new_synonym_modal(synonym = @taxon_concept, accepted_taxon_concept = nil)
     admin_new_modal(
       :resource => 'taxon_concept_synonym'
-    ){ render 'synonym_form' }
+    ){ render 'synonym_form',
+      :synonym => synonym,
+      :accepted_taxon_concept => accepted_taxon_concept
+    }
   end
 
   def admin_add_new_common_name_button

@@ -1,0 +1,4 @@
+$('.modal').modal('hide');
+$('#synonyms-list').html("<%= escape_javascript(render('synonym_list')) %>");
+window.adminInPlaceEditor.initEditors();
+window.adminInPlaceEditor.alertSuccess("Operation successful");

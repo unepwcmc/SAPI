@@ -1,0 +1,6 @@
+<% @taxon_concept.synonym_taxon_concepts.each do |s| %>
+  <%= s.full_name %>
+  <%= link_to 'edit', edit_admin_taxon_concept_url(s), :remote => true %>
+  <%= link_to 'delete', admin_taxon_concept_url(s), :confirm => "Are you sure?", :method => :delete %>
+  <br>
+<% end %>
