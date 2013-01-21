@@ -55,7 +55,7 @@ end
 
 group :staging, :production do
   gem 'exception_notification', :require => 'exception_notifier'
-  gem 'newrelic_rpm', '>=3.5.3.25'
+  gem 'newrelic_rpm', '>=3.5.5'
 end
 
 group :development do

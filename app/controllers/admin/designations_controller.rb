@@ -1,5 +1,4 @@
 class Admin::DesignationsController < Admin::SimpleCrudController
-  inherit_resources
 
   protected
     def collection

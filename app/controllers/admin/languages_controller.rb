@@ -1,5 +1,4 @@
 class Admin::LanguagesController < Admin::SimpleCrudController
-  inherit_resources
 
   protected
     def collection

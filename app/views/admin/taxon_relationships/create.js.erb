@@ -1,10 +1,9 @@
-//update pills
-$("li.active").removeClass("active");
-$("li.trt<%= @taxon_relationship_type.id %>").addClass("active");
-$("#directional_nav").html("<%= escape_javascript(render(:partial => 'directional_nav', :locals => {:taxon_concept => @taxon_concept, :taxon_relationship_type => @taxon_relationship_type})) %>");
-
-$('.modal').modal('hide');
-$('#admin-in-place-editor').html("<%= escape_javascript(render('list')) %>");
-window.adminInPlaceEditor.initEditors();
-window.adminInPlaceEditor.alertSuccess("Operation successful");
+<% if @taxon_relationship_type.name != params[:type] %>
+    window.location = '<%= admin_taxon_concept_taxon_relationships_path(@taxon_concept, :type => @taxon_relationship_type.name) %>';
+<% else %>
+    $('.modal').modal('hide');
+  $('#admin-in-place-editor').html("<%= escape_javascript(render('list')) %>");
+  window.adminInPlaceEditor.initEditors();
+  window.adminInPlaceEditor.alertSuccess("Operation successful");
+<% end %>
 

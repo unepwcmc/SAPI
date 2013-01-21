@@ -1,21 +1,23 @@
 <thead>
-  <th>Listing</th>
-  <th>Change type</th>
+  <th>Appx</th>
+  <th>Type</th>
   <th>Annotation</th>
   <th>Effective at</th>
   <th>Current</th>
+  <th>Geo entities</th>
   <th>Inclusion</th>
   <th>Parent</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
   <% collection.each do |listing_change| -%>
-    <tr>
-      <td><%= listing_change.species_listing.name %></td>
-      <td><%= listing_change.change_type.name %></td>
+    <tr class="<%= if listing_change.is_current? then "current_listing" end %>">
+      <td><%= listing_change.species_listing.abbreviation %></td>
+      <td><%= listing_change.change_type.abbreviation %></td>
       <td><%= listing_change.annotation.try(:id) %></td>
       <td><%= listing_change.effective_at.strftime('%d/%B/%Y') %></td>
       <td><%= listing_change.is_current %></td>
+      <td><%= listing_change.geo_entities.map(&:name).join(',') %></td>
       <td><%= listing_change.inclusion_taxon_concept_id %></td>
       <td><%= listing_change.parent_id %></td>
       <td>

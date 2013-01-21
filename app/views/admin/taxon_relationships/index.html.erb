@@ -8,17 +8,25 @@
 <div style="clear:both"></div>
 
 <ul class="nav nav-pills">
-  <% @taxon_relationship_types.each do |taxon_relationship_type| %>
-    <li class="<%= (@taxon_relationship_type.name == taxon_relationship_type.name ? 'active' : '') %> trt<%= taxon_relationship_type.id %>">
-      <%= link_to taxon_relationship_type.name.titleize, collection_url(:type => taxon_relationship_type.name) %>
+  <% @taxon_relationship_types.map(&:name).each do |taxon_relationship_type| %>
+    <li class="<%= (@taxon_relationship_type.name == taxon_relationship_type ? 'active' : '') %>">
+      <%= link_to taxon_relationship_type.titleize, collection_url(:type => taxon_relationship_type) %>
     </li>
   <% end %>
 </ul>
 <%= admin_new_modal %>
 
-<div id="directional_nav">
-  <%= render :partial => 'directional_nav', :locals => { :taxon_concept => @taxon_concept, :taxon_relationship_type => @taxon_relationship_type } %>
-</div>
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#home">
+    <%= "#{@taxon_concept.full_name} #{@taxon_relationship_type.name} ..." %>
+  </a></li>
+  <% unless @taxon_relationship_type.is_bidirectional? %>
+    <li ><a data-toggle="tab" href="#inverse">
+      <%= "... #{@taxon_relationship_type.name} #{@taxon_concept.full_name}" %>
+    </a></li>
+  <% end %>
+</ul>
+
 
 <div class="tab-content">
   <div id="home" class="tab-pane fade active in">

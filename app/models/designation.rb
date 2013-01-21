@@ -11,7 +11,7 @@
 class Designation < ActiveRecord::Base
   attr_accessible :name
   include Dictionary
-  build_dictionary :cites
+  build_dictionary :cites, :cms
 
   validates :name, :presence => true, :uniqueness => true
   has_many :species_listings
