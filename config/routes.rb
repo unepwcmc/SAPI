@@ -33,6 +33,7 @@ SAPI::Application.routes.draw do
       resources :taxon_relationships, :only => [:index, :create, :destroy]
       resources :listing_changes, :only => [:index, :create ]
       resources :taxon_commons, :only => [:new, :create, :edit, :update, :destroy]
+      resources :synonyms, :only => [:new, :create, :edit, :update, :destroy]
     end
     resources :listing_changes, :only => [ :update, :destroy ]
     root :to => 'home#index'
