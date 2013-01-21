@@ -17,7 +17,7 @@
       <td><%= listing_change.annotation.try(:id) %></td>
       <td><%= listing_change.effective_at.strftime('%d/%B/%Y') %></td>
       <td><%= listing_change.is_current %></td>
-      <td><%= listing_change.geo_entities.map(&:name).join(',') %></td>
+      <td><%= listing_change.geo_entities.map(&:name).join(', ') %></td>
       <td><%= listing_change.inclusion_taxon_concept_id %></td>
       <td><%= listing_change.parent_id %></td>
       <td>
