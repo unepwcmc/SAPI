@@ -29,3 +29,7 @@ ul.relationship_parts{
   width: 780px;
   margin-left: -390px; /* half the width */
 }
+
+table#admin-in-place-editor tr.current_listing td{
+  background-color: lightgreen;
+}

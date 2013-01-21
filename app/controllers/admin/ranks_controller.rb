@@ -1,5 +1,4 @@
 class Admin::RanksController < Admin::SimpleCrudController
-  inherit_resources
 
   protected
 

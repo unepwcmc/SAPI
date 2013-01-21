@@ -1,5 +1,4 @@
 class Admin::SpeciesListingsController < Admin::SimpleCrudController
-  inherit_resources
 
   def index
     @designations = Designation.order(:name)

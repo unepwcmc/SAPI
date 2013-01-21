@@ -1,5 +1,5 @@
 class Admin::GeoEntitiesController < Admin::SimpleCrudController
-  inherit_resources
+
   before_filter :load_geo_entity_types, :only => [:index, :create]
 
   def autocomplete
