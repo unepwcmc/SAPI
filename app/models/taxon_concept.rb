@@ -118,7 +118,7 @@ class TaxonConcept < ActiveRecord::Base
   def accepted_taxon_concept
     inverse_taxon_relationships.joins(:taxon_relationship_type).
       where("taxon_relationship_types.name = '#{TaxonRelationshipType::HAS_SYNONYM}'").
-      includes(:other_taxon_concept).first.taxon_concept
+      includes(:other_taxon_concept).first.try(:taxon_concept)
   end
 
   private

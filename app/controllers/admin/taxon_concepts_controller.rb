@@ -9,10 +9,15 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   end
 
   def edit
-    @designations = Designation.order(:name)
-    @ranks = Rank.order(:taxonomic_position)
     edit! do
+      @designations = Designation.order(:name)
+      @ranks = Rank.order(:taxonomic_position)
       @languages = Language.order(:name_en)
+
+      @synonyms = MTaxonConcept.
+        find(@taxon_concept.id).
+        synonyms.
+        map { |s| {name: s} }
     end
   end
 
