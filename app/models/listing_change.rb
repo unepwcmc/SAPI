@@ -15,7 +15,6 @@
 #  annotation_id              :integer
 #  is_current                 :boolean          default(FALSE), not null
 #  inclusion_taxon_concept_id :integer
-#  import_row_id              :integer
 #
 
 class ListingChange < ActiveRecord::Base
@@ -27,6 +26,7 @@ class ListingChange < ActiveRecord::Base
   belongs_to :taxon_concept
   belongs_to :change_type
   has_many :listing_distributions
+  has_many :geo_entities, :through => :listing_distributions
   belongs_to :annotation
   belongs_to :parent, :class_name => 'ListingChange'
 end

@@ -16,8 +16,8 @@ namespace :import do
           FROM #{TMP_TABLE}
           LEFT JOIN geo_entities ON geo_entities.legacy_id = #{TMP_TABLE}.country_legacy_id AND geo_entities.legacy_type = '#{GeoEntityType::COUNTRY}'
           LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = 'Animalia'
-          LEFT JOIN ranks ON INITCAP(ranks.name) = INITCAP(BTRIM(#{TMP_TABLE}.rank)) AND taxon_concepts.rank_id = ranks.id
-          WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL
+          LEFT JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(#{TMP_TABLE}.rank)) AND taxon_concepts.rank_id = ranks.id
+          WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL AND geo_entities.is_current = 't'
           AND BTRIM(#{TMP_TABLE}.designation) ilike '%CITES%'
       SQL
       #TODO do sth about those unknown distributions!

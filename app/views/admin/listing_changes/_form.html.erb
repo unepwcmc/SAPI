@@ -1,0 +1,13 @@
+<%= form_for :listing_change, :url => collection_url, :remote => true do |f| %>
+
+  <%= error_messages_for(@listing_change) %>
+
+  <p>
+    <%= f.label :taxon_concept %>
+    <%= f.text_field :taxon_concept_id %>
+  </p>
+  <p>
+    <%= f.label :change_type %>
+    <%= f.select :change_type, options_from_collection_for_select(@change_types, :id, :name) %>
+  </p>
+<% end %>

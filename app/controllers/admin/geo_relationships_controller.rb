@@ -1,5 +1,5 @@
 class Admin::GeoRelationshipsController < Admin::SimpleCrudController
-  inherit_resources
+
   belongs_to :geo_entity
   before_filter :load_geo_relationship_types, :only => [:index, :create]
   before_filter :load_geo_entities, :only => [:index, :create]

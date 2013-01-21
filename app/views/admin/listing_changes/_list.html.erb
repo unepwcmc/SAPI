@@ -1,0 +1,31 @@
+<thead>
+  <th>Appx</th>
+  <th>Type</th>
+  <th>Annotation</th>
+  <th>Effective at</th>
+  <th>Current</th>
+  <th>Geo entities</th>
+  <th>Inclusion</th>
+  <th>Parent</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |listing_change| -%>
+    <tr class="<%= if listing_change.is_current? then "current_listing" end %>">
+      <td><%= listing_change.species_listing.abbreviation %></td>
+      <td><%= listing_change.change_type.abbreviation %></td>
+      <td><%= listing_change.annotation.try(:id) %></td>
+      <td><%= listing_change.effective_at.strftime('%d/%B/%Y') %></td>
+      <td><%= listing_change.is_current %></td>
+      <td><%= listing_change.geo_entities.map(&:name).join(',') %></td>
+      <td><%= listing_change.inclusion_taxon_concept_id %></td>
+      <td><%= listing_change.parent_id %></td>
+      <td>
+        <%= link_to 'Delete', admin_listing_change_path(listing_change),
+          :confirm => "Are you sure?", :method => :delete
+        %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>
+

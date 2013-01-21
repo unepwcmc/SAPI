@@ -13,4 +13,5 @@
 class Annotation < ActiveRecord::Base
   attr_accessible :listing_change_id, :symbol, :parent_symbol
   belongs_to :listing_change
+  has_many :annotation_translations
 end

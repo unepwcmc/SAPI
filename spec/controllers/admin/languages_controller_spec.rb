@@ -1,3 +1,4 @@
+require 'spec_helper'
 describe Admin::LanguagesController do
   describe "GET index" do
     it "assigns @languages sorted by iso_code1" do
