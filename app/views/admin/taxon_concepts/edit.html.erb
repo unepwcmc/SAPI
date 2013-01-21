@@ -7,13 +7,6 @@
 
     $('.geo-entities-list').html(window.geoEntitiesList.render());
 
-    window.synonymsList = new SAPIAdmin.EditableList({
-      list: <%= @synonyms.to_json.html_safe %>,
-      el: '<ul class="unstyled">'
-    })
-
-    $('.synonyms-list').html(window.synonymsList.render());
-
     window.commonNamesList = new SAPIAdmin.EditableList({
       list: <%= @taxon_concept.common_names.to_json.html_safe %>,
       el: '<ul class="unstyled">',
@@ -29,7 +22,7 @@
 </script>
 
 <div class="row-fluid header">
-  <h1><%= @taxon_concept.full_name %></h1>
+  <h1><%= @taxon_concept.full_name || @taxon_concept.full_name %></h1>
   <%= @taxon_concept.author_year %>
 </div>
 
@@ -46,44 +39,18 @@
 
         <div class="span3">
           <h3>Details</h3>
-          <%= f.hidden_field :name_status, :value => 'A'%>
-          <div class="control-group">
-            <label>Designation</label>
-            <%= f.select :designation_id,
-              options_from_collection_for_select(@designations, :id, :name, @taxon_concept && @taxon_concept.designation_id),
-              {},
-              :disabled => true
-            %>
-          </div>
-          <div class="control-group">
-            <label>Rank</label>
-            <%= f.select :rank_id,
-              options_from_collection_for_select(@ranks, :id, :name, @taxon_concept && @taxon_concept.rank_id),
-              {},
-              :disabled => true
-            %>
-          </div>
-          <div class="control-group">
-            <label>Parent</label>
-            <%= f.text_field :parent_scientific_name, :class => 'typeahead', :disabled => true %>
-          </div>
-          <div class="control-group">
-            <%= f.fields_for :taxon_name_attributes do |ff| %>
-              <label>Scientific name</label>
-              <%= ff.text_field :scientific_name %>
-            <% end %>
-          </div>
-          <div class="control-group">
-            <label>Author & year</label>
-            <%= f.text_field :author_year %>
-          </div>
+          <% render "form" %>
         </div>
 
         <div class="span3">
           <h3>Synonyms</h3>
+          <%= admin_add_new_synonym_button %>
+          <%= admin_new_synonym_modal(@synonym, @taxon_concept) %>
+
+          <hr>
 
           <div class="synonyms-list">
-
+            <%= render 'synonym_list' %>
           </div>
         </div>
 
@@ -95,9 +62,14 @@
         </div>
 
         <div class="span3">
-          <h3>Common Names</h3>
+          <h3>Common name</h3>
+          <%= admin_add_new_common_name_button %>
+          <%= admin_new_common_name_modal %>
 
-          <div class="common-names-list">
+          <hr>
+
+          <div id="taxon-commons-list">
+            <%= render "admin/taxon_commons/list" %>
           </div>
         </div>
 
@@ -107,34 +79,6 @@
 
   <div class="row-fluid tab-pane fade" id="taxon-relationships">
     <div class="span12">
-      <%= nested_form_for @taxon_concept, :url => admin_taxon_concept_url(@taxon_concept) do |f| %>
-        <%= error_messages_for(@taxon_concept) %>
-        <%= f.link_to_add "Add a common name", :common_names, :class => '.pull-right' %>
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Language</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <%= f.fields_for :common_names, :wrapper => false do |ff| %>
-              <tr class="fields">
-                <td><%= ff.text_field :name %></td>
-                <td><%= ff.select :language_id, options_from_collection_for_select(@languages, :id, :name_en) %></td>
-                <td>
-                  <%= ff.select :language_id,
-                    options_from_collection_for_select(@languages, :id, :name_en, ff.object.language_id )
-                  %>
-                </td>
-                <td><%= ff.link_to_remove "Remove" %></td>
-              </tr>
-            <% end%>
-          </tbody>
-        </table>
-        <%= f.submit %>
-      <% end %>
     </div>
   </div>
 

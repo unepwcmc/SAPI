@@ -1,2 +1,7 @@
-$('#admin-new-record-form').html("<%= escape_javascript(render('synonym_form')) %>");
-window.taxonRelationshipForm.initAutocomplete();
+$('#admin-new-taxon_concept_synonym-form').html(
+  "<%= escape_javascript(render(
+    'synonym_form',
+    :synonym => @taxon_concept,
+    :accepted_taxon_concept => @taxon_concept.accepted_taxon_concept)
+  ) %>");
+$('#new-taxon_concept_synonym').modal('show');

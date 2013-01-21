@@ -26,7 +26,7 @@ class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :designation_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
-    :taxon_name_attributes, :common_names_attributes,
+    :taxon_name_attributes,
     :accepted_scientific_name,
     :parent_scientific_name
   attr_writer :parent_scientific_name, :accepted_scientific_name
@@ -46,12 +46,11 @@ class TaxonConcept < ActiveRecord::Base
   has_many :geo_entities, :through => :taxon_concept_geo_entities
   has_many :listing_changes
   has_many :species_listings, :through => :listing_changes
-  has_many :taxon_commons, :dependent => :destroy
+  has_many :taxon_commons, :dependent => :destroy, :include => :common_name
   has_many :common_names, :through => :taxon_commons
   has_and_belongs_to_many :references, :join_table => :taxon_concept_references
 
   accepts_nested_attributes_for :taxon_name, :update_only => true
-  accepts_nested_attributes_for :common_names, :allow_destroy => true
 
   validates :designation_id, :presence => true
   validates :rank_id, :presence => true
@@ -116,9 +115,16 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def accepted_taxon_concept
-    inverse_taxon_relationships.joins(:taxon_relationship_type).
+    rel = inverse_taxon_relationships.joins(:taxon_relationship_type).
       where("taxon_relationship_types.name = '#{TaxonRelationshipType::HAS_SYNONYM}'").
-      includes(:other_taxon_concept).first.try(:taxon_concept)
+      includes(:other_taxon_concept)
+    rel.size > 0 ? rel.first.taxon_concept : nil
+  end
+
+  def synonym_taxon_concepts
+    rel = taxon_relationships.joins(:taxon_relationship_type).
+      where("taxon_relationship_types.name = '#{TaxonRelationshipType::HAS_SYNONYM}'").
+      includes(:other_taxon_concept).map(&:other_taxon_concept)
   end
 
   private
@@ -155,6 +161,7 @@ class TaxonConcept < ActiveRecord::Base
       self.taxon_name = tn
       self.taxon_name_id = tn.id
     end
+    self.full_name = taxon_name.scientific_name if name_status == 'S' && taxon_name
     true
   end
 
@@ -178,7 +185,7 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def check_parent_taxon_name_exists
-    return true if @parent_scientific_name.nil?
+    return true if @parent_scientific_name.blank?
     @parent_scientific_name = TaxonConcept.normalize_full_name(@parent_scientific_name)
 
     p = TaxonConcept.
@@ -216,9 +223,11 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def can_be_deleted?
+    puts taxon_commons.inspect
     taxon_relationships.count == 0 &&
     children.count == 0 &&
-    listing_changes.count == 0
+    listing_changes.count == 0 &&
+    taxon_commons.count == 0
   end
 
 end

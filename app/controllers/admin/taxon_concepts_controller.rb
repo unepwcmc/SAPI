@@ -1,23 +1,24 @@
 class Admin::TaxonConceptsController < Admin::SimpleCrudController
   respond_to :json
+  respond_to :js, :only => [:edit]
   inherit_resources
 
   def index
     @designations = Designation.order(:name)
     @ranks = Rank.order(:taxonomic_position)
+    @taxon_concept = TaxonConcept.new
+    @taxon_concept.build_taxon_name
     index!
   end
 
   def edit
-    edit! do
-      @designations = Designation.order(:name)
-      @ranks = Rank.order(:taxonomic_position)
+    @designations = Designation.order(:name)
+    @ranks = Rank.order(:taxonomic_position)
+    edit! do |format|
       @languages = Language.order(:name_en)
-
-      @synonyms = MTaxonConcept.
-        find(@taxon_concept.id).
-        synonyms.
-        map { |s| {name: s} }
+      @synonym = TaxonConcept.new(:accepted_scientific_name => @taxon_concept.full_name)
+      @synonym.build_taxon_name
+      format.js { @taxon_concept.is_synonym? ? render('new_synonym') : render('new') }
     end
   end
 
@@ -25,7 +26,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     create! do |success, failure|
       @designations = Designation.order(:name)
       @ranks = Rank.order(:taxonomic_position)
-      success.js { render 'create' }
+      success.js { @taxon_concept.is_synonym? ? render('create_synonym') : render('create') }
       failure.js { @taxon_concept.is_synonym? ? render('new_synonym') : render('new') }
     end
   end
@@ -44,7 +45,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   end
 
   def autocomplete
-    @taxon_concepts = TaxonConcept.
+    @taxon_concepts = TaxonConcept.where(:name_status => 'A').
       select("data, #{TaxonConcept.table_name}.id, full_name, #{Designation.table_name}.name AS designation_name").
       joins(:designation)
     if params[:scientific_name]

@@ -24,7 +24,6 @@ gem 'whenever', :require => false
 gem 'jquery-rails'
 gem 'bootstrap-generators', '~> 2.1'
 gem 'kaminari'
-gem 'nested_form'
 
 gem 'underscore-rails'
 

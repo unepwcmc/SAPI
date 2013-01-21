@@ -1,0 +1,9 @@
+<%= form_for [:admin, @taxon_concept, @taxon_common], :remote => true do |f| %>
+  <%= error_messages_for(@taxon_common) %>
+  <%= f.fields_for :common_name do |ff| %>
+    <%= ff.text_field :name %>
+    <%= ff.select :language_id,
+      options_from_collection_for_select(@languages, :id, :name_en, ff.object && ff.object.language_id )
+    %>
+  <% end%>
+<% end %>

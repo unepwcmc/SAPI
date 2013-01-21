@@ -8,55 +8,40 @@ module TaxonConceptHelper
         else
           controller_name.titleize
         end
-      ) +
-      link_to("Add new synonym",
-        "#new-#{controller_name.singularize}-synonym",
-        :role => "button", :"data-toggle" => "modal",
-        :class => "btn new-button"
-      ) +
-      link_to("Add new #{controller_name.titleize.singularize}",
-        "#new-#{controller_name.singularize}",
-        :role => "button", :"data-toggle" => "modal",
-        :class => "btn new-button"
       )
+      admin_add_new_synonym_button +
+      admin_add_new_button
     end
   end
 
-  def admin_new_synonym_modal
-    content_tag(
-      :div,
-      :id => "new-#{controller_name.singularize}-synonym",
-      :class => "modal hide fade", :tabindex => "-1", :role => "dialog",
-      :"aria-labelledby" => "new-#{controller_name.singularize}-synonym-label",
-      :"aria-hidden" => "true") do
+  def admin_add_new_synonym_button
+    admin_add_new_button(
+      :resource => 'taxon_concept_synonym'
+    )
+  end
 
-      content_tag(:div, :class => "modal-header") do
-        button_tag(
-          :type => "button", :class => "close", :"data-dismiss" => "modal",
-          :"aria-hidden" => true
-        ){'×'} +
-        content_tag(:h3, 
-          :id => "new-#{controller_name.singularize}-synonym-label"
-        ){"Add new #{controller_name.titleize.singularize} synonym"}
-      end +
-      content_tag(
-        :div, :id => "admin-new-record-form", :class => "modal-body"
-      ) do
-        if block_given?
-          yield
-        else
-          render :partial => 'synonym_form'
-        end
-      end +
-      content_tag(:div, :class => "modal-footer") do
-        button_tag(
-          :type => "button", :class => "btn", :"data-dismiss" => "modal",
-          :"aria-hidden" => "true"
-        ){'Close'} +
-        button_tag(
-          :type => "button", :class => "btn btn-primary save-button"
-        ){'Save changes'}
-      end
-    end
+  def admin_new_synonym_modal(synonym = @taxon_concept, accepted_taxon_concept = nil)
+    admin_new_modal(
+      :resource => 'taxon_concept_synonym'
+    ){ render 'synonym_form',
+      :synonym => synonym,
+      :accepted_taxon_concept => accepted_taxon_concept
+    }
+  end
+
+  def admin_add_new_common_name_button
+    admin_add_new_button(
+      :resource => 'common_name',
+      :href => new_admin_taxon_concept_taxon_common_url(@taxon_concept),
+      :remote => true,
+      :"data-toggle" => nil,
+      :role => nil
+    )
+  end
+
+  def admin_new_common_name_modal
+    admin_new_modal(
+      :resource => 'common_name'
+    ){ '' }
   end
 end
