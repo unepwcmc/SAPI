@@ -10,4 +10,8 @@
     <%= f.label :change_type %>
     <%= f.select :change_type, options_from_collection_for_select(@change_types, :id, :name) %>
   </p>
+  <p>
+    <%= f.label :effective_at %>
+    <%= f.text_field :effective_at, :class => "datepicker" %>
+  </p>
 <% end %>
