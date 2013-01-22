@@ -42,6 +42,11 @@ class TaxonConcept < ActiveRecord::Base
     :foreign_key => :other_taxon_concept_id, :dependent => :destroy
   has_many :related_taxon_concepts, :class_name => 'TaxonConcept',
     :through => :taxon_relationships
+  has_many :synonym_relationships,
+    :class_name => 'TaxonRelationship', :dependent => :destroy,
+    :conditions => ["taxon_relationship_type_id IN (SELECT id FROM taxon_relationship_types WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"]
+  has_many :synonyms, :class_name => 'TaxonConcept',
+    :through => :synonym_relationships, :source => :other_taxon_concept
   has_many :taxon_concept_geo_entities
   has_many :geo_entities, :through => :taxon_concept_geo_entities
   has_many :listing_changes
@@ -121,11 +126,11 @@ class TaxonConcept < ActiveRecord::Base
     rel.size > 0 ? rel.first.taxon_concept : nil
   end
 
-  def synonym_taxon_concepts
-    rel = taxon_relationships.joins(:taxon_relationship_type).
-      where("taxon_relationship_types.name = '#{TaxonRelationshipType::HAS_SYNONYM}'").
-      includes(:other_taxon_concept).map(&:other_taxon_concept)
-  end
+  # def synonyms
+    # rel = taxon_relationships.joins(:taxon_relationship_type).
+      # where("taxon_relationship_types.name = '#{TaxonRelationshipType::HAS_SYNONYM}'").
+      # includes(:other_taxon_concept).map(&:other_taxon_concept)
+  # end
 
   private
 

@@ -14,19 +14,26 @@ module TaxonConceptHelper
     end
   end
 
-  def admin_add_new_synonym_button
-    admin_add_new_button(
-      :resource => 'taxon_concept_synonym'
-    )
+  def admin_add_new_synonym_button(nested = false)
+    if nested
+      admin_add_new_button(
+        :resource => 'taxon_concept_synonym',
+        :href => new_admin_taxon_concept_synonym_url(@taxon_concept),
+        :remote => true,
+        :"data-toggle" => nil,
+        :role => nil
+      )
+    else
+      admin_add_new_button(
+        :resource => 'taxon_concept_synonym'
+      )
+    end
   end
 
-  def admin_new_synonym_modal(synonym = @taxon_concept, accepted_taxon_concept = nil)
+  def admin_new_synonym_modal(nested = false)
     admin_new_modal(
       :resource => 'taxon_concept_synonym'
-    ){ render 'synonym_form',
-      :synonym => synonym,
-      :accepted_taxon_concept => accepted_taxon_concept
-    }
+    ){ nested ? '' : render('synonym_form') }
   end
 
   def admin_add_new_common_name_button
