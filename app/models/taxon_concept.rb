@@ -69,11 +69,8 @@ class TaxonConcept < ActiveRecord::Base
     :presence => true,
     :format => { :with => /\d(\.\d*)*/, :message => "Use prefix notation, e.g. 1.2" },
     :if => :fixed_order_required?
-  validates :accepted_scientific_name, :presence => true,
-    :if => lambda { |tc| tc.is_synonym? && tc.accepted_taxon_concept_id.blank? }
 
   before_validation :check_taxon_name_exists
-  before_validation :check_synonym_exists
   before_validation :check_parent_taxon_name_exists
   before_validation :check_accepted_taxon_name_exists
   before_validation :ensure_taxonomic_position
@@ -155,15 +152,6 @@ class TaxonConcept < ActiveRecord::Base
       errors.add(:parent_id, "must be at immediately higher rank")
       return false
     end
-  end
-
-  def check_synonym_exists
-    return true unless is_synonym?
-    syn = TaxonConcept.where(:designation_id => self.designation_id).
-      where(:rank_id => self.rank_id).where(:full_name => self.full_name).
-      where(:name_status => 'S').first
-    self.attributes = syn.attributes if syn
-    true
   end
 
   def check_taxon_name_exists
