@@ -11,7 +11,8 @@
 #
 
 class TaxonRelationship < ActiveRecord::Base
-  attr_accessible :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id
+  attr_accessible :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
+    :other_taxon_concept_attributes
   belongs_to :taxon_relationship_type
   belongs_to :taxon_concept
   belongs_to :other_taxon_concept, :class_name => 'TaxonConcept',
@@ -19,11 +20,14 @@ class TaxonRelationship < ActiveRecord::Base
 
   delegate :is_bidirectional?, :to => :taxon_relationship_type
 
+  before_validation :check_synonym_exists
   before_destroy :destroy_opposite, :if => Proc.new { self.is_bidirectional? && self.has_opposite? }
   after_create :create_opposite, :if => Proc.new { self.is_bidirectional? && !self.has_opposite? }
 
   validates :taxon_concept_id, :uniqueness => { :scope => [:taxon_relationship_type_id, :other_taxon_concept_id], :message => 'This relationship already exists, choose another taxa.' }
   validate :interdesignational_relationship_uniqueness, :if => "taxon_relationship_type.is_interdesignational?"
+
+  accepts_nested_attributes_for :other_taxon_concept
 
   def opposite
     TaxonRelationship.where(:taxon_concept_id => self.other_taxon_concept_id,
@@ -36,6 +40,18 @@ class TaxonRelationship < ActiveRecord::Base
   end
 
   private
+  def check_synonym_exists
+    return true unless taxon_relationship_type.name == TaxonRelationshipType::HAS_SYNONYM
+    return true unless other_taxon_concept
+    synonym = TaxonConcept.where(:designation_id => other_taxon_concept.designation_id).
+      where(:rank_id => other_taxon_concept.rank_id).
+      where(:full_name => other_taxon_concept.taxon_name.scientific_name).
+      where(:author_year => other_taxon_concept.author_year).
+      where(:name_status => 'S').first
+    self.other_taxon_concept = synonym if synonym
+    true
+  end
+
   def create_opposite
     TaxonRelationship.create(
       :taxon_concept_id => self.other_taxon_concept_id,

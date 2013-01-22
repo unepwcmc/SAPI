@@ -1,7 +1,7 @@
 <%= form_for [:admin, @taxon_concept], :remote => true do |f| %>
 
   <%= error_messages_for(@taxon_concept) %>
-  <%= f.hidden_field :name_status, :value => 'A'%>
+  <%= f.hidden_field :name_status %>
   <div class="control-group">
     <label>Designation</label>
     <%= f.select :designation_id,

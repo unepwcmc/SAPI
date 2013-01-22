@@ -18,7 +18,7 @@ module TaxonConceptHelper
     if nested
       admin_add_new_button(
         :resource => 'taxon_concept_synonym',
-        :href => new_admin_taxon_concept_synonym_url(@taxon_concept),
+        :href => new_admin_taxon_concept_synonym_relationship_url(@taxon_concept),
         :remote => true,
         :"data-toggle" => nil,
         :role => nil
