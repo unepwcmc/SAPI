@@ -27,9 +27,10 @@ class TaxonConcept < ActiveRecord::Base
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
     :taxon_name_attributes,
-    :accepted_scientific_name,
+    :accepted_scientific_name, :accepted_taxon_concept_id,
     :parent_scientific_name
-  attr_writer :parent_scientific_name, :accepted_scientific_name
+  attr_writer :parent_scientific_name, :accepted_scientific_name,
+    :accepted_taxon_concept_id
 
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore
@@ -68,9 +69,11 @@ class TaxonConcept < ActiveRecord::Base
     :presence => true,
     :format => { :with => /\d(\.\d*)*/, :message => "Use prefix notation, e.g. 1.2" },
     :if => :fixed_order_required?
-  validates :accepted_scientific_name, :presence => true, :if => :is_synonym?
+  validates :accepted_scientific_name, :presence => true,
+    :if => lambda { |tc| tc.is_synonym? && tc.accepted_taxon_concept_id.blank? }
 
   before_validation :check_taxon_name_exists
+  before_validation :check_synonym_exists
   before_validation :check_parent_taxon_name_exists
   before_validation :check_accepted_taxon_name_exists
   before_validation :ensure_taxonomic_position
@@ -110,27 +113,21 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def parent_scientific_name
-    @parent_scientific_name || 
+    @parent_scientific_name ||
     parent && parent.full_name
   end
 
   def accepted_scientific_name
-    @accepted_scientific_name || 
-    accepted_taxon_concept && accepted_taxon_concept.full_name
+    @accepted_scientific_name ||
+    @accepted_taxon_concept_id &&
+      a = TaxonConcept.find(@accepted_taxon_concept_id) && a.full_name
   end
 
-  def accepted_taxon_concept
-    rel = inverse_taxon_relationships.joins(:taxon_relationship_type).
-      where("taxon_relationship_types.name = '#{TaxonRelationshipType::HAS_SYNONYM}'").
-      includes(:other_taxon_concept)
-    rel.size > 0 ? rel.first.taxon_concept : nil
+  def accepted_taxon_concept_id
+    @accepted_taxon_concept_id ||
+    @accepted_scientific_name && 
+      a = TaxonConcept.where(:full_name => @accepted_scientific_name).first && a.id
   end
-
-  # def synonyms
-    # rel = taxon_relationships.joins(:taxon_relationship_type).
-      # where("taxon_relationship_types.name = '#{TaxonRelationshipType::HAS_SYNONYM}'").
-      # includes(:other_taxon_concept).map(&:other_taxon_concept)
-  # end
 
   private
 
@@ -158,6 +155,15 @@ class TaxonConcept < ActiveRecord::Base
       errors.add(:parent_id, "must be at immediately higher rank")
       return false
     end
+  end
+
+  def check_synonym_exists
+    return true unless is_synonym?
+    syn = TaxonConcept.where(:designation_id => self.designation_id).
+      where(:rank_id => self.rank_id).where(:full_name => self.full_name).
+      where(:name_status => 'S').first
+    self.attributes = syn.attributes if syn
+    true
   end
 
   def check_taxon_name_exists

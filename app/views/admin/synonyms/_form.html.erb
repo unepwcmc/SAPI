@@ -7,6 +7,7 @@
   <%= error_messages_for(@synonym) %>
   <%= f.hidden_field :name_status, :value => 'S'%>
   <%= f.hidden_field :designation_id, :value => @taxon_concept.designation_id %>
+  <%= f.hidden_field :accepted_taxon_concept_id, :value => @taxon_concept.id %>
   <div class="control-group">
     <label>Rank</label>
     <%= f.select :rank_id,

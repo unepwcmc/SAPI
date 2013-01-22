@@ -44,13 +44,13 @@
 
         <div class="span3">
           <h3>Synonyms</h3>
-          <%= admin_add_new_synonym_button %>
+          <%= admin_add_new_synonym_button(true) %>
           <%= admin_new_synonym_modal(true) %>
 
 
           <hr>
 
-          <div class="synonyms-list">
+          <div id="synonyms-list">
             <%= render 'admin/synonyms/list' %>
           </div>
         </div>

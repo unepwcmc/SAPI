@@ -17,6 +17,16 @@ class Admin::SynonymsController < Admin::SimpleCrudController
     end
   end
 
+  def create
+    create! do |success, failure|
+      failure.js {
+        @designations = Designation.order(:name)
+        @ranks = Rank.order(:taxonomic_position)
+        render 'new'
+      }
+    end
+  end
+
   def edit
     @designations = Designation.order(:name)
     @ranks = Rank.order(:taxonomic_position)
