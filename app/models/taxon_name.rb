@@ -14,6 +14,11 @@ class TaxonName < ActiveRecord::Base
 
   validates :scientific_name, :presence => true
 
+  def sanitize_scientific_name!
+    last = scientific_name && scientific_name.split(/\s/).last
+    self.scientific_name = last && last.capitalize || nil
+  end
+
   def self.lower_bound(scientific_name)
     scientific_name.sub(/^\s+/, '').sub(/\s+$/, '').sub(/\s+/,' ').capitalize
   end

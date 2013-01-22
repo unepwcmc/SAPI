@@ -21,6 +21,7 @@ class TaxonRelationship < ActiveRecord::Base
   delegate :is_bidirectional?, :to => :taxon_relationship_type
 
   before_validation :check_synonym_exists
+  after_validation :reset_synonym
   before_destroy :destroy_opposite, :if => Proc.new { self.is_bidirectional? && self.has_opposite? }
   after_create :create_opposite, :if => Proc.new { self.is_bidirectional? && !self.has_opposite? }
 
@@ -40,6 +41,13 @@ class TaxonRelationship < ActiveRecord::Base
   end
 
   private
+
+  def reset_synonym
+    return true unless taxon_relationship_type.name == TaxonRelationshipType::HAS_SYNONYM
+    return true unless other_taxon_concept
+    self.other_taxon_concept.id = nil unless errors.empty?
+  end
+
   def check_synonym_exists
     return true unless taxon_relationship_type.name == TaxonRelationshipType::HAS_SYNONYM
     return true unless other_taxon_concept

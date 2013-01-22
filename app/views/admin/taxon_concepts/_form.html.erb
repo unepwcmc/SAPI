@@ -19,7 +19,7 @@
     <%= f.text_field :parent_scientific_name, :class => 'typeahead' %>
   </div>
   <div class="control-group">
-    <%= f.fields_for :taxon_name_attributes do |ff| %>
+    <%= f.fields_for :taxon_name do |ff| %>
       <label>Scientific name</label>
       <%= ff.text_field :scientific_name %>
     <% end %>

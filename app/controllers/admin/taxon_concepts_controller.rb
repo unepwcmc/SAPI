@@ -25,7 +25,14 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
       @designations = Designation.order(:name)
       @ranks = Rank.order(:taxonomic_position)
       success.js { render('create') }
-      failure.js { render('new') }
+      failure.js {
+        if @taxon_concept.is_synonym?
+          @synonym = @taxon_concept
+          render('new_synonym')
+        else
+          render('new')
+        end
+      }
     end
   end
 

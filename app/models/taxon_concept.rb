@@ -27,10 +27,9 @@ class TaxonConcept < ActiveRecord::Base
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
     :taxon_name_attributes,
-    :accepted_scientific_name, :accepted_taxon_concept_id,
-    :parent_scientific_name
-  attr_writer :parent_scientific_name, :accepted_scientific_name,
-    :accepted_taxon_concept_id
+    :accepted_scientific_name, :parent_scientific_name
+  attr_writer :parent_scientific_name
+  attr_accessor :accepted_scientific_name
 
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore
@@ -56,7 +55,7 @@ class TaxonConcept < ActiveRecord::Base
   has_many :common_names, :through => :taxon_commons
   has_and_belongs_to_many :references, :join_table => :taxon_concept_references
 
-  accepts_nested_attributes_for :taxon_name, :update_only => true
+  accepts_nested_attributes_for :taxon_name
 
   validates :designation_id, :presence => true
   validates :rank_id, :presence => true
@@ -64,7 +63,7 @@ class TaxonConcept < ActiveRecord::Base
   validate :parent_at_immediately_higher_rank
   validates :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
-  validates :taxon_name_id, :uniqueness => { :scope => [:designation_id, :parent_id] }
+  validates :taxon_name_id, :uniqueness => { :scope => [:designation_id, :parent_id, :name_status, :author_year] }
   validates :taxonomic_position,
     :presence => true,
     :format => { :with => /\d(\.\d*)*/, :message => "Use prefix notation, e.g. 1.2" },
@@ -74,6 +73,7 @@ class TaxonConcept < ActiveRecord::Base
   before_validation :check_parent_taxon_name_exists
   before_validation :check_accepted_taxon_name_exists
   before_validation :ensure_taxonomic_position
+  after_validation :reset_taxon_name
   before_destroy :check_destroy_allowed
 
   acts_as_nested_set
@@ -114,19 +114,11 @@ class TaxonConcept < ActiveRecord::Base
     parent && parent.full_name
   end
 
-  def accepted_scientific_name
-    @accepted_scientific_name ||
-    @accepted_taxon_concept_id &&
-      a = TaxonConcept.find(@accepted_taxon_concept_id) && a.full_name
-  end
-
-  def accepted_taxon_concept_id
-    @accepted_taxon_concept_id ||
-    @accepted_scientific_name && 
-      a = TaxonConcept.where(:full_name => @accepted_scientific_name).first && a.id
-  end
-
   private
+
+  def reset_taxon_name
+    self.taxon_name.id = nil unless errors.empty?
+  end
 
   def self.normalize_full_name(some_full_name)
     #strip ranks
@@ -136,6 +128,7 @@ class TaxonConcept < ActiveRecord::Base
     #strip redundant whitespace between words
     some_full_name = some_full_name.split(/\s/).join(' ').capitalize
   end
+
 
   def parent_in_same_designation
     return true unless parent
@@ -155,22 +148,25 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def check_taxon_name_exists
+    return true unless taxon_name.new_record?
+    if taxon_name && is_synonym?
+      self.full_name = TaxonConcept.normalize_full_name(self.taxon_name.scientific_name)
+    end
+    self.taxon_name.sanitize_scientific_name!
     tn = taxon_name && TaxonName.where(["UPPER(scientific_name) = UPPER(?)", taxon_name.scientific_name]).first
     if tn
       self.taxon_name = tn
       self.taxon_name_id = tn.id
     end
-    self.full_name = taxon_name.scientific_name if name_status == 'S' && taxon_name
     true
   end
 
   def check_accepted_taxon_name_exists
-    return true if name_status == 'A'
+    return true unless is_synonym?
     return true if @accepted_scientific_name.blank?
     @accepted_scientific_name = TaxonConcept.normalize_full_name(@accepted_scientific_name)
-
     atc = TaxonConcept.
-      where(["UPPER(full_name) = UPPER(BTRIM(?))", @accepted_scientific_name]).first
+      where(["UPPER(full_name) = UPPER(BTRIM(?)) AND name_status = 'A'", @accepted_scientific_name]).first
     unless atc
       errors.add(:accepted_scientific_name, "does not exist")
       return true
