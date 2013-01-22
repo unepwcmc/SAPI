@@ -46,7 +46,9 @@ class AdminInPlaceEditor
       $(@).closest('.modal').find('form').submit()
 
     $('.modal').on 'hidden', () ->
-      $(@).find('form')[0].reset()
+      form = $(@).find('form')[0]
+      form.reset() if form
+
       $(@).find('.alert').remove()
 
   alertSuccess: (txt) ->

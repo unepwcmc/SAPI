@@ -25,15 +25,29 @@ module TaxonConceptHelper
       )
     else
       admin_add_new_button(
-        :resource => 'taxon_concept_synonym'
+        :resource => 'taxon_concept_synonym',
+        :name => 'Add new synonym'
       )
     end
   end
 
   def admin_new_synonym_modal(nested = false)
     admin_new_modal(
-      :resource => 'taxon_concept_synonym'
+      :resource => 'taxon_concept_synonym',
     ){ nested ? '' : render('synonym_form') }
+  end
+
+  def admin_add_new_distribution_button(nested = false)
+    admin_add_new_button(
+      :resource => 'taxon_concept_common_name',
+      :name => 'Add new common name'
+    )
+  end
+
+  def admin_new_distribution_modal()
+    admin_new_modal(
+      :resource => 'taxon_concept_common_name'
+    ){ render 'distribution_form' }
   end
 
   def admin_add_new_common_name_button
