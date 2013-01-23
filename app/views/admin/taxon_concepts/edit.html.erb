@@ -22,6 +22,7 @@
 </script>
 
 <div class="row-fluid header">
+  <%= ancestors_path(@taxon_concept) %>
   <h1><%= @taxon_concept.full_name || @taxon_concept.full_name %></h1>
   <%= @taxon_concept.author_year %>
 </div>
