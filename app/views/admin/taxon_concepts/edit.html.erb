@@ -21,33 +21,19 @@
   });
 </script>
 
-<div class="row-fluid header">
-  <%= ancestors_path(@taxon_concept) %>
-  <h1><%= @taxon_concept.full_name || @taxon_concept.full_name %></h1>
-  <%= @taxon_concept.author_year %>
+<div id="basic-info">
+  <%= render 'basic_info' %>
 </div>
-
-<ul id="taxon-concept-tabs" class="nav nav-tabs">
-  <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
-  <li><a href="#taxon-relationships" data-toggle="tab">Taxon Relationships</a></li>
-  <li><a href="#legislation" data-toggle="tab">Legislation</a></li>
-</ul>
 
 <div class="tab-content">
   <div class="tab-pane fade active in" id="details">
     <%= form_for :taxon_concept, :url => admin_taxon_concepts_url, :remote => true do |f| %>
       <div class="row-fluid">
 
-        <div class="span3">
-          <h3>Details</h3>
-          <%= render "form" %>
-        </div>
-
-        <div class="span3">
+        <div class="span4">
           <h3>Synonyms</h3>
           <%= admin_add_new_synonym_button(true) %>
           <%= admin_new_synonym_modal(true) %>
-
 
           <hr>
 
@@ -56,14 +42,14 @@
           </div>
         </div>
 
-        <div class="span3">
+        <div class="span4">
           <h3>Distribution</h3>
 
           <div class="geo-entities-list">
           </div>
         </div>
 
-        <div class="span3">
+        <div class="span4">
           <h3>Common name</h3>
           <%= admin_add_new_common_name_button %>
           <%= admin_new_common_name_modal %>

@@ -36,6 +36,12 @@ module TaxonConceptHelper
     ){ nested ? '' : render('synonym_form') }
   end
 
+  def admin_new_taxon_concept_modal
+    admin_new_modal(
+      :resource => 'taxon_concept'
+    ){ '' }
+  end
+
   def admin_add_new_common_name_button
     admin_add_new_button(
       :resource => 'common_name',

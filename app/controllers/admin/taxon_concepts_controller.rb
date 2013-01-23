@@ -17,6 +17,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     @ranks = Rank.order(:taxonomic_position)
     edit! do |format|
       @languages = Language.order(:name_en)
+      format.js { render 'new' }
     end
   end
 
@@ -38,12 +39,21 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
 
   def update
     update! do |success, failure|
+      success.js {
+        render 'update'
+      }
+      failure.js {
+        @designations = Designation.order(:name)
+        @ranks = Rank.order(:taxonomic_position)
+        render 'new'
+      }
       success.html {
         redirect_to edit_admin_taxon_concept_url(@taxon_concept),
           :notice => 'Operation successful'
       }
       failure.html {
-        @languages = Language.order(:name_en)
+        @designations = Designation.order(:name)
+        @ranks = Rank.order(:taxonomic_position)
         render 'edit'
       }
     end
