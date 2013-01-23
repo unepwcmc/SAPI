@@ -24,10 +24,8 @@
     <%= f.text_field :accepted_scientific_name, :class => 'typeahead' %>
   </div>
   <div class="control-group">
-    <%= f.fields_for :taxon_name do |ff| %>
-      <label>Synonym</label>
-      <%= ff.text_field :scientific_name %>
-    <% end %>
+    <label>Synonym</label>
+    <%= f.text_field :full_name %>
   </div>
   <div class="control-group">
     <label>Author & year</label>

@@ -21,7 +21,7 @@ describe TaxonConcept do
         :name_status => 'S',
         :author_year => 'Taxonomus 2013',
         :accepted_scientific_name => tc.full_name,
-        :taxon_name_attributes => {:scientific_name => 'Lolcatus lolus'}
+        :full_name => 'Lolcatus lolus'
       )
     }
     context "when new" do

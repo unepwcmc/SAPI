@@ -19,7 +19,7 @@ describe TaxonRelationship do
       create(
         :species,
         :parent_id => parent.id,
-        :taxon_name_attributes => {:scientific_name => 'lolcatus'}
+        :taxon_name => create(:taxon_name, :scientific_name => 'lolcatus')
       )
     }
     let(:synonym_attributes){
@@ -27,7 +27,15 @@ describe TaxonRelationship do
         :species,
         :name_status => 'S',
         :author_year => 'Hemulen 2013',
-        :taxon_name_attributes => {:scientific_name => 'Lolcatus lolus'}
+        :full_name => 'Lolcatus lolus'
+      ).delete_if { |k, v| %w(data listing notes lft rgt).include? k}
+    }
+    let(:another_synonym_attributes){
+      build_attributes(
+        :species,
+        :name_status => 'S',
+        :author_year => 'Hemulen 2013',
+        :full_name => 'Lolcatus lolatus'
       ).delete_if { |k, v| %w(data listing notes lft rgt).include? k}
     }
     let(:synonymy_rel){
@@ -46,6 +54,10 @@ describe TaxonRelationship do
         :other_taxon_concept_attributes => synonym_attributes
       )
     }
+    specify {
+      synonymy_rel.save
+      tc.synonyms.map(&:full_name).should include('Lolcatus lolus')
+    }
     specify{
       lambda do
         synonymy_rel.save
@@ -56,6 +68,19 @@ describe TaxonRelationship do
         synonymy_rel.save
         another_synonymy_rel.save
       end.should change(TaxonConcept, :count).by(1)
+    }
+    specify{
+      synonymy_rel.save
+      another_synonymy_rel.save
+      another_tc.synonyms.map(&:full_name).should include('Lolcatus lolus')
+    }
+    specify{
+      synonymy_rel.save
+      another_synonymy_rel.save
+      synonymy_rel.other_taxon_concept_attributes = another_synonym_attributes
+      synonymy_rel.save
+      tc.synonyms.map(&:full_name).should include('Lolcatus lolatus')
+      another_tc.synonyms.map(&:full_name).should include('Lolcatus lolus')
     }
   end
 end

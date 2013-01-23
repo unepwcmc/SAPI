@@ -26,7 +26,6 @@ class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :designation_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
-    :taxon_name_attributes,
     :accepted_scientific_name, :parent_scientific_name
   attr_writer :parent_scientific_name
   attr_accessor :accepted_scientific_name
@@ -55,8 +54,6 @@ class TaxonConcept < ActiveRecord::Base
   has_many :common_names, :through => :taxon_commons
   has_and_belongs_to_many :references, :join_table => :taxon_concept_references
 
-  accepts_nested_attributes_for :taxon_name
-
   validates :designation_id, :presence => true
   validates :rank_id, :presence => true
   validate :parent_in_same_designation
@@ -73,7 +70,6 @@ class TaxonConcept < ActiveRecord::Base
   before_validation :check_parent_taxon_name_exists
   before_validation :check_accepted_taxon_name_exists
   before_validation :ensure_taxonomic_position
-  after_validation :reset_taxon_name
   before_destroy :check_destroy_allowed
 
   acts_as_nested_set
@@ -116,11 +112,7 @@ class TaxonConcept < ActiveRecord::Base
 
   private
 
-  def reset_taxon_name
-    self.taxon_name.id = nil unless errors.empty?
-  end
-
-  def self.normalize_full_name(some_full_name)
+  def self.sanitize_full_name(some_full_name)
     #strip ranks
     if some_full_name =~ /(.+)\s*(#{Rank.dict.join('|')})\s*$/
       some_full_name = $1
@@ -128,7 +120,6 @@ class TaxonConcept < ActiveRecord::Base
     #strip redundant whitespace between words
     some_full_name = some_full_name.split(/\s/).join(' ').capitalize
   end
-
 
   def parent_in_same_designation
     return true unless parent
@@ -148,23 +139,29 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def check_taxon_name_exists
-    return true unless taxon_name.new_record?
-    if taxon_name && is_synonym?
-      self.full_name = TaxonConcept.normalize_full_name(self.taxon_name.scientific_name)
+    return true unless full_name
+    self.full_name = TaxonConcept.sanitize_full_name(full_name)
+    scientific_name = if is_synonym?
+      full_name
+    else
+      TaxonName.sanitize_scientific_name(self.full_name)
     end
-    self.taxon_name.sanitize_scientific_name!
-    tn = taxon_name && TaxonName.where(["UPPER(scientific_name) = UPPER(?)", taxon_name.scientific_name]).first
+
+    tn = taxon_name && TaxonName.where(["UPPER(scientific_name) = UPPER(?)", scientific_name]).first
     if tn
       self.taxon_name = tn
       self.taxon_name_id = tn.id
+    else
+      self.build_taxon_name(:scientific_name => scientific_name)
     end
+
     true
   end
 
   def check_accepted_taxon_name_exists
     return true unless is_synonym?
     return true if @accepted_scientific_name.blank?
-    @accepted_scientific_name = TaxonConcept.normalize_full_name(@accepted_scientific_name)
+    @accepted_scientific_name = TaxonConcept.sanitize_full_name(@accepted_scientific_name)
     atc = TaxonConcept.
       where(["UPPER(full_name) = UPPER(BTRIM(?)) AND name_status = 'A'", @accepted_scientific_name]).first
     unless atc
@@ -181,7 +178,7 @@ class TaxonConcept < ActiveRecord::Base
 
   def check_parent_taxon_name_exists
     return true if @parent_scientific_name.blank?
-    @parent_scientific_name = TaxonConcept.normalize_full_name(@parent_scientific_name)
+    @parent_scientific_name = TaxonConcept.sanitize_full_name(@parent_scientific_name)
 
     p = TaxonConcept.
       where(["UPPER(full_name) = UPPER(BTRIM(?))", @parent_scientific_name]).first
@@ -218,7 +215,6 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def can_be_deleted?
-    puts taxon_commons.inspect
     taxon_relationships.count == 0 &&
     children.count == 0 &&
     listing_changes.count == 0 &&

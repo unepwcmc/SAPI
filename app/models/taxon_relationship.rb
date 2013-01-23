@@ -53,10 +53,13 @@ class TaxonRelationship < ActiveRecord::Base
     return true unless other_taxon_concept
     synonym = TaxonConcept.where(:designation_id => other_taxon_concept.designation_id).
       where(:rank_id => other_taxon_concept.rank_id).
-      where(:full_name => other_taxon_concept.taxon_name.scientific_name).
+      where(:full_name => other_taxon_concept.full_name).
       where(:author_year => other_taxon_concept.author_year).
       where(:name_status => 'S').first
-    self.other_taxon_concept = synonym if synonym
+    if synonym
+      self.other_taxon_concept = synonym
+      self.other_taxon_concept_id = synonym.id
+    end
     true
   end
 
