@@ -64,7 +64,9 @@ class TaxonConceptsEditor extends AdminInPlaceEditor
     $('.typeahead').typeahead
       source: (query, process) ->
         prefix = if (@$element.attr('id').match('^synonym_.+') != null)
-         'synonym_'
+          'synonym_'
+        else if (@$element.attr('id').match('^hybrid_.+') != null)
+          'hybrid_'
         else
           ''
         $.get('/admin/taxon_concepts/autocomplete',

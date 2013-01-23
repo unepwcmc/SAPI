@@ -26,9 +26,10 @@ class TaxonConcept < ActiveRecord::Base
   attr_accessible :lft, :parent_id, :rgt, :designation_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
-    :accepted_scientific_name, :parent_scientific_name
+    :accepted_scientific_name, :parent_scientific_name, 
+    :hybrid_parent_scientific_name
   attr_writer :parent_scientific_name
-  attr_accessor :accepted_scientific_name
+  attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name
 
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore
@@ -101,6 +102,10 @@ class TaxonConcept < ActiveRecord::Base
     name_status == 'S'
   end
 
+  def is_hybrid?
+    name_status == 'H'
+  end
+
   def rank_name
     data['rank_name']
   end
@@ -141,7 +146,7 @@ class TaxonConcept < ActiveRecord::Base
   def check_taxon_name_exists
     return true unless full_name
     self.full_name = TaxonConcept.sanitize_full_name(full_name)
-    scientific_name = if is_synonym?
+    scientific_name = if is_synonym? || is_hybrid?
       full_name
     else
       TaxonName.sanitize_scientific_name(self.full_name)

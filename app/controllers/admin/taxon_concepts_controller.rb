@@ -9,6 +9,8 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     @taxon_concept.build_taxon_name
     @synonym = TaxonConcept.new(:name_status => 'S')
     @synonym.build_taxon_name
+    @hybrid = TaxonConcept.new(:name_status => 'H')
+    @hybrid.build_taxon_name
     index!
   end
 
