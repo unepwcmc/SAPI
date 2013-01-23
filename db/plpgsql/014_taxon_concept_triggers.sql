@@ -1,3 +1,5 @@
+-- TODO synonyms!
+
 CREATE OR REPLACE FUNCTION trg_taxon_concepts_u() RETURNS TRIGGER
 SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
 BEGIN
@@ -8,7 +10,9 @@ BEGIN
       PERFORM rebuild_taxonomic_positions_from_root(NEW.id);
     END IF;
   END IF;
-  IF OLD.taxon_name_id <> NEW.taxon_name_id OR OLD.rank_id <> NEW.rank_id THEN
+  IF OLD.taxon_name_id <> NEW.taxon_name_id OR OLD.rank_id <> NEW.rank_id OR
+    (OLD.data->'full_name') <> (NEW.data->'full_name') OR
+    (OLD.data->'rank_name') <> (NEW.data->'rank_name') THEN
     PERFORM taxon_concepts_refresh_row(NEW.id);
   END IF;
   RETURN NULL;
@@ -46,6 +50,45 @@ FOR EACH ROW EXECUTE PROCEDURE trg_taxon_concepts_d();
 DROP TRIGGER IF EXISTS trg_taxon_concepts_i ON taxon_concepts;
 CREATE TRIGGER trg_taxon_concepts_i AFTER INSERT ON taxon_concepts
 FOR EACH ROW EXECUTE PROCEDURE trg_taxon_concepts_i();
+
+-- DESIGNATIONS
+
+CREATE OR REPLACE FUNCTION trg_designations_u() RETURNS TRIGGER
+SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
+BEGIN
+  IF OLD.name <> NEW.name THEN
+    PERFORM taxon_concepts_refresh_row(tc.id)
+    FROM taxon_concepts tc
+    WHERE tc.designation_id = NEW.id;
+  END IF;
+  RETURN NULL;
+END
+$$;
+
+DROP TRIGGER IF EXISTS trg_designations_u ON designations;
+CREATE TRIGGER trg_designations_u AFTER UPDATE ON designations
+FOR EACH ROW EXECUTE PROCEDURE trg_designations_u();
+
+-- RANKS
+
+CREATE OR REPLACE FUNCTION trg_ranks_u() RETURNS TRIGGER
+SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
+BEGIN
+  IF OLD.name <> NEW.name THEN
+    PERFORM rebuild_names_and_ranks_for_node(tc.id)
+    FROM taxon_concepts tc
+    WHERE tc.rank_id = NEW.id;
+    --PERFORM taxon_concepts_refresh_row(tc.id)
+    --FROM taxon_concepts tc
+    --WHERE tc.rank_id = NEW.id;
+  END IF;
+  RETURN NULL;
+END
+$$;
+
+DROP TRIGGER IF EXISTS trg_ranks_u ON ranks;
+CREATE TRIGGER trg_ranks_u AFTER UPDATE ON ranks
+FOR EACH ROW EXECUTE PROCEDURE trg_ranks_u();
 
 DROP TRIGGER IF EXISTS trg_taxonomic_positions ON taxon_concepts;
 DROP FUNCTION IF EXISTS trg_taxonomic_positions();
