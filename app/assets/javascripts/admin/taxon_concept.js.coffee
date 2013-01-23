@@ -4,6 +4,8 @@ class SAPIAdmin.EditableList
   constructor: (options) ->
     @list = options.list || []
     @$el  = $(options.el) || $('<ul>')
+    @showEditLink = options.showEditLink || false
+    @edit = options.onEdit || @edit
 
     @url = options.url if options.url?
 
@@ -17,6 +19,8 @@ class SAPIAdmin.EditableList
       @update(
         success: @render
       )
+
+  edit: (e) =>
 
   delete: (e) =>
     e.preventDefault()
@@ -34,7 +38,12 @@ class SAPIAdmin.EditableList
 
   update: (options) ->
     if @url?
-      # PUT to @url
+      $.ajax(
+        url: @url
+        type: options.type || 'PUT'
+        success: options.success
+        error: options.error
+      )
     else
       options.success.apply(@)
 
@@ -48,10 +57,18 @@ class SAPIAdmin.EditableList
 
       $deleteLink.click(@delete)
 
+      if @showEditLink
+        $editLink = $('<a href="#">')
+          .addClass('pull-right')
+          .html('<i class="icon-edit">')
+
+        $editLink.click(@edit)
+
       $item = $("<li>")
         .attr('data-id', item.id)
         .append(item.name)
         .append($deleteLink)
+        .append($editLink || '')
 
       $list.append($item)
     )
@@ -59,34 +76,6 @@ class SAPIAdmin.EditableList
     return @$el
 
 $(document).ready ->
-  $('.typeahead.geo_entity').typeahead
-    source: (query, process) =>
-      $.get('/admin/geo_entities/autocomplete',
-        name: query
-        , (data) =>
-          @geoEntitiesMap = _.groupBy(data, 'name')
-          names = _.map(data, (e) -> e.name)
-
-          return process(names)
-      )
-
-    highlighter: (item) ->
-      # Only highlight matches at the start of strings
-
-      query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
-      transform = ($1, match) ->
-        return '<strong>' + match + '</strong>'
-
-      return item.
-        replace(new RegExp('^(' + query + ')', 'i'), transform).
-        replace(new RegExp('=(' + query + ')', 'ig'), transform)
-
-    updater: (item) =>
-      entityObject = @geoEntitiesMap[item][0]
-      window.geoEntitiesList.push(entityObject) if entityObject?
-
-      return item
-
   window.NestedFormEvents::insertFields = (content, assoc, link) ->
     $el = $('<tr>')
     $(content).children().each((i, element) ->

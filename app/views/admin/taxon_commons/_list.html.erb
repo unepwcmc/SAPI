@@ -1,0 +1,6 @@
+<% @taxon_concept.taxon_commons.each do |tc| %>
+  <%= tc.common_name && tc.common_name.name %>
+  <%= link_to 'edit', edit_admin_taxon_concept_taxon_common_url(@taxon_concept, tc), :remote => true %>
+  <%= link_to 'delete', admin_taxon_concept_taxon_common_url(@taxon_concept, tc), :confirm => "Are you sure?", :method => :delete %>
+  <br>
+<% end %>

@@ -1,2 +1,2 @@
-$('#admin-new-record-form').html("<%= escape_javascript(render('form')) %>");
-window.taxonRelationshipForm.initAutocomplete();
+$('#admin-new-<%= controller_name.singularize %>-form').html("<%= escape_javascript(render('form')) %>");
+

@@ -5,21 +5,35 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   def index
     @designations = Designation.order(:name)
     @ranks = Rank.order(:taxonomic_position)
+    @taxon_concept = TaxonConcept.new(:name_status => 'A')
+    @taxon_concept.build_taxon_name
+    @synonym = TaxonConcept.new(:name_status => 'S')
+    @synonym.build_taxon_name
     index!
   end
 
   def edit
     @designations = Designation.order(:name)
     @ranks = Rank.order(:taxonomic_position)
-    edit! do
+    edit! do |format|
       @languages = Language.order(:name_en)
     end
   end
 
   def create
-    @designations = Designation.order(:name)
-    @ranks = Rank.order(:taxonomic_position)
-    super
+    create! do |success, failure|
+      @designations = Designation.order(:name)
+      @ranks = Rank.order(:taxonomic_position)
+      success.js { render('create') }
+      failure.js {
+        if @taxon_concept.is_synonym?
+          @synonym = @taxon_concept
+          render('new_synonym')
+        else
+          render('new')
+        end
+      }
+    end
   end
 
   def update
@@ -36,7 +50,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   end
 
   def autocomplete
-    @taxon_concepts = TaxonConcept.
+    @taxon_concepts = TaxonConcept.where(:name_status => 'A').
       select("data, #{TaxonConcept.table_name}.id, full_name, #{Designation.table_name}.name AS designation_name").
       joins(:designation)
     if params[:scientific_name]
@@ -45,7 +59,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     if params[:designation_id]
       @taxon_concepts = @taxon_concepts.where(:designation_id => params[:designation_id])
     end
-    if params[:rank_id]
+    if params[:rank_id] && params[:name_status] == 'A'
       rank = Rank.find(params[:rank_id])
       @taxon_concepts = @taxon_concepts.at_parent_ranks(rank)
     end

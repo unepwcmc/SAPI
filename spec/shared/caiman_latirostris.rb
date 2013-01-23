@@ -30,7 +30,7 @@ shared_context "Caiman latirostris" do
     )
     @species1 = create(
       :species,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Cynocephalus'),
+      :full_name => 'Alligator cynocephalus',
       :parent => @genus1,
       :name_status => 'S'
     )

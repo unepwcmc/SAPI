@@ -62,14 +62,17 @@ class TaxonConceptsEditor extends AdminInPlaceEditor
   initModals: () ->
     super
     $('.typeahead').typeahead
-      source: (query, process) =>
-        designation_id = $('#taxon_concept_designation_id').attr('value')
-        rank_id = $('#taxon_concept_rank_id').attr('value')
+      source: (query, process) ->
+        prefix = if (@$element.attr('id').match('^synonym_.+') != null)
+         'synonym_'
+        else
+          ''
         $.get('/admin/taxon_concepts/autocomplete',
         {
           scientific_name: query,
-          designation_id: designation_id,
-          rank_id: rank_id,
+          designation_id: $('#' + prefix + 'taxon_concept_designation_id').attr('value'),
+          rank_id: $('#' + prefix + 'taxon_concept_rank_id').attr('value'),
+          name_status: $('#' + prefix + 'taxon_concept_name_status').attr('value'),
           limit: 25
         }, (data) =>
           labels = []
@@ -79,3 +82,7 @@ class TaxonConceptsEditor extends AdminInPlaceEditor
           )
           return process(labels)
         )
+      $('#taxon_concept_designation_id, #taxon_concept_rank_id').change () ->
+        $('#taxon_concept_parent_scientific_name').attr('value', null)
+      $('#synonym_taxon_concept_designation_id').change () ->
+        $('#synonym_taxon_concept_parent_scientific_name').attr('value', null)
