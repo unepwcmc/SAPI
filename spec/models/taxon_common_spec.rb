@@ -12,5 +12,54 @@
 require 'spec_helper'
 
 describe TaxonCommon do
-  pending "add some examples to (or delete) #{__FILE__}"
+    let(:lng){
+      create(:language)
+    }
+    let(:parent){
+      create(
+        :genus,
+        :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
+      )
+    }
+    let!(:tc){
+      create(
+        :species,
+        :parent_id => parent.id,
+        :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
+      )
+    }
+    let!(:another_tc){
+      create(
+        :species,
+        :parent_id => parent.id,
+        :taxon_name => create(:taxon_name, :scientific_name => 'lolcatus')
+      )
+    }
+    let(:tc_common){
+      build(
+        :taxon_common,
+        :taxon_concept_id => tc.id,
+        :common_name_attributes => {
+          :name => 'Lolcat',
+          :language_id => lng.id
+        }
+      )
+    }
+    let(:another_tc_common){
+      build(
+        :taxon_common,
+        :taxon_concept_id => another_tc.id,
+        :common_name_attributes => {
+          :name => 'Lolcat',
+          :language_id => lng.id
+        }
+      )
+    }
+    specify{
+      tc_common.save
+      another_tc_common.save
+      tc_common.common_name_attributes = {:name => 'Black lolcat'}
+      tc_common.save
+      another_tc.common_names.map(&:name).should include('Lolcat')
+    }
 end
