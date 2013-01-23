@@ -1,0 +1,34 @@
+<%= form_for [:admin, @hybrid], :remote => true, :namespace => 'hybrid' do |f| %>
+  <%= error_messages_for(@hybrid) %>
+  <%= f.hidden_field :name_status %>
+
+  <div class="control-group">
+    <label>Designation</label>
+    <%= f.select :designation_id,
+      options_from_collection_for_select(
+        @designations, :id, :name, @synonym && @synonym.designation_id
+      )
+    %>
+  </div>
+  <div class="control-group">
+    <label>Rank</label>
+    <%= f.select :rank_id,
+      options_from_collection_for_select(
+        @ranks, :id, :name,
+        @hybrid && @hybrid.rank_id
+      )
+    %>
+  </div>
+  <div class="control-group">
+    <label>Hybrid parent name</label>
+    <%= f.text_field :hybrid_parent_scientific_name, :class => 'typeahead' %>
+  </div>
+  <div class="control-group">
+    <label>Synonym</label>
+    <%= f.text_field :full_name %>
+  </div>
+  <div class="control-group">
+    <label>Author & year</label>
+    <%= f.text_field :author_year %>
+  </div>
+<% end %>

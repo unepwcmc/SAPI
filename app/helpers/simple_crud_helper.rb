@@ -1,5 +1,11 @@
 #encoding: utf-8
 module SimpleCrudHelper
+  def edit_icon
+    '<i class="icon-pencil"></i>'.html_safe
+  end
+  def delete_icon
+    '<i class="icon-trash"></i>'.html_safe
+  end
   def error_messages_for(resource)
     resource = instance_variable_get("@#{resource}") if resource.is_a? Symbol
     return '' unless resource && resource.errors.any?
