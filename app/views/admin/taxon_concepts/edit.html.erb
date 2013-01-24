@@ -34,11 +34,25 @@
           <h3>Synonyms</h3>
           <%= admin_add_new_synonym_button(true) %>
           <%= admin_new_synonym_modal(true) %>
-
           <hr>
-
           <div id="synonyms-list">
-            <%= render 'admin/synonym_relationships/list' %>
+            <% if @taxon_concept.has_synonyms? %>
+              <%= render 'admin/synonym_relationships/list' %>
+            <% else %>
+              No synonyms defined.
+            <% end %>
+          </div>
+
+          <h3>Hybrids</h3>
+          <%= admin_add_new_hybrid_button(true) %>
+          <%= admin_new_hybrid_modal(true) %>
+          <hr>
+          <div id="hybrids-list">
+            <% if @taxon_concept.has_hybrids? %>
+              <%= render 'admin/hybrid_relationships/list' %>
+            <% else %>
+              No hybrids defined.
+            <% end %>
           </div>
         </div>
 

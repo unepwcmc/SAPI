@@ -1,3 +1,4 @@
 $('#admin-new-taxon_concept_hybrid-form').html(
   "<%= escape_javascript(render('hybrid_form')) %>");
 $('#new-taxon_concept_hybrid').modal('show');
+window.adminEditor.initTaxonConceptTypeaheads();

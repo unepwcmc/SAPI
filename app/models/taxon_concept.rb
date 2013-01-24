@@ -27,9 +27,10 @@ class TaxonConcept < ActiveRecord::Base
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
     :accepted_scientific_name, :parent_scientific_name, 
-    :hybrid_parent_scientific_name
+    :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name
   attr_writer :parent_scientific_name
-  attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name
+  attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
+    :other_hybrid_parent_scientific_name
 
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore
@@ -44,9 +45,38 @@ class TaxonConcept < ActiveRecord::Base
     :through => :taxon_relationships
   has_many :synonym_relationships,
     :class_name => 'TaxonRelationship', :dependent => :destroy,
-    :conditions => ["taxon_relationship_type_id IN (SELECT id FROM taxon_relationship_types WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"]
+    :conditions => [
+      "taxon_relationship_type_id IN
+      (SELECT id FROM taxon_relationship_types
+        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"]
+  has_many :inverse_synonym_relationships, :class_name => 'TaxonRelationship',
+    :foreign_key => :other_taxon_concept_id, :dependent => :destroy,
+    :conditions => [
+      "taxon_relationship_type_id IN
+      (SELECT id FROM taxon_relationship_types
+        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"]
   has_many :synonyms, :class_name => 'TaxonConcept',
     :through => :synonym_relationships, :source => :other_taxon_concept
+  has_many :accepted_names, :class_name => 'TaxonConcept',
+    :through => :inverse_synonym_relationships, :source => :taxon_concept
+  has_many :hybrid_relationships,
+    :class_name => 'TaxonRelationship', :dependent => :destroy,
+    :conditions => [
+      "taxon_relationship_type_id IN
+      (SELECT id FROM taxon_relationship_types
+        WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}'
+      )"
+    ]
+  has_many :inverse_hybrid_relationships, :class_name => 'TaxonRelationship',
+    :foreign_key => :other_taxon_concept_id, :dependent => :destroy,
+    :conditions => [
+      "taxon_relationship_type_id IN
+      (SELECT id FROM taxon_relationship_types
+        WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}')"]
+  has_many :hybrids, :class_name => 'TaxonConcept',
+    :through => :hybrid_relationships, :source => :other_taxon_concept
+  has_many :hybrid_parents, :class_name => 'TaxonConcept',
+    :through => :inverse_hybrid_relationships, :source => :taxon_concept
   has_many :taxon_concept_geo_entities
   has_many :geo_entities, :through => :taxon_concept_geo_entities
   has_many :listing_changes
@@ -68,8 +98,10 @@ class TaxonConcept < ActiveRecord::Base
     :if => :fixed_order_required?
 
   before_validation :check_taxon_name_exists
-  before_validation :check_parent_taxon_name_exists
-  before_validation :check_accepted_taxon_name_exists
+  before_validation :check_parent_taxon_concept_exists
+  before_validation :check_hybrid_parent_taxon_concept_exists
+  before_validation :check_other_hybrid_parent_taxon_concept_exists
+  before_validation :check_accepted_taxon_concept_exists
   before_validation :ensure_taxonomic_position
   before_destroy :check_destroy_allowed
 
@@ -98,8 +130,16 @@ class TaxonConcept < ActiveRecord::Base
     rank && rank.fixed_order
   end
 
+  def has_synonyms?
+    synonyms.count > 0
+  end
+
   def is_synonym?
     name_status == 'S'
+  end
+
+  def has_hybrids?
+    hybrids.count > 0
   end
 
   def is_hybrid?
@@ -163,7 +203,41 @@ class TaxonConcept < ActiveRecord::Base
     true
   end
 
-  def check_accepted_taxon_name_exists
+  def check_hybrid_parent_taxon_concept_exists
+    return true unless is_hybrid?
+    return true if @hybrid_parent_scientific_name.blank?
+    @hybrid_parent_scientific_name = TaxonConcept.sanitize_full_name(@hybrid_parent_scientific_name)
+    htc = TaxonConcept.
+      where(["UPPER(full_name) = UPPER(BTRIM(?)) AND name_status = 'A'", @hybrid_parent_scientific_name]).first
+    unless htc
+      errors.add(:hybrid_parent_scientific_name, "does not exist")
+      return true
+    end
+
+    inverse_taxon_relationships.build(
+      :taxon_concept_id => htc.id,
+      :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_HYBRID).id
+    )
+  end
+
+  def check_other_hybrid_parent_taxon_concept_exists
+    return true if @other_hybrid_parent_scientific_name.blank?
+    @other_hybrid_parent_scientific_name = TaxonConcept.sanitize_full_name(@other_hybrid_parent_scientific_name)
+    htc = TaxonConcept.
+      where(["UPPER(full_name) = UPPER(BTRIM(?)) AND name_status = 'A'", @other_hybrid_parent_scientific_name]).first
+    unless htc
+      errors.add(:other_hybrid_parent_scientific_name, "does not exist")
+      return true
+    end
+
+    inverse_taxon_relationships.build(
+      :taxon_concept_id => htc.id,
+      :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_HYBRID).id
+    )
+    true
+  end
+
+  def check_accepted_taxon_concept_exists
     return true unless is_synonym?
     return true if @accepted_scientific_name.blank?
     @accepted_scientific_name = TaxonConcept.sanitize_full_name(@accepted_scientific_name)
@@ -181,7 +255,7 @@ class TaxonConcept < ActiveRecord::Base
     true
   end
 
-  def check_parent_taxon_name_exists
+  def check_parent_taxon_concept_exists
     return true if @parent_scientific_name.blank?
     @parent_scientific_name = TaxonConcept.sanitize_full_name(@parent_scientific_name)
 

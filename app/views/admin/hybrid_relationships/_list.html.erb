@@ -1,0 +1,11 @@
+<% @taxon_concept.hybrid_relationships.each do |s| %>
+  <%= link_to s.other_taxon_concept.full_name,
+    edit_admin_taxon_concept_url(s.other_taxon_concept) %>
+  <%= link_to edit_icon,
+    edit_admin_taxon_concept_hybrid_relationship_url(@taxon_concept, s),
+    :remote => true %>
+  <%= link_to delete_icon,
+    admin_taxon_concept_hybrid_relationship_url(@taxon_concept, s),
+    :confirm => "Are you sure?", :method => :delete %>
+  <br>
+<% end %>

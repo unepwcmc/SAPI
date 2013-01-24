@@ -31,10 +31,20 @@ module TaxonConceptHelper
     end
   end
 
-  def admin_add_new_hybrid_button
-    admin_add_new_button(
-      :resource => 'taxon_concept_hybrid'
-    )
+  def admin_add_new_hybrid_button(nested = false)
+    if nested
+      admin_add_new_button(
+        :resource => 'taxon_concept_hybrid',
+        :href => new_admin_taxon_concept_hybrid_relationship_url(@taxon_concept),
+        :remote => true,
+        :"data-toggle" => nil,
+        :role => nil
+      )
+    else
+      admin_add_new_button(
+        :resource => 'taxon_concept_hybrid'
+      )
+    end
   end
 
   def admin_new_synonym_modal(nested = false)
