@@ -1,6 +1,7 @@
-<%= form_for :taxon_concept, :url => collection_url, :remote => true do |f| %>
+<%= form_for [:admin, @taxon_concept], :remote => true do |f| %>
 
   <%= error_messages_for(@taxon_concept) %>
+  <%= f.hidden_field :name_status %>
   <div class="control-group">
     <label>Designation</label>
     <%= f.select :designation_id,
@@ -18,10 +19,8 @@
     <%= f.text_field :parent_scientific_name, :class => 'typeahead' %>
   </div>
   <div class="control-group">
-    <%= f.fields_for :taxon_name_attributes do |ff| %>
-      <label>Scientific name</label>
-      <%= ff.text_field :scientific_name %>
-    <% end %>
+    <label>Scientific name</label>
+    <%= f.text_field :full_name %>
   </div>
   <div class="control-group">
     <label>Author & year</label>

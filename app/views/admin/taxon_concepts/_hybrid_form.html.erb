@@ -1,12 +1,12 @@
-<%= form_for [:admin, @synonym], :remote => true, :namespace => 'synonym' do |f| %>
-  <%= error_messages_for(@synonym) %>
+<%= form_for [:admin, @hybrid], :remote => true, :namespace => 'hybrid' do |f| %>
+  <%= error_messages_for(@hybrid) %>
   <%= f.hidden_field :name_status %>
 
   <div class="control-group">
     <label>Designation</label>
     <%= f.select :designation_id,
       options_from_collection_for_select(
-        @designations, :id, :name, @synonym && @synonym.designation_id
+        @designations, :id, :name, @hybrid && @hybrid.designation_id
       )
     %>
   </div>
@@ -15,16 +15,20 @@
     <%= f.select :rank_id,
       options_from_collection_for_select(
         @ranks, :id, :name,
-        @synonym && @synonym.rank_id
+        @hybrid && @hybrid.rank_id
       )
     %>
   </div>
   <div class="control-group">
-    <label>Accepted name</label>
-    <%= f.text_field :accepted_scientific_name, :class => 'typeahead' %>
+    <label>Hybrid parent name</label>
+    <%= f.text_field :hybrid_parent_scientific_name, :class => 'typeahead' %>
   </div>
   <div class="control-group">
-    <label>Synonym</label>
+    <label>Hybrid parent name</label>
+    <%= f.text_field :hybrid_parent_scientific_name, :class => 'typeahead' %>
+  </div>
+  <div class="control-group">
+    <label>Hybrid</label>
     <%= f.text_field :full_name %>
   </div>
   <div class="control-group">

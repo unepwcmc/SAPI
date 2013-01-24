@@ -19,6 +19,8 @@ FactoryGirl.define do
     rank
     taxon_name
     taxonomic_position '1'
+    name_status 'A'
+    accepted_scientific_name ''
     data {}
     listing {}
 
@@ -30,6 +32,8 @@ FactoryGirl.define do
     end
 
   end
+
+  #TODO use traits instead of inheritance for taxon concept ranks?
 
   factory :reference do
     author 'Bolek'

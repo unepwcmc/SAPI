@@ -1,0 +1,16 @@
+<div class="row-fluid header">
+  <span></span><%= @taxon_concept.designation.name %></span>
+  <%= ancestors_path(@taxon_concept) %>
+  <%= content_tag(:h1, @taxon_concept.full_name, :title => @taxon_concept.rank.name) %>
+  <%= link_to edit_icon, edit_admin_taxon_concept_url(@taxon_concept), :remote => true %>
+  <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), :confirm => "Are you sure?", :method => :delete %>
+  <%= @taxon_concept.author_year %>
+</div>
+
+<%= admin_new_taxon_concept_modal %>
+
+<ul id="taxon-concept-tabs" class="nav nav-tabs">
+  <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
+  <li><a href="#taxon-relationships" data-toggle="tab">Taxon Relationships</a></li>
+  <li><a href="#legislation" data-toggle="tab">Legislation</a></li>
+</ul>
