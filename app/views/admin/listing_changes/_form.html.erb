@@ -7,6 +7,10 @@
     <%= f.text_field :taxon_concept_id %>
   </p>
   <p>
+    <%= f.label :species_listing %>
+    <%= f.select :species_listing, options_from_collection_for_select(@species_listings, :id, :name) %>
+  </p>
+  <p>
     <%= f.label :change_type %>
     <%= f.select :change_type, options_from_collection_for_select(@change_types, :id, :name) %>
   </p>
