@@ -1,10 +1,30 @@
 <div class="row-fluid header">
-  <span></span><%= @taxon_concept.designation.name %></span>
+  <span><%= @taxon_concept.designation.name %></span>
   <%= ancestors_path(@taxon_concept) %>
   <%= content_tag(:h1, @taxon_concept.full_name, :title => @taxon_concept.rank.name) %>
   <%= link_to edit_icon, edit_admin_taxon_concept_url(@taxon_concept), :remote => true %>
   <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), :confirm => "Are you sure?", :method => :delete %>
   <%= @taxon_concept.author_year %>
+
+  <% if @taxon_concept.is_synonym? %>
+    <div>
+    <span>SYNONYM OF:</span>
+    <ul>
+    <% @taxon_concept.accepted_name.each do |tc| %>
+      <li><%= link_to tc.full_name, edit_admin_taxon_concept_url(tc) %></li>
+    <% end %>
+    </ul>
+    </div>
+  <% elsif @taxon_concept.is_hybrid? %>
+    <div>
+    <span>HYBRID OF:</span>
+    <ul>
+    <% @taxon_concept.hybrid_parents.each do |tc| %>
+      <li><%= link_to tc.full_name, edit_admin_taxon_concept_url(tc) %></li>
+    <% end %>
+    </ul>
+    </div>
+  <% end %>
 </div>
 
 <%= admin_new_taxon_concept_modal %>
