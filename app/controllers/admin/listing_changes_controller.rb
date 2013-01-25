@@ -2,6 +2,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
 
   belongs_to :taxon_concept, :optional => true
   before_filter :load_change_types, :only => [:index, :create]
+  layout 'taxon_concepts'
 
   protected
   def load_change_types

@@ -74,15 +74,3 @@ class SAPIAdmin.EditableList
     )
 
     return @$el
-
-$(document).ready ->
-  window.NestedFormEvents::insertFields = (content, assoc, link) ->
-    $el = $('<tr>')
-    $(content).children().each((i, element) ->
-      if $(element).attr('type') != 'hidden'
-        $td = $('<td>')
-        $td.html(element)
-        $el.append($td)
-    )
-
-    $('.table tr:last').after($el)

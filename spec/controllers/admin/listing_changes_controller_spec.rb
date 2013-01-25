@@ -17,6 +17,10 @@ describe Admin::ListingChangesController do
       get :index, :taxon_concept_id => @taxon_concept.id
       response.should render_template("index")
     end
+    it "renders the taxon_concepts_layout" do
+      get :index, :taxon_concept_id => @taxon_concept.id
+      response.should render_template('layouts/taxon_concepts')
+    end
   end
 
   describe "XHR POST create" do
@@ -28,26 +32,6 @@ describe Admin::ListingChangesController do
       taxon_concept = create(:taxon_concept)
       xhr :post, :create, :listing_change => {}, :taxon_concept_id => @taxon_concept.id
       response.should render_template("create")
-    end
-  end
-
-  describe "XHR PUT update" do
-    let(:listing_change){ create(:listing_change, :taxon_concept_id => @taxon_concept.id) }
-    it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'json', :id => listing_change.id, :listing_change => { :effective_at => 1.week.ago }
-      response.should be_success
-    end
-    it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json', :id => listing_change.id, :listing_change => { :taxon_concept_id => nil }
-      JSON.parse(response.body).should include('errors')
-    end
-  end
-
-  describe "DELETE destroy" do
-    let(:listing_change){ create(:listing_change) }
-    it "redirects after delete" do
-      delete :destroy, :id => listing_change.id 
-      response.should render('destroy')
     end
   end
 

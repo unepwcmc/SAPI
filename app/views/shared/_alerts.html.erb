@@ -1,0 +1,7 @@
+<% flash.each do |name, msg| %>
+  <%= content_tag :div, :class => "alert #{name == :alert ? "alert-error" : "alert-success" }" do %>
+    <a class="close" data-dismiss="alert" href="#">×</a>
+    <%= msg %>
+  <% end %>
+<% end %>
+
