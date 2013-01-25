@@ -1,5 +1,5 @@
 #encoding: utf-8
-module SimpleCrudHelper
+module AdminHelper
   def edit_icon
     '<i class="icon-pencil"></i>'.html_safe
   end
@@ -105,5 +105,4 @@ module SimpleCrudHelper
       end
     end
   end
-
 end
