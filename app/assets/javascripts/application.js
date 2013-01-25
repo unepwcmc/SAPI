@@ -14,5 +14,6 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require bootstrap-editable
+//= require bootstrap-datepicker
 //= require underscore
 //= require_tree .
