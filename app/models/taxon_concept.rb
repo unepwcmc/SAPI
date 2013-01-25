@@ -205,78 +205,77 @@ class TaxonConcept < ActiveRecord::Base
 
   def check_hybrid_parent_taxon_concept_exists
     return true unless is_hybrid?
-    return true if @hybrid_parent_scientific_name.blank?
-    @hybrid_parent_scientific_name = TaxonConcept.sanitize_full_name(@hybrid_parent_scientific_name)
-    htc = TaxonConcept.
-      where(["UPPER(full_name) = UPPER(BTRIM(?)) AND name_status = 'A'", @hybrid_parent_scientific_name]).first
-    unless htc
-      errors.add(:hybrid_parent_scientific_name, "does not exist")
-      return true
+    check_associated_taxon_concept_exists(:hybrid_parent_scientific_name) do |tc|
+      inverse_taxon_relationships.build(
+        :taxon_concept_id => tc.id,
+        :taxon_relationship_type_id => TaxonRelationshipType.
+          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
+      )
     end
-
-    inverse_taxon_relationships.build(
-      :taxon_concept_id => htc.id,
-      :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_HYBRID).id
-    )
   end
 
   def check_other_hybrid_parent_taxon_concept_exists
-    return true if @other_hybrid_parent_scientific_name.blank?
-    @other_hybrid_parent_scientific_name = TaxonConcept.sanitize_full_name(@other_hybrid_parent_scientific_name)
-    htc = TaxonConcept.
-      where(["UPPER(full_name) = UPPER(BTRIM(?)) AND name_status = 'A'", @other_hybrid_parent_scientific_name]).first
-    unless htc
-      errors.add(:other_hybrid_parent_scientific_name, "does not exist")
-      return true
+    return true unless is_hybrid?
+    check_associated_taxon_concept_exists(:other_hybrid_parent_scientific_name) do |tc|
+      inverse_taxon_relationships.build(
+        :taxon_concept_id => tc.id,
+        :taxon_relationship_type_id => TaxonRelationshipType.
+          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
+      )
     end
-
-    inverse_taxon_relationships.build(
-      :taxon_concept_id => htc.id,
-      :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_HYBRID).id
-    )
-    true
   end
 
   def check_accepted_taxon_concept_exists
     return true unless is_synonym?
-    return true if @accepted_scientific_name.blank?
-    @accepted_scientific_name = TaxonConcept.sanitize_full_name(@accepted_scientific_name)
-    atc = TaxonConcept.
-      where(["UPPER(full_name) = UPPER(BTRIM(?)) AND name_status = 'A'", @accepted_scientific_name]).first
-    unless atc
-      errors.add(:accepted_scientific_name, "does not exist")
-      return true
+    check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
+      inverse_taxon_relationships.build(
+        :taxon_concept_id => tc.id,
+        :taxon_relationship_type_id => TaxonRelationshipType.
+          find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
+      )
     end
-
-    inverse_taxon_relationships.build(
-      :taxon_concept_id => atc.id,
-      :taxon_relationship_type_id => TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
-    )
-    true
   end
 
   def check_parent_taxon_concept_exists
-    return true if @parent_scientific_name.blank?
-    @parent_scientific_name = TaxonConcept.sanitize_full_name(@parent_scientific_name)
+    check_associated_taxon_concept_exists(:parent_scientific_name) do |tc|
+      self.parent_id = tc.id
+    end
+  end
 
-    p = TaxonConcept.
-      where(["UPPER(full_name) = UPPER(BTRIM(?))", @parent_scientific_name]).first
-    unless p
-      errors.add(:parent_scientific_name, "does not exist")
+  def check_associated_taxon_concept_exists(full_name_attr)
+    full_name_var = self.instance_variable_get("@#{full_name_attr}")
+    return true if full_name_var.blank?
+    tc = TaxonConcept.find_by_full_name_and_name_status(full_name_var, 'A')
+    unless tc
+      errors.add(full_name_attr, "does not exist")
       return true
     end
-    self.parent_id = p.id
+    if block_given?
+      yield(tc)
+    end
     true
+  end
+
+  def self.find_by_full_name_and_name_status(full_name, name_status)
+    full_name = TaxonConcept.sanitize_full_name(full_name)
+    TaxonConcept.
+      where([
+        "UPPER(full_name) = UPPER(BTRIM(?)) AND name_status = ?",
+        full_name,
+        name_status
+      ]).first
   end
 
   def ensure_taxonomic_position
     if new_record? && fixed_order_required? && taxonomic_position.blank?
       prev_taxonomic_position =
       if parent
-        last_sibling = TaxonConcept.where(:parent_id => parent_id).maximum(:taxonomic_position)
+        last_sibling = TaxonConcept.where(:parent_id => parent_id).
+          maximum(:taxonomic_position)
         last_sibling || (parent.taxonomic_position + '.0')
       else
-        last_root = TaxonConcept.where(:parent_id => nil).maximum(:taxonomic_position)
+        last_root = TaxonConcept.where(:parent_id => nil).
+          maximum(:taxonomic_position)
         last_root || '0'
       end
       prev_taxonomic_position_parts = prev_taxonomic_position.split('.')

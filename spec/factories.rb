@@ -20,9 +20,12 @@ FactoryGirl.define do
     taxon_name
     taxonomic_position '1'
     name_status 'A'
-    accepted_scientific_name ''
     data {}
     listing {}
+    parent_scientific_name ''
+    accepted_scientific_name ''
+    hybrid_parent_scientific_name ''
+    other_hybrid_parent_scientific_name ''
 
     %w(kingdom phylum class order family genus species subspecies).each do |rank_name|
       factory :"#{rank_name}" do

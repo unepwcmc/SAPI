@@ -32,7 +32,7 @@ puts "#{TaxonRelationshipType.delete_all} taxon relationship types deleted"
 ['EQUAL_TO', 'INCLUDES', 'OVERLAPS', 'DISJUNCT'].each do |relationship|
   TaxonRelationshipType.create(:name => relationship, :is_interdesignational => true, :is_bidirectional => ['EQUAL_TO', 'DISJUNCT'].include?(relationship))
 end
-['HAS_SYNONYM', 'HAS_HOMONYM'].each do |relationship|
+['HAS_SYNONYM', 'HAS_HYBRID'].each do |relationship|
   TaxonRelationshipType.create(:name => relationship, :is_interdesignational => false)
 end
 puts "#{TaxonRelationshipType.count} taxon relationship types created"

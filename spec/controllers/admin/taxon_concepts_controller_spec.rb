@@ -7,13 +7,10 @@ describe Admin::TaxonConceptsController do
   end
 
   describe "XHR POST create" do
-    let(:taxon_concept){ build(:taxon_concept) }
+    let(:taxon_concept_attributes){ build_tc_attributes(:taxon_concept) }
     it "renders create when successful" do
       xhr :post, :create,
-        taxon_concept: taxon_concept.attributes.except(
-          'id', 'data', 'listing', 'created_at', 'updated_at',
-          'notes', 'full_name', 'lft', 'rgt'
-        )
+        taxon_concept: taxon_concept_attributes
       response.should render_template("create")
     end
     it "renders new when not successful" do
