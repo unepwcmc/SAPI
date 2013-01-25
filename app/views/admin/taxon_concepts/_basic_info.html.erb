@@ -30,7 +30,7 @@
 <%= admin_new_taxon_concept_modal %>
 
 <ul id="taxon-concept-tabs" class="nav nav-tabs">
-  <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
-  <li><a href="#taxon-relationships" data-toggle="tab">Taxon Relationships</a></li>
-  <li><a href="#legislation" data-toggle="tab">Legislation</a></li>
+  <li class="<%= if controller_name == "taxon_concepts" then "active" end%>"><%= link_to "Details", edit_admin_taxon_concept_path(@taxon_concept) %></li>
+  <li class="<%= if controller_name == "listing_changes" then "active" end%>"><%= link_to "Legislation", admin_taxon_concept_listing_changes_path(@taxon_concept) %></li>
+  <li class="<%= if controller_name == "taxon_relationships" then "active" end%>"><%= link_to "Taxon Relationships", admin_taxon_concept_taxon_relationships_path(@taxon_concept) %></li>
 </ul>

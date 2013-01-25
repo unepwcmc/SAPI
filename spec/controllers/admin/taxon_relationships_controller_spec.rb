@@ -15,6 +15,10 @@ describe Admin::TaxonRelationshipsController do
       get :index, :taxon_concept_id => @taxon_concept.id
       response.should render_template("index")
     end
+    it "renders the taxon_concepts_layout" do
+      get :index, :taxon_concept_id => @taxon_concept.id
+      response.should render_template('layouts/taxon_concepts')
+    end
   end
 
   describe "XHR POST create" do

@@ -1,91 +1,50 @@
-<script type="text/javascript">
-  $(document).ready(function() {
-    window.geoEntitiesList = new SAPIAdmin.EditableList({
-      list: <%= @taxon_concept.geo_entities.to_json.html_safe %>,
-      el: '<ul class="unstyled">',
-    })
+<%= form_for :taxon_concept, :url => admin_taxon_concepts_url, :remote => true do |f| %>
+  <div class="row-fluid">
 
-    $('.geo-entities-list').html(window.geoEntitiesList.render());
-
-    window.commonNamesList = new SAPIAdmin.EditableList({
-      list: <%= @taxon_concept.common_names.to_json.html_safe %>,
-      el: '<ul class="unstyled">',
-      showEditLink: true,
-      onEdit: function(e) {
-        name = $(e.target).parents('li').attr('data-id')
-        console.log(name);
-      }
-    })
-
-    $('.common-names-list').html(window.commonNamesList.render());
-  });
-</script>
-
-<div id="basic-info">
-  <%= render 'basic_info' %>
-</div>
-
-<div class="tab-content">
-  <div class="tab-pane fade active in" id="details">
-    <%= form_for :taxon_concept, :url => admin_taxon_concepts_url, :remote => true do |f| %>
-      <div class="row-fluid">
-
-        <div class="span4">
-          <h3>Synonyms</h3>
-          <%= admin_add_new_synonym_button(true) %>
-          <%= admin_new_synonym_modal(true) %>
-          <hr>
-          <div id="synonyms-list">
-            <% if @taxon_concept.has_synonyms? %>
-              <%= render 'admin/synonym_relationships/list' %>
-            <% else %>
-              No synonyms defined.
-            <% end %>
-          </div>
-
-          <h3>Hybrids</h3>
-          <%= admin_add_new_hybrid_button(true) %>
-          <%= admin_new_hybrid_modal(true) %>
-          <hr>
-          <div id="hybrids-list">
-            <% if @taxon_concept.has_hybrids? %>
-              <%= render 'admin/hybrid_relationships/list' %>
-            <% else %>
-              No hybrids defined.
-            <% end %>
-          </div>
-        </div>
-
-        <div class="span4">
-          <h3>Distribution</h3>
-
-          <div class="geo-entities-list">
-          </div>
-        </div>
-
-        <div class="span4">
-          <h3>Common name</h3>
-          <%= admin_add_new_common_name_button %>
-          <%= admin_new_common_name_modal %>
-
-          <hr>
-
-          <div id="taxon-commons-list">
-            <%= render "admin/taxon_commons/list" %>
-          </div>
-        </div>
-
+    <div class="span4">
+      <h3>Synonyms</h3>
+      <%= admin_add_new_synonym_button(true) %>
+      <%= admin_new_synonym_modal(true) %>
+      <hr>
+      <div id="synonyms-list">
+        <% if @taxon_concept.has_synonyms? %>
+          <%= render 'admin/synonym_relationships/list' %>
+        <% else %>
+          No synonyms defined.
+        <% end %>
       </div>
-    <% end %>
-  </div>
 
-  <div class="row-fluid tab-pane fade" id="taxon-relationships">
-    <div class="span12">
+      <h3>Hybrids</h3>
+      <%= admin_add_new_hybrid_button(true) %>
+      <%= admin_new_hybrid_modal(true) %>
+      <hr>
+      <div id="hybrids-list">
+        <% if @taxon_concept.has_hybrids? %>
+          <%= render 'admin/hybrid_relationships/list' %>
+        <% else %>
+          No hybrids defined.
+        <% end %>
+      </div>
     </div>
-  </div>
 
-  <div class="row-fluid tab-pane" id="legislation">
-    <div class="span12">
+    <div class="span4">
+      <h3>Distribution</h3>
+
+      <div class="geo-entities-list">
+      </div>
     </div>
+
+    <div class="span4">
+      <h3>Common name</h3>
+      <%= admin_add_new_common_name_button %>
+      <%= admin_new_common_name_modal %>
+
+      <hr>
+
+      <div id="taxon-commons-list">
+        <%= render "admin/taxon_commons/list" %>
+      </div>
+    </div>
+
   </div>
-</div>
+<% end %>

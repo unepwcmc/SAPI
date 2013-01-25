@@ -1,6 +1,6 @@
 class Admin::TaxonConceptsController < Admin::SimpleCrudController
   respond_to :json
-  inherit_resources
+  layout :determine_layout
 
   def index
     @designations = Designation.order(:name)
@@ -87,5 +87,9 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
         includes([:rank, :designation, :taxon_name, :parent]).
         where(:name_status => 'A').
         order(:taxonomic_position).page(params[:page])
+    end
+
+    def determine_layout
+      action_name == 'index' ? 'admin' : 'taxon_concepts'
     end
 end

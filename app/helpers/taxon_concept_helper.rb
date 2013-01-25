@@ -8,7 +8,7 @@ module TaxonConceptHelper
         else
           controller_name.titleize
         end
-      )
+      ) +
       admin_add_new_hybrid_button +
       admin_add_new_synonym_button +
       admin_add_new_button

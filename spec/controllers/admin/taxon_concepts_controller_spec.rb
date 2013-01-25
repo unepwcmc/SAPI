@@ -3,6 +3,7 @@ describe Admin::TaxonConceptsController do
     it "renders the index template" do
       get :index
       response.should render_template("index")
+      response.should render_template("layouts/admin")
     end
   end
 
