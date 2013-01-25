@@ -26,6 +26,10 @@ class ChangeType < ActiveRecord::Base
       map{|a| a[0]}.join('')
   end
 
+  def print_name
+    self.name.titleize
+  end
+
   private
 
   def check_destroy_allowed
