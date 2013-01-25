@@ -2,15 +2,27 @@
 
   <%= error_messages_for(@listing_change) %>
   <p>
-    <%= f.label :species_listing %>
-    <%= f.select :species_listing, options_from_collection_for_select(@species_listings, :id, :name) %>
+    <%= f.label :species_listing_id %>
+    <%= f.select :species_listing_id, options_from_collection_for_select(@species_listings, :id, :name) %>
   </p>
   <p>
-    <%= f.label :change_type %>
-    <%= f.select :change_type, options_from_collection_for_select(@change_types, :id, :print_name) %>
+    <%= f.label :change_type_id %>
+    <%= f.select :change_type_id, options_from_collection_for_select(@change_types, :id, :print_name) %>
   </p>
   <p>
     <%= f.label :effective_at %>
     <%= f.text_field :effective_at, :class => "datepicker" %>
   </p>
+  <p>
+    <%= f.label :geo_entity_ids, "Countries" %>
+    <%= f.select :geo_entity_ids, options_from_collection_for_select(@geo_entities, :id, :name_en), { } , { :multiple => true, :class => 'distribution' } %>
+  </p>
 <% end %>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+      $('.distribution').select2({
+          placeholder: 'Select countries',
+        });
+  });
+</script>

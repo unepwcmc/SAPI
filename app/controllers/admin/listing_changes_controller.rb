@@ -4,6 +4,14 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   before_filter :load_change_types, :only => [:index, :create]
   layout 'taxon_concepts'
 
+  def destroy
+    destroy! do |success, failure|
+      success.html { redirect_to admin_taxon_concept_listing_changes_url(params[:taxon_concept_id]),
+        :notice => 'Operation successful'
+      }
+    end
+  end
+
   protected
   def load_change_types
     @taxon_concept ||= TaxonConcept.find(params[:taxon_concept_id])
@@ -11,6 +19,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       where(:designation_id => @taxon_concept.designation_id)
     @species_listings = SpeciesListing.order(:abbreviation).
       where(:designation_id => @taxon_concept.designation_id)
+    @geo_entities = GeoEntity.order(:name_en).where(:is_current => true)
   end
 
   def collection

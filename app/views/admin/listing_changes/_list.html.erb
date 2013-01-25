@@ -21,7 +21,7 @@
       <td><%= listing_change.inclusion_taxon_concept_id %></td>
       <td><%= listing_change.parent_id %></td>
       <td>
-        <%= link_to 'Delete', admin_listing_change_path(listing_change),
+        <%= link_to 'Delete', admin_listing_change_path(:id => listing_change.id, :taxon_concept_id => @taxon_concept.id),
           :confirm => "Are you sure?", :method => :delete
         %>
       </td>
