@@ -1,6 +1,10 @@
 #Encoding: utf-8
 FactoryGirl.define do
 
+  factory :taxonomy do
+    sequence(:name) {|n| "WILDLIFE#{n}"}
+  end
+
   factory :designation do
     sequence(:name) {|n| "CITES#{n}"}
   end
