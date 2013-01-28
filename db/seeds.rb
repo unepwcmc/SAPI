@@ -64,6 +64,7 @@ Taxonomy.dict.each do |type|
   Taxonomy.create(name: type)
 end
 taxonomy = Taxonomy.find_by_name(Taxonomy::WILDLIFE_TRADE)
+puts "#{Taxonomy.count} taxonomies created"
 
 [Designation::CITES, Designation::EU].each do |designation|
   Designation.create(:name => designation, :taxonomy_id => taxonomy.id)

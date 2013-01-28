@@ -19,6 +19,7 @@ class Designation < ActiveRecord::Base
     :if => lambda { |t| t.name_changed? && t.class.dict.include?(t.name_was) },
     :on => :update
   validate :taxonomy_cannot_be_changed_if_dependent_objects_present
+
   belongs_to :taxonomy
   has_many :species_listings
   has_many :change_types

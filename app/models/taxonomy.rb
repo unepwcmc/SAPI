@@ -4,6 +4,7 @@ class Taxonomy < ActiveRecord::Base
 
   attr_accessible :name
   has_many :designations
+
   validates :name, :presence => true, :uniqueness => true
   validates :name,
     :inclusion => {:in => self.dict, :message => 'cannot change protected name'},
