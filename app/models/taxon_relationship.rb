@@ -20,8 +20,7 @@ class TaxonRelationship < ActiveRecord::Base
 
   delegate :is_bidirectional?, :to => :taxon_relationship_type
 
-  before_validation :check_synonym_exists
-  after_validation :reset_synonym
+  before_validation :check_other_taxon_concept_exists
   before_destroy :destroy_opposite, :if => Proc.new { self.is_bidirectional? && self.has_opposite? }
   after_create :create_opposite, :if => Proc.new { self.is_bidirectional? && !self.has_opposite? }
 
@@ -42,23 +41,25 @@ class TaxonRelationship < ActiveRecord::Base
 
   private
 
-  def reset_synonym
-    return true unless taxon_relationship_type.name == TaxonRelationshipType::HAS_SYNONYM
+  def check_other_taxon_concept_exists
     return true unless other_taxon_concept
-    self.other_taxon_concept.id = nil unless errors.empty?
-  end
-
-  def check_synonym_exists
-    return true unless taxon_relationship_type.name == TaxonRelationshipType::HAS_SYNONYM
-    return true unless other_taxon_concept
-    synonym = TaxonConcept.where(:designation_id => other_taxon_concept.designation_id).
+    required_name_status = case taxon_relationship_type.name
+      when TaxonRelationshipType::HAS_SYNONYM
+        'S'
+      when TaxonRelationshipType::HAS_HYBRID
+        'H'
+      else
+        'A'
+    end
+    existing_tc = TaxonConcept.
+      where(:designation_id => other_taxon_concept.designation_id).
       where(:rank_id => other_taxon_concept.rank_id).
       where(:full_name => other_taxon_concept.full_name).
       where(:author_year => other_taxon_concept.author_year).
-      where(:name_status => 'S').first
-    if synonym
-      self.other_taxon_concept = synonym
-      self.other_taxon_concept_id = synonym.id
+      where(:name_status => required_name_status).first
+    if existing_tc
+      self.other_taxon_concept = existing_tc
+      self.other_taxon_concept_id = existing_tc.id
     end
     true
   end
