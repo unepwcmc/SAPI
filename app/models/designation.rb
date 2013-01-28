@@ -9,11 +9,12 @@
 #
 
 class Designation < ActiveRecord::Base
-  attr_accessible :name
+  attr_accessible :name, :taxonomy_id
   include Dictionary
   build_dictionary :cites, :cms
 
   validates :name, :presence => true, :uniqueness => true
+  belongs_to :taxonomy
   has_many :species_listings
   has_many :change_types
   has_many :taxon_concepts

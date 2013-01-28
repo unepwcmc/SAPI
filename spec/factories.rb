@@ -7,6 +7,7 @@ FactoryGirl.define do
 
   factory :designation do
     sequence(:name) {|n| "CITES#{n}"}
+    taxonomy
   end
 
   factory :taxon_name do
