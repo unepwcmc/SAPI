@@ -55,10 +55,10 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
               AND effective_at <= NOW()
               INNER JOIN species_listings ON species_listing_id = species_listings.id
               INNER JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
-              INNER JOIN designations ON taxon_concepts.designation_id = designations.id
+              INNER JOIN taxonomies ON taxon_concepts.taxonomy_id = taxonomies.id
               LEFT JOIN listing_distributions
                 ON listing_distributions.listing_change_id = listing_changes.id
-              WHERE designations.name = 'CITES'
+              WHERE taxonomies.name = 'WILDLIFE_TRADE'
               AND is_current = 't' 
             ) AS q
             GROUP BY taxon_concept_id

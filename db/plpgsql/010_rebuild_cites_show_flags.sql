@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_show_flags() RETURNS void
         DECLARE
           cites_id int;
         BEGIN
-        SELECT id INTO cites_id FROM designations WHERE name = 'CITES';
+        SELECT id INTO wildlife_trade_id FROM taxonomies WHERE name = 'WILDLIFE_TRADE';
 
         -- set cites_show to true for all taxa except:
         -- implicitly listed subspecies
@@ -30,7 +30,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_show_flags() RETURNS void
           THEN hstore('cites_show', 'f')
           ELSE hstore('cites_show', 't')
         END
-        WHERE designation_id = cites_id;
+        WHERE taxonomy_id = wildlife_trade_id;
 
         END;
       $$;

@@ -506,7 +506,7 @@ class MergedMigrations < ActiveRecord::Migration
     ON taxon_concept_geo_entities.geo_entity_id = geo_entities.id
     LEFT JOIN "geo_entity_types"
     ON "geo_entity_types"."id" = "geo_entities"."geo_entity_type_id"
-    AND geo_entity_types.name = '#{GeoEntityType::COUNTRY}'
+    AND geo_entity_types.name = 'COUNTRY'
     GROUP BY taxon_concepts.id
     ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt
     LEFT JOIN (

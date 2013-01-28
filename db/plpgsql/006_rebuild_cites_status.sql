@@ -6,12 +6,12 @@ CREATE OR REPLACE FUNCTION rebuild_cites_status() RETURNS void
     LANGUAGE plpgsql
     AS $$
         DECLARE
-          cites_id int;
+          wildlife_trade_id int;
           deletion_id int;
           addition_id int;
           exception_id int;
         BEGIN
-        SELECT id INTO cites_id FROM designations WHERE name = 'CITES';
+        SELECT id INTO wildlife_trade_id FROM taxonomies WHERE name = 'WILDLIFE_TRADE';
         SELECT id INTO deletion_id FROM change_types WHERE name = 'DELETION';
         SELECT id INTO addition_id FROM change_types WHERE name = 'ADDITION';
         SELECT id INTO exception_id FROM change_types WHERE name = 'EXCEPTION';
@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_status() RETURNS void
             ELSE listing - ARRAY['cites_listing','cites_I','cites_II','cites_III','cites_NC']
           END || hstore('cites_status', NULL) || hstore('cites_status_original', NULL) ||
             hstore('listing_updated_at', NULL)
-        WHERE designation_id = cites_id;
+        WHERE taxonomy_id = wildlife_trade_id;
 
         -- set cites_status property to 'LISTED' for all explicitly listed taxa
         -- i.e. ones which have at least one current ADDITION
@@ -35,7 +35,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_status() RETURNS void
           INNER JOIN listing_changes
             ON taxon_concepts.id = listing_changes.taxon_concept_id
             AND is_current = 't' AND change_type_id = addition_id
-          WHERE designation_id = cites_id
+          WHERE taxonomy_id = wildlife_trade_id
           GROUP BY taxon_concepts.id
         )
         UPDATE taxon_concepts
@@ -55,7 +55,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_status() RETURNS void
           INNER JOIN listing_changes
             ON taxon_concepts.id = listing_changes.taxon_concept_id
             AND is_current = 't' AND change_type_id = deletion_id
-          WHERE designation_id = cites_id AND (
+          WHERE taxonomy_id = wildlife_trade_id AND (
             listing -> 'cites_status' <> 'LISTED'
               OR (listing -> 'cites_status')::VARCHAR IS NULL
           )
@@ -74,7 +74,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_status() RETURNS void
             FROM listing_changes
             INNER JOIN taxon_concepts
               ON listing_changes.taxon_concept_id  = taxon_concepts.id
-                AND designation_id = cites_id
+                AND taxonomy_id = wildlife_trade_id
             WHERE change_type_id = exception_id
           )
           SELECT listing_exceptions.taxon_concept_id AS id
