@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe TaxonRelationship do
-  context "when synonymy" do
+  context "when hybrid" do
     let(:parent){
       create(
         :genus,
@@ -22,65 +22,65 @@ describe TaxonRelationship do
         :taxon_name => create(:taxon_name, :scientific_name => 'lolcatus')
       )
     }
-    let(:synonym_attributes){
+    let(:hybrid_attributes){
       build_tc_attributes(
         :species,
-        :name_status => 'S',
+        :name_status => 'H',
         :author_year => 'Hemulen 2013',
-        :full_name => 'Lolcatus lolus'
+        :full_name => 'Lolcatus lolatus x lolcatus'
       )
     }
-    let(:another_synonym_attributes){
+    let(:another_hybrid_attributes){
       build_tc_attributes(
         :species,
-        :name_status => 'S',
+        :name_status => 'H',
         :author_year => 'Hemulen 2013',
-        :full_name => 'Lolcatus lolatus'
+        :full_name => 'Lolcatus lolcatus x ?'
       )
     }
-    let(:synonymy_rel){
+    let(:hybrid_rel){
       build(
-        :has_synonym,
+        :has_hybrid,
         :taxon_concept_id => tc.id,
         :other_taxon_concept_id => nil,
-        :other_taxon_concept_attributes => synonym_attributes
+        :other_taxon_concept_attributes => hybrid_attributes
       )
     }
-    let(:another_synonymy_rel){
+    let(:another_hybrid_rel){
       build(
-        :has_synonym,
+        :has_hybrid,
         :taxon_concept_id => another_tc.id,
         :other_taxon_concept_id => nil,
-        :other_taxon_concept_attributes => synonym_attributes
+        :other_taxon_concept_attributes => hybrid_attributes
       )
     }
     specify {
-      synonymy_rel.save
-      tc.synonyms.map(&:full_name).should include('Lolcatus lolus')
+      hybrid_rel.save
+      tc.hybrids.map(&:full_name).should include('Lolcatus lolatus x lolcatus')
     }
     specify{
       lambda do
-        synonymy_rel.save
+        hybrid_rel.save
       end.should change(TaxonConcept, :count).by(1)
     }
     specify{
       lambda do
-        synonymy_rel.save
-        another_synonymy_rel.save
+        hybrid_rel.save
+        another_hybrid_rel.save
       end.should change(TaxonConcept, :count).by(1)
     }
     specify{
-      synonymy_rel.save
-      another_synonymy_rel.save
-      another_tc.synonyms.map(&:full_name).should include('Lolcatus lolus')
+      hybrid_rel.save
+      another_hybrid_rel.save
+      another_tc.hybrids.map(&:full_name).should include('Lolcatus lolatus x lolcatus')
     }
     specify{
-      synonymy_rel.save
-      another_synonymy_rel.save
-      synonymy_rel.other_taxon_concept_attributes = another_synonym_attributes
-      synonymy_rel.save
-      tc.synonyms.map(&:full_name).should include('Lolcatus lolatus')
-      another_tc.synonyms.map(&:full_name).should include('Lolcatus lolus')
+      hybrid_rel.save
+      another_hybrid_rel.save
+      hybrid_rel.other_taxon_concept_attributes = another_hybrid_attributes
+      hybrid_rel.save
+      tc.hybrids.map(&:full_name).should include('Lolcatus lolcatus x ?')
+      another_tc.hybrids.map(&:full_name).should include('Lolcatus lolatus x lolcatus')
     }
   end
 end

@@ -59,3 +59,9 @@ def build_attributes(*args)
     ["id", "created_at", "updated_at"].member?(k)
   end
 end
+
+def build_tc_attributes(*args)
+  build_attributes(*args).delete_if do |k, v|
+    %w(data listing notes lft rgt).include? k
+  end
+end
