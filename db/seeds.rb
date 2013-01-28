@@ -58,8 +58,10 @@ puts "#{Rank.count} ranks created"
 puts "#{SpeciesListing.delete_all} species listings deleted"
 puts "#{ChangeType.delete_all} change types deleted"
 puts "#{Designation.delete_all} designations deleted"
+puts "#{Taxonomy.delete_all} taxonomies deleted"
+taxonomy = Taxonomy.create(:name => Taxonomy::WILDLIFE_TRADE)
 [Designation::CITES, Designation::CMS].each do |designation|
-  Designation.create(:name => designation)
+  Designation.create(:name => designation, :taxonomy_id => taxonomy.id)
 end
 cites = Designation.find_by_name(Designation::CITES)
 cms = Designation.find_by_name('CMS')
