@@ -1,10 +1,18 @@
 <thead>
+  <th width="20%">Taxonomy</th>
   <th>Name</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
   <% collection.each do |designation| -%>
     <tr>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="select" data-resource="designation" data-name="taxonomy_id"
+          data-placeholder="Required" data-original-title="Enter the designation's taxonomy" data-source="/admin/taxonomies/"
+          data-url="<%= resource_url(designation) %>" data-pk="<%= designation.id %>" data-value="<%= designation.taxonomy_id %>">
+          <%= designation.taxonomy.name %>
+        </a>
+      </td>
       <td>
         <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="designation" data-name="name"
           data-placeholder="Required" data-original-title="Enter the designation's name"

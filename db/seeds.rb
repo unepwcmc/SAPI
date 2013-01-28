@@ -59,12 +59,16 @@ puts "#{SpeciesListing.delete_all} species listings deleted"
 puts "#{ChangeType.delete_all} change types deleted"
 puts "#{Designation.delete_all} designations deleted"
 puts "#{Taxonomy.delete_all} taxonomies deleted"
-taxonomy = Taxonomy.create(:name => Taxonomy::WILDLIFE_TRADE)
-[Designation::CITES, Designation::CMS].each do |designation|
+
+Taxonomy.dict.each do |type|
+  Taxonomy.create(name: type)
+end
+taxonomy = Taxonomy.find_by_name(Taxonomy::WILDLIFE_TRADE)
+
+[Designation::CITES, Designation::EU].each do |designation|
   Designation.create(:name => designation, :taxonomy_id => taxonomy.id)
 end
 cites = Designation.find_by_name(Designation::CITES)
-cms = Designation.find_by_name('CMS')
 puts "#{Designation.count} designations created"
 
 ChangeType.dict.each { |change_type_name| ChangeType.create(:name => change_type_name, :designation_id => cites.id) }

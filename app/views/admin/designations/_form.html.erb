@@ -1,6 +1,9 @@
 <%= form_for resource_instance_name, :url => collection_path, :remote => true do |f| %>
 
   <%= error_messages_for(@designation) %>
-
+  <label>Taxonomy</label>
+  <%= f.select :taxonomy_id,
+    options_from_collection_for_select(@taxonomies, :id, :name, @designation && @designation.taxonomy_id)
+  %><br />
   <label>Name</label><%= f.text_field :name %><br />
 <% end %>

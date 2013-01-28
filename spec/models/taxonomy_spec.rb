@@ -29,18 +29,18 @@ describe Taxonomy do
     end
   end
   describe :destroy do
-    context "when no child objects attached" do
+    context "when no dependent objects attached" do
       let(:taxonomy){ create(:taxonomy, :name => 'WILDLIFE') }
-      specify {taxonomy.destroy.should be_true}
+      specify { taxonomy.destroy.should be_true }
     end
-    context "when child objects attached" do
+    context "when dependent objects attached" do
       let(:taxonomy){ create(:taxonomy, :name => 'WILDLIFE') }
       let!(:designation){ create(:designation, :taxonomy => taxonomy)}
-      specify {taxonomy.destroy.should be_false}
+      specify { taxonomy.destroy.should be_false }
     end
     context "when protected name" do
       let(:taxonomy){ Taxonomy.find_or_create_by_name(Taxonomy::WILDLIFE_TRADE) }
-      specify {taxonomy.destroy.should be_false}
+      specify { taxonomy.destroy.should be_false }
     end
   end
 end

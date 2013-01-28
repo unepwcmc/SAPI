@@ -3,7 +3,7 @@ require 'spec_helper'
 describe TaxonConcept do
   context "create" do
     let(:cites){ Designation.find_by_name('CITES') }
-    let(:cms){ Designation.find_by_name('CMS') }
+    let(:eu){ Designation.find_by_name('EU') }
     let(:kingdom){ Rank.find_by_name('KINGDOM') }
     let(:phylum){ Rank.find_by_name('PHYLUM') }
     let(:klass){ Rank.find_by_name('CLASS') }
@@ -31,7 +31,7 @@ describe TaxonConcept do
       let(:tc) {
         build(
           :taxon_concept,
-          :designation_id => cms.id,
+          :designation_id => eu.id,
           :rank_id => phylum.id,
           :parent_id => kingdom_tc.id
         )
