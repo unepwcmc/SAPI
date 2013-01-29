@@ -7,7 +7,7 @@
 #  lft                :integer
 #  rgt                :integer
 #  rank_id            :integer          not null
-#  designation_id     :integer          not null
+#  taxonomy_id     :integer          not null
 #  taxon_name_id      :integer          not null
 #  legacy_id          :integer
 #  legacy_type        :string(255)
@@ -23,7 +23,7 @@
 #
 
 class TaxonConcept < ActiveRecord::Base
-  attr_accessible :lft, :parent_id, :rgt, :designation_id, :rank_id,
+  attr_accessible :lft, :parent_id, :rgt, :taxonomy_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
     :accepted_scientific_name, :parent_scientific_name, 
@@ -36,7 +36,7 @@ class TaxonConcept < ActiveRecord::Base
   serialize :listing, ActiveRecord::Coders::Hstore
 
   belongs_to :rank
-  belongs_to :designation
+  belongs_to :taxonomy
   belongs_to :taxon_name
   has_many :taxon_relationships, :dependent => :destroy
   has_many :inverse_taxon_relationships, :class_name => 'TaxonRelationship',
@@ -85,13 +85,13 @@ class TaxonConcept < ActiveRecord::Base
   has_many :common_names, :through => :taxon_commons
   has_and_belongs_to_many :references, :join_table => :taxon_concept_references
 
-  validates :designation_id, :presence => true
+  validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
-  validate :parent_in_same_designation
+  validate :parent_in_same_taxonomy
   validate :parent_at_immediately_higher_rank
   validates :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
-  validates :taxon_name_id, :uniqueness => { :scope => [:designation_id, :parent_id, :name_status, :author_year] }
+  validates :taxon_name_id, :uniqueness => { :scope => [:taxonomy_id, :parent_id, :name_status, :author_year] }
   validates :taxonomic_position,
     :presence => true,
     :format => { :with => /\d(\.\d*)*/, :message => "Use prefix notation, e.g. 1.2" },
@@ -166,10 +166,10 @@ class TaxonConcept < ActiveRecord::Base
     some_full_name = some_full_name.split(/\s/).join(' ').capitalize
   end
 
-  def parent_in_same_designation
+  def parent_in_same_taxonomy
     return true unless parent
-    if designation_id != parent.designation_id
-      errors.add(:parent_id, "must be in same designation")
+    if taxonomy_id != parent.taxonomy_id
+      errors.add(:parent_id, "must be in same taxonomy")
       return false
     end
   end

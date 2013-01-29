@@ -30,7 +30,7 @@ describe Admin::TaxonConceptsController do
       end
       it "responds with json error when not successful" do
         xhr :put, :update, :format => 'json', :id => taxon_concept.id,
-          :taxon_concept => { :designation_id => nil }
+          :taxon_concept => { :taxonomy_id => nil }
         JSON.parse(response.body).should include('errors')
       end
     end
@@ -42,7 +42,7 @@ describe Admin::TaxonConceptsController do
       end
       it "renders edit when not successful" do
         put :update, :id => taxon_concept.id,
-          :taxon_concept => { :designation_id => nil }
+          :taxon_concept => { :taxonomy_id => nil }
         response.should render_template("edit")
       end
     end

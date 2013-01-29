@@ -3,9 +3,9 @@
   <%= error_messages_for(@taxon_concept) %>
   <%= f.hidden_field :name_status %>
   <div class="control-group">
-    <label>Designation</label>
-    <%= f.select :designation_id,
-      options_from_collection_for_select(@designations, :id, :name, @taxon_concept && @taxon_concept.designation_id)
+    <label>Taxonomy</label>
+    <%= f.select :taxonomy_id,
+      options_from_collection_for_select(@taxonomies, :id, :name, @taxon_concept && @taxon_concept.taxonomy_id)
     %>
   </div>
   <div class="control-group">

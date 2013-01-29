@@ -30,6 +30,7 @@ class ListingChange < ActiveRecord::Base
   has_many :geo_entities, :through => :listing_distributions
   belongs_to :annotation
   belongs_to :parent, :class_name => 'ListingChange'
+  validates :change_type_id, :presence => true
 
   def party
     true
@@ -38,4 +39,5 @@ class ListingChange < ActiveRecord::Base
   def party= geo_entity_id
     true
   end
+
 end

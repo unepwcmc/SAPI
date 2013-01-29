@@ -21,10 +21,10 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   protected
   def load_change_types
     @taxon_concept ||= TaxonConcept.find(params[:taxon_concept_id])
-    @change_types = ChangeType.order(:name).
-      where(:designation_id => @taxon_concept.designation_id)
-    @species_listings = SpeciesListing.order(:abbreviation).
-      where(:designation_id => @taxon_concept.designation_id)
+    @change_types = ChangeType.order(:name).joins(:designation).
+      where(:"designations.taxonomy_id" => @taxon_concept.taxonomy_id)
+    @species_listings = SpeciesListing.order(:abbreviation).joins(:designation).
+      where(:"designations.taxonomy_id" => @taxon_concept.taxonomy_id)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
     @listing_change = ListingChange.new(:taxon_concept_id => @taxon_concept.id)
