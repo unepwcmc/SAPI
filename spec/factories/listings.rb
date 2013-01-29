@@ -1,8 +1,8 @@
 FactoryGirl.define do
 
   factory :species_listing do
-    name 'Appendix X'
-    abbreviation 'X'
+    sequence(:name) {|n| "Appendix #{n}"}
+    sequence(:abbreviation) {|n| "#{n}"}
     designation
   end
 

@@ -34,6 +34,7 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = true
 
   config.include FactoryGirl::Syntax::Methods
+  config.include JsonSpec::Helpers
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction

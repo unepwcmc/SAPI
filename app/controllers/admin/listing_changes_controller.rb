@@ -5,7 +5,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   layout 'taxon_concepts'
 
   protected
-  def load_change_types
+  def load_change_types #TODO this method needs to know the designation
     @taxon_concept ||= TaxonConcept.find(params[:taxon_concept_id])
     @change_types = ChangeType.order(:name).
       where(:designation_id => @taxon_concept.designation_id)

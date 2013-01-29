@@ -1,20 +1,32 @@
 require 'spec_helper'
 describe Admin::DesignationsController do
   describe "GET index" do
-    it "assigns @designations sorted by name" do
+    before(:each) do
       TaxonConcept.delete_all
       ChangeType.delete_all
       SpeciesListing.delete_all
       Designation.delete_all
-      designation1 = create(:designation, :name => 'BB', :taxonomy => create(:taxonomy))
-      designation2 = create(:designation, :name => 'AA', :taxonomy => create(:taxonomy))
-      get :index
-      assigns(:designations).should eq([designation2, designation1])
+      @designation1 = create(:designation, :name => 'BB', :taxonomy => create(:taxonomy))
+      @designation2 = create(:designation, :name => 'AA', :taxonomy => create(:taxonomy))
     end
-    it "renders the index template" do
-      get :index
-      response.should render_template("index")
+    describe "GET index" do
+      it "assigns @designations sorted by name" do
+        get :index
+        assigns(:designations).should eq([@designation2, @designation1])
+      end
+      it "renders the index template" do
+        get :index
+        response.should render_template("index")
+      end
     end
+    describe "XHR GET index JSON" do
+      it "renders json for dropdown" do
+        xhr :get, :index, :format => 'json'
+        response.body.should have_json_size(2)
+        parse_json(response.body, "0/text").should == 'AA'
+      end
+    end
+
   end
 
   describe "XHR POST create" do

@@ -79,6 +79,7 @@ end
 
 group :test, :development do
   gem "rspec-rails"
+  gem "json_spec"
   gem "database_cleaner"
 end
 

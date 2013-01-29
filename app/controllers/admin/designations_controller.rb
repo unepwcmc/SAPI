@@ -1,8 +1,14 @@
 class Admin::DesignationsController < Admin::SimpleCrudController
+  respond_to :json, :only => [:index, :update]
 
   def index
     @taxonomies = Taxonomy.order(:name)
-    index!
+    index! do |format|
+      format.json {
+        render :json => end_of_association_chain.order(:name).
+          select([:id, :name]).map{ |d| {:value => d.id, :text => d.name} }
+      }
+    end
   end
 
   def create
