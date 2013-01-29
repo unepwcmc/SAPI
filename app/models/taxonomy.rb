@@ -4,6 +4,7 @@ class Taxonomy < ActiveRecord::Base
 
   attr_accessible :name
   has_many :designations
+  has_many :taxon_concepts
 
   validates :name, :presence => true, :uniqueness => true
   validates :name,
@@ -27,7 +28,8 @@ class Taxonomy < ActiveRecord::Base
   end
 
   def has_dependent_objects?
-    !(designations.count == 0)
+    !(designations.count == 0 &&
+    taxon_concepts.count == 0)
   end
 
   def has_protected_name?

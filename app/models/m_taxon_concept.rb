@@ -66,9 +66,8 @@ class MTaxonConcept < ActiveRecord::Base
     :class_name => MListingChange,
     :conditions => "is_current = 't' AND change_type_name <> 'EXCEPTION'"
 
-  scope :by_designation, lambda { |name|
-    where("designation_is_#{name}".downcase => 't')
-  }
+  scope :by_wildlife_trade_taxonomy, where(:designation_is_cites => true)
+
   scope :without_nc, where(
     <<-SQL
     (cites_deleted <> 't' OR cites_deleted IS NULL)

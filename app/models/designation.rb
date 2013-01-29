@@ -49,8 +49,7 @@ class Designation < ActiveRecord::Base
 
   def has_dependent_objects?
     !(species_listings.count == 0 &&
-    change_types.count == 0 &&
-    taxon_concepts.count == 0)
+    change_types.count == 0)
   end
 
   def has_protected_name?

@@ -2,14 +2,14 @@ require 'spec_helper'
 
 describe TaxonConcept do
   context "before validate" do
-    let(:cites){ Designation.find_by_name('CITES') }
+    let(:wtr){ Taxonomy.find_by_name(Taxonomy::WILDLIFE_TRADE) }
     let(:kingdom){ Rank.find_by_name('KINGDOM') }
     let(:phylum){ Rank.find_by_name('PHYLUM') }
 
     let(:kingdom_tc){
       create(
         :taxon_concept,
-        :designation_id => cites.id,
+        :taxonomy_id => wtr.id,
         :rank_id => kingdom.id,
         :taxonomic_position => '1'
       )
@@ -19,7 +19,7 @@ describe TaxonConcept do
       let(:tc){
         create(
           :taxon_concept,
-          :designation_id => cites.id,
+          :taxonomy_id => wtr.id,
           :rank_id => phylum.id,
           :parent_id => kingdom_tc.id,
           :taxonomic_position => nil
@@ -31,7 +31,7 @@ describe TaxonConcept do
       let(:tc){
         create(
           :taxon_concept,
-          :designation_id => cites.id,
+          :taxonomy_id => wtr.id,
           :rank_id => phylum.id,
           :parent_id => kingdom_tc.id,
           :taxonomic_position => '1.2'
@@ -43,7 +43,7 @@ describe TaxonConcept do
       let(:tc){
         create(
           :taxon_concept,
-          :designation_id => cites.id,
+          :taxonomy_id => wtr.id,
           :rank_id => kingdom.id,
           :taxonomic_position => nil
         )

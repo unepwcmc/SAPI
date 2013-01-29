@@ -3,9 +3,10 @@ require 'spec_helper'
 describe Admin::ListingChangesController do
   before do
     @taxon_concept = create(:taxon_concept)
+    @designation = create(:designation, :taxonomy => @taxon_concept.taxonomy)
     @addition = create(
       :change_type,
-      :designation_id => @taxon_concept.designation_id,
+      :designation_id => @designation.id,
       :name => 'ADDITION'
     )
   end

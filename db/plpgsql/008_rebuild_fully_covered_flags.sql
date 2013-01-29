@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION rebuild_fully_covered_flags() RETURNS void
     LANGUAGE plpgsql
     AS $$
         DECLARE
-          cites_id int;
+          wildlife_trade_id int;
           exception_id int;
         BEGIN
         SELECT id INTO wildlife_trade_id FROM taxonomies WHERE name = 'WILDLIFE_TRADE';

@@ -30,10 +30,10 @@ puts "#{GeoEntityType.count} geo entity types created"
 puts "#{TaxonRelationship.delete_all} taxon relationships deleted"
 puts "#{TaxonRelationshipType.delete_all} taxon relationship types deleted"
 ['EQUAL_TO', 'INCLUDES', 'OVERLAPS', 'DISJUNCT'].each do |relationship|
-  TaxonRelationshipType.create(:name => relationship, :is_interdesignational => true, :is_bidirectional => ['EQUAL_TO', 'DISJUNCT'].include?(relationship))
+  TaxonRelationshipType.create(:name => relationship, :is_intertaxonomic => true, :is_bidirectional => ['EQUAL_TO', 'DISJUNCT'].include?(relationship))
 end
 ['HAS_SYNONYM', 'HAS_HYBRID'].each do |relationship|
-  TaxonRelationshipType.create(:name => relationship, :is_interdesignational => false)
+  TaxonRelationshipType.create(:name => relationship, :is_intertaxonomic => false)
 end
 puts "#{TaxonRelationshipType.count} taxon relationship types created"
 
@@ -245,7 +245,8 @@ higher_taxa.each do |kingdom_props|
   kingdom_name = kingdom_props[:name]
   name = TaxonName.create(:scientific_name => kingdom_name)
   kingdom = TaxonConcept.create(:rank_id => kingdom_rank_id,
-    :taxon_name_id => name.id, :designation_id => cites.id,
+    :taxon_name_id => name.id,
+    :taxonomy_id => taxonomy.id,
     :legacy_id => kingdom_props[:legacy_id], :legacy_type => kingdom_props[:legacy_type],
     :taxonomic_position => kingdom_props[:taxonomic_position],
     :name_status => 'A')
@@ -255,7 +256,8 @@ higher_taxa.each do |kingdom_props|
     phylum_name = phylum_props[:name]
     name = TaxonName.create(:scientific_name => phylum_name)
     phylum = TaxonConcept.create(:rank_id => phylum_rank_id,
-      :taxon_name_id => name.id, :designation_id => cites.id,
+      :taxon_name_id => name.id,
+      :taxonomy_id => taxonomy.id,
       :legacy_id => phylum_props[:legacy_id], :legacy_type => phylum_props[:legacy_type],
       :parent_id => kingdom.id,
       :taxonomic_position => phylum_props[:taxonomic_position],
@@ -268,7 +270,8 @@ higher_taxa.each do |kingdom_props|
         :scientific_name => klass_name
       )
       klass = TaxonConcept.create(:rank_id => klass_rank_id,
-      :taxon_name_id => name.id, :designation_id => cites.id,
+      :taxon_name_id => name.id,
+      :taxonomy_id => taxonomy.id,
       :legacy_id => klass_props[:legacy_id], :legacy_type => klass_props[:legacy_type],
       :parent_id => phylum.id,
       :taxonomic_position => klass_props[:taxonomic_position],

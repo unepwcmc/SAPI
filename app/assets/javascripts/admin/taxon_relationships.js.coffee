@@ -12,11 +12,11 @@ class TaxonRelationshipForm
   initAutocomplete: () ->
     $(".tr-autocomplete").typeahead
       source: (query, process) =>
-        designation_id = $("#designation_id").val()
+        taxonomy_id = $("#taxonomy_id").val()
         $.get('/admin/taxon_concepts/autocomplete',
         {
           scientific_name: query,
-          designation_id: designation_id
+          taxonomy_id: taxonomy_id
           limit: 25
         }, (data) =>
           @parentsMap = {}
