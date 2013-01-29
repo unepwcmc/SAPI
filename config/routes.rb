@@ -32,7 +32,9 @@ SAPI::Application.routes.draw do
     resources :taxon_concepts, :only => [:index, :create, :edit, :update, :destroy] do
       get :autocomplete, :on => :collection
       resources :taxon_relationships, :only => [:index, :create, :destroy]
-      resources :listing_changes, :only => [:index, :create ]
+      resources :designations, :only => [] do
+        resources :listing_changes, :only => [:index, :create ]
+      end
       resources :taxon_commons, :only => [:new, :create, :edit, :update, :destroy]
       resources :synonym_relationships, :only => [:new, :create, :edit, :update, :destroy]
       resources :hybrid_relationships, :only => [:new, :create, :edit, :update, :destroy]

@@ -23,7 +23,8 @@ class Designation < ActiveRecord::Base
   belongs_to :taxonomy
   has_many :species_listings
   has_many :change_types
-  has_many :taxon_concepts
+  has_many :taxon_concepts#TODO
+  has_many :listing_changes, :through => :change_types#TODO
 
   before_destroy :check_destroy_allowed
 

@@ -37,6 +37,7 @@ class TaxonConcept < ActiveRecord::Base
 
   belongs_to :rank
   belongs_to :taxonomy
+  has_many :designations, :through => :taxonomy
   belongs_to :taxon_name
   has_many :taxon_relationships, :dependent => :destroy
   has_many :inverse_taxon_relationships, :class_name => 'TaxonRelationship',
