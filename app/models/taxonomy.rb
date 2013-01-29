@@ -1,6 +1,6 @@
 class Taxonomy < ActiveRecord::Base
   include Dictionary
-  build_dictionary :wildlife_trade, :cms
+  build_dictionary :cites_eu, :cms
 
   attr_accessible :name
   has_many :designations

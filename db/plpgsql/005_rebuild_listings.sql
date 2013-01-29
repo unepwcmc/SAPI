@@ -58,7 +58,7 @@ CREATE OR REPLACE FUNCTION rebuild_listings() RETURNS void
               INNER JOIN taxonomies ON taxon_concepts.taxonomy_id = taxonomies.id
               LEFT JOIN listing_distributions
                 ON listing_distributions.listing_change_id = listing_changes.id
-              WHERE taxonomies.name = 'WILDLIFE_TRADE'
+              WHERE taxonomies.name = 'CITES_EU'
               AND is_current = 't' 
             ) AS q
             GROUP BY taxon_concept_id

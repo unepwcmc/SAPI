@@ -6,7 +6,7 @@ class AmendIsCitesInTaxonConceptsView < ActiveRecord::Migration
     SELECT taxon_concepts.id,
     taxon_concepts.parent_id,
     CASE
-    WHEN taxonomies.name = 'WILDLIFE_TRADE' THEN TRUE
+    WHEN taxonomies.name = 'CITES_EU' THEN TRUE
     ELSE FALSE
     END AS designation_is_cites,
     full_name,

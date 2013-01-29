@@ -14,7 +14,7 @@ class TaxonConceptsController < ApplicationController
   # end
 
   def autocomplete
-    taxon_concepts = MTaxonConcept.by_wildlife_trade_taxonomy.
+    taxon_concepts = MTaxonConcept.by_cites_eu_taxonomy.
       without_nc.
       select("
         DISTINCT id, LENGTH(taxonomic_position),

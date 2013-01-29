@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe TaxonConcept do
   context "create" do
-    let(:wtr){ Taxonomy.find_by_name(Taxonomy::WILDLIFE_TRADE)}
+    let(:cites_eu){ Taxonomy.find_by_name(Taxonomy::CITES_EU)}
     let(:cms){ Taxonomy.find_by_name(Taxonomy::CMS)}
     let(:kingdom){ Rank.find_by_name('KINGDOM') }
     let(:phylum){ Rank.find_by_name('PHYLUM') }
@@ -10,7 +10,7 @@ describe TaxonConcept do
     let(:kingdom_tc){
       create(
         :taxon_concept,
-        :taxonomy_id => wtr.id,
+        :taxonomy_id => cites_eu.id,
         :rank_id => kingdom.id,
         :taxonomic_position => '1',
         :taxon_name => build(:taxon_name, :scientific_name => 'Foobaria')
@@ -20,7 +20,7 @@ describe TaxonConcept do
       let(:tc){
         create(
           :taxon_concept,
-          :taxonomy_id => wtr.id,
+          :taxonomy_id => cites_eu.id,
           :rank_id => phylum.id,
           :parent_id => kingdom_tc.id
         )
@@ -43,7 +43,7 @@ describe TaxonConcept do
       let(:tc) {
         build(
           :taxon_concept,
-          :taxonomy_id => wtr.id,
+          :taxonomy_id => cites_eu.id,
           :parent_id => kingdom_tc.id,
           :rank_id => klass.id
         )
@@ -54,7 +54,7 @@ describe TaxonConcept do
       let(:parent) {
         create(
           :taxon_concept,
-          :taxonomy_id => wtr.id,
+          :taxonomy_id => cites_eu.id,
           :parent_id => kingdom_tc.id,
           :rank_id => phylum.id
         )
@@ -62,7 +62,7 @@ describe TaxonConcept do
       let(:tc) {
         build(
           :taxon_concept,
-          :taxonomy_id => wtr.id,
+          :taxonomy_id => cites_eu.id,
           :parent_id => parent.id,
           :rank_id => kingdom.id
         )
@@ -73,7 +73,7 @@ describe TaxonConcept do
       let(:tc) {
         build(
           :taxon_concept,
-          :taxonomy_id => wtr.id,
+          :taxonomy_id => cites_eu.id,
           :parent_id => kingdom_tc.id,
           :rank_id => phylum.id,
           :taxon_name => build(:taxon_name, :scientific_name => nil)

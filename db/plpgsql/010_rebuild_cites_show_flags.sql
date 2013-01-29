@@ -6,9 +6,9 @@ CREATE OR REPLACE FUNCTION rebuild_cites_show_flags() RETURNS void
     LANGUAGE plpgsql
     AS $$
         DECLARE
-          wildlife_trade_id int;
+          cites_eu_id int;
         BEGIN
-        SELECT id INTO wildlife_trade_id FROM taxonomies WHERE name = 'WILDLIFE_TRADE';
+        SELECT id INTO cites_eu_id FROM taxonomies WHERE name = 'CITES_EU';
 
         -- set cites_show to true for all taxa except:
         -- implicitly listed subspecies
@@ -30,7 +30,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_show_flags() RETURNS void
           THEN hstore('cites_show', 'f')
           ELSE hstore('cites_show', 't')
         END
-        WHERE taxonomy_id = wildlife_trade_id;
+        WHERE taxonomy_id = cites_eu_id;
 
         END;
       $$;

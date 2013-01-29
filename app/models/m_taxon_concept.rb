@@ -66,7 +66,7 @@ class MTaxonConcept < ActiveRecord::Base
     :class_name => MListingChange,
     :conditions => "is_current = 't' AND change_type_name <> 'EXCEPTION'"
 
-  scope :by_wildlife_trade_taxonomy, where(:designation_is_cites => true)
+  scope :by_cites_eu_taxonomy, where(:designation_is_cites => true)
 
   scope :without_nc, where(
     <<-SQL

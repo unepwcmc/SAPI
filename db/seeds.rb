@@ -63,7 +63,7 @@ puts "#{Taxonomy.delete_all} taxonomies deleted"
 Taxonomy.dict.each do |type|
   Taxonomy.create(name: type)
 end
-taxonomy = Taxonomy.find_by_name(Taxonomy::WILDLIFE_TRADE)
+taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
 puts "#{Taxonomy.count} taxonomies created"
 
 [Designation::CITES, Designation::EU].each do |designation|

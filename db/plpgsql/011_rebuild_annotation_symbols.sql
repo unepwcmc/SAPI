@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION rebuild_annotation_symbols() RETURNS void
           INNER JOIN listing_changes ON annotations.listing_change_id = listing_changes.id
           INNER JOIN change_types ON change_types.id = listing_changes.change_type_id AND change_types.name = 'ADDITION'
           INNER JOIN taxon_concepts ON listing_changes.taxon_concept_id = taxon_concepts.id
-          INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id AND taxonomies.name = 'WILDLIFE_TRADE'
+          INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id AND taxonomies.name = 'CITES_EU'
           WHERE is_current = 't'
             AND EXISTS (
                 SELECT * FROM listing_changes listing_changes_exceptions
@@ -54,7 +54,7 @@ CREATE OR REPLACE FUNCTION rebuild_annotation_symbols() RETURNS void
                 LEFT JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id
                 LEFT JOIN change_types ON change_types.id = listing_changes.change_type_id
                 INNER JOIN annotations ON listing_changes.annotation_id = annotations.id
-                WHERE taxonomies.name = 'WILDLIFE_TRADE' AND is_current = 't'
+                WHERE taxonomies.name = 'CITES_EU' AND is_current = 't'
                   AND change_types.name = 'ADDITION'
                 GROUP BY taxon_concept_id
         )

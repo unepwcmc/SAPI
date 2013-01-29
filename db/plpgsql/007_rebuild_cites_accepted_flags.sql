@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           INNER JOIN taxon_concept_references
             ON taxon_concept_references.taxon_concept_id = taxon_concepts.id
           INNER JOIN taxonomies ON taxon_concepts.taxonomy_id = taxonomies.id
-          WHERE taxonomies.name = 'WILDLIFE_TRADE' AND (taxon_concept_references.data->'usr_is_std_ref')::BOOLEAN = 't'
+          WHERE taxonomies.name = 'CITES_EU' AND (taxon_concept_references.data->'usr_is_std_ref')::BOOLEAN = 't'
         ) AS q
         WHERE taxon_concepts.id = q.id;
 
@@ -40,7 +40,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
             ON taxon_concepts.id = taxon_relationships.other_taxon_concept_id
           INNER JOIN taxonomies
             ON taxonomies.id = taxon_concepts.taxonomy_id
-          WHERE taxonomies.name = 'WILDLIFE_TRADE'
+          WHERE taxonomies.name = 'CITES_EU'
             AND taxon_relationship_types.name = 'HAS_SYNONYM'
         ) AS q
         WHERE taxon_concepts.id = q.id;

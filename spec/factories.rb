@@ -34,7 +34,7 @@ FactoryGirl.define do
 
     %w(kingdom phylum class order family genus species subspecies).each do |rank_name|
       factory :"#{rank_name}" do
-        taxonomy { Taxonomy.find_by_name(Taxonomy::WILDLIFE_TRADE) }
+        taxonomy { Taxonomy.find_by_name(Taxonomy::CITES_EU) }
         rank { Rank.find_by_name(rank_name.upcase) }
       end
     end
