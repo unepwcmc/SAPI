@@ -4,6 +4,12 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   before_filter :load_change_types, :only => [:index, :create]
   layout 'taxon_concepts'
 
+  def create
+    params[:listing_change][:geo_entity_ids].delete("")
+    @listing_change = ListingChange.new(params[:listing_change])
+    create!
+  end
+
   def destroy
     destroy! do |success, failure|
       success.html { redirect_to admin_taxon_concept_listing_changes_url(params[:taxon_concept_id]),
@@ -19,7 +25,10 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       where(:designation_id => @taxon_concept.designation_id)
     @species_listings = SpeciesListing.order(:abbreviation).
       where(:designation_id => @taxon_concept.designation_id)
-    @geo_entities = GeoEntity.order(:name_en).where(:is_current => true)
+    @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
+      where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+    @listing_change = ListingChange.new(:taxon_concept_id => @taxon_concept.id)
+    @listing_change.listing_distributions.build
   end
 
   def collection

@@ -20,14 +20,22 @@
 class ListingChange < ActiveRecord::Base
 
   attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
-    :effective_at, :parent_id, :geo_entity_ids
+    :effective_at, :parent_id, :geo_entity_ids, :listing_distributions_attributes
 
   belongs_to :species_listing
   belongs_to :taxon_concept
   belongs_to :change_type
   has_many :listing_distributions, :dependent => :destroy
+  accepts_nested_attributes_for :listing_distributions, :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
   has_many :geo_entities, :through => :listing_distributions
   belongs_to :annotation
   belongs_to :parent, :class_name => 'ListingChange'
-  accepts_nested_attributes_for :listing_distributions
+
+  def party
+    true
+  end
+
+  def party= geo_entity_id
+    true
+  end
 end
