@@ -4,7 +4,7 @@
 #
 #  id                               :integer          primary key
 #  parent_id                        :integer
-#  designation_is_cites             :boolean
+#  taxonomy_is_cites_eu             :boolean
 #  full_name                        :string(255)
 #  name_status                      :string(255)
 #  rank_name                        :text
@@ -66,7 +66,7 @@ class MTaxonConcept < ActiveRecord::Base
     :class_name => MListingChange,
     :conditions => "is_current = 't' AND change_type_name <> 'EXCEPTION'"
 
-  scope :by_cites_eu_taxonomy, where(:designation_is_cites => true)
+  scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
 
   scope :without_nc, where(
     <<-SQL

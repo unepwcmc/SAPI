@@ -8,7 +8,7 @@ class AmendIsCitesInTaxonConceptsView < ActiveRecord::Migration
     CASE
     WHEN taxonomies.name = 'CITES_EU' THEN TRUE
     ELSE FALSE
-    END AS designation_is_cites,
+    END AS taxonomy_is_cites_eu,
     full_name,
     name_status,
     data->'rank_name' AS rank_name,
@@ -162,7 +162,6 @@ class AmendIsCitesInTaxonConceptsView < ActiveRecord::Migration
     ) standard_references_ids ON taxon_concepts.id = standard_references_ids.taxon_concept_id_sr
   SQL
 
-  Sapi::rebuild_taxon_concepts_mview
   end
 
 end
