@@ -6,6 +6,9 @@ module AdminHelper
   def delete_icon
     '<i class="icon-trash"></i>'.html_safe
   end
+  def true_false_icon(bool_value)
+    bool_value ? '<i class="icon-ok"></i>'.html_safe : ''
+  end
   def error_messages_for(resource)
     resource = instance_variable_get("@#{resource}") if resource.is_a? Symbol
     return '' unless resource && resource.errors.any?

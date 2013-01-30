@@ -4,6 +4,12 @@ describe Admin::ListingChangesController do
   before do
     @taxon_concept = create(:taxon_concept)
     @designation = create(:designation, :taxonomy => @taxon_concept.taxonomy)
+    @appendix = create(
+      :species_listing,
+      :designation_id => @designation.id,
+      :name => 'Appendix I',
+      :abbreviation => 'I'
+    )
     @addition = create(
       :change_type,
       :designation_id => @designation.id,
@@ -40,16 +46,19 @@ describe Admin::ListingChangesController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create, :listing_change => FactoryGirl.attributes_for(:listing_change).merge(
-        :change_type_id => @addition.id,
-        :effective_at => 1.week.ago
-        ).reject{ |k,v| k == :taxon_concept_id },
-        :taxon_concept_id => @taxon_concept.id, :designation_id => @designation.id
+      xhr :post, :create, :listing_change => {
+          :change_type_id => @addition.id,
+          :species_listing_id => @appendix.id,
+          :effective_at => 1.week.ago
+        },
+        :taxon_concept_id => @taxon_concept.id,
+        :designation_id => @designation.id
       response.should render_template("create")
     end
     it "renders new when not successful" do
       taxon_concept = create(:taxon_concept)
-      xhr :post, :create, :listing_change => {}, :taxon_concept_id => @taxon_concept.id,
+      xhr :post, :create, :listing_change => {},
+        :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
       response.should render_template("new")
     end
