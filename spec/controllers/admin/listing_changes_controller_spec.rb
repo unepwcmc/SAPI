@@ -3,12 +3,27 @@ require 'spec_helper'
 describe Admin::ListingChangesController do
   before do
     @taxon_concept = create(:taxon_concept)
+    @designation = create(:designation, :taxonomy => @taxon_concept.taxonomy)
+    @addition = create(
+      :change_type,
+      :designation_id => @designation.id,
+      :name => 'ADDITION'
+    )
   end
 
   describe "GET index" do
     it "assigns @listing_changes sorted by effective_at" do
-      listing_change1 = create(:listing_change, :taxon_concept_id => @taxon_concept.id, :effective_at => 2.weeks.ago)
-      listing_change2 = create(:listing_change, :taxon_concept_id => @taxon_concept.id, :effective_at => 1.week.ago)
+      listing_change1 = create(
+        :listing_change,
+        :taxon_concept_id => @taxon_concept.id,
+        :change_type_id => @addition.id,
+        :effective_at => 2.weeks.ago)
+      listing_change2 = create(
+        :listing_change,
+        :taxon_concept_id => @taxon_concept.id,
+        :change_type_id => @addition.id,
+        :effective_at => 1.week.ago
+      )
       get :index, :taxon_concept_id => @taxon_concept.id
       assigns(:listing_changes).should eq([listing_change2, listing_change1])
       assigns(:taxon_concept).should eq @taxon_concept
@@ -25,13 +40,17 @@ describe Admin::ListingChangesController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create, :listing_change => FactoryGirl.attributes_for(:listing_change), :taxon_concept_id => @taxon_concept.id
+      xhr :post, :create, :listing_change => FactoryGirl.attributes_for(:listing_change).merge(
+        :change_type_id => @addition.id,
+        :effective_at => 1.week.ago
+        ),
+        :taxon_concept_id => @taxon_concept.id
       response.should render_template("create")
     end
     it "renders new when not successful" do
       taxon_concept = create(:taxon_concept)
       xhr :post, :create, :listing_change => {}, :taxon_concept_id => @taxon_concept.id
-      response.should render_template("create")
+      response.should render_template("new")
     end
   end
 

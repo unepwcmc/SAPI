@@ -1,0 +1,20 @@
+<thead>
+  <th>Name</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |taxonomy| -%>
+    <tr>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="taxonomy" data-name="name"
+          data-placeholder="Required" data-original-title="Enter the taxonomy's name"
+          data-url="<%= resource_url(taxonomy) %>" data-pk="<%= taxonomy.id %>">
+          <%= taxonomy.name %>
+        </a>
+      </td>
+      <td>
+        <%= link_to 'Delete', resource_url(taxonomy), :confirm => "Are you sure?", :method => :delete %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>

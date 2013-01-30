@@ -13,7 +13,7 @@ class CsvToDbMap
       'Status' => 'status varchar',
       'Species Author' => 'author varchar',
       'notes' => 'notes varchar',
-      'Designation' => 'designation varchar'
+      'Designation' => 'taxonomy varchar'
     },
     'synonym_import' => {
       'Scientific name' => 'name varchar',
@@ -25,7 +25,7 @@ class CsvToDbMap
       'Species Author' => 'author varchar',
       'notes' => 'notes varchar',
       'ReferenceIDs' => 'reference_ids varchar',
-      'Designation' => 'designation varchar',
+      'Designation' => 'taxonomy varchar',
       'AcceptedRank' => 'accepted_rank varchar',
       'AcceptedRecID' => 'accepted_legacy_id integer'
     },

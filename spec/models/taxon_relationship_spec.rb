@@ -51,10 +51,10 @@ describe TaxonRelationship do
   describe :validate_uniqueness_taxon_concept_id do
     context 'adding a duplicate relationship between the same taxon_concepts' do
       TaxonRelationship.delete_all
-      let(:designation) { create(:designation) }
-      let(:designation2) { create(:designation) }
-      let(:taxon_concept) { create(:taxon_concept, :designation_id => designation.id) }
-      let(:taxon_concept2) { create(:taxon_concept, :designation_id => designation2.id) }
+      let(:taxonomy) { create(:taxonomy) }
+      let(:taxonomy2) { create(:taxonomy) }
+      let(:taxon_concept) { create(:taxon_concept, :taxonomy_id => taxonomy.id) }
+      let(:taxon_concept2) { create(:taxon_concept, :taxonomy_id => taxonomy2.id) }
       let(:taxon_relationship_type) { create(:taxon_relationship_type) }
       let!(:taxon_relationship) { create(:taxon_relationship, :taxon_concept_id => taxon_concept.id,
                                         :other_taxon_concept_id => taxon_concept2.id,
@@ -66,15 +66,15 @@ describe TaxonRelationship do
     end
   end
 
-  describe :validate_interdesignational_relationship_uniqueness do
-    context "adding an interdesignational relationship between taxon concepts that are already related (A -> B)" do
+  describe :validate_intertaxonomic_relationship_uniqueness do
+    context "adding an intertaxonomic relationship between taxon concepts that are already related (A -> B)" do
       TaxonRelationship.delete_all
-      let(:designation) { create(:designation) }
-      let(:designation2) { create(:designation) }
-      let(:taxon_concept) { create(:taxon_concept, :designation_id => designation.id) }
-      let(:taxon_concept2) { create(:taxon_concept, :designation_id => designation2.id) }
-      let(:taxon_relationship_type) { create(:taxon_relationship_type, :is_interdesignational => true) }
-      let(:taxon_relationship_type2) { create(:taxon_relationship_type, :is_interdesignational => true) }
+      let(:taxonomy) { create(:taxonomy) }
+      let(:taxonomy2) { create(:taxonomy) }
+      let(:taxon_concept) { create(:taxon_concept, :taxonomy_id => taxonomy.id) }
+      let(:taxon_concept2) { create(:taxon_concept, :taxonomy_id => taxonomy2.id) }
+      let(:taxon_relationship_type) { create(:taxon_relationship_type, :is_intertaxonomic => true) }
+      let(:taxon_relationship_type2) { create(:taxon_relationship_type, :is_intertaxonomic => true) }
       let!(:taxon_relationship) { create(:taxon_relationship, :taxon_concept_id => taxon_concept.id,
                                         :other_taxon_concept_id => taxon_concept2.id,
                                         :taxon_relationship_type_id => taxon_relationship_type.id) }
@@ -85,14 +85,14 @@ describe TaxonRelationship do
         taxon_relationship2.valid?.should == false 
       }
     end
-    context "adding an interdesignational relationship between taxon concepts that are already related in the opposite direction (B -> A)" do
+    context "adding an intertaxonomic relationship between taxon concepts that are already related in the opposite direction (B -> A)" do
       TaxonRelationship.delete_all
-      let(:designation) { create(:designation) }
-      let(:designation2) { create(:designation) }
-      let(:taxon_concept) { create(:taxon_concept, :designation_id => designation.id) }
-      let(:taxon_concept2) { create(:taxon_concept, :designation_id => designation2.id) }
-      let(:taxon_relationship_type) { create(:taxon_relationship_type, :is_interdesignational => true) }
-      let(:taxon_relationship_type2) { create(:taxon_relationship_type, :is_interdesignational => true) }
+      let(:taxonomy) { create(:taxonomy) }
+      let(:taxonomy2) { create(:taxonomy) }
+      let(:taxon_concept) { create(:taxon_concept, :taxonomy_id => taxonomy.id) }
+      let(:taxon_concept2) { create(:taxon_concept, :taxonomy_id => taxonomy2.id) }
+      let(:taxon_relationship_type) { create(:taxon_relationship_type, :is_intertaxonomic => true) }
+      let(:taxon_relationship_type2) { create(:taxon_relationship_type, :is_intertaxonomic => true) }
       let!(:taxon_relationship) { create(:taxon_relationship, :taxon_concept_id => taxon_concept.id,
                                         :other_taxon_concept_id => taxon_concept2.id,
                                         :taxon_relationship_type_id => taxon_relationship_type.id) }
@@ -104,15 +104,15 @@ describe TaxonRelationship do
         taxon_relationship2.valid?.should == false
       }
     end
-    context "adding an interdesignational relationship between taxon concepts that are not already related" do
+    context "adding an intertaxonomic relationship between taxon concepts that are not already related" do
       TaxonRelationship.delete_all
-      let(:designation) { create(:designation) }
-      let(:designation2) { create(:designation) }
-      let(:taxon_concept) { create(:taxon_concept, :designation_id => designation.id) }
-      let(:taxon_concept2) { create(:taxon_concept, :designation_id => designation2.id) }
-      let(:taxon_concept3) { create(:taxon_concept, :designation_id => designation2.id) }
-      let(:taxon_relationship_type) { create(:taxon_relationship_type, :is_interdesignational => true) }
-      let(:taxon_relationship_type2) { create(:taxon_relationship_type, :is_interdesignational => true) }
+      let(:taxonomy) { create(:taxonomy) }
+      let(:taxonomy2) { create(:taxonomy) }
+      let(:taxon_concept) { create(:taxon_concept, :taxonomy_id => taxonomy.id) }
+      let(:taxon_concept2) { create(:taxon_concept, :taxonomy_id => taxonomy2.id) }
+      let(:taxon_concept3) { create(:taxon_concept, :taxonomy_id => taxonomy2.id) }
+      let(:taxon_relationship_type) { create(:taxon_relationship_type, :is_intertaxonomic => true) }
+      let(:taxon_relationship_type2) { create(:taxon_relationship_type, :is_intertaxonomic => true) }
       let!(:taxon_relationship) { create(:taxon_relationship, :taxon_concept_id => taxon_concept.id,
                                         :other_taxon_concept_id => taxon_concept2.id,
                                         :taxon_relationship_type_id => taxon_relationship_type.id) }

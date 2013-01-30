@@ -70,7 +70,7 @@ class TaxonConceptsEditor extends AdminEditor
       prefix = matches[1] + prefix unless matches[1] == undefined
       console.log(prefix)
       
-      designationEl = $('#' + prefix + '_designation_id')
+      taxonomyEl = $('#' + prefix + '_taxonomy_id')
       rankEl = $('#' + prefix + '_rank_id')
       nameStatusEl = $('#' + prefix + '_name_status')
       parentEl = $('#' + prefix + '_parent_scientific_name')
@@ -84,7 +84,7 @@ class TaxonConceptsEditor extends AdminEditor
           $.get('/admin/taxon_concepts/autocomplete',
           {
             scientific_name: query,
-            designation_id: designationEl.attr('value'),
+            taxonomy_id: taxonomyEl.attr('value'),
             rank_id: rankEl.attr('value'),
             name_status: nameStatusEl.attr('value'),
             limit: 25
@@ -96,7 +96,7 @@ class TaxonConceptsEditor extends AdminEditor
             )
             return process(labels)
           )
-        $().add(designationEl).add(rankEl).change () ->
+        $().add(taxonomyEl).add(rankEl).change () ->
           parentEl.attr('value', null)
           acceptedEl.attr('value', null) unless acceptedEl == undefined
           hybridParentEl.attr('value', null) unless hybridParentEl == undefined
