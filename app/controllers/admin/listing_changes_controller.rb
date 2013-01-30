@@ -7,18 +7,21 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
     new! do
       load_change_types
       @listing_change.build_party_listing_distribution
-      @listing_change.listing_distributions.build
     end
   end
 
   def create
     params[:listing_change][:geo_entity_ids] &&
       params[:listing_change][:geo_entity_ids].delete("")
-    create! do |success, failure|
-      failure.js {
-        load_change_types
-        render "new"
-      }
+    @taxon_concept = TaxonConcept.find(params[:taxon_concept_id])
+    @designation = Designation.find(params[:designation_id])
+    @listing_change = ListingChange.new(params[:listing_change])
+    if @taxon_concept.listing_changes << @listing_change
+      render 'create'
+    else
+      load_change_types
+      @listing_change.build_party_listing_distribution(params[:listing_change][:party_listing_distribution_attributes])
+      render 'new'
     end
   end
 
@@ -60,6 +63,12 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
 
   def collection
     @listing_changes ||= end_of_association_chain.
+      includes([
+        :species_listing,
+        :change_type,
+        :party_geo_entity,
+        :geo_entities
+      ]).
       order('effective_at desc, is_current desc').
       page(params[:page]).where(:parent_id => nil)
   end

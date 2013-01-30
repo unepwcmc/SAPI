@@ -20,7 +20,7 @@
           @geo_entities,
           :id,
           :name_en,
-          @listing_change.party_geo_entity && @listing_change.party_geo_entity.id
+          @listing_change.party_listing_distribution && @listing_change.party_listing_distribution.geo_entity_id
         ),
         { :include_blank => true }, :class => 'distribution'
       %>
