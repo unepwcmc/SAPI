@@ -7,6 +7,7 @@
 #  geo_entity_id    :integer          not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  tags             :string(255)
 #
 
 class TaxonConceptGeoEntity < ActiveRecord::Base

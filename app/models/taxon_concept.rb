@@ -4,22 +4,22 @@
 #
 #  id                 :integer          not null, primary key
 #  parent_id          :integer
-#  lft                :integer
-#  rgt                :integer
 #  rank_id            :integer          not null
-#  taxonomy_id     :integer          not null
 #  taxon_name_id      :integer          not null
+#  author_year        :string(255)
 #  legacy_id          :integer
 #  legacy_type        :string(255)
 #  data               :hstore
 #  listing            :hstore
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  author_year        :string(255)
 #  notes              :text
 #  taxonomic_position :string(255)      default("0"), not null
 #  full_name          :string(255)
 #  name_status        :string(255)      default("A"), not null
+#  lft                :integer
+#  rgt                :integer
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  taxonomy_id        :integer          default(1), not null
 #
 
 class TaxonConcept < ActiveRecord::Base

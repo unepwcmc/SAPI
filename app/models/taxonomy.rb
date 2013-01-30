@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: taxonomies
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)      default("DEAFAULT TAXONOMY"), not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class Taxonomy < ActiveRecord::Base
   include Dictionary
   build_dictionary :cites_eu, :cms

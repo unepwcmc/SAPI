@@ -3,8 +3,8 @@
 # Table name: taxon_concept_geo_entity_references
 #
 #  id                          :integer          not null, primary key
-#  taxon_concept_geo_entity_id :integer
-#  reference_id                :integer
+#  taxon_concept_geo_entity_id :integer          not null
+#  reference_id                :integer          not null
 #
 
 class TaxonConceptGeoEntityReference < ActiveRecord::Base
