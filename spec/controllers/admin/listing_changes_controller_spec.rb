@@ -30,17 +30,33 @@ describe Admin::ListingChangesController do
         :change_type_id => @addition.id,
         :effective_at => 1.week.ago
       )
-      get :index, :taxon_concept_id => @taxon_concept.id, :designation_id => @designation.id
+      get :index, :taxon_concept_id => @taxon_concept.id,
+        :designation_id => @designation.id
       assigns(:listing_changes).should eq([listing_change2, listing_change1])
       assigns(:taxon_concept).should eq @taxon_concept
     end
     it "renders the index template" do
-      get :index, :taxon_concept_id => @taxon_concept.id, :designation_id => @designation.id
+      get :index, :taxon_concept_id => @taxon_concept.id,
+        :designation_id => @designation.id
       response.should render_template("index")
     end
     it "renders the taxon_concepts_layout" do
-      get :index, :taxon_concept_id => @taxon_concept.id, :designation_id => @designation.id
+      get :index, :taxon_concept_id => @taxon_concept.id,
+        :designation_id => @designation.id
       response.should render_template('layouts/taxon_concepts')
+    end
+  end
+
+  describe "XHR GET new" do
+    it "renders the new template" do
+      xhr :get, :new, :taxon_concept_id => @taxon_concept.id,
+        :designation_id => @designation.id
+      response.should render_template('new')
+    end
+    it "assigns the listing_change variable" do
+      xhr :get, :new, :taxon_concept_id => @taxon_concept.id,
+        :designation_id => @designation.id
+      assigns(:listing_change).should_not be_nil
     end
   end
 
@@ -61,6 +77,80 @@ describe Admin::ListingChangesController do
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
       response.should render_template("new")
+    end
+  end
+
+  describe "XHR GET edit" do
+    before(:each) do
+      @listing_change = create(
+        :listing_change,
+        :taxon_concept_id => @taxon_concept.id,
+        :change_type_id => @addition.id,
+        :species_listing_id => @appendix.id,
+        :effective_at => 1.week.ago
+      )
+    end
+    it "renders the edit template" do
+      xhr :get, :edit, :id => @listing_change.id,
+        :taxon_concept_id => @taxon_concept.id,
+        :designation_id => @designation.id
+      response.should render_template('new')
+    end
+    it "assigns the listing_change variable" do
+      xhr :get, :edit, :id => @listing_change.id,
+        :taxon_concept_id => @taxon_concept.id,
+        :designation_id => @designation.id
+      assigns(:listing_change).should_not be_nil
+    end
+  end
+
+  describe "XHR PUT update" do
+    before(:each) do
+      @listing_change = create(
+        :listing_change,
+        :taxon_concept_id => @taxon_concept.id,
+        :change_type_id => @addition.id,
+        :species_listing_id => @appendix.id,
+        :effective_at => 1.week.ago
+      )
+    end
+    it "renders create when successful" do
+      xhr :put, :update, :listing_change => {
+          :change_type_id => @addition.id,
+          :species_listing_id => @appendix.id,
+          :effective_at => 1.week.ago
+        },
+        :id => @listing_change.id,
+        :taxon_concept_id => @taxon_concept.id,
+        :designation_id => @designation.id
+      response.should render_template("create")
+    end
+    it "renders new when not successful" do
+      xhr :put, :update, :listing_change => {:effective_at => nil},
+        :id => @listing_change.id,
+        :taxon_concept_id => @taxon_concept.id,
+        :designation_id => @designation.id
+      response.should render_template("new")
+    end
+  end
+
+  describe "DELETE destroy" do
+    before(:each) do
+      @listing_change = create(
+        :listing_change,
+        :taxon_concept_id => @taxon_concept.id,
+        :change_type_id => @addition.id,
+        :species_listing_id => @appendix.id,
+        :effective_at => 1.week.ago
+      )
+    end
+    it "redirects after delete" do
+      delete :destroy, :id => @listing_change.id,
+        :taxon_concept_id => @taxon_concept.id,
+        :designation_id => @designation.id
+      response.should redirect_to(
+        admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
+      )
     end
   end
 
