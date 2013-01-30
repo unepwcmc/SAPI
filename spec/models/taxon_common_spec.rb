@@ -58,7 +58,7 @@ describe TaxonCommon do
     specify{
       tc_common.save
       another_tc_common.save
-      tc_common.common_name_attributes = {:name => 'Black lolcat'}
+      tc_common.common_name_attributes = {:name => 'Black lolcat', :language_id => lng.id}
       tc_common.save
       another_tc.common_names.map(&:name).should include('Lolcat')
     }

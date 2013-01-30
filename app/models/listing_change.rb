@@ -29,4 +29,5 @@ class ListingChange < ActiveRecord::Base
   has_many :geo_entities, :through => :listing_distributions
   belongs_to :annotation
   belongs_to :parent, :class_name => 'ListingChange'
+  validates :change_type_id, :presence => true
 end

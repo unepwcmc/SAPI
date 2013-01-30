@@ -49,23 +49,7 @@ DROP TRIGGER IF EXISTS trg_taxon_concepts_i ON taxon_concepts;
 CREATE TRIGGER trg_taxon_concepts_i AFTER INSERT ON taxon_concepts
 FOR EACH ROW EXECUTE PROCEDURE trg_taxon_concepts_i();
 
--- DESIGNATIONS
-
-CREATE OR REPLACE FUNCTION trg_designations_u() RETURNS TRIGGER
-SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
-BEGIN
-  IF OLD.name <> NEW.name THEN
-    PERFORM taxon_concepts_refresh_row(tc.id)
-    FROM taxon_concepts tc
-    WHERE tc.designation_id = NEW.id;
-  END IF;
-  RETURN NULL;
-END
-$$;
-
 DROP TRIGGER IF EXISTS trg_designations_u ON designations;
-CREATE TRIGGER trg_designations_u AFTER UPDATE ON designations
-FOR EACH ROW EXECUTE PROCEDURE trg_designations_u();
 
 -- RANKS
 

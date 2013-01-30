@@ -5,14 +5,14 @@ class Admin::HybridRelationshipsController < Admin::SimpleCrudController
   before_filter :load_hybrid_relationship_type, :only => [:new]
 
   def new
-    @designations = Designation.order(:name)
+    @taxonomies = Taxonomy.order(:name)
     @ranks = Rank.order(:taxonomic_position)
     new! do |format|
       @hybrid_relationship = TaxonRelationship.new(
         :taxon_relationship_type_id => @hybrid_relationship_type.id
       )
       @hybrid_relationship.build_other_taxon_concept(
-        :designation_id => @taxon_concept.designation_id,
+        :taxonomy_id => @taxon_concept.taxonomy_id,
         :rank_id => @taxon_concept.rank_id,
         :name_status => 'H'
       )
@@ -23,7 +23,7 @@ class Admin::HybridRelationshipsController < Admin::SimpleCrudController
   def create
     create! do |success, failure|
       failure.js {
-        @designations = Designation.order(:name)
+        @taxonomies = Taxonomy.order(:name)
         @ranks = Rank.order(:taxonomic_position)
         render 'new'
       }
@@ -31,7 +31,7 @@ class Admin::HybridRelationshipsController < Admin::SimpleCrudController
   end
 
   def edit
-    @designations = Designation.order(:name)
+    @taxonomies = Taxonomy.order(:name)
     @ranks = Rank.order(:taxonomic_position)
     edit! do |format|
       format.js { render 'new' }

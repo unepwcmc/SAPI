@@ -3,10 +3,10 @@
   <%= f.hidden_field :name_status %>
 
   <div class="control-group">
-    <label>Designation</label>
-    <%= f.select :designation_id,
+    <label>Taxonomy</label>
+    <%= f.select :taxonomy_id,
       options_from_collection_for_select(
-        @designations, :id, :name, @synonym && @synonym.designation_id
+        @taxonomies, :id, :name, @synonym && @synonym.taxonomy_id
       )
     %>
   </div>

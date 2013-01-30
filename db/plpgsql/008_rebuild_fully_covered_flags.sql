@@ -6,16 +6,16 @@ CREATE OR REPLACE FUNCTION rebuild_fully_covered_flags() RETURNS void
     LANGUAGE plpgsql
     AS $$
         DECLARE
-          cites_id int;
+          cites_eu_id int;
           exception_id int;
         BEGIN
-        SELECT id INTO cites_id FROM designations WHERE name = 'CITES';
+        SELECT id INTO cites_eu_id FROM taxonomies WHERE name = 'CITES_EU';
         SELECT id INTO exception_id FROM change_types WHERE name = 'EXCEPTION';
 
         -- set the fully_covered flag to true for all taxa (so we start clear)
         UPDATE taxon_concepts SET listing = listing ||
           hstore('cites_fully_covered', 't')
-        WHERE designation_id = cites_id;
+        WHERE taxonomy_id = cites_eu_id;
 
         -- set the fully_covered flag to false for taxa with descendants who:
         -- * were deleted from the listing
@@ -30,7 +30,7 @@ CREATE OR REPLACE FUNCTION rebuild_fully_covered_flags() RETURNS void
               ELSE 'f'
             END AS not_listed
             FROM taxon_concepts h
-            WHERE designation_id = cites_id AND (
+            WHERE taxonomy_id = cites_eu_id AND (
               listing->'cites_status' = 'DELETED' OR listing->'cites_status' = 'EXCLUDED'
             )
 
@@ -65,7 +65,7 @@ CREATE OR REPLACE FUNCTION rebuild_fully_covered_flags() RETURNS void
             ON listing_changes.id = listing_distributions.listing_change_id
           INNER JOIN taxon_concepts
             ON taxon_concepts.id = listing_changes.taxon_concept_id
-          WHERE is_current = 't' AND designation_id = cites_id
+          WHERE is_current = 't' AND taxonomy_id = cites_eu_id
             AND NOT listing_distributions.is_party
 
           EXCEPT
@@ -75,7 +75,7 @@ CREATE OR REPLACE FUNCTION rebuild_fully_covered_flags() RETURNS void
             ON listing_changes.id = listing_distributions.listing_change_id
           INNER JOIN taxon_concepts
             ON taxon_concepts.id = listing_changes.taxon_concept_id
-          WHERE is_current = 't' AND designation_id = cites_id
+          WHERE is_current = 't' AND taxonomy_id = cites_eu_id
             AND listing_distributions.id IS NULL OR listing_distributions.is_party
         )
         UPDATE taxon_concepts
