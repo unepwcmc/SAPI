@@ -1,4 +1,4 @@
-class Admin::TaxonConceptGeoEntitiesRelationshipsController < Admin::SimpleCrudController
+class Admin::TaxonConceptGeoEntitiesController < Admin::SimpleCrudController
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
 
