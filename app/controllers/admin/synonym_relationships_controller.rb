@@ -2,12 +2,11 @@ class Admin::SynonymRelationshipsController < Admin::SimpleCrudController
   defaults :resource_class => TaxonRelationship, :collection_name => 'synonym_relationships', :instance_name => 'synonym_relationship'
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
-  before_filter :load_synonym_relationship_type, :only => [:new]
+  before_filter :load_synonym_relationship_type, :only => [:new, :create, :update]
 
   def new
-    @taxonomies = Taxonomy.order(:name)
-    @ranks = Rank.order(:taxonomic_position)
     new! do |format|
+      load_taxonomies_and_ranks
       @synonym_relationship = TaxonRelationship.new(
         :taxon_relationship_type_id => @synonym_relationship_type.id
       )
@@ -21,27 +20,31 @@ class Admin::SynonymRelationshipsController < Admin::SimpleCrudController
   end
 
   def create
+    params[:taxon_relationship][:taxon_relationship_type_id] =
+      @synonym_relationship_type.id
     create! do |success, failure|
       failure.js {
-        @taxonomies = Taxonomy.order(:name)
-        @ranks = Rank.order(:taxonomic_position)
+        load_taxonomies_and_ranks
         render 'new'
       }
     end
   end
 
   def edit
-    @taxonomies = Taxonomy.order(:name)
-    @ranks = Rank.order(:taxonomic_position)
     edit! do |format|
+      load_taxonomies_and_ranks
       format.js { render 'new' }
     end
   end
 
   def update
+    params[:taxon_relationship][:taxon_relationship_type_id] = @synonym_relationship_type.id
     update! do |success, failure|
       success.js { render 'create' }
-      failure.js { render 'new' }
+      failure.js {
+        load_taxonomies_and_ranks
+        render 'new'
+      }
     end
   end
 
@@ -59,6 +62,11 @@ class Admin::SynonymRelationshipsController < Admin::SimpleCrudController
   end
 
   protected
+
+  def load_taxonomies_and_ranks
+    @taxonomies = Taxonomy.order(:name)
+    @ranks = Rank.order(:taxonomic_position)
+  end
 
   def load_synonym_relationship_type
     @synonym_relationship_type = TaxonRelationshipType.

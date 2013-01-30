@@ -2,7 +2,7 @@ class Admin::HybridRelationshipsController < Admin::SimpleCrudController
   defaults :resource_class => TaxonRelationship, :collection_name => 'hybrid_relationships', :instance_name => 'hybrid_relationship'
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
-  before_filter :load_hybrid_relationship_type, :only => [:new]
+  before_filter :load_hybrid_relationship_type, :only => [:new, :create, :update]
 
   def new
     @taxonomies = Taxonomy.order(:name)
@@ -21,6 +21,8 @@ class Admin::HybridRelationshipsController < Admin::SimpleCrudController
   end
 
   def create
+    params[:taxon_relationship][:taxon_relationship_type_id] =
+      @hybrid_relationship_type.id
     create! do |success, failure|
       failure.js {
         @taxonomies = Taxonomy.order(:name)
@@ -39,6 +41,8 @@ class Admin::HybridRelationshipsController < Admin::SimpleCrudController
   end
 
   def update
+    params[:taxon_relationship][:taxon_relationship_type_id] =
+      @hybrid_relationship_type.id
     update! do |success, failure|
       success.js { render 'create' }
       failure.js { render 'new' }
