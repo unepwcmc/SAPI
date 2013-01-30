@@ -38,6 +38,10 @@
       { :multiple => true, :class => 'distribution', :style => 'width: 200px' }
     %>
   </p>
+  <p>
+    <%= f.label :is_current, "Is current?"%>
+    <%= f.check_box :is_current %>
+  </p>
 <% end %>
 
 <script type="text/javascript">

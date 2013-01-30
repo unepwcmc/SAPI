@@ -20,7 +20,8 @@
 class ListingChange < ActiveRecord::Base
 
   attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
-    :effective_at, :parent_id, :geo_entity_ids, :party_listing_distribution_attributes
+    :effective_at, :is_current, :parent_id, :geo_entity_ids,
+    :party_listing_distribution_attributes
 
   belongs_to :species_listing
   belongs_to :taxon_concept
