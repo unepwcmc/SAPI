@@ -61,26 +61,6 @@ class AdminInPlaceEditor extends AdminEditor
       'option', 'source', window.geoEntities
     )
 
-<<<<<<< HEAD
-  initModals: () ->
-    $('.modal .modal-footer .save-button').click () ->
-      $(@).closest('.modal').find('form').submit()
-
-    $('.modal').on 'hidden', () ->
-      form = $(@).find('form')[0]
-      form.reset() if form
-
-      $(@).find('.alert').remove()
-
-  alertSuccess: (txt) ->
-    $('.alert').remove()
-
-    alert = $('<div class="alert alert-success">')
-    alert.append('<a class="close" href="#" data-dismiss="alert">x</a>')
-    alert.append(txt)
-
-    $(alert).insertBefore($('h1'))
-=======
 class TaxonConceptsEditor extends AdminEditor
   initTaxonConceptTypeaheads: () ->
     $('.typeahead').each (idx) ->
@@ -89,7 +69,7 @@ class TaxonConceptsEditor extends AdminEditor
       prefix = matches[3]
       prefix = matches[1] + prefix unless matches[1] == undefined
       console.log(prefix)
-      
+
       taxonomyEl = $('#' + prefix + '_taxonomy_id')
       rankEl = $('#' + prefix + '_rank_id')
       nameStatusEl = $('#' + prefix + '_name_status')
