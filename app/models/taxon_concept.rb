@@ -77,9 +77,8 @@ class TaxonConcept < ActiveRecord::Base
     :through => :hybrid_relationships, :source => :other_taxon_concept
   has_many :hybrid_parents, :class_name => 'TaxonConcept',
     :through => :inverse_hybrid_relationships, :source => :taxon_concept
-  has_many :taxon_concept_geo_entities
-  #has_many :taxon_concept_geo_entities_relationship, :through => :taxon_concept_geo_entities, :source => :taxon_concept
-  has_many :geo_entities, :through => :taxon_concept_geo_entities
+  has_many :distributions
+  has_many :geo_entities, :through => :distributions
   has_many :listing_changes
   has_many :species_listings, :through => :listing_changes
   has_many :taxon_commons, :dependent => :destroy, :include => :common_name

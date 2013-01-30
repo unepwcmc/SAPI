@@ -1,6 +1,6 @@
 FactoryGirl.define do
 
-  factory :taxon_concept_geo_entity do
+  factory :distribution do
     taxon_concept
     geo_entity
   end

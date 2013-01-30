@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe "taxon_concept_geo_entities/new.html.erb" do
+describe "distributions/new.html.erb" do
   pending "add some examples to (or delete) #{__FILE__}"
 end

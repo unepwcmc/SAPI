@@ -56,16 +56,16 @@ module TaxonConceptHelper
 
   def admin_add_new_distribution_button(nested = false)
     admin_add_new_button(
-      :resource => 'taxon_concept_geo_entities',
+      :resource => 'distributions',
       :name => 'Add new distribution location'
     )
   end
 
   def admin_new_distribution_modal()
     admin_new_modal(
-      :resource => 'taxon_concept_geo_entities',
+      :resource => 'distributions',
       :title => 'Add new distribution location'
-    ){ render 'admin/taxon_concept_geo_entities_relationship/form' }
+    ){ render 'admin/distributions/form' }
   end
 
   def admin_new_hybrid_modal(nested = false)
