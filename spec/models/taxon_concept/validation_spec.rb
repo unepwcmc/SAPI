@@ -2,15 +2,15 @@ require 'spec_helper'
 
 describe TaxonConcept do
   context "create" do
-    let(:cites){ Designation.find_by_name('CITES') }
-    let(:cms){ Designation.find_by_name('CMS') }
+    let(:cites_eu){ Taxonomy.find_by_name(Taxonomy::CITES_EU)}
+    let(:cms){ Taxonomy.find_by_name(Taxonomy::CMS)}
     let(:kingdom){ Rank.find_by_name('KINGDOM') }
     let(:phylum){ Rank.find_by_name('PHYLUM') }
     let(:klass){ Rank.find_by_name('CLASS') }
     let(:kingdom_tc){
       create(
         :taxon_concept,
-        :designation_id => cites.id,
+        :taxonomy_id => cites_eu.id,
         :rank_id => kingdom.id,
         :taxonomic_position => '1',
         :taxon_name => build(:taxon_name, :scientific_name => 'Foobaria')
@@ -20,18 +20,18 @@ describe TaxonConcept do
       let(:tc){
         create(
           :taxon_concept,
-          :designation_id => cites.id,
+          :taxonomy_id => cites_eu.id,
           :rank_id => phylum.id,
           :parent_id => kingdom_tc.id
         )
       }
       specify{ tc.valid? should be_true}
     end
-    context "designation does not match parent" do
+    context "taxonomy does not match parent" do
       let(:tc) {
         build(
           :taxon_concept,
-          :designation_id => cms.id,
+          :taxonomy_id => cms.id,
           :rank_id => phylum.id,
           :parent_id => kingdom_tc.id
         )
@@ -43,7 +43,7 @@ describe TaxonConcept do
       let(:tc) {
         build(
           :taxon_concept,
-          :designation_id => cites.id,
+          :taxonomy_id => cites_eu.id,
           :parent_id => kingdom_tc.id,
           :rank_id => klass.id
         )
@@ -54,7 +54,7 @@ describe TaxonConcept do
       let(:parent) {
         create(
           :taxon_concept,
-          :designation_id => cites.id,
+          :taxonomy_id => cites_eu.id,
           :parent_id => kingdom_tc.id,
           :rank_id => phylum.id
         )
@@ -62,7 +62,7 @@ describe TaxonConcept do
       let(:tc) {
         build(
           :taxon_concept,
-          :designation_id => cites.id,
+          :taxonomy_id => cites_eu.id,
           :parent_id => parent.id,
           :rank_id => kingdom.id
         )
@@ -73,31 +73,10 @@ describe TaxonConcept do
       let(:tc) {
         build(
           :taxon_concept,
-          :designation_id => cites.id,
+          :taxonomy_id => cites_eu.id,
           :parent_id => kingdom_tc.id,
           :rank_id => phylum.id,
           :taxon_name => build(:taxon_name, :scientific_name => nil)
-        )
-      }
-      specify { tc.should have(1).error_on(:taxon_name_id) }
-    end
-    context "scientific name is not unique within designation and parent" do
-      let(:original_tc) {
-        create(
-          :taxon_concept,
-          :designation_id => cites.id,
-          :parent_id => kingdom_tc.id,
-          :rank_id => phylum.id,
-          :taxon_name => build(:taxon_name, :scientific_name => 'Foobaria')
-        )
-      }
-      let(:tc) {
-        build(
-          :taxon_concept,
-          :designation_id => cites.id,
-          :parent_id => kingdom_tc.id,
-          :rank_id => phylum.id,
-          :taxon_name => build(:taxon_name, :scientific_name => original_tc.taxon_name.scientific_name)
         )
       }
       specify { tc.should have(1).error_on(:taxon_name_id) }

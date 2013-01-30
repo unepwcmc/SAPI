@@ -2,11 +2,12 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
 
   belongs_to :taxon_concept
   before_filter :load_taxon_relationship_types, :only => [:index, :create]
+  layout 'taxon_concepts'
 
   def index
     index! do
-      @designations = Designation.order(:name). #for Inter-designational relationships
-        where('id <> ?', @taxon_concept.designation_id)
+      @taxonomies = Taxonomy.order(:name). #for Inter-taxonomic relationships
+        where('id <> ?', @taxon_concept.taxonomy_id)
       @inverse_taxon_relationships = TaxonRelationship.
         where(:other_taxon_concept_id => @taxon_concept.id,
           :taxon_relationship_type_id => @taxon_relationship_type.id).
@@ -27,9 +28,9 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
     create! do |success, failure|
       success.js { render 'create' }
       failure.js {
-        @designations = Designation.order(:name). #for Inter-designational relationships
+        @taxonomies = Taxonomy.order(:name). #for Inter-taxonomic relationships
           where('id <> ?', TaxonConcept.find(params[:taxon_relationship][:taxon_concept_id]).
-          try(:designation_id))
+          try(:taxonomy_id))
         render 'admin/simple_crud/new'
       }
     end
@@ -58,7 +59,7 @@ class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
        TaxonRelationshipType.find_by_name(params[:type] || TaxonRelationshipType::EQUAL_TO)
     end
     @taxon_relationship_types = TaxonRelationshipType.order(:name).
-      interdesignational
+      intertaxonomic
   end
 
   def collection

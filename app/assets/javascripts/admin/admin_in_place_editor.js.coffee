@@ -1,12 +1,32 @@
 $(document).ready ->
-  editorClass = $('#admin-in-place-editor').attr('data-editor-for')
-  if editorClass == 'taxon_concept'
-    window.adminInPlaceEditor = new TaxonConceptsEditor()
+  if window.editorClass == 'taxon_concepts'
+    window.adminEditor = new TaxonConceptsEditor()
   else
-    window.adminInPlaceEditor = new AdminInPlaceEditor()
-  window.adminInPlaceEditor.init()
+    window.adminEditor = new AdminInPlaceEditor()
+  window.adminEditor.init()
 
-class AdminInPlaceEditor
+class AdminEditor
+  init: () ->
+    @initModals()
+
+  initModals: () ->
+    $('.modal .modal-footer .save-button').click () ->
+      $(@).closest('.modal').find('form').submit()
+
+    $('.modal').on 'hidden', () ->
+      $(@).find('form')[0].reset()
+      $(@).find('.alert').remove()
+
+  alertSuccess: (txt) ->
+    $('.alert').remove()
+
+    alert = $('<div class="alert alert-success">')
+    alert.append('<a class="close" href="#" data-dismiss="alert">x</a>')
+    alert.append(txt)
+
+    $(alert).insertBefore($('h1'))
+
+class AdminInPlaceEditor extends AdminEditor
   init: () ->
     @initEditors()
     @initModals()
@@ -41,6 +61,7 @@ class AdminInPlaceEditor
       'option', 'source', window.geoEntities
     )
 
+<<<<<<< HEAD
   initModals: () ->
     $('.modal .modal-footer .save-button').click () ->
       $(@).closest('.modal').find('form').submit()
@@ -59,32 +80,48 @@ class AdminInPlaceEditor
     alert.append(txt)
 
     $(alert).insertBefore($('h1'))
+=======
+class TaxonConceptsEditor extends AdminEditor
+  initTaxonConceptTypeaheads: () ->
+    $('.typeahead').each (idx) ->
+      formId = $(@).closest('form').attr('id')
+      matches = formId.match('^(.+_)?(new|edit)_(.+)$')
+      prefix = matches[3]
+      prefix = matches[1] + prefix unless matches[1] == undefined
+      console.log(prefix)
+      
+      taxonomyEl = $('#' + prefix + '_taxonomy_id')
+      rankEl = $('#' + prefix + '_rank_id')
+      nameStatusEl = $('#' + prefix + '_name_status')
+      parentEl = $('#' + prefix + '_parent_scientific_name')
+      acceptedEl = $('#' + prefix + '_accepted_scientific_name')
+      hybridParentEl = $('#' + prefix + '_hybrid_parent_scientific_name')
+      otherHybridParentEl = $('#' + prefix + '_other_hybrid_parent_scientific_name')
+      console.log(nameStatusEl)
+      #initialize this typeahead
+      $(@).typeahead
+        source: (query, process) ->
+          $.get('/admin/taxon_concepts/autocomplete',
+          {
+            scientific_name: query,
+            taxonomy_id: taxonomyEl.attr('value'),
+            rank_id: rankEl.attr('value'),
+            name_status: nameStatusEl.attr('value'),
+            limit: 25
+          }, (data) =>
+            labels = []
+            $.each(data, (i, item) =>
+              label = item.full_name + ' ' + item.rank_name
+              labels.push(label)
+            )
+            return process(labels)
+          )
+        $().add(taxonomyEl).add(rankEl).change () ->
+          parentEl.attr('value', null)
+          acceptedEl.attr('value', null) unless acceptedEl == undefined
+          hybridParentEl.attr('value', null) unless hybridParentEl == undefined
+          otherHybridParentEl.attr('value', null) unless otherHybridParentEl == undefined
 
-class TaxonConceptsEditor extends AdminInPlaceEditor
   initModals: () ->
     super
-    $('.typeahead').typeahead
-      source: (query, process) ->
-        prefix = if (@$element.attr('id').match('^synonym_.+') != null)
-         'synonym_'
-        else
-          ''
-        $.get('/admin/taxon_concepts/autocomplete',
-        {
-          scientific_name: query,
-          designation_id: $('#' + prefix + 'taxon_concept_designation_id').attr('value'),
-          rank_id: $('#' + prefix + 'taxon_concept_rank_id').attr('value'),
-          name_status: $('#' + prefix + 'taxon_concept_name_status').attr('value'),
-          limit: 25
-        }, (data) =>
-          labels = []
-          $.each(data, (i, item) =>
-            label = item.full_name + ' ' + item.rank_name
-            labels.push(label)
-          )
-          return process(labels)
-        )
-      $('#taxon_concept_designation_id, #taxon_concept_rank_id').change () ->
-        $('#taxon_concept_parent_scientific_name').attr('value', null)
-      $('#synonym_taxon_concept_designation_id').change () ->
-        $('#synonym_taxon_concept_parent_scientific_name').attr('value', null)
+    @initTaxonConceptTypeaheads()

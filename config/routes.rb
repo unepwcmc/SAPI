@@ -14,6 +14,7 @@ SAPI::Application.routes.draw do
     resources :geo_relationship_types, :only => [:index]
   end
   namespace :admin do
+    resources :taxonomies, :only => [:index, :create, :update, :destroy]
     resources :terms, :only => [:index, :create, :update, :destroy]
     resources :sources, :only => [:index, :create, :update, :destroy]
     resources :purposes, :only => [:index, :create, :update, :destroy]
@@ -35,6 +36,7 @@ SAPI::Application.routes.draw do
       resources :taxon_commons, :only => [:new, :create, :edit, :update, :destroy]
       resources :synonym_relationships, :only => [:new, :create, :edit, :update, :destroy]
       resources :taxon_concept_geo_entities_relationship, :only => [:new, :create, :edit, :update, :destroy]
+      resources :hybrid_relationships, :only => [:new, :create, :edit, :update, :destroy]
     end
     resources :listing_changes, :only => [ :update, :destroy ]
     root :to => 'home#index'

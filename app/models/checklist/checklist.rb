@@ -19,7 +19,7 @@ class Checklist::Checklist
   def initialize_query
     @taxon_concepts_rel = MTaxonConcept.scoped.
       select(sql_columns).
-      by_designation(Designation::CITES)
+      by_cites_eu_taxonomy
 
       if @cites_regions.empty? && @countries.empty? && !@cites_appendices.empty?
         @taxon_concepts_rel = @taxon_concepts_rel.

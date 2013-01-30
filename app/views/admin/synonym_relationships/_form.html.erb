@@ -20,10 +20,8 @@
       %>
     </div>
     <div class="control-group">
-      <%= ff.fields_for :taxon_name do |fff| %>
-        <label>Synonym</label>
-        <%= fff.text_field :scientific_name %>
-      <% end %>
+      <label>Synonym</label>
+      <%= ff.text_field :full_name %>
     </div>
     <div class="control-group">
       <label>Author & year</label>

@@ -1,13 +1,18 @@
-<%= form_for :listing_change, :url => collection_url, :remote => true do |f| %>
+<%= form_for :listing_change, :url => collection_url(:taxon_concept_id => @taxon_concept), :remote => true do |f| %>
 
   <%= error_messages_for(@listing_change) %>
+  <%= f.hidden_field :taxon_concept_id %>
 
   <p>
-    <%= f.label :taxon_concept %>
-    <%= f.text_field :taxon_concept_id %>
+    <%= f.label :species_listing %>
+    <%= f.select :species_listing, options_from_collection_for_select(@species_listings, :id, :name) %>
   </p>
   <p>
     <%= f.label :change_type %>
     <%= f.select :change_type, options_from_collection_for_select(@change_types, :id, :name) %>
+  </p>
+  <p>
+    <%= f.label :effective_at %>
+    <%= f.text_field :effective_at, :class => "datepicker" %>
   </p>
 <% end %>

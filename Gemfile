@@ -59,6 +59,8 @@ group :staging, :production do
 end
 
 group :development do
+  gem "better_errors"
+  gem "binding_of_caller"
   gem 'immigrant'
   gem "guard-livereload"
   gem "yajl-ruby"
@@ -77,6 +79,7 @@ end
 
 group :test, :development do
   gem "rspec-rails"
+  gem "json_spec"
   gem "database_cleaner"
 end
 

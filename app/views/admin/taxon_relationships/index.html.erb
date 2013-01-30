@@ -1,9 +1,6 @@
-<%= admin_title { "#{@taxon_concept.designation.name}::#{@taxon_concept.full_name} relationships" } %>
-
-<script>
-  window.taxonRelationshipTypes = <%= @taxon_relationship_types_for_dropdown.to_json.html_safe %>
-  window.taxon_concepts = <%= @taxon_concepts_for_dropdown.to_json.html_safe %>
-</script>
+<div class="admin-header">
+  <h3>Intertaxonomic</h3><%= admin_add_new_button %>
+</div>
 
 <div style="clear:both"></div>
 

@@ -5,7 +5,7 @@
   <ul class="relationship_parts">
     <li id="left">
       <div class="elements">
-        <strong><%= @taxon_concept.designation.name %></strong><br />
+        <strong><%= @taxon_concept.taxonomy.name %></strong><br />
         <span><%= "#{@taxon_concept.full_name} #{@taxon_concept.data["rank_name"].upcase}" %></span><br />
       </div>
     </li>
@@ -18,7 +18,7 @@
     </li>
     <li id="right">
       <div class="elements">
-        <%= select_tag :designation_id, options_from_collection_for_select(@designations, :id, :name), :class => "designation_selector" %><br />
+        <%= select_tag :taxonomy_id, options_from_collection_for_select(@taxonomies, :id, :name), :class => "taxonomy_selector" %><br />
         <input type="text" class="tr-autocomplete"><br />
       </div>
     </li>

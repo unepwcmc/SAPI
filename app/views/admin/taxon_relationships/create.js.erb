@@ -3,7 +3,7 @@
 <% else %>
     $('.modal').modal('hide');
   $('#admin-in-place-editor').html("<%= escape_javascript(render('list')) %>");
-  window.adminInPlaceEditor.initEditors();
-  window.adminInPlaceEditor.alertSuccess("Operation successful");
+  window.adminEditor.initEditors();
+  window.adminEditor.alertSuccess("Operation successful");
 <% end %>
 

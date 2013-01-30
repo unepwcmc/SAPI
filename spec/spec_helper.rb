@@ -34,6 +34,7 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = true
 
   config.include FactoryGirl::Syntax::Methods
+  config.include JsonSpec::Helpers
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
@@ -57,5 +58,11 @@ end
 def build_attributes(*args)
   FactoryGirl.build(*args).attributes.delete_if do |k, v| 
     ["id", "created_at", "updated_at"].member?(k)
+  end
+end
+
+def build_tc_attributes(*args)
+  build_attributes(*args).delete_if do |k, v|
+    %w(data listing notes lft rgt).include? k
   end
 end

@@ -8,7 +8,8 @@ module TaxonConceptHelper
         else
           controller_name.titleize
         end
-      )
+      ) +
+      admin_add_new_hybrid_button +
       admin_add_new_synonym_button +
       admin_add_new_button
     end
@@ -31,6 +32,22 @@ module TaxonConceptHelper
     end
   end
 
+  def admin_add_new_hybrid_button(nested = false)
+    if nested
+      admin_add_new_button(
+        :resource => 'taxon_concept_hybrid',
+        :href => new_admin_taxon_concept_hybrid_relationship_url(@taxon_concept),
+        :remote => true,
+        :"data-toggle" => nil,
+        :role => nil
+      )
+    else
+      admin_add_new_button(
+        :resource => 'taxon_concept_hybrid'
+      )
+    end
+  end
+
   def admin_new_synonym_modal(nested = false)
     admin_new_modal(
       :resource => 'taxon_concept_synonym',
@@ -49,6 +66,18 @@ module TaxonConceptHelper
       :resource => 'taxon_concept_geo_entities',
       :title => 'Add new distribution location'
     ){ render 'admin/taxon_concept_geo_entities_relationship/form' }
+  end
+
+  def admin_new_hybrid_modal(nested = false)
+    admin_new_modal(
+      :resource => 'taxon_concept_hybrid'
+    ){ nested ? '' : render('hybrid_form') }
+  end
+
+  def admin_new_taxon_concept_modal
+    admin_new_modal(
+      :resource => 'taxon_concept'
+    ){ '' }
   end
 
   def admin_add_new_common_name_button

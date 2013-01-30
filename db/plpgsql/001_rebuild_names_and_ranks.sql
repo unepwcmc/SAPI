@@ -70,7 +70,7 @@ CREATE OR REPLACE FUNCTION rebuild_names_and_ranks_for_node(node_id integer) RET
       data = CASE WHEN data IS NULL THEN ''::HSTORE ELSE data END ||
         ancestors || hstore('rank_name', rank_name)
     FROM q
-    WHERE taxon_concepts.id = q.id AND taxon_concepts.name_status <> 'S';
+    WHERE taxon_concepts.id = q.id AND taxon_concepts.name_status NOT IN ('S', 'H');
   END;
   $$;
 
