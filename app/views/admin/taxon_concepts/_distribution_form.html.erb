@@ -4,7 +4,11 @@
   });
 </script>
 
-<div class="control-group">
-  <label>Tags</label>
-  <input type="text" name="tags" class="tagManager"/>
-</div>
+<%= form_for @taxon_concept.taxon_concept_geo_entities, :url => '', :remote => true do |f| %>
+  <%= error_messages_for(@taxon_concept) %>
+
+  <div class="control-group">
+    <label>Tags</label>
+    <%= f.text_field :tags, :class => 'tagManager' %>
+  </div>
+<% end %>

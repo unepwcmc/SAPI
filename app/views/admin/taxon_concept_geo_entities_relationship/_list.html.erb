@@ -1,0 +1,6 @@
+<% @taxon_concept.geo_entities.each do |ge| %>
+  <%= ge.name_en %>
+  <%#<%= link_to 'edit', edit_admin_taxon_concept_geo_entities_relationship_url(@taxon_concept, ge), :remote => true %>%>
+  <%#<%= link_to 'delete', admin_taxon_concept_geo_entities_relationship_url(@taxon_concept, ge), :confirm => "Are you sure?", :method => :delete %>%>
+  <br>
+<% end %>

@@ -49,6 +49,7 @@ class TaxonConcept < ActiveRecord::Base
   has_many :synonyms, :class_name => 'TaxonConcept',
     :through => :synonym_relationships, :source => :other_taxon_concept
   has_many :taxon_concept_geo_entities
+  #has_many :taxon_concept_geo_entities_relationship, :through => :taxon_concept_geo_entities, :source => :taxon_concept
   has_many :geo_entities, :through => :taxon_concept_geo_entities
   has_many :listing_changes
   has_many :species_listings, :through => :listing_changes

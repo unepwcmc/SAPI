@@ -1,0 +1,20 @@
+<script type="text/javascript">
+  $(document).ready(function() {
+    jQuery(".tagManager").tagsManager();
+  });
+</script>
+
+<%= form_tag(new_admin_taxon_concept_taxon_concept_geo_entities_relationship_url(@taxon_concept.id),
+  :method => "POST") do %>
+
+  <div class="control-group">
+    <label>Name</label>
+    <%= text_field_tag :name, '', :class => 'typeahead geo_entities' %>
+  </div>
+
+  <div class="control-group">
+    <label>Tags</label>
+    <%= text_field_tag :tags, '', :class => 'tagManager' %>
+  </div>
+
+<% end %>

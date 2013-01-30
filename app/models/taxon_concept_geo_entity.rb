@@ -10,7 +10,7 @@
 #
 
 class TaxonConceptGeoEntity < ActiveRecord::Base
-  attr_accessible :geo_entity_id, :taxon_concept_id
+  attr_accessible :geo_entity_id, :taxon_concept_id, :name
   belongs_to :geo_entity
   belongs_to :taxon_concept
 end
