@@ -8,7 +8,7 @@
   <%= f.hidden_field :taxon_relationship_type_id %>
   <%= f.fields_for :other_taxon_concept do |ff| %>
     <%= ff.hidden_field :name_status %>
-    <%= ff.hidden_field :designation_id %>
+    <%= ff.hidden_field :taxonomy_id %>
     <div class="control-group">
       <label>Rank</label>
       <%= ff.select :rank_id,
