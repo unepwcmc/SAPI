@@ -25,7 +25,7 @@ class TaxonRelationship < ActiveRecord::Base
   after_create :create_opposite, :if => Proc.new { self.is_bidirectional? && !self.has_opposite? }
 
   validates :taxon_concept_id, :uniqueness => { :scope => [:taxon_relationship_type_id, :other_taxon_concept_id], :message => 'This relationship already exists, choose another taxa.' }
-  validate :interdesignational_relationship_uniqueness, :if => "taxon_relationship_type.is_interdesignational?"
+  validate :intertaxonomic_relationship_uniqueness, :if => "taxon_relationship_type.is_intertaxonomic?"
 
   accepts_nested_attributes_for :other_taxon_concept
 
@@ -52,7 +52,7 @@ class TaxonRelationship < ActiveRecord::Base
         'A'
     end
     existing_tc = TaxonConcept.
-      where(:designation_id => other_taxon_concept.designation_id).
+      where(:taxonomy_id => other_taxon_concept.taxonomy_id).
       where(:rank_id => other_taxon_concept.rank_id).
       where(:full_name => other_taxon_concept.full_name).
       where(:author_year => other_taxon_concept.author_year).
@@ -80,17 +80,17 @@ class TaxonRelationship < ActiveRecord::Base
   end
 
   #A taxon concept can only be related with another taxon concept through
-  # ONE interdesignational Taxon Relationship. Unless the TaxonRelationships
+  # ONE intertaxonomic Taxon Relationship. Unless the TaxonRelationships
   # share the same TaxonRelationshipType and this is bidirectional
-  def interdesignational_relationship_uniqueness
+  def intertaxonomic_relationship_uniqueness
     if TaxonRelationship.where(:taxon_concept_id => self.taxon_concept_id,
          :other_taxon_concept_id => self.other_taxon_concept_id).
          joins(:taxon_relationship_type).
-         where(:taxon_relationship_types => { :is_interdesignational => true }).any? ||
+         where(:taxon_relationship_types => { :is_intertaxonomic => true }).any? ||
       TaxonRelationship.where(:taxon_concept_id => self.other_taxon_concept_id,
          :other_taxon_concept_id => self.taxon_concept_id).
          joins(:taxon_relationship_type).
-         where(:taxon_relationship_types => { :is_interdesignational => true }).where('taxon_relationship_types.id <> ?', self.taxon_relationship_type_id).any?
+         where(:taxon_relationship_types => { :is_intertaxonomic => true }).where('taxon_relationship_types.id <> ?', self.taxon_relationship_type_id).any?
       errors.add(:taxon_concept_id, "these taxon are already related through another relationship.")
     end
   end

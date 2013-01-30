@@ -35,6 +35,9 @@ class MviewRebuildProcedures < ActiveRecord::Migration
         FROM taxon_concepts_view;
 
         CREATE UNIQUE INDEX taxon_concepts_mview_on_id ON taxon_concepts_mview (id);
+        CREATE INDEX taxon_concepts_mview_on_history_filter ON taxon_concepts_mview (designation_is_cites, cites_listed, kingdom_position);
+        CREATE INDEX taxon_concepts_mview_on_full_name ON taxon_concepts_mview (full_name);
+        CREATE INDEX taxon_concepts_mview_on_parent_id ON taxon_concepts_mview (parent_id);
       END;
       $$;
 
@@ -59,6 +62,7 @@ class MviewRebuildProcedures < ActiveRecord::Migration
         FROM listing_changes_view;
 
         CREATE UNIQUE INDEX listing_changes_mview_on_id ON listing_changes_mview (id);
+        CREATE INDEX listing_changes_mview_on_taxon_concept_id ON listing_changes_mview (taxon_concept_id);
       END;
       $$;
 

@@ -3,7 +3,7 @@ FactoryGirl.define do
   factory :taxon_relationship_type do
     sequence(:name) {|n| "INCLUDES#{n}" }
     is_bidirectional false
-    is_interdesignational true
+    is_intertaxonomic true
   end
 
   factory :taxon_relationship do
