@@ -24,6 +24,7 @@ gem 'whenever', :require => false
 gem 'jquery-rails'
 gem 'bootstrap-generators', '~> 2.1'
 gem 'kaminari'
+gem 'select2-rails'
 
 gem 'underscore-rails'
 

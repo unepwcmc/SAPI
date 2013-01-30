@@ -57,15 +57,18 @@ module TaxonConceptHelper
   def admin_add_new_distribution_button(nested = false)
     admin_add_new_button(
       :resource => 'distributions',
-      :name => 'Add new distribution location'
+      :href => new_admin_taxon_concept_distribution_url(@taxon_concept),
+      :name => 'Add new distribution location',
+      :remote => true,
+      :'data-toggle' => nil,
+      :role => nil
     )
   end
 
-  def admin_new_distribution_modal()
+  def admin_new_distribution_modal( nested = false)
     admin_new_modal(
-      :resource => 'distributions',
-      :title => 'Add new distribution location'
-    ){ render 'admin/distributions/form' }
+      :resource => 'distribution'
+    ){ nested ? '' : render('admin/distributions/form') }
   end
 
   def admin_new_hybrid_modal(nested = false)

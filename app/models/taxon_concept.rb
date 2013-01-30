@@ -146,6 +146,10 @@ class TaxonConcept < ActiveRecord::Base
     name_status == 'H'
   end
 
+  def has_distribution?
+    distributions.count > 0
+  end
+
   def rank_name
     data['rank_name']
   end

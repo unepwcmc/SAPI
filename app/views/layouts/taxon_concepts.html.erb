@@ -40,7 +40,7 @@
                   el: '<ul class="unstyled">',
                 })
 
-                $('.geo-entities-list').html(window.geoEntitiesList.render());
+                $('.distributions-list').html(window.geoEntitiesList.render());
 
                 window.commonNamesList = new SAPIAdmin.EditableList({
                   list: <%= @taxon_concept.common_names.to_json.html_safe %>,

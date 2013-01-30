@@ -4,17 +4,8 @@ class Admin::DistributionsController < Admin::SimpleCrudController
 
   def new
     new! do |format|
-      @geo_entity = GeoEntity.find_by_name_en(params[:geo_entity])
-      @taxon_concept = TaxonConcept.find_by_id(params[:taxon_concept_id])
-
-      if (@geo_entity && @taxon_concept)
-        @geo_entity_relationship = Distribution.new(
-          :geo_entity => geo_entity,
-          :taxon_concept => taxon_concept
-        )
-        @geo_entity_relationship.tags = params[:"hidden-tags"] unless params[:"hidden-tags"].empty?
-        @geo_entity_relationship.save!
-      end
+      @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
+              where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
     end
   end
 

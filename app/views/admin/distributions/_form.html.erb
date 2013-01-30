@@ -1,15 +1,17 @@
-<script type="text/javascript">
-  $(document).ready(function() {
-    jQuery(".tagManager").tagsManager();
-  });
-</script>
-
-<%= form_tag(new_admin_taxon_concept_distributions_url(@taxon_concept.id),
-  :method => "POST") do %>
+<%= form_for [:admin, @taxon_concept, @distribution],  :remote => true do |f| %>
+  <%= error_messages_for(@distribution) %>
 
   <div class="control-group">
-    <label>Name</label>
-    <%= text_field_tag :name, '', :class => 'typeahead geo_entities' %>
+    <label>Country</label>
+    <%= f.select :geo_entity_id,
+      options_from_collection_for_select(
+        @geo_entities,
+        :id,
+        :name_en,
+        @distribution.geo_entity_id
+      ), { },
+      { :multiple => true, :class => 'distribution', :style => "width: 220px"}
+    %>
   </div>
 
   <div class="control-group">
