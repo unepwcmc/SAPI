@@ -10,13 +10,16 @@
         :name_en,
         @distribution.geo_entity_id
       ), { },
-      { :multiple => true, :class => 'distribution', :style => "width: 220px"}
+      { :class => 'distribution', :style => "width: 220px"}
     %>
   </div>
 
   <div class="control-group">
     <label>Tags</label>
-    <%= text_field_tag :tags, '', :class => 'tagManager' %>
+    <%= f.text_field :tags %>
   </div>
-
 <% end %>
+
+<script type="text/javascript">
+  $(".distribution").select2();
+</script>

@@ -1,6 +1,7 @@
-<% @taxon_concept.geo_entities.each do |ge| %>
-  <%= ge.name_en %>
-  <%#<%= link_to 'edit', edit_admin_distributions_url(@taxon_concept, ge), :remote => true %>%>
-  <%#<%= link_to 'delete', admin_distributions_url(@taxon_concept, ge), :confirm => "Are you sure?", :method => :delete %>%>
+<% @taxon_concept.distributions.each do |d| %>
+  <%= d.geo_entity.name %>
+  <%= d.tags %>
+  <%= link_to edit_icon, edit_admin_taxon_concept_distribution_url(@taxon_concept, d), :remote => true %>
+  <%= link_to delete_icon, admin_taxon_concept_distribution_url(@taxon_concept, d), :confirm => "Are you sure?", :method => :delete %>
   <br>
 <% end %>
