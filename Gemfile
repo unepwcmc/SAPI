@@ -69,6 +69,7 @@ group :development do
   gem "rack-livereload"
   gem "guard-bundler"
   gem 'annotate', ">=2.5.0"
+  gem 'sextant'
   gem 'ruby-debug19'
   # Deploy with Capistrano
   gem 'capistrano'
