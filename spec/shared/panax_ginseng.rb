@@ -91,7 +91,7 @@ shared_context "Panax ginseng" do
 
     [china, russia].each do |country|
       create(
-        :taxon_concept_geo_entity,
+        :distribution,
         :taxon_concept => @species,
         :geo_entity => country
       )

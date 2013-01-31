@@ -69,7 +69,7 @@ class TaxonConceptsEditor extends AdminEditor
       prefix = matches[3]
       prefix = matches[1] + prefix unless matches[1] == undefined
       console.log(prefix)
-      
+
       taxonomyEl = $('#' + prefix + '_taxonomy_id')
       rankEl = $('#' + prefix + '_rank_id')
       nameStatusEl = $('#' + prefix + '_name_status')

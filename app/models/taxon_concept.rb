@@ -4,22 +4,22 @@
 #
 #  id                 :integer          not null, primary key
 #  parent_id          :integer
-#  lft                :integer
-#  rgt                :integer
 #  rank_id            :integer          not null
-#  taxonomy_id     :integer          not null
 #  taxon_name_id      :integer          not null
+#  author_year        :string(255)
 #  legacy_id          :integer
 #  legacy_type        :string(255)
 #  data               :hstore
 #  listing            :hstore
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  author_year        :string(255)
 #  notes              :text
 #  taxonomic_position :string(255)      default("0"), not null
 #  full_name          :string(255)
 #  name_status        :string(255)      default("A"), not null
+#  lft                :integer
+#  rgt                :integer
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  taxonomy_id        :integer          default(1), not null
 #
 
 class TaxonConcept < ActiveRecord::Base
@@ -77,8 +77,8 @@ class TaxonConcept < ActiveRecord::Base
     :through => :hybrid_relationships, :source => :other_taxon_concept
   has_many :hybrid_parents, :class_name => 'TaxonConcept',
     :through => :inverse_hybrid_relationships, :source => :taxon_concept
-  has_many :taxon_concept_geo_entities
-  has_many :geo_entities, :through => :taxon_concept_geo_entities
+  has_many :distributions
+  has_many :geo_entities, :through => :distributions
   has_many :listing_changes
   has_many :species_listings, :through => :listing_changes
   has_many :taxon_commons, :dependent => :destroy, :include => :common_name
@@ -144,6 +144,10 @@ class TaxonConcept < ActiveRecord::Base
 
   def is_hybrid?
     name_status == 'H'
+  end
+
+  def has_distribution?
+    distributions.count > 0
   end
 
   def rank_name

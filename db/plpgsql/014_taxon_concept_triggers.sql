@@ -181,7 +181,7 @@ BEGIN
   IF OLD.name <> NEW.name THEN
     PERFORM taxon_concepts_refresh_row(tc.id)
     FROM taxon_concepts tc
-    INNER JOIN taxon_concept_geo_entities tc_ge ON tc_ge.taxon_concept_id = tc.id
+    INNER JOIN distributions tc_ge ON tc_ge.taxon_concept_id = tc.id
     WHERE tc_ge.geo_entity_id = NEW.id;
   END IF;
   RETURN NULL;
@@ -192,9 +192,9 @@ DROP TRIGGER IF EXISTS trg_geo_entities_u ON geo_entities;
 CREATE TRIGGER trg_geo_entities_u AFTER UPDATE ON geo_entities
 FOR EACH ROW EXECUTE PROCEDURE trg_geo_entities_u();
 
--- TAXON_CONCEPT_GEO_ENTITIES
+-- DISTRIBUTIONS
 
-CREATE OR REPLACE FUNCTION trg_taxon_concept_geo_entities_ui() RETURNS TRIGGER
+CREATE OR REPLACE FUNCTION trg_distributions_ui() RETURNS TRIGGER
 SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
 BEGIN
   PERFORM taxon_concepts_refresh_row(tc.id)
@@ -204,7 +204,7 @@ BEGIN
 END
 $$;
 
-CREATE OR REPLACE FUNCTION trg_taxon_concept_geo_entities_d() RETURNS TRIGGER
+CREATE OR REPLACE FUNCTION trg_distributions_d() RETURNS TRIGGER
 SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
 BEGIN
   PERFORM taxon_concepts_refresh_row(tc.id)
@@ -214,12 +214,12 @@ BEGIN
 END
 $$;
 
-DROP TRIGGER IF EXISTS trg_taxon_concept_geo_entities_ui ON taxon_concept_geo_entities;
-CREATE TRIGGER trg_taxon_concept_geo_entities_ui AFTER UPDATE ON taxon_concept_geo_entities
-FOR EACH ROW EXECUTE PROCEDURE trg_taxon_concept_geo_entities_ui();
-DROP TRIGGER IF EXISTS trg_taxon_concept_geo_entities_d ON taxon_concept_geo_entities;
-CREATE TRIGGER trg_taxon_concept_geo_entities_d AFTER UPDATE ON taxon_concept_geo_entities
-FOR EACH ROW EXECUTE PROCEDURE trg_taxon_concept_geo_entities_d();
+DROP TRIGGER IF EXISTS trg_distributions_ui ON distributions;
+CREATE TRIGGER trg_distributions_ui AFTER UPDATE ON distributions
+FOR EACH ROW EXECUTE PROCEDURE trg_distributions_ui();
+DROP TRIGGER IF EXISTS trg_distributions_d ON distributions;
+CREATE TRIGGER trg_distributions_d AFTER UPDATE ON distributions
+FOR EACH ROW EXECUTE PROCEDURE trg_distributions_d();
 
 -- TAXON_CONCEPT_REFERENCES -- TODO references cascade
 

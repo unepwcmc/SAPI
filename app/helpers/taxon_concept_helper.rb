@@ -26,7 +26,8 @@ module TaxonConceptHelper
       )
     else
       admin_add_new_button(
-        :resource => 'taxon_concept_synonym'
+        :resource => 'taxon_concept_synonym',
+        :name => 'Add new synonym'
       )
     end
   end
@@ -49,8 +50,25 @@ module TaxonConceptHelper
 
   def admin_new_synonym_modal(nested = false)
     admin_new_modal(
-      :resource => 'taxon_concept_synonym'
+      :resource => 'taxon_concept_synonym',
     ){ nested ? '' : render('synonym_form') }
+  end
+
+  def admin_add_new_distribution_button(nested = false)
+    admin_add_new_button(
+      :resource => 'distributions',
+      :href => new_admin_taxon_concept_distribution_url(@taxon_concept),
+      :name => 'Add new distribution location',
+      :remote => true,
+      :'data-toggle' => nil,
+      :role => nil
+    )
+  end
+
+  def admin_new_distribution_modal( nested = false)
+    admin_new_modal(
+      :resource => 'distribution'
+    ){ nested ? '' : render('admin/distributions/form') }
   end
 
   def admin_new_hybrid_modal(nested = false)

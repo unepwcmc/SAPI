@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: designations
+#
+#  id          :integer          not null, primary key
+#  name        :string(255)      not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  taxonomy_id :integer          default(1), not null
+#
+
 require 'spec_helper'
 
 describe Designation do

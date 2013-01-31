@@ -29,8 +29,16 @@
 
     <div class="span4">
       <h3>Distribution</h3>
+      <%= admin_add_new_distribution_button(true) %>
+      <%= admin_new_distribution_modal(true) %>
 
-      <div class="geo-entities-list">
+      <hr />
+      <div class="distributions-list">
+        <% if @taxon_concept.has_distribution? %>
+          <%= render 'admin/distributions/list' %>
+        <% else %>
+          No distribution information added.
+        <% end %>
       </div>
     </div>
 

@@ -127,7 +127,7 @@ shared_context "Canis lupus" do
 
     [bhutan, india, nepal, pakistan, poland].each do |country|
       create(
-        :taxon_concept_geo_entity,
+        :distribution,
         :taxon_concept => @species,
         :geo_entity => country
       )

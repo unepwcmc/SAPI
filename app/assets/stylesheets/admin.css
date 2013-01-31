@@ -10,6 +10,7 @@
  *
  *= require_self
  *= require datepicker
+ *= require select2
  *= require_tree ./admin
  */
 
