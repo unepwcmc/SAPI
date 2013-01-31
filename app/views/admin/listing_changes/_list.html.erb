@@ -20,7 +20,7 @@
       <td><%= true_false_icon(listing_change.is_current) %></td>
       <td><%= listing_change.party_geo_entity && listing_change.party_geo_entity.name %></td>
       <td><%= listing_change.geo_entities.map(&:name).join(', ') %></td>
-      <td><%= listing_change.inclusion_taxon_concept_id %></td>
+      <td><%= listing_change.inclusion_scientific_name %></td>
       <td><%= listing_change.parent_id %></td>
       <td>
         <%= link_to edit_icon,

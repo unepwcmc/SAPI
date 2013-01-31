@@ -56,4 +56,17 @@ describe Admin::TaxonConceptsController do
     end
   end
 
+  describe "XHR GET JSON autocomplete" do
+    let!(:taxon_concept){
+      create(:taxon_concept,
+        :taxon_name => create(:taxon_name, :scientific_name => 'AAA')
+      )
+    }
+    it "returns properly formatted json" do
+      xhr :get, :autocomplete, :format => 'json', :scientific_name => 'AAA'
+      response.body.should have_json_size(1)
+      parse_json(response.body, "0/full_name").should == 'AAA'
+    end
+  end
+
 end

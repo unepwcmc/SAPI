@@ -1,6 +1,9 @@
 $(document).ready ->
+  console.log(window.editorClass)
   if window.editorClass == 'taxon_concepts'
     window.adminEditor = new TaxonConceptsEditor()
+  else if window.editorClass == 'listing_changes' 
+    window.adminEditor = new ListingChangesEditor()
   else
     window.adminEditor = new AdminInPlaceEditor()
   window.adminEditor.init()
@@ -68,25 +71,22 @@ class TaxonConceptsEditor extends AdminEditor
       matches = formId.match('^(.+_)?(new|edit)_(.+)$')
       prefix = matches[3]
       prefix = matches[1] + prefix unless matches[1] == undefined
-      console.log(prefix)
-      
+
       taxonomyEl = $('#' + prefix + '_taxonomy_id')
       rankEl = $('#' + prefix + '_rank_id')
-      nameStatusEl = $('#' + prefix + '_name_status')
       parentEl = $('#' + prefix + '_parent_scientific_name')
       acceptedEl = $('#' + prefix + '_accepted_scientific_name')
       hybridParentEl = $('#' + prefix + '_hybrid_parent_scientific_name')
       otherHybridParentEl = $('#' + prefix + '_other_hybrid_parent_scientific_name')
-      console.log(nameStatusEl)
+
       #initialize this typeahead
       $(@).typeahead
         source: (query, process) ->
           $.get('/admin/taxon_concepts/autocomplete',
           {
             scientific_name: query,
-            taxonomy_id: taxonomyEl.attr('value'),
-            rank_id: rankEl.attr('value'),
-            name_status: nameStatusEl.attr('value'),
+            taxonomy: {id: taxonomyEl.attr('value')},
+            rank: {id: rankEl.attr('value'), scope: 'parent'},
             limit: 25
           }, (data) =>
             labels = []
@@ -101,6 +101,28 @@ class TaxonConceptsEditor extends AdminEditor
           acceptedEl.attr('value', null) unless acceptedEl == undefined
           hybridParentEl.attr('value', null) unless hybridParentEl == undefined
           otherHybridParentEl.attr('value', null) unless otherHybridParentEl == undefined
+
+  initModals: () ->
+    super
+    @initTaxonConceptTypeaheads()
+
+class ListingChangesEditor extends AdminEditor
+  initTaxonConceptTypeaheads: () ->
+    $('.typeahead').typeahead ->
+      source: (query, process) ->
+        $.get('/admin/taxon_concepts/autocomplete',
+        {
+          scientific_name: query,
+          # TODO pass rank here
+          limit: 25
+        }, (data) =>
+          labels = []
+          $.each(data, (i, item) =>
+            label = item.full_name + ' ' + item.rank_name
+            labels.push(label)
+          )
+          return process(labels)
+        )
 
   initModals: () ->
     super

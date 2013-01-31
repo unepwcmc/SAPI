@@ -127,6 +127,15 @@ class TaxonConcept < ActiveRecord::Base
     )
   }
 
+  scope :at_ancestor_ranks, lambda{ |rank|
+    joins(
+    <<-SQL
+      INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
+        AND ranks.taxonomic_position < '#{rank.taxonomic_position}'
+    SQL
+    )
+  }
+
   def fixed_order_required?
     rank && rank.fixed_order
   end

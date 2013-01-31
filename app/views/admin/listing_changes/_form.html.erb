@@ -42,6 +42,10 @@
     <%= f.label :is_current, "Is current?"%>
     <%= f.check_box :is_current %>
   </p>
+  <p>
+    <label>Included in</label>
+    <%= f.text_field :inclusion_scientific_name, :class => 'typeahead' %>
+  </p>
 <% end %>
 
 <script type="text/javascript">

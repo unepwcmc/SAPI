@@ -21,7 +21,8 @@ class ListingChange < ActiveRecord::Base
 
   attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
     :effective_at, :is_current, :parent_id, :geo_entity_ids,
-    :party_listing_distribution_attributes
+    :party_listing_distribution_attributes, :inclusion_scientific_name
+  attr_writer :inclusion_scientific_name
 
   belongs_to :species_listing
   belongs_to :taxon_concept
@@ -34,7 +35,26 @@ class ListingChange < ActiveRecord::Base
     :through => :party_listing_distribution, :source => :geo_entity
   belongs_to :annotation
   belongs_to :parent, :class_name => 'ListingChange'
+  belongs_to :inclusion, :class_name => 'TaxonConcept'
   validates :change_type_id, :presence => true
   validates :species_listing_id, :presence => true
   validates :effective_at, :presence => true
+  before_validation :check_inclusion_taxon_concept_exists
+
+  def inclusion_scientific_name
+    inclusion && includion.full_name
+  end
+
+  private
+  def check_inclusion_taxon_concept_exists
+    return true if inclusion_scientific_name.blank?
+    tc = TaxonConcept.find_by_full_name_and_name_status(inclusion_scientific_name, 'A')
+    unless tc
+      errors.add(full_name_attr, "does not exist")
+      return true
+    end
+    self.inclusion_taxon_concept_id = tc.id
+    true
+  end
+
 end
