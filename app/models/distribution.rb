@@ -7,11 +7,12 @@
 #  geo_entity_id    :integer          not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  tags             :string(255)
 #
 
 class Distribution < ActiveRecord::Base
-  attr_accessible :geo_entity_id, :taxon_concept_id, :tags
+  attr_accessible :geo_entity_id, :taxon_concept_id
+  acts_as_taggable
+
   belongs_to :geo_entity
   belongs_to :taxon_concept
 end
