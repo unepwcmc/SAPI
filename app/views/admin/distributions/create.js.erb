@@ -1,4 +1,5 @@
 $('.modal').modal('hide');
 $('.distributions-list').html("<%= escape_javascript(render('list')) %>");
+window.adminEditor.initEditors();
 window.adminEditor.alertSuccess("Operation successful");
 
