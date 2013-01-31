@@ -10,7 +10,7 @@
 #
 
 class Distribution < ActiveRecord::Base
-  attr_accessible :geo_entity_id, :taxon_concept_id
+  attr_accessible :geo_entity_id, :taxon_concept_id, :tag_list
   acts_as_taggable
 
   belongs_to :geo_entity

@@ -6,6 +6,7 @@ class Admin::DistributionsController < Admin::SimpleCrudController
     new! do |format|
       @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
               where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+      @tags = Distribution.tag_counts_on('tags').map(&:name)
     end
   end
 
@@ -13,6 +14,7 @@ class Admin::DistributionsController < Admin::SimpleCrudController
     edit! do |format|
       @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
               where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+      @tags = Distribution.tag_counts_on('tags')
       format.js { render 'new' }
     end
   end

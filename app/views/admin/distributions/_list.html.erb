@@ -1,6 +1,6 @@
 <% @taxon_concept.distributions.each do |d| %>
   <%= d.geo_entity.name %>
-  <%= d.tags %>
+  <%= d.tag_list %>
   <%= link_to edit_icon, edit_admin_taxon_concept_distribution_url(@taxon_concept, d), :remote => true %>
   <%= link_to delete_icon, admin_taxon_concept_distribution_url(@taxon_concept, d), :confirm => "Are you sure?", :method => :delete %>
   <br>

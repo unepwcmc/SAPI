@@ -16,10 +16,14 @@
 
   <div class="control-group">
     <label>Tags</label>
-    <%= f.text_field :tags %>
+    <%= f.select :tag_list,
+      options_from_collection_for_select(
+        @tags,
+        :name,
+        :name,
+        @distribution.tag_list
+      ), {},
+      { :multiple => true, :class => 'distribution', :style => "width: 220px"}
+    %>
   </div>
 <% end %>
-
-<script type="text/javascript">
-  $(".distribution").select2();
-</script>
