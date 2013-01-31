@@ -15,4 +15,6 @@ class Distribution < ActiveRecord::Base
 
   belongs_to :geo_entity
   belongs_to :taxon_concept
+
+  validates :taxon_concept_id, :uniqueness => { :scope => :geo_entity_id }
 end
