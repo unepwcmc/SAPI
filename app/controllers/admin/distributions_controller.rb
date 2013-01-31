@@ -9,6 +9,22 @@ class Admin::DistributionsController < Admin::SimpleCrudController
     end
   end
 
+  def edit
+    edit! do |format|
+      @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
+              where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+      format.js { render 'new' }
+    end
+  end
+
+  def update
+    update! do |success, failure|
+      success.js { render 'create' }
+      failure.js { render 'new' }
+    end
+  end
+
+
   def create
     create! do |success, failure|
       failure.js {
