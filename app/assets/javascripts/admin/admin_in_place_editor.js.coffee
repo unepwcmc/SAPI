@@ -74,15 +74,16 @@ class TaxonConceptsEditor extends AdminEditor
 
       taxonomyEl = $('#' + prefix + '_taxonomy_id')
       rankEl = $('#' + prefix + '_rank_id')
-
-      rankScope = if ($(@).attr('id') == prefix + '_parent_scientific_name')
-        'parent'
-      else if ($(@).attr('id') == prefix + '_hybrid_parent_scientific_name')
-        'ancestors'
-      else if ($(@).attr('id') == prefix + '_other_hybrid_parent_scientific_name')
-        'ancestors'
+      taxonomyId = if taxonomyEl
+        taxonomyEl.attr('value')
       else
-        null
+        $(@).attr('data-taxonomy-id')
+      rankId = if rankEl
+        rankEl.attr('value')
+      else
+        $(@).attr('data-rank-id')
+
+      rankScope = $(@).attr('data-rank-scope')
 
       #initialize this typeahead
       $(@).typeahead
@@ -90,8 +91,8 @@ class TaxonConceptsEditor extends AdminEditor
           $.get('/admin/taxon_concepts/autocomplete',
           {
             scientific_name: query,
-            taxonomy: {id: taxonomyEl.attr('value')},
-            rank: {id: rankEl.attr('value'), scope: rankScope},
+            taxonomy: {id: taxonomyId},
+            rank: {id: rankId, scope: rankScope},
             limit: 25
           }, (data) =>
             labels = []
@@ -113,15 +114,15 @@ class ListingChangesEditor extends AdminEditor
 
   initTaxonConceptTypeaheads: () ->
     $('.typeahead').each (idx) ->
-      formAction = $(@).closest('form').attr('action')
-      matches = formAction.match('^/admin/taxon_concepts/([0-9]+)/')
-      taxonConceptId = matches[1]
+      taxonConceptId = $(@).attr('data-taxon-concept-id')
+      taxonConceptScope = $(@).attr('data-taxon-concept-scope')
+
       $(@).typeahead
         source: (query, process) ->
           $.get('/admin/taxon_concepts/autocomplete',
           {
             scientific_name: query,
-            taxon_concept: {id: taxonConceptId, scope: 'ancestors'}
+            taxon_concept: {id: taxonConceptId, scope: taxonConceptScope}
             limit: 25
           }, (data) =>
             labels = []

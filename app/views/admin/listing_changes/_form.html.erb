@@ -50,8 +50,22 @@
   </p>
   <p>
     <label>Included in</label>
-    <%= f.text_field :inclusion_scientific_name, :class => 'typeahead' %>
+    <%= f.text_field :inclusion_scientific_name, :class => 'typeahead',
+      "data-taxon-concept-scope" => 'ancestors',
+      "data-taxon-concept-id" => @taxon_concept.id,
+      "data-taxonomy-id" => @taxon_concept.taxonomy_id
+    %>
   </p>
+  <%= f.fields_for :exclusions do |ff| %>
+    <label>Exclusions</label>
+    <p>
+      <%= ff.text_field :exclusion_scientific_name, :class => 'typeahead',
+        "data-taxon-concept-scope" => 'descendants',
+        "data-taxon-concept-id" => @taxon_concept.id,
+        "data-taxonomy-id" => @taxon_concept.taxonomy_id
+      %>
+    </p>
+  <% end %>
 <% end %>
 
 <script type="text/javascript">

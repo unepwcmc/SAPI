@@ -21,34 +21,49 @@ class ListingChange < ActiveRecord::Base
 
   attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
     :effective_at, :is_current, :parent_id, :geo_entity_ids,
-    :party_listing_distribution_attributes, :inclusion_scientific_name
-  attr_writer :inclusion_scientific_name
+    :party_listing_distribution_attributes, :inclusion_scientific_name,
+    :exclusion_attributes,:exclusion_scientific_name
+  attr_writer :inclusion_scientific_name, :exclusion_scientific_name
 
   belongs_to :species_listing
   belongs_to :taxon_concept
   belongs_to :change_type
   has_many :listing_distributions, :conditions => {:is_party => false}, :dependent => :destroy
   has_one :party_listing_distribution, :class_name => 'ListingDistribution', :conditions => {:is_party => true}, :dependent => :destroy
-  accepts_nested_attributes_for :party_listing_distribution, :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
   has_many :geo_entities, :through => :listing_distributions
   has_one :party_geo_entity, :class_name => 'GeoEntity',
     :through => :party_listing_distribution, :source => :geo_entity
   belongs_to :annotation
   belongs_to :parent, :class_name => 'ListingChange'
   belongs_to :inclusion, :class_name => 'TaxonConcept', :foreign_key => 'inclusion_taxon_concept_id'
+  has_many :exclusions, :class_name => 'ListingChange', :foreign_key => 'parent_id'
+
   validates :change_type_id, :presence => true
   validates :effective_at, :presence => true
   validate :inclusion_at_higher_rank
   validate :designation_mismatch
   before_validation :check_inclusion_taxon_concept_exists
 
+  accepts_nested_attributes_for :party_listing_distribution,
+    :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
+  accepts_nested_attributes_for :exclusions
+
   def effective_at_formatted
     effective_at ? effective_at.strftime('%d/%m/%Y') : ''
+  end
+
+  def is_exclusion?
+    change_type.name == ChangeType::EXCEPTION
   end
 
   def inclusion_scientific_name
     @inclusion_scientific_name ||
     inclusion && inclusion.full_name
+  end
+
+  def exclusion_scientific_name
+    @exclusion_scientific_name ||
+    is_exclusion? && taxon_concept && taxon_concept.full_name
   end
 
   private

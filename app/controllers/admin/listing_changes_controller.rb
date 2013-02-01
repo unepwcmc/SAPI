@@ -7,6 +7,9 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
     new! do
       load_change_types
       @listing_change.build_party_listing_distribution
+      @listing_change.exclusions.build(
+        :change_type_id => ChangeType.find_by_name(ChangeType::EXCEPTION).id
+      )
     end
   end
 

@@ -5,7 +5,6 @@ class TaxonConceptPrefixMatcher
   # 'taxon_concept' => {'id' => x, 'scope' => [ancestors]}
   # 'scientific_name'
   def initialize(options = {})
-    puts options.inspect
     @taxon_concepts = TaxonConcept.where(:name_status => 'A').
       select(
       <<-SQL
@@ -40,9 +39,12 @@ class TaxonConceptPrefixMatcher
       @taxon_concept_scope = options['taxon_concept']['scope'] || 0
       taxon_concept = TaxonConcept.find(@taxon_concept_id) if @taxon_concept_scope
       if @taxon_concept_scope == 'ancestors'
-        #search ancestors
         @taxon_concepts = @taxon_concepts.where([
           "lft < ? AND rgt > ?", taxon_concept.lft, taxon_concept.rgt
+        ])
+      elsif @taxon_concept_scope == 'descendants'
+        @taxon_concepts = @taxon_concepts.where([
+          "lft > ? AND lft < ?", taxon_concept.lft, taxon_concept.rgt
         ])
       end
     end
