@@ -40,3 +40,11 @@ ul.dropdown-menu {
     margin-right: 10px;
   }
 }
+
+#new-listing_change.modal {
+  width: 800px;
+  max-height: 700px;
+  .modal-body {
+    max-height: 650px;
+  }
+}
