@@ -42,6 +42,10 @@ class ListingChange < ActiveRecord::Base
   validate :designation_mismatch
   before_validation :check_inclusion_taxon_concept_exists
 
+  def effective_at_formatted
+    effective_at ? effective_at.strftime('%d/%m/%Y') : ''
+  end
+
   def inclusion_scientific_name
     @inclusion_scientific_name ||
     inclusion && inclusion.full_name

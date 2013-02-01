@@ -109,6 +109,8 @@ class TaxonConceptsEditor extends AdminEditor
     @initTaxonConceptTypeaheads()
 
 class ListingChangesEditor extends AdminEditor
+  init: () ->
+
   initTaxonConceptTypeaheads: () ->
     $('.typeahead').each (idx) ->
       formAction = $(@).closest('form').attr('action')
@@ -133,3 +135,6 @@ class ListingChangesEditor extends AdminEditor
   initModals: () ->
     super
     @initTaxonConceptTypeaheads()
+    $(".datepicker").datepicker
+      format: "dd/mm/yyyy",
+      autoclose: true

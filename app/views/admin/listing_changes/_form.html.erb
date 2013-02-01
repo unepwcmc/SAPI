@@ -2,15 +2,21 @@
   <%= error_messages_for(@listing_change) %>
   <p>
     <%= f.label :species_listing_id %>
-    <%= f.select :species_listing_id, options_from_collection_for_select(@species_listings, :id, :name) %>
+    <%= f.select :species_listing_id,
+      options_from_collection_for_select(@species_listings, :id, :name),
+      { :include_blank => true }
+    %>
   </p>
   <p>
     <%= f.label :change_type_id %>
-    <%= f.select :change_type_id, options_from_collection_for_select(@change_types, :id, :print_name) %>
+    <%= f.select :change_type_id,
+      options_from_collection_for_select(@change_types, :id, :print_name)
+    %>
   </p>
   <p>
     <%= f.label :effective_at %>
-    <%= f.text_field :effective_at, :value => @listing_change.effective_at ? @listing_change.effective_at.strftime('%m/%d/%Y') : '', :class => "datepicker" %>
+    <%= f.text_field :effective_at, :class => "datepicker", :value => @listing_change.effective_at_formatted %>
+
   </p>
   <%= f.fields_for :party_listing_distribution do |b| %>
     <p>
