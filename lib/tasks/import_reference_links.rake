@@ -34,9 +34,9 @@ namespace :import do
 
       # copy 'CTY' links
       sql = <<-SQL
-        INSERT INTO "taxon_concept_geo_entity_references"
-          (taxon_concept_geo_entity_id, reference_id)
-        SELECT taxon_concept_geo_entities.id, "references".id
+        INSERT INTO "distribution_references"
+          (distribution_id, reference_id)
+        SELECT distributions.id, "references".id
           FROM #{TMP_TABLE}
           INNER JOIN taxon_concepts
             ON #{TMP_TABLE}.SpcRecID = taxon_concepts.legacy_id
@@ -46,12 +46,12 @@ namespace :import do
             AND "references".legacy_type = #{TMP_TABLE}.legacy_type
           INNER JOIN geo_entities
             ON #{TMP_TABLE}.DslCodeRecID = geo_entities.legacy_id
-          INNER JOIN taxon_concept_geo_entities
-            ON geo_entities.id = taxon_concept_geo_entities.geo_entity_id
+          INNER JOIN distributions
+            ON geo_entities.id = distributions.geo_entity_id
           WHERE DslCode= 'CTY'
           AND NOT EXISTS (
             SELECT id
-            FROM taxon_concept_geo_entity_references
+            FROM distribution_references
             WHERE taxon_concept_id = taxon_concepts.id
               AND reference_id = "references".id
               AND geo_entity_id = geo_entities.id

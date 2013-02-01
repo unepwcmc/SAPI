@@ -105,9 +105,9 @@ class MTaxonConcept < ActiveRecord::Base
         UNION
         (
           -- occurs in specified geo entities
-          SELECT taxon_concept_geo_entities.taxon_concept_id
-          FROM taxon_concept_geo_entities
-          WHERE taxon_concept_geo_entities.geo_entity_id IN (#{geo_entities_in_clause})
+          SELECT distributions.taxon_concept_id
+          FROM distributions
+          WHERE distributions.geo_entity_id IN (#{geo_entities_in_clause})
 
           INTERSECT
 

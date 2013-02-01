@@ -3,8 +3,8 @@
 # Table name: common_names
 #
 #  id          :integer          not null, primary key
-#  name        :string(255)
-#  language_id :integer
+#  name        :string(255)      not null
+#  language_id :integer          not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #

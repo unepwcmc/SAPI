@@ -74,3 +74,13 @@ class SAPIAdmin.EditableList
     )
 
     return @$el
+
+$(document).ready ->
+  $('.typeahead.geo_entities').typeahead
+    source: (query, process) ->
+      $.get('/admin/geo_entities/autocomplete',
+        name: query
+      , (data) =>
+        names = _.map(data, (c) -> c.name)
+        return process(names)
+      )
