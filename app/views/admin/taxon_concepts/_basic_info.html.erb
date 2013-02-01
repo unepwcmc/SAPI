@@ -34,7 +34,7 @@
     <%= link_to "Details", edit_admin_taxon_concept_path(@taxon_concept) %>
   </li>
   <% @taxon_concept.designations.each do |d| %>
-    <li class="<%= if controller_name == "listing_changes" then "active" end%>">
+    <li class="<%= if controller_name == "listing_changes" && @designation.id == d.id then "active" end%>">
       <%= link_to "#{d.name} Legislation", admin_taxon_concept_designation_listing_changes_path(@taxon_concept, d) %>
     </li>
   <% end %>
