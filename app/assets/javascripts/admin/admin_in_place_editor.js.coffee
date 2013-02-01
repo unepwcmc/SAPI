@@ -74,10 +74,15 @@ class TaxonConceptsEditor extends AdminEditor
 
       taxonomyEl = $('#' + prefix + '_taxonomy_id')
       rankEl = $('#' + prefix + '_rank_id')
-      parentEl = $('#' + prefix + '_parent_scientific_name')
-      acceptedEl = $('#' + prefix + '_accepted_scientific_name')
-      hybridParentEl = $('#' + prefix + '_hybrid_parent_scientific_name')
-      otherHybridParentEl = $('#' + prefix + '_other_hybrid_parent_scientific_name')
+
+      rankScope = if ($(@).attr('id') == prefix + '_parent_scientific_name')
+        'parent'
+      else if ($(@).attr('id') == prefix + '_hybrid_parent_scientific_name')
+        'ancestors'
+      else if ($(@).attr('id') == prefix + '_other_hybrid_parent_scientific_name')
+        'ancestors'
+      else
+        null
 
       #initialize this typeahead
       $(@).typeahead
@@ -86,7 +91,7 @@ class TaxonConceptsEditor extends AdminEditor
           {
             scientific_name: query,
             taxonomy: {id: taxonomyEl.attr('value')},
-            rank: {id: rankEl.attr('value'), scope: 'parent'},
+            rank: {id: rankEl.attr('value'), scope: rankScope},
             limit: 25
           }, (data) =>
             labels = []
@@ -96,11 +101,8 @@ class TaxonConceptsEditor extends AdminEditor
             )
             return process(labels)
           )
-        $().add(taxonomyEl).add(rankEl).change () ->
-          parentEl.attr('value', null)
-          acceptedEl.attr('value', null) unless acceptedEl == undefined
-          hybridParentEl.attr('value', null) unless hybridParentEl == undefined
-          otherHybridParentEl.attr('value', null) unless otherHybridParentEl == undefined
+        $().add(taxonomyEl).add(rankEl).change () =>
+          $(@).attr('value', null)
 
   initModals: () ->
     super
@@ -108,21 +110,27 @@ class TaxonConceptsEditor extends AdminEditor
 
 class ListingChangesEditor extends AdminEditor
   initTaxonConceptTypeaheads: () ->
-    $('.typeahead').typeahead ->
-      source: (query, process) ->
-        $.get('/admin/taxon_concepts/autocomplete',
-        {
-          scientific_name: query,
-          # TODO pass rank here
-          limit: 25
-        }, (data) =>
-          labels = []
-          $.each(data, (i, item) =>
-            label = item.full_name + ' ' + item.rank_name
-            labels.push(label)
+    $('.typeahead').each (idx) ->
+      formAction = $(@).closest('form').attr('action')
+      console.log(formAction)
+      matches = formAction.match('^/admin/taxon_concepts/([0-9]+)/')
+      taxonConceptId = matches[1]
+      console.log(taxonConceptId)
+      $(@).typeahead
+        source: (query, process) ->
+          $.get('/admin/taxon_concepts/autocomplete',
+          {
+            scientific_name: query,
+            taxon_concept: {id: taxonConceptId, scope: 'ancestors'}
+            limit: 25
+          }, (data) =>
+            labels = []
+            $.each(data, (i, item) =>
+              label = item.full_name + ' ' + item.rank_name
+              labels.push(label)
+            )
+            return process(labels)
           )
-          return process(labels)
-        )
 
   initModals: () ->
     super

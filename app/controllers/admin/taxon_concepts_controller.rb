@@ -63,9 +63,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
 
   def autocomplete
     @taxon_concepts = TaxonConceptPrefixMatcher.new(
-      :scientific_name => params[:scientific_name],
-      :rank => params[:rank],
-      :taxonomy => params[:taxonomy]
+      params.select{ |k,v| %w(scientific_name taxon_concept rank taxonomy).include? k }
     ).taxon_concepts
     render :json => @taxon_concepts.to_json(
       :only => [:id, :taxonomy_name],

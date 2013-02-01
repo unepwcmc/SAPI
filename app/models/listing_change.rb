@@ -35,14 +35,16 @@ class ListingChange < ActiveRecord::Base
     :through => :party_listing_distribution, :source => :geo_entity
   belongs_to :annotation
   belongs_to :parent, :class_name => 'ListingChange'
-  belongs_to :inclusion, :class_name => 'TaxonConcept'
+  belongs_to :inclusion, :class_name => 'TaxonConcept', :foreign_key => 'inclusion_taxon_concept_id'
   validates :change_type_id, :presence => true
-  validates :species_listing_id, :presence => true
   validates :effective_at, :presence => true
+  validate :inclusion_at_higher_rank
+  validate :designation_mismatch
   before_validation :check_inclusion_taxon_concept_exists
 
   def inclusion_scientific_name
-    inclusion && includion.full_name
+    @inclusion_scientific_name ||
+    inclusion && inclusion.full_name
   end
 
   private
@@ -50,11 +52,27 @@ class ListingChange < ActiveRecord::Base
     return true if inclusion_scientific_name.blank?
     tc = TaxonConcept.find_by_full_name_and_name_status(inclusion_scientific_name, 'A')
     unless tc
-      errors.add(full_name_attr, "does not exist")
+      errors.add(:inclusion_scientific_name, "does not exist")
       return true
     end
     self.inclusion_taxon_concept_id = tc.id
     true
+  end
+
+  def inclusion_at_higher_rank
+    return true unless inclusion
+    unless inclusion.rank.taxonomic_position < taxon_concept.rank.taxonomic_position
+      errors.add(:inclusion_taxon_concept_id, "must be at immediately higher rank")
+      return false
+    end
+  end
+
+  def designation_mismatch
+    return true unless species_listing
+    unless species_listing.designation_id == change_type.designation_id
+      errors.add(:species_listing_id, "designation mismatch between change type and species listing")
+      return false
+    end
   end
 
 end
