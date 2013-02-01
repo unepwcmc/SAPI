@@ -112,10 +112,8 @@ class ListingChangesEditor extends AdminEditor
   initTaxonConceptTypeaheads: () ->
     $('.typeahead').each (idx) ->
       formAction = $(@).closest('form').attr('action')
-      console.log(formAction)
       matches = formAction.match('^/admin/taxon_concepts/([0-9]+)/')
       taxonConceptId = matches[1]
-      console.log(taxonConceptId)
       $(@).typeahead
         source: (query, process) ->
           $.get('/admin/taxon_concepts/autocomplete',
