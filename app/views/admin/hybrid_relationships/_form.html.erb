@@ -28,6 +28,18 @@
       <%= ff.text_field :full_name %>
     </div>
     <div class="control-group">
+      <label>Tags</label>
+      <%= f.select :tag_list,
+        options_from_collection_for_select(
+          @tags,
+          :name,
+          :name,
+          @taxon_concept.tag_list
+        ), {},
+        { :multiple => true, :class => 'tags', :style => "width: 220px"}
+      %>
+    </div>
+    <div class="control-group">
       <label>Author & year</label>
       <%= ff.text_field :author_year %>
     </div>

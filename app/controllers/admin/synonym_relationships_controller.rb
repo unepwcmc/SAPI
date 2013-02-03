@@ -7,7 +7,6 @@ class Admin::SynonymRelationshipsController < Admin::SimpleCrudController
   def new
     new! do |format|
       load_taxonomies_and_ranks
-      @tags = TaxonConcept.tag_counts_on('tags')
       @synonym_relationship = TaxonRelationship.new(
         :taxon_relationship_type_id => @synonym_relationship_type.id
       )
@@ -34,7 +33,6 @@ class Admin::SynonymRelationshipsController < Admin::SimpleCrudController
   def edit
     edit! do |format|
       load_taxonomies_and_ranks
-      @tags = TaxonConcept.tag_counts_on('tags')
       format.js { render 'new' }
     end
   end
