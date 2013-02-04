@@ -1,3 +1,6 @@
-$('#admin-new-<%= controller_name.singularize %>-form').html("<%= escape_javascript(render('form')) %>");
+var form = $("<%= escape_javascript(render('form')) %>");
+form.find('.tags').select2();
+
+$('#admin-new-<%= controller_name.singularize %>-form').html(form);
 $('#new-<%= controller_name.singularize %>').modal('show');
 window.adminEditor.initTaxonConceptTypeaheads();

@@ -27,10 +27,13 @@ class TaxonConcept < ActiveRecord::Base
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
     :accepted_scientific_name, :parent_scientific_name, 
-    :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name
+    :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
+    :tag_list
   attr_writer :parent_scientific_name
   attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
     :other_hybrid_parent_scientific_name
+
+  acts_as_taggable
 
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore

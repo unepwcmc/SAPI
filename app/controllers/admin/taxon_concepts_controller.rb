@@ -11,12 +11,14 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     @synonym.build_taxon_name
     @hybrid = TaxonConcept.new(:name_status => 'H')
     @hybrid.build_taxon_name
+    @tags = TaxonConcept.tag_counts_on('tags')
     index!
   end
 
   def edit
     @taxonomies = Taxonomy.order(:name)
     @ranks = Rank.order(:taxonomic_position)
+    @tags = TaxonConcept.tag_counts_on('tags')
     edit! do |format|
       @languages = Language.order(:name_en)
       format.js { render 'new' }
@@ -27,6 +29,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     create! do |success, failure|
       @taxonomies = Taxonomy.order(:name)
       @ranks = Rank.order(:taxonomic_position)
+      @tags = TaxonConcept.tag_counts_on('tags')
       success.js { render('create') }
       failure.js {
         if @taxon_concept.is_synonym?
