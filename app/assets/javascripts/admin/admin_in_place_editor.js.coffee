@@ -110,6 +110,10 @@ class TaxonConceptsEditor extends AdminEditor
     @initTaxonConceptTypeaheads()
 
 class ListingChangesEditor extends AdminEditor
+  init: () ->
+    @initEditors()
+    @initModals()
+
   initEditors: () ->
     $("[rel='tooltip']").tooltip()
 
@@ -155,6 +159,6 @@ class ListingChangesEditor extends AdminEditor
         )
 
   initDistributionSelectors: () ->
-    $('.distribution').select2({
+    $('.distribution:not(#exclusions_fields_blueprint > .fields > select)').select2({
       placeholder: 'Select countries'
     })

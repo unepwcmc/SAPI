@@ -81,6 +81,7 @@ class TaxonConcept < ActiveRecord::Base
   has_many :taxon_concept_geo_entities
   has_many :geo_entities, :through => :taxon_concept_geo_entities
   has_many :listing_changes
+  has_many :current_listing_changes, :class_name => 'ListingChange', :conditions => 'is_current = true'
   has_many :species_listings, :through => :listing_changes
   has_many :taxon_commons, :dependent => :destroy, :include => :common_name
   has_many :common_names, :through => :taxon_commons
