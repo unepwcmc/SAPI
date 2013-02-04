@@ -23,7 +23,7 @@ class ChangeType < ActiveRecord::Base
 
   def abbreviation
     self.name.split('_').
-      map{|a| a[0]}.join('')
+      map{|a| a[0..2]}.join('-')
   end
 
   def print_name

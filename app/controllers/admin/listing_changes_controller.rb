@@ -3,12 +3,18 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   belongs_to :taxon_concept, :designation
   layout 'taxon_concepts'
 
+  def index
+    index! do
+      load_listing_changes
+    end
+  end
+
   def new
     new! do
       load_change_types
       @listing_change.build_party_listing_distribution
       @listing_change.exclusions.build(
-        :change_type_id => ChangeType.find_by_name(ChangeType::EXCEPTION).id
+        :change_type_id => @designation.change_types.find_by_name(ChangeType::EXCEPTION).id
       )
     end
   end
@@ -20,6 +26,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
     @designation = Designation.find(params[:designation_id])
     @listing_change = ListingChange.new(params[:listing_change])
     if @taxon_concept.listing_changes << @listing_change
+      load_listing_changes
       render 'create'
     else
       load_change_types
@@ -31,13 +38,24 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   def edit
     edit! do |format|
       load_change_types
+      unless @listing_change.party_listing_distribution
+        @listing_change.build_party_listing_distribution
+      end
+      unless @listing_change.exclusions
+        @listing_change.exclusions.build(
+          :change_type_id => @designation.change_types.find_by_name(ChangeType::EXCEPTION).id
+        )
+      end
       format.js { render 'new' }
     end
   end
 
   def update
     update! do |success, failure|
-      success.js { render 'create' }
+      success.js {
+        load_listing_changes
+        render 'create'
+      }
       failure.js {
         load_change_types
         render 'new'
@@ -57,6 +75,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   protected
   def load_change_types
     @change_types = ChangeType.order(:name).
+      where("name <> '#{ChangeType::EXCEPTION}'").
       where(:designation_id => @designation.id)
     @species_listings = SpeciesListing.order(:abbreviation).
       where(:designation_id => @designation.id)
@@ -64,15 +83,18 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
   end
 
-  def collection
-    @listing_changes ||= end_of_association_chain.
+  def load_listing_changes
+    @listing_changes = @taxon_concept.listing_changes.
       includes([
         :species_listing,
         :change_type,
         :party_geo_entity,
-        :geo_entities
+        :geo_entities,
+        :exclusions => [:geo_entities, :taxon_concept]
       ]).
-      order('effective_at desc, is_current desc').
+      where("change_types.name <> '#{ChangeType::EXCEPTION}'").
+      where("change_types.designation_id" => @designation.id).
+      order('listing_changes.effective_at DESC').
       page(params[:page]).where(:parent_id => nil)
   end
 end

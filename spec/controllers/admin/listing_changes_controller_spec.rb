@@ -21,11 +21,13 @@ describe Admin::ListingChangesController do
     it "assigns @listing_changes sorted by effective_at" do
       listing_change1 = create(
         :listing_change,
+        :species_listing => @appendix,
         :taxon_concept_id => @taxon_concept.id,
         :change_type_id => @addition.id,
         :effective_at => 2.weeks.ago)
       listing_change2 = create(
         :listing_change,
+        :species_listing => @appendix,
         :taxon_concept_id => @taxon_concept.id,
         :change_type_id => @addition.id,
         :effective_at => 1.week.ago
@@ -53,7 +55,7 @@ describe Admin::ListingChangesController do
         :designation_id => @designation.id
       response.should render_template('new')
     end
-    it "assigns the listing_change variable" do
+    it "assigns @listing_change" do
       xhr :get, :new, :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
       assigns(:listing_change).should_not be_nil
@@ -61,15 +63,27 @@ describe Admin::ListingChangesController do
   end
 
   describe "XHR POST create" do
-    it "renders create when successful" do
-      xhr :post, :create, :listing_change => {
-          :change_type_id => @addition.id,
-          :species_listing_id => @appendix.id,
-          :effective_at => 1.week.ago
-        },
-        :taxon_concept_id => @taxon_concept.id,
-        :designation_id => @designation.id
-      response.should render_template("create")
+    context "when successful" do
+      it "renders create" do
+        xhr :post, :create, :listing_change => {
+            :change_type_id => @addition.id,
+            :species_listing_id => @appendix.id,
+            :effective_at => 1.week.ago
+          },
+          :taxon_concept_id => @taxon_concept.id,
+          :designation_id => @designation.id
+        response.should render_template("create")
+      end
+      it "assigns @listing_changes" do
+        xhr :post, :create, :listing_change => {
+            :change_type_id => @addition.id,
+            :species_listing_id => @appendix.id,
+            :effective_at => 1.week.ago
+          },
+          :taxon_concept_id => @taxon_concept.id,
+          :designation_id => @designation.id
+        assigns(:listing_changes).count.should == 1
+      end
     end
     it "renders new when not successful" do
       taxon_concept = create(:taxon_concept)
@@ -114,16 +128,29 @@ describe Admin::ListingChangesController do
         :effective_at => 1.week.ago
       )
     end
-    it "renders create when successful" do
-      xhr :put, :update, :listing_change => {
-          :change_type_id => @addition.id,
-          :species_listing_id => @appendix.id,
-          :effective_at => 1.week.ago
-        },
-        :id => @listing_change.id,
-        :taxon_concept_id => @taxon_concept.id,
-        :designation_id => @designation.id
-      response.should render_template("create")
+    context "when successful" do
+      it "renders create" do
+        xhr :put, :update, :listing_change => {
+            :change_type_id => @addition.id,
+            :species_listing_id => @appendix.id,
+            :effective_at => 1.week.ago
+          },
+          :id => @listing_change.id,
+          :taxon_concept_id => @taxon_concept.id,
+          :designation_id => @designation.id
+        response.should render_template("create")
+      end
+      it "assigns @listing_changes" do
+        xhr :put, :update, :listing_change => {
+            :change_type_id => @addition.id,
+            :species_listing_id => @appendix.id,
+            :effective_at => 1.week.ago
+          },
+          :id => @listing_change.id,
+          :taxon_concept_id => @taxon_concept.id,
+          :designation_id => @designation.id
+        assigns(:listing_changes).count.should == 1
+      end
     end
     it "renders new when not successful" do
       xhr :put, :update, :listing_change => {:effective_at => nil},

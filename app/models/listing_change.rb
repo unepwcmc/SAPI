@@ -22,7 +22,7 @@ class ListingChange < ActiveRecord::Base
   attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
     :effective_at, :is_current, :parent_id, :geo_entity_ids,
     :party_listing_distribution_attributes, :inclusion_scientific_name,
-    :exclusion_attributes,:exclusion_scientific_name
+    :exclusions_attributes,:exclusion_scientific_name
   attr_writer :inclusion_scientific_name, :exclusion_scientific_name
 
   belongs_to :species_listing
@@ -36,24 +36,28 @@ class ListingChange < ActiveRecord::Base
   belongs_to :annotation
   belongs_to :parent, :class_name => 'ListingChange'
   belongs_to :inclusion, :class_name => 'TaxonConcept', :foreign_key => 'inclusion_taxon_concept_id'
-  has_many :exclusions, :class_name => 'ListingChange', :foreign_key => 'parent_id'
+  has_many :exclusions, :class_name => 'ListingChange', :foreign_key => 'parent_id', :dependent => :destroy
 
   validates :change_type_id, :presence => true
   validates :effective_at, :presence => true
   validate :inclusion_at_higher_rank
   validate :designation_mismatch
+  validate :taxon_concept_or_geo_entities_present, :if => :is_exclusion?
+  validates_associated :exclusions
   before_validation :check_inclusion_taxon_concept_exists
+  before_validation :check_excluded_taxon_concept_exists
 
   accepts_nested_attributes_for :party_listing_distribution,
     :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
-  accepts_nested_attributes_for :exclusions
+  accepts_nested_attributes_for :exclusions,
+    :reject_if => proc { |attributes| attributes['geo_entity_ids'].blank? && attributes['exclusion_scientific_name'].blank? }
 
   def effective_at_formatted
     effective_at ? effective_at.strftime('%d/%m/%Y') : ''
   end
 
   def is_exclusion?
-    change_type.name == ChangeType::EXCEPTION
+    change_type && change_type.name == ChangeType::EXCEPTION
   end
 
   def inclusion_scientific_name
@@ -91,6 +95,23 @@ class ListingChange < ActiveRecord::Base
     unless species_listing.designation_id == change_type.designation_id
       errors.add(:species_listing_id, "designation mismatch between change type and species listing")
       return false
+    end
+  end
+
+  def check_excluded_taxon_concept_exists
+    return true if exclusion_scientific_name.blank?
+    tc = TaxonConcept.find_by_full_name_and_name_status(exclusion_scientific_name, 'A')
+    unless tc
+      errors.add(:exclusion_scientific_name, "does not exist")
+      return true
+    end
+    self.taxon_concept_id = tc.id
+    true
+  end
+
+  def taxon_concept_or_geo_entities_present
+    unless taxon_concept || geo_entities
+      errors.add(:taxon_concept, "either taxon concept of ge entities must be present")
     end
   end
 

@@ -1,27 +1,47 @@
 <thead>
   <th>Appx</th>
   <th>Type</th>
-  <th>Annotation</th>
   <th>Effective at</th>
   <th>Current</th>
   <th>Party</th>
   <th>Geo entities</th>
   <th>Inclusion</th>
-  <th>Parent</th>
-  <th width="10%">Actions</th>
+  <th>Exclusions</th>
+  <th>Annotation</th>
+  <th>Actions</th>
 </thead>
 <tbody>
   <% collection.each do |listing_change| -%>
     <tr class="<%= if listing_change.is_current? then "current_listing" end %>">
       <td><%= listing_change.species_listing && listing_change.species_listing.abbreviation %></td>
       <td><%= listing_change.change_type.abbreviation %></td>
-      <td><%= listing_change.annotation.try(:id) %></td>
       <td><%= listing_change.effective_at_formatted %></td>
       <td><%= true_false_icon(listing_change.is_current) %></td>
-      <td><%= listing_change.party_geo_entity && listing_change.party_geo_entity.name %></td>
-      <td><%= listing_change.geo_entities.map(&:name).join(', ') %></td>
-      <td><%= listing_change.inclusion_scientific_name %></td>
-      <td><%= listing_change.parent_id %></td>
+      <td><%= listing_change.party_geo_entity && listing_change.party_geo_entity.iso_code2 %></td>
+      <td>
+        <% if listing_change.geo_entities.count > 0 %>
+        <a rel="tooltip" href="#"
+          data-original-title="<%= geo_entities_tooltip(listing_change) %>"
+        ><%= listing_change.geo_entities.count %></a>
+        <% end %>
+      </td>
+      <td>
+        <a rel="tooltip" href="#"
+          data-original-title="<%= listing_change.inclusion_scientific_name %>"
+        ><%= true_false_icon(listing_change.inclusion) %></a>
+      </td>
+      <td>
+        <% if listing_change.exclusions.count > 0 %>
+        <a rel="tooltip" href="#"
+          data-original-title="<%= exclusions_tooltip(listing_change) %>"
+        ><%= listing_change.exclusions.count %></a>
+        <% end %>
+      </td>
+      <td>
+        <a rel="tooltip" href="#"
+          data-original-title="<%= listing_change.annotation.to_s %>"
+        ><%= true_false_icon(listing_change.annotation) %></a>
+      </td>
       <td>
         <%= link_to edit_icon,
           edit_admin_taxon_concept_designation_listing_change_path(@taxon_concept, @designation, listing_change),

@@ -49,7 +49,9 @@ class TaxonConceptPrefixMatcher
       end
     end
 
-    @taxon_concepts = @taxon_concepts.by_scientific_name(options['scientific_name'])
+    if options['scientific_name']
+      @taxon_concepts = @taxon_concepts.by_scientific_name(options['scientific_name'])
+    end
   end
 
 end

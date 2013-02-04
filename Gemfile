@@ -25,6 +25,7 @@ gem 'jquery-rails'
 gem 'bootstrap-generators', '~> 2.1'
 gem 'kaminari'
 gem 'select2-rails'
+gem 'nested_form'
 
 gem 'underscore-rails'
 

@@ -110,32 +110,51 @@ class TaxonConceptsEditor extends AdminEditor
     @initTaxonConceptTypeaheads()
 
 class ListingChangesEditor extends AdminEditor
-  init: () ->
-
-  initTaxonConceptTypeaheads: () ->
-    $('.typeahead').each (idx) ->
-      taxonConceptId = $(@).attr('data-taxon-concept-id')
-      taxonConceptScope = $(@).attr('data-taxon-concept-scope')
-
-      $(@).typeahead
-        source: (query, process) ->
-          $.get('/admin/taxon_concepts/autocomplete',
-          {
-            scientific_name: query,
-            taxon_concept: {id: taxonConceptId, scope: taxonConceptScope}
-            limit: 25
-          }, (data) =>
-            labels = []
-            $.each(data, (i, item) =>
-              label = item.full_name + ' ' + item.rank_name
-              labels.push(label)
-            )
-            return process(labels)
-          )
+  initEditors: () ->
+    $("[rel='tooltip']").tooltip()
 
   initModals: () ->
     super
+    @initForm()
+
+  initForm: () ->
     @initTaxonConceptTypeaheads()
+    @initDistributionSelectors()
     $(".datepicker").datepicker
       format: "dd/mm/yyyy",
       autoclose: true
+    # handle initializing stuff for nested form add events
+    $(document).on('nested:fieldAdded', (event) =>
+      event.field.find('.distribution').select2({
+        placeholder: 'Select countries'
+      })
+      @_initTaxonConceptTypeaheads(event.field.find('.typeahead'))
+    )
+
+  initTaxonConceptTypeaheads: () ->
+    @_initTaxonConceptTypeaheads($('.typeahead'))
+
+  _initTaxonConceptTypeaheads: (el) ->
+    el.typeahead
+      source: (query, process) ->
+        $.get('/admin/taxon_concepts/autocomplete',
+        {
+          scientific_name: query,
+          taxon_concept: {
+            id: @.$element.attr('data-taxon-concept-id'),
+            scope: @.$element.attr('data-taxon-concept-scope')
+          }
+          limit: 25
+        }, (data) =>
+          labels = []
+          $.each(data, (i, item) =>
+            label = item.full_name + ' ' + item.rank_name
+            labels.push(label)
+          )
+          return process(labels)
+        )
+
+  initDistributionSelectors: () ->
+    $('.distribution').select2({
+      placeholder: 'Select countries'
+    })
