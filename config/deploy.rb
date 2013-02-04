@@ -188,6 +188,11 @@ namespace :seeds do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:first_pages_cites"
   end
 
+  desc "Redo animals full import"
+  task :redo do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:redo"
+  end
+
   desc 'Imports data obtained from legacy database'
   task :import do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:species && RAILS_ENV=#{rails_env} rake import:distributions:remove_table"
