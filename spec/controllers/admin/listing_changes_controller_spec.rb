@@ -15,6 +15,11 @@ describe Admin::ListingChangesController do
       :designation_id => @designation.id,
       :name => 'ADDITION'
     )
+    create(
+      :change_type,
+      :designation_id => @designation.id,
+      :name => 'EXCEPTION'
+    )
   end
 
   describe "GET index" do

@@ -20,8 +20,6 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   end
 
   def create
-    params[:listing_change][:geo_entity_ids] &&
-      params[:listing_change][:geo_entity_ids].delete("")
     @taxon_concept = TaxonConcept.find(params[:taxon_concept_id])
     @designation = Designation.find(params[:designation_id])
     @listing_change = ListingChange.new(params[:listing_change])

@@ -50,7 +50,10 @@ class ListingChange < ActiveRecord::Base
   accepts_nested_attributes_for :party_listing_distribution,
     :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
   accepts_nested_attributes_for :exclusions,
-    :reject_if => proc { |attributes| attributes['geo_entity_ids'].blank? && attributes['exclusion_scientific_name'].blank? }
+    :reject_if => proc { |attributes|
+      attributes['exclusion_scientific_name'].blank? &&
+      attributes['geo_entity_ids'].reject(&:blank?).empty?
+    }
 
   def effective_at_formatted
     effective_at ? effective_at.strftime('%d/%m/%Y') : ''
