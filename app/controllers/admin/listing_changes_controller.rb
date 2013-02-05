@@ -13,9 +13,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
     new! do
       load_change_types
       @listing_change.build_party_listing_distribution
-      @listing_change.exclusions.build(
-        :change_type_id => @designation.change_types.find_by_name(ChangeType::EXCEPTION).id
-      )
+      @listing_change.exclusions.build
     end
   end
 
@@ -40,9 +38,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
         @listing_change.build_party_listing_distribution
       end
       unless @listing_change.exclusions
-        @listing_change.exclusions.build(
-          :change_type_id => @designation.change_types.find_by_name(ChangeType::EXCEPTION).id
-        )
+        @listing_change.exclusions.build
       end
       format.js { render 'new' }
     end
@@ -75,6 +71,9 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
     @change_types = ChangeType.order(:name).
       where("name <> '#{ChangeType::EXCEPTION}'").
       where(:designation_id => @designation.id)
+    @exception_change_type = ChangeType.
+      where(:designation_id => @designation.id).
+      find_by_name(ChangeType::EXCEPTION)
     @species_listings = SpeciesListing.order(:abbreviation).
       where(:designation_id => @designation.id)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).

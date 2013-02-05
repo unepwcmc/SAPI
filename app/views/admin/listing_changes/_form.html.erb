@@ -71,7 +71,7 @@
     </tr>
     <tr>
       <td colspan=2>
-        <%= ff.hidden_field :change_type_id %>
+        <%= ff.hidden_field :change_type_id, :value => @exception_change_type.id %>
         <%= ff.text_field :exclusion_scientific_name, :class => 'typeahead',
           "data-taxon-concept-scope" => 'descendants',
           "data-taxon-concept-id" => @taxon_concept.id,
@@ -102,12 +102,34 @@
 
 <% if @taxon_concept.current_listing_changes.count > 0 %>
   <p>Amend status of current listing changes</p>
-  <% @taxon_concept.current_listing_changes.each do |listing_change| %>
-    <%= form_for [:admin, @taxon_concept, @designation, listing_change], :remote => true do |f| %>
-      <%= f.check_box :is_current %>
-      <%= listing_change.change_type.name %>
+  <table width="100%">
+    <thead>
+      <th>Appx</th>
+      <th>Type</th>
+      <th>Effective at</th>
+      <th>Current</th>
+      <th>Party</th>
+    </thead>
+    <tbody>
+    <% @taxon_concept.current_listing_changes.each do |listing_change| %>
+      <tr>
+        <td>
+          <%= listing_change.species_listing && listing_change.species_listing.abbreviation %>
+        </td>
+        <td><%= listing_change.change_type.name %></td>
+        <td><%= listing_change.effective_at_formatted %></td>
+        <td>
+        <%= form_for [:admin, @taxon_concept, @designation, listing_change], :remote => true do |f| %>
+          <%= f.check_box :is_current %>
+        <% end %>
+        </td>
+        <td>
+          <%= listing_change.party_geo_entity && listing_change.party_geo_entity.iso_code2 %>
+        </td>
+      </tr>
     <% end %>
-  <% end %>
+    </tbody>
+  </table>
 <% end %>
 
     <style>

@@ -6,9 +6,9 @@ class TaxonConceptPrefixMatcher
   # 'scientific_name'
   def initialize(options = {})
     options.symbolize_keys!
-    options[:taxonomy] && options[:taxonomy].symbolize_keys!
-    options[:rank] && options[:rank].symbolize_keys!
-    options[:taxon_concept] && options[:taxon_concept].symbolize_keys!
+    options[:taxonomy] = options[:taxonomy] && options[:taxonomy].symbolize_keys
+    options[:rank] = options[:rank] && options[:rank].symbolize_keys
+    options[:taxon_concept] = options[:taxon_concept] && options[:taxon_concept].symbolize_keys
 
     @taxon_concepts = TaxonConcept.where(:name_status => 'A').
       select(
@@ -30,10 +30,10 @@ class TaxonConceptPrefixMatcher
     if @rank_id
       @rank_scope = options[:rank][:scope]
       rank = Rank.find(@rank_id) if @rank_scope
-      if @rank_scope == :parent
+      if @rank_scope.to_sym == :parent
         #search at parent ranks. this includes optional ranks, e.g. subfamily
         @taxon_concepts = @taxon_concepts.at_parent_ranks(rank)
-      elsif @rank_scope == :ancestors
+      elsif @rank_scope.to_sym == :ancestors
         #search at ancestor ranks
         @taxon_concepts = @taxon_concepts.at_ancestor_ranks(rank)
       end
@@ -43,11 +43,11 @@ class TaxonConceptPrefixMatcher
     if @taxon_concept_id
       @taxon_concept_scope = options[:taxon_concept][:scope]
       taxon_concept = TaxonConcept.find(@taxon_concept_id) if @taxon_concept_scope
-      if @taxon_concept_scope == :ancestors
+      if @taxon_concept_scope.to_sym == :ancestors
         @taxon_concepts = @taxon_concepts.where([
           "lft < ? AND rgt > ?", taxon_concept.lft, taxon_concept.rgt
         ])
-      elsif @taxon_concept_scope == :descendants
+      elsif @taxon_concept_scope.to_sym == :descendants
         @taxon_concepts = @taxon_concepts.where([
           "lft > ? AND lft < ?", taxon_concept.lft, taxon_concept.rgt
         ])

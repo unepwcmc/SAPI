@@ -46,6 +46,7 @@ class ListingChange < ActiveRecord::Base
   validates_associated :exclusions
   before_validation :check_inclusion_taxon_concept_exists
   before_validation :check_excluded_taxon_concept_exists
+  before_validation :ensure_exception_type
 
   accepts_nested_attributes_for :party_listing_distribution,
     :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
@@ -116,6 +117,12 @@ class ListingChange < ActiveRecord::Base
     unless taxon_concept || geo_entities
       errors.add(:taxon_concept, "either taxon concept of ge entities must be present")
     end
+  end
+
+  def ensure_exception_type
+    puts 'HELLO'
+    puts exclusions.inspect
+
   end
 
 end
