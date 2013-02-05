@@ -1,7 +1,8 @@
 class Checklist::HigherTaxaInjector
   attr_reader :last_seen_id
-  # last_seen_id can be used to pass the id of lat higher taxon added
+  # skip_id can be used to pass the id of last higher taxon added
   # so that the injector does not repeat higher taxa headers across fetches
+  # last higher taxon added in  this run can be retrieved through last_seen_id
   def initialize(taxon_concepts, skip_id=nil, expand_headers = false)
     @taxon_concepts = taxon_concepts
     # fetch all higher taxa first
@@ -61,6 +62,9 @@ class Checklist::HigherTaxaInjector
     end
     # puts "missing segments: #{missing_segments} for #{curr_item.full_name}"
     rank_idx = ranks.index(curr_item.rank_name) || (ranks.length - 1)
+    #if common_segments < (header_ranks - 1)
+    # if @expand_headers && (missing_segments > 1 || rank_idx < header_ranks && missing_segments == 1) ||
+      # common_segments < header_ranks
     if missing_segments > 1 || rank_idx < header_ranks && missing_segments == 1
       # determine the lowest rank to be included
       to_rank = if rank_idx > (header_ranks - 1)
@@ -70,6 +74,7 @@ class Checklist::HigherTaxaInjector
         # use this rank
         rank_idx
       end
+
       # determine the highest rank to be included
       from_rank = if @expand_headers
         # go back to last common header
@@ -81,12 +86,15 @@ class Checklist::HigherTaxaInjector
       # puts "rank_idx: #{rank_idx}, missing ranks from #{from_rank} to #{to_rank}"
 
       from_rank.upto to_rank do |k|
+        
         higher_taxon_id = curr_item.send("#{ranks[k].downcase}_id")
         @last_seen_id = higher_taxon_id
-        higher_taxon = @higher_taxa[higher_taxon_id]
-        if higher_taxon && higher_taxon.id != @skip_id
-          hti = Checklist::HigherTaxaItem.new(higher_taxon)
-          res << hti
+        unless (prev_item && prev_item.send("#{ranks[k].downcase}_id") == higher_taxon_id && !@expand_headers)
+          higher_taxon = @higher_taxa[higher_taxon_id]
+          if higher_taxon && higher_taxon.id != @skip_id
+            hti = Checklist::HigherTaxaItem.new(higher_taxon)
+            res << hti
+          end
         end
       end
     end
