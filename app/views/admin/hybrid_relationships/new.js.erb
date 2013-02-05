@@ -1,3 +1,8 @@
-$('#admin-new-taxon_concept_hybrid-form').html("<%= escape_javascript(render('form')) %>");
+// $().html is asynchronous, inexplicably, so we render the form to a jQuery object
+// first and init the tag box before passing to .html()
+var form = $("<%= escape_javascript(render('form')) %>");
+form.find('.tags').select2();
+
+$('#admin-new-taxon_concept_hybrid-form').html(form);
 $('#new-taxon_concept_hybrid').modal('show');
 window.adminEditor.initTaxonConceptTypeaheads();

@@ -9,6 +9,14 @@ class Admin::TaxonCommonsController < Admin::SimpleCrudController
     end
   end
 
+  def create
+    create! do |success, failure|
+      failure.js {
+        render 'new'
+      }
+    end
+  end
+
   def edit
     edit! do |format|
       @languages = Language.order(:name_en)

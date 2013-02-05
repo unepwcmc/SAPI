@@ -23,7 +23,7 @@ class GeoEntity < ActiveRecord::Base
   translates :name
   belongs_to :geo_entity_type
   has_many :geo_relationships, :dependent => :destroy
-  has_many :taxon_concept_geo_entities
+  has_many :distributions
   validates :geo_entity_type_id, :presence => true
   validates :iso_code2, :uniqueness => true, :allow_blank => true
   validates :iso_code2, :presence => true, :length => {:is => 2},
@@ -77,7 +77,7 @@ class GeoEntity < ActiveRecord::Base
   end
 
   def can_be_deleted?
-    taxon_concept_geo_entities.count == 0
+    distributions.count == 0
   end
 
 end

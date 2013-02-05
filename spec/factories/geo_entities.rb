@@ -7,7 +7,7 @@ FactoryGirl.define do
   factory :geo_entity do
     geo_entity_type
     name 'Wonderland'
-    iso_code2 'XX'
+    sequence(:iso_code2) {|n| "#{n}X"}
 
     GeoEntityType.dict.each do |type|
       factory type.downcase.to_sym do

@@ -3,8 +3,8 @@
 # Table name: taxon_commons
 #
 #  id               :integer          not null, primary key
-#  taxon_concept_id :integer
-#  common_name_id   :integer
+#  taxon_concept_id :integer          not null
+#  common_name_id   :integer          not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #

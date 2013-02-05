@@ -3,11 +3,11 @@
 # Table name: species_listings
 #
 #  id             :integer          not null, primary key
-#  designation_id :integer
-#  name           :string(255)
+#  designation_id :integer          not null
+#  name           :string(255)      not null
+#  abbreviation   :string(255)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  abbreviation   :string(255)
 #
 
 class SpeciesListing < ActiveRecord::Base

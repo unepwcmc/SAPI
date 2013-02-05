@@ -3,18 +3,19 @@
 # Table name: listing_changes
 #
 #  id                         :integer          not null, primary key
+#  taxon_concept_id           :integer          not null
 #  species_listing_id         :integer
-#  taxon_concept_id           :integer
-#  change_type_id             :integer
+#  change_type_id             :integer          not null
+#  effective_at               :datetime         default(2012-09-21 07:32:20 UTC), not null
+#  is_current                 :boolean          default(FALSE), not null
+#  annotation_id              :integer
+#  parent_id                  :integer
+#  inclusion_taxon_concept_id :integer
 #  lft                        :integer
 #  rgt                        :integer
-#  parent_id                  :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
-#  effective_at               :datetime         default(2012-09-21 07:32:20 UTC), not null
-#  annotation_id              :integer
-#  is_current                 :boolean          default(FALSE), not null
-#  inclusion_taxon_concept_id :integer
+#  import_row_id              :integer
 #
 
 class ListingChange < ActiveRecord::Base
@@ -46,7 +47,6 @@ class ListingChange < ActiveRecord::Base
   validates_associated :exclusions
   before_validation :check_inclusion_taxon_concept_exists
   before_validation :check_excluded_taxon_concept_exists
-  before_validation :ensure_exception_type
 
   accepts_nested_attributes_for :party_listing_distribution,
     :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
@@ -117,12 +117,6 @@ class ListingChange < ActiveRecord::Base
     unless taxon_concept || geo_entities
       errors.add(:taxon_concept, "either taxon concept of ge entities must be present")
     end
-  end
-
-  def ensure_exception_type
-    puts 'HELLO'
-    puts exclusions.inspect
-
   end
 
 end

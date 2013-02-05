@@ -7,6 +7,7 @@ class Admin::HybridRelationshipsController < Admin::SimpleCrudController
   def new
     @taxonomies = Taxonomy.order(:name)
     @ranks = Rank.order(:taxonomic_position)
+    @tags = TaxonConcept.tag_counts_on('tags')
     new! do |format|
       @hybrid_relationship = TaxonRelationship.new(
         :taxon_relationship_type_id => @hybrid_relationship_type.id
@@ -35,6 +36,7 @@ class Admin::HybridRelationshipsController < Admin::SimpleCrudController
   def edit
     @taxonomies = Taxonomy.order(:name)
     @ranks = Rank.order(:taxonomic_position)
+    @tags = TaxonConcept.tag_counts_on('tags')
     edit! do |format|
       format.js { render 'new' }
     end

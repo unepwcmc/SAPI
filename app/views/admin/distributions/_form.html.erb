@@ -1,0 +1,29 @@
+<%= form_for [:admin, @taxon_concept, @distribution],  :remote => true do |f| %>
+  <%= error_messages_for(@distribution) %>
+
+  <div class="control-group">
+    <label>Country</label>
+    <%= f.select :geo_entity_id,
+      options_from_collection_for_select(
+        @geo_entities,
+        :id,
+        :name_en,
+        @distribution.geo_entity_id
+      ), { },
+      { :class => 'distribution', :style => "width: 220px"}
+    %>
+  </div>
+
+  <div class="control-group">
+    <label>Tags</label>
+    <%= f.select :tag_list,
+      options_from_collection_for_select(
+        @tags,
+        :name,
+        :name,
+        @distribution.tag_list
+      ), {},
+      { :multiple => true, :class => 'distribution', :style => "width: 220px"}
+    %>
+  </div>
+<% end %>

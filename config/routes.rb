@@ -36,6 +36,7 @@ SAPI::Application.routes.draw do
         resources :listing_changes, :only => [:index, :new, :create, :edit, :update, :destroy ]
       end
       resources :taxon_commons, :only => [:new, :create, :edit, :update, :destroy]
+      resources :distributions, :only => [:new, :create, :edit, :update, :destroy]
       resources :synonym_relationships, :only => [:new, :create, :edit, :update, :destroy]
       resources :hybrid_relationships, :only => [:new, :create, :edit, :update, :destroy]
     end

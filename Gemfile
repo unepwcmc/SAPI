@@ -26,6 +26,7 @@ gem 'bootstrap-generators', '~> 2.1'
 gem 'kaminari'
 gem 'select2-rails'
 gem 'nested_form'
+gem 'acts-as-taggable-on', '~> 2.3.1'
 
 gem 'underscore-rails'
 

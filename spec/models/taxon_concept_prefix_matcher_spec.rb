@@ -9,23 +9,23 @@ describe TaxonConceptPrefixMatcher do
 
   let!(:taxon_concept1){
     create(:taxon_concept, :rank => rank1, :taxonomy => taxonomy,
-      :taxon_name => create(:taxon_name, :scientific_name => 'AAA')
+      :taxon_name => create(:taxon_name, :scientific_name => 'Aaa')
     )
   }
   let!(:taxon_concept2){
     create(:taxon_concept, :rank => rank2, :taxonomy => taxonomy,
-      :taxon_name => create(:taxon_name, :scientific_name => 'AAA'),
+      :taxon_name => create(:taxon_name, :scientific_name => 'Aaa'),
       :parent => taxon_concept1
     )
   }
   let!(:taxon_concept3){
     create(:taxon_concept, :rank => rank3, :taxonomy => taxonomy,
-      :taxon_name => create(:taxon_name, :scientific_name => 'AAB')
+      :taxon_name => create(:taxon_name, :scientific_name => 'Aab')
     )
   }
   let!(:taxon_concept4){
     create(:taxon_concept, :rank => rank4, :taxonomy => taxonomy,
-      :taxon_name => create(:taxon_name, :scientific_name => 'ABB'),
+      :taxon_name => create(:taxon_name, :scientific_name => 'Abb'),
       :parent => taxon_concept2
     )
   }
@@ -40,7 +40,7 @@ describe TaxonConceptPrefixMatcher do
     }
   
     specify{ parent_matcher.taxon_concepts.map(&:full_name).should ==
-      ['AAA', 'AAB'] }
+      ['Aaa', 'Aab'] }
   
     let(:ancestor_matcher){
       TaxonConceptPrefixMatcher.new(
@@ -51,7 +51,7 @@ describe TaxonConceptPrefixMatcher do
     }
   
     specify{ ancestor_matcher.taxon_concepts.map(&:full_name).should ==
-      ['AAA', 'AAA'] }
+      ['Aaa', 'Aaa'] }
   end
   context "when taxon concept scope applied" do
     let(:ancestor_matcher){
@@ -63,7 +63,7 @@ describe TaxonConceptPrefixMatcher do
     }
 
     specify{ ancestor_matcher.taxon_concepts.map(&:full_name).should ==
-      ['AAA', 'AAA'] }
+      ['Aaa', 'Aaa'] }
 
     let(:descendant_matcher){
       TaxonConceptPrefixMatcher.new(
@@ -74,7 +74,7 @@ describe TaxonConceptPrefixMatcher do
     }
 
     specify{ descendant_matcher.taxon_concepts.map(&:full_name).should ==
-      ['ABB'] }
+      ['Abb'] }
   end
 
 end

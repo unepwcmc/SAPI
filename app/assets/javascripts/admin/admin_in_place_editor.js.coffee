@@ -17,7 +17,9 @@ class AdminEditor
       $(@).closest('.modal').find('form').submit()
 
     $('.modal').on 'hidden', () ->
-      $(@).find('form')[0].reset()
+      form = $(@).find('form')
+      form[0].reset() if form.length > 0
+
       $(@).find('.alert').remove()
 
   alertSuccess: (txt) ->
