@@ -1,10 +1,10 @@
 class Timeline
   include ActiveModel::Serializers::JSON
-  attr_reader :id, :appendix, :party, :timeline_events, :timeline_intervals, :parties, :timelines
+  attr_reader :id, :appendix, :party_id, :timeline_events, :timeline_intervals, :parties, :timelines
   def initialize(options)
     @id = object_id
     @appendix = options[:appendix]
-    @party = options[:party]
+    @party_id = options[:party_id]
     @timeline_events = []
     @timeline_intervals = []
     @parties = []
@@ -70,12 +70,6 @@ class Timeline
   def add_intervals
     (@timelines + [self]).flatten.each do |timeline|
       timeline.timeline_events.each_with_index do |event, idx|
-        additions_no = timeline.timeline_events.select do |e|
-          e.change_type_name == ChangeType::ADDITION
-        end.count
-        deletions_no = timeline.timeline_events.select do |e|
-          e.change_type_name == ChangeType::DELETION
-        end.count
         interval = if idx < (timeline.timeline_events.size - 1)
           next_event = timeline.timeline_events[idx + 1]
           if !(event.is_deletion? && next_event.is_addition?)
@@ -84,11 +78,19 @@ class Timeline
               :end_pos => next_event.pos
             )
           end
-        elsif event.is_current && !(event.is_deletion? && (additions_no - deletions_no) > 1)
-          TimelineInterval.new(
-            :start_pos => event.pos,
-            :end_pos => 1
-          )
+        elsif event.is_current
+          additions_no = timeline.timeline_events.select do |e|
+            e.change_type_name == ChangeType::ADDITION
+          end.count
+          deletions_no = timeline.timeline_events.select do |e|
+            e.change_type_name == ChangeType::DELETION
+          end.count
+          unless event.is_deletion? && (additions_no - deletions_no) > 1
+            TimelineInterval.new(
+              :start_pos => event.pos,
+              :end_pos => 1
+            )
+          end
         else
           nil
         end
@@ -106,7 +108,7 @@ class Timeline
       @parties << party_id
       party_timeline = Timeline.new(
         :appendix => appendix,
-        :party => party_id
+        :party_id => party_id
       )
       @timelines << party_timeline
       party_timeline
@@ -119,8 +121,13 @@ class Timeline
     {
       'id' => id,
       'appendix' => appendix,
-      'party' => party
+      'party' => party,
+      'parties' => parties
     }
+  end
+
+  def party
+    @party_id
   end
 
 end

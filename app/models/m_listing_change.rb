@@ -102,7 +102,7 @@ class MListingChange < ActiveRecord::Base
         ],
         :methods => [
           :specific_short_note, :specific_full_note, :generic_note,
-          :effective_at_formatted, :countries_ids
+          :countries_ids
         ]
       ).symbolize_keys
     )
