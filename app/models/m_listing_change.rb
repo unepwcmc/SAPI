@@ -93,4 +93,19 @@ class MListingChange < ActiveRecord::Base
     CountryDictionary.instance.get_name_by_id(party_id)
   end
 
+  def to_timeline_event
+    TimelineEvent.new(
+      self.as_json(
+        :only => [
+          :id, :change_type_name, :is_current, :parent_symbol, :party_id,
+          :species_listing_name, :symbol, :effective_at
+        ],
+        :methods => [
+          :specific_short_note, :specific_full_note, :generic_note,
+          :effective_at_formatted, :countries_ids
+        ]
+      ).symbolize_keys
+    )
+  end
+
 end
