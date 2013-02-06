@@ -21,7 +21,10 @@
     </div>
     <div class="control-group">
       <label>Other hybrid parent name</label>
-      <%= ff.text_field :other_hybrid_parent_scientific_name, :class => 'typeahead' %>
+      <%= ff.text_field :other_hybrid_parent_scientific_name,
+        :class => 'typeahead', "data-rank-scope" => 'ancestors',
+        "data-taxonomy-id" => @taxon_concept.taxonomy_id
+      %>
     </div>
     <div class="control-group">
       <label>Hybrid</label>
