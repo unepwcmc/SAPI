@@ -1,4 +1,6 @@
 class GeoEntitiesController < ApplicationController
+  caches_action :index
+
   def index
     render :json => GeoEntity.
       select([:"geo_entities.id", :"geo_entities.name_en", :"geo_entities.iso_code2"]).
