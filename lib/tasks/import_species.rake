@@ -9,15 +9,18 @@ namespace :import do
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
+
+      kingdom = file.split('/').last.split('_')[0].titleize
+
       #import_data_for Rank::KINGDOM
-      import_data_for Rank::PHYLUM
-      import_data_for Rank::CLASS
-      import_data_for Rank::ORDER
-      import_data_for Rank::FAMILY
-      import_data_for Rank::SUBFAMILY
-      import_data_for Rank::GENUS
-      import_data_for Rank::SPECIES
-      import_data_for Rank::SUBSPECIES
+      import_data_for kingdom, Rank::PHYLUM
+      import_data_for kingdom, Rank::CLASS
+      import_data_for kingdom, Rank::ORDER
+      import_data_for kingdom, Rank::FAMILY
+      import_data_for kingdom, Rank::SUBFAMILY
+      import_data_for kingdom, Rank::GENUS
+      import_data_for kingdom, Rank::SPECIES
+      import_data_for kingdom, Rank::SUBSPECIES
     end
   end
 end
@@ -25,7 +28,7 @@ end
 # Copies data from the temporary table to the correct tables in the database
 #
 # @param [String] which the rank to be copied.
-def import_data_for rank, synonyms=nil
+def import_data_for kingdom, rank, synonyms=nil
   puts "Importing #{rank}"
   rank_id = Rank.select(:id).where(:name => rank).first.id
   existing = TaxonConcept.where(:rank_id => rank_id).count
@@ -59,11 +62,11 @@ def import_data_for rank, synonyms=nil
               WHEN tmp.author = 'Null' THEN NULL
               ELSE tmp.author
             END
-           ,tmp.legacy_id, 'Animalia', tmp.notes, '#{synonyms ? 'S' : 'A'}'
+           ,tmp.legacy_id, '#{kingdom}', tmp.notes, '#{synonyms ? 'S' : 'A'}'
          FROM
           (
             SELECT DISTINCT taxon_names.id AS taxon_name_id, #{TMP_TABLE}.parent_rank, #{TMP_TABLE}.parent_legacy_id,
-             #{taxonomy.id} AS taxonomy_id, INITCAP(BTRIM(#{TMP_TABLE}.author)) AS author, #{TMP_TABLE}.legacy_id, 'Animalia', #{TMP_TABLE}.notes
+             #{taxonomy.id} AS taxonomy_id, INITCAP(BTRIM(#{TMP_TABLE}.author)) AS author, #{TMP_TABLE}.legacy_id, '#{kingdom}', #{TMP_TABLE}.notes
             FROM #{TMP_TABLE}
             LEFT JOIN taxon_names ON UPPER(BTRIM(#{TMP_TABLE}.name)) LIKE UPPER(BTRIM(taxon_names.scientific_name))
             WHERE NOT EXISTS (
@@ -82,7 +85,7 @@ def import_data_for rank, synonyms=nil
           LEFT JOIN taxon_concepts ON (
             taxon_concepts.legacy_id = tmp.parent_legacy_id AND
             taxon_concepts.rank_id = ranks.id AND
-            taxon_concepts.legacy_type = 'Animalia' AND
+            taxon_concepts.legacy_type = '#{kingdom}' AND
             taxon_concepts.taxonomy_id = #{taxonomy.id} AND
             (tmp.parent_rank <> NULL OR tmp.parent_rank <> 'Null')
           )
@@ -93,7 +96,7 @@ def import_data_for rank, synonyms=nil
             tc2.taxonomy_id = tmp.taxonomy_id AND
             tc2.parent_id = taxon_concepts.id AND
             tc2.legacy_id = tmp.legacy_id AND
-            tc2.legacy_type = 'Animalia' AND
+            tc2.legacy_type = '#{kingdom}' AND
             tc2.author_year = CASE
               WHEN tmp.author = 'Null' THEN NULL
               ELSE tmp.author

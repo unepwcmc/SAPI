@@ -20,15 +20,17 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
 
+      kingdom = file.split('/').last.split('_')[0].titleize
+
       #[BEGIN]copied over from import:species
-      import_data_for Rank::PHYLUM, true
-      import_data_for Rank::CLASS, true
-      import_data_for Rank::ORDER, true
-      import_data_for Rank::FAMILY, true
-      import_data_for Rank::SUBFAMILY, true
-      import_data_for Rank::GENUS, true
-      import_data_for Rank::SPECIES, true
-      import_data_for Rank::SUBSPECIES, true
+      import_data_for kingdom, Rank::PHYLUM, true
+      import_data_for kingdom, Rank::CLASS, true
+      import_data_for kingdom, Rank::ORDER, true
+      import_data_for kingdom, Rank::FAMILY, true
+      import_data_for kingdom, Rank::SUBFAMILY, true
+      import_data_for kingdom, Rank::GENUS, true
+      import_data_for kingdom, Rank::SPECIES, true
+      import_data_for kingdom, Rank::SUBSPECIES, true
       #[END]copied over from import:species
 
       sql = <<-SQL
@@ -41,10 +43,10 @@ namespace :import do
           FROM #{TMP_TABLE}
           INNER JOIN ranks ON ranks.name ilike BTRIM(#{TMP_TABLE}.accepted_rank)
           INNER JOIN taxon_concepts AS accepted
-            ON accepted.legacy_id = #{TMP_TABLE}.accepted_legacy_id AND accepted.rank_id = ranks.id and accepted.legacy_type = 'Animalia'
+            ON accepted.legacy_id = #{TMP_TABLE}.accepted_legacy_id AND accepted.rank_id = ranks.id and accepted.legacy_type = '#{kingdom}'
           INNER JOIN ranks as synonyms_rank ON synonyms_rank.name ilike BTRIM(#{TMP_TABLE}.rank)
           INNER JOIN taxon_concepts AS synonym
-            ON synonym.legacy_id = #{TMP_TABLE}.legacy_id AND synonym.rank_id = synonyms_rank.id and synonym.legacy_type = 'Animalia'
+            ON synonym.legacy_id = #{TMP_TABLE}.legacy_id AND synonym.rank_id = synonyms_rank.id and synonym.legacy_type = '#{kingdom}'
           WHERE NOT EXISTS (
             SELECT * FROM taxon_relationships
             LEFT JOIN taxon_concepts AS accepted ON accepted.id = taxon_relationships.taxon_concept_id

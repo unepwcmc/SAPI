@@ -49,13 +49,11 @@ class CsvToDbMap
       'full_note_en' => 'full_note_en varchar'
     },
     'distribution_import' => {
-      'Rank' => 'rank varchar',
       'Species RecID' => 'legacy_id integer',
-      'Country Legacy ID' => 'country_legacy_id integer',
-      'Country ISO Code 2' => 'country_iso2 varchar',
-      'Country Short Name' => 'country_name varchar',
+      'Rank' => 'rank varchar',
+      'GEO_entity' => 'geo_entity_type varchar',
+      'ISO Code 2' => 'country_iso2 varchar',
       'Reference IDs' => 'reference_id integer',
-      'Tags' => 'tags varchar',
       'Designation' => 'designation varchar'
     },
     'common_name_import' => {
@@ -72,13 +70,12 @@ class CsvToDbMap
     },
     #TODO legacy type for countries?
     'countries_import' => {
-      'country id' => 'legacy_id integer',
-      'iso2' => 'iso2 varchar',
-      'name' => 'name varchar',
-      'long_name' => 'long_name varchar',
+      'ISO2' => 'iso2 varchar',
+      'short_name' => 'name varchar',
       'Geo_entity' => 'geo_entity varchar',
+      'Under' => 'bru_under varchar',
       'Current_name' => 'current_name varchar',
-      'BRU_under' => 'bru_under varchar',
+      'long_name' => 'long_name varchar',
       'CITES Region' => 'cites_region varchar'
     },
     'references_import' => {

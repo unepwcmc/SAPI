@@ -52,8 +52,8 @@ namespace :import do
     Sapi::disable_triggers
     Rake::Task["db:seed"].invoke
     Rake::Task["import:species"].invoke(
-      'lib/assets/files/cleaned/animalia_taxa_utf8.csv'
-      #'lib/assets/files/first_pages_cites/plants_taxon_concepts.csv'
+      'lib/assets/files/cleaned/animals/animalia_taxa_utf8.csv',
+      'lib/assets/files/cleaned/plants/plantae_taxa_utf8.csv'
     )
     puts "rebuilding the nested set"
     #rebuild the tree
@@ -66,20 +66,20 @@ namespace :import do
       'lib/assets/files/cleaned/countries_utf8.csv'
     )
     Rake::Task["import:distributions"].invoke(
-      'lib/assets/files/cleaned/animalia_distribution_utf8.csv'
-     #'lib/assets/files/first_pages_cites/plants_distributions.csv'
+      'lib/assets/files/cleaned/animals/animalia_distribution_utf8.csv',
+      'lib/assets/files/cleaned/plants/plantae_distribution_utf8.csv'
     )
     Rake::Task["import:cites_listings"].invoke(
-      'lib/assets/files/cleaned/animalia_legislation_utf8.csv',
-#      'lib/assets/files/first_pages_cites/plants_listing_changes.csv'
+      'lib/assets/files/cleaned/animals/animalia_legislation_utf8.csv',
+      'lib/assets/files/cleaned/plants/plantae_legislation_utf8.csv'
     )
     Rake::Task["import:common_names"].invoke(
-      'lib/assets/files/cleaned/animalia_common_names_utf8.csv',
-#      'lib/assets/files/first_pages_cites/plants_common_names.csv'
+      'lib/assets/files/cleaned/animals/animalia_common_names_utf8.csv',
+      'lib/assets/files/cleaned/plants/plantae_common_names_utf8.csv'
     )
     Rake::Task["import:synonyms"].invoke(
-      'lib/assets/files/cleaned/animalia_synonyms_utf8.csv',
-#      'lib/assets/files/first_pages_cites/plants_synonyms.csv'
+      'lib/assets/files/cleaned/animals/animalia_synonyms_utf8.csv',
+      'lib/assets/files/cleaned/plants/plantae_synonyms_utf8.csv'
     )
     # Rake::Task["import:references"].invoke(
       # 'lib/assets/files/references.csv'
@@ -89,7 +89,8 @@ namespace :import do
 #      'lib/assets/files/plants_reference_links.csv'
 #    )
    Rake::Task["import:standard_references"].invoke(
-     'lib/assets/files/cleaned/animalia_standard_refs_utf8.csv'
+     'lib/assets/files/cleaned/animals/animalia_standard_refs_utf8.csv',
+     'lib/assets/files/cleaned/plants/plantea_standard_refs_utf8.csv'
    )
 #
     Rake::Task["import:trade_codes"].invoke
