@@ -40,6 +40,7 @@ class TaxonConcept < ActiveRecord::Base
 
   belongs_to :rank
   belongs_to :taxonomy
+  has_many :designations, :through => :taxonomy
   belongs_to :taxon_name
   has_many :taxon_relationships, :dependent => :destroy
   has_many :inverse_taxon_relationships, :class_name => 'TaxonRelationship',
@@ -83,6 +84,7 @@ class TaxonConcept < ActiveRecord::Base
   has_many :distributions
   has_many :geo_entities, :through => :distributions
   has_many :listing_changes
+  has_many :current_listing_changes, :class_name => 'ListingChange', :conditions => 'is_current = true'
   has_many :species_listings, :through => :listing_changes
   has_many :taxon_commons, :dependent => :destroy, :include => :common_name
   has_many :common_names, :through => :taxon_commons
@@ -113,8 +115,8 @@ class TaxonConcept < ActiveRecord::Base
   scope :by_scientific_name, lambda { |scientific_name|
     where(
       <<-SQL
-      full_name >= '#{TaxonName.lower_bound(scientific_name)}'
-        AND full_name < '#{TaxonName.upper_bound(scientific_name)}'
+      UPPER(full_name) >= UPPER('#{TaxonName.lower_bound(scientific_name)}')
+        AND UPPER(full_name) < UPPER('#{TaxonName.upper_bound(scientific_name)}')
       SQL
     )
   }
@@ -124,6 +126,15 @@ class TaxonConcept < ActiveRecord::Base
     <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position >= '#{rank.parent_rank_lower_bound}'
+        AND ranks.taxonomic_position < '#{rank.taxonomic_position}'
+    SQL
+    )
+  }
+
+  scope :at_ancestor_ranks, lambda{ |rank|
+    joins(
+    <<-SQL
+      INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position < '#{rank.taxonomic_position}'
     SQL
     )

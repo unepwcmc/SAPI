@@ -65,19 +65,9 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   end
 
   def autocomplete
-    @taxon_concepts = TaxonConcept.where(:name_status => 'A').
-      select("data, #{TaxonConcept.table_name}.id, full_name, #{Taxonomy.table_name}.name AS taxonomy_name").
-      joins(:taxonomy)
-    if params[:scientific_name]
-      @taxon_concepts = @taxon_concepts.by_scientific_name(params[:scientific_name])
-    end
-    if params[:taxonomy_id]
-      @taxon_concepts = @taxon_concepts.where(:taxonomy_id => params[:taxonomy_id])
-    end
-    if params[:rank_id] && params[:name_status] == 'A'
-      rank = Rank.find(params[:rank_id])
-      @taxon_concepts = @taxon_concepts.at_parent_ranks(rank)
-    end
+    @taxon_concepts = TaxonConceptPrefixMatcher.new(
+      params.select{ |k,v| %w(scientific_name taxon_concept rank taxonomy).include? k }
+    ).taxon_concepts
     render :json => @taxon_concepts.to_json(
       :only => [:id, :taxonomy_name],
       :methods => [:rank_name, :full_name]

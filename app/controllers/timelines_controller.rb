@@ -1,4 +1,7 @@
 class TimelinesController < ApplicationController
+  caches_action :index, :cache_path => Proc.new { |c| c.params }
+  cache_sweeper :timeline_sweeper
+
   def index
     return render :json => []  if params[:taxon_concept_ids].nil?
 
