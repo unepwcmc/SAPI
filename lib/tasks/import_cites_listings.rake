@@ -22,6 +22,9 @@ namespace :import do
     files.each do |file|
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
+
+      kingdom = file.split('/').last.split('_')[0].titleize
+
       puts "CREATING temporary column and view"
       ActiveRecord::Base.connection.execute(<<-SQL
         CREATE VIEW #{TMP_TABLE}_view AS
@@ -61,13 +64,15 @@ namespace :import do
           ON LOWER(inclusion_ranks.name) = LOWER(rank_for_inclusions)
           INNER JOIN taxon_concepts
           ON taxon_concepts.legacy_id = TMP.legacy_id
-          AND taxon_concepts.legacy_type = 'Animalia'
+          AND taxon_concepts.legacy_type = '#{kingdom}'
           AND taxon_concepts.rank_id = ranks.id
           LEFT JOIN taxon_concepts inclusion_taxon_concepts
           ON inclusion_taxon_concepts.legacy_id = TMP.included_in_rec_id
-          AND inclusion_taxon_concepts.legacy_type = 'Animalia'
+          AND inclusion_taxon_concepts.legacy_type = '#{kingdom}'
           AND inclusion_taxon_concepts.rank_id = inclusion_ranks.id;
       SQL
+
+      puts "The sql\n #{sql} \n"
 
       puts "INSERTING listing_changes"
       ActiveRecord::Base.connection.execute(sql)
@@ -98,7 +103,7 @@ namespace :import do
           ON BTRIM(LOWER(exclusion_ranks.name)) = BTRIM(LOWER(exclusion_rank))
         INNER JOIN taxon_concepts exclusion_taxon_concepts
           ON exclusion_taxon_concepts.legacy_id = exclusion_legacy_id::INTEGER
-          AND exclusion_taxon_concepts.legacy_type = 'Animalia'
+          AND exclusion_taxon_concepts.legacy_type = '#{kingdom}'
           AND exclusion_taxon_concepts.rank_id = exclusion_ranks.id
         INNER JOIN listing_changes
           ON row_id = import_row_id

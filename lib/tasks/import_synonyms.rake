@@ -31,6 +31,9 @@ namespace :import do
       import_data_for kingdom, Rank::GENUS, true
       import_data_for kingdom, Rank::SPECIES, true
       import_data_for kingdom, Rank::SUBSPECIES, true
+      if kingdom == 'Plantae'
+        import_data_for kingdom, Rank::VARIETY
+      end
       #[END]copied over from import:species
 
       sql = <<-SQL

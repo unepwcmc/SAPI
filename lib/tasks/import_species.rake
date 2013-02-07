@@ -21,6 +21,9 @@ namespace :import do
       import_data_for kingdom, Rank::GENUS
       import_data_for kingdom, Rank::SPECIES
       import_data_for kingdom, Rank::SUBSPECIES
+      if kingdom == 'Plantae'
+        import_data_for kingdom, Rank::VARIETY
+      end
     end
   end
 end

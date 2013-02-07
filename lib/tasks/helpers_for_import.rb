@@ -36,7 +36,6 @@ class CsvToDbMap
       'effective_from' => 'listing_date date',
       'party_iso2' => 'country_iso2 varchar',
       'is_current' => 'is_current boolean',
-      'hash_note' => 'hash_note varchar',
       'populations_iso2' => 'populations_iso2 varchar',
       'EXCLUDEDpopulations_iso' => 'excluded_populations_iso2 varchar',
       'is_inclusion' => 'is_inclusion boolean',
@@ -46,7 +45,11 @@ class CsvToDbMap
       'short_note_en' => 'short_note_en varchar',
       'short_note_es' => 'short_note_es varchar',
       'short_note_fr' => 'short_note_fr varchar',
-      'full_note_en' => 'full_note_en varchar'
+      'full_note_en' => 'full_note_en varchar',
+      'SpeciesIndexAnnotation' => 'index_annotation integer',
+      'HistoryAnnotation' => 'history_annotation integer',
+      'hash_note' => 'hash_note varchar',
+      'Notes' => 'notes varchar'
     },
     'distribution_import' => {
       'Species RecID' => 'legacy_id integer',

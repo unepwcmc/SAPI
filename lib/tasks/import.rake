@@ -89,8 +89,8 @@ namespace :import do
 #      'lib/assets/files/plants_reference_links.csv'
 #    )
    Rake::Task["import:standard_references"].invoke(
-     'lib/assets/files/cleaned/animals/animalia_standard_refs_utf8.csv',
-     'lib/assets/files/cleaned/plants/plantea_standard_refs_utf8.csv'
+     #'lib/assets/files/cleaned/animals/animalia_standard_refs_utf8.csv',
+     #'lib/assets/files/cleaned/plants/plantea_standard_refs_utf8.csv'
    )
 #
     Rake::Task["import:trade_codes"].invoke
