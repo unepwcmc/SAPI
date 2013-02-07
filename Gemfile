@@ -85,6 +85,7 @@ group :test, :development do
   gem "rspec-rails"
   gem "json_spec"
   gem "database_cleaner"
+  gem "timecop"
 end
 
 group :test do
