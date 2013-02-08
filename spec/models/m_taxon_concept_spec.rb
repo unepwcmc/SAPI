@@ -102,8 +102,6 @@ describe MTaxonConcept do
       end
       context "when App II" do
         specify do
-          puts MTaxonConcept.
-          by_cites_populations_and_appendices([], [nepal.id], ['II']).to_sql
           MTaxonConcept.
           by_cites_populations_and_appendices([], [nepal.id], ['II']).
           should_not include(@species)
@@ -120,7 +118,6 @@ describe MTaxonConcept do
       end
       context "when App II" do
         specify do
-
           MTaxonConcept.
           by_cites_populations_and_appendices([], [poland.id], ['II']).
           should include(@species)
@@ -137,8 +134,6 @@ describe MTaxonConcept do
       end
       context "when App II" do
         specify do
-puts MTaxonConcept.
-          by_cites_populations_and_appendices([], [poland.id, nepal.id], ['II']).to_sql
           MTaxonConcept.
           by_cites_populations_and_appendices([], [poland.id, nepal.id], ['II']).
           should include(@species)
