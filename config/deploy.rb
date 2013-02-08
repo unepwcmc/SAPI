@@ -62,6 +62,7 @@ set :deploy_via, :remote_cache
 # items are symlinked in when the code is updated.
 # set :local_shared_dirs, %w(public/upload)
 set :local_shared_files, %w(config/database.yml)
+set :local_shared_dirs, %w(tmp/pids)
 
 ## Global Shared Area
 # These are the list of files and directories that you want
