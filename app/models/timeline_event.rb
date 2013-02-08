@@ -1,5 +1,8 @@
 class TimelineEvent
-  attr_accessor :change_type_name, :effective_at, :party_id, :pos
+  include ActiveModel::Serializers::JSON
+  attr_accessor :id, :change_type_name, :species_listing_name, :effective_at,
+    :party_id, :is_current, :pos, :specific_short_note, :specific_full_note,
+    :generic_note, :symbol, :parent_symbol
   #options to be passed:
   #:change_type_name
   #:effective_at
@@ -20,8 +23,42 @@ class TimelineEvent
     @generic_note = options[:generic_note]
     @symbol = options[:symbol]
     @parent_symbol = options[:parent_symbol]
-    @effective_at_formatted = options[:effective_at_formatted]
+    @effective_at = options[:effective_at]
     @is_current = options[:is_current]
     @species_listing_name = options[:species_listing_name]
   end
+
+  def attributes
+    {
+      'id' => id,
+      'change_type_name' => change_type_name,
+      'species_listing_name' => species_listing_name,
+      'effective_at_formatted' => effective_at_formatted,
+      'party_id' => party_id,
+      'is_current' => is_current,
+      'specific_short_note' => specific_short_note,
+      'specific_full_note' => specific_full_note,
+      'generic_note' => generic_note,
+      'symbol' => symbol,
+      'parent_symbol' => parent_symbol,
+      'pos' => pos
+    }
+  end
+
+  def is_addition?
+    @change_type_name == ChangeType::ADDITION
+  end
+
+  def is_deletion?
+    @change_type_name == ChangeType::DELETION
+  end
+
+  def is_reservation?
+    [ChangeType::RESERVATION, ChangeType::RESERVATION_WITHDRAWAL].include? @change_type_name
+  end
+
+  def effective_at_formatted
+    effective_at.strftime("%d/%m/%y")
+  end
+
 end

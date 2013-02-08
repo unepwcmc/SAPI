@@ -22,6 +22,12 @@ describe TaxonConcept do
         end
       end
 
+      describe :current_party_ids do
+        context "for species Mellivora capensis" do
+          specify { @species.current_party_ids.should == [GeoEntity.find_by_iso_code2('BW').id] }
+        end
+      end
+
     end
   end
 end

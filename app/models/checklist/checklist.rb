@@ -53,7 +53,7 @@ class Checklist::Checklist
     sql_columns = [:"taxon_concepts_mview.id", 
       :species_name, :genus_name, :family_name, :order_name,
       :class_name, :phylum_name, :kingdom_name,
-      :full_name, :rank_name,
+      :full_name, :rank_name, :cites_listed,
       :current_listing, :cites_accepted, :listing_updated_at,
       :specific_annotation_symbol, :generic_annotation_symbol,
       :"taxon_concepts_mview.countries_ids_ary AS tc_countries_ids_ary",
@@ -125,7 +125,8 @@ class Checklist::Checklist
         :specific_annotation_symbol, :generic_annotation_symbol,
         :generic_annotation_parent_symbol
       ],
-      :methods => [:countries_ids, :ancestors_path, :recently_changed]
+      :methods => [:countries_ids, :ancestors_path, :recently_changed,
+        :current_party_ids]
     }
 
     json_options[:only] << :author_year if @authors
