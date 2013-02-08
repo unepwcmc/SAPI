@@ -93,7 +93,7 @@ class TaxonConcept < ActiveRecord::Base
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
   validate :parent_in_same_taxonomy
-  #validate :parent_at_immediately_higher_rank
+  validate :parent_at_immediately_higher_rank
   validates :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
   validates :taxon_name_id, :uniqueness => { :scope => [:taxonomy_id, :parent_id, :name_status, :author_year] }
@@ -193,7 +193,8 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def parent_at_immediately_higher_rank
-    return true unless parent
+    return true unless parent 
+    return true if (parent.rank.name == 'KINGDOM' && parent.full_name == 'Plantae' && rank.name == 'ORDER')
     unless parent.rank.taxonomic_position >= rank.parent_rank_lower_bound &&
       parent.rank.taxonomic_position < rank.taxonomic_position
       errors.add(:parent_id, "must be at immediately higher rank")

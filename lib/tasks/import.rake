@@ -81,16 +81,16 @@ namespace :import do
       'lib/assets/files/cleaned/animals/animalia_synonyms_utf8.csv',
       'lib/assets/files/cleaned/plants/plantae_synonyms_utf8.csv'
     )
-    # Rake::Task["import:references"].invoke(
-      # 'lib/assets/files/references.csv'
-    # )
+     #Rake::Task["import:references"].invoke(
+     #  'lib/assets/files/references.csv'
+     #)
 #    Rake::Task["import:reference_links"].invoke(
 #      'lib/assets/files/animals_reference_links.csv',
 #      'lib/assets/files/plants_reference_links.csv'
 #    )
    Rake::Task["import:standard_references"].invoke(
-     #'lib/assets/files/cleaned/animals/animalia_standard_refs_utf8.csv',
-     #'lib/assets/files/cleaned/plants/plantea_standard_refs_utf8.csv'
+     'lib/assets/files/cleaned/animals/animalia_standard_refs_utf8.csv',
+     'lib/assets/files/cleaned/plants/plantea_standard_refs_utf8.csv'
    )
 #
     Rake::Task["import:trade_codes"].invoke

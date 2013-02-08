@@ -5,7 +5,7 @@
 #   gem 'sqlite3'
 development:
   adapter: postgresql
-  database: sapi_development_new_import
+  database: sapi_development
   pool: 5
   username: postgres
   password: postgres
