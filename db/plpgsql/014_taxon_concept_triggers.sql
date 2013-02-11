@@ -49,8 +49,6 @@ DROP TRIGGER IF EXISTS trg_taxon_concepts_i ON taxon_concepts;
 CREATE TRIGGER trg_taxon_concepts_i AFTER INSERT ON taxon_concepts
 FOR EACH ROW EXECUTE PROCEDURE trg_taxon_concepts_i();
 
-DROP TRIGGER IF EXISTS trg_designations_u ON designations;
-
 -- RANKS
 
 CREATE OR REPLACE FUNCTION trg_ranks_u() RETURNS TRIGGER
@@ -114,6 +112,7 @@ FOR EACH ROW EXECUTE PROCEDURE trg_common_names_u();
 CREATE OR REPLACE FUNCTION trg_taxon_commons_ui() RETURNS TRIGGER
 SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
 BEGIN
+RAISE NOTICE 'insert or update taxon common';
   PERFORM taxon_concepts_refresh_row(tc.id)
   FROM taxon_concepts tc
   WHERE tc.id = NEW.taxon_concept_id;
@@ -132,10 +131,10 @@ END
 $$;
 
 DROP TRIGGER IF EXISTS trg_taxon_commons_ui ON taxon_commons;
-CREATE TRIGGER trg_taxon_commons_ui AFTER UPDATE ON taxon_commons
+CREATE TRIGGER trg_taxon_commons_ui AFTER INSERT OR UPDATE ON taxon_commons
 FOR EACH ROW EXECUTE PROCEDURE trg_taxon_commons_ui();
 DROP TRIGGER IF EXISTS trg_taxon_commons_d ON taxon_commons;
-CREATE TRIGGER trg_taxon_commons_d AFTER UPDATE ON taxon_commons
+CREATE TRIGGER trg_taxon_commons_d AFTER DELETE ON taxon_commons
 FOR EACH ROW EXECUTE PROCEDURE trg_taxon_commons_d();
 
 -- TAXON_RELATIONSHIPS
@@ -167,10 +166,10 @@ END
 $$;
 
 DROP TRIGGER IF EXISTS trg_taxon_relationships_ui ON taxon_relationships;
-CREATE TRIGGER trg_taxon_relationships_ui AFTER UPDATE ON taxon_relationships
+CREATE TRIGGER trg_taxon_relationships_ui AFTER INSERT OR UPDATE ON taxon_relationships
 FOR EACH ROW EXECUTE PROCEDURE trg_taxon_relationships_ui();
 DROP TRIGGER IF EXISTS trg_taxon_relationships_d ON taxon_relationships;
-CREATE TRIGGER trg_taxon_relationships_d AFTER UPDATE ON taxon_relationships
+CREATE TRIGGER trg_taxon_relationships_d AFTER DELETE ON taxon_relationships
 FOR EACH ROW EXECUTE PROCEDURE trg_taxon_relationships_d();
 
 -- GEO_ENTITIES
@@ -215,10 +214,10 @@ END
 $$;
 
 DROP TRIGGER IF EXISTS trg_distributions_ui ON distributions;
-CREATE TRIGGER trg_distributions_ui AFTER UPDATE ON distributions
+CREATE TRIGGER trg_distributions_ui AFTER INSERT OR UPDATE ON distributions
 FOR EACH ROW EXECUTE PROCEDURE trg_distributions_ui();
 DROP TRIGGER IF EXISTS trg_distributions_d ON distributions;
-CREATE TRIGGER trg_distributions_d AFTER UPDATE ON distributions
+CREATE TRIGGER trg_distributions_d AFTER DELETE ON distributions
 FOR EACH ROW EXECUTE PROCEDURE trg_distributions_d();
 
 -- TAXON_CONCEPT_REFERENCES -- TODO references cascade
@@ -244,10 +243,10 @@ END
 $$;
 
 DROP TRIGGER IF EXISTS trg_taxon_concept_references_ui ON taxon_concept_references;
-CREATE TRIGGER trg_taxon_concept_references_ui AFTER UPDATE ON taxon_concept_references
+CREATE TRIGGER trg_taxon_concept_references_ui AFTER INSERT OR UPDATE ON taxon_concept_references
 FOR EACH ROW EXECUTE PROCEDURE trg_taxon_concept_references_ui();
 DROP TRIGGER IF EXISTS trg_taxon_concept_references_d ON taxon_concept_references;
-CREATE TRIGGER trg_taxon_concept_references_d AFTER UPDATE ON taxon_concept_references
+CREATE TRIGGER trg_taxon_concept_references_d AFTER DELETE ON taxon_concept_references
 FOR EACH ROW EXECUTE PROCEDURE trg_taxon_concept_references_d();
 
 DROP TRIGGER IF EXISTS trg_taxonomic_positions ON taxon_concepts;
