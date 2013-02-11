@@ -179,6 +179,7 @@ SET DateStyle = \"ISO,DMY\";
 \\COPY #{table_name} (#{db_columns.join(', ')})
 FROM '#{Rails.root + path_to_file}'
 WITH DELIMITER ','
+ENCODING 'utf-8'
 CSV HEADER
 PSQL
 
