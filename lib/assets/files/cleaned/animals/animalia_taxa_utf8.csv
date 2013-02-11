@@ -33,7 +33,7 @@ torulosa,Subspecies,7888,Species,94755,A,"(Rafinesque, 1820)",,"CITES_EU"
 rangiana,Subspecies,7887,Species,94755,A,"(I. Lea, 1839)",,"CITES_EU"
 gubernaculum,Subspecies,7886,Species,94755,A,"(Reeve, 1865)",,"CITES_EU"
 perobliqua,Subspecies,7884,Species,7885,A,"(Conrad, 1836)",,"CITES_EU"
-florentina,Subspecies,7869,Species,32195,A,"(I. Lea, 1857)",,CITES_EU
+florentina,Subspecies,7869,Species,32195,A,"(I. Lea, 1857)",,CITES_EU
 inornatus,Subspecies,7828,Species,7821,A,"(Reinhardt, 1843)",,CITES_EU
 cenchria,Subspecies,7827,Species,7816,A,"(Linnaeus, 1758)",,CITES_EU
 turtur,Subspecies,77923,Species,20885,A,"(Linnaeus, 1758)",,CMS
@@ -107,7 +107,7 @@ frontatus,Subspecies,2280,Species,2279,A,"Gray, 1842",,"CITES_EU"
 tecomatensis,Subspecies,22739,Species,99826,A,"I. Lea, 1841",,"CITES_EU"
 pinnatus,Subspecies,22588,Species,22589,A,"(Brewster, 1885)",,CITES_EU
 attwateri,Subspecies,22587,Species,22589,A,"Bendire, 1893",,"CITES_EU"
-elegans,Subspecies,22021,Species,22028,A,"(Wied, 1839)",,"CITES_EU"
+elegans,Subspecies,22021,Species,22028,A,"(Wied, 1839)",,"CITES_EU"
 aethiopicus,Subspecies,21838,Species,21833,A,"(Latham, 1790)",,CMS
 chapadensis,Subspecies,21351,Species,21350,A,,,CITES_EU
 glaucus,Subspecies,20859,Species,51716,A,"(Hubbs, 1926)",Fishbase treats this a synonym of S. vitreus,CITES_EU
@@ -154,7 +154,7 @@ vignei,Subspecies,15738,Species,29583,A,"Blyth, 1841",,"CITES_EU"
 ophion,Subspecies,15737,Species,15739,A,"Blyth, 1841",,"CITES_EU"
 hodgsonii,Subspecies,15734,Species,15733,A,"Blyth, 1841",,"CITES_EU"
 gambelli,Subspecies,1572,Species,1571,A,"Hartlaub, 1852",,CITES_EU
-newtoni,Subspecies,15713,Species,15698,A,"(Lawrence, 1860)",,CITES_EU
+newtoni,Subspecies,15713,Species,15698,A,"(Lawrence, 1860)",,CITES_EU
 bernardi,Subspecies,15325,Species,15324,A,"Goldman, 1932",,CITES_EU
 pajeros,Subspecies,15314,Species,101179,A,"Desmarest, 1816",,CITES_EU
 crespoi,Subspecies,15313,Species,101179,A,"Cabrera, 1957",,CITES_EU
@@ -3791,7 +3791,7 @@ stumpffi,Species,3087,Genus,652,A,"Boettger, 1894",,"CITES_EU"
 minima,Species,3086,Genus,652,A,"Boettger, 1893",,"CITES_EU"
 ebenaui,Species,3085,Genus,652,A,"(Boettger, 1880)",,"CITES_EU"
 decaryi,Species,3084,Genus,652,A,"Angel, 1939",,"CITES_EU"
-squamatus,Species,30831,Genus,3793,A,"Vigors, 1831",,CITES_EU
+squamatus,Species,30831,Genus,3793,A,"Vigors, 1831",,CITES_EU
 perarmata,Species,3083,Genus,652,A,"(Angel, 1933)",,"CITES_EU"
 porcellanus,Species,30822,Genus,3529,A,"Verrill, 1866",,"CITES_EU"
 expansa,Species,30821,Genus,18557,A,"(Opresko & Cairns, 1992)",,"CITES_EU"
