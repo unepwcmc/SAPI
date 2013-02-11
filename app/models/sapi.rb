@@ -53,10 +53,26 @@ module Sapi
 
   def self.disable_triggers
     ActiveRecord::Base.connection.execute("ALTER TABLE taxon_concepts DISABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE ranks DISABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_names DISABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE common_names DISABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_commons DISABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_relationships DISABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE geo_entities DISABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE distributions DISABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_concept_references DISABLE TRIGGER ALL")
   end
 
   def self.enable_triggers
     ActiveRecord::Base.connection.execute("ALTER TABLE taxon_concepts ENABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE ranks ENABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_names ENABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE common_names ENABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_commons ENABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_relationships ENABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE geo_entities ENABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE distributions ENABLE TRIGGER ALL")
+    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_concept_references ENABLE TRIGGER ALL")
   end
 
   def self.drop_indices
