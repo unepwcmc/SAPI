@@ -1,8 +1,8 @@
-DROP FUNCTION IF EXISTS taxon_concepts_refresh_row(id INTEGER);
 CREATE OR REPLACE FUNCTION taxon_concepts_refresh_row(row_id INTEGER) RETURNS VOID
 SECURITY DEFINER
 LANGUAGE 'plpgsql' AS $$
 BEGIN
+  RAISE NOTICE 'refreshing';
   DELETE
   FROM taxon_concepts_mview tc
   WHERE tc.id = row_id;
