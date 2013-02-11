@@ -14,6 +14,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       load_change_types
       @listing_change.build_party_listing_distribution
       @listing_change.exclusions.build
+      @listing_change.build_annotation
     end
   end
 
@@ -27,6 +28,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
     else
       load_change_types
       @listing_change.build_party_listing_distribution(params[:listing_change][:party_listing_distribution_attributes])
+      @listing_change.build_annotation(params[:listing_change][:annotation_attributes])
       render 'new'
     end
   end
@@ -39,6 +41,9 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       end
       unless @listing_change.exclusions
         @listing_change.exclusions.build
+      end
+      unless @listing_change.annotation
+        @listing_change.build_annotation
       end
       format.js { render 'new' }
     end

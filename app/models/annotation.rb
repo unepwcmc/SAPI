@@ -11,7 +11,10 @@
 #
 
 class Annotation < ActiveRecord::Base
-  attr_accessible :listing_change_id, :symbol, :parent_symbol
+  attr_accessible :listing_change_id, :symbol, :parent_symbol, :short_note_en,
+    :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
+    :display_in_index, :display_in_footnote
   belongs_to :listing_change
-  has_many :annotation_translations
+  translates :short_note
+  translates :full_note
 end

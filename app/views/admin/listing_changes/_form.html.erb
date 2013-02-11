@@ -98,6 +98,25 @@
   </table>
   <p><%= f.link_to_add "Add an exclusion", :exclusions %></p>
 
+  <%= f.fields_for :annotation do |ff| %>
+    <%= ff.label :short_note_en %>
+    <%= ff.text_field :short_note_en %>
+    <%= ff.label :full_note_en %>
+    <%= ff.text_area :full_note_en %>
+    <%= ff.label :short_note_fr %>
+    <%= ff.text_field :short_note_fr %>
+    <%= ff.label :full_note_fr %>
+    <%= ff.text_area :full_note_fr %>
+    <%= ff.label :short_note_es %>
+    <%= ff.text_field :short_note_es %>
+    <%= ff.label :full_note_es %>
+    <%= ff.text_area :full_note_es %>
+    <%= ff.label :display_in_index, :value => 'Display in index' %>
+    <%= ff.check_box :display_in_index %>
+    <%= ff.label :display_in_footnote, :value => 'Display in footnote' %>
+    <%= ff.check_box :display_in_footnote %>
+  <% end %>
+
 <% end %>
 
 <% if @taxon_concept.current_listing_changes.count > 0 %>

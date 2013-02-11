@@ -23,7 +23,7 @@ class ListingChange < ActiveRecord::Base
   attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
     :effective_at, :is_current, :parent_id, :geo_entity_ids,
     :party_listing_distribution_attributes, :inclusion_scientific_name,
-    :exclusions_attributes,:exclusion_scientific_name
+    :exclusions_attributes,:exclusion_scientific_name, :annotation_attributes
   attr_writer :inclusion_scientific_name, :exclusion_scientific_name
 
   belongs_to :species_listing
@@ -55,6 +55,7 @@ class ListingChange < ActiveRecord::Base
       attributes['exclusion_scientific_name'].blank? &&
       attributes['geo_entity_ids'].reject(&:blank?).empty?
     }
+  accepts_nested_attributes_for :annotation
 
   def effective_at_formatted
     effective_at ? effective_at.strftime('%d/%m/%Y') : ''
