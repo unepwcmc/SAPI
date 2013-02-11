@@ -126,7 +126,7 @@ class Checklist::Checklist
         :generic_annotation_parent_symbol
       ],
       :methods => [:countries_ids, :ancestors_path, :recently_changed,
-        :current_party_ids]
+        :current_parties_ids]
     }
 
     json_options[:only] << :author_year if @authors

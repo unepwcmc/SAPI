@@ -26,10 +26,10 @@ describe TaxonConcept do
 
       describe :current_party_ids do
         context "for genus Colophon" do
-          specify { @genus.current_party_ids.should == [GeoEntity.find_by_iso_code2('ZA').id] }
+          specify { @genus.current_parties_ids.should == [GeoEntity.find_by_iso_code2('ZA').id] }
         end
         context "for species Colophon barnardi" do
-          specify { @species.current_party_ids.should == [GeoEntity.find_by_iso_code2('ZA').id] }
+          specify { @species.current_parties_ids.should == [GeoEntity.find_by_iso_code2('ZA').id] }
         end
       end
 
