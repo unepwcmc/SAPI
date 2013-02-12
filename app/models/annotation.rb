@@ -15,6 +15,5 @@ class Annotation < ActiveRecord::Base
     :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
     :display_in_index, :display_in_footnote
   belongs_to :listing_change
-  translates :short_note
-  translates :full_note
+  translates :short_note, :full_note
 end
