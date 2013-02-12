@@ -117,7 +117,7 @@ GEM
     jquery-rails (2.2.0)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    json (1.7.6)
+    json (1.7.7)
     json_spec (1.1.0)
       multi_json (~> 1.0)
       rspec (~> 2.0)
@@ -135,8 +135,8 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     method_source (0.8.1)
-    mime-types (1.19)
-    multi_json (1.5.0)
+    mime-types (1.21)
+    multi_json (1.5.1)
     nested_form (0.3.1)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
@@ -156,7 +156,7 @@ GEM
       slop (~> 3.4)
     quiet_assets (1.0.1)
       railties (~> 3.1)
-    rack (1.4.4)
+    rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
     rack-cors (0.2.7)
@@ -183,7 +183,7 @@ GEM
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
     rake (10.0.3)
-    rdoc (3.12)
+    rdoc (3.12.1)
       json (~> 1.4)
     redis (3.0.2)
     redis-namespace (1.2.1)
@@ -288,6 +288,7 @@ DEPENDENCIES
   immigrant
   inherited_resources
   jquery-rails
+  json (>= 1.7.7)
   json_spec
   jsonify
   kaminari
