@@ -23,12 +23,12 @@ module Checklist::Csv::Document
     aliases = {
       :change_type_name => 'ChangeType',
       :species_listing_name => 'Appendix',
-      :generic_english_full_note => '#AnnotationEnglish',
-      :generic_spanish_full_note => '#AnnotationSpanish',
-      :generic_french_full_note => '#AnnotationFrench',
-      :english_full_note => 'AnnotationEnglish',
-      :spanish_full_note => 'AnnotationSpanish',
-      :french_full_note => 'AnnotationFrench'
+      :hash_full_note_en => '#AnnotationEnglish',
+      :hash_full_note_es => '#AnnotationSpanish',
+      :hash_full_note_fr => '#AnnotationFrench',
+      :full_note_en => 'AnnotationEnglish',
+      :full_note_es => 'AnnotationSpanish',
+      :full_note_fr => 'AnnotationFrench'
     }
     aliases[col] || col.to_s.camelize
   end

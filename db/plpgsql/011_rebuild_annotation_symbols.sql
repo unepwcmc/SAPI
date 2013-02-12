@@ -8,59 +8,51 @@ CREATE OR REPLACE FUNCTION rebuild_annotation_symbols() RETURNS void
         BEGIN
         -- start clear
         UPDATE taxon_concepts
-        SET listing = listing - ARRAY['specific_annotation_symbol',
-          'generic_annotation_parent_symbol', 'generic_annotation_symbol'];
+        SET listing = listing - ARRAY['ann_symbol',
+          'hash_ann_parent_symbol', 'hash_ann_symbol'];
 
         -- update specific annotation symbols
         -- need to put all taxa with specific annotations in alphabetical order (as in the index pdf)
         -- and use row numbers as annotation symbols
         WITH taxon_concepts_with_specific_symbols AS (
           WITH taxon_concepts_with_specific_annotations AS (
-          -- need to find addition records, which have exceptions or that have distributions attached
           SELECT taxon_concept_id, annotations.id AS annotation_id
           FROM 
-          annotations
-          INNER JOIN listing_changes ON annotations.listing_change_id = listing_changes.id
-          INNER JOIN change_types ON change_types.id = listing_changes.change_type_id AND change_types.name = 'ADDITION'
+          listing_changes
           INNER JOIN taxon_concepts ON listing_changes.taxon_concept_id = taxon_concepts.id
-          INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id AND taxonomies.name = 'CITES_EU'
-          WHERE is_current = 't'
-            AND EXISTS (
-                SELECT * FROM listing_changes listing_changes_exceptions
-                WHERE listing_changes.id = listing_changes_exceptions.parent_id
-              )
-            OR EXISTS (
-                SELECT * FROM listing_distributions
-                WHERE listing_changes.id = listing_distributions.listing_change_id AND is_party = 'f'
-              )
+          INNER JOIN annotations ON listing_changes.annotation_id = annotations.id
+            AND annotations.display_in_index = TRUE
+          INNER JOIN change_types ON change_types.id = listing_changes.change_type_id
+          INNER JOIN designations ON designations.id = change_types.designation_id
+            AND designations.name = 'CITES'
+          WHERE is_current = TRUE
           ORDER BY data->'kingdom_name', full_name
           )
           SELECT taxon_concept_id, ROW_NUMBER() OVER() AS specific_symbol
           FROM taxon_concepts_with_specific_annotations
           GROUP BY taxon_concept_id
         )
-        UPDATE taxon_concepts SET listing = listing || hstore('specific_annotation_symbol', specific_symbol::VARCHAR)
+        UPDATE taxon_concepts SET listing = listing || hstore('ann_symbol', specific_symbol::VARCHAR)
         FROM taxon_concepts_with_specific_symbols
         WHERE taxon_concepts.id = taxon_concepts_with_specific_symbols.taxon_concept_id;
 
         -- update generic annotation symbols
         WITH taxon_concepts_with_generic_symbols AS (
-                SELECT taxon_concept_id,
-                MAX(annotations.symbol) AS generic_symbol,
-                MAX(annotations.parent_symbol) AS generic_parent_symbol
-                FROM 
-                taxon_concepts
-                LEFT JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
-                LEFT JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id
-                LEFT JOIN change_types ON change_types.id = listing_changes.change_type_id
-                INNER JOIN annotations ON listing_changes.annotation_id = annotations.id
-                WHERE taxonomies.name = 'CITES_EU' AND is_current = 't'
-                  AND change_types.name = 'ADDITION'
-                GROUP BY taxon_concept_id
+          SELECT taxon_concept_id,
+          MAX(annotations.symbol) AS generic_symbol,
+          MAX(annotations.parent_symbol) AS generic_parent_symbol
+          FROM
+          listing_changes
+          INNER JOIN annotations ON listing_changes.hash_annotation_id = annotations.id
+          INNER JOIN change_types ON change_types.id = listing_changes.change_type_id
+          INNER JOIN designations ON designations.id = change_types.designation_id
+            AND designations.name = 'CITES'
+          WHERE is_current = TRUE
+          GROUP BY taxon_concept_id
         )
         UPDATE taxon_concepts SET listing = listing ||
-          hstore('generic_annotation_symbol', generic_symbol::VARCHAR) ||
-          hstore('generic_annotation_parent_symbol', generic_parent_symbol::VARCHAR)
+          hstore('hash_ann_symbol', generic_symbol::VARCHAR) ||
+          hstore('hash_ann_parent_symbol', generic_parent_symbol::VARCHAR)
         FROM taxon_concepts_with_generic_symbols
         WHERE taxon_concepts.id = taxon_concepts_with_generic_symbols.taxon_concept_id;
 

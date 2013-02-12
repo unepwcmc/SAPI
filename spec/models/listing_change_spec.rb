@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: listing_changes
+#
+#  id                         :integer          not null, primary key
+#  species_listing_id         :integer
+#  taxon_concept_id           :integer
+#  change_type_id             :integer
+#  lft                        :integer
+#  rgt                        :integer
+#  parent_id                  :integer
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  effective_at               :datetime         default(2012-09-21 07:32:20 UTC), not null
+#  annotation_id              :integer
+#  is_current                 :boolean          default(FALSE), not null
+#  inclusion_taxon_concept_id :integer
+#  import_row_id              :integer
+#  hash_annotation_id         :integer
+#
+
 require 'spec_helper'
 
 describe ListingChange do

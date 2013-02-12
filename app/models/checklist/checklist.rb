@@ -18,7 +18,6 @@ class Checklist::Checklist
 
   def initialize_query
     @taxon_concepts_rel = MTaxonConcept.scoped.
-      select(sql_columns).
       by_cites_eu_taxonomy
 
       if @cites_regions.empty? && @countries.empty? && !@cites_appendices.empty?
@@ -49,81 +48,14 @@ class Checklist::Checklist
     end
   end
 
-  def taxon_concepts_columns
-    sql_columns = [:"taxon_concepts_mview.id", 
-      :species_name, :genus_name, :family_name, :order_name,
-      :class_name, :phylum_name, :kingdom_name,
-      :full_name, :rank_name, :cites_listed,
-      :current_listing, :cites_accepted, :listing_updated_at,
-      :specific_annotation_symbol, :generic_annotation_symbol,
-      :"taxon_concepts_mview.countries_ids_ary AS tc_countries_ids_ary",
-      :kingdom_position, :taxonomic_position
-    ]
-
-    if @synonyms && @authors
-      sql_columns << <<-SEL
-    ARRAY(
-      SELECT synonym || 
-      CASE
-      WHEN author_year IS NOT NULL
-      THEN ' ' || author_year
-      ELSE ''
-      END
-      FROM ( 
-        (SELECT synonym, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_ary) AS synonym) q) synonyms 
-        LEFT JOIN
-        (SELECT author_year, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_author_years_ary) AS author_year) q) author_years
-        ON synonyms.id = author_years.id
-      )
-    ) AS synonyms_ary
-    SEL
-    elsif @synonyms
-      sql_columns << :synonyms_ary
-    end
-
-    sql_columns << :author_year if @authors
-    sql_columns << :english_names_ary if @english_common_names
-    sql_columns << :spanish_names_ary if @spanish_common_names
-    sql_columns << :french_names_ary if @french_common_names
-
-    if @output_layout == :taxonomic
-      sql_columns += [:family_id, :order_id, :class_id, :phylum_id]
-    end
-
-    sql_columns
-  end
-
-  def listing_changes_columns
-    sql_columns = [
-      :change_type_name, :species_listing_name,
-      :party_id, :party_name, :effective_at, :is_current,
-      :"listing_changes_mview.countries_ids_ary AS lc_countries_ids_ary"
-    ]
-    if @locale == 'en'
-      sql_columns +=
-        [:generic_english_full_note, :english_full_note, :english_short_note]
-    elsif @locale == 'es'
-      sql_columns +=
-        [:generic_spanish_full_note, :spanish_full_note, :spanish_short_note]
-    elsif @locale == 'fr'
-      sql_columns +=
-        [:generic_french_full_note, :french_full_note, :french_short_note]
-    end
-    sql_columns
-  end
-
-  def sql_columns
-    taxon_concepts_columns + listing_changes_columns
-  end
-
   def taxon_concepts_json_options
     json_options = {
       :only => [
         :id, :full_name, :rank_name, :current_listing, :cites_accepted,
         :species_name, :genus_name, :family_name, :order_name,
         :class_name, :phylum_name, :kingdom_name,
-        :specific_annotation_symbol, :generic_annotation_symbol,
-        :generic_annotation_parent_symbol
+        :ann_symbol, :hash_ann_symbol,
+        :hash_ann_parent_symbol
       ],
       :methods => [:countries_ids, :ancestors_path, :recently_changed,
         :current_parties_ids]
@@ -143,7 +75,7 @@ class Checklist::Checklist
         :party_id, :is_current, :symbol, :parent_symbol],
       :methods => [:countries_ids, :effective_at_formatted]
     }
-    json_options[:methods] += [:specific_short_note, :specific_full_note, :generic_note]
+    json_options[:methods] += [:short_note, :full_note, :hash_full_note]
 
     json_options
   end

@@ -171,24 +171,11 @@ namespace :import do
       ActiveRecord::Base.connection.execute(sql)
 
       sql = <<-SQL
-          WITH t AS (
-            INSERT INTO annotations(listing_change_id, created_at, updated_at)
-            SELECT DISTINCT listing_changes.id, current_date, current_date
-            FROM #{TMP_TABLE}_view AS TMP
-            INNER JOIN listing_changes ON TMP.row_id = listing_changes.import_row_id
-            WHERE TMP.short_note_en IS NOT NULL AND TMP.short_note_en <> 'NULL'
-            RETURNING *
-          )
-          INSERT INTO annotation_translations(annotation_id, language_id, short_note, full_note, created_at, updated_at)
-          SELECT t.id, #{english.id}, '',
-            CASE
-              WHEN TMP.full_note_en like 'NULL' OR TMP.full_note_en IS NULL THEN TMP.short_note_en
-              ELSE TMP.full_note_en
-            END
-          , current_date, current_date
-          FROM t
-          INNER JOIN listing_changes ON t.listing_change_id = listing_changes.id
-          INNER JOIN #{TMP_TABLE}_view AS TMP ON listing_changes.import_row_id = TMP.row_id
+          INSERT INTO annotations(listing_change_id, short_note_en, full_note_en, created_at, updated_at)
+          SELECT DISTINCT listing_changes.id, TMP.short_note_en, TMP.full_note_en, current_date, current_date
+          FROM #{TMP_TABLE}_view AS TMP
+          INNER JOIN listing_changes ON TMP.row_id = listing_changes.import_row_id
+          WHERE TMP.short_note_en IS NOT NULL AND TMP.short_note_en <> 'NULL'
       SQL
       puts "INSERTING annotations"
       ActiveRecord::Base.connection.execute(sql)

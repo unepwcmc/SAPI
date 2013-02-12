@@ -2,30 +2,32 @@
 #
 # Table name: listing_changes_mview
 #
-#  id                        :integer          primary key
-#  taxon_concept_id          :integer
-#  effective_at              :datetime
-#  species_listing_id        :integer
-#  species_listing_name      :string(255)
-#  change_type_id            :integer
-#  change_type_name          :string(255)
-#  party_id                  :integer
-#  party_name                :string(255)
-#  symbol                    :string(255)
-#  parent_symbol             :string(255)
-#  generic_english_full_note :text
-#  generic_spanish_full_note :text
-#  generic_french_full_note  :text
-#  english_full_note         :text
-#  spanish_full_note         :text
-#  french_full_note          :text
-#  english_short_note        :text
-#  spanish_short_note        :text
-#  french_short_note         :text
-#  is_current                :boolean
-#  countries_ids_ary         :string
-#  dirty                     :boolean
-#  expiry                    :datetime
+#  id                   :integer          primary key
+#  taxon_concept_id     :integer
+#  effective_at         :datetime
+#  species_listing_id   :integer
+#  species_listing_name :string(255)
+#  change_type_id       :integer
+#  change_type_name     :string(255)
+#  party_id             :integer
+#  party_name           :string(255)
+#  full_note_en         :text
+#  full_note_es         :text
+#  full_note_fr         :text
+#  short_note_en        :string(255)
+#  short_note_es        :string(255)
+#  short_note_fr        :string(255)
+#  display_in_index     :boolean
+#  display_in_footnote  :boolean
+#  symbol               :string(255)
+#  parent_symbol        :string(255)
+#  hash_full_note_en    :text
+#  hash_full_note_es    :text
+#  hash_full_note_fr    :text
+#  is_current           :boolean
+#  countries_ids_ary    :string
+#  dirty                :boolean
+#  expiry               :datetime
 #
 
 #TODO party_name should actually be renamed to party_iso_code
@@ -38,36 +40,36 @@ class MListingChange < ActiveRecord::Base
     effective_at.strftime("%d/%m/%y")
   end
 
-  def specific_short_note
+  def short_note
     case I18n.locale
       when :es
-        spanish_short_note
+        short_note_es
       when :fr
-        french_short_note
+        short_note_fr
       else
-        english_short_note
+        short_note_en
     end
   end
 
-  def specific_full_note
+  def full_note
     case I18n.locale
       when :es
-        spanish_full_note
+        full_note_es
       when :fr
-        french_full_note
+        full_note_fr
       else
-        english_full_note
+        full_note_en
     end
   end
 
-  def generic_note
+  def hash_full_note
     case I18n.locale
       when :es
-        generic_spanish_full_note
+        hash_full_note_es
       when :fr
-        generic_french_full_note
+        hash_full_note_fr
       else
-        generic_english_full_note
+        hash_full_note_en
     end
   end
 
@@ -97,12 +99,12 @@ class MListingChange < ActiveRecord::Base
     TimelineEvent.new(
       self.as_json(
         :only => [
-          :id, :change_type_name, :is_current, :parent_symbol, :party_id,
-          :species_listing_name, :symbol, :effective_at
+          :id, :change_type_name, :species_listing_name, :party_id,
+          :is_current, :hash_ann_symbol, :hash_ann_parent_symbol,
+          :effective_at
         ],
         :methods => [
-          :specific_short_note, :specific_full_note, :generic_note,
-          :countries_ids
+          :short_note, :full_note, :hash_full_note, :countries_ids
         ]
       ).symbolize_keys
     )

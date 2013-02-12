@@ -72,9 +72,15 @@ shared_context "Caiman latirostris" do
      :effective_at => '1975-07-01',
      :is_current => true
     )
+    a1 = create(
+      :annotation,
+      :full_note_en => 'Population of AR; included in CROCODYLIA spp.',
+      :display_in_index => true
+    )
     l1 = create(
      :cites_II_addition,
      :taxon_concept => @species,
+     :annotation_id => a1.id,
      :effective_at => '1997-09-18',
      :is_current => true
     )
@@ -83,16 +89,6 @@ shared_context "Caiman latirostris" do
       :geo_entity => argentina,
       :listing_change => l1,
       :is_party => false
-    )
-    a1 = create(
-      :annotation,
-      :listing_change => l1
-    )
-    create(
-      :annotation_translation,
-      :annotation => a1,
-      :language => Language.find_by_iso_code1('en'),
-      :full_note => 'Population of AR; included in CROCODYLIA spp.'
     )
 
     Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])

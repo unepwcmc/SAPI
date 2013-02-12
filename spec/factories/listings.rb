@@ -44,4 +44,12 @@ FactoryGirl.define do
       end
     end
   end
+
+  factory :annotation do
+    symbol '#4'
+    parent_symbol 'CoP15'
+    short_note_en "put me inline"
+    full_note_en "put me in footnote"
+  end
+
 end

@@ -83,9 +83,9 @@ module Sapi
       index_taxon_concepts_mview_on_full_name
       index_taxon_concepts_mview_on_history_filter
       index_listing_changes_on_annotation_id
+      index_listing_changes_on_hash_annotation_id
       index_listing_changes_on_parent_id
       index_listing_changes_mview_on_taxon_concept_id
-      index_annotations_on_listing_change_id
       index_listing_distributions_on_geo_entity_id
       index_listing_distributions_on_listing_change_id
     )
@@ -99,9 +99,9 @@ module Sapi
     ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_mview_on_full_name ON taxon_concepts_mview USING btree (full_name)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_mview_on_history_filter ON taxon_concepts_mview USING btree (taxonomy_is_cites_eu, cites_listed, kingdom_position)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_changes_on_annotation_id ON listing_changes USING btree (annotation_id)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_changes_on_hash_annotation_id ON listing_changes USING btree (hash_annotation_id)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_changes_on_parent_id ON listing_changes USING btree (parent_id)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_changes_mview_on_taxon_concept_id ON listing_changes_mview USING btree (taxon_concept_id)')
-    ActiveRecord::Base.connection.execute('CREATE INDEX index_annotations_on_listing_change_id ON annotations USING btree (listing_change_id)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_distributions_on_geo_entity_id ON listing_distributions USING btree (geo_entity_id)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_distributions_on_listing_change_id ON listing_distributions USING btree (listing_change_id)')
   end

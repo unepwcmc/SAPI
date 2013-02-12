@@ -8,16 +8,6 @@ class Checklist::Pdf::Index < Checklist::Index
     @input_name = 'index'
   end
 
-  def taxon_concepts_columns
-    res = super
-    res << :specific_annotation_symbol
-    res
-  end
-
-  def listing_changes_columns
-    []
-  end
-
   def prepare_kingdom_queries
     options = {
       :synonyms => @synonyms,

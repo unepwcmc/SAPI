@@ -68,12 +68,12 @@ module Checklist::Pdf::IndexContent
 
   def current_listing_with_annotations(taxon_concept)
     res = " \\textbf{#{taxon_concept.current_listing}} "
-    unless taxon_concept.generic_annotation_symbol.blank?
-      symbol = LatexToPdf.escape_latex(taxon_concept.generic_annotation_symbol)
+    unless taxon_concept.hash_ann_symbol.blank?
+      symbol = LatexToPdf.escape_latex(taxon_concept.hash_ann_symbol)
       res = " #{symbol}#{res}"
     end
-    unless taxon_concept.specific_annotation_symbol.blank?
-      res += "\\superscript{#{taxon_concept.specific_annotation_symbol}}"
+    unless taxon_concept.ann_symbol.blank?
+      res += "\\superscript{#{taxon_concept.ann_symbol}}"
     end
     res
   end
