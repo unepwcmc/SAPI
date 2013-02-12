@@ -11,19 +11,6 @@ class Checklist::History < Checklist::Checklist
     @download_name = "ChecklistHistory-#{Time.now}.#{ext}"
   end
 
-  def taxon_concepts_columns
-    super() - [:current_listing, :cites_accepted,
-      :specific_annotation_symbol,
-      :english_names_ary, :spanish_names_ary, :french_names_ary, :synonyms_ary,
-      :listing_updated_at,
-      :"taxon_concepts_mview.countries_ids_ary AS tc_countries_ids_ary",
-      :kingdom_position]
-  end
-
-  def listing_changes_columns
-    super - [:taxon_concept_id] + [:symbol, :parent_symbol]
-  end
-
   def prepare_kingdom_queries
     @animalia_rel = @taxon_concepts_rel.where("kingdom_position = 0")
     @plantae_rel = @taxon_concepts_rel.where("kingdom_position = 1")

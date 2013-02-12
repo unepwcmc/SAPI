@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.11'
+gem 'rails', '3.2.12'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -10,6 +10,7 @@ gem 'pg_array_parser'
 gem 'activerecord-postgres-hstore'
 #gem 'partitioned', :git => 'git@github.com:agnessa/partitioned.git'
 gem 'awesome_nested_set'
+gem 'json', '>=1.7.7'
 gem 'foreigner'
 gem 'oj'
 gem 'jsonify'

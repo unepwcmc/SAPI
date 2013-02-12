@@ -208,6 +208,14 @@ class MTaxonConcept < ActiveRecord::Base
     db_ary_to_array :synonyms_ary
   end
 
+  def synonyms_author_years
+    db_ary_to_array :synonyms_author_years_ary
+  end
+
+  def synonyms_with_authors
+    synonyms.each_with_index.map { |syn, idx| "#{syn} #{synonyms_author_years[idx]}" }
+  end
+
   def db_ary_to_array ary
     if respond_to?(ary)
       parse_pg_array( send(ary)|| '').compact.map do |e|
@@ -298,7 +306,7 @@ class MTaxonConcept < ActiveRecord::Base
   end
 
   # returns the ids of parties associated with current listing changes
-  def current_party_ids
+  def current_parties_ids
     if current_listing_changes.size > 0
       current_listing_changes.
         where(:change_type_name => ChangeType::ADDITION).map(&:party_id)
