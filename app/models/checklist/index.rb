@@ -11,12 +11,6 @@ class Checklist::Index < Checklist::Checklist
     @download_name = "FullChecklist-#{Time.now}.#{ext}"
   end
 
-  def taxon_concepts_columns
-    super +
-    [:generic_annotation_parent_symbol] -
-    [:specific_annotation_symbol]
-  end
-
   def prepare_main_query
     @taxon_concepts_rel = @taxon_concepts_rel.without_nc.without_hidden
   end
