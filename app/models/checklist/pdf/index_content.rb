@@ -4,10 +4,21 @@
 module Checklist::Pdf::IndexContent
 
   def content(tex)
+    annotations_key(tex)
     fetcher = Checklist::Pdf::IndexFetcher.new(@animalia_query)
     kingdom(tex, fetcher, 'FAUNA')
     fetcher = Checklist::Pdf::IndexFetcher.new(@plantae_query)
     kingdom(tex, fetcher, 'FLORA')
+  end
+
+  def annotations_key(tex)
+    tex << "\\cpart{SUPERSCRIPT ANNOTATIONS KEY}\n"
+    tex << "\\begin{itemize}\n"
+    Annotation.where(:display_in_index => true).
+      order(:symbol).each do |ann|
+        tex << "\\item[#{ann.symbol}] #{ann.full_note_en}\n"
+      end
+    tex << "\\end{itemize}\n"
   end
 
   def kingdom(tex, fetcher, kingdom_name)
