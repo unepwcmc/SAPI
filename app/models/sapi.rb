@@ -16,9 +16,11 @@ module Sapi
   ]
 
   def self.rebuild(options = {})
+    self.disable_triggers
     procedures = REBUILD_PROCEDURES - (options[:except] || [])
     procedures &= options[:only] unless options[:only].nil?
     procedures.each{ |p| ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()") }
+    self.enable_triggers
   end
 
   def self.rebuild_taxonomy
