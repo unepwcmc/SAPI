@@ -65,7 +65,12 @@ class Checklist::Checklist
     json_options[:methods] << :english_names if @english_common_names
     json_options[:methods] << :spanish_names if @spanish_common_names
     json_options[:methods] << :french_names if @french_common_names
-    json_options[:methods] << :synonyms if @synonyms
+    if @synonyms && @authors
+      json_options[:methods] << :synonyms_with_authors if @authors
+    elsif @synonyms
+      json_options[:methods] << :synonyms
+    end
+    puts json_options.inspect
     json_options
   end
 
@@ -104,10 +109,7 @@ class Checklist::Checklist
   #   related metadata
   def generate(page, per_page)
     @taxon_concepts_rel = @taxon_concepts_rel.
-    # if you change this join make sure synonym author names are displayed
-      joins('LEFT OUTER JOIN "listing_changes_mview"
-        ON "listing_changes_mview"."taxon_concept_id" ="taxon_concepts_mview"."id"
-        AND "listing_changes_mview"."is_current" = \'t\'').
+      includes(:current_listing_changes).
       without_nc.without_hidden
     page ||= 0
     per_page ||= 20
@@ -125,9 +127,10 @@ class Checklist::Checklist
   end
 
   def as_json(options={})
+    checklist_json_options = json_options
     [{
-      animalia: @animalia.as_json(json_options),
-      plantae: @plantae.as_json(json_options),
+      animalia: @animalia.as_json(checklist_json_options),
+      plantae: @plantae.as_json(checklist_json_options),
       result_cnt: @taxon_concepts.size,
       total_cnt: @total_cnt
     }]

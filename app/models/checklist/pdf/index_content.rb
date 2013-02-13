@@ -43,7 +43,9 @@ module Checklist::Pdf::IndexContent
   end
 
   def synonym_entry(tc)
-    "\\textit{#{LatexToPdf.escape_latex(tc.sort_name)} = #{tc.full_name}}"
+    res = "\\textit{#{LatexToPdf.escape_latex(tc.sort_name)} = #{tc.full_name}}"
+    res += " \\textit{#{LatexToPdf.escape_latex(tc.author_year)}}" if @authors
+    res
   end
 
   def common_name_entry(tc)
