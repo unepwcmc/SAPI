@@ -5,19 +5,10 @@ class Checklist::Csv::Index < Checklist::Index
   def taxon_concepts_csv_columns
     all_json_options = taxon_concepts_json_options
     res = all_json_options[:only] + all_json_options[:methods]
-    res -= [:ancestors_path, :ann_symbol, :countries_ids]
+    res -= [:ancestors_path, :countries_ids]
     res += [:countries_iso_codes, :countries_full_names]
-    case I18n.locale
-    when :es
-      res +=
-        [:hash_full_note_es, :full_note_es]
-    when:fr
-      res +=
-        [:hash_full_note_fr, :full_note_fr]
-    else
-      res +=
-        [:hash_full_note_en, :full_note_en]
-    end
+    res += [:short_note_es, :short_note_fr, :short_note_en,
+      :hash_full_note_en, :full_note_en]
     res
   end
 

@@ -73,6 +73,10 @@ class MListingChange < ActiveRecord::Base
     end
   end
 
+  def full_symbol
+    "#{parent_symbol}#{symbol}"
+  end
+
   def countries_ids
     if respond_to?(:countries_ids_ary) && countries_ids_ary?
       parse_pg_array(countries_ids_ary || '').compact

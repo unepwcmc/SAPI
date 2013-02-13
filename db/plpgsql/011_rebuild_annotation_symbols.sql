@@ -25,13 +25,13 @@ CREATE OR REPLACE FUNCTION rebuild_annotation_symbols() RETURNS void
           GROUP BY taxon_concept_id, kingdom_position, full_name
           ORDER BY kingdom_position, full_name
         ) ordered_annotations
-        WHERE ordered_annotations.id = annotations.id
+        WHERE ordered_annotations.id = annotations.id;
 
         UPDATE taxon_concepts
-        SET listing = listing - ['cites_ann_symbol', 'cites_hash_ann_symbol', 'cites_hash_ann_parent_symbol']
+        SET listing = listing - ARRAY['ann_symbol', 'hash_ann_symbol', 'hash_ann_parent_symbol'];
 
         UPDATE taxon_concepts
-        SET listing = listing || hstore('cites_ann_symbol', taxon_concept_annotations.symbol)
+        SET listing = listing || hstore('ann_symbol', taxon_concept_annotations.symbol)
         FROM
         (
           SELECT taxon_concept_id, MAX(annotations.symbol) AS symbol
@@ -45,12 +45,12 @@ CREATE OR REPLACE FUNCTION rebuild_annotation_symbols() RETURNS void
           WHERE is_current = TRUE AND display_in_index = TRUE
           GROUP BY taxon_concept_id
         ) taxon_concept_annotations
-        WHERE taxon_concept_annotations.taxon_concept_id = taxon_concepts.id
+        WHERE taxon_concept_annotations.taxon_concept_id = taxon_concepts.id;
 
         UPDATE taxon_concepts
         SET listing = listing ||
-          hstore('cites_hash_ann_symbol', taxon_concept_hash_annotations.symbol) ||
-          hstore('cites_hash_ann_parent_symbol', taxon_concept_hash_annotations.parent_symbol)
+          hstore('hash_ann_symbol', taxon_concept_hash_annotations.symbol) ||
+          hstore('hash_ann_parent_symbol', taxon_concept_hash_annotations.parent_symbol)
         FROM
         (
           SELECT taxon_concept_id, MAX(annotations.symbol) AS symbol, MAX(annotations.parent_symbol) AS parent_symbol
@@ -64,7 +64,7 @@ CREATE OR REPLACE FUNCTION rebuild_annotation_symbols() RETURNS void
           WHERE is_current = TRUE
           GROUP BY taxon_concept_id
         ) taxon_concept_hash_annotations
-        WHERE taxon_concept_hash_annotations.taxon_concept_id = taxon_concepts.id
+        WHERE taxon_concept_hash_annotations.taxon_concept_id = taxon_concepts.id;
 
         END;
       $$;

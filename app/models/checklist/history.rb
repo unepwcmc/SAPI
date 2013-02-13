@@ -47,11 +47,11 @@ class Checklist::History < Checklist::Checklist
   def taxon_concepts_json_options
     json_options = super
     #less taxon information for the history
+    json_options[:only] -= [:hash_ann_symbol]
     json_options[:only] -= [
       :current_listing, :cites_accepted, :ann_symbol,
       :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
-      :genus_name, :species_name,
-      :hash_ann_symbol, :hash_ann_parent_symbol
+      :genus_name, :species_name
     ]
     json_options[:methods] -= [:recently_changed, :countries_ids,
       :english_names, :spanish_names, :french_names, :synonyms,
@@ -61,21 +61,10 @@ class Checklist::History < Checklist::Checklist
 
   def listing_changes_json_options
     json_options = super
-    case I18n.locale
-    when :es
-      json_options[:only] +=
-        [:hash_full_note_es, :full_note_es, :short_note_es]
-    when :fr
-      json_options[:only] +=
-        [:hash_full_note_fr, :full_note_es, :short_note_fr]
-    else
-      json_options[:only] +=
-        [:hash_full_note_en, :full_note_en, :short_note_en]
-    end
+    json_options[:only] -= [:symbol]
+    json_options[:only] += [:short_note_fr, :short_note_en]
     json_options[:methods] -= [:countries_ids]
-    json_options[:methods] += [:countries_iso_codes]
-    #these only make sense for the online checklist
-    json_options[:methods] -= [:short_note, :full_note, :hash_full_note]
+    json_options[:methods] += [:countries_iso_codes, :full_symbol]
     json_options
   end
 

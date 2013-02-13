@@ -53,9 +53,7 @@ class Checklist::Checklist
       :only => [
         :id, :full_name, :rank_name, :current_listing, :cites_accepted,
         :species_name, :genus_name, :family_name, :order_name,
-        :class_name, :phylum_name, :kingdom_name,
-        :ann_symbol, :hash_ann_symbol,
-        :hash_ann_parent_symbol
+        :class_name, :phylum_name, :kingdom_name, :hash_ann_symbol
       ],
       :methods => [:countries_ids, :ancestors_path, :recently_changed,
         :current_parties_ids]
@@ -70,18 +68,16 @@ class Checklist::Checklist
     elsif @synonyms
       json_options[:methods] << :synonyms
     end
-    puts json_options.inspect
     json_options
   end
 
   def listing_changes_json_options
     json_options = {
       :only => [:id, :change_type_name, :species_listing_name, :party_name,
-        :party_id, :is_current, :symbol, :parent_symbol],
+        :party_id, :is_current, :symbol,
+        :short_note_en, :full_note_en, :hash_full_note_en],
       :methods => [:countries_ids, :effective_at_formatted]
     }
-    json_options[:methods] += [:short_note, :full_note, :hash_full_note]
-
     json_options
   end
 

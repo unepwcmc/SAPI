@@ -264,7 +264,7 @@ class MTaxonConcept < ActiveRecord::Base
   end
 
   ['en', 'es', 'fr'].each do |lng|
-    ["hash_full_note_#{lng.downcase}", "full_note_#{lng.downcase}"].each do |method_name|
+    ["hash_full_note_#{lng.downcase}", "full_note_#{lng.downcase}", "short_note_#{lng.downcase}"].each do |method_name|
       define_method(method_name) do
         current_listing_changes.map do |lc|
           note = lc.send(method_name)
