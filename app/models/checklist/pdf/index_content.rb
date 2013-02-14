@@ -12,13 +12,16 @@ module Checklist::Pdf::IndexContent
   end
 
   def annotations_key(tex)
-    tex << "\\cpart{SUPERSCRIPT ANNOTATIONS KEY}\n"
-    tex << "\\begin{itemize}\n"
-    Annotation.where(:display_in_index => true).
-      order(:symbol).each do |ann|
-        tex << "\\item[#{ann.symbol}] #{ann.full_note_en}\n"
-      end
-    tex << "\\end{itemize}\n"
+    index_annotations = Annotation.where(:display_in_index => true).
+      order(:symbol)
+    if index_annotations.size > 0
+      tex << "\\cpart{SUPERSCRIPT ANNOTATIONS KEY}\n"
+      tex << "\\begin{itemize}\n"
+      index_annotations.each do |ann|
+          tex << "\\item[#{ann.symbol}] #{ann.full_note_en}\n"
+        end
+      tex << "\\end{itemize}\n"
+    end
   end
 
   def kingdom(tex, fetcher, kingdom_name)

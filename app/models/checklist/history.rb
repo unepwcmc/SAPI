@@ -62,9 +62,9 @@ class Checklist::History < Checklist::Checklist
   def listing_changes_json_options
     json_options = super
     json_options[:only] -= [:symbol]
-    json_options[:only] += [:short_note_fr, :short_note_en]
+    json_options[:only] += [:short_note_fr, :short_note_es]
     json_options[:methods] -= [:countries_ids]
-    json_options[:methods] += [:countries_iso_codes, :full_symbol]
+    json_options[:methods] += [:countries_iso_codes, :full_hash_ann_symbol]
     json_options
   end
 

@@ -3,19 +3,18 @@
 # Table name: listing_changes
 #
 #  id                         :integer          not null, primary key
+#  taxon_concept_id           :integer          not null
 #  species_listing_id         :integer
-#  taxon_concept_id           :integer
-#  change_type_id             :integer
+#  change_type_id             :integer          not null
+#  effective_at               :datetime         default(2012-09-21 07:32:20 UTC), not null
+#  is_current                 :boolean          default(FALSE), not null
+#  annotation_id              :integer
+#  parent_id                  :integer
+#  inclusion_taxon_concept_id :integer
 #  lft                        :integer
 #  rgt                        :integer
-#  parent_id                  :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
-#  effective_at               :datetime         default(2012-09-21 07:32:20 UTC), not null
-#  annotation_id              :integer
-#  is_current                 :boolean          default(FALSE), not null
-#  inclusion_taxon_concept_id :integer
-#  import_row_id              :integer
 #  hash_annotation_id         :integer
 #
 
@@ -36,6 +35,7 @@ class ListingChange < ActiveRecord::Base
   has_one :party_geo_entity, :class_name => 'GeoEntity',
     :through => :party_listing_distribution, :source => :geo_entity
   belongs_to :annotation
+  belongs_to :hash_annotation, :class_name => 'Annotation'
   belongs_to :parent, :class_name => 'ListingChange'
   belongs_to :inclusion, :class_name => 'TaxonConcept', :foreign_key => 'inclusion_taxon_concept_id'
   has_many :exclusions, :class_name => 'ListingChange', :foreign_key => 'parent_id', :dependent => :destroy

@@ -26,9 +26,14 @@ module Checklist::Csv::Document
       :hash_full_note_en => '#AnnotationEnglish',
       :hash_full_note_es => '#AnnotationSpanish',
       :hash_full_note_fr => '#AnnotationFrench',
-      :full_note_en => 'AnnotationEnglish',
-      :full_note_es => 'AnnotationSpanish',
-      :full_note_fr => 'AnnotationFrench'
+      :full_hash_ann_symbol => '#AnnotationSymbol',
+      :hash_ann_symbol => '#AnnotationSymbol',
+      :full_note_en => 'LongAnnotationEnglish',
+      :full_note_es => 'LongAnnotationSpanish',
+      :full_note_fr => 'LongAnnotationFrench',
+      :short_note_en => 'AnnotationEnglish',
+      :short_note_es => 'AnnotationSpanish',
+      :short_note_fr => 'AnnotationFrench'
     }
     aliases[col] || col.to_s.camelize
   end

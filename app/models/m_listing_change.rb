@@ -2,32 +2,33 @@
 #
 # Table name: listing_changes_mview
 #
-#  id                   :integer          primary key
-#  taxon_concept_id     :integer
-#  effective_at         :datetime
-#  species_listing_id   :integer
-#  species_listing_name :string(255)
-#  change_type_id       :integer
-#  change_type_name     :string(255)
-#  party_id             :integer
-#  party_name           :string(255)
-#  full_note_en         :text
-#  full_note_es         :text
-#  full_note_fr         :text
-#  short_note_en        :string(255)
-#  short_note_es        :string(255)
-#  short_note_fr        :string(255)
-#  display_in_index     :boolean
-#  display_in_footnote  :boolean
-#  symbol               :string(255)
-#  parent_symbol        :string(255)
-#  hash_full_note_en    :text
-#  hash_full_note_es    :text
-#  hash_full_note_fr    :text
-#  is_current           :boolean
-#  countries_ids_ary    :string
-#  dirty                :boolean
-#  expiry               :datetime
+#  id                     :integer          primary key
+#  taxon_concept_id       :integer
+#  effective_at           :datetime
+#  species_listing_id     :integer
+#  species_listing_name   :string(255)
+#  change_type_id         :integer
+#  change_type_name       :string(255)
+#  party_id               :integer
+#  party_name             :string(255)
+#  ann_symbol             :string(255)
+#  full_note_en           :text
+#  full_note_es           :text
+#  full_note_fr           :text
+#  short_note_en          :text
+#  short_note_es          :text
+#  short_note_fr          :text
+#  display_in_index       :boolean
+#  display_in_footnote    :boolean
+#  hash_ann_symbol        :string(255)
+#  hash_ann_parent_symbol :string(255)
+#  hash_full_note_en      :text
+#  hash_full_note_es      :text
+#  hash_full_note_fr      :text
+#  is_current             :boolean
+#  countries_ids_ary      :string
+#  dirty                  :boolean
+#  expiry                 :datetime
 #
 
 #TODO party_name should actually be renamed to party_iso_code
@@ -40,41 +41,8 @@ class MListingChange < ActiveRecord::Base
     effective_at.strftime("%d/%m/%y")
   end
 
-  def short_note
-    case I18n.locale
-      when :es
-        short_note_es
-      when :fr
-        short_note_fr
-      else
-        short_note_en
-    end
-  end
-
-  def full_note
-    case I18n.locale
-      when :es
-        full_note_es
-      when :fr
-        full_note_fr
-      else
-        full_note_en
-    end
-  end
-
-  def hash_full_note
-    case I18n.locale
-      when :es
-        hash_full_note_es
-      when :fr
-        hash_full_note_fr
-      else
-        hash_full_note_en
-    end
-  end
-
-  def full_symbol
-    "#{parent_symbol}#{symbol}"
+  def full_hash_ann_symbol
+    "#{hash_ann_parent_symbol}#{hash_ann_symbol}"
   end
 
   def countries_ids
@@ -105,11 +73,9 @@ class MListingChange < ActiveRecord::Base
         :only => [
           :id, :change_type_name, :species_listing_name, :party_id,
           :is_current, :hash_ann_symbol, :hash_ann_parent_symbol,
-          :effective_at
+          :effective_at, :short_note_en, :full_note_en, :hash_full_note_en
         ],
-        :methods => [
-          :short_note, :full_note, :hash_full_note, :countries_ids
-        ]
+        :methods => [:countries_ids]
       ).symbolize_keys
     )
   end
