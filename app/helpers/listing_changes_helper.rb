@@ -30,4 +30,10 @@ module ListingChangesHelper
     end
   end
 
+  def hash_annotation_tooltip(listing_change)
+    if listing_change.hash_annotation
+      listing_change.hash_annotation.full_note_en
+    end
+  end
+
 end

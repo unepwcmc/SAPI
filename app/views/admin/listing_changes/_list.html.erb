@@ -41,6 +41,9 @@
         <a rel="tooltip" href="#"
           data-original-title="<%= annotation_tooltip(listing_change) %>"
         ><%= true_false_icon(listing_change.annotation) %></a>
+        <a rel="tooltip" href="#"
+          data-original-title="<%= hash_annotation_tooltip(listing_change) %>"
+        ><%= true_false_icon(listing_change.hash_annotation) %></a>
       </td>
       <td>
         <%= link_to edit_icon,

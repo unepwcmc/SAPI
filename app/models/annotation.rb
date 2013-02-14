@@ -24,4 +24,9 @@ class Annotation < ActiveRecord::Base
     :display_in_index, :display_in_footnote
   belongs_to :listing_change
   translates :short_note, :full_note
+  scope :for_cites_plants, where('parent_symbol IS NOT NULL').
+    order([:parent_symbol, :symbol])
+  def full_symbol
+    "#{parent_symbol}#{symbol}"
+  end
 end

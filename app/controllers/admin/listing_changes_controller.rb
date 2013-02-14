@@ -83,6 +83,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       where(:designation_id => @designation.id)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+    @hash_annotations = Annotation.for_cites_plants
   end
 
   def load_listing_changes
