@@ -8,44 +8,48 @@ module TaxonConceptHelper
         else
           controller_name.titleize
         end
-      ) +
-      admin_add_new_hybrid_button +
-      admin_add_new_synonym_button +
-      admin_add_new_button
+      ) + content_tag(:div, :class => 'action-buttons') do
+        admin_add_new_taxon_concept_multi
+      end
     end
   end
 
-  def admin_add_new_synonym_button(nested = false)
-    if nested
-      admin_add_new_button(
-        :resource => 'taxon_concept_synonym',
-        :href => new_admin_taxon_concept_synonym_relationship_url(@taxon_concept),
-        :remote => true,
-        :"data-toggle" => nil,
-        :role => nil
-      )
-    else
-      admin_add_new_button(
-        :resource => 'taxon_concept_synonym',
-        :name => 'Add new synonym'
-      )
+  def admin_add_new_taxon_concept_multi
+    content_tag(:div, :class => 'btn-group', :style => 'float:right') do
+      link_to('<i class="icon-plus-sign"></i> Add new Taxon Concept'.html_safe, '#', :class => 'btn') +
+      link_to('<span class="caret"></span>'.html_safe, '#', :class => 'btn dropdown-toggle', :"data-toggle" => 'dropdown') +
+      content_tag(:ul, :class => 'dropdown-menu') do
+        content_tag(:li) do
+          link_to('Accepted name', '#new-taxon_concept', :"data-toggle" => 'modal')
+        end +
+        content_tag(:li) do
+          link_to('Synonym', '#new-taxon_concept_synonym', :"data-toggle" => 'modal')
+        end +
+        content_tag(:li) do
+          link_to('Hybrid', '#new-taxon_concept_hybrid', :"data-toggle" => 'modal')
+        end
+      end
     end
   end
 
-  def admin_add_new_hybrid_button(nested = false)
-    if nested
-      admin_add_new_button(
-        :resource => 'taxon_concept_hybrid',
-        :href => new_admin_taxon_concept_hybrid_relationship_url(@taxon_concept),
-        :remote => true,
-        :"data-toggle" => nil,
-        :role => nil
-      )
-    else
-      admin_add_new_button(
-        :resource => 'taxon_concept_hybrid'
-      )
-    end
+  def admin_add_new_synonym_button
+    admin_add_new_button(
+      :resource => 'taxon_concept_synonym',
+      :href => new_admin_taxon_concept_synonym_relationship_url(@taxon_concept),
+      :remote => true,
+      :"data-toggle" => nil,
+      :role => nil
+    )
+  end
+
+  def admin_add_new_hybrid_button
+    admin_add_new_button(
+      :resource => 'taxon_concept_hybrid',
+      :href => new_admin_taxon_concept_hybrid_relationship_url(@taxon_concept),
+      :remote => true,
+      :"data-toggle" => nil,
+      :role => nil
+    )
   end
 
   def admin_new_synonym_modal(nested = false)
@@ -54,7 +58,7 @@ module TaxonConceptHelper
     ){ nested ? '' : render('synonym_form') }
   end
 
-  def admin_add_new_distribution_button(nested = false)
+  def admin_add_new_distribution_button
     admin_add_new_button(
       :resource => 'distributions',
       :href => new_admin_taxon_concept_distribution_url(@taxon_concept),
