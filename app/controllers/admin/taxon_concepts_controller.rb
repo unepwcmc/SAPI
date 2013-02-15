@@ -1,6 +1,7 @@
 class Admin::TaxonConceptsController < Admin::SimpleCrudController
   respond_to :json
   layout :determine_layout
+  before_filter :sanitize_search_params, :only => [:index, :autocomplete]
 
   def index
     @taxonomies = Taxonomy.order(:name)
@@ -12,7 +13,9 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     @hybrid = TaxonConcept.new(:name_status => 'H')
     @hybrid.build_taxon_name
     @tags = TaxonConcept.tag_counts_on('tags')
-    index!
+    @taxon_concepts = TaxonConceptMatcher.new(@search_params).taxon_concepts.
+      includes([:rank, :taxonomy, :taxon_name, :parent]).
+      order(:taxonomic_position).page(params[:page])
   end
 
   def edit
@@ -65,9 +68,8 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   end
 
   def autocomplete
-    @taxon_concepts = TaxonConceptPrefixMatcher.new(
-      params.select{ |k,v| %w(scientific_name taxon_concept rank taxonomy).include? k }
-    ).taxon_concepts
+    @taxon_concepts = TaxonConceptPrefixMatcher.new(@search_params).
+     taxon_concepts
     render :json => @taxon_concepts.to_json(
       :only => [:id, :taxonomy_name],
       :methods => [:rank_name, :full_name]
@@ -75,14 +77,13 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   end
 
   protected
-    def collection
-      @taxon_concepts ||= end_of_association_chain.
-        includes([:rank, :taxonomy, :taxon_name, :parent]).
-        where(:name_status => 'A').
-        order(:taxonomic_position).page(params[:page])
-    end
 
     def determine_layout
       action_name == 'index' ? 'admin' : 'taxon_concepts'
     end
+
+    def sanitize_search_params
+      @search_params = SearchParams.new(params[:search_params] || {})
+    end
+
 end
