@@ -63,7 +63,8 @@ describe Admin::TaxonConceptsController do
       )
     }
     it "returns properly formatted json" do
-      xhr :get, :autocomplete, :format => 'json', :scientific_name => 'AAA'
+      xhr :get, :autocomplete, :format => 'json',
+        :search_params => {:scientific_name => 'AAA'}
       response.body.should have_json_size(1)
       parse_json(response.body, "0/full_name").should == 'AAA'
     end
