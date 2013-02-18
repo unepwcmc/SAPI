@@ -63,6 +63,10 @@ class MListingChange < ActiveRecord::Base
     CountryDictionary.instance.get_names_by_ids(countries_ids)
   end
 
+  def party_iso_code
+    CountryDictionary.instance.get_iso_code_by_id(party_id)
+  end
+
   def party_full_name
     CountryDictionary.instance.get_name_by_id(party_id)
   end

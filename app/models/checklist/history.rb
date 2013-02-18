@@ -20,6 +20,7 @@ class Checklist::History < Checklist::Checklist
     @taxon_concepts_rel = @taxon_concepts_rel.
       includes(:listing_changes).
       where("cites_listed = 't'").
+      where("listing_changes_mview.change_type_name <> 'EXCEPTION'").
       where("NOT (listing_changes_mview.change_type_name = 'DELETION' " +
         "AND listing_changes_mview.species_listing_name IS NOT NULL " +
         "AND listing_changes_mview.party_name IS NULL)"

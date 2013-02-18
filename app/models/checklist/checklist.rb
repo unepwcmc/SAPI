@@ -64,7 +64,7 @@ class Checklist::Checklist
     json_options[:methods] << :spanish_names if @spanish_common_names
     json_options[:methods] << :french_names if @french_common_names
     if @synonyms && @authors
-      json_options[:methods] << :synonyms_with_authors if @authors
+      json_options[:methods] << :synonyms_with_authors
     elsif @synonyms
       json_options[:methods] << :synonyms
     end

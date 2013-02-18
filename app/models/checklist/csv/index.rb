@@ -3,13 +3,23 @@ class Checklist::Csv::Index < Checklist::Index
   include Checklist::Csv::IndexContent
 
   def taxon_concepts_csv_columns
-    all_json_options = taxon_concepts_json_options
-    res = all_json_options[:only] + all_json_options[:methods]
-    res -= [:ancestors_path, :countries_ids]
-    res += [:countries_iso_codes, :countries_full_names]
-    res += [:short_note_es, :short_note_fr, :short_note_en,
-      :hash_full_note_en, :full_note_en]
-    res
+    [
+      :id,
+      :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
+      :genus_name, :species_name, :subspecies_name,
+      :full_name, :author_year, :rank_name, :current_listing,
+      :full_note_en, :short_note_en, :short_note_es, :short_note_fr,
+      :hash_ann_symbol, :hash_full_note_en,
+      if @synonyms && @authors
+        :synonyms_with_authors
+      elsif @synonyms
+        :synonyms
+      end,
+      if @english_common_names then :english_names end,
+      if @spanish_common_names then :spanish_names end,
+      if @french_common_names then :french_names end,
+      :cites_accepted, :countries_iso_codes, :countries_full_names
+    ]
   end
 
   def listing_changes_csv_columns
