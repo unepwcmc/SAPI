@@ -1,0 +1,21 @@
+<thead>
+  <th>Name</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |event| -%>
+    <tr>
+      <td>
+        <a href="#" class="editable editable-click editable-required"
+          data-type="text" data-resource="event" data-name="name"
+          data-placeholder="Required" data-original-title="Enter the event's name"
+          data-url="<%= resource_url(event) %>" data-pk="<%= event.id %>">
+          <%= event.name %>
+        </a>
+      </td>
+      <td>
+        <%= link_to 'Delete', resource_url(event), :confirm => "Are you sure?", :method => :delete %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>

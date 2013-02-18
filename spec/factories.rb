@@ -10,6 +10,10 @@ FactoryGirl.define do
     taxonomy
   end
 
+  factory :event do
+    sequence(:name) {|n| "CoP#{n}"}
+  end
+
   factory :taxon_name do
     sequence(:scientific_name) {|n| "lupus#{n}"}
   end
