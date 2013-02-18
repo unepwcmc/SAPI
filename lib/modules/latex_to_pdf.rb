@@ -1,3 +1,4 @@
+#Encoding: UTF-8
 class LatexToPdf
   def self.config
     @config ||= {
@@ -74,4 +75,12 @@ class LatexToPdf
 
     @latex_escaper.latex_esc(text.to_s)#.html_safe
   end
+
+  def self.sanitize(text)
+    text.gsub!(//, '\'')
+    text.gsub!(//,'\'')
+    text.gsub!(/<i>(.*)<\/i>/, "\\textit{#{$1}}")
+    text
+  end
+
 end
