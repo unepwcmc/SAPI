@@ -1,6 +1,5 @@
 <thead>
   <th>Name</th>
-  <th>Type</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
@@ -12,13 +11,6 @@
           data-placeholder="Required" data-original-title="Enter the tag name"
           data-url="<%= resource_url(tag) %>" data-pk="<%= tag.id %>">
           <%= tag.name %>
-        </a>
-      </td>
-      <td>
-        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="tag" data-name="model"
-          data-placeholder="Required" data-original-title="Enter the tag type"
-          data-url="<%= resource_url(tag) %>" data-pk="<%= tag.id %>">
-          <%= tag.model %>
         </a>
       </td>
       <td>
