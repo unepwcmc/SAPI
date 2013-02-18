@@ -31,46 +31,58 @@ describe TaxonConceptPrefixMatcher do
   }
 
   context "when rank scope applied" do
-    let(:parent_matcher){
-      TaxonConceptPrefixMatcher.new(
+    let(:parent_matcher_params){
+      SearchParams.new(
         :taxonomy => {:id => taxonomy.id},
         :rank => {:id => taxon_concept4.rank_id, :scope => :parent},
         :scientific_name => 'A'
       )
     }
-  
+    let(:parent_matcher){
+      TaxonConceptPrefixMatcher.new parent_matcher_params
+    }
+
     specify{ parent_matcher.taxon_concepts.map(&:full_name).should ==
       ['Aaa', 'Aab'] }
-  
-    let(:ancestor_matcher){
-      TaxonConceptPrefixMatcher.new(
+
+    let(:ancestor_matcher_params){
+      SearchParams.new(
         :taxonomy => {:id => taxonomy.id},
         :rank => {:id => taxon_concept4.rank_id, :scope => :ancestors},
         :scientific_name => 'AAA'
       )
+    }
+    let(:ancestor_matcher){
+      TaxonConceptPrefixMatcher.new ancestor_matcher_params
     }
   
     specify{ ancestor_matcher.taxon_concepts.map(&:full_name).should ==
       ['Aaa', 'Aaa'] }
   end
   context "when taxon concept scope applied" do
-    let(:ancestor_matcher){
-      TaxonConceptPrefixMatcher.new(
+    let(:ancestor_matcher_params){
+      SearchParams.new(
         :taxonomy => {:id => taxonomy.id},
         :taxon_concept => {:id => taxon_concept4.id, :scope => :ancestors},
         :scientific_name => 'A'
       )
     }
+    let(:ancestor_matcher){
+      TaxonConceptPrefixMatcher.new ancestor_matcher_params
+    }
 
     specify{ ancestor_matcher.taxon_concepts.map(&:full_name).should ==
       ['Aaa', 'Aaa'] }
 
-    let(:descendant_matcher){
-      TaxonConceptPrefixMatcher.new(
+    let(:descendant_matcher_params){
+      SearchParams.new(
         :taxonomy => {:id => taxonomy.id},
         :taxon_concept => {:id => taxon_concept2.id, :scope => :descendants},
         :scientific_name => 'A'
       )
+    }
+    let(:descendant_matcher){
+      TaxonConceptPrefixMatcher.new descendant_matcher_params
     }
 
     specify{ descendant_matcher.taxon_concepts.map(&:full_name).should ==

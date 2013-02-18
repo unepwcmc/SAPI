@@ -50,7 +50,7 @@ module Checklist::Pdf::HistoryContent
           row << (is_lc_row && lc.party_name ? lc.party_name.upcase : '')
           row << (is_lc_row ? lc.effective_at_formatted : '')
           if kingdom_name == 'FLORA'
-            row << (is_lc_row ? "#{LatexToPdf.escape_latex(lc.symbol)}#{lc.parent_symbol}" : '')
+            row << (is_lc_row ? "#{LatexToPdf.escape_latex(lc.full_hash_ann_symbol)}" : '')
           end
           is_lc_row = false
           # ann fields
@@ -78,33 +78,21 @@ module Checklist::Pdf::HistoryContent
   end
 
   def multilingual_annotations(listing_change)
-    res = ['english', 'spanish', 'french'].map do |lng|
-      if instance_variable_get("@#{lng}_common_names")
-        annotation_for_language(listing_change, lng)
-      else
-        nil
-      end
+    res = ['en', 'es', 'fr'].map do |lng|
+      LatexToPdf.sanitize(annotation_for_language(listing_change, lng))
     end.compact
     (res.empty? ? [nil] : res)
   end
 
   def annotation_for_language(listing_change, lng)
-    full_note = listing_change.send("#{lng}_full_note")
-    if !full_note.blank?
-      full_note = LatexToPdf.escape_latex(
-        full_note
-      )
-      short_note = listing_change.send("#{lng}_short_note")
-      if !short_note.blank?
-        short_note = LatexToPdf.escape_latex(
-          short_note
-        )
-        "\\footnote{#{full_note}} #{short_note}"
-      else
-        full_note
-      end
+    short_note = listing_change.send("short_note_#{lng}")
+    short_note = LatexToPdf.escape_latex(short_note)
+    if listing_change.display_in_footnote && lng == 'en'
+      full_note = listing_change.send("full_note_#{lng}")
+      full_note = LatexToPdf.escape_latex(full_note)
+      "\\footnote{#{full_note}}{#{short_note}}"
     else
-      nil
+      short_note
     end
   end
 

@@ -15,7 +15,7 @@
 #  rgt                        :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
-#  import_row_id              :integer
+#  hash_annotation_id         :integer
 #
 
 class ListingChange < ActiveRecord::Base
@@ -23,7 +23,8 @@ class ListingChange < ActiveRecord::Base
   attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
     :effective_at, :is_current, :parent_id, :geo_entity_ids,
     :party_listing_distribution_attributes, :inclusion_scientific_name,
-    :exclusions_attributes,:exclusion_scientific_name
+    :exclusions_attributes,:exclusion_scientific_name, :annotation_attributes,
+    :hash_annotation_id
   attr_writer :inclusion_scientific_name, :exclusion_scientific_name
 
   belongs_to :species_listing
@@ -35,6 +36,7 @@ class ListingChange < ActiveRecord::Base
   has_one :party_geo_entity, :class_name => 'GeoEntity',
     :through => :party_listing_distribution, :source => :geo_entity
   belongs_to :annotation
+  belongs_to :hash_annotation, :class_name => 'Annotation'
   belongs_to :parent, :class_name => 'ListingChange'
   belongs_to :inclusion, :class_name => 'TaxonConcept', :foreign_key => 'inclusion_taxon_concept_id'
   has_many :exclusions, :class_name => 'ListingChange', :foreign_key => 'parent_id', :dependent => :destroy
@@ -54,6 +56,10 @@ class ListingChange < ActiveRecord::Base
     :reject_if => proc { |attributes|
       attributes['exclusion_scientific_name'].blank? &&
       attributes['geo_entity_ids'].reject(&:blank?).empty?
+    }
+  accepts_nested_attributes_for :annotation,
+    :reject_if => proc { |attributes|
+      attributes['short_note_en'].blank?
     }
 
   def effective_at_formatted

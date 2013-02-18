@@ -35,8 +35,9 @@ module AdminHelper
         else
           controller_name.titleize
         end
-      ) + admin_add_new_button
-
+      ) + content_tag(:div, :class => 'action-buttons') do
+        admin_add_new_button
+      end
     end
   end
 
@@ -44,7 +45,7 @@ module AdminHelper
     resource = options[:resource] || controller_name.singularize
     href = options.delete(:href) || "#new-#{resource}"
     name = options.delete(:name) || "Add new #{resource.titleize}"
-    link_to(name, href,
+    link_to('<i class="icon-plus-sign"></i> '.html_safe + name, href,
       {
         :role => "button",
         :"data-toggle" => "modal",

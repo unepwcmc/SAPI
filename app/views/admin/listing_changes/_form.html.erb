@@ -98,6 +98,32 @@
   </table>
   <p><%= f.link_to_add "Add an exclusion", :exclusions %></p>
 
+  <p>
+    <%= f.label :hash_annotation_id %>
+    <%= f.select :hash_annotation_id,
+      options_from_collection_for_select(
+        @hash_annotations, :id, :full_symbol,
+        @listing_change && @listing_change.hash_annotation_id
+      ),
+      { :include_blank => true }
+    %>
+  </p>
+
+  <%= f.fields_for :annotation do |ff| %>
+    <% Annotation.locale_columns(:short_note).each do |column| %>
+      <%= ff.label column %>
+      <%= ff.text_field column %>
+    <% end %>
+    <% Annotation.locale_columns(:full_note).each do |column| %>
+      <%= ff.label column %>
+      <%= ff.text_area column %>
+    <% end %>
+    <%= ff.label :display_in_index, :value => 'Display in index' %>
+    <%= ff.check_box :display_in_index %>
+    <%= ff.label :display_in_footnote, :value => 'Display in footnote' %>
+    <%= ff.check_box :display_in_footnote %>
+  <% end %>
+
 <% end %>
 
 <% if @taxon_concept.current_listing_changes.count > 0 %>

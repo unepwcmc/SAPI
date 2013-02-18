@@ -68,7 +68,27 @@ class AdminInPlaceEditor extends AdminEditor
 
 class TaxonConceptsEditor extends AdminEditor
   initTaxonConceptTypeaheads: () ->
-    $('.typeahead').each (idx) ->
+    $('.search-typeahead').typeahead
+      source: (query, process) ->
+        $.get('/admin/taxon_concepts/autocomplete',
+        {
+          search_params: {
+            scientific_name: query,
+            taxonomy: {
+              id: $('#search_params_taxonomy_id').val()
+            }
+          }
+          limit: 25
+        }, (data) =>
+          labels = []
+          $.each(data, (i, item) =>
+            label = item.full_name
+            labels.push(label)
+          )
+          return process(labels)
+        )
+
+    $('input.typeahead').each (idx) ->
       formId = $(@).closest('form').attr('id')
       matches = formId.match('^(.+_)?(new|edit)_(.+)$')
       prefix = matches[3]
@@ -76,25 +96,22 @@ class TaxonConceptsEditor extends AdminEditor
 
       taxonomyEl = $('#' + prefix + '_taxonomy_id')
       rankEl = $('#' + prefix + '_rank_id')
-      taxonomyId = if taxonomyEl
-        taxonomyEl.attr('value')
-      else
-        $(@).attr('data-taxonomy-id')
-      rankId = if rankEl
-        rankEl.attr('value')
-      else
-        $(@).attr('data-rank-id')
-
-      rankScope = $(@).attr('data-rank-scope')
 
       #initialize this typeahead
       $(@).typeahead
         source: (query, process) ->
           $.get('/admin/taxon_concepts/autocomplete',
           {
-            scientific_name: query,
-            taxonomy: {id: taxonomyId},
-            rank: {id: rankId, scope: rankScope},
+            search_params: {
+              scientific_name: query,
+              taxonomy: {
+                id: taxonomyEl && taxonomyEl.val() || $(@).attr('data-taxonomy-id')
+              },
+              rank: {
+                id: rankEl && rankEl.val() || $(@).attr('data-rank-id'),
+                scope: $(@).attr('data-rank-scope')
+              }
+            }
             limit: 25
           }, (data) =>
             labels = []
@@ -105,7 +122,7 @@ class TaxonConceptsEditor extends AdminEditor
             return process(labels)
           )
         $().add(taxonomyEl).add(rankEl).change () =>
-          $(@).attr('value', null)
+          $(@).val(null)
 
   initModals: () ->
     super
@@ -145,10 +162,12 @@ class ListingChangesEditor extends AdminEditor
       source: (query, process) ->
         $.get('/admin/taxon_concepts/autocomplete',
         {
-          scientific_name: query,
-          taxon_concept: {
-            id: @.$element.attr('data-taxon-concept-id'),
-            scope: @.$element.attr('data-taxon-concept-scope')
+          search_params: {
+            scientific_name: query,
+            taxon_concept: {
+              id: @.$element.attr('data-taxon-concept-id'),
+              scope: @.$element.attr('data-taxon-concept-scope')
+            }
           }
           limit: 25
         }, (data) =>
