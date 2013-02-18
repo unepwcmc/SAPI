@@ -15,6 +15,18 @@ module Sapi
     :listing_changes_mview
   ]
 
+  TABLES_WITH_TRIGGERS = [
+    :taxon_concepts,
+    :ranks,
+    :taxon_names,
+    :common_names,
+    :taxon_commons,
+    :taxon_relationships,
+    :geo_entities,
+    :distributions,
+    :taxon_concept_references,
+  ]
+
   def self.rebuild(options = {})
     procedures = REBUILD_PROCEDURES - (options[:except] || [])
     procedures &= options[:only] unless options[:only].nil?
@@ -51,28 +63,18 @@ module Sapi
     rebuild_listing_changes_mview
   end
 
+  
+
   def self.disable_triggers
-    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_concepts DISABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE ranks DISABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_names DISABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE common_names DISABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_commons DISABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_relationships DISABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE geo_entities DISABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE distributions DISABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_concept_references DISABLE TRIGGER ALL")
+    TABLES_WITH_TRIGGERS.each do |table|
+      ActiveRecord::Base.connection.execute("ALTER TABLE IF EXISTS #{table} DISABLE TRIGGER ALL")
+    end
   end
 
   def self.enable_triggers
-    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_concepts ENABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE ranks ENABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_names ENABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE common_names ENABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_commons ENABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_relationships ENABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE geo_entities ENABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE distributions ENABLE TRIGGER ALL")
-    ActiveRecord::Base.connection.execute("ALTER TABLE taxon_concept_references ENABLE TRIGGER ALL")
+    TABLES_WITH_TRIGGERS.each do |table|
+      ActiveRecord::Base.connection.execute("ALTER TABLE IF EXISTS #{table} ENABLE TRIGGER ALL")
+    end
   end
 
   def self.drop_indices

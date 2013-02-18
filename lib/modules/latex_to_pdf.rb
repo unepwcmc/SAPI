@@ -79,6 +79,8 @@ class LatexToPdf
   def self.sanitize(text)
     text.gsub!(//, '\'')
     text.gsub!(//,'\'')
+    text.gsub!(//,'\'')
+    text.gsub!(//,'\'')
     text.gsub!(/<i>(.*)<\/i>/, "\\textit{#{$1}}")
     text
   end
