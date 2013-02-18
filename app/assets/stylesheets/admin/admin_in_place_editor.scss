@@ -10,8 +10,12 @@
     float: left;
     width: 50%;
   }
-  a {
+  .action-buttons {
     float:right;
+    text-align: right;
+    width: 50%;
+    line-height: 40px;
+    margin: 10px 0;
   }
   clear:both;
 }
@@ -21,7 +25,7 @@ ul.dropdown-menu {
 }
 
 .editableform-loading {
-  background: image-url('loading.gif') center center no-repeat;  
+  background: image-url('loading.gif') center center no-repeat;
   height: 20px;
 }
 
