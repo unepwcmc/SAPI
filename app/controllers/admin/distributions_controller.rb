@@ -46,6 +46,6 @@ class Admin::DistributionsController < Admin::SimpleCrudController
   def load_tags_and_geo_entities
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
             where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
-    @tags = Distribution.tag_counts_on('tags')
+    @tags = ActsAsTaggableOn::Tag.all
   end
 end
