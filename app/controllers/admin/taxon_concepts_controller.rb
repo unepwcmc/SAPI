@@ -83,7 +83,11 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     end
 
     def sanitize_search_params
-      @search_params = SearchParams.new(params[:search_params] || {})
+      @search_params = SearchParams.new(
+        params[:search_params] || 
+        { :taxonomy => { :id => Taxonomy.
+          where(:name => Taxonomy::CITES_EU).limit(1).select(:id).first.id }
+        })
     end
 
 end
