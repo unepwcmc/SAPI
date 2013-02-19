@@ -1,6 +1,6 @@
 <%= admin_new_modal({:title => "Current Listing Changes"}) { render "current_listing_changes_form" } %>
 
-<%= nested_form_for [:admin, @taxon_concept, @designation, @listing_change], :remote => true do |f| %>
+<%= nested_form_for [:admin, @taxon_concept, @designation, @listing_change] do |f| %>
   <%= error_messages_for(@listing_change) %>
 
   <table class="listing-change">
