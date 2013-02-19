@@ -1,0 +1,30 @@
+<% if @taxon_concept.current_listing_changes.count > 0 %>
+  <table class="listing-change">
+    <thead>
+      <th>Appx</th>
+      <th>Type</th>
+      <th>Effective at</th>
+      <th>Current</th>
+      <th>Party</th>
+    </thead>
+    <tbody>
+    <% @taxon_concept.current_listing_changes.each do |listing_change| %>
+      <tr>
+        <td>
+          <%= listing_change.species_listing && listing_change.species_listing.abbreviation %>
+        </td>
+        <td><%= listing_change.change_type.name %></td>
+        <td><%= listing_change.effective_at_formatted %></td>
+        <td>
+        <%= form_for [:admin, @taxon_concept, @designation, listing_change], :remote => true do |f| %>
+          <%= f.check_box :is_current %>
+        <% end %>
+        </td>
+        <td>
+          <%= listing_change.party_geo_entity && listing_change.party_geo_entity.iso_code2 %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>
