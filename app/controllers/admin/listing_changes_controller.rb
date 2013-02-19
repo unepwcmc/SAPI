@@ -23,7 +23,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
     @listing_change = ListingChange.new(params[:listing_change])
     if @taxon_concept.listing_changes << @listing_change
       load_listing_changes
-      render 'create'
+      render 'index'
     else
       load_change_types
       @listing_change.build_party_listing_distribution(params[:listing_change][:party_listing_distribution_attributes])

@@ -77,7 +77,7 @@ describe Admin::ListingChangesController do
           },
           :taxon_concept_id => @taxon_concept.id,
           :designation_id => @designation.id
-        response.should render_template("create")
+        response.should render_template("index")
       end
       it "assigns @listing_changes" do
         xhr :post, :create, :listing_change => {
