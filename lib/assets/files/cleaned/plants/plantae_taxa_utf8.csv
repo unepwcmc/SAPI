@@ -1,257 +1,199 @@
 Scientific name,Rank,RecID,ParentRank,ParentRecID,Status,Species Author,notes,Designation
+islandica,Species,111929,Genus,1993,A,(L.) Ach.,,CITES_EU
 CYATHEACEAE,Family,1,Order,1,A,Kaulf.,,CITES_EU
-Aa,Genus,1,Family,4,A,Reichb. f.,,CITES_EU
-Cyatheales,Order,1,Kingdom,2,A,A.B. Frank,,CITES_EU
 THYMELAEACEAE,Family,2,Order,2,A,Juss.,,CITES_EU
-Abdominea,Genus,2,Family,4,A,J.J. Smith,,CITES_EU
-Flora,Kingdom,2,,,A,,,CITES_EU
-Myrtales,Order,2,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
 CACTACEAE,Family,3,Order,3,A,Juss.,,CITES_EU
-Abies,Genus,3,Family,16,A,Miller.,,CITES_EU
-Caryophyllales,Order,3,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
-lobelii,Species,4,Genus,1502,A,Ten.,,CITES_EU
 ORCHIDACEAE,Family,4,Order,4,A,Juss.,,CITES_EU
-Acampe,Genus,4,Family,4,A,Lindl.,,CITES_EU
-Orchidales,Order,4,Kingdom,2,A,Bromhead,,CITES_EU
 MAGNOLIACEAE,Family,5,Order,5,A,Juss.,,CITES_EU
-Acanthephippium,Genus,5,Family,4,A,Blume,,CITES_EU
-Magnoliales,Order,5,Kingdom,2,A,Bromhead,,CITES_EU
 LILIACEAE,Family,6,Order,6,A,Juss.,,CITES_EU
-Acanthocalycium,Genus,6,Family,3,A,Backeb.,,CITES_EU
-Liliales,Order,6,Kingdom,2,A,Perleb,,CITES_EU
 AMARYLLIDACEAE,Family,7,Order,6,A,J. St-Hil.,,CITES_EU
-Acanthocereus,Genus,7,Family,3,A,(A. Berger) Britton & Rose,,CITES_EU
-Nepenthales,Order,7,Kingdom,2,A,Lindl.,,CITES_EU
 NEPENTHACEAE,Family,8,Order,7,A,Bercht. & J. Presl.,,CITES_EU
-Aceras,Genus,8,Family,4,A,R. Br.,,CITES_EU
-Arales,Order,8,Kingdom,2,A,Lindl.,,CITES_EU
 ARACEAE,Family,9,Order,8,A,Juss.,,CITES_EU
-Aceratorchis,Genus,9,Family,4,A,Schlechter,,CITES_EU
-Euphorbiales,Order,9,Kingdom,2,A,Lindl.,,CITES_EU
 EUPHORBIACEAE,Family,10,Order,9,A,Juss.,,CITES_EU
-Acianthus,Genus,10,Family,4,A,R. Br.,,CITES_EU
-Gentianales,Order,10,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
 APOCYNACEAE,Family,11,Order,10,A,Juss.,,CITES_EU
-Acineta,Genus,11,Family,4,A,Lindl.,,CITES_EU
-Cycadales,Order,11,Kingdom,2,A,Pers. ex Bercht. & J. Presl,,CITES_EU
 SARRACENIACEAE,Family,12,Order,7,A,Dumort.,,CITES_EU
-Acostaea,Genus,12,Family,4,A,Schlechter,,CITES_EU
-Pinales,Order,12,Kingdom,2,A,Gorozh.,,CITES_EU
 ZAMIACEAE,Family,13,Order,11,A,Horan.,,CITES_EU
-Acriopsis,Genus,13,Family,4,A,Reinw. ex Blume,,CITES_EU
-Violales,Order,13,Kingdom,2,A,Vent. ex Bercht. & J. Presl,,CITES_EU
 CYCADACEAE,Family,14,Order,11,A,Pers.,,CITES_EU
-Acrochaene,Genus,14,Family,4,A,Lindl.,,CITES_EU
-Ranunculales,Order,14,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
 ASCLEPIADACEAE,Family,15,Order,10,A,Medikus ex Borkh.,,CITES_EU
-Acrolophia,Genus,15,Family,4,A,Pfitzer,,CITES_EU
-Fabales,Order,15,Kingdom,2,A,Bromhead,,CITES_EU
 PINACEAE,Family,16,Order,12,A,Sprengel ex Rudolphi.,,CITES_EU
-Acrorchis,Genus,16,Family,4,A,Dressler,,CITES_EU
-Laurales,Order,16,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
 PASSIFLORACEAE,Family,17,Order,13,A,Juss. ex DC.,,CITES_EU
-Ada,Genus,17,Family,4,A,Lindl.,,CITES_EU
-Ericales,Order,17,Kingdom,2,A,Bercht. & J. Presl,,CITES_EU
 RANUNCULACEAE,Family,18,Order,14,A,Juss.,,CITES_EU
-Adenia,Genus,18,Family,17,A,Forssk.,,CITES_EU
-Arecales,Order,18,Kingdom,2,A,Bromhead,,CITES_EU
 LEGUMINOSAE,Family,19,Order,15,A,Juss.,,CITES_EU
-Adenochilus,Genus,19,Family,4,A,Hook.f.,,CITES_EU
-Asterales,Order,19,Kingdom,2,A,Link,,CITES_EU
 AGAVACEAE,Family,20,Order,6,A,Dumort.,,CITES_EU
-Adenoncos,Genus,20,Family,4,A,Blume,,CITES_EU
-Piperales,Order,20,Kingdom,2,A,Bercht. & J. Presl,,CITES_EU
 DIDIEREACEAE,Family,21,Order,3,A,Radlk.,,CITES_EU
-Adonis,Genus,21,Family,18,A,L.,,CITES_EU
-Rubiales,Order,21,Kingdom,2,A,Benth. & Hook. f.,,CITES_EU
 PORTULACACEAE,Family,22,Order,3,A,Juss.,,CITES_EU
-Adrorhizon,Genus,22,Family,4,A,Hook.f.,,CITES_EU
-Proteales,Order,22,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
 LAURACEAE,Family,23,Order,16,A,Juss.,,CITES_EU
-Aerangis,Genus,23,Family,4,A,Reichb.f.,,CITES_EU
-Urticales,Order,23,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
 HAEMODORACEAE,Family,24,Order,6,A,R. Br.,,CITES_EU
-Aeranthes,Genus,24,Family,4,A,Lindl.,,CITES_EU
-Sapindales,Order,24,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
 ARAUCARIACEAE,Family,25,Order,12,A,Henkel & Hochst.,,CITES_EU
-Aeranthus,Genus,25,Family,4,A,,,CITES_EU
-Rosales,Order,25,Kingdom,2,A,Bercht. & J. Presl,,CITES_EU
 ERICACEAE,Family,26,Order,17,A,Juss.,,CITES_EU
-Aerides,Genus,26,Family,4,A,Lour.,,CITES_EU
-Dicksoniales,Order,26,Kingdom,2,A,Pic. Serm. ex Reveal,,CITES_EU
 PALMAE,Family,27,Order,18,A,Juss.,,CITES_EU
-Theales,Order,27,Kingdom,2,A,Lindl.,,CITES_EU
 COMPOSITAE,Family,28,Order,19,A,Giseke,,CITES_EU
-Lamiales,Order,28,Kingdom,2,A,Bromhead,,CITES_EU
 CHLORANTHACEAE,Family,29,Order,20,A,R.Br. ex Sims.,,CITES_EU
-Agave,Genus,29,Family,20,A,L.,,CITES_EU
-Lecanorales,Order,29,Kingdom,2,A,,,CITES_EU
 ASTERACEAE,Family,30,Order,19,A,Martinov,,CITES_EU
-Scrophulariales,Order,30,Kingdom,2,A,Lindl.,,CITES_EU
 RUBIACEAE,Family,31,Order,21,A,Juss.,,CITES_EU
-Agrostophyllum,Genus,31,Family,4,A,Blume,,CITES_EU
-Primulales,Order,31,Kingdom,2,A,Lindl.,,CITES_EU
 PROTEACEAE,Family,32,Order,22,A,Juss.,,CITES_EU
-Alamania,Genus,32,Family,4,A,Lex.,,CITES_EU
-Rhamnales,Order,32,Kingdom,2,A,Lindl.,,CITES_EU
 MORACEAE,Family,33,Order,23,A,Link.,,CITES_EU
-Albizia,Genus,33,Family,19,A,Durazz.,,CITES_EU
-Ebenales,Order,33,Kingdom,2,A,Engler,,CITES_EU
 RUTACEAE,Family,34,Order,24,A,Juss.,,CITES_EU
-Allochilus,Genus,34,Family,4,A,Gagnep.,,CITES_EU
-Juglandales,Order,34,Kingdom,2,A,Bercht. & J. Presl,,CITES_EU
 STANGERIACEAE,Family,35,Order,11,A,L. Johnson,,CITES_EU
-Alluaudia,Genus,35,Family,21,A,Drake,,CITES_EU
-Zingiberales,Order,35,Kingdom,2,A,Griseb.,,CITES_EU
 ZYGOPHYLLACEAE,Family,36,Order,24,A,R.Br.,,CITES_EU
-Alluaudiopsis,Genus,36,Family,21,A,Humbert & Choux,,CITES_EU
-Celastrales,Order,36,Kingdom,2,A,Link,,CITES_EU
 BYBLIDACEAE,Family,37,Order,25,A,(Engl. & Gilg) Domin,,CITES_EU
-Alocasia,Genus,37,Family,9,A,(Schott) G. Don,,CITES_EU
-Lycopodiales,Order,37,Kingdom,2,A,DC. ex Bercht. & J. Presl,,CITES_EU
 DICKSONIACEAE,Family,38,Order,26,A,(C. Presl) Bower,,CITES_EU
-Aloe,Genus,38,Family,6,A,L.,,CITES_EU
-Papaverales,Order,38,Kingdom,2,A,Diels,,CITES_EU
 THEACEAE,Family,39,Order,27,A,Mirbel ex Ker-Gawler,,CITES_EU
-Alsophila,Genus,39,Family,1,A,R. Br.,,CITES_EU
-Solanales,Order,39,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
 CARYOCARACEAE,Family,40,Order,27,A,Voigt.,,CITES_EU
-Dipsacales,Order,40,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
 VERBENACEAE,Family,41,Order,28,A,J. St-Hil.,,CITES_EU
-Amblostoma,Genus,41,Family,4,A,Scheidw.,,CITES_EU
-Apiales,Order,41,Kingdom,2,A,Nakai,,CITES_EU
 MELIACEAE,Family,42,Order,24,A,Juss.,,CITES_EU
-Malvales,Order,42,Kingdom,2,A,Juss.,,CITES_EU
 ULMACEAE,Family,43,Order,23,A,Mirbel.,,CITES_EU
-Fagales,Order,43,Kingdom,2,A,Engl.,,CITES_EU
 CEPHALOTACEAE,Family,44,Order,25,A,Dumort.,,CITES_EU
-Amesiella,Genus,44,Family,4,A,Schlechter ex Garay,,CITES_EU
-Selaginellales,Order,44,Kingdom,2,A,Prantl,,CITES_EU
 PARMELIACEAE,Family,45,Order,29,A,,,CITES_EU
-Amitostigma,Genus,45,Family,4,A,Schlechter,,CITES_EU
-Diapensiales,Order,45,Kingdom,2,A,Engler & Gilg,,CITES_EU
 OROBANCHACEAE,Family,46,Order,30,A,Vent. ,,CITES_EU
-Ammopiptanthus,Genus,46,Family,19,A,S.H. Cheng,,CITES_EU
-Trochodendrales,Order,46,Kingdom,2,A,Takht. ex Cronquist,,CITES_EU
 PRIMULACEAE,Family,47,Order,31,A,Batsch ex Borkh.,,CITES_EU
-Amparoa,Genus,47,Family,4,A,Schlechter,,CITES_EU
-Bromeliales,Order,47,Kingdom,2,A,Dumort.,,CITES_EU
 VITACEAE,Family,48,Order,32,A,Juss.,,CITES_EU
-Anacampseros,Genus,48,Family,22,A,L.,,CITES_EU
-Dioscoreales,Order,48,Kingdom,2,A,Mart.,,CITES_EU
 DROSERACEAE,Family,49,Order,7,A,Salisb.,,CITES_EU
-Anacamptis,Genus,49,Family,4,A,Rich.,,CITES_EU
-Linales,Order,49,Kingdom,2,A,Baskerville,,CITES_EU
 DIOSCOREACEAE,Family,50,Order,6,A,R.Br.,,CITES_EU
-Asparagales,Order,50,Kingdom,2,A,Link,,CITES_EU
 EBENACEAE,Family,51,Order,33,A,Guerke.,,CITES_EU
-Pottiales,Order,51,Kingdom,2,A,M. Fleisch.,,CITES_EU
 CRASSULACEAE,Family,52,Order,25,A,J. St-Hil.,,CITES_EU
-Ancistrorhynchus,Genus,52,Family,4,A,Finet,,CITES_EU
-Dennstaedtiales,Order,52,Kingdom,2,A,Doweld,,CITES_EU
 JUGLANDACEAE,Family,53,Order,34,A,DC ex Perleb.,,CITES_EU
-Hymenophyllales,Order,53,Kingdom,2,A,A.B. Frank,,CITES_EU
 CUPRESSACEAE,Family,54,Order,12,A,Gray.,,CITES_EU
-Androcorys,Genus,54,Family,4,A,Schlechter,,CITES_EU
-Cyperales,Order,54,Kingdom,2,A,Hutch.,,CITES_EU
 FOUQUIERIACEAE,Family,55,Order,13,A,DC.,,CITES_EU
-Angraecopsis,Genus,55,Family,4,A,Kraenzl.,,CITES_EU
-Polypodiales,Order,55,Kingdom,2,A,Link,,CITES_EU
 GENTIANACEAE,Family,56,Order,10,A,Juss.,,CITES_EU
-Angraecum,Genus,56,Family,4,A,Bory,,CITES_EU
-Pteridales,Order,56,Kingdom,2,A,Doweld,,CITES_EU
-Saxifragales,Order,57,Kingdom,2,A,,,CITES_EU
 GNETACEAE,Family,57,Order,12,A,Blume,,CITES_EU
-Anguloa,Genus,57,Family,4,A,Ruiz & Pav.,,CITES_EU
 CARYOPHYLLACEAE,Family,58,Order,3,A,Juss.,,CITES_EU
-Ania,Genus,58,Family,4,A,Lindl.,,CITES_EU
 PEDALIACEAE,Family,59,Order,30,A,R.Br.,,CITES_EU
-Aniba,Genus,59,Family,23,A,Aubl.,,CITES_EU
 ZINGIBERACEAE,Family,60,Order,35,A,Martinov ,,CITES_EU
-Anigozanthos,Genus,60,Family,24,A,Labill.,,CITES_EU
 AQUIFOLIACEAE,Family,61,Order,36,A,A. Rich.,,CITES_EU
-Anneliesia,Genus,61,Family,4,A,Brieger & Luckel,,CITES_EU
 MELASTOMATACEAE,Family,62,Order,2,A,Juss.,,CITES_EU
-Anoectochilus,Genus,62,Family,4,A,Blume,,CITES_EU
 LYCOPODIACEAE,Family,63,Order,37,A,Pal. ex Mirbel.,,CITES_EU
-Ansellia,Genus,63,Family,4,A,Lindl.,,CITES_EU
 PAPAVERACEAE,Family,64,Order,38,A,Juss.,,CITES_EU
 MENYANTHACEAE,Family,65,Order,39,A,Bercht. & Presl.,,CITES_EU
 VALERIANACEAE,Family,66,Order,40,A,Batsch.,,CITES_EU
 ANACARDIACEAE,Family,67,Order,24,A,Lindley,,CITES_EU
 ARALIACEAE,Family,68,Order,41,A,Juss.,,CITES_EU
-Apatostelis,Genus,68,Family,4,A,Garay,,CITES_EU
 SCROPHULARIACEAE,Family,69,Order,30,A,Juss.,,CITES_EU
-Aphyllorchis,Genus,69,Family,4,A,Blume,,CITES_EU
 PODOCARPACEAE,Family,70,Order,12,A,Endl.,,CITES_EU
-Aplectrum,Genus,70,Family,4,A,(Nutt.) Torr.,,CITES_EU
 BERBERIDACEAE,Family,71,Order,14,A,Juss.,,CITES_EU
 ROSACEAE,Family,72,Order,25,A,Juss.,,CITES_EU
-Apostasia,Genus,72,Family,4,A,Blume,,CITES_EU
 STERCULIACEAE,Family,73,Order,42,A,DC.,,CITES_EU
-Appendicula,Genus,73,Family,4,A,Blume,,CITES_EU
 FAGACEAE,Family,74,Order,43,A,Dumort.,,CITES_EU
-Aquilaria,Genus,74,Family,2,A,Lam.,,CITES_EU
 GROSSULARIACEAE,Family,75,Order,25,A,DC.,,CITES_EU
 SELAGINELLACEAE,Family,76,Order,44,A,Willk.,,CITES_EU
-Arachnis,Genus,76,Family,4,A,Blume,,CITES_EU
 DIAPENSIACEAE,Family,77,Order,45,A,Lindley,,CITES_EU
-Araucaria,Genus,77,Family,25,A,Juss.,,CITES_EU
 SOLANACEAE,Family,78,Order,39,A,Juss.,,CITES_EU
-Archineottia,Genus,78,Family,4,A,S.C. Chen,,CITES_EU
 TAXACEAE,Family,79,Order,12,A,Gray.,,CITES_EU
-Arctostaphylos,Genus,79,Family,26,A,Adans.,,CITES_EU
 TROCHODENDRACEAE,Family,80,Order,46,A,Prantl.,,CITES_EU
-Areca,Genus,80,Family,27,A,L.,,CITES_EU
 BROMELIACEAE,Family,81,Order,47,A,Juss.,,CITES_EU
 TRILLIACEAE,Family,82,Order,48,A,Chevall. ,,CITES_EU
-Ariocarpus,Genus,82,Family,3,A,Scheidw.,,CITES_EU
 HUMIRIACEAE,Family,83,Order,49,A,A. Juss. ,,CITES_EU
-Arisaema,Genus,83,Family,9,A,Mart.,,CITES_EU
 MYRTACEAE,Family,84,Order,2,A,Juss.,,CITES_EU
-Armatocereus,Genus,84,Family,3,A,Backeb.,,CITES_EU
 WELWITSCHIACEAE,Family,85,Order,12,A,Caruel.,,CITES_EU
-Armodorum,Genus,85,Family,4,A,Breda,,CITES_EU
 CUCURBITACEAE,Family,86,Order,13,A,Juss.,,CITES_EU
-Arnica,Genus,86,Family,28,A,L.,,CITES_EU
 ACERACEAE,Family,87,Order,24,A,Juss.,,CITES_EU
-Arnottia,Genus,87,Family,4,A,A. Rich.,,CITES_EU
 ALOACEAE,Family,88,Order,50,A,Batsch,,CITES_EU
-Arpophyllum,Genus,88,Family,4,A,La Llave & Lex.,,CITES_EU
 POTTIACEAE,Family,89,Order,51,A,Schimp. ,,CITES_EU
-Arrojadoa,Genus,89,Family,3,A,Britton & Rose,,CITES_EU
 HYACINTHACEAE,Family,90,Order,50,A,Batsch ex Borckh. ,,CITES_EU
-Arthrocereus,Genus,90,Family,3,A,A. Berger & F. Knuth,,CITES_EU
 DRACAENACEAE,Family,91,Order,50,A,Salisb.,,CITES_EU
-Arthrochilus,Genus,91,Family,4,A,F. Muell.,,CITES_EU
 BLECHNACEAE,Family,92,Order,52,A,(C. Presl) Copel.,,CITES_EU
-Artorima,Genus,92,Family,4,A,Dressler & Pollard,,CITES_EU
 DAVALLIACEAE,Family,93,Order,52,A,Mett. ex Frank.,,CITES_EU
-Arundina,Genus,93,Family,4,A,Blume,,CITES_EU
 HYMENOPHYLLACEAE,Family,94,Order,53,A,Link.,,CITES_EU
-Ascarina,Genus,94,Family,29,A,J.R. & G. Forst.,,CITES_EU
 LABIATAE,Family,95,Order,28,A,Juss.,,CITES_EU
 GRAMINEAE,Family,96,Order,54,A,Juss.,,CITES_EU
-Ascocentrum,Genus,96,Family,4,A,Schlechter,,CITES_EU
 POLYPODIACEAE,Family,97,Order,55,A,Bercht. & J. Presl.,,CITES_EU
 METAXYACEAE,Family,98,Order,1,A,Pichi-Serm.,,CITES_EU
-Ascochilus,Genus,98,Family,4,A,Ridl.,,CITES_EU
 CHRYSOBALANACEAE,Family,99,Order,25,A,R.Br.,,CITES_EU
-Ascoglossum,Genus,99,Family,4,A,Schlechter,,CITES_EU
 DENNSTAEDTIACEAE,Family,100,Order,52,A,Lotsy.,,CITES_EU
-Aspasia,Genus,100,Family,4,A,Lindl.,,CITES_EU
 DRYOPTERIDACEAE,Family,101,Order,52,A,Herter,,CITES_EU
 THELYPTERIDACEAE,Family,102,Order,52,A,Ching ex Pichi-Serm.,,CITES_EU
-Astrophytum,Genus,102,Family,3,A,Lem.,,CITES_EU
 UMBELLIFERAE,Family,103,Order,41,A,Juss.,,CITES_EU
 ADIANTACEAE,Family,104,Order,56,A,Newman,,CITES_EU
 GESNERIACEAE,Family,105,Order,30,A,Rich. & Juss. ex DC.,,CITES_EU
 ASPHODELACEAE,Family,106,Order,50,A,Juss.,,CITES_EU
-Austrocactus,Genus,106,Family,3,A,Britton & Rose,,CITES_EU
 PITTOSPORACEAE,Family,107,Order,25,A,R.Br.,,CITES_EU
 WOODSIACEAE,Family,108,Order,52,A,(Diels) Herter.,,CITES_EU
-Avonia,Genus,108,Family,22,A,(E.Mey ex Fenzl.) G.D.Rowley,,CITES_EU
 GROSSULARIACEAE,Family,109,Order,57,A,,,CITES_EU
+Aa,Genus,1,Family,4,A,Reichb. f.,,CITES_EU
+Abdominea,Genus,2,Family,4,A,J.J. Smith,,CITES_EU
+Abies,Genus,3,Family,16,A,Miller.,,CITES_EU
+Acampe,Genus,4,Family,4,A,Lindl.,,CITES_EU
+Acanthephippium,Genus,5,Family,4,A,Blume,,CITES_EU
+Acanthocalycium,Genus,6,Family,3,A,Backeb.,,CITES_EU
+Acanthocereus,Genus,7,Family,3,A,(A. Berger) Britton & Rose,,CITES_EU
+Aceras,Genus,8,Family,4,A,R. Br.,,CITES_EU
+Aceratorchis,Genus,9,Family,4,A,Schlechter,,CITES_EU
+Acianthus,Genus,10,Family,4,A,R. Br.,,CITES_EU
+Acineta,Genus,11,Family,4,A,Lindl.,,CITES_EU
+Acostaea,Genus,12,Family,4,A,Schlechter,,CITES_EU
+Acriopsis,Genus,13,Family,4,A,Reinw. ex Blume,,CITES_EU
+Acrochaene,Genus,14,Family,4,A,Lindl.,,CITES_EU
+Acrolophia,Genus,15,Family,4,A,Pfitzer,,CITES_EU
+Acrorchis,Genus,16,Family,4,A,Dressler,,CITES_EU
+Ada,Genus,17,Family,4,A,Lindl.,,CITES_EU
+Adenia,Genus,18,Family,17,A,Forssk.,,CITES_EU
+Adenochilus,Genus,19,Family,4,A,Hook.f.,,CITES_EU
+Adenoncos,Genus,20,Family,4,A,Blume,,CITES_EU
+Adonis,Genus,21,Family,18,A,L.,,CITES_EU
+Adrorhizon,Genus,22,Family,4,A,Hook.f.,,CITES_EU
+Aerangis,Genus,23,Family,4,A,Reichb.f.,,CITES_EU
+Aeranthes,Genus,24,Family,4,A,Lindl.,,CITES_EU
+Aeranthus,Genus,25,Family,4,A,,,CITES_EU
+Aerides,Genus,26,Family,4,A,Lour.,,CITES_EU
+Agave,Genus,29,Family,20,A,L.,,CITES_EU
+Agrostophyllum,Genus,31,Family,4,A,Blume,,CITES_EU
+Alamania,Genus,32,Family,4,A,Lex.,,CITES_EU
+Albizia,Genus,33,Family,19,A,Durazz.,,CITES_EU
+Allochilus,Genus,34,Family,4,A,Gagnep.,,CITES_EU
+Alluaudia,Genus,35,Family,21,A,Drake,,CITES_EU
+Alluaudiopsis,Genus,36,Family,21,A,Humbert & Choux,,CITES_EU
+Alocasia,Genus,37,Family,9,A,(Schott) G. Don,,CITES_EU
+Aloe,Genus,38,Family,6,A,L.,,CITES_EU
+Alsophila,Genus,39,Family,1,A,R. Br.,,CITES_EU
+Amblostoma,Genus,41,Family,4,A,Scheidw.,,CITES_EU
+Amesiella,Genus,44,Family,4,A,Schlechter ex Garay,,CITES_EU
+Amitostigma,Genus,45,Family,4,A,Schlechter,,CITES_EU
+Ammopiptanthus,Genus,46,Family,19,A,S.H. Cheng,,CITES_EU
+Amparoa,Genus,47,Family,4,A,Schlechter,,CITES_EU
+Anacampseros,Genus,48,Family,22,A,L.,,CITES_EU
+Anacamptis,Genus,49,Family,4,A,Rich.,,CITES_EU
+Ancistrorhynchus,Genus,52,Family,4,A,Finet,,CITES_EU
+Androcorys,Genus,54,Family,4,A,Schlechter,,CITES_EU
+Angraecopsis,Genus,55,Family,4,A,Kraenzl.,,CITES_EU
+Angraecum,Genus,56,Family,4,A,Bory,,CITES_EU
+Anguloa,Genus,57,Family,4,A,Ruiz & Pav.,,CITES_EU
+Ania,Genus,58,Family,4,A,Lindl.,,CITES_EU
+Aniba,Genus,59,Family,23,A,Aubl.,,CITES_EU
+Anigozanthos,Genus,60,Family,24,A,Labill.,,CITES_EU
+Anneliesia,Genus,61,Family,4,A,Brieger & Luckel,,CITES_EU
+Anoectochilus,Genus,62,Family,4,A,Blume,,CITES_EU
+Ansellia,Genus,63,Family,4,A,Lindl.,,CITES_EU
+Apatostelis,Genus,68,Family,4,A,Garay,,CITES_EU
+Aphyllorchis,Genus,69,Family,4,A,Blume,,CITES_EU
+Aplectrum,Genus,70,Family,4,A,(Nutt.) Torr.,,CITES_EU
+Apostasia,Genus,72,Family,4,A,Blume,,CITES_EU
+Appendicula,Genus,73,Family,4,A,Blume,,CITES_EU
+Aquilaria,Genus,74,Family,2,A,Lam.,,CITES_EU
+Arachnis,Genus,76,Family,4,A,Blume,,CITES_EU
+Araucaria,Genus,77,Family,25,A,Juss.,,CITES_EU
+Archineottia,Genus,78,Family,4,A,S.C. Chen,,CITES_EU
+Arctostaphylos,Genus,79,Family,26,A,Adans.,,CITES_EU
+Areca,Genus,80,Family,27,A,L.,,CITES_EU
+Ariocarpus,Genus,82,Family,3,A,Scheidw.,,CITES_EU
+Arisaema,Genus,83,Family,9,A,Mart.,,CITES_EU
+Armatocereus,Genus,84,Family,3,A,Backeb.,,CITES_EU
+Armodorum,Genus,85,Family,4,A,Breda,,CITES_EU
+Arnica,Genus,86,Family,28,A,L.,,CITES_EU
+Arnottia,Genus,87,Family,4,A,A. Rich.,,CITES_EU
+Arpophyllum,Genus,88,Family,4,A,La Llave & Lex.,,CITES_EU
+Arrojadoa,Genus,89,Family,3,A,Britton & Rose,,CITES_EU
+Arthrocereus,Genus,90,Family,3,A,A. Berger & F. Knuth,,CITES_EU
+Arthrochilus,Genus,91,Family,4,A,F. Muell.,,CITES_EU
+Artorima,Genus,92,Family,4,A,Dressler & Pollard,,CITES_EU
+Arundina,Genus,93,Family,4,A,Blume,,CITES_EU
+Ascarina,Genus,94,Family,29,A,J.R. & G. Forst.,,CITES_EU
+Ascocentrum,Genus,96,Family,4,A,Schlechter,,CITES_EU
+Ascochilus,Genus,98,Family,4,A,Ridl.,,CITES_EU
+Ascoglossum,Genus,99,Family,4,A,Schlechter,,CITES_EU
+Aspasia,Genus,100,Family,4,A,Lindl.,,CITES_EU
+Astrophytum,Genus,102,Family,3,A,Lem.,,CITES_EU
+Austrocactus,Genus,106,Family,3,A,Britton & Rose,,CITES_EU
+Avonia,Genus,108,Family,22,A,(E.Mey ex Fenzl.) G.D.Rowley,,CITES_EU
 Aztekium,Genus,109,Family,3,A,Bodeker,,CITES_EU
 Banksia,Genus,112,Family,32,A,L.f.,,CITES_EU
 Barbosella,Genus,113,Family,4,A,Schlechter,,CITES_EU
@@ -288,9 +230,7 @@ Brachypeza,Genus,151,Family,4,A,Schltr. ex Garay,,CITES_EU
 Brachystele,Genus,152,Family,4,A,Schlechter,,CITES_EU
 Brasilicereus,Genus,154,Family,3,A,Backeb.,,CITES_EU
 Brassavola,Genus,155,Family,4,A,R. Br.,,CITES_EU
-stoloniferus,Species,155,Genus,410,A,W.T.Marshall,,CITES_EU
 Brassia,Genus,156,Family,4,A,R. Br.,,CITES_EU
-phyllanthus,Species,156,Genus,434,A,(Linnaeus) Haworth,,CITES_EU
 Briegeria,Genus,157,Family,4,A,Senghas,,CITES_EU
 Bromheadia,Genus,158,Family,4,A,Lindl.,,CITES_EU
 Broughtonia,Genus,159,Family,4,A,R. Br.,,CITES_EU
@@ -298,12 +238,10 @@ Browningia,Genus,160,Family,3,A,Britton & Rose,,CITES_EU
 Bulbophyllum,Genus,163,Family,4,A,Thouars,,CITES_EU
 Bulleyia,Genus,164,Family,4,A,Schlechter,,CITES_EU
 Bulnesia,Genus,165,Family,36,A,C. Gay,,CITES_EU
-laui,Species,165,Genus,443,A,Luethy,,CITES_EU
 Burnettia,Genus,166,Family,4,A,Lindl.,,CITES_EU
 Byblis,Genus,168,Family,37,A,Salisb.,,CITES_EU
 Cadetia,Genus,169,Family,4,A,Gaudich.,,CITES_EU
 Caesalpinia,Genus,170,Family,19,A,L.,,CITES_EU
-squamosa,Species,170,Genus,464,A,(Guerke) Braun,,CITES_EU
 Caladenia,Genus,171,Family,4,A,R. Br.,,CITES_EU
 Calanthe,Genus,172,Family,4,A,Ker-Gawl.,,CITES_EU
 Calibanus,Genus,174,Family,20,A,Rose,,CITES_EU
@@ -329,7 +267,6 @@ Cephalanthera,Genus,200,Family,4,A,Rich.,,CITES_EU
 Cephalantheropsis,Genus,201,Family,4,A,Guillaumin,,CITES_EU
 Cephalocereus,Genus,202,Family,3,A,Pfeiffer,,CITES_EU
 Cephalocleistocactus,Genus,203,Family,3,A,Ritter,,CITES_EU
-carinatus,Species,203,Genus,617,A,Areces,,CITES_EU
 Cephalotus,Genus,204,Family,44,A,Labill.,,CITES_EU
 Ceraria,Genus,205,Family,22,A,Pearson & Stephens,,CITES_EU
 Ceratandra,Genus,206,Family,4,A,Eckl. ex Bauer,,CITES_EU
@@ -347,11 +284,9 @@ Chaseella,Genus,221,Family,4,A,Summerh.,,CITES_EU
 Chaubardia,Genus,222,Family,4,A,Reichb.f.,,CITES_EU
 Chaubardiella,Genus,223,Family,4,A,Garay,,CITES_EU
 Chauliodon,Genus,224,Family,4,A,Summerh.,,CITES_EU
-santamarinae,Species,225,Genus,617,A,Areces,,CITES_EU
 Cheirorchis,Genus,226,Family,4,A,C.E. Carr,,CITES_EU
 Cheirostylis,Genus,227,Family,4,A,Blume,,CITES_EU
 Chelonistele,Genus,228,Family,4,A,Pfitzer,,CITES_EU
-scopulophilus,Species,228,Genus,617,A,Areces,,CITES_EU
 Chigua,Genus,229,Family,13,A,D.W. Stev.,,CITES_EU
 Chiloglottis,Genus,230,Family,4,A,R. Br.,,CITES_EU
 Chiloschista,Genus,231,Family,4,A,Lindl.,,CITES_EU
@@ -366,7 +301,7 @@ Chrysoglossum,Genus,240,Family,4,A,Blume,,CITES_EU
 Chusua,Genus,241,Family,4,A,Nevski,,CITES_EU
 Chysis,Genus,242,Family,4,A,Lindl.,,CITES_EU
 Cibotium,Genus,244,Family,38,A,Kaulf.,,CITES_EU
-Cintia,Genus,245,Family,3,A,K.Kníe & J.?íha,,CITES_EU
+Cintia,Genus,245,Family,3,A,K.Kníže & J.?íha,,CITES_EU
 Cipocereus,Genus,246,Family,3,A,Ritter,,CITES_EU
 Cirrhopetalum,Genus,248,Family,4,A,Lindl.,,CITES_EU
 Cischweinfia,Genus,249,Family,4,A,Dressler & N.H. Williams,,CITES_EU
@@ -449,7 +384,6 @@ Diceratostele,Genus,348,Family,4,A,Summerh.,,CITES_EU
 Dichaea,Genus,350,Family,4,A,Lindl.,,CITES_EU
 Dichromanthus,Genus,351,Family,4,A,Garay,,CITES_EU
 Dicksonia,Genus,353,Family,38,A,L'Herit.,,CITES_EU
-perezassoi,Species,354,Genus,666,A,Areces,,CITES_EU
 Didiciea,Genus,355,Family,4,A,King & Prain,,CITES_EU
 Didierea,Genus,356,Family,21,A,Baill.,,CITES_EU
 Didymoplexiella,Genus,357,Family,4,A,Garay,,CITES_EU
@@ -531,7 +465,6 @@ Espostoopsis,Genus,452,Family,3,A,F. Buxb.,,CITES_EU
 Eucosia,Genus,453,Family,4,A,Blume,,CITES_EU
 Eulophia,Genus,454,Family,4,A,R. Br. ex Lindl.,,CITES_EU
 Eulophidium,Genus,455,Family,4,A,Pfitzer,,CITES_EU
-marcanoi,Species,455,Genus,821,A,Areces,,CITES_EU
 Eulophiella,Genus,456,Family,4,A,Rolfe,,CITES_EU
 Eulychnia,Genus,457,Family,3,A,Phil.,,CITES_EU
 Euphorbia,Genus,458,Family,10,A,L.,,CITES_EU
@@ -546,21 +479,17 @@ Flickingeria,Genus,468,Family,4,A,A.D. Hawkes,,CITES_EU
 Fouquieria,Genus,470,Family,55,A,Kunth,,CITES_EU
 Frailea,Genus,471,Family,3,A,Britton & Rose,,CITES_EU
 Frerea,Genus,472,Family,15,A,Dalzell,,CITES_EU
-ewaldiana,Species,472,Genus,946,A,Barthlott & Taylor,,CITES_EU
 Funkiella,Genus,475,Family,4,A,Schltr.,,CITES_EU
 Galanthus,Genus,476,Family,7,A,L.,,CITES_EU
 Galeandra,Genus,477,Family,4,A,Lindl.,,CITES_EU
 Galearis,Genus,478,Family,4,A,Rafin.,,CITES_EU
 Galeola,Genus,479,Family,4,A,Lour.,,CITES_EU
 Galeottiella,Genus,481,Family,4,A,Schltr.,,CITES_EU
-hoelleri,Species,481,Genus,946,A,Barthlott & Taylor,,CITES_EU
-juengeri,Species,482,Genus,946,A,Barthlott & Taylor,,CITES_EU
 Gastrochilus,Genus,483,Family,4,A,Wall.,,CITES_EU
 Gastrodia,Genus,484,Family,4,A,R. Br.,,CITES_EU
 Geesinkorchis,Genus,486,Family,4,A,de Vogel,,CITES_EU
 Geleznowia,Genus,487,Family,34,A,Turcz.,,CITES_EU
 Gennaria,Genus,488,Family,4,A,Parl.,,CITES_EU
-sulcata,Species,488,Genus,946,A,Weber,,CITES_EU
 Genoplesium,Genus,489,Family,4,A,R. Br.,,CITES_EU
 Gentiana,Genus,490,Family,56,A,L.,,CITES_EU
 Genyorchis,Genus,491,Family,4,A,Schlechter,,CITES_EU
@@ -580,7 +509,6 @@ Grammatophyllum,Genus,510,Family,4,A,Blume,,CITES_EU
 Graphorkis,Genus,511,Family,4,A,Thou.,,CITES_EU
 Grosourdya,Genus,514,Family,4,A,Reichb. f.,,CITES_EU
 Guaiacum,Genus,515,Family,36,A,L.,,CITES_EU
-davisii,Species,516,Genus,131,A,Turrill,,CITES_EU
 Gunnarella,Genus,517,Family,4,A,Senghas,,CITES_EU
 Gymnadenia,Genus,518,Family,4,A,R. Br.,,CITES_EU
 Gymnigritella,Genus,519,Family,4,A,,,CITES_EU
@@ -655,7 +583,6 @@ Lavoisiera,Genus,603,Family,62,A,DC.,,CITES_EU
 Lecanorchis,Genus,604,Family,4,A,Blume,,CITES_EU
 Lemurella,Genus,606,Family,4,A,Schlechter,,CITES_EU
 Lemurophoenix,Genus,607,Family,27,A,Dransfield,,CITES_EU
-bulbosa,Species,607,Genus,181,A,(L.) Oakes,,CITES_EU
 Leocereus,Genus,609,Family,3,A,Britton & Rose,,CITES_EU
 Leochilus,Genus,610,Family,4,A,Knowles & Westc.,,CITES_EU
 Lepanthes,Genus,611,Family,4,A,Sw.,,CITES_EU
@@ -884,9 +811,7 @@ Ponthieva,Genus,877,Family,4,A,R. Br.,,CITES_EU
 Porpax,Genus,879,Family,4,A,Lindl.,,CITES_EU
 Porphyrodesme,Genus,880,Family,4,A,Schlechter,,CITES_EU
 Porroglossum,Genus,883,Family,4,A,Schlechter,,CITES_EU
-cucullata,Species,884,Genus,200,A,Boiss. & Heldr.,,CITES_EU
 Praecereus,Genus,885,Family,3,A,F. Buxb.,,CITES_EU
-epipactoides,Species,885,Genus,200,A,Fisch. & C.A.Mey.,,CITES_EU
 Prasophyllum,Genus,886,Family,4,A,R. Br.,,CITES_EU
 Prepusa,Genus,887,Family,56,A,Mart.,,CITES_EU
 Prescottia,Genus,888,Family,4,A,Lindl.,,CITES_EU
@@ -956,7 +881,6 @@ Sarcanthopsis,Genus,976,Family,4,A,Garay,,CITES_EU
 Sarcanthus,Genus,977,Family,4,A,Lindl.,,CITES_EU
 Sarcochilus,Genus,978,Family,4,A,R. Br.,,CITES_EU
 Sarcoglottis,Genus,979,Family,4,A,C. Presl,,CITES_EU
-comperiana,Species,981,Genus,277,A,(Steven) Asch. & Graebn.,,CITES_EU
 Sarcostoma,Genus,982,Family,4,A,Blume,,CITES_EU
 Sarracenia,Genus,983,Family,12,A,L.,,CITES_EU
 Satranala,Genus,984,Family,27,A,J.Dransf. & Beentje,,CITES_EU
@@ -1039,14 +963,12 @@ Telipogon,Genus,1082,Family,4,A,Mutis ex Kunth,,CITES_EU
 Tetracentron,Genus,1083,Family,80,A,Oliv.,,CITES_EU
 Tetramicra,Genus,1084,Family,4,A,Lindl.,,CITES_EU
 Teuscheria,Genus,1085,Family,4,A,Garay,,CITES_EU
-creticum,Species,1085,Genus,312,A,(Dörfl.) Hidebr.,,CITES_EU
 Thecostele,Genus,1088,Family,4,A,Reichb.f.,,CITES_EU
 Thelasis,Genus,1089,Family,4,A,Blume,,CITES_EU
 Thelocactus,Genus,1090,Family,3,A,(K. Schum.) Britton & Rose,,CITES_EU
 Thelymitra,Genus,1091,Family,4,A,J.R. & G. Forst.,,CITES_EU
 Thrixspermum,Genus,1094,Family,4,A,Lour.,,CITES_EU
 Thyrsopteris,Genus,1097,Family,38,A,Kunze,,CITES_EU
-calceolus,Species,1098,Genus,322,A,L.,,CITES_EU
 Ticoglossum,Genus,1099,Family,4,A,Halbinger,,CITES_EU
 Tillandsia,Genus,1100,Family,81,A,L.,,CITES_EU
 Tolumnia,Genus,1102,Family,4,A,Rafin.,,CITES_EU
@@ -1056,7 +978,6 @@ Traunsteinera,Genus,1107,Family,4,A,Reichb.,,CITES_EU
 Trevoria,Genus,1108,Family,4,A,F.C. Lehm.,,CITES_EU
 Triaristella,Genus,1109,Family,4,A,Brieger,,CITES_EU
 Trias,Genus,1110,Family,4,A,Lindl.,,CITES_EU
-kalopissii,Species,1112,Genus,331,A,Erich Nelson,,CITES_EU
 Trichocentrum,Genus,1113,Family,4,A,Poepp. & Endl.,,CITES_EU
 Trichoceros,Genus,1114,Family,4,A,Kunth,,CITES_EU
 Trichoglottis,Genus,1115,Family,4,A,Blume,,CITES_EU
@@ -1264,62 +1185,36 @@ Polycycnis,Genus,1333,Family,4,A,Rchb.f.,,CITES_EU
 Polyotidium,Genus,1334,Family,4,A,Garay,,CITES_EU
 Polyradicion,Genus,1335,Family,4,A,Garay,,CITES_EU
 Porolabium,Genus,1336,Family,4,A,Tang & Wang,,CITES_EU
-austriaca,Species,1336,Genus,458,A,A.Kern.,,CITES_EU
 Porphyroglottis,Genus,1337,Family,4,A,Ridley,,CITES_EU
-bessarabica,Species,1337,Genus,458,A,Klokov,,CITES_EU
 Porphyrostachys,Genus,1338,Family,4,A,Rchb.f.,,CITES_EU
-bivonae,Species,1338,Genus,458,A,Steud.,,CITES_EU
 Porrorhachis,Genus,1339,Family,4,A,Garay,,CITES_EU
 Protoceras,Genus,1340,Family,4,A,Joseph & Vajravelu,,CITES_EU
-clavigera,Species,1340,Genus,458,A,N.E.Br.,,CITES_EU
 Pseudacoridium,Genus,1341,Family,4,A,Ames,,CITES_EU
-clementei,Species,1341,Genus,458,A,Boiss.,,CITES_EU
 Pseudomaxillaria,Genus,1342,Family,4,A,Hoehne,,CITES_EU
 Pseudovanilla,Genus,1343,Family,4,A,Garay,,CITES_EU
-deflexa,Species,1343,Genus,458,A,Sibth. & Sm.,,CITES_EU
 Psychopsiella,Genus,1344,Family,4,A,Luckel & Braem.,,CITES_EU
-duvalii,Species,1344,Genus,458,A,Lecoq & Lamotte,,CITES_EU
 Psychopsis,Genus,1345,Family,4,A,Raf.,,CITES_EU
 Psygmorchis,Genus,1346,Family,4,A,Dodson & Dressler,,CITES_EU
-gibelliana,Species,1346,Genus,458,A,Peola,,CITES_EU
 Pterostemma,Genus,1347,Family,4,A,Lahm. & Kraenzl.,,CITES_EU
-gregersenii,Species,1347,Genus,458,A,K.Maly ex Beck,,CITES_EU
 Pygmaeorchis,Genus,1348,Family,4,A,Brade,,CITES_EU
-hierosolymitana,Species,1348,Genus,458,A,Boiss.,,CITES_EU
 Quekettia,Genus,1349,Family,4,A,Lindl.,,CITES_EU
-isatidifolia,Species,1349,Genus,458,A,Lam.,,CITES_EU
 Raycadenco,Genus,1350,Family,4,A,Dodson,,CITES_EU
-ledebourii,Species,1350,Genus,458,A,Boiss.,,CITES_EU
 Reichenbachanthus,Genus,1351,Family,4,A,Barb.Rodr.,,CITES_EU
-maresii,Species,1351,Genus,458,A,Knoche,,CITES_EU
 Restrepiella,Genus,1352,Family,4,A,Garay & Dunst.,,CITES_EU
-medicaginea,Species,1352,Genus,458,A,Boiss.,,CITES_EU
 Rhaesteria,Genus,1353,Family,4,A,Summerh.,,CITES_EU
-minuta,Species,1353,Genus,458,A,Loscos & J.Pardo,,CITES_EU
 Rhamphorhynchus,Genus,1354,Family,4,A,Garay,,CITES_EU
-monchiquensis,Species,1354,Genus,458,A,Franco & P.Silva,,CITES_EU
 Rhynchogyna,Genus,1355,Family,4,A,Seidenfaden & Garay,,CITES_EU
-montenegrina,Species,1355,Genus,458,A,(Bald.) K.Maly ex Rohlena,,CITES_EU
 Rhynchophreatia,Genus,1356,Family,4,A,Schltr.,,CITES_EU
-nevadensis,Species,1356,Genus,458,A,Boiss. & Reut.,,CITES_EU
 Rimacola,Genus,1357,Family,4,A,Rupp.,,CITES_EU
-orphanidis,Species,1357,Genus,458,A,Boiss.,,CITES_EU
 Rodrigueziella,Genus,1358,Family,4,A,Kuntze,,CITES_EU
-polygalifolia,Species,1358,Genus,458,A,Boiss. & Reut.,,CITES_EU
 Rodrigueziopsis,Genus,1359,Family,4,A,Schltr..,,CITES_EU
-rechingeri,Species,1359,Genus,458,A,Greuter,,CITES_EU
 Roeperocharis,Genus,1360,Family,4,A,Rchb.f.,,CITES_EU
 Salpistele,Genus,1361,Family,4,A,Dressler,,CITES_EU
 Sanderella,Genus,1362,Family,4,A,Kuntze,,CITES_EU
-soongarica,Species,1362,Genus,458,A,Boiss.,,CITES_EU
 Sarcoglyphis,Genus,1363,Family,4,A,Garay,,CITES_EU
-squamosa,Species,1363,Genus,458,A,Willd.,,CITES_EU
 Sarcophyton,Genus,1364,Family,4,A,Garay,,CITES_EU
-transtagana,Species,1364,Genus,458,A,Boiss.,,CITES_EU
 Saundersia,Genus,1365,Family,4,A,Rchb.f.,,CITES_EU
-triflora,Species,1365,Genus,458,A,"Schott, Nyman & Kotschy",,CITES_EU
 Sauroglossum,Genus,1366,Family,4,A,Lindl.,,CITES_EU
-undulata,Species,1366,Genus,458,A,M.Bieb.,,CITES_EU
 Scelochiloides,Genus,1367,Family,4,A,Dodson & M.W.Chase,,CITES_EU
 Sirhookera,Genus,1368,Family,4,A,Kuntze,,CITES_EU
 Solenidiopsis,Genus,1369,Family,4,A,Senghas,,CITES_EU
@@ -1360,21 +1255,128 @@ Xenikophyton,Genus,1403,Family,4,A,Garay,,CITES_EU
 Xerorchis,Genus,1404,Family,4,A,Schltr.,,CITES_EU
 Xylomelum,Genus,1405,Family,32,A,Sm.,,CITES_EU
 Zygosepalum,Genus,1406,Family,4,A,Rchb.f.,,CITES_EU
+Acer,Genus,1502,Family,87,A,L.,,CITES_EU
+Benthamiella,Genus,1991,Family,78,A,Speg.,,CITES_EU
+Ribes,Genus,1992,Family,109,A,L.,,CITES_EU
+Cetraria,Genus,1993,Family,45,A,Ach.,,CITES_EU
+Flora,Kingdom,2,,,A,,,CITES_EU
+Cyatheales,Order,1,Kingdom,2,A,A.B. Frank,,CITES_EU
+Myrtales,Order,2,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
+Caryophyllales,Order,3,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
+Orchidales,Order,4,Kingdom,2,A,Bromhead,,CITES_EU
+Magnoliales,Order,5,Kingdom,2,A,Bromhead,,CITES_EU
+Liliales,Order,6,Kingdom,2,A,Perleb,,CITES_EU
+Nepenthales,Order,7,Kingdom,2,A,Lindl.,,CITES_EU
+Arales,Order,8,Kingdom,2,A,Lindl.,,CITES_EU
+Euphorbiales,Order,9,Kingdom,2,A,Lindl.,,CITES_EU
+Gentianales,Order,10,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
+Cycadales,Order,11,Kingdom,2,A,Pers. ex Bercht. & J. Presl,,CITES_EU
+Pinales,Order,12,Kingdom,2,A,Gorozh.,,CITES_EU
+Violales,Order,13,Kingdom,2,A,Vent. ex Bercht. & J. Presl,,CITES_EU
+Ranunculales,Order,14,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
+Fabales,Order,15,Kingdom,2,A,Bromhead,,CITES_EU
+Laurales,Order,16,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
+Ericales,Order,17,Kingdom,2,A,Bercht. & J. Presl,,CITES_EU
+Arecales,Order,18,Kingdom,2,A,Bromhead,,CITES_EU
+Asterales,Order,19,Kingdom,2,A,Link,,CITES_EU
+Piperales,Order,20,Kingdom,2,A,Bercht. & J. Presl,,CITES_EU
+Rubiales,Order,21,Kingdom,2,A,Benth. & Hook. f.,,CITES_EU
+Proteales,Order,22,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
+Urticales,Order,23,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
+Sapindales,Order,24,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
+Rosales,Order,25,Kingdom,2,A,Bercht. & J. Presl,,CITES_EU
+Dicksoniales,Order,26,Kingdom,2,A,Pic. Serm. ex Reveal,,CITES_EU
+Theales,Order,27,Kingdom,2,A,Lindl.,,CITES_EU
+Lamiales,Order,28,Kingdom,2,A,Bromhead,,CITES_EU
+Lecanorales,Order,29,Kingdom,2,A,,,CITES_EU
+Scrophulariales,Order,30,Kingdom,2,A,Lindl.,,CITES_EU
+Primulales,Order,31,Kingdom,2,A,Lindl.,,CITES_EU
+Rhamnales,Order,32,Kingdom,2,A,Lindl.,,CITES_EU
+Ebenales,Order,33,Kingdom,2,A,Engler,,CITES_EU
+Juglandales,Order,34,Kingdom,2,A,Bercht. & J. Presl,,CITES_EU
+Zingiberales,Order,35,Kingdom,2,A,Griseb.,,CITES_EU
+Celastrales,Order,36,Kingdom,2,A,Link,,CITES_EU
+Lycopodiales,Order,37,Kingdom,2,A,DC. ex Bercht. & J. Presl,,CITES_EU
+Papaverales,Order,38,Kingdom,2,A,Diels,,CITES_EU
+Solanales,Order,39,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
+Dipsacales,Order,40,Kingdom,2,A,Juss. ex Bercht. & J. Presl,,CITES_EU
+Apiales,Order,41,Kingdom,2,A,Nakai,,CITES_EU
+Malvales,Order,42,Kingdom,2,A,Juss.,,CITES_EU
+Fagales,Order,43,Kingdom,2,A,Engl.,,CITES_EU
+Selaginellales,Order,44,Kingdom,2,A,Prantl,,CITES_EU
+Diapensiales,Order,45,Kingdom,2,A,Engler & Gilg,,CITES_EU
+Trochodendrales,Order,46,Kingdom,2,A,Takht. ex Cronquist,,CITES_EU
+Bromeliales,Order,47,Kingdom,2,A,Dumort.,,CITES_EU
+Dioscoreales,Order,48,Kingdom,2,A,Mart.,,CITES_EU
+Linales,Order,49,Kingdom,2,A,Baskerville,,CITES_EU
+Asparagales,Order,50,Kingdom,2,A,Link,,CITES_EU
+Pottiales,Order,51,Kingdom,2,A,M. Fleisch.,,CITES_EU
+Dennstaedtiales,Order,52,Kingdom,2,A,Doweld,,CITES_EU
+Hymenophyllales,Order,53,Kingdom,2,A,A.B. Frank,,CITES_EU
+Cyperales,Order,54,Kingdom,2,A,Hutch.,,CITES_EU
+Polypodiales,Order,55,Kingdom,2,A,Link,,CITES_EU
+Pteridales,Order,56,Kingdom,2,A,Doweld,,CITES_EU
+Saxifragales,Order,57,Kingdom,2,A,,,CITES_EU
+lobelii,Species,4,Genus,1502,A,Ten.,,CITES_EU
+stoloniferus,Species,155,Genus,410,A,W.T.Marshall,,CITES_EU
+phyllanthus,Species,156,Genus,434,A,(Linnaeus) Haworth,,CITES_EU
+laui,Species,165,Genus,443,A,Luethy,,CITES_EU
+squamosa,Species,170,Genus,464,A,(Guerke) Braun,,CITES_EU
+carinatus,Species,203,Genus,617,A,Areces,,CITES_EU
+santamarinae,Species,225,Genus,617,A,Areces,,CITES_EU
+scopulophilus,Species,228,Genus,617,A,Areces,,CITES_EU
+perezassoi,Species,354,Genus,666,A,Areces,,CITES_EU
+marcanoi,Species,455,Genus,821,A,Areces,,CITES_EU
+ewaldiana,Species,472,Genus,946,A,Barthlott & Taylor,,CITES_EU
+hoelleri,Species,481,Genus,946,A,Barthlott & Taylor,,CITES_EU
+juengeri,Species,482,Genus,946,A,Barthlott & Taylor,,CITES_EU
+sulcata,Species,488,Genus,946,A,Weber,,CITES_EU
+davisii,Species,516,Genus,131,A,Turrill,,CITES_EU
+bulbosa,Species,607,Genus,181,A,(L.) Oakes,,CITES_EU
+cucullata,Species,884,Genus,200,A,Boiss. & Heldr.,,CITES_EU
+epipactoides,Species,885,Genus,200,A,Fisch. & C.A.Mey.,,CITES_EU
+comperiana,Species,981,Genus,277,A,(Steven) Asch. & Graebn.,,CITES_EU
+creticum,Species,1085,Genus,312,A,(Dörfl.) Hidebr.,,CITES_EU
+calceolus,Species,1098,Genus,322,A,L.,,CITES_EU
+kalopissii,Species,1112,Genus,331,A,Erich Nelson,,CITES_EU
+austriaca,Species,1336,Genus,458,A,A.Kern.,,CITES_EU
+bessarabica,Species,1337,Genus,458,A,Klokov,,CITES_EU
+bivonae,Species,1338,Genus,458,A,Steud.,,CITES_EU
+clavigera,Species,1340,Genus,458,A,N.E.Br.,,CITES_EU
+clementei,Species,1341,Genus,458,A,Boiss.,,CITES_EU
+deflexa,Species,1343,Genus,458,A,Sibth. & Sm.,,CITES_EU
+duvalii,Species,1344,Genus,458,A,Lecoq & Lamotte,,CITES_EU
+gibelliana,Species,1346,Genus,458,A,Peola,,CITES_EU
+gregersenii,Species,1347,Genus,458,A,K.Maly ex Beck,,CITES_EU
+hierosolymitana,Species,1348,Genus,458,A,Boiss.,,CITES_EU
+isatidifolia,Species,1349,Genus,458,A,Lam.,,CITES_EU
+ledebourii,Species,1350,Genus,458,A,Boiss.,,CITES_EU
+maresii,Species,1351,Genus,458,A,Knoche,,CITES_EU
+medicaginea,Species,1352,Genus,458,A,Boiss.,,CITES_EU
+minuta,Species,1353,Genus,458,A,Loscos & J.Pardo,,CITES_EU
+monchiquensis,Species,1354,Genus,458,A,Franco & P.Silva,,CITES_EU
+montenegrina,Species,1355,Genus,458,A,(Bald.) K.Maly ex Rohlena,,CITES_EU
+nevadensis,Species,1356,Genus,458,A,Boiss. & Reut.,,CITES_EU
+orphanidis,Species,1357,Genus,458,A,Boiss.,,CITES_EU
+polygalifolia,Species,1358,Genus,458,A,Boiss. & Reut.,,CITES_EU
+rechingeri,Species,1359,Genus,458,A,Greuter,,CITES_EU
+soongarica,Species,1362,Genus,458,A,Boiss.,,CITES_EU
+squamosa,Species,1363,Genus,458,A,Willd.,,CITES_EU
+transtagana,Species,1364,Genus,458,A,Boiss.,,CITES_EU
+triflora,Species,1365,Genus,458,A,"Schott, Nyman & Kotschy",,CITES_EU
+undulata,Species,1366,Genus,458,A,M.Bieb.,,CITES_EU
 cilicicus,Species,1482,Genus,476,A,Baker,,CITES_EU
 ikariae,Species,1483,Genus,476,A,Baker,,CITES_EU
 reginae-olgae,Species,1485,Genus,476,A,Orph.,,CITES_EU
-Acer,Genus,1502,Family,87,A,L.,,CITES_EU
 paludosa,Species,1626,Genus,531,A,(L.) Kuntze,,CITES_EU
-Benthamiella,Genus,1991,Family,78,A,Speg.,,CITES_EU
 loeselii,Species,1991,Genus,626,A,(L.) Rich.,,CITES_EU
-Ribes,Genus,1992,Family,109,A,L.,,CITES_EU
 aesculapii,Species,2219,Genus,764,A,Renz,,CITES_EU
 argolica,Species,2220,Genus,764,A,Fleischm.,,CITES_EU
 cretica,Species,2221,Genus,764,A,(Vierh.) E.Nelson,,CITES_EU
 gottfriediana,Species,2222,Genus,764,A,Renz,,CITES_EU
 boryi,Species,2225,Genus,768,A,Rchb.f.,,CITES_EU
-sardoum,Species,2533,Genus,1992,A,Martelli,,CITES_EU
 sardoum,Species,2533,Genus,953,A,Martelli,,CITES_EU
+sardoum,Species,2533,Genus,1992,A,Martelli,,CITES_EU
 romanzoffiana,Species,2899,Genus,1038,A,Cham.,,CITES_EU
 albisepta,Species,2962,Genus,212,A,Jum. & H.Perrier,,CITES_EU
 aridicola,Species,2967,Genus,212,A,W.W.Sm.,,CITES_EU
@@ -1525,7 +1527,6 @@ longipetalum,Species,5975,Genus,997,A,Lindl.,,CITES_EU
 longifolia,Species,6052,Genus,1049,A,Hook.f.,,CITES_EU
 neriifolius,Species,6212,Genus,865,A,D.Don in Lambert,,CITES_EU
 loureiroi,Species,7219,Genus,1173,A,Kunth,,CITES_EU
-lugardii,Subspecies,7428,Species,192611,A,(N.E.Br) Bruyns,,CITES_EU
 ciliata,Species,7429,Genus,212,A,Wight,,CITES_EU
 ensifolia,Species,7431,Genus,212,A,Bedd.,,CITES_EU
 intermedia,Species,7433,Genus,212,A,Wight,,CITES_EU
@@ -1714,10 +1715,8 @@ galeatum,Species,8715,Genus,83,A,N.E. Br.,,CITES_EU
 jacquemontii,Species,8716,Genus,83,A,Blume,,CITES_EU
 nepenthoides,Species,8717,Genus,83,A,(Wall.) Mart.,,CITES_EU
 speciosum,Species,8718,Genus,83,A,(Wall.) Mart.,,CITES_EU
-urashima,Variety,8719,Species,192618,A,H. Ohashi & J. Murata,,CITES_EU
 tortuosum,Species,8720,Genus,83,A,Schott,,CITES_EU
 triphyllum,Species,8721,Genus,83,A,(L.) Schott,,CITES_EU
-marmarisense,Subspecies,8722,Species,516,A,P.Boyce,,CITES_EU
 ditschianum,Species,8725,Genus,131,A,J.Bogner & P.Boyce,,CITES_EU
 clavifolia,Species,8726,Genus,783,A,Marloth,,CITES_EU
 euphorbioides,Species,8727,Genus,783,A,Hutchinson,,CITES_EU
@@ -1752,7 +1751,6 @@ grandiflorum,Species,8825,Genus,1121,A,Salisb.,,CITES_EU
 luteum,Species,8830,Genus,1121,A,Harbison,,CITES_EU
 keysii,Species,8843,Genus,144,A,Domin,,CITES_EU
 recurvatum,Species,8845,Genus,1121,A,Beck,,CITES_EU
-alabamensis,Subspecies,8848,Species,163021,A,(Case & Case) Schnell,,CITES_EU
 sessile,Species,8852,Genus,1121,A,L.,,CITES_EU
 undulatum,Species,8862,Genus,1121,A,Willd.,,CITES_EU
 fruticulosa,Species,8869,Genus,205,A,Pearson & E.L. Stephens,,CITES_EU
@@ -1820,22 +1818,18 @@ betsileensis,Species,9287,Genus,38,A,H. Perrier,,CITES_EU
 boiteaui,Species,9288,Genus,38,A,Guillaumin,,CITES_EU
 buchlohii,Species,9289,Genus,38,A,Rauh,,CITES_EU
 calcairophila,Species,9292,Genus,38,A,Reynolds 1961,,CITES_EU
-rugosquamosa,Variety,9299,Species,9714,A,H. Perrier,,CITES_EU
-schistophila,Variety,9300,Species,9714,A,H. Perrier,,CITES_EU
 conifera,Species,9301,Genus,38,A,H. Perrier,,CITES_EU
 cryptoflora,Species,9303,Genus,38,A,G. Reyn.,,CITES_EU
 descoingsii,Species,9309,Genus,38,A,G. Reyn. 1958,,CITES_EU
 ericetorum,Species,9312,Genus,38,A,Bosser,,CITES_EU
 erythrophylla,Species,9313,Genus,38,A,Bosser,,CITES_EU
 fievetii,Species,9314,Genus,38,A,G. Reyn.,,CITES_EU
-aurantiaca,Variety,9316,Species,8702,A,H. Perrier 1926,,CITES_EU
 helenae,Species,9317,Genus,38,A,Danguy 1929,,CITES_EU
 humbertii,Species,9318,Genus,38,A,H. Perrier,,CITES_EU
 ibitiensis,Species,9319,Genus,38,A,H. Perrier,,CITES_EU
 imalotensis,Species,9320,Genus,38,A,Reynolds,,CITES_EU
 isaloensis,Species,9322,Genus,38,A,H. Perrier,,CITES_EU
 itremensis,Species,9323,Genus,38,A,G. Reyn.,,CITES_EU
-maniaensis,Variety,9325,Species,8704,A,H. Perrier 1926,,CITES_EU
 leandrii,Species,9326,Genus,38,A,Bosser,,CITES_EU
 macroclada,Species,9327,Genus,38,A,Baker,,CITES_EU
 mayottensis,Species,9330,Genus,38,A,A. Berger,,CITES_EU
@@ -1866,7 +1860,6 @@ baccifera,Species,9399,Genus,946,A,(J.S.Mueller) Stearn,,CITES_EU
 fornicatus,Species,9421,Genus,288,A,(Blume) Kuntze,,CITES_EU
 baronii,Species,9440,Genus,794,A,Constantin & Bois 1907,,CITES_EU
 letestui,Species,9538,Genus,458,A,Raynal,,CITES_EU
-tobuschii,Subspecies,9584,Species,75952,A,(Marshall) Taylor,,CITES_EU
 pubispinus,Species,9626,Genus,1002,A,(Engelmann) Benson,,CITES_EU
 mongolica,Species,9629,Genus,1013,A,Maxim.,,CITES_EU
 pulvinata,Species,9645,Genus,1044,A,Grubov,,CITES_EU
@@ -1890,8 +1883,8 @@ geniculata,Species,9717,Genus,874,A,Summerh.,,CITES_EU
 victoriae,Species,9718,Genus,874,A,Kraenzl.,,CITES_EU
 longipetiola,Species,9719,Genus,1176,A,C. DC.,,CITES_EU
 cucullata,Species,9720,Genus,1139,A,J. Braun & Schumann,,CITES_EU
+cotyledon,Species,9730,Genus,622,A,Robinson,,CITES_EU
 formosa,Species,9749,Genus,399,A,R. Br.,,CITES_EU
-obovata,Variety,9762,Species,172451,A,(Korth.) Govaerts,,CITES_EU
 x barbeyi,Species,9769,Genus,322,H,Camus,,CITES_EU
 margaritaceum,Species,9793,Genus,322,A,Franch.,,CITES_EU
 parviflorum,Species,9813,Genus,322,A,E.Salisb.,,CITES_EU
@@ -2079,7 +2072,6 @@ griseola,Species,11285,Genus,458,A,Pax,,CITES_EU
 pillansii,Species,11286,Genus,458,A,N.E. Br.,,CITES_EU
 thinophila,Species,11287,Genus,458,A,Philippi,,CITES_EU
 beguinii,Species,11289,Genus,1130,A,(Taylor) Mosco & Zanovello,,CITES_EU
-trigonus,Subspecies,11297,Species,29422,A,(Weber) Anderson & Fitz Maurice,,CITES_EU
 antso,Species,11298,Genus,458,A,Denis,,CITES_EU
 lecointei,Species,11299,Genus,1165,A,Ducke,,CITES_EU
 duranii,Species,11300,Genus,458,A,Ursch & Leandri,,CITES_EU
@@ -3063,16 +3055,12 @@ tenuicylindrica,Species,15943,Genus,812,A,(Ritter) Hunt,,CITES_EU
 turbinata,Species,15945,Genus,812,A,(Arechavaleta) Hofacker,,CITES_EU
 turecekiana,Species,15946,Genus,812,A,Kiesling,,CITES_EU
 werneri,Species,15969,Genus,812,A,Hofacker,,CITES_EU
-despainii,Subspecies,15981,Species,26483,A,(Welsh & Goodrich) Hochstaetter,,CITES_EU
 dwyeri,Species,15988,Genus,458,A,Burch,,CITES_EU
-winkleri,Subspecies,15992,Species,26483,A,(Heil) Hochstaetter,,CITES_EU
 comacephala,Species,16082,Genus,658,A,Ritter,,CITES_EU
 nigrispinus,Species,16095,Genus,815,A,(Hochstaetter) Hochstaetter,,CITES_EU
 riosaniensis,Species,16150,Genus,931,A,Backeberg,,CITES_EU
 albiflora,Species,16204,Genus,935,A,Ritter & Buining,,CITES_EU
 macdougallii,Species,16229,Genus,819,A,Cutak,,CITES_EU
-grandifolia,Subspecies,16240,Species,107800,A,,,CITES_EU
-horrida,Subspecies,16249,Species,169130,A,,,CITES_EU
 spathulata,Species,16257,Genus,822,A,(Otto ex Pfeiffer) Britton & Rose,,CITES_EU
 aurisetus,Species,16268,Genus,843,A,(Werdermann) Byles & Rowley,,CITES_EU
 cardenasiana,Species,16279,Genus,935,A,(R.Vasquez) G.Navarro,,CITES_EU
@@ -3134,7 +3122,6 @@ collina,Species,16773,Genus,657,A,L.O. Wms.,,CITES_EU
 pelecaniceps,Species,16774,Genus,657,A,Luer,,CITES_EU
 pleurothalloides,Species,16775,Genus,657,A,Luer,,CITES_EU
 allenii,Species,16776,Genus,659,A,L.O. Williams,,CITES_EU
-disciformis,Subspecies,16777,Species,29601,A,,,CITES_EU
 longipetiolata,Species,16778,Genus,659,A,Ames & C. Schweinf.,,CITES_EU
 planicola,Species,16779,Genus,659,A,C. Schweinf.,,CITES_EU
 powellii,Species,16780,Genus,659,A,Schltr.,,CITES_EU
@@ -3252,7 +3239,6 @@ carambeiensis,Species,17321,Genus,812,A,(Buining & Brederoo) Hofacker,,CITES_EU
 muricata,Species,17322,Genus,812,A,(Otto ex Pfeiffer) Hofacker,,CITES_EU
 tilcarensis,Species,17334,Genus,812,A,(Werdermann & Backeberg) Backeberg,,CITES_EU
 pterocarpa,Species,17336,Genus,770,A,Oerst.,,CITES_EU
-rauhii,Subspecies,17340,Species,169130,A,(Backeberg) Ostolaza,,CITES_EU
 euchlorus,Species,17353,Genus,885,A,(Weber) Taylor,,CITES_EU
 saxicola,Species,17374,Genus,885,A,(Morong) Taylor,,CITES_EU
 hemitomophylla,Species,17388,Genus,318,A,(Donn. Sm.) Britton & Rose,,CITES_EU
@@ -3262,7 +3248,6 @@ viereckii,Species,17439,Genus,410,A,Werdermann,,CITES_EU
 schroederianum,Species,17444,Genus,521,A,Osten,,CITES_EU
 streptacantha,Species,17486,Genus,765,A,Lemaire,,CITES_EU
 ticnamarensis,Species,17491,Genus,765,A,(Ritter) Hunt,,CITES_EU
-pseudomacrochele,Subspecies,17502,Species,29607,A,,,CITES_EU
 zaragozae,Species,17505,Genus,1130,A,(Glass & Foster) Glass & Hofer ex Glass,,CITES_EU
 glaber,Species,17508,Genus,1153,A,(Eichlam) Rowley,,CITES_EU
 costaricensis,Species,17514,Genus,123,A,Standley & L.O. Williams,,CITES_EU
@@ -4188,7 +4173,6 @@ lacerum,Species,25505,Genus,430,A,Lindl.,,CITES_EU
 bokei,Species,25510,Genus,437,A,Benson,,CITES_EU
 collenetteae,Species,25523,Genus,38,A,Lavranos,,CITES_EU
 collina,Species,25573,Genus,38,A,S.Carter,,CITES_EU
-paucituberculata,Variety,25578,Species,9714,A,Lavranos,,CITES_EU
 cyrtophylla,Species,25611,Genus,38,A,Lavranos,,CITES_EU
 debrana,Species,25622,Genus,38,A,Christian,,CITES_EU
 ecristata,Species,25667,Genus,917,A,(Fern.) Rolfe,,CITES_EU
@@ -4276,7 +4260,6 @@ steffanieana,Species,26875,Genus,38,A,Rauh,,CITES_EU
 tewoldei,Species,26931,Genus,38,A,M.G.Gilbert & Sebsebe,,CITES_EU
 tormentorii,Species,26941,Genus,38,A,(Marais) L.E.Newton & G.D.Rowley,,CITES_EU
 oreophila,Species,26942,Genus,983,A,(Kearney) Wherry,,CITES_EU
-jonesii,Subspecies,26944,Species,163021,A,(Wherry) Wherry,,CITES_EU
 glaucus,Species,26976,Genus,1002,A,(Schumann) Benson,,CITES_EU
 mesae-verdae,Species,26977,Genus,1002,A,(Boissevain & Davidson ex Marshall & Bock) Benson,,CITES_EU
 polyancistrus,Species,26978,Genus,1002,A,(Engelmann & Bigelow) Britton & Rose,,CITES_EU
@@ -4321,7 +4304,6 @@ barthelowanus,Species,27441,Genus,410,A,Britton & Rose,,CITES_EU
 brandegeei,Species,27448,Genus,410,A,(J. Coulter) Schumann,,CITES_EU
 grandis,Species,27455,Genus,410,A,Britton & Rose,,CITES_EU
 laui,Species,27462,Genus,410,A,G.R.W.Frank,,CITES_EU
-lindsayi,Subspecies,27463,Species,11877,A,(Meyran) Taylor,,CITES_EU
 nivosus,Species,27469,Genus,410,A,Glass & Foster,,CITES_EU
 palmeri,Species,27472,Genus,410,A,Britton & Rose,,CITES_EU
 pensilis,Species,27473,Genus,410,A,(K.Brandegee) J.Purpus,,CITES_EU
@@ -4409,7 +4391,6 @@ montanus,Species,27657,Genus,1048,A,(Britton & Rose) Buxbaum,,CITES_EU
 pruinosus,Species,27658,Genus,1048,A,(Otto ex Pfeiffer) Buxbaum,,CITES_EU
 queretaroensis,Species,27659,Genus,1048,A,(Weber) Buxbaum,,CITES_EU
 standleyi,Species,27660,Genus,1048,A,(J.G.Ortega) Buxbaum,,CITES_EU
-conothelos,Subspecies,27662,Species,16435,A,,,CITES_EU
 tulensis,Species,27665,Genus,1090,A,(Poselger) Britton & Rose,,CITES_EU
 lophophoroides,Species,27666,Genus,1130,A,(Werdermann) Buxbaum & Backeberg,,CITES_EU
 valdezianus,Species,27670,Genus,1130,A,(Moeller) Glass & Foster,,CITES_EU
@@ -5295,7 +5276,6 @@ hymenophyllidia,Species,33938,Genus,1165,A,D.W.Stev.,,CITES_EU
 lacandona,Species,33955,Genus,1165,A,B.Schutzman & A.P.Vovides,,CITES_EU
 melanorrhachis,Species,33970,Genus,1165,A,D.W.Stev.,,CITES_EU
 prasina,Species,33978,Genus,1165,A,W.Bull,,CITES_EU
-angustifolium,Variety,33989,Species,164992,A,Lindl.,,CITES_EU
 urep,Species,34016,Genus,1165,A,B.Walln.,,CITES_EU
 aculeata,Species,34017,Genus,311,A,K.D.Hill & H.T.Nguyen,,CITES_EU
 bifida,Species,34023,Genus,311,A,(Dyer) K.D.Hill,,CITES_EU
@@ -7213,7 +7193,6 @@ major,Species,54015,Genus,506,A,Ames & Correll,,CITES_EU
 aureum,Species,54092,Genus,314,A,Lindl. & Paxton,,CITES_EU
 skinneri,Species,54148,Genus,637,A,(Bateman ex Lindl.) Lindl. 1843,,CITES_EU
 asterias,Species,54149,Genus,102,A,(Karwinski ex Zuccarini) Lemaire,,CITES_EU
-aurantiacus,Subspecies,54151,Species,16435,A,(Glass & Foster) Glass,,CITES_EU
 dorotheae,Species,54381,Genus,115,A,Halb. 1976,,CITES_EU
 amabilis,Species,54382,Genus,136,A,C. Schweinf.,,CITES_EU
 cirrhosum,Species,54383,Genus,163,A,L.O. Williams,,CITES_EU
@@ -7931,7 +7910,6 @@ victoria-mariae,Species,73507,Genus,802,A,(Sander ex Mast.) Rolfe,,CITES_EU
 repandum,Species,73508,Genus,312,A,Sibth. & Sm.,,CITES_EU
 intaminatum,Species,73512,Genus,312,A,(Meikle) Grey-Wilson,,CITES_EU
 coum,Species,73515,Genus,312,A,Mill.,,CITES_EU
-caucasicum,Subspecies,73516,Species,73515,A,(K. Koch) Schwarz,,CITES_EU
 libanoticum,Species,73518,Genus,312,A,Hildebr.,,CITES_EU
 hederifolium,Species,73525,Genus,312,A,Aiton,,CITES_EU
 africanum,Species,73526,Genus,312,A,Boiss. & Reut.,,CITES_EU
@@ -10265,7 +10243,6 @@ masirahensis,Species,110653,Genus,458,A,Ghazanfar,,CITES_EU
 riebeckii,Species,110655,Genus,458,A,Pax,,CITES_EU
 smithii,Species,110659,Genus,458,A,S. Carter,,CITES_EU
 malacophylla,Species,110664,Genus,528,A,Rchb. f.,,CITES_EU
-barklyi,Subspecies,110957,Species,192615,A,Bruyns,,CITES_EU
 anceps,Species,110961,Genus,212,A,S. Moore,,CITES_EU
 angusta,Species,110962,Genus,212,A,N.E. Brown,,CITES_EU
 angustilimba,Species,110963,Genus,212,A,Merrill,,CITES_EU
@@ -10276,9 +10253,6 @@ batesii,Species,110974,Genus,212,A,S. Moore,,CITES_EU
 beccariana,Species,110975,Genus,212,A,Martelli,,CITES_EU
 bequaertii,Species,110976,Genus,212,A,Wildemann,,CITES_EU
 bonafouxii,Species,110977,Genus,212,A,Schumann,,CITES_EU
-connivens,Subspecies,111002,Species,192616,A,(R.A. Dyer) Bruyns,,CITES_EU
-geniculata,Subspecies,111003,Species,192616,A,(R.A. Dyer) Bruyns,,CITES_EU
-woodii,Subspecies,111012,Species,192617,A,(Schlechter) H. Huber,,CITES_EU
 occulta,Species,111025,Genus,212,A,R.A. Dyer,,CITES_EU
 pachystelma,Species,111027,Genus,212,A,Schlecter,,CITES_EU
 variegata,Species,111042,Genus,212,A,(Forssk.) Decne.,,CITES_EU
@@ -10491,7 +10465,6 @@ petrophila,Species,149326,Genus,458,A,C.A.Mey.,,CITES_EU
 apifera,Species,149372,Genus,764,A,Huds.,,CITES_EU
 purpurascens,Species,150240,Genus,312,A,Miller,,CITES_EU
 elata,Species,150247,Genus,331,A,(Poir.) Soó,,CITES_EU
-incarnata,Subspecies,150250,Species,51976,A,,,CITES_EU
 apios,Species,150356,Genus,458,A,L.,,CITES_EU
 hyberna,Species,150367,Genus,458,A,L.,,CITES_EU
 spinosa,Species,150373,Genus,458,A,L.,,CITES_EU
@@ -10824,9 +10797,6 @@ arida,Species,160016,Genus,382,A,Vlok,,CITES_EU
 leachii,Species,160115,Genus,454,A,Greatrex ex A.V.Hall,,CITES_EU
 rubiginosa,Species,160123,Genus,462,A,(Sond. ex Bolus) Kurzweil & H.P.Linder,,CITES_EU
 lamprophylla,Species,160127,Genus,142,A,J.L.Stewart,,CITES_EU
-annulata,Subspecies,160440,Species,185013,A,(N.E.Br.) Bruyns,,CITES_EU
-pilifera,Subspecies,160441,Species,185013,A,,,CITES_EU
-pillansii,Subspecies,160442,Species,185013,A,(N.E.Br.) Bruyns,,CITES_EU
 torquata,Species,160545,Genus,371,A,H.Perr.,,CITES_EU
 decaryana,Species,160547,Genus,371,A,H.Perr.,,CITES_EU
 myrtifolia,Species,160548,Genus,371,A,H.Perr.,,CITES_EU
@@ -10837,13 +10807,12 @@ conifera,Species,160552,Genus,371,A,H.Perr.,,CITES_EU
 toxicaria,Species,160553,Genus,371,A,Hiern,,CITES_EU
 striicalyx,Species,160554,Genus,371,A,H.Perr.,,CITES_EU
 danguyana,Species,160555,Genus,371,A,H.Perr.,,CITES_EU
-aculeata,Subspecies,160556,Species,192592,A,,,CITES_EU
-meridionalis,Subspecies,160557,Species,192592,A,H.Perr.,,CITES_EU
 ketsensis,Species,160558,Genus,371,A,H.Perr.,,CITES_EU
 humbertiana,Species,160559,Genus,371,A,H.Perr.,,CITES_EU
+cinnamomoides,Species,160560,Genus,371,A,H.Perrier,,CITES_EU
 erythrosperma,Species,160562,Genus,371,A,H.Perr.,,CITES_EU
+analamerensis,Species,160563,Genus,371,A,H.Perrier,,CITES_EU
 greveana,Species,160564,Genus,371,A,(Pierre) H.Perr.,,CITES_EU
-boinensis,Subspecies,160565,Species,160564,A,H.Perr.,,CITES_EU
 tampinensis,Species,160567,Genus,371,A,H.Perr.,,CITES_EU
 louveli,Species,160568,Genus,371,A,H.Perr.,,CITES_EU
 masoalensis,Species,160569,Genus,371,A,H.Perr.,,CITES_EU
@@ -10873,7 +10842,6 @@ fuscovelutina,Species,160604,Genus,371,A,Baker,,CITES_EU
 urschii,Species,160605,Genus,371,A,H.Perr.,,CITES_EU
 hazomainty,Species,160606,Genus,371,A,H.Perr.,,CITES_EU
 tetraceros,Species,160607,Genus,371,A,H.Perr.,,CITES_EU
-pruinosa,Variety,160608,Species,192610,A,,,CITES_EU
 bernieri,Species,160611,Genus,371,A,Hiern,,CITES_EU
 conradiae,Species,160760,Genus,764,A,Melki & Deschâtres,,CITES_EU
 minima,Species,160923,Genus,38,A,Baker,,CITES_EU
@@ -10928,11 +10896,9 @@ whitelockii,Species,161738,Genus,418,A,P.J.H.Hurter,,CITES_EU
 aplanatus,Species,161739,Genus,418,A,Vorster,,CITES_EU
 hirsutus,Species,161740,Genus,418,A,P.J.H.Hurter,,CITES_EU
 brevifoliolatus,Species,161741,Genus,418,A,Vorster,,CITES_EU
-matsudai,Variety,161848,Species,192612,A,,,CITES_EU
 parviflora,Species,162304,Genus,29,A,Torr.,,CITES_EU
 chisoensis,Species,162495,Genus,410,A,W.T.Marshall,,CITES_EU
 papillosus,Species,162498,Genus,410,A,Linke ex Rumpler,,CITES_EU
-leei,Subspecies,162555,Species,106414,A,(Rose ex Bodeker) Hunt,,CITES_EU
 gosseliniana,Species,162780,Genus,765,A,Weber,,CITES_EU
 parryi,Species,162781,Genus,765,A,Engelmann,,CITES_EU
 peeblesianus,Species,162803,Genus,815,A,(Croizat) L.Benson,,CITES_EU
@@ -10974,7 +10940,6 @@ rotundata,Species,165524,Genus,611,A,Griseb.,,CITES_EU
 woodiana,Species,165525,Genus,611,A,F. & R.,,CITES_EU
 wullschlaegelii,Species,165526,Genus,611,A,F. & R.,,CITES_EU
 erectocentrus,Species,166042,Genus,1002,A,(Coulter) Taylor,,CITES_EU
-violacea,Subspecies,166116,Species,107800,A,(Leuenberger) Taylor & Zappi,,CITES_EU
 annectans,Species,166296,Genus,861,A,Luer,,CITES_EU
 isthmica,Species,166297,Genus,861,A,Luer,,CITES_EU
 pan,Species,166298,Genus,861,A,Luer,,CITES_EU
@@ -11091,7 +11056,6 @@ uxorium,Species,170107,Genus,147,A,Luer & Vásquez,,CITES_EU
 werneri,Species,170168,Genus,765,A,Eggli,,CITES_EU
 bahiensis,Species,170174,Genus,89,A,(Braun & Esteves Pereira) Taylor & Eggli,,CITES_EU
 fissuratus,Species,170687,Genus,82,A,(Engelmann) Schumann,,CITES_EU
-esperanzae,Subspecies,170702,Species,29601,A,Glass & Arias,,CITES_EU
 alonsoi,Species,170705,Genus,1130,A,Glass & Arias,,CITES_EU
 bonatzii,Species,170706,Genus,1130,A,G.Frank,,CITES_EU
 booleanus,Species,170707,Genus,1130,A,G.S.Hinton,,CITES_EU
@@ -11117,7 +11081,6 @@ javana,Species,170770,Genus,311,A,(Miq.) de Laub.,,CITES_EU
 lane-poolei,Species,170771,Genus,311,A,C.A.Gardner,,CITES_EU
 lindstromii,Species,170772,Genus,311,A,"S.L.Yang, K.D.Hill & N.T.Hiep",,CITES_EU
 macrocarpa,Species,170776,Genus,311,A,Griff.,,CITES_EU
-media,Subspecies,170777,Species,10386,A,R.Br.,,CITES_EU
 micronesica,Species,170780,Genus,311,A,K.D.Hill,,CITES_EU
 orientis,Species,170782,Genus,311,A,K.D.Hill,,CITES_EU
 semota,Species,170783,Genus,311,A,K.D.Hill,,CITES_EU
@@ -11153,10 +11116,6 @@ capsaintemariensis,Species,170825,Genus,458,A,Rauh 1970,,CITES_EU
 cattimandoo,Species,170826,Genus,458,A,Elliot ex Wight,,CITES_EU
 comosa,Species,170827,Genus,458,A,Vellozo,,CITES_EU
 copiapina,Species,170828,Genus,458,A,Philippi,,CITES_EU
-rakotozafyi,Variety,170831,Species,106241,A,(Cremers) Rauh,,CITES_EU
-ampanihyensis,Variety,170832,Species,9206,A,Cremers,,CITES_EU
-robinsonii,Variety,170834,Species,9206,A,Cremers,,CITES_EU
-spirosticha,Variety,170835,Species,9206,A,Rauh & Buchloh,,CITES_EU
 despoliata,Species,170836,Genus,458,A,(Menezes) Monod,,CITES_EU
 echinus,Species,170837,Genus,458,A,Hook.f. & Cosson,,CITES_EU
 elliotii,Species,170838,Genus,458,A,Leandri,,CITES_EU
@@ -11177,9 +11136,6 @@ leonensis,Species,170865,Genus,458,A,N.E.Br.,,CITES_EU
 longifolia,Species,170866,Genus,458,A,Lamarck,,CITES_EU
 mahabobokensis,Species,170869,Genus,458,A,Rauh,,CITES_EU
 meenae,Species,170870,Genus,458,A,S.Carter,,CITES_EU
-antsingiensis,Variety,170871,Species,9246,A,Cremers,,CITES_EU
-bemarahensis,Variety,170872,Species,9246,A,Cremers,,CITES_EU
-multiflora,Variety,170874,Species,9246,A,Rauh,,CITES_EU
 robivelonae,Species,170881,Genus,458,A,Rauh,,CITES_EU
 serendipita,Species,170884,Genus,458,A,L.E.Newton,,CITES_EU
 strigosa,Species,170887,Genus,458,A,Hooker & Arnott,,CITES_EU
@@ -11251,7 +11207,6 @@ dubia,Species,172893,Genus,57,A,Rchb.f. 1882,,CITES_EU
 uniflora,Species,172895,Genus,57,A,Ruiz & Pav. 1798,,CITES_EU
 hohenlohii,Species,172897,Genus,57,A,C.Morren 1853,,CITES_EU
 purpurea,Species,172900,Genus,57,A,Linden ex B.S.Williams 1881,,CITES_EU
-macroglossa,Variety,172901,Species,172897,A,C.Morren,,CITES_EU
 ruckeri,Species,172905,Genus,57,A,Lindl. 1846,,CITES_EU
 tognettiae,Species,172908,Genus,57,A,Oakeley 1999,,CITES_EU
 virginalis,Species,172912,Genus,57,A,Lindl. ex B.S.Williams 1872,,CITES_EU
@@ -11874,7 +11829,6 @@ aceras,Species,175680,Genus,503,A,Dressler,,CITES_EU
 alfieana,Species,175681,Genus,503,A,R.Rice (2001),,CITES_EU
 arcuata,Species,175683,Genus,503,A,G.Gerlach & Toulemonde (2001),,CITES_EU
 armeniaca,Species,175684,Genus,503,A,(Lindl.) Rchb.f. 1854,,CITES_EU
-cornuta,Subspecies,175688,Species,175684,A,(Klotzsch) Stein 1892,,CITES_EU
 beyrodtiana,Species,175692,Genus,503,A,Schltr.,,CITES_EU
 cassidea,Species,175693,Genus,503,A,Rchb.f. (1864),,CITES_EU
 catilligera,Species,175694,Genus,503,A,R.Rice (2001),,CITES_EU
@@ -12230,7 +12184,6 @@ incriptiosinensis,Species,176586,Genus,830,A,Fowlie,,CITES_EU
 philippinensis,Species,176593,Genus,830,A,Golamco ex Fowlie & Tang,,CITES_EU
 speciosa,Species,176599,Genus,830,A,Rchb.f.,,CITES_EU
 incana,Species,176615,Genus,39,A,(H.Karst) D.S.Conant 1983,,CITES_EU
-capensis,Subspecies,176616,Species,173613,A,(L.f) Sm.,,CITES_EU
 cipoensis,Species,176618,Genus,39,A,Sehnem 1978,,CITES_EU
 cubensis,Species,176619,Genus,39,A,(Maxon) comb.ined.,,CITES_EU
 latebrosa,Species,176620,Genus,39,A,Wall. ex Hook. 1844,,CITES_EU
@@ -12254,7 +12207,6 @@ rojasii,Species,176656,Genus,309,A,Christ 1909,,CITES_EU
 serpens,Species,176657,Genus,309,A,(R.M.Tryon) nom. ined.,,CITES_EU
 thysanolepis,Species,176658,Genus,309,A,(Barrington) A.R.Sm.,,CITES_EU
 lathamii,Species,176659,Genus,309,A,Holtt.,,CITES_EU
-lunulata,Subspecies,176664,Species,174593,A,,,CITES_EU
 cooperi,Species,176668,Genus,1034,A,(Hook. F.v. Muell 1866) R.Tryon 1970,,CITES_EU
 grandifolia,Species,176682,Genus,261,A,(Willd. 1810) Proctor 1961,,CITES_EU
 dalessandroi,Species,176686,Genus,11,A,Dodson 1984,,CITES_EU
@@ -12686,7 +12638,6 @@ welwitschii,Species,179291,Genus,382,A,Rchb.f.,,CITES_EU
 zimbabweensis,Species,179302,Genus,382,A,H.P.Linder,,CITES_EU
 zombica,Species,179305,Genus,382,A,N.E.Br.,,CITES_EU
 mesembryanthoides,Species,179954,Genus,946,A,Haworth,,CITES_EU
-viereckii,Subspecies,180240,Species,75728,A,,,CITES_EU
 aciculare,Species,180274,Genus,341,A,Lindl.,,CITES_EU
 acutimentum,Species,180275,Genus,341,A,J.J.Sm.,,CITES_EU
 amethystoglossum,Species,180276,Genus,341,A,Rchb.f.,,CITES_EU
@@ -16741,7 +16692,6 @@ bernieriana,Species,192537,Genus,371,A,(Baill.) H.Perrier,,CITES_EU
 boinensis,Species,192538,Genus,371,A,(H. Perrier),,CITES_EU
 clusiifolia,Species,192541,Genus,371,A,(Hiern) G.E.Schatz & Lowry,,CITES_EU
 dycorypheoides,Species,192542,Genus,371,A,H.Perrier,,CITES_EU
-meridionalis,Variety,192543,Species,192542,A,H.Perrier,,CITES_EU
 ebenifera,Species,192544,Genus,371,A,(Hiern) G.E.Schatz & Lowry,,CITES_EU
 enervis,Species,192545,Genus,371,A,(H.Perrier),,CITES_EU
 erinacea,Species,192547,Genus,371,A,(H.Perrier),,CITES_EU
@@ -16777,7 +16727,6 @@ quartzitarium,Species,192580,Genus,371,A,,,CITES_EU
 quercina,Species,192581,Genus,371,A,(Baill.),,CITES_EU
 rubrolanata,Species,192582,Genus,371,A,H.Perrier,,CITES_EU
 sphaerosepala,Species,192584,Genus,371,A,Baker,,CITES_EU
-calyculata,Variety,192585,Species,192584,A,H.Perrier,,CITES_EU
 stenocarpa,Species,192586,Genus,371,A,(H.Perrier),,CITES_EU
 subacuta,Species,192587,Genus,371,A,Hiern,,CITES_EU
 subenervis,Species,192588,Genus,371,A,,,CITES_EU
@@ -16790,7 +16739,6 @@ johannis,Species,192596,Genus,38,A,J.-B.Castillon,,CITES_EU
 pruinosa,Species,192610,Genus,371,A,Hiern,,CITES_EU
 currorii,Species,192611,Genus,564,A,Decne.,,CITES_EU
 lonicerifolia,Species,192612,Genus,577,A,Hayata,,CITES_EU
-loureiroi,Variety,192613,Species,7219,A,,,CITES_EU
 betongensis,Species,192614,Genus,648,A,(Craib) H.Keng,,CITES_EU
 africana,Species,192615,Genus,212,A,R.Br.,,CITES_EU
 fimbriata,Species,192616,Genus,212,A,E.Mey.,,CITES_EU
@@ -16800,3 +16748,63 @@ songarica,Species,192619,Genus,1013,A,"(Fisch., C.A. Mey., & Avé-Lall.) Bocquet
 henrici,Species,200000,Genus,1178,A,(Schltr.) P.J.Cribb,,CITES_EU
 aurantiacus,Species,200001,Genus,351,A,(Lex.),,CITES_EU
 trulliformis,Species,200004,Genus,172,A,King & Pantl.,,CITES_EU
+lugardii,Subspecies,7428,Species,192611,A,(N.E.Br) Bruyns,,CITES_EU
+marmarisense,Subspecies,8722,Species,516,A,P.Boyce,,CITES_EU
+alabamensis,Subspecies,8848,Species,163021,A,(Case & Case) Schnell,,CITES_EU
+tobuschii,Subspecies,9584,Species,75952,A,(Marshall) Taylor,,CITES_EU
+trigonus,Subspecies,11297,Species,29422,A,(Weber) Anderson & Fitz Maurice,,CITES_EU
+despainii,Subspecies,15981,Species,26483,A,(Welsh & Goodrich) Hochstaetter,,CITES_EU
+winkleri,Subspecies,15992,Species,26483,A,(Heil) Hochstaetter,,CITES_EU
+grandifolia,Subspecies,16240,Species,107800,A,,,CITES_EU
+horrida,Subspecies,16249,Species,169130,A,,,CITES_EU
+disciformis,Subspecies,16777,Species,29601,A,,,CITES_EU
+rauhii,Subspecies,17340,Species,169130,A,(Backeberg) Ostolaza,,CITES_EU
+pseudomacrochele,Subspecies,17502,Species,29607,A,,,CITES_EU
+jonesii,Subspecies,26944,Species,163021,A,(Wherry) Wherry,,CITES_EU
+lindsayi,Subspecies,27463,Species,11877,A,(Meyran) Taylor,,CITES_EU
+conothelos,Subspecies,27662,Species,16435,A,,,CITES_EU
+aurantiacus,Subspecies,54151,Species,16435,A,(Glass & Foster) Glass,,CITES_EU
+caucasicum,Subspecies,73516,Species,73515,A,(K. Koch) Schwarz,,CITES_EU
+davisii,Subspecies,101057,Species,516,A,Turrill,,CITES_EU
+barklyi,Subspecies,110957,Species,192615,A,Bruyns,,CITES_EU
+connivens,Subspecies,111002,Species,192616,A,(R.A. Dyer) Bruyns,,CITES_EU
+geniculata,Subspecies,111003,Species,192616,A,(R.A. Dyer) Bruyns,,CITES_EU
+woodii,Subspecies,111012,Species,192617,A,(Schlechter) H. Huber,,CITES_EU
+incarnata,Subspecies,150250,Species,51976,A,,,CITES_EU
+annulata,Subspecies,160440,Species,185013,A,(N.E.Br.) Bruyns,,CITES_EU
+pilifera,Subspecies,160441,Species,185013,A,,,CITES_EU
+pillansii,Subspecies,160442,Species,185013,A,(N.E.Br.) Bruyns,,CITES_EU
+aculeata,Subspecies,160556,Species,192592,A,,,CITES_EU
+meridionalis,Subspecies,160557,Species,192592,A,H.Perr.,,CITES_EU
+boinensis,Subspecies,160565,Species,160564,A,H.Perr.,,CITES_EU
+leei,Subspecies,162555,Species,106414,A,(Rose ex Bodeker) Hunt,,CITES_EU
+violacea,Subspecies,166116,Species,107800,A,(Leuenberger) Taylor & Zappi,,CITES_EU
+esperanzae,Subspecies,170702,Species,29601,A,Glass & Arias,,CITES_EU
+media,Subspecies,170777,Species,10386,A,R.Br.,,CITES_EU
+cornuta,Subspecies,175688,Species,175684,A,(Klotzsch) Stein 1892,,CITES_EU
+capensis,Subspecies,176616,Species,173613,A,(L.f) Sm.,,CITES_EU
+lunulata,Subspecies,176664,Species,174593,A,,,CITES_EU
+viereckii,Subspecies,180240,Species,75728,A,,,CITES_EU
+urashima,Variety,8719,Species,192618,A,H. Ohashi & J. Murata,,CITES_EU
+rugosquamosa,Variety,9299,Species,9714,A,H. Perrier,,CITES_EU
+schistophila,Variety,9300,Species,9714,A,H. Perrier,,CITES_EU
+aurantiaca,Variety,9316,Species,8702,A,H. Perrier 1926,,CITES_EU
+maniaensis,Variety,9325,Species,8704,A,H. Perrier 1926,,CITES_EU
+obovata,Variety,9762,Species,172451,A,(Korth.) Govaerts,,CITES_EU
+paucituberculata,Variety,25578,Species,9714,A,Lavranos,,CITES_EU
+angustifolium,Variety,33989,Species,164992,A,Lindl.,,CITES_EU
+pruinosa,Variety,160608,Species,192610,A,,,CITES_EU
+matsudai,Variety,161848,Species,192612,A,,,CITES_EU
+rakotozafyi,Variety,170831,Species,106241,A,(Cremers) Rauh,,CITES_EU
+ampanihyensis,Variety,170832,Species,9206,A,Cremers,,CITES_EU
+robinsonii,Variety,170834,Species,9206,A,Cremers,,CITES_EU
+spirosticha,Variety,170835,Species,9206,A,Rauh & Buchloh,,CITES_EU
+antsingiensis,Variety,170871,Species,9246,A,Cremers,,CITES_EU
+bemarahensis,Variety,170872,Species,9246,A,Cremers,,CITES_EU
+multiflora,Variety,170874,Species,9246,A,Rauh,,CITES_EU
+macroglossa,Variety,172901,Species,172897,A,C.Morren,,CITES_EU
+meridionalis,Variety,192543,Species,192542,A,H.Perrier,,CITES_EU
+calyculata,Variety,192585,Species,192584,A,H.Perrier,,CITES_EU
+loureiroi,Variety,192613,Species,7219,A,,,CITES_EU
+Balmea,Genus,1994,Family,31,A,Martínez,,CITES_EU
+stormiae,Species,51402,Genus,1994,A,Martínez,,CITES_EU
