@@ -22,7 +22,7 @@ gem 'sidekiq-status'
 
 gem 'whenever', :require => false
 
-gem 'jquery-rails'
+gem 'jquery-rails', '2.1.4' #do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
 gem 'bootstrap-generators', '~> 2.1'
 gem 'kaminari'
 gem 'select2-rails'

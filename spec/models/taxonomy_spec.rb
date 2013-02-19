@@ -53,19 +53,4 @@ describe Taxonomy do
       specify { taxonomy.destroy.should be_false }
     end
   end
-  describe :destroy do
-    context "when no child objects attached" do
-      let(:taxonomy){ create(:taxonomy, :name => 'WILDLIFE') }
-      specify {taxonomy.destroy.should be_true}
-    end
-    context "when child objects attached" do
-      let(:taxonomy){ create(:taxonomy, :name => 'WILDLIFE') }
-      let!(:designation){ create(:designation, :taxonomy => taxonomy)}
-      specify {taxonomy.destroy.should be_false}
-    end
-    context "when protected taxonomy name" do
-      let(:taxonomy){ Taxonomy.find_or_create_by_name(Taxonomy::CITES_EU) }
-      specify {taxonomy.destroy.should be_false}
-    end
-  end
 end
