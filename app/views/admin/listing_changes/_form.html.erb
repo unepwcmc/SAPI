@@ -1,53 +1,84 @@
+<%= admin_new_modal({:title => "Current Listing Changes"}) { render "current_listing_changes_form" } %>
+
 <%= nested_form_for [:admin, @taxon_concept, @designation, @listing_change], :remote => true do |f| %>
   <%= error_messages_for(@listing_change) %>
-  <p>
-    <%= f.label :species_listing_id %>
-    <%= f.select :species_listing_id,
-      options_from_collection_for_select(@species_listings, :id, :name),
-      { :include_blank => true }
-    %>
-  </p>
-  <p>
-    <%= f.label :change_type_id %>
-    <%= f.select :change_type_id,
-      options_from_collection_for_select(@change_types, :id, :print_name)
-    %>
-  </p>
-  <p>
-    <%= f.label :effective_at %>
-    <%= f.text_field :effective_at, :class => "datepicker", :value => @listing_change.effective_at_formatted %>
 
-  </p>
-  <%= f.fields_for :party_listing_distribution do |b| %>
-    <p>
-      <%= b.label :geo_entity_id, 'Party' %>
-      <%= b.select :geo_entity_id,
-        options_from_collection_for_select(
-          @geo_entities,
-          :id,
-          :name_en,
-          @listing_change.party_listing_distribution && @listing_change.party_listing_distribution.geo_entity_id
-        ),
-        { :include_blank => true }, :class => 'distribution'
-      %>
-    </p>
-  <% end %>
+  <table class="listing-change">
+    <thead>
+      <tr>
+        <th><%= f.label :species_listing_id %></th>
+        <th><%= f.label :change_type_id %></th>
+        <th><%= f.label :effective_at %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <%= f.select :species_listing_id,
+            options_from_collection_for_select(@species_listings, :id, :name),
+            { :include_blank => true }
+          %>
+        </td>
+        <td>
+          <%= f.select :change_type_id,
+            options_from_collection_for_select(@change_types, :id, :print_name)
+          %>
+        </td>
+        <td>
+          <%= f.text_field :effective_at, :class => "datepicker", :value => @listing_change.effective_at_formatted %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="listing-change">
+    <thead>
+      <tr>
+        <th><label>Party</label></th>
+        <th><%= f.label :geo_entity_ids, "Countries" %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <%= f.fields_for :party_listing_distribution do |b| %>
+          <td>
+            <%= b.select :geo_entity_id,
+              options_from_collection_for_select(
+                @geo_entities,
+                :id,
+                :name_en,
+                @listing_change.party_listing_distribution && @listing_change.party_listing_distribution.geo_entity_id
+              ),
+              { :include_blank => true },
+              {:class => 'distribution', :style => 'width: 220px' }
+            %>
+          </td>
+        <% end %>
+
+        <td>
+          <%= f.select :geo_entity_ids,
+            options_from_collection_for_select(
+              @geo_entities,
+              :id,
+              :name_en,
+              @listing_change.geo_entities.map(&:id)
+            ), { },
+            { :multiple => true, :class => 'distribution', :style => 'width: 220px' }
+          %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
   <p>
-    <%= f.label :geo_entity_ids, "Countries" %>
-    <%= f.select :geo_entity_ids,
-      options_from_collection_for_select(
-        @geo_entities,
-        :id,
-        :name_en,
-        @listing_change.geo_entities.map(&:id)
-      ), { },
-      { :multiple => true, :class => 'distribution', :style => 'width: 200px' }
-    %>
+    <%= f.label :is_current, "Is current?", :class => 'inline'%> <%= f.check_box :is_current %><br>
+    <%= link_to("View Current Listing Changes", "#new-listing_change",
+      {
+        :role => "button",
+        :"data-toggle" => "modal",
+      }) %>
   </p>
-  <p>
-    <%= f.label :is_current, "Is current?"%>
-    <%= f.check_box :is_current %>
-  </p>
+
   <p>
     <label>Included in</label>
     <%= f.text_field :inclusion_scientific_name, :class => 'typeahead',
@@ -56,12 +87,13 @@
       "data-taxonomy-id" => @taxon_concept.taxonomy_id
     %>
   </p>
-  <label>Exclusions</label>
-  <table>
+
+  <h4>Exclusions</h4>
+  <table class="listing-change">
     <thead>
     <tr>
-      <th>Taxon concept</th>
-      <th>Countries</th>
+      <th><label>Taxon concept</label></th>
+      <th><label>Countries</label></th>
     </tr>
     </thead>
     <tbody>
@@ -70,7 +102,7 @@
       <td><%= error_messages_for(ff.object) %></td>
     </tr>
     <tr>
-      <td colspan=2>
+      <td>
         <%= ff.hidden_field :change_type_id, :value => @exception_change_type.id %>
         <%= ff.text_field :exclusion_scientific_name, :class => 'typeahead',
           "data-taxon-concept-scope" => 'descendants',
@@ -98,42 +130,8 @@
   </table>
   <p><%= f.link_to_add "Add an exclusion", :exclusions %></p>
 
-<% end %>
+  <p class="pull-right">
+    <%= f.submit %>
+  </p>
 
-<% if @taxon_concept.current_listing_changes.count > 0 %>
-  <p>Amend status of current listing changes</p>
-  <table width="100%">
-    <thead>
-      <th>Appx</th>
-      <th>Type</th>
-      <th>Effective at</th>
-      <th>Current</th>
-      <th>Party</th>
-    </thead>
-    <tbody>
-    <% @taxon_concept.current_listing_changes.each do |listing_change| %>
-      <tr>
-        <td>
-          <%= listing_change.species_listing && listing_change.species_listing.abbreviation %>
-        </td>
-        <td><%= listing_change.change_type.name %></td>
-        <td><%= listing_change.effective_at_formatted %></td>
-        <td>
-        <%= form_for [:admin, @taxon_concept, @designation, listing_change], :remote => true do |f| %>
-          <%= f.check_box :is_current %>
-        <% end %>
-        </td>
-        <td>
-          <%= listing_change.party_geo_entity && listing_change.party_geo_entity.iso_code2 %>
-        </td>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
 <% end %>
-
-    <style>
-      #listing_change_geo_entity_ids {
-        width: 220px;
-      }
-    </style>
