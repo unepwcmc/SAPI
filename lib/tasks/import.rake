@@ -55,9 +55,6 @@ namespace :import do
       'lib/assets/files/cleaned/animals/animalia_taxa_utf8.csv',
       'lib/assets/files/cleaned/plants/plantae_taxa_utf8.csv'
     )
-    puts "rebuilding the nested set"
-    #rebuild the tree
-    TaxonConcept.rebuild!
 
     Rake::Task["import:cites_regions"].invoke(
       'lib/assets/files/cites_regions.csv'
@@ -96,6 +93,9 @@ namespace :import do
     Rake::Task["import:trade_codes"].invoke
 
     Sapi::rebuild()
+    puts "rebuilding the nested set"
+    #rebuild the tree
+    TaxonConcept.rebuild!
     Sapi::enable_triggers
     Sapi::create_indices
   end
