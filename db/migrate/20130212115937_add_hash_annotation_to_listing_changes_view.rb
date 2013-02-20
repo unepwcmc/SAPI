@@ -41,7 +41,7 @@ class AddHashAnnotationToListingChangesView < ActiveRecord::Migration
       LEFT JOIN annotations ON
         annotations.id = listing_changes.annotation_id
       LEFT JOIN annotations hash_annotations ON
-        annotations.id = listing_changes.hash_annotation_id
+        hash_annotations.id = listing_changes.hash_annotation_id
       LEFT JOIN (
         SELECT listing_change_id, ARRAY_AGG(geo_entities.id) AS countries_ids_ary
         FROM listing_distributions
