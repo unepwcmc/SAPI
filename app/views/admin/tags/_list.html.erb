@@ -1,16 +1,24 @@
 <thead>
   <th>Name</th>
+  <th>Type</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
 
-  <% collection.each do |tag| -%>
+  <% collection.sort_by(&:model).each do |tag| -%>
     <tr>
       <td>
         <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="tag" data-name="name"
           data-placeholder="Required" data-original-title="Enter the tag name"
           data-url="<%= resource_url(tag) %>" data-pk="<%= tag.id %>">
           <%= tag.name %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="select" data-resource="tag" data-name="model"
+          data-placeholder="Required" data-original-title="Select the tag type" data-source="<%= PresetTag::TYPES.to_json %>"
+          data-url="<%= resource_url(tag) %>" data-pk="<%= tag.id %>">
+          <%= tag.model %>
         </a>
       </td>
       <td>

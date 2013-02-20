@@ -1,5 +1,5 @@
 class Admin::TagsController < Admin::SimpleCrudController
-  defaults :resource_class => ActsAsTaggableOn::Tag, :collection_name => 'tags', :instance_name => 'tag'
+  defaults :resource_class => PresetTag, :collection_name => 'tags', :instance_name => 'tag'
 
   protected
 
