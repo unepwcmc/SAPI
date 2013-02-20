@@ -112,7 +112,6 @@ FOR EACH ROW EXECUTE PROCEDURE trg_common_names_u();
 CREATE OR REPLACE FUNCTION trg_taxon_commons_ui() RETURNS TRIGGER
 SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
 BEGIN
-RAISE NOTICE 'insert or update taxon common';
   PERFORM taxon_concepts_refresh_row(tc.id)
   FROM taxon_concepts tc
   WHERE tc.id = NEW.taxon_concept_id;

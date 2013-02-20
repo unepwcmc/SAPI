@@ -22,28 +22,17 @@ class Timeline
       add_addition_event(event)
     elsif event.is_deletion?
       add_deletion_event(event)
-    elsif event.is_reservation?
+    elsif event.is_reservation? || event.is_reservation_withdrawal?
       add_reservation_event(event)
     end
   end
 
   def add_addition_event(event)
     @timeline_events << event
-    if event.party_id
-      get_party_timeline(event.party_id).timeline_events << event
-    end
   end
 
   def add_deletion_event(event)
     @timeline_events << event
-    if event.party_id.nil?
-      # if it is a deletion without party specified
-      # delete from main timeline and from all party subtimelines
-      @timelines.each { |timeline| timeline.timeline_events << event }
-    else
-      # if it is a party deletion, delete only from party subtimeline
-      get_party_timeline(event.party_id).timeline_events << event
-    end
   end
 
   def add_reservation_event(event)
@@ -78,21 +67,26 @@ class Timeline
               :end_pos => next_event.pos
             )
           end
-        elsif event.is_current
-          additions_no = timeline.timeline_events.select do |e|
-            e.change_type_name == ChangeType::ADDITION
-          end.count
-          deletions_no = timeline.timeline_events.select do |e|
-            e.change_type_name == ChangeType::DELETION
-          end.count
-          unless event.is_deletion? && (additions_no - deletions_no) > 1
+        else
+          add_final_interval = true
+          if event.is_deletion?
+            additions_no = timeline.timeline_events.select do |e|
+              e.is_addition?
+            end.count
+            deletions_no = timeline.timeline_events.select do |e|
+              e.is_deletion?
+            end.count
+            add_final_interval = (additions_no > deletions_no)
+          elsif event.is_reservation_withdrawal?
+            add_final_interval = false
+          end
+
+          if add_final_interval
             TimelineInterval.new(
               :start_pos => event.pos,
               :end_pos => 1
             )
           end
-        else
-          nil
         end
         timeline.timeline_intervals << interval if interval
       end

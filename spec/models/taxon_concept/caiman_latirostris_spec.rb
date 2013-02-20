@@ -55,15 +55,15 @@ describe TaxonConcept do
       end
     end
 
-    describe :specific_annotation_symbol do
-      context "for species Caiman latirostric" do
-        specify { @species.specific_annotation_symbol.should_not be_blank }
+    describe :ann_symbol do
+      context "for species Caiman latirostris" do
+        specify { @species.ann_symbol.should_not be_blank }
       end
     end
 
-    describe :generic_annotation_symbol do
-      context "for species Caiman latirostric" do
-        specify { @species.generic_annotation_symbol.should be_blank }
+    describe :hash_ann_symbol do
+      context "for species Caiman latirostris" do
+        specify { @species.hash_ann_symbol.should be_blank }
       end
     end
 

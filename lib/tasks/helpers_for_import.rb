@@ -36,7 +36,6 @@ class CsvToDbMap
       'effective_from' => 'listing_date date',
       'party_iso2' => 'country_iso2 varchar',
       'is_current' => 'is_current boolean',
-      'hash_note' => 'hash_note varchar',
       'populations_iso2' => 'populations_iso2 varchar',
       'EXCLUDEDpopulations_iso' => 'excluded_populations_iso2 varchar',
       'is_inclusion' => 'is_inclusion boolean',
@@ -46,16 +45,18 @@ class CsvToDbMap
       'short_note_en' => 'short_note_en varchar',
       'short_note_es' => 'short_note_es varchar',
       'short_note_fr' => 'short_note_fr varchar',
-      'full_note_en' => 'full_note_en varchar'
+      'full_note_en' => 'full_note_en varchar',
+      'SpeciesIndexAnnotation' => 'index_annotation integer',
+      'HistoryAnnotation' => 'history_annotation integer',
+      'hash_note' => 'hash_note varchar',
+      'Notes' => 'notes varchar'
     },
     'distribution_import' => {
-      'Rank' => 'rank varchar',
       'Species RecID' => 'legacy_id integer',
-      'Country Legacy ID' => 'country_legacy_id integer',
-      'Country ISO Code 2' => 'country_iso2 varchar',
-      'Country Short Name' => 'country_name varchar',
+      'Rank' => 'rank varchar',
+      'GEO_entity' => 'geo_entity_type varchar',
+      'ISO Code 2' => 'country_iso2 varchar',
       'Reference IDs' => 'reference_id integer',
-      'Tags' => 'tags varchar',
       'Designation' => 'designation varchar'
     },
     'common_name_import' => {
@@ -72,13 +73,12 @@ class CsvToDbMap
     },
     #TODO legacy type for countries?
     'countries_import' => {
-      'country id' => 'legacy_id integer',
-      'iso2' => 'iso2 varchar',
-      'name' => 'name varchar',
-      'long_name' => 'long_name varchar',
+      'ISO2' => 'iso2 varchar',
+      'short_name' => 'name varchar',
       'Geo_entity' => 'geo_entity varchar',
+      'Under' => 'bru_under varchar',
       'Current_name' => 'current_name varchar',
-      'BRU_under' => 'bru_under varchar',
+      'long_name' => 'long_name varchar',
       'CITES Region' => 'cites_region varchar'
     },
     'references_import' => {
@@ -179,6 +179,7 @@ SET DateStyle = \"ISO,DMY\";
 \\COPY #{table_name} (#{db_columns.join(', ')})
 FROM '#{Rails.root + path_to_file}'
 WITH DELIMITER ','
+ENCODING 'utf-8'
 CSV HEADER
 PSQL
 

@@ -210,6 +210,42 @@ CREATE FUNCTION full_name(rank_name character varying, ancestors hstore) RETURNS
 
 
 --
+-- Name: listing_changes_invalidate_row(integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION listing_changes_invalidate_row(row_id integer) RETURNS void
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+BEGIN
+  UPDATE listing_changes_mview lc
+  SET dirty = TRUE
+  WHERE lc.id = row_id;
+  RETURN;
+END
+$$;
+
+
+--
+-- Name: listing_changes_refresh_row(integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION listing_changes_refresh_row(row_id integer) RETURNS void
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+BEGIN
+  DELETE
+  FROM listing_changes_mview lc
+  WHERE lc.id = row_id;
+
+  INSERT INTO listing_changes_mview
+  SELECT *, FALSE, NULL
+  FROM listing_changes_view lc
+  WHERE lc.id = row_id;
+END
+$$;
+
+
+--
 -- Name: rebuild_ancestor_listings(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -277,63 +313,65 @@ CREATE FUNCTION rebuild_annotation_symbols() RETURNS void
     LANGUAGE plpgsql
     AS $$
         BEGIN
-        -- start clear
+
+        UPDATE annotations
+        SET symbol = ordered_annotations.calculated_symbol
+        FROM
+        (
+          SELECT ROW_NUMBER() OVER(ORDER BY kingdom_position, full_name) AS calculated_symbol, MAX(annotations.id) AS id
+          FROM listing_changes
+          INNER JOIN annotations
+            ON listing_changes.annotation_id = annotations.id
+          INNER JOIN change_types
+            ON listing_changes.change_type_id = change_types.id
+          INNER JOIN designations
+            ON change_types.designation_id = designations.id AND designations.name = 'CITES'
+          INNER JOIN taxon_concepts_mview
+            ON listing_changes.taxon_concept_id = taxon_concepts_mview.id
+          WHERE is_current = TRUE AND display_in_index = TRUE
+          GROUP BY taxon_concept_id, kingdom_position, full_name
+          ORDER BY kingdom_position, full_name
+        ) ordered_annotations
+        WHERE ordered_annotations.id = annotations.id;
+
         UPDATE taxon_concepts
-        SET listing = listing - ARRAY['specific_annotation_symbol',
-          'generic_annotation_parent_symbol', 'generic_annotation_symbol'];
+        SET listing = listing - ARRAY['ann_symbol', 'hash_ann_symbol', 'hash_ann_parent_symbol'];
 
-        -- update specific annotation symbols
-        -- need to put all taxa with specific annotations in alphabetical order (as in the index pdf)
-        -- and use row numbers as annotation symbols
-        WITH taxon_concepts_with_specific_symbols AS (
-          WITH taxon_concepts_with_specific_annotations AS (
-          -- need to find addition records, which have exceptions or that have distributions attached
-          SELECT taxon_concept_id, annotations.id AS annotation_id
-          FROM 
-          annotations
-          INNER JOIN listing_changes ON annotations.listing_change_id = listing_changes.id
-          INNER JOIN change_types ON change_types.id = listing_changes.change_type_id AND change_types.name = 'ADDITION'
-          INNER JOIN taxon_concepts ON listing_changes.taxon_concept_id = taxon_concepts.id
-          INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id AND taxonomies.name = 'CITES_EU'
-          WHERE is_current = 't'
-            AND EXISTS (
-                SELECT * FROM listing_changes listing_changes_exceptions
-                WHERE listing_changes.id = listing_changes_exceptions.parent_id
-              )
-            OR EXISTS (
-                SELECT * FROM listing_distributions
-                WHERE listing_changes.id = listing_distributions.listing_change_id AND is_party = 'f'
-              )
-          ORDER BY data->'kingdom_name', full_name
-          )
-          SELECT taxon_concept_id, ROW_NUMBER() OVER() AS specific_symbol
-          FROM taxon_concepts_with_specific_annotations
+        UPDATE taxon_concepts
+        SET listing = listing || hstore('ann_symbol', taxon_concept_annotations.symbol)
+        FROM
+        (
+          SELECT taxon_concept_id, MAX(annotations.symbol) AS symbol
+          FROM listing_changes
+          INNER JOIN annotations
+            ON listing_changes.annotation_id = annotations.id
+          INNER JOIN change_types
+            ON listing_changes.change_type_id = change_types.id
+          INNER JOIN designations
+            ON change_types.designation_id = designations.id AND designations.name = 'CITES'
+          WHERE is_current = TRUE AND display_in_index = TRUE
           GROUP BY taxon_concept_id
-        )
-        UPDATE taxon_concepts SET listing = listing || hstore('specific_annotation_symbol', specific_symbol::VARCHAR)
-        FROM taxon_concepts_with_specific_symbols
-        WHERE taxon_concepts.id = taxon_concepts_with_specific_symbols.taxon_concept_id;
+        ) taxon_concept_annotations
+        WHERE taxon_concept_annotations.taxon_concept_id = taxon_concepts.id;
 
-        -- update generic annotation symbols
-        WITH taxon_concepts_with_generic_symbols AS (
-                SELECT taxon_concept_id,
-                MAX(annotations.symbol) AS generic_symbol,
-                MAX(annotations.parent_symbol) AS generic_parent_symbol
-                FROM 
-                taxon_concepts
-                LEFT JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
-                LEFT JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id
-                LEFT JOIN change_types ON change_types.id = listing_changes.change_type_id
-                INNER JOIN annotations ON listing_changes.annotation_id = annotations.id
-                WHERE taxonomies.name = 'CITES_EU' AND is_current = 't'
-                  AND change_types.name = 'ADDITION'
-                GROUP BY taxon_concept_id
-        )
-        UPDATE taxon_concepts SET listing = listing ||
-          hstore('generic_annotation_symbol', generic_symbol::VARCHAR) ||
-          hstore('generic_annotation_parent_symbol', generic_parent_symbol::VARCHAR)
-        FROM taxon_concepts_with_generic_symbols
-        WHERE taxon_concepts.id = taxon_concepts_with_generic_symbols.taxon_concept_id;
+        UPDATE taxon_concepts
+        SET listing = listing ||
+          hstore('hash_ann_symbol', taxon_concept_hash_annotations.symbol) ||
+          hstore('hash_ann_parent_symbol', taxon_concept_hash_annotations.parent_symbol)
+        FROM
+        (
+          SELECT taxon_concept_id, MAX(annotations.symbol) AS symbol, MAX(annotations.parent_symbol) AS parent_symbol
+          FROM listing_changes
+          INNER JOIN annotations
+            ON listing_changes.hash_annotation_id = annotations.id
+          INNER JOIN change_types
+            ON listing_changes.change_type_id = change_types.id
+          INNER JOIN designations
+            ON change_types.designation_id = designations.id AND designations.name = 'CITES'
+          WHERE is_current = TRUE
+          GROUP BY taxon_concept_id
+        ) taxon_concept_hash_annotations
+        WHERE taxon_concept_hash_annotations.taxon_concept_id = taxon_concepts.id;
 
         END;
       $$;
@@ -761,7 +799,7 @@ CREATE FUNCTION rebuild_descendant_listings() RETURNS void
               hi.listing->'cites_status_original' = 't'
             THEN
               hstore('cites_listing',hi.listing->'cites_listing_original') ||
-              slice(hi.listing, ARRAY['generic_annotation_symbol', 'specific_annotation_symbol'])
+              slice(hi.listing, ARRAY['hash_ann_symbol', 'ann_symbol'])
             ELSE
               inherited_listing
             END
@@ -1614,7 +1652,15 @@ CREATE TABLE annotations (
     parent_symbol character varying(255),
     listing_change_id integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    short_note_en text,
+    full_note_en text,
+    short_note_fr text,
+    full_note_fr text,
+    short_note_es text,
+    full_note_es text,
+    display_in_index boolean DEFAULT false NOT NULL,
+    display_in_footnote boolean DEFAULT false NOT NULL
 );
 
 
@@ -1680,7 +1726,6 @@ CREATE TABLE cites_listings_import (
     listing_date date,
     country_iso2 character varying,
     is_current boolean,
-    hash_note character varying,
     populations_iso2 character varying,
     excluded_populations_iso2 character varying,
     is_inclusion boolean,
@@ -1690,7 +1735,11 @@ CREATE TABLE cites_listings_import (
     short_note_en character varying,
     short_note_es character varying,
     short_note_fr character varying,
-    full_note_en character varying
+    full_note_en character varying,
+    index_annotation integer,
+    history_annotation integer,
+    hash_note character varying,
+    notes character varying
 );
 
 
@@ -1699,7 +1748,7 @@ CREATE TABLE cites_listings_import (
 --
 
 CREATE VIEW cites_listings_import_view AS
-    SELECT row_number() OVER () AS row_id, cites_listings_import.rank, cites_listings_import.legacy_id, cites_listings_import.appendix, cites_listings_import.listing_date, cites_listings_import.country_iso2, cites_listings_import.is_current, cites_listings_import.hash_note, cites_listings_import.populations_iso2, cites_listings_import.excluded_populations_iso2, cites_listings_import.is_inclusion, cites_listings_import.included_in_rec_id, cites_listings_import.rank_for_inclusions, cites_listings_import.excluded_taxa, cites_listings_import.short_note_en, cites_listings_import.short_note_es, cites_listings_import.short_note_fr, cites_listings_import.full_note_en FROM cites_listings_import ORDER BY cites_listings_import.legacy_id, cites_listings_import.listing_date, cites_listings_import.appendix, cites_listings_import.country_iso2;
+    SELECT row_number() OVER () AS row_id, cites_listings_import.rank, cites_listings_import.legacy_id, cites_listings_import.appendix, cites_listings_import.listing_date, cites_listings_import.country_iso2, cites_listings_import.is_current, cites_listings_import.populations_iso2, cites_listings_import.excluded_populations_iso2, cites_listings_import.is_inclusion, cites_listings_import.included_in_rec_id, cites_listings_import.rank_for_inclusions, cites_listings_import.excluded_taxa, cites_listings_import.short_note_en, cites_listings_import.short_note_es, cites_listings_import.short_note_fr, cites_listings_import.full_note_en, cites_listings_import.index_annotation, cites_listings_import.history_annotation, cites_listings_import.hash_note, cites_listings_import.notes FROM cites_listings_import ORDER BY cites_listings_import.legacy_id, cites_listings_import.listing_date, cites_listings_import.appendix, cites_listings_import.country_iso2;
 
 
 --
@@ -1762,13 +1811,12 @@ ALTER SEQUENCE common_names_id_seq OWNED BY common_names.id;
 --
 
 CREATE TABLE countries_import (
-    legacy_id integer,
     iso2 character varying,
     name character varying,
-    long_name character varying,
     geo_entity character varying,
-    current_name character varying,
     bru_under character varying,
+    current_name character varying,
+    long_name character varying,
     cites_region character varying
 );
 
@@ -1810,13 +1858,11 @@ ALTER SEQUENCE designations_id_seq OWNED BY designations.id;
 --
 
 CREATE TABLE distribution_import (
-    rank character varying,
     legacy_id integer,
-    country_legacy_id integer,
+    rank character varying,
+    geo_entity_type character varying,
     country_iso2 character varying,
-    country_name character varying,
     reference_id integer,
-    tags character varying,
     designation character varying
 );
 
@@ -1917,6 +1963,37 @@ CREATE SEQUENCE downloads_id_seq
 --
 
 ALTER SEQUENCE downloads_id_seq OWNED BY downloads.id;
+
+
+--
+-- Name: events; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE events (
+    id integer NOT NULL,
+    name character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE events_id_seq OWNED BY events.id;
 
 
 --
@@ -2106,7 +2183,8 @@ CREATE TABLE listing_changes (
     rgt integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    import_row_id integer
+    import_row_id integer,
+    hash_annotation_id integer
 );
 
 
@@ -2143,17 +2221,20 @@ CREATE TABLE listing_changes_mview (
     change_type_name character varying(255),
     party_id integer,
     party_name character varying(255),
-    symbol character varying(255),
-    parent_symbol character varying(255),
-    generic_english_full_note text,
-    generic_spanish_full_note text,
-    generic_french_full_note text,
-    english_full_note text,
-    spanish_full_note text,
-    french_full_note text,
-    english_short_note text,
-    spanish_short_note text,
-    french_short_note text,
+    ann_symbol character varying(255),
+    full_note_en text,
+    full_note_es text,
+    full_note_fr text,
+    short_note_en text,
+    short_note_es text,
+    short_note_fr text,
+    display_in_index boolean,
+    display_in_footnote boolean,
+    hash_ann_symbol character varying(255),
+    hash_ann_parent_symbol character varying(255),
+    hash_full_note_en text,
+    hash_full_note_es text,
+    hash_full_note_fr text,
     is_current boolean,
     countries_ids_ary integer[],
     dirty boolean,
@@ -2194,15 +2275,7 @@ CREATE TABLE species_listings (
 --
 
 CREATE VIEW listing_changes_view AS
-    WITH multilingual_annotations AS (SELECT ct.annotation_id_mul, ct.english_note[1] AS english_full_note, ct.english_note[2] AS english_short_note, ct.spanish_note[1] AS spanish_full_note, ct.spanish_note[2] AS spanish_short_note, ct.french_note[1] AS french_full_note, ct.french_note[2] AS french_short_note FROM crosstab('SELECT annotations.id AS annotation_id_mul,
-        SUBSTRING(languages.name_en FROM 1 FOR 1) AS lng,
-        ARRAY[annotation_translations.full_note, annotation_translations.short_note]
-        FROM "annotations"
-        INNER JOIN "annotation_translations"
-          ON "annotation_translations"."annotation_id" = "annotations"."id" 
-        INNER JOIN "languages"
-          ON "languages"."id" = "annotation_translations"."language_id"
-        ORDER BY 1,2'::text) ct(annotation_id_mul integer, english_note text[], spanish_note text[], french_note text[])) SELECT listing_changes.id, listing_changes.taxon_concept_id, listing_changes.effective_at, listing_changes.species_listing_id, species_listings.abbreviation AS species_listing_name, listing_changes.change_type_id, change_types.name AS change_type_name, listing_distributions.geo_entity_id AS party_id, geo_entities.iso_code2 AS party_name, generic_annotations.symbol, generic_annotations.parent_symbol, multilingual_generic_annotations.english_full_note AS generic_english_full_note, multilingual_generic_annotations.spanish_full_note AS generic_spanish_full_note, multilingual_generic_annotations.french_full_note AS generic_french_full_note, multilingual_specific_annotations.english_full_note, multilingual_specific_annotations.spanish_full_note, multilingual_specific_annotations.french_full_note, multilingual_specific_annotations.english_short_note, multilingual_specific_annotations.spanish_short_note, multilingual_specific_annotations.french_short_note, listing_changes.is_current, populations.countries_ids_ary FROM (((((((((listing_changes LEFT JOIN change_types ON ((listing_changes.change_type_id = change_types.id))) LEFT JOIN species_listings ON ((listing_changes.species_listing_id = species_listings.id))) LEFT JOIN listing_distributions ON (((listing_changes.id = listing_distributions.listing_change_id) AND (listing_distributions.is_party = true)))) LEFT JOIN geo_entities ON ((geo_entities.id = listing_distributions.geo_entity_id))) LEFT JOIN annotations specific_annotations ON ((specific_annotations.listing_change_id = listing_changes.id))) LEFT JOIN annotations generic_annotations ON ((generic_annotations.id = listing_changes.annotation_id))) LEFT JOIN multilingual_annotations multilingual_specific_annotations ON ((specific_annotations.id = multilingual_specific_annotations.annotation_id_mul))) LEFT JOIN multilingual_annotations multilingual_generic_annotations ON ((generic_annotations.id = multilingual_generic_annotations.annotation_id_mul))) LEFT JOIN (SELECT listing_distributions.listing_change_id, array_agg(geo_entities.id) AS countries_ids_ary FROM (listing_distributions JOIN geo_entities ON ((geo_entities.id = listing_distributions.geo_entity_id))) WHERE (NOT listing_distributions.is_party) GROUP BY listing_distributions.listing_change_id) populations ON ((populations.listing_change_id = listing_changes.id))) ORDER BY listing_changes.taxon_concept_id, listing_changes.effective_at, CASE WHEN ((change_types.name)::text = 'ADDITION'::text) THEN 0 WHEN ((change_types.name)::text = 'RESERVATION'::text) THEN 1 WHEN ((change_types.name)::text = 'RESERVATION_WITHDRAWAL'::text) THEN 2 WHEN ((change_types.name)::text = 'DELETION'::text) THEN 3 ELSE NULL::integer END;
+    SELECT listing_changes.id, listing_changes.taxon_concept_id, listing_changes.effective_at, listing_changes.species_listing_id, species_listings.abbreviation AS species_listing_name, listing_changes.change_type_id, change_types.name AS change_type_name, listing_distributions.geo_entity_id AS party_id, geo_entities.iso_code2 AS party_name, annotations.symbol AS ann_symbol, annotations.full_note_en, annotations.full_note_es, annotations.full_note_fr, annotations.short_note_en, annotations.short_note_es, annotations.short_note_fr, annotations.display_in_index, annotations.display_in_footnote, hash_annotations.symbol AS hash_ann_symbol, hash_annotations.parent_symbol AS hash_ann_parent_symbol, hash_annotations.full_note_en AS hash_full_note_en, hash_annotations.full_note_es AS hash_full_note_es, hash_annotations.full_note_fr AS hash_full_note_fr, listing_changes.is_current, populations.countries_ids_ary FROM (((((((listing_changes JOIN change_types ON ((listing_changes.change_type_id = change_types.id))) LEFT JOIN species_listings ON ((listing_changes.species_listing_id = species_listings.id))) LEFT JOIN listing_distributions ON (((listing_changes.id = listing_distributions.listing_change_id) AND (listing_distributions.is_party = true)))) LEFT JOIN geo_entities ON ((geo_entities.id = listing_distributions.geo_entity_id))) LEFT JOIN annotations ON ((annotations.id = listing_changes.annotation_id))) LEFT JOIN annotations hash_annotations ON ((annotations.id = listing_changes.hash_annotation_id))) LEFT JOIN (SELECT listing_distributions.listing_change_id, array_agg(geo_entities.id) AS countries_ids_ary FROM (listing_distributions JOIN geo_entities ON ((geo_entities.id = listing_distributions.geo_entity_id))) WHERE (NOT listing_distributions.is_party) GROUP BY listing_distributions.listing_change_id) populations ON ((populations.listing_change_id = listing_changes.id))) ORDER BY listing_changes.taxon_concept_id, listing_changes.effective_at, CASE WHEN ((change_types.name)::text = 'ADDITION'::text) THEN 0 WHEN ((change_types.name)::text = 'RESERVATION'::text) THEN 1 WHEN ((change_types.name)::text = 'RESERVATION_WITHDRAWAL'::text) THEN 2 WHEN ((change_types.name)::text = 'DELETION'::text) THEN 3 ELSE NULL::integer END;
 
 
 --
@@ -2624,9 +2697,9 @@ CREATE TABLE taxon_concepts_mview (
     cites_iii boolean,
     current_listing text,
     listing_updated_at timestamp without time zone,
-    specific_annotation_symbol text,
-    generic_annotation_symbol text,
-    generic_annotation_parent_symbol text,
+    ann_symbol text,
+    hash_ann_symbol text,
+    hash_ann_parent_symbol text,
     author_year character varying(255),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -2684,9 +2757,9 @@ CREATE TABLE taxon_concepts_view (
     cites_iii boolean,
     current_listing text,
     listing_updated_at timestamp without time zone,
-    specific_annotation_symbol text,
-    generic_annotation_symbol text,
-    generic_annotation_parent_symbol text,
+    ann_symbol text,
+    hash_ann_symbol text,
+    hash_ann_parent_symbol text,
     author_year character varying(255),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -2957,6 +3030,13 @@ ALTER TABLE ONLY downloads ALTER COLUMN id SET DEFAULT nextval('downloads_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY geo_entities ALTER COLUMN id SET DEFAULT nextval('geo_entities_id_seq'::regclass);
 
 
@@ -3153,6 +3233,14 @@ ALTER TABLE ONLY designations
 
 ALTER TABLE ONLY downloads
     ADD CONSTRAINT downloads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: events_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY events
+    ADD CONSTRAINT events_pkey PRIMARY KEY (id);
 
 
 --
@@ -3355,17 +3443,17 @@ CREATE INDEX index_annotations_on_listing_change_id ON annotations USING btree (
 
 
 --
--- Name: index_listing_changes_mview_on_taxon_concept_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_listing_changes_mview_on_taxon_concept_id ON listing_changes_mview USING btree (taxon_concept_id);
-
-
---
 -- Name: index_listing_changes_on_annotation_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_listing_changes_on_annotation_id ON listing_changes USING btree (annotation_id);
+
+
+--
+-- Name: index_listing_changes_on_hash_annotation_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_listing_changes_on_hash_annotation_id ON listing_changes USING btree (hash_annotation_id);
 
 
 --
@@ -3401,27 +3489,6 @@ CREATE INDEX index_taggings_on_tag_id ON taggings USING btree (tag_id);
 --
 
 CREATE INDEX index_taggings_on_taggable_id_and_taggable_type_and_context ON taggings USING btree (taggable_id, taggable_type, context);
-
-
---
--- Name: index_taxon_concepts_mview_on_full_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_taxon_concepts_mview_on_full_name ON taxon_concepts_mview USING btree (full_name);
-
-
---
--- Name: index_taxon_concepts_mview_on_history_filter; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_taxon_concepts_mview_on_history_filter ON taxon_concepts_mview USING btree (taxonomy_is_cites_eu, cites_listed, kingdom_position);
-
-
---
--- Name: index_taxon_concepts_mview_on_parent_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_taxon_concepts_mview_on_parent_id ON taxon_concepts_mview USING btree (parent_id);
 
 
 --
@@ -3491,7 +3558,7 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 -- Name: _RETURN; Type: RULE; Schema: public; Owner: -
 --
 
-CREATE RULE "_RETURN" AS ON SELECT TO taxon_concepts_view DO INSTEAD SELECT taxon_concepts.id, taxon_concepts.parent_id, CASE WHEN ((taxonomies.name)::text = 'CITES_EU'::text) THEN true ELSE false END AS taxonomy_is_cites_eu, taxon_concepts.full_name, taxon_concepts.name_status, (taxon_concepts.data -> 'rank_name'::text) AS rank_name, ((taxon_concepts.data -> 'cites_accepted'::text))::boolean AS cites_accepted, CASE WHEN ((taxon_concepts.data -> 'kingdom_name'::text) = 'Animalia'::text) THEN 0 ELSE 1 END AS kingdom_position, taxon_concepts.taxonomic_position, (taxon_concepts.data -> 'kingdom_name'::text) AS kingdom_name, (taxon_concepts.data -> 'phylum_name'::text) AS phylum_name, (taxon_concepts.data -> 'class_name'::text) AS class_name, (taxon_concepts.data -> 'order_name'::text) AS order_name, (taxon_concepts.data -> 'family_name'::text) AS family_name, (taxon_concepts.data -> 'genus_name'::text) AS genus_name, (taxon_concepts.data -> 'species_name'::text) AS species_name, (taxon_concepts.data -> 'subspecies_name'::text) AS subspecies_name, ((taxon_concepts.data -> 'kingdom_id'::text))::integer AS kingdom_id, ((taxon_concepts.data -> 'phylum_id'::text))::integer AS phylum_id, ((taxon_concepts.data -> 'class_id'::text))::integer AS class_id, ((taxon_concepts.data -> 'order_id'::text))::integer AS order_id, ((taxon_concepts.data -> 'family_id'::text))::integer AS family_id, ((taxon_concepts.data -> 'genus_id'::text))::integer AS genus_id, ((taxon_concepts.data -> 'species_id'::text))::integer AS species_id, ((taxon_concepts.data -> 'subspecies_id'::text))::integer AS subspecies_id, ((taxon_concepts.listing -> 'cites_fully_covered'::text))::boolean AS cites_fully_covered, CASE WHEN (((taxon_concepts.listing -> 'cites_status'::text) = 'LISTED'::text) AND ((taxon_concepts.listing -> 'cites_status_original'::text) = 't'::text)) THEN true WHEN ((taxon_concepts.listing -> 'cites_status'::text) = 'LISTED'::text) THEN false ELSE NULL::boolean END AS cites_listed, CASE WHEN ((taxon_concepts.listing -> 'cites_status'::text) = 'DELETED'::text) THEN true ELSE false END AS cites_deleted, CASE WHEN ((taxon_concepts.listing -> 'cites_status'::text) = 'EXCLUDED'::text) THEN true ELSE false END AS cites_excluded, ((taxon_concepts.listing -> 'cites_show'::text))::boolean AS cites_show, CASE WHEN ((taxon_concepts.listing -> 'cites_I'::text) = 'I'::text) THEN true ELSE false END AS cites_i, CASE WHEN ((taxon_concepts.listing -> 'cites_II'::text) = 'II'::text) THEN true ELSE false END AS cites_ii, CASE WHEN ((taxon_concepts.listing -> 'cites_III'::text) = 'III'::text) THEN true ELSE false END AS cites_iii, (taxon_concepts.listing -> 'cites_listing'::text) AS current_listing, ((taxon_concepts.listing -> 'listing_updated_at'::text))::timestamp without time zone AS listing_updated_at, (taxon_concepts.listing -> 'specific_annotation_symbol'::text) AS specific_annotation_symbol, (taxon_concepts.listing -> 'generic_annotation_symbol'::text) AS generic_annotation_symbol, (taxon_concepts.listing -> 'generic_annotation_parent_symbol'::text) AS generic_annotation_parent_symbol, taxon_concepts.author_year, taxon_concepts.created_at, taxon_concepts.updated_at, common_names.taxon_concept_id_com, common_names.english_names_ary, common_names.french_names_ary, common_names.spanish_names_ary, synonyms.taxon_concept_id_syn, synonyms.synonyms_ary, synonyms.synonyms_author_years_ary, countries_ids.countries_ids_ary, standard_references_ids.standard_references_ids_ary FROM (((((taxon_concepts LEFT JOIN taxonomies ON ((taxonomies.id = taxon_concepts.taxonomy_id))) LEFT JOIN (SELECT ct.taxon_concept_id_com, ct.english_names_ary, ct.french_names_ary, ct.spanish_names_ary FROM crosstab('SELECT taxon_concepts.id AS taxon_concept_id_com,
+CREATE RULE "_RETURN" AS ON SELECT TO taxon_concepts_view DO INSTEAD SELECT taxon_concepts.id, taxon_concepts.parent_id, CASE WHEN ((taxonomies.name)::text = 'CITES_EU'::text) THEN true ELSE false END AS taxonomy_is_cites_eu, taxon_concepts.full_name, taxon_concepts.name_status, (taxon_concepts.data -> 'rank_name'::text) AS rank_name, ((taxon_concepts.data -> 'cites_accepted'::text))::boolean AS cites_accepted, CASE WHEN ((taxon_concepts.data -> 'kingdom_name'::text) = 'Animalia'::text) THEN 0 ELSE 1 END AS kingdom_position, taxon_concepts.taxonomic_position, (taxon_concepts.data -> 'kingdom_name'::text) AS kingdom_name, (taxon_concepts.data -> 'phylum_name'::text) AS phylum_name, (taxon_concepts.data -> 'class_name'::text) AS class_name, (taxon_concepts.data -> 'order_name'::text) AS order_name, (taxon_concepts.data -> 'family_name'::text) AS family_name, (taxon_concepts.data -> 'genus_name'::text) AS genus_name, (taxon_concepts.data -> 'species_name'::text) AS species_name, (taxon_concepts.data -> 'subspecies_name'::text) AS subspecies_name, ((taxon_concepts.data -> 'kingdom_id'::text))::integer AS kingdom_id, ((taxon_concepts.data -> 'phylum_id'::text))::integer AS phylum_id, ((taxon_concepts.data -> 'class_id'::text))::integer AS class_id, ((taxon_concepts.data -> 'order_id'::text))::integer AS order_id, ((taxon_concepts.data -> 'family_id'::text))::integer AS family_id, ((taxon_concepts.data -> 'genus_id'::text))::integer AS genus_id, ((taxon_concepts.data -> 'species_id'::text))::integer AS species_id, ((taxon_concepts.data -> 'subspecies_id'::text))::integer AS subspecies_id, ((taxon_concepts.listing -> 'cites_fully_covered'::text))::boolean AS cites_fully_covered, CASE WHEN (((taxon_concepts.listing -> 'cites_status'::text) = 'LISTED'::text) AND ((taxon_concepts.listing -> 'cites_status_original'::text) = 't'::text)) THEN true WHEN ((taxon_concepts.listing -> 'cites_status'::text) = 'LISTED'::text) THEN false ELSE NULL::boolean END AS cites_listed, CASE WHEN ((taxon_concepts.listing -> 'cites_status'::text) = 'DELETED'::text) THEN true ELSE false END AS cites_deleted, CASE WHEN ((taxon_concepts.listing -> 'cites_status'::text) = 'EXCLUDED'::text) THEN true ELSE false END AS cites_excluded, ((taxon_concepts.listing -> 'cites_show'::text))::boolean AS cites_show, CASE WHEN ((taxon_concepts.listing -> 'cites_I'::text) = 'I'::text) THEN true ELSE false END AS cites_i, CASE WHEN ((taxon_concepts.listing -> 'cites_II'::text) = 'II'::text) THEN true ELSE false END AS cites_ii, CASE WHEN ((taxon_concepts.listing -> 'cites_III'::text) = 'III'::text) THEN true ELSE false END AS cites_iii, (taxon_concepts.listing -> 'cites_listing'::text) AS current_listing, ((taxon_concepts.listing -> 'listing_updated_at'::text))::timestamp without time zone AS listing_updated_at, (taxon_concepts.listing -> 'ann_symbol'::text) AS ann_symbol, (taxon_concepts.listing -> 'hash_ann_symbol'::text) AS hash_ann_symbol, (taxon_concepts.listing -> 'hash_ann_parent_symbol'::text) AS hash_ann_parent_symbol, taxon_concepts.author_year, taxon_concepts.created_at, taxon_concepts.updated_at, common_names.taxon_concept_id_com, common_names.english_names_ary, common_names.french_names_ary, common_names.spanish_names_ary, synonyms.taxon_concept_id_syn, synonyms.synonyms_ary, synonyms.synonyms_author_years_ary, countries_ids.countries_ids_ary, standard_references_ids.standard_references_ids_ary FROM (((((taxon_concepts LEFT JOIN taxonomies ON ((taxonomies.id = taxon_concepts.taxonomy_id))) LEFT JOIN (SELECT ct.taxon_concept_id_com, ct.english_names_ary, ct.french_names_ary, ct.spanish_names_ary FROM crosstab('SELECT taxon_concepts.id AS taxon_concept_id_com,
     SUBSTRING(languages.name_en FROM 1 FOR 1) AS lng,
     ARRAY_AGG(common_names.name ORDER BY common_names.id) AS common_names_ary
     FROM "taxon_concepts"
@@ -3502,7 +3569,7 @@ CREATE RULE "_RETURN" AS ON SELECT TO taxon_concepts_view DO INSTEAD SELECT taxo
     INNER JOIN "languages"
     ON "languages"."id" = "common_names"."language_id"
     GROUP BY taxon_concepts.id, SUBSTRING(languages.name_en FROM 1 FOR 1)
-    ORDER BY 1,2'::text) ct(taxon_concept_id_com integer, english_names_ary character varying[], french_names_ary character varying[], spanish_names_ary character varying[])) common_names ON ((taxon_concepts.id = common_names.taxon_concept_id_com))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_syn, array_agg(synonym_tc.full_name) AS synonyms_ary, array_agg(synonym_tc.author_year) AS synonyms_author_years_ary FROM (((taxon_concepts LEFT JOIN taxon_relationships ON ((taxon_relationships.taxon_concept_id = taxon_concepts.id))) LEFT JOIN taxon_relationship_types ON ((taxon_relationship_types.id = taxon_relationships.taxon_relationship_type_id))) LEFT JOIN taxon_concepts synonym_tc ON ((synonym_tc.id = taxon_relationships.other_taxon_concept_id))) GROUP BY taxon_concepts.id) synonyms ON ((taxon_concepts.id = synonyms.taxon_concept_id_syn))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_cnt, array_agg(geo_entities.id ORDER BY geo_entities.name_en) AS countries_ids_ary FROM (((taxon_concepts LEFT JOIN distributions taxon_concept_geo_entities ON ((taxon_concept_geo_entities.taxon_concept_id = taxon_concepts.id))) LEFT JOIN geo_entities ON ((taxon_concept_geo_entities.geo_entity_id = geo_entities.id))) LEFT JOIN geo_entity_types ON (((geo_entity_types.id = geo_entities.geo_entity_type_id) AND ((geo_entity_types.name)::text = 'COUNTRY'::text)))) GROUP BY taxon_concepts.id) countries_ids ON ((taxon_concepts.id = countries_ids.taxon_concept_id_cnt))) LEFT JOIN (WITH taxa_with_std_refs AS (WITH RECURSIVE q AS (SELECT h.*::taxon_concepts AS h, h.id, array_agg(taxon_concept_references.reference_id) AS standard_references_ids_ary FROM (taxon_concepts h LEFT JOIN taxon_concept_references ON (((h.id = taxon_concept_references.taxon_concept_id) AND ((taxon_concept_references.data -> 'usr_is_std_ref'::text) = 't'::text)))) WHERE (h.parent_id IS NULL) GROUP BY h.id UNION ALL SELECT hi.*::taxon_concepts AS hi, hi.id, CASE WHEN (((hi.data -> 'usr_no_std_ref'::text))::boolean = true) THEN ARRAY[]::integer[] ELSE (q.standard_references_ids_ary || taxon_concept_references.reference_id) END AS "case" FROM ((q JOIN taxon_concepts hi ON ((hi.parent_id = (q.h).id))) LEFT JOIN taxon_concept_references ON (((hi.id = taxon_concept_references.taxon_concept_id) AND ((taxon_concept_references.data -> 'usr_is_std_ref'::text) = 't'::text))))) SELECT DISTINCT q.id, unnest(q.standard_references_ids_ary) AS std_ref_id FROM q) SELECT taxa_with_std_refs.id AS taxon_concept_id_sr, array_agg(taxa_with_std_refs.std_ref_id) AS standard_references_ids_ary FROM taxa_with_std_refs WHERE (taxa_with_std_refs.std_ref_id IS NOT NULL) GROUP BY taxa_with_std_refs.id) standard_references_ids ON ((taxon_concepts.id = standard_references_ids.taxon_concept_id_sr)));
+    ORDER BY 1,2'::text) ct(taxon_concept_id_com integer, english_names_ary character varying[], french_names_ary character varying[], spanish_names_ary character varying[])) common_names ON ((taxon_concepts.id = common_names.taxon_concept_id_com))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_syn, array_agg(synonym_tc.full_name) AS synonyms_ary, array_agg(synonym_tc.author_year) AS synonyms_author_years_ary FROM (((taxon_concepts LEFT JOIN taxon_relationships ON ((taxon_relationships.taxon_concept_id = taxon_concepts.id))) LEFT JOIN taxon_relationship_types ON ((taxon_relationship_types.id = taxon_relationships.taxon_relationship_type_id))) LEFT JOIN taxon_concepts synonym_tc ON ((synonym_tc.id = taxon_relationships.other_taxon_concept_id))) GROUP BY taxon_concepts.id) synonyms ON ((taxon_concepts.id = synonyms.taxon_concept_id_syn))) LEFT JOIN (SELECT taxon_concepts.id AS taxon_concept_id_cnt, array_agg(geo_entities.id ORDER BY geo_entities.name_en) AS countries_ids_ary FROM (((taxon_concepts LEFT JOIN distributions ON ((distributions.taxon_concept_id = taxon_concepts.id))) LEFT JOIN geo_entities ON ((distributions.geo_entity_id = geo_entities.id))) LEFT JOIN geo_entity_types ON (((geo_entity_types.id = geo_entities.geo_entity_type_id) AND ((geo_entity_types.name)::text = 'COUNTRY'::text)))) GROUP BY taxon_concepts.id) countries_ids ON ((taxon_concepts.id = countries_ids.taxon_concept_id_cnt))) LEFT JOIN (WITH taxa_with_std_refs AS (WITH RECURSIVE q AS (SELECT h.*::taxon_concepts AS h, h.id, array_agg(taxon_concept_references.reference_id) AS standard_references_ids_ary FROM (taxon_concepts h LEFT JOIN taxon_concept_references ON (((h.id = taxon_concept_references.taxon_concept_id) AND ((taxon_concept_references.data -> 'usr_is_std_ref'::text) = 't'::text)))) WHERE (h.parent_id IS NULL) GROUP BY h.id UNION ALL SELECT hi.*::taxon_concepts AS hi, hi.id, CASE WHEN (((hi.data -> 'usr_no_std_ref'::text))::boolean = true) THEN ARRAY[]::integer[] ELSE (q.standard_references_ids_ary || taxon_concept_references.reference_id) END AS "case" FROM ((q JOIN taxon_concepts hi ON ((hi.parent_id = (q.h).id))) LEFT JOIN taxon_concept_references ON (((hi.id = taxon_concept_references.taxon_concept_id) AND ((taxon_concept_references.data -> 'usr_is_std_ref'::text) = 't'::text))))) SELECT DISTINCT q.id, unnest(q.standard_references_ids_ary) AS std_ref_id FROM q) SELECT taxa_with_std_refs.id AS taxon_concept_id_sr, array_agg(taxa_with_std_refs.std_ref_id) AS standard_references_ids_ary FROM taxa_with_std_refs WHERE (taxa_with_std_refs.std_ref_id IS NOT NULL) GROUP BY taxa_with_std_refs.id) standard_references_ids ON ((taxon_concepts.id = standard_references_ids.taxon_concept_id_sr)));
 ALTER VIEW taxon_concepts_view SET ();
 
 
@@ -3517,14 +3584,14 @@ CREATE TRIGGER trg_common_names_u AFTER UPDATE ON common_names FOR EACH ROW EXEC
 -- Name: trg_distributions_d; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER trg_distributions_d AFTER UPDATE ON distributions FOR EACH ROW EXECUTE PROCEDURE trg_distributions_d();
+CREATE TRIGGER trg_distributions_d AFTER DELETE ON distributions FOR EACH ROW EXECUTE PROCEDURE trg_distributions_d();
 
 
 --
 -- Name: trg_distributions_ui; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER trg_distributions_ui AFTER UPDATE ON distributions FOR EACH ROW EXECUTE PROCEDURE trg_distributions_ui();
+CREATE TRIGGER trg_distributions_ui AFTER INSERT OR UPDATE ON distributions FOR EACH ROW EXECUTE PROCEDURE trg_distributions_ui();
 
 
 --
@@ -3545,28 +3612,28 @@ CREATE TRIGGER trg_ranks_u AFTER UPDATE ON ranks FOR EACH ROW EXECUTE PROCEDURE 
 -- Name: trg_taxon_commons_d; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER trg_taxon_commons_d AFTER UPDATE ON taxon_commons FOR EACH ROW EXECUTE PROCEDURE trg_taxon_commons_d();
+CREATE TRIGGER trg_taxon_commons_d AFTER DELETE ON taxon_commons FOR EACH ROW EXECUTE PROCEDURE trg_taxon_commons_d();
 
 
 --
 -- Name: trg_taxon_commons_ui; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER trg_taxon_commons_ui AFTER UPDATE ON taxon_commons FOR EACH ROW EXECUTE PROCEDURE trg_taxon_commons_ui();
+CREATE TRIGGER trg_taxon_commons_ui AFTER INSERT OR UPDATE ON taxon_commons FOR EACH ROW EXECUTE PROCEDURE trg_taxon_commons_ui();
 
 
 --
 -- Name: trg_taxon_concept_references_d; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER trg_taxon_concept_references_d AFTER UPDATE ON taxon_concept_references FOR EACH ROW EXECUTE PROCEDURE trg_taxon_concept_references_d();
+CREATE TRIGGER trg_taxon_concept_references_d AFTER DELETE ON taxon_concept_references FOR EACH ROW EXECUTE PROCEDURE trg_taxon_concept_references_d();
 
 
 --
 -- Name: trg_taxon_concept_references_ui; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER trg_taxon_concept_references_ui AFTER UPDATE ON taxon_concept_references FOR EACH ROW EXECUTE PROCEDURE trg_taxon_concept_references_ui();
+CREATE TRIGGER trg_taxon_concept_references_ui AFTER INSERT OR UPDATE ON taxon_concept_references FOR EACH ROW EXECUTE PROCEDURE trg_taxon_concept_references_ui();
 
 
 --
@@ -3601,14 +3668,14 @@ CREATE TRIGGER trg_taxon_names_u AFTER UPDATE ON taxon_names FOR EACH ROW EXECUT
 -- Name: trg_taxon_relationships_d; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER trg_taxon_relationships_d AFTER UPDATE ON taxon_relationships FOR EACH ROW EXECUTE PROCEDURE trg_taxon_relationships_d();
+CREATE TRIGGER trg_taxon_relationships_d AFTER DELETE ON taxon_relationships FOR EACH ROW EXECUTE PROCEDURE trg_taxon_relationships_d();
 
 
 --
 -- Name: trg_taxon_relationships_ui; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER trg_taxon_relationships_ui AFTER UPDATE ON taxon_relationships FOR EACH ROW EXECUTE PROCEDURE trg_taxon_relationships_ui();
+CREATE TRIGGER trg_taxon_relationships_ui AFTER INSERT OR UPDATE ON taxon_relationships FOR EACH ROW EXECUTE PROCEDURE trg_taxon_relationships_ui();
 
 
 --
@@ -3705,6 +3772,14 @@ ALTER TABLE ONLY listing_changes
 
 ALTER TABLE ONLY listing_changes
     ADD CONSTRAINT listing_changes_change_type_id_fk FOREIGN KEY (change_type_id) REFERENCES change_types(id);
+
+
+--
+-- Name: listing_changes_hash_annotation_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY listing_changes
+    ADD CONSTRAINT listing_changes_hash_annotation_id_fk FOREIGN KEY (annotation_id) REFERENCES annotations(id);
 
 
 --
@@ -3910,3 +3985,21 @@ INSERT INTO schema_migrations (version) VALUES ('20130130120328');
 INSERT INTO schema_migrations (version) VALUES ('20130131140309');
 
 INSERT INTO schema_migrations (version) VALUES ('20130131140448');
+
+INSERT INTO schema_migrations (version) VALUES ('20130208105720');
+
+INSERT INTO schema_migrations (version) VALUES ('20130211152507');
+
+INSERT INTO schema_migrations (version) VALUES ('20130211155326');
+
+INSERT INTO schema_migrations (version) VALUES ('20130212105758');
+
+INSERT INTO schema_migrations (version) VALUES ('20130212110108');
+
+INSERT INTO schema_migrations (version) VALUES ('20130212115631');
+
+INSERT INTO schema_migrations (version) VALUES ('20130212115937');
+
+INSERT INTO schema_migrations (version) VALUES ('20130212181445');
+
+INSERT INTO schema_migrations (version) VALUES ('20130218131528');
