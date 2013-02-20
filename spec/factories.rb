@@ -58,4 +58,9 @@ FactoryGirl.define do
     data {}
   end
 
+  factory :preset_tag do
+    name 'Extinct'
+    model 'TaxonConcept'
+  end
+
 end
