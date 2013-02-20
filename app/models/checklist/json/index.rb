@@ -9,7 +9,7 @@ class Checklist::Json::Index < Checklist::Index
   def taxon_concepts_json_options
     json_options = super
     json_options[:methods] -= [
-      :ancestors_path, :specific_annotation_symbol, :countries_ids
+      :ancestors_path, :ann_symbol, :countries_ids
     ]
     json_options[:methods] << :countries_iso_codes
     json_options

@@ -10,6 +10,7 @@ namespace :import do
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
+      kingdom = file.split('/').last.split('_')[0].titleize
       sql = <<-SQL
         INSERT INTO common_names(name, language_id, created_at, updated_at)
         SELECT #{TMP_TABLE}.name, languages.id, current_date, current_date
@@ -28,7 +29,7 @@ namespace :import do
           INNER JOIN common_names ON #{TMP_TABLE}.name = common_names.name
           INNER JOIN languages ON #{TMP_TABLE}.language = languages.iso_code1
           LEFT JOIN ranks ON UPPER(BTRIM(#{TMP_TABLE}.rank)) = UPPER(ranks.name)
-          LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = 'Animalia' AND taxon_concepts.rank_id = ranks.id
+          LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = '#{kingdom}' AND taxon_concepts.rank_id = ranks.id
           WHERE taxon_concepts.id IS NOT NULL;
       SQL
       ActiveRecord::Base.connection.execute(sql)

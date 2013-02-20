@@ -1,28 +1,27 @@
 class TimelineEvent
   include ActiveModel::Serializers::JSON
   attr_accessor :id, :change_type_name, :species_listing_name, :effective_at,
-    :party_id, :is_current, :pos, :specific_short_note, :specific_full_note,
-    :generic_note, :symbol, :parent_symbol
+    :party_id, :is_current, :pos, :short_note_en, :full_note_en,
+    :hash_full_note_en, :hash_ann_symbol, :hash_ann_parent_symbol
   #options to be passed:
   #:change_type_name
   #:effective_at
   #:is_current
-  #:generic_note may be rich text (html)
-  #:specific_short_note
-  #:specific_full_note may be rich text (html)
-  #:symbol e.g. #4
-  #:parent_symbol e.g. CoP15
+  #:hash_full_note_en may be rich text (html)
+  #:short_note_en may be rich text (html)
+  #:full_note_en may be rich text (html)
+  #:hash_ann_symbol e.g. #4
+  #:hash_ann_parent_symbol e.g. CoP15
   #:pos - position (%)
   def initialize(options)
     @id = object_id
     @pos = options[:pos]
     @party_id = options[:party_id]
     @change_type_name = options[:change_type_name]
-    @specific_short_note = options[:specific_short_note]
-    @specific_full_note = options[:specific_full_note]
-    @generic_note = options[:generic_note]
-    @symbol = options[:symbol]
-    @parent_symbol = options[:parent_symbol]
+    @short_note_en = options[:short_note_en]
+    @full_note_en = options[:full_note_en]
+    @hash_full_note_en = options[:hash_full_note_en]
+    @hash_ann_symbol = options[:hash_ann_symbol]
     @effective_at = options[:effective_at]
     @is_current = options[:is_current]
     @species_listing_name = options[:species_listing_name]
@@ -36,11 +35,11 @@ class TimelineEvent
       'effective_at_formatted' => effective_at_formatted,
       'party_id' => party_id,
       'is_current' => is_current,
-      'specific_short_note' => specific_short_note,
-      'specific_full_note' => specific_full_note,
-      'generic_note' => generic_note,
-      'symbol' => symbol,
-      'parent_symbol' => parent_symbol,
+      'short_note_en' => short_note_en,
+      'full_note_en' => full_note_en,
+      'hash_full_note_en' => hash_full_note_en,
+      'hash_ann_symbol' => hash_ann_symbol,
+      'hash_ann_parent_symbol' => hash_ann_parent_symbol,
       'pos' => pos
     }
   end
@@ -54,7 +53,11 @@ class TimelineEvent
   end
 
   def is_reservation?
-    [ChangeType::RESERVATION, ChangeType::RESERVATION_WITHDRAWAL].include? @change_type_name
+    @change_type_name == ChangeType::RESERVATION
+  end
+
+  def is_reservation_withdrawal?
+    @change_type_name == ChangeType::RESERVATION_WITHDRAWAL
   end
 
   def effective_at_formatted

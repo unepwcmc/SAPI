@@ -22,20 +22,18 @@ module ListingChangesHelper
         join(', ') if geographic_exceptions.count > 0
 
     "#{taxonomic_exceptions_str} #{geographic_exceptions_str}"
-
-    # listing_change.exclusions.order('taxon_concept_id').map do |ex|
-      # tmp = ''
-      # puts ex.inspect
-      # puts ex.geo_entities.inspect
-      # if ex.taxon_concept
-        # tmp += "Except #{ex.taxon_concept.full_name}"
-        # if ex.geo_entities.count > 0
-          # tmp += "populations of #{geo_entities_tooltip(ex)}"
-        # end
-      # elsif ex.geo_entities.count > 0
-        # tmp += "Except populations of #{geo_entities_tooltip(ex)}"
-      # end
-      # tmp
-    # end.join("\n")
   end
+
+  def annotation_tooltip(listing_change)
+    if listing_change.annotation
+      "#{listing_change.annotation.short_note} (#{listing_change.annotation.full_note})"
+    end
+  end
+
+  def hash_annotation_tooltip(listing_change)
+    if listing_change.hash_annotation
+      listing_change.hash_annotation.full_note_en
+    end
+  end
+
 end

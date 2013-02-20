@@ -20,6 +20,7 @@ class Checklist::History < Checklist::Checklist
     @taxon_concepts_rel = @taxon_concepts_rel.
       includes(:listing_changes).
       where("cites_listed = 't'").
+      where("listing_changes_mview.change_type_name <> 'EXCEPTION'").
       where("NOT (listing_changes_mview.change_type_name = 'DELETION' " +
         "AND listing_changes_mview.species_listing_name IS NOT NULL " +
         "AND listing_changes_mview.party_name IS NULL)"
@@ -47,11 +48,11 @@ class Checklist::History < Checklist::Checklist
   def taxon_concepts_json_options
     json_options = super
     #less taxon information for the history
+    json_options[:only] -= [:hash_ann_symbol]
     json_options[:only] -= [
-      :current_listing, :cites_accepted, :specific_annotation_symbol,
+      :current_listing, :cites_accepted, :ann_symbol,
       :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
-      :genus_name, :species_name,
-      :generic_annotation_symbol, :generic_annotation_parent_symbol
+      :genus_name, :species_name
     ]
     json_options[:methods] -= [:recently_changed, :countries_ids,
       :english_names, :spanish_names, :french_names, :synonyms,
@@ -61,21 +62,10 @@ class Checklist::History < Checklist::Checklist
 
   def listing_changes_json_options
     json_options = super
-    case I18n.locale
-    when :es
-      json_options[:only] +=
-        [:generic_spanish_full_note, :spanish_full_note, :spanish_short_note]
-    when :fr
-      json_options[:only] +=
-        [:generic_french_full_note, :french_full_note, :french_short_note]
-    else
-      json_options[:only] +=
-        [:generic_english_full_note, :english_full_note, :english_short_note]
-    end
+    json_options[:only] -= [:symbol]
+    json_options[:only] += [:short_note_fr, :short_note_es]
     json_options[:methods] -= [:countries_ids]
-    json_options[:methods] += [:countries_iso_codes]
-    #these only make sense for the online checklist
-    json_options[:methods] -= [:specific_short_note, :specific_full_note, :generic_note]
+    json_options[:methods] += [:countries_iso_codes, :full_hash_ann_symbol]
     json_options
   end
 

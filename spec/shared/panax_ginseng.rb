@@ -52,21 +52,21 @@ shared_context "Panax ginseng" do
       :annotation,
       :symbol => '#3',
       :parent_symbol => 'CoP11',
-      :listing_change => nil
+      :full_note_en => 'generic'
     )
 
-    at1 = create(
-      :annotation_translation,
-      :language => Language.find_by_iso_code1('en'),
-      :annotation => a1,
-      :full_note => 'generic'
+    a2 = create(
+      :annotation,
+      :full_note_en => 'specific',
+      :display_in_index => true
     )
 
     l1 = create(
       :cites_II_addition,
       :taxon_concept => @species,
       :effective_at => '2000-07-19',
-      :annotation_id => a1.id,
+      :hash_annotation_id => a1.id,
+      :annotation_id => a2.id,
       :is_current => true
     )
 
@@ -75,18 +75,6 @@ shared_context "Panax ginseng" do
       :geo_entity => russia,
       :listing_change => l1,
       :is_party => false
-    )
-
-    a2 = create(
-      :annotation,
-      :listing_change => l1
-    )
-
-    at2 = create(
-      :annotation_translation,
-      :language => Language.find_by_iso_code1('en'),
-      :annotation => a2,
-      :full_note => 'specific'
     )
 
     [china, russia].each do |country|

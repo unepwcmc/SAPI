@@ -51,7 +51,8 @@ Rank.create(:name => Rank::FAMILY, :taxonomic_position => '5', :fixed_order => f
 Rank.create(:name => Rank::SUBFAMILY, :taxonomic_position => '5.1', :fixed_order => false)
 Rank.create(:name => Rank::GENUS, :taxonomic_position => '6', :fixed_order => false)
 Rank.create(:name => Rank::SPECIES, :taxonomic_position => '7', :fixed_order => false)
-Rank.create(:name => Rank::SUBSPECIES, :taxonomic_position => '8', :fixed_order => false)
+Rank.create(:name => Rank::SUBSPECIES, :taxonomic_position => '7.1', :fixed_order => false)
+Rank.create(:name => Rank::VARIETY, :taxonomic_position => '7.2', :fixed_order => false)
 
 puts "#{Rank.count} ranks created"
 
