@@ -33,21 +33,6 @@
         </div><!--/span-->
         <div class="span9">
           <%= render 'shared/alerts' %>
-          <script type="text/javascript">
-            $(document).ready(function() {
-                window.commonNamesList = new SAPIAdmin.EditableList({
-                  list: <%= @taxon_concept.common_names.to_json.html_safe %>,
-                  el: '<ul class="unstyled">',
-                  showEditLink: true,
-                  onEdit: function(e) {
-                    name = $(e.target).parents('li').attr('data-id')
-                    console.log(name);
-                  }
-                });
-
-              $('.common-names-list').html(window.commonNamesList.render());
-            });
-          </script>
           <div id="basic-info">
             <%= render 'admin/taxon_concepts/basic_info' %>
           </div>
