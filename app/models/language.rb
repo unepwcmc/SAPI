@@ -16,7 +16,6 @@ class Language < ActiveRecord::Base
   translates :name
 
   has_many :common_names
-  has_many :annotation_translations
 
   validates :iso_code1, :presence => true, :uniqueness => true, :length => {:is => 2}
 
@@ -32,7 +31,7 @@ class Language < ActiveRecord::Base
   end
 
   def can_be_deleted?
-    common_names.count == 0 && annotation_translations.count == 0
+    common_names.count == 0
   end
 
 end

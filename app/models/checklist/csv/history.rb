@@ -3,19 +3,21 @@ class Checklist::Csv::History < Checklist::History
   include Checklist::Csv::HistoryContent
 
   def taxon_concepts_csv_columns
-    all_json_options = taxon_concepts_json_options
-    all_json_options[:only] + all_json_options[:methods]
+    [
+      :id,
+      :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
+      :genus_name, :species_name, :subspecies_name,
+      :full_name, :author_year, :rank_name
+    ]
   end
 
   def listing_changes_csv_columns
-    all_json_options = listing_changes_json_options
-    res = all_json_options[:only] + all_json_options[:methods]
-    split = res.index(:party_name)
-    res = res[0..split] + [:party_full_name] + res[split+1..res.length-1]
-    split = res.index(:countries_iso_codes)
-    res = res[0..split] + [:countries_full_names] +
-      res[split+1..res.length-1]
-    res
+    [
+      :species_listing_name, :party_iso_code, :party_full_name,
+      :change_type_name, :effective_at_formatted, :is_current,
+      :hash_ann_symbol, :hash_full_note_en,
+      :full_note_en, :short_note_en, :short_note_es, :short_note_fr,
+    ]
   end
 
 end
