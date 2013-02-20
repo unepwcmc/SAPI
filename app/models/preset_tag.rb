@@ -5,4 +5,7 @@ class PresetTag < ActiveRecord::Base
     :TaxonConcept => 'TaxonConcept',
     :Distribution => 'Distribution'
   }
+
+  validates :name, :presence => true
+  validates :model, :inclusion => { :in => TYPES.values }
 end
