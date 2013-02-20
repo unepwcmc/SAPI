@@ -76,13 +76,14 @@ class LatexToPdf
     @latex_escaper.latex_esc(text.to_s)#.html_safe
   end
 
-  def self.sanitize(text)
-    text.gsub!(//, '\'')
-    text.gsub!(//,'\'')
-    text.gsub!(//,'\'')
-    text.gsub!(//,'\'')
-    text.gsub!(/<i>(.*)<\/i>/, "\\textit{#{$1}}")
-    text
+  def self.html2latex(text)
+    text && text.split(/(<i>.*?<\/i>)/).map do |part|
+      if part =~ /<i>(.*?)<\/i>/
+        "\\textit{#{escape_latex($+)}}"
+      else
+        escape_latex(part)
+      end
+    end.join('')
   end
 
 end

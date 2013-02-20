@@ -79,17 +79,17 @@ module Checklist::Pdf::HistoryContent
 
   def multilingual_annotations(listing_change)
     res = ['en', 'es', 'fr'].map do |lng|
-      LatexToPdf.sanitize(annotation_for_language(listing_change, lng))
+      annotation_for_language(listing_change, lng)
     end.compact
     (res.empty? ? [nil] : res)
   end
 
   def annotation_for_language(listing_change, lng)
     short_note = listing_change.send("short_note_#{lng}")
-    short_note = LatexToPdf.escape_latex(short_note)
+    short_note = LatexToPdf.html2latex(short_note)
     if listing_change.display_in_footnote && lng == 'en'
       full_note = listing_change.send("full_note_#{lng}")
-      full_note = LatexToPdf.escape_latex(full_note)
+      full_note = LatexToPdf.html2latex(full_note)
       "\\footnote{#{full_note}}{#{short_note}}"
     else
       short_note
