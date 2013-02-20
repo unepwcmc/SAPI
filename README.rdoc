@@ -67,15 +67,27 @@ To load the modules into your db in postgres >= 9.1:
 
 This is done in migrations for your development and test environments. For staging and production needs to be done by hand, as it requires superuser privileges.
 
+=== Files for import
+
+The original data files are in Dropbox in a folder shared with the Species staff.
+These files should have the same columns as defined in the helper import file (lib/tasks/helpers_for_import.rb).
+Otherwise they should be renamed. After copying the files from the Dropbox folder to the project folder, currently
+into lib/assets/files/cleaned/[animals|plants], I open them with excel and save them as Windows Comma Separated.
+After this (in Mac OSx) I run the following command in the terminal from the folder where the files are:
+
+  iconv -f Windows-1252 -t UTF-8 file_name.csv > file_name_utf8.csv
+
+This should generate in a file utf8 compatible.
+
 === Data import
 
-  rake import:all 
-This task loads the db seeds, and imports species, distributions, cites listings, common names, synonyms, references and taxon concept references directly from MS SQL (you'll need freetds installed); we're still using files in lib/assets/files/ to import cites_regions, countries and standard references.
+  rake import:redo
+This task drops the database if not being used, creates it and runs the migrations. Then it loads the db seeds, and imports species, distributions,
+cites listings, common names, synonyms, references and taxon concept references from the provided files in lib/assets/files/cleaned.
 There are specific tasks for each of the types of data. Run 'rake -T' to get the list of tasks.
 
-You need to run imports from a machine that has access to both the MSSQL db and PostgreSQL. Port forwarding might come in handy:
 
-  ssh -fNg -L 15432:localhost:5432 ssh_user@public-address-of-db-host
+
 
 Note: if there is some issue with data encoding on the way, we may end up with the utf8 unknown symbol �, which, sadly, crashes latex. Ideal solution: get the data right. Quick solution (for annotations, which seem to be most affected):
 
