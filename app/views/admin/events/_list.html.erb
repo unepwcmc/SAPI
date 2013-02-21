@@ -1,10 +1,18 @@
 <thead>
+  <th width="20%">Designation</th>
   <th>Name</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
   <% collection.each do |event| -%>
     <tr>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="select" data-resource="event" data-name="designation_id"
+          data-placeholder="Required" data-original-title="Enter the change type's designation" data-source="/admin/designations/"
+          data-url="<%= resource_url(event) %>" data-pk="<%= event.id %>" data-value="<%= event.designation.id %>">
+          <%= event.designation && event.designation.name %>
+        </a>
+      </td>
       <td>
         <a href="#" class="editable editable-click editable-required"
           data-type="text" data-resource="event" data-name="name"
