@@ -125,6 +125,7 @@ module Sapi
     Sapi.print_count_for "GeoEntities", GeoEntity.count
     Sapi.print_count_for "Countries", GeoEntity.joins(:geo_entity_type).where(:geo_entity_types => {:name => GeoEntityType::COUNTRY}).count
     Sapi.print_count_for "CITES Regions", GeoEntity.joins(:geo_entity_type).where(:geo_entity_types => {:name => GeoEntityType::CITES_REGION}).count
+    Sapi.print_count_for "References", Reference.count
     Sapi.print_count_for "CommonNames", CommonName.count
     Sapi.print_count_for "English CommonNames", CommonName.joins(:language).where(:languages => {:name_en => 'English'}).count
     Sapi.print_count_for "French CommonNames", CommonName.joins(:language).where(:languages => {:name_en => 'French'}).count
