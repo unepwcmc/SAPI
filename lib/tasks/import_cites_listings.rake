@@ -41,17 +41,30 @@ namespace :import do
 
       sql = <<-SQL
           WITH annotations AS (
-            INSERT INTO annotations(import_row_id, short_note_en, short_note_es, short_note_fr, full_note_en, created_at, updated_at)
-            SELECT DISTINCT TMP.row_id, TMP.short_note_en, TMP.short_note_es, TMP.short_note_fr, TMP.full_note_en, current_date, current_date
+            INSERT INTO annotations(
+              import_row_id,
+              short_note_en, short_note_es, short_note_fr, full_note_en,
+              display_in_index, display_in_footnote,
+              created_at, updated_at
+            )
+            SELECT DISTINCT TMP.row_id,
+              TMP.short_note_en, TMP.short_note_es, TMP.short_note_fr, TMP.full_note_en,
+              CASE WHEN index_annotation IS NOT NULL THEN TRUE ELSE FALSE END,
+              CASE WHEN history_annotation IS NOT NULL THEN TRUE ELSE FALSE END,
+              current_date, current_date
             FROM #{TMP_TABLE}_view AS TMP
             WHERE TMP.short_note_en IS NOT NULL AND TMP.short_note_en <> 'NULL'
             RETURNING import_row_id, id
           ), hash_annotations AS (
-            INSERT INTO annotations(import_row_id, symbol, parent_symbol, created_at, updated_at)
-            SELECT DISTINCT TMP.row_id, split_part(TMP.hash_note, ' ', 2), split_part(TMP.hash_note, ' ', 1), current_date, current_date
+            INSERT INTO annotations(
+              symbol, parent_symbol, created_at, updated_at
+            )
+            SELECT DISTINCT
+              split_part(TMP.hash_note, ' ', 2), split_part(TMP.hash_note, ' ', 1),
+              current_date, current_date
             FROM #{TMP_TABLE}_view AS TMP
             WHERE TMP.hash_note IS NOT NULL
-            RETURNING import_row_id, id
+            RETURNING (parent_symbol || ' ' ||symbol) AS full_symbol, id
           )
           INSERT INTO listing_changes(
             import_row_id,
@@ -97,7 +110,7 @@ namespace :import do
           AND inclusion_taxon_concepts.legacy_type = '#{kingdom}'
           AND inclusion_taxon_concepts.rank_id = inclusion_ranks.id
           LEFT JOIN annotations ON annotations.import_row_id = TMP.row_id
-          LEFT JOIN hash_annotations ON hash_annotations.import_row_id = TMP.row_id;
+          LEFT JOIN hash_annotations ON hash_annotations.full_symbol = TMP.hash_note;
       SQL
 
       puts "The sql\n #{sql} \n"
