@@ -193,7 +193,8 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def parent_at_immediately_higher_rank
-    return true unless parent
+    return true unless parent 
+    return true if (parent.rank.name == 'KINGDOM' && parent.full_name == 'Plantae' && rank.name == 'ORDER')
     unless parent.rank.taxonomic_position >= rank.parent_rank_lower_bound &&
       parent.rank.taxonomic_position < rank.taxonomic_position
       errors.add(:parent_id, "must be at immediately higher rank")

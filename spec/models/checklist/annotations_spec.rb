@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Checklist do
   include_context "Panax ginseng"
   include_context "Caiman latirostris"
-  describe "specific_annotation_symbol" do
+  describe "ann_symbol" do
     before(:all) do
       @checklist = Checklist::Checklist.new({
         :output_layout => 'alphabetical',
@@ -15,11 +15,11 @@ describe Checklist do
     end
     context 'for species Caiman latirostris' do
       subject { @taxon_concepts.select{ |e| e.full_name == 'Caiman latirostris' }.first }
-      specify { subject.specific_annotation_symbol.should == '1' }
+      specify { subject.ann_symbol.should == '1' }
     end
     context 'for species Panax ginseng' do
       subject { @taxon_concepts.select{ |e| e.full_name == 'Panax ginseng' }.first }
-      specify { subject.specific_annotation_symbol.should == '2' }
+      specify { subject.ann_symbol.should == '2' }
     end
   end
 end

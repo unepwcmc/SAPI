@@ -14,6 +14,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       load_change_types
       @listing_change.build_party_listing_distribution
       @listing_change.exclusions.build
+      @listing_change.build_annotation
     end
   end
 
@@ -23,10 +24,11 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
     @listing_change = ListingChange.new(params[:listing_change])
     if @taxon_concept.listing_changes << @listing_change
       load_listing_changes
-      render 'create'
+      render 'index'
     else
       load_change_types
       @listing_change.build_party_listing_distribution(params[:listing_change][:party_listing_distribution_attributes])
+      @listing_change.build_annotation(params[:listing_change][:annotation_attributes])
       render 'new'
     end
   end
@@ -39,6 +41,9 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       end
       unless @listing_change.exclusions
         @listing_change.exclusions.build
+      end
+      unless @listing_change.annotation
+        @listing_change.build_annotation
       end
       format.js { render 'new' }
     end
@@ -78,6 +83,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       where(:designation_id => @designation.id)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+    @hash_annotations = Annotation.for_cites_plants
   end
 
   def load_listing_changes

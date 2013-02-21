@@ -11,3 +11,32 @@
     margin: 0;
   }
 }
+.new_listing_change table,
+.edit_listing_change table,
+table.listing-change {
+  width: 50%;
+
+  tr {
+    text-align: left;
+
+    td {
+      padding-right: 25px;
+    }
+  }
+}
+
+
+.new_listing_change,
+.edit_listing_change {
+  p {
+    margin: 20px 0;
+  }
+
+  .inline {
+    display: inline;
+
+    & ~ input[type="checkbox"] {
+      margin: 0;
+    }
+  }
+}

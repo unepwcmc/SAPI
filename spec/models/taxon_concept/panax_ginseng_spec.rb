@@ -20,15 +20,15 @@ describe TaxonConcept do
       end
     end
 
-    describe :specific_annotation_symbol do
+    describe :ann_symbol do
       context "for species Panax ginseng" do
-        specify { @species.specific_annotation_symbol.should_not be_blank }
+        specify { @species.ann_symbol.should_not be_blank }
       end
     end
 
-    describe :generic_annotation_symbol do
+    describe :hash_ann_symbol do
       context "for species Panax ginseng" do
-        specify { @species.generic_annotation_symbol.should == '#3' }
+        specify { @species.hash_ann_symbol.should == '#3' }
       end
     end
 
