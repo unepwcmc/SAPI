@@ -27,6 +27,7 @@ SAPI::Application.routes.draw do
     resources :ranks, :only => [:index, :create, :update, :destroy]
     resources :tags, :only => [:index, :create, :update, :destroy]
     resources :events, :only => [:index, :create, :update, :destroy]
+    resources :references, :only => [:index, :create, :update, :destroy]
     resources :geo_entities, :only => [:index, :create, :update, :destroy] do
       get :autocomplete, :on => :collection
       resources :geo_relationships, :only => [:index, :create, :update, :destroy]

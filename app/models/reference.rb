@@ -14,4 +14,6 @@
 
 class Reference < ActiveRecord::Base
   attr_accessible :title, :author, :year
+
+  validates :title, :presence => true
 end
