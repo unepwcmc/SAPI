@@ -1,4 +1,4 @@
-<%= form_for resource_instance_name, :url => collection_path, :remote => true do |f| %>
+<%= form_for [:admin, @event], :remote => true do |f| %>
 
   <%= error_messages_for(@event) %>
   <label>Designation</label>
@@ -6,4 +6,7 @@
     options_from_collection_for_select(@designations, :id, :name, @event && @event.designation_id)
   %><br />
   <label>Name</label><%= f.text_field :name %><br />
+  <label>URL</label><%= f.text_area :url %><br />
+  <label>Description</label><%= f.text_area :description %><br />
+  <label>Effective at</label><%= f.text_field :effective_at, :class => "datepicker", :value => @event.effective_at_formatted %>
 <% end %>

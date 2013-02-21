@@ -12,6 +12,11 @@ class AdminEditor
   init: () ->
     @initModals()
 
+  initForm: () ->
+    $(".datepicker").datepicker
+      format: "dd/mm/yyyy",
+      autoclose: true
+
   initModals: () ->
     $('.modal .modal-footer .save-button').click () ->
       $(@).closest('.modal').find('form').submit()
@@ -141,11 +146,9 @@ class ListingChangesEditor extends AdminEditor
     @initForm()
 
   initForm: () ->
+    super
     @initTaxonConceptTypeaheads()
     @initDistributionSelectors()
-    $(".datepicker").datepicker
-      format: "dd/mm/yyyy",
-      autoclose: true
     # handle initializing stuff for nested form add events
     $(document).on('nested:fieldAdded', (event) =>
       event.field.find('.distribution').select2({

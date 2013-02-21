@@ -40,6 +40,9 @@ namespace :import do
     Rake::Task["import:standard_references"].invoke(
       'lib/assets/files/standard_references.csv'
     )
+    Rake::Task["import:laws"].invoke(
+      'lib/assets/files/laws.csv'
+    )
 
     Sapi::rebuild()
     Sapi::enable_triggers
