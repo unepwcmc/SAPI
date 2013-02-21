@@ -2,6 +2,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   respond_to :json
   layout :determine_layout
   before_filter :sanitize_search_params, :only => [:index, :autocomplete]
+  before_filter :load_tags, :only => [:index, :edit, :create]
 
   def index
     @taxonomies = Taxonomy.order(:name)
@@ -12,7 +13,6 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     @synonym.build_taxon_name
     @hybrid = TaxonConcept.new(:name_status => 'H')
     @hybrid.build_taxon_name
-    @tags = TaxonConcept.tag_counts_on('tags')
     @taxon_concepts = TaxonConceptMatcher.new(@search_params).taxon_concepts.
       includes([:rank, :taxonomy, :taxon_name, :parent]).
       order(:taxonomic_position).page(params[:page])
@@ -21,7 +21,6 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   def edit
     @taxonomies = Taxonomy.order(:name)
     @ranks = Rank.order(:taxonomic_position)
-    @tags = TaxonConcept.tag_counts_on('tags')
     edit! do |format|
       @languages = Language.order(:name_en)
       format.js { render 'new' }
@@ -32,7 +31,6 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     create! do |success, failure|
       @taxonomies = Taxonomy.order(:name)
       @ranks = Rank.order(:taxonomic_position)
-      @tags = TaxonConcept.tag_counts_on('tags')
       success.js { render('create') }
       failure.js {
         if @taxon_concept.is_synonym?
@@ -88,6 +86,10 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
         { :taxonomy => { :id => Taxonomy.
           where(:name => Taxonomy::CITES_EU).limit(1).select(:id).first.id }
         })
+    end
+
+    def load_tags
+      @tags = PresetTag.where(:model => PresetTag::TYPES[:TaxonConcept])
     end
 
 end

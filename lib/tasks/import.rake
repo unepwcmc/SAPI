@@ -52,12 +52,9 @@ namespace :import do
     Sapi::disable_triggers
     Rake::Task["db:seed"].invoke
     Rake::Task["import:species"].invoke(
-      'lib/assets/files/cleaned/animalia_taxa_utf8.csv'
-      #'lib/assets/files/first_pages_cites/plants_taxon_concepts.csv'
+      'lib/assets/files/cleaned/animals/animalia_taxa_utf8.csv',
+      'lib/assets/files/cleaned/plants/plantae_taxa_utf8.csv'
     )
-    puts "rebuilding the nested set"
-    #rebuild the tree
-    TaxonConcept.rebuild!
 
     Rake::Task["import:cites_regions"].invoke(
       'lib/assets/files/cites_regions.csv'
@@ -66,39 +63,50 @@ namespace :import do
       'lib/assets/files/cleaned/countries_utf8.csv'
     )
     Rake::Task["import:distributions"].invoke(
-      'lib/assets/files/cleaned/animalia_distribution_utf8.csv'
-     #'lib/assets/files/first_pages_cites/plants_distributions.csv'
+      'lib/assets/files/cleaned/animals/animalia_distribution_utf8.csv',
+      'lib/assets/files/cleaned/plants/plantae_distribution_utf8.csv'
     )
     Rake::Task["import:cites_listings"].invoke(
-      'lib/assets/files/cleaned/animalia_legislation_utf8.csv',
-#      'lib/assets/files/first_pages_cites/plants_listing_changes.csv'
+      'lib/assets/files/cleaned/animals/animalia_legislation_utf8.csv',
+      'lib/assets/files/cleaned/plants/plantae_legislation_utf8.csv'
     )
     Rake::Task["import:common_names"].invoke(
-      'lib/assets/files/cleaned/animalia_common_names_utf8.csv',
-#      'lib/assets/files/first_pages_cites/plants_common_names.csv'
+      'lib/assets/files/cleaned/animals/animalia_common_names_utf8.csv',
+      'lib/assets/files/cleaned/plants/plantae_common_names_utf8.csv'
     )
     Rake::Task["import:synonyms"].invoke(
-      'lib/assets/files/cleaned/animalia_synonyms_utf8.csv',
-#      'lib/assets/files/first_pages_cites/plants_synonyms.csv'
+      'lib/assets/files/cleaned/animals/animalia_synonyms_utf8.csv',
+      'lib/assets/files/cleaned/plants/plantae_synonyms_utf8.csv'
     )
-    # Rake::Task["import:references"].invoke(
-      # 'lib/assets/files/references.csv'
-    # )
+     #Rake::Task["import:references"].invoke(
+     #  'lib/assets/files/references.csv'
+     #)
 #    Rake::Task["import:reference_links"].invoke(
 #      'lib/assets/files/animals_reference_links.csv',
 #      'lib/assets/files/plants_reference_links.csv'
 #    )
    Rake::Task["import:standard_references"].invoke(
-     'lib/assets/files/cleaned/animalia_standard_refs_utf8.csv'
+     'lib/assets/files/cleaned/animals/animalia_standard_refs_utf8.csv',
+     'lib/assets/files/cleaned/plants/plantae_standard_refs_utf8.csv'
    )
 #
     Rake::Task["import:trade_codes"].invoke
 
     Sapi::rebuild()
+    puts "rebuilding the nested set"
+    #rebuild the tree
+    TaxonConcept.rebuild!
     Sapi::enable_triggers
     Sapi::create_indices
+
+    Rake::Task['import:stats'].invoke
   end
 
   desc 'Drops and reimports db'
   task :redo => ["db:drop", "db:create", "db:migrate", "db:seed", "import:first_pages_cites"]
+
+  desc 'Shows database summary stats'
+  task :stats => :environment do
+    Sapi::database_summary
+  end
 end

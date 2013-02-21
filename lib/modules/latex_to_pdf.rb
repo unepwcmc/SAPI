@@ -1,3 +1,4 @@
+#Encoding: UTF-8
 class LatexToPdf
   def self.config
     @config ||= {
@@ -74,4 +75,15 @@ class LatexToPdf
 
     @latex_escaper.latex_esc(text.to_s)#.html_safe
   end
+
+  def self.html2latex(text)
+    text && text.split(/(<i>.*?<\/i>)/).map do |part|
+      if part =~ /<i>(.*?)<\/i>/
+        "\\textit{#{escape_latex($+)}}"
+      else
+        escape_latex(part)
+      end
+    end.join('')
+  end
+
 end

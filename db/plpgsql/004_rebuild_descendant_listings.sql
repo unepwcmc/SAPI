@@ -31,7 +31,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings() RETURNS void
               hi.listing->'cites_status_original' = 't'
             THEN
               hstore('cites_listing',hi.listing->'cites_listing_original') ||
-              slice(hi.listing, ARRAY['generic_annotation_symbol', 'specific_annotation_symbol'])
+              slice(hi.listing, ARRAY['hash_ann_symbol', 'ann_symbol'])
             ELSE
               inherited_listing
             END

@@ -22,6 +22,9 @@ namespace :import do
     files.each do |file|
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
+
+      kingdom = file.split('/').last.split('_')[0].titleize
+
       puts "CREATING temporary column and view"
       ActiveRecord::Base.connection.execute(<<-SQL
         CREATE VIEW #{TMP_TABLE}_view AS
@@ -31,29 +34,68 @@ namespace :import do
       )
       ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN IF EXISTS import_row_id")
       ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes ADD COLUMN import_row_id integer")
+      ActiveRecord::Base.connection.execute("ALTER TABLE annotations DROP COLUMN IF EXISTS import_row_id")
+      ActiveRecord::Base.connection.execute("ALTER TABLE annotations ADD COLUMN import_row_id integer")
 
       copy_data(file, TMP_TABLE)
 
       sql = <<-SQL
-          INSERT INTO listing_changes(import_row_id, species_listing_id, taxon_concept_id, change_type_id, created_at, updated_at, effective_at, is_current, inclusion_taxon_concept_id)
+          WITH annotations AS (
+            INSERT INTO annotations(
+              import_row_id,
+              short_note_en, short_note_es, short_note_fr, full_note_en,
+              display_in_index, display_in_footnote,
+              created_at, updated_at
+            )
+            SELECT DISTINCT TMP.row_id,
+              TMP.short_note_en, TMP.short_note_es, TMP.short_note_fr, TMP.full_note_en,
+              CASE WHEN index_annotation IS NOT NULL THEN TRUE ELSE FALSE END,
+              CASE WHEN history_annotation IS NOT NULL THEN TRUE ELSE FALSE END,
+              current_date, current_date
+            FROM #{TMP_TABLE}_view AS TMP
+            WHERE TMP.short_note_en IS NOT NULL AND TMP.short_note_en <> 'NULL'
+            RETURNING import_row_id, id
+          ), hash_annotations AS (
+            INSERT INTO annotations(
+              symbol, parent_symbol, created_at, updated_at
+            )
+            SELECT DISTINCT
+              split_part(TMP.hash_note, ' ', 2), split_part(TMP.hash_note, ' ', 1),
+              current_date, current_date
+            FROM #{TMP_TABLE}_view AS TMP
+            WHERE TMP.hash_note IS NOT NULL
+            RETURNING (parent_symbol || ' ' ||symbol) AS full_symbol, id
+          )
+          INSERT INTO listing_changes(
+            import_row_id,
+            taxon_concept_id, species_listing_id, change_type_id,
+            annotation_id, hash_annotation_id, effective_at, is_current,
+            inclusion_taxon_concept_id, created_at, updated_at
+          )
           SELECT row_id,
+            taxon_concepts.id,
             CASE
               WHEN UPPER(BTRIM(TMP.appendix)) like '%III%' THEN #{appendix_3.id}
               WHEN UPPER(BTRIM(TMP.appendix)) like '%II%' THEN #{appendix_2.id}
               WHEN UPPER(BTRIM(TMP.appendix)) like '%I%' THEN #{appendix_1.id}
               ELSE NULL
-            END, taxon_concepts.id,
+            END,
             CASE
               WHEN TMP.appendix like '%/r' THEN #{r.id}
               WHEN TMP.appendix like '%/w' THEN #{rw.id}
               WHEN TMP.appendix ilike 'DEL%' THEN #{d.id}
               ELSE #{a.id}
-            END, current_date, current_date, TMP.listing_date,
+            END,
+            annotations.id,
+            hash_annotations.id,
+            TMP.listing_date,
             CASE
               WHEN TMP.is_current IS NULL THEN 'f'
+              WHEN TMP.appendix ilike 'DEL%' THEN 'f'
               ELSE TMP.is_current
             END,
-            inclusion_taxon_concepts.id
+            inclusion_taxon_concepts.id,
+            current_date, current_date
           FROM #{TMP_TABLE}_view AS TMP
           INNER JOIN ranks
           ON LOWER(ranks.name) = LOWER(TMP.rank)
@@ -61,13 +103,17 @@ namespace :import do
           ON LOWER(inclusion_ranks.name) = LOWER(rank_for_inclusions)
           INNER JOIN taxon_concepts
           ON taxon_concepts.legacy_id = TMP.legacy_id
-          AND taxon_concepts.legacy_type = 'Animalia'
+          AND taxon_concepts.legacy_type = '#{kingdom}'
           AND taxon_concepts.rank_id = ranks.id
           LEFT JOIN taxon_concepts inclusion_taxon_concepts
           ON inclusion_taxon_concepts.legacy_id = TMP.included_in_rec_id
-          AND inclusion_taxon_concepts.legacy_type = 'Animalia'
-          AND inclusion_taxon_concepts.rank_id = inclusion_ranks.id;
+          AND inclusion_taxon_concepts.legacy_type = '#{kingdom}'
+          AND inclusion_taxon_concepts.rank_id = inclusion_ranks.id
+          LEFT JOIN annotations ON annotations.import_row_id = TMP.row_id
+          LEFT JOIN hash_annotations ON hash_annotations.full_symbol = TMP.hash_note;
       SQL
+
+      puts "The sql\n #{sql} \n"
 
       puts "INSERTING listing_changes"
       ActiveRecord::Base.connection.execute(sql)
@@ -98,7 +144,7 @@ namespace :import do
           ON BTRIM(LOWER(exclusion_ranks.name)) = BTRIM(LOWER(exclusion_rank))
         INNER JOIN taxon_concepts exclusion_taxon_concepts
           ON exclusion_taxon_concepts.legacy_id = exclusion_legacy_id::INTEGER
-          AND exclusion_taxon_concepts.legacy_type = 'Animalia'
+          AND exclusion_taxon_concepts.legacy_type = '#{kingdom}'
           AND exclusion_taxon_concepts.rank_id = exclusion_ranks.id
         INNER JOIN listing_changes
           ON row_id = import_row_id
@@ -170,33 +216,12 @@ namespace :import do
       puts "INSERTING parties (listing distributions)"
       ActiveRecord::Base.connection.execute(sql)
 
-      sql = <<-SQL
-          WITH t AS (
-            INSERT INTO annotations(listing_change_id, created_at, updated_at)
-            SELECT DISTINCT listing_changes.id, current_date, current_date
-            FROM #{TMP_TABLE}_view AS TMP
-            INNER JOIN listing_changes ON TMP.row_id = listing_changes.import_row_id
-            WHERE TMP.short_note_en IS NOT NULL AND TMP.short_note_en <> 'NULL'
-            RETURNING *
-          )
-          INSERT INTO annotation_translations(annotation_id, language_id, short_note, full_note, created_at, updated_at)
-          SELECT t.id, #{english.id}, '',
-            CASE
-              WHEN TMP.full_note_en like 'NULL' OR TMP.full_note_en IS NULL THEN TMP.short_note_en
-              ELSE TMP.full_note_en
-            END
-          , current_date, current_date
-          FROM t
-          INNER JOIN listing_changes ON t.listing_change_id = listing_changes.id
-          INNER JOIN #{TMP_TABLE}_view AS TMP ON listing_changes.import_row_id = TMP.row_id
-      SQL
-      puts "INSERTING annotations"
-      ActiveRecord::Base.connection.execute(sql)
     end
 
     puts "DROPPING temporary column and view"
-    #TODO ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN import_row_id")
-    #TODO ActiveRecord::Base.connection.execute("DROP VIEW cites_listings_import_view")
+    ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN import_row_id")
+    ActiveRecord::Base.connection.execute("ALTER TABLE annotations DROP COLUMN import_row_id")
+    ActiveRecord::Base.connection.execute("DROP VIEW cites_listings_import_view")
 
     puts "#{ListingChange.count - listings_count} CITES listings were added to the database"
     puts "#{ListingDistribution.count - listings_d_count} listing distributions were added to the database"

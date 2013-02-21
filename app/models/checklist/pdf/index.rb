@@ -8,6 +8,11 @@ class Checklist::Pdf::Index < Checklist::Index
     @input_name = 'index'
   end
 
+  def taxon_concepts_json_options
+    json_options = super
+    json_options[:only] << :ann_symbol
+  end
+
   def prepare_kingdom_queries
     options = {
       :synonyms => @synonyms,

@@ -4,10 +4,24 @@
 module Checklist::Pdf::IndexContent
 
   def content(tex)
+    annotations_key(tex)
     fetcher = Checklist::Pdf::IndexFetcher.new(@animalia_query)
     kingdom(tex, fetcher, 'FAUNA')
     fetcher = Checklist::Pdf::IndexFetcher.new(@plantae_query)
     kingdom(tex, fetcher, 'FLORA')
+  end
+
+  def annotations_key(tex)
+    index_annotations = Annotation.where(:display_in_index => true).
+      order(:symbol)
+    if index_annotations.size > 0
+      tex << "\\cpart{SUPERSCRIPT ANNOTATIONS KEY}\n"
+      tex << "\\begin{itemize}\n"
+      index_annotations.each do |ann|
+          tex << "\\item[#{ann.symbol}] #{ann.full_note_en}\n"
+        end
+      tex << "\\end{itemize}\n"
+    end
   end
 
   def kingdom(tex, fetcher, kingdom_name)
@@ -70,12 +84,12 @@ module Checklist::Pdf::IndexContent
 
   def current_listing_with_annotations(taxon_concept)
     res = " \\textbf{#{taxon_concept.current_listing}} "
-    unless taxon_concept.generic_annotation_symbol.blank?
-      symbol = LatexToPdf.escape_latex(taxon_concept.generic_annotation_symbol)
+    unless taxon_concept.hash_ann_symbol.blank?
+      symbol = LatexToPdf.escape_latex(taxon_concept.hash_ann_symbol)
       res = " #{symbol}#{res}"
     end
-    unless taxon_concept.specific_annotation_symbol.blank?
-      res += "\\superscript{#{taxon_concept.specific_annotation_symbol}}"
+    unless taxon_concept.ann_symbol.blank?
+      res += "\\superscript{#{taxon_concept.ann_symbol}}"
     end
     res
   end

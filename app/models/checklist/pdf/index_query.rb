@@ -10,7 +10,7 @@ class Checklist::Pdf::IndexQuery
     #and sorted alphabetically
     shared_columns = [:full_name, :rank_name, :family_name, :class_name,
     :cites_accepted, :current_listing,
-    :specific_annotation_symbol, :generic_annotation_symbol]
+    :ann_symbol, :hash_ann_symbol]
     shared_columns << :english_names_ary if @english_common_names
     shared_columns << :spanish_names_ary if @spanish_common_names
     shared_columns << :french_names_ary if @french_common_names
@@ -83,7 +83,7 @@ class Checklist::Pdf::IndexQuery
       #{inner_query}
     )
     SELECT * FROM name_matches WHERE sort_name IS NOT NULL
-    ORDER BY sort_name COLLATE "en_GB"
+    ORDER BY UPPER(sort_name) COLLATE "en_GB"
     LIMIT #{limit} OFFSET #{offset}
     SQL
   end
