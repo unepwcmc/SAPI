@@ -1,0 +1,8 @@
+<%= form_for resource_instance_name, :url => collection_path, :remote => true do |f| %>
+
+  <%= error_messages_for(@event) %>
+
+  <label>Title</label><%= f.text_field :title %><br />
+  <label>Authors</label><%= f.text_field :author %><br />
+  <label>Year</label><%= f.text_field :year %><br />
+<% end %>
