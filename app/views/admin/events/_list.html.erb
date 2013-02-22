@@ -25,7 +25,7 @@
       </td>
       <td><%= event.effective_at_formatted %></td>
       <td>
-        <%= link_to_unless(event.url.blank?, '<i class="icon-share"></i>'.html_safe, event.url) { '' } %>
+        <%= link_to_unless(event.url.blank?, '<i class="icon-share" title="Go to URL"></i>'.html_safe, event.url) { '' } %>
       </td>
       <td>
         <%= link_to edit_icon, edit_resource_url(event), :remote => true %>

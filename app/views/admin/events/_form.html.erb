@@ -8,5 +8,17 @@
   <label>Name</label><%= f.text_field :name %><br />
   <label>URL</label><%= f.text_area :url %><br />
   <label>Description</label><%= f.text_area :description %><br />
-  <label>Effective at</label><%= f.text_field :effective_at, :class => "datepicker", :value => @event.effective_at_formatted %>
+  <label>Effective at</label>
+  <%= f.text_field :effective_at, :class => "datepicker",
+    :value => @event.effective_at_formatted
+  %>
+  <% if @event.new_record? %>
+    <label>Copy listing changes from:</label>
+    <%= f.select :listing_changes_event_id,
+      options_from_collection_for_select(
+        @events_with_effective_date, :id, :name
+      ),
+      { :include_blank => true }
+    %>
+  <% end %>
 <% end %>
