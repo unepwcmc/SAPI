@@ -108,7 +108,6 @@ class TaxonConcept < ActiveRecord::Base
   before_validation :check_other_hybrid_parent_taxon_concept_exists
   before_validation :check_accepted_taxon_concept_exists
   before_validation :ensure_taxonomic_position
-  before_destroy :check_destroy_allowed
 
   acts_as_nested_set
 
@@ -171,6 +170,13 @@ class TaxonConcept < ActiveRecord::Base
   def parent_scientific_name
     @parent_scientific_name ||
     parent && parent.full_name
+  end
+
+  def can_be_deleted?
+    taxon_relationships.count == 0 &&
+    children.count == 0 &&
+    listing_changes.count == 0 &&
+    taxon_commons.count == 0
   end
 
   private
@@ -302,20 +308,6 @@ class TaxonConcept < ActiveRecord::Base
       self.taxonomic_position = prev_taxonomic_position_parts.join('.')
     end
     true
-  end
-
-  def check_destroy_allowed
-    unless can_be_deleted?
-      errors.add(:base, "not allowed")
-      return false
-    end
-  end
-
-  def can_be_deleted?
-    taxon_relationships.count == 0 &&
-    children.count == 0 &&
-    listing_changes.count == 0 &&
-    taxon_commons.count == 0
   end
 
 end

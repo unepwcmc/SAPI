@@ -10,4 +10,8 @@ class Event < ActiveRecord::Base
     effective_at && effective_at.strftime("%d/%m/%y")
   end
 
+  def can_be_deleted?
+    listing_changes.count == 0
+  end
+
 end

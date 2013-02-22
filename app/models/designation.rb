@@ -27,7 +27,9 @@ class Designation < ActiveRecord::Base
   has_many :taxon_concepts#TODO
   has_many :listing_changes, :through => :change_types#TODO
 
-  before_destroy :check_destroy_allowed
+  def can_be_deleted?
+    !has_protected_name? && !has_dependent_objects?
+  end
 
   private
 
@@ -36,17 +38,6 @@ class Designation < ActiveRecord::Base
       errors.add(:taxonomy, "cannot be changed once dependent objects are attached")
       return false
     end
-  end
-
-  def check_destroy_allowed
-    unless can_be_deleted?
-      errors.add(:base, "not allowed")
-      return false
-    end
-  end
-
-  def can_be_deleted?
-    !has_protected_name? && !has_dependent_objects?
   end
 
   def has_dependent_objects?
