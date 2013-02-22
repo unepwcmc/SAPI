@@ -35,12 +35,9 @@ FactoryGirl.define do
     factory :"cites_#{a}_listing_change", parent: :listing_change, class: ListingChange do
       species_listing { SpeciesListing.find_by_abbreviation(a) }
     end
-    %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL).each do |ch|
+    %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch|
       factory :"cites_#{a}_#{ch.downcase}", parent: :"cites_#{a}_listing_change", class: ListingChange do
         change_type { ChangeType.find_by_name_and_designation_id(ch, Designation.find_by_name('CITES').id) }
-      end
-      factory :"cites_#{a}_#{ch.downcase}_exception", parent: :"cites_#{a}_listing_change", class: ListingChange do
-        change_type { ChangeType.find_by_name_and_designation_id('EXCEPTION', Designation.find_by_name('CITES').id) }
       end
     end
   end

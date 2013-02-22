@@ -70,6 +70,14 @@ class ListingChange < ActiveRecord::Base
     change_type && change_type.name == ChangeType::EXCEPTION
   end
 
+  def taxonomic_exclusions
+    exclusions.where("taxon_concept_id != #{self.taxon_concept_id}")
+  end
+
+  def geographic_exclusions
+    exclusions.where("taxon_concept_id = #{self.taxon_concept_id}")
+  end
+
   def inclusion_scientific_name
     @inclusion_scientific_name ||
     inclusion && inclusion.full_name

@@ -26,6 +26,17 @@ describe Admin::EventsController do
     end
   end
 
+  describe "XHR GET new" do
+    it "renders the new template" do
+      xhr :get, :new
+      response.should render_template('new')
+    end
+    it "assigns the event variable" do
+      xhr :get, :new
+      assigns(:event).should_not be_nil
+    end
+  end
+
   describe "XHR POST create" do
     it "renders create when successful" do
       xhr :post, :create, event: FactoryGirl.attributes_for(:event)
@@ -34,6 +45,18 @@ describe Admin::EventsController do
     it "renders new when not successful" do
       xhr :post, :create, event: { :name => nil }
       response.should render_template("new")
+    end
+  end
+
+  describe "XHR GET edit" do
+    let(:event){ create(:event) }
+    it "renders the edit template" do
+      xhr :get, :edit, :id => event.id
+      response.should render_template('new')
+    end
+    it "assigns the hybrid_relationship variable" do
+      xhr :get, :edit, :id => event.id
+      assigns(:event).should_not be_nil
     end
   end
 
