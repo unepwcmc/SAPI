@@ -95,7 +95,7 @@ namespace :import do
     Sapi::rebuild()
     puts "rebuilding the nested set"
     #rebuild the tree
-    TaxonConcept.rebuild!
+#    TaxonConcept.rebuild!
     Sapi::enable_triggers
     Sapi::create_indices
 
