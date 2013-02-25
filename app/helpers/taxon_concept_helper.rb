@@ -81,6 +81,23 @@ module TaxonConceptHelper
     ){ nested ? '' : render('hybrid_form') }
   end
 
+  def admin_add_new_reference_button
+    admin_add_new_button(
+      :resource => 'taxon_concept_reference',
+      :href => new_admin_taxon_concept_taxon_concept_reference_url(@taxon_concept),
+      :name => 'Add new reference',
+      :remote => true,
+      :"data-toggle" => nil,
+      :role => nil
+    )
+  end
+
+  def admin_new_reference_modal(nested = false)
+    admin_new_modal(
+      :resource => 'taxon_concept_reference'
+    )
+  end
+
   def admin_new_taxon_concept_modal
     admin_new_modal(
       :resource => 'taxon_concept'

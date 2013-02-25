@@ -1,0 +1,19 @@
+<% form_url = if @reference_relationship.new_record? %>
+  <% admin_taxon_concept_taxon_concept_references_url(@taxon_concept) %>
+<% else %>
+  <% admin_taxon_concept_taxon_concept_references_url(@taxon_concept, @reference_relationship) %>
+<% end %>
+
+<%= form_for [:admin, @taxon_concept, @reference], :url => form_url, :remote => true do |f| %>
+  <%= error_messages_for(@reference) %>
+
+  <label>Title</label>
+  <%= f.text_field :title %>
+
+  <label>Author</label>
+  <%= f.text_field :author %>
+
+  <label>Year</label>
+  <%= f.text_field :year %>
+
+<% end %>

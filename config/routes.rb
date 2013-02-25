@@ -43,6 +43,7 @@ SAPI::Application.routes.draw do
       resources :distributions, :only => [:new, :create, :edit, :update, :destroy]
       resources :synonym_relationships, :only => [:new, :create, :edit, :update, :destroy]
       resources :hybrid_relationships, :only => [:new, :create, :edit, :update, :destroy]
+      resources :taxon_concept_references, :only => [:new, :create, :destroy]
     end
     root :to => 'home#index'
   end
