@@ -21,15 +21,6 @@
 #  updated_at       :datetime         not null
 #
 
-class TradeRestriction < ActiveRecord::Base
-  attr_accessible :end_date, :geo_entity_id, :is_current,
-    :notes, :published_date, :purpose_id, :quota, :type,
-    :source_id, :start_date, :suspension_basis, :term_id,
-    :unit_id
+class Quota < TradeRestriction
 
-  belongs_to :taxon_concept
-  belongs_to :unit, :class_name => 'TradeCode'
-  belongs_to :term, :class_name => 'TradeCode'
-  belongs_to :source, :class_name => 'TradeCode'
-  belongs_to :purpose, :class_name => 'TradeCode'
 end
