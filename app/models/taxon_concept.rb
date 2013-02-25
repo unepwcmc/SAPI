@@ -23,7 +23,7 @@
 #
 
 class TaxonConcept < ActiveRecord::Base
-  attr_accessible :lft, :parent_id, :rgt, :taxonomy_id, :rank_id,
+  attr_accessible :parent_id, :taxonomy_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
     :accepted_scientific_name, :parent_scientific_name, 
@@ -38,6 +38,7 @@ class TaxonConcept < ActiveRecord::Base
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore
 
+  belongs_to :parent, :class_name => 'TaxonConcept'
   belongs_to :rank
   belongs_to :taxonomy
   has_many :designations, :through => :taxonomy
@@ -109,8 +110,6 @@ class TaxonConcept < ActiveRecord::Base
   before_validation :check_accepted_taxon_concept_exists
   before_validation :ensure_taxonomic_position
   before_destroy :check_destroy_allowed
-
-  acts_as_nested_set
 
   scope :by_scientific_name, lambda { |scientific_name|
     where(
