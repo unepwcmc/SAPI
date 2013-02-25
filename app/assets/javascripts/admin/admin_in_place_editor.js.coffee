@@ -90,39 +90,41 @@ class TaxonConceptsEditor extends AdminEditor
 
     $('input.typeahead').each (idx) ->
       formId = $(@).closest('form').attr('id')
-      matches = formId.match('^(.+_)?(new|edit)_(.+)$')
-      prefix = matches[3]
-      prefix = matches[1] + prefix unless matches[1] == undefined
 
-      taxonomyEl = $('#' + prefix + '_taxonomy_id')
-      rankEl = $('#' + prefix + '_rank_id')
+      if formId?
+        matches = formId.match('^(.+_)?(new|edit)_(.+)$')
+        prefix = matches[3]
+        prefix = matches[1] + prefix unless matches[1] == undefined
 
-      #initialize this typeahead
-      $(@).typeahead
-        source: (query, process) ->
-          $.get('/admin/taxon_concepts/autocomplete',
-          {
-            search_params: {
-              scientific_name: query,
-              taxonomy: {
-                id: taxonomyEl && taxonomyEl.val() || $(@).attr('data-taxonomy-id')
-              },
-              rank: {
-                id: rankEl && rankEl.val() || $(@).attr('data-rank-id'),
-                scope: $(@).attr('data-rank-scope')
+        taxonomyEl = $('#' + prefix + '_taxonomy_id')
+        rankEl = $('#' + prefix + '_rank_id')
+
+        #initialize this typeahead
+        $(@).typeahead
+          source: (query, process) ->
+            $.get('/admin/taxon_concepts/autocomplete',
+            {
+              search_params: {
+                scientific_name: query,
+                taxonomy: {
+                  id: taxonomyEl && taxonomyEl.val() || $(@).attr('data-taxonomy-id')
+                },
+                rank: {
+                  id: rankEl && rankEl.val() || $(@).attr('data-rank-id'),
+                  scope: $(@).attr('data-rank-scope')
+                }
               }
-            }
-            limit: 25
-          }, (data) =>
-            labels = []
-            $.each(data, (i, item) =>
-              label = item.full_name + ' ' + item.rank_name
-              labels.push(label)
+              limit: 25
+            }, (data) =>
+              labels = []
+              $.each(data, (i, item) =>
+                label = item.full_name + ' ' + item.rank_name
+                labels.push(label)
+              )
+              return process(labels)
             )
-            return process(labels)
-          )
-        $().add(taxonomyEl).add(rankEl).change () =>
-          $(@).val(null)
+          $().add(taxonomyEl).add(rankEl).change () =>
+            $(@).val(null)
 
   initModals: () ->
     super
