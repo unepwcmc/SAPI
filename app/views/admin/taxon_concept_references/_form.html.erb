@@ -1,11 +1,16 @@
-<% form_url = if @reference_relationship.new_record? %>
-  <% admin_taxon_concept_taxon_concept_references_url(@taxon_concept) %>
-<% else %>
-  <% admin_taxon_concept_taxon_concept_references_url(@taxon_concept, @reference_relationship) %>
-<% end %>
+<% form_url = admin_taxon_concept_taxon_concept_references_url(@taxon_concept) %>
 
 <%= form_for [:admin, @taxon_concept, @reference], :url => form_url, :remote => true do |f| %>
   <%= error_messages_for(@reference) %>
+
+  <h5>Search for a reference</h5>
+
+  <%= text_field_tag 'reference_search', nil, :class => 'typeahead' %>
+  <%= text_field_tag 'reference[id]', nil, :class => 'hidden' %>
+
+  <hr>
+
+  <h5>Add a new reference</h5>
 
   <label>Title</label>
   <%= f.text_field :title %>
@@ -15,5 +20,8 @@
 
   <label>Year</label>
   <%= f.text_field :year %>
+
+  <label>Is standard?</label>
+  <%= check_box_tag 'taxon_concept_reference[data][usr_is_std_ref]' %>
 
 <% end %>

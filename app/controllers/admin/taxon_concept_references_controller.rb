@@ -12,18 +12,30 @@ class Admin::TaxonConceptReferencesController < Admin::SimpleCrudController
   end
 
   def create
-    create! do |success, failure|
-      success.js {
-        @reference_relationship = TaxonConceptReference.new(
-          :taxon_concept_id => @taxon_concept.id,
-          :reference_id => @reference.id
-        )
+    if params["reference"]["id"].blank?
+      create! do |success, failure|
+        success.js {
+          @reference_relationship = TaxonConceptReference.new(
+            :taxon_concept_id => @taxon_concept.id,
+            :reference_id => @reference.id,
+            :data => params["taxon_concept_reference"]["data"]
+          )
 
-        @reference_relationship.save!
-      }
-      failure.js {
-        render 'new'
-      }
+          @reference_relationship.save!
+        }
+        failure.js {
+          render 'new'
+        }
+      end
+    else
+      @reference = Reference.find(params["reference"]["id"])
+
+      @reference_relationship = TaxonConceptReference.new(
+        :taxon_concept_id => params["taxon_concept_id"],
+        :reference_id => @reference.id
+      )
+
+      @reference_relationship.save!
     end
   end
 
