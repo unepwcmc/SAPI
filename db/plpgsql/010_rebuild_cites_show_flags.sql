@@ -22,6 +22,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_show_flags() RETURNS void
           OR data->'rank_name' = 'PHYLUM'
           OR data->'rank_name' = 'KINGDOM')
           AND listing->'cites_status' = 'LISTED'
+          AND (listing->'cites_status_original')::BOOLEAN = FALSE
           THEN hstore('cites_show', 'f')
           WHEN data->'rank_name' <> 'FAMILY'
           AND data->'family_name' = 'Orchidaceae'
