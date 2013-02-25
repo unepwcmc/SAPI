@@ -113,8 +113,6 @@ namespace :import do
           LEFT JOIN hash_annotations ON hash_annotations.full_symbol = TMP.hash_note;
       SQL
 
-      puts "The sql\n #{sql} \n"
-
       puts "INSERTING listing_changes"
       ActiveRecord::Base.connection.execute(sql)
 
