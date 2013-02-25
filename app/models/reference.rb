@@ -16,4 +16,11 @@ class Reference < ActiveRecord::Base
   attr_accessible :title, :author, :year
 
   validates :title, :presence => true
+
+  scope :autocomplete, lambda { |q|
+    where("title ILIKE ? OR
+           author ILIKE ? OR
+           year ILIKE ?",
+          q, q, q,)
+  }
 end

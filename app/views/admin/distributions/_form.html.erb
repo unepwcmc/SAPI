@@ -29,6 +29,14 @@
 
   <h4>References</h4>
 
+  <label>Search for a reference:</label>
+  <%= text_field_tag 'reference_search', nil, :class => 'typeahead' %>
+  <%= text_field_tag 'reference[id]', nil, :class => 'hidden' %>
+
+  <hr>
+
+  <%= f.link_to_add "Add a reference", :references %>
+
   <%= f.fields_for :references do |ff| %>
     <label>Title</label>
     <%= ff.text_field :title %>
@@ -45,5 +53,4 @@
 
     <hr>
   <% end %>
-  <%= f.link_to_add "Add a reference", :references %>
 <% end %>

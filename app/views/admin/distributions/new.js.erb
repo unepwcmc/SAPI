@@ -1,3 +1,33 @@
-$('#admin-new-distribution-form').html("<%= escape_javascript(render('form')) %>");
+var template = $("<%= escape_javascript(render('form')) %>");
+
+var references = {};
+var referencesLabels = [];
+template.find('input.typeahead').typeahead({
+  source: function(query, process)  {
+    $.get(
+      '/admin/references/autocomplete',
+      { query: query },
+      function (data) {
+        _.each(data, function(item, i, list) {
+          if (_.has(references, item.value)) {
+            item.value = item.value + ' (' + item.id + ')';
+          }
+
+          referencesLabels.push(item.value);
+          references[item.value] = item.id;
+        });
+
+        return process(referencesLabels);
+      }
+    );
+  },
+  updater: function(item) {
+    template.find('input[name="reference[id]"]').val(references[item]);
+    return item;
+  }
+});
+
+$('#admin-new-distribution-form').html(template);
+
 $(".distribution").select2();
 $('#new-distribution').modal('show');

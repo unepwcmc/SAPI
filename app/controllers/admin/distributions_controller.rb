@@ -22,6 +22,16 @@ class Admin::DistributionsController < Admin::SimpleCrudController
 
   def create
     create! do |success, failure|
+      success.js {
+        unless params["reference"]["id"].blank?
+          @reference = Reference.find(params["reference"]["id"])
+
+          @distribution_reference = DistributionReference.new({
+            :distribution_id => @distribution.id,
+            :reference_id => @reference.id
+          }).save!
+        end
+      }
       failure.js {
         load_tags_and_geo_entities
         render 'new'
