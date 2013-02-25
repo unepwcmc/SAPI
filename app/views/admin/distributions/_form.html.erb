@@ -1,4 +1,4 @@
-<%= form_for [:admin, @taxon_concept, @distribution],  :remote => true do |f| %>
+<%= nested_form_for [:admin, @taxon_concept, @distribution],  :remote => true do |f| %>
   <%= error_messages_for(@distribution) %>
 
   <div class="control-group">
@@ -26,4 +26,24 @@
       { :multiple => true, :class => 'distribution', :style => "width: 220px"}
     %>
   </div>
+
+  <h4>References</h4>
+
+  <%= f.fields_for :references do |ff| %>
+    <label>Title</label>
+    <%= ff.text_field :title %>
+
+    <label>Author</label>
+    <%= ff.text_field :author %>
+
+    <label>Year</label>
+    <%= ff.text_field :year %>
+
+    <p>
+      <%= ff.link_to_remove "Remove reference" %>
+    </p>
+
+    <hr>
+  <% end %>
+  <%= f.link_to_add "Add a reference", :references %>
 <% end %>

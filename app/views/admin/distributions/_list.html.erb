@@ -1,5 +1,15 @@
 <% @taxon_concept.distributions.each do |d| %>
-  <%= d.geo_entity.name %>
+  <% if d.references.count > 0 %>
+    <%= link_to d.geo_entity.name,
+          "#",
+          :data => {
+            :toggle => "popover",
+            :title => "References",
+            :content => render("admin/distributions/references", :references => d.references).html_safe
+          } %>
+  <% else %>
+    <%= d.geo_entity.name %>
+  <% end %>
   <%= d.tag_list %>
   <%= link_to edit_icon, edit_admin_taxon_concept_distribution_url(@taxon_concept, d), :remote => true %>
   <%= link_to delete_icon, admin_taxon_concept_distribution_url(@taxon_concept, d), :confirm => "Are you sure?", :method => :delete %>
