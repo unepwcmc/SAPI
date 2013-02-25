@@ -23,4 +23,7 @@
 
 class Quota < TradeRestriction
 
+  def year
+    start_date ? start_date.strftime('%Y') : ''
+  end
 end

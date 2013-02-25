@@ -32,4 +32,8 @@ class TradeRestriction < ActiveRecord::Base
   belongs_to :term, :class_name => 'TradeCode'
   belongs_to :source, :class_name => 'TradeCode'
   belongs_to :purpose, :class_name => 'TradeCode'
+
+  def publication_date_formatted
+    publication_date ? publication_date.strftime('%d/%m/%Y') : ''
+  end
 end

@@ -1,0 +1,37 @@
+<thead>
+  <th>Quota</th>
+  <th>Year</th>
+  <th>Published at</th>
+  <th>Current</th>
+  <th>Party</th>
+  <th>Term</th>
+  <th>Source</th>
+  <th>Purpose</th>
+  <th>Notes</th>
+  <th>Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |quota| -%>
+    <tr class="<%= if quota.is_current? then "current_listing" end %>">
+      <td><%= quota.quota + ' ' + quota.unit.code %></td>
+      <td><%= quota.year %></td>
+      <td><%= quota.publication_date_formatted %></td>
+      <td><%= true_false_icon(quota.is_current) %></td>
+      <td><%= quota.geo_entity && quota.geo_entity.iso_code2 %></td>
+      <td><%= quota.term && quota.term.code %></td>
+      <td><%= quota.source && quota.source.code %></td>
+      <td><%= quota.purpose && quota.purpose.code %></td>
+      <td><%= quota.notes %></td>
+      <td>
+        <%= link_to edit_icon,
+          edit_admin_taxon_concept_quota_path(@taxon_concept, @designation, quota)
+        %>
+        <%= link_to delete_icon,
+          admin_taxon_concept_quota_path(@taxon_concept, @designation, quota),
+          :confirm => "Are you sure?", :method => :delete
+        %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>
+
