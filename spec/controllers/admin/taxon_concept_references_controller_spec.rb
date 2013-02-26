@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe TaxonConceptReferencesController do
+describe Admin::TaxonConceptReferencesController do
 
 end

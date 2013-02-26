@@ -25,7 +25,8 @@ describe Admin::DistributionsController do
         :taxon_concept_id => @taxon_concept.id,
         :distribution => {
           :geo_entity_id => geo_entity.id
-        }
+        },
+        :reference => {}
       response.should render_template("create")
     end
   end
