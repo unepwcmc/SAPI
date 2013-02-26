@@ -98,8 +98,15 @@ namespace :import do
     TaxonConcept.rebuild!
     Sapi::enable_triggers
     Sapi::create_indices
+
+    Rake::Task['import:stats'].invoke
   end
 
   desc 'Drops and reimports db'
   task :redo => ["db:drop", "db:create", "db:migrate", "db:seed", "import:first_pages_cites"]
+
+  desc 'Shows database summary stats'
+  task :stats => :environment do
+    Sapi::database_summary
+  end
 end
