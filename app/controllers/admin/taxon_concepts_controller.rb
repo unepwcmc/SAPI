@@ -22,6 +22,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     @taxonomies = Taxonomy.order(:name)
     @ranks = Rank.order(:taxonomic_position)
     edit! do |format|
+      @references = TaxonConceptReference.where(:taxon_concept_id => @taxon_concept.id)
       @languages = Language.order(:name_en)
       format.js { render 'new' }
     end
