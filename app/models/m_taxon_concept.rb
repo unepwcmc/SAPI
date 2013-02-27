@@ -188,7 +188,7 @@ class MTaxonConcept < ActiveRecord::Base
             )
           )
       ) matches
-      ON matches.id IN (taxon_concepts_mview.id, family_id, order_id, class_id, phylum_id)
+      ON matches.id IN (taxon_concepts_mview.id, family_id, order_id, class_id, phylum_id, kingdom_id)
       SQL
     )
   }
