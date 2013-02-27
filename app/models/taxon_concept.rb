@@ -28,7 +28,7 @@ class TaxonConcept < ActiveRecord::Base
     :legacy_id, :legacy_type, :full_name, :name_status,
     :accepted_scientific_name, :parent_scientific_name, 
     :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
-    :tag_list
+    :tag_list, :references_attributes, :taxon_concept_references_attributes
   attr_writer :parent_scientific_name
   attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
     :other_hybrid_parent_scientific_name
@@ -88,7 +88,9 @@ class TaxonConcept < ActiveRecord::Base
   has_many :species_listings, :through => :listing_changes
   has_many :taxon_commons, :dependent => :destroy, :include => :common_name
   has_many :common_names, :through => :taxon_commons
+
   has_and_belongs_to_many :references, :join_table => :taxon_concept_references
+  accepts_nested_attributes_for :references, :allow_destroy => true
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
@@ -109,6 +111,9 @@ class TaxonConcept < ActiveRecord::Base
   before_validation :check_accepted_taxon_concept_exists
   before_validation :ensure_taxonomic_position
   before_destroy :check_destroy_allowed
+
+  has_many :taxon_concept_references
+  accepts_nested_attributes_for :taxon_concept_references
 
   acts_as_nested_set
 

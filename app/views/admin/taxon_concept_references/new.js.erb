@@ -22,7 +22,22 @@ form.find('input.typeahead').typeahead({
     );
   },
   updater: function(item) {
-    form.find('input[name="reference[id]"]').val(references[item]);
+    var id_fields = form.find('input[id^="taxon_concept_taxon_concept_references_attributes_"]');
+    if (id_fields.length == 0) {
+      form.find('#addReference').click();
+      id_fields = form.find('input[id^="taxon_concept_taxon_concept_references_attributes_"]');
+    }
+
+    var taxon_concept_id = <%= @taxon_concept.id %>;
+
+    // nested_form creates fields with unique (time based IDs),
+    // so we determine which field is which based on order as this is faster than using a regex.
+
+    // Reference ID
+    $(id_fields[0]).val(references[item]);
+    // Taxon Concept ID
+    $(id_fields[1]).val(taxon_concept_id);
+
     return item;
   }
 });
@@ -33,6 +48,11 @@ $('#new-taxon_concept_reference').modal('show');
 
 $('.nav-tabs a').click(function (e) {
   e.preventDefault();
-  $('#new_reference')[0].reset();
+
+  var referenceForm = $('#new_reference');
+  if (referenceForm.length > 0) {
+    referenceForm[0].reset();
+  }
+
   $(this).tab('show');
 });

@@ -19,5 +19,5 @@ class Distribution < ActiveRecord::Base
   has_and_belongs_to_many :references, :join_table => :distribution_references
   accepts_nested_attributes_for :references, :allow_destroy => true
 
-  validates :taxon_concept_id, :uniqueness => { :scope => :geo_entity_id }
+  validates :taxon_concept_id, :uniqueness => { :scope => :geo_entity_id, :message => 'already has this distribution' }
 end
