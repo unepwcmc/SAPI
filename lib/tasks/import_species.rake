@@ -68,7 +68,7 @@ def import_data_for kingdom, rank, synonyms=nil
           parent_taxon_concepts.id AS parent_id,
           CASE
             WHEN UPPER(BTRIM(tmp.author)) = 'NULL' THEN NULL
-            ELSE UPPER(BTRIM(tmp.author))
+            ELSE BTRIM(tmp.author)
           END AS author_year,
           tmp.legacy_id,
           '#{kingdom}' AS legacy_type,
