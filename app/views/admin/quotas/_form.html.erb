@@ -6,26 +6,24 @@
   <table class="quota">
     <thead>
       <tr>
-        <th><%= f.label :species_listing_id %></th>
-        <th><%= f.label :change_type_id %></th>
-        <th><%= f.label :effective_at %></th>
+        <th><%= f.label :quota %></th>
+        <th><%= f.label :unit_id %></th>
+        <th><%= f.label :publication_date %></th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td>
-          <%= f.select :species_listing_id,
-            options_from_collection_for_select(@species_listings, :id, :name),
+          <%= f.text_field :quota %>
+        </td>
+        <td>
+          <%= f.select :unit_id,
+            options_from_collection_for_select(@units, :id, :code),
             { :include_blank => true }
           %>
         </td>
         <td>
-          <%= f.select :change_type_id,
-            options_from_collection_for_select(@change_types, :id, :print_name)
-          %>
-        </td>
-        <td>
-          <%= f.text_field :effective_at, :class => "datepicker", :value => @quota.effective_at_formatted %>
+          <%= f.text_field :pubication_date, :class => "datepicker", :value => @quota.publication_date_formatted %>
         </td>
       </tr>
     </tbody>
@@ -34,36 +32,61 @@
   <table class="quota">
     <thead>
       <tr>
-        <th><label>Party</label></th>
-        <th><%= f.label :geo_entity_ids, "Countries" %></th>
+        <th><%= f.label :geo_entity_id, "Party" %></th>
+        <th><%= f.label :start_date %></th>
+        <th><%= f.label :end_date %></th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <%= f.fields_for :party_listing_distribution do |b| %>
-          <td>
-            <%= b.select :geo_entity_id,
-              options_from_collection_for_select(
-                @geo_entities,
-                :id,
-                :name_en,
-                @quota.party_listing_distribution && @quota.party_listing_distribution.geo_entity_id
-              ),
-              { :include_blank => true },
-              {:class => 'distribution', :style => 'width: 220px' }
-            %>
-          </td>
-        <% end %>
-
         <td>
-          <%= f.select :geo_entity_ids,
+          <%= f.select :geo_entity_id,
             options_from_collection_for_select(
               @geo_entities,
               :id,
               :name_en,
-              @quota.geo_entities.map(&:id)
-            ), { },
-            { :multiple => true, :class => 'distribution', :style => 'width: 220px' }
+              @quota.geo_entity_id
+            ),
+            { :include_blank => true },
+            {:class => 'distribution', :style => 'width: 220px' }
+          %>
+        </td>
+        <td>
+          <%= f.text_field :start_date, :class => "datepicker", :value => @quota.start_date_formatted %>
+        </td>
+        <td>
+          <%= f.text_field :end_date, :class => "datepicker", :value => @quota.end_date_formatted %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="quota">
+    <thead>
+      <tr>
+        <th><%= f.label :term_id  %></th>
+        <th><%= f.label :source_id  %></th>
+        <th><%= f.label :purpose_id  %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <%= f.select :term_id,
+            options_from_collection_for_select(@terms, :id, :code),
+            { :include_blank => true }
+          %>
+        </td>
+        <td>
+          <%= f.select :source_id,
+            options_from_collection_for_select(@sources, :id, :code),
+            { :include_blank => true }
+          %>
+        </td>
+        <td>
+          <%= f.select :purpose_id,
+            options_from_collection_for_select(@purposes, :id, :code),
+            { :include_blank => true }
           %>
         </td>
       </tr>

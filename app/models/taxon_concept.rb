@@ -90,7 +90,7 @@ class TaxonConcept < ActiveRecord::Base
   has_many :common_names, :through => :taxon_commons
   has_and_belongs_to_many :references, :join_table => :taxon_concept_references
   has_many :quotas
-  has_many :current_quotas, :class_name => 'TradeRestriction', :conditions => "is_current = true AND type = 'Quota'"
+  has_many :current_quotas, :class_name => 'Quota', :conditions => "is_current = true"
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true

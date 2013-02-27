@@ -36,4 +36,12 @@ class TradeRestriction < ActiveRecord::Base
   def publication_date_formatted
     publication_date ? publication_date.strftime('%d/%m/%Y') : ''
   end
+
+  def start_date_formatted
+    start_date ? start_date.strftime('%d/%m/%Y') : ''
+  end
+
+  def end_date_formatted
+    end_date ? end_date.strftime('%d/%m/%Y') : ''
+  end
 end
