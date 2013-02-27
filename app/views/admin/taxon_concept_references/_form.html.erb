@@ -13,6 +13,9 @@
       <label>Search by title, author or year:</label>
       <%= text_field_tag 'reference_search', nil, :class => 'typeahead' %>
       <%= text_field_tag 'reference[id]', nil, :class => 'hidden' %>
+
+      <label>Is standard?</label>
+      <%= check_box_tag 'taxon_concept_reference[data][usr_is_std_ref]' %>
     </div>
 
     <div class="tab-pane fade" id="new">

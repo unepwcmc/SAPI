@@ -1,4 +1,4 @@
-<% if @taxon_concept.references.count > 0 %>
+<% if @taxon_concept && @taxon_concept.references.count > 0 %>
   <% @taxon_concept.references.each do |r| %>
     <%= r.title %> (<%= r.author %>, <%= r.year %>)
     <%= link_to delete_icon,

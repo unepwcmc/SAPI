@@ -18,8 +18,11 @@ class Admin::TaxonConceptReferencesController < Admin::SimpleCrudController
           @reference_relationship = TaxonConceptReference.new(
             :taxon_concept_id => @taxon_concept.id,
             :reference_id => @reference.id,
-            :data => params["taxon_concept_reference"]["data"]
           )
+
+          unless params["taxon_concept_reference"].blank?
+            @reference_relationship.data = params["taxon_concept_reference"]["data"] || []
+          end
 
           @reference_relationship.save!
         }
@@ -34,6 +37,10 @@ class Admin::TaxonConceptReferencesController < Admin::SimpleCrudController
         :taxon_concept_id => params["taxon_concept_id"],
         :reference_id => @reference.id
       )
+
+      unless params["taxon_concept_reference"].blank?
+        @reference_relationship.data = params["taxon_concept_reference"]["data"] || []
+      end
 
       @reference_relationship.save!
     end
