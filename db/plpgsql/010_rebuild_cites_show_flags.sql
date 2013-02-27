@@ -12,22 +12,17 @@ CREATE OR REPLACE FUNCTION rebuild_cites_show_flags() RETURNS void
 
         -- set cites_show to true for all taxa except:
         -- implicitly listed subspecies
-        -- species of the family Orchidaceae
-        -- deleted taxa
-        -- excluded taxa
         UPDATE taxon_concepts SET listing = listing || 
         CASE
           WHEN (data->'rank_name' = 'SUBSPECIES'
-          OR data->'rank_name' = 'CLASS'
+          OR data->'rank_name' = 'ORDER'
+	  OR data->'rank_name' = 'CLASS'
           OR data->'rank_name' = 'PHYLUM'
           OR data->'rank_name' = 'KINGDOM')
           AND listing->'cites_status' = 'LISTED'
           AND (listing->'cites_status_original')::BOOLEAN = FALSE
           THEN hstore('cites_show', 'f')
-          WHEN data->'rank_name' <> 'FAMILY'
-          AND data->'family_name' = 'Orchidaceae'
-          THEN hstore('cites_show', 'f')
-          WHEN listing->'cites_status' = 'DELETED' OR listing->'cites_status' = 'EXCLUDED'
+          WHEN listing->'cites_status' = 'EXCLUDED'
           THEN hstore('cites_show', 'f')
           ELSE hstore('cites_show', 't')
         END

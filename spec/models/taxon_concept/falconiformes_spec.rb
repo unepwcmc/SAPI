@@ -45,7 +45,7 @@ describe TaxonConcept do
       end
 
       describe :cites_deleted do
-                context "for species Falco alopex (H)" do
+        context "for species Falco alopex (H)" do
           specify { @species2_2.cites_deleted.should be_false }
         end
       end
@@ -80,6 +80,15 @@ describe TaxonConcept do
         end
         context "for species Vultur atratus" do
           specify { @species1_3.cites_listed.should be_blank }
+        end
+      end
+
+      describe :cites_show do
+        context "for order Falconiformes" do
+          specify { @order.cites_show.should be_true }
+        end
+        context "for family Falconidae" do
+          specify { @family2.cites_show.should be_true }
         end
       end
 
