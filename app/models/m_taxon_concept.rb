@@ -71,12 +71,7 @@ class MTaxonConcept < ActiveRecord::Base
 
   scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
 
-  scope :without_nc, where(
-    <<-SQL
-    (cites_deleted <> 't' OR cites_deleted IS NULL)
-    AND cites_listed IS NOT NULL AND name_status = 'A'
-    SQL
-  )
+  scope :without_non_accepted, where(:name_status => ['A', 'H'])
 
   scope :without_hidden, where("cites_show = 't'")
 
