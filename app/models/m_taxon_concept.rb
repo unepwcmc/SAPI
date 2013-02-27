@@ -64,7 +64,10 @@ class MTaxonConcept < ActiveRecord::Base
   has_many :listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange
   has_many :current_listing_changes, :foreign_key => :taxon_concept_id,
     :class_name => MListingChange,
-    :conditions => "is_current = 't' AND change_type_name <> 'EXCEPTION'"
+    :conditions => "is_current = 't' AND change_type_name <> '#{ChangeType::EXCEPTION}'"
+  has_many :current_additions, :foreign_key => :taxon_concept_id,
+    :class_name => MListingChange,
+    :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'"
 
   scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
 
@@ -307,14 +310,12 @@ class MTaxonConcept < ActiveRecord::Base
 
   # returns the ids of parties associated with current listing changes
   def current_parties_ids
-    if current_listing_changes.size > 0
-      current_listing_changes.
-        where(:change_type_name => ChangeType::ADDITION).map(&:party_id)
+    if current_additions.size > 0
+      current_additions.map(&:party_id)
     else
       #inherited listing -- find closest ancestor with listing changes
       closest_listed_ancestor &&
-        closest_listed_ancestor.current_listing_changes.
-        where(:change_type_name => ChangeType::ADDITION).map(&:party_id) || []
+        closest_listed_ancestor.current_additions.map(&:party_id) || []
     end.compact
   end
 
