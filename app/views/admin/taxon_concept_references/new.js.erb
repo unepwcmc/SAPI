@@ -27,5 +27,12 @@ form.find('input.typeahead').typeahead({
   }
 });
 
+
 $('#admin-new-taxon_concept_reference-form').html(form);
 $('#new-taxon_concept_reference').modal('show');
+
+$('.nav-tabs a').click(function (e) {
+  e.preventDefault();
+  $('#new_reference')[0].reset();
+  $(this).tab('show');
+});

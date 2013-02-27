@@ -31,3 +31,9 @@ $('#admin-new-distribution-form').html(template);
 
 $(".distribution").select2();
 $('#new-distribution').modal('show');
+
+$('.nav-tabs a').click(function (e) {
+  e.preventDefault();
+  $('#new_distribution')[0].reset();
+  $(this).tab('show');
+});

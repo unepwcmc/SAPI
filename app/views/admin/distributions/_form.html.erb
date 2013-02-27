@@ -29,28 +29,37 @@
 
   <h4>References</h4>
 
-  <label>Search for a reference:</label>
-  <%= text_field_tag 'reference_search', nil, :class => 'typeahead' %>
-  <%= text_field_tag 'reference[id]', nil, :class => 'hidden' %>
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#search">Search for a reference</a></li>
+    <li><a href="#new">Create new references</a></li>
+  </ul>
 
-  <hr>
+  <div class="tab-content">
+    <div class="tab-pane fade in active" id="search">
+      <label>Search by title, author or year:</label>
+      <%= text_field_tag 'reference_search', nil, :class => 'typeahead' %>
+      <%= text_field_tag 'reference[id]', nil, :class => 'hidden' %>
+    </div>
 
-  <%= f.link_to_add "Add a reference", :references %>
+    <div class="tab-pane fade" id="new">
+      <%= f.link_to_add "Add a reference", :references %>
 
-  <%= f.fields_for :references do |ff| %>
-    <label>Title</label>
-    <%= ff.text_field :title %>
+      <%= f.fields_for :references do |ff| %>
+        <label>Title</label>
+        <%= ff.text_field :title %>
 
-    <label>Author</label>
-    <%= ff.text_field :author %>
+        <label>Author</label>
+        <%= ff.text_field :author %>
 
-    <label>Year</label>
-    <%= ff.text_field :year %>
+        <label>Year</label>
+        <%= ff.text_field :year %>
 
-    <p>
-      <%= ff.link_to_remove "Remove reference" %>
-    </p>
+        <p>
+          <%= ff.link_to_remove "Remove reference" %>
+        </p>
 
-    <hr>
-  <% end %>
+        <hr>
+      <% end %>
+    </div>
+  </div>
 <% end %>
