@@ -91,7 +91,6 @@ namespace :import do
             TMP.listing_date,
             CASE
               WHEN TMP.is_current IS NULL THEN 'f'
-              WHEN TMP.appendix ilike 'DEL%' THEN 'f'
               ELSE TMP.is_current
             END,
             inclusion_taxon_concepts.id,
