@@ -70,7 +70,7 @@ namespace :import do
             import_row_id,
             taxon_concept_id, species_listing_id, change_type_id,
             annotation_id, hash_annotation_id, effective_at, is_current,
-            inclusion_taxon_concept_id, created_at, updated_at
+            explicit_change, inclusion_taxon_concept_id, created_at, updated_at
           )
           SELECT row_id,
             taxon_concepts.id,
@@ -92,6 +92,11 @@ namespace :import do
             CASE
               WHEN TMP.is_current IS NULL THEN 'f'
               ELSE TMP.is_current
+            END,
+            CASE
+              WHEN (UPPER(TMP.appendix) = 'DELI' OR
+                UPPER(TMP.appendix) = 'DELII') AND TMP.is_current = 't' THEN 'f'::BOOLEAN
+              ELSE 't'::BOOLEAN
             END,
             inclusion_taxon_concepts.id,
             current_date, current_date
