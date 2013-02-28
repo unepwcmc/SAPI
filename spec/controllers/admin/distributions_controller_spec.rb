@@ -20,13 +20,29 @@ describe Admin::DistributionsController do
 
   describe "XHR POST 'create'" do
     let(:geo_entity) { create(:geo_entity) }
-    it "renders create when successful" do
+    let(:reference) { create(:reference) }
+    it "renders create when successful and has an existing reference" do
       xhr :post, :create,
         :taxon_concept_id => @taxon_concept.id,
         :distribution => {
           :geo_entity_id => geo_entity.id
         },
-        :reference => {}
+        :reference => {
+          :reference_id => reference.id
+        }
+      response.should render_template("create")
+    end
+    it "renders create when successful and is creating a reference" do
+      xhr :post, :create,
+        :taxon_concept_id => @taxon_concept.id,
+        :distribution => {
+          :geo_entity_id => geo_entity.id
+        },
+        :reference => {
+          :title => reference.title,
+          :author => reference.author,
+          :year => reference.year
+        }
       response.should render_template("create")
     end
   end
