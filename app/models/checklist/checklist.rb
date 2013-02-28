@@ -84,7 +84,7 @@ class Checklist::Checklist
   def json_options
     json_options = taxon_concepts_json_options
     json_options[:include] = {
-      :current_listing_changes => listing_changes_json_options
+      :current_additions => listing_changes_json_options
     }
     json_options
   end
