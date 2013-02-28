@@ -21,6 +21,6 @@ class Reference < ActiveRecord::Base
     where("title ILIKE ? OR
            author ILIKE ? OR
            year ILIKE ?",
-          q, q, q,)
+          "#{q}%", "#{q}%", "#{q}%")
   }
 end
