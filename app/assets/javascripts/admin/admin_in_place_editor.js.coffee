@@ -14,7 +14,7 @@ class AdminEditor
 
   initModals: () ->
     $('.modal .modal-footer .save-button').click () ->
-      $(@).closest('.modal').find('form').submit()
+      $(@).closest('.modal').find('form:visible').submit()
 
     $('.modal').on 'hidden', () ->
       form = $(@).find('form')
