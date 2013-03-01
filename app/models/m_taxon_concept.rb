@@ -67,7 +67,8 @@ class MTaxonConcept < ActiveRecord::Base
     :conditions => "is_current = 't' AND change_type_name <> '#{ChangeType::EXCEPTION}'"
   has_many :current_additions, :foreign_key => :taxon_concept_id,
     :class_name => MListingChange,
-    :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'"
+    :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'",
+    :order => 'effective_at DESC, species_listing_name ASC'
 
   scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
 
