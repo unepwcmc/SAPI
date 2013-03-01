@@ -31,7 +31,11 @@ module Sapi
     self.disable_triggers
     procedures = REBUILD_PROCEDURES - (options[:except] || [])
     procedures &= options[:only] unless options[:only].nil?
-    procedures.each{ |p| ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()") }
+    procedures.each{ |p| 
+      puts "Starting procedure: #{p}"
+      ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()") 
+      puts "Ending procedure: #{p}"
+    }
     self.enable_triggers
   end
 
