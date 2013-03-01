@@ -51,9 +51,8 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
 
   def update
     update! do |success, failure|
-      success.js {
-        load_listing_changes
-        render 'create'
+      success.html {
+        redirect_to admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
       }
       failure.js {
         load_change_types
