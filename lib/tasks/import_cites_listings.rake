@@ -75,6 +75,8 @@ namespace :import do
           SELECT row_id,
             taxon_concepts.id,
             CASE
+              WHEN (UPPER(TMP.appendix) = 'DELI' OR
+                UPPER(TMP.appendix) = 'DELII') AND TMP.is_current = 't'::BOOLEAN THEN NULL
               WHEN UPPER(BTRIM(TMP.appendix)) like '%III%' THEN #{appendix_3.id}
               WHEN UPPER(BTRIM(TMP.appendix)) like '%II%' THEN #{appendix_2.id}
               WHEN UPPER(BTRIM(TMP.appendix)) like '%I%' THEN #{appendix_1.id}
@@ -95,7 +97,7 @@ namespace :import do
             END,
             CASE
               WHEN (UPPER(TMP.appendix) = 'DELI' OR
-                UPPER(TMP.appendix) = 'DELII') AND TMP.is_current = 't' THEN 'f'::BOOLEAN
+                UPPER(TMP.appendix) = 'DELII') AND TMP.is_current = 'f'::BOOLEAN THEN 'f'::BOOLEAN
               ELSE 't'::BOOLEAN
             END,
             inclusion_taxon_concepts.id,
