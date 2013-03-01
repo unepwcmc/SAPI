@@ -56,7 +56,7 @@ class LatexToPdf
             '~' => 'asciitilde',
             '|' => 'bar',
             '<' => 'less',
-            '>' => 'greater',
+            '>' => 'greater'
           }
 
           def latex_esc(text)   # :nodoc:

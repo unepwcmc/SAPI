@@ -54,23 +54,23 @@ describe Admin::ListingChangesController do
     end
   end
 
-  describe "XHR GET new" do
+  describe "GET new" do
     it "renders the new template" do
-      xhr :get, :new, :taxon_concept_id => @taxon_concept.id,
+      get :new, :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
       response.should render_template('new')
     end
     it "assigns @listing_change" do
-      xhr :get, :new, :taxon_concept_id => @taxon_concept.id,
+      get :new, :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
       assigns(:listing_change).should_not be_nil
     end
   end
 
-  describe "XHR POST create" do
+  describe "POST create" do
     context "when successful" do
       it "renders create" do
-        xhr :post, :create, :listing_change => {
+        post :create, :listing_change => {
             :change_type_id => @addition.id,
             :species_listing_id => @appendix.id,
             :effective_at => 1.week.ago
@@ -80,7 +80,7 @@ describe Admin::ListingChangesController do
         response.should render_template("index")
       end
       it "assigns @listing_changes" do
-        xhr :post, :create, :listing_change => {
+       post :create, :listing_change => {
             :change_type_id => @addition.id,
             :species_listing_id => @appendix.id,
             :effective_at => 1.week.ago
@@ -92,14 +92,14 @@ describe Admin::ListingChangesController do
     end
     it "renders new when not successful" do
       taxon_concept = create(:taxon_concept)
-      xhr :post, :create, :listing_change => {},
+      post :create, :listing_change => {},
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
       response.should render_template("new")
     end
   end
 
-  describe "XHR GET edit" do
+  describe "GET edit" do
     before(:each) do
       @listing_change = create(
         :listing_change,
@@ -110,20 +110,20 @@ describe Admin::ListingChangesController do
       )
     end
     it "renders the edit template" do
-      xhr :get, :edit, :id => @listing_change.id,
+      get :edit, :id => @listing_change.id,
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
-      response.should render_template('new')
+      response.should render_template('edit')
     end
     it "assigns the listing_change variable" do
-      xhr :get, :edit, :id => @listing_change.id,
+      get :edit, :id => @listing_change.id,
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
       assigns(:listing_change).should_not be_nil
     end
   end
 
-  describe "XHR PUT update" do
+  describe "PUT update" do
     before(:each) do
       @listing_change = create(
         :listing_change,
@@ -134,8 +134,8 @@ describe Admin::ListingChangesController do
       )
     end
     context "when successful" do
-      it "renders create" do
-        xhr :put, :update, :listing_change => {
+      it "renders taxon_concepts listing_changes page" do
+        put :update, :listing_change => {
             :change_type_id => @addition.id,
             :species_listing_id => @appendix.id,
             :effective_at => 1.week.ago
@@ -143,10 +143,12 @@ describe Admin::ListingChangesController do
           :id => @listing_change.id,
           :taxon_concept_id => @taxon_concept.id,
           :designation_id => @designation.id
-        response.should render_template("create")
+        response.should redirect_to(
+          admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
+        )
       end
       it "assigns @listing_changes" do
-        xhr :put, :update, :listing_change => {
+        put :update, :listing_change => {
             :change_type_id => @addition.id,
             :species_listing_id => @appendix.id,
             :effective_at => 1.week.ago
@@ -154,15 +156,15 @@ describe Admin::ListingChangesController do
           :id => @listing_change.id,
           :taxon_concept_id => @taxon_concept.id,
           :designation_id => @designation.id
-        assigns(:listing_changes).count.should == 1
+        assigns(:listing_change)
       end
     end
-    it "renders new when not successful" do
-      xhr :put, :update, :listing_change => {:effective_at => nil},
+    it "renders edit when not successful" do
+      put :update, :listing_change => {:effective_at => nil},
         :id => @listing_change.id,
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
-      response.should render_template("new")
+      response.should render_template('edit')
     end
   end
 
@@ -185,6 +187,5 @@ describe Admin::ListingChangesController do
       )
     end
   end
-
 end
 
