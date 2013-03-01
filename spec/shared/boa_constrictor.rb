@@ -21,9 +21,14 @@ shared_context "Boa constrictor" do
       :taxon_name => create(:taxon_name, :scientific_name => 'Constrictor'),
       :parent => @genus
     )
-    @subspecies = create(
+    @subspecies1 = create(
       :subspecies,
       :taxon_name => create(:taxon_name, :scientific_name => 'Occidentalis'),
+      :parent => @species
+    )
+    @subspecies2 = create(
+      :subspecies,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Constrictor'),
       :parent => @species
     )
 
@@ -64,7 +69,7 @@ shared_context "Boa constrictor" do
     #Boa constrictor occidentalis
     create(
      :cites_II_addition,
-     :taxon_concept => @subspecies,
+     :taxon_concept => @subspecies1,
      :effective_at => '1977-02-04',
      :inclusion_taxon_concept_id => @family.id
     )
@@ -75,7 +80,7 @@ shared_context "Boa constrictor" do
     # )
     create(
      :cites_I_addition,
-     :taxon_concept => @subspecies,
+     :taxon_concept => @subspecies1,
      :effective_at => '1987-10-22',
      :is_current => true
     )
