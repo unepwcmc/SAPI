@@ -54,9 +54,9 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       success.html {
         redirect_to admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
       }
-      failure.js {
+      failure.html {
         load_change_types
-        render 'new'
+        render 'edit'
       }
     end
   end
