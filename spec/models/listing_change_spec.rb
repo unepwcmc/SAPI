@@ -11,8 +11,6 @@
 #  annotation_id              :integer
 #  parent_id                  :integer
 #  inclusion_taxon_concept_id :integer
-#  lft                        :integer
-#  rgt                        :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  hash_annotation_id         :integer
