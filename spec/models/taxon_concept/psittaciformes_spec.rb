@@ -25,7 +25,7 @@ describe TaxonConcept do
           specify { @species2_1.current_listing.should == 'NC' }
         end
         context "should be blank at species level Psittacula krameri (DEL III, not listed, not shown)" do
-          specify { @species2_1.current_listing.should == 'NC' }
+          specify { @species2_3.current_listing.should == 'NC' }
         end
       end
 
@@ -49,13 +49,13 @@ describe TaxonConcept do
 
       describe :cites_show do
         context "for species Agapornis roseicollis (DEL II)" do
-          specify { @species2_1.cites_show.should_not be_true }
+          specify { @species2_1.cites_show.should be_true }
         end
         context "for species Amazona aestiva" do
           specify { @species2_2.cites_show.should be_true }
         end
         context "for species Psittacula krameri (DEL III)" do
-          specify { @species2_3.cites_show.should_not be_true }
+          specify { @species2_3.cites_show.should be_true }
         end
       end
 

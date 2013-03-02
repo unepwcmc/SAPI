@@ -84,7 +84,7 @@ class Checklist::Checklist
   def json_options
     json_options = taxon_concepts_json_options
     json_options[:include] = {
-      :current_listing_changes => listing_changes_json_options
+      :current_additions => listing_changes_json_options
     }
     json_options
   end
@@ -106,7 +106,7 @@ class Checklist::Checklist
   def generate(page, per_page)
     @taxon_concepts_rel = @taxon_concepts_rel.
       includes(:current_listing_changes).
-      without_nc.without_hidden
+      without_non_accepted.without_hidden
     page ||= 0
     per_page ||= 20
     @total_cnt = @taxon_concepts_rel.count

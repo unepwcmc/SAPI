@@ -19,19 +19,17 @@ class Checklist::History < Checklist::Checklist
   def prepare_main_query
     @taxon_concepts_rel = @taxon_concepts_rel.
       includes(:listing_changes).
-      where("cites_listed = 't'").
+      where("cites_listed = 't' OR cites_deleted = 't'").
       where("listing_changes_mview.change_type_name <> 'EXCEPTION'").
-      where("NOT (listing_changes_mview.change_type_name = 'DELETION' " +
-        "AND listing_changes_mview.species_listing_name IS NOT NULL " +
-        "AND listing_changes_mview.party_name IS NULL)"
-      ).order <<-SQL
-      taxon_concept_id, effective_at,
-      CASE
-        WHEN change_type_name = 'ADDITION' THEN 0
-        WHEN change_type_name = 'RESERVATION' THEN 1
-        WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
-        WHEN change_type_name = 'DELETION' THEN 3
-      END
+      where("explicit_change = 't'").
+      order <<-SQL
+        taxon_concept_id, effective_at,
+        CASE
+          WHEN change_type_name = 'ADDITION' THEN 0
+          WHEN change_type_name = 'RESERVATION' THEN 1
+          WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
+          WHEN change_type_name = 'DELETION' THEN 3
+        END
       SQL
   end
 

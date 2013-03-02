@@ -124,7 +124,7 @@ describe Checklist::Pdf::History do
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
       specify{
         subject.annotation_for_language(lc, 'en').should ==
-        '\footnote{They have plenty of \textit{Foobarus cracoviensis} in Kraków}{Except \textit{Foobarus cracoviensis}}'
+        'Except \textit{Foobarus cracoviensis}\footnote{They have plenty of \textit{Foobarus cracoviensis} in Kraków}'
       }
     end
   end

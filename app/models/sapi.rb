@@ -31,7 +31,11 @@ module Sapi
     self.disable_triggers
     procedures = REBUILD_PROCEDURES - (options[:except] || [])
     procedures &= options[:only] unless options[:only].nil?
-    procedures.each{ |p| ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()") }
+    procedures.each{ |p| 
+      puts "Starting procedure: #{p}"
+      ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()") 
+      puts "Ending procedure: #{p}"
+    }
     self.enable_triggers
   end
 
@@ -136,12 +140,14 @@ module Sapi
       plants_ids = TaxonConcept.where(:taxonomy_id => t.id, :name_status => 'A', :legacy_type => 'Plantae').select('id').map(&:id)
       puts ">>> Animalia general stats"
       Sapi.print_count_for "accepted", animals_ids.count
+      Sapi.print_count_for "non accepted nor synonyms", TaxonConcept.where(:taxonomy_id => t.id, :legacy_type => 'Animalia').where("name_status NOT IN ('A', 'S')").count
       Sapi.print_count_for "Listing Changes", ListingChange.where(:taxon_concept_id => animals_ids).count
       Sapi.print_count_for "Distributions", Distribution.where(:taxon_concept_id => animals_ids).count
       Sapi.print_count_for "TaxonCommons", TaxonCommon.where(:taxon_concept_id => animals_ids).count
       Sapi.print_count_for "Synonyms", TaxonConcept.where(:taxonomy_id => t.id, :name_status => 'S', :legacy_type => 'Animalia').count
       puts ">>> Plantae general stats"
       Sapi.print_count_for "Accepted", plants_ids.count
+      Sapi.print_count_for "non accepted nor synonyms", TaxonConcept.where(:taxonomy_id => t.id, :legacy_type => 'Plantae').where("name_status NOT IN ('A', 'S')").count
       Sapi.print_count_for "Listing Changes", ListingChange.where(:taxon_concept_id => plants_ids).count
       Sapi.print_count_for "Distributions", Distribution.where(:taxon_concept_id => plants_ids).count
       Sapi.print_count_for "TaxonCommons", TaxonCommon.where(:taxon_concept_id => plants_ids).count
