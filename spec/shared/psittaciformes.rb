@@ -145,7 +145,7 @@ shared_context "Psittaciformes" do
      :effective_at => '1981-06-06'
     )
     create(
-     :cites_deletion,
+     :cites_II_deletion,
      :taxon_concept => @species2_1,
      :effective_at => '2005-01-12',
      :is_current => true
@@ -167,7 +167,7 @@ shared_context "Psittaciformes" do
       :listing_change => l1
     )
     l2 = create(
-     :cites_deletion,
+     :cites_III_deletion,
      :taxon_concept => @species2_3,
      :effective_at => '2007-03-04',
      :is_current => true

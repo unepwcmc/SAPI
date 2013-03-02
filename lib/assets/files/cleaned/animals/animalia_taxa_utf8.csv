@@ -6378,7 +6378,7 @@ crassus,Species,17887,Genus,3916,A,"(Sharpe, 1884)",,CITES_EU
 macrolepidotus,Species,17875,Genus,8818,A,"(Ayres, 1854)",,CITES_EU
 ciscoides,Species,17874,Genus,8818,A,"Hopkirk, 1974",,CITES_EU
 cincta,Species,17872,Genus,3909,A,"(Gould, 1837)",,CITES_EU
-cincta,Subspecies,17870,Genus,17872,A,"(Gould, 1837)",,CITES_EU
+cincta,Subspecies,17870,Species,17872,A,"(Gould, 1837)",,CITES_EU
 occidentalis,Species,17836,Genus,3905,A,"(Baird & Girard, 1853)",,CITES_EU
 sulphuraria,Species,17833,Genus,3903,A,"(Alvarez, 1948)",,CITES_EU
 latipunctata,Species,17832,Genus,3903,A,"Meek, 1904",,CITES_EU

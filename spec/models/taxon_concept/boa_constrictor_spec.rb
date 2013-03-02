@@ -6,7 +6,7 @@ describe TaxonConcept do
     context "TAXONOMY" do
       describe :full_name do
         it "should be trinomen for subspecies: Boa constrictor occidentalis" do
-          @subspecies.full_name.should == 'Boa constrictor occidentalis'
+          @subspecies1.full_name.should == 'Boa constrictor occidentalis'
         end
         it "should be binomen for species: Boa constrictor" do
           @species.full_name.should == 'Boa constrictor'
@@ -15,11 +15,7 @@ describe TaxonConcept do
           @genus.full_name.should == 'Boa'
         end
       end
-      describe :rank do
-        it "should be SPECIES" do
-          @species.rank_name.should == 'SPECIES'
-        end
-      end
+
       describe :parents do
         it "should have Boidae as family" do
           @species.family_name == 'Boidae'
@@ -36,7 +32,10 @@ describe TaxonConcept do
     context "LISTING" do
       describe :current_listing do
         it "should be I at subspecies level Boa constrictor occidentalis" do
-          @subspecies.current_listing.should == 'I'
+          @subspecies1.current_listing.should == 'I'
+        end
+        it "should be II at subspecies level Boa constrictor constrictor" do
+          @subspecies2.current_listing.should == 'II'
         end
         it "should be I/II at species level Boa constrictor" do
           @species.current_listing.should == 'I/II'
@@ -54,7 +53,7 @@ describe TaxonConcept do
           @species.cites_listed.should == false
         end
         it "should be true for subspecies Boa constrictor occidentalis" do
-          @subspecies.cites_listed.should be_true
+          @subspecies1.cites_listed.should be_true
         end
       end
 

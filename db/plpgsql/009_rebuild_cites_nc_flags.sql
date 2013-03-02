@@ -15,7 +15,8 @@ CREATE OR REPLACE FUNCTION rebuild_cites_nc_flags() RETURNS void
         SET listing = listing ||
         hstore('cites_nc', 'NC') || hstore('cites_listing_original', 'NC')
         WHERE (listing->'cites_status')::VARCHAR = 'DELETED'
-          OR (listing->'cites_status')::VARCHAR = 'EXCLUDED';
+          OR (listing->'cites_status')::VARCHAR = 'EXCLUDED'
+          OR (listing->'cites_status')::VARCHAR IS NULL;
 
         END;
       $$;

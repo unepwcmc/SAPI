@@ -24,6 +24,15 @@ describe TaxonConcept do
         end
       end
 
+      describe :cites_show do
+        context "for order Coleoptera" do
+          specify { @order.cites_show.should be_false }
+        end
+        context "for family Lucanidae" do
+          specify { @family.cites_show.should be_true }
+        end
+      end
+
       describe :current_party_ids do
         context "for genus Colophon" do
           specify { @genus.current_parties_ids.should == [GeoEntity.find_by_iso_code2('ZA').id] }
