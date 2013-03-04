@@ -4,13 +4,8 @@ class Checklist::History < Checklist::Checklist
   def initialize(options={})
     @download_path = download_location(options, "history", ext)
 
-    params = options.merge({:output_layout => :taxonomic})
-    # If a cached download exists, only initialize the params for the
-    # helper methods, otherwise run the generation queries.
     if !File.exists?(@download_path)
-      super(params)
-    else
-      initialize_params(params)
+      super(options.merge({:output_layout => :taxonomic}))
     end
 
     @download_name = "ChecklistHistory-#{Time.now}.#{ext}"
