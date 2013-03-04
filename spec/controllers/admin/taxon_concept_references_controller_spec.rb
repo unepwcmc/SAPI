@@ -14,17 +14,6 @@ describe Admin::TaxonConceptReferencesController do
     end
   end
 
-  describe "XHR POST 'create'" do
-    it "renders create when successful" do
-      xhr :post, :create, {
-        :data => {},
-        :taxon_concept_id => @taxon_concept.id,
-        :reference => @reference.id
-      }
-      response.should render_template("create")
-    end
-  end
-
   describe "DELETE destroy" do
     let(:taxon_concept_reference) { create(:taxon_concept_reference, :taxon_concept_id => @taxon_concept.id, :reference_id => @reference.id) }
     it "redirects after delete" do
