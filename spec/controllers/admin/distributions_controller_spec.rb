@@ -52,7 +52,7 @@ describe Admin::DistributionsController do
     it "renders the edit template" do
       xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
         :id => distribution.id
-      response.should render_template('new')
+      response.should render_template('edit')
     end
     it "assigns the distribution variable" do
       xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,

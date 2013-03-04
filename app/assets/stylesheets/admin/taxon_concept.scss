@@ -48,5 +48,43 @@ table.listing-change {
 }
 
 .standard_ref {
-  color: rgb(52, 189, 33);
+  font-weight: bold;
+}
+
+.hidden {
+  display: none !important;
+  visibility: hidden;
+}
+
+.reference_search_form {
+  .fields {
+    span {
+      font-weight: bold;
+    }
+
+    input[type="checkbox"] {
+      margin: 0;
+    }
+
+    label {
+      display: inline;
+    }
+
+    .remove_nested_fields {
+      margin-right: 20px;
+    }
+  }
+}
+
+ul.distribution_references {
+  margin: 0;
+  font-weight: bold;
+
+  li {
+    list-style-type: none;
+  }
+
+  .reference_delete {
+    margin-right: 20px;
+  }
 }

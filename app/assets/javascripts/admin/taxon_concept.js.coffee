@@ -1,8 +1,6 @@
 $(document).ready ->
   $(".tags").select2()
 
-  $('a[data-toggle="popover"]').popover(html: true, placement: 'bottom')
-
   $('.typeahead.geo_entities').typeahead
     source: (query, process) ->
       $.get('/admin/geo_entities/autocomplete',

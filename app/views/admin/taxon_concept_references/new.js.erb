@@ -22,23 +22,24 @@ form.find('input.typeahead').typeahead({
     );
   },
   updater: function(item) {
-    var id_fields = form.find('input[id^="taxon_concept_taxon_concept_references_attributes_"]');
-    if (id_fields.length == 0) {
-      form.find('#addReference').click();
-      id_fields = form.find('input[id^="taxon_concept_taxon_concept_references_attributes_"]');
-    }
-
     var taxon_concept_id = <%= @taxon_concept.id %>;
+
+    // Coerce nested_form in to adding a new nested reference form field set
+    form.find('#addReference').click();
+    // Select the form field set added by nested_form
+    var $field = form.find('.fields').last()
+
+    // Display the selected 
+    $field.find('span').text(item);
 
     // nested_form creates fields with unique (time based IDs),
     // so we determine which field is which based on order as this is faster than using a regex.
+    var inputs = $field.find('input[id^="taxon_concept_taxon_concept_references_attributes_"][type="text"]');
 
     // Reference ID
-    $(id_fields[0]).val(references[item]);
+    $(inputs[0]).val(references[item]);
     // Taxon Concept ID
-    $(id_fields[1]).val(taxon_concept_id);
-
-    return item;
+    $(inputs[1]).val(taxon_concept_id);
   }
 });
 
@@ -48,11 +49,5 @@ $('#new-taxon_concept_reference').modal('show');
 
 $('.nav-tabs a').click(function (e) {
   e.preventDefault();
-
-  var referenceForm = $('#new_reference');
-  if (referenceForm.length > 0) {
-    referenceForm[0].reset();
-  }
-
   $(this).tab('show');
 });

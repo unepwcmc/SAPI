@@ -30,20 +30,19 @@
   <h4>References</h4>
 
   <ul class="nav nav-tabs">
-    <li class="active"><a href="#search">Search for a reference</a></li>
-    <li><a href="#new">Create new references</a></li>
+    <li><a href="#search">Search for a reference</a></li>
+    <li class="active"><a href="#new">Create new references</a></li>
   </ul>
 
   <div class="tab-content">
-    <div class="tab-pane fade in active" id="search">
+    <div class="tab-pane fade" id="search">
       <label>Search by title, author or year:</label>
       <%= text_field_tag 'reference_search', nil, :class => 'typeahead' %>
       <%= text_field_tag 'reference[id]', nil, :class => 'hidden' %>
+      <ul class="distribution_references"></ul>
     </div>
 
-    <div class="tab-pane fade" id="new">
-      <%= f.link_to_add "Add a reference", :references %>
-
+    <div class="tab-pane fade in active" id="new">
       <%= f.fields_for :references do |ff| %>
         <label>Title</label>
         <%= ff.text_field :title %>
@@ -60,6 +59,8 @@
 
         <hr>
       <% end %>
+
+      <%= f.link_to_add "Add a reference", :references %>
     </div>
   </div>
 <% end %>

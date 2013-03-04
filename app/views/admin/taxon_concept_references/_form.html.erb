@@ -4,18 +4,21 @@
 </ul>
 
 <div class="tab-content">
-  <div class="tab-pane fade in active" id="search">
+  <div class="tab-pane fade in active reference_search_form" id="search">
     <%= nested_form_for [:admin, @taxon_concept], :remote => true do |f| %>
       <label>Search by title, author or year:</label>
       <%= text_field_tag 'reference_search', nil, :class => 'typeahead' %>
 
       <%= f.link_to_add "Add a reference", :taxon_concept_references, :class => "hidden", :id => "addReference" %>
       <% f.fields_for :taxon_concept_references do |ff| %>
+        <%= ff.link_to_remove delete_icon %>
+
+        <span></span> - 
         <%= ff.text_field :reference_id, :class => "hidden" %>
         <%= ff.text_field :taxon_concept_id, :class => "hidden" %>
         <%= ff.fields_for :data do |fff| %>
-          <label>Is Standard?</label>
           <%= fff.check_box :usr_is_std_ref %>
+          <label>Is Standard?</label>
         <% end %>
       <% end %>
     <% end %>
@@ -34,6 +37,19 @@
 
         <label>Year</label>
         <%= ff.text_field :year %>
+
+        <%#<%= f.fields_for :taxon_concept_references do |tcr| %>%>
+          <%#<%= tcr.fields_for :data do |d| %>%>
+            <%#<label>Is Standard?</label>%>
+            <%#<%= d.check_box :usr_is_std_ref %>%>
+          <%#<% end %>%>
+        <%#<% end %>%>
+
+        <%#<p>%>
+          <%#<%= ff.link_to_remove "Remove reference" %>%>
+        <%#</p>%>
+
+        <hr>
       <% end %>
     <% end %>
   </div>

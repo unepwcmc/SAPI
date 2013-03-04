@@ -14,7 +14,7 @@ class AdminEditor
 
   initModals: () ->
     $('.modal .modal-footer .save-button').click () ->
-      $(@).closest('.modal').find('form:visible').submit()
+      $(@).closest('.modal').find('form').submit()
 
     $('.modal').on 'hidden', () ->
       form = $(@).find('form')
@@ -48,6 +48,8 @@ class AdminInPlaceEditor extends AdminEditor
         newParams[$(@).attr('data-resource')] = {}
         newParams[$(@).attr('data-resource')][params.name] = params.value
         return newParams
+
+    $('a[data-toggle="popover"]').popover(html: true, placement: 'bottom')
 
     $('#admin-in-place-editor .editable-required').editable('option',
       validate: (v) ->
@@ -185,3 +187,49 @@ class ListingChangesEditor extends AdminEditor
     $('.distribution:not(#exclusions_fields_blueprint > .fields > select)').select2({
       placeholder: 'Select countries'
     })
+
+class window.DistributionReferences
+  constructor: (options = {}) ->
+    @references ||= {}
+    @el = $(options.el) || $('body')
+
+  add: (id, title) ->
+    @references[title] = id
+    @render()
+
+  remove: (value) ->
+    if _.isNumber(value)
+      _.forEach(@references, (v, key) => delete @references[key] if v == value)
+    else
+      @references = _.omit(@references, value)
+
+    @render()
+
+  removeAll: ->
+    @references = {}
+    @render()
+
+  titles: ->
+    _.keys(@references)
+
+  toString: ->
+    return _.values(@references).join(",")
+
+  render: ->
+    console.log('rendering')
+    console.log(@references)
+    template = _.template("""
+      <% _.each(references, function(v, key) { %>
+        <li>
+          <a href="#" class="reference_delete" data-title="<%= key %>"><i class="icon-trash"></i></a>
+          <%= key %>
+        </li>
+      <% }); %>
+    """, {references: @references})
+
+    @el.html(template)
+
+    $('.reference_delete').click( (e) =>
+      target = $(e.target).parent()
+      @remove(target.data('title'))
+    )

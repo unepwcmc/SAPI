@@ -5,7 +5,7 @@ class Admin::DistributionsController < Admin::SimpleCrudController
 
   def edit
     edit! do |format|
-      format.js { render 'new' }
+      format.js { render 'edit' }
     end
   end
 
@@ -19,17 +19,23 @@ class Admin::DistributionsController < Admin::SimpleCrudController
     end
   end
 
-
   def create
     create! do |success, failure|
       success.js {
         unless params["reference"]["id"].blank?
-          @reference = Reference.find(params["reference"]["id"])
+          @references = params["reference"]["id"]
+          @reference_ids = @references.split(",")
 
-          @distribution_reference = DistributionReference.new({
-            :distribution_id => @distribution.id,
-            :reference_id => @reference.id
-          }).save!
+          @reference_ids.each do |r|
+            reference = Reference.find(r)
+
+            unless reference.nil?
+              distribution_reference = DistributionReference.new({
+                :distribution_id => @distribution.id,
+                :reference_id => reference.id
+              }).save!
+            end
+          end
         end
       }
       failure.js {
