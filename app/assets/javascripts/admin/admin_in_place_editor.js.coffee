@@ -216,8 +216,6 @@ class window.DistributionReferences
     return _.values(@references).join(",")
 
   render: ->
-    console.log('rendering')
-    console.log(@references)
     template = _.template("""
       <% _.each(references, function(v, key) { %>
         <li>
