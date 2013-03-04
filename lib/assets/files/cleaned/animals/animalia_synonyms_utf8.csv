@@ -2255,7 +2255,7 @@ pachypoma,Species,89825,Genus,740,S,"(Hickson & England, 1905)",,,CITES_EU,Speci
 verecundus,Species,93974,Genus,30124,S,"De Vis, 1905",,,CITES_EU,Species,5343
 magnificus,Species,27986,Genus,741,S,"Shaw, 1790",,,CITES_EU,Species,3657
 nasutus,Species,91422,Genus,30125,S,"Duméril & Bibron, 1836",,,CITES_EU,Species,4484
-ferus,Species,27987,Genus,746,S,"Przewalski, 1878",,,CITES_EUCMS,Species,3707
+ferus,Species,27987,Genus,746,S,"Przewalski, 1878",,,"CITES_EU,CMS",Species,3707
 cirrochloris,Species,78809,Genus,757,S,"(Vieillot, 1818)",,,CITES_EU,Species,1853
 excellens,Species,3726,Genus,757,S,"(Wetmore, 1941)",,,CITES_EU,Species,3723
 macrourus,Species,78813,Genus,757,S,"(Gmelin, 1788)",,,CITES_EU,Species,8270
@@ -5658,8 +5658,8 @@ leucurus,Species,95134,Genus,2935,S,"Vieillot, 1818",,,CITES_EU,Species,7095
 lineatus,Species,13552,Genus,2935,S,"(Gray, 1831)",,,CITES_EU,Species,13553
 sphenurus,Species,95148,Genus,2935,S,"Vieillot, 1818",,,CITES_EU,Species,9659
 graysoni,Species,103028,Genus,30495,S,"(Lawrence, 1871)",,,CITES_EU,Species,13558
-haradai,Species,74687,Genus,2941,S,"Maeda, 1982",,,CITES_EUCMS,Species,13561
-oceanensis,Species,74690,Genus,2941,S,"Maeda, 1982",,,CITES_EUCMS,Species,13561
+haradai,Species,74687,Genus,2941,S,"Maeda, 1982",,,"CITES_EU,CMS",Species,13561
+oceanensis,Species,74690,Genus,2941,S,"Maeda, 1982",,,"CITES_EU,CMS",Species,13561
 kreffti,Species,42766,Genus,6995,S,"(Sclater, 1869)",,,CITES_EU,Species,38099
 steyermarki,Species,38885,Genus,30496,S,"(Rivero, 1971)",,,CITES_EU,Species,23458
 acrodonta,Species,100262,Genus,30497,S,"(Hill & Beckon, 1978)",,,CITES_EU,Species,18655
@@ -6093,7 +6093,7 @@ senegalensis,Species,95817,Genus,3426,S,"Vieillot, 1820",,,CITES_EU,Species,8367
 tetrax,Species,28443,Genus,3426,S,"Linnaeus, 1758",,,CITES_EU,Species,21677
 vigorsii,Species,95814,Genus,3426,S,"A. Smith, 1831",,,CITES_EU,Species,8368
 manul,Species,28827,Genus,30567,S,"(Pallas, 1776)",,,CITES_EU,Species,15640
-hemprichi,Species,103247,Genus,3432,S,"Peters, 1859",,,CMS-CITES_EUROBATS,Species,15663
+hemprichi,Species,103247,Genus,3432,S,"Peters, 1859",,,"CMS-EUROBATS",Species,15663
 abyssinicus,Species,97163,Genus,3436,S,"Guérin-Méneville, 1843",,,CITES_EU,Species,2164
 bengalensis,Species,97092,Genus,3436,S,"Franklin, 1831",,,CITES_EU,Species,3133
 capensis,Species,97166,Genus,3436,S,"A. Smith, 1834",,,CITES_EU,Species,2165
@@ -7236,7 +7236,7 @@ diluta,Species,31369,Genus,4290,S,"(Sharpe & Wyatt, 1893)",,,CITES_EU,Species,19
 hypolitus,Species,99139,Genus,30711,S,"(Cramer, 1775)",,,CITES_EU,Species,22308
 superciliosus,Species,95613,Genus,4295,S,"J. E. Gray, 1846",,,CITES_EU,Species,15388
 rosmarus,Species,72810,Genus,30712,S,"(Linnaeus, 1758)",,,CITES_EU,Species,15106
-arabicus,Species,77074,Genus,4304,S,"Anderson & de Winton, 1902",,,CMS-CITES_EUROBATS,Species,29730
+arabicus,Species,77074,Genus,4304,S,"Anderson & de Winton, 1902",,,"CMS-EUROBATS",Species,29730
 ruficollis,Species,31879,Genus,30713,S,"(Pallas, 1769)",,,CITES_EU,Species,3060
 ornata,Species,72108,Genus,4309,S,"Neumann, 1899",,,CITES_EU,Subspecies,19766
 peruviana,Species,102971,Genus,4310,S,"(Latham, 1790)",,,CITES_EU,Species,19774
@@ -7668,13 +7668,13 @@ calvus,Species,95108,Genus,30784,S,"Boddaert, 1783",,,CITES_EU,Species,9156
 cayennensis,Species,95098,Genus,30784,S,"Gmelin, 1789",,,CITES_EU,Species,13210
 cinereus,Species,95066,Genus,30784,S,"Raffles, 1822",,,CITES_EU,Species,14045
 cristatus,Species,95102,Genus,30784,S,"Boddaert, 1783",,,CITES_EU,Species,12330
-falcinellus,Species,95090,Genus,30784,S,"Linnaeus, 1766",,,CITES_EUCMS,Species,17609
+falcinellus,Species,95090,Genus,30784,S,"Linnaeus, 1766",,,"CITES_EU,CMS",Species,17609
 ibis,Species,95067,Genus,30784,S,"Linnaeus, 1766",,,"CITES_EU,CMS",Species,14046
 leucocephalus,Species,95068,Genus,30784,S,"Pennant, 1769",,,CITES_EU,Species,14047
 melanopis,Species,95096,Genus,30784,S,"Gmelin, 1789",,,CITES_EU,Species,21732
 heterurus,Species,28692,Genus,4719,S,"Salvadori, 1912",,,CITES_EU,Species,21440
 mulleri,Species,96765,Genus,4719,S,"(S. Müller, 1841)",,,CITES_EU,Species,21440
-kachhensis,Species,77078,Genus,4723,S,"Dobson, 1872",,,CMS-CITES_EUROBATS,Species,21462
+kachhensis,Species,77078,Genus,4723,S,"Dobson, 1872",,,"CMS-EUROBATS",Species,21462
 bairdii,Species,105447,Genus,30785,S,"(Gill, 1865)",,,CITES_EU,Species,21471
 roulinii,Species,28694,Genus,4726,S,"Fischer, 1830",,,CITES_EU,Species,21473
 dianae,Species,21489,Genus,4729,S,"Niemitz, Nietsch, Warter & Rumpler, 1991",,,CITES_EU,Species,101005

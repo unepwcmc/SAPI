@@ -45,7 +45,6 @@ CREATE OR REPLACE FUNCTION rebuild_cites_status() RETURNS void
         FROM listed_taxa
         WHERE taxon_concepts.id = listed_taxa.id;
 
-
         -- set cites_status property to 'DELETED' for all explicitly deleted taxa
         -- omit ones already marked as listed (applies to appendix III deletions)
         -- also set cites_status_original flag to true
@@ -67,6 +66,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_status() RETURNS void
         WHERE taxon_concepts.id = deleted_taxa.id;
 
         -- set cites_status property to 'EXCLUDED' for all explicitly excluded taxa
+        -- omit ones already marked as listed
         -- also set cites_status_original flag to true
         WITH excluded_taxa AS (
           WITH listing_exceptions AS (
@@ -87,7 +87,9 @@ CREATE OR REPLACE FUNCTION rebuild_cites_status() RETURNS void
         SET listing = listing || hstore('cites_status', 'EXCLUDED') ||
           hstore('cites_status_original', 't')
         FROM excluded_taxa
-        WHERE taxon_concepts.id = excluded_taxa.id;
+        WHERE taxon_concepts.id = excluded_taxa.id AND
+          (listing -> 'cites_status' <> 'LISTED'
+              OR (listing -> 'cites_status')::VARCHAR IS NULL);
 
         -- propagate cites_status to descendants
         WITH RECURSIVE q AS

@@ -17,7 +17,7 @@ class Checklist::Index < Checklist::Checklist
   end
 
   def prepare_main_query
-    @taxon_concepts_rel = @taxon_concepts_rel.without_nc.without_hidden
+    @taxon_concepts_rel = @taxon_concepts_rel.without_non_accepted.without_hidden
   end
 
   def prepare_kingdom_queries

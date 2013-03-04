@@ -2,28 +2,29 @@
 #
 # Table name: taxon_concepts
 #
-#  id                 :integer          not null, primary key
-#  parent_id          :integer
-#  rank_id            :integer          not null
-#  taxon_name_id      :integer          not null
-#  author_year        :string(255)
-#  legacy_id          :integer
-#  legacy_type        :string(255)
-#  data               :hstore
-#  listing            :hstore
-#  notes              :text
-#  taxonomic_position :string(255)      default("0"), not null
-#  full_name          :string(255)
-#  name_status        :string(255)      default("A"), not null
-#  lft                :integer
-#  rgt                :integer
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  taxonomy_id        :integer          default(1), not null
+#  id                         :integer          not null, primary key
+#  parent_id                  :integer
+#  rank_id                    :integer          not null
+#  taxon_name_id              :integer          not null
+#  author_year                :string(255)
+#  legacy_id                  :integer
+#  legacy_type                :string(255)
+#  data                       :hstore
+#  listing                    :hstore
+#  notes                      :text
+#  taxonomic_position         :string(255)      default("0"), not null
+#  full_name                  :string(255)
+#  name_status                :string(255)      default("A"), not null
+#  lft                        :integer
+#  rgt                        :integer
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  taxonomy_id                :integer          default(1), not null
+#  closest_listed_ancestor_id :integer
 #
 
 class TaxonConcept < ActiveRecord::Base
-  attr_accessible :lft, :parent_id, :rgt, :taxonomy_id, :rank_id,
+  attr_accessible :parent_id, :taxonomy_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
     :accepted_scientific_name, :parent_scientific_name, 
@@ -39,6 +40,8 @@ class TaxonConcept < ActiveRecord::Base
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore
 
+  belongs_to :parent, :class_name => 'TaxonConcept'
+  has_many :children, :class_name => 'TaxonConcept', :foreign_key => :parent_id
   belongs_to :rank
   belongs_to :taxonomy
   has_many :designations, :through => :taxonomy
@@ -115,8 +118,6 @@ class TaxonConcept < ActiveRecord::Base
 
   has_many :taxon_concept_references
   accepts_nested_attributes_for :taxon_concept_references
-
-  acts_as_nested_set
 
   scope :by_scientific_name, lambda { |scientific_name|
     where(

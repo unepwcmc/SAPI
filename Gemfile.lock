@@ -37,8 +37,6 @@ GEM
       rake
     archive-tar-minitar (0.5.2)
     arel (3.0.2)
-    awesome_nested_set (2.1.5)
-      activerecord (>= 3.0.0)
     better_errors (0.3.2)
       coderay (>= 1.0.0)
       erubis (>= 2.7.0)
@@ -271,7 +269,6 @@ DEPENDENCIES
   activerecord-postgres-hstore
   acts-as-taggable-on (~> 2.3.1)
   annotate (>= 2.5.0)
-  awesome_nested_set
   better_errors
   binding_of_caller
   bootstrap-generators (~> 2.1)
