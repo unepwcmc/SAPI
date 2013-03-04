@@ -4,8 +4,13 @@ class Checklist::Index < Checklist::Checklist
   def initialize(options={})
     @download_path = download_location(options, "index", ext)
 
+    params = options.merge({:output_layout => :alphabetical})
+    # If a cached download exists, only initialize the params for the
+    # helper methods, otherwise run the generation queries.
     if !File.exists?(@download_path)
-      super(options.merge({:output_layout => :alphabetical}))
+      super(params)
+    else
+      initialize_params(params)
     end
 
     @download_name = "FullChecklist-#{Time.now}.#{ext}"

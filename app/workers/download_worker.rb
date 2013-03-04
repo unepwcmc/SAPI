@@ -34,6 +34,8 @@ class DownloadWorker
       @download.save!
     rescue => msg
       puts "Failed: #{msg}"
+      puts "### Backtrace ###"
+      puts msg.backtrace
       @download.status = "failed"
       @download.save!
     end
