@@ -23,7 +23,7 @@
           %>
         </td>
         <td>
-          <%= f.text_field :pubication_date, :class => "datepicker", :value => @quota.publication_date_formatted %>
+          <%= f.text_field :pubication_date, :class => "quota datepicker", :value => @quota.publication_date_formatted %>
         </td>
       </tr>
     </tbody>
@@ -48,14 +48,14 @@
               @quota.geo_entity_id
             ),
             { :include_blank => true },
-            {:class => 'distribution', :style => 'width: 220px' }
+            {:class => 'quota select2', :style => 'width: 220px' }
           %>
         </td>
         <td>
-          <%= f.text_field :start_date, :class => "datepicker", :value => @quota.start_date_formatted %>
+          <%= f.text_field :start_date, :class => "quota datepicker", :value => @quota.start_date_formatted %>
         </td>
         <td>
-          <%= f.text_field :end_date, :class => "datepicker", :value => @quota.end_date_formatted %>
+          <%= f.text_field :end_date, :class => "quota datepicker", :value => @quota.end_date_formatted %>
         </td>
       </tr>
     </tbody>
@@ -74,19 +74,22 @@
         <td>
           <%= f.select :term_id,
             options_from_collection_for_select(@terms, :id, :code),
-            { :include_blank => true }
+            { :include_blank => true },
+            {:class => 'quota select2', :style => 'width: 220px' }
           %>
         </td>
         <td>
           <%= f.select :source_id,
             options_from_collection_for_select(@sources, :id, :code),
-            { :include_blank => true }
+            { :include_blank => true },
+            {:class => 'quota select2', :style => 'width: 220px' }
           %>
         </td>
         <td>
           <%= f.select :purpose_id,
             options_from_collection_for_select(@purposes, :id, :code),
-            { :include_blank => true }
+            { :include_blank => true },
+            {:class => 'quota select2', :style => 'width: 220px' }
           %>
         </td>
       </tr>
