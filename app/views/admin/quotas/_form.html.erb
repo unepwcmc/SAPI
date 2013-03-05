@@ -1,103 +1,8 @@
 <%= admin_new_modal({:title => "Current CITES Quotas"}) { render "current_quotas_form" } %>
 
-<%= nested_form_for [:admin, @taxon_concept, @quota] do |f| %>
-  <%= error_messages_for(@quota) %>
-
-  <table class="quota">
-    <thead>
-      <tr>
-        <th><%= f.label :quota %></th>
-        <th><%= f.label :unit_id %></th>
-        <th><%= f.label :publication_date %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <%= f.text_field :quota %>
-        </td>
-        <td>
-          <%= f.select :unit_id,
-            options_from_collection_for_select(@units, :id, :code),
-            { :include_blank => true }
-          %>
-        </td>
-        <td>
-          <%= f.text_field :pubication_date, :class => "quota datepicker", :value => @quota.publication_date_formatted %>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <table class="quota">
-    <thead>
-      <tr>
-        <th><%= f.label :geo_entity_id, "Party" %></th>
-        <th><%= f.label :start_date %></th>
-        <th><%= f.label :end_date %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <%= f.select :geo_entity_id,
-            options_from_collection_for_select(
-              @geo_entities,
-              :id,
-              :name_en,
-              @quota.geo_entity_id
-            ),
-            { :include_blank => true },
-            {:class => 'quota select2', :style => 'width: 220px' }
-          %>
-        </td>
-        <td>
-          <%= f.text_field :start_date, :class => "quota datepicker", :value => @quota.start_date_formatted %>
-        </td>
-        <td>
-          <%= f.text_field :end_date, :class => "quota datepicker", :value => @quota.end_date_formatted %>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <table class="quota">
-    <thead>
-      <tr>
-        <th><%= f.label :term_id  %></th>
-        <th><%= f.label :source_id  %></th>
-        <th><%= f.label :purpose_id  %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <%= f.select :term_id,
-            options_from_collection_for_select(@terms, :id, :code),
-            { :include_blank => true },
-            {:class => 'quota select2', :style => 'width: 220px' }
-          %>
-        </td>
-        <td>
-          <%= f.select :source_id,
-            options_from_collection_for_select(@sources, :id, :code),
-            { :include_blank => true },
-            {:class => 'quota select2', :style => 'width: 220px' }
-          %>
-        </td>
-        <td>
-          <%= f.select :purpose_id,
-            options_from_collection_for_select(@purposes, :id, :code),
-            { :include_blank => true },
-            {:class => 'quota select2', :style => 'width: 220px' }
-          %>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<%= nested_form_for [:admin, @taxon_concept, @quota], :html => {:class => 'form-horizontal'} do |f| %>
 
   <p>
-    <%= f.label :is_current, "Is current?", :class => 'inline'%> <%= f.check_box :is_current %><br>
     <%= link_to("View Current Quotas", "#new-quota",
       {
         :role => "button",
@@ -105,9 +10,92 @@
       }) %>
   </p>
 
+  <%= error_messages_for(@quota) %>
+
+  <div class="control-group">
+    <%= f.label :quota, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :quota %>
+      <%= f.select :unit_id,
+        options_from_collection_for_select(@units, :id, :code),
+        { :include_blank => true }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :publication_date, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :publication_date, :class => "quota datepicker", :value => @quota.publication_date_formatted %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :geo_entity_id, "Party", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :geo_entity_id,
+        options_from_collection_for_select(
+          @geo_entities,
+          :id,
+          :name_en,
+          @quota.geo_entity_id
+      ),
+        { :include_blank => true },
+        {:class => 'quota select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Validity</label>
+    <div class="controls">
+      <%= f.text_field :start_date, :class => "quota datepicker", :value => @quota.start_date_formatted, :placeholder => 'Start Date' %>
+      <%= f.text_field :end_date, :class => "quota datepicker", :value => @quota.end_date_formatted, :placeholder => 'End Date' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :term_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :term_id,
+        options_from_collection_for_select(@terms, :id, :code),
+        { :include_blank => true },
+        {:class => 'quota select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :source_id, :class => 'control-label'  %>
+    <div class="controls">
+      <%= f.select :source_id,
+        options_from_collection_for_select(@sources, :id, :code),
+        { :include_blank => true },
+        {:class => 'quota select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :purpose_id, :class => 'control-label' %>
+    <div class="controls">
+          <%= f.select :purpose_id,
+            options_from_collection_for_select(@purposes, :id, :code),
+            { :include_blank => true },
+            {:class => 'quota select2', :style => 'width: 220px' }
+          %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :is_current, "Is current?", :class => 'control-label'%>
+    <div class="controls">
+      <%= f.check_box :is_current %><br>
+    </div>
+  </div>
+
   <p class="pull-right">
     <%= f.submit %>
   </p>
-
 
 <% end %>

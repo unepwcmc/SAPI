@@ -1,29 +1,34 @@
 <% if @taxon_concept.current_quotas.count > 0 %>
-  <table class="quota">
+  <table class="quota table table-bordered table-striped">
     <thead>
-      <th>Appx</th>
-      <th>Type</th>
-      <th>Effective at</th>
-      <th>Current</th>
+      <th>Quota</th>
+      <th>Year</th>
+      <th>Published at</th>
       <th>Party</th>
+      <th>Term</th>
+      <th>Source</th>
+      <th>Purpose</th>
+      <th>Current</th>
     </thead>
+
     <tbody>
     <% @taxon_concept.current_quotas.each do |quota| %>
-      <tr>
+
+      <tr class="<%= if quota.is_current? then "current_listing" end %>">
+        <td><%= quota.quota %> <%= quota.unit.try(:code) %></td>
+        <td><%= quota.year %></td>
+        <td><%= quota.publication_date_formatted %></td>
+        <td><%= quota.geo_entity && quota.geo_entity.iso_code2 %></td>
+        <td><%= quota.term && quota.term.code %></td>
+        <td><%= quota.source && quota.source.code %></td>
+        <td><%= quota.purpose && quota.purpose.code %></td>
         <td>
-          <%= quota.species_listing && quota.species_listing.abbreviation %>
-        </td>
-        <td><%= quota.change_type.name %></td>
-        <td><%= quota.effective_at_formatted %></td>
-        <td>
-        <%= form_for [:admin, @taxon_concept, @designation, quota], :remote => true do |f| %>
-          <%= f.check_box :is_current %>
-        <% end %>
-        </td>
-        <td>
-          <%= quota.geo_entity && quota.geo_entity.iso_code2 %>
+          <%= form_for [:admin, @taxon_concept, quota], :remote => true do |f| %>
+            <%= f.check_box :is_current %>
+          <% end %>
         </td>
       </tr>
+
     <% end %>
     </tbody>
   </table>

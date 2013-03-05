@@ -1,5 +1,4 @@
 class Admin::QuotasController < Admin::SimpleCrudController
-  respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
   before_filter :load_lib_objects
 
@@ -11,10 +10,26 @@ class Admin::QuotasController < Admin::SimpleCrudController
     end
   end
 
+  def update
+    update! do |success, failure|
+      success.html {
+        redirect_to admin_taxon_concept_quotas_url(params[:taxon_concept_id]),
+        :notice => 'Operation successful'
+      }
+      failure.html {
+        load_tags_and_geo_entities
+        render 'new'
+      }
+    end
+  end
+
   def create
     create! do |success, failure|
-      success.js { render :template => 'admin/trade_codes/create' }
-      failure.js { render :template => 'admin/trade_codes/new' }
+      success.html {
+        redirect_to admin_taxon_concept_quotas_url(params[:taxon_concept_id]),
+        :notice => 'Operation successful'
+      }
+      failure.html { render 'create' }
     end
   end
 
