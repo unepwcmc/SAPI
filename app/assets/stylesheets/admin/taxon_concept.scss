@@ -49,10 +49,11 @@ input.annotation, textarea.annotation {
   }
 }
 
-tr.current_listing td{
-  background-color: lightgreen;
+tr.current_listing {
+  td {
+    background-color: lightgreen !important;
+  }
 }
-
 
 #new-quota.modal {
   width: 700px;
