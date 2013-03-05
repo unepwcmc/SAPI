@@ -27,13 +27,15 @@ class DownloadWorker
       @download.filename = document_module.download_name
       @download.path     = document_module.generate
 
-      @download.display_name = document_module.summarise_filters
+      @download.display_name = Checklist::Checklist.summarise_filters(params)
 
       @download.status = "completed"
 
       @download.save!
     rescue => msg
       puts "Failed: #{msg}"
+      puts "### Backtrace ###"
+      puts msg.backtrace
       @download.status = "failed"
       @download.save!
     end
