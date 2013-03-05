@@ -84,7 +84,7 @@ class Checklist::Checklist
   def json_options
     json_options = taxon_concepts_json_options
     json_options[:include] = {
-      :current_listing_changes => listing_changes_json_options
+      :current_additions => listing_changes_json_options
     }
     json_options
   end
@@ -106,7 +106,7 @@ class Checklist::Checklist
   def generate(page, per_page)
     @taxon_concepts_rel = @taxon_concepts_rel.
       includes(:current_listing_changes).
-      without_nc.without_hidden
+      without_non_accepted.without_hidden
     page ||= 0
     per_page ||= 20
     @total_cnt = @taxon_concepts_rel.count
@@ -139,8 +139,11 @@ class Checklist::Checklist
   #
   # @param [Hash] a hash of search params and their values
   # @return [String] a summary of the search params
-  def summarise_filters
+  def self.summarise_filters(params)
     summary = []
+
+    options = Checklist::ChecklistParams.sanitize(params)
+    options.keys.each { |k| instance_variable_set("@#{k}", options[k]) }
 
     # country
     @countries_count = 0
@@ -162,7 +165,7 @@ class Checklist::Checklist
     unless @cites_regions.empty?
       summary = ["Results from"]  if summary.length == 0
 
-      regions = GeoEntity.find_all_by_id(@params[:cites_region_ids])
+      regions = GeoEntity.find_all_by_id(params[:cites_region_ids])
 
       @regions_count = regions.count
       if @regions_count > 0

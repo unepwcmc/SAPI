@@ -17,7 +17,7 @@ class TaxonConceptsController < ApplicationController
 
   def autocomplete
     taxon_concepts = MTaxonConcept.by_cites_eu_taxonomy.
-      without_nc.
+      without_non_accepted.
       select("
         DISTINCT id, LENGTH(taxonomic_position),
         full_name, rank_name,

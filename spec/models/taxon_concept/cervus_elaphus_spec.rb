@@ -64,6 +64,15 @@ describe TaxonConcept do
         end
       end
 
+      describe :cites_show do
+        context "for subspecies Cervus elaphus hanglu" do
+          specify { @subspecies3.cites_show.should be_true }
+        end
+        context "for subspecies Cervus elaphus canadensis" do
+          specify { @subspecies4.cites_show.should be_false }
+        end
+      end
+
     end
   end
 end

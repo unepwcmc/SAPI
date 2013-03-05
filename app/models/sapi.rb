@@ -31,7 +31,11 @@ module Sapi
     self.disable_triggers
     procedures = REBUILD_PROCEDURES - (options[:except] || [])
     procedures &= options[:only] unless options[:only].nil?
-    procedures.each{ |p| ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()") }
+    procedures.each{ |p| 
+      puts "Starting procedure: #{p}"
+      ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()") 
+      puts "Ending procedure: #{p}"
+    }
     self.enable_triggers
   end
 
@@ -81,7 +85,6 @@ module Sapi
 
   def self.drop_indices
     indices = %w(
-      index_taxon_concepts_on_lft
       index_taxon_concepts_on_parent_id
       index_taxon_concepts_mview_on_parent_id
       index_taxon_concepts_mview_on_full_name
@@ -97,7 +100,6 @@ module Sapi
   end
 
   def self.create_indices
-    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_lft ON taxon_concepts USING btree (lft)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_parent_id ON taxon_concepts USING btree (parent_id)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_mview_on_parent_id ON taxon_concepts_mview USING btree (parent_id)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_mview_on_full_name ON taxon_concepts_mview USING btree (full_name)')
@@ -125,6 +127,7 @@ module Sapi
     Sapi.print_count_for "GeoEntities", GeoEntity.count
     Sapi.print_count_for "Countries", GeoEntity.joins(:geo_entity_type).where(:geo_entity_types => {:name => GeoEntityType::COUNTRY}).count
     Sapi.print_count_for "CITES Regions", GeoEntity.joins(:geo_entity_type).where(:geo_entity_types => {:name => GeoEntityType::CITES_REGION}).count
+    Sapi.print_count_for "References", Reference.count
     Sapi.print_count_for "CommonNames", CommonName.count
     Sapi.print_count_for "English CommonNames", CommonName.joins(:language).where(:languages => {:name_en => 'English'}).count
     Sapi.print_count_for "French CommonNames", CommonName.joins(:language).where(:languages => {:name_en => 'French'}).count
@@ -137,12 +140,14 @@ module Sapi
       plants_ids = TaxonConcept.where(:taxonomy_id => t.id, :name_status => 'A', :legacy_type => 'Plantae').select('id').map(&:id)
       puts ">>> Animalia general stats"
       Sapi.print_count_for "accepted", animals_ids.count
+      Sapi.print_count_for "non accepted nor synonyms", TaxonConcept.where(:taxonomy_id => t.id, :legacy_type => 'Animalia').where("name_status NOT IN ('A', 'S')").count
       Sapi.print_count_for "Listing Changes", ListingChange.where(:taxon_concept_id => animals_ids).count
       Sapi.print_count_for "Distributions", Distribution.where(:taxon_concept_id => animals_ids).count
       Sapi.print_count_for "TaxonCommons", TaxonCommon.where(:taxon_concept_id => animals_ids).count
       Sapi.print_count_for "Synonyms", TaxonConcept.where(:taxonomy_id => t.id, :name_status => 'S', :legacy_type => 'Animalia').count
       puts ">>> Plantae general stats"
       Sapi.print_count_for "Accepted", plants_ids.count
+      Sapi.print_count_for "non accepted nor synonyms", TaxonConcept.where(:taxonomy_id => t.id, :legacy_type => 'Plantae').where("name_status NOT IN ('A', 'S')").count
       Sapi.print_count_for "Listing Changes", ListingChange.where(:taxon_concept_id => plants_ids).count
       Sapi.print_count_for "Distributions", Distribution.where(:taxon_concept_id => plants_ids).count
       Sapi.print_count_for "TaxonCommons", TaxonCommon.where(:taxon_concept_id => plants_ids).count

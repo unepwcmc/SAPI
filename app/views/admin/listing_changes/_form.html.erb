@@ -15,13 +15,13 @@
       <tr>
         <td>
           <%= f.select :species_listing_id,
-            options_from_collection_for_select(@species_listings, :id, :name),
-            { :include_blank => true }
+            options_from_collection_for_select(@species_listings, :id, :name, @listing_change.species_listing_id),
+            { :include_blank => true, :selected => @listing_change.species_listing_id }
           %>
         </td>
         <td>
           <%= f.select :change_type_id,
-            options_from_collection_for_select(@change_types, :id, :print_name)
+            options_from_collection_for_select(@change_types, :id, :print_name, @listing_change.change_type_id)
           %>
         </td>
         <td>

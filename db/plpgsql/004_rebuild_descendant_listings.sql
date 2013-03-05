@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings() RETURNS void
                 THEN listing->'cites_listing_original'
                 ELSE NULL
               END
-            )
+            ) || hstore('closest_listed_ancestor_id', h.id::VARCHAR)
             AS inherited_listing
             FROM taxon_concepts h
             WHERE listing->'cites_status_original' = 't'
@@ -31,7 +31,8 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings() RETURNS void
               hi.listing->'cites_status_original' = 't'
             THEN
               hstore('cites_listing',hi.listing->'cites_listing_original') ||
-              slice(hi.listing, ARRAY['hash_ann_symbol', 'ann_symbol'])
+              slice(hi.listing, ARRAY['hash_ann_symbol', 'ann_symbol']) ||
+              hstore('closest_listed_ancestor_id', hi.id::VARCHAR)
             ELSE
               inherited_listing
             END
@@ -40,7 +41,9 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings() RETURNS void
             ON hi.parent_id = (q.h).id
           )
           UPDATE taxon_concepts
-          SET listing = listing || q.inherited_listing
+          SET
+          closest_listed_ancestor_id = (q.inherited_listing->'closest_listed_ancestor_id')::INTEGER,
+          listing = listing || q.inherited_listing - ARRAY['closest_listed_ancestor_id']
           FROM q
           WHERE taxon_concepts.id = q.id;
 
