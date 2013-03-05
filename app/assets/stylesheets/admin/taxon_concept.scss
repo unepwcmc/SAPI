@@ -11,6 +11,7 @@
     margin: 0;
   }
 }
+
 .new_listing_change table,
 .edit_listing_change table,
 table.listing-change {
@@ -29,6 +30,10 @@ textarea.annotation {
   height: 4em;
 }
 
+input.annotation, textarea.annotation {
+  width: 80%;
+}
+
 .new_listing_change,
 .edit_listing_change {
   p {
@@ -42,4 +47,27 @@ textarea.annotation {
       margin: 0;
     }
   }
+}
+
+tr.current_listing td{
+  background-color: lightgreen;
+}
+
+
+#new-quota.modal {
+  width: 700px;
+}
+
+ul.relationship_parts{
+  list-style-type: none;
+  overflow: hidden;
+}
+.relationship_parts li{
+  width: 225px;
+  float: left;
+  margin-right: 15px;
+}
+#new-taxon_relationship{ /* modal window */
+  width: 780px;
+  margin-left: -390px; /* half the width */
 }
