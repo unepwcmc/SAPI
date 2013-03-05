@@ -139,8 +139,11 @@ class Checklist::Checklist
   #
   # @param [Hash] a hash of search params and their values
   # @return [String] a summary of the search params
-  def summarise_filters
+  def self.summarise_filters(params)
     summary = []
+
+    options = Checklist::ChecklistParams.sanitize(params)
+    options.keys.each { |k| instance_variable_set("@#{k}", options[k]) }
 
     # country
     @countries_count = 0
@@ -162,7 +165,7 @@ class Checklist::Checklist
     unless @cites_regions.empty?
       summary = ["Results from"]  if summary.length == 0
 
-      regions = GeoEntity.find_all_by_id(@params[:cites_region_ids])
+      regions = GeoEntity.find_all_by_id(params[:cites_region_ids])
 
       @regions_count = regions.count
       if @regions_count > 0
