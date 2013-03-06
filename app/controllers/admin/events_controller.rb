@@ -12,7 +12,9 @@ class Admin::EventsController < Admin::SimpleCrudController
 
   protected
     def collection
-      @events ||= end_of_association_chain.order(:name).page(params[:page])
+      @events ||= end_of_association_chain.order(:name).
+        page(params[:page])
+      @events = @events.search(params[:query]) if params[:query]
     end
 end
 

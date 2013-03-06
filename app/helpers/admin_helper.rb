@@ -3,12 +3,15 @@ module AdminHelper
   def edit_icon
     '<i class="icon-pencil"></i>'.html_safe
   end
+
   def delete_icon
     '<i class="icon-trash"></i>'.html_safe
   end
+
   def true_false_icon(bool_value)
     bool_value ? '<i class="icon-ok"></i>'.html_safe : ''
   end
+
   def error_messages_for(resource)
     resource = instance_variable_get("@#{resource}") if resource.is_a? Symbol
     return '' unless resource && resource.errors.any?
@@ -107,6 +110,16 @@ module AdminHelper
       else
         render :partial => 'list', :locals => {:collection => collection}
       end
+    end
+  end
+
+  def admin_simple_search
+    content_tag(
+      :div, :id => "admin-simple-search",
+      :class => "simple-search",
+      :style => "clear: both"
+    ) do
+      render :partial => 'admin/simple_crud/simple_search'
     end
   end
 end
