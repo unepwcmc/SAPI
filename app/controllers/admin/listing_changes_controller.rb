@@ -1,5 +1,5 @@
 class Admin::ListingChangesController < Admin::SimpleCrudController
-  respond_to :js, :only => [:new, :edit, :create, :update]
+  respond_to :js, :only => [:create, :update]
   belongs_to :taxon_concept, :designation
   layout 'taxon_concepts'
 
@@ -12,9 +12,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   def new
     new! do
       load_change_types
-      @listing_change.build_party_listing_distribution
-      @listing_change.exclusions.build
-      @listing_change.build_annotation
+      build_dependants
     end
   end
 
@@ -27,8 +25,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       render 'index'
     else
       load_change_types
-      @listing_change.build_party_listing_distribution(params[:listing_change][:party_listing_distribution_attributes])
-      @listing_change.build_annotation(params[:listing_change][:annotation_attributes])
+      build_dependants
       render 'new'
     end
   end
@@ -36,16 +33,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   def edit
     edit! do |format|
       load_change_types
-      unless @listing_change.party_listing_distribution
-        @listing_change.build_party_listing_distribution
-      end
-      unless @listing_change.exclusions
-        @listing_change.exclusions.build
-      end
-      unless @listing_change.annotation
-        @listing_change.build_annotation
-      end
-      format.js { render 'new' }
+      build_dependants
     end
   end
 
@@ -56,6 +44,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       }
       failure.html {
         load_change_types
+        build_dependants
         render 'edit'
       }
     end
@@ -71,18 +60,36 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   end
 
   protected
+  def build_dependants
+    @listing_change.change_type_id ||= @change_types.first.id
+    unless @listing_change.party_listing_distribution
+      @listing_change.build_party_listing_distribution(
+        params[:listing_change] &&
+        params[:listing_change][:party_listing_distribution_attributes]
+      )
+    end
+    unless @listing_change.annotation
+      @listing_change.build_annotation(
+        params[:listing_change] &&
+        params[:listing_change][:annotation_attributes]
+      )
+    end
+    @listing_change.exclusions.build(
+      :change_type_id => @exception_change_type.id
+    )
+     @listing_change.exclusions.each{|e| puts e.change_type.inspect}
+  end
+
   def load_change_types
-    @change_types = ChangeType.order(:name).
-      where("name <> '#{ChangeType::EXCEPTION}'").
-      where(:designation_id => @designation.id)
-    @exception_change_type = ChangeType.
-      where(:designation_id => @designation.id).
+    @change_types = @designation.change_types.order(:name).
+      where("name <> '#{ChangeType::EXCEPTION}'")
+    @exception_change_type = @designation.change_types.
       find_by_name(ChangeType::EXCEPTION)
-    @species_listings = SpeciesListing.order(:abbreviation).
-      where(:designation_id => @designation.id)
+    @species_listings = @designation.species_listings.order(:abbreviation)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
     @hash_annotations = Annotation.for_cites_plants
+    @events = Event.with_effective_date
   end
 
   def load_listing_changes

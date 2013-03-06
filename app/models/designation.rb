@@ -27,6 +27,14 @@ class Designation < ActiveRecord::Base
   has_many :taxon_concepts#TODO
   has_many :listing_changes, :through => :change_types#TODO
 
+  def is_cites?
+    name == CITES
+  end
+
+  def is_eu?
+    name == EU
+  end
+
   def can_be_deleted?
     !has_protected_name? && !has_dependent_objects?
   end

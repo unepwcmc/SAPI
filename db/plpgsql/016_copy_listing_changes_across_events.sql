@@ -3,9 +3,11 @@ CREATE OR REPLACE FUNCTION copy_listing_changes_across_events(
   ) RETURNS void
   LANGUAGE plpgsql
   AS $$
+    DECLARE
+      to_event events%ROWTYPE;
     BEGIN
-    WITH to_event AS (SELECT * FROM events WHERE id = to_event_id),
-      copied_annotations AS (
+    SELECT INTO to_event * FROM events WHERE id = to_event_id;
+    WITH copied_annotations AS (
       -- copy regular annotations
       INSERT INTO annotations (
         symbol, parent_symbol,
@@ -47,18 +49,19 @@ CREATE OR REPLACE FUNCTION copy_listing_changes_across_events(
       -- copy listing_changes
       INSERT INTO listing_changes (
         change_type_id, species_listing_id, annotation_id, hash_annotation_id,
-        parent_id, event_id, effective_at, is_current, created_at, updated_at,
-        source_id
+        parent_id, taxon_concept_id, event_id, effective_at, is_current,
+        created_at, updated_at, source_id
       )
       SELECT source.change_type_id, source.species_listing_id,
         copied_annotations.id, copied_hash_annotations.id, source.parent_id,
-        to_event_id, to_event.effective_at, false, current_date, current_date,
-        source.id
-      FROM listing_changes source, to_event
+        source.taxon_concept_id, to_event.id, to_event.effective_at, false,
+        current_date, current_date, source.id
+      FROM listing_changes source
       LEFT JOIN copied_annotations
         ON source.annotation_id = copied_annotations.source_id
       LEFT JOIN copied_hash_annotations
         ON source.hash_annotation_id = copied_hash_annotations.source_id
+      WHERE source.event_id = from_event_id
       RETURNING id, source_id
     )
     INSERT INTO listing_distributions (
@@ -68,7 +71,7 @@ CREATE OR REPLACE FUNCTION copy_listing_changes_across_events(
       current_date, current_date
     FROM listing_distributions source
     INNER JOIN copied_listing_changes
-      ON copied_listing_changes.source_id = listing_distributions.listing_change_id;
+      ON copied_listing_changes.source_id = source.listing_change_id;
     END;
   $$;
 

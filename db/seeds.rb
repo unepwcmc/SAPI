@@ -68,13 +68,16 @@ taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
 puts "#{Taxonomy.count} taxonomies created"
 
 [Designation::CITES, Designation::EU].each do |designation|
-  Designation.create(:name => designation, :taxonomy_id => taxonomy.id)
+  d = Designation.create(:name => designation, :taxonomy_id => taxonomy.id)
+  ChangeType.dict.each do |change_type_name|
+    ChangeType.create(:name => change_type_name, :designation_id => d.id)
+  end
 end
-cites = Designation.find_by_name(Designation::CITES)
-puts "#{Designation.count} designations created"
 
-ChangeType.dict.each { |change_type_name| ChangeType.create(:name => change_type_name, :designation_id => cites.id) }
+puts "#{Designation.count} designations created"
 puts "#{ChangeType.count} change types created"
+
+cites = Designation.find_by_name(Designation::CITES)
 
 %w(I II III).each do |app_abbr|
   SpeciesListing.create(
@@ -83,6 +86,17 @@ puts "#{ChangeType.count} change types created"
     :designation_id => cites.id
   )
 end
+
+eu = Designation.find_by_name(Designation::EU)
+
+%w(A B C D).each do |app_abbr|
+  SpeciesListing.create(
+    :name => "Annex #{app_abbr}",
+    :abbreviation => app_abbr,
+    :designation_id => eu.id
+  )
+end
+
 puts "#{SpeciesListing.count} species listings created"
 
 higher_taxa = [

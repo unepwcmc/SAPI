@@ -32,8 +32,7 @@ class Admin::EventsController < Admin::SimpleCrudController
 
     def load_associations
       @designations = Designation.order(:name)
-      @events_with_effective_date = Event.where('effective_at IS NOT NULL').
-        order('name')
+      @events_with_effective_date = Event.with_effective_date
     end
 
 end

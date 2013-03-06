@@ -62,13 +62,13 @@ describe ListingChange do
             :taxon_concept => taxon_concept,
             :exclusions_attributes => {
               '0' => {
-                :exclusion_scientific_name => 'Abcd',
+                :scientific_name => 'Abcd',
                 :change_type_id => exception_type.id
               }
             }
           )
         }
-        #specify{ listing_change.should have(1).error_on(:exclusion_scientific_name)}
+        #specify{ listing_change.should have(1).error_on(:scientific_name)}
       end
       context "inclusion taxon concept is lower rank" do
         let(:rank1){ create(:rank, :taxonomic_position => '1')}

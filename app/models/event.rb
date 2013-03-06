@@ -6,6 +6,8 @@ class Event < ActiveRecord::Base
   has_many :listing_changes
   validates :name, :presence => true, :uniqueness => true
 
+  scope :with_effective_date, where('effective_at IS NOT NULL').order('name')
+
   def effective_at_formatted
     effective_at && effective_at.strftime("%d/%m/%y")
   end
