@@ -14,7 +14,7 @@
     <tbody>
     <% @taxon_concept.current_quotas.each do |quota| %>
 
-      <tr class="<%= if quota.is_current? then "current_listing" end %>">
+      <tr>
         <td><%= quota.quota %> <%= quota.unit.try(:code) %></td>
         <td><%= quota.year %></td>
         <td><%= quota.publication_date_formatted %></td>

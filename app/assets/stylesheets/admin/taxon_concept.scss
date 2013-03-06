@@ -30,6 +30,14 @@ textarea.annotation {
   height: 4em;
 }
 
+textarea {
+  &.quota,
+  &.suspension {
+    height: 5em;
+    width: 430px;
+  }
+}
+
 input.annotation, textarea.annotation {
   width: 80%;
 }
@@ -55,8 +63,11 @@ tr.current_listing {
   }
 }
 
-#new-quota.modal {
-  width: 700px;
+#new-quota,
+#new-suspension {
+  &.modal {
+    width: 700px;
+  }
 }
 
 ul.relationship_parts{

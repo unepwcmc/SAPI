@@ -1,13 +1,11 @@
-class Admin::QuotasController < Admin::SimpleCrudController
+class Admin::SuspensionsController < Admin::SimpleCrudController
   belongs_to :taxon_concept
   before_filter :load_lib_objects
-
-  layout 'taxon_concepts'
 
   def update
     update! do |success, failure|
       success.html {
-        redirect_to admin_taxon_concept_quotas_url(params[:taxon_concept_id]),
+        redirect_to admin_taxon_concept_suspensions_url(params[:taxon_concept_id]),
         :notice => 'Operation successful'
       }
       failure.html {
@@ -26,12 +24,14 @@ class Admin::QuotasController < Admin::SimpleCrudController
   def create
     create! do |success, failure|
       success.html {
-        redirect_to admin_taxon_concept_quotas_url(params[:taxon_concept_id]),
+        redirect_to admin_taxon_concept_suspensions_url(params[:taxon_concept_id]),
         :notice => 'Operation successful'
       }
       failure.html { render 'create' }
     end
   end
+
+  layout 'taxon_concepts'
 
   protected
 
@@ -45,7 +45,7 @@ class Admin::QuotasController < Admin::SimpleCrudController
   end
 
   def collection
-    @quotas ||= end_of_association_chain.order('start_date').
+    @suspensions ||= end_of_association_chain.order('start_date').
       page(params[:page])
   end
 end
