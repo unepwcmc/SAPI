@@ -17,7 +17,7 @@
           <%= f.select :event_id,
             options_from_collection_for_select(@events, :id, :name, @listing_change.event_id),
             { :include_blank => true, :selected => @listing_change.event_id },
-            { :disabled => true }
+            { :disabled => !@listing_change.new_record? }
           %>
         </td>
         <td>

@@ -3,11 +3,12 @@
   <th>Name</th>
   <th>Effective at</th>
   <th>URL</th>
+  <th>No of listing changes</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
   <% collection.each do |event| -%>
-    <tr>
+    <tr class="<%= if event.is_current? then "current_listing" end %>">
       <td>
         <a href="#" class="editable editable-click editable-required" data-type="select" data-resource="event" data-name="designation_id"
           data-placeholder="Required" data-original-title="Enter the change type's designation" data-source="/admin/designations/"
@@ -25,11 +26,27 @@
       </td>
       <td><%= event.effective_at_formatted %></td>
       <td>
-        <%= link_to_unless(event.url.blank?, '<i class="icon-share" title="Go to URL"></i>'.html_safe, event.url) { '' } %>
+        <%= link_to_unless(
+          event.url.blank?,
+          '<i class="icon-share" title="Go to URL"></i>'.html_safe,
+          event.url
+        ) { '' } %>
+      </td>
+      <td>
+        <%= event.listing_changes.count %>
       </td>
       <td>
         <%= link_to edit_icon, edit_resource_url(event), :remote => true %>
-        <%= link_to delete_icon, resource_url(event), :confirm => "Are you sure?", :method => :delete %>
+        <%= link_to delete_icon, resource_url(event),
+          :confirm => "Are you sure?", :method => :delete
+        %>
+        <%= link_to_if(
+          event.can_be_activated?,
+          '<i class="icon-cog" title="Activate"></i>'.html_safe,
+          activate_admin_event_url(event),
+          :confirm => 'Are you sure?', :method => :post, :remote => true
+        ) { '' }
+        %>
       </td>
     </tr>
   <% end -%>

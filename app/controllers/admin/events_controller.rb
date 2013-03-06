@@ -1,5 +1,5 @@
 class Admin::EventsController < Admin::SimpleCrudController
-  respond_to :js, :only => [:new, :edit, :create, :update]
+  respond_to :js, :only => [:new, :edit, :create, :update, :activate]
   respond_to :json, :only => [:index, :update]
 
   def index
@@ -23,6 +23,12 @@ class Admin::EventsController < Admin::SimpleCrudController
       load_associations
       format.js { render 'new' }
     end
+  end
+
+  def activate
+    @event = Event.find(params[:id])
+    @event.activate!
+    render 'create'
   end
 
   protected
