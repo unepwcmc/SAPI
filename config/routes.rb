@@ -1,4 +1,6 @@
 SAPI::Application.routes.draw do
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
   namespace :api do
     resources :terms, :only => [:index]
     resources :sources, :only => [:index]
@@ -26,7 +28,9 @@ SAPI::Application.routes.draw do
     resources :change_types, :only => [:index, :create, :update, :destroy]
     resources :ranks, :only => [:index, :create, :update, :destroy]
     resources :tags, :only => [:index, :create, :update, :destroy]
-    resources :events
+    resources :events do
+      post :activate, :on => :member
+    end
     resources :references, :only => [:index, :create, :update, :destroy]
     resources :geo_entities, :only => [:index, :create, :update, :destroy] do
       get :autocomplete, :on => :collection
