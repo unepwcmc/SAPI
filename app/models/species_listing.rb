@@ -21,6 +21,18 @@ class SpeciesListing < ActiveRecord::Base
 
   before_destroy :check_destroy_allowed
 
+  def self.search query
+    if query
+      where("UPPER(species_listings.name) LIKE UPPER(?) 
+            OR UPPER(species_listings.abbreviation) LIKE UPPER(?)
+            OR UPPER(designations.name) LIKE UPPER(?)", 
+            "%#{query}%", "%#{query}%", "%#{query}%").
+        joins(:designation)
+    else
+      scoped
+    end
+  end
+
   private
 
   def check_destroy_allowed

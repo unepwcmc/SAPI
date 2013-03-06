@@ -13,8 +13,9 @@ class Admin::SpeciesListingsController < Admin::SimpleCrudController
   protected
     def collection
       @species_listings ||= end_of_association_chain.includes(:designation).
-        order('designation_id, name').
-        page(params[:page])
+        order('designation_id, species_listings.name').
+        page(params[:page]).
+        search(params[:query])
     end
 end
 
