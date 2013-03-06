@@ -18,4 +18,52 @@ describe Event do
       specify { event2.should have(1).error_on(:name) }
     end
   end
+  describe :can_be_activated? do
+    let(:event){
+      create(
+        :event,
+        :designation => Designation.find_or_create_by_name('EU'),
+        :is_current => false,
+        :effective_at => '2012-05-01'
+      )
+    }
+    context "when non-eu" do
+      let(:event){
+        create(:event, :designation => create(:designation, :name => 'ZONK'))
+      }
+      specify{ event.can_be_activated?.should be_false }
+    end
+    context "when no other events" do
+      specify{ event.can_be_activated?.should be_true }
+    end
+    context "when current event is later" do
+      let!(:other_event){
+        create(
+          :event, :designation => Designation.find_or_create_by_name('EU'),
+          :is_current => true, :effective_at => '2012-05-10'
+        )
+      }
+      specify{ event.can_be_activated?.should be_false }
+    end
+    context "when current event is earlier" do
+      let!(:other_event){
+        create(
+          :event, :designation => Designation.find_or_create_by_name('EU'),
+          :is_current => true, :effective_at => '2012-04-10'
+        )
+      }
+      specify{ event.can_be_activated?.should be_true }
+    end
+  end
+  describe :destroy do
+    context "when no dependent objects attached" do
+      let(:event){ create(:event, :name => 'REGULATION 1.0') }
+      specify { event.destroy.should be_true }
+    end
+    context "when dependent objects attached" do
+      let(:event){ create(:event, :name => 'REGULATION 1.0') }
+      let!(:listing_change){ create(:cites_I_addition, :event_id => event.id)}
+      specify { event.destroy.should be_false }
+    end
+  end
 end

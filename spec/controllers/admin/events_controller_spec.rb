@@ -48,6 +48,13 @@ describe Admin::EventsController do
     end
   end
 
+  describe "XHR POST activate" do
+    it "renders create when successful" do
+      xhr :post, :activate, event: FactoryGirl.attributes_for(:event)
+      response.should render_template("create")
+    end
+  end
+
   describe "XHR GET edit" do
     let(:event){ create(:event) }
     it "renders the edit template" do

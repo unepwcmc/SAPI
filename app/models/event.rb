@@ -15,7 +15,6 @@ class Event < ActiveRecord::Base
   def can_be_activated?
     current_event = designation && designation.events.
       where(:is_current => true).order('effective_at DESC').first
-      puts current_event.inspect
     designation.is_eu? && !is_current && (
       current_event && current_event.effective_at < effective_at ||
       current_event.nil?
