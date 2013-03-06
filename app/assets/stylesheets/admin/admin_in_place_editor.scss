@@ -45,6 +45,13 @@ ul.dropdown-menu {
   }
 }
 
+.modal-body {
+  textarea {
+    width: 400px;
+    height: 100px;
+  }
+}
+
 input.annotation, textarea.annotation {
   width: 80%;
 }
