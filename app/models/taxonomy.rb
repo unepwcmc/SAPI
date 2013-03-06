@@ -24,6 +24,14 @@ class Taxonomy < ActiveRecord::Base
 
   before_destroy :check_destroy_allowed
 
+  def self.search query
+    if query
+      where("UPPER(name) LIKE UPPER(?)", "%#{query}%")
+    else
+      scoped
+    end
+  end
+
   private
 
   def check_destroy_allowed

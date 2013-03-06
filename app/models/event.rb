@@ -3,6 +3,10 @@ class Event < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => true
 
   def self.search query
-    where("UPPER(name) LIKE UPPER(?)", "%#{query}%")
+    if query
+      where("UPPER(name) LIKE UPPER(?)", "%#{query}%")
+    else
+      scoped
+    end
   end
 end

@@ -29,6 +29,14 @@ class Designation < ActiveRecord::Base
 
   before_destroy :check_destroy_allowed
 
+  def self.search query
+    if query
+      where("UPPER(name) LIKE UPPER(?)", "%#{query}%")
+    else
+      scoped
+    end
+  end
+
   private
 
   def taxonomy_cannot_be_changed_if_dependent_objects_present
