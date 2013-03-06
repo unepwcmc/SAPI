@@ -22,5 +22,5 @@
 #
 
 class Suspension < TradeRestriction
-
+  belongs_to :taxon_concept
 end

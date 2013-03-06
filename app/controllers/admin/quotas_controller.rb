@@ -20,6 +20,12 @@ class Admin::QuotasController < Admin::SimpleCrudController
         load_tags_and_geo_entities
         render 'new'
       }
+
+      success.js { render 'create' }
+      failure.js {
+        load_tags_and_geo_entities
+        render 'new'
+      }
     end
   end
 

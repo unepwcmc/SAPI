@@ -46,4 +46,8 @@ class TradeRestriction < ActiveRecord::Base
   def end_date_formatted
     end_date ? end_date.strftime('%d/%m/%Y') : ''
   end
+
+  def year
+    start_date ? start_date.strftime('%Y') : ''
+  end
 end

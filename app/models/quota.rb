@@ -22,10 +22,5 @@
 #
 
 class Quota < TradeRestriction
-
   belongs_to :taxon_concept
-
-  def year
-    start_date ? start_date.strftime('%Y') : ''
-  end
 end
