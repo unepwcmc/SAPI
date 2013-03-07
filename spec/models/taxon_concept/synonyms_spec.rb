@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe TaxonConcept do
+  include_context :designations
+  include_context :ranks
   describe :create do
     let(:parent){
       create(

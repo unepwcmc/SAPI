@@ -1,9 +1,10 @@
 require 'spec_helper'
 
 describe TaxonConcept do
+  include_context :designations
+  include_context :ranks
   context "create" do
-    let(:cites_eu){ Taxonomy.find_by_name(Taxonomy::CITES_EU)}
-    let(:cms){ Taxonomy.find_by_name(Taxonomy::CMS)}
+    
     let(:kingdom){ Rank.find_by_name('KINGDOM') }
     let(:phylum){ Rank.find_by_name('PHYLUM') }
     let(:klass){ Rank.find_by_name('CLASS') }

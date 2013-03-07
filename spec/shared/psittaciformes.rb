@@ -1,6 +1,9 @@
 shared_context "Psittaciformes" do
   before(:all) do
-    @klass = TaxonConcept.find_by_taxon_name_id(TaxonName.find_by_scientific_name('Aves').id)
+    @klass = create(
+      :class,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Aves')
+    )
     @order = create(
       :order,
       :taxon_name => create(:taxon_name, :scientific_name => 'Psittaciformes'),

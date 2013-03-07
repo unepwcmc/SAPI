@@ -1,6 +1,9 @@
 shared_context "Hirudo medicinalis" do
   before(:all) do
-    @klass = TaxonConcept.find_by_taxon_name_id(TaxonName.find_by_scientific_name('Hirudinoidea').id)
+    @klass = create(
+      :class,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Hirudinoidea')
+    )
     @order = create(
       :order,
       :taxon_name => create(:taxon_name, :scientific_name => 'Arhynchobdellida'),

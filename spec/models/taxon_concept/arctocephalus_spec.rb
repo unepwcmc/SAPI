@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe TaxonConcept do
   context "Arctocephalus" do
+    include_context :designations
+    include_context :ranks
     include_context "Arctocephalus"
 
     context "LISTING" do

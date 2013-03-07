@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe TaxonConcept do
   context "Ailuropoda" do
+    include_context :designations
+    include_context :ranks
     include_context "Ailuropoda"
 
     context "LISTING" do

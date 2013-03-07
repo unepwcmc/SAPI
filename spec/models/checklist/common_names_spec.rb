@@ -2,6 +2,8 @@
 require 'spec_helper'
 
 describe Checklist do
+  include_context :designations
+  include_context :ranks
   include_context "Arctocephalus"
 
   context "when common names displayed" do

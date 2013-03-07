@@ -1,16 +1,14 @@
 require 'spec_helper'
 
 describe TaxonConcept do
+  include_context :designations
+  include_context :ranks
   context "before validate" do
-    let(:cites_eu){ Taxonomy.find_by_name(Taxonomy::CITES_EU) }
-    let(:kingdom){ Rank.find_by_name('KINGDOM') }
-    let(:phylum){ Rank.find_by_name('PHYLUM') }
-
     let(:kingdom_tc){
       create(
         :taxon_concept,
         :taxonomy_id => cites_eu.id,
-        :rank_id => kingdom.id,
+        :rank_id => @kingdom.id,
         :taxonomic_position => '1'
       )
     }
@@ -20,7 +18,7 @@ describe TaxonConcept do
         create(
           :taxon_concept,
           :taxonomy_id => cites_eu.id,
-          :rank_id => phylum.id,
+          :rank_id => @phylum.id,
           :parent_id => kingdom_tc.id,
           :taxonomic_position => nil
         )
@@ -32,7 +30,7 @@ describe TaxonConcept do
         create(
           :taxon_concept,
           :taxonomy_id => cites_eu.id,
-          :rank_id => phylum.id,
+          :rank_id => @phylum.id,
           :parent_id => kingdom_tc.id,
           :taxonomic_position => '1.2'
         )
@@ -44,7 +42,7 @@ describe TaxonConcept do
         create(
           :taxon_concept,
           :taxonomy_id => cites_eu.id,
-          :rank_id => kingdom.id,
+          :rank_id => @kingdom.id,
           :taxonomic_position => nil
         )
       }

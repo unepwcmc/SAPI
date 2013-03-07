@@ -3,6 +3,8 @@ require 'spec_helper'
 
 describe TaxonConcept do
   context "Varanidae" do
+    include_context :designations
+    include_context :ranks
     include_context "Varanidae"
 
     context "REFERENCES" do

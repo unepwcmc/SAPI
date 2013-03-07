@@ -2,6 +2,8 @@
 require 'spec_helper'
 
 describe Checklist do
+  include_context :designations
+  include_context :ranks
   include_context "Panax ginseng"
   include_context "Caiman latirostris"
   describe "ann_symbol" do

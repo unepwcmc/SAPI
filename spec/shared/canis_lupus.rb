@@ -32,7 +32,10 @@ shared_context "Canis lupus" do
     )}
 
   before(:all) do
-    @klass = TaxonConcept.find_by_taxon_name_id(TaxonName.find_by_scientific_name('Mammalia').id)
+    @klass = create(
+      :class,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Mammalia')
+    )
     @order = create(
       :order,
       :taxon_name => create(:taxon_name, :scientific_name => 'Carnivora'),

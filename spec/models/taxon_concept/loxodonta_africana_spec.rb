@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe TaxonConcept do
   context "Loxodonta africana" do
+    include_context :designations
+    include_context :ranks
     include_context "Loxodonta africana"
     context "TAXONOMY" do
       describe :full_name do

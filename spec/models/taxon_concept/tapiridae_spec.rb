@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe TaxonConcept do
+  include_context :designations
+  include_context :ranks
   context "Tapiridae" do
     include_context "Tapiridae"
     context "TAXONOMY" do
