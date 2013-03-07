@@ -1,16 +1,6 @@
 class Admin::EventsController < Admin::SimpleCrudController
-  respond_to :js, :only => [:new, :edit, :create, :update, :activate]
-  respond_to :json, :only => [:index, :update]
-
-  def index
-    load_associations
-    index! do |format|
-      format.json {
-        render :json => end_of_association_chain.order(:name).
-          select([:id, :name]).map{ |d| {:value => d.id, :text => d.name} }
-      }
-    end
-  end
+  respond_to :js, :except => [:index, :destroy]
+  respond_to :json, :only => [:update]
 
   def new
     new! do
@@ -25,20 +15,14 @@ class Admin::EventsController < Admin::SimpleCrudController
     end
   end
 
-  def activate
-    @event = Event.find(params[:id])
-    @event.activate!
-    render 'create'
-  end
-
   protected
     def collection
-      @events ||= end_of_association_chain.order(:designation_id, :name).page(params[:page])
+      @events ||= end_of_association_chain.order(:designation_id, :name).
+        where("type != 'EuRegulation'").page(params[:page])
     end
 
     def load_associations
       @designations = Designation.order(:name)
-      @events_with_effective_date = Event.with_effective_date
     end
 
 end

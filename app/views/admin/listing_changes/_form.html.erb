@@ -6,7 +6,9 @@
   <table class="listing-change">
     <thead>
       <tr>
-        <th><%= f.label :event_id %></th>
+        <th>
+          <% if @designation.is_eu? %><%= f.label :event_id %><% end %>
+        </th>
         <th><%= f.label :species_listing_id %></th>
         <th><%= f.label :change_type_id %></th>
       </tr>
@@ -14,11 +16,13 @@
     <tbody>
       <tr>
         <td>
+          <% if @designation.is_eu? %>
           <%= f.select :event_id,
-            options_from_collection_for_select(@events, :id, :name, @listing_change.event_id),
+            options_from_collection_for_select(@eu_regulations, :id, :name, @listing_change.event_id),
             { :include_blank => true, :selected => @listing_change.event_id },
             { :disabled => !@listing_change.new_record? }
           %>
+          <% end %>
         </td>
         <td>
           <%= f.select :species_listing_id,

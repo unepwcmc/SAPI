@@ -17,13 +17,6 @@ describe Admin::EventsController do
         response.should render_template("index")
       end
     end
-    describe "XHR GET index JSON" do
-      it "renders json for dropdown" do
-        xhr :get, :index, :format => 'json'
-        response.body.should have_json_size(2)
-        parse_json(response.body, "0/text").should == 'AA'
-      end
-    end
   end
 
   describe "XHR GET new" do
@@ -45,14 +38,6 @@ describe Admin::EventsController do
     it "renders new when not successful" do
       xhr :post, :create, event: { :name => nil }
       response.should render_template("new")
-    end
-  end
-
-  describe "XHR POST activate" do
-    let(:event){ create(:event) }
-    it "renders create when successful" do
-      xhr :post, :activate, :format => 'js', :id => event.id
-      response.should render_template("create")
     end
   end
 

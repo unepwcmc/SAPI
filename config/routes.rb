@@ -28,7 +28,8 @@ SAPI::Application.routes.draw do
     resources :change_types, :only => [:index, :create, :update, :destroy]
     resources :ranks, :only => [:index, :create, :update, :destroy]
     resources :tags, :only => [:index, :create, :update, :destroy]
-    resources :events do
+    resources :events
+    resources :eu_regulations do
       post :activate, :on => :member
     end
     resources :references, :only => [:index, :create, :update, :destroy]

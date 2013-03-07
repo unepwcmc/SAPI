@@ -14,6 +14,10 @@ FactoryGirl.define do
     sequence(:name) {|n| "CoP#{n}"}
     effective_at '2012-01-01'
     designation
+
+    factory :eu_regulation, :class => EuRegulation do
+      designation Designation.find_by_name('EU')
+    end
   end
 
   factory :taxon_name do

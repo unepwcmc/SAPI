@@ -4,13 +4,10 @@ class EventActivationWorker
     Event.transaction do
       ActiveRecord::Base.connection.execute <<-SQL
         WITH non_current_events AS (
-          WITH designation AS (
-            SELECT DISTINCT designation_id AS id
-            FROM events WHERE id = #{event_id}
-          )
           UPDATE events SET is_current = FALSE
-          FROM designation
-          WHERE designation.id = events.designation_id
+          WHERE designation_id IN (
+            SELECT designation_id FROM events WHERE id = #{event_id}
+          ) AND id != #{event_id}
           RETURNING id
         )
         UPDATE listing_changes
