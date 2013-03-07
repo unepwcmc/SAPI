@@ -4,7 +4,7 @@ describe Admin::EventsController do
   describe "index" do
     before(:each) do
       @event1 = create(:event, :name => 'BB')
-      @event2 = create(:event, :name => 'AA')
+      @event2 = create(:event, :name => 'AA', :designation_id => @event1.designation_id)
     end
 
     describe "GET index" do
@@ -49,8 +49,9 @@ describe Admin::EventsController do
   end
 
   describe "XHR POST activate" do
+    let(:event){ create(:event) }
     it "renders create when successful" do
-      xhr :post, :activate, event: FactoryGirl.attributes_for(:event)
+      xhr :post, :activate, :format => 'js', :id => event.id
       response.should render_template("create")
     end
   end
