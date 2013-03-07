@@ -17,6 +17,14 @@ describe Event do
       specify { event2.should be_invalid }
       specify { event2.should have(1).error_on(:name) }
     end
+    context "when event to copy from given" do
+      let(:event1){ create(:event) }
+      before do
+        EventListingChangesCopyWorker.jobs.clear
+        create(:event, :listing_changes_event_id => event1.id)
+      end
+      specify{ EventListingChangesCopyWorker.jobs.size.should == 1 }
+    end
   end
   describe :can_be_activated? do
     let(:event){
@@ -55,15 +63,41 @@ describe Event do
       specify{ event.can_be_activated?.should be_true }
     end
   end
+  describe :activate do
+    let(:prev_event){ create(:event, :name => 'REGULATION 1.0', :is_current => true) }
+    let(:event){ create(:event, :name => 'REGULATION 2.0') }
+    before do
+      EventActivationWorker.jobs.clear
+      event.activate!
+    end
+    specify{ event.is_current.should be_true }
+    specify{ EventActivationWorker.jobs.size.should == 1 }
+  end
   describe :destroy do
     context "when no dependent objects attached" do
-      let(:event){ create(:event, :name => 'REGULATION 1.0') }
+      let(:event){
+        create(
+          :event,
+          :name => 'REGULATION 1.0',
+          :designation => Designation.find_or_create_by_name('EU')
+        )
+      }
       specify { event.destroy.should be_true }
     end
     context "when dependent objects attached" do
-      let(:event){ create(:event, :name => 'REGULATION 1.0') }
-      let!(:listing_change){ create(:cites_I_addition, :event_id => event.id)}
+      let(:event){
+        create(
+          :event,
+          :name => 'REGULATION 1.0',
+          :designation => Designation.find_or_create_by_name('EU')
+        )
+      }
+      let!(:listing_change){ create(:eu_A_addition, :event_id => event.id)}
       specify { event.destroy.should be_false }
     end
+  end
+  describe :effective_at_formatted do
+    let(:event){ create(:event, :effective_at => '2012-05-10') }
+    specify {event.effective_at_formatted.should == '10/05/2012' }
   end
 end

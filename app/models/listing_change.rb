@@ -43,7 +43,8 @@ class ListingChange < ActiveRecord::Base
   validates :change_type_id, :presence => true
   validates :effective_at, :presence => true
   validate :inclusion_at_higher_rank
-  validate :designation_mismatch
+  validate :species_listing_designation_mismatch
+  validate :event_designation_mismatch
   validate :taxon_concept_or_geo_entities_present, :if => :is_exclusion?
   validates_associated :exclusions
   before_validation :check_inclusion_taxon_concept_exists
@@ -107,10 +108,18 @@ class ListingChange < ActiveRecord::Base
     end
   end
 
-  def designation_mismatch
+  def species_listing_designation_mismatch
     return true unless species_listing
     unless species_listing.designation_id == change_type.designation_id
       errors.add(:species_listing_id, "designation mismatch between change type and species listing")
+      return false
+    end
+  end
+
+  def event_designation_mismatch
+    return true unless event
+    unless event.designation_id == change_type.designation_id
+      errors.add(:event_id, "designation mismatch between change type and event")
       return false
     end
   end

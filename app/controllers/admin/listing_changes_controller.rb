@@ -77,7 +77,6 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
     @listing_change.exclusions.build(
       :change_type_id => @exception_change_type.id
     )
-     @listing_change.exclusions.each{|e| puts e.change_type.inspect}
   end
 
   def load_change_types

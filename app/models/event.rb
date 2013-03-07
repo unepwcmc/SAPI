@@ -9,7 +9,7 @@ class Event < ActiveRecord::Base
   scope :with_effective_date, where('effective_at IS NOT NULL').order('name')
 
   def effective_at_formatted
-    effective_at && effective_at.strftime("%d/%m/%y")
+    effective_at && effective_at.strftime("%d/%m/%Y")
   end
 
   def can_be_activated?
