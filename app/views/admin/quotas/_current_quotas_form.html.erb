@@ -5,9 +5,7 @@
       <th>Year</th>
       <th>Published at</th>
       <th>Party</th>
-      <th>Term</th>
-      <th>Source</th>
-      <th>Purpose</th>
+      <th>Notes</th>
       <th>Current</th>
     </thead>
 
@@ -19,9 +17,7 @@
         <td><%= quota.year %></td>
         <td><%= quota.publication_date_formatted %></td>
         <td><%= quota.geo_entity && quota.geo_entity.iso_code2 %></td>
-        <td><%= quota.term && quota.term.code %></td>
-        <td><%= quota.source && quota.source.code %></td>
-        <td><%= quota.purpose && quota.purpose.code %></td>
+        <td><%= quota.notes %></td>
         <td>
           <%= form_for [:admin, @taxon_concept, quota], :remote => true do |f| %>
             <%= f.check_box :is_current %>

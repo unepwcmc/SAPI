@@ -44,9 +44,49 @@
   </div>
 
   <div class="control-group">
-    <label class="control-label">Suspension Basis &amp; Notes</label>
+    <label class="control-label">Suspension Basis</label>
+    <div class="controls">
+      <%= f.text_area :suspension_basis, :class => 'suspension' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Notes</label>
     <div class="controls">
       <%= f.text_area :notes, :class => 'suspension' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :term_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :term_id,
+        options_from_collection_for_select(@terms, :id, :code),
+        { :include_blank => true },
+        {:class => 'suspension select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :source_id, :class => 'control-label'  %>
+    <div class="controls">
+      <%= f.select :source_id,
+        options_from_collection_for_select(@sources, :id, :code),
+        { :include_blank => true },
+        {:class => 'suspension select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :purpose_id, :class => 'control-label' %>
+    <div class="controls">
+          <%= f.select :purpose_id,
+            options_from_collection_for_select(@purposes, :id, :code),
+            { :include_blank => true },
+            {:class => 'suspension select2', :style => 'width: 220px' }
+          %>
     </div>
   </div>
 

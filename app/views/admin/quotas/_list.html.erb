@@ -6,7 +6,6 @@
   <th>Party</th>
   <th>Term</th>
   <th>Source</th>
-  <th>Purpose</th>
   <th>Notes</th>
   <th>Actions</th>
 </thead>
@@ -20,7 +19,6 @@
       <td><%= quota.geo_entity && quota.geo_entity.iso_code2 %></td>
       <td><%= quota.term && quota.term.code %></td>
       <td><%= quota.source && quota.source.code %></td>
-      <td><%= quota.purpose && quota.purpose.code %></td>
       <td><%= quota.notes %></td>
       <td>
         <%= link_to edit_icon,

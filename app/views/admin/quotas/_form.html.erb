@@ -84,17 +84,6 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :purpose_id, :class => 'control-label' %>
-    <div class="controls">
-          <%= f.select :purpose_id,
-            options_from_collection_for_select(@purposes, :id, :code),
-            { :include_blank => true },
-            {:class => 'quota select2', :style => 'width: 220px' }
-          %>
-    </div>
-  </div>
-
-  <div class="control-group">
     <%= f.label :is_current, "Is current?", :class => 'control-label'%>
     <div class="controls">
       <%= f.check_box :is_current %><br>
