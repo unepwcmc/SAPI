@@ -25,7 +25,7 @@ class Quota < TradeRestriction
   belongs_to :taxon_concept
 
   validates :quota, :presence => true
-  validates :unit, :presence => true
-
   validates :quota, :numericality => { :only_integer => true, :greater_than => 0 }
+
+  validates :unit, :presence => true
 end
