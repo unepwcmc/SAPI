@@ -25,9 +25,12 @@ class Annotation < ActiveRecord::Base
   belongs_to :listing_change
   belongs_to :event
   translates :short_note, :full_note
+
   scope :for_cites_plants, joins(:event).where("events.type = 'CitesCop'").
     order([:parent_symbol, :symbol])
+
   def full_symbol
     "#{parent_symbol}#{symbol}"
   end
+
 end
