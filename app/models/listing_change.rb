@@ -62,6 +62,10 @@ class ListingChange < ActiveRecord::Base
       attributes['short_note_en'].blank?
     }
 
+  scope :by_designation, lambda { |designation_id|
+    joins(:change_type).where(:"change_types.designation_id" => designation_id)
+  }
+
   def effective_at_formatted
     effective_at ? effective_at.strftime('%d/%m/%Y') : ''
   end
