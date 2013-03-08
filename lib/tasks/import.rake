@@ -43,6 +43,10 @@ namespace :import do
      'lib/assets/files/cleaned/plants/plantae_standard_refs_utf8.csv'
    )
 
+    Rake::Task["import:laws"].invoke(
+      'lib/assets/files/laws.csv'
+    )
+
     Rake::Task["import:trade_codes"].invoke
 
     Sapi::rebuild()

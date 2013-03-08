@@ -75,7 +75,7 @@ shared_context "Falconiformes" do
      :is_current => true
     )
     create(
-     :cites_II_addition_exception,
+     :cites_II_exception,
      :taxon_concept => @family1,
      :effective_at => '1979-06-28',
      :parent_id => l1.id

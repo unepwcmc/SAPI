@@ -1,10 +1,10 @@
 #encoding: utf-8
 module AdminHelper
   def edit_icon
-    '<i class="icon-pencil"></i>'.html_safe
+    '<i class="icon-pencil" title="Edit"></i>'.html_safe
   end
   def delete_icon
-    '<i class="icon-trash"></i>'.html_safe
+    '<i class="icon-trash" title="Delete"></i>'.html_safe
   end
   def true_false_icon(bool_value)
     bool_value ? '<i class="icon-ok"></i>'.html_safe : ''

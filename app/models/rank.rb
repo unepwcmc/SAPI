@@ -21,23 +21,12 @@ class Rank < ActiveRecord::Base
   validates :taxonomic_position, :presence => true,
     :format => { :with => /\d(\.\d*)*/, :message => "Use prefix notation, e.g. 1.2" }
 
-  before_destroy :check_destroy_allowed
-
   def parent_rank_lower_bound
     parts = taxonomic_position.split('.')
     if parts.length > 1
       parts.slice(0, parts.length - 1).join('.')
     else
       (parts.first.to_i - 1).to_s
-    end
-  end
-
-  private
-
-  def check_destroy_allowed
-    unless can_be_deleted?
-      errors.add(:base, "not allowed")
-      return false
     end
   end
 

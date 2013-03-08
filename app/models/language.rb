@@ -19,17 +19,6 @@ class Language < ActiveRecord::Base
 
   validates :iso_code1, :presence => true, :uniqueness => true, :length => {:is => 2}
 
-  before_destroy :check_destroy_allowed
-
-  private
-
-  def check_destroy_allowed
-    unless can_be_deleted?
-      errors.add(:base, "not allowed")
-      return false
-    end
-  end
-
   def can_be_deleted?
     common_names.count == 0
   end

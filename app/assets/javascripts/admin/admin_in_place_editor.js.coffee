@@ -12,6 +12,11 @@ class AdminEditor
   init: () ->
     @initModals()
 
+  initForm: () ->
+    $(".datepicker").datepicker
+      format: "dd/mm/yyyy",
+      autoclose: true
+
   initModals: () ->
     $('.modal .modal-footer .save-button').click () ->
       $(@).closest('.modal').find('form').submit()
@@ -131,21 +136,16 @@ class TaxonConceptsEditor extends AdminEditor
 class ListingChangesEditor extends AdminEditor
   init: () ->
     @initEditors()
-    @initModals()
+    @initForm()
 
   initEditors: () ->
     $("[rel='tooltip']").tooltip()
 
-  initModals: () ->
-    super
-    @initForm()
-
   initForm: () ->
+    super
     @initTaxonConceptTypeaheads()
     @initDistributionSelectors()
-    $(".datepicker").datepicker
-      format: "dd/mm/yyyy",
-      autoclose: true
+    @initEventSelector()
     # handle initializing stuff for nested form add events
     $(document).on('nested:fieldAdded', (event) =>
       event.field.find('.distribution').select2({
@@ -183,3 +183,9 @@ class ListingChangesEditor extends AdminEditor
     $('.distribution:not(#exclusions_fields_blueprint > .fields > select)').select2({
       placeholder: 'Select countries'
     })
+
+  initEventSelector: () ->
+    if $('#cites_cop').length > 0
+      $('#listing_change_hash_annotation_id').chained('#cites_cop')
+    else
+      $('#listing_change_hash_annotation_id').chained('#listing_change_event_id')

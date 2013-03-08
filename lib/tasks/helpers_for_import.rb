@@ -104,6 +104,12 @@ class CsvToDbMap
       'Excludes' => 'exclusions varchar',
       'Cascade' => 'cascade boolean',
       'Designation' => 'designation varchar'
+    },
+    'laws_import' => {
+      'LnmShortDesc' => 'name varchar',
+      'Date valid' => 'effective_at date',
+      'LnmLongDesc' => 'description text',
+      'LnmURL' => 'url text'
     }
   }
 
