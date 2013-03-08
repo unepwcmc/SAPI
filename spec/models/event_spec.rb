@@ -17,6 +17,11 @@ describe Event do
       specify { event2.should be_invalid }
       specify { event2.should have(1).error_on(:name) }
     end
+    context "when url invalid" do
+      let(:event){ build(:event, :url => 'www.google.com') }
+      specify { event.should be_invalid}
+      specify { event.should have(1).error_on(:url) }
+    end
   end
   describe :destroy do
     context "when no dependent objects attached" do

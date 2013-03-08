@@ -3,6 +3,7 @@ class Event < ActiveRecord::Base
   belongs_to :designation
   has_many :listing_changes
   validates :name, :presence => true, :uniqueness => true
+  validates :url, :format => URI::regexp(%w(http https)), :allow_nil => true
 
   def effective_at_formatted
     effective_at && effective_at.strftime("%d/%m/%Y")
