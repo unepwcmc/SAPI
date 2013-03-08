@@ -88,8 +88,11 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
     @hash_annotations = Annotation.for_cites_plants
-    if @designation.is_eu?
-      @eu_regulations = EuRegulation.order(:effective_at)
+    @cites_cops = CitesCop.order(:effective_at)
+    @events = if @designation.is_eu?
+      EuRegulation.order(:effective_at)
+    elsif @designation.is_cites?
+      @cites_cops
     end
   end
 

@@ -17,5 +17,6 @@
 //= require bootstrap-datepicker
 //= require select2
 //= require jquery_nested_form
+//= require jquery.chained
 //= require underscore
 //= require_tree .

@@ -7,7 +7,7 @@
     <thead>
       <tr>
         <th>
-          <% if @designation.is_eu? %><%= f.label :event_id %><% end %>
+          <%= f.label :event_id %>
         </th>
         <th><%= f.label :species_listing_id %></th>
         <th><%= f.label :change_type_id %></th>
@@ -16,13 +16,11 @@
     <tbody>
       <tr>
         <td>
-          <% if @designation.is_eu? %>
           <%= f.select :event_id,
-            options_from_collection_for_select(@eu_regulations, :id, :name, @listing_change.event_id),
-            { :include_blank => true, :selected => @listing_change.event_id },
+            options_from_collection_for_select(@events, :id, :name, @listing_change.event_id),
+            { :selected => @listing_change.event_id },
             { :disabled => !@listing_change.new_record? }
           %>
-          <% end %>
         </td>
         <td>
           <%= f.select :species_listing_id,
@@ -94,13 +92,20 @@
   <h4>Annotations</h4>
   <p>
     <%= f.label :hash_annotation_id %>
-    <%= f.select :hash_annotation_id,
-      options_from_collection_for_select(
-        @hash_annotations, :id, :full_symbol,
-        @listing_change && @listing_change.hash_annotation_id
+    <% if @designation.is_eu? %>
+      <%= select_tag :cites_cop,
+        options_from_collection_for_select(@cites_cops, :id, :name)
+      %>
+    <% end %>
+    <%= f.select :hash_annotation_id, 
+      options_for_select(
+        @hash_annotations.map do |a|
+          [a.full_symbol, a.id, {:class => a.event_id}]
+        end
       ),
       { :include_blank => true }
     %>
+
   </p>
 
   <%= f.fields_for :annotation do |ff| %>
