@@ -9,13 +9,13 @@ class Admin::SuspensionsController < Admin::SimpleCrudController
         :notice => 'Operation successful'
       }
       failure.html {
-        load_tags_and_geo_entities
+        load_lib_objects
         render 'new'
       }
 
       success.js { render 'create' }
       failure.js {
-        load_tags_and_geo_entities
+        load_lib_objects
         render 'new'
       }
     end
