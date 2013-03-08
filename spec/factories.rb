@@ -16,7 +16,7 @@ FactoryGirl.define do
     designation
 
     factory :eu_regulation, :class => EuRegulation do
-      designation Designation.find_by_name('EU')
+      designation { Designation.find_by_name('EU') }
     end
   end
 
