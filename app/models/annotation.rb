@@ -21,10 +21,11 @@
 class Annotation < ActiveRecord::Base
   attr_accessible :listing_change_id, :symbol, :parent_symbol, :short_note_en,
     :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
-    :display_in_index, :display_in_footnote
+    :display_in_index, :display_in_footnote, :event_id
   belongs_to :listing_change
+  belongs_to :event
   translates :short_note, :full_note
-  scope :for_cites_plants, where('parent_symbol IS NOT NULL').
+  scope :for_cites_plants, joins(:event).where("events.type = 'CitesCop'").
     order([:parent_symbol, :symbol])
   def full_symbol
     "#{parent_symbol}#{symbol}"

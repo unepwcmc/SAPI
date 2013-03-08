@@ -2,6 +2,16 @@ class Admin::EventsController < Admin::SimpleCrudController
   respond_to :js, :except => [:index, :destroy]
   respond_to :json, :only => [:update]
 
+  def index
+    load_associations
+    index! do |format|
+      format.json {
+        render :json => end_of_association_chain.order(:effective_at, :name).
+          select([:id, :name]).map{ |d| {:value => d.id, :text => d.name} }
+      }
+    end
+  end
+
   def new
     new! do
       load_associations
