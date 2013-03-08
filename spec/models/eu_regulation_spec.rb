@@ -10,6 +10,16 @@ describe EuRegulation do
       end
       specify{ EventListingChangesCopyWorker.jobs.size.should == 1 }
     end
+    context "when designation invalid" do
+      let(:eu_regulation){
+        build(
+          :eu_regulation,
+          :designation => Designation.find_or_create_by_name('CITES')
+        )
+      }
+      specify { eu_regulation.should be_invalid}
+      specify { eu_regulation.should have(1).error_on(:designation_id) }
+    end
   end
   describe :can_be_activated? do
     let(:eu_regulation){

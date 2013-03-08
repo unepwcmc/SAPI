@@ -18,6 +18,11 @@ FactoryGirl.define do
     factory :eu_regulation, :class => EuRegulation do
       designation { Designation.find_by_name('EU') }
     end
+
+    factory :cites_cop, :class => CitesCop do
+      designation { Designation.find_by_name('CITES') }
+    end
+
   end
 
   factory :taxon_name do

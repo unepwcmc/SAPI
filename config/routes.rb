@@ -32,6 +32,7 @@ SAPI::Application.routes.draw do
     resources :eu_regulations do
       post :activate, :on => :member
     end
+    resources :cites_cops
     resources :references, :only => [:index, :create, :update, :destroy]
     resources :geo_entities, :only => [:index, :create, :update, :destroy] do
       get :autocomplete, :on => :collection

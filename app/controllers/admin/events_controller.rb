@@ -18,7 +18,7 @@ class Admin::EventsController < Admin::SimpleCrudController
   protected
     def collection
       @events ||= end_of_association_chain.order(:designation_id, :name).
-        where("type != 'EuRegulation'").page(params[:page])
+        where("type NOT IN ('EuRegulation', 'CitesCop')").page(params[:page])
     end
 
     def load_associations
