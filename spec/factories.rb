@@ -35,17 +35,7 @@ FactoryGirl.define do
     accepted_scientific_name ''
     hybrid_parent_scientific_name ''
     other_hybrid_parent_scientific_name ''
-
-    %w(kingdom phylum class order family genus species subspecies).each do |rank_name|
-      factory :"#{rank_name}" do
-        taxonomy { Taxonomy.find_by_name(Taxonomy::CITES_EU) }
-        rank { Rank.find_by_name(rank_name.upcase) }
-      end
-    end
-
   end
-
-  #TODO use traits instead of inheritance for taxon concept ranks?
 
   factory :reference do
     author 'Bolek'

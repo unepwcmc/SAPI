@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe TaxonConcept do
   context "Mellivora capensis" do
-    include_context :designations
-    include_context :ranks
     include_context "Mellivora capensis"
     context "LISTING" do
       describe :current_listing do

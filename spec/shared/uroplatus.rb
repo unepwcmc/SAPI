@@ -1,39 +1,32 @@
 #Encoding: utf-8
 shared_context 'Uroplatus' do
   before(:all) do
-    @klass = create(
-      :class,
+    @klass = create_cites_eu_class(
       :taxon_name => create(:taxon_name, :scientific_name => 'Reptilia')
     )
-    @order = create(
-      :order,
+    @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Sauria'),
       :parent => @klass
     )
-    @family = create(
-      :family,
+    @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Gekkonidae'),
       :parent => @order
     )
-    @genus = create(
-      :genus,
+    @genus = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Uroplatus'),
       :parent => @family,
       :data => {:usr_no_std_ref => true}
     )
-    @species1 = create(
-      :species,
+    @species1 = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'Alluaudi'),
       :parent => @genus
     )
-    @species2 = create(
-      :species,
+    @species2 = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'Giganteus'),
       :parent => @genus
     )
 
-    create(
-     :cites_II_addition,
+    create_cites_II_addition(
      :taxon_concept => @genus,
      :effective_at => '2005-01-12',
      :is_current => true

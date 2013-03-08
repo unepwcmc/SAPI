@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe TaxonConcept do
   context "Cervus elaphus" do
-    include_context :designations
-    include_context :ranks
     include_context "Cervus elaphus"
 
     context "TAXONOMY" do

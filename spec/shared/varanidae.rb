@@ -1,44 +1,36 @@
 #Encoding: utf-8
 shared_context 'Varanidae' do
   before(:all) do
-    @klass = create(
-      :class,
+    @klass = create_cites_eu_class(
       :taxon_name => create(:taxon_name, :scientific_name => 'Reptilia')
     )
-    @order = create(
-      :order,
+    @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Sauria'),
       :parent => @klass
     )
-    @family = create(
-      :family,
+    @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Varanidae'),
       :parent => @order
     )
-    @genus = create(
-      :genus,
+    @genus = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Varanus'),
       :parent => @family
     )
-    @species1 = create(
-      :species,
+    @species1 = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'Bengalensis'),
       :parent => @genus
     )
-    @species2 = create(
-      :species,
+    @species2 = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'Bushi'),
       :parent => @genus
     )
 
-    create(
-     :cites_II_addition,
+    create_cites_II_addition(
      :taxon_concept => @genus,
      :effective_at => '1975-07-01',
      :is_current => true
     )
-    create(
-     :cites_I_addition,
+    create_cites_I_addition(
      :taxon_concept => @species1,
      :effective_at => '1975-07-01',
      :is_current => true

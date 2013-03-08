@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe TaxonConcept do
   context "Falconiformes" do
-    include_context :designations
-    include_context :ranks
     include_context "Falconiformes"
 
     context "LISTING" do

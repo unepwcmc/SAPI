@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Checklist do
-  include_context :designations
-  include_context :ranks
   include_context "Tapiridae"
   include_context "Psittaciformes"
   include_context "Falconiformes"

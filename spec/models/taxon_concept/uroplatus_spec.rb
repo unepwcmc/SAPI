@@ -3,8 +3,6 @@ require 'spec_helper'
 
 describe TaxonConcept do
   context "Uroplatus" do
-    include_context :designations
-    include_context :ranks
     include_context "Uroplatus"
 
     context "REFERENCES" do

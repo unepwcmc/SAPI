@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe TaxonConcept do
   context "Panax ginseng" do
-    include_context :designations
-    include_context :ranks
     include_context "Panax ginseng"
 
     context "LISTING" do

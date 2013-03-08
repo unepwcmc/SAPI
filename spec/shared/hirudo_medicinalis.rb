@@ -1,33 +1,27 @@
 shared_context "Hirudo medicinalis" do
   before(:all) do
-    @klass = create(
-      :class,
+    @klass = create_cites_eu_class(
       :taxon_name => create(:taxon_name, :scientific_name => 'Hirudinoidea')
     )
-    @order = create(
-      :order,
+    @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Arhynchobdellida'),
       :parent => @klass
     )
-    @family = create(
-      :family,
+    @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Hirudinidae'),
       :parent => @order
     )
-    @genus = create(
-      :genus,
+    @genus = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Hirudo'),
       :parent => @family
     )
-    @species = create(
-      :species,
+    @species = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'Medicinalis'),
       :parent => @genus,
       :name_status => 'A'
     )
 
-    create(
-     :cites_II_addition,
+    create_cites_II_addition(
      :taxon_concept => @species,
      :effective_at => '1987-10-22'
     )

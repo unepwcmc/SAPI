@@ -1,0 +1,161 @@
+shared_context :sapi do
+  let(:cites_eu){
+    create(:taxonomy, :name => Taxonomy::CITES_EU)
+  }
+  let(:cms){ create(:taxonomy, :name => Taxonomy::CMS) }
+
+  let(:kingdom_rank){
+    create(
+      :rank,
+      :name => Rank::KINGDOM, :taxonomic_position => '1', :fixed_order => true
+    )
+  }
+  let(:phylum_rank){
+    create(
+      :rank,
+      :name => Rank::PHYLUM, :taxonomic_position => '2', :fixed_order => true
+    )
+  }
+  let(:class_rank){
+    create(
+      :rank,
+      :name => Rank::CLASS, :taxonomic_position => '3', :fixed_order => true
+    )
+  }
+  let(:order_rank){
+    create(
+      :rank,
+      :name => Rank::ORDER, :taxonomic_position => '4', :fixed_order => false
+    )
+  }
+  let(:family_rank){
+    create(
+      :rank,
+      :name => Rank::FAMILY, :taxonomic_position => '5', :fixed_order => false
+    )
+  }
+  let(:subfamily_rank){
+    create(
+      :rank,
+      :name => Rank::SUBFAMILY, :taxonomic_position => '5.1', :fixed_order => false
+    )
+  }
+  let(:genus_rank){
+    create(
+      :rank,
+      :name => Rank::GENUS, :taxonomic_position => '6', :fixed_order => false
+    )
+  }
+  let(:species_rank){
+    create(
+      :rank,
+      :name => Rank::SPECIES, :taxonomic_position => '7', :fixed_order => false
+    )
+  }
+  let(:subspecies_rank){
+    create(
+      :rank,
+      :name => Rank::SUBSPECIES, :taxonomic_position => '7.1', :fixed_order => false
+    )
+  }
+  let(:variety){
+    create(
+      :rank,
+      :name => Rank::VARIETY, :taxonomic_position => '7.2', :fixed_order => false
+    )
+  }
+
+  %w(kingdom phylum class order family subfamily genus species subspecies variety).each do |rank|
+    define_method "create_#{rank}" do |options = {}|
+      create(
+        :taxon_concept,
+        options.merge({:rank => send("#{rank}_rank")})
+      )
+    end
+    define_method "build_#{rank}" do |options = {}|
+      build(
+        :taxon_concept,
+        options.merge({:rank => send("#{rank}_rank")})
+      )
+    end
+    define_method "create_cites_eu_#{rank}" do |options = {}|
+      create(
+        :taxon_concept,
+        options.merge({
+          :rank => send("#{rank}_rank"),
+          :taxonomy => cites_eu
+        })
+      )
+    end
+    define_method "build_cites_eu_#{rank}" do |options = {}|
+      build(
+        :taxon_concept,
+        options.merge({
+          :rank => send("#{rank}_rank"),
+          :taxonomy => cites_eu
+        })
+      )
+    end
+  end
+
+  let(:cites){ create(:designation, :name => 'CITES', :taxonomy => cites_eu) }
+  let(:eu){ create(:designation, :name => 'EU', :taxonomy => cites_eu) }
+
+  %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch|
+
+    let(:"cites_#{ch.downcase}"){
+      create(
+        :change_type, :name => ch, :designation => cites
+      )
+    }
+
+    let(:"eu_#{ch.downcase}"){
+      create(
+        :change_type, :name => ch, :designation => eu
+      )
+    }
+
+    %w(I II III).each do |app|
+      let(:"cites_#{app}"){
+        create(
+          :species_listing, :name => "Appendix #{app}", :abbreviation => app,
+          :designation => cites
+        )
+      }
+      define_method "create_cites_#{app}_#{ch.downcase}" do |options = {}|
+        create(
+          :listing_change,
+          options.merge({
+            :change_type => send(:"cites_#{ch.downcase}"),
+            :species_listing => send(:"cites_#{app}")
+          })
+        )
+      end
+    end
+    %w(A B C D).each do |app|
+      let(:"eu_#{app}"){
+        create(
+          :species_listing, :name => "Annex #{app}", :abbreviation => app,
+          :designation => eu
+        )
+      }
+      define_method "create_eu_#{app}_#{ch.downcase}" do |options = {}|
+        create(
+          :listing_change,
+          options.merge({
+            :change_type => send(:"eu_#{ch.downcase}"),
+            :species_listing => send(:"eu_#{app}")
+          })
+        )
+      end
+    end
+  end
+end
+
+module Sapi
+  module Helpers
+    def self.included(scope)
+      scope.include_context :sapi
+    end
+  end
+end

@@ -1,28 +1,18 @@
 require 'spec_helper'
 
 describe TaxonConcept do
-  include_context :designations
-  include_context :ranks
   context "create" do
-    
-    let(:kingdom){ Rank.find_by_name('KINGDOM') }
-    let(:phylum){ Rank.find_by_name('PHYLUM') }
-    let(:klass){ Rank.find_by_name('CLASS') }
     let(:kingdom_tc){
-      create(
-        :taxon_concept,
+      create_kingdom(
         :taxonomy_id => cites_eu.id,
-        :rank_id => kingdom.id,
         :taxonomic_position => '1',
         :taxon_name => build(:taxon_name, :scientific_name => 'Foobaria')
       )
     }
     context "all fine" do
       let(:tc){
-        create(
-          :taxon_concept,
+        create_phylum(
           :taxonomy_id => cites_eu.id,
-          :rank_id => phylum.id,
           :parent_id => kingdom_tc.id
         )
       }
@@ -30,10 +20,8 @@ describe TaxonConcept do
     end
     context "taxonomy does not match parent" do
       let(:tc) {
-        build(
-          :taxon_concept,
+        create_phylum(
           :taxonomy_id => cms.id,
-          :rank_id => phylum.id,
           :parent_id => kingdom_tc.id
         )
       }
@@ -42,11 +30,9 @@ describe TaxonConcept do
     
     context "parent rank is too high above child rank" do
       let(:tc) {
-        build(
-          :taxon_concept,
+        create_class(
           :taxonomy_id => cites_eu.id,
-          :parent_id => kingdom_tc.id,
-          :rank_id => klass.id
+          :parent_id => kingdom_tc.id
         )
       }
       specify { tc.should have(1).error_on(:parent_id) }

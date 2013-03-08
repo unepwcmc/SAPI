@@ -1,45 +1,56 @@
 #Encoding: utf-8
 shared_context "Caiman latirostris" do
+  let(:country){
+    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
+  }
+  let(:argentina){
+    create(
+      :geo_entity,
+      :geo_entity_type => country,
+      :name => 'Argentina',
+      :iso_code2 => 'AR'
+    )
+  }
+  let(:has_synonym){
+    create(
+      :taxon_relationship_type, :name => TaxonRelationshipType::HAS_SYNONYM
+    )
+  }
   before(:all) do
-    @klass = create(
-      :class,
+    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
+    @klass = create_cites_eu_class(
       :taxon_name => create(:taxon_name, :scientific_name => 'Reptilia')
     )
-    @order = create(
-      :order,
+    @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Crocodylia'),
       :parent => @klass
     )
-    @family = create(
-      :family,
+    @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Alligatoridae'),
       :parent => @order
     )
-    @genus = create(
-      :genus,
+    @genus = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Caiman'),
       :parent => @family
     )
-    @species = create(
-      :species,
+    @species = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'Latirostris'),
       :parent => @genus,
       :name_status => 'A'
     )
-    @genus1 = create(
-      :genus,
+    @genus1 = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Alligator'),
       :parent => @family
     )
-    @species1 = create(
-      :species,
+    @species1 = create_cites_eu_species(
       :full_name => 'Alligator cynocephalus',
       :parent => @genus1,
       :name_status => 'S'
     )
 
     create(
-      :has_synonym,
+      :taxon_relationship,
+      :taxon_relationship_type => has_synonym,
       :taxon_concept => @species,
       :other_taxon_concept => @species1
     )
@@ -58,19 +69,12 @@ shared_context "Caiman latirostris" do
       :data => {:usr_is_std_ref => 't'}
     )
 
-    argentina = create(
-      :country,
-      :name => 'Argentina',
-      :iso_code2 => 'AR'
-    )
-    create(
-      :cites_II_addition,
+    create_cites_II_addition(
       :taxon_concept => @order,
       :effective_at => '1977-02-04',
       :is_current => true
     )
-    create(
-     :cites_I_addition,
+    create_cites_I_addition(
      :taxon_concept => @species,
      :effective_at => '1975-07-01',
      :is_current => true
@@ -80,8 +84,7 @@ shared_context "Caiman latirostris" do
       :full_note_en => 'Population of AR; included in CROCODYLIA spp.',
       :display_in_index => true
     )
-    l1 = create(
-     :cites_II_addition,
+    l1 = create_cites_II_addition(
      :taxon_concept => @species,
      :annotation_id => a1.id,
      :effective_at => '1997-09-18',

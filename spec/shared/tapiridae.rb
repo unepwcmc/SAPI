@@ -1,41 +1,34 @@
 shared_context "Tapiridae" do
   before(:all) do
-    @klass = create(
-      :class,
+    @klass = create_cites_eu_class(
       :taxon_name => create(:taxon_name, :scientific_name => 'Mammalia')
     )
-    @order = create(
-      :order,
+    @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Perissodactyla'),
       :parent => @klass
     )
-    @family = create(
-      :family,
+    @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Tapiridae'),
       :parent => @order
     )
-    @genus = create(
-      :genus,
+    @genus = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Tapirus'),
       :parent => @family
     )
     ['Bairdii', 'Indicus', 'Pinchaque', 'Terrestris'].each do |n|
-      @species = create(
-        :species,
+      @species = create_cites_eu_species(
         :taxon_name => create(:taxon_name, :scientific_name => n),
         :parent => @genus,
       :name_status => 'A'
       )
     end
 
-    create(
-     :cites_I_addition,
+    create_cites_I_addition(
      :taxon_concept => @family,
      :effective_at => '1975-07-01',
      :is_current => true
     )
-    create(
-     :cites_II_addition,
+    create_cites_II_addition(
      :taxon_concept => @species,
      :effective_at => '1977-02-04',
      :is_current => true

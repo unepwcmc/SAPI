@@ -1,42 +1,41 @@
 #Encoding: utf-8
 shared_context 'Colophon' do
+  let(:country){
+    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
+  }
+  let(:south_africa){
+    create(
+      :geo_entity,
+      :geo_entity_type => country,
+      :name => 'South Africa',
+      :iso_code2 => 'ZA'
+    )
+  }
   before(:all) do
-    @klass = create(
-      :class,
+    @klass = create_cites_eu_class(
       :taxon_name => create(:taxon_name, :scientific_name => 'Insecta')
     )
-    @order = create(
-      :order,
+    @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Coleoptera'),
       :parent => @klass
     )
-    @family = create(
-      :family,
+    @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Lucanidae'),
       :parent => @order
     )
-    @genus = create(
-      :genus,
+    @genus = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Colophon'),
       :parent => @family,
     )
-    @species = create(
-      :species,
+    @species = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'barnardi'),
       :parent => @genus,
     )
 
-    lc = create(
-     :cites_III_addition,
+    lc = create_cites_III_addition(
      :taxon_concept => @genus,
      :effective_at => '2000-09-13',
      :is_current => true
-    )
-
-    south_africa = create(
-      :country,
-      :name => 'South Africa',
-      :iso_code2 => 'ZA'
     )
 
     create(

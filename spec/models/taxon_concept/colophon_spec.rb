@@ -3,8 +3,6 @@ require 'spec_helper'
 
 describe TaxonConcept do
   context "Colophon" do
-    include_context :designations
-    include_context :ranks
     include_context "Colophon"
 
     context "LISTING" do

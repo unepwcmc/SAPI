@@ -1,33 +1,25 @@
 require 'spec_helper'
 
 describe TaxonConcept do
-  include_context :designations
-  include_context :ranks
   describe :create do
     let(:parent){
-      create(
-        :genus,
+      create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
       )
     }
     let!(:tc){
-      create(
-        :species,
+      create_cites_eu_species(
         :parent_id => parent.id,
         :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
       )
     }
-    let(:synonym_attributes){
-      build_tc_attributes(
-        :species,
+    let(:synonym){
+      build_cites_eu_species(
         :name_status => 'S',
         :author_year => 'Taxonomus 2013',
         :accepted_scientific_name => tc.full_name,
         :full_name => 'Lolcatus lolus'
       )
-    }
-    let(:synonym){
-      build(:taxon_concept, synonym_attributes)
     }
     context "when new" do
       specify {
