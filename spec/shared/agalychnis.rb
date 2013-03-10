@@ -1,9 +1,10 @@
 #Encoding: utf-8
 shared_context 'Agalychnis' do
   before(:all) do
+    @klass = cites_eu_amphibia
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Anura'),
-      :parent => cites_eu_amphibia
+      :parent => @klass
     )
     @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Hylidae'),

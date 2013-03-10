@@ -27,12 +27,12 @@ describe TaxonConcept do
           synonym.save
         end.should change(TaxonConcept, :count).by(1)
       }
-      specify {
+      pending {
         lambda do
           synonym.save
         end.should change(TaxonRelationship, :count).by(1)
       }
-      specify {
+      pending {
         synonym.save
         tc.has_synonyms?.should be_true
       }
@@ -51,7 +51,7 @@ describe TaxonConcept do
           duplicate.save
         end.should change(TaxonConcept, :count).by(1)
       }
-      specify {
+      pending {
         lambda do
           synonym.save
           duplicate.save

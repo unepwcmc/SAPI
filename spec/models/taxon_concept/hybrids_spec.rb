@@ -42,7 +42,7 @@ describe TaxonConcept do
           hybrid.save
         end.should change(TaxonConcept, :count).by(1)
       }
-      specify {
+      pending {
         hybrid.save
         tc.has_hybrids?.should be_true
       }

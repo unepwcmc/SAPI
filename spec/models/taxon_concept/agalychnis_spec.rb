@@ -8,7 +8,7 @@ describe TaxonConcept do
     context "REFERENCES" do
       describe :cites_accepted do
         context "for class Amphibia" do
-          specify { cites_eu_amphibia.cites_accepted.should be_true }
+          specify { @klass.cites_accepted.should be_true }
         end
         context "for family Hylidae" do
           specify { @family.cites_accepted.should be_true }
@@ -19,7 +19,7 @@ describe TaxonConcept do
       end
       describe :standard_references do
         context "for class Amphibia" do
-          specify { cites_eu_amphibia.standard_references.should include @ref.id }
+          specify { @klass.standard_references.should include @ref.id }
         end
         context "for family Hylidae" do
           specify { @family.standard_references.should include @ref.id }
