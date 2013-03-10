@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe TaxonConcept do
-  let!(:hybrid_relationship_type){
+  let(:hybrid_relationship_type){
     create(
       :taxon_relationship_type,
       :name => TaxonRelationshipType::HAS_HYBRID,
@@ -42,7 +42,7 @@ describe TaxonConcept do
           hybrid.save
         end.should change(TaxonConcept, :count).by(1)
       }
-      pending {
+      specify {
         hybrid.save
         tc.has_hybrids?.should be_true
       }

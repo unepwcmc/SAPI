@@ -18,12 +18,9 @@ shared_context "Caiman latirostris" do
   }
   before(:all) do
     create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-    @klass = create_cites_eu_class(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Reptilia')
-    )
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Crocodylia'),
-      :parent => @klass
+      :parent => cites_eu_reptilia
     )
     @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Alligatoridae'),

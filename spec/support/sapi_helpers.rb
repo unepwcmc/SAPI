@@ -65,6 +65,82 @@ shared_context :sapi do
     )
   }
 
+  let(:cites_eu_animalia){
+    create_cites_eu_kingdom(
+      :taxonomic_position => '1',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Animalia')
+    )
+  }
+  let(:cites_eu_chordata){
+    create_cites_eu_phylum(
+      :taxonomic_position => '1.1',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Chordata'),
+      :parent => cites_eu_animalia
+    )
+  }
+  let(:cites_eu_mammalia){
+    create_cites_eu_class(
+      :taxonomic_position => '1.1.1',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Mammalia'),
+      :parent => cites_eu_chordata
+    )
+  }
+  let(:cites_eu_aves){
+    create_cites_eu_class(
+      :taxonomic_position => '1.1.2',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Aves'),
+      :parent => cites_eu_chordata
+    )
+  }
+  let(:cites_eu_reptilia){
+    create_cites_eu_class(
+      :taxonomic_position => '1.1.3',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Reptilia'),
+      :parent => cites_eu_chordata
+    )
+  }
+  let(:cites_eu_amphibia){
+    create_cites_eu_class(
+      :taxonomic_position => '1.1.4',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Amphibia'),
+      :parent => cites_eu_chordata
+    )
+  }
+  let(:cites_eu_arthropoda){
+    create_cites_eu_phylum(
+      :taxonomic_position => '1.3',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Arthropoda'),
+      :parent => cites_eu_animalia
+    )
+  }
+  let(:cites_eu_insecta){
+    create_cites_eu_class(
+      :taxonomic_position => '1.3.2',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Insecta'),
+      :parent => cites_eu_arthropoda
+    )
+  }
+  let(:cites_eu_annelida){
+    create_cites_eu_phylum(
+      :taxonomic_position => '1.4',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Annelida'),
+      :parent => cites_eu_animalia
+    )
+  }
+  let(:cites_eu_hirudinoidea){
+    create_cites_eu_class(
+      :taxonomic_position => '1.4.1',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Hirudinoidea'),
+      :parent => cites_eu_annelida
+    )
+  }
+  let(:cites_eu_plantae){
+    create_cites_eu_kingdom(
+      :taxonomic_position => '2',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Plantae')
+    )
+  }
+
   %w(kingdom phylum class order family subfamily genus species subspecies variety).each do |rank|
     define_method "create_#{rank}" do |options = {}|
       create(

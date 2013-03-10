@@ -4,12 +4,9 @@ shared_context "Arctocephalus" do
   let(:es){ create(:language, :name => 'Spanish', :iso_code1 => 'ES') }
   let(:fr){ create(:language, :name => 'French', :iso_code1 => 'FR') }
   before(:all) do
-    @klass = create_cites_eu_class(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Mammalia')
-    )
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Carnivora'),
-      :parent => @klass
+      :parent => cites_eu_mammalia
     )
     @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Otariidae'),
@@ -17,9 +14,9 @@ shared_context "Arctocephalus" do
       :common_names => [
         create(:common_name, :name => 'Fur seals', :language => en),
         create(:common_name, :name => 'Sealions', :language => en),
-        create(:common_name, :name => 'Focas'),
-        create(:common_name, :name => 'Leones marinos'),
-        create(:common_name, :name => 'Arctocéphales')
+        create(:common_name, :name => 'Focas', :language => es),
+        create(:common_name, :name => 'Leones marinos', :language => es),
+        create(:common_name, :name => 'Arctocéphales', :language => fr)
       ]
     )
     @genus = create_cites_eu_genus(

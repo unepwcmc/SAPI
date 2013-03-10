@@ -20,7 +20,8 @@ shared_context "Panax ginseng" do
   }
   before(:all) do
     @order = create_cites_eu_order(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Apiales')
+      :taxon_name => create(:taxon_name, :scientific_name => 'Apiales'),
+      :parent => cites_eu_plantae.reload # reload is needed for full name
     )
     @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Araliaceae'),

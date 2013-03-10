@@ -1,7 +1,8 @@
 shared_context "Pereskia" do
   before(:all) do
     @order = create_cites_eu_order(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Caryophyllales')
+      :taxon_name => create(:taxon_name, :scientific_name => 'Caryophyllales'),
+      :parent => cites_eu_plantae.reload # reload is needed for full name
     )
     @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Cactacea'),

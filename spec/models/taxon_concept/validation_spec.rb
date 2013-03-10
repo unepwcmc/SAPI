@@ -20,7 +20,7 @@ describe TaxonConcept do
     end
     context "taxonomy does not match parent" do
       let(:tc) {
-        create_phylum(
+        build_phylum(
           :taxonomy_id => cms.id,
           :parent_id => kingdom_tc.id
         )
@@ -30,7 +30,7 @@ describe TaxonConcept do
     
     context "parent rank is too high above child rank" do
       let(:tc) {
-        create_class(
+        build_class(
           :taxonomy_id => cites_eu.id,
           :parent_id => kingdom_tc.id
         )
@@ -39,30 +39,24 @@ describe TaxonConcept do
     end
     context "parent rank is below child rank" do
       let(:parent) {
-        create(
-          :taxon_concept,
+        create_phylum(
           :taxonomy_id => cites_eu.id,
-          :parent_id => kingdom_tc.id,
-          :rank_id => phylum.id
+          :parent_id => kingdom_tc.id
         )
       }
       let(:tc) {
-        build(
-          :taxon_concept,
+        build_kingdom(
           :taxonomy_id => cites_eu.id,
-          :parent_id => parent.id,
-          :rank_id => kingdom.id
+          :parent_id => parent.id
         )
       }
       specify { tc.should have(1).error_on(:parent_id) }
     end
     context "scientific name is not given" do
       let(:tc) {
-        build(
-          :taxon_concept,
+        build_phylum(
           :taxonomy_id => cites_eu.id,
           :parent_id => kingdom_tc.id,
-          :rank_id => phylum.id,
           :taxon_name => build(:taxon_name, :scientific_name => nil)
         )
       }

@@ -1,12 +1,9 @@
 #Encoding: utf-8
 shared_context 'Agalychnis' do
   before(:all) do
-    @klass = create_cites_eu_class(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Amphibia')
-    )
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Anura'),
-      :parent => @klass
+      :parent => cites_eu_amphibia
     )
     @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Hylidae'),
@@ -34,7 +31,7 @@ shared_context 'Agalychnis' do
 
     create(
       :taxon_concept_reference,
-      :taxon_concept => @klass,
+      :taxon_concept => cites_eu_amphibia,
       :reference => @ref,
       :data => {:usr_is_std_ref => 't', :cascade => 't'}
     )

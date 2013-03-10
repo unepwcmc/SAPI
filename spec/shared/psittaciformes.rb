@@ -11,12 +11,9 @@ shared_context "Psittaciformes" do
     )
   }
   before(:all) do
-    @klass = create_cites_eu_class(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Aves')
-    )
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Psittaciformes'),
-      :parent => @klass
+      :parent => cites_eu_aves
     )
     @family1 = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Cacatuidae'),

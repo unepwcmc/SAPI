@@ -19,12 +19,9 @@ shared_context "Mellivora capensis" do
     )
   }
   before(:all) do
-    @klass = create_cites_eu_class(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Mammalia')
-    )
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Carnivora'),
-      :parent => @klass
+      :parent => cites_eu_mammalia
     )
     @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Mustelinae'),

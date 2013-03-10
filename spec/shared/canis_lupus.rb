@@ -50,14 +50,10 @@ shared_context "Canis lupus" do
       :iso_code2 => 'AR'
     )
   }
-
   before(:all) do
-    @klass = create_cites_eu_class(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Mammalia')
-    )
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Carnivora'),
-      :parent => @klass
+      :parent => cites_eu_mammalia
     )
     @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Canidae'),
@@ -81,8 +77,7 @@ shared_context "Canis lupus" do
      :taxon_concept => @species,
      :effective_at => '1977-02-04'
     )
-    l1 = create(
-     :cites_I_addition,
+    l1 = create_cites_I_addition(
      :taxon_concept => @species,
      :effective_at => '1979-06-28'
     )

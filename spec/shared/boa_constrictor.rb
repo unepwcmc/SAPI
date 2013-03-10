@@ -1,11 +1,8 @@
 shared_context "Boa constrictor" do
   before(:all) do
-    @klass = create_cites_eu_class(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Reptilia')
-    )
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Serpentes'),
-      :parent => @klass
+      :parent => cites_eu_reptilia
     )
     @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Boidae'),

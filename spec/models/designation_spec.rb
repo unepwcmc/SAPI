@@ -37,8 +37,7 @@ describe Designation do
       ).should be_true }
     end
     context "when updating a protected name" do
-      let(:designation){ Designation.find_or_create_by_name(Designation::CITES) }
-      specify{ designation.update_attributes(
+      specify{ cites.update_attributes(
         {:name => 'RULES OF INTERGALACTIC TRADE'}
       ).should be_false }
     end
@@ -65,8 +64,7 @@ describe Designation do
       specify { designation.destroy.should be_false }
     end
     context "when protected name" do
-      let(:designation){ Designation.find_or_create_by_name(Designation::CITES) }
-      specify { designation.destroy.should be_false }
+      specify { cites.destroy.should be_false }
     end
   end
 end

@@ -11,13 +11,11 @@ shared_context 'Colophon' do
       :iso_code2 => 'ZA'
     )
   }
+
   before(:all) do
-    @klass = create_cites_eu_class(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Insecta')
-    )
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Coleoptera'),
-      :parent => @klass
+      :parent => cites_eu_insecta
     )
     @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Lucanidae'),
