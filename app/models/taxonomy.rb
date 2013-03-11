@@ -22,20 +22,11 @@ class Taxonomy < ActiveRecord::Base
     :if => lambda { |t| t.name_changed? && t.class.dict.include?(t.name_was) },
     :on => :update
 
-  before_destroy :check_destroy_allowed
-
-  private
-
-  def check_destroy_allowed
-    unless can_be_deleted?
-      errors.add(:base, "not allowed")
-      return false
-    end
-  end
-
   def can_be_deleted?
     !has_protected_name? && !has_dependent_objects?
   end
+
+  private
 
   def has_dependent_objects?
     !(designations.count == 0 &&
