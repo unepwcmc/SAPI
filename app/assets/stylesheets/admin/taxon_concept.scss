@@ -32,7 +32,8 @@ textarea.annotation {
 
 textarea {
   &.quota,
-  &.suspension {
+  &.suspension,
+  &.eu_opinion {
     height: 5em;
     width: 430px;
   }
