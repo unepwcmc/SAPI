@@ -81,4 +81,8 @@ FactoryGirl.define do
     model 'TaxonConcept'
   end
 
+  factory :eu_decision do
+    taxon_concept
+  end
+
 end

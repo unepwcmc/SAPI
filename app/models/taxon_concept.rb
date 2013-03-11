@@ -97,6 +97,11 @@ class TaxonConcept < ActiveRecord::Base
   has_many :suspensions
   has_many :current_suspensions, :class_name => 'Suspension', :conditions => "is_current = true"
 
+  has_many :eu_opinions
+  has_many :current_eu_opinions, :class_name => 'EuOpinion', :conditions => "is_current = true"
+  has_many :eu_suspensions
+  has_many :current_eu_suspensions, :class_name => 'EuSuspension', :conditions => "is_current = true"
+
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
   validate :parent_in_same_taxonomy
