@@ -50,6 +50,10 @@
     <li class="<%= if controller_name == 'eu_opinions' then 'active' end%>">
       <%= link_to "EU Opinions", admin_taxon_concept_eu_opinions_path(@taxon_concept) %>
     </li>
+
+    <li class="<%= if controller_name == 'eu_suspensions' then 'active' end%>">
+      <%= link_to "EU Suspensions", admin_taxon_concept_eu_suspensions_path(@taxon_concept) %>
+    </li>
   <% end %>
   <li class="<%= if controller_name == "taxon_relationships" then "active" end%>">
     <%= link_to "Taxon Relationships", admin_taxon_concept_taxon_relationships_path(@taxon_concept) %>

@@ -46,6 +46,7 @@ SAPI::Application.routes.draw do
       resources :quotas, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_opinions, :only => [:index, :new, :create, :edit, :update, :destroy]
+      resources :eu_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
     end
     root :to => 'home#index'
   end

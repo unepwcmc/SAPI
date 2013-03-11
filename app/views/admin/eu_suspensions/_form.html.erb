@@ -1,0 +1,102 @@
+<%= admin_new_modal({:title => "Current EU Suspensions"}) { render "current_suspensions_form" } %>
+
+<%= form_for [:admin, @taxon_concept, @eu_suspension], :html => {:class => 'form-horizontal'} do |f| %>
+
+  <p>
+    <%= link_to("View Current EU Suspensions", "#new-eu_suspension",
+      {
+        :role => "button",
+        :"data-toggle" => "modal",
+      }) %>
+  </p>
+
+  <%= error_messages_for(@eu_suspension) %>
+
+  <div class="control-group">
+    <%= f.label :geo_entity_id, "Party", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :geo_entity_id,
+        options_from_collection_for_select(
+          @geo_entities,
+          :id,
+          :name_en,
+          @eu_suspension.geo_entity_id
+      ),
+        { :include_blank => true },
+        {:class => 'eu_suspension select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Validity</label>
+    <div class="controls">
+      <%= f.text_field :start_date, :class => "eu_suspension datepicker", :value =>  @eu_suspension.start_date && @eu_suspension.start_date.strftime('%d/%m/%Y'), :placeholder => 'Start Date' %>
+      <%= f.text_field :end_date, :class => "eu_suspension datepicker", :value => @eu_suspension.end_date && @eu_suspension.end_date.strftime('%d/%m/%Y'), :placeholder => 'End Date' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :restriction, "Restriction", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :restriction,
+        options_from_collection_for_select(
+          [],
+          :id,
+          :name_en,
+          @eu_suspension.restriction
+      ),
+        { :include_blank => true },
+        {:class => 'eu_suspension select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Restriction Text</label>
+    <div class="controls">
+      <%= f.text_area :restriction_text, :class => 'eu_suspension' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Comments</label>
+    <div class="controls">
+      <%= f.text_area :comments, :class => 'eu_suspension' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :term_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :term_id,
+        options_from_collection_for_select(@terms, :id, :code),
+        { :include_blank => true },
+        {:class => 'eu_suspension select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :source_id, :class => 'control-label'  %>
+    <div class="controls">
+      <%= f.select :source_id,
+        options_from_collection_for_select(@sources, :id, :code),
+        { :include_blank => true },
+        {:class => 'eu_suspension select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :is_current, "Is current?", :class => 'control-label'%>
+    <div class="controls">
+      <%= f.check_box :is_current %><br>
+    </div>
+  </div>
+
+  <p class="pull-right">
+    <%= f.submit "Save" %>
+  </p>
+
+<% end %>

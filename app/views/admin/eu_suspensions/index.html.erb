@@ -1,0 +1,18 @@
+<div class="admin-header">
+  <h3>EU Suspensions</h3>
+  <div class="action-buttons">
+    <%= admin_add_new_button(
+      :resource => 'eu_suspension',
+      :href => new_admin_taxon_concept_eu_suspension_path(@taxon_concept),
+      :"data-toggle" => nil,
+      :role => nil
+    ) %>
+  </div>
+</div>
+
+<%= admin_new_modal{ '' } %>
+
+<%= admin_table %>
+
+<%= paginate collection %>
+
