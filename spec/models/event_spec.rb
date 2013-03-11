@@ -17,5 +17,37 @@ describe Event do
       specify { event2.should be_invalid }
       specify { event2.should have(1).error_on(:name) }
     end
+    context "when url invalid" do
+      let(:event){ build(:event, :url => 'www.google.com') }
+      specify { event.should be_invalid}
+      specify { event.should have(1).error_on(:url) }
+    end
+  end
+  describe :destroy do
+    context "when no dependent objects attached" do
+      let(:event){
+        create(
+          :event,
+          :name => 'REGULATION 1.0',
+          :designation => eu
+        )
+      }
+      specify { event.destroy.should be_true }
+    end
+    context "when dependent objects attached" do
+      let(:event){
+        create(
+          :event,
+          :name => 'REGULATION 1.0',
+          :designation => eu
+        )
+      }
+      let!(:listing_change){ create_eu_A_addition(:event_id => event.id) }
+      specify { event.destroy.should be_false }
+    end
+  end
+  describe :effective_at_formatted do
+    let(:event){ create(:event, :effective_at => '2012-05-10') }
+    specify {event.effective_at_formatted.should == '10/05/2012' }
   end
 end

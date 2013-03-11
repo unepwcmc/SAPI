@@ -1,6 +1,7 @@
 describe Admin::TaxonConceptsController do
   describe "GET index" do
     it "renders the index template" do
+      cites_eu
       get :index
       response.should render_template("index")
       response.should render_template("layouts/admin")

@@ -226,6 +226,30 @@ shared_context :sapi do
       end
     end
   end
+  def create_cites_cop(options = {})
+    create(
+      :cites_cop,
+      options.merge({:designation => cites})
+    )
+  end
+  def create_eu_regulation(options = {})
+    create(
+      :eu_regulation,
+      options.merge({:designation => eu})
+    )
+  end
+  def build_cites_cop(options = {})
+    build(
+      :cites_cop,
+      options.merge({:designation => cites})
+    )
+  end
+  def build_eu_regulation(options = {})
+    build(
+      :eu_regulation,
+      options.merge({:designation => eu})
+    )
+  end
 end
 
 module Sapi

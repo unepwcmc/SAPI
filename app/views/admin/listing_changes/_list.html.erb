@@ -1,4 +1,5 @@
 <thead>
+  <th>Event</th>
   <th>Appx</th>
   <th>Type</th>
   <th>Effective at</th>
@@ -13,6 +14,7 @@
 <tbody>
   <% collection.each do |listing_change| -%>
     <tr class="<%= if listing_change.is_current? then "current_listing" end %>">
+      <td><%= listing_change.event && listing_change.event.name %></td>
       <td><%= listing_change.species_listing && listing_change.species_listing.abbreviation %></td>
       <td><%= listing_change.change_type.abbreviation %></td>
       <td><%= listing_change.effective_at_formatted %></td>

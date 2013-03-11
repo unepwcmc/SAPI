@@ -25,6 +25,11 @@ module Sapi
     :geo_entities,
     :distributions,
     :taxon_concept_references,
+    :listing_changes,
+    :annotations,
+    :change_types,
+    :species_listings,
+    :listing_distributions
   ]
 
   def self.rebuild(options = {})

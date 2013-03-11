@@ -12,6 +12,11 @@ FactoryGirl.define do
 
   factory :event do
     sequence(:name) {|n| "CoP#{n}"}
+    effective_at '2012-01-01'
+    designation
+
+    factory :eu_regulation, :class => EuRegulation
+    factory :cites_cop, :class => CitesCop
   end
 
   factory :taxon_name do

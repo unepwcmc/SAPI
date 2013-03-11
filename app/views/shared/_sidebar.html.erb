@@ -1,14 +1,20 @@
 <ul class="nav nav-list">
-  <li class="nav-header">Basic types</li>
+  <li class="nav-header">Taxonomy</li>
   <li><%= link_to 'Taxonomies', admin_taxonomies_path %></li>
-  <li><%= link_to 'Designations', admin_designations_path %></li>
-  <li><%= link_to 'Species listings', admin_species_listings_path %></li>
   <li><%= link_to 'Ranks', admin_ranks_path %></li>
+  <li><%= link_to 'Taxon concepts', admin_taxon_concepts_path %></li>
+  <li class="nav-header">Designation</li>
+  <li><%= link_to 'Designations', admin_designations_path %></li>
+  <li><%= link_to 'EU Regulations', admin_eu_regulations_path %></li>
+  <li><%= link_to 'CITES CoPs', admin_cites_cops_path %></li>
+  <li><%= link_to 'Events', admin_events_path %></li>
+  <li><%= link_to 'Species listings', admin_species_listings_path %></li>
   <li><%= link_to 'Change types', admin_change_types_path %></li>
+  <li><%= link_to 'CITES plant annotations', admin_cites_plant_annotations_path %></li>
+  <li class="nav-header">Global</li>
   <li><%= link_to 'Languages', admin_languages_path %></li>
   <li><%= link_to 'Geo entities', admin_geo_entities_path %></li>
   <li><%= link_to 'Tags', admin_tags_path %></li>
-  <li><%= link_to 'Events', admin_events_path %></li>
   <li><%= link_to 'References', admin_references_path %></li>
   <li class="nav-header">Trade codes</li>
   <li><%= link_to 'Purposes', admin_purposes_path %></li>
@@ -17,7 +23,5 @@
   <li><%= link_to 'Units', admin_units_path %></li>
   <li class="nav-header">Users & Roles</li>
   <li><%= link_to 'Users', admin_users_path %></li>
-  <li class="nav-header">Taxon concepts</li>
-  <li><%= link_to 'Taxon concepts', admin_taxon_concepts_path %></li>
 </ul>
 
