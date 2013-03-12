@@ -47,12 +47,17 @@
       <%= link_to "CITES Suspensions", admin_taxon_concept_suspensions_path(@taxon_concept) %>
     </li>
 
-    <li class="<%= if controller_name == 'eu_opinions' then 'active' end%>">
-      <%= link_to "EU Opinions", admin_taxon_concept_eu_opinions_path(@taxon_concept) %>
-    </li>
+    <li class="dropdown <%= if %w{eu_opinions eu_suspensions}.include?(controller_name) then 'active' end %>">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown">EU <b class="caret"></b></a>
+      <ul class="dropdown-menu">
+        <li class="<%= if controller_name == 'eu_opinions' then 'active' end%>">
+          <%= link_to "EU Opinions", admin_taxon_concept_eu_opinions_path(@taxon_concept) %>
+        </li>
 
-    <li class="<%= if controller_name == 'eu_suspensions' then 'active' end%>">
-      <%= link_to "EU Suspensions", admin_taxon_concept_eu_suspensions_path(@taxon_concept) %>
+        <li class="<%= if controller_name == 'eu_suspensions' then 'active' end%>">
+          <%= link_to "EU Suspensions", admin_taxon_concept_eu_suspensions_path(@taxon_concept) %>
+        </li>
+      </ul>
     </li>
   <% end %>
   <li class="<%= if controller_name == "taxon_relationships" then "active" end%>">

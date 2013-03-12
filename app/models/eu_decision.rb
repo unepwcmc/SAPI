@@ -9,6 +9,13 @@ class EuDecision < ActiveRecord::Base
   belongs_to :source, :class_name => 'TradeCode'
   belongs_to :term, :class_name => 'TradeCode'
 
+
+  RESTRICTION_TYPES = [
+    'b', '+', '-', '-Removed'
+  ]
+
+  validates :restriction, { presence: true, inclusion: { :in => RESTRICTION_TYPES } }
+
   def year
     start_date ? start_date.strftime('%Y') : ''
   end

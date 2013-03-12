@@ -40,12 +40,7 @@
     <%= f.label :restriction, "Restriction", :class => 'control-label' %>
     <div class="controls">
       <%= f.select :restriction,
-        options_from_collection_for_select(
-          [],
-          :id,
-          :name_en,
-          @eu_opinion.restriction
-      ),
+        options_for_select(EuDecision::RESTRICTION_TYPES),
         { :include_blank => true },
         {:class => 'eu_opinion select2', :style => 'width: 220px' }
       %>
