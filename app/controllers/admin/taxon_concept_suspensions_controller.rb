@@ -1,14 +1,38 @@
 class Admin::TaxonConceptSuspensionsController < Admin::SimpleCrudController
-  defaults :resource_class => Suspension, :collection_name => 'suspensions', :instance_name => 'suspension'
   belongs_to :taxon_concept
 
   before_filter :load_lib_objects
+  layout 'taxon_concepts'
 
-  def create
-    create! do |format|
-      debugger
+  def update
+    update! do |success, failure|
+      success.html {
+        redirect_to admin_taxon_concept_taxon_concept_suspensions_url(@taxon_concept),
+        :notice => 'Operation successful'
+      }
+      failure.html {
+        load_lib_objects
+        render 'new'
+      }
+
+      success.js { render 'create' }
+      failure.js {
+        load_lib_objects
+        render 'new'
+      }
     end
   end
+
+  def create
+    create! do |success, failure|
+      success.html {
+        redirect_to admin_taxon_concept_taxon_concept_suspensions_url(@taxon_concept),
+        :notice => 'Operation successful'
+      }
+      failure.html { render 'create' }
+    end
+  end
+
 
   def load_lib_objects
     @current_suspensions = Suspension.where(:is_current => true)
@@ -21,7 +45,6 @@ class Admin::TaxonConceptSuspensionsController < Admin::SimpleCrudController
   end
 
   def collection
-    @suspensions ||= end_of_association_chain.order('start_date').
-      page(params[:page])
+    @suspensions ||= end_of_association_chain.page(params[:page])
   end
 end
