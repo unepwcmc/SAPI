@@ -7,7 +7,7 @@ class Admin::EuSuspensionsController < Admin::SimpleCrudController
   def update
     update! do |success, failure|
       success.html {
-        redirect_to admin_taxon_concept_suspensions_url(params[:taxon_concept_id]),
+        redirect_to admin_taxon_concept_eu_suspensions_url(params[:taxon_concept_id]),
         :notice => 'Operation successful'
       }
       failure.html {

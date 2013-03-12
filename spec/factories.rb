@@ -85,4 +85,13 @@ FactoryGirl.define do
     taxon_concept
   end
 
+  factory :eu_opinion do
+    taxon_concept
+    restriction 'b'
+  end
+
+  factory :eu_suspension do
+    taxon_concept
+    restriction 'b'
+  end
 end
