@@ -1,0 +1,103 @@
+<%= admin_new_modal({:title => "Current CITES Suspensions"}) { render "current_suspensions_form" } %>
+
+<% form_url = admin_taxon_concept_taxon_concept_suspension_path(@taxon_concept) %>
+<%= form_for [:admin, @taxon_concept, @suspension], :url => form_url, :html => {:class => 'form-horizontal'} do |f| %>
+
+  <p>
+    <%= link_to("View Current Suspensions", "#new-suspension",
+      {
+        :role => "button",
+        :"data-toggle" => "modal",
+      }) %>
+  </p>
+
+  <div class="control-group">
+    <%= f.label :publication_date, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :publication_date, :class => "suspension datepicker", :value => @suspension.publication_date_formatted %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :geo_entity_id, "Party", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :geo_entity_id,
+        options_from_collection_for_select(
+          @geo_entities,
+          :id,
+          :name_en,
+          @suspension.geo_entity_id
+      ),
+        { :include_blank => true },
+        {:class => 'suspension select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Validity</label>
+    <div class="controls">
+      <%= f.text_field :start_date, :class => "suspension datepicker", :value => @suspension.start_date_formatted, :placeholder => 'Start Date' %>
+      <%= f.text_field :end_date, :class => "suspension datepicker", :value => @suspension.end_date_formatted, :placeholder => 'End Date' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Suspension Basis</label>
+    <div class="controls">
+      <%= f.text_area :suspension_basis, :class => 'suspension' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Notes</label>
+    <div class="controls">
+      <%= f.text_area :notes, :class => 'suspension' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :term_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :term_id,
+        options_from_collection_for_select(@terms, :id, :code),
+        { :include_blank => true },
+        {:class => 'suspension select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :source_id, :class => 'control-label'  %>
+    <div class="controls">
+      <%= f.select :source_id,
+        options_from_collection_for_select(@sources, :id, :code),
+        { :include_blank => true },
+        {:class => 'suspension select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :purpose_id, :class => 'control-label' %>
+    <div class="controls">
+          <%= f.select :purpose_id,
+            options_from_collection_for_select(@purposes, :id, :code),
+            { :include_blank => true },
+            {:class => 'suspension select2', :style => 'width: 220px' }
+          %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :is_current, "Is current?", :class => 'control-label'%>
+    <div class="controls">
+      <%= f.check_box :is_current %><br>
+    </div>
+  </div>
+
+  <p class="pull-right">
+    <%= f.submit %>
+  </p>
+
+<% end %>

@@ -1,0 +1,16 @@
+<div class="admin-header">
+  <h1>CITES Suspensions</h1>
+  <div class="action-buttons">
+    <%= admin_add_new_button(
+      :resource => 'taxon_concept_suspension',
+      :href => new_admin_taxon_concept_taxon_concept_suspension_url(@taxon_concept),
+      :"data-toggle" => nil,
+      :role => nil
+    ) %>
+  </div>
+</div>
+
+<%= admin_table %>
+
+<%= paginate collection %>
+
