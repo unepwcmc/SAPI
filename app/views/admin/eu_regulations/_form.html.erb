@@ -1,0 +1,22 @@
+<%= form_for [:admin, @eu_regulation], :remote => true do |f| %>
+
+  <%= error_messages_for(@eu_regulation) %>
+
+  <%= f.hidden_field :designation_id %>
+  <label>Name</label><%= f.text_field :name %><br />
+  <label>Effective at</label>
+  <%= f.text_field :effective_at, :class => "datepicker",
+    :value => @eu_regulation.effective_at_formatted
+  %>
+  <% if @eu_regulation.new_record? %>
+    <label>Copy listing changes from:</label>
+    <%= f.select :listing_changes_event_id,
+      options_from_collection_for_select(
+        @eu_regulations_for_dropdown, :id, :name
+      ),
+      { :include_blank => true }
+    %>
+  <% end %>
+  <label>URL</label><%= f.text_area :url %><br />
+  <label>Description</label><%= f.text_area :description %><br />
+<% end %>

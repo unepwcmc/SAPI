@@ -62,13 +62,13 @@ describe ListingChange do
             :taxon_concept => taxon_concept,
             :exclusions_attributes => {
               '0' => {
-                :exclusion_scientific_name => 'Abcd',
+                :scientific_name => 'Abcd',
                 :change_type_id => exception_type.id
               }
             }
           )
         }
-        #specify{ listing_change.should have(1).error_on(:exclusion_scientific_name)}
+        specify{ listing_change.exclusions.first.should have(1).error_on(:scientific_name)}
       end
       context "inclusion taxon concept is lower rank" do
         let(:rank1){ create(:rank, :taxonomic_position => '1')}
@@ -90,7 +90,7 @@ describe ListingChange do
         }
         specify{listing_change.should have(1).error_on(:inclusion_taxon_concept_id)}
       end
-      context "designation mismatch" do
+      context "species listing designation mismatch" do
         let(:designation1){ create(:designation)}
         let(:designation2){ create(:designation)}
         let(:listing_change){
@@ -102,6 +102,22 @@ describe ListingChange do
         }
         specify{listing_change.should have(1).error_on(:species_listing_id)}
       end
+      context "event designation mismatch" do
+        let(:designation1){ create(:designation)}
+        let(:designation2){ create(:designation)}
+        let(:listing_change){
+          build(
+            :listing_change,
+            :event_id => create(:event, :designation => designation1).id,
+            :change_type => create(:change_type, :designation => designation2)
+          )
+        }
+        specify{listing_change.should have(1).error_on(:event_id)}
+      end
     end
+  end
+  describe :effective_at_formatted do
+    let(:listing_change){ create(:cites_I_addition, :effective_at => '2012-05-10') }
+    specify {listing_change.effective_at_formatted.should == '10/05/2012' }
   end
 end

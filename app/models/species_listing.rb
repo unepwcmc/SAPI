@@ -19,17 +19,6 @@ class SpeciesListing < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => {:scope => :designation_id}
   validates :abbreviation, :presence => true, :uniqueness => {:scope => :designation_id}
 
-  before_destroy :check_destroy_allowed
-
-  private
-
-  def check_destroy_allowed
-    unless can_be_deleted?
-      errors.add(:base, "not allowed (listing changes present)")
-      return false
-    end
-  end
-
   def can_be_deleted?
     listing_changes.count == 0
   end
