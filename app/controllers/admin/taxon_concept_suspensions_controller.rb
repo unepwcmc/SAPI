@@ -4,6 +4,13 @@ class Admin::TaxonConceptSuspensionsController < Admin::SimpleCrudController
   before_filter :load_lib_objects
   layout 'taxon_concepts'
 
+  def new
+    new! do
+      @taxon_concept_suspension = TaxonConceptSuspension.new
+      @taxon_concept_suspension.suspension = Suspension.new
+    end
+  end
+
   def update
     update! do |success, failure|
       success.html {
