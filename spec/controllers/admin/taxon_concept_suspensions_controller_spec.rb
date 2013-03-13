@@ -65,7 +65,7 @@ describe Admin::TaxonConceptSuspensionsController do
       @taxon_concept_suspension = create(
         :taxon_concept_suspension,
         :taxon_concept_id => @taxon_concept.id,
-        :suspension => @suspension.id
+        :suspension_id => @suspension.id
       )
     end
 
@@ -103,7 +103,7 @@ describe Admin::TaxonConceptSuspensionsController do
       @taxon_concept_suspension = create(
         :taxon_concept_suspension,
         :taxon_concept_id => @taxon_concept.id,
-        :suspension => @suspension.id
+        :suspension_id => @suspension.id
       )
     end
 

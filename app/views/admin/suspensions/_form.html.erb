@@ -46,14 +46,14 @@
   <div class="control-group">
     <label class="control-label">Suspension Basis</label>
     <div class="controls">
-      <%= f.text_area :suspension_basis, :class => 'suspension' %>
+      <%= f.text_area :suspension_basis, :class => 'suspension', :value => @suspension.suspension_basis %>
     </div>
   </div>
 
   <div class="control-group">
     <label class="control-label">Notes</label>
     <div class="controls">
-      <%= f.text_area :notes, :class => 'suspension' %>
+      <%= f.text_area :notes, :class => 'suspension', :value => @suspension.notes %>
     </div>
   </div>
 
@@ -61,7 +61,7 @@
     <%= f.label :term_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.select :term_id,
-        options_from_collection_for_select(@terms, :id, :code),
+        options_from_collection_for_select(@terms, :id, :code, @suspension.term_id),
         { :include_blank => true },
         {:class => 'suspension select2', :style => 'width: 220px' }
       %>
@@ -72,7 +72,7 @@
     <%= f.label :source_id, :class => 'control-label'  %>
     <div class="controls">
       <%= f.select :source_id,
-        options_from_collection_for_select(@sources, :id, :code),
+        options_from_collection_for_select(@sources, :id, :code, @suspension.source_id),
         { :include_blank => true },
         {:class => 'suspension select2', :style => 'width: 220px' }
       %>
@@ -83,7 +83,7 @@
     <%= f.label :purpose_id, :class => 'control-label' %>
     <div class="controls">
           <%= f.select :purpose_id,
-            options_from_collection_for_select(@purposes, :id, :code),
+            options_from_collection_for_select(@purposes, :id, :code, @suspension.purpose_id),
             { :include_blank => true },
             {:class => 'suspension select2', :style => 'width: 220px' }
           %>
@@ -93,7 +93,7 @@
   <div class="control-group">
     <%= f.label :is_current, "Is current?", :class => 'control-label'%>
     <div class="controls">
-      <%= f.check_box :is_current %><br>
+      <%= f.check_box :is_current, :value => @suspension.is_current %><br>
     </div>
   </div>
 

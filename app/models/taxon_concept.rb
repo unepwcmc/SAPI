@@ -99,6 +99,10 @@ class TaxonConcept < ActiveRecord::Base
   has_many :current_suspensions, :class_name => 'Suspension', :conditions => "is_current = true"
   has_many :taxon_concept_suspensions
 
+  def current_suspensions
+    suspensions.where(:is_current => true)
+  end
+
   has_many :eu_opinions
   has_many :current_eu_opinions, :class_name => 'EuOpinion', :conditions => "is_current = true"
   has_many :eu_suspensions

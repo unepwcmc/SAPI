@@ -5,4 +5,6 @@ class TaxonConceptSuspension < ActiveRecord::Base
   belongs_to :taxon_concept
 
   accepts_nested_attributes_for :suspension
+
+  validates :suspension_id, :uniqueness => true
 end

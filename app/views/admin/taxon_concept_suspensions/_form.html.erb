@@ -13,11 +13,12 @@
   <%= error_messages_for(@taxon_concept_suspension) %>
 
   <%= f.fields_for :suspension do |ff| %>
+    <% @suspension = @taxon_concept_suspension.suspension %>
 
     <div class="control-group">
       <%= ff.label :publication_date, :class => 'control-label' %>
       <div class="controls">
-        <%= ff.text_field :publication_date, :class => "suspension datepicker" %>
+        <%= ff.text_field :publication_date, :class => "suspension datepicker", :value => @suspension.publication_date_formatted %>
       </div>
     </div>
 
@@ -28,7 +29,8 @@
           options_from_collection_for_select(
             @geo_entities,
             :id,
-            :name_en
+            :name_en,
+            @suspension.geo_entity_id
         ),
           { :include_blank => true },
           {:class => 'suspension select2', :style => 'width: 220px' }
@@ -39,22 +41,22 @@
     <div class="control-group">
       <label class="control-label">Validity</label>
       <div class="controls">
-        <%= ff.text_field :start_date, :class => "suspension datepicker" %>
-        <%= ff.text_field :end_date, :class => "suspension datepicker" %>
+        <%= ff.text_field :start_date, :class => "suspension datepicker", :value => @suspension.start_date_formatted, :placeholder => 'Start Date' %>
+        <%= ff.text_field :end_date, :class => "suspension datepicker", :value => @suspension.end_date_formatted, :placeholder => 'End Date' %>
       </div>
     </div>
 
     <div class="control-group">
       <label class="control-label">Suspension Basis</label>
       <div class="controls">
-        <%= ff.text_area :suspension_basis, :class => 'suspension' %>
+        <%= ff.text_area :suspension_basis, :class => 'suspension', :value => @suspension.suspension_basis %>
       </div>
     </div>
 
     <div class="control-group">
       <label class="control-label">Notes</label>
       <div class="controls">
-        <%= ff.text_area :notes, :class => 'suspension' %>
+        <%= ff.text_area :notes, :class => 'suspension', :value => @suspension.notes %>
       </div>
     </div>
 
@@ -62,7 +64,7 @@
       <%= ff.label :term_id, :class => 'control-label' %>
       <div class="controls">
         <%= ff.select :term_id,
-          options_from_collection_for_select(@terms, :id, :code),
+          options_from_collection_for_select(@terms, :id, :code, @suspension.term_id),
           { :include_blank => true },
           {:class => 'suspension select2', :style => 'width: 220px' }
         %>
@@ -73,7 +75,7 @@
       <%= ff.label :source_id, :class => 'control-label'  %>
       <div class="controls">
         <%= ff.select :source_id,
-          options_from_collection_for_select(@sources, :id, :code),
+          options_from_collection_for_select(@sources, :id, :code, @suspension.source_id),
           { :include_blank => true },
           {:class => 'suspension select2', :style => 'width: 220px' }
         %>
@@ -84,7 +86,7 @@
       <%= ff.label :purpose_id, :class => 'control-label' %>
       <div class="controls">
             <%= ff.select :purpose_id,
-              options_from_collection_for_select(@purposes, :id, :code),
+              options_from_collection_for_select(@purposes, :id, :code, @suspension.purpose_id),
               { :include_blank => true },
               {:class => 'suspension select2', :style => 'width: 220px' }
             %>
@@ -94,7 +96,7 @@
     <div class="control-group">
       <%= ff.label :is_current, "Is current?", :class => 'control-label'%>
       <div class="controls">
-        <%= ff.check_box :is_current %><br>
+        <%= ff.check_box :is_current, :value => @suspension.is_current %><br>
       </div>
     </div>
 

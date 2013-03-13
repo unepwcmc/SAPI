@@ -7,7 +7,8 @@ class Admin::TaxonConceptSuspensionsController < Admin::SimpleCrudController
   def new
     new! do
       @taxon_concept_suspension = TaxonConceptSuspension.new
-      @taxon_concept_suspension.suspension = Suspension.new
+      @suspension = Suspension.new
+      @taxon_concept_suspension.suspension = @suspension
     end
   end
 
