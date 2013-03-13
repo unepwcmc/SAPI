@@ -96,9 +96,11 @@ class TaxonConcept < ActiveRecord::Base
   has_many :current_quotas, :class_name => 'Quota', :conditions => "is_current = true"
 
   has_and_belongs_to_many :suspensions, :join_table => :taxon_concept_suspensions
-  has_many :current_suspensions, :class_name => 'Suspension', :conditions => "is_current = true"
-
   has_many :taxon_concept_suspensions
+
+  def current_suspensions
+    suspensions.where(:is_current => true)
+  end
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
