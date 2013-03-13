@@ -22,3 +22,14 @@ ul.dropdown-menu {
     margin-right: 10px;
   }
 }
+
+.modal-body {
+  textarea {
+    width: 400px;
+    height: 100px;
+  }
+}
+
+input.annotation, textarea.annotation {
+  width: 80%;
+}

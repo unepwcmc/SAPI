@@ -7,18 +7,18 @@ describe Admin::SuspensionsController do
 
   describe "GET index" do
     it "renders the index template" do
-      get :index, :taxon_concept_id => @taxon_concept.id
+      get :index
       response.should render_template("index")
     end
-    it "renders the taxon_concepts_layout" do
-      get :index, :taxon_concept_id => @taxon_concept.id
-      response.should render_template('layouts/taxon_concepts')
+    it "assigns @suspensions" do
+      get :index
+      assigns(:suspensions)
     end
   end
 
   describe "GET new" do
     it "renders the new template" do
-      get :new, :taxon_concept_id => @taxon_concept.id
+      get :new
       response.should render_template('new')
     end
   end
@@ -29,37 +29,31 @@ describe Admin::SuspensionsController do
         post :create, :suspension => {
             :publication_date => "22/03/2013",
             :is_current => 1
-          },
-          :taxon_concept_id => @taxon_concept.id
-        response.should render_template("index")
+          }
+        response.should redirect_to(
+          admin_suspensions_url
+        )
       end
     end
     it "renders new when not successful" do
-      post :create, :suspension => {},
-        :taxon_concept_id => @taxon_concept.id
+      post :create, :suspension => {}
       response.should render_template("new")
     end
   end
 
   describe "GET edit" do
     before(:each) do
-      @suspension = create(
-        :suspension,
-        :taxon_concept_id => @taxon_concept.id
-      )
+      @suspension = create( :suspension)
     end
     it "renders the edit template" do
-      get :edit, :id => @suspension.id, :taxon_concept_id => @taxon_concept.id
+      get :edit, :id => @suspension.id
       response.should render_template('edit')
     end
   end
 
   describe "PUT update" do
     before(:each) do
-      @suspension = create(
-        :suspension,
-        :taxon_concept_id => @taxon_concept.id
-      )
+      @suspension = create(:suspension)
     end
 
     context "when successful" do
@@ -67,10 +61,9 @@ describe Admin::SuspensionsController do
         put :update, :suspension => {
             :publication_date => 1.week.ago
           },
-          :id => @suspension.id,
-          :taxon_concept_id => @taxon_concept.id
+          :id => @suspension.id
         response.should redirect_to(
-          admin_taxon_concept_suspensions_url(@taxon_concept)
+          admin_suspensions_url
         )
       end
     end
@@ -79,24 +72,19 @@ describe Admin::SuspensionsController do
       put :update, :suspension => {
           :publication_date => nil
         },
-        :id => @suspension.id,
-        :taxon_concept_id => @taxon_concept.id
+        :id => @suspension.id
       response.should render_template('new')
     end
   end
 
   describe "DELETE destroy" do
     before(:each) do
-      @suspension = create(
-        :suspension,
-        :taxon_concept_id => @taxon_concept.id
-      )
+      @suspension = create(:suspension)
     end
     it "redirects after delete" do
-      delete :destroy, :id => @suspension.id,
-        :taxon_concept_id => @taxon_concept.id
+      delete :destroy, :id => @suspension.id
       response.should redirect_to(
-        admin_taxon_concept_suspensions_url(@taxon_concept)
+        admin_suspensions_url
       )
     end
   end

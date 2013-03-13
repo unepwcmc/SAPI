@@ -2,8 +2,11 @@
 
   <%= error_messages_for(@annotation) %>
 
-  <%= f.label :parent_symbol %>
-  <%= f.text_field :parent_symbol %>
+  <label>CITES CoP</label>
+  <%= f.select :event_id,
+    options_from_collection_for_select(@cites_cops, :id, :name, @annotation && @annotation.event_id)
+  %><br />
+
   <%= f.label :symbol %>
   <%= f.text_field :symbol %>
 

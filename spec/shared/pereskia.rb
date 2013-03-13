@@ -40,7 +40,7 @@ shared_context "Pereskia" do
      :is_current => true
     )
     create(
-     :cites_II_addition_exception,
+     :cites_II_exception,
      :taxon_concept => @genus1,
      :effective_at => '2010-06-23',
      :parent_id => l1.id

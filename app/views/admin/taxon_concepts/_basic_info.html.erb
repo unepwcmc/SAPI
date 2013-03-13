@@ -43,8 +43,8 @@
       <%= link_to "CITES Quotas", admin_taxon_concept_quotas_path(@taxon_concept) %>
     </li>
 
-    <li class="<%= if controller_name == 'suspensions' then 'active' end%>">
-      <%= link_to "CITES Suspensions", admin_taxon_concept_suspensions_path(@taxon_concept) %>
+    <li class="<%= if controller_name == 'taxon_concept_suspensions' then 'active' end%>">
+      <%= link_to "CITES Suspensions", admin_taxon_concept_taxon_concept_suspensions_path(@taxon_concept) %>
     </li>
 
     <li class="dropdown <%= if %w{eu_opinions eu_suspensions}.include?(controller_name) then 'active' end %>">

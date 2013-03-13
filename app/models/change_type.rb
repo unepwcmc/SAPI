@@ -19,8 +19,6 @@ class ChangeType < ActiveRecord::Base
 
   build_dictionary :addition, :deletion, :reservation, :reservation_withdrawal, :exception
 
-  before_destroy :check_destroy_allowed
-
   def abbreviation
     self.name.split('_').
       map{|a| a[0..2]}.join('-')
@@ -28,15 +26,6 @@ class ChangeType < ActiveRecord::Base
 
   def print_name
     self.name.titleize
-  end
-
-  private
-
-  def check_destroy_allowed
-    unless can_be_deleted?
-      errors.add(:base, "not allowed (listing changes present)")
-      return false
-    end
   end
 
   def can_be_deleted?

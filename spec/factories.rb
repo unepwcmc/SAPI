@@ -12,6 +12,17 @@ FactoryGirl.define do
 
   factory :event do
     sequence(:name) {|n| "CoP#{n}"}
+    effective_at '2012-01-01'
+    designation
+
+    factory :eu_regulation, :class => EuRegulation do
+      designation { Designation.find_by_name('EU') }
+    end
+
+    factory :cites_cop, :class => CitesCop do
+      designation { Designation.find_by_name('CITES') }
+    end
+
   end
 
   factory :taxon_name do
@@ -50,6 +61,11 @@ FactoryGirl.define do
   factory :suspension do
     taxon_concept
     publication_date Date.new(2012, 12, 3)
+  end
+
+  factory :taxon_concept_suspension do
+    suspension
+    taxon_concept
   end
 
   factory :unit do
