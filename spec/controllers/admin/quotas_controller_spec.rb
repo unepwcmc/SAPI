@@ -33,7 +33,9 @@ describe Admin::QuotasController do
             :publication_date => 1.week.ago
           },
           :taxon_concept_id => @taxon_concept.id
-        response.should render_template("index")
+        response.should redirect_to(
+          admin_taxon_concept_quotas_url(@taxon_concept)
+        )
       end
     end
     it "renders new when not successful" do
