@@ -15,9 +15,9 @@
   <div class="control-group">
     <%= f.label :quota, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :quota %>
+      <%= f.text_field :quota, :value => @quota.quota %>
       <%= f.select :unit_id,
-        options_from_collection_for_select(@units, :id, :code),
+        options_from_collection_for_select(@units, :id, :code, @quota.unit_id),
         { :include_blank => true }
       %>
     </div>
@@ -57,7 +57,7 @@
   <div class="control-group">
     <label class="control-label">Notes</label>
     <div class="controls">
-      <%= f.text_area :notes, :class => 'quota' %>
+      <%= f.text_area :notes, :class => 'quota', :value => @quota.notes %>
     </div>
   </div>
 
@@ -65,7 +65,7 @@
     <%= f.label :term_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.select :term_id,
-        options_from_collection_for_select(@terms, :id, :code),
+        options_from_collection_for_select(@terms, :id, :code, @quota.term_id),
         { :include_blank => true },
         {:class => 'quota select2', :style => 'width: 220px' }
       %>
@@ -76,7 +76,7 @@
     <%= f.label :source_id, :class => 'control-label'  %>
     <div class="controls">
       <%= f.select :source_id,
-        options_from_collection_for_select(@sources, :id, :code),
+        options_from_collection_for_select(@sources, :id, :code, @quota.source_id),
         { :include_blank => true },
         {:class => 'quota select2', :style => 'width: 220px' }
       %>
@@ -86,7 +86,7 @@
   <div class="control-group">
     <%= f.label :is_current, "Is current?", :class => 'control-label'%>
     <div class="controls">
-      <%= f.check_box :is_current %><br>
+      <%= f.check_box :is_current, :value => @quota.is_current %><br>
     </div>
   </div>
 
