@@ -1,25 +1,3 @@
-@import "bootstrap-variables";
-
-.admin-header {
-  h1 {
-    color: $grayLight;
-    float:left;
-    width: 50%;
-  }
-  h3 {
-    float: left;
-    width: 50%;
-  }
-  .action-buttons {
-    float:right;
-    text-align: right;
-    width: 50%;
-    line-height: 40px;
-    margin: 10px 0;
-  }
-  clear:both;
-}
-
 ul.dropdown-menu {
   z-index: 1100
 }
