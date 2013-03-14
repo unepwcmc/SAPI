@@ -63,11 +63,6 @@ FactoryGirl.define do
     publication_date Date.new(2012, 12, 3)
   end
 
-  factory :taxon_concept_suspension do
-    suspension
-    taxon_concept
-  end
-
   factory :unit do
     code "BOX"
     name_en "Boxes"

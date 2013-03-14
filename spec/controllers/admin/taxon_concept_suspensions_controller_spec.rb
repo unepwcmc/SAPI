@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::TaxonConceptSuspensionsController do
   before do
     @taxon_concept = create(:taxon_concept)
-    @suspension = create(:suspension)
+    @suspension = create(:suspension, :taxon_concept => @taxon_concept)
   end
 
   describe "GET index" do
@@ -33,85 +33,56 @@ describe Admin::TaxonConceptSuspensionsController do
           },
           :taxon_concept_id => @taxon_concept.id
         response.should redirect_to(
-          admin_taxon_concept_taxon_concept_suspensions_url(@taxon_concept)
+          admin_taxon_concept_suspensions_url(@taxon_concept)
         )
       end
     end
     it "renders new when not successful" do
       post :create, :suspension => {},
         :taxon_concept_id => @taxon_concept.id
-      response.should redirect_to(
-        admin_taxon_concept_taxon_concept_suspensions_url(@taxon_concept)
-      )
+      response.should render_template('new')
     end
   end
 
   describe "GET edit" do
-    before(:each) do
-      @taxon_concept_suspension = create(
-        :taxon_concept_suspension,
-        :taxon_concept_id => @taxon_concept.id,
-        :suspension_id => @suspension.id
-      )
-    end
     it "renders the edit template" do
-      get :edit, :id => @taxon_concept_suspension.id, :taxon_concept_id => @taxon_concept.id
+      get :edit, :id => @suspension.id, :taxon_concept_id => @taxon_concept.id
       response.should render_template('edit')
     end
   end
 
   describe "PUT update" do
-    before(:each) do
-      @taxon_concept_suspension = create(
-        :taxon_concept_suspension,
-        :taxon_concept_id => @taxon_concept.id,
-        :suspension_id => @suspension.id
-      )
-    end
-
     context "when successful" do
       it "renders taxon_concepts suspensions page" do
-        put :update, :taxon_concept_suspension => {
-            :suspension_attributes => {
-              :id => @suspension.id,
-              :publication_date => 1.week.ago
-            }
+        put :update, :suspension => {
+            :publication_date => 1.week.ago
           },
-          :id => @taxon_concept_suspension.id,
+          :id => @suspension.id,
           :taxon_concept_id => @taxon_concept.id
         response.should redirect_to(
-          admin_taxon_concept_taxon_concept_suspensions_url(@taxon_concept)
+          admin_taxon_concept_suspensions_url(@taxon_concept)
         )
       end
     end
 
     it "renders new when not successful" do
       put :update, :taxon_concept_suspension => {
-          :suspension_attributes => {
-            :id => @suspension.id,
-            :publication_date => nil
-          }
+          :publication_date => nil
         },
-        :id => @taxon_concept_suspension.id,
+        :id => @suspension.id,
         :taxon_concept_id => @taxon_concept.id
-      response.should render_template('new')
+      response.should redirect_to(
+        admin_taxon_concept_suspensions_url(@taxon_concept)
+      )
     end
   end
 
   describe "DELETE destroy" do
-    before(:each) do
-      @taxon_concept_suspension = create(
-        :taxon_concept_suspension,
-        :taxon_concept_id => @taxon_concept.id,
-        :suspension_id => @suspension.id
-      )
-    end
-
     it "redirects after delete" do
-      delete :destroy, :id => @taxon_concept_suspension.id,
+      delete :destroy, :id => @suspension.id,
         :taxon_concept_id => @taxon_concept.id
       response.should redirect_to(
-        admin_taxon_concept_taxon_concept_suspensions_url(@taxon_concept)
+        admin_taxon_concept_suspensions_url(@taxon_concept)
       )
     end
   end

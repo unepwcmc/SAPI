@@ -24,8 +24,8 @@
       <td><%= suspension.suspension_basis %></td>
       <td><%= suspension.notes %></td>
       <td>
-        <% TaxonConceptSuspension.where(:suspension_id => suspension.id).each do |tcs| %>
-          <%= link_to tcs.taxon_concept.full_name, edit_admin_taxon_concept_path(tcs.taxon_concept) %>
+        <% if suspension.taxon_concept %>
+          <%= link_to suspension.taxon_concept.full_name, edit_admin_taxon_concept_path(suspension.taxon_concept) %>
         <% end %>
       </td>
       <td>
