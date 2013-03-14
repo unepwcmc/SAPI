@@ -1,7 +1,9 @@
 var form = $("<%= escape_javascript(render('form')) %>");
 
 var references = {};
-var referencesLabels = [];
+var referencesLabels = [], selectedReferences = [];
+var taxon_concept_id = <%= @taxon_concept.id %>;
+
 form.find('input.typeahead').typeahead({
   source: function(query, process)  {
     $.get(
@@ -22,24 +24,25 @@ form.find('input.typeahead').typeahead({
     );
   },
   updater: function(item) {
-    var taxon_concept_id = <%= @taxon_concept.id %>;
+    if (!_.contains(selectedReferences, item)) {
+      selectedReferences.push(item);
+      // Coerce nested_form in to adding a new nested reference form field set
+      form.find('#addReference').click();
+      // Select the form field set added by nested_form
+      var $field = form.find('.fields').last()
 
-    // Coerce nested_form in to adding a new nested reference form field set
-    form.find('#addReference').click();
-    // Select the form field set added by nested_form
-    var $field = form.find('.fields').last()
+      // Display the selected 
+      $field.find('span').text(item);
 
-    // Display the selected 
-    $field.find('span').text(item);
+      // nested_form creates fields with unique (time based IDs),
+      // so we determine which field is which based on order as this is faster than using a regex.
+      var inputs = $field.find('input[id^="taxon_concept_taxon_concept_references_attributes_"][type="text"]');
 
-    // nested_form creates fields with unique (time based IDs),
-    // so we determine which field is which based on order as this is faster than using a regex.
-    var inputs = $field.find('input[id^="taxon_concept_taxon_concept_references_attributes_"][type="text"]');
-
-    // Reference ID
-    $(inputs[0]).val(references[item]);
-    // Taxon Concept ID
-    $(inputs[1]).val(taxon_concept_id);
+      // Reference ID
+      $(inputs[0]).val(references[item]);
+      // Taxon Concept ID
+      $(inputs[1]).val(taxon_concept_id);
+    }
   }
 });
 

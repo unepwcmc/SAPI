@@ -15,4 +15,6 @@ class TaxonConceptReference < ActiveRecord::Base
 
   belongs_to :reference
   belongs_to :taxon_concept
+
+  validates :reference_id, :uniqueness => true
 end
