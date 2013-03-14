@@ -8,6 +8,7 @@
   <th>Restriction Notes</th>
   <th>Comments</th>
   <th>Current</th>
+  <th>Conditions Apply</th>
   <th>Actions</th>
 </thead>
 <tbody>
@@ -22,6 +23,7 @@
       <td><%= opinion.restriction_text %></td>
       <td><%= opinion.comments %></td>
       <td><%= true_false_icon(opinion.is_current) %></td>
+      <td><%= true_false_icon(opinion.conditions_apply) %></td>
       <td>
         <%= link_to edit_icon,
           edit_admin_taxon_concept_eu_opinion_path(@taxon_concept, opinion)

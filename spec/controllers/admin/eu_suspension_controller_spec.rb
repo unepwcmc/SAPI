@@ -27,7 +27,8 @@ describe Admin::EuSuspensionsController do
     context "when successful" do
       it "redirects to the EU suspensions index" do
         post :create, :eu_suspension => {
-            :restriction => EuDecision::RESTRICTION_TYPES.first
+            :restriction => EuDecision::RESTRICTION_TYPES.first,
+            :start_date => Date.new(2013,1,1)
           },
           :taxon_concept_id => @taxon_concept.id
           response.should redirect_to(admin_taxon_concept_eu_suspensions_url(@taxon_concept.id))

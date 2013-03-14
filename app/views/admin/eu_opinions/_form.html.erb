@@ -84,6 +84,13 @@
   </div>
 
   <div class="control-group">
+    <%= f.label :conditions_apply, "Conditions Apply", :class => 'control-label'%>
+    <div class="controls">
+      <%= f.check_box :conditions_apply, :value => @eu_suspension.conditions_apply %><br>
+    </div>
+  </div>
+
+  <div class="control-group">
     <%= f.label :is_current, "Is current?", :class => 'control-label'%>
     <div class="controls">
       <%= f.check_box :is_current, :value => @eu_opinion.is_current %><br>
