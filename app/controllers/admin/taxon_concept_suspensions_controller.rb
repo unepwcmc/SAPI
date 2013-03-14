@@ -45,7 +45,6 @@ class Admin::TaxonConceptSuspensionsController < Admin::SimpleCrudController
 
 
   def load_lib_objects
-    @current_suspensions = Suspension.where(:is_current => true)
     @units = Unit.order(:code)
     @terms = Term.order(:code)
     @sources = Source.order(:code)
