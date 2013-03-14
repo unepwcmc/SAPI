@@ -8,7 +8,7 @@ class Admin::TaxonConceptSuspensionsController < Admin::SimpleCrudController
   def update
     update! do |success, failure|
       success.html {
-        redirect_to admin_taxon_concept_taxon_concept_suspensions_url(@taxon_concept),
+        redirect_to admin_taxon_concept_suspensions_url(@taxon_concept),
         :notice => 'Operation successful'
       }
       failure.html {
@@ -27,10 +27,19 @@ class Admin::TaxonConceptSuspensionsController < Admin::SimpleCrudController
   def create
     create! do |success, failure|
       success.html {
-        redirect_to admin_taxon_concept_taxon_concept_suspensions_url(@taxon_concept),
+        redirect_to admin_taxon_concept_suspensions_url(@taxon_concept),
         :notice => 'Operation successful'
       }
       failure.html { render 'create' }
+    end
+  end
+
+  def destroy
+    destroy! do |success, failure|
+      success.html {
+        redirect_to admin_taxon_concept_suspensions_url(@taxon_concept),
+        :notice => 'Operation successful'
+      }
     end
   end
 
