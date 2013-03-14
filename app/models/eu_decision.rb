@@ -15,6 +15,8 @@ class EuDecision < ActiveRecord::Base
   ]
 
   validates :restriction, { presence: true, inclusion: { :in => RESTRICTION_TYPES } }
+  validates :start_date, presence: true
+  validates :taxon_concept, presence: true
 
   def year
     start_date ? start_date.strftime('%Y') : ''

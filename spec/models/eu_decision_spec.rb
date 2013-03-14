@@ -27,6 +27,31 @@ describe EuDecision do
         specify { eu_decision.should have(2).error_on(:restriction) }
       end
 
+      context "when start_date missing" do
+        let(:eu_decision){
+          build(
+            :eu_decision,
+            :start_date => nil,
+            :taxon_concept => @taxon_concept
+          )
+        }
+
+        specify { eu_decision.should be_invalid }
+        specify { eu_decision.should have(1).error_on(:start_date) }
+      end
+
+      context "when start_date missing" do
+        let(:eu_decision){
+          build(
+            :eu_decision,
+            :taxon_concept => nil
+          )
+        }
+
+        specify { eu_decision.should be_invalid }
+        specify { eu_decision.should have(1).error_on(:taxon_concept) }
+      end
+
       context "when valid" do
         let(:eu_decision){
           build(
