@@ -94,6 +94,7 @@ FactoryGirl.define do
 
   factory :eu_decision do
     taxon_concept
+    restriction 'b'
   end
 
   factory :eu_opinion do
