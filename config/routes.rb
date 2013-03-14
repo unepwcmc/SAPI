@@ -39,6 +39,7 @@ SAPI::Application.routes.draw do
       resources :geo_relationships, :only => [:index, :create, :update, :destroy]
     end
     resources :cites_plant_annotations, :only => [:index, :create, :update, :destroy]
+    resources :suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
     resources :taxon_concepts, :only => [:index, :create, :edit, :update, :destroy] do
       get :autocomplete, :on => :collection
       resources :taxon_relationships, :only => [:index, :create, :destroy]
@@ -49,6 +50,8 @@ SAPI::Application.routes.draw do
       resources :distributions, :only => [:new, :create, :edit, :update, :destroy]
       resources :synonym_relationships, :only => [:new, :create, :edit, :update, :destroy]
       resources :hybrid_relationships, :only => [:new, :create, :edit, :update, :destroy]
+      resources :quotas, :only => [:index, :new, :create, :edit, :update, :destroy]
+      resources :taxon_concept_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy], :as => :suspensions
     end
     root :to => 'home#index'
   end
