@@ -44,7 +44,7 @@
     </li>
 
     <li class="<%= if controller_name == 'taxon_concept_suspensions' then 'active' end%>">
-      <%= link_to "CITES Suspensions", admin_taxon_concept_taxon_concept_suspensions_path(@taxon_concept) %>
+      <%= link_to "CITES Suspensions", admin_taxon_concept_suspensions_path(@taxon_concept) %>
     </li>
   <% end %>
   <li class="<%= if controller_name == "taxon_relationships" then "active" end%>">

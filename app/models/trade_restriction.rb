@@ -39,7 +39,7 @@ class TradeRestriction < ActiveRecord::Base
 
   validate :valid_dates
   def valid_dates
-    if !(start_date.nil? && end_date.nil?) && (start_date > end_date)
+    if !(start_date.nil? || end_date.nil?) && (start_date > end_date)
       self.errors.add(:start_date, ' has to be before end date.')
     end
   end
