@@ -11,8 +11,7 @@
   <th>Actions</th>
 </thead>
 <tbody>
-  <% collection.each do |tcs| %>
-    <% suspension = tcs.suspension %>
+  <% collection.each do |suspension| %>
     <tr class="<%= if suspension.is_current? then "current_listing" end %>">
       <td><%= suspension.year %></td>
       <td><%= suspension.publication_date_formatted %></td>
@@ -25,10 +24,10 @@
       <td><%= suspension.notes %></td>
       <td>
         <%= link_to edit_icon,
-          edit_admin_taxon_concept_taxon_concept_suspension_path(@taxon_concept, tcs)
+          edit_admin_taxon_concept_taxon_concept_suspension_path(@taxon_concept, suspension)
         %>
         <%= link_to delete_icon,
-          admin_taxon_concept_taxon_concept_suspension_path(@taxon_concept, tcs),
+          admin_taxon_concept_taxon_concept_suspension_path(@taxon_concept, suspension),
           :confirm => "Are you sure?", :method => :delete
         %>
       </td>

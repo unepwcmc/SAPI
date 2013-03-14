@@ -35,7 +35,7 @@ class Admin::SuspensionsController < Admin::SimpleCrudController
   def load_lib_objects
     @current_suspensions = Suspension.
       where(:is_current => true).
-      where("trade_restrictions.id NOT IN (?)", TaxonConceptSuspension.all)
+      where(:taxon_concept_id => nil)
     @units = Unit.order(:code)
     @terms = Term.order(:code)
     @sources = Source.order(:code)

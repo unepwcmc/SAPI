@@ -1,16 +1,9 @@
 class Admin::TaxonConceptSuspensionsController < Admin::SimpleCrudController
+  defaults :resource_class => Suspension, :collection_name => 'suspensions', :instance_name => 'suspension'
   belongs_to :taxon_concept
 
   before_filter :load_lib_objects
   layout 'taxon_concepts'
-
-  def new
-    new! do
-      @taxon_concept_suspension = TaxonConceptSuspension.new
-      @suspension = Suspension.new
-      @taxon_concept_suspension.suspension = @suspension
-    end
-  end
 
   def update
     update! do |success, failure|
