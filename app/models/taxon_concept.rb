@@ -92,6 +92,11 @@ class TaxonConcept < ActiveRecord::Base
   has_many :taxon_commons, :dependent => :destroy, :include => :common_name
   has_many :common_names, :through => :taxon_commons
   has_and_belongs_to_many :references, :join_table => :taxon_concept_references
+  has_many :quotas
+  has_many :current_quotas, :class_name => 'Quota', :conditions => "is_current = true"
+
+  has_many :suspensions
+  has_many :current_suspensions, :class_name => 'Suspension', :conditions => "is_current = true"
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
@@ -139,6 +144,10 @@ class TaxonConcept < ActiveRecord::Base
     SQL
     )
   }
+
+  def under_cites_eu?
+    self.taxonomy.name == Taxonomy::CITES_EU
+  end
 
   def fixed_order_required?
     rank && rank.fixed_order
