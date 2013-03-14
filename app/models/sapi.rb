@@ -33,7 +33,7 @@ module Sapi
   ]
 
   def self.rebuild(options = {})
-    self.disable_triggers
+    self.disable_triggers if options[:disable_triggers]
     procedures = REBUILD_PROCEDURES - (options[:except] || [])
     procedures &= options[:only] unless options[:only].nil?
     procedures.each{ |p| 
@@ -41,7 +41,7 @@ module Sapi
       ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()") 
       puts "Ending procedure: #{p}"
     }
-    self.enable_triggers
+    self.enable_triggers if options[:disable_triggers]
   end
 
   def self.rebuild_taxonomy
@@ -62,11 +62,11 @@ module Sapi
   end
 
   def self.rebuild_taxon_concepts_mview
-    rebuild(:only => [:taxon_concepts_mview])
+    rebuild(:only => [:taxon_concepts_mview], :disable_triggers => false)
   end
 
   def self.rebuild_listing_changes_mview
-    rebuild(:only => [:listing_changes_mview])
+    rebuild(:only => [:listing_changes_mview], :disable_triggers => false)
   end
 
   def self.rebuild_mviews
