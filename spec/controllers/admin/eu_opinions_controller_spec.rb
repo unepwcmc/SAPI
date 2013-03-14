@@ -27,7 +27,7 @@ describe Admin::EuOpinionsController do
     context "when successful" do
       it "redirects to the EU Opinions index" do
         post :create, :eu_opinion => {
-            :restriction => EuDecision::RESTRICTION_TYPES.first
+            :restriction => EuDecision::RESTRICTION_TYPES.first, :start_date => Date.today
           },
           :taxon_concept_id => @taxon_concept.id
           response.should redirect_to(admin_taxon_concept_eu_opinions_url(@taxon_concept.id))

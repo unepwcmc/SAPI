@@ -13,6 +13,16 @@
   <%= error_messages_for(@eu_opinion) %>
 
   <div class="control-group">
+    <%= f.label :law_id, "Law", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :law_id,
+        options_from_collection_for_select(@laws, :id, :name, @eu_opinion.law_id),
+        { :selected => @eu_opinion.law_id }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
     <%= f.label :geo_entity_id, "Party", :class => 'control-label' %>
     <div class="controls">
       <%= f.select :geo_entity_id,
@@ -86,7 +96,7 @@
   <div class="control-group">
     <%= f.label :conditions_apply, "Conditions Apply", :class => 'control-label'%>
     <div class="controls">
-      <%= f.check_box :conditions_apply, :value => @eu_suspension.conditions_apply %><br>
+      <%= f.check_box :conditions_apply, :value => @eu_opinion.conditions_apply %><br>
     </div>
   </div>
 

@@ -13,6 +13,16 @@
   <%= error_messages_for(@eu_suspension) %>
 
   <div class="control-group">
+    <%= f.label :law_id, "Law", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :law_id,
+        options_from_collection_for_select(@laws, :id, :name, @eu_suspension.law_id),
+        { :selected => @eu_suspension.law_id }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
     <%= f.label :geo_entity_id, "Party", :class => 'control-label' %>
     <div class="controls">
       <%= f.select :geo_entity_id,

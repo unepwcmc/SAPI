@@ -40,6 +40,7 @@ class Admin::EuSuspensionsController < Admin::SimpleCrudController
     @sources = Source.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+    @laws = Event.joins(:designation).where('designations.name' => 'EU')
   end
 
   def collection
