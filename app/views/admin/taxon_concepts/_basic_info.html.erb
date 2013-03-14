@@ -33,20 +33,43 @@
   <li class="<%= if controller_name == "taxon_concepts" then "active" end%>">
     <%= link_to "Details", edit_admin_taxon_concept_path(@taxon_concept) %>
   </li>
-  <% @taxon_concept.designations.each do |d| %>
-    <li class="<%= if controller_name == "listing_changes" && @designation.id == d.id then "active" end%>">
-      <%= link_to "#{d.name} Legislation", admin_taxon_concept_designation_listing_changes_path(@taxon_concept, d) %>
-    </li>
-  <% end %>
-  <% if @taxon_concept.under_cites_eu? %>
-    <li class="<%= if controller_name == 'quotas' then 'active' end%>">
-      <%= link_to "CITES Quotas", admin_taxon_concept_quotas_path(@taxon_concept) %>
-    </li>
 
-    <li class="<%= if controller_name == 'taxon_concept_suspensions' then 'active' end%>">
-      <%= link_to "CITES Suspensions", admin_taxon_concept_suspensions_path(@taxon_concept) %>
-    </li>
+  <% @taxon_concept.designations.each do |d| %>
+    <% if d.is_cites? %>
+      <li class="dropdown <%= if @designation && @designation.is_cites? ||
+        %w(quotas taxon_concept_suspensions).include?(controller_name) then 'active' end %>">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">CITES legislation<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li class="<%= if controller_name == "listing_changes" && @designation.is_cites? then "active" end%>">
+            <%= link_to "CITES listing changes", admin_taxon_concept_designation_listing_changes_path(@taxon_concept, d) %>
+          </li>
+          <li class="<%= if controller_name == 'quotas' then 'active' end%>">
+            <%= link_to "CITES Quotas", admin_taxon_concept_quotas_path(@taxon_concept) %>
+          </li>
+          <li class="<%= if controller_name == 'taxon_concept_suspensions' then 'active' end%>">
+            <%= link_to "CITES Suspensions", admin_taxon_concept_suspensions_path(@taxon_concept) %>
+          </li>
+        </ul>
+      </li>
+    <% elsif d.is_eu? %>
+      <li class="dropdown <%= if @designation &&@designation.is_eu? ||
+        %w(eu_opinions eu_suspensions).include?(controller_name) then 'active' end %>">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">EU legislation <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li class="<%= if controller_name == "listing_changes" && @designation.is_eu? then "active" end%>">
+            <%= link_to "EU listing changes", admin_taxon_concept_designation_listing_changes_path(@taxon_concept, d) %>
+          </li>
+          <li class="<%= if controller_name == 'eu_opinions' then 'active' end%>">
+            <%= link_to "EU Opinions", admin_taxon_concept_eu_opinions_path(@taxon_concept) %>
+          </li>
+          <li class="<%= if controller_name == 'eu_suspensions' then 'active' end%>">
+            <%= link_to "EU Suspensions", admin_taxon_concept_eu_suspensions_path(@taxon_concept) %>
+          </li>
+        </ul>
+      </li>
+    <% end %>
   <% end %>
+
   <li class="<%= if controller_name == "taxon_relationships" then "active" end%>">
     <%= link_to "Taxon Relationships", admin_taxon_concept_taxon_relationships_path(@taxon_concept) %>
   </li>
