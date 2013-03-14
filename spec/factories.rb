@@ -12,6 +12,17 @@ FactoryGirl.define do
 
   factory :event do
     sequence(:name) {|n| "CoP#{n}"}
+    effective_at '2012-01-01'
+    designation
+
+    factory :eu_regulation, :class => EuRegulation do
+      designation { Designation.find_by_name('EU') }
+    end
+
+    factory :cites_cop, :class => CitesCop do
+      designation { Designation.find_by_name('CITES') }
+    end
+
   end
 
   factory :taxon_name do
@@ -46,6 +57,24 @@ FactoryGirl.define do
   end
 
   #TODO use traits instead of inheritance for taxon concept ranks?
+
+  factory :suspension do
+    taxon_concept
+    publication_date Date.new(2012, 12, 3)
+  end
+
+  factory :unit do
+    code "BOX"
+    name_en "Boxes"
+    type "Unit"
+  end
+
+  factory :quota do
+    taxon_concept
+    unit
+    publication_date Date.new(2012, 12, 3)
+    quota '10'
+  end
 
   factory :reference do
     author 'Bolek'

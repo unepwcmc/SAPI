@@ -31,8 +31,6 @@ class GeoEntity < ActiveRecord::Base
   validates :iso_code3, :uniqueness => true, :length => {:is => 3},
     :allow_blank => true, :if => :is_country?
 
-  before_destroy :check_destroy_allowed
-
   # geo entities containing those given by ids
   scope :containing_geo_entities, lambda { |geo_entity_ids|
     select("#{table_name}.*").
@@ -65,15 +63,6 @@ class GeoEntity < ActiveRecord::Base
 
   def as_json(options={})
     super(:only =>[:id, :iso_code2], :methods => [:name])
-  end
-
-  private
-
-  def check_destroy_allowed
-    unless can_be_deleted?
-      errors.add(:base, "not allowed")
-      return false
-    end
   end
 
   def can_be_deleted?

@@ -11,6 +11,7 @@
     margin: 0;
   }
 }
+
 .new_listing_change table,
 .edit_listing_change table,
 table.listing-change {
@@ -27,6 +28,18 @@ table.listing-change {
 
 textarea.annotation {
   height: 4em;
+}
+
+textarea {
+  &.quota,
+  &.suspension {
+    height: 5em;
+    width: 430px;
+  }
+}
+
+input.annotation, textarea.annotation {
+  width: 80%;
 }
 
 .new_listing_change,
@@ -90,4 +103,31 @@ ul.distribution_references {
   .reference_delete {
     margin-right: 20px;
   }
+}
+
+tr.current_listing {
+  td {
+    background-color: lightgreen !important;
+  }
+}
+
+#new-quota,
+#new-suspension {
+  &.modal {
+    width: 700px;
+  }
+}
+
+ul.relationship_parts{
+  list-style-type: none;
+  overflow: hidden;
+}
+.relationship_parts li{
+  width: 225px;
+  float: left;
+  margin-right: 15px;
+}
+#new-taxon_relationship{ /* modal window */
+  width: 780px;
+  margin-left: -390px; /* half the width */
 }

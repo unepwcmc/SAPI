@@ -3,9 +3,11 @@
 #   sidekiq -C config.yml
 ---
 :verbose: false
-:pidfile: ./tmp/pids/sidekiq.pid
-:namespace: sidekiq_<%= stage %>
-:concurrency:  10
+:pidfile: tmp/pids/sidekiq.pid
+staging:
+  :concurrency: 10
+production:
+  :concurrency: 50
 :queues:
   - [often, 7]
   - [default, 5]
