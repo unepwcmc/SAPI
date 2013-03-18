@@ -116,7 +116,7 @@ module TaxonConceptHelper
 
   def admin_new_common_name_modal
     admin_new_modal(
-      :resource => 'common_name'
+      :resource => 'common_name', :save_and_reopen => true
     ){ '' }
   end
 end
