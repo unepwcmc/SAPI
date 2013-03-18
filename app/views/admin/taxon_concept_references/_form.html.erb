@@ -3,30 +3,17 @@
   <li><a href="#new">Create new reference</a></li>
 </ul>
 
-<%= nested_form_for [:admin, @taxon_concept], :remote => true do |f| %>
+<%= nested_form_for [:admin, @taxon_concept, @taxon_concept_reference], :remote => true do |f| %>
+  <%= error_messages_for(@taxon_concept_reference) %>
   <div class="tab-content">
     <div class="tab-pane fade in active reference_search_form" id="search">
       <label>Search by title, author or year:</label>
-      <%= text_field_tag 'reference_search', nil, :class => 'typeahead' %>
-
-      <%= f.link_to_add "Add a reference", :taxon_concept_references, :class => "hidden", :id => "addReference" %>
-      <% f.fields_for :taxon_concept_references do |ff| %>
-        <%= ff.link_to_remove delete_icon %>
-
-        <span></span> - 
-        <%= ff.text_field :reference_id, :class => "hidden" %>
-        <%= ff.text_field :taxon_concept_id, :class => "hidden" %>
-        <%= ff.fields_for :data do |fff| %>
-          <%= fff.check_box :usr_is_std_ref %>
-          <label>Is Standard?</label>
-        <% end %>
-      <% end %>
+      <%= text_field_tag 'reference_search', nil, :class =>'typeahead' %>
+      <%= text_field_tag 'reference[id]', nil, :class =>'typeahead hidden' %>
     </div>
 
     <div class="tab-pane fade" id="new">
-      <%= f.link_to_add "Add a reference", :references %>
-
-      <% f.fields_for :references do |ff| %>
+      <%= f.fields_for :reference do |ff| %>
         <label>Title</label>
         <%= ff.text_field :title %>
 
