@@ -8,5 +8,10 @@ class Admin::CitesPlantAnnotationsController < Admin::SimpleCrudController
       @annotations ||= end_of_association_chain.
         for_cites_plants.page(params[:page])
     end
+
+    def load_associations
+      @cites_cops = CitesCop.order(:effective_at)
+    end
+
 end
 

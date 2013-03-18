@@ -1,0 +1,19 @@
+<div class="admin-header">
+  <h3>EU Opinions</h3>
+  <div class="action-buttons">
+    <%= admin_add_new_button(
+      :resource => 'eu_opinion',
+      :href => new_admin_taxon_concept_eu_opinion_path(@taxon_concept),
+      :"data-toggle" => nil,
+      :role => nil,
+      :name => 'Add new EU Opinion'
+    ) %>
+  </div>
+</div>
+
+<%= admin_new_modal{ '' } %>
+
+<%= admin_table %>
+
+<%= paginate collection %>
+

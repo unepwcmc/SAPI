@@ -8,9 +8,9 @@ module TaxonConceptHelper
         else
           controller_name.titleize
         end
-      ) + content_tag(:div, :class => 'action-buttons') do
+      ) + (content_tag(:div, :class => 'action-buttons') do
         admin_add_new_taxon_concept_multi
-      end
+      end)
     end
   end
 
@@ -69,6 +69,17 @@ module TaxonConceptHelper
     )
   end
 
+  def admin_add_new_suspension_button
+    admin_add_new_button(
+      :resource => 'suspensions',
+      :href => new_admin_suspension_url,
+      :name => 'Add suspension',
+      :remote => true,
+      :'data-toggle' => nil,
+      :role => nil
+    )
+  end
+
   def admin_new_distribution_modal( nested = false)
     admin_new_modal(
       :resource => 'distribution'
@@ -87,6 +98,12 @@ module TaxonConceptHelper
     ){ '' }
   end
 
+  def admin_new_suspension_modal
+    admin_new_modal(
+      :resource => 'suspension'
+    ){ '' }
+  end
+
   def admin_add_new_common_name_button
     admin_add_new_button(
       :resource => 'common_name',
@@ -99,7 +116,7 @@ module TaxonConceptHelper
 
   def admin_new_common_name_modal
     admin_new_modal(
-      :resource => 'common_name'
+      :resource => 'common_name', :save_and_reopen => true
     ){ '' }
   end
 end

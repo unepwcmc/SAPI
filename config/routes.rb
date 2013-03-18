@@ -1,4 +1,6 @@
 SAPI::Application.routes.draw do
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
   namespace :api do
     resources :terms, :only => [:index]
     resources :sources, :only => [:index]
@@ -26,23 +28,32 @@ SAPI::Application.routes.draw do
     resources :change_types, :only => [:index, :create, :update, :destroy]
     resources :ranks, :only => [:index, :create, :update, :destroy]
     resources :tags, :only => [:index, :create, :update, :destroy]
-    resources :events, :only => [:index, :create, :update, :destroy]
+    resources :events
+    resources :eu_regulations do
+      post :activate, :on => :member
+    end
+    resources :cites_cops
     resources :references, :only => [:index, :create, :update, :destroy]
     resources :geo_entities, :only => [:index, :create, :update, :destroy] do
       get :autocomplete, :on => :collection
       resources :geo_relationships, :only => [:index, :create, :update, :destroy]
     end
     resources :cites_plant_annotations, :only => [:index, :create, :update, :destroy]
+    resources :suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
     resources :taxon_concepts, :only => [:index, :create, :edit, :update, :destroy] do
       get :autocomplete, :on => :collection
       resources :taxon_relationships, :only => [:index, :create, :destroy]
       resources :designations, :only => [] do
-        resources :listing_changes, :only => [:index, :new, :create, :edit, :update, :destroy ]
+        resources :listing_changes
       end
       resources :taxon_commons, :only => [:new, :create, :edit, :update, :destroy]
       resources :distributions, :only => [:new, :create, :edit, :update, :destroy]
       resources :synonym_relationships, :only => [:new, :create, :edit, :update, :destroy]
       resources :hybrid_relationships, :only => [:new, :create, :edit, :update, :destroy]
+      resources :quotas, :only => [:index, :new, :create, :edit, :update, :destroy]
+      resources :eu_opinions, :only => [:index, :new, :create, :edit, :update, :destroy]
+      resources :eu_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
+      resources :taxon_concept_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy], :as => :suspensions
     end
     root :to => 'home#index'
   end

@@ -10,17 +10,25 @@ $(document).ready ->
 
 class AdminEditor
   init: () ->
-    @initModals()
-
-  initModals: () ->
     $('.modal .modal-footer .save-button').click () ->
       $(@).closest('.modal').find('form').submit()
+    $('.modal').on 'hidden', () =>
+      console.log('hidden')
+      @clearModalForm($(@))
 
-    $('.modal').on 'hidden', () ->
-      form = $(@).find('form')
-      form[0].reset() if form.length > 0
+    @initModals()
 
-      $(@).find('.alert').remove()
+  clearModalForm: (modal) ->
+    form = modal.find('form')
+    form[0].reset() if form.length > 0
+
+  initForm: () ->
+    $(".datepicker").datepicker
+      format: "dd/mm/yyyy",
+      autoclose: true
+
+  initModals: () ->
+    $(@).find('.alert').remove()
 
   alertSuccess: (txt) ->
     $('.alert').remove()
@@ -124,28 +132,29 @@ class TaxonConceptsEditor extends AdminEditor
         $().add(taxonomyEl).add(rankEl).change () =>
           $(@).val(null)
 
+  init: () ->
+    super
+    $('.modal .modal-footer .save-and-reopen-button').click () =>
+      @saveAndReopen = true
+
   initModals: () ->
     super
+    @saveAndReopen = false
     @initTaxonConceptTypeaheads()
 
 class ListingChangesEditor extends AdminEditor
   init: () ->
     @initEditors()
-    @initModals()
+    @initForm()
 
   initEditors: () ->
     $("[rel='tooltip']").tooltip()
 
-  initModals: () ->
-    super
-    @initForm()
-
   initForm: () ->
+    super
     @initTaxonConceptTypeaheads()
     @initDistributionSelectors()
-    $(".datepicker").datepicker
-      format: "dd/mm/yyyy",
-      autoclose: true
+    @initEventSelector()
     # handle initializing stuff for nested form add events
     $(document).on('nested:fieldAdded', (event) =>
       event.field.find('.distribution').select2({
@@ -183,3 +192,9 @@ class ListingChangesEditor extends AdminEditor
     $('.distribution:not(#exclusions_fields_blueprint > .fields > select)').select2({
       placeholder: 'Select countries'
     })
+
+  initEventSelector: () ->
+    if $('#cites_cop').length > 0
+      $('#listing_change_hash_annotation_id').chained('#cites_cop')
+    else
+      $('#listing_change_hash_annotation_id').chained('#listing_change_event_id')

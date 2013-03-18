@@ -22,7 +22,7 @@ gem 'sidekiq-status'
 gem 'whenever', :require => false
 
 gem 'jquery-rails', '2.1.4' #do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
-gem 'bootstrap-generators', '~> 2.1'
+gem 'bootstrap-sass'
 gem 'kaminari'
 gem 'select2-rails'
 gem 'nested_form', '~> 0.3.1'
@@ -94,3 +94,7 @@ group :test do
 end
 
 gem 'rake', '~> 10.0.3'
+
+gem 'slim'
+# if you require 'sinatra' you get the DSL extended to Object
+gem 'sinatra', '>= 1.3.0', :require => nil

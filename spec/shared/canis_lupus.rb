@@ -91,7 +91,7 @@ shared_context "Canis lupus" do
      :is_current => true
     )
     create(
-      :cites_I_addition_exception,
+      :cites_I_exception,
       :taxon_concept => @subspecies,
       :effective_at => '2010-06-23',
       :parent_id => l2.id,
@@ -104,7 +104,7 @@ shared_context "Canis lupus" do
      :is_current => true
     )
     l3_exc = create(
-      :cites_II_addition_exception,
+      :cites_II_exception,
       :taxon_concept => @species,
       :effective_at => '1979-06-28',
       :parent_id => l3.id,

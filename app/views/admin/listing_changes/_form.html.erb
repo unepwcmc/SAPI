@@ -6,13 +6,22 @@
   <table class="listing-change">
     <thead>
       <tr>
+        <th>
+          <%= f.label :event_id %>
+        </th>
         <th><%= f.label :species_listing_id %></th>
         <th><%= f.label :change_type_id %></th>
-        <th><%= f.label :effective_at %></th>
       </tr>
     </thead>
     <tbody>
       <tr>
+        <td>
+          <%= f.select :event_id,
+            options_from_collection_for_select(@events, :id, :name, @listing_change.event_id),
+            { :selected => @listing_change.event_id },
+            { :disabled => !@listing_change.new_record? }
+          %>
+        </td>
         <td>
           <%= f.select :species_listing_id,
             options_from_collection_for_select(@species_listings, :id, :name, @listing_change.species_listing_id),
@@ -24,9 +33,6 @@
             options_from_collection_for_select(@change_types, :id, :print_name, @listing_change.change_type_id)
           %>
         </td>
-        <td>
-          <%= f.text_field :effective_at, :class => "datepicker", :value => @listing_change.effective_at_formatted %>
-        </td>
       </tr>
     </tbody>
   </table>
@@ -34,12 +40,16 @@
   <table class="listing-change">
     <thead>
       <tr>
+        <th><%= f.label :effective_at %></th>
         <th><label>Party</label></th>
         <th><%= f.label :geo_entity_ids, "Countries" %></th>
       </tr>
     </thead>
     <tbody>
       <tr>
+        <td>
+          <%= f.text_field :effective_at, :class => "datepicker", :value => @listing_change.effective_at_formatted %>
+        </td>
         <%= f.fields_for :party_listing_distribution do |b| %>
           <td>
             <%= b.select :geo_entity_id,
@@ -82,13 +92,20 @@
   <h4>Annotations</h4>
   <p>
     <%= f.label :hash_annotation_id %>
-    <%= f.select :hash_annotation_id,
-      options_from_collection_for_select(
-        @hash_annotations, :id, :full_symbol,
-        @listing_change && @listing_change.hash_annotation_id
+    <% if @designation.is_eu? %>
+      <%= select_tag :cites_cop,
+        options_from_collection_for_select(@cites_cops, :id, :name)
+      %>
+    <% end %>
+    <%= f.select :hash_annotation_id, 
+      options_for_select(
+        @hash_annotations.map do |a|
+          [a.full_symbol, a.id, {:class => a.event_id}]
+        end
       ),
       { :include_blank => true }
     %>
+
   </p>
 
   <%= f.fields_for :annotation do |ff| %>
@@ -133,8 +150,8 @@
     </tr>
     <tr>
       <td>
-        <%= ff.hidden_field :change_type_id, :value => @exception_change_type.id %>
-        <%= ff.text_field :exclusion_scientific_name, :class => 'typeahead',
+        <%= ff.hidden_field :change_type_id %>
+        <%= ff.text_field :scientific_name, :class => 'typeahead',
           "data-taxon-concept-scope" => 'descendants',
           "data-taxon-concept-id" => @taxon_concept.id,
           "data-taxonomy-id" => @taxon_concept.taxonomy_id
