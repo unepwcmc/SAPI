@@ -9,10 +9,8 @@ module TaxonConceptHelper
           controller_name.titleize
         end
       ) + (content_tag(:div, :class => 'action-buttons') do
-        admin_add_new_suspension_button
-      end) + content_tag(:div, :class => 'action-buttons') do
         admin_add_new_taxon_concept_multi
-      end
+      end)
     end
   end
 
