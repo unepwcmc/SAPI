@@ -1,0 +1,114 @@
+<%= admin_new_modal({:title => "Current EU Opinions"}) { render "current_opinions_form" } %>
+
+<%= form_for [:admin, @taxon_concept, @eu_opinion], :html => {:class => 'form-horizontal'} do |f| %>
+
+  <p>
+    <%= link_to("View Current EU Opinions", "#new-eu_opinion",
+      {
+        :role => "button",
+        :"data-toggle" => "modal",
+      }) %>
+  </p>
+
+  <%= error_messages_for(@eu_opinion) %>
+
+  <div class="control-group">
+    <%= f.label :law_id, "Law", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :law_id,
+        options_from_collection_for_select(@laws, :id, :name, @eu_opinion.law_id),
+        { :selected => @eu_opinion.law_id }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :geo_entity_id, "Party", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :geo_entity_id,
+        options_from_collection_for_select(
+          @geo_entities,
+          :id,
+          :name_en,
+          @eu_opinion.geo_entity_id
+      ),
+        { :include_blank => true },
+        {:class => 'eu_opinion select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Validity</label>
+    <div class="controls">
+      <%= f.text_field :start_date, :class => "eu_opinion datepicker", :value =>  @eu_opinion.start_date && @eu_opinion.start_date.strftime('%d/%m/%Y'), :placeholder => 'Start Date' %>
+      <%= f.text_field :end_date, :class => "eu_opinion datepicker", :value => @eu_opinion.end_date && @eu_opinion.end_date.strftime('%d/%m/%Y'), :placeholder => 'End Date' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :restriction, "Restriction", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :restriction,
+        options_for_select(EuDecision::RESTRICTION_TYPES, @eu_opinion.restriction),
+        { :include_blank => true },
+        {:class => 'eu_opinion select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Restriction Text</label>
+    <div class="controls">
+      <%= f.text_area :restriction_text, :class => 'eu_opinion', :value => @eu_opinion.restriction_text %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Comments</label>
+    <div class="controls">
+      <%= f.text_area :comments, :class => 'eu_opinion', :value => @eu_opinion.comments %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :term_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :term_id,
+        options_from_collection_for_select(@terms, :id, :code, @eu_opinion.term_id),
+        { :include_blank => true },
+        {:class => 'eu_opinion select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :source_id, :class => 'control-label'  %>
+    <div class="controls">
+      <%= f.select :source_id,
+        options_from_collection_for_select(@sources, :id, :code, @eu_opinion.source_id),
+        { :include_blank => true },
+        {:class => 'eu_opinion select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :conditions_apply, "Conditions Apply", :class => 'control-label'%>
+    <div class="controls">
+      <%= f.check_box :conditions_apply, :value => @eu_opinion.conditions_apply %><br>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :is_current, "Is current?", :class => 'control-label'%>
+    <div class="controls">
+      <%= f.check_box :is_current, :value => @eu_opinion.is_current %><br>
+    </div>
+  </div>
+
+  <p class="pull-right">
+    <%= f.submit "Save" %>
+  </p>
+
+<% end %>

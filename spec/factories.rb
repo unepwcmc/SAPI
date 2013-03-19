@@ -92,4 +92,21 @@ FactoryGirl.define do
     model 'TaxonConcept'
   end
 
+  factory :eu_decision do
+    taxon_concept
+    restriction 'b'
+    start_date Date.new(2013,1,1)
+  end
+
+  factory :eu_opinion do
+    taxon_concept
+    restriction 'b'
+    start_date Date.new(2013,1,1)
+  end
+
+  factory :eu_suspension do
+    taxon_concept
+    restriction 'b'
+    start_date Date.new(2013,1,1)
+  end
 end

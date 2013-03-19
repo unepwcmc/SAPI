@@ -10,7 +10,17 @@ $(document).ready ->
 
 class AdminEditor
   init: () ->
+    $('.modal .modal-footer .save-button').click () ->
+      $(@).closest('.modal').find('form').submit()
+    $('.modal').on 'hidden', () =>
+      console.log('hidden')
+      @clearModalForm($(@))
+
     @initModals()
+
+  clearModalForm: (modal) ->
+    form = modal.find('form')
+    form[0].reset() if form.length > 0
 
   initForm: () ->
     $(".datepicker").datepicker
@@ -18,14 +28,7 @@ class AdminEditor
       autoclose: true
 
   initModals: () ->
-    $('.modal .modal-footer .save-button').click () ->
-      $(@).closest('.modal').find('form').submit()
-
-    $('.modal').on 'hidden', () ->
-      form = $(@).find('form')
-      form[0].reset() if form.length > 0
-
-      $(@).find('.alert').remove()
+    $(@).find('.alert').remove()
 
   alertSuccess: (txt) ->
     $('.alert').remove()
@@ -133,8 +136,14 @@ class TaxonConceptsEditor extends AdminEditor
           $().add(taxonomyEl).add(rankEl).change () =>
             $(@).val(null)
 
+  init: () ->
+    super
+    $('.modal .modal-footer .save-and-reopen-button').click () =>
+      @saveAndReopen = true
+
   initModals: () ->
     super
+    @saveAndReopen = false
     @initTaxonConceptTypeaheads()
 
 class ListingChangesEditor extends AdminEditor
