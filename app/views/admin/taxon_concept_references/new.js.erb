@@ -1,49 +1,14 @@
 var form = $("<%= escape_javascript(render('form')) %>");
 
-var references = {};
-var referencesLabels = [], selectedReferences = [];
-
-form.find('input.typeahead').typeahead({
-  source: function(query, process)  {
-    $.get(
-      '/admin/references/autocomplete',
-      { query: query },
-      function (data) {
-        _.each(data, function(item, i, list) {
-          if (_.has(references, item.value)) {
-            item.value = item.value + ' (' + item.id + ')';
-          }
-
-          referencesLabels.push(item.value);
-          references[item.value] = item.id;
-        });
-
-        return process(referencesLabels);
-      }
-    );
-  },
-  updater: function(item) {
-    $('#reference_id').val(references[item]);
-    $('#reference_search').val(item);
-  }
-});
-
-
 $('#admin-new-taxon_concept_reference-form').html(form);
+
+window.adminEditor.initModals();
+
+window.adminEditor.clearModalForm($('#admin-new-taxon_concept_reference-form'));
 $('#new-taxon_concept_reference').modal('show');
 
 $('.nav-tabs a').click(function (e) {
   e.preventDefault();
-  $(this).parents('ul').siblings('form')[0].reset()
+  window.adminEditor.clearModalForm($('#admin-new-taxon_concept_reference-form'));
   $(this).tab('show');
 });
-
-if (window.currentTab !== undefined) {
-  $('#new-taxon_concept_reference .nav-tabs a[href="'+window.currentTab+'"]').tab('show');
-}
-
-$('#new-taxon_concept_reference .save-button').click(function(e) {
-  window.currentTab = $('#new-taxon_concept_reference .nav-tabs li.active a').attr('href');
-});
-
-$('#references-list').html("<%= escape_javascript(render('list')) %>");

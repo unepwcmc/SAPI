@@ -136,10 +136,43 @@ class TaxonConceptsEditor extends AdminEditor
           $().add(taxonomyEl).add(rankEl).change () =>
             $(@).val(null)
 
+    @references = {}
+    @referencesLabels = []
+    $('.references-typeahead').typeahead(
+      source: (query, process) =>
+        $.get(
+          '/admin/references/autocomplete',
+          { query: query },
+          (data) =>
+            _.each(data, (item, i, list) =>
+              if (_.has(@references, item.value))
+                item.value = item.value + ' (' + item.id + ')'
+
+              @referencesLabels.push(item.value)
+              @references[item.value] = item.id
+            )
+
+            process(@referencesLabels)
+        )
+      updater: (item) =>
+        $('#reference_id').val(@references[item])
+        $('#reference_search').val(item)
+    )
+
   init: () ->
     super
+
     $('.modal .modal-footer .save-and-reopen-button').click () =>
       @saveAndReopen = true
+
+  alertSuccess: (txt) ->
+    $('.alert').remove()
+
+    alert = $('<div class="alert alert-success">')
+    alert.append('<a class="close" href="#" data-dismiss="alert">x</a>')
+    alert.append(txt)
+
+    $(alert).insertBefore($('.modal-body form'))
 
   initModals: () ->
     super

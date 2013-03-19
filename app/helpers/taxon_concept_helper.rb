@@ -113,7 +113,8 @@ module TaxonConceptHelper
 
   def admin_new_reference_modal(nested = false)
     admin_new_modal(
-      :resource => 'taxon_concept_reference'
+      :resource => 'taxon_concept_reference',
+      :save_and_reopen => true
     )
   end
 

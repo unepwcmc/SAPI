@@ -26,7 +26,7 @@ class Admin::TaxonConceptReferencesController < Admin::SimpleCrudController
       success.js {
         @taxon_concept_reference = TaxonConceptReference.new
         @taxon_concept_reference.reference = Reference.new
-        render 'new'
+        render 'create'
       }
       failure.js { render 'new' }
     end

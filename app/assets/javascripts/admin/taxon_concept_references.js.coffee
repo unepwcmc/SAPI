@@ -4,7 +4,6 @@ class window.DistributionReferences
     @el = $(options.el) || $('body')
 
   add: (id, title) ->
-    debugger
     @references[title] = id unless @references[title]?
     @render()
 
