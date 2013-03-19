@@ -151,16 +151,17 @@ class TaxonConceptsEditor extends AdminEditor
               @referencesLabels.push(item.value)
               @references[item.value] = item.id
             )
-
             process(@referencesLabels)
         )
       updater: (item) =>
         $('#reference_id').val(@references[item])
         $('#reference_search').val(item)
+        return item
     )
 
   init: () ->
     super
+    $('a').popover({});
 
     $('.modal .modal-footer .save-and-reopen-button').click () =>
       @saveAndReopen = true

@@ -4,7 +4,8 @@
           "#",
           :data => {
             :toggle => "popover",
-            :title => "References",
+            :"original-title" => "References",
+            :html => true,
             :content => render("admin/distributions/references", :references => d.references).html_safe
           } %>
   <% else %>
