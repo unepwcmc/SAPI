@@ -41,8 +41,8 @@ class AdminEditor
 
 class AdminInPlaceEditor extends AdminEditor
   init: () ->
+    super
     @initEditors()
-    @initModals()
 
   initEditors: () ->
     $('#admin-in-place-editor .editable').editable
