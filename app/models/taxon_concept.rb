@@ -15,8 +15,6 @@
 #  taxonomic_position         :string(255)      default("0"), not null
 #  full_name                  :string(255)
 #  name_status                :string(255)      default("A"), not null
-#  lft                        :integer
-#  rgt                        :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  taxonomy_id                :integer          default(1), not null

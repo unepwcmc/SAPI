@@ -36,6 +36,7 @@
 #  cites_ii                    :boolean
 #  cites_iii                   :boolean
 #  current_listing             :text
+#  closest_listed_ancestor_id  :integer
 #  listing_updated_at          :datetime
 #  ann_symbol                  :text
 #  hash_ann_symbol             :text
