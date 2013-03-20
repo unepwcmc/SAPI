@@ -13,9 +13,6 @@
 #  suspension_basis :string(255)
 #  type             :string(255)
 #  unit_id          :integer
-#  term_id          :integer
-#  source_id        :integer
-#  purpose_id       :integer
 #  taxon_concept_id :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
