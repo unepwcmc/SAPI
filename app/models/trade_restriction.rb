@@ -29,9 +29,12 @@ class TradeRestriction < ActiveRecord::Base
 
   belongs_to :taxon_concept
   belongs_to :unit, :class_name => 'TradeCode'
-  belongs_to :term, :class_name => 'TradeCode'
-  belongs_to :source, :class_name => 'TradeCode'
-  belongs_to :purpose, :class_name => 'TradeCode'
+  has_many :trade_restriction_terms
+  has_many :terms, :through => :trade_restriction_terms
+  has_many :trade_restriction_sources
+  has_many :sources, :through => :trade_restriction_sources
+  has_many :trade_restriction_purposes
+  has_many :purposes, :through => :trade_restriction_purposes
 
   belongs_to :geo_entity
 
