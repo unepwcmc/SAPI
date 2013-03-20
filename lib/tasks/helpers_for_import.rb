@@ -81,20 +81,62 @@ class CsvToDbMap
       'long_name' => 'long_name varchar',
       'CITES Region' => 'cites_region varchar'
     },
+    # 'references_import' => {
+      # 'legacy_type' => 'legacy_type varchar',
+      # 'legacy_id' => 'legacy_id integer',
+      # 'author' => 'author varchar',
+      # 'title' => 'title varchar',
+      # 'year' => 'year varchar'
+    # },
+    # 'reference_links_import' => {
+      # 'Kingdom' => 'legacy_type varchar',
+      # 'DslRecID' => 'legacy_id integer',
+      # 'DslSpcRecID' => 'SpcRecID integer',
+      # 'DslDscRecID' => 'DscRecID integer',
+      # 'DslCode' => 'DslCode varchar',
+      # 'DslCodeRecID' => 'DslCodeRecID integer'
+    # },
     'references_import' => {
-      'legacy_type' => 'legacy_type varchar',
-      'legacy_id' => 'legacy_id integer',
-      'author' => 'author varchar',
-      'title' => 'title varchar',
-      'year' => 'year varchar'
+      'CITATION TO USE' => 'citation_to_use text',
+      'DscRecID' => 'legacy_ids text',
+      'Combination' => 'combination text',
+      'DscAuthors' => 'author text',
+      'DscPubYear' => 'pub_year text',
+      'DscTitle' => 'title text',
+      'DscSubTitle' => 'subtitle text',
+      'DscSource' => 'source text',
+      'DscPublisher' => 'publisher text',
+      'DscPubPlace' => 'pub_place text',
+      'DscISBN' => 'isbn text',
+      'DscVolume' => 'volume text',
+      'DscNumber' => 'number text',
+      'DscPagination' => 'pagination text',
+      'DtyDesc' => 'description text',
+      'DscCitation' => 'citation text',
+      'DscSeriesEdition' => 'series_edition text'
     },
-    'reference_links_import' => {
-      'Kingdom' => 'legacy_type varchar',
-      'DslRecID' => 'legacy_id integer',
-      'DslSpcRecID' => 'SpcRecID integer',
-      'DslDscRecID' => 'DscRecID integer',
-      'DslCode' => 'DslCode varchar',
-      'DslCodeRecID' => 'DslCodeRecID integer'
+    'references_distributions_import' => {
+      'SpcRecID' => 'taxon_legacy_id int',
+      'Rank' => 'rank text',
+      'GEO_entity' => 'geo_entity_type text',
+      'ISO Code 2' => 'iso_code2 text',
+      'RefRecIDs' => 'ref_legacy_ids'
+    },
+    'references_accepted_links_import' => {
+      'SpcRecID' => 'taxon_legacy_id int',
+      'Scientific name' => 'scientific_name text',
+      'Rank' => 'rank text',
+      'Status' => 'status text',
+      'RefRecIDs' => 'ref_legacy_ids'
+    },
+    'references_synonym_links_import' => {
+      'SpcRecID' => 'taxon_legacy_id int',
+      'Scientific name' => 'scientific_name text',
+      'Rank' => 'rank text',
+      'Status' => 'status text',
+      'RefRecIDs' => 'ref_legacy_ids',
+      'Accepted RecID' => 'accepted_taxon_legacy_id int',
+      'Accepted rank' => 'accepted_rank text'
     },
     'standard_references_import' => {
       'Scientific name' => 'name varchar',
@@ -102,8 +144,7 @@ class CsvToDbMap
       'RecID' => 'taxon_legacy_id integer',
       'DesignationStandardReferenceID' => 'ref_legacy_id integer',
       'Excludes' => 'exclusions varchar',
-      'Cascade' => 'cascade boolean',
-      'Designation' => 'designation varchar'
+      'Cascade' => 'cascade boolean'
     },
     'laws_import' => {
       'LnmShortDesc' => 'name varchar',
