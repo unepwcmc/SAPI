@@ -75,8 +75,8 @@ class CsvToDbMap
     'countries_import' => {
       'ISO2' => 'iso2 varchar',
       'short_name' => 'name varchar',
-      'Geo_entity' => 'geo_entity varchar',
-      'Under' => 'bru_under varchar',
+      'Geo_entity' => 'geo_entity_type varchar',
+      'Under' => 'parent_iso_code2 varchar',
       'Current_name' => 'current_name varchar',
       'long_name' => 'long_name varchar',
       'CITES Region' => 'cites_region varchar'
