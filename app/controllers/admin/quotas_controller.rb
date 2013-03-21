@@ -45,7 +45,7 @@ class Admin::QuotasController < Admin::SimpleCrudController
   end
 
   def collection
-    @quotas ||= end_of_association_chain.order('start_date').
+    @quotas ||= end_of_association_chain.order('is_current DESC, start_date DESC').
       page(params[:page])
   end
 end
