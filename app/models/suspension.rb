@@ -7,7 +7,7 @@
 #  start_date       :datetime
 #  end_date         :datetime
 #  geo_entity_id    :integer
-#  quota            :integer
+#  quota            :float
 #  publication_date :datetime
 #  notes            :text
 #  suspension_basis :string(255)
@@ -16,6 +16,8 @@
 #  taxon_concept_id :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  public_display   :boolean          default(TRUE)
+#  url              :text
 #
 
 class Suspension < TradeRestriction
