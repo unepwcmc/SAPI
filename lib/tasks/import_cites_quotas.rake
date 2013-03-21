@@ -4,8 +4,18 @@ namespace :import do
   task :cites_quotas, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     TMP_TABLE = 'quotas_import'
 
-    taxonomy_id = Taxonomy.where(:name => 'CITES_EU').first.id
+    if Quota.any?
+      puts "Removing quotas related records"
+      puts "#{TradeRestrictionSource.
+        where(:trade_restriction_id => Quota.select(:id)).
+        delete_all} trade restriction Sources deleted"
+      puts "#{TradeRestrictionTerm.
+        where(:trade_restriction_id => Quota.select(:id)).
+        delete_all} trade restriction Term deleted"
+      puts "#{Quota.delete_all} quotas deleted"
+    end
 
+    taxonomy_id = Taxonomy.where(:name => 'CITES_EU').first.id
     puts "There are #{Quota.count} CITES quotas in the database."
     files = files_from_args(t, args)
     files.each do |file|
