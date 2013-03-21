@@ -42,7 +42,7 @@ class Quota < TradeRestriction
 
   def self.export
     path = "public/downloads/"
-    file_name = "quotas_#{Quota.order("created_at DESC").
+    file_name = "quotas_#{Quota.order("updated_at DESC").
       limit(1).first.created_at.to_time.to_i}.csv"
     if !File.file?(path+file_name)
       Quota.to_csv(path+file_name)
