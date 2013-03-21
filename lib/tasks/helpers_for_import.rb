@@ -81,21 +81,6 @@ class CsvToDbMap
       'long_name' => 'long_name varchar',
       'CITES Region' => 'cites_region varchar'
     },
-    # 'references_import' => {
-      # 'legacy_type' => 'legacy_type varchar',
-      # 'legacy_id' => 'legacy_id integer',
-      # 'author' => 'author varchar',
-      # 'title' => 'title varchar',
-      # 'year' => 'year varchar'
-    # },
-    # 'reference_links_import' => {
-      # 'Kingdom' => 'legacy_type varchar',
-      # 'DslRecID' => 'legacy_id integer',
-      # 'DslSpcRecID' => 'SpcRecID integer',
-      # 'DslDscRecID' => 'DscRecID integer',
-      # 'DslCode' => 'DslCode varchar',
-      # 'DslCodeRecID' => 'DslCodeRecID integer'
-    # },
     'references_import' => {
       'CITATION TO USE' => 'citation_to_use text',
       'DscRecID' => 'legacy_ids text',
@@ -115,12 +100,12 @@ class CsvToDbMap
       'DscCitation' => 'citation text',
       'DscSeriesEdition' => 'series_edition text'
     },
-    'reference_distributions_import' => {
+    'reference_distribution_links_import' => {
       'SpcRecID' => 'taxon_legacy_id int',
       'Rank' => 'rank text',
       'GEO_entity' => 'geo_entity_type text',
       'ISO Code 2' => 'iso_code2 text',
-      'RefRecIDs' => 'ref_legacy_ids'
+      'RefIDs' => 'ref_legacy_id integer'
     },
     'reference_accepted_links_import' => {
       'SpcRecID' => 'taxon_legacy_id int',
@@ -134,7 +119,7 @@ class CsvToDbMap
       'Scientific name' => 'scientific_name text',
       'Rank' => 'rank text',
       'Status' => 'status text',
-      'RefRecIDs' => 'ref_legacy_ids',
+      'RefRecIDs' => 'ref_legacy_id integer',
       'Accepted RecID' => 'accepted_taxon_legacy_id int',
       'Accepted rank' => 'accepted_rank text'
     },
