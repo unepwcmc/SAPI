@@ -27,6 +27,7 @@ class TradeRestriction < ActiveRecord::Base
     :unit_id
 
   belongs_to :taxon_concept
+  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
   belongs_to :unit, :class_name => 'TradeCode'
   has_many :trade_restriction_terms
   has_many :terms, :through => :trade_restriction_terms
@@ -56,13 +57,5 @@ class TradeRestriction < ActiveRecord::Base
 
   def end_date_formatted
     end_date ? end_date.strftime('%d/%m/%Y') : Time.now.end_of_year.strftime("%d/%m/%Y")
-  end
-
-  def year
-    start_date ? start_date.strftime('%Y') : ''
-  end
-
-  def party
-    geo_entity_id ? geo_entity.name_en : ''
   end
 end

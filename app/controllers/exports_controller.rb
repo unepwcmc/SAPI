@@ -1,5 +1,4 @@
 class ExportsController < ApplicationController
-  
   layout "admin"
 
   # GET exports/
@@ -10,8 +9,8 @@ class ExportsController < ApplicationController
 
   def download
     if params[:data_type] == 'Q'
-      send_file Quota.to_csv, :filename => 'quotas.csv',
-        :type => 'csv'
+      result = Quota.export
+      send_file result[0], result[1]
     end
   end
 end

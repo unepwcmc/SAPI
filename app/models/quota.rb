@@ -21,7 +21,6 @@
 #
 
 class Quota < TradeRestriction
-  belongs_to :taxon_concept
 
   validates :quota, :presence => true
   validates :quota, :numericality => { :only_integer => true, :greater_than => 0 }
@@ -29,7 +28,30 @@ class Quota < TradeRestriction
   validates :unit, :presence => true
 
 
-  def self.to_csv
+  def year
+    start_date ? start_date.strftime('%Y') : ''
+  end
+
+  def party
+    geo_entity_id ? geo_entity.name_en : ''
+  end
+
+  def unit_name
+    unit_id ? unit.name_en : ''
+  end
+
+  def self.export
+    path = "public/downloads/"
+    file_name = "quotas_#{Quota.order("created_at DESC").
+      limit(1).first.created_at.to_time.to_i}.csv"
+    if !File.file?(path+file_name)
+      Quota.to_csv(path+file_name)
+    end
+    [ path+file_name,
+      { :filename => file_name, :type => 'csv' } ]
+  end
+
+  def self.to_csv file_path
     require 'csv'
     taxonomy_columns = [
       :kingdom_name, :phylum_name,
@@ -40,17 +62,17 @@ class Quota < TradeRestriction
     ]
     quota_columns = [
       :year, :party, :quota,
-      :unit, :published_on
+      :unit_name, :publication_date
     ]
-    limit = 1000
+    limit = 500
     offset = 0
-    CSV.open("tmp/full_quotas_download.csv", 'wb') do |csv|
+    CSV.open(file_path, 'wb') do |csv|
       csv << taxonomy_columns + quota_columns
-      row = []
-      self.where(:is_current => true).
-        order(:start_date).
-        limit(limit).offset(offset).each do |q|
-          taxon = q.taxon_concept
+      until (quotas =self.order(:start_date).
+             limit(limit).offset(offset)).empty? do
+        quotas.each do |q|
+          row = []
+          taxon = q.m_taxon_concept
           taxonomy_columns.each do |c|
             row << taxon.send(c)
           end
@@ -59,8 +81,8 @@ class Quota < TradeRestriction
           end
           csv << row
         end
-      offset += limit
+        offset += limit
+      end
     end
-    'tmp/full_quotas_download.csv'
   end
 end
