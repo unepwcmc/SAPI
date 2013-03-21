@@ -62,14 +62,16 @@ class Quota < TradeRestriction
     ]
     quota_columns = [
       :year, :party, :quota,
-      :unit_name, :publication_date
+      :unit_name, :publication_date,
+      :url
     ]
     limit = 500
     offset = 0
     CSV.open(file_path, 'wb') do |csv|
       csv << taxonomy_columns + quota_columns
-      until (quotas =self.order(:start_date).
-             limit(limit).offset(offset)).empty? do
+      until (quotas =self.where(:public_display => true).
+             order(:start_date).limit(limit).
+             offset(offset)).empty? do
         quotas.each do |q|
           row = []
           taxon = q.m_taxon_concept
