@@ -139,7 +139,7 @@ class CsvToDbMap
       'Accepted rank' => 'accepted_rank text'
     },
     'standard_reference_links_import' => {
-      'Scientific name' => 'name varchar',
+      'Scientific name' => 'scientific_name varchar',
       'Rank' => 'rank varchar',
       'RecID' => 'taxon_legacy_id integer',
       'DesignationStandardReferenceID' => 'ref_legacy_id integer',
