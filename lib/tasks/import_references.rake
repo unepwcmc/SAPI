@@ -13,30 +13,42 @@ namespace :import do
       kingdom = file.split('/').last.split('_')[0].titleize
 
       sql = <<-SQL
+        DELETE FROM references_legacy_id_mapping;
+
         WITH references_with_aliases AS (
-          SELECT title,
-            split_part(legacy_id,':',1) AS legacy_id, regexp_split_to_table(legacy_id, ':') AS alias_legacy_id
-          FROM #{TMP_TABLE}
+          WITH references_with_aliases_before_cast AS (
+            SELECT split_part(legacy_ids,':',1) AS legacy_id,
+            regexp_split_to_table(legacy_ids, ':') AS alias_legacy_id
+            FROM #{TMP_TABLE}
+          )
+          SELECT legacy_id::INT, '#{kingdom}' AS legacy_type,
+            NULLIF(alias_legacy_id, '')::INT AS alias_legacy_id
+          FROM references_with_aliases_before_cast
+          WHERE NULLIF(alias_legacy_id, '') IS NOT NULL AND legacy_id::INT != NULLIF(alias_legacy_id, '')::INT
         )
         INSERT INTO references_legacy_id_mapping (
           legacy_id, legacy_type, alias_legacy_id
         )
-        SELECT legacy_id::INT, '#{kingdom}', NULLIF(alias_legacy_id, '')::INT AS alias_legacy_id FROM references_with_aliases 
-        WHERE NULLIF(alias_legacy_id, '') IS NOT NULL AND legacy_id::INT != NULLIF(alias_legacy_id, '')::INT;
+        SELECT legacy_id, legacy_type, alias_legacy_id FROM references_with_aliases
+        WHERE NOT EXISTS (
+          SELECT * FROM references_legacy_id_mapping map
+          WHERE map.legacy_id = legacy_id AND map.legacy_type = legacy_type
+            AND map.alias_legacy_id = alias_legacy_id
+        );
 
         INSERT INTO "references" (
           legacy_type, legacy_id,
           citation, author, title, publisher, year,
           created_at, updated_at
         )
-        SELECT '#{kingdom}', split_part(legacy_id,':',1)::INT,
+        SELECT '#{kingdom}', split_part(legacy_ids,':',1)::INT,
           citation_to_use, author, title, publisher, pub_year,
           current_date, current_date
           FROM #{TMP_TABLE}
           WHERE NOT EXISTS (
             SELECT legacy_type, legacy_id
             FROM "references"
-            WHERE "references".legacy_id = split_part(#{TMP_TABLE}.legacy_id,':',1)::INT AND
+            WHERE "references".legacy_id = split_part(#{TMP_TABLE}.legacy_ids,':',1)::INT AND
               "references".legacy_type = '#{kingdom}'
           )
       SQL

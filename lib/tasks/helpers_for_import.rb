@@ -115,21 +115,21 @@ class CsvToDbMap
       'DscCitation' => 'citation text',
       'DscSeriesEdition' => 'series_edition text'
     },
-    'references_distributions_import' => {
+    'reference_distributions_import' => {
       'SpcRecID' => 'taxon_legacy_id int',
       'Rank' => 'rank text',
       'GEO_entity' => 'geo_entity_type text',
       'ISO Code 2' => 'iso_code2 text',
       'RefRecIDs' => 'ref_legacy_ids'
     },
-    'references_accepted_links_import' => {
+    'reference_accepted_links_import' => {
       'SpcRecID' => 'taxon_legacy_id int',
       'Scientific name' => 'scientific_name text',
       'Rank' => 'rank text',
       'Status' => 'status text',
-      'RefRecIDs' => 'ref_legacy_ids'
+      'RefRecIDs' => 'ref_legacy_id integer'
     },
-    'references_synonym_links_import' => {
+    'reference_synonym_links_import' => {
       'SpcRecID' => 'taxon_legacy_id int',
       'Scientific name' => 'scientific_name text',
       'Rank' => 'rank text',
@@ -138,7 +138,7 @@ class CsvToDbMap
       'Accepted RecID' => 'accepted_taxon_legacy_id int',
       'Accepted rank' => 'accepted_rank text'
     },
-    'standard_references_import' => {
+    'standard_reference_links_import' => {
       'Scientific name' => 'name varchar',
       'Rank' => 'rank varchar',
       'RecID' => 'taxon_legacy_id integer',
