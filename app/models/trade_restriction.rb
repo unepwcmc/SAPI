@@ -20,8 +20,8 @@
 
 class TradeRestriction < ActiveRecord::Base
   attr_accessible :end_date, :geo_entity_id, :is_current,
-    :notes, :publication_date, :purpose_id, :quota, :type,
-    :source_id, :start_date, :suspension_basis, :term_id,
+    :notes, :publication_date, :purpose_ids, :quota, :type,
+    :source_ids, :start_date, :suspension_basis, :term_ids,
     :unit_id
 
   belongs_to :taxon_concept
@@ -49,11 +49,11 @@ class TradeRestriction < ActiveRecord::Base
   end
 
   def start_date_formatted
-    start_date ? start_date.strftime('%d/%m/%Y') : ''
+    start_date ? start_date.strftime('%d/%m/%Y') : Time.now.strftime("01/01/%Y")
   end
 
   def end_date_formatted
-    end_date ? end_date.strftime('%d/%m/%Y') : ''
+    end_date ? end_date.strftime('%d/%m/%Y') : Time.now.strftime("31/12/%Y")
   end
 
   def year
