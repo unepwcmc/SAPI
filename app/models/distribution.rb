@@ -15,7 +15,7 @@ class Distribution < ActiveRecord::Base
 
   belongs_to :geo_entity
   belongs_to :taxon_concept
-
+  has_many :distribution_references
   has_and_belongs_to_many :references, :join_table => :distribution_references
   accepts_nested_attributes_for :references, :allow_destroy => true
 
@@ -28,7 +28,8 @@ class Distribution < ActiveRecord::Base
     reference_ids.each do |r|
       reference = Reference.find(r)
       unless reference.nil?
-        distribution_reference = DistributionReference.create({
+        self.distribution_references.
+          create({
           :distribution_id => self.id,
           :reference_id => reference.id
         })
