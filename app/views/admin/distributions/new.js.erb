@@ -40,11 +40,5 @@ $('#new-distribution').modal('show');
 
 $('.nav-tabs a').click(function (e) {
   e.preventDefault();
-
-  $('#new_distribution')[0].reset();
-  $('input#reference_id').val('');
-  $('.remove_nested_fields').click();
-  distributionReferences.removeAll();
-
   $(this).tab('show');
 });
