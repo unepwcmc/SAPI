@@ -61,7 +61,7 @@ class Quota < TradeRestriction
       :full_name, :rank_name
     ]
     quota_columns = [
-      :year, :party, :quota,
+      :id, :year, :party, :quota,
       :unit_name, :publication_date,
       :url
     ]
@@ -69,8 +69,8 @@ class Quota < TradeRestriction
     offset = 0
     CSV.open(file_path, 'wb') do |csv|
       csv << taxonomy_columns + quota_columns
-      until (quotas =self.where(:public_display => true).
-             order(:start_date).limit(limit).
+      until (quotas = Quota.where(:public_display => true).
+             order([:public_display, :start_date]).limit(limit).
              offset(offset)).empty? do
         quotas.each do |q|
           row = []

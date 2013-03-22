@@ -26,7 +26,7 @@ namespace :import do
       puts "CREATING temporary column and view"
       ActiveRecord::Base.connection.execute(<<-SQL
         CREATE VIEW #{TMP_TABLE}_view AS
-        SELECT ROW_NUMBER() OVER () AS row_id, * FROM #{TMP_TABLE}
+        SELECT DISTINCT ROW_NUMBER() OVER () AS row_id, * FROM #{TMP_TABLE}
         ORDER BY start_date
       SQL
       )
@@ -47,14 +47,15 @@ namespace :import do
             ELSE #{TMP_TABLE}_view.created_at
           END, #{TMP_TABLE}_view.row_id
           FROM #{TMP_TABLE}_view
-          LEFT JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(#{TMP_TABLE}_view.country_iso2)) AND geo_entities.legacy_type = '#{GeoEntityType::COUNTRY}'
+          LEFT JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(#{TMP_TABLE}_view.country_iso2)) AND geo_entities.legacy_type IN ('#{GeoEntityType::COUNTRY}', '#{GeoEntityType::TERRITORY}')
+          LEFT JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(#{TMP_TABLE}_view.rank))
           LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}_view.legacy_id AND
             UPPER(taxon_concepts.legacy_type) = UPPER(BTRIM(#{TMP_TABLE}_view.kingdom)) AND taxon_concepts.taxonomy_id = #{taxonomy_id} AND
-            taxon_concepts.name_status = 'A'
-          LEFT JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(#{TMP_TABLE}_view.rank)) AND taxon_concepts.rank_id = ranks.id
+            taxon_concepts.name_status = 'A' AND taxon_concepts.rank_id = ranks.id
           LEFT JOIN trade_codes AS units ON UPPER(units.code) = UPPER(BTRIM(#{TMP_TABLE}_view.unit)) AND units.type = 'Unit'
           WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL 
       SQL
+
       ActiveRecord::Base.connection.execute(sql)
 
       #Add Terms & Sources Relationships
