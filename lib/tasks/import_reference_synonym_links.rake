@@ -1,8 +1,8 @@
 namespace :import do
 
-  desc 'Import reference accepted links from csv file (usage: rake import:reference_accepted_links[path/to/file,path/to/another])'
-  task :reference_accepted_links, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
-    TMP_TABLE = 'reference_accepted_links_import'
+  desc 'Import reference synonym links from csv file (usage: rake import:reference_synonym_links[path/to/file,path/to/another])'
+  task :reference_synonym_links, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+    TMP_TABLE = 'reference_synonym_links_import'
     puts "There are #{TaxonConceptReference.count} taxon concept references in the database."
 
     ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
@@ -19,7 +19,7 @@ namespace :import do
       kingdom = file.split('/').last.split('_')[0].titleize
 
       sql = <<-SQL
-        WITH reference_accepted_links AS (
+        WITH reference_synonym_links AS (
           WITH expanded_ref_ids AS (
             SELECT taxon_legacy_id, rank, regexp_split_to_table(ref_legacy_ids, ':') AS ref_legacy_id
             FROM #{TMP_TABLE}
@@ -32,15 +32,15 @@ namespace :import do
         )
         INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id)
         SELECT taxon_concepts.id, "references".id
-          FROM reference_accepted_links
+          FROM reference_synonym_links
           INNER JOIN ranks
-            ON UPPER(BTRIM(reference_accepted_links.rank)) = UPPER(ranks.name)
+            ON UPPER(BTRIM(reference_synonym_links.rank)) = UPPER(ranks.name)
           INNER JOIN taxon_concepts
-            ON reference_accepted_links.taxon_legacy_id = taxon_concepts.legacy_id
+            ON reference_synonym_links.taxon_legacy_id = taxon_concepts.legacy_id
               AND taxon_concepts.legacy_type = '#{kingdom}'::VARCHAR
               AND taxon_concepts.rank_id = ranks.id
           INNER JOIN "references"
-            ON reference_accepted_links.ref_legacy_id = "references".legacy_id
+            ON reference_synonym_links.ref_legacy_id = "references".legacy_id
               AND "references".legacy_type = '#{kingdom}'::VARCHAR
           AND NOT EXISTS (
             SELECT id

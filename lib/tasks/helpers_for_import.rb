@@ -82,23 +82,17 @@ class CsvToDbMap
       'CITES Region' => 'cites_region varchar'
     },
     'references_import' => {
-      'CITATION TO USE' => 'citation_to_use text',
+      'Full_citation' => 'citation_to_use text',
       'DscRecID' => 'legacy_ids text',
-      'Combination' => 'combination text',
-      'DscAuthors' => 'author text',
-      'DscPubYear' => 'pub_year text',
-      'DscTitle' => 'title text',
-      'DscSubTitle' => 'subtitle text',
-      'DscSource' => 'source text',
-      'DscPublisher' => 'publisher text',
-      'DscPubPlace' => 'pub_place text',
-      'DscISBN' => 'isbn text',
-      'DscVolume' => 'volume text',
-      'DscNumber' => 'number text',
-      'DscPagination' => 'pagination text',
-      'DtyDesc' => 'description text',
-      'DscCitation' => 'citation text',
-      'DscSeriesEdition' => 'series_edition text'
+      'Authors' => 'author text',
+      'Year' => 'pub_year text',
+      'Title' => 'title text',
+      'Source' => 'source text',
+      'Publisher' => 'publisher text',
+      'PubPlace' => 'pub_place text',
+      'Volume' => 'volume text',
+      'Number' => 'number text',
+      'Pagination' => 'pagination text'
     },
     'reference_distribution_links_import' => {
       'SpcRecID' => 'taxon_legacy_id int',
@@ -112,14 +106,14 @@ class CsvToDbMap
       'Scientific name' => 'scientific_name text',
       'Rank' => 'rank text',
       'Status' => 'status text',
-      'RefRecIDs' => 'ref_legacy_id integer'
+      'RefRecIDs' => 'ref_legacy_ids text'
     },
     'reference_synonym_links_import' => {
       'SpcRecID' => 'taxon_legacy_id int',
       'Scientific name' => 'scientific_name text',
       'Rank' => 'rank text',
       'Status' => 'status text',
-      'RefRecIDs' => 'ref_legacy_id integer',
+      'RefRecIDs' => 'ref_legacy_ids text',
       'Accepted RecID' => 'accepted_taxon_legacy_id int',
       'Accepted rank' => 'accepted_rank text'
     },

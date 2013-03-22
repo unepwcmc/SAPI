@@ -42,7 +42,7 @@ namespace :import do
           created_at, updated_at
         )
         SELECT '#{kingdom}', split_part(legacy_ids,':',1)::INT,
-          citation_to_use, author, title, publisher, pub_year,
+          citation_to_use, author, COALESCE(title, ''), publisher, pub_year,
           current_date, current_date
           FROM #{TMP_TABLE}
           WHERE NOT EXISTS (

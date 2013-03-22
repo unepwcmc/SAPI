@@ -7,8 +7,10 @@ namespace :import do
     TMP_TABLE = 'standard_reference_links_import'
     puts "There are #{TaxonConceptReference.where("(data->'usr_is_std_ref')::BOOLEAN = 't'").count} standard references in the database."
 
-    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_legacy_id_and_legacy_type ON taxon_concepts(legacy_id, legacy_type)')
-    ActiveRecord::Base.connection.execute('CREATE INDEX index_references_on_legacy_id_and_legacy_type ON references(legacy_id, legacy_type)')
+    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
+    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_legacy_id_and_legacy_type ON taxon_concepts (legacy_id, legacy_type)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_references_on_legacy_id_and_legacy_type ON "references" (legacy_id, legacy_type)')
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(TMP_TABLE)
@@ -93,8 +95,8 @@ namespace :import do
 
     end
     puts "There are now #{TaxonConceptReference.where("(data->'usr_is_std_ref')::BOOLEAN = 't'").count} standard references in the database"
-    ActiveRecord::Base.connection.execute('DROP INDEX index_taxon_concepts_on_legacy_id_and_legacy_type')
-    ActiveRecord::Base.connection.execute('DROP INDEX index_references_on_legacy_id_and_legacy_type')
+    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
+    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
     Sapi::rebuild_references
   end
 

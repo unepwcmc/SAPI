@@ -33,15 +33,20 @@ namespace :import do
     )
     Rake::Task["import:references"].invoke(
      'lib/assets/files/cleaned/animals/animalia_references_utf8.csv',
+     'lib/assets/files/cleaned/plants/plantae_references_utf8.csv'
     )
     Rake::Task["import:reference_accepted_links"].invoke(
      'lib/assets/files/cleaned/animals/animalia_reference_accepted_links.csv',
+     'lib/assets/files/cleaned/plants/plantae_reference_accepted_links.csv'
+    )
+    Rake::Task["import:reference_synonym_links"].invoke(
+     'lib/assets/files/cleaned/animals/animalia_reference_synonym_links.csv',
+     'lib/assets/files/cleaned/plants/plantae_reference_synonym_links.csv'
     )
     Rake::Task["import:standard_reference_links"].invoke(
      'lib/assets/files/cleaned/animals/animalia_standard_reference_links.csv',
+     'lib/assets/files/cleaned/plants/plantae_standard_reference_links.csv'
     )
-
-
     Rake::Task["import:laws"].invoke(
       'lib/assets/files/laws.csv'
     )
