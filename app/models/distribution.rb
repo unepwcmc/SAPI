@@ -20,4 +20,19 @@ class Distribution < ActiveRecord::Base
   accepts_nested_attributes_for :references, :allow_destroy => true
 
   validates :taxon_concept_id, :uniqueness => { :scope => :geo_entity_id, :message => 'already has this distribution' }
+
+
+  def add_existing_references ids
+    reference_ids = ids.split(",")
+
+    reference_ids.each do |r|
+      reference = Reference.find(r)
+      unless reference.nil?
+        distribution_reference = DistributionReference.create({
+          :distribution_id => self.id,
+          :reference_id => reference.id
+        })
+      end
+    end
+  end
 end

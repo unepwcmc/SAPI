@@ -13,6 +13,9 @@ class Admin::DistributionsController < Admin::SimpleCrudController
     update! do |success, failure|
       success.js { 
         load_distributions
+        unless params["reference"]["id"].blank?
+          @distribution.add_existing_references(params["reference"]["id"])
+        end
         render 'create' 
       }
       failure.js {
@@ -27,19 +30,7 @@ class Admin::DistributionsController < Admin::SimpleCrudController
       success.js {
         load_distributions
         unless params["reference"]["id"].blank?
-          @references = params["reference"]["id"]
-          @reference_ids = @references.split(",")
-
-          @reference_ids.each do |r|
-            reference = Reference.find(r)
-
-            unless reference.nil?
-              distribution_reference = DistributionReference.new({
-                :distribution_id => @distribution.id,
-                :reference_id => reference.id
-              }).save!
-            end
-          end
+          @distribution.add_existing_references(params["reference"]["id"])
         end
       }
       failure.js {
