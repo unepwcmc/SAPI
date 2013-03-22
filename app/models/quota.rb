@@ -63,7 +63,7 @@ class Quota < TradeRestriction
     quota_columns = [
       :id, :year, :party, :quota,
       :unit_name, :publication_date,
-      :url
+      :notes, :url
     ]
     limit = 500
     offset = 0
