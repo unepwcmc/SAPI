@@ -12,34 +12,32 @@ namespace :import do
       copy_data(file, TMP_TABLE)
 
       kingdom = file.split('/').last.split('_')[0].titleize
-#create index on distribution_references(distribution_id, reference_id)
+
+      puts "unaliasing reference ids in #{TMP_TABLE}"
       sql = <<-SQL
-        WITH unaliased_reference_links AS (
-          SELECT UPPER(BTRIM(rank)) AS rank, taxon_legacy_id, UPPER(BTRIM(iso_code2)) AS iso_code2,
-          CASE
-          WHEN map.legacy_id IS NOT NULL THEN map.legacy_id
-          ELSE #{TMP_TABLE}.ref_legacy_id
-          END AS ref_legacy_id, '#{kingdom}'::VARCHAR AS legacy_type
-          FROM #{TMP_TABLE}
-          LEFT JOIN references_legacy_id_mapping map
-          ON map.alias_legacy_id = #{TMP_TABLE}.ref_legacy_id AND map.legacy_type = '#{kingdom}'
-          WHERE #{TMP_TABLE}.ref_legacy_id IS NOT NULL AND #{TMP_TABLE}.taxon_legacy_id IS NOT NULL
-        )
+        UPDATE #{TMP_TABLE} SET ref_legacy_id = map.legacy_id
+        FROM references_legacy_id_mapping map
+        WHERE map.alias_legacy_id = #{TMP_TABLE}.ref_legacy_id
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
+
+      puts "inserting reference distribution links"
+      sql = <<-SQL
         INSERT INTO "distribution_references"
           (distribution_id, reference_id)
         SELECT distributions.id, "references".id
-          FROM unaliased_reference_links
+          FROM #{TMP_TABLE}
           INNER JOIN ranks
-            ON rank = UPPER(ranks.name)
+            ON UPPER(BTRIM(rank)) = UPPER(ranks.name)
           INNER JOIN taxon_concepts
-            ON unaliased_reference_links.taxon_legacy_id = taxon_concepts.legacy_id
-              AND unaliased_reference_links.legacy_type = taxon_concepts.legacy_type
+            ON #{TMP_TABLE}.taxon_legacy_id = taxon_concepts.legacy_id
+              AND taxon_concepts.legacy_type = '#{kingdom}'::VARCHAR
               AND taxon_concepts.rank_id = ranks.id
           INNER JOIN "references"
-            ON unaliased_reference_links.ref_legacy_id = "references".legacy_id
-            AND unaliased_reference_links.legacy_type = "references".legacy_type
+            ON #{TMP_TABLE}.ref_legacy_id = "references".legacy_id
+            AND "references".legacy_type = '#{kingdom}'::VARCHAR
           INNER JOIN geo_entities
-            ON unaliased_reference_links.iso_code2 = UPPER(geo_entities.iso_code2)
+            ON #{TMP_TABLE}.iso_code2 = UPPER(geo_entities.iso_code2)
           INNER JOIN distributions
             ON geo_entities.id = distributions.geo_entity_id
             AND taxon_concepts.id = distributions.taxon_concept_id

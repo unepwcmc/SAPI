@@ -13,29 +13,28 @@ namespace :import do
 
       kingdom = file.split('/').last.split('_')[0].titleize
 
+      puts "unaliasing reference ids in #{TMP_TABLE}"
       sql = <<-SQL
-        WITH unaliased_reference_links AS (
-          SELECT UPPER(rank) AS rank, taxon_legacy_id,
-          CASE
-          WHEN map.legacy_id IS NOT NULL THEN map.legacy_id
-          ELSE #{TMP_TABLE}.ref_legacy_id
-          END AS ref_legacy_id, '#{kingdom}'::VARCHAR AS legacy_type
-          FROM #{TMP_TABLE}
-          LEFT JOIN references_legacy_id_mapping map
-          ON map.alias_legacy_id = #{TMP_TABLE}.ref_legacy_id AND map.legacy_type = '#{kingdom}'
-        )
+        UPDATE #{TMP_TABLE} SET ref_legacy_id = map.legacy_id
+        FROM references_legacy_id_mapping map
+        WHERE map.alias_legacy_id = #{TMP_TABLE}.ref_legacy_id
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
+
+      puts "inserting reference accepted links"
+      sql = <<-SQL
         INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id)
         SELECT taxon_concepts.id, "references".id
-          FROM unaliased_reference_links
+          FROM #{TMP_TABLE}
           INNER JOIN ranks
-            ON unaliased_reference_links.rank = ranks.name
+            ON UPPER(BTRIM(#{TMP_TABLE}.rank)) = UPPER(ranks.name)
           INNER JOIN taxon_concepts
-            ON unaliased_reference_links.taxon_legacy_id = taxon_concepts.legacy_id
-              AND taxon_concepts.legacy_type = unaliased_reference_links.legacy_type
+            ON #{TMP_TABLE}.taxon_legacy_id = taxon_concepts.legacy_id
+              AND taxon_concepts.legacy_type = '#{kingdom}'::VARCHAR
               AND taxon_concepts.rank_id = ranks.id
           INNER JOIN "references"
-            ON unaliased_reference_links.ref_legacy_id = "references".legacy_id
-              AND "references".legacy_type = unaliased_reference_links.legacy_type
+            ON #{TMP_TABLE}.ref_legacy_id = "references".legacy_id
+              AND "references".legacy_type = '#{kingdom}'::VARCHAR
           AND NOT EXISTS (
             SELECT id
             FROM taxon_concept_references
