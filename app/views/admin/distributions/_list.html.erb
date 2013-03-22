@@ -1,4 +1,4 @@
-<% @taxon_concept.distributions.each do |d| %>
+<% @distributions.each do |d| %>
   <% if d.references.count > 0 %>
     <%= link_to d.geo_entity.name,
           "#",
