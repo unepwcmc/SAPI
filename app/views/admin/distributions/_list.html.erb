@@ -1,5 +1,5 @@
 <% @distributions.each do |d| %>
-  <% if d.references.count > 0 %>
+  <% if d.references.any? %>
     <%= link_to d.geo_entity.name,
           "#",
           :data => {
