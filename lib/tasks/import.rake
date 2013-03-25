@@ -53,7 +53,7 @@ namespace :import do
 
     Rake::Task["import:trade_codes"].invoke
 
-    #Sapi::rebuild()
+    Sapi::rebuild()
     Sapi::enable_triggers
     Sapi::create_indices
 
