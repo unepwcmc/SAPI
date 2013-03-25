@@ -33,12 +33,17 @@ template.find('input.typeahead').typeahead({
   }
 });
 
-$('#admin-new-distribution-form').html(template);
+$('#admin-edit-distribution-form').html(template);
 
-$('#admin-new-distribution-form .distribution').select2();
-$('#new-distribution').modal('show');
+$('#admin-edit-distribution-form .distribution').select2();
+$('#edit-distribution').modal('show');
 
 $('.nav-tabs a').click(function (e) {
   e.preventDefault();
   $(this).tab('show');
+});
+
+$('.nav li a').each(function(i, value) {
+  $(this).parent().toggleClass('active');
+  template.find($(this).attr('href')).toggleClass('active in');
 });

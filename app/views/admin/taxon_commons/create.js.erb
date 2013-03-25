@@ -1,4 +1,10 @@
-$('.modal').modal('hide');
 $('#taxon-commons-list').html("<%= escape_javascript(render('list')) %>");
-window.adminEditor.initEditors();
+var saveAndReopen = window.adminEditor.saveAndReopen;
+window.adminEditor.initModals();
 window.adminEditor.alertSuccess("Operation successful");
+if (saveAndReopen){
+  window.adminEditor.clearModalForm($('#new-common_name.modal'));
+  $('#new-common_name.modal').modal('show');
+} else {
+  $('#new-common_name.modal').modal('hide');
+}

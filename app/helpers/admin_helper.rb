@@ -75,7 +75,7 @@ module AdminHelper
         ){title}
       end +
       content_tag(
-        :div, :id => "admin-new-#{resource}-form", :class => "modal-body" #TODO
+        :div, :id => "admin-#{id}-form", :class => "modal-body" #TODO
       ) do
         if block_given?
           yield
@@ -88,9 +88,18 @@ module AdminHelper
           :type => "button", :class => "btn", :"data-dismiss" => "modal",
           :"aria-hidden" => "true"
         ){'Close'} +
-        button_tag(
-          :type => "button", :class => "btn btn-primary save-button"
-        ){'Save changes'}
+        if options[:save_and_reopen]
+          button_tag(
+            :type => "button", :class => "btn btn-primary save-button save-and-reopen-button"
+          ){'Save changes'} +
+          button_tag(
+            :type => "button", :class => "btn btn-primary save-button"
+          ){'Save changes & close'}
+        else
+          button_tag(
+            :type => "button", :class => "btn btn-primary save-button"
+          ){'Save changes'}
+        end
       end
     end
   end
