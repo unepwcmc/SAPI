@@ -18,7 +18,8 @@ class Admin::TaxonConceptReferencesController < Admin::SimpleCrudController
     unless reference_id.blank?
       @taxon_concept_reference = TaxonConceptReference.new(
         :taxon_concept_id => params["taxon_concept_id"],
-        :reference_id     => reference_id
+        :reference_id     => reference_id,
+        :data => params[:taxon_concept_reference][:data]
       )
     end
 
