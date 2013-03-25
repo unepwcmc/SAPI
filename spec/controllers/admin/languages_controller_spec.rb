@@ -2,7 +2,6 @@ require 'spec_helper'
 describe Admin::LanguagesController do
   describe "GET index" do
     it "assigns @languages sorted by iso_code1" do
-      Language.delete_all
       language1 = create(:language, :iso_code1 => 'BB')
       language2 = create(:language, :iso_code1 => 'AA')
       get :index
