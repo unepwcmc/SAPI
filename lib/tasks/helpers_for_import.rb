@@ -75,35 +75,55 @@ class CsvToDbMap
     'countries_import' => {
       'ISO2' => 'iso2 varchar',
       'short_name' => 'name varchar',
-      'Geo_entity' => 'geo_entity varchar',
-      'Under' => 'bru_under varchar',
+      'Geo_entity' => 'geo_entity_type varchar',
+      'Under' => 'parent_iso_code2 varchar',
       'Current_name' => 'current_name varchar',
       'long_name' => 'long_name varchar',
       'CITES Region' => 'cites_region varchar'
     },
     'references_import' => {
-      'legacy_type' => 'legacy_type varchar',
-      'legacy_id' => 'legacy_id integer',
-      'author' => 'author varchar',
-      'title' => 'title varchar',
-      'year' => 'year varchar'
+      'Full_citation' => 'citation_to_use text',
+      'DscRecID' => 'legacy_ids text',
+      'Authors' => 'author text',
+      'Year' => 'pub_year text',
+      'Title' => 'title text',
+      'Source' => 'source text',
+      'Publisher' => 'publisher text',
+      'PubPlace' => 'pub_place text',
+      'Volume' => 'volume text',
+      'Number' => 'number text',
+      'Pagination' => 'pagination text'
     },
-    'reference_links_import' => {
-      'Kingdom' => 'legacy_type varchar',
-      'DslRecID' => 'legacy_id integer',
-      'DslSpcRecID' => 'SpcRecID integer',
-      'DslDscRecID' => 'DscRecID integer',
-      'DslCode' => 'DslCode varchar',
-      'DslCodeRecID' => 'DslCodeRecID integer'
+    'reference_distribution_links_import' => {
+      'SpcRecID' => 'taxon_legacy_id int',
+      'Rank' => 'rank text',
+      'GEO_entity' => 'geo_entity_type text',
+      'ISO Code 2' => 'iso_code2 text',
+      'RefIDs' => 'ref_legacy_id integer'
     },
-    'standard_references_import' => {
-      'Scientific name' => 'name varchar',
+    'reference_accepted_links_import' => {
+      'SpcRecID' => 'taxon_legacy_id int',
+      'Scientific name' => 'scientific_name text',
+      'Rank' => 'rank text',
+      'Status' => 'status text',
+      'RefRecIDs' => 'ref_legacy_ids text'
+    },
+    'reference_synonym_links_import' => {
+      'SpcRecID' => 'taxon_legacy_id int',
+      'Scientific name' => 'scientific_name text',
+      'Rank' => 'rank text',
+      'Status' => 'status text',
+      'RefRecIDs' => 'ref_legacy_ids text',
+      'Accepted RecID' => 'accepted_taxon_legacy_id int',
+      'Accepted rank' => 'accepted_rank text'
+    },
+    'standard_reference_links_import' => {
+      'Scientific name' => 'scientific_name varchar',
       'Rank' => 'rank varchar',
       'RecID' => 'taxon_legacy_id integer',
       'DesignationStandardReferenceID' => 'ref_legacy_id integer',
       'Excludes' => 'exclusions varchar',
-      'Cascade' => 'cascade boolean',
-      'Designation' => 'designation varchar'
+      'Cascade' => 'cascade boolean'
     },
     'laws_import' => {
       'LnmShortDesc' => 'name varchar',
