@@ -22,7 +22,10 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     @taxonomies = Taxonomy.order(:name)
     @ranks = Rank.order(:taxonomic_position)
     edit! do |format|
+      @references = TaxonConceptReference.where(:taxon_concept_id => @taxon_concept.id)
       @languages = Language.order(:name_en)
+      @distributions = @taxon_concept.distributions.
+        joins(:geo_entity).order('geo_entities.name_en ASC')
       format.js { render 'new' }
     end
   end
@@ -91,5 +94,4 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     def load_tags
       @tags = PresetTag.where(:model => PresetTag::TYPES[:TaxonConcept])
     end
-
 end
