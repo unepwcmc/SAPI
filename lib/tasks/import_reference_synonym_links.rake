@@ -21,10 +21,11 @@ namespace :import do
       sql = <<-SQL
         WITH reference_synonym_links AS (
           WITH expanded_ref_ids AS (
-            SELECT taxon_legacy_id, rank, regexp_split_to_table(ref_legacy_ids, ':') AS ref_legacy_id
+            SELECT taxon_legacy_id, rank, accepted_taxon_legacy_id, accepted_rank,
+            regexp_split_to_table(ref_legacy_ids, ':') AS ref_legacy_id
             FROM #{TMP_TABLE}
           )-- TODO remove the substring below once files are fixed
-          SELECT taxon_legacy_id, rank,
+          SELECT taxon_legacy_id, rank, accepted_taxon_legacy_id, accepted_rank,
           COALESCE(map.legacy_id, NULLIF(substring(ref_legacy_id from 1 for 5), '')::INTEGER) AS ref_legacy_id
           FROM expanded_ref_ids
           LEFT JOIN references_legacy_id_mapping map
@@ -39,6 +40,8 @@ namespace :import do
             ON reference_synonym_links.taxon_legacy_id = taxon_concepts.legacy_id
               AND taxon_concepts.legacy_type = '#{kingdom}'::VARCHAR
               AND taxon_concepts.rank_id = ranks.id
+              AND (taxon_concepts.data->'accepted_legacy_id')::INT = accepted_taxon_legacy_id
+              AND (taxon_concepts.data->'accepted_rank') = accepted_rank
           INNER JOIN "references"
             ON reference_synonym_links.ref_legacy_id = "references".legacy_id
               AND "references".legacy_type = '#{kingdom}'::VARCHAR
