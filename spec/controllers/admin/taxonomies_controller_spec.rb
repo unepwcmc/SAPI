@@ -3,11 +3,6 @@ describe Admin::TaxonomiesController do
 
   describe "index" do
     before(:each) do
-      TaxonConcept.delete_all
-      ChangeType.delete_all
-      SpeciesListing.delete_all
-      Designation.delete_all
-      Taxonomy.delete_all
       @taxonomy1 = create(:taxonomy, :name => 'BB')
       @taxonomy2 = create(:taxonomy, :name => 'AA')
     end

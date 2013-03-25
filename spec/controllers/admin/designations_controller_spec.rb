@@ -2,10 +2,6 @@ require 'spec_helper'
 describe Admin::DesignationsController do
   describe "GET index" do
     before(:each) do
-      TaxonConcept.delete_all
-      ChangeType.delete_all
-      SpeciesListing.delete_all
-      Designation.delete_all
       @designation1 = create(:designation, :name => 'BB', :taxonomy => create(:taxonomy))
       @designation2 = create(:designation, :name => 'AA', :taxonomy => create(:taxonomy))
     end

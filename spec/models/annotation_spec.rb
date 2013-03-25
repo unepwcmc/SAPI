@@ -9,7 +9,7 @@ describe Annotation do
       specify{ annotation.full_symbol == 'CoP1#1' }
     end
     context "when event given" do
-      let(:event){ create(:cites_cop, :name => 'CoP1') }
+      let(:event){ create_cites_cop(:name => 'CoP1') }
       let(:annotation){
         create(:annotation, :event_id => event.id, :symbol => '#1')
       }

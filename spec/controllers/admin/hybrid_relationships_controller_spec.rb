@@ -1,9 +1,6 @@
 require 'spec_helper'
 describe Admin::HybridRelationshipsController do
-  let(:taxon_concept){ create(:taxon_concept) }
-  let(:hybrid){ create(:taxon_concept, :name_status => 'S') }
-  let(:hybrid_relationship_type){
-    TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_HYBRID) ||
+  let!(:hybrid_relationship_type){
     create(
       :taxon_relationship_type,
       :name => TaxonRelationshipType::HAS_HYBRID,
@@ -11,6 +8,8 @@ describe Admin::HybridRelationshipsController do
       :is_bidirectional => false
     )
   }
+  let(:taxon_concept){ create(:taxon_concept) }
+  let(:hybrid){ create(:taxon_concept, :name_status => 'S') }
   let(:hybrid_relationship){
     create(:taxon_relationship,
       :taxon_relationship_type_id => hybrid_relationship_type.id,

@@ -13,13 +13,6 @@ FactoryGirl.define do
   factory :common_name do
     name 'Honey badger'
     association :language
-
-    ['English', 'Spanish', 'French'].each do |lng|
-      factory :"#{lng.downcase}_common_name" do
-        language { Language.find_by_name_en(lng) }
-      end
-    end
-
   end
 
 end

@@ -2,16 +2,15 @@
 require 'spec_helper'
 
 describe Checklist::Pdf::History do
+  let(:en){ create(:language, :name => 'English', :iso_code1 => 'EN') }
   let(:family_tc){
-    tc = create(
-      :family,
+    tc = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Foobaridae')
     )
     MTaxonConcept.find(tc.id)
   }
   let(:genus_tc){
-    tc = create(
-      :genus,
+    tc = create_cites_eu_genus(
       :parent_id => family_tc.id,
       :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus')
     )
@@ -27,7 +26,7 @@ describe Checklist::Pdf::History do
           :common_name => create(
             :common_name,
             :name => 'Foobars',
-            :language => Language.find_or_create_by_iso_code1('en')
+            :language => en
           )
         )
         Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
@@ -43,8 +42,7 @@ describe Checklist::Pdf::History do
     context "when family" do
       let(:tc){ family_tc }
       let!(:lc){
-        lc = create(
-          :cites_I_addition,
+        lc = create_cites_I_addition(
           :taxon_concept_id => tc.id,
           :is_current => true
         )
@@ -59,8 +57,7 @@ describe Checklist::Pdf::History do
     context "when genus" do
       let(:tc){ genus_tc }
       let!(:lc){
-        lc = create(
-          :cites_I_addition,
+        lc = create_cites_I_addition(
           :taxon_concept_id => tc.id,
           :is_current => true
         )
@@ -77,8 +74,7 @@ describe Checklist::Pdf::History do
   describe :annotation_for_language do
     let(:tc){ family_tc }
     let!(:lc){
-      lc = create(
-        :cites_I_addition,
+      lc = create_cites_I_addition(
         :taxon_concept_id => tc.id,
         :annotation_id => annotation.id,
         :is_current => true

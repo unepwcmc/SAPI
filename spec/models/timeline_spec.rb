@@ -1,18 +1,15 @@
 require 'spec_helper'
 
 describe Timeline do
-
   context "when deleted" do
     let(:tc){
-      tc = create(:species)
-      create(
-        :cites_I_addition,
+      tc = create_cites_eu_species
+      create_cites_I_addition(
         :taxon_concept => tc,
         :effective_at => '1975-06-06',
         :is_current => false
       )
-      create(
-        :cites_I_deletion,
+      create_cites_I_deletion(
         :taxon_concept => tc,
         :effective_at => '1975-06-07',
         :is_current => false
@@ -30,11 +27,10 @@ describe Timeline do
 
   context "when deleted from III multiple times" do
     let(:tc){
-      tc = create(:species)
+      tc = create_cites_eu_species
       cnt1 = create(:geo_entity)
       cnt2 = create(:geo_entity)
-      lc1 = create(
-        :cites_III_addition,
+      lc1 = create_cites_III_addition(
         :taxon_concept => tc,
         :effective_at => '1975-06-06',
         :is_current => false
@@ -45,8 +41,7 @@ describe Timeline do
         :listing_change => lc1,
         :is_party => true
       )
-      lc2 = create(
-        :cites_III_addition,
+      lc2 = create_cites_III_addition(
         :taxon_concept => tc,
         :effective_at => '1975-06-06',
         :is_current => false
@@ -57,8 +52,7 @@ describe Timeline do
         :listing_change => lc2,
         :is_party => true
       )
-      lc3 = create(
-        :cites_III_deletion,
+      lc3 = create_cites_III_deletion(
         :taxon_concept => tc,
         :effective_at => '1975-06-07',
         :is_current => false
@@ -69,8 +63,7 @@ describe Timeline do
         :listing_change => lc3,
         :is_party => true
       )
-      lc4 = create(
-        :cites_III_deletion,
+      lc4 = create_cites_III_deletion(
         :taxon_concept => tc,
         :effective_at => '1975-06-08',
         :is_current => false
@@ -94,21 +87,18 @@ describe Timeline do
 
   context "when deleted and then readded" do
     let(:tc){
-      tc = create(:species)
-      create(
-        :cites_I_addition,
+      tc = create_cites_eu_species
+      create_cites_I_addition(
         :taxon_concept => tc,
         :effective_at => '1975-06-06',
         :is_current => false
       )
-      create(
-        :cites_I_deletion,
+      create_cites_I_deletion(
         :taxon_concept => tc,
         :effective_at => '1975-06-07',
         :is_current => false
       )
-      create(
-        :cites_I_addition,
+      create_cites_I_addition(
         :taxon_concept => tc,
         :effective_at => '1975-06-08',
         :is_current => true
@@ -125,15 +115,13 @@ describe Timeline do
 
   context "when added multiple times" do
     let(:tc){
-      tc = create(:species)
-      create(
-        :cites_I_addition,
+      tc = create_cites_eu_species
+      create_cites_I_addition(
         :taxon_concept => tc,
         :effective_at => '1975-06-06',
         :is_current => false
       )
-      create(
-        :cites_I_addition,
+      create_cites_I_addition(
         :taxon_concept => tc,
         :effective_at => '1975-06-08',
         :is_current => true

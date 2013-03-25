@@ -15,8 +15,7 @@ describe ListingChangesHelper do
     GeoEntity.find_by_iso_code2('PL') || create(:geo_entity, :iso_code2 => 'PL', :name => 'Poland')
   }
   let(:taxon_concept){
-    create(
-      :genus,
+    create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus')
     )
   }
@@ -36,8 +35,7 @@ describe ListingChangesHelper do
     )
   }
   let(:listing_change){
-    create(
-      :cites_I_addition,
+    create_cites_I_addition(
       :taxon_concept_id => taxon_concept.id,
       :annotation_id => annotation.id,
       :hash_annotation_id => hash_annotation.id
@@ -71,8 +69,7 @@ describe ListingChangesHelper do
   end
   describe :exclusions_tooltip do
     let(:child_taxon_concept){
-      create(
-        :species,
+      create_cites_eu_species(
         :parent_id => taxon_concept.id,
         :taxon_name => create(:taxon_name, :scientific_name => 'cracovianus')
       )
@@ -84,8 +81,7 @@ describe ListingChangesHelper do
     end
     context "taxonomic exclusion" do
       let!(:exclusion){
-        create(
-          :cites_I_exception,
+        create_cites_I_exception(
           :taxon_concept_id => child_taxon_concept.id,
           :parent_id => listing_change.id
         )
@@ -96,8 +92,7 @@ describe ListingChangesHelper do
     end
     context "geographic exclusion" do
       let(:exclusion){
-        create(
-          :cites_I_exception,
+        create_cites_I_exception(
           :parent_id => listing_change.id,
           :taxon_concept_id => listing_change.taxon_concept_id
         )
@@ -116,8 +111,7 @@ describe ListingChangesHelper do
     end
     context "both taxonomic and geographic exclusion" do
       let!(:exclusion){
-        create(
-          :cites_I_exception,
+        create_cites_I_exception(
           :taxon_concept_id => child_taxon_concept.id,
           :parent_id => listing_change.id
         )

@@ -1,36 +1,29 @@
 #Encoding: UTF-8
 shared_context "Ailuropoda" do
   before(:all) do
-    @klass = TaxonConcept.find_by_taxon_name_id(TaxonName.find_by_scientific_name('Mammalia').id)
-    @order = create(
-      :order,
+    @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Carnivora'),
-      :parent => @klass
+      :parent => cites_eu_mammalia
     )
-    @family = create(
-      :family,
+    @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Ursidae'),
       :parent => @order
     )
-    @genus = create(
-      :genus,
+    @genus = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Ailuropoda'),
       :parent => @family
     )
-    @species = create(
-      :species,
+    @species = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'Melanoleuca'),
       :parent => @genus
     )
 
-    create(
-     :cites_II_addition,
+    create_cites_II_addition(
      :taxon_concept => @family,
      :effective_at => '1992-06-11',
      :is_current => true
     )
-    create(
-     :cites_I_addition,
+    create_cites_I_addition(
      :taxon_concept => @species,
      :effective_at => '1984-03-14',
      :is_current => true

@@ -36,6 +36,7 @@ RSpec.configure do |config|
 
   config.include FactoryGirl::Syntax::Methods
   config.include JsonSpec::Helpers
+  config.include Sapi::Helpers
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
@@ -43,7 +44,6 @@ RSpec.configure do |config|
 
   config.before(:all) do
     DatabaseCleaner.clean_with(:truncation)
-    load "#{Rails.root}/db/seeds.rb"
   end
 
   config.before(:each) do

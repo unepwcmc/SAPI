@@ -39,7 +39,7 @@ describe Event do
         create(
           :event,
           :name => 'REGULATION 1.0',
-          :designation => Designation.find_or_create_by_name('EU')
+          :designation => eu
         )
       }
       specify { event.destroy.should be_true }
@@ -49,10 +49,10 @@ describe Event do
         create(
           :event,
           :name => 'REGULATION 1.0',
-          :designation => Designation.find_or_create_by_name('EU')
+          :designation => eu
         )
       }
-      let!(:listing_change){ create(:eu_A_addition, :event_id => event.id)}
+      let!(:listing_change){ create_eu_A_addition(:event_id => event.id) }
       specify { event.destroy.should be_false }
     end
   end
