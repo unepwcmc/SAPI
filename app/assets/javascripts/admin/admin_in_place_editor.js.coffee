@@ -13,9 +13,7 @@ class AdminEditor
     $('.modal .modal-footer .save-button').click () ->
       $(@).closest('.modal').find('form').submit()
     $('.modal').on 'hidden', () =>
-      console.log('hidden')
       @clearModalForm($(@))
-
     @initModals()
 
   clearModalForm: (modal) ->
@@ -77,6 +75,19 @@ class AdminInPlaceEditor extends AdminEditor
     )
 
 class TaxonConceptsEditor extends AdminEditor
+  init: () ->
+    super
+    $('.modal .modal-footer .save-and-reopen-button').click () =>
+      @saveAndReopen = true
+    $('.distributions-list > a').popover({})
+
+  initModals: () ->
+    super
+    @saveAndReopen = false
+    @initTaxonConceptTypeaheads()
+    @initReferencesTypeahead()
+    $('.distributions-list > a').popover({});
+
   initTaxonConceptTypeaheads: () ->
     $('.search-typeahead').typeahead
       source: (query, process) ->
@@ -136,6 +147,7 @@ class TaxonConceptsEditor extends AdminEditor
           $().add(taxonomyEl).add(rankEl).change () =>
             $(@).val(null)
 
+  initReferencesTypeahead: () ->
     @references = {}
     @referencesLabels = []
     $('.references-typeahead').typeahead(
@@ -159,13 +171,6 @@ class TaxonConceptsEditor extends AdminEditor
         return item
     )
 
-  init: () ->
-    super
-    $('a').popover({});
-
-    $('.modal .modal-footer .save-and-reopen-button').click () =>
-      @saveAndReopen = true
-
   alertSuccess: (txt) ->
     $('.alert').remove()
 
@@ -174,11 +179,6 @@ class TaxonConceptsEditor extends AdminEditor
     alert.append(txt)
 
     $(alert).insertBefore($('.modal-body form'))
-
-  initModals: () ->
-    super
-    @saveAndReopen = false
-    @initTaxonConceptTypeaheads()
 
 class ListingChangesEditor extends AdminEditor
   init: () ->

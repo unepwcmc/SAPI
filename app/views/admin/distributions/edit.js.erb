@@ -35,12 +35,11 @@ template.find('input.typeahead').typeahead({
 
 $('#admin-edit-distribution-form').html(template);
 
-$('.distribution').select2();
+$('#admin-edit-distribution-form .distribution').select2();
 $('#edit-distribution').modal('show');
 
 $('.nav-tabs a').click(function (e) {
   e.preventDefault();
-
   $(this).tab('show');
 });
 
