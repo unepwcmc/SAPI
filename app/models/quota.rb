@@ -43,7 +43,7 @@ class Quota < TradeRestriction
   def self.export
     path = "public/downloads/"
     file_name = "quotas_#{Quota.order("updated_at DESC").
-      limit(1).first.created_at.to_time.to_i}.csv"
+      limit(1).first.created_at.strftime("%d%m%Y")}.csv"
     if !File.file?(path+file_name)
       Quota.to_csv(path+file_name)
     end
@@ -63,14 +63,16 @@ class Quota < TradeRestriction
     quota_columns = [
       :id, :year, :party, :quota,
       :unit_name, :publication_date,
-      :notes, :url
+      :notes, :url, :public_display
     ]
-    limit = 500
+    limit = 1000
     offset = 0
     CSV.open(file_path, 'wb') do |csv|
       csv << taxonomy_columns + quota_columns
-      until (quotas = Quota.where(:public_display => true).
-             order([:public_display, :start_date]).limit(limit).
+      ids = []
+      until (quotas = Quota.
+             includes([:m_taxon_concept, :geo_entity, :unit]).
+             order([:start_date, :id]).limit(limit).
              offset(offset)).empty? do
         quotas.each do |q|
           row = []

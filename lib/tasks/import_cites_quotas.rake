@@ -51,7 +51,7 @@ namespace :import do
           LEFT JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(#{TMP_TABLE}_view.rank))
           LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}_view.legacy_id AND
             UPPER(taxon_concepts.legacy_type) = UPPER(BTRIM(#{TMP_TABLE}_view.kingdom)) AND taxon_concepts.taxonomy_id = #{taxonomy_id} AND
-            taxon_concepts.name_status = 'A' AND taxon_concepts.rank_id = ranks.id
+            taxon_concepts.rank_id = ranks.id
           LEFT JOIN trade_codes AS units ON UPPER(units.code) = UPPER(BTRIM(#{TMP_TABLE}_view.unit)) AND units.type = 'Unit'
           WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL 
       SQL
