@@ -1,0 +1,14 @@
+<% if @references %>
+  <% @references.each do |tcr| %>
+    <% r = tcr.reference %>
+    <span <% if (tcr.data && tcr.data["usr_is_std_ref"] == "1") %>class="standard_ref"<%end%>>
+      <%= r.title %> (<%= r.author %>, <%= r.year %>)
+    </span>
+    <%= link_to delete_icon,
+      admin_taxon_concept_taxon_concept_reference_url(@taxon_concept, tcr),
+      :confirm => "Are you sure?", :method => :delete %>
+    <br>
+  <% end %>
+<% else %>
+  No references defined.
+<% end %>

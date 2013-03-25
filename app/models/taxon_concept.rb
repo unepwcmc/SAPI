@@ -91,7 +91,10 @@ class TaxonConcept < ActiveRecord::Base
   has_many :species_listings, :through => :listing_changes
   has_many :taxon_commons, :dependent => :destroy, :include => :common_name
   has_many :common_names, :through => :taxon_commons
-  has_and_belongs_to_many :references, :join_table => :taxon_concept_references
+
+  has_many :taxon_concept_references, :include => :reference
+  has_many :references, :through => :taxon_concept_reference
+
   has_many :quotas
   has_many :current_quotas, :class_name => 'Quota', :conditions => "is_current = true"
 
