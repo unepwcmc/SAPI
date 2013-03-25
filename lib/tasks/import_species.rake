@@ -130,16 +130,6 @@ def import_data_for kingdom, rank, synonyms=nil
     # puts sql
 
     ActiveRecord::Base.connection.execute(sql)
-    # sql = <<-SQL
-      # WITH fake_parents_of_synonyms AS (
-        # UPDATE taxon_concepts
-        # SET parent_id = NULL
-        # WHERE name_status = 'S' AND parent_id IS NOT NULL
-        # RETURNING parent_id AS id
-      # )
-      # DELETE FROM taxon_concepts WHERE id IN (SELECT id FROM fake_parents_of_synonyms)
-    # SQL
-    # ActiveRecord::Base.connection.execute(sql)
   end
   puts "#{TaxonConcept.where(:rank_id => rank_id).count - existing} #{rank} added"
   ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS species_import_name')
