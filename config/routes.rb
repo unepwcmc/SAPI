@@ -33,7 +33,9 @@ SAPI::Application.routes.draw do
       post :activate, :on => :member
     end
     resources :cites_cops
-    resources :references, :only => [:index, :create, :update, :destroy]
+    resources :references, :only => [:index, :create, :update, :destroy] do
+      get :autocomplete, :on => :collection
+    end
     resources :geo_entities, :only => [:index, :create, :update, :destroy] do
       get :autocomplete, :on => :collection
       resources :geo_relationships, :only => [:index, :create, :update, :destroy]
@@ -50,6 +52,7 @@ SAPI::Application.routes.draw do
       resources :distributions, :only => [:new, :create, :edit, :update, :destroy]
       resources :synonym_relationships, :only => [:new, :create, :edit, :update, :destroy]
       resources :hybrid_relationships, :only => [:new, :create, :edit, :update, :destroy]
+      resources :taxon_concept_references, :only => [:new, :create, :destroy]
       resources :quotas, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_opinions, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
