@@ -35,6 +35,10 @@ namespace :import do
      'lib/assets/files/cleaned/animals/animalia_references_utf8.csv',
      'lib/assets/files/cleaned/plants/plantae_references_utf8.csv'
     )
+    Rake::Task["import:reference_diistribution_links"].invoke(
+     'lib/assets/files/cleaned/animals/animalia_reference_distribution_links.csv',
+     'lib/assets/files/cleaned/plants/plantae_reference_distribution_links.csv'
+    )
     Rake::Task["import:reference_accepted_links"].invoke(
      'lib/assets/files/cleaned/animals/animalia_reference_accepted_links.csv',
      'lib/assets/files/cleaned/plants/plantae_reference_accepted_links.csv'
