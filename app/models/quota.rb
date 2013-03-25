@@ -41,6 +41,7 @@ class Quota < TradeRestriction
   end
 
   def self.export
+    return false if !Quota.any?
     path = "public/downloads/"
     file_name = "quotas_#{Quota.order("updated_at DESC").
       limit(1).first.created_at.strftime("%d%m%Y")}.csv"
