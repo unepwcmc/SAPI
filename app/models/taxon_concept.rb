@@ -192,6 +192,41 @@ class TaxonConcept < ActiveRecord::Base
     parent && parent.full_name
   end
 
+  def standard_references
+    sql = <<-SQL
+      WITH RECURSIVE inherited_references AS (
+        SELECT h.id, h.parent_id, h_refs.reference_id,
+        (h_refs.data->'usr_is_std_ref')::BOOLEAN AS is_std_ref,
+        (h_refs.data->'cascade')::BOOLEAN AS is_cascaded,
+        (h_refs.data->'exclusions')::INT[] AS exclusions
+        FROM taxon_concepts h
+        LEFT JOIN taxon_concept_references h_refs
+        ON h_refs.taxon_concept_id = h.id
+        WHERE h.id = #{id}
+        UNION
+        SELECT hi.id, hi.parent_id, hi_refs.reference_id,
+        (hi_refs.data->'usr_is_std_ref')::BOOLEAN,
+        (hi_refs.data->'cascade')::BOOLEAN,
+        (hi_refs.data->'exclusions')::INT[]
+        FROM taxon_concepts hi
+        JOIN inherited_references ON inherited_references.parent_id = hi.id
+        LEFT JOIN taxon_concept_references hi_refs
+        ON hi_refs.taxon_concept_id = hi.id
+      )
+      SELECT refs.* FROM inherited_references inh_refs
+      INNER JOIN "references" refs
+      ON inh_refs.reference_id = refs.id
+        AND inh_refs.is_std_ref AND (inh_refs.is_cascaded OR inh_refs.id = #{id})
+        AND NOT COALESCE(inh_refs.exclusions, ARRAY[]::INT[]) @> ARRAY[#{id}]
+    SQL
+    Reference.find_by_sql(sql)
+  end
+
+  def inherited_standard_references
+    ref_ids = taxon_concept_references.map(&:reference_id)
+    standard_references.keep_if{ |ref| !ref_ids.include? ref.id }
+  end
+
   def can_be_deleted?
     taxon_relationships.count == 0 &&
     children.count == 0 &&
