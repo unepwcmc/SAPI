@@ -2,112 +2,96 @@ require 'spec_helper'
 
 describe Checklist::HigherTaxaInjector do
   let(:phylum){
-    create(
-      :phylum,
+    create_cites_eu_phylum(
       :taxon_name => create(:taxon_name, :scientific_name => 'Rotflata')
     )
   }
   let(:klass){
-    create(
-      :class,
+    create_cites_eu_class(
       :parent => phylum,
       :taxon_name => create(:taxon_name, :scientific_name => 'Forfiteria')
     )
   }
   let(:order1){
-    create(
-      :order,
+    create_cites_eu_order(
       :parent => klass,
       :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatiformes')
     )
   }
   let(:family1){
-    create(
-      :family,
+    create_cites_eu_family(
       :parent => order1,
       :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatidae')
     )
   }
   let(:genus1_1){
-    create(
-      :genus,
+    create_cites_eu_genus(
       :parent => family1,
       :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
     )
   }
   let(:species1_1_1){
-    create(
-      :species,
+    create_cites_eu_species(
       :parent => genus1_1,
       :taxon_name => create(:taxon_name, :scientific_name => 'lolus')
     )
   }
   let(:subspecies1_1_1_1){
-    create(
-      :subspecies,
+    create_cites_eu_subspecies(
       :parent => species1_1_1,
       :taxon_name => create(:taxon_name, :scientific_name => 'cracovianus')
     )
   }
   let(:species1_1_2){
-    create(
-      :species,
+    create_cites_eu_species(
       :parent => genus1_1,
       :taxon_name => create(:taxon_name, :scientific_name => 'ridiculus')
     )
   }
   let(:genus1_2){
-    create(
-      :genus,
+    create_cites_eu_genus(
       :parent => family1,
       :taxon_name => create(:taxon_name, :scientific_name => 'Lollipopus')
     )
   }
   let(:species1_2_1){
-    create(
-      :species,
+    create_cites_eu_species(
       :parent => genus1_2,
       :taxon_name => create(:taxon_name, :scientific_name => 'lolus')
     )
   }
   let(:species1_2_2){
-    create(
-      :species,
+    create_cites_eu_species(
       :parent => genus1_2,
       :taxon_name => create(:taxon_name, :scientific_name => 'ridiculus')
     )
   }
   let(:family2){
-    create(
-      :family,
+    create_cites_eu_family(
       :parent => order1,
       :taxon_name => create(:taxon_name, :scientific_name => 'Foobaridae')
     )
   }
   let(:genus2_1){
-    create(
-      :genus,
+    create_cites_eu_genus(
       :parent => family2,
       :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus')
     )
   }
   let(:species2_1_1){
-    create(
-      :species,
+    create_cites_eu_species(
       :parent => genus2_1,
       :taxon_name => create(:taxon_name, :scientific_name => 'lolus')
     )
   }
   let(:species2_1_2){
-    create(
-      :species,
+    create_cites_eu_species(
       :parent => genus2_1,
       :taxon_name => create(:taxon_name, :scientific_name => 'ridiculus')
     )
   }
   let(:order2){
-    create(
-      :order,
+    create_cites_eu_order(
       :parent => klass,
       :taxon_name => create(:taxon_name, :scientific_name => 'Testariformes')
     )

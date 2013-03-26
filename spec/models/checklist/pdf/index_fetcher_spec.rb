@@ -1,20 +1,21 @@
 require 'spec_helper'
 
 describe Checklist::Pdf::IndexFetcher do
-  let(:english){ Language.find_by_iso_code1('en') || create(:language, :iso_code1 => 'en') }
-  let(:spanish){ Language.find_by_iso_code1('es') || create(:language, :iso_code1 => 'es') }
+  let(:en){ create(:language, :name => 'English', :iso_code1 => 'EN') }
+  let(:es){ create(:language, :name => 'Spanish', :iso_code1 => 'ES') }
+
   let(:english_common_name){
     create(
       :common_name,
       :name => 'Domestic lolcat',
-      :language => english
+      :language => en
     )
   }
   let(:spanish_common_name){ 
     create(
       :common_name,
       :name => 'Lolgato domestico',
-      :language => spanish
+      :language => es
     )
   }
   let!(:tc){
@@ -41,6 +42,14 @@ describe Checklist::Pdf::IndexFetcher do
     specify{ subject.next.first.sort_name.should == 'lolcat, Domestic' }
   end
   context "with synonyms and authors" do
+    let(:synonym_relationship_type){
+      create(
+        :taxon_relationship_type,
+        :name => TaxonRelationshipType::HAS_SYNONYM,
+        :is_intertaxonomic => false,
+        :is_bidirectional => false
+      )
+    }
     let!(:synonym){
       create(
         :taxon_concept,
@@ -50,7 +59,8 @@ describe Checklist::Pdf::IndexFetcher do
     }
     let!(:synonymy_rel){
       create(
-        :has_synonym,
+        :taxon_relationship,
+        :taxon_relationship_type => synonym_relationship_type,
         :taxon_concept_id => tc.id,
         :other_taxon_concept_id => synonym.id,
       )

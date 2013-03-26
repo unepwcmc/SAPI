@@ -23,7 +23,7 @@ describe CitesCop do
       let(:cites_cop){
         build(
           :cites_cop,
-          :designation => Designation.find_or_create_by_name('EU')
+          :designation => eu
         )
       }
       specify { cites_cop.should be_invalid}

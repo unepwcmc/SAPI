@@ -16,21 +16,18 @@ describe TaxonCommon do
       create(:language)
     }
     let(:parent){
-      create(
-        :genus,
+      create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
       )
     }
     let!(:tc){
-      create(
-        :species,
+      create_cites_eu_species(
         :parent_id => parent.id,
         :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
       )
     }
     let!(:another_tc){
-      create(
-        :species,
+      create_cites_eu_species(
         :parent_id => parent.id,
         :taxon_name => create(:taxon_name, :scientific_name => 'lolcatus')
       )

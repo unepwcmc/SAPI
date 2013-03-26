@@ -1,6 +1,6 @@
 #Encoding: utf-8
 class Checklist::Checklist
-  attr_accessor :taxon_concepts_rel, :taxon_concepts
+  attr_accessor :taxon_concepts_rel, :taxon_concepts, :animalia, :plantae
 
   # Constructs a query to retrieve taxon concepts based on user defined
   # parameters

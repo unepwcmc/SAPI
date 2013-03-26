@@ -62,6 +62,7 @@ puts "#{Rank.count} ranks created"
 
 puts "#{SpeciesListing.delete_all} species listings deleted"
 puts "#{ChangeType.delete_all} change types deleted"
+puts "#{Event.delete_all} events deleted"
 puts "#{Designation.delete_all} designations deleted"
 puts "#{Taxonomy.delete_all} taxonomies deleted"
 
@@ -309,3 +310,4 @@ Language.create(:name_en => 'Spanish', :iso_code1 => 'es')
 Language.create(:name_en => 'French', :iso_code1 => 'fr')
 puts "#{Language.count} languages created"
 puts "#{Reference.delete_all} references deleted"
+puts "#{TradeRestriction.delete_all} trade restrictions deleted"
