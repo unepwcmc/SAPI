@@ -130,6 +130,25 @@ class CsvToDbMap
       'Date valid' => 'effective_at date',
       'LnmLongDesc' => 'description text',
       'LnmURL' => 'url text'
+    },
+    'quotas_import' => {
+      'Kingdom' => 'kingdom varchar',
+      'RecId' => 'legacy_id integer',
+      'Rank' => 'rank varchar',
+      'ISO code' => 'country_iso2 varchar',
+      'Quota' => 'quota float',
+      'Unit' => 'unit varchar',
+      'StartDate' => 'start_date date',
+      'EndDate' => 'end_date date',
+      'Year' => 'year integer',
+      'Notes' => 'notes varchar',
+      'Terms' => 'terms varchar',
+      'Sources' => 'sources varchar',
+      'QuoAdded' => 'created_at date',
+      'QuoDate' => 'publication_date date',
+      'IsCurrent' => 'is_current boolean',
+      'PublicDisplay' => 'public_display boolean',
+      'Link' => 'url varchar'
     }
   }
 

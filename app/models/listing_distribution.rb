@@ -5,9 +5,10 @@
 #  id                :integer          not null, primary key
 #  listing_change_id :integer          not null
 #  geo_entity_id     :integer          not null
+#  is_party          :boolean          default(TRUE), not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  is_party          :boolean          default(TRUE), not null
+#  source_id         :integer
 #
 
 class ListingDistribution < ActiveRecord::Base

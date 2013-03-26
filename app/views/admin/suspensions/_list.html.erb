@@ -18,9 +18,9 @@
       <td><%= suspension.publication_date_formatted %></td>
       <td><%= true_false_icon(suspension.is_current) %></td>
       <td><%= suspension.geo_entity && suspension.geo_entity.iso_code2 %></td>
-      <td><%= suspension.purpose && suspension.purpose.code %></td>
-      <td><%= suspension.term && suspension.term.code %></td>
-      <td><%= suspension.source && suspension.source.code %></td>
+      <td><%= suspension.purposes && suspension.purposes.map(&:code).join(', ') %></td>
+      <td><%= suspension.terms && suspension.terms.map(&:code).join(', ') %></td>
+      <td><%= suspension.sources && suspension.sources.map(&:code).join(', ') %></td>
       <td><%= suspension.suspension_basis %></td>
       <td><%= suspension.notes %></td>
       <td>

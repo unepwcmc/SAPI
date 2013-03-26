@@ -70,6 +70,8 @@ SAPI::Application.routes.draw do
     :constraints => {:designation => /#{Designation::CITES}/}
   match 'timelines' => 'timelines#index'
 
+  match 'exports' => 'exports#index'
+  match 'exports/download' => 'exports#download'
   match 'downloads/index'   => 'downloads#download_index'
   match 'downloads/history' => 'downloads#download_history'
 
