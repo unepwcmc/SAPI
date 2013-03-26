@@ -55,6 +55,10 @@ namespace :import do
       'lib/assets/files/laws.csv'
     )
 
+    Rake::Task["import:cites_quotas"].invoke(
+      'lib/assets/files/cleaned/quotas_utf8.csv'
+    )
+
     Rake::Task["import:trade_codes"].invoke
 
     Sapi::rebuild()
