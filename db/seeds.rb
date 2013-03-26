@@ -45,7 +45,7 @@ puts "#{Rank.delete_all} ranks deleted"
 puts "#{Quota.delete_all} quotas deleted"
 puts "#{TradeRestrictionTerm.delete_all} trade restrictions terms deleted"
 puts "#{TradeRestrictionSource.delete_all} trade restrictions sources deleted"
-puts "#{TradeRestrictionPurposes.delete_all} trade restrictions purposes deleted"
+puts "#{TradeRestrictionPurpose.delete_all} trade restrictions purposes deleted"
 
 Rank.create(:name => Rank::KINGDOM, :taxonomic_position => '1', :fixed_order => true)
 Rank.create(:name => Rank::PHYLUM, :taxonomic_position => '2', :fixed_order => true)
