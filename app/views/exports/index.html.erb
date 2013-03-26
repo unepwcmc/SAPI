@@ -18,8 +18,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
       ['Suspensions', 'S', {:class => @eu.id}]
     ]
   ) %>
-  <p>
-  <%= submit_tag 'Download' %>
+  <label>All <%= check_box_tag :all %></label>
+    <%= submit_tag 'Download' %>
   </p>
 <% end %>
 
