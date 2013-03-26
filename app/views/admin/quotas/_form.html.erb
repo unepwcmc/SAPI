@@ -18,7 +18,8 @@
       <%= f.text_field :quota, :value => @quota.quota %>
       <%= f.select :unit_id,
         options_from_collection_for_select(@units, :id, :code, @quota.unit_id),
-        { :include_blank => true }
+        { :include_blank => true },
+        {:class => 'quota select2', :style => 'width: 220px' }
       %>
     </div>
   </div>
@@ -64,10 +65,10 @@
   <div class="control-group">
     <%= f.label :term_id, :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :term_id,
-        options_from_collection_for_select(@terms, :id, :code, @quota.term_id),
+      <%= f.select :term_ids,
+        options_from_collection_for_select(@terms, :id, :code, @quota.term_ids),
         { :include_blank => true },
-        {:class => 'quota select2', :style => 'width: 220px' }
+        {:class => 'quota select2', :multiple => true, :style => 'width: 220px' }
       %>
     </div>
   </div>
@@ -75,10 +76,10 @@
   <div class="control-group">
     <%= f.label :source_id, :class => 'control-label'  %>
     <div class="controls">
-      <%= f.select :source_id,
-        options_from_collection_for_select(@sources, :id, :code, @quota.source_id),
-        { :include_blank => true },
-        {:class => 'quota select2', :style => 'width: 220px' }
+      <%= f.select :source_ids,
+        options_from_collection_for_select(@sources, :id, :code, @quota.source_ids),
+        { :include_blank => true},
+        {:class => 'quota select2', :multiple => true, :style => 'width: 220px' }
       %>
     </div>
   </div>

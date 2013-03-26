@@ -14,6 +14,9 @@
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  hash_annotation_id         :integer
+#  event_id                   :integer
+#  explicit_change            :boolean          default(TRUE)
+#  source_id                  :integer
 #
 
 class ListingChange < ActiveRecord::Base

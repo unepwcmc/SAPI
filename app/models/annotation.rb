@@ -5,7 +5,6 @@
 #  id                  :integer          not null, primary key
 #  symbol              :string(255)
 #  parent_symbol       :string(255)
-#  listing_change_id   :integer
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  short_note_en       :text
@@ -16,6 +15,8 @@
 #  full_note_es        :text
 #  display_in_index    :boolean          default(FALSE), not null
 #  display_in_footnote :boolean          default(FALSE), not null
+#  source_id           :integer
+#  event_id            :integer
 #
 
 class Annotation < ActiveRecord::Base
