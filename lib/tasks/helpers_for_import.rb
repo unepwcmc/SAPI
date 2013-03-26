@@ -55,7 +55,7 @@ class CsvToDbMap
       'Species RecID' => 'legacy_id integer',
       'Rank' => 'rank varchar',
       'GEO_entity' => 'geo_entity_type varchar',
-      'ISO Code 2' => 'country_iso2 varchar',
+      'ISO Code 2' => 'iso2 varchar',
       'Reference IDs' => 'reference_id integer',
       'Designation' => 'designation varchar'
     },
@@ -154,7 +154,7 @@ class CsvToDbMap
       'Species RecID' => 'legacy_id integer',
       'Rank' => 'rank varchar',
       'GEO_entity_type' => 'geo_entity_type varchar',
-      'ISO Code 2' => 'iso_code varchar',
+      'ISO Code 2' => 'iso_code2 varchar',
       'Tags' => 'tags varchar',
       'Designation' => 'designation varchar'
     }
