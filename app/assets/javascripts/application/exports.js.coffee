@@ -1,2 +1,3 @@
 $(document).ready ->
-  #$('#designation_id').chained('#species_listing_id')
+  $('#data_type').chained('#trade_restriction_designation_id')
+  $('#species_listing_id').chained('#species_listing_designation_id')

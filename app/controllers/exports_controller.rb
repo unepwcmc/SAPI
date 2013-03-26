@@ -3,6 +3,8 @@ class ExportsController < ApplicationController
   #
   def index
     @designations = Designation.order('name')
+    @cites = @designations.find_by_name(Designation::CITES)
+    @eu = @designations.find_by_name(Designation::EU)
     @species_listings = SpeciesListing.order('name')
   end
 
