@@ -11,6 +11,21 @@ namespace :import do
 
       kingdom = file.split('/').last.split('_')[0].titleize
 
+      #import all distinct tags
+      sql = <<-SQL
+        INSERT INTO preset_tags(name, model, created_at, updated_at)
+        SELECT DISTINCT regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag,
+        'Distribution', current_date, current_date
+        FROM #{TMP_TABLE}
+        WHERE NOT EXISTS (
+          SELECT * FROM preset_tags
+          WHERE preset_tags.tag = #{TMP_TABLE}.tag AND
+          model = 'Distribution'
+        )
+      SQL
+      puts sql
+      ActiveRecord::Base.connection.execute(sql)
+
       sql = <<-SQL
         INSERT INTO distributions(taxon_concept_id, geo_entity_id, created_at, updated_at)
         SELECT DISTINCT taxon_concepts.id, geo_entities.id, current_date, current_date
@@ -22,7 +37,7 @@ namespace :import do
           AND BTRIM(#{TMP_TABLE}.designation) ilike '%CITES%'
       SQL
       #TODO do sth about those unknown distributions!
-      ActiveRecord::Base.connection.execute(sql)
+      #ActiveRecord::Base.connection.execute(sql)
     end
     puts "There are now #{Distribution.count} taxon concept distributions in the database"
   end

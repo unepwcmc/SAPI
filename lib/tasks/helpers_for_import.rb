@@ -149,6 +149,14 @@ class CsvToDbMap
       'IsCurrent' => 'is_current boolean',
       'PublicDisplay' => 'public_display boolean',
       'Link' => 'url varchar'
+    },
+    'distribution_tags_import' => {
+      'Species RecID' => 'legacy_id integer',
+      'Rank' => 'rank varchar',
+      'GEO_entity_type' => 'geo_entity_type varchar',
+      'ISO Code 2' => 'iso_code varchar',
+      'Tags' => 'tags varchar',
+      'Designation' => 'designation varchar'
     }
   }
 
