@@ -12,7 +12,13 @@
 <tbody>
   <% collection.each do |quota| -%>
     <tr class="<%= if quota.is_current? then "current_listing" end %>">
-    <td><%= quota.quota %> <%= quota.unit.try(:code) %></td>
+      <td>
+        <% if quota.quota == -1 %>
+          in preparation
+        <% else %>
+          <%= quota.quota %> <%= quota.unit.try(:code) %>
+        <% end %>
+      </td>
       <td><%= quota.year %></td>
       <td><%= quota.publication_date_formatted %></td>
       <td><%= true_false_icon(quota.is_current) %></td>
