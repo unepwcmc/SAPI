@@ -69,7 +69,7 @@ class Quota < TradeRestriction
     limit = 1000
     offset = 0
     CSV.open(file_path, 'wb') do |csv|
-      csv << taxonomy_columns + quota_columns
+      csv << taxonomy_columns + ['Remarks'] + quota_columns
       ids = []
       until (quotas = Quota.
              includes([:m_taxon_concept, :geo_entity, :unit]).
@@ -77,10 +77,7 @@ class Quota < TradeRestriction
              offset(offset)).empty? do
         quotas.each do |q|
           row = []
-          taxon = q.m_taxon_concept
-          taxonomy_columns.each do |c|
-            row << taxon.send(c)
-          end
+          row += Quota.fill_taxon_columns(q, taxonomy_columns)
           quota_columns.each do |c|
             row << q.send(c)
           end
@@ -89,5 +86,19 @@ class Quota < TradeRestriction
         offset += limit
       end
     end
+  end
+ 
+  def self.fill_taxon_columns quota, taxonomy_columns
+    columns = []
+    taxon = quota.m_taxon_concept
+    taxonomy_columns.each do |c|
+      columns << taxon.send(c)
+    end
+    if taxon.name_status == 'A'
+      columns << '' #empty remarks
+    else
+      columns << "Quota issued for #{taxon.name_status == 'S' ? 'synonym' : 'hybrid' } #{quota.taxon_concept.legacy_id} - #{quota.taxon_concept.legacy_type}"
+    end
+    columns
   end
 end
