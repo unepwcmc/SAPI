@@ -79,7 +79,6 @@ class TaxonConceptsEditor extends AdminEditor
     super
     $('.modal .modal-footer .save-and-reopen-button').click () =>
       @saveAndReopen = true
-    $('.distributions-list > a').popover({})
 
   initModals: () ->
     super

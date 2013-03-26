@@ -1,14 +1,44 @@
-<% if @references %>
-  <% @references.each do |tcr| %>
-    <% r = tcr.reference %>
-    <span <% if (tcr.data && tcr.data["usr_is_std_ref"] == "1") %>class="standard_ref"<%end%>>
-      <%= r.title %> (<%= r.author %>, <%= r.year %>)
-    </span>
-    <%= link_to delete_icon,
-      admin_taxon_concept_taxon_concept_reference_url(@taxon_concept, tcr),
-      :confirm => "Are you sure?", :method => :delete %>
-    <br>
-  <% end %>
+<% if @taxon_concept.taxon_concept_references || @taxon_concept.inherited_standard_references %>
+  <table class="table table-hover">
+    <thead>
+      <th>
+        Reference
+      </th>
+      <th>Std?</th>
+      <th>
+        Actions
+      </th>
+    </thead>
+    <tbody>
+    <% @taxon_concept.taxon_concept_references.each do |tc_ref| %>
+      <% ref = tc_ref.reference %>
+      <tr>
+        <td>
+          <%= ref.citation %>
+        </td>
+        <td><%= true_false_icon(tc_ref.data && tc_ref.data['usr_is_std_ref'] == 't') %></td>
+        <td>
+          <%= link_to delete_icon,
+            admin_taxon_concept_taxon_concept_reference_url(@taxon_concept, tc_ref),
+            :confirm => "Are you sure?", :method => :delete
+          %>
+        </td>
+      </tr>
+      <br>
+    <% end %>
+    <% @taxon_concept.inherited_standard_references.each do |ref| %>
+      <tr>
+        <td>
+          <%= ref.citation %>
+        </td>
+        <td><%= true_false_icon(true) %></td>
+        <td>
+        </td>
+      </tr>
+      <br>
+    <% end %>
+    </tbody>
+  </table>
 <% else %>
   No references defined.
 <% end %>
