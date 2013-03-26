@@ -12,7 +12,11 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require bootstrap
+//= require bootstrap-editable
+//= require bootstrap-datepicker
+//= require select2
+//= require jquery_nested_form
 //= require jquery.chained
-//= require bootstrap-dropdown
-//= require bootstrap-button
-//= require_tree ./application
+//= require underscore
+//= require_tree ./admin

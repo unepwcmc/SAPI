@@ -1,10 +1,9 @@
 class ExportsController < ApplicationController
-  layout "admin"
-
   # GET exports/
   #
   def index
     @designations = Designation.order('name')
+    @species_listings = SpeciesListing.order('name')
   end
 
   def download
