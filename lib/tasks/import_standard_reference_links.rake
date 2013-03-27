@@ -5,7 +5,7 @@ namespace :import do
   desc "Import standard reference links from csv file (usage: rake import:standard_references[path/to/file,path/to/another])"
   task :standard_reference_links, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     TMP_TABLE = 'standard_reference_links_import'
-    puts "There are #{TaxonConceptReference.where("(data->'usr_is_std_ref')::BOOLEAN = 't'").count} standard references in the database."
+    puts "There are #{TaxonConceptReference.where(:is_standard => true).count} standard references in the database."
 
     ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
     ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
@@ -56,7 +56,7 @@ namespace :import do
       sql = <<-SQL
       WITH standard_references_as_ids AS (
         WITH standard_references_per_exclusion AS (
-          SELECT rank, taxon_legacy_id, ref_legacy_id, '#{kingdom}'::VARCHAR AS legacy_type, "cascade", 
+          SELECT rank, taxon_legacy_id, ref_legacy_id, '#{kingdom}'::VARCHAR AS legacy_type, is_cascaded, 
           CASE WHEN exclusions IS NULL THEN NULL ELSE split_part(regexp_split_to_table(exclusions,','),':',1) END AS exclusion_rank,
           CASE WHEN exclusions IS NULL THEN NULL ELSE split_part(regexp_split_to_table(exclusions,','),':',2) END AS exclusion_legacy_id
           FROM #{TMP_TABLE}
@@ -64,7 +64,7 @@ namespace :import do
         SELECT taxon_concepts.id AS taxon_concept_id,
         ARRAY_AGG(exclusion_taxon_concepts.id)::VARCHAR AS exclusions,
         "references".id AS reference_id, 
-        "cascade"
+        is_cascaded
         FROM standard_references_per_exclusion
         INNER JOIN ranks
           ON LOWER(ranks.name) = LOWER(BTRIM(rank))
@@ -81,11 +81,11 @@ namespace :import do
         INNER JOIN "references"
           ON "references".legacy_id = standard_references_per_exclusion.ref_legacy_id
           AND "references".legacy_type = standard_references_per_exclusion.legacy_type
-        GROUP BY taxon_concept_id, reference_id, "cascade"
+        GROUP BY taxon_concept_id, reference_id, is_cascaded
       )
-      UPDATE taxon_concept_references SET data = hstore('usr_is_std_ref', 't') ||
-      hstore('cascade', "cascade"::VARCHAR) ||
-      hstore('exclusions', exclusions)
+      UPDATE taxon_concept_references SET is_standard = TRUE,
+        is_cascaded = standard_references_as_ids.is_cascaded,
+        excluded_taxon_concepts_ids = (exclusions)::INT[]
       FROM standard_references_as_ids
       WHERE taxon_concept_references.taxon_concept_id = standard_references_as_ids.taxon_concept_id AND
       taxon_concept_references.reference_id = standard_references_as_ids.reference_id
@@ -94,7 +94,7 @@ namespace :import do
       ActiveRecord::Base.connection.execute(sql)
 
     end
-    puts "There are now #{TaxonConceptReference.where("(data->'usr_is_std_ref')::BOOLEAN = 't'").count} standard references in the database"
+    puts "There are now #{TaxonConceptReference.where(:is_standard => true).count} standard references in the database"
     ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
     ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
     Sapi::rebuild_references

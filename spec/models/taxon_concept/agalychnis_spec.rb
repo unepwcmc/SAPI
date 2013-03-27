@@ -19,13 +19,13 @@ describe TaxonConcept do
       end
       describe :standard_references do
         context "for class Amphibia" do
-          specify { @klass.standard_references.should include @ref.id }
+          specify { @klass.taxon_concept.standard_references.map(&:id).should include @ref.id }
         end
         context "for family Hylidae" do
-          specify { @family.standard_references.should include @ref.id }
+          specify { @family.taxon_concept.standard_references.map(&:id).should include @ref.id }
         end
         context "for genus Agalychnis" do
-          specify { @genus.standard_references.should be_empty }
+          specify { @genus.taxon_concept.standard_references.should be_empty }
         end
       end
     end

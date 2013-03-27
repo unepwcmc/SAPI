@@ -12,8 +12,7 @@ shared_context 'Agalychnis' do
     )
     @genus = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Agalychnis'),
-      :parent => @family,
-      :data => {:usr_no_std_ref => true}
+      :parent => @family
     )
 
     create_cites_II_addition(
@@ -34,7 +33,9 @@ shared_context 'Agalychnis' do
       :taxon_concept_reference,
       :taxon_concept => cites_eu_amphibia,
       :reference => @ref,
-      :data => {:usr_is_std_ref => 't', :cascade => 't'}
+      :is_standard => true,
+      :is_cascaded => true,
+      :excluded_taxon_concepts_ids => "{#{@genus.id}}"
     )
 
     Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
