@@ -18,10 +18,24 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
       ['Suspensions', 'S', {:class => @eu.id}]
     ]
   ) %>
+  <%= label_tag "Set" %>
   <ul>
     <li><label><%= radio_button_tag "filters[set]", :all %> All</label></li>
-    <li><label><%= radio_button_tag "filters[set]", :current %> Current</label></li>
+    <li><label><%= radio_button_tag "filters[set]", :current, :checked => true %> Current</label></li>
   </ul>
+  <p><%= label_tag "Countries" %>
+  <%= select_tag "filters[geo_entities_ids]",
+    options_from_collection_for_select(
+      @geo_entities,
+      :id,
+      :name_en
+  ), { :class => "select2", :multiple => true, :style => 'width: 220px' }
+  %></p>
+  <p><%= label_tag "Years" %>
+  <%= select_tag "filters[years]",
+      options_for_select((1975..Time.now.year).to_a.reverse.map{|y| [y, y]}),
+      { :class => "select2", :multiple => true, :style => 'width: 220px' }
+  %></p>
 
   <%= submit_tag 'Download' %>
   </p>

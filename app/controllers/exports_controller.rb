@@ -6,6 +6,10 @@ class ExportsController < ApplicationController
     @cites = @designations.find_by_name(Designation::CITES)
     @eu = @designations.find_by_name(Designation::EU)
     @species_listings = SpeciesListing.order('name')
+    @geo_entities = GeoEntity.joins(:geo_entity_type).
+      where(:geo_entity_types => {:name => GeoEntityType::COUNTRY},
+            :geo_entities => { :is_current => true }).
+      order(:name_en)
   end
 
   def download
