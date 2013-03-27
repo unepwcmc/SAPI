@@ -1,4 +1,4 @@
-<table class="table table-hover">
+<table class="table table-striped table-hover">
   <thead>
     <th>
       Geo entity
@@ -25,7 +25,7 @@
       <td>
         <ul class="unstyled">
           <% d.references.each do |r| %>
-            <li><%= r.citation %></li>
+            <li class="reference-citation"><%= r.citation %></li>
           <% end %>
         </ul>
       </td>
@@ -34,7 +34,6 @@
         <%= link_to delete_icon, admin_taxon_concept_distribution_url(@taxon_concept, d), :confirm => "Are you sure?", :method => :delete %>
       </td>
     </tr>
-    <br>
   <% end %>
   </tbody>
 </table>

@@ -32,8 +32,19 @@
 <%= admin_new_taxon_concept_modal %>
 
 <ul id="taxon-concept-tabs" class="nav nav-tabs">
-  <li class="<%= if controller_name == "taxon_concepts" then "active" end%>">
-    <%= link_to "Details", edit_admin_taxon_concept_path(@taxon_concept) %>
+  <li class="dropdown <%= if controller_name == "taxon_concepts" then "active" end%>">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Details<b class="caret"></b></a>
+    <ul id="details-menu" class="dropdown-menu">
+      <li>
+        <%= link_to "Nomenclature", '#nomenclature-tab', :"data-toggle" => :tab %>
+      </li>
+      <li>
+        <%= link_to "Distributions", '#distributions-tab', :"data-toggle" => :tab %>
+      </li>
+      <li>
+        <%= link_to "References", '#references-tab', :"data-toggle" => :tab %>
+      </li>
+    </ul>
   </li>
 
   <% @taxon_concept.designations.each do |d| %>

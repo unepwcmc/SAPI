@@ -84,17 +84,9 @@ input.annotation, textarea.annotation {
   }
 }
 
-ul.distribution_references {
-  margin: 0;
-  font-weight: bold;
-
-  li {
-    list-style-type: none;
-  }
-
-  .reference_delete {
-    margin-right: 20px;
-  }
+.reference-citation {
+    padding-left: 22px ;
+    text-indent: -22px ;
 }
 
 tr.current_listing {

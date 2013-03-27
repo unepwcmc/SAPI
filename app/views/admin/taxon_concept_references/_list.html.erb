@@ -1,5 +1,5 @@
 <% if @taxon_concept.taxon_concept_references || @taxon_concept.inherited_standard_references %>
-  <table class="table table-hover">
+  <table class="table table-striped table-hover">
     <thead>
       <th>
         Reference
@@ -14,7 +14,7 @@
       <% ref = tc_ref.reference %>
       <tr>
         <td>
-          <%= ref.citation %>
+          <p class="reference-citation"><%= ref.citation %></p>
         </td>
         <td><%= true_false_icon(tc_ref.data && tc_ref.data['usr_is_std_ref'] == 't') %></td>
         <td>
@@ -24,12 +24,11 @@
           %>
         </td>
       </tr>
-      <br>
     <% end %>
     <% @taxon_concept.inherited_standard_references.each do |ref| %>
       <tr>
         <td>
-          <%= ref.citation %>
+          <p class="reference-citation"><%= ref.citation %></p>
         </td>
         <td><%= true_false_icon(true) %></td>
         <td>
