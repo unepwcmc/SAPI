@@ -19,6 +19,10 @@ namespace :import do
       'lib/assets/files/cleaned/animals/animalia_distribution_utf8.csv',
       'lib/assets/files/cleaned/plants/plantae_distribution_utf8.csv'
     )
+    Rake::Task["import:distribution_tags"].invoke(
+      'lib/assets/files/cleaned/animals/animalia_distribution_tags_utf8.csv',
+      'lib/assets/files/cleaned/plants/plantae_distribution_tags_utf8.csv'
+    )
     Rake::Task["import:cites_listings"].invoke(
       'lib/assets/files/cleaned/animals/animalia_legislation_utf8.csv',
       'lib/assets/files/cleaned/plants/plantae_legislation_utf8.csv'
@@ -53,6 +57,10 @@ namespace :import do
     )
     Rake::Task["import:laws"].invoke(
       'lib/assets/files/laws.csv'
+    )
+
+    Rake::Task["import:cites_quotas"].invoke(
+      'lib/assets/files/cleaned/quotas_utf8.csv'
     )
 
     Rake::Task["import:trade_codes"].invoke
