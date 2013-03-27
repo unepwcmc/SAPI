@@ -21,6 +21,10 @@
 /public/latex/*.gz
 /public/latex/index.pdf
 /public/latex/history.pdf
+
+#exports csvs
+/public/exports/cites_quotas/*.csv
+
 # Ruby
 /vendor/ruby
 
