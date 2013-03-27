@@ -1,4 +1,4 @@
-Species RecID,Rank,GEO_entity,ISO Code 2,Tags,Designation
+Species RecID,Rank,GEO_entity_type,ISO Code 2,Tags,Designation
 100871,Species,Country,CL,Introduced,CITES_EU
 102687,Species,Country,SG,Extinct,CITES_EU
 102706,Species,Country,SG,Extinct,CITES_EU
