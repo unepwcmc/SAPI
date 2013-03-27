@@ -68,7 +68,6 @@ FactoryGirl.define do
   factory :taxon_concept_reference do
     taxon_concept
     reference
-    data {}
   end
 
   factory :preset_tag do

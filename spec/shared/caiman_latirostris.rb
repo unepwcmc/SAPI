@@ -63,7 +63,7 @@ shared_context "Caiman latirostris" do
       :taxon_concept_reference,
       :taxon_concept => @species,
       :reference => @ref,
-      :data => {:usr_is_std_ref => 't'}
+      :is_standard => true
     )
 
     create_cites_II_addition(
