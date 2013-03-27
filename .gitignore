@@ -13,7 +13,7 @@
 /log/*.log
 /tmp
 /public/system
-/public/downloads
+/public/downloads/*.pdf
 #LaTeX
 /public/latex/*.aux
 /public/latex/*.out
@@ -21,6 +21,10 @@
 /public/latex/*.gz
 /public/latex/index.pdf
 /public/latex/history.pdf
+
+#exports csvs
+/public/downloads/cites_quotas/*.csv
+
 # Ruby
 /vendor/ruby
 
