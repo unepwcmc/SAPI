@@ -12,14 +12,18 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
   <%= label_tag 'Type of data' %>
   <%= select_tag :data_type, options_for_select(
     [
-      ['Quotas', 'Q', {:class => @cites.id}],
-      ['Suspensions', 'S', {:class => @cites.id}],
+      ['Quotas', 'Quotas', {:class => @cites.id}],
+      ['Suspensions', 'Suspensions', {:class => @cites.id}],
       ['Opinions', 'O', {:class => @eu.id}],
       ['Suspensions', 'S', {:class => @eu.id}]
     ]
   ) %>
-  <label>All <%= check_box_tag :all %></label>
-    <%= submit_tag 'Download' %>
+  <ul>
+    <li><label><%= radio_button_tag "filters[set]", :all %> All</label></li>
+    <li><label><%= radio_button_tag "filters[set]", :current %> Current</label></li>
+  </ul>
+
+  <%= submit_tag 'Download' %>
   </p>
 <% end %>
 

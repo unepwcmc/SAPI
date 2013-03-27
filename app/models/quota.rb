@@ -41,7 +41,7 @@ class Quota < TradeRestriction
     unit_id ? unit.name_en : ''
   end
 
-  def self.export
+  def self.export filters
     return false if !Quota.any?
     path = "public/downloads/"
     file_name = "quotas_#{Quota.order("updated_at DESC").
