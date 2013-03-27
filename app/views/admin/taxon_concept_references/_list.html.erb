@@ -16,7 +16,7 @@
         <td>
           <p class="reference-citation"><%= ref.citation %></p>
         </td>
-        <td><%= true_false_icon(tc_ref.data && tc_ref.data['usr_is_std_ref'] == 't') %></td>
+        <td><%= true_false_icon(tc_ref.is_standard) %></td>
         <td>
           <%= link_to delete_icon,
             admin_taxon_concept_taxon_concept_reference_url(@taxon_concept, tc_ref),

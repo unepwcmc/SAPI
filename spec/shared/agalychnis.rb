@@ -33,7 +33,9 @@ shared_context 'Agalychnis' do
       :taxon_concept_reference,
       :taxon_concept => cites_eu_amphibia,
       :reference => @ref,
-      :data => {:usr_is_std_ref => 't', :cascade => 't', :exclusions => "{#{@genus.id}}"}
+      :is_standard => true,
+      :is_cascaded => true,
+      :excluded_taxon_concepts_ids => "{#{@genus.id}}"
     )
 
     Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])

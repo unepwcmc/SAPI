@@ -123,7 +123,7 @@ class CsvToDbMap
       'RecID' => 'taxon_legacy_id integer',
       'DesignationStandardReferenceID' => 'ref_legacy_id integer',
       'Excludes' => 'exclusions varchar',
-      'Cascade' => 'cascade boolean'
+      'Cascade' => 'is_cascaded boolean'
     },
     'laws_import' => {
       'LnmShortDesc' => 'name varchar',
