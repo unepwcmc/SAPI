@@ -29,12 +29,14 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
       @geo_entities,
       :id,
       :name_en
-  ), { :class => "select2", :multiple => true, :style => 'width: 220px' }
+  ), { :class => "select2", :multiple => true,
+       :style => 'width: 220px', :'data-placeholder' => 'All (select countries to filter)' }
   %></p>
   <p><%= label_tag "Years" %>
   <%= select_tag "filters[years]",
       options_for_select((1975..Time.now.year).to_a.reverse.map{|y| [y, y]}),
-      { :class => "select2", :multiple => true, :style => 'width: 220px' }
+      { :class => "select2", :multiple => true,
+       :style => 'width: 220px', :'data-placeholder' => 'All (select years to filter)' }
   %></p>
 
   <%= submit_tag 'Download' %>
