@@ -44,7 +44,7 @@ class Quota < TradeRestriction
   def self.export filters
     return false if !Quota.any?
     require 'digest/sha1'
-    path = "public/downloads/cites_quotas"
+    path = "public/downloads/cites_quotas/"
     latest = Quota.order("updated_at DESC").
       limit(1).first.updated_at.strftime("%d%m%Y")
     public_file_name = "quotas_#{latest}.csv"
