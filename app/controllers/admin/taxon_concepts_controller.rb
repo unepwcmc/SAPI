@@ -22,12 +22,11 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     @taxonomies = Taxonomy.order(:name)
     @ranks = Rank.order(:taxonomic_position)
     edit! do |format|
-      @references = TaxonConceptReference.where(:taxon_concept_id => @taxon_concept.id)
       @languages = Language.order(:name_en)
       @distributions = @taxon_concept.distributions.
-        joins(:geo_entity).order('geo_entities.name_en ASC')
+        joins(:geo_entity).order('UPPER(geo_entities.name_en) ASC')
       @taxon_commons = @taxon_concept.taxon_commons.
-        joins(:common_name).order('common_names.name ASC').
+        joins(:common_name).order('UPPER(common_names.name) ASC').
         includes(:common_name => :language)
       format.js { render 'new' }
     end

@@ -42,7 +42,8 @@ shared_context 'Uroplatus' do
       :taxon_concept_reference,
       :taxon_concept => @species2,
       :reference => @ref,
-      :data => {:usr_is_std_ref => 't', :cascade => 't'}
+      :is_standard => true,
+      :is_cascaded => true
     )
 
     Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
