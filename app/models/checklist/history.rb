@@ -13,7 +13,7 @@ class Checklist::History < Checklist::Checklist
       initialize_params(params)
     end
 
-    @download_name = "ChecklistHistory-#{Time.now}.#{ext}"
+    @download_name = "ChecklistHistory-#{Time.now.strftime("%d%m%Y")}.#{ext}"
   end
 
   def prepare_kingdom_queries
