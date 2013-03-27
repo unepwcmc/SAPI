@@ -28,6 +28,7 @@ class Admin::HybridRelationshipsController < Admin::SimpleCrudController
       failure.js {
         @taxonomies = Taxonomy.order(:name)
         @ranks = Rank.order(:taxonomic_position)
+        @tags = TaxonConcept.tag_counts_on('tags')
         render 'new'
       }
     end

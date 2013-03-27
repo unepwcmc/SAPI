@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.12'
+gem 'rails', '3.2.13'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -22,7 +22,7 @@ gem 'sidekiq-status'
 gem 'whenever', :require => false
 
 gem 'jquery-rails', '2.1.4' #do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'kaminari'
 gem 'select2-rails'
 gem 'nested_form', '~> 0.3.1'

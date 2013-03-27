@@ -1,9 +1,6 @@
 require 'spec_helper'
 describe Admin::SynonymRelationshipsController do
-  let(:taxon_concept){ create(:taxon_concept) }
-  let(:synonym){ create(:taxon_concept, :name_status => 'S') }
-  let(:synonym_relationship_type){
-    TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_SYNONYM) ||
+  let!(:synonym_relationship_type){
     create(
       :taxon_relationship_type,
       :name => TaxonRelationshipType::HAS_SYNONYM,
@@ -11,6 +8,8 @@ describe Admin::SynonymRelationshipsController do
       :is_bidirectional => false
     )
   }
+  let(:taxon_concept){ create(:taxon_concept) }
+  let(:synonym){ create(:taxon_concept, :name_status => 'S') }
   let(:synonym_relationship){
     create(:taxon_relationship,
       :taxon_relationship_type_id => synonym_relationship_type.id,

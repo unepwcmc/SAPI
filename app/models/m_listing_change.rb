@@ -26,6 +26,7 @@
 #  hash_full_note_es      :text
 #  hash_full_note_fr      :text
 #  is_current             :boolean
+#  explicit_change        :boolean
 #  countries_ids_ary      :string
 #  dirty                  :boolean
 #  expiry                 :datetime

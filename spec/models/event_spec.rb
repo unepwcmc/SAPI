@@ -2,10 +2,17 @@
 #
 # Table name: events
 #
-#  id         :integer          not null, primary key
-#  name       :string(255)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id             :integer          not null, primary key
+#  name           :string(255)
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  designation_id :integer
+#  effective_at   :datetime
+#  published_at   :datetime
+#  description    :text
+#  url            :text
+#  is_current     :boolean          default(FALSE), not null
+#  type           :string(255)      default("Event"), not null
 #
 
 require 'spec_helper'
@@ -39,7 +46,7 @@ describe Event do
         create(
           :event,
           :name => 'REGULATION 1.0',
-          :designation => Designation.find_or_create_by_name('EU')
+          :designation => eu
         )
       }
       specify { event.destroy.should be_true }
@@ -49,10 +56,10 @@ describe Event do
         create(
           :event,
           :name => 'REGULATION 1.0',
-          :designation => Designation.find_or_create_by_name('EU')
+          :designation => eu
         )
       }
-      let!(:listing_change){ create(:eu_A_addition, :event_id => event.id)}
+      let!(:listing_change){ create_eu_A_addition(:event_id => event.id) }
       specify { event.destroy.should be_false }
     end
   end

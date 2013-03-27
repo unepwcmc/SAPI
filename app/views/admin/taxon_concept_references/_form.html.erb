@@ -1,0 +1,34 @@
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#search">Search for a reference</a></li>
+  <li><a href="#new">Create new reference</a></li>
+</ul>
+
+<%= nested_form_for [:admin, @taxon_concept, @taxon_concept_reference], :remote => true do |f| %>
+  <%= error_messages_for(@taxon_concept_reference) %>
+  <div class="tab-content">
+    <div class="tab-pane fade in active reference_search_form" id="search">
+      <label>Search by title, author or year:</label>
+      <%= text_field_tag 'reference_search', nil, :class =>'references-typeahead' %>
+      <%= text_field_tag 'reference[id]', nil, :class =>'hidden' %>
+      <label>Is standard?</label>
+      <%= check_box_tag 'taxon_concept_reference[is_standard]' %>
+      <label>Cascade?</label>
+      <%= check_box_tag 'taxon_concept_reference[is_cascaded]' %>
+    </div>
+
+    <div class="tab-pane fade" id="new">
+      <%= f.fields_for :reference do |ff| %>
+        <label>Title</label>
+        <%= ff.text_field :title %>
+
+        <label>Author</label>
+        <%= ff.text_field :author %>
+
+        <label>Year</label>
+        <%= ff.text_field :year %>
+
+        <hr>
+      <% end %>
+    </div>
+  </div>
+<% end %>

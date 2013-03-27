@@ -15,8 +15,6 @@
 #  taxonomic_position         :string(255)      default("0"), not null
 #  full_name                  :string(255)
 #  name_status                :string(255)      default("A"), not null
-#  lft                        :integer
-#  rgt                        :integer
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  taxonomy_id                :integer          default(1), not null
@@ -91,7 +89,10 @@ class TaxonConcept < ActiveRecord::Base
   has_many :species_listings, :through => :listing_changes
   has_many :taxon_commons, :dependent => :destroy, :include => :common_name
   has_many :common_names, :through => :taxon_commons
-  has_and_belongs_to_many :references, :join_table => :taxon_concept_references
+
+  has_many :taxon_concept_references, :include => :reference
+  has_many :references, :through => :taxon_concept_reference
+
   has_many :quotas
   has_many :current_quotas, :class_name => 'Quota', :conditions => "is_current = true"
 
@@ -182,9 +183,46 @@ class TaxonConcept < ActiveRecord::Base
     data['rank_name']
   end
 
+  def cites_accepted
+    data['cites_accepted']
+  end
+
   def parent_scientific_name
     @parent_scientific_name ||
     parent && parent.full_name
+  end
+
+  def standard_references
+    sql = <<-SQL
+      WITH RECURSIVE inherited_references AS (
+        SELECT h.id, h.parent_id, h_refs.reference_id, h_refs.is_standard,
+        h_refs.is_cascaded, h_refs.excluded_taxon_concepts_ids AS exclusions
+        FROM taxon_concepts h
+        LEFT JOIN taxon_concept_references h_refs
+        ON h_refs.taxon_concept_id = h.id
+        WHERE h.id = #{id}
+        UNION
+        SELECT hi.id, hi.parent_id, hi_refs.reference_id,
+        hi_refs.is_standard,
+        hi_refs.is_cascaded,
+        hi_refs.excluded_taxon_concepts_ids
+        FROM taxon_concepts hi
+        JOIN inherited_references ON inherited_references.parent_id = hi.id
+        LEFT JOIN taxon_concept_references hi_refs
+        ON hi_refs.taxon_concept_id = hi.id
+      )
+      SELECT refs.* FROM inherited_references inh_refs
+      INNER JOIN "references" refs
+      ON inh_refs.reference_id = refs.id
+        AND inh_refs.is_standard AND (inh_refs.is_cascaded OR inh_refs.id = #{id})
+        AND NOT COALESCE(inh_refs.exclusions, ARRAY[]::INT[]) @> ARRAY[#{id}]
+    SQL
+    Reference.find_by_sql(sql)
+  end
+
+  def inherited_standard_references
+    ref_ids = taxon_concept_references.map(&:reference_id)
+    standard_references.keep_if{ |ref| !ref_ids.include? ref.id }
   end
 
   def can_be_deleted?
@@ -214,7 +252,7 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def parent_at_immediately_higher_rank
-    return true unless parent 
+    return true unless parent
     return true if (parent.rank.name == 'KINGDOM' && parent.full_name == 'Plantae' && rank.name == 'ORDER')
     unless parent.rank.taxonomic_position >= rank.parent_rank_lower_bound &&
       parent.rank.taxonomic_position < rank.taxonomic_position

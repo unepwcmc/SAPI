@@ -1,26 +1,21 @@
 #Encoding: utf-8
 shared_context 'Agalychnis' do
   before(:all) do
-    @klass = TaxonConcept.find_by_taxon_name_id(TaxonName.find_by_scientific_name('Amphibia').id)
-    @order = create(
-      :order,
+    @klass = cites_eu_amphibia
+    @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Anura'),
       :parent => @klass
     )
-    @family = create(
-      :family,
+    @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Hylidae'),
       :parent => @order
     )
-    @genus = create(
-      :genus,
+    @genus = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Agalychnis'),
-      :parent => @family,
-      :data => {:usr_no_std_ref => true}
+      :parent => @family
     )
 
-    create(
-     :cites_II_addition,
+    create_cites_II_addition(
      :taxon_concept => @genus,
      :effective_at => '2010-06-23',
      :is_current => true
@@ -36,9 +31,11 @@ shared_context 'Agalychnis' do
 
     create(
       :taxon_concept_reference,
-      :taxon_concept => @klass,
+      :taxon_concept => cites_eu_amphibia,
       :reference => @ref,
-      :data => {:usr_is_std_ref => 't', :cascade => 't'}
+      :is_standard => true,
+      :is_cascaded => true,
+      :excluded_taxon_concepts_ids => "{#{@genus.id}}"
     )
 
     Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])

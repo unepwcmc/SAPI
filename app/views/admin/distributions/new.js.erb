@@ -1,3 +1,44 @@
-$('#admin-new-distribution-form').html("<%= escape_javascript(render('form')) %>");
-$(".distribution").select2();
+var template = $("<%= escape_javascript(render('form')) %>");
+
+var distributionReferences = new DistributionReferences({el: template.find('#search ul')});
+
+var references = {};
+var referencesLabels = [];
+
+template.find('input.typeahead').typeahead({
+  source: function(query, process)  {
+    $.get(
+      '/admin/references/autocomplete',
+      { query: query },
+      function (data) {
+        _.each(data, function(item, i, list) {
+          if (_.has(references, item.value)) {
+            item.value = item.value + ' (' + item.id + ')';
+          }
+
+          referencesLabels.push(item.value);
+          references[item.value] = item.id;
+        });
+
+        return process(referencesLabels);
+      }
+    );
+  },
+  updater: function(item) {
+    distributionReferences.add(references[item], item);
+
+    // Select the form field set added by nested_form
+    var $input = template.find('input#reference_id');
+    $input.val(distributionReferences.toString());
+  }
+});
+
+$('#admin-new-distribution-form').html(template);
+
+$('#admin-new-distribution-form .distribution').select2();
 $('#new-distribution').modal('show');
+
+$('.nav-tabs a').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+});

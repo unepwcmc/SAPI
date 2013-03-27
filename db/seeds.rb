@@ -42,6 +42,11 @@ puts "#{TaxonConcept.delete_all} taxon_concepts deleted"
 puts "#{TaxonName.delete_all} taxon_names deleted"
 puts "#{Rank.delete_all} ranks deleted"
 
+puts "#{Quota.delete_all} quotas deleted"
+puts "#{TradeRestrictionTerm.delete_all} trade restrictions terms deleted"
+puts "#{TradeRestrictionSource.delete_all} trade restrictions sources deleted"
+puts "#{TradeRestrictionPurpose.delete_all} trade restrictions purposes deleted"
+
 Rank.create(:name => Rank::KINGDOM, :taxonomic_position => '1', :fixed_order => true)
 Rank.create(:name => Rank::PHYLUM, :taxonomic_position => '2', :fixed_order => true)
 Rank.create(:name => Rank::CLASS, :taxonomic_position => '3', :fixed_order => true)
@@ -57,6 +62,7 @@ puts "#{Rank.count} ranks created"
 
 puts "#{SpeciesListing.delete_all} species listings deleted"
 puts "#{ChangeType.delete_all} change types deleted"
+puts "#{Event.delete_all} events deleted"
 puts "#{Designation.delete_all} designations deleted"
 puts "#{Taxonomy.delete_all} taxonomies deleted"
 
@@ -299,8 +305,9 @@ puts "#{TaxonName.count} taxon_names created"
 
 puts "#{CommonName.delete_all} common names deleted"
 puts "#{Language.delete_all} languages deleted"
-Language.create(:name_en => 'English', :iso_code1 => 'en')
-Language.create(:name_en => 'Spanish', :iso_code1 => 'es')
-Language.create(:name_en => 'French', :iso_code1 => 'fr')
+Language.create(:name_en => 'English', :iso_code1 => 'en', :iso_code3 => 'eng')
+Language.create(:name_en => 'Spanish', :iso_code1 => 'es', :iso_code3 => 'spa')
+Language.create(:name_en => 'French', :iso_code1 => 'fr', :iso_code3 => 'fra')
 puts "#{Language.count} languages created"
 puts "#{Reference.delete_all} references deleted"
+puts "#{TradeRestriction.delete_all} trade restrictions deleted"

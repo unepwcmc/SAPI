@@ -1,0 +1,17 @@
+<h3>Data Exports</h3>
+<p>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin nisi. Etiam eu orci lectus, vitae hendrerit magna. Aenean tincidunt euismod urna, in rutrum arcu ultrices eu. Cras ornare tincidunt lorem, in imperdiet justo lacinia sit amet. Vivamus accumsan, ipsum et molestie cursus, leo odio faucibus dui, quis eleifend turpis odio eget dui. Ut mattis venenatis ipsum, sed facilisis sapien pretium nec. Fusce eget arcu a nulla pellentesque tristique at a elit. Praesent eget tortor vel urna imperdiet pulvinar. 
+</p>
+<%= form_tag exports_download_path, :method => :get do %>
+  <%= label_tag 'Select Designation' %>
+  <%= select_tag :designation_id, options_from_collection_for_select(
+    @designations, :id, :name
+  ) %>
+  <%= label_tag 'Type of data' %>
+  <%= select_tag :data_type, options_for_select(
+    [['Quotas', 'Q'], ['Suspensions', 'S']]
+  ) %>
+  <p>
+  <%= submit_tag 'Download' %>
+  </p>
+<% end %>

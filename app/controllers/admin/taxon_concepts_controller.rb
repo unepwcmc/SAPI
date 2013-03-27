@@ -23,6 +23,11 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     @ranks = Rank.order(:taxonomic_position)
     edit! do |format|
       @languages = Language.order(:name_en)
+      @distributions = @taxon_concept.distributions.
+        joins(:geo_entity).order('UPPER(geo_entities.name_en) ASC')
+      @taxon_commons = @taxon_concept.taxon_commons.
+        joins(:common_name).order('UPPER(common_names.name) ASC').
+        includes(:common_name => :language)
       format.js { render 'new' }
     end
   end
@@ -91,5 +96,4 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     def load_tags
       @tags = PresetTag.where(:model => PresetTag::TYPES[:TaxonConcept])
     end
-
 end

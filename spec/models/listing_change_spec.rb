@@ -14,6 +14,9 @@
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  hash_annotation_id         :integer
+#  event_id                   :integer
+#  explicit_change            :boolean          default(TRUE)
+#  source_id                  :integer
 #
 
 require 'spec_helper'
@@ -117,7 +120,7 @@ describe ListingChange do
     end
   end
   describe :effective_at_formatted do
-    let(:listing_change){ create(:cites_I_addition, :effective_at => '2012-05-10') }
+    let(:listing_change){ create_cites_I_addition(:effective_at => '2012-05-10') }
     specify {listing_change.effective_at_formatted.should == '10/05/2012' }
   end
 end
