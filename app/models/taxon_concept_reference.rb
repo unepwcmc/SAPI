@@ -2,16 +2,17 @@
 #
 # Table name: taxon_concept_references
 #
-#  id               :integer          not null, primary key
-#  taxon_concept_id :integer          not null
-#  reference_id     :integer          not null
-#  data             :hstore
+#  id                          :integer          not null, primary key
+#  taxon_concept_id            :integer          not null
+#  reference_id                :integer          not null
+#  is_standard                 :boolean          default(FALSE), not null
+#  is_cascaded                 :boolean          default(FALSE), not null
+#  excluded_taxon_concepts_ids :string
 #
 
 class TaxonConceptReference < ActiveRecord::Base
-  attr_accessible :reference_id, :taxon_concept_id, :data, :reference_attributes
-
-  serialize :data, ActiveRecord::Coders::Hstore
+  attr_accessible :reference_id, :taxon_concept_id, :is_standard, :is_cascaded,
+    :excluded_taxon_concepts_ids, :reference_attributes
 
   belongs_to :reference
   belongs_to :taxon_concept

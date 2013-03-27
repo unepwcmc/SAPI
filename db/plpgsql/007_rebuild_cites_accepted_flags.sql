@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           INNER JOIN taxon_concept_references
             ON taxon_concept_references.taxon_concept_id = taxon_concepts.id
           INNER JOIN taxonomies ON taxon_concepts.taxonomy_id = taxonomies.id
-          WHERE taxonomies.name = 'CITES_EU' AND (taxon_concept_references.data->'usr_is_std_ref')::BOOLEAN = 't'
+          WHERE taxonomies.name = 'CITES_EU' AND taxon_concept_references.is_standard
         ) AS q
         WHERE taxon_concepts.id = q.id;
 
@@ -50,11 +50,11 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
         SET data = data || hstore('usr_no_std_ref', 't')
         FROM (
           WITH RECURSIVE cascading_refs AS (
-            SELECT h, h.id, (taxon_concept_references.data->'exclusions')::INTEGER[] AS exclusions, false AS i_am_excluded
+            SELECT h, h.id, taxon_concept_references.excluded_taxon_concepts_ids AS exclusions, false AS i_am_excluded
             FROM taxon_concept_references
             INNER JOIN taxon_concepts h
               ON h.id = taxon_concept_references.taxon_concept_id
-            WHERE (taxon_concept_references.data->'cascade')::BOOLEAN
+            WHERE taxon_concept_references.is_cascaded
   
             UNION ALL
   
@@ -80,7 +80,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_accepted_flags() RETURNS void
           FROM taxon_concept_references
           INNER JOIN taxon_concepts h
             ON h.id = taxon_concept_references.taxon_concept_id
-          WHERE (taxon_concept_references.data->'cascade')::BOOLEAN
+          WHERE taxon_concept_references.is_cascaded
 
           UNION ALL
 

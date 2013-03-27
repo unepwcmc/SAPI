@@ -19,16 +19,16 @@ describe TaxonConcept do
       end
       describe :standard_references do
         context "for family Gekkonidae" do
-          specify { @family.standard_references.should be_empty }
+          specify { @family.taxon_concept.standard_references.should be_empty }
         end
         context "for genus Uroplatus" do
-          specify { @genus.standard_references.should be_empty }
+          specify { @genus.taxon_concept.standard_references.map(&:id).should be_empty }
         end
         context "for species Uroplatus alluaudi" do
-          specify { @species1.standard_references.should be_empty }
+          specify { @species1.taxon_concept.standard_references.map(&:id).should be_empty }
         end
         context "for species Uroplatus giganteus" do
-          specify { @species2.standard_references.should include @ref.id }
+          specify { @species2.taxon_concept.standard_references.map(&:id).should include @ref.id }
         end
       end
     end
