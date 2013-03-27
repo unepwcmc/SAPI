@@ -25,6 +25,9 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
       @languages = Language.order(:name_en)
       @distributions = @taxon_concept.distributions.
         joins(:geo_entity).order('geo_entities.name_en ASC')
+      @taxon_commons = @taxon_concept.taxon_commons.
+        joins(:common_name).order('common_names.name ASC').
+        includes(:common_name => :language)
       format.js { render 'new' }
     end
   end
