@@ -59,4 +59,94 @@ class TradeRestriction < ActiveRecord::Base
   def end_date_formatted
     end_date ? end_date.strftime('%d/%m/%Y') : Time.now.end_of_year.strftime("%d/%m/%Y")
   end
-end
+
+  def self.export filters
+    return false if !self.any?
+    require 'digest/sha1'
+    path = "public/downloads/cites_#{self.to_s.downcase}s/"
+    latest = self.order("updated_at DESC").
+      limit(1).first.updated_at.strftime("%d%m%Y")
+    public_file_name = "#{self.to_s.downcase}s_#{latest}.csv"
+    file_name = Digest::SHA1.hexdigest(
+      filters.merge(:latest_date => latest).
+      to_hash.
+      symbolize_keys!.sort
+      .to_s
+    )+"_cites_#{self.to_s.downcase}s.csv"
+    if !File.file?(path+file_name)
+      self.to_csv(path+file_name, filters)
+    end
+    [ path+file_name,
+      { :filename => public_file_name, :type => 'csv' } ]
+  end
+
+  def self.to_csv file_path, filters
+    require 'csv'
+    taxonomy_columns = [
+      :kingdom_name, :phylum_name,
+      :class_name, :order_name,
+      :family_name, :genus_name,
+      :species_name, :subspecies_name,
+      :full_name, :rank_name
+    ]
+    limit = 1000
+    offset = 0
+    CSV.open(file_path, 'wb') do |csv|
+      csv << taxonomy_columns + ['Remarks'] + self::CSV_COLUMNS
+      ids = []
+      until (objs = self.includes([:m_taxon_concept, :geo_entity, :unit]).
+             filter_is_current(filters["set"]).
+             filter_geo_entities(filters).
+             filter_years(filters).
+             where(:public_display => true).
+             order([:start_date, :id]).limit(limit).
+             offset(offset)).empty? do
+        objs.each do |q|
+          row = []
+          row += self.fill_taxon_columns(q, taxonomy_columns)
+          self::CSV_COLUMNS.each do |c|
+            row << q.send(c)
+          end
+          csv << row
+          offset += limit
+        end
+             end
+      end
+    end
+
+    def self.fill_taxon_columns trade_restriction, taxonomy_columns
+      columns = []
+      taxon = trade_restriction.m_taxon_concept
+      taxonomy_columns.each do |c|
+        columns << taxon.send(c)
+      end
+      if taxon.name_status == 'A'
+        columns << '' #no remarks
+      else
+        columns << "#{trade_restriction.type} issued for #{taxon.name_status == 'S' ? 'synonym' : 'hybrid' } #{trade_restriction.taxon_concept.legacy_id} - #{trade_restriction.taxon_concept.legacy_type}"
+      end
+      columns
+    end
+
+    def self.filter_is_current set
+      if set == "current"
+        return where(:is_current => true)
+      end
+      scoped
+    end
+
+    def self.filter_geo_entities filters
+      if filters.has_key?("geo_entities_ids")
+        return where(:geo_entity_id => filters["geo_entities_ids"])
+      end
+      scoped
+    end
+
+    def self.filter_years filters
+      if filters.has_key?("years")
+        return where('EXTRACT(YEAR FROM trade_restrictions.start_date) IN (?)',
+                     filters["years"])
+      end
+      scoped
+    end
+  end
