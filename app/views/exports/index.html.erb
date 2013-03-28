@@ -53,14 +53,25 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
   %>
   <%= hidden_field_tag :data_type, 'Listings' %>
   <%= label_tag 'Species listing' %>
-  <%= select_tag :"filters[species_listing_id]", 
+  <%= select_tag :"filters[species_listings_ids]", 
     options_for_select(
       @species_listings.map do |a|
         [a.abbreviation, a.id, {:class => a.designation_id}]
       end
-    ), :id => :species_listing_id
+    ), {
+      :id => :species_listing_id,
+      :class => "select2", :multiple => true, :style => 'width: 220px',
+      :'data-placeholder' => 'All (select listings to filter)'
+    }
   %>
-
+  <%= label_tag "Countries" %>
+  <%= select_tag "filters[geo_entities_ids]",
+    options_from_collection_for_select(@geo_entities, :id, :name_en),
+    {
+      :class => "select2", :multiple => true, :style => 'width: 220px',
+      :'data-placeholder' => 'All (select countries to filter)'
+    }
+  %>
   <p>
   <%= submit_tag 'Download' %>
   </p>

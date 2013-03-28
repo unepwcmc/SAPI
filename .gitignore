@@ -24,6 +24,7 @@
 
 #exports csvs
 /public/downloads/cites_quotas/*.csv
+/public/downloads/cites_listings/*.csv
 
 # Ruby
 /vendor/ruby

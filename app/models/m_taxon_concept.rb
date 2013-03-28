@@ -70,12 +70,12 @@ class MTaxonConcept < ActiveRecord::Base
     :class_name => MListingChange,
     :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'",
     :order => 'effective_at DESC, species_listing_name ASC'
-
+  belongs_to :closest_listed_ancestor, :class_name => MTaxonConcept
   scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
 
   scope :without_non_accepted, where(:name_status => ['A', 'H'])
 
-  scope :without_hidden, where("cites_show = 't'")
+  scope :without_hidden, where("#{table_name}.cites_show = 't'")
 
   scope :by_cites_populations_and_appendices, lambda { |cites_regions_ids, countries_ids, appendix_abbreviations=nil|
     geo_entity_ids = countries_ids
@@ -193,6 +193,36 @@ class MTaxonConcept < ActiveRecord::Base
     )
   }
 
+  def self_and_descendants
+    joins(
+      <<-SQL
+      INNER JOIN (
+        WITH RECURSIVE search_tree(id) AS (
+            SELECT id
+            FROM #{table_name}
+            WHERE id = #{id}
+          UNION ALL
+            SELECT #{table_name}.id
+            FROM search_tree
+            JOIN #{table_name} ON #{table_name}.parent_id = search_tree.id
+            WHERE NOT #{table_name}.id = ANY(path)
+        )
+        SELECT id FROM search_tree ORDER BY path
+      ) self_and_descendants_ids ON #{table_name}.id = self_and_descendants_ids.id
+      SQL
+    ).order("taxonomic_position")
+  end
+
+  def self.tree_for(instance)
+    
+  end
+
+  def self.tree_sql_for(instance)
+    tree_sql =  <<-SQL
+
+    SQL
+  end
+
   scope :at_level_of_listing, where(:cites_listed => 't')
 
   scope :taxonomic_layout, order('taxonomic_position')
@@ -273,35 +303,35 @@ class MTaxonConcept < ActiveRecord::Base
   end
 
   # returns ancestor from whom listing is inherited
-  def closest_listed_ancestor
-    # TODO we should precalculate this ancestor
-    return self if cites_listed
-    if cites_listed == false
-      MTaxonConcept.where(
-      <<-SQL
-      id IN (
-        WITH RECURSIVE ancestors AS (
-          SELECT h.id, h.parent_id, h.cites_listed, h.taxonomic_position
-          FROM #{MTaxonConcept.table_name} h
-          WHERE h.id = #{self.id}
+  # def closest_listed_ancestor
+  #   # TODO we should precalculate this ancestor
+  #   return self if cites_listed
+  #   if cites_listed == false
+  #     MTaxonConcept.where(
+  #     <<-SQL
+  #     id IN (
+  #       WITH RECURSIVE ancestors AS (
+  #         SELECT h.id, h.parent_id, h.cites_listed, h.taxonomic_position
+  #         FROM #{MTaxonConcept.table_name} h
+  #         WHERE h.id = #{self.id}
 
-          UNION ALL
+  #         UNION ALL
 
-          SELECT hi.id, hi.parent_id, hi.cites_listed, hi.taxonomic_position
-          FROM ancestors
-          JOIN #{MTaxonConcept.table_name} hi ON hi.id = ancestors.parent_id
-        )
-        SELECT id FROM ancestors
-        WHERE cites_listed = TRUE
-        ORDER BY taxonomic_position DESC
-        LIMIT 1
-      )
-      SQL
-      ).first
-    else
-      nil
-    end
-  end
+  #         SELECT hi.id, hi.parent_id, hi.cites_listed, hi.taxonomic_position
+  #         FROM ancestors
+  #         JOIN #{MTaxonConcept.table_name} hi ON hi.id = ancestors.parent_id
+  #       )
+  #       SELECT id FROM ancestors
+  #       WHERE cites_listed = TRUE
+  #       ORDER BY taxonomic_position DESC
+  #       LIMIT 1
+  #     )
+  #     SQL
+  #     ).first
+  #   else
+  #     nil
+  #   end
+  # end
 
   # returns the ids of parties associated with current listing changes
   def current_parties_ids
