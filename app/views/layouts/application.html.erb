@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ISIP Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <%= stylesheet_link_tag    "admin" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <div class="navbar navbar-fixed-top">
+    <%= render 'shared/topbar' %>
+  </div>
+
+    <div class="container">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav sidebar-nav-fixed">
+            <%= render 'shared/sidebar' %>
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+          <%= render 'shared/alerts' %>
+          <%= yield %>
+        </div><!--/span-->
+      </div><!--/row-->
+    <hr>
+    <footer>
+      <p>&copy; UNEP-WCMC <%= Date.today.year %></p>
+    </footer>
+    </div><!--/.fluid-container-->
+
+</body>
+</html>

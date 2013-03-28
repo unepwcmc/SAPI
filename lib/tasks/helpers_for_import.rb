@@ -55,7 +55,7 @@ class CsvToDbMap
       'Species RecID' => 'legacy_id integer',
       'Rank' => 'rank varchar',
       'GEO_entity' => 'geo_entity_type varchar',
-      'ISO Code 2' => 'country_iso2 varchar',
+      'ISO Code 2' => 'iso2 varchar',
       'Reference IDs' => 'reference_id integer',
       'Designation' => 'designation varchar'
     },
@@ -123,7 +123,7 @@ class CsvToDbMap
       'RecID' => 'taxon_legacy_id integer',
       'DesignationStandardReferenceID' => 'ref_legacy_id integer',
       'Excludes' => 'exclusions varchar',
-      'Cascade' => 'cascade boolean'
+      'Cascade' => 'is_cascaded boolean'
     },
     'laws_import' => {
       'LnmShortDesc' => 'name varchar',
@@ -149,6 +149,14 @@ class CsvToDbMap
       'IsCurrent' => 'is_current boolean',
       'PublicDisplay' => 'public_display boolean',
       'Link' => 'url varchar'
+    },
+    'distribution_tags_import' => {
+      'Species RecID' => 'legacy_id integer',
+      'Rank' => 'rank varchar',
+      'GEO_entity_type' => 'geo_entity_type varchar',
+      'ISO Code 2' => 'iso_code2 varchar',
+      'Tags' => 'tags varchar',
+      'Designation' => 'designation varchar'
     }
   }
 

@@ -54,13 +54,15 @@ shared_context 'Varanidae' do
       :taxon_concept_reference,
       :taxon_concept => @family,
       :reference => @ref1,
-      :data => {:usr_is_std_ref => 't', :cascade => 't'}
+      :is_standard => true,
+      :is_cascaded => true
     )
     create(
       :taxon_concept_reference,
       :taxon_concept => @species2,
       :reference => @ref2,
-      :data => {:usr_is_std_ref => 't', :cascade => 't'}
+      :is_standard => true,
+      :is_cascaded => true
     )
 
     Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])

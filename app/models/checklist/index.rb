@@ -13,7 +13,7 @@ class Checklist::Index < Checklist::Checklist
       initialize_params(params)
     end
 
-    @download_name = "FullChecklist-#{Time.now}.#{ext}"
+    @download_name = "FullChecklist-#{Time.now.strftime("%d%m%Y")}.#{ext}"
   end
 
   def prepare_main_query
