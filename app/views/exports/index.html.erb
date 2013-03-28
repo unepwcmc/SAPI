@@ -46,17 +46,19 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
 <h2>Listings</h2>
 <%= form_tag exports_download_path, :method => :get do %>
   <%= label_tag 'Select Designation' %>
-  <%= select_tag :designation_id, options_from_collection_for_select(
-    @designations, :id, :name
-  ), :id => :species_listing_designation_id %>
-  <%= hidden_field_tag :data_type, :value => 'L'%>
+  <%= select_tag :"filters[designation_id]",
+    options_from_collection_for_select(
+      @designations, :id, :name
+    ), :id => :species_listing_designation_id
+  %>
+  <%= hidden_field_tag :data_type, 'Listings' %>
   <%= label_tag 'Species listing' %>
-  <%= select_tag :species_listing_id, 
+  <%= select_tag :"filters[species_listing_id]", 
     options_for_select(
       @species_listings.map do |a|
         [a.abbreviation, a.id, {:class => a.designation_id}]
       end
-    )
+    ), :id => :species_listing_id
   %>
 
   <p>

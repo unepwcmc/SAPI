@@ -18,6 +18,8 @@ class ExportsController < ApplicationController
         result = Quota.export params[:filters]
       when 'Suspensions'
         result = Suspension.export
+      when 'Listings'
+        result = ListingsExport.new(params[:filters]).export
     end
     if result.is_a?(Array)
       send_file result[0], result[1]
