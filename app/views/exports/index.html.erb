@@ -2,15 +2,63 @@
 <p>
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin nisi. Etiam eu orci lectus, vitae hendrerit magna. Aenean tincidunt euismod urna, in rutrum arcu ultrices eu. Cras ornare tincidunt lorem, in imperdiet justo lacinia sit amet. Vivamus accumsan, ipsum et molestie cursus, leo odio faucibus dui, quis eleifend turpis odio eget dui. Ut mattis venenatis ipsum, sed facilisis sapien pretium nec. Fusce eget arcu a nulla pellentesque tristique at a elit. Praesent eget tortor vel urna imperdiet pulvinar. 
 </p>
+
+<h2>Trade restrictions</h2>
 <%= form_tag exports_download_path, :method => :get do %>
   <%= label_tag 'Select Designation' %>
   <%= select_tag :designation_id, options_from_collection_for_select(
     @designations, :id, :name
-  ) %>
+  ), :id => :trade_restriction_designation_id %>
   <%= label_tag 'Type of data' %>
   <%= select_tag :data_type, options_for_select(
-    [['Quotas', 'Q'], ['Suspensions', 'S']]
+    [
+      ['Quotas', 'Quotas', {:class => @cites.id}],
+      ['Suspensions', 'Suspensions', {:class => @cites.id}],
+      ['Opinions', 'O', {:class => @eu.id}],
+      ['Suspensions', 'S', {:class => @eu.id}]
+    ]
   ) %>
+  <%= label_tag "Set" %>
+  <ul>
+    <li><label><%= radio_button_tag "filters[set]", :all %> All</label></li>
+    <li><label><%= radio_button_tag "filters[set]", :current, :checked => true %> Current</label></li>
+  </ul>
+  <p><%= label_tag "Countries" %>
+  <%= select_tag "filters[geo_entities_ids]",
+    options_from_collection_for_select(
+      @geo_entities,
+      :id,
+      :name_en
+  ), { :class => "select2", :multiple => true,
+       :style => 'width: 220px', :'data-placeholder' => 'All (select countries to filter)' }
+  %></p>
+  <p><%= label_tag "Years" %>
+  <%= select_tag "filters[years]",
+      options_for_select((1975..Time.now.year).to_a.reverse.map{|y| [y, y]}),
+      { :class => "select2", :multiple => true,
+       :style => 'width: 220px', :'data-placeholder' => 'All (select years to filter)' }
+  %></p>
+
+  <%= submit_tag 'Download' %>
+  </p>
+<% end %>
+
+<h2>Listings</h2>
+<%= form_tag exports_download_path, :method => :get do %>
+  <%= label_tag 'Select Designation' %>
+  <%= select_tag :designation_id, options_from_collection_for_select(
+    @designations, :id, :name
+  ), :id => :species_listing_designation_id %>
+  <%= hidden_field_tag :data_type, :value => 'L'%>
+  <%= label_tag 'Species listing' %>
+  <%= select_tag :species_listing_id, 
+    options_for_select(
+      @species_listings.map do |a|
+        [a.abbreviation, a.id, {:class => a.designation_id}]
+      end
+    )
+  %>
+
   <p>
   <%= submit_tag 'Download' %>
   </p>
