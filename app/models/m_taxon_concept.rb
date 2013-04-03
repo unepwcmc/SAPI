@@ -77,20 +77,6 @@ class MTaxonConcept < ActiveRecord::Base
 
   scope :without_hidden, where("#{table_name}.cites_show = 't'")
 
-  scope :by_cites_populations_and_appendices, lambda { |cites_regions_ids, countries_ids, appendix_abbreviations=[]|
-    MTaxonConceptFilterByAppendixPopulationQuery.new(
-      self, appendix_abbreviations, cites_regions_ids + countries_ids
-    ).relation
-  }
-
-  scope :by_cites_appendices, lambda { |appendix_abbreviations|
-    conds = 
-    (['I','II','III'] & appendix_abbreviations).map do |abbr|
-      "cites_#{abbr} = 't'"
-    end
-    where(conds.join(' OR '))
-   }
-
   scope :by_scientific_name, lambda { |scientific_name|
     joins(
       <<-SQL
@@ -112,36 +98,6 @@ class MTaxonConcept < ActiveRecord::Base
       SQL
     )
   }
-
-  def self_and_descendants
-    joins(
-      <<-SQL
-      INNER JOIN (
-        WITH RECURSIVE search_tree(id) AS (
-            SELECT id
-            FROM #{table_name}
-            WHERE id = #{id}
-          UNION ALL
-            SELECT #{table_name}.id
-            FROM search_tree
-            JOIN #{table_name} ON #{table_name}.parent_id = search_tree.id
-            WHERE NOT #{table_name}.id = ANY(path)
-        )
-        SELECT id FROM search_tree ORDER BY path
-      ) self_and_descendants_ids ON #{table_name}.id = self_and_descendants_ids.id
-      SQL
-    ).order("taxonomic_position")
-  end
-
-  def self.tree_for(instance)
-    
-  end
-
-  def self.tree_sql_for(instance)
-    tree_sql =  <<-SQL
-
-    SQL
-  end
 
   scope :at_level_of_listing, where(:cites_listed => 't')
 

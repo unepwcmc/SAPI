@@ -4,13 +4,13 @@ class MTaxonConceptFilterByAppendixPopulationQuery
     @relation = relation
     @geo_entities_ids = GeoEntity.nodes_and_descendants(geo_entities_ids).map(&:id)
     @geo_entities_in_clause = geo_entities_ids.compact.join(',')
+    @appendix_abbreviations = appendix_abbreviations
     @appendix_abbreviations_conditions = 
-    (['I','II','III'] & appendix_abbreviations).map do |abbr|
+    (['I','II','III'] & @appendix_abbreviations).map do |abbr|
       "cites_#{abbr} = 't'"
     end.join(' OR ')
     @species_listings_ids = SpeciesListing.where(:abbreviation => appendix_abbreviations).map(&:id)
     @species_listings_in_clause = @species_listings_ids.compact.join(',')
-
   end
 
   def relation
