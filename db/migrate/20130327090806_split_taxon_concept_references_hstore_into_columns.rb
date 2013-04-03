@@ -3,7 +3,7 @@ class SplitTaxonConceptReferencesHstoreIntoColumns < ActiveRecord::Migration
     add_column :taxon_concept_references, :is_standard, :boolean
     add_column :taxon_concept_references, :is_cascaded, :boolean
     add_column :taxon_concept_references, :excluded_taxon_concepts_ids, 'INTEGER[]'
-    unless Rails.env.test? do
+    unless Rails.env.test?
       Sapi::disable_triggers
       execute <<-SQL
       UPDATE taxon_concept_references SET
