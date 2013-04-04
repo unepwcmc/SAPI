@@ -4,7 +4,7 @@ class MTaxonConceptFilterByAppendixQuery
     @relation = relation
     @appendix_abbreviations_conditions = 
     (['I','II','III'] & appendix_abbreviations).map do |abbr|
-      "cites_#{abbr} = 't'"
+      "#{relation.table_name}.cites_#{abbr} = 't'"
     end
   end
 

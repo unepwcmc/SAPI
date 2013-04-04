@@ -1,30 +1,35 @@
 require 'digest/sha1'
 require 'csv'
 class ListingsExport
-
+  attr_reader :file_name, :public_file_name
+  
   def initialize(filters)
     @filters = filters
     @designation_id = filters[:designation_id]
     @taxon_concepts_ids = filters[:taxon_concepts_ids]
     @geo_entities_ids = filters[:geo_entities_ids]
     @species_listings_ids = filters[:species_listings_ids]
+    @designation = Designation.find(@designation_id)
   end
   
-  def export
-    return false unless query.any?
-    designation = Designation.find(@designation_id)
-    public_file_name = "#{designation.name.downcase}_listings.csv"
-    path = "public/downloads/#{designation.name.downcase}_listings/"
-    @file_name = path + Digest::SHA1.hexdigest(
-      @filters.to_hash.symbolize_keys!.sort.to_s
-    ) + ".csv"
-    #if !File.file?(@file_name)
-      to_csv
-    #end
-    [@file_name, {:filename => public_file_name, :type => 'text/csv'}]
+  def path
+    @path ||= "public/downloads/#{@designation.name.downcase}_listings/"
   end
 
-private
+  def file_name
+    @file_name ||= path + Digest::SHA1.hexdigest(
+      @filters.to_hash.symbolize_keys!.sort.to_s
+    ) + ".csv"
+  end
+
+  def export
+    return false unless query.any?
+    @public_file_name = "#{@designation.name.downcase}_listings.csv"
+    if !File.file?(file_name)
+      to_csv
+    end
+    [@file_name, {:filename => @public_file_name, :type => 'text/csv'}]
+  end
 
   def query
     #TODO this can go once we change the way appendix is matched
@@ -38,12 +43,18 @@ private
     where('listing_changes_mview.designation_id' => @designation_id).
     group(group_columns).
     order('taxon_concepts_mview.taxonomic_position')
-    if @species_listings_ids && @geo_entities_ids
+    rel = if @species_listings_ids && @geo_entities_ids
       MTaxonConceptFilterByAppendixPopulationQuery.new(rel, @species_listings_ids, @geo_entities_ids)
     elsif @species_listings_ids
       MTaxonConceptFilterByAppendixQuery.new(rel, @species_listings_ids)
-    end.relation   
+    end.relation
+    if @taxon_concepts_ids
+      rel = MTaxonConceptFilterByIdWithDescendants.new(rel, @taxon_concepts_ids).relation
+    end
+    rel
   end
+
+private
 
   def to_csv
     limit = 5000

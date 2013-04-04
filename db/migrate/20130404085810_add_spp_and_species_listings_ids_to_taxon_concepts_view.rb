@@ -132,6 +132,5 @@ class AddSppAndSpeciesListingsIdsToTaxonConceptsView < ActiveRecord::Migration
     ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt
   SQL
   Sapi::rebuild_taxon_concepts_mview
-  execute 'UPDATE taxon_concepts_mview SET spp = spp(rank_name)'
   end
 end

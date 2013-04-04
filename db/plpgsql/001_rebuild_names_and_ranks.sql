@@ -79,7 +79,7 @@ CREATE OR REPLACE FUNCTION rebuild_names_and_ranks_for_node(node_id integer) RET
     UPDATE taxon_concepts
     SET full_name = full_name(rank_name, ancestors),
       data = CASE WHEN data IS NULL THEN ''::HSTORE ELSE data END ||
-        ancestors || hstore('rank_name', rank_name) || hstore('spp', spp(rank_name))
+        ancestors || hstore('rank_name', rank_name) || hstore('spp', spp(rank_name)::VARCHAR)
     FROM q
     WHERE taxon_concepts.id = q.id AND taxon_concepts.name_status NOT IN ('S', 'H');
   END;
@@ -118,7 +118,7 @@ CREATE OR REPLACE FUNCTION rebuild_names_and_ranks_from_root(root_id integer) RE
     UPDATE taxon_concepts
     SET
     full_name = full_name(rank_name, ancestors),
-    data = data || ancestors || hstore('rank_name', rank_name)
+    data = data || ancestors || hstore('rank_name', rank_name) || hstore('spp', spp(rank_name)::VARCHAR)
     FROM q
     WHERE taxon_concepts.id = q.id;
 
