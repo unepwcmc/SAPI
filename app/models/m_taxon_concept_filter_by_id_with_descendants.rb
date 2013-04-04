@@ -8,8 +8,12 @@ class MTaxonConceptFilterByIdWithDescendants
   def relation
     @relation.where(
       <<-SQL
-      ARRAY[#{@relation.table_name}.id, family_id, order_id, class_id, phylum_id, kingdom_id] @>
-      ARRAY[#{ids.join(', ')}]
+      ARRAY[
+        #{@relation.table_name}.id,
+        #{@relation.table_name}.family_id, #{@relation.table_name}.order_id,
+        #{@relation.table_name}.class_id, #{@relation.table_name}.phylum_id,
+        #{@relation.table_name}.kingdom_id] && --overlap
+      ARRAY[#{@ids.join(', ')}]
       SQL
     )
   end

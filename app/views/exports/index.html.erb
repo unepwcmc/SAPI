@@ -38,7 +38,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
       { :class => "select2", :multiple => true,
        :style => 'width: 220px', :'data-placeholder' => 'All (select years to filter)' }
   %></p>
-
+  <p>
   <%= submit_tag 'Download' %>
   </p>
 <% end %>
@@ -64,6 +64,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
       :'data-placeholder' => 'All (select listings to filter)'
     }
   %>
+
   <%= label_tag "Countries" %>
   <%= select_tag "filters[geo_entities_ids]",
     options_from_collection_for_select(@geo_entities, :id, :name_en),
@@ -72,7 +73,17 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
       :'data-placeholder' => 'All (select countries to filter)'
     }
   %>
+
+  <%= label_tag 'Higher taxa' %>
+  <%= select_tag :"filters[taxon_concepts_ids]", 
+    options_from_collection_for_select(@taxon_concepts, :id, :full_name),
+    {
+      :class => "select2", :multiple => true, :style => 'width: 220px',
+      :'data-placeholder' => 'All (select higher taxa to filter)'
+    }
+  %>
+
   <p>
-  <%= submit_tag 'Download' %>
+    <%= submit_tag 'Download' %>
   </p>
 <% end %>
