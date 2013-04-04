@@ -60,6 +60,8 @@ class MTaxonConcept < ActiveRecord::Base
   include PgArrayParser
   self.table_name = :taxon_concepts_mview
   self.primary_key = :id
+  attr_accessor :closest_listed_ancestor_full_name_with_spp,
+    :closest_listed_ancestor_full_note_en, :closest_listed_ancestor_hash_full_note_en
 
   belongs_to :taxon_concept, :foreign_key => :id
   has_many :listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange
