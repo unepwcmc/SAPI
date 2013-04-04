@@ -77,7 +77,7 @@ class TradeRestriction < ActiveRecord::Base
       self.to_csv(path+file_name, filters)
     end
     [ path+file_name,
-      { :filename => public_file_name, :type => 'csv' } ]
+      { :filename => public_file_name, :type => 'text/csv' } ]
   end
 
   def self.to_csv file_path, filters
