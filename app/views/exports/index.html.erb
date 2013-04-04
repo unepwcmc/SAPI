@@ -45,13 +45,16 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
 
 <h2>Listings</h2>
 <%= form_tag exports_download_path, :method => :get do %>
+  <%= hidden_field_tag :data_type, 'Listings' %>
+  <p>
   <%= label_tag 'Select Designation' %>
   <%= select_tag :"filters[designation_id]",
     options_from_collection_for_select(
       @designations, :id, :name
     ), :id => :species_listing_designation_id
   %>
-  <%= hidden_field_tag :data_type, 'Listings' %>
+  </p>
+  <p>
   <%= label_tag 'Species listing' %>
   <%= select_tag :"filters[species_listings_ids]", 
     options_for_select(
@@ -64,7 +67,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
       :'data-placeholder' => 'All (select listings to filter)'
     }
   %>
-
+  </p>
+  <p>
   <%= label_tag "Countries" %>
   <%= select_tag "filters[geo_entities_ids]",
     options_from_collection_for_select(@geo_entities, :id, :name_en),
@@ -73,7 +77,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
       :'data-placeholder' => 'All (select countries to filter)'
     }
   %>
-
+  </p>
+  <p>
   <%= label_tag 'Higher taxa' %>
   <%= select_tag :"filters[taxon_concepts_ids]", 
     options_from_collection_for_select(@taxon_concepts, :id, :full_name),
@@ -82,7 +87,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
       :'data-placeholder' => 'All (select higher taxa to filter)'
     }
   %>
-
+  </p>
   <p>
     <%= submit_tag 'Download' %>
   </p>
