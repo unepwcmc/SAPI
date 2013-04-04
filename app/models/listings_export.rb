@@ -75,7 +75,7 @@ private
     [
       :id, :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
       :genus_name, :species_name, :subspecies_name,
-      :full_name, :author_year, :rank_name, :current_listing
+      :full_name, :author_year, :rank_name, :current_listing_original
     ]
   end
 
