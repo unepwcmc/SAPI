@@ -24,6 +24,7 @@
 
 #exports csvs
 /public/downloads/cites_quotas/*.csv
+/public/downloads/cites_suspensions/*.csv
 
 # Ruby
 /vendor/ruby
