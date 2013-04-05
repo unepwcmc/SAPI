@@ -3,7 +3,7 @@ module Sapi
   REBUILD_PROCEDURES = [
     :names_and_ranks,
     :taxonomic_positions,
-    :cites_status,
+    :cites_listed_status,
     :fully_covered_flags,
     :cites_nc_flags,
     :listings,

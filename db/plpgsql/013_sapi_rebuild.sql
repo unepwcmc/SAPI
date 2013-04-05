@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION sapi_rebuild() RETURNS void
           PERFORM rebuild_names_and_ranks();
           --RAISE NOTICE 'taxonomic positions';
           PERFORM rebuild_taxonomic_positions();
-          PERFORM rebuild_cites_status();
+          PERFORM rebuild_cites_listed_status();
           PERFORM rebuild_fully_covered_flags();
           PERFORM rebuild_cites_nc_flags();
           --RAISE NOTICE 'listings';
