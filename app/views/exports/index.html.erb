@@ -38,28 +38,57 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
       { :class => "select2", :multiple => true,
        :style => 'width: 220px', :'data-placeholder' => 'All (select years to filter)' }
   %></p>
-
+  <p>
   <%= submit_tag 'Download' %>
   </p>
 <% end %>
 
 <h2>Listings</h2>
 <%= form_tag exports_download_path, :method => :get do %>
+  <%= hidden_field_tag :data_type, 'Listings' %>
+  <p>
   <%= label_tag 'Select Designation' %>
-  <%= select_tag :designation_id, options_from_collection_for_select(
-    @designations, :id, :name
-  ), :id => :species_listing_designation_id %>
-  <%= hidden_field_tag :data_type, :value => 'L'%>
+  <%= select_tag :"filters[designation_id]",
+    options_from_collection_for_select(
+      @designations, :id, :name
+    ), :id => :species_listing_designation_id
+  %>
+  </p>
+  <p>
   <%= label_tag 'Species listing' %>
-  <%= select_tag :species_listing_id, 
+  <%= select_tag :"filters[species_listings_ids]", 
     options_for_select(
       @species_listings.map do |a|
         [a.abbreviation, a.id, {:class => a.designation_id}]
       end
-    )
+    ), {
+      :id => :species_listing_id,
+      :class => "select2", :multiple => true, :style => 'width: 220px',
+      :'data-placeholder' => 'All (select listings to filter)'
+    }
   %>
-
+  </p>
   <p>
-  <%= submit_tag 'Download' %>
+  <%= label_tag "Countries" %>
+  <%= select_tag "filters[geo_entities_ids]",
+    options_from_collection_for_select(@geo_entities, :id, :name_en),
+    {
+      :class => "select2", :multiple => true, :style => 'width: 220px',
+      :'data-placeholder' => 'All (select countries to filter)'
+    }
+  %>
+  </p>
+  <p>
+  <%= label_tag 'Higher taxa' %>
+  <%= select_tag :"filters[taxon_concepts_ids]", 
+    options_from_collection_for_select(@taxon_concepts, :id, :full_name),
+    {
+      :class => "select2", :multiple => true, :style => 'width: 220px',
+      :'data-placeholder' => 'All (select higher taxa to filter)'
+    }
+  %>
+  </p>
+  <p>
+    <%= submit_tag 'Download' %>
   </p>
 <% end %>

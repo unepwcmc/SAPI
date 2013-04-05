@@ -49,6 +49,31 @@ class GeoEntity < ActiveRecord::Base
 
   scope :current, where(:is_current => true)
 
+  def self.nodes_and_descendants(nodes_ids = [])
+    joins(
+      <<-SQL
+      INNER JOIN (
+        WITH RECURSIVE search_tree(id) AS (
+            SELECT id
+            FROM #{table_name}
+            WHERE id IN (#{nodes_ids.join(',')})
+          UNION
+            SELECT other_geo_entities.id
+            FROM search_tree
+            JOIN geo_relationships
+              ON geo_relationships.geo_entity_id = search_tree.id
+            JOIN geo_relationship_types
+              ON geo_relationship_types.id = geo_relationships.geo_relationship_type_id
+              AND geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'
+            JOIN geo_entities other_geo_entities
+              ON geo_relationships.other_geo_entity_id = other_geo_entities.id
+        )
+        SELECT id FROM search_tree
+      ) nodes_and_descendants_ids ON #{table_name}.id = nodes_and_descendants_ids.id
+      SQL
+    )
+  end
+
   def is_country?
     geo_entity_type.name == GeoEntityType::COUNTRY
   end
