@@ -21,6 +21,8 @@
 #  import_row_id    :integer
 #
 
+require 'digest/sha1'
+require 'csv'
 class TradeRestriction < ActiveRecord::Base
   attr_accessible :end_date, :geo_entity_id, :is_current,
     :notes, :publication_date, :purpose_ids, :quota, :type,
@@ -62,7 +64,6 @@ class TradeRestriction < ActiveRecord::Base
 
   def self.export filters
     return false if !self.any?
-    require 'digest/sha1'
     path = "public/downloads/cites_#{self.to_s.downcase}s/"
     latest = self.order("updated_at DESC").
       limit(1).first.updated_at.strftime("%d%m%Y")
@@ -81,7 +82,6 @@ class TradeRestriction < ActiveRecord::Base
   end
 
   def self.to_csv file_path, filters
-    require 'csv'
     taxonomy_columns = [
       :kingdom_name, :phylum_name,
       :class_name, :order_name,
