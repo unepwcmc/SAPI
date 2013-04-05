@@ -80,6 +80,12 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   end
 
   protected
+    # used in create
+    def collection
+      @taxon_concepts ||= end_of_association_chain.where(:name_status => 'A').
+        includes([:rank, :taxonomy, :taxon_name, :parent]).
+        order(:taxonomic_position).page(params[:page])
+    end
 
     def determine_layout
       action_name == 'index' ? 'admin' : 'taxon_concepts'
