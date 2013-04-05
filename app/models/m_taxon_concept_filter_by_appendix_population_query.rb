@@ -5,11 +5,11 @@ class MTaxonConceptFilterByAppendixPopulationQuery
     @geo_entities_ids = GeoEntity.nodes_and_descendants(geo_entities_ids).map(&:id)
     @geo_entities_in_clause = geo_entities_ids.compact.join(',')
     @appendix_abbreviations = appendix_abbreviations
-    @appendix_abbreviations_conditions = 
-    (['I','II','III'] & @appendix_abbreviations).map do |abbr|
-      "cites_#{abbr} = 't'"
-    end.join(' OR ')
-    @species_listings_ids = SpeciesListing.where(:abbreviation => appendix_abbreviations).map(&:id)
+    @appendix_abbreviations_conditions = <<-SQL
+      REGEXP_SPLIT_TO_ARRAY(taxon_concepts_mview.current_listing_original, '/') && 
+      ARRAY[#{@appendix_abbreviations.map{ |e| "'#{e}'" }.join(',')}]
+    SQL
+    @species_listings_ids = SpeciesListing.where(:abbreviation => @appendix_abbreviations).map(&:id)
     @species_listings_in_clause = @species_listings_ids.compact.join(',')
   end
 
@@ -23,7 +23,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery
         INNER JOIN listing_distributions ON listing_changes_mview.id = listing_distributions.listing_change_id AND NOT is_party
         WHERE is_current = 't' AND change_type_name = 'ADDITION'
         AND listing_distributions.geo_entity_id IN (#{@geo_entities_in_clause})
-        #{"AND species_listing_id IN (#{@species_listings_in_clause})" unless @species_listings_ids.empty?}
+        #{"AND species_listing_id IN (#{@species_listings_in_clause})" unless @appendix_abbreviations.empty?}
 
         UNION
         (
@@ -34,7 +34,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery
             ON distributions.taxon_concept_id = taxon_concepts_mview.id
           WHERE distributions.geo_entity_id IN (#{@geo_entities_in_clause})
           AND cites_listed = FALSE
-          #{"AND (#{@appendix_abbreviations_conditions})" unless @species_listings_ids.empty? }
+          #{"AND (#{@appendix_abbreviations_conditions})" unless @appendix_abbreviations.empty? }
         )
 
         UNION
@@ -51,7 +51,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery
           FROM listing_changes_mview
           LEFT JOIN listing_distributions ON listing_changes_mview.id = listing_distributions.listing_change_id AND NOT is_party
           WHERE is_current = 't' AND change_type_name = 'ADDITION'
-          #{"AND species_listing_id IN (#{@species_listings_in_clause})" unless @species_listings_ids.empty? }
+          #{"AND species_listing_id IN (#{@species_listings_in_clause})" unless @appendix_abbreviations.empty? }
           AND listing_distributions.id IS NULL
 
           EXCEPT
@@ -65,7 +65,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery
                 FROM listing_changes_mview
                 INNER JOIN listing_distributions ON listing_changes_mview.id = listing_distributions.listing_change_id AND NOT is_party 
                 WHERE is_current = 't' AND change_type_name = 'EXCEPTION'
-                #{"AND species_listing_id IN (#{@species_listings_in_clause})" unless @species_listings_ids.empty? }
+                #{"AND species_listing_id IN (#{@species_listings_in_clause})" unless @appendix_abbreviations.empty? }
                 AND listing_distributions.geo_entity_id = #{geo_entity_id}
               GEO_SQL
             end.join ("\n            INTERSECT\n\n")
