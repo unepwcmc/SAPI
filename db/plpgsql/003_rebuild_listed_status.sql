@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       exception_id int;
       status_flag varchar;
       status_original_flag varchar;
+      listing_updated_at_flag varchar;
+      flags_to_reset text[];
     BEGIN
     SELECT id INTO deletion_id FROM change_types
       WHERE designation_id = designation.id AND name = 'DELETION';
@@ -19,15 +21,20 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
 
     status_flag = LOWER(designation.name) || '_status';
     status_original_flag = LOWER(designation.name) || '_status_original';
-    -- TODO listing_updated_at should be per designation
+    listing_updated_at_flag = LOWER(designation.name) || '_updated_at';
+    flags_to_reset := ARRAY[status_flag, status_original_flag, listing_updated_at_flag];
+    IF designation.name = 'CITES' THEN 
+      flags_to_reset := flags_to_reset ||
+        ARRAY['cites_listing','cites_I','cites_II','cites_III','cites_NC'];
+    ELSIF designation.name = 'EU' THEN
+      flags_to_reset := flags_to_reset ||
+        ARRAY['eu_listing','eu_A','eu_B','eu_C','eu_D','eu_NEU'];
+    END IF;
 
     -- reset the listing status (so we start clear)
-    UPDATE taxon_concepts SET listing =
-      CASE
-        WHEN listing IS NULL THEN ''::HSTORE
-        ELSE listing - ARRAY['cites_listing','cites_I','cites_II','cites_III','cites_NC']
-      END || hstore(status_flag, NULL) || hstore(status_original_flag, NULL) ||
-        hstore('listing_updated_at', NULL)
+    UPDATE taxon_concepts
+    SET listing = (COALESCE(listing, ''::HSTORE) - flags_to_reset) ||
+      hstore('listing_updated_at', NULL) -- TODO get rid of this
     WHERE taxonomy_id = designation.taxonomy_id AND
       CASE WHEN node_id IS NOT NULL THEN id = node_id ELSE TRUE END;
 
@@ -48,7 +55,8 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     UPDATE taxon_concepts
     SET listing = listing || hstore(status_flag, 'LISTED') ||
       hstore(status_original_flag, 't') ||
-      hstore('listing_updated_at', listing_updated_at::VARCHAR)
+      hstore(listing_updated_at_flag, listing_updated_at::VARCHAR) ||
+      hstore('listing_updated_at', listing_updated_at::VARCHAR) --TODO get rid of this
     FROM listed_taxa
     WHERE taxon_concepts.id = listed_taxa.id AND
       CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
@@ -121,7 +129,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     (
       SELECT  h.id, h.parent_id,
       listing->status_flag AS inherited_cites_status,
-      listing->'listing_updated_at' AS inherited_listing_updated_at
+      listing->listing_updated_at_flag AS inherited_listing_updated_at
       FROM    taxon_concepts h
       WHERE (listing->status_original_flag)::BOOLEAN = 't' AND
         CASE WHEN node_id IS NOT NULL THEN id = node_id ELSE TRUE END
@@ -139,9 +147,12 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
         (listing->status_original_flag)::BOOLEAN = 'f'
     )
     UPDATE taxon_concepts
-    SET listing = COALESCE(listing, ''::HSTORE) || hstore(status_flag, inherited_cites_status)
-      || hstore('listing_updated_at', inherited_listing_updated_at) ||
-      hstore(status_original_flag, 'f') || hstore('cites_NC', NULL)
+    SET listing = COALESCE(listing, ''::HSTORE) ||
+      hstore(status_flag, inherited_cites_status) ||
+      hstore(status_original_flag, 'f') ||
+      hstore('cites_NC', NULL) ||
+      hstore(listing_updated_at_flag, inherited_listing_updated_at) ||
+      hstore('listing_updated_at', inherited_listing_updated_at) --TODO get rid of this
     FROM q
     WHERE taxon_concepts.id = q.id AND (
       listing IS NULL OR
@@ -155,7 +166,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       (
         SELECT  h.id, h.parent_id,
         listing->status_flag AS inherited_cites_status,
-        (listing->'listing_updated_at')::TIMESTAMP AS inherited_listing_updated_at
+        (listing->listing_updated_at_flag)::TIMESTAMP AS inherited_listing_updated_at
         FROM    taxon_concepts h
         WHERE
           listing->status_flag = 'LISTED'
@@ -172,8 +183,8 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
           ELSE inherited_cites_status
         END,
         CASE
-          WHEN (listing->'listing_updated_at')::TIMESTAMP IS NOT NULL
-          THEN (listing->'listing_updated_at')::TIMESTAMP
+          WHEN (listing->listing_updated_at_flag)::TIMESTAMP IS NOT NULL
+          THEN (listing->listing_updated_at_flag)::TIMESTAMP
           ELSE inherited_listing_updated_at
         END
         FROM    q
@@ -189,7 +200,8 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     SET listing = COALESCE(listing, ''::HSTORE) ||
       hstore(status_flag, inherited_cites_status) ||
       hstore(status_original_flag, 'f') ||
-      hstore('listing_updated_at', inherited_listing_updated_at::VARCHAR)
+      hstore(listing_updated_at_flag, inherited_listing_updated_at::VARCHAR) ||
+      hstore('listing_updated_at', inherited_listing_updated_at::VARCHAR) --TODO get rid of this
     FROM qq
     WHERE taxon_concepts.id = qq.id
      AND (
