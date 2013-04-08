@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION apply_children_listing(node_id INTEGER) RETURNS VOID
         hstore('cites_I', MAX((listing -> 'cites_I')::VARCHAR)) ||
         hstore('cites_II', MAX((listing -> 'cites_II')::VARCHAR)) ||
         hstore('cites_III', MAX((listing -> 'cites_III')::VARCHAR)) ||
-        hstore('cites_NC', MAX((listing -> 'cites_NC')::VARCHAR)) ||
+        hstore('cites_not_listed', MAX((listing -> 'cites_not_listed')::VARCHAR)) ||
         hstore('cites_listing', ARRAY_TO_STRING(
           -- unnest to filter out the nulls
           ARRAY(SELECT * FROM UNNEST(
@@ -25,7 +25,7 @@ CREATE OR REPLACE FUNCTION apply_children_listing(node_id INTEGER) RETURNS VOID
               (MAX(listing -> 'cites_I')::VARCHAR),
               (MAX(listing -> 'cites_II')::VARCHAR),
               (MAX(listing -> 'cites_III')::VARCHAR),
-              (MAX(listing -> 'cites_NC')::VARCHAR)
+              (MAX(listing -> 'cites_not_listed')::VARCHAR)
             ]) s WHERE s IS NOT NULL),
             '/'
           )
@@ -37,14 +37,14 @@ CREATE OR REPLACE FUNCTION apply_children_listing(node_id INTEGER) RETURNS VOID
           OR parent_id = node_id;
 
         UPDATE taxon_concepts
-        SET listing = listing - ARRAY['cites_I', 'cites_II', 'cites_III', 'cites_NC'] || tmp
+        SET listing = listing - ARRAY['cites_I', 'cites_II', 'cites_III', 'cites_not_listed'] || tmp
         WHERE id = node_id;
       ELSE
         UPDATE taxon_concepts SET listing = listing ||
         hstore('cites_listing', ARRAY_TO_STRING(
             -- unnest to filter out the nulls
             ARRAY(SELECT * FROM UNNEST(
-              ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III', listing -> 'cites_NC']) s 
+              ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III', listing -> 'cites_not_listed']) s 
               WHERE s IS NOT NULL),
               '/'
             )

@@ -35,7 +35,6 @@ def change
     (data->'genus_id')::INTEGER AS genus_id,
     (data->'species_id')::INTEGER AS species_id,
     (data->'subspecies_id')::INTEGER AS subspecies_id,
-    (listing->'cites_fully_covered')::BOOLEAN AS cites_fully_covered,
     CASE
     WHEN listing->'cites_status' = 'LISTED' AND listing->'cites_status_original' = 't'
     THEN TRUE

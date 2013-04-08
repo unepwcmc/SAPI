@@ -12,10 +12,11 @@ CREATE OR REPLACE FUNCTION sapi_rebuild() RETURNS void
           --RAISE NOTICE 'taxonomic positions';
           PERFORM rebuild_taxonomic_positions();
           PERFORM rebuild_cites_listed_status();
-          PERFORM rebuild_fully_covered_flags();
-          PERFORM rebuild_cites_nc_flags();
+          PERFORM rebuild_eu_listed_status();
+          PERFORM rebuild_cites_not_listed_status();
+          PERFORM rebuild_eu_not_listed_status();
           --RAISE NOTICE 'listings';
-          PERFORM rebuild_listings();
+          PERFORM rebuild_explicit_cites_listing();
           --RAISE NOTICE 'descendant listings';
           PERFORM rebuild_descendant_listings();
           --RAISE NOTICE 'ancestor listings';

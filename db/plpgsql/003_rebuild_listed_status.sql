@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       status_flag varchar;
       status_original_flag varchar;
       listing_updated_at_flag varchar;
+      not_listed_flag varchar;
       flags_to_reset text[];
     BEGIN
     SELECT id INTO deletion_id FROM change_types
@@ -22,13 +23,17 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     status_flag = LOWER(designation.name) || '_status';
     status_original_flag = LOWER(designation.name) || '_status_original';
     listing_updated_at_flag = LOWER(designation.name) || '_updated_at';
-    flags_to_reset := ARRAY[status_flag, status_original_flag, listing_updated_at_flag];
+    not_listed_flag := LOWER(designation.name) || '_not_listed';
+    flags_to_reset := ARRAY[
+      status_flag, status_original_flag, not_listed_flag,
+      listing_updated_at_flag
+    ];
     IF designation.name = 'CITES' THEN 
       flags_to_reset := flags_to_reset ||
-        ARRAY['cites_listing','cites_I','cites_II','cites_III','cites_NC'];
+        ARRAY['cites_listing','cites_I','cites_II','cites_III'];
     ELSIF designation.name = 'EU' THEN
       flags_to_reset := flags_to_reset ||
-        ARRAY['eu_listing','eu_A','eu_B','eu_C','eu_D','eu_NEU'];
+        ARRAY['eu_listing','eu_A','eu_B','eu_C','eu_D'];
     END IF;
 
     -- reset the listing status (so we start clear)
@@ -150,7 +155,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     SET listing = COALESCE(listing, ''::HSTORE) ||
       hstore(status_flag, inherited_cites_status) ||
       hstore(status_original_flag, 'f') ||
-      hstore('cites_NC', NULL) ||
+      hstore(not_listed_flag, NULL) ||
       hstore(listing_updated_at_flag, inherited_listing_updated_at) ||
       hstore('listing_updated_at', inherited_listing_updated_at) --TODO get rid of this
     FROM q

@@ -27,7 +27,6 @@
 #  genus_id                   :integer
 #  species_id                 :integer
 #  subspecies_id              :integer
-#  cites_fully_covered        :boolean
 #  cites_listed               :boolean
 #  cites_deleted              :boolean
 #  cites_excluded             :boolean
