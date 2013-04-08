@@ -17,8 +17,10 @@ CREATE OR REPLACE FUNCTION sapi_rebuild() RETURNS void
           PERFORM rebuild_eu_not_listed_status();
           --RAISE NOTICE 'listings';
           PERFORM rebuild_explicit_cites_listing();
+          PERFORM rebuild_explicit_eu_listing();
           --RAISE NOTICE 'descendant listings';
-          PERFORM rebuild_descendant_listings();
+          PERFORM rebuild_descendant_cites_listing();
+          PERFORM rebuild_descendant_eu_listing();
           --RAISE NOTICE 'ancestor listings';
           PERFORM rebuild_ancestor_listings();
           PERFORM rebuild_cites_accepted_flags();
