@@ -36,7 +36,7 @@ shared_context "Mellivora capensis" do
       :parent => @genus
     )
 
-    l1 = create_cites_III_addition(
+    cites_lc1 = create_cites_III_addition(
      :taxon_concept => @species,
      :effective_at => '1976-02-26',
      :is_current => false
@@ -44,9 +44,9 @@ shared_context "Mellivora capensis" do
     create(
       :listing_distribution,
       :geo_entity => ghana,
-      :listing_change => l1
+      :listing_change => cites_lc1
     )
-    l2 = create_cites_III_addition(
+    cites_lc2 = create_cites_III_addition(
      :taxon_concept => @species,
      :effective_at => '1978-04-24',
      :is_current => true
@@ -54,9 +54,20 @@ shared_context "Mellivora capensis" do
     create(
       :listing_distribution,
       :geo_entity => botswana,
-      :listing_change => l2
+      :listing_change => cites_lc2
     )
-    l3 = create_cites_III_deletion(
+    eu_lc2 = create_eu_C_addition(
+     :taxon_concept => @species,
+     :effective_at => '1978-04-24',
+     :is_current => true
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => botswana,
+      :listing_change => eu_lc2
+    )
+
+    cites_lc3 = create_cites_III_deletion(
      :taxon_concept => @species,
      :effective_at => '2007-03-04',
      :is_current => true
@@ -64,7 +75,17 @@ shared_context "Mellivora capensis" do
     create(
       :listing_distribution,
       :geo_entity => ghana,
-      :listing_change => l3
+      :listing_change => cites_lc3
+    )
+    eu_lc3 = create_eu_C_deletion(
+     :taxon_concept => @species,
+     :effective_at => '2007-03-04',
+     :is_current => true
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => ghana,
+      :listing_change => eu_lc3
     )
 
     Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])

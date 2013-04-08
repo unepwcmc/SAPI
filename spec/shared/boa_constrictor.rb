@@ -31,14 +31,30 @@ shared_context "Boa constrictor" do
       :effective_at => '1977-02-04',
       :is_current => true
     )
+    create_eu_B_addition(
+      :taxon_concept => @family,
+      :effective_at => '1977-02-04',
+      :is_current => true
+    )
 
     create_cites_II_addition(
      :taxon_concept => @species,
      :effective_at => '1975-07-01',
      :is_current => true
     )
+    create_eu_B_addition(
+     :taxon_concept => @species,
+     :effective_at => '1975-07-01',
+     :is_current => true
+    )
 
     create_cites_II_addition(
+     :taxon_concept => @species,
+     :effective_at => '1977-02-04',
+     :inclusion_taxon_concept_id => @family.id,
+     :is_current => true
+    )
+    create_eu_B_addition(
      :taxon_concept => @species,
      :effective_at => '1977-02-04',
      :inclusion_taxon_concept_id => @family.id,
@@ -52,6 +68,11 @@ shared_context "Boa constrictor" do
     )
 
     create_cites_I_addition(
+     :taxon_concept => @subspecies1,
+     :effective_at => '1987-10-22',
+     :is_current => true
+    )
+    create_eu_A_addition(
      :taxon_concept => @subspecies1,
      :effective_at => '1987-10-22',
      :is_current => true

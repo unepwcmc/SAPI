@@ -15,11 +15,20 @@ describe TaxonConcept do
       end
 
       describe :cites_listed do
-        it "should be true for genus Ailuropoda" do
+        it "should be false for genus Ailuropoda" do
           @genus.cites_listed.should be_false
         end
         it "should be true for species Ailuropoda melanoleuca" do
           @species.cites_listed.should be_true
+        end
+      end
+
+      describe :eu_listed do
+        it "should be false for genus Ailuropoda" do
+          @genus.eu_listed.should be_false
+        end
+        it "should be true for species Ailuropoda melanoleuca" do
+          @species.eu_listed.should be_true
         end
       end
 

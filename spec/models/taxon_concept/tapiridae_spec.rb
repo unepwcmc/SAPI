@@ -46,6 +46,17 @@ describe TaxonConcept do
         end
       end
 
+      describe :eu_listed do
+        context "for family Tapiridae" do
+          specify { @family.eu_listed.should be_true }
+        end
+        context "for genus Tapirus" do
+          specify { @genus.eu_listed.should == false }
+        end
+        context "for species Tapirus terrestris" do
+          specify { @species.eu_listed.should be_true }
+        end
+      end
     end
   end
 end

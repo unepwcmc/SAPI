@@ -64,6 +64,33 @@ describe TaxonConcept do
         end
       end
 
+      describe :eu_listed do
+        context "for order Artiodactyla" do
+          specify { @order.eu_listed.should == false }
+        end
+        context "for family Cervidae" do
+          specify { @family.eu_listed.should == false }
+        end
+        context "for genus Cervus" do
+          specify { @genus.eu_listed.should == false }
+        end
+        context "for species Cervus elaphus" do
+          specify { @species.eu_listed.should == false }
+        end
+        context "for subspecies Cervus elaphus bactrianus" do
+          specify { @subspecies1.eu_listed.should be_true }
+        end
+        context "for subspecies Cervus elaphus barbarus" do
+          specify { @subspecies2.eu_listed.should be_true }
+        end
+        context "for subspecies Cervus elaphus hanglu" do
+          specify { @subspecies3.eu_listed.should be_true }
+        end
+        context "for subspecies Cervus elaphus canadensis" do
+          specify { @subspecies4.eu_listed.should be_blank }
+        end
+      end
+
       describe :cites_show do
         context "for subspecies Cervus elaphus hanglu" do
           specify { @subspecies3.cites_show.should be_true }

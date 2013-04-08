@@ -23,6 +23,11 @@ shared_context "Hirudo medicinalis" do
      :effective_at => '1987-10-22',
      :is_current => true
     )
+    create_eu_B_addition(
+     :taxon_concept => @species,
+     :effective_at => '1987-10-22',
+     :is_current => true
+    )
 
     Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
     self.instance_variables.each do |t|

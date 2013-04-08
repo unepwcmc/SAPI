@@ -38,6 +38,8 @@ class MListingChange < ActiveRecord::Base
   self.table_name = :listing_changes_mview
   self.primary_key = :id
 
+  belongs_to :designation
+
   def effective_at_formatted
     effective_at.strftime("%d/%m/%y")
   end

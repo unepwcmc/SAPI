@@ -51,18 +51,30 @@ shared_context "Panax ginseng" do
       :display_in_index => true
     )
 
-    l1 = create_cites_II_addition(
+    cites_lc1 = create_cites_II_addition(
       :taxon_concept => @species,
       :effective_at => '2000-07-19',
       :hash_annotation_id => a1.id,
       :annotation_id => a2.id,
       :is_current => true
     )
-
     create(
       :listing_distribution,
       :geo_entity => russia,
-      :listing_change => l1,
+      :listing_change => cites_lc1,
+      :is_party => false
+    )
+    eu_lc1 = create_eu_B_addition(
+      :taxon_concept => @species,
+      :effective_at => '2000-07-19',
+      :hash_annotation_id => a1.id,
+      :annotation_id => a2.id,
+      :is_current => true
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => russia,
+      :listing_change => eu_lc1,
       :is_party => false
     )
 

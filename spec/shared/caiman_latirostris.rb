@@ -71,7 +71,18 @@ shared_context "Caiman latirostris" do
       :effective_at => '1977-02-04',
       :is_current => true
     )
+    create_eu_B_addition(
+      :taxon_concept => @order,
+      :effective_at => '1977-02-04',
+      :is_current => true
+    )
+ 
     create_cites_I_addition(
+     :taxon_concept => @species,
+     :effective_at => '1975-07-01',
+     :is_current => true
+    )
+    create_eu_A_addition(
      :taxon_concept => @species,
      :effective_at => '1975-07-01',
      :is_current => true
@@ -81,7 +92,7 @@ shared_context "Caiman latirostris" do
       :full_note_en => 'Population of AR; included in CROCODYLIA spp.',
       :display_in_index => true
     )
-    l1 = create_cites_II_addition(
+    cites_lc1 = create_cites_II_addition(
      :taxon_concept => @species,
      :annotation_id => a1.id,
      :effective_at => '1997-09-18',
@@ -90,7 +101,19 @@ shared_context "Caiman latirostris" do
     create(
       :listing_distribution,
       :geo_entity => argentina,
-      :listing_change => l1,
+      :listing_change => cites_lc1,
+      :is_party => false
+    )
+    eu_lc1 = create_eu_B_addition(
+     :taxon_concept => @species,
+     :annotation_id => a1.id,
+     :effective_at => '1997-09-18',
+     :is_current => true
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => argentina,
+      :listing_change => eu_lc1,
       :is_party => false
     )
 

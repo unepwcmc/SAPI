@@ -54,6 +54,18 @@ describe TaxonConcept do
         end
       end
 
+      describe :eu_listed do
+        context "for family Gekkonidae" do
+          specify { @family.eu_listed.should == false }
+        end
+        context "for genus Uroplatus" do
+          specify { @genus.eu_listed.should be_true }
+        end
+        context "for species Uroplatus giganteus" do
+          specify { @species2.eu_listed.should == false }
+        end
+      end
+
     end
   end
 end

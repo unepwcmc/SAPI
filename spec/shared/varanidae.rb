@@ -27,7 +27,18 @@ shared_context 'Varanidae' do
      :effective_at => '1975-07-01',
      :is_current => true
     )
+    create_eu_B_addition(
+     :taxon_concept => @genus,
+     :effective_at => '1975-07-01',
+     :is_current => true
+    )
+
     create_cites_I_addition(
+     :taxon_concept => @species1,
+     :effective_at => '1975-07-01',
+     :is_current => true
+    )
+    create_eu_A_addition(
      :taxon_concept => @species1,
      :effective_at => '1975-07-01',
      :is_current => true

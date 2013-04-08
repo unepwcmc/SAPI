@@ -24,6 +24,15 @@ describe TaxonConcept do
         end
       end
 
+      describe :eu_listed do
+        context "for genus Colophon" do
+          specify { @genus.eu_listed.should == true}
+        end
+        context "for species Colophon barnardi" do
+          specify { @species.eu_listed.should == false }
+        end
+      end
+
       describe :cites_show do
         context "for order Coleoptera" do
           specify { @order.cites_show.should be_false }

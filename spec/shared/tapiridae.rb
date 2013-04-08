@@ -25,7 +25,18 @@ shared_context "Tapiridae" do
      :effective_at => '1975-07-01',
      :is_current => true
     )
+    create_eu_A_addition(
+     :taxon_concept => @family,
+     :effective_at => '1975-07-01',
+     :is_current => true
+    )
+
     create_cites_II_addition(
+     :taxon_concept => @species,
+     :effective_at => '1977-02-04',
+     :is_current => true
+    )
+    create_eu_B_addition(
      :taxon_concept => @species,
      :effective_at => '1977-02-04',
      :is_current => true

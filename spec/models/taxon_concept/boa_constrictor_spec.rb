@@ -57,6 +57,21 @@ describe TaxonConcept do
         end
       end
 
+      describe :eu_listed do
+        it "should be true for family Boidae" do
+          @family.eu_listed.should be_true
+        end
+        it "should be false for genus Boa" do
+          @genus.eu_listed.should == false
+        end
+        it "should be false for species Boa constrictor (inclusion in higher taxa listing)" do
+          @species.eu_listed.should == false
+        end
+        it "should be true for subspecies Boa constrictor occidentalis" do
+          @subspecies1.eu_listed.should be_true
+        end
+      end
+
     end
 
   end

@@ -21,6 +21,12 @@ shared_context 'Agalychnis' do
      :is_current => true
     )
 
+    create_eu_B_addition(
+     :taxon_concept => @genus,
+     :effective_at => '2010-06-23',
+     :is_current => true
+    )
+
     @ref = create(
       :reference,
       :author => 'Frost, D. R.',

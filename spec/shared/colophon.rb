@@ -30,16 +30,27 @@ shared_context 'Colophon' do
       :parent => @genus,
     )
 
-    lc = create_cites_III_addition(
+    cites_lc = create_cites_III_addition(
      :taxon_concept => @genus,
      :effective_at => '2000-09-13',
      :is_current => true
     )
-
     create(
       :listing_distribution,
       :geo_entity => south_africa,
-      :listing_change => lc,
+      :listing_change => cites_lc,
+      :is_party => true
+    )
+
+    eu_lc = create_eu_C_addition(
+     :taxon_concept => @genus,
+     :effective_at => '2000-09-13',
+     :is_current => true
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => south_africa,
+      :listing_change => eu_lc,
       :is_party => true
     )
 

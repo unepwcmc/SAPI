@@ -47,6 +47,24 @@ describe TaxonConcept do
         end
       end
 
+      describe :eu_listed do
+        context "for order Psittaciformes" do
+          specify { @order.eu_listed.should be_true }
+        end
+        context "for family Cacatuidae" do
+          specify { @family1.eu_listed.should == false }
+        end
+        context "for genus Cacatua" do
+          specify { @genus1_2.eu_listed.should == false }
+        end
+        context "for species Cacatua goffiniana" do
+          specify { @species1_2_1.eu_listed.should be_true }
+        end
+        context "for species Cacatua ducorpsi" do
+          specify { @species1_2_2.eu_listed.should == false }
+        end
+      end
+
       describe :cites_show do
         context "for species Agapornis roseicollis (DEL II)" do
           specify { @species2_1.cites_show.should be_true }

@@ -29,6 +29,18 @@ describe TaxonConcept do
         end
       end
 
+      describe :eu_listed do
+        it "should be true for genus Arctocephalus" do
+          @genus.eu_listed.should be_true
+        end
+        it "should be true for species Arctocephalus townsendi" do
+          @species2.eu_listed.should be_true
+        end
+        it "should be false for species Arctocephalus australis (inclusion in higher taxa listing)" do
+          @species1.eu_listed.should == false
+        end
+      end
+
       describe :closest_listed_ancestor do
         context "for genus Arctocephalus" do
           specify{ @genus.closest_listed_ancestor.should == @genus }

@@ -18,7 +18,7 @@ shared_context "Pereskia" do
       :parent => @family
     )
 
-    l1 = create_cites_II_addition(
+    cites_lc1 = create_cites_II_addition(
      :taxon_concept => @family,
      :effective_at => '2010-06-23',
      :is_current => true
@@ -26,8 +26,19 @@ shared_context "Pereskia" do
     create_cites_II_exception(
      :taxon_concept => @genus1,
      :effective_at => '2010-06-23',
-     :parent_id => l1.id
+     :parent_id => cites_lc1.id
     )
+    eu_lc1 = create_eu_B_addition(
+     :taxon_concept => @family,
+     :effective_at => '2010-06-23',
+     :is_current => true
+    )
+    create_eu_B_exception(
+     :taxon_concept => @genus1,
+     :effective_at => '2010-06-23',
+     :parent_id => eu_lc1.id
+    )
+
     create_cites_II_addition(
      :taxon_concept => @genus2,
      :effective_at => '1975-07-01'

@@ -49,6 +49,18 @@ describe TaxonConcept do
         end
       end
 
+      describe :eu_listed do
+        context "for family Varanidae" do
+          specify { @family.eu_listed.should == false }
+        end
+        context "for genus Varanus" do
+          specify { @genus.eu_listed.should be_true }
+        end
+        context "for species Varanus bengalensis" do
+          specify { @species1.eu_listed.should be_true }
+        end
+      end
+
     end
   end
 end

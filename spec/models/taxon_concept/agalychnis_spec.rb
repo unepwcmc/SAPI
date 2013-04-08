@@ -45,6 +45,15 @@ describe TaxonConcept do
         end
       end
 
+      describe :eu_listed do
+        context "for family Hylidae" do
+          specify { @family.eu_listed.should == false }
+        end
+        context "for genus Agalychnis" do
+          specify { @genus.eu_listed.should be_true }
+        end
+      end
+
     end
   end
 end

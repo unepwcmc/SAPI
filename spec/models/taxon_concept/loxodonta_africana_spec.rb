@@ -46,6 +46,15 @@ describe TaxonConcept do
         end
       end
 
+      describe :eu_listed do
+        it "should be true for species Loxodonta africana" do
+          @species.eu_listed.should be_true
+        end
+        it "should be false for family Elephantidae" do
+          @family.eu_listed.should == false
+        end
+      end
+
     end
   end
 end

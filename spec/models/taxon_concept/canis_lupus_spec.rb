@@ -11,11 +11,17 @@ describe TaxonConcept do
       end
     end
 
-      describe :cites_listed do
-        it "should be true for species Canis lupus" do
-          @species.cites_listed.should be_true
-        end
+    describe :cites_listed do
+      it "should be true for species Canis lupus" do
+        @species.cites_listed.should be_true
       end
+    end
+
+    describe :eu_listed do
+      it "should be true for species Canis lupus" do
+        @species.eu_listed.should be_true
+      end
+    end
 
   end
 end

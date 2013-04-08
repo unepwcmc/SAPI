@@ -83,6 +83,27 @@ describe TaxonConcept do
         end
       end
 
+      describe :eu_listed do
+        context "for order Falconiformes" do
+          specify { @order.eu_listed.should be_true }
+        end
+        context "for family Falconidae (inclusion in higher taxa listing)" do
+          specify { @family2.eu_listed.should == false }
+        end
+        context "for genus Falco" do
+          specify { @genus2_1.eu_listed.should == false }
+        end
+        context "for species Falco araea" do
+          specify { @species2_1.eu_listed.should be_true }
+        end
+        context "for species Falco alopex" do
+          specify { @species2_2.eu_listed.should == false }
+        end
+        context "for species Vultur atratus" do
+          specify { @species1_3.eu_listed.should be_blank }
+        end
+      end
+
       describe :cites_show do
         context "for order Falconiformes" do
           specify { @order.cites_show.should be_true }

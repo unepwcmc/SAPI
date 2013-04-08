@@ -162,45 +162,20 @@ class MTaxonConcept < ActiveRecord::Base
     end
   end
 
-  # returns ancestor from whom listing is inherited
-  # def closest_listed_ancestor
-  #   # TODO we should precalculate this ancestor
-  #   return self if cites_listed
-  #   if cites_listed == false
-  #     MTaxonConcept.where(
-  #     <<-SQL
-  #     id IN (
-  #       WITH RECURSIVE ancestors AS (
-  #         SELECT h.id, h.parent_id, h.cites_listed, h.taxonomic_position
-  #         FROM #{MTaxonConcept.table_name} h
-  #         WHERE h.id = #{self.id}
-
-  #         UNION ALL
-
-  #         SELECT hi.id, hi.parent_id, hi.cites_listed, hi.taxonomic_position
-  #         FROM ancestors
-  #         JOIN #{MTaxonConcept.table_name} hi ON hi.id = ancestors.parent_id
-  #       )
-  #       SELECT id FROM ancestors
-  #       WHERE cites_listed = TRUE
-  #       ORDER BY taxonomic_position DESC
-  #       LIMIT 1
-  #     )
-  #     SQL
-  #     ).first
-  #   else
-  #     nil
-  #   end
-  # end
-
   # returns the ids of parties associated with current listing changes
+  # used only for CITES Checklist atm, therefore a designation filter is applied
   def current_parties_ids
-    if current_additions.size > 0
-      current_additions.map(&:party_id)
+    cites_current_additions = current_additions.joins(:designation).
+      where('designations.name' => Designation::CITES)
+    if cites_current_additions.size > 0
+      cites_current_additions.map(&:party_id)
     else
+      cites_inherited_current_additions = closest_listed_ancestor.
+        current_additions.joins(:designation).
+        where('designations.name' => Designation::CITES)
       #inherited listing -- find closest ancestor with listing changes
       closest_listed_ancestor &&
-        closest_listed_ancestor.current_additions.map(&:party_id) || []
+        cites_inherited_current_additions.map(&:party_id) || []
     end.compact
   end
 

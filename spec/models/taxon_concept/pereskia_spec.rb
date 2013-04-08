@@ -26,6 +26,15 @@ describe TaxonConcept do
         end
       end
 
+      describe :eu_listed do
+        context "for family Cactaceae" do
+          specify { @family.eu_listed.should be_true }
+        end
+        context "for genus Pereskia" do
+          specify { @genus1.eu_listed.should be_nil }
+        end
+      end
+
       describe :cites_excluded do
         context "for genus Pereskia" do
           specify { @genus1.cites_excluded.should be_true }
