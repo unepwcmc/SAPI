@@ -124,12 +124,11 @@ class TaxonConcept < ActiveRecord::Base
   before_validation :ensure_taxonomic_position
 
   scope :by_scientific_name, lambda { |scientific_name|
-    where(
-      <<-SQL
-      UPPER(full_name) >= UPPER('#{TaxonName.lower_bound(scientific_name)}')
-        AND UPPER(full_name) < UPPER('#{TaxonName.upper_bound(scientific_name)}')
-      SQL
-    )
+    where([
+      "UPPER(full_name) >= UPPER(?) AND UPPER(full_name) < UPPER(?)",
+      TaxonName.lower_bound(scientific_name), 
+      TaxonName.upper_bound(scientific_name)
+    ])
   }
 
   scope :at_parent_ranks, lambda{ |rank|
