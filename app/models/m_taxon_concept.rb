@@ -2,57 +2,63 @@
 #
 # Table name: taxon_concepts_mview
 #
-#  id                         :integer          primary key
-#  parent_id                  :integer
-#  taxonomy_is_cites_eu       :boolean
-#  full_name                  :string(255)
-#  name_status                :string(255)
-#  rank_name                  :text
-#  cites_accepted             :boolean
-#  kingdom_position           :integer
-#  taxonomic_position         :string(255)
-#  kingdom_name               :text
-#  phylum_name                :text
-#  class_name                 :text
-#  order_name                 :text
-#  family_name                :text
-#  genus_name                 :text
-#  species_name               :text
-#  subspecies_name            :text
-#  kingdom_id                 :integer
-#  phylum_id                  :integer
-#  class_id                   :integer
-#  order_id                   :integer
-#  family_id                  :integer
-#  genus_id                   :integer
-#  species_id                 :integer
-#  subspecies_id              :integer
-#  cites_listed               :boolean
-#  cites_deleted              :boolean
-#  cites_excluded             :boolean
-#  cites_show                 :boolean
-#  cites_i                    :boolean
-#  cites_ii                   :boolean
-#  cites_iii                  :boolean
-#  current_listing            :text
-#  closest_listed_ancestor_id :integer
-#  listing_updated_at         :datetime
-#  ann_symbol                 :text
-#  hash_ann_symbol            :text
-#  hash_ann_parent_symbol     :text
-#  author_year                :string(255)
-#  created_at                 :datetime
-#  updated_at                 :datetime
-#  taxon_concept_id_com       :integer
-#  english_names_ary          :string
-#  french_names_ary           :string
-#  spanish_names_ary          :string
-#  taxon_concept_id_syn       :integer
-#  synonyms_ary               :string
-#  synonyms_author_years_ary  :string
-#  countries_ids_ary          :string
-#  dirty                      :boolean
-#  expiry                     :datetime
+#  id                               :integer          primary key
+#  parent_id                        :integer
+#  taxonomy_is_cites_eu             :boolean
+#  full_name                        :string(255)
+#  name_status                      :string(255)
+#  rank_name                        :text
+#  spp                              :boolean
+#  cites_accepted                   :boolean
+#  kingdom_position                 :integer
+#  taxonomic_position               :string(255)
+#  kingdom_name                     :text
+#  phylum_name                      :text
+#  class_name                       :text
+#  order_name                       :text
+#  family_name                      :text
+#  genus_name                       :text
+#  species_name                     :text
+#  subspecies_name                  :text
+#  kingdom_id                       :integer
+#  phylum_id                        :integer
+#  class_id                         :integer
+#  order_id                         :integer
+#  family_id                        :integer
+#  genus_id                         :integer
+#  species_id                       :integer
+#  subspecies_id                    :integer
+#  cites_listed                     :boolean
+#  cites_deleted                    :boolean
+#  cites_excluded                   :boolean
+#  cites_show                       :boolean
+#  cites_i                          :boolean
+#  cites_ii                         :boolean
+#  cites_iii                        :boolean
+#  current_listing_original         :text
+#  current_listing                  :text
+#  species_listings_ids             :string
+#  species_listings_ids_aggregated  :string
+#  cites_closest_listed_ancestor_id :integer
+#  eu_closest_listed_ancestor_id    :integer
+#  listing_updated_at               :datetime
+#  ann_symbol                       :text
+#  hash_ann_symbol                  :text
+#  hash_ann_parent_symbol           :text
+#  eu_listed                        :boolean
+#  author_year                      :string(255)
+#  created_at                       :datetime
+#  updated_at                       :datetime
+#  taxon_concept_id_com             :integer
+#  english_names_ary                :string
+#  french_names_ary                 :string
+#  spanish_names_ary                :string
+#  taxon_concept_id_syn             :integer
+#  synonyms_ary                     :string
+#  synonyms_author_years_ary        :string
+#  countries_ids_ary                :string
+#  dirty                            :boolean
+#  expiry                           :datetime
 #
 
 class MTaxonConcept < ActiveRecord::Base
@@ -71,7 +77,8 @@ class MTaxonConcept < ActiveRecord::Base
     :class_name => MListingChange,
     :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'",
     :order => 'effective_at DESC, species_listing_name ASC'
-  belongs_to :closest_listed_ancestor, :class_name => MTaxonConcept
+  belongs_to :cites_closest_listed_ancestor, :class_name => MTaxonConcept
+  belongs_to :eu_closest_listed_ancestor, :class_name => MTaxonConcept
   scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
 
   scope :without_non_accepted, where(:name_status => ['A', 'H'])
@@ -173,7 +180,7 @@ class MTaxonConcept < ActiveRecord::Base
         current_additions.joins(:designation).
         where('designations.name' => Designation::CITES)
       #inherited listing -- find closest ancestor with listing changes
-      closest_listed_ancestor &&
+      cites_closest_listed_ancestor &&
         cites_inherited_current_additions.map(&:party_id) || []
     end.compact
   end

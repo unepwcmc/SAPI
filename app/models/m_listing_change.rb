@@ -9,6 +9,7 @@
 #  species_listing_name   :string(255)
 #  change_type_id         :integer
 #  change_type_name       :string(255)
+#  designation_id         :integer
 #  party_id               :integer
 #  party_name             :string(255)
 #  ann_symbol             :string(255)

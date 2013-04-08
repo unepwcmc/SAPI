@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION rebuild_eu_not_listed_status() RETURNS void
   $$;
 
 COMMENT ON FUNCTION rebuild_eu_not_listed_status() IS '
-  Procedure to rebuild the eu_fully_covered AND eu_NEU flags in taxon_concepts.listing.
+  Procedure to rebuild the eu_fully_covered AND eu_not_listed flags in taxon_concepts.listing.
   1. eu_fully_covered
     TRUE - all descendants are listed,
     FALSE - some descendants were excluded or deleted from listing

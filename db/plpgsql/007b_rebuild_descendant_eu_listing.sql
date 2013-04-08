@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_eu_listing_for_node(node_id intege
       designation designations%ROWTYPE;
     BEGIN
     SELECT * INTO designation FROM designations WHERE name = 'EU';
-    PERFORM rebuild_not_listed_status_for_designation_and_node(designation, node_id);
+    PERFORM rebuild_descendant_listing_for_designation_and_node(designation, node_id);
     END;
   $$;
 

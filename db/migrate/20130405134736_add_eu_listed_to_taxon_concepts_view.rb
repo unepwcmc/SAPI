@@ -68,7 +68,9 @@ def change
     listing->'cites_listing_original' AS current_listing_original,
     listing->'cites_listing' AS current_listing,
     (listing->'species_listings_ids')::INT[] AS species_listings_ids,
-    closest_listed_ancestor_id,
+    (listing->'species_listings_ids_aggregated')::INT[] AS species_listings_ids_aggregated,
+    (listing->'cites_closest_listed_ancestor_id')::INT AS cites_closest_listed_ancestor_id,
+    (listing->'eu_closest_listed_ancestor_id')::INT AS eu_closest_listed_ancestor_id,
     (listing->'listing_updated_at')::TIMESTAMP AS listing_updated_at,
     (listing->'ann_symbol') AS ann_symbol,
     (listing->'hash_ann_symbol') AS hash_ann_symbol,
@@ -138,5 +140,9 @@ def change
     ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt
   SQL
   Sapi::rebuild_taxon_concepts_mview
+  add_index "taxon_concepts_mview", ["cites_closest_listed_ancestor_id"],
+    :name => "index_taxon_concepts_mview_on_cites_closest_listed_ancestor_id"
+  add_index "taxon_concepts_mview", ["eu_closest_listed_ancestor_id"],
+    :name => "index_taxon_concepts_mview_on_eu_closest_listed_ancestor_id"
   end
 end

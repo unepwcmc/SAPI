@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: geo_entities
+#
+#  id                 :integer          not null, primary key
+#  geo_entity_type_id :integer          not null
+#  name_en            :string(255)      not null
+#  long_name          :string(255)
+#  iso_code2          :string(255)
+#  iso_code3          :string(255)
+#  legacy_id          :integer
+#  legacy_type        :string(255)
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  is_current         :boolean          default(TRUE)
+#  name_fr            :string(255)
+#  name_es            :string(255)
+#
+
 require 'spec_helper'
 
 describe GeoEntity do

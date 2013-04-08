@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION rebuild_descendant_listings_for_designation_and_node(
+CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
   designation designations, node_id integer
   ) RETURNS void
   LANGUAGE plpgsql
@@ -11,14 +11,16 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings_for_designation_and_node(
       status_flag varchar;
       listing_original_flag varchar;
       listing_flag varchar;
+      closest_listed_ancestor_flag varchar;
     BEGIN
 
     fully_covered_flag := LOWER(designation.name) || '_fully_covered';
     not_listed_flag := LOWER(designation.name) || '_not_listed';
-    status_original_flag = LOWER(designation.name) || '_status_original';
-    status_flag = LOWER(designation.name) || '_status';
+    status_original_flag := LOWER(designation.name) || '_status_original';
+    status_flag := LOWER(designation.name) || '_status';
     listing_original_flag := LOWER(designation.name) || '_listing_original';
     listing_flag := LOWER(designation.name) || '_listing';
+    closest_listed_ancestor_flag  := LOWER(designation.name) || '_closest_listed_ancestor_id';
 
     IF node_id IS NOT NULL THEN
       WITH RECURSIVE ancestors AS (
@@ -42,7 +44,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings_for_designation_and_node(
 
     WITH RECURSIVE q AS (
       SELECT h.id, parent_id,
-      listing - ARRAY[status_flag, status_original_flag, not_listed_flag, fully_covered_flag] ||
+      listing - ARRAY[status_flag, status_original_flag, not_listed_flag, fully_covered_flag, closest_listed_ancestor_flag] ||
       hstore(listing_flag,
         CASE
           WHEN listing->status_flag = 'LISTED'
@@ -51,8 +53,8 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings_for_designation_and_node(
           THEN listing->not_listed_flag
           ELSE NULL
         END
-      ) || hstore(not_listed_flag, listing-> not_listed_flag) ||
-      hstore('closest_listed_ancestor_id', h.id::VARCHAR)
+      ) || hstore(not_listed_flag, listing->not_listed_flag) ||
+      hstore(closest_listed_ancestor_flag, h.id::VARCHAR)
       AS inherited_listing
       FROM taxon_concepts h
       WHERE listing->status_original_flag = 't' AND
@@ -65,9 +67,9 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings_for_designation_and_node(
       WHEN
         hi.listing->status_original_flag = 't'
       THEN
-        hstore(listing_flag,hi.listing->listing_original_flag) ||
+        hstore(listing_flag, hi.listing->listing_original_flag) ||
         slice(hi.listing, ARRAY['hash_ann_symbol', 'ann_symbol']) ||
-        hstore('closest_listed_ancestor_id', hi.id::VARCHAR)
+        hstore(closest_listed_ancestor_flag, hi.id::VARCHAR)
       ELSE
         inherited_listing
       END
@@ -77,12 +79,11 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listings_for_designation_and_node(
     )
     UPDATE taxon_concepts
     SET
-    closest_listed_ancestor_id = (q.inherited_listing->'closest_listed_ancestor_id')::INTEGER,
     listing = listing ||
     CASE
     WHEN listing->status_flag = 'EXCLUDED' OR listing->status_flag = 'DELETED'
-    THEN q.inherited_listing - ARRAY['closest_listed_ancestor_id', not_listed_flag]
-    ELSE q.inherited_listing - ARRAY['closest_listed_ancestor_id']
+    THEN q.inherited_listing - ARRAY[not_listed_flag]
+    ELSE q.inherited_listing
     END
     FROM q
     WHERE taxon_concepts.id = q.id;
