@@ -2,6 +2,24 @@ CREATE OR REPLACE FUNCTION rebuild_explicit_cites_listing_for_node(node_id integ
   LANGUAGE plpgsql
   AS $$
     BEGIN
+
+    UPDATE taxon_concepts SET listing = COALESCE(listing, ''::HSTORE) ||
+      HSTORE('species_listings_ids', q.species_listings_ids)
+    FROM (
+      SELECT taxon_concept_id, ARRAY_AGG(species_listing_id) AS species_listings_ids
+      FROM listing_changes
+      INNER JOIN change_types
+      ON change_type_id = change_types.id
+        AND change_types.name = 'ADDITION'
+      INNER JOIN designations
+      ON change_types.designation_id = designations.id
+        AND designations.name = 'CITES'
+      WHERE is_current = TRUE
+      GROUP BY taxon_concept_id
+    ) AS q
+    WHERE taxon_concepts.id = q.taxon_concept_id AND
+    CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
+
     UPDATE taxon_concepts SET listing =
     CASE
     WHEN NOT (taxon_concepts.listing->'cites_status_original')::BOOLEAN

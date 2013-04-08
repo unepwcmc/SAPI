@@ -44,7 +44,10 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
 
     WITH RECURSIVE q AS (
       SELECT h.id, parent_id,
-      listing - ARRAY[status_flag, status_original_flag, not_listed_flag, fully_covered_flag, closest_listed_ancestor_flag] ||
+      listing - ARRAY[
+        status_flag, status_original_flag,
+        not_listed_flag, fully_covered_flag, closest_listed_ancestor_flag
+      ] ||
       hstore(listing_flag,
         CASE
           WHEN listing->status_flag = 'LISTED'
