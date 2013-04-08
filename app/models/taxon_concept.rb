@@ -113,7 +113,7 @@ class TaxonConcept < ActiveRecord::Base
   validates :taxon_name_id, :uniqueness => { :scope => [:taxonomy_id, :parent_id, :name_status, :author_year] }
   validates :taxonomic_position,
     :presence => true,
-    :format => { :with => /\d(\.\d*)*/, :message => "Use prefix notation, e.g. 1.2" },
+    :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" },
     :if => :fixed_order_required?
 
   before_validation :check_taxon_name_exists
