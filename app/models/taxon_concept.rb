@@ -132,12 +132,15 @@ class TaxonConcept < ActiveRecord::Base
   }
 
   scope :at_parent_ranks, lambda{ |rank|
-    joins(
-    <<-SQL
+    joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
-        AND ranks.taxonomic_position >= '#{rank.parent_rank_lower_bound}'
-        AND ranks.taxonomic_position < '#{rank.taxonomic_position}'
+        AND ranks.taxonomic_position >= ?
+        AND ranks.taxonomic_position < ?
     SQL
+    joins(
+      sanitize_sql_array([
+        joins_sql, rank.parent_rank_lower_bound, rank.taxonomic_position
+      ])
     )
   }
 
