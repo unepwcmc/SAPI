@@ -26,6 +26,7 @@
 /public/downloads/cites_quotas/*.csv
 /public/downloads/cites_listings/*.csv
 /public/downloads/cites_suspensions/*.csv
+/public/downloads/eu_listings/*.csv
 
 # Ruby
 /vendor/ruby
