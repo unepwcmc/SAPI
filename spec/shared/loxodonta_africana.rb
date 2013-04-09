@@ -78,6 +78,12 @@ shared_context "Loxodonta africana" do
      :effective_at => '1990-01-18',
      :is_current => true
     )
+    create_eu_A_addition(
+     :taxon_concept => @species,
+     :effective_at => '1990-01-18',
+     :is_current => true
+    )
+
     cites_lc2 = create_cites_II_addition(
      :taxon_concept => @species,
      :effective_at => '1997-09-18'

@@ -20,9 +20,15 @@ describe TaxonConcept do
       end
     end
     context "LISTING" do
-      describe :current_listing do
+      describe :cites_listing do
         context 'for species Caiman latirostris' do
-          specify { @species.current_listing.should == 'I/II' }
+          specify { @species.cites_listing.should == 'I/II' }
+        end
+      end
+
+      describe :eu_listing do
+        context 'for species Caiman latirostris' do
+          specify { @species.eu_listing.should == 'A/B' }
         end
       end
 

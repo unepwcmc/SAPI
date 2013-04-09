@@ -19,21 +19,39 @@ describe TaxonConcept do
     end
 
     context "LISTING" do
-      describe :current_listing do
+      describe :cites_listing do
         context "for species Cervus elaphus" do
-          specify { @species.current_listing.should == 'I/II/III/NC' }
+          specify { @species.cites_listing.should == 'I/II/III/NC' }
         end
         context "for subspecies Cervus elaphus bactrianus" do
-          specify { @subspecies1.current_listing.should == 'II' }
+          specify { @subspecies1.cites_listing.should == 'II' }
         end
         context "for subspecies Cervus elaphus barbarus" do
-          specify { @subspecies2.current_listing.should == 'III' }
+          specify { @subspecies2.cites_listing.should == 'III' }
         end
         context "for subspecies Cervus elaphus hanglu" do
-          specify { @subspecies3.current_listing.should == 'I' }
+          specify { @subspecies3.cites_listing.should == 'I' }
         end
         context "for subspecies Cervus elaphus canadensis" do
-          specify { @subspecies4.current_listing.should == 'NC' }
+          specify { @subspecies4.cites_listing.should == 'NC' }
+        end
+      end
+
+      describe :eu_listing do
+        context "for species Cervus elaphus" do
+          specify { @species.eu_listing.should == 'A/B/C/NC' }
+        end
+        context "for subspecies Cervus elaphus bactrianus" do
+          specify { @subspecies1.eu_listing.should == 'B' }
+        end
+        context "for subspecies Cervus elaphus barbarus" do
+          specify { @subspecies2.eu_listing.should == 'C' }
+        end
+        context "for subspecies Cervus elaphus hanglu" do
+          specify { @subspecies3.eu_listing.should == 'A' }
+        end
+        context "for subspecies Cervus elaphus canadensis" do
+          specify { @subspecies4.eu_listing.should == 'NC' }
         end
       end
 

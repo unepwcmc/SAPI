@@ -5,30 +5,39 @@ describe TaxonConcept do
     include_context "Ailuropoda"
 
     context "LISTING" do
-      describe :current_listing do
-        it "should be I at species level Ailuropoda melanoleuca" do
-          @species.current_listing.should == 'I'
+      describe :cites_listing do
+        context "for species Ailuropoda melanoleuca" do
+          specify { @species.cites_listing.should == 'I' }
         end
-        it "should be I at genus level Ailuropoda" do
-          @genus.current_listing.should == 'I'
+        context "for genus level Ailuropoda" do
+          specify { @genus.cites_listing.should == 'I' }
+        end
+      end
+
+      describe :eu_listing do
+        context "for species Ailuropoda melanoleuca" do
+          specify { @species.eu_listing.should == 'A' }
+        end
+        context "for genus level Ailuropoda" do
+          specify { @genus.eu_listing.should == 'A' }
         end
       end
 
       describe :cites_listed do
-        it "should be false for genus Ailuropoda" do
-          @genus.cites_listed.should be_false
+        context "for genus Ailuropoda" do
+          specify { @genus.cites_listed.should be_false }
         end
-        it "should be true for species Ailuropoda melanoleuca" do
-          @species.cites_listed.should be_true
+        context "for species Ailuropoda melanoleuca" do
+          specify { @species.cites_listed.should be_true }
         end
       end
 
       describe :eu_listed do
-        it "should be false for genus Ailuropoda" do
-          @genus.eu_listed.should be_false
+        context "for genus Ailuropoda" do
+          specify { @genus.eu_listed.should be_false }
         end
-        it "should be true for species Ailuropoda melanoleuca" do
-          @species.eu_listed.should be_true
+        context "for species Ailuropoda melanoleuca" do
+          specify { @species.eu_listed.should be_true }
         end
       end
 

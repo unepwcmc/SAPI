@@ -24,9 +24,15 @@ describe TaxonConcept do
         end
       end
 
-      describe :current_listing do
+      describe :cites_listing do
         context "for species Panax ginseng" do
-          specify { @species.current_listing.should == 'II/NC' }
+          specify { @species.cites_listing.should == 'II/NC' }
+        end
+      end
+
+      describe :eu_listing do
+        context "for species Panax ginseng" do
+          specify { @species.eu_listing.should == 'B/NC' }
         end
       end
 

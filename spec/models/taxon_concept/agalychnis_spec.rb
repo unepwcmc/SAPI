@@ -30,9 +30,15 @@ describe TaxonConcept do
       end
     end
     context "LISTING" do
-      describe :current_listing do
+      describe :cites_listing do
         context "for genus Agalychnis" do
-          specify { @genus.current_listing.should == 'II' }
+          specify { @genus.cites_listing.should == 'II' }
+        end
+      end
+
+      describe :eu_listing do
+        context "for genus Agalychnis" do
+          specify { @genus.eu_listing.should == 'B' }
         end
       end
 

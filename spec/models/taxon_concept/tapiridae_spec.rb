@@ -10,27 +10,36 @@ describe TaxonConcept do
         end
       end
       describe :rank do
-        context "for Family" do
+        context "for family Tapiridae" do
           specify { @family.rank_name.should == 'FAMILY' }
         end
       end
-      describe :parents do
-        context "for species Tapirus terrestris" do
+      describe :ancestors do
+        context "order" do
           specify { @species.order_name == 'Perissodactyla' }
         end
-        context "for species Tapirus terrestris" do
+        context "class" do
           specify { @species.class_name == 'Mammalia' }
         end
       end
     end
 
     context "LISTING" do
-      describe :current_listing do
+      describe :cites_listing do
         context "for family Tapiridae" do
-          specify { @family.current_listing.should == 'I/II' }
+          specify { @family.cites_listing.should == 'I/II' }
         end
         context "for species Tapirus terrestris" do
-          specify { @species.current_listing.should == 'II' }
+          specify { @species.cites_listing.should == 'II' }
+        end
+      end
+
+      describe :eu_listing do
+        context "for family Tapiridae" do
+          specify { @family.eu_listing.should == 'A/B' }
+        end
+        context "for species Tapirus terrestris" do
+          specify { @species.eu_listing.should == 'B' }
         end
       end
 

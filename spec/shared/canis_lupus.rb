@@ -127,12 +127,12 @@ shared_context "Canis lupus" do
       :parent_id => cites_lc3.id,
      :is_current => true
     )
-    eu_lc3 = create_cites_II_addition(
+    eu_lc3 = create_eu_B_addition(
      :taxon_concept => @species,
      :effective_at => '2010-06-23',
      :is_current => true
     )
-    eu_lc3_exc = create_cites_II_exception(
+    eu_lc3_exc = create_eu_B_exception(
       :taxon_concept => @species,
       :effective_at => '1979-06-28',
       :parent_id => eu_lc3.id,

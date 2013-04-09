@@ -48,6 +48,11 @@ shared_context "Pereskia" do
      :effective_at => '1992-06-11',
      :is_current => true
     )
+    create_eu_A_addition(
+     :taxon_concept => @genus2,
+     :effective_at => '1992-06-11',
+     :is_current => true
+    )
 
     Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
     self.instance_variables.each do |t|
