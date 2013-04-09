@@ -13,13 +13,13 @@ CREATE OR REPLACE FUNCTION rebuild_explicit_eu_listing_for_node(node_id integer)
       hstore('eu_listing_original', ARRAY_TO_STRING(
         -- unnest to filter out the nulls
         ARRAY(SELECT * FROM UNNEST(
-          ARRAY[listing -> 'eu_A', listing -> 'eu_B', listing -> 'eu_C', listing -> 'eu_D']) s 
+          ARRAY[listing -> 'eu_A', listing -> 'eu_B', listing -> 'eu_C', listing -> 'eu_D']) s
           WHERE s IS NOT NULL),
           '/'
         )
       ) AS listing
       FROM (
-        SELECT taxon_concept_id, 
+        SELECT taxon_concept_id,
           hstore('eu_A', CASE WHEN SUM(eu_A) > 0 THEN 'A' ELSE NULL END) ||
           hstore('eu_B', CASE WHEN SUM(eu_B) > 0 THEN 'B' ELSE NULL END) ||
           hstore('eu_C', CASE WHEN SUM(eu_C) > 0 THEN 'C' ELSE NULL END) ||
