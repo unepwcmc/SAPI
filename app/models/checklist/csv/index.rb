@@ -7,7 +7,7 @@ class Checklist::Csv::Index < Checklist::Index
       :id,
       :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
       :genus_name, :species_name, :subspecies_name,
-      :full_name, :author_year, :rank_name, :current_listing,
+      :full_name, :author_year, :rank_name, :cites_listing,
       :full_note_en, :short_note_en, :short_note_es, :short_note_fr,
       :hash_ann_symbol, :hash_full_note_en,
       if @synonyms && @authors

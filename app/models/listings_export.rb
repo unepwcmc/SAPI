@@ -51,7 +51,7 @@ class ListingsExport
       MTaxonConceptFilterByAppendixPopulationQuery.new(rel, @species_listings_ids, @geo_entities_ids)
     elsif @species_listings_ids
       MTaxonConceptFilterByAppendixQuery.new(rel, @species_listings_ids)
-    end.relation
+    end.relation(@designation.name)
     if @taxon_concepts_ids
       rel = MTaxonConceptFilterByIdWithDescendants.new(rel, @taxon_concepts_ids).relation
     end
@@ -90,7 +90,7 @@ private
     [
       :id, :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
       :genus_name, :species_name, :subspecies_name,
-      :full_name, :author_year, :rank_name, :current_listing_original
+      :full_name, :author_year, :rank_name, :cites_listing_original
     ]
   end
 

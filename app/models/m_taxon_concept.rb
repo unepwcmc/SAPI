@@ -35,7 +35,7 @@
 #  cites_i                          :boolean
 #  cites_ii                         :boolean
 #  cites_iii                        :boolean
-#  current_listing_original         :text
+#  cites_listing_original         :text
 #  current_listing                  :text
 #  species_listings_ids             :string
 #  species_listings_ids_aggregated  :string
@@ -93,6 +93,11 @@ class MTaxonConcept < ActiveRecord::Base
 
   scope :taxonomic_layout, order('taxonomic_position')
   scope :alphabetical_layout, order(['kingdom_position', 'full_name'])
+
+  # leftover from old Checklist code, this field is used in returned json
+  def current_listing
+    cites_listing
+  end
 
   def spp
     if ['GENUS', 'FAMILY', 'SUBFAMILY', 'ORDER'].include?(rank_name)
@@ -154,7 +159,7 @@ class MTaxonConcept < ActiveRecord::Base
   end
 
   def recently_changed
-    return (listing_updated_at ? listing_updated_at > 8.year.ago : false)
+    return (cites_listing_updated_at ? cites_listing_updated_at > 8.year.ago : false)
   end
 
   ['en', 'es', 'fr'].each do |lng|

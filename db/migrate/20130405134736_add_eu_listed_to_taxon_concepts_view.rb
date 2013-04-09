@@ -36,24 +36,6 @@ def change
     (data->'species_id')::INTEGER AS species_id,
     (data->'subspecies_id')::INTEGER AS subspecies_id,
     CASE
-    WHEN listing->'cites_status' = 'LISTED' AND listing->'cites_status_original' = 't'
-    THEN TRUE
-    WHEN listing->'cites_status' = 'LISTED'
-    THEN FALSE
-    ELSE NULL
-    END AS cites_listed,
-    CASE
-    WHEN listing->'cites_status' = 'DELETED'
-    THEN TRUE
-    ELSE FALSE
-    END AS cites_deleted,
-    CASE
-    WHEN listing->'cites_status' = 'EXCLUDED'
-    THEN TRUE
-    ELSE FALSE
-    END AS cites_excluded,
-    (listing->'cites_show')::BOOLEAN AS cites_show,
-    CASE
     WHEN listing->'cites_I' = 'I' THEN TRUE
     ELSE FALSE
     END AS cites_I,
@@ -65,13 +47,20 @@ def change
     WHEN listing->'cites_III' = 'III' THEN TRUE
     ELSE FALSE
     END AS cites_III,
-    listing->'cites_listing_original' AS current_listing_original,
-    listing->'cites_listing' AS current_listing,
-    (listing->'species_listings_ids')::INT[] AS species_listings_ids,
-    (listing->'species_listings_ids_aggregated')::INT[] AS species_listings_ids_aggregated,
+    CASE
+    WHEN listing->'cites_status' = 'LISTED' AND listing->'cites_status_original' = 't'
+    THEN TRUE
+    WHEN listing->'cites_status' = 'LISTED'
+    THEN FALSE
+    ELSE NULL
+    END AS cites_listed,
+    (listing->'cites_show')::BOOLEAN AS cites_show,
+    (listing->'cites_status_original')::BOOLEAN AS cites_status_original,
+    listing->'cites_status' AS cites_status,
+    listing->'cites_listing_original' AS cites_listing_original,
+    listing->'cites_listing' AS cites_listing,
     (listing->'cites_closest_listed_ancestor_id')::INT AS cites_closest_listed_ancestor_id,
-    (listing->'eu_closest_listed_ancestor_id')::INT AS eu_closest_listed_ancestor_id,
-    (listing->'listing_updated_at')::TIMESTAMP AS listing_updated_at,
+    (listing->'cites_listing_updated_at')::TIMESTAMP AS cites_listing_updated_at,
     (listing->'ann_symbol') AS ann_symbol,
     (listing->'hash_ann_symbol') AS hash_ann_symbol,
     (listing->'hash_ann_parent_symbol') AS hash_ann_parent_symbol,
@@ -82,6 +71,15 @@ def change
     THEN FALSE
     ELSE NULL
     END AS eu_listed,
+    (listing->'eu_show')::BOOLEAN AS eu_show,
+    (listing->'eu_status_original')::BOOLEAN AS eu_status_original,
+    listing->'eu_status' AS eu_status,
+    listing->'eu_listing_original' AS eu_listing_original,
+    listing->'eu_listing' AS eu_listing,
+    (listing->'eu_closest_listed_ancestor_id')::INT AS eu_closest_listed_ancestor_id,
+    (listing->'eu_listing_updated_at')::TIMESTAMP AS eu_listing_updated_at,
+    (listing->'species_listings_ids')::INT[] AS species_listings_ids,
+    (listing->'species_listings_ids_aggregated')::INT[] AS species_listings_ids_aggregated,
     author_year,
     taxon_concepts.created_at,
     taxon_concepts.updated_at,
