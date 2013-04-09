@@ -3,23 +3,6 @@ CREATE OR REPLACE FUNCTION rebuild_explicit_cites_listing_for_node(node_id integ
   AS $$
     BEGIN
 
-    UPDATE taxon_concepts SET listing = COALESCE(listing, ''::HSTORE) ||
-      HSTORE('species_listings_ids', q.species_listings_ids)
-    FROM (
-      SELECT taxon_concept_id, ARRAY_AGG(species_listing_id) AS species_listings_ids
-      FROM listing_changes
-      INNER JOIN change_types
-      ON change_type_id = change_types.id
-        AND change_types.name = 'ADDITION'
-      INNER JOIN designations
-      ON change_types.designation_id = designations.id
-        AND designations.name = 'CITES'
-      WHERE is_current = TRUE
-      GROUP BY taxon_concept_id
-    ) AS q
-    WHERE taxon_concepts.id = q.taxon_concept_id AND
-    CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
-
     UPDATE taxon_concepts SET listing =
     CASE
     WHEN NOT (taxon_concepts.listing->'cites_status_original')::BOOLEAN
@@ -31,13 +14,13 @@ CREATE OR REPLACE FUNCTION rebuild_explicit_cites_listing_for_node(node_id integ
       hstore('cites_listing_original', ARRAY_TO_STRING(
         -- unnest to filter out the nulls
         ARRAY(SELECT * FROM UNNEST(
-          ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III']) s 
+          ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III']) s
           WHERE s IS NOT NULL),
           '/'
         )
       ) AS listing
       FROM (
-        SELECT taxon_concept_id, 
+        SELECT taxon_concept_id,
           hstore('cites_I', CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
           hstore('cites_II', CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
           hstore('cites_III', CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END)
@@ -85,7 +68,7 @@ CREATE OR REPLACE FUNCTION rebuild_explicit_cites_listing() RETURNS void
   LANGUAGE plpgsql
   AS $$
     BEGIN
-    PERFORM rebuild_explicit_cites_listing_for_node(NULL);
+      PERFORM rebuild_explicit_cites_listing_for_node(NULL);
     END;
   $$;
 
