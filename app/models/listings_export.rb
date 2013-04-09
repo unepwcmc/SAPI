@@ -2,7 +2,7 @@ require 'digest/sha1'
 require 'csv'
 class ListingsExport
   attr_reader :file_name, :public_file_name
-  
+
   def initialize(filters)
     @filters = filters
     @designation_id = filters[:designation_id]
@@ -15,7 +15,7 @@ class ListingsExport
     @species_listings_ids = SpeciesListing.where(:id => @species_listings_ids).map(&:abbreviation)
     @designation = Designation.find(@designation_id)
   end
-  
+
   def path
     @path ||= "public/downloads/#{@designation.name.downcase}_listings/"
   end
@@ -35,11 +35,15 @@ class ListingsExport
     [@file_name, {:filename => @public_file_name, :type => 'text/csv'}]
   end
 
-  def query   
+  def query
     rel = MTaxonConcept.select(select_columns).
     by_cites_eu_taxonomy.without_non_accepted.without_hidden.
     where(:rank_name => [Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY]).
-    joins(:closest_listed_ancestor => :current_listing_changes).
+    joins(
+      @designation.is_cites? ?
+      {:cites_closest_listed_ancestor => :current_listing_changes} :
+      {:eu_closest_listed_ancestor => :current_listing_changes}
+    ).
     where('listing_changes_mview.designation_id' => @designation_id).
     group(group_columns).
     order('taxon_concepts_mview.taxonomic_position')
@@ -81,7 +85,7 @@ private
       Checklist::ColumnDisplayNameMapping.column_display_name_for(c)
     end + ['Listed under', 'Full note', '# Full note']
   end
- 
+
   def taxon_concept_columns
     [
       :id, :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
@@ -113,11 +117,17 @@ private
     [:full_name_with_spp, :full_note_en, :hash_full_note_en]
   end
 
+  def closest_listed_ancestor_table_name
+    @designation.is_cites? ?
+      'cites_closest_listed_ancestors_taxon_concepts_mview' :
+      'eu_closest_listed_ancestors_taxon_concepts_mview'
+  end
+
   def closest_listed_ancestor_select_columns
     <<-SQL
-    closest_listed_ancestors_taxon_concepts_mview.full_name || ' ' ||
+    #{closest_listed_ancestor_table_name}.full_name || ' ' ||
     CASE
-      WHEN closest_listed_ancestors_taxon_concepts_mview.spp THEN 'spp.'
+      WHEN #{closest_listed_ancestor_table_name}.spp THEN 'spp.'
       ELSE ''
     END
     AS closest_listed_ancestor_full_name_with_spp,
@@ -140,8 +150,8 @@ private
 
   def closest_listed_ancestor_group_columns
     <<-SQL
-    closest_listed_ancestors_taxon_concepts_mview.full_name,
-    closest_listed_ancestors_taxon_concepts_mview.spp
+    #{closest_listed_ancestor_table_name}.full_name,
+    #{closest_listed_ancestor_table_name}.spp
     SQL
   end
 end
