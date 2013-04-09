@@ -54,45 +54,89 @@ describe ListingsExport do
     end
   end
   describe :query do
-    context "when Appendix I" do
-      subject {
-        ListingsExport.new({
-          :designation_id => cites.id,
-          :species_listings_ids => [cites_I.id]
-        })
-      }
-      specify { subject.query.all.size.should == 1 }
-
-      context "when Poland" do
+    context "when CITES" do
+      context "when Appendix I" do
         subject {
           ListingsExport.new({
             :designation_id => cites.id,
-            :species_listings_ids => [cites_I.id],
-            :geo_entities_ids => [poland.id]
+            :species_listings_ids => [cites_I.id]
           })
         }
-        specify { subject.query.all.size.should == 0 }
-      end
+        specify { subject.query.all.size.should == 1 }
 
-      context "when Nepal" do
+        context "when Poland" do
+          subject {
+            ListingsExport.new({
+              :designation_id => cites.id,
+              :species_listings_ids => [cites_I.id],
+              :geo_entities_ids => [poland.id]
+            })
+          }
+          specify { subject.query.all.size.should == 0 }
+        end
+
+        context "when Nepal" do
+          subject {
+            ListingsExport.new({
+              :designation_id => cites.id,
+              :species_listings_ids => [cites_I.id],
+              :geo_entities_ids => [nepal.id]
+            })
+          }
+          specify { subject.query.all.size.should == 1 }
+        end
+      end
+      context "when higher taxon ids" do
         subject {
           ListingsExport.new({
             :designation_id => cites.id,
-            :species_listings_ids => [cites_I.id],
-            :geo_entities_ids => [nepal.id]
+            :taxon_concepts_ids => [@family.id]
           })
         }
         specify { subject.query.all.size.should == 1 }
       end
     end
-    context "when higher taxon ids" do
-      subject {
-        ListingsExport.new({
-          :designation_id => cites.id,
-          :taxon_concepts_ids => [@family.id]
-        })
-      }
-      specify { subject.query.all.size.should == 1 }
+    context "when EU" do
+      context "when Annex A" do
+        subject {
+          ListingsExport.new({
+            :designation_id => eu.id,
+            :species_listings_ids => [eu_A.id]
+          })
+        }
+        specify { subject.query.all.size.should == 1 }
+
+        context "when Poland" do
+          subject {
+            ListingsExport.new({
+              :designation_id => eu.id,
+              :species_listings_ids => [eu_A.id],
+              :geo_entities_ids => [poland.id]
+            })
+          }
+          specify { subject.query.all.size.should == 0 }
+        end
+
+        context "when Nepal" do
+          subject {
+            ListingsExport.new({
+              :designation_id => eu.id,
+              :species_listings_ids => [eu_A.id],
+              :geo_entities_ids => [nepal.id]
+            })
+          }
+          specify { subject.query.all.size.should == 1 }
+        end
+      end
+      context "when higher taxon ids" do
+        subject {
+          ListingsExport.new({
+            :designation_id => eu.id,
+            :taxon_concepts_ids => [@family.id]
+          })
+        }
+        specify { subject.query.all.size.should == 1 }
+      end
     end
   end
 end
