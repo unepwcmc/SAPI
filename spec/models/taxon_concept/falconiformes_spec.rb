@@ -26,42 +26,6 @@ describe TaxonConcept do
         end
       end
 
-      describe :cites_fully_covered do
-        context "for order Falconiformes" do
-          specify { @order.taxon_concept.data['cites_fully_covered'].should be_false }
-        end
-        context "for family Cathartidae" do
-          specify { @family1.taxon_concept.data['cites_fully_covered'].should be_false }
-        end
-        context "for family Falconidae" do
-          specify { @family2.taxon_concept.data['cites_fully_covered'].should be_true }
-        end
-        context "for genus Vultur" do
-          specify { @genus1_3.taxon_concept.data['cites_fully_covered'].should be_false }
-        end
-        context "for species Falco alopex (H)" do
-          specify { @species2_2.taxon_concept.data['cites_fully_covered'].should be_true }
-        end
-      end
-
-      describe :eu_fully_covered do
-        context "for order Falconiformes" do
-          specify { @order.taxon_concept.data['eu_fully_covered'].should be_false }
-        end
-        context "for family Cathartidae" do
-          specify { @family1.taxon_concept.data['eu_fully_covered'].should be_false }
-        end
-        context "for family Falconidae" do
-          specify { @family2.taxon_concept.data['eu_fully_covered'].should be_true }
-        end
-        context "for genus Vultur" do
-          specify { @genus1_3.taxon_concept.data['eu_fully_covered'].should be_false }
-        end
-        context "for species Falco alopex (H)" do
-          specify { @species2_2.taxon_concept.data['eu_fully_covered'].should be_true }
-        end
-      end
-
       describe :cites_deleted do
         context "for species Falco alopex (H)" do
           specify { @species2_2.cites_deleted.should be_false }

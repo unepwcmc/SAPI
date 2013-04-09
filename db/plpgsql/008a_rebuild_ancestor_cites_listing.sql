@@ -82,7 +82,6 @@ CREATE OR REPLACE FUNCTION rebuild_ancestor_cites_listing_for_node(node_id integ
       ancestor_node_ids INTEGER[];
       tmp_node_id int;
     BEGIN
-    SELECT id INTO cites_eu_id FROM taxonomies WHERE name = 'CITES_EU';
     IF node_id IS NOT NULL THEN
       PERFORM cites_aggregate_children_listing(node_id, TRUE);
       ancestor_node_ids := ancestor_node_ids_for_node(node_id);
@@ -91,6 +90,7 @@ CREATE OR REPLACE FUNCTION rebuild_ancestor_cites_listing_for_node(node_id integ
         PERFORM cites_aggregate_children_listing(tmp_node_id, FALSE);
       END LOOP;
     ELSE
+      SELECT id INTO cites_eu_id FROM taxonomies WHERE name = 'CITES_EU';
       UPDATE taxon_concepts SET listing = taxon_concepts.listing ||
         cites_aggregate_children_listing(id, TRUE)
       WHERE parent_id IS NULL AND taxonomy_id = cites_eu_id;

@@ -44,10 +44,6 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
 
     WITH RECURSIVE q AS (
       SELECT h.id, parent_id,
-      listing - ARRAY[
-        status_flag, status_original_flag,
-        not_listed_flag, fully_covered_flag, closest_listed_ancestor_flag
-      ] ||
       hstore(listing_flag,
         CASE
           WHEN listing->status_flag = 'LISTED'
@@ -56,8 +52,14 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
           THEN listing->not_listed_flag
           ELSE NULL
         END
-      ) || hstore(not_listed_flag, listing->not_listed_flag) ||
-      hstore(closest_listed_ancestor_flag, h.id::VARCHAR)
+      )  ||
+      hstore(closest_listed_ancestor_flag, h.id::VARCHAR) ||
+      slice(h.listing, ARRAY[fully_covered_flag,'hash_ann_symbol', 'ann_symbol']) ||
+      CASE
+        WHEN designation.name = 'CITES' THEN slice(h.listing, ARRAY['cites_I', 'cites_II', 'cites_III'])
+        WHEN designation.name = 'EU' THEN slice(h.listing, ARRAY['eu_A', 'eu_B', 'eu_C', 'eu_D'])
+        ELSE ''::HSTORE
+      END
       AS inherited_listing
       FROM taxon_concepts h
       WHERE listing->status_original_flag = 't' AND
@@ -71,8 +73,13 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
         hi.listing->status_original_flag = 't'
       THEN
         hstore(listing_flag, hi.listing->listing_original_flag) ||
-        slice(hi.listing, ARRAY['hash_ann_symbol', 'ann_symbol']) ||
-        hstore(closest_listed_ancestor_flag, hi.id::VARCHAR)
+        slice(hi.listing, ARRAY[fully_covered_flag,'hash_ann_symbol', 'ann_symbol']) ||
+        hstore(closest_listed_ancestor_flag, hi.id::VARCHAR) ||
+        CASE
+          WHEN designation.name = 'CITES' THEN slice(hi.listing, ARRAY['cites_I', 'cites_II', 'cites_III'])
+          WHEN designation.name = 'EU' THEN slice(hi.listing, ARRAY['eu_A', 'eu_B', 'eu_C', 'eu_D'])
+          ELSE ''::HSTORE
+        END
       ELSE
         inherited_listing
       END

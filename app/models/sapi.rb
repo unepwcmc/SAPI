@@ -3,16 +3,8 @@ module Sapi
   REBUILD_PROCEDURES = [
     :names_and_ranks,
     :taxonomic_positions,
-    :cites_listed_status,
-    :eu_listed_status,
-    :cites_not_listed_status,
-    :eu_not_listed_status,
-    :explicit_cites_listing,
-    :explicit_eu_listing,
-    :descendant_cites_listing,
-    :descendant_eu_listing,
-    :ancestor_cites_listing,
-    :ancestor_eu_listing,
+    :cites_listing,
+    :eu_listing,
     :cites_accepted_flags,
     :taxon_concepts_mview,
     :listing_changes_mview
@@ -52,18 +44,7 @@ module Sapi
   end
 
   def self.rebuild_listings
-    rebuild(:only => [
-      :cites_listed_status,
-      :eu_listed_status,
-      :cites_not_listed_status,
-      :eu_not_listed_status,
-      :explicit_cites_listing,
-      :explicit_eu_listing,
-      :descendant_cites_listing,
-      :descendant_eu_listing,
-      :ancestor_cites_listing,
-      :ancestor_eu_listing
-    ])
+    rebuild(:only => [:cites_listing, :eu_listing])
   end
 
   def self.rebuild_references
