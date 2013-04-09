@@ -25,7 +25,6 @@ CREATE OR REPLACE FUNCTION sapi_rebuild() RETURNS void
           PERFORM rebuild_ancestor_cites_listing();
           PERFORM rebuild_ancestor_eu_listing();
           PERFORM rebuild_cites_accepted_flags();
-          PERFORM rebuild_cites_show_flags();
         END;
       $$;
 

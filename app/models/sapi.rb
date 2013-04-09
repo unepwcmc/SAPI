@@ -14,7 +14,6 @@ module Sapi
     :ancestor_cites_listing,
     :ancestor_eu_listing,
     :cites_accepted_flags,
-    :cites_show_flags,
     :taxon_concepts_mview,
     :listing_changes_mview
   ]
@@ -40,9 +39,9 @@ module Sapi
     self.disable_triggers if options[:disable_triggers]
     procedures = REBUILD_PROCEDURES - (options[:except] || [])
     procedures &= options[:only] unless options[:only].nil?
-    procedures.each{ |p| 
+    procedures.each{ |p|
       puts "Starting procedure: #{p}"
-      ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()") 
+      ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
       puts "Ending procedure: #{p}"
     }
     self.enable_triggers if options[:disable_triggers]
