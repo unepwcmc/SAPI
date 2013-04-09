@@ -23,6 +23,7 @@ module Checklist::ColumnDisplayNameMapping
     :effective_at_formatted => 'EffectiveAt',
     :countries_iso_codes => 'DistributionISOCodes',
     :countries_full_names => 'DistributionFullNames',
+    :cites_listing => 'CurrentListing',
     :cites_listing_original => 'CurrentListing'
   }
 
