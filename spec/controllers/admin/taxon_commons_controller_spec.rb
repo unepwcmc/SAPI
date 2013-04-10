@@ -19,7 +19,7 @@ describe Admin::TaxonCommonsController do
       create(
         :taxon_common,
         :taxon_concept_id => @taxon_concept.id,
-        :common_name_id => @common_name.id
+        :common_name => @common_name
       )
     }
     it "redirects after delete" do

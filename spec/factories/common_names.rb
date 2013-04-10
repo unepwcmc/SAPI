@@ -2,8 +2,8 @@ FactoryGirl.define do
 
   factory :language do
     sequence(:name_en) { |n| "lng#{n}" }
-    sequence(:iso_code1) { |n| "#{n.chr}#{(n+1).chr}" }
-    sequence(:iso_code3) { |n| "#{n.chr}#{(n+1).chr}#{(n+2).chr}" }
+    sequence(:iso_code1) { |n| [n, n+1].map{ |i|  (65 + i%26).chr }.join }
+    sequence(:iso_code3) { |n| [n, n+1, n+2].map{ |i|  (65 + i%26).chr }.join }
   end
 
   factory :taxon_common do
@@ -12,8 +12,8 @@ FactoryGirl.define do
   end
 
   factory :common_name do
+    language
     name 'Honey badger'
-    association :language
   end
 
 end
