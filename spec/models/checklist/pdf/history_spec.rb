@@ -29,7 +29,7 @@ describe Checklist::Pdf::History do
             :language => en
           )
         )
-        Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+        Sapi::rebuild(:except => [:taxonomy])
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name, :show_english => true) }
       specify{
@@ -46,7 +46,7 @@ describe Checklist::Pdf::History do
           :taxon_concept_id => tc.id,
           :is_current => true
         )
-        Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+        Sapi::rebuild(:except => [:taxonomy])
         MListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
@@ -61,7 +61,7 @@ describe Checklist::Pdf::History do
           :taxon_concept_id => tc.id,
           :is_current => true
         )
-        Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+        Sapi::rebuild(:except => [:taxonomy])
         MListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
@@ -79,7 +79,7 @@ describe Checklist::Pdf::History do
         :annotation_id => annotation.id,
         :is_current => true
       )
-      Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+      Sapi::rebuild(:except => [:taxonomy])
       MListingChange.find(lc.id)
     }
     context "annotations with italics" do

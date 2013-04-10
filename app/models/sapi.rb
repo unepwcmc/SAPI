@@ -1,8 +1,7 @@
 module Sapi
 
   REBUILD_PROCEDURES = [
-    :names_and_ranks,
-    :taxonomic_positions,
+    :taxonomy,
     :cites_listing,
     :eu_listing,
     :cites_accepted_flags,
@@ -40,7 +39,7 @@ module Sapi
   end
 
   def self.rebuild_taxonomy
-    rebuild(:only => [:names_and_ranks, :taxonomic_positions])
+    rebuild(:only => [:taxonomy])
   end
 
   def self.rebuild_listings
