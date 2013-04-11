@@ -31,9 +31,9 @@ module Sapi
     self.disable_triggers
     procedures = REBUILD_PROCEDURES - (options[:except] || [])
     procedures &= options[:only] unless options[:only].nil?
-    procedures.each{ |p|
+    procedures.each{ |p| 
       puts "Starting procedure: #{p}"
-      ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
+      ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()") 
       puts "Ending procedure: #{p}"
     }
     self.enable_triggers
@@ -69,7 +69,7 @@ module Sapi
     rebuild_listing_changes_mview
   end
 
-
+  
 
   def self.disable_triggers
     TABLES_WITH_TRIGGERS.each do |table|
@@ -99,25 +99,15 @@ module Sapi
     indices.each { |i| ActiveRecord::Base.connection.execute("DROP INDEX IF EXISTS #{i}") }
   end
 
-  def self.create_taxon_concepts_mview_indices
-    ActiveRecord::Base.connection.execute('CREATE UNIQUE INDEX taxon_concepts_mview_on_id ON taxon_concepts_mview (id)')
+  def self.create_indices
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_parent_id ON taxon_concepts USING btree (parent_id)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_mview_on_parent_id ON taxon_concepts_mview USING btree (parent_id)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_mview_on_full_name ON taxon_concepts_mview USING btree (full_name)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_mview_on_history_filter ON taxon_concepts_mview USING btree (taxonomy_is_cites_eu, cites_listed, kingdom_position)')
-  end
-
-  def self.create_listing_changes_mview_indices
-    ActiveRecord::Base.connection.execute('CREATE UNIQUE INDEX listing_changes_mview_on_id ON listing_changes_mview (id)')
-    ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_changes_mview_on_taxon_concept_id ON listing_changes_mview USING btree (taxon_concept_id)')
-  end
-
-  def self.create_indices
-    create_taxon_concepts_mview_indices
-    create_listing_changes_mview_indices
-    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_parent_id ON taxon_concepts USING btree (parent_id)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_changes_on_annotation_id ON listing_changes USING btree (annotation_id)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_changes_on_hash_annotation_id ON listing_changes USING btree (hash_annotation_id)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_changes_on_parent_id ON listing_changes USING btree (parent_id)')
+    ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_changes_mview_on_taxon_concept_id ON listing_changes_mview USING btree (taxon_concept_id)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_distributions_on_geo_entity_id ON listing_distributions USING btree (geo_entity_id)')
     ActiveRecord::Base.connection.execute('CREATE INDEX index_listing_distributions_on_listing_change_id ON listing_distributions USING btree (listing_change_id)')
   end

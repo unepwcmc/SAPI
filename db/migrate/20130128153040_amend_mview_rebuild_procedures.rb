@@ -1,4 +1,4 @@
-class MviewRebuildProcedures < ActiveRecord::Migration
+class AmendMviewRebuildProcedures < ActiveRecord::Migration
   def change
     execute <<-SQL
     --
@@ -35,7 +35,7 @@ class MviewRebuildProcedures < ActiveRecord::Migration
         FROM taxon_concepts_view;
 
         CREATE UNIQUE INDEX taxon_concepts_mview_on_id ON taxon_concepts_mview (id);
-        CREATE INDEX taxon_concepts_mview_on_history_filter ON taxon_concepts_mview (designation_is_cites, cites_listed, kingdom_position);
+        CREATE INDEX taxon_concepts_mview_on_history_filter ON taxon_concepts_mview (taxonomy_is_cites_eu, cites_listed, kingdom_position);
         CREATE INDEX taxon_concepts_mview_on_full_name ON taxon_concepts_mview (full_name);
         CREATE INDEX taxon_concepts_mview_on_parent_id ON taxon_concepts_mview (parent_id);
       END;
