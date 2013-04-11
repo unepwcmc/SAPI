@@ -90,8 +90,8 @@ private
     [
       :id, :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
       :genus_name, :species_name, :subspecies_name,
-      :full_name, :author_year, :rank_name, :cites_listing_original
-    ]
+      :full_name, :author_year, :rank_name
+    ] << (@designation.is_eu? ? :eu_listing_original : :cites_listing_original)
   end
 
   def select_columns
