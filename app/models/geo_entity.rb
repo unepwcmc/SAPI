@@ -50,13 +50,12 @@ class GeoEntity < ActiveRecord::Base
   scope :current, where(:is_current => true)
 
   def self.nodes_and_descendants(nodes_ids = [])
-    joins(
-      <<-SQL
+    joins_sql = <<-SQL
       INNER JOIN (
         WITH RECURSIVE search_tree(id) AS (
             SELECT id
             FROM #{table_name}
-            WHERE id IN (#{nodes_ids.join(',')})
+            WHERE id IN (?)
           UNION
             SELECT other_geo_entities.id
             FROM search_tree
@@ -71,6 +70,8 @@ class GeoEntity < ActiveRecord::Base
         SELECT id FROM search_tree
       ) nodes_and_descendants_ids ON #{table_name}.id = nodes_and_descendants_ids.id
       SQL
+    joins(
+      sanitize_sql_array([joins_sql, nodes_ids])
     )
   end
 

@@ -1,4 +1,4 @@
-class Admin::DistributionsController < Admin::SimpleCrudController
+class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesController
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
   before_filter :load_tags_and_geo_entities, :only => [:new, :edit]
@@ -11,16 +11,16 @@ class Admin::DistributionsController < Admin::SimpleCrudController
 
   def update
     update! do |success, failure|
-      success.js { 
+      success.js {
         load_distributions
         unless params["reference"]["id"].blank?
           @distribution.add_existing_references(params["reference"]["id"])
         end
-        render 'create' 
+        render 'create'
       }
       failure.js {
         load_tags_and_geo_entities
-        render 'new' 
+        render 'new'
       }
     end
   end
@@ -36,19 +36,6 @@ class Admin::DistributionsController < Admin::SimpleCrudController
       failure.js {
         load_tags_and_geo_entities
         render 'new'
-      }
-    end
-  end
-
-  def destroy
-    destroy! do |success, failure|
-      success.html {
-        redirect_to edit_admin_taxon_concept_url(params[:taxon_concept_id]),
-        :notice => 'Operation successful'
-      }
-      failure.html {
-        redirect_to edit_admin_taxon_concept_url(params[:taxon_concept_id]),
-        :notice => 'Operation failed'
       }
     end
   end

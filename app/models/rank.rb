@@ -19,7 +19,7 @@ class Rank < ActiveRecord::Base
 
   validates :name, :presence => true, :uniqueness => true
   validates :taxonomic_position, :presence => true,
-    :format => { :with => /\d(\.\d*)*/, :message => "Use prefix notation, e.g. 1.2" }
+    :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" }
 
   def parent_rank_lower_bound
     parts = taxonomic_position.split('.')
@@ -31,7 +31,17 @@ class Rank < ActiveRecord::Base
   end
 
   def can_be_deleted?
-    taxon_concepts.count == 0
+    !has_protected_name? && !has_dependent_objects?
+  end
+
+  private
+
+  def has_dependent_objects?
+    taxon_concepts.count != 0
+  end
+
+  def has_protected_name?
+    self.class.dict.include? self.name
   end
 
 end

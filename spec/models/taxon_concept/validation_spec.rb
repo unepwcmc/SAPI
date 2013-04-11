@@ -62,5 +62,15 @@ describe TaxonConcept do
       }
       specify { tc.should have(1).error_on(:taxon_name_id) }
     end
+    context "when taxonomic position malformed" do
+      let(:tc){
+        build_phylum(
+          :taxonomy_id => cites_eu.id,
+          :parent_id => kingdom_tc.id,
+          :taxonomic_position => '1.a.b'
+        )
+      }
+      specify { tc.should have(1).error_on(:taxonomic_position) }
+    end
   end
 end
