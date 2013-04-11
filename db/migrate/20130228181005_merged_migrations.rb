@@ -1,6 +1,7 @@
 class MergedMigrations < ActiveRecord::Migration
   def change
 
+
   create_table "annotation_translations", :force => true do |t|
     t.integer  "annotation_id", :null => false
     t.integer  "language_id",   :null => false
@@ -14,8 +15,16 @@ class MergedMigrations < ActiveRecord::Migration
     t.string   "symbol"
     t.string   "parent_symbol"
     t.integer  "listing_change_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.text     "short_note_en"
+    t.text     "full_note_en"
+    t.text     "short_note_fr"
+    t.text     "full_note_fr"
+    t.text     "short_note_es"
+    t.text     "full_note_es"
+    t.boolean  "display_in_index",    :default => false, :null => false
+    t.boolean  "display_in_footnote", :default => false, :null => false
   end
 
   add_index "annotations", ["listing_change_id"], :name => "index_annotations_on_listing_change_id"
@@ -35,9 +44,22 @@ class MergedMigrations < ActiveRecord::Migration
   end
 
   create_table "designations", :force => true do |t|
-    t.string   "name",       :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string   "name",                       :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
+    t.integer  "taxonomy_id", :default => 1, :null => false
+  end
+
+  create_table "distribution_references", :force => true do |t|
+    t.integer "distribution_id", :null => false
+    t.integer "reference_id",    :null => false
+  end
+
+  create_table "distributions", :force => true do |t|
+    t.integer  "taxon_concept_id", :null => false
+    t.integer  "geo_entity_id",    :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "downloads", :force => true do |t|
@@ -49,6 +71,12 @@ class MergedMigrations < ActiveRecord::Migration
     t.string   "path"
     t.string   "filename"
     t.string   "display_name"
+  end
+
+  create_table "events", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "geo_entities", :force => true do |t|
@@ -104,13 +132,14 @@ class MergedMigrations < ActiveRecord::Migration
     t.integer  "annotation_id"
     t.integer  "parent_id"
     t.integer  "inclusion_taxon_concept_id"
-    t.integer  "lft"
-    t.integer  "rgt"
     t.datetime "created_at",                                                    :null => false
     t.datetime "updated_at",                                                    :null => false
+    t.integer  "hash_annotation_id"
+    t.boolean  "explicit_change",            :default => true
   end
 
   add_index "listing_changes", ["annotation_id"], :name => "index_listing_changes_on_annotation_id"
+  add_index "listing_changes", ["hash_annotation_id"], :name => "index_listing_changes_on_hash_annotation_id"
   add_index "listing_changes", ["parent_id"], :name => "index_listing_changes_on_parent_id"
 
   create_table "listing_distributions", :force => true do |t|
@@ -123,6 +152,13 @@ class MergedMigrations < ActiveRecord::Migration
 
   add_index "listing_distributions", ["geo_entity_id"], :name => "index_listing_distributions_on_geo_entity_id"
   add_index "listing_distributions", ["listing_change_id"], :name => "index_listing_distributions_on_listing_change_id"
+
+  create_table "preset_tags", :force => true do |t|
+    t.string   "name"
+    t.string   "model"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "ranks", :force => true do |t|
     t.string   "name",                                  :null => false
@@ -165,23 +201,28 @@ class MergedMigrations < ActiveRecord::Migration
     t.datetime "updated_at",          :null => false
   end
 
+  create_table "taggings", :force => true do |t|
+    t.integer  "tag_id"
+    t.integer  "taggable_id"
+    t.string   "taggable_type"
+    t.integer  "tagger_id"
+    t.string   "tagger_type"
+    t.string   "context",       :limit => 128
+    t.datetime "created_at"
+  end
+
+  add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
+
+  create_table "tags", :force => true do |t|
+    t.string "name"
+  end
+
   create_table "taxon_commons", :force => true do |t|
     t.integer  "taxon_concept_id", :null => false
     t.integer  "common_name_id",   :null => false
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
-  end
-
-  create_table "taxon_concept_geo_entities", :force => true do |t|
-    t.integer  "taxon_concept_id", :null => false
-    t.integer  "geo_entity_id",    :null => false
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
-  end
-
-  create_table "taxon_concept_geo_entity_references", :force => true do |t|
-    t.integer "taxon_concept_geo_entity_id", :null => false
-    t.integer "reference_id",                :null => false
   end
 
   create_table "taxon_concept_references", :force => true do |t|
@@ -192,25 +233,23 @@ class MergedMigrations < ActiveRecord::Migration
 
   create_table "taxon_concepts", :force => true do |t|
     t.integer  "parent_id"
-    t.integer  "rank_id",                             :null => false
-    t.integer  "designation_id",                      :null => false
-    t.integer  "taxon_name_id",                       :null => false
+    t.integer  "rank_id",                                     :null => false
+    t.integer  "taxon_name_id",                               :null => false
     t.string   "author_year"
     t.integer  "legacy_id"
     t.string   "legacy_type"
     t.hstore   "data"
     t.hstore   "listing"
     t.text     "notes"
-    t.string   "taxonomic_position", :default => "0", :null => false
+    t.string   "taxonomic_position",         :default => "0", :null => false
     t.string   "full_name"
-    t.string   "name_status",        :default => "A", :null => false
-    t.integer  "lft"
-    t.integer  "rgt"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.string   "name_status",                :default => "A", :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
+    t.integer  "taxonomy_id",                :default => 1,   :null => false
+    t.integer  "closest_listed_ancestor_id"
   end
 
-  add_index "taxon_concepts", ["lft"], :name => "index_taxon_concepts_on_lft"
   add_index "taxon_concepts", ["parent_id"], :name => "index_taxon_concepts_on_parent_id"
 
   create_table "taxon_names", :force => true do |t|
@@ -220,11 +259,11 @@ class MergedMigrations < ActiveRecord::Migration
   end
 
   create_table "taxon_relationship_types", :force => true do |t|
-    t.string   "name",                                     :null => false
-    t.boolean  "is_interdesignational", :default => false, :null => false
-    t.boolean  "is_bidirectional",      :default => false, :null => false
-    t.datetime "created_at",                               :null => false
-    t.datetime "updated_at",                               :null => false
+    t.string   "name",                                 :null => false
+    t.boolean  "is_intertaxonomic", :default => false, :null => false
+    t.boolean  "is_bidirectional",  :default => false, :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
   end
 
   create_table "taxon_relationships", :force => true do |t|
@@ -233,6 +272,12 @@ class MergedMigrations < ActiveRecord::Migration
     t.integer  "taxon_relationship_type_id", :null => false
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
+  end
+
+  create_table "taxonomies", :force => true do |t|
+    t.string   "name",       :default => "DEAFAULT TAXONOMY", :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
   end
 
   create_table "trade_codes", :force => true do |t|
@@ -261,6 +306,14 @@ class MergedMigrations < ActiveRecord::Migration
 
   add_foreign_key "common_names", "languages", :name => "common_names_language_id_fk"
 
+  add_foreign_key "designations", "taxonomies", :name => "designations_taxonomy_id_fk"
+
+  add_foreign_key "distribution_references", "distributions", :name => "taxon_concept_geo_entity_references_taxon_concept_geo_entity_fk"
+  add_foreign_key "distribution_references", "references", :name => "taxon_concept_geo_entity_references_reference_id_fk"
+
+  add_foreign_key "distributions", "geo_entities", :name => "taxon_concept_geo_entities_geo_entity_id_fk"
+  add_foreign_key "distributions", "taxon_concepts", :name => "taxon_concept_geo_entities_taxon_concept_id_fk"
+
   add_foreign_key "geo_entities", "geo_entity_types", :name => "geo_entities_geo_entity_type_id_fk"
 
   add_foreign_key "geo_relationships", "geo_entities", :name => "geo_relationships_geo_entity_id_fk"
@@ -268,6 +321,7 @@ class MergedMigrations < ActiveRecord::Migration
   add_foreign_key "geo_relationships", "geo_relationship_types", :name => "geo_relationships_geo_relationship_type_id_fk"
 
   add_foreign_key "listing_changes", "annotations", :name => "listing_changes_annotation_id_fk"
+  add_foreign_key "listing_changes", "annotations", :name => "listing_changes_hash_annotation_id_fk"
   add_foreign_key "listing_changes", "change_types", :name => "listing_changes_change_type_id_fk"
   add_foreign_key "listing_changes", "listing_changes", :name => "listing_changes_parent_id_fk", :column => "parent_id"
   add_foreign_key "listing_changes", "species_listings", :name => "listing_changes_species_listing_id_fk"
@@ -282,115 +336,93 @@ class MergedMigrations < ActiveRecord::Migration
   add_foreign_key "taxon_commons", "common_names", :name => "taxon_commons_common_name_id_fk"
   add_foreign_key "taxon_commons", "taxon_concepts", :name => "taxon_commons_taxon_concept_id_fk"
 
-  add_foreign_key "taxon_concept_geo_entities", "geo_entities", :name => "taxon_concept_geo_entities_geo_entity_id_fk"
-  add_foreign_key "taxon_concept_geo_entities", "taxon_concepts", :name => "taxon_concept_geo_entities_taxon_concept_id_fk"
-
-  add_foreign_key "taxon_concept_geo_entity_references", "references", :name => "taxon_concept_geo_entity_references_reference_id_fk"
-  add_foreign_key "taxon_concept_geo_entity_references", "taxon_concept_geo_entities", :name => "taxon_concept_geo_entity_references_taxon_concept_geo_entity_fk"
-
   add_foreign_key "taxon_concept_references", "references", :name => "taxon_concept_references_reference_id_fk"
   add_foreign_key "taxon_concept_references", "taxon_concepts", :name => "taxon_concept_references_taxon_concept_id_fk"
 
-  add_foreign_key "taxon_concepts", "designations", :name => "taxon_concepts_designation_id_fk"
   add_foreign_key "taxon_concepts", "ranks", :name => "taxon_concepts_rank_id_fk"
+  add_foreign_key "taxon_concepts", "taxon_concepts", :name => "taxon_concepts_closest_listed_ancestor_id_fk", :column => "closest_listed_ancestor_id"
   add_foreign_key "taxon_concepts", "taxon_concepts", :name => "taxon_concepts_parent_id_fk", :column => "parent_id"
   add_foreign_key "taxon_concepts", "taxon_names", :name => "taxon_concepts_taxon_name_id_fk"
+  add_foreign_key "taxon_concepts", "taxonomies", :name => "taxon_concepts_taxonomy_id_fk"
 
   add_foreign_key "taxon_relationships", "taxon_concepts", :name => "taxon_relationships_taxon_concept_id_fk"
   add_foreign_key "taxon_relationships", "taxon_relationship_types", :name => "taxon_relationships_taxon_relationship_type_id_fk"
 
+
   execute <<-SQL
-    DROP VIEW IF EXISTS listing_changes_view;
-    CREATE VIEW listing_changes_view AS
-    WITH multilingual_annotations AS (
-      SELECT annotation_id_mul,
-      english_note[1] AS english_full_note, english_note[2] AS english_short_note,
-      spanish_note[1] AS spanish_full_note, spanish_note[2] AS spanish_short_note,
-      french_note[1] AS french_full_note, french_note[2] AS french_short_note
+      DROP VIEW IF EXISTS listing_changes_view;
+      CREATE VIEW listing_changes_view AS
+      SELECT
+        listing_changes.id AS id,
+        taxon_concept_id, effective_at,
+        species_listing_id,
+        species_listings.abbreviation AS species_listing_name,
+        change_type_id, change_types.name AS change_type_name,
+        listing_distributions.geo_entity_id AS party_id,
+        geo_entities.iso_code2 AS party_name,
+        annotations.symbol AS ann_symbol,
+        annotations.full_note_en,
+        annotations.full_note_es,
+        annotations.full_note_fr,
+        annotations.short_note_en,
+        annotations.short_note_es,
+        annotations.short_note_fr,
+        annotations.display_in_index,
+        annotations.display_in_footnote,
+        hash_annotations.symbol AS hash_ann_symbol,
+        hash_annotations.parent_symbol AS hash_ann_parent_symbol,
+        hash_annotations.full_note_en AS hash_full_note_en,
+        hash_annotations.full_note_es AS hash_full_note_es,
+        hash_annotations.full_note_fr AS hash_full_note_fr,
+        listing_changes.is_current,
+        listing_changes.explicit_change,
+        populations.countries_ids_ary
       FROM
-      CROSSTAB(
-        'SELECT annotations.id AS annotation_id_mul,
-        SUBSTRING(languages.name_en FROM 1 FOR 1) AS lng,
-        ARRAY[annotation_translations.full_note, annotation_translations.short_note]
-        FROM "annotations"
-        INNER JOIN "annotation_translations"
-          ON "annotation_translations"."annotation_id" = "annotations"."id" 
-        INNER JOIN "languages"
-          ON "languages"."id" = "annotation_translations"."language_id"
-        ORDER BY 1,2'
-      ) AS ct(
-        annotation_id_mul INTEGER,
-        english_note TEXT[], spanish_note TEXT[], french_note TEXT[]
-      )
-    )
-    SELECT
-      listing_changes.id AS id,
-      taxon_concept_id, effective_at,
-      species_listing_id,
-      species_listings.abbreviation AS species_listing_name,
-      change_type_id, change_types.name AS change_type_name,
-      listing_distributions.geo_entity_id AS party_id,
-      geo_entities.iso_code2 AS party_name,
-      generic_annotations.symbol,
-      generic_annotations.parent_symbol,
-      multilingual_generic_annotations.english_full_note AS generic_english_full_note,
-      multilingual_generic_annotations.spanish_full_note AS generic_spanish_full_note,
-      multilingual_generic_annotations.french_full_note AS generic_french_full_note,
-      multilingual_specific_annotations.english_full_note,
-      multilingual_specific_annotations.spanish_full_note,
-      multilingual_specific_annotations.french_full_note,
-      multilingual_specific_annotations.english_short_note,
-      multilingual_specific_annotations.spanish_short_note,
-      multilingual_specific_annotations.french_short_note,
-      listing_changes.is_current,
-      populations.countries_ids_ary
-    FROM
-      listing_changes
-      LEFT JOIN change_types
-        ON listing_changes.change_type_id = change_types.id
-      LEFT JOIN species_listings
-        ON listing_changes.species_listing_id = species_listings.id
-      LEFT JOIN listing_distributions
-        ON listing_changes.id = listing_distributions.listing_change_id
-        AND listing_distributions.is_party = 't'
-      LEFT JOIN geo_entities ON
-        geo_entities.id = listing_distributions.geo_entity_id
-      LEFT JOIN annotations AS specific_annotations ON
-        specific_annotations.listing_change_id = listing_changes.id
-      LEFT JOIN annotations AS generic_annotations ON
-        generic_annotations.id = listing_changes.annotation_id
-      LEFT JOIN multilingual_annotations AS multilingual_specific_annotations
-        ON specific_annotations.id = multilingual_specific_annotations.annotation_id_mul
-      LEFT JOIN multilingual_annotations AS multilingual_generic_annotations
-        ON generic_annotations.id = multilingual_generic_annotations.annotation_id_mul
-      LEFT JOIN (
-        SELECT listing_change_id, ARRAY_AGG(geo_entities.id) AS countries_ids_ary
-        FROM listing_distributions
-        INNER JOIN geo_entities
-        ON geo_entities.id = listing_distributions.geo_entity_id
-        WHERE NOT is_party
-        GROUP BY listing_change_id
-      ) populations ON populations.listing_change_id = listing_changes.id
-    ORDER BY taxon_concept_id, effective_at,
-    CASE
-      WHEN change_types.name = 'ADDITION' THEN 0
-      WHEN change_types.name = 'RESERVATION' THEN 1
-      WHEN change_types.name = 'RESERVATION_WITHDRAWAL' THEN 2
-      WHEN change_types.name = 'DELETION' THEN 3
-    END
-  SQL
+        listing_changes
+        INNER JOIN change_types
+          ON listing_changes.change_type_id = change_types.id
+        LEFT JOIN species_listings
+          ON listing_changes.species_listing_id = species_listings.id
+        LEFT JOIN listing_distributions
+          ON listing_changes.id = listing_distributions.listing_change_id
+          AND listing_distributions.is_party = 't'
+        LEFT JOIN geo_entities ON
+          geo_entities.id = listing_distributions.geo_entity_id
+        LEFT JOIN annotations ON
+          annotations.id = listing_changes.annotation_id
+        LEFT JOIN annotations hash_annotations ON
+          hash_annotations.id = listing_changes.hash_annotation_id
+        LEFT JOIN (
+          SELECT listing_change_id, ARRAY_AGG(geo_entities.id) AS countries_ids_ary
+          FROM listing_distributions
+          INNER JOIN geo_entities
+          ON geo_entities.id = listing_distributions.geo_entity_id
+          WHERE NOT is_party
+          GROUP BY listing_change_id
+        ) populations ON populations.listing_change_id = listing_changes.id
+      ORDER BY taxon_concept_id, effective_at,
+      CASE
+        WHEN change_types.name = 'ADDITION' THEN 0
+        WHEN change_types.name = 'RESERVATION' THEN 1
+        WHEN change_types.name = 'RESERVATION_WITHDRAWAL' THEN 2
+        WHEN change_types.name = 'DELETION' THEN 3
+      END
+    SQL
 
   Sapi::rebuild_listing_changes_mview
 
-  execute <<-SQL
+  execute "CREATE UNIQUE INDEX listing_changes_mview_on_id ON listing_changes_mview (id)"
+  execute "CREATE INDEX listing_changes_mview_on_taxon_concept_id ON listing_changes_mview (taxon_concept_id)"
+
+ execute <<-SQL
     DROP VIEW IF EXISTS taxon_concepts_view;
     CREATE OR REPLACE VIEW taxon_concepts_view AS
     SELECT taxon_concepts.id,
     taxon_concepts.parent_id,
     CASE
-    WHEN designations.name = 'CITES' THEN TRUE
+    WHEN taxonomies.name = 'CITES_EU' THEN TRUE
     ELSE FALSE
-    END AS designation_is_cites,
+    END AS taxonomy_is_cites_eu,
     full_name,
     name_status,
     data->'rank_name' AS rank_name,
@@ -448,10 +480,11 @@ class MergedMigrations < ActiveRecord::Migration
     ELSE FALSE
     END AS cites_III,
     listing->'cites_listing' AS current_listing,
+    closest_listed_ancestor_id,
     (listing->'listing_updated_at')::TIMESTAMP AS listing_updated_at,
-    (listing->'specific_annotation_symbol') AS specific_annotation_symbol,
-    (listing->'generic_annotation_symbol') AS generic_annotation_symbol,
-    (listing->'generic_annotation_parent_symbol') AS generic_annotation_parent_symbol,
+    (listing->'ann_symbol') AS ann_symbol,
+    (listing->'hash_ann_symbol') AS hash_ann_symbol,
+    (listing->'hash_ann_parent_symbol') AS hash_ann_parent_symbol,
     author_year,
     taxon_concepts.created_at,
     taxon_concepts.updated_at,
@@ -460,8 +493,8 @@ class MergedMigrations < ActiveRecord::Migration
     countries_ids_ary,
     standard_references_ids_ary
     FROM taxon_concepts
-    LEFT JOIN designations
-    ON designations.id = taxon_concepts.designation_id
+    LEFT JOIN taxonomies
+    ON taxonomies.id = taxon_concepts.taxonomy_id
     LEFT JOIN (
     SELECT *
     FROM
@@ -500,10 +533,10 @@ class MergedMigrations < ActiveRecord::Migration
     SELECT taxon_concepts.id AS taxon_concept_id_cnt,
     ARRAY_AGG(geo_entities.id ORDER BY geo_entities.name_en) AS countries_ids_ary
     FROM taxon_concepts
-    LEFT JOIN taxon_concept_geo_entities
-    ON "taxon_concept_geo_entities"."taxon_concept_id" = "taxon_concepts"."id"
+    LEFT JOIN distributions
+    ON "distributions"."taxon_concept_id" = "taxon_concepts"."id"
     LEFT JOIN geo_entities
-    ON taxon_concept_geo_entities.geo_entity_id = geo_entities.id
+    ON distributions.geo_entity_id = geo_entities.id
     LEFT JOIN "geo_entity_types"
     ON "geo_entity_types"."id" = "geo_entities"."geo_entity_type_id"
     AND geo_entity_types.name = 'COUNTRY'
@@ -545,6 +578,11 @@ class MergedMigrations < ActiveRecord::Migration
   SQL
 
   Sapi::rebuild_taxon_concepts_mview
+
+  execute "CREATE UNIQUE INDEX taxon_concepts_mview_on_id ON taxon_concepts_mview (id)"
+  execute "CREATE INDEX taxon_concepts_mview_on_history_filter ON taxon_concepts_mview (taxonomy_is_cites_eu, cites_listed, kingdom_position)"
+  execute "CREATE INDEX taxon_concepts_mview_on_full_name ON taxon_concepts_mview (full_name)"
+  execute "CREATE INDEX taxon_concepts_mview_on_parent_id ON taxon_concepts_mview (parent_id)"
 
   end
 end
