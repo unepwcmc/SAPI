@@ -54,7 +54,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
         END
       )  ||
       hstore(closest_listed_ancestor_flag, h.id::VARCHAR) ||
-      slice(h.listing, ARRAY[fully_covered_flag,'hash_ann_symbol', 'ann_symbol']) ||
+      slice(h.listing, ARRAY[listing_original_flag, fully_covered_flag,'hash_ann_symbol', 'ann_symbol']) ||
       CASE
         WHEN designation.name = 'CITES' THEN slice(h.listing, ARRAY['cites_I', 'cites_II', 'cites_III'])
         WHEN designation.name = 'EU' THEN slice(h.listing, ARRAY['eu_A', 'eu_B', 'eu_C', 'eu_D'])
@@ -73,7 +73,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
         hi.listing->status_original_flag = 't'
       THEN
         hstore(listing_flag, hi.listing->listing_original_flag) ||
-        slice(hi.listing, ARRAY[fully_covered_flag,'hash_ann_symbol', 'ann_symbol']) ||
+        slice(hi.listing, ARRAY[listing_original_flag, fully_covered_flag,'hash_ann_symbol', 'ann_symbol']) ||
         hstore(closest_listed_ancestor_flag, hi.id::VARCHAR) ||
         CASE
           WHEN designation.name = 'CITES' THEN slice(hi.listing, ARRAY['cites_I', 'cites_II', 'cites_III'])
