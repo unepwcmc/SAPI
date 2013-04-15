@@ -50,12 +50,12 @@ class Checklist::Checklist
   def taxon_concepts_json_options
     json_options = {
       :only => [
-        :id, :full_name, :rank_name, :current_listing, :cites_accepted,
+        :id, :full_name, :rank_name, :cites_accepted,
         :species_name, :genus_name, :family_name, :order_name,
         :class_name, :phylum_name, :kingdom_name, :hash_ann_symbol
       ],
       :methods => [:countries_ids, :ancestors_path, :recently_changed,
-        :current_parties_ids]
+        :current_parties_ids, :current_listing]
     }
 
     json_options[:only] << :author_year if @authors

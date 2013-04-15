@@ -28,12 +28,21 @@ describe TaxonConcept do
       end
     end
     context "LISTING" do
-      describe :current_listing do
+      describe :cites_listing do
         context "for genus Varanus" do
-          specify { @genus.current_listing.should == 'I/II' }
+          specify { @genus.cites_listing.should == 'I/II' }
         end
         context "for species Varanus bengalensis" do
-          specify { @species1.current_listing.should == 'I' }
+          specify { @species1.cites_listing.should == 'I' }
+        end
+      end
+
+      describe :eu_listing do
+        context "for genus Varanus" do
+          specify { @genus.eu_listing.should == 'A/B' }
+        end
+        context "for species Varanus bengalensis" do
+          specify { @species1.eu_listing.should == 'A' }
         end
       end
 
@@ -46,6 +55,18 @@ describe TaxonConcept do
         end
         context "for species Varanus bengalensis" do
           specify { @species1.cites_listed.should be_true }
+        end
+      end
+
+      describe :eu_listed do
+        context "for family Varanidae" do
+          specify { @family.eu_listed.should == false }
+        end
+        context "for genus Varanus" do
+          specify { @genus.eu_listed.should be_true }
+        end
+        context "for species Varanus bengalensis" do
+          specify { @species1.eu_listed.should be_true }
         end
       end
 

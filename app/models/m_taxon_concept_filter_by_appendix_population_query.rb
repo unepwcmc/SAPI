@@ -1,19 +1,14 @@
-class MTaxonConceptFilterByAppendixPopulationQuery
+class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppendixQuery
 
   def initialize(relation = MTaxonConcept.scoped, appendix_abbreviations = [], geo_entities_ids = [])
     @relation = relation
+    @appendix_abbreviations = appendix_abbreviations
     @geo_entities_ids = GeoEntity.nodes_and_descendants(geo_entities_ids).map(&:id)
     @geo_entities_in_clause = geo_entities_ids.compact.join(',')
-    @appendix_abbreviations = appendix_abbreviations
-    @appendix_abbreviations_conditions = <<-SQL
-      REGEXP_SPLIT_TO_ARRAY(taxon_concepts_mview.current_listing_original, '/') && 
-      ARRAY[#{@appendix_abbreviations.map{ |e| "'#{e}'" }.join(',')}]
-    SQL
-    @species_listings_ids = SpeciesListing.where(:abbreviation => @appendix_abbreviations).map(&:id)
-    @species_listings_in_clause = @species_listings_ids.compact.join(',')
   end
 
-  def relation
+def relation(designation_name = 'CITES')
+    initialize_species_listings_conditions(designation_name)
     @relation.joins(
       <<-SQL
       INNER JOIN (
@@ -63,7 +58,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery
               <<-GEO_SQL
                 SELECT taxon_concept_id
                 FROM listing_changes_mview
-                INNER JOIN listing_distributions ON listing_changes_mview.id = listing_distributions.listing_change_id AND NOT is_party 
+                INNER JOIN listing_distributions ON listing_changes_mview.id = listing_distributions.listing_change_id AND NOT is_party
                 WHERE is_current = 't' AND change_type_name = 'EXCEPTION'
                 #{"AND species_listing_id IN (#{@species_listings_in_clause})" unless @appendix_abbreviations.empty? }
                 AND listing_distributions.geo_entity_id = #{geo_entity_id}
@@ -75,7 +70,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery
         )
       ) taxa_in_populations ON #{@relation.table_name}.id = taxa_in_populations.taxon_concept_id
       SQL
-    )    
+    )
   end
 
 end

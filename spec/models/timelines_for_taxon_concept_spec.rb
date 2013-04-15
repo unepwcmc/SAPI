@@ -18,7 +18,7 @@ describe TimelinesForTaxonConcept do
           :effective_at => '1975-06-06',
           :is_current => true
         )
-        Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+        Sapi::rebuild(:except => [:taxonomy])
         MTaxonConcept.find(tc.id)
       }
       subject{ TimelinesForTaxonConcept.new(tc.id) }
@@ -39,7 +39,7 @@ describe TimelinesForTaxonConcept do
           :listing_change => lc,
           :is_party => true
         )
-        Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+        Sapi::rebuild(:except => [:taxonomy])
         MTaxonConcept.find(tc.id)
       }
       subject{ TimelinesForTaxonConcept.new(tc.id) }
@@ -60,7 +60,7 @@ describe TimelinesForTaxonConcept do
           :listing_change => lc,
           :is_party => true
         )
-        Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+        Sapi::rebuild(:except => [:taxonomy])
         MTaxonConcept.find(tc.id)
       }
       subject{ TimelinesForTaxonConcept.new(tc.id) }

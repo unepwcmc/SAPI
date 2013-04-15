@@ -20,9 +20,15 @@ describe TaxonConcept do
       end
     end
     context "LISTING" do
-      describe :current_listing do
+      describe :cites_listing do
         context 'for species Caiman latirostris' do
-          specify { @species.current_listing.should == 'I/II' }
+          specify { @species.cites_listing.should == 'I/II' }
+        end
+      end
+
+      describe :eu_listing do
+        context 'for species Caiman latirostris' do
+          specify { @species.eu_listing.should == 'A/B' }
         end
       end
 
@@ -38,6 +44,21 @@ describe TaxonConcept do
         end
         context "for species Caiman latoristris" do
           specify { @species.cites_listed.should be_true }
+        end
+      end
+
+      describe :eu_listed do
+        context 'for order Crocodylia' do
+          specify { @order.eu_listed.should be_true }
+        end
+        context "for family Alligatoridae" do
+          specify { @family.eu_listed.should == false }
+        end
+        context "for genus Caiman" do
+          specify { @genus.eu_listed.should == false }
+        end
+        context "for species Caiman latoristris" do
+          specify { @species.eu_listed.should be_true }
         end
       end
 

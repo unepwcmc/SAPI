@@ -4,9 +4,15 @@ describe TaxonConcept do
   context "Mellivora capensis" do
     include_context "Mellivora capensis"
     context "LISTING" do
-      describe :current_listing do
+      describe :cites_listing do
         context "for species Mellivora capensis" do
-          specify { @species.current_listing.should == 'III' }
+          specify { @species.cites_listing.should == 'III' }
+        end
+      end
+
+      describe :eu_listing do
+        context "for species Mellivora capensis" do
+          specify { @species.eu_listing.should == 'C' }
         end
       end
 
@@ -19,6 +25,18 @@ describe TaxonConcept do
         end
         context "for species Mellivora capensis" do
           specify { @species.cites_listed.should be_true }
+        end
+      end
+
+      describe :eu_listed do
+        context "for family Mustelinae" do
+          specify { @family.eu_listed.should == false }
+        end
+        context "for genus Mellivora" do
+          specify { @genus.eu_listed.should == false }
+        end
+        context "for species Mellivora capensis" do
+          specify { @species.eu_listed.should be_true }
         end
       end
 

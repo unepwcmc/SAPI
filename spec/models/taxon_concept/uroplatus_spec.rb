@@ -33,12 +33,21 @@ describe TaxonConcept do
       end
     end
     context "LISTING" do
-      describe :current_listing do
+      describe :cites_listing do
         context "for genus Uroplatus" do
-          specify { @genus.current_listing.should == 'II' }
+          specify { @genus.cites_listing.should == 'II' }
         end
         context "for species Uroplatus giganteus" do
-          specify { @species2.current_listing.should == 'II' }
+          specify { @species2.cites_listing.should == 'II' }
+        end
+      end
+
+      describe :eu_listing do
+        context "for genus Uroplatus" do
+          specify { @genus.eu_listing.should == 'B' }
+        end
+        context "for species Uroplatus giganteus" do
+          specify { @species2.eu_listing.should == 'B' }
         end
       end
 
@@ -51,6 +60,18 @@ describe TaxonConcept do
         end
         context "for species Uroplatus giganteus" do
           specify { @species2.cites_listed.should == false }
+        end
+      end
+
+      describe :eu_listed do
+        context "for family Gekkonidae" do
+          specify { @family.eu_listed.should == false }
+        end
+        context "for genus Uroplatus" do
+          specify { @genus.eu_listed.should be_true }
+        end
+        context "for species Uroplatus giganteus" do
+          specify { @species2.eu_listed.should == false }
         end
       end
 

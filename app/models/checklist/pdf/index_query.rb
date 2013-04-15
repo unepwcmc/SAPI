@@ -9,7 +9,7 @@ class Checklist::Pdf::IndexQuery
     #we want common names and synonyms returned as separate records
     #and sorted alphabetically
     shared_columns = [:full_name, :rank_name, :family_name, :class_name,
-    :cites_accepted, :current_listing,
+    :cites_accepted, :cites_listing,
     :ann_symbol, :hash_ann_symbol]
     shared_columns << :english_names_ary if @english_common_names
     shared_columns << :spanish_names_ary if @spanish_common_names
@@ -31,14 +31,14 @@ class Checklist::Pdf::IndexQuery
         :french => 'UNNEST(french_names_ary)',
         :synonym => if @authors
           <<-SQL
-          UNNEST(ARRAY(SELECT synonym || 
+          UNNEST(ARRAY(SELECT synonym ||
           CASE
           WHEN author_year IS NOT NULL
           THEN ' ' || author_year
           ELSE ''
           END
-          FROM ( 
-            (SELECT synonym, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_ary) AS synonym) q) synonyms 
+          FROM (
+            (SELECT synonym, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_ary) AS synonym) q) synonyms
             LEFT JOIN
             (SELECT author_year, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_author_years_ary) AS author_year) q) author_years
             ON synonyms.id = author_years.id

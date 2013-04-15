@@ -30,9 +30,15 @@ describe TaxonConcept do
       end
     end
     context "LISTING" do
-      describe :current_listing do
+      describe :cites_listing do
         context "for genus Agalychnis" do
-          specify { @genus.current_listing.should == 'II' }
+          specify { @genus.cites_listing.should == 'II' }
+        end
+      end
+
+      describe :eu_listing do
+        context "for genus Agalychnis" do
+          specify { @genus.eu_listing.should == 'B' }
         end
       end
 
@@ -42,6 +48,15 @@ describe TaxonConcept do
         end
         context "for genus Agalychnis" do
           specify { @genus.cites_listed.should be_true }
+        end
+      end
+
+      describe :eu_listed do
+        context "for family Hylidae" do
+          specify { @family.eu_listed.should == false }
+        end
+        context "for genus Agalychnis" do
+          specify { @genus.eu_listed.should be_true }
         end
       end
 

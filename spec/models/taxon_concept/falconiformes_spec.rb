@@ -5,60 +5,54 @@ describe TaxonConcept do
     include_context "Falconiformes"
 
     context "LISTING" do
-      describe :current_listing do
+      describe :cites_listing do
         context "for order Falconiformes" do
-          specify { @order.current_listing.should == 'I/II/III/NC' }
+          specify { @order.cites_listing.should == 'I/II/III/NC' }
         end
         context "for species Falco araea" do
-          specify { @species2_1.current_listing.should == 'I' }
+          specify { @species2_1.cites_listing.should == 'I' }
         end
         context "for species Falco alopex (H)" do
-          specify { @species2_2.current_listing.should == 'II' }
+          specify { @species2_2.cites_listing.should == 'II' }
         end
         context "for species Gymnogyps californianus" do
-          specify { @species1_1.current_listing.should == 'I' }
+          specify { @species1_1.cites_listing.should == 'I' }
         end
         context "for species Sarcoramphus papa" do
-          specify { @species1_2.current_listing.should == 'III' }
+          specify { @species1_2.cites_listing.should == 'III' }
         end
         context "for species Vultur atratus" do
-          specify { @species1_3.current_listing.should == 'NC' }
+          specify { @species1_3.cites_listing.should == 'NC' }
         end
       end
 
-      describe :cites_fully_covered do
+      describe :eu_listing do
         context "for order Falconiformes" do
-          specify { @order.cites_fully_covered.should be_false }
+          specify { @order.eu_listing.should == 'A/B/C/NC' }
         end
-        context "for family Cathartidae" do
-          specify { @family1.cites_fully_covered.should be_false }
-        end
-        context "for family Falconidae" do
-          specify { @family2.cites_fully_covered.should be_true }
-        end
-        context "for genus Vultur" do
-          specify { @genus1_3.cites_fully_covered.should be_false }
+        context "for species Falco araea" do
+          specify { @species2_1.eu_listing.should == 'A' }
         end
         context "for species Falco alopex (H)" do
-          specify { @species2_2.cites_fully_covered.should be_true }
+          specify { @species2_2.eu_listing.should == 'B' }
         end
-      end
-
-      describe :cites_deleted do
-        context "for species Falco alopex (H)" do
-          specify { @species2_2.cites_deleted.should be_false }
+        context "for species Gymnogyps californianus" do
+          specify { @species1_1.eu_listing.should == 'A' }
         end
-      end
-
-      describe :cites_excluded do
-        context "for genus Vultur" do
-          specify { @genus1_3.cites_excluded.should be_true }
+        context "for species Sarcoramphus papa" do
+          specify { @species1_2.eu_listing.should == 'C' }
         end
         context "for species Vultur atratus" do
-          specify { @species1_3.cites_excluded.should be_true }
+          specify { @species1_3.eu_listing.should == 'NC' }
         end
-        context "for species Falco alopex (H)" do
-          specify { @species2_2.cites_excluded.should be_false }
+      end
+
+      describe :cites_status do
+        context "for genus Vultur" do
+          specify { @genus1_3.cites_status.should == 'EXCLUDED' }
+        end
+        context "for species Vultur atratus" do
+          specify { @species1_3.cites_status.should == 'EXCLUDED' }
         end
       end
 
@@ -80,6 +74,27 @@ describe TaxonConcept do
         end
         context "for species Vultur atratus" do
           specify { @species1_3.cites_listed.should be_blank }
+        end
+      end
+
+      describe :eu_listed do
+        context "for order Falconiformes" do
+          specify { @order.eu_listed.should be_true }
+        end
+        context "for family Falconidae (inclusion in higher taxa listing)" do
+          specify { @family2.eu_listed.should == false }
+        end
+        context "for genus Falco" do
+          specify { @genus2_1.eu_listed.should == false }
+        end
+        context "for species Falco araea" do
+          specify { @species2_1.eu_listed.should be_true }
+        end
+        context "for species Falco alopex" do
+          specify { @species2_2.eu_listed.should == false }
+        end
+        context "for species Vultur atratus" do
+          specify { @species1_3.eu_listed.should be_blank }
         end
       end
 

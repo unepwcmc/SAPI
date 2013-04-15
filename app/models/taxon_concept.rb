@@ -18,7 +18,7 @@
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  taxonomy_id                :integer          default(1), not null
-#  closest_listed_ancestor_id :integer
+#  taxonomic_order            :string
 #
 
 class TaxonConcept < ActiveRecord::Base
@@ -27,7 +27,7 @@ class TaxonConcept < ActiveRecord::Base
     :legacy_id, :legacy_type, :full_name, :name_status,
     :accepted_scientific_name, :parent_scientific_name, 
     :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
-    :tag_list, :closest_listed_ancestor_id
+    :tag_list
   attr_writer :parent_scientific_name
   attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
     :other_hybrid_parent_scientific_name
