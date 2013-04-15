@@ -28,6 +28,11 @@ shared_context 'Uroplatus' do
      :effective_at => '2005-01-12',
      :is_current => true
     )
+    create_eu_B_addition(
+     :taxon_concept => @genus,
+     :effective_at => '2005-01-12',
+     :is_current => true
+    )
 
     @ref = create(
       :reference,
@@ -46,7 +51,7 @@ shared_context 'Uroplatus' do
       :is_cascaded => true
     )
 
-    Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+    Sapi::rebuild(:except => [:taxonomy])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

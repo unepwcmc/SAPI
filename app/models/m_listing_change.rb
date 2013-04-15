@@ -9,6 +9,7 @@
 #  species_listing_name   :string(255)
 #  change_type_id         :integer
 #  change_type_name       :string(255)
+#  designation_id         :integer
 #  party_id               :integer
 #  party_name             :string(255)
 #  ann_symbol             :string(255)
@@ -37,6 +38,8 @@ class MListingChange < ActiveRecord::Base
   include PgArrayParser
   self.table_name = :listing_changes_mview
   self.primary_key = :id
+
+  belongs_to :designation
 
   def effective_at_formatted
     effective_at.strftime("%d/%m/%y")
