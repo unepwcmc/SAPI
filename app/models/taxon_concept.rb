@@ -113,7 +113,7 @@ class TaxonConcept < ActiveRecord::Base
   validates :taxon_name_id, :uniqueness => { :scope => [:taxonomy_id, :parent_id, :name_status, :author_year] }
   validates :taxonomic_position,
     :presence => true,
-    :format => { :with => /\d(\.\d*)*/, :message => "Use prefix notation, e.g. 1.2" },
+    :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" },
     :if => :fixed_order_required?
 
   before_validation :check_taxon_name_exists
@@ -124,30 +124,33 @@ class TaxonConcept < ActiveRecord::Base
   before_validation :ensure_taxonomic_position
 
   scope :by_scientific_name, lambda { |scientific_name|
-    where(
-      <<-SQL
-      UPPER(full_name) >= UPPER('#{TaxonName.lower_bound(scientific_name)}')
-        AND UPPER(full_name) < UPPER('#{TaxonName.upper_bound(scientific_name)}')
-      SQL
-    )
+    where([
+      "UPPER(full_name) >= UPPER(?) AND UPPER(full_name) < UPPER(?)",
+      TaxonName.lower_bound(scientific_name), 
+      TaxonName.upper_bound(scientific_name)
+    ])
   }
 
   scope :at_parent_ranks, lambda{ |rank|
-    joins(
-    <<-SQL
+    joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
-        AND ranks.taxonomic_position >= '#{rank.parent_rank_lower_bound}'
-        AND ranks.taxonomic_position < '#{rank.taxonomic_position}'
+        AND ranks.taxonomic_position >= ?
+        AND ranks.taxonomic_position < ?
     SQL
+    joins(
+      sanitize_sql_array([
+        joins_sql, rank.parent_rank_lower_bound, rank.taxonomic_position
+      ])
     )
   }
 
   scope :at_ancestor_ranks, lambda{ |rank|
-    joins(
-    <<-SQL
+    joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
-        AND ranks.taxonomic_position < '#{rank.taxonomic_position}'
+        AND ranks.taxonomic_position < ?
     SQL
+    joins(
+      sanitize_sql_array([joins_sql, rank.taxonomic_position])
     )
   }
 

@@ -1,4 +1,4 @@
-class Admin::SynonymRelationshipsController < Admin::SimpleCrudController
+class Admin::SynonymRelationshipsController < Admin::TaxonConceptAssociatedTypesController
   defaults :resource_class => TaxonRelationship, :collection_name => 'synonym_relationships', :instance_name => 'synonym_relationship'
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
@@ -44,19 +44,6 @@ class Admin::SynonymRelationshipsController < Admin::SimpleCrudController
       failure.js {
         load_taxonomies_and_ranks
         render 'new'
-      }
-    end
-  end
-
-  def destroy
-    destroy! do |success, failure|
-      success.html {
-        redirect_to edit_admin_taxon_concept_url(params[:taxon_concept_id]),
-        :notice => 'Operation successful'
-      }
-      failure.html {
-        redirect_to edit_admin_taxon_concept_url(params[:taxon_concept_id]),
-        :notice => 'Operation failed'
       }
     end
   end

@@ -10,6 +10,9 @@ class ExportsController < ApplicationController
       where(:geo_entity_types => {:name => GeoEntityType::COUNTRY},
             :geo_entities => { :is_current => true }).
       order(:name_en)
+    @taxon_concepts = MTaxonConcept.select([:id, :full_name]).
+      where(:rank_name => [Rank::CLASS, Rank::ORDER, Rank::FAMILY]).
+      order(:full_name)
   end
 
   def download
@@ -18,6 +21,8 @@ class ExportsController < ApplicationController
         result = Quota.export params[:filters]
       when 'Suspensions'
         result = Suspension.export
+      when 'Listings'
+        result = ListingsExport.new(params[:filters]).export
     end
     if result.is_a?(Array)
       send_file result[0], result[1]

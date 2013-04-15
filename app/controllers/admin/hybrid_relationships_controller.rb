@@ -1,4 +1,4 @@
-class Admin::HybridRelationshipsController < Admin::SimpleCrudController
+class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesController
   defaults :resource_class => TaxonRelationship, :collection_name => 'hybrid_relationships', :instance_name => 'hybrid_relationship'
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
@@ -49,19 +49,6 @@ class Admin::HybridRelationshipsController < Admin::SimpleCrudController
     update! do |success, failure|
       success.js { render 'create' }
       failure.js { render 'new' }
-    end
-  end
-
-  def destroy
-    destroy! do |success, failure|
-      success.html {
-        redirect_to edit_admin_taxon_concept_url(params[:taxon_concept_id]),
-        :notice => 'Operation successful'
-      }
-      failure.html {
-        redirect_to edit_admin_taxon_concept_url(params[:taxon_concept_id]),
-        :notice => 'Operation failed'
-      }
     end
   end
 

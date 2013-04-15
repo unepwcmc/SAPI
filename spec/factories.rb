@@ -48,7 +48,7 @@ FactoryGirl.define do
   end
 
   factory :unit do
-    code "BOX"
+    sequence(:code) {|n| "BO#{n}" }
     name_en "Boxes"
     type "Unit"
   end
