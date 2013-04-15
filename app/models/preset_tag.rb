@@ -19,4 +19,14 @@ class PresetTag < ActiveRecord::Base
 
   validates :name, :presence => true
   validates :model, :inclusion => { :in => TYPES.values }
+
+  def self.search query
+    if query
+      where("UPPER(name) LIKE UPPER(?) OR
+        UPPER(model) LIKE UPPER(?)",
+        "%#{query}%", "%#{query}%")
+    else
+      scoped
+    end
+  end
 end
