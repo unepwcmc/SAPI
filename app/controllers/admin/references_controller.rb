@@ -24,7 +24,9 @@ class Admin::ReferencesController < Admin::SimpleCrudController
 
   protected
     def collection
-      @references ||= end_of_association_chain.order(:title).page(params[:page])
+      @references ||= end_of_association_chain.order(:title).
+        page(params[:page]).
+        search(params[:query])
     end
 end
 

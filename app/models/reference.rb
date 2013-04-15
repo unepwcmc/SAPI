@@ -25,4 +25,18 @@ class Reference < ActiveRecord::Base
            year ILIKE ?",
           "#{q}%", "#{q}%", "#{q}%")
   }
+
+  def self.search query
+    if query
+      where("UPPER(title) LIKE UPPER(?) OR
+        UPPER(year) LIKE UPPER(?) OR
+        UPPER(author) LIKE UPPER(?) OR
+        UPPER(citation) LIKE UPPER(?) OR
+        UPPER(publisher) LIKE UPPER(?)",
+        "%#{query}%", "%#{query}%", "%#{query}%",
+        "%#{query}%", "%#{query}%")
+    else
+      scoped
+    end
+  end
 end
