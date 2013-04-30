@@ -54,8 +54,13 @@ def import_data_for kingdom, rank, synonyms=nil
       )
   SQL
   ActiveRecord::Base.connection.execute(sql)
-
-  ActiveRecord::Base.connection.execute('CREATE INDEX species_import_name ON species_import (name)')
+  if synonyms
+    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS synonym_import_name')
+    ActiveRecord::Base.connection.execute('CREATE INDEX synonym_import_name ON synonym_import (name)')
+  else
+    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS species_import_name')
+    ActiveRecord::Base.connection.execute('CREATE INDEX species_import_name ON species_import (name)')
+  end
 
   [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy|
     taxonomy = Taxonomy.find_by_name(taxonomy)
@@ -132,5 +137,4 @@ def import_data_for kingdom, rank, synonyms=nil
     ActiveRecord::Base.connection.execute(sql)
   end
   puts "#{TaxonConcept.where(:rank_id => rank_id).count - existing} #{rank} added"
-  ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS species_import_name')
 end
