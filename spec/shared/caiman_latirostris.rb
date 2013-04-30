@@ -35,13 +35,8 @@ shared_context "Caiman latirostris" do
       :parent => @genus,
       :name_status => 'A'
     )
-    @genus1 = create_cites_eu_genus(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Alligator'),
-      :parent => @family
-    )
     @species1 = create_cites_eu_species(
       :full_name => 'Alligator cynocephalus',
-      :parent => @genus1,
       :name_status => 'S'
     )
 
