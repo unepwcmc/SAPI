@@ -24,7 +24,7 @@ class Checklist::History < Checklist::Checklist
   def prepare_main_query
     @taxon_concepts_rel = @taxon_concepts_rel.
       includes(:listing_changes).
-      where("cites_listed = 't' OR cites_deleted = 't'").
+      where("cites_listed = 't' OR cites_status = 'DELETED'").
       where("listing_changes_mview.change_type_name <> 'EXCEPTION'").
       where("explicit_change = 't'").
       order <<-SQL
