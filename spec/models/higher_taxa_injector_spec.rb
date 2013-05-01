@@ -1,15 +1,24 @@
 require 'spec_helper'
 
 describe Checklist::HigherTaxaInjector do
+  let(:kingdom){
+    create_cites_eu_kingdom(
+      :taxon_name => create(:taxon_name, :scientific_name => 'Testae'),
+      :taxonomic_position => '1'
+    )
+  }
   let(:phylum){
     create_cites_eu_phylum(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Rotflata')
+      :parent => kingdom,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Rotflata'),
+      :taxonomic_position => '1.1'
     )
   }
   let(:klass){
     create_cites_eu_class(
       :parent => phylum,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Forfiteria')
+      :taxon_name => create(:taxon_name, :scientific_name => 'Forfiteria'),
+      :taxonomic_position => '1.1.1'
     )
   }
   let(:order1){
@@ -36,13 +45,13 @@ describe Checklist::HigherTaxaInjector do
       :taxon_name => create(:taxon_name, :scientific_name => 'lolus')
     )
   }
-  let(:subspecies1_1_1_1){
+  let!(:subspecies1_1_1_1){
     create_cites_eu_subspecies(
       :parent => species1_1_1,
       :taxon_name => create(:taxon_name, :scientific_name => 'cracovianus')
     )
   }
-  let(:species1_1_2){
+  let!(:species1_1_2){
     create_cites_eu_species(
       :parent => genus1_1,
       :taxon_name => create(:taxon_name, :scientific_name => 'ridiculus')
@@ -54,13 +63,13 @@ describe Checklist::HigherTaxaInjector do
       :taxon_name => create(:taxon_name, :scientific_name => 'Lollipopus')
     )
   }
-  let(:species1_2_1){
+  let!(:species1_2_1){
     create_cites_eu_species(
       :parent => genus1_2,
       :taxon_name => create(:taxon_name, :scientific_name => 'lolus')
     )
   }
-  let(:species1_2_2){
+  let!(:species1_2_2){
     create_cites_eu_species(
       :parent => genus1_2,
       :taxon_name => create(:taxon_name, :scientific_name => 'ridiculus')
@@ -78,19 +87,19 @@ describe Checklist::HigherTaxaInjector do
       :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus')
     )
   }
-  let(:species2_1_1){
+  let!(:species2_1_1){
     create_cites_eu_species(
       :parent => genus2_1,
       :taxon_name => create(:taxon_name, :scientific_name => 'lolus')
     )
   }
-  let(:species2_1_2){
+  let!(:species2_1_2){
     create_cites_eu_species(
       :parent => genus2_1,
       :taxon_name => create(:taxon_name, :scientific_name => 'ridiculus')
     )
   }
-  let(:order2){
+  let!(:order2){
     create_cites_eu_order(
       :parent => klass,
       :taxon_name => create(:taxon_name, :scientific_name => 'Testariformes')
@@ -165,6 +174,20 @@ describe Checklist::HigherTaxaInjector do
           hti_one_species_skip_family.higher_taxa_headers(nil, m_species1_1_1).should be_empty
         }
       end
+      context "when one species and expand headers set" do
+        let(:hti_one_species_expand_headers){
+          Checklist::HigherTaxaInjector.new(
+            [
+              m_species1_1_1
+            ], nil, true
+          )
+        }
+        specify{
+          headers = hti_one_species_expand_headers.higher_taxa_headers(nil, m_species1_1_1)
+          headers.map(&:full_name).should ==
+            ["Rotflata", "Forfiteria", "Lolcatiformes", "Lolcatidae"]
+        }
+      end
       context "when two species" do
         let(:hti_same_genus){
           Checklist::HigherTaxaInjector.new(
@@ -235,7 +258,7 @@ describe Checklist::HigherTaxaInjector do
         specify{
           headers = hti_different_family.higher_taxa_headers(m_species1_1_1, m_species2_1_1)
           headers.map(&:full_name).should ==
-            ['Forfiteria', 'Lolcatiformes', 'Foobaridae']
+            ['Foobaridae']
         }
       end
       context "when genus and different family" do
@@ -297,7 +320,7 @@ describe Checklist::HigherTaxaInjector do
         specify{
           headers = hti_different_orders_expand.higher_taxa_headers(m_order2, m_genus2_1)
           headers.map(&:full_name).should ==
-            ['Rotflata', 'Forfiteria', 'Lolcatiformes', 'Foobaridae']
+            ['Lolcatiformes', 'Foobaridae']
         }
       end
     end

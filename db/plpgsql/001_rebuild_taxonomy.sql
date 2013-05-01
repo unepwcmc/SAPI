@@ -37,7 +37,7 @@ CREATE OR REPLACE FUNCTION full_name(rank_name VARCHAR(255), ancestors HSTORE) R
   END;
   $$;
 
-CREATE OR REPLACE FUNCTION ancestors_data(node_id INTEGER) RETURNS HSTORE
+CREATE OR REPLACE FUNCTION ancestors_names(node_id INTEGER) RETURNS HSTORE
   LANGUAGE plpgsql
   AS $$
   DECLARE
@@ -45,10 +45,9 @@ CREATE OR REPLACE FUNCTION ancestors_data(node_id INTEGER) RETURNS HSTORE
     ancestor_row RECORD;
   BEGIN
     WITH RECURSIVE q AS (
-      SELECT h.id, h.parent_id, h.taxonomic_position, 
+      SELECT h.id, h.parent_id,
         HSTORE(LOWER(ranks.name) || '_name', taxon_names.scientific_name) ||
-        HSTORE(LOWER(ranks.name) || '_id', h.id::VARCHAR) ||
-        HSTORE('taxonomic_position', h.taxonomic_position) AS ancestors
+        HSTORE(LOWER(ranks.name) || '_id', h.id::VARCHAR) AS ancestors
       FROM taxon_concepts h
       INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
       INNER JOIN ranks ON h.rank_id = ranks.id
@@ -56,7 +55,7 @@ CREATE OR REPLACE FUNCTION ancestors_data(node_id INTEGER) RETURNS HSTORE
 
       UNION
 
-      SELECT hi.id, hi.parent_id, GREATEST(hi.taxonomic_position, q.taxonomic_position), q.ancestors ||
+      SELECT hi.id, hi.parent_id, q.ancestors ||
         HSTORE(LOWER(ranks.name) || '_name', taxon_names.scientific_name) ||
         HSTORE(LOWER(ranks.name) || '_id', hi.id::VARCHAR)
       FROM q
@@ -65,7 +64,7 @@ CREATE OR REPLACE FUNCTION ancestors_data(node_id INTEGER) RETURNS HSTORE
       INNER JOIN taxon_names ON hi.taxon_name_id = taxon_names.id
       INNER JOIN ranks ON hi.rank_id = ranks.id
     )
-    SELECT ancestors || HSTORE('taxonomic_position', q.taxonomic_position)
+    SELECT ancestors
     INTO result FROM q WHERE parent_id IS NULL;
     RETURN result;
   END;
@@ -74,13 +73,16 @@ CREATE OR REPLACE FUNCTION ancestors_data(node_id INTEGER) RETURNS HSTORE
 CREATE OR REPLACE FUNCTION rebuild_taxonomy_for_node(node_id integer) RETURNS void
   LANGUAGE plpgsql
   AS $$
+  DECLARE
+    ancestor_node_id integer;
   BEGIN
+    -- update full name
     WITH RECURSIVE q AS (
-      SELECT h.id, ranks.name AS rank_name, ancestors_data(node_id) AS ancestors
+      SELECT h.id, ranks.name AS rank_name, ancestors_names(h.id) AS ancestors_names
       FROM taxon_concepts h
       INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
       INNER JOIN ranks ON h.rank_id = ranks.id
-      WHERE h.name_status NOT IN ('S', 'H') AND
+      WHERE name_status NOT IN ('H', 'S') AND
         CASE
         WHEN node_id IS NOT NULL THEN h.id = node_id
         ELSE h.parent_id IS NULL
@@ -89,18 +91,9 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomy_for_node(node_id integer) RETURNS vo
       UNION
 
       SELECT hi.id, ranks.name,
-      ancestors ||
+      ancestors_names ||
       hstore(LOWER(ranks.name) || '_name', taxon_names.scientific_name) ||
-      hstore(LOWER(ranks.name) || '_id', (hi.id)::VARCHAR) ||
-      CASE
-        WHEN (ranks.fixed_order) THEN HSTORE('taxonomic_position', hi.taxonomic_position)
-        -- use generous zero padding to accommodate for orchidacea (30 thousand species in about 900 genera)
-        ELSE HSTORE('taxonomic_position', (q.ancestors->'taxonomic_position' || '.' || LPAD(
-          (row_number() OVER (PARTITION BY parent_id ORDER BY full_name)::VARCHAR(64)),
-          5,
-          '0'
-        ))::VARCHAR(255))
-      END
+      hstore(LOWER(ranks.name) || '_id', (hi.id)::VARCHAR)
       FROM q
       JOIN taxon_concepts hi
       ON hi.parent_id = q.id
@@ -109,12 +102,62 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomy_for_node(node_id integer) RETURNS vo
     )
     UPDATE taxon_concepts
     SET
-    full_name = full_name(rank_name, ancestors),
-    taxonomic_position = ancestors->'taxonomic_position',
+    full_name = full_name(rank_name, ancestors_names),
     data = CASE WHEN data IS NOT NULL THEN data ELSE ''::HSTORE END ||
-      ancestors || hstore('rank_name', rank_name)
+      ancestors_names || hstore('rank_name', rank_name)
     FROM q
     WHERE taxon_concepts.id = q.id;
+
+    -- find the closest ancestor with taxonomic position set
+    WITH RECURSIVE self_and_ancestors AS (
+        SELECT h.id, h.parent_id, h.taxonomic_position, 1 AS level
+        FROM taxon_concepts h
+        WHERE id = node_id
+
+        UNION
+
+        SELECT hi.id, hi.parent_id, hi.taxonomic_position, level + 1
+        FROM taxon_concepts hi
+        JOIN self_and_ancestors ON self_and_ancestors.parent_id = hi.id
+    )
+    SELECT id INTO ancestor_node_id
+    FROM self_and_ancestors
+    WHERE taxonomic_position IS NOT NULL AND id != node_id
+    ORDER BY level
+    LIMIT 1;
+
+    -- update taxonomic position
+    WITH RECURSIVE self_and_descendants AS (
+      SELECT h.id, COALESCE(h.taxonomic_position, '') AS ancestors_taxonomic_position
+      FROM taxon_concepts h
+      INNER JOIN ranks ON h.rank_id = ranks.id
+      WHERE
+        CASE
+        WHEN ancestor_node_id IS NOT NULL THEN h.id = ancestor_node_id
+        ELSE h.parent_id IS NULL
+        END
+
+      UNION
+
+      SELECT hi.id,
+      CASE
+        WHEN (ranks.fixed_order) THEN hi.taxonomic_position
+        -- use generous zero padding to accommodate for orchidacea (30 thousand species in about 900 genera)
+        ELSE (self_and_descendants.ancestors_taxonomic_position || '.' || LPAD(
+          (ROW_NUMBER() OVER (PARTITION BY parent_id ORDER BY full_name)::VARCHAR(64)),
+          5,
+          '0'
+        ))::VARCHAR(255)
+      END
+      FROM self_and_descendants
+      JOIN taxon_concepts hi ON hi.parent_id = self_and_descendants.id
+      INNER JOIN ranks ON hi.rank_id = ranks.id
+    )
+    UPDATE taxon_concepts
+    SET
+    taxonomic_position = ancestors_taxonomic_position
+    FROM self_and_descendants
+    WHERE taxon_concepts.id = self_and_descendants.id;
   END;
   $$;
 
