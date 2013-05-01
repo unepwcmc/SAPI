@@ -181,8 +181,8 @@ class MTaxonConcept < ActiveRecord::Base
     if cites_current_additions.size > 0
       cites_current_additions.map(&:party_id)
     else
-      cites_inherited_current_additions = cites_closest_listed_ancestor.
-        current_additions.joins(:designation).
+      cites_inherited_current_additions = cites_closest_listed_ancestor &&
+        cites_closest_listed_ancestor.current_additions.joins(:designation).
         where('designations.name' => Designation::CITES)
       #inherited listing -- find closest ancestor with listing changes
       cites_closest_listed_ancestor &&
