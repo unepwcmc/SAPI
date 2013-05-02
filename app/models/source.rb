@@ -14,4 +14,8 @@
 
 class Source < TradeCode
   validates :code, :length => {:is => 1}
+  def can_be_deleted?
+    EuDecision.where(:source_id => self.id).length == 0 &&
+    TradeRestrictionSource.where(:source_id => self.id).length == 0
+  end
 end

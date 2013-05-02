@@ -47,10 +47,26 @@ FactoryGirl.define do
     publication_date Date.new(2012, 12, 3)
   end
 
-  factory :unit do
-    sequence(:code) {|n| "BO#{n}" }
-    name_en "Boxes"
-    type "Unit"
+  factory :trade_code do
+    factory :source, :class => Source do
+      sequence(:code) { |n| (65 + n%26).chr }
+      name_en "Wild"
+    end
+
+    factory :purpose, :class => Purpose do
+      sequence(:code) { |n| (65 + n%26).chr }
+      name_en "Zoo"
+    end
+
+    factory :term, :class => Term do
+      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (65 + i%26).chr }.join }
+      name_en "Bones"
+    end
+
+    factory :unit, :class => Unit do
+      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (65 + i%26).chr }.join }
+      name_en "Boxes"
+    end
   end
 
   factory :quota do

@@ -14,4 +14,8 @@
 
 class Unit < TradeCode
   validates :code, :length => {:is => 3}
+
+  def can_be_deleted?
+    Quota.where(:unit_id => self.id).length == 0
+  end
 end

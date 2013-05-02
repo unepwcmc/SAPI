@@ -20,6 +20,6 @@ class TradeCode < ActiveRecord::Base
   validates :code, :presence => true, :uniqueness => {:scope => :type}
 
   def can_be_deleted?
-    false #TODO
+    true
   end
 end
