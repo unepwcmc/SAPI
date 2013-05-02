@@ -24,6 +24,25 @@ require 'spec_helper'
 describe ListingChange do
   context "validations" do
     describe :create do
+      context "all fine with exception" do
+        let(:designation){ create(:designation) }
+        let(:exception_type){ create(:change_type, :designation_id => designation.id, :name => 'EXCEPTION') }
+        let(:taxon_concept){ create(:taxon_concept) }
+        let(:excluded_taxon_concept){ create(:taxon_concept, :parent_id => taxon_concept) }
+        let(:listing_change){
+          build(
+            :listing_change,
+            :taxon_concept => taxon_concept,
+            :exclusions_attributes => {
+              '0' => {
+                :scientific_name => "#{excluded_taxon_concept.reload.full_name} SUBSPECIES",
+                :change_type_id => exception_type.id
+              }
+            }
+          )
+        }
+        specify{ listing_change.exclusions.first.should be_valid}
+      end
       context "inclusion taxon concept does not exist" do
         let(:taxon_concept){ create(:taxon_concept) }
         let(:listing_change){

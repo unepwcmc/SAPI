@@ -110,7 +110,7 @@ class ListingChange < ActiveRecord::Base
   def inclusion_at_higher_rank
     return true unless inclusion
     unless inclusion.rank.taxonomic_position < taxon_concept.rank.taxonomic_position
-      errors.add(:inclusion_taxon_concept_id, "must be at immediately higher rank")
+      errors.add(:inclusion_taxon_concept_id, "must be at higher rank")
       return false
     end
   end
