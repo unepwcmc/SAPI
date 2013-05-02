@@ -18,7 +18,7 @@ class Rank < ActiveRecord::Base
   has_many :taxon_concepts
 
   validates :name, :presence => true, :uniqueness => true
-  validates :taxonomic_position, :presence => true,
+  validates :taxonomic_position, :presence => true, :uniqueness => true,
     :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" }
 
   def parent_rank_lower_bound
