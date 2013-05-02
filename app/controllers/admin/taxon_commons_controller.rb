@@ -4,14 +4,18 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
 
   def new
     new! do |format|
-      @languages = Language.order(:name_en)
+      load_associations
       @taxon_common.build_common_name unless @taxon_common.common_name
     end
   end
 
   def create
     create! do |success, failure|
+      success.js {
+        @taxon_commons = @taxon_concept.taxon_commons
+      }
       failure.js {
+        load_associations
         render 'new'
       }
     end
@@ -19,15 +23,21 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
 
   def edit
     edit! do |format|
-      @languages = Language.order(:name_en)
+      load_associations
       format.js { render 'new' }
     end
   end
 
   def update
     update! do |success, failure|
-      success.js { render 'create' }
-      failure.js { render 'new' }
+      success.js {
+        @taxon_commons = @taxon_concept.taxon_commons
+        render 'create'
+      }
+      failure.js {
+        load_associations
+        render 'new'
+      }
     end
   end
 
@@ -37,5 +47,10 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
     @taxon_commons ||= end_of_association_chain.
       includes(:common_name).page(params[:page])
   end
+
+  def load_associations
+    @languages = Language.order(:name_en)
+  end
+
 end
 
