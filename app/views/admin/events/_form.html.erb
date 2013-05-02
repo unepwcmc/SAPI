@@ -6,7 +6,7 @@
     options_from_collection_for_select(@designations, :id, :name, @event && @event.designation_id)
   %><br />
   <label>Name</label><%= f.text_field :name %><br />
-  <label>Effective at</label>
+  <label>Effective from</label>
   <%= f.text_field :effective_at, :class => "datepicker",
     :value => @event.effective_at_formatted
   %>

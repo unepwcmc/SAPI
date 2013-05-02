@@ -40,7 +40,7 @@
   <table class="listing-change">
     <thead>
       <tr>
-        <th><%= f.label :effective_at %></th>
+        <th><%= f.label :effective_at, 'Effective from' %></th>
         <th><label>Party</label></th>
         <th><%= f.label :geo_entity_ids, "Countries" %></th>
       </tr>
@@ -97,7 +97,7 @@
         options_from_collection_for_select(@cites_cops, :id, :name)
       %>
     <% end %>
-    <%= f.select :hash_annotation_id, 
+    <%= f.select :hash_annotation_id,
       options_for_select(
         @hash_annotations.map do |a|
           [a.full_symbol, a.id, {:class => a.event_id}]
