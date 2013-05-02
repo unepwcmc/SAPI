@@ -8,7 +8,7 @@
   <% collection.each do |taxon_relationship| -%>
     <tr>
       <td>
-        <%= link_to taxon_relationship.taxon_concept.full_name, edit_admin_taxon_concept_path(taxon_relationship.taxon_concept) %> 
+        <%= link_to taxon_relationship.taxon_concept.full_name, edit_admin_taxon_concept_path(taxon_relationship.taxon_concept) %>
         (<%= link_to taxon_relationship.taxon_concept.taxonomy.name, admin_taxonomy_path(taxon_relationship.taxon_concept.taxonomy) %>)
       </td>
       <td>
@@ -20,7 +20,7 @@
       </td>
       <td>
         <%= link_to 'Delete', resource_url(taxon_relationship, :type => params[:type]),
-          :confirm => "Are you sure?", :method => :delete
+          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
     </tr>

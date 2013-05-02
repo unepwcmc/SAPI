@@ -32,13 +32,13 @@
       <td>
         <%= link_to edit_icon, edit_resource_url(eu_regulation), :remote => true %>
         <%= link_to delete_icon, resource_url(eu_regulation),
-          :confirm => "Are you sure?", :method => :delete
+          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
         <%= link_to_if(
           eu_regulation.can_be_activated?,
           '<i class="icon-cog" title="Activate"></i>'.html_safe,
           activate_admin_eu_regulation_url(eu_regulation),
-          :confirm => 'Are you sure?', :method => :post, :remote => true
+          :confirm => 'Warning: you are about to modify a batch of data. Are you sure?', :method => :post, :remote => true
         ) { '' }
         %>
       </td>
