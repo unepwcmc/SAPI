@@ -43,11 +43,6 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
 
   protected
 
-  def collection
-    @taxon_commons ||= end_of_association_chain.
-      includes(:common_name).page(params[:page])
-  end
-
   def load_associations
     @languages = Language.order(:name_en)
   end
