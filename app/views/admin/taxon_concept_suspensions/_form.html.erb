@@ -60,10 +60,10 @@
   <div class="control-group">
     <%= f.label :term_id, :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :term_id,
-        options_from_collection_for_select(@terms, :id, :code, @suspension.term_id),
+      <%= f.select :term_ids,
+        options_from_collection_for_select(@terms, :id, :code, @suspension.term_ids),
         { :include_blank => true },
-        {:class => 'suspension select2', :style => 'width: 220px' }
+        {:class => 'suspension select2', :multiple => true, :style => 'width: 220px' }
       %>
     </div>
   </div>
@@ -71,10 +71,10 @@
   <div class="control-group">
     <%= f.label :source_id, :class => 'control-label'  %>
     <div class="controls">
-      <%= f.select :source_id,
-        options_from_collection_for_select(@sources, :id, :code, @suspension.source_id),
+      <%= f.select :source_ids,
+        options_from_collection_for_select(@sources, :id, :code, @suspension.source_ids),
         { :include_blank => true },
-        {:class => 'suspension select2', :style => 'width: 220px' }
+        {:class => 'suspension select2', :multiple => true, :style => 'width: 220px' }
       %>
     </div>
   </div>
@@ -82,10 +82,10 @@
   <div class="control-group">
     <%= f.label :purpose_id, :class => 'control-label' %>
     <div class="controls">
-          <%= f.select :purpose_id,
-            options_from_collection_for_select(@purposes, :id, :code, @suspension.purpose_id),
+          <%= f.select :purpose_ids,
+            options_from_collection_for_select(@purposes, :id, :code, @suspension.purpose_ids),
             { :include_blank => true },
-            {:class => 'suspension select2', :style => 'width: 220px' }
+            {:class => 'suspension select2', :multiple => true, :style => 'width: 220px' }
           %>
     </div>
   </div>
