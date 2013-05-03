@@ -83,7 +83,7 @@ private
   def csv_column_headers
     taxon_concept_columns.map do |c|
       Checklist::ColumnDisplayNameMapping.column_display_name_for(c)
-    end + ['Listed under', 'Full note', '# Full note']
+    end + ['Party', 'Listed under', 'Full note', '# Full note']
   end
 
   def taxon_concept_columns
@@ -114,7 +114,7 @@ private
   end
 
   def closest_listed_ancestor_columns
-    [:full_name_with_spp, :full_note_en, :hash_full_note_en]
+    [:party_name, :full_name_with_spp, :full_note_en, :hash_full_note_en]
   end
 
   def closest_listed_ancestor_table_name
@@ -125,6 +125,12 @@ private
 
   def closest_listed_ancestor_select_columns
     <<-SQL
+    ARRAY_TO_STRING(
+      ARRAY_AGG(
+        listing_changes_mview.party_name
+      ),
+      '\n'
+    ) AS closest_listed_ancestor_party_name,
     #{closest_listed_ancestor_table_name}.full_name || ' ' ||
     CASE
       WHEN #{closest_listed_ancestor_table_name}.spp THEN 'spp.'
