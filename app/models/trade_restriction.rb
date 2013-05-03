@@ -61,6 +61,10 @@ class TradeRestriction < ActiveRecord::Base
     end_date ? end_date.strftime('%d/%m/%Y') : Time.now.end_of_year.strftime("%d/%m/%Y")
   end
 
+  def year
+    start_date ? start_date.strftime('%Y') : ''
+  end
+
   def self.export filters
     return false if !self.any?
     path = "public/downloads/cites_#{self.to_s.downcase}s/"

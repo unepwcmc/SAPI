@@ -33,10 +33,6 @@ class Quota < TradeRestriction
     :notes, :url, :public_display
   ]
 
-  def year
-    start_date ? start_date.strftime('%Y') : ''
-  end
-
   def party
     geo_entity_id ? geo_entity.name_en : ''
   end
