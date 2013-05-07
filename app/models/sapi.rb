@@ -75,10 +75,17 @@ module Sapi
     end
   end
 
+  # rewrite the code below to just use add_index and add UNIQUE to the mview ids
+  # add_index "listing_changes_mview", ["id"], :name => "listing_changes_mview_on_id", :unique => true
+
   INDEXES = [
     {
       :name => 'index_taxon_concepts_on_parent_id',
       :on => 'taxon_concepts (parent_id)'
+    },
+    {
+      :name => 'index_taxon_concepts_mview_on_id',
+      :on => 'taxon_concepts_mview (id)'
     },
     {
       :name => 'index_taxon_concepts_mview_on_parent_id',
@@ -93,6 +100,14 @@ module Sapi
       :on => 'taxon_concepts_mview (taxonomy_is_cites_eu, cites_listed, kingdom_position)'
     },
     {
+      :name => 'index_taxon_concepts_mview_on_cites_closest_listed_ancestor_id',
+      :on => 'taxon_concepts_mview (cites_closest_listed_ancestor_id)'
+    },
+    {
+      :name => 'index_taxon_concepts_mview_on_eu_closest_listed_ancestor_id',
+      :on => 'taxon_concepts_mview (eu_closest_listed_ancestor_id)'
+    },
+    {
       :name => 'index_listing_changes_on_annotation_id',
       :on => 'listing_changes (annotation_id)'
     },
@@ -103,6 +118,10 @@ module Sapi
     {
       :name => 'index_listing_changes_on_parent_id',
       :on => 'listing_changes (parent_id)'
+    },
+    {
+      :name => 'index_listing_changes_mview_on_id',
+      :on => 'listing_changes_mview (id)'
     },
     {
       :name => 'index_listing_changes_mview_on_taxon_concept_id',
