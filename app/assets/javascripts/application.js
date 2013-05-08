@@ -16,4 +16,11 @@
 //= require bootstrap-dropdown
 //= require bootstrap-button
 //= require select2
+//= require handlebars
+//= require ember
+//= require ember-data
+//= require_self
+//= require sapi
+SAPI = Ember.Application.create();
+
 //= require_tree ./application
