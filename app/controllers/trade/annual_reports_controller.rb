@@ -8,4 +8,5 @@ class Trade::AnnualReportsController < ApplicationController
   def show
     respond_with Trade::AnnualReport.find(params[:id])
   end
+
 end

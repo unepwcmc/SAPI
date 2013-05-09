@@ -65,6 +65,7 @@ SAPI::Application.routes.draw do
 
   namespace :trade do
     resources :annual_reports
+    resources :annual_report_uploads
     root :to => 'ember#start'
   end
 
