@@ -12,8 +12,19 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require jquery.chained
-//= require bootstrap-dropdown
-//= require bootstrap-button
-//= require select2
-//= require_tree ./application
+//= require handlebars
+//= require ember
+//= require ember-data
+
+//= require_self
+
+//= require ./trade/store
+//= require_tree ./trade/models
+//= require_tree ./trade/controllers
+//= require_tree ./trade/views
+//= require_tree ./trade/helpers
+//= require_tree ./trade/templates
+//= require ./trade/router
+//= require_tree ./trade/routes
+
+Trade = Ember.Application.create();
