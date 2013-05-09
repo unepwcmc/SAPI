@@ -1,1 +1,5 @@
 <h1>{{year}}</h1>
+
+{{view Trade.UploadFileView name="annual_report" contentBinding="content"}}
+{{log record}}
+<a {{action submitFileUpload content target="view"}}>Save</a>
