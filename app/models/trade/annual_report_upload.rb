@@ -6,21 +6,18 @@ class Trade::AnnualReportUpload
   def initialize(uploaded_file = {})
     @original_filename = uploaded_file.original_filename
     @length = uploaded_file.tempfile.length
-    directory = "tmp/data"
+    directory = "tmp/uploads"
     # create the file path
     @path = File.join(directory, @original_filename)
     # write the file
     File.open(@path, "wb") { |f| f.write(uploaded_file.read) }
-    Trade::AnnualReportCopyWorker.perform_async(self)
-  end
-
-  def valid_columns
-    %w(Appendix_no  Taxon_check Term_code Quantity  Unit_code Trading_partner_code  Origin_country_code Export_permit Origin_permit Purpose_code  Source_code Year)
+    #Trade::AnnualReportCopyWorker.perform_async(self)
+    copy_to_sandbox
   end
 
   def copy_to_sandbox
-    @table = "sandbox_#{Time.now}"
-    CsvCopy::copy_data(@path, @table, )
+    @sandbox = Trade::Sandbox.new(@path)
+    @sandbox.copy
   end
 
   def persisted?

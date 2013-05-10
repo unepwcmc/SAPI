@@ -1,12 +1,12 @@
-<header id="header">
-  <h2>{{#linkTo "index"}}Home{{/linkTo}}</h2>
-
-  <nav>
-    <ul>
-      <li>{{#linkTo "annual_reports"}}Annual Reports{{/linkTo}}</li>
-    </ul>
-  </nav>
-</header>
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+	  <a class="brand" href="#">Trade DB Management Tool</a>
+	  <ul class="nav">
+	    <li class="active"><a href="#">Home</a></li>
+	    <li>{{#linkTo "annual_reports"}}Annual Reports{{/linkTo}}</li>
+	  </ul>
+  </div>
+</div>
 
 <div id="content">
 {{outlet}}

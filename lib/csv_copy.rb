@@ -1,7 +1,6 @@
 module CsvCopy
-  def copy_data(path_to_file, table_name, db_columns)
+  def self.copy_data(path_to_file, table_name, db_columns)
     puts "Copying data from #{path_to_file} into tmp table #{table_name}"
-    db_columns = db_columns_from_csv_headers(path_to_file, table_name, false)
     cmd = <<-PSQL
   SET DateStyle = \"ISO,DMY\";
   \\COPY #{table_name} (#{db_columns.join(', ')})
