@@ -16,7 +16,7 @@ class Trade::AnnualReportUpload
   end
 
   def copy_to_sandbox
-    @sandbox = Trade::Sandbox.new(@path)
+    @sandbox = Trade::Sandbox.new_upload(@path)
     @sandbox.copy
   end
 
