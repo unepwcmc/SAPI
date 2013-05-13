@@ -18,12 +18,12 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
   # object that represents the particular sandbox table linked to this annual
   # report upload
   def sandbox
-    # TODO return nil if sandbox submitted
+    return nil if is_done
     @sandbox ||= Trade::Sandbox.new(self)
   end
 
   def sandbox_shipments
-    # TODO return nil if sandbox submitted
+    return [] if is_done
     Trade::SandboxTemplate.select('*').from(sandbox.table_name)
   end
 

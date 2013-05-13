@@ -2,7 +2,7 @@ class Trade::AnnualReportUploadsController < ApplicationController
   respond_to :json
 
   def index
-    respond_with Trade::AnnualReportUpload.all
+    respond_with []
   end
 
   def show
