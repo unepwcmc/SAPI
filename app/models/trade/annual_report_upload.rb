@@ -1,9 +1,6 @@
-class Trade::AnnualReportUpload
-  include ActiveModel::Conversion
-  extend  ActiveModel::Naming
-  include ActiveModel::Serialization
-
-  def initialize(uploaded_file = {})
+class Trade::AnnualReportUpload < ActiveRecord::Base
+  attr_reader :path, :original_filename, :length
+  def save_temp_file(uploaded_file)
     @original_filename = uploaded_file.original_filename
     @length = uploaded_file.tempfile.length
     directory = "tmp/uploads"
@@ -16,12 +13,8 @@ class Trade::AnnualReportUpload
   end
 
   def copy_to_sandbox
-    @sandbox = Trade::Sandbox.new_upload(@path)
+    @sandbox = Trade::Sandbox.new(self)
     @sandbox.copy
-  end
-
-  def persisted?
-    false
   end
 
 end

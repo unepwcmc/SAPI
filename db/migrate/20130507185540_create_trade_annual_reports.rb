@@ -6,5 +6,6 @@ class CreateTradeAnnualReports < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_foreign_key "trade_annual_reports", "geo_entities", :name => "trade_annual_reports_geo_entity_id_fk"
   end
 end
