@@ -8,7 +8,7 @@ class Trade::Sandbox
 
 	def create_table
 		@table_name = "sandbox_#{@id}"
-		ActiveRecord::Base.connection.execute("CREATE TABLE #{@table_name} () INHERITS (sandbox_template)")
+		ActiveRecord::Base.connection.execute("CREATE TABLE #{@table_name} () INHERITS (trade_sandbox_template)")
 	end
 
 	def copy
