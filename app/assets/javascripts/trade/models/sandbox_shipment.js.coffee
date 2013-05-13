@@ -1,0 +1,13 @@
+Trade.SandboxShipment = DS.Model.extend
+  appendix_no: DS.attr('string')
+  taxon_check: DS.attr('string')
+  term_code: DS.attr('string')
+  quantity: DS.attr('string')
+  unit_code: DS.attr('string')
+  trading_partner_code: DS.attr('string')
+  origin_country_code: DS.attr('string')
+  export_permit: DS.attr('string')
+  origin_permit: DS.attr('string')
+  purpose_code: DS.attr('string')
+  source_code: DS.attr('string')
+  year: DS.attr('string')

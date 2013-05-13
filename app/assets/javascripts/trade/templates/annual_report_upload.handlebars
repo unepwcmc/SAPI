@@ -1,0 +1,41 @@
+<p>Uploaded file: {{originalFilename}}</p>
+<p>Number of rows: {{numberOfRows}}</p>
+<p>Uploaded at: {{createdAt}}</p>
+<p>Uploaded by: TODO</p>
+
+<hr>
+
+<table>
+  <thead>
+    <th>Appendix No</th>
+    <th>Taxon Check</th>
+    <th>Term Code</th>
+    <th>Quantity</th>
+    <th>Unit Code</th>
+    <th>Trading Partner Code</th>
+    <th>Origin Country Code</th>
+    <th>Export Permit</th>
+    <th>Origin Permit</th>
+    <th>Purpose Code</th>
+    <th>Source Code</th>
+    <th>Year</th>
+  </thead>
+  <tbody>
+{{#each sandboxShipments}}
+<tr>
+    <td>{{appendix_no}}</td>
+    <td>{{taxon_check}}</td>
+    <td>{{term_code}}</td>
+    <td>{{quantity}}</td>
+    <td>{{unit_code}}</td>
+    <td>{{trading_partner_code}}</td>
+    <td>{{origin_country_code}}</td>
+    <td>{{export_permit}}</td>
+    <td>{{origin_permit}}</td>
+    <td>{{purpose_code}}</td>
+    <td>{{source_code}}</td>
+    <td>{{year}}</td>
+</tr>
+{{/each}}
+</tbody>
+</table>
