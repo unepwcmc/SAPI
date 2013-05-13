@@ -1,3 +1,3 @@
 Trade.Router.map (match)->
-  @resource 'annual_reports', ()->
-    @resource 'annual_report', { path: ':annual_report_id' }
+  @resource 'annual_report_uploads', ()->
+    @resource 'annual_report_upload', { path: ':annual_report_upload_id' }
