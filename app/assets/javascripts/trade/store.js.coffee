@@ -1,4 +1,4 @@
-DS.RESTAdapter.reopen({
+Trade.Adapter = DS.RESTAdapter.reopen({
   namespace: 'trade'
 });
 
