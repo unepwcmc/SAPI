@@ -1,6 +1,6 @@
 class CreateTradeSandboxTemplate < ActiveRecord::Migration
   def change
-    create_table :trade_sandbox_template do |t|
+    create_table :trade_sandbox_template, :id => false do |t|
       t.string :appendix_no
       t.string :taxon_check
       t.string :term_code
@@ -13,8 +13,6 @@ class CreateTradeSandboxTemplate < ActiveRecord::Migration
       t.string :purpose_code
       t.string :source_code
       t.string :year
-
-      t.timestamps
     end
   end
 end
