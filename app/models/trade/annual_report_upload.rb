@@ -1,36 +1,20 @@
 class Trade::AnnualReportUpload < ActiveRecord::Base
-  TMP_DIR = 'tmp/uploads'
-  attr_reader :path
-  attr_accessible :original_filename, :number_of_rows
+  attr_accessible :number_of_rows, :csv_source_file
+  mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
 
-  def save_temp_file(uploaded_file)
-    @original_filename = uploaded_file.original_filename
-    if Rails.env != "production"
-      save_in_tmp uploaded_file
-    else
-      copy_to_db_server uploaded_file
-    end
-    copy_to_sandbox
-  end
-
-  def save_in_tmp uploaded_file
-    # create the file path
-    @path = File.join(TMP_DIR, @original_filename)
-    File.open(@path, "wb") { |f| f.write(uploaded_file.read) }
-  end
-
-  def copy_to_db_server uploaded_file
+  def copy_to_db_server
+    return true unless Rails.env.production?
     require 'net/scp'
-    @path = File.join('/home/rails/sapi/current', TMP_DIR, @original_filename)
+    remote_path = File.join('/home/rails/sapi/current', csv_source_file.current_path)
     destiny = Rails.configuration.database_configuration[Rails.env]["host"]
     Net::SCP.start(destiny, 'rails') do |scp|
-      scp.upload! uploaded_file.tempfile.path, @path
+      scp.upload! csv_source_file.current_path, remote_path
     end
   end
 
   def copy_to_sandbox
     sandbox.copy
-    update_attributes({:original_filename => @original_filename, :number_of_rows => sandbox_shipments.size})
+    update_attribute(:number_of_rows, sandbox_shipments.size)
   end
 
   # object that represents the particular sandbox table linked to this annual
@@ -42,7 +26,7 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
 
   def sandbox_shipments
     return [] if is_done
-    Trade::SandboxTemplate.select('*').from(sandbox.table_name)
+    sandbox.shipments
   end
 
 end

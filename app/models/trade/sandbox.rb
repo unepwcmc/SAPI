@@ -1,21 +1,33 @@
-require 'csv_copy'
 class Trade::Sandbox
-	attr_reader :table_name
-	def initialize(annual_report_upload)
-		@id = annual_report_upload.id
-		@csv_file_path = annual_report_upload.path
-		create_table
-	end
+  def initialize(annual_report_upload)
+    @annual_report_upload = annual_report_upload
+    @csv_file_path = @annual_report_upload.csv_source_file.current_path
+    @table_name = "trade_sandbox_#{@annual_report_upload.id}"
+  end
 
-	def create_table
-		@table_name = "trade_sandbox_#{@id}"
-		unless ActiveRecord::Base.connection.table_exists? @table_name
-			ActiveRecord::Base.connection.execute("CREATE TABLE #{@table_name} () INHERITS (trade_sandbox_template)")
-		end
-	end
+  def copy
+    create_target_table
+    copy_csv_to_target_table
+  end
 
-	def copy
-		CsvCopy::copy_data(@csv_file_path, @table_name, Trade::SandboxTemplate.column_names)
-	end
+  def shipments
+    Trade::SandboxTemplate.select('*').from(@table_name)
+  end
+
+  private
+
+  def create_target_table
+    unless Trade::SandboxTemplate.connection.table_exists? @table_name
+      Trade::SandboxTemplate.connection.execute(
+        Trade::SandboxTemplate.create_stmt(@table_name)
+      )
+    end
+  end
+
+  def copy_csv_to_target_table
+    Trade::SandboxTemplate.connection.execute(
+      Trade::SandboxTemplate.copy_stmt(@table_name, @csv_file_path)
+    )
+  end
 
 end

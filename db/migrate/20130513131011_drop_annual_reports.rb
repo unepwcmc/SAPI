@@ -1,5 +1,5 @@
 class DropAnnualReports < ActiveRecord::Migration
   def change
-    drop_table :annual_reports
+    drop_table :trade_annual_reports
   end
 end

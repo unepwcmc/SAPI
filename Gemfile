@@ -27,6 +27,7 @@ gem 'kaminari'
 gem 'select2-rails'
 gem 'nested_form', '~> 0.3.1'
 gem 'acts-as-taggable-on', '~> 2.3.1'
+gem 'carrierwave'
 
 gem 'underscore-rails'
 

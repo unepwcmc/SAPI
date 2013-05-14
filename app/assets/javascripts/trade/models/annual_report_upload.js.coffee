@@ -1,5 +1,4 @@
 Trade.AnnualReportUpload = DS.Model.extend
-  originalFilename: DS.attr('string')
   numberOfRows: DS.attr('number')
   createdAt: DS.attr('date')
   updatedAt: DS.attr('date')
