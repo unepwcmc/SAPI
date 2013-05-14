@@ -1,6 +1,8 @@
+require 'csv_column_headers_validator'
 class Trade::AnnualReportUpload < ActiveRecord::Base
   attr_accessible :number_of_rows, :csv_source_file
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
+  validates :csv_source_file, :csv_column_headers => {:is => Trade::SandboxTemplate.column_names}
 
   def copy_to_db_server
     return true unless Rails.env.production?
