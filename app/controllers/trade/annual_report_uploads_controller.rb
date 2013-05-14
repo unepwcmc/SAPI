@@ -10,16 +10,10 @@ class Trade::AnnualReportUploadsController < ApplicationController
   end
 
   def create
-    @annual_report_upload = Trade::AnnualReportUpload.new(
+    @annual_report_upload = Trade::AnnualReportUpload.create(
       params.slice(:csv_source_file)
     )
-    if @annual_report_upload.save
-      render :json => @annual_report_upload
-    else
-      render :json => {
-        :errors => @annual_report_upload.errors.full_messages
-      }, :status => 422
-    end
+    render :json => {:files => [@annual_report_upload.to_jq_upload]}
   end
 
 end

@@ -31,4 +31,19 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     sandbox.shipments
   end
 
+  def to_jq_upload
+    if valid?
+    {
+      "id" => self.id,
+      "name" => read_attribute(:csv_source_file),
+      "size" => csv_source_file.size,
+      "url" => csv_source_file.url
+    }
+    else
+      {
+        "name" => read_attribute(:csv_source_file),
+        'error' => "Upload failed on: " + errors[:csv_source_file].join('; ')
+      }
+    end
+  end
 end
