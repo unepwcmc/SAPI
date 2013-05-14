@@ -5,8 +5,8 @@ class Admin::DesignationsController < Admin::SimpleCrudController
     load_associations
     index! do |format|
       format.json {
-        render :json => end_of_association_chain.order(:name).
-          select([:id, :name]).map{ |d| {:value => d.id, :text => d.name} }
+        render :text => end_of_association_chain.order(:name).
+          select([:id, :name]).map{ |d| {:value => d.id, :text => d.name} }.to_json
       }
     end
   end
