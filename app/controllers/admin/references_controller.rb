@@ -4,8 +4,8 @@ class Admin::ReferencesController < Admin::SimpleCrudController
   def index
     index! do |format|
       format.json {
-        render :json => end_of_association_chain.order(:title).
-          select([:id, :title]).map{ |d| {:value => d.id, :text => d.title} }
+        render :text => end_of_association_chain.order(:title).
+          select([:id, :title]).map{ |d| {:value => d.id, :text => d.title} }.to_json
       }
     end
   end

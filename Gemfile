@@ -8,7 +8,6 @@ gem 'rails', '3.2.13'
 gem 'pg'
 gem 'pg_array_parser'
 gem 'activerecord-postgres-hstore'
-#gem 'partitioned', :git => 'git@github.com:agnessa/partitioned.git'
 gem 'json', '>=1.7.7'
 gem 'foreigner'
 gem 'oj'
@@ -21,12 +20,14 @@ gem 'sidekiq-status'
 
 gem 'whenever', :require => false
 
+gem 'ember-rails'
 gem 'jquery-rails', '2.1.4' #do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'kaminari'
 gem 'select2-rails'
 gem 'nested_form', '~> 0.3.1'
 gem 'acts-as-taggable-on', '~> 2.3.1'
+gem 'carrierwave'
 
 gem 'underscore-rails'
 

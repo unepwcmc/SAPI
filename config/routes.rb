@@ -1,4 +1,6 @@
 SAPI::Application.routes.draw do
+  get "ember/start"
+
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
   namespace :api do
@@ -59,6 +61,11 @@ SAPI::Application.routes.draw do
       resources :taxon_concept_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy], :as => :suspensions
     end
     root :to => 'home#index'
+  end
+
+  namespace :trade do
+    resources :annual_report_uploads
+    root :to => 'ember#start'
   end
 
   match 'taxon_concepts/' => 'taxon_concepts#index'
