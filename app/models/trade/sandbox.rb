@@ -18,16 +18,18 @@ class Trade::Sandbox
 
   def create_target_table
     unless Trade::SandboxTemplate.connection.table_exists? @table_name
-      Trade::SandboxTemplate.connection.execute(
-        Trade::SandboxTemplate.create_stmt(@table_name)
-      )
+      Thread.new do
+        Trade::SandboxTemplate.connection.execute(
+          Trade::SandboxTemplate.create_stmt(@table_name)
+        )
+      end.join
     end
   end
 
   def copy_csv_to_target_table
-    Trade::SandboxTemplate.connection.execute(
-      Trade::SandboxTemplate.copy_stmt(@table_name, @csv_file_path)
-    )
+    db_conf = Rails.configuration.database_configuration[Rails.env]
+    cmd = Trade::SandboxTemplate.copy_stmt(@table_name, @csv_file_path)
+    system("export PGPASSWORD=#{db_conf["password"]} && echo \"#{cmd.split("\n").join(' ')}\" | psql -h #{db_conf["host"] || "localhost"} -p #{db_conf["port"] || 5432} -U#{db_conf["username"]} #{db_conf["database"]}")
   end
 
 end

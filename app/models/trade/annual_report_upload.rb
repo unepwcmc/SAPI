@@ -4,16 +4,6 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
   validates :csv_source_file, :csv_column_headers => {:is => Trade::SandboxTemplate.column_names}
 
-  def copy_to_db_server
-    return true unless Rails.env.production?
-    require 'net/scp'
-    remote_path = File.join('/home/rails/sapi/current', csv_source_file.current_path)
-    destiny = Rails.configuration.database_configuration[Rails.env]["host"]
-    Net::SCP.start(destiny, 'rails') do |scp|
-      scp.upload! csv_source_file.current_path, remote_path
-    end
-  end
-
   def copy_to_sandbox
     sandbox.copy
     update_attribute(:number_of_rows, sandbox_shipments.size)

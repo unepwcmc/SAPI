@@ -1,5 +1,5 @@
 class Trade::SandboxTemplate < ActiveRecord::Base
-	self.table_name = :trade_sandbox_template
+  self.table_name = :trade_sandbox_template
 
   private
   def self.create_stmt(target_table_name)
@@ -9,15 +9,15 @@ class Trade::SandboxTemplate < ActiveRecord::Base
   end
 
   def self.copy_stmt(target_table_name, csv_file_path)
-    sql = <<-SQL
-      COPY #{target_table_name} (#{column_names.join(', ')})
+    sql = <<-PSQL
+      \\COPY #{target_table_name} (#{column_names.join(', ')})
       FROM ?
-        WITH DELIMITER ','
-        ENCODING 'utf-8'
-        CSV HEADER
-    SQL
+      WITH DELIMITER ','
+      ENCODING 'utf-8'
+      CSV HEADER
+    PSQL
     sanitize_sql_array([
-      sql, csv_file_path
+                       sql, csv_file_path
     ])
   end
 end
