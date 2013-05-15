@@ -69,4 +69,6 @@ SAPI::Application.configure do
   config.middleware.use ExceptionNotifier, :email_prefix => "[SAPI Exception] ",
     :sender_address => %{"SAPI Exception Notifier" <no-reply@unep-wcmc.org>},
     :exception_recipients => %w{simao.belchior@unep-wcmc.org agnieszka.figiel@unep-wcmc.org}
+
+  config.ember.variant = :staging
 end
