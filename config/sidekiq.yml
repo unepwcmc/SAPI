@@ -10,3 +10,4 @@ production:
   :concurrency: 50
 :queues:
   - [default, 5]
+  - [trade, 5]
