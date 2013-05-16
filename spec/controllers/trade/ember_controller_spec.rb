@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe EmberController do
+describe Trade::EmberController do
 
   describe "GET 'start'" do
     it "returns http success" do
