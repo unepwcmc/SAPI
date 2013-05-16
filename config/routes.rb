@@ -1,5 +1,4 @@
 SAPI::Application.routes.draw do
-  get "ember/start"
 
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
