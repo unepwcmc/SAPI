@@ -27,9 +27,9 @@ class Trade::Sandbox
   end
 
   def copy_csv_to_target_table
-    db_conf = Rails.configuration.database_configuration[Rails.env]
+    require 'psql_command'
     cmd = Trade::SandboxTemplate.copy_stmt(@table_name, @csv_file_path)
-    system("export PGPASSWORD=#{db_conf["password"]} && echo \"#{cmd.split("\n").join(' ')}\" | psql -h #{db_conf["host"] || "localhost"} -p #{db_conf["port"] || 5432} -U#{db_conf["username"]} #{db_conf["database"]}")
+    PsqlCommand.new(cmd).execute
   end
 
 end
