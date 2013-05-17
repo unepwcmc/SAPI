@@ -1,0 +1,23 @@
+<table>
+<thead>
+  <th>Type</th>
+  <th>Column names</th>
+  <th>Valid values view</th>
+</thead>
+<tbody>
+
+  {{#each controller}}
+  <tr>
+    <td>{{type}}</td>
+    <td>
+      <ul>
+      {{#each columnName in columnNames}}
+        <li>{{columnName}}</li>
+      {{/each}}
+      </ul>
+    </td>
+    <td>{{validValuesView}}</td>
+  </tr>
+  {{/each}}
+</tbody>
+</table>
