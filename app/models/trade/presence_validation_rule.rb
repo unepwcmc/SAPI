@@ -1,4 +1,6 @@
+require 'postgres_ext'
 class Trade::PresenceValidationRule < Trade::ValidationRule
+  validates :column_names, :presence => true, :uniqueness => true
 
   def matching_records(table_name)
     s = Arel::Table.new(table_name)
