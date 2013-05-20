@@ -1,5 +1,5 @@
 class Trade::FormatValidationRule < Trade::ValidationRule
-
+  attr_accessible :format_re
   # Returns records that do not pass the regex test for all columns
   # specified in column_names.
   def matching_records(table_name)

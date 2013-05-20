@@ -11,6 +11,9 @@ FactoryGirl.define do
     factory :format_validation_rule, :class => Trade::FormatValidationRule do
       format_re '^\w+$'
     end
+    factory :inclusion_validation_rule, :class => Trade::InclusionValidationRule do
+      valid_values_view 'valid_taxon_check_view'
+    end
   end
 
 end

@@ -320,3 +320,36 @@ end
 end
 
 Trade::FormatValidationRule.create(:column_names => ['year'], :format_re => '^\d{4}$')
+
+Trade::InclusionValidationRule.create(
+  :column_names => ['trade_code'],
+  :valid_values_view => 'valid_term_code_view'
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['source_code'],
+  :valid_values_view => 'valid_source_code_view'
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['purpose_code'],
+  :valid_values_view => 'valid_purpose_code_view'
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['unit_code'],
+  :valid_values_view => 'valid_unit_code_view'
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['trading_partner_code'],
+  :valid_values_view => 'valid_trading_partner_code_view'
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['origin_country_code'],
+  :valid_values_view => 'valid_origin_country_code_view'
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['taxon_check'],
+  :valid_values_view => 'valid_taxon_check_view'
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['appendix'],
+  :valid_values_view => 'valid_appendix_view'
+)
