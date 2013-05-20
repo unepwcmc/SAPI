@@ -7,7 +7,10 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   def matching_records(table_name)
     s = Arel::Table.new(table_name)
     v = Arel::Table.new(valid_values_view)
-    arel_nodes = column_names.map{ |c| v[c].eq(s[c]) }
+    arel_nodes = column_names.map do |c|
+      func =Arel::Nodes::NamedFunction.new 'btrim', [s[c]]
+      v[c].eq(func)
+    end
     join_conditions = arel_nodes.shift
     arel_nodes.each{ |n| join_conditions = join_conditions.and(n) }
     valid_values = s.project(s['*']).join(v).on(join_conditions)

@@ -1,15 +1,16 @@
 require 'spec_helper'
 
 describe Trade::ValidationRule do
-    let(:annual_report_upload){
-      create(
-        :annual_report_upload,
-        :csv_source_file => Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_correct_min.csv'))
-      )
-    }
-    let(:sandbox_table_name){
-      annual_report_upload.sandbox.table_name
-    }
+  let(:annual_report_upload){
+    create(
+      :annual_report_upload,
+      :csv_source_file => Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_correct_min.csv'))
+    )
+  }
+  let(:sandbox_table_name){
+    annual_report_upload.sandbox.table_name
+  }
+
   describe Trade::PresenceValidationRule do
     describe :matching_records do
       let!(:sandbox_records){
@@ -81,10 +82,13 @@ describe Trade::FormatValidationRule do
 
 describe Trade::InclusionValidationRule do
     describe :matching_records do
+      let(:country){
+        create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
+      }
       let!(:france){
         create(
           :geo_entity,
-          :geo_entity_type => create(:geo_entity_type, :name => GeoEntityType::COUNTRY),
+          :geo_entity_type => country,
           :name => 'France',
           :iso_code2 => 'FR'
         )
