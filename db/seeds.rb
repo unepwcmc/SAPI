@@ -311,3 +311,12 @@ Language.create(:name_en => 'French', :iso_code1 => 'fr', :iso_code3 => 'fra')
 puts "#{Language.count} languages created"
 puts "#{Reference.delete_all} references deleted"
 puts "#{TradeRestriction.delete_all} trade restrictions deleted"
+
+['trading_partner_code', 'term_code', 'taxon_check', 'appendix_no', 'quantity'].each do |col|
+  Trade::PresenceValidationRule.create(:column_names => [col])
+end
+['quantity', 'year'].each do |col|
+  Trade::NumericalityValidationRule.create(:column_names => [col])
+end
+
+Trade::FormatValidationRule.create(:column_names => ['year'], :format_re => '^\d{4}$')

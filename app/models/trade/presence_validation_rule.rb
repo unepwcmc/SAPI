@@ -1,7 +1,9 @@
-require 'postgres_ext'
 class Trade::PresenceValidationRule < Trade::ValidationRule
-  validates :column_names, :presence => true, :uniqueness => true
+  #validates :column_names, :uniqueness => true
 
+  # Returns records where the specified columns are NULL.
+  # In case more than one column is specified, predicates are combined
+  # using AND.
   def matching_records(table_name)
     s = Arel::Table.new(table_name)
     arel_nodes = column_names.map{|c| s[c].eq(nil)}
