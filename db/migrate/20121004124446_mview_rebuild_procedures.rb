@@ -25,7 +25,7 @@ class MviewRebuildProcedures < ActiveRecord::Migration
       AS $$
       BEGIN
         RAISE NOTICE 'Dropping taxon concepts materialized view';
-        DROP table IF EXISTS taxon_concepts_mview;
+        DROP table IF EXISTS taxon_concepts_mview CASCADE;
 
         RAISE NOTICE 'Creating taxon concepts materialized view';
         CREATE TABLE taxon_concepts_mview AS
@@ -48,7 +48,7 @@ class MviewRebuildProcedures < ActiveRecord::Migration
       AS $$
       BEGIN
         RAISE NOTICE 'Dropping listing changes materialized view';
-        DROP table IF EXISTS listing_changes_mview;
+        DROP table IF EXISTS listing_changes_mview CASCADE;
 
         RAISE NOTICE 'Creating listing changes materialized view';
         CREATE TABLE listing_changes_mview AS

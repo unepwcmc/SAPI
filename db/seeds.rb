@@ -311,3 +311,45 @@ Language.create(:name_en => 'French', :iso_code1 => 'fr', :iso_code3 => 'fra')
 puts "#{Language.count} languages created"
 puts "#{Reference.delete_all} references deleted"
 puts "#{TradeRestriction.delete_all} trade restrictions deleted"
+
+['trading_partner_code', 'term_code', 'taxon_check', 'appendix_no', 'quantity'].each do |col|
+  Trade::PresenceValidationRule.create(:column_names => [col])
+end
+['quantity', 'year'].each do |col|
+  Trade::NumericalityValidationRule.create(:column_names => [col])
+end
+
+Trade::FormatValidationRule.create(:column_names => ['year'], :format_re => '^\d{4}$')
+
+Trade::InclusionValidationRule.create(
+  :column_names => ['trade_code'],
+  :valid_values_view => 'valid_term_code_view'
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['source_code'],
+  :valid_values_view => 'valid_source_code_view'
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['purpose_code'],
+  :valid_values_view => 'valid_purpose_code_view'
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['unit_code'],
+  :valid_values_view => 'valid_unit_code_view'
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['trading_partner_code'],
+  :valid_values_view => 'valid_trading_partner_code_view'
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['origin_country_code'],
+  :valid_values_view => 'valid_origin_country_code_view'
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['taxon_check'],
+  :valid_values_view => 'valid_taxon_check_view'
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['appendix'],
+  :valid_values_view => 'valid_appendix_view'
+)

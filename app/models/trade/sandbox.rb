@@ -1,4 +1,5 @@
 class Trade::Sandbox
+  attr_reader :table_name
   def initialize(annual_report_upload)
     @annual_report_upload = annual_report_upload
     @csv_file_path = @annual_report_upload.csv_source_file.current_path
@@ -8,6 +9,12 @@ class Trade::Sandbox
   def copy
     create_target_table
     copy_csv_to_target_table
+  end
+
+  def destroy
+    Trade::SandboxTemplate.connection.execute(
+      Trade::SandboxTemplate.drop_stmt(@table_name)
+    )
   end
 
   def shipments
