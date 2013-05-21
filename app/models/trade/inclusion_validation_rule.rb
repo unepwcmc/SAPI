@@ -1,5 +1,5 @@
 class Trade::InclusionValidationRule < Trade::ValidationRule
-
+  attr_accessible :valid_values_view
   # Returns records from sandbox where values in column_names are not included
   # in valid_values_view.
   # The valid_values_view should have the same column names and data types as
