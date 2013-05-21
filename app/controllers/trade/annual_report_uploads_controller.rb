@@ -11,7 +11,7 @@ class Trade::AnnualReportUploadsController < ApplicationController
 
   def create
     @annual_report_upload = Trade::AnnualReportUpload.create(
-      params.slice(:csv_source_file)
+      params[:annual_report_upload].merge(params.slice(:csv_source_file))
     )
     render :json => {:files => [@annual_report_upload.to_jq_upload]}
   end

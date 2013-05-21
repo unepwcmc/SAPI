@@ -5,7 +5,13 @@ Trade.AnnualReportUploadFieldView = Ember.TextField.extend
     didInsertElement: ()->
       @.$().fileupload
           dataType: 'json'
-          url: '/trade/annual_report_uploads'
+
+          add: (e, data) ->
+             $("input[type=submit]").attr("disabled", null)
+                .click( (e) ->
+                    e.preventDefault()
+                    data.submit()
+                )
 
           done: (e, data) =>
             $.each data.result.files, (index, file) =>

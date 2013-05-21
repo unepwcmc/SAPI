@@ -1,11 +1,3 @@
-<h1>Annual Report Upload</h1>
+{{view Trade.AnnualReportUploadFormView}}
 
-<p>Please upload a file in CSV format</p>
-
-<span class="btn btn-success fileinput-button">
-  <i class="icon-plus icon-white"></i>
-  <span>Select file</span>
-  {{view Trade.AnnualReportUploadFieldView name="csv_source_file" controllerBinding="controller"}}
-</span>
-<div id="upload-message"></div>
 {{outlet}}
