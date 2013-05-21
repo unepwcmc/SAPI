@@ -1,30 +1,3 @@
-Appendix_no,Taxon_check,Term_code,Quantity,Unit_code,Trading_partner_code,Origin_country_code,Export_permit,Origin_permit,Purpose_code,Source_code,Year
+Appendix,SpeciesName,TermCode,Quantity,UnitCode,TradingPartner,CountryOfOrigin,ExportPermit,OriginPermit,PurposeCode,SourceCode,Year
 2,Acipenser baerii,CAV,6,KIL,FR,,FR1007533178-E,,T,C,2010
 2,Acipenser baerii,CAV,0.2,KIL,FR,CN,FR1107539121-R,,T,F,2011
-2,Acipenser gueldenstaedtii,CAV,0.7,KIL,FR,CN,FR1007533189-R,,T,C,2010
-2,Acipenser gueldenstaedtii,CAV,0.3,KIL,FR,,FR1107528146-E,,T,C,2011
-2,Acipenser gueldenstaedtii,CAV,0.3,KIL,FR,,FR1107513439-R,,T,C,2011
-2,Acipenser transmontanus,CAV,1.4,KIL,FR,,FR1007533200-R,,T,C,2010
-2,Acipenser transmontanus,CAV,5.576,KIL,FR,US,FR1007533198-R,,T,C,2010
-2,Acipenser transmontanus,CAV,0.5,KIL,FR,US,FR1007533201-R,,T,C,2010
-2,Acipenser transmontanus,CAV,7.525,KIL,FR,US,FR1007533198-R,,T,C,2010
-2,Acipenser transmontanus,CAV,0.8,KIL,FR,US,FR1107513439-R,10US 18890A/9,T,C,2011
-2,Acipenser transmontanus,CAV,6.538,KIL,FR,,FR1107522923-R,,T,C,2011
-2,Acipenser transmontanus,CAV,0.944,KIL,FR,,FR1107528146-E,,T,C,2011
-2,Acipenser transmontanus,CAV,0.888,KIL,FR,,FR1107507733-R,,T,C,2011
-2,Acipenser transmontanus,CAV,0.2,KIL,FR,US,FR1107539121-R,,T,F,2011
-2,Acipenser transmontanus,CAV,0.3,KIL,FR,US,FR1107539121-R,,T,F,2011
-2,Agapornis personatus,LIV,24,,US,,11US54795A/9,,T,C,2011
-2,Alligator mississippiensis,LPS,2,,CH,US,10CH056390,07US1666599/4,T,W,2010
-2,Alligator mississippiensis,LPS,1,,CH,US,10CH070098,05US10598/4,T,W,2010
-2,Alligator mississippiensis,LPS,4,,CH,US,10CH030800,08US191010/4,T,W,2010
-2,Alligator mississippiensis,LPS,2,,CH,US,09CH075983,08-US174838/4,T,W,2010
-2,Alligator mississippiensis,LPS,5,,CH,US,09CHo83758,06US128234/4,T,W,2010
-2,Alligator mississippiensis,LPS,1,,CH,US,10CH023670,08-US174841/4,T,W,2010
-2,Alligator mississippiensis,LPS,2,,CH,US,10CH025208,07US164801/4,T,W,2010
-2,Alligator mississippiensis,LPS,2,,CH,US,10CH027201,07US146017/4,T,W,2010
-2,Alligator mississippiensis,LPS,1,,CH,US,11CH027121,07US160204/4,T,W,2011
-2,Alligator mississippiensis,LPS,3,,CH,US,11CH031553,09US232736/4,T,W,2011
-2,Alligator mississippiensis,LPS,2,,CH,US,11CH058914,10US16631A/4,T,W,2011
-2,Alligator mississippiensis,LPS,4,,CH,US,11CH058914,10US16691A,T,W,2011
-2,Alligator mississippiensis,LPS,1,,US,US,11US41758A/9,07US160204/4,T,W,2011

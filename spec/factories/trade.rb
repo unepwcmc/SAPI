@@ -5,14 +5,14 @@ FactoryGirl.define do
   end
 
   factory :validation_rule, :class => Trade::ValidationRule do
-    column_names ['taxon_check']
+    column_names ['species_name']
     factory :presence_validation_rule, :class => Trade::PresenceValidationRule
     factory :numericality_validation_rule, :class => Trade::NumericalityValidationRule
     factory :format_validation_rule, :class => Trade::FormatValidationRule do
       format_re '^\w+$'
     end
     factory :inclusion_validation_rule, :class => Trade::InclusionValidationRule do
-      valid_values_view 'valid_taxon_check_view'
+      valid_values_view 'valid_species_name_view'
     end
   end
 
