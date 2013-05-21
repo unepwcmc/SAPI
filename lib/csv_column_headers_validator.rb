@@ -7,7 +7,8 @@ class CsvColumnHeadersValidator < ActiveModel::EachValidator
     begin
       CSV.open(value.current_path, "r") do |csv|
           column_headers = csv.first.map(&:downcase)
-          if column_headers != options[:is]
+          required_column_headers = Trade::SandboxTemplate.column_names
+          if column_headers != required_column_headers
             record.errors.add(attribute, "file has invalid column headers", {})
           end
       end
