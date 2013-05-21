@@ -312,7 +312,7 @@ puts "#{Language.count} languages created"
 puts "#{Reference.delete_all} references deleted"
 puts "#{TradeRestriction.delete_all} trade restrictions deleted"
 
-['trading_partner_code', 'term_code', 'taxon_check', 'appendix_no', 'quantity'].each do |col|
+['trading_partner', 'term_code', 'species_name', 'appendix', 'quantity'].each do |col|
   Trade::PresenceValidationRule.create(:column_names => [col])
 end
 ['quantity', 'year'].each do |col|
@@ -338,16 +338,16 @@ Trade::InclusionValidationRule.create(
   :valid_values_view => 'valid_unit_code_view'
 )
 Trade::InclusionValidationRule.create(
-  :column_names => ['trading_partner_code'],
-  :valid_values_view => 'valid_trading_partner_code_view'
+  :column_names => ['trading_partner'],
+  :valid_values_view => 'valid_trading_partner_view'
 )
 Trade::InclusionValidationRule.create(
-  :column_names => ['origin_country_code'],
-  :valid_values_view => 'valid_origin_country_code_view'
+  :column_names => ['country_of_origin'],
+  :valid_values_view => 'valid_country_of_origin_view'
 )
 Trade::InclusionValidationRule.create(
-  :column_names => ['taxon_check'],
-  :valid_values_view => 'valid_taxon_check_view'
+  :column_names => ['species_name'],
+  :valid_values_view => 'valid_species_name_view'
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['appendix'],

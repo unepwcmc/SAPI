@@ -4,7 +4,7 @@ describe Trade::ValidationRule do
   let(:annual_report_upload){
     create(
       :annual_report_upload,
-      :csv_source_file => Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_correct_min.csv'))
+      :csv_source_file => Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_correct.csv'))
     )
   }
   let(:sandbox_table_name){
@@ -16,14 +16,14 @@ describe Trade::ValidationRule do
       let!(:sandbox_records){
         Trade::SandboxTemplate.connection.execute <<-SQL
           INSERT INTO #{sandbox_table_name}
-          (trading_partner_code) VALUES (NULL)
+          (trading_partner) VALUES (NULL)
         SQL
       }
-      context 'trading_partner_code should not be blank' do
+      context 'trading_partner should not be blank' do
         subject{
           create(
             :presence_validation_rule,
-            :column_names => ['trading_partner_code']
+            :column_names => ['trading_partner']
           )
         }
         specify{
@@ -96,15 +96,15 @@ describe Trade::InclusionValidationRule do
       let!(:sandbox_records){
         Trade::SandboxTemplate.connection.execute <<-SQL
           INSERT INTO #{sandbox_table_name}
-          (trading_partner_code) VALUES ('Neverland')
+          (trading_partner) VALUES ('Neverland')
         SQL
       }
-      context 'trading partner code should be a valid iso code' do
+      context 'trading partner should be a valid iso code' do
         subject{
           create(
             :inclusion_validation_rule,
-            :column_names => ['trading_partner_code'],
-            :valid_values_view => 'valid_trading_partner_code_view'
+            :column_names => ['trading_partner'],
+            :valid_values_view => 'valid_trading_partner_view'
           )
         }
         specify{
