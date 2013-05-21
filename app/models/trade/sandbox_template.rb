@@ -8,6 +8,12 @@ class Trade::SandboxTemplate < ActiveRecord::Base
     SQL
   end
 
+  def self.drop_stmt(target_table_name)
+    sql = <<-SQL
+      DROP TABLE #{target_table_name}
+    SQL
+  end
+
   def self.copy_stmt(target_table_name, csv_file_path)
     sql = <<-PSQL
       \\COPY #{target_table_name} (#{column_names.join(', ')})
