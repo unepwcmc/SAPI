@@ -7,10 +7,15 @@ class CsvColumnHeadersValidator < ActiveModel::EachValidator
     begin
       CSV.open(value.current_path, "r") do |csv|
           reported_column_headers = csv.first.map(&:downcase)
-          valid_column_headers = Trade::SandboxTemplate::COLUMNS_IN_CSV_ORDER.map(&:classify).map(&:downcase)
-          required_column_headers = Trade::SandboxTemplate::REQUIRED_COLUMNS.map(&:classify).map(&:downcase)
-          reported_column_headers = valid_column_headers & reported_column_headers
-          if !(required_column_headers - reported_column_headers).empty?
+          required_column_headers = if (record.point_of_view == 'E')
+            Trade::SandboxTemplate::EXPORTER_COLUMNS
+          else
+            Trade::SandboxTemplate::IMPORTER_COLUMNS
+          end.map(&:classify).map(&:downcase)
+          if !(
+            (required_column_headers - reported_column_headers).empty? && 
+            (reported_column_headers - required_column_headers).empty?
+            )
             record.errors.add(attribute, "file does not have required column headers", {})
           end
       end

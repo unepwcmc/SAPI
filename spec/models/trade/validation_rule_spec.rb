@@ -4,7 +4,8 @@ describe Trade::ValidationRule do
   let(:annual_report_upload){
     create(
       :annual_report_upload,
-      :csv_source_file => Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_correct.csv'))
+      :point_of_view => 'E',
+      :csv_source_file => Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv'))
     )
   }
   let(:sandbox_table_name){

@@ -17,20 +17,30 @@ describe Trade::AnnualReportUploadsController do
   end
 
   describe "POST create" do
-    def correct_csv
-      test_document = File.join(Rails.root, 'spec', 'support', 'annual_report_upload_correct.csv')
+    def exporter_csv
+      test_document = File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv')
       Rack::Test::UploadedFile.new(test_document, "text/csv")
     end
+    let(:france){
+      create(
+        :geo_entity,
+        :geo_entity_type => create(
+          :geo_entity_type, :name => GeoEntityType::COUNTRY
+          ),
+        :name => 'France',
+        :iso_code2 => 'FR'
+      )
+    }
     it "should return success in jQuery File Upload way" do
-      xhr :post, :create, :csv_source_file => correct_csv, :format => 'json'
+      xhr :post, :create,
+        :annual_report_upload => {:point_of_view => 'E', :trading_country_id => france.id},
+        :csv_source_file => exporter_csv, :format => 'json'
       parse_json(response.body, "files/0")['id'].should_not be_blank
     end
-    def incorrect_csv
-      test_document = File.join(Rails.root, 'spec', 'support', 'annual_report_upload_incorrect.csv')
-      Rack::Test::UploadedFile.new(test_document, "text/csv")
-    end
     it "should return error in jQuery File Upload way" do
-      xhr :post, :create, :csv_source_file => incorrect_csv, :format => 'json'
+      xhr :post, :create,
+        :annual_report_upload => {:point_of_view => 'I', :trading_country_id => france.id},
+        :csv_source_file => exporter_csv, :format => 'json'
       parse_json(response.body, "files/0")['id'].should be_blank
     end
   end
