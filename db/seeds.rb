@@ -313,43 +313,51 @@ puts "#{Reference.delete_all} references deleted"
 puts "#{TradeRestriction.delete_all} trade restrictions deleted"
 
 ['trading_partner', 'term_code', 'species_name', 'appendix', 'quantity'].each do |col|
-  Trade::PresenceValidationRule.create(:column_names => [col])
+  Trade::PresenceValidationRule.create(:column_names => [col], :run_order => 1)
 end
 ['quantity', 'year'].each do |col|
-  Trade::NumericalityValidationRule.create(:column_names => [col])
+  Trade::NumericalityValidationRule.create(:column_names => [col], :run_order => 2)
 end
 
-Trade::FormatValidationRule.create(:column_names => ['year'], :format_re => '^\d{4}$')
+Trade::FormatValidationRule.create(:column_names => ['year'], :format_re => '^\d{4}$', :run_order => 2)
 
 Trade::InclusionValidationRule.create(
-  :column_names => ['trade_code'],
-  :valid_values_view => 'valid_term_code_view'
+  :column_names => ['term_code'],
+  :valid_values_view => 'valid_term_code_view',
+  :run_order => 3
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['source_code'],
-  :valid_values_view => 'valid_source_code_view'
+  :valid_values_view => 'valid_source_code_view',
+  :run_order => 3
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['purpose_code'],
-  :valid_values_view => 'valid_purpose_code_view'
+  :valid_values_view => 'valid_purpose_code_view',
+  :run_order => 3
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['unit_code'],
-  :valid_values_view => 'valid_unit_code_view'
+  :valid_values_view => 'valid_unit_code_view',
+  :run_order => 3
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['trading_partner'],
-  :valid_values_view => 'valid_trading_partner_view'
+  :valid_values_view => 'valid_trading_partner_view',
+  :run_order => 3
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['country_of_origin'],
-  :valid_values_view => 'valid_country_of_origin_view'
+  :valid_values_view => 'valid_country_of_origin_view',
+  :run_order => 3
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['species_name'],
-  :valid_values_view => 'valid_species_name_view'
+  :valid_values_view => 'valid_species_name_view',
+  :run_order => 3
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['appendix'],
-  :valid_values_view => 'valid_appendix_view'
+  :valid_values_view => 'valid_appendix_view',
+  :run_order => 3
 )

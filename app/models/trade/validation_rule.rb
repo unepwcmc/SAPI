@@ -1,5 +1,5 @@
 class Trade::ValidationRule < ActiveRecord::Base
-  attr_accessible :column_names
+  attr_accessible :column_names, :run_order
   include PgArrayParser
 
   def column_names
