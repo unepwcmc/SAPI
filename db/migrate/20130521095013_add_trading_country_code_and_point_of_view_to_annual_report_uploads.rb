@@ -1,6 +1,5 @@
 class AddTradingCountryCodeAndPointOfViewToAnnualReportUploads < ActiveRecord::Migration
   def change
-
     if Rails.env.test?
       add_column :trade_annual_report_uploads, :trading_country_id, :integer, :null => false
     else

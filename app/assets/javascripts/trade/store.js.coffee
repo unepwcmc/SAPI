@@ -8,6 +8,8 @@ DS.RESTAdapter.registerTransform('array',
     return value
 )
 
+DS.RESTAdapter.configure("plurals", { geo_entity: "geo_entities" });
+
 Trade.Adapter = DS.RESTAdapter.reopen({
   namespace: 'trade'
 })

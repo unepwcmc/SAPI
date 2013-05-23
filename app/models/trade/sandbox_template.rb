@@ -6,7 +6,8 @@ class Trade::SandboxTemplate < ActiveRecord::Base
     "trading_partner", "country_of_origin", "import_permit", "export_permit",
     "origin_permit", "purpose_code", "source_code", "year"
   ]
-  REQUIRED_COLUMNS = COLUMNS_IN_CSV_ORDER - ['import_permit']
+  IMPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER
+  EXPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER - ['import_permit']
 
   private
   def self.create_stmt(target_table_name)
@@ -21,9 +22,9 @@ class Trade::SandboxTemplate < ActiveRecord::Base
     SQL
   end
 
-  def self.copy_stmt(target_table_name, csv_file_path)
+  def self.copy_stmt(target_table_name, csv_file_path, columns_in_csv_order)
     sql = <<-PSQL
-      \\COPY #{target_table_name} (#{COLUMNS_IN_CSV_ORDER.join(', ')})
+      \\COPY #{target_table_name} (#{columns_in_csv_order.join(', ')})
       FROM ?
       WITH DELIMITER ','
       ENCODING 'utf-8'
