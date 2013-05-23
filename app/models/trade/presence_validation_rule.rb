@@ -5,11 +5,6 @@ class Trade::PresenceValidationRule < Trade::ValidationRule
     column_names.join(', ') + ' cannot be blank'
   end
 
-  def validation_errors(sandbox)
-    Trade::ValidationError.new(:error_message => error_message)
-  end
-
-
   # Returns records where the specified columns are NULL.
   # In case more than one column is specified, predicates are combined
   # using AND.

@@ -4,10 +4,6 @@ class Trade::NumericalityValidationRule < Trade::ValidationRule
     column_names.join(', ') + ' must be a number'
   end
 
-  def validation_errors(sandbox)
-    Trade::ValidationError.new(:error_message => error_message)
-  end
-
   # Returns records that do not pass the ISNUMERIC test for all columns
   # specified in column_names.
   def matching_records(table_name)

@@ -4,7 +4,6 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
   belongs_to :trading_country, :class_name => GeoEntity, :foreign_key => :trading_country_id
   validates :csv_source_file, :csv_column_headers => true
-  #include ActiveModel::ArraySerializationSupport
 
   def copy_to_sandbox
     sandbox.copy
@@ -24,7 +23,12 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
   end
 
   def validation_errors
-    Trade::ValidationErrorsArray.new(sandbox).validation_errors
+      @validation_errors = []
+      validation_rules = Trade::ValidationRule.order(:run_order)
+      validation_rules.each do |vr|
+        @validation_errors << vr.validation_errors(self)
+      end
+      @validation_errors.flatten
   end
 
   def to_jq_upload

@@ -7,11 +7,11 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     end.join(" with ") + ' is invalid'
   end
 
-  def validation_errors(sandbox)
+  def validation_errors(annual_report_upload)
     uniq_matching_records = Trade::SandboxTemplate.select(column_names).uniq.
       from(
       Arel::SqlLiteral.new(
-        '(' + matching_records_arel(sandbox.table_name).to_sql + ') AS matches'
+        '(' + matching_records_arel(annual_report_upload.sandbox.table_name).to_sql + ') AS matches'
       )
     )
     uniq_offending_values = uniq_matching_records.map do |r|
@@ -21,7 +21,9 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
       hash_conditions = Hash[column_names.zip(values_ary)]
 
       Trade::ValidationError.new(
-          :error_message => error_message(values_ary)
+          :error_message => error_message(values_ary),
+          :annual_report_upload_id => annual_report_upload.id,
+          :validation_rule_id => self.id
       )
     end
   end

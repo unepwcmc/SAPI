@@ -6,9 +6,16 @@
 
 <table>
   <thead>
-    <th>Validation</th>
+    <th>Error message</th>
+    <th>Error count</th>
   </thead>
   <tbody>
+    {{#each validationErrors}}
+      <tr>
+        <td>{{errorMessage}}</td>
+        <td>{{errorCount}}</td>
+      </tr>
+    {{/each}}
   </tbody>
 </table>
 <hr>
