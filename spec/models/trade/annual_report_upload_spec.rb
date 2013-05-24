@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: trade_annual_report_uploads
+#
+#  id                 :integer          not null, primary key
+#  created_by         :integer
+#  updated_by         :integer
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  is_done            :boolean          default(FALSE)
+#  number_of_rows     :integer
+#  csv_source_file    :text
+#  trading_country_id :integer          not null
+#  point_of_view      :string(255)      default("E"), not null
+#
+
 require 'spec_helper'
 
 describe Trade::AnnualReportUpload do

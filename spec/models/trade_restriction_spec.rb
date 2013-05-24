@@ -18,6 +18,7 @@
 #  updated_at       :datetime         not null
 #  public_display   :boolean          default(TRUE)
 #  url              :text
+#  import_row_id    :integer
 #
 
 require 'spec_helper'

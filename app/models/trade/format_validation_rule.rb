@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: trade_validation_rules
+#
+#  id                :integer          not null, primary key
+#  column_names      :string(255)      not null
+#  valid_values_view :string(255)
+#  type              :string(255)      not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  format_re         :string(255)
+#
+
 class Trade::FormatValidationRule < Trade::ValidationRule
   attr_accessible :format_re
   # Returns records that do not pass the regex test for all columns

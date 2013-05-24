@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: trade_validation_rules
+#
+#  id                :integer          not null, primary key
+#  column_names      :string(255)      not null
+#  valid_values_view :string(255)
+#  type              :string(255)      not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  format_re         :string(255)
+#
+
 require 'spec_helper'
 
 describe Trade::ValidationRule do
