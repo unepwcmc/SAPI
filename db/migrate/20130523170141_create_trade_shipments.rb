@@ -4,6 +4,8 @@ class CreateTradeShipments < ActiveRecord::Migration
     create_table :trade_permits do |t|
       t.string :number
       t.integer :geo_entity_id
+
+      t.timestamps
     end
 
     add_foreign_key "trade_permits", "geo_entities", :name => "trade_permits_geo_entity_id_fk", :column => "geo_entity_id"
@@ -11,6 +13,8 @@ class CreateTradeShipments < ActiveRecord::Migration
     create_table :trade_exporter_permits do |t|
       t.integer :trade_permit_id
       t.integer :trade_shipment_id
+
+      t.timestamps
     end
 
     add_foreign_key "trade_exporter_permits", "trade_permits", :name => "trade_exporter_permits_trade_permit_id_fk", :column => "trade_permit_id"
