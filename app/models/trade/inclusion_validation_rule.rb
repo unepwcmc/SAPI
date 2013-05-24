@@ -29,7 +29,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
       column_names +
       ['COUNT(*) AS error_count', 'ARRAY_AGG(id) AS matching_records_ids']
     ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
-    group(column_names)
+    group(column_names).having(column_names.map{ |cn| "#{cn} IS NOT NULL"}.join(' AND '))
   end
 
   # Returns records from sandbox where values in column_names are not included
