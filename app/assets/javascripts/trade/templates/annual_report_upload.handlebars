@@ -6,6 +6,15 @@
 
 <table>
   <thead>
+    <th>Error message</th>
+    <th>Error count</th>
+  </thead>
+  {{collection Trade.ValidationErrorsView contentBinding='validationErrors'}}
+</table>
+<hr>
+
+<table>
+  <thead>
     <th>Appendix</th>
     <th>Species Name</th>
     <th>Term Code</th>
@@ -20,23 +29,5 @@
     <th>Source Code</th>
     <th>Year</th>
   </thead>
-  <tbody>
-{{#each sandboxShipments}}
-<tr>
-    <td>{{appendix}}</td>
-    <td>{{species_name}}</td>
-    <td>{{term_code}}</td>
-    <td>{{quantity}}</td>
-    <td>{{unit_code}}</td>
-    <td>{{trading_partner}}</td>
-    <td>{{country_of_origin}}</td>
-    <td>{{import_permit}}</td>
-    <td>{{export_permit}}</td>
-    <td>{{origin_permit}}</td>
-    <td>{{purpose_code}}</td>
-    <td>{{source_code}}</td>
-    <td>{{year}}</td>
-</tr>
-{{/each}}
-</tbody>
+  {{collection Trade.SandboxShipmentsView contentBinding='controllers.visibleSandboxShipments'}}
 </table>

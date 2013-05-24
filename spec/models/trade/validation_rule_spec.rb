@@ -13,7 +13,7 @@ describe Trade::ValidationRule do
   }
 
   describe Trade::PresenceValidationRule do
-    describe :matching_records do
+    describe :validation_errors do
       let!(:sandbox_records){
         Trade::SandboxTemplate.connection.execute <<-SQL
           INSERT INTO #{sandbox_table_name}
@@ -28,14 +28,14 @@ describe Trade::ValidationRule do
           )
         }
         specify{
-          subject.matching_records(sandbox_table_name).size.should == 1
+          subject.validation_errors(annual_report_upload).size.should == 1
         }
       end
     end
   end
 
   describe Trade::NumericalityValidationRule do
-    describe :matching_records do
+    describe :validation_errors do
 
       let!(:sandbox_records){
         Trade::SandboxTemplate.connection.execute <<-SQL
@@ -51,14 +51,14 @@ describe Trade::ValidationRule do
           )
         }
         specify{
-          subject.matching_records(sandbox_table_name).size.should == 1
+          subject.validation_errors(annual_report_upload).size.should == 1
         }
       end
     end
   end
 
 describe Trade::FormatValidationRule do
-    describe :matching_records do
+    describe :validation_errors do
 
       let!(:sandbox_records){
         Trade::SandboxTemplate.connection.execute <<-SQL
@@ -75,14 +75,14 @@ describe Trade::FormatValidationRule do
           )
         }
         specify{
-          subject.matching_records(sandbox_table_name).size.should == 1
+          subject.validation_errors(annual_report_upload).size.should == 1
         }
       end
     end
   end
 
 describe Trade::InclusionValidationRule do
-    describe :matching_records do
+    describe :validation_errors do
       let(:country){
         create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
       }
@@ -109,7 +109,7 @@ describe Trade::InclusionValidationRule do
           )
         }
         specify{
-          subject.matching_records(sandbox_table_name).size.should == 1
+          subject.validation_errors(annual_report_upload).size.should == 1
         }
       end
     end

@@ -8,6 +8,7 @@ FactoryGirl.define do
 
   factory :validation_rule, :class => Trade::ValidationRule do
     column_names ['species_name']
+    run_order 1
     factory :presence_validation_rule, :class => Trade::PresenceValidationRule
     factory :numericality_validation_rule, :class => Trade::NumericalityValidationRule
     factory :format_validation_rule, :class => Trade::FormatValidationRule do
