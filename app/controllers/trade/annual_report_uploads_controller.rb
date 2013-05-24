@@ -16,4 +16,10 @@ class Trade::AnnualReportUploadsController < ApplicationController
     render :json => {:files => [@annual_report_upload.to_jq_upload]}
   end
 
+  def submit
+    @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
+    @annual_report_upload.submit
+    respond_with []
+  end
+
 end

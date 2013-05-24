@@ -53,4 +53,9 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
       }
     end
   end
+
+  def submit
+    sandbox.submit_permits
+  end
+
 end

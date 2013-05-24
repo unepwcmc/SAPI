@@ -1,7 +1,7 @@
 <p>Number of rows: {{numberOfRows}}</p>
 <p>Uploaded at: {{createdAt}}</p>
 <p>Uploaded by: TODO</p>
-
+<button {{action submitShipments}}>Submit shipments</button>
 <hr>
 
 <table>
@@ -21,22 +21,22 @@
     <th>Year</th>
   </thead>
   <tbody>
-{{#each sandboxShipments}}
-<tr>
-    <td>{{appendix}}</td>
-    <td>{{species_name}}</td>
-    <td>{{term_code}}</td>
-    <td>{{quantity}}</td>
-    <td>{{unit_code}}</td>
-    <td>{{trading_partner}}</td>
-    <td>{{country_of_origin}}</td>
-    <td>{{import_permit}}</td>
-    <td>{{export_permit}}</td>
-    <td>{{origin_permit}}</td>
-    <td>{{purpose_code}}</td>
-    <td>{{source_code}}</td>
-    <td>{{year}}</td>
-</tr>
-{{/each}}
-</tbody>
+    {{#each sandboxShipments}}
+    <tr>
+      <td>{{appendix}}</td>
+      <td>{{species_name}}</td>
+      <td>{{term_code}}</td>
+      <td>{{quantity}}</td>
+      <td>{{unit_code}}</td>
+      <td>{{trading_partner}}</td>
+      <td>{{country_of_origin}}</td>
+      <td>{{import_permit}}</td>
+      <td>{{export_permit}}</td>
+      <td>{{origin_permit}}</td>
+      <td>{{purpose_code}}</td>
+      <td>{{source_code}}</td>
+      <td>{{year}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
 </table>
