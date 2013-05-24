@@ -5,6 +5,7 @@ class Trade::PresenceValidationRule < Trade::ValidationRule
     column_names.join(', ') + ' cannot be blank'
   end
 
+  private
   # Returns records where the specified columns are NULL.
   # In case more than one column is specified, predicates are combined
   # using AND.

@@ -8,9 +8,6 @@ class Trade::ValidationRule < ActiveRecord::Base
   def column_names=(ary)
     write_attribute(:column_names, '{' + ary.join(',') + '}')
   end
-  def matching_records
-    raise "Must be implemented in subcass"
-  end
 
   def validation_errors(annual_report_upload)
     matching_records = matching_records(annual_report_upload.sandbox.table_name)

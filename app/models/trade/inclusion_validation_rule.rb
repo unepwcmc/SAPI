@@ -8,33 +8,30 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   end
 
   def validation_errors(annual_report_upload)
-    uniq_matching_records = Trade::SandboxTemplate.select(column_names).uniq.
-      from(
-      Arel::SqlLiteral.new(
-        '(' + matching_records_arel(annual_report_upload.sandbox.table_name).to_sql + ') AS matches'
-      )
-    )
-    uniq_offending_values = uniq_matching_records.map do |r|
-      column_names.map{ |cn| r.send(cn) }
-    end
-    uniq_offending_values.map do |values_ary|
-      hash_conditions = Hash[column_names.zip(values_ary)]
-
+    matching_records_grouped(annual_report_upload.sandbox.table_name).map do |mr|
+      values_ary = column_names.map{ |cn| mr.send(cn) }
       Trade::ValidationError.new(
           :error_message => error_message(values_ary),
           :annual_report_upload_id => annual_report_upload.id,
           :validation_rule_id => self.id,
-          :error_count => 0, #TODO
-          :matching_records_ids => [] #TODO
+          :error_count => mr.error_count,
+          :matching_records_ids => parse_pg_array(mr.matching_records_ids)
       )
     end
   end
 
-  def matching_records(table_name)
-    Trade::SandboxTemplate.from(matching_records_arel(table_name))
+  private
+  # Returns matching records grouped by column_names to return the count of
+  # specific errors and ids of matching records
+  def matching_records_grouped(table_name)
+    Trade::SandboxTemplate.
+    select(
+      column_names +
+      ['COUNT(*) AS error_count', 'ARRAY_AGG(id) AS matching_records_ids']
+    ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
+    group(column_names)
   end
 
-  private
   # Returns records from sandbox where values in column_names are not included
   # in valid_values_view.
   # The valid_values_view should have the same column names and data types as
@@ -50,14 +47,6 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     arel_nodes.each{ |n| join_conditions = join_conditions.and(n) }
     valid_values = s.project(s['*']).join(v).on(join_conditions)
     s.project('*').except(valid_values)
-  end
-
-  def value_matching_records_arel(table_name, hash_conditions)
-    s = Arel::Table.new(table_name)
-    arel_nodes = hash_conditions.map{ |c, v| s[c].eq(v)}
-    arel_conditions = arel_nodes.shift
-    arel_nodes.each{ |n| arel_conditions = arel_conditions.and(n) }
-    s.project('*').where(arel_conditions)
   end
 
 end
