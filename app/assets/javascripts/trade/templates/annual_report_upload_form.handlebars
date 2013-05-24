@@ -2,9 +2,15 @@
 
 <form id="fileupload" action="/trade/annual_report_uploads" method="POST" enctype="multipart/form-data">
   <label>Trading country</label>
-  <input type="text" name="annual_report_upload[trading_country_id]">
+  {{view Ember.Select
+      name = "annual_report_upload[trading_country_id]"
+      contentBinding = "controllers.geoEntities.content"
+      optionLabelPath = "content.name"
+      optionValuePath = "content.id"
+  }}
+
   <label>Point of view</label>
-  <input type="radio" name="annual_report_upload[point_of_view]" value="E">Exporter
+  <input type="radio" name="annual_report_upload[point_of_view]" value="E" checked="checked">Exporter
   <input type="radio" name="annual_report_upload[point_of_view]" value="I">Importer
 
 <p>Please upload a file in CSV format</p>

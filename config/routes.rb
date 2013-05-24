@@ -65,6 +65,7 @@ SAPI::Application.routes.draw do
   namespace :trade do
     resources :annual_report_uploads
     resources :validation_rules
+    resources :geo_entities, :only => [:index]
     root :to => 'ember#start'
   end
 
