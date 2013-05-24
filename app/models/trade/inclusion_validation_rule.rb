@@ -23,7 +23,9 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
       Trade::ValidationError.new(
           :error_message => error_message(values_ary),
           :annual_report_upload_id => annual_report_upload.id,
-          :validation_rule_id => self.id
+          :validation_rule_id => self.id,
+          :error_count => 0, #TODO
+          :matching_records_ids => [] #TODO
       )
     end
   end

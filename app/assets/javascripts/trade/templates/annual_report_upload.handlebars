@@ -9,14 +9,7 @@
     <th>Error message</th>
     <th>Error count</th>
   </thead>
-  <tbody>
-    {{#each validationErrors}}
-      <tr>
-        <td>{{errorMessage}}</td>
-        <td>{{errorCount}}</td>
-      </tr>
-    {{/each}}
-  </tbody>
+  {{collection Trade.ValidationErrorsView contentBinding='validationErrors'}}
 </table>
 <hr>
 
@@ -36,5 +29,5 @@
     <th>Source Code</th>
     <th>Year</th>
   </thead>
-  {{collection Trade.SandboxShipmentsView contentBinding='sandboxShipments'}}
+  {{collection Trade.SandboxShipmentsView contentBinding='controllers.visibleSandboxShipments'}}
 </table>
