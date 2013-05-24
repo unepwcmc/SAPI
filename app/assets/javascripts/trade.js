@@ -30,4 +30,4 @@
 //= require ./trade/router
 //= require_tree ./trade/routes
 
-Trade = Ember.Application.create();
+Trade = Ember.Application.create({LOG_TRANSITIONS: true});
