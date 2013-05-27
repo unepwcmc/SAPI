@@ -30,8 +30,8 @@ namespace :import do
       puts "inserting reference links"
       #add taxon_concept_references where missing
       sql = <<-SQL
-        INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id)
-        SELECT taxon_concepts.id, "references".id
+        INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id, created_at, updated_at)
+        SELECT taxon_concepts.id, "references".id, NOW(), NOW()
           FROM #{TMP_TABLE}
           INNER JOIN ranks
             ON UPPER(BTRIM(#{TMP_TABLE}.rank)) = UPPER(ranks.name)
