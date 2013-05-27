@@ -18,7 +18,7 @@ class Language < ActiveRecord::Base
 
   has_many :common_names
 
-  validates :iso_code1, :presence => true, :uniqueness => true, :length => {:is => 2}
+  validates :iso_code1, :uniqueness => true, :length => {:is => 2}, :allow_blank => true
   validates :iso_code3, :presence => true, :uniqueness => true, :length => {:is => 3}
 
   def can_be_deleted?

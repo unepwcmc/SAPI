@@ -305,10 +305,6 @@ puts "#{TaxonName.count} taxon_names created"
 
 puts "#{CommonName.delete_all} common names deleted"
 puts "#{Language.delete_all} languages deleted"
-Language.create(:name_en => 'English', :iso_code1 => 'en', :iso_code3 => 'eng')
-Language.create(:name_en => 'Spanish', :iso_code1 => 'es', :iso_code3 => 'spa')
-Language.create(:name_en => 'French', :iso_code1 => 'fr', :iso_code3 => 'fra')
-puts "#{Language.count} languages created"
 puts "#{Reference.delete_all} references deleted"
 puts "#{TradeRestriction.delete_all} trade restrictions deleted"
 
