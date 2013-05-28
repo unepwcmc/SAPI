@@ -18,7 +18,7 @@ require 'csv_column_headers_validator'
 class Trade::AnnualReportUpload < ActiveRecord::Base
   attr_accessible :number_of_rows, :csv_source_file, :trading_country_id, :point_of_view
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
-  belongs_to :trading_country, :class_name => GeoEntity, :foreign_key => :trading_country_id 
+  belongs_to :trading_country, :class_name => GeoEntity, :foreign_key => :trading_country_id
   validates :csv_source_file, :csv_column_headers => true
 
   def copy_to_sandbox
@@ -54,9 +54,28 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     end
   end
 
+  #TODO: this method needs error checking
   def submit
     sandbox.submit_permits
     sandbox.submit_shipments
+    #TODO probably would be good to wrap in transaction
+    # and return number of inserted shipments?
+
+    # none of the below should happen if there are rows that
+    # we were unable to move over
+
+    #remove uploaded file
+    store_dir = csv_source_file.store_dir
+    remove_csv_source_file!
+    puts '### removing uploads dir ###'
+    puts Rails.root.join('public', store_dir)
+    FileUtils.remove_dir(Rails.root.join('public', store_dir), :force => true)
+
+    #remove sandbox table
+    sandbox.destroy
+
+    #flag as submitted
+    update_attribute(:is_done, true)
   end
 
 end

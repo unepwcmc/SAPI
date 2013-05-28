@@ -19,7 +19,7 @@ class Trade::AnnualReportUploadsController < ApplicationController
   def submit
     @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
     @annual_report_upload.submit
-    respond_with []
+    respond_with @annual_report_upload
   end
 
 end
