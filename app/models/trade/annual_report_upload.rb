@@ -39,6 +39,7 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
   end
 
   def validation_errors
+      return [] if is_done
       @validation_errors = []
       validation_rules = Trade::ValidationRule.order(:run_order)
       validation_rules.each do |vr|
