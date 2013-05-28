@@ -74,4 +74,36 @@ describe Trade::AnnualReportUpload do
       specify {subject.should_not be_valid}
     end
   end
+
+  describe :validation_errors do
+    let!(:format_validation_rule){
+      create(
+        :format_validation_rule,
+        :column_names => ['year'],
+        :format_re => '^\d{4}$'
+      )
+    }
+      subject{
+        create(
+          :annual_report_upload,
+          :point_of_view => 'I',
+          :csv_source_file => importer_file
+        )
+      }
+      specify{ subject.validation_errors.should be_empty}
+  end
+
+  describe :destroy do
+      subject{
+        create(
+          :annual_report_upload,
+          :point_of_view => 'I',
+          :csv_source_file => importer_file
+        )
+      }
+      specify{
+          subject.sandbox.should_receive(:destroy)
+          subject.destroy
+      }
+  end
 end

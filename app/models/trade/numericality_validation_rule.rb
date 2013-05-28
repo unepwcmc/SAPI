@@ -13,6 +13,11 @@
 
 class Trade::NumericalityValidationRule < Trade::ValidationRule
 
+  def error_message
+    column_names.join(', ') + ' must be a number'
+  end
+
+  private
   # Returns records that do not pass the ISNUMERIC test for all columns
   # specified in column_names.
   def matching_records(table_name)

@@ -13,21 +13,6 @@ namespace :import do
       copy_data(file, TMP_TABLE)
       kingdom = file.split('/').last.split('_')[0].titleize
 
-
-      puts "Adding any missing languages"
-      puts "There are #{Language.count} languages in the database"
-      sql = <<-SQL
-        INSERT INTO languages(iso_code3, created_at, updated_at)
-        SELECT DISTINCT LOWER(BTRIM(#{TMP_TABLE}.language)), current_date, current_date
-        FROM #{TMP_TABLE}
-        WHERE NOT EXISTS (
-          SELECT id FROM languages
-          WHERE UPPER(iso_code3) = UPPER(BTRIM(#{TMP_TABLE}.language))
-        );
-      SQL
-      ActiveRecord::Base.connection.execute(sql)
-      puts "There are now #{Language.count} languages in the database"
-
       sql = <<-SQL
         INSERT INTO common_names(name, language_id, created_at, updated_at)
         SELECT #{TMP_TABLE}.name, languages.id, current_date, current_date

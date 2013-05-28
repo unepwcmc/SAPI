@@ -131,6 +131,11 @@ class CsvToDbMap
       'LnmLongDesc' => 'description text',
       'LnmURL' => 'url text'
     },
+    'languages_import' => {
+      'ISO-3' => 'iso_code3 varchar',
+      'LangShort' => 'name_en varchar',
+      'ISO-1' => 'iso_code1 varchar'
+    }, 
     'quotas_import' => {
       'Kingdom' => 'kingdom varchar',
       'RecId' => 'legacy_id integer',

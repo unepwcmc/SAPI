@@ -15,6 +15,9 @@ namespace :import do
     Rake::Task["import:countries"].invoke(
       'lib/assets/files/cleaned/countries_utf8.csv'
     )
+    Rake::Task["import:languages"].invoke(
+      'lib/assets/files/cleaned/languages_utf8.csv'
+    )
     Rake::Task["import:distributions"].invoke(
       'lib/assets/files/cleaned/animals/animalia_distribution_utf8.csv',
       'lib/assets/files/cleaned/plants/plantae_distribution_utf8.csv'

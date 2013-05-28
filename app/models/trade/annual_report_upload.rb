@@ -38,6 +38,15 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     sandbox.shipments
   end
 
+  def validation_errors
+      @validation_errors = []
+      validation_rules = Trade::ValidationRule.order(:run_order)
+      validation_rules.each do |vr|
+        @validation_errors << vr.validation_errors(self)
+      end
+      @validation_errors.flatten
+  end
+
   def to_jq_upload
     if valid?
     {

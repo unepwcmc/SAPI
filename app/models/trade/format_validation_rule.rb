@@ -13,6 +13,12 @@
 
 class Trade::FormatValidationRule < Trade::ValidationRule
   attr_accessible :format_re
+
+  def error_message
+    column_names.join(', ') + ' must be formatted as ' + format_re
+  end
+
+  private
   # Returns records that do not pass the regex test for all columns
   # specified in column_names.
   def matching_records(table_name)
