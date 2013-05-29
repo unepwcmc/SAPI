@@ -260,3 +260,13 @@ References are meant to be kept in an external system accessed by a web based AP
 Standard references are references recognized by CITES as references for specific taxon concepts. If a taxon concept has a standard reference, its name is considered to be 'accepted' and is therefore output in bold in the checklist index pdf.
 
 To create a standard reference link, create a taxon_concept_references record with data = {:usr_is_std_ref => true}. This will be inherited by descendants, unless they have taxon_concepts.data = {:usr_no_std_ref => true}.
+
+
+=== Events
+Events are used to represent CITES CoPs, CITES Notifications, and EU regulations (amongst others). This group listing changes, and trade restrictions under a common element. Allowing for copying bulks of information that repeat year after year.
+
+==== Event Types
+* CitesCop: For CITES CoP
+* CitesNotification: For CITES Notification
+* EuRegulation: for EU Implemeting/Listing/Legislation regulations
+* SuspensionEuRegulation: for EU suspending regulations
