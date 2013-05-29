@@ -267,6 +267,6 @@ Events are used to represent CITES CoPs, CITES Notifications, and EU regulations
 
 ==== Event Types
 * CitesCop: For CITES CoP
-* CitesNotification: For CITES Notification
+* CitesSuspensionNotification: For CITES Suspension Notification
 * EuRegulation: for EU Implemeting/Listing/Legislation regulations
 * SuspensionEuRegulation: for EU suspending regulations
