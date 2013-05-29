@@ -55,7 +55,11 @@ namespace :import do
               geo_entities.id AS geo_entity_id,
               start_notification.id AS start_notification_id,
               end_notification.id AS end_notification_id,
-              ARRAY_AGG(exclusion_taxon_concepts.id)::VARCHAR AS exclusions,
+              ARRAY(
+                SELECT *
+                FROM UNNEST(ARRAY_AGG(exclusion_taxon_concepts.id)) s
+                WHERE s IS NOT NULL
+              )::VARCHAR AS exclusions,
               suspensions_per_exclusion.is_current,
               suspensions_per_exclusion.notes
 
