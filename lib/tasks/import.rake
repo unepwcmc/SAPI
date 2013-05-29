@@ -58,8 +58,8 @@ namespace :import do
      'lib/assets/files/animals/animalia_standard_reference_links.csv',
      'lib/assets/files/plants/plantae_standard_reference_links.csv'
     )
-    Rake::Task["import:laws"].invoke(
-      'lib/assets/files/laws.csv'
+    Rake::Task["import:events"].invoke(
+      'lib/assets/files/events.csv'
     )
 
     Rake::Task["import:cites_quotas"].invoke(

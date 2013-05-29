@@ -125,9 +125,13 @@ class CsvToDbMap
       'Excludes' => 'exclusions varchar',
       'Cascade' => 'is_cascaded boolean'
     },
-    'laws_import' => {
+    'events_import' => {
+      'Legacy_ID' => 'legacy_id int',
+      'Designation' => 'designation varchar',
       'LnmShortDesc' => 'name varchar',
-      'Date valid' => 'effective_at date',
+      'StartDate' => 'effective_at date',
+      'EventType' => 'type varchar',
+      'Subtype' => 'subtype varchar',
       'LnmLongDesc' => 'description text',
       'LnmURL' => 'url text'
     },
