@@ -67,7 +67,7 @@ namespace :import do
     )
 
     Rake::Task["import:cites_suspensions"].invoke(
-      'lib/assets/files/cleaned/cites_suspensions_utf8.csv'
+      'lib/assets/files/cites_suspensions_utf8.csv'
     )
 
     Rake::Task["import:trade_codes"].invoke
