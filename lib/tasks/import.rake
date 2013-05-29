@@ -66,6 +66,10 @@ namespace :import do
       'lib/assets/files/cleaned/quotas_utf8.csv'
     )
 
+    Rake::Task["import:cites_suspensions"].invoke(
+      'lib/assets/files/cleaned/cites_suspensions_utf8.csv'
+    )
+
     Rake::Task["import:trade_codes"].invoke
 
     Sapi::rebuild()
