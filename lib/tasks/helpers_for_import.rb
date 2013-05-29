@@ -139,7 +139,7 @@ class CsvToDbMap
       'ISO-3' => 'iso_code3 varchar',
       'LangShort' => 'name_en varchar',
       'ISO-1' => 'iso_code1 varchar'
-    }, 
+    },
     'quotas_import' => {
       'Kingdom' => 'kingdom varchar',
       'RecId' => 'legacy_id integer',
@@ -158,6 +158,17 @@ class CsvToDbMap
       'IsCurrent' => 'is_current boolean',
       'PublicDisplay' => 'public_display boolean',
       'Link' => 'url varchar'
+    },
+    'cites_suspensions_import' => {
+      'IsCurrent' => 'is_current boolean',
+      'Kingdom' => 'kingdom varchar',
+      'RecID' => 'legacy_id integer',
+      'Rank' => 'rank varchar',
+      'ISO code' => 'country_iso2 varchar',
+      'StartNotificationID' => 'start_notification_legacy_id integer',
+      'EndNotificationID' => 'end_notification_legacy_id integer',
+      'Notes' => 'notes varchar',
+      'ExcludedTaxa' => 'exclusions text'
     },
     'distribution_tags_import' => {
       'Species RecID' => 'legacy_id integer',
