@@ -1,0 +1,2 @@
+class CitesSuspensionNotification < Event; end
+

@@ -1,0 +1,2 @@
+class EuSuspensionRegulation < Event; end
+
