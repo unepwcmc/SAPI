@@ -13,6 +13,9 @@
 #  url            :text
 #  is_current     :boolean          default(FALSE), not null
 #  type           :string(255)      default("Event"), not null
+#  legacy_id      :integer
+#  end_date       :datetime
+#  subtype        :string(255)
 #
 
 class EuRegulation < Event
