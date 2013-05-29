@@ -45,3 +45,5 @@
 .idea/
 
 db/structure.sql
+
+*.xlsx
