@@ -32,5 +32,15 @@ describe CitesCop do
       specify { cites_cop.should be_invalid}
       specify { cites_cop.should have(1).error_on(:designation_id) }
     end
+    context "when effective_at is blank" do
+      let(:cites_cop){
+        build(
+          :cites_cop,
+          :effective_at => nil
+        )
+      }
+      specify { cites_cop.should be_invalid}
+      specify { cites_cop.should have(1).error_on(:effective_at) }
+    end
   end
 end

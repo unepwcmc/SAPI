@@ -21,7 +21,7 @@
 class Event < ActiveRecord::Base
   attr_accessible :name, :designation_id, :description, :url, :effective_at
   belongs_to :designation
-  has_many :listing_changes
+
   validates :name, :presence => true, :uniqueness => true
   validates :url, :format => URI::regexp(%w(http https)), :allow_nil => true
 
@@ -29,8 +29,16 @@ class Event < ActiveRecord::Base
     effective_at && effective_at.strftime("%d/%m/%Y")
   end
 
-  def can_be_deleted?
-    listing_changes.count == 0
+  def end_date_formatted
+    end_date && end_date.strftime("%d/%m/%Y")
   end
+
+  protected
+    def designation_is_cites
+      cites = Designation.find_by_name('CITES')
+      unless designation_id && cites && designation_id == cites.id
+        errors.add(:designation_id, 'should be CITES')
+      end
+    end
 
 end

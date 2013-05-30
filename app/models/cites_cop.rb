@@ -19,15 +19,14 @@
 #
 
 class CitesCop < Event
+  has_many :listing_changes, :foreign_key => :event_id
+
   validates :designation_id, :presence => true
   validate :designation_is_cites
   validates :effective_at, :presence => true
 
-  protected
-    def designation_is_cites
-      cites = Designation.find_by_name('CITES')
-      unless designation_id && cites && designation_id == cites.id
-        errors.add(:designation_id, 'should be CITES')
-      end
-    end
+  def can_be_deleted?
+    listing_changes.count == 0
+  end
+
 end

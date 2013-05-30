@@ -34,6 +34,7 @@ SAPI::Application.routes.draw do
       post :activate, :on => :member
     end
     resources :cites_cops
+    resources :cites_suspension_notifications
     resources :references, :only => [:index, :create, :update, :destroy] do
       get :autocomplete, :on => :collection
     end

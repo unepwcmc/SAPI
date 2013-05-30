@@ -17,6 +17,9 @@ FactoryGirl.define do
 
     factory :eu_regulation, :class => EuRegulation
     factory :cites_cop, :class => CitesCop
+    factory :cites_suspension_notification, :class => CitesSuspensionNotification do
+      end_date '2012-01-01'
+    end
   end
 
   factory :taxon_name do
