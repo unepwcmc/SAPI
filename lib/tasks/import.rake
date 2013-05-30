@@ -18,6 +18,15 @@ namespace :import do
     Rake::Task["import:languages"].invoke(
       'lib/assets/files/languages_utf8.csv'
     )
+
+    Rake::Task["import:events"].invoke(
+      'lib/assets/files/events_utf8.csv'
+    )
+    Rake::Task["import:hash_annotations"].invoke(
+      'lib/assets/files/hash_annotations_eu_utf8.csv',
+      'lib/assets/files/hash_annotations_cites_utf8.csv'
+    )
+
     Rake::Task["import:distributions"].invoke(
       'lib/assets/files/animals/animalia_distribution_utf8.csv',
       'lib/assets/files/plants/plantae_distribution_utf8.csv'
@@ -58,10 +67,6 @@ namespace :import do
      'lib/assets/files/animals/animalia_standard_reference_links.csv',
      'lib/assets/files/plants/plantae_standard_reference_links.csv'
     )
-    Rake::Task["import:events"].invoke(
-      'lib/assets/files/events_utf8.csv'
-    )
-
     Rake::Task["import:cites_quotas"].invoke(
       'lib/assets/files/quotas_utf8.csv'
     )

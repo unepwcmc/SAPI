@@ -166,6 +166,12 @@ class CsvToDbMap
       'ISO Code 2' => 'iso_code2 varchar',
       'Tags' => 'tags varchar',
       'Designation' => 'designation varchar'
+    },
+    'hash_annotations_import' => {
+      'Event' => 'parent_symbol varchar',
+      'Symbol' => 'symbol varchar',
+      'For display' => 'ignore varchar',
+      'Text' => 'full_note_en varchar'
     }
   }
 
