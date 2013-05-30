@@ -40,7 +40,7 @@ namespace :import do
       copy_data(file, TMP_TABLE)
 
       sql = <<-SQL
-          WITH annotations AS (
+          WITH new_annotations AS (
             INSERT INTO annotations(
               import_row_id,
               short_note_en, short_note_es, short_note_fr, full_note_en,
@@ -55,16 +55,6 @@ namespace :import do
             FROM #{TMP_TABLE}_view AS TMP
             WHERE TMP.short_note_en IS NOT NULL AND TMP.short_note_en <> 'NULL'
             RETURNING import_row_id, id
-          ), hash_annotations AS (
-            INSERT INTO annotations(
-              symbol, parent_symbol, created_at, updated_at
-            )
-            SELECT DISTINCT
-              split_part(TMP.hash_note, ' ', 2), split_part(TMP.hash_note, ' ', 1),
-              current_date, current_date
-            FROM #{TMP_TABLE}_view AS TMP
-            WHERE TMP.hash_note IS NOT NULL
-            RETURNING (parent_symbol || ' ' ||symbol) AS full_symbol, id
           )
           INSERT INTO listing_changes(
             import_row_id,
@@ -88,7 +78,7 @@ namespace :import do
               WHEN TMP.appendix ilike 'DEL%' THEN #{d.id}
               ELSE #{a.id}
             END,
-            annotations.id,
+            new_annotations.id,
             hash_annotations.id,
             TMP.listing_date,
             CASE
@@ -115,8 +105,10 @@ namespace :import do
           ON inclusion_taxon_concepts.legacy_id = TMP.included_in_rec_id
           AND inclusion_taxon_concepts.legacy_type = '#{kingdom}'
           AND inclusion_taxon_concepts.rank_id = inclusion_ranks.id
-          LEFT JOIN annotations ON annotations.import_row_id = TMP.row_id
-          LEFT JOIN hash_annotations ON hash_annotations.full_symbol = TMP.hash_note;
+          LEFT JOIN new_annotations ON new_annotations.import_row_id = TMP.row_id
+          LEFT JOIN annotations AS hash_annotations
+            ON UPPER(hash_annotations.parent_symbol || ' ' || hash_annotations.symbol) = BTRIM(UPPER(TMP.hash_note))
+          LEFT JOIN events ON events.id = hash_annotations.event_id AND events.designation_id = #{designation.id};
       SQL
 
       puts "INSERTING listing_changes"
