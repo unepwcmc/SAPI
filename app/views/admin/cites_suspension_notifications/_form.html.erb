@@ -14,7 +14,7 @@
   %>
 
   <label>Basis for suspension</label>
-  <%= select_tag "cites_suspension_notification[existing_subtype]",
+  <%= f.select :subtype,
     options_from_collection_for_select(
       CitesSuspensionNotification.bases_for_suspension, :subtype, :subtype,
       @cites_suspension_notification && @cites_suspension_notification.subtype
