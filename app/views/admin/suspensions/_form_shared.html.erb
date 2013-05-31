@@ -1,0 +1,90 @@
+  <%= error_messages_for(@suspension) %>
+
+  <div class="control-group">
+    <%= f.label :geo_entity_id, "Party", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :geo_entity_id,
+        options_from_collection_for_select(
+          @geo_entities,
+          :id,
+          :name_en,
+          @suspension.geo_entity_id
+      ),
+        { :include_blank => true },
+        {:class => 'suspension select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :start_notification_id, "Start notification", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :start_notification_id,
+        options_from_collection_for_select(
+          @suspension_notifications,
+          :id,
+          :name,
+          @suspension.start_notification_id
+        )
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :end_notification_id, "End notification", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :end_notification_id,
+        options_from_collection_for_select(
+          @suspension_notifications,
+          :id,
+          :name,
+          @suspension.end_notification_id
+        ),
+        { :include_blank => true }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Notes</label>
+    <div class="controls">
+      <%= f.text_area :notes, :class => 'suspension', :value => @suspension.notes %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :term_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :term_ids,
+        options_from_collection_for_select(@terms, :id, :code, @suspension.term_ids),
+        { :include_blank => true },
+        {:class => 'suspension select2', :multiple => true, :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :source_id, :class => 'control-label'  %>
+    <div class="controls">
+      <%= f.select :source_ids,
+        options_from_collection_for_select(@sources, :id, :code, @suspension.source_ids),
+        { :include_blank => true },
+        {:class => 'suspension select2', :multiple => true, :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :purpose_id, :class => 'control-label' %>
+    <div class="controls">
+          <%= f.select :purpose_ids,
+            options_from_collection_for_select(@purposes, :id, :code, @suspension.purpose_ids),
+            { :include_blank => true },
+            {:class => 'suspension select2', :multiple => true, :style => 'width: 220px' }
+          %>
+    </div>
+  </div>
+
+  <p class="pull-right">
+    <%= f.submit %>
+  </p>

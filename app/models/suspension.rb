@@ -22,7 +22,17 @@
 #
 
 class Suspension < TradeRestriction
+  attr_accessible :start_notification_id, :end_notification_id
   belongs_to :taxon_concept
+  belongs_to :start_notification, :class_name => 'CitesSuspensionNotification'
+  belongs_to :end_notification, :class_name => 'CitesSuspensionNotification'
+  before_validation :handle_dates
+
+  def handle_dates
+    self.publication_date = start_notification && start_notification.effective_at
+    self.start_date = start_notification && start_notification.effective_at
+    self.end_date = end_notification && end_notification.effective_at
+  end
 
   CSV_COLUMNS = [
     :id, :start_date, :party, :quota,

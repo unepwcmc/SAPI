@@ -42,6 +42,7 @@ class Admin::SuspensionsController < Admin::SimpleCrudController
     @purposes = Purpose.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+    @suspension_notifications = CitesSuspensionNotification.select([:id, :name]).order(:effective_at)
   end
 
   def collection
