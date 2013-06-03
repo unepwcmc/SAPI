@@ -1,9 +1,10 @@
 require 'spec_helper'
 
-describe Admin::TaxonConceptSuspensionsController do
+describe Admin::TaxonConceptCitesSuspensionsController do
   before do
     @taxon_concept = create(:taxon_concept)
-    @suspension = create(:suspension,
+    @cites_suspension = create(
+      :cites_suspension,
       :taxon_concept => @taxon_concept,
       :start_notification => create_cites_suspension_notification
     )
@@ -30,17 +31,17 @@ describe Admin::TaxonConceptSuspensionsController do
   describe "POST create" do
     context "when successful" do
       it "renders index" do
-        post :create, :suspension => {
+        post :create, :cites_suspension => {
             :start_notification_id => create_cites_suspension_notification.id
           },
           :taxon_concept_id => @taxon_concept.id
         response.should redirect_to(
-          admin_taxon_concept_suspensions_url(@taxon_concept)
+          admin_taxon_concept_cites_suspensions_url(@taxon_concept)
         )
       end
     end
     it "renders new when not successful" do
-      post :create, :suspension => {},
+      post :create, :cites_suspension => {},
         :taxon_concept_id => @taxon_concept.id
       response.should render_template('new')
     end
@@ -48,43 +49,43 @@ describe Admin::TaxonConceptSuspensionsController do
 
   describe "GET edit" do
     it "renders the edit template" do
-      get :edit, :id => @suspension.id, :taxon_concept_id => @taxon_concept.id
+      get :edit, :id => @cites_suspension.id, :taxon_concept_id => @taxon_concept.id
       response.should render_template('edit')
     end
   end
 
   describe "PUT update" do
     context "when successful" do
-      it "renders taxon_concepts suspensions page" do
-        put :update, :suspension => {
+      it "renders taxon_concepts cites suspensions page" do
+        put :update, :cites_suspension => {
             :publication_date => 1.week.ago
           },
-          :id => @suspension.id,
+          :id => @cites_suspension.id,
           :taxon_concept_id => @taxon_concept.id
         response.should redirect_to(
-          admin_taxon_concept_suspensions_url(@taxon_concept)
+          admin_taxon_concept_cites_suspensions_url(@taxon_concept)
         )
       end
     end
 
     it "renders new when not successful" do
-      put :update, :taxon_concept_suspension => {
+      put :update, :taxon_concept_cites_suspension => {
           :publication_date => nil
         },
-        :id => @suspension.id,
+        :id => @cites_suspension.id,
         :taxon_concept_id => @taxon_concept.id
       response.should redirect_to(
-        admin_taxon_concept_suspensions_url(@taxon_concept)
+        admin_taxon_concept_cites_suspensions_url(@taxon_concept)
       )
     end
   end
 
   describe "DELETE destroy" do
     it "redirects after delete" do
-      delete :destroy, :id => @suspension.id,
+      delete :destroy, :id => @cites_suspension.id,
         :taxon_concept_id => @taxon_concept.id
       response.should redirect_to(
-        admin_taxon_concept_suspensions_url(@taxon_concept)
+        admin_taxon_concept_cites_suspensions_url(@taxon_concept)
       )
     end
   end

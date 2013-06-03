@@ -22,24 +22,23 @@
 #  excluded_taxon_concepts_ids :string
 #
 
-class Quota < TradeRestriction
+class CitesSuspension < TradeRestriction
+  attr_accessible :start_notification_id, :end_notification_id
+  belongs_to :taxon_concept
+  belongs_to :start_notification, :class_name => 'CitesSuspensionNotification'
+  belongs_to :end_notification, :class_name => 'CitesSuspensionNotification'
+  before_validation :handle_dates
+  validates :start_notification_id, :presence => true
 
-  validates :quota, :presence => true
-  validates :quota, :numericality => { :only_integer => true, :greater_than => 0 }
-
-  validates :unit, :presence => true
+  def handle_dates
+    self.publication_date = start_notification && start_notification.effective_at
+    self.start_date = start_notification && start_notification.effective_at
+    self.end_date = end_notification && end_notification.effective_at
+  end
 
   CSV_COLUMNS = [
-    :id, :year, :party, :quota,
+    :id, :start_date, :party, :quota,
     :unit_name, :publication_date,
     :notes, :url, :public_display
   ]
-
-  def party
-    geo_entity_id ? geo_entity.name_en : ''
-  end
-
-  def unit_name
-    unit_id ? unit.name_en : ''
-  end
 end

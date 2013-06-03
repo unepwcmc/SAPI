@@ -31,8 +31,8 @@ describe Term do
         specify { term.destroy.should be_false }
       end
       context "when CITES suspension" do
-        let!(:suspension){ create(
-          :suspension,
+        let!(:cites_suspension){ create(
+          :cites_suspension,
           :terms => [term],
           :start_notification_id => create_cites_suspension_notification.id
         ) }

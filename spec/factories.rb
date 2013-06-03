@@ -68,7 +68,7 @@ FactoryGirl.define do
     end
   end
 
-  factory :suspension do
+  factory :cites_suspension do
     taxon_concept
     start_notification
   end

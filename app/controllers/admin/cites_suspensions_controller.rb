@@ -1,14 +1,10 @@
-class Admin::TaxonConceptSuspensionsController < Admin::SimpleCrudController
-  defaults :resource_class => Suspension, :collection_name => 'suspensions', :instance_name => 'suspension'
-  belongs_to :taxon_concept
-
+class Admin::CitesSuspensionsController < Admin::SimpleCrudController
   before_filter :load_lib_objects
-  layout 'taxon_concepts'
 
   def update
     update! do |success, failure|
       success.html {
-        redirect_to admin_taxon_concept_suspensions_url(@taxon_concept),
+        redirect_to admin_cites_suspensions_url,
         :notice => 'Operation successful'
       }
       failure.html {
@@ -27,33 +23,30 @@ class Admin::TaxonConceptSuspensionsController < Admin::SimpleCrudController
   def create
     create! do |success, failure|
       success.html {
-        redirect_to admin_taxon_concept_suspensions_url(@taxon_concept),
+        redirect_to admin_cites_suspensions_url,
         :notice => 'Operation successful'
       }
       failure.html { render 'create' }
     end
   end
 
-  def destroy
-    destroy! do |success, failure|
-      success.html {
-        redirect_to admin_taxon_concept_suspensions_url(@taxon_concept),
-        :notice => 'Operation successful'
-      }
-    end
-  end
-
+  protected
 
   def load_lib_objects
+    @current_suspensions = CitesSuspension.
+      where(:is_current => true).
+      where(:taxon_concept_id => nil)
     @units = Unit.order(:code)
     @terms = Term.order(:code)
     @sources = Source.order(:code)
     @purposes = Purpose.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+    @suspension_notifications = CitesSuspensionNotification.select([:id, :name]).order(:effective_at)
   end
 
   def collection
-    @suspensions ||= end_of_association_chain.page(params[:page])
+    @cites_suspensions ||= end_of_association_chain.order('start_date').
+      page(params[:page])
   end
 end

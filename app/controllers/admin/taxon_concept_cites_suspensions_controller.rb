@@ -1,10 +1,15 @@
-class Admin::SuspensionsController < Admin::SimpleCrudController
+class Admin::TaxonConceptCitesSuspensionsController < Admin::SimpleCrudController
+  defaults :resource_class => CitesSuspension,
+    :collection_name => 'cites_suspensions', :instance_name => 'cites_suspension'
+  belongs_to :taxon_concept
+
   before_filter :load_lib_objects
+  layout 'taxon_concepts'
 
   def update
     update! do |success, failure|
       success.html {
-        redirect_to admin_suspensions_url,
+        redirect_to admin_taxon_concept_cites_suspensions_url(@taxon_concept),
         :notice => 'Operation successful'
       }
       failure.html {
@@ -23,19 +28,23 @@ class Admin::SuspensionsController < Admin::SimpleCrudController
   def create
     create! do |success, failure|
       success.html {
-        redirect_to admin_suspensions_url,
+        redirect_to admin_taxon_concept_cites_suspensions_url(@taxon_concept),
         :notice => 'Operation successful'
       }
       failure.html { render 'create' }
     end
   end
 
-  protected
+  def destroy
+    destroy! do |success, failure|
+      success.html {
+        redirect_to admin_taxon_concept_cites_suspensions_url(@taxon_concept),
+        :notice => 'Operation successful'
+      }
+    end
+  end
 
   def load_lib_objects
-    @current_suspensions = Suspension.
-      where(:is_current => true).
-      where(:taxon_concept_id => nil)
     @units = Unit.order(:code)
     @terms = Term.order(:code)
     @sources = Source.order(:code)
@@ -46,7 +55,6 @@ class Admin::SuspensionsController < Admin::SimpleCrudController
   end
 
   def collection
-    @suspensions ||= end_of_association_chain.order('start_date').
-      page(params[:page])
+    @cites_suspensions ||= end_of_association_chain.page(params[:page])
   end
 end

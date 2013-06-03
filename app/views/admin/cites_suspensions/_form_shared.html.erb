@@ -1,4 +1,4 @@
-  <%= error_messages_for(@suspension) %>
+  <%= error_messages_for(@cites_suspension) %>
 
   <div class="control-group">
     <%= f.label :geo_entity_id, "Party", :class => 'control-label' %>
@@ -8,10 +8,10 @@
           @geo_entities,
           :id,
           :name_en,
-          @suspension.geo_entity_id
+          @cites_suspension.geo_entity_id
       ),
         { :include_blank => true },
-        {:class => 'suspension select2', :style => 'width: 220px' }
+        {:class => 'cites_suspension select2', :style => 'width: 220px' }
       %>
     </div>
   </div>
@@ -24,7 +24,7 @@
           @suspension_notifications,
           :id,
           :name,
-          @suspension.start_notification_id
+          @cites_suspension.start_notification_id
         )
       %>
     </div>
@@ -38,7 +38,7 @@
           @suspension_notifications,
           :id,
           :name,
-          @suspension.end_notification_id
+          @cites_suspension.end_notification_id
         ),
         { :include_blank => true }
       %>
@@ -48,7 +48,7 @@
   <div class="control-group">
     <label class="control-label">Notes</label>
     <div class="controls">
-      <%= f.text_area :notes, :class => 'suspension', :value => @suspension.notes %>
+      <%= f.text_area :notes, :class => 'cites_suspension', :value => @cites_suspension.notes %>
     </div>
   </div>
 
@@ -56,9 +56,9 @@
     <%= f.label :term_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.select :term_ids,
-        options_from_collection_for_select(@terms, :id, :code, @suspension.term_ids),
+        options_from_collection_for_select(@terms, :id, :code, @cites_suspension.term_ids),
         { :include_blank => true },
-        {:class => 'suspension select2', :multiple => true, :style => 'width: 220px' }
+        {:class => 'cites_suspension select2', :multiple => true, :style => 'width: 220px' }
       %>
     </div>
   </div>
@@ -67,9 +67,9 @@
     <%= f.label :source_id, :class => 'control-label'  %>
     <div class="controls">
       <%= f.select :source_ids,
-        options_from_collection_for_select(@sources, :id, :code, @suspension.source_ids),
+        options_from_collection_for_select(@sources, :id, :code, @cites_suspension.source_ids),
         { :include_blank => true },
-        {:class => 'suspension select2', :multiple => true, :style => 'width: 220px' }
+        {:class => 'cites_suspension select2', :multiple => true, :style => 'width: 220px' }
       %>
     </div>
   </div>
@@ -78,9 +78,9 @@
     <%= f.label :purpose_id, :class => 'control-label' %>
     <div class="controls">
           <%= f.select :purpose_ids,
-            options_from_collection_for_select(@purposes, :id, :code, @suspension.purpose_ids),
+            options_from_collection_for_select(@purposes, :id, :code, @cites_suspension.purpose_ids),
             { :include_blank => true },
-            {:class => 'suspension select2', :multiple => true, :style => 'width: 220px' }
+            {:class => 'cites_suspension select2', :multiple => true, :style => 'width: 220px' }
           %>
     </div>
   </div>

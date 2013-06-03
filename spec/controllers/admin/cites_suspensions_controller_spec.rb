@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Admin::SuspensionsController do
+describe Admin::CitesSuspensionsController do
   before do
     @taxon_concept = create(:taxon_concept)
   end
@@ -10,9 +10,9 @@ describe Admin::SuspensionsController do
       get :index
       response.should render_template("index")
     end
-    it "assigns @suspensions" do
+    it "assigns @cites_suspensions" do
       get :index
-      assigns(:suspensions)
+      assigns(:cites_suspensions)
     end
   end
 
@@ -26,64 +26,73 @@ describe Admin::SuspensionsController do
   describe "POST create" do
     context "when successful" do
       it "renders index" do
-        post :create, :suspension => {
+        post :create, :cites_suspension => {
             :start_notification_id => create_cites_suspension_notification.id
           }
         response.should redirect_to(
-          admin_suspensions_url
+          admin_cites_suspensions_url
         )
       end
     end
     it "renders new when not successful" do
-      post :create, :suspension => {}
+      post :create, :cites_suspension => {}
       response.should render_template("new")
     end
   end
 
   describe "GET edit" do
     before(:each) do
-      @suspension = create(:suspension, :start_notification => create_cites_suspension_notification)
+      @cites_suspension = create(
+        :cites_suspension,
+        :start_notification => create_cites_suspension_notification
+      )
     end
     it "renders the edit template" do
-      get :edit, :id => @suspension.id
+      get :edit, :id => @cites_suspension.id
       response.should render_template('edit')
     end
   end
 
   describe "PUT update" do
     before(:each) do
-      @suspension = create(:suspension, :start_notification => create_cites_suspension_notification)
+      @cites_suspension = create(
+        :cites_suspension,
+        :start_notification => create_cites_suspension_notification
+      )
     end
 
     context "when successful" do
-      it "renders taxon_concepts suspensions page" do
-        put :update, :suspension => {
+      it "renders taxon_concepts cites suspensions page" do
+        put :update, :cites_suspension => {
             :publication_date => 1.week.ago
           },
-          :id => @suspension.id
+          :id => @cites_suspension.id
         response.should redirect_to(
-          admin_suspensions_url
+          admin_cites_suspensions_url
         )
       end
     end
 
     it "renders new when not successful" do
-      put :update, :suspension => {
+      put :update, :cites_suspension => {
           :start_notification_id => nil
         },
-        :id => @suspension.id
+        :id => @cites_suspension.id
       response.should render_template('new')
     end
   end
 
   describe "DELETE destroy" do
     before(:each) do
-      @suspension = create(:suspension, :start_notification => create_cites_suspension_notification)
+      @cites_suspension = create(
+        :cites_suspension,
+        :start_notification => create_cites_suspension_notification
+      )
     end
     it "redirects after delete" do
-      delete :destroy, :id => @suspension.id
+      delete :destroy, :id => @cites_suspension.id
       response.should redirect_to(
-        admin_suspensions_url
+        admin_cites_suspensions_url
       )
     end
   end
