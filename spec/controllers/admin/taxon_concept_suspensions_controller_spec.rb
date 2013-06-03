@@ -3,7 +3,10 @@ require 'spec_helper'
 describe Admin::TaxonConceptSuspensionsController do
   before do
     @taxon_concept = create(:taxon_concept)
-    @suspension = create(:suspension, :taxon_concept => @taxon_concept)
+    @suspension = create(:suspension,
+      :taxon_concept => @taxon_concept,
+      :start_notification => create_cites_suspension_notification
+    )
   end
 
   describe "GET index" do
@@ -28,8 +31,7 @@ describe Admin::TaxonConceptSuspensionsController do
     context "when successful" do
       it "renders index" do
         post :create, :suspension => {
-            :publication_date => "22/03/2013",
-            :is_current => 1
+            :start_notification_id => create_cites_suspension_notification.id
           },
           :taxon_concept_id => @taxon_concept.id
         response.should redirect_to(

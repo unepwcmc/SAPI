@@ -25,7 +25,7 @@ describe CitesSuspensionNotification do
   end
 
   describe :end_date_formatted do
-    let(:cites_suspension_notification){ create(:cites_supension_notification, :end_date => '2012-05-10') }
-    specify {event.end_date_formatted.should == '10/05/2012' }
+    let(:cites_suspension_notification){ create_cites_suspension_notification(:end_date => '2012-05-10') }
+    specify { cites_suspension_notification.end_date_formatted.should == '10/05/2012' }
   end
 end

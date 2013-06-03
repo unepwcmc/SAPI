@@ -21,7 +21,6 @@
 class CitesCop < Event
   has_many :listing_changes, :foreign_key => :event_id
 
-  validates :designation_id, :presence => true
   validate :designation_is_cites
   validates :effective_at, :presence => true
 

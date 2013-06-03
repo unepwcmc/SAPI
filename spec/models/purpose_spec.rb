@@ -23,7 +23,11 @@ describe Purpose do
     context "when dependent objects attached" do
       let(:purpose){ create(:purpose) }
       context "when CITES suspension" do
-        let!(:suspension){ create(:suspension, :purposes => [purpose])}
+        let!(:suspension){ create(
+            :suspension,
+            :purposes => [purpose],
+            :start_notification_id => create_cites_suspension_notification.id
+        ) }
         specify { purpose.destroy.should be_false }
       end
     end

@@ -24,7 +24,6 @@ class EuRegulation < Event
 
   has_many :listing_changes, :foreign_key => :event_id
 
-  validates :designation_id, :presence => true
   validate :designation_is_eu
   validates :effective_at, :presence => true
 

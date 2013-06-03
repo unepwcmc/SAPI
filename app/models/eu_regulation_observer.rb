@@ -2,7 +2,7 @@ class EuRegulationObserver < ActiveRecord::Observer
 
   def before_validation(eu_regulation)
     eu = Designation.find_by_name('EU')
-    eu_regulation.designation_id = eu && eu.iion
+    eu_regulation.designation_id = eu && eu.id
   end
 
   def after_create(eu_regulation)

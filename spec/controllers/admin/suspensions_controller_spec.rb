@@ -27,8 +27,7 @@ describe Admin::SuspensionsController do
     context "when successful" do
       it "renders index" do
         post :create, :suspension => {
-            :publication_date => "22/03/2013",
-            :is_current => 1
+            :start_notification_id => create_cites_suspension_notification.id
           }
         response.should redirect_to(
           admin_suspensions_url
@@ -43,7 +42,7 @@ describe Admin::SuspensionsController do
 
   describe "GET edit" do
     before(:each) do
-      @suspension = create( :suspension)
+      @suspension = create(:suspension, :start_notification => create_cites_suspension_notification)
     end
     it "renders the edit template" do
       get :edit, :id => @suspension.id
@@ -53,7 +52,7 @@ describe Admin::SuspensionsController do
 
   describe "PUT update" do
     before(:each) do
-      @suspension = create(:suspension)
+      @suspension = create(:suspension, :start_notification => create_cites_suspension_notification)
     end
 
     context "when successful" do
@@ -70,7 +69,7 @@ describe Admin::SuspensionsController do
 
     it "renders new when not successful" do
       put :update, :suspension => {
-          :publication_date => nil
+          :start_notification_id => nil
         },
         :id => @suspension.id
       response.should render_template('new')
@@ -79,7 +78,7 @@ describe Admin::SuspensionsController do
 
   describe "DELETE destroy" do
     before(:each) do
-      @suspension = create(:suspension)
+      @suspension = create(:suspension, :start_notification => create_cites_suspension_notification)
     end
     it "redirects after delete" do
       delete :destroy, :id => @suspension.id

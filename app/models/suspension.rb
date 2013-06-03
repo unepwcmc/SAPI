@@ -27,6 +27,7 @@ class Suspension < TradeRestriction
   belongs_to :start_notification, :class_name => 'CitesSuspensionNotification'
   belongs_to :end_notification, :class_name => 'CitesSuspensionNotification'
   before_validation :handle_dates
+  validates :start_notification_id, :presence => true
 
   def handle_dates
     self.publication_date = start_notification && start_notification.effective_at
