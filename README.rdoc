@@ -1,36 +1,23 @@
-= CITES Checklist {<img src="https://secure.travis-ci.org/unepwcmc/SAPI.png" />}[http://travis-ci.org/unepwcmc/SAPI] {<img src="https://codeclimate.com/badge.png" />}[https://codeclimate.com/github/unepwcmc/SAPI]
+= Species+ {<img src="https://secure.travis-ci.org/unepwcmc/SAPI.png" />}[http://travis-ci.org/unepwcmc/SAPI] {<img src="https://codeclimate.com/badge.png" />}[https://codeclimate.com/github/unepwcmc/SAPI]
 
+Species+ is the new species integration platform developed at WCMC.
 
 ==Dependencies
 
-packages as for Ubuntu:
+(packages as for Ubuntu)
 
-  - libpq-dev postgresql-9.1 postgresql-contrib-9.1
+  - PostgreSQL
+     - libpq-dev
+     - postgresql-9.1
+     - postgresql-contrib-9.1
+  - Redis
+  - TeXLive PdfLaTeX
+     - texlive
+     - texlive-full
+     - texlive-latex-recommended
+     - texlive-fonts-recommended
+     - texlive-extra (is this included in texlive-full?)
 
-Redis is used for the job queue.
-
-LaTex (pdflatex) is used for generating pdfs. We're using the texlive distribution.
-
-==LaTeX
-
-=== packages
-  - texlive
-  - texlive-full
-  - texlive-latex-recommended
-  - texlive-fonts-recommended
-
-=== handling hyperlinks in included pdf documents
-Latex does not preserve hyperlinks from an included pdf document, but there is a workaround to get this to work in order to be able to embed the intro pages in the checklist pdfs. The following needs to be when the intro pdfs are changed:
-  
-  - get pdfannotextractor.pl -- should be in texlive-extra package (?)
-  - get libfile-which-perl
-  - run this to install PDFBox (that's a Java jar required by pdfannotextractor that needs to be v. 0.7.2 or 0.7.3 -- not the current from apt-get))
-      pdfannotextractor --install
-  - run this command on every file to be included, this will generate a .pax file:
-      pdfannotextractor static_index.pdf
-  - finally, pdflatex should pick the pax files and use to reinsert hyperlinks into the included pdfs. It's considered an experimental feature.
-
-More info: http://anorien.csc.warwick.ac.uk/mirrors/CTAN/macros/latex/contrib/pax/README
 
 ==Installation
 
@@ -67,6 +54,19 @@ To load the modules into your db in postgres >= 9.1:
 
 This is done in migrations for your development and test environments. For staging and production needs to be done by hand, as it requires superuser privileges.
 
+=== LaTeX: handling hyperlinks in included pdf documents
+Latex does not preserve hyperlinks from an included pdf document, but there is a workaround to get this to work in order to be able to embed the intro pages in the checklist pdfs. The following needs to be when the intro pdfs are changed:
+  
+  - get pdfannotextractor.pl -- should be in texlive-extra package (?)
+  - get libfile-which-perl
+  - run this to install PDFBox (that's a Java jar required by pdfannotextractor that needs to be v. 0.7.2 or 0.7.3 -- not the current from apt-get))
+      pdfannotextractor --install
+  - run this command on every file to be included, this will generate a .pax file:
+      pdfannotextractor static_index.pdf
+  - finally, pdflatex should pick the pax files and use to reinsert hyperlinks into the included pdfs. It's considered an experimental feature.
+
+More info: http://anorien.csc.warwick.ac.uk/mirrors/CTAN/macros/latex/contrib/pax/README
+
 === Files for import
 
 The original data files are in Dropbox in a folder shared with the Species staff.
@@ -95,7 +95,7 @@ Note: if there is some issue with data encoding on the way, we may end up with t
 
   update listing_changes_mview set english_full_note = replace(english_full_note, '�', ''), spanish_full_note = replace(spanish_full_note, '�',''), french_full_note = replace(french_full_note, '�', '')  where id in (select id from listing_changes_mview where english_full_note like '%�%' or spanish_full_note like '%�%' or french_full_note like '%�%');
 
-== Job queue
+=== Job queue
 
 1. start redis
   redis-server
@@ -126,14 +126,9 @@ Try to apply these coding guidelines:
 * hstore support is via the 'activerecord-postgres-hstore' gem
 * arrays are parsed using the 'pg_array_parser' gem
 
-=== Indices
-
-We're using a BTREE index on the hstore column in some places to be able to use hstore column in order by expressions:
-
-  SELECT * FROM "taxon_concepts" ORDER BY (data -> 'some_hstore_col')
 
 === Migrating plpgsql functions
-Stored procedures are not updated with regular migrations anymore, as that approach was cumbersome. Instead, procedures and other plpgsql constructs are defined in separate files under db/plpgsql and are hooked to the db:migrate task, so that every time db:migrate runs those files are executed in lexicographic order. Therefore, it is important to use 'CREATE OR REPLACE' or 'DROP' / 'CREATE' in these files for migrations to pass.
+Stored procedures and views are not updated with regular migrations anymore, as that approach was cumbersome. Instead, procedures and other plpgsql constructs are defined in separate files under db/plpgsql and db/views and are hooked to the db:migrate task, so that every time db:migrate runs those files are executed in lexicographic order. Therefore, it is important to use 'CREATE OR REPLACE' or 'DROP' / 'CREATE' in these files for migrations to pass.
 
 == Definitions and Resources
 
