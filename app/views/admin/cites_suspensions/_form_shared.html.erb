@@ -29,6 +29,22 @@
       %>
     </div>
   </div>
+  <div class="control-group">
+    <div class="controls">
+    <%= f.fields_for :cites_suspension_confirmations do |cn_f| %>
+    <%= cn_f.select :cites_suspension_notification_id,
+      options_from_collection_for_select(
+        @suspension_notifications,
+        :id,
+        :name,
+        cn_f.object.cites_suspension_notification_id
+      )
+    %>
+    <%= cn_f.link_to_remove delete_icon %>
+    <% end %>
+    <p><%= f.link_to_add "Add a confirmation", :cites_suspension_confirmations %></p>
+    </div>
+  </div>
 
   <div class="control-group">
     <%= f.label :end_notification_id, "End notification", :class => 'control-label' %>

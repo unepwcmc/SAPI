@@ -23,12 +23,16 @@
 #
 
 class CitesSuspension < TradeRestriction
-  attr_accessible :start_notification_id, :end_notification_id
+  attr_accessible :start_notification_id, :end_notification_id,
+    :cites_suspension_confirmations_attributes
   belongs_to :taxon_concept
   belongs_to :start_notification, :class_name => 'CitesSuspensionNotification'
   belongs_to :end_notification, :class_name => 'CitesSuspensionNotification'
+  has_many :cites_suspension_confirmations
+  has_many :confirmation_notifications, :through => :cites_suspension_confirmations
   before_validation :handle_dates
   validates :start_notification_id, :presence => true
+  accepts_nested_attributes_for :cites_suspension_confirmations
 
   def handle_dates
     self.publication_date = start_notification && start_notification.effective_at
