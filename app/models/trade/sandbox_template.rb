@@ -15,6 +15,7 @@
 #  source_code       :string(255)
 #  year              :string(255)
 #  import_permit     :string(255)
+#  id                :integer          not null, primary key
 #
 
 class Trade::SandboxTemplate < ActiveRecord::Base
