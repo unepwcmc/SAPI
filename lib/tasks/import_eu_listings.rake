@@ -3,20 +3,22 @@ namespace :import do
   desc "Import EU species listings from csv file (usage: rake import:eu_listings[path/to/file,path/to/another])"
   task :eu_listings, 10.times.map { |i| "file_#{i}".to_sym } => [:environment, "eu_listings:defaults"] do |t, args|
     TMP_TABLE = 'eu_listings_import'
-    puts "There are #{ListingChange.count} EU listings in the database"
-    puts "There are #{ListingDistribution.count} listing distributions in the database"
-    designation = Designation.find_by_name(Designation::CITES)
-    appendix_1 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'I')
-    appendix_2 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'II')
-    appendix_3 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'III')
-    a = ChangeType.find_by_name(ChangeType::ADDITION)
-    d = ChangeType.find_by_name(ChangeType::DELETION)
-    r = ChangeType.find_by_name(ChangeType::RESERVATION)
-    rw = ChangeType.find_by_name(ChangeType::RESERVATION_WITHDRAWAL)
+    designation = Designation.find_by_name(Designation::EU)
+    puts "There are #{ListingChange.joins(:species_listing).
+      where(:species_listings => {:designation_id => designation.id}).count} EU listings in the database"
+    puts "There are #{ListingDistribution.joins(:listing_change => :species_listing).
+      where(:species_listings => {:designation_id => designation.id}).count} EU listing distributions in the database"
+    annex_A = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'A')
+    annex_B = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'B')
+    annex_C = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'C')
+    annex_D = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'D')
+    a = ChangeType.find_by_name_and_designation_id(ChangeType::ADDITION, designation.id)
+    d = ChangeType.find_by_name_and_designation_id(ChangeType::DELETION, designation.id)
     english = Language.find_by_name_en('English')
-    listings_count = ListingChange.count
-    listings_d_count = ListingDistribution.count
-    annotations_count = Annotation.count
+    listings_count = ListingChange.joins(:species_listing).
+      where(:species_listings => {:designation_id => designation.id}).count
+    listings_d_count = ListingDistribution.joins(:listing_change => :species_listing).
+      where(:species_listings => {:designation_id => designation.id}).count
 
     files = files_from_args(t, args)
     files.each do |file|
@@ -29,7 +31,7 @@ namespace :import do
       ActiveRecord::Base.connection.execute(<<-SQL
         CREATE VIEW #{TMP_TABLE}_view AS
         SELECT ROW_NUMBER() OVER () AS row_id, * FROM #{TMP_TABLE}
-        ORDER BY legacy_id, listing_date, appendix, country_iso2
+        ORDER BY legacy_id, listing_date, annex, country_iso2
       SQL
       )
       ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN IF EXISTS import_row_id")
@@ -40,68 +42,47 @@ namespace :import do
       copy_data(file, TMP_TABLE)
 
       sql = <<-SQL
-          WITH annotations AS (
+          WITH new_annotations AS (
             INSERT INTO annotations(
               import_row_id,
-              short_note_en, short_note_es, short_note_fr, full_note_en,
-              display_in_index, display_in_footnote,
-              created_at, updated_at
+              full_note_en, created_at, updated_at
             )
             SELECT DISTINCT TMP.row_id,
-              TMP.short_note_en, TMP.short_note_es, TMP.short_note_fr, TMP.full_note_en,
-              CASE WHEN index_annotation IS NOT NULL THEN TRUE ELSE FALSE END,
-              CASE WHEN history_annotation IS NOT NULL THEN TRUE ELSE FALSE END,
-              current_date, current_date
+               TMP.full_note_en, current_date, current_date
             FROM #{TMP_TABLE}_view AS TMP
-            WHERE TMP.short_note_en IS NOT NULL AND TMP.short_note_en <> 'NULL'
+            WHERE TMP.full_note_en IS NOT NULL AND TMP.full_note_en <> 'NULL'
             RETURNING import_row_id, id
-          ), hash_annotations AS (
-            INSERT INTO annotations(
-              symbol, parent_symbol, created_at, updated_at
-            )
-            SELECT DISTINCT
-              split_part(TMP.hash_note, ' ', 2), split_part(TMP.hash_note, ' ', 1),
-              current_date, current_date
-            FROM #{TMP_TABLE}_view AS TMP
-            WHERE TMP.hash_note IS NOT NULL
-            RETURNING (parent_symbol || ' ' ||symbol) AS full_symbol, id
           )
           INSERT INTO listing_changes(
             import_row_id,
             taxon_concept_id, species_listing_id, change_type_id,
             annotation_id, hash_annotation_id, effective_at, is_current,
-            explicit_change, inclusion_taxon_concept_id, created_at, updated_at
+            explicit_change, inclusion_taxon_concept_id, created_at, updated_at,
+            event_id
           )
           SELECT row_id,
             taxon_concepts.id,
             CASE
-              WHEN (UPPER(TMP.appendix) = 'DELI' OR
-                UPPER(TMP.appendix) = 'DELII') AND TMP.is_current = 't'::BOOLEAN THEN NULL
-              WHEN UPPER(BTRIM(TMP.appendix)) like '%III%' THEN #{appendix_3.id}
-              WHEN UPPER(BTRIM(TMP.appendix)) like '%II%' THEN #{appendix_2.id}
-              WHEN UPPER(BTRIM(TMP.appendix)) like '%I%' THEN #{appendix_1.id}
+              WHEN UPPER(BTRIM(TMP.annex)) like '%A' THEN #{annex_A.id}
+              WHEN UPPER(BTRIM(TMP.annex)) like '%B' THEN #{annex_B.id}
+              WHEN UPPER(BTRIM(TMP.annex)) like '%C' THEN #{annex_C.id}
+              WHEN UPPER(BTRIM(TMP.annex)) like '%D' THEN #{annex_D.id}
               ELSE NULL
             END,
             CASE
-              WHEN TMP.appendix like '%/r' THEN #{r.id}
-              WHEN TMP.appendix like '%/w' THEN #{rw.id}
-              WHEN TMP.appendix ilike 'DEL%' THEN #{d.id}
+              WHEN TMP.annex ilike 'DEL%' THEN #{d.id}
               ELSE #{a.id}
             END,
-            annotations.id,
+            new_annotations.id,
             hash_annotations.id,
             TMP.listing_date,
             CASE
               WHEN TMP.is_current IS NULL THEN 'f'
               ELSE TMP.is_current
             END,
-            CASE
-              WHEN (UPPER(TMP.appendix) = 'DELI' OR
-                UPPER(TMP.appendix) = 'DELII') AND TMP.is_current = 'f'::BOOLEAN THEN 'f'::BOOLEAN
-              ELSE 't'::BOOLEAN
-            END,
+            't'::BOOLEAN,
             inclusion_taxon_concepts.id,
-            current_date, current_date
+            current_date, current_date, events2.id
           FROM #{TMP_TABLE}_view AS TMP
           INNER JOIN ranks
           ON LOWER(ranks.name) = LOWER(TMP.rank)
@@ -115,8 +96,11 @@ namespace :import do
           ON inclusion_taxon_concepts.legacy_id = TMP.included_in_rec_id
           AND inclusion_taxon_concepts.legacy_type = '#{kingdom}'
           AND inclusion_taxon_concepts.rank_id = inclusion_ranks.id
-          LEFT JOIN annotations ON annotations.import_row_id = TMP.row_id
-          LEFT JOIN hash_annotations ON hash_annotations.full_symbol = TMP.hash_note;
+          LEFT JOIN new_annotations ON new_annotations.import_row_id = TMP.row_id
+          LEFT JOIN annotations AS hash_annotations
+            ON UPPER(hash_annotations.parent_symbol || ' ' || hash_annotations.symbol) = BTRIM(UPPER(TMP.hash_note))
+          LEFT JOIN events ON events.id = hash_annotations.event_id AND events.designation_id = #{designation.id}
+          LEFT JOIN events AS events2 ON events2.legacy_id = TMP.event_legacy_id AND events2.designation_id = #{designation.id};
       SQL
 
       puts "INSERTING listing_changes"
@@ -126,15 +110,15 @@ namespace :import do
       sql = <<-SQL
       INSERT INTO listing_changes (parent_id, taxon_concept_id, species_listing_id, change_type_id, effective_at, is_current, created_at, updated_at)
       SELECT * FROM (
-        WITH cites_listings_import_per_taxon_exclusion AS (
+        WITH eu_listings_import_per_taxon_exclusion AS (
           SELECT row_id, 
           split_part(regexp_split_to_table(excluded_taxa,','),':',1) AS exclusion_rank,
           split_part(regexp_split_to_table(excluded_taxa,','),':',2) AS exclusion_legacy_id
-          FROM cites_listings_import_view
+          FROM eu_listings_import_view
           WHERE excluded_taxa IS NOT NULL
         )
         SELECT
-        --cites_listings_import_per_taxon_exclusion.*,
+        --eu_listings_import_per_taxon_exclusion.*,
         --exclusion_ranks.name, 
         listing_changes.id, 
         exclusion_taxon_concepts.id AS exclusion_id,
@@ -143,7 +127,7 @@ namespace :import do
         effective_at,
         false AS is_current,
         NOW(), NOW()
-        FROM cites_listings_import_per_taxon_exclusion
+        FROM eu_listings_import_per_taxon_exclusion
         INNER JOIN ranks exclusion_ranks
           ON BTRIM(LOWER(exclusion_ranks.name)) = BTRIM(LOWER(exclusion_rank))
         INNER JOIN taxon_concepts exclusion_taxon_concepts
@@ -172,7 +156,7 @@ namespace :import do
               effective_at,
               false AS is_current,
               NOW(), NOW()
-              FROM cites_listings_import_view 
+              FROM eu_listings_import_view 
               INNER JOIN listing_changes
                 ON row_id = import_row_id
               INNER JOIN change_types ON change_types.name = 'EXCEPTION'
@@ -183,7 +167,7 @@ namespace :import do
       SELECT exceptions.*, split_part(regexp_split_to_table(excluded_populations_iso2,','),':',1) AS iso_code2
       FROM exceptions
       INNER JOIN listing_changes ON exceptions.parent_id = listing_changes.id
-      INNER JOIN cites_listings_import_view ON cites_listings_import_view.row_id = listing_changes.import_row_id
+      INNER JOIN eu_listings_import_view ON eu_listings_import_view.row_id = listing_changes.import_row_id
       )
       INSERT INTO listing_distributions (listing_change_id, geo_entity_id, is_party, created_at, updated_at)
       SELECT excluded_populations.id, geo_entities.id, 'f', NOW(), NOW() 
@@ -197,7 +181,7 @@ namespace :import do
       sql = <<-SQL
       WITH listed_populations AS (
         SELECT listing_changes.id, split_part(regexp_split_to_table(populations_iso2,','),':',1) AS iso_code2
-        FROM cites_listings_import_view AS TMP
+        FROM eu_listings_import_view AS TMP
         INNER JOIN listing_changes ON TMP.row_id = listing_changes.import_row_id
       )
       INSERT INTO listing_distributions (listing_change_id, geo_entity_id, is_party, created_at, updated_at)
@@ -225,34 +209,39 @@ namespace :import do
     puts "DROPPING temporary column and view"
     ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN import_row_id")
     ActiveRecord::Base.connection.execute("ALTER TABLE annotations DROP COLUMN import_row_id")
-    ActiveRecord::Base.connection.execute("DROP VIEW cites_listings_import_view")
+    ActiveRecord::Base.connection.execute("DROP VIEW eu_listings_import_view")
 
-    puts "#{ListingChange.count - listings_count} CITES listings were added to the database"
-    puts "#{ListingDistribution.count - listings_d_count} listing distributions were added to the database"
-    puts "#{Annotation.count - annotations_count} CITES annotations were added to the database"
+    new_listings_count = ListingChange.joins(:species_listing).
+      where(:species_listings => {:designation_id => designation.id}).count
+    new_listings_d_count = ListingDistribution.joins(:listing_change => :species_listing).
+      where(:species_listings => {:designation_id => designation.id}).count
+    puts "#{new_listings_count - listings_count} EU listings were added to the database"
+    puts "#{new_listings_d_count - listings_d_count} EU listing distributions were added to the database"
 
   end
 
-  namespace :cites_listings do
-    desc 'Add defaults CITES listings and default ChangeTypes'
+  namespace :eu_listings do
+    desc 'Add defaults EU listings and default ChangeTypes'
     task :defaults => :environment do
-      puts 'Going to create CITES default species listings, if they do not exist'
-      designation = Designation.find_by_name("CITES")
-      ["I", "II", "III"].each do |appendix|
-        SpeciesListing.find_or_create_by_name_and_abbreviation_and_designation_id("Appendix #{appendix}", appendix, designation.id)
+      puts 'Going to create EU default species listings, if they do not exist'
+      designation = Designation.find_by_name("EU")
+      ["A", "B", "C", "D"].each do |annex|
+        SpeciesListing.find_or_create_by_name_and_abbreviation_and_designation_id("Annex #{annex}", annex, designation.id)
       end
       puts 'Going to create change types defaults, if they dont already exist'
       ChangeType.dict.each do |c_type|
-        ChangeType.find_or_create_by_name(c_type)
+        ChangeType.find_or_create_by_name_and_designation_id(c_type, designation.id)
       end
       puts 'Created appendices and change type defaults'
     end
-    desc "Drop CITES species listings"
+    desc "Drop EU species listings"
     task :delete_all => :environment do
-      AnnotationTranslation.delete_all
-      Annotation.delete_all
-      ListingDistribution.delete_all
-      ListingChange.delete_all
+      designation = Designation.find_by_name("EU")
+      Annotation.joins(:event).
+        where(:events => {:designation_id => designation.id}).delete_all
+      ListingDistribution.joins(:listing_change).
+        where(:listing_changes => {:desigantion_id => designation.id}).delete_all
+      ListingChange.where(:designation_id => designation.id).delete_all
     end
   end
 end
