@@ -39,6 +39,10 @@ namespace :import do
       'lib/assets/files/animals/animalia_legislation_utf8.csv',
       'lib/assets/files/plants/plantae_legislation_utf8.csv'
     )
+    Rake::Task["import:eu_listings"].invoke(
+      'lib/assets/files/animals/animalia_eu_legislation_utf8.csv',
+      'lib/assets/files/plants/plantae_eu_legislation_utf8.csv'
+    )
     Rake::Task["import:common_names"].invoke(
       'lib/assets/files/animals/animalia_common_names_utf8.csv',
       'lib/assets/files/plants/plantae_common_names_utf8.csv'
