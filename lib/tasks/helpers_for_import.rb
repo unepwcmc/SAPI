@@ -129,9 +129,9 @@ class CsvToDbMap
       'Legacy_ID' => 'legacy_id int',
       'Designation' => 'designation varchar',
       'LnmShortDesc' => 'name varchar',
-      'StartDate' => 'effective_at date',
-      'EventType' => 'type varchar',
-      'Subtype' => 'subtype varchar',
+      'Date valid from' => 'effective_at date',
+      'Event Type' => 'type varchar',
+      'Basis for Suspension' => 'subtype varchar',
       'LnmLongDesc' => 'description text',
       'LnmURL' => 'url text'
     },
@@ -168,9 +168,9 @@ class CsvToDbMap
       'Designation' => 'designation varchar'
     },
     'hash_annotations_import' => {
-      'Event' => 'parent_symbol varchar',
-      'Symbol' => 'symbol varchar',
-      'For display' => 'ignore varchar',
+      'Hash No' => 'symbol varchar',
+      'Law No' => 'event_legacy_id integer',
+      'For Display' => 'ignore varchar',
       'Text' => 'full_note_en varchar'
     }
   }
