@@ -15,6 +15,7 @@ SAPI::Application.routes.draw do
     resources :ranks, :only => [:index]
     resources :geo_entities, :only => [:index]
     resources :geo_relationship_types, :only => [:index]
+    resources :taxon_concepts, :only => [:index]
   end
   namespace :admin do
     resources :taxonomies, :only => [:index, :create, :update, :destroy]

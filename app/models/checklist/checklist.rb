@@ -2,8 +2,8 @@
 class Checklist::Checklist
   attr_accessor :taxon_concepts_rel, :taxon_concepts, :animalia, :plantae
 
-  # Constructs a query to retrieve taxon concepts based on user defined
-  # parameters
+  # Constructs a query to retrieve CITES listed taxon concepts based on user
+  # defined parameters
   #
   # @param [Hash] a hash of search params and their values
   def initialize(options)
