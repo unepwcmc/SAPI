@@ -4,21 +4,22 @@ namespace :import do
   task :cites_suspensions, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     TMP_TABLE = 'cites_suspensions_import'
 
-    if Suspension.any?
-      puts "Removing suspensions related records"
+    if CitesSuspension.any?
+      puts "Removing CitesSuspensions related records"
+      puts "#{CitesSuspensionConfirmation.delete_all} suspension confirmations deleted"
       puts "#{TradeRestrictionSource.
-        where(:trade_restriction_id => Suspension.select(:id)).
+        where(:trade_restriction_id => CitesSuspension.select(:id)).
         delete_all} trade restriction Sources deleted"
       puts "#{TradeRestrictionTerm.
-        where(:trade_restriction_id => Suspension.select(:id)).
+        where(:trade_restriction_id => CitesSuspension.select(:id)).
         delete_all} trade restriction Term deleted"
       puts "#{TradeRestrictionPurpose.
-        where(:trade_restriction_id => Suspension.select(:id)).
+        where(:trade_restriction_id => CitesSuspension.select(:id)).
         delete_all} trade restriction Purposes deleted"
-      puts "#{Suspension.delete_all} suspensions deleted"
+      puts "#{CitesSuspension.delete_all} suspensions deleted"
     end
 
-    puts "There are #{Suspension.count} CITES suspensions in the database."
+    puts "There are #{CitesSuspension.count} CITES suspensions in the database."
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(TMP_TABLE)
@@ -112,7 +113,7 @@ namespace :import do
           end_notification_id,
           is_current,
           notes,
-          'Suspension',
+          'CitesSuspension',
           NOW(),
           NOW()
         FROM suspensions_with_ids
@@ -121,7 +122,7 @@ namespace :import do
       ActiveRecord::Base.connection.execute(sql)
     end
 
-    puts "There are now #{Suspension.count} CITES suspensions in the database"
+    puts "There are now #{CitesSuspension.count} CITES suspensions in the database"
   end
 
 end

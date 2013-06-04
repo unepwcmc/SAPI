@@ -1,6 +1,6 @@
 <h3>Data Exports</h3>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin nisi. Etiam eu orci lectus, vitae hendrerit magna. Aenean tincidunt euismod urna, in rutrum arcu ultrices eu. Cras ornare tincidunt lorem, in imperdiet justo lacinia sit amet. Vivamus accumsan, ipsum et molestie cursus, leo odio faucibus dui, quis eleifend turpis odio eget dui. Ut mattis venenatis ipsum, sed facilisis sapien pretium nec. Fusce eget arcu a nulla pellentesque tristique at a elit. Praesent eget tortor vel urna imperdiet pulvinar. 
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin nisi. Etiam eu orci lectus, vitae hendrerit magna. Aenean tincidunt euismod urna, in rutrum arcu ultrices eu. Cras ornare tincidunt lorem, in imperdiet justo lacinia sit amet. Vivamus accumsan, ipsum et molestie cursus, leo odio faucibus dui, quis eleifend turpis odio eget dui. Ut mattis venenatis ipsum, sed facilisis sapien pretium nec. Fusce eget arcu a nulla pellentesque tristique at a elit. Praesent eget tortor vel urna imperdiet pulvinar.
 </p>
 
 <h2>Trade restrictions</h2>
@@ -13,7 +13,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
   <%= select_tag :data_type, options_for_select(
     [
       ['Quotas', 'Quotas', {:class => @cites.id}],
-      ['Suspensions', 'Suspensions', {:class => @cites.id}],
+      ['Suspensions', 'CitesSuspensions', {:class => @cites.id}],
       ['Opinions', 'O', {:class => @eu.id}],
       ['Suspensions', 'S', {:class => @eu.id}]
     ]
@@ -56,7 +56,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
   </p>
   <p>
   <%= label_tag 'Species listing' %>
-  <%= select_tag :"filters[species_listings_ids]", 
+  <%= select_tag :"filters[species_listings_ids]",
     options_for_select(
       @species_listings.map do |a|
         [a.abbreviation, a.id, {:class => a.designation_id}]
@@ -80,7 +80,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
   </p>
   <p>
   <%= label_tag 'Higher taxa' %>
-  <%= select_tag :"filters[taxon_concepts_ids]", 
+  <%= select_tag :"filters[taxon_concepts_ids]",
     options_from_collection_for_select(@taxon_concepts, :id, :full_name),
     {
       :class => "select2", :multiple => true, :style => 'width: 220px',

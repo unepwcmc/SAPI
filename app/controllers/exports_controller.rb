@@ -19,8 +19,8 @@ class ExportsController < ApplicationController
     case params[:data_type]
       when 'Quotas'
         result = Quota.export params[:filters]
-      when 'Suspensions'
-        result = Suspension.export
+      when 'CitesSuspensions'
+        result = CitesSuspension.export
       when 'Listings'
         result = ListingsExport.new(params[:filters]).export
     end

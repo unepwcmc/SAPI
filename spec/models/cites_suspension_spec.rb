@@ -10,7 +10,6 @@
 #  quota            :integer
 #  publication_date :datetime
 #  notes            :text
-#  suspension_basis :string(255)
 #  type             :string(255)
 #  unit_id          :integer
 #  term_id          :integer
@@ -23,49 +22,50 @@
 
 require 'spec_helper'
 
-describe Suspension do
+describe CitesSuspension do
   before do
     @taxon_concept = create(:taxon_concept)
   end
 
   context "validations" do
     describe :create do
-      context "when publication date missing" do
-        let(:suspension){
+      context "when start notification missing" do
+        let(:cites_suspension){
           build(
-            :suspension,
-            :publication_date => nil,
+            :cites_suspension,
+            :start_notification => nil,
             :taxon_concept => @taxon_concept
           )
         }
 
-        specify { suspension.should be_invalid }
-        specify { suspension.should have(1).error_on(:publication_date) }
+        specify { cites_suspension.should be_invalid }
+        specify { cites_suspension.should have(1).error_on(:start_notification_id) }
       end
 
       context "when start date greater than end date" do
-        let(:suspension){
+        let(:cites_suspension){
           build(
-            :suspension,
-            :start_date => 1.week.from_now,
-            :end_date => 1.week.ago,
+            :cites_suspension,
+            :start_notification => create_cites_suspension_notification(:effective_at => 1.week.from_now),
+            :end_notification => create_cites_suspension_notification(:effective_at => 1.week.ago),
             :taxon_concept => @taxon_concept
           )
         }
 
-        specify { suspension.should be_invalid }
-        specify { suspension.should have(1).error_on(:start_date) }
+        specify { cites_suspension.should be_invalid }
+        specify { cites_suspension.should have(1).error_on(:start_date) }
       end
 
       context "when valid" do
-        let(:suspension){
+        let(:cites_suspension){
           build(
-            :suspension,
-            :taxon_concept => @taxon_concept
+            :cites_suspension,
+            :taxon_concept => @taxon_concept,
+            :start_notification => create_cites_suspension_notification
           )
         }
 
-        specify { suspension.should be_valid }
+        specify { cites_suspension.should be_valid }
       end
     end
   end
