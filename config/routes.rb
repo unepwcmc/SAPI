@@ -73,6 +73,10 @@ SAPI::Application.routes.draw do
     root :to => 'ember#start'
   end
 
+  namespace :species do
+    root :to => 'ember#start'
+  end
+
   match 'taxon_concepts/' => 'taxon_concepts#index'
   match 'taxon_concepts/autocomplete' => 'taxon_concepts#autocomplete'
   match 'taxon_concepts/summarise_filters' => 'taxon_concepts#summarise_filters'
