@@ -129,9 +129,9 @@ class CsvToDbMap
       'Legacy_ID' => 'legacy_id int',
       'Designation' => 'designation varchar',
       'LnmShortDesc' => 'name varchar',
-      'StartDate' => 'effective_at date',
-      'EventType' => 'type varchar',
-      'Subtype' => 'subtype varchar',
+      'Date valid from' => 'effective_at date',
+      'Event Type' => 'type varchar',
+      'Basis for Suspension' => 'subtype varchar',
       'LnmLongDesc' => 'description text',
       'LnmURL' => 'url text'
     },
@@ -177,6 +177,29 @@ class CsvToDbMap
       'ISO Code 2' => 'iso_code2 varchar',
       'Tags' => 'tags varchar',
       'Designation' => 'designation varchar'
+    },
+    'hash_annotations_import' => {
+      'Hash No' => 'symbol varchar',
+      'Law No' => 'event_legacy_id integer',
+      'For Display' => 'ignore varchar',
+      'Text' => 'full_note_en varchar'
+    },
+    'eu_listings_import' => {
+      'LAW_NUM' => 'event_legacy_id integer',
+      'RANK_NAME' => 'rank varchar',
+      'REC_ID' => 'legacy_id integer',
+      'LISTING' => 'annex varchar',
+      'EFFECTIVE_FROM' => 'listing_date date',
+      'PARTY_ISO2' => 'country_iso2 varchar',
+      'IS_CURRENT' => 'is_current boolean',
+      'POPULATIONS_ISO2' => 'populations_iso2 varchar',
+      'EXCLUDEDpopulations_ISO' => 'excluded_populations_iso2 varchar',
+      'IS_INCLUSION' => 'is_inclusion boolean',
+      'INCLUDED_IN' => 'included_in_rec_id integer',
+      'RANK' => 'rank_for_inclusions varchar',
+      'EXCLUDED_REC_IDS' => 'excluded_taxa varchar',
+      'FULL_NOTE_EN' => 'full_note_en varchar',
+      'HASH_NOTE' => 'hash_note varchar'
     }
   }
 
