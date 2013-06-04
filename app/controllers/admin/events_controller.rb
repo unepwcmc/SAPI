@@ -28,6 +28,7 @@ class Admin::EventsController < Admin::SimpleCrudController
   protected
     def collection
       @events ||= end_of_association_chain.order(:designation_id, :name).
+        includes(:designation).
         where("type NOT IN ('EuRegulation', 'CitesCop', 'CitesSuspensionNotification')").page(params[:page])
     end
 
