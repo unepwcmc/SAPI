@@ -1,39 +1,36 @@
-class Admin::SuspensionsController < Admin::SimpleCrudController
-  before_filter :load_lib_objects
+class Admin::CitesSuspensionsController < Admin::SimpleCrudController
+  before_filter :load_lib_objects, :only => [:new, :edit]
 
-  def update
-    update! do |success, failure|
+  def create
+    create! do |success, failure|
       success.html {
-        redirect_to admin_suspensions_url,
+        redirect_to admin_cites_suspensions_url,
         :notice => 'Operation successful'
       }
       failure.html {
         load_lib_objects
         render 'new'
       }
-
-      success.js { render 'create' }
-      failure.js {
-        load_lib_objects
-        render 'new'
-      }
     end
   end
 
-  def create
-    create! do |success, failure|
+  def update
+    update! do |success, failure|
       success.html {
-        redirect_to admin_suspensions_url,
+        redirect_to admin_cites_suspensions_url,
         :notice => 'Operation successful'
       }
-      failure.html { render 'create' }
+      failure.html {
+        load_lib_objects
+        render 'edit'
+      }
     end
   end
 
   protected
 
   def load_lib_objects
-    @current_suspensions = Suspension.
+    @current_suspensions = CitesSuspension.
       where(:is_current => true).
       where(:taxon_concept_id => nil)
     @units = Unit.order(:code)
@@ -42,10 +39,11 @@ class Admin::SuspensionsController < Admin::SimpleCrudController
     @purposes = Purpose.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+    @suspension_notifications = CitesSuspensionNotification.select([:id, :name]).order(:effective_at)
   end
 
   def collection
-    @suspensions ||= end_of_association_chain.order('start_date').
+    @cites_suspensions ||= end_of_association_chain.order('start_date').
       page(params[:page])
   end
 end

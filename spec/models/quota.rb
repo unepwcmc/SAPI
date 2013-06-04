@@ -10,7 +10,6 @@
 #  quota            :integer
 #  publication_date :datetime
 #  notes            :text
-#  suspension_basis :string(255)
 #  type             :string(255)
 #  unit_id          :integer
 #  term_id          :integer

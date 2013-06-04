@@ -1,5 +1,5 @@
-<% if @current_suspensions.count > 0 %>
-  <table class="suspension table table-bordered table-striped">
+<% if current_suspensions.count > 0 %>
+  <table class="cites_suspension table table-bordered table-striped">
     <thead>
       <th>Year</th>
       <th>Published at</th>
@@ -9,7 +9,7 @@
     </thead>
 
     <tbody>
-    <% @current_suspensions.each do |suspension| %>
+    <% current_suspensions.each do |suspension| %>
 
       <tr>
         <td><%= suspension.year %></td>

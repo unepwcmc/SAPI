@@ -232,6 +232,12 @@ shared_context :sapi do
       options.merge({:designation => cites})
     )
   end
+  def create_cites_suspension_notification(options = {})
+    create(
+      :cites_suspension_notification,
+      options.merge({:designation => cites})
+    )
+  end
   def create_eu_regulation(options = {})
     create(
       :eu_regulation,
@@ -248,6 +254,12 @@ shared_context :sapi do
     build(
       :eu_regulation,
       options.merge({:designation => eu})
+    )
+  end
+  def build_cites_suspension_notification(options = {})
+    build(
+      :cites_suspension_notification,
+      options.merge({:designation => cites})
     )
   end
 end

@@ -21,7 +21,7 @@
       <td><%= suspension.purposes && suspension.purposes.map(&:code).join(', ') %></td>
       <td><%= suspension.terms && suspension.terms.map(&:code).join(', ') %></td>
       <td><%= suspension.sources && suspension.sources.map(&:code).join(', ') %></td>
-      <td><%= suspension.suspension_basis %></td>
+      <td><%= suspension.start_notification && suspension.start_notification.subtype %></td>
       <td><%= suspension.notes %></td>
       <td>
         <% if suspension.taxon_concept %>
@@ -30,10 +30,10 @@
       </td>
       <td>
         <%= link_to edit_icon,
-          edit_admin_suspension_path(suspension)
+          edit_admin_cites_suspension_path(suspension)
         %>
         <%= link_to delete_icon,
-          admin_suspension_path(suspension),
+          admin_cites_suspension_path(suspension),
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
