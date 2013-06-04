@@ -1,5 +1,18 @@
 class Admin::CitesSuspensionsController < Admin::SimpleCrudController
-  before_filter :load_lib_objects
+  before_filter :load_lib_objects, :only => [:new, :edit]
+
+  def create
+    create! do |success, failure|
+      success.html {
+        redirect_to admin_cites_suspensions_url,
+        :notice => 'Operation successful'
+      }
+      failure.html {
+        load_lib_objects
+        render 'new'
+      }
+    end
+  end
 
   def update
     update! do |success, failure|
@@ -9,24 +22,8 @@ class Admin::CitesSuspensionsController < Admin::SimpleCrudController
       }
       failure.html {
         load_lib_objects
-        render 'new'
+        render 'edit'
       }
-
-      success.js { render 'create' }
-      failure.js {
-        load_lib_objects
-        render 'new'
-      }
-    end
-  end
-
-  def create
-    create! do |success, failure|
-      success.html {
-        redirect_to admin_cites_suspensions_url,
-        :notice => 'Operation successful'
-      }
-      failure.html { render 'create' }
     end
   end
 

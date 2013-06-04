@@ -68,15 +68,13 @@ describe Admin::TaxonConceptCitesSuspensionsController do
       end
     end
 
-    it "renders new when not successful" do
-      put :update, :taxon_concept_cites_suspension => {
-          :publication_date => nil
+    it "renders edit when not successful" do
+      put :update, :cites_suspension => {
+          :start_notification_id => nil
         },
         :id => @cites_suspension.id,
         :taxon_concept_id => @taxon_concept.id
-      response.should redirect_to(
-        admin_taxon_concept_cites_suspensions_url(@taxon_concept)
-      )
+      response.should render_template('edit')
     end
   end
 

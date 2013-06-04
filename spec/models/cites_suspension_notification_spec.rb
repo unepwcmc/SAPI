@@ -44,8 +44,51 @@ describe CitesSuspensionNotification do
     end
   end
 
+  describe :destroy do
+    let(:cites_suspension_notification){ create_cites_suspension_notification }
+    context "when no dependent objects attached" do
+      specify { cites_suspension_notification.destroy.should be_true }
+    end
+    context "when dependent objects attached" do
+      context "when start notification" do
+        let!(:cites_suspension){ create(
+          :cites_suspension, :start_notification => cites_suspension_notification
+        ) }
+        specify { cites_suspension_notification.destroy.should be_false }
+      end
+      context "when end notification" do
+        let!(:cites_suspension){ create(
+          :cites_suspension,
+          :start_notification => create_cites_suspension_notification,
+          :end_notification => cites_suspension_notification
+        ) }
+        specify { cites_suspension_notification.destroy.should be_false }
+      end
+      context "when confirmation notification, make sure it gets destroyed" do
+        let!(:cites_suspension){ create(
+          :cites_suspension,
+          :start_notification => create_cites_suspension_notification,
+          :confirmation_notifications => [cites_suspension_notification]
+        ) }
+        subject { cites_suspension_notification.cites_suspension_confirmations }
+        specify{
+          cites_suspension_notification.destroy
+          subject.reload.should be_empty
+        }
+      end
+    end
+  end
+
   describe :end_date_formatted do
     let(:cites_suspension_notification){ create_cites_suspension_notification(:end_date => '2012-05-10') }
     specify { cites_suspension_notification.end_date_formatted.should == '10/05/2012' }
+  end
+
+  describe :bases_for_suspension do
+    let!(:cites_suspension_notification1){ create_cites_suspension_notification(:subtype => 'A') }
+    let!(:cites_suspension_notification2){ create_cites_suspension_notification(:subtype => 'A') }
+    let!(:cites_suspension_notification3){ create_cites_suspension_notification(:subtype => 'B') }
+    subject{ CitesSuspensionNotification.bases_for_suspension }
+    specify{ subject.length == 2 }
   end
 end

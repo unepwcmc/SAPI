@@ -62,7 +62,7 @@ describe Admin::CitesSuspensionsController do
     end
 
     context "when successful" do
-      it "renders taxon_concepts cites suspensions page" do
+      it "redirects to taxon_concepts cites suspensions page" do
         put :update, :cites_suspension => {
             :publication_date => 1.week.ago
           },
@@ -73,12 +73,12 @@ describe Admin::CitesSuspensionsController do
       end
     end
 
-    it "renders new when not successful" do
+    it "renders edit when not successful" do
       put :update, :cites_suspension => {
           :start_notification_id => nil
         },
         :id => @cites_suspension.id
-      response.should render_template('new')
+      response.should render_template('edit')
     end
   end
 

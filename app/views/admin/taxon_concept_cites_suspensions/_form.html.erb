@@ -3,7 +3,7 @@
     :locals => {:current_suspensions => @taxon_concept.current_cites_suspensions}
 } %>
 
-<%= form_for [:admin, @taxon_concept, @cites_suspension], :html => {:class => 'form-horizontal'} do |f| %>
+<%= nested_form_for [:admin, @taxon_concept, @cites_suspension], :html => {:class => 'form-horizontal'} do |f| %>
 
   <p>
     <%= link_to("View Current Suspensions", "#new-taxon_concept_cites_suspension",

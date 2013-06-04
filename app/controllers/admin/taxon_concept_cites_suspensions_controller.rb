@@ -3,8 +3,21 @@ class Admin::TaxonConceptCitesSuspensionsController < Admin::SimpleCrudControlle
     :collection_name => 'cites_suspensions', :instance_name => 'cites_suspension'
   belongs_to :taxon_concept
 
-  before_filter :load_lib_objects
+  before_filter :load_lib_objects, :only => [:new, :edit]
   layout 'taxon_concepts'
+
+  def create
+    create! do |success, failure|
+      success.html {
+        redirect_to admin_taxon_concept_cites_suspensions_url(@taxon_concept),
+        :notice => 'Operation successful'
+      }
+      failure.html {
+        load_lib_objects
+        render 'new'
+      }
+    end
+  end
 
   def update
     update! do |success, failure|
@@ -14,24 +27,8 @@ class Admin::TaxonConceptCitesSuspensionsController < Admin::SimpleCrudControlle
       }
       failure.html {
         load_lib_objects
-        render 'new'
+        render 'edit'
       }
-
-      success.js { render 'create' }
-      failure.js {
-        load_lib_objects
-        render 'new'
-      }
-    end
-  end
-
-  def create
-    create! do |success, failure|
-      success.html {
-        redirect_to admin_taxon_concept_cites_suspensions_url(@taxon_concept),
-        :notice => 'Operation successful'
-      }
-      failure.html { render 'create' }
     end
   end
 
