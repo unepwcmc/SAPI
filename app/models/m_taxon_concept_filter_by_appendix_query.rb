@@ -5,7 +5,7 @@ class MTaxonConceptFilterByAppendixQuery
     @appendix_abbreviations = appendix_abbreviations
   end
 
-def initialize_species_listings_conditions(designation_name = 'CITES')
+  def initialize_species_listings_conditions(designation_name = 'CITES')
     unless @appendix_abbreviations.empty?
       @appendix_abbreviations_conditions = <<-SQL
         REGEXP_SPLIT_TO_ARRAY(
@@ -14,10 +14,10 @@ def initialize_species_listings_conditions(designation_name = 'CITES')
         ) &&
         ARRAY[#{@appendix_abbreviations.map{ |e| "'#{e}'" }.join(',')}]::TEXT[]
       SQL
-  end
+    end
     @species_listings_ids = SpeciesListing.where(:abbreviation => @appendix_abbreviations).map(&:id)
     @species_listings_in_clause = @species_listings_ids.compact.join(',')
-end
+  end
 
   def relation(designation_name = 'CITES')
     initialize_species_listings_conditions(designation_name)

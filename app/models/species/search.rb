@@ -27,6 +27,20 @@ class Species::Search
       @taxon_concepts_rel.by_cites_eu_taxonomy
     end
 
+    if !@geo_entities.empty? && @geo_entity_scope == :cites
+      @taxon_concepts_rel = MTaxonConceptFilterByAppendixPopulationQuery.new(
+        @taxon_concepts_rel, ['I', 'II', 'III'], @geo_entities
+      ).relation('CITES')
+    elsif !@geo_entities.empty? && @geo_entity_scope == :eu
+      @taxon_concepts_rel = MTaxonConceptFilterByAppendixPopulationQuery.new(
+        @taxon_concepts_rel, ['A', 'B', 'C', 'D'], @geo_entities
+      ).relation('EU')
+    elsif !@geo_entities.empty? && @geo_entity_scope == :occurrences
+      @taxon_concepts_rel = MTaxonConceptFilterByAppendixPopulationQuery.new(
+        @taxon_concepts_rel, [], @geo_entities
+      ).relation
+    end
+
     unless @scientific_name.blank?
       @taxon_concepts_rel = @taxon_concepts_rel.
         by_scientific_name(@scientific_name)
