@@ -1,2 +1,2 @@
 Species.ResultsView = Ember.View.extend
-  templateName: 'species/results'
+  templateName: 'species/taxon_concepts'
