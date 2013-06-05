@@ -1,6 +1,6 @@
 Species.TaxonConceptsController = Ember.ArrayController.extend({
   content: null,
   contentObserver: function(){
-    console.log('www')
+    console.log(this.get('content.meta'))
   }.observes('content.didLoad')
 });

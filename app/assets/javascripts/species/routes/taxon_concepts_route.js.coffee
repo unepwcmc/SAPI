@@ -1,3 +1,3 @@
 Species.TaxonConceptsRoute = Ember.Route.extend
   model: ->
-    Species.TaxonConcept.find()
+    Species.TaxonConcept.find({taxonomy: 'cites_eu'})

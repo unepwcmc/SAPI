@@ -1,10 +1,17 @@
 Species.Adapter = DS.RESTAdapter.reopen
   namespace: 'api/v1'
-  ajax: (url, type, hash) ->
-    hash.success = (json, e, xhr) ->
-      @pagination = xhr.getResponseHeader('X-Pagination')
-      console.log(xhr.getResponseHeader('X-Pagination'))
-    return this._super(url, type, hash)
+
+  didFindQuery: (store, type, payload, recordArray) -> 
+    loader = DS.loaderFor(store)
+
+    loader.populateArray = (data) ->
+        recordArray.load(data)
+
+        # This adds the meta property returned from the server
+        # onto the recordArray sent back
+        recordArray.set('meta', payload.meta)
+
+    @get('serializer').extractMany(loader, payload, type)
 
 
 Species.Store = DS.Store.extend
