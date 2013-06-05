@@ -1,2 +1,7 @@
-{{view Ember.TextField valueBinding="search"}}
+{{view Ember.RadioButton title="CITES" option="cites_eu" group="search"
+  valueBinding="controller.taxonomy"}}
+{{view Ember.RadioButton title="CMS" option="cms" group="search"
+  valueBinding="controller.taxonomy"}}
+
+{{view Ember.TextField name="search[scientific_name]" valueBinding="controller.scientificName"}}
 <button {{action "loadTaxonConcepts"}}>Go!</button>
