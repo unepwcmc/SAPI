@@ -86,6 +86,7 @@ class MTaxonConcept < ActiveRecord::Base
   belongs_to :cites_closest_listed_ancestor, :class_name => MTaxonConcept
   belongs_to :eu_closest_listed_ancestor, :class_name => MTaxonConcept
   scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
+  scope :by_cms_taxonomy, where(:taxonomy_is_cites_eu => false)
 
   scope :without_non_accepted, where(:name_status => ['A', 'H'])
 
