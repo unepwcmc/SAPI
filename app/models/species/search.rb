@@ -18,7 +18,8 @@ class Species::Search
   end
 
   def initialize_query
-    @taxon_concepts_rel = MTaxonConcept.alphabetical_layout
+    @taxon_concepts_rel = MTaxonConcept.taxonomic_layout.
+      where(:rank_name => [Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY])
 
     @taxon_concepts_rel = if @taxonomy == :cms
       @taxon_concepts_rel.by_cms_taxonomy

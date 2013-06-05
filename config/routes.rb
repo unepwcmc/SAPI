@@ -3,6 +3,9 @@ SAPI::Application.routes.draw do
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
   namespace :api do
+    namespace :v1 do
+      resources :taxon_concepts, :only => [:index]
+    end
     resources :terms, :only => [:index]
     resources :sources, :only => [:index]
     resources :purposes, :only => [:index]
@@ -15,7 +18,6 @@ SAPI::Application.routes.draw do
     resources :ranks, :only => [:index]
     resources :geo_entities, :only => [:index]
     resources :geo_relationship_types, :only => [:index]
-    resources :taxon_concepts, :only => [:index]
   end
   namespace :admin do
     resources :taxonomies, :only => [:index, :create, :update, :destroy]
