@@ -21,8 +21,9 @@
 
 //= require_self
 
-//= require ./species/store
-//= require_tree ./species/models
+//= require ./species/models/store
+//= require ./species/models/result
+
 //= require_tree ./species/controllers
 //= require_tree ./species/views
 //= require_tree ./species/helpers

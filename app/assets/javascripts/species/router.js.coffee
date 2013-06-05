@@ -1,2 +1,3 @@
-Species.Router.map (match)->
+Species.Router.map (match) ->
 
+  @resource 'results'
