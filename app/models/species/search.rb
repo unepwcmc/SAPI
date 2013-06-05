@@ -1,6 +1,4 @@
 class Species::Search
-  include ActiveModel::SerializerSupport
-  attr_reader :id, :results, :result_cnt, :total_cnt
 
   # Constructs a query to retrieve taxon concepts based on user defined
   # parameters
@@ -47,20 +45,8 @@ class Species::Search
     end
   end
 
- # Takes the current search query, paginates it and adds metadata
-  #
-  # @param [Integer] page the current page number to offset by
-  # @param [Integer] per_page the number of results per page
-  # @return [Array] an array containing a hash of search results and
-  #   related metadata
-  def generate(page, per_page)
-    page ||= 0
-    per_page ||= 20
-    @total_cnt = @taxon_concepts_rel.count
-    @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
-    @results = @taxon_concepts_rel.all
-    @result_cnt = @results.length
-    self
+  def results
+    @taxon_concepts_rel
   end
 
 end
