@@ -20,15 +20,15 @@ class Checklist::Checklist
     @taxon_concepts_rel = MTaxonConcept.scoped.
       by_cites_eu_taxonomy
 
-      if @cites_regions.empty? && @countries.empty? && !@cites_appendices.empty?
-        @taxon_concepts_rel = MTaxonConceptFilterByAppendixQuery.new(
-          @taxon_concepts_rel, @cites_appendices
-        ).relation
-      elsif !(@cites_regions.empty? && @countries.empty?)
-        @taxon_concepts_rel = MTaxonConceptFilterByAppendixPopulationQuery.new(
-          @taxon_concepts_rel, @cites_appendices, @cites_regions + @countries
-        ).relation
-      end
+    if @cites_regions.empty? && @countries.empty? && !@cites_appendices.empty?
+      @taxon_concepts_rel = MTaxonConceptFilterByAppendixQuery.new(
+        @taxon_concepts_rel, @cites_appendices
+      ).relation
+    elsif !(@cites_regions.empty? && @countries.empty?)
+      @taxon_concepts_rel = MTaxonConceptFilterByAppendixPopulationQuery.new(
+        @taxon_concepts_rel, @cites_appendices, @cites_regions + @countries
+      ).relation
+    end
 
     unless @scientific_name.blank?
       @taxon_concepts_rel = @taxon_concepts_rel.
