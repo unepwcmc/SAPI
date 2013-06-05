@@ -22,7 +22,7 @@
 //= require_self
 
 //= require ./species/models/store
-//= require ./species/models/result
+//= require ./species/models/taxon_concept
 
 //= require_tree ./species/controllers
 //= require_tree ./species/views

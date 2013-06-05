@@ -1,3 +1,2 @@
 Species.Router.map (match) ->
-
-  @resource 'results'
+  @resource 'taxon_concepts'

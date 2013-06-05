@@ -1,5 +1,5 @@
 Species.IndexController = Ember.Controller.extend
   content: null
 
-  loadResults: ->
-    @transitionToRoute('results')
+  loadTaxonConcepts: ->
+    @transitionToRoute('taxon_concepts')

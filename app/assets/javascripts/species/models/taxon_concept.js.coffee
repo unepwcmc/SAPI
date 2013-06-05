@@ -1,10 +1,11 @@
-Species.Result = DS.Model.extend(
+Species.TaxonConcept = DS.Model.extend(
   taxonomyName: DS.attr("string")
   rankName: DS.attr("string")
   fullName: DS.attr("string")
 )
 
-Species.Result.FIXTURES = [
+
+Species.TaxonConcept.FIXTURES = [
   id: 462
   taxonomyName: "CITES_EU"
   rankName: "FAMILY"
