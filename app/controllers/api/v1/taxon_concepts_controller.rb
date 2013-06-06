@@ -8,4 +8,9 @@ class Api::V1::TaxonConceptsController < ApplicationController
       :meta => {:total => @search.results.count}
   end
 
+  def show
+    render :json => MTaxonConcept.where(:rank_name => 'SPECIES').first,
+      :serializer => Species::TaxonConceptSerializer
+  end
+
 end
