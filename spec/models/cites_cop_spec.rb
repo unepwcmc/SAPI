@@ -32,5 +32,28 @@ describe CitesCop do
       specify { cites_cop.should be_invalid}
       specify { cites_cop.should have(1).error_on(:designation_id) }
     end
+    context "when effective_at is blank" do
+      let(:cites_cop){
+        build(
+          :cites_cop,
+          :effective_at => nil
+        )
+      }
+      specify { cites_cop.should be_invalid}
+      specify { cites_cop.should have(1).error_on(:effective_at) }
+    end
+  end
+
+  describe :destroy do
+    let(:cites_cop){ create_cites_cop }
+    context "when no dependent objects attached" do
+      specify { cites_cop.destroy.should be_true }
+    end
+    context "when dependent objects attached" do
+      context "when listing changes" do
+        let!(:listing_change){ create_cites_I_addition(:event => cites_cop) }
+        specify { cites_cop.destroy.should be_false }
+      end
+    end
   end
 end

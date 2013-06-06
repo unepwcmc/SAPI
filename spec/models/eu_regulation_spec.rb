@@ -40,6 +40,16 @@ describe EuRegulation do
       specify { eu_regulation.should be_invalid}
       specify { eu_regulation.should have(1).error_on(:designation_id) }
     end
+    context "when effective_at is blank" do
+      let(:eu_regulation){
+        build(
+          :eu_regulation,
+          :effective_at => nil
+        )
+      }
+      specify { eu_regulation.should be_invalid}
+      specify { eu_regulation.should have(1).error_on(:effective_at) }
+    end
   end
   describe :can_be_activated? do
     let(:eu_regulation){
@@ -81,4 +91,18 @@ describe EuRegulation do
     specify{ eu_regulation.is_current.should be_true }
     specify{ EventActivationWorker.jobs.size.should == 1 }
   end
+
+  describe :destroy do
+    let(:eu_regulation){ create_eu_regulation }
+    context "when no dependent objects attached" do
+      specify { eu_regulation.destroy.should be_true }
+    end
+    context "when dependent objects attached" do
+      context "when listing changes" do
+        let!(:listing_change){ create_eu_A_addition(:event => eu_regulation) }
+        specify { eu_regulation.destroy.should be_false }
+      end
+    end
+  end
+
 end

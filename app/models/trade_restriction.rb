@@ -2,23 +2,24 @@
 #
 # Table name: trade_restrictions
 #
-#  id               :integer          not null, primary key
-#  is_current       :boolean
-#  start_date       :datetime
-#  end_date         :datetime
-#  geo_entity_id    :integer
-#  quota            :float
-#  publication_date :datetime
-#  notes            :text
-#  suspension_basis :string(255)
-#  type             :string(255)
-#  unit_id          :integer
-#  taxon_concept_id :integer
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  public_display   :boolean          default(TRUE)
-#  url              :text
-#  import_row_id    :integer
+#  id                          :integer          not null, primary key
+#  is_current                  :boolean
+#  start_date                  :datetime
+#  end_date                    :datetime
+#  geo_entity_id               :integer
+#  quota                       :float
+#  publication_date            :datetime
+#  notes                       :text
+#  type                        :string(255)
+#  unit_id                     :integer
+#  taxon_concept_id            :integer
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  public_display              :boolean          default(TRUE)
+#  url                         :text
+#  start_notification_id       :integer
+#  end_notification_id         :integer
+#  excluded_taxon_concepts_ids :string
 #
 
 require 'digest/sha1'
@@ -26,7 +27,7 @@ require 'csv'
 class TradeRestriction < ActiveRecord::Base
   attr_accessible :end_date, :geo_entity_id, :is_current,
     :notes, :publication_date, :purpose_ids, :quota, :type,
-    :source_ids, :start_date, :suspension_basis, :term_ids,
+    :source_ids, :start_date, :term_ids,
     :unit_id
 
   belongs_to :taxon_concept

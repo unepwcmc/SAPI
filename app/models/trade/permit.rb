@@ -5,6 +5,8 @@
 #  id            :integer          not null, primary key
 #  number        :string(255)
 #  geo_entity_id :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
 
 class Trade::Permit < ActiveRecord::Base

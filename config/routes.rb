@@ -37,6 +37,7 @@ SAPI::Application.routes.draw do
       post :activate, :on => :member
     end
     resources :cites_cops
+    resources :cites_suspension_notifications
     resources :references, :only => [:index, :create, :update, :destroy] do
       get :autocomplete, :on => :collection
     end
@@ -45,7 +46,7 @@ SAPI::Application.routes.draw do
       resources :geo_relationships, :only => [:index, :create, :update, :destroy]
     end
     resources :cites_plant_annotations, :only => [:index, :create, :update, :destroy]
-    resources :suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
+    resources :cites_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
     resources :taxon_concepts, :only => [:index, :create, :edit, :update, :destroy] do
       get :autocomplete, :on => :collection
       resources :taxon_relationships, :only => [:index, :create, :destroy]
@@ -60,7 +61,9 @@ SAPI::Application.routes.draw do
       resources :quotas, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_opinions, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
-      resources :taxon_concept_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy], :as => :suspensions
+      resources :taxon_concept_cites_suspensions,
+        :only => [:index, :new, :create, :edit, :update, :destroy],
+        :as => :cites_suspensions
     end
     root :to => 'home#index'
   end

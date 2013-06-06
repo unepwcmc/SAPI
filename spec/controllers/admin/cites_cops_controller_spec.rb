@@ -8,7 +8,7 @@ describe Admin::CitesCopsController do
     end
 
     describe "GET index" do
-      it "assigns @cites_cops sorted by effective_at" do
+      it "assigns @cites_cops sorted by name" do
         get :index
         assigns(:cites_cops).should eq([@cites_cop2, @cites_cop1])
       end

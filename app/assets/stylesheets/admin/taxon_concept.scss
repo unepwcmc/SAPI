@@ -32,7 +32,7 @@ textarea.annotation {
 
 textarea {
   &.quota,
-  &.suspension,
+  &.cites_suspension,
   &.eu_opinion,
   &.eu_suspension {
     height: 5em;
@@ -96,7 +96,7 @@ tr.current_listing {
 }
 
 #new-quota,
-#new-suspension {
+#new-cites_suspension {
   &.modal {
     width: 700px;
   }

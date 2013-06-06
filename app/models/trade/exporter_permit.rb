@@ -5,6 +5,8 @@
 #  id                :integer          not null, primary key
 #  trade_permit_id   :integer
 #  trade_shipment_id :integer
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
 #
 
 class Trade::ExporterPermit < ActiveRecord::Base
