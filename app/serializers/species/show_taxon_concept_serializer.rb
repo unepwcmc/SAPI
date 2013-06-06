@@ -14,7 +14,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       }
     end
   end
-  
+
   def synonyms
     object.taxon_concept.synonyms.map do |s|
       {
