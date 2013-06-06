@@ -1,15 +1,2 @@
-{{view Ember.RadioButton title="CITES" option="cites_eu" group="search"
-  valueBinding="controller.taxonomy"}}
-{{view Ember.RadioButton title="CMS" option="cms" group="search"
-  valueBinding="controller.taxonomy"}}
-
-{{view Ember.TextField name="search[scientific_name]" valueBinding="controller.scientificName"}}
-<button {{action "loadTaxonConcepts"}}>Go!</button>
-
-{{view Ember.Select
-  prompt="locations"
-  contentBinding="Species.locations"
-  optionValuePath="content.id"
-  optionLabelPath="content.name"
-  selectionBinding="controller.selectedLocation"
-}}
+{{controller}}
+{{outlet search}}

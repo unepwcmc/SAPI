@@ -8,7 +8,13 @@ Species.locations = [Ember.Object.create(
 
 
 Species.SearchController = Ember.Controller.extend
-
   taxonomy: 'cites_eu'
   scientificName: null
-  selectedLocation: null
+  location: null
+
+  loadTaxonConcepts: ->
+    #TODO handle locations
+    @transitionToRoute('search', {
+      taxonomy: @get('taxonomy'),
+      scientific_name: @get('scientificName')
+    })

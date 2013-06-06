@@ -1,10 +1,9 @@
 Species.TaxonConceptsController = Ember.ArrayController.extend
-
   content: null
 
 
   contentObserver: ( ->
-    
+
     # Does not work????
     #@content.set Species.TaxonConcept.FIXTURES
     #@content.forEach (c, i) -> console.log c
