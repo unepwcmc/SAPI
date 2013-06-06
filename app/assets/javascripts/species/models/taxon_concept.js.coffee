@@ -1,33 +1,20 @@
-Species.TaxonConcept = DS.Model.extend(
-  taxonomyName: DS.attr("string")
+Species.TaxonConcept = DS.Model.extend
+  #taxonomyName: DS.attr("string")
   rankName: DS.attr("string")
   fullName: DS.attr("string")
-)
+
+  #didLoad: ->
+  #  console.log 'ffffffffffffffffff'
+
 
 
 Species.TaxonConcept.FIXTURES = [
-  id: 462
-  taxonomyName: "CITES_EU"
-  rankName: "FAMILY"
-  fullName: "Loxocemidae"
-,
-  id: 784
-  taxonomyName: "CITES_EU"
-  rankName: "GENUS"
-  fullName: "Loxocemus"
-,
-  id: 7674
-  taxonomyName: "CITES_EU"
+  id: 2751
+  fullName: "Antilocapra americana"
   rankName: "SPECIES"
-  fullName: "Loxocemus bicolor"
 ,
-  id: 1813
-  taxonomyName: "CITES_EU"
-  rankName: "GENUS"
-  fullName: "Loxodonta"
-,
-  id: 3158
-  taxonomyName: "CITES_EU"
-  rankName: "SPECIES"
-  fullName: "Loxodonta africana"
+  id: 10887
+  fullName: "Antilocapra americana mexicana"
+  rankName: "SUBSPECIES"
+
 ]
