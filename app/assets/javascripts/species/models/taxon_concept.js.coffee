@@ -7,7 +7,6 @@ Species.TaxonConcept = DS.Model.extend
   #  console.log 'ffffffffffffffffff'
 
 
-
 Species.TaxonConcept.FIXTURES = [
   id: 2751
   fullName: "Antilocapra americana"

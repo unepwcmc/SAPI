@@ -23,6 +23,7 @@
 //= require_self
 
 //= require ./species/models/store
+//= require ./species/models/location
 //= require ./species/models/taxon_concept
 
 //= require_tree ./species/controllers

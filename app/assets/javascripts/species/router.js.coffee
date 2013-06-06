@@ -1,4 +1,4 @@
 Species.Router.map (match) ->
-  @resource 'taxon_concepts'
+  @route 'search', { path: 'search/:params' }
+  @route 'taxon_concepts', { path: 'taxon_concepts/:params' }
   @resource 'taxon_concept', { path: 'taxon_concepts/:taxon_concept_id' }
-
