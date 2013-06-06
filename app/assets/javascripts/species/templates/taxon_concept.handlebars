@@ -12,6 +12,6 @@
 <h3>Synonyms</h3>
 <h3>Common Names</h3>
 {{#each commonName in controller.commonNames}}
-  {{nameEn}}
+{{commonName.name}} ({{commonName.isoCode3}} -  {{commonName.language}})<br />
 {{/each}}
 <h3>Subspecies</h3>

@@ -3,5 +3,5 @@ class Species::TaxonConceptSerializer < ActiveModel::Serializer
     :family_id, :family_name, :order_id, :order_name,
     :phylum_id, :phylum_name, :class_id, :class_name,
     :author_year
-  has_many :common_names, :foreign_key => :taxon_concept_id, :select => :'common_names.id'
+  has_many :common_names, :serializer => Species::CommonNameSerializer
 end

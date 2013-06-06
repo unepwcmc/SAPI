@@ -7,7 +7,11 @@ Species.TaxonConcept = DS.Model.extend
   orderName: DS.attr("string")
   className: DS.attr("string")
   familyName: DS.attr("string")
-  commonNames: DS.hasMany('Species.CommonName', {embedded: true})
+  commonNames: DS.hasMany('Species.CommonName')
+
+Species.Adapter.map('Species.TaxonConcept', {
+  commonNames: { embedded: 'always' }
+})
 
   #didLoad: ->
   #  console.log 'ffffffffffffffffff'

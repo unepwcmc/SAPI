@@ -1,2 +1,4 @@
 Species.CommonName = DS.Model.extend
-  nameEn: DS.attr("string")
+  name: DS.attr("string")
+  language: DS.attr("string")
+  isoCode3: DS.attr("string")
