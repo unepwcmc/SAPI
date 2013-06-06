@@ -17,3 +17,4 @@ Species.Adapter = DS.RESTAdapter.reopen
 Species.Store = DS.Store.extend
   revision: 12
   adapter: 'DS.RESTAdapter'
+
