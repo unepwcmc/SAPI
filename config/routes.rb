@@ -5,7 +5,6 @@ SAPI::Application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :taxon_concepts, :only => [:index, :show]
-      resources :common_names, :only => [:show]
     end
     resources :terms, :only => [:index]
     resources :sources, :only => [:index]
