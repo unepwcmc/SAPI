@@ -36,6 +36,8 @@ class TaxonConcept < ActiveRecord::Base
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore
 
+  has_one :m_taxon_concept, :foreign_key => :id
+
   belongs_to :parent, :class_name => 'TaxonConcept'
   has_many :children, :class_name => 'TaxonConcept', :foreign_key => :parent_id
   belongs_to :rank

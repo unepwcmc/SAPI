@@ -9,6 +9,7 @@ Species.TaxonConcept = DS.Model.extend
   familyName: DS.attr("string")
   commonNames: DS.attr("array")
   synonyms: DS.attr("array")
+  mTaxonConcept: DS.attr("array")
 
   #didLoad: ->
   #  console.log 'ffffffffffffffffff'

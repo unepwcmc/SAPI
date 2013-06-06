@@ -1,5 +1,5 @@
 {{fullName}} {{authorYear}} <br />
-{{phylumName}} > {{orderName}} > {{className}} > {{familyName}}
+{{mTaxonConcept.phylum_name}} > {{mTaxonConcept.order_name}} > {{mTaxonConcept.class_name}} > {{mTaxonConcept.family_name}}
 
 <h2>Legal</h2>
 <h3>CITES</h3>
@@ -11,11 +11,11 @@
 <h2>Names</h2>
 <h3>Synonyms</h3>
 {{#each synonym in controller.synonyms}}
-  {{synonym.name}} {{synonym.author}} <br />
+  {{synonym.full_name}} {{synonym.author_year}} <br />
 {{/each}}
 <h3>Common Names</h3>
 {{#each commonName in controller.commonNames}}
-  {{commonName.name}} ({{commonName.iso_code3}} -  {{commonName.language}})<br />
+  {{commonName.name}} ({{commonName.language.iso_code3}} -  {{commonName.language.name_en}})<br />
 {{/each}}
 
 <h3>Subspecies</h3>
