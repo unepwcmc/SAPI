@@ -9,7 +9,8 @@ class Api::V1::TaxonConceptsController < ApplicationController
   end
 
   def show
-    render :json => MTaxonConcept.where(:rank_name => 'SPECIES').first,
+    @taxon_concept = MTaxonConcept.find(params[:id])
+    render :json => @taxon_concept,
       :serializer => Species::TaxonConceptSerializer
   end
 

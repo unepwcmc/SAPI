@@ -76,6 +76,8 @@ class MTaxonConcept < ActiveRecord::Base
 
   belongs_to :taxon_concept, :foreign_key => :id
   has_many :listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange
+  has_many :taxon_commons, :foreign_key => :taxon_concept_id
+  has_many :common_names, :through => :taxon_commons
   has_many :current_listing_changes, :foreign_key => :taxon_concept_id,
     :class_name => MListingChange,
     :conditions => "is_current = 't' AND change_type_name <> '#{ChangeType::EXCEPTION}'"

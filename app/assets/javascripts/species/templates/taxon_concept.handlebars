@@ -1,3 +1,17 @@
-hello, I'm a taxon concept
+{{fullName}} {{authorYear}} <br />
+{{phylumName}} > {{orderName}} > {{className}} > {{familyName}}
 
-{{id}}
+<h2>Legal</h2>
+<h3>CITES</h3>
+<h4>Listings</h4>
+<h4>Restrictions</h4>
+<h3>EU</h3>
+<h4>Listings</h4>
+<h4>Decisions</h4>
+<h2>Names</h2>
+<h3>Synonyms</h3>
+<h3>Common Names</h3>
+{{#each commonName in controller.commonNames}}
+{{commonName.name}} ({{commonName.isoCode3}} -  {{commonName.language}})<br />
+{{/each}}
+<h3>Subspecies</h3>
