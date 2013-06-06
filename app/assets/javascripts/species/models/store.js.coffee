@@ -18,3 +18,12 @@ Species.Store = DS.Store.extend
   revision: 12
   adapter: 'DS.RESTAdapter'
 
+DS.RESTAdapter.registerTransform('array',
+  serialize: (value) ->
+    if (Em.typeOf(value) == 'array')
+      return value
+    else
+      return []
+  deserialize: (value) ->
+    return value
+)

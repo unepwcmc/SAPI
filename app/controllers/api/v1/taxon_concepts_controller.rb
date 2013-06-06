@@ -9,9 +9,10 @@ class Api::V1::TaxonConceptsController < ApplicationController
   end
 
   def show
-    @taxon_concept = MTaxonConcept.find(params[:id])
+    @taxon_concept = MTaxonConcept.where(:id => params[:id]).
+      includes(:common_names => :language).first
     render :json => @taxon_concept,
-      :serializer => Species::TaxonConceptSerializer
+      :serializer => Species::ShowTaxonConceptSerializer
   end
 
 end

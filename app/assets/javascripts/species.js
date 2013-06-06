@@ -25,7 +25,6 @@
 //= require ./species/models/store
 //= require ./species/models/location
 //= require ./species/models/taxon_concept
-//= require ./species/models/common_name
 
 //= require_tree ./species/controllers
 //= require_tree ./species/views
