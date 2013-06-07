@@ -7,9 +7,18 @@
   valueBinding="controller.taxonomy"}}
 
 {{view Ember.TextField name="search[scientific_name]" valueBinding="controller.scientificName"}}
-<button {{action "loadTaxonConcepts"}}>Go!</button>
 
-{{view Ember.TextField name="search[geo_entity_name]" valueBinding="controller.geoEntityName"}}
+<hr>
+
+{{view Species.GeoEntityTextField
+  valueBinding="controller.geoEntityAutoCompleteQuery"
+  placeholder="Type to filter countries or regions"
+  autocomplete="off"
+}}
+
+<h3>Selected Locations</h3>{{controller.geoEntityIds}}
+  {{collection Species.SelectedGeoEntitiesCollectionView
+  contentBinding="controller.selectedGeoEntities"}}
 
 <h3>Regions</h3>
   {{collection Species.GeoEntitiesCollectionView
@@ -18,3 +27,7 @@
 <h3>Countries</h3>
   {{collection Species.GeoEntitiesCollectionView
   contentBinding="controller.autoCompleteCountries"}}
+
+<hr>
+
+<button {{action "loadTaxonConcepts"}}>Go!</button>
