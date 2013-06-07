@@ -14,7 +14,7 @@ class Species::SearchParams < Hash
       #filtering options
       :scientific_name =>
         params[:scientific_name] ? params[:scientific_name] : nil,
-      :geo_entities => params[:geo_entity_ids] ? params[:geo_entity_ids].sort : []
+      :geo_entities => params[:geo_entity_id].blank? ? [] : [params[:geo_entity_id]]
     }
     unless [:cites_eu, :cms].include? sanitized_params[:taxonomy]
       sanitized_params[:taxonomy] = :cites_eu

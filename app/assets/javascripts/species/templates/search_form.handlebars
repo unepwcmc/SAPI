@@ -1,5 +1,6 @@
 {{controller}}
 {{controller.taxonomy}}
+{{controller.geoEntityId}}
 {{view Ember.RadioButton title="CITES" option="cites_eu" group="search[taxonomy]"
   valueBinding="controller.taxonomy"}}
 {{view Ember.RadioButton title="CMS" option="cms" group="search[taxonomy]"
@@ -9,9 +10,10 @@
 <button {{action "loadTaxonConcepts"}}>Go!</button>
 
 {{view Ember.Select
-  prompt="locations"
-  contentBinding="Species.locations"
-  optionValuePath="content.id"
-  optionLabelPath="content.name"
-  selectionBinding="controller.location"
+    name = "search[geo_entity_id]"
+    prompt="locations"
+    contentBinding = "controllers.geoEntities"
+    valueBinding = "controller.geoEntityId"
+    optionLabelPath = "content.name"
+    optionValuePath = "content.id"
 }}

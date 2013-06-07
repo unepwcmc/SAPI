@@ -10,22 +10,18 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 //
-//= require lodash.compat
 //= require jquery
 //= require jquery_ujs
-//= require jquery.ui.widget
-//= require jquery.iframe-transport
-//= require jquery.fileupload
+//= require jquery-deparam
 //= require handlebars
 //= require ember
 //= require ember-data
-
+//
 //= require_self
-
-//= require ./species/models/store
-//= require ./species/models/location
-//= require ./species/models/taxon_concept
-
+//
+//= require ./species/store
+//
+//= require_tree ./species/models
 //= require_tree ./species/controllers
 //= require_tree ./species/views
 //= require_tree ./species/helpers

@@ -1,20 +1,18 @@
-Species.locations = [Ember.Object.create(
-  name: "Africa"
-  id: 1
-), Ember.Object.create(
-  name: "Europe"
-  id: 2
-)]
-
-
 Species.SearchController = Ember.Controller.extend
+  needs: ['geoEntities', 'taxonConcepts']
   taxonomy: 'cites_eu'
   scientificName: null
-  location: null
+  geoEntity: null
 
   loadTaxonConcepts: ->
-    #TODO handle locations
     @transitionToRoute('search', {
       taxonomy: @get('taxonomy'),
-      scientific_name: @get('scientificName')
+      scientific_name: @get('scientificName'),
+      geo_entity_id: @get('geoEntity.id')
     })
+
+  setFilters: (filtersHash) ->
+    console.log(filtersHash)
+    @set('taxonomy', filtersHash.taxonomy)
+    @set('scientificName', filtersHash.scientific_name)
+    @set('geoEntity', filtersHash.geo_entity_id)

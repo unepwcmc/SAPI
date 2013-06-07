@@ -1,7 +1,19 @@
+DS.RESTAdapter.registerTransform('array',
+  serialize: (value) ->
+    if (Em.typeOf(value) == 'array')
+      return value
+    else
+      return []
+  deserialize: (value) ->
+    return value
+)
+
+DS.RESTAdapter.configure("plurals", { geo_entity: "geo_entities" });
+
 Species.Adapter = DS.RESTAdapter.reopen
   namespace: 'api/v1'
 
-  didFindQuery: (store, type, payload, recordArray) -> 
+  didFindQuery: (store, type, payload, recordArray) ->
     loader = DS.loaderFor(store)
 
     loader.populateArray = (data) ->
@@ -17,13 +29,3 @@ Species.Adapter = DS.RESTAdapter.reopen
 Species.Store = DS.Store.extend
   revision: 12
   adapter: 'DS.RESTAdapter'
-
-DS.RESTAdapter.registerTransform('array',
-  serialize: (value) ->
-    if (Em.typeOf(value) == 'array')
-      return value
-    else
-      return []
-  deserialize: (value) ->
-    return value
-)

@@ -1,9 +1,29 @@
 Species.SearchRoute = Ember.Route.extend
 
+  serialize: (model) ->
+    {params: '?' + $.param(model)}
+
+  model: (params) ->
+    console.log('model')
+    geoEntitiesController = @controllerFor('geoEntities')
+    geoEntitiesController.set('content', Species.GeoEntity.find())
+    # what follows here is the deserialisation of params
+    # this hook is executed only when entering from url
+    queryString = params.params
+    #remove the questionmark
+    if queryString[0] == '?'
+      queryString = queryString.slice(1,queryString.length)
+    params = $.deparam(queryString)
+    params
+
   setupController: (controller, model) ->
-    @controllerFor('taxonConcepts').set('content', Species.TaxonConcept.find model )
+    console.log('setup')
+    # this hook is executed whether entering from url or transition
+    controller.setFilters(model)
+    @controllerFor('taxonConcepts').set('content', Species.TaxonConcept.find(model))
 
   renderTemplate: ->
+    console.log('render')
     taxonConceptsController = @controllerFor('taxonConcepts')
     searchController = @controllerFor('search')
     # Render the `taxon_concepts` template into
@@ -21,7 +41,3 @@ Species.SearchRoute = Ember.Route.extend
       outlet: 'search',
       controller: searchController
     })
-
-  serialize: (model) ->
-    #TODO serialize this properly
-    {params: '?taxonomy=' + model.taxonomy + '&scientific_name=' + model.scientific_name}

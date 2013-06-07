@@ -1,8 +1,13 @@
 Species.IndexRoute = Ember.Route.extend
+
+  setupController: ->
+    geoEntitiesController = @controllerFor('geoEntities')
+    geoEntitiesController.set('content', Species.GeoEntity.find())
+
   renderTemplate: ->
     indexController = @controllerFor('index')
     searchController = @controllerFor('search')
-    console.log('hello, rendering')
+
     # Render the `index` template into
     # the default outlet, and display the `index`
     # controller.
