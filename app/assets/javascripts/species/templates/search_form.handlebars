@@ -9,11 +9,12 @@
 {{view Ember.TextField name="search[scientific_name]" valueBinding="controller.scientificName"}}
 <button {{action "loadTaxonConcepts"}}>Go!</button>
 
-{{view Ember.Select
-    name = "search[geo_entity_id]"
-    prompt="locations"
-    contentBinding = "controllers.geoEntities"
-    valueBinding = "controller.geoEntityId"
-    optionLabelPath = "content.name"
-    optionValuePath = "content.id"
-}}
+{{view Ember.TextField name="search[geo_entity_name]" valueBinding="controller.geoEntityName"}}
+
+<h3>Regions</h3>
+  {{collection Species.GeoEntitiesCollectionView
+  contentBinding="controller.autoCompleteRegions"}}
+
+<h3>Countries</h3>
+  {{collection Species.GeoEntitiesCollectionView
+  contentBinding="controller.autoCompleteCountries"}}
