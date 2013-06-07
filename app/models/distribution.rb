@@ -21,6 +21,8 @@ class Distribution < ActiveRecord::Base
 
   validates :taxon_concept_id, :uniqueness => { :scope => :geo_entity_id, :message => 'already has this distribution' }
 
+  delegate :name_en, :to => :geo_entity
+
 
   def add_existing_references ids
     reference_ids = ids.split(",")

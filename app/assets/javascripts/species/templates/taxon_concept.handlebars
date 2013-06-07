@@ -8,6 +8,10 @@
 <h3>EU</h3>
 <h4>Listings</h4>
 <h4>Decisions</h4>
+<h2>Distribution</h2>
+{{#each geoEntity in controller.distributions}}
+  {{geoEntity.name_en}} . {{geoEntity.tag_list}}<br />
+{{/each}}
 <h2>Names</h2>
 <h3>Synonyms</h3>
 {{#each synonym in controller.synonyms}}

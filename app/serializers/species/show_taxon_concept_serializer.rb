@@ -5,6 +5,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   has_many :common_names, :serializer => Species::CommonNameSerializer
   has_many :synonyms, :serializer => Species::SynonymSerializer
   has_one :m_taxon_concept, :serializer => Species::MTaxonConceptSerializer
+  has_many :distributions, :serializer => Species::DistributionSerializer
 
 end
 
