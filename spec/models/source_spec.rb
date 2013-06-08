@@ -31,7 +31,11 @@ describe Source do
         specify { source.destroy.should be_false }
       end
       context "when CITES suspension" do
-        let!(:suspension){ create(:suspension, :sources => [source])}
+        let!(:cites_suspension){ create(
+          :cites_suspension,
+          :sources => [source],
+          :start_notification_id => create_cites_suspension_notification.id
+        ) }
         specify { source.destroy.should be_false }
       end
       context "when CITES quota" do

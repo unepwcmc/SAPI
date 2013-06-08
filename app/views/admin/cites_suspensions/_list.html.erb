@@ -1,0 +1,43 @@
+<thead>
+  <th>Year</th>
+  <th>Published at</th>
+  <th>Current</th>
+  <th>Party</th>
+  <th>Purpose</th>
+  <th>Term</th>
+  <th>Source</th>
+  <th>Basis</th>
+  <th>Notes</th>
+  <th>Taxon Concept</th>
+  <th>Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |suspension| -%>
+    <tr class="<%= if suspension.is_current? then "current_listing" end %>">
+      <td><%= suspension.year %></td>
+      <td><%= suspension.publication_date_formatted %></td>
+      <td><%= true_false_icon(suspension.is_current) %></td>
+      <td><%= suspension.geo_entity && suspension.geo_entity.iso_code2 %></td>
+      <td><%= suspension.purposes && suspension.purposes.map(&:code).join(', ') %></td>
+      <td><%= suspension.terms && suspension.terms.map(&:code).join(', ') %></td>
+      <td><%= suspension.sources && suspension.sources.map(&:code).join(', ') %></td>
+      <td><%= suspension.start_notification && suspension.start_notification.subtype %></td>
+      <td><%= suspension.notes %></td>
+      <td>
+        <% if suspension.taxon_concept %>
+          <%= link_to suspension.taxon_concept.full_name, edit_admin_taxon_concept_path(suspension.taxon_concept) %>
+        <% end %>
+      </td>
+      <td>
+        <%= link_to edit_icon,
+          edit_admin_cites_suspension_path(suspension)
+        %>
+        <%= link_to delete_icon,
+          admin_cites_suspension_path(suspension),
+          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+        %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>
+

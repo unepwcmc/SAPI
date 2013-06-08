@@ -1,0 +1,106 @@
+  <%= error_messages_for(@cites_suspension) %>
+
+  <div class="control-group">
+    <%= f.label :geo_entity_id, "Party", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :geo_entity_id,
+        options_from_collection_for_select(
+          @geo_entities,
+          :id,
+          :name_en,
+          @cites_suspension.geo_entity_id
+      ),
+        { :include_blank => true },
+        {:class => 'cites_suspension select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :start_notification_id, "Start notification", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :start_notification_id,
+        options_from_collection_for_select(
+          @suspension_notifications,
+          :id,
+          :name,
+          @cites_suspension.start_notification_id
+        )
+      %>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+    <%= f.fields_for :cites_suspension_confirmations do |cn_f| %>
+    <%= cn_f.select :cites_suspension_notification_id,
+      options_from_collection_for_select(
+        @suspension_notifications,
+        :id,
+        :name,
+        cn_f.object.cites_suspension_notification_id
+      )
+    %>
+    <%= cn_f.link_to_remove delete_icon %>
+    <% end %>
+    <p><%= f.link_to_add "Add a confirmation", :cites_suspension_confirmations %></p>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :end_notification_id, "End notification", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :end_notification_id,
+        options_from_collection_for_select(
+          @suspension_notifications,
+          :id,
+          :name,
+          @cites_suspension.end_notification_id
+        ),
+        { :include_blank => true }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Notes</label>
+    <div class="controls">
+      <%= f.text_area :notes, :class => 'cites_suspension', :value => @cites_suspension.notes %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :term_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :term_ids,
+        options_from_collection_for_select(@terms, :id, :code, @cites_suspension.term_ids),
+        { :include_blank => true },
+        {:class => 'cites_suspension select2', :multiple => true, :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :source_id, :class => 'control-label'  %>
+    <div class="controls">
+      <%= f.select :source_ids,
+        options_from_collection_for_select(@sources, :id, :code, @cites_suspension.source_ids),
+        { :include_blank => true },
+        {:class => 'cites_suspension select2', :multiple => true, :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :purpose_id, :class => 'control-label' %>
+    <div class="controls">
+          <%= f.select :purpose_ids,
+            options_from_collection_for_select(@purposes, :id, :code, @cites_suspension.purpose_ids),
+            { :include_blank => true },
+            {:class => 'cites_suspension select2', :multiple => true, :style => 'width: 220px' }
+          %>
+    </div>
+  </div>
+
+  <p class="pull-right">
+    <%= f.submit %>
+  </p>

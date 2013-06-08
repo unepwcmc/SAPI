@@ -125,9 +125,13 @@ class CsvToDbMap
       'Excludes' => 'exclusions varchar',
       'Cascade' => 'is_cascaded boolean'
     },
-    'laws_import' => {
+    'events_import' => {
+      'Legacy_ID' => 'legacy_id int',
+      'Designation' => 'designation varchar',
       'LnmShortDesc' => 'name varchar',
-      'Date valid' => 'effective_at date',
+      'Date valid from' => 'effective_at date',
+      'Event Type' => 'type varchar',
+      'Basis for Suspension' => 'subtype varchar',
       'LnmLongDesc' => 'description text',
       'LnmURL' => 'url text'
     },
@@ -135,7 +139,7 @@ class CsvToDbMap
       'ISO-3' => 'iso_code3 varchar',
       'LangShort' => 'name_en varchar',
       'ISO-1' => 'iso_code1 varchar'
-    }, 
+    },
     'quotas_import' => {
       'Kingdom' => 'kingdom varchar',
       'RecId' => 'legacy_id integer',
@@ -155,6 +159,17 @@ class CsvToDbMap
       'PublicDisplay' => 'public_display boolean',
       'Link' => 'url varchar'
     },
+    'cites_suspensions_import' => {
+      'IsCurrent' => 'is_current boolean',
+      'Kingdom' => 'kingdom varchar',
+      'RecID' => 'legacy_id integer',
+      'Rank' => 'rank varchar',
+      'ISO code' => 'country_iso2 varchar',
+      'StartNotificationID' => 'start_notification_legacy_id integer',
+      'EndNotificationID' => 'end_notification_legacy_id integer',
+      'Notes' => 'notes varchar',
+      'ExcludedTaxa' => 'exclusions text'
+    },
     'distribution_tags_import' => {
       'Species RecID' => 'legacy_id integer',
       'Rank' => 'rank varchar',
@@ -162,6 +177,29 @@ class CsvToDbMap
       'ISO Code 2' => 'iso_code2 varchar',
       'Tags' => 'tags varchar',
       'Designation' => 'designation varchar'
+    },
+    'hash_annotations_import' => {
+      'Hash No' => 'symbol varchar',
+      'Law No' => 'event_legacy_id integer',
+      'For Display' => 'ignore varchar',
+      'Text' => 'full_note_en varchar'
+    },
+    'eu_listings_import' => {
+      'LAW_NUM' => 'event_legacy_id integer',
+      'RANK_NAME' => 'rank varchar',
+      'REC_ID' => 'legacy_id integer',
+      'LISTING' => 'annex varchar',
+      'EFFECTIVE_FROM' => 'listing_date date',
+      'PARTY_ISO2' => 'country_iso2 varchar',
+      'IS_CURRENT' => 'is_current boolean',
+      'POPULATIONS_ISO2' => 'populations_iso2 varchar',
+      'EXCLUDEDpopulations_ISO' => 'excluded_populations_iso2 varchar',
+      'IS_INCLUSION' => 'is_inclusion boolean',
+      'INCLUDED_IN' => 'included_in_rec_id integer',
+      'RANK' => 'rank_for_inclusions varchar',
+      'EXCLUDED_REC_IDS' => 'excluded_taxa varchar',
+      'FULL_NOTE_EN' => 'full_note_en varchar',
+      'HASH_NOTE' => 'hash_note varchar'
     }
   }
 

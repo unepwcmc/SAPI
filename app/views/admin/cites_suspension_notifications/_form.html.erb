@@ -1,0 +1,27 @@
+<%= form_for [:admin, @cites_suspension_notification], :remote => true do |f| %>
+
+  <%= error_messages_for(@cites_suspension_notification) %>
+
+  <%= f.hidden_field :designation_id %>
+  <label>Name</label><%= f.text_field :name %><br />
+  <label>Effective from</label>
+  <%= f.text_field :effective_at, :class => "datepicker",
+    :value => @cites_suspension_notification.effective_at_formatted
+  %>
+  <label>End date</label>
+  <%= f.text_field :end_date, :class => "datepicker",
+    :value => @cites_suspension_notification.end_date_formatted
+  %>
+
+  <label>Basis for suspension</label>
+  <%= f.select :subtype,
+    options_from_collection_for_select(
+      CitesSuspensionNotification.bases_for_suspension, :subtype, :subtype,
+      @cites_suspension_notification && @cites_suspension_notification.subtype
+    )
+  %><br />
+  <%= text_field_tag "cites_suspension_notification[new_subtype]" %>
+
+  <label>URL</label><%= f.text_area :url %><br />
+  <label>Description</label><%= f.text_area :description %><br />
+<% end %>

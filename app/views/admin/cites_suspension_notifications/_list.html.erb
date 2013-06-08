@@ -1,0 +1,38 @@
+<thead>
+  <th>Name</th>
+  <th>Effective from</th>
+  <th>End date</th>
+  <th>Basis for suspension</th>
+  <th>URL</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |cites_suspension_notification| -%>
+    <tr class="<%= if cites_suspension_notification.is_current? then "current_listing" end %>">
+      <td>
+        <a href="#" class="editable editable-click editable-required"
+          data-type="text" data-resource="cites_suspension_notification" data-name="name"
+          data-placeholder="Required" data-original-title="Enter the CITES Suspension Notification's name"
+          data-url="<%= resource_url(cites_suspension_notification) %>" data-pk="<%= cites_suspension_notification.id %>">
+          <%= cites_suspension_notification.name %>
+        </a>
+      </td>
+      <td><%= cites_suspension_notification.effective_at_formatted %></td>
+      <td><%= cites_suspension_notification.end_date_formatted %></td>
+      <td><%= cites_suspension_notification.subtype %></td>
+      <td>
+        <%= link_to_unless(
+          cites_suspension_notification.url.blank?,
+          '<i class="icon-share" title="Go to URL"></i>'.html_safe,
+          cites_suspension_notification.url
+        ) { '' } %>
+      </td>
+      <td>
+        <%= link_to edit_icon, edit_resource_url(cites_suspension_notification), :remote => true %>
+        <%= link_to delete_icon, resource_url(cites_suspension_notification),
+          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+        %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>

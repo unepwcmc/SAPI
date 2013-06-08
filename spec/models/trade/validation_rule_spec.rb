@@ -9,6 +9,7 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  format_re         :string(255)
+#  run_order         :integer          not null
 #
 
 require 'spec_helper'
