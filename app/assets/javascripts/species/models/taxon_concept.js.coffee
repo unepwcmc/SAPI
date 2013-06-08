@@ -11,6 +11,8 @@ Species.TaxonConcept = DS.Model.extend
   synonyms: DS.attr("array")
   mTaxonConcept: DS.attr("array")
   distributions: DS.attr("array")
+  references: DS.attr("array")
+  standardReferences: DS.attr("array")
 
   #didLoad: ->
   #  console.log 'ffffffffffffffffff'
