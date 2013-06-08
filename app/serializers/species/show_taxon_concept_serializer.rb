@@ -8,6 +8,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   has_many :distributions, :serializer => Species::DistributionSerializer
   has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,
     :key => :references
+  has_many :quotas, :serializer => Species::QuotaSerializer
 
 end
 

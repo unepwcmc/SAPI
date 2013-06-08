@@ -13,6 +13,7 @@ Species.TaxonConcept = DS.Model.extend
   distributions: DS.attr("array")
   references: DS.attr("array")
   standardReferences: DS.attr("array")
+  quotas: DS.attr("array")
 
   #didLoad: ->
   #  console.log 'ffffffffffffffffff'
