@@ -17,6 +17,8 @@ class TaxonConceptReference < ActiveRecord::Base
   belongs_to :reference
   belongs_to :taxon_concept
 
+  delegate :citation, :to => :reference
+
   accepts_nested_attributes_for :reference
 
   validates :reference_id, :uniqueness => { :scope => [:taxon_concept_id] }
