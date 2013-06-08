@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe TaxonConceptsController do
+describe Checklist::TaxonConceptsController do
   describe "XHR GET JSON autocomplete" do
     include_context "Arctocephalus"
     context "when searching by accepted name" do

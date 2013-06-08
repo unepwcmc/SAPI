@@ -1,4 +1,4 @@
-class TaxonConceptsController < ApplicationController
+class Checklist::TaxonConceptsController < ApplicationController
   caches_action :index, :cache_path => Proc.new { |c| c.params }
   cache_sweeper :taxon_concept_sweeper
 
