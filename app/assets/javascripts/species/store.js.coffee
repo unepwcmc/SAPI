@@ -8,7 +8,7 @@ DS.RESTAdapter.registerTransform('array',
     return value
 )
 
-DS.RESTAdapter.configure("plurals", { geo_entity: "geo_entities" });
+DS.RESTAdapter.configure("plurals", { geo_entity: "geo_entities" })
 
 Species.Adapter = DS.RESTAdapter.reopen
   namespace: 'api/v1'
