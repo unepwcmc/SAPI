@@ -24,14 +24,14 @@ Species.SearchController = Ember.Controller.extend
 
 
   geoEntityAutoCompleteRegExpObserver: ( ->
-    @set('autoCompleteRegions', @get('controllers.geoEntities.regions').filter( (item, index, enumerable) =>
-      (@get('geoEntityAutoCompleteRegExp').test(item.get('name')))
-    ))
-    @set('autoCompleteCountries', @get('controllers.geoEntities.countries').filter( (item, index, enumerable) =>
-      (@get('geoEntityAutoCompleteRegExp').test(item.get('name')))
-    ))
+    @set 'autoCompleteRegions', @get('controllers.geoEntities.regions')
+    .filter (item, index, enumerable) =>
+      @get('geoEntityAutoCompleteRegExp').test item.get('name')
+    @set 'autoCompleteCountries', @get('controllers.geoEntities.countries')
+    .filter (item, index, enumerable) =>
+      @get('geoEntityAutoCompleteRegExp').test item.get('name')
   ).observes('geoEntityAutoCompleteRegExp')
 
   selectedGeoEntitiesObserver: ( ->
-    @set('geoEntityIds', @get('selectedGeoEntities').mapProperty('id'))
+    @set 'geoEntityIds', @get('selectedGeoEntities').mapProperty('id')
   ).observes('selectedGeoEntities.@each')
