@@ -94,7 +94,7 @@ class TaxonConcept < ActiveRecord::Base
   has_many :taxon_concept_references, :include => :reference
   has_many :references, :through => :taxon_concept_references
 
-  has_many :quotas
+  has_many :quotas, :order => 'start_date DESC'
   has_many :current_quotas, :class_name => 'Quota', :conditions => "is_current = true"
 
   has_many :cites_suspensions

@@ -9,6 +9,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,
     :key => :references
   has_many :quotas, :serializer => Species::QuotaSerializer
+  has_many :cites_suspensions, :serializer => Species::CitesSuspensionSerializer
 
 end
 

@@ -7,8 +7,22 @@
 <h4>Restrictions</h4>
 <h5>Quotas</h5>
 {{#each quota in controller.quotas}}
-  {{quota.quota}} {{quota.publication_date}} {{quota.notes}}
-  {{#if quota.is_current}}
+{{#if quota.public_display}}
+{{quota.quota}} {{quota.unit_name}} {{quota.year}}
+{{quota.publication_date}} {{quota.notes}}
+{{quota.url}}
+  {{#if quota.is_current }}
+    Current
+  {{/if}}
+  <br />
+  {{/if}}
+{{/each}}
+<h5>Suspensions</h5>
+{{#each suspension in controller.citesSuspensions}}
+{{suspension.start_date}} {{suspension.end_date}}
+{{suspension.publication_date}} {{suspension.notes}}
+{{suspension.url}} {{suspension.geo_entity.name}}
+  {{#if suspension.is_current }}
     Current
   {{/if}}
   <br />
