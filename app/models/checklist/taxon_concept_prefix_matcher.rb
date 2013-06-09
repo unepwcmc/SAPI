@@ -2,7 +2,7 @@ class Checklist::TaxonConceptPrefixMatcher
   attr_reader :taxon_concepts
 
   def initialize(search_params)
-    @scientific_name = search_params[:scientific_name]
+    @scientific_name = ActiveRecord::Base.send(:sanitize_sql_array, search_params[:scientific_name])
   end
 
   def taxon_concepts
