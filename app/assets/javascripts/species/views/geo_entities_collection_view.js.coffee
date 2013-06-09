@@ -14,3 +14,5 @@ Species.GeoEntitiesCollectionView = Ember.CollectionView.extend
 
     click: (event) ->
       @set('controller.geoEntityId', @get('context.id'))
+      @get('controller.selectedGeoEntities').addObject(@get('context'))
+

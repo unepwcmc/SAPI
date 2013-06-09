@@ -5,6 +5,14 @@
 <h3>CITES</h3>
 <h4>Listings</h4>
 <h4>Restrictions</h4>
+<h5>Quotas</h5>
+{{#each quota in controller.quotas}}
+  {{quota.quota}} {{quota.publication_date}} {{quota.notes}}
+  {{#if quota.is_current}}
+    Current
+  {{/if}}
+  <br />
+{{/each}}
 <h3>EU</h3>
 <h4>Listings</h4>
 <h4>Decisions</h4>
@@ -23,3 +31,15 @@
 {{/each}}
 
 <h3>Subspecies</h3>
+
+<h2>References</h2>
+<h3>Standard Reference</h3>
+{{#each reference in controller.standardReferences}}
+  {{reference.citation}}<br />
+{{/each}}
+<h3>Other</h3>
+{{#each reference in controller.references}}
+  {{#unless reference.is_standard}}
+    {{reference.citation}} <br />
+  {{/unless}}
+{{/each}}

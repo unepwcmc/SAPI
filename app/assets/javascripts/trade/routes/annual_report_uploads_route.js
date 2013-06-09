@@ -3,6 +3,6 @@ Trade.AnnualReportUploadsRoute = Ember.Route.extend({
     return Trade.AnnualReportUpload.find();
   },
   setupController: function(controller, model){
-     this.controllerFor('geoEntities').set('content', Trade.GeoEntity.find());
+     this.controllerFor('geoEntities').set('content', Trade.GeoEntity.find({geo_entity_type: 'country', designation: 'cites'}));
   }
 });

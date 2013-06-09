@@ -9,11 +9,11 @@ Species.GeoEntityTextField = Em.TextField.extend
 
     @.$().attr('placeholder', '')
 
-  #focusOut: (event) ->
-  #  if ($.browser.msie) {
-  #    if (@.$().val().length == 0)
-  #      this.$().val(this.get('placeholder'))
-  #  @.$().attr('placeholder', @get('placeholder'))
+  focusOut: (event) ->
+    if ($.browser.msie)
+      if (@.$().val().length == 0)
+        this.$().val(this.get('placeholder'))
+    @.$().attr('placeholder', @get('placeholder'))
 
   keyUp: (event) ->
     @set('controller.geoEntityAutoCompleteRegExp', new RegExp("^"+event.currentTarget.value,"i"))
