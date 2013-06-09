@@ -1,5 +1,6 @@
 #Encoding: utf-8
 shared_context "Caiman latirostris" do
+  let(:en){ create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') }
   let(:country){
     create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
   }
@@ -33,7 +34,11 @@ shared_context "Caiman latirostris" do
     @species = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'Latirostris'),
       :parent => @genus,
-      :name_status => 'A'
+      :name_status => 'A',
+      :common_names => [
+        create(:common_name, :name => 'Broad-nosed Caiman', :language => en),
+        create(:common_name, :name => 'Broad-snouted Caiman', :language => en)
+      ]
     )
     @species1 = create_cites_eu_species(
       :full_name => 'Alligator cynocephalus',

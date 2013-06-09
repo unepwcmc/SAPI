@@ -84,25 +84,27 @@ SAPI::Application.routes.draw do
     root :to => 'ember#start'
   end
 
-  match 'taxon_concepts/' => 'taxon_concepts#index'
-  match 'taxon_concepts/autocomplete' => 'taxon_concepts#autocomplete'
-  match 'taxon_concepts/summarise_filters' => 'taxon_concepts#summarise_filters'
-  match 'geo_entities/:geo_entity_type' => 'geo_entities#index',
-    :constraints => {:geo_entity_type => /#{GeoEntityType::COUNTRY}|#{GeoEntityType::CITES_REGION}/}
-  match 'species_listings/:designation' => 'species_listings#index',
-    :constraints => {:designation => /#{Designation::CITES}/}
-  match 'timelines' => 'timelines#index'
+  namespace :checklist do
+    resources :geo_entities, :only => [:index] #TODO move to API
+    resources :species_listings, :only => [:index] #TODO move to API
+    resources :downloads do
+      member do
+        get :download
+      end
+    end
+    match 'taxon_concepts/' => 'taxon_concepts#index'
+    match 'taxon_concepts/autocomplete' => 'taxon_concepts#autocomplete'
+    match 'taxon_concepts/summarise_filters' => 'taxon_concepts#summarise_filters'
+    match 'timelines' => 'timelines#index'
+    match 'downloads/index'   => 'downloads#download_index'
+    match 'downloads/history' => 'downloads#download_history'
+  end
 
   match 'exports' => 'exports#index'
   match 'exports/download' => 'exports#download'
-  match 'downloads/index'   => 'downloads#download_index'
-  match 'downloads/history' => 'downloads#download_history'
 
-  resources :downloads do
-    member do
-      get :download
-    end
-  end
+
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
