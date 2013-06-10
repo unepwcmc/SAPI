@@ -1,4 +1,4 @@
-class TimelinesController < ApplicationController
+class Checklist::TimelinesController < ApplicationController
   caches_action :index, :cache_path => Proc.new { |c| c.params }
   cache_sweeper :timeline_sweeper
 
@@ -28,6 +28,6 @@ class TimelinesController < ApplicationController
       ]
       )
     end
-    render :json => res
+    render :text => res.to_json
   end
 end

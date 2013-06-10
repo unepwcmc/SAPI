@@ -1,4 +1,4 @@
-class DownloadsController < ApplicationController
+class Checklist::DownloadsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, :with => :not_found
 
   # GET downloads/
@@ -15,7 +15,7 @@ class DownloadsController < ApplicationController
       v["updated_at"] = v["updated_at"].strftime("%A, %e %b %Y %H:%M")
     end
 
-    render :json => @downloads
+    render :text => @downloads.to_json
   end
 
   # POST downloads/
@@ -26,14 +26,14 @@ class DownloadsController < ApplicationController
     @download = @download.attributes.except("filename", "path")
     @download["updated_at"] = @download["updated_at"].strftime("%A, %e %b %Y %H:%M")
 
-    render :json => @download
+    render :text => @download.to_json
   end
 
   # GET downloads/:id/
   def show
     @download = Download.find(params[:id])
 
-    render :json => {status: @download.status}
+    render :text => {status: @download.status}.to_json
   end
 
   # GET downloads/:id/download
@@ -48,7 +48,7 @@ class DownloadsController < ApplicationController
         :filename => @download.filename,
         :type => @download.format)
     else
-      render :json => {error: "Download not processed"}
+      render :text => {error: "Download not processed"}.to_json
     end
   end
 
@@ -83,7 +83,7 @@ class DownloadsController < ApplicationController
   private
 
   def not_found
-    render :json => {error: "No downloads available"}
+    render :text => {error: "No downloads available"}.to_json
   end
 
 end

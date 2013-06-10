@@ -1,7 +1,7 @@
 Species.SearchController = Ember.Controller.extend
   needs: ['geoEntities', 'taxonConcepts']
   taxonomy: 'cites_eu'
-  scientificName: null
+  taxonConceptQuery: null
   geoEntityId: null
   geoEntityIds: null
   geoEntityAutoCompleteRegExp: null
@@ -13,25 +13,25 @@ Species.SearchController = Ember.Controller.extend
   loadTaxonConcepts: ->
     @transitionToRoute('search', {
       taxonomy: @get('taxonomy'),
-      scientific_name: @get('scientificName'),
+      taxon_concept_query: @get('taxonConceptQuery'),
       geo_entity_id: @get('geoEntityId')
     })
 
   setFilters: (filtersHash) ->
     @set('taxonomy', filtersHash.taxonomy)
-    @set('scientificName', filtersHash.scientific_name)
+    @set('taxonConceptQuery', filtersHash.taxon_concept_query)
     @set('geoEntityId', filtersHash.geo_entity_id)
 
 
   geoEntityAutoCompleteRegExpObserver: ( ->
-    @set('autoCompleteRegions', @get('controllers.geoEntities.regions').filter( (item, index, enumerable) =>
-      (@get('geoEntityAutoCompleteRegExp').test(item.get('name')))
-    ))
-    @set('autoCompleteCountries', @get('controllers.geoEntities.countries').filter( (item, index, enumerable) =>
-      (@get('geoEntityAutoCompleteRegExp').test(item.get('name')))
-    ))
+    @set 'autoCompleteRegions', @get('controllers.geoEntities.regions')
+    .filter (item, index, enumerable) =>
+      @get('geoEntityAutoCompleteRegExp').test item.get('name')
+    @set 'autoCompleteCountries', @get('controllers.geoEntities.countries')
+    .filter (item, index, enumerable) =>
+      @get('geoEntityAutoCompleteRegExp').test item.get('name')
   ).observes('geoEntityAutoCompleteRegExp')
 
   selectedGeoEntitiesObserver: ( ->
-    @set('geoEntityIds', @get('selectedGeoEntities').mapProperty('id'))
+    @set 'geoEntityIds', @get('selectedGeoEntities').mapProperty('id')
   ).observes('selectedGeoEntities.@each')

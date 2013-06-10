@@ -16,4 +16,12 @@ class Api::V1::TaxonConceptsController < ApplicationController
       :serializer => Species::ShowTaxonConceptSerializer
   end
 
+  def autocomplete
+    matcher = Checklist::TaxonConceptPrefixMatcher.new(
+      :scientific_name => params[:scientific_name]
+    )
+    render :json => matcher.taxon_concepts.limit(params[:per_page]),
+      :each_serializer => Species::AutocompleteTaxonConceptSerializer
+  end
+
 end
