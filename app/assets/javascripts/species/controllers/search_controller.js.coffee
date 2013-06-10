@@ -10,6 +10,8 @@ Species.SearchController = Ember.Controller.extend
   autoCompleteCountries: null
   selectedGeoEntities: []
 
+  scientificName: ""
+
   loadTaxonConcepts: ->
     @transitionToRoute('search', {
       taxonomy: @get('taxonomy'),
@@ -22,6 +24,9 @@ Species.SearchController = Ember.Controller.extend
     @set('taxonConceptQuery', filtersHash.taxon_concept_query)
     @set('geoEntityId', filtersHash.geo_entity_id)
 
+  toParams: ->
+    scientific_name : this.get('scientificName')
+      
 
   geoEntityAutoCompleteRegExpObserver: ( ->
     @set 'autoCompleteRegions', @get('controllers.geoEntities.regions')

@@ -10,9 +10,11 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 //
+//= require underscore
 //= require jquery
 //= require jquery_ujs
 //= require jquery-deparam
+//= require bootstrap-typeahead
 //= require handlebars
 //= require ember
 //= require ember-data

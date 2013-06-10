@@ -7,12 +7,21 @@
 {{view Ember.RadioButton title="CMS" option="cms" group="search[taxonomy]"
   valueBinding="controller.taxonomy"}}
 
-{{view Species.TaxonConceptTextField
+
+{{view Species.SearchTextField
   valueBinding="controller.taxonConceptQuery"
+  id="scientific_name"
   title="search"
   placeholder="Species, higher taxon, synonym or common name..."
   autocomplete="off"
 }}
+
+<div class="drop" style="display: none;" id="autocomplete-dropdown">
+  <img src="/images/decor-dropdown-light.png" alt="arrow for autocomplete dropdown boxclass="decor" width="24" height="13" >
+</div>
+
+
+
 
 <hr>
 
