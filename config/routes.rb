@@ -83,13 +83,18 @@ SAPI::Application.routes.draw do
       member do
         get :download
       end
+      collection do
+        get :download_index
+        get :download_history
+      end
     end
-    match 'taxon_concepts/' => 'taxon_concepts#index'
-    match 'taxon_concepts/autocomplete' => 'taxon_concepts#autocomplete'
-    match 'taxon_concepts/summarise_filters' => 'taxon_concepts#summarise_filters'
-    match 'timelines' => 'timelines#index'
-    match 'downloads/index'   => 'downloads#download_index'
-    match 'downloads/history' => 'downloads#download_history'
+    resources :taxon_concepts, :only => [:index] do
+      collection do
+        get :autocomplete
+        get :summarise_filters
+      end
+    end
+    resources :timelines, :only => [:index]
   end
 
   match 'exports' => 'exports#index'

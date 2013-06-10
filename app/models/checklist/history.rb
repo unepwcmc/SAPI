@@ -26,6 +26,7 @@ class Checklist::History < Checklist::Checklist
       includes(:listing_changes).
       where("cites_listed = 't' OR cites_status = 'DELETED'").
       where("listing_changes_mview.change_type_name <> 'EXCEPTION'").
+      where("listing_changes_mview.designation_name" => Designation::CITES).
       where("explicit_change = 't'").
       order <<-SQL
         taxon_concept_id, effective_at,
