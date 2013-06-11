@@ -50,34 +50,32 @@ class Checklist::DownloadsController < ApplicationController
   end
 
   def download_index
-    download_module = {
-      "pdf" => Checklist::Pdf,
-      "csv" => Checklist::Csv,
-      "json" => Checklist::Json
-    }
-
-    doc = download_module[params[:format]]::Index.new(params)
-    @download_path = doc.generate
-    send_file(@download_path,
-      :filename => doc.download_name,
-      :type => doc.ext)
+    @doc = download_module::Index.new(params)
+    send_download
   end
 
   def download_history
-    download_module = {
+    @doc = download_module::History.new(params)
+    send_download
+  end
+
+  private
+
+  def download_module
+    format_mapping = {
       "pdf" => Checklist::Pdf,
       "csv" => Checklist::Csv,
       "json" => Checklist::Json
     }
-
-    doc = download_module[params[:format]]::History.new(params)
-    @download_path = doc.generate
-    send_file(@download_path,
-      :filename => doc.download_name,
-      :type => doc.ext)
+    format_mapping[params[:format]]
   end
 
-  private
+  def send_download
+    @download_path = @doc.generate
+    send_file(@download_path,
+      :filename => @doc.download_name,
+      :type => @doc.ext)
+  end
 
   def not_found
     render :text => {error: "No downloads available"}.to_json
