@@ -12,7 +12,7 @@ module Checklist::Pdf::IndexContent
   end
 
   def annotations_key
-    tex = "\\newpage "
+    tex = "\\parindent 0in"
     tex << "\\cpart{Annotations key}\n"
     listing_changes_with_index_annotations = MListingChange.
       includes(:taxon_concept).
@@ -23,9 +23,10 @@ module Checklist::Pdf::IndexContent
     tex << "\\section*{Annotations not preceded by \"\\#\"}\n"
     listing_changes_with_index_annotations.each do |lc|
         box_colour = (lc.taxon_concept.kingdom_name == 'Animalia' ? 'orange' : 'green')
-        tex << "\\cfbox{#{box_colour}}{\\superscript{#{lc.ann_symbol}} #{taxon_name_at_rank(lc.taxon_concept)}}\n\n"
+        tex << "\\cfbox{#{box_colour}}{\\superscript{#{lc.ann_symbol}} \\textbf{#{taxon_name_at_rank(lc.taxon_concept)}}}\n\n"
         tex << "#{LatexToPdf.html2latex(lc.full_note_en)}\n\n"
       end
+    tex << "\\parindent -0.1in"
     tex
   end
 
