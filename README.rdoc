@@ -1,4 +1,5 @@
-= Species+ {<img src="https://secure.travis-ci.org/unepwcmc/SAPI.png" />}[http://travis-ci.org/unepwcmc/SAPI] {<img src="https://codeclimate.com/badge.png" />}[https://codeclimate.com/github/unepwcmc/SAPI]
+= Species+ {<img src="https://secure.travis-ci.org/unepwcmc/SAPI.png" />}[http://travis-ci.org/unepwcmc/SAPI] {<img src="https://codeclimate.com/github/unepwcmc/SAPI.png" />}[https://codeclimate.com/github/unepwcmc/SAPI] {<img src="https://coveralls.io/repos/unepwcmc/SAPI/badge.png?branch=master" alt="Coverage Status" />}[https://coveralls.io/r/unepwcmc/SAPI?branch=master]
+
 
 Species+ is the new species integration platform developed at WCMC.
 
