@@ -64,7 +64,9 @@ describe Checklist::Pdf::Index do
   }
   describe :annotations_key do
     subject{ Checklist::Pdf::Index.new({}) }
-    specify{ subject.annotations_key.should == "\\newpage \\cpart{Annotations key}\n\\section*{Annotations not preceded by \"\\#\"}\n\\cfbox{green}{\\superscript{1} FOOBARIDAE spp.}\n\nExcept \\emph{Foobarus spp}\n\nsome more stuff here\n\n\\cfbox{green}{\\superscript{2} \\textit{Foobarus} spp.}\n\nExcept \\emph{Foobarus bizarrus}\n\n\\cfbox{green}{\\superscript{3} \\textit{Foobarus bizarrus}}\n\nOnly populations of X, Y, Z\n\n"}
+    specify{
+      LatexToPdf.stub(:html2latex).and_return('x')
+      subject.annotations_key.should ==  "\\newpage \\cpart{Annotations key}\n\\section*{Annotations not preceded by \"\\#\"}\n\\cfbox{green}{\\superscript{1} FOOBARIDAE spp.}\n\nx\n\n\\cfbox{green}{\\superscript{2} \\textit{Foobarus} spp.}\n\nx\n\n\\cfbox{green}{\\superscript{3} \\textit{Foobarus bizarrus}}\n\nx\n\n"}
   end
 
 end
