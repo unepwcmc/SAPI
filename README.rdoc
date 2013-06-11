@@ -17,6 +17,8 @@ Species+ is the new species integration platform developed at WCMC.
      - texlive-latex-recommended
      - texlive-fonts-recommended
      - texlive-extra (is this included in texlive-full?)
+  - Pandoc (for html => latex conversions)
+     - pandoc
 
 
 ==Installation
