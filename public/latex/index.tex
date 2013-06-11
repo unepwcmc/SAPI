@@ -28,7 +28,7 @@
 
 \renewcommand{\rmdefault}{phv}
 \newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
-\newcommand{\cpart}[1]{\addcontentsline{toc}{part}{#1}\part*{\centering #1}}
+\newcommand{\cpart}[1]{\addcontentsline{toc}{part}{#1}\newpage\part*{\centering #1}}
 \newcommand{\csection}[1]{\addcontentsline{toc}{section}{#1}\section*{\centering #1}}
 \newcommand{\cfbox}[2]{%
     \colorlet{currentcolor}{.}%
