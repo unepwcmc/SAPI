@@ -234,7 +234,7 @@ class Checklist::Checklist
                                        .sort
                                        .to_s)
 
-    return [Rails.root, '/public/downloads/', @filename, '.', format].join
+    return [Rails.root, '/public/downloads/checklist/', @filename, '.', format].join
   end
 
   private

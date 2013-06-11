@@ -66,7 +66,7 @@ describe Checklist::Pdf::History do
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
       specify{
-        subject.listed_taxon_name(tc).should == '\textit{Foobarus} spp.'
+        subject.listed_taxon_name(tc).should == '\emph{Foobarus} spp.'
       }
     end
   end
@@ -92,7 +92,7 @@ describe Checklist::Pdf::History do
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
       specify{
         subject.annotation_for_language(lc, 'en').should ==
-        'Except \textit{Foobarus cracoviensis} and \textit{Foobarus cambridgianus}'
+        'Except \emph{Foobarus cracoviensis} and \emph{Foobarus cambridgianus}'
       }
     end
     context "annotations with italics and latex special characters" do
@@ -105,7 +105,7 @@ describe Checklist::Pdf::History do
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
       specify{
         subject.annotation_for_language(lc, 'en').should ==
-        'Except \textit{Foobarus cracoviensis} as defined by Karl \& Bernard'
+        'Except \emph{Foobarus cracoviensis} as defined by Karl \& Bernard'
       }
     end
     context "annotations with footnotes" do
@@ -120,7 +120,7 @@ describe Checklist::Pdf::History do
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
       specify{
         subject.annotation_for_language(lc, 'en').should ==
-        'Except \textit{Foobarus cracoviensis}\footnote{They have plenty of \textit{Foobarus cracoviensis} in Kraków}'
+        'Except \emph{Foobarus cracoviensis}\footnote{They have plenty of \emph{Foobarus cracoviensis} in Kraków}'
       }
     end
   end

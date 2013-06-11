@@ -40,6 +40,7 @@ class MListingChange < ActiveRecord::Base
   self.primary_key = :id
 
   belongs_to :designation
+  belongs_to :taxon_concept, :class_name => 'MTaxonConcept'
 
   def effective_at_formatted
     effective_at.strftime("%d/%m/%y")

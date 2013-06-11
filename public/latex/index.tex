@@ -8,6 +8,7 @@
 \usepackage{attachfile}
 \usepackage[utf8]{inputenc}
 \usepackage{fancyhdr}
+\usepackage{xcolor}
 
 \DeclareUnicodeCharacter{00A0}{~}
 
@@ -29,6 +30,11 @@
 \newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
 \newcommand{\cpart}[1]{\addcontentsline{toc}{part}{#1}\part*{\centering #1}}
 \newcommand{\csection}[1]{\addcontentsline{toc}{section}{#1}\section*{\centering #1}}
+\newcommand{\cfbox}[2]{%
+    \colorlet{currentcolor}{.}%
+    {\color{#1}%
+    \fbox{\color{currentcolor}#2}}%
+}
 
 \includepdf[pages={-}]{../../public/latex/static_index.pdf}
 \rmfamily
@@ -37,7 +43,5 @@
 
 \rmfamily
 \include{_index}
-
-\attachfile[icon=Paperclip]{../../public/latex/CITES_abbreviations_and_annotations.pdf}
 
 \end{document}

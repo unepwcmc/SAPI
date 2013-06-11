@@ -22,6 +22,9 @@
 /public/latex/index.pdf
 /public/latex/history.pdf
 
+#checklist downloads
+/public/downloads/checklist/*.*
+
 #exports csvs
 /public/downloads/cites_quotas/*.csv
 /public/downloads/cites_listings/*.csv

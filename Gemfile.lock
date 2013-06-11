@@ -173,6 +173,7 @@ GEM
       net-ssh (>= 2.6.5)
     newrelic_rpm (3.5.5.38)
     oj (2.0.2)
+    pandoc-ruby (0.7.0)
     pg (0.14.1)
     pg_array_parser (0.0.8)
     polyglot (0.3.3)
@@ -335,6 +336,7 @@ DEPENDENCIES
   nested_form (~> 0.3.1)
   newrelic_rpm (>= 3.5.5)
   oj
+  pandoc-ruby
   pg
   pg_array_parser
   quiet_assets

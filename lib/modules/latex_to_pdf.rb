@@ -77,13 +77,8 @@ class LatexToPdf
   end
 
   def self.html2latex(text)
-    text && text.split(/(<i>.*?<\/i>)/).map do |part|
-      if part =~ /<i>(.*?)<\/i>/
-        "\\textit{#{escape_latex($+)}}"
-      else
-        escape_latex(part)
-      end
-    end.join('')
+    @converter = PandocRuby.new(text, :from => :html, :to => :latex)
+    @converter.convert.chomp
   end
 
 end

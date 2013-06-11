@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_annotation_symbols_for_node(node_id int
     SET symbol = ordered_annotations.calculated_symbol, parent_symbol = NULL
     FROM
     (
-      SELECT ROW_NUMBER() OVER(ORDER BY kingdom_position, full_name) AS calculated_symbol, MAX(annotations.id) AS id
+      SELECT ROW_NUMBER() OVER(ORDER BY taxonomic_position) AS calculated_symbol, MAX(annotations.id) AS id
       FROM listing_changes
       INNER JOIN annotations
         ON listing_changes.annotation_id = annotations.id
@@ -17,8 +17,8 @@ CREATE OR REPLACE FUNCTION rebuild_cites_annotation_symbols_for_node(node_id int
       INNER JOIN taxon_concepts_mview
         ON listing_changes.taxon_concept_id = taxon_concepts_mview.id
       WHERE is_current = TRUE AND display_in_index = TRUE
-      GROUP BY taxon_concept_id, kingdom_position, full_name
-      ORDER BY kingdom_position, full_name
+      GROUP BY taxon_concept_id, taxonomic_position
+      ORDER BY taxonomic_position
     ) ordered_annotations
     WHERE ordered_annotations.id = annotations.id;
 

@@ -4,24 +4,29 @@
 module Checklist::Pdf::IndexContent
 
   def content(tex)
-    annotations_key(tex)
     fetcher = Checklist::Pdf::IndexFetcher.new(@animalia_query)
     kingdom(tex, fetcher, 'FAUNA')
     fetcher = Checklist::Pdf::IndexFetcher.new(@plantae_query)
     kingdom(tex, fetcher, 'FLORA')
+    tex << annotations_key
   end
 
-  def annotations_key(tex)
-    index_annotations = Annotation.where(:display_in_index => true).
-      order(:symbol)
-    if index_annotations.size > 0
-      tex << "\\cpart{SUPERSCRIPT ANNOTATIONS KEY}\n"
-      tex << "\\begin{itemize}\n"
-      index_annotations.each do |ann|
-          tex << "\\item[#{ann.symbol}] #{ann.full_note_en}\n"
-        end
-      tex << "\\end{itemize}\n"
-    end
+  def annotations_key
+    tex = "\\newpage "
+    tex << "\\cpart{Annotations key}\n"
+    listing_changes_with_index_annotations = MListingChange.
+      includes(:taxon_concept).
+      where(:is_current => true, :display_in_index => true, :designation_name => Designation::CITES).
+      where("ann_symbol IS NOT NULL").
+      order(:"ann_symbol::INT")
+
+    tex << "\\section*{Annotations not preceded by \"\\#\"}\n"
+    listing_changes_with_index_annotations.each do |lc|
+        box_colour = (lc.taxon_concept.kingdom_name == 'Animalia' ? 'orange' : 'green')
+        tex << "\\cfbox{#{box_colour}}{\\superscript{#{lc.ann_symbol}} #{taxon_name_at_rank(lc.taxon_concept)}}\n\n"
+        tex << "#{LatexToPdf.html2latex(lc.full_note_en)}\n\n"
+      end
+    tex
   end
 
   def kingdom(tex, fetcher, kingdom_name)
@@ -67,7 +72,7 @@ module Checklist::Pdf::IndexContent
     res
   end
 
-  def listed_taxon_name(taxon_concept)
+  def taxon_name_at_rank(taxon_concept)
     res = if ['FAMILY','SUBFAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
       LatexToPdf.escape_latex(taxon_concept.full_name.upcase)
     else
@@ -78,7 +83,12 @@ module Checklist::Pdf::IndexContent
       end
     end
     res += " #{LatexToPdf.escape_latex(taxon_concept.spp)}" if taxon_concept.spp
-    res = "\\textbf{#{res}}" if taxon_concept.cites_accepted
+    res
+  end
+
+  def listed_taxon_name(taxon_concept)
+    res = taxon_name_at_rank(taxon_concept)
+    "\\textbf{#{res}}" if taxon_concept.cites_accepted
     res
   end
 

@@ -103,7 +103,7 @@ module Checklist::Pdf::HistoryContent
       taxon_concept.full_name
     end
     if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? taxon_concept.rank_name
-      res = "\\textit{#{res}}"
+      res = "\\emph{#{res}}"
     end
     res += " #{taxon_concept.spp}" if taxon_concept.spp
     res
