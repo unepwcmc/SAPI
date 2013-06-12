@@ -77,8 +77,9 @@ class LatexToPdf
   end
 
   def self.html2latex(text)
-    @converter = PandocRuby.new(text, :from => :html, :to => :latex)
-    @converter.convert.chomp
+    # @converter = PandocRuby.new(text, :from => :html, :to => :latex)
+    # @converter.convert.chomp
+    escape_latex(text)
   end
 
 end
