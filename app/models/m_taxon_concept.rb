@@ -85,7 +85,7 @@ class MTaxonConcept < ActiveRecord::Base
     :order => 'effective_at DESC, species_listing_name ASC'
   belongs_to :cites_closest_listed_ancestor, :class_name => MTaxonConcept
   belongs_to :eu_closest_listed_ancestor, :class_name => MTaxonConcept
-  scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
+  scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true).uniq
 
   scope :without_non_accepted, where(:name_status => ['A', 'H'])
 
