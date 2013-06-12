@@ -13,7 +13,7 @@ class Checklist::TaxonConceptPrefixMatcher
   protected
 
   def build_rel
-    @taxon_concepts = MTaxonConcept.by_cites_eu_taxonomy.without_non_accepted
+    @taxon_concepts = MTaxonConcept.by_cites_eu_taxonomy.without_non_accepted.without_hidden
     if @scientific_name
       @taxon_concepts = @taxon_concepts.select("
         DISTINCT id, LENGTH(taxonomic_position),
@@ -49,4 +49,4 @@ class Checklist::TaxonConceptPrefixMatcher
 
 
 end
-      
+
