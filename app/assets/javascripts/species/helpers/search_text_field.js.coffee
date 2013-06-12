@@ -29,21 +29,12 @@ Species.SearchTextField = Ember.TextField.extend(
             full_name: query 
             limit: 10
           , (data) ->
-            #console.log JSON.stringify(data.taxon_concepts)
             labels = self.parser data.taxon_concepts
-            #console.log labels
-            #$.each(data.taxon_concepts, (i, item) =>
-            #  console.log  'OOOO', item.full_name
-            #  label = item.full_name
-            #  labels.push(label)
-            #)
             process(labels)
         sorter: self.sorter
         matcher: self.matcher
         updater: self.updater
         highlighter: self.highlighter
-
-
     @$().val ""  if @$().val() is @get("placeholder")
     @$().attr "placeholder", ""
 
@@ -52,7 +43,6 @@ Species.SearchTextField = Ember.TextField.extend(
     @$().attr "placeholder", @get("placeholder")
 
   updater: (item) ->
-    #console.log "updater", item
     # Remove synonyms when an item is selected
     item.replace /(.*)( \(\=.*\))/, "$1"
 
@@ -61,15 +51,19 @@ Species.SearchTextField = Ember.TextField.extend(
     transform = ($1, match) ->
       "<span style=\"text-decoration:underline\">" + match + "</span>"
 
-    item.replace(new RegExp("^(" + query + ")", "i"), transform).replace new RegExp("=(" + query + ")", "ig"), transform
+    item.replace(new RegExp("^(" + query + ")", "i"), transform)
+      .replace new RegExp("=(" + query + ")", "ig"), transform
 
   matcher: (item) ->
-    #console.log item, @query
     true
 
   sorter: (items) ->
     items
 
+  # This parser relies on a Hack inside bootstrap-typeahead.
+  # If a string in the list starts with an underscore it is treated as
+  # header in the autocomplete list.
+  # TODO: any better alternatives? 
   parser: (data) ->
     results = []
     # Extract the names of each result row for use by typeahead.js
@@ -77,9 +71,24 @@ Species.SearchTextField = Ember.TextField.extend(
       unless "_#{el.rank_name}" in results
         results.push "_#{el.rank_name}"
       entry = el.full_name
-      entry += " (=" + el.matching_names.join(", ") + ")"  if el.matching_names.length > 0
+      if el.matching_names.length > 0
+        entry += " (=" + el.matching_names.join(", ") + ")"
       results.push entry
     results
+
+  # A better way to prepare the data, but unfortunately not compatible 
+  # with boostrap-typehead
+  #parserB: (data) ->
+  #  content = data
+  #  results = {}
+  #  # Extract the names of each result row for use by typeahead.js
+  #  content.forEach (item, i) ->
+  #    results[item.rank_name] = []  unless item.rank_name of results
+  #    entry = item.full_name
+  #    if el.matching_names.length > 0
+  #      entry += " (=" + el.matching_names.join(", ") + ")"
+  #    results[item.rank_name].push entry
+  #  results
 
   didInsertElement: ->
     @$().val @$().attr("placeholder")  if $.browser.msie
