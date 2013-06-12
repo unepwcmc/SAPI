@@ -23,7 +23,7 @@ Species.SearchTextField = Ember.TextField.extend(
       $("#scientific_name").typeahead
         minLength: 3
         source: (query, process) ->
-          $.get "http://0.0.0.0:3000/api/v1/taxon_concepts/autocomplete",
+          $.get "/api/v1/taxon_concepts/autocomplete",
             scientific_name: query
             rank_name: query
             full_name: query 
