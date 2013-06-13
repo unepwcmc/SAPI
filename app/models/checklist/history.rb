@@ -2,7 +2,12 @@ class Checklist::History < Checklist::Checklist
   attr_reader :download_name
 
   def initialize(options={})
-    options = {:output_layout => :taxononomic}
+    options = {
+      :output_layout => :taxononomic,
+      :show_english => true,
+      :show_french => true,
+      :show_spanish => true
+    }
     # History cannot be parametrized like other Checklist reports
     @download_path = download_location(options, "history", ext)
 
