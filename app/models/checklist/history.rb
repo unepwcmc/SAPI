@@ -25,11 +25,9 @@ class Checklist::History < Checklist::Checklist
 
   def prepare_main_query
     @taxon_concepts_rel = MTaxonConcept.
-       includes(:listing_changes).
+       includes(:cites_listing_changes).
         where(<<-SQL
-          listing_changes_mview.change_type_name != 'EXCEPTION'
-            AND listing_changes_mview.explicit_change = TRUE
-            AND listing_changes_mview.designation_name = '#{Designation::CITES}'
+            listing_changes_mview.explicit_change = TRUE
             AND (cites_listed = TRUE OR cites_status = 'DELETED')
           SQL
         ).

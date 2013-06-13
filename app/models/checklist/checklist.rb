@@ -104,7 +104,7 @@ class Checklist::Checklist
   #   related metadata
   def generate(page, per_page)
     @taxon_concepts_rel = @taxon_concepts_rel.
-      includes(:current_listing_changes).
+      includes(:current_cites_listing_changes).
       without_non_accepted.without_hidden
     page ||= 0
     per_page ||= 20
