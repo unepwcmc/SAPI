@@ -28,7 +28,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       status_flag, status_original_flag, not_listed_flag,
       listing_updated_at_flag
     ];
-    IF designation.name = 'CITES' THEN 
+    IF designation.name = 'CITES' THEN
       flags_to_reset := flags_to_reset ||
         ARRAY['cites_listing','cites_I','cites_II','cites_III'];
     ELSIF designation.name = 'EU' THEN
@@ -66,30 +66,13 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     WHERE taxon_concepts.id = listed_taxa.id AND
       CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
 
-    -- set cites_status property to 'DELETED' for all explicitly deleted taxa
-    -- omit ones already marked as listed (applies to appendix III deletions)
-    -- also set cites_status_original flag to true
-    WITH deleted_taxa AS (
-      SELECT taxon_concepts.id
-      FROM taxon_concepts
-      INNER JOIN listing_changes
-        ON taxon_concepts.id = listing_changes.taxon_concept_id
-        AND is_current = 't' AND change_type_id = deletion_id
-      WHERE taxonomy_id = designation.taxonomy_id AND (
-        listing -> status_flag <> 'LISTED'
-          OR (listing -> status_flag)::VARCHAR IS NULL
-      )
-    )
-    UPDATE taxon_concepts
-    SET listing = listing || hstore(status_flag, 'DELETED') ||
-      hstore(status_original_flag, 't')
-    FROM deleted_taxa
-    WHERE taxon_concepts.id = deleted_taxa.id AND
-      CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
-
     -- set cites_status property to 'EXCLUDED' for all explicitly excluded taxa
     -- omit ones already marked as listed
     -- also set cites_status_original flag to true
+    -- note: this was moved before setting the "deleted" status,
+    -- because some taxa were deleted but still need to show up
+    -- in the checklist, and so they get the "excluded" status
+    -- to differentiate them
     WITH excluded_taxa AS (
       WITH listing_exceptions AS (
         SELECT listing_changes.parent_id, taxon_concept_id
@@ -108,6 +91,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       INNER JOIN listing_changes
         ON listing_changes.id = listing_exceptions.parent_id
           AND listing_changes.taxon_concept_id <> listing_exceptions.taxon_concept_id
+          AND listing_changes.is_current = TRUE
     )
     UPDATE taxon_concepts
     SET listing = listing || hstore(status_flag, 'EXCLUDED') ||
@@ -116,6 +100,27 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     WHERE taxon_concepts.id = excluded_taxa.id AND
       CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
 
+    -- set cites_status property to 'DELETED' for all explicitly deleted taxa
+    -- omit ones already marked as listed (applies to appendix III deletions)
+    -- also set cites_status_original flag to true
+    WITH deleted_taxa AS (
+      SELECT taxon_concepts.id
+      FROM taxon_concepts
+      INNER JOIN listing_changes
+        ON taxon_concepts.id = listing_changes.taxon_concept_id
+        AND is_current = 't' AND change_type_id = deletion_id
+      WHERE taxonomy_id = designation.taxonomy_id AND (
+        listing -> status_flag <> 'LISTED'
+        AND listing -> status_flag <> 'EXCLUDED'
+          OR (listing -> status_flag)::VARCHAR IS NULL
+      )
+    )
+    UPDATE taxon_concepts
+    SET listing = listing || hstore(status_flag, 'DELETED') ||
+      hstore(status_original_flag, 't')
+    FROM deleted_taxa
+    WHERE taxon_concepts.id = deleted_taxa.id AND
+      CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
 
     -- set the cites_status_original flag to false for taxa included in parent listing
     UPDATE taxon_concepts
@@ -197,7 +202,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
         ON      hi.id = q.parent_id
         WHERE (listing->status_original_flag)::BOOLEAN IS NULL
       )
-      SELECT DISTINCT id, inherited_cites_status, 
+      SELECT DISTINCT id, inherited_cites_status,
         inherited_listing_updated_at
       FROM q
     )
@@ -210,7 +215,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     FROM qq
     WHERE taxon_concepts.id = qq.id
      AND (
-       listing IS NULL 
+       listing IS NULL
        OR (listing->status_original_flag)::BOOLEAN IS NULL
        OR (listing->status_original_flag)::BOOLEAN = 'f'
      );

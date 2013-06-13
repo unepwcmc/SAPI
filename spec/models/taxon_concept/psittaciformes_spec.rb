@@ -91,22 +91,22 @@ describe TaxonConcept do
 
       describe :cites_show do
         context "for species Agapornis roseicollis (DEL II)" do
-          specify { @species2_1.cites_show.should be_false }
+          specify { @species2_1.cites_show.should be_true }
         end
         context "for species Amazona aestiva" do
           specify { @species2_2.cites_show.should be_true }
         end
         context "for species Psittacula krameri (DEL III)" do
-          specify { @species2_3.cites_show.should be_false }
+          specify { @species2_3.cites_show.should be_true }
         end
       end
 
       describe :cites_status do
         context "for species Agapornis roseicollis (DEL II)" do
-          specify { @species2_1.cites_status.should == 'DELETED' }
+          specify { @species2_1.cites_status.should == 'EXCLUDED' }
         end
         context "for species Psittacula krameri (DEL III)" do
-          specify { @species2_3.cites_status.should == 'DELETED' }
+          specify { @species2_3.cites_status.should == 'EXCLUDED' }
         end
       end
 
