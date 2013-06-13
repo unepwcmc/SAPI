@@ -12,7 +12,7 @@ gem 'json', '>=1.7.7'
 gem 'foreigner'
 gem 'oj'
 gem 'jsonify'
-gem 'pandoc-ruby'
+gem 'nokogiri'
 gem 'inherited_resources'
 gem 'traco'
 

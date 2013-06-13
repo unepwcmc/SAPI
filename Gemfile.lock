@@ -162,6 +162,7 @@ GEM
       treetop (~> 1.4.8)
     method_source (0.8.1)
     mime-types (1.21)
+    mini_portile (0.5.0)
     multi_json (1.7.3)
     nested_form (0.3.1)
     net-scp (1.1.0)
@@ -172,8 +173,9 @@ GEM
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
     newrelic_rpm (3.5.5.38)
+    nokogiri (1.6.0)
+      mini_portile (~> 0.5.0)
     oj (2.0.2)
-    pandoc-ruby (0.7.0)
     pg (0.14.1)
     pg_array_parser (0.0.8)
     polyglot (0.3.3)
@@ -335,8 +337,8 @@ DEPENDENCIES
   kaminari
   nested_form (~> 0.3.1)
   newrelic_rpm (>= 3.5.5)
+  nokogiri
   oj
-  pandoc-ruby
   pg
   pg_array_parser
   quiet_assets
