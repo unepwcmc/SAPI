@@ -2,6 +2,7 @@
 # Reason for this: pandoc was either extremely slow or hanging.
 class HtmlToLatex
 
+  # We're only expecting <p>, <i> and <b>
   def self.convert(input_str)
     doc = Nokogiri::HTML(input_str)
     output_str = ''
@@ -14,10 +15,10 @@ class HtmlToLatex
           output_str << "\\textbf{#{n_content}}"
         else
           output_str << n_content
-          if n.parent.name == 'p' && n.next_sibling.nil?
-            output_str << "\n\n"
-          end
         end
+      end
+      if n.next_sibling && (n.next_sibling.name == 'p' || n.name == 'p')
+        output_str << "\\newline "
       end
     end
     output_str
