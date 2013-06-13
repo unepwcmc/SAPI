@@ -35,7 +35,6 @@ class Checklist::History < Checklist::Checklist
           listing_changes_mview.change_type_name != 'EXCEPTION'
             AND listing_changes_mview.explicit_change = TRUE
             AND listing_changes_mview.designation_name = '#{Designation::CITES}'
-            AND (cites_listed = TRUE OR cites_status = 'DELETED')
           SQL
         ).
         order(<<-SQL
