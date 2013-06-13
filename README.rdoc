@@ -18,9 +18,6 @@ Species+ is the new species integration platform developed at WCMC.
      - texlive-latex-recommended
      - texlive-fonts-recommended
      - texlive-extra (is this included in texlive-full?)
-  - Pandoc (for html => latex conversions)
-     - pandoc
-
 
 ==Installation
 
@@ -97,6 +94,37 @@ Note: if there is some issue with data encoding on the way, we may end up with t
   update annotation_translations set full_note = replace(full_note, '�', '') where id in (select id from annotation_translations where full_note like '%�%');
 
   update listing_changes_mview set english_full_note = replace(english_full_note, '�', ''), spanish_full_note = replace(spanish_full_note, '�',''), french_full_note = replace(french_full_note, '�', '')  where id in (select id from listing_changes_mview where english_full_note like '%�%' or spanish_full_note like '%�%' or french_full_note like '%�%');
+
+
+=== Migrating local database into staging/production server
+
+First in your local machine:
+   1- Dump the local database sapi_development to a .sql file:
+      pg_dump -c sapi_development > sapi_db.sql
+   2- Transfer the .sql file to the database server that you want to migrate too:
+      scp sapi_db.sql rails@unepwcmc-00X.vm.brightbox.net:~/
+Then the web server:
+   3- Drop existing database
+     RAILS_ENV=environment bundle exec rake db:drop
+   3.2- If this doesn't work straight away because the database is being used you'll need to kill the database process in the db server, and then try dropping the database again
+   In the db server:
+     ps axu | grep sapi
+     sudo kill -9 [pid]
+   4- Create the database again
+     RAILS_ENV=environment bundle exec rake db:create
+Then in the db server:
+   5- Make sure that the user used in the database is the same as the one that exists in the database server. In my case this means replacing instances of simaob with wcmc:
+     vim sapi_db.sql
+     Do a few find and replace: 
+       %s/simaob/wcmc/gi
+       %s/postgres/wcmc/gi
+   6- Run the .sql script to fill the database (for this example the database name is sapi_staging)
+     sudo -u postgres psql -f sapi_db.sql -d sapi_staging
+Back in the web server:
+   7- Run the migrations just to make sure that the schema matches the latest migrations
+     RAILS_ENV=environment bundle exec rake db:migrate
+     
+Maybe in the future we might want to create a chef script to do all this. :)
 
 === Job queue
 
