@@ -30,5 +30,6 @@
 //= require_tree ./species/templates
 //= require ./species/router
 //= require_tree ./species/routes
+//= require ./species/main
 
 var Species = Ember.Application.create({LOG_TRANSITIONS: true});
