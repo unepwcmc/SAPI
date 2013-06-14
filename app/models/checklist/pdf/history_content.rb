@@ -125,11 +125,13 @@ module Checklist::Pdf::HistoryContent
 
   def higher_taxon_name(taxon_concept)
     common_names = common_names_with_lng_initials(taxon_concept)
-    if taxon_concept.rank_name == 'PHYLUM'
+    if taxon_concept.rank_name == 'PHYLUM' && taxon_concept.kingdom_name == 'Animalia'
       "\\csection{#{taxon_concept.full_name.upcase}}\n"
-    elsif taxon_concept.rank_name == 'CLASS'
+    elsif taxon_concept.rank_name == 'CLASS' && taxon_concept.kingdom_name == 'Animalia'
       "\\section*{\\underline{#{taxon_concept.full_name.upcase}} #{common_names}}\n"
-    elsif ['ORDER','FAMILY','SUBFAMILY'].include? taxon_concept.rank_name
+    elsif taxon_concept.rank_name == 'ORDER' && taxon_concept.kingdom_name == 'Animalia'
+      "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names}}\n"
+    elsif ['FAMILY','SUBFAMILY'].include? taxon_concept.rank_name
       "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names}}\n"
     end
   end
