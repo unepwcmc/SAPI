@@ -10,7 +10,7 @@ Ember.Handlebars.helper "eachPart", (arr, options) ->
   return options.inverse(this) if options.inverse and not arr.length
   limit = Math.ceil(arr.length / options.hash.parts)
   offset = options.hash.page * limit
-  new_arr = arr.slice(offset, limit+offset-1)
+  new_arr = arr.slice(offset, limit+offset)
   new_arr.map((item, index) ->
     options.fn item
   ).join ""

@@ -216,14 +216,14 @@
         <strong class="title">SYNONYMS</strong>
         <div class="columns-holder">
           <ul class="col">
-            <li>Candoia superciliosa (Günther, 1863)</li>
-            <li>Candoia paulsoni (Stull, 1956)</li>
-            <li>Candoia superciliosa (Günther, 1863)</li>
+            {{#eachPart synonyms parts=2 page=0}}
+  			  <li>{{full_name}} {{author_year}}</li>
+  			{{/eachPart}}
           </ul>
           <ul class="col">
-            <li>Candoia superciliosa (Günther, 1863)</li>
-            <li>Candoia paulsoni (Stull, 1956)</li>
-            <li>Candoia superciliosa (Günther, 1863)</li>
+            {{#eachPart synonyms parts=2 page=1}}
+  			  <li>{{full_name}} {{author_year}}</li>
+  			{{/eachPart}}
           </ul>
         </div>
       </div>
@@ -231,16 +231,8 @@
         <strong class="title">SUBSPECIES</strong>
         <div class="columns-holder">
           <ul class="col">
-            <li>Candoia aspera (Günther, 1863)</li>
-            <li>Candoia bibroni (Stull, 1956)</li>
-            <li>Candoia carinata (Günther, 1863)</li>
-            <li>Candoia paulsoni  (Stull, 1956)</li>
           </ul>
           <ul class="col">
-            <li>Candoia aspera (Günther, 1863)</li>
-            <li>Candoia bibroni (Stull, 1956)</li>
-            <li>Candoia carinata (Günther, 1863)</li>
-            <li>Candoia paulsoni  (Stull, 1956)</li>
           </ul>
         </div>
       </div>
@@ -278,12 +270,6 @@
       </div>
     </div>
   </div>
-  <h2>Names</h2>
-  <h3>Synonyms</h3>
-  {{#each synonym in controller.synonyms}}
-  {{synonym.full_name}} {{synonym.author_year}} <br />
-  {{/each}}
-  <h3>Common Names</h3>
 
   <h3>Subspecies</h3>
 
