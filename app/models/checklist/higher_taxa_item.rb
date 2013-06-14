@@ -6,7 +6,11 @@ class Checklist::HigherTaxaItem
   end
 
   def ancestors_path
-    taxa = ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY']
+    taxa = if kingdom_name == 'Plantae'
+      ['FAMILY', 'SUBFAMILY']
+    else
+      ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY']
+    end
     current_idx = taxa.index(rank_name) || 0
     0.upto(current_idx).map do |i|
       taxa[i]
