@@ -15,6 +15,7 @@
 //= require jquery_ujs
 //= require jquery-deparam
 //= require bootstrap-typeahead
+//= require bootstrap-scrollspy
 //= require handlebars
 //= require ember
 //= require ember-data

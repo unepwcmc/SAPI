@@ -2,45 +2,45 @@
   <h1>{{fullName}} <strong>{{authorYear}}</strong></h1>
   <ul class="list">
     <li><a href="#">{{mTaxonConcept.phylum_name}}</a></li>
-    <li><a href="#">{{mTaxonConcept.order_name}}</a></li>
     <li><a href="#">{{mTaxonConcept.class_name}}</a></li>
+    <li><a href="#">{{mTaxonConcept.order_name}}</a></li>
     <li><a href="#">{{mTaxonConcept.family_name}}</a></li>
   </ul>
 </div>
 <ul class="tabset">
-  <li class="active"><a href="#">LEGAL</a>
+  <li class="active"><a href="#legal">LEGAL</a>
   <ul>
-    <li><a href="#">CITES Listing</a></li>
-    <li class="has-dropdown active"><a href="#">CITES Restrictions</a>
+    <li><a href="#cites_listing">CITES Listing</a></li>
+    <li class="has-dropdown active"><a href="#cites_restrictions">CITES Restrictions</a>
     <ul>
-      <li><a href="#">Suspensions</a></li>
-      <li class="active"><a href="#">Quotas</a></li>
+      <li><a href="#cites_suspensions">Suspensions</a></li>
+      <li class="active"><a href="#cites_quotas">Quotas</a></li>
     </ul>
     </li>
-    <li><a href="#">EU Listing</a></li>
-    <li><a href="#">EU Decisions</a></li>
+    <li><a href="#eu_listing">EU Listing</a></li>
+    <li><a href="#eu_decisions">EU Decisions</a></li>
   </ul>
   </li>
-  <li><a href="#">NAMES</a>
+  <li><a href="#names">NAMES</a>
   <ul>
-    <li class="active"><a href="#">Common names</a></li>
-    <li><a href="#">Synonyms</a></li>
-    <li><a href="#">Subspecies</a></li>
+    <li class="active"><a href="#common_names">Common names</a></li>
+    <li><a href="#synonyms">Synonyms</a></li>
+    <li><a href="#subspecies">Subspecies</a></li>
   </ul>
   </li>
-  <li class="add"><a href="#">DISTRIBUTION</a>
+  <li class="add"><a href="#distribution">DISTRIBUTION</a>
   <ul>
     <li>&nbsp;</li>
   </ul>
   </li>
-  <li><a href="#">REFERENCES</a></li>
+  <li><a href="#reference">REFERENCES</a></li>
   <li class="last-child"><a href="#">TRADE DATA</a></li>
 </ul>
 
 <div class="tab-content">
   <div id="tab1">
     <div class="block">
-      <strong class="title more">Quotas</strong>
+      <strong class="title more" id="cites_quotas">Quotas</strong>
       <table summary="data table">
         <thead>
           <tr>
@@ -55,7 +55,7 @@
         <tbody>
           {{#each quota in controller.quotas}}
             {{#if quota.public_display}}
-              <tr class="{{#if quota.is_current}}current{{/if}}">
+              <tr {{bindAttr class="quota.is_current:current"}}">
                 <td>&nbsp;</td>
                 <td>{{quota.year}}</td>
                 <td>{{quota.geo_entity.name}}</td>
@@ -65,7 +65,7 @@
               </tr>
             {{/if}}
           {{/each}}
-            <tr class="add">
+            <tr class="add"> <!-- Add class is for the first item below the current -->
               <td>&nbsp;</td>
               <td>15/07/04</td>
               <td>Palau (PW)</td>
@@ -80,7 +80,7 @@
         </div>
       </div>
     <div class="block add">
-      <strong class="title more">Suspensions</strong>
+      <strong class="title more" id="cites_suspensions">Suspensions</strong>
       <table summary="data table">
         <thead>
           <tr>
@@ -94,7 +94,7 @@
         </thead>
         <tbody>
             {{#each suspension in controller.citesSuspensions}}
-              <tr class="{{#if suspension.is_current}}current{{/if}}">
+              <tr {{bindAttr class="suspension.is_current:current"}}>
                 <td>&nbsp;</td>
                 <td>[{{suspension.start_date}}-{{suspension.end_date}}]</td>
                 <td>{{suspension.geo_entity.name}}</td>
@@ -199,24 +199,12 @@
             </tr>
           </thead>
           <tbody>
-            {{#each commonName in controller.commonNames}}
-              <tr>
-                <td>{{commonName.language}}</td>
-                <td>{{commonName.names}}</td>
+            {{#foreach controller.commonNames}}
+              <tr {{bindAttr class="$first:first"}}>
+                <td>{{lang}}</td>
+                <td>{{names}}</td>
               </tr>
-            {{/each}}
-            <tr class="first">
-              <td>English</td>
-              <td>Bevel-nosed Boa, New Guinea Bevel-nosed Boa, Solomon Ground Boa, Tree Boa</td>
-            </tr>
-            <tr>
-              <td>Spanish</td>
-              <td>Boa del Pacífico</td>
-            </tr>
-            <tr>
-              <td>French</td>
-              <td>Boa nain à carènes, Boa nain des Salomon</td>
-            </tr>
+            {{/foreach}}
           </tbody>
         </table>
         <div class="btn-hloder">
@@ -262,9 +250,9 @@
         <strong class="title">COUNTRIES</strong>
         <div class="three-columns">
           <ul class="col">
-            <li><a href="#">Angola</a> <span class="tage">vagrant</span></li>
-            <li><a href="#">Benin</a></li>
-            <li>
+          	{{#eachPart distributions parts=3 page=0}}
+  				<li><a href="#">{{name_en}}</a> {{formattedTags tags_list}}</li>
+  			{{/eachPart}}
             <div class="link-holder">
               <a href="#">Botswana</a>
               <div class="popup-holder">
@@ -275,47 +263,21 @@
                 </div>
               </div>
             </div>
-            <span class="tage">vagrant</span></li>
-            <li><a href="#">Burundi</a></li>
-            <li><a href="#">Cameroon</a></li>
-            <li><a href="#">Congo</a></li>
-            <li><a href="#">Côte d’Ivoire</a></li>
-            <li><a href="#">Ethiopia</a></li>
-            <li><a href="#">Gabon</a></li>
           </ul>
           <ul class="col">
-            <li><a href="#">Gambia</a></li>
-            <li><a href="#">Ghana</a></li>
-            <li><a href="#">Honduras</a> <span class="tage">vagrant</span></li>
-            <li><a href="#">Indonesia</a></li>
-            <li><a href="#">Iran</a> <span class="tage">extinct</span></li>
-            <li><a href="#">Iraq</a> <span class="tage">breeding</span></li>
-            <li><a href="#">Israel</a> <span class="tage">breeding</span></li>
-            <li><a href="#">Italy</a></li>
-            <li><a href="#">Jamaica</a></li>
+          	{{#eachPart distributions parts=3 page=1}}
+  				<li><a href="#">{{name_en}}</a> {{formattedTags tags_list}}</li>
+  			{{/eachPart}}
           </ul>
           <ul class="col last-child">
-            <li><a href="#">Jordan</a></li>
-            <li><a href="#">Kenya</a> </li>
-            <li><a href="#">Kwait</a> <span class="tage">extinct</span></li>
-            <li><a href="#">Laos</a> <span class="tage">breeding</span><span class="tage">vagrant</span></li>
-            <li><a href="#">Namibia</a></li>
-            <li><a href="#">Nepal</a></li>
-            <li><a href="#">Peru</a></li>
-            <li><a href="#">Tanzania</a></li>
-            <li><a href="#">Zambia</a></li>
+			{{#eachPart distributions parts=3 page=2}}
+  				<li><a href="#">{{name_en}}</a> {{formattedTags tags_list}}</li>
+  			{{/eachPart}}
           </ul>
         </div>
       </div>
     </div>
   </div>
-  <h3>EU</h3>
-  <h4>Listings</h4>
-  <h4>Decisions</h4>
-  <h2>Distribution</h2>
-  {{#each geoEntity in controller.distributions}}
-  {{geoEntity.name_en}} . {{geoEntity.tag_list}}<br />
-  {{/each}}
   <h2>Names</h2>
   <h3>Synonyms</h3>
   {{#each synonym in controller.synonyms}}

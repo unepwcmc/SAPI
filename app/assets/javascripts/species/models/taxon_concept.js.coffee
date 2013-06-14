@@ -16,8 +16,6 @@ Species.TaxonConcept = DS.Model.extend
   quotas: DS.attr("array")
   citesSuspensions: DS.attr("array")
 
-  #didLoad: ->
-  #  console.log 'ffffffffffffffffff'
 
 
 Species.TaxonConcept.FIXTURES = [

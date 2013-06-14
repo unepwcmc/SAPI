@@ -1354,8 +1354,8 @@ form, fieldset {
 #main .block04.block05 .columns-holder .col li { padding: 11px 0 12px; }
 #main .block04.block05 .title { margin: 0 0 13px; }
 #tab1 { display: block; }
-#tab2 { display: none; }
-#tab3 { display: none; }
+#tab2 { display: block; }
+#tab3 { display: block; }
 #main .tabset > li.active.add > ul > li { line-height: 10px; }
 .block06 {
 	padding: 0 10px 24px 29px;

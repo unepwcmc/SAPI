@@ -11,7 +11,9 @@ class Api::V1::TaxonConceptsController < ApplicationController
   def show
     @taxon_concept = TaxonConcept.where(:id => params[:id]).
       includes(:common_names => :language,
-               :distributions => :geo_entity).first
+               :distributions => :geo_entity,
+               :quotas => :geo_entity,
+               :cites_suspensions => :geo_entity).first
     render :json => @taxon_concept,
       :serializer => Species::ShowTaxonConceptSerializer
   end
@@ -23,5 +25,4 @@ class Api::V1::TaxonConceptsController < ApplicationController
     render :json => matcher.taxon_concepts.limit(params[:per_page]),
       :each_serializer => Species::AutocompleteTaxonConceptSerializer
   end
-
 end
