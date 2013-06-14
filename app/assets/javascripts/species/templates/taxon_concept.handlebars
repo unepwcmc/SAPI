@@ -269,18 +269,32 @@
         </div>
       </div>
     </div>
+    <div id="tab4">
+      <div class="block block02">
+        <strong class="title">CITES STANDARD REFERENCE</strong>
+        <table summary="data table">
+          <tbody>
+            {{#each reference in standardReferences}}
+              <tr>
+                <td>{{reference.citation}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      <div class="block block02 add">
+        <strong class="title">OTHER TAXONOMIC REFERENCES</strong>
+	      <table summary="data table">
+        	<tbody>
+          	{{#each reference in controller.references}}
+            	{{#unless reference.is_standard}}
+            		<tr>
+  			    			<td>{{reference.citation}}</td>
+  			    		</tr>
+  			    		{{/unless}}
+  				{{/each}}
+  				</tbody>
+        </table>
+      </div>
+    </div>
   </div>
-
-  <h3>Subspecies</h3>
-
-  <h2>References</h2>
-  <h3>Standard Reference</h3>
-  {{#each reference in controller.standardReferences}}
-  {{reference.citation}}<br />
-  {{/each}}
-  <h3>Other</h3>
-  {{#each reference in controller.references}}
-  {{#unless reference.is_standard}}
-  {{reference.citation}} <br />
-  {{/unless}}
-  {{/each}}
