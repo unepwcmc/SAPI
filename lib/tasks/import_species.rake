@@ -62,8 +62,9 @@ def import_data_for kingdom, rank, synonyms=nil
     ActiveRecord::Base.connection.execute('CREATE INDEX species_import_name ON species_import (name)')
   end
 
-  [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy|
-    taxonomy = Taxonomy.find_by_name(taxonomy)
+  [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
+    puts "Import #{taxonomy_name} taxa"
+    taxonomy = Taxonomy.find_by_name(taxonomy_name)
     sql = <<-SQL
       WITH to_be_inserted AS (
         SELECT DISTINCT
@@ -132,8 +133,6 @@ def import_data_for kingdom, rank, synonyms=nil
     SQL
 
     # puts "#{taxonomy.name} #{rank} #{kingdom}"
-    # puts sql
-
     ActiveRecord::Base.connection.execute(sql)
   end
   puts "#{TaxonConcept.where(:rank_id => rank_id).count - existing} #{rank} added"

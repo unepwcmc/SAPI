@@ -12,7 +12,7 @@
 class Designation < ActiveRecord::Base
   attr_accessible :name, :taxonomy_id
   include Dictionary
-  build_dictionary :cites, :eu
+  build_dictionary :cites, :eu, :cms
 
   validates :name, :presence => true, :uniqueness => true
   validates :name,
