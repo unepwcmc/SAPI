@@ -16,7 +16,7 @@ class TaxonConceptMatcher
   def build_rel
     @taxon_concepts = initialize_rel
     apply_taxonomy_options_to_rel
-    if @scientific_name
+    if @scientific_name.present?
       @taxon_concepts = @taxon_concepts.by_scientific_name(@scientific_name)
     end
   end
