@@ -1,6 +1,6 @@
 class Checklist::HigherTaxaInjector
   attr_reader :last_seen_id
-  
+
   # skip_id can be used to pass the id of last higher taxon added
   # so that the injector does not repeat higher taxa headers across fetches
   # last higher taxon added in this run can be retrieved through last_seen_id
@@ -21,11 +21,11 @@ class Checklist::HigherTaxaInjector
 
   def run
     res = []
-    last_inserted_item = nil
     @taxon_concepts.each_with_index do |tc, i|
       prev_item = (i > 0 ? @taxon_concepts[i-1] : nil)
-      higher_taxa = higher_taxa_headers(prev_item, tc)
-      res += higher_taxa
+      res += higher_taxa_headers(prev_item, tc).map do |ht|
+        Checklist::HigherTaxaItem.new(ht)
+      end
       res << tc
     end
     res
@@ -38,7 +38,7 @@ class Checklist::HigherTaxaInjector
       @header_ranks
     else
       tmp = []
-    
+
       for rank in @header_ranks.reverse
         rank_id_attr = "#{rank.downcase}_id"
         curr_item.send(rank_id_attr)
@@ -52,6 +52,7 @@ class Checklist::HigherTaxaInjector
     end
 
     ranks = [ranks.last].compact unless @expand_headers
+    puts ranks.inspect
 
     res = []
     ranks.each do |rank|

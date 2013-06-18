@@ -8,10 +8,24 @@ module Checklist::Pdf::HistoryContent
   end
 
   def kingdom(tex, fetcher, kingdom_name)
+    @last_seen_id = nil
     kingdom = fetcher.next
     return if kingdom.empty?
+
     tex << "\\cpart{#{kingdom_name}}\n"
     begin
+
+      injector = Checklist::HigherTaxaInjector.new(
+        results,
+        {
+          :skip_id => @last_seen_id,
+          :expand_headers => true#,
+          :header_ranks => (kingdom_name == 'FLORA' ? ['FAMILY'] : nil)
+        }
+      )
+      kingdom = injector.run
+      @last_seen_id = injector.last_seen_id
+
       listed_taxa_ary = []
       kingdom.each do |tc|
         if tc.kind_of? Checklist::HigherTaxaItem
