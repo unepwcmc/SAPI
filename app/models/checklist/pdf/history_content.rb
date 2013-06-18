@@ -19,7 +19,7 @@ module Checklist::Pdf::HistoryContent
         results,
         {
           :skip_id => @last_seen_id,
-          :expand_headers => true#,
+          :expand_headers => true,
           :header_ranks => (kingdom_name == 'FLORA' ? ['FAMILY'] : nil)
         }
       )
