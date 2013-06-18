@@ -5,7 +5,14 @@ class Checklist::Pdf::HistoryFetcher < Checklist::HistoryFetcher
   end
   def next
     results = super
-    injector = Checklist::HigherTaxaInjector.new(results, @last_seen_id, true)
+    injector = Checklist::HigherTaxaInjector.new(
+      results,
+      {
+        :skip_id => @last_seen_id,
+        :expand_headers => true#,
+        #:header_ranks => (kingdom_name == 'FLORA' ? ['FAMILY'] : nil)
+      }
+    )
     res = injector.run
     @last_seen_id = injector.last_seen_id
     res
