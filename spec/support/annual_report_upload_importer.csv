@@ -1,0 +1,3 @@
+Appendix,SpeciesName,TermCode,Quantity,UnitCode,TradingPartner,CountryOfOrigin,ImportPermit,ExportPermit,OriginPermit,PurposeCode,SourceCode,Year
+2,Acipenser baerii,CAV,6,KIL,FR,,,FR1007533178-E,,T,C,2010
+2,Acipenser baerii,CAV,0.2,KIL,FR,CN,,FR1107539121-R,,T,F,2011

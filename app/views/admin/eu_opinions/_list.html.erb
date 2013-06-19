@@ -1,0 +1,39 @@
+<thead>
+  <th>Year</th>
+  <th>Law</th>
+  <th>Party</th>
+  <th>Term</th>
+  <th>Source</th>
+  <th>Restriction</th>
+  <th>Restriction Notes</th>
+  <th>Comments</th>
+  <th>Current</th>
+  <th>Conditions Apply</th>
+  <th>Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |opinion| -%>
+    <tr class="<%= if opinion.is_current? then "current_listing" end %>">
+      <td><%= opinion.year %></td>
+      <td></td>
+      <td><%= opinion.geo_entity && opinion.geo_entity.iso_code2 %></td>
+      <td><%= opinion.term && opinion.term.code %></td>
+      <td><%= opinion.source && opinion.source.code %></td>
+      <td><%= opinion.restriction %></td>
+      <td><%= opinion.restriction_text %></td>
+      <td><%= opinion.comments %></td>
+      <td><%= true_false_icon(opinion.is_current) %></td>
+      <td><%= true_false_icon(opinion.conditions_apply) %></td>
+      <td>
+        <%= link_to edit_icon,
+          edit_admin_taxon_concept_eu_opinion_path(@taxon_concept, opinion)
+        %>
+        <%= link_to delete_icon,
+          admin_taxon_concept_eu_opinion_path(@taxon_concept, opinion),
+          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+        %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>
+

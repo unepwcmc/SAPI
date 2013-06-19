@@ -2,23 +2,23 @@ class Admin::DesignationsController < Admin::SimpleCrudController
   respond_to :json, :only => [:index, :update]
 
   def index
-    @taxonomies = Taxonomy.order(:name)
+    load_associations
     index! do |format|
       format.json {
-        render :json => end_of_association_chain.order(:name).
-          select([:id, :name]).map{ |d| {:value => d.id, :text => d.name} }
+        render :text => end_of_association_chain.order(:name).
+          select([:id, :name]).map{ |d| {:value => d.id, :text => d.name} }.to_json
       }
     end
-  end
-
-  def create
-    @taxonomies = Taxonomy.order(:name)
-    super
   end
 
   protected
     def collection
       @designations ||= end_of_association_chain.order(:name).page(params[:page])
     end
+
+    def load_associations
+      @taxonomies = Taxonomy.order(:name)
+    end
+
 end
 

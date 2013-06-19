@@ -1,0 +1,18 @@
+<div class="admin-header">
+  <h3>CITES Quotas</h3>
+  <div class="action-buttons">
+    <%= admin_add_new_button(
+      :resource => 'quota',
+      :href => new_admin_taxon_concept_quota_url(@taxon_concept),
+      :"data-toggle" => nil,
+      :role => nil
+    ) %>
+  </div>
+</div>
+
+<%= admin_new_modal{ '' } %>
+
+<%= admin_table %>
+
+<%= paginate collection %>
+

@@ -19,18 +19,7 @@ class TradeCode < ActiveRecord::Base
 
   validates :code, :presence => true, :uniqueness => {:scope => :type}
 
-  before_destroy :check_destroy_allowed
-
-  private
-
-  def check_destroy_allowed
-    unless can_be_deleted?
-      errors.add(:base, "not allowed")
-      return false
-    end
-  end
-
   def can_be_deleted?
-    false #TODO
+    true
   end
 end

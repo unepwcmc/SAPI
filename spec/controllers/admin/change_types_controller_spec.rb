@@ -2,10 +2,6 @@ require 'spec_helper'
 describe Admin::ChangeTypesController do
   describe "GET index" do
     it "assigns @change_types sorted by designation and name" do
-      TaxonConcept.delete_all
-      ChangeType.delete_all
-      SpeciesListing.delete_all
-      Designation.delete_all
       designation1 = create(:designation, :name => 'BB', :taxonomy => create(:taxonomy))
       designation2 = create(:designation, :name => 'AA', :taxonomy => create(:taxonomy))
       change_type2_1 = create(:change_type, :designation => designation2, :name => 'ADD')

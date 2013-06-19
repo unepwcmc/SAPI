@@ -6,12 +6,21 @@ describe TaxonConcept do
     include_context "Colophon"
 
     context "LISTING" do
-      describe :current_listing do
+      describe :cites_listing do
         context "for genus Colophon" do
-          specify { @genus.current_listing.should == 'III' }
+          specify { @genus.cites_listing.should == 'III' }
         end
         context "for species Colophon barnardi" do
-          specify { @species.current_listing.should == 'III' }
+          specify { @species.cites_listing.should == 'III' }
+        end
+      end
+
+      describe :eu_listing do
+        context "for genus Colophon" do
+          specify { @genus.eu_listing.should == 'C' }
+        end
+        context "for species Colophon barnardi" do
+          specify { @species.eu_listing.should == 'C' }
         end
       end
 
@@ -21,6 +30,15 @@ describe TaxonConcept do
         end
         context "for species Colophon barnardi" do
           specify { @species.cites_listed.should == false }
+        end
+      end
+
+      describe :eu_listed do
+        context "for genus Colophon" do
+          specify { @genus.eu_listed.should == true}
+        end
+        context "for species Colophon barnardi" do
+          specify { @species.eu_listed.should == false }
         end
       end
 

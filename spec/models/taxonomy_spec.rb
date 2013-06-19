@@ -34,8 +34,7 @@ describe Taxonomy do
       specify{ taxonomy.update_attributes({:name => 'WORLD OF LOLCATS'}).should be_true }
     end
     context "when updating a protected name" do
-      let(:taxonomy){ Taxonomy.find_or_create_by_name(Taxonomy::CITES_EU) }
-      specify{ taxonomy.update_attributes({:name => 'WORLD OF LOLCATS'}).should be_false }
+      specify{ cites_eu.update_attributes({:name => 'WORLD OF LOLCATS'}).should be_false }
     end
   end
   describe :destroy do
@@ -49,8 +48,7 @@ describe Taxonomy do
       specify { taxonomy.destroy.should be_false }
     end
     context "when protected name" do
-      let(:taxonomy){ Taxonomy.find_or_create_by_name(Taxonomy::CITES_EU) }
-      specify { taxonomy.destroy.should be_false }
+      specify { cites_eu.destroy.should be_false }
     end
   end
 end

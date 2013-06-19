@@ -11,6 +11,7 @@
     margin: 0;
   }
 }
+
 .new_listing_change table,
 .edit_listing_change table,
 table.listing-change {
@@ -29,6 +30,20 @@ textarea.annotation {
   height: 4em;
 }
 
+textarea {
+  &.quota,
+  &.cites_suspension,
+  &.eu_opinion,
+  &.eu_suspension {
+    height: 5em;
+    width: 430px;
+  }
+}
+
+input.annotation, textarea.annotation {
+  width: 80%;
+}
+
 .new_listing_change,
 .edit_listing_change {
   p {
@@ -42,4 +57,61 @@ textarea.annotation {
       margin: 0;
     }
   }
+}
+
+.hidden {
+  display: none !important;
+  visibility: hidden;
+}
+
+.reference_search_form {
+  .fields {
+    span {
+      font-weight: bold;
+    }
+
+    input[type="checkbox"] {
+      margin: 0;
+    }
+
+    label {
+      display: inline;
+    }
+
+    .remove_nested_fields {
+      margin-right: 20px;
+    }
+  }
+}
+
+.reference-citation {
+    padding-left: 22px ;
+    text-indent: -22px ;
+}
+
+tr.current_listing {
+  td {
+    background-color: lightgreen !important;
+  }
+}
+
+#new-quota,
+#new-cites_suspension {
+  &.modal {
+    width: 700px;
+  }
+}
+
+ul.relationship_parts{
+  list-style-type: none;
+  overflow: hidden;
+}
+.relationship_parts li{
+  width: 225px;
+  float: left;
+  margin-right: 15px;
+}
+#new-taxon_relationship{ /* modal window */
+  width: 780px;
+  margin-left: -390px; /* half the width */
 }

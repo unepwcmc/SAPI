@@ -2,15 +2,15 @@
 module TaxonConceptHelper
   def admin_taxon_concept_title
     content_tag(:div, :class => 'admin-header') do
-      content_tag(:h1, 
+      content_tag(:h1,
         if block_given?
           yield
         else
           controller_name.titleize
         end
-      ) + content_tag(:div, :class => 'action-buttons') do
+      ) + (content_tag(:div, :class => 'action-buttons') do
         admin_add_new_taxon_concept_multi
-      end
+      end)
     end
   end
 
@@ -69,9 +69,28 @@ module TaxonConceptHelper
     )
   end
 
+  def admin_add_new_cites_suspension_button
+    admin_add_new_button(
+      :resource => 'cites_suspensions',
+      :href => new_admin_cites_suspension_url,
+      :name => 'Add suspension',
+      :remote => true,
+      :'data-toggle' => nil,
+      :role => nil
+    )
+  end
+
   def admin_new_distribution_modal( nested = false)
     admin_new_modal(
       :resource => 'distribution'
+    ){ nested ? '' : render('admin/distributions/form') }
+  end
+
+  def admin_edit_distribution_modal(nested = false)
+    admin_new_modal(
+      :resource => 'distribution',
+      :id => 'edit-distribution',
+      :title => 'Edit Distribution'
     ){ nested ? '' : render('admin/distributions/form') }
   end
 
@@ -81,9 +100,33 @@ module TaxonConceptHelper
     ){ nested ? '' : render('hybrid_form') }
   end
 
+  def admin_add_new_reference_button
+    admin_add_new_button(
+      :resource => 'taxon_concept_reference',
+      :href => new_admin_taxon_concept_taxon_concept_reference_url(@taxon_concept),
+      :name => 'Add new reference',
+      :remote => true,
+      :"data-toggle" => nil,
+      :role => nil
+    )
+  end
+
+  def admin_new_reference_modal(nested = false)
+    admin_new_modal(
+      :resource => 'taxon_concept_reference',
+      :save_and_reopen => true
+    )
+  end
+
   def admin_new_taxon_concept_modal
     admin_new_modal(
       :resource => 'taxon_concept'
+    ){ '' }
+  end
+
+  def admin_new_cites_suspension_modal
+    admin_new_modal(
+      :resource => 'cites_suspension'
     ){ '' }
   end
 
@@ -99,7 +142,7 @@ module TaxonConceptHelper
 
   def admin_new_common_name_modal
     admin_new_modal(
-      :resource => 'common_name'
+      :resource => 'common_name', :save_and_reopen => true
     ){ '' }
   end
 end

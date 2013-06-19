@@ -30,7 +30,9 @@ module SAPI
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
     # Activate observers that should always be running.
-    # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
+    config.active_record.observers = :destroy_observer, :annotation_observer,
+      :cites_cop_observer, :cites_suspension_notification_observer,
+      :eu_regulation_observer, :"trade/annual_report_upload_observer"
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -49,7 +51,7 @@ module SAPI
     # Use SQL instead of Active Record's schema dumper when creating the database.
     # This is necessary if your schema can't be completely dumped by the schema dumper,
     # like if you have constraints or database-specific column types
-    config.active_record.schema_format = :sql
+    # config.active_record.schema_format = :sql
 
     # Enforce whitelist mode for mass assignment.
     # This will create an empty whitelist of attributes available for mass-assignment for all models
@@ -59,5 +61,8 @@ module SAPI
 
     # Enable the asset pipeline
     config.assets.enabled = true
+
+    # Change Ember's template root. Doesn't seem to be working though :(
+    # config.handlebars.templates_root = "trade/templates"
   end
 end

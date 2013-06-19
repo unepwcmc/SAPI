@@ -24,14 +24,14 @@ class GeoEntity < ActiveRecord::Base
   belongs_to :geo_entity_type
   has_many :geo_relationships, :dependent => :destroy
   has_many :distributions
+  has_many :designation_geo_entities
+  has_many :designations, :through => :designation_geo_entities
   validates :geo_entity_type_id, :presence => true
   validates :iso_code2, :uniqueness => true, :allow_blank => true
   validates :iso_code2, :presence => true, :length => {:is => 2},
     :if => :is_country?
   validates :iso_code3, :uniqueness => true, :length => {:is => 3},
     :allow_blank => true, :if => :is_country?
-
-  before_destroy :check_destroy_allowed
 
   # geo entities containing those given by ids
   scope :containing_geo_entities, lambda { |geo_entity_ids|
@@ -51,6 +51,32 @@ class GeoEntity < ActiveRecord::Base
 
   scope :current, where(:is_current => true)
 
+  def self.nodes_and_descendants(nodes_ids = [])
+    joins_sql = <<-SQL
+      INNER JOIN (
+        WITH RECURSIVE search_tree(id) AS (
+            SELECT id
+            FROM #{table_name}
+            WHERE id IN (?)
+          UNION
+            SELECT other_geo_entities.id
+            FROM search_tree
+            JOIN geo_relationships
+              ON geo_relationships.geo_entity_id = search_tree.id
+            JOIN geo_relationship_types
+              ON geo_relationship_types.id = geo_relationships.geo_relationship_type_id
+              AND geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'
+            JOIN geo_entities other_geo_entities
+              ON geo_relationships.other_geo_entity_id = other_geo_entities.id
+        )
+        SELECT id FROM search_tree
+      ) nodes_and_descendants_ids ON #{table_name}.id = nodes_and_descendants_ids.id
+      SQL
+    joins(
+      sanitize_sql_array([joins_sql, nodes_ids])
+    )
+  end
+
   def is_country?
     geo_entity_type.name == GeoEntityType::COUNTRY
   end
@@ -65,15 +91,6 @@ class GeoEntity < ActiveRecord::Base
 
   def as_json(options={})
     super(:only =>[:id, :iso_code2], :methods => [:name])
-  end
-
-  private
-
-  def check_destroy_allowed
-    unless can_be_deleted?
-      errors.add(:base, "not allowed")
-      return false
-    end
   end
 
   def can_be_deleted?

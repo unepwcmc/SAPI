@@ -1,13 +1,16 @@
 #encoding: utf-8
 module AdminHelper
   def edit_icon
-    '<i class="icon-pencil"></i>'.html_safe
+    '<i class="icon-pencil" title="Edit"></i>'.html_safe
   end
   def delete_icon
-    '<i class="icon-trash"></i>'.html_safe
+    '<i class="icon-trash" title="Delete"></i>'.html_safe
   end
   def true_false_icon(bool_value)
     bool_value ? '<i class="icon-ok"></i>'.html_safe : ''
+  end
+  def tag_list(tags_ary)
+    tags_ary.map{ |t| content_tag(:span, :class => 'myMinTag'){t} }.join.html_safe
   end
   def error_messages_for(resource)
     resource = instance_variable_get("@#{resource}") if resource.is_a? Symbol
@@ -75,7 +78,7 @@ module AdminHelper
         ){title}
       end +
       content_tag(
-        :div, :id => "admin-new-#{resource}-form", :class => "modal-body" #TODO
+        :div, :id => "admin-#{id}-form", :class => "modal-body" #TODO
       ) do
         if block_given?
           yield
@@ -88,9 +91,18 @@ module AdminHelper
           :type => "button", :class => "btn", :"data-dismiss" => "modal",
           :"aria-hidden" => "true"
         ){'Close'} +
-        button_tag(
-          :type => "button", :class => "btn btn-primary save-button"
-        ){'Save changes'}
+        if options[:save_and_reopen]
+          button_tag(
+            :type => "button", :class => "btn btn-primary save-button save-and-reopen-button"
+          ){'Save changes'} +
+          button_tag(
+            :type => "button", :class => "btn btn-primary save-button"
+          ){'Save changes & close'}
+        else
+          button_tag(
+            :type => "button", :class => "btn btn-primary save-button"
+          ){'Save changes'}
+        end
       end
     end
   end

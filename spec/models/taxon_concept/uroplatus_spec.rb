@@ -19,26 +19,35 @@ describe TaxonConcept do
       end
       describe :standard_references do
         context "for family Gekkonidae" do
-          specify { @family.standard_references.should be_empty }
+          specify { @family.taxon_concept.standard_references.should be_empty }
         end
         context "for genus Uroplatus" do
-          specify { @genus.standard_references.should be_empty }
+          specify { @genus.taxon_concept.standard_references.map(&:id).should be_empty }
         end
         context "for species Uroplatus alluaudi" do
-          specify { @species1.standard_references.should be_empty }
+          specify { @species1.taxon_concept.standard_references.map(&:id).should be_empty }
         end
         context "for species Uroplatus giganteus" do
-          specify { @species2.standard_references.should include @ref.id }
+          specify { @species2.taxon_concept.standard_references.map(&:id).should include @ref.id }
         end
       end
     end
     context "LISTING" do
-      describe :current_listing do
+      describe :cites_listing do
         context "for genus Uroplatus" do
-          specify { @genus.current_listing.should == 'II' }
+          specify { @genus.cites_listing.should == 'II' }
         end
         context "for species Uroplatus giganteus" do
-          specify { @species2.current_listing.should == 'II' }
+          specify { @species2.cites_listing.should == 'II' }
+        end
+      end
+
+      describe :eu_listing do
+        context "for genus Uroplatus" do
+          specify { @genus.eu_listing.should == 'B' }
+        end
+        context "for species Uroplatus giganteus" do
+          specify { @species2.eu_listing.should == 'B' }
         end
       end
 
@@ -51,6 +60,18 @@ describe TaxonConcept do
         end
         context "for species Uroplatus giganteus" do
           specify { @species2.cites_listed.should == false }
+        end
+      end
+
+      describe :eu_listed do
+        context "for family Gekkonidae" do
+          specify { @family.eu_listed.should == false }
+        end
+        context "for genus Uroplatus" do
+          specify { @genus.eu_listed.should be_true }
+        end
+        context "for species Uroplatus giganteus" do
+          specify { @species2.eu_listed.should == false }
         end
       end
 

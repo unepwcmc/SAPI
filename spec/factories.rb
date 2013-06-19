@@ -12,6 +12,15 @@ FactoryGirl.define do
 
   factory :event do
     sequence(:name) {|n| "CoP#{n}"}
+    effective_at '2012-01-01'
+    designation
+
+    factory :eu_regulation, :class => EuRegulation
+    factory :cites_cop, :class => CitesCop
+    factory :cites_suspension_notification, :class => CitesSuspensionNotification,
+      :aliases => [:start_notification] do
+      end_date '2012-01-01'
+    end
   end
 
   factory :taxon_name do
@@ -35,17 +44,41 @@ FactoryGirl.define do
     accepted_scientific_name ''
     hybrid_parent_scientific_name ''
     other_hybrid_parent_scientific_name ''
-
-    %w(kingdom phylum class order family genus species subspecies).each do |rank_name|
-      factory :"#{rank_name}" do
-        taxonomy { Taxonomy.find_by_name(Taxonomy::CITES_EU) }
-        rank { Rank.find_by_name(rank_name.upcase) }
-      end
-    end
-
   end
 
-  #TODO use traits instead of inheritance for taxon concept ranks?
+  factory :trade_code do
+    factory :source, :class => Source do
+      sequence(:code) { |n| (65 + n%26).chr }
+      name_en "Wild"
+    end
+
+    factory :purpose, :class => Purpose do
+      sequence(:code) { |n| (65 + n%26).chr }
+      name_en "Zoo"
+    end
+
+    factory :term, :class => Term do
+      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (65 + i%26).chr }.join }
+      name_en "Bones"
+    end
+
+    factory :unit, :class => Unit do
+      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (65 + i%26).chr }.join }
+      name_en "Boxes"
+    end
+  end
+
+  factory :cites_suspension do
+    taxon_concept
+    start_notification
+  end
+
+  factory :quota do
+    taxon_concept
+    unit
+    publication_date Date.new(2012, 12, 3)
+    quota '10'
+  end
 
   factory :reference do
     author 'Bolek'
@@ -55,7 +88,6 @@ FactoryGirl.define do
   factory :taxon_concept_reference do
     taxon_concept
     reference
-    data {}
   end
 
   factory :preset_tag do
@@ -63,4 +95,21 @@ FactoryGirl.define do
     model 'TaxonConcept'
   end
 
+  factory :eu_decision do
+    taxon_concept
+    restriction 'b'
+    start_date Date.new(2013,1,1)
+  end
+
+  factory :eu_opinion do
+    taxon_concept
+    restriction 'b'
+    start_date Date.new(2013,1,1)
+  end
+
+  factory :eu_suspension do
+    taxon_concept
+    restriction 'b'
+    start_date Date.new(2013,1,1)
+  end
 end

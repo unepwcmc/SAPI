@@ -23,6 +23,11 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     @ranks = Rank.order(:taxonomic_position)
     edit! do |format|
       @languages = Language.order(:name_en)
+      @distributions = @taxon_concept.distributions.
+        joins(:geo_entity).order('UPPER(geo_entities.name_en) ASC')
+      @taxon_commons = @taxon_concept.taxon_commons.
+        joins(:common_name).order('UPPER(common_names.name) ASC').
+        includes(:common_name => :language)
       format.js { render 'new' }
     end
   end
@@ -75,17 +80,26 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   end
 
   protected
+    # used in create
+    def collection
+      @taxon_concepts ||= end_of_association_chain.where(:name_status => 'A').
+        includes([:rank, :taxonomy, :taxon_name, :parent]).
+        order(:taxonomic_position).page(params[:page])
+    end
 
     def determine_layout
       action_name == 'index' ? 'admin' : 'taxon_concepts'
     end
 
     def sanitize_search_params
-      @search_params = SearchParams.new(params[:search_params] || {})
+      @search_params = SearchParams.new(
+        params[:search_params] || 
+        { :taxonomy => { :id => Taxonomy.
+          where(:name => Taxonomy::CITES_EU).limit(1).select(:id).first.id }
+        })
     end
 
     def load_tags
       @tags = PresetTag.where(:model => PresetTag::TYPES[:TaxonConcept])
     end
-
 end

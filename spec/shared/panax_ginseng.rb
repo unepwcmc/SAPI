@@ -1,48 +1,38 @@
 shared_context "Panax ginseng" do
+  let(:country){
+    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
+  }
   let(:russia){
     create(
-      :country,
+      :geo_entity,
+      :geo_entity_type => country,
       :name => 'Russia',
       :iso_code2 => 'RU'
     )
   }
   let(:china){
     create(
-      :country,
+      :geo_entity,
+      :geo_entity_type => country,
       :name => 'China',
       :iso_code2 => 'CN'
     )
   }
   before(:all) do
-    @kingdom = TaxonConcept.find_by_taxon_name_id(TaxonName.find_by_scientific_name('Plantae').id)
-    @phylum = create(
-      :phylum,
-      :taxon_name => create(:taxon_name, :scientific_name => 'not really sure'),
-      :parent => @kingdom
-    )
-    @klass = create(
-      :class,
-      :taxon_name => create(:taxon_name, :scientific_name => 'not really sure'),
-      :parent => @phylum
-    )
-    @order = create(
-      :order,
+    @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Apiales'),
-      :parent => @klass
+      :parent => cites_eu_plantae.reload # reload is needed for full name
     )
-    @family = create(
-      :family,
+    @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Araliaceae'),
       :parent => @order
     )
-    @genus = create(
-      :genus,
+    @genus = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Panax'),
       :parent => @family,
       :name_status => 'A'
     )
-    @species = create(
-      :species,
+    @species = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'Ginseng'),
       :parent => @genus,
       :name_status => 'A'
@@ -61,19 +51,30 @@ shared_context "Panax ginseng" do
       :display_in_index => true
     )
 
-    l1 = create(
-      :cites_II_addition,
+    cites_lc1 = create_cites_II_addition(
       :taxon_concept => @species,
       :effective_at => '2000-07-19',
       :hash_annotation_id => a1.id,
       :annotation_id => a2.id,
       :is_current => true
     )
-
     create(
       :listing_distribution,
       :geo_entity => russia,
-      :listing_change => l1,
+      :listing_change => cites_lc1,
+      :is_party => false
+    )
+    eu_lc1 = create_eu_B_addition(
+      :taxon_concept => @species,
+      :effective_at => '2000-07-19',
+      :hash_annotation_id => a1.id,
+      :annotation_id => a2.id,
+      :is_current => true
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => russia,
+      :listing_change => eu_lc1,
       :is_party => false
     )
 
@@ -85,7 +86,7 @@ shared_context "Panax ginseng" do
       )
     end
 
-    Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+    Sapi::rebuild(:except => [:taxonomy])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

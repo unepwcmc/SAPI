@@ -8,11 +8,11 @@ gem 'rails', '3.2.13'
 gem 'pg'
 gem 'pg_array_parser'
 gem 'activerecord-postgres-hstore'
-#gem 'partitioned', :git => 'git@github.com:agnessa/partitioned.git'
 gem 'json', '>=1.7.7'
 gem 'foreigner'
 gem 'oj'
 gem 'jsonify'
+gem 'nokogiri'
 gem 'inherited_resources'
 gem 'traco'
 
@@ -21,12 +21,14 @@ gem 'sidekiq-status'
 
 gem 'whenever', :require => false
 
+gem 'ember-rails'
 gem 'jquery-rails', '2.1.4' #do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
-gem 'bootstrap-generators', '~> 2.1'
+gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'kaminari'
 gem 'select2-rails'
 gem 'nested_form', '~> 0.3.1'
 gem 'acts-as-taggable-on', '~> 2.3.1'
+gem 'carrierwave'
 
 gem 'underscore-rails'
 
@@ -91,6 +93,11 @@ end
 group :test do
   gem "factory_girl_rails", "~> 4.0"
   gem 'simplecov', :require => false
+  gem 'coveralls', require: false
 end
 
 gem 'rake', '~> 10.0.3'
+
+gem 'slim'
+# if you require 'sinatra' you get the DSL extended to Object
+gem 'sinatra', '>= 1.3.0', :require => nil

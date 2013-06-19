@@ -16,7 +16,6 @@ puts "#{GeoRelationshipType.count} geo relationship types created"
 
 puts "#{DistributionReference.delete_all} taxon concept geo entity references deleted"
 puts "#{Distribution.delete_all} taxon concept geo entities deleted"
-puts "#{AnnotationTranslation.delete_all} annotation translations deleted"
 ListingChange.update_all :annotation_id => nil
 puts "#{Annotation.delete_all} annotations deleted"
 puts "#{ListingChange.delete_all} listing changes deleted"
@@ -43,6 +42,11 @@ puts "#{TaxonConcept.delete_all} taxon_concepts deleted"
 puts "#{TaxonName.delete_all} taxon_names deleted"
 puts "#{Rank.delete_all} ranks deleted"
 
+puts "#{Quota.delete_all} quotas deleted"
+puts "#{TradeRestrictionTerm.delete_all} trade restrictions terms deleted"
+puts "#{TradeRestrictionSource.delete_all} trade restrictions sources deleted"
+puts "#{TradeRestrictionPurpose.delete_all} trade restrictions purposes deleted"
+
 Rank.create(:name => Rank::KINGDOM, :taxonomic_position => '1', :fixed_order => true)
 Rank.create(:name => Rank::PHYLUM, :taxonomic_position => '2', :fixed_order => true)
 Rank.create(:name => Rank::CLASS, :taxonomic_position => '3', :fixed_order => true)
@@ -58,6 +62,7 @@ puts "#{Rank.count} ranks created"
 
 puts "#{SpeciesListing.delete_all} species listings deleted"
 puts "#{ChangeType.delete_all} change types deleted"
+puts "#{Event.delete_all} events deleted"
 puts "#{Designation.delete_all} designations deleted"
 puts "#{Taxonomy.delete_all} taxonomies deleted"
 
@@ -68,13 +73,16 @@ taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
 puts "#{Taxonomy.count} taxonomies created"
 
 [Designation::CITES, Designation::EU].each do |designation|
-  Designation.create(:name => designation, :taxonomy_id => taxonomy.id)
+  d = Designation.create(:name => designation, :taxonomy_id => taxonomy.id)
+  ChangeType.dict.each do |change_type_name|
+    ChangeType.create(:name => change_type_name, :designation_id => d.id)
+  end
 end
-cites = Designation.find_by_name(Designation::CITES)
-puts "#{Designation.count} designations created"
 
-ChangeType.dict.each { |change_type_name| ChangeType.create(:name => change_type_name, :designation_id => cites.id) }
+puts "#{Designation.count} designations created"
 puts "#{ChangeType.count} change types created"
+
+cites = Designation.find_by_name(Designation::CITES)
 
 %w(I II III).each do |app_abbr|
   SpeciesListing.create(
@@ -83,6 +91,17 @@ puts "#{ChangeType.count} change types created"
     :designation_id => cites.id
   )
 end
+
+eu = Designation.find_by_name(Designation::EU)
+
+%w(A B C D).each do |app_abbr|
+  SpeciesListing.create(
+    :name => "Annex #{app_abbr}",
+    :abbreviation => app_abbr,
+    :designation_id => eu.id
+  )
+end
+
 puts "#{SpeciesListing.count} species listings created"
 
 higher_taxa = [
@@ -286,8 +305,55 @@ puts "#{TaxonName.count} taxon_names created"
 
 puts "#{CommonName.delete_all} common names deleted"
 puts "#{Language.delete_all} languages deleted"
-Language.create(:name_en => 'English', :iso_code1 => 'en')
-Language.create(:name_en => 'Spanish', :iso_code1 => 'es')
-Language.create(:name_en => 'French', :iso_code1 => 'fr')
-puts "#{Language.count} languages created"
 puts "#{Reference.delete_all} references deleted"
+puts "#{TradeRestriction.delete_all} trade restrictions deleted"
+
+['trading_partner', 'term_code', 'species_name', 'appendix', 'quantity'].each do |col|
+  Trade::PresenceValidationRule.create(:column_names => [col], :run_order => 1)
+end
+['quantity', 'year'].each do |col|
+  Trade::NumericalityValidationRule.create(:column_names => [col], :run_order => 2)
+end
+
+Trade::FormatValidationRule.create(:column_names => ['year'], :format_re => '^\d{4}$', :run_order => 2)
+
+Trade::InclusionValidationRule.create(
+  :column_names => ['term_code'],
+  :valid_values_view => 'valid_term_code_view',
+  :run_order => 3
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['source_code'],
+  :valid_values_view => 'valid_source_code_view',
+  :run_order => 3
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['purpose_code'],
+  :valid_values_view => 'valid_purpose_code_view',
+  :run_order => 3
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['unit_code'],
+  :valid_values_view => 'valid_unit_code_view',
+  :run_order => 3
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['trading_partner'],
+  :valid_values_view => 'valid_trading_partner_view',
+  :run_order => 3
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['country_of_origin'],
+  :valid_values_view => 'valid_country_of_origin_view',
+  :run_order => 3
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['species_name'],
+  :valid_values_view => 'valid_species_name_view',
+  :run_order => 3
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['appendix'],
+  :valid_values_view => 'valid_appendix_view',
+  :run_order => 3
+)

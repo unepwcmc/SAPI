@@ -15,15 +15,11 @@ require 'spec_helper'
 describe TaxonRelationship do
   describe :has_opposite? do
     context 'a relationship with no opposite' do
-      TaxonRelationship.delete_all
-      TaxonRelationshipType.delete_all
       let(:taxon_relationship_type) {create(:taxon_relationship_type, :is_bidirectional => false)}
       let!(:taxon_relationship) { create(:taxon_relationship, :taxon_relationship_type_id => taxon_relationship_type.id) }
       specify { taxon_relationship.has_opposite?.should == false }
     end
     context 'with an opposite' do
-      TaxonRelationship.delete_all
-      TaxonRelationshipType.delete_all
       let(:taxon_relationship_type) {create(:taxon_relationship_type, :is_bidirectional => true)}
       let(:taxon_relationship) { create(:taxon_relationship, :taxon_relationship_type_id => taxon_relationship_type.id) }
       specify { taxon_relationship.has_opposite?.should == true }
@@ -32,16 +28,12 @@ describe TaxonRelationship do
 
   describe :after_create_create_opposite do
     context 'when creating a bidirectional relationship' do
-      TaxonRelationship.delete_all
-      TaxonRelationshipType.delete_all
       let(:taxon_relationship_type) {create(:taxon_relationship_type, :is_bidirectional => true)}
       let!(:taxon_relationship) { create(:taxon_relationship, :taxon_relationship_type_id => taxon_relationship_type.id) }
       specify { taxon_relationship.has_opposite?.should == true }
     end
 
     context 'when creating a non bidirectional relationship' do
-      TaxonRelationship.delete_all
-      TaxonRelationshipType.delete_all
       let(:taxon_relationship_type) {create(:taxon_relationship_type, :is_bidirectional => false)}
       let!(:taxon_relationship) { create(:taxon_relationship, :taxon_relationship_type_id => taxon_relationship_type.id) }
       specify { taxon_relationship.has_opposite?.should == false }
@@ -50,7 +42,6 @@ describe TaxonRelationship do
 
   describe :validate_uniqueness_taxon_concept_id do
     context 'adding a duplicate relationship between the same taxon_concepts' do
-      TaxonRelationship.delete_all
       let(:taxonomy) { create(:taxonomy) }
       let(:taxonomy2) { create(:taxonomy) }
       let(:taxon_concept) { create(:taxon_concept, :taxonomy_id => taxonomy.id) }
@@ -68,7 +59,6 @@ describe TaxonRelationship do
 
   describe :validate_intertaxonomic_relationship_uniqueness do
     context "adding an intertaxonomic relationship between taxon concepts that are already related (A -> B)" do
-      TaxonRelationship.delete_all
       let(:taxonomy) { create(:taxonomy) }
       let(:taxonomy2) { create(:taxonomy) }
       let(:taxon_concept) { create(:taxon_concept, :taxonomy_id => taxonomy.id) }
@@ -86,7 +76,6 @@ describe TaxonRelationship do
       }
     end
     context "adding an intertaxonomic relationship between taxon concepts that are already related in the opposite direction (B -> A)" do
-      TaxonRelationship.delete_all
       let(:taxonomy) { create(:taxonomy) }
       let(:taxonomy2) { create(:taxonomy) }
       let(:taxon_concept) { create(:taxon_concept, :taxonomy_id => taxonomy.id) }
@@ -105,7 +94,6 @@ describe TaxonRelationship do
       }
     end
     context "adding an intertaxonomic relationship between taxon concepts that are not already related" do
-      TaxonRelationship.delete_all
       let(:taxonomy) { create(:taxonomy) }
       let(:taxonomy2) { create(:taxonomy) }
       let(:taxon_concept) { create(:taxon_concept, :taxonomy_id => taxonomy.id) }

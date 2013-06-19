@@ -1,0 +1,24 @@
+@import "bootstrap";
+
+body { padding-top: 40px; }
+
+.admin-header {
+  clear:both;
+
+  h1 {
+    color: #999;
+    float:left;
+    width: 50%;
+  }
+  h3 {
+    float: left;
+    width: 50%;
+  }
+  .action-buttons {
+    float:right;
+    text-align: right;
+    width: 50%;
+    line-height: 40px;
+    margin: 10px 0;
+  }
+}

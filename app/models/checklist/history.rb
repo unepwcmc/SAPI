@@ -2,13 +2,25 @@ class Checklist::History < Checklist::Checklist
   attr_reader :download_name
 
   def initialize(options={})
+    options = {
+      :output_layout => :taxononomic,
+      :show_english => true,
+      :show_french => true,
+      :show_spanish => true
+    }
+    # History cannot be parametrized like other Checklist reports
     @download_path = download_location(options, "history", ext)
 
+    # If a cached download exists, only initialize the params for the
+    # helper methods, otherwise initialize the generation queries.
+
     if !File.exists?(@download_path)
-      super(options.merge({:output_layout => :taxonomic}))
+      super(options)
+    else
+      initialize_params(options)
     end
 
-    @download_name = "ChecklistHistory-#{Time.now}.#{ext}"
+    @download_name = "ChecklistHistory-#{Time.now.strftime("%d%m%Y")}.#{ext}"
   end
 
   def prepare_kingdom_queries
@@ -17,20 +29,24 @@ class Checklist::History < Checklist::Checklist
   end
 
   def prepare_main_query
-    @taxon_concepts_rel = @taxon_concepts_rel.
-      includes(:listing_changes).
-      where("cites_listed = 't' OR cites_deleted = 't'").
-      where("listing_changes_mview.change_type_name <> 'EXCEPTION'").
-      where("explicit_change = 't'").
-      order <<-SQL
-        taxon_concept_id, effective_at,
-        CASE
-          WHEN change_type_name = 'ADDITION' THEN 0
-          WHEN change_type_name = 'RESERVATION' THEN 1
-          WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
-          WHEN change_type_name = 'DELETION' THEN 3
-        END
-      SQL
+    @taxon_concepts_rel = MTaxonConcept.
+       includes(:listing_changes).
+        where(<<-SQL
+          listing_changes_mview.change_type_name != 'EXCEPTION'
+            AND listing_changes_mview.explicit_change = TRUE
+            AND listing_changes_mview.designation_name = '#{Designation::CITES}'
+          SQL
+        ).
+        order(<<-SQL
+          taxonomic_position, effective_at,
+          CASE
+            WHEN change_type_name = 'ADDITION' THEN 0
+            WHEN change_type_name = 'RESERVATION' THEN 1
+            WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
+            WHEN change_type_name = 'DELETION' THEN 3
+          END
+          SQL
+        )
   end
 
   def generate
