@@ -1,9 +1,9 @@
 module Checklist::Pdf::HistoryContent
 
   def content(tex)
-    fetcher = Checklist::Pdf::HistoryFetcher.new(@animalia_rel)
+    fetcher = Checklist::HistoryFetcher.new(@animalia_rel)
     kingdom(tex, fetcher, 'FAUNA')
-    fetcher = Checklist::Pdf::HistoryFetcher.new(@plantae_rel)
+    fetcher = Checklist::HistoryFetcher.new(@plantae_rel)
     kingdom(tex, fetcher, 'FLORA')
   end
 
@@ -16,7 +16,7 @@ module Checklist::Pdf::HistoryContent
     begin
 
       injector = Checklist::HigherTaxaInjector.new(
-        results,
+        kingdom,
         {
           :skip_id => @last_seen_id,
           :expand_headers => true,

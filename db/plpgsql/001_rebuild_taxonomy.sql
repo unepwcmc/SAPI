@@ -106,39 +106,41 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_animalia_node(node_id
   END;
   $$;
 
-CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_plantae_node(node_id integer) RETURNS void
+CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_plantae_node(node_id integer, rank_name text) RETURNS void
   LANGUAGE plpgsql
   AS $$
 
   BEGIN
-
-    WITH plantae_root AS (
-      SELECT id, taxonomic_position
-      FROM taxon_concepts
-      WHERE full_name = 'Plantae'
-    ), missing_higher_taxa AS (
+    IF rank_name IN ('KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY')  THEN
+      -- rebuild higher taxonomic ranks
+      WITH plantae_root AS (
+        SELECT id, taxonomic_position
+        FROM taxon_concepts
+        WHERE full_name = 'Plantae'
+      ), missing_higher_taxa AS (
+        UPDATE taxon_concepts
+        SET taxonomic_position = plantae_root.taxonomic_position
+        FROM plantae_root
+        WHERE plantae_root.id = (taxon_concepts.data->'kingdom_id')::INT
+        AND data->'rank_name' IN ('PHYLUM', 'CLASS', 'ORDER')
+      ), families AS (
+        SELECT taxon_concepts.id, plantae_root.taxonomic_position || '.' || LPAD(
+          (
+            ROW_NUMBER()
+            OVER (PARTITION BY rank_id ORDER BY full_name)::VARCHAR(64)
+          )::VARCHAR(64),
+          5,
+          '0'
+        ) AS taxonomic_position
+        FROM taxon_concepts
+        JOIN plantae_root ON plantae_root.id = (taxon_concepts.data->'kingdom_id')::INT
+        WHERE data->'rank_name' = 'FAMILY'
+      )
       UPDATE taxon_concepts
-      SET taxonomic_position = plantae_root.taxonomic_position
-      FROM plantae_root
-      WHERE plantae_root.id = (taxon_concepts.data->'kingdom_id')::INT
-      AND data->'rank_name' IN ('PHYLUM', 'CLASS', 'ORDER')
-    ), families AS (
-      SELECT taxon_concepts.id, plantae_root.taxonomic_position || '.' || LPAD(
-        (
-          ROW_NUMBER()
-          OVER (PARTITION BY rank_id ORDER BY full_name)::VARCHAR(64)
-        )::VARCHAR(64),
-        5,
-        '0'
-      ) AS taxonomic_position
-      FROM taxon_concepts
-      JOIN plantae_root ON plantae_root.id = (taxon_concepts.data->'kingdom_id')::INT
-      WHERE data->'rank_name' = 'FAMILY'
-    )
-    UPDATE taxon_concepts
-    SET taxonomic_position = families.taxonomic_position
-    FROM families
-    WHERE families.id = taxon_concepts.id;
+      SET taxonomic_position = families.taxonomic_position
+      FROM families
+      WHERE families.id = taxon_concepts.id;
+    END IF;
 
     -- update taxonomic position
     WITH RECURSIVE self_and_descendants AS (
@@ -169,7 +171,8 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_plantae_node(node_id 
     SET
     taxonomic_position = ancestors_taxonomic_position
     FROM self_and_descendants
-    WHERE taxon_concepts.id = self_and_descendants.id;
+    WHERE taxon_concepts.id = self_and_descendants.id
+    AND taxon_concepts.data->'rank_name' NOT IN ('PHYLUM', 'CLASS', 'ORDER', 'FAMILY');
 
   END;
   $$;
@@ -181,24 +184,26 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_node(node_id integer)
     ancestor_kingdom_name text;
     kingdom_node_id integer;
     ancestor_node_id integer;
+    ancestor_rank_name text;
   BEGIN
     IF node_id IS NOT NULL THEN
       -- find kingdom for this node
       -- find the closest ancestor with taxonomic position set
       WITH RECURSIVE self_and_ancestors AS (
           SELECT h.id, h.parent_id, h.taxonomic_position, 1 AS level,
-            h.data->'kingdom_name' AS kingdom_name
+            h.data->'kingdom_name' AS kingdom_name,
+            h.data->'rank_name' AS rank_name
           FROM taxon_concepts h
           WHERE id = node_id
 
           UNION
 
           SELECT hi.id, hi.parent_id, hi.taxonomic_position, level + 1,
-            hi.data->'kingdom_name'
+            hi.data->'kingdom_name', h.data->'rank_name'
           FROM taxon_concepts hi
           JOIN self_and_ancestors ON self_and_ancestors.parent_id = hi.id
       )
-      SELECT id, kingdom_name INTO ancestor_node_id, ancestor_kingdom_name
+      SELECT id, rank_name, kingdom_name INTO ancestor_node_id, ancestor_rank_name, ancestor_kingdom_name
       FROM self_and_ancestors
       WHERE taxonomic_position IS NOT NULL AND id != node_id
       ORDER BY level
@@ -207,14 +212,14 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_node(node_id integer)
       IF ancestor_kingdom_name = 'Animalia' THEN
         PERFORM rebuild_taxonomic_positions_for_animalia_node(ancestor_node_id);
       ELSE
-        PERFORM rebuild_taxonomic_positions_for_plantae_node(ancestor_node_id);
+        PERFORM rebuild_taxonomic_positions_for_plantae_node(ancestor_node_id, ancestor_rank_name);
       END IF;
     ELSE
       -- rebuild animalia and plantae trees separately
       SELECT id INTO kingdom_node_id FROM taxon_concepts WHERE full_name = 'Animalia';
       PERFORM rebuild_taxonomic_positions_for_animalia_node(kingdom_node_id);
       SELECT id INTO kingdom_node_id FROM taxon_concepts WHERE full_name = 'Plantae';
-      PERFORM rebuild_taxonomic_positions_for_plantae_node(kingdom_node_id);
+      PERFORM rebuild_taxonomic_positions_for_plantae_node(kingdom_node_id, 'KINGDOM');
     END IF;
 
   END;
