@@ -70,11 +70,164 @@ CREATE OR REPLACE FUNCTION ancestors_names(node_id INTEGER) RETURNS HSTORE
   END;
   $$;
 
-CREATE OR REPLACE FUNCTION rebuild_taxonomy_for_node(node_id integer) RETURNS void
+CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_animalia_node(node_id integer) RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  BEGIN
+    -- update taxonomic position
+    WITH RECURSIVE self_and_descendants AS (
+      SELECT h.id, COALESCE(h.taxonomic_position, '') AS ancestors_taxonomic_position
+      FROM taxon_concepts h
+      INNER JOIN ranks ON h.rank_id = ranks.id
+      WHERE h.id = node_id
+
+      UNION
+
+      SELECT hi.id,
+      CASE
+        WHEN (ranks.fixed_order) THEN hi.taxonomic_position
+        -- use generous zero padding to accommodate for orchidacea (30 thousand species in about 900 genera)
+        ELSE (self_and_descendants.ancestors_taxonomic_position || '.' || LPAD(
+          (ROW_NUMBER() OVER (PARTITION BY parent_id ORDER BY full_name)::VARCHAR(64)),
+          5,
+          '0'
+        ))::VARCHAR(255)
+      END
+      FROM self_and_descendants
+      JOIN taxon_concepts hi ON hi.parent_id = self_and_descendants.id
+      INNER JOIN ranks ON hi.rank_id = ranks.id
+    )
+    UPDATE taxon_concepts
+    SET
+    taxonomic_position = ancestors_taxonomic_position
+    FROM self_and_descendants
+    WHERE taxon_concepts.id = self_and_descendants.id;
+
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_plantae_node(node_id integer, rank_name text) RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+
+  BEGIN
+    IF rank_name IN ('KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY')  THEN
+      -- rebuild higher taxonomic ranks
+      WITH plantae_root AS (
+        SELECT id, taxonomic_position
+        FROM taxon_concepts
+        WHERE full_name = 'Plantae'
+      ), missing_higher_taxa AS (
+        UPDATE taxon_concepts
+        SET taxonomic_position = plantae_root.taxonomic_position
+        FROM plantae_root
+        WHERE plantae_root.id = (taxon_concepts.data->'kingdom_id')::INT
+        AND data->'rank_name' IN ('PHYLUM', 'CLASS', 'ORDER')
+      ), families AS (
+        SELECT taxon_concepts.id, plantae_root.taxonomic_position || '.' || LPAD(
+          (
+            ROW_NUMBER()
+            OVER (PARTITION BY rank_id ORDER BY full_name)::VARCHAR(64)
+          )::VARCHAR(64),
+          5,
+          '0'
+        ) AS taxonomic_position
+        FROM taxon_concepts
+        JOIN plantae_root ON plantae_root.id = (taxon_concepts.data->'kingdom_id')::INT
+        WHERE data->'rank_name' = 'FAMILY'
+      )
+      UPDATE taxon_concepts
+      SET taxonomic_position = families.taxonomic_position
+      FROM families
+      WHERE families.id = taxon_concepts.id;
+    END IF;
+
+    -- update taxonomic position
+    WITH RECURSIVE self_and_descendants AS (
+      SELECT h.id,
+        COALESCE(h.taxonomic_position, '') AS ancestors_taxonomic_position
+      FROM taxon_concepts h
+      INNER JOIN ranks ON h.rank_id = ranks.id
+      WHERE h.id = node_id
+
+      UNION
+
+      SELECT hi.id,
+      CASE
+        WHEN hi.data->'rank_name' IN ('PHYLUM', 'CLASS', 'ORDER', 'FAMILY')
+        THEN hi.taxonomic_position
+        -- use generous zero padding to accommodate for orchidacea (30 thousand species in about 900 genera)
+        ELSE (self_and_descendants.ancestors_taxonomic_position || '.' || LPAD(
+          (ROW_NUMBER() OVER (PARTITION BY parent_id ORDER BY full_name)::VARCHAR(64)),
+          5,
+          '0'
+        ))::VARCHAR(255)
+      END
+      FROM self_and_descendants
+      JOIN taxon_concepts hi ON hi.parent_id = self_and_descendants.id
+      INNER JOIN ranks ON hi.rank_id = ranks.id
+    )
+    UPDATE taxon_concepts
+    SET
+    taxonomic_position = ancestors_taxonomic_position
+    FROM self_and_descendants
+    WHERE taxon_concepts.id = self_and_descendants.id
+    AND taxon_concepts.data->'rank_name' NOT IN ('PHYLUM', 'CLASS', 'ORDER', 'FAMILY');
+
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_node(node_id integer) RETURNS void
   LANGUAGE plpgsql
   AS $$
   DECLARE
+    ancestor_kingdom_name text;
+    kingdom_node_id integer;
     ancestor_node_id integer;
+    ancestor_rank_name text;
+  BEGIN
+    IF node_id IS NOT NULL THEN
+      -- find kingdom for this node
+      -- find the closest ancestor with taxonomic position set
+      WITH RECURSIVE self_and_ancestors AS (
+          SELECT h.id, h.parent_id, h.taxonomic_position, 1 AS level,
+            h.data->'kingdom_name' AS kingdom_name,
+            h.data->'rank_name' AS rank_name
+          FROM taxon_concepts h
+          WHERE id = node_id
+
+          UNION
+
+          SELECT hi.id, hi.parent_id, hi.taxonomic_position, level + 1,
+            hi.data->'kingdom_name', hi.data->'rank_name'
+          FROM taxon_concepts hi
+          JOIN self_and_ancestors ON self_and_ancestors.parent_id = hi.id
+      )
+      SELECT id, rank_name, kingdom_name INTO ancestor_node_id, ancestor_rank_name, ancestor_kingdom_name
+      FROM self_and_ancestors
+      WHERE taxonomic_position IS NOT NULL AND id != node_id
+      ORDER BY level
+      LIMIT 1;
+      -- and rebuild animalia or plantae subtree
+      IF ancestor_kingdom_name = 'Animalia' THEN
+        PERFORM rebuild_taxonomic_positions_for_animalia_node(ancestor_node_id);
+      ELSE
+        PERFORM rebuild_taxonomic_positions_for_plantae_node(ancestor_node_id, ancestor_rank_name);
+      END IF;
+    ELSE
+      -- rebuild animalia and plantae trees separately
+      SELECT id INTO kingdom_node_id FROM taxon_concepts WHERE full_name = 'Animalia';
+      PERFORM rebuild_taxonomic_positions_for_animalia_node(kingdom_node_id);
+      SELECT id INTO kingdom_node_id FROM taxon_concepts WHERE full_name = 'Plantae';
+      PERFORM rebuild_taxonomic_positions_for_plantae_node(kingdom_node_id, 'KINGDOM');
+    END IF;
+
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION rebuild_taxonomy_for_node(node_id integer) RETURNS void
+  LANGUAGE plpgsql
+  AS $$
   BEGIN
     -- update full name
     WITH RECURSIVE q AS (
@@ -108,56 +261,8 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomy_for_node(node_id integer) RETURNS vo
     FROM q
     WHERE taxon_concepts.id = q.id;
 
-    -- find the closest ancestor with taxonomic position set
-    WITH RECURSIVE self_and_ancestors AS (
-        SELECT h.id, h.parent_id, h.taxonomic_position, 1 AS level
-        FROM taxon_concepts h
-        WHERE id = node_id
+    PERFORM rebuild_taxonomic_positions_for_node(node_id);
 
-        UNION
-
-        SELECT hi.id, hi.parent_id, hi.taxonomic_position, level + 1
-        FROM taxon_concepts hi
-        JOIN self_and_ancestors ON self_and_ancestors.parent_id = hi.id
-    )
-    SELECT id INTO ancestor_node_id
-    FROM self_and_ancestors
-    WHERE taxonomic_position IS NOT NULL AND id != node_id
-    ORDER BY level
-    LIMIT 1;
-
-    -- update taxonomic position
-    WITH RECURSIVE self_and_descendants AS (
-      SELECT h.id, COALESCE(h.taxonomic_position, '') AS ancestors_taxonomic_position
-      FROM taxon_concepts h
-      INNER JOIN ranks ON h.rank_id = ranks.id
-      WHERE
-        CASE
-        WHEN ancestor_node_id IS NOT NULL THEN h.id = ancestor_node_id
-        ELSE h.parent_id IS NULL
-        END
-
-      UNION
-
-      SELECT hi.id,
-      CASE
-        WHEN (ranks.fixed_order) THEN hi.taxonomic_position
-        -- use generous zero padding to accommodate for orchidacea (30 thousand species in about 900 genera)
-        ELSE (self_and_descendants.ancestors_taxonomic_position || '.' || LPAD(
-          (ROW_NUMBER() OVER (PARTITION BY parent_id ORDER BY full_name)::VARCHAR(64)),
-          5,
-          '0'
-        ))::VARCHAR(255)
-      END
-      FROM self_and_descendants
-      JOIN taxon_concepts hi ON hi.parent_id = self_and_descendants.id
-      INNER JOIN ranks ON hi.rank_id = ranks.id
-    )
-    UPDATE taxon_concepts
-    SET
-    taxonomic_position = ancestors_taxonomic_position
-    FROM self_and_descendants
-    WHERE taxon_concepts.id = self_and_descendants.id;
   END;
   $$;
 

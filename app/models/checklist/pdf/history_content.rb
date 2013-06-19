@@ -1,17 +1,31 @@
 module Checklist::Pdf::HistoryContent
 
   def content(tex)
-    fetcher = Checklist::Pdf::HistoryFetcher.new(@animalia_rel)
+    fetcher = Checklist::HistoryFetcher.new(@animalia_rel)
     kingdom(tex, fetcher, 'FAUNA')
-    fetcher = Checklist::Pdf::HistoryFetcher.new(@plantae_rel)
+    fetcher = Checklist::HistoryFetcher.new(@plantae_rel)
     kingdom(tex, fetcher, 'FLORA')
   end
 
   def kingdom(tex, fetcher, kingdom_name)
+    @last_seen_id = nil
     kingdom = fetcher.next
     return if kingdom.empty?
+
     tex << "\\cpart{#{kingdom_name}}\n"
     begin
+
+      injector = Checklist::HigherTaxaInjector.new(
+        kingdom,
+        {
+          :skip_id => @last_seen_id,
+          :expand_headers => true,
+          :header_ranks => (kingdom_name == 'FLORA' ? ['FAMILY'] : nil)
+        }
+      )
+      kingdom = injector.run
+      @last_seen_id = injector.last_seen_id
+
       listed_taxa_ary = []
       kingdom.each do |tc|
         if tc.kind_of? Checklist::HigherTaxaItem
@@ -111,11 +125,13 @@ module Checklist::Pdf::HistoryContent
 
   def higher_taxon_name(taxon_concept)
     common_names = common_names_with_lng_initials(taxon_concept)
-    if taxon_concept.rank_name == 'PHYLUM'
+    if taxon_concept.rank_name == 'PHYLUM' && taxon_concept.kingdom_name == 'Animalia'
       "\\csection{#{taxon_concept.full_name.upcase}}\n"
-    elsif taxon_concept.rank_name == 'CLASS'
+    elsif taxon_concept.rank_name == 'CLASS' && taxon_concept.kingdom_name == 'Animalia'
       "\\section*{\\underline{#{taxon_concept.full_name.upcase}} #{common_names}}\n"
-    elsif ['ORDER','FAMILY','SUBFAMILY'].include? taxon_concept.rank_name
+    elsif taxon_concept.rank_name == 'ORDER' && taxon_concept.kingdom_name == 'Animalia'
+      "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names}}\n"
+    elsif ['FAMILY','SUBFAMILY'].include? taxon_concept.rank_name
       "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names}}\n"
     end
   end
