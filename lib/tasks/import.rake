@@ -18,6 +18,7 @@ namespace :import do
     Rake::Task["import:languages"].invoke(
       'lib/assets/files/languages_utf8.csv'
     )
+    Rake::Task["import:cites_parties"].invoke
 
     Rake::Task["import:events"].invoke(
       'lib/assets/files/events_utf8.csv'

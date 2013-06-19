@@ -30,6 +30,9 @@
 /public/downloads/cites_listings/*.csv
 /public/downloads/cites_suspensions/*.csv
 /public/downloads/eu_listings/*.csv
+/public/downloads/checklist/*.pdf
+/public/downloads/checklist/*.csv
+/public/downloads/checklist/*.json
 /public/uploads/*
 
 # Ruby
