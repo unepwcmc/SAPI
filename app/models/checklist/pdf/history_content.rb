@@ -47,7 +47,7 @@ module Checklist::Pdf::HistoryContent
           is_tc_row = false
           # lc fields
           row << (is_lc_row ? listing_with_change_type(lc) : '')
-          row << (is_lc_row && lc.party_name ? lc.party_name.upcase : '')
+          row << (is_lc_row && lc.party_iso_code ? lc.party_iso_code.upcase : '')
           row << (is_lc_row ? lc.effective_at_formatted : '')
           if kingdom_name == 'FLORA'
             row << (is_lc_row ? "#{LatexToPdf.escape_latex(lc.full_hash_ann_symbol)}" : '')
