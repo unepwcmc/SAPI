@@ -17,7 +17,6 @@
 #  event_id                   :integer
 #  explicit_change            :boolean          default(TRUE)
 #  source_id                  :integer
-#  import_row_id              :integer
 #
 
 require 'spec_helper'

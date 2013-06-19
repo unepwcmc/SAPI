@@ -103,10 +103,10 @@ describe TaxonConcept do
 
       describe :cites_status do
         context "for species Agapornis roseicollis (DEL II)" do
-          specify { @species2_1.cites_status.should == 'DELETED' }
+          specify { @species2_1.cites_status.should == 'EXCLUDED' }
         end
         context "for species Psittacula krameri (DEL III)" do
-          specify { @species2_3.cites_status.should == 'DELETED' }
+          specify { @species2_3.cites_status.should == 'EXCLUDED' }
         end
       end
 

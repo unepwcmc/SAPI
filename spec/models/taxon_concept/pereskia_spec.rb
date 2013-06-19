@@ -53,6 +53,12 @@ describe TaxonConcept do
         end
       end
 
+      describe :cites_show do
+        context "for genus Pereskia" do
+          specify { @genus1.cites_show.should == true }
+        end
+      end
+
     end
   end
 end

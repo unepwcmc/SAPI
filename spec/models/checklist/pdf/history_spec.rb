@@ -66,49 +66,13 @@ describe Checklist::Pdf::History do
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
       specify{
-        subject.listed_taxon_name(tc).should == '\textit{Foobarus} spp.'
+        subject.listed_taxon_name(tc).should == '\emph{Foobarus} spp.'
       }
     end
   end
 
   describe :annotation_for_language do
-    let(:tc){ family_tc }
-    let!(:lc){
-      lc = create_cites_I_addition(
-        :taxon_concept_id => tc.id,
-        :annotation_id => annotation.id,
-        :is_current => true
-      )
-      Sapi::rebuild(:except => [:taxonomy])
-      MListingChange.find(lc.id)
-    }
-    context "annotations with italics" do
-      let(:annotation){
-        create(
-          :annotation,
-          :short_note_en => 'Except <i>Foobarus cracoviensis</i> and <i>Foobarus cambridgianus</i>'
-        )
-      }
-      subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
-      specify{
-        subject.annotation_for_language(lc, 'en').should ==
-        'Except \textit{Foobarus cracoviensis} and \textit{Foobarus cambridgianus}'
-      }
-    end
-    context "annotations with italics and latex special characters" do
-      let(:annotation){
-        create(
-          :annotation,
-          :short_note_en => 'Except <i>Foobarus cracoviensis</i> as defined by Karl & Bernard'
-        )
-      }
-      subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
-      specify{
-        subject.annotation_for_language(lc, 'en').should ==
-        'Except \textit{Foobarus cracoviensis} as defined by Karl \& Bernard'
-      }
-    end
-    context "annotations with footnotes" do
+    context "annotation with footnote" do
       let(:annotation){
         create(
           :annotation,
@@ -117,10 +81,18 @@ describe Checklist::Pdf::History do
           :display_in_footnote => true
         )
       }
-      subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
+      let(:lc){
+        lc = create_cites_I_addition(
+          :annotation_id => annotation.id,
+          :is_current => true
+        )
+        Sapi::rebuild(:except => [:taxonomy])
+        MListingChange.find(lc.id)
+      }
+      subject{ Checklist::Pdf::History.new({}) }
       specify{
-        subject.annotation_for_language(lc, 'en').should ==
-        'Except \textit{Foobarus cracoviensis}\footnote{They have plenty of \textit{Foobarus cracoviensis} in Kraków}'
+        LatexToPdf.stub(:html2latex).and_return('x')
+        subject.annotation_for_language(lc, 'en').should == 'x\footnote{x}'
       }
     end
   end

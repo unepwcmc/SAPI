@@ -10,8 +10,7 @@ shared_context "Pereskia" do
     )
     @genus1 = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Pereskia'),
-      :parent => @family,
-      :listing => {:usr_cites_excluded => 't'}
+      :parent => @family
     )
     @genus2 = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Ariocarpus'),

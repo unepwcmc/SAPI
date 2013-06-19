@@ -180,7 +180,7 @@ class CsvToDbMap
     },
     'hash_annotations_import' => {
       'Hash No' => 'symbol varchar',
-      'Law No' => 'event_legacy_id integer',
+      'Event No' => 'event_legacy_id integer',
       'For Display' => 'ignore varchar',
       'Text' => 'full_note_en varchar'
     },

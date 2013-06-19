@@ -114,7 +114,7 @@ private
   end
 
   def closest_listed_ancestor_columns
-    [:party_name, :full_name_with_spp, :full_note_en, :hash_full_note_en]
+    [:party_iso_code, :full_name_with_spp, :full_note_en, :hash_full_note_en]
   end
 
   def closest_listed_ancestor_table_name
@@ -127,10 +127,10 @@ private
     <<-SQL
     ARRAY_TO_STRING(
       ARRAY_AGG(
-        listing_changes_mview.party_name
+        listing_changes_mview.party_iso_code
       ),
       '\n'
-    ) AS closest_listed_ancestor_party_name,
+    ) AS closest_listed_ancestor_party_iso_code,
     #{closest_listed_ancestor_table_name}.full_name || ' ' ||
     CASE
       WHEN #{closest_listed_ancestor_table_name}.spp THEN 'spp.'

@@ -18,7 +18,7 @@ class Checklist::Checklist
 
   def initialize_query
     @taxon_concepts_rel = MTaxonConcept.scoped.
-      by_cites_eu_taxonomy
+      by_cites_eu_taxonomy.uniq
 
     if @cites_regions.empty? && @countries.empty? && !@cites_appendices.empty?
       @taxon_concepts_rel = MTaxonConceptFilterByAppendixQuery.new(
@@ -72,7 +72,7 @@ class Checklist::Checklist
 
   def listing_changes_json_options
     json_options = {
-      :only => [:id, :change_type_name, :species_listing_name, :party_name,
+      :only => [:id, :change_type_name, :species_listing_name,
         :party_id, :is_current, :symbol,
         :short_note_en, :full_note_en, :hash_full_note_en],
       :methods => [:countries_ids, :effective_at_formatted]
@@ -234,7 +234,7 @@ class Checklist::Checklist
                                        .sort
                                        .to_s)
 
-    return [Rails.root, '/public/downloads/', @filename, '.', format].join
+    return [Rails.root, '/public/downloads/checklist/', @filename, '.', format].join
   end
 
   private

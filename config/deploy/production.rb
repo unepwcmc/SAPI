@@ -6,6 +6,6 @@ set :domain, "unepwcmc-004.vm.brightbox.net"
 
 role :web, "unepwcmc-004.vm.brightbox.net"
 role :app, "unepwcmc-004.vm.brightbox.net"
-role :db, "unepwcmc-009.vm.brightbox.net", :primary => true
+role :db, "unepwcmc-004.vm.brightbox.net", :primary => true
 
-set :branch, "production"
+#set :branch, "production"

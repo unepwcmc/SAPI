@@ -36,10 +36,10 @@ set :copy_exclude, [ '.git' ]
 # If you're using Bundler, then you don't need to specify your
 # gems here as well as there (and the bundler gem is installed for
 # you automatically)
-# 
+#
 # Gem with a source (such as github)
 # depend :remote, :gem, "tmm1-amqp", ">=0.6.0", :source => "http://gems.github.com"
-# 
+#
 # Specify your specific Rails version if it is not vendored
 # depend :remote, :gem, "rails", "=2.2.2"
 #
@@ -63,7 +63,7 @@ set :copy_exclude, [ '.git' ]
 # items are symlinked in when the code is updated.
 # set :local_shared_dirs, %w(public/upload)
 set :local_shared_files, %w(config/database.yml)
-set :local_shared_dirs, %w(tmp/pids)
+set :local_shared_dirs, %w(tmp/pids public/downloads public/uploads)
 
 ## Global Shared Area
 # These are the list of files and directories that you want
@@ -185,12 +185,7 @@ namespace :seeds do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} rake db:seed"
   end
 
-  desc "Import first pages of the checklist"
-  task :import_first_pages, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:first_pages_cites"
-  end
-
-  desc "Redo animals full import"
+  desc "Redo full import"
   task :redo, :roles => [:db] do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:redo"
   end

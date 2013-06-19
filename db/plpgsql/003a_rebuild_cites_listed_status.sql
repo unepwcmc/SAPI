@@ -14,9 +14,12 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_status_for_node(node_id integer)
 
     -- set cites_show to true for all taxa except:
     -- implicitly listed subspecies
+    -- hybrids
     -- excluded and not listed taxa
     UPDATE taxon_concepts SET listing = listing ||
     CASE
+      WHEN name_status = 'H'
+      THEN hstore('cites_show', 'f')
       WHEN (data->'rank_name' = 'SUBSPECIES'
       OR data->'rank_name' = 'ORDER'
       OR data->'rank_name' = 'CLASS'
@@ -25,7 +28,10 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_status_for_node(node_id integer)
       AND listing->'cites_status' = 'LISTED'
       AND (listing->'cites_status_original')::BOOLEAN = FALSE
       THEN hstore('cites_show', 'f')
-      WHEN listing->'cites_status' = 'EXCLUDED' OR (listing->'cites_status')::VARCHAR IS NULL
+      WHEN listing->'cites_status' = 'EXCLUDED'
+      THEN hstore('cites_show', 't')
+      WHEN listing->'cites_status' = 'DELETED'
+        OR (listing->'cites_status')::VARCHAR IS NULL
       THEN hstore('cites_show', 'f')
       ELSE hstore('cites_show', 't')
     END

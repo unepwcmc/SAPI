@@ -20,7 +20,7 @@ class ExportsController < ApplicationController
       when 'Quotas'
         result = Quota.export params[:filters]
       when 'CitesSuspensions'
-        result = CitesSuspension.export
+        result = CitesSuspension.export params[:filters]
       when 'Listings'
         result = ListingsExport.new(params[:filters]).export
     end

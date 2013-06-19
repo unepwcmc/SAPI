@@ -72,6 +72,9 @@ namespace :import do
      'lib/assets/files/animals/animalia_standard_reference_links.csv',
      'lib/assets/files/plants/plantae_standard_reference_links.csv'
     )
+
+    Rake::Task["import:trade_codes"].invoke
+
     Rake::Task["import:cites_quotas"].invoke(
       'lib/assets/files/quotas_utf8.csv'
     )
@@ -80,7 +83,6 @@ namespace :import do
       'lib/assets/files/cites_suspensions_utf8.csv'
     )
 
-    Rake::Task["import:trade_codes"].invoke
 
     Sapi::rebuild()
     Sapi::enable_triggers
