@@ -1,18 +1,14 @@
 CREATE OR REPLACE FUNCTION trg_taxon_concepts_u() RETURNS TRIGGER
 SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
 BEGIN
-  IF OLD.taxonomic_position <> NEW.taxonomic_position OR OLD.parent_id <> NEW.parent_id THEN
-    IF NEW.parent_id IS NOT NULL THEN
-      PERFORM rebuild_taxonomic_positions_from_root(NEW.parent_id);
-    ELSE
-      PERFORM rebuild_taxonomic_positions_from_root(NEW.id);
-    END IF;
+  IF OLD.taxonomic_position <> NEW.taxonomic_position OR
+    OLD.parent_id <> NEW.parent_id OR
+    OLD.taxon_name_id <> NEW.taxon_name_id OR
+    OLD.rank_id <> NEW.rank_id
+  THEN
+    PERFORM rebuild_taxonomy_for_node(NEW.id);
   END IF;
-  IF OLD.taxon_name_id <> NEW.taxon_name_id OR OLD.rank_id <> NEW.rank_id OR
-    (OLD.data->'full_name') <> (NEW.data->'full_name') OR
-    (OLD.data->'rank_name') <> (NEW.data->'rank_name') THEN
-    PERFORM taxon_concepts_refresh_row(NEW.id);
-  END IF;
+  PERFORM taxon_concepts_refresh_row(NEW.id);
   RETURN NULL;
 END
 $$;
@@ -28,12 +24,7 @@ $$;
 CREATE OR REPLACE FUNCTION trg_taxon_concepts_i() RETURNS TRIGGER
 SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
 BEGIN
-  IF NEW.parent_id IS NOT NULL THEN
-    PERFORM rebuild_taxonomic_positions_from_root(NEW.parent_id);
-  ELSE
-    PERFORM rebuild_taxonomic_positions_from_root(NEW.id);
-  END IF;
-  PERFORM rebuild_names_and_ranks_for_node(NEW.id);
+  PERFORM rebuild_taxonomy_for_node(NEW.id);
   PERFORM taxon_concepts_refresh_row(NEW.id);
   RETURN NULL;
 END
@@ -54,20 +45,18 @@ FOR EACH ROW EXECUTE PROCEDURE trg_taxon_concepts_i();
 CREATE OR REPLACE FUNCTION trg_ranks_u() RETURNS TRIGGER
 SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
 BEGIN
-  IF OLD.name <> NEW.name THEN
-    PERFORM rebuild_names_and_ranks_for_node(tc.id)
+    PERFORM rebuild_taxonomy_for_node(tc.id)
     FROM taxon_concepts tc
     WHERE tc.rank_id = NEW.id;
     --PERFORM taxon_concepts_refresh_row(tc.id)
     --FROM taxon_concepts tc
     --WHERE tc.rank_id = NEW.id;
-  END IF;
   RETURN NULL;
 END
 $$;
 
 DROP TRIGGER IF EXISTS trg_ranks_u ON ranks;
-CREATE TRIGGER trg_ranks_u AFTER UPDATE ON ranks
+CREATE TRIGGER trg_ranks_u AFTER UPDATE OF name ON ranks
 FOR EACH ROW EXECUTE PROCEDURE trg_ranks_u();
 
 -- TAXON_NAMES
@@ -75,17 +64,15 @@ FOR EACH ROW EXECUTE PROCEDURE trg_ranks_u();
 CREATE OR REPLACE FUNCTION trg_taxon_names_u() RETURNS TRIGGER
 SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
 BEGIN
-  IF OLD.name <> NEW.name THEN
-    PERFORM taxon_concepts_refresh_row(tc.id)
-    FROM taxon_concepts tc
-    WHERE tc.taxon_name_id = NEW.id;
-  END IF;
+  PERFORM taxon_concepts_refresh_row(tc.id)
+  FROM taxon_concepts tc
+  WHERE tc.taxon_name_id = NEW.id;
   RETURN NULL;
 END
 $$;
 
 DROP TRIGGER IF EXISTS trg_taxon_names_u ON taxon_names;
-CREATE TRIGGER trg_taxon_names_u AFTER UPDATE ON taxon_names
+CREATE TRIGGER trg_taxon_names_u AFTER UPDATE OF scientific_name ON taxon_names
 FOR EACH ROW EXECUTE PROCEDURE trg_taxon_names_u();
 
 -- COMMON_NAMES
@@ -93,18 +80,16 @@ FOR EACH ROW EXECUTE PROCEDURE trg_taxon_names_u();
 CREATE OR REPLACE FUNCTION trg_common_names_u() RETURNS TRIGGER
 SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
 BEGIN
-  IF OLD.name <> NEW.name THEN
-    PERFORM taxon_concepts_refresh_row(tc.id)
-    FROM taxon_concepts tc
-    INNER JOIN taxon_commons tc_c ON tc_c.taxon_concept_id = tc.id
-    WHERE tc_c.common_name_id = NEW.id;
-  END IF;
+  PERFORM taxon_concepts_refresh_row(tc.id)
+  FROM taxon_concepts tc
+  INNER JOIN taxon_commons tc_c ON tc_c.taxon_concept_id = tc.id
+  WHERE tc_c.common_name_id = NEW.id;
   RETURN NULL;
 END
 $$;
 
 DROP TRIGGER IF EXISTS trg_common_names_u ON common_names;
-CREATE TRIGGER trg_common_names_u AFTER UPDATE ON common_names
+CREATE TRIGGER trg_common_names_u AFTER UPDATE OF name ON common_names
 FOR EACH ROW EXECUTE PROCEDURE trg_common_names_u();
 
 -- TAXON_COMMONS
@@ -176,18 +161,22 @@ FOR EACH ROW EXECUTE PROCEDURE trg_taxon_relationships_d();
 CREATE OR REPLACE FUNCTION trg_geo_entities_u() RETURNS TRIGGER
 SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
 BEGIN
-  IF OLD.name <> NEW.name THEN
-    PERFORM taxon_concepts_refresh_row(tc.id)
-    FROM taxon_concepts tc
-    INNER JOIN distributions tc_ge ON tc_ge.taxon_concept_id = tc.id
-    WHERE tc_ge.geo_entity_id = NEW.id;
-  END IF;
+  PERFORM taxon_concepts_refresh_row(tc.id)
+  FROM taxon_concepts tc
+  INNER JOIN distributions tc_ge ON tc_ge.taxon_concept_id = tc.id
+  WHERE tc_ge.geo_entity_id = NEW.id;
+
+  PERFORM listing_changes_refresh_row(lc.id)
+  FROM listing_changes lc
+  INNER JOIN listing_distributions lc_ge ON lc_ge.listing_change_id = lc.id
+  WHERE lc_ge.geo_entity_id = NEW.id;
+
   RETURN NULL;
 END
 $$;
 
 DROP TRIGGER IF EXISTS trg_geo_entities_u ON geo_entities;
-CREATE TRIGGER trg_geo_entities_u AFTER UPDATE ON geo_entities
+CREATE TRIGGER trg_geo_entities_u AFTER UPDATE OF name_en, iso_code2 ON geo_entities
 FOR EACH ROW EXECUTE PROCEDURE trg_geo_entities_u();
 
 -- DISTRIBUTIONS

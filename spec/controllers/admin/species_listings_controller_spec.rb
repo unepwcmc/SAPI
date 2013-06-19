@@ -2,10 +2,6 @@ require 'spec_helper'
 describe Admin::SpeciesListingsController do
   describe "index" do
     it "assigns @species_listings sorted by designation and name" do
-      TaxonConcept.delete_all
-      ChangeType.delete_all
-      SpeciesListing.delete_all
-      Designation.delete_all
       designation1 = create(:designation, :name => 'BB', :taxonomy => create(:taxonomy))
       designation2 = create(:designation, :name => 'AA', :taxonomy => create(:taxonomy))
       species_listing2_1 = create(:species_listing, :designation => designation2, :name => 'I')

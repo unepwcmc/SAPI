@@ -1,35 +1,35 @@
 shared_context "Hirudo medicinalis" do
   before(:all) do
-    @klass = TaxonConcept.find_by_taxon_name_id(TaxonName.find_by_scientific_name('Hirudinoidea').id)
-    @order = create(
-      :order,
+    @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Arhynchobdellida'),
-      :parent => @klass
+      :parent => cites_eu_hirudinoidea
     )
-    @family = create(
-      :family,
+    @family = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Hirudinidae'),
       :parent => @order
     )
-    @genus = create(
-      :genus,
+    @genus = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Hirudo'),
       :parent => @family
     )
-    @species = create(
-      :species,
+    @species = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'Medicinalis'),
       :parent => @genus,
       :name_status => 'A'
     )
 
-    create(
-     :cites_II_addition,
+    create_cites_II_addition(
      :taxon_concept => @species,
-     :effective_at => '1987-10-22'
+     :effective_at => '1987-10-22',
+     :is_current => true
+    )
+    create_eu_B_addition(
+     :taxon_concept => @species,
+     :effective_at => '1987-10-22',
+     :is_current => true
     )
 
-    Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+    Sapi::rebuild(:except => [:taxonomy])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

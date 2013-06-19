@@ -1,0 +1,18 @@
+<%= admin_new_modal({:title => "Current CITES Suspensions"}) {
+  render :partial => "current_suspensions_form",
+    :locals => {:current_suspensions => @current_suspensions}
+} %>
+
+<%= nested_form_for [:admin, @cites_suspension], :html => {:class => 'form-horizontal'} do |f| %>
+
+  <p>
+    <%= link_to("View Current Suspensions", "#new-cites_suspension",
+      {
+        :role => "button",
+        :"data-toggle" => "modal",
+      }) %>
+  </p>
+
+<%= render :partial => 'form_shared', :locals => {:f => f} %>
+
+<% end %>

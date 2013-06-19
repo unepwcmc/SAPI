@@ -1,0 +1,2 @@
+module Trade::AnnualReportsHelper
+end

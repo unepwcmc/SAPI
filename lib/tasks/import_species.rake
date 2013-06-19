@@ -54,8 +54,13 @@ def import_data_for kingdom, rank, synonyms=nil
       )
   SQL
   ActiveRecord::Base.connection.execute(sql)
-
-  ActiveRecord::Base.connection.execute('CREATE INDEX species_import_name ON species_import (name)')
+  if synonyms
+    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS synonym_import_name')
+    ActiveRecord::Base.connection.execute('CREATE INDEX synonym_import_name ON synonym_import (name)')
+  else
+    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS species_import_name')
+    ActiveRecord::Base.connection.execute('CREATE INDEX species_import_name ON species_import (name)')
+  end
 
   [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy|
     taxonomy = Taxonomy.find_by_name(taxonomy)
@@ -74,6 +79,8 @@ def import_data_for kingdom, rank, synonyms=nil
           '#{kingdom}' AS legacy_type,
           tmp.notes,
           UPPER(BTRIM(tmp.status)) AS name_status,
+          hstore('accepted_legacy_id', #{synonyms ? 'accepted_legacy_id::VARCHAR' : 'NULL'}) ||
+          hstore('accepted_rank', #{synonyms ? 'UPPER(BTRIM(accepted_rank))' : 'NULL'}) AS data,
           current_date, current_date
         FROM #{TMP_TABLE} tmp
         INNER JOIN taxon_names
@@ -97,7 +104,7 @@ def import_data_for kingdom, rank, synonyms=nil
       )
       INSERT INTO taxon_concepts(
         taxon_name_id, rank_id, taxonomy_id, parent_id,
-        author_year, legacy_id, legacy_type, notes, name_status,
+        author_year, legacy_id, legacy_type, notes, name_status, data,
         created_at, updated_at
       )
       SELECT * FROM to_be_inserted
@@ -113,6 +120,13 @@ def import_data_for kingdom, rank, synonyms=nil
             AND UPPER(taxon_concepts.name_status) = UPPER(to_be_inserted.name_status)
             AND taxon_concepts.legacy_id = to_be_inserted.legacy_id
             AND UPPER(taxon_concepts.legacy_type) = UPPER(to_be_inserted.legacy_type)
+            AND (
+              (taxon_concepts.data->'accepted_legacy_id')::INT IS NULL
+              OR (
+                (taxon_concepts.data->'accepted_legacy_id')::INT = (to_be_inserted.data->'accepted_legacy_id')::INT
+                AND UPPER(BTRIM(taxon_concepts.data->'accepted_rank')) = to_be_inserted.data->'accepted_rank'
+              )
+            )
       )
       RETURNING id;
     SQL
@@ -123,5 +137,4 @@ def import_data_for kingdom, rank, synonyms=nil
     ActiveRecord::Base.connection.execute(sql)
   end
   puts "#{TaxonConcept.where(:rank_id => rank_id).count - existing} #{rank} added"
-  ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS species_import_name')
 end

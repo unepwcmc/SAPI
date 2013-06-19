@@ -1,0 +1,11 @@
+<%= form_for [:admin, @cites_cop], :remote => true do |f| %>
+
+  <%= error_messages_for(@cites_cop) %>
+
+  <%= f.hidden_field :designation_id %>
+  <label>Name</label><%= f.text_field :name %><br />
+  <label>Effective from</label>
+  <%= f.text_field :effective_at, :class => "datepicker",
+    :value => @cites_cop.effective_at_formatted
+  %>
+<% end %>

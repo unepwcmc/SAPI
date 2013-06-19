@@ -2,34 +2,31 @@
 #
 # Table name: taxon_concepts
 #
-#  id                         :integer          not null, primary key
-#  parent_id                  :integer
-#  rank_id                    :integer          not null
-#  taxon_name_id              :integer          not null
-#  author_year                :string(255)
-#  legacy_id                  :integer
-#  legacy_type                :string(255)
-#  data                       :hstore
-#  listing                    :hstore
-#  notes                      :text
-#  taxonomic_position         :string(255)      default("0"), not null
-#  full_name                  :string(255)
-#  name_status                :string(255)      default("A"), not null
-#  lft                        :integer
-#  rgt                        :integer
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  taxonomy_id                :integer          default(1), not null
-#  closest_listed_ancestor_id :integer
+#  id                 :integer          not null, primary key
+#  parent_id          :integer
+#  rank_id            :integer          not null
+#  taxon_name_id      :integer          not null
+#  author_year        :string(255)
+#  legacy_id          :integer
+#  legacy_type        :string(255)
+#  data               :hstore
+#  listing            :hstore
+#  notes              :text
+#  taxonomic_position :string(255)      default("0"), not null
+#  full_name          :string(255)
+#  name_status        :string(255)      default("A"), not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  taxonomy_id        :integer          default(1), not null
 #
 
 class TaxonConcept < ActiveRecord::Base
   attr_accessible :parent_id, :taxonomy_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
-    :accepted_scientific_name, :parent_scientific_name, 
+    :accepted_scientific_name, :parent_scientific_name,
     :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
-    :tag_list, :closest_listed_ancestor_id
+    :tag_list
   attr_writer :parent_scientific_name
   attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
     :other_hybrid_parent_scientific_name
@@ -91,7 +88,20 @@ class TaxonConcept < ActiveRecord::Base
   has_many :species_listings, :through => :listing_changes
   has_many :taxon_commons, :dependent => :destroy, :include => :common_name
   has_many :common_names, :through => :taxon_commons
-  has_and_belongs_to_many :references, :join_table => :taxon_concept_references
+
+  has_many :taxon_concept_references, :include => :reference
+  has_many :references, :through => :taxon_concept_reference
+
+  has_many :quotas
+  has_many :current_quotas, :class_name => 'Quota', :conditions => "is_current = true"
+
+  has_many :cites_suspensions
+  has_many :current_cites_suspensions, :class_name => 'CitesSuspension', :conditions => "is_current = true"
+
+  has_many :eu_opinions
+  has_many :current_eu_opinions, :class_name => 'EuOpinion', :conditions => "is_current = true"
+  has_many :eu_suspensions
+  has_many :current_eu_suspensions, :class_name => 'EuSuspension', :conditions => "is_current = true"
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
@@ -102,7 +112,7 @@ class TaxonConcept < ActiveRecord::Base
   validates :taxon_name_id, :uniqueness => { :scope => [:taxonomy_id, :parent_id, :name_status, :author_year] }
   validates :taxonomic_position,
     :presence => true,
-    :format => { :with => /\d(\.\d*)*/, :message => "Use prefix notation, e.g. 1.2" },
+    :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" },
     :if => :fixed_order_required?
 
   before_validation :check_taxon_name_exists
@@ -111,35 +121,41 @@ class TaxonConcept < ActiveRecord::Base
   before_validation :check_other_hybrid_parent_taxon_concept_exists
   before_validation :check_accepted_taxon_concept_exists
   before_validation :ensure_taxonomic_position
-  before_destroy :check_destroy_allowed
 
   scope :by_scientific_name, lambda { |scientific_name|
-    where(
-      <<-SQL
-      UPPER(full_name) >= UPPER('#{TaxonName.lower_bound(scientific_name)}')
-        AND UPPER(full_name) < UPPER('#{TaxonName.upper_bound(scientific_name)}')
-      SQL
-    )
+    where([
+      "UPPER(full_name) >= UPPER(?) AND UPPER(full_name) < UPPER(?)",
+      TaxonName.lower_bound(scientific_name),
+      TaxonName.upper_bound(scientific_name)
+    ])
   }
 
   scope :at_parent_ranks, lambda{ |rank|
-    joins(
-    <<-SQL
+    joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
-        AND ranks.taxonomic_position >= '#{rank.parent_rank_lower_bound}'
-        AND ranks.taxonomic_position < '#{rank.taxonomic_position}'
+        AND ranks.taxonomic_position >= ?
+        AND ranks.taxonomic_position < ?
     SQL
+    joins(
+      sanitize_sql_array([
+        joins_sql, rank.parent_rank_lower_bound, rank.taxonomic_position
+      ])
     )
   }
 
   scope :at_ancestor_ranks, lambda{ |rank|
-    joins(
-    <<-SQL
+    joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
-        AND ranks.taxonomic_position < '#{rank.taxonomic_position}'
+        AND ranks.taxonomic_position < ?
     SQL
+    joins(
+      sanitize_sql_array([joins_sql, rank.taxonomic_position])
     )
   }
+
+  def under_cites_eu?
+    self.taxonomy.name == Taxonomy::CITES_EU
+  end
 
   def fixed_order_required?
     rank && rank.fixed_order
@@ -169,16 +185,60 @@ class TaxonConcept < ActiveRecord::Base
     data['rank_name']
   end
 
+  def cites_accepted
+    data['cites_accepted']
+  end
+
   def parent_scientific_name
     @parent_scientific_name ||
     parent && parent.full_name
+  end
+
+  def standard_references
+    sql = <<-SQL
+      WITH RECURSIVE inherited_references AS (
+        SELECT h.id, h.parent_id, h_refs.reference_id, h_refs.is_standard,
+        h_refs.is_cascaded, h_refs.excluded_taxon_concepts_ids AS exclusions
+        FROM taxon_concepts h
+        LEFT JOIN taxon_concept_references h_refs
+        ON h_refs.taxon_concept_id = h.id
+        WHERE h.id = #{id}
+        UNION
+        SELECT hi.id, hi.parent_id, hi_refs.reference_id,
+        hi_refs.is_standard,
+        hi_refs.is_cascaded,
+        hi_refs.excluded_taxon_concepts_ids
+        FROM taxon_concepts hi
+        JOIN inherited_references ON inherited_references.parent_id = hi.id
+        LEFT JOIN taxon_concept_references hi_refs
+        ON hi_refs.taxon_concept_id = hi.id
+      )
+      SELECT refs.* FROM inherited_references inh_refs
+      INNER JOIN "references" refs
+      ON inh_refs.reference_id = refs.id
+        AND inh_refs.is_standard AND (inh_refs.is_cascaded OR inh_refs.id = #{id})
+        AND NOT COALESCE(inh_refs.exclusions, ARRAY[]::INT[]) @> ARRAY[#{id}]
+    SQL
+    Reference.find_by_sql(sql)
+  end
+
+  def inherited_standard_references
+    ref_ids = taxon_concept_references.map(&:reference_id)
+    standard_references.keep_if{ |ref| !ref_ids.include? ref.id }
+  end
+
+  def can_be_deleted?
+    taxon_relationships.count == 0 &&
+    children.count == 0 &&
+    listing_changes.count == 0 &&
+    taxon_commons.count == 0
   end
 
   private
 
   def self.sanitize_full_name(some_full_name)
     #strip ranks
-    if some_full_name =~ /(.+)\s*(#{Rank.dict.join('|')})\s*$/
+    if some_full_name =~ /\A(.+)\s+(#{Rank.dict.join('|')})\s*\Z/
       some_full_name = $1
     end
     #strip redundant whitespace between words
@@ -194,7 +254,7 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def parent_at_immediately_higher_rank
-    return true unless parent 
+    return true unless parent
     return true if (parent.rank.name == 'KINGDOM' && parent.full_name == 'Plantae' && rank.name == 'ORDER')
     unless parent.rank.taxonomic_position >= rank.parent_rank_lower_bound &&
       parent.rank.taxonomic_position < rank.taxonomic_position
@@ -303,20 +363,6 @@ class TaxonConcept < ActiveRecord::Base
       self.taxonomic_position = prev_taxonomic_position_parts.join('.')
     end
     true
-  end
-
-  def check_destroy_allowed
-    unless can_be_deleted?
-      errors.add(:base, "not allowed")
-      return false
-    end
-  end
-
-  def can_be_deleted?
-    taxon_relationships.count == 0 &&
-    children.count == 0 &&
-    listing_changes.count == 0 &&
-    taxon_commons.count == 0
   end
 
 end

@@ -3,12 +3,12 @@
     <thead>
       <th>Appx</th>
       <th>Type</th>
-      <th>Effective at</th>
+      <th>Effective from</th>
       <th>Current</th>
       <th>Party</th>
     </thead>
     <tbody>
-    <% @taxon_concept.current_listing_changes.each do |listing_change| %>
+    <% @taxon_concept.current_listing_changes.by_designation(@designation.id).each do |listing_change| %>
       <tr>
         <td>
           <%= listing_change.species_listing && listing_change.species_listing.abbreviation %>

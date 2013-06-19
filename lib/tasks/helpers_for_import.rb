@@ -55,7 +55,7 @@ class CsvToDbMap
       'Species RecID' => 'legacy_id integer',
       'Rank' => 'rank varchar',
       'GEO_entity' => 'geo_entity_type varchar',
-      'ISO Code 2' => 'country_iso2 varchar',
+      'ISO Code 2' => 'iso2 varchar',
       'Reference IDs' => 'reference_id integer',
       'Designation' => 'designation varchar'
     },
@@ -75,35 +75,131 @@ class CsvToDbMap
     'countries_import' => {
       'ISO2' => 'iso2 varchar',
       'short_name' => 'name varchar',
-      'Geo_entity' => 'geo_entity varchar',
-      'Under' => 'bru_under varchar',
+      'Geo_entity' => 'geo_entity_type varchar',
+      'Under' => 'parent_iso_code2 varchar',
       'Current_name' => 'current_name varchar',
       'long_name' => 'long_name varchar',
       'CITES Region' => 'cites_region varchar'
     },
     'references_import' => {
-      'legacy_type' => 'legacy_type varchar',
-      'legacy_id' => 'legacy_id integer',
-      'author' => 'author varchar',
-      'title' => 'title varchar',
-      'year' => 'year varchar'
+      'Full_citation' => 'citation_to_use text',
+      'DscRecID' => 'legacy_ids text',
+      'Authors' => 'author text',
+      'Year' => 'pub_year text',
+      'Title' => 'title text',
+      'Source' => 'source text',
+      'Publisher' => 'publisher text',
+      'PubPlace' => 'pub_place text',
+      'Volume' => 'volume text',
+      'Number' => 'number text',
+      'Pagination' => 'pagination text'
     },
-    'reference_links_import' => {
-      'Kingdom' => 'legacy_type varchar',
-      'DslRecID' => 'legacy_id integer',
-      'DslSpcRecID' => 'SpcRecID integer',
-      'DslDscRecID' => 'DscRecID integer',
-      'DslCode' => 'DslCode varchar',
-      'DslCodeRecID' => 'DslCodeRecID integer'
+    'reference_distribution_links_import' => {
+      'SpcRecID' => 'taxon_legacy_id int',
+      'Rank' => 'rank text',
+      'GEO_entity' => 'geo_entity_type text',
+      'ISO Code 2' => 'iso_code2 text',
+      'RefIDs' => 'ref_legacy_id integer'
     },
-    'standard_references_import' => {
-      'Scientific name' => 'name varchar',
+    'reference_accepted_links_import' => {
+      'SpcRecID' => 'taxon_legacy_id int',
+      'Scientific name' => 'scientific_name text',
+      'Rank' => 'rank text',
+      'Status' => 'status text',
+      'RefRecIDs' => 'ref_legacy_ids text'
+    },
+    'reference_synonym_links_import' => {
+      'SpcRecID' => 'taxon_legacy_id int',
+      'Scientific name' => 'scientific_name text',
+      'Rank' => 'rank text',
+      'Status' => 'status text',
+      'RefRecIDs' => 'ref_legacy_ids text',
+      'Accepted RecID' => 'accepted_taxon_legacy_id int',
+      'Accepted rank' => 'accepted_rank text'
+    },
+    'standard_reference_links_import' => {
+      'Scientific name' => 'scientific_name varchar',
       'Rank' => 'rank varchar',
       'RecID' => 'taxon_legacy_id integer',
       'DesignationStandardReferenceID' => 'ref_legacy_id integer',
       'Excludes' => 'exclusions varchar',
-      'Cascade' => 'cascade boolean',
+      'Cascade' => 'is_cascaded boolean'
+    },
+    'events_import' => {
+      'Legacy_ID' => 'legacy_id int',
+      'Designation' => 'designation varchar',
+      'LnmShortDesc' => 'name varchar',
+      'Date valid from' => 'effective_at date',
+      'Event Type' => 'type varchar',
+      'Basis for Suspension' => 'subtype varchar',
+      'LnmLongDesc' => 'description text',
+      'LnmURL' => 'url text'
+    },
+    'languages_import' => {
+      'ISO-3' => 'iso_code3 varchar',
+      'LangShort' => 'name_en varchar',
+      'ISO-1' => 'iso_code1 varchar'
+    },
+    'quotas_import' => {
+      'Kingdom' => 'kingdom varchar',
+      'RecId' => 'legacy_id integer',
+      'Rank' => 'rank varchar',
+      'ISO code' => 'country_iso2 varchar',
+      'Quota' => 'quota float',
+      'Unit' => 'unit varchar',
+      'StartDate' => 'start_date date',
+      'EndDate' => 'end_date date',
+      'Year' => 'year integer',
+      'Notes' => 'notes varchar',
+      'Terms' => 'terms varchar',
+      'Sources' => 'sources varchar',
+      'QuoAdded' => 'created_at date',
+      'QuoDate' => 'publication_date date',
+      'IsCurrent' => 'is_current boolean',
+      'PublicDisplay' => 'public_display boolean',
+      'Link' => 'url varchar'
+    },
+    'cites_suspensions_import' => {
+      'IsCurrent' => 'is_current boolean',
+      'Kingdom' => 'kingdom varchar',
+      'RecID' => 'legacy_id integer',
+      'Rank' => 'rank varchar',
+      'ISO code' => 'country_iso2 varchar',
+      'StartNotificationID' => 'start_notification_legacy_id integer',
+      'EndNotificationID' => 'end_notification_legacy_id integer',
+      'Notes' => 'notes varchar',
+      'ExcludedTaxa' => 'exclusions text'
+    },
+    'distribution_tags_import' => {
+      'Species RecID' => 'legacy_id integer',
+      'Rank' => 'rank varchar',
+      'GEO_entity_type' => 'geo_entity_type varchar',
+      'ISO Code 2' => 'iso_code2 varchar',
+      'Tags' => 'tags varchar',
       'Designation' => 'designation varchar'
+    },
+    'hash_annotations_import' => {
+      'Hash No' => 'symbol varchar',
+      'Event No' => 'event_legacy_id integer',
+      'For Display' => 'ignore varchar',
+      'Text' => 'full_note_en varchar'
+    },
+    'eu_listings_import' => {
+      'LAW_NUM' => 'event_legacy_id integer',
+      'RANK_NAME' => 'rank varchar',
+      'REC_ID' => 'legacy_id integer',
+      'LISTING' => 'annex varchar',
+      'EFFECTIVE_FROM' => 'listing_date date',
+      'PARTY_ISO2' => 'country_iso2 varchar',
+      'IS_CURRENT' => 'is_current boolean',
+      'POPULATIONS_ISO2' => 'populations_iso2 varchar',
+      'EXCLUDEDpopulations_ISO' => 'excluded_populations_iso2 varchar',
+      'IS_INCLUSION' => 'is_inclusion boolean',
+      'INCLUDED_IN' => 'included_in_rec_id integer',
+      'RANK' => 'rank_for_inclusions varchar',
+      'EXCLUDED_REC_IDS' => 'excluded_taxa varchar',
+      'FULL_NOTE_EN' => 'full_note_en varchar',
+      'HASH_NOTE' => 'hash_note varchar'
     }
   }
 
@@ -172,6 +268,7 @@ def drop_table(table_name)
 end
 
 def copy_data(path_to_file, table_name)
+  require 'psql_command'
   puts "Copying data from #{path_to_file} into tmp table #{table_name}"
   db_columns = db_columns_from_csv_headers(path_to_file, table_name, false)
   cmd = <<-PSQL
@@ -182,9 +279,6 @@ WITH DELIMITER ','
 ENCODING 'utf-8'
 CSV HEADER
 PSQL
-
-  db_conf = YAML.load(File.open(Rails.root + "config/database.yml"))[Rails.env]
-  system("export PGPASSWORD=#{db_conf["password"]} && echo \"#{cmd.split("\n").join(' ')}\" | psql -h #{db_conf["host"] || "localhost"} -p #{db_conf["port"] || 5432} -U#{db_conf["username"]} #{db_conf["database"]}")
-  #system("export PGPASSWORD=#{db_conf["password"]} && psql -h #{db_conf["host"] || "localhost"} -U#{db_conf["username"]} -c \"#{psql}\" #{db_conf["database"]}")
+  PsqlCommand.new(cmd).execute
   puts "Data copied to tmp table"
 end

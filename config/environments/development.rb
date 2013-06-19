@@ -41,4 +41,6 @@ SAPI::Application.configure do
       resource '*', :headers => :any, :methods => :any
     end
   end
+
+  config.ember.variant = :development
 end

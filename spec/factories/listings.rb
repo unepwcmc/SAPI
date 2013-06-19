@@ -26,25 +26,6 @@ FactoryGirl.define do
     is_party true
   end
 
-  factory :cites_deletion, class: ListingChange do
-    change_type { ChangeType.find_by_name_and_designation_id('DELETION', Designation.find_by_name('CITES').id) }
-    taxon_concept
-  end
-
-  %w(I II III).each do |a|
-    factory :"cites_#{a}_listing_change", parent: :listing_change, class: ListingChange do
-      species_listing { SpeciesListing.find_by_abbreviation(a) }
-    end
-    %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL).each do |ch|
-      factory :"cites_#{a}_#{ch.downcase}", parent: :"cites_#{a}_listing_change", class: ListingChange do
-        change_type { ChangeType.find_by_name_and_designation_id(ch, Designation.find_by_name('CITES').id) }
-      end
-      factory :"cites_#{a}_#{ch.downcase}_exception", parent: :"cites_#{a}_listing_change", class: ListingChange do
-        change_type { ChangeType.find_by_name_and_designation_id('EXCEPTION', Designation.find_by_name('CITES').id) }
-      end
-    end
-  end
-
   factory :annotation, :aliases => [:hash_annotation] do
     symbol '#4'
     parent_symbol 'CoP15'

@@ -59,6 +59,17 @@ namespace :import do
         ) q
       SQL
       ActiveRecord::Base.connection.execute(sql)
+
+      sql = <<-SQL
+        UPDATE taxon_concepts
+        SET full_name = full_name(ranks.name, ancestors_names(taxon_concepts.id))
+        FROM taxon_concepts q
+        JOIN ranks ON ranks.id = q.rank_id
+        WHERE taxon_concepts.name_status = 'S'
+          AND taxon_concepts.full_name IS NULL
+          AND q.id = taxon_concepts.id
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
     end
 
     puts "There are now #{

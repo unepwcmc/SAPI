@@ -12,25 +12,26 @@
 require 'spec_helper'
 
 describe TaxonCommon do
-    let(:lng){
-      create(:language)
+  describe :update do
+    let(:common_name_attributes){
+      build_attributes(:common_name, :name => 'Lolcat')
+    }
+    let(:another_common_name_attributes){
+      build_attributes(:common_name, :name => 'Black Lolcat')
     }
     let(:parent){
-      create(
-        :genus,
+      create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
       )
     }
     let!(:tc){
-      create(
-        :species,
+      create_cites_eu_species(
         :parent_id => parent.id,
         :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
       )
     }
     let!(:another_tc){
-      create(
-        :species,
+      create_cites_eu_species(
         :parent_id => parent.id,
         :taxon_name => create(:taxon_name, :scientific_name => 'lolcatus')
       )
@@ -39,27 +40,24 @@ describe TaxonCommon do
       build(
         :taxon_common,
         :taxon_concept_id => tc.id,
-        :common_name_attributes => {
-          :name => 'Lolcat',
-          :language_id => lng.id
-        }
+        :common_name_attributes => common_name_attributes
       )
     }
-    let(:another_tc_common){
-      build(
-        :taxon_common,
-        :taxon_concept_id => another_tc.id,
-        :common_name_attributes => {
-          :name => 'Lolcat',
-          :language_id => lng.id
-        }
-      )
-    }
-    specify{
-      tc_common.save
-      another_tc_common.save
-      tc_common.common_name_attributes = {:name => 'Black lolcat', :language_id => lng.id}
-      tc_common.save
-      another_tc.common_names.map(&:name).should include('Lolcat')
-    }
+    context "when common name changed" do
+      let(:another_tc_common){
+        build(
+          :taxon_common,
+          :taxon_concept_id => another_tc.id,
+          :common_name_attributes => common_name_attributes
+        )
+      }
+      specify{
+        tc_common.save
+        another_tc_common.save
+        tc_common.common_name_attributes = another_common_name_attributes
+        tc_common.save
+        another_tc.common_names.map(&:name).should include('Lolcat')
+      }
+    end
+  end
 end

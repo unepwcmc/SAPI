@@ -1,0 +1,29 @@
+<% if @taxon_concept.current_eu_opinions.count > 0 %>
+  <table class="eu_opinion table table-bordered table-striped">
+    <thead>
+      <th>Year</th>
+      <th>Party</th>
+      <th>Comments</th>
+      <th>Current</th>
+    </thead>
+
+    <tbody>
+    <% @taxon_concept.current_eu_opinions.each do |opinion| %>
+
+      <tr>
+        <td><%= opinion.year %></td>
+        <td><%= opinion.geo_entity && opinion.geo_entity.iso_code2 %></td>
+        <td><%= opinion.comments %></td>
+        <td>
+          <%= form_for [:admin, @taxon_concept, opinion], :remote => true do |f| %>
+            <%= f.check_box :is_current %>
+          <% end %>
+        </td>
+      </tr>
+
+    <% end %>
+    </tbody>
+  </table>
+<% else %>
+  There are no current EU opinions for this Taxon Concept.
+<% end %>

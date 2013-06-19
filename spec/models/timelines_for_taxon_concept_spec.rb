@@ -12,14 +12,13 @@ describe TimelinesForTaxonConcept do
   describe :timelines do
     context "when Appendix I" do
       let(:tc){
-        tc = create(:species)
-        create(
-          :cites_I_addition,
+        tc = create_cites_eu_species
+        create_cites_I_addition(
           :taxon_concept => tc,
           :effective_at => '1975-06-06',
           :is_current => true
         )
-        Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+        Sapi::rebuild(:except => [:taxonomy])
         MTaxonConcept.find(tc.id)
       }
       subject{ TimelinesForTaxonConcept.new(tc.id) }
@@ -28,9 +27,8 @@ describe TimelinesForTaxonConcept do
     end
     context "when Appendix III" do
       let(:tc){
-        tc = create(:species)
-        lc = create(
-          :cites_III_addition,
+        tc = create_cites_eu_species
+        lc = create_cites_III_addition(
           :taxon_concept => tc,
           :effective_at => '1975-06-06',
           :is_current => true
@@ -41,7 +39,7 @@ describe TimelinesForTaxonConcept do
           :listing_change => lc,
           :is_party => true
         )
-        Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+        Sapi::rebuild(:except => [:taxonomy])
         MTaxonConcept.find(tc.id)
       }
       subject{ TimelinesForTaxonConcept.new(tc.id) }
@@ -50,9 +48,8 @@ describe TimelinesForTaxonConcept do
     end
     context "when Appendix III reservation" do
       let(:tc){
-        tc = create(:species)
-        lc = create(
-          :cites_III_reservation,
+        tc = create_cites_eu_species
+        lc = create_cites_III_reservation(
           :taxon_concept => tc,
           :effective_at => '1975-06-06',
           :is_current => true
@@ -63,7 +60,7 @@ describe TimelinesForTaxonConcept do
           :listing_change => lc,
           :is_party => true
         )
-        Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+        Sapi::rebuild(:except => [:taxonomy])
         MTaxonConcept.find(tc.id)
       }
       subject{ TimelinesForTaxonConcept.new(tc.id) }

@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: events
+#
+#  id             :integer          not null, primary key
+#  name           :string(255)
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  designation_id :integer
+#  effective_at   :datetime
+#  published_at   :datetime
+#  description    :text
+#  url            :text
+#  is_current     :boolean          default(FALSE), not null
+#  type           :string(255)      default("Event"), not null
+#  legacy_id      :integer
+#  end_date       :datetime
+#  subtype        :string(255)
+#
+
 require 'spec_helper'
 
 describe Event do
@@ -17,5 +37,15 @@ describe Event do
       specify { event2.should be_invalid }
       specify { event2.should have(1).error_on(:name) }
     end
+    context "when url invalid" do
+      let(:event){ build(:event, :url => 'www.google.com') }
+      specify { event.should be_invalid}
+      specify { event.should have(1).error_on(:url) }
+    end
+  end
+
+  describe :effective_at_formatted do
+    let(:event){ create(:event, :effective_at => '2012-05-10') }
+    specify {event.effective_at_formatted.should == '10/05/2012' }
   end
 end

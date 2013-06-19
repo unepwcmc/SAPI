@@ -16,11 +16,17 @@ namespace :import do
         INSERT INTO distributions(taxon_concept_id, geo_entity_id, created_at, updated_at)
         SELECT DISTINCT taxon_concepts.id, geo_entities.id, current_date, current_date
           FROM #{TMP_TABLE}
-          LEFT JOIN geo_entities ON geo_entities.iso_code2 = #{TMP_TABLE}.country_iso2 AND geo_entities.legacy_type = '#{GeoEntityType::COUNTRY}'
-          LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = '#{kingdom}'
-          LEFT JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(#{TMP_TABLE}.rank)) AND taxon_concepts.rank_id = ranks.id
-          WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL AND geo_entities.is_current = 't'
-          AND BTRIM(#{TMP_TABLE}.designation) ilike '%CITES%'
+          INNER JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(#{TMP_TABLE}.rank))
+          INNER JOIN geo_entities ON geo_entities.iso_code2 = #{TMP_TABLE}.iso2 AND UPPER(geo_entities.legacy_type) = UPPER(BTRIM(geo_entity_type))
+          INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = '#{kingdom}' AND
+           taxon_concepts.rank_id = ranks.id
+          WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL
+            AND (UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%' )
+            AND NOT EXISTS (
+              SELECT * FROM distributions
+              WHERE distributions.taxon_concept_id = taxon_concepts.id AND
+                distributions.geo_entity_id = geo_entities.id
+            )
       SQL
       #TODO do sth about those unknown distributions!
       ActiveRecord::Base.connection.execute(sql)

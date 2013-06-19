@@ -1,30 +1,37 @@
 require 'spec_helper'
 
 describe TaxonRelationship do
+  let(:synonym_relationship_type){
+    create(
+      :taxon_relationship_type,
+      :name => TaxonRelationshipType::HAS_SYNONYM,
+      :is_intertaxonomic => false,
+      :is_bidirectional => false
+    )
+  }
   context "when synonymy" do
     let(:parent){
-      create(
-        :genus,
+      create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
       )
     }
     let!(:tc){
-      create(
-        :species,
+      create_cites_eu_species(
         :parent_id => parent.id,
         :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
       )
     }
     let!(:another_tc){
-      create(
-        :species,
+      create_cites_eu_species(
         :parent_id => parent.id,
         :taxon_name => create(:taxon_name, :scientific_name => 'lolcatus')
       )
     }
     let(:synonym_attributes){
       build_tc_attributes(
-        :species,
+        :taxon_concept,
+        :taxonomy => cites_eu,
+        :rank => species_rank,
         :name_status => 'S',
         :author_year => 'Hemulen 2013',
         :full_name => 'Lolcatus lolus'
@@ -32,7 +39,9 @@ describe TaxonRelationship do
     }
     let(:another_synonym_attributes){
       build_tc_attributes(
-        :species,
+        :taxon_concept,
+        :taxonomy => cites_eu,
+        :rank => species_rank,
         :name_status => 'S',
         :author_year => 'Hemulen 2013',
         :full_name => 'Lolcatus lolatus'
@@ -40,7 +49,8 @@ describe TaxonRelationship do
     }
     let(:synonymy_rel){
       build(
-        :has_synonym,
+        :taxon_relationship,
+        :taxon_relationship_type => synonym_relationship_type,
         :taxon_concept_id => tc.id,
         :other_taxon_concept_id => nil,
         :other_taxon_concept_attributes => synonym_attributes
@@ -48,7 +58,8 @@ describe TaxonRelationship do
     }
     let(:another_synonymy_rel){
       build(
-        :has_synonym,
+        :taxon_relationship,
+        :taxon_relationship_type => synonym_relationship_type,
         :taxon_concept_id => another_tc.id,
         :other_taxon_concept_id => nil,
         :other_taxon_concept_attributes => synonym_attributes

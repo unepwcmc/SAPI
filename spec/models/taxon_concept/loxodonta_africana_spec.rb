@@ -5,44 +5,59 @@ describe TaxonConcept do
     include_context "Loxodonta africana"
     context "TAXONOMY" do
       describe :full_name do
-        it "should be binomen for species: Loxodonta africana" do
-          @species.full_name.should == 'Loxodonta africana'
+        context "for species Loxodonta africana" do
+          specify{ @species.full_name.should == 'Loxodonta africana' }
         end
-        it "should be single name for genus: Loxodonta" do
-          @genus.full_name.should == 'Loxodonta'
+        context "for genus Loxodonta" do
+          specify{ @genus.full_name.should == 'Loxodonta' }
         end
       end
       describe :rank do
-        it "should be SPECIES" do
-          @species.rank_name.should == 'SPECIES'
+        context "for species Loxodonta africana" do
+          specify{ @species.rank_name.should == 'SPECIES' }
         end
       end
-      describe :parents do
-        it "should have Elephantidae as family" do
-          @species.family_name == 'Elephantidae'
+      describe :ancestors do
+        context "family" do
+          specify{ @species.family_name == 'Elephantidae' }
         end
-        it "should have Proboscidea as order" do
-          @species.order_name == 'Proboscidea'
+        context "order" do
+          specify{ @species.order_name == 'Proboscidea' }
         end
-        it "should have Mammalia as class" do
-          @species.class_name == 'Mammalia'
+        context "class" do
+          specify{ @species.class_name == 'Mammalia' }
         end
       end
     end
 
     context "LISTING" do
-      describe :current_listing do
-        it "should be I/II at species level Loxodonta africana (population split listing)" do
-          @species.current_listing.should == 'I/II'
+      describe :cites_listing do
+        context "for species Loxodonta africana (population split listing)" do
+          specify{ @species.cites_listing.should == 'I/II' }
+        end
+      end
+
+      describe :eu_listing do
+        context "for species Loxodonta africana (population split listing)" do
+          specify{ @species.eu_listing.should == 'A/B' }
         end
       end
 
       describe :cites_listed do
-        it "should be true for species Loxodonta africana" do
-          @species.cites_listed.should be_true
+        context "for species Loxodonta africana" do
+          specify{ @species.cites_listed.should be_true }
         end
-        it "should be false for family Elephantidae" do
-          @family.cites_listed.should == false
+        context "for family Elephantidae" do
+          specify{ @family.cites_listed.should == false }
+        end
+      end
+
+      describe :eu_listed do
+        context "for species Loxodonta africana" do
+          specify{ @species.eu_listed.should be_true }
+        end
+        context "for family Elephantidae" do
+          specify{ @family.eu_listed.should == false }
         end
       end
 

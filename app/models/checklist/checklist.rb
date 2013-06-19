@@ -1,6 +1,6 @@
 #Encoding: utf-8
 class Checklist::Checklist
-  attr_accessor :taxon_concepts_rel, :taxon_concepts
+  attr_accessor :taxon_concepts_rel, :taxon_concepts, :animalia, :plantae
 
   # Constructs a query to retrieve taxon concepts based on user defined
   # parameters
@@ -18,17 +18,16 @@ class Checklist::Checklist
 
   def initialize_query
     @taxon_concepts_rel = MTaxonConcept.scoped.
-      by_cites_eu_taxonomy
+      by_cites_eu_taxonomy.uniq
 
       if @cites_regions.empty? && @countries.empty? && !@cites_appendices.empty?
-        @taxon_concepts_rel = @taxon_concepts_rel.
-        by_cites_appendices(@cites_appendices)
+        @taxon_concepts_rel = MTaxonConceptFilterByAppendixQuery.new(
+          @taxon_concepts_rel, @cites_appendices
+        ).relation
       elsif !(@cites_regions.empty? && @countries.empty?)
-        @taxon_concepts_rel = @taxon_concepts_rel.
-          by_cites_populations_and_appendices(
-            @cites_regions, @countries,
-            @cites_appendices.empty? ? nil : @cites_appendices
-          )
+        @taxon_concepts_rel = MTaxonConceptFilterByAppendixPopulationQuery.new(
+          @taxon_concepts_rel, @cites_appendices, @cites_regions + @countries
+        ).relation
       end
 
     unless @scientific_name.blank?
@@ -51,12 +50,12 @@ class Checklist::Checklist
   def taxon_concepts_json_options
     json_options = {
       :only => [
-        :id, :full_name, :rank_name, :current_listing, :cites_accepted,
+        :id, :full_name, :rank_name, :cites_accepted,
         :species_name, :genus_name, :family_name, :order_name,
         :class_name, :phylum_name, :kingdom_name, :hash_ann_symbol
       ],
       :methods => [:countries_ids, :ancestors_path, :recently_changed,
-        :current_parties_ids]
+        :current_parties_ids, :current_listing]
     }
 
     json_options[:only] << :author_year if @authors
@@ -73,7 +72,7 @@ class Checklist::Checklist
 
   def listing_changes_json_options
     json_options = {
-      :only => [:id, :change_type_name, :species_listing_name, :party_name,
+      :only => [:id, :change_type_name, :species_listing_name,
         :party_id, :is_current, :symbol,
         :short_note_en, :full_note_en, :hash_full_note_en],
       :methods => [:countries_ids, :effective_at_formatted]
@@ -235,7 +234,7 @@ class Checklist::Checklist
                                        .sort
                                        .to_s)
 
-    return [Rails.root, '/public/downloads/', @filename, '.', format].join
+    return [Rails.root, '/public/downloads/checklist/', @filename, '.', format].join
   end
 
   private
