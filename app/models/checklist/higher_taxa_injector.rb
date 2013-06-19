@@ -52,7 +52,6 @@ class Checklist::HigherTaxaInjector
     end
 
     ranks = [ranks.last].compact unless @expand_headers
-    puts ranks.inspect
 
     res = []
     ranks.each do |rank|
