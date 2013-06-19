@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: cites_suspension_confirmations
+#
+#  id                               :integer          not null, primary key
+#  cites_suspension_id              :integer
+#  cites_suspension_notification_id :integer
+#  created_at                       :datetime         not null
+#  updated_at                       :datetime         not null
+#
+
 class CitesSuspensionConfirmation < ActiveRecord::Base
   attr_accessible :cites_suspension_notification_id
   belongs_to :confirmation_notification, :class_name => 'CitesSuspensionNotification',
