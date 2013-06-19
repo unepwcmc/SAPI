@@ -3,6 +3,12 @@ SAPI::Application.routes.draw do
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
   namespace :api do
+    namespace :v1 do
+      resources :taxon_concepts, :only => [:index, :show] do
+        get :autocomplete, :on => :collection
+      end
+      resources :geo_entities, :only => [:index]
+    end
     resources :terms, :only => [:index]
     resources :sources, :only => [:index]
     resources :purposes, :only => [:index]
@@ -73,6 +79,10 @@ SAPI::Application.routes.draw do
     end
     resources :validation_rules
     resources :geo_entities, :only => [:index]
+    root :to => 'ember#start'
+  end
+
+  namespace :species do
     root :to => 'ember#start'
   end
 

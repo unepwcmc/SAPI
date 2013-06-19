@@ -10,8 +10,9 @@
 #  change_type_id         :integer
 #  change_type_name       :string(255)
 #  designation_id         :integer
+#  designation_name       :string(255)
 #  party_id               :integer
-#  party_name             :string(255)
+#  party_iso_code         :string(255)
 #  ann_symbol             :string(255)
 #  full_note_en           :text
 #  full_note_es           :text
@@ -33,7 +34,6 @@
 #  expiry                 :datetime
 #
 
-#TODO party_name should actually be renamed to party_iso_code
 class MListingChange < ActiveRecord::Base
   include PgArrayParser
   self.table_name = :listing_changes_mview
@@ -66,10 +66,6 @@ class MListingChange < ActiveRecord::Base
 
   def countries_full_names
     CountryDictionary.instance.get_names_by_ids(countries_ids)
-  end
-
-  def party_iso_code
-    CountryDictionary.instance.get_iso_code_by_id(party_id)
   end
 
   def party_full_name

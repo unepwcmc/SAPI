@@ -79,13 +79,15 @@ class MTaxonConcept < ActiveRecord::Base
   has_many :current_listing_changes, :foreign_key => :taxon_concept_id,
     :class_name => MListingChange,
     :conditions => "is_current = 't' AND change_type_name <> '#{ChangeType::EXCEPTION}'"
-  has_many :current_additions, :foreign_key => :taxon_concept_id,
+  has_many :current_cites_additions, :foreign_key => :taxon_concept_id,
     :class_name => MListingChange,
-    :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'",
+    :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'" +
+      " AND designation_name = '#{Designation::CITES}'",
     :order => 'effective_at DESC, species_listing_name ASC'
   belongs_to :cites_closest_listed_ancestor, :class_name => MTaxonConcept
   belongs_to :eu_closest_listed_ancestor, :class_name => MTaxonConcept
   scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
+  scope :by_cms_taxonomy, where(:taxonomy_is_cites_eu => false)
 
   scope :without_non_accepted, where(:name_status => ['A', 'H'])
 
@@ -182,18 +184,21 @@ class MTaxonConcept < ActiveRecord::Base
   # returns the ids of parties associated with current listing changes
   # used only for CITES Checklist atm, therefore a designation filter is applied
   def current_parties_ids
-    cites_current_additions = current_additions.joins(:designation).
-      where('designations.name' => Designation::CITES)
-    if cites_current_additions.size > 0
-      cites_current_additions.map(&:party_id)
+    if current_cites_additions.size > 0
+      current_cites_additions.map(&:party_id)
     else
-      cites_inherited_current_additions = cites_closest_listed_ancestor &&
-        cites_closest_listed_ancestor.current_additions.joins(:designation).
-        where('designations.name' => Designation::CITES)
+      inherited_current_cites_additions = cites_closest_listed_ancestor &&
+        cites_closest_listed_ancestor.current_cites_additions
       #inherited listing -- find closest ancestor with listing changes
       cites_closest_listed_ancestor &&
-        cites_inherited_current_additions.map(&:party_id) || []
+        inherited_current_cites_additions.map(&:party_id) || []
     end.compact
+  end
+
+  # returns the current listing changes
+  # used only for CITES Checklist atm, therefore a designation filter is applied
+  def current_additions
+    current_cites_additions
   end
 
 end

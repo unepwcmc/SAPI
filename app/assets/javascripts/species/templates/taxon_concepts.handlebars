@@ -1,0 +1,8 @@
+{{outlet search}}
+
+{{controller.content.meta.total}} species
+<ul>
+{{#each taxonConcept in  controller}}
+  <li>{{#linkTo 'taxon_concept' taxonConcept}}{{taxonConcept.fullName}}{{/linkTo}}</li>
+{{/each}}
+</ul>

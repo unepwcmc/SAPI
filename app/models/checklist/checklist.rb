@@ -2,8 +2,8 @@
 class Checklist::Checklist
   attr_accessor :taxon_concepts_rel, :taxon_concepts, :animalia, :plantae
 
-  # Constructs a query to retrieve taxon concepts based on user defined
-  # parameters
+  # Constructs a query to retrieve CITES listed taxon concepts based on user
+  # defined parameters
   #
   # @param [Hash] a hash of search params and their values
   def initialize(options)
@@ -20,15 +20,15 @@ class Checklist::Checklist
     @taxon_concepts_rel = MTaxonConcept.scoped.
       by_cites_eu_taxonomy.uniq
 
-      if @cites_regions.empty? && @countries.empty? && !@cites_appendices.empty?
-        @taxon_concepts_rel = MTaxonConceptFilterByAppendixQuery.new(
-          @taxon_concepts_rel, @cites_appendices
-        ).relation
-      elsif !(@cites_regions.empty? && @countries.empty?)
-        @taxon_concepts_rel = MTaxonConceptFilterByAppendixPopulationQuery.new(
-          @taxon_concepts_rel, @cites_appendices, @cites_regions + @countries
-        ).relation
-      end
+    if @cites_regions.empty? && @countries.empty? && !@cites_appendices.empty?
+      @taxon_concepts_rel = MTaxonConceptFilterByAppendixQuery.new(
+        @taxon_concepts_rel, @cites_appendices
+      ).relation
+    elsif !(@cites_regions.empty? && @countries.empty?)
+      @taxon_concepts_rel = MTaxonConceptFilterByAppendixPopulationQuery.new(
+        @taxon_concepts_rel, @cites_appendices, @cites_regions + @countries
+      ).relation
+    end
 
     unless @scientific_name.blank?
       @taxon_concepts_rel = @taxon_concepts_rel.
@@ -72,7 +72,7 @@ class Checklist::Checklist
 
   def listing_changes_json_options
     json_options = {
-      :only => [:id, :change_type_name, :species_listing_name, :party_name,
+      :only => [:id, :change_type_name, :species_listing_name,
         :party_id, :is_current, :symbol,
         :short_note_en, :full_note_en, :hash_full_note_en],
       :methods => [:countries_ids, :effective_at_formatted]

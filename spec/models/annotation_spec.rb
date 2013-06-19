@@ -17,7 +17,6 @@
 #  display_in_footnote :boolean          default(FALSE), not null
 #  source_id           :integer
 #  event_id            :integer
-#  import_row_id       :integer
 #
 
 require 'spec_helper'
