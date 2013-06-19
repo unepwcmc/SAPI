@@ -199,7 +199,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_node(node_id integer)
           UNION
 
           SELECT hi.id, hi.parent_id, hi.taxonomic_position, level + 1,
-            hi.data->'kingdom_name', h.data->'rank_name'
+            hi.data->'kingdom_name', hi.data->'rank_name'
           FROM taxon_concepts hi
           JOIN self_and_ancestors ON self_and_ancestors.parent_id = hi.id
       )
