@@ -23,15 +23,14 @@ namespace :import do
           INNER JOIN geo_entities ON geo_entities.iso_code2 = #{TMP_TABLE}.iso2 AND UPPER(geo_entities.legacy_type) = UPPER(BTRIM(geo_entity_type))
           INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = '#{kingdom}' AND
            taxon_concepts.rank_id = ranks.id
-          INNER JOIN taxonomies ON taxonomies.di = taxon_concepts.taxonomy_id
+          INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
           WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL
             AND
                #{ if taxonomy_name == Taxonomy::CITES_EU
                     "( UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%')"
                   else
                     "UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CMS%'"
-                  end
-               }
+                  end}
             AND taxonomies.id = #{taxonomy.id}
             AND NOT EXISTS (
               SELECT * FROM distributions
