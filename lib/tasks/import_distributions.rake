@@ -12,7 +12,10 @@ namespace :import do
 
       kingdom = file.split('/').last.split('_')[0].titleize
 
-      sql = <<-SQL
+      [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
+        puts "Import #{taxonomy_name} common names"
+        taxonomy = Taxonomy.find_by_name(taxonomy_name)
+        sql = <<-SQL
         INSERT INTO distributions(taxon_concept_id, geo_entity_id, created_at, updated_at)
         SELECT DISTINCT taxon_concepts.id, geo_entities.id, current_date, current_date
           FROM #{TMP_TABLE}
@@ -20,16 +23,25 @@ namespace :import do
           INNER JOIN geo_entities ON geo_entities.iso_code2 = #{TMP_TABLE}.iso2 AND UPPER(geo_entities.legacy_type) = UPPER(BTRIM(geo_entity_type))
           INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = '#{kingdom}' AND
            taxon_concepts.rank_id = ranks.id
+          INNER JOIN taxonomies ON taxonomies.di = taxon_concepts.taxonomy_id
           WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL
-            AND (UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%' )
+            AND
+               #{ if taxonomy_name == Taxonomy::CITES_EU
+                    "( UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%')"
+                  else
+                    "UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CMS%'"
+                  end
+               }
+            AND taxonomies.id = #{taxonomy.id}
             AND NOT EXISTS (
               SELECT * FROM distributions
               WHERE distributions.taxon_concept_id = taxon_concepts.id AND
                 distributions.geo_entity_id = geo_entities.id
             )
-      SQL
-      #TODO do sth about those unknown distributions!
-      ActiveRecord::Base.connection.execute(sql)
+          SQL
+          #TODO do sth about those unknown distributions!
+          ActiveRecord::Base.connection.execute(sql)
+      end
     end
     puts "There are now #{Distribution.count} taxon concept distributions in the database"
   end
