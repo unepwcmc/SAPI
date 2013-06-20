@@ -59,6 +59,7 @@ namespace :import do
               LEFT JOIN taxon_concepts AS accepted ON accepted.id = taxon_relationships.taxon_concept_id
               LEFT JOIN taxon_concepts AS synonym ON synonym.id = taxon_relationships.other_taxon_concept_id
               WHERE taxon_relationships.taxon_relationship_type_id = #{rel.id}
+                AND accepted.taxonomy_id = #{taxonomy.id} AND synonym.taxonomy_id = #{taxonomy.id}
             ) AND taxonomies.id = #{taxonomy.id}
               AND
                  #{ if taxonomy_name == Taxonomy::CITES_EU
@@ -69,6 +70,7 @@ namespace :import do
                  }
           ) q
         SQL
+        puts sql
         ActiveRecord::Base.connection.execute(sql)
       end
 
