@@ -70,6 +70,7 @@ namespace :import do
     )
     Rake::Task["import:standard_reference_links"].invoke(
      'lib/assets/files/animals/animalia_standard_reference_links.csv',
+     'lib/assets/files/animals/CMS_standard_reference_links.csv',
      'lib/assets/files/plants/plantae_standard_reference_links.csv'
     )
 

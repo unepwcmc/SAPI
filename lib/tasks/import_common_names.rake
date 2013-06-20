@@ -41,7 +41,6 @@ namespace :import do
                 taxon_commons.common_name_id = common_names.id
             ) AND taxonomies.id = #{taxonomy.id}
         SQL
-        puts sql
         ActiveRecord::Base.connection.execute(sql)
       end
     end
