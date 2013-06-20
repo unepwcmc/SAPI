@@ -90,8 +90,10 @@ namespace :import do
               ELSE TMP.is_current
             END,
             CASE
-              WHEN TMP.is_current IS NULL THEN 'f'
-              ELSE TMP.is_current
+              WHEN UPPER(TMP.appendix) LIKE 'DEL%'
+              AND (TMP.is_current IS NULL OR TMP.is_current = 'f'::BOOLEAN)
+              THEN FALSE
+              ELSE TRUE
             END,
             inclusion_taxon_concepts.id,
             current_date, current_date
