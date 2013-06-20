@@ -9,19 +9,19 @@ namespace :import do
     files.each do |file|
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
-      ActiveRecord::Base.connection.execute("CREATE INDEX ON #{TMP_TABLE} (name, language, rank)")
       copy_data(file, TMP_TABLE)
+      ActiveRecord::Base.connection.execute("CREATE INDEX ON #{TMP_TABLE} (name, language, rank)")
       kingdom = file.split('/').last.split('_')[0].titleize
 
       sql = <<-SQL
         INSERT INTO common_names(name, language_id, created_at, updated_at)
-        SELECT #{TMP_TABLE}.name, languages.id, current_date, current_date
+        SELECT DISTINCT #{TMP_TABLE}.name, languages.id, current_date, current_date
           FROM #{TMP_TABLE}
           INNER JOIN languages ON UPPER(#{TMP_TABLE}.language) = UPPER(languages.iso_code3)
           WHERE NOT EXISTS (
             SELECT common_names.name
               FROM common_names
-              LEFT JOIN languages ON common_names.language_id = languages.id
+              JOIN languages ON common_names.language_id = languages.id
               WHERE common_names.name = #{TMP_TABLE}.name AND UPPER(BTRIM(#{TMP_TABLE}.language)) = UPPER(languages.iso_code3)
           ) AND ( UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%');
 
