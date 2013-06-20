@@ -70,7 +70,6 @@ namespace :import do
                  }
           ) q
         SQL
-        puts sql
         ActiveRecord::Base.connection.execute(sql)
       end
 
