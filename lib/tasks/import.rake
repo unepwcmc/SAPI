@@ -93,7 +93,8 @@ namespace :import do
   end
 
   desc 'Drops and reimports db'
-  task :redo => ["db:drop", "db:create", "db:migrate", "db:seed", "import:cleaned"]
+  task :redo => ["db:drop", "db:create", "db:migrate", "db:seed", 
+    "import:cleaned", "import:cites_parties"]
 
   desc 'Shows database summary stats'
   task :stats => :environment do
