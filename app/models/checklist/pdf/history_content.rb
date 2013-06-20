@@ -8,9 +8,9 @@ module Checklist::Pdf::HistoryContent
   end
 
   def kingdom(tex, fetcher, kingdom_name)
-    @last_seen_id = nil
     kingdom = fetcher.next
     return if kingdom.empty?
+    @skip_ancestor_ids = nil
 
     tex << "\\cpart{#{kingdom_name}}\n"
     begin
@@ -18,13 +18,13 @@ module Checklist::Pdf::HistoryContent
       injector = Checklist::HigherTaxaInjector.new(
         kingdom,
         {
-          :skip_id => @last_seen_id,
+          :skip_ancestor_ids => @skip_ancestor_ids,
           :expand_headers => true,
           :header_ranks => (kingdom_name == 'FLORA' ? ['FAMILY'] : nil)
         }
       )
       kingdom = injector.run
-      @last_seen_id = injector.last_seen_id
+      @skip_ancestor_ids = injector.last_ancestor_ids
 
       listed_taxa_ary = []
       kingdom.each do |tc|

@@ -9,8 +9,8 @@ namespace :import do
     files.each do |file|
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
-      ActiveRecord::Base.connection.execute("CREATE INDEX ON #{TMP_TABLE} (name, language, rank)")
       copy_data(file, TMP_TABLE)
+      ActiveRecord::Base.connection.execute("CREATE INDEX ON #{TMP_TABLE} (name, language, rank)")
       kingdom = file.split('/').last.split('_')[0].titleize
 
       sql = <<-SQL
