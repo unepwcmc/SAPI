@@ -73,7 +73,7 @@ group :development do
   gem "guard-bundler"
   gem 'annotate', ">=2.5.0"
   gem 'sextant'
-  gem 'ruby-debug19'
+  gem 'debugger'
   # Deploy with Capistrano
   gem 'capistrano'
   gem 'capistrano-ext'
