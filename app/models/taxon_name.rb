@@ -23,6 +23,7 @@ class TaxonName < ActiveRecord::Base
   end
 
   def self.upper_bound(scientific_name)
+    return "" unless scientific_name.present?
     lower = lower_bound(scientific_name)
     (lower.length >= 2 ? lower[0..lower.length - 2] : '') +
       lower[lower.length - 1].next

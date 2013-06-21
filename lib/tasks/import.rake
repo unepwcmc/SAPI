@@ -18,6 +18,7 @@ namespace :import do
     Rake::Task["import:languages"].invoke(
       'lib/assets/files/languages_utf8.csv'
     )
+    Rake::Task["import:cites_parties"].invoke
 
     Rake::Task["import:events"].invoke(
       'lib/assets/files/events_utf8.csv'
@@ -69,6 +70,7 @@ namespace :import do
     )
     Rake::Task["import:standard_reference_links"].invoke(
      'lib/assets/files/animals/animalia_standard_reference_links.csv',
+     'lib/assets/files/animals/CMS_standard_reference_links.csv',
      'lib/assets/files/plants/plantae_standard_reference_links.csv'
     )
 

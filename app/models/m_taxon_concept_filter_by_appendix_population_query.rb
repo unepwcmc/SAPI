@@ -7,7 +7,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
     @geo_entities_in_clause = geo_entities_ids.compact.join(',')
   end
 
-def relation(designation_name = 'CITES')
+  def relation(designation_name = 'CITES')
     initialize_species_listings_conditions(designation_name)
     @relation.joins(
       <<-SQL

@@ -205,7 +205,7 @@ describe Checklist::HigherTaxaInjector do
             [
               m_species1_1_1,
               m_species2_1_1
-              ], {:skip_id => m_family1.id}
+              ], {:skip_ancestor_ids => [m_family1.id]}
               )
         }
         specify{
@@ -235,7 +235,7 @@ describe Checklist::HigherTaxaInjector do
           Checklist::HigherTaxaInjector.new(
             [
               m_species1_1_1
-              ], {:skip_id => m_family1.id}
+              ], {:skip_ancestor_ids => [m_family1.id]}
               )
         }
         specify{

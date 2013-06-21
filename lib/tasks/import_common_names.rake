@@ -9,36 +9,40 @@ namespace :import do
     files.each do |file|
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
-      ActiveRecord::Base.connection.execute("CREATE INDEX ON #{TMP_TABLE} (name, language, rank)")
       copy_data(file, TMP_TABLE)
+      ActiveRecord::Base.connection.execute("CREATE INDEX ON #{TMP_TABLE} (name, language, rank)")
       kingdom = file.split('/').last.split('_')[0].titleize
 
       sql = <<-SQL
         INSERT INTO common_names(name, language_id, created_at, updated_at)
-        SELECT #{TMP_TABLE}.name, languages.id, current_date, current_date
-          FROM #{TMP_TABLE}
-          INNER JOIN languages ON UPPER(#{TMP_TABLE}.language) = UPPER(languages.iso_code3)
-          WHERE NOT EXISTS (
-            SELECT common_names.name
-              FROM common_names
-              LEFT JOIN languages ON common_names.language_id = languages.id
-              WHERE common_names.name = #{TMP_TABLE}.name AND UPPER(BTRIM(#{TMP_TABLE}.language)) = UPPER(languages.iso_code3)
-          ) AND ( UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%');
-
-        INSERT INTO taxon_commons(taxon_concept_id, common_name_id, created_at, updated_at)
-        SELECT DISTINCT taxon_concepts.id, common_names.id, current_date, current_date
-          FROM #{TMP_TABLE}
-          INNER JOIN common_names ON #{TMP_TABLE}.name = common_names.name
-          INNER JOIN languages ON UPPER(#{TMP_TABLE}.language) = UPPER(languages.iso_code3)
-          LEFT JOIN ranks ON UPPER(BTRIM(#{TMP_TABLE}.rank)) = UPPER(ranks.name)
-          LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = '#{kingdom}' AND taxon_concepts.rank_id = ranks.id
-          WHERE taxon_concepts.id IS NOT NULL AND NOT EXISTS (
-            SELECT id FROM taxon_commons
-            WHERE taxon_commons.taxon_concept_id = taxon_concepts.id AND
-              taxon_commons.common_name_id = common_names.id
-          );
+        SELECT DISTINCT ON( BTRIM(UPPER(#{TMP_TABLE}.name)), languages.id) #{TMP_TABLE}.name,
+          languages.id, current_date, current_date
+        FROM #{TMP_TABLE}
+        INNER JOIN languages ON UPPER(#{TMP_TABLE}.language) = UPPER(languages.iso_code3);
       SQL
       ActiveRecord::Base.connection.execute(sql)
+
+      [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
+        puts "Import #{taxonomy_name} common names"
+        taxonomy = Taxonomy.find_by_name(taxonomy_name)
+        sql = <<-SQL
+
+          INSERT INTO taxon_commons(taxon_concept_id, common_name_id, created_at, updated_at)
+          SELECT DISTINCT taxon_concepts.id, common_names.id, current_date, current_date
+            FROM #{TMP_TABLE}
+            INNER JOIN common_names ON UPPER(BTRIM(#{TMP_TABLE}.name)) = UPPER(common_names.name)
+            INNER JOIN languages ON UPPER(#{TMP_TABLE}.language) = UPPER(languages.iso_code3)
+            LEFT JOIN ranks ON UPPER(BTRIM(#{TMP_TABLE}.rank)) = UPPER(ranks.name)
+            LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = '#{kingdom}' AND taxon_concepts.rank_id = ranks.id
+            LEFT JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
+            WHERE taxon_concepts.id IS NOT NULL AND NOT EXISTS (
+              SELECT id FROM taxon_commons
+              WHERE taxon_commons.taxon_concept_id = taxon_concepts.id AND
+                taxon_commons.common_name_id = common_names.id
+            ) AND taxonomies.id = #{taxonomy.id}
+        SQL
+        ActiveRecord::Base.connection.execute(sql)
+      end
     end
     puts "There are now #{CommonName.count} common names in the database"
     puts "There are now #{TaxonCommon.count} taxon commons in the database."

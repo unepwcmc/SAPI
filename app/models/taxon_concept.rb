@@ -36,6 +36,8 @@ class TaxonConcept < ActiveRecord::Base
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore
 
+  has_one :m_taxon_concept, :foreign_key => :id
+
   belongs_to :parent, :class_name => 'TaxonConcept'
   has_many :children, :class_name => 'TaxonConcept', :foreign_key => :parent_id
   belongs_to :rank
@@ -90,9 +92,9 @@ class TaxonConcept < ActiveRecord::Base
   has_many :common_names, :through => :taxon_commons
 
   has_many :taxon_concept_references, :include => :reference
-  has_many :references, :through => :taxon_concept_reference
+  has_many :references, :through => :taxon_concept_references
 
-  has_many :quotas
+  has_many :quotas, :order => 'start_date DESC'
   has_many :current_quotas, :class_name => 'Quota', :conditions => "is_current = true"
 
   has_many :cites_suspensions

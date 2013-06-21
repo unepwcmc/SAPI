@@ -1,11 +1,15 @@
 class Checklist::HigherTaxaInjector
-  attr_reader :last_seen_id
+  attr_reader :last_ancestor_ids
 
-  # skip_id can be used to pass the id of last higher taxon added
-  # so that the injector does not repeat higher taxa headers across fetches
-  # last higher taxon added in this run can be retrieved through last_seen_id
+  # skip_ancestor_ids can be used to pass the array of ids of last higher taxa added
+  # e.g. if the headers for chordata -> mammalia -> antilocapridae have already been
+  # returned, you only want bovidae for the next family, so to suppress outputting
+  # chordata -> mammalia pass their ids in an array
+  # of course all that only makes sense when your fetching taxon concepts in batches
+  # but the final output needs to be continuous
+  # last higher taxa added in this run can be retrieved through last_ancestors_ids
   def initialize(taxon_concepts, options = {})
-    @skip_id = options[:skip_id]
+    @skip_ancestor_ids = options[:skip_ancestor_ids]
     @expand_headers = options[:expand_headers] || false
     @ranks = ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY', 'GENUS', 'SPECIES']
     @header_ranks = options[:header_ranks] || ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY']
@@ -52,15 +56,15 @@ class Checklist::HigherTaxaInjector
     end
 
     ranks = [ranks.last].compact unless @expand_headers
-    puts ranks.inspect
 
     res = []
-    ranks.each do |rank|
+    @last_ancestor_ids = @header_ranks.map{ |rank| curr_item.send("#{rank.downcase}_id") }
+    ranks.each_with_index do |rank, idx|
       higher_taxon_id = curr_item.send("#{rank.downcase}_id")
-      @last_seen_id = higher_taxon_id
+      
       unless (prev_item && prev_item.send("#{rank.downcase}_id") == higher_taxon_id && !@expand_headers)
         higher_taxon = @higher_taxa[higher_taxon_id]
-        if higher_taxon && higher_taxon.id != @skip_id
+        if higher_taxon && !(@skip_ancestor_ids && @skip_ancestor_ids.include?(higher_taxon.id))
           res << higher_taxon
         end
       end
