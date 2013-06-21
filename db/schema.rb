@@ -11,23 +11,23 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130507161852) do
+ActiveRecord::Schema.define(:version => 20130620075330) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
     t.string   "parent_symbol"
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
+    t.boolean  "display_in_index",    :default => false, :null => false
+    t.boolean  "display_in_footnote", :default => false, :null => false
     t.text     "short_note_en"
     t.text     "full_note_en"
     t.text     "short_note_fr"
     t.text     "full_note_fr"
     t.text     "short_note_es"
     t.text     "full_note_es"
-    t.boolean  "display_in_index",    :default => false, :null => false
-    t.boolean  "display_in_footnote", :default => false, :null => false
     t.integer  "source_id"
     t.integer  "event_id"
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
   end
 
   create_table "change_types", :force => true do |t|
@@ -37,6 +37,13 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
     t.datetime "updated_at",     :null => false
   end
 
+  create_table "cites_suspension_confirmations", :force => true do |t|
+    t.integer  "cites_suspension_id",              :null => false
+    t.integer  "cites_suspension_notification_id", :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+  end
+
   create_table "common_names", :force => true do |t|
     t.string   "name",        :null => false
     t.integer  "language_id", :null => false
@@ -44,11 +51,18 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
     t.datetime "updated_at",  :null => false
   end
 
+  create_table "designation_geo_entities", :force => true do |t|
+    t.integer  "designation_id", :null => false
+    t.integer  "geo_entity_id",  :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
   create_table "designations", :force => true do |t|
     t.string   "name",                       :null => false
+    t.integer  "taxonomy_id", :default => 1, :null => false
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
-    t.integer  "taxonomy_id", :default => 1, :null => false
   end
 
   create_table "distribution_references", :force => true do |t|
@@ -69,11 +83,11 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
     t.string   "doc_type"
     t.string   "format"
     t.string   "status",       :default => "working"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
     t.string   "path"
     t.string   "filename"
     t.string   "display_name"
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
   end
 
   create_table "eu_decisions", :force => true do |t|
@@ -97,30 +111,33 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
 
   create_table "events", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
     t.integer  "designation_id"
-    t.datetime "effective_at"
-    t.datetime "published_at"
     t.text     "description"
     t.text     "url"
     t.boolean  "is_current",     :default => false,   :null => false
     t.string   "type",           :default => "Event", :null => false
+    t.datetime "effective_at"
+    t.datetime "published_at"
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.integer  "legacy_id"
+    t.datetime "end_date"
+    t.string   "subtype"
   end
 
   create_table "geo_entities", :force => true do |t|
     t.integer  "geo_entity_type_id",                   :null => false
     t.string   "name_en",                              :null => false
+    t.string   "name_fr"
+    t.string   "name_es"
     t.string   "long_name"
     t.string   "iso_code2"
     t.string   "iso_code3"
     t.integer  "legacy_id"
     t.string   "legacy_type"
+    t.boolean  "is_current",         :default => true
     t.datetime "created_at",                           :null => false
     t.datetime "updated_at",                           :null => false
-    t.boolean  "is_current",         :default => true
-    t.string   "name_fr"
-    t.string   "name_es"
   end
 
   create_table "geo_entity_types", :force => true do |t|
@@ -144,30 +161,30 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
   end
 
   create_table "languages", :force => true do |t|
-    t.string   "name_en"
-    t.string   "iso_code1"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string   "name_en",    :null => false
     t.string   "name_fr"
     t.string   "name_es"
-    t.string   "iso_code3"
+    t.string   "iso_code1"
+    t.string   "iso_code3",  :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "listing_changes", :force => true do |t|
     t.integer  "taxon_concept_id",                                              :null => false
     t.integer  "species_listing_id"
     t.integer  "change_type_id",                                                :null => false
+    t.integer  "annotation_id"
+    t.integer  "hash_annotation_id"
     t.datetime "effective_at",               :default => '2012-09-21 07:32:20', :null => false
     t.boolean  "is_current",                 :default => false,                 :null => false
-    t.integer  "annotation_id"
     t.integer  "parent_id"
     t.integer  "inclusion_taxon_concept_id"
+    t.integer  "event_id"
+    t.integer  "source_id"
+    t.boolean  "explicit_change",            :default => true
     t.datetime "created_at",                                                    :null => false
     t.datetime "updated_at",                                                    :null => false
-    t.integer  "hash_annotation_id"
-    t.integer  "event_id"
-    t.boolean  "explicit_change",            :default => true
-    t.integer  "source_id"
   end
 
   add_index "listing_changes", ["annotation_id"], :name => "index_listing_changes_on_annotation_id"
@@ -184,8 +201,9 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
     t.integer  "change_type_id"
     t.string   "change_type_name"
     t.integer  "designation_id"
+    t.string   "designation_name"
     t.integer  "party_id"
-    t.string   "party_name"
+    t.string   "party_iso_code"
     t.string   "ann_symbol"
     t.text     "full_note_en"
     t.text     "full_note_es"
@@ -207,16 +225,13 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
     t.datetime "expiry"
   end
 
-  add_index "listing_changes_mview", ["id"], :name => "listing_changes_mview_on_id", :unique => true
-  add_index "listing_changes_mview", ["taxon_concept_id"], :name => "listing_changes_mview_on_taxon_concept_id"
-
   create_table "listing_distributions", :force => true do |t|
     t.integer  "listing_change_id",                   :null => false
     t.integer  "geo_entity_id",                       :null => false
     t.boolean  "is_party",          :default => true, :null => false
+    t.integer  "source_id"
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
-    t.integer  "source_id"
   end
 
   add_index "listing_distributions", ["geo_entity_id"], :name => "index_listing_distributions_on_geo_entity_id"
@@ -241,12 +256,12 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
     t.text     "title",       :null => false
     t.string   "year"
     t.string   "author"
+    t.text     "citation"
+    t.text     "publisher"
     t.integer  "legacy_id"
     t.string   "legacy_type"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-    t.text     "citation"
-    t.text     "publisher"
   end
 
   create_table "references_legacy_id_mapping", :force => true do |t|
@@ -288,16 +303,19 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
   end
 
   create_table "taxon_concept_references", :force => true do |t|
-    t.integer "taxon_concept_id",                                              :null => false
-    t.integer "reference_id",                                                  :null => false
-    t.boolean "is_standard",                                :default => false, :null => false
-    t.boolean "is_cascaded",                                :default => false, :null => false
-    t.string  "excluded_taxon_concepts_ids", :limit => nil
+    t.integer  "taxon_concept_id",                                              :null => false
+    t.integer  "reference_id",                                                  :null => false
+    t.boolean  "is_standard",                                :default => false, :null => false
+    t.boolean  "is_cascaded",                                :default => false, :null => false
+    t.datetime "created_at",                                                    :null => false
+    t.datetime "updated_at",                                                    :null => false
+    t.string   "excluded_taxon_concepts_ids", :limit => nil
   end
 
   add_index "taxon_concept_references", ["taxon_concept_id", "reference_id"], :name => "index_taxon_concept_references_on_taxon_concept_id_and_ref_id"
 
   create_table "taxon_concepts", :force => true do |t|
+    t.integer  "taxonomy_id",        :default => 1,   :null => false
     t.integer  "parent_id"
     t.integer  "rank_id",                             :null => false
     t.integer  "taxon_name_id",                       :null => false
@@ -312,7 +330,6 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
     t.string   "name_status",        :default => "A", :null => false
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
-    t.integer  "taxonomy_id",        :default => 1,   :null => false
   end
 
   add_index "taxon_concepts", ["parent_id"], :name => "index_taxon_concepts_on_parent_id"
@@ -373,8 +390,8 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
     t.datetime "updated_at"
     t.integer  "taxon_concept_id_com"
     t.string   "english_names_ary",                :limit => nil
-    t.string   "french_names_ary",                 :limit => nil
     t.string   "spanish_names_ary",                :limit => nil
+    t.string   "french_names_ary",                 :limit => nil
     t.integer  "taxon_concept_id_syn"
     t.string   "synonyms_ary",                     :limit => nil
     t.string   "synonyms_author_years_ary",        :limit => nil
@@ -382,11 +399,6 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
     t.boolean  "dirty"
     t.datetime "expiry"
   end
-
-  add_index "taxon_concepts_mview", ["full_name"], :name => "taxon_concepts_mview_on_full_name"
-  add_index "taxon_concepts_mview", ["id"], :name => "taxon_concepts_mview_on_id", :unique => true
-  add_index "taxon_concepts_mview", ["parent_id"], :name => "taxon_concepts_mview_on_parent_id"
-  add_index "taxon_concepts_mview", ["taxonomy_is_cites_eu", "cites_listed", "kingdom_position"], :name => "taxon_concepts_mview_on_history_filter"
 
   create_table "taxon_names", :force => true do |t|
     t.string   "scientific_name", :null => false
@@ -416,11 +428,16 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
     t.datetime "updated_at",                                  :null => false
   end
 
-  create_table "trade_annual_reports", :force => true do |t|
-    t.integer  "country_id"
-    t.integer  "year"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+  create_table "trade_annual_report_uploads", :force => true do |t|
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
+    t.boolean  "is_done",            :default => false
+    t.integer  "number_of_rows"
+    t.text     "csv_source_file"
+    t.integer  "trading_country_id",                    :null => false
+    t.string   "point_of_view",      :default => "E",   :null => false
   end
 
   create_table "trade_codes", :force => true do |t|
@@ -431,6 +448,20 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
     t.string   "name_fr"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "trade_exporter_permits", :force => true do |t|
+    t.integer  "trade_permit_id"
+    t.integer  "trade_shipment_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  create_table "trade_permits", :force => true do |t|
+    t.string   "number"
+    t.integer  "geo_entity_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "trade_restriction_purposes", :force => true do |t|
@@ -462,14 +493,64 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
     t.float    "quota"
     t.datetime "publication_date"
     t.text     "notes"
-    t.string   "suspension_basis"
     t.string   "type"
     t.integer  "unit_id"
     t.integer  "taxon_concept_id"
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
-    t.boolean  "public_display",   :default => true
+    t.boolean  "public_display",                             :default => true
     t.text     "url"
+    t.datetime "created_at",                                                   :null => false
+    t.datetime "updated_at",                                                   :null => false
+    t.integer  "start_notification_id"
+    t.integer  "end_notification_id"
+    t.string   "excluded_taxon_concepts_ids", :limit => nil
+  end
+
+  create_table "trade_sandbox_template", :force => true do |t|
+    t.string "appendix"
+    t.string "species_name"
+    t.string "term_code"
+    t.string "quantity"
+    t.string "unit_code"
+    t.string "trading_partner"
+    t.string "country_of_origin"
+    t.string "export_permit"
+    t.string "origin_permit"
+    t.string "purpose_code"
+    t.string "source_code"
+    t.string "year"
+    t.string "import_permit"
+  end
+
+  create_table "trade_shipments", :force => true do |t|
+    t.integer  "source_id"
+    t.integer  "unit_id"
+    t.integer  "purpose_id"
+    t.integer  "term_id"
+    t.decimal  "quantity"
+    t.string   "reported_appendix"
+    t.string   "appendix"
+    t.integer  "trade_annual_report_upload_id"
+    t.integer  "exporter_id"
+    t.integer  "importer_id"
+    t.integer  "country_of_origin_id"
+    t.integer  "country_of_origin_permit_id"
+    t.integer  "import_permit_id"
+    t.boolean  "reported_by_exporter"
+    t.integer  "taxon_concept_id"
+    t.string   "reported_species_name"
+    t.integer  "year"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  create_table "trade_validation_rules", :force => true do |t|
+    t.string   "valid_values_view"
+    t.string   "type",              :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.string   "format_re"
+    t.integer  "run_order",         :null => false
+    t.string   "column_names"
   end
 
   create_table "users", :force => true do |t|
@@ -479,11 +560,18 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
     t.datetime "updated_at", :null => false
   end
 
+  add_foreign_key "annotations", "annotations", :name => "annotations_source_id_fk", :column => "source_id"
   add_foreign_key "annotations", "events", :name => "annotations_event_id_fk"
 
   add_foreign_key "change_types", "designations", :name => "change_types_designation_id_fk"
 
+  add_foreign_key "cites_suspension_confirmations", "events", :name => "cites_suspension_confirmations_notification_id_fk", :column => "cites_suspension_notification_id"
+  add_foreign_key "cites_suspension_confirmations", "trade_restrictions", :name => "cites_suspension_confirmations_cites_suspension_id_fk", :column => "cites_suspension_id"
+
   add_foreign_key "common_names", "languages", :name => "common_names_language_id_fk"
+
+  add_foreign_key "designation_geo_entities", "designations", :name => "designation_geo_entities_designation_id_fk"
+  add_foreign_key "designation_geo_entities", "geo_entities", :name => "designation_geo_entities_geo_entity_id_fk"
 
   add_foreign_key "designations", "taxonomies", :name => "designations_taxonomy_id_fk"
 
@@ -508,16 +596,18 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
   add_foreign_key "geo_relationships", "geo_relationship_types", :name => "geo_relationships_geo_relationship_type_id_fk"
 
   add_foreign_key "listing_changes", "annotations", :name => "listing_changes_annotation_id_fk"
-  add_foreign_key "listing_changes", "annotations", :name => "listing_changes_hash_annotation_id_fk"
+  add_foreign_key "listing_changes", "annotations", :name => "listing_changes_hash_annotation_id_fk", :column => "hash_annotation_id"
   add_foreign_key "listing_changes", "change_types", :name => "listing_changes_change_type_id_fk"
   add_foreign_key "listing_changes", "events", :name => "listing_changes_event_id_fk"
   add_foreign_key "listing_changes", "listing_changes", :name => "listing_changes_parent_id_fk", :column => "parent_id"
+  add_foreign_key "listing_changes", "listing_changes", :name => "listing_changes_source_id_fk", :column => "source_id"
   add_foreign_key "listing_changes", "species_listings", :name => "listing_changes_species_listing_id_fk"
-  add_foreign_key "listing_changes", "taxon_concepts", :name => "listing_changes_inclusion_taxon_concept_id_fk"
+  add_foreign_key "listing_changes", "taxon_concepts", :name => "listing_changes_inclusion_taxon_concept_id_fk", :column => "inclusion_taxon_concept_id"
   add_foreign_key "listing_changes", "taxon_concepts", :name => "listing_changes_taxon_concept_id_fk"
 
   add_foreign_key "listing_distributions", "geo_entities", :name => "listing_distributions_geo_entity_id_fk"
   add_foreign_key "listing_distributions", "listing_changes", :name => "listing_distributions_listing_change_id_fk"
+  add_foreign_key "listing_distributions", "listing_distributions", :name => "listing_distributions_source_id_fk", :column => "source_id"
 
   add_foreign_key "species_listings", "designations", :name => "species_listings_designation_id_fk"
 
@@ -535,8 +625,40 @@ ActiveRecord::Schema.define(:version => 20130507161852) do
   add_foreign_key "taxon_relationships", "taxon_concepts", :name => "taxon_relationships_taxon_concept_id_fk"
   add_foreign_key "taxon_relationships", "taxon_relationship_types", :name => "taxon_relationships_taxon_relationship_type_id_fk"
 
+  add_foreign_key "trade_annual_report_uploads", "geo_entities", :name => "trade_annual_report_uploads_trading_country_id_fk", :column => "trading_country_id"
+  add_foreign_key "trade_annual_report_uploads", "users", :name => "trade_annual_report_uploads_created_by_fk", :column => "created_by"
+  add_foreign_key "trade_annual_report_uploads", "users", :name => "trade_annual_report_uploads_updated_by_fk", :column => "updated_by"
+
+  add_foreign_key "trade_exporter_permits", "trade_permits", :name => "trade_exporter_permits_trade_permit_id_fk"
+  add_foreign_key "trade_exporter_permits", "trade_permits", :name => "trade_exporter_permits_trade_shipment_id_fk", :column => "trade_shipment_id"
+
+  add_foreign_key "trade_permits", "geo_entities", :name => "trade_permits_geo_entity_id_fk"
+
+  add_foreign_key "trade_restriction_purposes", "trade_codes", :name => "trade_restriction_purposes_purpose_id", :column => "purpose_id"
+  add_foreign_key "trade_restriction_purposes", "trade_restrictions", :name => "trade_restriction_purposes_trade_restriction_id"
+
+  add_foreign_key "trade_restriction_sources", "trade_codes", :name => "trade_restriction_sources_source_id", :column => "source_id"
+  add_foreign_key "trade_restriction_sources", "trade_restrictions", :name => "trade_restriction_sources_trade_restriction_id"
+
+  add_foreign_key "trade_restriction_terms", "trade_codes", :name => "trade_restriction_terms_term_id", :column => "term_id"
+  add_foreign_key "trade_restriction_terms", "trade_restrictions", :name => "trade_restriction_terms_trade_restriction_id"
+
+  add_foreign_key "trade_restrictions", "events", :name => "trade_restrictions_end_notification_id_fk", :column => "end_notification_id"
+  add_foreign_key "trade_restrictions", "events", :name => "trade_restrictions_start_notification_id_fk", :column => "start_notification_id"
   add_foreign_key "trade_restrictions", "geo_entities", :name => "trade_restrictions_geo_entity_id_fk"
   add_foreign_key "trade_restrictions", "taxon_concepts", :name => "trade_restrictions_taxon_concept_id_fk"
   add_foreign_key "trade_restrictions", "trade_codes", :name => "trade_restrictions_unit_id_fk", :column => "unit_id"
+
+  add_foreign_key "trade_shipments", "geo_entities", :name => "trade_shipments_country_of_origin_id_fk", :column => "country_of_origin_id"
+  add_foreign_key "trade_shipments", "geo_entities", :name => "trade_shipments_exporter_id_fk", :column => "exporter_id"
+  add_foreign_key "trade_shipments", "geo_entities", :name => "trade_shipments_importer_id_fk", :column => "importer_id"
+  add_foreign_key "trade_shipments", "taxon_concepts", :name => "trade_shipments_taxon_concept_id_fk"
+  add_foreign_key "trade_shipments", "trade_annual_report_uploads", :name => "trade_shipments_trade_annual_report_upload_id_fk"
+  add_foreign_key "trade_shipments", "trade_codes", :name => "trade_shipments_purpose_id_fk", :column => "purpose_id"
+  add_foreign_key "trade_shipments", "trade_codes", :name => "trade_shipments_source_id_fk", :column => "source_id"
+  add_foreign_key "trade_shipments", "trade_codes", :name => "trade_shipments_term_id_fk", :column => "term_id"
+  add_foreign_key "trade_shipments", "trade_codes", :name => "trade_shipments_unit_id_fk", :column => "unit_id"
+  add_foreign_key "trade_shipments", "trade_permits", :name => "trade_shipments_country_of_origin_permit_id_fk", :column => "country_of_origin_permit_id"
+  add_foreign_key "trade_shipments", "trade_permits", :name => "trade_shipments_import_permit_id_fk", :column => "import_permit_id"
 
 end
