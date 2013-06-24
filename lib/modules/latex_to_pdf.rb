@@ -49,7 +49,7 @@ class LatexToPdf
         end
       else
         class << (@latex_escaper=Object.new)
-          ESCAPE_RE=/([{}_$&%#])|([\\^~|<>])/
+          ESCAPE_RE=/([{}_$&%#\r])|([\\^~|<>])/
           ESC_MAP={
             '\\' => 'backslash',
             '^' => 'asciicircum',
