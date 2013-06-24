@@ -4,6 +4,7 @@ namespace :import do
   task :eu_listings, 10.times.map { |i| "file_#{i}".to_sym } => [:environment, "eu_listings:defaults"] do |t, args|
     TMP_TABLE = 'eu_listings_import'
     designation = Designation.find_by_name(Designation::EU)
+    taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
     puts "There are #{ListingChange.joins(:species_listing).
       where(:species_listings => {:designation_id => designation.id}).count} EU listings in the database"
     puts "There are #{ListingDistribution.joins(:listing_change => :species_listing).
@@ -93,10 +94,12 @@ namespace :import do
           ON taxon_concepts.legacy_id = TMP.legacy_id
           AND taxon_concepts.legacy_type = '#{kingdom}'
           AND taxon_concepts.rank_id = ranks.id
+          AND taxon_concepts.taxonomy_id = #{taxonomy.id}
           LEFT JOIN taxon_concepts inclusion_taxon_concepts
           ON inclusion_taxon_concepts.legacy_id = TMP.included_in_rec_id
           AND inclusion_taxon_concepts.legacy_type = '#{kingdom}'
           AND inclusion_taxon_concepts.rank_id = inclusion_ranks.id
+          AND inclusion_taxon_concepts.taxonomy_id = #{taxonomy.id}
           LEFT JOIN new_annotations ON new_annotations.import_row_id = TMP.row_id
           LEFT JOIN annotations AS hash_annotations
             ON UPPER(hash_annotations.parent_symbol || ' ' || hash_annotations.symbol) = BTRIM(UPPER(TMP.hash_note))
@@ -135,6 +138,7 @@ namespace :import do
           ON exclusion_taxon_concepts.legacy_id = exclusion_legacy_id::INTEGER
           AND exclusion_taxon_concepts.legacy_type = '#{kingdom}'
           AND exclusion_taxon_concepts.rank_id = exclusion_ranks.id
+          AND exclusion_taxon_concepts.taxonomy_id = #{taxonomy.id}
         INNER JOIN listing_changes
           ON row_id = import_row_id
       ) q
