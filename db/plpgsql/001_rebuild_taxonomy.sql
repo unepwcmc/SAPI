@@ -114,8 +114,11 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_plantae_node(node_id 
     IF rank_name IN ('KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY')  THEN
       -- rebuild higher taxonomic ranks
       WITH plantae_root AS (
-        SELECT id, taxonomic_position
+        SELECT taxon_concepts.id, taxonomic_position
         FROM taxon_concepts
+        JOIN taxonomies
+        ON taxonomies.id = taxon_concepts.taxonomy_id
+        AND taxonomies.name = 'CITES_EU'
         WHERE full_name = 'Plantae'
       ), missing_higher_taxa AS (
         UPDATE taxon_concepts
@@ -216,9 +219,29 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_node(node_id integer)
       END IF;
     ELSE
       -- rebuild animalia and plantae trees separately
-      SELECT id INTO kingdom_node_id FROM taxon_concepts WHERE full_name = 'Animalia';
+      -- CITES Animalia
+      SELECT taxon_concepts.id INTO kingdom_node_id
+      FROM taxon_concepts
+      JOIN taxonomies
+      ON taxonomies.id = taxon_concepts.taxonomy_id
+      AND taxonomies.name = 'CITES_EU'
+      WHERE full_name = 'Animalia';
       PERFORM rebuild_taxonomic_positions_for_animalia_node(kingdom_node_id);
-      SELECT id INTO kingdom_node_id FROM taxon_concepts WHERE full_name = 'Plantae';
+      -- CMS Animalia
+      SELECT taxon_concepts.id INTO kingdom_node_id
+      FROM taxon_concepts
+      JOIN taxonomies
+      ON taxonomies.id = taxon_concepts.taxonomy_id
+      AND taxonomies.name = 'CMS'
+      WHERE full_name = 'Animalia';
+      PERFORM rebuild_taxonomic_positions_for_animalia_node(kingdom_node_id);
+      -- CITES Plantae
+      SELECT taxon_concepts.id INTO kingdom_node_id
+      FROM taxon_concepts
+      JOIN taxonomies
+      ON taxonomies.id = taxon_concepts.taxonomy_id
+      AND taxonomies.name = 'CITES_EU'
+      WHERE full_name = 'Plantae';
       PERFORM rebuild_taxonomic_positions_for_plantae_node(kingdom_node_id, 'KINGDOM');
     END IF;
 

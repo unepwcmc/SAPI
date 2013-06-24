@@ -73,7 +73,7 @@ group :development do
   gem "guard-bundler"
   gem 'annotate', ">=2.5.0"
   gem 'sextant'
-  gem 'ruby-debug19'
+  gem 'debugger'
   # Deploy with Capistrano
   gem 'capistrano'
   gem 'capistrano-ext'
@@ -93,7 +93,7 @@ end
 group :test do
   gem "factory_girl_rails", "~> 4.0"
   gem 'simplecov', :require => false
-  gem 'coveralls', require: false
+  gem 'coveralls', :require => false
 end
 
 gem 'rake', '~> 10.0.3'
