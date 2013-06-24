@@ -29,7 +29,7 @@ class Checklist::History < Checklist::Checklist
   end
 
   def prepare_main_query
-    @taxon_concepts_rel = MTaxonConcept.
+    @taxon_concepts_rel = MTaxonConcept.where(:taxonomy_is_cites_eu => true).
        includes(:listing_changes).
         where(<<-SQL
           listing_changes_mview.change_type_name != 'EXCEPTION'
