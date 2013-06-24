@@ -48,7 +48,8 @@ SAPI::Application.routes.draw do
       get :autocomplete, :on => :collection
       resources :geo_relationships, :only => [:index, :create, :update, :destroy]
     end
-    resources :cites_plant_annotations, :only => [:index, :create, :update, :destroy]
+    resources :cites_hash_annotations, :only => [:index, :create, :update, :destroy]
+    resources :eu_hash_annotations, :only => [:index, :create, :update, :destroy]
     resources :cites_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
     resources :taxon_concepts, :only => [:index, :create, :edit, :update, :destroy] do
       get :autocomplete, :on => :collection

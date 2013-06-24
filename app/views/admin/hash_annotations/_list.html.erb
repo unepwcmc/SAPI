@@ -9,7 +9,8 @@
     <tr>
       <td>
         <a href="#" class="editable editable-click editable-required" data-type="select" data-resource="annotation" data-name="event_id"
-          data-placeholder="Required" data-original-title="Enter the annotation's CoP event" data-source="/admin/cites_cops/"
+          data-placeholder="Required" data-original-title="Enter the annotation's event" 
+          data-source="<%= controller_name == 'cites_hash_annotations' ? '/admin/cites_cops/' : '/admin/eu_regulations' %>"
           data-url="<%= resource_url(annotation) %>" data-pk="<%= annotation.id %>" data-value="<%= annotation.event.id %>">
           <%= annotation.event.name %>
         </a>
