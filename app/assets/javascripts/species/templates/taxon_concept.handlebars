@@ -55,17 +55,17 @@
         </thead>
         <tbody>
           {{#each listing in controller.citesListings}}
-          <tr {{bindAttr class="listing.is_current:current"}}>
-            <td>&nbsp;</td>
-            <td>
-              <!--img src="assets/species/ico_annex_A.png" alt="" width="27" height="27" /-->
-              {{listing.species_listing_name}} {{listing.change_type_name}}
-            </td>
-            <td>{{listing.party_full_name}}</td>
-            <td>{{listing.effective_at_formatted}}</td>
-            <td>{{listing.short_note_en}}</td>
-            <td class="last">&nbsp;</td>
-          </tr>
+            <tr {{bindAttr class="listing.is_current:current"}}>
+              <td>&nbsp;</td>
+              <td>
+                <!--img src="assets/species/ico_annex_A.png" alt="" width="27" height="27" /-->
+                {{listing.species_listing_name}} {{listing.change_type_name}}
+              </td>
+              <td>{{listing.party_full_name}}</td>
+              <td>{{listing.effective_at_formatted}}</td>
+              <td>{{listing.short_note_en}}</td>
+              <td class="last">&nbsp;</td>
+            </tr>
           {{/each}}
         </tbody>
       </table>
@@ -159,6 +159,20 @@
           </tr>
         </thead>
         <tbody>
+          {{#each listing in controller.euListings}}
+            <tr {{bindAttr class="listing.is_current:current"}}>
+              <td>&nbsp;</td>
+              <td>
+                <img src="assets/species/ico_annex_{{unbound listing.species_listing_name}}.png" alt="" width="27" height="27" />
+                {{listing.change_type_name}}
+              </td>
+              <td>{{listing.party_full_name}}</td>
+              <td>{{listing.effective_at_formatted}}</td>
+              <td>{{listing.short_note_en}}</td>
+              <td>{{listing.event_name}}</td>
+              <td class="last">&nbsp;</td>
+            </tr>
+          {{/each}}
           <tr class="current">
             <td>&nbsp;</td>
             <td><img src="assets/species/ico_annex_A.png" alt="" width="27" height="27" /></td>

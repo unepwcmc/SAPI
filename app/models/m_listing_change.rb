@@ -41,6 +41,7 @@ class MListingChange < ActiveRecord::Base
 
   belongs_to :designation
   belongs_to :taxon_concept, :class_name => 'MTaxonConcept'
+  belongs_to :listing_change, :foreign_key => :id
 
   def effective_at_formatted
     effective_at.strftime("%d/%m/%y")
