@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Timeline do
+describe Checklist::Timeline do
   context "when deleted" do
     let(:tc){
       tc = create_cites_eu_species
@@ -17,7 +17,7 @@ describe Timeline do
       Sapi::rebuild(:except => [:taxonomy])
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ TimelinesForTaxonConcept.new(tc.id)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc.id)}
     let(:subject){ ttc.timelines.first }
 
     specify{ subject.timeline_intervals.count.should == 1 }
@@ -77,7 +77,7 @@ describe Timeline do
       Sapi::rebuild(:except => [:taxonomy])
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ TimelinesForTaxonConcept.new(tc.id)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc.id)}
     let(:subject){ ttc.timelines.last }
 
     specify{ subject.timeline_intervals.count.should == 3 }
@@ -106,7 +106,7 @@ describe Timeline do
       Sapi::rebuild(:except => [:taxonomy])
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ TimelinesForTaxonConcept.new(tc.id)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc.id)}
     let(:subject){ ttc.timelines.first }
 
     specify{ subject.timeline_intervals.count.should == 2 }
@@ -129,7 +129,7 @@ describe Timeline do
       Sapi::rebuild(:except => [:taxonomy])
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ TimelinesForTaxonConcept.new(tc.id)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc.id)}
     let(:subject){ ttc.timelines.first }
 
     specify{
@@ -138,8 +138,4 @@ describe Timeline do
     }
   end
 
-  describe :attributes do
-    subject{ Timeline.new(:appendix => 'X') }
-    specify{ subject.attributes['id'].should_not be_blank }
-  end
 end
