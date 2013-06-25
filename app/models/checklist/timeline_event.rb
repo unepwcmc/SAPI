@@ -1,5 +1,5 @@
-class TimelineEvent
-  include ActiveModel::Serializers::JSON
+class Checklist::TimelineEvent
+  include ActiveModel::SerializerSupport
   attr_accessor :id, :change_type_name, :species_listing_name, :effective_at,
     :party_id, :is_current, :pos, :short_note_en, :full_note_en,
     :hash_full_note_en, :hash_ann_symbol, :hash_ann_parent_symbol
@@ -25,23 +25,6 @@ class TimelineEvent
     @effective_at = options[:effective_at]
     @is_current = options[:is_current]
     @species_listing_name = options[:species_listing_name]
-  end
-
-  def attributes
-    {
-      'id' => id,
-      'change_type_name' => change_type_name,
-      'species_listing_name' => species_listing_name,
-      'effective_at_formatted' => effective_at_formatted,
-      'party_id' => party_id,
-      'is_current' => is_current,
-      'short_note_en' => short_note_en,
-      'full_note_en' => full_note_en,
-      'hash_full_note_en' => hash_full_note_en,
-      'hash_ann_symbol' => hash_ann_symbol,
-      'hash_ann_parent_symbol' => hash_ann_parent_symbol,
-      'pos' => pos
-    }
   end
 
   def is_addition?
