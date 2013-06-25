@@ -37,6 +37,9 @@ class TaxonConcept < ActiveRecord::Base
   serialize :listing, ActiveRecord::Coders::Hstore
 
   has_one :m_taxon_concept, :foreign_key => :id
+  has_many :cites_listing_changes, :class_name => 'MListingChange',
+    :order => 'is_current DESC,  effective_at DESC',
+    :conditions => {:designation_id => Designation.find_by_name(Designation::CITES).id}
 
   belongs_to :parent, :class_name => 'TaxonConcept'
   has_many :children, :class_name => 'TaxonConcept', :foreign_key => :parent_id
