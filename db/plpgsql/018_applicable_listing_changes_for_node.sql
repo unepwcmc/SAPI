@@ -1,7 +1,6 @@
-
-
 CREATE OR REPLACE FUNCTION applicable_listing_changes_for_node(in_designation_id INT, node_id INT)
 RETURNS SETOF  INT
+
 STABLE
 AS $$
 
@@ -49,7 +48,6 @@ FROM listing_changes_timeline
 WHERE is_applicable
 ORDER BY timeline_position;
 $$ LANGUAGE SQL;
-
 
 COMMENT ON FUNCTION applicable_listing_changes_for_node(in_designation_id INT, node_id INT) IS
   'Returns applicable listing changes for a given node, including own and ancestors.'
