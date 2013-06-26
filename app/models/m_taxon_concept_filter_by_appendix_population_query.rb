@@ -4,7 +4,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
     @relation = relation
     @appendix_abbreviations = appendix_abbreviations
     @geo_entities_ids = GeoEntity.nodes_and_descendants(geo_entities_ids).map(&:id)
-    @geo_entities_in_clause = geo_entities_ids.compact.join(',')
+    @geo_entities_in_clause = @geo_entities_ids.compact.join(',')
   end
 
   def relation(designation_name = 'CITES')
