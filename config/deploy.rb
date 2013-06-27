@@ -1,12 +1,11 @@
 set :default_stage, 'staging'
 require 'capistrano/ext/multistage'
-## Generated with 'brightbox' on 2012-05-08 09:53:55 +0100
+## Generated with 'brightbox' on 2013-06-27 08:45:55 +0100
 gem 'brightbox', '>=2.3.9'
 require 'brightbox/recipes'
 require 'brightbox/passenger'
 require 'sidekiq/capistrano'
-load "deploy/assets"
-set :rake, 'bundle exec rake'
+
 # The name of your application.  Used for deployment directory and filenames
 # and Apache configs. Should be unique on the Brightbox
 set :application, "sapi"
@@ -61,7 +60,6 @@ set :copy_exclude, [ '.git' ]
 #
 # The shared area is prepared with 'deploy:setup' and all the shared
 # items are symlinked in when the code is updated.
-# set :local_shared_dirs, %w(public/upload)
 set :local_shared_files, %w(config/database.yml)
 set :local_shared_dirs, %w(tmp/pids public/downloads public/uploads)
 
