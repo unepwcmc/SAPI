@@ -1,14 +1,25 @@
-class CreateCascadedListingChangesView < ActiveRecord::Migration
-  def change
-execute <<-SQL
+CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  BEGIN
+    PERFORM rebuild_all_listing_changes_mview();
+
+    RAISE NOTICE 'Dropping listing changes materialized view';
+    DROP table IF EXISTS listing_changes_mview CASCADE;
+
+    RAISE NOTICE 'Dropping listing changes view';
     DROP VIEW IF EXISTS listing_changes_view;
+
+    RAISE NOTICE 'Creating listing changes view';
     CREATE VIEW listing_changes_view AS
     WITH applicable_listing_changes AS (
-      SELECT taxon_concepts.id AS taxon_concept_id, applicable_listing_changes_for_node(taxon_concepts.id) AS id
-      FROM taxon_concepts
+        SELECT designation_id, affected_taxon_concept_id,
+        applicable_listing_changes_for_node(designation_id, affected_taxon_concept_id) AS listing_change_id
+        FROM all_listing_changes_mview
+        GROUP BY designation_id, affected_taxon_concept_id
     )
     SELECT
-    applicable_listing_changes.taxon_concept_id AS taxon_concept_id,
+    applicable_listing_changes.affected_taxon_concept_id AS taxon_concept_id,
     listing_changes.id AS id,
     listing_changes.taxon_concept_id AS original_taxon_concept_id,
     effective_at,
@@ -38,7 +49,7 @@ execute <<-SQL
     populations.countries_ids_ary
     FROM
     applicable_listing_changes
-    JOIN listing_changes On applicable_listing_changes.id  = listing_changes.id
+    JOIN listing_changes ON applicable_listing_changes.listing_change_id  = listing_changes.id
     INNER JOIN change_types
     ON listing_changes.change_type_id = change_types.id
     INNER JOIN designations
@@ -68,10 +79,17 @@ execute <<-SQL
     WHEN change_types.name = 'RESERVATION' THEN 1
     WHEN change_types.name = 'RESERVATION_WITHDRAWAL' THEN 2
     WHEN change_types.name = 'DELETION' THEN 3
-    END
-  SQL
+    END;
 
-    Sapi::rebuild_listing_changes_mview
 
-  end
-end
+    RAISE NOTICE 'Creating listing changes materialized view';
+    CREATE TABLE listing_changes_mview AS
+    SELECT *,
+    false as dirty,
+    null::timestamp with time zone as expiry
+    FROM listing_changes_view;
+
+    RAISE NOTICE 'Dropping all listing changes materialized view';
+    DROP table IF EXISTS all_listing_changes_mview CASCADE;
+  END;
+  $$;
