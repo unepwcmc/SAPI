@@ -6,7 +6,10 @@ class Checklist::TimelinesForTaxonConcept
   def initialize(taxon_concept_id)
     @taxon_concept_id = taxon_concept_id
     @id = @taxon_concept_id
-    listing_changes = MListingChange.applicable_listing_changes(@taxon_concept_id)
+    taxon_concept = MTaxonConcept.joins(:listing_changes).
+      includes(:listing_changes).
+      where(:"taxon_concepts_mview.id" => taxon_concept_id).first
+    listing_changes = taxon_concept ? taxon_concept.listing_changes : []
     @timeline_events = listing_changes.map(&:to_timeline_event)
     @time_start = Time.new('1975-01-01')
     @time_end = Time.new("#{Time.now.year + 1}-01-01")

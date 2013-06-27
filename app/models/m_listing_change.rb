@@ -86,20 +86,4 @@ class MListingChange < ActiveRecord::Base
     )
   end
 
-  def self.applicable_listing_changes(designation_id, taxon_concept_id)
-    sql = <<-SQL
-      SELECT listing_changes_mview.*
-      FROM applicable_listing_changes_for_node(?,?) applicable_listing_changes
-      JOIN listing_changes_mview
-      ON applicable_listing_changes.id = listing_changes_mview.id
-    SQL
-    find_by_sql(
-      sanitize_sql_array([
-        sql,
-        designation_id,
-        taxon_concept_id
-      ])
-    )
-  end
-
 end

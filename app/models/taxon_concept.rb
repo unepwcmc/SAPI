@@ -38,8 +38,9 @@ class TaxonConcept < ActiveRecord::Base
 
   has_one :m_taxon_concept, :foreign_key => :id
   has_many :cites_listing_changes, :class_name => 'MListingChange',
-    :order => 'is_current DESC,  effective_at DESC',
-    :conditions => {:designation_id => Designation.find_by_name(Designation::CITES).id}
+    :order => 'effective_at DESC',
+    :conditions => "explicit_change = TRUE AND designation_id = #{Designation.find_by_name(Designation::CITES).id}"
+    #:conditions => {:designation_id => Designation.find_by_name(Designation::CITES).id}
   has_many :eu_listing_changes, :class_name => 'MListingChange',
     :order => 'is_current DESC,  effective_at DESC',
     :conditions => {:designation_id => Designation.find_by_name(Designation::EU).id}

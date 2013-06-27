@@ -61,21 +61,24 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         )::INT AS timeline_position
     FROM listing_changes
     JOIN (
-      SELECT *, ROW_NUMBER() OVER(PARTITION BY taxon_concept_id) -1 AS tree_distance FROM (
-        -- This subquery takes advantage of the fact that a set-returning SQL procedure
-        -- (higher_or_equal_ranks_names) used in select clause can accept other select targets as
-        -- parameters (the rank_name in this case) and will produce a number of
-        -- records in the query result, i.e. for every taxon concept this will output all pairs
-        -- of this taxon concept (taxon_concept_id) and its ancestors (ancestor_taxon_concept_id)
-        -- However, ROW_NUMBER cannot be applied  directly here, because it would return
-        -- the same number for every ancestor matching the same taxon concept
-        -- which is why ROW_NUMBER is being called over this subquery in order to calculate
-        -- the distance between the taxon concept and any of its ancestors; ROW_NUMBER will
-        -- use the same order in which ancestors were returned, which is already correct
+        -- This subquery took like half a day to get right, so maybe it deserves a comment.
+        -- It uses a sql procedure (ary_higher_or_equal_ranks_names) to return all ranks above
+        -- the current taxon concept and then from those ranks get at actual ancestor ids.
+        -- The reason for doing it that way is to make use of ancestor data which we already store
+        -- for every taxon concept in columns named 'name_of_rank_id'.
+        -- We also want to know the tree distance between the current taxon concept and any
+        -- of its ancestors.
+        -- So we call the higher_or_equal_ranks_names procedure for every taxon concept,
+        -- and the only way to parametrise it correctly is to call it in the select clause.
+        -- Because it returns an array of ranks, and what we want is a set of (taxon concept, ancestor, distance),
+        -- we then go through the UNNEST thing in order to arrive at separate rows per ancestor.
+        -- In order to know the distance it is enough to know the index of the ancestor in the originally
+        -- returned array, because it is already sorted accordingly. That's what GENERATE_SUBSCRIPTS does.
+        -- Quite surprisingly, this worked.
         SELECT id AS taxon_concept_id,
-        (data->(LOWER(higher_or_equal_ranks_names(data->'rank_name')) || '_id'))::INT AS ancestor_taxon_concept_id
+        (data->(LOWER(UNNEST(higher_or_equal_ranks_names(data->'rank_name'))) || '_id'))::INT AS ancestor_taxon_concept_id,
+        GENERATE_SUBSCRIPTS(higher_or_equal_ranks_names(data->'rank_name'), 1) - 1 AS tree_distance
         FROM taxon_concepts
-      ) q
     ) taxon_concept_and_ancestors
     ON listing_changes.taxon_concept_id = taxon_concept_and_ancestors.ancestor_taxon_concept_id
     JOIN change_types ON change_types.id = listing_changes.change_type_id;
@@ -96,7 +99,8 @@ WITH RECURSIVE listing_changes_timeline AS (
   taxon_concept_id AS current_taxon_concept_id,
   taxon_concept_id AS context,
   tree_distance AS context_tree_distance,
-  timeline_position, TRUE AS is_applicable
+  timeline_position,
+  TRUE AS is_applicable
   FROM all_listing_changes_mview
   WHERE designation_id = in_designation_id
   AND all_listing_changes_mview.affected_taxon_concept_id = node_id
@@ -111,11 +115,13 @@ WITH RECURSIVE listing_changes_timeline AS (
   WHEN hi.inclusion_taxon_concept_id IS NOT NULL
   THEN hi.inclusion_taxon_concept_id
   WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
+  AND change_types.name = 'ADDITION'
   THEN hi.taxon_concept_id
   ELSE listing_changes_timeline.context
   END,
   hi.tree_distance,
   hi.timeline_position,
+  -- is applicable
   CASE
   WHEN hi.taxon_concept_id = listing_changes_timeline.context
   THEN TRUE
@@ -128,6 +134,7 @@ WITH RECURSIVE listing_changes_timeline AS (
   ON designation_id = in_designation_id
   AND listing_changes_timeline.original_taxon_concept_id = hi.affected_taxon_concept_id
   AND listing_changes_timeline.timeline_position + 1 = hi.timeline_position
+  JOIN change_types ON change_type_id = change_types.id
 )
 SELECT listing_changes_timeline.id
 FROM listing_changes_timeline

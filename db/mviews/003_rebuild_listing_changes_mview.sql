@@ -44,12 +44,20 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     hash_annotations.full_note_en AS hash_full_note_en,
     hash_annotations.full_note_es AS hash_full_note_es,
     hash_annotations.full_note_fr AS hash_full_note_fr,
+    CASE
+    WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
+    THEN original_taxon_concepts.data->'rank_name' || ' listing: ' ||
+      full_name_with_spp(original_taxon_concepts.data->'rank_name', original_taxon_concepts.full_name)
+    ELSE NULL
+    END AS auto_note,
     listing_changes.is_current,
     listing_changes.explicit_change,
     populations.countries_ids_ary
     FROM
     applicable_listing_changes
     JOIN listing_changes ON applicable_listing_changes.listing_change_id  = listing_changes.id
+    JOIN taxon_concepts original_taxon_concepts
+    ON original_taxon_concepts.id = listing_changes.taxon_concept_id
     INNER JOIN change_types
     ON listing_changes.change_type_id = change_types.id
     INNER JOIN designations
