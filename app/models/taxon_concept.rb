@@ -38,8 +38,17 @@ class TaxonConcept < ActiveRecord::Base
 
   has_one :m_taxon_concept, :foreign_key => :id
   has_many :cites_listing_changes, :class_name => 'MListingChange',
-    :order => 'effective_at DESC',
-    :conditions => "explicit_change = TRUE AND designation_id = #{Designation.find_by_name(Designation::CITES).id}"
+    :conditions => "show_in_history AND designation_id = #{Designation.find_by_name(Designation::CITES).id}",
+    :order => <<-SQL
+          effective_at DESC,
+          CASE
+            WHEN change_type_name = 'ADDITION' THEN 3
+            WHEN change_type_name = 'RESERVATION' THEN 2
+            WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
+            WHEN change_type_name = 'DELETION' THEN 0
+          END
+          SQL
+
     #:conditions => {:designation_id => Designation.find_by_name(Designation::CITES).id}
   has_many :eu_listing_changes, :class_name => 'MListingChange',
     :order => 'is_current DESC,  effective_at DESC',

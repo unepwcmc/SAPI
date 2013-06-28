@@ -3,13 +3,13 @@ class Checklist::TimelinesForTaxonConcept
   attr_reader :id, :taxon_concept_id, :raw_timelines, :timelines,
     :timeline_years
 
-  def initialize(taxon_concept_id)
-    @taxon_concept_id = taxon_concept_id
+  def initialize(taxon_concept)
+    @taxon_concept_id = taxon_concept.id
     @id = @taxon_concept_id
-    taxon_concept = MTaxonConcept.joins(:listing_changes).
-      includes(:listing_changes).
-      where(:"taxon_concepts_mview.id" => taxon_concept_id).first
-    listing_changes = taxon_concept ? taxon_concept.listing_changes : []
+    cites = Designation.find_by_name(Designation::CITES)
+    listing_changes = taxon_concept.listing_changes.where(
+      :designation_id => cites && cites.id, :show_in_timeline => true
+    )
     @timeline_events = listing_changes.map(&:to_timeline_event)
     @time_start = Time.new('1975-01-01')
     @time_end = Time.new("#{Time.now.year + 1}-01-01")

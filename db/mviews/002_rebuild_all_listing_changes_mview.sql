@@ -53,11 +53,19 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         change_type_id,
         inclusion_taxon_concept_id,
         effective_at::DATE,
-        -- the following ROW_NUMBER call will assign chronoligocal order to listing changes
+        -- the following ROW_NUMBER call will assign chronologocal order to listing changes
         -- in scope of the affected taxon concept and a particular designation
         ROW_NUMBER() OVER (
-            PARTITION BY designation_id, taxon_concept_and_ancestors.taxon_concept_id
-            ORDER BY effective_at, tree_distance
+            PARTITION BY taxon_concept_and_ancestors.taxon_concept_id, designation_id
+            ORDER BY effective_at,
+            CASE
+              WHEN change_types.name = 'ADDITION' THEN 0
+              WHEN change_types.name = 'RESERVATION' THEN 1
+              WHEN change_types.name = 'RESERVATION_WITHDRAWAL' THEN 2
+              WHEN change_types.name = 'DELETION' THEN 3
+              WHEN change_types.name = 'EXCEPTION' THEN 4
+            END,
+            tree_distance
         )::INT AS timeline_position
     FROM listing_changes
     JOIN (
@@ -95,9 +103,14 @@ AS $$
 
 WITH RECURSIVE listing_changes_timeline AS (
   SELECT id,
-  taxon_concept_id AS original_taxon_concept_id,
+  designation_id,
+  affected_taxon_concept_id AS original_taxon_concept_id,
   taxon_concept_id AS current_taxon_concept_id,
   taxon_concept_id AS context,
+  inclusion_taxon_concept_id,
+  species_listing_id,
+  change_type_id,
+  effective_at,
   tree_distance AS context_tree_distance,
   timeline_position,
   TRUE AS is_applicable
@@ -109,20 +122,35 @@ WITH RECURSIVE listing_changes_timeline AS (
   UNION
 
   SELECT hi.id,
+  hi.designation_id,
   listing_changes_timeline.original_taxon_concept_id,
   hi.taxon_concept_id,
   CASE
   WHEN hi.inclusion_taxon_concept_id IS NOT NULL
   THEN hi.inclusion_taxon_concept_id
+  WHEN change_types.name = 'DELETION'
+  THEN NULL
   WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
   AND change_types.name = 'ADDITION'
   THEN hi.taxon_concept_id
   ELSE listing_changes_timeline.context
   END,
+  hi.inclusion_taxon_concept_id,
+  hi.species_listing_id,
+  hi.change_type_id,
+  hi.effective_at,
   hi.tree_distance,
   hi.timeline_position,
   -- is applicable
   CASE
+  WHEN listing_changes_timeline.context IS NULL --this would be the case when deleted
+  THEN FALSE
+  WHEN listing_changes_timeline.inclusion_taxon_concept_id IS NOT NULL
+  AND listing_changes_timeline.inclusion_taxon_concept_id = hi.taxon_concept_id
+  AND listing_changes_timeline.species_listing_id = hi.species_listing_id
+  AND listing_changes_timeline.change_type_id = hi.change_type_id
+  AND listing_changes_timeline.effective_at = hi.effective_at
+  THEN FALSE
   WHEN hi.taxon_concept_id = listing_changes_timeline.context
   THEN TRUE
   WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
@@ -131,10 +159,10 @@ WITH RECURSIVE listing_changes_timeline AS (
   END
   FROM all_listing_changes_mview hi
   JOIN listing_changes_timeline
-  ON designation_id = in_designation_id
+  ON hi.designation_id = listing_changes_timeline.designation_id
   AND listing_changes_timeline.original_taxon_concept_id = hi.affected_taxon_concept_id
   AND listing_changes_timeline.timeline_position + 1 = hi.timeline_position
-  JOIN change_types ON change_type_id = change_types.id
+  JOIN change_types ON hi.change_type_id = change_types.id
 )
 SELECT listing_changes_timeline.id
 FROM listing_changes_timeline

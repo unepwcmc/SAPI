@@ -52,7 +52,22 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     END AS auto_note,
     listing_changes.is_current,
     listing_changes.explicit_change,
-    populations.countries_ids_ary
+    populations.countries_ids_ary,
+    CASE
+    WHEN change_types.name != 'EXCEPTION' AND listing_changes.explicit_change
+    THEN TRUE
+    ELSE FALSE
+    END AS show_in_history,
+    CASE
+    WHEN change_types.name != 'EXCEPTION' AND listing_changes.explicit_change
+    THEN TRUE
+    ELSE FALSE
+    END AS show_in_downloads,
+    CASE
+    WHEN change_types.name != 'EXCEPTION'
+    THEN TRUE
+    ELSE FALSE
+    END AS show_in_timeline
     FROM
     applicable_listing_changes
     JOIN listing_changes ON applicable_listing_changes.listing_change_id  = listing_changes.id
@@ -96,6 +111,26 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     false as dirty,
     null::timestamp with time zone as expiry
     FROM listing_changes_view;
+
+    -- now for those taxon concepts that only have inherited legislation,
+    -- ignore them in downloads
+    WITH taxon_concepts_with_inherited_legislation_only AS (
+      SELECT designation_id, taxon_concept_id
+      FROM listing_changes_mview
+      GROUP BY designation_id, taxon_concept_id
+      HAVING EVERY(original_taxon_concept_id != taxon_concept_id)
+    )
+    UPDATE listing_changes_mview
+    SET show_in_downloads = FALSE
+    FROM taxon_concepts_with_inherited_legislation_only
+    WHERE taxon_concepts_with_inherited_legislation_only.designation_id = listing_changes_mview.designation_id
+    AND taxon_concepts_with_inherited_legislation_only.taxon_concept_id = listing_changes_mview.taxon_concept_id;
+
+    RAISE NOTICE 'Creating indexes on listing changes materialized view';
+    CREATE INDEX ON listing_changes_mview (show_in_timeline, taxon_concept_id, designation_id);
+    CREATE INDEX ON listing_changes_mview (show_in_downloads, taxon_concept_id, designation_id);
+    CREATE INDEX ON listing_changes_mview (id);
+    CREATE INDEX ON listing_changes_mview (taxon_concept_id);
 
     RAISE NOTICE 'Dropping all listing changes materialized view';
     DROP table IF EXISTS all_listing_changes_mview CASCADE;

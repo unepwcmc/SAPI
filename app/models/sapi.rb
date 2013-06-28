@@ -120,14 +120,6 @@ module Sapi
       :on => 'listing_changes (parent_id)'
     },
     {
-      :name => 'index_listing_changes_mview_on_id',
-      :on => 'listing_changes_mview (id)'
-    },
-    {
-      :name => 'index_listing_changes_mview_on_taxon_concept_id',
-      :on => 'listing_changes_mview (taxon_concept_id)'
-    },
-    {
       :name => 'index_listing_distributions_on_geo_entity_id',
       :on => 'listing_distributions (geo_entity_id)'
     },
