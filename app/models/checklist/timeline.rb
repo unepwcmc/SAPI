@@ -14,11 +14,15 @@ class Checklist::Timeline
     @time_end = options[:end]
   end
 
+  def has_events?
+    !@timeline_events.empty?
+  end
+
   def add_event(event)
     proportionate_time_span = event.effective_at - @time_start
     position = (proportionate_time_span / (@time_end - @time_start)).round(2)
     event.pos = position
-    if event.is_addition?
+    if event.is_addition? # TODO inclusion event with appendix change
       add_addition_event(event)
     elsif event.is_deletion?
       add_deletion_event(event)

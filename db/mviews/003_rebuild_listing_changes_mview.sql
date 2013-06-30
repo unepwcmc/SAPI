@@ -1,3 +1,20 @@
+CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255)) RETURNS VARCHAR(255)
+  LANGUAGE sql IMMUTABLE
+  AS $$
+    SELECT CASE
+      WHEN rank_name IN ('ORDER', 'FAMILY', 'GENUS')
+      THEN full_name || ' spp.'
+      ELSE full_name
+    END;
+  $$;
+
+CREATE OR REPLACE FUNCTION ancestor_listing_auto_note(rank_name VARCHAR(255), full_name VARCHAR(255)) 
+RETURNS TEXT
+  LANGUAGE sql IMMUTABLE
+  AS $$
+    SELECT rank_name || ' listing: ' || full_name_with_spp(rank_name, full_name);
+  $$;
+
 CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
   LANGUAGE plpgsql
   AS $$
@@ -46,8 +63,15 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     hash_annotations.full_note_fr AS hash_full_note_fr,
     CASE
     WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
-    THEN original_taxon_concepts.data->'rank_name' || ' listing: ' ||
-      full_name_with_spp(original_taxon_concepts.data->'rank_name', original_taxon_concepts.full_name)
+    THEN ancestor_listing_auto_note(
+      original_taxon_concepts.data->'rank_name', 
+      original_taxon_concepts.full_name
+    )
+    WHEN inclusion_taxon_concept_id IS NOT NULL
+    THEN ancestor_listing_auto_note(
+      inclusion_taxon_concepts.data->'rank_name', 
+      inclusion_taxon_concepts.full_name
+    )
     ELSE NULL
     END AS auto_note,
     listing_changes.is_current,
@@ -73,6 +97,8 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     JOIN listing_changes ON applicable_listing_changes.listing_change_id  = listing_changes.id
     JOIN taxon_concepts original_taxon_concepts
     ON original_taxon_concepts.id = listing_changes.taxon_concept_id
+    LEFT JOIN taxon_concepts inclusion_taxon_concepts
+    ON inclusion_taxon_concepts.id = listing_changes.inclusion_taxon_concept_id
     INNER JOIN change_types
     ON listing_changes.change_type_id = change_types.id
     INNER JOIN designations

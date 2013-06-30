@@ -1,3 +1,19 @@
+CREATE OR REPLACE FUNCTION higher_or_equal_ranks_names(in_rank_name character varying)
+  RETURNS TEXT[]
+AS
+$BODY$
+    WITH ranks_in_order(row_no, rank_name) AS (
+      SELECT ROW_NUMBER() OVER(), *
+      FROM UNNEST(ARRAY[
+      'VARIETY', 'SUBSPECIES', 'SPECIES', 'GENUS',
+      'FAMILY', 'ORDER', 'CLASS', 'PHYLUM', 'KINGDOM'
+      ])
+    )
+    SELECT ARRAY_AGG(rank_name) FROM ranks_in_order
+    WHERE row_no >= (SELECT row_no FROM ranks_in_order WHERE rank_name = in_rank_name);
+  $BODY$
+  LANGUAGE sql IMMUTABLE;
+
 CREATE OR REPLACE FUNCTION rebuild_all_listing_changes_mview() RETURNS void
   LANGUAGE plpgsql
   AS $$
@@ -57,7 +73,7 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         -- in scope of the affected taxon concept and a particular designation
         ROW_NUMBER() OVER (
             PARTITION BY taxon_concept_and_ancestors.taxon_concept_id, designation_id
-            ORDER BY effective_at,
+            ORDER BY effective_at, tree_distance,
             CASE
               WHEN change_types.name = 'ADDITION' THEN 0
               WHEN change_types.name = 'RESERVATION' THEN 1
@@ -143,8 +159,6 @@ WITH RECURSIVE listing_changes_timeline AS (
   hi.timeline_position,
   -- is applicable
   CASE
-  WHEN listing_changes_timeline.context IS NULL --this would be the case when deleted
-  THEN FALSE
   WHEN listing_changes_timeline.inclusion_taxon_concept_id IS NOT NULL
   AND listing_changes_timeline.inclusion_taxon_concept_id = hi.taxon_concept_id
   AND listing_changes_timeline.species_listing_id = hi.species_listing_id
@@ -153,6 +167,8 @@ WITH RECURSIVE listing_changes_timeline AS (
   THEN FALSE
   WHEN hi.taxon_concept_id = listing_changes_timeline.context
   THEN TRUE
+  WHEN listing_changes_timeline.context IS NULL --this would be the case when deleted
+  THEN FALSE
   WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
   THEN TRUE
   ELSE FALSE

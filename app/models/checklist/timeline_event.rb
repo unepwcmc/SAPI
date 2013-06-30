@@ -1,7 +1,7 @@
 class Checklist::TimelineEvent
   include ActiveModel::SerializerSupport
   attr_accessor :id, :change_type_name, :species_listing_name, :effective_at,
-    :party_id, :is_current, :pos, :short_note_en, :full_note_en,
+    :party_id, :is_current, :pos, :auto_note, :short_note_en, :full_note_en,
     :hash_full_note_en, :hash_ann_symbol, :hash_ann_parent_symbol
   #options to be passed:
   #:change_type_name
@@ -25,6 +25,8 @@ class Checklist::TimelineEvent
     @effective_at = options[:effective_at]
     @is_current = options[:is_current]
     @species_listing_name = options[:species_listing_name]
+    @auto_note = options[:auto_note]
+    @inclusion_taxon_concept_id = options[:inclusion_taxon_concept_id]
   end
 
   def is_addition?
@@ -41,6 +43,10 @@ class Checklist::TimelineEvent
 
   def is_reservation_withdrawal?
     @change_type_name == ChangeType::RESERVATION_WITHDRAWAL
+  end
+
+  def is_inclusion?
+    !@inclusion_taxon_concept_id.nil?
   end
 
   def effective_at_formatted

@@ -36,7 +36,16 @@ class Checklist::TimelinesForTaxonConcept
           'III'
         )
       @raw_timelines[species_listing_name] &&
-        @raw_timelines[species_listing_name].add_event(timeline_event)
+      @raw_timelines[species_listing_name].add_event(timeline_event)
+      #handle inclusions in a different appendix
+      if timeline_event.is_inclusion? 
+        @raw_timelines[species_listing_name] &&
+        @raw_timelines.select{ |k, v| k != species_listing_name }.each do |app, t|
+          del = timeline_event.clone
+          del.change_type_name = 'DELETION'
+          t.add_deletion_event(del) if t.has_events?
+        end
+      end
     end
     @raw_timelines.values.each do |t|
       t.change_consecutive_additions_to_amendments
