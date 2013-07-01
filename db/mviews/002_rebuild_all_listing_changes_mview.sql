@@ -168,7 +168,7 @@ WITH RECURSIVE listing_changes_timeline AS (
   WHEN hi.taxon_concept_id = listing_changes_timeline.context
   THEN TRUE
   WHEN listing_changes_timeline.context IS NULL --this would be the case when deleted
-  THEN FALSE
+  THEN TRUE -- unless exlusion is active...
   WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
   THEN TRUE
   ELSE FALSE
