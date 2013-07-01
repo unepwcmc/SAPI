@@ -6,28 +6,21 @@ class Checklist::TimelinesController < ApplicationController
     return render :json => []  if params[:taxon_concept_ids].nil?
 
     taxon_concept_ids = params[:taxon_concept_ids].split(',')
-    res = taxon_concept_ids.map do |id|
-      TimelinesForTaxonConcept.new(id).serializable_hash(
-      :only => [:id, :taxon_concept_id],
-      :methods => [:timeline_years],
-      :include => [
-        :timelines => {
-          :only => [:id, :appendix, :party, :parties],
-          :include => [
-            :timeline_events,
-            :timeline_intervals,
-            {:timelines => {
-              :only => [:id, :appendix, :party],
-              :include => [
-                :timeline_events,
-                :timeline_intervals
-              ]
-            }}
-          ]
-        }
-      ]
-      )
+
+    res = taxon_concept_ids.map do |tc_id|
+      tc = MTaxonConcept.find_by_id(tc_id)
+      Checklist::TimelinesForTaxonConcept.new(tc) unless tc.nil?
     end
-    render :text => res.to_json
+    render :json =>  res, :each_serializer => Checklist::TimelinesForTaxonConceptSerializer
   end
+
+  private
+  # this disables json root for this controller
+  # remove when checklist frontent upgraded to new Ember.js
+  def default_serializer_options
+    {
+      root: false
+    }
+  end
+
 end

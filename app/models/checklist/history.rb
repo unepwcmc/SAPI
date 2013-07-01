@@ -29,13 +29,11 @@ class Checklist::History < Checklist::Checklist
   end
 
   def prepare_main_query
+    cites = Designation.find_by_name(Designation::CITES)
     @taxon_concepts_rel = MTaxonConcept.where(:taxonomy_is_cites_eu => true).
-       includes(:listing_changes).
-        where(<<-SQL
-          listing_changes_mview.change_type_name != 'EXCEPTION'
-            AND listing_changes_mview.explicit_change = TRUE
-            AND listing_changes_mview.designation_name = '#{Designation::CITES}'
-          SQL
+       includes(:listing_changes).where(
+          :"listing_changes_mview.show_in_downloads" => true,
+          :"listing_changes_mview.designation_id" => cites && cites.id
         ).
         order(<<-SQL
           taxonomic_position, effective_at,

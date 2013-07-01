@@ -1,5 +1,5 @@
-class Timeline
-  include ActiveModel::Serializers::JSON
+class Checklist::Timeline
+  include ActiveModel::SerializerSupport
   attr_reader :id, :appendix, :party_id, :timeline_events, :timeline_intervals, :parties, :timelines
   def initialize(options)
     @id = object_id
@@ -14,11 +14,15 @@ class Timeline
     @time_end = options[:end]
   end
 
+  def has_events?
+    !@timeline_events.empty?
+  end
+
   def add_event(event)
     proportionate_time_span = event.effective_at - @time_start
     position = (proportionate_time_span / (@time_end - @time_start)).round(2)
     event.pos = position
-    if event.is_addition?
+    if event.is_addition? # TODO inclusion event with appendix change
       add_addition_event(event)
     elsif event.is_deletion?
       add_deletion_event(event)
@@ -62,7 +66,7 @@ class Timeline
         interval = if idx < (timeline.timeline_events.size - 1)
           next_event = timeline.timeline_events[idx + 1]
           if !(event.is_deletion? && next_event.is_addition?)
-            TimelineInterval.new(
+            Checklist::TimelineInterval.new(
               :start_pos => event.pos,
               :end_pos => next_event.pos
             )
@@ -82,7 +86,7 @@ class Timeline
           end
 
           if add_final_interval
-            TimelineInterval.new(
+            Checklist::TimelineInterval.new(
               :start_pos => event.pos,
               :end_pos => 1
             )
@@ -100,24 +104,13 @@ class Timeline
     else
       #create party timeline
       @parties << party_id
-      party_timeline = Timeline.new(
+      party_timeline = Checklist::Timeline.new(
         :appendix => appendix,
         :party_id => party_id
       )
       @timelines << party_timeline
       party_timeline
     end
-  end
-
-  # this is required for JSON serialisation on non-AR model
-  # for some reason keys can't be symbols
-  def attributes
-    {
-      'id' => id,
-      'appendix' => appendix,
-      'party' => party,
-      'parties' => parties
-    }
   end
 
   def party

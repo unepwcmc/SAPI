@@ -6,13 +6,13 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cites_listing do
         context "for species Canis lupus (population split listing)" do
-          specify{ @species.cites_listing.should == 'I/II/NC' }
+          specify{ @species.cites_listing.should == 'I/II' }
         end
       end
 
       describe :eu_listing do
         context "for species Canis lupus (population split listing)" do
-          specify{ @species.eu_listing.should == 'A/B/NC' }
+          specify{ @species.eu_listing.should == 'A/B' }
         end
       end
 
