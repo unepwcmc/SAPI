@@ -17,7 +17,7 @@ describe Checklist::Timeline do
       Sapi::rebuild(:except => [:taxonomy])
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc.id)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
     let(:subject){ ttc.timelines.first }
 
     specify{ subject.timeline_intervals.count.should == 1 }
@@ -77,7 +77,7 @@ describe Checklist::Timeline do
       Sapi::rebuild(:except => [:taxonomy])
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc.id)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
     let(:subject){ ttc.timelines.last }
 
     specify{ subject.timeline_intervals.count.should == 3 }
@@ -106,7 +106,7 @@ describe Checklist::Timeline do
       Sapi::rebuild(:except => [:taxonomy])
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc.id)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
     let(:subject){ ttc.timelines.first }
 
     specify{ subject.timeline_intervals.count.should == 2 }
@@ -129,7 +129,7 @@ describe Checklist::Timeline do
       Sapi::rebuild(:except => [:taxonomy])
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc.id)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
     let(:subject){ ttc.timelines.first }
 
     specify{
