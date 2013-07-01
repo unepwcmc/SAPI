@@ -13,7 +13,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
       <<-SQL
       INNER JOIN (
         -- listed in specified geo entities
-        SELECT taxon_concept_id
+        SELECT DISTINCT original_taxon_concept_id AS taxon_concept_id
         FROM listing_changes_mview
         INNER JOIN listing_distributions ON listing_changes_mview.id = listing_distributions.listing_change_id AND NOT is_party
         WHERE is_current = 't' AND change_type_name = 'ADDITION'
@@ -42,7 +42,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
           INTERSECT
 
           -- has listing changes that do not have distribution attached
-          SELECT taxon_concept_id
+          SELECT DISTINCT original_taxon_concept_id AS taxon_concept_id
           FROM listing_changes_mview
           LEFT JOIN listing_distributions ON listing_changes_mview.id = listing_distributions.listing_change_id AND NOT is_party
           WHERE is_current = 't' AND change_type_name = 'ADDITION'
@@ -56,7 +56,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
           #{
             @geo_entities_ids.map do |geo_entity_id|
               <<-GEO_SQL
-                SELECT taxon_concept_id
+                SELECT DISTINCT original_taxon_concept_id AS taxon_concept_id
                 FROM listing_changes_mview
                 INNER JOIN listing_distributions ON listing_changes_mview.id = listing_distributions.listing_change_id AND NOT is_party
                 WHERE is_current = 't' AND change_type_name = 'EXCEPTION'

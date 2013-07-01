@@ -1,9 +1,7 @@
+
 CREATE OR REPLACE FUNCTION ancestor_node_ids_for_node(node_id integer) RETURNS INTEGER[]
-  LANGUAGE plpgsql STABLE
+  LANGUAGE sql STABLE
   AS $$
-  DECLARE
-    ancestor_node_ids INTEGER[];
-  BEGIN
     WITH RECURSIVE ancestors AS (
       SELECT h.id, h.parent_id
       FROM taxon_concepts h WHERE id = node_id
@@ -13,16 +11,13 @@ CREATE OR REPLACE FUNCTION ancestor_node_ids_for_node(node_id integer) RETURNS I
       SELECT hi.id, hi.parent_id
       FROM taxon_concepts hi JOIN ancestors ON hi.id = ancestors.parent_id
     )
-    SELECT ARRAY(SELECT id FROM ancestors) INTO ancestor_node_ids;
-    RETURN ancestor_node_ids;
-  END;
+    SELECT ARRAY(SELECT id FROM ancestors);
   $$;
 
 CREATE OR REPLACE FUNCTION full_name(rank_name VARCHAR(255), ancestors HSTORE) RETURNS VARCHAR(255)
-  LANGUAGE plpgsql IMMUTABLE
+  LANGUAGE sql IMMUTABLE
   AS $$
-  BEGIN
-    RETURN CASE
+    SELECT CASE
       WHEN rank_name = 'SPECIES' THEN
         -- now create a binomen for full name
         CAST(ancestors -> 'genus_name' AS VARCHAR) || ' ' ||
@@ -34,16 +29,21 @@ CREATE OR REPLACE FUNCTION full_name(rank_name VARCHAR(255), ancestors HSTORE) R
         LOWER(CAST(ancestors -> 'subspecies_name' AS VARCHAR))
       ELSE ancestors -> LOWER(rank_name || '_name')
     END;
-  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255)) RETURNS VARCHAR(255)
+  LANGUAGE sql IMMUTABLE
+  AS $$
+    SELECT CASE
+      WHEN rank_name IN ('ORDER', 'FAMILY')
+      THEN full_name || ' spp.'
+      ELSE full_name
+    END;
   $$;
 
 CREATE OR REPLACE FUNCTION ancestors_names(node_id INTEGER) RETURNS HSTORE
-  LANGUAGE plpgsql
+  LANGUAGE sql
   AS $$
-  DECLARE
-    result HSTORE;
-    ancestor_row RECORD;
-  BEGIN
     WITH RECURSIVE q AS (
       SELECT h.id, h.parent_id,
         HSTORE(LOWER(ranks.name) || '_name', taxon_names.scientific_name) ||
@@ -64,10 +64,7 @@ CREATE OR REPLACE FUNCTION ancestors_names(node_id INTEGER) RETURNS HSTORE
       INNER JOIN taxon_names ON hi.taxon_name_id = taxon_names.id
       INNER JOIN ranks ON hi.rank_id = ranks.id
     )
-    SELECT ancestors
-    INTO result FROM q WHERE parent_id IS NULL;
-    RETURN result;
-  END;
+    SELECT ancestors FROM q WHERE parent_id IS NULL;
   $$;
 
 CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_animalia_node(node_id integer) RETURNS void

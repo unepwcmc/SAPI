@@ -9,7 +9,10 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     :key => :references
   has_many :quotas, :serializer => Species::QuotaSerializer
   has_many :cites_suspensions, :serializer => Species::CitesSuspensionSerializer
-  #has_many :listing_changes, :serializer => Species::CitesListingChangeSerializer
+  has_many :cites_listing_changes, :serializer => Species::CitesListingChangeSerializer,
+    :key => :cites_listings
+  has_many :eu_listing_changes, :serializer => Species::EuListingChangeSerializer,
+    :key => :eu_listings
 
   def common_names
     object.common_names.joins(:language).
