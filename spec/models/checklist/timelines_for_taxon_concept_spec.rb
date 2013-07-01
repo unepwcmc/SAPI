@@ -72,7 +72,11 @@ describe Checklist::TimelinesForTaxonConcept do
 
   describe :timeline_years do
     context "when in 1990" do
-      let(:tc){ create(:taxon_concept) }
+      let(:tc){
+        tc = create(:taxon_concept)
+        Sapi::rebuild(:except => [:taxonomy])
+        MTaxonConcept.find(tc.id)
+      }
       subject{ Checklist::TimelinesForTaxonConcept.new(tc).timeline_years }
       specify{ subject.size.should == 5 }
       specify{ subject.first.year.should == 1975 }

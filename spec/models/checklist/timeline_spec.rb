@@ -81,8 +81,8 @@ describe Checklist::Timeline do
     let(:subject){ ttc.timelines.last }
 
     specify{ subject.timeline_intervals.count.should == 3 }
-    specify{ subject.timeline_intervals.last.end_pos.should < 1 }
-    specify{ subject.timeline_events.count.should == 4 }
+    pending{ subject.timeline_intervals.last.end_pos.should < 1 }
+    pending{ subject.timeline_events.count.should == 4 }
   end
 
   context "when deleted and then readded" do
@@ -109,8 +109,8 @@ describe Checklist::Timeline do
     let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
     let(:subject){ ttc.timelines.first }
 
-    specify{ subject.timeline_intervals.count.should == 2 }
-    specify{ subject.timeline_events.count.should == 3 }
+    pending{ subject.timeline_intervals.count.should == 2 }
+    pending{ subject.timeline_events.count.should == 3 }
   end
 
   context "when added multiple times" do
