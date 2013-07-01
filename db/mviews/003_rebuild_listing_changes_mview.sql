@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name 
     END;
   $$;
 
-CREATE OR REPLACE FUNCTION ancestor_listing_auto_note(rank_name VARCHAR(255), full_name VARCHAR(255)) 
+CREATE OR REPLACE FUNCTION ancestor_listing_auto_note(rank_name VARCHAR(255), full_name VARCHAR(255))
 RETURNS TEXT
   LANGUAGE sql IMMUTABLE
   AS $$
@@ -64,12 +64,12 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     CASE
     WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
     THEN ancestor_listing_auto_note(
-      original_taxon_concepts.data->'rank_name', 
+      original_taxon_concepts.data->'rank_name',
       original_taxon_concepts.full_name
     )
     WHEN inclusion_taxon_concept_id IS NOT NULL
     THEN ancestor_listing_auto_note(
-      inclusion_taxon_concepts.data->'rank_name', 
+      inclusion_taxon_concepts.data->'rank_name',
       inclusion_taxon_concepts.full_name
     )
     ELSE NULL
@@ -158,7 +158,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     CREATE INDEX ON listing_changes_mview (id);
     CREATE INDEX ON listing_changes_mview (taxon_concept_id);
 
-    RAISE NOTICE 'Dropping all listing changes materialized view';
-    DROP table IF EXISTS all_listing_changes_mview CASCADE;
+    --RAISE NOTICE 'Dropping all listing changes materialized view';
+   -- DROP table IF EXISTS all_listing_changes_mview CASCADE;
   END;
   $$;
