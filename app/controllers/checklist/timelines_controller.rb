@@ -7,8 +7,9 @@ class Checklist::TimelinesController < ApplicationController
 
     taxon_concept_ids = params[:taxon_concept_ids].split(',')
 
-    res = MTaxonConcept.find(taxon_concept_ids).map do |tc|
-      Checklist::TimelinesForTaxonConcept.new(tc)
+    res = taxon_concept_ids.map do |tc_id|
+      tc = MTaxonConcept.find_by_id(tc_id)
+      Checklist::TimelinesForTaxonConcept.new(tc) unless tc.nil?
     end
     render :json =>  res, :each_serializer => Checklist::TimelinesForTaxonConceptSerializer
   end
