@@ -35,6 +35,10 @@ class Designation < ActiveRecord::Base
     name == EU
   end
 
+  def is_cms?
+    name == CMS
+  end
+
   def can_be_deleted?
     !has_protected_name? && !has_dependent_objects?
   end
