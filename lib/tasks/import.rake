@@ -44,6 +44,9 @@ namespace :import do
       'lib/assets/files/animals/animalia_eu_legislation_utf8.csv',
       'lib/assets/files/plants/plantae_eu_legislation_utf8.csv'
     )
+    Rake::Task["import:cms_listings"].invoke(
+      'lib/assets/files/animals/CMS_legislation_utf8.csv'
+    )
     Rake::Task["import:common_names"].invoke(
       'lib/assets/files/animals/animalia_common_names_utf8.csv',
       'lib/assets/files/plants/plantae_common_names_utf8.csv'
@@ -57,21 +60,21 @@ namespace :import do
      'lib/assets/files/plants/plantae_references_utf8.csv'
     )
     Rake::Task["import:reference_distribution_links"].invoke(
-     'lib/assets/files/animals/animalia_reference_distribution_links.csv',
-     'lib/assets/files/plants/plantae_reference_distribution_links.csv'
+     'lib/assets/files/animals/animalia_reference_distribution_links_utf8.csv',
+     'lib/assets/files/plants/plantae_reference_distribution_links_utf8.csv'
     )
     Rake::Task["import:reference_accepted_links"].invoke(
-     'lib/assets/files/animals/animalia_reference_accepted_links.csv',
-     'lib/assets/files/plants/plantae_reference_accepted_links.csv'
+     'lib/assets/files/animals/animalia_reference_accepted_links_utf8.csv',
+     'lib/assets/files/plants/plantae_reference_accepted_links_utf8.csv'
     )
     Rake::Task["import:reference_synonym_links"].invoke(
-     'lib/assets/files/animals/animalia_reference_synonym_links.csv',
-     'lib/assets/files/plants/plantae_reference_synonym_links.csv'
+     'lib/assets/files/animals/animalia_reference_synonym_links_utf8.csv',
+     'lib/assets/files/plants/plantae_reference_synonym_links_utf8.csv'
     )
     Rake::Task["import:standard_reference_links"].invoke(
-     'lib/assets/files/animals/animalia_standard_reference_links.csv',
-     'lib/assets/files/animals/CMS_standard_reference_links.csv',
-     'lib/assets/files/plants/plantae_standard_reference_links.csv'
+     'lib/assets/files/animals/animalia_standard_reference_links_utf8.csv',
+     'lib/assets/files/animals/CMS_standard_reference_links_utf8.csv',
+     'lib/assets/files/plants/plantae_standard_reference_links_utf8.csv'
     )
 
     Rake::Task["import:trade_codes"].invoke
