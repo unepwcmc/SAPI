@@ -3,7 +3,7 @@ every :day, :at => '2:42am' do
 end
 
 every :day, :at => '3:42am' do
-  rake "db:migrate:rebuild_taxon_concepts_mview"
+  rake "db:migrate:rebuild_listing_changes_mview"
 end
 
 every :day, :at => '4:42am' do
