@@ -200,7 +200,7 @@ namespace :import do
         SELECT DISTINCT BTRIM(#{TMP_TABLE}.designation), #{designation.id},
           NOW(), NOW()
         FROM #{TMP_TABLE}
-        WHERE NOT EXISTS (
+        WHERE BTRIM(#{TMP_TABLE}.designation) <> 'CMS' AND NOT EXISTS (
           SELECT * FROM instruments
           WHERE UPPER(name) = BTRIM(UPPER(#{TMP_TABLE}.designation))
         )
