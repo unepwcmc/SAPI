@@ -4,6 +4,7 @@ module Sapi
     :taxonomy,
     :cites_listing,
     :eu_listing,
+    :cms_listing,
     :cites_accepted_flags,
     :taxon_concepts_mview,
     :listing_changes_mview
@@ -43,7 +44,7 @@ module Sapi
   end
 
   def self.rebuild_listings
-    rebuild(:only => [:cites_listing, :eu_listing])
+    rebuild(:only => [:cites_listing, :eu_listing, :cms_listing], :disable_triggers => true)
   end
 
   def self.rebuild_references

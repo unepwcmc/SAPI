@@ -34,6 +34,9 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     ELSIF designation.name = 'EU' THEN
       flags_to_reset := flags_to_reset ||
         ARRAY['eu_listing','eu_A','eu_B','eu_C','eu_D'];
+    ELSIF designation.name = 'CMS' THEN
+      flags_to_reset := flags_to_reset ||
+        ARRAY['cms_listing','cms_I','cms_II'];
     END IF;
 
     -- reset the listing status (so we start clear)
