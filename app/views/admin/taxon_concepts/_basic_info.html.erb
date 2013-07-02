@@ -81,8 +81,11 @@
         </ul>
       </li>
     <% elsif d.is_cms? %>
-      <li class="dropdown <%= if @designation && @designation.is_cms? then 'active' end %>">
+      <li class="<%= if @designation && @designation.is_cms? then 'active' end %>">
         <%= link_to "CMS listing changes", admin_taxon_concept_designation_listing_changes_path(@taxon_concept, d) %>
+      </li>
+      <li class="<%= if @taxon_instruments then 'active' end %>">
+        <%= link_to "Instruments", admin_taxon_concept_taxon_instruments_path(@taxon_concept) %>
       </li>
     <% end %>
   <% end %>
