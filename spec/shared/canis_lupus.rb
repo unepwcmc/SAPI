@@ -67,11 +67,6 @@ shared_context "Canis lupus" do
       :taxon_name => create(:taxon_name, :scientific_name => 'Lupus'),
       :parent => @genus
     )
-    @subspecies = create_cites_eu_subspecies(
-      :taxon_name => create(:taxon_name, :scientific_name => 'familiaris'),
-      :parent => @species
-    )
-
 
     create_cites_II_addition(
      :taxon_concept => @species,
@@ -99,21 +94,9 @@ shared_context "Canis lupus" do
      :effective_at => '2010-06-23',
      :is_current => true
     )
-    create_cites_I_exception(
-      :taxon_concept => @subspecies,
-      :effective_at => '2010-06-23',
-      :parent_id => cites_lc2.id,
-     :is_current => true
-    )
     eu_lc2 = create_eu_A_addition(
      :taxon_concept => @species,
      :effective_at => '2010-06-23',
-     :is_current => true
-    )
-    create_eu_A_exception(
-      :taxon_concept => @subspecies,
-      :effective_at => '2010-06-23',
-      :parent_id => eu_lc2.id,
      :is_current => true
     )
     cites_lc3 = create_cites_II_addition(

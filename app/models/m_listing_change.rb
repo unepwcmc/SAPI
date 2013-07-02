@@ -41,6 +41,7 @@ class MListingChange < ActiveRecord::Base
 
   belongs_to :designation
   belongs_to :taxon_concept, :class_name => 'MTaxonConcept'
+  belongs_to :listing_change, :foreign_key => :id
 
   def effective_at_formatted
     effective_at.strftime("%d/%m/%y")
@@ -73,12 +74,13 @@ class MListingChange < ActiveRecord::Base
   end
 
   def to_timeline_event
-    TimelineEvent.new(
+    Checklist::TimelineEvent.new(
       self.as_json(
         :only => [
           :id, :change_type_name, :species_listing_name, :party_id,
           :is_current, :hash_ann_symbol, :hash_ann_parent_symbol,
-          :effective_at, :short_note_en, :full_note_en, :hash_full_note_en
+          :effective_at, :short_note_en, :full_note_en, :hash_full_note_en,
+          :auto_note, :inclusion_taxon_concept_id
         ],
         :methods => [:countries_ids]
       ).symbolize_keys
