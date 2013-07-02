@@ -200,6 +200,22 @@ class CsvToDbMap
       'EXCLUDED_REC_IDS' => 'excluded_taxa varchar',
       'FULL_NOTE_EN' => 'full_note_en varchar',
       'HASH_NOTE' => 'hash_note varchar'
+    },
+    'cms_listings_import' => {
+      'rank_name' => 'rank varchar',
+      'rec_id' => 'legacy_id integer',
+      'listing' => 'appendix varchar',
+      'effective_from' => 'listing_date varchar',
+      'is_current' => 'is_current boolean',
+      'populations_iso2' => 'populations_iso2 varchar',
+      'EXCLUDEDpopulations_iso' => 'excluded_populations_iso2 varchar',
+      'is_inclusion' => 'is_inclusion boolean',
+      'included_in_RecID' => 'included_in_rec_id integer',
+      'RankforInclusions' => 'rank_for_inclusions varchar',
+      'excluded_rec_ids' => 'excluded_taxa varchar',
+      'LegNotes' => 'full_note_en varchar',
+      'CMS instrument' => 'designation varchar',
+      'Internal Notes' => 'notes varchar'
     }
   }
 
