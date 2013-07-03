@@ -2,7 +2,7 @@ namespace :import do
 
   desc 'Runs import tasks for cleaned files'
   task :cleaned => :environment do
-    Sapi::drop_indices
+    Sapi::drop_indexes
     Sapi::disable_triggers
     Rake::Task["db:seed"].invoke
     Rake::Task["import:species"].invoke(
@@ -88,9 +88,9 @@ namespace :import do
     )
 
 
-    Sapi::rebuild()
+    Sapi.rebuild()
     Sapi::enable_triggers
-    Sapi::create_indices
+    Sapi::create_indexes
 
     Rake::Task['import:stats'].invoke
   end
