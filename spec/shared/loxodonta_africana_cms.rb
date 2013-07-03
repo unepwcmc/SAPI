@@ -14,8 +14,13 @@ shared_context "Loxodonta africana CMS" do
       :parent => @family
     )
     @species = create_cms_species(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Africana'),
+      :taxon_name => create(:taxon_name, :scientific_name => 'africana'),
       :parent => @genus
+    )
+
+    create_cms_II_addition(
+     :taxon_concept => @species,
+     :effective_at => '1979-01-01'
     )
 
     Sapi::rebuild(:except => [:taxonomy])
