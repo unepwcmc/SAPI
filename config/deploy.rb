@@ -1,15 +1,28 @@
 set :default_stage, 'staging'
+
 require 'capistrano/ext/multistage'
-## Generated with 'brightbox' on 2012-05-08 09:53:55 +0100
+## Generated with 'brightbox' on 2013-06-27 08:45:55 +0100
 gem 'brightbox', '>=2.3.9'
 require 'brightbox/recipes'
 require 'brightbox/passenger'
 require 'sidekiq/capistrano'
-load "deploy/assets"
-set :rake, 'bundle exec rake'
+
 # The name of your application.  Used for deployment directory and filenames
 # and Apache configs. Should be unique on the Brightbox
 set :application, "sapi"
+
+
+# got sick of "gem X not found in any of the sources when using the default whenever recipe
+# probable source of issue:
+# https://github.com/javan/whenever/commit/7ae1009c31deb03c5db4a68f5fc99ea099ce5655
+namespace :deploy do
+  desc "Update the crontab file"
+  task :update_crontab, :roles => :app, :except => { :no_release => true } do
+    run "cd #{release_path} && bundle exec whenever --update-crontab #{application}"
+  end
+end
+
+after 'deploy:update_code', 'deploy:update_crontab'
 
 # Target directory for the application on the web and app servers.
 set(:deploy_to) { File.join("", "home", user, application) }
@@ -61,7 +74,6 @@ set :copy_exclude, [ '.git' ]
 #
 # The shared area is prepared with 'deploy:setup' and all the shared
 # items are symlinked in when the code is updated.
-# set :local_shared_dirs, %w(public/upload)
 set :local_shared_files, %w(config/database.yml)
 set :local_shared_dirs, %w(tmp/pids public/downloads public/uploads)
 

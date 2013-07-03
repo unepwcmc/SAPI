@@ -107,6 +107,16 @@ eu = Designation.find_by_name(Designation::EU)
   )
 end
 
+cms = Designation.find_by_name(Designation::CMS)
+
+%w(I II).each do |app_abbr|
+  SpeciesListing.create(
+    :name => "Appendix #{app_abbr}",
+    :abbreviation => app_abbr,
+    :designation_id => cms.id
+  )
+end
+
 puts "#{SpeciesListing.count} species listings created"
 
 higher_taxa = [
