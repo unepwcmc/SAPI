@@ -108,7 +108,6 @@ namespace :import do
       SQL
 
       puts "INSERTING listing_changes"
-      puts sql
       ActiveRecord::Base.connection.execute(sql)
 
       #add taxonomic exceptions
@@ -193,6 +192,40 @@ namespace :import do
       SQL
 
       puts "INSERTING listed populations (listing distributions)"
+      ActiveRecord::Base.connection.execute(sql)
+
+
+      sql = <<-SQL
+        INSERT INTO instruments(name, designation_id, created_at, updated_at)
+        SELECT DISTINCT BTRIM(#{TMP_TABLE}.designation), #{designation.id},
+          NOW(), NOW()
+        FROM #{TMP_TABLE}
+        WHERE BTRIM(#{TMP_TABLE}.designation) <> 'CMS' AND NOT EXISTS (
+          SELECT * FROM instruments
+          WHERE UPPER(name) = BTRIM(UPPER(#{TMP_TABLE}.designation))
+        )
+      SQL
+      puts "INSERTING CMS instruments"
+      ActiveRecord::Base.connection.execute(sql)
+
+      sql = <<-SQL
+        INSERT INTO taxon_instruments(taxon_concept_id, instrument_id, effective_from, created_at, updated_at)
+        SELECT DISTINCT t.id, i.id, to_date(#{TMP_TABLE}.listing_date, 'yyyy'),
+          NOW(), NOW()
+        FROM #{TMP_TABLE}
+        INNER JOIN taxon_concepts t ON t.legacy_id = #{TMP_TABLE}.legacy_id
+          AND t.legacy_type = '#{kingdom}'
+          AND t.taxonomy_id = #{taxonomy.id}
+        INNER JOIN instruments i ON UPPER(i.name) = BTRIM(UPPER(#{TMP_TABLE}.designation))
+        WHERE #{TMP_TABLE}.appendix NOT IN ('I', 'II') AND
+          NOT EXISTS(
+            SELECT * FROM taxon_instruments ti
+            WHERE ti.taxon_concept_id = t.id
+              AND ti.instrument_id = i.id
+              AND effective_from = to_date(#{TMP_TABLE}.listing_date, 'yyyy')
+          )
+      SQL
+      puts "INSERTING taxon_instruments relationships"
       ActiveRecord::Base.connection.execute(sql)
     end
 

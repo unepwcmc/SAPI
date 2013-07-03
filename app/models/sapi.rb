@@ -40,7 +40,7 @@ module Sapi
   end
 
   def self.rebuild_taxonomy
-    rebuild(:only => [:taxonomy])
+    rebuild(:only => [:taxonomy], :disable_triggers => true)
   end
 
   def self.rebuild_listings
@@ -48,7 +48,7 @@ module Sapi
   end
 
   def self.rebuild_references
-    rebuild(:only => [:cites_accepted_flags])
+    rebuild(:only => [:cites_accepted_flags], :disable_triggers => true)
   end
 
   def self.rebuild_taxon_concepts_mview
@@ -119,14 +119,6 @@ module Sapi
     {
       :name => 'index_listing_changes_on_parent_id',
       :on => 'listing_changes (parent_id)'
-    },
-    {
-      :name => 'index_listing_changes_mview_on_id',
-      :on => 'listing_changes_mview (id)'
-    },
-    {
-      :name => 'index_listing_changes_mview_on_taxon_concept_id',
-      :on => 'listing_changes_mview (taxon_concept_id)'
     },
     {
       :name => 'index_listing_distributions_on_geo_entity_id',

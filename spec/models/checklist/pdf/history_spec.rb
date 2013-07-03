@@ -81,8 +81,10 @@ describe Checklist::Pdf::History do
           :display_in_footnote => true
         )
       }
+      let(:tc){ genus_tc }
       let(:lc){
         lc = create_cites_I_addition(
+          :taxon_concept_id => tc.id,
           :annotation_id => annotation.id,
           :is_current => true
         )

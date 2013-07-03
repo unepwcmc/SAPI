@@ -105,6 +105,9 @@ class TaxonConcept < ActiveRecord::Base
   has_many :eu_suspensions
   has_many :current_eu_suspensions, :class_name => 'EuSuspension', :conditions => "is_current = true"
 
+  has_many :taxon_instruments
+  has_many :instruments, :through => :taxon_instruments
+
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
   validate :parent_in_same_taxonomy
@@ -154,6 +157,38 @@ class TaxonConcept < ActiveRecord::Base
       sanitize_sql_array([joins_sql, rank.taxonomic_position])
     )
   }
+
+def cites_listing_changes
+  cites = Designation.find_by_name(Designation::CITES)
+  MListingChange.
+    where(:taxon_concept_id => self.id, :show_in_history => true, :designation_id => cites && cites.id).
+    order(<<-SQL
+      effective_at DESC,
+      CASE
+        WHEN change_type_name = 'ADDITION' THEN 3
+        WHEN change_type_name = 'RESERVATION' THEN 2
+        WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
+        WHEN change_type_name = 'DELETION' THEN 0
+      END
+      SQL
+    )
+end
+
+def eu_listing_changes
+  eu = Designation.find_by_name(Designation::EU)
+  MListingChange.
+    where(:taxon_concept_id => self.id, :show_in_history => true, :designation_id => eu && eu.id).
+    order(<<-SQL
+      effective_at DESC,
+      CASE
+        WHEN change_type_name = 'ADDITION' THEN 3
+        WHEN change_type_name = 'RESERVATION' THEN 2
+        WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
+        WHEN change_type_name = 'DELETION' THEN 0
+      END
+      SQL
+    )
+end
 
   def under_cites_eu?
     self.taxonomy.name == Taxonomy::CITES_EU

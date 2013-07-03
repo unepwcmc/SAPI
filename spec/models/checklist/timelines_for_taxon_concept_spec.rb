@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TimelinesForTaxonConcept do
+describe Checklist::TimelinesForTaxonConcept do
   before do
     Timecop.freeze(Time.local(1990))
   end
@@ -21,7 +21,7 @@ describe TimelinesForTaxonConcept do
         Sapi::rebuild(:except => [:taxonomy])
         MTaxonConcept.find(tc.id)
       }
-      subject{ TimelinesForTaxonConcept.new(tc.id) }
+      subject{ Checklist::TimelinesForTaxonConcept.new(tc) }
       specify{ subject.raw_timelines['I'].timeline_events.should_not be_empty }
       specify{ subject.raw_timelines['II'].timeline_events.should be_empty }
     end
@@ -42,7 +42,7 @@ describe TimelinesForTaxonConcept do
         Sapi::rebuild(:except => [:taxonomy])
         MTaxonConcept.find(tc.id)
       }
-      subject{ TimelinesForTaxonConcept.new(tc.id) }
+      subject{ Checklist::TimelinesForTaxonConcept.new(tc) }
       specify{ subject.raw_timelines['III'].timeline_events.should_not be_empty }
       specify{ subject.raw_timelines['I'].timeline_events.should be_empty }
     end
@@ -63,7 +63,7 @@ describe TimelinesForTaxonConcept do
         Sapi::rebuild(:except => [:taxonomy])
         MTaxonConcept.find(tc.id)
       }
-      subject{ TimelinesForTaxonConcept.new(tc.id) }
+      subject{ Checklist::TimelinesForTaxonConcept.new(tc) }
       specify{ subject.raw_timelines['III'].timeline_events.should be_empty }
       specify{ subject.raw_timelines['III'].timelines.first.timeline_events.should_not be_empty }
       specify{ subject.raw_timelines['I'].timeline_events.should be_empty }
@@ -72,18 +72,16 @@ describe TimelinesForTaxonConcept do
 
   describe :timeline_years do
     context "when in 1990" do
-      let(:tc){ create(:taxon_concept) }
-      subject{ TimelinesForTaxonConcept.new(tc.id).timeline_years }
+      let(:tc){
+        tc = create(:taxon_concept)
+        Sapi::rebuild(:except => [:taxonomy])
+        MTaxonConcept.find(tc.id)
+      }
+      subject{ Checklist::TimelinesForTaxonConcept.new(tc).timeline_years }
       specify{ subject.size.should == 5 }
-      specify{ subject.first[:year].should == 1975 }
-      specify{ subject.last[:year].should == 1995 }
+      specify{ subject.first.year.should == 1975 }
+      specify{ subject.last.year.should == 1995 }
     end
-  end
-
-  describe :attributes do
-    let(:tc){ create(:taxon_concept) }
-    subject{ TimelinesForTaxonConcept.new(tc.id) }
-    specify{ subject.attributes['id'].should_not be_blank }
   end
 
 end
