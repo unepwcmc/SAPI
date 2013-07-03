@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     CREATE OR REPLACE VIEW taxon_concepts_view AS
     SELECT taxon_concepts.id,
     taxon_concepts.parent_id,
+    taxon_concepts.taxonomy_id,
     CASE
     WHEN taxonomies.name = 'CITES_EU' THEN TRUE
     ELSE FALSE
@@ -77,7 +78,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     THEN FALSE
     ELSE NULL
     END AS eu_listed,
-    --(listing->'eu_show')::BOOLEAN AS eu_show, --doesn't seem to be used
+    (listing->'eu_show')::BOOLEAN AS eu_show,
     --(listing->'eu_status_original')::BOOLEAN AS eu_status_original, --doesn't seem to be used
     listing->'eu_status' AS eu_status,
     listing->'eu_listing_original' AS eu_listing_original,
@@ -91,6 +92,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     THEN FALSE
     ELSE NULL
     END AS cms_listed,
+    (listing->'cms_show')::BOOLEAN AS cms_show,
     listing->'cms_status' AS cms_status,
     listing->'cms_listing_original' AS cms_listing_original,
     listing->'cms_listing' AS cms_listing,

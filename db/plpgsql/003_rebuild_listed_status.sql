@@ -11,7 +11,9 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       status_original_flag varchar;
       listing_updated_at_flag varchar;
       not_listed_flag varchar;
+      show_flag varchar;
       flags_to_reset text[];
+      ancestor_node_ids INTEGER[];
     BEGIN
     SELECT id INTO deletion_id FROM change_types
       WHERE designation_id = designation.id AND name = 'DELETION';
@@ -24,6 +26,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     status_original_flag = LOWER(designation.name) || '_status_original';
     listing_updated_at_flag = LOWER(designation.name) || '_updated_at';
     not_listed_flag := LOWER(designation.name) || '_not_listed';
+    show_flag := LOWER(designation.name) || '_show';
     flags_to_reset := ARRAY[
       status_flag, status_original_flag, not_listed_flag,
       listing_updated_at_flag
@@ -223,6 +226,37 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
        OR (listing->status_original_flag)::BOOLEAN IS NULL
        OR (listing->status_original_flag)::BOOLEAN = 'f'
      );
+
+    IF node_id IS NOT NULL THEN
+      ancestor_node_ids := ancestor_node_ids_for_node(node_id);
+    END IF;
+
+    -- set designation_show to true for all taxa except:
+    -- implicitly listed subspecies
+    -- hybrids
+    -- excluded and not listed taxa
+    UPDATE taxon_concepts SET listing = listing ||
+    CASE
+      WHEN name_status = 'H'
+      THEN hstore(show_flag, 'f')
+      WHEN (data->'rank_name' = 'SUBSPECIES'
+      OR data->'rank_name' = 'ORDER'
+      OR data->'rank_name' = 'CLASS'
+      OR data->'rank_name' = 'PHYLUM'
+      OR data->'rank_name' = 'KINGDOM')
+      AND listing->status_flag = 'LISTED'
+      AND (listing->status_original_flag)::BOOLEAN = FALSE
+      THEN hstore(show_flag, 'f')
+      WHEN listing->status_flag = 'EXCLUDED'
+      THEN hstore(show_flag, 't')
+      WHEN listing->status_flag = 'DELETED'
+        OR (listing->status_flag)::VARCHAR IS NULL
+      THEN hstore(show_flag, 'f')
+      ELSE hstore(show_flag, 't')
+    END
+    WHERE taxonomy_id = designation.taxonomy_id AND
+    CASE WHEN node_id IS NOT NULL THEN id IN (SELECT id FROM UNNEST(ancestor_node_ids)) ELSE TRUE END;
+
 
     END;
   $$;

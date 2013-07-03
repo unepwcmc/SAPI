@@ -8,12 +8,16 @@ class ListingsExport
     @designation_id = filters[:designation_id]
     @taxon_concepts_ids = filters[:taxon_concepts_ids]
     @geo_entities_ids = filters[:geo_entities_ids]
+    @designation = Designation.find(@designation_id)
     @species_listings_ids = filters[:species_listings_ids]
     #TODO this can go once we change the way appendix is matched
     #there should be an array of species listing ids in taxon_concepts_mview
     #then we would not need the abbreviations
-    @species_listings_ids = SpeciesListing.where(:id => @species_listings_ids).map(&:abbreviation)
-    @designation = Designation.find(@designation_id)
+    @species_listings_ids = SpeciesListing.where(
+      :id => @species_listings_ids,
+      :designation_id => @designation.id
+    ).map(&:abbreviation)
+
   end
 
   def path
@@ -36,13 +40,14 @@ class ListingsExport
   end
 
   def query
-    rel = MTaxonConcept.select(select_columns).
-    by_cites_eu_taxonomy.without_non_accepted.without_hidden.
-    where(:rank_name => [Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY]).
+    rel = MTaxonConcept.select(select_columns).without_non_accepted.
+    where(
+      :taxonomy_id => @designation.taxonomy_id,
+      :"#{@designation.name.downcase}_show" => true,
+      :rank_name => [Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY]
+    ).
     joins(
-      @designation.is_cites? ?
-      {:cites_closest_listed_ancestor => :current_listing_changes} :
-      {:eu_closest_listed_ancestor => :current_listing_changes}
+      :"#{@designation.name.downcase}_closest_listed_ancestor" => :current_listing_changes
     ).
     where('listing_changes_mview.designation_id' => @designation_id).
     group(group_columns).
@@ -118,9 +123,13 @@ private
   end
 
   def closest_listed_ancestor_table_name
-    @designation.is_cites? ?
-      'cites_closest_listed_ancestors_taxon_concepts_mview' :
-      'eu_closest_listed_ancestors_taxon_concepts_mview'
+    if @designation.is_cms?
+      'cms_closest_listed_ancestors_taxon_concepts_mview'
+    else
+      @designation.is_cites? ?
+        'cites_closest_listed_ancestors_taxon_concepts_mview' :
+        'eu_closest_listed_ancestors_taxon_concepts_mview'
+    end
   end
 
   def closest_listed_ancestor_select_columns
