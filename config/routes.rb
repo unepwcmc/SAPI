@@ -68,6 +68,7 @@ SAPI::Application.routes.draw do
       resources :taxon_concept_cites_suspensions,
         :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :cites_suspensions
+      resources :taxon_instruments, :only => [ :index, :new, :create, :edit, :update, :destroy ]
     end
     root :to => 'home#index'
   end
