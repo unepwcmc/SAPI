@@ -5,6 +5,9 @@ CREATE OR REPLACE FUNCTION rebuild_eu_listed_status_for_node(node_id integer) RE
       designation designations%ROWTYPE;
     BEGIN
     SELECT * INTO designation FROM designations WHERE name = 'EU';
+    IF NOT FOUND THEN
+      RETURN;
+    END IF;
     PERFORM rebuild_listing_status_for_designation_and_node(designation, node_id);
     END;
   $$;

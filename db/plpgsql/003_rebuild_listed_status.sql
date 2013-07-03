@@ -28,6 +28,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       status_flag, status_original_flag, not_listed_flag,
       listing_updated_at_flag
     ];
+
     IF designation.name = 'CITES' THEN
       flags_to_reset := flags_to_reset ||
         ARRAY['cites_listing','cites_I','cites_II','cites_III'];

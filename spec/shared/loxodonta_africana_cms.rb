@@ -3,7 +3,7 @@ shared_context "Loxodonta africana CMS" do
   before(:all) do
     @order = create_cms_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Proboscidea'),
-      :parent => cites_eu_mammalia
+      :parent => cms_mammalia
     )
     @family = create_cms_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Elephantidae'),
@@ -20,7 +20,8 @@ shared_context "Loxodonta africana CMS" do
 
     create_cms_II_addition(
      :taxon_concept => @species,
-     :effective_at => '1979-01-01'
+     :effective_at => '1979-01-01',
+     :is_current => true
     )
 
     Sapi::rebuild(:except => [:taxonomy])
