@@ -2,9 +2,9 @@ CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name 
   LANGUAGE sql IMMUTABLE
   AS $$
     SELECT CASE
-      WHEN rank_name IN ('ORDER', 'FAMILY', 'GENUS')
-      THEN full_name || ' spp.'
-      ELSE full_name
+      WHEN $1 IN ('ORDER', 'FAMILY', 'GENUS')
+      THEN $2 || ' spp.'
+      ELSE $2
     END;
   $$;
 
@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION ancestor_listing_auto_note(rank_name VARCHAR(255), fu
 RETURNS TEXT
   LANGUAGE sql IMMUTABLE
   AS $$
-    SELECT rank_name || ' listing: ' || full_name_with_spp(rank_name, full_name);
+    SELECT rank_name || ' listing: ' || full_name_with_spp($1, $2);
   $$;
 
 CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void

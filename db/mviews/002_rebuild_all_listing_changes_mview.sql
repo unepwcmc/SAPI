@@ -130,8 +130,8 @@ WITH RECURSIVE listing_changes_timeline AS (
   timeline_position,
   TRUE AS is_applicable
   FROM all_listing_changes_mview
-  WHERE designation_id = in_designation_id
-  AND all_listing_changes_mview.affected_taxon_concept_id = node_id
+  WHERE designation_id = $1
+  AND all_listing_changes_mview.affected_taxon_concept_id = $2
   AND timeline_position = 1
 
   UNION

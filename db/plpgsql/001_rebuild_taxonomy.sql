@@ -4,7 +4,7 @@ CREATE OR REPLACE FUNCTION ancestor_node_ids_for_node(node_id integer) RETURNS I
   AS $$
     WITH RECURSIVE ancestors AS (
       SELECT h.id, h.parent_id
-      FROM taxon_concepts h WHERE id = node_id
+      FROM taxon_concepts h WHERE id = $1
 
       UNION
 
@@ -18,16 +18,16 @@ CREATE OR REPLACE FUNCTION full_name(rank_name VARCHAR(255), ancestors HSTORE) R
   LANGUAGE sql IMMUTABLE
   AS $$
     SELECT CASE
-      WHEN rank_name = 'SPECIES' THEN
+      WHEN $1 = 'SPECIES' THEN
         -- now create a binomen for full name
-        CAST(ancestors -> 'genus_name' AS VARCHAR) || ' ' ||
-        LOWER(CAST(ancestors -> 'species_name' AS VARCHAR))
-      WHEN rank_name = 'SUBSPECIES' THEN
+        CAST($2 -> 'genus_name' AS VARCHAR) || ' ' ||
+        LOWER(CAST($2 -> 'species_name' AS VARCHAR))
+      WHEN $1 = 'SUBSPECIES' THEN
         -- now create a trinomen for full name
-        CAST(ancestors -> 'genus_name' AS VARCHAR) || ' ' ||
-        LOWER(CAST(ancestors -> 'species_name' AS VARCHAR)) || ' ' ||
-        LOWER(CAST(ancestors -> 'subspecies_name' AS VARCHAR))
-      ELSE ancestors -> LOWER(rank_name || '_name')
+        CAST($2 -> 'genus_name' AS VARCHAR) || ' ' ||
+        LOWER(CAST($2 -> 'species_name' AS VARCHAR)) || ' ' ||
+        LOWER(CAST($2 -> 'subspecies_name' AS VARCHAR))
+      ELSE $2 -> LOWER($1 || '_name')
     END;
   $$;
 
@@ -35,9 +35,9 @@ CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name 
   LANGUAGE sql IMMUTABLE
   AS $$
     SELECT CASE
-      WHEN rank_name IN ('ORDER', 'FAMILY')
-      THEN full_name || ' spp.'
-      ELSE full_name
+      WHEN $1 IN ('ORDER', 'FAMILY')
+      THEN $2 || ' spp.'
+      ELSE $2
     END;
   $$;
 
@@ -51,7 +51,7 @@ CREATE OR REPLACE FUNCTION ancestors_names(node_id INTEGER) RETURNS HSTORE
       FROM taxon_concepts h
       INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
       INNER JOIN ranks ON h.rank_id = ranks.id
-      WHERE h.id = node_id
+      WHERE h.id = $1
 
       UNION
 
