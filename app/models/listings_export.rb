@@ -95,13 +95,15 @@ private
     [
       :id, :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
       :genus_name, :species_name, :subspecies_name,
-      :full_name, :author_year, :rank_name
-    ] << (@designation.is_eu? ? :eu_listing_original : :cites_listing_original)
+      :full_name, :author_year, :rank_name, :"#{@designation.name.downcase}_listing_original"
+    ]
   end
 
   def select_columns
     (
-      taxon_concept_sql_columns <<
+      taxon_concept_sql_columns.each_with_index.map do |c, idx|
+        "#{c} AS #{taxon_concept_columns[idx]}" # alias all
+      end <<
       closest_listed_ancestor_select_columns
     ).join(', ')
   end
@@ -115,7 +117,15 @@ private
   end
 
   def taxon_concept_sql_columns
-    taxon_concept_columns.map{ |c| "taxon_concepts_mview.#{c}" }
+    res = taxon_concept_columns.map{ |c| "taxon_concepts_mview.#{c}" }
+    # columns to lowercase
+    [
+      taxon_concept_columns.index(:species_name),
+      taxon_concept_columns.index(:subspecies_name)
+    ].each do |idx|
+      res[idx] = "LOWER(#{res[idx]})"
+    end
+    res
   end
 
   def closest_listed_ancestor_columns
@@ -123,13 +133,7 @@ private
   end
 
   def closest_listed_ancestor_table_name
-    if @designation.is_cms?
-      'cms_closest_listed_ancestors_taxon_concepts_mview'
-    else
-      @designation.is_cites? ?
-        'cites_closest_listed_ancestors_taxon_concepts_mview' :
-        'eu_closest_listed_ancestors_taxon_concepts_mview'
-    end
+    "#{@designation.name.downcase}_closest_listed_ancestors_taxon_concepts_mview"
   end
 
   def closest_listed_ancestor_select_columns
@@ -148,14 +152,14 @@ private
     AS closest_listed_ancestor_full_name_with_spp,
     ARRAY_TO_STRING(
       ARRAY_AGG(
-        '**' || species_listing_name || '** ' || listing_changes_mview.full_note_en
+        '**' || species_listing_name || '** ' || strip_tags(listing_changes_mview.full_note_en)
         ORDER BY species_listing_name
       ),
       '\n'
     ) AS closest_listed_ancestor_full_note_en,
     ARRAY_TO_STRING(
       ARRAY_AGG(
-        '**' || species_listing_name || '** ' || listing_changes_mview.hash_full_note_en
+        '**' || species_listing_name || '** ' || strip_tags(listing_changes_mview.hash_full_note_en)
         ORDER BY species_listing_name
       ),
       '\n'
