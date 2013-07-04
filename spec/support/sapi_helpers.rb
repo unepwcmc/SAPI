@@ -264,7 +264,7 @@ shared_context :sapi do
   end
 end
 
-module Sapi
+module SapiSpec
   module Helpers
     def self.included(scope)
       scope.include_context :sapi
