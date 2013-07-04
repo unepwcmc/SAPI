@@ -47,9 +47,8 @@ class ListingsExport
       :rank_name => [Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY]
     ).
     joins(
-      :"#{@designation.name.downcase}_closest_listed_ancestor" => :current_listing_changes
+      :"#{@designation.name.downcase}_closest_listed_ancestor" => :"current_#{@designation.name.downcase}_additions"
     ).
-    where('listing_changes_mview.designation_id' => @designation_id).
     group(group_columns).
     order('taxon_concepts_mview.taxonomic_position')
     rel = if @species_listings_ids && @geo_entities_ids
@@ -88,7 +87,7 @@ private
   def csv_column_headers
     taxon_concept_columns.map do |c|
       Checklist::ColumnDisplayNameMapping.column_display_name_for(c)
-    end + ['Party', 'Listed under', 'Full note', '# Full note']
+    end + ['Party', 'Listed under', 'Short note', 'Full note', '# Full note']
   end
 
   def taxon_concept_columns
@@ -129,7 +128,7 @@ private
   end
 
   def closest_listed_ancestor_columns
-    [:party_iso_code, :full_name_with_spp, :full_note_en, :hash_full_note_en]
+    [:party_iso_code, :full_name_with_spp, :short_note_en, :full_note_en, :hash_full_note_en]
   end
 
   def closest_listed_ancestor_table_name
@@ -142,7 +141,7 @@ private
       ARRAY_AGG(
         listing_changes_mview.party_iso_code
       ),
-      '\n'
+      ','
     ) AS closest_listed_ancestor_party_iso_code,
     #{closest_listed_ancestor_table_name}.full_name || ' ' ||
     CASE
@@ -150,6 +149,13 @@ private
       ELSE ''
     END
     AS closest_listed_ancestor_full_name_with_spp,
+    ARRAY_TO_STRING(
+      ARRAY_AGG(
+        '**' || species_listing_name || '** ' || strip_tags(listing_changes_mview.short_note_en)
+        ORDER BY species_listing_name
+      ),
+      '\n'
+    ) AS closest_listed_ancestor_short_note_en,
     ARRAY_TO_STRING(
       ARRAY_AGG(
         '**' || species_listing_name || '** ' || strip_tags(listing_changes_mview.full_note_en)
