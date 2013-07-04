@@ -81,8 +81,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis sollicitudin
   <p>
   <%= label_tag 'Higher taxa' %>
   <%= select_tag :"filters[taxon_concepts_ids]",
-    options_from_collection_for_select(@taxon_concepts, :id, :full_name),
+    options_for_select(
+      @taxon_concepts.map do |tc|
+        [tc.full_name, tc.id, {:class => tc.designation_id}]
+      end
+    ),
     {
+      :id => :species_listing_taxon_concept_id,
       :class => "select2", :multiple => true, :style => 'width: 220px',
       :'data-placeholder' => 'All (select higher taxa to filter)'
     }
