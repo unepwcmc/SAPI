@@ -123,16 +123,22 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
 
     -- set the cites_status_original flag to false for taxa included in parent listing
+    -- unless the inclusion is part of split listing where the other part is actually
+    -- an explicit listing
     UPDATE taxon_concepts
     SET listing = listing || hstore(status_original_flag, 'f')
-    FROM
-    listing_changes
-    WHERE
-      taxon_concepts.id = listing_changes.taxon_concept_id
-      AND is_current = 't'
-      AND inclusion_taxon_concept_id IS NOT NULL
-      AND
-      CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
+    FROM (
+    SELECT taxon_concepts.id
+    FROM taxon_concepts
+    JOIN listing_changes ON taxon_concepts.id = listing_changes.taxon_concept_id
+    JOIN change_types ON change_types.id = listing_changes.change_type_id
+    WHERE is_current = TRUE
+    AND
+    CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END
+    GROUP BY taxon_concepts.id, designation_id
+    HAVING EVERY(inclusion_taxon_concept_id IS NOT NULL)
+    ) taxon_concepts_with_inclusions_only
+    WHERE taxon_concepts_with_inclusions_only.id = taxon_concepts.id;
 
     -- propagate cites_status to descendants
     WITH RECURSIVE q AS
