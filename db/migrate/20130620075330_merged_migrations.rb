@@ -688,7 +688,7 @@ execute <<-SQL
     GROUP BY taxon_concepts.id
     ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt
   SQL
-  Sapi::rebuild_taxon_concepts_mview
+  Sapi.rebuild(:only => [:taxon_concepts_mview], :disable_triggers => false)
 
 execute <<-SQL
     DROP VIEW IF EXISTS listing_changes_view;
@@ -754,6 +754,6 @@ execute <<-SQL
     END
   SQL
 
-    Sapi::rebuild_listing_changes_mview
+    Sapi.rebuild(:only => [:listing_changes_mview], :disable_triggers => false)
   end
 end
