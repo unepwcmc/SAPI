@@ -60,7 +60,7 @@ describe Checklist::Pdf::Index do
       :annotation_id => species_annotation.id,
       :is_current => true
     )
-    Sapi::rebuild(:except => [:taxonomy])
+    Sapi.rebuild(:except => [:taxonomy])
   }
   describe :annotations_key do
     subject{ Checklist::Pdf::Index.new({}) }

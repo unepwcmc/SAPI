@@ -2,7 +2,7 @@ namespace :import do
 
   desc 'Runs import tasks for cleaned files'
   task :cleaned => :environment do
-    Sapi::drop_indices
+    Sapi::drop_indexes
     Sapi::disable_triggers
     Rake::Task["db:seed"].invoke
     Rake::Task["import:species"].invoke(
@@ -87,10 +87,10 @@ namespace :import do
       'lib/assets/files/cites_suspensions_utf8.csv'
     )
 
-
+    Sapi::create_indexes
     Sapi::rebuild(:disable_triggers => true)
+
     Sapi::enable_triggers
-    Sapi::create_indices
 
     Rake::Task['import:stats'].invoke
   end
