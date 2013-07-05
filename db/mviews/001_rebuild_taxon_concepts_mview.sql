@@ -161,6 +161,15 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     null::timestamp with time zone as expiry
     FROM taxon_concepts_view;
 
+    RAISE NOTICE 'Creating indexes on taxon_concepts materialized view';
+    CREATE INDEX ON taxon_concepts_mview (id);
+    CREATE INDEX ON taxon_concepts_mview (parent_id);
+    CREATE INDEX ON taxon_concepts_mview (full_name);
+    CREATE INDEX ON taxon_concepts_mview (taxonomy_is_cites_eu, cites_listed, kingdom_position);
+    CREATE INDEX ON taxon_concepts_mview (cites_closest_listed_ancestor_id);
+    CREATE INDEX ON taxon_concepts_mview (eu_closest_listed_ancestor_id);
+    CREATE INDEX ON taxon_concepts_mview (cms_closest_listed_ancestor_id);
+
   END;
   $$;
 
