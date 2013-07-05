@@ -96,6 +96,7 @@ shared_context "Caiman latirostris" do
      :taxon_concept => @species,
      :annotation_id => a1.id,
      :effective_at => '1997-09-18',
+     :inclusion_taxon_concept_id => @order.id,
      :is_current => true
     )
     create(
@@ -108,6 +109,7 @@ shared_context "Caiman latirostris" do
      :taxon_concept => @species,
      :annotation_id => a1.id,
      :effective_at => '1997-09-18',
+     :inclusion_taxon_concept_id => @order.id,
      :is_current => true
     )
     create(

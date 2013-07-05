@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION higher_or_equal_ranks_names(in_rank_name VARCHAR(255)
       ])
     )
     SELECT ARRAY_AGG(rank_name) FROM ranks_in_order
-    WHERE row_no >= (SELECT row_no FROM ranks_in_order WHERE rank_name = in_rank_name);
+    WHERE row_no >= (SELECT row_no FROM ranks_in_order WHERE rank_name = $1);
   $$;
 
 CREATE OR REPLACE FUNCTION rebuild_all_listing_changes_mview() RETURNS void
@@ -130,8 +130,8 @@ WITH RECURSIVE listing_changes_timeline AS (
   timeline_position,
   TRUE AS is_applicable
   FROM all_listing_changes_mview
-  WHERE designation_id = in_designation_id
-  AND all_listing_changes_mview.affected_taxon_concept_id = node_id
+  WHERE designation_id = $1
+  AND all_listing_changes_mview.affected_taxon_concept_id = $2
   AND timeline_position = 1
 
   UNION
