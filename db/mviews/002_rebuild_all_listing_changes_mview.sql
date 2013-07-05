@@ -165,6 +165,7 @@ WITH RECURSIVE listing_changes_timeline AS (
   AND listing_changes_timeline.effective_at = hi.effective_at
   THEN FALSE
   WHEN hi.taxon_concept_id = listing_changes_timeline.context
+  OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
   THEN TRUE
   WHEN listing_changes_timeline.context IS NULL --this would be the case when deleted
   THEN TRUE -- unless exlusion is active...
