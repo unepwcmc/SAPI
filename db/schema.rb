@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130620075330) do
+ActiveRecord::Schema.define(:version => 20130702093702) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -158,6 +158,13 @@ ActiveRecord::Schema.define(:version => 20130620075330) do
     t.integer  "geo_relationship_type_id", :null => false
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
+  end
+
+  create_table "instruments", :force => true do |t|
+    t.integer  "designation_id"
+    t.string   "name"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   create_table "languages", :force => true do |t|
@@ -400,6 +407,14 @@ ActiveRecord::Schema.define(:version => 20130620075330) do
     t.datetime "expiry"
   end
 
+  create_table "taxon_instruments", :force => true do |t|
+    t.integer  "taxon_concept_id"
+    t.integer  "instrument_id"
+    t.datetime "effective_from"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
   create_table "taxon_names", :force => true do |t|
     t.string   "scientific_name", :null => false
     t.datetime "created_at",      :null => false
@@ -595,6 +610,8 @@ ActiveRecord::Schema.define(:version => 20130620075330) do
   add_foreign_key "geo_relationships", "geo_entities", :name => "geo_relationships_other_geo_entity_id_fk", :column => "other_geo_entity_id"
   add_foreign_key "geo_relationships", "geo_relationship_types", :name => "geo_relationships_geo_relationship_type_id_fk"
 
+  add_foreign_key "instruments", "designations", :name => "instruments_designation_id_fk"
+
   add_foreign_key "listing_changes", "annotations", :name => "listing_changes_annotation_id_fk"
   add_foreign_key "listing_changes", "annotations", :name => "listing_changes_hash_annotation_id_fk", :column => "hash_annotation_id"
   add_foreign_key "listing_changes", "change_types", :name => "listing_changes_change_type_id_fk"
@@ -621,6 +638,9 @@ ActiveRecord::Schema.define(:version => 20130620075330) do
   add_foreign_key "taxon_concepts", "taxon_concepts", :name => "taxon_concepts_parent_id_fk", :column => "parent_id"
   add_foreign_key "taxon_concepts", "taxon_names", :name => "taxon_concepts_taxon_name_id_fk"
   add_foreign_key "taxon_concepts", "taxonomies", :name => "taxon_concepts_taxonomy_id_fk"
+
+  add_foreign_key "taxon_instruments", "instruments", :name => "taxon_instruments_instrument_id_fk"
+  add_foreign_key "taxon_instruments", "taxon_concepts", :name => "taxon_instruments_taxon_concept_id_fk"
 
   add_foreign_key "taxon_relationships", "taxon_concepts", :name => "taxon_relationships_taxon_concept_id_fk"
   add_foreign_key "taxon_relationships", "taxon_relationship_types", :name => "taxon_relationships_taxon_relationship_type_id_fk"
