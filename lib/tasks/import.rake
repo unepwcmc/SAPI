@@ -88,7 +88,7 @@ namespace :import do
     )
 
 
-    Sapi::rebuild()
+    Sapi::rebuild(:disable_triggers => true)
     Sapi::enable_triggers
     Sapi::create_indices
 
@@ -96,8 +96,7 @@ namespace :import do
   end
 
   desc 'Drops and reimports db'
-  task :redo => ["db:drop", "db:create", "db:migrate", "db:seed", 
-    "import:cleaned", "import:cites_parties"]
+  task :redo => ["db:drop", "db:create", "db:migrate", "import:cleaned"]
 
   desc 'Shows database summary stats'
   task :stats => :environment do
