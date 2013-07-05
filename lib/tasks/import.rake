@@ -87,8 +87,8 @@ namespace :import do
       'lib/assets/files/cites_suspensions_utf8.csv'
     )
 
+    Sapi::rebuild(:disable_triggers => true)
 
-    Sapi.rebuild()
     Sapi::enable_triggers
     Sapi::create_indexes
 
@@ -96,8 +96,7 @@ namespace :import do
   end
 
   desc 'Drops and reimports db'
-  task :redo => ["db:drop", "db:create", "db:migrate", "db:seed", 
-    "import:cleaned", "import:cites_parties"]
+  task :redo => ["db:drop", "db:create", "db:migrate", "import:cleaned"]
 
   desc 'Shows database summary stats'
   task :stats => :environment do

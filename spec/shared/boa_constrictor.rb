@@ -39,13 +39,11 @@ shared_context "Boa constrictor" do
 
     create_cites_II_addition(
      :taxon_concept => @species,
-     :effective_at => '1975-07-01',
-     :is_current => true
+     :effective_at => '1975-07-01'
     )
     create_eu_B_addition(
      :taxon_concept => @species,
-     :effective_at => '1975-07-01',
-     :is_current => true
+     :effective_at => '1975-07-01'
     )
 
     create_cites_II_addition(

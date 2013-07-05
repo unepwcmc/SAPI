@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION ancestor_listing_auto_note(rank_name VARCHAR(255), fu
 RETURNS TEXT
   LANGUAGE sql IMMUTABLE
   AS $$
-    SELECT rank_name || ' listing: ' || full_name_with_spp($1, $2);
+    SELECT $1 || ' listing: ' || full_name_with_spp($1, $2);
   $$;
 
 CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
