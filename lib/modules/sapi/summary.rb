@@ -1,7 +1,7 @@
 module Sapi
   module Summary
 
-    def database_summary
+    def self.database_summary
       puts "#############################################################"
       puts "#################                  ##########################"
       puts "################# Database Summary ##########################"
@@ -21,45 +21,59 @@ module Sapi
       print_count_for "French CommonNames", CommonName.joins(:language).where(:languages => {:name_en => 'French'}).count
       print_count_for "Spanish CommonNames", CommonName.joins(:language).where(:languages => {:name_en => 'Spanish'}).count
       print_count_for "Total TaxonConcepts", TaxonConcept.count
-      Taxonomy.where(:name => 'CITES_EU').each do |t|
-        puts "#############################################################"
-        puts "Details for Taxa under #{t.name}"
-        animals_ids = TaxonConcept.where(:taxonomy_id => t.id, :name_status => 'A', :legacy_type => 'Animalia').select('id').map(&:id)
-        plants_ids = TaxonConcept.where(:taxonomy_id => t.id, :name_status => 'A', :legacy_type => 'Plantae').select('id').map(&:id)
-        puts ">>> Animalia general stats"
-        print_count_for "accepted", animals_ids.count
-        print_count_for "non accepted nor synonyms", TaxonConcept.where(:taxonomy_id => t.id, :legacy_type => 'Animalia').where("name_status NOT IN ('A', 'S')").count
-        print_count_for "Listing Changes", ListingChange.where(:taxon_concept_id => animals_ids).count
-        print_count_for "Distributions", Distribution.where(:taxon_concept_id => animals_ids).count
-        print_count_for "TaxonCommons", TaxonCommon.where(:taxon_concept_id => animals_ids).count
-        print_count_for "Synonyms", TaxonConcept.where(:taxonomy_id => t.id, :name_status => 'S', :legacy_type => 'Animalia').count
-        puts ">>> Plantae general stats"
-        print_count_for "Accepted", plants_ids.count
-        print_count_for "non accepted nor synonyms", TaxonConcept.where(:taxonomy_id => t.id, :legacy_type => 'Plantae').where("name_status NOT IN ('A', 'S')").count
-        print_count_for "Listing Changes", ListingChange.where(:taxon_concept_id => plants_ids).count
-        print_count_for "Distributions", Distribution.where(:taxon_concept_id => plants_ids).count
-        print_count_for "TaxonCommons", TaxonCommon.where(:taxon_concept_id => plants_ids).count
-        print_count_for "Synonyms", TaxonConcept.where(:taxonomy_id => t.id, :name_status => 'S', :legacy_type => 'Plantae').count
+      Taxonomy.all.each { |t| taxonomy_summary(t) }
+    end
 
-        puts "###################### #{t.name} ############################"
-        puts "Break down per Rank"
-        puts "#############################################################"
-        Rank.order(:taxonomic_position).each do |r|
-          puts "##############   Rank: #{r.name} ####################"
-          ranked_animals_ids = TaxonConcept.where(:id => animals_ids, :rank_id => r.id).select(:id).map(&:id)
-          ranked_plants_ids = TaxonConcept.where(:id => plants_ids, :rank_id => r.id).select(:id).map(&:id)
-          puts ">>> Animalia rank stats"
-          print_count_for "Taxa", ranked_animals_ids.count
-          print_count_for " Listing Changes", ListingChange.where(:taxon_concept_id => ranked_animals_ids).count
-          puts ">>> Plantae rank stats"
-          print_count_for "Taxa", ranked_plants_ids.count
-          print_count_for "Listing Changes", ListingChange.where(:taxon_concept_id => ranked_plants_ids).count
-          puts "#####################################################"
-        end
+    def self.taxonomy_summary(t)
+      puts "#############################################################"
+      puts "Details for Taxa under #{t.name}"
+      TaxonConcept.joins(:rank).where(
+        :"ranks.name" => Rank::KINGDOM, :taxonomy_id => t.id
+      ).each do |k|
+        kingdom_summary(t, k)
       end
     end
 
-    def print_count_for klass, count
+    def self.kingdom_summary(t, k)
+      puts "#############################################################"
+      puts ">>> #{k.full_name} general stats"
+      taxon_concept_ids = TaxonConcept.where(
+        :taxonomy_id => t.id, 
+        :name_status => 'A').
+      where(["(data->'kingdom_id')::INT = ?", k.id]).select('id').map(&:id)
+
+      print_count_for "Accepted", taxon_concept_ids.count
+      print_count_for "Synonyms", TaxonConcept.where(
+        :taxonomy_id => t.id, :name_status => 'S'
+      ).where(["(data->'kingdom_id')::INT = ?", k.id]).count
+      print_count_for "Neither accepted nor synonyms", TaxonConcept.where(
+        :taxonomy_id => t.id
+      ).where(["(data->'kingdom_id')::INT = ?", k.id]).
+      where("name_status NOT IN ('A', 'S')").count
+      print_count_for "Listing Changes", ListingChange.where(
+        :taxon_concept_id => taxon_concept_ids
+      ).count
+      print_count_for "Distributions", Distribution.where(
+        :taxon_concept_id => taxon_concept_ids
+      ).count
+      print_count_for "TaxonCommons", TaxonCommon.where(
+        :taxon_concept_id => taxon_concept_ids
+      ).count
+      
+      Rank.order(:taxonomic_position).each do |r|
+        puts "##############   Rank: #{r.name} ####################"
+        ranked_taxon_concept_ids = TaxonConcept.where(
+          :id => taxon_concept_ids, :rank_id => r.id
+        ).select(:id).map(&:id)     
+        print_count_for "Taxa", ranked_taxon_concept_ids.count
+        print_count_for " Listing Changes", ListingChange.where(
+          :taxon_concept_id => ranked_taxon_concept_ids
+        ).count
+      end     
+      puts "#####################################################"
+    end
+
+    def self.print_count_for klass, count
       puts "#{count} #{klass} in the Database. #{if count == 0 then " !!!!!!!!!!!!!!!!!!!!!!! ZERO !!!!!!!!!!!!!!!!!!!!!!! " end}"
     end
 
