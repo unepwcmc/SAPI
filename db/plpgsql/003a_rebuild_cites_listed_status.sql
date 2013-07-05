@@ -31,6 +31,9 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_status_for_node(node_id integer)
       WHEN listing->'cites_status' = 'EXCLUDED'
       THEN hstore('cites_show', 't')
       WHEN listing->'cites_status' = 'DELETED'
+        AND (listing->'not_really_deleted')::BOOLEAN = TRUE
+      THEN hstore('cites_show', 't')
+      WHEN listing->'cites_status' = 'DELETED'
         OR (listing->'cites_status')::VARCHAR IS NULL
       THEN hstore('cites_show', 'f')
       ELSE hstore('cites_show', 't')

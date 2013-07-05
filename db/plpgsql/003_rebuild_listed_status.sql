@@ -103,6 +103,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     -- set cites_status property to 'DELETED' for all explicitly deleted taxa
     -- omit ones already marked as listed (applies to appendix III deletions)
     -- also set cites_status_original flag to true
+    -- also set a flag if there are listed subspecies of a deleted species
     WITH deleted_taxa AS (
       SELECT taxon_concepts.id
       FROM taxon_concepts
@@ -114,11 +115,28 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
         AND listing -> status_flag <> 'EXCLUDED'
           OR (listing -> status_flag)::VARCHAR IS NULL
       )
+    ), not_really_deleted_taxa AS (
+      -- crazy stuff to do with species that were deleted but have listed subspecies
+      -- so in fact this is really confusing but what can you do, flag it
+        SELECT DISTINCT parent_id AS id
+        FROM taxon_concepts
+        JOIN deleted_taxa
+        ON taxon_concepts.parent_id = deleted_taxa.id
+        JOIN ranks
+        ON taxon_concepts.rank_id = ranks.id AND ranks.name = 'SUBSPECIES'
+        WHERE taxon_concepts.listing->'cites_status' = 'LISTED'
     )
     UPDATE taxon_concepts
     SET listing = listing || hstore(status_flag, 'DELETED') ||
-      hstore(status_original_flag, 't')
+      hstore(status_original_flag, 't') ||
+      hstore(
+        'not_really_deleted',
+        CASE WHEN not_really_deleted_taxa.id IS NOT NULL THEN 't'
+        ELSE 'f' END
+      )
     FROM deleted_taxa
+    LEFT JOIN not_really_deleted_taxa
+    ON not_really_deleted_taxa.id = deleted_taxa.id
     WHERE taxon_concepts.id = deleted_taxa.id AND
       CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
 
