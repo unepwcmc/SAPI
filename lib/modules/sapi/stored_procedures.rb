@@ -5,6 +5,7 @@ module Sapi
       :taxonomy,
       :cites_listing,
       :eu_listing,
+      :cms_listing,
       :cites_accepted_flags,
       :taxon_concepts_mview,
       :listing_changes_mview
