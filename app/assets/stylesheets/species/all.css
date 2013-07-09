@@ -1,4 +1,4 @@
-/* http://meyerweb.com/eric/tools/css/reset/ 
+/* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -178,7 +178,7 @@ form, fieldset {
 	padding: 0 9px;
 	border-left: none;
 	text-decoration: none;
-	border: 2px solid #253848;
+	border: 1px solid #253848;
 	-webkit-border-radius: 0 20px 20px 0;
 	border-radius: 0 20px 20px 0;
 }
@@ -225,7 +225,7 @@ form, fieldset {
 	background: none;
 }
 .search-block .search fieldset.parent-focus.parent-active .popup { display: block; }
-.search-block .search input[type="submit"] {
+.search-block .search button {
 	width: 101px;
 	float: right;
 	border: none;
@@ -243,11 +243,11 @@ form, fieldset {
 	background: #376382;
 }
 .search-block .search input[type="submit"]:hover { cursor: pointer; }
-.locoation-area {
+.location-area {
 	float: left;
 	padding: 13px 0 0 15px;
 }
-.locoation-area a {
+.location-area a {
 	float: left;
 	font-size: 13px;
 	font-weight: bold;
@@ -261,7 +261,7 @@ form, fieldset {
 	border-radius: 20px;
 	margin: 1px 0 0;
 }
-.locoation-area a:before {
+.location-area a:before {
 	width: 6px;
 	height: 4px;
 	position: absolute;
@@ -270,6 +270,16 @@ form, fieldset {
 	right: 10px;
 	top: 14px;
 	background: url(../species/arrow01.png) no-repeat;
+}
+.location-area span.delete{
+  color: #FF0000 !important;
+  text-decoration: none;
+  border: none;
+
+  &:hover {
+    text-decoration: none;
+    border: none;
+  }
 }
 .search-block .search .popup {
 	display: none;
@@ -397,7 +407,7 @@ form, fieldset {
 	border-left: 1px solid #739cb7;
 }
 .total-species span { font-size: 23px; }
-.inner .locoation-area { padding: 13px 15px 0; }
+.inner .location-area { padding: 13px 15px 0; }
 .container {
 	text-align: left;
 	background: #f5f5f7;
@@ -1036,7 +1046,7 @@ form, fieldset {
 }
 .popup-area.add .list-holder ul li ul { margin: 0 0 8px; }
 .inner .search-block.add .search-form { width: 615px; }
-.inner .search-block.add .locoation-area { padding: 15px 0 0 14px; }
+.inner .search-block.add .location-area { padding: 15px 0 0 14px; }
 .inner .search-block.add .search { width: 589px; }
 .inner .search-block.add .search input[type="text"] { width: 475px; }
 .heading-holder {

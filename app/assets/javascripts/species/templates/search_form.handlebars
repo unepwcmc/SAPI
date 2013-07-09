@@ -1,109 +1,96 @@
-{{controller}}
-{{controller.taxonomy}}
-{{controller.geoEntityId}}
-{{controller.taxonConceptQuery}}
-<div class="search-block add">
   <div class="links-area">
     {{#view Species.TaxonomyToggle option="cites_eu" valueBinding="controller.taxonomy"}}
-      CITES
+    CITES
     {{/view}}
     {{#view Species.TaxonomyToggle option="cms" valueBinding="controller.taxonomy"}}
-      CMS
+    CMS
     {{/view}}
   </div>
   <div class="search-form">
     <form action="#" class="search">
       <fieldset>
-        <input type="text" value="Candoia" title="candoia" />
-        <input type="submit" value="search" />
-        <div class="popup">
-          <ul>
-            <li>
-              <strong class="title">FAMILY</strong>
-              <ul>
-                <li><a href="#"><span>Lox</span>ocemidae (<span>Lox</span>ocemidés)</a></li>
-              </ul>
-            </li>
-            <li>
-              <strong class="title">GENUS</strong>
-              <ul>
-                <li><a href="#"><span>Lox</span>ia</a></li>
-                <li><a href="#"><span>Lox</span>ocemus</a></li>
-                <li><a href="#"><span>Lox</span>odonta</a></li>
-              </ul>
-            </li>
-            <li>
-              <strong class="title">SPECIES</strong>
-              <ul>
-                <li><a href="#"><span>Lox</span>ia curvirostra</a></li>
-                <li><a href="#"><span>Lox</span>ia pytyopsittacus</a></li>
-                <li><a href="#"><span>Lox</span>ia scotica</a></li>
-                <li><a href="#"><span>Lox</span>ocemus bicolor</a></li>
-                <li><a href="#"><span>Lox</span>odonta africana (Loxodonta cyclotis)</a></li>
-              </ul>
-            </li>
-            <li>
-              <ul>
-                <li><a href="#"><span>Lox</span>ia curvirostra</a></li>
-                <li><a href="#"><span>Lox</span>ia pytyopsittacus</a></li>
-                <li><a href="#"><span>Lox</span>ia scotica</a></li>
-                <li><a href="#"><span>Lox</span>ocemus bicolor</a></li>
-                <li><a href="#"><span>Lox</span>odonta africana (Loxodonta cyclotis)</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </fieldset>
-    </form>
-  </div>
-  <div class="locoation-area">
-    <a href="#">Locations</a>
-  </div>
+        {{view Species.SearchTextField
+        valueBinding="controller.taxonConceptQuery"
+        id="scientific_name"
+        title="search"
+        placeholder="Species, higher taxon, synonym or common name..."
+        autocomplete="off"
+      }}
+      <button {{action "loadTaxonConcepts"}}>Search</button>
+      <div class="popup">
+        <ul>
+          <li>
+            <strong class="title">FAMILY</strong>
+            <ul>
+              <li><a href="#"><span>Lox</span>ocemidae (<span>Lox</span>ocemidés)</a></li>
+            </ul>
+          </li>
+          <li>
+            <strong class="title">GENUS</strong>
+            <ul>
+              <li><a href="#"><span>Lox</span>ia</a></li>
+              <li><a href="#"><span>Lox</span>ocemus</a></li>
+              <li><a href="#"><span>Lox</span>odonta</a></li>
+            </ul>
+          </li>
+          <li>
+            <strong class="title">SPECIES</strong>
+            <ul>
+              <li><a href="#"><span>Lox</span>ia curvirostra</a></li>
+              <li><a href="#"><span>Lox</span>ia pytyopsittacus</a></li>
+              <li><a href="#"><span>Lox</span>ia scotica</a></li>
+              <li><a href="#"><span>Lox</span>ocemus bicolor</a></li>
+              <li><a href="#"><span>Lox</span>odonta africana (Loxodonta cyclotis)</a></li>
+            </ul>
+          </li>
+          <li>
+            <ul>
+              <li><a href="#"><span>Lox</span>ia curvirostra</a></li>
+              <li><a href="#"><span>Lox</span>ia pytyopsittacus</a></li>
+              <li><a href="#"><span>Lox</span>ia scotica</a></li>
+              <li><a href="#"><span>Lox</span>ocemus bicolor</a></li>
+              <li><a href="#"><span>Lox</span>odonta africana (Loxodonta cyclotis)</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </fieldset>
+  </form>
 </div>
+{{#view Species.GeoEntitiesDropdown}}
+  <a href="#">Locations</a>
+  <div id="location-area-popup" class="popup-holder01">
+    <div class="popup">
+      <div class="search-block01">
+        <div class="row01">
+          {{view Species.GeoEntityTextField
+          valueBinding="controller.geoEntityAutoCompleteQuery"
+          placeholder="Type to filter countries or regions"
+          autocomplete="off"
+          }}
+          <input type="submit" value="submit" />
+        </div>
+        <strong class="title01">SELECTED LOCATIONS</strong>
+       {{collection Species.SelectedGeoEntitiesCollectionView
+       contentBinding="controller.selectedGeoEntities"}}
+    </div>
+    <div class="list-holder">
+      <ul>
+        <li>
+          <h2>REGIONS</h2>
+          {{collection Species.GeoEntitiesCollectionView
+          contentBinding="controller.autoCompleteRegions"}}
+        </li>
+        <li>
+          <h2>COUNTRIES</h2>
+          {{collection Species.GeoEntitiesCollectionView
+          contentBinding="controller.autoCompleteCountries"}}
+        </li>
+      </ul>
+    </div>
+  </div>
+  </div>
+
+{{/view}}
 
 {{outlet search}}
-
-
-
-
-
-
-
-{{view Species.SearchTextField
-  valueBinding="controller.taxonConceptQuery"
-  id="scientific_name"
-  title="search"
-  placeholder="Species, higher taxon, synonym or common name..."
-  autocomplete="off"
-}}
-
-<div class="drop" style="display: none;" id="autocomplete-dropdown">
-  <img src="/images/decor-dropdown-light.png" alt="arrow for autocomplete dropdown boxclass="decor" width="24" height="13" >
-</div>
-
-
-
-
-<hr>
-
-{{view Species.GeoEntityTextField
-  valueBinding="controller.geoEntityAutoCompleteQuery"
-  placeholder="Type to filter countries or regions"
-  autocomplete="off"
-}}
-
-<h3>Selected Locations</h3>{{controller.geoEntityIds}}
-  {{collection Species.SelectedGeoEntitiesCollectionView
-  contentBinding="controller.selectedGeoEntities"}}
-
-<h3>Regions</h3>
-  {{collection Species.GeoEntitiesCollectionView
-  contentBinding="controller.autoCompleteRegions"}}
-
-<h3>Countries</h3>
-  {{collection Species.GeoEntitiesCollectionView
-  contentBinding="controller.autoCompleteCountries"}}
-
-<hr>
-
-<button {{action "loadTaxonConcepts"}}>Go!</button>
