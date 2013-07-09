@@ -67,9 +67,17 @@ class TradeRestriction < ActiveRecord::Base
     start_date ? start_date.strftime('%Y') : ''
   end
 
+  def party
+    geo_entity_id ? geo_entity.name_en : ''
+  end
+
+  def unit_name
+    unit_id ? unit.name_en : ''
+  end
+
   def self.export filters
     return false if !self.any?
-    path = "public/downloads/cites_#{self.to_s.downcase}s/"
+    path = "public/downloads/#{self.to_s.tableize}/"
     latest = self.order("updated_at DESC").
       limit(1).first.updated_at.strftime("%d%m%Y")
     public_file_name = "#{self.to_s.downcase}s_#{latest}.csv"
@@ -122,6 +130,7 @@ class TradeRestriction < ActiveRecord::Base
     def self.fill_taxon_columns trade_restriction, taxonomy_columns
       columns = []
       taxon = trade_restriction.m_taxon_concept
+      return [""]*(taxonomy_columns.size+1) unless taxon #return array with empty strings
       taxonomy_columns.each do |c|
         columns << taxon.send(c)
       end
