@@ -4,8 +4,12 @@
 {{controller.taxonConceptQuery}}
 <div class="search-block add">
   <div class="links-area">
-    {{view Species.TaxonomyToggle option="cites_eu" label="CITES" valueBinding="controller.taxonomy"}}
-    {{view Species.TaxonomyToggle option="cms" label="CMS" valueBinding="controller.taxonomy"}}
+    {{#view Species.TaxonomyToggle option="cites_eu" valueBinding="controller.taxonomy"}}
+      CITES
+    {{/view}}
+    {{#view Species.TaxonomyToggle option="cms" valueBinding="controller.taxonomy"}}
+      CMS
+    {{/view}}
   </div>
   <div class="search-form">
     <form action="#" class="search">
