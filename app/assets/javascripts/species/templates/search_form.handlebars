@@ -2,10 +2,67 @@
 {{controller.taxonomy}}
 {{controller.geoEntityId}}
 {{controller.taxonConceptQuery}}
-{{view Ember.RadioButton title="CITES" option="cites_eu" group="search[taxonomy]"
-  valueBinding="controller.taxonomy"}}
-{{view Ember.RadioButton title="CMS" option="cms" group="search[taxonomy]"
-  valueBinding="controller.taxonomy"}}
+<div class="search-block add">
+  <div class="links-area">
+    {{view Species.TaxonomyToggle option="cites_eu" label="CITES" valueBinding="controller.taxonomy"}}
+    {{view Species.TaxonomyToggle option="cms" label="CMS" valueBinding="controller.taxonomy"}}
+  </div>
+  <div class="search-form">
+    <form action="#" class="search">
+      <fieldset>
+        <input type="text" value="Candoia" title="candoia" />
+        <input type="submit" value="search" />
+        <div class="popup">
+          <ul>
+            <li>
+              <strong class="title">FAMILY</strong>
+              <ul>
+                <li><a href="#"><span>Lox</span>ocemidae (<span>Lox</span>ocemidés)</a></li>
+              </ul>
+            </li>
+            <li>
+              <strong class="title">GENUS</strong>
+              <ul>
+                <li><a href="#"><span>Lox</span>ia</a></li>
+                <li><a href="#"><span>Lox</span>ocemus</a></li>
+                <li><a href="#"><span>Lox</span>odonta</a></li>
+              </ul>
+            </li>
+            <li>
+              <strong class="title">SPECIES</strong>
+              <ul>
+                <li><a href="#"><span>Lox</span>ia curvirostra</a></li>
+                <li><a href="#"><span>Lox</span>ia pytyopsittacus</a></li>
+                <li><a href="#"><span>Lox</span>ia scotica</a></li>
+                <li><a href="#"><span>Lox</span>ocemus bicolor</a></li>
+                <li><a href="#"><span>Lox</span>odonta africana (Loxodonta cyclotis)</a></li>
+              </ul>
+            </li>
+            <li>
+              <ul>
+                <li><a href="#"><span>Lox</span>ia curvirostra</a></li>
+                <li><a href="#"><span>Lox</span>ia pytyopsittacus</a></li>
+                <li><a href="#"><span>Lox</span>ia scotica</a></li>
+                <li><a href="#"><span>Lox</span>ocemus bicolor</a></li>
+                <li><a href="#"><span>Lox</span>odonta africana (Loxodonta cyclotis)</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <div class="locoation-area">
+    <a href="#">Locations</a>
+  </div>
+</div>
+
+{{outlet search}}
+
+
+
+
+
 
 
 {{view Species.SearchTextField

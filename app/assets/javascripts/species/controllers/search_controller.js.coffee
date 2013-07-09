@@ -26,7 +26,7 @@ Species.SearchController = Ember.Controller.extend
 
   toParams: ->
     scientific_name : this.get('scientificName')
-      
+
 
   geoEntityAutoCompleteRegExpObserver: ( ->
     @set 'autoCompleteRegions', @get('controllers.geoEntities.regions')
