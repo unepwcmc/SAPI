@@ -1258,7 +1258,7 @@ form, fieldset {
 #main .block thead tr { background: #f5f5f7; }
 #main .block .btn-hloder {
 	margin: -1px 0 0;
-	padding: 46px 29px 0;
+	/*padding: 46px 29px 0; */
 	text-align: center;
   display: none;
 }
