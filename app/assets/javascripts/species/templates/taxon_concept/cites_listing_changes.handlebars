@@ -15,8 +15,11 @@
     <tr {{bindAttr class="listing.is_current:current:historic"}}>
       <td>&nbsp;</td>
       <td>
-        <div class="cites_appendix appx_{{unbound listing.species_listing_name}}">
+        <div class="cites_appendix {{unbound listing.change_type}}_{{unbound listing.species_listing_name}}">
           <span>{{listing.species_listing_name}}</span>
+          {{#unless listing.is_addition}}
+            <span class="subscript">{{listing.change_type}}</span>
+          {{/unless}}
         </div>
       </td>
       <td>{{listing.party_full_name}}</td>

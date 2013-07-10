@@ -4,7 +4,7 @@
 
   color: #fff;
 
-  .appx_I &, &.appx_I {
+  .a_I &, &.a_I {
     background: url(/assets/species/cites-appendix.png);
     background-position: 0px 0px;
     span {
@@ -13,7 +13,33 @@
     }
   }
 
-  .appx_II &, &.appx_II {
+  .d_I &, &.d_I {
+    background: url(/assets/species/cites-appendix.png);
+    background-position: 0px 156px;
+    width: 44px;
+    span {
+      line-height: 2em;
+      margin-left: 10px;
+    }
+    span.subscript {
+      margin-left: 14px;
+    }
+  }
+
+  .r_I &, &.r_I, .w_I &, &.w_I {
+    background: url(/assets/species/cites-appendix.png);
+    background-position: 0px 78px;
+    width: 44px;
+    span {
+      line-height: 2em;
+      margin-left: 10px;
+    }
+    span.subscript {
+      margin-left: 14px;
+    }
+  }
+
+  .a_II &, &.a_II {
     background: url(/assets/species/cites-appendix.png);
     background-position: 0px 234px;
     span {
@@ -22,12 +48,64 @@
     }
   }
 
-  .appx_III &, &.appx_III {
+  .d_II &, &.d_II {
+    background: url(/assets/species/cites-appendix.png);
+    background-position: 0px 130px;
+    width: 44px;
+    span {
+      line-height: 2em;
+      margin-left: 9px;
+    }
+    span.subscript {
+      margin-left: 14px;
+    }
+  }
+
+  .r_II &, &.r_II, .w_II &, &.w_II {
+    background: url(/assets/species/cites-appendix.png);
+    background-position: 0px 52px;
+    width: 44px;
+    span {
+      line-height: 2em;
+      margin-left: 9px;
+    }
+    span.subscript {
+      margin-left: 14px;
+    }
+  }
+
+  .a_III &, &.a_III {
     background: url(/assets/species/cites-appendix.png);
     background-position: 0px 208px;
     span {
       line-height: 2em;
       margin-left: 7.5px;
+    }
+  }
+
+  .d_III &, &.d_III {
+    background: url(/assets/species/cites-appendix.png);
+    background-position: 0px 104px;
+    width: 44px;
+    span {
+      line-height: 2em;
+      margin-left: 7.5px;
+    }
+    span.subscript {
+      margin-left: 14px;
+    }
+  }
+
+  .r_III &, &.r_III, .w_III &, &.w_III {
+    background: url(/assets/species/cites-appendix.png);
+    background-position: 0px 26px;
+    width: 44px;
+    span {
+      line-height: 2em;
+      margin-left: 7.5px;
+    }
+    span.subscript {
+      margin-left: 14px;
     }
   }
 
