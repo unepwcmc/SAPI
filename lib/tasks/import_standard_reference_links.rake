@@ -109,7 +109,7 @@ namespace :import do
     puts "There are now #{TaxonConceptReference.where(:is_standard => true).count} standard references in the database"
     ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
     ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
-    Sapi::rebuild_references
+    Sapi.rebuild(:only => [:cites_accepted_flags], :disable_triggers => true)
   end
 
 end

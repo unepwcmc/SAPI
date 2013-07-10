@@ -35,11 +35,4 @@ class Quota < TradeRestriction
     :notes, :url, :public_display
   ]
 
-  def party
-    geo_entity_id ? geo_entity.name_en : ''
-  end
-
-  def unit_name
-    unit_id ? unit.name_en : ''
-  end
 end
