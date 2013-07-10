@@ -1176,11 +1176,13 @@ form, fieldset {
 	border-top: none;
 	padding: 67px 0 0;
 }
+#main .block.hovered {
+	border-bottom: 2px solid #376382;
+}
 #main .block {
 	text-align: left;
 	padding: 38px 1px 0;
 	margin: 0 -1px 12px;
-	border-bottom: 2px solid #376382;
 }
 #main .block .title {
 	display: block;
@@ -1255,11 +1257,18 @@ form, fieldset {
 #main .block tr.current { background: #f5f5f7; }
 #main .block thead tr { background: #f5f5f7; }
 #main .block .btn-hloder {
-	background: #eef2f7;
 	margin: -1px 0 0;
 	padding: 46px 29px 0;
 	text-align: center;
+  display: none;
 }
+#main .block .btn-hloder.expanded {
+	background: #eef2f7;
+}
+#main .block.hovered .btn-hloder {
+  display: block;
+}
+
 #main .block .btn-hloder:after {
 	display: block;
 	clear: both;

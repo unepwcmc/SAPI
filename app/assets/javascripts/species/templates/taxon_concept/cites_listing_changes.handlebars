@@ -1,0 +1,42 @@
+<strong class="title">CITES LISTINGS</strong>
+<table summary="data table">
+  <thead>
+    <tr>
+      <th class="col1">&nbsp;</th>
+      <th class="col2">APPENDIX</th>
+      <th class="col3">COUNTRY</th>
+      <th class="col4">DATE</th>
+      <th class="col6">NOTES</th>
+      <th class="col1">&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each listing in controller.citesListings}}
+    <tr {{bindAttr class="listing.is_current:current:historic"}}>
+      <td>&nbsp;</td>
+      <td>
+        <div class="cites_appendix appx_{{unbound listing.species_listing_name}}">
+          <span>{{listing.species_listing_name}}</span>
+        </div>
+      </td>
+      <td>{{listing.party_full_name}}</td>
+      <td>{{listing.effective_at_formatted}}</td>
+      <td>
+        {{#if listing.auto_note}}
+          [{{listing.auto_note}}]
+        {{/if}}
+        {{listing.short_note_en}}
+      </td>
+      <td class="last">&nbsp;</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+<div {{bindAttr class=":btn-hloder citesListingsExpanded:expanded"}}>
+  {{#if citesListingsExpanded}}
+    <a class="link" {{action 'contractCitesListings'}}>HIDE HISTORY</a>
+  {{else}}
+    <a class="link" {{action 'expandCitesListings'}}>SHOW HISTORY</a>
+  {{/if}}
+</div>
+
