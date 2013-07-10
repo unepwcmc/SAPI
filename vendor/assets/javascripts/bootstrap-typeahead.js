@@ -33,6 +33,10 @@
     this.sorter = this.options.sorter || this.sorter
     this.highlighter = this.options.highlighter || this.highlighter
     this.updater = this.options.updater || this.updater
+
+    // The parser is run on the dataset before lookup is called
+    this.parser = this.options.parser || this.parser
+
     this.source = this.options.source
     this.$menu = $(this.options.menu)
     this.shown = false
@@ -44,6 +48,9 @@
     constructor: Typeahead
 
   , select: function () {
+      // Do nothing when a header is clicked on
+      if (this.$menu.find('.active').hasClass('list-header')) { return; }
+
       var val = this.$menu.find('.active').attr('data-value')
       this.$element
         .val(this.updater(val))
@@ -93,6 +100,11 @@
     }
 
   , process: function (items) {
+      // If items is an object, then we must be using headers
+      if (items.length === undefined) {
+        return this.render(items).show();
+      }
+
       var that = this
 
       items = $.grep(items, function (item) {
@@ -137,22 +149,42 @@
   , render: function (items) {
       var that = this
 
-      items = $(items).map(function (i, item) {
-        // Hack
-        if (item.charAt(0) == "_") {
-          item = item.substr(1)
-          i = $(that.options.header)
-            .attr('data-value', item).html(that.highlighter(item))
-        } else {
+      // If items is an object, then we must be using headers
+      if (items.length === undefined) {
+        var result = [];
+        for (var cat in items) {
+          var i = $(that.options.item).text(cat.toString()).addClass('list-header');
+          result.push(i[0]);
+
+          $.each(items[cat], function(i, item) {
+            var i = $(that.options.item).attr('data-value', item);
+            i.find('a').html(that.highlighter(item))
+            result.push(i[0]);
+          });
+        }
+
+        $(result[1]).addClass('active')
+        this.inject_menu(result);
+      } else {
+        items = $(items).map(function (i, item) {
           i = $(that.options.item).attr('data-value', item)
           i.find('a').html(that.highlighter(item))
-        }
-        return i[0]
-      })
+          return i[0]
+        })
 
-      items.first().addClass('active')
-      this.$menu.html(items)
-      return this
+        items.first().addClass('active')
+        this.inject_menu(items);
+      }
+
+      return this      
+    }
+
+    /*
+     * Injects the given HTML in to the deepest child element in the
+     * provided menu HTML
+     */
+  , inject_menu: function(html) {
+      return this.$menu.find('ul').html(html);
     }
 
   , next: function (event) {
@@ -161,6 +193,11 @@
 
       if (!next.length) {
         next = $(this.$menu.find('li')[0])
+      }
+
+      // Don't allow headers to be selected
+      if (next.hasClass('list-header')) {
+        next = next.next();
       }
 
       next.addClass('active')
@@ -172,6 +209,10 @@
 
       if (!prev.length) {
         prev = this.$menu.find('li').last()
+      }
+
+      if (prev.hasClass('list-header')) {
+        prev = prev.prev();
       }
 
       prev.addClass('active')

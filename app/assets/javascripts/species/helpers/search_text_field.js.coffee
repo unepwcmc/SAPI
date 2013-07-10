@@ -8,7 +8,7 @@
 # https://github.com/tcrosen/twitter-bootstrap-typeahead/tree/2.0
 # https://github.com/twitter/typeahead.js
 
-Species.SearchTextField = Ember.TextField.extend(
+Species.SearchTextField = Ember.TextField.extend
 
   value: ""
   attributeBindings: ["autocomplete"]
@@ -35,6 +35,8 @@ Species.SearchTextField = Ember.TextField.extend(
         matcher: self.matcher
         updater: self.updater
         highlighter: self.highlighter
+        parser: self.parser
+        menu: '<div class="popup"><ul> </ul></div>'
     @$().val ""  if @$().val() is @get("placeholder")
     @$().attr "placeholder", ""
 
@@ -49,7 +51,7 @@ Species.SearchTextField = Ember.TextField.extend(
   highlighter: (item) ->
     query = @query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&")
     transform = ($1, match) ->
-      "<span style=\"text-decoration:underline\">" + match + "</span>"
+      "<span>" + match + "</span>"
 
     item.replace(new RegExp("^(" + query + ")", "i"), transform)
       .replace new RegExp("=(" + query + ")", "ig"), transform
@@ -60,38 +62,21 @@ Species.SearchTextField = Ember.TextField.extend(
   sorter: (items) ->
     items
 
-  # This parser relies on a Hack inside bootstrap-typeahead.
-  # If a string in the list starts with an underscore it is treated as
-  # header in the autocomplete list.
-  # TODO: any better alternatives? 
   parser: (data) ->
-    results = []
-    # Extract the names of each result row for use by typeahead.js
-    _.each data, (el, idx) ->
-      unless "_#{el.rank_name}" in results
-        results.push "_#{el.rank_name}"
-      entry = el.full_name
-      if el.matching_names.length > 0
-        entry += " (=" + el.matching_names.join(", ") + ")"
-      results.push entry
-    results
+    results = {}
 
-  # A better way to prepare the data, but unfortunately not compatible 
-  # with boostrap-typehead
-  #parserB: (data) ->
-  #  content = data
-  #  results = {}
-  #  # Extract the names of each result row for use by typeahead.js
-  #  content.forEach (item, i) ->
-  #    results[item.rank_name] = []  unless item.rank_name of results
-  #    entry = item.full_name
-  #    if el.matching_names.length > 0
-  #      entry += " (=" + el.matching_names.join(", ") + ")"
-  #    results[item.rank_name].push entry
-  #  results
+    # Extract the names of each result row for use by typeahead.js
+    data.forEach((item,i) ->
+      if (!(item.rank_name in results))
+        results[item.rank_name] = []
+
+      entry = item.full_name
+      if (item.matching_names.length > 0)
+        entry += " (=" + item.matching_names.join(", ") + ")"
+      results[item.rank_name].push(entry)
+    )
+    return results
 
   didInsertElement: ->
     @$().val @$().attr("placeholder")  if $.browser.msie
 
-
-)
