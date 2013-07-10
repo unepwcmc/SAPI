@@ -1,0 +1,43 @@
+<strong class="title more" id="cites_quotas">Quotas</strong>
+<table summary="data table">
+  <thead>
+    <tr>
+      <th class="col1">&nbsp;</th>
+      <th class="col2">YEAR</th>
+      <th class="col3">COUNTRY</th>
+      <th class="col4">QUOTA</th>
+      <th class="col5">NOTES</th>
+      <th class="col1">&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each quota in controller.quotas}}
+      {{#if quota.public_display}}
+        <tr {{bindAttr class="quota.is_current:current:historic"}}>
+          <td>&nbsp;</td>
+          <td>{{quota.year}}</td>
+          <td>{{quota.geo_entity.name}}</td>
+          <td>{{quota.quota}} {{quota.unit_name}}</td>
+          <td>{{quota.notes}}</td>
+          <td class="last">&nbsp;</td>
+        </tr>
+      {{/if}}
+    {{/each}}
+    <tr class="add"> <!-- Add class is for the first item below the current -->
+      <td>&nbsp;</td>
+      <td>15/07/04</td>
+      <td>Palau (PW)</td>
+      <td>130</td>
+      <td>Trophies and skins <a href="#">www.cites.org</a></td>
+      <td class="last">&nbsp;</td>
+    </tr>
+  </tbody>
+</table>
+<div {{bindAttr class=":btn-hloder citesQuotasExpanded:expanded"}}>
+  {{#if citesQuotasExpanded}}
+    <a class="link" {{action 'contractCitesQuotas'}}>HIDE HISTORY</a>
+  {{else}}
+    <a class="link" {{action 'expandCitesQuotas'}}>SHOW HISTORY</a>
+  {{/if}}
+</div>
+
