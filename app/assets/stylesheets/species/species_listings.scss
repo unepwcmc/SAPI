@@ -1,0 +1,40 @@
+.cites_appendix {
+  height: 26px;
+  width: 26px;
+
+  color: #fff;
+
+
+  .appx_I &, &.appx_I {
+    background: url(/assets/species/cites-appendix.png);
+    background-position: 0px 0px;
+    span {
+      line-height: 2em;
+      margin-left: 10px;
+    }
+  }
+
+  .appx_II &, &.appx_II {
+    background: url(/assets/species/cites-appendix.png);
+    background-position: 0px 234px;
+    span {
+      line-height: 2em;
+      margin-left: 9px;
+    }
+  }
+
+  .appx_III &, &.appx_III {
+    background: url(/assets/species/cites-appendix.png);
+    background-position: 0px 208px;
+    span {
+      line-height: 2em;
+      margin-left: 7.5px;
+    }
+  }
+
+  .nc &, .inactive &, &.nc {
+    background: url(/assets/species/cites-appendix.png);
+    background-position: 0px 26px;
+  }
+}
+
