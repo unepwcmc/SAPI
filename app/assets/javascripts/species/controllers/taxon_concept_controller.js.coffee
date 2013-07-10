@@ -29,3 +29,18 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     $("html, body").animate
       scrollTop: $("#cites_quotas").offset().top
       , 1000
+
+  euListingsExpanded: false
+
+  expandEuListings: () ->
+    this.set('euListingsExpanded', true)
+    $('#eu_listings').
+      find('.historic').show('slow')
+
+  contractEuListings: () ->
+    this.set('euListingsExpanded', false)
+    $('#eu_listings').
+      find('.historic').hide('slow')
+    $("html, body").animate
+      scrollTop: $("#eu_listings").offset().top
+      , 1000
