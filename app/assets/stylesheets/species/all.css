@@ -1245,6 +1245,11 @@ form, fieldset {
 	padding: 26px 0 12px;
 	border: 0;
 }
+
+#main .block tr.historic {
+  display: none;
+}
+
 #main .block tr.add td { padding: 16px 0 12px; }
 #main .block tr { background: #eef2f7; }
 #main .block tr.current { background: #f5f5f7; }
