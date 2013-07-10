@@ -11,4 +11,6 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     this.set('citesListingsExpanded', false)
     $('#cites_listings').
       find('.historic').hide('slow')
-    window.scrollTo($('#cites_listings', 300).prev())
+    $("html, body").animate
+      scrollTop: $("#cites_listings").offset().top
+      , 1000
