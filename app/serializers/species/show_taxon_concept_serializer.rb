@@ -14,6 +14,12 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   has_many :eu_listing_changes, :serializer => Species::EuListingChangeSerializer,
     :key => :eu_listings
 
+
+  def quotas
+    object.quotas.joins(:geo_entity).
+      order("geo_entities.name_en ASC, trade_restrictions.notes ASC")
+  end
+
   def cites_listing_changes
     cites = Designation.find_by_name(Designation::CITES)
     MListingChange.
