@@ -5,7 +5,7 @@ Species.TaxonConceptController = Ember.ObjectController.extend
   expandCitesListings: () ->
     this.set('citesListingsExpanded', true)
     $('#cites_listings').
-      find('.historic').show('slow')
+      find('.historic').show('fast')
 
   contractCitesListings: () ->
     this.set('citesListingsExpanded', false)
@@ -13,7 +13,7 @@ Species.TaxonConceptController = Ember.ObjectController.extend
       find('.historic').hide('slow')
     $("html, body").animate
       scrollTop: $("#cites_listings").offset().top
-      , 1000
+      , 500
 
   citesQuotasExpanded: false
 
