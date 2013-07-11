@@ -9,9 +9,7 @@ require 'sidekiq/capistrano'
 
 set :generate_webserver_config, false
 
-set(:pub_key) { Capistrano::CLI.ui.ask ("Enter Name of Public key: ") }
-ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", pub_key)]
-
+ssh_options[:forward_agent] = true
 
 # The name of your application.  Used for deployment directory and filenames
 # and Apache configs. Should be unique on the Brightbox
