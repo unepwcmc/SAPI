@@ -1,0 +1,29 @@
+  <div id="tab1">
+    <div class="block block02">
+      <strong class="title">CITES STANDARD REFERENCE</strong>
+      <table summary="data table">
+        <tbody>
+          {{#each reference in controllers.taxonConcept.standardReferences}}
+            <tr>
+              <td>{{reference.citation}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="block block02 add">
+      <strong class="title">OTHER TAXONOMIC REFERENCES</strong>
+      <table summary="data table">
+        <tbody>
+          {{#each reference in controllers.taxonConcept.references}}
+            {{#unless reference.is_standard}}
+              <tr>
+                <td>{{reference.citation}}</td>
+              </tr>
+            {{/unless}}
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+

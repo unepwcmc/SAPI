@@ -33,37 +33,9 @@
     <li>&nbsp;</li>
   </ul>
   </li>
-  <li class="last-child"><a href="#reference">REFERENCES</a></li>
+  <li class="last-child">{{#linkTo 'taxon_concept.references'}}REFERENCES{{/linkTo}}</li>
 </ul>
 
 <div class="tab-content">
   {{ outlet }}
-  <div id="tab4">
-    <div class="block block02">
-      <strong class="title">CITES STANDARD REFERENCE</strong>
-      <table summary="data table">
-        <tbody>
-          {{#each reference in standardReferences}}
-            <tr>
-              <td>{{reference.citation}}</td>
-            </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-    <div class="block block02 add">
-      <strong class="title">OTHER TAXONOMIC REFERENCES</strong>
-      <table summary="data table">
-        <tbody>
-          {{#each reference in controller.references}}
-            {{#unless reference.is_standard}}
-              <tr>
-                <td>{{reference.citation}}</td>
-              </tr>
-            {{/unless}}
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-  </div>
 </div>
