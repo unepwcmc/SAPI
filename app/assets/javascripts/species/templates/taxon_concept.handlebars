@@ -40,19 +40,19 @@
 <div class="tab-content">
   <div id="tab1">
 
-    <div class="block" id="cites_listings">
+    <div {{bindAttr class=":block citesListings.length::empty"}} id="cites_listings">
       <h2>CITES</h2>
       {{ partial 'species/taxon_concept/cites_listing_changes' }}
     </div>
 
-    <div class="block add" id="cites_quotas">
+    <div {{bindAttr class=":block :add quotas.length::empty"}} id="cites_quotas">
       {{ partial 'species/taxon_concept/cites_quotas' }}
     </div>
 
-    <div class="block add" id="cites_suspensions">
+    <div {{bindAttr class=":block :add citesSuspensions.length::empty"}} id="cites_suspensions">
       {{ partial 'species/taxon_concept/cites_suspensions' }}
     </div>
-    <div class="block add" id="eu_listings">
+    <div {{bindAttr class=":block :add euListings.length::empty"}} id="eu_listings">
       <h2>EU Wildlife Trade Regulations</h2>
       {{ partial 'species/taxon_concept/eu_listing_changes' }}
     </div>

@@ -1179,6 +1179,9 @@ form, fieldset {
 #main .block:hover {
 	border-bottom: 2px solid #376382;
 }
+#main .block.empty:hover {
+  border-bottom: 0
+}
 #main .block {
 	text-align: left;
 	padding: 38px 1px 0;

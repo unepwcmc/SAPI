@@ -45,6 +45,9 @@ Species.TaxonConceptController = Ember.ObjectController.extend
       scrollTop: $("#cites_suspensions").offset().top
       , 1000
 
+  citesSuspensionsEmpty: () ->
+    alert("A!")
+
   euListingsExpanded: false
 
   expandEuListings: () ->
