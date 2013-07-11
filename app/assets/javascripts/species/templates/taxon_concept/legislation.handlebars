@@ -1,0 +1,48 @@
+<div id="tab1">
+
+  <div {{bindAttr class=":block citesListings.length::empty"}} id="cites_listings">
+    <h2>CITES</h2>
+    {{ partial 'species/taxon_concept/cites_listing_changes' }}
+  </div>
+
+  <div {{bindAttr class=":block :add quotas.length::empty"}} id="cites_quotas">
+    {{ partial 'species/taxon_concept/cites_quotas' }}
+  </div>
+
+  <div {{bindAttr class=":block :add citesSuspensions.length::empty"}} id="cites_suspensions">
+    {{ partial 'species/taxon_concept/cites_suspensions' }}
+  </div>
+  <div {{bindAttr class=":block :add euListings.length::empty"}} id="eu_listings">
+    <h2>EU Wildlife Trade Regulations</h2>
+    {{ partial 'species/taxon_concept/eu_listing_changes' }}
+  </div>
+  <div class="block block01">
+    <strong class="title">EU DECISIONS</strong>
+    <table summary="data table">
+      <thead>
+        <tr>
+          <th class="col1">&nbsp;</th>
+          <th class="col2">DATE</th>
+          <th class="col3">COUNTRY<br />OF ORIGIN</th>
+          <th class="col8">SRG<br />OPINION</th>
+          <th class="col9">SUSPENSIONS</th>
+          <th class="col10">NOTES</th>
+          <th class="col7">DOCUMENT</th>
+          <th class="col1">&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="current">
+          <td>&nbsp;</td>
+          <td>15/07/04</td>
+          <td>Namibia</td>
+          <td>Negative</td>
+          <td>Art. 4.6 b</td>
+          <td>Live wild specimens</td>
+          <td>Commission Reg. (EC) No 757/2012 of 20 August 2012</td>
+          <td class="last">&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

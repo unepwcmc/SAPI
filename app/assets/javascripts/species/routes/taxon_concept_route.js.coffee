@@ -9,3 +9,4 @@ Species.TaxonConceptRoute = Ember.Route.extend
     # We might need to revisit this when loading particular tabs.
     if model.get('isLoaded')
       model.reload()
+

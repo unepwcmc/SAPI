@@ -1,0 +1,32 @@
+<div id="tab1">
+  <div class="block06">
+    <strong class="title">COUNTRIES</strong>
+    <div class="three-columns">
+      <ul class="col">
+        {{#eachPart controllers.taxonConcept.distributions parts=3 page=0}}
+        <li><a href="#">{{name_en}}</a> {{formattedTags tags_list}}</li>
+        {{/eachPart}}
+        <div class="link-holder">
+          <a href="#">Botswana</a>
+          <div class="popup-holder">
+            <div class="popup">
+              <strong class="title">Myers, N. (1976).<br />The Leopard Panthera pardus in Africa</strong>
+              <span class="text">ICON Monograph No.5. IUCN -Morges</span>
+              <a href="#">Go to References</a>
+            </div>
+          </div>
+        </div>
+      </ul>
+      <ul class="col">
+        {{#eachPart controllers.taxonConcept.distributions parts=3 page=1}}
+        <li><a href="#">{{name_en}}</a> {{formattedTags tags_list}}</li>
+        {{/eachPart}}
+      </ul>
+      <ul class="col last-child">
+        {{#eachPart controllers.taxonConcept.distributions parts=3 page=2}}
+        <li><a href="#">{{name_en}}</a> {{formattedTags tags_list}}</li>
+        {{/eachPart}}
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<div id="tab1">
+  <div class="block block02">
+    <strong class="title">COMMON NAMES</strong>
+    <table summary="data table">
+      <thead>
+        <tr>
+          <th class="col11">LANGUAGE</th>
+          <th class="col12">NAME</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#foreach controllers.taxonConcept.commonNames}}
+        <tr {{bindAttr class="$first:first"}}>
+          <td>{{lang}}</td>
+          <td>{{names}}</td>
+        </tr>
+        {{/foreach}}
+      </tbody>
+    </table>
+    <div class="btn-hloder">
+      <a href="#" class="link">SHOW 21 MORE LANGUAGES</a>
+      <a href="#" class="link hide">SHOW 21 MORE LANGUAGES</a>
+    </div>
+  </div>
+  <div class="block04">
+    <strong class="title">SYNONYMS</strong>
+    <div class="columns-holder">
+      <ul class="col">
+        {{#eachPart controllers.taxonConcept.synonyms parts=2 page=0}}
+        <li>{{full_name}} {{author_year}}</li>
+        {{/eachPart}}
+      </ul>
+      <ul class="col">
+        {{#eachPart controllers.taxonConcept.synonyms parts=2 page=1}}
+        <li>{{full_name}} {{author_year}}</li>
+        {{/eachPart}}
+      </ul>
+    </div>
+  </div>
+  <div class="block04 block05">
+    <strong class="title">SUBSPECIES</strong>
+    <div class="columns-holder">
+      <ul class="col">
+      </ul>
+      <ul class="col">
+      </ul>
+    </div>
+  </div>
+</div>
