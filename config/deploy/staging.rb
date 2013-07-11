@@ -63,5 +63,5 @@ namespace :nginx do
 end
 
 after "deploy:setup", :config_vhost
-after "deploy:setup", :cap nginx:restart
+after "deploy:setup", :cap nginx:reload
 
