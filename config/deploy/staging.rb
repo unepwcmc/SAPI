@@ -53,15 +53,15 @@ sudo "mv /tmp/vhost_config /etc/nginx/sites-available/#{application}"
 sudo "ln -s /etc/nginx/sites-available/#{application} /etc/nginx/sites-enabled/#{application}"
 end
  
-namespace :nginx do
-  [:stop, :start, :restart, :reload].each do |action|
-    desc "#{action.to_s.capitalize} Nginx"
-    task action, :roles => :web do
-      invoke_command "/etc/init.d/nginx #{action.to_s}", :via => run_method
-    end
+
+after "deploy:setup", :config_vhost
+
+namespace :deploy do
+  desc "Restarting mod_rails with restart.txt"
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "touch #{current_path}/tmp/restart.txt"
   end
 end
 
-after "deploy:setup", :config_vhost
-after "deploy:setup", :cap nginx:reload
+
 
