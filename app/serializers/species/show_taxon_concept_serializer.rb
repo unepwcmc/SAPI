@@ -17,7 +17,14 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
 
   def quotas
     object.quotas.joins(:geo_entity).
+      includes([:unit, :geo_entity]).
       order("geo_entities.name_en ASC, trade_restrictions.notes ASC")
+  end
+
+  def cites_suspensions
+    object.cites_suspensions.
+      joins([:start_notification, :geo_entity]).
+      order("is_current DESC, events.effective_at DESC, geo_entities.name_en ASC")
   end
 
   def cites_listing_changes
@@ -41,6 +48,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     eu = Designation.find_by_name(Designation::EU)
     MListingChange.
       where(:taxon_concept_id => object.id, :show_in_history => true, :designation_id => eu && eu.id).
+      includes(:event).
       order("is_current DESC").
       order(<<-SQL
         effective_at DESC,
