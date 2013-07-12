@@ -14,10 +14,22 @@ Ember.Handlebars.helper "eachPart", (arr, options) ->
   new_arr.map((item, index) ->
     options.fn item
   ).join ""
-  
+
 Ember.Handlebars.helper "formattedTags", (value, options) ->
   escaped = Handlebars.Utils.escapeExpression(value)
   formatted = escaped.split(',').map((item) ->
   	"<span class=\"tage\">" + item + "</span>"
   ).join ""
   new Handlebars.SafeString(formatted)
+
+Ember.Handlebars.helper('highlight', (suggestion, query) ->
+  #escaped = Handlebars.Utils.escapeExpression(suggestion)
+  #new Handlebars.SafeString('<span>' + escaped + '</span>')
+  query = query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&")
+  transform = ($1, match) ->
+    "<span>" + match + "</span>"
+
+  new Handlebars.SafeString(suggestion.replace(new RegExp("^(" + query + ")", "i"), transform)
+    .replace new RegExp("=(" + query + ")", "ig"), transform
+  )
+)

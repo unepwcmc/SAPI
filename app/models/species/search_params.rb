@@ -12,8 +12,8 @@ class Species::SearchParams < Hash
       :geo_entity_scope =>
         params[:geo_entity_scope] ? params[:geo_entity_scope].to_sym : nil,
       #filtering options
-      :scientific_name =>
-        params[:scientific_name] ? params[:scientific_name] : nil,
+      :taxon_concept_query =>
+        params[:taxon_concept_query] ? params[:taxon_concept_query] : nil,
       :geo_entities => params[:geo_entity_id].blank? ? [] : [params[:geo_entity_id]]
     }
     unless [:cites_eu, :cms].include? sanitized_params[:taxonomy]

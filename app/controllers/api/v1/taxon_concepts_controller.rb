@@ -1,11 +1,19 @@
 class Api::V1::TaxonConceptsController < ApplicationController
 
   def index
-    @search = Species::Search.new(params)
-    @taxon_concepts = @search.results.page(params[:page]).per(5)
-    render :json => @taxon_concepts,
-      :each_serializer => Species::TaxonConceptSerializer,
-      :meta => {:total => @search.results.count}
+    if params[:autocomplete]
+      matcher = Checklist::TaxonConceptPrefixMatcher.new(
+        :scientific_name => params[:scientific_name]
+      )
+      render :json => matcher.taxon_concepts.limit(params[:per_page]),
+        :each_serializer => Species::AutocompleteTaxonConceptSerializer
+    else
+      @search = Species::Search.new(params)
+      @taxon_concepts = @search.results.page(params[:page]).per(5)
+      render :json => @taxon_concepts,
+        :each_serializer => Species::TaxonConceptSerializer,
+        :meta => {:total => @search.results.count}
+    end
   end
 
   def show

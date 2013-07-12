@@ -17,8 +17,14 @@ Species.TaxonConcept = DS.Model.extend
   citesSuspensions: DS.attr("array")
   citesListings: DS.attr("array")
   euListings: DS.attr("array")
+  matchingNames: DS.attr("string")
 
-
+  autoCompleteSuggestion: ( ->
+    if !@get('matchingNames')
+      @get('fullName')
+    else
+      @get(fullName) + '(' + @get('matchingNames') + ')'
+  ).property('fullName', 'matchingNames')
 
 Species.TaxonConcept.FIXTURES = [
   id: 2751

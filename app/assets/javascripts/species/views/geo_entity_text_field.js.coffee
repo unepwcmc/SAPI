@@ -16,7 +16,7 @@ Species.GeoEntityTextField = Em.TextField.extend
     @.$().attr('placeholder', @get('placeholder'))
 
   keyUp: (event) ->
-    @set('controller.geoEntityAutoCompleteRegExp', new RegExp("^"+event.currentTarget.value,"i"))
+    @set('controller.geoEntityQuery', event.currentTarget.value)
 
   didInsertElement: () ->
     if ($.browser.msie)
