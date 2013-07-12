@@ -316,7 +316,7 @@ form, fieldset {
 	text-transform: none;
 }
 .search-block .search .popup > ul > li > ul { margin: 0 0 8px; }
-.search-block .search .popup > ul > li.list-header {
+.search-block .search .popup > ul > li .title {
 	text-transform: uppercase;
 	display: block;
 	font-weight: bold;
