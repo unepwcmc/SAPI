@@ -16,17 +16,15 @@
         placeholder="Species, higher taxon, synonym or common name..."
         autocomplete="off"
       }}
-      <button {{action "loadTaxonConcepts"}}>Search</button>
+
+<!--
       <div class="popup">
         <ul>
-          <li>
-            <strong class="title">FAMILY</strong>
-            <ul>
-              <li><a href="#"><span>Lox</span>ocemidae (<span>Lox</span>ocemidés)</a></li>
-            </ul>
+          <li class="header">FAMILY</li>
+          <li><a href="#"><span>Lox</span>ocemidae (<span>Lox</span>ocemidés)</a></li>
           </li>
           <li>
-            <strong class="title">GENUS</strong>
+            <strong class="header">GENUS</strong>
             <ul>
               <li><a href="#"><span>Lox</span>ia</a></li>
               <li><a href="#"><span>Lox</span>ocemus</a></li>
@@ -34,7 +32,7 @@
             </ul>
           </li>
           <li>
-            <strong class="title">SPECIES</strong>
+            <strong class="header">SPECIES</strong>
             <ul>
               <li><a href="#"><span>Lox</span>ia curvirostra</a></li>
               <li><a href="#"><span>Lox</span>ia pytyopsittacus</a></li>
@@ -54,6 +52,8 @@
           </li>
         </ul>
       </div>
+-->
+      <button {{action "loadTaxonConcepts"}}>Search</button>
     </fieldset>
   </form>
 </div>

@@ -2,7 +2,7 @@
 # * An extended TextField for use in scientific name search.
 # *
 # * Handles text change events and creates an autocomplete box for the text.
-# 
+#
 
 # Possible typehead alternatives:
 # https://github.com/tcrosen/twitter-bootstrap-typeahead/tree/2.0
@@ -16,7 +16,7 @@ Species.SearchTextField = Ember.TextField.extend(
   keyUp: (event) ->
     searchFormController = @get "controller"
     searchFormController.set "scientific_name", $(event.target).val()
-    
+
   click: (event) ->
     self = @
     if $(".typeahead").length <= 0
@@ -26,7 +26,7 @@ Species.SearchTextField = Ember.TextField.extend(
           $.get "/api/v1/taxon_concepts/autocomplete",
             scientific_name: query
             rank_name: query
-            full_name: query 
+            full_name: query
             limit: 10
           , (data) ->
             labels = self.parser data.taxon_concepts
@@ -35,6 +35,9 @@ Species.SearchTextField = Ember.TextField.extend(
         matcher: self.matcher
         updater: self.updater
         highlighter: self.highlighter
+        menu: '<div class="popup"><ul> </ul></div>'
+
+
     @$().val ""  if @$().val() is @get("placeholder")
     @$().attr "placeholder", ""
 
@@ -49,7 +52,7 @@ Species.SearchTextField = Ember.TextField.extend(
   highlighter: (item) ->
     query = @query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&")
     transform = ($1, match) ->
-      "<span style=\"text-decoration:underline\">" + match + "</span>"
+      "<span>" + match + "</span>"
 
     item.replace(new RegExp("^(" + query + ")", "i"), transform)
       .replace new RegExp("=(" + query + ")", "ig"), transform
@@ -63,7 +66,7 @@ Species.SearchTextField = Ember.TextField.extend(
   # This parser relies on a Hack inside bootstrap-typeahead.
   # If a string in the list starts with an underscore it is treated as
   # header in the autocomplete list.
-  # TODO: any better alternatives? 
+  # TODO: any better alternatives?
   parser: (data) ->
     results = []
     # Extract the names of each result row for use by typeahead.js
@@ -76,7 +79,7 @@ Species.SearchTextField = Ember.TextField.extend(
       results.push entry
     results
 
-  # A better way to prepare the data, but unfortunately not compatible 
+  # A better way to prepare the data, but unfortunately not compatible
   # with boostrap-typehead
   #parserB: (data) ->
   #  content = data

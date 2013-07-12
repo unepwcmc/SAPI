@@ -35,6 +35,7 @@
     this.updater = this.options.updater || this.updater
     this.source = this.options.source
     this.$menu = $(this.options.menu)
+
     this.shown = false
     this.listen()
   }
@@ -56,6 +57,7 @@
     }
 
   , show: function () {
+
       var pos = $.extend({}, this.$element.position(), {
         height: this.$element[0].offsetHeight
       })
@@ -151,7 +153,7 @@
       })
 
       items.first().addClass('active')
-      this.$menu.html(items)
+      this.$menu.find('ul').html(items)
       return this
     }
 
