@@ -11,17 +11,17 @@
     </tr>
   </thead>
   <tbody>
-    {{#each quota in controller.quotas}}
-      {{#if quota.public_display}}
-        <tr {{bindAttr class="quota.is_current:current:historic"}}>
-          <td>&nbsp;</td>
-          <td>{{quota.year}}</td>
-          <td>{{quota.geo_entity.name}}</td>
-          <td>{{quota.quota}} {{quota.unit_name}}</td>
-          <td>{{quota.notes}}</td>
-          <td class="last">&nbsp;</td>
-        </tr>
-      {{/if}}
+    {{#each quota in quotas}}
+    {{#if quota.public_display}}
+    <tr {{bindAttr class="quota.is_current:current:historic"}}>
+      <td>&nbsp;</td>
+      <td>{{quota.year}}</td>
+      <td>{{quota.geo_entity.name}}</td>
+      <td>{{quota.quota}} {{quota.unit_name}}</td>
+      <td>{{quota.notes}}</td>
+      <td class="last">&nbsp;</td>
+    </tr>
+    {{/if}}
     {{/each}}
     <tr class="add"> <!-- Add class is for the first item below the current -->
       <td>&nbsp;</td>
@@ -34,10 +34,9 @@
   </tbody>
 </table>
 <div {{bindAttr class=":btn-hloder citesQuotasExpanded:expanded"}}>
-  {{#if citesQuotasExpanded}}
+  {{#if controller.citesQuotasExpanded}}
     <a class="link" {{action 'contractCitesQuotas'}}>HIDE HISTORY</a>
   {{else}}
     <a class="link" {{action 'expandCitesQuotas'}}>SHOW HISTORY</a>
   {{/if}}
 </div>
-

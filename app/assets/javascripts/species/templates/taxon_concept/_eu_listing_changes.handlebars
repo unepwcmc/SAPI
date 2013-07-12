@@ -12,25 +12,25 @@
     </tr>
   </thead>
   <tbody>
-    {{#each listing in controller.euListings}}
-      <tr {{bindAttr class="listing.is_current:current:historic"}}>
-        <td>&nbsp;</td>
-        <td>
-          <div class="eu_annex annex_{{unbound listing.species_listing_name}}">
-            <span>{{listing.species_listing_name}}</span>
-          </div>
-        </td>
-        <td>{{listing.party_full_name}}</td>
-        <td>{{listing.effective_at_formatted}}</td>
-        <td>{{listing.short_note_en}}</td>
-        <td>{{listing.event_name}}</td>
-        <td class="last">&nbsp;</td>
-      </tr>
+    {{#each listing in euListings}}
+    <tr {{bindAttr class="listing.is_current:current:historic"}}>
+      <td>&nbsp;</td>
+      <td>
+        <div class="eu_annex annex_{{unbound listing.species_listing_name}}">
+          <span>{{listing.species_listing_name}}</span>
+        </div>
+      </td>
+      <td>{{listing.party_full_name}}</td>
+      <td>{{listing.effective_at_formatted}}</td>
+      <td>{{listing.short_note_en}}</td>
+      <td>{{listing.event_name}}</td>
+      <td class="last">&nbsp;</td>
+    </tr>
     {{/each}}
   </tbody>
 </table>
 <div {{bindAttr class=":btn-hloder euListingsExpanded:expanded"}}>
-  {{#if euListingsExpanded}}
+  {{#if controller.euListingsExpanded}}
     <a class="link" {{action 'contractEuListings'}}>HIDE HISTORY</a>
   {{else}}
     <a class="link" {{action 'expandEuListings'}}>SHOW HISTORY</a>

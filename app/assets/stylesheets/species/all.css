@@ -1272,6 +1272,9 @@ form, fieldset {
 #main .block:hover .btn-hloder {
   display: block;
 }
+#main .block.empty:hover .btn-hloder {
+  display: none;
+}
 
 #main .block .btn-hloder:after {
 	display: block;

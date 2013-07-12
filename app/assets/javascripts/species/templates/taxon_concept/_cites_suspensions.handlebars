@@ -1,5 +1,5 @@
 <strong class="title more">Suspensions</strong>
-{{#unless controller.citesSuspensions}}
+{{#unless citesSuspensions}}
   <p>There are no current suspensions in place for this species.</p>
 {{else}}
   <table summary="data table">
@@ -14,26 +14,26 @@
       </tr>
     </thead>
     <tbody>
-      {{#each suspension in controller.citesSuspensions}}
-        <tr {{bindAttr class="suspension.is_current:current:historic"}}>
-          <td>&nbsp;</td>
-          <td>
-            {{#if suspension.is_current}}
-              {{suspension.start_notification.effective_at_formatted}}
-            {{else}}
-              {{suspension.start_notification.effective_at_formatted}}
-              - {{suspension.end_notification.effective_at_formatted}}</td>
-            {{/if}}
-          <td>{{suspension.geo_entity.name}}</td>
-          <td>{{suspension.start_notification.name}}</td>
-          <td>{{suspension.notes}} {{suspension.url}}</td>
-          <td class="last">&nbsp;</td>
-        </tr>
+      {{#each suspension in citesSuspensions}}
+      <tr {{bindAttr class="suspension.is_current:current:historic"}}>
+        <td>&nbsp;</td>
+        <td>
+          {{#if suspension.is_current}}
+          {{suspension.start_notification.effective_at_formatted}}
+          {{else}}
+          {{suspension.start_notification.effective_at_formatted}}
+          - {{suspension.end_notification.effective_at_formatted}}</td>
+        {{/if}}
+        <td>{{suspension.geo_entity.name}}</td>
+        <td>{{suspension.start_notification.name}}</td>
+        <td>{{suspension.notes}} {{suspension.url}}</td>
+        <td class="last">&nbsp;</td>
+      </tr>
       {{/each}}
     </tbody>
   </table>
   <div {{bindAttr class=":btn-hloder citesSuspensionsExpanded:expanded"}}>
-    {{#if citesSuspensionsExpanded}}
+    {{#if controller.citesSuspensionsExpanded}}
       <a class="link" {{action 'contractCitesSuspensions'}}>HIDE HISTORY</a>
     {{else}}
       <a class="link" {{action 'expandCitesSuspensions'}}>SHOW HISTORY</a>

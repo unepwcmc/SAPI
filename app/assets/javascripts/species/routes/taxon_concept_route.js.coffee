@@ -10,3 +10,5 @@ Species.TaxonConceptRoute = Ember.Route.extend
     if model.get('isLoaded')
       model.reload()
 
+  redirect: () ->
+    @transitionTo('taxon_concept.legal')
