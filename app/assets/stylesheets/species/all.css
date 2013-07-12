@@ -1112,7 +1112,7 @@ form, fieldset {
 	border-radius: 0 5px 0 0;
 	border-right: solid 1px #6b94af;
 }
-#main .tabset > li:hover > a, #main .tabset > li.active > a {
+#main .tabset > li:hover > a, #main .tabset > li > a.active {
 	background: #ecf2f6;
 	font-weight: bold;
 }
