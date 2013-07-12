@@ -1379,7 +1379,8 @@ form, fieldset {
 #tab3 { display: block; }
 #main .tabset > li.active.add > ul > li { line-height: 10px; }
 .block06 {
-	padding: 0 10px 24px 29px;
+	/*padding: 0 10px 24px 29px;*/
+	padding: 29px 10px 24px 29px;
 	text-align: left;
 	margin: 0 0 18px;
 }
