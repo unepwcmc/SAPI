@@ -12,25 +12,17 @@
   </thead>
   <tbody>
     {{#each quota in quotas}}
-    {{#if quota.public_display}}
-    <tr {{bindAttr class="quota.is_current:current:historic"}}>
-      <td>&nbsp;</td>
-      <td>{{quota.year}}</td>
-      <td>{{quota.geo_entity.name}}</td>
-      <td>{{quota.quota}} {{quota.unit_name}}</td>
-      <td>{{quota.notes}}</td>
-      <td class="last">&nbsp;</td>
-    </tr>
-    {{/if}}
+      {{#if quota.public_display}}
+        <tr {{bindAttr class="quota.is_current:current:historic"}}>
+          <td>&nbsp;</td>
+          <td>{{quota.year}}</td>
+          <td>{{quota.geo_entity.name}}</td>
+          <td>{{quota.quota}} {{quota.unit_name}}</td>
+          <td>{{quota.notes}}</td>
+          <td class="last">&nbsp;</td>
+        </tr>
+      {{/if}}
     {{/each}}
-    <tr class="add"> <!-- Add class is for the first item below the current -->
-      <td>&nbsp;</td>
-      <td>15/07/04</td>
-      <td>Palau (PW)</td>
-      <td>130</td>
-      <td>Trophies and skins <a href="#">www.cites.org</a></td>
-      <td class="last">&nbsp;</td>
-    </tr>
   </tbody>
 </table>
 <div {{bindAttr class=":btn-hloder citesQuotasExpanded:expanded"}}>
