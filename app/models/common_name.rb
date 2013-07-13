@@ -19,4 +19,12 @@ class CommonName < ActiveRecord::Base
     return common_name if words.size == 1
     words.last + ", " + common_name.chomp(" "+words.last)
   end
+
+  #attribute_accessor to convert postgresql "t" or "f" to a Ruby boolean
+  #used in app/serializeres/species/show_taxon_concept_serializer.rb
+  #for distinguishing between official CITES languages an non official languages
+  #might need to be reviewed: TODO
+  def official_language
+    ActiveRecord::ConnectionAdapters::Column.value_to_boolean(self[:official_language])
+  end
 end

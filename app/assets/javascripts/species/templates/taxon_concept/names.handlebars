@@ -1,7 +1,7 @@
 <div id="tab1">
   <div class="block block02">
     <strong class="title">COMMON NAMES</strong>
-    <table summary="data table">
+    <table summary="data table" id="common_names">
       <thead>
         <tr>
           <th class="col11">LANGUAGE</th>
@@ -9,17 +9,20 @@
         </tr>
       </thead>
       <tbody>
-        {{#foreach controllers.taxonConcept.commonNames}}
-        <tr {{bindAttr class="$first:first"}}>
-          <td>{{lang}}</td>
-          <td>{{names}}</td>
-        </tr>
-        {{/foreach}}
+        {{#each commonName in controllers.taxonConcept.commonNames}}
+          <tr {{ bindAttr class="commonName.official_language::historic"}}>
+            <td>{{commonName.lang}}</td>
+            <td>{{commonName.names}}</td>
+          </tr>
+        {{/each}}
       </tbody>
     </table>
-    <div class="btn-hloder">
-      <a href="#" class="link">SHOW 21 MORE LANGUAGES</a>
-      <a href="#" class="link hide">SHOW 21 MORE LANGUAGES</a>
+    <div {{bindAttr class=":btn-hloder commonNamesExpanded:expanded"}}>
+      {{#if controller.commonNamesExpanded}}
+        <a href="#" class="link" {{action 'contractCommonNames'}}>HIDE EXTRA LANGUAGES</a>
+      {{else}}
+        <a href="#" class="link" {{action 'expandCommonNames'}}>SHOW MORE LANGUAGES</a>
+      {{/if}}
     </div>
   </div>
   <div class="block04">
