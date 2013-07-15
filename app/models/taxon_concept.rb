@@ -158,38 +158,6 @@ class TaxonConcept < ActiveRecord::Base
     )
   }
 
-def cites_listing_changes
-  cites = Designation.find_by_name(Designation::CITES)
-  MListingChange.
-    where(:taxon_concept_id => self.id, :show_in_history => true, :designation_id => cites && cites.id).
-    order(<<-SQL
-      effective_at DESC,
-      CASE
-        WHEN change_type_name = 'ADDITION' THEN 3
-        WHEN change_type_name = 'RESERVATION' THEN 2
-        WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
-        WHEN change_type_name = 'DELETION' THEN 0
-      END
-      SQL
-    )
-end
-
-def eu_listing_changes
-  eu = Designation.find_by_name(Designation::EU)
-  MListingChange.
-    where(:taxon_concept_id => self.id, :show_in_history => true, :designation_id => eu && eu.id).
-    order(<<-SQL
-      effective_at DESC,
-      CASE
-        WHEN change_type_name = 'ADDITION' THEN 3
-        WHEN change_type_name = 'RESERVATION' THEN 2
-        WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
-        WHEN change_type_name = 'DELETION' THEN 0
-      END
-      SQL
-    )
-end
-
   def under_cites_eu?
     self.taxonomy.name == Taxonomy::CITES_EU
   end
@@ -362,7 +330,7 @@ end
   def check_associated_taxon_concept_exists(full_name_attr)
     full_name_var = self.instance_variable_get("@#{full_name_attr}")
     return true if full_name_var.blank?
-    tc = TaxonConcept.find_by_full_name_and_name_status(full_name_var, 'A')
+    tc = TaxonConcept.find_by_full_name_and_name_status(full_name_var, 'A', taxonomy_id)
     unless tc
       errors.add(full_name_attr, "does not exist")
       return true
@@ -373,14 +341,18 @@ end
     true
   end
 
-  def self.find_by_full_name_and_name_status(full_name, name_status)
+  def self.find_by_full_name_and_name_status(full_name, name_status, taxonomy_id=nil)
     full_name = TaxonConcept.sanitize_full_name(full_name)
-    TaxonConcept.
+    res = TaxonConcept.
       where([
         "UPPER(full_name) = UPPER(BTRIM(?)) AND name_status = ?",
         full_name,
         name_status
-      ]).first
+      ])
+    if taxonomy_id
+      res = res.where(:taxonomy_id => taxonomy_id)
+    end
+    res.first
   end
 
   def ensure_taxonomic_position

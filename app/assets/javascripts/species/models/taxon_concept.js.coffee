@@ -26,6 +26,7 @@ Species.TaxonConcept = DS.Model.extend
       @get('fullName') + ' (' + @get('matchingNames') + ')'
   ).property('fullName', 'matchingNames')
 
+
 Species.TaxonConcept.FIXTURES = [
   id: 2751
   fullName: "Antilocapra americana"

@@ -28,11 +28,11 @@ namespace :db do
     task :rebuild_all => [:rebuild_taxon_concepts_mview, :rebuild_listing_changes_mview]
     desc "Rebuild taxon concepts materialized view"
     task :rebuild_taxon_concepts_mview => [:migrate] do
-      Sapi::rebuild_taxon_concepts_mview
+      Sapi.rebuild(:only => [:taxon_concepts_mview], :disable_triggers => false)
     end
     desc "Rebuild listing changes materialized view"
     task :rebuild_listing_changes_mview => [:migrate] do
-      Sapi::rebuild_listing_changes_mview
+      Sapi.rebuild(:only => [:listing_changes_mview], :disable_triggers => false)
     end
   end
   task :migrate do

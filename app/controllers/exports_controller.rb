@@ -10,7 +10,9 @@ class ExportsController < ApplicationController
       where(:geo_entity_types => {:name => GeoEntityType::COUNTRY},
             :geo_entities => { :is_current => true }).
       order(:name_en)
-    @taxon_concepts = MTaxonConcept.select([:id, :full_name]).
+    @taxon_concepts = MTaxonConcept.
+      select([:"taxon_concepts_mview.id", :full_name, :"designations.id AS designation_id"]).
+      joins('JOIN designations ON designations.taxonomy_id = taxon_concepts_mview.taxonomy_id').
       where(:rank_name => [Rank::CLASS, Rank::ORDER, Rank::FAMILY]).
       order(:full_name)
   end

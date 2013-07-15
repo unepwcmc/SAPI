@@ -1,3 +1,3 @@
 class Species::EventSerializer < ActiveModel::Serializer
-  attributes :name
+  attributes :name, :effective_at_formatted
 end
