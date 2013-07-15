@@ -26,7 +26,7 @@ class Event < ActiveRecord::Base
   validates :url, :format => URI::regexp(%w(http https)), :allow_blank => true
 
   def effective_at_formatted
-    effective_at && effective_at.strftime("%d/%m/%Y")
+    effective_at && effective_at.strftime("%d/%m/%y")
   end
 
   def end_date_formatted
