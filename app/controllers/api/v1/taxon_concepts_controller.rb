@@ -2,7 +2,7 @@ class Api::V1::TaxonConceptsController < ApplicationController
 
   def index
     @search = Species::Search.new(params)
-    @taxon_concepts = @search.results.page(params[:page]).per(5)
+    @taxon_concepts = @search.results.page(params[:page]).per(params[:per_page] || 10)
     render :json => @taxon_concepts,
       :each_serializer => Species::TaxonConceptSerializer,
       :meta => {:total => @search.results.count}
