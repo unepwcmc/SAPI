@@ -4,3 +4,5 @@ Species.IndexView = Ember.View.extend
   init: () ->
     @.set('elementId', 'main')
     return @._super()
+  didInsertElement: () ->
+    $('body').removeClass('inner')

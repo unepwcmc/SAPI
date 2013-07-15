@@ -371,6 +371,11 @@ form, fieldset {
 }
 #header .download {
 	float: right;
+}
+#main .download {
+	display: inline-block;
+}
+#header .download, #main .download {
 	font-size: 13px;
 	font-weight: bold;
 	text-transform: uppercase;
