@@ -1,6 +1,50 @@
 <ul>
-{{#each autoCompleteTaxonConcepts}}
-{{autoCompleteSuggestion}}
-<li><a href="#">{{highlight autoCompleteSuggestion controller.taxonConceptQuery}}</a></li>
+{{#each controller.autoCompleteTaxonConcepts.meta.rank_headers}}
+  <li class="header">{{this.rank_name}}</li>
+
+  {{#each taxonConceptId in this.taxon_concept_ids}}
+    {{view Species.AutoCompleteTaxonConceptView 
+      taxonConceptIdBinding="taxonConceptId"
+    }}
+  {{/each}}
+
 {{/each}}
+
 </ul>
+
+<!--
+      <div class="popup">
+        <ul>
+          <li class="header">FAMILY</li>
+          <li><a href="#"><span>Lox</span>ocemidae (<span>Lox</span>ocemidés)</a></li>
+          </li>
+          <li>
+            <strong class="header">GENUS</strong>
+            <ul>
+              <li><a href="#"><span>Lox</span>ia</a></li>
+              <li><a href="#"><span>Lox</span>ocemus</a></li>
+              <li><a href="#"><span>Lox</span>odonta</a></li>
+            </ul>
+          </li>
+          <li>
+            <strong class="header">SPECIES</strong>
+            <ul>
+              <li><a href="#"><span>Lox</span>ia curvirostra</a></li>
+              <li><a href="#"><span>Lox</span>ia pytyopsittacus</a></li>
+              <li><a href="#"><span>Lox</span>ia scotica</a></li>
+              <li><a href="#"><span>Lox</span>ocemus bicolor</a></li>
+              <li><a href="#"><span>Lox</span>odonta africana (Loxodonta cyclotis)</a></li>
+            </ul>
+          </li>
+          <li>
+            <ul>
+              <li><a href="#"><span>Lox</span>ia curvirostra</a></li>
+              <li><a href="#"><span>Lox</span>ia pytyopsittacus</a></li>
+              <li><a href="#"><span>Lox</span>ia scotica</a></li>
+              <li><a href="#"><span>Lox</span>ocemus bicolor</a></li>
+              <li><a href="#"><span>Lox</span>odonta africana (Loxodonta cyclotis)</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+-->

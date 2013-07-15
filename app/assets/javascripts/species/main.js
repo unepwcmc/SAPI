@@ -1,6 +1,6 @@
 // page init
 bindReady(function(){
-	initInputs();
+	//initInputs();
 });
 
 // clear inputs on focus

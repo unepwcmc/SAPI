@@ -23,7 +23,7 @@ Species.TaxonConcept = DS.Model.extend
     if !@get('matchingNames')
       @get('fullName')
     else
-      @get(fullName) + '(' + @get('matchingNames') + ')'
+      @get('fullName') + ' (' + @get('matchingNames') + ')'
   ).property('fullName', 'matchingNames')
 
 Species.TaxonConcept.FIXTURES = [

@@ -2,10 +2,11 @@ Species.SearchController = Ember.Controller.extend
   needs: ['geoEntities', 'taxonConcepts']
   taxonomy: 'cites_eu'
   taxonConceptQuery: null
+  taxonConceptsDropdownVisible: false
   geoEntityQuery: null
   geoEntityId: null
   geoEntityIds: null
-  geoEntityAutoCompleteRegExp: null
+  geoEntitiesDropdownVisible: false
 
   #autoCompleteRegions: null
   #autoCompleteCountries: null
@@ -59,21 +60,14 @@ Species.SearchController = Ember.Controller.extend
     @set 'geoEntityIds', @get('selectedGeoEntities').mapProperty('id')
   ).observes('selectedGeoEntities.@each')
 
-  # taxonConceptQueryObserver: ( ->
-
-  #   @set 'autoCompleteTaxonConcepts', Species.TaxonConcept.find({taxon_concept_query: @get('taxonConceptQuery')})
-  # ).observes('taxonConceptQuery')
-
   autoCompleteTaxonConcepts: ( ->
-    console.log(@get('taxonConceptQuery'))
     taxonConceptQuery = @get('taxonConceptQuery')
-    if !taxonConceptQuery
+    if !taxonConceptQuery || taxonConceptQuery.length < 3
       return;
 
-    matches = Species.TaxonConcept.find(
-      scientific_name: taxonConceptQuery,
+    Species.TaxonConcept.find(
+      taxonomy: @get('taxonomy')
+      scientific_name: taxonConceptQuery
       autocomplete: true
     )
-    return matches
-
   ).property('taxonConceptQuery')
