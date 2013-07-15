@@ -7,5 +7,7 @@ Species.TaxonConceptRoute = Ember.Route.extend
     # transitionTo(myObject) call then the passed object is used to call
     # setupController directly and model is not called.
     # We might need to revisit this when loading particular tabs.
-    if model.get('isLoaded')
-      model.reload()
+    model.reload() if model.get('citesListings') is `undefined`
+
+  redirect: () ->
+    @transitionTo('taxon_concept.legal')
