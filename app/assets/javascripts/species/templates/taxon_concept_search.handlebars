@@ -1,0 +1,16 @@
+<form action="#" class="search">
+  <fieldset>
+    {{view Species.TaxonConceptSearchTextField
+      valueBinding="controller.taxonConceptQuery"
+      id="scientific_name"
+      title="search"
+      placeholder="Species, higher taxon, synonym or common name..."
+      autocomplete="off"
+    }}
+    {{view Species.TaxonConceptSearchDropdown
+     valueBinding="controller.autoCompleteTaxonConcepts"
+     isVisibleBinding="controller.taxonConceptsDropdownVisible"
+    }}
+    <button {{action "loadTaxonConcepts"}}>Search</button>
+  </fieldset>
+</form>

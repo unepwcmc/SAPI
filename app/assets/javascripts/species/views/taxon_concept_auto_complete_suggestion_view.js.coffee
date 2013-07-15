@@ -6,7 +6,7 @@ Species.TaxonConceptAutoCompleteSuggestionView = Ember.View.extend
   ).property('taxonConceptId')
   template: ( ->
     if @get('taxonConcept.rankName') == 'SPECIES'
-      Ember.Handlebars.compile('{{#linkTo "taxon_concept" view.taxonConcept}}{{highlight view.taxonConcept.autoCompleteSuggestion controller.taxonConceptQuery}}{{/linkTo}}')
+      Ember.Handlebars.compile('{{#linkTo "taxon_concept.legal" view.taxonConcept}}{{highlight view.taxonConcept.autoCompleteSuggestion controller.taxonConceptQuery}}{{/linkTo}}')
     else
       Ember.Handlebars.compile('<a href="#">{{highlight view.taxonConcept.autoCompleteSuggestion controller.taxonConceptQuery}}</a>')
   ).property()
