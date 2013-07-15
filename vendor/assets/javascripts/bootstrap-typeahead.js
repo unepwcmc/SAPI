@@ -35,7 +35,6 @@
     this.updater = this.options.updater || this.updater
     this.source = this.options.source
     this.$menu = $(this.options.menu)
-
     this.shown = false
     this.listen()
   }
@@ -57,7 +56,6 @@
     }
 
   , show: function () {
-
       var pos = $.extend({}, this.$element.position(), {
         height: this.$element[0].offsetHeight
       })
@@ -140,20 +138,13 @@
       var that = this
 
       items = $(items).map(function (i, item) {
-        // Hack
-        if (item.charAt(0) == "_") {
-          item = item.substr(1)
-          i = $(that.options.header)
-            .attr('data-value', item).html(that.highlighter(item))
-        } else {
-          i = $(that.options.item).attr('data-value', item)
-          i.find('a').html(that.highlighter(item))
-        }
+        i = $(that.options.item).attr('data-value', item)
+        i.find('a').html(that.highlighter(item))
         return i[0]
       })
 
       items.first().addClass('active')
-      this.$menu.find('ul').html(items)
+      this.$menu.html(items)
       return this
     }
 
@@ -316,7 +307,6 @@
     source: []
   , items: 8
   , menu: '<ul class="typeahead dropdown-menu"></ul>'
-  , header: '<li class="typeahead header"></li>'
   , item: '<li><a href="#"></a></li>'
   , minLength: 1
   }
