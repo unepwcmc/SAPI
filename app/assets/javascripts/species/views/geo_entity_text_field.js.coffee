@@ -18,7 +18,3 @@ Species.GeoEntityTextField = Em.TextField.extend
   keyUp: (event) ->
     @set('controller.geoEntityQuery', event.currentTarget.value)
 
-  didInsertElement: () ->
-    if ($.browser.msie)
-      @.$().val(@.$().attr('placeholder'))
-
