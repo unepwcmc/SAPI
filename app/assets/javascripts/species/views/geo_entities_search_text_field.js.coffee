@@ -1,24 +1,20 @@
-Species.GeoEntityTextField = Em.TextField.extend
+Species.GeoEntitiesSearchTextField = Em.TextField.extend
   value: ''
 
   attributeBindings: ['autocomplete']
 
-  click: () ->
+  click: (event) ->  
     if (@.$().val() == @get('placeholder'))
       @.$().val('')
-
     @.$().attr('placeholder', '')
 
   focusOut: (event) ->
-    if ($.browser.msie)
-      if (@.$().val().length == 0)
-        this.$().val(this.get('placeholder'))
     @.$().attr('placeholder', @get('placeholder'))
+    @hideDropdown() if !@get('parentView.mousedOver')
 
   keyUp: (event) ->
     @set('controller.geoEntityQuery', event.currentTarget.value)
 
-  didInsertElement: () ->
-    if ($.browser.msie)
-      @.$().val(@.$().attr('placeholder'))
+  hideDropdown: () -> 
+    @set('controller.geoEntitiesDropdownVisible', false)   
 

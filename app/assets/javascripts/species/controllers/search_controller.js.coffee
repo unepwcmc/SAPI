@@ -8,9 +8,8 @@ Species.SearchController = Ember.Controller.extend
   geoEntityIds: null
   geoEntitiesDropdownVisible: false
 
-  #autoCompleteRegions: null
-  #autoCompleteCountries: null
-
+  autoCompleteRegions: null
+  autoCompleteCountries: null
   selectedGeoEntities: []
 
   scientificName: ""
@@ -30,36 +29,6 @@ Species.SearchController = Ember.Controller.extend
   toParams: ->
     scientific_name : this.get('scientificName')
 
-  geoEntityAutoCompleteRegExp: ( ->
-    console.log('hello')
-    return new RegExp("^"+@get('geoEntityQuery'),"i")
-  ).property('geoEntityQuery')
-
-  autoCompleteRegions: ( ->
-    return @get('controllers.geoEntities.regions')
-    .filter (item, index, enumerable) =>
-      @get('geoEntityAutoCompleteRegExp').test item.get('name')
-  ).property('geoEntityAutoCompleteRegExp')
-
-  autoCompleteCountries: ( ->
-    return @get('controllers.geoEntities.countries')
-    .filter (item, index, enumerable) =>
-      @get('geoEntityAutoCompleteRegExp').test item.get('name')
-  ).property('geoEntityAutoCompleteRegExp')
-
-  # geoEntityAutoCompleteRegExpObserver: ( ->
-  #   @set 'autoCompleteRegions', @get('controllers.geoEntities.regions')
-  #   .filter (item, index, enumerable) =>
-  #     @get('geoEntityAutoCompleteRegExp').test item.get('name')
-  #   @set 'autoCompleteCountries', @get('controllers.geoEntities.countries')
-  #   .filter (item, index, enumerable) =>
-  #     @get('geoEntityAutoCompleteRegExp').test item.get('name')
-  # ).observes('geoEntityAutoCompleteRegExp')
-
-  selectedGeoEntitiesObserver: ( ->
-    @set 'geoEntityIds', @get('selectedGeoEntities').mapProperty('id')
-  ).observes('selectedGeoEntities.@each')
-
   autoCompleteTaxonConcepts: ( ->
     taxonConceptQuery = @get('taxonConceptQuery')
     if !taxonConceptQuery || taxonConceptQuery.length < 3
@@ -71,3 +40,18 @@ Species.SearchController = Ember.Controller.extend
       autocomplete: true
     )
   ).property('taxonConceptQuery')
+
+  geoEntityOueryObserver: ( ->
+    re = new RegExp("^"+@get('geoEntityQuery'),"i")
+
+    @set 'autoCompleteRegions', @get('controllers.geoEntities.regions')
+    .filter (item, index, enumerable) =>
+      re.test item.get('name')
+    @set 'autoCompleteCountries', @get('controllers.geoEntities.countries')
+    .filter (item, index, enumerable) =>
+      re.test item.get('name')
+  ).observes('geoEntityQuery')
+
+  selectedGeoEntitiesObserver: ( ->
+    @set 'geoEntityIds', @get('selectedGeoEntities').mapProperty('id')
+  ).observes('selectedGeoEntities.@each')

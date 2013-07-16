@@ -5,3 +5,5 @@ Species.DownloadsButton = Ember.View.extend
   didInsertElement: () ->
     if @get('controller.currentPath') == 'index'
       @.$().appendTo("#main")
+  click: (event) ->
+    @set('controller.downloadsPopupVisible', true)

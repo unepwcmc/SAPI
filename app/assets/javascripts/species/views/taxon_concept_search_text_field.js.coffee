@@ -10,6 +10,7 @@ Species.TaxonConceptSearchTextField = Em.TextField.extend
     @showDropdown()
 
   focusOut: (event) ->
+    @.$().attr('placeholder', @get('placeholder'))
     @hideDropdown() if !@get('parentView.mousedOver')
 
   keyUp: (event) ->

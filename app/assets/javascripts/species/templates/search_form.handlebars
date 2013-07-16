@@ -7,43 +7,12 @@
     {{/view}}
   </div>
 
-        {{view Species.TaxonConceptSearchView controllerBinding="controller"}}
-        
-
-{{#view Species.GeoEntitiesDropdown}}
-  <a href="#">Locations</a>
-  <div id="location-area-popup" class="popup-holder01">
-    <div class="popup">
-      <div class="search-block01">
-        <div class="row01">
-          {{view Species.GeoEntityTextField
-          valueBinding="controller.geoEntityQuery"
-          placeholder="Type to filter countries or regions"
-          autocomplete="off"
-          }}
-          <input type="submit" value="submit" />
-        </div>
-        <strong class="title01">SELECTED LOCATIONS</strong>
-       {{collection Species.SelectedGeoEntitiesCollectionView
-       contentBinding="controller.selectedGeoEntities"}}
-    </div>
-    <div class="list-holder">
-      <ul>
-        <li>
-          <h2>REGIONS</h2>
-          {{collection Species.GeoEntitiesCollectionView
-          contentBinding="controller.autoCompleteRegions"}}
-        </li>
-        <li>
-          <h2>COUNTRIES</h2>
-          {{collection Species.GeoEntitiesCollectionView
-          contentBinding="controller.autoCompleteCountries"}}
-        </li>
-      </ul>
-    </div>
-  </div>
-  </div>
-
-{{/view}}
-
+  {{view Species.TaxonConceptSearchView controllerBinding="controller"}} 
+  {{#view Species.GeoEntitiesSearchView}} 
+    {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}   
+    {{view Species.GeoEntitiesSearchDropdown 
+      controllerBinding="controller"
+      isVisibleBinding="controller.geoEntitiesDropdownVisible"
+    }}
+  {{/view}}
 {{outlet search}}
