@@ -1188,11 +1188,8 @@ form, fieldset {
 	border-top: none;
 	padding: 67px 0 0;
 }
-#main .block:hover {
+#main .block.show_more:hover {
 	border-bottom: 2px solid #376382;
-}
-#main .block.empty:hover {
-  border-bottom: 0
 }
 #main .block {
 	text-align: left;
@@ -1281,13 +1278,9 @@ form, fieldset {
   display: none;
 }
 
-#main .block:hover .btn-hloder {
+#main .block.show_more:hover .btn-hloder {
   display: block;
 }
-#main .block.empty:hover .btn-hloder {
-  display: none;
-}
-
 #main .block .btn-hloder:after {
 	display: block;
 	clear: both;

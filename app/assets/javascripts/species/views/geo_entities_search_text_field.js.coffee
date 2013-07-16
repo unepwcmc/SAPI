@@ -17,4 +17,3 @@ Species.GeoEntitiesSearchTextField = Em.TextField.extend
 
   hideDropdown: () -> 
     @set('controller.geoEntitiesDropdownVisible', false)   
-
