@@ -14,6 +14,11 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   has_many :eu_listing_changes, :serializer => Species::EuListingChangeSerializer,
     :key => :eu_listings
 
+  def synonyms
+    object.synonyms.
+      order("full_name")
+  end
+
 
   def quotas
     object.quotas.joins(:geo_entity).
