@@ -544,20 +544,17 @@ form, fieldset {
 }
 .result-block h2:hover { background: #ecf2f6; }
 .result-block.add h2 { padding: 13px 28px 12px; }
-.dwonload-wrapper {
-	width: 1000px;
-	margin: 0 auto;
-	padding: 50px 0;
-}
+
 .dwonload-block {
 	width: 360px;
-	float: left;
-	margin: 0 50px 50px 0;
-	position: relative;
+	margin-left: -180px;
+	position: fixed;
+	left: 50%;
 	background: #f5f5f7;
 	-webkit-border-radius: 12px;
 	border-radius: 12px;
 	border: 1px solid #6d95b0;
+	z-index: 1000;
 }
 .dwonload-block .close {
 	width: 22px;

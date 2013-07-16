@@ -1,2 +1,6 @@
 Species.DownloadsController = Ember.Controller.extend
-  downloadsDropdownVisible: false
+  downloadsPopupVisible: false
+  downloadsTopButtonVisible: ( ->
+    # hide if we're currently showing index
+    this.target.get('_activeViews').index == undefined
+  ).property()
