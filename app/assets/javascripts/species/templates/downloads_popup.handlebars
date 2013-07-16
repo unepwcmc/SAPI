@@ -1,44 +1,31 @@
 <a href="#" class="close">close</a>
 <form action="#">
-	<fieldset>
-		<strong class="title">DOWNLOAD SPECIES LISTS</strong>
-		<ul class="tabset">
-			<li><a href="#">CITES</a></li>
-			<li class="active"><a href="#">EU</a></li>
-			<li class="last-child"><a href="#">CMS</a></li>
-		</ul>
-		<div class="tab-content">
-			<div id="tab03">
-				<ul class="tabset subtabset">
-					<li class="active"><a href="#">LISTINGS</a></li>
-					<li class="last-child"><a href="#">EU DECISIONS</a></li>
-				</ul>
-				<div class="tab-content">
-					<div class="two-columns">
-						<div class="col">
-							<a href="#" class="link">A &amp; B</a>
-						</div>
-						<div class="col">
-							<strong class="heading">ADDITIONAL DATA</strong>
-							<div class="row">
-								<input type="checkbox" id="check" />
-								<label for="check">Include CITES appendixes</label>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="bottom-columns">
-			<div class="col">
-				<a href="#" class="link">TAXON</a>
-			</div>
-			<div class="col">
-				<a href="#" class="link">LOCATION</a>
-			</div>
-		</div>
-		<div class="btn-holder">
-			<a href="#">DOWNLOAD</a>
-		</div>
-	</fieldset>
+  <fieldset>
+    <strong class="title">DOWNLOAD SPECIES LISTS</strong>
+    <ul class="tabset">
+      <li>
+          {{#view Species.TaxonomyToggle option="cites" valueBinding="controller.designation"}}
+            CITES
+          {{/view}}
+      </li>
+      <li>
+          {{#view Species.TaxonomyToggle option="eu" valueBinding="controller.designation"}}
+            EU
+          {{/view}}
+      </li>
+      <li class="last-child">
+          {{#view Species.TaxonomyToggle option="cms" valueBinding="controller.designation"}}
+            CMS
+          {{/view}}
+      </li>
+    </ul>
+
+    {{view Species.DownloadsForCites isVisibleBinding="controller.designationIsCites"}}
+    {{view Species.DownloadsForEu isVisibleBinding="controller.designationIsEu"}}
+    {{view Species.DownloadsForCms isVisibleBinding="controller.designationIsCms"}}
+
+    <div class="btn-holder">
+      <a href="#">DOWNLOAD</a>
+    </div>
+  </fieldset>
 </form>

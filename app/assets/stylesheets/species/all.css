@@ -174,7 +174,7 @@ form, fieldset {
 .search-block .links-area a {
 	color: #fff;
 	float: left;
-	background: #253848;
+	background: #376382;
 	padding: 0 9px;
 	border-left: none;
 	text-decoration: none;
@@ -182,7 +182,7 @@ form, fieldset {
 	-webkit-border-radius: 0 20px 20px 0;
 	border-radius: 0 20px 20px 0;
 }
-.search-block .links-area a:hover, .search-block .links-area a.active { background: #376382; }
+.search-block .links-area a:hover, .search-block .links-area a.active { background: #253848; }
 .search-block .links-area a:first-child {
 	border-right: none;
 	-webkit-border-radius: 20px 0 0 20px;
@@ -604,7 +604,7 @@ form, fieldset {
 	border: 1px solid #2c516c;
 	border-left: none;
 }
-.dwonload-block .tabset li a:hover, .dwonload-block .tabset li.active a { background: #253848; }
+.dwonload-block .tabset li a:hover, .dwonload-block .tabset li.active a, .dwonload-block .tabset li a.active  { background: #253848; }
 .dwonload-block .tabset li:first-child a {
 	-webkit-border-radius: 20px 0 0 20px;
 	border-radius: 20px 0 0 20px;

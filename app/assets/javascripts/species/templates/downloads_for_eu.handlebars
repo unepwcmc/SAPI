@@ -1,0 +1,80 @@
+<ul class="tabset subtabset">
+  <li>
+    {{#view Species.TaxonomyToggle option="listings" valueBinding="controller.euLegislation"}}
+      LISTINGS
+    {{/view}}
+  </li>
+  <li class="last-child">
+    {{#view Species.TaxonomyToggle option="decisions" valueBinding="controller.euLegislation"}}
+      EU DECISIONS
+    {{/view}}
+  </li>
+</ul>
+{{#view Species.DownloadsForLegislation isVisibleBinding="controller.legislationIsEuListings"}}
+  <div class="two-columns">
+    <div class="col">
+      <a href="#" class="link">A &amp; B</a>
+    </div>
+    <div class="col">
+      <strong class="heading">ADDITIONAL DATA</strong>
+      <div class="row">
+        <input type="checkbox" id="check" />
+        <label for="check">Include CITES appendixes</label>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-columns">
+    <div class="col">
+      <a href="#" class="link">TAXON</a>
+    </div>
+    <div class="col">
+      <a href="#" class="link">LOCATION</a>
+    </div>
+  </div>
+{{/view}}
+{{#view Species.DownloadsForLegislation isVisibleBinding="controller.legislationIsEuDecisions"}}
+  <div class="doc-type">
+    <strong class="heading">DOCUMENT TYPE</strong>
+    <div class="typy-columns">
+      <div class="col">
+        <div class="row">
+          <input type="checkbox" id="item" />
+          <label for="item">SRG Negative Opinions</label>
+        </div>
+        <div class="row">
+          <input type="checkbox" id="item01" />
+          <label for="item01">SRG No Opinions</label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          <input type="checkbox" id="item02" />
+          <label for="item02">SRG Positive Opinions</label>
+        </div>
+        <div class="row">
+          <input type="checkbox" id="item03" />
+          <label for="item03">Suspensions</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="info-columns">
+    <div class="col">
+      <ul class="tab-link">
+        <li><a href="#">CURRENT</a></li>
+        <li class="last-child active"><a href="#">ALL</a></li>
+      </ul>
+    </div>
+    <div class="col">
+      <a href="#" class="link">YEAR</a>
+    </div>
+  </div>
+  <div class="bottom-columns">
+    <div class="col">
+      <a href="#" class="link">TAXON</a>
+    </div>
+    <div class="col">
+      <a href="#" class="link">LOCATION</a>
+    </div>
+  </div>
+{{/view}}
