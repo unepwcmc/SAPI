@@ -3,31 +3,32 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     if @get('citesListings') == undefined
       return
     if @get('citesListings').findProperty('is_current', false) is `undefined`
-      "empty"
-    else
       ""
+    else
+      "show_more"
   ).property('citesListings')
   historicEuListings: ( ->
     if @get('euListings') == undefined
       return
     if @get('euListings').findProperty('is_current', false) is `undefined`
-      "empty"
-    else
       ""
+    else
+      "show_more"
   ).property('euListings')
+
   historicCitesQuotas: ( ->
-    if @get('quotas') == undefined
+    if @get('citesQuotas') == undefined
       return
-    if @get('quotas').findProperty('is_current', false) is `undefined`
-      "empty"
-    else
+    if @get('citesQuotas').findProperty('is_current', false) is `undefined`
       ""
-  ).property('quotas')
+    else
+      "show_more"
+  ).property('citesQuotas')
   historicCitesSuspensions: ( ->
     if @get('citesSuspensions') == undefined
       return
     if @get('citesSuspensions').findProperty('is_current', false) is `undefined`
-      "empty"
+      "no_hover"
     else
       ""
   ).property('citesSuspensions')

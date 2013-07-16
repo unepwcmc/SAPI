@@ -1,5 +1,5 @@
 <strong class="title more">Quotas</strong>
-{{#unless quotas}}
+{{#unless citesQuotas}}
 
 {{else}}
   <table summary="data table">
@@ -14,7 +14,7 @@
       </tr>
     </thead>
     <tbody>
-      {{#each quota in quotas}}
+      {{#each quota in citesQuotas}}
         {{#if quota.public_display}}
           <tr {{bindAttr class="quota.is_current:current:historic"}}>
             <td>&nbsp;</td>

@@ -7,7 +7,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   has_one :m_taxon_concept, :serializer => Species::MTaxonConceptSerializer
   has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,
     :key => :references
-  has_many :quotas, :serializer => Species::QuotaSerializer
+  has_many :quotas, :serializer => Species::QuotaSerializer, :key => :cites_quotas
   has_many :cites_suspensions, :serializer => Species::CitesSuspensionSerializer
   has_many :cites_listing_changes, :serializer => Species::CitesListingChangeSerializer,
     :key => :cites_listings

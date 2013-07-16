@@ -1,5 +1,5 @@
 <div id="tab1">
-  <div class="block block02">
+  <div class="block block02 show_more">
     <strong class="title">COMMON NAMES</strong>
     <table summary="data table" id="common_names">
       <thead>
@@ -30,12 +30,12 @@
     <div class="columns-holder">
       <ul class="col">
         {{#eachPart controllers.taxonConcept.synonyms parts=2 page=0}}
-        <li>{{full_name}} {{author_year}}</li>
+          <li>{{full_name}} {{author_year}}</li>
         {{/eachPart}}
       </ul>
       <ul class="col">
         {{#eachPart controllers.taxonConcept.synonyms parts=2 page=1}}
-        <li>{{full_name}} {{author_year}}</li>
+          <li>{{full_name}} {{author_year}}</li>
         {{/eachPart}}
       </ul>
     </div>
