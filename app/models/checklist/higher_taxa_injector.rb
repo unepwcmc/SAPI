@@ -35,6 +35,35 @@ class Checklist::HigherTaxaInjector
     res
   end
 
+  def run_summary
+    @expand_headers = false #use this only for collapsed headers
+    # such as the Checklist or Species+ website
+    res = []
+    current_higher_taxon = nil
+    current_higher_taxon_children_ids = []
+    @taxon_concepts.each_with_index do |tc, i|
+      prev_item = (i > 0 ? @taxon_concepts[i-1] : nil)
+      higher_taxon = higher_taxa_headers(prev_item, tc).first
+      puts higher_taxon.inspect
+      if higher_taxon
+        res.push({
+          :higher_taxon => Checklist::HigherTaxaItem.new(current_higher_taxon),
+          :taxon_concept_ids => current_higher_taxon_children_ids
+        }) unless current_higher_taxon.nil?
+        current_higher_taxon = higher_taxon
+        current_higher_taxon_children_ids = []
+      end
+      current_higher_taxon_children_ids << tc.id
+    end
+    # push the last one
+    res.push({
+      :higher_taxon => Checklist::HigherTaxaItem.new(current_higher_taxon),
+      :taxon_concept_ids => current_higher_taxon_children_ids
+    }) unless current_higher_taxon.nil?
+    res
+  end
+
+
   #returns array of HigherTaxaItems that need to be inserted
   #between prev_item and curr_item in the taxonomic layout
   def higher_taxa_headers(prev_item, curr_item)

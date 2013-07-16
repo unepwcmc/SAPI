@@ -12,7 +12,6 @@ class Api::V1::TaxonConceptsController < ApplicationController
           :total => matcher.taxon_concepts.count,
           :rank_headers => @taxon_concepts.map(&:rank_name).uniq.map do |r|
             {
-              :id => r,
               :rank_name => r, 
               :taxon_concept_ids => @taxon_concepts.select{|tc| tc.rank_name == r}.map(&:id)
             }
@@ -23,7 +22,10 @@ class Api::V1::TaxonConceptsController < ApplicationController
       @taxon_concepts = @search.results.page(params[:page]).per(params[:per_page] || 10)
       render :json => @taxon_concepts,
         :each_serializer => Species::TaxonConceptSerializer,
-        :meta => {:total => @search.results.count}  
+        :meta => {
+          :total => @search.results.count,
+          :higher_taxa_headers => Checklist::HigherTaxaInjector.new(@taxon_concepts).run_summary
+        }  
     end
 
   end
