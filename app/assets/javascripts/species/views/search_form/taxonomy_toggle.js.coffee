@@ -1,5 +1,7 @@
-Species.TaxonomyToggle = Ember.LinkView.extend
+Species.TaxonomyToggle = Ember.View.extend
+  tagName: 'a'
   href: '#'
+  classNameBindings: ['active:active:']
 
   active: ( ->
     return @.get("option") == @.get("value")

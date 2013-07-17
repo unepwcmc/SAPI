@@ -4,7 +4,6 @@ Species.SearchRoute = Ember.Route.extend
     {params: '?' + $.param(model)}
 
   model: (params) ->
-    console.log('model')
     geoEntitiesController = @controllerFor('geoEntities')
     geoEntitiesController.set('content', Species.GeoEntity.find())
     # what follows here is the deserialisation of params
@@ -17,7 +16,6 @@ Species.SearchRoute = Ember.Route.extend
     params
 
   setupController: (controller, model) ->
-    console.log('setup')
     # this hook is executed whether entering from url or transition
     controller.setFilters(model)
     @controllerFor('taxonConcepts').set('content', Species.TaxonConcept.find(model))
