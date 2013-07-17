@@ -674,7 +674,7 @@ form, fieldset {
 	height: 4px;
 	position: absolute;
 	content: "";
-	z-index: 1;
+	/*z-index: 1;*/
 	right: 10px;
 	top: 14px;
 	background: url(../species/arrow01.png) no-repeat;

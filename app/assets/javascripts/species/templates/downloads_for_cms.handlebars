@@ -2,7 +2,22 @@
   <div id="tab4">
     <div class="three-columns">
       <div class="col">
-        <a href="#" class="link">APPENDIX</a>
+        <div class="popup-area">
+          {{view Species.AppendixButton
+            contentBinding="controller.selectedAppendices"
+            appendicesBinding="controller.appendices"
+          }}
+          <div class="popup-holder-appendix">
+            <div class="popup">
+              <div class="list-holder">
+                {{collection Species.AppendixDropdownCollectionView 
+                  selectedAppendicesBinding="controller.selectedAppendices"
+                  contentBinding="controller.appendices"
+                }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="col">
         <a href="#" class="link">TAXON</a>
