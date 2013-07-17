@@ -22,6 +22,7 @@ gem 'sidekiq-status'
 gem 'whenever', :require => false
 
 gem 'ember-rails'
+gem 'ember-source', '1.0.0.rc5' # or the version you need
 gem 'jquery-rails', '2.1.4' #do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'kaminari'
