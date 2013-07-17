@@ -1,12 +1,8 @@
-Ember.Handlebars.helper "foreach", (arr, options) ->
-  return options.inverse(this)  if options.inverse and not arr.length
-  arr.map((item, index) ->
-    item.$index = index
-    item.$first = index is 0
-    options.fn item
-  ).join ""
-
-Ember.Handlebars.helper "eachPart", (arr, options) ->
+# for some reason cannot use bound helper here
+# "registerBoundHelper helpers don't support block usage"
+# so using a regular helper
+Ember.Handlebars.registerHelper "eachPart", (arr, options) ->
+  arr = Ember.Handlebars.get(this, arr, options)
   return options.inverse(this) if options.inverse and not arr.length
   limit = Math.ceil(arr.length / options.hash.parts)
   offset = options.hash.page * limit
