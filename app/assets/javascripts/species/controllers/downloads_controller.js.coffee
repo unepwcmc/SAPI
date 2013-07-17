@@ -1,5 +1,5 @@
 Species.DownloadsController = Ember.Controller.extend
-  needs: ['downloadsForCmsListings']
+  needs: ['downloadsForCmsListings', 'downloadsForCitesListings', 'downloadsForEuListings']
   downloadsPopupVisible: false
   downloadsTopButtonVisible: ( ->
     # hide if we're currently showing index

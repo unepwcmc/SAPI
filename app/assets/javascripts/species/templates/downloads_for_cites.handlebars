@@ -10,19 +10,23 @@
     {{/view}}
   </li>
 </ul>
-{{#view Species.DownloadsForLegislation isVisibleBinding="controller.legislationIsCitesListings"}}
+{{#view Species.DownloadsForLegislation 
+  isVisibleBinding="controller.legislationIsCitesListings"
+  controllerBinding="controllers.downloadsForCitesListings"
+}}
   <div class="two-columns add">
     <div class="col">
       <div class="popup-area">
-        <a href="#" class="link">I &amp; II</a>
-        <div class="popup-holder01">
+        {{view Species.AppendixButton
+          controllerBinding="controller"
+        }}
+        <div class="popup-holder-appendix">
           <div class="popup">
             <div class="list-holder">
-              <ul>
-                <li>I</li>
-                <li>II</li>
-                <li>III</li>
-              </ul>
+              {{collection Species.AppendixDropdownCollectionView 
+                controllerBinding="controller"
+                contentBinding="controller.appendices"
+              }}
             </div>
           </div>
         </div>

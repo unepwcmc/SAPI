@@ -3,15 +3,12 @@
     <div class="three-columns">
       <div class="col">
         <div class="popup-area">
-          {{view Species.AppendixButton
-            contentBinding="controller.selectedAppendices"
-            appendicesBinding="controller.appendices"
-          }}
+          {{view Species.AppendixButton controllerBinding="controller"}}
           <div class="popup-holder-appendix">
             <div class="popup">
               <div class="list-holder">
                 {{collection Species.AppendixDropdownCollectionView 
-                  selectedAppendicesBinding="controller.selectedAppendices"
+                  controllerBinding="controller"
                   contentBinding="controller.appendices"
                 }}
               </div>

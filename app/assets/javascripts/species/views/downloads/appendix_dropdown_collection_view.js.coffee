@@ -1,14 +1,17 @@
 Species.AppendixDropdownCollectionView = Ember.CollectionView.extend
   tagName: 'ul'
+  controller: null
   content: []
-  selectedAppendices: []
 
   itemViewClass: Ember.View.extend
     contextBinding: 'content'
-    template: Ember.Handlebars.compile('<div class="cites_appendix a_{{unbound this}}">{{this}}</div>')
+    designation: ( ->
+      @get('parentView.controller.designation')
+    ).property()
+    template: Ember.Handlebars.compile('<div class="{{unbound view.designation}}_appendix a_{{unbound this}}">{{this}}</div>')
 
     active: ( ->
-      $.inArray(@get('context'), @get('selectedAppendices')) > 0
+      $.inArray(@get('context'), @get('parentView.controller.selectedAppendices')) > 0
     ).property()
 
     touchEnd: (event) ->
@@ -22,7 +25,7 @@ Species.AppendixDropdownCollectionView = Ember.CollectionView.extend
 
       # Add the selected appendices to the appendices filter array
       # Equivalent to a selectionBinding in a dropdown list
-      selectedAppendices = @get('parentView.selectedAppendices')
+      selectedAppendices = @get('parentView.controller.selectedAppendices')
       if (selectedAppendices.contains(@get('context')))
         selectedAppendices.removeObject(@get('context'))
       else
