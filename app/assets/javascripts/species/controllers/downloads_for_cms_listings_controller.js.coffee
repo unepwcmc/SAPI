@@ -10,7 +10,8 @@ Species.DownloadsForCmsListingsController = Ember.Controller.extend
     {
       data_type: 'Listings'
       filters: 
-        selected_appendices: @get('selectedAppendices')
+        designation: @get('designation')
+        appendices: @get('selectedAppendices')
     }
   ).property('selectedAppendices.@each')
 

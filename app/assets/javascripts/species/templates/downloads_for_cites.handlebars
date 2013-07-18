@@ -14,7 +14,7 @@
   isVisibleBinding="controller.legislationIsCitesListings"
   controllerBinding="controllers.downloadsForCitesListings"
 }}
-  <div class="two-columns add">
+  <div class="three-columns">
     <div class="col">
       <div class="popup-area">
         {{view Species.AppendixButton
@@ -33,20 +33,14 @@
       </div>
     </div>
     <div class="col">
-      <strong class="heading">ADDITIONAL DATA</strong>
-      <div class="row">
-        <input type="checkbox" id="check01" />
-        <label for="check01">Include EU annexes</label>
-      </div>
-    </div>
-  </div>
-  <div class="bottom-columns">
-    <div class="col">
       <a href="#" class="link">TAXON</a>
     </div>
     <div class="col">
       <a href="#" class="link">LOCATION</a>
     </div>
+  </div> 
+  <div class="btn-holder">     
+    {{view Species.StartDownloadButton controllerBinding="controller"}}
   </div>
 {{/view}}
 {{#view Species.DownloadsForLegislation isVisibleBinding="controller.legislationIsCitesRestrictions"}}
@@ -118,5 +112,8 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="btn-holder">     
+    {{view Species.StartDownloadButton controllerBinding="controller"}}
   </div>
 {{/view}}

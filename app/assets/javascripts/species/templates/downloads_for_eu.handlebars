@@ -48,6 +48,9 @@
       <a href="#" class="link">LOCATION</a>
     </div>
   </div>
+  <div class="btn-holder">     
+    {{view Species.StartDownloadButton controllerBinding="controller"}}
+  </div>
 {{/view}}
 {{#view Species.DownloadsForLegislation isVisibleBinding="controller.legislationIsEuDecisions"}}
   <div class="doc-type">
@@ -93,5 +96,8 @@
     <div class="col">
       <a href="#" class="link">LOCATION</a>
     </div>
+  </div>
+  <div class="btn-holder">
+    {{view Species.StartDownloadButton controllerBinding="controller"}}
   </div>
 {{/view}}
