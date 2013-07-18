@@ -1089,6 +1089,10 @@ form, fieldset {
 	margin: 0 0 12px;
 	text-transform: uppercase;
 }
+#main .block .empty {
+  padding: 0 29px;
+  font-size: 13px;
+}
 #main .block .title.more { text-transform: none; }
 #main .block table {
 	border-collapse: collapse;

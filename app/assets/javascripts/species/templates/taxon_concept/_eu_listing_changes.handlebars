@@ -1,6 +1,6 @@
 <strong class="title">EU LISTING</strong>
 {{#unless euListings}}
-
+  <p class="empty">This species is not currently listed in the EU Annexes.</p>
 {{else}}
   <table summary="data table">
     <thead>
@@ -15,20 +15,27 @@
       </tr>
     </thead>
     <tbody>
+      {{#if noCurrentCitesListings}}
+        <tr class="current">
+          <td>&nbsp;</td>
+          <td colspan=4>This species is not currently listed in the EU Annexes.</td>
+          <td>&nbsp;</td>
+        </tr>
+      {{/if}}
       {{#each listing in euListings}}
-      <tr {{bindAttr class="listing.is_current:current:historic"}}>
-        <td>&nbsp;</td>
-        <td>
-          <div class="eu_appendix a_{{unbound listing.species_listing_name}}">
-            <span>{{listing.species_listing_name}}</span>
-          </div>
-        </td>
-        <td>{{listing.party_full_name}}</td>
-        <td>{{listing.effective_at_formatted}}</td>
-        <td>{{listing.short_note_en}}</td>
-        <td>{{listing.event_name}}</td>
-        <td class="last">&nbsp;</td>
-      </tr>
+        <tr {{bindAttr class="listing.is_current:current:historic"}}>
+          <td>&nbsp;</td>
+          <td>
+            <div class="eu_appendix a_{{unbound listing.species_listing_name}}">
+              <span>{{listing.species_listing_name}}</span>
+            </div>
+          </td>
+          <td>{{listing.party_full_name}}</td>
+          <td>{{listing.effective_at_formatted}}</td>
+          <td>{{listing.short_note_en}}</td>
+          <td>{{listing.event_name}}</td>
+          <td class="last">&nbsp;</td>
+        </tr>
       {{/each}}
     </tbody>
   </table>

@@ -1,6 +1,6 @@
 <strong class="title more">Suspensions</strong>
 {{#unless citesSuspensions}}
-  <p>There are no current suspensions in place for this species.</p>
+  <p class="empty">There are no current suspensions in place for this species.</p>
 {{else}}
   <table summary="data table">
     <thead>
@@ -14,6 +14,13 @@
       </tr>
     </thead>
     <tbody>
+      {{#if noCurrentCitesSuspensions}}
+        <tr class="current">
+          <td>&nbsp;</td>
+          <td colspan=4>There are no current suspensions in place for this species.</td>
+          <td>&nbsp;</td>
+        </tr>
+      {{/if}}
       {{#each suspension in citesSuspensions}}
       <tr {{bindAttr class="suspension.is_current:current:historic"}}>
         <td>&nbsp;</td>
