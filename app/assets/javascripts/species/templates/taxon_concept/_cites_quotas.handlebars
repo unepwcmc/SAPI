@@ -37,9 +37,9 @@
   </table>
   <div {{bindAttr class=":btn-hloder citesQuotasExpanded:expanded"}}>
     {{#if controller.citesQuotasExpanded}}
-      <a class="link" {{action 'contractCitesQuotas'}}>HIDE HISTORY</a>
+      <a class="link" {{action 'contractList' 'cites_quotas' 'citesQuotasExpanded'}}>HIDE HISTORY</a>
     {{else}}
-      <a class="link" {{action 'expandCitesQuotas'}}>SHOW HISTORY</a>
+      <a class="link" {{action 'expandList' 'cites_quotas' 'citesQuotasExpanded'}}>SHOW HISTORY</a>
     {{/if}}
   </div>
 {{/unless}}

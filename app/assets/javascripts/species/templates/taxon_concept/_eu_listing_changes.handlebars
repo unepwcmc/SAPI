@@ -41,9 +41,9 @@
   </table>
   <div {{bindAttr class=":btn-hloder euListingsExpanded:expanded"}}>
     {{#if controller.euListingsExpanded}}
-      <a class="link" {{action 'contractEuListings'}}>HIDE HISTORY</a>
+      <a class="link" {{action 'contractList' 'eu_listings' 'euListingsExpanded'}}>HIDE HISTORY</a>
     {{else}}
-      <a class="link" {{action 'expandEuListings'}}>SHOW HISTORY</a>
+      <a class="link" {{action 'expandList' 'eu_listings' 'euListingsExpanded'}}>SHOW HISTORY</a>
     {{/if}}
   </div>
 {{/unless}}
