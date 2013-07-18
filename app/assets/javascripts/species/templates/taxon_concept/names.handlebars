@@ -44,8 +44,14 @@
     <strong class="title">SUBSPECIES</strong>
     <div class="columns-holder">
       <ul class="col">
+        {{#eachPart controllers.taxonConcept.subspecies parts=2 page=0}}
+          <li>{{full_name}} {{author_year}}</li>
+        {{/eachPart}}
       </ul>
       <ul class="col">
+        {{#eachPart controllers.taxonConcept.subspecies parts=2 page=1}}
+          <li>{{full_name}} {{author_year}}</li>
+        {{/eachPart}}
       </ul>
     </div>
   </div>
