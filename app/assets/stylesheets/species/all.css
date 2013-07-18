@@ -1012,7 +1012,7 @@ form, fieldset {
 	background: #ecf2f6;
 	font-weight: bold;
 }
-#main .tabset > li.active > ul { display: block; }
+#main .tabset > li > a.active + ul { display: block; }
 #main .tabset > li > ul {
 	position: absolute;
 	display: none;
