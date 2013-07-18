@@ -22,7 +22,7 @@
 
     {{view Species.DownloadsForCites isVisibleBinding="controller.designationIsCites"}}
     {{view Species.DownloadsForEu isVisibleBinding="controller.designationIsEu"}}
-    {{view Species.DownloadsForCms isVisibleBinding="controller.designationIsCms"}}
+    {{view Species.DownloadsForCms isVisibleBinding="controller.designationIsCms" controllerBinding="controllers.downloadsForCmsListings"}}
 
     <div class="btn-holder">
       <a href="#">DOWNLOAD</a>

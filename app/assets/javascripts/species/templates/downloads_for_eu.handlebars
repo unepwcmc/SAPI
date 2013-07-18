@@ -10,16 +10,33 @@
     {{/view}}
   </li>
 </ul>
-{{#view Species.DownloadsForLegislation isVisibleBinding="controller.legislationIsEuListings"}}
+{{#view Species.DownloadsForLegislation
+  isVisibleBinding="controller.legislationIsEuListings"
+  controllerBinding="controllers.downloadsForEuListings"
+}}
   <div class="two-columns">
     <div class="col">
-      <a href="#" class="link">A &amp; B</a>
+      <div class="popup-area">
+        {{view Species.AppendixButton
+          controllerBinding="controller"
+        }}
+        <div class="popup-holder-appendix">
+          <div class="popup">
+            <div class="list-holder">
+              {{collection Species.AppendixDropdownCollectionView 
+                controllerBinding="controller"
+                contentBinding="controller.appendices"
+              }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col">
       <strong class="heading">ADDITIONAL DATA</strong>
       <div class="row">
         <input type="checkbox" id="check" />
-        <label for="check">Include CITES appendixes</label>
+        <label for="check">Include CITES appendices</label>
       </div>
     </div>
   </div>
