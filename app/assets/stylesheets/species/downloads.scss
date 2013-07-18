@@ -1,4 +1,142 @@
+.two-columns {
+	width: 100%;
+	padding: 16px 0 17px;
+	/*overflow: hidden;*/
+
+	&.add .col { width: 150px; }
+	&.add .col:first-child { padding: 4px 0 0 50px; }
+
+	.col {
+		float: left;
+		width: 200px;
+		padding: 0 0 0 13px;
+
+		.link {
+			float: left;
+			min-width: 62px;
+			font-size: 13px;
+			font-weight: bold;
+			text-transform: uppercase;
+			color: #fff;
+			padding: 8px 25px 7px 10px;
+			position: relative;
+			background: #376382;
+			line-height: 16px;
+			text-decoration: none;
+			-webkit-border-radius: 20px;
+			border-radius: 20px;
+		}
+		.link:hover { background: #253848; }
+		.link:before {
+			width: 6px;
+			height: 4px;
+			position: absolute;
+			content: "";
+			/*z-index: 1;*/
+			right: 10px;
+			top: 14px;
+			background: url(../species/arrow01.png) no-repeat;
+		}
+	}
+
+	.col:first-child {
+		width: 112px;
+		padding: 4px 0 0 30px;
+		border-right: 1px solid #e8e8e9;
+	}
+
+}
+.two-columns:after {
+	display: block;
+	clear: both;
+	content: "";
+}
+
+
+
+.col .row { overflow: hidden; }
+.col label {
+	font-size: 13px;
+	float: left;
+	line-height: 16px;
+}
+.col input[type="checkbox"] {
+	float: left;
+	height: 16px;
+	margin: 0 5px 0 0;
+	padding: 0;
+	width: 15px;
+}
+.col input[type="radio"] {
+	float: left;
+	height: 16px;
+	margin: 0 5px 0 0;
+	padding: 0;
+	width: 15px;
+}
+.col .heading {
+	color: #2d3237;
+	font-weight: bold;
+	display: block;
+	margin: 0 0 4px;
+	text-transform: uppercase;
+}
+
 .col .popup-area:hover .popup-holder-appendix { display: block; }
+
+.bottom-columns {
+	border-top: 1px solid #d6d7d7;
+	width: 100%;
+	padding: 19px 0 20px;
+
+	.col {
+		float: left;
+		width: 130px;
+		margin: 0 0 0 34px;
+		position: relative;
+
+		.link {
+			float: left;
+			min-width: 68px;
+			font-size: 13px;
+			position: relative;
+			font-weight: bold;
+			text-transform: uppercase;
+			color: #fff;
+			padding: 8px 19px 7px 10px;
+			background: #376382;
+			line-height: 16px;
+			-webkit-border-radius: 20px;
+			border-radius: 20px;
+			text-decoration: none;
+		}
+
+		.link:before {
+			width: 6px;
+			height: 4px;
+			position: absolute;
+			content: "";
+			z-index: 1;
+			right: 10px;
+			top: 14px;
+			background: url(../species/arrow01.png) no-repeat;
+		}
+
+		.link:hover { background: #253848; }
+	}
+
+	.col:first-child {
+		padding: 0 0 0 49px;
+		margin: 0;
+		border-right: 1px solid #e8e8e9;
+	}
+
+}
+.bottom-columns:after {
+	display: block;
+	clear: both;
+	content: "";
+}
 
 .popup-holder-appendix {
 	position: absolute;

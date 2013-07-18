@@ -1,3 +1,34 @@
+.cms_appendix {
+  height: 26px;
+  width: 26px;
+
+  color: #fff;
+
+  .a_I &, &.a_I {
+    background: url(/assets/species/cms-appendix.png);
+    background-position: 0px 0px;
+    span {
+      line-height: 2em;
+      margin-left: 10px;
+    }
+  }  
+
+  .a_II &, &.a_II {
+    background: url(/assets/species/cms-appendix.png);
+    background-position: 0px 52px;
+    span {
+      line-height: 2em;
+      margin-left: 9px;
+    }
+  }
+
+  .nc &, .inactive &, &.nc, &.inactive {
+    background: url(/assets/species/cms-appendix.png);
+    background-position: 0px 26px;
+  }
+
+}
+
 .cites_appendix {
   height: 26px;
   width: 26px;
@@ -109,13 +140,13 @@
     }
   }
 
-  .nc &, .inactive &, &.nc {
+  .nc &, .inactive &, &.nc, &.inactive {
     background: url(/assets/species/cites-appendix.png);
-    background-position: 0px 26px;
+    background-position: 0px 182px;
   }
 }
 
-.eu_annex {
+.eu_appendix {
   height: 26px;
   width: 26px;
 
@@ -126,29 +157,29 @@
     margin-left: 9px;
   }
 
-  .annex_A &, &.annex_A {
+  .a_A &, &.a_A {
     background: url(/assets/species/eu-annex.png);
     background-position: 0px 130px;
   }
 
-  .annex_B &, &.annex_B {
+  .a_B &, &.a_B {
     background: url(/assets/species/eu-annex.png);
     background-position: 0px 104px;
   }
 
-  .annex_C &, &.annex_C {
+  .a_C &, &.a_C {
     background: url(/assets/species/eu-annex.png);
     background-position: 0px 78px;
   }
 
-  .annex_D &, &.annex_D {
+  .a_D &, &.a_D {
     background: url(/assets/species/eu-annex.png);
     background-position: 0px 52px;
   }
 
-  .nc &, .inactive &, &.nc {
+  .nc &, .inactive &, &.nc, &.inactive {
     background: url(/assets/species/cites-appendix.png);
-    background-position: 0px 26px;
+    background-position: 0px 182px;
   }
 }
 

@@ -8,11 +8,7 @@ Species.AppendixDropdownCollectionView = Ember.CollectionView.extend
     designation: ( ->
       @get('parentView.controller.designation')
     ).property()
-    template: Ember.Handlebars.compile('<div class="{{unbound view.designation}}_appendix a_{{unbound this}}">{{this}}</div>')
-
-    active: ( ->
-      $.inArray(@get('context'), @get('parentView.controller.selectedAppendices')) > 0
-    ).property()
+    template: Ember.Handlebars.compile('<div class="inactive {{unbound view.designation}}_appendix a_{{unbound this}}">{{this}}</div>')
 
     touchEnd: (event) ->
       @click(event)
