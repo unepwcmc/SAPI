@@ -17,14 +17,15 @@
         </div>
       </div>
       <div class="col">
-        <a href="#" class="link">TAXON</a>
+        <div class="popup-area">
+          {{view Species.HigherTaxaSearchButton controllerBinding="controller"}}
+          {{view Species.HigherTaxaSearchDropdown controllerBinding="controller"}}
+        </div>
       </div>
       <div class="col">
         <div class="popup-area">
           {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}
-          {{view Species.GeoEntitiesSearchDropdown
-            controllerBinding="controller"
-          }}
+          {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
         </div>
       </div>
     </div>
