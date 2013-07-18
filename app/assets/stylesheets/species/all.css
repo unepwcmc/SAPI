@@ -199,7 +199,7 @@ form, fieldset {
 .search-block .search {
 	background: #fff;
 	width: 507px;
-	height: 30px;
+	height: 28px;
 	padding: 3px 4px 5px;
 	position: relative;
 	-webkit-border-radius: 20px;
@@ -212,9 +212,9 @@ form, fieldset {
 	display: block;
 }
 .search-block .search input[type="text"] {
-	padding: 3px;
+	padding: 3px 10px;
 	float: left;
-	width: 396px;
+	width: 386px;
 	height: 26px;
 	font-size: 13px;
 	line-height: 26px;
