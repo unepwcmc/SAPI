@@ -3,16 +3,15 @@ Species.TaxonConceptNamesController = Ember.ArrayController.extend
 
   commonNamesExpanded: false
 
-  expandCommonNames: () ->
-    this.set('commonNamesExpanded', true)
-    $('#common_names').
+  expandList: (id, flag) ->
+    this.set(flag, true)
+    $('#'+id).
       find('.historic').show('fast')
 
-  contractCommonNames: () ->
-    this.set('commonNamesExpanded', false)
-    $('#common_names').
+  contractList: (id, flag) ->
+    this.set(flag, false)
+    $('#'+id).
       find('.historic').hide('slow')
     $("html, body").animate
-      scrollTop: $("#common_names").offset().top
+      scrollTop: $("#"+id).offset().top
       , 500
-

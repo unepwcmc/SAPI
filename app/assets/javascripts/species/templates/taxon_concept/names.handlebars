@@ -19,9 +19,9 @@
     </table>
     <div {{bindAttr class=":btn-hloder commonNamesExpanded:expanded"}}>
       {{#if controller.commonNamesExpanded}}
-        <a href="#" class="link" {{action 'contractCommonNames'}}>HIDE EXTRA LANGUAGES</a>
+        <a href="#" class="link" {{action 'contractList' 'common_names' 'commonNamesExpanded'}}>HIDE EXTRA LANGUAGES</a>
       {{else}}
-        <a href="#" class="link" {{action 'expandCommonNames'}}>SHOW MORE LANGUAGES</a>
+        <a href="#" class="link" {{action 'expandList' 'common_names' 'commonNamesExpanded'}}>SHOW MORE LANGUAGES</a>
       {{/if}}
     </div>
   </div>
