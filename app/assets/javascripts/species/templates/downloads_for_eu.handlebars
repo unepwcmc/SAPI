@@ -45,8 +45,20 @@
       <a href="#" class="link">TAXON</a>
     </div>
     <div class="col">
-      <a href="#" class="link">LOCATION</a>
+    <div class="col">
+      <div class="popup-area">
+        {{#view Species.GeoEntitiesSearchView}} 
+          {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}
+          {{view Species.GeoEntitiesSearchDropdown
+            controllerBinding="controller"
+          }}
+        {{/view}}
+      </div>
     </div>
+    </div>
+  </div>
+  <div class="btn-holder">     
+    {{view Species.StartDownloadButton controllerBinding="controller"}}
   </div>
 {{/view}}
 {{#view Species.DownloadsForLegislation isVisibleBinding="controller.legislationIsEuDecisions"}}
@@ -93,5 +105,8 @@
     <div class="col">
       <a href="#" class="link">LOCATION</a>
     </div>
+  </div>
+  <div class="btn-holder">
+    {{view Species.StartDownloadButton controllerBinding="controller"}}
   </div>
 {{/view}}

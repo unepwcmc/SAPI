@@ -804,8 +804,6 @@ form, fieldset {
 	border-radius: 0 20px 20px 0;
 }
 .popup-area { position: relative; }
-.bottom-columns .col .popup-area:hover .link { background: #253848; }
-.bottom-columns .col .popup-area:hover .popup-holder01 { display: block; }
 .popup-holder01 {
 	position: absolute;
 	padding: 22px 0 0;
@@ -1119,8 +1117,8 @@ form, fieldset {
 	border: 0;
 }
 #main .block th.col2 { width: 130px; }
-#main .block th.col3 { width: 159px; }
-#main .block th.col4 { width: 160px; }
+#main .block th.col3 { width: 249px; }
+#main .block th.col4 { width: 90px; }
 #main .block th.col5 { width: 433px; }
 #main .block th.col6 { width: 240px; }
 #main .block th.col7 { width: 192px; }

@@ -5,19 +5,28 @@ class ListingsExport
 
   def initialize(filters)
     @filters = filters
-    @designation_id = filters[:designation_id]
     @taxon_concepts_ids = filters[:taxon_concepts_ids]
     @geo_entities_ids = filters[:geo_entities_ids]
-    @designation = Designation.find(@designation_id)
-    @species_listings_ids = filters[:species_listings_ids]
+    @designation = if filters[:designation_id]
+      Designation.find(filters[:designation_id])
+    elsif filters[:designation]
+      Designation.find_by_name(filters[:designation].upcase)
+    end
+
     #TODO this can go once we change the way appendix is matched
     #there should be an array of species listing ids in taxon_concepts_mview
     #then we would not need the abbreviations
-    @species_listings_ids = SpeciesListing.where(
-      :id => @species_listings_ids,
-      :designation_id => @designation.id
-    ).map(&:abbreviation)
-
+    @species_listings_ids = if filters[:species_listings_ids]
+      SpeciesListing.where(
+        :id => filters[:species_listings_ids],
+        :designation_id => @designation.id
+      ).map(&:abbreviation)
+    elsif filters[:appendices]
+       SpeciesListing.where(
+        :abbreviation => filters[:appendices],
+        :designation_id => @designation.id
+      ).map(&:abbreviation)   
+    end  
   end
 
   def path

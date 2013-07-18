@@ -27,7 +27,7 @@ Species.SearchController = Ember.Controller.extend
     @set('geoEntityId', filtersHash.geo_entity_id)
 
   toParams: ->
-    scientific_name : this.get('scientificName')
+    scientific_name: @get('scientificName')
 
   autoCompleteTaxonConcepts: ( ->
     taxonConceptQuery = @get('taxonConceptQuery')
