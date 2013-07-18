@@ -78,7 +78,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
               UPPER(languages.name_en) = 'SPANISH'
               THEN true
             ELSE false
-          END AS official_language
+          END AS convention_language
         SQL
       ).
       group("languages.name_en").order("languages.name_en")

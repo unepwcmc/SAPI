@@ -10,7 +10,7 @@
       </thead>
       <tbody>
         {{#each commonName in controllers.taxonConcept.commonNames}}
-          <tr {{ bindAttr class="commonName.official_language::historic"}}>
+          <tr {{ bindAttr class="commonName.convention_language::historic"}}>
             <td>{{commonName.lang}}</td>
             <td>{{commonName.names}}</td>
           </tr>
