@@ -36,7 +36,14 @@
       <a href="#" class="link">TAXON</a>
     </div>
     <div class="col">
-      <a href="#" class="link">LOCATION</a>
+      <div class="popup-area">
+        {{#view Species.GeoEntitiesSearchView}} 
+          {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}
+          {{view Species.GeoEntitiesSearchDropdown
+            controllerBinding="controller"
+          }}
+        {{/view}}
+      </div>
     </div>
   </div> 
   <div class="btn-holder">     

@@ -804,8 +804,6 @@ form, fieldset {
 	border-radius: 0 20px 20px 0;
 }
 .popup-area { position: relative; }
-.bottom-columns .col .popup-area:hover .link { background: #253848; }
-.bottom-columns .col .popup-area:hover .popup-holder01 { display: block; }
 .popup-holder01 {
 	position: absolute;
 	padding: 22px 0 0;
