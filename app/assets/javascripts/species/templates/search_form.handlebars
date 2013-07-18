@@ -7,11 +7,9 @@
     {{/view}}
   </div>
 
-  {{view Species.TaxonConceptSearchView controllerBinding="controller"}} 
-  {{#view Species.GeoEntitiesSearchView}} 
+  {{view Species.TaxonConceptSearchView controllerBinding="controller"}}
+  
+  <div class="popup-area">
     {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}   
-    {{view Species.GeoEntitiesSearchDropdown 
-      controllerBinding="controller"
-      isVisibleBinding="controller.geoEntitiesDropdownVisible"
-    }}
-  {{/view}}
+    {{view Species.GeoEntitiesSearchDropdown  controllerBinding="controller"}}
+  </div>

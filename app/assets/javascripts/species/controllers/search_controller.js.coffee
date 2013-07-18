@@ -6,7 +6,6 @@ Species.SearchController = Ember.Controller.extend
   geoEntityQuery: null
   geoEntityId: null
   geoEntityIds: null
-  geoEntitiesDropdownVisible: false
 
   autoCompleteRegions: null
   autoCompleteCountries: null
