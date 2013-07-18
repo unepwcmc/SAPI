@@ -6,12 +6,9 @@ Species.TaxonConceptNamesController = Ember.ArrayController.extend
   expandList: (id, flag) ->
     this.set(flag, true)
     $('#'+id).
-      find('.historic').show('fast')
+      find('.historic').show('slow')
 
   contractList: (id, flag) ->
     this.set(flag, false)
     $('#'+id).
       find('.historic').hide('slow')
-    $("html, body").animate
-      scrollTop: $("#"+id).offset().top
-      , 500

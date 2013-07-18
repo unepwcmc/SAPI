@@ -7,15 +7,7 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     else
       "show_more"
   ).property('citesListings')
-  noCurrentCitesListings: ( ->
-    if @get('citesListings') == undefined
-      return
-    if @get('citesListings').findProperty('is_current', true) == undefined
-      return true
-    else
-      return false
-  ).property("citesListings")
-  historicEuListings: ( ->
+  anyHistoricEuListings: ( ->
     if @get('euListings') == undefined
       return
     if @get('euListings').findProperty('is_current', false) == undefined
@@ -23,15 +15,7 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     else
       "show_more"
   ).property('euListings')
-  noCurrentEuListings: ( ->
-    if @get('euListings') == undefined
-      return
-    if @get('euListings').findProperty('is_current', true) == undefined
-      return true
-    else
-      return false
-  ).property("euListings")
-  historicCitesQuotas: ( ->
+  anyHistoricCitesQuotas: ( ->
     if @get('citesQuotas') == undefined
       return
     if @get('citesQuotas').findProperty('is_current', false) == undefined
@@ -39,15 +23,7 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     else
       "show_more"
   ).property('citesQuotas')
-  noCurrentCitesQuotas: ( ->
-    if @get('citesQuotas') == undefined
-      return
-    if @get('citesQuotas').findProperty('is_current', true) == undefined
-      return true
-    else
-      return false
-  ).property("citesQuotas")
-  historicCitesSuspensions: ( ->
+  anyHistoricCitesSuspensions: ( ->
     if @get('citesSuspensions') == undefined
       return
     if @get('citesSuspensions').findProperty('is_current', false) == undefined
@@ -55,18 +31,27 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     else
       ""
   ).property('citesSuspensions')
-  noCurrentCitesSuspensions: ( ->
-    if @get('citesSuspensions') == undefined
-      return
-    if @get('citesSuspensions').findProperty('is_current', true) == undefined
-      return true
-    else
-      return false
-  ).property("citesSuspensions")
-
   currentCitesListings: (->
     @get('citesListings').filterProperty('is_current', true)
   ).property('citesListings')
   historicCitesListings: (->
     @get('citesListings').filterProperty('is_current', false)
   ).property('citesListings')
+  currentCitesQuotas: (->
+    @get('citesQuotas').filterProperty('is_current', true)
+  ).property('citesQuotas')
+  historicCitesQuotas: (->
+    @get('citesQuotas').filterProperty('is_current', false)
+  ).property('citesQuotas')
+  currentCitesSuspensions: (->
+    @get('citesSuspensions').filterProperty('is_current', true)
+  ).property('citesSuspensions')
+  historicCitesSuspensions: (->
+    @get('citesSuspensions').filterProperty('is_current', false)
+  ).property('citesSuspensions')
+  currentEuListings: (->
+    @get('euListings').filterProperty('is_current', true)
+  ).property('euListings')
+  historicEuListings: (->
+    @get('euListings').filterProperty('is_current', false)
+  ).property('euListings')

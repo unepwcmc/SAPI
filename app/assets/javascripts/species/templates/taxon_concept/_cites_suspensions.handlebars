@@ -14,36 +14,69 @@
       </tr>
     </thead>
     <tbody>
-      {{#if noCurrentCitesSuspensions}}
+      {{#each suspension in currentCitesSuspensions}}
+        <tr class="current">
+          <td>&nbsp;</td>
+          <td>
+            {{#if suspension.is_current}}
+            {{suspension.start_notification.effective_at_formatted}}
+            {{else}}
+            {{suspension.start_notification.effective_at_formatted}}
+            - {{suspension.end_notification.effective_at_formatted}}</td>
+          {{/if}}
+          <td>{{suspension.geo_entity.name}}</td>
+          <td>{{suspension.start_notification.name}}</td>
+          <td>{{suspension.notes}} {{suspension.url}}</td>
+          <td class="last">&nbsp;</td>
+        </tr>
+      {{else}}
         <tr class="current">
           <td>&nbsp;</td>
           <td colspan=4>There are no current suspensions in place for this species.</td>
           <td>&nbsp;</td>
         </tr>
-      {{/if}}
-      {{#each suspension in citesSuspensions}}
-      <tr {{bindAttr class="suspension.is_current:current:historic"}}>
-        <td>&nbsp;</td>
-        <td>
-          {{#if suspension.is_current}}
-          {{suspension.start_notification.effective_at_formatted}}
-          {{else}}
-          {{suspension.start_notification.effective_at_formatted}}
-          - {{suspension.end_notification.effective_at_formatted}}</td>
-        {{/if}}
-        <td>{{suspension.geo_entity.name}}</td>
-        <td>{{suspension.start_notification.name}}</td>
-        <td>{{suspension.notes}} {{suspension.url}}</td>
-        <td class="last">&nbsp;</td>
-      </tr>
       {{/each}}
     </tbody>
   </table>
-  <div {{bindAttr class=":btn-hloder citesSuspensionsExpanded:expanded"}}>
-    {{#if controller.citesSuspensionsExpanded}}
-      <a class="link" {{action 'contractList' 'cites_suspensions' 'citesSuspensionsExpanded'}}>HIDE HISTORY</a>
-    {{else}}
-      <a class="link" {{action 'expandList' 'cites_suspensions' 'citesSuspensionsExpanded'}}>SHOW HISTORY</a>
-    {{/if}}
-  </div>
+  {{#if historicCitesSuspensions}}
+    <div class="historic">
+      <table summary="data table">
+        <thead>
+          <tr>
+            <th class="col1">&nbsp;</th>
+            <th class="col2">&nbsp;</th>
+            <th class="col3">&nbsp;</th>
+            <th class="col4">&nbsp;</th>
+            <th class="col5">&nbsp;</th>
+            <th class="col1">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each suspension in historicCitesSuspensions}}
+            <tr>
+              <td>&nbsp;</td>
+              <td>
+                {{#if suspension.is_current}}
+                {{suspension.start_notification.effective_at_formatted}}
+                {{else}}
+                {{suspension.start_notification.effective_at_formatted}}
+                - {{suspension.end_notification.effective_at_formatted}}</td>
+              {{/if}}
+              <td>{{suspension.geo_entity.name}}</td>
+              <td>{{suspension.start_notification.name}}</td>
+              <td>{{suspension.notes}} {{suspension.url}}</td>
+              <td class="last">&nbsp;</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div {{bindAttr class=":btn-hloder citesSuspensionsExpanded:expanded"}}>
+      {{#if controller.citesSuspensionsExpanded}}
+        <a class="link" {{action 'contractList' 'cites_suspensions' 'citesSuspensionsExpanded'}}>HIDE HISTORY</a>
+      {{else}}
+        <a class="link" {{action 'expandList' 'cites_suspensions' 'citesSuspensionsExpanded'}}>SHOW HISTORY</a>
+      {{/if}}
+    </div>
+  {{/if}}
 {{/unless}}

@@ -1164,7 +1164,6 @@ form, fieldset {
 	text-align: center;
   display: none;
 }
-
 #main .block.show_more:hover .btn-hloder {
   display: block;
 }
