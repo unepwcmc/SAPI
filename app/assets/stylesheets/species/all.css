@@ -247,6 +247,12 @@ form, fieldset {
 	float: left;
 	padding: 13px 0 0 15px;
 }
+
+.search-block.results .search-form { width: 460px; }
+.search-block.results .location-area { padding: 13px 15px 0; }
+.search-block.results .search { width: 432px; }
+.search-block.results .search input[type="text"] { width: 322px; }
+
 .location-area a {
 	float: left;
 	font-size: 13px;
@@ -931,10 +937,17 @@ form, fieldset {
 	margin: 15px 0 17px;
 }
 .popup-area.add .list-holder ul li ul { margin: 0 0 8px; }
+
 .inner .search-block.add .search-form { width: 615px; }
 .inner .search-block.add .location-area { padding: 15px 0 0 14px; }
 .inner .search-block.add .search { width: 589px; }
 .inner .search-block.add .search input[type="text"] { width: 475px; }
+
+.inner .search-block.add.results .search-form { width: 460px; }
+.inner .search-block.add.results .location-area { padding: 13px 15px 0; }
+.inner .search-block.add.results .search { width: 432px; }
+.inner .search-block.add.results .search input[type="text"] { width: 322px; }
+
 .heading-holder {
 	padding: 22px 26px 19px;
 	min-height: 139px;
