@@ -14,10 +14,16 @@
   </div>
   <div class="list-holder">
     <ul>
-      <li>
+    {{#each controller.autoCompleteTaxonConceptsByRank}}
+      <li class="header">
+        <h2>{{this.rankName}}</h2>
         {{collection Species.HigherTaxaCollectionView
-          contentBinding="controller.autoCompleteTaxonConcepts"}}
+          contentBinding="taxonConcepts"}}
       </li>
+    {{/each}}
     </ul>
+
   </div>
 </div>
+
+

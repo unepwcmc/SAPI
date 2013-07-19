@@ -10,5 +10,5 @@ Species.HigherTaxaCollectionView = Ember.CollectionView.extend
     template: Ember.Handlebars.compile("{{{fullName}}}")
 
     click: (event) ->
-      @set('controller.selectedTaxonConcept', @get('context'))
+      @set('controller.selectedTaxonConcepts', [@get('context')])
 

@@ -15,10 +15,9 @@ class Species::SearchParams < Hash
       :taxon_concept_query =>
         params[:taxon_concept_query] ? params[:taxon_concept_query] : nil,
       :geo_entities => params[:geo_entity_id].blank? ? [] : [params[:geo_entity_id]],
-      :higher_taxon_concept_id => params[:higher_taxon_id] ? params[:higher_taxon_id] : nil,
+      :higher_taxa_ids => params[:higher_taxa_ids] ? params[:higher_taxa_ids] : nil,
       :ranks => params[:ranks] ? 
-        Rank.dict & params[:ranks].map(&:upcase) : 
-        [Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY]
+        Rank.dict & params[:ranks].map(&:upcase) : [Rank::SPECIES]
     }
     unless [:cites_eu, :cms].include? sanitized_params[:taxonomy]
       sanitized_params[:taxonomy] = :cites_eu

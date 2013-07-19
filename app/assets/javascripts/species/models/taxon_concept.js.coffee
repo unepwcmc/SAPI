@@ -17,14 +17,14 @@ Species.TaxonConcept = DS.Model.extend
   citesSuspensions: DS.attr("array")
   citesListings: DS.attr("array")
   euListings: DS.attr("array")
-  matchingNames: DS.attr("string")
+  synonyms: DS.attr("array")
 
   autoCompleteSuggestion: ( ->
-    if !@get('matchingNames')
-      @get('fullName')
+    if @get('synonyms').length > 0
+      @get('fullName') + ' (' + @get('synonyms').join( ', ') + ')'
     else
-      @get('fullName') + ' (' + @get('matchingNames') + ')'
-  ).property('fullName', 'matchingNames')
+      @get('fullName')
+  ).property('fullName', 'synonyms')
 
 
 Species.TaxonConcept.FIXTURES = [
