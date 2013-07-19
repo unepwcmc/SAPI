@@ -27,3 +27,18 @@ Ember.Handlebars.helper('highlight', (suggestion, query) ->
     suggestion.replace(new RegExp("(" + query + ")", "gi"), transform)
   )
 )
+
+Ember.Handlebars.registerHelper 'stringToArray', (string, options) ->
+  string = Ember.Handlebars.get(this, string, options)
+  array = string.split options.hash.splitter
+  array.map((item, index) ->
+    options.fn item
+  ).join ""
+
+Ember.Handlebars.registerHelper 'getTaxonConcept', (id, options) ->
+  id = Ember.Handlebars.get(this, id, options)
+  q = options.hash.q
+  Species.TaxonConcept.find(id).get(q)
+  
+
+
