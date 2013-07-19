@@ -85,6 +85,7 @@ SAPI::Application.routes.draw do
   end
 
   namespace :species do
+    get '*foo' => 'ember#start'
     root :to => 'ember#start'
   end
 
