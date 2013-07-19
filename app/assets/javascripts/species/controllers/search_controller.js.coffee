@@ -4,9 +4,7 @@ Species.SearchController = Ember.Controller.extend
   taxonConceptQuery: null
   taxonConceptsDropdownVisible: false
   geoEntityQuery: null
-  geoEntityId: null
   geoEntityIds: null
-  geoEntitiesDropdownVisible: false
 
   autoCompleteRegions: null
   autoCompleteCountries: null
@@ -18,13 +16,11 @@ Species.SearchController = Ember.Controller.extend
     @transitionToRoute('search', {
       taxonomy: @get('taxonomy'),
       taxon_concept_query: @get('taxonConceptQuery'),
-      geo_entity_id: @get('geoEntityId')
     })
 
   setFilters: (filtersHash) ->
     @set('taxonomy', filtersHash.taxonomy)
     @set('taxonConceptQuery', filtersHash.taxon_concept_query)
-    @set('geoEntityId', filtersHash.geo_entity_id)
 
   toParams: ->
     scientific_name: @get('scientificName')
@@ -51,6 +47,14 @@ Species.SearchController = Ember.Controller.extend
     .filter (item, index, enumerable) =>
       re.test item.get('name')
   ).observes('geoEntityQuery')
+
+  regionsObserver: ( ->
+    @set('autoCompleteRegions', @get('controllers.geoEntities.regions'))
+  ).observes('controllers.geoEntities.regions.@each.didLoad')
+
+  countriesObserver: ( ->
+    @set('autoCompleteCountries', @get('controllers.geoEntities.countries'))
+  ).observes('controllers.geoEntities.countries.@each.didLoad')
 
   selectedGeoEntitiesObserver: ( ->
     @set 'geoEntityIds', @get('selectedGeoEntities').mapProperty('id')

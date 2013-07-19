@@ -1,7 +1,6 @@
 Species.GeoEntitiesCollectionView = Ember.CollectionView.extend
   tagName: 'ul'
   content: null
-  searchController: null
 
   geoEntityType: null
 
@@ -13,6 +12,5 @@ Species.GeoEntitiesCollectionView = Ember.CollectionView.extend
     template: Ember.Handlebars.compile("{{{name}}}")
 
     click: (event) ->
-      @set('controller.geoEntityId', @get('context.id'))
       @get('controller.selectedGeoEntities').addObject(@get('context'))
 
