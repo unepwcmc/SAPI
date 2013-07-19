@@ -35,10 +35,12 @@ Ember.Handlebars.registerHelper 'stringToArray', (string, options) ->
     options.fn item
   ).join ""
 
-Ember.Handlebars.registerHelper 'getTaxonConcept', (id, options) ->
+# Given an id, a model and a field, return the field value for that item.
+Ember.Handlebars.registerHelper 'getItem', (id, options) ->
   id = Ember.Handlebars.get(this, id, options)
-  q = options.hash.q
-  Species.TaxonConcept.find(id).get(q)
+  field = options.hash.field
+  model = options.hash.model
+  Species[model].find(id).get(field)
   
 
 
