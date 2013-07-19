@@ -2,10 +2,7 @@
 
 <div class="container">
 
-  <div class="heading">
-    <strong class="title">Showing</strong>
-    {{controller.content.meta.total}} species
-  </div>
+  <div class="heading"></div>
 
   <div class="result-block">
     {{#each header in controller.content.meta.higher_taxa_headers}}
@@ -21,7 +18,7 @@
 
       {{#each id in header.taxon_concept_ids}}
       <h2>
-        <a href="#/taxon_concepts/{{unbound id}}">
+        <a href="#/taxon_concepts/{{unbound id}}/legal">
         {{#getItem id model="TaxonConcept" field="fullName"}}{{/getItem}} 
           <span>
           {{#getItem id model="TaxonConcept" field="authorYear"}}{{/getItem}}
