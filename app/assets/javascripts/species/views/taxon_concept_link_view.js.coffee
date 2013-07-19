@@ -2,7 +2,7 @@
 #  headers, I want to fire a new search.
 #
 # This view has an atomic template, that contains the name of the taxon 
-#  clicked in the results heading. When clickedS,
+#  clicked in the results heading. When clicked,
 #  `newTaxonSearch` is called on the `TaxonConceptsController`, that will then
 #  reset the `taxonConceptQuery` property on the `SearchController` and fire 
 #  a new call to `loadTaxonConcepts`.
