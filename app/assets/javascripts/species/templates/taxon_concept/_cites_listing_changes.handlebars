@@ -29,9 +29,13 @@
           <td>{{listing.effective_at_formatted}}</td>
           <td>
             {{#if listing.auto_note}}
-            [{{listing.auto_note}}]
+              [{{listing.auto_note}}]
             {{/if}}
-            {{{listing.short_note_en}}}
+            {{#if listing.full_note_en}}
+              {{{listing.full_note_en}}}
+            {{else}}
+              {{{listing.short_note_en}}}
+            {{/if}}
           </td>
           <td class="last">&nbsp;</td>
         </tr>
@@ -75,7 +79,11 @@
                 {{#if listing.auto_note}}
                 [{{listing.auto_note}}]
                 {{/if}}
-                {{{listing.short_note_en}}}
+                {{#if listing.full_note_en}}
+                  {{{listing.full_note_en}}}
+                {{else}}
+                  {{{listing.short_note_en}}}
+                {{/if}}
               </td>
               <td class="last">&nbsp;</td>
             </tr>
