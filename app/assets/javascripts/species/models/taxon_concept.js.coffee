@@ -19,6 +19,7 @@ Species.TaxonConcept = DS.Model.extend
   citesListings: DS.attr("array")
   euListings: DS.attr("array")
   matchingNames: DS.attr("string")
+  distributionReferences: DS.attr("array")
 
   autoCompleteSuggestion: ( ->
     if !@get('matchingNames')

@@ -1,7 +1,7 @@
 class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   root 'taxon_concept'
   attributes :id, :full_name, :author_year, :standard_references,
-    :common_names, :distributions, :subspecies
+    :common_names, :distributions, :subspecies, :distribution_references
 
   has_many :synonyms, :serializer => Species::SynonymSerializer
   has_one :m_taxon_concept, :serializer => Species::MTaxonConceptSerializer
@@ -100,6 +100,10 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     TaxonConcept.where(:parent_id => object.id).
       select([:full_name, :author_year]).
       order(:full_name)
+  end
+
+  def distribution_references
+    []
   end
 end
 
