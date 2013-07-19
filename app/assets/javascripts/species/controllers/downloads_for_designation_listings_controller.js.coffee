@@ -52,6 +52,18 @@ Species.DownloadsForDesignationListingsController = Ember.Controller.extend
     )
   ).observes('higherTaxaController.content.@each.didLoad')
 
+  autoCompleteTaxonConceptsByRank: ( ->
+    ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY'].map((e) =>
+      {
+        rankName: e
+        taxonConcepts: @get('autoCompleteTaxonConcepts').filterProperty('rankName', e)
+      }
+    ).filter((e) ->
+      e.taxonConcepts.length > 0
+    )
+  ).property('autoCompleteTaxonConcepts.@each')
+
+
   selectedGeoEntitiesObserver: ( ->
     @set 'selectedGeoEntitiesIds', @get('selectedGeoEntities').mapProperty('id')
   ).observes('selectedGeoEntities.@each')

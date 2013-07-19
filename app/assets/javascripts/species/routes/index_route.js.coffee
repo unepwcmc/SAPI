@@ -7,13 +7,15 @@ Species.IndexRoute = Ember.Route.extend
     @controllerFor('higherTaxaCitesEu').set('content', 
       Species.TaxonConcept.find({
         taxonomy: 'cites_eu'
-        ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY'],
+        ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY']
+        autocomplete: true
       })
     )
     @controllerFor('higherTaxaCms').set('content', 
       Species.TaxonConcept.find({
         taxonomy: 'cms'
         ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY']
+        autocomplete: true
       })
     )
 
