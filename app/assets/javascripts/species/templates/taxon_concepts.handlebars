@@ -9,16 +9,24 @@
 
   <div class="result-block">
     {{#each header in controller.content.meta.higher_taxa_headers}}
+    
     <ul class="result-list">
       {{#stringToArray header.higher_taxon.ancestors_path splitter=","}}
-      <li>{{unbound this}}</li>  
+      <li>
+        {{view Species.TaxonConceptLinkView}}
+      </li>
       {{/stringToArray}}
       <li>{{header.higher_taxon.rank_name}}</li>
     </ul>
+
       {{#each id in header.taxon_concept_ids}}
-      <h2><a href="#/taxon_concepts/{{unbound id}}">
-        {{#getTaxonConcept id q="fullName"}}{{/getTaxonConcept}} <span>
-        {{#getTaxonConcept id q="authorYear"}}{{/getTaxonConcept}}</span></a>
+      <h2>
+        <a href="#/taxon_concepts/{{unbound id}}">
+        {{#getItem id model="TaxonConcept" field="fullName"}}{{/getItem}} 
+          <span>
+          {{#getItem id model="TaxonConcept" field="authorYear"}}{{/getItem}}
+          </span>
+        </a>
       </h2>
       {{/each}}
     {{/each}}
