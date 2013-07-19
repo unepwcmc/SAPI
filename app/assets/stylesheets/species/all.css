@@ -825,8 +825,7 @@ form, fieldset {
 #main .block.block01 td { vertical-align: top; }
 #main .block td:first-child, #main .block td.last { border: 0; }
 #main .block tr.current td {
-	padding: 26px 0 12px;
-	border: 0;
+	padding: 13px 0 12px;
 }
 
 #main .block .historic {
