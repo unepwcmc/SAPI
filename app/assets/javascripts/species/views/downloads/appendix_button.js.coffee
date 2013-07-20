@@ -1,7 +1,6 @@
 Species.AppendixButton = Ember.View.extend
   tagName: 'a'
   href: '#'
-
   classNames: ['link']
 
   controller: null
