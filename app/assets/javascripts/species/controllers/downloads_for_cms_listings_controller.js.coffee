@@ -1,9 +1,10 @@
-Species.DownloadsForDesignationListingsController = Ember.Controller.extend
-  designation: 'cites'
-  appendices: ['I', 'II', 'III']
-
-  needs: ['geoEntities']
-
+Species.DownloadsForCmsListingsController = Ember.Controller.extend
+  designation: 'cms'
+  appendices: ['I', 'II']
+  needs: ['geoEntities', 'higherTaxaCms']
+  higherTaxaController: ( ->
+    @get('controllers.higherTaxaCms')
+  ).property()
 
   selectedAppendices: []
   geoEntityQuery: null
@@ -86,27 +87,3 @@ Species.DownloadsForDesignationListingsController = Ember.Controller.extend
   downloadUrl: ( ->
     '/exports/download?' + $.param(@get('toParams'))
   ).property('toParams')
-
-Species.DownloadsForCitesListingsController = Species.DownloadsForDesignationListingsController.extend
-  designation: 'cites'
-  appendices: ['I', 'II', 'III']
-  needs: ['higherTaxaCitesEu']
-  higherTaxaController: ( ->
-    @get('controllers.higherTaxaCitesEu')
-  ).property()
-
-Species.DownloadsForEuListingsController = Species.DownloadsForDesignationListingsController.extend
-  designation: 'eu'
-  appendices: ['A', 'B', 'C', 'D']
-  needs: ['higherTaxaCitesEu']
-  higherTaxaController: ( ->
-    @get('controllers.higherTaxaCitesEu')
-  ).property()
-
-Species.DownloadsForCmsListingsController = Species.DownloadsForDesignationListingsController.extend
-  designation: 'cms'
-  appendices: ['I', 'II']
-  needs: ['higherTaxaCms']
-  higherTaxaController: ( ->
-    @get('controllers.higherTaxaCms')
-  ).property()

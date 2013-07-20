@@ -3,15 +3,16 @@ Species.AppendixButton = Ember.View.extend
   href: '#'
   classNames: ['link']
 
-  controller: null
+  selectedAppendices: null
+  appendices: null
 
   template: Ember.Handlebars.compile("{{view.summary}}"),
 
   summary: ( ->
-    selectedAppendices = @get('controller.selectedAppendices')
-    appendices = @get('controller.appendices')
+    selectedAppendices = @get('selectedAppendices')
+    appendices = @get('appendices')
     if (selectedAppendices.length == 0 || selectedAppendices.length == appendices.length)
       return "APPENDIX"
     else
       return selectedAppendices.sort().join(" & ")
-  ).property("controller.selectedAppendices.@each")
+  ).property("selectedAppendices.@each")

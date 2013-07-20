@@ -18,7 +18,8 @@
     <div class="col">
       <div class="popup-area">
         {{view Species.AppendixButton
-          controllerBinding="controller"
+          selectedAppendicesBinding="controller.selectedAppendices"
+          appendicesBinding="controller.appendices"
         }}
         <div class="popup-holder-appendix">
           <div class="popup">
@@ -60,7 +61,10 @@
     {{view Species.StartDownloadButton controllerBinding="controller"}}
   </div>
 {{/view}}
-{{#view Species.DownloadsForLegislation isVisibleBinding="controller.legislationIsEuDecisions"}}
+{{#view Species.DownloadsForLegislation
+  isVisibleBinding="controller.legislationIsEuDecisions"
+  controllerBinding="controllers.downloadsForEuDecisions"
+}}
   <div class="doc-type">
     <strong class="heading">DOCUMENT TYPE</strong>
     <div class="typy-columns">
@@ -99,10 +103,16 @@
   </div>
   <div class="bottom-columns">
     <div class="col">
-      <a href="#" class="link">TAXON</a>
+      <div class="popup-area">
+        {{view Species.HigherTaxaSearchButton controllerBinding="controller"}}
+        {{view Species.HigherTaxaSearchDropdown controllerBinding="controller"}}
+      </div>
     </div>
     <div class="col">
-      <a href="#" class="link">LOCATION</a>
+      <div class="popup-area">
+        {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}
+        {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
+      </div>
     </div>
   </div>
   <div class="btn-holder">
