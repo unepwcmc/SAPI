@@ -30,4 +30,5 @@ Species.DownloadsController = Ember.Controller.extend
     @get('euLegislation') == 'decisions'
   ).property('euLegislation')
 
-  citesAppendices: ['I', 'II', 'III']
+  close: () ->
+    @set('downloadsPopupVisible', false)
