@@ -70,21 +70,21 @@
     <div class="typy-columns">
       <div class="col">
         <div class="row">
-          <input type="checkbox" id="item" />
+          {{view Ember.Checkbox checkedBinding="negativeOpinions"}}
           <label for="item">SRG Negative Opinions</label>
         </div>
         <div class="row">
-          <input type="checkbox" id="item01" />
+          {{view Ember.Checkbox checkedBinding="noOpinions"}}
           <label for="item01">SRG No Opinions</label>
         </div>
       </div>
       <div class="col">
         <div class="row">
-          <input type="checkbox" id="item02" />
+          {{view Ember.Checkbox checkedBinding="positiveOpinions"}}
           <label for="item02">SRG Positive Opinions</label>
         </div>
         <div class="row">
-          <input type="checkbox" id="item03" />
+          {{view Ember.Checkbox checkedBinding="suspensions"}}
           <label for="item03">Suspensions</label>
         </div>
       </div>
@@ -106,7 +106,11 @@
       </ul>
     </div>
     <div class="col">
-      <a href="#" class="link">YEAR</a>
+      Only current data has<br />been selected.
+      <div class="popup-area">
+        {{view Species.YearSearchButton selectedYearsBinding="controller.selectedYears"}}
+        {{view Species.YearSearchDropdown controllerBinding="controller"}}
+      </div>
     </div>
   </div>
   <div class="bottom-columns">

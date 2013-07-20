@@ -16,6 +16,12 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   selectedTaxonConcepts: []
   selectedTaxonConceptsIds: []
   timeScope: 'current'
+  years: [1975..2013]
+  selectedYears: []
+  positiveOpinions: true
+  negativeOpinions: true
+  noOpinions: true
+  suspensions: true
 
   geoEntityOueryObserver: ( ->
     re = new RegExp("^"+@get('geoEntityQuery'),"i")
@@ -76,14 +82,23 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
 
   toParams: ( ->
     {
-      data_type: 'Listings'
+      data_type: 'EuDecisions'
       filters: 
         designation: @get('designation')
         geo_entities_ids: @get('selectedGeoEntitiesIds')
         higher_taxa_ids: @get('selectedTaxonConceptsIds')
         set: @get('timeScope')
+        years: @get('selectedYears')
+        positiveOpinions: @get('positiveOpinions')
+        negativeOpinions: @get('negativeOpinions')
+        noOpinions: @get('noOpinions')
+        suspensions: @get('suspensions')
     }
-  ).property('selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 'timeScope')
+  ).property(
+    'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 
+    'timeScope', 'years.@each', 'positiveOpinions', 'negativeOpinions',
+    'noOpinions', 'suspensions'
+  )
 
   downloadUrl: ( ->
     '/exports/download?' + $.param(@get('toParams'))
