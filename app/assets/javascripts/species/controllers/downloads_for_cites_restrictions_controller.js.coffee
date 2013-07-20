@@ -15,6 +15,7 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
   autoCompleteTaxonConcepts: []
   selectedTaxonConcepts: []
   selectedTaxonConceptsIds: []
+  timeScope: 'current'
 
   geoEntityOueryObserver: ( ->
     re = new RegExp("^"+@get('geoEntityQuery'),"i")
@@ -80,8 +81,9 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
         designation: @get('designation')
         geo_entities_ids: @get('selectedGeoEntitiesIds')
         higher_taxa_ids: @get('selectedTaxonConceptsIds')
+        set: @get('timeScope')
     }
-  ).property('selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each')
+  ).property('selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 'timeScope')
 
   downloadUrl: ( ->
     '/exports/download?' + $.param(@get('toParams'))

@@ -93,8 +93,16 @@
   <div class="info-columns">
     <div class="col">
       <ul class="tab-link">
-        <li><a href="#">CURRENT</a></li>
-        <li class="last-child active"><a href="#">ALL</a></li>
+        <li>
+          {{#view Species.TaxonomyToggle option="current" valueBinding="controller.timeScope"}}
+            CURRENT
+          {{/view}}
+        </li>
+        <li class="last-child">
+          {{#view Species.TaxonomyToggle option="all" valueBinding="controller.timeScope"}}
+            ALL
+          {{/view}}
+        </li>
       </ul>
     </div>
     <div class="col">
