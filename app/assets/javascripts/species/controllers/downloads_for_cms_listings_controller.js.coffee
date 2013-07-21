@@ -29,41 +29,36 @@ Species.DownloadsForCmsListingsController = Ember.Controller.extend
 
   taxonConceptOueryObserver: ( ->
     re = new RegExp("^"+@get('taxonConceptQuery'),"i")
-
-    @set 'autoCompleteTaxonConcepts', @get('higherTaxaController.content')
-    .filter (item, index, enumerable) =>
-      re.test item.get('fullName')
+    @set 'autoCompleteTaxonConcepts', @get('higherTaxaController.contentByRank')
+    .map((e) =>
+      {
+        rankName: e.rankName
+        taxonConcepts: e.taxonConcepts.filter((item) =>
+          re.test item.get('fullName')
+        )
+      }
+    ).filter((e) ->
+      e.taxonConcepts.length > 0
+    )
   ).observes('taxonConceptQuery')
 
   regionsObserver: ( ->
     Ember.run.once(@, () ->
       @set('autoCompleteRegions', @get('controllers.geoEntities.regions'))
     )
-  ).observes('controllers.geoEntities.regions.@each.didLoad')
+  ).observes('controllers.geoEntities.regions.@each')
 
   countriesObserver: ( ->
     Ember.run.once(@, () ->
       @set('autoCompleteCountries', @get('controllers.geoEntities.countries'))
     )
-  ).observes('controllers.geoEntities.countries.@each.didLoad')
+  ).observes('controllers.geoEntities.countries.@each')
 
   higherTaxaObserver: ( ->
     Ember.run.once(@, () ->
-      @set('autoCompleteTaxonConcepts', @get('higherTaxaController.content'))
+      @set('autoCompleteTaxonConcepts', @get('higherTaxaController.contentByRank'))
     )
-  ).observes('higherTaxaController.content.@each.didLoad')
-
-  autoCompleteTaxonConceptsByRank: ( ->
-    ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY'].map((e) =>
-      {
-        rankName: e
-        taxonConcepts: @get('autoCompleteTaxonConcepts').filterProperty('rankName', e)
-      }
-    ).filter((e) ->
-      e.taxonConcepts.length > 0
-    )
-  ).property('autoCompleteTaxonConcepts.@each')
-
+  ).observes('higherTaxaController.contentByRank.@each')
 
   selectedGeoEntitiesObserver: ( ->
     @set 'selectedGeoEntitiesIds', @get('selectedGeoEntities').mapProperty('id')
