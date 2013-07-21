@@ -58,11 +58,11 @@
     <strong class="heading more">DOCUMENT TYPE</strong>
     <div class="typy-columns add">
       <div class="col more-add">
-          <input type="radio" id="item04" name="city" />
+          {{view Ember.RadioButton name="document-type" selectionBinding="documentType" value="Quotas"}}
           <label for="item04">CITES Quotas</label>
       </div>
       <div class="col more-add">
-          <input type="radio" id="item05" name="city" />
+          {{view Ember.RadioButton name="document-type" selectionBinding="documentType" value="CitesSuspensions"}}
           <label for="item05">CITES Suspensions</label>
       </div>
     </div>

@@ -21,6 +21,7 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
   ).property('timeScope')
   years: [1975..2013]
   selectedYears: []
+  documentType: 'CitesSuspensions'
 
   geoEntityOueryObserver: ( ->
     re = new RegExp("^"+@get('geoEntityQuery'),"i")
@@ -76,7 +77,7 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
 
   toParams: ( ->
     {
-      data_type: 'CitesSuspensions' #TODO Quotas
+      data_type: @get('documentType')
       filters: 
         designation: @get('designation')
         geo_entities_ids: @get('selectedGeoEntitiesIds')
@@ -86,7 +87,7 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
     }
   ).property(
     'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 
-    'timeScope', 'years.@each'
+    'timeScope', 'years.@each', 'documentType'
   )
 
   downloadUrl: ( ->
