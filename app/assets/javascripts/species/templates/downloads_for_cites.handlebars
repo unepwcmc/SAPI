@@ -83,11 +83,14 @@
       </ul>
     </div>
     <div class="col">
-      Only current data has<br />been selected.
+      {{#if timeScopeIsCurrent}}
+        Only current data has<br />been selected.
+      {{else}}
       <div class="popup-area">
         {{view Species.YearSearchButton selectedYearsBinding="controller.selectedYears"}}
         {{view Species.YearSearchDropdown controllerBinding="controller"}}
       </div>
+      {{/if}}
     </div>
   </div>
   <div class="bottom-columns">
