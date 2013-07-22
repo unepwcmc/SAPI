@@ -1,4 +1,6 @@
 class Api::V1::GeoEntitiesController < ApplicationController
+  caches_action :index, :cache_path => Proc.new { |c| c.params }
+  cache_sweeper :geo_entity_sweeper
 
   def index
     geo_entity_type = (

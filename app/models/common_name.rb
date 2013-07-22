@@ -24,7 +24,7 @@ class CommonName < ActiveRecord::Base
   #used in app/serializeres/species/show_taxon_concept_serializer.rb
   #for distinguishing between official CITES languages an non official languages
   #might need to be reviewed: TODO
-  def official_language
-    ActiveRecord::ConnectionAdapters::Column.value_to_boolean(self[:official_language])
+  def convention_language
+    ActiveRecord::ConnectionAdapters::Column.value_to_boolean(self[:convention_language])
   end
 end

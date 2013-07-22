@@ -1,11 +1,11 @@
 <ul class="tabset subtabset">
   <li>
-    {{#view Species.TaxonomyToggle option="listings" valueBinding="controller.citesLegislation"}}
+    {{#view Species.ToggleButton option="listings" valueBinding="controller.citesLegislation"}}
       LISTINGS
     {{/view}}
   </li>
   <li class="last-child">
-    {{#view Species.TaxonomyToggle option="restrictions" valueBinding="controller.citesLegislation"}}
+    {{#view Species.ToggleButton option="restrictions" valueBinding="controller.citesLegislation"}}
       TRADE RESTRICTIONS
     {{/view}}
   </li>
@@ -14,11 +14,12 @@
   isVisibleBinding="controller.legislationIsCitesListings"
   controllerBinding="controllers.downloadsForCitesListings"
 }}
-  <div class="two-columns add">
+  <div class="three-columns">
     <div class="col">
       <div class="popup-area">
         {{view Species.AppendixButton
-          controllerBinding="controller"
+          selectedAppendicesBinding="controller.selectedAppendices"
+          appendicesBinding="controller.appendices"
         }}
         <div class="popup-holder-appendix">
           <div class="popup">
@@ -33,90 +34,84 @@
       </div>
     </div>
     <div class="col">
-      <strong class="heading">ADDITIONAL DATA</strong>
-      <div class="row">
-        <input type="checkbox" id="check01" />
-        <label for="check01">Include EU annexes</label>
+      <div class="popup-area">
+        {{view Species.HigherTaxaSearchButton controllerBinding="controller"}}
+        {{view Species.HigherTaxaSearchDropdown controllerBinding="controller"}}
       </div>
     </div>
-  </div>
-  <div class="bottom-columns">
     <div class="col">
-      <a href="#" class="link">TAXON</a>
+      <div class="popup-area">
+        {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}
+        {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
+      </div>
     </div>
-    <div class="col">
-      <a href="#" class="link">LOCATION</a>
-    </div>
+  </div> 
+  <div class="btn-holder">     
+    {{view Species.StartDownloadButton controllerBinding="controller"}}
   </div>
 {{/view}}
-{{#view Species.DownloadsForLegislation isVisibleBinding="controller.legislationIsCitesRestrictions"}}
+{{#view Species.DownloadsForLegislation 
+  isVisibleBinding="controller.legislationIsCitesRestrictions"
+  controllerBinding="controllers.downloadsForCitesRestrictions"
+}}
   <div class="doc-type">
     <strong class="heading more">DOCUMENT TYPE</strong>
     <div class="typy-columns add">
       <div class="col more-add">
-          <input type="radio" id="item04" name="city" />
-          <label for="item04">CITES Quotas</label>
+        <label>
+          {{view Ember.RadioButton name="document-type" selectionBinding="documentType" value="Quotas"}}
+          CITES Quotas
+        </label>
       </div>
       <div class="col more-add">
-          <input type="radio" id="item05" name="city" />
-          <label for="item05">CITES Suspensions</label>
+        <label>
+          {{view Ember.RadioButton name="document-type" selectionBinding="documentType" value="CitesSuspensions"}}
+          CITES Suspensions
+        </label>
       </div>
     </div>
   </div>
   <div class="info-columns more">
     <div class="col">
       <ul class="tab-link">
-        <li class="active"><a href="#">CURRENT</a></li>
-        <li class="last-child"><a href="#">ALL</a></li>
+        <li>
+          {{#view Species.ToggleButton option="current" valueBinding="controller.timeScope"}}
+            CURRENT
+          {{/view}}
+        </li>
+        <li class="last-child">
+          {{#view Species.ToggleButton option="all" valueBinding="controller.timeScope"}}
+            ALL
+          {{/view}}
+        </li>
       </ul>
     </div>
     <div class="col">
-      Only current data has<br />been selected.
+      {{#if timeScopeIsCurrent}}
+        Only current data has<br />been selected.
+      {{else}}
+      <div class="popup-area">
+        {{view Species.YearSearchButton selectedYearsBinding="controller.selectedYears"}}
+        {{view Species.YearSearchDropdown controllerBinding="controller"}}
+      </div>
+      {{/if}}
     </div>
   </div>
   <div class="bottom-columns">
     <div class="col">
-      <a href="#" class="link">TAXON</a>
+      <div class="popup-area">
+        {{view Species.HigherTaxaSearchButton controllerBinding="controller"}}
+        {{view Species.HigherTaxaSearchDropdown controllerBinding="controller"}}
+      </div>
     </div>
     <div class="col">
       <div class="popup-area">
-        <a href="#" class="link">LOCATION</a>
-        <div class="popup-holder01">
-          <div class="popup">
-            <div class="search-block01">
-              <div class="row01">
-                <input type="text" value="Type a location to filter" title="Type a location to filter" />
-                <input type="submit" value="submit" />
-              </div>
-              <strong class="title01">SELECTED LOCATIONS</strong>
-            </div>
-            <div class="list-holder">
-              <ul>
-              <li>
-                <h2>REGIONS</h2>
-                <ul>
-                  <li><a href="#">Asia</a></li>
-                  <li><a href="#">Africa</a></li>
-                  <li><a href="#">America</a></li>
-                  <li><a href="#">Europe</a></li>
-                  <li><a href="#">Oceania</a></li>
-                </ul>
-              </li>
-              <li>
-                <h2>COUNTRIES</h2>
-                <ul>
-                  <li><a href="#">Algeria</a></li>
-                  <li><a href="#">Angola</a></li>
-                  <li><a href="#">Anguilla</a></li>
-                  <li><a href="#">Antarctica</a></li>
-                  <li><a href="#">Argentina</a></li>
-                </ul>
-              </li>
-            </ul>
-            </div>
-          </div>
-        </div>
+        {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}
+        {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
       </div>
     </div>
+  </div>
+  <div class="btn-holder">     
+    {{view Species.StartDownloadButton controllerBinding="controller"}}
   </div>
 {{/view}}

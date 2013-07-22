@@ -4,9 +4,7 @@ SAPI::Application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
   namespace :api do
     namespace :v1 do
-      resources :taxon_concepts, :only => [:index, :show] do
-        get :autocomplete, :on => :collection
-      end
+      resources :taxon_concepts, :only => [:index, :show]
       resources :geo_entities, :only => [:index]
     end
     resources :terms, :only => [:index]
@@ -85,6 +83,7 @@ SAPI::Application.routes.draw do
   end
 
   namespace :species do
+    get '*foo' => 'ember#start'
     root :to => 'ember#start'
   end
 

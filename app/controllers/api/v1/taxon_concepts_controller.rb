@@ -1,10 +1,10 @@
 class Api::V1::TaxonConceptsController < ApplicationController
+  caches_action :index, :cache_path => Proc.new { |c| c.params }
+  cache_sweeper :taxon_concept_sweeper
 
   def index
     if params[:autocomplete]
-      matcher = Checklist::TaxonConceptPrefixMatcher.new(
-        :scientific_name => params[:scientific_name]
-      )
+      matcher = Species::TaxonConceptPrefixMatcher.new(params)
       @taxon_concepts = matcher.taxon_concepts.limit(params[:per_page])
       render :json => @taxon_concepts,
         :each_serializer => Species::AutocompleteTaxonConceptSerializer,
@@ -40,11 +40,4 @@ class Api::V1::TaxonConceptsController < ApplicationController
       :serializer => Species::ShowTaxonConceptSerializer
   end
 
-  def autocomplete
-    matcher = Checklist::TaxonConceptPrefixMatcher.new(
-      :scientific_name => params[:scientific_name]
-    )
-    render :json => matcher.taxon_concepts.limit(params[:per_page]),
-      :each_serializer => Species::AutocompleteTaxonConceptSerializer
-  end
 end

@@ -44,7 +44,6 @@ class Checklist::HigherTaxaInjector
     @taxon_concepts.each_with_index do |tc, i|
       prev_item = (i > 0 ? @taxon_concepts[i-1] : nil)
       higher_taxon = higher_taxa_headers(prev_item, tc).first
-      puts higher_taxon.inspect
       if higher_taxon
         res.push({
           :higher_taxon => Checklist::HigherTaxaItem.new(current_higher_taxon),

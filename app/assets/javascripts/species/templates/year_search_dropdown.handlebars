@@ -1,0 +1,17 @@
+<div class="popup">
+  <div class="search-block01">
+    <strong class="title01">SELECTED YEARS</strong>
+    {{collection Species.SelectedYearsCollectionView
+      contentBinding="controller.selectedYears"}}
+  </div>
+  <div class="list-holder">
+    <ul>
+      <li class="header">
+        {{collection Species.YearsCollectionView
+          contentBinding="years"}}
+      </li>
+    </ul>
+  </div>
+</div>
+
+
