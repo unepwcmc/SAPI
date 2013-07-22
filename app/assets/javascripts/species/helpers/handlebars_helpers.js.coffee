@@ -43,4 +43,6 @@ Ember.Handlebars.registerHelper 'getItem', (id, options) ->
   Species[model].find(id).get(field)
   
 
-
+Ember.Handlebars.registerHelper 'sizeGt', (str, options) ->
+  str = Ember.Handlebars.get(this, str, options)
+  if str.length > options.hash.max then options.fn(@) else options.inverse(@)

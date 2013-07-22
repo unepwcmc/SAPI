@@ -1,56 +1,55 @@
-<strong class="title">CITES LISTINGS</strong>
-{{#unless citesListings}}
-  <p class="empty">This species is not currently listed in the CITES Appendices.</p>
+<strong class="title">EU LISTING</strong>
+{{#unless euListings}}
+  <p class="empty">This species is not currently listed in the EU Annexes.</p>
 {{else}}
   <table summary="data table">
     <thead>
       <tr>
         <th class="col1">&nbsp;</th>
-        <th class="col2">APPENDIX</th>
+        <th class="col2">ANNEX</th>
         <th class="col3">COUNTRY</th>
         <th class="col4">DATE</th>
         <th class="col6">NOTES</th>
+        <th class="col7">LEGAL NOTICE</th>
         <th class="col1">&nbsp;</th>
       </tr>
     </thead>
     <tbody>
-      {{#each listing in currentCitesListings}}
+      {{#each listing in currentEuListings}}
         <tr class="current">
           <td>&nbsp;</td>
           <td>
-            <div class="cites_appendix {{unbound listing.change_type}}_{{unbound listing.species_listing_name}}">
+            <div class="eu_appendix a_{{unbound listing.species_listing_name}}">
               <span>{{listing.species_listing_name}}</span>
-              {{#unless listing.is_addition}}
-              <span class="subscript">{{listing.change_type}}</span>
-              {{/unless}}
             </div>
           </td>
           <td>{{listing.party_full_name}}</td>
           <td>{{listing.effective_at_formatted}}</td>
           <td>
-            {{#if listing.auto_note}}
-              [{{listing.auto_note}}]
-            {{/if}}
             {{#if listing.full_note_en}}
-              {{{listing.full_note_en}}}
-            {{else}}
-              {{{listing.short_note_en}}}
+              {{#sizeGt listing.full_note_en max=250}}
+                {{{listing.short_note_en}}}<br />
+                <a class="link" {{action 'showFullNote' listing.full_note_en}}>See full note</a>
+              {{else}}
+                {{{listing.full_note_en}}}
+              {{/sizeGt}}
             {{/if}}
           </td>
+          <td>{{listing.event_name}}</td>
           <td class="last">&nbsp;</td>
         </tr>
       {{else}}
         <tr class="current">
           <td>&nbsp;</td>
-          <td colspan=4>This species is not currently listed in the CITES Appendices.</td>
+          <td colspan=4>This species is not currently listed in the EU Annexes.</td>
           <td>&nbsp;</td>
         </tr>
       {{/each}}
     </tbody>
   </table>
-  {{#if historicCitesListings}}
+  {{#if historicEuListings}}
     <div class="historic">
-      <table>
+      <table summary="data table">
         <thead>
           <tr>
             <th class="col1">&nbsp;</th>
@@ -58,44 +57,43 @@
             <th class="col3">&nbsp;</th>
             <th class="col4">&nbsp;</th>
             <th class="col6">&nbsp;</th>
+            <th class="col7">&nbsp;</th>
             <th class="col1">&nbsp;</th>
           </tr>
         </thead>
         <tbody>
-          {{#each listing in historicCitesListings}}
+          {{#each listing in historicEuListings}}
             <tr>
               <td>&nbsp;</td>
               <td>
-                <div class="cites_appendix {{unbound listing.change_type}}_{{unbound listing.species_listing_name}}">
+                <div class="eu_appendix a_{{unbound listing.species_listing_name}}">
                   <span>{{listing.species_listing_name}}</span>
-                  {{#unless listing.is_addition}}
-                  <span class="subscript">{{listing.change_type}}</span>
-                  {{/unless}}
                 </div>
               </td>
               <td>{{listing.party_full_name}}</td>
               <td>{{listing.effective_at_formatted}}</td>
               <td>
-                {{#if listing.auto_note}}
-                [{{listing.auto_note}}]
-                {{/if}}
                 {{#if listing.full_note_en}}
-                  {{{listing.full_note_en}}}
-                {{else}}
-                  {{{listing.short_note_en}}}
+                  {{#sizeGt listing.full_note_en max=250}}
+                    {{{listing.short_note_en}}}<br />
+                    <a class="link" {{action 'showFullNote' listing.full_note_en}}>See full note</a>
+                  {{else}}
+                    {{{listing.full_note_en}}}
+                  {{/sizeGt}}
                 {{/if}}
               </td>
+              <td>{{listing.event_name}}</td>
               <td class="last">&nbsp;</td>
             </tr>
           {{/each}}
         </tbody>
       </table>
     </div>
-    <div {{bindAttr class=":btn-hloder citesListingsExpanded:expanded"}}>
-      {{#if controller.citesListingsExpanded}}
-        <a class="link" {{action 'contractList' 'cites_listings' 'citesListingsExpanded'}}>HIDE HISTORY</a>
+    <div {{bindAttr class=":btn-hloder euListingsExpanded:expanded"}}>
+      {{#if controller.euListingsExpanded}}
+        <a class="link" {{action 'contractList' 'eu_listings' 'euListingsExpanded'}}>HIDE HISTORY</a>
       {{else}}
-        <a class="link" {{action 'expandList' 'cites_listings' 'citesListingsExpanded'}}>SHOW HISTORY</a>
+        <a class="link" {{action 'expandList' 'eu_listings' 'euListingsExpanded'}}>SHOW HISTORY</a>
       {{/if}}
     </div>
   {{/if}}

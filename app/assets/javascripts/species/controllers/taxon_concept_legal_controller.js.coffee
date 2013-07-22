@@ -16,3 +16,8 @@ Species.TaxonConceptLegalController = Ember.ArrayController.extend
     $('#'+id).
       find('.historic').slideUp('slow')
 
+  showFullNote: (fullNote) ->
+    $("#full-note-legal .content").html(fullNote)
+    $("#full-note-legal").show()
+  close: () ->
+    $("#full-note-legal").hide()

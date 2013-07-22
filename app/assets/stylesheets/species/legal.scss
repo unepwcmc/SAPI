@@ -1,0 +1,41 @@
+#full-note-legal {
+	width: 590px;
+	margin-left: -295px;
+	position: fixed;
+	left: 50%;
+  top: 25%;
+	background: #f5f5f7;
+	-webkit-border-radius: 12px;
+	border-radius: 12px;
+	border: 1px solid #6d95b0;
+	z-index: 1000;
+  .close {
+    width: 22px;
+    height: 22px;
+    overflow: hidden;
+    position: absolute;
+    right: -9px;
+    top: -6px;
+    text-indent: -9999px;
+    background: url(/assets/species/btn-close.png) no-repeat;
+  }
+  .title {
+    display: block;
+    font-size: 17px;
+    text-align: center;
+    padding: 29px 10px 26px;
+    line-height: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #253848;
+    background: #8fb7cf;
+    border-bottom: 1px solid #6d95b0;
+    -webkit-border-radius: 12px 12px 0 0;
+    border-radius: 12px 12px 0 0;
+  }
+  .content{
+    padding: 10px;
+    overflow-y: scroll;
+  }
+}
+
