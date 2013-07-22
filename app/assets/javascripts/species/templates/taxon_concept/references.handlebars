@@ -37,11 +37,15 @@
         </tr>
       </thead>
       <tbody>
-        {{#each ref in distributionReferences}}
+        {{#each ref in controllers.taxonConcept.distributionReferences}}
           <tr class="current">
             <td>&nbsp;</td>
             <td>{{ref.country}}</td>
-            <td>{{ref.references}}</td>
+            <td>
+              {{#stringToArray ref.country_references splitter="; "}}
+                <span class="distrib_reference">{{this}}</span>
+              {{/stringToArray}}
+            </td>
             <td class="last">&nbsp;</td>
           </tr>
         {{/each}}

@@ -103,7 +103,12 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distribution_references
-    []
+    object.distributions.joins(:geo_entity).
+      joins(:distribution_references => :reference).
+      select("geo_entities.name_en AS country").
+      select("string_agg(\"references\".citation, '; ') AS country_references").
+      group('geo_entities.name_en').
+      order('geo_entities.name_en')
   end
 end
 
