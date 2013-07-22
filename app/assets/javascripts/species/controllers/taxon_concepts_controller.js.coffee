@@ -1,28 +1,24 @@
 Species.TaxonConceptsController = Ember.ArrayController.extend
+  needs: 'search'
   content: null
 
   contentObserver: ( ->
-
-    # Does not work????
-    #@content.set Species.TaxonConcept.FIXTURES
-    #@content.forEach (c, i) -> console.log c
-
-    #console.log 'looooo', @get "content.length"
-    #console.log @get "taxonConcepts"
+    # Here just to remind us that this can be done, if needed!
     #@loopMyContent()
-
-
   ).observes("content.didLoad")
-
 
   customContent: null
 
   loopMyContent: ->
-    #console.log '##############', @get "content.length"
     test = []
     @content.forEach (e, i) ->
       t = {}
       t.id = e.id
       test.push t
     @set "customContent", test
+
+  newTaxonSearch: (q) ->
+    searchController = @get('controllers.search')
+    @set('controllers.search.taxonConceptQuery', q)
+    searchController.send('loadTaxonConcepts')
 

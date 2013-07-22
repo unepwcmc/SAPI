@@ -1,5 +1,5 @@
 <div id="tab1">
-  <div class="block block02 show_more">
+  <div class="block block02 show_more" id="common_names">
     <strong class="title">COMMON NAMES</strong>
     <table summary="data table" id="common_names">
       <thead>
@@ -10,7 +10,7 @@
       </thead>
       <tbody>
         {{#each commonName in controllers.taxonConcept.commonNames}}
-          <tr {{ bindAttr class="commonName.official_language::historic"}}>
+          <tr {{ bindAttr class="commonName.convention_language::historic"}}>
             <td>{{commonName.lang}}</td>
             <td>{{commonName.names}}</td>
           </tr>
@@ -19,13 +19,13 @@
     </table>
     <div {{bindAttr class=":btn-hloder commonNamesExpanded:expanded"}}>
       {{#if controller.commonNamesExpanded}}
-        <a href="#" class="link" {{action 'contractCommonNames'}}>HIDE EXTRA LANGUAGES</a>
+        <a href="#" class="link" {{action 'contractList' 'common_names' 'commonNamesExpanded'}}>HIDE EXTRA LANGUAGES</a>
       {{else}}
-        <a href="#" class="link" {{action 'expandCommonNames'}}>SHOW MORE LANGUAGES</a>
+        <a href="#" class="link" {{action 'expandList' 'common_names' 'commonNamesExpanded'}}>SHOW MORE LANGUAGES</a>
       {{/if}}
     </div>
   </div>
-  <div class="block04">
+  <div class="block04" id="synonyms">
     <strong class="title">SYNONYMS</strong>
     <div class="columns-holder">
       <ul class="col">
@@ -40,12 +40,18 @@
       </ul>
     </div>
   </div>
-  <div class="block04 block05">
+  <div class="block04 block05" id="subspecies">
     <strong class="title">SUBSPECIES</strong>
     <div class="columns-holder">
       <ul class="col">
+        {{#eachPart controllers.taxonConcept.subspecies parts=2 page=0}}
+          <li>{{full_name}} {{author_year}}</li>
+        {{/eachPart}}
       </ul>
       <ul class="col">
+        {{#eachPart controllers.taxonConcept.subspecies parts=2 page=1}}
+          <li>{{full_name}} {{author_year}}</li>
+        {{/eachPart}}
       </ul>
     </div>
   </div>

@@ -1,7 +1,7 @@
 class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   root 'taxon_concept'
   attributes :id, :full_name, :author_year, :standard_references,
-    :common_names, :distributions
+    :common_names, :distributions, :subspecies, :distribution_references
 
   has_many :synonyms, :serializer => Species::SynonymSerializer
   has_one :m_taxon_concept, :serializer => Species::MTaxonConceptSerializer
@@ -78,7 +78,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
               UPPER(languages.name_en) = 'SPANISH'
               THEN true
             ELSE false
-          END AS official_language
+          END AS convention_language
         SQL
       ).
       group("languages.name_en").order("languages.name_en")
@@ -94,6 +94,16 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       select("string_agg(tags.name, ', ') AS tags_list").
       group('geo_entities.name_en').
       order('geo_entities.name_en')
+  end
+
+  def subspecies
+    TaxonConcept.where(:parent_id => object.id).
+      select([:full_name, :author_year]).
+      order(:full_name)
+  end
+
+  def distribution_references
+    []
   end
 end
 
