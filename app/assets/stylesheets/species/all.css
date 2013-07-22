@@ -717,12 +717,16 @@ form, fieldset {
 	font-weight: bold;
 	text-decoration: none;
 }
-#main .tabset > li > ul > li.has-dropdown > a {
+#main .tabset > li > ul > li.has-dropdown:hover > a {
 	padding: 0 0 1px;
 	margin: 0 0 -1px;
 	background: url(/assets/species/arrow07.png) no-repeat 50% 100%;
 }
+#main .tabset > li > ul > li.has-dropdown:hover ul, #main .tabset > li > ul > li.has-dropdown ul:hover {
+  display: block;
+}
 .has-dropdown ul {
+  display: none;
 	position: absolute;
 	left: -1px;
 	top: 45px;
