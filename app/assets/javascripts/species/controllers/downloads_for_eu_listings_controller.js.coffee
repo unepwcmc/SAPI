@@ -15,6 +15,7 @@ Species.DownloadsForEuListingsController = Ember.Controller.extend
   autoCompleteTaxonConcepts: []
   selectedTaxonConcepts: []
   selectedTaxonConceptsIds: []
+  includeCites: null
 
   geoEntityOueryObserver: ( ->
     re = new RegExp("^"+@get('geoEntityQuery'),"i")
@@ -76,8 +77,9 @@ Species.DownloadsForEuListingsController = Ember.Controller.extend
         appendices: @get('selectedAppendices')
         geo_entities_ids: @get('selectedGeoEntitiesIds')
         higher_taxa_ids: @get('selectedTaxonConceptsIds')
+        include_cites: @get('includeCites')
     }
-  ).property('selectedAppendices.@each', 'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each')
+  ).property('selectedAppendices.@each', 'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 'includeCites')
 
   downloadUrl: ( ->
     '/exports/download?' + $.param(@get('toParams'))
