@@ -69,7 +69,7 @@ form, fieldset {
 	float: left;
 	text-indent: -9999px;
 	overflow: hidden;
-	background: url(../species/logo.png) no-repeat;
+	background: url(/assets/species/logo.png) no-repeat;
 }
 #header .logo a {
 	display: block;
@@ -86,7 +86,7 @@ form, fieldset {
 	line-height: 18px;
 	padding: 0 25px 10px 20px;
 	position: relative;
-	background: url(../species/sep.png) no-repeat 0 3px;
+	background: url(/assets/species/sep.png) no-repeat 0 3px;
 }
 #nav > li:first-child { background: none; }
 #nav > li > a { color: #2d3237; }
@@ -113,7 +113,7 @@ form, fieldset {
 	width: 11px;
 	height: 10px;
 	z-index: 1;
-	background: url(../species/arrow.png) no-repeat;
+	background: url(/assets/species/arrow.png) no-repeat;
 }
 #nav > li > ul > li {
 	float: left;
@@ -124,7 +124,7 @@ form, fieldset {
 #nav > li > ul > li > a {
 	float: left;
 	text-decoration: none;
-	background: url(../species/sep01.png) repeat-x 0 100%;
+	background: url(/assets/species/sep01.png) repeat-x 0 100%;
 }
 #main {
 	width: 860px;
@@ -149,7 +149,7 @@ form, fieldset {
 	display: inline-block;
 	overflow: hidden;
 	text-indent: -9999px;
-	background: url(../species/text-species.png) no-repeat;
+	background: url(/assets/species/text-species.png) no-repeat;
 }
 #footer {
 	background: #8fb7cf;
@@ -261,7 +261,7 @@ form, fieldset {
 	z-index: 1;
 	right: 10px;
 	top: 9px;
-	background: url(../species/arrow01.png) no-repeat;
+	background: url(/assets/species/arrow01.png) no-repeat;
 }
 .container .heading .link-holder:hover .popup-holder { display: block; }
 .container .heading .link-holder .popup-holder {
@@ -290,7 +290,7 @@ form, fieldset {
 	width: 7px;
 	height: 7px;
 	z-index: 1;
-	background: url(../species/arrow03.png) no-repeat;
+	background: url(/assets/species/arrow03.png) no-repeat;
 }
 .check .row {
 	overflow: hidden;
@@ -321,7 +321,7 @@ form, fieldset {
 	font-size: 13px;
 	line-height: 20px;
 	font-weight: bold;
-	background: url(../species/arrow04.png) no-repeat 0 50%;
+	background: url(/assets/species/arrow04.png) no-repeat 0 50%;
 	padding: 0 11px;
 	text-transform: uppercase;
 }
@@ -348,7 +348,7 @@ form, fieldset {
 	color: #373f4c;
 	float: left;
 	text-decoration: none;
-	background: url(../species/sep01.png) repeat-x 0 100%;
+	background: url(/assets/species/sep01.png) repeat-x 0 100%;
 }
 .result-block h2:hover { background: #ecf2f6; }
 .result-block.add h2 { padding: 13px 28px 12px; }
@@ -372,7 +372,7 @@ form, fieldset {
 	right: -9px;
 	top: -6px;
 	text-indent: -9999px;
-	background: url(../species/btn-close.png) no-repeat;
+	background: url(/assets/species/btn-close.png) no-repeat;
 }
 .dwonload-block .title {
 	display: block;
@@ -539,7 +539,7 @@ form, fieldset {
 	z-index: 1;
 	right: 10px;
 	top: 14px;
-	background: url(../species/arrow01.png) no-repeat;
+	background: url(/assets/species/arrow01.png) no-repeat;
 }
 .three-columns { padding: 21px 0 20px; }
 .three-columns:after {
@@ -578,7 +578,7 @@ form, fieldset {
 	z-index: 1;
 	right: 10px;
 	top: 14px;
-	background: url(../species/arrow01.png) no-repeat;
+	background: url(/assets/species/arrow01.png) no-repeat;
 }
 .tab-link01 {
 	padding: 20px 0 13px 49px;
@@ -641,7 +641,7 @@ form, fieldset {
 	float: left;
 	font-size: 17px;
 	line-height: 20px;
-	background: url(../species/arrow06.png) no-repeat 0 50%;
+	background: url(/assets/species/arrow06.png) no-repeat 0 50%;
 	padding: 0 6px 0 13px;
 }
 #main .heading-holder .list li:first-child {
@@ -720,7 +720,7 @@ form, fieldset {
 #main .tabset > li > ul > li.has-dropdown > a {
 	padding: 0 0 1px;
 	margin: 0 0 -1px;
-	background: url(../species/arrow07.png) no-repeat 50% 100%;
+	background: url(/assets/species/arrow07.png) no-repeat 50% 100%;
 }
 .has-dropdown ul {
 	position: absolute;
@@ -873,7 +873,7 @@ form, fieldset {
 	z-index: 1;
 	right: 10px;
 	top: 7px;
-	background: url(../species/ico.png) no-repeat;
+	background: url(/assets/species/ico.png) no-repeat;
 }
 #main .block h2 {
 	font-size: 30px;
@@ -901,14 +901,14 @@ form, fieldset {
 #main .block02 .btn-hloder .link:before {
 	right: 7px;
 	top: 10px;
-	background: url(../species/arrow01.png) no-repeat;
+	background: url(/assets/species/arrow01.png) no-repeat;
 }
 #main .block02 .btn-hloder .link { padding: 0 16px 0 9px; }
 #main .block04 {
 	padding: 0 29px 24px;
 	text-align: left;
 	margin: 0 0 46px;
-	background: url(../species/sep02.png) repeat-x 0 100%;
+	background: url(/assets/species/sep02.png) repeat-x 0 100%;
 }
 #main .block04.block05 {
 	background: none;
@@ -1037,7 +1037,7 @@ form, fieldset {
 	width: 9px;
 	height: 10px;
 	z-index: 1;
-	background: url(../species/arrow08.png) no-repeat;
+	background: url(/assets/species/arrow08.png) no-repeat;
 }
 #main .block06 .popup .title {
 	text-transform: none;
@@ -1057,7 +1057,7 @@ form, fieldset {
 	color: #253848;
 	display: inline-block;
 	vertical-align: top;
-	background: url(../species/sep01.png) repeat-x 0 100%;
+	background: url(/assets/species/sep01.png) repeat-x 0 100%;
 }
 #main .block06 .three-columns .col li .link-holder:hover .popup a { font-weight: normal; }
 .skip {
