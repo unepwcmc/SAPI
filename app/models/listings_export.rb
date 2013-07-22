@@ -5,7 +5,7 @@ class ListingsExport
 
   def initialize(filters)
     @filters = filters
-    @taxon_concepts_ids = filters[:higher_taxa_ids]
+    @taxon_concepts_ids = filters[:taxon_concepts_ids]
     @geo_entities_ids = filters[:geo_entities_ids]
     @designation = if filters[:designation_id]
       Designation.find(filters[:designation_id])
@@ -68,6 +68,8 @@ class ListingsExport
       MTaxonConceptFilterByAppendixQuery.new(
         rel, @species_listings_ids
       ).relation(@designation.name)
+    else
+      rel
     end
     if @taxon_concepts_ids
       rel = MTaxonConceptFilterByIdWithDescendants.new(rel, @taxon_concepts_ids).relation

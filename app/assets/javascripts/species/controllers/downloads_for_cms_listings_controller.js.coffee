@@ -75,7 +75,7 @@ Species.DownloadsForCmsListingsController = Ember.Controller.extend
         designation: @get('designation')
         appendices: @get('selectedAppendices')
         geo_entities_ids: @get('selectedGeoEntitiesIds')
-        higher_taxa_ids: @get('selectedTaxonConceptsIds')
+        taxon_concepts_ids: @get('selectedTaxonConceptsIds')
     }
   ).property('selectedAppendices.@each', 'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each')
 
