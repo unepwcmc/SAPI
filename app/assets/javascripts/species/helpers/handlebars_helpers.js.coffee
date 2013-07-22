@@ -27,3 +27,20 @@ Ember.Handlebars.helper('highlight', (suggestion, query) ->
     suggestion.replace(new RegExp("(" + query + ")", "gi"), transform)
   )
 )
+
+Ember.Handlebars.registerHelper 'stringToArray', (string, options) ->
+  string = Ember.Handlebars.get(this, string, options)
+  array = string.split options.hash.splitter
+  array.map((item, index) ->
+    options.fn item
+  ).join ""
+
+# Given an id, a model and a field, return the field value for that item.
+Ember.Handlebars.registerHelper 'getItem', (id, options) ->
+  id = Ember.Handlebars.get(this, id, options)
+  field = options.hash.field
+  model = options.hash.model
+  Species[model].find(id).get(field)
+  
+
+

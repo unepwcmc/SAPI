@@ -79,7 +79,7 @@
 			text-transform: uppercase;
 			text-align: center;
 			padding: 0 0 2px;
-			margin: 1px;
+			margin: 0;
 			-webkit-border-radius: 20px;
 			border-radius: 20px;
 			background: #376382;
@@ -215,11 +215,18 @@
 .total-species span { font-size: 23px; }
 .inner .location-area { padding: 13px 15px 0; }
 
-
-
-
+.search-block.results .search-form { width: 460px; }
+.search-block.results .popup-area { padding: 13px 15px 0; }
+.search-block.results .search { width: 432px; }
+.search-block.results .search input[type="text"] { width: 311px; }
 
 .inner .search-block.add .search-form { width: 615px; }
-.inner .search-block.add .location-area { padding: 15px 0 0 14px; }
+.inner .search-block.add .popup-area { padding: 15px 0 0 14px; }
 .inner .search-block.add .search { width: 589px; }
 .inner .search-block.add .search input[type="text"] { width: 475px; }
+
+.inner .search-block.add.results .search-form { width: 460px; }
+.inner .search-block.add.results .popup-area { padding: 13px 15px 0; }
+.inner .search-block.add.results .search { width: 432px; }
+.inner .search-block.add.results .search input[type="text"] { width: 322px; }
+

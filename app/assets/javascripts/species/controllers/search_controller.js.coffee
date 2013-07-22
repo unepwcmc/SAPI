@@ -1,5 +1,5 @@
 Species.SearchController = Ember.Controller.extend
-  needs: ['geoEntities', 'taxonConcepts']
+  needs: ['geoEntities', 'taxonConcepts']  # Does it really need these?
   taxonomy: 'cites_eu'
   taxonConceptQuery: null
   taxonConceptsDropdownVisible: false
@@ -38,7 +38,7 @@ Species.SearchController = Ember.Controller.extend
     )
   ).property('taxonConceptQuery')
 
-  geoEntityOueryObserver: ( ->
+  geoEntityQueryObserver: ( ->
     re = new RegExp("^"+@get('geoEntityQuery'),"i")
 
     @set 'autoCompleteRegions', @get('controllers.geoEntities.regions')

@@ -38,3 +38,10 @@ Species.SearchRoute = Ember.Route.extend
       outlet: 'search',
       controller: searchController
     })
+
+    @render('taxonConceptsResultsCount', {
+      into: 'searchForm',
+      outlet: 'count',
+      controller: taxonConceptsController
+    })
+
