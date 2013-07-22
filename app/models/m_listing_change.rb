@@ -41,6 +41,7 @@ class MListingChange < ActiveRecord::Base
 
   belongs_to :designation
   belongs_to :taxon_concept, :class_name => 'MTaxonConcept'
+  belongs_to :original_taxon_concept, :class_name => 'MTaxonConcept', :foreign_key => :original_taxon_concept_id
   belongs_to :listing_change, :foreign_key => :id
   belongs_to :event
 

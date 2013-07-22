@@ -55,9 +55,7 @@ class ListingsExport
       :"#{@designation.name.downcase}_show" => true,
       :rank_name => [Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY]
     ).
-    joins(
-      :"#{@designation.name.downcase}_closest_listed_ancestor" => :"current_#{@designation.name.downcase}_additions"
-    ).
+    joins(:listing_changes => :original_taxon_concept).
     group(group_columns).
     order('taxon_concepts_mview.taxonomic_position')
     rel = if @species_listings_ids && @geo_entities_ids
@@ -89,7 +87,7 @@ private
           row = taxon_concept_columns.map do |c|
             rec.send(c)
           end
-          closest_listed_ancestor_columns.each do |c|
+          listing_changes_columns.each do |c|
             row << rec[:"closest_listed_ancestor_#{c}"]
           end
           csv << row
@@ -118,7 +116,7 @@ private
       taxon_concept_sql_columns.each_with_index.map do |c, idx|
         "#{c} AS #{taxon_concept_columns[idx]}" # alias all
       end <<
-      closest_listed_ancestor_select_columns
+      listing_changes_select_columns
     ).join(', ')
   end
 
@@ -142,56 +140,60 @@ private
     res
   end
 
-  def closest_listed_ancestor_columns
+  def listing_changes_columns
     [:party_iso_code, :full_name_with_spp, :short_note_en, :full_note_en, :hash_full_note_en]
   end
 
-  def closest_listed_ancestor_table_name
+  def original_taxon_concept_table_name
     "#{@designation.name.downcase}_closest_listed_ancestors_taxon_concepts_mview"
   end
 
-  def closest_listed_ancestor_select_columns
+  def listing_changes_select_columns
     <<-SQL
     ARRAY_TO_STRING(
       ARRAY_AGG(
-        listing_changes_mview.party_iso_code
+        DISTINCT listing_changes_mview.party_iso_code
       ),
       ','
-    ) AS closest_listed_ancestor_party_iso_code,
-    #{closest_listed_ancestor_table_name}.full_name || ' ' ||
-    CASE
-      WHEN #{closest_listed_ancestor_table_name}.spp THEN 'spp.'
-      ELSE ''
-    END
-    AS closest_listed_ancestor_full_name_with_spp,
+    ) AS cascaded_party_iso_code,
+    
     ARRAY_TO_STRING(
       ARRAY_AGG(
-        '**' || species_listing_name || '** ' || strip_tags(listing_changes_mview.short_note_en)
-        ORDER BY species_listing_name
+        DISTINCT full_name_with_spp(original_taxon_concepts_mview.rank_name, original_taxon_concepts_mview.full_name)
       ),
-      '\n'
-    ) AS closest_listed_ancestor_short_note_en,
+      ','
+    ) 
+    AS cascaded_full_name_with_spp,
+
     ARRAY_TO_STRING(
       ARRAY_AGG(
-        '**' || species_listing_name || '** ' || strip_tags(listing_changes_mview.full_note_en)
-        ORDER BY species_listing_name
+        '**' || listing_changes_mview.species_listing_name || '** '
+        || CASE 
+          WHEN LENGTH(listing_changes_mview.auto_note) > 0 THEN '[' || listing_changes_mview.auto_note || '] ' 
+          ELSE '' 
+        END 
+        || CASE 
+          WHEN LENGTH(listing_changes_mview.full_note_en) > 0 THEN strip_tags(listing_changes_mview.full_note_en) 
+          ELSE strip_tags(listing_changes_mview.short_note_en) 
+        END
+        ORDER BY listing_changes_mview.species_listing_name
       ),
       '\n'
-    ) AS closest_listed_ancestor_full_note_en,
+    ) AS cascaded_note_en,
     ARRAY_TO_STRING(
       ARRAY_AGG(
         '**' || species_listing_name || '** ' || strip_tags(listing_changes_mview.hash_full_note_en)
         ORDER BY species_listing_name
       ),
       '\n'
-    ) AS closest_listed_ancestor_hash_full_note_en
+    ) AS cascaded_hash_full_note_en
     SQL
   end
 
   def closest_listed_ancestor_group_columns
     <<-SQL
-    #{closest_listed_ancestor_table_name}.full_name,
-    #{closest_listed_ancestor_table_name}.spp
+    #{original_taxon_concept_table_name}.full_name,
+    #{original_taxon_concept_table_name}.spp
     SQL
   end
 end
