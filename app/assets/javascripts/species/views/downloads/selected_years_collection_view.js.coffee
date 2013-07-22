@@ -7,5 +7,4 @@ Species.SelectedYearsCollectionView = Ember.CollectionView.extend
     template: Ember.Handlebars.compile('{{this}} <span {{action "deleteSelection" target="view"}} class="delete">x</span>')
 
     deleteSelection: (event) ->
-      @set('controller.selectedYears', [])
-
+      @get('controller.selectedYears').removeObject(@get('context'))

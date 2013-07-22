@@ -36,8 +36,10 @@
     <div class="col">
       <strong class="heading">ADDITIONAL DATA</strong>
       <div class="row">
-        {{view Ember.Checkbox checkedBinding="includeCites"}}
-        <label for="check">Include CITES appendices</label>
+        <label>
+          {{view Ember.Checkbox checkedBinding="includeCites"}}
+          Include CITES appendices
+        </label>
       </div>
     </div>
   </div>
@@ -70,22 +72,30 @@
     <div class="typy-columns">
       <div class="col">
         <div class="row">
-          {{view Ember.Checkbox checkedBinding="negativeOpinions"}}
-          <label for="item">SRG Negative Opinions</label>
+          <label>
+            {{view Ember.Checkbox checkedBinding="negativeOpinions"}}
+            SRG Negative Opinions
+          </label>
         </div>
         <div class="row">
-          {{view Ember.Checkbox checkedBinding="noOpinions"}}
-          <label for="item01">SRG No Opinions</label>
+          <label>
+            {{view Ember.Checkbox checkedBinding="noOpinions"}}
+            SRG No Opinions
+          </label>
         </div>
       </div>
       <div class="col">
         <div class="row">
-          {{view Ember.Checkbox checkedBinding="positiveOpinions"}}
-          <label for="item02">SRG Positive Opinions</label>
+          <label>
+            {{view Ember.Checkbox checkedBinding="positiveOpinions"}}
+            SRG Positive Opinions
+          </label>
         </div>
         <div class="row">
-          {{view Ember.Checkbox checkedBinding="suspensions"}}
-          <label for="item03">Suspensions</label>
+          <label>
+            {{view Ember.Checkbox checkedBinding="suspensions"}}
+            Suspensions
+          </label>
         </div>
       </div>
     </div>
