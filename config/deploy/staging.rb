@@ -16,6 +16,33 @@ set :default_environment, {
   'GEM_PATH' => '/home/rails/.rvm/gems/ruby-1.9.2-p320',
 }
 
+
+namespace :deploy do
+task :default do
+update
+assets.precompile
+restart
+cleanup
+# etc
+end
+end
+ 
+namespace :assets do
+desc "Precompile assets locally and then rsync to app servers"
+task :precompile, :only => { :primary => true } do
+run_locally "bundle exec rake RAILS_ENV=staging assets:precompile;"
+servers = find_servers :roles => [:app], :except => { :no_release => true }
+servers.each do |server|
+run_locally "rsync -av ./public/assets/ rails@unepwcmc-012.vm.brightbox.net:#{deploy_to}/shared/assets;"
+end
+run_locally "rm -rf public/assets"
+end
+end
+
+
+
+
+
 desc "Configure VHost"
 task :config_vhost do
 vhost_config =<<-EOF
