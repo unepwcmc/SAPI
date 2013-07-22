@@ -1,7 +1,7 @@
 class MTaxonConceptFilterByIdWithDescendants
 
-  def initialize(relation = MTaxonConcept.scoped, ids)
-    @relation = relation
+  def initialize(relation, ids)
+    @relation = relation || MTaxonConcept.scoped
     @ids = ids
   end
 
@@ -9,10 +9,10 @@ class MTaxonConceptFilterByIdWithDescendants
     @relation.where(
       <<-SQL
       ARRAY[
-        #{@relation.table_name}.id,
-        #{@relation.table_name}.family_id, #{@relation.table_name}.order_id,
-        #{@relation.table_name}.class_id, #{@relation.table_name}.phylum_id,
-        #{@relation.table_name}.kingdom_id] && --overlap
+        taxon_concepts_mview.id,
+        taxon_concepts_mview.family_id, taxon_concepts_mview.order_id,
+        taxon_concepts_mview.class_id, taxon_concepts_mview.phylum_id,
+        taxon_concepts_mview.kingdom_id] && --overlap
       ARRAY[#{@ids.join(', ')}]
       SQL
     )

@@ -506,7 +506,7 @@ form, fieldset {
 	border: 1px solid #253848;
 	border-left: none;
 }
-.info-columns .col .tab-link li a:hover, .info-columns .col .tab-link li.active a { background: #253848; }
+.info-columns .col .tab-link li a:hover, .info-columns .col .tab-link li a.active { background: #253848; }
 .info-columns .col .tab-link li:first-child a {
 	-webkit-border-radius: 20px 0 0 20px;
 	border-radius: 20px 0 0 20px;
