@@ -61,10 +61,14 @@ class ListingsExport
     group(group_columns).
     order('taxon_concepts_mview.taxonomic_position')
     rel = if @species_listings_ids && @geo_entities_ids
-      MTaxonConceptFilterByAppendixPopulationQuery.new(rel, @species_listings_ids, @geo_entities_ids)
+      MTaxonConceptFilterByAppendixPopulationQuery.new(
+        rel, @species_listings_ids, @geo_entities_ids
+      ).relation(@designation.name)
     elsif @species_listings_ids
-      MTaxonConceptFilterByAppendixQuery.new(rel, @species_listings_ids)
-    end.relation(@designation.name)
+      MTaxonConceptFilterByAppendixQuery.new(
+        rel, @species_listings_ids
+      ).relation(@designation.name)
+    end
     if @taxon_concepts_ids
       rel = MTaxonConceptFilterByIdWithDescendants.new(rel, @taxon_concepts_ids).relation
     end
