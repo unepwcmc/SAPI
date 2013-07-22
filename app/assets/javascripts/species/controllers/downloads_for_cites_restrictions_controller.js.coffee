@@ -1,12 +1,12 @@
-Species.DownloadsForEuListingsController = Ember.Controller.extend
-  designation: 'eu'
-  appendices: ['A', 'B', 'C', 'D']
-  needs: ['geoEntities', 'higherTaxaCitesEu']
+Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
+  designation: 'cites'
+
+  needs: ['geoEntities','higherTaxaCitesEu']
+
   higherTaxaController: ( ->
     @get('controllers.higherTaxaCitesEu')
   ).property()
 
-  selectedAppendices: []
   geoEntityQuery: null
   autoCompleteRegions: null
   autoCompleteCountries: null
@@ -15,7 +15,13 @@ Species.DownloadsForEuListingsController = Ember.Controller.extend
   autoCompleteTaxonConcepts: []
   selectedTaxonConcepts: []
   selectedTaxonConceptsIds: []
-  includeCites: null
+  timeScope: 'current'
+  timeScopeIsCurrent: ( ->
+    @get('timeScope') == 'current'
+  ).property('timeScope')
+  years: [1975..2013]
+  selectedYears: []
+  documentType: 'CitesSuspensions'
 
   geoEntityOueryObserver: ( ->
     re = new RegExp("^"+@get('geoEntityQuery'),"i")
@@ -71,15 +77,18 @@ Species.DownloadsForEuListingsController = Ember.Controller.extend
 
   toParams: ( ->
     {
-      data_type: 'Listings'
+      data_type: @get('documentType')
       filters: 
         designation: @get('designation')
-        appendices: @get('selectedAppendices')
         geo_entities_ids: @get('selectedGeoEntitiesIds')
         higher_taxa_ids: @get('selectedTaxonConceptsIds')
-        include_cites: @get('includeCites')
+        set: @get('timeScope')
+        years: @get('selectedYears')
     }
-  ).property('selectedAppendices.@each', 'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 'includeCites')
+  ).property(
+    'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 
+    'timeScope', 'years.@each', 'documentType'
+  )
 
   downloadUrl: ( ->
     '/exports/download?' + $.param(@get('toParams'))

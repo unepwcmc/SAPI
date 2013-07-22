@@ -21,7 +21,6 @@ Species.SearchRoute = Ember.Route.extend
     @controllerFor('taxonConcepts').set('content', Species.TaxonConcept.find(model))
 
   renderTemplate: ->
-    console.log("Species.SearchRoute : render")
     taxonConceptsController = @controllerFor('taxonConcepts')
     searchController = @controllerFor('search')
     # Render the `taxon_concepts` template into
@@ -45,6 +44,4 @@ Species.SearchRoute = Ember.Route.extend
       outlet: 'count',
       controller: taxonConceptsController
     })
-
-
 

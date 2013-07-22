@@ -10,7 +10,7 @@ development:
   username: postgres
   password: postgres
   timeout: 5000
-  port: 5433
+  port: 5432
   host: localhost
 
 # Warning: The database defined as "test" will be erased and

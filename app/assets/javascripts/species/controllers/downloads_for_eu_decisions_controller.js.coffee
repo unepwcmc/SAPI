@@ -1,12 +1,12 @@
-Species.DownloadsForEuListingsController = Ember.Controller.extend
+Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   designation: 'eu'
-  appendices: ['A', 'B', 'C', 'D']
+
   needs: ['geoEntities', 'higherTaxaCitesEu']
+
   higherTaxaController: ( ->
     @get('controllers.higherTaxaCitesEu')
   ).property()
 
-  selectedAppendices: []
   geoEntityQuery: null
   autoCompleteRegions: null
   autoCompleteCountries: null
@@ -15,7 +15,16 @@ Species.DownloadsForEuListingsController = Ember.Controller.extend
   autoCompleteTaxonConcepts: []
   selectedTaxonConcepts: []
   selectedTaxonConceptsIds: []
-  includeCites: null
+  timeScope: 'current'
+  timeScopeIsCurrent: ( ->
+    @get('timeScope') == 'current'
+  ).property('timeScope')
+  years: [1975..2013]
+  selectedYears: []
+  positiveOpinions: true
+  negativeOpinions: true
+  noOpinions: true
+  suspensions: true
 
   geoEntityOueryObserver: ( ->
     re = new RegExp("^"+@get('geoEntityQuery'),"i")
@@ -71,15 +80,23 @@ Species.DownloadsForEuListingsController = Ember.Controller.extend
 
   toParams: ( ->
     {
-      data_type: 'Listings'
+      data_type: 'EuDecisions'
       filters: 
         designation: @get('designation')
-        appendices: @get('selectedAppendices')
         geo_entities_ids: @get('selectedGeoEntitiesIds')
         higher_taxa_ids: @get('selectedTaxonConceptsIds')
-        include_cites: @get('includeCites')
+        set: @get('timeScope')
+        years: @get('selectedYears')
+        positiveOpinions: @get('positiveOpinions')
+        negativeOpinions: @get('negativeOpinions')
+        noOpinions: @get('noOpinions')
+        suspensions: @get('suspensions')
     }
-  ).property('selectedAppendices.@each', 'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 'includeCites')
+  ).property(
+    'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 
+    'timeScope', 'years.@each', 'positiveOpinions', 'negativeOpinions',
+    'noOpinions', 'suspensions'
+  )
 
   downloadUrl: ( ->
     '/exports/download?' + $.param(@get('toParams'))

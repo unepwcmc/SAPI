@@ -1,5 +1,9 @@
 Species.DownloadsController = Ember.Controller.extend
-  needs: ['downloadsForCmsListings', 'downloadsForCitesListings', 'downloadsForEuListings']
+  needs: [
+    'downloadsForCmsListings', 
+    'downloadsForCitesListings', 'downloadsForCitesRestrictions',
+    'downloadsForEuListings', 'downloadsForEuDecisions'
+  ]
   downloadsPopupVisible: false
   downloadsTopButtonVisible: ( ->
     # hide if we're currently showing index
@@ -30,4 +34,5 @@ Species.DownloadsController = Ember.Controller.extend
     @get('euLegislation') == 'decisions'
   ).property('euLegislation')
 
-  citesAppendices: ['I', 'II', 'III']
+  close: () ->
+    @set('downloadsPopupVisible', false)

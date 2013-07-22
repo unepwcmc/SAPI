@@ -9,6 +9,7 @@ Species.TaxonConcept = DS.Model.extend
   familyName: DS.attr("string")
   commonNames: DS.attr("array")
   synonyms: DS.attr("array")
+  subspecies: DS.attr("array")
   mTaxonConcept: DS.attr("array")
   distributions: DS.attr("array")
   references: DS.attr("array")
@@ -18,13 +19,14 @@ Species.TaxonConcept = DS.Model.extend
   citesListings: DS.attr("array")
   euListings: DS.attr("array")
   matchingNames: DS.attr("string")
+  distributionReferences: DS.attr("array")
 
   autoCompleteSuggestion: ( ->
-    if !@get('matchingNames')
-      @get('fullName')
+    if @get('synonyms').length > 0
+      @get('fullName') + ' (' + @get('synonyms').join( ', ') + ')'
     else
-      @get('fullName') + ' (' + @get('matchingNames') + ')'
-  ).property('fullName', 'matchingNames')
+      @get('fullName')
+  ).property('fullName', 'synonyms')
 
 
 Species.TaxonConcept.FIXTURES = [

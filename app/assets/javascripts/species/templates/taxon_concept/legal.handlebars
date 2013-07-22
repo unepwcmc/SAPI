@@ -1,23 +1,27 @@
 <div id="tab1">
   {{#with controllers.taxonConcept}}
-    <div {{bindAttr class=":block historicCitesListings"}} id="cites_listings">
+    <div {{bindAttr class=":block anyHistoricCitesListings"}} id="cites_listings">
       <h2>CITES</h2>
       {{ partial 'species/taxon_concept/cites_listing_changes' }}
     </div>
-
-    <div {{bindAttr class=":block :add historicCitesQuotas"}} id="cites_quotas">
+	
+    <div {{bindAttr class=":block :add anyHistoricCitesQuotas"}} id="cites_quotas">
+      <strong class="title">CITES RESTRICTIONS</strong>
       {{ partial 'species/taxon_concept/cites_quotas' }}
     </div>
 
-    <div {{bindAttr class=":block :add historicCitesSuspensions"}} id="cites_suspensions">
+    <div {{bindAttr class=":block :add anyHistoricCitesSuspensions"}} id="cites_suspensions">
       {{ partial 'species/taxon_concept/cites_suspensions' }}
     </div>
-    <div {{bindAttr class=":block :add historicEuListings"}} id="eu_listings">
+
+    <hr />
+
+    <div {{bindAttr class=":block :add anyHistoricEuListings"}} id="eu_listings">
       <h2>EU Wildlife Trade Regulations</h2>
       {{ partial 'species/taxon_concept/eu_listing_changes' }}
     </div>
   {{/with}}
-  <div class="block block01">
+  <div class="block block01" id="eu_decisions">
     <strong class="title">EU DECISIONS</strong>
     <table summary="data table">
       <thead>

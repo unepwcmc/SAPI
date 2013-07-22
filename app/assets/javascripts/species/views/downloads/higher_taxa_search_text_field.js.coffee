@@ -1,4 +1,4 @@
-Species.GeoEntitiesSearchTextField = Em.TextField.extend
+Species.HigherTaxaSearchTextField = Em.TextField.extend
   value: ''
 
   attributeBindings: ['autocomplete']
@@ -12,4 +12,4 @@ Species.GeoEntitiesSearchTextField = Em.TextField.extend
     @.$().attr('placeholder', @get('placeholder'))
 
   keyUp: (event) ->
-    @set('controller.geoEntityQuery', event.currentTarget.value)  
+    @set('controller.taxonConceptQuery', event.currentTarget.value)  
