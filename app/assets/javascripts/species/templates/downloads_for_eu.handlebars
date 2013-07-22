@@ -1,11 +1,11 @@
 <ul class="tabset subtabset">
   <li>
-    {{#view Species.TaxonomyToggle option="listings" valueBinding="controller.euLegislation"}}
+    {{#view Species.ToggleButton option="listings" valueBinding="controller.euLegislation"}}
       LISTINGS
     {{/view}}
   </li>
   <li class="last-child">
-    {{#view Species.TaxonomyToggle option="decisions" valueBinding="controller.euLegislation"}}
+    {{#view Species.ToggleButton option="decisions" valueBinding="controller.euLegislation"}}
       EU DECISIONS
     {{/view}}
   </li>
@@ -94,12 +94,12 @@
     <div class="col">
       <ul class="tab-link">
         <li>
-          {{#view Species.TaxonomyToggle option="current" valueBinding="controller.timeScope"}}
+          {{#view Species.ToggleButton option="current" valueBinding="controller.timeScope"}}
             CURRENT
           {{/view}}
         </li>
         <li class="last-child">
-          {{#view Species.TaxonomyToggle option="all" valueBinding="controller.timeScope"}}
+          {{#view Species.ToggleButton option="all" valueBinding="controller.timeScope"}}
             ALL
           {{/view}}
         </li>

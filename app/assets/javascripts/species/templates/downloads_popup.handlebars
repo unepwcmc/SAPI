@@ -4,17 +4,17 @@
     <strong class="title">DOWNLOAD SPECIES LISTS</strong>
     <ul class="tabset">
       <li>
-          {{#view Species.TaxonomyToggle option="cites" valueBinding="controller.designation"}}
+          {{#view Species.ToggleButton option="cites" valueBinding="controller.designation"}}
             CITES
           {{/view}}
       </li>
       <li>
-          {{#view Species.TaxonomyToggle option="eu" valueBinding="controller.designation"}}
+          {{#view Species.ToggleButton option="eu" valueBinding="controller.designation"}}
             EU
           {{/view}}
       </li>
       <li class="last-child">
-          {{#view Species.TaxonomyToggle option="cms" valueBinding="controller.designation"}}
+          {{#view Species.ToggleButton option="cms" valueBinding="controller.designation"}}
             CMS
           {{/view}}
       </li>
