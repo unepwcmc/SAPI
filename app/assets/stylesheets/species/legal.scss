@@ -1,3 +1,7 @@
+a.see-full-note {
+	background: url(/assets/species/sep01.png) repeat-x 0 100%;
+}
+
 #full-note-legal {
 	width: 590px;
 	margin-left: -295px;
@@ -35,7 +39,7 @@
   }
   .content{
     padding: 10px;
-    overflow-y: scroll;
+    overflow-y: auto;
     text-align: left;
   }
 }

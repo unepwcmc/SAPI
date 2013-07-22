@@ -21,7 +21,7 @@
             <div class="cites_appendix {{unbound listing.change_type}}_{{unbound listing.species_listing_name}}">
               <span>{{listing.species_listing_name}}</span>
               {{#unless listing.is_addition}}
-              <span class="subscript">{{listing.change_type}}</span>
+                <span class="subscript">{{listing.change_type}}</span>
               {{/unless}}
             </div>
           </td>
@@ -31,10 +31,15 @@
             {{#if listing.auto_note}}
               [{{listing.auto_note}}]
             {{/if}}
+            {{#if listing.hash_full_note_en}}
+              <a class="see-full-note" {{action 'showFullNote' "Hash annotation" listing.hash_full_note_en}}>
+                {{listing.hash_ann_parent_symbol}}{{listing.hash_ann_symbol}}
+              </a><br />
+            {{/if}}
             {{#if listing.full_note_en}}
               {{#sizeGt listing.full_note_en max=250}}
                 {{{listing.short_note_en}}}<br />
-                <a class="link" {{action 'showFullNote' listing.full_note_en}}>See full note</a>
+                <a class="see-full-note" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
               {{else}}
                 {{{listing.full_note_en}}}
               {{/sizeGt}}
@@ -74,7 +79,7 @@
                 <div class="cites_appendix {{unbound listing.change_type}}_{{unbound listing.species_listing_name}}">
                   <span>{{listing.species_listing_name}}</span>
                   {{#unless listing.is_addition}}
-                  <span class="subscript">{{listing.change_type}}</span>
+                    <span class="subscript">{{listing.change_type}}</span>
                   {{/unless}}
                 </div>
               </td>
@@ -82,12 +87,17 @@
               <td>{{listing.effective_at_formatted}}</td>
               <td>
                 {{#if listing.auto_note}}
-                [{{listing.auto_note}}]
+                  [{{listing.auto_note}}]<br />
+                {{/if}}
+                {{#if listing.hash_full_note_en}}
+                  <a class="see-full-note" {{action 'showFullNote' "Hash annotation" listing.hash_full_note_en}}>
+                    {{listing.hash_ann_parent_symbol}}{{listing.hash_ann_symbol}}
+                  </a><br />
                 {{/if}}
                 {{#if listing.full_note_en}}
                   {{#sizeGt listing.full_note_en max=500}}
                     {{{listing.short_note_en}}}<br />
-                    <a class="link" {{action 'showFullNote' listing.full_note_en}}>See full note</a>
+                    <a class="see-full-note" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
                   {{else}}
                     {{{listing.full_note_en}}}
                   {{/sizeGt}}
