@@ -1,11 +1,11 @@
 <ul class="tabset subtabset">
   <li>
-    {{#view Species.TaxonomyToggle option="listings" valueBinding="controller.euLegislation"}}
+    {{#view Species.ToggleButton option="listings" valueBinding="controller.euLegislation"}}
       LISTINGS
     {{/view}}
   </li>
   <li class="last-child">
-    {{#view Species.TaxonomyToggle option="decisions" valueBinding="controller.euLegislation"}}
+    {{#view Species.ToggleButton option="decisions" valueBinding="controller.euLegislation"}}
       EU DECISIONS
     {{/view}}
   </li>
@@ -18,7 +18,8 @@
     <div class="col">
       <div class="popup-area">
         {{view Species.AppendixButton
-          controllerBinding="controller"
+          selectedAppendicesBinding="controller.selectedAppendices"
+          appendicesBinding="controller.appendices"
         }}
         <div class="popup-holder-appendix">
           <div class="popup">
@@ -35,7 +36,7 @@
     <div class="col">
       <strong class="heading">ADDITIONAL DATA</strong>
       <div class="row">
-        <input type="checkbox" id="check" />
+        {{view Ember.Checkbox checkedBinding="includeCites"}}
         <label for="check">Include CITES appendices</label>
       </div>
     </div>
@@ -60,27 +61,30 @@
     {{view Species.StartDownloadButton controllerBinding="controller"}}
   </div>
 {{/view}}
-{{#view Species.DownloadsForLegislation isVisibleBinding="controller.legislationIsEuDecisions"}}
+{{#view Species.DownloadsForLegislation
+  isVisibleBinding="controller.legislationIsEuDecisions"
+  controllerBinding="controllers.downloadsForEuDecisions"
+}}
   <div class="doc-type">
     <strong class="heading">DOCUMENT TYPE</strong>
     <div class="typy-columns">
       <div class="col">
         <div class="row">
-          <input type="checkbox" id="item" />
+          {{view Ember.Checkbox checkedBinding="negativeOpinions"}}
           <label for="item">SRG Negative Opinions</label>
         </div>
         <div class="row">
-          <input type="checkbox" id="item01" />
+          {{view Ember.Checkbox checkedBinding="noOpinions"}}
           <label for="item01">SRG No Opinions</label>
         </div>
       </div>
       <div class="col">
         <div class="row">
-          <input type="checkbox" id="item02" />
+          {{view Ember.Checkbox checkedBinding="positiveOpinions"}}
           <label for="item02">SRG Positive Opinions</label>
         </div>
         <div class="row">
-          <input type="checkbox" id="item03" />
+          {{view Ember.Checkbox checkedBinding="suspensions"}}
           <label for="item03">Suspensions</label>
         </div>
       </div>
@@ -89,20 +93,41 @@
   <div class="info-columns">
     <div class="col">
       <ul class="tab-link">
-        <li><a href="#">CURRENT</a></li>
-        <li class="last-child active"><a href="#">ALL</a></li>
+        <li>
+          {{#view Species.ToggleButton option="current" valueBinding="controller.timeScope"}}
+            CURRENT
+          {{/view}}
+        </li>
+        <li class="last-child">
+          {{#view Species.ToggleButton option="all" valueBinding="controller.timeScope"}}
+            ALL
+          {{/view}}
+        </li>
       </ul>
     </div>
     <div class="col">
-      <a href="#" class="link">YEAR</a>
+      {{#if timeScopeIsCurrent}}
+        Only current data has<br />been selected.
+      {{else}}
+        <div class="popup-area">
+          {{view Species.YearSearchButton selectedYearsBinding="controller.selectedYears"}}
+          {{view Species.YearSearchDropdown controllerBinding="controller"}}
+        </div>
+      {{/if}}
     </div>
   </div>
   <div class="bottom-columns">
     <div class="col">
-      <a href="#" class="link">TAXON</a>
+      <div class="popup-area">
+        {{view Species.HigherTaxaSearchButton controllerBinding="controller"}}
+        {{view Species.HigherTaxaSearchDropdown controllerBinding="controller"}}
+      </div>
     </div>
     <div class="col">
-      <a href="#" class="link">LOCATION</a>
+      <div class="popup-area">
+        {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}
+        {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
+      </div>
     </div>
   </div>
   <div class="btn-holder">
