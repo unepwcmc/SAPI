@@ -190,7 +190,8 @@ private
 
     ARRAY_TO_STRING(
       ARRAY_AGG(
-        '**' || species_listing_name || '** ' || strip_tags(listing_changes_mview.hash_full_note_en)
+        '**' || species_listing_name || '** ' || listing_changes_mview.hash_ann_symbol || ' ' 
+        || strip_tags(listing_changes_mview.hash_full_note_en)
         ORDER BY species_listing_name
       ),
       '\n'
