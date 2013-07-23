@@ -18,15 +18,18 @@
         <tr class="current">
           <td>&nbsp;</td>
           <td>
-            {{#if suspension.is_current}}
-            {{suspension.start_notification.effective_at_formatted}}
-            {{else}}
-            {{suspension.start_notification.effective_at_formatted}}
-            - {{suspension.end_notification.effective_at_formatted}}</td>
-          {{/if}}
+            {{suspension.start_date}}
+            {{#unless suspension.is_current}}
+              - {{suspension.end_date}}
+            {{/unless}}
+          </td>
           <td>{{suspension.geo_entity.name}}</td>
-          <td>{{suspension.start_notification.name}}</td>
-          <td>{{suspension.notes}} {{suspension.url}}</td>
+          <td>
+            <a href="{{unbound suspension.start_notification.url}}">
+              {{suspension.start_notification.name}}
+            </a>
+          </td>
+          <td>{{{suspension.notes}}}</td>
           <td class="last">&nbsp;</td>
         </tr>
       {{else}}
@@ -56,14 +59,20 @@
             <tr>
               <td>&nbsp;</td>
               <td>
-                {{#if suspension.is_current}}
-                {{suspension.start_notification.effective_at_formatted}}
-                {{else}}
-                {{suspension.start_notification.effective_at_formatted}}
-                - {{suspension.end_notification.effective_at_formatted}}</td>
-              {{/if}}
+                {{suspension.start_date}}
+                {{#unless suspension.is_current}}
+                  - {{suspension.end_date}}
+                {{/unless}}
+              </td>
               <td>{{suspension.geo_entity.name}}</td>
-              <td>{{suspension.start_notification.name}}</td>
+              <td>
+                <a href="{{unbound suspension.start_notification.url}}">
+                  {{suspension.start_notification.name}}
+                </a>,
+                <a href="{{unbound suspension.end_notification.url}}">
+                  {{suspension.end_notification.name}}
+                </a>
+              </td>
               <td>{{suspension.notes}} {{suspension.url}}</td>
               <td class="last">&nbsp;</td>
             </tr>
