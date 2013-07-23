@@ -49,7 +49,7 @@ class Species::Search
           SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE :sci_name_prefix
         )
       ", :sci_name_prefix => "#{@scientific_name}%"
-      ])
+      ]).where(:name_status => 'A')
     end
   end
 

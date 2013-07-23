@@ -43,7 +43,7 @@ class Species::TaxonConceptPrefixMatcher
           SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE :sci_name_prefix
         )
       ", :sci_name_prefix => "#{@taxon_concept_query}%"
-      ])
+      ]).where(:name_status => 'A')
     end
   end
 
