@@ -19,17 +19,17 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       order("full_name")
   end
 
-
   def quotas
     object.quotas.joins(:geo_entity).
-      includes([:unit, :geo_entity]).
+      includes([:unit, :geo_entity => :geo_entity_type]).
       order("geo_entities.name_en ASC, trade_restrictions.notes ASC")
   end
 
   def cites_suspensions
     object.cites_suspensions.
+      includes(:geo_entity, :start_notification, :end_notification).
       joins([:start_notification, :geo_entity]).
-      order("is_current DESC, events.effective_at DESC, geo_entities.name_en ASC")
+      order("trade_restrictions.is_current DESC, events.effective_at DESC, geo_entities.name_en ASC")
   end
 
   def cites_listing_changes
@@ -53,7 +53,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     eu = Designation.find_by_name(Designation::EU)
     MListingChange.
       where(:taxon_concept_id => object.id, :show_in_history => true, :designation_id => eu && eu.id).
-      includes(:event).
+      includes(:listing_change => :event).
       order("is_current DESC").
       order(<<-SQL
         effective_at DESC,
@@ -85,7 +85,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distributions
-    a = object.distributions.joins(:geo_entity).
+    object.distributions.joins(:geo_entity).
       select('geo_entities.name_en AS name_en').
       joins("LEFT JOIN taggings ON
         taggings.taggable_id = distributions.id
@@ -103,7 +103,12 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distribution_references
-    []
+    object.distributions.joins(:geo_entity).
+      joins(:distribution_references => :reference).
+      select("geo_entities.name_en AS country").
+      select("string_agg(\"references\".citation, '; ') AS country_references").
+      group('geo_entities.name_en').
+      order('geo_entities.name_en')
   end
 end
 

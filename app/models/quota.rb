@@ -29,10 +29,20 @@ class Quota < TradeRestriction
 
   validates :unit, :presence => true
 
+  #Each element of CSV columns can be either an array [display_text, method]
+  #or a single symbol if the display text and the method are the same
   CSV_COLUMNS = [
-    :id, :year, :party, :quota,
-    :unit_name, :publication_date,
-    :notes, :url, :public_display
+    :year, :party, :quota,
+    [:unit, :unit_name], :publication_date,
+    :notes, :url
   ]
+
+  def start_date_formatted
+    start_date ? start_date.strftime('%d/%m/%y') : Time.now.beginning_of_year.strftime("%d/%m/%y")
+  end
+
+  def end_date_formatted
+    end_date ? end_date.strftime('%d/%m/%y') : Time.now.end_of_year.strftime("%d/%m/%y")
+  end
 
 end

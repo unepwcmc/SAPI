@@ -1,8 +1,13 @@
+<div id="full-note-legal" style="display:none">
+  <a href="#" {{action "close"}} class="close">close</a>
+  <strong class="title">Full note</strong>
+  <div class="content"></div>
+</div>
 <div id="tab1">
   {{#with controllers.taxonConcept}}
     <div {{bindAttr class=":block anyHistoricCitesListings"}} id="cites_listings">
       <h2>CITES</h2>
-      {{ partial 'species/taxon_concept/cites_listing_changes' }}
+      {{ partial 'species/taxon_concept/cites_listings' }}
     </div>
 	
     <div {{bindAttr class=":block :add anyHistoricCitesQuotas"}} id="cites_quotas">
@@ -18,7 +23,7 @@
 
     <div {{bindAttr class=":block :add anyHistoricEuListings"}} id="eu_listings">
       <h2>EU Wildlife Trade Regulations</h2>
-      {{ partial 'species/taxon_concept/eu_listing_changes' }}
+      {{ partial 'species/taxon_concept/eu_listings' }}
     </div>
   {{/with}}
   <div class="block block01" id="eu_decisions">

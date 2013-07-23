@@ -25,7 +25,21 @@
           </td>
           <td>{{listing.party_full_name}}</td>
           <td>{{listing.effective_at_formatted}}</td>
-          <td>{{listing.full_note_en}}</td>
+          <td>
+            {{#if listing.hash_full_note_en}}
+              <a class="see-full-note" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
+                {{listing.hash_display}}
+              </a><br />
+            {{/if}}
+            {{#if listing.full_note_en}}
+              {{#sizeGt listing.full_note_en max=800}}
+                {{{listing.short_note_en}}}<br />
+                <a class="see-full-note" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
+              {{else}}
+                {{{listing.full_note_en}}}
+              {{/sizeGt}}
+            {{/if}}
+          </td>
           <td>{{listing.event_name}}</td>
           <td class="last">&nbsp;</td>
         </tr>
@@ -63,7 +77,21 @@
               </td>
               <td>{{listing.party_full_name}}</td>
               <td>{{listing.effective_at_formatted}}</td>
-              <td>{{listing.full_note_en}}</td>
+              <td>
+                {{#if listing.hash_full_note_en}}
+                  <a class="see-full-note" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
+                    {{listing.hash_display}}
+                  </a><br />
+                {{/if}}
+                {{#if listing.full_note_en}}
+                  {{#sizeGt listing.full_note_en max=800}}
+                    {{{listing.short_note_en}}}<br />
+                    <a class="see-full-note" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
+                  {{else}}
+                    {{{listing.full_note_en}}}
+                  {{/sizeGt}}
+                {{/if}}
+              </td>
               <td>{{listing.event_name}}</td>
               <td class="last">&nbsp;</td>
             </tr>

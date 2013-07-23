@@ -1,7 +1,7 @@
 class Species::CitesListingChangeSerializer < ActiveModel::Serializer
   attributes :is_current, :species_listing_name, :party_full_name,
    :effective_at_formatted, :short_note_en, :full_note_en, :auto_note,
-   :change_type, :is_addition
+   :change_type, :is_addition, :hash_full_note_en, :hash_display
 
   def change_type
     if object.change_type_name == ChangeType::RESERVATION_WITHDRAWAL
@@ -13,6 +13,11 @@ class Species::CitesListingChangeSerializer < ActiveModel::Serializer
  
   def is_addition
     object.change_type_name == ChangeType::ADDITION
+  end
+
+  def hash_display
+    return "" unless object.hash_ann_parent_symbol.present?
+    object.hash_ann_parent_symbol + object.hash_ann_symbol
   end
 end
 

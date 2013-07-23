@@ -717,12 +717,16 @@ form, fieldset {
 	font-weight: bold;
 	text-decoration: none;
 }
-#main .tabset > li > ul > li.has-dropdown > a {
+#main .tabset > li > ul > li.has-dropdown:hover > a {
 	padding: 0 0 1px;
 	margin: 0 0 -1px;
 	background: url(/assets/species/arrow07.png) no-repeat 50% 100%;
 }
+#main .tabset > li > ul > li.has-dropdown:hover ul, #main .tabset > li > ul > li.has-dropdown ul:hover {
+  display: block;
+}
 .has-dropdown ul {
+  display: none;
 	position: absolute;
 	left: -1px;
 	top: 45px;
@@ -805,6 +809,10 @@ form, fieldset {
 #main .block th.col10 { width: 159px; }
 #main .block th.col11 { width: 212px; }
 #main .block th.col12 { width: 670px; }
+
+#main #cites_suspensions.block th.col4 { width: 115px; }
+#main #cites_suspensions.block th.col5 { width: 418px; }
+
 #main .block a { color: #666; }
 #main .block td {
 	border-bottom: 1px solid #ccc;
@@ -812,7 +820,7 @@ form, fieldset {
 	padding: 12px 0;
 	line-height: 15px;
 }
-#main .block:hover td {
+#main .block.show_more:hover td {
   border-top: 1px solid #ccc;
   border-bottom: 0;
 }

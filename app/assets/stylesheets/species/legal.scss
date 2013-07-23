@@ -1,0 +1,52 @@
+a.see-full-note {
+  cursor: pointer;
+	background: url(/assets/species/sep01.png) repeat-x 0 100%;
+}
+
+#full-note-legal {
+	width: 590px;
+	margin-left: -295px;
+	position: fixed;
+	left: 50%;
+  top: 25%;
+	background: #f5f5f7;
+	-webkit-border-radius: 12px;
+	border-radius: 12px;
+	border: 1px solid #6d95b0;
+	z-index: 1000;
+  text-align: left;
+  .close {
+    width: 22px;
+    height: 22px;
+    overflow: hidden;
+    position: absolute;
+    right: -9px;
+    top: -6px;
+    text-indent: -9999px;
+    background: url(/assets/species/btn-close.png) no-repeat;
+  }
+  .title {
+    display: block;
+    font-size: 17px;
+    padding: 29px 32px 26px;
+    line-height: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #253848;
+    background: #8fb7cf;
+    border-bottom: 1px solid #6d95b0;
+    -webkit-border-radius: 12px 12px 0 0;
+    border-radius: 12px 12px 0 0;
+  }
+  .content{
+    padding: 32px;
+    overflow-y: auto;
+    background: #f5f5f7;
+    height: 400px;
+    p{
+      margin: 0 0 5px;
+      font-size: 13px;
+    }
+  }
+}
+
