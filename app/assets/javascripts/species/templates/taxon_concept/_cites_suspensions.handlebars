@@ -18,12 +18,11 @@
         <tr class="current">
           <td>&nbsp;</td>
           <td>
-            {{#if suspension.is_current}}
-            {{suspension.start_notification.effective_at_formatted}}
-            {{else}}
-            {{suspension.start_notification.effective_at_formatted}}
-            - {{suspension.end_notification.effective_at_formatted}}</td>
-          {{/if}}
+            {{suspension.start_date}}
+            {{#unless suspension.is_current}}
+              - {{suspension.end_date}}
+            {{/unless}}
+          </td>
           <td>{{suspension.geo_entity.name}}</td>
           <td>{{suspension.start_notification.name}}</td>
           <td>{{suspension.notes}} {{suspension.url}}</td>
@@ -56,12 +55,11 @@
             <tr>
               <td>&nbsp;</td>
               <td>
-                {{#if suspension.is_current}}
-                {{suspension.start_notification.effective_at_formatted}}
-                {{else}}
-                {{suspension.start_notification.effective_at_formatted}}
-                - {{suspension.end_notification.effective_at_formatted}}</td>
-              {{/if}}
+                {{suspension.start_date}}
+                {{#unless suspension.is_current}}
+                  - {{suspension.end_date}}
+                {{/unless}}
+              </td>
               <td>{{suspension.geo_entity.name}}</td>
               <td>{{suspension.start_notification.name}}</td>
               <td>{{suspension.notes}} {{suspension.url}}</td>
