@@ -24,7 +24,7 @@ class ExportsController < ApplicationController
       when 'CitesSuspensions'
         result = CitesSuspension.export params[:filters]
       when 'Listings'
-        result = ListingsExport.new(params[:filters]).export
+        result = Species::ListingsExportFactory.new(params[:filters]).export
     end
     if result.is_a?(Array)
       send_file result[0], result[1]

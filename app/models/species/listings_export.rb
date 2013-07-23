@@ -1,17 +1,13 @@
 require 'digest/sha1'
 require 'csv'
-class ListingsExport
+class Species::ListingsExport
   attr_reader :file_name, :public_file_name
 
-  def initialize(filters)
+  def initialize(designation, filters)
+    @designation = designation
     @filters = filters
     @taxon_concepts_ids = filters[:taxon_concepts_ids]
     @geo_entities_ids = filters[:geo_entities_ids]
-    @designation = if filters[:designation_id]
-      Designation.find(filters[:designation_id])
-    elsif filters[:designation]
-      Designation.find_by_name(filters[:designation].upcase)
-    end
     @include_cites = filters[:include_cites] && @designation.name == 'EU'
 
     #TODO this can go once we change the way appendix is matched

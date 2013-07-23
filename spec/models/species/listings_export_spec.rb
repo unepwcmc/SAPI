@@ -1,9 +1,9 @@
 require 'spec_helper'
-describe ListingsExport do
+describe Species::ListingsExport do
   include_context "Canis lupus"
   describe :path do
     subject {
-      ListingsExport.new({
+      Species::ListingsExportFactory.new({
         :designation_id => cites.id
       })
     }
@@ -12,7 +12,7 @@ describe ListingsExport do
   describe :export do
     context "when no results" do
       subject {
-        ListingsExport.new({
+        Species::ListingsExportFactory.new({
           :designation_id => cites.id,
           :species_listings_ids => [cites_I.id],
           :geo_entities_ids => [poland.id]
@@ -25,14 +25,14 @@ describe ListingsExport do
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/cites_listings")
         )
-        ListingsExport.any_instance.stub(:path).
+        Species::ListingsExport.any_instance.stub(:path).
           and_return("spec/public/downloads/cites_listings/")
       }
       after(:each){
         FileUtils.remove_dir("spec/public/downloads/cites_listings", true)
       }
       subject {
-        ListingsExport.new({
+        Species::ListingsExportFactory.new({
           :designation_id => cites.id,
           :species_listings_ids => [cites_I.id],
           :geo_entities_ids => [nepal.id]
@@ -57,7 +57,7 @@ describe ListingsExport do
     context "when CITES" do
       context "when Appendix I" do
         subject {
-          ListingsExport.new({
+          Species::ListingsExportFactory.new({
             :designation_id => cites.id,
             :species_listings_ids => [cites_I.id]
           })
@@ -66,7 +66,7 @@ describe ListingsExport do
 
         context "when Poland" do
           subject {
-            ListingsExport.new({
+            Species::ListingsExportFactory.new({
               :designation_id => cites.id,
               :species_listings_ids => [cites_I.id],
               :geo_entities_ids => [poland.id]
@@ -77,7 +77,7 @@ describe ListingsExport do
 
         context "when Nepal" do
           subject {
-            ListingsExport.new({
+            Species::ListingsExportFactory.new({
               :designation_id => cites.id,
               :species_listings_ids => [cites_I.id],
               :geo_entities_ids => [nepal.id]
@@ -88,7 +88,7 @@ describe ListingsExport do
       end
       context "when higher taxon ids" do
         subject {
-          ListingsExport.new({
+          Species::ListingsExportFactory.new({
             :designation_id => cites.id,
             :taxon_concepts_ids => [@family.id]
           })
@@ -99,7 +99,7 @@ describe ListingsExport do
     context "when EU" do
       context "when Annex A" do
         subject {
-          ListingsExport.new({
+          Species::ListingsExportFactory.new({
             :designation_id => eu.id,
             :species_listings_ids => [eu_A.id]
           })
@@ -108,7 +108,7 @@ describe ListingsExport do
 
         context "when Poland" do
           subject {
-            ListingsExport.new({
+            Species::ListingsExportFactory.new({
               :designation_id => eu.id,
               :species_listings_ids => [eu_A.id],
               :geo_entities_ids => [poland.id]
@@ -119,7 +119,7 @@ describe ListingsExport do
 
         context "when Nepal" do
           subject {
-            ListingsExport.new({
+            Species::ListingsExportFactory.new({
               :designation_id => eu.id,
               :species_listings_ids => [eu_A.id],
               :geo_entities_ids => [nepal.id]
@@ -130,7 +130,7 @@ describe ListingsExport do
       end
       context "when higher taxon ids" do
         subject {
-          ListingsExport.new({
+          Species::ListingsExportFactory.new({
             :designation_id => eu.id,
             :taxon_concepts_ids => [@family.id]
           })
