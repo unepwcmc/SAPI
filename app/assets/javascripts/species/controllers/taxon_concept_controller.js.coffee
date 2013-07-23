@@ -27,9 +27,9 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     if @get('citesSuspensions') == undefined
       return
     if @get('citesSuspensions').findProperty('is_current', false) == undefined
-      "no_hover"
-    else
       ""
+    else
+      "show_more"
   ).property('citesSuspensions')
   currentCitesListings: (->
     @get('citesListings').filterProperty('is_current', true)

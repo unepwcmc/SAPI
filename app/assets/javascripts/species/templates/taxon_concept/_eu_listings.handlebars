@@ -26,6 +26,11 @@
           <td>{{listing.party_full_name}}</td>
           <td>{{listing.effective_at_formatted}}</td>
           <td>
+            {{#if listing.hash_full_note_en}}
+              <a class="see-full-note" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
+                {{listing.hash_display}}
+              </a><br />
+            {{/if}}
             {{#if listing.full_note_en}}
               {{#sizeGt listing.full_note_en max=800}}
                 {{{listing.short_note_en}}}<br />
@@ -73,6 +78,11 @@
               <td>{{listing.party_full_name}}</td>
               <td>{{listing.effective_at_formatted}}</td>
               <td>
+                {{#if listing.hash_full_note_en}}
+                  <a class="see-full-note" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
+                    {{listing.hash_display}}
+                  </a><br />
+                {{/if}}
                 {{#if listing.full_note_en}}
                   {{#sizeGt listing.full_note_en max=800}}
                     {{{listing.short_note_en}}}<br />
