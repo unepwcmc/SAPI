@@ -163,6 +163,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     CREATE INDEX ON listing_changes_mview (show_in_downloads, taxon_concept_id, designation_id);
     CREATE INDEX ON listing_changes_mview (id);
     CREATE INDEX ON listing_changes_mview (taxon_concept_id);
+    CREATE INDEX ON listing_changes_mview (original_taxon_concept_id);
 
     --RAISE NOTICE 'Dropping all listing changes materialized view';
    -- DROP table IF EXISTS all_listing_changes_mview CASCADE;
