@@ -102,7 +102,7 @@ namespace :import do
           AND inclusion_taxon_concepts.taxonomy_id = #{taxonomy.id}
           LEFT JOIN new_annotations ON new_annotations.import_row_id = TMP.row_id
           LEFT JOIN annotations AS hash_annotations
-            ON UPPER(hash_annotations.parent_symbol || ' ' || hash_annotations.symbol) = BTRIM(UPPER(TMP.hash_note))
+            ON UPPER(hash_annotations.symbol || ' ' || hash_annotations.parent_symbol) = BTRIM(UPPER(TMP.hash_note))
           LEFT JOIN events ON events.id = hash_annotations.event_id AND events.designation_id = #{designation.id}
           LEFT JOIN events AS events2 ON events2.legacy_id = TMP.event_legacy_id AND events2.designation_id = #{designation.id};
       SQL

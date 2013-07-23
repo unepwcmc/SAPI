@@ -55,7 +55,9 @@ namespace :import do
               taxon_concepts.id AS taxon_concept_id,
               geo_entities.id AS geo_entity_id,
               start_notification.id AS start_notification_id,
+              start_notification.effective_at AS start_date,
               end_notification.id AS end_notification_id,
+              end_notification.effective_at AS end_date,
               ARRAY(
                 SELECT *
                 FROM UNNEST(ARRAY_AGG(exclusion_taxon_concepts.id)) s
@@ -99,7 +101,9 @@ namespace :import do
           taxon_concept_id,
           geo_entity_id,
           start_notification_id,
+          start_date,
           end_notification_id,
+          end_date,
           is_current,
           notes,
           type,
@@ -110,7 +114,9 @@ namespace :import do
           taxon_concept_id,
           geo_entity_id,
           start_notification_id,
+          start_date,
           end_notification_id,
+          end_date,
           is_current,
           notes,
           'CitesSuspension',
