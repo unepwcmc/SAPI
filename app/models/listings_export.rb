@@ -12,6 +12,7 @@ class ListingsExport
     elsif filters[:designation]
       Designation.find_by_name(filters[:designation].upcase)
     end
+    @include_cites = filters[:include_cites] && @designation.name == 'EU'
 
     #TODO this can go once we change the way appendix is matched
     #there should be an array of species listing ids in taxon_concepts_mview
@@ -109,17 +110,25 @@ private
   end
 
   def csv_column_headers
-    taxon_concept_columns.map do |c|
+    headers = taxon_concept_columns.map do |c|
       Checklist::ColumnDisplayNameMapping.column_display_name_for(c)
-    end + ['Party', 'Listed under', 'Full note', '# Full note']
+    end
+    if @include_cites
+      headers << 'CITES' + headers.pop
+    end
+    headers + ['Party', 'Listed under', 'Full note', '# Full note']
   end
 
   def taxon_concept_columns
-    [
+    columns = [
       :id, :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
       :genus_name, :species_name, :subspecies_name,
       :full_name, :author_year, :rank_name, :"#{@designation.name.downcase}_listing_original"
     ]
+    if @include_cites
+      columns << :cites_listing_original
+    end
+    columns
   end
 
   def select_columns
