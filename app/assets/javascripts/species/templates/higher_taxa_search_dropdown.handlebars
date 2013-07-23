@@ -1,0 +1,29 @@
+<div class="popup">
+  <div class="search-block01">
+    <div class="row01">
+      {{view Species.HigherTaxaSearchTextField
+        valueBinding="controller.taxonConceptQuery"
+        placeholder="Type to filter higher taxa"
+        autocomplete="off"
+      }}
+      <input type="submit" value="submit" />
+    </div>
+    <strong class="title01">SELECTED TAXA</strong>
+    {{collection Species.SelectedHigherTaxaCollectionView
+      contentBinding="controller.selectedTaxonConcepts"}}
+  </div>
+  <div class="list-holder">
+    <ul>
+    {{#each controller.autoCompleteTaxonConcepts}}
+      <li class="header">
+        <h2>{{this.rankName}}</h2>
+        {{collection Species.HigherTaxaCollectionView
+          contentBinding="taxonConcepts"}}
+      </li>
+    {{/each}}
+    </ul>
+
+  </div>
+</div>
+
+

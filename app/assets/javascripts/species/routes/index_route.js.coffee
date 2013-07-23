@@ -3,17 +3,29 @@ Species.IndexRoute = Ember.Route.extend
   setupController: ->
     geoEntitiesController = @controllerFor('geoEntities')
     geoEntitiesController.set('content', Species.GeoEntity.find())
+  
+    @controllerFor('higherTaxaCitesEu').set('content', 
+      Species.TaxonConcept.find({
+        taxonomy: 'cites_eu'
+        ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY']
+        autocomplete: true
+      })
+    )
+    @controllerFor('higherTaxaCms').set('content', 
+      Species.TaxonConcept.find({
+        taxonomy: 'cms'
+        ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY']
+        autocomplete: true
+      })
+    )
 
   renderTemplate: ->
-    indexController = @controllerFor('index')
-    searchController = @controllerFor('search')
-
     # Render the `index` template into
     # the default outlet, and display the `index`
     # controller.
     @render('index', {
       into: 'application',
-      controller: indexController
+      controller: @controllerFor('index')
     })
     # Render the `search_form` template into
     # the outlet `search`, and display the `search`
@@ -21,5 +33,5 @@ Species.IndexRoute = Ember.Route.extend
     @render('searchForm', {
       into: 'index',
       outlet: 'search',
-      controller: searchController
+      controller: @controllerFor('search')
     })

@@ -1,0 +1,12 @@
+<ul>
+{{#each controller.autoCompleteTaxonConcepts.meta.rank_headers}}
+  <li class="header">{{this.rank_name}}</li>
+
+  {{#each taxonConceptId in this.taxon_concept_ids}}
+    {{view Species.TaxonConceptAutoCompleteSuggestionView 
+      taxonConceptIdBinding="taxonConceptId"
+    }}
+  {{/each}}
+
+{{/each}}
+</ul>

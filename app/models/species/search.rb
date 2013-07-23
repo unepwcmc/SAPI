@@ -13,11 +13,12 @@ class Species::Search
   def initialize_params(options)
     options = Species::SearchParams.sanitize(options)
     options.keys.each { |k| instance_variable_set("@#{k}", options[k]) }
+    @scientific_name = @taxon_concept_query  #TODO handle advanced queries
   end
 
   def initialize_query
     @taxon_concepts_rel = MTaxonConcept.taxonomic_layout.
-      where(:rank_name => [Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY])
+      where(:rank_name => @ranks)
 
     @taxon_concepts_rel = if @taxonomy == :cms
       @taxon_concepts_rel.by_cms_taxonomy
@@ -41,7 +42,14 @@ class Species::Search
 
     unless @scientific_name.blank?
       @taxon_concepts_rel = @taxon_concepts_rel.
-        by_scientific_name(@scientific_name)
+      where([
+        "full_name ILIKE '#{@scientific_name}%'
+        OR
+        EXISTS (
+          SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE :sci_name_prefix
+        )
+      ", :sci_name_prefix => "#{@scientific_name}%"
+      ])
     end
   end
 

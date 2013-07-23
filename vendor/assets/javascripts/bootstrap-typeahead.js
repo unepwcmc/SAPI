@@ -138,15 +138,8 @@
       var that = this
 
       items = $(items).map(function (i, item) {
-        // Hack
-        if (item.charAt(0) == "_") {
-          item = item.substr(1)
-          i = $(that.options.header)
-            .attr('data-value', item).html(that.highlighter(item))
-        } else {
-          i = $(that.options.item).attr('data-value', item)
-          i.find('a').html(that.highlighter(item))
-        }
+        i = $(that.options.item).attr('data-value', item)
+        i.find('a').html(that.highlighter(item))
         return i[0]
       })
 
@@ -314,7 +307,6 @@
     source: []
   , items: 8
   , menu: '<ul class="typeahead dropdown-menu"></ul>'
-  , header: '<li class="typeahead header"></li>'
   , item: '<li><a href="#"></a></li>'
   , minLength: 1
   }

@@ -12,9 +12,12 @@ class Species::SearchParams < Hash
       :geo_entity_scope =>
         params[:geo_entity_scope] ? params[:geo_entity_scope].to_sym : nil,
       #filtering options
-      :scientific_name =>
-        params[:scientific_name] ? params[:scientific_name] : nil,
-      :geo_entities => params[:geo_entity_id].blank? ? [] : [params[:geo_entity_id]]
+      :taxon_concept_query =>
+        params[:taxon_concept_query] ? params[:taxon_concept_query] : nil,
+      :geo_entities => params[:geo_entity_id].blank? ? [] : [params[:geo_entity_id]],
+      :higher_taxa_ids => params[:higher_taxa_ids] ? params[:higher_taxa_ids] : nil,
+      :ranks => params[:ranks] ? 
+        Rank.dict & params[:ranks].map(&:upcase) : [Rank::SPECIES]
     }
     unless [:cites_eu, :cms].include? sanitized_params[:taxonomy]
       sanitized_params[:taxonomy] = :cites_eu

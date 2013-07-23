@@ -1,10 +1,10 @@
 Species.SearchController = Ember.Controller.extend
-  needs: ['geoEntities', 'taxonConcepts']
+  needs: ['geoEntities', 'taxonConcepts']  # Does it really need these?
   taxonomy: 'cites_eu'
   taxonConceptQuery: null
-  geoEntityId: null
+  taxonConceptsDropdownVisible: false
+  geoEntityQuery: null
   geoEntityIds: null
-  geoEntityAutoCompleteRegExp: null
 
   autoCompleteRegions: null
   autoCompleteCountries: null
@@ -16,26 +16,46 @@ Species.SearchController = Ember.Controller.extend
     @transitionToRoute('search', {
       taxonomy: @get('taxonomy'),
       taxon_concept_query: @get('taxonConceptQuery'),
-      geo_entity_id: @get('geoEntityId')
     })
 
   setFilters: (filtersHash) ->
     @set('taxonomy', filtersHash.taxonomy)
     @set('taxonConceptQuery', filtersHash.taxon_concept_query)
-    @set('geoEntityId', filtersHash.geo_entity_id)
 
   toParams: ->
-    scientific_name : this.get('scientificName')
-      
+    scientific_name: @get('scientificName')
 
-  geoEntityAutoCompleteRegExpObserver: ( ->
+  autoCompleteTaxonConcepts: ( ->
+    taxonConceptQuery = @get('taxonConceptQuery')
+    if !taxonConceptQuery || taxonConceptQuery.length < 3
+      return;
+
+    Species.TaxonConcept.find(
+      taxonomy: @get('taxonomy')
+      taxon_concept_query: taxonConceptQuery
+      ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY', 'GENUS', 'SPECIES']
+      autocomplete: true
+    )
+  ).property('taxonConceptQuery')
+
+  geoEntityQueryObserver: ( ->
+    re = new RegExp("^"+@get('geoEntityQuery'),"i")
+
     @set 'autoCompleteRegions', @get('controllers.geoEntities.regions')
     .filter (item, index, enumerable) =>
-      @get('geoEntityAutoCompleteRegExp').test item.get('name')
+      re.test item.get('name')
     @set 'autoCompleteCountries', @get('controllers.geoEntities.countries')
     .filter (item, index, enumerable) =>
-      @get('geoEntityAutoCompleteRegExp').test item.get('name')
-  ).observes('geoEntityAutoCompleteRegExp')
+      re.test item.get('name')
+  ).observes('geoEntityQuery')
+
+  regionsObserver: ( ->
+    @set('autoCompleteRegions', @get('controllers.geoEntities.regions'))
+  ).observes('controllers.geoEntities.regions.@each.didLoad')
+
+  countriesObserver: ( ->
+    @set('autoCompleteCountries', @get('controllers.geoEntities.countries'))
+  ).observes('controllers.geoEntities.countries.@each.didLoad')
 
   selectedGeoEntitiesObserver: ( ->
     @set 'geoEntityIds', @get('selectedGeoEntities').mapProperty('id')

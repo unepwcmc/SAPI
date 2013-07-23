@@ -1,26 +1,59 @@
 <div id="tab1">
   <div class="block block02">
     <strong class="title">CITES STANDARD REFERENCE</strong>
-    <table summary="data table">
-      <tbody>
-        {{#each reference in controllers.taxonConcept.standardReferences}}
-        <tr>
-          <td>{{reference.citation}}</td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
+    {{#unless controllers.taxonConcept.standardReference}}
+      <p class="empty">There is no CITES Standard Reference for this species.</p>
+    {{else}}
+      <table summary="data table">
+        <tbody>
+          {{#each reference in controllers.taxonConcept.standardReferences}}
+          <tr>
+            <td>{{reference.citation}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{/unless}}
   </div>
-  <div class="block block02 add">
-    <strong class="title">OTHER TAXONOMIC REFERENCES</strong>
+  {{#if controllers.taxonConcept.references}}
+    <div class="block block02 add">
+      <strong class="title">OTHER TAXONOMIC REFERENCES</strong>
+      <table summary="data table">
+        <tbody>
+          {{#each reference in controllers.taxonConcept.references}}
+          {{#unless reference.is_standard}}
+          <tr>
+            <td>{{reference.citation}}</td>
+          </tr>
+          {{/unless}}
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  {{/if}}
+  <div class="block add">
+    <strong class="title">DISTRIBUTION REFERENCES</strong>
     <table summary="data table">
-      <tbody>
-        {{#each reference in controllers.taxonConcept.references}}
-        {{#unless reference.is_standard}}
+      <thead>
         <tr>
-          <td>{{reference.citation}}</td>
+          <th class="col1">&nbsp;</th>
+          <th class="col11">COUNTRY</th>
+          <th class="col12">REFERENCES</th>
+          <th class="col1">&nbsp;</th>
         </tr>
-        {{/unless}}
+      </thead>
+      <tbody>
+        {{#each ref in controllers.taxonConcept.distributionReferences}}
+          <tr class="current">
+            <td>&nbsp;</td>
+            <td>{{ref.country}}</td>
+            <td>
+              {{#stringToArray ref.country_references splitter="; "}}
+                <span class="distrib_reference">{{this}}</span>
+              {{/stringToArray}}
+            </td>
+            <td class="last">&nbsp;</td>
+          </tr>
         {{/each}}
       </tbody>
     </table>

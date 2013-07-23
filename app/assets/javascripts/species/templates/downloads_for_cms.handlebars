@@ -1,0 +1,40 @@
+<div class="tab-content">
+  <div id="tab4">
+    <div class="three-columns">
+      <div class="col">
+        <div class="popup-area">
+          {{view Species.AppendixButton
+            selectedAppendicesBinding="controller.selectedAppendices"
+            appendicesBinding="controller.appendices"
+          }}
+          <div class="popup-holder-appendix">
+            <div class="popup">
+              <div class="list-holder">
+                {{collection Species.AppendixDropdownCollectionView 
+                  controllerBinding="controller"
+                  contentBinding="controller.appendices"
+                }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="popup-area">
+          {{view Species.HigherTaxaSearchButton controllerBinding="controller"}}
+          {{view Species.HigherTaxaSearchDropdown controllerBinding="controller"}}
+        </div>
+      </div>
+      <div class="col">
+        <div class="popup-area">
+          {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}
+          {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="btn-holder">     
+  {{view Species.StartDownloadButton controllerBinding="controller"}}
+</div>
+

@@ -171,6 +171,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     CREATE INDEX ON taxon_concepts_mview (cites_closest_listed_ancestor_id);
     CREATE INDEX ON taxon_concepts_mview (eu_closest_listed_ancestor_id);
     CREATE INDEX ON taxon_concepts_mview (cms_closest_listed_ancestor_id);
+    CREATE INDEX ON taxon_concepts_mview (taxonomy_is_cites_eu, rank_name); --this one used for Species+ autocomplete (both main and higher taxa in downloads)
 
   END;
   $$;

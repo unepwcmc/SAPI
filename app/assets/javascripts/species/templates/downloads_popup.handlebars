@@ -1,0 +1,28 @@
+<a href="#" {{action "close"}} class="close">close</a>
+<form action="#">
+  <fieldset>
+    <strong class="title">DOWNLOAD SPECIES LISTS</strong>
+    <ul class="tabset">
+      <li>
+          {{#view Species.ToggleButton option="cites" valueBinding="controller.designation"}}
+            CITES
+          {{/view}}
+      </li>
+      <li>
+          {{#view Species.ToggleButton option="eu" valueBinding="controller.designation"}}
+            EU
+          {{/view}}
+      </li>
+      <li class="last-child">
+          {{#view Species.ToggleButton option="cms" valueBinding="controller.designation"}}
+            CMS
+          {{/view}}
+      </li>
+    </ul>
+
+    {{view Species.DownloadsForCites isVisibleBinding="controller.designationIsCites"}}
+    {{view Species.DownloadsForEu isVisibleBinding="controller.designationIsEu"}}
+    {{view Species.DownloadsForCms isVisibleBinding="controller.designationIsCms" controllerBinding="controllers.downloadsForCmsListings"}}
+
+  </fieldset>
+</form>

@@ -1,11 +1,33 @@
 class Api::V1::TaxonConceptsController < ApplicationController
+  caches_action :index, :cache_path => Proc.new { |c| c.params }
+  cache_sweeper :taxon_concept_sweeper
 
   def index
-    @search = Species::Search.new(params)
-    @taxon_concepts = @search.results.page(params[:page]).per(5)
-    render :json => @taxon_concepts,
-      :each_serializer => Species::TaxonConceptSerializer,
-      :meta => {:total => @search.results.count}
+    if params[:autocomplete]
+      matcher = Species::TaxonConceptPrefixMatcher.new(params)
+      @taxon_concepts = matcher.taxon_concepts.limit(params[:per_page])
+      render :json => @taxon_concepts,
+        :each_serializer => Species::AutocompleteTaxonConceptSerializer,
+        :meta => {
+          :total => matcher.taxon_concepts.count,
+          :rank_headers => @taxon_concepts.map(&:rank_name).uniq.map do |r|
+            {
+              :rank_name => r, 
+              :taxon_concept_ids => @taxon_concepts.select{|tc| tc.rank_name == r}.map(&:id)
+            }
+          end
+        }
+    else
+      @search = Species::Search.new(params)
+      @taxon_concepts = @search.results.page(params[:page]).per(params[:per_page] || 10)
+      render :json => @taxon_concepts,
+        :each_serializer => Species::TaxonConceptSerializer,
+        :meta => {
+          :total => @search.results.count,
+          :higher_taxa_headers => Checklist::HigherTaxaInjector.new(@taxon_concepts).run_summary
+        }  
+    end
+
   end
 
   def show
@@ -18,11 +40,4 @@ class Api::V1::TaxonConceptsController < ApplicationController
       :serializer => Species::ShowTaxonConceptSerializer
   end
 
-  def autocomplete
-    matcher = Checklist::TaxonConceptPrefixMatcher.new(
-      :scientific_name => params[:scientific_name]
-    )
-    render :json => matcher.taxon_concepts.limit(params[:per_page]),
-      :each_serializer => Species::AutocompleteTaxonConceptSerializer
-  end
 end

@@ -1,48 +1,16 @@
-{{controller}}
-{{controller.taxonomy}}
-{{controller.geoEntityId}}
-{{controller.taxonConceptQuery}}
-{{view Ember.RadioButton title="CITES" option="cites_eu" group="search[taxonomy]"
-  valueBinding="controller.taxonomy"}}
-{{view Ember.RadioButton title="CMS" option="cms" group="search[taxonomy]"
-  valueBinding="controller.taxonomy"}}
+  <div class="links-area">
+    {{#view Species.ToggleButton option="cites_eu" valueBinding="controller.taxonomy"}}
+      CITES
+    {{/view}}
+    {{#view Species.ToggleButton option="cms" valueBinding="controller.taxonomy"}}
+      CMS
+    {{/view}}
+  </div>
 
+  {{view Species.TaxonConceptSearchView controllerBinding="controller"}}
 
-{{view Species.SearchTextField
-  valueBinding="controller.taxonConceptQuery"
-  id="scientific_name"
-  title="search"
-  placeholder="Species, higher taxon, synonym or common name..."
-  autocomplete="off"
-}}
-
-<div class="drop" style="display: none;" id="autocomplete-dropdown">
-  <img src="/images/decor-dropdown-light.png" alt="arrow for autocomplete dropdown boxclass="decor" width="24" height="13" >
-</div>
-
-
-
-
-<hr>
-
-{{view Species.GeoEntityTextField
-  valueBinding="controller.geoEntityAutoCompleteQuery"
-  placeholder="Type to filter countries or regions"
-  autocomplete="off"
-}}
-
-<h3>Selected Locations</h3>{{controller.geoEntityIds}}
-  {{collection Species.SelectedGeoEntitiesCollectionView
-  contentBinding="controller.selectedGeoEntities"}}
-
-<h3>Regions</h3>
-  {{collection Species.GeoEntitiesCollectionView
-  contentBinding="controller.autoCompleteRegions"}}
-
-<h3>Countries</h3>
-  {{collection Species.GeoEntitiesCollectionView
-  contentBinding="controller.autoCompleteCountries"}}
-
-<hr>
-
-<button {{action "loadTaxonConcepts"}}>Go!</button>
+  <div class="popup-area">
+    {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}   
+    {{view Species.GeoEntitiesSearchDropdown  controllerBinding="controller"}}
+  </div>
+  {{outlet count}}
