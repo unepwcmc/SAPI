@@ -32,8 +32,8 @@
               [{{listing.auto_note}}]
             {{/if}}
             {{#if listing.hash_full_note_en}}
-              <a class="see-full-note" {{action 'showFullNote' "Hash annotation" listing.hash_full_note_en}}>
-                {{listing.hash_ann_parent_symbol}}{{listing.hash_ann_symbol}}
+              <a class="see-full-note" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
+                {{listing.hash_display}}
               </a><br />
             {{/if}}
             {{#if listing.full_note_en}}
@@ -90,8 +90,8 @@
                   [{{listing.auto_note}}]<br />
                 {{/if}}
                 {{#if listing.hash_full_note_en}}
-                  <a class="see-full-note" {{action 'showFullNote' "Hash annotation" listing.hash_full_note_en}}>
-                    {{listing.hash_ann_parent_symbol}}{{listing.hash_ann_symbol}}
+                  <a class="see-full-note" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
+                    {{listing.hash_display}}
                   </a><br />
                 {{/if}}
                 {{#if listing.full_note_en}}
