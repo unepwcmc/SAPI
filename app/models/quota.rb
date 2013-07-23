@@ -29,10 +29,12 @@ class Quota < TradeRestriction
 
   validates :unit, :presence => true
 
+  #Each element of CSV columns can be either an array [display_text, method]
+  #or a single symbol if the display text and the method are the same
   CSV_COLUMNS = [
-    :id, :year, :party, :quota,
-    :unit_name, :publication_date,
-    :notes, :url, :public_display
+    :year, :party, :quota,
+    [:unit, :unit_name], :publication_date,
+    :notes, :url
   ]
 
 end

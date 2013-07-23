@@ -94,6 +94,13 @@ class TradeRestriction < ActiveRecord::Base
       { :filename => public_file_name, :type => 'text/csv' } ]
   end
 
+  #Gets the display text for each CSV_COLUMNS
+  def self.csv_columns_headers
+    self::CSV_COLUMNS.map do |b|
+      Array(b).first 
+    end.flatten
+  end
+
   def self.to_csv file_path, filters
     taxonomy_columns = [
       :kingdom_name, :phylum_name,
@@ -105,7 +112,7 @@ class TradeRestriction < ActiveRecord::Base
     limit = 1000
     offset = 0
     CSV.open(file_path, 'wb') do |csv|
-      csv << taxonomy_columns + ['Remarks'] + self::CSV_COLUMNS
+      csv << taxonomy_columns + ['Remarks'] + self.csv_columns_headers
       ids = []
       until (objs = self.includes([:m_taxon_concept, :geo_entity, :unit]).
              filter_is_current(filters["set"]).
@@ -118,7 +125,11 @@ class TradeRestriction < ActiveRecord::Base
           row = []
           row += self.fill_taxon_columns(q, taxonomy_columns)
           self::CSV_COLUMNS.each do |c|
-            row << q.send(c)
+            if c.is_a?(Array)
+              row << q.send(c[1])
+            else
+              row << q.send(c)
+            end
           end
           csv << row
           offset += limit
