@@ -51,6 +51,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     change_type_id, change_types.name AS change_type_name,
     change_types.designation_id AS designation_id,
     designations.name AS designation_name,
+    listing_changes.parent_id,
     listing_distributions.geo_entity_id AS party_id,
     geo_entities.iso_code2 AS party_iso_code,
     annotations.symbol AS ann_symbol,

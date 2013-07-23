@@ -3,6 +3,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
   def initialize(relation = MTaxonConcept.scoped, appendix_abbreviations = [], geo_entities_ids = [])
     @relation = relation
     @appendix_abbreviations = appendix_abbreviations
+    @original_geo_entities_ids = geo_entities_ids
     @geo_entities_ids = GeoEntity.nodes_and_descendants(geo_entities_ids).map(&:id)
     @geo_entities_in_clause = @geo_entities_ids.compact.join(',')
   end
@@ -54,13 +55,17 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
           -- and does not have an exclusion for the specified geo entities
           (
           #{
-            @geo_entities_ids.map do |geo_entity_id|
+            @original_geo_entities_ids.map do |geo_entity_id|
               <<-GEO_SQL
-                SELECT DISTINCT original_taxon_concept_id AS taxon_concept_id
+                SELECT DISTINCT listing_changes_mview.original_taxon_concept_id AS taxon_concept_id
                 FROM listing_changes_mview
+                INNER JOIN listing_changes_mview parent_listing_changes_mview
+                ON parent_listing_changes_mview.id = listing_changes_mview.parent_id 
+                AND parent_listing_changes_mview.is_current 
+                AND parent_listing_changes_mview.change_type_name = 'ADDITION'
                 INNER JOIN listing_distributions ON listing_changes_mview.id = listing_distributions.listing_change_id AND NOT is_party
-                WHERE is_current = 't' AND change_type_name = 'EXCEPTION'
-                #{"AND species_listing_id IN (#{@species_listings_in_clause})" unless @appendix_abbreviations.empty? }
+                WHERE listing_changes_mview.change_type_name = 'EXCEPTION'
+                #{"AND listing_changes_mview.species_listing_id IN (#{@species_listings_in_clause})" unless @appendix_abbreviations.empty? }
                 AND listing_distributions.geo_entity_id = #{geo_entity_id}
               GEO_SQL
             end.join ("\n            INTERSECT\n\n")
