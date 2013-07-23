@@ -37,7 +37,7 @@
               </a><br />
             {{/if}}
             {{#if listing.full_note_en}}
-              {{#sizeGt listing.full_note_en max=250}}
+              {{#sizeGt listing.full_note_en max=800}}
                 {{{listing.short_note_en}}}<br />
                 <a class="see-full-note" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
               {{else}}
@@ -95,7 +95,7 @@
                   </a><br />
                 {{/if}}
                 {{#if listing.full_note_en}}
-                  {{#sizeGt listing.full_note_en max=500}}
+                  {{#sizeGt listing.full_note_en max=800}}
                     {{{listing.short_note_en}}}<br />
                     <a class="see-full-note" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
                   {{else}}
