@@ -14,7 +14,7 @@ namespace :import do
         INSERT INTO "events" (legacy_id, designation_id, name, description, url, effective_at, type, subtype, created_at, updated_at)
         SELECT legacy_id, designations.id, #{TMP_TABLE}.name, description, url, effective_at,
           CASE
-            WHEN BTRIM(#{TMP_TABLE}.type) = 'Implementing' THEN 'EuRegulation'
+            WHEN BTRIM(#{TMP_TABLE}.type) = 'Basic and amendments' THEN 'EuRegulation'
             WHEN BTRIM(#{TMP_TABLE}.type) = 'Suspension' THEN 'EuSuspensionRegulation'
             WHEN BTRIM(#{TMP_TABLE}.type) = 'CITES Suspension Notification' THEN 'CitesSuspensionNotification'
             WHEN BTRIM(#{TMP_TABLE}.type) = 'CITES CoP' THEN 'CitesCop'
