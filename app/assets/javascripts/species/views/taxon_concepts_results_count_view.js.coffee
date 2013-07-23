@@ -3,4 +3,3 @@ Species.TaxonConceptsResultsCountView = Ember.View.extend
 
   didInsertElement: () ->
     $('.search-block').toggleClass('results')
-  

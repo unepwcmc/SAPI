@@ -22,7 +22,7 @@ Species.TaxonConcept = DS.Model.extend
   distributionReferences: DS.attr("array")
 
   autoCompleteSuggestion: ( ->
-    if @get('synonyms').length > 0
+    if @get('synonyms') != undefined && @get('synonyms').length > 0
       @get('fullName') + ' (' + @get('synonyms').join( ', ') + ')'
     else
       @get('fullName')
