@@ -28,10 +28,11 @@ test:
 
 staging:
   adapter: postgresql
-  database: sapi_staging
+  database: sapi_development
   pool: 10
-  username: wcmc
+  username: postgres
+  password: postgres
   host: localhost
-  port: 15432
+  port: 5432
   password: 
   template: template0
