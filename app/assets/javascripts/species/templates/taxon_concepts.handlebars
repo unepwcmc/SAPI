@@ -17,14 +17,14 @@
     </ul>
 
       {{#each id in header.taxon_concept_ids}}
-      <h2>
-        <a href="#/taxon_concepts/{{unbound id}}/legal">
-        {{#getItem id model="TaxonConcept" field="fullName"}}{{/getItem}} 
-          <span>
-          {{#getItem id model="TaxonConcept" field="authorYear"}}{{/getItem}}
-          </span>
-        </a>
-      </h2>
+        <h2>
+          <a href="/species/taxon_concepts/{{unbound id}}/legal">
+            {{#getItem id model="TaxonConcept" field="fullName"}}{{/getItem}} 
+            <span>
+            {{#getItem id model="TaxonConcept" field="authorYear"}}{{/getItem}}
+            </span>
+          </a>
+        </h2>
       {{/each}}
     {{/each}}
   </div>
