@@ -37,4 +37,12 @@ class Quota < TradeRestriction
     :notes, :url
   ]
 
+  def start_date_formatted
+    start_date ? start_date.strftime('%d/%m/%y') : Time.now.beginning_of_year.strftime("%d/%m/%y")
+  end
+
+  def end_date_formatted
+    end_date ? end_date.strftime('%d/%m/%y') : Time.now.end_of_year.strftime("%d/%m/%y")
+  end
+
 end

@@ -55,14 +55,6 @@ class TradeRestriction < ActiveRecord::Base
     publication_date ? publication_date.strftime('%d/%m/%y') : ''
   end
 
-  def start_date_formatted
-    start_date ? start_date.strftime('%d/%m/%y') : Time.now.beginning_of_year.strftime("%d/%m/%y")
-  end
-
-  def end_date_formatted
-    end_date ? end_date.strftime('%d/%m/%y') : Time.now.end_of_year.strftime("%d/%m/%y")
-  end
-
   def year
     start_date ? start_date.strftime('%Y') : ''
   end
@@ -148,7 +140,7 @@ class TradeRestriction < ActiveRecord::Base
       if taxon.name_status == 'A'
         columns << '' #no remarks
       else
-        columns << "#{trade_restriction.type} issued for #{taxon.name_status == 'S' ? 'synonym' : 'hybrid' } #{trade_restriction.taxon_concept.legacy_id} - #{trade_restriction.taxon_concept.legacy_type}"
+        columns << "Issued for #{taxon.name_status == 'S' ? 'synonym' : 'hybrid' } #{trade_restriction.taxon_concept.full_name}"
       end
       columns
     end
