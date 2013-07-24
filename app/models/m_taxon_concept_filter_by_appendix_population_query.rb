@@ -66,7 +66,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
                 INNER JOIN listing_distributions ON listing_changes_mview.id = listing_distributions.listing_change_id AND NOT is_party
                 WHERE listing_changes_mview.change_type_name = 'EXCEPTION'
                 #{"AND listing_changes_mview.species_listing_id IN (#{@species_listings_in_clause})" unless @appendix_abbreviations.empty? }
-                AND listing_distributions.geo_entity_id IN (#{@geo_entities_in_clause})
+                AND listing_distributions.geo_entity_id = (#{geo_entity_id})
               GEO_SQL
             end.join ("\n            INTERSECT\n\n")
           }

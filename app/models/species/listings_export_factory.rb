@@ -6,7 +6,7 @@ class Species::ListingsExportFactory
       Designation.find_by_name(filters[:designation].upcase)
     end
     if @designation && @designation.name == 'CMS'
-      Species::CmsListingsExport.new(@designation, filters)   
+      Species::CmsListingsExport.new(@designation, filters)
     else
       Species::ListingsExport.new(@designation, filters)
     end
