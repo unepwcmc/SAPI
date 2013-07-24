@@ -5,5 +5,5 @@ Species.TaxonConceptSearchResultView = Ember.View.extend
     Species.TaxonConcept.find(@get('taxonConceptId'))
   ).property('taxonConceptId')
   template: ( ->
-    Ember.Handlebars.compile('{{#linkTo "taxon_concept.legal" view.taxonConcept}}{{view.taxonConcept.fullName}} <span>{{view.taxonConcept.authorYear}}</span>{{/linkTo}}')
+    Ember.Handlebars.compile('{{#linkTo "taxon_concept.legal" view.taxonConcept}}{{unbound view.taxonConcept.fullName}} <span>{{unbound view.taxonConcept.authorYear}}</span>{{/linkTo}}')
   ).property()
