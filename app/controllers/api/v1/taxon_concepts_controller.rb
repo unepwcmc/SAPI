@@ -19,7 +19,7 @@ class Api::V1::TaxonConceptsController < ApplicationController
         }
     else
       @search = Species::Search.new(params)
-      @taxon_concepts = @search.results.page(params[:page]).per(params[:per_page] || 10)
+      @taxon_concepts = @search.results.page(params[:page]).per(params[:per_page] || 50)
       render :json => @taxon_concepts,
         :each_serializer => Species::TaxonConceptSerializer,
         :meta => {

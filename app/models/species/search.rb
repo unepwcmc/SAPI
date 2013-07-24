@@ -42,14 +42,8 @@ class Species::Search
 
     unless @scientific_name.blank?
       @taxon_concepts_rel = @taxon_concepts_rel.
-      where([
-        "full_name ILIKE '#{@scientific_name}%'
-        OR
-        EXISTS (
-          SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE :sci_name_prefix
-        )
-      ", :sci_name_prefix => "#{@scientific_name}%"
-      ]).where(:name_status => 'A')
+        by_scientific_name_wo_commons(@scientific_name).
+        where(:name_status => 'A')
     end
   end
 
