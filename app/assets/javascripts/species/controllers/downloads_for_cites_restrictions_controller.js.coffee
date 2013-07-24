@@ -91,5 +91,18 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
   )
 
   downloadUrl: ( ->
-    '/exports/download?' + $.param(@get('toParams'))
+    '/species/exports/download?' + $.param(@get('toParams'))
   ).property('toParams')
+
+  startDownload: () ->
+    $.ajax({
+      type: 'GET'
+      dataType: 'json'
+      url: @get('downloadUrl')
+    }).done((data) =>
+      if data.total > 0
+        window.location = @get('downloadUrl')
+        return
+      else
+        alert('No results')
+    )
