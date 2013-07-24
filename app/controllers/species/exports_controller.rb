@@ -1,21 +1,4 @@
 class Species::ExportsController < ApplicationController
-  # GET exports/
-  #
-  def index
-    @designations = Designation.order('name')
-    @cites = @designations.find_by_name(Designation::CITES)
-    @eu = @designations.find_by_name(Designation::EU)
-    @species_listings = SpeciesListing.order('name')
-    @geo_entities = GeoEntity.joins(:geo_entity_type).
-      where(:geo_entity_types => {:name => GeoEntityType::COUNTRY},
-            :geo_entities => { :is_current => true }).
-      order(:name_en)
-    @taxon_concepts = MTaxonConcept.
-      select([:"taxon_concepts_mview.id", :full_name, :"designations.id AS designation_id"]).
-      joins('JOIN designations ON designations.taxonomy_id = taxon_concepts_mview.taxonomy_id').
-      where(:rank_name => [Rank::CLASS, Rank::ORDER, Rank::FAMILY]).
-      order(:full_name)
-  end
 
   def download
     case params[:data_type]
