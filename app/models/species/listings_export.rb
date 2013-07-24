@@ -8,7 +8,7 @@ class Species::ListingsExport
     @filters = filters
     @taxon_concepts_ids = filters[:taxon_concepts_ids]
     @geo_entities_ids = filters[:geo_entities_ids]
-    @include_cites = filters[:include_cites] && @designation.name == 'EU'
+    @include_cites = @designation.name == 'EU' && filters[:include_cites] == "true"
 
     #TODO this can go once we change the way appendix is matched
     #there should be an array of species listing ids in taxon_concepts_mview
