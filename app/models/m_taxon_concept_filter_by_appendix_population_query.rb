@@ -1,8 +1,8 @@
 class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppendixQuery
 
-  def initialize(relation = MTaxonConcept.scoped, appendix_abbreviations = [], geo_entities_ids = [])
-    @relation = relation
-    @appendix_abbreviations = appendix_abbreviations
+  def initialize(relation, appendix_abbreviations, geo_entities_ids = [])
+    @relation = relation || MTaxonConcept.scoped
+    @appendix_abbreviations = appendix_abbreviations || []
     @original_geo_entities_ids = geo_entities_ids
     @geo_entities_ids = GeoEntity.nodes_and_descendants(geo_entities_ids).map(&:id)
     @geo_entities_in_clause = @geo_entities_ids.compact.join(',')

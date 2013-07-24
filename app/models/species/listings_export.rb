@@ -66,7 +66,7 @@ class Species::ListingsExport
     ).
     group(group_columns).
     order('taxon_concepts_mview.taxonomic_position')
-    rel = if @species_listings_ids && @geo_entities_ids
+    rel = if @geo_entities_ids
       MTaxonConceptFilterByAppendixPopulationQuery.new(
         rel, @species_listings_ids, @geo_entities_ids
       ).relation(@designation.name)
