@@ -38,6 +38,10 @@ Species.SearchController = Ember.Controller.extend
     )
   ).property('taxonConceptQuery')
 
+  taxonConceptQueryRe: ( ->
+    new RegExp("^"+@get('taxonConceptQuery'),"i")
+  ).property('taxonConceptQuery')
+
   geoEntityQueryObserver: ( ->
     re = new RegExp("^"+@get('geoEntityQuery'),"i")
 

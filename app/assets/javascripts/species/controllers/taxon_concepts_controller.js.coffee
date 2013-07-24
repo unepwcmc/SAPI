@@ -11,16 +11,6 @@ Species.TaxonConceptsController = Ember.ArrayController.extend
       @transitionToRoute('taxon_concept.legal', taxonConcept)
   ).observes("content.meta.didLoad")
 
-  customContent: null
-
-  loopMyContent: ->
-    test = []
-    @content.forEach (e, i) ->
-      t = {}
-      t.id = e.id
-      test.push t
-    @set "customContent", test
-
   newTaxonSearch: (q) ->
     searchController = @get('controllers.search')
     @set('controllers.search.taxonConceptQuery', q)
