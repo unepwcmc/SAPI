@@ -42,7 +42,7 @@ class Species::Search
 
     unless @scientific_name.blank?
       @taxon_concepts_rel = @taxon_concepts_rel.
-        by_scientific_name_wo_commons(@scientific_name).
+        by_name(@scientific_name, {:synonyms => true, :subspecies => true, :common_names => false}).
         where(:name_status => 'A')
     end
   end

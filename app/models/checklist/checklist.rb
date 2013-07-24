@@ -32,7 +32,10 @@ class Checklist::Checklist
 
     unless @scientific_name.blank?
       @taxon_concepts_rel = @taxon_concepts_rel.
-        by_scientific_name(@scientific_name)
+        by_name(
+          @scientific_name, 
+          {:synonyms => true, :common_names => true, :subspecies => false}
+        )
     end
 
     if @level_of_listing

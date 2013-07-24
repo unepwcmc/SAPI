@@ -104,12 +104,18 @@ class MTaxonConcept < ActiveRecord::Base
 
   scope :without_hidden, where("#{table_name}.cites_show = 't'")
 
-  scope :by_scientific_name, lambda { |scientific_name|
-    MTaxonConceptFilterByScientificNameWithDescendants.new(self, scientific_name).relation
+  scope :by_name, lambda { |name, match_options|
+    MTaxonConceptFilterByScientificNameWithDescendants.new(
+      self, name, match_options
+    ).relation
   }
-  scope :by_scientific_name_wo_commons, lambda { |scientific_name|
-    MTaxonConceptFilterByScientificNameWithDescendants.new(self, scientific_name).
-      relation_wo_common_names
+
+  scope :by_scientific_name, lambda { |scientific_name|
+    MTaxonConceptFilterByScientificNameWithDescendants.new(
+      self, 
+      scientific_name,
+      {:synonyms => true, :common_names => true, :subspecies => false}
+    ).relation
   }
 
   scope :at_level_of_listing, where(:cites_listed => 't')
