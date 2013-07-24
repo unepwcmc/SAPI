@@ -110,8 +110,9 @@ class TradeRestriction < ActiveRecord::Base
              filter_is_current(filters["set"]).
              filter_geo_entities(filters).
              filter_years(filters).
+             filter_taxon_concepts(filters).
              where(:public_display => true).
-             order([:start_date, :id]).limit(limit).
+             order([:start_date, :"trade_restrictions.id"]).limit(limit).
              offset(offset)).empty? do
         objs.each do |q|
           row = []
@@ -155,6 +156,21 @@ class TradeRestriction < ActiveRecord::Base
     def self.filter_geo_entities filters
       if filters.has_key?("geo_entities_ids")
         return where(:geo_entity_id => filters["geo_entities_ids"])
+      end
+      scoped
+    end
+
+    def self.filter_taxon_concepts filters
+      if filters.has_key?("taxon_concepts_ids")
+        conds_str = <<-SQL
+          ARRAY[
+            taxon_concepts_mview.id, taxon_concepts_mview.family_id, 
+            taxon_concepts_mview.order_id, taxon_concepts_mview.class_id, 
+            taxon_concepts_mview.phylum_id, taxon_concepts_mview.kingdom_id
+          ] && ARRAY[?]
+          OR taxon_concept_id IS NULL
+        SQL
+        return where(conds_str, filters["taxon_concepts_ids"].map(&:to_i))
       end
       scoped
     end
