@@ -1,4 +1,4 @@
-class ExportsController < ApplicationController
+class Species::ExportsController < ApplicationController
   # GET exports/
   #
   def index
@@ -24,12 +24,19 @@ class ExportsController < ApplicationController
       when 'CitesSuspensions'
         result = CitesSuspension.export params[:filters]
       when 'Listings'
-        result = ListingsExport.new(params[:filters]).export
+        result = Species::ListingsExportFactory.new(params[:filters]).export
     end
-    if result.is_a?(Array)
-      send_file result[0], result[1]
-    else
-      redirect_to exports_path, :notice => "There are no #{params[:data_type]} to download."
+    respond_to do |format|
+      format.html {
+        if result.is_a?(Array)
+          send_file result[0], result[1]
+        else 
+          redirect_to species_exports_path, :notice => "There are no #{params[:data_type]} to download."
+        end
+      }
+      format.json {
+        render :json => {:total => result.is_a?(Array) ? result.count : 0}
+      }
     end
   end
 end
