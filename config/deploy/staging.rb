@@ -36,6 +36,7 @@ servers.each do |server|
 run_locally "rsync -av ./public/assets/ rails@unepwcmc-012.vm.brightbox.net:#{deploy_to}/shared/assets;"
 end
 run_locally "rm -rf public/assets"
+run "ln -nfs #{deploy_to}/shared/assets #{deploy_to}/current/public/assets"
 end
 end
 
