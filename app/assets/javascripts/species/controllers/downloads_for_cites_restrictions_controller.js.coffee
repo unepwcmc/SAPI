@@ -22,6 +22,9 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
   years: [1975..2013]
   selectedYears: []
   documentType: 'CitesSuspensions'
+  documentTypeIsCitesSuspensions: ( ->
+    @get('documentType') == 'CitesSuspensions'
+  ).property('documentType')
 
   geoEntityOueryObserver: ( ->
     re = new RegExp("^"+@get('geoEntityQuery'),"i")
