@@ -26,8 +26,13 @@ class Species::ListingsExport
     end  
   end
 
-  def path
-    @path ||= "public/downloads/#{@designation.name.downcase}_listings/"
+  def resource_name
+    designation_name = ['cites', 'eu', 'cms'].find{ |d| d == @designation.name.downcase }
+    "#{designation_name}_listings"
+  end
+
+  def path 
+    @path ||= "public/downloads/#{resource_name}/"
   end
 
   def file_name
@@ -38,11 +43,14 @@ class Species::ListingsExport
 
   def export
     return false unless query.any?
-    @public_file_name = "#{@designation.name.downcase}_listings.csv"
+    @public_file_name = "#{resource_name}.csv"
     if !File.file?(file_name)
       to_csv
     end
-    [@file_name, {:filename => @public_file_name, :type => 'text/csv'}]
+    [
+      @file_name,
+      {:filename => @public_file_name, :type => 'text/csv'}
+    ]
   end
 
   def query
