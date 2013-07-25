@@ -1,5 +1,10 @@
 <div id="main">
   {{outlet search}}
+  {{#if matchInfo}}
+    <div id="match-info">
+      {{{matchInfo}}}
+    </div>
+  {{/if}}
   <div class="heading-holder">
     <h1>{{fullName}} <strong>{{authorYear}}</strong></h1>
     <ul class="list">
@@ -8,9 +13,6 @@
       <li><a href="#">{{mTaxonConcept.order_name}}</a></li>
       <li><a href="#">{{mTaxonConcept.family_name}}</a></li>
     </ul>
-    {{#unless matchedOnSelf}}
-      {{{matchInfo}}}
-    {{/unless}}
   </div>
   <ul class="tabset">
     <li>{{#linkTo 'taxon_concept.legal'}}LEGAL{{/linkTo}}
