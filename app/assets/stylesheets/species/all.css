@@ -820,8 +820,7 @@ form, fieldset {
 	padding: 12px 0;
 	line-height: 15px;
 }
-#main .block.show_more:hover td {
-  border-top: 1px solid #ccc;
+#main .block.show_more:hover td, #main .block.show_more tbody.historic_expanded tr td {
   border-bottom: 0;
 }
 #main .block.add { margin: 0 -px -1px; }
@@ -836,8 +835,11 @@ form, fieldset {
 	padding: 13px 0 12px;
 }
 
-#main .block .historic {
+#main .block .historic.hidden {
   display: none;
+}
+#main .block .historic thead{
+  line-height: 0;
 }
 
 #main .block tr.add td { padding: 16px 0 12px; }
