@@ -1,9 +1,9 @@
 <div id="main">
-  {{#unless matchedOnSelf}}
+  {{#if matchInfo}}
     <div id="match-info">
       {{{matchInfo}}}
     </div>
-  {{/unless}}
+  {{/if}}
   <div class="heading-holder">
     <h1>{{fullName}} <strong>{{authorYear}}</strong></h1>
     <ul class="list">
