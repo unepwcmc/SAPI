@@ -83,6 +83,8 @@ SAPI::Application.routes.draw do
   end
 
   namespace :species do
+    match 'exports' => 'exports#index'
+    match 'exports/download' => 'exports#download'
     get '*foo' => 'ember#start'
     root :to => 'ember#start'
   end
@@ -107,12 +109,6 @@ SAPI::Application.routes.draw do
     end
     resources :timelines, :only => [:index]
   end
-
-  match 'exports' => 'exports#index'
-  match 'exports/download' => 'exports#download'
-
-
-
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

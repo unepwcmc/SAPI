@@ -13,7 +13,7 @@
         <th class="col1">&nbsp;</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody {{bindAttr class="controller.citesListingsExpanded:historic_expanded"}}>
       {{#each listing in currentCitesListings}}
         <tr class="current">
           <td>&nbsp;</td>
@@ -59,7 +59,7 @@
     </tbody>
   </table>
   {{#if historicCitesListings}}
-    <div class="historic">
+    <div {{bindAttr class=":historic controller.citesListingsExpanded::hidden"}}>
       <table>
         <thead>
           <tr>

@@ -20,6 +20,7 @@
         {{view Species.AppendixButton
           selectedAppendicesBinding="controller.selectedAppendices"
           appendicesBinding="controller.appendices"
+          title="APPENDIX"
         }}
         <div class="popup-holder-appendix">
           <div class="popup">
@@ -87,14 +88,16 @@
       </ul>
     </div>
     <div class="col">
-      {{#if timeScopeIsCurrent}}
-        Only current data has<br />been selected.
-      {{else}}
-      <div class="popup-area">
-        {{view Species.YearSearchButton selectedYearsBinding="controller.selectedYears"}}
-        {{view Species.YearSearchDropdown controllerBinding="controller"}}
-      </div>
-      {{/if}}
+      {{#unless documentTypeIsCitesSuspensions}}
+        {{#if timeScopeIsCurrent}}
+          Only current data has<br />been selected.
+        {{else}}
+          <div class="popup-area">
+            {{view Species.YearSearchButton selectedYearsBinding="controller.selectedYears"}}
+            {{view Species.YearSearchDropdown controllerBinding="controller"}}
+          </div>
+        {{/if}}
+      {{/unless}}
     </div>
   </div>
   <div class="bottom-columns">
