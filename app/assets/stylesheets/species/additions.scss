@@ -8,9 +8,16 @@ span.distrib_reference {
   display: block;
 }
 
-#match-info{
-  color: #2d3237;
-  font-size: 14px;
+#match-info {
+  color: #243748;
+  font-size: 16px;
   border-bottom: 1px solid #6B93AF;
   border-top: 1px solid #6B93AF;
+  padding: 15px 0 15px 30px;
+  text-align: left;
+  background: #8FB7CF;
+
+  i {
+    font-style: italic;
+  }
 }
