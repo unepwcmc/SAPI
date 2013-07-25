@@ -20,6 +20,7 @@ Species.TaxonConcept = DS.Model.extend
   euListings: DS.attr("array")
   matchingNames: DS.attr("string")
   distributionReferences: DS.attr("array")
+  taxonomy: DS.attr("string")
 
   autoCompleteSuggestion: ( ->
     if @get('synonyms') != undefined && @get('synonyms').length > 0

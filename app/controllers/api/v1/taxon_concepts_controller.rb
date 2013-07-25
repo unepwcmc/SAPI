@@ -1,5 +1,6 @@
 class Api::V1::TaxonConceptsController < ApplicationController
   caches_action :index, :cache_path => Proc.new { |c| c.params }
+  caches_action :show, :cache_path => Proc.new { |c| c.params }
   cache_sweeper :taxon_concept_sweeper
 
   def index
@@ -35,7 +36,8 @@ class Api::V1::TaxonConceptsController < ApplicationController
       includes(:common_names => :language,
                :distributions => :geo_entity,
                :quotas => :geo_entity,
-               :cites_suspensions => :geo_entity).first
+               :cites_suspensions => :geo_entity).
+      includes(:taxonomy).first
     render :json => @taxon_concept,
       :serializer => Species::ShowTaxonConceptSerializer
   end
