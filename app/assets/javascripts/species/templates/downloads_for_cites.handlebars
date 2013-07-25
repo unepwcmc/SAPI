@@ -49,6 +49,12 @@
   </div> 
   <div class="btn-holder">     
     {{view Species.StartDownloadButton controllerBinding="controller"}}
+    <div class="message-area">
+      {{#if controller.downloadInProgress}}
+        <img src="assets/loading.gif">
+      {{/if}}
+      {{controller.downloadMessage}}
+    </div>
   </div>
 {{/view}}
 {{#view Species.DownloadsForLegislation 
@@ -116,5 +122,11 @@
   </div>
   <div class="btn-holder">     
     {{view Species.StartDownloadButton controllerBinding="controller"}}
+    <div class="message-area">
+      {{#if controller.downloadInProgress}}
+        <img src="assets/loading.gif">
+      {{/if}}
+      {{controller.downloadMessage}}
+    </div>
   </div>
 {{/view}}
