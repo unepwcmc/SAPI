@@ -1,29 +1,31 @@
 <div id="tab1">
-  <div class="block block02 show_more" id="common_names">
+  <div {{bindAttr class=":block :block02 controllers.taxonConcept.anyNonConventionCommonNames"}} id="common_names">
     <strong class="title">COMMON NAMES</strong>
-    <table summary="data table" id="common_names">
-      <thead>
-        <tr>
-          <th class="col11">LANGUAGE</th>
-          <th class="col12">NAME</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each commonName in controllers.taxonConcept.commonNames}}
-          <tr {{ bindAttr class="commonName.convention_language::historic commonNamesExpanded::hidden"}}>
-            <td>{{commonName.lang}}</td>
-            <td>{{commonName.names}}</td>
+    {{#if controllers.taxonConcept.commonNames}}
+      <table summary="data table" id="common_names">
+        <thead>
+          <tr>
+            <th class="col11">LANGUAGE</th>
+            <th class="col12">NAME</th>
           </tr>
-        {{/each}}
-      </tbody>
-    </table>
-    <div {{bindAttr class=":btn-hloder commonNamesExpanded:expanded"}}>
-      {{#if controller.commonNamesExpanded}}
-        <a href="#" class="link" {{action 'contractList' 'common_names' 'commonNamesExpanded'}}>HIDE EXTRA LANGUAGES</a>
-      {{else}}
-        <a href="#" class="link" {{action 'expandList' 'common_names' 'commonNamesExpanded'}}>SHOW MORE LANGUAGES</a>
-      {{/if}}
-    </div>
+        </thead>
+        <tbody>
+          {{#each commonName in controllers.taxonConcept.commonNames}}
+            <tr {{ bindAttr class="commonName.convention_language::historic commonNamesExpanded::hidden"}}>
+              <td>{{commonName.lang}}</td>
+              <td>{{commonName.names}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      <div {{bindAttr class=":btn-hloder commonNamesExpanded:expanded"}}>
+        {{#if controller.commonNamesExpanded}}
+          <a href="#" class="link" {{action 'contractList' 'common_names' 'commonNamesExpanded'}}>HIDE EXTRA LANGUAGES</a>
+        {{else}}
+          <a href="#" class="link" {{action 'expandList' 'common_names' 'commonNamesExpanded'}}>SHOW MORE LANGUAGES</a>
+        {{/if}}
+      </div>
+    {{/if}}
   </div>
   <div class="block04" id="synonyms">
     <strong class="title">SYNONYMS</strong>

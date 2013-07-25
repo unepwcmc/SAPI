@@ -1,36 +1,34 @@
 Species.TaxonConceptController = Ember.ObjectController.extend
   anyHistoricCitesListings: ( ->
-    if @get('citesListings') == undefined
-      return
-    if @get('citesListings').findProperty('is_current', false) == undefined
-      ""
-    else
+    if @get('citesListings') != undefined && @get('citesListings').findProperty('is_current', false) != undefined
       "show_more"
+    else
+      ""
   ).property('citesListings')
   anyHistoricEuListings: ( ->
-    if @get('euListings') == undefined
-      return
-    if @get('euListings').findProperty('is_current', false) == undefined
-      ""
-    else
+    if @get('euListings') != undefined && @get('euListings').findProperty('is_current', false) != undefined
       "show_more"
+    else
+      ""
   ).property('euListings')
   anyHistoricCitesQuotas: ( ->
-    if @get('citesQuotas') == undefined
-      return
-    if @get('citesQuotas').findProperty('is_current', false) == undefined
-      ""
-    else
+    if @get('citesQuotas') != undefined && @get('citesQuotas').findProperty('is_current', false) != undefined
       "show_more"
+    else
+      ""
   ).property('citesQuotas')
   anyHistoricCitesSuspensions: ( ->
-    if @get('citesSuspensions') == undefined
-      return
-    if @get('citesSuspensions').findProperty('is_current', false) == undefined
-      ""
-    else
+    if @get('citesSuspensions') != undefined && @get('citesSuspensions').findProperty('is_current', false) != undefined
       "show_more"
+    else
+      ""
   ).property('citesSuspensions')
+  anyNonConventionCommonNames: ( ->
+    if @get('commonNames') != undefined && @get('commonNames').findProperty('convention_language', false) != undefined
+      "show_more"
+    else
+      ""
+  ).property('commonNames')
   currentCitesListings: (->
     @get('citesListings').filterProperty('is_current', true)
   ).property('citesListings')
