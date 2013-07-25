@@ -1,5 +1,5 @@
 Species.SearchController = Ember.Controller.extend
-  needs: ['geoEntities', 'taxonConcepts']  # Does it really need these?
+  needs: ['geoEntities']
   taxonomy: 'cites_eu'
   taxonConceptQuery: null
   taxonConceptsDropdownVisible: false
