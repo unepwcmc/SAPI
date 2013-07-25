@@ -68,7 +68,7 @@ class TradeRestriction < ActiveRecord::Base
   end
 
   def self.export filters
-    return false if !self.any?
+    return false unless export_query(filters).any?
     path = "public/downloads/#{self.to_s.tableize}/"
     latest = self.order("updated_at DESC").
       limit(1).first.updated_at.strftime("%d%m%Y")
@@ -82,8 +82,20 @@ class TradeRestriction < ActiveRecord::Base
     if !File.file?(path+file_name)
       self.to_csv(path+file_name, filters)
     end
-    [ path+file_name,
-      { :filename => public_file_name, :type => 'text/csv' } ]
+    [
+      path + file_name,
+      { :filename => public_file_name, :type => 'text/csv' }
+    ]
+  end
+
+  def self.export_query filters
+    self.includes([:m_taxon_concept, :geo_entity, :unit]).
+      filter_is_current(filters["set"]).
+      filter_geo_entities(filters).
+      filter_years(filters).
+      filter_taxon_concepts(filters).
+      where(:public_display => true).
+      order([:start_date, :"trade_restrictions.id"])
   end
 
   #Gets the display text for each CSV_COLUMNS
@@ -106,13 +118,7 @@ class TradeRestriction < ActiveRecord::Base
     CSV.open(file_path, 'wb') do |csv|
       csv << taxonomy_columns + ['Remarks'] + self.csv_columns_headers
       ids = []
-      until (objs = self.includes([:m_taxon_concept, :geo_entity, :unit]).
-             filter_is_current(filters["set"]).
-             filter_geo_entities(filters).
-             filter_years(filters).
-             filter_taxon_concepts(filters).
-             where(:public_display => true).
-             order([:start_date, :"trade_restrictions.id"]).limit(limit).
+      until (objs = export_query(filters).limit(limit).
              offset(offset)).empty? do
         objs.each do |q|
           row = []
@@ -155,7 +161,10 @@ class TradeRestriction < ActiveRecord::Base
 
     def self.filter_geo_entities filters
       if filters.has_key?("geo_entities_ids")
-        return where(:geo_entity_id => filters["geo_entities_ids"])
+        geo_entities_ids = GeoEntity.nodes_and_descendants(
+          filters["geo_entities_ids"]
+        ).map(&:id)
+        return where(:geo_entity_id => geo_entities_ids)
       end
       scoped
     end
