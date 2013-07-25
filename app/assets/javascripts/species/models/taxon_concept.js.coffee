@@ -28,15 +28,3 @@ Species.TaxonConcept = DS.Model.extend
     else
       @get('fullName')
   ).property('fullName', 'synonyms')
-
-
-Species.TaxonConcept.FIXTURES = [
-  id: 2751
-  fullName: "Antilocapra americana"
-  rankName: "SPECIES"
-,
-  id: 10887
-  fullName: "Antilocapra americana mexicana"
-  rankName: "SUBSPECIES"
-
-]

@@ -62,10 +62,12 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     else
       "show_more"
   ).property('commonNames')
-  matchedOnSelf: ( ->
-    return true if @get('controllers.search.taxonConceptQueryRe') == null
-    @get('controllers.search.taxonConceptQueryRe').test(@get('fullName'))
-  ).property('controllers.search.taxonConceptQueryRe')
+  contentObserver: ( ->
+    matchedOnSelf = true
+    unless @get('controllers.search.taxonConceptQueryRe') == null
+      matchedOnSelf = @get('controllers.search.taxonConceptQueryRe').test(@get('fullName'))
+    @set('matchedOnSelf', matchedOnSelf)
+  ).observes('content.didLoad')
   matchedOnSynonym: ( ->
     if @get('synonyms') == undefined || @get('matchedOnSelf') || @get('controllers.search.taxonConceptQueryRe') == null
       return null
