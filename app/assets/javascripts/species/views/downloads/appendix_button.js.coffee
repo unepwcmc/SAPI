@@ -12,7 +12,7 @@ Species.AppendixButton = Ember.View.extend
     selectedAppendices = @get('selectedAppendices')
     appendices = @get('appendices')
     if (selectedAppendices.length == 0 || selectedAppendices.length == appendices.length)
-      return "APPENDIX"
+      return @get('title')
     else
       return selectedAppendices.sort().join(" & ")
   ).property("selectedAppendices.@each")

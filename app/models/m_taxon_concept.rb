@@ -71,8 +71,6 @@ class MTaxonConcept < ActiveRecord::Base
   include PgArrayParser
   self.table_name = :taxon_concepts_mview
   self.primary_key = :id
-  attr_accessor :closest_listed_ancestor_full_name_with_spp,
-    :closest_listed_ancestor_full_note_en, :closest_listed_ancestor_hash_full_note_en
 
   belongs_to :taxon_concept, :foreign_key => :id
   has_many :listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange
@@ -94,9 +92,6 @@ class MTaxonConcept < ActiveRecord::Base
     :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'" +
       " AND designation_name = '#{Designation::CMS}'",
     :order => 'effective_at DESC, species_listing_name ASC'
-  belongs_to :cites_closest_listed_ancestor, :class_name => MTaxonConcept
-  belongs_to :eu_closest_listed_ancestor, :class_name => MTaxonConcept
-  belongs_to :cms_closest_listed_ancestor, :class_name => MTaxonConcept
   scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
   scope :by_cms_taxonomy, where(:taxonomy_is_cites_eu => false)
 
@@ -104,8 +99,18 @@ class MTaxonConcept < ActiveRecord::Base
 
   scope :without_hidden, where("#{table_name}.cites_show = 't'")
 
+  scope :by_name, lambda { |name, match_options|
+    MTaxonConceptFilterByScientificNameWithDescendants.new(
+      self, name, match_options
+    ).relation
+  }
+
   scope :by_scientific_name, lambda { |scientific_name|
-    MTaxonConceptFilterByScientificNameWithDescendants.new(self, scientific_name).relation
+    MTaxonConceptFilterByScientificNameWithDescendants.new(
+      self, 
+      scientific_name,
+      {:synonyms => true, :common_names => true, :subspecies => false}
+    ).relation
   }
 
   scope :at_level_of_listing, where(:cites_listed => 't')
@@ -195,15 +200,7 @@ class MTaxonConcept < ActiveRecord::Base
   # returns the ids of parties associated with current listing changes
   # used only for CITES Checklist atm, therefore a designation filter is applied
   def current_parties_ids
-    if current_cites_additions.size > 0
-      current_cites_additions.map(&:party_id)
-    else
-      inherited_current_cites_additions = cites_closest_listed_ancestor &&
-        cites_closest_listed_ancestor.current_cites_additions
-      #inherited listing -- find closest ancestor with listing changes
-      cites_closest_listed_ancestor &&
-        inherited_current_cites_additions.map(&:party_id) || []
-    end.compact
+    current_cites_additions.map(&:party_id).compact.uniq
   end
 
   # returns the current listing changes

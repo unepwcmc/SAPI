@@ -9,22 +9,17 @@
     
     <ul class="result-list">
       {{#stringToArray header.higher_taxon.ancestors_path splitter=","}}
-      <li>
-        {{view Species.TaxonConceptLinkView}}
-      </li>
+        <li>
+          {{view Species.TaxonConceptLinkView}}
+        </li>
       {{/stringToArray}}
       <li>{{header.higher_taxon.rank_name}}</li>
     </ul>
 
-      {{#each id in header.taxon_concept_ids}}
-      <h2>
-        <a href="#/taxon_concepts/{{unbound id}}/legal">
-        {{#getItem id model="TaxonConcept" field="fullName"}}{{/getItem}} 
-          <span>
-          {{#getItem id model="TaxonConcept" field="authorYear"}}{{/getItem}}
-          </span>
-        </a>
-      </h2>
+      {{#each taxonConceptId in header.taxon_concept_ids}}
+        {{view Species.TaxonConceptSearchResultView
+          taxonConceptIdBinding="taxonConceptId"
+        }}
       {{/each}}
     {{/each}}
   </div>

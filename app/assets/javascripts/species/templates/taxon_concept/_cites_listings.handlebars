@@ -13,7 +13,7 @@
         <th class="col1">&nbsp;</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody {{bindAttr class="controller.citesListingsExpanded:historic_expanded"}}>
       {{#each listing in currentCitesListings}}
         <tr class="current">
           <td>&nbsp;</td>
@@ -37,7 +37,7 @@
               </a><br />
             {{/if}}
             {{#if listing.full_note_en}}
-              {{#sizeGt listing.full_note_en max=250}}
+              {{#sizeGt listing.full_note_en max=800}}
                 {{{listing.short_note_en}}}<br />
                 <a class="see-full-note" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
               {{else}}
@@ -59,7 +59,7 @@
     </tbody>
   </table>
   {{#if historicCitesListings}}
-    <div class="historic">
+    <div {{bindAttr class=":historic controller.citesListingsExpanded::hidden"}}>
       <table>
         <thead>
           <tr>
@@ -95,7 +95,7 @@
                   </a><br />
                 {{/if}}
                 {{#if listing.full_note_en}}
-                  {{#sizeGt listing.full_note_en max=500}}
+                  {{#sizeGt listing.full_note_en max=800}}
                     {{{listing.short_note_en}}}<br />
                     <a class="see-full-note" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
                   {{else}}

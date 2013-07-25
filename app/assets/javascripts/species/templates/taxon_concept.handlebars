@@ -1,11 +1,38 @@
 <div id="main">
+  {{outlet search}}
+  {{#if matchInfo}}
+    <div id="match-info">
+      {{{matchInfo}}}
+    </div>
+  {{/if}}
   <div class="heading-holder">
     <h1>{{fullName}} <strong>{{authorYear}}</strong></h1>
     <ul class="list">
-      <li><a href="#">{{mTaxonConcept.phylum_name}}</a></li>
-      <li><a href="#">{{mTaxonConcept.class_name}}</a></li>
-      <li><a href="#">{{mTaxonConcept.order_name}}</a></li>
-      <li><a href="#">{{mTaxonConcept.family_name}}</a></li>
+      <li>
+        <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound mTaxonConcept.phylum_name}}" {{action 'searchFor' mTaxonConcept.phylum_name}}>
+          {{mTaxonConcept.phylum_name}}
+        </a>
+      </li>
+      <li>
+        <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound mTaxonConcept.phylum_name}}" {{action 'searchFor' mTaxonConcept.phylum_name}}>
+          {{mTaxonConcept.phylum_name}}
+        </a>
+      </li>
+      <li>
+        <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound mTaxonConcept.class_name}}" {{action 'searchFor' mTaxonConcept.class_name}}>
+          {{mTaxonConcept.class_name}}
+        </a>
+      </li>
+      <li>
+        <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound mTaxonConcept.order_name}}" {{action 'searchFor' mTaxonConcept.order_name}}>
+          {{mTaxonConcept.order_name}}
+        </a>
+      </li>
+      <li>
+        <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound mTaxonConcept.family_name}}" {{action 'searchFor' mTaxonConcept.family_name}}>
+          {{mTaxonConcept.family_name}}
+        </a>
+      </li>
     </ul>
   </div>
   <ul class="tabset">

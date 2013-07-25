@@ -187,7 +187,7 @@ namespace :import do
       INSERT INTO listing_distributions (listing_change_id, geo_entity_id, is_party, created_at, updated_at)
       SELECT excluded_populations.id, geo_entities.id, 'f', NOW(), NOW()
       FROM excluded_populations
-      INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(excluded_populations.iso_code2) AND geo_entities.is_current = 't'
+      INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(excluded_populations.iso_code2)) AND geo_entities.is_current = 't'
       SQL
 
       puts "INSERTING population exceptions (listing distributions)"
@@ -202,7 +202,7 @@ namespace :import do
       INSERT INTO listing_distributions (listing_change_id, geo_entity_id, is_party, created_at, updated_at)
       SELECT listed_populations.id, geo_entities.id, 'f', NOW(), NOW()
       FROM listed_populations
-      INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(listed_populations.iso_code2) AND geo_entities.is_current = 't'
+      INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(listed_populations.iso_code2)) AND geo_entities.is_current = 't'
       SQL
 
       puts "INSERTING listed populations (listing distributions)"

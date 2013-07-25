@@ -52,7 +52,8 @@
 		border: 1px solid #6c95b0;
 
 		input[type="text"] {
-			padding: 3px 10px;
+			padding: 3px;
+      padding-left: 10px;
 			float: left;
 			width: 386px;
 			height: 26px;
@@ -201,6 +202,12 @@
 	width: 454px;
 }
 .inner .search-block .search input[type="text"] { width: 313px; }
+
+.inner .search-block.add .search-form { width: 615px; }
+
+.inner .search-block.add .search { width: 589px; }
+.inner .search-block.add .search input[type="text"] { width: 475px; }
+
 .total-species {
 	float: left;
 	text-align: left;
@@ -213,20 +220,35 @@
 	border-left: 1px solid #739cb7;
 }
 .total-species span { font-size: 23px; }
+
+.location-area {
+	float: left;
+	padding: 13px 0 0 15px;
+}
+.location-area a {
+	float: left;
+	font-size: 13px;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #fff;
+	padding: 0 25px 0 10px;
+	position: relative;
+	background: #376382;
+	line-height: 30px;
+	-webkit-border-radius: 20px;
+	border-radius: 20px;
+	margin: 1px 0 0;
+}
+.location-area a:before {
+	width: 6px;
+	height: 4px;
+	position: absolute;
+	content: "";
+	z-index: 1;
+	right: 10px;
+	top: 14px;
+	background: url(../images/arrow01.png) no-repeat;
+}
+
 .inner .location-area { padding: 13px 15px 0; }
-
-.search-block.results .search-form { width: 460px; }
-.search-block.results .popup-area { padding: 13px 15px 0; }
-.search-block.results .search { width: 432px; }
-.search-block.results .search input[type="text"] { width: 311px; }
-
-.inner .search-block.add .search-form { width: 615px; }
-.inner .search-block.add .popup-area { padding: 15px 0 0 14px; }
-.inner .search-block.add .search { width: 589px; }
-.inner .search-block.add .search input[type="text"] { width: 475px; }
-
-.inner .search-block.add.results .search-form { width: 460px; }
-.inner .search-block.add.results .popup-area { padding: 13px 15px 0; }
-.inner .search-block.add.results .search { width: 432px; }
-.inner .search-block.add.results .search input[type="text"] { width: 322px; }
-
+.inner .search-block.add .location-area { padding: 15px 0 0 14px; }

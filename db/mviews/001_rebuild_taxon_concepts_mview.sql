@@ -105,6 +105,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     taxon_concepts.updated_at,
     common_names.*,
     synonyms.*,
+    subspecies.subspecies_ary,
     countries_ids_ary
     FROM taxon_concepts
     LEFT JOIN taxonomies
@@ -130,30 +131,38 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       )
     ) common_names ON taxon_concepts.id = common_names.taxon_concept_id_com
     LEFT JOIN (
-    SELECT taxon_concepts.id AS taxon_concept_id_syn,
-    ARRAY_AGG(synonym_tc.full_name) AS synonyms_ary,
-    ARRAY_AGG(synonym_tc.author_year) AS synonyms_author_years_ary
-    FROM taxon_concepts
-    LEFT JOIN taxon_relationships
-    ON "taxon_relationships"."taxon_concept_id" = "taxon_concepts"."id"
-    LEFT JOIN "taxon_relationship_types"
-    ON "taxon_relationship_types"."id" = "taxon_relationships"."taxon_relationship_type_id"
-    LEFT JOIN taxon_concepts AS synonym_tc
-    ON synonym_tc.id = taxon_relationships.other_taxon_concept_id
-    GROUP BY taxon_concepts.id
+      SELECT taxon_concepts.id AS taxon_concept_id_syn,
+      ARRAY_AGG(synonym_tc.full_name) AS synonyms_ary,
+      ARRAY_AGG(synonym_tc.author_year) AS synonyms_author_years_ary
+      FROM taxon_concepts
+      LEFT JOIN taxon_relationships
+      ON "taxon_relationships"."taxon_concept_id" = "taxon_concepts"."id"
+      LEFT JOIN "taxon_relationship_types"
+      ON "taxon_relationship_types"."id" = "taxon_relationships"."taxon_relationship_type_id"
+      LEFT JOIN taxon_concepts AS synonym_tc
+      ON synonym_tc.id = taxon_relationships.other_taxon_concept_id
+      GROUP BY taxon_concepts.id
     ) synonyms ON taxon_concepts.id = synonyms.taxon_concept_id_syn
     LEFT JOIN (
-    SELECT taxon_concepts.id AS taxon_concept_id_cnt,
-    ARRAY_AGG(geo_entities.id ORDER BY geo_entities.name_en) AS countries_ids_ary
-    FROM taxon_concepts
-    LEFT JOIN distributions
-    ON "distributions"."taxon_concept_id" = "taxon_concepts"."id"
-    LEFT JOIN geo_entities
-    ON distributions.geo_entity_id = geo_entities.id
-    LEFT JOIN "geo_entity_types"
-    ON "geo_entity_types"."id" = "geo_entities"."geo_entity_type_id"
-    AND geo_entity_types.name = 'COUNTRY'
-    GROUP BY taxon_concepts.id
+      SELECT taxon_concepts.parent_id AS taxon_concept_id_sub,
+      ARRAY_AGG(taxon_concepts.full_name) AS subspecies_ary
+      FROM taxon_concepts
+      JOIN ranks ON ranks.id = taxon_concepts.rank_id 
+      AND ranks.name IN ('SUBSPECIES', 'VARIETY')
+      GROUP BY taxon_concepts.parent_id
+    ) subspecies ON taxon_concepts.id = subspecies.taxon_concept_id_sub
+    LEFT JOIN (
+      SELECT taxon_concepts.id AS taxon_concept_id_cnt,
+      ARRAY_AGG(geo_entities.id ORDER BY geo_entities.name_en) AS countries_ids_ary
+      FROM taxon_concepts
+      LEFT JOIN distributions
+      ON "distributions"."taxon_concept_id" = "taxon_concepts"."id"
+      LEFT JOIN geo_entities
+      ON distributions.geo_entity_id = geo_entities.id
+      LEFT JOIN "geo_entity_types"
+      ON "geo_entity_types"."id" = "geo_entities"."geo_entity_type_id"
+      AND geo_entity_types.name = 'COUNTRY'
+      GROUP BY taxon_concepts.id
     ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt;
 
     RAISE NOTICE 'Creating taxon concepts materialized view';

@@ -164,6 +164,7 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    memcache-client (1.8.5)
     method_source (0.8.1)
     mime-types (1.21)
     mini_portile (0.5.0)
@@ -331,6 +332,7 @@ DEPENDENCIES
   json_spec
   jsonify
   kaminari
+  memcache-client
   nested_form (~> 0.3.1)
   newrelic_rpm (>= 3.5.5)
   nokogiri

@@ -99,5 +99,22 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   )
 
   downloadUrl: ( ->
-    '/exports/download?' + $.param(@get('toParams'))
+    '/species/exports/download?' + $.param(@get('toParams'))
   ).property('toParams')
+
+  startDownload: () ->
+    @set('downloadInProgress', true)
+    @set('downloadMessage', 'Downloading...')
+    $.ajax({
+      type: 'GET'
+      dataType: 'json'
+      url: @get('downloadUrl')
+    }).done((data) =>
+      @set('downloadInProgress', false)
+      if data.total > 0
+        @set('downloadMessage', null)
+        window.location = @get('downloadUrl')
+        return
+      else
+        @set('downloadMessage', 'No results')
+    )

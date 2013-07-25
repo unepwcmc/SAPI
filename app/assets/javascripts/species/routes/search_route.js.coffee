@@ -1,7 +1,7 @@
 Species.SearchRoute = Ember.Route.extend
 
   serialize: (model) ->
-    {params: '?' + $.param(model)}
+    {params: $.param(model)}
 
   model: (params) ->
     geoEntitiesController = @controllerFor('geoEntities')
