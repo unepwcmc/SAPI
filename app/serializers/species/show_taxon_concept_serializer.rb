@@ -1,4 +1,5 @@
 class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
+  cached
   root 'taxon_concept'
   attributes :id, :full_name, :author_year, :standard_references,
     :common_names, :distributions, :subspecies, :distribution_references
@@ -109,6 +110,10 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       select("string_agg(\"references\".citation, '; ') AS country_references").
       group('geo_entities.name_en').
       order('geo_entities.name_en')
+  end
+
+  def cached_key
+    [object]
   end
 end
 
