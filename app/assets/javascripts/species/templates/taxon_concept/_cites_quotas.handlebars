@@ -13,7 +13,7 @@
         <th class="col1">&nbsp;</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody {{bindAttr class="controller.citesQuotasExpanded:historic_expanded"}}>
       {{#each quota in currentCitesQuotas}}
         {{#if quota.public_display}}
           <tr class="current">
@@ -35,7 +35,7 @@
     </tbody>
   </table>
   {{#if historicCitesQuotas}}
-    <div class="historic">
+    <div {{bindAttr class=":historic controller.citesQuotasExpanded::hidden"}}>
       <table summary="data table">
         <thead>
           <tr>
