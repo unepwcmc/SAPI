@@ -91,3 +91,8 @@ Species.TaxonConceptController = Ember.ObjectController.extend
         '</i>. You have been redirected to the species page for <i>' +
         @get('fullName') + '</i>.'
   ).property('matchedOnSelf', 'matchedOnSynonym', 'matchedOnSubspecies')
+  searchFor: (query) ->
+    @transitionToRoute('search', {
+      taxonomy: @get('taxonomy'),
+      taxon_concept_query: query
+    })

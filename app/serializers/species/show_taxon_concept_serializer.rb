@@ -2,7 +2,8 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   cached
   root 'taxon_concept'
   attributes :id, :full_name, :author_year, :standard_references,
-    :common_names, :distributions, :subspecies, :distribution_references
+    :common_names, :distributions, :subspecies, :distribution_references,
+    :taxonomy
 
   has_many :synonyms, :serializer => Species::SynonymSerializer
   has_one :m_taxon_concept, :serializer => Species::MTaxonConceptSerializer
@@ -14,6 +15,10 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     :key => :cites_listings
   has_many :eu_listing_changes, :serializer => Species::EuListingChangeSerializer,
     :key => :eu_listings
+
+  def taxonomy
+    object.taxonomy.name.downcase
+  end
 
   def synonyms
     object.synonyms.
