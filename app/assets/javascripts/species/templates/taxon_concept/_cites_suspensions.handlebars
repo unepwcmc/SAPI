@@ -29,7 +29,12 @@
               {{suspension.start_notification.name}}
             </a>
           </td>
-          <td>{{{suspension.notes}}}</td>
+          <td>
+            {{#if suspension.subspecies_info}}
+              {{suspension.subspecies_info}}<br />
+            {{/if}}
+            {{{suspension.notes}}}
+          </td>
           <td class="last">&nbsp;</td>
         </tr>
       {{else}}
@@ -73,7 +78,12 @@
                   {{suspension.end_notification.name}}
                 </a>
               </td>
-              <td>{{suspension.notes}} {{suspension.url}}</td>
+              <td>
+                {{#if suspension.subspecies_info}}
+                  {{suspension.subspecies_info}}<br />
+                {{/if}}
+                {{{suspension.notes}}}
+              </td>
               <td class="last">&nbsp;</td>
             </tr>
           {{/each}}
