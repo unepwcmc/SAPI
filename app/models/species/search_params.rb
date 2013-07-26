@@ -14,7 +14,7 @@ class Species::SearchParams < Hash
       #filtering options
       :taxon_concept_query =>
         params[:taxon_concept_query] ? params[:taxon_concept_query] : nil,
-      :geo_entities => params[:geo_entity_id].blank? ? [] : [params[:geo_entity_id]],
+      :geo_entities => params[:geo_entities_ids].blank? ? [] : params[:geo_entities_ids],
       :higher_taxa_ids => params[:higher_taxa_ids] ? params[:higher_taxa_ids] : nil,
       :ranks => params[:ranks] ? 
         Rank.dict & params[:ranks].map(&:upcase) : [Rank::SPECIES]

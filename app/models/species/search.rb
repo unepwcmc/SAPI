@@ -13,7 +13,7 @@ class Species::Search
   def initialize_params(options)
     options = Species::SearchParams.sanitize(options)
     options.keys.each { |k| instance_variable_set("@#{k}", options[k]) }
-    @scientific_name = @taxon_concept_query  #TODO handle advanced queries
+    @scientific_name = @taxon_concept_query
   end
 
   def initialize_query
