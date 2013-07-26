@@ -44,3 +44,10 @@ Species.TaxonConceptRoute = Ember.Route.extend
       controller: @controllerFor('downloads')
     })
 
+  events:
+    ensureGeoEntitiesLoaded: ->
+      @controllerFor('geoEntities').load()
+
+    ensureHigherTaxaLoaded: ->
+      @controllerFor('higherTaxaCitesEu').load()
+      @controllerFor('higherTaxaCms').load()

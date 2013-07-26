@@ -21,6 +21,7 @@ Species.SearchRoute = Ember.Route.extend
     @controllerFor('taxonConcepts').set('content', Species.TaxonConcept.find(model))
 
   renderTemplate: ->
+    console.log 'index render template'
     taxonConceptsController = @controllerFor('taxonConcepts')
     searchController = @controllerFor('search')
     # Render the `taxon_concepts` template into
@@ -55,3 +56,11 @@ Species.SearchRoute = Ember.Route.extend
       outlet: 'downloadsButton',
       controller: @controllerFor('downloads')
     })
+
+  events:
+    ensureGeoEntitiesLoaded: ->
+      @controllerFor('geoEntities').load()
+
+    ensureHigherTaxaLoaded: ->
+      @controllerFor('higherTaxaCitesEu').load()
+      @controllerFor('higherTaxaCms').load()

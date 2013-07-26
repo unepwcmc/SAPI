@@ -14,3 +14,4 @@ Species.HigherTaxaSearchButton = Ember.View.extend
     else
       return "TAXON"
   ).property("controller.selectedTaxonConcepts.@each")
+  
