@@ -50,12 +50,15 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
               END AS subspecies_info
              SQL
       ).
-      order("geo_entities.name_en ASC, trade_restrictions.notes ASC")
+      order(<<-SQL
+              geo_entities.name_en ASC, trade_restrictions.notes ASC,
+              subspecies_info DESC
+            SQL
+      )
   end
 
   def cites_suspensions
     CitesSuspension.where(:taxon_concept_id => object_and_children).
-      includes(:geo_entity, :start_notification, :end_notification).
       joins([:start_notification, :geo_entity]).
       joins('INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id').
       select(<<-SQL
@@ -73,7 +76,12 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
               END AS subspecies_info
              SQL
       ).
-      order("trade_restrictions.is_current DESC, events.effective_at DESC, geo_entities.name_en ASC")
+      order(<<-SQL
+            trade_restrictions.is_current DESC,
+            events.effective_at DESC, geo_entities.name_en ASC,
+            subspecies_info DESC
+        SQL
+      )
   end
 
   def cites_listing_changes
@@ -112,7 +120,8 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
             WHEN change_type_name = 'RESERVATION' THEN 2
             WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
             WHEN change_type_name = 'DELETION' THEN 0
-          END
+          END,
+          subspecies_info DESC
         SQL
       )
   end
@@ -157,7 +166,8 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
             WHEN change_type_name = 'RESERVATION' THEN 2
             WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
             WHEN change_type_name = 'DELETION' THEN 0
-          END
+          END,
+          subspecies_info DESC
         SQL
       )
   end
