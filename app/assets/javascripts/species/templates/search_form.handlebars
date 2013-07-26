@@ -11,7 +11,6 @@
       <fieldset>
         {{view Species.TaxonConceptSearchTextField
           valueBinding="controller.taxonConceptQuery"
-          dropdownIsVisibleBinding="controller.taxonConceptsDropdownVisible"
           id="scientific_name"
           title="search"
           placeholder="Species, higher taxon or synonym..."
@@ -20,7 +19,6 @@
         <button {{action "loadTaxonConcepts"}}>Search</button>
         {{view Species.TaxonConceptSearchDropdown
          valueBinding="controller.autoCompleteTaxonConcepts"
-         isVisibleBinding="controller.taxonConceptsDropdownVisible"
         }}
       </fieldset>
     </form>
