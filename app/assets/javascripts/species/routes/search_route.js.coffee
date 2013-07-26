@@ -29,6 +29,7 @@ Species.SearchRoute = Ember.Route.extend
     # controller.
     @render('taxonConcepts', {
       into: 'application',
+      outlet: 'main',
       controller: taxonConceptsController
     })
     # Render the `search_form` template into

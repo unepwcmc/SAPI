@@ -43,7 +43,14 @@ class Species::Search
     unless @scientific_name.blank?
       @taxon_concepts_rel = @taxon_concepts_rel.
         by_name(@scientific_name, {:synonyms => true, :subspecies => true, :common_names => false}).
-        where(:name_status => 'A').uniq
+        where(:name_status => 'A').
+        select(<<-SQL
+                DISTINCT taxon_concepts_mview.*,
+                ARRAY(
+                  SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{@scientific_name}%'
+                ) AS synonyms_ary
+               SQL
+        )
     end
   end
 
