@@ -18,14 +18,13 @@ Ember.Handlebars.helper "formattedTags", (value, options) ->
   ).join ""
   new Handlebars.SafeString(formatted)
 
-Ember.Handlebars.helper('highlight', (suggestion, query) ->
+Ember.Handlebars.registerHelper('highlight', (suggestion, options) ->
+  suggestion = Ember.Handlebars.get(this, suggestion, options)
+  query = Ember.Handlebars.get(this, options.hash.query, options)
   query = query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&")
   transform = ($1, match) ->
-    "<span>" + match + "</span>"
-
-  new Handlebars.SafeString(
-    suggestion.replace(new RegExp("(" + query + ")", "gi"), transform)
-  )
+    "<span class='match'>" + match + "</span>"
+  new Handlebars.SafeString(suggestion.replace(new RegExp("(" + query + ")", "gi"), transform))
 )
 
 Ember.Handlebars.registerHelper 'stringToArray', (string, options) ->

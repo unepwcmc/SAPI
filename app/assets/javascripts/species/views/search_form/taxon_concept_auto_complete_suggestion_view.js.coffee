@@ -14,12 +14,16 @@ Species.TaxonConceptAutoCompleteSuggestionView = Ember.View.extend
     if @get('taxonConcept.rankName') == 'SPECIES'
       Ember.Handlebars.compile(
         '{{#linkTo "taxon_concept.legal" view.taxonConcept}}
-          {{highlight view.taxonConcept.autoCompleteSuggestion controller.taxonConceptQuery}}
+          {{#highlight view.taxonConcept.autoCompleteSuggestion query=controller.taxonConceptQuery}}
+            {{unbound this}}
+          {{/highlight}}
         {{/linkTo}}')
     else
       Ember.Handlebars.compile('
         {{#linkTo "search" view.setSearchParams }}
-          {{highlight view.taxonConcept.autoCompleteSuggestion controller.taxonConceptQuery}}
+          {{#highlight view.taxonConcept.autoCompleteSuggestion query=controller.taxonConceptQuery}}
+            {{unbound this}}
+          {{/highlight}}
         {{/linkTo}}
         ')
   ).property()

@@ -4,10 +4,15 @@ Species.TaxonConceptSearchResultView = Ember.View.extend
   taxonConcept: ( -> 
     Species.TaxonConcept.find(@get('taxonConceptId'))
   ).property('taxonConceptId')
+  getQuery: ( ->
+    @get('controller').get('controllers.search').get('taxonConceptQuery')
+  ).property()
   template: ( ->
     Ember.Handlebars.compile(
       '{{#linkTo "taxon_concept.legal" view.taxonConcept}}
-        {{{unbound view.taxonConcept.searchResultDisplay}}}
+        {{#highlight view.taxonConcept.searchResultDisplay query=view.getQuery}}
+          {{unbound this}}
+        {{/highlight}}
       {{/linkTo}}
       ')
   ).property()

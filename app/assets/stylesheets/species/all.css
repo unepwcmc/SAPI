@@ -339,11 +339,15 @@ form, fieldset {
 	font-style: italic;
 	border-top: 1px solid #e5e5e5;
 }
-.result-block h2 span {
+.result-block h2 span.match, .result-block h2 span.match.synonyms {
+  font-weight: bold;
+}
+.result-block h2 span.author-year, .result-block h2 span.synonyms {
 	font-size: 13px;
 	color: #666;
 	font-style: normal;
 }
+
 .result-block h2 a {
 	color: #373f4c;
 	float: left;
