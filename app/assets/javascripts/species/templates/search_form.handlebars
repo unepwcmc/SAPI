@@ -6,23 +6,9 @@
       CMS
     {{/view}}
   </div>
-  <div class="search-form">
-    <form action="#" class="search">
-      <fieldset>
-        {{view Species.TaxonConceptSearchTextField
-          valueBinding="controller.taxonConceptQuery"
-          id="scientific_name"
-          title="search"
-          placeholder="Species, higher taxon or synonym..."
-          autocomplete="off"
-        }}
-        <button {{action "loadTaxonConcepts"}}>Search</button>
-        {{view Species.TaxonConceptSearchDropdown
-         valueBinding="controller.autoCompleteTaxonConcepts"
-        }}
-      </fieldset>
-    </form>
-  </div>
+
+  {{view Species.TaxonConceptSearchView controllerBinding="controller"}}
+
   <div class="location-area popup-area">
     {{view Species.GeoEntitiesSearchButton
       selectedGeoEntitiesBinding="controller.selectedGeoEntities"
