@@ -25,6 +25,7 @@ Species.IndexRoute = Ember.Route.extend
     # controller.
     @render('index', {
       into: 'application',
+      outlet: 'main'
       controller: @controllerFor('index')
     })
     # Render the `search_form` template into
@@ -34,4 +35,15 @@ Species.IndexRoute = Ember.Route.extend
       into: 'index',
       outlet: 'search',
       controller: @controllerFor('search')
+    })
+
+    @render('downloads', {
+      into: 'application',
+      outlet: 'downloads',
+      controller: @controllerFor('downloads')
+    })
+    @render('downloadsButton', {
+      into: 'index',
+      outlet: 'downloadsButton',
+      controller: @controllerFor('downloads')
     })

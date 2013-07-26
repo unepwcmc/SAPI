@@ -45,3 +45,13 @@ Species.SearchRoute = Ember.Route.extend
       controller: taxonConceptsController
     })
 
+    @render('downloads', {
+      into: 'application',
+      outlet: 'downloads',
+      controller: @controllerFor('downloads')
+    })
+    @render('downloadsButton', {
+      into: 'downloads',
+      outlet: 'downloadsButton',
+      controller: @controllerFor('downloads')
+    })
