@@ -25,32 +25,103 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       order("full_name")
   end
 
+  def object_and_children
+    [object.id]+object.children.select(:id).map(&:id)
+  end
+
   def quotas
-    object.quotas.joins(:geo_entity).
+    Quota.where(:taxon_concept_id => object_and_children).joins(:geo_entity).
       includes([:unit, :geo_entity => :geo_entity_type]).
-      order("geo_entities.name_en ASC, trade_restrictions.notes ASC")
+      joins('INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id').
+      select(<<-SQL
+              trade_restrictions.notes,
+              trade_restrictions.url,
+              trade_restrictions.start_date,
+              trade_restrictions.publication_date,
+              trade_restrictions.is_current,
+              trade_restrictions.geo_entity_id,
+              trade_restrictions.unit_id,
+              trade_restrictions.quota,
+              trade_restrictions.public_display,
+              CASE
+                WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
+                  THEN '[Quota for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
+                ELSE NULL
+              END AS subspecies_info
+             SQL
+      ).
+      order(<<-SQL
+              geo_entities.name_en ASC, trade_restrictions.notes ASC,
+              subspecies_info DESC
+            SQL
+      )
   end
 
   def cites_suspensions
-    object.cites_suspensions.
-      includes(:geo_entity, :start_notification, :end_notification).
+    CitesSuspension.where(:taxon_concept_id => object_and_children).
       joins([:start_notification, :geo_entity]).
-      order("trade_restrictions.is_current DESC, events.effective_at DESC, geo_entities.name_en ASC")
+      joins('INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id').
+      select(<<-SQL
+              trade_restrictions.notes,
+              trade_restrictions.start_date,
+              trade_restrictions.end_date,
+              trade_restrictions.is_current,
+              trade_restrictions.geo_entity_id,
+              trade_restrictions.start_notification_id,
+              trade_restrictions.end_notification_id,
+              CASE
+                WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
+                  THEN '[Suspension for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
+                ELSE NULL
+              END AS subspecies_info
+             SQL
+      ).
+      order(<<-SQL
+            trade_restrictions.is_current DESC,
+            events.effective_at DESC, geo_entities.name_en ASC,
+            subspecies_info DESC
+        SQL
+      )
   end
 
   def cites_listing_changes
     cites = Designation.find_by_name(Designation::CITES)
     MListingChange.
-      where(:taxon_concept_id => object.id, :show_in_history => true, :designation_id => cites && cites.id).
-      order("is_current DESC").
+      where(:taxon_concept_id => object_and_children, :show_in_history => true, :designation_id => cites && cites.id).
+      joins(<<-SQL
+              INNER JOIN taxon_concepts_mview
+                ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id 
+            SQL
+      ).
+      select(<<-SQL
+              listing_changes_mview.is_current,
+              listing_changes_mview.species_listing_name,
+              listing_changes_mview.party_id,
+              listing_changes_mview.effective_at,
+              listing_changes_mview.full_note_en,
+              listing_changes_mview.short_note_en,
+              listing_changes_mview.auto_note,
+              listing_changes_mview.change_type_name,
+              listing_changes_mview.hash_full_note_en,
+              listing_changes_mview.hash_ann_parent_symbol,
+              listing_changes_mview.hash_ann_symbol,
+              CASE
+                WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
+                  THEN '[Listing for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
+                ELSE NULL
+              END AS subspecies_info
+           SQL
+      ).
       order(<<-SQL
+          is_current DESC,
           effective_at DESC,
           CASE
             WHEN change_type_name = 'ADDITION' THEN 3
             WHEN change_type_name = 'RESERVATION' THEN 2
             WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
             WHEN change_type_name = 'DELETION' THEN 0
-          END
+          END,
+          subspecies_info DESC
         SQL
       )
   end
@@ -58,17 +129,45 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   def eu_listing_changes
     eu = Designation.find_by_name(Designation::EU)
     MListingChange.
-      where(:taxon_concept_id => object.id, :show_in_history => true, :designation_id => eu && eu.id).
-      includes(:listing_change => :event).
-      order("is_current DESC").
+      where(:taxon_concept_id => object_and_children, :show_in_history => true, :designation_id => eu && eu.id).
+      joins(<<-SQL
+              INNER JOIN taxon_concepts_mview
+                ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id
+              INNER JOIN listing_changes
+                ON listing_changes.id = listing_changes_mview.id
+              INNER JOIN events
+                ON events.id = listing_changes.event_id
+            SQL
+      ).
+      select(<<-SQL
+              listing_changes_mview.id,
+              listing_changes_mview.is_current,
+              listing_changes_mview.species_listing_name,
+              listing_changes_mview.party_id,
+              listing_changes_mview.effective_at,
+              listing_changes_mview.full_note_en,
+              listing_changes_mview.short_note_en,
+              listing_changes_mview.hash_full_note_en,
+              listing_changes_mview.hash_ann_parent_symbol,
+              listing_changes_mview.hash_ann_symbol,
+              events.description AS event_name,
+              CASE
+                WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
+                  THEN '[Listing for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
+                ELSE NULL
+              END AS subspecies_info
+           SQL
+      ).
       order(<<-SQL
-        effective_at DESC,
-        CASE
-          WHEN change_type_name = 'ADDITION' THEN 3
-          WHEN change_type_name = 'RESERVATION' THEN 2
-          WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
-          WHEN change_type_name = 'DELETION' THEN 0
-        END
+          is_current DESC,
+          effective_at DESC,
+          CASE
+            WHEN change_type_name = 'ADDITION' THEN 3
+            WHEN change_type_name = 'RESERVATION' THEN 2
+            WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
+            WHEN change_type_name = 'DELETION' THEN 0
+          END,
+          subspecies_info DESC
         SQL
       )
   end
