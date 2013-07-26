@@ -88,6 +88,12 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     cites = Designation.find_by_name(Designation::CITES)
     MListingChange.
       where(:taxon_concept_id => object_and_children, :show_in_history => true, :designation_id => cites && cites.id).
+      where(<<-SQL
+              taxon_concepts_mview.rank_name = 'SPECIES' OR 
+              ( taxon_concepts_mview.rank_name = 'SUBSPECIES' AND
+                listing_changes_mview.auto_note IS NULL )
+            SQL
+      ).
       joins(<<-SQL
               INNER JOIN taxon_concepts_mview
                 ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id 
@@ -130,6 +136,12 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     eu = Designation.find_by_name(Designation::EU)
     MListingChange.
       where(:taxon_concept_id => object_and_children, :show_in_history => true, :designation_id => eu && eu.id).
+      where(<<-SQL
+              taxon_concepts_mview.rank_name = 'SPECIES' OR 
+              ( taxon_concepts_mview.rank_name = 'SUBSPECIES' AND
+                listing_changes_mview.auto_note IS NULL )
+            SQL
+      ).
       joins(<<-SQL
               INNER JOIN taxon_concepts_mview
                 ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id
