@@ -5,18 +5,19 @@
 #  id                  :integer          not null, primary key
 #  symbol              :string(255)
 #  parent_symbol       :string(255)
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
+#  display_in_index    :boolean          default(FALSE), not null
+#  display_in_footnote :boolean          default(FALSE), not null
 #  short_note_en       :text
 #  full_note_en        :text
 #  short_note_fr       :text
 #  full_note_fr        :text
 #  short_note_es       :text
 #  full_note_es        :text
-#  display_in_index    :boolean          default(FALSE), not null
-#  display_in_footnote :boolean          default(FALSE), not null
 #  source_id           :integer
 #  event_id            :integer
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  import_row_id       :integer
 #
 
 class Annotation < ActiveRecord::Base

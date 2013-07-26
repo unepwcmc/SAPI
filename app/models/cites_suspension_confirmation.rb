@@ -3,8 +3,8 @@
 # Table name: cites_suspension_confirmations
 #
 #  id                               :integer          not null, primary key
-#  cites_suspension_id              :integer
-#  cites_suspension_notification_id :integer
+#  cites_suspension_id              :integer          not null
+#  cites_suspension_notification_id :integer          not null
 #  created_at                       :datetime         not null
 #  updated_at                       :datetime         not null
 #
