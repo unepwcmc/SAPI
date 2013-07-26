@@ -14,7 +14,7 @@ Species.TaxonConceptSearchTextField = Em.TextField.extend
     @hideDropdown() if !@get('parentView.mousedOver')
 
   keyUp: (event) ->
-    @set('value', event.currentTarget.value)
+    @set('controller.taxonConceptQuery', event.currentTarget.value)
     @showDropdown()
 
   hideDropdown: () -> 
