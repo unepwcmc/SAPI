@@ -1,8 +1,10 @@
 Species.HigherTaxaCitesEuController = Ember.ArrayController.extend
   content: null
   contentByRank: null
+  loaded: false
 
   contentObserver: ( ->
+    @set('loaded', true)
     Ember.run.once(@, 'groupHigherTaxaByRank')
   ).observes("content.@each.didLoad")
 
@@ -17,3 +19,13 @@ Species.HigherTaxaCitesEuController = Ember.ArrayController.extend
         e.taxonConcepts.length > 0
       )
     )
+
+  load: ->
+    unless @get('loaded')
+      @set('content', 
+        Species.TaxonConcept.find({
+          taxonomy: 'cites_eu'
+          ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY']
+          autocomplete: true
+        })
+      )

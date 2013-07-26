@@ -53,7 +53,10 @@
     </div>
     <div class="col">
       <div class="popup-area">
-        {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}
+        {{view Species.GeoEntitiesSearchButton
+          selectedGeoEntitiesBinding="controller.selectedGeoEntities"
+          loadedBinding="controller.loaded"
+        }}
         {{view Species.GeoEntitiesSearchDropdown
           controllerBinding="controller"
         }}
@@ -142,7 +145,10 @@
     </div>
     <div class="col">
       <div class="popup-area">
-        {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}
+        {{view Species.GeoEntitiesSearchButton
+          selectedGeoEntitiesBinding="controller.selectedGeoEntities"
+          loadedBinding="controller.loaded"
+        }}
         {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
       </div>
     </div>
