@@ -9,7 +9,7 @@ Species.GeoEntitiesCollectionView = Ember.CollectionView.extend
 
   itemViewClass: Ember.View.extend
     contextBinding: 'content'
-    template: Ember.Handlebars.compile("{{{name}}}")
+    template: Ember.Handlebars.compile("{{unbound name}}")
 
     click: (event) ->
       @get('controller.selectedGeoEntities').addObject(@get('context'))
