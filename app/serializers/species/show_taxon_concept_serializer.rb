@@ -51,7 +51,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
              SQL
       ).
       order(<<-SQL
-              geo_entities.name_en ASC, trade_restrictions.notes ASC,
+              trade_restrictions.start_date DESC, geo_entities.name_en ASC, trade_restrictions.notes ASC,
               subspecies_info DESC
             SQL
       )
@@ -91,7 +91,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       where(<<-SQL
               taxon_concepts_mview.rank_name = 'SPECIES' OR 
               ( taxon_concepts_mview.rank_name = 'SUBSPECIES' AND
-                listing_changes_mview.original_taxon_concept_id = listing_changes_mview.taxon_concept_id )
+                listing_changes_mview.auto_note IS NULL )
             SQL
       ).
       joins(<<-SQL
@@ -139,7 +139,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       where(<<-SQL
               taxon_concepts_mview.rank_name = 'SPECIES' OR 
               ( taxon_concepts_mview.rank_name = 'SUBSPECIES' AND
-                listing_changes_mview.original_taxon_concept_id = listing_changes_mview.taxon_concept_id )
+                listing_changes_mview.auto_note IS NULL )
             SQL
       ).
       joins(<<-SQL
