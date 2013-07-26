@@ -29,8 +29,8 @@ Species.TaxonConcept = DS.Model.extend
       @get('fullName')
   ).property('fullName', 'synonyms')
   searchResultDisplay: ( ->
-    baseDisplay = @get('fullName') + ' <span>' + @get('authorYear') + '</span>'
+    baseDisplay = @get('fullName') + ' <span class="author-year">' + @get('authorYear') + '</span>'
     if @get('synonyms') != undefined && @get('synonyms').length > 0
-      baseDisplay = baseDisplay + ' <span>(' + @get('synonyms').join(', ') + ')</span>'
+      baseDisplay = baseDisplay + ' <span class="synonyms">(' + @get('synonyms').join(', ') + ')</span>'
     baseDisplay
   ).property('fullName', 'synonyms', 'authorYear')
