@@ -100,7 +100,11 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
             SQL
       ).
       select(<<-SQL
-              listing_changes_mview.is_current,
+              CASE
+                WHEN listing_changes_mview.change_type_name = 'DELETION'
+                  THEN 'f'
+                ELSE listing_changes_mview.is_current
+              END AS is_current,
               listing_changes_mview.species_listing_name,
               listing_changes_mview.party_id,
               listing_changes_mview.effective_at,
@@ -119,7 +123,6 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
            SQL
       ).
       order(<<-SQL
-          is_current DESC,
           effective_at DESC,
           CASE
             WHEN change_type_name = 'ADDITION' THEN 3
@@ -171,7 +174,6 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
            SQL
       ).
       order(<<-SQL
-          is_current DESC,
           effective_at DESC,
           CASE
             WHEN change_type_name = 'ADDITION' THEN 3

@@ -7,6 +7,8 @@ class Species::CitesListingChangeSerializer < ActiveModel::Serializer
   def change_type
     if object.change_type_name == ChangeType::RESERVATION_WITHDRAWAL
       "w"
+    elsif object.change_type_name == ChangeType::DELETION
+      "x"
     else
       object.change_type_name.downcase[0]
     end
