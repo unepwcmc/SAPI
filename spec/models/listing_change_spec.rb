@@ -6,17 +6,18 @@
 #  taxon_concept_id           :integer          not null
 #  species_listing_id         :integer
 #  change_type_id             :integer          not null
+#  annotation_id              :integer
+#  hash_annotation_id         :integer
 #  effective_at               :datetime         default(2012-09-21 07:32:20 UTC), not null
 #  is_current                 :boolean          default(FALSE), not null
-#  annotation_id              :integer
 #  parent_id                  :integer
 #  inclusion_taxon_concept_id :integer
+#  event_id                   :integer
+#  source_id                  :integer
+#  explicit_change            :boolean          default(TRUE)
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
-#  hash_annotation_id         :integer
-#  event_id                   :integer
-#  explicit_change            :boolean          default(TRUE)
-#  source_id                  :integer
+#  import_row_id              :integer
 #
 
 require 'spec_helper'

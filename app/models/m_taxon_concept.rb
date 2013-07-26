@@ -4,6 +4,7 @@
 #
 #  id                               :integer          primary key
 #  parent_id                        :integer
+#  taxonomy_id                      :integer
 #  taxonomy_is_cites_eu             :boolean
 #  full_name                        :string(255)
 #  name_status                      :string(255)
@@ -33,7 +34,6 @@
 #  cites_iii                        :boolean
 #  cites_listed                     :boolean
 #  cites_show                       :boolean
-#  cites_status_original            :boolean
 #  cites_status                     :text
 #  cites_listing_original           :text
 #  cites_listing                    :text
@@ -44,12 +44,18 @@
 #  hash_ann_parent_symbol           :text
 #  eu_listed                        :boolean
 #  eu_show                          :boolean
-#  eu_status_original               :boolean
 #  eu_status                        :text
 #  eu_listing_original              :text
 #  eu_listing                       :text
 #  eu_closest_listed_ancestor_id    :integer
 #  eu_listing_updated_at            :datetime
+#  cms_listed                       :boolean
+#  cms_show                         :boolean
+#  cms_status                       :text
+#  cms_listing_original             :text
+#  cms_listing                      :text
+#  cms_closest_listed_ancestor_id   :integer
+#  cms_listing_updated_at           :datetime
 #  species_listings_ids             :string
 #  species_listings_ids_aggregated  :string
 #  author_year                      :string(255)
@@ -57,11 +63,12 @@
 #  updated_at                       :datetime
 #  taxon_concept_id_com             :integer
 #  english_names_ary                :string
-#  french_names_ary                 :string
 #  spanish_names_ary                :string
+#  french_names_ary                 :string
 #  taxon_concept_id_syn             :integer
 #  synonyms_ary                     :string
 #  synonyms_author_years_ary        :string
+#  subspecies_ary                   :string
 #  countries_ids_ary                :string
 #  dirty                            :boolean
 #  expiry                           :datetime
