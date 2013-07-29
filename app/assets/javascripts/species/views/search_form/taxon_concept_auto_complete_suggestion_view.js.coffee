@@ -1,29 +1,25 @@
 Species.TaxonConceptAutoCompleteSuggestionView = Ember.View.extend
   tagName: 'li'
   taxonConceptId: null
-  taxonConcept: ( -> 
-    Species.TaxonConcept.find(@get('taxonConceptId'))
+
+  autoCompleteTaxonConcept: ( -> 
+    Species.AutoCompleteTaxonConcept.find(@get('taxonConceptId'))
   ).property('taxonConceptId')
-  setSearchParams: ( ->
-    {
-      taxonomy: @get('controller').get('taxonomy'),
-      taxon_concept_query: @get('controller').get('taxonConceptQuery')
-    }
-  ).property('taxonConceptQuery')
+
   template: ( ->
-    if @get('taxonConcept.rankName') == 'SPECIES'
+    if @get('autoCompleteTaxonConcept.rankName') == 'SPECIES'
       Ember.Handlebars.compile(
-        '{{#linkTo "taxon_concept.legal" view.taxonConcept}}
-          {{#highlight view.taxonConcept.autoCompleteSuggestion query=controller.taxonConceptQuery}}
+        '<a href="#" {{action openTaxonPage view.taxonConceptId}}>
+          {{#highlight view.autoCompleteTaxonConcept.autoCompleteSuggestion query=controller.taxonConceptQuery}}
             {{unbound this}}
           {{/highlight}}
-        {{/linkTo}}')
+        </a>')
     else
-      Ember.Handlebars.compile('
-        {{#linkTo "search" view.setSearchParams }}
-          {{#highlight view.taxonConcept.autoCompleteSuggestion query=controller.taxonConceptQuery}}
+      Ember.Handlebars.compile(
+        '<a href="#" {{action openSearchPage}}>
+          {{#highlight view.autoCompleteTaxonConcept.autoCompleteSuggestion query=controller.taxonConceptQuery}}
             {{unbound this}}
           {{/highlight}}
-        {{/linkTo}}
-        ')
+        </a>')
   ).property()
+

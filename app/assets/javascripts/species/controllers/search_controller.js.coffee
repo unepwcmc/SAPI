@@ -8,13 +8,6 @@ Species.SearchController = Ember.Controller.extend
   selectedGeoEntities: []
   selectedGeoEntitiesIds: []
 
-  loadTaxonConcepts: ->
-    @transitionToRoute('search', {
-      taxonomy: @get('taxonomy'),
-      taxon_concept_query: @get('taxonConceptQuery'),
-      geo_entities_ids: @get('selectedGeoEntities').mapProperty('id')
-    })
-
   setFilters: (filtersHash) ->
     @set('taxonomy', filtersHash.taxonomy)
     if filtersHash.taxon_concept_query == ''
@@ -27,7 +20,7 @@ Species.SearchController = Ember.Controller.extend
     if !taxonConceptQuery || taxonConceptQuery.length < 3
       return;
 
-    Species.TaxonConcept.find(
+    Species.AutoCompleteTaxonConcept.find(
       taxonomy: @get('taxonomy')
       taxon_concept_query: taxonConceptQuery
       ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY', 'GENUS', 'SPECIES']
@@ -60,3 +53,13 @@ Species.SearchController = Ember.Controller.extend
     ))
     @set('autoCompleteRegions', @get('controllers.geoEntities.regions'))
     @set('autoCompleteCountries', @get('controllers.geoEntities.countries'))
+
+  openTaxonPage: (taxonConceptId) ->
+    @transitionToRoute('taxon_concept.legal', Species.TaxonConcept.find(taxonConceptId))
+
+  openSearchPage: () ->
+    @transitionToRoute('search', {
+      taxonomy: @get('taxonomy'),
+      taxon_concept_query: @get('taxonConceptQuery'),
+      geo_entities_ids: @get('selectedGeoEntities').mapProperty('id')
+    })

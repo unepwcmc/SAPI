@@ -7,7 +7,7 @@
       placeholder="Species, higher taxon or synonym..."
       autocomplete="off"
     }}
-    <button {{action "loadTaxonConcepts"}}>Search</button>
+    <button {{action "openSearchPage"}}>Search</button>
     {{view Species.TaxonConceptSearchDropdown
      valueBinding="controller.autoCompleteTaxonConcepts"
      isVisibleBinding="controller.taxonConceptsDropdownVisible"
