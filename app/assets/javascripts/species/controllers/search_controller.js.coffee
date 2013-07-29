@@ -6,7 +6,7 @@ Species.SearchController = Ember.Controller.extend
   autoCompleteRegions: null
   autoCompleteCountries: null
   selectedGeoEntities: []
-  selectedGeoEntitiesIds: null
+  selectedGeoEntitiesIds: []
 
   loadTaxonConcepts: ->
     @transitionToRoute('search', {
@@ -18,7 +18,7 @@ Species.SearchController = Ember.Controller.extend
   setFilters: (filtersHash) ->
     @set('taxonomy', filtersHash.taxonomy)
     @set('taxonConceptQuery', filtersHash.taxon_concept_query)
-    @set('selectedGeoEntitiesIds', filtersHash.geo_entities_ids)
+    @set('selectedGeoEntitiesIds', filtersHash.geo_entities_ids || [])
 
   autoCompleteTaxonConcepts: ( ->
     taxonConceptQuery = @get('taxonConceptQuery')
