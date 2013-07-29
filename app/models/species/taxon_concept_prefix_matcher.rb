@@ -15,7 +15,7 @@ class Species::TaxonConceptPrefixMatcher
   protected
 
   def build_rel
-    @taxon_concepts = MTaxonConcept.taxonomic_layout
+    @taxon_concepts = MTaxonConcept.order("ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1), full_name")
     unless @ranks.empty?
       @taxon_concepts = @taxon_concepts.where(:rank_name => @ranks)
     end
@@ -29,10 +29,10 @@ class Species::TaxonConceptPrefixMatcher
     if @taxon_concept_query
       @taxon_concepts = @taxon_concepts.select(
         ActiveRecord::Base.send(:sanitize_sql_array, [
-        "DISTINCT id, full_name, rank_name,
+        "id, full_name, rank_name,
         ARRAY(
           SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE :sci_name_prefix
-        ) AS synonyms_ary, taxonomic_position",
+        ) AS synonyms_ary",
         :sci_name_prefix => "#{@taxon_concept_query}%"
         ])
       ).
@@ -46,7 +46,6 @@ class Species::TaxonConceptPrefixMatcher
       ]).where(:name_status => 'A')
     end
   end
-
 
 end
 
