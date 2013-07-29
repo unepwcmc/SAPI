@@ -17,6 +17,8 @@ Species.SearchController = Ember.Controller.extend
 
   setFilters: (filtersHash) ->
     @set('taxonomy', filtersHash.taxonomy)
+    if filtersHash.taxon_concept_query == ''
+      filtersHash.taxon_concept_query = null
     @set('taxonConceptQuery', filtersHash.taxon_concept_query)
     @set('selectedGeoEntitiesIds', filtersHash.geo_entities_ids || [])
 
