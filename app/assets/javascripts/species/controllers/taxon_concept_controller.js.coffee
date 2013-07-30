@@ -54,14 +54,6 @@ Species.TaxonConceptController = Ember.ObjectController.extend
   historicEuListings: (->
     @get('euListings').filterProperty('is_current', false)
   ).property('euListings')
-  anyNonConventionLanguage: ( ->
-    if @get('commonNames') == undefined
-      return
-    if @get('commonNames').findProperty('convention_language', false) == undefined
-      ""
-    else
-      "show_more"
-  ).property('commonNames')
   contentObserver: ( ->
     matchedOnSelf = true
     unless @get('controllers.search.taxonConceptQueryRe') == null
