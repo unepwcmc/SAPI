@@ -9,7 +9,7 @@ Species.TaxonConceptSearchResultView = Ember.View.extend
   getQuery: ( ->
     @get('controller').get('controllers.search').get('taxonConceptQuery')
   ).property()
-  
+
   template: ( ->
     Ember.Handlebars.compile(
       '<a href="#" {{action openTaxonPage view.taxonConceptId}}>

@@ -7,6 +7,7 @@ Species.SearchController = Ember.Controller.extend
   autoCompleteCountries: null
   selectedGeoEntities: []
   selectedGeoEntitiesIds: []
+  redirected: false
 
   setFilters: (filtersHash) ->
     @set('taxonomy', filtersHash.taxonomy)
@@ -55,6 +56,7 @@ Species.SearchController = Ember.Controller.extend
     @set('autoCompleteCountries', @get('controllers.geoEntities.countries'))
 
   openTaxonPage: (taxonConceptId) ->
+    @set('redirected', false);
     @transitionToRoute('taxon_concept.legal', Species.TaxonConcept.find(taxonConceptId))
 
   openSearchPage: () ->

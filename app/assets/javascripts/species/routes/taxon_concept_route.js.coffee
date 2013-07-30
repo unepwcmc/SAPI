@@ -11,7 +11,8 @@ Species.TaxonConceptRoute = Ember.Route.extend
     # setupController directly and model is not called.
     # We might need to revisit this when loading particular tabs.
     if model.get('citesListings') == undefined
-      controller.set('model', Species.TaxonConcept.find(model.get('id')))
+      model.reload()
+      #controller.set('model', Species.TaxonConcept.find(model.get('id')))
 
   renderTemplate: ->
     taxonConceptController = @controllerFor('taxonConcept')

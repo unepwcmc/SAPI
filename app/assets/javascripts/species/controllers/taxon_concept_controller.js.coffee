@@ -56,7 +56,7 @@ Species.TaxonConceptController = Ember.ObjectController.extend
   ).property('euListings')
   contentObserver: ( ->
     matchedOnSelf = true
-    unless @get('controllers.search.taxonConceptQueryRe') == null
+    if @get('controllers.search.redirected') == true && @get('controllers.search.taxonConceptQueryRe') != null
       matchedOnSelf = @get('controllers.search.taxonConceptQueryRe').test(@get('fullName'))
     @set('matchedOnSelf', matchedOnSelf)
   ).observes('content.didLoad')
