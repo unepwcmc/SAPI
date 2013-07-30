@@ -16,7 +16,7 @@ Species.TaxonConceptAutoCompleteSuggestionView = Ember.View.extend
         </a>')
     else
       Ember.Handlebars.compile(
-        '<a href="#" {{action openSearchPage}}>
+        '<a href="#" {{action openSearchPage view.autoCompleteTaxonConcept.fullName}}>
           {{#highlight view.autoCompleteTaxonConcept.autoCompleteSuggestion query=controller.taxonConceptQuery}}
             {{unbound this}}
           {{/highlight}}
