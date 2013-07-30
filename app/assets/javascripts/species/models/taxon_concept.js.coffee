@@ -20,22 +20,17 @@ Species.TaxonConcept = DS.Model.extend
   euListings: DS.attr("array")
   matchingNames: DS.attr("string")
   distributionReferences: DS.attr("array")
+  taxonomy: DS.attr("string")
 
   autoCompleteSuggestion: ( ->
-    if @get('synonyms').length > 0
+    if @get('synonyms') != undefined && @get('synonyms').length > 0
       @get('fullName') + ' (' + @get('synonyms').join( ', ') + ')'
     else
       @get('fullName')
   ).property('fullName', 'synonyms')
-
-
-Species.TaxonConcept.FIXTURES = [
-  id: 2751
-  fullName: "Antilocapra americana"
-  rankName: "SPECIES"
-,
-  id: 10887
-  fullName: "Antilocapra americana mexicana"
-  rankName: "SUBSPECIES"
-
-]
+  searchResultDisplay: ( ->
+    baseDisplay = @get('fullName') + ' <span class="author-year">' + @get('authorYear') + '</span>'
+    if @get('synonyms') != undefined && @get('synonyms').length > 0
+      baseDisplay = baseDisplay + ' <span class="synonyms">(' + @get('synonyms').join(', ') + ')</span>'
+    baseDisplay
+  ).property('fullName', 'synonyms', 'authorYear')

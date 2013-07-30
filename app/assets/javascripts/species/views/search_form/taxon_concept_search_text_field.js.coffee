@@ -18,11 +18,8 @@ Species.TaxonConceptSearchTextField = Em.TextField.extend
     @showDropdown()
 
   hideDropdown: () -> 
-    @set('controller.taxonConceptsDropdownVisible', false)   
+    $('.search fieldset').removeClass('parent-focus parent-active')
 
   showDropdown: () ->
     if @.$().val().length > 2
-      @set('controller.taxonConceptsDropdownVisible', true)   
-
-
-
+      $('.search fieldset').addClass('parent-focus parent-active') 

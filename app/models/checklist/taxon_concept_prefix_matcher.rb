@@ -50,7 +50,5 @@ class Checklist::TaxonConceptPrefixMatcher
       ]).order("LENGTH(taxonomic_position), full_name")
     end
   end
-
-
 end
 

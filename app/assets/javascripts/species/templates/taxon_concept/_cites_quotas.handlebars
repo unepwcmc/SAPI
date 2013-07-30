@@ -21,7 +21,12 @@
             <td>{{quota.year}}</td>
             <td>{{quota.geo_entity.name}}</td>
             <td>{{quota.quota}} {{quota.unit_name}}</td>
-            <td>{{quota.notes}}</td>
+            <td>
+              {{#if quota.subspecies_info}}
+                {{quota.subspecies_info}}<br />
+              {{/if}}
+              {{{quota.notes}}}
+            </td>
             <td class="last">&nbsp;</td>
           </tr>
         {{/if}}
@@ -55,7 +60,12 @@
                 <td>{{quota.year}}</td>
                 <td>{{quota.geo_entity.name}}</td>
                 <td>{{quota.quota}} {{quota.unit_name}}</td>
-                <td>{{quota.notes}}</td>
+                <td>
+                  {{#if quota.subspecies_info}}
+                    {{quota.subspecies_info}}<br />
+                  {{/if}}
+                  {{quota.notes}}
+                </td>
                 <td class="last">&nbsp;</td>
               </tr>
               {{/if}}

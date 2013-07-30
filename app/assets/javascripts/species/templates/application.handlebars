@@ -5,7 +5,7 @@
   <div class="w1">
     <div id="header">
       <strong class="logo"><a href="/species">Species+</a></strong>
-        {{view Species.DownloadsView controllerBinding="controllers.downloads"}}
+      {{outlet downloads}}
       <ul id="nav">
         <li class="add"><a href="#">Resource</a>
           <ul>
@@ -21,23 +21,23 @@
       </ul>
     </div>
 
-    {{outlet}}
+    {{outlet main}}
 
   </div>
 </div>
 <div id="footer">
   <div class="holder">
     <ul class="sponsor">
-      <li><a href="#"><img src="/assets/species/logo01.png" alt="image description" width="37" height="43" /></a></li>
-      <li><a href="#"><img src="/assets/species/logo02.png" alt="image description" width="77" height="44" /></a></li>
-      <li><a href="#"><img src="/assets/species/logo03.png" alt="image description" width="65" height="44" /></a></li>
-      <li><a href="#"><img src="/assets/species/logo04.png" alt="image description" width="31" height="44" /></a></li>
+      <li><a href="http://www.unep.org"><img src="/assets/species/logo-UNEP.png" alt="UNEP logo" width="37" height="43" /></a></li>
+      <li><a href="http://www.cites.org"><img src="/assets/species/logo-CITES.png" alt="CITES logo" width="77" height="44" /></a></li>
+      <li><a href="http://ec.europa.eu/environment/cites/home_en.htm"><img src="/assets/species/logo-EU.png" alt="EU logo" width="65" height="44" /></a></li>
+      <li><a href="http://www.cms.int"><img src="/assets/species/logo-CMS.png" alt="CMS logo" width="31" height="44" /></a></li>
     </ul>
     <div class="power-by">
       <strong class="title">Powered by</strong>
       <ul>
-        <li><a href="#"><img src="/assets/species/logo01.png" alt="image description" width="37" height="43" /></a></li>
-        <li><a href="#"><img src="/assets/species/logo05.png" alt="image description" width="43" height="44" /></a></li>
+        <li><a href="http://www.unep-wcmc.org"><img src="/assets/species/logo-UNEP.png" alt="image description" width="37" height="43" /></a></li>
+        <li><a href="http://www.unep-wcmc.org"><img src="/assets/species/logo-WCMC.png" alt="image description" width="43" height="44" /></a></li>
       </ul>
     </div>
   </div>

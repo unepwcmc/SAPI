@@ -1,19 +1,12 @@
 Species.SearchRoute = Ember.Route.extend
 
   serialize: (model) ->
-    {params: '?' + $.param(model)}
+    {params: $.param(model)}
 
   model: (params) ->
-    geoEntitiesController = @controllerFor('geoEntities')
-    geoEntitiesController.set('content', Species.GeoEntity.find())
     # what follows here is the deserialisation of params
     # this hook is executed only when entering from url
-    queryString = params.params
-    #remove the questionmark
-    if queryString[0] == '?'
-      queryString = queryString.slice(1,queryString.length)
-    params = $.deparam(queryString)
-    params
+    $.deparam(params.params)
 
   setupController: (controller, model) ->
     # this hook is executed whether entering from url or transition
@@ -28,6 +21,7 @@ Species.SearchRoute = Ember.Route.extend
     # controller.
     @render('taxonConcepts', {
       into: 'application',
+      outlet: 'main',
       controller: taxonConceptsController
     })
     # Render the `search_form` template into
@@ -45,3 +39,21 @@ Species.SearchRoute = Ember.Route.extend
       controller: taxonConceptsController
     })
 
+    @render('downloads', {
+      into: 'application',
+      outlet: 'downloads',
+      controller: @controllerFor('downloads')
+    })
+    @render('downloadsButton', {
+      into: 'downloads',
+      outlet: 'downloadsButton',
+      controller: @controllerFor('downloads')
+    })
+
+  events:
+    ensureGeoEntitiesLoaded: ->
+      @controllerFor('geoEntities').load()
+
+    ensureHigherTaxaLoaded: ->
+      @controllerFor('higherTaxaCitesEu').load()
+      @controllerFor('higherTaxaCms').load()

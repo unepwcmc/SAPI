@@ -13,7 +13,7 @@ class Species::Search
   def initialize_params(options)
     options = Species::SearchParams.sanitize(options)
     options.keys.each { |k| instance_variable_set("@#{k}", options[k]) }
-    @scientific_name = @taxon_concept_query  #TODO handle advanced queries
+    @scientific_name = @taxon_concept_query
   end
 
   def initialize_query
@@ -42,14 +42,15 @@ class Species::Search
 
     unless @scientific_name.blank?
       @taxon_concepts_rel = @taxon_concepts_rel.
-      where([
-        "full_name ILIKE '#{@scientific_name}%'
-        OR
-        EXISTS (
-          SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE :sci_name_prefix
+        by_name(@scientific_name, {:synonyms => true, :subspecies => true, :common_names => false}).
+        where(:name_status => 'A').
+        select(<<-SQL
+                taxon_concepts_mview.*,
+                ARRAY(
+                  SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{@scientific_name}%'
+                ) AS synonyms_ary
+               SQL
         )
-      ", :sci_name_prefix => "#{@scientific_name}%"
-      ])
     end
   end
 

@@ -53,7 +53,10 @@
     </div>
     <div class="col">
       <div class="popup-area">
-        {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}
+        {{view Species.GeoEntitiesSearchButton
+          selectedGeoEntitiesBinding="controller.selectedGeoEntities"
+          loadedBinding="controller.loaded"
+        }}
         {{view Species.GeoEntitiesSearchDropdown
           controllerBinding="controller"
         }}
@@ -64,7 +67,7 @@
     {{view Species.StartDownloadButton controllerBinding="controller"}}
     <div class="message-area">
       {{#if controller.downloadInProgress}}
-        <img src="assets/loading.gif">
+        <img src="/assets/loading.gif">
       {{/if}}
       {{controller.downloadMessage}}
     </div>
@@ -142,7 +145,10 @@
     </div>
     <div class="col">
       <div class="popup-area">
-        {{view Species.GeoEntitiesSearchButton controllerBinding="controller"}}
+        {{view Species.GeoEntitiesSearchButton
+          selectedGeoEntitiesBinding="controller.selectedGeoEntities"
+          loadedBinding="controller.loaded"
+        }}
         {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
       </div>
     </div>
@@ -151,7 +157,7 @@
     {{view Species.StartDownloadButton controllerBinding="controller"}}
     <div class="message-area">
       {{#if controller.downloadInProgress}}
-        <img src="assets/loading.gif">
+        <img src="/assets/loading.gif">
       {{/if}}
       {{controller.downloadMessage}}
     </div>
