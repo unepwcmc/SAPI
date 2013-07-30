@@ -24,6 +24,10 @@ RETURNS TEXT
 CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
   LANGUAGE plpgsql
   AS $$
+  DECLARE
+    addition_id INT;
+    deletion_id INT;
+    cites_id INT;
   BEGIN
     PERFORM rebuild_all_listing_changes_mview();
 
@@ -165,8 +169,67 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     CREATE INDEX ON listing_changes_mview (id);
     CREATE INDEX ON listing_changes_mview (taxon_concept_id);
     CREATE INDEX ON listing_changes_mview (original_taxon_concept_id);
+    CREATE INDEX ON listing_changes_mview (taxon_concept_id, original_taxon_concept_id, change_type_id, effective_at, change_type_id);
 
-    --RAISE NOTICE 'Dropping all listing changes materialized view';
-   -- DROP table IF EXISTS all_listing_changes_mview CASCADE;
+    RAISE NOTICE 'Terminating non-current inherited listings';
+    SELECT id INTO cites_id FROM designations WHERE name = 'CITES';
+    SELECT id INTO deletion_id FROM change_types WHERE name = 'DELETION' AND designation_id = cites_id;
+    SELECT id INTO addition_id FROM change_types WHERE name = 'ADDITION' AND designation_id = cites_id;
+    -- find inherited listing changes superceded by own listing changes
+    -- mark them as not current in context of the child and add fake deletion records
+    -- so that those inherited events are terminated properly on the timelines
+    WITH own_listing_changes AS (
+      SELECT taxon_concept_id, effective_at
+      FROM listing_changes_mview
+      WHERE taxon_concept_id = original_taxon_concept_id
+      AND change_type_id = addition_id
+    ), terminated_inherited_listing_changes AS (
+      SELECT id, original_taxon_concept_id, listing_changes_mview.taxon_concept_id, 
+      own_listing_changes.effective_at,
+      species_listing_id, species_listing_name,
+      designation_id, designation_name,
+      party_id, party_iso_code
+      FROM own_listing_changes
+      JOIN listing_changes_mview
+      ON listing_changes_mview.taxon_concept_id = own_listing_changes.taxon_concept_id
+      AND listing_changes_mview.original_taxon_concept_id != own_listing_changes.taxon_concept_id
+      AND listing_changes_mview.effective_at < own_listing_changes.effective_at
+      AND change_type_id = addition_id
+    ), fake_deletions AS (
+      -- note: this inserts records without an id
+      -- this is ok for the timelines, and those records are not used elsewhere
+      -- note to self: ids in this view are not unique anyway, since any id
+      -- from listing changes can occur multiple times
+      INSERT INTO listing_changes_mview (
+        original_taxon_concept_id, taxon_concept_id,
+        effective_at,
+        species_listing_id, species_listing_name,
+        change_type_id, change_type_name,
+        designation_id, designation_name,
+        party_id, party_iso_code,
+        is_current, explicit_change,
+        show_in_timeline, show_in_downloads, show_in_history
+      )
+      SELECT 
+      original_taxon_concept_id, taxon_concept_id,
+      MIN(effective_at) AS effective_at, 
+      species_listing_id, species_listing_name,
+      deletion_id, 'DELETION', 
+      terminated_inherited_listing_changes.designation_id, designation_name, 
+      party_id, party_iso_code, 
+      TRUE AS is_current, FALSE AS explicit_change,
+      TRUE AS show_in_timeline, FALSE AS show_in_downloads, FALSE AS show_in_history
+      FROM terminated_inherited_listing_changes
+      GROUP BY original_taxon_concept_id, taxon_concept_id, 
+      species_listing_id, species_listing_name,
+      terminated_inherited_listing_changes.designation_id, designation_name, party_id, party_iso_code
+      RETURNING *
+    )
+    UPDATE listing_changes_mview
+    SET is_current = FALSE
+    FROM terminated_inherited_listing_changes terminated_lc
+    WHERE terminated_lc.id = listing_changes_mview.id 
+    AND terminated_lc.taxon_concept_id = listing_changes_mview.taxon_concept_id;
+
   END;
   $$;
