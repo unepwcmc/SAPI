@@ -3,26 +3,24 @@ Species.SearchController = Ember.Controller.extend
   taxonomy: 'cites_eu'
   taxonConceptQuery: null
   geoEntityQuery: null
-  geoEntityIds: null
-
   autoCompleteRegions: null
   autoCompleteCountries: null
   selectedGeoEntities: []
-
-  scientificName: ""
+  selectedGeoEntitiesIds: []
 
   loadTaxonConcepts: ->
     @transitionToRoute('search', {
       taxonomy: @get('taxonomy'),
       taxon_concept_query: @get('taxonConceptQuery'),
+      geo_entities_ids: @get('selectedGeoEntities').mapProperty('id')
     })
 
   setFilters: (filtersHash) ->
     @set('taxonomy', filtersHash.taxonomy)
+    if filtersHash.taxon_concept_query == ''
+      filtersHash.taxon_concept_query = null
     @set('taxonConceptQuery', filtersHash.taxon_concept_query)
-
-  toParams: ->
-    scientific_name: @get('scientificName')
+    @set('selectedGeoEntitiesIds', filtersHash.geo_entities_ids || [])
 
   autoCompleteTaxonConcepts: ( ->
     taxonConceptQuery = @get('taxonConceptQuery')
@@ -52,14 +50,13 @@ Species.SearchController = Ember.Controller.extend
       re.test item.get('name')
   ).observes('geoEntityQuery')
 
-  regionsObserver: ( ->
+  geoEntitiesObserver: ( ->
+    Ember.run.once(@, 'initForm')
+  ).observes('controllers.geoEntities.@each.didLoad')
+
+  initForm: ->
+    @set('selectedGeoEntities', @get('controllers.geoEntities.content').filter((geoEntity) =>
+      return geoEntity.get('id') in @get('selectedGeoEntitiesIds')
+    ))
     @set('autoCompleteRegions', @get('controllers.geoEntities.regions'))
-  ).observes('controllers.geoEntities.regions.@each.didLoad')
-
-  countriesObserver: ( ->
     @set('autoCompleteCountries', @get('controllers.geoEntities.countries'))
-  ).observes('controllers.geoEntities.countries.@each.didLoad')
-
-  selectedGeoEntitiesObserver: ( ->
-    @set 'geoEntityIds', @get('selectedGeoEntities').mapProperty('id')
-  ).observes('selectedGeoEntities.@each')
