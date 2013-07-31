@@ -57,6 +57,12 @@ server {
   root #{deploy_to}/current/public;
   passenger_enabled on;
   rails_env staging;
+
+  add_header 'Access-Control-Allow-Origin' *;
+  add_header 'Access-Control-Allow-Methods' "GET, POST, PUT, DELETE, OPTIONS";
+  add_header 'Access-Control-Allow-Headers' "X-Requested-With, X-Prototype-Version";
+  add_header 'Access-Control-Max-Age' 1728000;
+  
   gzip on;
   location ^~ /assets/ {
     expires max;
