@@ -4,6 +4,8 @@ set :domain, "unepwcmc-012.vm.brightbox.net"
 ## List of servers
 server "unepwcmc-012.vm.brightbox.net", :app, :web, :db, :primary => true
  
+set :branch, "NewBrightboxDeploy"
+
 set :application, "sapi"
 set :server_name, "sapi.unepwcmc-012.vm.brightbox.net"
 set :sudo_user, "rails"
