@@ -58,31 +58,52 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
     -- affected_taxon_concept -- is a taxon concept that is affected by this listing change,
     -- even though it might not have an explicit connection to it
     -- (i.e. it's an ancestor's listing change)
-    SELECT
+    WITH listing_changes_with_exceptions AS (
+      -- the purpose of this CTE is to aggregate excluded taxon concept ids
+      SELECT         
         listing_changes.id,
-        designation_id,
+        change_types.designation_id,
+        change_types.name AS change_type_name,
         listing_changes.taxon_concept_id,
+        listing_changes.species_listing_id,
+        listing_changes.change_type_id,
+        listing_changes.inclusion_taxon_concept_id,
+        listing_changes.effective_at::DATE,
+        ARRAY_AGG(taxonomic_exceptions.taxon_concept_id) AS excluded_taxon_concept_ids
+      FROM listing_changes
+      LEFT JOIN listing_changes taxonomic_exceptions
+      ON listing_changes.id = taxonomic_exceptions.parent_id 
+      AND listing_changes.taxon_concept_id != taxonomic_exceptions.taxon_concept_id
+      JOIN change_types ON change_types.id = listing_changes.change_type_id
+      GROUP BY
+        listing_changes.id,
+        change_types.designation_id,
+        change_types.name,
+        listing_changes.taxon_concept_id,
+        listing_changes.species_listing_id,
+        listing_changes.change_type_id,
+        listing_changes.inclusion_taxon_concept_id,
+        listing_changes.effective_at::DATE
+    )
+    SELECT
+        listing_changes.*,
         taxon_concept_and_ancestors.taxon_concept_id AS affected_taxon_concept_id,
         taxon_concept_and_ancestors.tree_distance,
-        species_listing_id,
-        change_type_id,
-        inclusion_taxon_concept_id,
-        effective_at::DATE,
-        -- the following ROW_NUMBER call will assign chronologocal order to listing changes
+        -- the following ROW_NUMBER call will assign chronological order to listing changes
         -- in scope of the affected taxon concept and a particular designation
         ROW_NUMBER() OVER (
             PARTITION BY taxon_concept_and_ancestors.taxon_concept_id, designation_id
             ORDER BY effective_at, tree_distance,
             CASE
-              WHEN change_types.name = 'ADDITION' THEN 0
-              WHEN change_types.name = 'RESERVATION' THEN 1
-              WHEN change_types.name = 'RESERVATION_WITHDRAWAL' THEN 2
-              WHEN change_types.name = 'DELETION' THEN 3
-              WHEN change_types.name = 'EXCEPTION' THEN 4
+              WHEN change_type_name = 'DELETION' THEN 0
+              WHEN change_type_name = 'ADDITION' THEN 1
+              WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
+              WHEN change_type_name = 'RESERVATION' THEN 3
+              WHEN change_type_name = 'EXCEPTION' THEN 4
             END,
             tree_distance
         )::INT AS timeline_position
-    FROM listing_changes
+    FROM listing_changes_with_exceptions listing_changes
     JOIN (
         -- This subquery took like half a day to get right, so maybe it deserves a comment.
         -- It uses a sql procedure (ary_higher_or_equal_ranks_names) to return all ranks above
@@ -103,8 +124,7 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         GENERATE_SUBSCRIPTS(higher_or_equal_ranks_names(data->'rank_name'), 1) - 1 AS tree_distance
         FROM taxon_concepts
     ) taxon_concept_and_ancestors
-    ON listing_changes.taxon_concept_id = taxon_concept_and_ancestors.ancestor_taxon_concept_id
-    JOIN change_types ON change_types.id = listing_changes.change_type_id;
+    ON listing_changes.taxon_concept_id = taxon_concept_and_ancestors.ancestor_taxon_concept_id;
   END;
   $$;
 
@@ -167,8 +187,11 @@ WITH RECURSIVE listing_changes_timeline AS (
   WHEN hi.taxon_concept_id = listing_changes_timeline.context
   OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
   THEN TRUE
+  WHEN hi.excluded_taxon_concept_ids IS NOT NULL 
+  AND hi.excluded_taxon_concept_ids @> ARRAY[hi.affected_taxon_concept_id]
+  THEN FALSE
   WHEN listing_changes_timeline.context IS NULL --this would be the case when deleted
-  THEN TRUE -- unless exlusion is active...
+  THEN TRUE -- allows for re-listing
   WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
   THEN TRUE
   ELSE FALSE
@@ -179,6 +202,7 @@ WITH RECURSIVE listing_changes_timeline AS (
   AND listing_changes_timeline.original_taxon_concept_id = hi.affected_taxon_concept_id
   AND listing_changes_timeline.timeline_position + 1 = hi.timeline_position
   JOIN change_types ON hi.change_type_id = change_types.id
+  
 )
 SELECT listing_changes_timeline.id
 FROM listing_changes_timeline

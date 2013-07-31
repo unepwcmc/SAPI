@@ -1,5 +1,5 @@
 namespace :downloads do
-  DOWNLOAD_DIRS = ['checklist', 'eu_listings', 'cites_listings', 'cms_listings', 'quotas', 'cites_suspesions']
+  DOWNLOAD_DIRS = ['checklist', 'eu_listings', 'cites_listings', 'cms_listings', 'quotas', 'cites_suspensions']
   namespace :cache do
     desc "Remove all cached downloads in /public/downloads/"
     task :clear => :environment do
