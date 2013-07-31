@@ -31,34 +31,60 @@ Species.TaxonConceptController = Ember.ObjectController.extend
       ""
   ).property('commonNames')
   currentCitesListings: (->
-    @get('citesListings').filterProperty('is_current', true)
+    if @get('citesListings') != undefined
+      @get('citesListings').filterProperty('is_current', true)
+    else
+      null
   ).property('citesListings')
   historicCitesListings: (->
-    @get('citesListings').filterProperty('is_current', false)
+    if @get('citesListings') != undefined
+      @get('citesListings').filterProperty('is_current', false)
+    else
+      null
   ).property('citesListings')
   currentCitesQuotas: (->
-    @get('citesQuotas').filterProperty('is_current', true)
+    if @get('citesQuotas') != undefined
+      @get('citesQuotas').filterProperty('is_current', true)
+    else
+      null
   ).property('citesQuotas')
   historicCitesQuotas: (->
-    @get('citesQuotas').filterProperty('is_current', false)
+    if @get('citesQuotas') != undefined
+      @get('citesQuotas').filterProperty('is_current', false)
+    else
+      null
   ).property('citesQuotas')
   currentCitesSuspensions: (->
-    @get('citesSuspensions').filterProperty('is_current', true)
+    if @get('citesSuspensions') != undefined
+      @get('citesSuspensions').filterProperty('is_current', true)
+    else
+      null
   ).property('citesSuspensions')
   historicCitesSuspensions: (->
-    @get('citesSuspensions').filterProperty('is_current', false)
+    if @get('citesSuspensions') != undefined
+      @get('citesSuspensions').filterProperty('is_current', false)
+    else
+      null
   ).property('citesSuspensions')
   currentEuListings: (->
-    @get('euListings').filterProperty('is_current', true)
+    if @get('citesEuListings') != undefined
+      @get('euListings').filterProperty('is_current', true)
+    else
+      null
   ).property('euListings')
   historicEuListings: (->
-    @get('euListings').filterProperty('is_current', false)
+    if @get('citesEuListings') != undefined
+      @get('euListings').filterProperty('is_current', false)
+    else
+      null
   ).property('euListings')
   contentObserver: ( ->
     matchedOnSelf = true
     if @get('controllers.search.redirected') == true && @get('controllers.search.taxonConceptQueryRe') != null
       matchedOnSelf = @get('controllers.search.taxonConceptQueryRe').test(@get('fullName'))
     @set('matchedOnSelf', matchedOnSelf)
+    if @get('content') != undefined && @get('content').get('isLoaded') == true && @get('content').get('mTaxonConcept') == undefined
+      @get('content').reload()
   ).observes('content.didLoad')
   matchedOnSynonym: ( ->
     if @get('synonyms') == undefined || @get('matchedOnSelf') || @get('controllers.search.taxonConceptQueryRe') == null

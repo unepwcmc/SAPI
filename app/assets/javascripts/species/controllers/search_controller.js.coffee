@@ -56,7 +56,7 @@ Species.SearchController = Ember.Controller.extend
     @set('autoCompleteCountries', @get('controllers.geoEntities.countries'))
 
   openTaxonPage: (taxonConceptId) ->
-    @set('redirected', false);
+    @set('redirected', false)
     $(".search fieldset").removeClass('parent-focus parent-active')
     @transitionToRoute('taxon_concept.legal', Species.TaxonConcept.find(taxonConceptId))
 
