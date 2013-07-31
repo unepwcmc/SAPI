@@ -3,10 +3,10 @@ Species.TaxonConceptsController = Ember.ArrayController.extend
   content: null
 
   contentObserver: ( ->
-    # Here just to remind us that this can be done, if needed!
     if @get('content').meta != undefined &&  @get('content').meta.total == 1
-      taxonConcept = Species.
-        TaxonConcept.
-        find(@get('content').meta.higher_taxa_headers[0].taxon_concept_ids[0])
-      @transitionToRoute('taxon_concept.legal', taxonConcept)
+      @get('controllers.search').set('redirected', true)
+      @openTaxonPage(@get('content').meta.higher_taxa_headers[0].taxon_concept_ids[0])
   ).observes("content.meta.didLoad")
+
+  openTaxonPage: (taxonConceptId) ->
+    @transitionToRoute('taxon_concept.legal', Species.TaxonConcept.find(taxonConceptId))
