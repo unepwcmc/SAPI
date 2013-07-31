@@ -62,8 +62,12 @@ Species.SearchController = Ember.Controller.extend
 
   openSearchPage: (taxonFullName) ->
     $(".search fieldset").removeClass('parent-focus parent-active')
+    if taxonFullName == undefined
+      query = @get('taxonConceptQuery')
+    else
+      query = taxonFullName
     @transitionToRoute('search', {
       taxonomy: @get('taxonomy'),
-      taxon_concept_query: taxonFullName,
+      taxon_concept_query: query,
       geo_entities_ids: @get('selectedGeoEntities').mapProperty('id')
     })
