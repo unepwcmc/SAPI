@@ -137,7 +137,7 @@ form, fieldset {
 #main p { margin: 0 0 28px; }
 #main h1 {
 	font-size: 50px;
-	font-weight: normal;
+	font-weight: lighter;
 	margin: 0 0 3px;
 	color: #2d3237;
 	line-height: 57px;
@@ -676,8 +676,8 @@ form, fieldset {
 	display: block;
 	color: #2a425a;
 	text-decoration: none;
-	border-top: solid 1px #6b94af;
-	border-left: solid 1px #6b94af;
+	border-top: solid 1px #6993B0;
+	border-left: solid 1px #6993B0;
 }
 #main .tabset > li:first-child > a {
 	-webkit-border-radius: 5px 0 0 0;
@@ -691,6 +691,10 @@ form, fieldset {
 #main .tabset > li:hover > a, #main .tabset > li > a.active {
 	background: #ecf2f6;
 	font-weight: bold;
+  color: #25475F;
+  border-top: solid 1px #ACC7DF;
+  border-left: solid 1px #ACC7DF;
+  border-right: solid 1px #ACC7DF;
 }
 #main .tabset > li > a.active + ul { display: block; }
 #main .tabset > li > ul {
@@ -702,7 +706,7 @@ form, fieldset {
 	border: solid 1px #adc7de;
 	border-top: none;
 	width: 938px;
-        padding: 5px 0 0;
+  padding: 5px 0 0;
 }
 #main .tabset > li > ul >li {
 	float: left;
@@ -819,8 +823,8 @@ form, fieldset {
 
 #main .block a { color: #666; }
 #main .block td {
-	border-bottom: 1px solid #ccc;
-	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #DFE1E2;
+	border-top: 1px solid #DFE1E2;
 	padding: 12px 0;
 	line-height: 15px;
 }

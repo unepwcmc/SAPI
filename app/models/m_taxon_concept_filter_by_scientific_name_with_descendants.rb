@@ -16,6 +16,15 @@ class MTaxonConceptFilterByScientificNameWithDescendants
       )
     SQL
     ]
+
+    cond =<<-SQL 
+      EXISTS (
+        SELECT * FROM UNNEST(ARRAY[kingdom_name, phylum_name, class_name, order_name, family_name]) name
+        WHERE UPPER(name) LIKE UPPER(BTRIM('#{@scientific_name}%'))
+      )
+    SQL
+
+    conditions << cond
     if @match_synonyms
       cond = <<-SQL
         EXISTS (
@@ -52,15 +61,7 @@ class MTaxonConceptFilterByScientificNameWithDescendants
       conditions << cond
     end
 
-    @relation.joins(
-      <<-SQL
-      INNER JOIN (
-        SELECT id FROM taxon_concepts_mview
-        WHERE #{conditions.join("\nOR ")}
-      ) matches
-      ON matches.id IN (#{@relation.table_name}.id, family_id, order_id, class_id, phylum_id, kingdom_id)
-      SQL
-    )
+    @relation.where(conditions.join("\nOR "))
   end
 
 end

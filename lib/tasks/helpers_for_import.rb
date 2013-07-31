@@ -24,7 +24,6 @@ class CsvToDbMap
       'Status' => 'status varchar',
       'Species Author' => 'author varchar',
       'notes' => 'notes varchar',
-      'ReferenceIDs' => 'reference_ids varchar',
       'Designation' => 'taxonomy varchar',
       'AcceptedRank' => 'accepted_rank varchar',
       'AcceptedRecID' => 'accepted_legacy_id integer'
@@ -202,7 +201,7 @@ class CsvToDbMap
       'HASH_NOTE' => 'hash_note varchar'
     },
     'cms_listings_import' => {
-      'rank_name' => 'rank varchar',
+      'rank' => 'rank varchar',
       'rec_id' => 'legacy_id integer',
       'listing' => 'appendix varchar',
       'effective_from' => 'listing_date varchar',
