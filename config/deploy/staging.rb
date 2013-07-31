@@ -76,6 +76,12 @@ server {
   location @maintenance {
     rewrite  ^(.*)$  /system/maintenance.html break;
   }
+
+  Header set Access-Control-Allow-Origin *
+  Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+  Header set Access-Control-Allow-Headers "X-Requested-With, X-Prototype-Version"
+  Header set Access-Control-Max-Age 1728000
+
 }
 EOF
 put vhost_config, "/tmp/vhost_config"
