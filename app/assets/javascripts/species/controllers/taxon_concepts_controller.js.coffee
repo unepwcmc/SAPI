@@ -9,4 +9,7 @@ Species.TaxonConceptsController = Ember.ArrayController.extend
   ).observes("content.meta.didLoad")
 
   openTaxonPage: (taxonConceptId) ->
-    @transitionToRoute('taxon_concept.legal', Species.TaxonConcept.find(taxonConceptId))
+    m = Species.TaxonConcept.find(taxonConceptId)
+    if m.get('mTaxonConcept') == undefined
+      m.reload()
+    @transitionToRoute('taxon_concept.legal', m)

@@ -83,8 +83,6 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     if @get('controllers.search.redirected') == true && @get('controllers.search.taxonConceptQueryRe') != null
       matchedOnSelf = @get('controllers.search.taxonConceptQueryRe').test(@get('fullName'))
     @set('matchedOnSelf', matchedOnSelf)
-    if @get('content') != undefined && @get('content').get('isLoaded') == true && @get('content').get('mTaxonConcept') == undefined
-      @get('content').reload()
   ).observes('content.didLoad')
   matchedOnSynonym: ( ->
     if @get('synonyms') == undefined || @get('matchedOnSelf') || @get('controllers.search.taxonConceptQueryRe') == null

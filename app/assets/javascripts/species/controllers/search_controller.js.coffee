@@ -58,7 +58,10 @@ Species.SearchController = Ember.Controller.extend
   openTaxonPage: (taxonConceptId) ->
     @set('redirected', false)
     $(".search fieldset").removeClass('parent-focus parent-active')
-    @transitionToRoute('taxon_concept.legal', Species.TaxonConcept.find(taxonConceptId))
+    m = Species.TaxonConcept.find(taxonConceptId)
+    if m.get('mTaxonConcept') == undefined
+      m.reload()
+    @transitionToRoute('taxon_concept.legal', m)
 
   openSearchPage: (taxonFullName) ->
     $(".search fieldset").removeClass('parent-focus parent-active')
