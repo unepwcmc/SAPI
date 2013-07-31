@@ -78,7 +78,7 @@ module Checklist::Pdf::HistoryContent
   end
 
   def listing_with_change_type(listing_change)
-    appendix = if listing_change.change_type_name == ChangeType::DELETION && listing_change.species_listing_name != 'III'
+    appendix = if listing_change.change_type_name == ChangeType::DELETION
       nil
     else
       listing_change.species_listing_name
