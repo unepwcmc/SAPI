@@ -78,8 +78,12 @@ module Checklist::Pdf::HistoryContent
   end
 
   def listing_with_change_type(listing_change)
-    "#{listing_change.species_listing_name}#{
-      if listing_change.change_type_name == ChangeType::RESERVATION
+    appendix = if listing_change.change_type_name == ChangeType::DELETION && listing_change.species_listing_name != 'III'
+      nil
+    else
+      listing_change.species_listing_name
+    end
+    change_type = if listing_change.change_type_name == ChangeType::RESERVATION
         '/r'
       elsif listing_change.change_type_name == ChangeType::RESERVATION_WITHDRAWAL
         '/w'
@@ -88,7 +92,7 @@ module Checklist::Pdf::HistoryContent
       else
         nil
       end
-    }"
+    "#{appendix}#{change_type}"
   end
 
   def multilingual_annotations(listing_change)
