@@ -60,7 +60,7 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
     -- (i.e. it's an ancestor's listing change)
     WITH listing_changes_with_exceptions AS (
       -- the purpose of this CTE is to aggregate excluded taxon concept ids
-      SELECT         
+      SELECT
         listing_changes.id,
         change_types.designation_id,
         change_types.name AS change_type_name,
@@ -84,6 +84,36 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         listing_changes.change_type_id,
         listing_changes.inclusion_taxon_concept_id,
         listing_changes.effective_at::DATE
+    ), listing_changes_with_distributions AS (
+      -- the purpose of this CTE is to aggregate listed and excluded populations
+      SELECT lc.id, 
+        lc.designation_id,
+        lc.change_type_name,
+        lc.taxon_concept_id,
+        lc.species_listing_id,
+        lc.change_type_id,
+        lc.inclusion_taxon_concept_id,
+        lc.effective_at,
+        lc.excluded_taxon_concept_ids,
+        ARRAY_AGG(listing_distributions.geo_entity_id) AS listed_geo_entities_ids,
+        ARRAY_AGG(excluded_distributions.geo_entity_id) AS excluded_geo_entities_ids
+      FROM listing_changes_with_exceptions lc
+      LEFT JOIN listing_distributions
+      ON lc.id = listing_distributions.listing_change_id
+      LEFT JOIN listing_changes population_exceptions
+      ON lc.id = population_exceptions.parent_id 
+      AND lc.taxon_concept_id = population_exceptions.taxon_concept_id
+      LEFT JOIN listing_distributions excluded_distributions
+      ON population_exceptions.id = excluded_distributions.listing_change_id
+      GROUP BY lc.id,
+        lc.designation_id,
+        lc.change_type_name,
+        lc.taxon_concept_id,
+        lc.species_listing_id,
+        lc.change_type_id,
+        lc.inclusion_taxon_concept_id,
+        lc.effective_at,
+        lc.excluded_taxon_concept_ids
     )
     SELECT
         listing_changes.*,
@@ -103,7 +133,7 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
             END,
             tree_distance
         )::INT AS timeline_position
-    FROM listing_changes_with_exceptions listing_changes
+    FROM listing_changes_with_distributions listing_changes
     JOIN (
         -- This subquery took like half a day to get right, so maybe it deserves a comment.
         -- It uses a sql procedure (ary_higher_or_equal_ranks_names) to return all ranks above
@@ -178,11 +208,15 @@ WITH RECURSIVE listing_changes_timeline AS (
   hi.timeline_position,
   -- is applicable
   CASE
+  -- do not include duplicated inclusions
   WHEN listing_changes_timeline.inclusion_taxon_concept_id IS NOT NULL
   AND listing_changes_timeline.inclusion_taxon_concept_id = hi.taxon_concept_id
   AND listing_changes_timeline.species_listing_id = hi.species_listing_id
   AND listing_changes_timeline.change_type_id = hi.change_type_id
   AND listing_changes_timeline.effective_at = hi.effective_at
+  THEN FALSE
+  -- when excluded populations clash with distribution
+  WHEN hi.excluded_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
   THEN FALSE
   WHEN hi.taxon_concept_id = listing_changes_timeline.context
   OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
