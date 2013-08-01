@@ -18,16 +18,9 @@ Species.TaxonConcept = DS.Model.extend
   citesSuspensions: DS.attr("array")
   citesListings: DS.attr("array")
   euListings: DS.attr("array")
-  matchingNames: DS.attr("string")
   distributionReferences: DS.attr("array")
   taxonomy: DS.attr("string")
 
-  autoCompleteSuggestion: ( ->
-    if @get('synonyms') != undefined && @get('synonyms').length > 0
-      @get('fullName') + ' (' + @get('synonyms').join( ', ') + ')'
-    else
-      @get('fullName')
-  ).property('fullName', 'synonyms')
   searchResultDisplay: ( ->
     baseDisplay = @get('fullName') + ' <span class="author-year">' + @get('authorYear') + '</span>'
     if @get('synonyms') != undefined && @get('synonyms').length > 0
