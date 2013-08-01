@@ -72,6 +72,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     hash_annotations.full_note_en AS hash_full_note_en,
     hash_annotations.full_note_es AS hash_full_note_es,
     hash_annotations.full_note_fr AS hash_full_note_fr,
+    inclusion_taxon_concept_id,
     CASE
     WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
     THEN ancestor_listing_auto_note(
@@ -178,23 +179,48 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     -- find inherited listing changes superceded by own listing changes
     -- mark them as not current in context of the child and add fake deletion records
     -- so that those inherited events are terminated properly on the timelines
-    WITH own_listing_changes AS (
-      SELECT taxon_concept_id, effective_at
+    WITH next_lc AS (
+      SELECT taxon_concept_id, original_taxon_concept_id, species_listing_id, effective_at
       FROM listing_changes_mview
-      WHERE taxon_concept_id = original_taxon_concept_id
-      AND change_type_id = addition_id
-    ), terminated_inherited_listing_changes AS (
-      SELECT id, original_taxon_concept_id, listing_changes_mview.taxon_concept_id, 
-      own_listing_changes.effective_at,
-      species_listing_id, species_listing_name,
+      WHERE change_type_id = addition_id AND is_current
+    ), prev_lc AS (
+      SELECT id, 
+      listing_changes_mview.original_taxon_concept_id, 
+      listing_changes_mview.taxon_concept_id, 
+      next_lc.effective_at,
+      listing_changes_mview.species_listing_id, 
+      species_listing_name,
       designation_id, designation_name,
       party_id, party_iso_code
-      FROM own_listing_changes
-      JOIN listing_changes_mview
-      ON listing_changes_mview.taxon_concept_id = own_listing_changes.taxon_concept_id
-      AND listing_changes_mview.original_taxon_concept_id != own_listing_changes.taxon_concept_id
-      AND listing_changes_mview.effective_at < own_listing_changes.effective_at
-      AND change_type_id = addition_id
+      FROM next_lc
+      JOIN listing_changes_mview      
+      ON listing_changes_mview.taxon_concept_id = next_lc.taxon_concept_id
+      AND change_type_id = 1
+      AND listing_changes_mview.effective_at < next_lc.effective_at
+      AND listing_changes_mview.species_listing_id != next_lc.species_listing_id
+      AND (
+        (
+          -- own listing change preceded by inherited listing change
+          next_lc.original_taxon_concept_id = next_lc.taxon_concept_id
+          AND listing_changes_mview.original_taxon_concept_id != listing_changes_mview.taxon_concept_id
+        ) OR (
+          -- own listing change preceded by own listing change if it is a not current inclusion
+          next_lc.original_taxon_concept_id = next_lc.taxon_concept_id
+          AND listing_changes_mview.original_taxon_concept_id = listing_changes_mview.taxon_concept_id
+          AND listing_changes_mview.inclusion_taxon_concept_id IS NOT NULL
+          AND NOT listing_changes_mview.is_current
+        ) OR (
+          -- inherited listing change preceded by inherited listing change
+          next_lc.original_taxon_concept_id != next_lc.taxon_concept_id
+          AND listing_changes_mview.original_taxon_concept_id != listing_changes_mview.taxon_concept_id
+        ) OR (
+          -- inherited listing change preceded by own listing change if it is a not current inclusion
+          next_lc.original_taxon_concept_id != next_lc.taxon_concept_id
+          AND listing_changes_mview.original_taxon_concept_id = listing_changes_mview.taxon_concept_id
+          AND listing_changes_mview.inclusion_taxon_concept_id IS NOT NULL
+          AND NOT listing_changes_mview.is_current
+        )
+      )
     ), fake_deletions AS (
       -- note: this inserts records without an id
       -- this is ok for the timelines, and those records are not used elsewhere
@@ -215,19 +241,19 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
       MIN(effective_at) AS effective_at, 
       species_listing_id, species_listing_name,
       deletion_id, 'DELETION', 
-      terminated_inherited_listing_changes.designation_id, designation_name, 
+      prev_lc.designation_id, designation_name, 
       party_id, party_iso_code, 
       TRUE AS is_current, FALSE AS explicit_change,
       TRUE AS show_in_timeline, FALSE AS show_in_downloads, FALSE AS show_in_history
-      FROM terminated_inherited_listing_changes
+      FROM prev_lc
       GROUP BY original_taxon_concept_id, taxon_concept_id, 
       species_listing_id, species_listing_name,
-      terminated_inherited_listing_changes.designation_id, designation_name, party_id, party_iso_code
+      prev_lc.designation_id, designation_name, party_id, party_iso_code
       RETURNING *
     )
     UPDATE listing_changes_mview
     SET is_current = FALSE
-    FROM terminated_inherited_listing_changes terminated_lc
+    FROM prev_lc terminated_lc
     WHERE terminated_lc.id = listing_changes_mview.id 
     AND terminated_lc.taxon_concept_id = listing_changes_mview.taxon_concept_id;
 
