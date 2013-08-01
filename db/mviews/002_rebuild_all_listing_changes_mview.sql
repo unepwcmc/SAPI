@@ -188,7 +188,17 @@ WITH RECURSIVE listing_changes_timeline AS (
   OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
   THEN TRUE
   WHEN hi.excluded_taxon_concept_ids IS NOT NULL 
-  AND hi.excluded_taxon_concept_ids @> ARRAY[hi.affected_taxon_concept_id]
+  -- if taxon or any of its ancestors is excluded from this listing
+  AND hi.excluded_taxon_concept_ids && ARRAY[
+    hi.affected_taxon_concept_id,
+    taxon_concepts_mview.kingdom_id,
+    taxon_concepts_mview.phylum_id,
+    taxon_concepts_mview.class_id,
+    taxon_concepts_mview.order_id,
+    taxon_concepts_mview.family_id,
+    taxon_concepts_mview.genus_id,
+    taxon_concepts_mview.species_id
+  ]
   THEN FALSE
   WHEN listing_changes_timeline.context IS NULL --this would be the case when deleted
   THEN TRUE -- allows for re-listing
@@ -202,7 +212,7 @@ WITH RECURSIVE listing_changes_timeline AS (
   AND listing_changes_timeline.original_taxon_concept_id = hi.affected_taxon_concept_id
   AND listing_changes_timeline.timeline_position + 1 = hi.timeline_position
   JOIN change_types ON hi.change_type_id = change_types.id
-  
+  JOIN taxon_concepts_mview ON hi.affected_taxon_concept_id = taxon_concepts_mview.id 
 )
 SELECT listing_changes_timeline.id
 FROM listing_changes_timeline
