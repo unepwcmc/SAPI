@@ -69,7 +69,7 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         listing_changes.change_type_id,
         listing_changes.inclusion_taxon_concept_id,
         listing_changes.effective_at::DATE,
-        ARRAY_AGG(taxonomic_exceptions.taxon_concept_id) AS excluded_taxon_concept_ids
+        ARRAY_AGG_NOTNULL(taxonomic_exceptions.taxon_concept_id) AS excluded_taxon_concept_ids
       FROM listing_changes
       LEFT JOIN listing_changes taxonomic_exceptions
       ON listing_changes.id = taxonomic_exceptions.parent_id 
@@ -95,8 +95,8 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         lc.inclusion_taxon_concept_id,
         lc.effective_at,
         lc.excluded_taxon_concept_ids,
-        ARRAY_AGG(listing_distributions.geo_entity_id) AS listed_geo_entities_ids,
-        ARRAY_AGG(excluded_distributions.geo_entity_id) AS excluded_geo_entities_ids
+        ARRAY_AGG_NOTNULL(listing_distributions.geo_entity_id) AS listed_geo_entities_ids,
+        ARRAY_AGG_NOTNULL(excluded_distributions.geo_entity_id) AS excluded_geo_entities_ids
       FROM listing_changes_with_exceptions lc
       LEFT JOIN listing_distributions
       ON lc.id = listing_distributions.listing_change_id
@@ -159,7 +159,7 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
   $$;
 
 --this line is here so that the following procedure, which depends on this materialized view, can be created
-SELECT * FROM redefine_all_listing_changes_mview() ;
+SELECT * FROM redefine_all_listing_changes_mview();
 
 CREATE OR REPLACE FUNCTION applicable_listing_changes_for_node(in_designation_id INT, node_id INT)
 RETURNS SETOF  INT
@@ -167,7 +167,7 @@ STABLE
 AS $$
 
 WITH RECURSIVE listing_changes_timeline AS (
-  SELECT id,
+  SELECT all_listing_changes_mview.id,
   designation_id,
   affected_taxon_concept_id AS original_taxon_concept_id,
   taxon_concept_id AS current_taxon_concept_id,
@@ -178,8 +178,34 @@ WITH RECURSIVE listing_changes_timeline AS (
   effective_at,
   tree_distance AS context_tree_distance,
   timeline_position,
-  TRUE AS is_applicable
+  CASE
+   WHEN (
+    -- there are listed populations
+    ARRAY_UPPER(listed_geo_entities_ids, 1) IS NOT NULL
+    -- and the taxon does not occur in any of them
+    AND NOT listed_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
+  )
+  -- when all populations are excluded
+  OR excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+  THEN FALSE
+  WHEN ARRAY_UPPER(excluded_taxon_concept_ids, 1) IS NOT NULL 
+  -- if taxon or any of its ancestors is excluded from this listing
+  AND excluded_taxon_concept_ids && ARRAY[
+    affected_taxon_concept_id,
+    taxon_concepts_mview.kingdom_id,
+    taxon_concepts_mview.phylum_id,
+    taxon_concepts_mview.class_id,
+    taxon_concepts_mview.order_id,
+    taxon_concepts_mview.family_id,
+    taxon_concepts_mview.genus_id,
+    taxon_concepts_mview.species_id
+  ]
+  THEN FALSE
+  ELSE
+  TRUE 
+  END AS is_applicable
   FROM all_listing_changes_mview
+  JOIN taxon_concepts_mview ON all_listing_changes_mview.affected_taxon_concept_id = taxon_concepts_mview.id 
   WHERE designation_id = $1
   AND all_listing_changes_mview.affected_taxon_concept_id = $2
   AND timeline_position = 1
@@ -195,7 +221,7 @@ WITH RECURSIVE listing_changes_timeline AS (
   THEN hi.inclusion_taxon_concept_id
   WHEN change_types.name = 'DELETION'
   THEN NULL
-  WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
+  WHEN hi.tree_distance <= listing_changes_timeline.context_tree_distance
   AND change_types.name = 'ADDITION'
   THEN hi.taxon_concept_id
   ELSE listing_changes_timeline.context
@@ -215,13 +241,19 @@ WITH RECURSIVE listing_changes_timeline AS (
   AND listing_changes_timeline.change_type_id = hi.change_type_id
   AND listing_changes_timeline.effective_at = hi.effective_at
   THEN FALSE
-  -- when excluded populations clash with distribution
-  WHEN hi.excluded_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
+  WHEN (
+    -- there are listed populations
+    ARRAY_UPPER(hi.listed_geo_entities_ids, 1) IS NOT NULL
+    -- and the taxon does not occur in any of them
+    AND NOT hi.listed_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
+  )
+  -- when all populations are excluded
+  OR hi.excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
   THEN FALSE
   WHEN hi.taxon_concept_id = listing_changes_timeline.context
   OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
   THEN TRUE
-  WHEN hi.excluded_taxon_concept_ids IS NOT NULL 
+  WHEN ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL 
   -- if taxon or any of its ancestors is excluded from this listing
   AND hi.excluded_taxon_concept_ids && ARRAY[
     hi.affected_taxon_concept_id,
