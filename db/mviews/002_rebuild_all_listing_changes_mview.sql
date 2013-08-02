@@ -218,10 +218,12 @@ WITH RECURSIVE listing_changes_timeline AS (
   hi.taxon_concept_id,
   CASE
   WHEN hi.inclusion_taxon_concept_id IS NOT NULL
+  AND hi.affected_taxon_concept_id = hi.taxon_concept_id
   THEN hi.inclusion_taxon_concept_id
   WHEN change_types.name = 'DELETION'
   THEN NULL
-  WHEN hi.tree_distance <= listing_changes_timeline.context_tree_distance
+  -- changing this to <= breaks Ursus arctos isabellinus
+  WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
   AND change_types.name = 'ADDITION'
   THEN hi.taxon_concept_id
   ELSE listing_changes_timeline.context
@@ -250,9 +252,6 @@ WITH RECURSIVE listing_changes_timeline AS (
   -- when all populations are excluded
   OR hi.excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
   THEN FALSE
-  WHEN hi.taxon_concept_id = listing_changes_timeline.context
-  OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
-  THEN TRUE
   WHEN ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL 
   -- if taxon or any of its ancestors is excluded from this listing
   AND hi.excluded_taxon_concept_ids && ARRAY[
@@ -266,6 +265,9 @@ WITH RECURSIVE listing_changes_timeline AS (
     taxon_concepts_mview.species_id
   ]
   THEN FALSE
+  WHEN hi.taxon_concept_id = listing_changes_timeline.context
+  OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
+  THEN TRUE
   WHEN listing_changes_timeline.context IS NULL --this would be the case when deleted
   THEN TRUE -- allows for re-listing
   WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
