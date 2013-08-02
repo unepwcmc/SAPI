@@ -67,13 +67,13 @@ Species.TaxonConceptController = Ember.ObjectController.extend
       null
   ).property('citesSuspensions')
   currentEuListings: (->
-    if @get('citesEuListings') != undefined
+    if @get('euListings') != undefined
       @get('euListings').filterProperty('is_current', true)
     else
       null
   ).property('euListings')
   historicEuListings: (->
-    if @get('citesEuListings') != undefined
+    if @get('euListings') != undefined
       @get('euListings').filterProperty('is_current', false)
     else
       null
