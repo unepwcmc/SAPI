@@ -3,28 +3,26 @@
 # Table name: eu_decisions
 #
 #  id               :integer          not null, primary key
-#  type             :string(255)
-#  law_id           :integer
+#  is_current       :boolean
+#  notes            :text
+#  internal_notes   :text
 #  taxon_concept_id :integer
 #  geo_entity_id    :integer
 #  start_date       :datetime
+#  start_event_id   :integer
 #  end_date         :datetime
+#  end_event_id     :integer
+#  type             :string(255)
 #  restriction      :string(255)
-#  restriction_text :text
-#  term_id          :integer
-#  source_id        :integer
-#  conditions       :boolean
-#  comments         :text
-#  is_current       :boolean
+#  conditions_apply :boolean
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  conditions_apply :boolean
 #
 
 class EuDecision < ActiveRecord::Base
-  attr_accessible :comments, :conditions, :end_date, :geo_entity_id,
-    :is_current, :law_id, :restriction, :restriction_text, :source_id,
-    :start_date, :taxon_concept_id, :term_id, :type, :conditions_apply
+  attr_accessible :end_date, :end_event_id, :geo_entity_id, :internal_notes,
+    :is_current, :notes, :start_date, :start_event_id, :restriction, 
+    :taxon_concept_id, :type, :conditions_apply
 
   belongs_to :taxon_concept
   belongs_to :geo_entity
