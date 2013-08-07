@@ -57,7 +57,9 @@ namespace :import do
             WHERE NOT EXISTS (
               SELECT * FROM taxon_relationships
               LEFT JOIN taxon_concepts AS accepted ON accepted.id = taxon_relationships.taxon_concept_id
+                AND accepted.legacy_type = '#{kingdom}'
               LEFT JOIN taxon_concepts AS synonym ON synonym.id = taxon_relationships.other_taxon_concept_id
+                AND synonym.legacy_type = '#{kingdom}'
               WHERE taxon_relationships.taxon_relationship_type_id = #{rel.id}
                 AND accepted.taxonomy_id = #{taxonomy.id} AND synonym.taxonomy_id = #{taxonomy.id}
             ) AND taxonomies.id = #{taxonomy.id}
