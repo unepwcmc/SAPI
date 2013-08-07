@@ -182,7 +182,9 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     WITH next_lc AS (
       SELECT taxon_concept_id, original_taxon_concept_id, species_listing_id, effective_at
       FROM listing_changes_mview
-      WHERE change_type_id = addition_id AND is_current
+      -- note to self: removed the is_current filter here to also handle cases
+      -- where an appendix changed in the past, e.g. Amazona auropalliata
+      WHERE change_type_id = addition_id
     ), prev_lc AS (
       SELECT id, 
       listing_changes_mview.original_taxon_concept_id, 
@@ -215,10 +217,14 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
           AND listing_changes_mview.original_taxon_concept_id != listing_changes_mview.taxon_concept_id
         ) OR (
           -- inherited listing change preceded by own listing change if it is a not current inclusion
+          -- in the same taxon concept as the current listing change
           next_lc.original_taxon_concept_id != next_lc.taxon_concept_id
           AND listing_changes_mview.original_taxon_concept_id = listing_changes_mview.taxon_concept_id
           AND listing_changes_mview.inclusion_taxon_concept_id IS NOT NULL
-          AND NOT listing_changes_mview.is_current
+          AND (
+            listing_changes_mview.inclusion_taxon_concept_id = next_lc.original_taxon_concept_id
+            OR NOT listing_changes_mview.is_current
+          )
         )
       )
     ), fake_deletions AS (
@@ -259,3 +265,5 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
 
   END;
   $$;
+
+COMMENT ON FUNCTION rebuild_listing_changes_mview() IS 'Procedure to rebuild listing changes materialized view in the database.';

@@ -60,7 +60,7 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
     -- (i.e. it's an ancestor's listing change)
     WITH listing_changes_with_exceptions AS (
       -- the purpose of this CTE is to aggregate excluded taxon concept ids
-      SELECT         
+      SELECT
         listing_changes.id,
         change_types.designation_id,
         change_types.name AS change_type_name,
@@ -69,7 +69,7 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         listing_changes.change_type_id,
         listing_changes.inclusion_taxon_concept_id,
         listing_changes.effective_at::DATE,
-        ARRAY_AGG(taxonomic_exceptions.taxon_concept_id) AS excluded_taxon_concept_ids
+        ARRAY_AGG_NOTNULL(taxonomic_exceptions.taxon_concept_id) AS excluded_taxon_concept_ids
       FROM listing_changes
       LEFT JOIN listing_changes taxonomic_exceptions
       ON listing_changes.id = taxonomic_exceptions.parent_id 
@@ -84,6 +84,36 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         listing_changes.change_type_id,
         listing_changes.inclusion_taxon_concept_id,
         listing_changes.effective_at::DATE
+    ), listing_changes_with_distributions AS (
+      -- the purpose of this CTE is to aggregate listed and excluded populations
+      SELECT lc.id, 
+        lc.designation_id,
+        lc.change_type_name,
+        lc.taxon_concept_id,
+        lc.species_listing_id,
+        lc.change_type_id,
+        lc.inclusion_taxon_concept_id,
+        lc.effective_at,
+        lc.excluded_taxon_concept_ids,
+        ARRAY_AGG_NOTNULL(listing_distributions.geo_entity_id) AS listed_geo_entities_ids,
+        ARRAY_AGG_NOTNULL(excluded_distributions.geo_entity_id) AS excluded_geo_entities_ids
+      FROM listing_changes_with_exceptions lc
+      LEFT JOIN listing_distributions
+      ON lc.id = listing_distributions.listing_change_id AND NOT listing_distributions.is_party
+      LEFT JOIN listing_changes population_exceptions
+      ON lc.id = population_exceptions.parent_id 
+      AND lc.taxon_concept_id = population_exceptions.taxon_concept_id
+      LEFT JOIN listing_distributions excluded_distributions
+      ON population_exceptions.id = excluded_distributions.listing_change_id AND NOT excluded_distributions.is_party
+      GROUP BY lc.id,
+        lc.designation_id,
+        lc.change_type_name,
+        lc.taxon_concept_id,
+        lc.species_listing_id,
+        lc.change_type_id,
+        lc.inclusion_taxon_concept_id,
+        lc.effective_at,
+        lc.excluded_taxon_concept_ids
     )
     SELECT
         listing_changes.*,
@@ -103,7 +133,7 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
             END,
             tree_distance
         )::INT AS timeline_position
-    FROM listing_changes_with_exceptions listing_changes
+    FROM listing_changes_with_distributions listing_changes
     JOIN (
         -- This subquery took like half a day to get right, so maybe it deserves a comment.
         -- It uses a sql procedure (ary_higher_or_equal_ranks_names) to return all ranks above
@@ -129,27 +159,53 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
   $$;
 
 --this line is here so that the following procedure, which depends on this materialized view, can be created
-SELECT * FROM redefine_all_listing_changes_mview() ;
+SELECT * FROM redefine_all_listing_changes_mview();
 
 CREATE OR REPLACE FUNCTION applicable_listing_changes_for_node(in_designation_id INT, node_id INT)
-RETURNS SETOF  INT
+RETURNS SETOF INT
 STABLE
 AS $$
 
 WITH RECURSIVE listing_changes_timeline AS (
-  SELECT id,
+  SELECT all_listing_changes_mview.id,
   designation_id,
   affected_taxon_concept_id AS original_taxon_concept_id,
   taxon_concept_id AS current_taxon_concept_id,
-  taxon_concept_id AS context,
+  HSTORE(species_listing_id::TEXT, taxon_concept_id::TEXT) AS context,
   inclusion_taxon_concept_id,
   species_listing_id,
   change_type_id,
   effective_at,
   tree_distance AS context_tree_distance,
   timeline_position,
-  TRUE AS is_applicable
+  CASE
+   WHEN (
+    -- there are listed populations
+    ARRAY_UPPER(listed_geo_entities_ids, 1) IS NOT NULL
+    -- and the taxon does not occur in any of them
+    AND NOT listed_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
+  )
+  -- when all populations are excluded
+  OR excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+  THEN FALSE
+  WHEN ARRAY_UPPER(excluded_taxon_concept_ids, 1) IS NOT NULL 
+  -- if taxon or any of its ancestors is excluded from this listing
+  AND excluded_taxon_concept_ids && ARRAY[
+    affected_taxon_concept_id,
+    taxon_concepts_mview.kingdom_id,
+    taxon_concepts_mview.phylum_id,
+    taxon_concepts_mview.class_id,
+    taxon_concepts_mview.order_id,
+    taxon_concepts_mview.family_id,
+    taxon_concepts_mview.genus_id,
+    taxon_concepts_mview.species_id
+  ]
+  THEN FALSE
+  ELSE
+  TRUE 
+  END AS is_applicable
   FROM all_listing_changes_mview
+  JOIN taxon_concepts_mview ON all_listing_changes_mview.affected_taxon_concept_id = taxon_concepts_mview.id 
   WHERE designation_id = $1
   AND all_listing_changes_mview.affected_taxon_concept_id = $2
   AND timeline_position = 1
@@ -162,12 +218,20 @@ WITH RECURSIVE listing_changes_timeline AS (
   hi.taxon_concept_id,
   CASE
   WHEN hi.inclusion_taxon_concept_id IS NOT NULL
-  THEN hi.inclusion_taxon_concept_id
+  AND AVALS(listing_changes_timeline.context) @> ARRAY[hi.taxon_concept_id::TEXT]
+  THEN HSTORE(hi.species_listing_id::TEXT, hi.inclusion_taxon_concept_id::TEXT)
   WHEN change_types.name = 'DELETION'
-  THEN NULL
-  WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
+  THEN --listing_changes_timeline.context - ARRAY[hi.taxon_concept_id]
+  listing_changes_timeline.context - HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
+  WHEN hi.tree_distance <= listing_changes_timeline.context_tree_distance
+  AND hi.affected_taxon_concept_id = hi.taxon_concept_id
   AND change_types.name = 'ADDITION'
-  THEN hi.taxon_concept_id
+  AND hi.affected_taxon_concept_id = hi.taxon_concept_id -- if it's 
+  THEN HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
+  -- changing this to <= breaks Ursus arctos isabellinus
+  WHEN hi.tree_distance <= listing_changes_timeline.context_tree_distance
+  AND change_types.name = 'ADDITION'
+  THEN listing_changes_timeline.context || HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
   ELSE listing_changes_timeline.context
   END,
   hi.inclusion_taxon_concept_id,
@@ -178,16 +242,23 @@ WITH RECURSIVE listing_changes_timeline AS (
   hi.timeline_position,
   -- is applicable
   CASE
+  -- do not include duplicated inclusions
   WHEN listing_changes_timeline.inclusion_taxon_concept_id IS NOT NULL
   AND listing_changes_timeline.inclusion_taxon_concept_id = hi.taxon_concept_id
   AND listing_changes_timeline.species_listing_id = hi.species_listing_id
   AND listing_changes_timeline.change_type_id = hi.change_type_id
   AND listing_changes_timeline.effective_at = hi.effective_at
   THEN FALSE
-  WHEN hi.taxon_concept_id = listing_changes_timeline.context
-  OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
-  THEN TRUE
-  WHEN hi.excluded_taxon_concept_ids IS NOT NULL 
+  WHEN (
+    -- there are listed populations
+    ARRAY_UPPER(hi.listed_geo_entities_ids, 1) IS NOT NULL
+    -- and the taxon does not occur in any of them
+    AND NOT hi.listed_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
+  )
+  -- when all populations are excluded
+  OR hi.excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+  THEN FALSE
+  WHEN ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL 
   -- if taxon or any of its ancestors is excluded from this listing
   AND hi.excluded_taxon_concept_ids && ARRAY[
     hi.affected_taxon_concept_id,
@@ -200,7 +271,10 @@ WITH RECURSIVE listing_changes_timeline AS (
     taxon_concepts_mview.species_id
   ]
   THEN FALSE
-  WHEN listing_changes_timeline.context IS NULL --this would be the case when deleted
+  WHEN listing_changes_timeline.context -> hi.species_listing_id::TEXT = hi.taxon_concept_id::TEXT
+  OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
+  THEN TRUE
+  WHEN listing_changes_timeline.context = ''::HSTORE  --this would be the case when deleted
   THEN TRUE -- allows for re-listing
   WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
   THEN TRUE
