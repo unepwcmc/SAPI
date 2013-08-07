@@ -182,7 +182,9 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     WITH next_lc AS (
       SELECT taxon_concept_id, original_taxon_concept_id, species_listing_id, effective_at
       FROM listing_changes_mview
-      WHERE change_type_id = addition_id AND is_current
+      -- note to self: removed the is_current filter here to also handle cases
+      -- where an appendix changed in the past, e.g. Amazona auropalliata
+      WHERE change_type_id = addition_id
     ), prev_lc AS (
       SELECT id, 
       listing_changes_mview.original_taxon_concept_id, 
