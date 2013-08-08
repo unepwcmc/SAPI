@@ -16,13 +16,40 @@ ssh_options[:forward_agent] = true
 set :application, "sapi"
 
 
-# got sick of "gem X not found in any of the sources when using the default whenever recipe
+# got sick of "gem X not found in any of the sources" when using the default whenever recipe
 # probable source of issue:
 # https://github.com/javan/whenever/commit/7ae1009c31deb03c5db4a68f5fc99ea099ce5655
 namespace :deploy do
   desc "Update the crontab file"
   task :update_crontab, :roles => :app, :except => { :no_release => true } do
     run "cd #{release_path} && bundle exec whenever --update-crontab #{application}"
+  end
+
+  task :default do
+    update
+    assets.precompile
+    restart
+    cleanup
+    # etc
+  end
+
+  desc "Restarting mod_rails with restart.txt"
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "touch #{current_path}/tmp/restart.txt"
+  end
+
+end
+ 
+namespace :assets do
+  desc "Precompile assets locally and then rsync to app servers"
+    task :precompile, :only => { :primary => true } do
+    run_locally "bundle exec rake RAILS_ENV=staging assets:precompile;"
+    servers = find_servers :roles => [:app], :except => { :no_release => true }
+    servers.each do |server|
+    run_locally "rsync -av ./public/assets/ rails@unepwcmc-012.vm.brightbox.net:#{deploy_to}/shared/assets;"
+    end
+    run_locally "rm -rf public/assets"
+    run "ln -nfs #{deploy_to}/shared/assets #{deploy_to}/current/public/assets"
   end
 end
 

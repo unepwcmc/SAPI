@@ -3,8 +3,6 @@ set :rails_env, "staging"
 set :domain, "unepwcmc-012.vm.brightbox.net"
 ## List of servers
 server "unepwcmc-012.vm.brightbox.net", :app, :web, :db, :primary => true
- 
-set :branch, "NewBrightboxDeploy"
 
 set :application, "sapi"
 set :server_name, "sapi.unepwcmc-012.vm.brightbox.net"
@@ -17,34 +15,6 @@ set :default_environment, {
   'GEM_HOME' => '/home/rails/.rvm/gems/ruby-1.9.2-p320',
   'GEM_PATH' => '/home/rails/.rvm/gems/ruby-1.9.2-p320',
 }
-
-
-namespace :deploy do
-task :default do
-update
-assets.precompile
-restart
-cleanup
-# etc
-end
-end
- 
-namespace :assets do
-desc "Precompile assets locally and then rsync to app servers"
-task :precompile, :only => { :primary => true } do
-run_locally "bundle exec rake RAILS_ENV=staging assets:precompile;"
-servers = find_servers :roles => [:app], :except => { :no_release => true }
-servers.each do |server|
-run_locally "rsync -av ./public/assets/ rails@unepwcmc-012.vm.brightbox.net:#{deploy_to}/shared/assets;"
-end
-run_locally "rm -rf public/assets"
-run "ln -nfs #{deploy_to}/shared/assets #{deploy_to}/current/public/assets"
-end
-end
-
-
-
-
 
 desc "Configure VHost"
 task :config_vhost do
@@ -89,15 +59,4 @@ sudo "mv /tmp/vhost_config /etc/nginx/sites-available/#{application}"
 sudo "ln -s /etc/nginx/sites-available/#{application} /etc/nginx/sites-enabled/#{application}"
 end
  
-
 after "deploy:setup", :config_vhost
-
-namespace :deploy do
-  desc "Restarting mod_rails with restart.txt"
-  task :restart, :roles => :app, :except => { :no_release => true } do
-    run "touch #{current_path}/tmp/restart.txt"
-  end
-end
-
-
-
