@@ -70,8 +70,6 @@ namespace :import do
           SELECT row_id,
             taxon_concepts.id,
             CASE
-              WHEN (UPPER(TMP.appendix) = 'DELI' OR
-                UPPER(TMP.appendix) = 'DELII') AND TMP.is_current = 't'::BOOLEAN THEN NULL
               WHEN UPPER(BTRIM(TMP.appendix)) like '%III%' THEN #{appendix_3.id}
               WHEN UPPER(BTRIM(TMP.appendix)) like '%II%' THEN #{appendix_2.id}
               WHEN UPPER(BTRIM(TMP.appendix)) like '%I%' THEN #{appendix_1.id}

@@ -7,6 +7,10 @@ require 'brightbox/recipes'
 require 'brightbox/passenger'
 require 'sidekiq/capistrano'
 
+set :generate_webserver_config, false
+
+ssh_options[:forward_agent] = true
+
 # The name of your application.  Used for deployment directory and filenames
 # and Apache configs. Should be unique on the Brightbox
 set :application, "sapi"
