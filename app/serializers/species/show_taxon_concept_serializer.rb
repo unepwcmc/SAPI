@@ -90,8 +90,13 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       where(:taxon_concept_id => object_and_children, :show_in_history => true, :designation_id => cites && cites.id).
       where(<<-SQL
               taxon_concepts_mview.rank_name = 'SPECIES' OR 
-              ( taxon_concepts_mview.rank_name = 'SUBSPECIES' AND
-                listing_changes_mview.auto_note IS NULL )
+              ( 
+                (
+                  taxon_concepts_mview.rank_name = 'SUBSPECIES'
+                  OR taxon_concepts_mview.rank_name = 'VARIETY'
+                )
+                AND listing_changes_mview.auto_note IS NULL
+              )
             SQL
       ).
       joins(<<-SQL
@@ -118,6 +123,8 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
               CASE
                 WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
                   THEN '[Listing for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
+                WHEN taxon_concepts_mview.rank_name = 'VARIETY'
+                  THEN '[Listing for VARIETY ' || taxon_concepts_mview.full_name || ']'
                 ELSE NULL
               END AS subspecies_info
            SQL
