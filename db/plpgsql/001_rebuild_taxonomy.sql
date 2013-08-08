@@ -27,6 +27,11 @@ CREATE OR REPLACE FUNCTION full_name(rank_name VARCHAR(255), ancestors HSTORE) R
         CAST($2 -> 'genus_name' AS VARCHAR) || ' ' ||
         LOWER(CAST($2 -> 'species_name' AS VARCHAR)) || ' ' ||
         LOWER(CAST($2 -> 'subspecies_name' AS VARCHAR))
+      WHEN $1 = 'VARIETY' THEN
+        -- now create a trinomen for full name
+        CAST($2 -> 'genus_name' AS VARCHAR) || ' ' ||
+        LOWER(CAST($2 -> 'species_name' AS VARCHAR)) || ' var. ' ||
+        LOWER(CAST($2 -> 'variety_name' AS VARCHAR))      
       ELSE $2 -> LOWER($1 || '_name')
     END;
   $$;
