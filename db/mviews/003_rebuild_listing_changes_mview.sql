@@ -14,11 +14,19 @@ CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name 
     END;
   $$;
 
-CREATE OR REPLACE FUNCTION ancestor_listing_auto_note(rank_name VARCHAR(255), full_name VARCHAR(255))
+DROP FUNCTION IF EXISTS ancestor_listing_auto_note(rank_name VARCHAR(255), full_name VARCHAR(255));
+
+CREATE OR REPLACE FUNCTION ancestor_listing_auto_note(rank_name VARCHAR(255), full_name VARCHAR(255), change_type_name VARCHAR(255))
 RETURNS TEXT
   LANGUAGE sql IMMUTABLE
   AS $$
-    SELECT $1 || ' listing: ' || full_name_with_spp($1, $2);
+    SELECT $1 || ' ' ||
+    CASE
+      WHEN $3 = 'DELETION' THEN 'deletion'
+      WHEN $3 = 'RESERVATION' THEN 'reservation'
+      WHEN $3 = 'RESERVATION_WITHDRAWAL' THEN 'reservaton withdrawn'
+      ELSE 'listing'
+    END || ' ' || full_name_with_spp($1, $2);
   $$;
 
 CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
@@ -77,12 +85,14 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
     THEN ancestor_listing_auto_note(
       original_taxon_concepts.data->'rank_name',
-      original_taxon_concepts.full_name
+      original_taxon_concepts.full_name,
+      change_types.name
     )
     WHEN inclusion_taxon_concept_id IS NOT NULL
     THEN ancestor_listing_auto_note(
       inclusion_taxon_concepts.data->'rank_name',
-      inclusion_taxon_concepts.full_name
+      inclusion_taxon_concepts.full_name,
+      change_types.name
     )
     ELSE NULL
     END AS auto_note,
