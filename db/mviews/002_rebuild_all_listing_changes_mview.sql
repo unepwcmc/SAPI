@@ -95,11 +95,14 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         lc.inclusion_taxon_concept_id,
         lc.effective_at,
         lc.excluded_taxon_concept_ids,
+        party_distribution.geo_entity_id AS party_id,
         ARRAY_AGG_NOTNULL(listing_distributions.geo_entity_id) AS listed_geo_entities_ids,
         ARRAY_AGG_NOTNULL(excluded_distributions.geo_entity_id) AS excluded_geo_entities_ids
       FROM listing_changes_with_exceptions lc
       LEFT JOIN listing_distributions
       ON lc.id = listing_distributions.listing_change_id AND NOT listing_distributions.is_party
+      LEFT JOIN listing_distributions party_distribution
+      ON lc.id = party_distribution.listing_change_id AND party_distribution.is_party
       LEFT JOIN listing_changes population_exceptions
       ON lc.id = population_exceptions.parent_id 
       AND lc.taxon_concept_id = population_exceptions.taxon_concept_id
@@ -113,6 +116,7 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         lc.change_type_id,
         lc.inclusion_taxon_concept_id,
         lc.effective_at,
+        party_distribution.geo_entity_id,
         lc.excluded_taxon_concept_ids
     )
     SELECT
@@ -242,13 +246,6 @@ WITH RECURSIVE listing_changes_timeline AS (
   hi.timeline_position,
   -- is applicable
   CASE
-  -- do not include duplicated inclusions
-  WHEN listing_changes_timeline.inclusion_taxon_concept_id IS NOT NULL
-  AND listing_changes_timeline.inclusion_taxon_concept_id = hi.taxon_concept_id
-  AND listing_changes_timeline.species_listing_id = hi.species_listing_id
-  AND listing_changes_timeline.change_type_id = hi.change_type_id
-  AND listing_changes_timeline.effective_at = hi.effective_at
-  THEN FALSE
   WHEN (
     -- there are listed populations
     ARRAY_UPPER(hi.listed_geo_entities_ids, 1) IS NOT NULL
