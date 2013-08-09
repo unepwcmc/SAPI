@@ -13,6 +13,4 @@ Species.TaxonConceptsController = Ember.ArrayController.extend
     else
       @get('controllers.search').set('redirected', false)
     m = Species.TaxonConcept.find(taxonConceptId)
-    if m.get('mTaxonConcept') == undefined
-      m.reload()
     @transitionToRoute('taxon_concept.legal', m)

@@ -76,7 +76,7 @@ class Checklist::Checklist
   def listing_changes_json_options
     json_options = {
       :only => [:id, :change_type_name, :species_listing_name,
-        :party_id, :is_current, :symbol,
+        :party_id, :is_current, :hash_ann_symbol, :auto_note,
         :short_note_en, :full_note_en, :hash_full_note_en],
       :methods => [:countries_ids, :effective_at_formatted]
     }

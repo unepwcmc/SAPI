@@ -23,9 +23,8 @@ Species.HigherTaxaCmsController = Ember.ArrayController.extend
   load: ->
     unless @get('loaded')
       @set('content', 
-        Species.TaxonConcept.find({
+        Species.AutoCompleteTaxonConcept.find({
           taxonomy: 'cms'
           ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY']
-          autocomplete: true
         })
       )

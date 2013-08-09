@@ -1,3 +1,12 @@
+$(document).ready( function() {
+  $('body').on('click', 'a.scroll-to', function(e) {
+    e.preventDefault();
+    $('html, body').animate({
+      scrollTop: $($(this).attr('href')).offset().top
+    }, 500);
+  });
+});
+
 // page init
 bindReady(function(){
 	//initInputs();
