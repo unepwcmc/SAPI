@@ -21,14 +21,15 @@
 
 class EuDecision < ActiveRecord::Base
   attr_accessible :end_date, :end_event_id, :geo_entity_id, :internal_notes,
-    :is_current, :notes, :start_date, :start_event_id, :restriction, 
+    :is_current, :notes, :start_date, :start_event_id, :eu_decision_type_id,
     :taxon_concept_id, :type, :conditions_apply
 
   belongs_to :taxon_concept
   belongs_to :geo_entity
-
+  belongs_to :eu_decision_type
   belongs_to :source, :class_name => 'TradeCode'
   belongs_to :term, :class_name => 'TradeCode'
+
 
 
   RESTRICTION_TYPES = [
