@@ -1,0 +1,39 @@
+<strong class="title">EU DECISIONS</strong>
+{{#unless euDecisions}}
+  <p class="empty">There are no current suspensions or opinions for this species.</p>
+{{else}}
+  <table summary="data table">
+    <thead>
+      <tr>
+        <th class="col1">&nbsp;</th>
+        <th class="col2">DATE</th>
+        <th class="col3">COUNTRY<br />OF ORIGIN</th>
+        <th class="col8">SRG<br />OPINION</th>
+        <th class="col9">SUSPENSIONS</th>
+        <th class="col10">NOTES</th>
+        <th class="col7">DOCUMENT</th>
+        <th class="col1">&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody {{bindAttr class="controller.euDecisionsExpanded:historic_expanded"}}>
+      {{#each decision in currentEuDecisions}}
+        <tr class="current">
+          <td>&nbsp;</td>
+          <td>{{decision.start_date}}</td>
+          <td>{{decision.geo_entity_name}}</td>
+          <td>{{decision.decision_type_name}}</td>
+          <td>Art. 4.6 b</td>
+          <td>{{decision.notes}}</td>
+          <td>{{decision.event_name}}</td>
+          <td class="last">&nbsp;</td>
+        </tr>
+      {{else}}
+        <tr class="current">
+          <td>&nbsp;</td>
+          <td colspan=6>There are no current decisions in place for this species.</td>
+          <td>&nbsp;</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{/unless}}

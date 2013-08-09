@@ -5,6 +5,7 @@ Species.TaxonConceptLegalController = Ember.ArrayController.extend
   euListingsExpanded: false
   citesSuspensionsExpanded: false
   citesQuotasExpanded: false
+  euDecisionsExpanded: false
 
   expandList: (id, flag) ->
     this.set(flag, true)

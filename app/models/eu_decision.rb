@@ -29,18 +29,16 @@ class EuDecision < ActiveRecord::Base
   belongs_to :eu_decision_type
   belongs_to :source, :class_name => 'TradeCode'
   belongs_to :term, :class_name => 'TradeCode'
+  belongs_to :start_event, :class_name => 'Event'
 
-
-
-  RESTRICTION_TYPES = [
-    'b', '+', '-', '-Removed'
-  ]
-
-  validates :restriction, { presence: true, inclusion: { :in => RESTRICTION_TYPES } }
   validates :start_date, presence: true
   validates :taxon_concept, presence: true
 
   def year
     start_date ? start_date.strftime('%Y') : ''
+  end
+
+  def start_date_formatted
+    start_date ? start_date.strftime("%d/%m/%y") : ""
   end
 end
