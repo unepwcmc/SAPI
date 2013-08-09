@@ -30,17 +30,18 @@ class Species::TaxonConceptPrefixMatcher
       @taxon_concepts = @taxon_concepts.select(
         ActiveRecord::Base.send(:sanitize_sql_array, [
         "id, full_name, rank_name,
+        ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1),
         ARRAY(
-          SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE :sci_name_prefix
+          SELECT * FROM UNNEST(synonyms_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
         ) AS synonyms_ary",
         :sci_name_prefix => "#{@taxon_concept_query}%"
         ])
       ).
       where([
-        "full_name ILIKE '#{@taxon_concept_query}%'
+        "UPPER(full_name) LIKE :sci_name_prefix
         OR
         EXISTS (
-          SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE :sci_name_prefix
+          SELECT * FROM UNNEST(synonyms_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
         )
       ", :sci_name_prefix => "#{@taxon_concept_query}%"
       ]).where(:name_status => 'A')
