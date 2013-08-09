@@ -233,7 +233,7 @@ namespace :import do
 
     # and now some special care for species that have been deleted and then readded to the same appendix
     # those deletions are explicit, even though not current
-    # Acipenser fulvescens, Loxodonta africana, Incilius periglenes
+    # Acipenser fulvescens, Incilius periglenes
     sql = <<-SQL
     WITH explicit_not_current_deletions AS (
       SELECT listing_changes.* FROM taxon_concepts 
@@ -241,12 +241,6 @@ namespace :import do
       AND change_type_id = #{d.id} AND effective_at = '1983-07-29'
       WHERE taxonomy_id = #{taxonomy.id} 
       AND legacy_type = 'Animalia' and legacy_id = 223
-      UNION
-      SELECT listing_changes.* FROM taxon_concepts 
-      JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id 
-      AND change_type_id = #{d.id} AND effective_at = '1990-01-18'
-      WHERE taxonomy_id = #{taxonomy.id} 
-      AND legacy_type = 'Animalia' and legacy_id = 12392
       UNION
       SELECT listing_changes.* FROM taxon_concepts 
       JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id 
