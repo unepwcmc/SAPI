@@ -19,9 +19,6 @@
           <td>&nbsp;</td>
           <td>
             {{suspension.start_date}}
-            {{#unless suspension.is_current}}
-              - {{suspension.end_date}}
-            {{/unless}}
           </td>
           <td>{{suspension.geo_entity.name}}</td>
           <td>
@@ -65,18 +62,12 @@
               <td>&nbsp;</td>
               <td>
                 {{suspension.start_date}}
-                {{#unless suspension.is_current}}
-                  - {{suspension.end_date}}
-                {{/unless}}
               </td>
               <td>{{suspension.geo_entity.name}}</td>
               <td>
                 <a class="legal-links" href="{{unbound suspension.start_notification.url}}">
                   {{suspension.start_notification.name}}
                 </a>,
-                <a class="legal-links" href="{{unbound suspension.end_notification.url}}">
-                  {{suspension.end_notification.name}}
-                </a>
               </td>
               <td>
                 {{#if suspension.subspecies_info}}
