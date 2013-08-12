@@ -87,6 +87,10 @@ namespace :import do
       'lib/assets/files/cites_suspensions_utf8.csv'
     )
 
+    Rake::Task["import:eu_decisions"].invoke(
+      'lib/assets/files/eu_decisions_utf8.csv'
+    )
+
     Sapi::create_indexes
     Sapi::rebuild(:disable_triggers => true)
 
