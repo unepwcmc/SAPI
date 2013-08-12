@@ -50,7 +50,6 @@ namespace :import do
         WHERE taxon_concepts.taxonomy_id = #{taxonomy_id};
       SQL
       puts "Importing eu decision types and eu decisions"
-      puts sql
       ActiveRecord::Base.connection.execute(sql)
     end
     puts "There are now #{EuDecision.count} EU decisions in the database"
