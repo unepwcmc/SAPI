@@ -27,7 +27,7 @@
           <td>{{listing.effective_at_formatted}}</td>
           <td>
             {{#if listing.subspecies_info}}
-              {{listing.subspecies_info}}<br />
+              {{{listing.subspecies_info}}}<br />
             {{/if}}
             {{#if listing.hash_full_note_en}}
               <a class="legal-links" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
@@ -90,7 +90,7 @@
               <td>{{listing.effective_at_formatted}}</td>
               <td>
                 {{#if listing.subspecies_info}}
-                  {{listing.subspecies_info}}<br />
+                  {{{listing.subspecies_info}}}<br />
                 {{/if}}
                 {{#if listing.hash_full_note_en}}
                   <a class="legal-links" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
