@@ -17,6 +17,8 @@
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  eu_decision_type_id :integer
+#  term_id             :integer
+#  source_id           :integer
 #
 
 require 'spec_helper'
