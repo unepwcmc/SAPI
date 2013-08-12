@@ -44,9 +44,13 @@
             {{/if}}
           </td>
           <td>
-            <a class="legal-links" href="{{unbound listing.event.url}}">
+            {{#if listing.event_url}}
+              <a class="legal-links" href="{{unbound listing.event_url}}">
+                {{listing.event_name}}
+              </a>
+            {{else}}
               {{listing.event_name}}
-            </a>
+            {{/if}}
           </td>
           <td class="last">&nbsp;</td>
         </tr>
@@ -103,9 +107,13 @@
                 {{/if}}
               </td>
               <td>
-                <a class="legal-links" href="{{unbound listing.event.url}}">
+                {{#if listing.event_url}}
+                  <a class="legal-links" href="{{unbound listing.event_url}}">
+                    {{listing.event_name}}
+                  </a>
+                {{else}}
                   {{listing.event_name}}
-                </a>
+                {{/if}}
               </td>
               <td class="last">&nbsp;</td>
             </tr>
