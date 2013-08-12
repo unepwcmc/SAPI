@@ -215,6 +215,21 @@ class CsvToDbMap
       'LegNotes' => 'full_note_en varchar',
       'CMS instrument' => 'designation varchar',
       'Internal Notes' => 'notes varchar'
+    },
+    'eu_decisions_import' => {
+      'IsCurrent?' => 'is_current boolean',
+      'Taxonomy' => 'taxonomy varchar',
+      'LawID' => 'event_legacy_id integer',
+      'SpcRecID' => 'legacy_id integer',
+      'DecLevel' => 'rank varchar',
+      'Kingdom' => 'kingdom varchar',
+      'ISO_country' => 'country_iso2 varchar',
+      'DecOpinion' => 'opinion varchar',
+      'DecDate' => 'start_date date',
+      'Source' => 'source varchar',
+      'Term' => 'term varchar',
+      'DecNotes' => 'notes varchar',
+      'Internal_Notes' => 'internal_notes varchar'
     }
   }
 
