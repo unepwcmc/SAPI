@@ -102,7 +102,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       ).
       joins(<<-SQL
               INNER JOIN taxon_concepts_mview
-                ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id 
+                ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id
             SQL
       ).
       select(<<-SQL
@@ -176,6 +176,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
               listing_changes_mview.hash_ann_parent_symbol,
               listing_changes_mview.hash_ann_symbol,
               events.description AS event_name,
+              events.url AS event_url,
               CASE
                 WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
                   THEN '[Listing for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
