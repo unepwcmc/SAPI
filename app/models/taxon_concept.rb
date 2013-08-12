@@ -129,9 +129,8 @@ class TaxonConcept < ActiveRecord::Base
 
   scope :by_scientific_name, lambda { |scientific_name|
     where([
-      "UPPER(full_name) >= UPPER(?) AND UPPER(full_name) < UPPER(?)",
-      TaxonName.lower_bound(scientific_name),
-      TaxonName.upper_bound(scientific_name)
+      "UPPER(full_name) LIKE BTRIM(UPPER(:sci_name_prefix))",
+      :sci_name_prefix => "#{scientific_name}%"
     ])
   }
 

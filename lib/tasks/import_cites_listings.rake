@@ -231,6 +231,27 @@ namespace :import do
     puts "#{new_listings_count - listings_count} CITES listings were added to the database"
     puts "#{new_listings_d_count - listings_d_count} CITES listing distributions were added to the database"
 
+    # and now some special care for species that have been deleted and then readded to the same appendix
+    # those deletions are explicit, even though not current
+    # Acipenser fulvescens, Incilius periglenes
+    sql = <<-SQL
+    WITH explicit_not_current_deletions AS (
+      SELECT listing_changes.* FROM taxon_concepts 
+      JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id 
+      AND change_type_id = #{d.id} AND effective_at = '1983-07-29'
+      WHERE taxonomy_id = #{taxonomy.id} 
+      AND legacy_type = 'Animalia' and legacy_id = 223
+      UNION
+      SELECT listing_changes.* FROM taxon_concepts 
+      JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id 
+      AND change_type_id = #{d.id} AND effective_at = '1985-08-01'
+      WHERE taxonomy_id = #{taxonomy.id} 
+      AND legacy_type = 'Animalia' and legacy_id = 3172
+    )
+    UPDATE listing_changes SET explicit_change = TRUE
+    FROM explicit_not_current_deletions
+    WHERE explicit_not_current_deletions.id = listing_changes.id
+    SQL
   end
 
   namespace :cites_listings do
