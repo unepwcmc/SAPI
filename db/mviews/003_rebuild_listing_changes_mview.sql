@@ -281,7 +281,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
       SELECT lc.taxon_concept_id, lc.id AS own_inclusion_id, lc_inh.id AS inherited_inclusion_id, 
       lc_inh.full_note_en AS inherited_full_note_en,
       lc_inh.short_note_en AS inherited_short_note_en
-      FROM all_listing_changes_mview lc
+      FROM listing_changes_mview lc
       JOIN listing_changes_mview lc_inh
       ON lc.taxon_concept_id = lc_inh.taxon_concept_id
       AND lc.species_listing_id = lc_inh.species_listing_id
@@ -291,12 +291,12 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
       AND lc.inclusion_taxon_concept_id = lc_inh.original_taxon_concept_id
       WHERE lc.inclusion_taxon_concept_id IS NOT NULL
     ), rows_to_be_deleted AS (
-    DELETE
-    FROM listing_changes_mview lc
-    USING double_inclusions
-    WHERE double_inclusions.taxon_concept_id = lc.taxon_concept_id
-    AND double_inclusions.inherited_inclusion_id = lc.id
-    RETURNING *
+      DELETE
+      FROM listing_changes_mview lc
+      USING double_inclusions
+      WHERE double_inclusions.taxon_concept_id = lc.taxon_concept_id
+      AND double_inclusions.inherited_inclusion_id = lc.id
+      RETURNING *
     )
     UPDATE listing_changes_mview lc
     SET inherited_full_note_en = double_inclusions.inherited_full_note_en,
@@ -304,7 +304,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     FROM double_inclusions
     WHERE double_inclusions.taxon_concept_id = lc.taxon_concept_id
     AND double_inclusions.own_inclusion_id = lc.id
-    AND double_inclusions.inherited_full_note_en IS NOT NULL;    
+    AND (double_inclusions.inherited_full_note_en IS NOT NULL OR double_inclusions.inherited_short_note_en IS NOT NULL);    
 
   END;
   $$;
