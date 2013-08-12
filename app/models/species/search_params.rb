@@ -13,7 +13,7 @@ class Species::SearchParams < Hash
         params[:geo_entity_scope] ? params[:geo_entity_scope].to_sym : nil,
       #filtering options
       :taxon_concept_query =>
-        params[:taxon_concept_query] ? params[:taxon_concept_query] : nil,
+        params[:taxon_concept_query] ? params[:taxon_concept_query].upcase.chomp : nil,
       :geo_entities => params[:geo_entities_ids].blank? ? [] : params[:geo_entities_ids],
       :higher_taxa_ids => params[:higher_taxa_ids] ? params[:higher_taxa_ids] : nil,
       :ranks => params[:ranks] ? 

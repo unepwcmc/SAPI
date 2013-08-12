@@ -175,7 +175,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     RAISE NOTICE 'Creating indexes on taxon_concepts materialized view';
     CREATE INDEX ON taxon_concepts_mview (id);
     CREATE INDEX ON taxon_concepts_mview (parent_id);
-    CREATE INDEX ON taxon_concepts_mview (full_name);
+    CREATE INDEX full_name_idx ON taxon_concepts_mview USING BTREE(UPPER(full_name) text_pattern_ops);
     CREATE INDEX ON taxon_concepts_mview (taxonomy_is_cites_eu, cites_listed, kingdom_position);
     CREATE INDEX ON taxon_concepts_mview (cites_closest_listed_ancestor_id);
     CREATE INDEX ON taxon_concepts_mview (eu_closest_listed_ancestor_id);

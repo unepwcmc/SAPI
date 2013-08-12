@@ -258,7 +258,8 @@ namespace :downloads do
 
     desc "Populate cache"
     task :populate, :roles => [:web, :app] do
-      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake downloads:cache:update"
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake downloads:cache:update_species_downloads"
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake downloads:cache:update_checklist_downloads"
     end
 
     desc "Rotate cache"
