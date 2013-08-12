@@ -20,7 +20,20 @@
           <td>&nbsp;</td>
           <td>{{decision.start_date}}</td>
           <td>{{decision.geo_entity.name}}</td>
-          <td>{{decision.eu_decision_type.name}}</td>
+          <td>
+              {{#if decision.eu_decision_type.tooltip}}
+                <div class="link-holder">
+                  <a class="legal-links">{{decision.eu_decision_type.name}}</a>
+                  <div class="popup-holder">
+                    <div class="popup">
+                      {{decision.eu_decision_type.tooltip}}
+                    </div>
+                  </div>
+                </div>
+              {{else}}
+                {{decision.eu_decision_type.name}}
+              {{/if}}
+          </td>
           <td>
             {{#if decision.subspecies_info}}
               {{decision.subspecies_info}}
@@ -64,7 +77,20 @@
               <td>&nbsp;</td>
               <td>{{decision.start_date}}</td>
               <td>{{decision.geo_entity.name}}</td>
-              <td>{{decision.eu_decision_type.name}}</td>
+              <td>
+                {{#if decision.eu_decision_type.tooltip}}
+                  <div class="link-holder">
+                    <a class="legal-links">{{decision.eu_decision_type.name}}</a>
+                    <div class="popup-holder">
+                      <div class="popup">
+                        {{decision.eu_decision_type.tooltip}}
+                      </div>
+                    </div>
+                  </div>
+                {{else}}
+                  {{decision.eu_decision_type.name}}
+                {{/if}}
+              </td>
               <td>
                 {{#if decision.subspecies_info}}
                   {{decision.subspecies_info}}

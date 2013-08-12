@@ -1024,52 +1024,6 @@ form, fieldset {
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
 }
-#main .block06 .link-holder {
-	position: relative;
-	float: left;
-}
-#main .block06 .link-holder:hover a { font-weight: bold; }
-#main .block06 .link-holder:hover .popup-holder { display: block; }
-#main .block06 .link-holder .popup-holder {
-	position: absolute;
-	display: none;
-	z-index: 9999;
-	left: -14px;
-	top: 7px;
-	padding: 20px 0 0;
-}
-#main .block06 .popup {
-	width: 240px;
-	position: relative;
-	text-align: left;
-	padding: 10px;
-	background: #f5f5f7;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	border: #d6d7d7 solid 1px;
-}
-#main .block06 .popup:after {
-	content: "";
-	position: absolute;
-	top: -10px;
-	left: 13px;
-	width: 9px;
-	height: 10px;
-	z-index: 1;
-	background: url(/assets/species/arrow08.png) no-repeat;
-}
-#main .block06 .popup .title {
-	text-transform: none;
-	font-size: 12px;
-	color: #253848;
-	margin: 0;
-}
-#main .block06 .popup .text {
-	color: #253848;
-	font-size: 12px;
-	display: block;
-	margin: 0 0 14px;
-}
 #main .block06 .three-columns .col li .popup a {
 	padding: 0;
 	float: none;
