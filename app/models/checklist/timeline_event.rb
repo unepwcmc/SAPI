@@ -2,7 +2,8 @@ class Checklist::TimelineEvent
   include ActiveModel::SerializerSupport
   attr_accessor :id, :change_type_name, :species_listing_name, :effective_at,
     :party_id, :is_current, :pos, :auto_note, :short_note_en, :full_note_en,
-    :hash_full_note_en, :hash_ann_symbol, :hash_ann_parent_symbol
+    :hash_full_note_en, :hash_ann_symbol, :hash_ann_parent_symbol,
+    :inherited_short_note_en, :inherited_full_note_en
   #options to be passed:
   #:change_type_name
   #:effective_at
@@ -27,6 +28,8 @@ class Checklist::TimelineEvent
     @species_listing_name = options[:species_listing_name]
     @auto_note = options[:auto_note]
     @inclusion_taxon_concept_id = options[:inclusion_taxon_concept_id]
+    @inherited_short_note_en = options[:inherited_short_note_en]
+    @inherited_full_note_en = options[:inherited_full_note_en]
   end
 
   def is_addition?
