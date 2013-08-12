@@ -195,38 +195,33 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def eu_decisions
-    EuDecisionPart.select(<<-SQL
-        sources.name_en, terms.name_en,
-        eu_decision_parts.is_current, eu_decision_id, taxon_concepts_mview.full_name,
-        geo_entities.name_en AS geo_entity_name, events.description AS event_name,
-        eu_decision_types.tooltip AS decision_type_tooltip, eu_decisions.notes,
-        eu_decisions.start_date,
-        eu_decisions.type AS type, eu_decision_types.name AS decision_type_name,
-        CASE
-          WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
-            THEN '[Listing for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
-          ELSE NULL
-        END AS subspecies_info
-      SQL
-    ).joins(<<-SQL
-          INNER JOIN trade_codes AS sources ON sources.id = eu_decision_parts.source_id
-          INNER JOIN trade_codes AS terms ON terms.id = eu_decision_parts.term_id
-          INNER JOIN eu_decisions ON eu_decisions.id = eu_decision_parts.eu_decision_id
-          INNER JOIN geo_entities ON geo_entities.id = eu_decisions.geo_entity_id
-          INNER JOIN events ON events.id = eu_decisions.start_event_id
-          INNER JOIN eu_decision_types ON eu_decision_types.id = eu_decisions.eu_decision_type_id
-          INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = eu_decisions.taxon_concept_id
-      SQL
-    ).where(:taxon_concepts_mview => {:id => object_and_children}).group(<<-SQL
-        eu_decision_parts.is_current, eu_decision_id, sources.name_en, terms.name_en,
-        geo_entities.name_en, events.description,
-        eu_decision_types.name, eu_decision_types.tooltip, eu_decisions.notes, eu_decisions.start_date,
-        taxon_concepts_mview.rank_name, taxon_concepts_mview.full_name, eu_decisions.type
-      SQL
-    ).order(<<-SQL
-        eu_decision_parts.is_current DESC, eu_decisions.start_date, geo_entities.name_en
-      SQL
-    )
+    EuDecision.where(:taxon_concept_id => object_and_children).
+      joins([:start_event, :geo_entity]).
+      joins('INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = eu_decisions.taxon_concept_id').
+      select(<<-SQL
+              eu_decisions.notes,
+              eu_decisions.start_date,
+              eu_decisions.is_current,
+              eu_decisions.geo_entity_id,
+              eu_decisions.start_event_id,
+              eu_decisions.term_id,
+              eu_decisions.source_id,
+              eu_decisions.eu_decision_type_id,
+              eu_decisions.term_id,
+              eu_decisions.source_id,
+              CASE
+                WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
+                  THEN '[Suspension for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
+                ELSE NULL
+              END AS subspecies_info
+             SQL
+      ).
+      order(<<-SQL
+            eu_decisions.is_current DESC,
+            events.effective_at DESC, geo_entities.name_en ASC,
+            subspecies_info DESC
+        SQL
+      )
   end
 
   def common_names

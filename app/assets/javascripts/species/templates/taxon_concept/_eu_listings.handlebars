@@ -30,20 +30,24 @@
               {{listing.subspecies_info}}<br />
             {{/if}}
             {{#if listing.hash_full_note_en}}
-              <a class="see-full-note" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
+              <a class="legal-links" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
                 {{listing.hash_display}}
               </a><br />
             {{/if}}
             {{#if listing.full_note_en}}
               {{#sizeGt listing.full_note_en max=800}}
                 {{{listing.short_note_en}}}<br />
-                <a class="see-full-note" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
+                <a class="legal-links" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
               {{else}}
                 {{{listing.full_note_en}}}
               {{/sizeGt}}
             {{/if}}
           </td>
-          <td>{{listing.event_name}}</td>
+          <td>
+            <a class="legal-links" href="{{unbound listing.event.url}}">
+              {{listing.event_name}}
+            </a>
+          </td>
           <td class="last">&nbsp;</td>
         </tr>
       {{else}}
@@ -85,20 +89,24 @@
                   {{listing.subspecies_info}}<br />
                 {{/if}}
                 {{#if listing.hash_full_note_en}}
-                  <a class="see-full-note" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
+                  <a class="legal-links" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
                     {{listing.hash_display}}
                   </a><br />
                 {{/if}}
                 {{#if listing.full_note_en}}
                   {{#sizeGt listing.full_note_en max=800}}
                     {{{listing.short_note_en}}}<br />
-                    <a class="see-full-note" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
+                    <a class="legal-links" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
                   {{else}}
                     {{{listing.full_note_en}}}
                   {{/sizeGt}}
                 {{/if}}
               </td>
-              <td>{{listing.event_name}}</td>
+              <td>
+                <a class="legal-links" href="{{unbound listing.event.url}}">
+                  {{listing.event_name}}
+                </a>
+              </td>
               <td class="last">&nbsp;</td>
             </tr>
           {{/each}}
