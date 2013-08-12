@@ -81,6 +81,8 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     hash_annotations.full_note_es AS hash_full_note_es,
     hash_annotations.full_note_fr AS hash_full_note_fr,
     inclusion_taxon_concept_id,
+    NULL::TEXT AS inherited_short_note_en, -- this column is populated later
+    NULL::TEXT AS inherited_full_note_en, -- this column is populated later
     CASE
     WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
     THEN ancestor_listing_auto_note(
@@ -272,6 +274,37 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     FROM prev_lc terminated_lc
     WHERE terminated_lc.id = listing_changes_mview.id 
     AND terminated_lc.taxon_concept_id = listing_changes_mview.taxon_concept_id;
+
+    RAISE NOTICE 'Merging inclusion records with their ancestor counterparts';
+
+    WITH double_inclusions AS (
+      SELECT lc.taxon_concept_id, lc.id AS own_inclusion_id, lc_inh.id AS inherited_inclusion_id, 
+      lc_inh.full_note_en AS inherited_full_note_en,
+      lc_inh.short_note_en AS inherited_short_note_en
+      FROM all_listing_changes_mview lc
+      JOIN listing_changes_mview lc_inh
+      ON lc.taxon_concept_id = lc_inh.taxon_concept_id
+      AND lc.species_listing_id = lc_inh.species_listing_id
+      AND lc.change_type_id = lc_inh.change_type_id
+      AND lc.effective_at = lc_inh.effective_at
+      AND (lc.party_id IS NULL OR lc.party_id = lc_inh.party_id)
+      AND lc.inclusion_taxon_concept_id = lc_inh.original_taxon_concept_id
+      WHERE lc.inclusion_taxon_concept_id IS NOT NULL
+    ), rows_to_be_deleted AS (
+    DELETE
+    FROM listing_changes_mview lc
+    USING double_inclusions
+    WHERE double_inclusions.taxon_concept_id = lc.taxon_concept_id
+    AND double_inclusions.inherited_inclusion_id = lc.id
+    RETURNING *
+    )
+    UPDATE listing_changes_mview lc
+    SET inherited_full_note_en = double_inclusions.inherited_full_note_en,
+    inherited_short_note_en = double_inclusions.inherited_short_note_en
+    FROM double_inclusions
+    WHERE double_inclusions.taxon_concept_id = lc.taxon_concept_id
+    AND double_inclusions.own_inclusion_id = lc.id
+    AND double_inclusions.inherited_full_note_en IS NOT NULL;    
 
   END;
   $$;
