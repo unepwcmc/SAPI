@@ -120,6 +120,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
               listing_changes_mview.hash_full_note_en,
               listing_changes_mview.hash_ann_parent_symbol,
               listing_changes_mview.hash_ann_symbol,
+              listing_changes_mview.inclusion_taxon_concept_id,
               listing_changes_mview.inherited_full_note_en,
               listing_changes_mview.inherited_short_note_en,
               CASE
