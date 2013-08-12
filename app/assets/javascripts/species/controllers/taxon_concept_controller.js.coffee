@@ -24,6 +24,12 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     else
       ""
   ).property('citesSuspensions')
+  anyHistoricEuDecisions: ( ->
+    if @get('euDecisions') != undefined && @get('euDecisions').findProperty('is_current', false) != undefined
+      "show_more"
+    else
+      ""
+  ).property('euDecisions')
   anyNonConventionCommonNames: ( ->
     if @get('commonNames') != undefined && @get('commonNames').findProperty('convention_language', false) != undefined
       "show_more"
@@ -78,6 +84,18 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     else
       null
   ).property('euListings')
+  currentEuDecisions: (->
+    if @get('euDecisions') != undefined
+      @get('euDecisions').filterProperty('is_current', true)
+    else
+      null
+  ).property('euDecisions')
+  historicEuDecisions: (->
+    if @get('euDecisions') != undefined
+      @get('euDecisions').filterProperty('is_current', false)
+    else
+      null
+  ).property('euDecisions')
   contentObserver: ( ->
     matchedOnSelf = true
     if @get('controllers.search.redirected') == true && @get('controllers.search.taxonConceptQueryRe') != null
