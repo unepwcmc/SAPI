@@ -18,6 +18,22 @@ namespace :import do
         INSERT INTO eu_decision_types (name, created_at, updated_at)
         SELECT DISTINCT opinion, current_date, current_date FROM #{TMP_TABLE};
 
+        UPDATE eu_decision_types
+        SET tooltip = 'no significant trade anticipated'
+        WHERE name = 'i)';
+
+        UPDATE eu_decision_types
+        SET tooltip = 'decision deferred'
+        WHERE name = 'ii)';
+
+        UPDATE eu_decision_types
+        SET tooltip = 'referral to the SRG'
+        WHERE name = 'iii)';
+
+        UPDATE eu_decision_types
+        SET tooltip = 'opinion type not specified'
+        WHERE name = 'no opinion';
+
         -- import eu_decisions (both Opinions and Suspensions)
         INSERT INTO eu_decisions (taxon_concept_id, geo_entity_id, is_current,
           start_date, start_event_id, eu_decision_type_id, type, notes, internal_notes,
