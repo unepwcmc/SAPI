@@ -32,7 +32,7 @@
               {{listing.subspecies_info}}<br />
             {{/if}}
 
-            {{#if listing.inherited_full_note_en}}
+            {{#if listing.is_inclusion}}
               <!-- inclusion records have a combined inherited + own note -->
               <!-- own note first -->
               <p>
@@ -52,12 +52,17 @@
                 {{#if listing.auto_note}}
                   [{{unbound listing.auto_note}}]<br /><br />
                 {{/if}}
-                {{#sizeGt listing.inherited_full_note_en max=800}}
-                  {{{unbound listing.inherited_short_note_en}}}<br />
-                  <a class="legal-links" {{action 'showFullNote' "Full note" listing.inherited_full_note_en}}>See full note</a>
+
+                {{#if listing.inherited_full_note_en}}
+                  {{#sizeGt listing.inherited_full_note_en max=800}}
+                    {{{unbound listing.inherited_short_note_en}}}<br />
+                    <a class="see-full-note" {{action 'showFullNote' "Full note" listing.inherited_full_note_en}}>See full note</a>
+                  {{else}}
+                    {{{unbound listing.inherited_full_note_en}}}
+                  {{/sizeGt}}
                 {{else}}
-                  {{{unbound listing.inherited_full_note_en}}}
-                {{/sizeGt}}
+                  {{{unbound listing.inherited_short_note_en}}}
+                {{/if}}
               </p>              
             {{else}}
               <!-- other records have single inherited or own note -->
