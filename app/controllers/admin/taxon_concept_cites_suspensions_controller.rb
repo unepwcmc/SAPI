@@ -4,6 +4,7 @@ class Admin::TaxonConceptCitesSuspensionsController < Admin::SimpleCrudControlle
   belongs_to :taxon_concept
 
   before_filter :load_lib_objects, :only => [:new, :edit]
+  before_filter :load_search, :except => [:create, :update, :destroy]
   layout 'taxon_concepts'
 
   def create

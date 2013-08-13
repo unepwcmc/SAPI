@@ -19,9 +19,9 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
   end
 
   def edit
-    @taxonomies = Taxonomy.order(:name)
     @ranks = Rank.order(:taxonomic_position)
     edit! do |format|
+      load_search
       @languages = Language.order(:name_en)
       @distributions = @taxon_concept.distributions.
         joins(:geo_entity).order('UPPER(geo_entities.name_en) ASC')
