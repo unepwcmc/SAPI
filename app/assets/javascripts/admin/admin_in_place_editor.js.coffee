@@ -15,6 +15,7 @@ class AdminEditor
     $('.modal').on 'hidden', () =>
       @clearModalForm($(@))
     @initModals()
+    @initSearchTypeahead()
 
   clearModalForm: (modal) ->
     form = modal.find('form')
@@ -36,6 +37,27 @@ class AdminEditor
     alert.append(txt)
 
     $(alert).insertBefore($('h1'))
+
+  initSearchTypeahead: () ->
+    $('.search-typeahead').typeahead
+      source: (query, process) ->
+        $.get('/admin/taxon_concepts/autocomplete',
+        {
+          search_params: {
+            scientific_name: query,
+            taxonomy: {
+              id: $('#search_params_taxonomy_id').val()
+            }
+          }
+          limit: 25
+        }, (data) =>
+          labels = []
+          $.each(data, (i, item) =>
+            label = item.full_name
+            labels.push(label)
+          )
+          return process(labels)
+        )
 
 class AdminInPlaceEditor extends AdminEditor
   init: () ->
@@ -88,25 +110,6 @@ class TaxonConceptsEditor extends AdminEditor
     $('.distributions-list > a').popover({});
 
   initTaxonConceptTypeaheads: () ->
-    $('.search-typeahead').typeahead
-      source: (query, process) ->
-        $.get('/admin/taxon_concepts/autocomplete',
-        {
-          search_params: {
-            scientific_name: query,
-            taxonomy: {
-              id: $('#search_params_taxonomy_id').val()
-            }
-          }
-          limit: 25
-        }, (data) =>
-          labels = []
-          $.each(data, (i, item) =>
-            label = item.full_name
-            labels.push(label)
-          )
-          return process(labels)
-        )
 
     $('input.typeahead').each (idx) ->
       formId = $(@).closest('form').attr('id')
