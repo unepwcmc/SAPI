@@ -29,7 +29,7 @@
           <td>{{listing.effective_at_formatted}}</td>
           <td>
             {{#if listing.subspecies_info}}
-              {{listing.subspecies_info}}<br />
+              {{{listing.subspecies_info}}}<br />
             {{/if}}
 
             {{#if listing.is_inclusion}}
@@ -67,7 +67,12 @@
             {{else}}
               <!-- other records have single inherited or own note -->
               {{#if listing.auto_note}}
-              [{{unbound listing.auto_note}}]<br /><br />
+                [{{unbound listing.auto_note}}]<br /><br />
+              {{/if}}
+              {{#if listing.hash_full_note_en}}
+                <a class="legal-links" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
+                  {{unbound listing.hash_display}}
+                </a><br /><br />
               {{/if}}
 
               {{#if listing.full_note_en}}
@@ -80,15 +85,7 @@
               {{else}}
                 {{{unbound listing.short_note_en}}}
               {{/if}}
-
             {{/if}}
-            {{#if listing.hash_full_note_en}}
-              <br /><br />
-              <a class="legal-links" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
-                {{unbound listing.hash_display}}
-              </a><br />
-            {{/if}}
-
           </td>
           <td class="last">&nbsp;</td>
         </tr>
@@ -130,7 +127,7 @@
               <td>{{listing.effective_at_formatted}}</td>
               <td>
                 {{#if listing.subspecies_info}}
-                  {{listing.subspecies_info}}<br /><br />
+                  {{{listing.subspecies_info}}}<br /><br />
                 {{/if}}
                 {{#if listing.auto_note}}
                   [{{listing.auto_note}}]<br /><br />
