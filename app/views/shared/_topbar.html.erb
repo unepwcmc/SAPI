@@ -9,8 +9,53 @@
     <div class="nav-collapse">
       <ul class="nav">
         <li class="<%= if controller_name == 'home' then 'active' end%>"><a href="/admin">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#terms-of-use">Terms of Use</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Core Data
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><%= link_to 'Taxonomies', admin_taxonomies_path %></li>
+            <li><%= link_to 'Ranks', admin_ranks_path %></li>
+            <li><%= link_to 'MEAs', admin_designations_path %></li>
+            <li><%= link_to 'Species listings', admin_species_listings_path %></li>
+            <li><%= link_to 'Change types', admin_change_types_path %></li>
+            <li><%= link_to 'Languages', admin_languages_path %></li>
+            <li><%= link_to 'Geo entities', admin_geo_entities_path %></li>
+            <li><%= link_to 'Tags', admin_tags_path %></li>
+            <li><%= link_to 'Trade Codes', admin_purposes_path %></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Events
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><%= link_to 'CITES CoPs', admin_cites_cops_path %></li>
+            <li><%= link_to 'CITES Suspension Notifications', admin_cites_suspension_notifications_path %></li>
+            <li><%= link_to 'CITES hash annotations', admin_cites_hash_annotations_path %></li>
+            <li><%= link_to 'EU Annex Regulations', admin_eu_regulations_path %></li>
+            <li><%= link_to 'EU Suspension Regulations', '#' %></li>
+            <li><%= link_to 'EU hash annotations', admin_eu_hash_annotations_path %></li>
+            <li><%= link_to 'Events', admin_events_path %></li>
+          </ul>
+        </li>
+        <li><%= link_to 'References', admin_references_path %></li>
+        <li><%= link_to 'Users', admin_users_path %></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Batch Updates
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><%= link_to 'CITES Suspensions', admin_cites_suspensions_path %></li>
+            <li><%= link_to 'CITES Quotas', '#' %></li>
+            <li><%= link_to 'EU Annexes', '#' %></li>
+            <li><%= link_to 'EU Decisions', '#' %></li>
+          </ul>
+        </li>
+        <li><%= link_to 'Data Downloads', '#' %></li>
       </ul>
     </div>
   </div>

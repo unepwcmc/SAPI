@@ -1,6 +1,57 @@
-a.see-full-note {
+a.legal-links {
   cursor: pointer;
 	background: url(/assets/species/sep01.png) repeat-x 0 100%;
+}
+
+a.legal-links:hover {
+  text-decoration: none;
+}
+
+#eu_decisions .link-holder {
+	position: relative;
+	float: left;
+}
+#eu_decisions .link-holder:hover a { font-weight: bold; }
+#eu_decisions .link-holder:hover .popup-holder { display: block; }
+#eu_decisions .link-holder .popup-holder {
+	position: absolute;
+	display: none;
+	z-index: 9999;
+	left: -14px;
+	top: 7px;
+	padding: 20px 0 0;
+}
+#eu_decisions .popup {
+	width: 240px;
+	position: relative;
+	text-align: left;
+	padding: 10px;
+	background: #f5f5f7;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border: #d6d7d7 solid 1px;
+}
+#eu_decisions .popup:after {
+	content: "";
+	position: absolute;
+	top: -10px;
+	left: 13px;
+	width: 9px;
+	height: 10px;
+	z-index: 1;
+	background: url(/assets/species/arrow08.png) no-repeat;
+}
+#eu_decisions .popup .title {
+	text-transform: none;
+	font-size: 12px;
+	color: #253848;
+	margin: 0;
+}
+#eu_decisions .popup .text {
+	color: #253848;
+	font-size: 12px;
+	display: block;
+	margin: 0 0 14px;
 }
 
 #full-note-legal {

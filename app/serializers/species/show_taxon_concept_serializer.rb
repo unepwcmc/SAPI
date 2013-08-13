@@ -15,6 +15,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     :key => :cites_listings
   has_many :eu_listing_changes, :serializer => Species::EuListingChangeSerializer,
     :key => :eu_listings
+  has_many :eu_decisions, :serializer => Species::EuDecisionSerializer
 
   def taxonomy
     object.taxonomy.name.downcase
@@ -45,7 +46,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
               trade_restrictions.public_display,
               CASE
                 WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
-                  THEN '[Quota for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
+                  THEN '[Quota for SUBSPECIES <i>' || taxon_concepts_mview.full_name || '</i>]'
                 ELSE NULL
               END AS subspecies_info
              SQL
@@ -71,7 +72,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
               trade_restrictions.end_notification_id,
               CASE
                 WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
-                  THEN '[Suspension for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
+                  THEN '[Suspension for SUBSPECIES <i>' || taxon_concepts_mview.full_name || '</i>]'
                 ELSE NULL
               END AS subspecies_info
              SQL
@@ -101,7 +102,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       ).
       joins(<<-SQL
               INNER JOIN taxon_concepts_mview
-                ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id 
+                ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id
             SQL
       ).
       select(<<-SQL
@@ -120,11 +121,14 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
               listing_changes_mview.hash_full_note_en,
               listing_changes_mview.hash_ann_parent_symbol,
               listing_changes_mview.hash_ann_symbol,
+              listing_changes_mview.inclusion_taxon_concept_id,
+              listing_changes_mview.inherited_full_note_en,
+              listing_changes_mview.inherited_short_note_en,
               CASE
                 WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
-                  THEN '[Listing for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
+                  THEN '[Listing for SUBSPECIES <i>' || taxon_concepts_mview.full_name || '</i>]'
                 WHEN taxon_concepts_mview.rank_name = 'VARIETY'
-                  THEN '[Listing for VARIETY ' || taxon_concepts_mview.full_name || ']'
+                  THEN '[Listing for VARIETY <i>' || taxon_concepts_mview.full_name || '</i>]'
                 ELSE NULL
               END AS subspecies_info
            SQL
@@ -173,9 +177,10 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
               listing_changes_mview.hash_ann_parent_symbol,
               listing_changes_mview.hash_ann_symbol,
               events.description AS event_name,
+              events.url AS event_url,
               CASE
                 WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
-                  THEN '[Listing for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
+                  THEN '[Listing for SUBSPECIES <i>' || taxon_concepts_mview.full_name || '</i>]'
                 ELSE NULL
               END AS subspecies_info
            SQL
@@ -189,6 +194,36 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
             WHEN change_type_name = 'DELETION' THEN 0
           END,
           subspecies_info DESC
+        SQL
+      )
+  end
+
+  def eu_decisions
+    EuDecision.where(:taxon_concept_id => object_and_children).
+      joins([:start_event, :geo_entity]).
+      joins('INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = eu_decisions.taxon_concept_id').
+      select(<<-SQL
+              eu_decisions.notes,
+              eu_decisions.start_date,
+              eu_decisions.is_current,
+              eu_decisions.geo_entity_id,
+              eu_decisions.start_event_id,
+              eu_decisions.term_id,
+              eu_decisions.source_id,
+              eu_decisions.eu_decision_type_id,
+              eu_decisions.term_id,
+              eu_decisions.source_id,
+              CASE
+                WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
+                  THEN '[Suspension for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
+                ELSE NULL
+              END AS subspecies_info
+             SQL
+      ).
+      order(<<-SQL
+            eu_decisions.is_current DESC,
+            events.effective_at DESC, geo_entities.name_en ASC,
+            subspecies_info DESC
         SQL
       )
   end
