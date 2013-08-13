@@ -40,6 +40,7 @@ SAPI::Application.routes.draw do
     end
     resources :cites_cops
     resources :cites_suspension_notifications
+    resources :eu_suspension_regulations
     resources :references, :only => [:index, :create, :update, :destroy] do
       get :autocomplete, :on => :collection
     end
