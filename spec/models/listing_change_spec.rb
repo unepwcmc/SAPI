@@ -27,22 +27,16 @@ describe ListingChange do
     describe :create do
       context "all fine with exception" do
         let(:designation){ create(:designation) }
-        let(:exception_type){ create(:change_type, :designation_id => designation.id, :name => 'EXCEPTION') }
+        let!(:exception_type){ cites_exception }
         let(:taxon_concept){ create(:taxon_concept) }
         let(:excluded_taxon_concept){ create(:taxon_concept, :parent_id => taxon_concept) }
         let(:listing_change){
-          build(
-            :listing_change,
+          create_cites_I_addition(
             :taxon_concept => taxon_concept,
-            :exclusions_attributes => {
-              '0' => {
-                :scientific_name => "#{excluded_taxon_concept.reload.full_name} SUBSPECIES",
-                :change_type_id => exception_type.id
-              }
-            }
+            :excluded_taxon_concepts_ids => "#{excluded_taxon_concept.id}"
           )
         }
-        specify{ listing_change.exclusions.first.should be_valid}
+        specify{ listing_change.exclusions.size == 0 }
       end
       context "inclusion taxon concept does not exist" do
         let(:taxon_concept){ create(:taxon_concept) }
@@ -74,24 +68,6 @@ describe ListingChange do
           )
         }
         specify{listing_change.should have(1).error_on(:inclusion_taxon_concept_id)}
-      end
-      context "excluded taxon concept does not exist" do
-        let(:designation){ create(:designation) }
-        let(:exception_type){ create(:change_type, :designation_id => designation.id, :name => 'EXCEPTION') }
-        let(:taxon_concept){ create(:taxon_concept) }
-        let(:listing_change){
-          build(
-            :listing_change,
-            :taxon_concept => taxon_concept,
-            :exclusions_attributes => {
-              '0' => {
-                :scientific_name => 'Abcd',
-                :change_type_id => exception_type.id
-              }
-            }
-          )
-        }
-        specify{ listing_change.exclusions.first.should have(1).error_on(:scientific_name)}
       end
       context "inclusion taxon concept is lower rank" do
         let(:rank1){ create(:rank, :taxonomic_position => '1')}

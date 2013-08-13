@@ -25,7 +25,7 @@
         <td>
           <%= f.select :species_listing_id,
             options_from_collection_for_select(@species_listings, :id, :name, @listing_change.species_listing_id),
-            { :include_blank => true, :selected => @listing_change.species_listing_id }
+            { :selected => @listing_change.species_listing_id }
           %>
         </td>
         <td>
@@ -135,47 +135,27 @@
     %>
   </p>
 
-  <h4>Exclusions</h4>
-  <table class="listing-change">
-    <thead>
-    <tr>
-      <th><label>Taxon concept</label></th>
-      <th><label>Countries</label></th>
-    </tr>
-    </thead>
-    <tbody>
-    <%= f.fields_for :exclusions do |ff| %>
-    <tr>
-      <td><%= error_messages_for(ff.object) %></td>
-    </tr>
-    <tr>
-      <td>
-        <%= ff.hidden_field :change_type_id %>
-        <%= ff.text_field :scientific_name, :class => 'typeahead',
-          "data-taxon-concept-scope" => 'descendants',
-          "data-taxon-concept-id" => @taxon_concept.id,
-          "data-taxonomy-id" => @taxon_concept.taxonomy_id
-        %>
-      </td>
-      <td>
-        <%= ff.select :geo_entity_ids,
-          options_from_collection_for_select(
-            @geo_entities,
-            :id,
-            :name_en,
-            ff.object.geo_entities && ff.object.geo_entities.map(&:id)
-          ), { },
-          { :multiple => true, :class => 'distribution', :style => 'width: 200px' }
-        %>
-      </td>
-      <td>
-        <%= ff.link_to_remove delete_icon %>
-      </td>
-    </tr>
-    <% end %>
-    </tbody>
-  </table>
-  <p><%= f.link_to_add "Add an exclusion", :exclusions %></p>
+  <h4>Population exclusions</h4>
+  <%= f.select :excluded_geo_entities_ids,
+    options_from_collection_for_select(
+      @geo_entities,
+      :id,
+      :name_en,
+      @listing_change.excluded_geo_entities.map(&:id)
+    ), { },
+    { :multiple => true, :class => 'distribution', :style => 'width: 200px' }
+  %>
+
+  <h4>Taxonomic exclusions</h4>
+
+  <%= f.hidden_field :excluded_taxon_concepts_ids,
+    "data-taxon-concept-scope" => 'descendants',
+    "data-taxon-concept-id" => @taxon_concept.id,
+    "data-taxonomy-id" => @taxon_concept.taxonomy_id,
+    :class => 'excluded_taxa', :style => 'width: 200px',
+    :id => 'excluded_taxon_concepts_ids',
+    :value => @listing_change.excluded_taxon_concepts.map{|tc| "#{tc.id}:#{tc.full_name}"}.join(',')
+  %>
 
   <p class="pull-right">
     <%= f.submit %>

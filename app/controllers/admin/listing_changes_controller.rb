@@ -74,9 +74,6 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
         params[:listing_change][:annotation_attributes]
       )
     end
-    @listing_change.exclusions.build(
-      :change_type_id => @exception_change_type.id
-    )
   end
 
   def load_change_types

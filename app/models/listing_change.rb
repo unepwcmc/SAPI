@@ -26,8 +26,9 @@ class ListingChange < ActiveRecord::Base
     :effective_at, :is_current, :parent_id, :scientific_name, :geo_entity_ids,
     :party_listing_distribution_attributes, :inclusion_scientific_name,
     :exclusions_attributes, :annotation_attributes, :hash_annotation_id,
-    :event_id
+    :event_id, :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
   attr_writer :inclusion_scientific_name, :scientific_name
+  attr_accessor :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
 
   belongs_to :event
   belongs_to :species_listing
@@ -43,24 +44,16 @@ class ListingChange < ActiveRecord::Base
   belongs_to :parent, :class_name => 'ListingChange'
   belongs_to :inclusion, :class_name => 'TaxonConcept', :foreign_key => 'inclusion_taxon_concept_id'
   has_many :exclusions, :class_name => 'ListingChange', :foreign_key => 'parent_id', :dependent => :destroy
-
   validates :change_type_id, :presence => true
   validates :effective_at, :presence => true
   validate :inclusion_at_higher_rank
   validate :species_listing_designation_mismatch
   validate :event_designation_mismatch
-  validate :taxon_concept_or_geo_entities_present, :if => :is_exclusion?
-  validates_associated :exclusions
   before_validation :check_inclusion_taxon_concept_exists
   before_validation :check_taxon_concept_exists
 
   accepts_nested_attributes_for :party_listing_distribution,
     :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
-  accepts_nested_attributes_for :exclusions,
-    :reject_if => proc { |attributes|
-      attributes['scientific_name'].blank? &&
-      attributes['geo_entity_ids'].reject(&:blank?).empty?
-    }
   accepts_nested_attributes_for :annotation,
     :reject_if => proc { |attributes|
       attributes['short_note_en'].blank?
@@ -82,8 +75,18 @@ class ListingChange < ActiveRecord::Base
     exclusions.where("taxon_concept_id != #{self.taxon_concept_id}")
   end
 
+  def excluded_taxon_concepts
+    taxonomic_exclusions.includes(:taxon_concept).map(&:taxon_concept).flatten
+  end
+
   def geographic_exclusions
     exclusions.where("taxon_concept_id = #{self.taxon_concept_id}")
+  end
+
+  def excluded_geo_entities
+    geographic_exclusions.includes(:listing_distributions => :geo_entity).map do |e|
+      e.listing_distributions.map(&:geo_entity)
+    end.flatten
   end
 
   def inclusion_scientific_name
@@ -141,12 +144,6 @@ class ListingChange < ActiveRecord::Base
     end
     self.taxon_concept_id = tc.id
     true
-  end
-
-  def taxon_concept_or_geo_entities_present
-    unless taxon_concept || geo_entities
-      errors.add(:taxon_concept, "either taxon concept or geo entities must be present")
-    end
   end
 
 end
