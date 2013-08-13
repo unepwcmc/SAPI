@@ -21,7 +21,7 @@ describe Admin::TaxonConceptReferencesController do
         :taxon_concept_id => @taxon_concept.id,
         :id => taxon_concept_reference.id
       response.should redirect_to(
-        edit_admin_taxon_concept_url(taxon_concept_reference.taxon_concept)
+        admin_taxon_concept_taxon_concept_references_url(taxon_concept_reference.taxon_concept)
       )
     end
   end

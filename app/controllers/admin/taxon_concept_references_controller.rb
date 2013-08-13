@@ -1,7 +1,14 @@
 class Admin::TaxonConceptReferencesController < Admin::SimpleCrudController
   defaults :resource_class => TaxonConceptReference, :collection_name => 'taxon_concept_references', :instance_name => 'taxon_concept_reference'
   belongs_to :taxon_concept
+  before_filter :load_search, :only => [:index]
   respond_to :js, :only => [:new, :create]
+  layout 'taxon_concepts'
+
+  def index
+    @taxon_concept_reference = TaxonConceptReference.new
+    index!
+  end
 
   def new
     @taxon_concept_reference = TaxonConceptReference.new
@@ -38,11 +45,11 @@ class Admin::TaxonConceptReferencesController < Admin::SimpleCrudController
   def destroy
     destroy! do |success, failure|
       success.html {
-        redirect_to edit_admin_taxon_concept_url(params[:taxon_concept_id]),
+        redirect_to admin_taxon_concept_taxon_concept_references_path(@taxon_concept),
         :notice => 'Operation successful'
       }
       failure.html {
-        redirect_to edit_admin_taxon_concept_url(params[:taxon_concept_id]),
+        redirect_to admin_taxon_concept_taxon_concept_references_path(@taxon_concept),
         :notice => 'Operation failed'
       }
     end

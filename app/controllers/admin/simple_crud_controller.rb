@@ -32,4 +32,12 @@ class Admin::SimpleCrudController < Admin::AdminController
   protected
     def load_associations; end
 
+    def load_search
+      @taxonomies ||= Taxonomy.order(:name)
+      @taxon_concept ||= TaxonConcept.find(params[:taxon_concept_id])
+      @search_params = SearchParams.new(
+          { :taxonomy => { :id => @taxon_concept.taxonomy_id },
+            :scientific_name => @taxon_concept.full_name
+        })
+    end
 end

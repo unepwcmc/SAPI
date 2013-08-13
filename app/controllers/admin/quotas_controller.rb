@@ -1,6 +1,7 @@
 class Admin::QuotasController < Admin::SimpleCrudController
   belongs_to :taxon_concept
   before_filter :load_lib_objects
+  before_filter :load_search, :except => [:create, :update, :destroy]
 
   layout 'taxon_concepts'
 

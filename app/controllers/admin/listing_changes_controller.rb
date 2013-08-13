@@ -1,6 +1,7 @@
 class Admin::ListingChangesController < Admin::SimpleCrudController
   respond_to :js, :only => [:create, :update]
   belongs_to :taxon_concept, :designation
+  before_filter :load_search, :except => [:create, :update, :destroy]
   layout 'taxon_concepts'
 
   def index

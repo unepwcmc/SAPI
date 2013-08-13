@@ -57,10 +57,11 @@ SAPI::Application.routes.draw do
         resources :listing_changes
       end
       resources :taxon_commons, :only => [:new, :create, :edit, :update, :destroy]
-      resources :distributions, :only => [:new, :create, :edit, :update, :destroy]
+      resources :distributions, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :synonym_relationships, :only => [:new, :create, :edit, :update, :destroy]
       resources :hybrid_relationships, :only => [:new, :create, :edit, :update, :destroy]
-      resources :taxon_concept_references, :only => [:new, :create, :destroy]
+      resources :taxon_concept_references, :only => [:index, :new, :create, :destroy]
+      resources :names, :only => [:index]
       resources :quotas, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_opinions, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]

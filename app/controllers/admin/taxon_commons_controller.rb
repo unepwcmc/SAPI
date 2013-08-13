@@ -41,6 +41,19 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
     end
   end
 
+  def destroy
+    destroy! do |success, failure|
+      success.html {
+        redirect_to admin_taxon_concept_names_url(@taxon_concept), 
+          :notice => 'Operation succeeded'
+      }
+      failure.html {
+        redirect_to admin_taxon_concept_names_url(@taxon_concept),
+          :notice => 'Operation failed'
+      }
+    end
+  end
+
   protected
 
   def load_associations
