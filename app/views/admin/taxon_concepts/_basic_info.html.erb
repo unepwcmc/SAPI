@@ -1,51 +1,36 @@
 <div class="row-fluid header">
-  <span><%= @taxon_concept.taxonomy.name %></span>
-  <%= ancestors_path(@taxon_concept) %>
   <%= content_tag(:h1, @taxon_concept.full_name, :title => @taxon_concept.rank.name) %>
   <%= link_to edit_icon, edit_admin_taxon_concept_url(@taxon_concept), :remote => true %>
   <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
   <%= @taxon_concept.author_year %>
   <% if @taxon_concept.tag_list %>
-    <%= tag_list(@taxon_concept.tag_list) %>
+    <%= tag_list(@taxon_concept.tag_list) %><br />
   <% end %>
   <% if @taxon_concept.is_synonym? %>
     <div>
-    <span>SYNONYM OF:</span>
-    <ul>
-    <% @taxon_concept.accepted_name.each do |tc| %>
-      <li><%= link_to tc.full_name, edit_admin_taxon_concept_url(tc) %></li>
-    <% end %>
-    </ul>
+      <span>SYNONYM OF:</span>
+      <ul>
+        <% @taxon_concept.accepted_name.each do |tc| %>
+          <li><%= link_to tc.full_name, edit_admin_taxon_concept_url(tc) %></li>
+        <% end %>
+      </ul>
     </div>
   <% elsif @taxon_concept.is_hybrid? %>
     <div>
-    <span>HYBRID OF:</span>
-    <ul>
-    <% @taxon_concept.hybrid_parents.each do |tc| %>
-      <li><%= link_to tc.full_name, edit_admin_taxon_concept_url(tc) %></li>
-    <% end %>
-    </ul>
+      <span>HYBRID OF:</span>
+      <ul>
+        <% @taxon_concept.hybrid_parents.each do |tc| %>
+          <li><%= link_to tc.full_name, edit_admin_taxon_concept_url(tc) %></li>
+        <% end %>
+      </ul>
     </div>
   <% end %>
+  <%= ancestors_path(@taxon_concept) %>
 </div>
 
 <%= admin_new_taxon_concept_modal %>
 
 <ul id="taxon-concept-tabs" class="nav nav-tabs">
-  <li class="dropdown <%= if controller_name == "taxon_concepts" then "active" end%>">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Details<b class="caret"></b></a>
-    <ul id="details-menu" class="dropdown-menu">
-      <li>
-        <%= link_to "Nomenclature", '#nomenclature-tab', :"data-toggle" => :tab %>
-      </li>
-      <li>
-        <%= link_to "Distributions", '#distributions-tab', :"data-toggle" => :tab %>
-      </li>
-      <li>
-        <%= link_to "References", '#references-tab', :"data-toggle" => :tab %>
-      </li>
-    </ul>
-  </li>
 
   <% @taxon_concept.designations.each do |d| %>
     <% if d.is_cites? %>
@@ -89,6 +74,15 @@
       </li>
     <% end %>
   <% end %>
+  <li class="<%= if controller_name == 'names' then 'active' end %>">
+    <%= link_to "Names", admin_taxon_concept_names_path(@taxon_concept) %>
+  </li>
+  <li class="<%= if controller_name == 'distributions' then 'active' end %>">
+    <%= link_to "Distribution", admin_taxon_concept_distributions_path(@taxon_concept) %>
+  </li>
+  <li class="<%= if controller_name == 'taxon_concept_references' then 'active' end %>">
+    <%= link_to "References", admin_taxon_concept_taxon_concept_references_path(@taxon_concept) %>
+  </li>
 
   <li class="<%= if controller_name == "taxon_relationships" then "active" end%>">
     <%= link_to "Taxon Relationships", admin_taxon_concept_taxon_relationships_path(@taxon_concept) %>
