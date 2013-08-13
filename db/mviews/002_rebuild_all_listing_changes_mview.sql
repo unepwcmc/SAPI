@@ -127,7 +127,7 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         -- in scope of the affected taxon concept and a particular designation
         ROW_NUMBER() OVER (
             PARTITION BY taxon_concept_and_ancestors.taxon_concept_id, designation_id
-            ORDER BY effective_at, tree_distance,
+            ORDER BY effective_at,
             CASE
               WHEN change_type_name = 'DELETION' THEN 0
               WHEN change_type_name = 'ADDITION' THEN 1
@@ -227,10 +227,12 @@ WITH RECURSIVE listing_changes_timeline AS (
   WHEN change_types.name = 'DELETION'
   THEN --listing_changes_timeline.context - ARRAY[hi.taxon_concept_id]
   listing_changes_timeline.context - HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
+  WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
+  AND change_types.name = 'ADDITION'
+  THEN HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
   WHEN hi.tree_distance <= listing_changes_timeline.context_tree_distance
   AND hi.affected_taxon_concept_id = hi.taxon_concept_id
   AND change_types.name = 'ADDITION'
-  AND hi.affected_taxon_concept_id = hi.taxon_concept_id -- if it's 
   THEN HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
   -- changing this to <= breaks Ursus arctos isabellinus
   WHEN hi.tree_distance <= listing_changes_timeline.context_tree_distance
@@ -242,7 +244,12 @@ WITH RECURSIVE listing_changes_timeline AS (
   hi.species_listing_id,
   hi.change_type_id,
   hi.effective_at,
-  hi.tree_distance,
+  CASE 
+  WHEN hi.inclusion_taxon_concept_id IS NOT NULL
+  OR hi.tree_distance < listing_changes_timeline.context_tree_distance
+  THEN hi.tree_distance
+  ELSE listing_changes_timeline.context_tree_distance
+  END,
   hi.timeline_position,
   -- is applicable
   CASE
