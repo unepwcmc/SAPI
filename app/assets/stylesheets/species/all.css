@@ -406,6 +406,7 @@ form, fieldset {
 	text-transform: uppercase;
 	display: inline-block;
 	vertical-align: top;
+	cursor: pointer;
 }
 .dwonload-block .tabset li a {
 	display: block;
@@ -761,14 +762,21 @@ form, fieldset {
 	border-top: none;
 	padding: 67px 0 0;
 }
-#main .block.show_more:hover {
-	border-bottom: 2px solid #376382;
-}
+
 #main .block {
 	text-align: left;
 	padding: 38px 1px 0;
 	margin: 0 -1px 12px;
 }
+
+#main .block.show_more {
+	border-bottom: 1px solid #ddd;
+}
+
+#main .block.show_more:hover, #main .block.show_more.active {
+	border-bottom: 1px solid #376382;
+}
+
 #main .block .title {
 	display: block;
 	font-size: 15px;
@@ -823,14 +831,11 @@ form, fieldset {
 
 #main .block a { color: #666; }
 #main .block td {
-	border-bottom: 1px solid #DFE1E2;
 	border-top: 1px solid #DFE1E2;
 	padding: 12px 0;
 	line-height: 15px;
 }
-#main .block.show_more:hover td, #main .block.show_more tbody.historic_expanded tr td {
-  border-bottom: 0;
-}
+
 #main .block.add { margin: 0 -px -1px; }
 #main .block.add td { padding: 9px 0 16px; }
 #main .block.block01 {
@@ -854,13 +859,18 @@ form, fieldset {
 #main .block tr { background: #eef2f7; }
 #main .block tr.current { background: #f5f5f7; }
 #main .block thead tr { background: #f5f5f7; }
-#main .block .btn-hloder {
-	margin: -8px 0 0;
+#main .block.show_more .btn-hloder {
+	margin: 0;
 	text-align: center;
-  display: none;
+  	display: block;
 }
 #main .block.show_more:hover .btn-hloder {
-  display: block;
+	display: block;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-ms-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
 }
 #main .block .btn-hloder:after {
 	display: block;
@@ -868,31 +878,87 @@ form, fieldset {
 	content: "";
 }
 #main .block .btn-hloder .link {
+	cursor: pointer;
+	text-decoration: none;
 	display: inline-block;
 	min-width: 71px;
 	font-size: 10px;
 	position: relative;
 	font-weight: bold;
 	text-transform: uppercase;
-	color: #fff;
-	padding: 0 25px 0 10px;
-	background: #376382;
+	color: #ccc;
+	padding: 1px 20px 0 10px;
+	background: #F4F5F6;
+	border: 1px solid #D6D7D7;
 	line-height: 20px;
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
 	margin: 0 0 -10px;
+	margin-top: 20px;
 	vertical-align: top;
 }
+
+#main .block .btn-hloder .link.languages {
+	padding-right: 23px;
+}
+
+#main .block.show_more .btn-hloder .link:hover, #main .block.show_more:hover .btn-hloder .link {
+	color: #fff;
+	background: #376382;
+	border: 1px solid #376382;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-ms-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+
 #main .block .btn-hloder .link:before {
-	width: 7px;
-	height: 6px;
+	width: 6px;
+	height: 4px;
 	position: absolute;
 	content: "";
 	z-index: 1;
+	right: 8px;
+	top: 9px;
+	background: url(/assets/species/arrow01_grey.png) no-repeat;
+}
+
+#main .block .btn-hloder .link.languages:before {
+	margin-top: -2px;
 	right: 10px;
-	top: 7px;
+	background: url(/assets/species/arrow01_grey.png) no-repeat;
+}
+
+#main .block .btn-hloder .link:hover:before {
+	background: url(/assets/species/arrow01.png) no-repeat;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-ms-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+
+#main .block .btn-hloder .link.active {
+	color: #fff;
+	background: #376382;
+	border: 1px solid #376382;
+}
+
+#main .block .btn-hloder .link.active:before {
+	top: 8px;
+	width: 6px;
+	height: 6px;
 	background: url(/assets/species/ico.png) no-repeat;
 }
+
+#main .block .btn-hloder .link.languages.active:before {
+	top: 8px;
+	width: 6px;
+	height: 6px;
+	background: url(/assets/species/ico.png) no-repeat;
+}
+
 #main .block h2 {
 	font-size: 30px;
 	color: #2c3237;
@@ -904,7 +970,7 @@ form, fieldset {
 	padding: 29px 30px 0;
 	margin: 0 -1px 46px;
 }
-#main .block.block02 td:first-child { border-bottom: 1px solid #ccc; }
+#main .block.block02 td:first-child { border-top: 1px solid #DFE1E2; }
 #main .block.block02 tr { background: #f5f5f7; }
 #main .block.block02 .title {
 	padding: 0;

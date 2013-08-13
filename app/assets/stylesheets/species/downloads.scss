@@ -17,6 +17,7 @@
 		-webkit-border-radius: 5px;
 		border-radius: 5px;
 		border: #80a3bb solid 1px;
+		
 
 		.search-block01 {
 			-webkit-border-radius: 5px 5px 0 0;
@@ -24,6 +25,29 @@
 			background: #8fb7cf;
 			padding: 19px 18px 9px;
 			border-bottom: #80a3bb solid 1px;
+
+			li {
+				font-size: 11px;
+				color: #89B1CB;
+				font-weight: bold;
+				background-color: #fff;
+				display: inline-block;
+				padding: 3px 5px;
+				border-radius: 5px;
+				margin: 2.5px;
+				max-width: 160px;
+				span.delete{
+				  color: #FB585E !important;
+				  text-decoration: none;
+				  border: none;
+			 	  cursor: pointer;
+
+				  &:hover {
+				    text-decoration: none;
+				    border: none;
+				  }
+				}
+			}
 
 			.row01 {
 				background: #fff;
@@ -107,6 +131,12 @@
 		line-height: 15px;
 
 		ul { margin: 0 0 17px; }
+		ul li { 
+			cursor: pointer;
+			&:hover{
+				text-decoration: underline;
+			}
+		}
 		a { 
 			color: #666;
 			span { text-decoration: underline; }
@@ -236,6 +266,7 @@
 	text-transform: uppercase;
 }
 
+.popup-area .link { cursor: pointer; }
 .popup-area:hover .link { background: #253848; }
 .popup-area:hover .popup-holder01 { display: block; }
 .popup-area:hover .popup-holder-appendix { display: block; }

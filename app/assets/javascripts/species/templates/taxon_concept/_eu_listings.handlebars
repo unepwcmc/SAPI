@@ -107,7 +107,7 @@
     </div>
     <div {{bindAttr class=":btn-hloder euListingsExpanded:expanded"}}>
       {{#if controller.euListingsExpanded}}
-        <a class="link" {{action 'contractList' 'eu_listings' 'euListingsExpanded'}}>HIDE HISTORY</a>
+        <a class="link active" {{action 'contractList' 'eu_listings' 'euListingsExpanded'}}>HIDE HISTORY</a>
       {{else}}
         <a class="link" {{action 'expandList' 'eu_listings' 'euListingsExpanded'}}>SHOW HISTORY</a>
       {{/if}}
