@@ -96,7 +96,7 @@ describe Admin::TaxonCommonsController do
         :taxon_concept_id => @taxon_concept.id,
         :id => taxon_common.id
       response.should redirect_to(
-        edit_admin_taxon_concept_url(@taxon_concept)
+        admin_taxon_concept_names_url(@taxon_concept)
       )
     end
   end
