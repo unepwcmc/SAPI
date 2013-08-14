@@ -15,7 +15,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       load_change_types
       @listing_change.change_type_id ||= @change_types.first.id
       @listing_change.is_current = true
-      @listing_change.event = @events.first #ordered most recent first
+      @listing_change.event = @events && @events.first #ordered most recent first
       @listing_change.effective_at =  @listing_change.event && @listing_change.event.effective_at
       build_dependants
     end
