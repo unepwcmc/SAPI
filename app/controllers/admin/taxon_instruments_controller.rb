@@ -1,6 +1,7 @@
 class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesController
   respond_to :js, :only => [:create, :update]
   belongs_to :taxon_concept
+  before_filter :load_search, :only => [:new, :index, :edit, :create]
   layout 'taxon_concepts'
 
   def index
@@ -24,12 +25,6 @@ class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesCont
     else
       load_instruments
       render 'new'
-    end
-  end
-
-  def edit
-    edit! do |format|
-      load_instruments
     end
   end
 

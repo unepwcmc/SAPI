@@ -9,9 +9,6 @@
       <td><%= ti.instrument.name %></td>
       <td><%= ti.effective_from_formatted %></td>
       <td>
-        <%= link_to edit_icon,
-          edit_admin_taxon_concept_taxon_instrument_path(@taxon_concept, ti)
-        %>
         <%= link_to delete_icon,
           admin_taxon_concept_taxon_instrument_path(@taxon_concept, ti),
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete

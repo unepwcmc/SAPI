@@ -6,7 +6,7 @@ module ApplicationHelper
       name = taxon_concept.data["#{r.name.downcase}_name"]
       id = taxon_concept.data["#{r.name.downcase}_id"]
       if name && id
-        link_to(name, edit_admin_taxon_concept_url(id), :title => r.name)
+        link_to(name, admin_taxon_concept_names_url(id), :title => r.name)
       else
         nil
       end
