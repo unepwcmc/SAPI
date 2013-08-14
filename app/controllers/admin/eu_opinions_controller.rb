@@ -46,7 +46,8 @@ class Admin::EuOpinionsController < Admin::SimpleCrudController
   end
 
   def collection
-    @eu_opinions ||= end_of_association_chain.order('is_current DESC').
+    @eu_opinions ||= end_of_association_chain.
+      order('is_current DESC, start_date DESC').
       page(params[:page])
   end
 end

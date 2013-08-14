@@ -13,7 +13,8 @@
     </thead>
 
     <tbody>
-    <% @taxon_concept.current_eu_opinions.each do |opinion| %>
+    <% @taxon_concept.current_eu_opinions.
+        order("start_date DESC").each do |opinion| %>
 
       <tr>
         <td><%= opinion.year %></td>
