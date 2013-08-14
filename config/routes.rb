@@ -53,6 +53,7 @@ SAPI::Application.routes.draw do
     resources :cites_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
     resources :taxon_concepts, :only => [:index, :create, :edit, :update, :destroy] do
       get :autocomplete, :on => :collection
+      resources :children, :only => [:index]
       resources :taxon_relationships, :only => [:index, :create, :destroy]
       resources :designations, :only => [] do
         resources :listing_changes
