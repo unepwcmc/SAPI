@@ -5,8 +5,8 @@ class EventActivationWorker
       ActiveRecord::Base.connection.execute <<-SQL
         WITH non_current_events AS (
           UPDATE events SET is_current = FALSE
-          WHERE designation_id IN (
-            SELECT designation_id FROM events WHERE id = #{event_id}
+          WHERE type IN (
+            SELECT type FROM events WHERE id = #{event_id}
           ) AND id != #{event_id}
           RETURNING id
         )
