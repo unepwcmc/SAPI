@@ -13,11 +13,11 @@
   <%= error_messages_for(@eu_suspension) %>
 
   <div class="control-group">
-    <%= f.label :law_id, "Law", :class => 'control-label' %>
+    <%= f.label :start_event_id, "Suspension Regulation", :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :law_id,
-        options_from_collection_for_select(@laws, :id, :name, @eu_suspension.law_id),
-        { :selected => @eu_suspension.law_id }
+      <%= f.select :start_event_id,
+        options_from_collection_for_select(@eu_regulations, :id, :name, @eu_suspension.start_event_id),
+        {}, :class => "select2"
       %>
     </div>
   </div>
@@ -47,10 +47,11 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :restriction, "Restriction", :class => 'control-label' %>
+    <%= f.label :eu_decision_type_id, "Opinion", :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :restriction,
-        options_for_select(EuDecision::RESTRICTION_TYPES, @eu_suspension.restriction),
+      <%= f.select :eu_decision_type_id,
+        options_from_collection_for_select(@eu_decision_types,
+          :id, :name, @eu_suspension.eu_decision_type_id),
         { :include_blank => true },
         {:class => 'eu_suspension select2', :style => 'width: 220px' }
       %>
@@ -58,16 +59,16 @@
   </div>
 
   <div class="control-group">
-    <label class="control-label">Restriction Text</label>
+    <label class="control-label">Notes</label>
     <div class="controls">
-      <%= f.text_area :restriction_text, :class => 'eu_suspension', :value => @eu_suspension.restriction_text %>
+      <%= f.text_area :notes, :class => 'eu_suspension', :value => @eu_suspension.notes %>
     </div>
   </div>
 
   <div class="control-group">
-    <label class="control-label">Comments</label>
+    <label class="control-label">Internal notes</label>
     <div class="controls">
-      <%= f.text_area :comments, :class => 'eu_suspension', :value => @eu_suspension.comments %>
+      <%= f.text_area :internal_notes, :class => 'eu_suspension', :value => @eu_suspension.internal_notes %>
     </div>
   </div>
 
@@ -94,21 +95,16 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :conditions_apply, "Conditions Apply", :class => 'control-label'%>
-    <div class="controls">
-      <%= f.check_box :conditions_apply, :value => @eu_suspension.conditions_apply %><br>
-    </div>
-  </div>
-
-  <div class="control-group">
     <%= f.label :is_current, "Is current?", :class => 'control-label'%>
     <div class="controls">
-      <%= f.check_box :is_current, :value => @eu_suspension.is_current %><br>
+      <%= f.check_box :is_current %>
     </div>
   </div>
 
   <p class="pull-right">
-    <%= f.submit "Save" %>
+    <%= link_to 'Cancel', admin_taxon_concept_eu_suspensions_path(@taxon_concept),
+      :class => "btn" %>
+    <%= f.submit "Save", :class => "btn btn-primary save-button" %>
   </p>
 
 <% end %>

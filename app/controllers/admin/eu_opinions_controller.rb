@@ -1,7 +1,7 @@
 class Admin::EuOpinionsController < Admin::SimpleCrudController
   belongs_to :taxon_concept
   before_filter :load_lib_objects
-  before_filter :load_search
+  before_filter :load_search, :only => [:new, :index, :edit]
 
   layout 'taxon_concepts'
 
@@ -47,7 +47,9 @@ class Admin::EuOpinionsController < Admin::SimpleCrudController
 
   def collection
     @eu_opinions ||= end_of_association_chain.
-      order('is_current DESC, start_date DESC').
+      joins(:geo_entity).
+      order('is_current DESC, start_date DESC,
+        geo_entities.name_en ASC').
       page(params[:page])
   end
 end

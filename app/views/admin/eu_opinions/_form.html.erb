@@ -50,7 +50,7 @@
     <%= f.label :eu_decision_type_id, "Opinion", :class => 'control-label' %>
     <div class="controls">
       <%= f.select :eu_decision_type_id,
-        options_from_collection_for_select(@eu_decision_types, 
+        options_from_collection_for_select(@eu_decision_types,
           :id, :name, @eu_opinion.eu_decision_type_id),
         { :include_blank => true },
         {:class => 'eu_opinion select2', :style => 'width: 220px' }
@@ -97,7 +97,7 @@
   <div class="control-group">
     <%= f.label :is_current, "Is current?", :class => 'control-label'%>
     <div class="controls">
-      <%= f.check_box :is_current %><br>
+      <%= f.check_box :is_current %>
     </div>
   </div>
 
