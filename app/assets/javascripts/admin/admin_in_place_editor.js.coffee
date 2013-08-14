@@ -192,7 +192,6 @@ class ListingChangesEditor extends AdminEditor
 
   initForm: () ->
     super
-    @initTaxonConceptTypeaheads()
     @initDistributionSelectors()
     @initEventSelector()
     # handle initializing stuff for nested form add events
@@ -202,31 +201,6 @@ class ListingChangesEditor extends AdminEditor
       })
       @_initTaxonConceptTypeaheads(event.field.find('.typeahead'))
     )
-
-  initTaxonConceptTypeaheads: () ->
-    @_initTaxonConceptTypeaheads($('.typeahead'))
-
-  _initTaxonConceptTypeaheads: (el) ->
-    el.typeahead
-      source: (query, process) ->
-        $.get('/admin/taxon_concepts/autocomplete',
-        {
-          search_params: {
-            scientific_name: query,
-            taxon_concept: {
-              id: @.$element.attr('data-taxon-concept-id'),
-              scope: @.$element.attr('data-taxon-concept-scope')
-            }
-          }
-          limit: 25
-        }, (data) =>
-          labels = []
-          $.each(data, (i, item) =>
-            label = item.full_name + ' ' + item.rank_name
-            labels.push(label)
-          )
-          return process(labels)
-        )
 
   initDistributionSelectors: () ->
     $('.distribution:not(#exclusions_fields_blueprint > .fields > select)').select2({
@@ -256,6 +230,39 @@ class ListingChangesEditor extends AdminEditor
             taxon_concept:
               id: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-id')
               scope: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-scope')
+          limit: 25
+        results: (data) ->
+            results = []
+            $.each(data, (i, e) ->
+              results.push(
+                id: e.id
+                text: e.full_name
+              )
+            )
+            results: results
+        dropdownCssClass: 'bigdrop'
+        placeholder: 'Select taxa'
+      }
+    })
+
+    $("#inclusion_taxon_concept_id").select2({
+      minimumInputLength: 3
+      initSelection: (element, callback) ->
+        tmp = element.val().split(":")
+        id = tmp[0]
+        data = {id: tmp[0], text: tmp[1]}
+        element.val(id)
+        callback(data)
+      ajax: {
+        url: '/admin/taxon_concepts/autocomplete',
+        dataType: 'json',
+        quietMillis: 100,
+        data: (query) ->
+          search_params:
+            scientific_name: query
+            taxon_concept:
+              id: $("#inclusion_taxon_concept_id").attr('data-taxon-concept-id')
+              scope: $("#inclusion_taxon_concept_id").attr('data-taxon-concept-scope')
           limit: 25
         results: (data) ->
             results = []

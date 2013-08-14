@@ -38,21 +38,10 @@ describe ListingChange do
         }
         specify{ listing_change.exclusions.size == 0 }
       end
-      context "inclusion taxon concept does not exist" do
-        let(:taxon_concept){ create(:taxon_concept) }
-        let(:listing_change){
-          build(
-            :listing_change,
-            :taxon_concept => taxon_concept,
-            :inclusion_scientific_name => 'Abcd'
-          )
-        }
-        specify{ listing_change.should have(1).error_on(:inclusion_scientific_name)}
-      end
       context "inclusion taxon concept is lower rank" do
         let(:rank1){ create(:rank, :taxonomic_position => '1')}
         let(:rank2){ create(:rank, :taxonomic_position => '1.2')}
-        let!(:inclusion){
+        let(:inclusion){
           create(
             :taxon_concept,
             :rank => rank2,
@@ -64,7 +53,7 @@ describe ListingChange do
           build(
             :listing_change,
             :taxon_concept => taxon_concept,
-            :inclusion_scientific_name => 'Abc'
+            :inclusion_taxon_concept_id => inclusion.id
           )
         }
         specify{listing_change.should have(1).error_on(:inclusion_taxon_concept_id)}
@@ -72,7 +61,7 @@ describe ListingChange do
       context "inclusion taxon concept is lower rank" do
         let(:rank1){ create(:rank, :taxonomic_position => '1')}
         let(:rank2){ create(:rank, :taxonomic_position => '1.2')}
-        let!(:inclusion){
+        let(:inclusion){
           create(
             :taxon_concept,
             :rank => rank2,
@@ -84,7 +73,7 @@ describe ListingChange do
           build(
             :listing_change,
             :taxon_concept => taxon_concept,
-            :inclusion_scientific_name => 'Abc'
+            :inclusion_taxon_concept_id => inclusion.id
           )
         }
         specify{listing_change.should have(1).error_on(:inclusion_taxon_concept_id)}

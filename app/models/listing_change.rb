@@ -23,11 +23,10 @@
 class ListingChange < ActiveRecord::Base
 
   attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
-    :effective_at, :is_current, :parent_id, :scientific_name, :geo_entity_ids,
-    :party_listing_distribution_attributes, :inclusion_scientific_name,
-    :exclusions_attributes, :annotation_attributes, :hash_annotation_id,
+    :effective_at, :is_current, :parent_id, :geo_entity_ids,
+    :party_listing_distribution_attributes, :inclusion_taxon_concept_id,
+    :annotation_attributes, :hash_annotation_id,
     :event_id, :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
-  attr_writer :inclusion_scientific_name, :scientific_name
   attr_accessor :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
 
   belongs_to :event
@@ -49,8 +48,6 @@ class ListingChange < ActiveRecord::Base
   validate :inclusion_at_higher_rank
   validate :species_listing_designation_mismatch
   validate :event_designation_mismatch
-  before_validation :check_inclusion_taxon_concept_exists
-  before_validation :check_taxon_concept_exists
 
   accepts_nested_attributes_for :party_listing_distribution,
     :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
@@ -104,16 +101,6 @@ class ListingChange < ActiveRecord::Base
   end
 
   private
-  def check_inclusion_taxon_concept_exists
-    return true if inclusion_scientific_name.blank?
-    tc = TaxonConcept.find_by_full_name_and_name_status(inclusion_scientific_name, 'A')
-    unless tc
-      errors.add(:inclusion_scientific_name, "does not exist")
-      return true
-    end
-    self.inclusion_taxon_concept_id = tc.id
-    true
-  end
 
   def inclusion_at_higher_rank
     return true unless inclusion
@@ -137,17 +124,6 @@ class ListingChange < ActiveRecord::Base
       errors.add(:event_id, "designation mismatch between change type and event")
       return false
     end
-  end
-
-  def check_taxon_concept_exists
-    return true if scientific_name.blank?
-    tc = TaxonConcept.find_by_full_name_and_name_status(scientific_name, 'A')
-    unless tc
-      errors.add(:scientific_name, "does not exist")
-      return true
-    end
-    self.taxon_concept_id = tc.id
-    true
   end
 
 end
