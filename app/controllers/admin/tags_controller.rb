@@ -4,6 +4,7 @@ class Admin::TagsController < Admin::SimpleCrudController
   protected
 
   def collection
-    @tags ||= end_of_association_chain.page(params[:page])
+    @tags ||= end_of_association_chain.page(params[:page]).
+      order('UPPER(name) ASC, model ASC')
   end
 end
