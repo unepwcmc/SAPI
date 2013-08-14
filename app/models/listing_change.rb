@@ -56,7 +56,7 @@ class ListingChange < ActiveRecord::Base
     :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
   accepts_nested_attributes_for :annotation,
     :reject_if => proc { |attributes|
-      attributes['short_note_en'].blank?
+      attributes['short_note_en'].blank? && attributes['full_note_en'].blank?
     }
 
   scope :by_designation, lambda { |designation_id|
