@@ -3,7 +3,7 @@
 # Table name: eu_decisions
 #
 #  id                  :integer          not null, primary key
-#  is_current          :boolean
+#  is_current          :boolean          default(TRUE)
 #  notes               :text
 #  internal_notes      :text
 #  taxon_concept_id    :integer

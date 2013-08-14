@@ -1,6 +1,7 @@
 class Admin::EuOpinionsController < Admin::SimpleCrudController
   belongs_to :taxon_concept
   before_filter :load_lib_objects
+  before_filter :load_search
 
   layout 'taxon_concepts'
 
@@ -40,11 +41,13 @@ class Admin::EuOpinionsController < Admin::SimpleCrudController
     @sources = Source.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
-    @laws = Event.joins(:designation).where('designations.name' => 'EU')
+    @eu_regulations = EuRegulation.order("effective_at DESC")
+    @eu_decision_types = EuDecisionType.opinions
   end
 
   def collection
-    @eu_opinions ||= end_of_association_chain.order('start_date').
+    @eu_opinions ||= end_of_association_chain.
+      order('is_current DESC, start_date DESC').
       page(params[:page])
   end
 end

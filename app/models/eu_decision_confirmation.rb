@@ -11,4 +11,6 @@
 
 class EuDecisionConfirmation < ActiveRecord::Base
   attr_accessible :eu_decision_id, :event_id
+
+  belongs_to :eu_decision
 end
