@@ -12,5 +12,6 @@
 class EuDecisionType < ActiveRecord::Base
   attr_accessible :name, :tooltip, :is_suspension
 
-  scope :opinions, where(:is_suspension => false)
+  scope :opinions, where(:is_suspension => false).
+    order(:name)
 end
