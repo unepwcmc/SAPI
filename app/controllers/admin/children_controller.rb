@@ -5,6 +5,7 @@ class Admin::ChildrenController < Admin::SimpleCrudController
 
   def index
     @children = @taxon_concept.children.
+      where(:name_status => 'A').
       order(:full_name)
   end
 end
