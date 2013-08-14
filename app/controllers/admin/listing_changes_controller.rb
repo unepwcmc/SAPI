@@ -22,8 +22,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
     @designation = Designation.find(params[:designation_id])
     @listing_change = ListingChange.new(params[:listing_change])
     if @taxon_concept.listing_changes << @listing_change
-      load_listing_changes
-      render 'index'
+      redirect_to admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
     else
       load_change_types
       build_dependants

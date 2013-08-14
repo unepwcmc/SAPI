@@ -63,6 +63,8 @@ class ListingChange < ActiveRecord::Base
     joins(:change_type).where(:"change_types.designation_id" => designation_id)
   }
 
+  scope :none, where("1 = 0")
+
   def effective_at_formatted
     effective_at ? effective_at.strftime('%d/%m/%Y') : ''
   end
@@ -72,6 +74,7 @@ class ListingChange < ActiveRecord::Base
   end
 
   def taxonomic_exclusions
+    return ListingChange.none if new_record?
     exclusions.where("taxon_concept_id != #{self.taxon_concept_id}")
   end
 
@@ -80,6 +83,7 @@ class ListingChange < ActiveRecord::Base
   end
 
   def geographic_exclusions
+    return ListingChange.none if new_record?
     exclusions.where("taxon_concept_id = #{self.taxon_concept_id}")
   end
 
