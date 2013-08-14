@@ -16,6 +16,11 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     @taxon_concepts = TaxonConceptMatcher.new(@search_params).taxon_concepts.
       includes([:rank, :taxonomy, :taxon_name, :parent]).
       order(:taxonomic_position).page(params[:page])
+    if @taxon_concepts.count == 1
+      redirect_to admin_taxon_concept_names_path(@taxon_concepts.first),
+        :notice => "Your search returned only one result,
+          you have been redirected to the page of #{@taxon_concepts.first.full_name}"
+    end
   end
 
   def edit
