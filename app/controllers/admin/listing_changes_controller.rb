@@ -15,6 +15,8 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       load_change_types
       @listing_change.change_type_id ||= @change_types.first.id
       @listing_change.is_current = true
+      @listing_change.event = @events.first #ordered most recent first
+      @listing_change.effective_at =  @listing_change.event && @listing_change.event.effective_at
       build_dependants
     end
   end
@@ -91,9 +93,9 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       Annotation.for_cites
     end
     @events = if @designation.is_eu?
-      EuRegulation.order(:effective_at)
+      EuRegulation.order('effective_at DESC')
     elsif @designation.is_cites?
-      CitesCop.order(:effective_at)
+      CitesCop.order('effective_at DESC')
     end
   end
 

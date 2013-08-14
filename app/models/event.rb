@@ -20,13 +20,14 @@
 
 class Event < ActiveRecord::Base
   attr_accessible :name, :designation_id, :description, :url, :effective_at
+  attr_reader :effective_at_formatted
   belongs_to :designation
 
   validates :name, :presence => true, :uniqueness => true
   validates :url, :format => URI::regexp(%w(http https)), :allow_blank => true
 
   def effective_at_formatted
-    effective_at && effective_at.strftime("%d/%m/%y")
+    effective_at && effective_at.strftime("%d/%m/%Y")
   end
 
   def end_date_formatted
