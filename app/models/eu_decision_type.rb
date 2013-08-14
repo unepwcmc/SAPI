@@ -15,4 +15,6 @@ class EuDecisionType < ActiveRecord::Base
 
   scope :opinions, where(:is_suspension => false).
     order(:name)
+  scope :suspensions, where(:is_suspension => true).
+    order(:name)
 end

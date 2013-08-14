@@ -16,7 +16,11 @@
       <td><%= opinion.year %></td>
       <td><%= opinion.start_event.name %></td>
       <td><%= opinion.geo_entity && opinion.geo_entity.name_en %></td>
-      <td><%= opinion.eu_decision_type.name %> <%= '(' + opinion.eu_decision_type.tooltip + ')' if opinion.eu_decision_type.tooltip.present? %></td>
+      <td>
+        <%= opinion.eu_decision_type.name %> 
+        <%= '(' + opinion.eu_decision_type.tooltip + ')' if opinion.
+          eu_decision_type.tooltip.present? %>
+      </td>
       <td><%= opinion.term && opinion.term.code %></td>
       <td><%= opinion.source && opinion.source.code %></td>
       <td><%= opinion.notes %></td>
