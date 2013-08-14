@@ -1,7 +1,15 @@
 <div class="row-fluid header">
   <h1 title="<%= @taxon_concept.rank.name %>">
     <%= @taxon_concept.full_name %>
-    <span><a href="/species#/taxon_concepts/<%= @taxon_concept.id %>/legal">in Species+</a></span>
+    <span>
+      <% if @taxon_concept.rank.name == Rank::SPECIES %>
+        <a href="/species#/taxon_concepts/<%= @taxon_concept.id %>/legal">
+      <% else %>
+        <a href="/species#/search/taxonomy=<%= @taxon_concept.taxonomy.name.downcase %>&taxon_concept_query=<%= @taxon_concept.full_name %>">
+      <% end %>
+          in Species+
+        </a>
+    </span>
   </h1>
   <%= link_to edit_icon, edit_admin_taxon_concept_url(@taxon_concept), :remote => true %>
   <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
@@ -14,7 +22,7 @@
       <span>SYNONYM OF:</span>
       <ul>
         <% @taxon_concept.accepted_names.each do |tc| %>
-          <li><%= link_to tc.full_name, admin_taxon_concept_names_url(tc) %></li>
+          <li><%= link_to tc.full_name, send("admin_taxon_concept_#{controller_name}_url", tc) %></li>
         <% end %>
       </ul>
     </div>
@@ -23,7 +31,7 @@
       <span>HYBRID OF:</span>
       <ul>
         <% @taxon_concept.hybrid_parents.each do |tc| %>
-          <li><%= link_to tc.full_name, admin_taxon_concept_names_url(tc) %></li>
+          <li><%= link_to tc.full_name, send("admin_taxon_concept_#{controller_name}_url", tc) %></li>
         <% end %>
       </ul>
     </div>
