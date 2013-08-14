@@ -126,9 +126,9 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
               listing_changes_mview.inherited_short_note_en,
               CASE
                 WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
-                  THEN '[Listing for SUBSPECIES <i>' || taxon_concepts_mview.full_name || '</i>]'
+                  THEN '[SUBSPECIES listing <i>' || taxon_concepts_mview.full_name || '</i>]'
                 WHEN taxon_concepts_mview.rank_name = 'VARIETY'
-                  THEN '[Listing for VARIETY <i>' || taxon_concepts_mview.full_name || '</i>]'
+                  THEN '[VARIETY listing <i>' || taxon_concepts_mview.full_name || '</i>]'
                 ELSE NULL
               END AS subspecies_info
            SQL
@@ -180,7 +180,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
               events.url AS event_url,
               CASE
                 WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
-                  THEN '[Listing for SUBSPECIES <i>' || taxon_concepts_mview.full_name || '</i>]'
+                  THEN '[SUBSPECIES listing <i>' || taxon_concepts_mview.full_name || '</i>]'
                 ELSE NULL
               END AS subspecies_info
            SQL
