@@ -13,6 +13,8 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   def new
     new! do
       load_change_types
+      @listing_change.change_type_id ||= @change_types.first.id
+      @listing_change.is_current = true
       build_dependants
     end
   end
@@ -61,7 +63,6 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
 
   protected
   def build_dependants
-    @listing_change.change_type_id ||= @change_types.first.id
     unless @listing_change.party_listing_distribution
       @listing_change.build_party_listing_distribution(
         params[:listing_change] &&
