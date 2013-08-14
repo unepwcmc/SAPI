@@ -13,10 +13,11 @@ class PresetTag < ActiveRecord::Base
   attr_accessible :model, :name
 
   TYPES = {
-    :TaxonConcept => 'TaxonConcept',
-    :Distribution => 'Distribution'
+    :Distribution => 'Distribution',
+    :TaxonConcept => 'TaxonConcept'
   }
 
-  validates :name, :presence => true
+  validates :name, :presence => true, :uniqueness => {
+    :scope => :model, :case_sensitive => false }
   validates :model, :inclusion => { :in => TYPES.values }
 end

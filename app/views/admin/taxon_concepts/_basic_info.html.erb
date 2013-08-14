@@ -1,5 +1,8 @@
 <div class="row-fluid header">
-  <%= content_tag(:h1, @taxon_concept.full_name, :title => @taxon_concept.rank.name) %>
+  <h1 title="<%= @taxon_concept.rank.name %>">
+    <%= @taxon_concept.full_name %>
+    <span><a href="/species#/taxon_concepts/<%= @taxon_concept.id %>/legal">in Species+</a></span>
+  </h1>
   <%= link_to edit_icon, edit_admin_taxon_concept_url(@taxon_concept), :remote => true %>
   <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
   <%= @taxon_concept.author_year %>
