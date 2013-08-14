@@ -10,7 +10,7 @@ class ListingChangeObserver < ActiveRecord::Observer
 
     #geographic exclusions
     excluded_geo_entities_ids = listing_change.excluded_geo_entities_ids && 
-      listing_change.excluded_geo_entities_ids.compact
+      listing_change.excluded_geo_entities_ids.reject(&:blank?)
     excluded_geo_entities = if excluded_geo_entities_ids && excluded_geo_entities_ids.size > 0
       new_exclusions << ListingChange.new(
         :change_type_id => exclusion_change_type.id,
@@ -22,7 +22,7 @@ class ListingChangeObserver < ActiveRecord::Observer
 
     #taxonomic exclusions
     excluded_taxon_concepts_ids = listing_change.excluded_taxon_concepts_ids &&
-      listing_change.excluded_taxon_concepts_ids.split(',').compact
+      listing_change.excluded_taxon_concepts_ids.split(',').reject(&:blank?)
     excluded_taxon_concepts = if excluded_taxon_concepts_ids && excluded_taxon_concepts_ids.size > 0
       excluded_taxon_concepts_ids.map do |id|
         new_exclusions << ListingChange.new(
