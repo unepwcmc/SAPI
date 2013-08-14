@@ -114,7 +114,7 @@ FactoryGirl.define do
 
   factory :eu_suspension do
     taxon_concept
-    restriction 'b'
+    eu_decision_type
     start_date Date.new(2013,1,1)
   end
 end
