@@ -208,6 +208,7 @@ class ListingChangesEditor extends AdminEditor
     })
 
     $("#excluded_taxon_concepts_ids").select2({
+      placeholder: 'Select taxa'
       minimumInputLength: 3
       multiple: true
       initSelection: (element, callback) ->
@@ -246,6 +247,7 @@ class ListingChangesEditor extends AdminEditor
     })
 
     $("#inclusion_taxon_concept_id").select2({
+      placeholder: 'Select taxon'
       minimumInputLength: 3
       initSelection: (element, callback) ->
         tmp = element.val().split(":")
@@ -279,7 +281,4 @@ class ListingChangesEditor extends AdminEditor
     })
 
   initEventSelector: () ->
-    if $('#cites_cop').length > 0
-      $('#listing_change_hash_annotation_id').chained('#cites_cop')
-    else
-      $('#listing_change_hash_annotation_id').chained('#listing_change_event_id')
+    $('#listing_change_hash_annotation_id').chained('#listing_change_event_id')
