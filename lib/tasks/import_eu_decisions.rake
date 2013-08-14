@@ -16,23 +16,38 @@ namespace :import do
       sql = <<-SQL
         -- import eu_decision_types
         INSERT INTO eu_decision_types (name, created_at, updated_at)
-        SELECT DISTINCT opinion, current_date, current_date FROM #{TMP_TABLE};
+        SELECT DISTINCT BTRIM(opinion), current_date, current_date FROM #{TMP_TABLE};
 
         UPDATE eu_decision_types
-        SET tooltip = 'no significant trade anticipated'
-        WHERE name = 'i)';
+        SET tooltip = 'no significant trade anticipated',
+          is_suspension = 'f'::BOOLEAN
+        WHERE name ilike 'i)%';
 
         UPDATE eu_decision_types
-        SET tooltip = 'decision deferred'
-        WHERE name = 'ii)';
+        SET tooltip = 'decision deferred',
+          is_suspension = 'f'::BOOLEAN
+        WHERE name ilike 'ii)%';
 
         UPDATE eu_decision_types
-        SET tooltip = 'referral to the SRG'
-        WHERE name = 'iii)';
+        SET tooltip = 'referral to the SRG',
+          is_suspension = 'f'::BOOLEAN
+        WHERE name ilike 'iii)%';
 
         UPDATE eu_decision_types
-        SET tooltip = 'opinion type not specified'
-        WHERE name = 'no opinion';
+        SET is_suspension = 'f'::BOOLEAN
+        WHERE name ilike 'no%';
+
+        UPDATE eu_decision_types
+        SET is_suspension = 'f'::BOOLEAN
+        WHERE name ilike 'positive%';
+
+        UPDATE eu_decision_types
+        SET is_suspension = 'f'::BOOLEAN
+        WHERE name ilike 'negative%';
+
+        UPDATE eu_decision_types
+        SET is_suspension = 't'::BOOLEAN
+        WHERE name ilike 'suspension%';
 
         -- import eu_decisions (both Opinions and Suspensions)
         INSERT INTO eu_decisions (taxon_concept_id, geo_entity_id, is_current,
