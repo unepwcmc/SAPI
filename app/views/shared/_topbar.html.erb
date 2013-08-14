@@ -69,14 +69,11 @@
             <li class="<%= if controller_name == 'eu_regulations' then 'active' end%>">
               <%= link_to 'EU Annex Regulations', admin_eu_regulations_path %>
             </li>
-            <li class="<%= if controller_name == '#' then 'active' end%>">
-              <%= link_to 'EU Suspension Regulations', '#' %>
+            <li class="<%= if controller_name == 'eu_suspension_regulations' then 'active' end%>">
+              <%= link_to 'EU Suspension Regulations', admin_eu_suspension_regulations_path %>
             </li>
             <li class="<%= if controller_name == 'eu_hash_annotations' then 'active' end%>">
               <%= link_to 'EU hash annotations', admin_eu_hash_annotations_path %>
-            </li>
-            <li class="<%= if controller_name == 'events' then 'active' end%>">
-              <%= link_to 'Events', admin_events_path %>
             </li>
           </ul>
         </li>
