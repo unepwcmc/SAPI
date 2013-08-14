@@ -46,6 +46,6 @@ describe Event do
 
   describe :effective_at_formatted do
     let(:event){ create(:event, :effective_at => '2012-05-10') }
-    specify {event.effective_at_formatted.should == '10/05/12' }
+    specify {event.effective_at_formatted.should == '10/05/2012' }
   end
 end

@@ -282,3 +282,12 @@ class ListingChangesEditor extends AdminEditor
 
   initEventSelector: () ->
     $('#listing_change_hash_annotation_id').chained('#listing_change_event_id')
+    if $('#listing_change_event_id').attr('data-designation') == 'EU'
+      $('#listing_change_event_id').change((e) ->
+        $.get(
+          '/admin/events/' + $('#listing_change_event_id option:selected').val(),
+          {format: 'json'},
+          (data) ->
+            $('#listing_change_effective_at').val(data.event.effective_at_formatted)
+        )
+      )

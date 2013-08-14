@@ -1,6 +1,6 @@
 class Admin::EventsController < Admin::SimpleCrudController
   respond_to :js, :except => [:index, :destroy]
-  respond_to :json, :only => [:update]
+  respond_to :json, :only => [:update, :show]
 
   def index
     load_associations
@@ -24,6 +24,12 @@ class Admin::EventsController < Admin::SimpleCrudController
       format.js { render 'new' }
     end
   end
+
+def show
+  show! do |format|
+    format.json{ render :json => resource, :serializer => Admin::EventSerializer }
+  end
+end
 
   protected
     def collection

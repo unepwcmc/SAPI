@@ -141,7 +141,8 @@
             @events, :id, :name, 
             @listing_change.event_id || @listing_change.hash_annotation && @listing_change.hash_annotation.event_id
           ),
-          { :selected => @listing_change.event_id, :include_blank => @designation.is_cites? }
+          { :selected => @listing_change.event_id, :include_blank => @designation.is_cites? },
+          { "data-designation" => @designation.name }
         %>
       </td>
       <td>
