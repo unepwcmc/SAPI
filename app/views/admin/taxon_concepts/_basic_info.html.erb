@@ -3,16 +3,19 @@
     <%= @taxon_concept.full_name %>
     <span>
       <% if @taxon_concept.rank.name == Rank::SPECIES %>
-        <a href="/species#/taxon_concepts/<%= @taxon_concept.id %>/legal">
+        <a href="/species#/taxon_concepts/<%= @taxon_concept.id %>/legal"
+          title="View this taxon concept in Species+" alt="link to this taxon concept in Species+">
       <% else %>
-        <a href="/species#/search/taxonomy=<%= @taxon_concept.taxonomy.name.downcase %>&taxon_concept_query=<%= @taxon_concept.full_name %>">
+        <a href="/species#/search/taxonomy=<%= @taxon_concept.taxonomy.name.downcase %>&taxon_concept_query=<%= @taxon_concept.full_name %>"
+          title="View this taxon concept in Species+" alt="link to this taxon concept in Species+">
       <% end %>
           in Species+
         </a>
     </span>
   </h1>
   <%= link_to edit_icon, edit_admin_taxon_concept_url(@taxon_concept), :remote => true %>
-  <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+  <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), 
+    :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
   <%= @taxon_concept.author_year %>
   <% if @taxon_concept.tag_list %>
     <%= tag_list(@taxon_concept.tag_list) %><br />
@@ -22,7 +25,7 @@
       <span>SYNONYM OF:</span>
       <ul>
         <% @taxon_concept.accepted_names.each do |tc| %>
-          <li><%= link_to tc.full_name, send("admin_taxon_concept_#{controller_name}_url", tc) %></li>
+          <li><%= link_to tc.full_name, params.merge(:taxon_concept_id => tc.id) %></li>
         <% end %>
       </ul>
     </div>
@@ -31,7 +34,7 @@
       <span>HYBRID OF:</span>
       <ul>
         <% @taxon_concept.hybrid_parents.each do |tc| %>
-          <li><%= link_to tc.full_name, send("admin_taxon_concept_#{controller_name}_url", tc) %></li>
+          <li><%= link_to tc.full_name, params.merge(:taxon_concept_id => tc.id) %></li>
         <% end %>
       </ul>
     </div>
