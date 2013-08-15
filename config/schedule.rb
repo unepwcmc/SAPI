@@ -7,7 +7,8 @@ every :day, :at => '3:42am' do
 end
 
 every :day, :at => '4:42am' do
-  rake "downloads:cache:update"
+  rake "downloads:cache:update_checklist_downloads"
+  rake "downloads:cache:update_species_downloads"
 end
 
 every :day, :at => '5:42am' do
