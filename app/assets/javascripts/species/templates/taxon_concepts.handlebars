@@ -21,9 +21,11 @@
         }}
       {{/each}}
     {{else}}
-      <p class="no-results-title">Your search for <u>{{unbound controllers.search.taxonConceptQuery}}</u> returned no results.</p>
-      <p class="no-results-subtitle"> Try refining your search or selecting a taxa from the drop-down menu.</p>
-      <p>Please note that this database contains species that are listed in the Appendices to CITES and CMS, as well as the Annexes to the EU Wildlife Trade Regulations; it is not a comprehensive source of all species.</p>
+      <div class="no-results">
+        <p class="no-results-title">Your search for <u>{{unbound controllers.search.taxonConceptQuery}}</u> returned no results.</p>
+        <p class="no-results-subtitle"> Try refining your search or selecting a taxa from the drop-down menu.</p>
+        <p>Please note that this database contains species that are listed in the Appendices to CITES and CMS, as well as the Annexes to the EU Wildlife Trade Regulations; it is not a comprehensive source of all species.</p>
+      </div>
     {{/each}}
   </div>
 
