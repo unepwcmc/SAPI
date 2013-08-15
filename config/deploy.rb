@@ -22,10 +22,6 @@ set :application, "sapi"
 # probable source of issue:
 # https://github.com/javan/whenever/commit/7ae1009c31deb03c5db4a68f5fc99ea099ce5655
 namespace :deploy do
-#  desc "Update the crontab file"
-#  task :update_crontab, :roles => :app, :except => { :no_release => true } do
-#    run "cd #{release_path} && RAILS_ENV=#{rails_env} bundle exec whenever --update-crontab #{application}"
-#  end
 
   task :default do
     update
@@ -55,7 +51,6 @@ namespace :assets do
   end
 end
 
-after 'deploy:update_code', 'deploy:update_crontab'
 
 # Target directory for the application on the web and app servers.
 set(:deploy_to) { File.join("", "home", user, application) }
