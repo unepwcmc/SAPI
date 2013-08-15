@@ -25,9 +25,7 @@
 class Quota < TradeRestriction
 
   validates :quota, :presence => true
-  validates :quota, :numericality => { :only_integer => true, :greater_than => 0 }
-
-  validates :unit, :presence => true
+  validates :quota, :numericality => { :greater_than => 0 }
 
   #Each element of CSV columns can be either an array [display_text, method]
   #or a single symbol if the display text and the method are the same
