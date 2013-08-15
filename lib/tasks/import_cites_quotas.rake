@@ -68,8 +68,8 @@ namespace :import do
           INSERT INTO trade_restriction_#{code}(trade_restriction_id, #{code.singularize}_id, created_at, updated_at)
           SELECT trade_restrictions.id, trade_codes.id, current_date, current_date
           FROM #{code}_codes_per_quota as t
-          LEFT JOIN trade_restrictions ON trade_restrictions.import_row_id = t.row_id AND trade_restrictions.type = 'Quota'
-          LEFT JOIN trade_codes ON UPPER(trade_codes.code) = UPPER(BTRIM(t.code)) AND trade_codes.type = '#{code.singularize.titleize}'
+          INNER JOIN trade_restrictions ON trade_restrictions.import_row_id = t.row_id AND trade_restrictions.type = 'Quota'
+          INNER JOIN trade_codes ON UPPER(trade_codes.code) = UPPER(BTRIM(t.code)) AND trade_codes.type = '#{code.singularize.titleize}'
         SQL
         puts "Linking #{code} to quotas"
         ActiveRecord::Base.connection.execute(sql)
