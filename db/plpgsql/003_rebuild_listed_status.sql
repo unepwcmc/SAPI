@@ -98,6 +98,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       INNER JOIN listing_changes
         ON listing_changes.id = listing_exceptions.parent_id
           AND listing_changes.taxon_concept_id <> listing_exceptions.taxon_concept_id
+          AND listing_changes.change_type_id = addition_id
           AND listing_changes.is_current = TRUE
     )
     UPDATE taxon_concepts
