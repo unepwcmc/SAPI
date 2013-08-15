@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
       status_flag varchar;
       listing_original_flag varchar;
       listing_flag varchar;
-      closest_listed_ancestor_flag varchar;
+      level_of_listing_flag varchar;
     BEGIN
 
     fully_covered_flag := LOWER(designation.name) || '_fully_covered';
@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
     status_flag := LOWER(designation.name) || '_status';
     listing_original_flag := LOWER(designation.name) || '_listing_original';
     listing_flag := LOWER(designation.name) || '_listing';
-    closest_listed_ancestor_flag  := LOWER(designation.name) || '_closest_listed_ancestor_id';
+    level_of_listing_flag := LOWER(designation.name) || '_level_of_listing';
 
     IF node_id IS NOT NULL THEN
       WITH RECURSIVE ancestors AS (
@@ -53,7 +53,6 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
           ELSE NULL
         END
       )  ||
-      hstore(closest_listed_ancestor_flag, h.id::VARCHAR) ||
       slice(h.listing, ARRAY[listing_original_flag, fully_covered_flag,'hash_ann_symbol', 'ann_symbol']) ||
       CASE
         WHEN designation.name = 'CITES' THEN slice(h.listing, ARRAY['cites_I', 'cites_II', 'cites_III'])
@@ -74,7 +73,6 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
       THEN
         hstore(listing_flag, hi.listing->listing_original_flag) ||
         slice(hi.listing, ARRAY[listing_original_flag, fully_covered_flag,'hash_ann_symbol', 'ann_symbol']) ||
-        hstore(closest_listed_ancestor_flag, hi.id::VARCHAR) ||
         CASE
           WHEN designation.name = 'CITES' THEN slice(hi.listing, ARRAY['cites_I', 'cites_II', 'cites_III'])
           WHEN designation.name = 'EU' THEN slice(hi.listing, ARRAY['eu_A', 'eu_B', 'eu_C', 'eu_D'])

@@ -205,13 +205,13 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
       listing_changes_mview.species_listing_id, 
       species_listing_name,
       designation_id, designation_name,
-      party_id, party_iso_code
+      party_id, party_iso_code,
+      listing_changes_mview.species_listing_id != next_lc.species_listing_id AS appendix_change
       FROM next_lc
       JOIN listing_changes_mview      
       ON listing_changes_mview.taxon_concept_id = next_lc.taxon_concept_id
       AND change_type_id = 1
       AND listing_changes_mview.effective_at < next_lc.effective_at
-      AND listing_changes_mview.species_listing_id != next_lc.species_listing_id
       AND (
         (
           -- own listing change preceded by inherited listing change
@@ -264,6 +264,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
       TRUE AS is_current, FALSE AS explicit_change,
       TRUE AS show_in_timeline, FALSE AS show_in_downloads, FALSE AS show_in_history
       FROM prev_lc
+      WHERE appendix_change
       GROUP BY original_taxon_concept_id, taxon_concept_id, 
       species_listing_id, species_listing_name,
       prev_lc.designation_id, designation_name, party_id, party_iso_code

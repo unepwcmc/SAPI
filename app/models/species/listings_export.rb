@@ -43,10 +43,11 @@ class Species::ListingsExport
 
   def export
     return false unless query.any?
-    @public_file_name = "#{resource_name}.csv"
     if !File.file?(file_name)
       to_csv
     end
+    ctime = File.ctime(@file_name)
+    @public_file_name = "#{resource_name}_generated_at_#{ctime}.csv"
     [
       @file_name,
       {:filename => @public_file_name, :type => 'text/csv'}

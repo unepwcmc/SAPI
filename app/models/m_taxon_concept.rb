@@ -37,7 +37,6 @@
 #  cites_status                     :text
 #  cites_listing_original           :text
 #  cites_listing                    :text
-#  cites_closest_listed_ancestor_id :integer
 #  cites_listing_updated_at         :datetime
 #  ann_symbol                       :text
 #  hash_ann_symbol                  :text
@@ -47,14 +46,12 @@
 #  eu_status                        :text
 #  eu_listing_original              :text
 #  eu_listing                       :text
-#  eu_closest_listed_ancestor_id    :integer
 #  eu_listing_updated_at            :datetime
 #  cms_listed                       :boolean
 #  cms_show                         :boolean
 #  cms_status                       :text
 #  cms_listing_original             :text
 #  cms_listing                      :text
-#  cms_closest_listed_ancestor_id   :integer
 #  cms_listing_updated_at           :datetime
 #  species_listings_ids             :string
 #  species_listings_ids_aggregated  :string
