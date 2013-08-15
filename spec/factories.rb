@@ -102,7 +102,7 @@ FactoryGirl.define do
   end
 
   factory :eu_decision_type do
-    name 'Opinion'
+    sequence(:name) {|n| "Opinion#{n}"}
     is_suspension false
   end
 
