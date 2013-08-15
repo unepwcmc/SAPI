@@ -14,17 +14,30 @@ module Checklist::Pdf::IndexContent
   def annotations_key
     tex = "\\parindent 0in"
     tex << "\\cpart{Annotations key}\n"
-    listing_changes_with_index_annotations = MListingChange.
-      includes(:taxon_concept).
-      where(:is_current => true, :display_in_index => true, :designation_name => Designation::CITES).
-      where("ann_symbol IS NOT NULL").
-      order(:"ann_symbol::INT")
+    cites = Designation.find_by_name(Designation::CITES)
+    taxa_with_index_annotations = MTaxonConcept.
+      select("taxon_concepts_mview.*, annotations.symbol, annotations.full_note_en").
+      joins( <<-SQL
+        JOIN listing_changes
+        ON listing_changes.taxon_concept_id = taxon_concepts_mview.id
+        AND listing_changes.is_current
+        JOIN change_types
+        ON change_types.id = listing_changes.change_type_id
+        AND designation_id = #{cites.id}
+        AND change_types.name = 'ADDITION'
+        JOIN annotations
+        ON listing_changes.annotation_id = annotations.id
+        AND annotations.display_in_index
+        AND annotations.symbol IS NOT NULL
+      SQL
+      ).
+      order("annotations.symbol::INT")
 
     tex << "\\section*{Annotations not preceded by \"\\#\"}\n"
-    listing_changes_with_index_annotations.each do |lc|
-        box_colour = (lc.taxon_concept.kingdom_name == 'Animalia' ? 'orange' : 'green')
-        tex << "\\cfbox{#{box_colour}}{\\superscript{#{lc.ann_symbol}} \\textbf{#{taxon_name_at_rank(lc.taxon_concept)}}}\n\n"
-        tex << "#{LatexToPdf.html2latex(lc.full_note_en)}\n\n"
+    taxa_with_index_annotations.each do |tc|
+        box_colour = (tc.kingdom_name == 'Animalia' ? 'orange' : 'green')
+        tex << "\\cfbox{#{box_colour}}{\\superscript{#{tc['symbol']}} \\textbf{#{taxon_name_at_rank(tc)}}}\n\n"
+        tex << "#{LatexToPdf.html2latex(tc['full_note_en'])}\n\n"
       end
     tex << "\\parindent -0.1in"
     tex
