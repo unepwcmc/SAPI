@@ -55,7 +55,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     ELSE FALSE
     END AS cites_III,
     CASE
-    WHEN listing->'cites_status' = 'LISTED' AND listing->'cites_status_original' = 't'
+    WHEN listing->'cites_status' = 'LISTED' AND listing->'cites_level_of_listing' = 't'
     THEN TRUE
     WHEN listing->'cites_status' = 'LISTED'
     THEN FALSE
@@ -71,7 +71,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     (listing->'hash_ann_symbol') AS hash_ann_symbol,
     (listing->'hash_ann_parent_symbol') AS hash_ann_parent_symbol,
     CASE
-    WHEN listing->'eu_status' = 'LISTED' AND listing->'eu_status_original' = 't'
+    WHEN listing->'eu_status' = 'LISTED' AND listing->'eu_level_of_listing' = 't'
     THEN TRUE
     WHEN listing->'eu_status' = 'LISTED'
     THEN FALSE
@@ -84,7 +84,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     listing->'eu_listing' AS eu_listing,
     (listing->'eu_listing_updated_at')::TIMESTAMP AS eu_listing_updated_at,
     CASE
-    WHEN listing->'cms_status' = 'LISTED' AND listing->'cms_status_original' = 't'
+    WHEN listing->'cms_status' = 'LISTED' AND listing->'cms_level_of_listing' = 't'
     THEN TRUE
     WHEN listing->'cms_status' = 'LISTED'
     THEN FALSE

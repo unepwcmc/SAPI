@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
       status_flag varchar;
       listing_original_flag varchar;
       listing_flag varchar;
-      closest_listed_ancestor_flag varchar;
+      level_of_listing_flag varchar;
     BEGIN
 
     fully_covered_flag := LOWER(designation.name) || '_fully_covered';
@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
     status_flag := LOWER(designation.name) || '_status';
     listing_original_flag := LOWER(designation.name) || '_listing_original';
     listing_flag := LOWER(designation.name) || '_listing';
-    closest_listed_ancestor_flag  := LOWER(designation.name) || '_closest_listed_ancestor_id';
+    level_of_listing_flag := LOWER(designation.name) || '_level_of_listing';
 
     IF node_id IS NOT NULL THEN
       WITH RECURSIVE ancestors AS (
