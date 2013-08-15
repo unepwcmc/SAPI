@@ -41,24 +41,6 @@ describe TaxonConcept do
         end
       end
 
-      describe :cites_closest_listed_ancestor_id do
-        context "for genus Arctocephalus" do
-          specify{ @genus.cites_closest_listed_ancestor_id.should == @genus.id }
-        end
-        context "for species Arctocephalus australis" do
-          specify{ @species1.cites_closest_listed_ancestor_id.should == @genus.id }
-        end
-      end
-
-      describe :eu_closest_listed_ancestor_id do
-        context "for genus Arctocephalus" do
-          specify{ @genus.eu_closest_listed_ancestor_id.should == @genus.id }
-        end
-        context "for species Arctocephalus australis" do
-          specify{ @species1.eu_closest_listed_ancestor_id.should == @genus.id }
-        end
-      end
-
     end
   end
 end

@@ -66,7 +66,6 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     listing->'cites_status' AS cites_status,
     listing->'cites_listing_original' AS cites_listing_original, --used in CSV downloads
     listing->'cites_listing' AS cites_listing,
-    (listing->'cites_closest_listed_ancestor_id')::INT AS cites_closest_listed_ancestor_id,
     (listing->'cites_listing_updated_at')::TIMESTAMP AS cites_listing_updated_at,
     (listing->'ann_symbol') AS ann_symbol,
     (listing->'hash_ann_symbol') AS hash_ann_symbol,
@@ -83,7 +82,6 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     listing->'eu_status' AS eu_status,
     listing->'eu_listing_original' AS eu_listing_original,
     listing->'eu_listing' AS eu_listing,
-    (listing->'eu_closest_listed_ancestor_id')::INT AS eu_closest_listed_ancestor_id,
     (listing->'eu_listing_updated_at')::TIMESTAMP AS eu_listing_updated_at,
     CASE
     WHEN listing->'cms_status' = 'LISTED' AND listing->'cms_status_original' = 't'
@@ -96,7 +94,6 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     listing->'cms_status' AS cms_status,
     listing->'cms_listing_original' AS cms_listing_original,
     listing->'cms_listing' AS cms_listing,
-    (listing->'cms_closest_listed_ancestor_id')::INT AS cms_closest_listed_ancestor_id,
     (listing->'cms_listing_updated_at')::TIMESTAMP AS cms_listing_updated_at,
     (listing->'species_listings_ids')::INT[] AS species_listings_ids,
     (listing->'species_listings_ids_aggregated')::INT[] AS species_listings_ids_aggregated,
@@ -177,9 +174,6 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     CREATE INDEX ON taxon_concepts_mview (parent_id);
     CREATE INDEX full_name_idx ON taxon_concepts_mview USING BTREE(UPPER(full_name) text_pattern_ops);
     CREATE INDEX ON taxon_concepts_mview (taxonomy_is_cites_eu, cites_listed, kingdom_position);
-    CREATE INDEX ON taxon_concepts_mview (cites_closest_listed_ancestor_id);
-    CREATE INDEX ON taxon_concepts_mview (eu_closest_listed_ancestor_id);
-    CREATE INDEX ON taxon_concepts_mview (cms_closest_listed_ancestor_id);
     CREATE INDEX ON taxon_concepts_mview (taxonomy_is_cites_eu, rank_name); --this one used for Species+ autocomplete (both main and higher taxa in downloads)
 
   END;
