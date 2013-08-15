@@ -158,7 +158,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     FROM taxon_concepts
     JOIN listing_changes ON taxon_concepts.id = listing_changes.taxon_concept_id
     JOIN change_types ON change_types.id = listing_changes.change_type_id
-    WHERE is_current = TRUE
+    WHERE is_current = TRUE AND designation_id = designation.id
     AND
     CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END
     GROUP BY taxon_concepts.id, designation_id
