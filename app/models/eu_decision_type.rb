@@ -14,7 +14,15 @@ class EuDecisionType < ActiveRecord::Base
   attr_accessible :name, :tooltip, :is_suspension
 
   scope :opinions, where(:is_suspension => false).
-    order(:name)
+    order('UPPER(name) ASC')
   scope :suspensions, where(:is_suspension => true).
-    order(:name)
+    order('UPPER(name) ASC')
+
+  validates :name, presence: true, uniqueness: true
+
+  has_many :eu_decisions
+
+  def can_be_deleted?
+    eu_decisions.count == 0
+  end
 end
