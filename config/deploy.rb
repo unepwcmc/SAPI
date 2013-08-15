@@ -8,6 +8,7 @@ require 'brightbox/passenger'
 require 'sidekiq/capistrano'
 
 set :generate_webserver_config, false
+set :whenever_environment, defer { stage }
 
 ssh_options[:forward_agent] = true
 
@@ -22,7 +23,7 @@ set :application, "sapi"
 namespace :deploy do
   desc "Update the crontab file"
   task :update_crontab, :roles => :app, :except => { :no_release => true } do
-    run "cd #{release_path} && bundle exec whenever --update-crontab #{application}"
+    run "cd #{release_path} && RAILS_ENV=#{env} bundle exec whenever --update-crontab #{application}"
   end
 
   task :default do
