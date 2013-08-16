@@ -24,8 +24,11 @@
 
 class Quota < TradeRestriction
 
+  attr_accessible :public_display
+
   validates :quota, :presence => true
-  validates :quota, :numericality => { :greater_than => 0 }
+  validates :quota, :numericality => { :greater_than_or_equal_to => -1.0 }
+  validates :geo_entity_id, :presence => true
 
   #Each element of CSV columns can be either an array [display_text, method]
   #or a single symbol if the display text and the method are the same
