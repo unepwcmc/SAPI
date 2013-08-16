@@ -19,8 +19,10 @@ class Checklist::History < Checklist::Checklist
     else
       initialize_params(options)
     end
+  end
 
-    @download_name = "ChecklistHistory-#{Time.now.strftime("%d%m%Y")}.#{ext}"
+  def has_full_options?
+    true
   end
 
   def prepare_kingdom_queries
@@ -48,12 +50,14 @@ class Checklist::History < Checklist::Checklist
   end
 
   def generate
-    return @download_path  if File.exists?(@download_path)
-
-    prepare_queries
-    document do |doc|
-      content(doc)
+    if !File.exists?(@download_path)
+      prepare_queries
+      document do |doc|
+        content(doc)
+      end
     end
+    ctime = File.ctime(@download_path).strftime('%Y-%m-%d %H:%M')
+    @download_name = "History_of_CITES_Listings_#{has_full_options? ? '' : '[CUSTOM]_'}#{ctime}.#{ext}"
     @download_path
   end
 
