@@ -279,6 +279,7 @@ WITH RECURSIVE listing_changes_timeline AS (
   OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
   THEN TRUE
   WHEN listing_changes_timeline.context = ''::HSTORE  --this would be the case when deleted
+  AND hi.change_type_name = 'ADDITION'
   THEN TRUE -- allows for re-listing
   WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
   THEN TRUE

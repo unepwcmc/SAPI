@@ -10,6 +10,10 @@ class Checklist::TimelinesForTaxonConcept
     listing_changes = taxon_concept.listing_changes.where(
       :designation_id => cites && cites.id, :show_in_timeline => true
     ).order(:effective_at)
+    @current_appendices = listing_changes.where(
+      :is_current => true, 
+      :change_type_name => ChangeType::ADDITION
+    ).map(&:species_listing_name)
     @timeline_events = listing_changes.map(&:to_timeline_event)
     @time_start = Time.new('1975-01-01')
     @time_end = Time.new("#{Time.now.year + 2}-01-01")
@@ -25,7 +29,8 @@ class Checklist::TimelinesForTaxonConcept
       @raw_timelines[species_listing_name] = Checklist::Timeline.new(
         :appendix => species_listing_name,
         :start => @time_start,
-        :end => @time_end
+        :end => @time_end,
+        :current => @current_appendices.include?(species_listing_name)
       )
     end
     @timeline_events.each do |timeline_event|

@@ -12,6 +12,7 @@ class Checklist::Timeline
     @appendix = options[:appendix]
     @time_start = options[:start]
     @time_end = options[:end]
+    @current = options[:current]
   end
 
   def has_events?
@@ -72,20 +73,7 @@ class Checklist::Timeline
             )
           end
         else
-          add_final_interval = true
-          if event.is_deletion?
-            additions_no = timeline.timeline_events.select do |e|
-              e.is_addition?
-            end.count
-            deletions_no = timeline.timeline_events.select do |e|
-              e.is_deletion?
-            end.count
-            add_final_interval = (additions_no > deletions_no)
-          elsif event.is_reservation_withdrawal?
-            add_final_interval = false
-          end
-
-          if add_final_interval
+          if @current
             Checklist::TimelineInterval.new(
               :start_pos => event.pos,
               :end_pos => 1
