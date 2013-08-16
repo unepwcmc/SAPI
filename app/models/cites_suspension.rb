@@ -31,6 +31,7 @@ class CitesSuspension < TradeRestriction
   has_many :cites_suspension_confirmations, :dependent => :destroy
   has_many :confirmation_notifications, :through => :cites_suspension_confirmations
   before_validation :handle_dates
+  before_save :handle_current_flag
   validates :start_notification_id, :presence => true
   accepts_nested_attributes_for :cites_suspension_confirmations
 
@@ -38,6 +39,11 @@ class CitesSuspension < TradeRestriction
     self.publication_date = start_notification && start_notification.effective_at
     self.start_date = start_notification && start_notification.effective_at
     self.end_date = end_notification && end_notification.effective_at
+  end
+
+  def handle_current_flag
+    self.is_current = !end_notification_id.present?
+    true
   end
 
   #Each element of CSV columns can be either an array [display_text, method]

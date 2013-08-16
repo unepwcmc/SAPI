@@ -14,9 +14,9 @@
   <% collection.each do |suspension| %>
     <tr class="<%= if suspension.is_current? then "current_listing" end %>">
       <td><%= suspension.year %></td>
-      <td><%= suspension.start_notification && suspension.start_notification.effective_at %></td>
-      <td><%= suspension.end_notification && suspension.end_notification.effective_at %></td>
-      <td><%= suspension.geo_entity && suspension.geo_entity.iso_code2 %></td>
+      <td><%= suspension.start_notification && suspension.start_date_formatted %></td>
+      <td><%= suspension.end_notification && suspension.end_date_formatted %></td>
+      <td><%= suspension.geo_entity && suspension.geo_entity.name_en %></td>
       <td><%= suspension.purposes && suspension.purposes.map(&:code).join(', ') %></td>
       <td><%= suspension.terms && suspension.terms.map(&:code).join(', ') %></td>
       <td><%= suspension.sources && suspension.sources.map(&:code).join(', ') %></td>

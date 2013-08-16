@@ -44,5 +44,4 @@ class CitesSuspensionNotification < Event
   def can_be_deleted?
     started_suspensions.count == 0 && ended_suspensions.count == 0
   end
-
 end

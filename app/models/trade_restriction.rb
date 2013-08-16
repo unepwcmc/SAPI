@@ -27,8 +27,7 @@ require 'csv'
 class TradeRestriction < ActiveRecord::Base
   attr_accessible :end_date, :geo_entity_id, :is_current,
     :notes, :publication_date, :purpose_ids, :quota, :type,
-    :source_ids, :start_date, :term_ids,
-    :unit_id
+    :source_ids, :start_date, :term_ids, :unit_id
 
   belongs_to :taxon_concept
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
@@ -43,8 +42,8 @@ class TradeRestriction < ActiveRecord::Base
   belongs_to :geo_entity
 
   validates :publication_date, :presence => true
-
   validate :valid_dates
+
   def valid_dates
     if !(start_date.nil? || end_date.nil?) && (start_date > end_date)
       self.errors.add(:start_date, ' has to be before end date.')

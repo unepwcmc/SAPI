@@ -102,5 +102,7 @@
   </div>
 
   <p class="pull-right">
-    <%= f.submit %>
+    <%= link_to 'Cancel', admin_taxon_concept_cites_suspensions_path(@taxon_concept),
+      :class => "btn" %>
+    <%= f.submit "Save", :class => "btn btn-primary save-button" %>
   </p>
