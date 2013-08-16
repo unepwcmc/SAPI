@@ -15,24 +15,13 @@
 #
 
 class Reference < ActiveRecord::Base
-  attr_accessible :title, :author, :year
+  attr_accessible :citation
 
-  validates :title, :presence => true
-
-  scope :autocomplete, lambda { |q|
-    where("title ILIKE ? OR
-           author ILIKE ? OR
-           year ILIKE ?",
-          "#{q}%", "#{q}%", "#{q}%")
-  }
+  validates :citation, :presence => true
 
   def self.search query
     if query
-      where("UPPER(title) LIKE UPPER(:query) OR
-        UPPER(year) LIKE UPPER(:query) OR
-        UPPER(author) LIKE UPPER(:query) OR
-        UPPER(citation) LIKE UPPER(:query) OR
-        UPPER(publisher) LIKE UPPER(:query)",
+      where("UPPER(citation) LIKE UPPER(:query)",
         :query => "%#{query}%")
     else
       scoped

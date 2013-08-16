@@ -4,18 +4,18 @@ class Admin::ReferencesController < Admin::SimpleCrudController
   def index
     index! do |format|
       format.json {
-        render :text => end_of_association_chain.order(:title).
-          select([:id, :title]).map{ |d| {:value => d.id, :text => d.title} }.to_json
+        render :text => end_of_association_chain.order(:citation).
+          select([:id, :title]).map{ |d| {:value => d.id, :text => d.citation} }.to_json
       }
     end
   end
 
   def autocomplete
-    @references = Reference.autocomplete(params[:query])
+    @references = Reference.search(params[:query])
     @references.map! do |r|
       {
         :id => r.id,
-        :value => "#{r.title} (#{r.author}, #{r.year})"
+        :value => r.citation
       }
     end
 
@@ -24,7 +24,7 @@ class Admin::ReferencesController < Admin::SimpleCrudController
 
   protected
     def collection
-      @references ||= end_of_association_chain.order(:title).
+      @references ||= end_of_association_chain.order(:citation).
         page(params[:page]).
         search(params[:query])
     end

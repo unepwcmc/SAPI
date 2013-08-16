@@ -1,7 +1,5 @@
 <thead>
-  <th>Title</th>
-  <th>Author</th>
-  <th>Year</th>
+  <th>Citation</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
@@ -9,30 +7,14 @@
     <tr>
       <td>
         <a href="#" class="editable editable-click editable-required"
-          data-type="text" data-resource="reference" data-name="title"
-          data-placeholder="Required" data-original-title="Enter the reference's title"
+          data-type="text" data-resource="reference" data-name="citation"
+          data-placeholder="Required" data-original-title="Enter the reference's citation"
           data-url="<%= resource_url(reference) %>" data-pk="<%= reference.id %>">
-          <%= reference.title %>
+          <%= reference.citation %>
         </a>
       </td>
       <td>
-        <a href="#" class="editable editable-click editable-required"
-          data-type="text" data-resource="reference" data-name="author"
-          data-placeholder="Required" data-original-title="Enter the reference's author"
-          data-url="<%= resource_url(reference) %>" data-pk="<%= reference.id %>">
-          <%= reference.author %>
-        </a>
-      </td>
-      <td>
-        <a href="#" class="editable editable-click editable-required"
-          data-type="text" data-resource="reference" data-name="year"
-          data-placeholder="Required" data-original-title="Enter the reference's year"
-          data-url="<%= resource_url(reference) %>" data-pk="<%= reference.id %>">
-          <%= reference.year %>
-        </a>
-      </td>
-      <td>
-        <%= link_to 'Delete', resource_url(reference), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+        <%= link_to delete_icon, resource_url(reference), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
       </td>
     </tr>
   <% end -%>
