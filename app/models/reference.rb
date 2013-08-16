@@ -3,15 +3,15 @@
 # Table name: references
 #
 #  id          :integer          not null, primary key
-#  title       :text             not null
+#  title       :text
 #  year        :string(255)
 #  author      :string(255)
+#  citation    :text             not null
+#  publisher   :text
 #  legacy_id   :integer
 #  legacy_type :string(255)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
-#  citation    :text
-#  publisher   :text
 #
 
 class Reference < ActiveRecord::Base

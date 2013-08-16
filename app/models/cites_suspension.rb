@@ -3,7 +3,7 @@
 # Table name: trade_restrictions
 #
 #  id                          :integer          not null, primary key
-#  is_current                  :boolean
+#  is_current                  :boolean          default(TRUE)
 #  start_date                  :datetime
 #  end_date                    :datetime
 #  geo_entity_id               :integer
@@ -13,10 +13,10 @@
 #  type                        :string(255)
 #  unit_id                     :integer
 #  taxon_concept_id            :integer
-#  created_at                  :datetime         not null
-#  updated_at                  :datetime         not null
 #  public_display              :boolean          default(TRUE)
 #  url                         :text
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
 #  start_notification_id       :integer
 #  end_notification_id         :integer
 #  excluded_taxon_concepts_ids :string
