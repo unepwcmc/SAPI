@@ -5,7 +5,7 @@ class Admin::ReferencesController < Admin::SimpleCrudController
     index! do |format|
       format.json {
         render :text => end_of_association_chain.order(:citation).
-          select([:id, :title]).map{ |d| {:value => d.id, :text => d.citation} }.to_json
+          select([:id, :citation]).map{ |d| {:value => d.id, :text => d.citation} }.to_json
       }
     end
   end

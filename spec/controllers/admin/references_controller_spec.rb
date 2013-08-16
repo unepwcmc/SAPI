@@ -3,12 +3,12 @@ describe Admin::ReferencesController do
 
   describe "index" do
     before(:each) do
-      @reference1 = create(:reference, :title => 'BB')
-      @reference2 = create(:reference, :title => 'AA')
+      @reference1 = create(:reference, :citation => 'BB')
+      @reference2 = create(:reference, :citation => 'AA')
     end
 
     describe "GET index" do
-      it "assigns @references sorted by title" do
+      it "assigns @references sorted by citation" do
         get :index
         assigns(:references).should eq([@reference2, @reference1])
       end
@@ -32,7 +32,7 @@ describe Admin::ReferencesController do
       response.should render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, reference: { :title => nil }
+      xhr :post, :create, reference: { :citation => nil }
       response.should render_template("new")
     end
   end
@@ -40,11 +40,11 @@ describe Admin::ReferencesController do
   describe "XHR PUT update JSON" do
     let(:reference){ create(:reference) }
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'json', :id => reference.id, :reference => { :title => 'ZZ' }
+      xhr :put, :update, :format => 'json', :id => reference.id, :reference => { :citation => 'ZZ' }
       response.should be_success
     end
     it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json', :id => reference.id, :reference => { :title => nil }
+      xhr :put, :update, :format => 'json', :id => reference.id, :reference => { :citation => nil }
       JSON.parse(response.body).should include('errors')
     end
   end
