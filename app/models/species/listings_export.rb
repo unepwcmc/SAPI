@@ -154,6 +154,7 @@ private
   end
 
   def taxon_concept_sql_columns
+    # TODO maybe use a view or sth...
     res = taxon_concept_columns.map{ |c| "taxon_concepts_mview.#{c}" }
     # columns to lowercase
     [
@@ -161,6 +162,11 @@ private
       taxon_concept_columns.index(:subspecies_name)
     ].each do |idx|
       res[idx] = "LOWER(#{res[idx]})"
+    end
+    # force NC on blanks
+    if idx = taxon_concept_columns.index(:cites_listing_original)
+      col = res[idx]
+      res[idx] = "CASE WHEN #{col} IS NULL OR LENGTH(#{col}) = 0 THEN 'NC' ELSE #{col} END"
     end
     res
   end
