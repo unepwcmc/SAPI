@@ -29,11 +29,12 @@ describe TradeRestriction do
   context 'export trade restrictions in csv' do
     before(:all) do
       @unit = create(:unit, :code => "ABC")
+      @geo_entity = create(:geo_entity)
     end
     describe 'filter_is_current' do
       before do
-        @quota1 = create(:quota, :is_current => true, :unit_id => @unit.id)
-        @quota2 = create(:quota, :is_current => false, :unit_id => @unit.id)
+        @quota1 = create(:quota, :is_current => true, :unit_id => @unit.id, :geo_entity_id => @geo_entity.id)
+        @quota2 = create(:quota, :is_current => false, :unit_id => @unit.id, :geo_entity_id => @geo_entity.id)
       end
       it "should return @quota1 if filter set to current" do
         result = Quota.filter_is_current("current")
@@ -72,10 +73,11 @@ describe TradeRestriction do
 
     describe 'filter_years' do
       before do
-        @quota1 = create(:quota, :start_date => "01/01/2012", :unit_id => @unit.id)
-        @quota2 = create(:quota, :start_date => "01/02/2011", :unit_id => @unit.id)
-        @quota3 = create(:quota, :start_date => "01/09/2012", :unit_id => @unit.id)
-        @quota4 = create(:quota, :start_date => "01/06/2013", :unit_id => @unit.id)
+        @geo_entity = create(:geo_entity)
+        @quota1 = create(:quota, :start_date => "01/01/2012", :unit_id => @unit.id, :geo_entity_id => @geo_entity.id)
+        @quota2 = create(:quota, :start_date => "01/02/2011", :unit_id => @unit.id, :geo_entity_id => @geo_entity.id)
+        @quota3 = create(:quota, :start_date => "01/09/2012", :unit_id => @unit.id, :geo_entity_id => @geo_entity.id)
+        @quota4 = create(:quota, :start_date => "01/06/2013", :unit_id => @unit.id, :geo_entity_id => @geo_entity.id)
       end
       it 'should get all quotas if years filter not set' do
         result = Quota.filter_years({})

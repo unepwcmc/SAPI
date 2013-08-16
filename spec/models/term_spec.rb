@@ -39,7 +39,8 @@ describe Term do
         specify { term.destroy.should be_false }
       end
       context "when CITES quota" do
-        let!(:quota){ create(:quota, :terms => [term])}
+        let(:geo_entity) { create(:geo_entity) }
+        let!(:quota){ create(:quota, :terms => [term], :geo_entity_id => geo_entity.id)}
         specify { term.destroy.should be_false }
       end
     end

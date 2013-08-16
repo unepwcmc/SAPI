@@ -22,7 +22,8 @@ describe Unit do
     end
     context "when dependent objects attached" do
       let(:unit){ create(:unit) }
-      let!(:quota){ create(:quota, :unit => unit)}
+      let(:geo_entity){ create(:geo_entity) }
+      let!(:quota){ create(:quota, :unit => unit, :geo_entity_id => geo_entity.id)}
       specify { unit.destroy.should be_false }
     end
   end
