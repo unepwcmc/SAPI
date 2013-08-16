@@ -81,8 +81,7 @@ FactoryGirl.define do
   end
 
   factory :reference do
-    author 'Bolek'
-    title 'Przygód kilka wróbla ćwirka'
+    citation 'Przygód kilka wróbla ćwirka'
   end
 
   factory :taxon_concept_reference do
