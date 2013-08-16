@@ -43,6 +43,6 @@ class EuDecision < ActiveRecord::Base
   end
 
   def start_date_formatted
-    start_date ? start_date.strftime("%d/%m/%y") : ""
+    start_date ? start_date.strftime("%d/%m/%Y") : ""
   end
 end

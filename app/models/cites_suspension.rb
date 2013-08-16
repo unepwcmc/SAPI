@@ -56,10 +56,10 @@ class CitesSuspension < TradeRestriction
   end
 
   def start_date_formatted
-    start_date ? start_date.strftime('%d/%m/%y') : ''
+    start_date ? start_date.strftime('%d/%m/%Y') : ''
   end
 
   def end_date_formatted
-    end_date ? end_date.strftime('%d/%m/%y') : ''
+    end_date ? end_date.strftime('%d/%m/%Y') : ''
   end
 end
