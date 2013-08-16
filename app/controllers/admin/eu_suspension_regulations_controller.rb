@@ -12,7 +12,9 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
   protected
     def collection
       @eu_suspension_regulations ||= end_of_association_chain.
-        order(:designation_id, :name).includes(:designation).page(params[:page])
+        order(:designation_id, :name).includes(:designation).
+        page(params[:page]).
+        search(params[:query])
     end
 
     def load_associations

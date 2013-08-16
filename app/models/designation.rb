@@ -43,6 +43,15 @@ class Designation < ActiveRecord::Base
     !has_protected_name? && !has_dependent_objects?
   end
 
+  def self.search query
+    if query
+      where("UPPER(name) LIKE UPPER(:query)", 
+            :query => "%#{query}%")
+    else
+      scoped
+    end
+  end
+
   private
 
   def taxonomy_cannot_be_changed_if_dependent_objects_present

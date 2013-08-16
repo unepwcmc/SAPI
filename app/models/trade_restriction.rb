@@ -52,7 +52,7 @@ class TradeRestriction < ActiveRecord::Base
   end
 
   def publication_date_formatted
-    publication_date ? publication_date.strftime('%d/%m/%y') : ''
+    publication_date ? publication_date.strftime('%d/%m/%Y') : ''
   end
 
   def year

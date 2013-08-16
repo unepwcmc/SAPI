@@ -93,6 +93,20 @@ class GeoEntity < ActiveRecord::Base
     super(:only =>[:id, :iso_code2], :methods => [:name])
   end
 
+  def self.search query
+    if query
+      where("UPPER(name_en) LIKE UPPER(:query)
+            OR UPPER(name_fr) LIKE UPPER(:query)
+            OR UPPER(name_es) LIKE UPPER(:query)
+            OR UPPER(long_name) LIKE UPPER(:query)
+            OR UPPER(iso_code3) LIKE UPPER(:query)
+            OR UPPER(iso_code2) LIKE UPPER(:query)",
+            :query => "%#{query}%")
+    else
+      scoped
+    end
+  end
+
   def can_be_deleted?
     distributions.count == 0
   end

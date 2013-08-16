@@ -14,7 +14,9 @@ class Admin::DesignationsController < Admin::SimpleCrudController
 
   protected
     def collection
-      @designations ||= end_of_association_chain.order(:name).page(params[:page])
+      @designations ||= end_of_association_chain.order(:name).
+        page(params[:page]).
+        search(params[:query])
     end
 
     def load_associations

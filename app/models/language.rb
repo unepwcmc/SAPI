@@ -25,4 +25,16 @@ class Language < ActiveRecord::Base
     common_names.count == 0
   end
 
+  def self.search query
+    if query
+      where("UPPER(name_en) LIKE UPPER(:query) OR
+        UPPER(name_fr) LIKE UPPER(:query) OR
+        UPPER(name_es) LIKE UPPER(:query) OR
+        UPPER(iso_code1) LIKE UPPER(:query) OR
+        UPPER(iso_code3) LIKE UPPER(:query)",
+        :query => "%#{query}%")
+    else
+      scoped
+    end
+  end
 end

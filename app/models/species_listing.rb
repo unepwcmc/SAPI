@@ -19,8 +19,19 @@ class SpeciesListing < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => {:scope => :designation_id}
   validates :abbreviation, :presence => true, :uniqueness => {:scope => :designation_id}
 
+  def self.search query
+    if query
+      where("UPPER(species_listings.name) LIKE UPPER(:query) 
+            OR UPPER(species_listings.abbreviation) LIKE UPPER(:query)
+            OR UPPER(designations.name) LIKE UPPER(:query)", 
+            :query => "%#{query}%").
+        joins(:designation)
+    else
+      scoped
+    end
+  end
+
   def can_be_deleted?
     listing_changes.count == 0
   end
-
 end

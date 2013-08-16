@@ -17,6 +17,8 @@ class Admin::SourcesController < Admin::SimpleCrudController
   protected
 
   def collection
-    @sources ||= end_of_association_chain.order('code').page(params[:page])
+    @sources ||= end_of_association_chain.order('code').
+      page(params[:page]).
+      search(params[:query])
   end
 end

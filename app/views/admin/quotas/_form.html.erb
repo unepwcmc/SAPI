@@ -21,6 +21,7 @@
         { :include_blank => true },
         {:class => 'quota select2', :style => 'width: 220px' }
       %>
+      <span class="help-block">For quotas <strong>in prep</strong>aration use <strong>-1</strong> for quota value.</span>
     </div>
   </div>
 
@@ -88,6 +89,13 @@
     <%= f.label :is_current, "Is current?", :class => 'control-label'%>
     <div class="controls">
       <%= f.check_box :is_current, :value => @quota.is_current %><br>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :public_display, "Display publicly?", :class => 'control-label'%>
+    <div class="controls">
+      <%= f.check_box :public_display, :value => @quota.public_display %><br>
     </div>
   </div>
 

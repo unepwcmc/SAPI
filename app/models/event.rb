@@ -34,6 +34,16 @@ class Event < ActiveRecord::Base
     end_date && end_date.strftime("%d/%m/%Y")
   end
 
+  def self.search query
+    if query
+      where("UPPER(name) LIKE UPPER(:query)
+            OR UPPER(description) LIKE UPPER(:query)", 
+            :query => "%#{query}%")
+    else
+      scoped
+    end
+  end
+
   protected
     def designation_is_cites
       cites = Designation.find_by_name('CITES')

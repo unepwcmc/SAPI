@@ -4,6 +4,7 @@ describe Admin::QuotasController do
   before do
     @taxon_concept = create(:taxon_concept)
     @unit = create(:unit)
+    @geo_entity = create(:geo_entity)
   end
 
   describe "GET index" do
@@ -30,7 +31,8 @@ describe Admin::QuotasController do
         post :create, :quota => {
             :quota => 1,
             :unit_id => @unit.id,
-            :publication_date => 1.week.ago
+            :publication_date => 1.week.ago,
+            :geo_entity_id => @geo_entity.id
           },
           :taxon_concept_id => @taxon_concept.id
         response.should redirect_to(
@@ -50,7 +52,8 @@ describe Admin::QuotasController do
       @quota = create(
         :quota,
         :unit_id => @unit.id,
-        :taxon_concept_id => @taxon_concept.id
+        :taxon_concept_id => @taxon_concept.id,
+        :geo_entity_id => @geo_entity.id
       )
     end
     it "renders the edit template" do
@@ -64,7 +67,8 @@ describe Admin::QuotasController do
       @quota = create(
         :quota,
         :unit_id => @unit.id,
-        :taxon_concept_id => @taxon_concept.id
+        :taxon_concept_id => @taxon_concept.id,
+        :geo_entity_id => @geo_entity.id
       )
     end
 
@@ -96,7 +100,8 @@ describe Admin::QuotasController do
       @quota = create(
         :quota,
         :unit_id => @unit.id,
-        :taxon_concept_id => @taxon_concept.id
+        :taxon_concept_id => @taxon_concept.id,
+        :geo_entity_id => @geo_entity.id
       )
     end
     it "redirects after delete" do

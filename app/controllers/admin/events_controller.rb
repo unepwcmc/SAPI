@@ -25,21 +25,21 @@ class Admin::EventsController < Admin::SimpleCrudController
     end
   end
 
-def show
-  show! do |format|
-    format.json{ render :json => resource, :serializer => Admin::EventSerializer }
+  def show
+    show! do |format|
+      format.json{ render :json => resource, :serializer => Admin::EventSerializer }
+    end
   end
-end
 
   protected
     def collection
       @events ||= end_of_association_chain.order(:designation_id, :name).
         includes(:designation).
-        where("type NOT IN ('EuRegulation', 'CitesCop', 'CitesSuspensionNotification')").page(params[:page])
+        where("type NOT IN ('EuRegulation', 'CitesCop', 'CitesSuspensionNotification')").page(params[:page]).
+        search(params[:query])
     end
 
     def load_associations
       @designations = Designation.order(:name)
     end
-
 end

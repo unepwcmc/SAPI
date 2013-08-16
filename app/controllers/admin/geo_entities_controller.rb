@@ -28,6 +28,7 @@ class Admin::GeoEntitiesController < Admin::SimpleCrudController
       joins(:geo_entity_type).
       where(:"geo_entity_types.name" => @geo_entity_type.name).
       order(:name_en).
-      page(params[:page])
+      page(params[:page]).
+      search(params[:query])
   end
 end
