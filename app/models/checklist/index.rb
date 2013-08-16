@@ -2,9 +2,8 @@ class Checklist::Index < Checklist::Checklist
   attr_reader :download_name
 
   def initialize(options={})
-    @download_path = download_location(options, "index", ext)
-
     params = options.merge({:output_layout => :alphabetical})
+    @download_path = download_location(params, "index", ext)
     # If a cached download exists, only initialize the params for the
     # helper methods, otherwise run the generation queries.
     if !File.exists?(@download_path)
@@ -12,8 +11,10 @@ class Checklist::Index < Checklist::Checklist
     else
       initialize_params(params)
     end
+  end
 
-    @download_name = "FullChecklist-#{Time.now.strftime("%d%m%Y")}.#{ext}"
+  def has_full_options?
+    @scientific_name.blank? && @cites_regions.empty? && @countries.empty? && @cites_appendices.empty?
   end
 
   def prepare_main_query
@@ -26,12 +27,14 @@ class Checklist::Index < Checklist::Checklist
   end
 
   def generate
-    return @download_path  if File.exists?(@download_path)
-
-    prepare_queries
-    document do |doc|
-      content(doc)
+    if !File.exists?(@download_path)
+      prepare_queries
+      document do |doc|
+        content(doc)
+      end
     end
+    ctime = File.ctime(@download_path).strftime('%Y-%m-%d %H:%M')
+    @download_name = "Index_of_CITES_Species_#{has_full_options? ? '' : '[CUSTOM]_'}#{ctime}.#{ext}"    
     @download_path
   end
 

@@ -46,8 +46,8 @@ class Species::ListingsExport
     if !File.file?(file_name)
       to_csv
     end
-    ctime = File.ctime(@file_name)
-    @public_file_name = "#{resource_name}_generated_at_#{ctime}.csv"
+    ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
+    @public_file_name = "#{resource_name}_#{ctime}.csv"
     [
       @file_name,
       {:filename => @public_file_name, :type => 'text/csv'}
