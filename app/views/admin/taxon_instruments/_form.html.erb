@@ -1,0 +1,16 @@
+<%= form_for [:admin, @taxon_concept, @taxon_instrument] do |f| %>
+  <%= error_messages_for(@taxon_instrument) %>
+  <%= f.hidden_field :taxon_concept_id %>
+  <div class="control-group">
+    <%= f.label :instrument_id %>
+    <%= f.select :instrument_id,
+      options_from_collection_for_select(@instruments, :id, :name, @taxon_instrument.instrument_id )
+    %>
+  </div>
+  <div class="control-group">
+    <%= f.label :effective_from %>
+    <%= f.text_field :effective_from, :class => "datepicker", :value => @taxon_instrument.effective_from_formatted %>
+  </div>
+  <%= f.submit %>
+<% end %>
+

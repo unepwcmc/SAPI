@@ -37,7 +37,6 @@ describe TaxonCommon do
       )
     }
     let(:tc_common){
-      puts common_name_attributes.inspect
       build(
         :taxon_common,
         :taxon_concept_id => tc.id,

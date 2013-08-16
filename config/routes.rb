@@ -1,7 +1,13 @@
 SAPI::Application.routes.draw do
+
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
   namespace :api do
+    namespace :v1 do
+      resources :taxon_concepts, :only => [:index, :show]
+      resources :auto_complete_taxon_concepts, :only => [:index, :show]
+      resources :geo_entities, :only => [:index]
+    end
     resources :terms, :only => [:index]
     resources :sources, :only => [:index]
     resources :purposes, :only => [:index]
@@ -28,11 +34,14 @@ SAPI::Application.routes.draw do
     resources :change_types, :only => [:index, :create, :update, :destroy]
     resources :ranks, :only => [:index, :create, :update, :destroy]
     resources :tags, :only => [:index, :create, :update, :destroy]
+    resources :eu_decision_types, :only => [:index, :create, :update, :destroy]
     resources :events
     resources :eu_regulations do
       post :activate, :on => :member
     end
     resources :cites_cops
+    resources :cites_suspension_notifications
+    resources :eu_suspension_regulations
     resources :references, :only => [:index, :create, :update, :destroy] do
       get :autocomplete, :on => :collection
     end
@@ -40,45 +49,70 @@ SAPI::Application.routes.draw do
       get :autocomplete, :on => :collection
       resources :geo_relationships, :only => [:index, :create, :update, :destroy]
     end
-    resources :cites_plant_annotations, :only => [:index, :create, :update, :destroy]
-    resources :suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
+    resources :cites_hash_annotations, :only => [:index, :create, :update, :destroy]
+    resources :eu_hash_annotations, :only => [:index, :create, :update, :destroy]
+    resources :cites_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
     resources :taxon_concepts, :only => [:index, :create, :edit, :update, :destroy] do
       get :autocomplete, :on => :collection
+      resources :children, :only => [:index]
       resources :taxon_relationships, :only => [:index, :create, :destroy]
       resources :designations, :only => [] do
         resources :listing_changes
       end
       resources :taxon_commons, :only => [:new, :create, :edit, :update, :destroy]
-      resources :distributions, :only => [:new, :create, :edit, :update, :destroy]
+      resources :distributions, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :synonym_relationships, :only => [:new, :create, :edit, :update, :destroy]
       resources :hybrid_relationships, :only => [:new, :create, :edit, :update, :destroy]
-      resources :taxon_concept_references, :only => [:new, :create, :destroy]
+      resources :taxon_concept_references, :only => [:index, :new, :create, :destroy]
+      resources :names, :only => [:index]
       resources :quotas, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_opinions, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
-      resources :taxon_concept_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy], :as => :suspensions
+      resources :taxon_concept_cites_suspensions,
+        :only => [:index, :new, :create, :edit, :update, :destroy],
+        :as => :cites_suspensions
+      resources :taxon_instruments, :only => [ :index, :new, :create, :edit, :update, :destroy ]
     end
-    root :to => 'home#index'
+    root :to => 'taxon_concepts#index'
   end
 
-  match 'taxon_concepts/' => 'taxon_concepts#index'
-  match 'taxon_concepts/autocomplete' => 'taxon_concepts#autocomplete'
-  match 'taxon_concepts/summarise_filters' => 'taxon_concepts#summarise_filters'
-  match 'geo_entities/:geo_entity_type' => 'geo_entities#index',
-    :constraints => {:geo_entity_type => /#{GeoEntityType::COUNTRY}|#{GeoEntityType::CITES_REGION}/}
-  match 'species_listings/:designation' => 'species_listings#index',
-    :constraints => {:designation => /#{Designation::CITES}/}
-  match 'timelines' => 'timelines#index'
-
-  match 'exports' => 'exports#index'
-  match 'exports/download' => 'exports#download'
-  match 'downloads/index'   => 'downloads#download_index'
-  match 'downloads/history' => 'downloads#download_history'
-
-  resources :downloads do
-    member do
-      get :download
+  namespace :trade do
+    resources :annual_report_uploads do
+      member do
+        post 'submit'
+      end
     end
+    resources :validation_rules
+    resources :geo_entities, :only => [:index]
+    root :to => 'ember#start'
+  end
+
+  namespace :species do
+    match 'exports' => 'exports#index'
+    match 'exports/download' => 'exports#download'
+    get '*foo' => 'ember#start'
+    root :to => 'ember#start'
+  end
+
+  namespace :checklist do
+    resources :geo_entities, :only => [:index] #TODO move to API
+    resources :species_listings, :only => [:index] #TODO move to API
+    resources :downloads do
+      member do
+        get :download
+      end
+      collection do
+        get :download_index
+        get :download_history
+      end
+    end
+    resources :taxon_concepts, :only => [:index] do
+      collection do
+        get :autocomplete
+        get :summarise_filters
+      end
+    end
+    resources :timelines, :only => [:index]
   end
 
   # The priority is based upon order of creation:
@@ -130,7 +164,7 @@ SAPI::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
+  root :to => 'species/ember#start'
 
   # See how all your routes lay out with "rake routes"
 

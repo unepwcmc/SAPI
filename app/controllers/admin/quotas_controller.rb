@@ -1,6 +1,7 @@
 class Admin::QuotasController < Admin::SimpleCrudController
   belongs_to :taxon_concept
   before_filter :load_lib_objects
+  before_filter :load_search, :except => [:destroy]
 
   layout 'taxon_concepts'
 
@@ -45,7 +46,10 @@ class Admin::QuotasController < Admin::SimpleCrudController
   end
 
   def collection
-    @quotas ||= end_of_association_chain.order('is_current DESC, start_date DESC').
+    @quotas ||= end_of_association_chain.
+      joins(:geo_entity).
+      order('start_date DESC, geo_entities.name_en ASC,
+        notes ASC').
       page(params[:page])
   end
 end

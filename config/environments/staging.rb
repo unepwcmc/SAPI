@@ -46,7 +46,7 @@ SAPI::Application.configure do
   # config.action_controller.asset_host = "http://assets.example.com"
 
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  config.assets.precompile += %w( admin.js admin.css )
+  config.assets.precompile += %w( admin.js admin.css trade.js trade.css species.js species.css)
 
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
@@ -69,4 +69,6 @@ SAPI::Application.configure do
   config.middleware.use ExceptionNotifier, :email_prefix => "[SAPI Exception] ",
     :sender_address => %{"SAPI Exception Notifier" <no-reply@unep-wcmc.org>},
     :exception_recipients => %w{simao.belchior@unep-wcmc.org agnieszka.figiel@unep-wcmc.org}
+
+  config.ember.variant = :production
 end

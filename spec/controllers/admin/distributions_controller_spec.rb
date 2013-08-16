@@ -82,7 +82,7 @@ describe Admin::DistributionsController do
         :taxon_concept_id => @taxon_concept.id,
         :id => distribution.id
       response.should redirect_to(
-        edit_admin_taxon_concept_url(distribution.taxon_concept)
+        admin_taxon_concept_distributions_url(distribution.taxon_concept)
       )
     end
   end

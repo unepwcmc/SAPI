@@ -5,15 +5,27 @@ describe TaxonConcept do
     include_context "Pereskia"
 
     context "LISTING" do
-      describe :current_listing do
+      describe :cites_listing do
         context "for genus Pereskia (not listed, shown)" do
-          specify { @genus1.current_listing.should == 'NC' }
+          specify { @genus1.cites_listing.should == 'NC' }
         end
         context "for genus Ariocarpus" do
-          specify { @genus2.current_listing.should == 'I' }
+          specify { @genus2.cites_listing.should == 'I' }
         end
         context "for family Cactaceae" do
-          specify { @family.current_listing.should == 'I/II/NC' }
+          specify { @family.cites_listing.should == 'I/II/NC' }
+        end
+      end
+
+      describe :eu_listing do
+        context "for genus Pereskia (not listed, shown)" do
+          specify { @genus1.eu_listing.should == 'NC' }
+        end
+        context "for genus Ariocarpus" do
+          specify { @genus2.eu_listing.should == 'A' }
+        end
+        context "for family Cactaceae" do
+          specify { @family.eu_listing.should == 'A/B/NC' }
         end
       end
 
@@ -26,9 +38,24 @@ describe TaxonConcept do
         end
       end
 
-      describe :cites_excluded do
+      describe :eu_listed do
+        context "for family Cactaceae" do
+          specify { @family.eu_listed.should be_true }
+        end
         context "for genus Pereskia" do
-          specify { @genus1.cites_excluded.should be_true }
+          specify { @genus1.eu_listed.should be_nil }
+        end
+      end
+
+      describe :cites_status do
+        context "for genus Pereskia" do
+          specify { @genus1.cites_status.should == 'EXCLUDED' }
+        end
+      end
+
+      describe :cites_show do
+        context "for genus Pereskia" do
+          specify { @genus1.cites_show.should == true }
         end
       end
 

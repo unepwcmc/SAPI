@@ -17,6 +17,8 @@ class Admin::TermsController < Admin::SimpleCrudController
   protected
 
   def collection
-    @terms ||= end_of_association_chain.order('code').page(params[:page])
+    @terms ||= end_of_association_chain.order('code').
+      page(params[:page]).
+      search(params[:query])
   end
 end

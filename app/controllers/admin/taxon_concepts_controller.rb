@@ -16,18 +16,17 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     @taxon_concepts = TaxonConceptMatcher.new(@search_params).taxon_concepts.
       includes([:rank, :taxonomy, :taxon_name, :parent]).
       order(:taxonomic_position).page(params[:page])
+    if @taxon_concepts.count == 1
+      redirect_to admin_taxon_concept_names_path(@taxon_concepts.first),
+        :notice => "Your search returned only one result,
+          you have been redirected to the page of #{@taxon_concepts.first.full_name}"
+    end
   end
 
   def edit
-    @taxonomies = Taxonomy.order(:name)
     @ranks = Rank.order(:taxonomic_position)
     edit! do |format|
-      @languages = Language.order(:name_en)
-      @distributions = @taxon_concept.distributions.
-        joins(:geo_entity).order('UPPER(geo_entities.name_en) ASC')
-      @taxon_commons = @taxon_concept.taxon_commons.
-        joins(:common_name).order('UPPER(common_names.name) ASC').
-        includes(:common_name => :language)
+      load_search
       format.js { render 'new' }
     end
   end

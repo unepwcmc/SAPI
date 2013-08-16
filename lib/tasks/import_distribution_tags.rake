@@ -24,7 +24,7 @@ namespace :import do
             ) AS tmp
         WHERE NOT EXISTS (
           SELECT * FROM preset_tags
-          WHERE preset_tags.name = BTRIM(tmp.tag) AND
+          WHERE UPPER(preset_tags.name) = BTRIM(UPPER(tmp.tag)) AND
           model = 'Distribution'
         );
         INSERT INTO tags(name)
@@ -38,34 +38,45 @@ namespace :import do
       puts "There are now #{ActiveRecord::Base.connection.execute('SELECT COUNT(*) FROM tags').first["count"]} tags in the tags table"
 
       puts "There are #{ActiveRecord::Base.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
-      sql = <<-SQL
-        WITH tmp AS (
-          SELECT DISTINCT legacy_id, rank, geo_entity_type, iso_code2, regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag
-          FROM #{TMP_TABLE}
-          WHERE UPPER(designation) like '%EU%' OR UPPER(designation) like '%CITES%'
-        )
-        INSERT INTO taggings(tag_id, taggable_id, taggable_type, context, created_at)
-        SELECT tags.id, distributions.id, 'Distribution', 'tags', current_date
-        FROM tmp
-        INNER JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(tmp.rank))
-        INNER JOIN geo_entity_types ON UPPER(geo_entity_types.name) = UPPER(BTRIM(tmp.geo_entity_type))
-        INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = tmp.legacy_id AND
-          taxon_concepts.legacy_type = '#{kingdom}' AND taxon_concepts.rank_id = ranks.id
-        INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(tmp.iso_code2)) AND
-          geo_entities.geo_entity_type_id = geo_entity_types.id
-        INNER JOIN distributions ON distributions.geo_entity_id = geo_entities.id AND
-          distributions.taxon_concept_id = taxon_concepts.id
-        INNER JOIN tags ON UPPER(tags.name) = UPPER(BTRIM(tmp.tag))
-        WHERE NOT EXISTS (
-          SELECT * from taggings
-          WHERE taggings.tag_id = tags.id AND
-            taggings.taggable_id = distributions.id AND
-            taggings.taggable_type = 'Distribution' AND
-            taggings.context = 'tags'
-        )
-      SQL
-      puts "ADDING: distribution taggings"
-      ActiveRecord::Base.connection.execute(sql)
+      [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
+        puts "Import #{taxonomy_name} common names"
+        taxonomy = Taxonomy.find_by_name(taxonomy_name)
+        sql = <<-SQL
+          WITH tmp AS (
+            SELECT DISTINCT legacy_id, rank, geo_entity_type, iso_code2, regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag
+            FROM #{TMP_TABLE}
+            WHERE
+               #{ if taxonomy_name == Taxonomy::CITES_EU
+                    "( UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%')"
+                  else
+                    "UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CMS%'"
+                  end
+               }
+          )
+          INSERT INTO taggings(tag_id, taggable_id, taggable_type, context, created_at)
+          SELECT tags.id, distributions.id, 'Distribution', 'tags', current_date
+          FROM tmp
+          INNER JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(tmp.rank))
+          INNER JOIN geo_entity_types ON UPPER(geo_entity_types.name) = UPPER(BTRIM(tmp.geo_entity_type))
+          INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = tmp.legacy_id AND
+            taxon_concepts.legacy_type = '#{kingdom}' AND taxon_concepts.rank_id = ranks.id
+          INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(tmp.iso_code2)) AND
+            geo_entities.geo_entity_type_id = geo_entity_types.id
+          INNER JOIN distributions ON distributions.geo_entity_id = geo_entities.id AND
+            distributions.taxon_concept_id = taxon_concepts.id
+          INNER JOIN tags ON UPPER(tags.name) = UPPER(BTRIM(tmp.tag))
+          INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
+          WHERE NOT EXISTS (
+            SELECT * from taggings
+            WHERE taggings.tag_id = tags.id AND
+              taggings.taggable_id = distributions.id AND
+              taggings.taggable_type = 'Distribution' AND
+              taggings.context = 'tags'
+          ) AND taxonomies.id = #{taxonomy.id}
+        SQL
+        puts "ADDING: distribution taggings"
+        ActiveRecord::Base.connection.execute(sql)
+      end
       puts "There are now #{ActiveRecord::Base.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
     end
   end

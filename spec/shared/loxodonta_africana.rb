@@ -60,14 +60,14 @@ shared_context "Loxodonta africana" do
       :parent => @genus
     )
 
-    l1 = create_cites_III_addition(
+    cites_lc1 = create_cites_III_addition(
      :taxon_concept => @species,
      :effective_at => '1976-02-26'
     )
     create(
       :listing_distribution,
       :geo_entity => ghana,
-      :listing_change => l1
+      :listing_change => cites_lc1
     )
     create_cites_II_addition(
      :taxon_concept => @species,
@@ -78,7 +78,13 @@ shared_context "Loxodonta africana" do
      :effective_at => '1990-01-18',
      :is_current => true
     )
-    l2 = create_cites_II_addition(
+    create_eu_A_addition(
+     :taxon_concept => @species,
+     :effective_at => '1990-01-18',
+     :is_current => true
+    )
+
+    cites_lc2 = create_cites_II_addition(
      :taxon_concept => @species,
      :effective_at => '1997-09-18'
     )
@@ -86,11 +92,16 @@ shared_context "Loxodonta africana" do
       create(
         :listing_distribution,
         :geo_entity => country,
-        :listing_change => l2,
+        :listing_change => cites_lc2,
         :is_party => false
       )
     end
-    l3 = create_cites_II_addition(
+    cites_lc3 = create_cites_II_addition(
+     :taxon_concept => @species,
+     :effective_at => '2000-07-19',
+     :is_current => true
+    )
+    eu_lc3 = create_eu_B_addition(
      :taxon_concept => @species,
      :effective_at => '2000-07-19',
      :is_current => true
@@ -99,12 +110,18 @@ shared_context "Loxodonta africana" do
       create(
         :listing_distribution,
         :geo_entity => country,
-        :listing_change => l3,
+        :listing_change => cites_lc3,
+        :is_party => false
+      )
+      create(
+        :listing_distribution,
+        :geo_entity => country,
+        :listing_change => eu_lc3,
         :is_party => false
       )
     end
 
-    Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+    Sapi.rebuild(:except => [:taxonomy])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

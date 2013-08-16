@@ -1,3 +1,8 @@
+h1 span{
+  font-size: 14px;
+  font-weight: normal;
+}
+
 .tab-content #details {
   input, select {
     width: 150px;
@@ -32,7 +37,7 @@ textarea.annotation {
 
 textarea {
   &.quota,
-  &.suspension,
+  &.cites_suspension,
   &.eu_opinion,
   &.eu_suspension {
     height: 5em;
@@ -96,7 +101,7 @@ tr.current_listing {
 }
 
 #new-quota,
-#new-suspension {
+#new-cites_suspension {
   &.modal {
     width: 700px;
   }
@@ -114,4 +119,8 @@ ul.relationship_parts{
 #new-taxon_relationship{ /* modal window */
   width: 780px;
   margin-left: -390px; /* half the width */
+}
+
+#taxon-concept-search{
+  margin-top: 25px;
 }

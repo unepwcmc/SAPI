@@ -25,10 +25,26 @@ class Admin::SimpleCrudController < Admin::AdminController
   def destroy
     destroy! do |success, failure|
       success.html { redirect_to collection_url, :notice => 'Operation succeeded' }
-      failure.html { redirect_to collection_url, :alert => 'Operation failed' }
+      failure.html { 
+        redirect_to collection_url, 
+          :alert => if resource.errors.present?
+              "Operation #{resource.errors.messages[:base].join(", ")}"
+            else
+              "Operation failed"
+            end
+      }
     end
   end
 
   protected
     def load_associations; end
+
+    def load_search
+      @taxonomies ||= Taxonomy.order(:name)
+      @taxon_concept ||= TaxonConcept.find(params[:taxon_concept_id])
+      @search_params = SearchParams.new(
+          { :taxonomy => { :id => @taxon_concept.taxonomy_id },
+            :scientific_name => @taxon_concept.full_name
+        })
+    end
 end

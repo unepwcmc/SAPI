@@ -5,10 +5,9 @@
 :verbose: false
 :pidfile: tmp/pids/sidekiq.pid
 staging:
-  :concurrency: 10
+  :concurrency: 2
 production:
   :concurrency: 50
 :queues:
-  - [often, 7]
   - [default, 5]
-  - [seldom, 3]
+  - [trade, 5]

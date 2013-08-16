@@ -28,13 +28,12 @@ class Reference < ActiveRecord::Base
 
   def self.search query
     if query
-      where("UPPER(title) LIKE UPPER(?) OR
-        UPPER(year) LIKE UPPER(?) OR
-        UPPER(author) LIKE UPPER(?) OR
-        UPPER(citation) LIKE UPPER(?) OR
-        UPPER(publisher) LIKE UPPER(?)",
-        "%#{query}%", "%#{query}%", "%#{query}%",
-        "%#{query}%", "%#{query}%")
+      where("UPPER(title) LIKE UPPER(:query) OR
+        UPPER(year) LIKE UPPER(:query) OR
+        UPPER(author) LIKE UPPER(:query) OR
+        UPPER(citation) LIKE UPPER(:query) OR
+        UPPER(publisher) LIKE UPPER(:query)",
+        :query => "%#{query}%")
     else
       scoped
     end

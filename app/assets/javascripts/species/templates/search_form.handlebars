@@ -1,0 +1,19 @@
+  <div class="links-area">
+    {{#view Species.ToggleButton option="cites_eu" valueBinding="controller.taxonomy"}}
+      CITES
+    {{/view}}
+    {{#view Species.ToggleButton option="cms" valueBinding="controller.taxonomy"}}
+      CMS
+    {{/view}}
+  </div>
+
+  {{view Species.TaxonConceptSearchView controllerBinding="controller"}}
+
+  <div class="location-area popup-area">
+    {{view Species.GeoEntitiesSearchButton
+      selectedGeoEntitiesBinding="controller.selectedGeoEntities"
+      loadedBinding="controllers.geoEntities.loaded"
+    }}
+    {{view Species.GeoEntitiesSearchDropdown  controllerBinding="controller"}}
+  </div>
+  {{outlet count}}

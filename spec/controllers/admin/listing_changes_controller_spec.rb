@@ -69,7 +69,7 @@ describe Admin::ListingChangesController do
 
   describe "POST create" do
     context "when successful" do
-      it "renders create" do
+      it "redirects to taxon_concept listing_changes page" do
         post :create, :listing_change => {
             :change_type_id => @addition.id,
             :species_listing_id => @appendix.id,
@@ -77,17 +77,9 @@ describe Admin::ListingChangesController do
           },
           :taxon_concept_id => @taxon_concept.id,
           :designation_id => @designation.id
-        response.should render_template("index")
-      end
-      it "assigns @listing_changes" do
-       post :create, :listing_change => {
-            :change_type_id => @addition.id,
-            :species_listing_id => @appendix.id,
-            :effective_at => 1.week.ago
-          },
-          :taxon_concept_id => @taxon_concept.id,
-          :designation_id => @designation.id
-        assigns(:listing_changes).count.should == 1
+        response.should redirect_to(
+          admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
+        )
       end
     end
     it "renders new when not successful" do
@@ -134,7 +126,7 @@ describe Admin::ListingChangesController do
       )
     end
     context "when successful" do
-      it "renders taxon_concepts listing_changes page" do
+      it "redirects to taxon_concept listing_changes page" do
         put :update, :listing_change => {
             :change_type_id => @addition.id,
             :species_listing_id => @appendix.id,
@@ -146,17 +138,6 @@ describe Admin::ListingChangesController do
         response.should redirect_to(
           admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
         )
-      end
-      it "assigns @listing_changes" do
-        put :update, :listing_change => {
-            :change_type_id => @addition.id,
-            :species_listing_id => @appendix.id,
-            :effective_at => 1.week.ago
-          },
-          :id => @listing_change.id,
-          :taxon_concept_id => @taxon_concept.id,
-          :designation_id => @designation.id
-        assigns(:listing_change)
       end
     end
     it "renders edit when not successful" do

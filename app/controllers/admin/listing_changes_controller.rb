@@ -1,6 +1,7 @@
 class Admin::ListingChangesController < Admin::SimpleCrudController
   respond_to :js, :only => [:create, :update]
   belongs_to :taxon_concept, :designation
+  before_filter :load_search, :except => [:create, :update, :destroy]
   layout 'taxon_concepts'
 
   def index
@@ -12,6 +13,10 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   def new
     new! do
       load_change_types
+      @listing_change.change_type_id ||= @change_types.first.id
+      @listing_change.is_current = true
+      @listing_change.event = @events && @events.first #ordered most recent first
+      @listing_change.effective_at =  @listing_change.event && @listing_change.event.effective_at
       build_dependants
     end
   end
@@ -21,8 +26,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
     @designation = Designation.find(params[:designation_id])
     @listing_change = ListingChange.new(params[:listing_change])
     if @taxon_concept.listing_changes << @listing_change
-      load_listing_changes
-      render 'index'
+      redirect_to admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
     else
       load_change_types
       build_dependants
@@ -61,7 +65,6 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
 
   protected
   def build_dependants
-    @listing_change.change_type_id ||= @change_types.first.id
     unless @listing_change.party_listing_distribution
       @listing_change.build_party_listing_distribution(
         params[:listing_change] &&
@@ -74,9 +77,6 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
         params[:listing_change][:annotation_attributes]
       )
     end
-    @listing_change.exclusions.build(
-      :change_type_id => @exception_change_type.id
-    )
   end
 
   def load_change_types
@@ -87,12 +87,15 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
     @species_listings = @designation.species_listings.order(:abbreviation)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
-    @hash_annotations = Annotation.for_cites_plants
-    @cites_cops = CitesCop.order(:effective_at)
+    @hash_annotations = if @designation.is_eu?
+      Annotation.for_eu
+    else
+      Annotation.for_cites
+    end
     @events = if @designation.is_eu?
-      EuRegulation.order(:effective_at)
+      EuRegulation.order('effective_at DESC')
     elsif @designation.is_cites?
-      @cites_cops
+      CitesCop.order('effective_at DESC')
     end
   end
 

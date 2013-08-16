@@ -2,18 +2,27 @@ class Checklist::History < Checklist::Checklist
   attr_reader :download_name
 
   def initialize(options={})
+    options = {
+      :output_layout => :taxononomic,
+      :show_english => true,
+      :show_french => true,
+      :show_spanish => true
+    }
+    # History cannot be parametrized like other Checklist reports
     @download_path = download_location(options, "history", ext)
 
-    params = options.merge({:output_layout => :taxonomic})
     # If a cached download exists, only initialize the params for the
-    # helper methods, otherwise run the generation queries.
-    if !File.exists?(@download_path)
-      super(params)
-    else
-      initialize_params(params)
-    end
+    # helper methods, otherwise initialize the generation queries.
 
-    @download_name = "ChecklistHistory-#{Time.now.strftime("%d%m%Y")}.#{ext}"
+    if !File.exists?(@download_path)
+      super(options)
+    else
+      initialize_params(options)
+    end
+  end
+
+  def has_full_options?
+    true
   end
 
   def prepare_kingdom_queries
@@ -22,29 +31,33 @@ class Checklist::History < Checklist::Checklist
   end
 
   def prepare_main_query
-    @taxon_concepts_rel = @taxon_concepts_rel.
-      includes(:listing_changes).
-      where("cites_listed = 't' OR cites_deleted = 't'").
-      where("listing_changes_mview.change_type_name <> 'EXCEPTION'").
-      where("explicit_change = 't'").
-      order <<-SQL
-        taxon_concept_id, effective_at,
-        CASE
-          WHEN change_type_name = 'ADDITION' THEN 0
-          WHEN change_type_name = 'RESERVATION' THEN 1
-          WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
-          WHEN change_type_name = 'DELETION' THEN 3
-        END
-      SQL
+    cites = Designation.find_by_name(Designation::CITES)
+    @taxon_concepts_rel = MTaxonConcept.where(:taxonomy_is_cites_eu => true).
+       includes(:listing_changes).where(
+          :"listing_changes_mview.show_in_downloads" => true,
+          :"listing_changes_mview.designation_id" => cites && cites.id
+        ).
+        order(<<-SQL
+          taxonomic_position, effective_at,
+          CASE
+            WHEN change_type_name = 'ADDITION' THEN 0
+            WHEN change_type_name = 'RESERVATION' THEN 1
+            WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
+            WHEN change_type_name = 'DELETION' THEN 3
+          END
+          SQL
+        )
   end
 
   def generate
-    return @download_path  if File.exists?(@download_path)
-
-    prepare_queries
-    document do |doc|
-      content(doc)
+    if !File.exists?(@download_path)
+      prepare_queries
+      document do |doc|
+        content(doc)
+      end
     end
+    ctime = File.ctime(@download_path).strftime('%Y-%m-%d %H:%M')
+    @download_name = "History_of_CITES_Listings_#{has_full_options? ? '' : '[CUSTOM]_'}#{ctime}.#{ext}"
     @download_path
   end
 

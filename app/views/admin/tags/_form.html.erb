@@ -5,5 +5,6 @@
   <label>Name</label><%= f.text_field :name %><br />
 
   <label>Type</label>
-  <%= f.select :model, options_for_select(PresetTag::TYPES) %>
+  <%= f.select :model, options_for_select(PresetTag::TYPES,
+   @tag && @tag.model ) %>
 <% end %>

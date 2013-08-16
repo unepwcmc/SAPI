@@ -12,7 +12,7 @@
 class Designation < ActiveRecord::Base
   attr_accessible :name, :taxonomy_id
   include Dictionary
-  build_dictionary :cites, :eu
+  build_dictionary :cites, :eu, :cms
 
   validates :name, :presence => true, :uniqueness => true
   validates :name,
@@ -35,13 +35,18 @@ class Designation < ActiveRecord::Base
     name == EU
   end
 
+  def is_cms?
+    name == CMS
+  end
+
   def can_be_deleted?
     !has_protected_name? && !has_dependent_objects?
   end
 
   def self.search query
     if query
-      where("UPPER(name) LIKE UPPER(?)", "%#{query}%")
+      where("UPPER(name) LIKE UPPER(:query)", 
+            :query => "%#{query}%")
     else
       scoped
     end

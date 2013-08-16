@@ -1,0 +1,21 @@
+<div id="taxon-concept-search">
+  <%= form_for @search_params, :url => admin_taxon_concepts_url, 
+    :method => :get, :html => {:class => 'form-inline'} do |f| %>
+
+    <div class="input-prepend">
+      <span class="add-on"><i class="icon-search"></i></span>
+      <%= f.text_field :scientific_name, :class => 'search-typeahead input-xxlarge', :autocomplete => :off %>
+    </div>
+
+    <%= f.fields_for :taxonomy do |ff| %>
+      <%= ff.select :id,
+        options_from_collection_for_select(
+          @taxonomies, "id", "name",
+          @search_params.taxonomy && @search_params.taxonomy[:id]
+        ), :class => "input-xlarge"
+      %>
+    <% end %>
+    <%= f.submit 'Search'%>
+
+  <% end %>
+</div>

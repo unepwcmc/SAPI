@@ -1,0 +1,32 @@
+{{outlet search}}
+
+<div class="container">
+
+  <div class="heading"></div>
+
+  <div class="result-block">
+    {{#each header in controller.content.meta.higher_taxa_headers}}
+      <ul class="result-list">
+        {{#stringToArray header.higher_taxon.ancestors_path splitter=","}}
+          <li>
+            {{view Species.TaxonConceptLinkView}}
+          </li>
+        {{/stringToArray}}
+        <li>{{header.higher_taxon.rank_name}}</li>
+      </ul>
+
+      {{#each taxonConceptId in header.taxon_concept_ids}}
+        {{view Species.TaxonConceptSearchResultView
+          taxonConceptIdBinding="taxonConceptId"
+        }}
+      {{/each}}
+    {{else}}
+      <div class="no-results">
+        <p class="no-results-title">Your search for <u>{{unbound controllers.search.taxonConceptQuery}}</u> returned no results.</p>
+        <p class="no-results-subtitle"> Try refining your search or selecting a taxa from the drop-down menu.</p>
+        <p>Please note that this database contains species that are listed in the Appendices to CITES and CMS, as well as the Annexes to the EU Wildlife Trade Regulations; it is not a comprehensive source of all species.</p>
+      </div>
+    {{/each}}
+  </div>
+
+</div>

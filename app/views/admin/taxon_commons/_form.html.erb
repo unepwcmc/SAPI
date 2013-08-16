@@ -3,7 +3,8 @@
   <%= f.fields_for :common_name do |ff| %>
     <%= ff.text_field :name %>
     <%= ff.select :language_id,
-      options_from_collection_for_select(@languages, :id, :name_en, ff.object && ff.object.language_id )
+      options_from_collection_for_select(@languages, :id, :name_en, ff.object && ff.object.language_id ),
+      {}, :class => 'select2'
     %>
   <% end%>
 <% end %>

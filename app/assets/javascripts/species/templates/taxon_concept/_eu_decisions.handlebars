@@ -1,0 +1,120 @@
+<strong class="title">EU DECISIONS</strong>
+{{#unless euDecisions}}
+  <p class="empty">There are no current suspensions or opinions for this species.</p>
+{{else}}
+  <table summary="data table">
+    <thead>
+      <tr>
+        <th class="col1">&nbsp;</th>
+        <th class="col2">DATE</th>
+        <th class="col3">COUNTRY</th>
+        <th class="col13">SRG</th>
+        <th class="col10">NOTES</th>
+        <th class="col7">DOCUMENT</th>
+        <th class="col1">&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody {{bindAttr class="controller.euDecisionsExpanded:historic_expanded"}}>
+      {{#each decision in currentEuDecisions}}
+        <tr class="current">
+          <td>&nbsp;</td>
+          <td>{{decision.start_date}}</td>
+          <td>{{decision.geo_entity.name}}</td>
+          <td>
+              {{#if decision.eu_decision_type.tooltip}}
+                <div class="link-holder">
+                  <a class="legal-links">{{decision.eu_decision_type.name}}</a>
+                  <div class="popup-holder">
+                    <div class="popup">
+                      {{decision.eu_decision_type.tooltip}}
+                    </div>
+                  </div>
+                </div>
+              {{else}}
+                {{decision.eu_decision_type.name}}
+              {{/if}}
+          </td>
+          <td>
+            {{#if decision.subspecies_info}}
+              {{{decision.subspecies_info}}}<br />
+            {{/if}}
+            {{decision.term.name_en}} {{decision.source.name_en}} <br />
+            {{{decision.notes}}}
+          </td>
+          <td>
+            <a class="legal-links" href="{{unbound decision.start_event.url}}">
+              {{decision.start_event.name}}
+            </a>
+          </td>
+          <td class="last">&nbsp;</td>
+        </tr>
+      {{else}}
+        <tr class="current">
+          <td>&nbsp;</td>
+          <td colspan=6>There are no current decisions in place for this species.</td>
+          <td>&nbsp;</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{#if historicEuDecisions}}
+    <div {{bindAttr class=":historic controller.euDecisionsExpanded::hidden"}}>
+      <table summary="data table">
+        <thead>
+          <tr>
+            <th class="col1">&nbsp;</th>
+            <th class="col2">&nbsp;</th>
+            <th class="col3">&nbsp;</th>
+            <th class="col13">&nbsp;</th>
+            <th class="col10">&nbsp;</th>
+            <th class="col7">&nbsp;</th>
+            <th class="col1">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each decision in historicEuDecisions}}
+            <tr>
+              <td>&nbsp;</td>
+              <td>{{decision.start_date}}</td>
+              <td>{{decision.geo_entity.name}}</td>
+              <td>
+                {{#if decision.eu_decision_type.tooltip}}
+                  <div class="link-holder">
+                    <a class="legal-links">{{decision.eu_decision_type.name}}</a>
+                    <div class="popup-holder">
+                      <div class="popup">
+                        {{decision.eu_decision_type.tooltip}}
+                      </div>
+                    </div>
+                  </div>
+                {{else}}
+                  {{decision.eu_decision_type.name}}
+                {{/if}}
+              </td>
+              <td>
+                {{#if decision.subspecies_info}}
+                  {{{decision.subspecies_info}}}<br />
+                {{/if}}
+                {{decision.term.name_en}} {{decision.source.name_en}} <br />
+                {{{decision.notes}}}
+              </td>
+              <td>
+                <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                  {{decision.start_event.name}}
+                </a>
+              </td>
+              <td class="last">&nbsp;</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div {{bindAttr class=":btn-hloder euDecisionsExpanded:expanded"}}>
+      {{#if controller.euDecisionsExpanded}}
+        <a class="link active" {{action 'contractList' 'eu_decisions' 'euDecisionsExpanded'}}>HIDE HISTORY</a>
+      {{else}}
+        <a class="link" {{action 'expandList' 'eu_decisions' 'euDecisionsExpanded'}}>SHOW HISTORY</a>
+      {{/if}}
+    </div>
+  {{/if}}
+{{/unless}}

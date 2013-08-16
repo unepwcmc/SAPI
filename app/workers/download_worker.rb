@@ -24,8 +24,8 @@ class DownloadWorker
       params = params.symbolize_keys
       document_module = document_modules[@download.doc_type].new(params)
 
-      @download.filename = document_module.download_name
       @download.path     = document_module.generate
+      @download.filename = document_module.download_name
 
       @download.display_name = Checklist::Checklist.summarise_filters(params)
 

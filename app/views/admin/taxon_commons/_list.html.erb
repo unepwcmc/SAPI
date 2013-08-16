@@ -2,6 +2,6 @@
   <%= tc.common_name && tc.common_name.name %>
   (<%= tc.common_name.language.name || tc.common_name.language.iso_code3 %>)
   <%= link_to edit_icon, edit_admin_taxon_concept_taxon_common_url(@taxon_concept, tc), :remote => true %>
-  <%= link_to delete_icon, admin_taxon_concept_taxon_common_url(@taxon_concept, tc), :confirm => "Are you sure?", :method => :delete %>
+  <%= link_to delete_icon, admin_taxon_concept_taxon_common_url(@taxon_concept, tc), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
   <br>
 <% end %>

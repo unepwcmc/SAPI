@@ -17,7 +17,16 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
 
-      kingdom = file.split('/').last.split('_')[0].titleize
+      split_file_name = file.split('/').last.split('_')
+      if split_file_name[0] == Taxonomy::CMS
+        kingdom = "Animalia"
+        taxonomy = Taxonomy.find_by_name(Taxonomy::CMS)
+      else
+        kingdom = split_file_name[0].titleize
+        taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
+      end
+
+      puts "Standard reference links for #{kingdom} of #{taxonomy.name}"
 
       puts "unaliasing reference ids in #{TMP_TABLE}"
       sql = <<-SQL
@@ -30,8 +39,8 @@ namespace :import do
       puts "inserting reference links"
       #add taxon_concept_references where missing
       sql = <<-SQL
-        INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id)
-        SELECT taxon_concepts.id, "references".id
+        INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id, created_at, updated_at)
+        SELECT taxon_concepts.id, "references".id, NOW(), NOW()
           FROM #{TMP_TABLE}
           INNER JOIN ranks
             ON UPPER(BTRIM(#{TMP_TABLE}.rank)) = UPPER(ranks.name)
@@ -39,9 +48,10 @@ namespace :import do
             ON #{TMP_TABLE}.taxon_legacy_id = taxon_concepts.legacy_id
               AND taxon_concepts.legacy_type = '#{kingdom}'::VARCHAR
               AND taxon_concepts.rank_id = ranks.id
+              AND taxon_concepts.taxonomy_id = #{taxonomy.id}
           INNER JOIN "references"
             ON #{TMP_TABLE}.ref_legacy_id = "references".legacy_id
-              AND "references".legacy_type = '#{kingdom}'::VARCHAR
+            AND "references".legacy_type = '#{kingdom}'::VARCHAR
           AND NOT EXISTS (
             SELECT id
             FROM taxon_concept_references
@@ -74,10 +84,12 @@ namespace :import do
           ON taxon_concepts.legacy_id = taxon_legacy_id
           AND taxon_concepts.legacy_type = standard_references_per_exclusion.legacy_type
           AND taxon_concepts.rank_id = ranks.id
+          AND taxon_concepts.taxonomy_id = #{taxonomy.id}
         LEFT JOIN taxon_concepts exclusion_taxon_concepts
           ON exclusion_taxon_concepts.legacy_id = exclusion_legacy_id::INTEGER
           AND exclusion_taxon_concepts.legacy_type = standard_references_per_exclusion.legacy_type
           AND exclusion_taxon_concepts.rank_id = exclusion_ranks.id
+          AND exclusion_taxon_concepts.taxonomy_id = #{taxonomy.id}
         INNER JOIN "references"
           ON "references".legacy_id = standard_references_per_exclusion.ref_legacy_id
           AND "references".legacy_type = standard_references_per_exclusion.legacy_type
@@ -97,7 +109,7 @@ namespace :import do
     puts "There are now #{TaxonConceptReference.where(:is_standard => true).count} standard references in the database"
     ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
     ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
-    Sapi::rebuild_references
+    Sapi.rebuild(:only => [:cites_accepted_flags], :disable_triggers => true)
   end
 
 end

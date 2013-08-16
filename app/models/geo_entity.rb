@@ -24,6 +24,8 @@ class GeoEntity < ActiveRecord::Base
   belongs_to :geo_entity_type
   has_many :geo_relationships, :dependent => :destroy
   has_many :distributions
+  has_many :designation_geo_entities
+  has_many :designations, :through => :designation_geo_entities
   validates :geo_entity_type_id, :presence => true
   validates :iso_code2, :uniqueness => true, :allow_blank => true
   validates :iso_code2, :presence => true, :length => {:is => 2},
@@ -89,6 +91,20 @@ class GeoEntity < ActiveRecord::Base
 
   def as_json(options={})
     super(:only =>[:id, :iso_code2], :methods => [:name])
+  end
+
+  def self.search query
+    if query
+      where("UPPER(name_en) LIKE UPPER(:query)
+            OR UPPER(name_fr) LIKE UPPER(:query)
+            OR UPPER(name_es) LIKE UPPER(:query)
+            OR UPPER(long_name) LIKE UPPER(:query)
+            OR UPPER(iso_code3) LIKE UPPER(:query)
+            OR UPPER(iso_code2) LIKE UPPER(:query)",
+            :query => "%#{query}%")
+    else
+      scoped
+    end
   end
 
   def can_be_deleted?

@@ -1,0 +1,380 @@
+.message-area {margin-top: 10px }
+.popup-area { position: relative; }
+.popup-holder01 {
+	position: absolute;
+	padding: 22px 0 0;
+	left: -115px;
+	top: 29px;
+	display: none;
+	z-index: 9999;
+
+	.popup {
+		position: relative;
+		width: 260px;
+		margin: -10px 0 0;
+		text-align: left;
+		background: #f5f5f7;
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
+		border: #80a3bb solid 1px;
+		
+
+		.search-block01 {
+			-webkit-border-radius: 5px 5px 0 0;
+			border-radius: 5px 5px 0 0;
+			background: #8fb7cf;
+			padding: 19px 18px 9px;
+			border-bottom: #80a3bb solid 1px;
+
+			li {
+				font-size: 11px;
+				color: #89B1CB;
+				font-weight: bold;
+				background-color: #fff;
+				display: inline-block;
+				padding: 3px 5px;
+				border-radius: 5px;
+				margin: 2.5px;
+				max-width: 160px;
+				span.delete{
+				  color: #FB585E !important;
+				  text-decoration: none;
+				  border: none;
+			 	  cursor: pointer;
+
+				  &:hover {
+				    text-decoration: none;
+				    border: none;
+				  }
+				}
+			}
+
+			.row01 {
+				background: #fff;
+				padding: 2px;
+				height: 23px;
+				width: 212px;
+				margin: 0 0 7px 3px;
+				overflow: hidden;
+				-webkit-border-radius: 20px;
+				border-radius: 20px;
+				border: 1px solid #6e96b1;
+
+				input[type="text"] {
+					padding: 3px 8px;
+					float: left;
+					width: 173px;
+					height: 17px;
+					font-size: 13px;
+					line-height: 17px;
+					color: #b6b6b6;
+					outline: none;
+					border: none;
+					background: none;
+				}
+
+				input[type="submit"] {
+					width: 13px;
+					float: right;
+					border: none;
+					overflow: hidden;
+					text-indent: -9999px;
+					background: url(/assets/species/ico-search.png) no-repeat;
+					height: 12px;
+					padding: 0;
+					margin: 6px 7px 0 0;
+				}
+				input[type="submit"]:hover { cursor: pointer; }
+			}
+
+			.title01 {
+				color: #253848;
+				display: block;
+				font-weight: bold;
+				margin: 0 0 4px;
+				text-transform: uppercase;
+			}
+
+		}
+		.list-holder {
+			height: 188px;
+			width: 220px;
+			overflow: auto;
+			margin: 17px 0 15px;
+			padding: 0 0 20px 19px;
+		}
+	}
+
+	.popup:after {
+		content: "";
+		position: absolute;
+		top: -10px;
+		right: 56px;
+		width: 11px;
+		height: 11px;
+		z-index: 1;
+		background: url(/assets/species/arrow05.png) no-repeat;
+	}
+
+}
+
+.list-holder ul {
+	h2 {
+		text-transform: uppercase;
+		color: #376381;
+		font-weight: bold;
+		margin: 0;
+		line-height: 18px;
+	}
+	li {
+		font-size: 13px;
+		line-height: 15px;
+
+		ul { margin: 0 0 17px; }
+		ul li { 
+			cursor: pointer;
+			&:hover{
+				text-decoration: underline;
+			}
+		}
+		a { 
+			color: #666;
+			span { text-decoration: underline; }
+		}
+	}
+}
+
+
+
+
+.info-columns.more .col:first-child {
+	padding: 0 0 0 38px;
+	text-align: left;
+}
+.info-columns.more .col {
+	font-size: 13px;
+	line-height: 15px;
+	text-align: center;
+}
+.popup-area.add .popup-holder01 {
+	left: -50px;
+	.popup { 
+		width: 360px; 
+		.search-block01 .row01 {
+			width: 313px;
+			height: 24px;
+
+			input[type="text"] {
+				height: 18px;
+				line-height: 18px;
+				width: 275px;
+			}			
+		}
+	}
+	.popup:after { left: 126px; }
+}
+
+
+.popup-area.add .popup-holder01 .popup .list-holder {
+	width: 331px;
+	margin: 15px 0 17px;
+}
+.popup-area.add .list-holder ul li ul { margin: 0 0 8px; }
+
+
+.two-columns {
+	width: 100%;
+	padding: 16px 0 17px;
+	/*overflow: hidden;*/
+
+	&.add .col { width: 150px; }
+	&.add .col:first-child { padding: 4px 0 0 50px; }
+
+	.col {
+		float: left;
+		width: 200px;
+		padding: 0 0 0 13px;
+
+		.link {
+			float: left;
+			min-width: 62px;
+			font-size: 13px;
+			font-weight: bold;
+			text-transform: uppercase;
+			color: #fff;
+			padding: 8px 25px 7px 10px;
+			position: relative;
+			background: #376382;
+			line-height: 16px;
+			text-decoration: none;
+			-webkit-border-radius: 20px;
+			border-radius: 20px;
+		}
+		.link:hover { background: #253848; }
+		.link:before {
+			width: 6px;
+			height: 4px;
+			position: absolute;
+			content: "";
+			/*z-index: 1;*/
+			right: 10px;
+			top: 14px;
+			background: url(/assets/species/arrow01.png) no-repeat;
+		}
+	}
+
+	.col:first-child {
+		width: 112px;
+		padding: 4px 0 0 30px;
+		border-right: 1px solid #e8e8e9;
+	}
+
+}
+.two-columns:after {
+	display: block;
+	clear: both;
+	content: "";
+}
+
+
+
+.col .row { overflow: hidden; }
+.col label {
+	font-size: 13px;
+	float: left;
+	line-height: 16px;
+}
+.col input[type="checkbox"] {
+	float: left;
+	height: 16px;
+	margin: 0 5px 0 0;
+	padding: 0;
+	width: 15px;
+}
+.col input[type="radio"] {
+	float: left;
+	height: 16px;
+	margin: 0 5px 0 0;
+	padding: 0;
+	width: 15px;
+}
+.col .heading {
+	color: #2d3237;
+	font-weight: bold;
+	display: block;
+	margin: 0 0 4px;
+	text-transform: uppercase;
+}
+
+.popup-area .link { cursor: pointer; }
+.popup-area:hover .link { background: #253848; }
+.popup-area:hover .popup-holder01 { display: block; }
+.popup-area:hover .popup-holder-appendix { display: block; }
+
+.bottom-columns {
+	border-top: 1px solid #d6d7d7;
+	width: 100%;
+	padding: 19px 0 20px;
+
+	.col {
+		float: left;
+		width: 130px;
+		margin: 0 0 0 34px;
+		position: relative;
+
+		.link {
+			float: left;
+			min-width: 68px;
+			font-size: 13px;
+			position: relative;
+			font-weight: bold;
+			text-transform: uppercase;
+			color: #fff;
+			padding: 8px 19px 7px 10px;
+			background: #376382;
+			line-height: 16px;
+			-webkit-border-radius: 20px;
+			border-radius: 20px;
+			text-decoration: none;
+		}
+
+		.link:before {
+			width: 6px;
+			height: 4px;
+			position: absolute;
+			content: "";
+			z-index: 1;
+			right: 10px;
+			top: 14px;
+			background: url(/assets/species/arrow01.png) no-repeat;
+		}
+
+		.link:hover { background: #253848; }
+	}
+
+	.col:first-child {
+		padding: 0 0 0 49px;
+		margin: 0;
+		border-right: 1px solid #e8e8e9;
+	}
+
+}
+.bottom-columns:after {
+	display: block;
+	clear: both;
+	content: "";
+}
+
+.popup-holder-appendix {
+	position: absolute;
+	padding: 22px 0 0;
+	left: 0;
+	top: 29px;
+	display: none;
+	z-index: 9999;
+}
+
+.popup-holder-appendix .popup {
+
+	position: relative;
+	margin: -10px 0 0;
+	text-align: left;
+	background: #f5f5f7;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border: #80a3bb solid 1px;
+
+	&:after {
+		content: "";
+		position: absolute;
+		top: -9px;
+		right: 25px;
+		width: 11px;
+		height: 11px;
+		z-index: 1;
+		background: url(/assets/species/arrow07.png) no-repeat;
+	}
+
+
+	.list-holder {
+		width: 50px;
+		overflow: auto;
+
+		ul {
+			padding: 0;
+
+			li {
+			    border-bottom: 1px solid #CCCCCC;
+			    line-height: 28px;
+			    padding: 10px;
+
+			    div {
+			    	margin: 0 auto;
+				    height: 26px;
+				    width: 26px;
+				    text-align: center;
+			    }
+			}
+		}
+	}
+}

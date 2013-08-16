@@ -1,17 +1,31 @@
 module Checklist::Pdf::HistoryContent
 
   def content(tex)
-    fetcher = Checklist::Pdf::HistoryFetcher.new(@animalia_rel)
+    fetcher = Checklist::HistoryFetcher.new(@animalia_rel)
     kingdom(tex, fetcher, 'FAUNA')
-    fetcher = Checklist::Pdf::HistoryFetcher.new(@plantae_rel)
+    fetcher = Checklist::HistoryFetcher.new(@plantae_rel)
     kingdom(tex, fetcher, 'FLORA')
   end
 
   def kingdom(tex, fetcher, kingdom_name)
     kingdom = fetcher.next
     return if kingdom.empty?
+    @skip_ancestor_ids = nil
+
     tex << "\\cpart{#{kingdom_name}}\n"
     begin
+
+      injector = Checklist::HigherTaxaInjector.new(
+        kingdom,
+        {
+          :skip_ancestor_ids => @skip_ancestor_ids,
+          :expand_headers => true,
+          :header_ranks => (kingdom_name == 'FLORA' ? ['FAMILY'] : nil)
+        }
+      )
+      kingdom = injector.run
+      @skip_ancestor_ids = injector.last_ancestor_ids
+
       listed_taxa_ary = []
       kingdom.each do |tc|
         if tc.kind_of? Checklist::HigherTaxaItem
@@ -47,7 +61,7 @@ module Checklist::Pdf::HistoryContent
           is_tc_row = false
           # lc fields
           row << (is_lc_row ? listing_with_change_type(lc) : '')
-          row << (is_lc_row && lc.party_name ? lc.party_name.upcase : '')
+          row << (is_lc_row && lc.party_iso_code ? lc.party_iso_code.upcase : '')
           row << (is_lc_row ? lc.effective_at_formatted : '')
           if kingdom_name == 'FLORA'
             row << (is_lc_row ? "#{LatexToPdf.escape_latex(lc.full_hash_ann_symbol)}" : '')
@@ -64,8 +78,12 @@ module Checklist::Pdf::HistoryContent
   end
 
   def listing_with_change_type(listing_change)
-    "#{listing_change.species_listing_name}#{
-      if listing_change.change_type_name == ChangeType::RESERVATION
+    appendix = if listing_change.change_type_name == ChangeType::DELETION
+      nil
+    else
+      listing_change.species_listing_name
+    end
+    change_type = if listing_change.change_type_name == ChangeType::RESERVATION
         '/r'
       elsif listing_change.change_type_name == ChangeType::RESERVATION_WITHDRAWAL
         '/w'
@@ -74,7 +92,7 @@ module Checklist::Pdf::HistoryContent
       else
         nil
       end
-    }"
+    "#{appendix}#{change_type}"
   end
 
   def multilingual_annotations(listing_change)
@@ -103,7 +121,7 @@ module Checklist::Pdf::HistoryContent
       taxon_concept.full_name
     end
     if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? taxon_concept.rank_name
-      res = "\\textit{#{res}}"
+      res = "\\emph{#{res}}"
     end
     res += " #{taxon_concept.spp}" if taxon_concept.spp
     res
@@ -111,11 +129,13 @@ module Checklist::Pdf::HistoryContent
 
   def higher_taxon_name(taxon_concept)
     common_names = common_names_with_lng_initials(taxon_concept)
-    if taxon_concept.rank_name == 'PHYLUM'
+    if taxon_concept.rank_name == 'PHYLUM' && taxon_concept.kingdom_name == 'Animalia'
       "\\csection{#{taxon_concept.full_name.upcase}}\n"
-    elsif taxon_concept.rank_name == 'CLASS'
+    elsif taxon_concept.rank_name == 'CLASS' && taxon_concept.kingdom_name == 'Animalia'
       "\\section*{\\underline{#{taxon_concept.full_name.upcase}} #{common_names}}\n"
-    elsif ['ORDER','FAMILY','SUBFAMILY'].include? taxon_concept.rank_name
+    elsif taxon_concept.rank_name == 'ORDER' && taxon_concept.kingdom_name == 'Animalia'
+      "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names}}\n"
+    elsif ['FAMILY','SUBFAMILY'].include? taxon_concept.rank_name
       "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names}}\n"
     end
   end

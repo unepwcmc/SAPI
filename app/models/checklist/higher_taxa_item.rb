@@ -5,13 +5,27 @@ class Checklist::HigherTaxaItem
     @taxon_concept = taxon_concept
   end
 
-  def ancestors_path
-    taxa = ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY']
+  def ancestors_ranks
+    taxa = if kingdom_name == 'Plantae'
+      ['FAMILY', 'SUBFAMILY']
+    else
+      ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY']
+    end
     current_idx = taxa.index(rank_name) || 0
     0.upto(current_idx).map do |i|
       taxa[i]
-    end.map do |rank|
+    end
+  end
+
+  def ancestors_path
+    ancestors_ranks.map do |rank|
       send("#{rank.downcase}_name")
+    end.join(',')
+  end
+
+  def ancestors_ids
+    ancestors_ranks.map do |rank|
+      send("#{rank.downcase}_id")
     end.join(',')
   end
 
@@ -25,12 +39,13 @@ class Checklist::HigherTaxaItem
     end
   end
 
-  def as_json(options)
+  def as_json(options = {})
     {
       :id => id + 100000,
       :item_type => @item_type,
       :rank_name => rank_name,
-      :ancestors_path => ancestors_path
+      :ancestors_path => ancestors_path,
+      :ancestors_ids => ancestors_ids
     }
   end
 

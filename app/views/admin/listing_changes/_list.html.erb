@@ -2,12 +2,13 @@
   <th>Event</th>
   <th>Appx</th>
   <th>Type</th>
-  <th>Effective at</th>
+  <th>Effective from</th>
   <th>Current</th>
   <th>Party</th>
   <th>Geo entities</th>
   <th>Inclusion</th>
-  <th>Exclusions</th>
+  <th>Excl. taxa</th>
+  <th>Excl. popns</th>
   <th>Annotation</th>
   <th>Actions</th>
 </thead>
@@ -33,10 +34,17 @@
         ><%= true_false_icon(listing_change.inclusion) %></a>
       </td>
       <td>
-        <% if listing_change.exclusions.count > 0 %>
+        <% if listing_change.excluded_taxon_concepts.count > 0 %>
         <a rel="tooltip" href="#"
-          data-original-title="<%= exclusions_tooltip(listing_change) %>"
-        ><%= listing_change.exclusions.count %></a>
+          data-original-title="<%= excluded_taxon_concepts_tooltip(listing_change) %>"
+        ><%= listing_change.excluded_taxon_concepts.count %></a>
+        <% end %>
+      </td>
+      <td>
+        <% if listing_change.excluded_geo_entities.count > 0 %>
+        <a rel="tooltip" href="#"
+          data-original-title="<%= excluded_geo_entities_tooltip(listing_change) %>"
+        ><%= listing_change.excluded_geo_entities.count %></a>
         <% end %>
       </td>
       <td>
@@ -53,7 +61,7 @@
         %>
         <%= link_to delete_icon,
           admin_taxon_concept_designation_listing_change_path(@taxon_concept, @designation, listing_change),
-          :confirm => "Are you sure?", :method => :delete
+          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
     </tr>

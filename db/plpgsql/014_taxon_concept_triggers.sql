@@ -1,18 +1,14 @@
 CREATE OR REPLACE FUNCTION trg_taxon_concepts_u() RETURNS TRIGGER
 SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
 BEGIN
-  IF OLD.taxonomic_position <> NEW.taxonomic_position OR OLD.parent_id <> NEW.parent_id THEN
-    IF NEW.parent_id IS NOT NULL THEN
-      PERFORM rebuild_taxonomic_positions_from_root(NEW.parent_id);
-    ELSE
-      PERFORM rebuild_taxonomic_positions_from_root(NEW.id);
-    END IF;
+  IF OLD.taxonomic_position <> NEW.taxonomic_position OR
+    OLD.parent_id <> NEW.parent_id OR
+    OLD.taxon_name_id <> NEW.taxon_name_id OR
+    OLD.rank_id <> NEW.rank_id
+  THEN
+    PERFORM rebuild_taxonomy_for_node(NEW.id);
   END IF;
-  IF OLD.taxon_name_id <> NEW.taxon_name_id OR OLD.rank_id <> NEW.rank_id OR
-    (OLD.data->'full_name') <> (NEW.data->'full_name') OR
-    (OLD.data->'rank_name') <> (NEW.data->'rank_name') THEN
-    PERFORM taxon_concepts_refresh_row(NEW.id);
-  END IF;
+  PERFORM taxon_concepts_refresh_row(NEW.id);
   RETURN NULL;
 END
 $$;
@@ -28,12 +24,7 @@ $$;
 CREATE OR REPLACE FUNCTION trg_taxon_concepts_i() RETURNS TRIGGER
 SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
 BEGIN
-  IF NEW.parent_id IS NOT NULL THEN
-    PERFORM rebuild_taxonomic_positions_from_root(NEW.parent_id);
-  ELSE
-    PERFORM rebuild_taxonomic_positions_from_root(NEW.id);
-  END IF;
-  PERFORM rebuild_names_and_ranks_for_node(NEW.id);
+  PERFORM rebuild_taxonomy_for_node(NEW.id);
   PERFORM taxon_concepts_refresh_row(NEW.id);
   RETURN NULL;
 END
@@ -54,7 +45,7 @@ FOR EACH ROW EXECUTE PROCEDURE trg_taxon_concepts_i();
 CREATE OR REPLACE FUNCTION trg_ranks_u() RETURNS TRIGGER
 SECURITY DEFINER LANGUAGE 'plpgsql' AS $$
 BEGIN
-    PERFORM rebuild_names_and_ranks_for_node(tc.id)
+    PERFORM rebuild_taxonomy_for_node(tc.id)
     FROM taxon_concepts tc
     WHERE tc.rank_id = NEW.id;
     --PERFORM taxon_concepts_refresh_row(tc.id)

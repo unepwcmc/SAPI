@@ -1,139 +1,7 @@
-= CITES Checklist {<img src="https://secure.travis-ci.org/unepwcmc/SAPI.png" />}[http://travis-ci.org/unepwcmc/SAPI] {<img src="https://codeclimate.com/badge.png" />}[https://codeclimate.com/github/unepwcmc/SAPI]
+= Species+ {<img src="https://secure.travis-ci.org/unepwcmc/SAPI.png" />}[http://travis-ci.org/unepwcmc/SAPI] {<img src="https://codeclimate.com/github/unepwcmc/SAPI.png" />}[https://codeclimate.com/github/unepwcmc/SAPI] {<img src="https://coveralls.io/repos/unepwcmc/SAPI/badge.png?branch=master" alt="Coverage Status" />}[https://coveralls.io/r/unepwcmc/SAPI?branch=master]
 
 
-==Dependencies
-
-packages as for Ubuntu:
-
-  - libpq-dev postgresql-9.1 postgresql-contrib-9.1
-
-Redis is used for the job queue.
-
-LaTex (pdflatex) is used for generating pdfs. We're using the texlive distribution.
-
-==LaTeX
-
-=== packages
-  - texlive
-  - texlive-full
-  - texlive-latex-recommended
-  - texlive-fonts-recommended
-
-=== handling hyperlinks in included pdf documents
-Latex does not preserve hyperlinks from an included pdf document, but there is a workaround to get this to work in order to be able to embed the intro pages in the checklist pdfs. The following needs to be when the intro pdfs are changed:
-  
-  - get pdfannotextractor.pl -- should be in texlive-extra package (?)
-  - get libfile-which-perl
-  - run this to install PDFBox (that's a Java jar required by pdfannotextractor that needs to be v. 0.7.2 or 0.7.3 -- not the current from apt-get))
-      pdfannotextractor --install
-  - run this command on every file to be included, this will generate a .pax file:
-      pdfannotextractor static_index.pdf
-  - finally, pdflatex should pick the pax files and use to reinsert hyperlinks into the included pdfs. It's considered an experimental feature.
-
-More info: http://anorien.csc.warwick.ac.uk/mirrors/CTAN/macros/latex/contrib/pax/README
-
-==Installation
-
-=== Gems
-Gems are packaged, following this article:
-
-  http://ryan.mcgeary.org/2011/02/09/vendor-everything-still-applies/
-
-=== CORS
-
-CORS using a rack middleware:
-
-  http://blog.carbonfive.com/2012/02/27/supporting-cross-domain-ajax-in-rails-using-jsonp-and-cors/
-
-for now we use the rack-cors middleware for development, staging has the appropriate headers defined in Apache config:
-
-  <VirtualHost *:80>
-    Header set Access-Control-Allow-Origin *
-    Header set Access-Control-Allow-Methods "POST, GET, OPTIONS"
-    Header set Access-Control-Allow-Headers "X-Requested-With, X-Prototype-Version"
-    Header set Access-Control-Max-Age 1728000
-    ...
-
-=== Database
-
-We use PostgreSQL 9.1 with the hstore and tablefunc extensions. We also use data modifying recursive CTEs, which are not supported on versions lower than 9.1.
-
-The hstore and tablefunc extensions need to be installed separately from the contrib package.
-
-To load the modules into your db in postgres >= 9.1:
-
-  CREATE EXTENSION hstore
-  CREATE EXTENSION tablefunc
-
-This is done in migrations for your development and test environments. For staging and production needs to be done by hand, as it requires superuser privileges.
-
-=== Files for import
-
-The original data files are in Dropbox in a folder shared with the Species staff.
-These files should have the same columns as defined in the helper import file (lib/tasks/helpers_for_import.rb).
-Otherwise they should be renamed. After copying the files from the Dropbox folder to the project folder, currently
-into lib/assets/files/cleaned/[animals|plants], I open them with excel and save them as Windows Comma Separated.
-After this (in Mac OSx) I run the following command in the terminal from the folder where the files are:
-
-  iconv -f Windows-1252 -t UTF-8 file_name.csv > file_name_utf8.csv
-
-This should generate in a file utf8 compatible.
-
-=== Data import
-
-  rake import:redo
-This task drops the database if not being used, creates it and runs the migrations. Then it loads the db seeds, and imports species, distributions,
-cites listings, common names, synonyms, references and taxon concept references from the provided files in lib/assets/files/cleaned.
-There are specific tasks for each of the types of data. Run 'rake -T' to get the list of tasks.
-
-
-
-
-Note: if there is some issue with data encoding on the way, we may end up with the utf8 unknown symbol �, which, sadly, crashes latex. Ideal solution: get the data right. Quick solution (for annotations, which seem to be most affected):
-
-  update annotation_translations set full_note = replace(full_note, '�', '') where id in (select id from annotation_translations where full_note like '%�%');
-
-  update listing_changes_mview set english_full_note = replace(english_full_note, '�', ''), spanish_full_note = replace(spanish_full_note, '�',''), french_full_note = replace(french_full_note, '�', '')  where id in (select id from listing_changes_mview where english_full_note like '%�%' or spanish_full_note like '%�%' or french_full_note like '%�%');
-
-== Job queue
-
-1. start redis
-  redis-server
-2. start sidekiq
-  bundle exec sidekiq
-3. create new download job
-  curl --data "output_layout=alphabetical&level_of_listing=0&show_synonyms=1&show_english=1&show_spanish=1&show_french=1&scientific_name=pediocactus&page=0&per_page=20&locale=en&download[format]=pdf&download[doc_type]=index" http://localhost:3000/downloads
-
-response:
-  {"downloads":[{"id":2,"doc_type":"index","format":"pdf","status":"working","created_at":"2012-10-30T11:44:21Z","updated_at":"2012-10-30T11:44:21Z"}]}
-3. get status of job
-  curl http://localhost:3000/downloads/2
-
-response:
-  {"status":"completed"}
-
-==Development
-
-=== Coding guidelines
-Try to apply these coding guidelines:
-  
-  http://pub.cozmixng.org/~the-rwiki/rw-cgi.rb?cmd=view;name=RubyCodingConvention
-
-== Database
-
-=== PostgreSQL data types support
-* foreign keys via foreigner: https://github.com/matthuhiggins/foreigner
-* hstore support is via the 'activerecord-postgres-hstore' gem
-* arrays are parsed using the 'pg_array_parser' gem
-
-=== Indices
-
-We're using a BTREE index on the hstore column in some places to be able to use hstore column in order by expressions:
-
-  SELECT * FROM "taxon_concepts" ORDER BY (data -> 'some_hstore_col')
-
-=== Migrating plpgsql functions
-Stored procedures are not updated with regular migrations anymore, as that approach was cumbersome. Instead, procedures and other plpgsql constructs are defined in separate files under db/plpgsql and are hooked to the db:migrate task, so that every time db:migrate runs those files are executed in lexicographic order. Therefore, it is important to use 'CREATE OR REPLACE' or 'DROP' / 'CREATE' in these files for migrations to pass.
+Species+ is the new species integration platform developed at WCMC.
 
 == Definitions and Resources
 
@@ -260,3 +128,13 @@ References are meant to be kept in an external system accessed by a web based AP
 Standard references are references recognized by CITES as references for specific taxon concepts. If a taxon concept has a standard reference, its name is considered to be 'accepted' and is therefore output in bold in the checklist index pdf.
 
 To create a standard reference link, create a taxon_concept_references record with data = {:usr_is_std_ref => true}. This will be inherited by descendants, unless they have taxon_concepts.data = {:usr_no_std_ref => true}.
+
+
+=== Events
+Events are used to represent CITES CoPs, CITES Notifications, and EU regulations (amongst others). This group listing changes, and trade restrictions under a common element. Allowing for copying bulks of information that repeat year after year.
+
+==== Event Types
+* CitesCop: For CITES CoP
+* CitesSuspensionNotification: For CITES Suspension Notification
+* EuRegulation: for EU Implemeting/Listing/Legislation regulations
+* SuspensionEuRegulation: for EU suspending regulations

@@ -13,12 +13,17 @@
 #  url            :text
 #  is_current     :boolean          default(FALSE), not null
 #  type           :string(255)      default("Event"), not null
+#  legacy_id      :integer
+#  end_date       :datetime
+#  subtype        :string(255)
 #
 
 class EuRegulation < Event
   attr_accessible :listing_changes_event_id
   attr_accessor :listing_changes_event_id
-  validates :designation_id, :presence => true
+
+  has_many :listing_changes, :foreign_key => :event_id
+
   validate :designation_is_eu
   validates :effective_at, :presence => true
 
@@ -34,6 +39,10 @@ class EuRegulation < Event
   def activate!
     update_attribute(:is_current, true)
     notify_observers(:after_activate)
+  end
+
+  def can_be_deleted?
+    listing_changes.count == 0
   end
 
   protected

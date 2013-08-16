@@ -1,13 +1,13 @@
 class Admin::EventsController < Admin::SimpleCrudController
   respond_to :js, :except => [:index, :destroy]
-  respond_to :json, :only => [:update]
+  respond_to :json, :only => [:update, :show]
 
   def index
     load_associations
     index! do |format|
       format.json {
-        render :json => end_of_association_chain.order(:effective_at, :name).
-        select([:id, :name]).map{ |d| {:value => d.id, :text => d.name} }
+        render :text => end_of_association_chain.order(:effective_at, :name).
+          select([:id, :name]).map{ |d| {:value => d.id, :text => d.name} }.to_json
       }
     end
   end
@@ -25,14 +25,21 @@ class Admin::EventsController < Admin::SimpleCrudController
     end
   end
 
-  protected
-  def collection
-    @events ||= end_of_association_chain.order(:designation_id, :name).
-      where("type NOT IN ('EuRegulation', 'CitesCop')").page(params[:page]).
-      search(params[:query])
+  def show
+    show! do |format|
+      format.json{ render :json => resource, :serializer => Admin::EventSerializer }
+    end
   end
 
-  def load_associations
-    @designations = Designation.order(:name)
-  end
+  protected
+    def collection
+      @events ||= end_of_association_chain.order(:designation_id, :name).
+        includes(:designation).
+        where("type NOT IN ('EuRegulation', 'CitesCop', 'CitesSuspensionNotification')").page(params[:page]).
+        search(params[:query])
+    end
+
+    def load_associations
+      @designations = Designation.order(:name)
+    end
 end

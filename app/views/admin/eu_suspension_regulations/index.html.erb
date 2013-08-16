@@ -1,0 +1,19 @@
+<div class="admin-header">
+  <h3>EU Suspension Regulations</h3>
+  <div class="action-buttons">
+    <%= admin_add_new_button(
+      :resource => 'eu_suspension_regulation',
+      :href => new_admin_eu_suspension_regulation_url,
+      :"data-toggle" => nil,
+      :role => nil,
+      :remote => true
+    ) %>
+  </div>
+</div>
+
+<%= admin_new_modal{ '' } %>
+<%= admin_simple_search %>
+
+<%= admin_table %>
+
+<%= paginate collection %>

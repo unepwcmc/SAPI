@@ -22,10 +22,19 @@
 /public/latex/index.pdf
 /public/latex/history.pdf
 
+#checklist downloads
+/public/downloads/checklist/*.*
+
 #exports csvs
-/public/downloads/cites_quotas/*.csv
+/public/downloads/quotas/*.csv
 /public/downloads/cites_listings/*.csv
 /public/downloads/cites_suspensions/*.csv
+/public/downloads/eu_listings/*.csv
+/public/downloads/cms_listings/*.csv
+/public/downloads/checklist/*.pdf
+/public/downloads/checklist/*.csv
+/public/downloads/checklist/*.json
+/public/uploads/*
 
 # Ruby
 /vendor/ruby
@@ -43,3 +52,5 @@
 .idea/
 
 db/structure.sql
+
+*.xlsx

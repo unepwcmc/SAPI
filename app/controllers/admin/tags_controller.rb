@@ -5,6 +5,7 @@ class Admin::TagsController < Admin::SimpleCrudController
 
   def collection
     @tags ||= end_of_association_chain.page(params[:page]).
+      order('UPPER(name) ASC, model ASC').
       search(params[:query])
   end
 end

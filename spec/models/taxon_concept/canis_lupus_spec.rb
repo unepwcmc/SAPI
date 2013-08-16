@@ -4,18 +4,30 @@ describe TaxonConcept do
   context "Canis lupus" do
     include_context "Canis lupus"
     context "LISTING" do
-      describe :current_listing do
-        it "should be I/II/NC at species level Canis lupus (population split listing)" do
-          @species.current_listing.should == 'I/II/NC'
+      describe :cites_listing do
+        context "for species Canis lupus (population split listing)" do
+          specify{ @species.cites_listing.should == 'I/II' }
         end
       end
-    end
+
+      describe :eu_listing do
+        context "for species Canis lupus (population split listing)" do
+          specify{ @species.eu_listing.should == 'A/B' }
+        end
+      end
 
       describe :cites_listed do
-        it "should be true for species Canis lupus" do
-          @species.cites_listed.should be_true
+        context "for species Canis lupus" do
+          specify{ @species.cites_listed.should be_true }
         end
       end
 
+      describe :eu_listed do
+        context "for species Canis lupus" do
+          specify{ @species.eu_listed.should be_true }
+        end
+      end
+
+    end
   end
 end

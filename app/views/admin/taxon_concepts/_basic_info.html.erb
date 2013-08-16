@@ -1,56 +1,55 @@
 <div class="row-fluid header">
-  <span><%= @taxon_concept.taxonomy.name %></span>
-  <%= ancestors_path(@taxon_concept) %>
-  <%= content_tag(:h1, @taxon_concept.full_name, :title => @taxon_concept.rank.name) %>
+  <h1 title="<%= @taxon_concept.rank.name %>">
+    <%= @taxon_concept.full_name %>
+    <span>
+      <% if @taxon_concept.rank.name == Rank::SPECIES %>
+        <a href="/species#/taxon_concepts/<%= @taxon_concept.id %>/legal"
+          title="View this taxon concept in Species+" alt="link to this taxon concept in Species+">
+      <% else %>
+        <a href="/species#/search/taxonomy=<%= @taxon_concept.taxonomy.name.downcase %>&taxon_concept_query=<%= @taxon_concept.full_name %>"
+          title="View this taxon concept in Species+" alt="link to this taxon concept in Species+">
+      <% end %>
+          in Species+
+        </a>
+    </span>
+  </h1>
   <%= link_to edit_icon, edit_admin_taxon_concept_url(@taxon_concept), :remote => true %>
-  <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), :confirm => "Are you sure?", :method => :delete %>
+  <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), 
+    :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
   <%= @taxon_concept.author_year %>
   <% if @taxon_concept.tag_list %>
-    <%= tag_list(@taxon_concept.tag_list) %>
+    <%= tag_list(@taxon_concept.tag_list) %><br />
   <% end %>
   <% if @taxon_concept.is_synonym? %>
     <div>
-    <span>SYNONYM OF:</span>
-    <ul>
-    <% @taxon_concept.accepted_name.each do |tc| %>
-      <li><%= link_to tc.full_name, edit_admin_taxon_concept_url(tc) %></li>
-    <% end %>
-    </ul>
+      <span>SYNONYM OF:</span>
+      <ul>
+        <% @taxon_concept.accepted_names.each do |tc| %>
+          <li><%= link_to tc.full_name, params.merge(:taxon_concept_id => tc.id) %></li>
+        <% end %>
+      </ul>
     </div>
   <% elsif @taxon_concept.is_hybrid? %>
     <div>
-    <span>HYBRID OF:</span>
-    <ul>
-    <% @taxon_concept.hybrid_parents.each do |tc| %>
-      <li><%= link_to tc.full_name, edit_admin_taxon_concept_url(tc) %></li>
-    <% end %>
-    </ul>
+      <span>HYBRID OF:</span>
+      <ul>
+        <% @taxon_concept.hybrid_parents.each do |tc| %>
+          <li><%= link_to tc.full_name, params.merge(:taxon_concept_id => tc.id) %></li>
+        <% end %>
+      </ul>
     </div>
   <% end %>
+  <%= ancestors_path(@taxon_concept) %>
 </div>
 
 <%= admin_new_taxon_concept_modal %>
 
 <ul id="taxon-concept-tabs" class="nav nav-tabs">
-  <li class="dropdown <%= if controller_name == "taxon_concepts" then "active" end%>">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Details<b class="caret"></b></a>
-    <ul id="details-menu" class="dropdown-menu">
-      <li>
-        <%= link_to "Nomenclature", '#nomenclature-tab', :"data-toggle" => :tab %>
-      </li>
-      <li>
-        <%= link_to "Distributions", '#distributions-tab', :"data-toggle" => :tab %>
-      </li>
-      <li>
-        <%= link_to "References", '#references-tab', :"data-toggle" => :tab %>
-      </li>
-    </ul>
-  </li>
 
   <% @taxon_concept.designations.each do |d| %>
     <% if d.is_cites? %>
       <li class="dropdown <%= if @designation && @designation.is_cites? ||
-        %w(quotas taxon_concept_suspensions).include?(controller_name) then 'active' end %>">
+        %w(quotas taxon_concept_cites_suspensions).include?(controller_name) then 'active' end %>">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">CITES legislation<b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li class="<%= if controller_name == "listing_changes" && @designation.is_cites? then "active" end%>">
@@ -59,8 +58,8 @@
           <li class="<%= if controller_name == 'quotas' then 'active' end%>">
             <%= link_to "CITES Quotas", admin_taxon_concept_quotas_path(@taxon_concept) %>
           </li>
-          <li class="<%= if controller_name == 'taxon_concept_suspensions' then 'active' end%>">
-            <%= link_to "CITES Suspensions", admin_taxon_concept_suspensions_path(@taxon_concept) %>
+          <li class="<%= if controller_name == 'taxon_concept_cites_suspensions' then 'active' end%>">
+            <%= link_to "CITES Suspensions", admin_taxon_concept_cites_suspensions_path(@taxon_concept) %>
           </li>
         </ul>
       </li>
@@ -80,10 +79,30 @@
           </li>
         </ul>
       </li>
+    <% elsif d.is_cms? %>
+      <li class="<%= if @designation && @designation.is_cms? then 'active' end %>">
+        <%= link_to "CMS listing changes", admin_taxon_concept_designation_listing_changes_path(@taxon_concept, d) %>
+      </li>
+      <li class="<%= if @taxon_instruments then 'active' end %>">
+        <%= link_to "Instruments", admin_taxon_concept_taxon_instruments_path(@taxon_concept) %>
+      </li>
     <% end %>
   <% end %>
+  <li class="<%= if controller_name == 'names' then 'active' end %>">
+    <%= link_to "Names", admin_taxon_concept_names_path(@taxon_concept) %>
+  </li>
+  <li class="<%= if controller_name == 'distributions' then 'active' end %>">
+    <%= link_to "Distribution", admin_taxon_concept_distributions_path(@taxon_concept) %>
+  </li>
+  <li class="<%= if controller_name == 'taxon_concept_references' then 'active' end %>">
+    <%= link_to "References", admin_taxon_concept_taxon_concept_references_path(@taxon_concept) %>
+  </li>
 
   <li class="<%= if controller_name == "taxon_relationships" then "active" end%>">
     <%= link_to "Taxon Relationships", admin_taxon_concept_taxon_relationships_path(@taxon_concept) %>
+  </li>
+
+  <li class="<%= if controller_name == "children" then "active" end%>">
+    <%= link_to "Children", admin_taxon_concept_children_path(@taxon_concept) %>
   </li>
 </ul>

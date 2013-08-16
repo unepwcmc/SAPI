@@ -31,7 +31,7 @@ describe Admin::LanguagesController do
       response.should be_success
     end
     it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json', :id => language.id, :language => { :iso_code1 => nil }
+      xhr :put, :update, :format => 'json', :id => language.id, :language => { :iso_code1 => 'zzz' }
       JSON.parse(response.body).should include('errors')
     end
   end

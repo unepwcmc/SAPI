@@ -13,18 +13,19 @@
 #  url            :text
 #  is_current     :boolean          default(FALSE), not null
 #  type           :string(255)      default("Event"), not null
+#  legacy_id      :integer
+#  end_date       :datetime
+#  subtype        :string(255)
 #
 
 class CitesCop < Event
-  validates :designation_id, :presence => true
+  has_many :listing_changes, :foreign_key => :event_id
+
   validate :designation_is_cites
   validates :effective_at, :presence => true
 
-  protected
-    def designation_is_cites
-      cites = Designation.find_by_name('CITES')
-      unless designation_id && cites && designation_id == cites.id
-        errors.add(:designation_id, 'should be CITES')
-      end
-    end
+  def can_be_deleted?
+    listing_changes.count == 0
+  end
+
 end

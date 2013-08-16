@@ -17,6 +17,8 @@ class Admin::PurposesController < Admin::AdminController
   protected
 
   def collection
-    @purposes ||= end_of_association_chain.order('code').page(params[:page])
+    @purposes ||= end_of_association_chain.order('code').
+      page(params[:page]).
+      search(params[:query])
   end
 end

@@ -70,6 +70,7 @@ Taxonomy.dict.each do |type|
   Taxonomy.create(name: type)
 end
 taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
+cms_taxonomy = Taxonomy.find_by_name(Taxonomy::CMS)
 puts "#{Taxonomy.count} taxonomies created"
 
 [Designation::CITES, Designation::EU].each do |designation|
@@ -77,6 +78,10 @@ puts "#{Taxonomy.count} taxonomies created"
   ChangeType.dict.each do |change_type_name|
     ChangeType.create(:name => change_type_name, :designation_id => d.id)
   end
+end
+
+[Designation::CMS].each do |designation|
+  d = Designation.create(:name => designation, :taxonomy_id => cms_taxonomy.id)
 end
 
 puts "#{Designation.count} designations created"
@@ -102,200 +107,211 @@ eu = Designation.find_by_name(Designation::EU)
   )
 end
 
+cms = Designation.find_by_name(Designation::CMS)
+
+%w(I II).each do |app_abbr|
+  SpeciesListing.create(
+    :name => "Appendix #{app_abbr}",
+    :abbreviation => app_abbr,
+    :designation_id => cms.id
+  )
+end
+
 puts "#{SpeciesListing.count} species listings created"
 
 higher_taxa = [
   {
-    :name => 'Animalia',
-    :taxonomic_position => '1',
-    :legacy_id => 1,
+  :name => 'Animalia',
+  :taxonomic_position => '1',
+  :legacy_id => 1,
+  :legacy_type => 'Animalia',
+  :sub_taxa => [
+    {
+      :name => 'Annelida',
+      :taxonomic_position => '1.4',
+      :legacy_id => 1,
+      :legacy_type => 'Animalia',
+      :sub_taxa => [
+        {
+          :name => 'Hirudinoidea',
+          :taxonomic_position => '1.4.1',
+          :legacy_id => 14,
+          :legacy_type => 'Animalia'
+        }
+      ]
+  },
+  {
+    :name => 'Arthropoda',
+    :taxonomic_position => '1.3',
+    :legacy_id => 2,
     :legacy_type => 'Animalia',
     :sub_taxa => [
-      {
-        :name => 'Annelida',
-        :taxonomic_position => '1.4',
-        :legacy_id => 1,
-        :legacy_type => 'Animalia',
-        :sub_taxa => [
-          {
-            :name => 'Hirudinoidea',
-            :taxonomic_position => '1.4.1',
-            :legacy_id => 14,
-            :legacy_type => 'Animalia'
-          }
-        ]
+        {
+        :name => 'Arachnida',
+        :taxonomic_position => '1.3.1',
+        :legacy_id => 4,
+        :legacy_type => 'Animalia'
       },
       {
-        :name => 'Arthropoda',
-        :taxonomic_position => '1.3',
-        :legacy_id => 2,
-        :legacy_type => 'Animalia',
-        :sub_taxa => [
-          {
-            :name => 'Arachnida',
-            :taxonomic_position => '1.3.1',
-            :legacy_id => 4,
-            :legacy_type => 'Animalia'
-          },
-          {
-            :name => 'Insecta',
-            :taxonomic_position => '1.3.2',
-            :legacy_id => 16,
-            :legacy_type => 'Animalia'
-          }
-        ]
-      },
-      {
-        :name => 'Chordata',
-        :taxonomic_position => '1.1',
-        :legacy_id => 3,
-        :legacy_type => 'Animalia',
-        :sub_taxa => [
-          {
-            :name => 'Actinopterygii',
-            :taxonomic_position => '1.1.6',
-            :legacy_id => 1,
-            :legacy_type => 'Animalia'
-          },
-          {
-            :name => 'Amphibia',
-            :taxonomic_position => '1.1.4',
-            :legacy_id => 2,
-            :legacy_type => 'Animalia'
-          },
-          {
-            :name => 'Aves',
-            :taxonomic_position => '1.1.2',
-            :legacy_id => 5,
-            :legacy_type => 'Animalia'
-          },
-          {
-            :name => 'Elasmobranchii',
-            :taxonomic_position => '1.1.5',
-            :legacy_id => 11,
-            :legacy_type => 'Animalia'
-          },
-          {
-            :name => 'Mammalia',
-            :taxonomic_position => '1.1.1',
-            :legacy_id => 17,
-            :legacy_type => 'Animalia'
-          },
-          {
-            :name => 'Reptilia',
-            :taxonomic_position => '1.1.3',
-            :legacy_id => 23,
-            :legacy_type => 'Animalia'
-          },
-          {
-            :name => 'Sarcopterygii',
-            :taxonomic_position => '1.1.7',
-            :legacy_id => 24,
-            :legacy_type => 'Animalia'
-          }
-        ]
-      },
-      {
-        :name => 'Cnidaria',
-        :taxonomic_position => '1.6',
-        :legacy_id => 5,
-        :legacy_type => 'Animalia',
-        :sub_taxa => [
-          {
-            :name => 'Anthozoa',
-            :taxonomic_position => '1.6.1',
-            :legacy_id => 3,
-            :legacy_type => 'Animalia'
-          },
-          {
-            :name => 'Hydrozoa',
-            :taxonomic_position => '1.6.2',
-            :legacy_id => 15,
-            :legacy_type => 'Animalia'
-          }
-        ]
-      },
-      {
-        :name => 'Echinodermata',
-        :taxonomic_position => '1.2',
-        :legacy_id => 6,
-        :legacy_type => 'Animalia',
-        :sub_taxa => [
-          {
-            :name => 'Holothuroidea',
-            :taxonomic_position => '1.2.1',
-            :legacy_id => 41,
-            :legacy_type => 'Animalia'
-          }
-        ]
-      },
-      {
-        :name => 'Mollusca',
-        :taxonomic_position => '1.5',
-        :legacy_id => 7,
-        :legacy_type => 'Animalia',
-        :sub_taxa => [
-          {
-            :name => 'Bivalvia',
-            :taxonomic_position => '1.5.1',
-            :legacy_id => 6,
-            :legacy_type => 'Animalia'
-          },
-          {
-            :name => 'Gastropoda',
-            :taxonomic_position => '1.5.2',
-            :legacy_id => 13,
-            :legacy_type => 'Animalia'
-          }
-        ]
+        :name => 'Insecta',
+        :taxonomic_position => '1.3.2',
+        :legacy_id => 16,
+        :legacy_type => 'Animalia'
       }
     ]
   },
   {
-    :name => 'Plantae',
-    :taxonomic_position => '2',
-    :legacy_id => 2,
-    :legacy_type => 'Plantae',
-    :sub_taxa => []
-  }
+    :name => 'Chordata',
+    :taxonomic_position => '1.1',
+    :legacy_id => 3,
+    :legacy_type => 'Animalia',
+    :sub_taxa => [
+      {
+      :name => 'Actinopterygii',
+      :taxonomic_position => '1.1.6',
+      :legacy_id => 1,
+      :legacy_type => 'Animalia'
+    },
+    {
+      :name => 'Amphibia',
+      :taxonomic_position => '1.1.4',
+      :legacy_id => 2,
+      :legacy_type => 'Animalia'
+    },
+    {
+      :name => 'Aves',
+      :taxonomic_position => '1.1.2',
+      :legacy_id => 5,
+      :legacy_type => 'Animalia'
+    },
+    {
+      :name => 'Elasmobranchii',
+      :taxonomic_position => '1.1.5',
+      :legacy_id => 11,
+      :legacy_type => 'Animalia'
+    },
+    {
+      :name => 'Mammalia',
+      :taxonomic_position => '1.1.1',
+      :legacy_id => 17,
+      :legacy_type => 'Animalia'
+    },
+  {
+  :name => 'Reptilia',
+  :taxonomic_position => '1.1.3',
+  :legacy_id => 23,
+  :legacy_type => 'Animalia'
+},
+  {
+  :name => 'Sarcopterygii',
+  :taxonomic_position => '1.1.7',
+  :legacy_id => 24,
+  :legacy_type => 'Animalia'
+}
+]
+},
+  {
+  :name => 'Cnidaria',
+  :taxonomic_position => '1.6',
+  :legacy_id => 5,
+  :legacy_type => 'Animalia',
+  :sub_taxa => [
+    {
+  :name => 'Anthozoa',
+  :taxonomic_position => '1.6.1',
+  :legacy_id => 3,
+  :legacy_type => 'Animalia'
+},
+  {
+  :name => 'Hydrozoa',
+  :taxonomic_position => '1.6.2',
+  :legacy_id => 15,
+  :legacy_type => 'Animalia'
+}
+]
+},
+  {
+  :name => 'Echinodermata',
+  :taxonomic_position => '1.2',
+  :legacy_id => 6,
+  :legacy_type => 'Animalia',
+  :sub_taxa => [
+    {
+  :name => 'Holothuroidea',
+  :taxonomic_position => '1.2.1',
+  :legacy_id => 41,
+  :legacy_type => 'Animalia'
+}
+]
+},
+  {
+  :name => 'Mollusca',
+  :taxonomic_position => '1.5',
+  :legacy_id => 7,
+  :legacy_type => 'Animalia',
+  :sub_taxa => [
+    {
+  :name => 'Bivalvia',
+  :taxonomic_position => '1.5.1',
+  :legacy_id => 6,
+  :legacy_type => 'Animalia'
+},
+  {
+  :name => 'Gastropoda',
+  :taxonomic_position => '1.5.2',
+  :legacy_id => 13,
+  :legacy_type => 'Animalia'
+}
+]
+}
+]
+},
+  {
+  :name => 'Plantae',
+  :taxonomic_position => '2',
+  :legacy_id => 2,
+  :legacy_type => 'Plantae',
+  :sub_taxa => []
+}
 ]
 
 kingdom_rank_id = Rank.find_by_name(Rank::KINGDOM).id
 higher_taxa.each do |kingdom_props|
   kingdom_name = kingdom_props[:name]
-  name = TaxonName.create(:scientific_name => kingdom_name)
-  kingdom = TaxonConcept.create(:rank_id => kingdom_rank_id,
-    :taxon_name_id => name.id,
-    :taxonomy_id => taxonomy.id,
-    :legacy_id => kingdom_props[:legacy_id], :legacy_type => kingdom_props[:legacy_type],
-    :taxonomic_position => kingdom_props[:taxonomic_position],
-    :name_status => 'A')
-  phyla = kingdom_props[:sub_taxa]
-  phylum_rank_id = Rank.find_by_name(Rank::PHYLUM).id
-  phyla.each do |phylum_props|
-    phylum_name = phylum_props[:name]
-    name = TaxonName.create(:scientific_name => phylum_name)
-    phylum = TaxonConcept.create(:rank_id => phylum_rank_id,
-      :taxon_name_id => name.id,
-      :taxonomy_id => taxonomy.id,
-      :legacy_id => phylum_props[:legacy_id], :legacy_type => phylum_props[:legacy_type],
-      :parent_id => kingdom.id,
-      :taxonomic_position => phylum_props[:taxonomic_position],
-      :name_status => 'A')
-    klasses = phylum_props[:sub_taxa]
-    klass_rank_id = Rank.find_by_name(Rank::CLASS).id
-    klasses.each do |klass_props|
-      klass_name = klass_props[:name]
-      name = TaxonName.create(
-        :scientific_name => klass_name
-      )
-      klass = TaxonConcept.create(:rank_id => klass_rank_id,
-      :taxon_name_id => name.id,
-      :taxonomy_id => taxonomy.id,
-      :legacy_id => klass_props[:legacy_id], :legacy_type => klass_props[:legacy_type],
-      :parent_id => phylum.id,
-      :taxonomic_position => klass_props[:taxonomic_position],
-      :name_status => 'A')
+  [cms_taxonomy, taxonomy].each do |taksonomy|
+    name = TaxonName.find_or_create_by_scientific_name(kingdom_name)
+    next if taksonomy.name == Taxonomy::CMS && kingdom_name == 'Plantae'
+    kingdom = TaxonConcept.create(:rank_id => kingdom_rank_id,
+                                  :taxon_name_id => name.id,
+                                  :taxonomy_id => taksonomy.id,
+                                  :legacy_id => kingdom_props[:legacy_id], :legacy_type => kingdom_props[:legacy_type],
+                                  :taxonomic_position => kingdom_props[:taxonomic_position],
+                                  :name_status => 'A')
+    phyla = kingdom_props[:sub_taxa]
+    phylum_rank_id = Rank.find_by_name(Rank::PHYLUM).id
+    phyla.each do |phylum_props|
+      phylum_name = phylum_props[:name]
+      name = TaxonName.find_or_create_by_scientific_name(phylum_name)
+      phylum = TaxonConcept.create(:rank_id => phylum_rank_id,
+         :taxon_name_id => name.id,
+         :taxonomy_id => taksonomy.id,
+         :legacy_id => phylum_props[:legacy_id], :legacy_type => phylum_props[:legacy_type],
+         :parent_id => kingdom.id,
+         :taxonomic_position => phylum_props[:taxonomic_position],
+         :name_status => 'A')
+      klasses = phylum_props[:sub_taxa]
+      klass_rank_id = Rank.find_by_name(Rank::CLASS).id
+      klasses.each do |klass_props|
+        klass_name = klass_props[:name]
+        name = TaxonName.find_or_create_by_scientific_name(klass_name)
+        klass = TaxonConcept.create(:rank_id => klass_rank_id,
+          :taxon_name_id => name.id,
+          :taxonomy_id => taksonomy.id,
+          :legacy_id => klass_props[:legacy_id], :legacy_type => klass_props[:legacy_type],
+          :parent_id => phylum.id,
+          :taxonomic_position => klass_props[:taxonomic_position],
+          :name_status => 'A')
+      end
     end
   end
 end
@@ -305,9 +321,55 @@ puts "#{TaxonName.count} taxon_names created"
 
 puts "#{CommonName.delete_all} common names deleted"
 puts "#{Language.delete_all} languages deleted"
-Language.create(:name_en => 'English', :iso_code1 => 'en', :iso_code3 => 'eng')
-Language.create(:name_en => 'Spanish', :iso_code1 => 'es', :iso_code3 => 'spa')
-Language.create(:name_en => 'French', :iso_code1 => 'fr', :iso_code3 => 'fra')
-puts "#{Language.count} languages created"
 puts "#{Reference.delete_all} references deleted"
 puts "#{TradeRestriction.delete_all} trade restrictions deleted"
+
+['trading_partner', 'term_code', 'species_name', 'appendix', 'quantity'].each do |col|
+  Trade::PresenceValidationRule.create(:column_names => [col], :run_order => 1)
+end
+['quantity', 'year'].each do |col|
+  Trade::NumericalityValidationRule.create(:column_names => [col], :run_order => 2)
+end
+
+Trade::FormatValidationRule.create(:column_names => ['year'], :format_re => '^\d{4}$', :run_order => 2)
+
+Trade::InclusionValidationRule.create(
+  :column_names => ['term_code'],
+  :valid_values_view => 'valid_term_code_view',
+  :run_order => 3
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['source_code'],
+  :valid_values_view => 'valid_source_code_view',
+  :run_order => 3
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['purpose_code'],
+  :valid_values_view => 'valid_purpose_code_view',
+  :run_order => 3
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['unit_code'],
+  :valid_values_view => 'valid_unit_code_view',
+  :run_order => 3
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['trading_partner'],
+  :valid_values_view => 'valid_trading_partner_view',
+  :run_order => 3
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['country_of_origin'],
+  :valid_values_view => 'valid_country_of_origin_view',
+  :run_order => 3
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['species_name'],
+  :valid_values_view => 'valid_species_name_view',
+  :run_order => 3
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['appendix'],
+  :valid_values_view => 'valid_appendix_view',
+  :run_order => 3
+)

@@ -1,0 +1,103 @@
+a.legal-links {
+  cursor: pointer;
+	background: url(/assets/species/sep01.png) repeat-x 0 100%;
+}
+
+a.legal-links:hover {
+  text-decoration: none;
+}
+
+#eu_decisions .link-holder {
+	position: relative;
+	float: left;
+}
+#eu_decisions .link-holder:hover a { font-weight: bold; }
+#eu_decisions .link-holder:hover .popup-holder { display: block; }
+#eu_decisions .link-holder .popup-holder {
+	position: absolute;
+	display: none;
+	z-index: 9999;
+	left: -14px;
+	top: 7px;
+	padding: 20px 0 0;
+}
+#eu_decisions .popup {
+	width: 240px;
+	position: relative;
+	text-align: left;
+	padding: 10px;
+	background: #f5f5f7;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border: #d6d7d7 solid 1px;
+}
+#eu_decisions .popup:after {
+	content: "";
+	position: absolute;
+	top: -10px;
+	left: 13px;
+	width: 9px;
+	height: 10px;
+	z-index: 1;
+	background: url(/assets/species/arrow08.png) no-repeat;
+}
+#eu_decisions .popup .title {
+	text-transform: none;
+	font-size: 12px;
+	color: #253848;
+	margin: 0;
+}
+#eu_decisions .popup .text {
+	color: #253848;
+	font-size: 12px;
+	display: block;
+	margin: 0 0 14px;
+}
+
+#full-note-legal {
+	width: 590px;
+	margin-left: -295px;
+	position: fixed;
+	left: 50%;
+  top: 25%;
+	background: #f5f5f7;
+	-webkit-border-radius: 12px;
+	border-radius: 12px;
+	border: 1px solid #6d95b0;
+	z-index: 1000;
+  text-align: left;
+  .close {
+    width: 22px;
+    height: 22px;
+    overflow: hidden;
+    position: absolute;
+    right: -9px;
+    top: -6px;
+    text-indent: -9999px;
+    background: url(/assets/species/btn-close.png) no-repeat;
+  }
+  .title {
+    display: block;
+    font-size: 17px;
+    padding: 29px 32px 26px;
+    line-height: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #253848;
+    background: #8fb7cf;
+    border-bottom: 1px solid #6d95b0;
+    -webkit-border-radius: 12px 12px 0 0;
+    border-radius: 12px 12px 0 0;
+  }
+  .content{
+    padding: 32px;
+    overflow-y: auto;
+    background: #f5f5f7;
+    height: 400px;
+    p{
+      margin: 0 0 5px;
+      font-size: 13px;
+    }
+  }
+}
+

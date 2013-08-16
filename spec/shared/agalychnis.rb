@@ -21,6 +21,12 @@ shared_context 'Agalychnis' do
      :is_current => true
     )
 
+    create_eu_B_addition(
+     :taxon_concept => @genus,
+     :effective_at => '2010-06-23',
+     :is_current => true
+    )
+
     @ref = create(
       :reference,
       :author => 'Frost, D. R.',
@@ -38,7 +44,7 @@ shared_context 'Agalychnis' do
       :excluded_taxon_concepts_ids => "{#{@genus.id}}"
     )
 
-    Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+    Sapi.rebuild(:except => [:taxonomy])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

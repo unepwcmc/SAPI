@@ -39,18 +39,35 @@ shared_context "Cervus elaphus" do
      :effective_at => '1975-07-01',
      :is_current => true
     )
+    create_eu_B_addition(
+     :taxon_concept => @subspecies1,
+     :effective_at => '1975-07-01',
+     :is_current => true
+    )
+
     create_cites_III_addition(
      :taxon_concept => @subspecies2,
      :effective_at => '1976-04-22',
      :is_current => true
     )
+    create_eu_C_addition(
+     :taxon_concept => @subspecies2,
+     :effective_at => '1976-04-22',
+     :is_current => true
+    )
+
     create_cites_I_addition(
      :taxon_concept => @subspecies3,
      :effective_at => '1975-07-01',
      :is_current => true
     )
+    create_eu_A_addition(
+     :taxon_concept => @subspecies3,
+     :effective_at => '1975-07-01',
+     :is_current => true
+    )
 
-    Sapi::rebuild(:except => [:names_and_ranks, :taxonomic_positions])
+    Sapi.rebuild(:except => [:taxonomy])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

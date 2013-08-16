@@ -1,0 +1,36 @@
+<thead>
+  <th>Name</th>
+  <th>Effective from</th>
+  <th>Current</th>
+  <th>URL</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |eu_suspension_regulation| -%>
+    <tr class="<%= if eu_suspension_regulation.is_current? then "current_listing" end %>">
+      <td>
+        <a href="#" class="editable editable-click editable-required"
+          data-type="text" data-resource="eu_suspension_regulation" data-name="name"
+          data-placeholder="Required" data-original-title="Enter the EU Suspension Regulation's name"
+          data-url="<%= resource_url(eu_suspension_regulation) %>" data-pk="<%= eu_suspension_regulation.id %>">
+          <%= eu_suspension_regulation.name %>
+        </a>
+      </td>
+      <td><%= eu_suspension_regulation.effective_at_formatted %></td>
+      <td><%= true_false_icon(eu_suspension_regulation.is_current) %></td>
+      <td>
+        <%= link_to_unless(
+          eu_suspension_regulation.url.blank?,
+          '<i class="icon-share" title="Go to URL"></i>'.html_safe,
+          eu_suspension_regulation.url
+        ) { '' } %>
+      </td>
+      <td>
+        <%= link_to edit_icon, edit_resource_url(eu_suspension_regulation), :remote => true %>
+        <%= link_to delete_icon, resource_url(eu_suspension_regulation),
+          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+        %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>

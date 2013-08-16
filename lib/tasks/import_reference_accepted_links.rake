@@ -30,8 +30,8 @@ namespace :import do
           LEFT JOIN references_legacy_id_mapping map
           ON map.alias_legacy_id = NULLIF(substring(ref_legacy_id from 1 for 5), '')::INTEGER
         )
-        INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id)
-        SELECT taxon_concepts.id, "references".id
+        INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id, created_at, updated_at)
+        SELECT taxon_concepts.id, "references".id, NOW(), NOW()
           FROM reference_accepted_links
           INNER JOIN ranks
             ON UPPER(BTRIM(reference_accepted_links.rank)) = UPPER(ranks.name)

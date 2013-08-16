@@ -7,6 +7,8 @@
 #  reference_id                :integer          not null
 #  is_standard                 :boolean          default(FALSE), not null
 #  is_cascaded                 :boolean          default(FALSE), not null
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
 #  excluded_taxon_concepts_ids :string
 #
 
@@ -16,6 +18,8 @@ class TaxonConceptReference < ActiveRecord::Base
 
   belongs_to :reference
   belongs_to :taxon_concept
+
+  delegate :citation, :to => :reference
 
   accepts_nested_attributes_for :reference
 

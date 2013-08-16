@@ -17,6 +17,8 @@ class Admin::UnitsController < Admin::AdminController
   protected
 
   def collection
-    @units ||= end_of_association_chain.order('code').page(params[:page])
+    @units ||= end_of_association_chain.order('code').
+      page(params[:page]).
+      search(params[:query])
   end
 end

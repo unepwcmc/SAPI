@@ -20,8 +20,3 @@ $(document).ready ->
     format: "dd/mm/yyyy",
     autoclose: true
   )
-
-  $('#details-menu a').click((e) ->
-    e.preventDefault()
-    $(@).tab('show')
-  )

@@ -14,4 +14,7 @@
 
 class Purpose < TradeCode
  validates :code, :length => {:is => 1}
+  def can_be_deleted?
+    TradeRestrictionPurpose.where(:purpose_id => self.id).length == 0
+  end
 end

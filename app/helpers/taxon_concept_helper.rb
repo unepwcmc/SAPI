@@ -2,7 +2,7 @@
 module TaxonConceptHelper
   def admin_taxon_concept_title
     content_tag(:div, :class => 'admin-header') do
-      content_tag(:h1, 
+      content_tag(:h1,
         if block_given?
           yield
         else
@@ -69,10 +69,10 @@ module TaxonConceptHelper
     )
   end
 
-  def admin_add_new_suspension_button
+  def admin_add_new_cites_suspension_button
     admin_add_new_button(
-      :resource => 'suspensions',
-      :href => new_admin_suspension_url,
+      :resource => 'cites_suspensions',
+      :href => new_admin_cites_suspension_url,
       :name => 'Add suspension',
       :remote => true,
       :'data-toggle' => nil,
@@ -124,9 +124,9 @@ module TaxonConceptHelper
     ){ '' }
   end
 
-  def admin_new_suspension_modal
+  def admin_new_cites_suspension_modal
     admin_new_modal(
-      :resource => 'suspension'
+      :resource => 'cites_suspension'
     ){ '' }
   end
 

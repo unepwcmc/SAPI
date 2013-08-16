@@ -60,8 +60,8 @@
         </a>
       </td>
       <td>
-        <%= link_to 'Delete', resource_url(geo_entity), :confirm => "Are you sure?", :method => :delete %>
-        <%= link_to 'Edit relationships', admin_geo_entity_geo_relationships_url(geo_entity) %>
+        <%= link_to delete_icon, resource_url(geo_entity), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+        <%= link_to 'Relations', admin_geo_entity_geo_relationships_url(geo_entity), :title => "Edit geo entity relationships" %>
       </td>
     </tr>
   <% end -%>

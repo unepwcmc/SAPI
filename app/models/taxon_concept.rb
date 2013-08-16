@@ -2,32 +2,31 @@
 #
 # Table name: taxon_concepts
 #
-#  id                         :integer          not null, primary key
-#  parent_id                  :integer
-#  rank_id                    :integer          not null
-#  taxon_name_id              :integer          not null
-#  author_year                :string(255)
-#  legacy_id                  :integer
-#  legacy_type                :string(255)
-#  data                       :hstore
-#  listing                    :hstore
-#  notes                      :text
-#  taxonomic_position         :string(255)      default("0"), not null
-#  full_name                  :string(255)
-#  name_status                :string(255)      default("A"), not null
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  taxonomy_id                :integer          default(1), not null
-#  closest_listed_ancestor_id :integer
+#  id                 :integer          not null, primary key
+#  parent_id          :integer
+#  rank_id            :integer          not null
+#  taxon_name_id      :integer          not null
+#  author_year        :string(255)
+#  legacy_id          :integer
+#  legacy_type        :string(255)
+#  data               :hstore
+#  listing            :hstore
+#  notes              :text
+#  taxonomic_position :string(255)      default("0"), not null
+#  full_name          :string(255)
+#  name_status        :string(255)      default("A"), not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  taxonomy_id        :integer          default(1), not null
 #
 
 class TaxonConcept < ActiveRecord::Base
   attr_accessible :parent_id, :taxonomy_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
-    :accepted_scientific_name, :parent_scientific_name, 
+    :accepted_scientific_name, :parent_scientific_name,
     :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
-    :tag_list, :closest_listed_ancestor_id
+    :tag_list
   attr_writer :parent_scientific_name
   attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
     :other_hybrid_parent_scientific_name
@@ -36,6 +35,8 @@ class TaxonConcept < ActiveRecord::Base
 
   serialize :data, ActiveRecord::Coders::Hstore
   serialize :listing, ActiveRecord::Coders::Hstore
+
+  has_one :m_taxon_concept, :foreign_key => :id
 
   belongs_to :parent, :class_name => 'TaxonConcept'
   has_many :children, :class_name => 'TaxonConcept', :foreign_key => :parent_id
@@ -91,18 +92,21 @@ class TaxonConcept < ActiveRecord::Base
   has_many :common_names, :through => :taxon_commons
 
   has_many :taxon_concept_references, :include => :reference
-  has_many :references, :through => :taxon_concept_reference
+  has_many :references, :through => :taxon_concept_references
 
-  has_many :quotas
+  has_many :quotas, :order => 'start_date DESC'
   has_many :current_quotas, :class_name => 'Quota', :conditions => "is_current = true"
 
-  has_many :suspensions
-  has_many :current_suspensions, :class_name => 'Suspension', :conditions => "is_current = true"
+  has_many :cites_suspensions
+  has_many :current_cites_suspensions, :class_name => 'CitesSuspension', :conditions => "is_current = true"
 
   has_many :eu_opinions
   has_many :current_eu_opinions, :class_name => 'EuOpinion', :conditions => "is_current = true"
   has_many :eu_suspensions
   has_many :current_eu_suspensions, :class_name => 'EuSuspension', :conditions => "is_current = true"
+
+  has_many :taxon_instruments
+  has_many :instruments, :through => :taxon_instruments
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
@@ -125,9 +129,8 @@ class TaxonConcept < ActiveRecord::Base
 
   scope :by_scientific_name, lambda { |scientific_name|
     where([
-      "UPPER(full_name) >= UPPER(?) AND UPPER(full_name) < UPPER(?)",
-      TaxonName.lower_bound(scientific_name), 
-      TaxonName.upper_bound(scientific_name)
+      "UPPER(full_name) LIKE BTRIM(UPPER(:sci_name_prefix))",
+      :sci_name_prefix => "#{scientific_name}%"
     ])
   }
 
@@ -239,7 +242,7 @@ class TaxonConcept < ActiveRecord::Base
 
   def self.sanitize_full_name(some_full_name)
     #strip ranks
-    if some_full_name =~ /(.+)\s*(#{Rank.dict.join('|')})\s*$/
+    if some_full_name =~ /\A(.+)\s+(#{Rank.dict.join('|')})\s*\Z/
       some_full_name = $1
     end
     #strip redundant whitespace between words
@@ -326,7 +329,7 @@ class TaxonConcept < ActiveRecord::Base
   def check_associated_taxon_concept_exists(full_name_attr)
     full_name_var = self.instance_variable_get("@#{full_name_attr}")
     return true if full_name_var.blank?
-    tc = TaxonConcept.find_by_full_name_and_name_status(full_name_var, 'A')
+    tc = TaxonConcept.find_by_full_name_and_name_status(full_name_var, 'A', taxonomy_id)
     unless tc
       errors.add(full_name_attr, "does not exist")
       return true
@@ -337,14 +340,18 @@ class TaxonConcept < ActiveRecord::Base
     true
   end
 
-  def self.find_by_full_name_and_name_status(full_name, name_status)
+  def self.find_by_full_name_and_name_status(full_name, name_status, taxonomy_id=nil)
     full_name = TaxonConcept.sanitize_full_name(full_name)
-    TaxonConcept.
+    res = TaxonConcept.
       where([
         "UPPER(full_name) = UPPER(BTRIM(?)) AND name_status = ?",
         full_name,
         name_status
-      ]).first
+      ])
+    if taxonomy_id
+      res = res.where(:taxonomy_id => taxonomy_id)
+    end
+    res.first
   end
 
   def ensure_taxonomic_position

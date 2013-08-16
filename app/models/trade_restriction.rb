@@ -2,23 +2,24 @@
 #
 # Table name: trade_restrictions
 #
-#  id               :integer          not null, primary key
-#  is_current       :boolean
-#  start_date       :datetime
-#  end_date         :datetime
-#  geo_entity_id    :integer
-#  quota            :float
-#  publication_date :datetime
-#  notes            :text
-#  suspension_basis :string(255)
-#  type             :string(255)
-#  unit_id          :integer
-#  taxon_concept_id :integer
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  public_display   :boolean          default(TRUE)
-#  url              :text
-#  import_row_id    :integer
+#  id                          :integer          not null, primary key
+#  is_current                  :boolean
+#  start_date                  :datetime
+#  end_date                    :datetime
+#  geo_entity_id               :integer
+#  quota                       :float
+#  publication_date            :datetime
+#  notes                       :text
+#  type                        :string(255)
+#  unit_id                     :integer
+#  taxon_concept_id            :integer
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  public_display              :boolean          default(TRUE)
+#  url                         :text
+#  start_notification_id       :integer
+#  end_notification_id         :integer
+#  excluded_taxon_concepts_ids :string
 #
 
 require 'digest/sha1'
@@ -26,7 +27,7 @@ require 'csv'
 class TradeRestriction < ActiveRecord::Base
   attr_accessible :end_date, :geo_entity_id, :is_current,
     :notes, :publication_date, :purpose_ids, :quota, :type,
-    :source_ids, :start_date, :suspension_basis, :term_ids,
+    :source_ids, :start_date, :term_ids,
     :unit_id
 
   belongs_to :taxon_concept
@@ -51,20 +52,24 @@ class TradeRestriction < ActiveRecord::Base
   end
 
   def publication_date_formatted
-    publication_date ? publication_date.strftime('%d/%m/%Y') : ''
+    publication_date ? publication_date.strftime('%d/%m/%y') : ''
   end
 
-  def start_date_formatted
-    start_date ? start_date.strftime('%d/%m/%Y') : Time.now.beginning_of_year.strftime("%d/%m/%Y")
+  def year
+    start_date ? start_date.strftime('%Y') : ''
   end
 
-  def end_date_formatted
-    end_date ? end_date.strftime('%d/%m/%Y') : Time.now.end_of_year.strftime("%d/%m/%Y")
+  def party
+    geo_entity_id ? geo_entity.name_en : ''
+  end
+
+  def unit_name
+    unit_id ? unit.name_en : ''
   end
 
   def self.export filters
-    return false if !self.any?
-    path = "public/downloads/cites_#{self.to_s.downcase}s/"
+    return false unless export_query(filters).any?
+    path = "public/downloads/#{self.to_s.tableize}/"
     latest = self.order("updated_at DESC").
       limit(1).first.updated_at.strftime("%d%m%Y")
     public_file_name = "#{self.to_s.downcase}s_#{latest}.csv"
@@ -77,8 +82,27 @@ class TradeRestriction < ActiveRecord::Base
     if !File.file?(path+file_name)
       self.to_csv(path+file_name, filters)
     end
-    [ path+file_name,
-      { :filename => public_file_name, :type => 'text/csv' } ]
+    [
+      path + file_name,
+      { :filename => public_file_name, :type => 'text/csv' }
+    ]
+  end
+
+  def self.export_query filters
+    self.includes([:m_taxon_concept, :geo_entity, :unit]).
+      filter_is_current(filters["set"]).
+      filter_geo_entities(filters).
+      filter_years(filters).
+      filter_taxon_concepts(filters).
+      where(:public_display => true).
+      order([:start_date, :"trade_restrictions.id"])
+  end
+
+  #Gets the display text for each CSV_COLUMNS
+  def self.csv_columns_headers
+    self::CSV_COLUMNS.map do |b|
+      Array(b).first 
+    end.flatten
   end
 
   def self.to_csv file_path, filters
@@ -92,20 +116,19 @@ class TradeRestriction < ActiveRecord::Base
     limit = 1000
     offset = 0
     CSV.open(file_path, 'wb') do |csv|
-      csv << taxonomy_columns + ['Remarks'] + self::CSV_COLUMNS
+      csv << taxonomy_columns + ['Remarks'] + self.csv_columns_headers
       ids = []
-      until (objs = self.includes([:m_taxon_concept, :geo_entity, :unit]).
-             filter_is_current(filters["set"]).
-             filter_geo_entities(filters).
-             filter_years(filters).
-             where(:public_display => true).
-             order([:start_date, :id]).limit(limit).
+      until (objs = export_query(filters).limit(limit).
              offset(offset)).empty? do
         objs.each do |q|
           row = []
           row += self.fill_taxon_columns(q, taxonomy_columns)
           self::CSV_COLUMNS.each do |c|
-            row << q.send(c)
+            if c.is_a?(Array)
+              row << q.send(c[1])
+            else
+              row << q.send(c)
+            end
           end
           csv << row
           offset += limit
@@ -117,13 +140,14 @@ class TradeRestriction < ActiveRecord::Base
     def self.fill_taxon_columns trade_restriction, taxonomy_columns
       columns = []
       taxon = trade_restriction.m_taxon_concept
+      return [""]*(taxonomy_columns.size+1) unless taxon #return array with empty strings
       taxonomy_columns.each do |c|
         columns << taxon.send(c)
       end
       if taxon.name_status == 'A'
         columns << '' #no remarks
       else
-        columns << "#{trade_restriction.type} issued for #{taxon.name_status == 'S' ? 'synonym' : 'hybrid' } #{trade_restriction.taxon_concept.legacy_id} - #{trade_restriction.taxon_concept.legacy_type}"
+        columns << "Issued for #{taxon.name_status == 'S' ? 'synonym' : 'hybrid' } #{trade_restriction.taxon_concept.full_name}"
       end
       columns
     end
@@ -137,7 +161,25 @@ class TradeRestriction < ActiveRecord::Base
 
     def self.filter_geo_entities filters
       if filters.has_key?("geo_entities_ids")
-        return where(:geo_entity_id => filters["geo_entities_ids"])
+        geo_entities_ids = GeoEntity.nodes_and_descendants(
+          filters["geo_entities_ids"]
+        ).map(&:id)
+        return where(:geo_entity_id => geo_entities_ids)
+      end
+      scoped
+    end
+
+    def self.filter_taxon_concepts filters
+      if filters.has_key?("taxon_concepts_ids")
+        conds_str = <<-SQL
+          ARRAY[
+            taxon_concepts_mview.id, taxon_concepts_mview.family_id, 
+            taxon_concepts_mview.order_id, taxon_concepts_mview.class_id, 
+            taxon_concepts_mview.phylum_id, taxon_concepts_mview.kingdom_id
+          ] && ARRAY[?]
+          OR taxon_concept_id IS NULL
+        SQL
+        return where(conds_str, filters["taxon_concepts_ids"].map(&:to_i))
       end
       scoped
     end

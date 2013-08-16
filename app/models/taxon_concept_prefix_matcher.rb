@@ -16,12 +16,12 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
   def initialize_rel
     super.
     select(
-    <<-SQL
-    data,
-    #{Taxonomy.table_name}.name AS taxonomy_name,
-    #{TaxonConcept.table_name}.id,
-    full_name
-    SQL
+      <<-SQL
+        data,
+        #{Taxonomy.table_name}.name AS taxonomy_name,
+        #{TaxonConcept.table_name}.id,
+        full_name
+      SQL
     ).
     joins(:taxonomy).order(:full_name)
   end

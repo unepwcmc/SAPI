@@ -19,7 +19,19 @@ class TradeCode < ActiveRecord::Base
 
   validates :code, :presence => true, :uniqueness => {:scope => :type}
 
+  def self.search query
+    if query
+      where("UPPER(code) LIKE UPPER(:query) 
+            OR UPPER(name_en) LIKE UPPER(:query)
+            OR UPPER(name_fr) LIKE UPPER(:query)
+            OR UPPER(name_es) LIKE UPPER(:query)", 
+            :query => "%#{query}%")
+    else
+      scoped
+    end
+  end
+
   def can_be_deleted?
-    false #TODO
+    true
   end
 end

@@ -1,0 +1,37 @@
+<thead>
+  <th>Event</th>
+  <th>Symbol</th>
+  <th>Note</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |annotation| -%>
+    <tr>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="select" data-resource="annotation" data-name="event_id"
+          data-placeholder="Required" data-original-title="Enter the annotation's event" 
+          data-source="<%= controller_name == 'cites_hash_annotations' ? '/admin/cites_cops/' : '/admin/eu_regulations' %>"
+          data-url="<%= resource_url(annotation) %>" data-pk="<%= annotation.id %>" data-value="<%= annotation.event.id %>">
+          <%= annotation.event.name %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="annotation" data-name="symbol"
+          data-placeholder="#1" data-original-title="Enter the symbol"
+          data-url="<%= resource_url(annotation) %>" data-pk="<%= annotation.id %>">
+          <%= annotation.symbol %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="annotation" data-name="full_note_en"
+          data-placeholder="Required" data-original-title="Enter the note"
+          data-url="<%= resource_url(annotation) %>" data-pk="<%= annotation.id %>">
+          <%= annotation.full_note_en %>
+        </a>
+      </td>
+      <td>
+        <%= link_to 'Delete', resource_url(annotation), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>

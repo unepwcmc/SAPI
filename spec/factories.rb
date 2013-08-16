@@ -17,6 +17,10 @@ FactoryGirl.define do
 
     factory :eu_regulation, :class => EuRegulation
     factory :cites_cop, :class => CitesCop
+    factory :cites_suspension_notification, :class => CitesSuspensionNotification,
+      :aliases => [:start_notification] do
+      end_date '2012-01-01'
+    end
   end
 
   factory :taxon_name do
@@ -42,15 +46,31 @@ FactoryGirl.define do
     other_hybrid_parent_scientific_name ''
   end
 
-  factory :suspension do
-    taxon_concept
-    publication_date Date.new(2012, 12, 3)
+  factory :trade_code do
+    factory :source, :class => Source do
+      sequence(:code) { |n| (65 + n%26).chr }
+      name_en "Wild"
+    end
+
+    factory :purpose, :class => Purpose do
+      sequence(:code) { |n| (65 + n%26).chr }
+      name_en "Zoo"
+    end
+
+    factory :term, :class => Term do
+      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (65 + i%26).chr }.join }
+      name_en "Bones"
+    end
+
+    factory :unit, :class => Unit do
+      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (65 + i%26).chr }.join }
+      name_en "Boxes"
+    end
   end
 
-  factory :unit do
-    sequence(:code) {|n| "BO#{n}" }
-    name_en "Boxes"
-    type "Unit"
+  factory :cites_suspension do
+    taxon_concept
+    start_notification
   end
 
   factory :quota do
@@ -77,19 +97,24 @@ FactoryGirl.define do
 
   factory :eu_decision do
     taxon_concept
-    restriction 'b'
+    eu_decision_type
     start_date Date.new(2013,1,1)
+  end
+
+  factory :eu_decision_type do
+    sequence(:name) {|n| "Opinion#{n}"}
+    is_suspension false
   end
 
   factory :eu_opinion do
     taxon_concept
-    restriction 'b'
+    eu_decision_type
     start_date Date.new(2013,1,1)
   end
 
   factory :eu_suspension do
     taxon_concept
-    restriction 'b'
+    eu_decision_type
     start_date Date.new(2013,1,1)
   end
 end

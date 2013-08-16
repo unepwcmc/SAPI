@@ -2,47 +2,45 @@
 #
 # Table name: trade_restrictions
 #
-#  id               :integer          not null, primary key
-#  is_current       :boolean
-#  start_date       :datetime
-#  end_date         :datetime
-#  geo_entity_id    :integer
-#  quota            :float
-#  publication_date :datetime
-#  notes            :text
-#  suspension_basis :string(255)
-#  type             :string(255)
-#  unit_id          :integer
-#  taxon_concept_id :integer
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  public_display   :boolean          default(TRUE)
-#  url              :text
-#  import_row_id    :integer
+#  id                          :integer          not null, primary key
+#  is_current                  :boolean
+#  start_date                  :datetime
+#  end_date                    :datetime
+#  geo_entity_id               :integer
+#  quota                       :float
+#  publication_date            :datetime
+#  notes                       :text
+#  type                        :string(255)
+#  unit_id                     :integer
+#  taxon_concept_id            :integer
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  public_display              :boolean          default(TRUE)
+#  url                         :text
+#  start_notification_id       :integer
+#  end_notification_id         :integer
+#  excluded_taxon_concepts_ids :string
 #
 
 class Quota < TradeRestriction
 
   validates :quota, :presence => true
-  validates :quota, :numericality => { :only_integer => true, :greater_than => 0 }
+  validates :quota, :numericality => { :greater_than => 0 }
 
-  validates :unit, :presence => true
-
+  #Each element of CSV columns can be either an array [display_text, method]
+  #or a single symbol if the display text and the method are the same
   CSV_COLUMNS = [
-    :id, :year, :party, :quota,
-    :unit_name, :publication_date,
-    :notes, :url, :public_display
+    :year, :party, :quota,
+    [:unit, :unit_name], :publication_date,
+    :notes, :url
   ]
 
-  def year
-    start_date ? start_date.strftime('%Y') : ''
+  def start_date_formatted
+    start_date ? start_date.strftime('%d/%m/%y') : Time.now.beginning_of_year.strftime("%d/%m/%y")
   end
 
-  def party
-    geo_entity_id ? geo_entity.name_en : ''
+  def end_date_formatted
+    end_date ? end_date.strftime('%d/%m/%y') : Time.now.end_of_year.strftime("%d/%m/%y")
   end
 
-  def unit_name
-    unit_id ? unit.name_en : ''
-  end
 end

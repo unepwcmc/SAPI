@@ -3,21 +3,12 @@ module ListingChangesHelper
     listing_change.geo_entities.map(&:name).join(', ')
   end
 
-  def exclusions_tooltip(listing_change)
-    taxonomic_exceptions_str = 'Except: ' +
-      listing_change.taxonomic_exclusions.map do |ex|
-        tmp = ex.taxon_concept.full_name
-        if ex.geo_entities.count > 0
-          tmp += " populations of: #{geo_entities_tooltip(ex)}"
-        end
-        tmp
-      end.join(', ') if listing_change.taxonomic_exclusions.count > 0
+  def excluded_geo_entities_tooltip(listing_change)
+    listing_change.excluded_geo_entities.map(&:name).join(', ')
+  end
 
-    geographic_exceptions_str = 'Except populations of: ' +
-      listing_change.geographic_exclusions.map{ |ex| geo_entities_tooltip(ex) }.
-        join(', ') if listing_change.geographic_exclusions.count > 0
-
-    [taxonomic_exceptions_str, geographic_exceptions_str].compact.join('; ')
+  def excluded_taxon_concepts_tooltip(listing_change)
+    listing_change.excluded_taxon_concepts.map(&:full_name).join(', ')
   end
 
   def annotation_tooltip(listing_change)

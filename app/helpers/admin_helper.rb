@@ -39,6 +39,8 @@ module AdminHelper
       content_tag(:h1, 
         if block_given?
           yield
+        elsif @custom_title
+          @custom_title
         else
           controller_name.titleize
         end

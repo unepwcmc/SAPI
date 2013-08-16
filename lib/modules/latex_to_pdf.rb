@@ -18,8 +18,10 @@ class LatexToPdf
       fork do
         begin
           Dir.chdir dir
-          STDOUT.reopen("#{input}.log","a")
-          STDERR.reopen(STDOUT)
+          # TODO keep an eye on this: https://github.com/jacott/rails-latex/issues/28
+          # LatexToPdf is borrowed from that gem and apparently is not compatible with Passenger 4
+          # STDOUT.reopen("#{input}.log","a")
+          # STDERR.reopen(STDOUT)
           args=config[:arguments] + %w[-shell-escape -interaction batchmode] + ["#{input}.tex"]
           exec config[:command],*args
         rescue
@@ -49,7 +51,7 @@ class LatexToPdf
         end
       else
         class << (@latex_escaper=Object.new)
-          ESCAPE_RE=/([{}_$&%#])|([\\^~|<>])/
+          ESCAPE_RE=/([{}_$&%#\r])|([\\^~|<>])/
           ESC_MAP={
             '\\' => 'backslash',
             '^' => 'asciicircum',
@@ -77,13 +79,8 @@ class LatexToPdf
   end
 
   def self.html2latex(text)
-    text && text.split(/(<i>.*?<\/i>)/).map do |part|
-      if part =~ /<i>(.*?)<\/i>/
-        "\\textit{#{escape_latex($+)}}"
-      else
-        escape_latex(part)
-      end
-    end.join('')
+    return '' if text.blank?
+    HtmlToLatex.convert(text)
   end
 
 end

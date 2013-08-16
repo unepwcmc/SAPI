@@ -24,7 +24,6 @@ class CsvToDbMap
       'Status' => 'status varchar',
       'Species Author' => 'author varchar',
       'notes' => 'notes varchar',
-      'ReferenceIDs' => 'reference_ids varchar',
       'Designation' => 'taxonomy varchar',
       'AcceptedRank' => 'accepted_rank varchar',
       'AcceptedRecID' => 'accepted_legacy_id integer'
@@ -125,11 +124,20 @@ class CsvToDbMap
       'Excludes' => 'exclusions varchar',
       'Cascade' => 'is_cascaded boolean'
     },
-    'laws_import' => {
+    'events_import' => {
+      'Legacy_ID' => 'legacy_id int',
+      'Designation' => 'designation varchar',
       'LnmShortDesc' => 'name varchar',
-      'Date valid' => 'effective_at date',
+      'Date valid from' => 'effective_at date',
+      'Event Type' => 'type varchar',
+      'Basis for Suspension' => 'subtype varchar',
       'LnmLongDesc' => 'description text',
       'LnmURL' => 'url text'
+    },
+    'languages_import' => {
+      'ISO-3' => 'iso_code3 varchar',
+      'LangShort' => 'name_en varchar',
+      'ISO-1' => 'iso_code1 varchar'
     },
     'quotas_import' => {
       'Kingdom' => 'kingdom varchar',
@@ -150,6 +158,17 @@ class CsvToDbMap
       'PublicDisplay' => 'public_display boolean',
       'Link' => 'url varchar'
     },
+    'cites_suspensions_import' => {
+      'IsCurrent' => 'is_current boolean',
+      'Kingdom' => 'kingdom varchar',
+      'RecID' => 'legacy_id integer',
+      'Rank' => 'rank varchar',
+      'ISO code' => 'country_iso2 varchar',
+      'StartNotificationID' => 'start_notification_legacy_id integer',
+      'EndNotificationID' => 'end_notification_legacy_id integer',
+      'Notes' => 'notes varchar',
+      'ExcludedTaxa' => 'exclusions text'
+    },
     'distribution_tags_import' => {
       'Species RecID' => 'legacy_id integer',
       'Rank' => 'rank varchar',
@@ -157,6 +176,60 @@ class CsvToDbMap
       'ISO Code 2' => 'iso_code2 varchar',
       'Tags' => 'tags varchar',
       'Designation' => 'designation varchar'
+    },
+    'hash_annotations_import' => {
+      'Hash No' => 'symbol varchar',
+      'Event No' => 'event_legacy_id integer',
+      'For Display' => 'ignore varchar',
+      'Text' => 'full_note_en varchar'
+    },
+    'eu_listings_import' => {
+      'LAW_NUM' => 'event_legacy_id integer',
+      'RANK_NAME' => 'rank varchar',
+      'REC_ID' => 'legacy_id integer',
+      'LISTING' => 'annex varchar',
+      'EFFECTIVE_FROM' => 'listing_date date',
+      'PARTY_ISO2' => 'country_iso2 varchar',
+      'IS_CURRENT' => 'is_current boolean',
+      'POPULATIONS_ISO2' => 'populations_iso2 varchar',
+      'EXCLUDEDpopulations_ISO' => 'excluded_populations_iso2 varchar',
+      'IS_INCLUSION' => 'is_inclusion boolean',
+      'INCLUDED_IN' => 'included_in_rec_id integer',
+      'RANK' => 'rank_for_inclusions varchar',
+      'EXCLUDED_REC_IDS' => 'excluded_taxa varchar',
+      'FULL_NOTE_EN' => 'full_note_en varchar',
+      'HASH_NOTE' => 'hash_note varchar'
+    },
+    'cms_listings_import' => {
+      'rank' => 'rank varchar',
+      'rec_id' => 'legacy_id integer',
+      'listing' => 'appendix varchar',
+      'effective_from' => 'listing_date varchar',
+      'is_current' => 'is_current boolean',
+      'populations_iso2' => 'populations_iso2 varchar',
+      'EXCLUDEDpopulations_iso' => 'excluded_populations_iso2 varchar',
+      'is_inclusion' => 'is_inclusion boolean',
+      'included_in_RecID' => 'included_in_rec_id integer',
+      'RankforInclusions' => 'rank_for_inclusions varchar',
+      'excluded_rec_ids' => 'excluded_taxa varchar',
+      'LegNotes' => 'full_note_en varchar',
+      'CMS instrument' => 'designation varchar',
+      'Internal Notes' => 'notes varchar'
+    },
+    'eu_decisions_import' => {
+      'IsCurrent?' => 'is_current boolean',
+      'Taxonomy' => 'taxonomy varchar',
+      'LawID' => 'event_legacy_id integer',
+      'SpcRecID' => 'legacy_id integer',
+      'DecLevel' => 'rank varchar',
+      'Kingdom' => 'kingdom varchar',
+      'ISO_country' => 'country_iso2 varchar',
+      'DecOpinion' => 'opinion varchar',
+      'DecDate' => 'start_date date',
+      'Source' => 'source varchar',
+      'Term' => 'term varchar',
+      'DecNotes' => 'notes varchar',
+      'Internal_Notes' => 'internal_notes varchar'
     }
   }
 
@@ -225,6 +298,7 @@ def drop_table(table_name)
 end
 
 def copy_data(path_to_file, table_name)
+  require 'psql_command'
   puts "Copying data from #{path_to_file} into tmp table #{table_name}"
   db_columns = db_columns_from_csv_headers(path_to_file, table_name, false)
   cmd = <<-PSQL
@@ -235,9 +309,6 @@ WITH DELIMITER ','
 ENCODING 'utf-8'
 CSV HEADER
 PSQL
-
-  db_conf = YAML.load(File.open(Rails.root + "config/database.yml"))[Rails.env]
-  system("export PGPASSWORD=#{db_conf["password"]} && echo \"#{cmd.split("\n").join(' ')}\" | psql -h #{db_conf["host"] || "localhost"} -p #{db_conf["port"] || 5432} -U#{db_conf["username"]} #{db_conf["database"]}")
-  #system("export PGPASSWORD=#{db_conf["password"]} && psql -h #{db_conf["host"] || "localhost"} -U#{db_conf["username"]} -c \"#{psql}\" #{db_conf["database"]}")
+  PsqlCommand.new(cmd).execute
   puts "Data copied to tmp table"
 end

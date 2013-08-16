@@ -1,15 +1,56 @@
 set :default_stage, 'staging'
+
 require 'capistrano/ext/multistage'
-## Generated with 'brightbox' on 2012-05-08 09:53:55 +0100
+## Generated with 'brightbox' on 2013-06-27 08:45:55 +0100
 gem 'brightbox', '>=2.3.9'
 require 'brightbox/recipes'
 require 'brightbox/passenger'
 require 'sidekiq/capistrano'
-load "deploy/assets"
-set :rake, 'bundle exec rake'
+
+set :generate_webserver_config, false
+set :whenever_environment, defer { stage }
+require 'whenever/capistrano'
+
+ssh_options[:forward_agent] = true
+
 # The name of your application.  Used for deployment directory and filenames
 # and Apache configs. Should be unique on the Brightbox
 set :application, "sapi"
+
+
+# got sick of "gem X not found in any of the sources" when using the default whenever recipe
+# probable source of issue:
+# https://github.com/javan/whenever/commit/7ae1009c31deb03c5db4a68f5fc99ea099ce5655
+namespace :deploy do
+
+  task :default do
+    update
+    assets.precompile
+    restart
+    cleanup
+    # etc
+  end
+
+  desc "Restarting mod_rails with restart.txt"
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "touch #{current_path}/tmp/restart.txt"
+  end
+
+end
+ 
+namespace :assets do
+  desc "Precompile assets locally and then rsync to app servers"
+    task :precompile, :only => { :primary => true } do
+    run_locally "bundle exec rake RAILS_ENV=staging assets:precompile;"
+    servers = find_servers :roles => [:app], :except => { :no_release => true }
+    servers.each do |server|
+    run_locally "rsync -av ./public/assets/ rails@unepwcmc-012.vm.brightbox.net:#{deploy_to}/shared/assets;"
+    end
+    run_locally "rm -rf public/assets"
+    run "ln -nfs #{deploy_to}/shared/assets #{deploy_to}/current/public/assets"
+  end
+end
+
 
 # Target directory for the application on the web and app servers.
 set(:deploy_to) { File.join("", "home", user, application) }
@@ -36,10 +77,10 @@ set :copy_exclude, [ '.git' ]
 # If you're using Bundler, then you don't need to specify your
 # gems here as well as there (and the bundler gem is installed for
 # you automatically)
-# 
+#
 # Gem with a source (such as github)
 # depend :remote, :gem, "tmm1-amqp", ">=0.6.0", :source => "http://gems.github.com"
-# 
+#
 # Specify your specific Rails version if it is not vendored
 # depend :remote, :gem, "rails", "=2.2.2"
 #
@@ -61,9 +102,8 @@ set :copy_exclude, [ '.git' ]
 #
 # The shared area is prepared with 'deploy:setup' and all the shared
 # items are symlinked in when the code is updated.
-# set :local_shared_dirs, %w(public/upload)
 set :local_shared_files, %w(config/database.yml)
-set :local_shared_dirs, %w(tmp/pids)
+set :local_shared_dirs, %w(tmp/pids public/downloads public/uploads)
 
 ## Global Shared Area
 # These are the list of files and directories that you want
@@ -185,12 +225,7 @@ namespace :seeds do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} rake db:seed"
   end
 
-  desc "Import first pages of the checklist"
-  task :import_first_pages, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:first_pages_cites"
-  end
-
-  desc "Redo animals full import"
+  desc "Redo full import"
   task :redo, :roles => [:db] do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:redo"
   end
@@ -220,7 +255,8 @@ namespace :downloads do
 
     desc "Populate cache"
     task :populate, :roles => [:web, :app] do
-      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake downloads:cache:update"
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake downloads:cache:update_species_downloads"
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake downloads:cache:update_checklist_downloads"
     end
 
     desc "Rotate cache"

@@ -12,7 +12,6 @@ notifications:
   email:
     - agnieszka.figiel@unep-wcmc.org
     - simao.belchior@unep-wcmc.org
-    - adam.mulligan@unep-wcmc.org
 branches:
   only:
     - master

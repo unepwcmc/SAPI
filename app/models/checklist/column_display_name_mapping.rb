@@ -23,7 +23,12 @@ module Checklist::ColumnDisplayNameMapping
     :effective_at_formatted => 'EffectiveAt',
     :countries_iso_codes => 'DistributionISOCodes',
     :countries_full_names => 'DistributionFullNames',
-    :current_listing_original => 'CurrentListing'
+    :cites_listing => 'CurrentListing',
+    :cites_listing_original => 'CurrentListing',
+    :eu_listing => 'CurrentListing',
+    :eu_listing_original => 'CurrentListing',
+    :cms_listing => 'CurrentListing',
+    :cms_listing_original => 'CurrentListing'
   }
 
   def self.column_display_name_for(column_name)

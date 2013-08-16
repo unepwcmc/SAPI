@@ -6,32 +6,26 @@
   <table class="listing-change">
     <thead>
       <tr>
-        <th>
-          <%= f.label :event_id %>
-        </th>
-        <th><%= f.label :species_listing_id %></th>
         <th><%= f.label :change_type_id %></th>
+        <th><%= f.label :species_listing_id %></th>
+        <th><%= f.label :effective_at, 'Effective from' %></th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td>
-          <%= f.select :event_id,
-            options_from_collection_for_select(@events, :id, :name, @listing_change.event_id),
-            { :selected => @listing_change.event_id },
-            { :disabled => !@listing_change.new_record? }
+          <%= f.select :change_type_id,
+            options_from_collection_for_select(@change_types, :id, :print_name, @listing_change.change_type_id)
           %>
         </td>
         <td>
           <%= f.select :species_listing_id,
             options_from_collection_for_select(@species_listings, :id, :name, @listing_change.species_listing_id),
-            { :include_blank => true, :selected => @listing_change.species_listing_id }
+            { :selected => @listing_change.species_listing_id }
           %>
         </td>
         <td>
-          <%= f.select :change_type_id,
-            options_from_collection_for_select(@change_types, :id, :print_name, @listing_change.change_type_id)
-          %>
+          <%= f.text_field :effective_at, :class => "datepicker", :value => @listing_change.effective_at_formatted %>
         </td>
       </tr>
     </tbody>
@@ -40,16 +34,12 @@
   <table class="listing-change">
     <thead>
       <tr>
-        <th><%= f.label :effective_at %></th>
-        <th><label>Party</label></th>
-        <th><%= f.label :geo_entity_ids, "Countries" %></th>
+        <th><label>App. III or reservation Party</label></th>
+        <th><%= f.label :inclusion_scientific_name, "Inclusion in higher taxon" %></th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>
-          <%= f.text_field :effective_at, :class => "datepicker", :value => @listing_change.effective_at_formatted %>
-        </td>
         <%= f.fields_for :party_listing_distribution do |b| %>
           <td>
             <%= b.select :geo_entity_id,
@@ -66,17 +56,62 @@
         <% end %>
 
         <td>
-          <%= f.select :geo_entity_ids,
-            options_from_collection_for_select(
-              @geo_entities,
-              :id,
-              :name_en,
-              @listing_change.geo_entities.map(&:id)
-            ), { },
-            { :multiple => true, :class => 'distribution', :style => 'width: 220px' }
+          <%= f.hidden_field :inclusion_taxon_concept_id,
+            "data-taxon-concept-scope" => 'ancestors',
+            "data-taxon-concept-id" => @taxon_concept.id,
+            "data-taxonomy-id" => @taxon_concept.taxonomy_id,
+            :style => 'width: 220px',
+            :id => 'inclusion_taxon_concept_id',
+            :value => @listing_change.inclusion && "#{@listing_change.inclusion.id}:#{@listing_change.inclusion.full_name}"
           %>
         </td>
       </tr>
+    </tbody>
+  </table>
+
+  <table class="listing-change">
+    <thead>
+      <tr>
+        <th><%= f.label :geo_entity_ids, "Populations to which listing applies" %></th>
+        <th><%= f.label :excluded_geo_entities_ids, "Excluded populations" %></th>
+        <th><%= f.label :excluded_taxon_concepts_ids, "Excluded taxa" %></th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>
+        <%= f.select :geo_entity_ids,
+          options_from_collection_for_select(
+            @geo_entities,
+            :id,
+            :name_en,
+            @listing_change.geo_entities.map(&:id)
+          ), { },
+          { :multiple => true, :class => 'distribution', :style => 'width: 220px' }
+        %>
+      </td>
+      <td>
+        <%= f.select :excluded_geo_entities_ids,
+          options_from_collection_for_select(
+            @geo_entities,
+            :id,
+            :name_en,
+            @listing_change.excluded_geo_entities.map(&:id)
+          ), { },
+          { :multiple => true, :class => 'distribution', :style => 'width: 220px' }
+        %>
+      </td>
+      <td>
+        <%= f.hidden_field :excluded_taxon_concepts_ids,
+          "data-taxon-concept-scope" => 'descendants',
+          "data-taxon-concept-id" => @taxon_concept.id,
+          "data-taxonomy-id" => @taxon_concept.taxonomy_id,
+          :style => 'width: 220px',
+          :id => 'excluded_taxon_concepts_ids',
+          :value => @listing_change.excluded_taxon_concepts.map{|tc| "#{tc.id}:#{tc.full_name}"}.join(',')
+        %>
+      </td>
+    </tr>
     </tbody>
   </table>
 
@@ -90,23 +125,41 @@
   </p>
 
   <h4>Annotations</h4>
-  <p>
-    <%= f.label :hash_annotation_id %>
-    <% if @designation.is_eu? %>
-      <%= select_tag :cites_cop,
-        options_from_collection_for_select(@cites_cops, :id, :name)
-      %>
-    <% end %>
-    <%= f.select :hash_annotation_id, 
-      options_for_select(
-        @hash_annotations.map do |a|
-          [a.full_symbol, a.id, {:class => a.event_id}]
-        end
-      ),
-      { :include_blank => true }
-    %>
 
-  </p>
+  <table class="listing-change">
+    <thead>
+      <tr>
+        <th><%= f.label :event_id %></th>
+        <th><%= f.label :hash_annotation_id %></th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>
+        <%= f.select :event_id,
+          options_from_collection_for_select(
+            @events, :id, :name, 
+            @listing_change.event_id || @listing_change.hash_annotation && @listing_change.hash_annotation.event_id
+          ),
+          { :selected => @listing_change.event_id, :include_blank => @designation.is_cites? },
+          { "data-designation" => @designation.name }
+        %>
+      </td>
+      <td>
+        <%= f.select :hash_annotation_id,
+          options_for_select(
+            @hash_annotations.map do |a|
+              [a.full_symbol, a.id, {:class => a.event_id}]
+            end,
+            @listing_change.hash_annotation_id
+          ),
+          { :include_blank => true }
+        %>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
 
   <%= f.fields_for :annotation do |ff| %>
     <% Annotation.locale_columns(:short_note).each do |column| %>
@@ -117,68 +170,24 @@
       <%= ff.label column %>
       <%= ff.text_area column, :class => :annotation %>
     <% end %>
-    <p>
-      <%= ff.label :display_in_index, :value => 'Display in index', :class => 'inline' %>
-      <%= ff.check_box :display_in_index %>
-      <%= ff.label :display_in_footnote, :value => 'Display in footnote', :class => 'inline' %>
-      <%= ff.check_box :display_in_footnote %>
-    </p>
+      <% if @designation.is_cites? %>
+        <p><%= ff.label :display_in_index,
+          'Display FullNote in Checklist Species index',
+          :class => 'inline' %>
+        <%= ff.check_box :display_in_index %>
+        </p>
+        <p><%= ff.label :display_in_footnote, 
+          'Display FullNote in Checklist History of Listing footnote',
+          :class => 'inline' %>
+        <%= ff.check_box :display_in_footnote %>
+        </p>
+      <% end %>
   <% end %>
 
-  <h4>Inclusion</h4>
-  <p>
-    <label>Included in</label>
-    <%= f.text_field :inclusion_scientific_name, :class => 'typeahead',
-      "data-taxon-concept-scope" => 'ancestors',
-      "data-taxon-concept-id" => @taxon_concept.id,
-      "data-taxonomy-id" => @taxon_concept.taxonomy_id
-    %>
-  </p>
-
-  <h4>Exclusions</h4>
-  <table class="listing-change">
-    <thead>
-    <tr>
-      <th><label>Taxon concept</label></th>
-      <th><label>Countries</label></th>
-    </tr>
-    </thead>
-    <tbody>
-    <%= f.fields_for :exclusions do |ff| %>
-    <tr>
-      <td><%= error_messages_for(ff.object) %></td>
-    </tr>
-    <tr>
-      <td>
-        <%= ff.hidden_field :change_type_id %>
-        <%= ff.text_field :scientific_name, :class => 'typeahead',
-          "data-taxon-concept-scope" => 'descendants',
-          "data-taxon-concept-id" => @taxon_concept.id,
-          "data-taxonomy-id" => @taxon_concept.taxonomy_id
-        %>
-      </td>
-      <td>
-        <%= ff.select :geo_entity_ids,
-          options_from_collection_for_select(
-            @geo_entities,
-            :id,
-            :name_en,
-            ff.object.geo_entities && ff.object.geo_entities.map(&:id)
-          ), { },
-          { :multiple => true, :class => 'distribution', :style => 'width: 200px' }
-        %>
-      </td>
-      <td>
-        <%= ff.link_to_remove delete_icon %>
-      </td>
-    </tr>
-    <% end %>
-    </tbody>
-  </table>
-  <p><%= f.link_to_add "Add an exclusion", :exclusions %></p>
-
   <p class="pull-right">
-    <%= f.submit %>
+    <%= link_to 'Cancel', admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation),
+      :class => "btn" %>
+    <%= f.submit "Save", :class => "btn btn-primary save-button" %>
   </p>
 
 

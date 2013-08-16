@@ -24,7 +24,8 @@ class Taxonomy < ActiveRecord::Base
 
   def self.search query
     if query
-      where("UPPER(name) LIKE UPPER(?)", "%#{query}%")
+      where("UPPER(name) LIKE UPPER(:query)", 
+            :query => "%#{query}%")
     else
       scoped
     end

@@ -64,9 +64,14 @@ shared_context :sapi do
       :name => Rank::VARIETY, :taxonomic_position => '7.2', :fixed_order => false
     )
   }
-
   let(:cites_eu_animalia){
     create_cites_eu_kingdom(
+      :taxonomic_position => '1',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Animalia')
+    )
+  }
+  let(:cms_animalia){
+    create_cms_kingdom(
       :taxonomic_position => '1',
       :taxon_name => create(:taxon_name, :scientific_name => 'Animalia')
     )
@@ -78,11 +83,25 @@ shared_context :sapi do
       :parent => cites_eu_animalia
     )
   }
+  let(:cms_chordata){
+    create_cms_phylum(
+      :taxonomic_position => '1.1',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Chordata'),
+      :parent => cms_animalia
+    )
+  }
   let(:cites_eu_mammalia){
     create_cites_eu_class(
       :taxonomic_position => '1.1.1',
       :taxon_name => create(:taxon_name, :scientific_name => 'Mammalia'),
       :parent => cites_eu_chordata
+    )
+  }
+  let(:cms_mammalia){
+    create_cms_class(
+      :taxonomic_position => '1.1.1',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Mammalia'),
+      :parent => cms_chordata
     )
   }
   let(:cites_eu_aves){
@@ -172,10 +191,29 @@ shared_context :sapi do
         })
       )
     end
+    define_method "create_cms_#{rank}" do |options = {}|
+      create(
+        :taxon_concept,
+        options.merge({
+          :rank => send("#{rank}_rank"),
+          :taxonomy => cms
+        })
+      )
+    end
+    define_method "build_cms_#{rank}" do |options = {}|
+      build(
+        :taxon_concept,
+        options.merge({
+          :rank => send("#{rank}_rank"),
+          :taxonomy => cms
+        })
+      )
+    end
   end
 
   let(:cites){ create(:designation, :name => 'CITES', :taxonomy => cites_eu) }
   let(:eu){ create(:designation, :name => 'EU', :taxonomy => cites_eu) }
+  let(:cms_designation){ create(:designation, :name => 'CMS', :taxonomy => cms) }
 
   %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch|
 
@@ -188,6 +226,12 @@ shared_context :sapi do
     let(:"eu_#{ch.downcase}"){
       create(
         :change_type, :name => ch, :designation => eu
+      )
+    }
+
+    let(:"cms_#{ch.downcase}"){
+      create(
+        :change_type, :name => ch, :designation => cms_designation
       )
     }
 
@@ -225,10 +269,33 @@ shared_context :sapi do
         )
       end
     end
+    %w(I II).each do |app|
+      let(:"cms_#{app}"){
+        create(
+          :species_listing, :name => "Appendix #{app}", :abbreviation => app,
+          :designation => cms_designation
+        )
+      }
+      define_method "create_cms_#{app}_#{ch.downcase}" do |options = {}|
+        create(
+          :listing_change,
+          options.merge({
+            :change_type => send(:"cms_#{ch.downcase}"),
+            :species_listing => send(:"cms_#{app}")
+          })
+        )
+      end
+    end
   end
   def create_cites_cop(options = {})
     create(
       :cites_cop,
+      options.merge({:designation => cites})
+    )
+  end
+  def create_cites_suspension_notification(options = {})
+    create(
+      :cites_suspension_notification,
       options.merge({:designation => cites})
     )
   end
@@ -250,9 +317,15 @@ shared_context :sapi do
       options.merge({:designation => eu})
     )
   end
+  def build_cites_suspension_notification(options = {})
+    build(
+      :cites_suspension_notification,
+      options.merge({:designation => cites})
+    )
+  end
 end
 
-module Sapi
+module SapiSpec
   module Helpers
     def self.included(scope)
       scope.include_context :sapi
