@@ -89,7 +89,7 @@ describe Admin::SynonymRelationshipsController do
         :taxon_concept_id => taxon_concept.id,
         :id => synonym_relationship.id
       response.should redirect_to(
-        edit_admin_taxon_concept_url(synonym_relationship.taxon_concept)
+        admin_taxon_concept_names_url(synonym_relationship.taxon_concept)
       )
     end
   end

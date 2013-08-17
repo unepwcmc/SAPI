@@ -3,12 +3,6 @@ h1 span{
   font-weight: normal;
 }
 
-.tab-content #details {
-  input, select {
-    width: 150px;
-  }
-}
-
 .header {
   margin-bottom: 10px;
 
@@ -123,4 +117,8 @@ ul.relationship_parts{
 
 #taxon-concept-search{
   margin-top: 25px;
+}
+
+span.author-year {
+  font-size: 11px;
 }

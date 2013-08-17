@@ -24,6 +24,15 @@ class Admin::SynonymRelationshipsController < Admin::TaxonConceptAssociatedTypes
       @synonym_relationship_type.id
     create! do |success, failure|
       failure.js {
+        @synonym_relationship.build_other_taxon_concept(
+          :taxonomy_id => @taxon_concept.taxonomy_id,
+          :rank_id => @taxon_concept.rank_id,
+          :name_status => 'S',
+          :full_name => params[:taxon_relationship][:other_taxon_concept_attributes][:full_name],
+          :author_year => params[:taxon_relationship][:other_taxon_concept_attributes][:author_year]
+
+        )
+        @synonym_relationship.other_taxon_concept.build_taxon_name
         load_taxonomies_and_ranks
         render 'new'
       }
@@ -38,12 +47,21 @@ class Admin::SynonymRelationshipsController < Admin::TaxonConceptAssociatedTypes
   end
 
   def update
-    params[:taxon_relationship][:taxon_relationship_type_id] = @synonym_relationship_type.id
+    params[:taxon_relationship][:taxon_relationship_type_id] = 
+      @synonym_relationship_type.id
     update! do |success, failure|
       success.js { render 'create' }
       failure.js {
         load_taxonomies_and_ranks
         render 'new'
+      }
+    end
+  end
+
+  def destroy
+    destroy! do |success|
+      success.html {
+        redirect_to admin_taxon_concept_names_path(@taxon_concept)
       }
     end
   end
