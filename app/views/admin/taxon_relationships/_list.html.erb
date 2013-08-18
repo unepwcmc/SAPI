@@ -19,7 +19,7 @@
         (<%= link_to taxon_relationship.other_taxon_concept.taxonomy.name, admin_taxonomy_path(taxon_relationship.other_taxon_concept.taxonomy) %>)
       </td>
       <td>
-        <%= link_to 'Delete', resource_url(taxon_relationship, :type => params[:type]),
+        <%= link_to delete_icon, resource_url(taxon_relationship, :type => params[:type]),
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
