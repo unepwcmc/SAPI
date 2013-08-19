@@ -122,9 +122,10 @@ module TaxonConceptHelper
     )
   end
 
-  def admin_new_taxon_concept_modal
+  def admin_new_taxon_concept_modal options= {}
     admin_new_modal(
-      :resource => 'taxon_concept'
+      :resource => 'taxon_concept',
+      :title => options[:title] || nil
     ){ '' }
   end
 
