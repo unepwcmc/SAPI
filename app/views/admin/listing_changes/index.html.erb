@@ -4,6 +4,7 @@
     <%= admin_add_new_button(
       :resource => 'listing_change',
       :href => new_admin_taxon_concept_designation_listing_change_url(@taxon_concept, @designation),
+      :name => "Add a new #{@designation.name} Listing",
       :"data-toggle" => nil,
       :role => nil
     ) %>

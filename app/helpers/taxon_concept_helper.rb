@@ -36,6 +36,7 @@ module TaxonConceptHelper
     admin_add_new_button(
       :resource => 'taxon_concept_synonym',
       :href => new_admin_taxon_concept_synonym_relationship_url(@taxon_concept),
+      :name => 'Add new Synonym',
       :remote => true,
       :"data-toggle" => nil,
       :role => nil
@@ -46,6 +47,7 @@ module TaxonConceptHelper
     admin_add_new_button(
       :resource => 'taxon_concept_hybrid',
       :href => new_admin_taxon_concept_hybrid_relationship_url(@taxon_concept),
+      :name => 'Add new Hybrid',
       :remote => true,
       :"data-toggle" => nil,
       :role => nil
@@ -55,6 +57,7 @@ module TaxonConceptHelper
   def admin_new_synonym_modal(nested = false)
     admin_new_modal(
       :resource => 'taxon_concept_synonym',
+      :title => 'Add new Synonym'
     ){ nested ? '' : render('synonym_form') }
   end
 
@@ -96,7 +99,8 @@ module TaxonConceptHelper
 
   def admin_new_hybrid_modal(nested = false)
     admin_new_modal(
-      :resource => 'taxon_concept_hybrid'
+      :resource => 'taxon_concept_hybrid',
+      :title => 'Add new Hybrid'
     ){ nested ? '' : render('hybrid_form') }
   end
 
