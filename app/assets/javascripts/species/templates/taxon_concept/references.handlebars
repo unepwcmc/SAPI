@@ -1,8 +1,20 @@
 <div id="tab1">
   <div class="block block02">
-    <strong class="title">CITES STANDARD REFERENCE</strong>
+    <strong class="title">
+      {{#if controllers.taxonConcept.cmsListings }}
+      CMS REFERENCE
+      {{else}}
+      CITES STANDARD REFERENCE
+      {{/if}}
+    </strong>
     {{#unless controllers.taxonConcept.standardReferences}}
-      <p class="empty">There is no CITES Standard Reference for this species.</p>
+      <p class="empty">There is no 
+        {{#if controllers.taxonConcept.cmsListings }}
+        CMS Reference
+        {{else}}
+        CITES Standard Reference
+        {{/if}}
+        for this species.</p>
     {{else}}
       <table summary="data table">
         <tbody>

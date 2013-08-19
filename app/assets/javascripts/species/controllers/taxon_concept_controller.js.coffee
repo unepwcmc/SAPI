@@ -1,5 +1,15 @@
 Species.TaxonConceptController = Ember.ObjectController.extend
   needs: ['search']
+  isCms: ( ->
+    if @get('cmsListings') is undefined then no else yes
+  ).property('taxonomy')
+  anyHistoricCmsListings: ( ->
+    if @get('cmsListings') != undefined && @get('cmsListings')
+     .findProperty('is_current', false) != undefined
+      "show_more"
+    else
+      ""
+  ).property('cmsListings')
   anyHistoricCitesListings: ( ->
     if @get('citesListings') != undefined && @get('citesListings')
      .findProperty('is_current', false) != undefined
@@ -42,6 +52,18 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     else
       ""
   ).property('commonNames')
+  currentCmsListings: (->
+    if @get('cmsListings') != undefined
+      @get('cmsListings').filterProperty('is_current', true)
+    else
+      null
+  ).property('cmsListings')
+  historicCmsListings: (->
+    if @get('cmsListings') != undefined
+      @get('cmsListings').filterProperty('is_current', false)
+    else
+      null
+  ).property('cmsListings')
   currentCitesListings: (->
     if @get('citesListings') != undefined
       @get('citesListings').filterProperty('is_current', true)
