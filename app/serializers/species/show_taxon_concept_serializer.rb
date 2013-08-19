@@ -9,7 +9,6 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   has_one :m_taxon_concept, :serializer => Species::MTaxonConceptSerializer
   has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,
     :key => :references
-
   def taxonomy
     object.taxonomy.name.downcase
   end
