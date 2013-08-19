@@ -18,6 +18,7 @@ Species.TaxonConcept = DS.Model.extend
   citesSuspensions: DS.attr("array")
   citesListings: DS.attr("array")
   cmsListings: DS.attr("array")
+  cmsInstruments: DS.attr("array")
   euListings: DS.attr("array")
   euDecisions: DS.attr("array")
   distributionReferences: DS.attr("array")

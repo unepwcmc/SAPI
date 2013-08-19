@@ -5,10 +5,15 @@
 </div>
 <div id="tab1">
 {{#if controllers.taxonConcept.cmsListings }}
-  <div {{bindAttr class=":block controllers.taxonConcept.anyHistoricCitesListings citesListingsExpanded:active"}} id="cites_listings">
+  <div {{bindAttr class=":block controllers.taxonConcept.anyHistoricCitesListings citesListingsExpanded:active"}} id="cms_listings">
     <h2>CMS</h2>
     {{#with controllers.taxonConcept}}
       {{ partial 'species/taxon_concept/cms_listings' }}
+    {{/with}}
+  </div>
+  <div class="block" id="cms_instruments">
+    {{#with controllers.taxonConcept}}
+      {{ partial 'species/taxon_concept/cms_instruments' }}
     {{/with}}
   </div>
 {{else}}

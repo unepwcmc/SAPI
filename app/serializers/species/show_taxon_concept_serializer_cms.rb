@@ -3,6 +3,7 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
 
   has_many :cms_listing_changes, :serializer => Species::ListingChangeSerializer,
     :key => :cms_listings
+  has_many :cms_instruments, :serializer => Species::CmsInstrumentsSerializer
 
   def cms_listing_changes
     cms = Designation.find_by_name(Designation::CMS)
@@ -63,5 +64,9 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
           subspecies_info DESC
         SQL
       )
+  end
+
+  def cms_instruments
+    object.taxon_instruments.includes(:instrument)
   end
 end
