@@ -22,7 +22,7 @@ class Api::V1::TaxonConceptsController < ApplicationController
                :cites_suspensions => :geo_entity).
       includes(:taxonomy).first
     render :json => @taxon_concept,
-      :serializer => Species::ShowTaxonConceptSerializer
+      :serializer => Species::ShowTaxonConceptSerializerCites
   end
 
 end
