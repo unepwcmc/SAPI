@@ -18,7 +18,7 @@
   </div>
 {{else}}
   <div {{bindAttr class=":block controllers.taxonConcept.anyHistoricCitesListings citesListingsExpanded:active"}} id="cites_listings">
-    <h2>CITES</h2>
+    <h2 class="cites-title">CITES</h2>
     {{#with controllers.taxonConcept}}
       {{ partial 'species/taxon_concept/cites_listings' }}
     {{/with}}

@@ -37,19 +37,17 @@
   <ul class="tabset">
     <li>{{#linkTo 'taxon_concept.legal'}}LEGAL{{/linkTo}}
       <ul>
-        {{#if isCms }}
-        <li><a href="#cms_listings" class="scroll-to">CMS Listing</a></li>
-        {{else}}
-        <li><a href="#cites_listings" class="scroll-to">CITES Listing</a></li>
-        <li class="has-dropdown"><a href="#cites_restrictions" class="scroll-to">CITES Restrictions</a>
-        <ul>
-          <li><a href="#cites_suspensions" class="scroll-to">Suspensions</a></li>
-          <li><a href="#cites_quotas" class="scroll-to">Quotas</a></li>
-        </ul>
-        </li>
-        <li><a href="#eu_listings" class="scroll-to">EU Listing</a></li>
-        <li><a href="#eu_decisions" class="scroll-to">EU Decisions</a></li>
-        {{/if}}
+        {{#unless isCms }}
+          <li><a href="#cites_listings" class="scroll-to">CITES Listing</a></li>
+          <li class="has-dropdown"><a href="#cites_restrictions" class="scroll-to">CITES Restrictions</a>
+          <ul>
+            <li><a href="#cites_suspensions" class="scroll-to">Suspensions</a></li>
+            <li><a href="#cites_quotas" class="scroll-to">Quotas</a></li>
+          </ul>
+          </li>
+          <li><a href="#eu_listings" class="scroll-to">EU Listing</a></li>
+          <li><a href="#eu_decisions" class="scroll-to">EU Decisions</a></li>
+        {{/unless}}
       </ul>
     </li>
     <li>{{#linkTo 'taxon_concept.names'}}NAMES{{/linkTo}}
