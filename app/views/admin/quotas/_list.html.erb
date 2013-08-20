@@ -7,6 +7,7 @@
   <th>Source</th>
   <th>Notes</th>
   <th>Date</th>
+  <th>Public display?</th>
   <th>Actions</th>
 </thead>
 <tbody>
@@ -26,6 +27,7 @@
       <td><%= quota.sources && quota.sources.map(&:code).join(', ') %></td>
       <td><%= quota.notes %></td>
       <td><%= quota.publication_date_formatted %></td>
+      <td><%= true_false_icon(quota.public_display) %></td>
       <td>
         <%= link_to edit_icon,
           edit_admin_taxon_concept_quota_path(@taxon_concept, quota)
