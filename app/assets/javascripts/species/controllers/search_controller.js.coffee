@@ -72,3 +72,7 @@ Species.SearchController = Ember.Controller.extend
       taxon_concept_query: query,
       geo_entities_ids: @get('selectedGeoEntities').mapProperty('id')
     })
+
+  redirectToOpenSearchPage: (taxonomy) ->
+    @set('taxonomy', taxonomy)
+    @openSearchPage()

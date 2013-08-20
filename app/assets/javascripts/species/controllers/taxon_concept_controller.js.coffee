@@ -130,6 +130,12 @@ Species.TaxonConceptController = Ember.ObjectController.extend
       matchedOnSelf = @get('controllers.search.taxonConceptQueryRe').test(@get('fullName'))
     @set('matchedOnSelf', matchedOnSelf)
     @get('content').reload()
+    # Setting the search input text value.
+    @set('controllers.search.taxonConceptQuery', @get('fullName'))
+    # Setting the right taxonomy on page reload. TODO: is this the best way?
+    taxonomy = @get('taxonomy')
+    if taxonomy
+      @set('controllers.search.taxonomy', taxonomy)
   ).observes('content.didLoad')
   matchedOnSynonym: ( ->
     if @get('synonyms') == undefined || @get('matchedOnSelf') || @get('controllers.search.taxonConceptQueryRe') == null
