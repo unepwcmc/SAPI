@@ -24,7 +24,6 @@
     {{/with}}
   </div>
   <div {{bindAttr class=":block :add controllers.taxonConcept.anyHistoricCitesQuotas citesQuotasExpanded:active"}} id="cites_quotas">
-    <strong class="title" id="cites_restrictions">CITES RESTRICTIONS</strong>
     {{#with controllers.taxonConcept}}
       {{ partial 'species/taxon_concept/cites_quotas' }}
     {{/with}}
