@@ -7,7 +7,7 @@
 #  tooltip       :string(255)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  is_suspension :boolean
+#  decision_type :string(255)
 #
 
 require 'spec_helper'

@@ -87,10 +87,13 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
         taxon_concepts_ids: @get('selectedTaxonConceptsIds')
         set: @get('timeScope')
         years: @get('selectedYears')
-        positiveOpinions: @get('positiveOpinions')
-        negativeOpinions: @get('negativeOpinions')
-        noOpinions: @get('noOpinions')
-        suspensions: @get('suspensions')
+        decision_types:
+          {
+            positiveOpinions: @get('positiveOpinions')
+            negativeOpinions: @get('negativeOpinions')
+            noOpinions: @get('noOpinions')
+            suspensions: @get('suspensions')
+          }
     }
   ).property(
     'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 

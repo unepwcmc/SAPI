@@ -1,41 +1,69 @@
 Species.TaxonConceptController = Ember.ObjectController.extend
   needs: ['search']
+  isCms: ( ->
+    if @get('cmsListings') is undefined then no else yes
+  ).property('taxonomy')
+  anyHistoricCmsListings: ( ->
+    if @get('cmsListings') != undefined && @get('cmsListings')
+     .findProperty('is_current', false) != undefined
+      "show_more"
+    else
+      ""
+  ).property('cmsListings')
   anyHistoricCitesListings: ( ->
-    if @get('citesListings') != undefined && @get('citesListings').findProperty('is_current', false) != undefined
+    if @get('citesListings') != undefined && @get('citesListings')
+     .findProperty('is_current', false) != undefined
       "show_more"
     else
       ""
   ).property('citesListings')
   anyHistoricEuListings: ( ->
-    if @get('euListings') != undefined && @get('euListings').findProperty('is_current', false) != undefined
+    if @get('euListings') != undefined && @get('euListings')
+     .findProperty('is_current', false) != undefined
       "show_more"
     else
       ""
   ).property('euListings')
   anyHistoricCitesQuotas: ( ->
-    if @get('citesQuotas') != undefined && @get('citesQuotas').findProperty('is_current', false) != undefined
+    if @get('citesQuotas') != undefined && @get('citesQuotas')
+     .findProperty('is_current', false) != undefined
       "show_more"
     else
       ""
   ).property('citesQuotas')
   anyHistoricCitesSuspensions: ( ->
-    if @get('citesSuspensions') != undefined && @get('citesSuspensions').findProperty('is_current', false) != undefined
+    if @get('citesSuspensions') != undefined && @get('citesSuspensions')
+     .findProperty('is_current', false) != undefined
       "show_more"
     else
       ""
   ).property('citesSuspensions')
   anyHistoricEuDecisions: ( ->
-    if @get('euDecisions') != undefined && @get('euDecisions').findProperty('is_current', false) != undefined
+    if @get('euDecisions') != undefined && @get('euDecisions')
+     .findProperty('is_current', false) != undefined
       "show_more"
     else
       ""
   ).property('euDecisions')
   anyNonConventionCommonNames: ( ->
-    if @get('commonNames') != undefined && @get('commonNames').findProperty('convention_language', false) != undefined
+    if @get('commonNames') != undefined && @get('commonNames')
+     .findProperty('convention_language', false) != undefined
       "show_more"
     else
       ""
   ).property('commonNames')
+  currentCmsListings: (->
+    if @get('cmsListings') != undefined
+      @get('cmsListings').filterProperty('is_current', true)
+    else
+      null
+  ).property('cmsListings')
+  historicCmsListings: (->
+    if @get('cmsListings') != undefined
+      @get('cmsListings').filterProperty('is_current', false)
+    else
+      null
+  ).property('cmsListings')
   currentCitesListings: (->
     if @get('citesListings') != undefined
       @get('citesListings').filterProperty('is_current', true)
