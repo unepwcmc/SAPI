@@ -29,7 +29,7 @@ class TradeRestriction < ActiveRecord::Base
     :notes, :publication_date, :purpose_ids, :quota, :type,
     :source_ids, :start_date, :term_ids, :unit_id
 
-  belongs_to :taxon_concept
+  belongs_to :taxon_concept, :touch => true
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
   belongs_to :unit, :class_name => 'TradeCode'
   has_many :trade_restriction_terms, :dependent => :destroy
@@ -130,64 +130,64 @@ class TradeRestriction < ActiveRecord::Base
             end
           end
           csv << row
-          offset += limit
         end
-             end
+        offset += limit
+       end
       end
-    end
-
-    def self.fill_taxon_columns trade_restriction, taxonomy_columns
-      columns = []
-      taxon = trade_restriction.m_taxon_concept
-      return [""]*(taxonomy_columns.size+1) unless taxon #return array with empty strings
-      taxonomy_columns.each do |c|
-        columns << taxon.send(c)
-      end
-      if taxon.name_status == 'A'
-        columns << '' #no remarks
-      else
-        columns << "Issued for #{taxon.name_status == 'S' ? 'synonym' : 'hybrid' } #{trade_restriction.taxon_concept.full_name}"
-      end
-      columns
-    end
-
-    def self.filter_is_current set
-      if set == "current"
-        return where(:is_current => true)
-      end
-      scoped
-    end
-
-    def self.filter_geo_entities filters
-      if filters.has_key?("geo_entities_ids")
-        geo_entities_ids = GeoEntity.nodes_and_descendants(
-          filters["geo_entities_ids"]
-        ).map(&:id)
-        return where(:geo_entity_id => geo_entities_ids)
-      end
-      scoped
-    end
-
-    def self.filter_taxon_concepts filters
-      if filters.has_key?("taxon_concepts_ids")
-        conds_str = <<-SQL
-          ARRAY[
-            taxon_concepts_mview.id, taxon_concepts_mview.family_id, 
-            taxon_concepts_mview.order_id, taxon_concepts_mview.class_id, 
-            taxon_concepts_mview.phylum_id, taxon_concepts_mview.kingdom_id
-          ] && ARRAY[?]
-          OR taxon_concept_id IS NULL
-        SQL
-        return where(conds_str, filters["taxon_concepts_ids"].map(&:to_i))
-      end
-      scoped
-    end
-
-    def self.filter_years filters
-      if filters.has_key?("years")
-        return where('EXTRACT(YEAR FROM trade_restrictions.start_date) IN (?)',
-                     filters["years"])
-      end
-      scoped
-    end
   end
+
+  def self.fill_taxon_columns trade_restriction, taxonomy_columns
+    columns = []
+    taxon = trade_restriction.m_taxon_concept
+    return [""]*(taxonomy_columns.size+1) unless taxon #return array with empty strings
+    taxonomy_columns.each do |c|
+      columns << taxon.send(c)
+    end
+    if taxon.name_status == 'A'
+      columns << '' #no remarks
+    else
+      columns << "Issued for #{taxon.name_status == 'S' ? 'synonym' : 'hybrid' } #{trade_restriction.taxon_concept.full_name}"
+    end
+    columns
+  end
+
+  def self.filter_is_current set
+    if set == "current"
+      return where(:is_current => true)
+    end
+    scoped
+  end
+
+  def self.filter_geo_entities filters
+    if filters.has_key?("geo_entities_ids")
+      geo_entities_ids = GeoEntity.nodes_and_descendants(
+        filters["geo_entities_ids"]
+      ).map(&:id)
+      return where(:geo_entity_id => geo_entities_ids)
+    end
+    scoped
+  end
+
+  def self.filter_taxon_concepts filters
+    if filters.has_key?("taxon_concepts_ids")
+      conds_str = <<-SQL
+        ARRAY[
+          taxon_concepts_mview.id, taxon_concepts_mview.family_id, 
+          taxon_concepts_mview.order_id, taxon_concepts_mview.class_id, 
+          taxon_concepts_mview.phylum_id, taxon_concepts_mview.kingdom_id
+        ] && ARRAY[?]
+        OR taxon_concept_id IS NULL
+      SQL
+      return where(conds_str, filters["taxon_concepts_ids"].map(&:to_i))
+    end
+    scoped
+  end
+
+  def self.filter_years filters
+    if filters.has_key?("years")
+      return where('EXTRACT(YEAR FROM trade_restrictions.start_date) IN (?)',
+                   filters["years"])
+    end
+    scoped
+  end
+end

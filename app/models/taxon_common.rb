@@ -12,5 +12,6 @@
 class TaxonCommon < ActiveRecord::Base
   attr_accessible :common_name_id, :taxon_concept_id, :common_name, :common_name_attributes
   belongs_to :common_name
+  belongs_to :taxon_concept, :touch => true
   accepts_nested_attributes_for :common_name
 end

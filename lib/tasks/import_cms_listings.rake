@@ -210,7 +210,7 @@ namespace :import do
 
       sql = <<-SQL
         INSERT INTO taxon_instruments(taxon_concept_id, instrument_id, effective_from, created_at, updated_at)
-        SELECT DISTINCT t.id, i.id, to_date(#{TMP_TABLE}.listing_date, 'yyyy'),
+        SELECT DISTINCT t.id, i.id, to_date(#{TMP_TABLE}.listing_date, 'dd/mm/yyyy'),
           NOW(), NOW()
         FROM #{TMP_TABLE}
         INNER JOIN taxon_concepts t ON t.legacy_id = #{TMP_TABLE}.legacy_id
