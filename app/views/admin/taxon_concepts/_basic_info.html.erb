@@ -42,7 +42,7 @@
   <%= ancestors_path(@taxon_concept) %>
 </div>
 
-<%= admin_new_taxon_concept_modal %>
+<%= admin_new_taxon_concept_modal(:title => 'Edit Taxon Concept') %>
 
 <ul id="taxon-concept-tabs" class="nav nav-tabs">
 
@@ -53,7 +53,7 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">CITES legislation<b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li class="<%= if controller_name == "listing_changes" && @designation.is_cites? then "active" end%>">
-            <%= link_to "CITES listing changes", admin_taxon_concept_designation_listing_changes_path(@taxon_concept, d) %>
+            <%= link_to "CITES listings", admin_taxon_concept_designation_listing_changes_path(@taxon_concept, d) %>
           </li>
           <li class="<%= if controller_name == 'quotas' then 'active' end%>">
             <%= link_to "CITES Quotas", admin_taxon_concept_quotas_path(@taxon_concept) %>
@@ -69,7 +69,7 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">EU legislation <b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li class="<%= if controller_name == "listing_changes" && @designation.is_eu? then "active" end%>">
-            <%= link_to "EU listing changes", admin_taxon_concept_designation_listing_changes_path(@taxon_concept, d) %>
+            <%= link_to "EU listings", admin_taxon_concept_designation_listing_changes_path(@taxon_concept, d) %>
           </li>
           <li class="<%= if controller_name == 'eu_opinions' then 'active' end%>">
             <%= link_to "EU Opinions", admin_taxon_concept_eu_opinions_path(@taxon_concept) %>
@@ -81,7 +81,7 @@
       </li>
     <% elsif d.is_cms? %>
       <li class="<%= if @designation && @designation.is_cms? then 'active' end %>">
-        <%= link_to "CMS listing changes", admin_taxon_concept_designation_listing_changes_path(@taxon_concept, d) %>
+        <%= link_to "CMS listings", admin_taxon_concept_designation_listing_changes_path(@taxon_concept, d) %>
       </li>
       <li class="<%= if @taxon_instruments then 'active' end %>">
         <%= link_to "Instruments", admin_taxon_concept_taxon_instruments_path(@taxon_concept) %>
