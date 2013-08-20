@@ -830,6 +830,8 @@ form, fieldset {
 
 #main #cites_suspensions.block th.col4 { width: 115px; }
 #main #cites_suspensions.block th.col5 { width: 418px; }
+#main #cms_instruments.block th.col2 { width: 418px; }
+#main #cms_instruments.block th.col3 { width: 418px; }
 
 #main .block a { color: #666; }
 #main .block td {
