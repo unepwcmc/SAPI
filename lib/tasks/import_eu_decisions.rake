@@ -20,33 +20,33 @@ namespace :import do
 
         UPDATE eu_decision_types
         SET tooltip = 'no significant trade anticipated',
-          is_suspension = 'f'::BOOLEAN
+          decision_type = '#{EuDecisionType::NO_OPINION}'
         WHERE name ilike 'i)%';
 
         UPDATE eu_decision_types
         SET tooltip = 'decision deferred',
-          is_suspension = 'f'::BOOLEAN
+          decision_type = '#{EuDecisionType::NO_OPINION}'
         WHERE name ilike 'ii)%';
 
         UPDATE eu_decision_types
         SET tooltip = 'referral to the SRG',
-          is_suspension = 'f'::BOOLEAN
+          decision_type = '#{EuDecisionType::NO_OPINION}'
         WHERE name ilike 'iii)%';
 
         UPDATE eu_decision_types
-        SET is_suspension = 'f'::BOOLEAN
+        SET decision_type = '#{EuDecisionType::NO_OPINION}'
         WHERE name ilike 'no%';
 
         UPDATE eu_decision_types
-        SET is_suspension = 'f'::BOOLEAN
+        SET decision_type = '#{EuDecisionType::POSITIVE_OPINION}'
         WHERE name ilike 'positive%';
 
         UPDATE eu_decision_types
-        SET is_suspension = 'f'::BOOLEAN
+        SET decision_type = '#{EuDecisionType::NEGATIVE_OPINION}'
         WHERE name ilike 'negative%';
 
         UPDATE eu_decision_types
-        SET is_suspension = 't'::BOOLEAN
+        SET decision_type = '#{EuDecisionType::SUSPENSION}'
         WHERE name ilike 'suspension%';
 
         -- import eu_decisions (both Opinions and Suspensions)

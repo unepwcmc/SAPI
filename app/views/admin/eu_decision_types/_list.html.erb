@@ -1,7 +1,7 @@
 <thead>
   <th>Name</th>
   <th>Tooltip</th>
-  <th>Is suspension?</th>
+  <th>Type</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
@@ -23,7 +23,11 @@
         </a>
       </td>
       <td>
-        <%= true_false_icon(eu_decision_type.is_suspension) %>
+        <a href="#" class="editable editable-click editable-required" data-type="select" data-resource="eu_decision_type" data-name="decision_type"
+          data-placeholder="Required" data-original-title="Enter the decision type", data-source="/admin/eu_decision_types/"
+          data-url="<%= resource_url(eu_decision_type) %>" data-pk="<%= eu_decision_type.id %>">
+          <%= eu_decision_type.decision_type %>
+        </a>
       </td>
       <td>
         <%= link_to delete_icon, resource_url(eu_decision_type), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>

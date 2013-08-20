@@ -4,6 +4,7 @@
 
   <label>Name</label><%= f.text_field :name %><br />
   <label>Tooltip</label><%= f.text_field :tooltip %><br />
-  <label>Is suspension?</label><%= f.check_box :is_suspension %>
-
+  <label>Type</label><%= f.select :decision_type,
+    options_for_select(EuDecisionType.dict.sort), { },
+    {:class => 'select2' }%>
 <% end %>
