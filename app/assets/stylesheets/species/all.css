@@ -761,8 +761,9 @@ form, fieldset {
 	background: #f5f5f7;
 	border: 1px solid #d5dadd;
 	border-top: none;
-	padding: 67px 0 0;
+	padding: 20px 0 0;
 }
+
 
 #main .block {
 	text-align: left;
@@ -830,6 +831,8 @@ form, fieldset {
 
 #main #cites_suspensions.block th.col4 { width: 115px; }
 #main #cites_suspensions.block th.col5 { width: 418px; }
+#main #cms_instruments.block th.col2 { width: 418px; }
+#main #cms_instruments.block th.col3 { width: 418px; }
 
 #main .block a { color: #666; }
 #main .block td {
@@ -968,6 +971,11 @@ form, fieldset {
 	line-height: 40px;
 	padding: 0 27px;
 }
+
+#main .block h2.cites-title {
+  margin-top: 20px;
+}
+
 #main .block.block02 {
 	padding: 29px 30px 0;
 	margin: 0 -1px 46px;

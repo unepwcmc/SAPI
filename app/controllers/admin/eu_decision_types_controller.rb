@@ -1,5 +1,13 @@
 class Admin::EuDecisionTypesController < Admin::SimpleCrudController
 
+  def index
+    index! do |format|
+      format.json {
+        render :json => EuDecisionType.dict.sort.to_json
+      }
+    end
+  end
+
   def create
     create! do |failure|
       failure.js { render 'new' }

@@ -21,8 +21,12 @@ class Api::V1::TaxonConceptsController < ApplicationController
                :quotas => :geo_entity,
                :cites_suspensions => :geo_entity).
       includes(:taxonomy).first
+    if @taxon_concept.taxonomy.name == "CMS"
+      s = Species::ShowTaxonConceptSerializerCms
+    else
+      s = Species::ShowTaxonConceptSerializerCites
+    end
     render :json => @taxon_concept,
-      :serializer => Species::ShowTaxonConceptSerializer
+      :serializer => s
   end
-
 end

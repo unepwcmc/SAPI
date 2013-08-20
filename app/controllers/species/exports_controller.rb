@@ -8,6 +8,8 @@ class Species::ExportsController < ApplicationController
         result = CitesSuspension.export params[:filters]
       when 'Listings'
         result = Species::ListingsExportFactory.new(params[:filters]).export
+      when 'EuDecisions'
+        result = EuDecision.export params[:filters]
     end
     respond_to do |format|
       format.html {
