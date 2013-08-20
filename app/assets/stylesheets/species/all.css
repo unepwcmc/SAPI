@@ -120,7 +120,7 @@ form, fieldset {
 	float: left;
 	width: 100%;
 	font-size: 13px;
-	margin: 0 0 -2px;
+	margin: 5px 0 -2px;
 }
 #nav > li > ul > li > a {
 	float: left;
