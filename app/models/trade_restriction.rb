@@ -130,8 +130,8 @@ class TradeRestriction < ActiveRecord::Base
             end
           end
           csv << row
-          offset += limit
         end
+        offset += limit
        end
       end
   end
