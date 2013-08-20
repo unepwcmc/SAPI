@@ -28,7 +28,7 @@ class EuDecision < ActiveRecord::Base
     :is_current, :notes, :start_date, :start_event_id, :eu_decision_type_id,
     :taxon_concept_id, :type, :conditions_apply, :term_id, :source_id
 
-  belongs_to :taxon_concept
+  belongs_to :taxon_concept, :touch => true
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
   belongs_to :geo_entity
   belongs_to :eu_decision_type
