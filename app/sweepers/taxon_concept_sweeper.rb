@@ -13,6 +13,10 @@ class TaxonConceptSweeper < ActionController::Caching::Sweeper
     expire_cache(tc)
   end
 
+  def after_touch(tc)
+    expire_cache(tc)
+  end
+
   private
 
   def expire_cache(tc)
