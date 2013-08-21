@@ -194,7 +194,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               eu_decisions.source_id,
               CASE
                 WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
-                  THEN '[Suspension for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
+                  THEN '[SUBSPECIES decision <i>' || taxon_concepts_mview.full_name || '</i>]'
                 ELSE NULL
               END AS subspecies_info
              SQL
