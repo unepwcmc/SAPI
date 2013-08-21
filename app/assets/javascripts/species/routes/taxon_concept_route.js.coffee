@@ -41,7 +41,3 @@ Species.TaxonConceptRoute = Ember.Route.extend
     ensureHigherTaxaLoaded: ->
       @controllerFor('higherTaxaCitesEu').load()
       @controllerFor('higherTaxaCms').load()
-
-  # When the route is activated, reload the data. Hummmm...
-  activate: ->
-    @modelFor('taxonConcept').reload()
