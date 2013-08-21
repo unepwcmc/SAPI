@@ -5,6 +5,8 @@
   <div class="heading"></div>
 
   <div class="result-block">
+    {{#unless controller.didContentLoad}}
+    {{else}}
     {{#each header in controller.content.meta.higher_taxa_headers}}
       <ul class="result-list">
         {{#stringToArray header.higher_taxon.ancestors_path splitter=","}}
@@ -26,6 +28,7 @@
         <p>Please note that this database contains species that are listed in the Appendices to CITES and CMS, as well as the Annexes to the EU Wildlife Trade Regulations; it is not a comprehensive source of all species.</p>
       </div>
     {{/each}}
+    {{/unless}}
   </div>
 
 </div>

@@ -19,14 +19,14 @@
           <td>&nbsp;</td>
           <td>
             <div class="cites_appendix {{unbound listing.change_type}}_{{unbound listing.species_listing_name}}">
-              <span>{{listing.species_listing_name}}</span>
+              <span>{{unbound listing.species_listing_name}}</span>
               {{#unless listing.is_addition}}
                 <span class="subscript">{{listing.change_type}}</span>
               {{/unless}}
             </div>
           </td>
-          <td>{{listing.party_full_name}}</td>
-          <td>{{listing.effective_at_formatted}}</td>
+          <td>{{unbound listing.party_full_name}}</td>
+          <td>{{unbound listing.effective_at_formatted}}</td>
           <td>
             {{#if listing.subspecies_info}}
               {{{listing.subspecies_info}}}<br />
@@ -123,29 +123,29 @@
                   {{/unless}}
                 </div>
               </td>
-              <td>{{listing.party_full_name}}</td>
-              <td>{{listing.effective_at_formatted}}</td>
+              <td>{{unbound listing.party_full_name}}</td>
+              <td>{{unbound listing.effective_at_formatted}}</td>
               <td>
                 {{#if listing.subspecies_info}}
-                  {{{listing.subspecies_info}}}<br /><br />
+                  {{{unbound listing.subspecies_info}}}<br /><br />
                 {{/if}}
                 {{#if listing.auto_note}}
-                  [{{listing.auto_note}}]<br /><br />
+                  [{{unbound listing.auto_note}}]<br /><br />
                 {{/if}}
                 {{#if listing.hash_full_note_en}}
                   <a class="legal-links" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
-                    {{listing.hash_display}}
+                    {{unbound listing.hash_display}}
                   </a><br /><br />
                 {{/if}}
                 {{#if listing.full_note_en}}
                   {{#sizeGt listing.full_note_en max=800}}
-                    {{{listing.short_note_en}}}<br />
+                    {{{unbound listing.short_note_en}}}<br />
                     <a class="legal-links" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
                   {{else}}
-                    {{{listing.full_note_en}}}
+                    {{{unbound listing.full_note_en}}}
                   {{/sizeGt}}
                 {{else}}
-                  {{{listing.short_note_en}}}
+                  {{{unbound listing.short_note_en}}}
                 {{/if}}
               </td>
               <td class="last">&nbsp;</td>
