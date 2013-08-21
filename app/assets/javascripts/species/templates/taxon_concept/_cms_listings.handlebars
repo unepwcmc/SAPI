@@ -1,4 +1,4 @@
-<strong class="title">CMS LISTINGS</strong>
+<strong class="title">CMS LISTING</strong>
 {{#unless cmsListings}}
   <p class="empty">This species is not currently listed in the CMS Appendices.</p>
 {{else}}
@@ -7,9 +7,8 @@
       <tr>
         <th class="col1">&nbsp;</th>
         <th class="col2">APPENDIX</th>
-        <th class="col3">COUNTRY</th>
-        <th class="col4">DATE</th>
-        <th class="col6">NOTES</th>
+        <th class="col3">DATE</th>
+        <th class="col4">NOTES</th>
         <th class="col1">&nbsp;</th>
       </tr>
     </thead>
@@ -25,7 +24,6 @@
               {{/unless}}
             </div>
           </td>
-          <td>{{listing.party_full_name}}</td>
           <td>{{listing.effective_at_formatted}}</td>
           <td>
             {{#if listing.subspecies_info}}
