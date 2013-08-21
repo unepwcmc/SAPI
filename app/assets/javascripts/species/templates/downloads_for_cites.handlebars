@@ -97,16 +97,16 @@
       </ul>
     </div>
     <div class="col">
-      {{#unless documentTypeIsCitesSuspensions}}
-        {{#if timeScopeIsCurrent}}
-          Only current data has<br />been selected.
-        {{else}}
-          <div class="popup-area">
-            {{view Species.YearSearchButton selectedYearsBinding="controller.selectedYears"}}
-            {{view Species.YearSearchDropdown controllerBinding="controller"}}
-          </div>
-        {{/if}}
-      {{/unless}}
+      {{#if timeScopeIsCurrent}}
+        Only current data has<br />been selected.
+      {{else}}
+        {{#unless documentTypeIsCitesSuspensions}}
+            <div class="popup-area">
+              {{view Species.YearSearchButton selectedYearsBinding="controller.selectedYears"}}
+              {{view Species.YearSearchDropdown controllerBinding="controller"}}
+            </div>
+        {{/unless}}
+      {{/if}}
     </div>
   </div>
   <div class="bottom-columns">
