@@ -200,8 +200,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
              SQL
       ).
       order(<<-SQL
-            eu_decisions.is_current DESC,
-            events.effective_at DESC, geo_entities.name_en ASC,
+            geo_entities.name_en ASC, events.effective_at DESC,
             subspecies_info DESC
         SQL
       )
