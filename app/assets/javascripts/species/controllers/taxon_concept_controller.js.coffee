@@ -1,7 +1,10 @@
-Species.TaxonConceptController = Ember.ObjectController.extend
+Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
   needs: ['search']
   isCms: ( ->
-    if @get('cmsListings') is undefined then no else yes
+    if @get('taxonomy') != undefined
+      @get('taxonomy') == 'cms'
+    else
+      no
   ).property('taxonomy')
   anyHistoricCmsListings: ( ->
     if @get('cmsListings') != undefined && @get('cmsListings')
@@ -129,13 +132,14 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     if @get('controllers.search.redirected') == true && @get('controllers.search.taxonConceptQueryRe') != null
       matchedOnSelf = @get('controllers.search.taxonConceptQueryRe').test(@get('fullName'))
     @set('matchedOnSelf', matchedOnSelf)
-    @get('content').reload()
     # Setting the search input text value.
     @set('controllers.search.taxonConceptQuery', @get('fullName'))
     # Setting the right taxonomy on page reload. TODO: is this the best way?
     taxonomy = @get('taxonomy')
     if taxonomy
       @set('controllers.search.taxonomy', taxonomy)
+    # Removing spinner once content is loaded.
+    $(@spinnerSelector).css("visibility", "hidden")
   ).observes('content.didLoad')
   matchedOnSynonym: ( ->
     if @get('synonyms') == undefined || @get('matchedOnSelf') || @get('controllers.search.taxonConceptQueryRe') == null
