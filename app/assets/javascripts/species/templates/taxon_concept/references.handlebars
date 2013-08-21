@@ -1,18 +1,18 @@
 <div id="tab1">
   <div class="block block02">
     <strong class="title">
-      {{#if controllers.taxonConcept.cmsListings }}
-      CMS REFERENCE
+      {{#if controllers.taxonConcept.isCms }}
+        CMS REFERENCE
       {{else}}
-      CITES STANDARD REFERENCE
+        CITES STANDARD REFERENCE
       {{/if}}
     </strong>
     {{#unless controllers.taxonConcept.standardReferences}}
       <p class="empty">There is no 
-        {{#if controllers.taxonConcept.cmsListings }}
-        CMS Reference
+        {{#if controllers.taxonConcept.isCms }}
+          CMS Reference
         {{else}}
-        CITES Standard Reference
+          CITES Standard Reference
         {{/if}}
         for this species.</p>
     {{else}}

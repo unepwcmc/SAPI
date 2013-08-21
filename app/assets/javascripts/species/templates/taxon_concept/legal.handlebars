@@ -4,7 +4,7 @@
   <div class="content"></div>
 </div>
 <div id="tab1">
-{{#if controllers.taxonConcept.cmsListings }}
+{{#if controllers.taxonConcept.isCms }}
   <div {{bindAttr class=":block controllers.taxonConcept.anyHistoricCitesListings citesListingsExpanded:active"}} id="cms_listings">
     <h2>CMS</h2>
     {{#with controllers.taxonConcept}}
