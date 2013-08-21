@@ -91,6 +91,8 @@ namespace :import do
       'lib/assets/files/eu_decisions_utf8.csv'
     )
 
+    Rake::Task["import:fix_symbols"].invoke
+
     Sapi::create_indexes
     Sapi::rebuild(:disable_triggers => true)
 
