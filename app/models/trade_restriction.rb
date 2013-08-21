@@ -94,7 +94,9 @@ class TradeRestriction < ActiveRecord::Base
       filter_years(filters).
       filter_taxon_concepts(filters).
       where(:public_display => true).
-      order([:start_date, :"trade_restrictions.id"])
+      order('taxon_concepts_mview.taxonomic_position ASC,
+        trade_restrictions.start_date DESC, geo_entities.name_en ASC,
+        trade_restrictions.notes ASC')
   end
 
   #Gets the display text for each CSV_COLUMNS
