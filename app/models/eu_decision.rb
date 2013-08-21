@@ -113,6 +113,7 @@ class EuDecision < ActiveRecord::Base
       filter_taxon_concepts(filters).
       filter_decision_type(filters["decision_types"]).
       order('taxon_concepts_mview.taxonomic_position ASC,
+        geo_entities.name_en ASC,
         eu_decisions.start_date DESC')
   end
 
