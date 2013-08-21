@@ -88,7 +88,9 @@ class TradeRestriction < ActiveRecord::Base
   end
 
   def self.export_query filters
-    self.includes([:m_taxon_concept, :geo_entity, :unit]).
+    self.includes([:geo_entity, :unit,
+      {:taxon_concept => [:m_taxon_concept,
+        :taxon_relationships]}]).
       filter_is_current(filters["set"]).
       filter_geo_entities(filters).
       filter_years(filters).
@@ -107,23 +109,17 @@ class TradeRestriction < ActiveRecord::Base
   end
 
   def self.to_csv file_path, filters
-    taxonomy_columns = [
-      :kingdom_name, :phylum_name,
-      :class_name, :order_name,
-      :family_name, :genus_name,
-      :species_name, :subspecies_name,
-      :full_name, :rank_name
-    ]
     limit = 1000
     offset = 0
     CSV.open(file_path, 'wb') do |csv|
-      csv << taxonomy_columns + ['Remarks'] + self.csv_columns_headers
+      csv << Species::RestrictionsExport::TAXONOMY_COLUMNS + 
+        ['Remarks'] + self.csv_columns_headers
       ids = []
       until (objs = export_query(filters).limit(limit).
              offset(offset)).empty? do
         objs.each do |q|
           row = []
-          row += self.fill_taxon_columns(q, taxonomy_columns)
+          row += Species::RestrictionsExport.fill_taxon_columns(q)
           self::CSV_COLUMNS.each do |c|
             if c.is_a?(Array)
               row << q.send(c[1])
@@ -136,21 +132,6 @@ class TradeRestriction < ActiveRecord::Base
         offset += limit
        end
       end
-  end
-
-  def self.fill_taxon_columns trade_restriction, taxonomy_columns
-    columns = []
-    taxon = trade_restriction.m_taxon_concept
-    return [""]*(taxonomy_columns.size+1) unless taxon #return array with empty strings
-    taxonomy_columns.each do |c|
-      columns << taxon.send(c)
-    end
-    if taxon.name_status == 'A'
-      columns << '' #no remarks
-    else
-      columns << "Issued for #{taxon.name_status == 'S' ? 'synonym' : 'hybrid' } #{trade_restriction.taxon_concept.full_name}"
-    end
-    columns
   end
 
   def self.filter_is_current set

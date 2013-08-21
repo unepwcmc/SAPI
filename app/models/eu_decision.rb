@@ -105,8 +105,10 @@ class EuDecision < ActiveRecord::Base
   end
 
   def self.export_query filters
-    self.includes([:m_taxon_concept, :source, :geo_entity,
-        :start_event, :term, :eu_decision_type]).
+    self.includes([:source, :geo_entity,
+        :start_event, :term, :eu_decision_type,
+        {:taxon_concept => [:m_taxon_concept,
+          :taxon_relationships]}]).
       filter_is_current(filters["set"]).
       filter_geo_entities(filters).
       filter_years(filters).
@@ -117,25 +119,18 @@ class EuDecision < ActiveRecord::Base
         eu_decisions.start_date DESC')
   end
 
-
   def self.to_csv file_path, filters
-    taxonomy_columns = [
-      :kingdom_name, :phylum_name,
-      :class_name, :order_name,
-      :family_name, :genus_name,
-      :species_name, :subspecies_name,
-      :full_name, :rank_name
-    ]
     limit = 1000
     offset = 0
     CSV.open(file_path, 'wb') do |csv|
-      csv << taxonomy_columns + ['Remarks'] + self.csv_columns_headers
+      csv << Species::RestrictionsExport::TAXONOMY_COLUMNS + 
+        ['Remarks'] + self.csv_columns_headers
       ids = []
       until (objs = export_query(filters).limit(limit).
              offset(offset)).empty? do
         objs.each do |q|
           row = []
-          row += self.fill_taxon_columns(q, taxonomy_columns)
+          row += Species::RestrictionsExport.fill_taxon_columns(q)
           self.csv_columns.each do |c|
             row << q.send(c)
           end
@@ -144,22 +139,6 @@ class EuDecision < ActiveRecord::Base
         offset += limit
        end
       end
-  end
-
-  def self.fill_taxon_columns eu_decision, taxonomy_columns
-    columns = []
-    taxon = eu_decision.m_taxon_concept
-    return [""]*(taxonomy_columns.size+1) unless taxon #return array with empty strings
-    taxonomy_columns.each do |c|
-      columns << taxon.send(c)
-    end
-    if taxon.name_status == 'A'
-      columns << '' #no remarks
-    else
-      columns << "Issued for #{taxon.name_status == 'S' ? 'synonym' : 'hybrid' }
-        #{eu_decision.taxon_concept.full_name}"
-    end
-    columns
   end
 
   def self.filter_is_current set
