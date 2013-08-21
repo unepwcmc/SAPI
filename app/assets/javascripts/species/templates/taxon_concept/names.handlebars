@@ -18,13 +18,15 @@
           {{/each}}
         </tbody>
       </table>
-      <div {{bindAttr class=":btn-hloder commonNamesExpanded:expanded"}}>
-        {{#if controller.commonNamesExpanded}}
-          <a href="#" class="link active languages" {{action 'contractList' 'common_names' 'commonNamesExpanded'}}>HIDE EXTRA LANGUAGES</a>
-        {{else}}
-          <a href="#" class="link languages" {{action 'expandList' 'common_names' 'commonNamesExpanded'}}>SHOW MORE LANGUAGES</a>
-        {{/if}}
-      </div>
+      {{#if controllers.taxonConcept.anyNonConventionCommonNames}}
+        <div {{bindAttr class=":btn-hloder commonNamesExpanded:expanded"}}>
+          {{#if controller.commonNamesExpanded}}
+            <a href="#" class="link active languages" {{action 'contractList' 'common_names' 'commonNamesExpanded'}}>HIDE EXTRA LANGUAGES</a>
+          {{else}}
+            <a href="#" class="link languages" {{action 'expandList' 'common_names' 'commonNamesExpanded'}}>SHOW MORE LANGUAGES</a>
+          {{/if}}
+        </div>
+      {{/if}}
     {{/if}}
   </div>
   <div class="block04" id="synonyms">

@@ -869,7 +869,7 @@ form, fieldset {
 #main .block.show_more .btn-hloder {
 	margin: 0;
 	text-align: center;
-  	display: block;
+  display: block;
 }
 #main .block.show_more:hover .btn-hloder {
 	display: block;
