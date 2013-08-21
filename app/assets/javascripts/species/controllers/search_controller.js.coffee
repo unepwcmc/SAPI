@@ -1,4 +1,4 @@
-Species.SearchController = Ember.Controller.extend
+Species.SearchController = Ember.Controller.extend Species.Spinner,
   needs: ['geoEntities']
   taxonomy: 'cites_eu'
   taxonConceptQuery: null
@@ -59,6 +59,8 @@ Species.SearchController = Ember.Controller.extend
     @set('redirected', false)
     $(".search fieldset").removeClass('parent-focus parent-active')
     m = Species.TaxonConcept.find(taxonConceptId)
+    # Setting a spinner until content is loaded.
+    $(@spinnerSelector).css("visibility", "visible")
     @transitionToRoute('taxon_concept.legal', m)
 
   openSearchPage: (taxonFullName) ->

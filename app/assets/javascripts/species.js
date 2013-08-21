@@ -23,10 +23,10 @@
 //
 //= require ./species/store
 //
+//= require_tree ./species/helpers
 //= require_tree ./species/models
 //= require_tree ./species/controllers
 //= require_tree ./species/views
-//= require_tree ./species/helpers
 //= require_tree ./species/templates
 //= require ./species/router
 //= require_tree ./species/routes
