@@ -75,12 +75,13 @@ class EuDecision < ActiveRecord::Base
 
   def self.csv_columns_headers
     ['Date', 'Party', 'EU Decision', 'Source',
-      'Term', 'Notes', 'Document']
+      'Term', 'Notes', 'Document', 'Valid']
   end
 
   def self.csv_columns
     [:start_date_formatted, :party, :decision_type,
-      :source_name, :term_name, :notes, :start_event_name]
+      :source_name, :term_name, :notes, :start_event_name,
+      :is_current]
   end
 
   def self.export filters
