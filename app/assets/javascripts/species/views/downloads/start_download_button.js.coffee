@@ -4,5 +4,6 @@ Species.StartDownloadButton = Ember.View.extend
 
   href: '#'
   template: Ember.Handlebars.compile('DOWNLOAD')
-  click: () ->
+  click: (event) ->
+    event.preventDefault()
     @get('controller').send('startDownload')

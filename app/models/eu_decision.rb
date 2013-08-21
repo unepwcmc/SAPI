@@ -74,13 +74,13 @@ class EuDecision < ActiveRecord::Base
   end
 
   def self.csv_columns_headers
-    ['Date', 'Party', 'SRG', 'Source',
+    ['Date', 'Party', 'EU Decision', 'Source',
       'Term', 'Notes', 'Document']
   end
 
   def self.csv_columns
     [:start_date_formatted, :party, :decision_type,
-      :term_name, :source_name, :notes, :start_event_name]
+      :source_name, :term_name, :notes, :start_event_name]
   end
 
   def self.export filters
@@ -112,7 +112,8 @@ class EuDecision < ActiveRecord::Base
       filter_years(filters).
       filter_taxon_concepts(filters).
       filter_decision_type(filters["decision_types"]).
-      order([:start_date, :"eu_decisions.id"])
+      order('taxon_concepts_mview.taxonomic_position ASC,
+        eu_decisions.start_date DESC')
   end
 
 

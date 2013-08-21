@@ -120,7 +120,7 @@ form, fieldset {
 	float: left;
 	width: 100%;
 	font-size: 13px;
-	margin: 0 0 -2px;
+	margin: 5px 0 -2px;
 }
 #nav > li > ul > li > a {
 	float: left;
@@ -792,6 +792,10 @@ form, fieldset {
   padding: 0 29px;
   font-size: 13px;
 }
+#main .block02 .empty{
+  padding: 0;
+}
+
 #main .block .title.more { text-transform: none; }
 #main .block table {
 	border-collapse: collapse;
@@ -829,10 +833,12 @@ form, fieldset {
 #main .block th.col12 { width: 670px; }
 #main .block th.col13 { width: 239px; }
 
-#main #cites_suspensions.block th.col4 { width: 115px; }
-#main #cites_suspensions.block th.col5 { width: 418px; }
-#main #cms_instruments.block th.col2 { width: 418px; }
-#main #cms_instruments.block th.col3 { width: 418px; }
+#main #cms_listings.block th.col3{ width: 314px; }
+#main #cms_listings.block th.col4{ width: 458px; }
+#main #cites_suspensions.block th.col4{ width: 115px; }
+#main #cites_suspensions.block th.col5{ width: 418px; }
+#main #cms_instruments.block th.col2{ width: 418px; }
+#main #cms_instruments.block th.col3{ width: 418px; }
 
 #main .block a { color: #666; }
 #main .block td {
@@ -867,7 +873,7 @@ form, fieldset {
 #main .block.show_more .btn-hloder {
 	margin: 0;
 	text-align: center;
-  	display: block;
+  display: block;
 }
 #main .block.show_more:hover .btn-hloder {
 	display: block;
