@@ -5,9 +5,10 @@ Species.TaxonConceptLinkView = Ember.View.extend
   templateName: 'species/taxon_concept_link'
   tagName: 'a'
   classNames: ['emb-link']
-  setSearchParams: ( ->
-    {
-      taxonomy: @get('controller').get('controllers.search').get('taxonomy'),
-      taxon_concept_query: @get('context').toString()
-    }
-  ).property('taxonConceptQuery')
+
+  click: (e) ->
+    taxonomy = @get('controller').get('controllers.search').get('taxonomy')
+    taxon_concept_query = @get('context').toString()
+    @get('controller').get('controllers.search')
+      .send('redirectToOpenSearchPage', taxonomy, taxon_concept_query)
+

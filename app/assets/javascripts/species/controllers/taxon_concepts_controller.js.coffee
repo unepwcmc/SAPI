@@ -1,5 +1,5 @@
 Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner,
-  needs: 'search'
+  needs: ['search', 'taxonConceptLink']
   content: null
   pages: null
   page: 1
@@ -26,6 +26,7 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner,
       return pages
 
   page: ( ->
+    #page = @get('content.query.page')
     page = @get('content').meta?.page
     if page 
       @set('page', page)
@@ -60,5 +61,5 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner,
       @set("page", parseInt(@page) + 1)
     else
       @set("page", parseInt(@page) - 1)
-    this.get("controllers.search").openSearchPage undefined, @page, @perPage
+    @get("controllers.search").openSearchPage undefined, @page, @perPage
 
