@@ -74,7 +74,7 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
       taxon_concept_query: query
       geo_entities_ids: @get('selectedGeoEntities').mapProperty('id')
       page: page or 1
-      per_page: perPage or 100
+      per_page: perPage or 5
     })
 
   redirectToOpenSearchPage: (taxonomy) ->
