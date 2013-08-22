@@ -38,9 +38,16 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def cites_suspensions
-    CitesSuspension.where(:taxon_concept_id => object_children_and_ancestors).
-      joins([:start_notification, :geo_entity]).
-      joins('INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id').
+    CitesSuspension.joins(:geo_entity).
+      where("
+            trade_restrictions.taxon_concept_id IN (?) OR
+              ( trade_restrictions.taxon_concept_id IS NULL AND trade_restrictions.geo_entity_id  IN (
+                  SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?
+                )
+              )
+      ", object_children_and_ancestors, object.id).
+      joins(:start_notification).
+      joins('LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id').
       select(<<-SQL
               trade_restrictions.notes,
               trade_restrictions.start_date,
