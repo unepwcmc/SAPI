@@ -1,17 +1,12 @@
 Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner,
-  needs: ['search']
+  needs: 'search'
   content: null
+  pages: null
   page: 1
   perPage: 100
-  #pages: null
-  #showPageControls: null
-  #showPrevPage: null
-  #showNextPage: null
 
   contentObserver: ( ->
     meta = @get('content').meta
-    #@pages = @set('getPages', meta)
-    #@page = @set('@getPage', meta)
     if meta != undefined &&  meta.total == 1
       @openTaxonPage(meta.higher_taxa_headers[0].taxon_concept_ids[0], true)
   ).observes("content.meta.didLoad")
@@ -23,11 +18,12 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner,
     c
   ).property('content.meta')
 
-  pages: ( ->
+  setPages: ->
     total = @get('content').meta?.total
     if total
-      p = Math.ceil(total / @perPage)
-  ).observes("content.meta")
+      pages = Math.ceil(total / @perPage)
+      @set 'pages', pages
+      return pages
 
   page: ( ->
     page = @get('content').meta?.page
@@ -37,7 +33,7 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner,
   ).property("content.meta")
 
   showPageControls: ( ->
-    pages = @pages()
+    pages = @setPages()
     if pages > 1 then return yes else return no
   ).property('content.meta')
   
@@ -48,7 +44,7 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner,
 
   showNextPage: ( ->
     page = @get('page')
-    if page < @pages then return yes else return no
+    if page < @setPages() then return yes else return no
   ).property('content.meta')
 
   openTaxonPage: (taxonConceptId, redirected) ->
@@ -58,3 +54,11 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner,
       @get('controllers.search').set('redirected', false)
     m = Species.TaxonConcept.find(taxonConceptId)
     @transitionToRoute('taxon_concept.legal', m)
+
+  transitionToPage: (forward) ->
+    if forward
+      @set("page", parseInt(@page) + 1)
+    else
+      @set("page", parseInt(@page) - 1)
+    this.get("controllers.search").openSearchPage undefined, @page, @perPage
+
