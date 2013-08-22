@@ -1,5 +1,5 @@
 Species.SearchController = Ember.Controller.extend Species.Spinner,
-  needs: ['geoEntities']
+  needs: ['geoEntities', 'taxonConcepts']
   taxonomy: 'cites_eu'
   taxonConceptQuery: null
   geoEntityQuery: null
@@ -69,6 +69,8 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
       query = @get('taxonConceptQuery')
     else
       query = taxonFullName
+    # Resetting the page property.
+    unless page then @get("controllers.taxonConcepts").set('page', 1)
     @transitionToRoute('search', {
       taxonomy: @get('taxonomy')
       taxon_concept_query: query
