@@ -72,6 +72,42 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       )
   end
 
+  def eu_decisions
+    EuDecision.joins([:start_event, :geo_entity]).
+      where("
+            eu_decisions.taxon_concept_id = ?
+            OR (
+              eu_decisions.taxon_concept_id IN (?)
+              AND eu_decisions.geo_entity_id IN
+                (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
+            )
+      ", object.id, children_and_ancestors, object.id).
+      joins('INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = eu_decisions.taxon_concept_id').
+      select(<<-SQL
+              eu_decisions.notes,
+              eu_decisions.start_date,
+              eu_decisions.is_current,
+              eu_decisions.geo_entity_id,
+              eu_decisions.start_event_id,
+              eu_decisions.term_id,
+              eu_decisions.source_id,
+              eu_decisions.eu_decision_type_id,
+              eu_decisions.term_id,
+              eu_decisions.source_id,
+              CASE
+                WHEN taxon_concepts_mview.rank_name = 'SPECIES'
+                THEN NULL
+                ELSE '[' || taxon_concepts_mview.rank_name || ' decision <i>' || taxon_concepts_mview.full_name || '</i>]'
+              END AS subspecies_info
+             SQL
+      ).
+      order(<<-SQL
+            geo_entities.name_en ASC, events.effective_at DESC,
+            subspecies_info DESC
+        SQL
+      )
+  end
+
   def cites_listing_changes
     cites = Designation.find_by_name(Designation::CITES)
     MListingChange.
@@ -181,35 +217,6 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
             WHEN change_type_name = 'DELETION' THEN 0
           END,
           subspecies_info DESC
-        SQL
-      )
-  end
-
-  def eu_decisions
-    EuDecision.where(:taxon_concept_id => object_children_and_ancestors).
-      joins([:start_event, :geo_entity]).
-      joins('INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = eu_decisions.taxon_concept_id').
-      select(<<-SQL
-              eu_decisions.notes,
-              eu_decisions.start_date,
-              eu_decisions.is_current,
-              eu_decisions.geo_entity_id,
-              eu_decisions.start_event_id,
-              eu_decisions.term_id,
-              eu_decisions.source_id,
-              eu_decisions.eu_decision_type_id,
-              eu_decisions.term_id,
-              eu_decisions.source_id,
-              CASE
-                WHEN taxon_concepts_mview.rank_name = 'SPECIES'
-                THEN NULL
-                ELSE '[' || taxon_concepts_mview.rank_name || ' decision <i>' || taxon_concepts_mview.full_name || '</i>]'
-              END AS subspecies_info
-             SQL
-      ).
-      order(<<-SQL
-            geo_entities.name_en ASC, events.effective_at DESC,
-            subspecies_info DESC
         SQL
       )
   end
