@@ -32,4 +32,18 @@
     {{/unless}}
   </div>
 
+{{#if controller.showPageControls}}
+  <ul class="paging">
+    {{# if controller.showPrevPage }}
+      <li><a class="btn-prev" href="#" {{action "prevPage" target="controller" on="click"}}>&#9664;</a></li>
+    {{/if}}
+
+    <li>Page {{controller.page}}</li>
+
+    {{# if view.showNextPage }}
+      <li><a class="btn-next" href="#" {{action "nextPage" target="controller" on="click"}}>&#9654;</a></li>
+    {{/if}}
+  </ul>
+{{/if}}
+
 </div>
