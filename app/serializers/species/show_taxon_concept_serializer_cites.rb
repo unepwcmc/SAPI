@@ -10,7 +10,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   has_many :eu_decisions, :serializer => Species::EuDecisionSerializer
 
   def quotas
-    Quota.where(:taxon_concept_id => object_and_children).joins(:geo_entity).
+    Quota.where(:taxon_concept_id => object_children_and_ancestors).joins(:geo_entity).
       includes([:unit, :geo_entity => :geo_entity_type]).
       joins('INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id').
       select(<<-SQL
@@ -24,9 +24,9 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.quota,
               trade_restrictions.public_display,
               CASE
-                WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
-                  THEN '[Quota for SUBSPECIES <i>' || taxon_concepts_mview.full_name || '</i>]'
-                ELSE NULL
+                WHEN taxon_concepts_mview.rank_name = 'SPECIES'
+                THEN NULL
+                ELSE '[Quota for ' || taxon_concepts_mview.rank_name || ' <i>' || taxon_concepts_mview.full_name || '</i>]'
               END AS subspecies_info
              SQL
       ).
@@ -38,9 +38,17 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def cites_suspensions
-    CitesSuspension.where(:taxon_concept_id => object_and_children).
-      joins([:start_notification, :geo_entity]).
-      joins('INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id').
+    CitesSuspension.joins(:geo_entity).
+      where("
+            trade_restrictions.taxon_concept_id = ?
+            OR (
+              (trade_restrictions.taxon_concept_id IN (?) OR trade_restrictions.taxon_concept_id IS NULL)
+              AND trade_restrictions.geo_entity_id IN
+                (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
+            )
+      ", object.id, children_and_ancestors, object.id).
+      joins(:start_notification).
+      joins('LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id').
       select(<<-SQL
               trade_restrictions.notes,
               trade_restrictions.start_date,
@@ -50,9 +58,9 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.start_notification_id,
               trade_restrictions.end_notification_id,
               CASE
-                WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
-                  THEN '[Suspension for SUBSPECIES <i>' || taxon_concepts_mview.full_name || '</i>]'
-                ELSE NULL
+                WHEN taxon_concepts_mview.rank_name = 'SPECIES'
+                THEN NULL
+                ELSE '[Suspension for ' || taxon_concepts_mview.rank_name || ' <i>' || taxon_concepts_mview.full_name || '</i>]'
               END AS subspecies_info
              SQL
       ).
@@ -178,7 +186,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def eu_decisions
-    EuDecision.where(:taxon_concept_id => object_and_children).
+    EuDecision.where(:taxon_concept_id => object_children_and_ancestors).
       joins([:start_event, :geo_entity]).
       joins('INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = eu_decisions.taxon_concept_id').
       select(<<-SQL
@@ -193,15 +201,14 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               eu_decisions.term_id,
               eu_decisions.source_id,
               CASE
-                WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
-                  THEN '[Suspension for SUBSPECIES ' || taxon_concepts_mview.full_name || ']'
-                ELSE NULL
+                WHEN taxon_concepts_mview.rank_name = 'SPECIES'
+                THEN NULL
+                ELSE '[' || taxon_concepts_mview.rank_name || ' decision <i>' || taxon_concepts_mview.full_name || '</i>]'
               END AS subspecies_info
              SQL
       ).
       order(<<-SQL
-            eu_decisions.is_current DESC,
-            events.effective_at DESC, geo_entities.name_en ASC,
+            geo_entities.name_en ASC, events.effective_at DESC,
             subspecies_info DESC
         SQL
       )

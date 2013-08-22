@@ -8,6 +8,4 @@ Species.ToggleButton = Ember.View.extend
   ).property('value')
 
   click: (e) ->
-    option = @.get("option")
-    @.set("value", option)
-    @get('controller').send('redirectToOpenSearchPage', option)
+    @.set("value", @.get("option"))
