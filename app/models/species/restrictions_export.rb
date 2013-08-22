@@ -10,6 +10,7 @@ class Species::RestrictionsExport
   def self.fill_taxon_columns restriction
     columns = []
     taxon_issued = restriction.taxon_concept
+    return [""]*(TAXONOMY_COLUMNS.size+1) unless taxon_issued #return array with empty strings
     if taxon_issued.name_status == "A"
       taxon = taxon_issued.m_taxon_concept
       remark = ""
@@ -18,7 +19,6 @@ class Species::RestrictionsExport
       remark = "Issued for #{taxon_issued.name_status == 'S' ? 'synonym' : 'hybrid' }
         #{taxon_issued.full_name}"
     end
-    return [""]*(TAXONOMY_COLUMNS.size+1) unless taxon #return array with empty strings
     TAXONOMY_COLUMNS.each do |c|
       columns << taxon.send(c)
     end
