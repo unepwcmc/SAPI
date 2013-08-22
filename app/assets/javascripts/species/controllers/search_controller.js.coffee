@@ -79,8 +79,7 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
       per_page: perPage or 100
     })
 
-  redirectToOpenSearchPage: (taxonomy, taxonConceptQuery) ->
-    @set('taxonomy', taxonomy)
-    if taxonConceptQuery
-      @set('taxonConceptQuery', taxonConceptQuery)
+  redirectToOpenSearchPage: (params) ->
+    for property, val of params
+      @set(property, val)
     @openSearchPage()

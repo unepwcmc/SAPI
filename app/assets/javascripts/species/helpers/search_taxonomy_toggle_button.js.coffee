@@ -10,4 +10,4 @@ Species.SearchTaxonomyToggleButton = Ember.View.extend
   click: (e) ->
     option = @.get("option")
     @.set("value", option)
-    @get('controller').send('redirectToOpenSearchPage', option)
+    @get('controller').send('redirectToOpenSearchPage', {"taxonomy": option})
