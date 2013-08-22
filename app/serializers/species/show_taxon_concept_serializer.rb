@@ -32,10 +32,6 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     ids.reject{|r| r.nil?} #remove nils
   end
 
-  def object_children_and_ancestors
-    [object.id]+children_and_ancestors
-  end
-
   def common_names
     object.common_names.joins(:language).
       select("languages.name_en AS lang").

@@ -10,9 +10,16 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   has_many :eu_decisions, :serializer => Species::EuDecisionSerializer
 
   def quotas
-    Quota.where(:taxon_concept_id => object_children_and_ancestors).joins(:geo_entity).
-      includes([:unit, :geo_entity => :geo_entity_type]).
-      joins('INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id').
+    Quota.joins(:geo_entity).
+      where("
+            trade_restrictions.taxon_concept_id = ?
+            OR (
+              (trade_restrictions.taxon_concept_id IN (?) OR trade_restrictions.taxon_concept_id IS NULL)
+              AND trade_restrictions.geo_entity_id IN
+                (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
+            )
+      ", object.id, children_and_ancestors, object.id).
+      joins('LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id').
       select(<<-SQL
               trade_restrictions.notes,
               trade_restrictions.url,
