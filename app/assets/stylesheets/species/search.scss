@@ -2,6 +2,7 @@
 	background: #8fb7cf;
 	border: 1px solid #6b94af;
 	padding: 18px 18px 17px;
+	box-shadow: 2px 2px 2px rgba(0,0,0,0.05);
 
 	.links-area {
 		float: left;
@@ -23,7 +24,12 @@
 			border: 1px solid #253848;
 			-webkit-border-radius: 0 20px 20px 0;
 			border-radius: 0 20px 20px 0;
-      cursor: pointer;
+      		cursor: pointer;
+			-webkit-transition: all 0.5s ease;
+			-moz-transition: all 0.5s ease;
+			-ms-transition: all 0.5s ease;
+			-o-transition: all 0.5s ease;
+			transition: all 0.5s ease;
 		}		
 		a:hover, a.active { background: #253848; }
 		a:first-child {
@@ -70,6 +76,7 @@
 		fieldset.parent-focus.parent-active .popup { display: block; }
 
 		button {
+			cursor: pointer;
 			width: 101px;
 			float: right;
 			border: none;
@@ -85,6 +92,15 @@
 			-webkit-border-radius: 20px;
 			border-radius: 20px;
 			background: #376382;
+			&:hover{
+				background: #253848;
+				-webkit-transition: all 0.5s ease;
+				-moz-transition: all 0.5s ease;
+				-ms-transition: all 0.5s ease;
+				-o-transition: all 0.5s ease;
+				transition: all 0.5s ease;
+			}
+			
 		}
 		input[type="submit"]:hover { cursor: pointer; }
 
@@ -96,11 +112,11 @@
 			width: 562px;
 			z-index: 9999;
 			text-align: left;
-			padding: 5px 13px 8px;
+			padding: 0 15px 15px 15px;
 			background: #f5f5f7;
 			-webkit-border-radius: 5px;
 			border-radius: 5px;
-			border: #d6d7d7 solid 1px;
+			border: #ddd solid 1px;
 		}
 
 		.popup:after {
@@ -118,7 +134,7 @@
 			max-height: 218px;
 			overflow: auto;
 			padding: 10px 0 0;
-			line-height: 16px;
+			line-height: 18px;
 		}
 		.popup > ul > li {
 			font-size: 13px;
@@ -130,9 +146,26 @@
 			display: block;
 			font-weight: bold;
 			color: #376381;
+			padding: 10px 0 0 0;
 		}
-		.popup > ul > li a { color: #525263; }
-		.popup > ul > li a span { text-decoration: underline; }
+		.popup > ul > li a { 
+			color: #525263; 
+			}
+			
+		.popup > ul > li a span { 
+			border-bottom: 1px dotted #525263;
+			}
+			
+		.popup > ul > li a:hover { 
+			text-decoration: none;
+			color: #2d3237;
+			border-bottom: 1px dotted #2d3237;
+			-webkit-transition: all 0.5s ease;
+			-moz-transition: all 0.5s ease;
+			-ms-transition: all 0.5s ease;
+			-o-transition: all 0.5s ease;
+			transition: all 0.5s ease;
+			}
 	}
 	.search:after {
 		clear: both;
@@ -145,12 +178,13 @@
 		padding: 13px 0 0 15px;
 
 		a {
+			text-decoration: none;
 			float: left;
 			font-size: 13px;
 			font-weight: bold;
 			text-transform: uppercase;
 			color: #fff;
-			padding: 0 25px 0 10px;
+			padding: 0 25px 0 13px;
 			position: relative;
 			background: #376382;
 			line-height: 30px;
@@ -169,7 +203,7 @@
 			position: absolute;
 			content: "";
 			z-index: 1;
-			right: 10px;
+			right: 12px;
 			top: 14px;
 			background: url(/assets/species/arrow01.png) no-repeat;
 		}
@@ -177,11 +211,6 @@
 		  color: #FB585E !important;
 		  text-decoration: none;
 		  border: none;
-
-		  &:hover {
-		    text-decoration: none;
-		    border: none;
-		  }
 		}
 
 		.popup-holder01 {
@@ -208,7 +237,7 @@
 }
 .inner .search-block .search input[type="text"] { width: 313px; }
 
-.inner .search-block.add .search-form { width: 615px; }
+.inner .search-block.add .search-form { width: 612px; }
 
 .inner .search-block.add .search { width: 589px; }
 .inner .search-block.add .search input[type="text"] { width: 475px; }
