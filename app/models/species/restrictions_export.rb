@@ -16,12 +16,12 @@ class Species::RestrictionsExport
       when "H"
         taxon = restriction.taxon_concept.hybrid_parents.
           first.try(:m_taxon_concept) ||
-          taxon_issued.m_taxon_concept
+          restriction.taxon_concept.m_taxon_concept
           remark = "Issued for hybrid #{restriction.taxon_concept.full_name}"
       when "S"
         taxon = restriction.taxon_concept.accepted_names.
           first.try(:m_taxon_concept) ||
-          taxon_issued.m_taxon_concept
+          restriction.taxon_concept.m_taxon_concept
         remark = "Issued for synonym #{restriction.taxon_concept.full_name}"
       else
         taxon = nil
