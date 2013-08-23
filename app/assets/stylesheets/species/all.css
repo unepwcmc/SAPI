@@ -1125,7 +1125,7 @@ form, fieldset {
 	margin: 0 -20px 0 0;
 }
 
-#spinner {
+.spinner {
   visibility: hidden;
   position: absolute;
   background-color: #fff;
@@ -1137,7 +1137,7 @@ form, fieldset {
   z-index: 999;
 }
 
-#spinner img {
+.spinner img {
   position: fixed;
 	top: 50%;
 	left: 50%;
