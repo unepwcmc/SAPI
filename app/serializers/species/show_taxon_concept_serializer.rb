@@ -22,9 +22,9 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     [object.id]+object.children.select(:id).map(&:id)
   end
 
-  def object_children_and_ancestors
+  def children_and_ancestors
     m_concept = object.m_taxon_concept
-    ids = [object.id]+object.children.select(:id).map(&:id)+
+    ids = object.children.select(:id).map(&:id)+
             [m_concept.kingdom_id, m_concept.phylum_id,
               m_concept.order_id, m_concept.class_id,
               m_concept.family_id, m_concept.subfamily_id,

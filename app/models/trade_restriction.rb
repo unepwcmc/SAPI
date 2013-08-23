@@ -88,9 +88,13 @@ class TradeRestriction < ActiveRecord::Base
   end
 
   def self.export_query filters
-    self.includes([:geo_entity, :unit,
-      {:taxon_concept => [:m_taxon_concept,
-        :taxon_relationships]}]).
+    self.
+      joins(:geo_entity).
+      joins(<<-SQL
+          LEFT JOIN taxon_concepts ON taxon_concepts.id = trade_restrictions.taxon_concept_id
+          LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id
+        SQL
+      ).
       filter_is_current(filters["set"]).
       filter_geo_entities(filters).
       filter_years(filters).
@@ -159,7 +163,7 @@ class TradeRestriction < ActiveRecord::Base
           taxon_concepts_mview.order_id, taxon_concepts_mview.class_id, 
           taxon_concepts_mview.phylum_id, taxon_concepts_mview.kingdom_id
         ] && ARRAY[?]
-        OR taxon_concept_id IS NULL
+        OR trade_restrictions.taxon_concept_id IS NULL
       SQL
       return where(conds_str, filters["taxon_concepts_ids"].map(&:to_i))
     end
