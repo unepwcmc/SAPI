@@ -4,12 +4,13 @@ class Api::V1::TaxonConceptsController < ApplicationController
 
   def index
     @search = Species::Search.new(params)
-    @taxon_concepts = @search.results.page(params[:page]).per(params[:per_page] || 50)
+    @taxon_concepts = @search.results.page(params[:page]).per(params[:per_page] || 100)
     render :json => @taxon_concepts,
       :each_serializer => Species::TaxonConceptSerializer,
       :meta => {
         :total => @search.results.count,
-        :higher_taxa_headers => Checklist::HigherTaxaInjector.new(@taxon_concepts).run_summary
+        :higher_taxa_headers => Checklist::HigherTaxaInjector.new(@taxon_concepts).run_summary,
+        :page => params[:page]
       }  
   end
 

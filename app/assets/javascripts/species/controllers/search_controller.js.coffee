@@ -1,5 +1,5 @@
 Species.SearchController = Ember.Controller.extend Species.Spinner,
-  needs: ['geoEntities']
+  needs: ['geoEntities', 'taxonConcepts']
   taxonomy: 'cites_eu'
   taxonConceptQuery: null
   geoEntityQuery: null
@@ -63,18 +63,23 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
     $(@spinnerSelector).css("visibility", "visible")
     @transitionToRoute('taxon_concept.legal', m)
 
-  openSearchPage: (taxonFullName) ->
+  openSearchPage: (taxonFullName, page, perPage) ->
     $(".search fieldset").removeClass('parent-focus parent-active')
     if taxonFullName == undefined
       query = @get('taxonConceptQuery')
     else
       query = taxonFullName
+    # Resetting the page property if no page value has been passed.
+    unless page then @get("controllers.taxonConcepts").set('page', 1)
     @transitionToRoute('search', {
-      taxonomy: @get('taxonomy'),
-      taxon_concept_query: query,
+      taxonomy: @get('taxonomy')
+      taxon_concept_query: query
       geo_entities_ids: @get('selectedGeoEntities').mapProperty('id')
+      page: page or 1
+      per_page: perPage or 100
     })
 
-  redirectToOpenSearchPage: (taxonomy) ->
-    @set('taxonomy', taxonomy)
+  redirectToOpenSearchPage: (params) ->
+    for property, val of params
+      @set(property, val)
     @openSearchPage()
