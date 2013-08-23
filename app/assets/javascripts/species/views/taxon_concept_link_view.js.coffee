@@ -9,7 +9,7 @@ Species.TaxonConceptLinkView = Ember.View.extend
   click: (e) ->
     params = 
       taxonomy: @get('controller').get('controllers.search').get('taxonomy')
-      taxon_concept_query: @get('context').toString()
+      taxonConceptQuery: @get('context').toString()
     @get('controller').get('controllers.search')
       .send('redirectToOpenSearchPage', params)
 
