@@ -167,7 +167,7 @@ class EuDecision < ActiveRecord::Base
           taxon_concepts_mview.order_id, taxon_concepts_mview.class_id, 
           taxon_concepts_mview.phylum_id, taxon_concepts_mview.kingdom_id
         ] && ARRAY[?]
-        OR taxon_concept_id IS NULL
+        OR eu_decisions.taxon_concept_id IS NULL
       SQL
       return where(conds_str, filters["taxon_concepts_ids"].map(&:to_i))
     end
