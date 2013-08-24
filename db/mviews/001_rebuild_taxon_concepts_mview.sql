@@ -123,7 +123,8 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       INNER JOIN "languages"
       ON "languages"."id" = "common_names"."language_id" AND UPPER(languages.iso_code1) IN (''EN'', ''FR'', ''ES'')
       GROUP BY taxon_concepts.id, languages.iso_code1
-      ORDER BY 1,2'
+      ORDER BY 1,2',
+      'SELECT DISTINCT languages.iso_code1 FROM languages WHERE UPPER(languages.iso_code1) IN (''EN'', ''FR'', ''ES'') order by 1'
       ) AS ct(
       taxon_concept_id_com INTEGER,
       english_names_ary VARCHAR[], spanish_names_ary VARCHAR[], french_names_ary VARCHAR[]
