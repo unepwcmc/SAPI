@@ -5,7 +5,7 @@ namespace :import do
   desc 'Fix symbols in the data files'
   task :fix_symbols => :environment do
     Sapi.disable_triggers
-    CSV.foreach('lib/assets/files/ascii_symbols_utf8.csv', :quote_char => 'h') do |row|
+    CSV.foreach('lib/files/ascii_symbols_utf8.csv', :quote_char => 'h') do |row|
       puts "############################# Cleaning References  of ( #{row[0]} => #{row[1]}) #############################"
       count = Reference.where('citation Like ?', "%#{row[0]}%").count
       puts "#{count} records affected"

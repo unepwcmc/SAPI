@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130702093702) do
+ActiveRecord::Schema.define(:version => 20130820080200) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -90,23 +90,38 @@ ActiveRecord::Schema.define(:version => 20130702093702) do
     t.datetime "updated_at",                          :null => false
   end
 
+  create_table "eu_decision_confirmations", :force => true do |t|
+    t.integer  "eu_decision_id"
+    t.integer  "event_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  create_table "eu_decision_types", :force => true do |t|
+    t.string   "name"
+    t.string   "tooltip"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.string   "decision_type"
+  end
+
   create_table "eu_decisions", :force => true do |t|
-    t.string   "type"
-    t.integer  "law_id"
+    t.boolean  "is_current",          :default => true
+    t.text     "notes"
+    t.text     "internal_notes"
     t.integer  "taxon_concept_id"
     t.integer  "geo_entity_id"
     t.datetime "start_date"
+    t.integer  "start_event_id"
     t.datetime "end_date"
-    t.string   "restriction"
-    t.text     "restriction_text"
+    t.integer  "end_event_id"
+    t.string   "type"
+    t.boolean  "conditions_apply"
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
+    t.integer  "eu_decision_type_id"
     t.integer  "term_id"
     t.integer  "source_id"
-    t.boolean  "conditions"
-    t.text     "comments"
-    t.boolean  "is_current"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
-    t.boolean  "conditions_apply"
   end
 
   create_table "events", :force => true do |t|
@@ -260,10 +275,10 @@ ActiveRecord::Schema.define(:version => 20130702093702) do
   end
 
   create_table "references", :force => true do |t|
-    t.text     "title",       :null => false
+    t.text     "title"
     t.string   "year"
     t.string   "author"
-    t.text     "citation"
+    t.text     "citation",    :null => false
     t.text     "publisher"
     t.integer  "legacy_id"
     t.string   "legacy_type"
@@ -356,6 +371,7 @@ ActiveRecord::Schema.define(:version => 20130702093702) do
     t.text     "phylum_name"
     t.text     "class_name"
     t.text     "order_name"
+    t.text     "subfamily_name"
     t.text     "family_name"
     t.text     "genus_name"
     t.text     "species_name"
@@ -364,6 +380,7 @@ ActiveRecord::Schema.define(:version => 20130702093702) do
     t.integer  "phylum_id"
     t.integer  "class_id"
     t.integer  "order_id"
+    t.integer  "subfamily_id"
     t.integer  "family_id"
     t.integer  "genus_id"
     t.integer  "species_id"
@@ -501,7 +518,7 @@ ActiveRecord::Schema.define(:version => 20130702093702) do
   end
 
   create_table "trade_restrictions", :force => true do |t|
-    t.boolean  "is_current"
+    t.boolean  "is_current",                                 :default => true
     t.datetime "start_date"
     t.datetime "end_date"
     t.integer  "geo_entity_id"
@@ -596,7 +613,12 @@ ActiveRecord::Schema.define(:version => 20130702093702) do
   add_foreign_key "distributions", "geo_entities", :name => "taxon_concept_geo_entities_geo_entity_id_fk"
   add_foreign_key "distributions", "taxon_concepts", :name => "taxon_concept_geo_entities_taxon_concept_id_fk"
 
-  add_foreign_key "eu_decisions", "events", :name => "eu_decisions_law_id_fk", :column => "law_id"
+  add_foreign_key "eu_decision_confirmations", "eu_decisions", :name => "eu_decision_confirmations_eu_decision_id_fk"
+  add_foreign_key "eu_decision_confirmations", "events", :name => "eu_decision_confirmations_event_id_fk"
+
+  add_foreign_key "eu_decisions", "eu_decision_types", :name => "eu_decisions_eu_decision_type_id_fk"
+  add_foreign_key "eu_decisions", "events", :name => "eu_decisions_end_event_id_fk", :column => "end_event_id"
+  add_foreign_key "eu_decisions", "events", :name => "eu_decisions_start_event_id_fk", :column => "start_event_id"
   add_foreign_key "eu_decisions", "geo_entities", :name => "eu_decisions_geo_entity_id_fk"
   add_foreign_key "eu_decisions", "taxon_concepts", :name => "eu_decisions_taxon_concept_id_fk"
   add_foreign_key "eu_decisions", "trade_codes", :name => "eu_decisions_source_id_fk", :column => "source_id"

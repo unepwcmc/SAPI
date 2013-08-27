@@ -30,6 +30,11 @@ body {
 	background: #f3f1f1;
 	height: 100%;
 	min-width: 980px;
+	background-image: url(/assets/species/background_1.jpg);
+	background-size: 100%;
+	background-repeat: no-repeat;
+	background-position: top center;
+	background-attachment: fixed;
 }
 img { border-style: none; }
 i { font-style: italic; }
@@ -87,10 +92,32 @@ form, fieldset {
 	line-height: 18px;
 	padding: 0 25px 10px 20px;
 	position: relative;
-	background: url(/assets/species/sep.png) no-repeat 0 3px;
 }
 #nav > li:first-child { background: none; }
-#nav > li > a { color: #2d3237; }
+#nav > li > a { 
+	color: #2d3237;
+	text-decoration: none;
+	}
+	
+#nav > li > a:hover { 
+	border-bottom: 1px dotted #2D3237;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-ms-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	}
+	
+#nav > li.add {
+	border-left: 1px solid #2d3237;
+	border-right: 1px solid #2d3237;
+	padding-bottom: 0;
+}
+
+#nav > li.add a:hover {
+	border: none;
+}
+
 #nav > li.add > a { text-decoration: none; }
 #nav > li:hover > ul { display: block; }
 #nav > li > ul {
@@ -98,13 +125,13 @@ form, fieldset {
 	position: absolute;
 	left: 6px;
 	top: 24px;
-	width: 162px;
+	width: 180px;
 	z-index: 9999;
-	padding: 5px 8px 8px;
+	padding: 5px 15px 15px 15px;
 	background: #f5f5f7;
 	-webkit-border-radius: 7px;
 	border-radius: 7px;
-	border: #d6d7d7 solid 1px;
+	border: #ddd solid 1px;
 }
 #nav > li > ul:after {
 	content: "";
@@ -125,8 +152,21 @@ form, fieldset {
 #nav > li > ul > li > a {
 	float: left;
 	text-decoration: none;
-	background: url(/assets/species/sep01.png) repeat-x 0 100%;
+	border-bottom: 1px dotted #999;
 }
+
+#nav > li > ul > li > a:hover {
+	float: left;
+	text-decoration: none;
+	color: #2D3237;
+	border-bottom: 1px dotted #2D3237;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-ms-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+
 #main {
 	width: 860px;
 	margin: 0 auto;
@@ -135,7 +175,12 @@ form, fieldset {
 	color: #868686;
 	padding: 136px 0 201px;
 }
-#main p { margin: 0 0 28px; }
+#main p { 
+	margin: 20px 0 28px 0;
+	font-size: 16px;
+	color: #2D3237;
+}
+
 #main h1 {
 	font-size: 50px;
 	font-weight: lighter;
@@ -204,6 +249,7 @@ form, fieldset {
 	display: inline-block;
 }
 #header .download, #main .download {
+	text-decoration: none;
 	font-size: 13px;
 	font-weight: bold;
 	text-transform: uppercase;
@@ -215,7 +261,19 @@ form, fieldset {
 	line-height: 31px;
 	-webkit-border-radius: 20px;
 	border-radius: 20px;
+	box-shadow: 2px 2px 2px rgba(0,0,0,0.05);
 }
+
+#header .download:hover, #main .download:hover {
+	cursor: pointer;
+	background: #253848;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-ms-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+
 .inner #nav {
 	margin: 0 12px 0 0;
 	padding: 24px 0 0;
@@ -359,7 +417,7 @@ form, fieldset {
 .result-block.add h2 { padding: 13px 28px 12px; }
 
 .dwonload-block {
-	width: 360px;
+	width: 441px;
 	margin-left: -180px;
 	position: fixed;
 	left: 50%;
@@ -547,7 +605,10 @@ form, fieldset {
 	top: 14px;
 	background: url(/assets/species/arrow01.png) no-repeat;
 }
-.three-columns { padding: 21px 0 20px; }
+.three-columns { 
+	padding: 20px 25px;
+}
+
 .three-columns:after {
 	display: block;
 	content: "";
@@ -555,20 +616,21 @@ form, fieldset {
 }
 .three-columns .col {
 	float: left;
-	width: 103px;
-	padding: 0 0 0 6px;
+	padding: 0 6px;
 	border-left: 1px solid #e8e8e9;
 }
-.three-columns .col:first-child { padding: 0 0 0 22px; }
+.three-columns .col:first-child {
+	border-left: none;
+}
 .three-columns .col .link {
 	float: left;
-	min-width: 68px;
+	min-width: 85px;
 	font-size: 13px;
 	position: relative;
 	font-weight: bold;
 	text-transform: uppercase;
 	color: #fff;
-	padding: 8px 19px 7px 10px;
+	padding: 8px 19px 7px 13px;
 	background: #376382;
 	line-height: 16px;
 	-webkit-border-radius: 20px;
@@ -582,7 +644,7 @@ form, fieldset {
 	position: absolute;
 	content: "";
 	z-index: 1;
-	right: 10px;
+	right: 13px;
 	top: 14px;
 	background: url(/assets/species/arrow01.png) no-repeat;
 }
@@ -656,7 +718,6 @@ form, fieldset {
 }
 #main .heading-holder .list li a { color: #2a425a; }
 #main .tabset {
-	padding: 0 9px;
 	margin: -40px 0 0;
 	position: relative;
 }
@@ -670,7 +731,6 @@ form, fieldset {
 	width: 184px;
 	font-size: 19px;
 	text-align: center;
-	line-height: 39px;
 	text-transform: uppercase;
 }
 #main .tabset > li > a {
@@ -680,6 +740,8 @@ form, fieldset {
 	text-decoration: none;
 	border-top: solid 1px #6993B0;
 	border-left: solid 1px #6993B0;
+	padding: 15px 0;
+	margin-top: -9px;
 }
 #main .tabset > li:first-child > a {
 	-webkit-border-radius: 5px 0 0 0;
@@ -691,12 +753,12 @@ form, fieldset {
 	border-right: solid 1px #6b94af;
 }
 #main .tabset > li:hover > a, #main .tabset > li > a.active {
-	background: #ecf2f6;
+	background: #F2F2F5;
 	font-weight: bold;
-  color: #25475F;
-  border-top: solid 1px #ACC7DF;
-  border-left: solid 1px #ACC7DF;
-  border-right: solid 1px #ACC7DF;
+  	color: #25475F;
+  	border-top: solid 1px #ACC7DF;
+  	border-left: solid 1px #ACC7DF;
+  	border-right: solid 1px #ACC7DF;
 }
 #main .tabset > li > a.active + ul { display: block; }
 #main .tabset > li > ul {
@@ -704,11 +766,11 @@ form, fieldset {
 	display: none;
 	left: 0;
 	top: 40px;
-	background: #ecf2f6;
+	background: #F2F2F5;
 	border: solid 1px #adc7de;
 	border-top: none;
 	width: 938px;
-  padding: 5px 0 0;
+	padding: 5px 0 0;
 }
 #main .tabset > li > ul >li {
 	float: left;
@@ -716,15 +778,16 @@ form, fieldset {
 	padding: 0 48px 0 30px;
 	line-height: 38px;
 	font-size: 15px;
+	font-weight: bold;
 	text-align: center;
 	text-transform: none;
 }
 #main .tabset > li > ul >li > a {
-	color: #2a425a;
+	color: #7CA8C6;
 	float: left;
 }
 #main .tabset > li > ul >li.active > a, #main .tabset > li > ul >li > a:hover {
-	font-weight: bold;
+	color: #2a425a;
 	text-decoration: none;
 }
 #main .tabset > li > ul > li.has-dropdown:hover > a {
@@ -761,18 +824,22 @@ form, fieldset {
 	background: #f5f5f7;
 	border: 1px solid #d5dadd;
 	border-top: none;
-	padding: 20px 0 0;
+	padding: 50px 0;
 }
 
 
 #main .block {
 	text-align: left;
-	padding: 38px 1px 0;
+	padding: 38px 30px 0 30px;
 	margin: 0 -1px 12px;
 }
 
 #main .block.show_more {
 	border-bottom: 1px solid #ddd;
+}
+
+#main .block.show_more#cites_quotas {
+	border-top: 1px solid #ddd;
 }
 
 #main .block.show_more:hover, #main .block.show_more.active {
@@ -856,7 +923,9 @@ form, fieldset {
 #main .block.block01 td { vertical-align: top; }
 #main .block td:first-child, #main .block td.last { border: 0; }
 #main .block tr.current td {
-	padding: 13px 0 12px;
+	padding: 20px 0;
+	line-height: 20px;
+	font-size: 14px;
 }
 
 #main .block .historic.hidden {
@@ -868,7 +937,9 @@ form, fieldset {
 
 #main .block tr.add td { padding: 16px 0 12px; }
 #main .block tr { background: #eef2f7; }
-#main .block tr.current { background: #f5f5f7; }
+#main .block tr.current { 
+	background: #f5f5f7; 
+	}
 #main .block thead tr { background: #f5f5f7; }
 #main .block.show_more .btn-hloder {
 	margin: 0;
@@ -1008,7 +1079,6 @@ form, fieldset {
 	padding: 0 29px 24px;
 	text-align: left;
 	margin: 0 0 46px;
-	background: url(/assets/species/sep02.png) repeat-x 0 100%;
 }
 #main .block04.block05 {
 	background: none;
