@@ -129,13 +129,30 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
   ).property('euDecisions')
 
   # This part is for the loading spinner...
-  # TODO: if it works, it will need to be implemented for the other partials.
-  citesListingsCheck: (->
+  citesListingsIsLoading: ( ->
     if @get('citesListings') != undefined
       return no
     else
       return yes
-  ).property()
+  ).property('citesListings')
+  citesQuotasIsLoading: ( ->
+    if @get('citesQuotas') != undefined
+      return no
+    else
+      return yes
+  ).property('citesQuotas')
+  euListingsIsLoading: ( ->
+    if @get('euListings') != undefined
+      return no
+    else
+      return yes
+  ).property('euListings')
+  citesSuspensionsIsLoading: ( ->
+    if @get('citesSuspensions') != undefined
+      return no
+    else
+      return yes
+  ).property('citesSuspensions')
 
   contentObserver: ( ->
     matchedOnSelf = true
