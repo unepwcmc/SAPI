@@ -1,7 +1,7 @@
 class Checklist::TimelinesForTaxonConcept
   include ActiveModel::SerializerSupport
   attr_reader :id, :taxon_concept_id, :raw_timelines, :timelines,
-    :timeline_years
+    :timeline_years, :has_descendant_timelines, :has_events
 
   def initialize(taxon_concept)
     @taxon_concept_id = taxon_concept.id
@@ -15,6 +15,8 @@ class Checklist::TimelinesForTaxonConcept
       :change_type_name => ChangeType::ADDITION
     ).map(&:species_listing_name)
     @timeline_events = listing_changes.map(&:to_timeline_event)
+    @has_descendant_timelines = taxon_concept.cites_listed_descendants
+    @has_events = (@timeline_events.length > 0)
     @time_start = Time.new('1975-01-01')
     @time_end = Time.new("#{Time.now.year + 2}-01-01")
     generate_timelines

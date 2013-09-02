@@ -18,6 +18,7 @@
 #  class_name                      :text
 #  order_name                      :text
 #  family_name                     :text
+#  subfamily_name                  :text
 #  genus_name                      :text
 #  species_name                    :text
 #  subspecies_name                 :text
@@ -26,6 +27,7 @@
 #  class_id                        :integer
 #  order_id                        :integer
 #  family_id                       :integer
+#  subfamily_id                    :integer
 #  genus_id                        :integer
 #  species_id                      :integer
 #  subspecies_id                   :integer
@@ -33,6 +35,7 @@
 #  cites_ii                        :boolean
 #  cites_iii                       :boolean
 #  cites_listed                    :boolean
+#  cites_listed_descendants        :boolean
 #  cites_show                      :boolean
 #  cites_status                    :text
 #  cites_listing_original          :text

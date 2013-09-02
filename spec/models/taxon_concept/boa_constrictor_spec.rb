@@ -69,6 +69,21 @@ describe TaxonConcept do
         end
       end
 
+      describe :cites_listed_descendants do
+        context "for family Boidae" do
+          specify{ @family.cites_listed_descendants.should be_true }
+        end
+        context "for genus Boa" do
+          specify{ @genus.cites_listed_descendants.should be_true }
+        end
+        context "for species Boa constrictor (inclusion in higher taxa listing)" do
+          specify{ @species.cites_listed_descendants.should be_true }
+        end
+        context "for subspecies Boa constrictor occidentalis" do
+          specify{ @subspecies1.cites_listed_descendants.should be_false }
+        end
+      end
+
       describe :eu_listed do
         context "for family Boidae" do
           specify{ @family.eu_listed.should be_true }
