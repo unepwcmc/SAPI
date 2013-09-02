@@ -97,7 +97,7 @@ module Checklist::Pdf::HistoryContent
 
   def multilingual_annotations(listing_change)
     res = ['en', 'es', 'fr'].map do |lng|
-      annotation_for_language(listing_change, lng)
+      annotation_for_language(listing_change, lng).presence
     end.compact
     (res.empty? ? [nil] : res)
   end
