@@ -20,7 +20,7 @@
         <tbody>
           {{#each reference in controllers.taxonConcept.standardReferences}}
           <tr>
-            <td>{{reference.citation}}</td>
+            <td>{{{reference.citation}}}</td>
           </tr>
           {{/each}}
         </tbody>
@@ -33,11 +33,11 @@
       <table summary="data table">
         <tbody>
           {{#each reference in controllers.taxonConcept.references}}
-          {{#unless reference.is_standard}}
-          <tr>
-            <td>{{reference.citation}}</td>
-          </tr>
-          {{/unless}}
+            {{#unless reference.is_standard}}
+            <tr>
+              <td>{{{reference.citation}}}</td>
+            </tr>
+            {{/unless}}
           {{/each}}
         </tbody>
       </table>
@@ -62,7 +62,7 @@
               <td>{{ref.country}}</td>
               <td>
                 {{#stringToArray ref.country_references splitter="; "}}
-                  <span class="distrib_reference">{{this}}</span>
+                  <span class="distrib_reference">{{{this}}}</span>
                 {{/stringToArray}}
               </td>
               <td class="last">&nbsp;</td>
