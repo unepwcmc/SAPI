@@ -270,12 +270,10 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     CASE
       WHEN name_status = 'H'
       THEN hstore(show_flag, 'f')
-      WHEN (data->'rank_name' = 'VARIETY'
-      OR data->'rank_name' = 'SUBSPECIES'
-      OR data->'rank_name' = 'ORDER'
-      OR data->'rank_name' = 'CLASS'
-      OR data->'rank_name' = 'PHYLUM'
-      OR data->'rank_name' = 'KINGDOM')
+      WHEN NOT (
+        data->'rank_name' = 'SPECIES'
+        OR data->'rank_name' = 'GENUS'
+      )
       AND listing->status_flag = 'LISTED'
       AND (listing->status_original_flag)::BOOLEAN = FALSE
       THEN hstore(show_flag, 'f')

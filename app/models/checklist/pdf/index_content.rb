@@ -102,7 +102,7 @@ module Checklist::Pdf::IndexContent
 
   def listed_taxon_name(taxon_concept)
     res = taxon_name_at_rank(taxon_concept)
-    "\\textbf{#{res}}" if taxon_concept.cites_accepted
+    res = "\\textbf{#{res}}" if taxon_concept.cites_accepted
     res
   end
 
