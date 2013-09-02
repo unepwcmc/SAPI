@@ -13,7 +13,7 @@ describe Checklist::TaxonConceptPrefixMatcher do
       subject{
         Checklist::TaxonConceptPrefixMatcher.new({:scientific_name => 'alligator'})
       }
-      specify{ subject.taxon_concepts.size.should == 2 }
+      specify{ subject.taxon_concepts.size.should == 1 } #Alligatoridae should nt be included
     end
     context "when match on common name" do
       subject{
