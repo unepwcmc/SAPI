@@ -1,5 +1,7 @@
 SAPI::Application.routes.draw do
 
+  match 'about' => 'pages#about'
+
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
   namespace :api do
@@ -88,6 +90,7 @@ SAPI::Application.routes.draw do
   end
 
   namespace :species do
+    #match 'about' => 'pages#about'
     match 'exports' => 'exports#index'
     match 'exports/download' => 'exports#download'
     get '*foo' => 'ember#start'

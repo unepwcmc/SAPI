@@ -1,0 +1,30 @@
+@import "susy";
+
+//@include border-box-sizing;
+
+
+// Setting up the Static Grid
+$total-columns: 12;
+$column-width: 4em;
+$gutter-width: 1em;
+$grid-padding: 1em;
+
+$container-style: static;
+
+.page {
+
+  //margin: 0 auto -30px;
+  //padding: 0 0 203px;
+  background-color: #f3f1f1;
+
+  // page acts as a container for our grid.
+  @include container;
+
+  .row-one { @include span-columns(6, 12); }
+  .row-two { @include span-columns(6 omega, 12); }
+
+  //.two-row {
+  //  @include span-columns(6, 12);
+  //}
+
+}
