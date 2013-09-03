@@ -1,6 +1,8 @@
 #Encoding: utf-8
 class Checklist::Checklist
-  attr_accessor :taxon_concepts_rel, :taxon_concepts, :animalia, :plantae
+  include ActiveModel::SerializerSupport
+  attr_accessor :taxon_concepts_rel, :taxon_concepts, :animalia, :plantae,
+  :authors, :synonyms, :synonyms_with_authors, :english_names, :spanish_names, :french_names, :total_cnt
 
   # Constructs a query to retrieve CITES listed taxon concepts based on user
   # defined parameters
@@ -50,47 +52,47 @@ class Checklist::Checklist
     end
   end
 
-  def taxon_concepts_json_options
-    json_options = {
-      :only => [
-        :id, :full_name, :rank_name, :cites_accepted,
-        :species_name, :genus_name, :family_name, :order_name,
-        :class_name, :phylum_name, :kingdom_name, :hash_ann_symbol
-      ],
-      :methods => [:countries_ids, :ancestors_path, :recently_changed,
-        :current_parties_ids, :current_listing]
-    }
+  # def taxon_concepts_json_options
+  #   json_options = {
+  #     :only => [
+  #       :id, :full_name, :rank_name, :cites_accepted,
+  #       :species_name, :genus_name, :family_name, :order_name,
+  #       :class_name, :phylum_name, :kingdom_name, :hash_ann_symbol
+  #     ],
+  #     :methods => [:countries_ids, :ancestors_path, :recently_changed,
+  #       :current_parties_ids, :current_listing]
+  #   }
 
-    json_options[:only] << :author_year if @authors
-    json_options[:methods] << :english_names if @english_common_names
-    json_options[:methods] << :spanish_names if @spanish_common_names
-    json_options[:methods] << :french_names if @french_common_names
-    if @synonyms && @authors
-      json_options[:methods] << :synonyms_with_authors
-    elsif @synonyms
-      json_options[:methods] << :synonyms
-    end
-    json_options
-  end
+  #   json_options[:only] << :author_year if @authors
+  #   json_options[:methods] << :english_names if @english_common_names
+  #   json_options[:methods] << :spanish_names if @spanish_common_names
+  #   json_options[:methods] << :french_names if @french_common_names
+  #   if @synonyms && @authors
+  #     json_options[:methods] << :synonyms_with_authors
+  #   elsif @synonyms
+  #     json_options[:methods] << :synonyms
+  #   end
+  #   json_options
+  # end
 
-  def listing_changes_json_options
-    json_options = {
-      :only => [:id, :change_type_name, :species_listing_name,
-        :party_id, :is_current, :hash_ann_symbol, :auto_note,
-        :short_note_en, :full_note_en, :hash_full_note_en,
-        :inherited_short_note_en, :inherited_full_note_en],
-      :methods => [:countries_ids, :effective_at_formatted]
-    }
-    json_options
-  end
+  # def listing_changes_json_options
+  #   json_options = {
+  #     :only => [:id, :change_type_name, :species_listing_name,
+  #       :party_id, :is_current, :hash_ann_symbol, :auto_note,
+  #       :short_note_en, :full_note_en, :hash_full_note_en,
+  #       :inherited_short_note_en, :inherited_full_note_en],
+  #     :methods => [:countries_ids, :effective_at_formatted]
+  #   }
+  #   json_options
+  # end
 
-  def json_options
-    json_options = taxon_concepts_json_options
-    json_options[:include] = {
-      :current_additions => listing_changes_json_options
-    }
-    json_options
-  end
+  # def json_options
+  #   json_options = taxon_concepts_json_options
+  #   json_options[:include] = {
+  #     :current_additions => listing_changes_json_options
+  #   }
+  #   json_options
+  # end
 
   def prepare_queries
     prepare_main_query
@@ -122,18 +124,18 @@ class Checklist::Checklist
        injector = Checklist::HigherTaxaInjector.new(@plantae)
        @plantae = injector.run
     end
-    self
+    [self]
   end
 
-  def as_json(options={})
-    checklist_json_options = json_options
-    [{
-      animalia: @animalia.as_json(checklist_json_options),
-      plantae: @plantae.as_json(checklist_json_options),
-      result_cnt: @taxon_concepts.size,
-      total_cnt: @total_cnt
-    }]
-  end
+  # def as_json(options={})
+  #   checklist_json_options = json_options
+  #   [{
+  #     animalia: @animalia.as_json(checklist_json_options),
+  #     plantae: @plantae.as_json(checklist_json_options),
+  #     result_cnt: @taxon_concepts.size,
+  #     total_cnt: @total_cnt
+  #   }]
+  # end
 
   # Converts a list of search filters into a limited length
   # summary of what the search covers
