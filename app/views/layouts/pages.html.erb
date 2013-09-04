@@ -1,69 +1,69 @@
 <!doctype html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta charset="utf-8">
-    <title>Species+</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8">
+  <title>Species+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
   
-    <%= stylesheet_link_tag "pages" %>
+  <%= stylesheet_link_tag "pages" %>
 
-    <%= csrf_meta_tags %>
-  </head>
-  <body class="inner">
+  <%= csrf_meta_tags %>
+</head>
+<body class="inner">
 
-    <div id="wrapper">
-      <div class="w1">   
-        <div id="header">
+  <div id="wrapper">
+    <div class="w1">   
+      <div id="header">
         <strong class="logo"><a href="/species">Species+</a></strong>
         <ul id="nav">
           <li><a href="/about">About</a></li>
           <li class="add"><a href="#">Related Resources</a>
-      <ul>
-       <li><a href="http://checklist.cites.org">CITES Checklist</a></li>
-       <li><a href="http://www.unep-wcmc-apps.org/citestrade/expert_accord.cfm">CITES Trade Database    </a></li>
-       <li><a href="http://captivebreeding.unep-wcmc.org">EU Captive breeding database</a></li>
-       <li><a href="http://elibrary.unep-wcmc.org/">EU E-library</a></li>
-      </ul>
-          </li>
-          <li><a href="/terms-of-use">Terms of use</a></li>
-        </ul>
-        </div>
-  
-    
-    <%= yield %>
+            <ul>
+             <li><a href="http://checklist.cites.org">CITES Checklist</a></li>
+             <li><a href="http://www.unep-wcmc-apps.org/citestrade/expert_accord.cfm">CITES Trade Database    </a></li>
+             <li><a href="http://captivebreeding.unep-wcmc.org">EU Captive breeding database</a></li>
+             <li><a href="http://elibrary.unep-wcmc.org/">EU E-library</a></li>
+           </ul>
+         </li>
+         <li><a href="/terms-of-use">Terms of use</a></li>
+       </ul>
+     </div>
+     <%= yield %>
+   </div>
+ </div>
 
-<div id="footer">
+ <div id="footer">
   <div class="holder">
    <ul class="sponsor">
     <li><a href="http://www.cites.org"><img src="/assets/species/logo-CITES.png" alt="CITES logo" width="77" height="44" /></a></li>
     <li><a href="http://www.cms.int"><img src="/assets/species/logo-CMS.png" alt="CMS logo" width="31" height="44" /></a></li>
     <li><a href="http://www.unep.org"><img src="/assets/species/logo-UNEP.png" alt="UNEP logo" width="37" height="43" /></a></li>
     <li><a href="http://ec.europa.eu/environment/cites/home_en.htm"><img src="/assets/species/logo-EU.png" alt="EU logo" width="65" height="44" /></a></li>
-   </ul>
-   <div class="power-by">
+  </ul>
+  <div class="power-by">
     <strong class="title">Powered by</strong>
     <ul>
       <li><a href="http://www.unep-wcmc.org"><img src="/assets/species/logo-UNEP.png" alt="image description" width="37" height="43" /></a></li>
       <li><a href="http://www.unep-wcmc.org"><img src="/assets/species/logo-WCMC.png" alt="image description" width="43" height="44" /></a></li>
     </ul>
-   </div>
   </div>
 </div>
+</div>
 
-    <script type="text/javascript">
-  
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-21313092-1']);
-      _gaq.push(['_trackPageview']);
-  
-      (function() {
-         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.  async = true;
-         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www'  ) + '.google-analytics.com/ga.js';
-         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(  ga, s);
-       })();
-  
-    </script>
-  </body>
+<script type="text/javascript">
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-21313092-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.  async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www'  ) + '.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(  ga, s);
+})();
+
+</script>
+</body>
 </html>
