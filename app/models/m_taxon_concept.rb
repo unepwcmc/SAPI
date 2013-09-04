@@ -84,6 +84,18 @@ class MTaxonConcept < ActiveRecord::Base
   has_many :current_listing_changes, :foreign_key => :taxon_concept_id,
     :class_name => MListingChange,
     :conditions => "is_current = 't' AND change_type_name <> '#{ChangeType::EXCEPTION}'"
+  has_many :historic_cites_listing_changes_for_downloads, :foreign_key => :taxon_concept_id,
+    :class_name => MListingChange,
+    :conditions => "show_in_downloads = 't' AND designation_name = '#{Designation::CITES}'",
+    :order => <<-SQL
+      effective_at,
+      CASE
+      WHEN change_type_name = 'ADDITION' THEN 0
+      WHEN change_type_name = 'RESERVATION' THEN 1
+      WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
+      WHEN change_type_name = 'DELETION' THEN 3
+      END
+    SQL
   has_many :current_cites_additions, :foreign_key => :taxon_concept_id,
     :class_name => MListingChange,
     :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'" +
@@ -208,6 +220,14 @@ class MTaxonConcept < ActiveRecord::Base
   # used only for CITES Checklist atm, therefore a designation filter is applied
   def current_parties_ids
     current_cites_additions.map(&:party_id).compact.uniq
+  end
+
+  def current_parties_iso_codes
+    CountryDictionary.instance.get_iso_codes_by_ids(current_parties_ids).compact
+  end
+
+  def current_parties_full_names
+    CountryDictionary.instance.get_names_by_ids(current_parties_ids).compact
   end
 
   # returns the current listing changes
