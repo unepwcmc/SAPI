@@ -10,7 +10,8 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :country_ids => [america.id]
         })
-        checklist.generate(0,100).taxon_concepts
+        checklist.generate(0,100)
+        checklist.taxon_concepts
       }
       specify do
         subject.should_not include(@species)
@@ -21,7 +22,8 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :country_ids => [mexico.id]
         })
-        checklist.generate(0,100).taxon_concepts
+        checklist.generate(0,100)
+        checklist.taxon_concepts
       }
       specify do
         subject.should_not include(@species)
@@ -32,7 +34,8 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :country_ids => [canada.id]
         })
-        checklist.generate(0,100).taxon_concepts
+        checklist.generate(0,100)
+        checklist.taxon_concepts
       }
       specify do
         subject.should_not include(@species)
@@ -43,7 +46,8 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :country_ids => [argentina.id]
         })
-        checklist.generate(0,100).taxon_concepts
+        checklist.generate(0,100)
+        checklist.taxon_concepts
       }
       specify do
         subject.should include(@species)
@@ -54,7 +58,8 @@ describe Checklist do
     #    checklist = Checklist::Checklist.new({
     #      :country_ids => [south_america.id]
     #    })
-    #    checklist.generate(0,100).taxon_concepts
+    #    checklist.generate(0,100)
+    #    checklist.taxon_concepts
     #  }
     #  specify do
     #    subject.should include(@species)
@@ -65,7 +70,8 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :country_ids => [north_america.id]
         })
-        checklist.generate(0,100).taxon_concepts
+        checklist.generate(0,100)
+        checklist.taxon_concepts
       }
       specify do
         subject.should_not include(@species)
@@ -76,7 +82,8 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :country_ids => [north_america.id, argentina.id]
         })
-        checklist.generate(0,100).taxon_concepts
+        checklist.generate(0,100)
+        checklist.taxon_concepts
       }
       specify do
         subject.should include(@species)

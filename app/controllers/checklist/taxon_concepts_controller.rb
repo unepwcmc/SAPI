@@ -3,8 +3,15 @@ class Checklist::TaxonConceptsController < ApplicationController
   cache_sweeper :taxon_concept_sweeper
 
   def index
-    render :json => Checklist::Checklist.new(params).
-      generate(params[:page], params[:per_page])
+    checklist = Checklist::Checklist.new(params)
+      
+    render :json => checklist.generate(params[:page], params[:per_page]),
+      :each_serializer => Checklist::ChecklistSerializer,
+      :authors => checklist.authors,
+      :synonyms => checklist.synonyms,
+      :english_names => checklist.english_names,
+      :spanish_names => checklist.spanish_names,
+      :french_names => checklist.french_names
   end
 
   def autocomplete
@@ -18,4 +25,14 @@ class Checklist::TaxonConceptsController < ApplicationController
   def summarise_filters
     render :text => Checklist::Checklist.new(params).summarise_filters
   end
+
+  private
+  # this disables json root for this controller
+  # remove when checklist frontend upgraded to new Ember.js
+  def default_serializer_options
+    {
+      root: false
+    }
+  end
+
 end

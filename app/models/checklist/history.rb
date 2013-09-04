@@ -33,20 +33,17 @@ class Checklist::History < Checklist::Checklist
   def prepare_main_query
     cites = Designation.find_by_name(Designation::CITES)
     @taxon_concepts_rel = MTaxonConcept.where(:taxonomy_is_cites_eu => true).
-       includes(:listing_changes).where(
-          :"listing_changes_mview.show_in_downloads" => true,
-          :"listing_changes_mview.designation_id" => cites && cites.id
-        ).
-        order(<<-SQL
-          taxonomic_position, effective_at,
-          CASE
-            WHEN change_type_name = 'ADDITION' THEN 0
-            WHEN change_type_name = 'RESERVATION' THEN 1
-            WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
-            WHEN change_type_name = 'DELETION' THEN 3
-          END
-          SQL
+      where(
+        <<-SQL
+        EXISTS (
+          SELECT * FROM listing_changes_mview
+          WHERE taxon_concept_id = taxon_concepts_mview.id 
+          AND show_in_downloads
+          AND designation_id = #{cites.id}
         )
+        SQL
+      ).
+      order(:taxonomic_position)
   end
 
   def generate
@@ -59,38 +56,6 @@ class Checklist::History < Checklist::Checklist
     ctime = File.ctime(@download_path).strftime('%Y-%m-%d %H:%M')
     @download_name = "History_of_CITES_Listings_#{has_full_options? ? '' : '[CUSTOM]_'}#{ctime}.#{ext}"
     @download_path
-  end
-
-  def taxon_concepts_json_options
-    json_options = super
-    #less taxon information for the history
-    json_options[:only] -= [:hash_ann_symbol]
-    json_options[:only] -= [
-      :current_listing, :cites_accepted, :ann_symbol,
-      :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
-      :genus_name, :species_name
-    ]
-    json_options[:methods] -= [:recently_changed, :countries_ids,
-      :english_names, :spanish_names, :french_names, :synonyms,
-      :ancestors_path]
-    json_options
-  end
-
-  def listing_changes_json_options
-    json_options = super
-    json_options[:only] -= [:symbol]
-    json_options[:only] += [:short_note_fr, :short_note_es]
-    json_options[:methods] -= [:countries_ids]
-    json_options[:methods] += [:countries_iso_codes, :full_hash_ann_symbol]
-    json_options
-  end
-
-  def json_options
-    json_options = taxon_concepts_json_options
-    json_options[:include] = {
-      :listing_changes => listing_changes_json_options
-    }
-    json_options
   end
 
 end
