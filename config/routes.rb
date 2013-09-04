@@ -1,6 +1,7 @@
 SAPI::Application.routes.draw do
 
   match 'about' => 'pages#about'
+  match 'terms-of-use' => 'pages#terms_of_use'
 
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'

@@ -11,6 +11,10 @@ $grid-padding: 1em;
 
 $container-style: static;
 
+p {
+  padding: 0.2em;
+}
+
 h2 {
   font-size: 2em;
   margin: 0 0 3px;
@@ -26,13 +30,14 @@ h3 {
   margin: 0 0 3px;
   color: $font-grey;
   text-transform: uppercase;
-  padding-top: 0.6em;
+  padding-top: 1em;
   padding-bottom: 0.6em;
 }
 
 h4 {
   font-size: 1.2em;
   color: $font-blue;
+  padding-top: 0.4em;
   padding-bottom: 0.4em;
   font-weight: bold;
 }
@@ -56,6 +61,14 @@ ul {
   background-color: #f3f1f1;
   margin-bottom: 1em;
 
+  h4.point-header {
+    margin-top: 1em;
+  }
+
+  .strong {
+    font-weight: bold;
+  }
+
   .row-header {
     clear: both;
   }
@@ -71,6 +84,7 @@ ul {
       margin-left: auto;
       margin-right: auto;
       border: 1px solid black;
+      margin-top: 2em;
       margin-bottom: 2em;
     }
   }
