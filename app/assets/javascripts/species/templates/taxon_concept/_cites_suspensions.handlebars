@@ -1,6 +1,10 @@
 <strong class="title more">SUSPENSIONS</strong>
 {{#unless citesSuspensions}}
-  <p class="empty">There are no current suspensions in place for this species.</p>
+  {{#if citesSuspensionsIsLoading}}
+    {{ partial 'species/spinner'}}
+  {{else}}
+    <p class="empty">There are no current suspensions in place for this species.</p>
+  {{/if}}
 {{else}}
   <table summary="data table">
     <thead>

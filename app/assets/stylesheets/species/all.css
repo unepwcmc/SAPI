@@ -197,6 +197,15 @@ form, fieldset {
 	text-indent: -9999px;
 	background: url(/assets/species/text-species.png) no-repeat;
 }
+a.learn-more {
+  border-bottom: 1px dotted #999;
+}
+a.learn-more:hover {
+  text-decoration: none;
+  border-bottom: 1px solid #444;
+  color: #444;
+}
+
 #footer {
 	background: #8fb7cf;
 	height: 202px;
@@ -1195,7 +1204,7 @@ form, fieldset {
 	margin: 0 -20px 0 0;
 }
 
-#spinner {
+.spinner {
   visibility: hidden;
   position: absolute;
   background-color: #fff;
@@ -1207,7 +1216,7 @@ form, fieldset {
   z-index: 999;
 }
 
-#spinner img {
+.spinner img {
   position: fixed;
 	top: 50%;
 	left: 50%;

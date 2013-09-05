@@ -127,6 +127,33 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
     else
       null
   ).property('euDecisions')
+
+  # This part is for the loading spinner...
+  citesListingsIsLoading: ( ->
+    if @get('citesListings') != undefined
+      return no
+    else
+      return yes
+  ).property('citesListings')
+  citesQuotasIsLoading: ( ->
+    if @get('citesQuotas') != undefined
+      return no
+    else
+      return yes
+  ).property('citesQuotas')
+  euListingsIsLoading: ( ->
+    if @get('euListings') != undefined
+      return no
+    else
+      return yes
+  ).property('euListings')
+  citesSuspensionsIsLoading: ( ->
+    if @get('citesSuspensions') != undefined
+      return no
+    else
+      return yes
+  ).property('citesSuspensions')
+
   contentObserver: ( ->
     matchedOnSelf = true
     if @get('controllers.search.redirected') == true && @get('controllers.search.taxonConceptQueryRe') != null
@@ -141,6 +168,7 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
     # Removing spinner once content is loaded.
     $(@spinnerSelector).css("visibility", "hidden")
   ).observes('content.didLoad')
+
   matchedOnSynonym: ( ->
     if @get('synonyms') == undefined || @get('matchedOnSelf') || @get('controllers.search.taxonConceptQueryRe') == null
       return null
@@ -148,6 +176,7 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
       @get('controllers.search.taxonConceptQueryRe').test(item.full_name)
     )
   ).property('matchedOnSelf', 'synonyms')
+
   matchedOnSubspecies: ( ->
     if @get('subspecies') == undefined || @get('matchedOnSelf') || @get('controllers.search.taxonConceptQueryRe') == null
       return null
@@ -155,6 +184,7 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
       @get('controllers.search.taxonConceptQueryRe').test(item.full_name)
     )
   ).property('matchedOnSelf', 'subspecies')
+
   matchInfo: ( -> 
     unless @get('matchedOnSelf') 
       if @get('matchedOnSynonym') != undefined
@@ -166,6 +196,7 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
         '</i>. You have been redirected to the species page for <i>' +
         @get('fullName') + '</i>.'
   ).property('matchedOnSelf', 'matchedOnSynonym', 'matchedOnSubspecies')
+
   searchFor: (query) ->
     @transitionToRoute('search', {
       taxonomy: @get('taxonomy'),

@@ -42,17 +42,7 @@ h4 {
   font-weight: bold;
 }
 
-ul {
-  margin-top: 0.4em;
-  margin-bottom: 0.4em;
-  padding-left: 0.5em;
-  ul {
-    padding-left: 0.5em;
-    margin-top: 0.1em;
-    margin-bottom: 0.1em;
-  }
-}
-
+  
 .page {
 
   // page acts as a container for our grid.
@@ -60,6 +50,19 @@ ul {
 
   background-color: #f3f1f1;
   margin-bottom: 1em;
+
+  ul {
+    list-style-type: disc;
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
+    padding-left: 1.7em;
+    ul {
+      list-style-type:circle;
+      padding-left: 1.5em;
+      margin-top: 0.1em;
+      margin-bottom: 0.1em;
+    }
+  }
 
   h4.point-header {
     margin-top: 1em;
