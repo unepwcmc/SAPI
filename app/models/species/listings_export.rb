@@ -70,12 +70,9 @@ class Species::ListingsExport
       AND is_current
       AND change_type_name = 'ADDITION'
       JOIN taxon_concepts_mview original_taxon_concepts_mview
-      ON 
-      CASE
-      WHEN listing_changes_mview.inclusion_taxon_concept_id IS NOT NULL
-      THEN listing_changes_mview.inclusion_taxon_concept_id = original_taxon_concepts_mview.id
-      ELSE listing_changes_mview.original_taxon_concept_id = original_taxon_concepts_mview.id
-      END
+      ON listing_changes_mview.original_taxon_concept_id = original_taxon_concepts_mview.id
+      LEFT JOIN taxon_concepts_mview inclusion_taxon_concepts_mview
+      ON listing_changes_mview.inclusion_taxon_concept_id = inclusion_taxon_concepts_mview.id
     SQL
     ).
     group(group_columns).
@@ -191,7 +188,10 @@ private
     
     ARRAY_TO_STRING(
       ARRAY_AGG(
-        DISTINCT full_name_with_spp(original_taxon_concepts_mview.rank_name, original_taxon_concepts_mview.full_name)
+        DISTINCT full_name_with_spp(
+          COALESCE(inclusion_taxon_concepts_mview.rank_name, original_taxon_concepts_mview.rank_name),
+          COALESCE(inclusion_taxon_concepts_mview.full_name, original_taxon_concepts_mview.full_name)
+        )
       ),
       ','
     ) 
@@ -226,8 +226,8 @@ private
 
   def original_taxon_concept_group_columns
     <<-SQL
-    original_taxon_concepts_mview.full_name,
-    original_taxon_concepts_mview.spp
+    COALESCE(inclusion_taxon_concepts_mview.full_name, original_taxon_concepts_mview.full_name),
+    COALESCE(inclusion_taxon_concepts_mview.spp, original_taxon_concepts_mview.spp)
     SQL
   end
 end
