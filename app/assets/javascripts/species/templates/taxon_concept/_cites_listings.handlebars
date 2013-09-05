@@ -1,6 +1,10 @@
 <strong class="title">CITES LISTING</strong>
 {{#unless citesListings}}
+  {{#if citesListingsIsLoading}}
+    {{ partial 'species/spinner'}}
+  {{else}}
   <p class="empty">This species is not currently listed in the CITES Appendices.</p>
+  {{/if}}
 {{else}}
   <table summary="data table">
     <thead>
