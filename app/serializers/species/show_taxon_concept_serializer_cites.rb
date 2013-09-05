@@ -1,6 +1,7 @@
 class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerializer
   cached
 
+  attributes :cites_listing, :eu_listing
   has_many :quotas, :serializer => Species::QuotaSerializer, :key => :cites_quotas
   has_many :cites_suspensions, :serializer => Species::CitesSuspensionSerializer
   has_many :cites_listing_changes, :serializer => Species::ListingChangeSerializer,
@@ -227,4 +228,14 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
         SQL
       )
   end
+
+
+  def cites_listing
+    object.listing['cites_listing']
+  end
+
+  def eu_listing
+    object.listing['cites_listing']
+  end
+
 end
