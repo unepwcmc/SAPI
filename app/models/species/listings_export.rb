@@ -70,7 +70,12 @@ class Species::ListingsExport
       AND is_current
       AND change_type_name = 'ADDITION'
       JOIN taxon_concepts_mview original_taxon_concepts_mview
-      ON listing_changes_mview.original_taxon_concept_id = original_taxon_concepts_mview.id
+      ON 
+      CASE
+      WHEN listing_changes_mview.inclusion_taxon_concept_id IS NOT NULL
+      THEN listing_changes_mview.inclusion_taxon_concept_id = original_taxon_concepts_mview.id
+      ELSE listing_changes_mview.original_taxon_concept_id = original_taxon_concepts_mview.id
+      END
     SQL
     ).
     group(group_columns).
