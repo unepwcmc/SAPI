@@ -10,7 +10,8 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :country_ids => [nepal.id]
         })
-        checklist.generate(0,100).taxon_concepts
+        checklist.generate(0,100)
+        checklist.taxon_concepts
       }
       specify do
         subject.should include(@species)
@@ -21,7 +22,8 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :country_ids => [poland.id]
         })
-        checklist.generate(0,100).taxon_concepts
+        checklist.generate(0,100)
+        checklist.taxon_concepts
       }
       specify do
         subject.should include(@species)
@@ -34,7 +36,8 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :cites_appendices => ['I']
         })
-        checklist.generate(0,100).taxon_concepts
+        checklist.generate(0,100)
+        checklist.taxon_concepts
       }
       specify do
         subject.should include(@species)
@@ -45,7 +48,8 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :cites_appendices => ['II']
         })
-        checklist.generate(0,100).taxon_concepts
+        checklist.generate(0,100)
+        checklist.taxon_concepts
       }
       specify do
         subject.should include(@species)
@@ -56,7 +60,8 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :cites_appendices => ['III']
         })
-        checklist.generate(0,100).taxon_concepts
+        checklist.generate(0,100)
+        checklist.taxon_concepts
       }
       specify do
         subject.should_not include(@species)
@@ -71,7 +76,8 @@ describe Checklist do
             :cites_appendices => ['I'],
             :country_ids => [nepal.id]
           })
-          checklist.generate(0,100).taxon_concepts
+          checklist.generate(0,100)
+          checklist.taxon_concepts
         }
         specify do
           subject.should include(@species)
@@ -83,7 +89,8 @@ describe Checklist do
             :cites_appendices => ['II'],
             :country_ids => [nepal.id]
           })
-          checklist.generate(0,100).taxon_concepts
+          checklist.generate(0,100)
+          checklist.taxon_concepts
         }
         specify do
           subject.should_not include(@species)
@@ -97,7 +104,8 @@ describe Checklist do
             :cites_appendices => ['I'],
             :country_ids => [poland.id]
           })
-          checklist.generate(0,100).taxon_concepts
+          checklist.generate(0,100)
+          checklist.taxon_concepts
         }
         specify do
           subject.should_not include(@species)
@@ -109,7 +117,8 @@ describe Checklist do
             :cites_appendices => ['II'],
             :country_ids => [poland.id]
           })
-          checklist.generate(0,100).taxon_concepts
+          checklist.generate(0,100)
+          checklist.taxon_concepts
         }
         specify do
           subject.should include(@species)
@@ -123,7 +132,8 @@ describe Checklist do
             :cites_appendices => ['I'],
             :country_ids => [poland.id, nepal.id]
           })
-          checklist.generate(0,100).taxon_concepts
+          checklist.generate(0,100)
+          checklist.taxon_concepts
         }
         specify do
           subject.should include(@species)
@@ -135,7 +145,8 @@ describe Checklist do
             :cites_appendices => ['II'],
             :country_ids => [poland.id, nepal.id]
           })
-          checklist.generate(0,100).taxon_concepts
+          checklist.generate(0,100)
+          checklist.taxon_concepts
         }
         specify do
           subject.should include(@species)
@@ -149,7 +160,8 @@ describe Checklist do
             :cites_appendices => ['I', 'II'],
             :country_ids => [poland.id]
           })
-          checklist.generate(0,100).taxon_concepts
+          checklist.generate(0,100)
+          checklist.taxon_concepts
         }
         specify do
           subject.should include(@species)
@@ -161,7 +173,8 @@ describe Checklist do
             :cites_appendices => ['I', 'II'],
             :country_ids => [nepal.id]
           })
-          checklist.generate(0,100).taxon_concepts
+          checklist.generate(0,100)
+          checklist.taxon_concepts
         }
         specify do
           subject.should include(@species)

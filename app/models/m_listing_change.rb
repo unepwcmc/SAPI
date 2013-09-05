@@ -72,11 +72,11 @@ class MListingChange < ActiveRecord::Base
   end
 
   def countries_iso_codes
-    CountryDictionary.instance.get_iso_codes_by_ids(countries_ids)
+    CountryDictionary.instance.get_iso_codes_by_ids(countries_ids).compact
   end
 
   def countries_full_names
-    CountryDictionary.instance.get_names_by_ids(countries_ids)
+    CountryDictionary.instance.get_names_by_ids(countries_ids).compact
   end
 
   def party_full_name
