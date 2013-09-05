@@ -44,6 +44,13 @@ CREATE OR REPLACE FUNCTION cites_aggregate_children_listing(
         WITH updated AS (
           WITH aggregated_children_listing AS (
             SELECT
+            -- this to be used in the timelines: if there are explicitly listed
+            -- descendants, the timeline might differ from the current listing
+            -- and a note should be displayed to inform the user 
+            hstore('cites_listed_descendants', BOOL_OR(
+              (listing -> 'cites_status_original')::BOOLEAN
+              OR (listing -> 'cites_listed_descendants')::BOOLEAN
+            )::VARCHAR) ||
             hstore('cites_I', MAX((listing -> 'cites_I')::VARCHAR)) ||
             hstore('cites_II', MAX((listing -> 'cites_II')::VARCHAR)) ||
             hstore('cites_III', MAX((listing -> 'cites_III')::VARCHAR)) ||

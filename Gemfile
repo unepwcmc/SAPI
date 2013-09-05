@@ -8,10 +8,8 @@ gem 'rails', '3.2.13'
 gem 'pg'
 gem 'pg_array_parser'
 gem 'activerecord-postgres-hstore'
-gem 'json', '>=1.7.7'
 gem 'foreigner'
-gem 'oj'
-gem 'jsonify'
+gem 'oj' #optimised JSON (picked by multi_json)
 gem 'nokogiri'
 gem 'inherited_resources'
 gem 'traco'
@@ -43,6 +41,10 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
+  
+  gem "susy"
+  gem 'compass', '>= 0.12.2'
+  gem 'compass-rails', '>= 1.0.3'
 end
 
 
@@ -82,6 +84,7 @@ group :development do
   gem 'rack-cors', :require => 'rack/cors'
   gem 'quiet_assets'
   gem 'webrick', '1.3.1'
+
 end
 
 group :test, :development do
@@ -104,3 +107,4 @@ gem 'slim'
 gem 'sinatra', '>= 1.3.0', :require => nil
 
 gem 'memcache-client'
+#gem 'high_voltage'

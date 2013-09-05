@@ -1,0 +1,92 @@
+@import "susy";
+
+$font-grey: #2d3237;
+$font-blue: #253848;
+
+// Setting up the Static Grid
+$total-columns: 12;
+$column-width: 4em;
+$gutter-width: 1em;
+$grid-padding: 1em;
+
+$container-style: static;
+
+p {
+  padding: 0.2em;
+}
+
+h2 {
+  font-size: 2em;
+  margin: 0 0 3px;
+  color: $font-grey;
+  line-height: 1.6em;
+  text-transform: uppercase;
+  padding-bottom: 1em;
+}
+
+h3 {
+  font-size: 1.5em;
+  font-weight: lighter;
+  margin: 0 0 3px;
+  color: $font-grey;
+  text-transform: uppercase;
+  padding-top: 1em;
+  padding-bottom: 0.6em;
+}
+
+h4 {
+  font-size: 1.2em;
+  color: $font-blue;
+  padding-top: 0.4em;
+  padding-bottom: 0.4em;
+  font-weight: bold;
+}
+
+ul {
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+  padding-left: 0.5em;
+  ul {
+    padding-left: 0.5em;
+    margin-top: 0.1em;
+    margin-bottom: 0.1em;
+  }
+}
+
+.page {
+
+  // page acts as a container for our grid.
+  @include container;
+
+  background-color: #f3f1f1;
+  margin-bottom: 1em;
+
+  h4.point-header {
+    margin-top: 1em;
+  }
+
+  .strong {
+    font-weight: bold;
+  }
+
+  .row-header {
+    clear: both;
+  }
+
+  .column-one { 
+    @include span-columns(6, 12);
+  }
+  
+  .column-two { 
+    @include span-columns(6 omega, 12); 
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid black;
+      margin-top: 2em;
+      margin-bottom: 2em;
+    }
+  }
+
+}

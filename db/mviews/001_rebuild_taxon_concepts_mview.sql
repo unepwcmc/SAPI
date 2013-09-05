@@ -63,6 +63,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     THEN FALSE
     ELSE NULL
     END AS cites_listed,
+    (listing->'cites_listed_descendants')::BOOLEAN AS cites_listed_descendants,
     (listing->'cites_show')::BOOLEAN AS cites_show,
     --(listing->'cites_status_original')::BOOLEAN AS cites_status_original, --doesn't seem to be used
     listing->'cites_status' AS cites_status,
@@ -161,7 +162,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       ON distributions.geo_entity_id = geo_entities.id
       LEFT JOIN "geo_entity_types"
       ON "geo_entity_types"."id" = "geo_entities"."geo_entity_type_id"
-      AND geo_entity_types.name = 'COUNTRY'
+      AND (geo_entity_types.name = 'COUNTRY' OR geo_entity_types.name = 'TERRITORY')
       GROUP BY taxon_concepts.id
     ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt;
 
