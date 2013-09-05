@@ -1,6 +1,10 @@
 <strong class="title more">QUOTAS</strong>
 {{#unless citesQuotas}}
-  <p class="empty">There are no current quotas in place for this species.</p>
+  {{#if citesQuotasIsLoading}}
+    {{ partial 'species/spinner'}}
+  {{else}}
+    <p class="empty">There are no current quotas in place for this species.</p>
+  {{/if}}
 {{else}}
   <table summary="data table">
     <thead>

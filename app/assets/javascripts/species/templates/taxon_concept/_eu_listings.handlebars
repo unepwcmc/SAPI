@@ -1,6 +1,10 @@
 <strong class="title">EU LISTING</strong>
 {{#unless euListings}}
-  <p class="empty">This species is not currently listed in the EU Annexes.</p>
+  {{#if euListingsIsLoading}}
+    {{ partial 'species/spinner'}}
+  {{else}}
+    <p class="empty">This species is not currently listed in the EU Annexes.</p>
+  {{/if}}
 {{else}}
   <table summary="data table">
     <thead>
