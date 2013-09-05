@@ -14,41 +14,22 @@ CREATE OR REPLACE FUNCTION rebuild_explicit_cites_listing_for_node(node_id integ
       hstore('cites_listing_original', ARRAY_TO_STRING(
         -- unnest to filter out the nulls
         ARRAY(SELECT * FROM UNNEST(
-          ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III']) s
+          ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III', listing -> 'cites_not_listed']) s
           WHERE s IS NOT NULL),
           '/'
         )
       ) AS listing
       FROM (
         SELECT taxon_concept_id,
-          hstore('cites_I', CASE WHEN SUM(cites_I) > 0 THEN 'I' ELSE NULL END) ||
-          hstore('cites_II', CASE WHEN SUM(cites_II) > 0 THEN 'II' ELSE NULL END) ||
-          hstore('cites_III', CASE WHEN SUM(cites_III) > 0 THEN 'III' ELSE NULL END)
+          hstore('cites_I', CASE WHEN BOOL_OR(abbreviation = 'I') THEN 'I' ELSE NULL END) ||
+          hstore('cites_II', CASE WHEN BOOL_OR(abbreviation = 'II') THEN 'II' ELSE NULL END) ||
+          hstore('cites_III', CASE WHEN BOOL_OR(abbreviation = 'III') THEN 'III' ELSE NULL END)
           AS listing
         FROM (
-          SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type,
-          CASE
-            WHEN species_listings.abbreviation = 'I' AND change_types.name = 'ADDITION' THEN 1
-            WHEN (species_listings.abbreviation = 'I' OR species_listing_id IS NULL)
-              AND change_types.name = 'DELETION' THEN -1
-            ELSE 0
-          END AS cites_I,
-          CASE
-            WHEN species_listings.abbreviation = 'II' AND change_types.name = 'ADDITION' THEN 1
-            WHEN (species_listings.abbreviation = 'II' OR species_listing_id IS NULL)
-              AND change_types.name = 'DELETION' THEN -1
-            ELSE 0
-          END AS cites_II,
-          CASE
-            WHEN species_listings.abbreviation = 'III' AND change_types.name = 'ADDITION' THEN 1
-            WHEN (species_listings.abbreviation = 'III' OR species_listing_id IS NULL)
-              AND change_types.name = 'DELETION' AND
-                (listing_distributions.id IS NULL OR NOT listing_distributions.is_party) THEN -1
-            ELSE 0
-          END AS cites_III
+          SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type
           FROM listing_changes
           INNER JOIN change_types ON change_type_id = change_types.id
-            AND change_types.name IN ('ADDITION','DELETION')
+            AND change_types.name = 'ADDITION'
           INNER JOIN  designations ON change_types.designation_id = designations.id
             AND designations.name = 'CITES'
           INNER JOIN species_listings ON species_listing_id = species_listings.id

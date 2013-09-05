@@ -120,6 +120,14 @@ CREATE OR REPLACE FUNCTION rebuild_ancestor_cites_listing_for_node(node_id integ
         cites_aggregate_children_listing(id, TRUE)
       WHERE parent_id IS NULL AND taxonomy_id = cites_eu_id;
     END IF;
+
+    UPDATE taxon_concepts
+    SET listing = listing ||
+    hstore('cites_listing', listing->'cites_listing' || '/NC')
+    WHERE taxon_concepts.listing->'cites_not_listed' = 'NC'
+    AND NOT taxon_concepts.listing->'cites_listing' LIKE '%NC'
+    AND CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
+
     END;
   $$;
 
