@@ -235,7 +235,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def eu_listing
-    object.listing['cites_listing']
+    object.listing['eu_listing']
   end
 
 end
