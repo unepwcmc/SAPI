@@ -3,7 +3,8 @@ class Checklist::Checklist
   include ActiveModel::SerializerSupport
   include ActionView::Helpers::TextHelper
   attr_accessor :taxon_concepts_rel, :taxon_concepts, :animalia, :plantae,
-  :authors, :synonyms, :synonyms_with_authors, :english_names, :spanish_names, :french_names, :total_cnt
+  :authors, :synonyms, :synonyms_with_authors,
+  :english_common_names, :spanish_common_names, :french_common_names, :total_cnt
 
   # Constructs a query to retrieve CITES listed taxon concepts based on user
   # defined parameters

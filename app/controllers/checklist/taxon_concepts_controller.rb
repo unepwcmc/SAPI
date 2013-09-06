@@ -9,9 +9,9 @@ class Checklist::TaxonConceptsController < ApplicationController
       :each_serializer => Checklist::ChecklistSerializer,
       :authors => checklist.authors,
       :synonyms => checklist.synonyms,
-      :english_names => checklist.english_names,
-      :spanish_names => checklist.spanish_names,
-      :french_names => checklist.french_names
+      :english_names => checklist.english_common_names,
+      :spanish_names => checklist.spanish_common_names,
+      :french_names => checklist.french_common_names
   end
 
   def autocomplete
