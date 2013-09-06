@@ -207,6 +207,8 @@ private
           ELSE '' 
         END 
         || CASE 
+          WHEN LENGTH(listing_changes_mview.inherited_full_note_en) > 0 THEN strip_tags(listing_changes_mview.inherited_full_note_en) 
+          WHEN LENGTH(listing_changes_mview.inherited_short_note_en) > 0 THEN strip_tags(listing_changes_mview.inherited_short_note_en) 
           WHEN LENGTH(listing_changes_mview.full_note_en) > 0 THEN strip_tags(listing_changes_mview.full_note_en) 
           ELSE strip_tags(listing_changes_mview.short_note_en) 
         END
