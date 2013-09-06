@@ -222,7 +222,10 @@ WITH RECURSIVE listing_changes_timeline AS (
   hi.taxon_concept_id,
   CASE
   WHEN hi.inclusion_taxon_concept_id IS NOT NULL
-  AND AVALS(listing_changes_timeline.context) @> ARRAY[hi.taxon_concept_id::TEXT]
+  AND (
+    AVALS(listing_changes_timeline.context) @> ARRAY[hi.taxon_concept_id::TEXT]
+    OR listing_changes_timeline.context = ''::HSTORE
+  )
   THEN HSTORE(hi.species_listing_id::TEXT, hi.inclusion_taxon_concept_id::TEXT)
   WHEN change_types.name = 'DELETION'
   THEN --listing_changes_timeline.context - ARRAY[hi.taxon_concept_id]
