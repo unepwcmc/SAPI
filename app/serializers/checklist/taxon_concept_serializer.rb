@@ -5,12 +5,13 @@ class Checklist::TaxonConceptSerializer < ActiveModel::Serializer
     :countries_ids, :ancestors_path, :recently_changed,
     :current_parties_ids, :current_listing,
     :author_year, :english_names, :spanish_names, :french_names,
-    :synonyms_with_authors, :synonyms, :ancestors_path, :item_type
+    :synonyms_with_authors, :synonyms, :ancestors_ids, :ancestors_path, :item_type
 
   has_many :current_additions, :serializer => Checklist::ListingChangeSerializer
 
   def item_type
-    'HigherTaxa' if object.is_a? Checklist::HigherTaxaItem
+    return 'HigherTaxa' if object.is_a? Checklist::HigherTaxaItem
+    'TaxonConcept'
   end
 
   def include_author_year?
@@ -35,6 +36,10 @@ class Checklist::TaxonConceptSerializer < ActiveModel::Serializer
 
   def include_synonyms?
     @options[:synonyms] && !@options[:authors]
+  end
+
+  def include_ancestors_ids?
+    object.is_a? Checklist::HigherTaxaItem
   end
 
   def include_ancestors_path?
