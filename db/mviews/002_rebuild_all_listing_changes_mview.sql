@@ -25,7 +25,7 @@ CREATE OR REPLACE FUNCTION rebuild_all_listing_changes_mview() RETURNS void
     null::timestamp with time zone as expiry
     FROM all_listing_changes_view;
 
-    CREATE INDEX ON all_listing_changes_mview (designation_id, affected_taxon_concept_id);
+    CREATE INDEX ON all_listing_changes_mview (designation_id, timeline_position, affected_taxon_concept_id);
   END;
   $$;
 
@@ -159,6 +159,7 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         FROM taxon_concepts
     ) taxon_concept_and_ancestors
     ON listing_changes.taxon_concept_id = taxon_concept_and_ancestors.ancestor_taxon_concept_id;
+
   END;
   $$;
 
