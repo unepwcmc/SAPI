@@ -67,7 +67,7 @@ describe TaxonConcept do
           specify { @order.cites_show.should be_true }
         end
         context "for family Alligatoridae" do
-          specify { @family.cites_show.should be_false }
+          specify { @family.cites_show.should be_true }
         end
         context "for genus Caiman" do
           specify { @genus.cites_show.should be_true }

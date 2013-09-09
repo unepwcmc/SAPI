@@ -11,6 +11,9 @@ CREATE OR REPLACE FUNCTION rebuild_not_listed_status_for_designation_and_node(
       status_flag varchar;
       listing_original_flag varchar;
       listing_flag varchar;
+      listed_ancestors_flag varchar;
+      ancestor_node_ids INTEGER[];
+      show_flag varchar;
     BEGIN
     SELECT id INTO exception_id FROM change_types
       WHERE designation_id = designation.id AND name = 'EXCEPTION';
@@ -21,10 +24,14 @@ CREATE OR REPLACE FUNCTION rebuild_not_listed_status_for_designation_and_node(
     status_flag = LOWER(designation.name) || '_status';
     listing_original_flag := LOWER(designation.name) || '_listing_original';
     listing_flag := LOWER(designation.name) || '_listing';
+    listed_ancestors_flag := LOWER(designation.name) || '_listed_ancestors';
+    show_flag := LOWER(designation.name) || '_show';
 
     -- reset the fully_covered flag (so we start clear)
+    -- also set the listed ancestors flag to true
     UPDATE taxon_concepts SET listing = listing - ARRAY[not_listed_flag] ||
-      hstore(fully_covered_flag, 't')
+      hstore(fully_covered_flag, 't') ||
+      hstore(listed_ancestors_flag, 't')
     WHERE
       taxonomy_id = designation.taxonomy_id AND
       CASE WHEN node_id IS NOT NULL THEN id = node_id ELSE TRUE END;
@@ -84,6 +91,7 @@ CREATE OR REPLACE FUNCTION rebuild_not_listed_status_for_designation_and_node(
 
     -- set the fully_covered flag to false for taxa
     -- that do not have a cascaded listing
+    -- also set the 'has_listed_ancestors' flag to false
 
     WITH RECURSIVE taxa_without_cascaded_listing AS (
       SELECT id
@@ -100,7 +108,7 @@ CREATE OR REPLACE FUNCTION rebuild_not_listed_status_for_designation_and_node(
       AND NOT (hi.listing->status_original_flag)::BOOLEAN
     )
     UPDATE taxon_concepts
-    SET listing = listing || hstore(fully_covered_flag, 'f')
+    SET listing = listing || hstore(fully_covered_flag, 'f') || hstore(listed_ancestors_flag, 'f')
     FROM taxa_without_cascaded_listing
     WHERE taxon_concepts.id = taxa_without_cascaded_listing.id
       AND NOT (listing->status_original_flag)::BOOLEAN
@@ -135,6 +143,39 @@ CREATE OR REPLACE FUNCTION rebuild_not_listed_status_for_designation_and_node(
     WHERE taxonomy_id = designation.taxonomy_id 
       AND (listing->status_flag)::VARCHAR IS NULL
       AND CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
+
+    IF node_id IS NOT NULL THEN
+      ancestor_node_ids := ancestor_node_ids_for_node(node_id);
+    END IF;
+
+    -- set designation_show to true for all taxa except:
+    -- implicitly listed subspecies
+    -- hybrids
+    -- excluded and not listed taxa
+    -- higher taxa (incl. genus) that do not have a cascaded listing
+    UPDATE taxon_concepts SET listing = listing ||
+    CASE
+      WHEN name_status = 'H'
+      THEN hstore(show_flag, 'f')
+      WHEN NOT (
+        data->'rank_name' = 'SPECIES'
+      )
+      AND listing->status_flag = 'LISTED'
+      AND (listing->status_original_flag)::BOOLEAN = FALSE
+      AND (listing->listed_ancestors_flag)::BOOLEAN = FALSE
+      THEN hstore(show_flag, 'f')
+      WHEN listing->status_flag = 'EXCLUDED'
+      THEN hstore(show_flag, 't')
+      WHEN listing->status_flag = 'DELETED'
+        AND (listing->'not_really_deleted')::BOOLEAN = TRUE
+      THEN hstore(show_flag, 't')
+      WHEN listing->status_flag = 'DELETED'
+        OR (listing->status_flag)::VARCHAR IS NULL
+      THEN hstore(show_flag, 'f')
+      ELSE hstore(show_flag, 't')
+    END
+    WHERE taxonomy_id = designation.taxonomy_id AND
+    CASE WHEN node_id IS NOT NULL THEN id IN (SELECT id FROM UNNEST(ancestor_node_ids)) ELSE TRUE END;
 
     END;
   $$;
