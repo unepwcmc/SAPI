@@ -66,7 +66,7 @@ module Checklist::Pdf::IndexContent
 
   def synonym_entry(tc)
     res = "\\textit{#{LatexToPdf.escape_latex(tc.sort_name)} = #{tc.full_name}}"
-    res += " \\textit{#{LatexToPdf.escape_latex(tc.author_year)}}" if @authors
+    res += " #{LatexToPdf.escape_latex(tc.author_year)}" if @authors
     res
   end
 
@@ -76,7 +76,7 @@ module Checklist::Pdf::IndexContent
 
   def main_entry(tc)
     res = listed_taxon_name(tc)
-    res += " \\textit{#{LatexToPdf.escape_latex(tc.author_year)}}" if @authors
+    res += " #{LatexToPdf.escape_latex(tc.author_year)}" if @authors
     res += current_listing_with_annotations(tc)
     if ['SPECIES', 'SUBSPECIES', 'GENUS', 'FAMILY', 'SUBFAMILY'].include? tc.rank_name
       res += " #{"#{tc.family_name}".upcase}" if tc.rank_name != 'FAMILY'
