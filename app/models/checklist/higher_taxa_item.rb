@@ -1,9 +1,7 @@
 class Checklist::HigherTaxaItem
   include ActiveModel::SerializerSupport
-  attr_reader :id
 
   def initialize(taxon_concept)
-    @id = taxon_concept.id + 1000000
     @taxon_concept = taxon_concept
   end
 

@@ -9,6 +9,14 @@ class Checklist::TaxonConceptSerializer < ActiveModel::Serializer
 
   has_many :current_additions, :serializer => Checklist::ListingChangeSerializer
 
+  def id
+    if object.is_a? Checklist::HigherTaxaItem
+      object.id + 1000000 #unless ids differ, Ember will create a single object
+    else
+      object.id
+    end
+  end
+
   def item_type
     return 'HigherTaxa' if object.is_a? Checklist::HigherTaxaItem
     'TaxonConcept'
