@@ -26,6 +26,19 @@ CREATE OR REPLACE FUNCTION rebuild_all_listing_changes_mview() RETURNS void
     FROM all_listing_changes_view;
 
     CREATE INDEX ON all_listing_changes_mview (designation_id, timeline_position, affected_taxon_concept_id);
+    CREATE INDEX ON all_listing_changes_mview (affected_taxon_concept_id, inclusion_taxon_concept_id);
+    CREATE INDEX ON all_listing_changes_mview (id, affected_taxon_concept_id);
+
+    RAISE NOTICE 'Fixing inclusion tree distance in all listing changes materialized view';
+    -- make the tree distance reflect distance from inclusion (Rhinopittecus roxellana)
+    UPDATE all_listing_changes_mview
+    SET tree_distance = taxon_concept_and_ancestors.tree_distance
+    FROM all_listing_changes_mview alc
+    JOIN taxon_concept_and_ancestors
+    ON alc.inclusion_taxon_concept_id = taxon_concept_and_ancestors.ancestor_taxon_concept_id
+    AND alc.affected_taxon_concept_id = taxon_concept_and_ancestors.taxon_concept_id
+    WHERE alc.id = all_listing_changes_mview.id
+    AND alc.affected_taxon_concept_id = all_listing_changes_mview.affected_taxon_concept_id;
   END;
   $$;
 
@@ -53,8 +66,33 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
     RAISE NOTICE 'Dropping all listing changes view';
     DROP VIEW IF EXISTS all_listing_changes_view;
 
-    RAISE NOTICE 'Creating all listing changes view';
-    CREATE VIEW all_listing_changes_view AS
+    RAISE NOTICE 'Creating taxon_concept_and_ancestors tmp table';
+    DROP TABLE IF EXISTS taxon_concept_and_ancestors;
+    CREATE TEMP TABLE taxon_concept_and_ancestors AS
+    -- This query took like half a day to get right, so maybe it deserves a comment.
+    -- It uses a sql procedure (ary_higher_or_equal_ranks_names) to return all ranks above
+    -- the current taxon concept and then from those ranks get at actual ancestor ids.
+    -- The reason for doing it that way is to make use of ancestor data which we already store
+    -- for every taxon concept in columns named 'name_of_rank_id'.
+    -- We also want to know the tree distance between the current taxon concept and any
+    -- of its ancestors.
+    -- So we call the higher_or_equal_ranks_names procedure for every taxon concept,
+    -- and the only way to parametrise it correctly is to call it in the select clause.
+    -- Because it returns an array of ranks, and what we want is a set of (taxon concept, ancestor, distance),
+    -- we then go through the UNNEST thing in order to arrive at separate rows per ancestor.
+    -- In order to know the distance it is enough to know the index of the ancestor in the originally
+    -- returned array, because it is already sorted accordingly. That's what GENERATE_SUBSCRIPTS does.
+    -- Quite surprisingly, this worked.
+    SELECT id AS taxon_concept_id,
+    (data->(LOWER(UNNEST(higher_or_equal_ranks_names(data->'rank_name'))) || '_id'))::INT AS ancestor_taxon_concept_id,
+    GENERATE_SUBSCRIPTS(higher_or_equal_ranks_names(data->'rank_name'), 1) - 1 AS tree_distance
+    FROM taxon_concepts;
+
+    CREATE INDEX ON taxon_concept_and_ancestors (ancestor_taxon_concept_id);
+
+    RAISE NOTICE 'Creating listing_changes_with_distributions tmp table';
+    DROP TABLE IF EXISTS listing_changes_with_distributions;
+    CREATE TEMP table listing_changes_with_distributions AS
     -- affected_taxon_concept -- is a taxon concept that is affected by this listing change,
     -- even though it might not have an explicit connection to it
     -- (i.e. it's an ancestor's listing change)
@@ -84,7 +122,7 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         listing_changes.change_type_id,
         listing_changes.inclusion_taxon_concept_id,
         listing_changes.effective_at::DATE
-    ), listing_changes_with_distributions AS (
+    )
       -- the purpose of this CTE is to aggregate listed and excluded populations
       SELECT lc.id, 
         lc.designation_id,
@@ -117,8 +155,12 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
         lc.inclusion_taxon_concept_id,
         lc.effective_at,
         party_distribution.geo_entity_id,
-        lc.excluded_taxon_concept_ids
-    )
+        lc.excluded_taxon_concept_ids;
+  
+    CREATE INDEX ON listing_changes_with_distributions (taxon_concept_id);
+
+    RAISE NOTICE 'Creating all listing changes view';
+    CREATE VIEW all_listing_changes_view AS
     SELECT
         listing_changes.*,
         taxon_concept_and_ancestors.taxon_concept_id AS affected_taxon_concept_id,
@@ -138,26 +180,7 @@ CREATE OR REPLACE FUNCTION redefine_all_listing_changes_view() RETURNS void
             tree_distance
         )::INT AS timeline_position
     FROM listing_changes_with_distributions listing_changes
-    JOIN (
-        -- This subquery took like half a day to get right, so maybe it deserves a comment.
-        -- It uses a sql procedure (ary_higher_or_equal_ranks_names) to return all ranks above
-        -- the current taxon concept and then from those ranks get at actual ancestor ids.
-        -- The reason for doing it that way is to make use of ancestor data which we already store
-        -- for every taxon concept in columns named 'name_of_rank_id'.
-        -- We also want to know the tree distance between the current taxon concept and any
-        -- of its ancestors.
-        -- So we call the higher_or_equal_ranks_names procedure for every taxon concept,
-        -- and the only way to parametrise it correctly is to call it in the select clause.
-        -- Because it returns an array of ranks, and what we want is a set of (taxon concept, ancestor, distance),
-        -- we then go through the UNNEST thing in order to arrive at separate rows per ancestor.
-        -- In order to know the distance it is enough to know the index of the ancestor in the originally
-        -- returned array, because it is already sorted accordingly. That's what GENERATE_SUBSCRIPTS does.
-        -- Quite surprisingly, this worked.
-        SELECT id AS taxon_concept_id,
-        (data->(LOWER(UNNEST(higher_or_equal_ranks_names(data->'rank_name'))) || '_id'))::INT AS ancestor_taxon_concept_id,
-        GENERATE_SUBSCRIPTS(higher_or_equal_ranks_names(data->'rank_name'), 1) - 1 AS tree_distance
-        FROM taxon_concepts
-    ) taxon_concept_and_ancestors
+    JOIN taxon_concept_and_ancestors taxon_concept_and_ancestors
     ON listing_changes.taxon_concept_id = taxon_concept_and_ancestors.ancestor_taxon_concept_id;
 
   END;
