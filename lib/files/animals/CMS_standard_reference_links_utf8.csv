@@ -1,0 +1,4 @@
+Scientific name,Rank,RecID,DesignationStandardReferenceID,Excludes,Cascade
+TESTUDINATA,Order,893,30004,,Y
+ELASMOBRANCHII,Class,11,30005,,Y
+ACTINOPTERYGII,Class,1,30005,,Y

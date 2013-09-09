@@ -10,7 +10,8 @@ describe Checklist do
         :output_layout => :alphabetical,
         :show_synonyms => '1'
       })
-      @taxon_concepts = @checklist.generate(0,100).taxon_concepts
+      @checklist.generate(0,100)
+      @taxon_concepts = @checklist.taxon_concepts
     end
 
     it "should return Alligator cynocephalus as synonym for Caiman latirostris" do

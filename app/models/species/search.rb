@@ -18,7 +18,7 @@ class Species::Search
 
   def initialize_query
     @taxon_concepts_rel = MTaxonConcept.taxonomic_layout.
-      where(:rank_name => @ranks)
+      where(:rank_name => @ranks, :name_status => 'A')
 
     @taxon_concepts_rel = if @taxonomy == :cms
       @taxon_concepts_rel.by_cms_taxonomy
@@ -43,7 +43,6 @@ class Species::Search
     unless @scientific_name.blank?
       @taxon_concepts_rel = @taxon_concepts_rel.
         by_name(@scientific_name, {:synonyms => true, :subspecies => true, :common_names => false}).
-        where(:name_status => 'A').
         select(<<-SQL
                 taxon_concepts_mview.*,
                 ARRAY(

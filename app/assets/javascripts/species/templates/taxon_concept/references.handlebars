@@ -1,14 +1,26 @@
 <div id="tab1">
   <div class="block block02">
-    <strong class="title">CITES STANDARD REFERENCE</strong>
+    <strong class="title">
+      {{#if controllers.taxonConcept.isCms }}
+        CMS REFERENCE
+      {{else}}
+        CITES STANDARD REFERENCE
+      {{/if}}
+    </strong>
     {{#unless controllers.taxonConcept.standardReferences}}
-      <p class="empty">There is no CITES Standard Reference for this species.</p>
+      <p class="empty">There is no 
+        {{#if controllers.taxonConcept.isCms }}
+          CMS Reference
+        {{else}}
+          CITES Standard Reference
+        {{/if}}
+        for this species.</p>
     {{else}}
       <table summary="data table">
         <tbody>
           {{#each reference in controllers.taxonConcept.standardReferences}}
           <tr>
-            <td>{{reference.citation}}</td>
+            <td>{{{reference.citation}}}</td>
           </tr>
           {{/each}}
         </tbody>
@@ -21,11 +33,11 @@
       <table summary="data table">
         <tbody>
           {{#each reference in controllers.taxonConcept.references}}
-          {{#unless reference.is_standard}}
-          <tr>
-            <td>{{reference.citation}}</td>
-          </tr>
-          {{/unless}}
+            {{#unless reference.is_standard}}
+            <tr>
+              <td>{{{reference.citation}}}</td>
+            </tr>
+            {{/unless}}
           {{/each}}
         </tbody>
       </table>
@@ -50,7 +62,7 @@
               <td>{{ref.country}}</td>
               <td>
                 {{#stringToArray ref.country_references splitter="; "}}
-                  <span class="distrib_reference">{{this}}</span>
+                  <span class="distrib_reference">{{{this}}}</span>
                 {{/stringToArray}}
               </td>
               <td class="last">&nbsp;</td>

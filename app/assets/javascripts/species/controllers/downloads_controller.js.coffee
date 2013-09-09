@@ -1,4 +1,4 @@
-Species.DownloadsController = Ember.Controller.extend
+Species.DownloadsController = Ember.Controller.extend Species.Spinner,
   needs: [
     'downloadsForCmsListings', 
     'downloadsForCitesListings', 'downloadsForCitesRestrictions',
@@ -32,3 +32,5 @@ Species.DownloadsController = Ember.Controller.extend
 
   close: () ->
     @set('downloadsPopupVisible', false)
+    # Closing the spinner cover and resetting the spinner image.
+    $(@spinnerSelector).css("visibility", "hidden").find('img').show()

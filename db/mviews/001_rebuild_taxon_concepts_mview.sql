@@ -31,6 +31,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     data->'class_name' AS class_name,
     data->'order_name' AS order_name,
     data->'family_name' AS family_name,
+    data->'subfamily_name' AS subfamily_name,
     data->'genus_name' AS genus_name,
     data->'species_name' AS species_name,
     data->'subspecies_name' AS subspecies_name,
@@ -39,6 +40,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     (data->'class_id')::INTEGER AS class_id,
     (data->'order_id')::INTEGER AS order_id,
     (data->'family_id')::INTEGER AS family_id,
+    (data->'subfamily_id')::INTEGER AS subfamily_id,
     (data->'genus_id')::INTEGER AS genus_id,
     (data->'species_id')::INTEGER AS species_id,
     (data->'subspecies_id')::INTEGER AS subspecies_id,
@@ -61,6 +63,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     THEN FALSE
     ELSE NULL
     END AS cites_listed,
+    (listing->'cites_listed_descendants')::BOOLEAN AS cites_listed_descendants,
     (listing->'cites_show')::BOOLEAN AS cites_show,
     --(listing->'cites_status_original')::BOOLEAN AS cites_status_original, --doesn't seem to be used
     listing->'cites_status' AS cites_status,
@@ -121,7 +124,8 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       INNER JOIN "languages"
       ON "languages"."id" = "common_names"."language_id" AND UPPER(languages.iso_code1) IN (''EN'', ''FR'', ''ES'')
       GROUP BY taxon_concepts.id, languages.iso_code1
-      ORDER BY 1,2'
+      ORDER BY 1,2',
+      'SELECT DISTINCT languages.iso_code1 FROM languages WHERE UPPER(languages.iso_code1) IN (''EN'', ''FR'', ''ES'') order by 1'
       ) AS ct(
       taxon_concept_id_com INTEGER,
       english_names_ary VARCHAR[], spanish_names_ary VARCHAR[], french_names_ary VARCHAR[]
@@ -158,7 +162,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       ON distributions.geo_entity_id = geo_entities.id
       LEFT JOIN "geo_entity_types"
       ON "geo_entity_types"."id" = "geo_entities"."geo_entity_type_id"
-      AND geo_entity_types.name = 'COUNTRY'
+      AND (geo_entity_types.name = 'COUNTRY' OR geo_entity_types.name = 'TERRITORY')
       GROUP BY taxon_concepts.id
     ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt;
 

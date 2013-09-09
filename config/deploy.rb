@@ -44,7 +44,7 @@ namespace :assets do
     run_locally "bundle exec rake RAILS_ENV=staging assets:precompile;"
     servers = find_servers :roles => [:app], :except => { :no_release => true }
     servers.each do |server|
-    run_locally "rsync -av ./public/assets/ rails@unepwcmc-012.vm.brightbox.net:#{deploy_to}/shared/assets;"
+    run_locally "rsync -av ./public/assets/ rails@#{domain}:#{deploy_to}/shared/assets;"
     end
     run_locally "rm -rf public/assets"
     run "ln -nfs #{deploy_to}/shared/assets #{deploy_to}/current/public/assets"
@@ -103,7 +103,10 @@ set :copy_exclude, [ '.git' ]
 # The shared area is prepared with 'deploy:setup' and all the shared
 # items are symlinked in when the code is updated.
 set :local_shared_files, %w(config/database.yml)
-set :local_shared_dirs, %w(tmp/pids public/downloads public/uploads)
+set :local_shared_dirs, %w(tmp/pids public/downloads public/uploads
+  public/downloads/cites_listings public/downloads/eu_listings public/downloads/cms_listings
+  public/downloads/eu_decisions public/downloads/cites_suspensions public/downloads/quotas
+  public/downloads/checklist)
 
 ## Global Shared Area
 # These are the list of files and directories that you want

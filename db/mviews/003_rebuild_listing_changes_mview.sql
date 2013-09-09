@@ -84,16 +84,16 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     NULL::TEXT AS inherited_short_note_en, -- this column is populated later
     NULL::TEXT AS inherited_full_note_en, -- this column is populated later
     CASE
-    WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
-    THEN ancestor_listing_auto_note(
-      original_taxon_concepts.data->'rank_name',
-      original_taxon_concepts.full_name,
-      change_types.name
-    )
     WHEN inclusion_taxon_concept_id IS NOT NULL
     THEN ancestor_listing_auto_note(
       inclusion_taxon_concepts.data->'rank_name',
       inclusion_taxon_concepts.full_name,
+      change_types.name
+    )
+    WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
+    THEN ancestor_listing_auto_note(
+      original_taxon_concepts.data->'rank_name',
+      original_taxon_concepts.full_name,
       change_types.name
     )
     ELSE NULL
@@ -182,6 +182,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     CREATE INDEX ON listing_changes_mview (id);
     CREATE INDEX ON listing_changes_mview (taxon_concept_id);
     CREATE INDEX ON listing_changes_mview (original_taxon_concept_id);
+    CREATE INDEX ON listing_changes_mview (inclusion_taxon_concept_id);
     CREATE INDEX ON listing_changes_mview (taxon_concept_id, original_taxon_concept_id, change_type_id, effective_at, change_type_id);
 
     RAISE NOTICE 'Terminating non-current inherited listings';

@@ -575,6 +575,7 @@ execute <<-SQL
     data->'phylum_name' AS phylum_name,
     data->'class_name' AS class_name,
     data->'order_name' AS order_name,
+    data->'subfamily_name' AS subfamily_name,
     data->'family_name' AS family_name,
     data->'genus_name' AS genus_name,
     data->'species_name' AS species_name,
@@ -583,6 +584,7 @@ execute <<-SQL
     (data->'phylum_id')::INTEGER AS phylum_id,
     (data->'class_id')::INTEGER AS class_id,
     (data->'order_id')::INTEGER AS order_id,
+    (data->'subfamily_id')::INTEGER AS subfamily_id,
     (data->'family_id')::INTEGER AS family_id,
     (data->'genus_id')::INTEGER AS genus_id,
     (data->'species_id')::INTEGER AS species_id,
@@ -655,7 +657,8 @@ execute <<-SQL
       INNER JOIN "languages"
       ON "languages"."id" = "common_names"."language_id" AND UPPER(languages.iso_code1) IN (''EN'', ''FR'', ''ES'')
       GROUP BY taxon_concepts.id, languages.iso_code1
-      ORDER BY 1,2'
+      ORDER BY 1,2',
+      'SELECT DISTINCT languages.iso_code1 FROM languages WHERE UPPER(languages.iso_code1) IN (''EN'', ''FR'', ''ES'') order by 1'
       ) AS ct(
       taxon_concept_id_com INTEGER,
       english_names_ary VARCHAR[], spanish_names_ary VARCHAR[], french_names_ary VARCHAR[]

@@ -29,7 +29,7 @@ class TradeRestriction < ActiveRecord::Base
     :notes, :publication_date, :purpose_ids, :quota, :type,
     :source_ids, :start_date, :term_ids, :unit_id
 
-  belongs_to :taxon_concept
+  belongs_to :taxon_concept, :touch => true
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
   belongs_to :unit, :class_name => 'TradeCode'
   has_many :trade_restriction_terms, :dependent => :destroy
@@ -88,13 +88,22 @@ class TradeRestriction < ActiveRecord::Base
   end
 
   def self.export_query filters
-    self.includes([:m_taxon_concept, :geo_entity, :unit]).
+    self.joins(:geo_entity).
+      joins(<<-SQL
+          LEFT JOIN taxon_concepts ON taxon_concepts.id = trade_restrictions.taxon_concept_id
+          LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id
+        SQL
+      ).
       filter_is_current(filters["set"]).
       filter_geo_entities(filters).
       filter_years(filters).
       filter_taxon_concepts(filters).
       where(:public_display => true).
-      order([:start_date, :"trade_restrictions.id"])
+      order('
+        taxon_concepts.name_status ASC,
+        taxon_concepts_mview.taxonomic_position ASC,
+        trade_restrictions.start_date DESC, geo_entities.name_en ASC,
+        trade_restrictions.notes ASC')
   end
 
   #Gets the display text for each CSV_COLUMNS
@@ -105,23 +114,17 @@ class TradeRestriction < ActiveRecord::Base
   end
 
   def self.to_csv file_path, filters
-    taxonomy_columns = [
-      :kingdom_name, :phylum_name,
-      :class_name, :order_name,
-      :family_name, :genus_name,
-      :species_name, :subspecies_name,
-      :full_name, :rank_name
-    ]
     limit = 1000
     offset = 0
     CSV.open(file_path, 'wb') do |csv|
-      csv << taxonomy_columns + ['Remarks'] + self.csv_columns_headers
+      csv << Species::RestrictionsExport::TAXONOMY_COLUMNS + 
+        ['Remarks'] + self.csv_columns_headers
       ids = []
       until (objs = export_query(filters).limit(limit).
              offset(offset)).empty? do
         objs.each do |q|
           row = []
-          row += self.fill_taxon_columns(q, taxonomy_columns)
+          row += Species::RestrictionsExport.fill_taxon_columns(q)
           self::CSV_COLUMNS.each do |c|
             if c.is_a?(Array)
               row << q.send(c[1])
@@ -130,64 +133,49 @@ class TradeRestriction < ActiveRecord::Base
             end
           end
           csv << row
-          offset += limit
         end
-             end
+        offset += limit
+       end
       end
-    end
-
-    def self.fill_taxon_columns trade_restriction, taxonomy_columns
-      columns = []
-      taxon = trade_restriction.m_taxon_concept
-      return [""]*(taxonomy_columns.size+1) unless taxon #return array with empty strings
-      taxonomy_columns.each do |c|
-        columns << taxon.send(c)
-      end
-      if taxon.name_status == 'A'
-        columns << '' #no remarks
-      else
-        columns << "Issued for #{taxon.name_status == 'S' ? 'synonym' : 'hybrid' } #{trade_restriction.taxon_concept.full_name}"
-      end
-      columns
-    end
-
-    def self.filter_is_current set
-      if set == "current"
-        return where(:is_current => true)
-      end
-      scoped
-    end
-
-    def self.filter_geo_entities filters
-      if filters.has_key?("geo_entities_ids")
-        geo_entities_ids = GeoEntity.nodes_and_descendants(
-          filters["geo_entities_ids"]
-        ).map(&:id)
-        return where(:geo_entity_id => geo_entities_ids)
-      end
-      scoped
-    end
-
-    def self.filter_taxon_concepts filters
-      if filters.has_key?("taxon_concepts_ids")
-        conds_str = <<-SQL
-          ARRAY[
-            taxon_concepts_mview.id, taxon_concepts_mview.family_id, 
-            taxon_concepts_mview.order_id, taxon_concepts_mview.class_id, 
-            taxon_concepts_mview.phylum_id, taxon_concepts_mview.kingdom_id
-          ] && ARRAY[?]
-          OR taxon_concept_id IS NULL
-        SQL
-        return where(conds_str, filters["taxon_concepts_ids"].map(&:to_i))
-      end
-      scoped
-    end
-
-    def self.filter_years filters
-      if filters.has_key?("years")
-        return where('EXTRACT(YEAR FROM trade_restrictions.start_date) IN (?)',
-                     filters["years"])
-      end
-      scoped
-    end
   end
+
+  def self.filter_is_current set
+    if set == "current"
+      return where(:is_current => true)
+    end
+    scoped
+  end
+
+  def self.filter_geo_entities filters
+    if filters.has_key?("geo_entities_ids")
+      geo_entities_ids = GeoEntity.nodes_and_descendants(
+        filters["geo_entities_ids"]
+      ).map(&:id)
+      return where(:geo_entity_id => geo_entities_ids)
+    end
+    scoped
+  end
+
+  def self.filter_taxon_concepts filters
+    if filters.has_key?("taxon_concepts_ids")
+      conds_str = <<-SQL
+        ARRAY[
+          taxon_concepts_mview.id, taxon_concepts_mview.family_id, 
+          taxon_concepts_mview.order_id, taxon_concepts_mview.class_id, 
+          taxon_concepts_mview.phylum_id, taxon_concepts_mview.kingdom_id
+        ] && ARRAY[?]
+        OR trade_restrictions.taxon_concept_id IS NULL
+      SQL
+      return where(conds_str, filters["taxon_concepts_ids"].map(&:to_i))
+    end
+    scoped
+  end
+
+  def self.filter_years filters
+    if filters.has_key?("years")
+      return where('EXTRACT(YEAR FROM trade_restrictions.start_date) IN (?)',
+                   filters["years"])
+    end
+    scoped
+  end
+end

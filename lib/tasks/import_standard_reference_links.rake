@@ -96,7 +96,12 @@ namespace :import do
         GROUP BY taxon_concept_id, reference_id, is_cascaded
       )
       UPDATE taxon_concept_references SET is_standard = TRUE,
-        is_cascaded = standard_references_as_ids.is_cascaded,
+        is_cascaded = 
+            CASE
+              WHEN standard_references_as_ids.is_cascaded IS NOT NULL
+                THEN standard_references_as_ids.is_cascaded
+              ELSE 'f'::BOOLEAN
+            END,
         excluded_taxon_concepts_ids = (exclusions)::INT[]
       FROM standard_references_as_ids
       WHERE taxon_concept_references.taxon_concept_id = standard_references_as_ids.taxon_concept_id AND

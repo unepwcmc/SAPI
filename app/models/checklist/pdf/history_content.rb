@@ -52,7 +52,7 @@ module Checklist::Pdf::HistoryContent
     listed_taxa_ary.each do |tc|
       listed_taxon_name = listed_taxon_name(tc)
       is_tc_row = true #it is the first row per taxon concept
-      tc.listing_changes.each do |lc|
+      tc.historic_cites_listing_changes_for_downloads.each do |lc|
         is_lc_row = true #it is the first row per listing change
         multilingual_annotations(lc).each do |ann|
           row = []
@@ -97,7 +97,7 @@ module Checklist::Pdf::HistoryContent
 
   def multilingual_annotations(listing_change)
     res = ['en', 'es', 'fr'].map do |lng|
-      annotation_for_language(listing_change, lng)
+      annotation_for_language(listing_change, lng).presence
     end.compact
     (res.empty? ? [nil] : res)
   end

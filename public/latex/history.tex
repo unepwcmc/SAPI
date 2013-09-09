@@ -13,6 +13,7 @@
 \usepackage{hyperref}
 \usepackage{fancyhdr}
 \usepackage{textcomp}
+\usepackage{array}
 
 \DeclareUnicodeCharacter{B0}{\textdegree}
 \DeclareUnicodeCharacter{00A0}{~}
@@ -52,21 +53,22 @@
     $^{\ref{#1}}$%
 }
 
+\setlength{\extrarowheight}{1.5pt}
+
 \newcommand{\listingtablefauna}[1]{
-  \begin{longtable}[t]{p{5cm}p{0.5cm}p{0.5cm}p{1.5cm}p{8.5cm}}
+  \begin{longtable}[t]{>{\raggedright\arraybackslash}p{5cm}p{0.5cm}p{0.5cm}p{1.5cm}>{\raggedright\arraybackslash}p{8.5cm}}
   #1
   \end{longtable}
 }
 
 \newcommand{\listingtableflora}[1]{
-  \begin{longtable}[t]{p{4.4cm}p{0.4cm}p{0.4cm}p{1.4cm}p{1.4cm}p{8cm}}
+  \begin{longtable}[t]{>{\raggedright\arraybackslash}p{4.4cm}p{0.4cm}p{0.4cm}p{1.4cm}p{1.4cm}>{\raggedright\arraybackslash}p{8cm}}
   #1
   \end{longtable}
 }
 
 \includepdf[pages={-}]{../../public/latex/static_history.pdf}
 
-\raggedright
 \rmfamily
 \include{_history}
 

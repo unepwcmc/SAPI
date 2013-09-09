@@ -5,10 +5,13 @@ class Species::ListingsExport
 
   def initialize(designation, filters)
     @designation = designation
+    @designation_name = [Designation::CITES, Designation::EU, Designation::CMS].find do |d| 
+      d == @designation.name
+    end || 'CITES'
     @filters = filters
     @taxon_concepts_ids = filters[:taxon_concepts_ids]
     @geo_entities_ids = filters[:geo_entities_ids]
-    @include_cites = @designation.name == 'EU' && filters[:include_cites] == "true"
+    @include_cites = @designation_name == Designation::EU && filters[:include_cites] == "true"
 
     #TODO this can go once we change the way appendix is matched
     #there should be an array of species listing ids in taxon_concepts_mview
@@ -27,8 +30,7 @@ class Species::ListingsExport
   end
 
   def resource_name
-    designation_name = ['cites', 'eu', 'cms'].find{ |d| d == @designation.name.downcase }
-    "#{designation_name}_listings"
+    "#{@designation_name.downcase}_listings"
   end
 
   def path 
@@ -55,34 +57,36 @@ class Species::ListingsExport
   end
 
   def query
-    rel = MTaxonConcept.select(select_columns).without_non_accepted.
-    where(
-      :taxonomy_id => @designation.taxonomy_id,
-      :"#{@designation.name.downcase}_show" => true,
-      :rank_name => [Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY]
-    ).
-    where("taxon_concepts_mview.#{@designation.name.downcase}_listing_original != 'NC'").
-    joins(
-    <<-SQL
+    join_sql = <<-SQL
       JOIN listing_changes_mview 
       ON listing_changes_mview.taxon_concept_id = taxon_concepts_mview.id
-      AND designation_name = '#{@designation.name}'
+      AND designation_name = ?
       AND is_current
       AND change_type_name = 'ADDITION'
       JOIN taxon_concepts_mview original_taxon_concepts_mview
       ON listing_changes_mview.original_taxon_concept_id = original_taxon_concepts_mview.id
+      LEFT JOIN taxon_concepts_mview inclusion_taxon_concepts_mview
+      ON listing_changes_mview.inclusion_taxon_concept_id = inclusion_taxon_concepts_mview.id
     SQL
+    join_sql = MTaxonConcept.send(:sanitize_sql_array, [join_sql, @designation_name])
+    rel = MTaxonConcept.select(select_columns).without_non_accepted.
+    where(
+      :taxonomy_id => @designation.taxonomy_id,
+      :"#{@designation_name.downcase}_show" => true,
+      :rank_name => [Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY]
     ).
+    where("taxon_concepts_mview.#{@designation_name.downcase}_listing_original != 'NC'").
+    joins(join_sql).
     group(group_columns).
     order('taxon_concepts_mview.taxonomic_position')
     rel = if @geo_entities_ids
       MTaxonConceptFilterByAppendixPopulationQuery.new(
         rel, @species_listings_ids, @geo_entities_ids
-      ).relation(@designation.name)
+      ).relation(@designation_name)
     elsif @species_listings_ids
       MTaxonConceptFilterByAppendixQuery.new(
         rel, @species_listings_ids
-      ).relation(@designation.name)
+      ).relation(@designation_name)
     else
       rel
     end
@@ -186,7 +190,10 @@ private
     
     ARRAY_TO_STRING(
       ARRAY_AGG(
-        DISTINCT full_name_with_spp(original_taxon_concepts_mview.rank_name, original_taxon_concepts_mview.full_name)
+        DISTINCT full_name_with_spp(
+          COALESCE(inclusion_taxon_concepts_mview.rank_name, original_taxon_concepts_mview.rank_name),
+          COALESCE(inclusion_taxon_concepts_mview.full_name, original_taxon_concepts_mview.full_name)
+        )
       ),
       ','
     ) 
@@ -200,6 +207,8 @@ private
           ELSE '' 
         END 
         || CASE 
+          WHEN LENGTH(listing_changes_mview.inherited_full_note_en) > 0 THEN strip_tags(listing_changes_mview.inherited_full_note_en) 
+          WHEN LENGTH(listing_changes_mview.inherited_short_note_en) > 0 THEN strip_tags(listing_changes_mview.inherited_short_note_en) 
           WHEN LENGTH(listing_changes_mview.full_note_en) > 0 THEN strip_tags(listing_changes_mview.full_note_en) 
           ELSE strip_tags(listing_changes_mview.short_note_en) 
         END
@@ -221,8 +230,8 @@ private
 
   def original_taxon_concept_group_columns
     <<-SQL
-    original_taxon_concepts_mview.full_name,
-    original_taxon_concepts_mview.spp
+    COALESCE(inclusion_taxon_concepts_mview.full_name, original_taxon_concepts_mview.full_name),
+    COALESCE(inclusion_taxon_concepts_mview.spp, original_taxon_concepts_mview.spp)
     SQL
   end
 end

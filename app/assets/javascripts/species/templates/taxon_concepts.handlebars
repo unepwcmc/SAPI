@@ -5,6 +5,8 @@
   <div class="heading"></div>
 
   <div class="result-block">
+    {{#unless controller.didContentLoad}}
+    {{else}}
     {{#each header in controller.content.meta.higher_taxa_headers}}
       <ul class="result-list">
         {{#stringToArray header.higher_taxon.ancestors_path splitter=","}}
@@ -12,7 +14,6 @@
             {{view Species.TaxonConceptLinkView}}
           </li>
         {{/stringToArray}}
-        <li>{{header.higher_taxon.rank_name}}</li>
       </ul>
 
       {{#each taxonConceptId in header.taxon_concept_ids}}
@@ -27,6 +28,23 @@
         <p>Please note that this database contains species that are listed in the Appendices to CITES and CMS, as well as the Annexes to the EU Wildlife Trade Regulations; it is not a comprehensive source of all species.</p>
       </div>
     {{/each}}
+    {{/unless}}
+  </div>
+
+  <div class="paging">
+  {{#if controller.showPageControls }}
+    <ul>
+      {{# if controller.showPrevPage }}
+        <li><a class="btn-prev" href="#" {{action "prevPage" target="view" on="click"}}>&#9664;</a>  </li>
+      {{/if}}
+  
+      <li>Page {{controller.page}} of {{controller.pages}}</li>
+  
+      {{# if controller.showNextPage }}
+        <li><a class="btn-next" href="#" {{action "nextPage" target="view" on="click"}}>&#9654;</a>  </li>
+      {{/if}}
+    </ul>
+  {{/if}}
   </div>
 
 </div>

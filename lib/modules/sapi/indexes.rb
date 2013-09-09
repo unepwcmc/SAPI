@@ -26,6 +26,14 @@ module Sapi
         :on => 'listing_changes (parent_id)'
       },
       {
+        :name => 'index_listing_changes_on_taxon_concept_id',
+        :on => 'listing_changes (taxon_concept_id)'
+      },
+      {
+        :name => 'index_listing_changes_on_inclusion_taxon_concept_id',
+        :on => 'listing_changes (inclusion_taxon_concept_id)'
+      },
+      {
         :name => 'index_listing_distributions_on_geo_entity_id',
         :on => 'listing_distributions (geo_entity_id)'
       },
