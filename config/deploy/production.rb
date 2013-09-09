@@ -65,7 +65,3 @@ end
  
 after "deploy:setup", :config_vhost
 
-
-
-
-
