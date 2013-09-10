@@ -57,6 +57,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
       CASE
         WHEN designation.name = 'CITES' THEN slice(h.listing, ARRAY['cites_I', 'cites_II', 'cites_III'])
         WHEN designation.name = 'EU' THEN slice(h.listing, ARRAY['eu_A', 'eu_B', 'eu_C', 'eu_D'])
+        WHEN designation.name = 'CMS' THEN slice(h.listing, ARRAY['cms_I', 'cms_II'])
         ELSE ''::HSTORE
       END
       AS inherited_listing
@@ -76,6 +77,7 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
         CASE
           WHEN designation.name = 'CITES' THEN slice(hi.listing, ARRAY['cites_I', 'cites_II', 'cites_III'])
           WHEN designation.name = 'EU' THEN slice(hi.listing, ARRAY['eu_A', 'eu_B', 'eu_C', 'eu_D'])
+          WHEN designation.name = 'CMS' THEN slice(hi.listing, ARRAY['cms_I', 'cms_II'])
           ELSE ''::HSTORE
         END
       ELSE
