@@ -73,7 +73,7 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
 
 
   def cms_listing
-    object.listing['cms_listing']
+    object.listing && object.listing['cms_listing']
   end
 
 end
