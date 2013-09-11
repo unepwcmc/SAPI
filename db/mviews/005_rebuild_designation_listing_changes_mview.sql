@@ -175,8 +175,8 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
       FROM next_lc
       JOIN ' || lc_table_name || ' listing_changes_mview      
       ON listing_changes_mview.taxon_concept_id = next_lc.taxon_concept_id
-      AND change_type_id = 1
-      AND listing_changes_mview.effective_at < next_lc.effective_at
+      AND change_type_id = ' || addition_id
+      || ' AND listing_changes_mview.effective_at < next_lc.effective_at
       AND (
         (
           -- own listing change preceded by inherited listing change
