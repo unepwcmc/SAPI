@@ -15,8 +15,8 @@ describe Checklist do
         @taxon_concepts = @checklist.plantae
       end
       it "should include Agave (Agavaceae) before Panax (Araliaceae)" do
-        @taxon_concepts.index{ |tc| tc.full_name == 'Agave' }.should <
-          @taxon_concepts.index{ |tc| tc.full_name == 'Panax' }
+        @taxon_concepts.index{ |tc| tc.full_name == 'Agave parviflora' }.should <
+          @taxon_concepts.index{ |tc| tc.full_name == 'Panax ginseng' }
       end
     end
     context("Animalia") do

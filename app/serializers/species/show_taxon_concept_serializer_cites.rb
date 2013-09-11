@@ -1,6 +1,7 @@
 class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerializer
   cached
 
+  attributes :cites_listing, :eu_listing
   has_many :quotas, :serializer => Species::QuotaSerializer, :key => :cites_quotas
   has_many :cites_suspensions, :serializer => Species::CitesSuspensionSerializer
   has_many :cites_listing_changes, :serializer => Species::ListingChangeSerializer,
@@ -109,7 +110,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
              SQL
       ).
       order(<<-SQL
-            geo_entities.name_en ASC, events.effective_at DESC,
+            geo_entities.name_en ASC, eu_decisions.start_date DESC,
             subspecies_info DESC
         SQL
       )
@@ -227,4 +228,14 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
         SQL
       )
   end
+
+
+  def cites_listing
+    object.listing && object.listing['cites_listing']
+  end
+
+  def eu_listing
+    object.listing && object.listing['eu_listing']
+  end
+
 end

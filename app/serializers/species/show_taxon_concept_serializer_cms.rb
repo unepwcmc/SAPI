@@ -1,6 +1,7 @@
 class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializer
   cached
 
+  attributes :cms_listing
   has_many :cms_listing_changes, :serializer => Species::ListingChangeSerializer,
     :key => :cms_listings
   has_many :cms_instruments, :serializer => Species::CmsInstrumentsSerializer
@@ -69,4 +70,10 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
   def cms_instruments
     object.taxon_instruments.includes(:instrument)
   end
+
+
+  def cms_listing
+    object.listing && object.listing['cms_listing']
+  end
+
 end

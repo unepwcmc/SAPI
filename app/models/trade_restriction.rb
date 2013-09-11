@@ -88,8 +88,7 @@ class TradeRestriction < ActiveRecord::Base
   end
 
   def self.export_query filters
-    self.
-      joins(:geo_entity).
+    self.joins(:geo_entity).
       joins(<<-SQL
           LEFT JOIN taxon_concepts ON taxon_concepts.id = trade_restrictions.taxon_concept_id
           LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id
@@ -100,7 +99,9 @@ class TradeRestriction < ActiveRecord::Base
       filter_years(filters).
       filter_taxon_concepts(filters).
       where(:public_display => true).
-      order('taxon_concepts_mview.taxonomic_position ASC,
+      order('
+        taxon_concepts.name_status ASC,
+        taxon_concepts_mview.taxonomic_position ASC,
         trade_restrictions.start_date DESC, geo_entities.name_en ASC,
         trade_restrictions.notes ASC')
   end

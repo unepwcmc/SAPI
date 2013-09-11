@@ -24,8 +24,12 @@ namespace :db do
         ActiveRecord::Base.connection.execute(File.read(file))
       end
     end
+    desc "Rebuild all computed values"
+    task :rebuild_all => [:migrate] do
+      Sapi.rebuild(:disable_triggers => true)
+    end
     desc "Rebuild all materialized views"
-    task :rebuild_all => [:rebuild_taxon_concepts_mview, :rebuild_listing_changes_mview]
+    task :rebuild_mviews => [:rebuild_taxon_concepts_mview, :rebuild_listing_changes_mview]
     desc "Rebuild taxon concepts materialized view"
     task :rebuild_taxon_concepts_mview => [:migrate] do
       Sapi.rebuild(:only => [:taxon_concepts_mview], :disable_triggers => false)

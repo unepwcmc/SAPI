@@ -47,7 +47,7 @@ describe TaxonConcept do
           specify { @order.cites_show.should be_false }
         end
         context "for family Lucanidae" do
-          specify { @family.cites_show.should be_true }
+          specify { @family.cites_show.should be_false }
         end
       end
 

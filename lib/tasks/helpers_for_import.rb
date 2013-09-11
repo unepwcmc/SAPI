@@ -240,7 +240,7 @@ end
 
 def files_from_args(t, args)
   files = t.arg_names.map{ |a| args[a] }.compact
-  files = ['lib/assets/files/animals.csv'] if files.empty?
+  files = ['lib/files/animals.csv'] if files.empty?
   files.reject { |file| !file_ok?(file) }
 end
 

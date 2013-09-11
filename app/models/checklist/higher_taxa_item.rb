@@ -1,7 +1,7 @@
 class Checklist::HigherTaxaItem
+  include ActiveModel::SerializerSupport
 
   def initialize(taxon_concept)
-    @item_type = 'HigherTaxa'#TODO class name would do, if as_json would work
     @taxon_concept = taxon_concept
   end
 

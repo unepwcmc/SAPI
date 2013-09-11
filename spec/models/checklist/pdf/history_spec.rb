@@ -3,6 +3,8 @@ require 'spec_helper'
 
 describe Checklist::Pdf::History do
   let(:en){ create(:language, :name => 'English', :iso_code1 => 'EN') }
+  let!(:fr){ create(:language, :name => 'French', :iso_code1 => 'FR') }
+  let!(:es){ create(:language, :name => 'Spanish', :iso_code1 => 'ES') }
   let(:family_tc){
     tc = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Foobaridae')

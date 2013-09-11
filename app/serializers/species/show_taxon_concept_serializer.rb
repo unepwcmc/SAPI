@@ -3,12 +3,43 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   root 'taxon_concept'
   attributes :id, :full_name, :author_year, :standard_references,
     :common_names, :distributions, :subspecies, :distribution_references,
-    :taxonomy
+    :taxonomy,
+    :kingdom_name, :phylum_name, :order_name, :class_name, :family_name,
+    :genus_name, :species_name
 
   has_many :synonyms, :serializer => Species::SynonymSerializer
-  has_one :m_taxon_concept, :serializer => Species::MTaxonConceptSerializer
   has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,
     :key => :references
+
+
+  def kingdom_name
+    object.data['kingdom_name']
+  end
+
+  def phylum_name
+    object.data['phylum_name']
+  end
+
+  def class_name
+    object.data['class_name']
+  end
+
+  def order_name
+    object.data['order_name']
+  end
+
+  def family_name
+    object.data['family_name']
+  end
+
+  def genus_name
+    object.data['genus_name']
+  end
+
+  def species_name
+    object.data['species_name']
+  end
+
   def taxonomy
     object.taxonomy.name.downcase
   end
