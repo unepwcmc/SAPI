@@ -1,34 +1,3 @@
-CREATE OR REPLACE FUNCTION strip_tags(TEXT) RETURNS TEXT
-  LANGUAGE SQL IMMUTABLE
-  AS $$
-    SELECT regexp_replace(regexp_replace($1, E'(?x)<[^>]*?(\s alt \s* = \s* ([\'"]) ([^>]*?) \2) [^>]*? >', E'\3'), E'(?x)(< [^>]*? >)', '', 'g')
-  $$;
-
-CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255)) RETURNS VARCHAR(255)
-  LANGUAGE sql IMMUTABLE
-  AS $$
-    SELECT CASE
-      WHEN $1 IN ('ORDER', 'FAMILY', 'GENUS')
-      THEN $2 || ' spp.'
-      ELSE $2
-    END;
-  $$;
-
-DROP FUNCTION IF EXISTS ancestor_listing_auto_note(rank_name VARCHAR(255), full_name VARCHAR(255));
-
-CREATE OR REPLACE FUNCTION ancestor_listing_auto_note(rank_name VARCHAR(255), full_name VARCHAR(255), change_type_name VARCHAR(255))
-RETURNS TEXT
-  LANGUAGE sql IMMUTABLE
-  AS $$
-    SELECT $1 || ' ' ||
-    CASE
-      WHEN $3 = 'DELETION' THEN 'deletion'
-      WHEN $3 = 'RESERVATION' THEN 'reservation'
-      WHEN $3 = 'RESERVATION_WITHDRAWAL' THEN 'reservaton withdrawn'
-      ELSE 'listing'
-    END || ' ' || full_name_with_spp($1, $2);
-  $$;
-
 CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
   LANGUAGE plpgsql
   AS $$
