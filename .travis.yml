@@ -7,7 +7,7 @@ before_script:
   - psql -c 'create database sapi_test' -U postgres
   - RAILS_ENV=test bundle exec rake db:migrate
 script: 
-  - bundle exec rspec spec
+  - CODECLIMATE_REPO_TOKEN=dd9c26c5738d807099d3f35926ddb76902d4e2a7b899a8fe3b866152ffe8bbf1 bundle exec rspec spec
 notifications:
   email:
     - agnieszka.figiel@unep-wcmc.org
