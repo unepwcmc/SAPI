@@ -5,8 +5,10 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     taxonomy taxonomies%ROWTYPE;
     designation designations%ROWTYPE;
   BEGIN
+    DROP TABLE IF EXISTS all_listing_changes_mview CASCADE;
+
     RAISE NOTICE 'Creating listing_changes_mview materialized view';
-    EXECUTE 'DROP TABLE IF EXISTS listing_changes_mview CASCADE';
+    DROP TABLE IF EXISTS listing_changes_mview CASCADE;
 
     SELECT * INTO taxonomy FROM taxonomies WHERE name = 'CITES_EU';
     PERFORM rebuild_taxonomy_taxon_concepts_and_ancestors_mview(taxonomy);

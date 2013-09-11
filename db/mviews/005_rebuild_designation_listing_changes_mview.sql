@@ -20,8 +20,10 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     RAISE NOTICE '* creating % materialized view', lc_table_name;
     sql := 'CREATE TEMP TABLE ' || lc_table_name || ' AS
     WITH applicable_listing_changes AS (
-        SELECT affected_taxon_concept_id,
-        applicable_listing_changes_for_node(' || designation.id || ', affected_taxon_concept_id) AS listing_change_id
+        SELECT affected_taxon_concept_id,'
+        || LOWER(designation.name) || '_applicable_listing_changes_for_node(
+          affected_taxon_concept_id
+        ) AS listing_change_id
         FROM ' || all_lc_table_name
         || ' GROUP BY affected_taxon_concept_id
     )

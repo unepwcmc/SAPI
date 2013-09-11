@@ -18,7 +18,7 @@
 
     RAISE NOTICE '* creating % tmp table', tmp_lc_table_name;
     
-    sql = 'CREATE TEMP TABLE ' || tmp_lc_table_name || ' AS
+    sql := 'CREATE TEMP TABLE ' || tmp_lc_table_name || ' AS
     -- affected_taxon_concept -- is a taxon concept that is affected by this listing change,
     -- even though it might not have an explicit connection to it
     -- (i.e. it''s an ancestor''s listing change)
@@ -139,43 +139,3 @@
   'Procedure to create a helper table with all listing changes 
   + their included / excluded populations 
   + tree distance between affected taxon concept and the taxon concept this listing change applies to.';
-
-  CREATE OR REPLACE FUNCTION rebuild_all_listing_changes_mview() RETURNS void
-  LANGUAGE plpgsql
-  AS $$
-  DECLARE
-    taxonomy taxonomies%ROWTYPE;
-    designation designations%ROWTYPE;
-  BEGIN
-
-    -- TODO: temporary, get rid of the view altogether
-    RAISE NOTICE 'Dropping all listing changes materialized view';
-    DROP table IF EXISTS all_listing_changes_mview CASCADE;
-
-    SELECT * INTO taxonomy FROM taxonomies WHERE name = 'CITES_EU';
-    PERFORM rebuild_taxonomy_taxon_concepts_and_ancestors_mview(taxonomy);
-    SELECT * INTO designation FROM designations WHERE name = 'CITES';
-    PERFORM rebuild_designation_all_listing_changes_mview(taxonomy, designation);
-    SELECT * INTO designation FROM designations WHERE name = 'EU';
-    PERFORM rebuild_designation_all_listing_changes_mview(taxonomy, designation);
-
-    SELECT * INTO taxonomy FROM taxonomies WHERE name = 'CMS';
-    PERFORM rebuild_taxonomy_taxon_concepts_and_ancestors_mview(taxonomy);
-    SELECT * INTO designation FROM designations WHERE name = 'CMS';
-    PERFORM rebuild_designation_all_listing_changes_mview(taxonomy, designation);
-
-    -- TODO: temporary, get rid of the view altogether
-    RAISE NOTICE 'Creating all listing changes materialized view';
-    CREATE TABLE all_listing_changes_mview AS
-    SELECT * FROM cites_all_listing_changes_mview
-    UNION
-    SELECT * FROM eu_all_listing_changes_mview
-    UNION
-    SELECT * FROM cms_all_listing_changes_mview;
-
-    CREATE INDEX ON all_listing_changes_mview (designation_id, timeline_position, affected_taxon_concept_id);
-    CREATE INDEX ON all_listing_changes_mview (affected_taxon_concept_id, inclusion_taxon_concept_id);
-    CREATE INDEX ON all_listing_changes_mview (id, affected_taxon_concept_id);
-
-  END
-  $$;
