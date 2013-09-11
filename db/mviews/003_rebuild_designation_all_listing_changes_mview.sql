@@ -13,9 +13,6 @@
     SELECT LOWER(designation.name) || '_tmp_listing_changes_mview' INTO tmp_lc_table_name;
     SELECT LOWER(taxonomy.name) || '_taxon_concepts_and_ancestors_mview' INTO tc_table_name;
 
-    EXECUTE 'DROP table IF EXISTS ' || all_lc_table_name || ' CASCADE';   
-    EXECUTE 'DROP TABLE IF EXISTS ' || tmp_lc_table_name || ' CASCADE';
-
     RAISE NOTICE '* creating % tmp table', tmp_lc_table_name;
     
     sql := 'CREATE TEMP TABLE ' || tmp_lc_table_name || ' AS

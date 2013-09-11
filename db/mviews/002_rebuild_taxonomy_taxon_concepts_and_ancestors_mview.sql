@@ -8,7 +8,6 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomy_taxon_concepts_and_ancestors_mview(t
     SELECT LOWER(taxonomy.name) || '_taxon_concepts_and_ancestors_mview' INTO tc_table_name;
 
     RAISE NOTICE '* creating % tmp table', tc_table_name;
-    EXECUTE 'DROP TABLE IF EXISTS ' || tc_table_name;
 
     -- This query took like half a day to get right, so maybe it deserves a comment.
     -- It uses a sql procedure (ary_higher_or_equal_ranks_names) to return all ranks above
