@@ -277,5 +277,5 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
   END;
   $$;
 
-COMMENT ON FUNCTION rebuild_designation_listing_changes_mview(designation designations) IS 
+COMMENT ON FUNCTION rebuild_designation_listing_changes_mview(taxonomy taxonomies, designation designations) IS 
 'Procedure to rebuild designation listing changes materialized view in the database.';
