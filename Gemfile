@@ -95,6 +95,7 @@ group :test, :development do
 end
 
 group :test do
+  gem "codeclimate-test-reporter", require: nil
   gem "factory_girl_rails", "~> 4.0"
   gem 'simplecov', :require => false
   gem 'coveralls', :require => false
