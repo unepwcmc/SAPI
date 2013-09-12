@@ -685,7 +685,7 @@ a.learn-more:hover {
 	border-radius: 0 20px 20px 0;
 }
 .heading-holder {
-	padding: 22px 26px 19px;
+	padding: 30px 60px 75px;
 	min-height: 139px;
 	background: #8fb7cf;
 	border: 1px solid #6b94af;
@@ -698,17 +698,19 @@ a.learn-more:hover {
 	font-size: 41px;
 	font-weight: bold;
 	font-style: italic;
-	margin: 0 0 -2px;
+	margin: 0;
 	line-height: 60px;
 }
-#main .heading-holder h1 strong {
-	font-size: 28px;
+#main .heading-holder h2 {
+  color: #2d3237;
+	font-size: 24px;
+	padding: 5px 0 15px 0;
 	font-weight: normal;
 	font-style: normal;
 }
 #main .heading-holder .list {
 	overflow: hidden;
-	padding: 0 0 0 4px;
+	padding: 0;
 }
 #main .heading-holder .list li {
 	float: left;
@@ -747,6 +749,7 @@ a.learn-more:hover {
 	border-left: solid 1px #6993B0;
 	padding: 15px 0;
 	margin-top: -9px;
+	font-weight: bold;
 }
 #main .tabset > li:first-child > a {
 	-webkit-border-radius: 5px 0 0 0;
@@ -757,14 +760,19 @@ a.learn-more:hover {
 	border-radius: 0 5px 0 0;
 	border-right: solid 1px #6b94af;
 }
-#main .tabset > li:hover > a, #main .tabset > li > a.active {
-	background: #F2F2F5;
-	font-weight: bold;
+
+#main .tabset > li > a.active, #main .tabset > li:hover > a.active {
+	background: #f5f5f7;
   	color: #25475F;
   	border-top: solid 1px #ACC7DF;
   	border-left: solid 1px #ACC7DF;
   	border-right: solid 1px #ACC7DF;
 }
+
+#main .tabset > li:hover > a {
+  background: #9DC0DA;
+}
+
 #main .tabset > li > a.active + ul { display: block; }
 #main .tabset > li > ul {
 	position: absolute;
@@ -772,21 +780,31 @@ a.learn-more:hover {
 	left: 0;
 	top: 40px;
 	background: #F2F2F5;
-	border: solid 1px #adc7de;
 	border-top: none;
 	width: 938px;
-	padding: 5px 0 0;
+	border-left: solid 1px #adc7de;
+	border-right: solid 1px #adc7de;
 }
 #main .tabset > li > ul >li {
 	float: left;
-	min-width: 100px;
-	padding: 0 48px 0 30px;
 	line-height: 38px;
 	font-size: 15px;
 	font-weight: bold;
 	text-align: center;
 	text-transform: none;
+	padding: 5px 79px 0 0;
+	border-bottom: solid 1px #adc7de;
 }
+
+#main .tabset > li > ul >li.first {
+  padding-left: 60px;
+}
+
+#main .tabset > li > ul >li.last {
+  padding-right: 60px;
+}
+
+
 #main .tabset > li > ul >li > a {
 	color: #7CA8C6;
 	float: left;
@@ -861,7 +879,7 @@ a.learn-more:hover {
 	text-transform: uppercase;
 }
 #main .block .empty {
-  padding: 0 29px;
+  padding: 0;
   font-size: 13px;
 }
 #main .block02 .empty{
@@ -1085,7 +1103,7 @@ a.learn-more:hover {
 	line-height: 20px;
 }
 #main .block.block02 td:first-child { 
-	border-bottom: 1px solid #DFE1E2; 
+	border-bottom: none; 
 }
 #main .block.block02 tr { background: #f5f5f7; }
 #main .block.block02 .title {
