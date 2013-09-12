@@ -9,19 +9,16 @@
   <table summary="data table">
     <thead>
       <tr>
-        <th class="col1">&nbsp;</th>
         <th class="col2">ANNEX</th>
-        <th class="col3">COUNTRY</th>
-        <th class="col4">DATE</th>
-        <th class="col6">NOTES</th>
-        <th class="col7">LEGAL NOTICE</th>
-        <th class="col1">&nbsp;</th>
+        <th class="col2">COUNTRY</th>
+        <th class="col2">DATE</th>
+        <th class="col3">NOTES</th>
+        <th class="col3">LEGAL NOTICE</th>
       </tr>
     </thead>
     <tbody {{bindAttr class="controller.euListingsExpanded:historic_expanded"}}>
       {{#each listing in currentEuListings}}
         <tr class="current">
-          <td>&nbsp;</td>
           <td>
             <div class="eu_appendix a_{{unbound listing.species_listing_name}}">
               <span>{{listing.species_listing_name}}</span>
@@ -47,7 +44,7 @@
               {{/sizeGt}}
             {{/if}}
           </td>
-          <td>
+          <td class="last">
             {{#if listing.event_url}}
               <a class="legal-links" href="{{unbound listing.event_url}}">
                 {{listing.event_name}}
@@ -56,13 +53,10 @@
               {{listing.event_name}}
             {{/if}}
           </td>
-          <td class="last">&nbsp;</td>
         </tr>
       {{else}}
         <tr class="current">
-          <td>&nbsp;</td>
           <td colspan=4>This species is not currently listed in the EU Annexes.</td>
-          <td>&nbsp;</td>
         </tr>
       {{/each}}
     </tbody>
@@ -72,19 +66,16 @@
       <table summary="data table">
         <thead>
           <tr>
-            <th class="col1">&nbsp;</th>
+            <th class="col2">&nbsp;</th>
+            <th class="col2">&nbsp;</th>
             <th class="col2">&nbsp;</th>
             <th class="col3">&nbsp;</th>
-            <th class="col4">&nbsp;</th>
-            <th class="col6">&nbsp;</th>
-            <th class="col7">&nbsp;</th>
-            <th class="col1">&nbsp;</th>
+            <th class="col3">&nbsp;</th>
           </tr>
         </thead>
         <tbody>
           {{#each listing in historicEuListings}}
             <tr>
-              <td>&nbsp;</td>
               <td>
                 <div class="eu_appendix a_{{unbound listing.species_listing_name}}">
                   <span>{{listing.species_listing_name}}</span>
@@ -110,7 +101,7 @@
                   {{/sizeGt}}
                 {{/if}}
               </td>
-              <td>
+              <td class="last">
                 {{#if listing.event_url}}
                   <a class="legal-links" href="{{unbound listing.event_url}}">
                     {{listing.event_name}}
@@ -119,7 +110,6 @@
                   {{listing.event_name}}
                 {{/if}}
               </td>
-              <td class="last">&nbsp;</td>
             </tr>
           {{/each}}
         </tbody>

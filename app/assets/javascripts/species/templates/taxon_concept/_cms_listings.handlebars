@@ -5,17 +5,14 @@
   <table summary="data table">
     <thead>
       <tr>
-        <th class="col1">&nbsp;</th>
         <th class="col2">APPENDIX</th>
-        <th class="col3">DATE</th>
-        <th class="col4">NOTES</th>
-        <th class="col1">&nbsp;</th>
+        <th class="col2">DATE</th>
+        <th class="col6">NOTES</th>
       </tr>
     </thead>
     <tbody {{bindAttr class="controller.cmsListingsExpanded:historic_expanded"}}>
       {{#each listing in currentCmsListings}}
         <tr class="current">
-          <td>&nbsp;</td>
           <td>
             <div class="cms_appendix {{unbound listing.change_type}}_{{unbound listing.species_listing_name}}">
               <span>{{listing.species_listing_name}}</span>
@@ -25,7 +22,7 @@
             </div>
           </td>
           <td>{{listing.effective_at_formatted}}</td>
-          <td>
+          <td class="last">
             {{#if listing.subspecies_info}}
               {{{listing.subspecies_info}}}<br />
             {{/if}}
@@ -89,9 +86,7 @@
         </tr>
       {{else}}
         <tr class="current">
-          <td>&nbsp;</td>
           <td colspan=4>This species is not currently listed in the CITES Appendices.</td>
-          <td>&nbsp;</td>
         </tr>
       {{/each}}
     </tbody>
@@ -101,18 +96,14 @@
       <table>
         <thead>
           <tr>
-            <th class="col1">&nbsp;</th>
             <th class="col2">&nbsp;</th>
-            <th class="col3">&nbsp;</th>
-            <th class="col4">&nbsp;</th>
+            <th class="col2">&nbsp;</th>
             <th class="col6">&nbsp;</th>
-            <th class="col1">&nbsp;</th>
           </tr>
         </thead>
         <tbody>
           {{#each listing in historicCmsListings}}
             <tr>
-              <td>&nbsp;</td>
               <td>
                 <div class="cms_appendix {{unbound listing.change_type}}_{{unbound listing.species_listing_name}}">
                   <span>{{listing.species_listing_name}}</span>
@@ -123,7 +114,7 @@
               </td>
               <td>{{listing.party_full_name}}</td>
               <td>{{listing.effective_at_formatted}}</td>
-              <td>
+              <td class="last">
                 {{#if listing.subspecies_info}}
                   {{{listing.subspecies_info}}}<br /><br />
                 {{/if}}

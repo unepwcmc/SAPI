@@ -34,8 +34,12 @@ body {
 	background-size: 100%;
 	background-repeat: no-repeat;
 	background-position: top center;
-	background-attachment: fixed;
 }
+
+body.inner {
+  background-attachment: fixed;
+}
+
 img { border-style: none; }
 i { font-style: italic; }
 a {
@@ -58,7 +62,7 @@ form, fieldset {
 .w1 {
 	width: 940px;
 	margin: 0 auto -30px;
-	padding: 0 0 203px;
+	padding: 0 0 20px;
 }
 #header {
 	width: 100%;
@@ -208,27 +212,19 @@ a.learn-more:hover {
 
 #footer {
 	background: #8fb7cf;
-	height: 202px;
 	border-top: 1px solid #6b94af;
-	position: relative;
-	margin: -203px 0 0;
 }
 #footer .holder {
 	margin: 0 auto;
 	width: 940px;
-	padding: 44px 0 0;
+	padding: 44px 0;
 	overflow: hidden;
 }
 .power-by {
 	float: right;
-	width: 300px;
 }
-.power-by ul { float: right; }
-.power-by ul li {
-	float: left;
-	margin: 0 0 0 7px;
-}
-.power-by ul li img { display: block; }
+
+.power-by img { display: block; }
 .power-by .title {
 	display: block;
 	margin: 0 0 5px;
@@ -237,7 +233,7 @@ a.learn-more:hover {
 }
 #footer .sponsor {
 	float: left;
-	padding: 24px 0 0;
+	padding: 20px 0 0 0;
 }
 #footer .sponsor li {
 	float: left;
@@ -839,7 +835,7 @@ a.learn-more:hover {
 
 #main .block {
 	text-align: left;
-	padding: 38px 30px 0 30px;
+	padding: 38px 60px 0 60px;
 	margin: 0 -1px 12px;
 }
 
@@ -860,7 +856,7 @@ a.learn-more:hover {
 	font-size: 15px;
 	color: #2d3237;
 	font-weight: bold;
-	padding: 0 29px;
+	padding: 0;
 	margin: 0 0 12px;
 	text-transform: uppercase;
 }
@@ -892,15 +888,28 @@ a.learn-more:hover {
 	border-bottom: 1px solid #ccc;
 	padding: 0 0 7px;
 }
+
 #main .block th.col1 {
 	width: 29px;
 	border: 0;
 }
-#main .block th.col2 { width: 130px; }
-#main .block th.col3 { width: 249px; }
-#main .block th.col4 { width: 90px; }
+#main .block th.col2 { 
+  width: 120px;
+  padding-right: 20px;
+  }
+#main .block th.col3 { 
+  width: 180px; 
+  padding-right: 20px;
+  }
+#main .block th.col4 { 
+  width: 300px;
+  padding-right: 20px; 
+  }
 #main .block th.col5 { width: 433px; }
-#main .block th.col6 { width: 240px; }
+#main .block th.col6 { 
+  width: 360px; 
+  padding-right: 20px;
+  }
 #main .block th.col7 { width: 192px; }
 #main .block th.col8 { width: 82px; }
 #main .block th.col9 { width: 157px; }
@@ -913,7 +922,7 @@ a.learn-more:hover {
 #main #cms_listings.block th.col4{ width: 458px; }
 #main #cites_suspensions.block th.col4{ width: 115px; }
 #main #cites_suspensions.block th.col5{ width: 418px; }
-#main #cms_instruments.block th.col2{ width: 418px; }
+#main #cms_instruments.block th.col2{ width: 120px; }
 #main #cms_instruments.block th.col3{ width: 418px; }
 
 #main .block a { color: #666; }
@@ -925,17 +934,23 @@ a.learn-more:hover {
 }
 
 #main .block.add { margin: 0 -px -1px; }
-#main .block.add td { padding: 9px 0 16px; }
+#main .block.add td { padding: 20px 20px 20px 0; }
+#main .block.add td.last {
+  padding-right: 0;
+  }
 #main .block.block01 {
 	border: none;
 	padding: 38px 1px 34px;
 }
 #main .block.block01 td { vertical-align: top; }
-#main .block td:first-child, #main .block td.last { border: 0; }
 #main .block tr.current td {
-	padding: 20px 0;
+	padding: 20px 20px 20px 0;
 	line-height: 20px;
 	font-size: 14px;
+}
+
+#main .block tr.current td.last {
+	padding-right: 0;
 }
 
 #main .block .historic.hidden {
@@ -1056,7 +1071,7 @@ a.learn-more:hover {
 	color: #2c3237;
 	margin: 0 0 27px;
 	line-height: 40px;
-	padding: 0 27px;
+	padding: 0;
 }
 
 #main .block h2.cites-title {
