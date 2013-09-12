@@ -242,7 +242,9 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     WHERE terminated_lc.id = ' || lc_table_name || '.id 
     AND terminated_lc.taxon_concept_id = ' || lc_table_name || '.taxon_concept_id';
 
-    EXECUTE sql;
+    IF designation.name != 'CMS' THEN
+      EXECUTE sql;
+    END IF;
 
     RAISE INFO '* % merging inclusion records with their ancestor counterparts', lc_table_name;
 

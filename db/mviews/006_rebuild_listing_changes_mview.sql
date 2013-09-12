@@ -38,7 +38,6 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
       END IF;
     END IF;
 
-
     sql := 'CREATE TABLE listing_changes_mview AS ';
     FOR i IN 1..ARRAY_UPPER(designations, 1) LOOP
       designations[i] := 'SELECT * FROM ' || LOWER(designations[i]) || '_listing_changes_mview';
