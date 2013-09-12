@@ -4,37 +4,53 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
   DECLARE
     taxonomy taxonomies%ROWTYPE;
     designation designations%ROWTYPE;
+    designations TEXT[];
+    i INT;
+    sql TEXT;
   BEGIN
     DROP TABLE IF EXISTS all_listing_changes_mview CASCADE;
 
-    RAISE NOTICE 'Creating listing_changes_mview materialized view';
+    RAISE INFO 'Creating listing_changes_mview materialized view';
     DROP TABLE IF EXISTS listing_changes_mview CASCADE;
 
     SELECT * INTO taxonomy FROM taxonomies WHERE name = 'CITES_EU';
-    PERFORM rebuild_taxonomy_taxon_concepts_and_ancestors_mview(taxonomy);
-    SELECT * INTO designation FROM designations WHERE name = 'CITES';
-    PERFORM rebuild_designation_listing_changes_mview(taxonomy, designation);
-    SELECT * INTO designation FROM designations WHERE name = 'EU';
-    PERFORM rebuild_designation_listing_changes_mview(taxonomy, designation);
+    IF FOUND THEN
+      PERFORM rebuild_taxonomy_taxon_concepts_and_ancestors_mview(taxonomy);
+      SELECT * INTO designation FROM designations WHERE name = 'CITES';
+      IF FOUND THEN
+        designations := ARRAY_APPEND(designations, 'CITES');
+        PERFORM rebuild_designation_listing_changes_mview(taxonomy, designation);
+      END IF;
+      SELECT * INTO designation FROM designations WHERE name = 'EU';
+      IF FOUND THEN
+        designations := ARRAY_APPEND(designations, 'EU');
+        PERFORM rebuild_designation_listing_changes_mview(taxonomy, designation);
+      END IF;
+    END IF;
 
     SELECT * INTO taxonomy FROM taxonomies WHERE name = 'CMS';
-    PERFORM rebuild_taxonomy_taxon_concepts_and_ancestors_mview(taxonomy);
-    SELECT * INTO designation FROM designations WHERE name = 'CMS';
-    PERFORM rebuild_designation_listing_changes_mview(taxonomy, designation);
+    IF FOUND THEN
+      PERFORM rebuild_taxonomy_taxon_concepts_and_ancestors_mview(taxonomy);
+      SELECT * INTO designation FROM designations WHERE name = 'CMS';
+      IF FOUND THEN
+        designations := ARRAY_APPEND(designations, 'CMS');
+        PERFORM rebuild_designation_listing_changes_mview(taxonomy, designation);
+      END IF;
+    END IF;
 
-    CREATE TABLE listing_changes_mview AS
-    SELECT  *,
-    false as dirty,
-    null::timestamp with time zone as expiry
-    FROM (
-      SELECT * FROM cites_listing_changes_mview
-      UNION
-      SELECT * FROM eu_listing_changes_mview
-      UNION
-      SELECT * FROM cms_listing_changes_mview
-    ) designation_lc;
 
-    RAISE NOTICE 'Creating indexes on listing changes materialized view';
+    sql := 'CREATE TABLE listing_changes_mview AS ';
+    FOR i IN 1..ARRAY_UPPER(designations, 1) LOOP
+      designations[i] := 'SELECT * FROM ' || LOWER(designations[i]) || '_listing_changes_mview';
+    END LOOP;
+
+    sql := sql || ARRAY_TO_STRING(designations, ' UNION ');
+    RAISE INFO '%', sql;
+
+    EXECUTE sql;
+
+
+    RAISE INFO 'Creating indexes on listing changes materialized view';
     CREATE INDEX ON listing_changes_mview (show_in_timeline, taxon_concept_id, designation_id);
     CREATE INDEX ON listing_changes_mview (show_in_downloads, taxon_concept_id, designation_id);
     CREATE INDEX ON listing_changes_mview (id, taxon_concept_id);

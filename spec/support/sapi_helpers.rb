@@ -1,8 +1,154 @@
 shared_context :sapi do
+
   let(:cites_eu){
     create(:taxonomy, :name => Taxonomy::CITES_EU)
   }
-  let(:cms){ create(:taxonomy, :name => Taxonomy::CMS) }
+
+  let(:cms){
+    create(:taxonomy, :name => Taxonomy::CMS)
+  }
+
+  let(:cites){
+    d = Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::CITES)
+    unless d
+      d = create(:designation, :name => Designation::CITES, :taxonomy => cites_eu)
+      %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch|
+        ch_type = ChangeType.find_by_designation_id_and_name(d.id, ch)
+        unless ch_type
+          create(:change_type, :name => ch, :designation => d)
+        end
+        %w(I II III).each do |app|
+          unless SpeciesListing.find_by_designation_id_and_abbreviation(d.id, app)
+            create(
+              :species_listing, :name => "Appendix #{app}", :abbreviation => app,
+              :designation => d
+            )
+          end
+        end
+      end
+    end
+    d  
+  }
+
+  let(:eu){
+    d = Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::EU)
+    unless d
+      d = create(:designation, :name => Designation::EU, :taxonomy => cites_eu)
+      %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch| 
+        unless ChangeType.find_by_designation_id_and_name(d.id, ch)
+          create(:change_type, :name => ch, :designation => d)
+        end
+        %w(A B C D).each do |app| 
+          unless SpeciesListing.find_by_designation_id_and_abbreviation(d.id, app)
+            create(
+              :species_listing, :name => "Annex #{app}", :abbreviation => app,
+              :designation => d
+            )
+          end
+        end
+      end
+    end
+    d
+  }
+
+  let(:cms_designation){
+    d = Designation.find_by_taxonomy_id_and_name(cms.id, Designation::CMS)
+    unless d
+      d = create(:designation, :name => Designation::CMS, :taxonomy => cms)
+      %w(ADDITION DELETION EXCEPTION).each do |ch|
+        unless ChangeType.find_by_designation_id_and_name(d.id, ch)
+          create(:change_type, :name => ch, :designation => d)
+        end
+        %w(I II).each do |app|
+          unless SpeciesListing.find_by_designation_id_and_abbreviation(d.id, app)
+            create(
+              :species_listing, :name => "Appendix #{app}", :abbreviation => app,
+              :designation => d
+            )
+          end
+        end
+      end
+    end
+  }
+
+  # def cites_eu
+  #   puts 'hello taxonomy'
+  #   Taxonomy.find_by_name(Taxonomy::CITES_EU)
+  # end
+
+  # def cms
+  #   Taxonomy.find_by_name(Taxonomy::CMS)
+  # end
+
+  # def cites
+  #   Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::CITES)
+  # end
+
+  # def eu
+  #   Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::EU)
+  # end
+
+  # def cms_designation
+  #   Designation.find_by_taxonomy_id_and_name(cms.id, Designation::CMS)
+  # end
+
+  %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch|
+
+    define_method "cites_#{ch.downcase}" do
+      ChangeType.find_by_designation_id_and_name(cites.id, ch)
+    end
+
+    define_method "eu_#{ch.downcase}" do
+      ChangeType.find_by_designation_id_and_name(eu.id, ch)
+    end
+
+    define_method "cms_#{ch.downcase}" do
+      ChangeType.find_by_designation_id_and_name(cms_designation.id, ch)
+    end
+
+    %w(I II III).each do |app|
+      define_method "cites_#{app}" do
+        SpeciesListing.find_by_designation_id_and_abbreviation(cites.id, app)
+      end
+      define_method "create_cites_#{app}_#{ch.downcase}" do |options = {}|
+        create(
+          :listing_change,
+          options.merge({
+            :change_type => send(:"cites_#{ch.downcase}"),
+            :species_listing => send(:"cites_#{app}")
+          })
+        )
+      end
+    end
+    %w(A B C D).each do |app|
+      define_method "eu_#{app}" do
+        SpeciesListing.find_by_designation_id_and_abbreviation(eu.id, app)
+      end
+      define_method "create_eu_#{app}_#{ch.downcase}" do |options = {}|
+        create(
+          :listing_change,
+          options.merge({
+            :change_type => send(:"eu_#{ch.downcase}"),
+            :species_listing => send(:"eu_#{app}")
+          })
+        )
+      end
+    end
+    %w(I II).each do |app|
+      define_method "cms_#{app}" do
+        SpeciesListing.find_by_designation_id_and_abbreviation(cms_designation.id, app)
+      end
+      define_method "create_cms_#{app}_#{ch.downcase}" do |options = {}|
+        create(
+          :listing_change,
+          options.merge({
+            :change_type => send(:"cms_#{ch.downcase}"),
+            :species_listing => send(:"cms_#{app}")
+          })
+        )
+      end
+    end
+  end
 
   let(:kingdom_rank){
     create(
@@ -211,82 +357,6 @@ shared_context :sapi do
     end
   end
 
-  let(:cites){ create(:designation, :name => 'CITES', :taxonomy => cites_eu) }
-  let(:eu){ create(:designation, :name => 'EU', :taxonomy => cites_eu) }
-  let(:cms_designation){ create(:designation, :name => 'CMS', :taxonomy => cms) }
-
-  %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch|
-
-    let(:"cites_#{ch.downcase}"){
-      create(
-        :change_type, :name => ch, :designation => cites
-      )
-    }
-
-    let(:"eu_#{ch.downcase}"){
-      create(
-        :change_type, :name => ch, :designation => eu
-      )
-    }
-
-    let(:"cms_#{ch.downcase}"){
-      create(
-        :change_type, :name => ch, :designation => cms_designation
-      )
-    }
-
-    %w(I II III).each do |app|
-      let(:"cites_#{app}"){
-        create(
-          :species_listing, :name => "Appendix #{app}", :abbreviation => app,
-          :designation => cites
-        )
-      }
-      define_method "create_cites_#{app}_#{ch.downcase}" do |options = {}|
-        create(
-          :listing_change,
-          options.merge({
-            :change_type => send(:"cites_#{ch.downcase}"),
-            :species_listing => send(:"cites_#{app}")
-          })
-        )
-      end
-    end
-    %w(A B C D).each do |app|
-      let(:"eu_#{app}"){
-        create(
-          :species_listing, :name => "Annex #{app}", :abbreviation => app,
-          :designation => eu
-        )
-      }
-      define_method "create_eu_#{app}_#{ch.downcase}" do |options = {}|
-        create(
-          :listing_change,
-          options.merge({
-            :change_type => send(:"eu_#{ch.downcase}"),
-            :species_listing => send(:"eu_#{app}")
-          })
-        )
-      end
-    end
-    %w(I II).each do |app|
-      let(:"cms_#{app}"){
-        create(
-          :species_listing, :name => "Appendix #{app}", :abbreviation => app,
-          :designation => cms_designation
-        )
-      }
-      define_method "create_cms_#{app}_#{ch.downcase}" do |options = {}|
-        create(
-          :listing_change,
-          options.merge({
-            :change_type => send(:"cms_#{ch.downcase}"),
-            :species_listing => send(:"cms_#{app}")
-          })
-        )
-      end
-    end
-  end
   def create_cites_cop(options = {})
     create(
       :cites_cop,

@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION cites_eu_applicable_listing_changes_for_node(designation_name TEXT, node_id INT)
 RETURNS SETOF INT
-LANGUAGE plpgsql
+LANGUAGE plpgsql STRICT
 STABLE
 AS $$
 DECLARE

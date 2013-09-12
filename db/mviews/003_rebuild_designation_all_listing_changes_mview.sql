@@ -1,7 +1,7 @@
   CREATE OR REPLACE FUNCTION rebuild_designation_all_listing_changes_mview(
     taxonomy taxonomies, designation designations
   ) RETURNS void
-  LANGUAGE plpgsql
+  LANGUAGE plpgsql STRICT
   AS $$
   DECLARE
     all_lc_table_name TEXT;
@@ -13,7 +13,8 @@
     SELECT LOWER(designation.name) || '_tmp_listing_changes_mview' INTO tmp_lc_table_name;
     SELECT LOWER(taxonomy.name) || '_taxon_concepts_and_ancestors_mview' INTO tc_table_name;
 
-    RAISE NOTICE '* creating % tmp table', tmp_lc_table_name;
+    RAISE INFO '* creating % tmp table', tmp_lc_table_name;
+    EXECUTE 'DROP TABLE IF EXISTS ' || tmp_lc_table_name || ' CASCADE';
     
     sql := 'CREATE TEMP TABLE ' || tmp_lc_table_name || ' AS
     -- affected_taxon_concept -- is a taxon concept that is affected by this listing change,
@@ -85,7 +86,8 @@
   
     EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (taxon_concept_id)';
 
-    RAISE NOTICE '* creating % materialized view', all_lc_table_name;
+    RAISE INFO '* creating % materialized view', all_lc_table_name;
+    EXECUTE 'DROP TABLE IF EXISTS ' || all_lc_table_name || ' CASCADE';
 
     sql := 'CREATE TABLE ' || all_lc_table_name || ' AS
     SELECT
@@ -116,7 +118,7 @@
     EXECUTE 'CREATE INDEX ON ' || all_lc_table_name || ' (affected_taxon_concept_id, inclusion_taxon_concept_id)';
     EXECUTE 'CREATE INDEX ON ' || all_lc_table_name || ' (id, affected_taxon_concept_id)';
 
-    RAISE NOTICE '* fixing inclusion tree distance in % materialized view', all_lc_table_name;
+    RAISE INFO '* fixing inclusion tree distance in % materialized view', all_lc_table_name;
     -- make the tree distance reflect distance from inclusion (Rhinopittecus roxellana)
     sql := 'UPDATE ' || all_lc_table_name
     || ' SET tree_distance = tc.tree_distance

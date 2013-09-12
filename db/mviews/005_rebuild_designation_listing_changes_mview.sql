@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
   taxonomy taxonomies, designation designations
   ) RETURNS void
-  LANGUAGE plpgsql
+  LANGUAGE plpgsql STRICT
   AS $$
   DECLARE
     all_lc_table_name TEXT;
@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
 
     EXECUTE 'DROP TABLE IF EXISTS ' || lc_table_name || ' CASCADE';
 
-    RAISE NOTICE '* creating % materialized view', lc_table_name;
+    RAISE INFO '* creating % materialized view', lc_table_name;
     sql := 'CREATE TEMP TABLE ' || lc_table_name || ' AS
     WITH applicable_listing_changes AS (
         SELECT affected_taxon_concept_id,'
@@ -89,7 +89,9 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     WHEN change_types.name != ''EXCEPTION''
     THEN TRUE
     ELSE FALSE
-    END AS show_in_timeline
+    END AS show_in_timeline,
+    false as dirty,
+    null::timestamp with time zone as expiry
     FROM
     applicable_listing_changes
     JOIN listing_changes ON applicable_listing_changes.listing_change_id  = listing_changes.id
@@ -149,7 +151,7 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
 
     EXECUTE sql;
 
-    RAISE NOTICE 'Terminating non-current inherited listings';
+    RAISE INFO 'Terminating non-current inherited listings';
 
     SELECT id INTO deletion_id FROM change_types WHERE name = 'DELETION' AND designation_id = designation.id;
     SELECT id INTO addition_id FROM change_types WHERE name = 'ADDITION' AND designation_id = designation.id;
@@ -242,7 +244,7 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
 
     EXECUTE sql;
 
-    RAISE NOTICE '* % merging inclusion records with their ancestor counterparts', lc_table_name;
+    RAISE INFO '* % merging inclusion records with their ancestor counterparts', lc_table_name;
 
     sql := 'WITH double_inclusions AS (
       SELECT lc.taxon_concept_id, lc.id AS own_inclusion_id, lc_inh.id AS inherited_inclusion_id, 

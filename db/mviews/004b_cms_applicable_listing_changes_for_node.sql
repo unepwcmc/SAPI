@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION cms_applicable_listing_changes_for_node(node_id INT)
 RETURNS SETOF INT
-LANGUAGE plpgsql
+LANGUAGE plpgsql STRICT
 STABLE
 AS $$
 DECLARE
@@ -117,7 +117,7 @@ BEGIN
   ORDER BY timeline_position';
 
   -- note to self: the reason to execute a string here rather than use an SQL
-  -- function is that cms_all_listing_changes_mview does not exest at the time
+  -- function is that cms_all_listing_changes_mview does not exist at the time
   -- this function is defined.
   RETURN QUERY EXECUTE sql USING node_id;
 END;

@@ -24,6 +24,8 @@ shared_context "Loxodonta africana CMS" do
      :is_current => true
     )
 
+    cites
+    eu
     Sapi::rebuild(:except => [:taxonomy])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
