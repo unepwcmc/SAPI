@@ -69,28 +69,8 @@ shared_context :sapi do
         end
       end
     end
+    d
   }
-
-  # def cites_eu
-  #   puts 'hello taxonomy'
-  #   Taxonomy.find_by_name(Taxonomy::CITES_EU)
-  # end
-
-  # def cms
-  #   Taxonomy.find_by_name(Taxonomy::CMS)
-  # end
-
-  # def cites
-  #   Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::CITES)
-  # end
-
-  # def eu
-  #   Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::EU)
-  # end
-
-  # def cms_designation
-  #   Designation.find_by_taxonomy_id_and_name(cms.id, Designation::CMS)
-  # end
 
   %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch|
 
@@ -100,10 +80,6 @@ shared_context :sapi do
 
     define_method "eu_#{ch.downcase}" do
       ChangeType.find_by_designation_id_and_name(eu.id, ch)
-    end
-
-    define_method "cms_#{ch.downcase}" do
-      ChangeType.find_by_designation_id_and_name(cms_designation.id, ch)
     end
 
     %w(I II III).each do |app|
@@ -134,6 +110,14 @@ shared_context :sapi do
         )
       end
     end
+  end
+
+  %w(ADDITION DELETION EXCEPTION).each do |ch|
+
+    define_method "cms_#{ch.downcase}" do
+      ChangeType.find_by_designation_id_and_name(cms_designation.id, ch)
+    end
+
     %w(I II).each do |app|
       define_method "cms_#{app}" do
         SpeciesListing.find_by_designation_id_and_abbreviation(cms_designation.id, app)
