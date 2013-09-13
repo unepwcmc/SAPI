@@ -3,6 +3,8 @@
    License: none (public domain)
 */
 
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:700italic,400,600,700);
+
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
 	margin: 0;
 	padding: 0;
@@ -26,7 +28,7 @@ html { height: 100%; }
 body {
 	margin: 0;
 	color: #868686;
-	font: 14px/18px Helvetica, Arial, sans-serif;
+	font: 14px/18px 'Open Sans', Helvetica, Arial, sans-serif;
 	background: #f3f1f1;
 	height: 100%;
 	min-width: 980px;
@@ -181,7 +183,7 @@ form, fieldset {
 }
 #main p { 
 	margin: 20px 0 28px 0;
-	font-size: 16px;
+	font-size: 15px;
 	color: #2D3237;
 }
 
@@ -202,16 +204,17 @@ form, fieldset {
 	background: url(/assets/species/text-species.png) no-repeat;
 }
 a.learn-more {
-  border-bottom: 1px dotted #999;
+  color: #2D3237;
+  border-bottom: 1px dotted #2D3237;
 }
 a.learn-more:hover {
   text-decoration: none;
-  border-bottom: 1px solid #444;
-  color: #444;
+  border-bottom: 1px dotted #2D3237;
+  color: #2D3237;
 }
 
 #footer {
-	background: #8fb7cf;
+	background: #A4C5DA;
 	border-top: 1px solid #6b94af;
 }
 #footer .holder {
@@ -243,10 +246,22 @@ a.learn-more:hover {
 .inner #main {
 	width: 100%;
 	padding: 0;
-	margin: 0 0 -28px;
+	margin: 0 0 -20px;
 	position: relative;
 	z-index: 666;
 }
+
+body.inner #footer .holder{
+  margin: 0 auto;
+	width: 940px;
+	padding: 80px 0;
+	overflow: hidden;
+}
+
+/*body.inner #footer .holder .sponsor{
+  display: none;
+}*/
+
 #header .download {
 	float: right;
 }
@@ -377,7 +392,7 @@ a.learn-more:hover {
 .result-list {
 	background: #cddae3;
 	overflow: hidden;
-	padding: 9px 30px;
+	padding: 9px 40px;
 	border-top: 1px solid #e5e5e5;
 }
 .result-list li {
@@ -398,7 +413,7 @@ a.learn-more:hover {
 	margin: 0;
 	font-size: 19px;
 	overflow: hidden;
-	padding: 26px 28px;
+	padding: 26px 40px;
 	line-height: 21px;
 	font-style: italic;
 	border-top: 1px solid #e5e5e5;
@@ -416,7 +431,7 @@ a.learn-more:hover {
 	color: #373f4c;
 	float: left;
 	text-decoration: none;
-	background: url(/assets/species/sep01.png) repeat-x 0 100%;
+	border-bottom: 1px dotted #373f4c;
 }
 .result-block h2:hover { background: #ecf2f6; }
 .result-block.add h2 { padding: 13px 28px 12px; }
@@ -429,7 +444,7 @@ a.learn-more:hover {
 	background: #f5f5f7;
 	-webkit-border-radius: 12px;
 	border-radius: 12px;
-	border: 1px solid #6d95b0;
+	border: 1px solid #8fb7cf;
 	z-index: 1000;
 }
 .dwonload-block .close {
@@ -451,8 +466,8 @@ a.learn-more:hover {
 	font-weight: bold;
 	text-transform: uppercase;
 	color: #253848;
-	background: #8fb7cf;
-	border-bottom: 1px solid #6d95b0;
+	background: #A4C5DA;
+	border-bottom: 1px solid #8fb7cf;
 	-webkit-border-radius: 12px 12px 0 0;
 	border-radius: 12px 12px 0 0;
 }
@@ -494,7 +509,7 @@ a.learn-more:hover {
 .btn-holder {
 	border-top: 1px solid #d6d7d7;
 	text-align: center;
-	padding: 29px 10px 28px;
+	padding: 28px 10px 28px;
 }
 .btn-holder a {
 	display: block;
@@ -687,8 +702,8 @@ a.learn-more:hover {
 .heading-holder {
 	padding: 30px 60px 75px;
 	min-height: 139px;
-	background: #8fb7cf;
-	border: 1px solid #6b94af;
+	background: #A4C5DA;
+	border: 1px solid #8fb7cf;
 	border-bottom: none;
 	border-top: none;
 	word-spacing: -3px;
@@ -745,8 +760,8 @@ a.learn-more:hover {
 	display: block;
 	color: #2a425a;
 	text-decoration: none;
-	border-top: solid 1px #6993B0;
-	border-left: solid 1px #6993B0;
+	border-top: solid 1px #8fb7cf;
+	border-left: solid 1px #8fb7cf;
 	padding: 15px 0;
 	margin-top: -9px;
 	font-weight: bold;
@@ -758,7 +773,7 @@ a.learn-more:hover {
 #main .tabset > li.last-child > a {
 	-webkit-border-radius: 0 5px 0 0;
 	border-radius: 0 5px 0 0;
-	border-right: solid 1px #6b94af;
+	border-right: solid 1px #8fb7cf;
 }
 
 #main .tabset > li > a.active, #main .tabset > li:hover > a.active {
@@ -779,7 +794,7 @@ a.learn-more:hover {
 	display: none;
 	left: 0;
 	top: 40px;
-	background: #F2F2F5;
+	background: #f5f5f7;
 	border-top: none;
 	width: 938px;
 	border-left: solid 1px #adc7de;
@@ -792,8 +807,8 @@ a.learn-more:hover {
 	font-weight: bold;
 	text-align: center;
 	text-transform: none;
-	padding: 5px 79px 0 0;
-	border-bottom: solid 1px #adc7de;
+	padding: 5px 81px 0 0;
+	border-bottom: solid 1px #D5E0E8;
 }
 
 #main .tabset > li > ul >li.first {
@@ -847,7 +862,7 @@ a.learn-more:hover {
 	background: #f5f5f7;
 	border: 1px solid #d5dadd;
 	border-top: none;
-	padding: 50px 0;
+	padding: 50px 0 60px 0;
 }
 
 

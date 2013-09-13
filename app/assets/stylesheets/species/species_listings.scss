@@ -38,8 +38,8 @@
     background: url(/assets/species/cites-appendix.png);
     background-position: 0px 0px;
     span {
-      line-height: 2em;
-      margin-left: 10px;
+    line-height: 1.95em;
+    margin-left: 11px;
     }
   }
 
@@ -48,12 +48,14 @@
     background-position: 0px 156px;
     width: 44px;
     span {
-      line-height: 2em;
-      margin-left: 10px;
+      line-height: 1.95em;
+      margin-left: 11px;
     }
     span.subscript {
-      margin-left: 14px;
       text-transform: uppercase;
+      display: block;
+      font-size: 11px;
+      margin: -24px 0 0 30px;
     }
   }
 
@@ -62,13 +64,14 @@
     background-position: 0px 78px;
     width: 44px;
     span {
-      line-height: 2em;
-      margin-left: 10px;
+      line-height: 1.95em;
+      margin-left: 11px;
     }
-    span.subscript {
-      margin-left: 14px;
+    span.subscript{
       text-transform: uppercase;
+      display: block;
       font-size: 11px;
+      margin: -24px 0 0 30px;
     }
   }
 
@@ -90,7 +93,10 @@
       margin-left: 9px;
     }
     span.subscript {
-      margin-left: 14px;
+      text-transform: uppercase;
+      display: block;
+      font-size: 11px;
+      margin: -24px 0 0 30px;
     }
   }
 
@@ -103,7 +109,10 @@
       margin-left: 9px;
     }
     span.subscript {
-      margin-left: 14px;
+      text-transform: uppercase;
+      display: block;
+      font-size: 11px;
+      margin: -24px 0 0 30px;
     }
   }
 
@@ -125,7 +134,10 @@
       margin-left: 7.5px;
     }
     span.subscript {
-      margin-left: 14px;
+      text-transform: uppercase;
+      display: block;
+      font-size: 11px;
+      margin: -24px 0 0 30px;
     }
   }
 
@@ -138,7 +150,10 @@
       margin-left: 7.5px;
     }
     span.subscript {
-      margin-left: 14px;
+      text-transform: uppercase;
+      display: block;
+      font-size: 11px;
+      margin: -24px 0 0 30px;
     }
   }
 
@@ -154,9 +169,9 @@
 
   color: #fff;
 
-  span, div {
-    line-height: 2em;
-    margin-left: 9px;
+  span {
+    line-height: 1.9em;
+    margin-left: 8px;
   }
 
   .a_A &, &.a_A {

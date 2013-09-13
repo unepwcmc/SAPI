@@ -1,10 +1,10 @@
 .search-block {
-	background: #8fb7cf;
-	border: 1px solid #6b94af;
-	padding: 30px 40px 30px;
+	background: #A4C5DA;
+	border: 1px solid #8fb7cf;
+	padding: 20px 40px 20px;
 	box-shadow: 2px 2px 2px rgba(0,0,0,0.05);
 	&.add {
-	  padding: 30px 60px 30px;
+	  padding: 20px 60px 20px;
 	}
 
 	.links-area {
@@ -14,7 +14,7 @@
 		font-weight: bold;
 		padding: 14px 15px 14px 0;
 		text-transform: uppercase;
-		border-right: 1px solid #739cb7;
+		border-right: 1px solid #8fb7cf;
 
 		a {
 			color: #fff;
@@ -47,7 +47,7 @@
 		width: 493px;
 		padding: 10px 15px 13px 15px;
 		text-transform: uppercase;
-		border-right: 1px solid #739cb7;
+		border-right: 1px solid #8fb7cf;
 	}
 
 	.search {
@@ -57,7 +57,7 @@
 		position: relative;
 		-webkit-border-radius: 20px;
 		border-radius: 20px;
-		border: 1px solid #6c95b0;
+		border: 1px solid #8fb7cf;
 
 		input[type="text"] {
 			padding: 3px;
@@ -248,9 +248,8 @@
 	color: #2a425a;
 	line-height: 30px;
 	font-weight: bold;
-	width: 130px;
 	padding: 12px 0 15px 15px;
-	border-left: 1px solid #739cb7;
+	border-left: 1px solid #8fb7cf;
 }
 .total-species span { font-size: 23px; }
 
