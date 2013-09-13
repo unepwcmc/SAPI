@@ -1,57 +1,31 @@
-CREATE OR REPLACE FUNCTION strip_tags(TEXT) RETURNS TEXT
-  LANGUAGE SQL IMMUTABLE
-  AS $$
-    SELECT regexp_replace(regexp_replace($1, E'(?x)<[^>]*?(\s alt \s* = \s* ([\'"]) ([^>]*?) \2) [^>]*? >', E'\3'), E'(?x)(< [^>]*? >)', '', 'g')
-  $$;
-
-CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255)) RETURNS VARCHAR(255)
-  LANGUAGE sql IMMUTABLE
-  AS $$
-    SELECT CASE
-      WHEN $1 IN ('ORDER', 'FAMILY', 'GENUS')
-      THEN $2 || ' spp.'
-      ELSE $2
-    END;
-  $$;
-
-DROP FUNCTION IF EXISTS ancestor_listing_auto_note(rank_name VARCHAR(255), full_name VARCHAR(255));
-
-CREATE OR REPLACE FUNCTION ancestor_listing_auto_note(rank_name VARCHAR(255), full_name VARCHAR(255), change_type_name VARCHAR(255))
-RETURNS TEXT
-  LANGUAGE sql IMMUTABLE
-  AS $$
-    SELECT $1 || ' ' ||
-    CASE
-      WHEN $3 = 'DELETION' THEN 'deletion'
-      WHEN $3 = 'RESERVATION' THEN 'reservation'
-      WHEN $3 = 'RESERVATION_WITHDRAWAL' THEN 'reservaton withdrawn'
-      ELSE 'listing'
-    END || ' ' || full_name_with_spp($1, $2);
-  $$;
-
-CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
-  LANGUAGE plpgsql
+CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
+  taxonomy taxonomies, designation designations
+  ) RETURNS void
+  LANGUAGE plpgsql STRICT
   AS $$
   DECLARE
+    all_lc_table_name TEXT;
+    lc_table_name TEXT;
+    sql TEXT;
     addition_id INT;
     deletion_id INT;
-    cites_id INT;
   BEGIN
-    PERFORM rebuild_all_listing_changes_mview();
+    PERFORM rebuild_designation_all_listing_changes_mview(taxonomy, designation);
 
-    RAISE NOTICE 'Dropping listing changes materialized view';
-    DROP table IF EXISTS listing_changes_mview CASCADE;
+    SELECT LOWER(designation.name) || '_all_listing_changes_mview' INTO all_lc_table_name;
+    SELECT LOWER(designation.name) || '_listing_changes_mview' INTO lc_table_name;
 
-    RAISE NOTICE 'Dropping listing changes view';
-    DROP VIEW IF EXISTS listing_changes_view;
+    EXECUTE 'DROP TABLE IF EXISTS ' || lc_table_name || ' CASCADE';
 
-    RAISE NOTICE 'Creating listing changes view';
-    CREATE VIEW listing_changes_view AS
+    RAISE INFO '* creating % materialized view', lc_table_name;
+    sql := 'CREATE TEMP TABLE ' || lc_table_name || ' AS
     WITH applicable_listing_changes AS (
-        SELECT designation_id, affected_taxon_concept_id,
-        applicable_listing_changes_for_node(designation_id, affected_taxon_concept_id) AS listing_change_id
-        FROM all_listing_changes_mview
-        GROUP BY designation_id, affected_taxon_concept_id
+        SELECT affected_taxon_concept_id,'
+        || LOWER(designation.name) || '_applicable_listing_changes_for_node(
+          affected_taxon_concept_id
+        ) AS listing_change_id
+        FROM ' || all_lc_table_name
+        || ' GROUP BY affected_taxon_concept_id
     )
     SELECT
     applicable_listing_changes.affected_taxon_concept_id AS taxon_concept_id,
@@ -86,13 +60,13 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     CASE
     WHEN inclusion_taxon_concept_id IS NOT NULL
     THEN ancestor_listing_auto_note(
-      inclusion_taxon_concepts.data->'rank_name',
+      inclusion_taxon_concepts.data->''rank_name'',
       inclusion_taxon_concepts.full_name,
       change_types.name
     )
     WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
     THEN ancestor_listing_auto_note(
-      original_taxon_concepts.data->'rank_name',
+      original_taxon_concepts.data->''rank_name'',
       original_taxon_concepts.full_name,
       change_types.name
     )
@@ -102,20 +76,22 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     listing_changes.explicit_change,
     populations.countries_ids_ary,
     CASE
-    WHEN change_types.name != 'EXCEPTION' AND listing_changes.explicit_change
+    WHEN change_types.name != ''EXCEPTION'' AND listing_changes.explicit_change
     THEN TRUE
     ELSE FALSE
     END AS show_in_history,
     CASE
-    WHEN change_types.name != 'EXCEPTION' AND listing_changes.explicit_change
+    WHEN change_types.name != ''EXCEPTION'' AND listing_changes.explicit_change
     THEN TRUE
     ELSE FALSE
     END AS show_in_downloads,
     CASE
-    WHEN change_types.name != 'EXCEPTION'
+    WHEN change_types.name != ''EXCEPTION''
     THEN TRUE
     ELSE FALSE
-    END AS show_in_timeline
+    END AS show_in_timeline,
+    false as dirty,
+    null::timestamp with time zone as expiry
     FROM
     applicable_listing_changes
     JOIN listing_changes ON applicable_listing_changes.listing_change_id  = listing_changes.id
@@ -131,7 +107,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     ON listing_changes.species_listing_id = species_listings.id
     LEFT JOIN listing_distributions
     ON listing_changes.id = listing_distributions.listing_change_id
-    AND listing_distributions.is_party = 't'
+    AND listing_distributions.is_party = ''t''
     LEFT JOIN geo_entities ON
     geo_entities.id = listing_distributions.geo_entity_id
     LEFT JOIN annotations ON
@@ -148,57 +124,47 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     ) populations ON populations.listing_change_id = listing_changes.id
     ORDER BY taxon_concept_id, effective_at,
     CASE
-    WHEN change_types.name = 'ADDITION' THEN 0
-    WHEN change_types.name = 'RESERVATION' THEN 1
-    WHEN change_types.name = 'RESERVATION_WITHDRAWAL' THEN 2
-    WHEN change_types.name = 'DELETION' THEN 3
-    END;
+    WHEN change_types.name = ''ADDITION'' THEN 0
+    WHEN change_types.name = ''RESERVATION'' THEN 1
+    WHEN change_types.name = ''RESERVATION_WITHDRAWAL'' THEN 2
+    WHEN change_types.name = ''DELETION'' THEN 3
+    END';
 
+    EXECUTE sql;
 
-    RAISE NOTICE 'Creating listing changes materialized view';
-    CREATE TABLE listing_changes_mview AS
-    SELECT *,
-    false as dirty,
-    null::timestamp with time zone as expiry
-    FROM listing_changes_view;
+    EXECUTE 'CREATE INDEX ON ' || lc_table_name || ' (id, taxon_concept_id)';
+    EXECUTE 'CREATE INDEX ON ' || lc_table_name || ' (inclusion_taxon_concept_id)';
+    EXECUTE 'CREATE INDEX ON ' || lc_table_name || ' (taxon_concept_id, original_taxon_concept_id, change_type_id, effective_at)';
 
     -- now for those taxon concepts that only have inherited legislation,
     -- ignore them in downloads
-    WITH taxon_concepts_with_inherited_legislation_only AS (
-      SELECT designation_id, taxon_concept_id
-      FROM listing_changes_mview
-      GROUP BY designation_id, taxon_concept_id
+    sql := 'WITH taxon_concepts_with_inherited_legislation_only AS (
+      SELECT taxon_concept_id
+      FROM ' || lc_table_name
+      || ' GROUP BY taxon_concept_id
       HAVING EVERY(original_taxon_concept_id != taxon_concept_id)
     )
-    UPDATE listing_changes_mview
+    UPDATE '|| lc_table_name || ' listing_changes_mview
     SET show_in_downloads = FALSE
     FROM taxon_concepts_with_inherited_legislation_only
-    WHERE taxon_concepts_with_inherited_legislation_only.designation_id = listing_changes_mview.designation_id
-    AND taxon_concepts_with_inherited_legislation_only.taxon_concept_id = listing_changes_mview.taxon_concept_id;
+    WHERE taxon_concepts_with_inherited_legislation_only.taxon_concept_id = listing_changes_mview.taxon_concept_id';
 
-    RAISE NOTICE 'Creating indexes on listing changes materialized view';
-    CREATE INDEX ON listing_changes_mview (show_in_timeline, taxon_concept_id, designation_id);
-    CREATE INDEX ON listing_changes_mview (show_in_downloads, taxon_concept_id, designation_id);
-    CREATE INDEX ON listing_changes_mview (id);
-    CREATE INDEX ON listing_changes_mview (taxon_concept_id);
-    CREATE INDEX ON listing_changes_mview (original_taxon_concept_id);
-    CREATE INDEX ON listing_changes_mview (inclusion_taxon_concept_id);
-    CREATE INDEX ON listing_changes_mview (taxon_concept_id, original_taxon_concept_id, change_type_id, effective_at, change_type_id);
+    EXECUTE sql;
 
-    RAISE NOTICE 'Terminating non-current inherited listings';
-    SELECT id INTO cites_id FROM designations WHERE name = 'CITES';
-    SELECT id INTO deletion_id FROM change_types WHERE name = 'DELETION' AND designation_id = cites_id;
-    SELECT id INTO addition_id FROM change_types WHERE name = 'ADDITION' AND designation_id = cites_id;
+    RAISE INFO 'Terminating non-current inherited listings';
+
+    SELECT id INTO deletion_id FROM change_types WHERE name = 'DELETION' AND designation_id = designation.id;
+    SELECT id INTO addition_id FROM change_types WHERE name = 'ADDITION' AND designation_id = designation.id;
     -- find inherited listing changes superceded by own listing changes
     -- mark them as not current in context of the child and add fake deletion records
     -- so that those inherited events are terminated properly on the timelines
-    WITH next_lc AS (
+    sql := 'WITH next_lc AS (
       SELECT taxon_concept_id, original_taxon_concept_id, species_listing_id, effective_at
-      FROM listing_changes_mview
-      -- note to self: removed the is_current filter here to also handle cases
+      FROM ' || lc_table_name
+      || ' -- note to self: removed the is_current filter here to also handle cases
       -- where an appendix changed in the past, e.g. Amazona auropalliata
-      WHERE change_type_id = addition_id
-    ), prev_lc AS (
+      WHERE change_type_id = ' || addition_id
+    || '), prev_lc AS (
       SELECT id, 
       listing_changes_mview.original_taxon_concept_id, 
       listing_changes_mview.taxon_concept_id, 
@@ -209,10 +175,10 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
       party_id, party_iso_code,
       listing_changes_mview.species_listing_id != next_lc.species_listing_id AS appendix_change
       FROM next_lc
-      JOIN listing_changes_mview      
+      JOIN ' || lc_table_name || ' listing_changes_mview      
       ON listing_changes_mview.taxon_concept_id = next_lc.taxon_concept_id
-      AND change_type_id = 1
-      AND listing_changes_mview.effective_at < next_lc.effective_at
+      AND change_type_id = ' || addition_id
+      || ' AND listing_changes_mview.effective_at < next_lc.effective_at
       AND (
         (
           -- own listing change preceded by inherited listing change
@@ -245,7 +211,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
       -- this is ok for the timelines, and those records are not used elsewhere
       -- note to self: ids in this view are not unique anyway, since any id
       -- from listing changes can occur multiple times
-      INSERT INTO listing_changes_mview (
+      INSERT INTO ' || lc_table_name || ' (
         original_taxon_concept_id, taxon_concept_id,
         effective_at,
         species_listing_id, species_listing_name,
@@ -258,8 +224,8 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
       SELECT 
       original_taxon_concept_id, taxon_concept_id,
       MIN(effective_at) AS effective_at, 
-      species_listing_id, species_listing_name,
-      deletion_id, 'DELETION', 
+      species_listing_id, species_listing_name, '
+      || deletion_id ||', ''DELETION'', 
       prev_lc.designation_id, designation_name, 
       party_id, party_iso_code, 
       TRUE AS is_current, FALSE AS explicit_change,
@@ -271,20 +237,23 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
       prev_lc.designation_id, designation_name, party_id, party_iso_code
       RETURNING *
     )
-    UPDATE listing_changes_mview
-    SET is_current = FALSE
+    UPDATE ' || lc_table_name || ' SET is_current = FALSE
     FROM prev_lc terminated_lc
-    WHERE terminated_lc.id = listing_changes_mview.id 
-    AND terminated_lc.taxon_concept_id = listing_changes_mview.taxon_concept_id;
+    WHERE terminated_lc.id = ' || lc_table_name || '.id 
+    AND terminated_lc.taxon_concept_id = ' || lc_table_name || '.taxon_concept_id';
 
-    RAISE NOTICE 'Merging inclusion records with their ancestor counterparts';
+    IF designation.name != 'CMS' THEN
+      EXECUTE sql;
+    END IF;
 
-    WITH double_inclusions AS (
+    RAISE INFO '* % merging inclusion records with their ancestor counterparts', lc_table_name;
+
+    sql := 'WITH double_inclusions AS (
       SELECT lc.taxon_concept_id, lc.id AS own_inclusion_id, lc_inh.id AS inherited_inclusion_id, 
       lc_inh.full_note_en AS inherited_full_note_en,
       lc_inh.short_note_en AS inherited_short_note_en
-      FROM listing_changes_mview lc
-      JOIN listing_changes_mview lc_inh
+      FROM ' || lc_table_name || ' lc
+      JOIN ' || lc_table_name || ' lc_inh
       ON lc.taxon_concept_id = lc_inh.taxon_concept_id
       AND lc.species_listing_id = lc_inh.species_listing_id
       AND lc.change_type_id = lc_inh.change_type_id
@@ -294,21 +263,23 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
       WHERE lc.inclusion_taxon_concept_id IS NOT NULL
     ), rows_to_be_deleted AS (
       DELETE
-      FROM listing_changes_mview lc
+      FROM ' || lc_table_name || ' lc
       USING double_inclusions
       WHERE double_inclusions.taxon_concept_id = lc.taxon_concept_id
       AND double_inclusions.inherited_inclusion_id = lc.id
       RETURNING *
     )
-    UPDATE listing_changes_mview lc
+    UPDATE ' || lc_table_name || ' lc
     SET inherited_full_note_en = double_inclusions.inherited_full_note_en,
     inherited_short_note_en = double_inclusions.inherited_short_note_en
     FROM double_inclusions
     WHERE double_inclusions.taxon_concept_id = lc.taxon_concept_id
     AND double_inclusions.own_inclusion_id = lc.id
-    AND (double_inclusions.inherited_full_note_en IS NOT NULL OR double_inclusions.inherited_short_note_en IS NOT NULL);    
+    AND (double_inclusions.inherited_full_note_en IS NOT NULL OR double_inclusions.inherited_short_note_en IS NOT NULL)';
 
+    EXECUTE sql;
   END;
   $$;
 
-COMMENT ON FUNCTION rebuild_listing_changes_mview() IS 'Procedure to rebuild listing changes materialized view in the database.';
+COMMENT ON FUNCTION rebuild_designation_listing_changes_mview(taxonomy taxonomies, designation designations) IS 
+'Procedure to rebuild designation listing changes materialized view in the database.';

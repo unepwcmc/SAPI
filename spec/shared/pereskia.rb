@@ -53,6 +53,7 @@ shared_context "Pereskia" do
      :is_current => true
     )
 
+    cms_designation
     Sapi.rebuild(:except => [:taxonomy])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
