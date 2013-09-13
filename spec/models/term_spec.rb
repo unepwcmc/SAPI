@@ -22,14 +22,14 @@ describe Term do
     end
     context "when dependent objects attached" do
       let(:term){ create(:term) }
-      context "when EU opinion" do
-        let!(:eu_opinion){ create(:eu_opinion, :term => term)}
-        specify { term.destroy.should be_false }
-      end
-      context "when EU suspension" do
-        let!(:eu_suspension){ create(:eu_suspension, :term => term)}
-        specify { term.destroy.should be_false }
-      end
+      #context "when EU opinion" do
+      #  let!(:eu_opinion){ create(:eu_opinion, :term => term)}
+      #  specify { term.destroy.should be_false }
+      #end
+      #context "when EU suspension" do
+      #  let!(:eu_suspension){ create(:eu_suspension, :term => term)}
+      #  specify { term.destroy.should be_false }
+      #end
       context "when CITES suspension" do
         let!(:cites_suspension){ create(
           :cites_suspension,
@@ -39,7 +39,8 @@ describe Term do
         specify { term.destroy.should be_false }
       end
       context "when CITES quota" do
-        let!(:quota){ create(:quota, :terms => [term])}
+        let(:geo_entity) { create(:geo_entity) }
+        let!(:quota){ create(:quota, :terms => [term], :geo_entity_id => geo_entity.id)}
         specify { term.destroy.should be_false }
       end
     end

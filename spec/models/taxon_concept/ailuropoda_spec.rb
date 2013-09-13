@@ -41,24 +41,6 @@ describe TaxonConcept do
         end
       end
 
-      describe :cites_closest_listed_ancestor_id do
-        context "for genus Ailuropoda" do
-          specify{ @genus.cites_closest_listed_ancestor_id.should == @family.id }
-        end
-        context "for species Ailuropoda melanoleuca" do
-          specify{ @species.cites_closest_listed_ancestor_id.should == @species.id }
-        end
-      end
-
-      describe :eu_closest_listed_ancestor_id do
-        context "for genus Ailuropoda" do
-          specify{ @genus.eu_closest_listed_ancestor_id.should == @family.id }
-        end
-        context "for species Ailuropoda melanoleuca" do
-          specify{ @species.eu_closest_listed_ancestor_id.should == @species.id }
-        end
-      end
-
     end
   end
 end

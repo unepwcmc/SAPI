@@ -1,8 +1,50 @@
 {{outlet search}}
 
-{{controller.content.meta.total}} species
-<ul>
-{{#each taxonConcept in  controller}}
-  <li>{{#linkTo 'taxon_concept' taxonConcept}}{{taxonConcept.fullName}}{{/linkTo}}</li>
-{{/each}}
-</ul>
+<div class="container">
+
+  <div class="heading"></div>
+
+  <div class="result-block">
+    {{#unless controller.didContentLoad}}
+    {{else}}
+    {{#each header in controller.content.meta.higher_taxa_headers}}
+      <ul class="result-list">
+        {{#stringToArray header.higher_taxon.ancestors_path splitter=","}}
+          <li>
+            {{view Species.TaxonConceptLinkView}}
+          </li>
+        {{/stringToArray}}
+      </ul>
+
+      {{#each taxonConceptId in header.taxon_concept_ids}}
+        {{view Species.TaxonConceptSearchResultView
+          taxonConceptIdBinding="taxonConceptId"
+        }}
+      {{/each}}
+    {{else}}
+      <div class="no-results">
+        <p class="no-results-title">Your search for <u>{{unbound controllers.search.taxonConceptQuery}}</u> returned no results.</p>
+        <p class="no-results-subtitle"> Try refining your search or selecting a taxa from the drop-down menu.</p>
+        <p>Please note that this database contains species that are listed in the Appendices to CITES and CMS, as well as the Annexes to the EU Wildlife Trade Regulations; it is not a comprehensive source of all species.</p>
+      </div>
+    {{/each}}
+    {{/unless}}
+  </div>
+
+  <div class="paging">
+  {{#if controller.showPageControls }}
+    <ul>
+      {{# if controller.showPrevPage }}
+        <li><a class="btn-prev" href="#" {{action "prevPage" target="view" on="click"}}>&#9664;</a>  </li>
+      {{/if}}
+  
+      <li>Page {{controller.page}} of {{controller.pages}}</li>
+  
+      {{# if controller.showNextPage }}
+        <li><a class="btn-next" href="#" {{action "nextPage" target="view" on="click"}}>&#9654;</a>  </li>
+      {{/if}}
+    </ul>
+  {{/if}}
+  </div>
+
+</div>

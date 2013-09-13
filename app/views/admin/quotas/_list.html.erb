@@ -1,31 +1,33 @@
 <thead>
-  <th>Quota</th>
   <th>Year</th>
-  <th>Published at</th>
-  <th>Current</th>
   <th>Party</th>
+  <th>Quantity</th>
+  <th>Unit</th>
   <th>Term</th>
   <th>Source</th>
   <th>Notes</th>
+  <th>Date</th>
+  <th>Public display?</th>
   <th>Actions</th>
 </thead>
 <tbody>
   <% collection.each do |quota| -%>
     <tr class="<%= if quota.is_current? then "current_listing" end %>">
+      <td><%= quota.year %></td>
+      <td><%= quota.geo_entity && quota.geo_entity.name_en %></td>
       <td>
         <% if quota.quota == -1 %>
           in preparation
         <% else %>
-          <%= quota.quota %> <%= quota.unit.try(:code) %>
+          <%= quota.quota %>
         <% end %>
       </td>
-      <td><%= quota.year %></td>
-      <td><%= quota.publication_date_formatted %></td>
-      <td><%= true_false_icon(quota.is_current) %></td>
-      <td><%= quota.geo_entity && quota.geo_entity.iso_code2 %></td>
+      <td><%= quota.unit.try(:code) %></td>
       <td><%= quota.terms && quota.terms.map(&:code).join(', ') %></td>
       <td><%= quota.sources && quota.sources.map(&:code).join(', ') %></td>
       <td><%= quota.notes %></td>
+      <td><%= quota.publication_date_formatted %></td>
+      <td><%= true_false_icon(quota.public_display) %></td>
       <td>
         <%= link_to edit_icon,
           edit_admin_taxon_concept_quota_path(@taxon_concept, quota)

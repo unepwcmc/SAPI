@@ -1,29 +1,31 @@
 <thead>
   <th>Year</th>
-  <th>Law</th>
+  <th>Regulation</th>
   <th>Party</th>
+  <th>Type</th>
   <th>Term</th>
   <th>Source</th>
-  <th>Restriction</th>
-  <th>Restriction Notes</th>
-  <th>Comments</th>
+  <th>Notes</th>
+  <th>Internal notes</th>
   <th>Current</th>
-  <th>Conditions Apply</th>
   <th>Actions</th>
 </thead>
 <tbody>
   <% collection.each do |opinion| -%>
     <tr class="<%= if opinion.is_current? then "current_listing" end %>">
       <td><%= opinion.year %></td>
-      <td></td>
-      <td><%= opinion.geo_entity && opinion.geo_entity.iso_code2 %></td>
+      <td><%= opinion.start_event.name %></td>
+      <td><%= opinion.geo_entity && opinion.geo_entity.name_en %></td>
+      <td>
+        <%= opinion.eu_decision_type.name %> 
+        <%= '(' + opinion.eu_decision_type.tooltip + ')' if opinion.
+          eu_decision_type.tooltip.present? %>
+      </td>
       <td><%= opinion.term && opinion.term.code %></td>
       <td><%= opinion.source && opinion.source.code %></td>
-      <td><%= opinion.restriction %></td>
-      <td><%= opinion.restriction_text %></td>
-      <td><%= opinion.comments %></td>
+      <td><%= opinion.notes %></td>
+      <td><%= opinion.internal_notes %></td>
       <td><%= true_false_icon(opinion.is_current) %></td>
-      <td><%= true_false_icon(opinion.conditions_apply) %></td>
       <td>
         <%= link_to edit_icon,
           edit_admin_taxon_concept_eu_opinion_path(@taxon_concept, opinion)

@@ -25,9 +25,12 @@ describe Admin::EuSuspensionsController do
 
   describe "POST create" do
     context "when successful" do
+      before do
+        @eu_decision_type = create(:eu_decision_type)
+      end
       it "redirects to the EU suspensions index" do
         post :create, :eu_suspension => {
-            :restriction => EuDecision::RESTRICTION_TYPES.first,
+            :eu_decision_type_id => @eu_decision_type.id,
             :start_date => Date.new(2013,1,1)
           },
           :taxon_concept_id => @taxon_concept.id
@@ -63,12 +66,13 @@ describe Admin::EuSuspensionsController do
         :eu_suspension,
         :taxon_concept_id => @taxon_concept.id
       )
+      @eu_decision_type = create(:eu_decision_type)
     end
 
     context "when successful" do
       it "renders taxon_concepts EU suspensions page" do
         put :update, :eu_suspension => {
-            :restriction => EuDecision::RESTRICTION_TYPES.last
+            :eu_decision_type_id => @eu_decision_type.id
           },
           :id => @eu_suspension.id,
           :taxon_concept_id => @taxon_concept.id
@@ -81,7 +85,7 @@ describe Admin::EuSuspensionsController do
     context "when not successful" do
       it "renders new" do
         put :update, :eu_suspension => {
-            :restriction => nil
+            :eu_decision_type_id => nil
           },
           :id => @eu_suspension.id,
           :taxon_concept_id => @taxon_concept.id

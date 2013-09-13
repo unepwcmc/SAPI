@@ -15,6 +15,7 @@ class AdminEditor
     $('.modal').on 'hidden', () =>
       @clearModalForm($(@))
     @initModals()
+    @initSearchTypeahead()
 
   clearModalForm: (modal) ->
     form = modal.find('form')
@@ -36,6 +37,27 @@ class AdminEditor
     alert.append(txt)
 
     $(alert).insertBefore($('h1'))
+
+  initSearchTypeahead: () ->
+    $('.search-typeahead').typeahead
+      source: (query, process) ->
+        $.get('/admin/taxon_concepts/autocomplete',
+        {
+          search_params: {
+            scientific_name: query,
+            taxonomy: {
+              id: $('#search_params_taxonomy_id').val()
+            }
+          }
+          limit: 25
+        }, (data) =>
+          labels = []
+          $.each(data, (i, item) =>
+            label = item.full_name
+            labels.push(label)
+          )
+          return process(labels)
+        )
 
 class AdminInPlaceEditor extends AdminEditor
   init: () ->
@@ -88,25 +110,6 @@ class TaxonConceptsEditor extends AdminEditor
     $('.distributions-list > a').popover({});
 
   initTaxonConceptTypeaheads: () ->
-    $('.search-typeahead').typeahead
-      source: (query, process) ->
-        $.get('/admin/taxon_concepts/autocomplete',
-        {
-          search_params: {
-            scientific_name: query,
-            taxonomy: {
-              id: $('#search_params_taxonomy_id').val()
-            }
-          }
-          limit: 25
-        }, (data) =>
-          labels = []
-          $.each(data, (i, item) =>
-            label = item.full_name
-            labels.push(label)
-          )
-          return process(labels)
-        )
 
     $('input.typeahead').each (idx) ->
       formId = $(@).closest('form').attr('id')
@@ -189,7 +192,6 @@ class ListingChangesEditor extends AdminEditor
 
   initForm: () ->
     super
-    @initTaxonConceptTypeaheads()
     @initDistributionSelectors()
     @initEventSelector()
     # handle initializing stuff for nested form add events
@@ -200,37 +202,92 @@ class ListingChangesEditor extends AdminEditor
       @_initTaxonConceptTypeaheads(event.field.find('.typeahead'))
     )
 
-  initTaxonConceptTypeaheads: () ->
-    @_initTaxonConceptTypeaheads($('.typeahead'))
-
-  _initTaxonConceptTypeaheads: (el) ->
-    el.typeahead
-      source: (query, process) ->
-        $.get('/admin/taxon_concepts/autocomplete',
-        {
-          search_params: {
-            scientific_name: query,
-            taxon_concept: {
-              id: @.$element.attr('data-taxon-concept-id'),
-              scope: @.$element.attr('data-taxon-concept-scope')
-            }
-          }
-          limit: 25
-        }, (data) =>
-          labels = []
-          $.each(data, (i, item) =>
-            label = item.full_name + ' ' + item.rank_name
-            labels.push(label)
-          )
-          return process(labels)
-        )
-
   initDistributionSelectors: () ->
     $('.distribution:not(#exclusions_fields_blueprint > .fields > select)').select2({
       placeholder: 'Select countries'
     })
+
+    $("#excluded_taxon_concepts_ids").select2({
+      placeholder: 'Select taxa'
+      minimumInputLength: 3
+      multiple: true
+      initSelection: (element, callback) ->
+        data = []
+        ids = []
+        $(element.val().split(",")).each(() ->
+          tmp = this.split(":")
+          ids.push(tmp[0])
+          data.push({id: tmp[0], text: tmp[1]})
+        )
+        element.val(ids)
+        callback(data)
+      ajax: {
+        url: '/admin/taxon_concepts/autocomplete',
+        dataType: 'json',
+        quietMillis: 100,
+        data: (query) ->
+          search_params:
+            scientific_name: query
+            taxon_concept:
+              id: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-id')
+              scope: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-scope')
+          limit: 25
+        results: (data) ->
+            results = []
+            $.each(data, (i, e) ->
+              results.push(
+                id: e.id
+                text: e.full_name
+              )
+            )
+            results: results
+        dropdownCssClass: 'bigdrop'
+        placeholder: 'Select taxa'
+      }
+    })
+
+    $("#inclusion_taxon_concept_id").select2({
+      placeholder: 'Select taxon'
+      minimumInputLength: 3
+      initSelection: (element, callback) ->
+        tmp = element.val().split(":")
+        id = tmp[0]
+        data = {id: tmp[0], text: tmp[1]}
+        element.val(id)
+        callback(data)
+      ajax: {
+        url: '/admin/taxon_concepts/autocomplete',
+        dataType: 'json',
+        quietMillis: 100,
+        data: (query) ->
+          search_params:
+            scientific_name: query
+            taxon_concept:
+              id: $("#inclusion_taxon_concept_id").attr('data-taxon-concept-id')
+              scope: $("#inclusion_taxon_concept_id").attr('data-taxon-concept-scope')
+          limit: 25
+        results: (data) ->
+            results = []
+            $.each(data, (i, e) ->
+              results.push(
+                id: e.id
+                text: e.full_name
+              )
+            )
+            results: results
+        dropdownCssClass: 'bigdrop'
+        placeholder: 'Select taxa'
+      }
+    })
+
   initEventSelector: () ->
-    if $('#cites_cop').length > 0
-      $('#listing_change_hash_annotation_id').chained('#cites_cop')
-    else
-      $('#listing_change_hash_annotation_id').chained('#listing_change_event_id')
+    $('#listing_change_hash_annotation_id').chained('#listing_change_event_id')
+    if $('#listing_change_event_id').attr('data-designation') == 'EU'
+      $('#listing_change_event_id').change((e) ->
+        $.get(
+          '/admin/events/' + $('#listing_change_event_id option:selected').val(),
+          {format: 'json'},
+          (data) ->
+            $('#listing_change_effective_at').val(data.event.effective_at_formatted)
+        )
+      )

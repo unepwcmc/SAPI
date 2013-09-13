@@ -1,0 +1,18 @@
+<%= form_for :annotation, :url => collection_path, :remote => true do |f| %>
+
+  <%= error_messages_for(@annotation) %>
+
+  <label>Event</label>
+  <%= f.select :event_id,
+    options_from_collection_for_select(@events, :id, :name, @annotation && @annotation.event_id)
+  %><br />
+
+  <%= f.label :symbol %>
+  <%= f.text_field :symbol %>
+
+  <% Annotation.locale_columns(:full_note).each do |column| %>
+    <%= f.label column %>
+    <%= f.text_area column %>
+  <% end %>
+
+<% end %>

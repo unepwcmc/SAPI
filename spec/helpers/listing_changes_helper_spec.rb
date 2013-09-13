@@ -67,29 +67,13 @@ describe ListingChangesHelper do
         "Only seeds and roots."
     end
   end
-  describe :exclusions_tooltip do
-    let(:child_taxon_concept){
-      create_cites_eu_species(
-        :parent_id => taxon_concept.id,
-        :taxon_name => create(:taxon_name, :scientific_name => 'cracovianus')
-      )
-    }
+  describe :excluded_geo_entities_tooltip do
     context "no exclusions" do
       it "should output blank exception" do
-        helper.exclusions_tooltip(listing_change).should be_blank
+        helper.excluded_geo_entities_tooltip(listing_change).should be_blank
       end
     end
-    context "taxonomic exclusion" do
-      let!(:exclusion){
-        create_cites_I_exception(
-          :taxon_concept_id => child_taxon_concept.id,
-          :parent_id => listing_change.id
-        )
-      }
-      it "should list taxonomic exception" do
-        helper.exclusions_tooltip(listing_change).should == 'Except: Foobarus cracovianus'
-      end
-    end
+
     context "geographic exclusion" do
       let(:exclusion){
         create_cites_I_exception(
@@ -106,27 +90,35 @@ describe ListingChangesHelper do
         )
       }
       it "should list geographic exception" do
-        helper.exclusions_tooltip(listing_change).should == 'Except populations of: Poland'
+        helper.excluded_geo_entities_tooltip(listing_change).should == 'Poland'
       end
     end
-    context "both taxonomic and geographic exclusion" do
+  end
+  describe :excluded_taxon_concepts_tooltip do
+    let(:child_taxon_concept){
+      create_cites_eu_species(
+        :parent_id => taxon_concept.id,
+        :taxon_name => create(:taxon_name, :scientific_name => 'cracovianus')
+      )
+    }
+    context "no exclusions" do
+      it "should output blank exception" do
+        helper.excluded_taxon_concepts_tooltip(listing_change).should be_blank
+      end
+    end
+
+    context "taxonomic exclusion" do
       let!(:exclusion){
         create_cites_I_exception(
           :taxon_concept_id => child_taxon_concept.id,
           :parent_id => listing_change.id
         )
       }
-      let!(:listing_distribution){
-        create(
-          :listing_distribution,
-          :listing_change_id => exclusion.id,
-          :geo_entity_id => poland.id,
-          :is_party => false
-        )
-      }
-      it "should list both taxonomic and geographic exception" do
-        helper.exclusions_tooltip(listing_change).should == 'Except: Foobarus cracovianus populations of: Poland'
+      it "should list taxonomic exception" do
+        helper.excluded_taxon_concepts_tooltip(listing_change).should == 'Foobarus cracovianus'
       end
     end
+
   end
+
 end

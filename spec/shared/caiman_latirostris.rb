@@ -1,6 +1,11 @@
 #Encoding: utf-8
 shared_context "Caiman latirostris" do
-  let(:en){ create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') }
+
+  let(:en){ 
+   create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA')
+   create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')   
+   create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') 
+  }
   let(:country){
     create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
   }
@@ -96,6 +101,7 @@ shared_context "Caiman latirostris" do
      :taxon_concept => @species,
      :annotation_id => a1.id,
      :effective_at => '1997-09-18',
+     :inclusion_taxon_concept_id => @order.id,
      :is_current => true
     )
     create(
@@ -108,6 +114,7 @@ shared_context "Caiman latirostris" do
      :taxon_concept => @species,
      :annotation_id => a1.id,
      :effective_at => '1997-09-18',
+     :inclusion_taxon_concept_id => @order.id,
      :is_current => true
     )
     create(
@@ -117,7 +124,7 @@ shared_context "Caiman latirostris" do
       :is_party => false
     )
 
-    Sapi::rebuild(:except => [:taxonomy])
+    Sapi.rebuild(:except => [:taxonomy])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

@@ -1,8 +1,12 @@
 <%= admin_title %>
 
+<%= sub_nav %>
+
 <%= admin_new_modal do %>
   <%= render :partial => 'admin/trade_codes/form' %>
 <% end %>
+
+<%= admin_simple_search %>
 
 <%= admin_table do %>
   <%=

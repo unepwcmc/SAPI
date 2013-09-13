@@ -1,17 +1,36 @@
 #encoding: utf-8
 module AdminHelper
+
+  def ancestors_path(taxon_concept)
+    Rank.where(
+      ["taxonomic_position < ?", taxon_concept.rank.taxonomic_position]
+      ).order(:taxonomic_position).map do |r|
+      name = taxon_concept.data["#{r.name.downcase}_name"]
+      id = taxon_concept.data["#{r.name.downcase}_id"]
+      if name && id
+        link_to(name, params.merge(:taxon_concept_id => id), :title => r.name)
+      else
+        nil
+      end
+    end.compact.join(' > ').html_safe
+  end   
+
   def edit_icon
     '<i class="icon-pencil" title="Edit"></i>'.html_safe
   end
+
   def delete_icon
     '<i class="icon-trash" title="Delete"></i>'.html_safe
   end
+
   def true_false_icon(bool_value)
     bool_value ? '<i class="icon-ok"></i>'.html_safe : ''
   end
+
   def tag_list(tags_ary)
     tags_ary.map{ |t| content_tag(:span, :class => 'myMinTag'){t} }.join.html_safe
   end
+
   def error_messages_for(resource)
     resource = instance_variable_get("@#{resource}") if resource.is_a? Symbol
     return '' unless resource && resource.errors.any?
@@ -35,6 +54,8 @@ module AdminHelper
       content_tag(:h1, 
         if block_given?
           yield
+        elsif @custom_title
+          @custom_title
         else
           controller_name.titleize
         end
@@ -119,6 +140,16 @@ module AdminHelper
       else
         render :partial => 'list', :locals => {:collection => collection}
       end
+    end
+  end
+
+  def admin_simple_search
+    content_tag(
+      :div, :id => "admin-simple-search",
+      :class => "simple-search",
+      :style => "clear: both"
+    ) do
+      render :partial => 'admin/simple_crud/simple_search'
     end
   end
 end

@@ -14,7 +14,6 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-deparam
-//= require bootstrap-typeahead
 //= require bootstrap-scrollspy
 //= require handlebars
 //= require ember
@@ -24,10 +23,10 @@
 //
 //= require ./species/store
 //
+//= require_tree ./species/helpers
 //= require_tree ./species/models
 //= require_tree ./species/controllers
 //= require_tree ./species/views
-//= require_tree ./species/helpers
 //= require_tree ./species/templates
 //= require ./species/router
 //= require_tree ./species/routes

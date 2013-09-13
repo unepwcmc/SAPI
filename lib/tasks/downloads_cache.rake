@@ -1,5 +1,5 @@
 namespace :downloads do
-  DOWNLOAD_DIRS = ['checklist', 'eu_listings', 'cites_listings', 'cites_quotas', 'cites_suspesions']
+  DOWNLOAD_DIRS = ['checklist', 'eu_listings', 'cites_listings', 'cms_listings', 'quotas', 'cites_suspensions', 'eu_decisions']
   namespace :cache do
     desc "Remove all cached downloads in /public/downloads/"
     task :clear => :environment do
@@ -24,15 +24,16 @@ namespace :downloads do
       end
     end
 
-    desc "Update the cache for the featured downloads"
-    task :update => :environment do
+    desc "Update the cache for the featured Checklist downloads"
+    task :update_checklist_downloads => :environment do
+      # Checklist downloads
       modules = [
         Checklist::Pdf,
         Checklist::Json,
         Checklist::Csv
       ]
 
-      # Default l
+      # full download parameters
       params = {
         show_synonyms: "1",
         show_author: "1",
@@ -47,6 +48,20 @@ namespace :downloads do
         puts m::Index.new(params).generate
         puts m::History.new(params).generate
       end
+    end
+
+    desc "Update the cache for the featured Species+ downloads"
+    task :update_species_downloads => :environment do
+      puts "Updating listings downloads"
+      Designation.dict.each do |d|
+        puts d
+        Species::ListingsExportFactory.new(:designation => d).export
+      end
+      puts "Updating CITES Suspensions downloads"
+      CitesSuspension.export(:set => 'current')
+
+      puts "Updating CITES Quotas downloads"
+      Quota.export(:set => 'current')
     end
   end
 end

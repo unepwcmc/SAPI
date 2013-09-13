@@ -24,7 +24,7 @@ namespace :import do
             ) AS tmp
         WHERE NOT EXISTS (
           SELECT * FROM preset_tags
-          WHERE preset_tags.name = BTRIM(tmp.tag) AND
+          WHERE UPPER(preset_tags.name) = BTRIM(UPPER(tmp.tag)) AND
           model = 'Distribution'
         );
         INSERT INTO tags(name)

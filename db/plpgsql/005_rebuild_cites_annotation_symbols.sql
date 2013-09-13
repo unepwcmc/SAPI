@@ -14,8 +14,8 @@ CREATE OR REPLACE FUNCTION rebuild_cites_annotation_symbols_for_node(node_id int
         ON listing_changes.change_type_id = change_types.id
       INNER JOIN designations
         ON change_types.designation_id = designations.id AND designations.name = 'CITES'
-      INNER JOIN taxon_concepts_mview
-        ON listing_changes.taxon_concept_id = taxon_concepts_mview.id
+      INNER JOIN taxon_concepts
+        ON listing_changes.taxon_concept_id = taxon_concepts.id
       WHERE is_current = TRUE AND display_in_index = TRUE
       GROUP BY taxon_concept_id, taxonomic_position
       ORDER BY taxonomic_position

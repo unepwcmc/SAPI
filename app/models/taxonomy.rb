@@ -22,6 +22,16 @@ class Taxonomy < ActiveRecord::Base
     :if => lambda { |t| t.name_changed? && t.class.dict.include?(t.name_was) },
     :on => :update
 
+  def self.search query
+    if query
+      where("UPPER(name) LIKE UPPER(:query)", 
+            :query => "%#{query}%")
+    else
+      scoped
+    end
+  end
+
+
   def can_be_deleted?
     !has_protected_name? && !has_dependent_objects?
   end

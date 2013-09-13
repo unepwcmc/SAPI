@@ -1,0 +1,165 @@
+<ul class="tabset subtabset">
+  <li>
+    {{#view Species.ToggleButton option="listings" valueBinding="controller.euLegislation"}}
+      LISTINGS
+    {{/view}}
+  </li>
+  <li class="last-child">
+    {{#view Species.ToggleButton option="decisions" valueBinding="controller.euLegislation"}}
+      EU DECISIONS
+    {{/view}}
+  </li>
+</ul>
+{{#view Species.DownloadsForLegislation
+  isVisibleBinding="controller.legislationIsEuListings"
+  controllerBinding="controllers.downloadsForEuListings"
+}}
+  <div class="two-columns">
+    <div class="col">
+      <div class="popup-area">
+        {{view Species.AppendixButton
+          selectedAppendicesBinding="controller.selectedAppendices"
+          appendicesBinding="controller.appendices"
+          title="ANNEX"
+        }}
+        <div class="popup-holder-appendix">
+          <div class="popup">
+            <div class="list-holder">
+              {{collection Species.AppendixDropdownCollectionView 
+                controllerBinding="controller"
+                contentBinding="controller.appendices"
+              }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <strong class="heading">ADDITIONAL DATA</strong>
+      <div class="row">
+        <label>
+          {{view Ember.Checkbox checkedBinding="includeCites"}}
+          Include CITES Appendices
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="bottom-columns">
+    <div class="col">
+        <div class="popup-area">
+          {{view Species.HigherTaxaSearchButton controllerBinding="controller"}}
+          {{view Species.HigherTaxaSearchDropdown controllerBinding="controller"}}
+        </div>
+    </div>
+    <div class="col">
+      <div class="popup-area">
+        {{view Species.GeoEntitiesSearchButton
+          selectedGeoEntitiesBinding="controller.selectedGeoEntities"
+          loadedBinding="controller.loaded"
+        }}
+        {{view Species.GeoEntitiesSearchDropdown
+          controllerBinding="controller"
+        }}
+      </div>
+    </div>
+  </div>
+  <div class="btn-holder">     
+    {{view Species.StartDownloadButton controllerBinding="controller"}}
+    <div class="message-area">
+      {{#if controller.downloadInProgress}}
+        <img src="/assets/loading.gif">
+      {{/if}}
+      {{controller.downloadMessage}}
+    </div>
+  </div>
+{{/view}}
+{{#view Species.DownloadsForLegislation
+  isVisibleBinding="controller.legislationIsEuDecisions"
+  controllerBinding="controllers.downloadsForEuDecisions"
+}}
+  <div class="doc-type">
+    <strong class="heading">DOCUMENT TYPE</strong>
+    <div class="typy-columns">
+      <div class="col">
+        <div class="row">
+          <label>
+            {{view Ember.Checkbox checkedBinding="negativeOpinions"}}
+            SRG Negative Opinions
+          </label>
+        </div>
+        <div class="row">
+          <label>
+            {{view Ember.Checkbox checkedBinding="noOpinions"}}
+            SRG No Opinions
+          </label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          <label>
+            {{view Ember.Checkbox checkedBinding="positiveOpinions"}}
+            SRG Positive Opinions
+          </label>
+        </div>
+        <div class="row">
+          <label>
+            {{view Ember.Checkbox checkedBinding="suspensions"}}
+            Suspensions
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="info-columns">
+    <div class="col">
+      <ul class="tab-link">
+        <li>
+          {{#view Species.ToggleButton option="current" valueBinding="controller.timeScope"}}
+            CURRENT
+          {{/view}}
+        </li>
+        <li class="last-child">
+          {{#view Species.ToggleButton option="all" valueBinding="controller.timeScope"}}
+            ALL
+          {{/view}}
+        </li>
+      </ul>
+    </div>
+    <div class="col">
+      {{#if timeScopeIsCurrent}}
+        Only current data has<br />been selected.
+      {{else}}
+        <div class="popup-area">
+          {{view Species.YearSearchButton selectedYearsBinding="controller.selectedYears"}}
+          {{view Species.YearSearchDropdown controllerBinding="controller"}}
+        </div>
+      {{/if}}
+    </div>
+  </div>
+  <div class="bottom-columns">
+    <div class="col">
+      <div class="popup-area">
+        {{view Species.HigherTaxaSearchButton controllerBinding="controller"}}
+        {{view Species.HigherTaxaSearchDropdown controllerBinding="controller"}}
+      </div>
+    </div>
+    <div class="col">
+      <div class="popup-area">
+        {{view Species.GeoEntitiesSearchButton
+          selectedGeoEntitiesBinding="controller.selectedGeoEntities"
+          loadedBinding="controller.loaded"
+        }}
+        {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
+      </div>
+    </div>
+  </div>
+  <div class="btn-holder">
+    {{view Species.StartDownloadButton controllerBinding="controller"}}
+    <div class="message-area">
+      {{#if controller.downloadInProgress}}
+        <img src="/assets/loading.gif">
+      {{/if}}
+      {{controller.downloadMessage}}
+    </div>
+  </div>
+{{/view}}

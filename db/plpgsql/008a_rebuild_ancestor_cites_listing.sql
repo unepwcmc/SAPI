@@ -44,6 +44,13 @@ CREATE OR REPLACE FUNCTION cites_aggregate_children_listing(
         WITH updated AS (
           WITH aggregated_children_listing AS (
             SELECT
+            -- this to be used in the timelines: if there are explicitly listed
+            -- descendants, the timeline might differ from the current listing
+            -- and a note should be displayed to inform the user 
+            hstore('cites_listed_descendants', BOOL_OR(
+              (listing -> 'cites_status_original')::BOOLEAN
+              OR (listing -> 'cites_listed_descendants')::BOOLEAN
+            )::VARCHAR) ||
             hstore('cites_I', MAX((listing -> 'cites_I')::VARCHAR)) ||
             hstore('cites_II', MAX((listing -> 'cites_II')::VARCHAR)) ||
             hstore('cites_III', MAX((listing -> 'cites_III')::VARCHAR)) ||
@@ -60,8 +67,26 @@ CREATE OR REPLACE FUNCTION cites_aggregate_children_listing(
                 '/'
               )
             ) AS listing
-            FROM taxon_concepts WHERE parent_id = node_id
-              OR (id = node_id AND (listing->'cites_status_original')::BOOLEAN)
+            FROM taxon_concepts
+            WHERE
+              -- aggregate children's listings
+              parent_id = node_id
+              -- as well as parent if they're explicitly listed
+              OR (
+                id = node_id 
+                AND (listing->'cites_status_original')::BOOLEAN
+              )
+              -- as well as parent if they are species
+              -- the assumption being they will have subspecies
+              -- which are not listed in their own right and
+              -- should therefore inherit the cascaded listing
+              -- if one exists
+              -- this should fix Lutrinae species, which should be I/II
+              -- even though subspecies in the db are on I
+              OR (
+                id = node_id 
+                AND data->'rank_name' = 'SPECIES'
+              )
           )
           UPDATE taxon_concepts SET listing = taxon_concepts.listing || aggregated_children_listing.listing
           FROM aggregated_children_listing
@@ -95,6 +120,14 @@ CREATE OR REPLACE FUNCTION rebuild_ancestor_cites_listing_for_node(node_id integ
         cites_aggregate_children_listing(id, TRUE)
       WHERE parent_id IS NULL AND taxonomy_id = cites_eu_id;
     END IF;
+
+    UPDATE taxon_concepts
+    SET listing = listing ||
+    hstore('cites_listing', listing->'cites_listing' || '/NC')
+    WHERE taxon_concepts.listing->'cites_not_listed' = 'NC'
+    AND NOT taxon_concepts.listing->'cites_listing' LIKE '%NC'
+    AND CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
+
     END;
   $$;
 

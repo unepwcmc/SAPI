@@ -8,10 +8,8 @@ gem 'rails', '3.2.13'
 gem 'pg'
 gem 'pg_array_parser'
 gem 'activerecord-postgres-hstore'
-gem 'json', '>=1.7.7'
 gem 'foreigner'
-gem 'oj'
-gem 'jsonify'
+gem 'oj' #optimised JSON (picked by multi_json)
 gem 'nokogiri'
 gem 'inherited_resources'
 gem 'traco'
@@ -22,6 +20,7 @@ gem 'sidekiq-status'
 gem 'whenever', :require => false
 
 gem 'ember-rails'
+gem 'ember-source', '1.0.0.rc6' # or the version you need
 gem 'jquery-rails', '2.1.4' #do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'kaminari'
@@ -42,6 +41,10 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
+  
+  gem "susy"
+  gem 'compass', '>= 0.12.2'
+  gem 'compass-rails', '>= 1.0.3'
 end
 
 
@@ -73,7 +76,7 @@ group :development do
   gem "guard-bundler"
   gem 'annotate', ">=2.5.0"
   gem 'sextant'
-  gem 'ruby-debug19'
+  gem 'debugger'
   # Deploy with Capistrano
   gem 'capistrano'
   gem 'capistrano-ext'
@@ -81,6 +84,7 @@ group :development do
   gem 'rack-cors', :require => 'rack/cors'
   gem 'quiet_assets'
   gem 'webrick', '1.3.1'
+
 end
 
 group :test, :development do
@@ -91,9 +95,10 @@ group :test, :development do
 end
 
 group :test do
+  gem "codeclimate-test-reporter", require: nil
   gem "factory_girl_rails", "~> 4.0"
   gem 'simplecov', :require => false
-  gem 'coveralls', require: false
+  gem 'coveralls', :require => false
 end
 
 gem 'rake', '~> 10.0.3'
@@ -101,3 +106,6 @@ gem 'rake', '~> 10.0.3'
 gem 'slim'
 # if you require 'sinatra' you get the DSL extended to Object
 gem 'sinatra', '>= 1.3.0', :require => nil
+
+gem 'memcache-client'
+#gem 'high_voltage'

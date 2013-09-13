@@ -1,0 +1,29 @@
+<div class="popup">
+  <div class="search-block01">
+    <div class="row01">
+      {{view Species.GeoEntitiesSearchTextField
+        valueBinding="controller.geoEntityQuery"
+        placeholder="Type to filter countries or regions"
+        autocomplete="off"
+      }}
+      <input type="submit" value="submit" />
+    </div>
+    <strong class="title01">SELECTED LOCATIONS</strong>
+    {{collection Species.SelectedGeoEntitiesCollectionView
+      contentBinding="controller.selectedGeoEntities"}}
+  </div>
+  <div class="list-holder">
+    <ul>
+      <li>
+        <h2>REGIONS</h2>
+        {{collection Species.GeoEntitiesCollectionView
+          contentBinding="controller.autoCompleteRegions"}}
+      </li>
+      <li>
+        <h2>COUNTRIES</h2>
+        {{collection Species.GeoEntitiesCollectionView
+          contentBinding="controller.autoCompleteCountries"}}
+      </li>
+    </ul>
+  </div>
+</div>

@@ -5,13 +5,105 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </a>
-    <%= link_to "ISIP Admin Panel", admin_root_path, :class => "brand" %>
+    <%= link_to "Species+ Admin Panel", admin_root_path, :class => "brand" %>
     <div class="nav-collapse">
       <ul class="nav">
-        <li class="<%= if controller_name == 'home' then 'active' end%>"><a href="/admin">Home</a></li>
-        <li class="<%= if controller_name == 'exports' then 'active' end%>"><a href="/exports">Data Exports</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#terms-of-use">Terms of Use</a></li>
+        <li class="<%= if controller_name == 'taxon_concepts' then 'active' end%>"><a href="/admin">Home</a></li>
+        <% controller_matches = ["taxonomies", "ranks", "designations", "change_types",
+            "species_listings", "geo_entities", "languages", "tags", "purposes", "sources",
+            "terms", "units"] %>
+        <li class="dropdown <%= 
+            if controller_matches.include?(controller_name) then 'active' end%>">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Core Data
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li class="<%= if controller_name == 'taxonomies' then 'active' end%>">
+              <%= link_to 'Taxonomies', admin_taxonomies_path %>
+            </li>
+            <li class="<%= if controller_name == 'ranks' then 'active' end%>">
+              <%= link_to 'Ranks', admin_ranks_path %>
+            </li>
+            <li class="<%= if controller_name == 'designations' then 'active' end%>">
+              <%= link_to 'MEAs', admin_designations_path %>
+            </li>
+            <li class="<%= if controller_name == 'species_listings' then 'active' end%>">
+              <%= link_to 'Species listings', admin_species_listings_path %>
+            </li>
+            <li class="<%= if controller_name == 'change_types' then 'active' end%>">
+              <%= link_to 'Change types', admin_change_types_path %>
+            </li>
+            <li class="<%= if controller_name == 'eu_decision_types' then 'active' end%>">
+              <%= link_to 'EU decision types', admin_eu_decision_types_path %>
+            </li>
+            <li class="<%= if controller_name == 'languages' then 'active' end%>">
+              <%= link_to 'Languages', admin_languages_path %>
+            </li>
+            <li class="<%= if controller_name == 'geo_entities' then 'active' end%>">
+              <%= link_to 'Geo entities', admin_geo_entities_path %>
+            </li>
+            <li class="<%= if controller_name == 'tags' then 'active' end%>">
+              <%= link_to 'Tags', admin_tags_path %>
+            </li>
+            <% controller_matches = ["purposes", "sources", "terms", "units"] %>
+            <li class="<%= if controller_matches.include?(controller_name) then 'active' end%>">
+              <%= link_to 'Trade Codes', admin_purposes_path %>
+            </li>
+          </ul>
+        </li>
+        <% controller_matches = ["cites_cops", "cites_suspension_notifications",
+          "cites_hash_annotations", "eu_regulations", "eu_hash_annotations", "events"] %>
+          <li class="dropdown <%= if controller_matches.include?(controller_name) then 'active' end %>">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Events
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li class="<%= if controller_name == 'cites_cops' then 'active' end%>">
+              <%= link_to 'CITES CoPs', admin_cites_cops_path %>
+            </li>
+            <li class="<%= if controller_name == 'cites_suspension_notifications' then 'active' end%>">
+              <%= link_to 'CITES Suspension Notifications', admin_cites_suspension_notifications_path %>
+            </li>
+            <li class="<%= if controller_name == 'cites_hash_annotations' then 'active' end%>">
+              <%= link_to 'CITES hash annotations', admin_cites_hash_annotations_path %>
+            </li>
+            <li class="<%= if controller_name == 'eu_regulations' then 'active' end%>">
+              <%= link_to 'EU Annex Regulations', admin_eu_regulations_path %>
+            </li>
+            <li class="<%= if controller_name == 'eu_suspension_regulations' then 'active' end%>">
+              <%= link_to 'EU Suspension Regulations', admin_eu_suspension_regulations_path %>
+            </li>
+            <li class="<%= if controller_name == 'eu_hash_annotations' then 'active' end%>">
+              <%= link_to 'EU hash annotations', admin_eu_hash_annotations_path %>
+            </li>
+          </ul>
+        </li>
+        <li class="<%= if controller_name == 'references' then 'active' end%>"><%= link_to 'References', admin_references_path %></li>
+        <li class="<%= if controller_name == 'users' then 'active' end%>"><%= link_to 'Users', admin_users_path %></li>
+        <% controller_matches = ["cites_suspensions"] %>
+        <li class="dropdown <%= if controller_matches.include?(controller_name) then 'active' end %>">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Batch Updates
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li class="<%= if controller_name == 'cites_suspensions' then 'active' end%>">
+              <%= link_to 'CITES Suspensions', admin_cites_suspensions_path %>
+            </li>
+            <li class="<%= if controller_name == '#' then 'active' end%>">
+              <%= link_to 'CITES Quotas', '#' %>
+            </li>
+            <li class="<%= if controller_name == '#' then 'active' end%>">
+              <%= link_to 'EU Annexes', '#' %>
+            </li>
+            <li class="<%= if controller_name == '#' then 'active' end%>">
+              <%= link_to 'EU Decisions', '#' %>
+            </li>
+          </ul>
+        </li>
+        <li><%= link_to 'Data Downloads', '#' %></li>
       </ul>
     </div>
   </div>

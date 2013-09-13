@@ -25,9 +25,12 @@ describe Admin::EuOpinionsController do
 
   describe "POST create" do
     context "when successful" do
+      before do
+        @eu_decision_type = create(:eu_decision_type)
+      end
       it "redirects to the EU Opinions index" do
         post :create, :eu_opinion => {
-            :restriction => EuDecision::RESTRICTION_TYPES.first, :start_date => Date.today
+            :eu_decision_type_id => @eu_decision_type.id, :start_date => Date.today
           },
           :taxon_concept_id => @taxon_concept.id
           response.should redirect_to(admin_taxon_concept_eu_opinions_url(@taxon_concept.id))
@@ -62,12 +65,13 @@ describe Admin::EuOpinionsController do
         :eu_opinion,
         :taxon_concept_id => @taxon_concept.id
       )
+      @eu_decision_type = create(:eu_decision_type)
     end
 
     context "when successful" do
       it "renders taxon_concepts EU Opinions page" do
         put :update, :eu_opinion => {
-            :restriction => EuDecision::RESTRICTION_TYPES.last
+            :eu_decision_type_id => @eu_decision_type.id
           },
           :id => @eu_opinion.id,
           :taxon_concept_id => @taxon_concept.id
@@ -80,7 +84,7 @@ describe Admin::EuOpinionsController do
     context "when not successful" do
       it "renders new" do
         put :update, :eu_opinion => {
-            :restriction => nil
+            :eu_decision_type_id => nil
           },
           :id => @eu_opinion.id,
           :taxon_concept_id => @taxon_concept.id

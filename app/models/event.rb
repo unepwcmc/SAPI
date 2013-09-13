@@ -20,6 +20,7 @@
 
 class Event < ActiveRecord::Base
   attr_accessible :name, :designation_id, :description, :url, :effective_at
+  attr_reader :effective_at_formatted
   belongs_to :designation
 
   validates :name, :presence => true, :uniqueness => true
@@ -31,6 +32,16 @@ class Event < ActiveRecord::Base
 
   def end_date_formatted
     end_date && end_date.strftime("%d/%m/%Y")
+  end
+
+  def self.search query
+    if query
+      where("UPPER(name) LIKE UPPER(:query)
+            OR UPPER(description) LIKE UPPER(:query)", 
+            :query => "%#{query}%")
+    else
+      scoped
+    end
   end
 
   protected

@@ -47,17 +47,19 @@ namespace :import do
           FROM (
             SELECT accepted.id AS accepted_id, synonym.id AS synonym_id
             FROM #{TMP_TABLE}
-            INNER JOIN ranks ON ranks.name ilike BTRIM(#{TMP_TABLE}.accepted_rank)
+            INNER JOIN ranks ON UPPER(ranks.name) = BTRIM(UPPER(#{TMP_TABLE}.accepted_rank))
             INNER JOIN taxon_concepts AS accepted
               ON accepted.legacy_id = #{TMP_TABLE}.accepted_legacy_id AND accepted.rank_id = ranks.id and accepted.legacy_type = '#{kingdom}'
-            INNER JOIN ranks as synonyms_rank ON synonyms_rank.name ilike BTRIM(#{TMP_TABLE}.rank)
+            INNER JOIN ranks as synonyms_rank ON UPPER(synonyms_rank.name) = BTRIM(Upper(#{TMP_TABLE}.rank))
             INNER JOIN taxon_concepts AS synonym
               ON synonym.legacy_id = #{TMP_TABLE}.legacy_id AND synonym.rank_id = synonyms_rank.id and synonym.legacy_type = '#{kingdom}'
             LEFT JOIN taxonomies ON taxonomies.id = accepted.taxonomy_id AND taxonomies.id = synonym.taxonomy_id
             WHERE NOT EXISTS (
               SELECT * FROM taxon_relationships
               LEFT JOIN taxon_concepts AS accepted ON accepted.id = taxon_relationships.taxon_concept_id
+                AND accepted.legacy_type = '#{kingdom}'
               LEFT JOIN taxon_concepts AS synonym ON synonym.id = taxon_relationships.other_taxon_concept_id
+                AND synonym.legacy_type = '#{kingdom}'
               WHERE taxon_relationships.taxon_relationship_type_id = #{rel.id}
                 AND accepted.taxonomy_id = #{taxonomy.id} AND synonym.taxonomy_id = #{taxonomy.id}
             ) AND taxonomies.id = #{taxonomy.id}

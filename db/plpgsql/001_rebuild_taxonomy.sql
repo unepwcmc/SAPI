@@ -1,49 +1,54 @@
+
 CREATE OR REPLACE FUNCTION ancestor_node_ids_for_node(node_id integer) RETURNS INTEGER[]
-  LANGUAGE plpgsql STABLE
+  LANGUAGE sql STABLE
   AS $$
-  DECLARE
-    ancestor_node_ids INTEGER[];
-  BEGIN
     WITH RECURSIVE ancestors AS (
       SELECT h.id, h.parent_id
-      FROM taxon_concepts h WHERE id = node_id
+      FROM taxon_concepts h WHERE id = $1
 
       UNION
 
       SELECT hi.id, hi.parent_id
       FROM taxon_concepts hi JOIN ancestors ON hi.id = ancestors.parent_id
     )
-    SELECT ARRAY(SELECT id FROM ancestors) INTO ancestor_node_ids;
-    RETURN ancestor_node_ids;
-  END;
+    SELECT ARRAY(SELECT id FROM ancestors);
   $$;
 
 CREATE OR REPLACE FUNCTION full_name(rank_name VARCHAR(255), ancestors HSTORE) RETURNS VARCHAR(255)
-  LANGUAGE plpgsql IMMUTABLE
+  LANGUAGE sql IMMUTABLE
   AS $$
-  BEGIN
-    RETURN CASE
-      WHEN rank_name = 'SPECIES' THEN
+    SELECT CASE
+      WHEN $1 = 'SPECIES' THEN
         -- now create a binomen for full name
-        CAST(ancestors -> 'genus_name' AS VARCHAR) || ' ' ||
-        LOWER(CAST(ancestors -> 'species_name' AS VARCHAR))
-      WHEN rank_name = 'SUBSPECIES' THEN
+        CAST($2 -> 'genus_name' AS VARCHAR) || ' ' ||
+        LOWER(CAST($2 -> 'species_name' AS VARCHAR))
+      WHEN $1 = 'SUBSPECIES' THEN
         -- now create a trinomen for full name
-        CAST(ancestors -> 'genus_name' AS VARCHAR) || ' ' ||
-        LOWER(CAST(ancestors -> 'species_name' AS VARCHAR)) || ' ' ||
-        LOWER(CAST(ancestors -> 'subspecies_name' AS VARCHAR))
-      ELSE ancestors -> LOWER(rank_name || '_name')
+        CAST($2 -> 'genus_name' AS VARCHAR) || ' ' ||
+        LOWER(CAST($2 -> 'species_name' AS VARCHAR)) || ' ' ||
+        LOWER(CAST($2 -> 'subspecies_name' AS VARCHAR))
+      WHEN $1 = 'VARIETY' THEN
+        -- now create a trinomen for full name
+        CAST($2 -> 'genus_name' AS VARCHAR) || ' ' ||
+        LOWER(CAST($2 -> 'species_name' AS VARCHAR)) || ' var. ' ||
+        LOWER(CAST($2 -> 'variety_name' AS VARCHAR))      
+      ELSE $2 -> LOWER($1 || '_name')
     END;
-  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255)) RETURNS VARCHAR(255)
+  LANGUAGE sql IMMUTABLE
+  AS $$
+    SELECT CASE
+      WHEN $1 IN ('ORDER', 'FAMILY')
+      THEN $2 || ' spp.'
+      ELSE $2
+    END;
   $$;
 
 CREATE OR REPLACE FUNCTION ancestors_names(node_id INTEGER) RETURNS HSTORE
-  LANGUAGE plpgsql
+  LANGUAGE sql
   AS $$
-  DECLARE
-    result HSTORE;
-    ancestor_row RECORD;
-  BEGIN
     WITH RECURSIVE q AS (
       SELECT h.id, h.parent_id,
         HSTORE(LOWER(ranks.name) || '_name', taxon_names.scientific_name) ||
@@ -51,7 +56,7 @@ CREATE OR REPLACE FUNCTION ancestors_names(node_id INTEGER) RETURNS HSTORE
       FROM taxon_concepts h
       INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
       INNER JOIN ranks ON h.rank_id = ranks.id
-      WHERE h.id = node_id
+      WHERE h.id = $1
 
       UNION
 
@@ -64,10 +69,7 @@ CREATE OR REPLACE FUNCTION ancestors_names(node_id INTEGER) RETURNS HSTORE
       INNER JOIN taxon_names ON hi.taxon_name_id = taxon_names.id
       INNER JOIN ranks ON hi.rank_id = ranks.id
     )
-    SELECT ancestors
-    INTO result FROM q WHERE parent_id IS NULL;
-    RETURN result;
-  END;
+    SELECT ancestors FROM q WHERE parent_id IS NULL;
   $$;
 
 CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_animalia_node(node_id integer) RETURNS void
@@ -114,8 +116,11 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_plantae_node(node_id 
     IF rank_name IN ('KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY')  THEN
       -- rebuild higher taxonomic ranks
       WITH plantae_root AS (
-        SELECT id, taxonomic_position
+        SELECT taxon_concepts.id, taxonomic_position
         FROM taxon_concepts
+        JOIN taxonomies
+        ON taxonomies.id = taxon_concepts.taxonomy_id
+        AND taxonomies.name = 'CITES_EU'
         WHERE full_name = 'Plantae'
       ), missing_higher_taxa AS (
         UPDATE taxon_concepts
@@ -216,9 +221,29 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomic_positions_for_node(node_id integer)
       END IF;
     ELSE
       -- rebuild animalia and plantae trees separately
-      SELECT id INTO kingdom_node_id FROM taxon_concepts WHERE full_name = 'Animalia';
+      -- CITES Animalia
+      SELECT taxon_concepts.id INTO kingdom_node_id
+      FROM taxon_concepts
+      JOIN taxonomies
+      ON taxonomies.id = taxon_concepts.taxonomy_id
+      AND taxonomies.name = 'CITES_EU'
+      WHERE full_name = 'Animalia';
       PERFORM rebuild_taxonomic_positions_for_animalia_node(kingdom_node_id);
-      SELECT id INTO kingdom_node_id FROM taxon_concepts WHERE full_name = 'Plantae';
+      -- CMS Animalia
+      SELECT taxon_concepts.id INTO kingdom_node_id
+      FROM taxon_concepts
+      JOIN taxonomies
+      ON taxonomies.id = taxon_concepts.taxonomy_id
+      AND taxonomies.name = 'CMS'
+      WHERE full_name = 'Animalia';
+      PERFORM rebuild_taxonomic_positions_for_animalia_node(kingdom_node_id);
+      -- CITES Plantae
+      SELECT taxon_concepts.id INTO kingdom_node_id
+      FROM taxon_concepts
+      JOIN taxonomies
+      ON taxonomies.id = taxon_concepts.taxonomy_id
+      AND taxonomies.name = 'CITES_EU'
+      WHERE full_name = 'Plantae';
       PERFORM rebuild_taxonomic_positions_for_plantae_node(kingdom_node_id, 'KINGDOM');
     END IF;
 

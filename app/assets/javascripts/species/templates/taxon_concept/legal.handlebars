@@ -1,0 +1,52 @@
+<div id="full-note-legal" style="display:none">
+  <a href="#" {{action "close"}} class="close">close</a>
+  <strong class="title">Full note</strong>
+  <div class="content"></div>
+</div>
+<div id="tab1">
+{{#if controllers.taxonConcept.isCms }}
+  <div {{bindAttr class=":block controllers.taxonConcept.anyHistoricCitesListings citesListingsExpanded:active"}} id="cms_listings">
+    <h2>CMS</h2>
+    {{#with controllers.taxonConcept}}
+      {{ partial 'species/taxon_concept/cms_listings' }}
+    {{/with}}
+  </div>
+  <div class="block" id="cms_instruments">
+    {{#with controllers.taxonConcept}}
+      {{ partial 'species/taxon_concept/cms_instruments' }}
+    {{/with}}
+  </div>
+{{else}}
+  <div {{bindAttr class=":block controllers.taxonConcept.anyHistoricCitesListings citesListingsExpanded:active"}} id="cites_listings">
+    <h2 class="cites-title">CITES</h2>
+    {{#with controllers.taxonConcept}}
+      {{ partial 'species/taxon_concept/cites_listings' }}
+    {{/with}}
+  </div>
+  <div {{bindAttr class=":block :add controllers.taxonConcept.anyHistoricCitesQuotas citesQuotasExpanded:active"}} id="cites_quotas">
+    {{#with controllers.taxonConcept}}
+      {{ partial 'species/taxon_concept/cites_quotas' }}
+    {{/with}}
+  </div>
+
+  <div {{bindAttr class=":block :add controllers.taxonConcept.anyHistoricCitesSuspensions citesSuspensionsExpanded:active"}} id="cites_suspensions">
+    {{#with controllers.taxonConcept}}
+      {{ partial 'species/taxon_concept/cites_suspensions' }}
+    {{/with}}
+  </div>
+
+  <hr />
+
+  <div {{bindAttr class=":block :add controllers.taxonConcept.anyHistoricEuListings euListingsExpanded:active"}} id="eu_listings">
+    <h2>EU Wildlife Trade Regulations</h2>
+    {{#with controllers.taxonConcept}}
+      {{ partial 'species/taxon_concept/eu_listings' }}
+    {{/with}}
+  </div>
+  <div {{bindAttr class=":block :add controllers.taxonConcept.anyHistoricEuDecisions euDecisionsExpanded:active"}} id="eu_decisions">
+    {{#with controllers.taxonConcept}}
+      {{ partial 'species/taxon_concept/eu_decisions' }}
+    {{/with}}
+  </div>
+{{/if}}
+</div>

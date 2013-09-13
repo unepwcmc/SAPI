@@ -3,8 +3,8 @@
 # Table name: designation_geo_entities
 #
 #  id             :integer          not null, primary key
-#  designation_id :integer
-#  geo_entity_id  :integer
+#  designation_id :integer          not null
+#  geo_entity_id  :integer          not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #

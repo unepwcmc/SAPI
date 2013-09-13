@@ -1,3 +1,3 @@
 Species.IndexController = Ember.Controller.extend
-  needs: ['search']
+  needs: ['search', 'downloads']
   content: null

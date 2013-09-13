@@ -1,1 +1,0 @@
-collection @checklist.taxon_concepts_rel

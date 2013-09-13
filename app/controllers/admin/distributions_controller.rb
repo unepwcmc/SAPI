@@ -2,6 +2,12 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
   before_filter :load_tags_and_geo_entities, :only => [:new, :edit]
+  before_filter :load_search, :only => [:index]
+
+  def index
+    @distributions = @taxon_concept.distributions.
+      joins(:geo_entity).order('UPPER(geo_entities.name_en) ASC')
+  end
 
   def edit
     edit! do |format|
@@ -36,6 +42,19 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
       failure.js {
         load_tags_and_geo_entities
         render 'new'
+      }
+    end
+  end
+
+  def destroy
+    destroy! do |success, failure|
+      success.html {
+        redirect_to admin_taxon_concept_distributions_url(@taxon_concept), 
+          :notice => 'Operation succeeded'
+      }
+      failure.html {
+        redirect_to admin_taxon_concept_distributions_url(@taxon_concept),
+          :notice => 'Operation failed'
       }
     end
   end

@@ -1,0 +1,20 @@
+<thead>
+  <th>Instrument</th>
+  <th>Effective from</th>
+  <th>Actions</th>
+</thead>
+<tbody>
+  <% @taxon_instruments.each do |ti| %>
+    <tr>
+      <td><%= ti.instrument.name %></td>
+      <td><%= ti.effective_from_formatted %></td>
+      <td>
+        <%= link_to delete_icon,
+          admin_taxon_concept_taxon_instrument_path(@taxon_concept, ti),
+          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+        %>
+      </td>
+    </tr>
+  <% end %>
+</tbody>
+

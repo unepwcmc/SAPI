@@ -1,0 +1,11 @@
+<div class="children-list">
+  <% unless @children.empty? %>
+    <ul>
+      <% @children.each do |child| %>
+        <li title="<%= child.rank.name %>"><%= link_to child.full_name, admin_taxon_concept_children_path(child) %> <%= child.author_year %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <%= @taxon_concept.full_name %> has no children.
+  <% end %>
+</div>

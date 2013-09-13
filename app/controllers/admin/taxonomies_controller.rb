@@ -12,7 +12,9 @@ class Admin::TaxonomiesController < Admin::SimpleCrudController
 
   protected
     def collection
-      @taxonomies ||= end_of_association_chain.order(:name).page(params[:page])
+      @taxonomies ||= end_of_association_chain.order(:name).
+        page(params[:page]).
+        search(params[:query])
     end
 end
 

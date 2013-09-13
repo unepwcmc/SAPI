@@ -1,19 +1,13 @@
 Species.IndexRoute = Ember.Route.extend
 
-  setupController: ->
-    geoEntitiesController = @controllerFor('geoEntities')
-    geoEntitiesController.set('content', Species.GeoEntity.find())
-
   renderTemplate: ->
-    indexController = @controllerFor('index')
-    searchController = @controllerFor('search')
-
     # Render the `index` template into
     # the default outlet, and display the `index`
     # controller.
     @render('index', {
       into: 'application',
-      controller: indexController
+      outlet: 'main',
+      controller: @controllerFor('index')
     })
     # Render the `search_form` template into
     # the outlet `search`, and display the `search`
@@ -21,5 +15,24 @@ Species.IndexRoute = Ember.Route.extend
     @render('searchForm', {
       into: 'index',
       outlet: 'search',
-      controller: searchController
+      controller: @controllerFor('search')
     })
+
+    @render('downloads', {
+      into: 'application',
+      outlet: 'downloads',
+      controller: @controllerFor('downloads')
+    })
+    @render('downloadsButton', {
+      into: 'index',
+      outlet: 'downloadsButton',
+      controller: @controllerFor('downloads')
+    })
+
+  events:
+    ensureGeoEntitiesLoaded: ->
+      @controllerFor('geoEntities').load()
+
+    ensureHigherTaxaLoaded: ->
+      @controllerFor('higherTaxaCitesEu').load()
+      @controllerFor('higherTaxaCms').load()

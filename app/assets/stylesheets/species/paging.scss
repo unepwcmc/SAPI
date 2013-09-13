@@ -1,0 +1,43 @@
+
+div.paging {
+  height: 30px;
+  ul{
+    margin-right: 20px;
+    font-size:13px;
+    line-height:23px;
+    color:#373f4c;
+    float: right;
+  
+    li{
+      float:left;
+      margin:0 0 0 7px;
+  
+      &:first-child {
+        margin:0;
+      }
+    }
+  
+    .btn-prev,
+    .btn-next{
+      float:left;
+      width:23px;
+      height:23px;
+      overflow:hidden;
+      display:block;
+      background: #33536A;
+      border-radius: 50%;
+      color: #fff;
+      font-size:  0.7em;
+      text-align: center;
+  
+      &:hover {
+        cursor: pointer;
+        text-decoration: none;
+      }
+    }
+  
+    .btn-next {
+      background-position:-46px -23px;
+    }
+  }
+}

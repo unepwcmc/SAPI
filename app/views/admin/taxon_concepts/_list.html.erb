@@ -42,9 +42,8 @@
         <% end %>
       </td>
       <td>
-        <%= link_to 'Delete', resource_url(taxon_concept), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %><br />
-        <%= link_to 'Edit', edit_resource_url(taxon_concept) %><br />
-        <%= link_to 'Relationships', admin_taxon_concept_taxon_relationships_url(taxon_concept) %>
+        <%= link_to edit_icon, admin_taxon_concept_names_path(taxon_concept) %>
+        <%= link_to delete_icon, resource_url(taxon_concept), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
       </td>
     </tr>
   <% end -%>

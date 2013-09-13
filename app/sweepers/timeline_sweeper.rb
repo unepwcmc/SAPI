@@ -17,6 +17,6 @@ class TimelineSweeper < ActionController::Caching::Sweeper
   private
 
   def expire_cache(tl)
-    expire_action(:controller => "timelines", :action => "index")
+    expire_action(:controller => "checklist/timelines", :action => "index")
   end
 end

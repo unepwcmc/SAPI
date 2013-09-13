@@ -21,6 +21,7 @@
         { :include_blank => true },
         {:class => 'quota select2', :style => 'width: 220px' }
       %>
+      <span class="help-block">For quotas <strong>in prep</strong>aration use <strong>-1</strong> for quota value.</span>
     </div>
   </div>
 
@@ -91,8 +92,17 @@
     </div>
   </div>
 
+  <div class="control-group">
+    <%= f.label :public_display, "Display publicly?", :class => 'control-label'%>
+    <div class="controls">
+      <%= f.check_box :public_display, :value => @quota.public_display %><br>
+    </div>
+  </div>
+
   <p class="pull-right">
-    <%= f.submit %>
+    <%= link_to 'Cancel', admin_taxon_concept_quotas_path(@taxon_concept),
+      :class => "btn" %>
+    <%= f.submit "Save", :class => "btn btn-primary save-button" %>
   </p>
 
 <% end %>

@@ -7,9 +7,8 @@
 #  updated_by         :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  original_filename  :string(255)
-#  number_of_rows     :integer
 #  is_done            :boolean          default(FALSE)
+#  number_of_rows     :integer
 #  csv_source_file    :text
 #  trading_country_id :integer          not null
 #  point_of_view      :string(255)      default("E"), not null

@@ -1,3 +1,5 @@
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
 require 'simplecov'
 require 'coveralls'
 
@@ -44,7 +46,7 @@ RSpec.configure do |config|
 
   config.include FactoryGirl::Syntax::Methods
   config.include JsonSpec::Helpers
-  config.include Sapi::Helpers
+  config.include SapiSpec::Helpers
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction

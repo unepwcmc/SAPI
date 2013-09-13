@@ -81,8 +81,7 @@ FactoryGirl.define do
   end
 
   factory :reference do
-    author 'Bolek'
-    title 'Przygód kilka wróbla ćwirka'
+    citation 'Przygód kilka wróbla ćwirka'
   end
 
   factory :taxon_concept_reference do
@@ -97,19 +96,24 @@ FactoryGirl.define do
 
   factory :eu_decision do
     taxon_concept
-    restriction 'b'
+    eu_decision_type
     start_date Date.new(2013,1,1)
+  end
+
+  factory :eu_decision_type do
+    sequence(:name) {|n| "Opinion#{n}"}
+    decision_type "NO_OPINION"
   end
 
   factory :eu_opinion do
     taxon_concept
-    restriction 'b'
+    eu_decision_type
     start_date Date.new(2013,1,1)
   end
 
   factory :eu_suspension do
     taxon_concept
-    restriction 'b'
+    eu_decision_type
     start_date Date.new(2013,1,1)
   end
 end

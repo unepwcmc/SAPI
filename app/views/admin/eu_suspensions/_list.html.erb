@@ -1,29 +1,31 @@
 <thead>
   <th>Year</th>
-  <th>Law</th>
+  <th>Suspension Regulation</th>
   <th>Party</th>
+  <th>Type</th>
   <th>Term</th>
   <th>Source</th>
-  <th>Restriction</th>
-  <th>Restriction Notes</th>
-  <th>Comments</th>
+  <th>Notes</th>
+  <th>Internal notes</th>
   <th>Current</th>
-  <th>Conditions Apply</th>
   <th>Actions</th>
 </thead>
 <tbody>
   <% collection.each do |suspension| -%>
     <tr class="<%= if suspension.is_current? then "current_listing" end %>">
       <td><%= suspension.year %></td>
-      <td></td>
-      <td><%= suspension.geo_entity && suspension.geo_entity.iso_code2 %></td>
+      <td><%= suspension.start_event.name %></td>
+      <td><%= suspension.geo_entity && suspension.geo_entity.name_en %></td>
+      <td>
+        <%= suspension.eu_decision_type.name %> 
+        <%= '(' + suspension.eu_decision_type.tooltip + ')' if suspension.
+          eu_decision_type.tooltip.present? %>
+      </td>
       <td><%= suspension.term && suspension.term.code %></td>
       <td><%= suspension.source && suspension.source.code %></td>
-      <td><%= suspension.restriction %></td>
-      <td><%= suspension.restriction_text %></td>
-      <td><%= suspension.comments %></td>
+      <td><%= suspension.notes %></td>
+      <td><%= suspension.internal_notes %></td>
       <td><%= true_false_icon(suspension.is_current) %></td>
-      <td><%= true_false_icon(suspension.conditions_apply) %></td>
       <td>
         <%= link_to edit_icon,
           edit_admin_taxon_concept_eu_suspension_path(@taxon_concept, suspension)

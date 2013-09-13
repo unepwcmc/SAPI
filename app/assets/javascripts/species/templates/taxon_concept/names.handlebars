@@ -1,0 +1,62 @@
+<div id="tab1">
+  <div {{bindAttr class=":block :block02 controllers.taxonConcept.anyNonConventionCommonNames commonNamesExpanded:active"}} id="common_names">
+    <strong class="title">COMMON NAMES</strong>
+    {{#if controllers.taxonConcept.commonNames}}
+      <table summary="data table" id="common_names">
+        <thead>
+          <tr>
+            <th class="col11">LANGUAGE</th>
+            <th class="col12">NAME</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each commonName in controllers.taxonConcept.commonNames}}
+            <tr {{ bindAttr class="commonName.convention_language::historic commonNamesExpanded::hidden"}}>
+              <td>{{commonName.lang}}</td>
+              <td>{{commonName.names}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      {{#if controllers.taxonConcept.anyNonConventionCommonNames}}
+        <div {{bindAttr class=":btn-hloder commonNamesExpanded:expanded"}}>
+          {{#if controller.commonNamesExpanded}}
+            <a href="#" class="link active languages" {{action 'contractList' 'common_names' 'commonNamesExpanded'}}>HIDE EXTRA LANGUAGES</a>
+          {{else}}
+            <a href="#" class="link languages" {{action 'expandList' 'common_names' 'commonNamesExpanded'}}>SHOW MORE LANGUAGES</a>
+          {{/if}}
+        </div>
+      {{/if}}
+    {{/if}}
+  </div>
+  <div class="block04" id="synonyms">
+    <strong class="title">SYNONYMS</strong>
+    <div class="columns-holder">
+      <ul class="col">
+        {{#eachPart controllers.taxonConcept.synonyms parts=2 page=0}}
+          <li>{{full_name}} {{author_year}}</li>
+        {{/eachPart}}
+      </ul>
+      <ul class="col">
+        {{#eachPart controllers.taxonConcept.synonyms parts=2 page=1}}
+          <li>{{full_name}} {{author_year}}</li>
+        {{/eachPart}}
+      </ul>
+    </div>
+  </div>
+  <div class="block04 block05" id="subspecies">
+    <strong class="title">SUBSPECIES</strong>
+    <div class="columns-holder">
+      <ul class="col">
+        {{#eachPart controllers.taxonConcept.subspecies parts=2 page=0}}
+          <li>{{full_name}} {{author_year}}</li>
+        {{/eachPart}}
+      </ul>
+      <ul class="col">
+        {{#eachPart controllers.taxonConcept.subspecies parts=2 page=1}}
+          <li>{{full_name}} {{author_year}}</li>
+        {{/eachPart}}
+      </ul>
+    </div>
+  </div>
+</div>

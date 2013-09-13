@@ -4,6 +4,7 @@ class Admin::TaxonConceptCitesSuspensionsController < Admin::SimpleCrudControlle
   belongs_to :taxon_concept
 
   before_filter :load_lib_objects, :only => [:new, :edit]
+  before_filter :load_search, :except => [:create, :destroy]
   layout 'taxon_concepts'
 
   def create
@@ -48,7 +49,9 @@ class Admin::TaxonConceptCitesSuspensionsController < Admin::SimpleCrudControlle
     @purposes = Purpose.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
-    @suspension_notifications = CitesSuspensionNotification.select([:id, :name]).order(:effective_at)
+    @suspension_notifications = CitesSuspensionNotification.
+      select([:id, :name]).
+      order('effective_at DESC')
   end
 
   def collection

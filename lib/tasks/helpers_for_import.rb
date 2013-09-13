@@ -24,7 +24,6 @@ class CsvToDbMap
       'Status' => 'status varchar',
       'Species Author' => 'author varchar',
       'notes' => 'notes varchar',
-      'ReferenceIDs' => 'reference_ids varchar',
       'Designation' => 'taxonomy varchar',
       'AcceptedRank' => 'accepted_rank varchar',
       'AcceptedRecID' => 'accepted_legacy_id integer'
@@ -200,6 +199,37 @@ class CsvToDbMap
       'EXCLUDED_REC_IDS' => 'excluded_taxa varchar',
       'FULL_NOTE_EN' => 'full_note_en varchar',
       'HASH_NOTE' => 'hash_note varchar'
+    },
+    'cms_listings_import' => {
+      'rank' => 'rank varchar',
+      'rec_id' => 'legacy_id integer',
+      'listing' => 'appendix varchar',
+      'effective_from' => 'listing_date varchar',
+      'is_current' => 'is_current boolean',
+      'populations_iso2' => 'populations_iso2 varchar',
+      'EXCLUDEDpopulations_iso' => 'excluded_populations_iso2 varchar',
+      'is_inclusion' => 'is_inclusion boolean',
+      'included_in_RecID' => 'included_in_rec_id integer',
+      'RankforInclusions' => 'rank_for_inclusions varchar',
+      'excluded_rec_ids' => 'excluded_taxa varchar',
+      'LegNotes' => 'full_note_en varchar',
+      'CMS instrument' => 'designation varchar',
+      'Internal Notes' => 'notes varchar'
+    },
+    'eu_decisions_import' => {
+      'IsCurrent?' => 'is_current boolean',
+      'Taxonomy' => 'taxonomy varchar',
+      'LawID' => 'event_legacy_id integer',
+      'SpcRecID' => 'legacy_id integer',
+      'DecLevel' => 'rank varchar',
+      'Kingdom' => 'kingdom varchar',
+      'ISO_country' => 'country_iso2 varchar',
+      'DecOpinion' => 'opinion varchar',
+      'DecDate' => 'start_date date',
+      'Source' => 'source varchar',
+      'Term' => 'term varchar',
+      'DecNotes' => 'notes varchar',
+      'Internal_Notes' => 'internal_notes varchar'
     }
   }
 
@@ -210,7 +240,7 @@ end
 
 def files_from_args(t, args)
   files = t.arg_names.map{ |a| args[a] }.compact
-  files = ['lib/assets/files/animals.csv'] if files.empty?
+  files = ['lib/files/animals.csv'] if files.empty?
   files.reject { |file| !file_ok?(file) }
 end
 

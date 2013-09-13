@@ -107,6 +107,16 @@ eu = Designation.find_by_name(Designation::EU)
   )
 end
 
+cms = Designation.find_by_name(Designation::CMS)
+
+%w(I II).each do |app_abbr|
+  SpeciesListing.create(
+    :name => "Appendix #{app_abbr}",
+    :abbreviation => app_abbr,
+    :designation_id => cms.id
+  )
+end
+
 puts "#{SpeciesListing.count} species listings created"
 
 higher_taxa = [
@@ -117,75 +127,75 @@ higher_taxa = [
   :legacy_type => 'Animalia',
   :sub_taxa => [
     {
-  :name => 'Annelida',
-  :taxonomic_position => '1.4',
-  :legacy_id => 1,
-  :legacy_type => 'Animalia',
-  :sub_taxa => [
+      :name => 'Annelida',
+      :taxonomic_position => '1.4',
+      :legacy_id => 1,
+      :legacy_type => 'Animalia',
+      :sub_taxa => [
+        {
+          :name => 'Hirudinoidea',
+          :taxonomic_position => '1.4.1',
+          :legacy_id => 14,
+          :legacy_type => 'Animalia'
+        }
+      ]
+  },
+  {
+    :name => 'Arthropoda',
+    :taxonomic_position => '1.3',
+    :legacy_id => 2,
+    :legacy_type => 'Animalia',
+    :sub_taxa => [
+        {
+        :name => 'Arachnida',
+        :taxonomic_position => '1.3.1',
+        :legacy_id => 4,
+        :legacy_type => 'Animalia'
+      },
+      {
+        :name => 'Insecta',
+        :taxonomic_position => '1.3.2',
+        :legacy_id => 16,
+        :legacy_type => 'Animalia'
+      }
+    ]
+  },
+  {
+    :name => 'Chordata',
+    :taxonomic_position => '1.1',
+    :legacy_id => 3,
+    :legacy_type => 'Animalia',
+    :sub_taxa => [
+      {
+      :name => 'Actinopterygii',
+      :taxonomic_position => '1.1.6',
+      :legacy_id => 1,
+      :legacy_type => 'Animalia'
+    },
     {
-  :name => 'Hirudinoidea',
-  :taxonomic_position => '1.4.1',
-  :legacy_id => 14,
-  :legacy_type => 'Animalia'
-}
-]
-},
-  {
-  :name => 'Arthropoda',
-  :taxonomic_position => '1.3',
-  :legacy_id => 2,
-  :legacy_type => 'Animalia',
-  :sub_taxa => [
+      :name => 'Amphibia',
+      :taxonomic_position => '1.1.4',
+      :legacy_id => 2,
+      :legacy_type => 'Animalia'
+    },
     {
-  :name => 'Arachnida',
-  :taxonomic_position => '1.3.1',
-  :legacy_id => 4,
-  :legacy_type => 'Animalia'
-},
-  {
-  :name => 'Insecta',
-  :taxonomic_position => '1.3.2',
-  :legacy_id => 16,
-  :legacy_type => 'Animalia'
-}
-]
-},
-  {
-  :name => 'Chordata',
-  :taxonomic_position => '1.1',
-  :legacy_id => 3,
-  :legacy_type => 'Animalia',
-  :sub_taxa => [
+      :name => 'Aves',
+      :taxonomic_position => '1.1.2',
+      :legacy_id => 5,
+      :legacy_type => 'Animalia'
+    },
     {
-  :name => 'Actinopterygii',
-  :taxonomic_position => '1.1.6',
-  :legacy_id => 1,
-  :legacy_type => 'Animalia'
-},
-  {
-  :name => 'Amphibia',
-  :taxonomic_position => '1.1.4',
-  :legacy_id => 2,
-  :legacy_type => 'Animalia'
-},
-  {
-  :name => 'Aves',
-  :taxonomic_position => '1.1.2',
-  :legacy_id => 5,
-  :legacy_type => 'Animalia'
-},
-  {
-  :name => 'Elasmobranchii',
-  :taxonomic_position => '1.1.5',
-  :legacy_id => 11,
-  :legacy_type => 'Animalia'
-},
-  {
-  :name => 'Mammalia',
-  :taxonomic_position => '1.1.1',
-  :legacy_id => 17,
-  :legacy_type => 'Animalia'
-},
+      :name => 'Elasmobranchii',
+      :taxonomic_position => '1.1.5',
+      :legacy_id => 11,
+      :legacy_type => 'Animalia'
+    },
+    {
+      :name => 'Mammalia',
+      :taxonomic_position => '1.1.1',
+      :legacy_id => 17,
+      :legacy_type => 'Animalia'
+    },
   {
   :name => 'Reptilia',
   :taxonomic_position => '1.1.3',
@@ -268,8 +278,8 @@ higher_taxa = [
 kingdom_rank_id = Rank.find_by_name(Rank::KINGDOM).id
 higher_taxa.each do |kingdom_props|
   kingdom_name = kingdom_props[:name]
-  name = TaxonName.find_or_create_by_scientific_name(kingdom_name)
   [cms_taxonomy, taxonomy].each do |taksonomy|
+    name = TaxonName.find_or_create_by_scientific_name(kingdom_name)
     next if taksonomy.name == Taxonomy::CMS && kingdom_name == 'Plantae'
     kingdom = TaxonConcept.create(:rank_id => kingdom_rank_id,
                                   :taxon_name_id => name.id,

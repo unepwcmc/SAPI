@@ -1,15 +1,18 @@
 Species.GeoEntitiesController = Ember.ArrayController.extend
   content: null
-  needs: ['search']
   regions: null
   countries: null
+  loaded: false
 
   contentObserver: ( ->
+    @set('loaded', true)
     Ember.run.once(@, 'initAutocompleteGeoEntities')
   ).observes("content.@each.didLoad")
 
   initAutocompleteGeoEntities: ->
     @set('regions', @get('content').filterProperty('geoEntityType', 'CITES_REGION'))
-    @set('controllers.search.autoCompleteRegions', @get('regions'))
    	@set('countries', @get('content').filterProperty('geoEntityType', 'COUNTRY'))
-   	@set('controllers.search.autoCompleteCountries', @get('countries'))
+
+  load: ->
+    unless @get('loaded')
+      @set('content', Species.GeoEntity.find())

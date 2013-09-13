@@ -52,7 +52,7 @@ module Checklist::Pdf::HistoryContent
     listed_taxa_ary.each do |tc|
       listed_taxon_name = listed_taxon_name(tc)
       is_tc_row = true #it is the first row per taxon concept
-      tc.listing_changes.each do |lc|
+      tc.historic_cites_listing_changes_for_downloads.each do |lc|
         is_lc_row = true #it is the first row per listing change
         multilingual_annotations(lc).each do |ann|
           row = []
@@ -78,8 +78,12 @@ module Checklist::Pdf::HistoryContent
   end
 
   def listing_with_change_type(listing_change)
-    "#{listing_change.species_listing_name}#{
-      if listing_change.change_type_name == ChangeType::RESERVATION
+    appendix = if listing_change.change_type_name == ChangeType::DELETION
+      nil
+    else
+      listing_change.species_listing_name
+    end
+    change_type = if listing_change.change_type_name == ChangeType::RESERVATION
         '/r'
       elsif listing_change.change_type_name == ChangeType::RESERVATION_WITHDRAWAL
         '/w'
@@ -88,12 +92,12 @@ module Checklist::Pdf::HistoryContent
       else
         nil
       end
-    }"
+    "#{appendix}#{change_type}"
   end
 
   def multilingual_annotations(listing_change)
     res = ['en', 'es', 'fr'].map do |lng|
-      annotation_for_language(listing_change, lng)
+      annotation_for_language(listing_change, lng).presence
     end.compact
     (res.empty? ? [nil] : res)
   end

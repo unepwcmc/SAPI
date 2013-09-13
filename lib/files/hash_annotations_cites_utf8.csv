@@ -1,0 +1,314 @@
+Hash No,Event No,For Display,Text
+#1,23,Pre-CoP1 #1,Designates roots
+#2,23,Pre-CoP1 #2,Designates timber
+#3,23,Pre-CoP1 #3,Designates trunks
+>1,24,CoP1 >1,Designates roots
+>2,24,CoP1 >2,Designates timber
+>3,24,CoP1 >3,Designates trunks
+>1,25,CoP2 >1,Designates roots
+>2,25,CoP2 >2,Designates timber
+>3,25,CoP2 >3,Designates trunks
+#1,26,CoP3 #1,Designates roots
+#2,26,CoP3 #2,Designates timber
+#3,26,CoP3 #3,Designates trunks
+#1,27,CoP4 #1,Designates roots
+#2,27,CoP4 #2,Designates timber
+#3,27,CoP4 #3,Designates trunks
+#1,28,CoP5 #1,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia); and<p>
+b) tissue cultures and flasked seedling cultures<p>"
+#2,28,CoP5 #2,Designates roots and readily recognizable parts thereof
+#3,28,CoP5 #3,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia);<p>
+b) tissue cultures and flasked seedling cultures;<p>
+c) fruits and parts and derivatives thereof of naturalized or artificially propagated plants; and<p>
+d) separate stem joints (pads) and parts and derivatives thereof of naturalized or artificially propagated <i>Opuntia</i> subgenus <i>Opuntia</i> spp.<p>"
+#4,28,CoP5 #4,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia);<p>
+b) tissue cultures and flasked seedling cultures; and<p>
+c) fruits and parts and derivatives thereof of naturalized or artificially propagated plants"
+#5,28,CoP5 #5,"Designates all parts and derivatives, except:<p>
+a) spores and pollen (including pollinia); and<p>
+b) tissue cultures and flasked seedling cultures<p>"
+#6,28,CoP5 #6,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia);<p>
+b) tissue cultures and flasked seedling cultures; and<p>
+c) separate leaves and parts and derivatives thereof of naturalized or artificially propagated <i>Aloe vera</i>"
+#7,28,CoP5 #7,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia); and<p>
+b) tissue cultures and flasked seedling cultures;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) fruits and parts and derivatives of artificially propagated <i><i>Vanilla</i> </i> spp."
+#1,29,CoP6 #1,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia); and<p>
+b) tissue cultures and flasked seedling cultures<p>"
+#2,29,CoP6 #2,Designates roots and readily recognizable parts thereof
+#3,29,CoP6 #3,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) tissue cultures and flasked seedling cultures;<p>
+c) fruits and parts and derivatives thereof of naturalized or artificially propagated plants; and<p>
+d) separate stem joints (pads) and parts and derivatives thereof of naturalized or artificially propagated <i>Opuntia</i> subgenus <i>Opuntia</i> spp."
+#4,29,CoP6 #4,"Designates all parts and derivatives, except:<p>
+a) pollen; and<p>
+b) tissue cultures and flasked seedling cultures<p>"
+#5,29,CoP6 #5,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) tissue cultures and flasked seedling cultures; and<p>
+c) separate leaves and parts and derivatives thereof of naturalized or artificially propagated <i>Aloe vera</i>"
+#6,29,CoP6 #6,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia); and<p>
+b) tissue cultures and flasked seedling cultures;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) fruits and parts and derivatives of artificially propagated <i><i>Vanilla</i> </i> spp."
+#1,30,CoP7 #1,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia); and<p>
+b) tissue cultures and flasked seedling cultures<p>"
+#2,30,CoP7 #2,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) tissue cultures and flasked seedling cultures; and<p>
+c) chemical derivatives"
+#3,30,CoP7 #3,Designates roots and readily recognizable parts thereof
+#4,30,CoP7 #4,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) tissue cultures and flasked seedling cultures;<p>
+c) fruits and parts and derivatives thereof of naturalized or artificially propagated plants; and<p>
+d) separate stem joints (pads) and parts and derivatives thereof of naturalized or artificially propagated <i>Opuntia</i> subgenus <i>Opuntia</i> spp."
+#5,30,CoP7 #5,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) tissue cultures and flasked seedling cultures; and<p>
+c) separate leaves and parts and derivatives thereof of naturalized or artificially propagated <i>Aloe vera</i>"
+#6,30,CoP7 #6,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen (including pollinia); and<p>
+b) tissue cultures and flasked seedling cultures;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) fruits and parts and derivatives thereof of artificially propagated <i>Vanilla</i> spp."
+#1,31,CoP8 #1,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia); and<p>
+b) tissue cultures and flasked seedling cultures<p>"
+#2,31,CoP8 #2,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) tissue cultures and flasked seedling cultures; and<p>
+c) chemical derivatives"
+#3,31,CoP8 #3,Designates roots and readily recognizable parts thereof
+#4,31,CoP8 #4,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) tissue cultures and flasked seedling cultures;<p>
+c) fruits and parts and derivatives thereof of naturalized or artificially propagated plants; and<p>
+d) separate stem joints (pads) and parts and derivatives thereof of naturalized or artificially propagated <i>Opuntia</i> subgenus <i>Opuntia</i> spp."
+#5,31,CoP8 #5,"Designates saw-logs, sawn wood and veneers"
+#6,31,CoP8 #6,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) tissue cultures and flasked seedling cultures; and<p>
+c) separate leaves and parts and derivatives thereof of naturalized or artificially propagated <i>Aloe vera</i>"
+#7,31,CoP8 #7,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia);<p>
+b) tissue cultures and flasked seedling cultures;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) fruits and parts and derivatives thereof of artificially propagated plants of the genus <i>Vanilla</i> "
+#1,32,CoP9 #1,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia);<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers"
+#2,32,CoP9 #2,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers; and<p>
+c) chemical derivatives"
+#3,32,CoP9 #3,Designates roots and readily recognizable parts thereof
+#4,32,CoP9 #4,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) fruits and parts and derivatives thereof of naturalized or artificially propagated plants; and<p>
+d) separate stem joints (pads) and parts and derivatives thereof of naturalized or artificially propagated plants of the genus <i>Opuntia</i> subgenus <i>Opuntia</i> "
+#5,32,CoP9 #5,"Designates saw-logs, sawn wood and veneers"
+#6,32,CoP9 #6,"Designates logs, wood-chips and unprocessed broken material"
+#7,32,CoP9 #7,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen (including pollinia);<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) fruits and parts and derivatives thereof of artificially propagated plants of the genus <i>Vanilla</i> "
+#8,32,CoP9 #8,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>and
+c) finished pharmaceutical products"
+#1,33,CoP10 #1,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia);<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers; and<p>
+c) cut flowers of artificially propagated plants"
+#2,33,CoP10 #2,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) chemical derivatives"
+#3,33,CoP10 #3,"Designates whole and sliced roots and parts of roots, excluding manufactured parts or derivatives such as powders, pills, extracts, tonics, teas and confectionery"
+#4,33,CoP10 #4,"Designates all parts and derivatives, except:<p>
+a) seeds, except those from Mexican cacti originating in Mexico, and pollen;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants;<p>
+d) fruits and parts and derivatives thereof of naturalized or artificially propagated plants; and<p>
+e) separate stem joints (pads) and parts and derivatives thereof of naturalized or artificially propagated plants of the genus <i>Opuntia</i> subgenus <i>Opuntia</i> "
+#5,33,CoP10 #5,"Designates logs, sawn wood and veneer sheets"
+#6,33,CoP10 #6,"Designates logs, wood-chips and unprocessed broken material"
+#7,33,CoP10 #7,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen (including pollinia);<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) fruits and parts and derivatives thereof of artificially propagated plants of the genus <i>Vanilla</i> "
+#8,33,CoP10 #8,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen (including pollinia);<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) finished pharmaceutical products."
+#1,34,CoP11 #1,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia);<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers; and<p>
+c) cut flowers of artificially propagated plants"
+#2,34,CoP11 #2,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) chemical derivatives and finished pharmaceutical products"
+#3,34,CoP11 #3,"Designates whole and sliced roots and parts of roots, excluding manufactured parts or derivatives such as powders, pills, extracts, tonics, teas and confectionery"
+#4,34,CoP11 #4,"Designates all parts and derivatives, except:<p>
+a) seeds, except those from Mexican cacti originating in Mexico, and pollen;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants;<p>
+d) fruits and parts and derivatives thereof of naturalized or artificially propagated plants; and<p>
+e) separate stem joints (pads) and parts and derivatives thereof of naturalized or artificially propagated plants of the genus <i>Opuntia</i> subgenus <i>Opuntia</i> "
+#5,34,CoP11 #5,"Designates logs, sawn wood and veneer sheets"
+#6,34,CoP11 #6,"Designates logs, wood-chips and unprocessed broken material"
+#7,34,CoP11 #7,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen (including pollinia);<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) fruits and parts and derivatives thereof of artificially propagated plants of the genus <i>Vanilla</i> "
+#1,35,CoP12 #1,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia);<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers; and<p>
+c) cut flowers of artificially propagated plants"
+#2,35,CoP12 #2,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) chemical derivatives and finished pharmaceutical products"
+#3,35,CoP12 #3,"Designates whole and sliced roots and parts of roots, excluding manufactured parts or derivatives such as powders, pills, extracts, tonics, teas and confectionery"
+#4,35,CoP12 #4,"Designates all parts and derivatives, except:<p>
+a) seeds, except those from Mexican cacti originating in Mexico, and pollen;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants;<p>
+d) fruits and parts and derivatives thereof of naturalized or artificially propagated plants; and<p>
+e) separate stem joints (pads) and parts and derivatives thereof of naturalized or artificially propagated plants of the genus <i>Opuntia</i> subgenus <i>Opuntia</i> "
+#5,35,CoP12 #5,"Designates logs, sawn wood and veneer sheets"
+#6,35,CoP12 #6,"Designates logs, sawn wood, veneer sheets and plywood"
+#7,35,CoP12 #7,"Designates logs, wood-chips and unprocessed broken material"
+#8,35,CoP12 #8,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen (including pollinia);<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) fruits and parts and derivatives thereof of artificially propagated plants of the genus <i>Vanilla</i> "
+#1,36,CoP13 #1,"Designates all parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia);<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers; and<p>
+c) cut flowers of artificially propagated plants"
+#2,36,CoP13 #2,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) chemical derivatives and finished pharmaceutical products"
+#3,36,CoP13 #3,"Designates whole and sliced roots and parts of roots, excluding manufactured parts or derivatives such as powders, pills, extracts, tonics, teas and confectionery"
+#4,36,CoP13 #4,"Designates all parts and derivatives, except:<p>
+a) seeds, except those from Mexican cacti originating in Mexico, and pollen;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants;<p>
+d) fruits and parts and derivatives thereof of naturalized or artificially propagated plants; and<p>
+e) separate stem joints (pads) and parts and derivatives thereof of naturalized or artificially propagated plants of the genus <i>Opuntia</i> subgenus <i>Opuntia</i> "
+#5,36,CoP13 #5,"Designates logs, sawn wood and veneer sheets"
+#6,36,CoP13 #6,"Designates logs, sawn wood, veneer sheets and plywood"
+#7,36,CoP13 #7,"Designates logs, wood-chips and unprocessed broken material"
+#8,36,CoP13 #8,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen (including pollinia);<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) fruits and parts and derivatives thereof of artificially propagated plants of the genus <i>Vanilla</i> "
+#9,36,CoP13 #9,"Designates all parts and derivatives except those bearing the label ""Produced from <i>Hoodia</i> spp. material obtained through controlled harvesting and production in collaboration with the CITES Management Authorities of Botswana/Namibia/South Africa under agreement no. BW/NA/ZA xxxxxx"""
+#10,36,CoP13 #10,"Designates all parts and derivatives, except:<p>
+a) seeds and pollen; and<p>
+b) finished pharmaceutical products"
+#1,37,CoP14 #1,"All parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia);<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) fruits and parts and derivatives thereof of artificially propagated plants of the genus <i>Vanilla</i> "
+#2,37,CoP14 #2,"All parts and derivatives except:<p>
+a) seeds and pollen; and<p>
+b) finished products packaged and ready for retail trade"
+#3,37,CoP14 #3,Whole and sliced roots and parts of roots
+#4,37,CoP14 #4,"All parts and derivatives, except:<p>
+a) seeds, except those from Mexican cacti originating in Mexico, and pollen;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants;<p>
+d) fruits and parts and derivatives thereof of naturalized or artificially propagated plants; and<p>
+e) separate stem joints (pads) and parts and derivatives thereof of naturalized or artificially propagated plants of the genus <i>Opuntia</i> subgenus <i>Opuntia</i> ."
+#5,37,CoP14 #5,"Logs, sawn wood and veneer sheets"
+#6,37,CoP14 #6,"Logs, sawn wood, veneer sheets and plywood"
+#7,37,CoP14 #7,"Logs, wood-chips, powder and extracts"
+#8,37,CoP14 #8,"Underground parts (i.e. roots, rhizomes): whole, parts and powdered"
+#9,37,CoP14 #9,All parts and derivatives except those bearing a label “Produced from <i>Hoodia</i> spp. material obtained through controlled harvesting and production in collaboration with the CITES Management Authorities of Botswana/Namibia/South Africa under agreement no. BW/NA/ZA xxxxxx”
+#10,37,CoP14 #10,"Logs, sawn wood, veneer sheets, including unfinished wood articles used for the fabrication of bows for stringed musical instruments"
+#11,37,CoP14 #11,"Logs, sawn wood, veneer sheets, plywood, powder and extracts"
+#1,38,CoP15 #1,"All parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia);<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) fruits, and parts and derivatives thereof, of artificially propagated plants of the genus <i>Vanilla</i> "
+#2,38,CoP15 #2,"All parts and derivatives except:<p>
+a) seeds and pollen; and<p>
+b) finished products packaged and ready for retail trade"
+#3,38,CoP15 #3,Whole and sliced roots and parts of roots
+#4,38,CoP15 #4,"All parts and derivatives, except:<p>
+a) seeds (including seedpods of Orchidaceae), spores and pollen (including pollinia). The exemption does not apply to seeds from Cactaceae spp. exported from Mexico, and to seeds from Beccariophoenix madagascariensis and Neodypsis decaryi exported from Madagascar;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants;<p>
+d) fruits and parts and derivatives thereof of naturalized or artificially propagated plants of the genus <i>Vanilla</i>  (Orchidaceae) and of the family Cactaceae;<p>
+e) stems, flowers, and parts and derivatives thereof of naturalized or artificially propagated plants of the genera <i>Opuntia</i> subgenus <i>Opuntia</i> and Selenicereus (Cactaceae); and<p>
+f) finished products of Euphorbia antisyphilitica packaged and ready for retail trade"
+#5,38,CoP15 #5,"Logs, sawn wood and veneer sheets"
+#6,38,CoP15 #6,"Logs, sawn wood, veneer sheets and plywood"
+#7,38,CoP15 #7,"Logs, wood-chips, powder and extracts"
+#8,38,CoP15 #8,"Underground parts (i.e. roots, rhizomes): whole, parts and powdered"
+#9,38,CoP15 #9,All parts and derivatives except those bearing a label “Produced from <i>Hoodia</i> spp. material obtained through controlled harvesting and production in collaboration with the CITES Management Authorities of Botswana/Namibia/South Africa under agreement no. BW/NA/ZA xxxxxx”.
+#10,38,CoP15 #10,"Logs, sawn wood, veneer sheets, including unfinished wood articles used for the fabrication of bows for stringed musical instruments"
+#11,38,CoP15 #11,"Logs, sawn wood, veneer sheets, plywood, powder and extracts"
+#12,38,CoP15 #12,"Logs, sawn wood, veneer sheets, plywood and essential oil (excluding finished products packaged and ready for retail trade)"
+#13,38,CoP15 #13,"The kernel (also known as 'endosperm', 'pulp' or 'copra') and any derivative thereof"
+#1,39,CoP16 #1,"All parts and derivatives, except:<p>
+a) seeds, spores and pollen (including pollinia);<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants; and<p>
+d) fruits, and parts and derivatives thereof, of artificially propagated plants of the genus <i>Vanilla</i> "
+#2,39,CoP16 #2,"All parts and derivatives except:<p>
+a) seeds and pollen; and<p>
+b) finished products packaged and ready for retail trade"
+#3,39,CoP16 #3,"Designates whole and sliced roots and parts of roots, excluding manufactured parts or derivatives, such as powders, pills, extracts, tonics, teas and confectionery"
+#4,39,CoP16 #4,"All parts and derivatives, except:<p>
+a) seeds (including seedpods of Orchidaceae), spores and pollen (including pollinia). The exemption does not apply to seeds from Cactaceae spp. exported from Mexico, and to seeds from <i>Beccariophoenix madagascariensis</i> and <i>Neodypsis decaryi</i> exported from Madagascar;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) cut flowers of artificially propagated plants;<p>
+d) fruits, and parts and derivatives thereof, of naturalized or artificially propagated plants of the genus <i>Vanilla</i> (Orchidaceae) and of the family Cactaceae;<p>
+e) stems, flowers, and parts and derivatives thereof, of naturalized or artificially propagated plants of the genera <i>Opuntia</i> subgenus <i>Opuntia</i> and <i>Selenicereus</i> (Cactaceae); and<p>
+f) finished products of <i>Euphorbia antisyphilitica</i> packaged and ready for retail trade"
+#5,39,CoP16 #5,"Logs, sawn wood and veneer sheets"
+#6,39,CoP16 #6,"Logs, sawn wood, veneer sheets and plywood"
+#7,39,CoP16 #7,"Logs, wood-chips, powder and extracts"
+#8,39,CoP16 #8,"Underground parts (i.e. roots, rhizomes): whole, parts and powdered"
+#9,39,CoP16 #9," All parts and derivatives except those bearing a label:<p>
+“Produced from <i>Hoodia</i> spp. material obtained through controlled harvesting and production under the terms of an agreement with the relevant CITES Management Authority of [Botswana under agreement No. BW/xxxxxx] [Namibia under agreement No. NA/xxxxxx] [South Africa under agreement No. ZA/xxxxxx]”"
+#10,39,CoP16 #10,"Logs, sawn wood, veneer sheets, including unfinished wood articles used for the fabrication of bows for stringed musical instruments"
+#11,39,CoP16 #11,"Logs, sawn wood, veneer sheets, plywood, powder and extracts"
+#12,39,CoP16 #12,"Logs, sawn wood, veneer sheets, plywood and extracts. Finished products containing such extracts as ingredients, including fragrances, are not considered to be covered by this annotation"
+#13,39,CoP16 #13,"The kernel (also known as 'endosperm', 'pulp' or 'copra') and any derivative thereof"
+#14,39,CoP16 #14,"All parts and derivatives except:<p>
+a) seeds and pollen;<p>
+b) seedling or tissue cultures obtained in vitro, in solid or liquid media, transported in sterile containers;<p>
+c) fruits;<p>
+d) leaves;<p>
+e) exhausted agarwood powder, including compressed powder in all shapes; and<p>
+f) finished products packaged and ready for retail trade; this exemption does not apply to beads, prayer beads and carvings"

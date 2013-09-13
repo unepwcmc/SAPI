@@ -7,7 +7,7 @@
   <%= error_messages_for(@taxon_concept_reference) %>
   <div class="tab-content">
     <div class="tab-pane fade in active reference_search_form" id="search">
-      <label>Search by title, author or year:</label>
+      <label>Search by citation:</label>
       <%= text_field_tag 'reference_search', nil, :class =>'references-typeahead' %>
       <%= text_field_tag 'reference[id]', nil, :class =>'hidden' %>
       <label>Is standard?</label>
@@ -18,15 +18,8 @@
 
     <div class="tab-pane fade" id="new">
       <%= f.fields_for :reference do |ff| %>
-        <label>Title</label>
-        <%= ff.text_field :title %>
-
-        <label>Author</label>
-        <%= ff.text_field :author %>
-
-        <label>Year</label>
-        <%= ff.text_field :year %>
-
+        <label>Citation</label>
+        <%= ff.text_field :citation %>
         <hr>
       <% end %>
     </div>

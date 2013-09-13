@@ -1,7 +1,6 @@
-.tab-content #details {
-  input, select {
-    width: 150px;
-  }
+h1 span{
+  font-size: 14px;
+  font-weight: normal;
 }
 
 .header {
@@ -114,4 +113,12 @@ ul.relationship_parts{
 #new-taxon_relationship{ /* modal window */
   width: 780px;
   margin-left: -390px; /* half the width */
+}
+
+#taxon-concept-search{
+  margin-top: 25px;
+}
+
+span.author-year {
+  font-size: 11px;
 }

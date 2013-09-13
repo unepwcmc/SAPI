@@ -5,7 +5,7 @@
 </thead>
 <tbody>
 
-  <% collection.sort_by(&:model).each do |tag| -%>
+  <% collection.each do |tag| -%>
     <tr>
       <td>
         <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="tag" data-name="name"
@@ -22,7 +22,7 @@
         </a>
       </td>
       <td>
-        <%= link_to 'Delete', resource_url(tag), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+        <%= link_to delete_icon, resource_url(tag), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
       </td>
     </tr>
   <% end -%>

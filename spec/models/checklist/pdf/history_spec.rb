@@ -3,6 +3,8 @@ require 'spec_helper'
 
 describe Checklist::Pdf::History do
   let(:en){ create(:language, :name => 'English', :iso_code1 => 'EN') }
+  let!(:fr){ create(:language, :name => 'French', :iso_code1 => 'FR') }
+  let!(:es){ create(:language, :name => 'Spanish', :iso_code1 => 'ES') }
   let(:family_tc){
     tc = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Foobaridae')
@@ -29,7 +31,7 @@ describe Checklist::Pdf::History do
             :language => en
           )
         )
-        Sapi::rebuild(:except => [:taxonomy])
+        Sapi.rebuild(:except => [:taxonomy])
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name, :show_english => true) }
       specify{
@@ -46,7 +48,7 @@ describe Checklist::Pdf::History do
           :taxon_concept_id => tc.id,
           :is_current => true
         )
-        Sapi::rebuild(:except => [:taxonomy])
+        Sapi.rebuild(:except => [:taxonomy])
         MListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
@@ -61,7 +63,7 @@ describe Checklist::Pdf::History do
           :taxon_concept_id => tc.id,
           :is_current => true
         )
-        Sapi::rebuild(:except => [:taxonomy])
+        Sapi.rebuild(:except => [:taxonomy])
         MListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
@@ -81,12 +83,14 @@ describe Checklist::Pdf::History do
           :display_in_footnote => true
         )
       }
+      let(:tc){ genus_tc }
       let(:lc){
         lc = create_cites_I_addition(
+          :taxon_concept_id => tc.id,
           :annotation_id => annotation.id,
           :is_current => true
         )
-        Sapi::rebuild(:except => [:taxonomy])
+        Sapi.rebuild(:except => [:taxonomy])
         MListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new({}) }

@@ -10,6 +10,8 @@ development:
   username: postgres
   password: postgres
   timeout: 5000
+  port: 5432
+  host: localhost
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -21,13 +23,16 @@ test:
   username: postgres
   password: postgres
   timeout: 5000
+  port: 5432
+  host: localhost
 
 staging:
   adapter: postgresql
-  database: sapi_staging
+  database: sapi_development
   pool: 10
-  username: wcmc
+  username: postgres
+  password: postgres
   host: localhost
-  port: 15432
+  port: 5432
   password: 
   template: template0
