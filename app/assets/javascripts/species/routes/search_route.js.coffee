@@ -50,7 +50,7 @@ Species.SearchRoute = Ember.Route.extend
       controller: @controllerFor('downloads')
     })
 
-  events:
+  actions:
     ensureGeoEntitiesLoaded: ->
       @controllerFor('geoEntities').load()
 
