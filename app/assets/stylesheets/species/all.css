@@ -51,7 +51,7 @@ a {
 a:hover { text-decoration: underline; }
 a:active { background-color: transparent; }
 textarea, select, input {
-	font: 100% Helvetica, Arial, sans-serif;
+	font: 100% 'Open Sans', Helvetica, Arial, sans-serif;
 	vertical-align: middle;
 	color: #000;
 }
@@ -76,12 +76,14 @@ form, fieldset {
 	display: block;
 }
 #header .logo {
+  margin-top: -6px;
 	width: 140px;
 	height: 43px;
 	float: left;
 	text-indent: -9999px;
 	overflow: hidden;
-	background: url(/assets/species/logo.png) no-repeat;
+	background: url(/assets/species/species+_logo_header.png) no-repeat;
+	background-size:100%;
 }
 #header .logo a {
 	display: block;
@@ -192,16 +194,17 @@ form, fieldset {
 	font-weight: lighter;
 	margin: 0 0 3px;
 	color: #2d3237;
-	line-height: 57px;
+	line-height: 60px;
 }
 .text-species {
-	width: 183px;
+	width: 200px;
 	vertical-align: top;
-	height: 56px;
+	height: 61px;
 	display: inline-block;
 	overflow: hidden;
 	text-indent: -9999px;
-	background: url(/assets/species/text-species.png) no-repeat;
+	background: url(/assets/species/species+_logo_text.png) no-repeat;
+	background-size: 100%;
 }
 a.learn-more {
   color: #2D3237;
