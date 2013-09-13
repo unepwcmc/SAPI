@@ -88,6 +88,7 @@ shared_context "Mellivora capensis" do
       :listing_change => eu_lc3
     )
 
+    cms_designation
     Sapi.rebuild(:except => [:taxonomy])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
