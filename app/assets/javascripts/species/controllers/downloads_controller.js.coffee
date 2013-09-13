@@ -30,7 +30,8 @@ Species.DownloadsController = Ember.Controller.extend Species.Spinner,
     @get('euLegislation') == 'decisions'
   ).property('euLegislation')
 
-  close: () ->
-    @set('downloadsPopupVisible', false)
-    # Closing the spinner cover and resetting the spinner image.
-    $(@spinnerSelector).css("visibility", "hidden").find('img').show()
+  actions:
+    close: () ->
+      @set('downloadsPopupVisible', false)
+      # Closing the spinner cover and resetting the spinner image.
+      $(@spinnerSelector).css("visibility", "hidden").find('img').show()

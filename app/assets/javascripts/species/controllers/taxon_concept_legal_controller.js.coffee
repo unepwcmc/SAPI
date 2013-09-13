@@ -7,19 +7,20 @@ Species.TaxonConceptLegalController = Ember.ArrayController.extend
   citesQuotasExpanded: false
   euDecisionsExpanded: false
 
-  expandList: (id, flag) ->
-    this.set(flag, true)
-    $('#'+id).
-      find('.historic').slideDown('slow')
+  actions:
+    expandList: (id, flag) ->
+      this.set(flag, true)
+      $('#'+id).
+        find('.historic').slideDown('slow')
 
-  contractList: (id, flag) ->
-    this.set(flag, false)
-    $('#'+id).
-      find('.historic').slideUp('slow')
+    contractList: (id, flag) ->
+      this.set(flag, false)
+      $('#'+id).
+        find('.historic').slideUp('slow')
 
-  showFullNote: (title, fullNote) ->
-    $("#full-note-legal .title").text(title)
-    $("#full-note-legal .content").html(fullNote)
-    $("#full-note-legal").show()
-  close: () ->
-    $("#full-note-legal").hide()
+    showFullNote: (title, fullNote) ->
+      $("#full-note-legal .title").text(title)
+      $("#full-note-legal .content").html(fullNote)
+      $("#full-note-legal").show()
+    close: () ->
+      $("#full-note-legal").hide()
