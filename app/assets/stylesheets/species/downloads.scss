@@ -109,11 +109,12 @@
 		content: "";
 		position: absolute;
 		top: -10px;
-		right: 56px;
+		right: 28px;
 		width: 11px;
 		height: 11px;
 		z-index: 1;
 		background: url(/assets/species/arrow05.png) no-repeat;
+		background-size: 100%;
 	}
 
 }
@@ -354,6 +355,7 @@
 		height: 11px;
 		z-index: 1;
 		background: url(/assets/species/arrow07.png) no-repeat;
+		background-size: 100%;
 	}
 
 

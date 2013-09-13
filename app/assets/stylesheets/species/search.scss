@@ -154,13 +154,13 @@
 			}
 			
 		.popup > ul > li a span { 
-			border-bottom: 1px dotted #525263;
+			border-bottom: 1px solid #525263;
 			}
 			
 		.popup > ul > li a:hover { 
 			text-decoration: none;
 			color: #2d3237;
-			border-bottom: 1px dotted #2d3237;
+			border-bottom: 1px solid #2d3237;
 			-webkit-transition: all 0.5s ease;
 			-moz-transition: all 0.5s ease;
 			-ms-transition: all 0.5s ease;
@@ -240,6 +240,21 @@
 
 .inner .search-block.add .search { width: 509px; }
 .inner .search-block.add .search input[type="text"] { width: 395px; }
+
+/*to add class="search-results" to the search block in the search results page*/
+
+/*
+.search-block.search-results .search-form {
+width: 425px;
+}
+.inner .search-block.search-results .search {
+width: 415px;
+}
+.inner .search-block.search-results .search input[type="text"] {
+width: 300px;
+}
+*/
+
 
 .total-species {
 	float: left;
