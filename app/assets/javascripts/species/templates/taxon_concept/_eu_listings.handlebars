@@ -36,8 +36,10 @@
               </a><br />
             {{/if}}
             {{#if listing.full_note_en}}
-              {{#sizeGt listing.full_note_en max=800}}
-                {{{listing.short_note_en}}}<br />
+            {{#sizeGt listing.full_note_en max=800}}
+                {{#if listing.short_note_en}}
+                  {{{listing.short_note_en}}}<br />
+                {{/if}}
                 <a class="legal-links" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
               {{else}}
                 {{{listing.full_note_en}}}
@@ -94,7 +96,9 @@
                 {{/if}}
                 {{#if listing.full_note_en}}
                   {{#sizeGt listing.full_note_en max=800}}
-                    {{{listing.short_note_en}}}<br />
+                    {{#if listing.short_note_en}}
+                      {{{listing.short_note_en}}}<br />
+                    {{/if}}
                     <a class="legal-links" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
                   {{else}}
                     {{{listing.full_note_en}}}
