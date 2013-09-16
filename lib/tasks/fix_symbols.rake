@@ -4,11 +4,28 @@ namespace :import do
 
   desc 'Fix symbols in the data files'
   task :fix_symbols => :environment do
+    #Rake::Task["import:fix_annotations_symbols"].invoke
     Rake::Task["import:fix_references_symbols"].invoke
     Rake::Task["import:fix_taxon_concepts_symbols"].invoke
     Rake::Task["import:fix_geo_entities_symbols"].invoke
     Rake::Task["import:fix_common_names_symbols"].invoke
     Rake::Task["import:add_italics_to_references"].invoke
+  end
+
+  desc 'Fix symbols in Annotations'
+  task :fix_annotations_symbols => :environment do
+    Sapi.disable_triggers
+    CSV.foreach('lib/files/ascii_symbols_utf8.csv', :quote_char => 'h') do |row|
+      puts "############################# Cleaning Annotations  of ( #{row[0]} => #{row[1]}) #############################"
+      count = Annotation.where('short_note_en LIKE :sym OR full_note_en LIKE :sym', :sym => "%#{row[0]}%").count
+      puts "#{count} records affected"
+      Annotation.where('short_note_en LIKE :sym OR full_note_en LIKE :sym', :sym => "%#{row[0]}%").each do |o|
+        o.short_note_en = o.short_note_en.gsub(row[0], row[1].strip)
+        o.full_note_en = o.full_note_en.gsub(row[0], row[1].strip)
+        o.save
+      end
+    end
+    Sapi.enable_triggers
   end
 
   desc 'Fix symbols in Common Names'

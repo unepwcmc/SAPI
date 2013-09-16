@@ -2,7 +2,7 @@ class MTaxonConceptFilterByScientificNameWithDescendants
 
   def initialize(relation, scientific_name, match_options = {})
     @relation = relation || MTaxonConcept.scoped
-    @scientific_name = scientific_name.upcase.chomp
+    @scientific_name = scientific_name.upcase.strip
     @match_synonyms = match_options[:synonyms] || true
     @match_common_names = match_options[:common_names] || false
     @match_subspecies = match_options[:subspecies] || false

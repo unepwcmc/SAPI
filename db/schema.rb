@@ -13,28 +13,6 @@
 
 ActiveRecord::Schema.define(:version => 20130820080200) do
 
-  create_table "all_listing_changes_mview", :id => false, :force => true do |t|
-    t.integer  "id"
-    t.integer  "designation_id"
-    t.string   "change_type_name"
-    t.integer  "taxon_concept_id"
-    t.integer  "species_listing_id"
-    t.integer  "change_type_id"
-    t.integer  "inclusion_taxon_concept_id"
-    t.date     "effective_at"
-    t.string   "excluded_taxon_concept_ids", :limit => nil
-    t.integer  "party_id"
-    t.string   "listed_geo_entities_ids",    :limit => nil
-    t.string   "excluded_geo_entities_ids",  :limit => nil
-    t.integer  "affected_taxon_concept_id"
-    t.integer  "tree_distance"
-    t.integer  "timeline_position"
-    t.boolean  "dirty"
-    t.datetime "expiry"
-  end
-
-  add_index "all_listing_changes_mview", ["designation_id", "affected_taxon_concept_id"], :name => "all_listing_changes_mview_designation_id_affected_taxon_con_idx"
-
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
     t.string   "parent_symbol"
@@ -59,12 +37,56 @@ ActiveRecord::Schema.define(:version => 20130820080200) do
     t.datetime "updated_at",     :null => false
   end
 
+  create_table "cites_all_listing_changes_mview", :id => false, :force => true do |t|
+    t.integer "id"
+    t.integer "designation_id"
+    t.string  "change_type_name"
+    t.integer "taxon_concept_id"
+    t.integer "species_listing_id"
+    t.integer "change_type_id"
+    t.integer "inclusion_taxon_concept_id"
+    t.date    "effective_at"
+    t.string  "excluded_taxon_concept_ids", :limit => nil
+    t.integer "party_id"
+    t.string  "listed_geo_entities_ids",    :limit => nil
+    t.string  "excluded_geo_entities_ids",  :limit => nil
+    t.integer "affected_taxon_concept_id"
+    t.integer "tree_distance"
+    t.integer "timeline_position"
+  end
+
+  add_index "cites_all_listing_changes_mview", ["affected_taxon_concept_id", "inclusion_taxon_concept_id"], :name => "cites_all_listing_changes_mvi_affected_taxon_concept_id_inc_idx"
+  add_index "cites_all_listing_changes_mview", ["designation_id", "timeline_position", "affected_taxon_concept_id"], :name => "cites_all_listing_changes_mvi_designation_id_timeline_posit_idx"
+  add_index "cites_all_listing_changes_mview", ["id", "affected_taxon_concept_id"], :name => "cites_all_listing_changes_mvie_id_affected_taxon_concept_id_idx"
+
   create_table "cites_suspension_confirmations", :force => true do |t|
     t.integer  "cites_suspension_id",              :null => false
     t.integer  "cites_suspension_notification_id", :null => false
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
   end
+
+  create_table "cms_all_listing_changes_mview", :id => false, :force => true do |t|
+    t.integer "id"
+    t.integer "designation_id"
+    t.string  "change_type_name"
+    t.integer "taxon_concept_id"
+    t.integer "species_listing_id"
+    t.integer "change_type_id"
+    t.integer "inclusion_taxon_concept_id"
+    t.date    "effective_at"
+    t.string  "excluded_taxon_concept_ids", :limit => nil
+    t.integer "party_id"
+    t.string  "listed_geo_entities_ids",    :limit => nil
+    t.string  "excluded_geo_entities_ids",  :limit => nil
+    t.integer "affected_taxon_concept_id"
+    t.integer "tree_distance"
+    t.integer "timeline_position"
+  end
+
+  add_index "cms_all_listing_changes_mview", ["affected_taxon_concept_id", "inclusion_taxon_concept_id"], :name => "cms_all_listing_changes_mview_affected_taxon_concept_id_inc_idx"
+  add_index "cms_all_listing_changes_mview", ["designation_id", "timeline_position", "affected_taxon_concept_id"], :name => "cms_all_listing_changes_mview_designation_id_timeline_posit_idx"
+  add_index "cms_all_listing_changes_mview", ["id", "affected_taxon_concept_id"], :name => "cms_all_listing_changes_mview_id_affected_taxon_concept_id_idx"
 
   create_table "common_names", :force => true do |t|
     t.string   "name",        :null => false
@@ -111,6 +133,28 @@ ActiveRecord::Schema.define(:version => 20130820080200) do
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
   end
+
+  create_table "eu_all_listing_changes_mview", :id => false, :force => true do |t|
+    t.integer "id"
+    t.integer "designation_id"
+    t.string  "change_type_name"
+    t.integer "taxon_concept_id"
+    t.integer "species_listing_id"
+    t.integer "change_type_id"
+    t.integer "inclusion_taxon_concept_id"
+    t.date    "effective_at"
+    t.string  "excluded_taxon_concept_ids", :limit => nil
+    t.integer "party_id"
+    t.string  "listed_geo_entities_ids",    :limit => nil
+    t.string  "excluded_geo_entities_ids",  :limit => nil
+    t.integer "affected_taxon_concept_id"
+    t.integer "tree_distance"
+    t.integer "timeline_position"
+  end
+
+  add_index "eu_all_listing_changes_mview", ["affected_taxon_concept_id", "inclusion_taxon_concept_id"], :name => "eu_all_listing_changes_mview_affected_taxon_concept_id_incl_idx"
+  add_index "eu_all_listing_changes_mview", ["designation_id", "timeline_position", "affected_taxon_concept_id"], :name => "eu_all_listing_changes_mview_designation_id_timeline_positi_idx"
+  add_index "eu_all_listing_changes_mview", ["id", "affected_taxon_concept_id"], :name => "eu_all_listing_changes_mview_id_affected_taxon_concept_id_idx"
 
   create_table "eu_decision_confirmations", :force => true do |t|
     t.integer  "eu_decision_id"
@@ -278,12 +322,11 @@ ActiveRecord::Schema.define(:version => 20130820080200) do
     t.datetime "expiry"
   end
 
-  add_index "listing_changes_mview", ["id"], :name => "listing_changes_mview_id_idx"
+  add_index "listing_changes_mview", ["id", "taxon_concept_id"], :name => "listing_changes_mview_id_taxon_concept_id_idx"
+  add_index "listing_changes_mview", ["inclusion_taxon_concept_id"], :name => "listing_changes_mview_inclusion_taxon_concept_id_idx"
   add_index "listing_changes_mview", ["original_taxon_concept_id"], :name => "listing_changes_mview_original_taxon_concept_id_idx"
   add_index "listing_changes_mview", ["show_in_downloads", "taxon_concept_id", "designation_id"], :name => "listing_changes_mview_show_in_downloads_taxon_concept_id_de_idx"
   add_index "listing_changes_mview", ["show_in_timeline", "taxon_concept_id", "designation_id"], :name => "listing_changes_mview_show_in_timeline_taxon_concept_id_des_idx"
-  add_index "listing_changes_mview", ["taxon_concept_id", "original_taxon_concept_id", "change_type_id", "effective_at", "change_type_id"], :name => "listing_changes_mview_taxon_concept_id_original_taxon_conce_idx"
-  add_index "listing_changes_mview", ["taxon_concept_id"], :name => "listing_changes_mview_taxon_concept_id_idx"
 
   create_table "listing_distributions", :force => true do |t|
     t.integer  "listing_change_id",                   :null => false
@@ -603,40 +646,6 @@ ActiveRecord::Schema.define(:version => 20130820080200) do
   end
 
   create_table "trade_sandbox_2", :id => false, :force => true do |t|
-    t.integer "id",                :null => false
-    t.string  "appendix"
-    t.string  "species_name"
-    t.string  "term_code"
-    t.string  "quantity"
-    t.string  "unit_code"
-    t.string  "trading_partner"
-    t.string  "country_of_origin"
-    t.string  "export_permit"
-    t.string  "origin_permit"
-    t.string  "purpose_code"
-    t.string  "source_code"
-    t.string  "year"
-    t.string  "import_permit"
-  end
-
-  create_table "trade_sandbox_3", :id => false, :force => true do |t|
-    t.integer "id",                :null => false
-    t.string  "appendix"
-    t.string  "species_name"
-    t.string  "term_code"
-    t.string  "quantity"
-    t.string  "unit_code"
-    t.string  "trading_partner"
-    t.string  "country_of_origin"
-    t.string  "export_permit"
-    t.string  "origin_permit"
-    t.string  "purpose_code"
-    t.string  "source_code"
-    t.string  "year"
-    t.string  "import_permit"
-  end
-
-  create_table "trade_sandbox_4", :id => false, :force => true do |t|
     t.integer "id",                :null => false
     t.string  "appendix"
     t.string  "species_name"

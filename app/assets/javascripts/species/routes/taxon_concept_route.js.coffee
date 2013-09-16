@@ -34,7 +34,7 @@ Species.TaxonConceptRoute = Ember.Route.extend
       controller: @controllerFor('downloads')
     })
 
-  events:
+  actions:
     ensureGeoEntitiesLoaded: ->
       @controllerFor('geoEntities').load()
 

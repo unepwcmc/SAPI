@@ -10,7 +10,7 @@ namespace :import do
       'lib/files/plants/plantae_taxa_utf8.csv'
     )
     Rake::Task["import:cites_regions"].invoke(
-      'lib/files/cites_regions.csv'
+      'lib/files/cites_regions_utf8.csv'
     )
     Rake::Task["import:countries"].invoke(
       'lib/files/countries_utf8.csv'

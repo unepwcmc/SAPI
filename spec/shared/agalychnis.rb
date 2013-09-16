@@ -44,6 +44,7 @@ shared_context 'Agalychnis' do
       :excluded_taxon_concepts_ids => "{#{@genus.id}}"
     )
 
+    cms_designation
     Sapi.rebuild(:except => [:taxonomy])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
