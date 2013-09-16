@@ -141,10 +141,10 @@ $$;
 
 CREATE OR REPLACE FUNCTION cites_applicable_listing_changes_for_node(node_id INT)
 RETURNS SETOF INT
-LANGUAGE SQL
+LANGUAGE SQL STRICT
 STABLE
 AS $$
-  SELECT * FROM cites_eu_applicable_listing_changes_for_node('CITES', node_id);
+  SELECT * FROM cites_eu_applicable_listing_changes_for_node('CITES', $1);
 $$;
 
 COMMENT ON FUNCTION cites_applicable_listing_changes_for_node(node_id INT) IS
@@ -152,10 +152,10 @@ COMMENT ON FUNCTION cites_applicable_listing_changes_for_node(node_id INT) IS
 
 CREATE OR REPLACE FUNCTION eu_applicable_listing_changes_for_node(node_id INT)
 RETURNS SETOF INT
-LANGUAGE SQL
+LANGUAGE SQL STRICT
 STABLE
 AS $$
-  SELECT * FROM cites_eu_applicable_listing_changes_for_node('EU', node_id);
+  SELECT * FROM cites_eu_applicable_listing_changes_for_node('EU', $1);
 $$;
 
 COMMENT ON FUNCTION eu_applicable_listing_changes_for_node(node_id INT) IS
