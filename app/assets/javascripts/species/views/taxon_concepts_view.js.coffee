@@ -3,8 +3,9 @@ Species.TaxonConceptsView = Ember.View.extend
   didInsertElement: () ->
     $('body').addClass('inner')
 
-  nextPage: ->
-    @controller.transitionToPage yes
+  actions:
+    nextPage: ->
+      @controller.transitionToPage yes
 
-  prevPage: ->
-    @controller.transitionToPage no
+    prevPage: ->
+      @controller.transitionToPage no

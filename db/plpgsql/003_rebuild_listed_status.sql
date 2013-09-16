@@ -48,8 +48,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
 
     -- reset the listing status (so we start clear)
     UPDATE taxon_concepts
-    SET listing = (COALESCE(listing, ''::HSTORE) - flags_to_reset) ||
-      hstore('listing_updated_at', NULL) -- TODO get rid of this
+    SET listing = (COALESCE(listing, ''::HSTORE) - flags_to_reset)
     WHERE taxonomy_id = designation.taxonomy_id AND
       CASE WHEN node_id IS NOT NULL THEN id = node_id ELSE TRUE END;
 
@@ -71,8 +70,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     SET listing = listing || hstore(status_flag, 'LISTED') ||
       hstore(status_original_flag, 't') ||
       hstore(level_of_listing_flag, 't') ||
-      hstore(listing_updated_at_flag, listing_updated_at::VARCHAR) ||
-      hstore('listing_updated_at', listing_updated_at::VARCHAR) --TODO get rid of this
+      hstore(listing_updated_at_flag, listing_updated_at::VARCHAR)
     FROM listed_taxa
     WHERE taxon_concepts.id = listed_taxa.id AND
       CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
@@ -197,8 +195,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       hstore(status_flag, inherited_cites_status) ||
       hstore(status_original_flag, 'f') ||
       hstore(not_listed_flag, NULL) ||
-      hstore(listing_updated_at_flag, inherited_listing_updated_at) ||
-      hstore('listing_updated_at', inherited_listing_updated_at) --TODO get rid of this
+      hstore(listing_updated_at_flag, inherited_listing_updated_at)
     FROM q
     WHERE taxon_concepts.id = q.id AND (
       listing IS NULL OR
@@ -247,8 +244,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       hstore(status_flag, inherited_cites_status) ||
       hstore(status_original_flag, 'f') ||
       hstore(level_of_listing_flag, 'f') ||
-      hstore(listing_updated_at_flag, inherited_listing_updated_at::VARCHAR) ||
-      hstore('listing_updated_at', inherited_listing_updated_at::VARCHAR) --TODO get rid of this
+      hstore(listing_updated_at_flag, inherited_listing_updated_at::VARCHAR)
     FROM qq
     WHERE taxon_concepts.id = qq.id
      AND (

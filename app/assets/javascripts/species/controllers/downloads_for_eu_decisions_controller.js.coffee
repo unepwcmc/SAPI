@@ -8,13 +8,11 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   ).property()
 
   geoEntityQuery: null
+  taxonConceptQuery: null
   autoCompleteRegions: null
   autoCompleteCountries: null
   selectedGeoEntities: []
-  selectedGeoEntitiesIds: []
-  autoCompleteTaxonConcepts: []
   selectedTaxonConcepts: []
-  selectedTaxonConceptsIds: []
   timeScope: 'current'
   timeScopeIsCurrent: ( ->
     @get('timeScope') == 'current'
@@ -26,57 +24,51 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   noOpinions: true
   suspensions: true
 
-  geoEntityOueryObserver: ( ->
-    re = new RegExp("^"+@get('geoEntityQuery'),"i")
+  autoCompleteTaxonConcepts: ( ->
+    if @get('taxonConceptQuery') && @get('taxonConceptQuery').length > 0
+      re = new RegExp("^"+@get('taxonConceptQuery'),"i")
+      @get('higherTaxaController.contentByRank')
+      .map((e) =>
+        {
+          rankName: e.rankName
+          taxonConcepts: e.taxonConcepts.filter((item) =>
+            re.test item.get('fullName')
+          )
+        }
+      ).filter((e) ->
+        e.taxonConcepts.length > 0
+      )      
+    else
+      @get('higherTaxaController.contentByRank')
+  ).property('higherTaxaController.contentByRank.@each', 'taxonConceptQuery')
 
-    @set 'autoCompleteRegions', @get('controllers.geoEntities.regions')
-    .filter (item, index, enumerable) =>
-      re.test item.get('name')
-    @set 'autoCompleteCountries', @get('controllers.geoEntities.countries')
-    .filter (item, index, enumerable) =>
-      re.test item.get('name')
-  ).observes('geoEntityQuery')
+  autoCompleteRegions: ( ->
+    if @get('geoEntityQuery') && @get('geoEntityQuery').length > 0
+      re = new RegExp("^"+@get('geoEntityQuery'),"i")
+      @get('controllers.geoEntities.regions')
+        .filter (item, index, enumerable) =>
+          re.test item.get('name')
+    else
+      @get('controllers.geoEntities.regions')
+  ).property('controllers.geoEntities.regions.@each', 'geoEntityQuery')
 
-  taxonConceptOueryObserver: ( ->
-    re = new RegExp("^"+@get('taxonConceptQuery'),"i")
-    @set 'autoCompleteTaxonConcepts', @get('higherTaxaController.contentByRank')
-    .map((e) =>
-      {
-        rankName: e.rankName
-        taxonConcepts: e.taxonConcepts.filter((item) =>
-          re.test item.get('fullName')
-        )
-      }
-    ).filter((e) ->
-      e.taxonConcepts.length > 0
-    )
-  ).observes('taxonConceptQuery')
+  autoCompleteCountries: ( ->
+    if @get('geoEntityQuery') && @get('geoEntityQuery').length > 0
+      re = new RegExp("^"+@get('geoEntityQuery'),"i")
+      @get('controllers.geoEntities.countries')
+        .filter (item, index, enumerable) =>
+          re.test item.get('name')
+    else
+      @get('controllers.geoEntities.countries')
+  ).property('controllers.geoEntities.countries.@each', 'geoEntityQuery')
 
-  regionsObserver: ( ->
-    Ember.run.once(@, () ->
-      @set('autoCompleteRegions', @get('controllers.geoEntities.regions'))
-    )
-  ).observes('controllers.geoEntities.regions.@each')
+  selectedGeoEntitiesIds: ( ->
+    @get('selectedGeoEntities').mapProperty('id')
+  ).property('selectedGeoEntities.@each')
 
-  countriesObserver: ( ->
-    Ember.run.once(@, () ->
-      @set('autoCompleteCountries', @get('controllers.geoEntities.countries'))
-    )
-  ).observes('controllers.geoEntities.countries.@each')
-
-  higherTaxaObserver: ( ->
-    Ember.run.once(@, () ->
-      @set('autoCompleteTaxonConcepts', @get('higherTaxaController.contentByRank'))
-    )
-  ).observes('higherTaxaController.contentByRank.@each')
-
-  selectedGeoEntitiesObserver: ( ->
-    @set 'selectedGeoEntitiesIds', @get('selectedGeoEntities').mapProperty('id')
-  ).observes('selectedGeoEntities.@each')
-
-  selectedTaxonConceptsObserver: ( ->
-    @set 'selectedTaxonConceptsIds', @get('selectedTaxonConcepts').mapProperty('id')
-  ).observes('selectedTaxonConcepts.@each')
+  selectedTaxonConceptsIds: ( ->
+    @get('selectedTaxonConcepts').mapProperty('id')
+  ).property('selectedTaxonConcepts.@each')
 
   toParams: ( ->
     {
@@ -105,19 +97,20 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
     '/species/exports/download?' + $.param(@get('toParams'))
   ).property('toParams')
 
-  startDownload: () ->
-    @set('downloadInProgress', true)
-    @set('downloadMessage', 'Downloading...')
-    $.ajax({
-      type: 'GET'
-      dataType: 'json'
-      url: @get('downloadUrl')
-    }).done((data) =>
-      @set('downloadInProgress', false)
-      if data.total > 0
-        @set('downloadMessage', null)
-        window.location = @get('downloadUrl')
-        return
-      else
-        @set('downloadMessage', 'No results')
-    )
+  actions:
+    startDownload: () ->
+      @set('downloadInProgress', true)
+      @set('downloadMessage', 'Downloading...')
+      $.ajax({
+        type: 'GET'
+        dataType: 'json'
+        url: @get('downloadUrl')
+      }).done((data) =>
+        @set('downloadInProgress', false)
+        if data.total > 0
+          @set('downloadMessage', null)
+          window.location = @get('downloadUrl')
+          return
+        else
+          @set('downloadMessage', 'No results')
+      )
