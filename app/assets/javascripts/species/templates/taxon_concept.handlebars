@@ -6,7 +6,8 @@
     </div>
   {{/if}}
   <div class="heading-holder">
-    <h1>{{fullName}} <strong>{{authorYear}}</strong></h1>
+    <h1>{{fullName}}</h1>
+    <h2>{{authorYear}}</h2>
     <ul class="list">
       <li>
       <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound phylumName}}"
@@ -38,11 +39,11 @@
     <li>{{#linkTo 'taxon_concept.legal'}}LEGAL{{/linkTo}}
       <ul>
         {{#unless isCms }}
-          <li><a href="#cites_listings" class="scroll-to">CITES Listing</a></li>
+          <li class="first"><a href="#cites_listings" class="scroll-to">CITES Listing</a></li>
           <li><a href="#cites_quotas" class="scroll-to">CITES Quotas</a></li>
           <li><a href="#cites_suspensions" class="scroll-to">CITES Suspensions</a></li>
           <li><a href="#eu_listings" class="scroll-to">EU Listing</a></li>
-          <li><a href="#eu_decisions" class="scroll-to">EU Decisions</a></li>
+          <li class="last"><a href="#eu_decisions" class="scroll-to">EU Decisions</a></li>
         {{/unless}}
       </ul>
     </li>
