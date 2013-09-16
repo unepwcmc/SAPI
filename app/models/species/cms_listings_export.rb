@@ -6,7 +6,7 @@ class Species::CmsListingsExport < Species::ListingsExport
 
   def csv_column_headers
     ['Id', 'Phylum', 'Class', 'Order', 'Family', 'Genus', 'ScientificName', 
-    'Author', 'Rank', 'Listing', 'ListedUnder', 'Date', 'Note']
+    'Author', 'Rank', 'Listing', 'Listed under', 'Date', 'Note']
   end
 
   def taxon_concept_columns
@@ -62,9 +62,6 @@ class Species::CmsListingsExport < Species::ListingsExport
   end
 
   def original_taxon_concept_group_columns
-    <<-SQL
-    original_taxon_concepts_mview.full_name,
-    original_taxon_concepts_mview.spp
-    SQL
+    '' #there may be multiple original taxon concepts
   end
 end

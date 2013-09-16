@@ -57,27 +57,28 @@ class Species::ListingsExport
   end
 
   def query
-    join_sql = <<-SQL
-      JOIN listing_changes_mview 
-      ON listing_changes_mview.taxon_concept_id = taxon_concepts_mview.id
-      AND designation_name = ?
-      AND is_current
-      AND change_type_name = 'ADDITION'
-      JOIN taxon_concepts_mview original_taxon_concepts_mview
-      ON listing_changes_mview.original_taxon_concept_id = original_taxon_concepts_mview.id
-      LEFT JOIN taxon_concepts_mview inclusion_taxon_concepts_mview
-      ON listing_changes_mview.inclusion_taxon_concept_id = inclusion_taxon_concepts_mview.id
-    SQL
-    join_sql = MTaxonConcept.send(:sanitize_sql_array, [join_sql, @designation_name])
-    rel = MTaxonConcept.select(select_columns).without_non_accepted.
-    where(
-      :taxonomy_id => @designation.taxonomy_id,
-      :"#{@designation_name.downcase}_show" => true,
-      :rank_name => [Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY]
-    ).
-    where("taxon_concepts_mview.#{@designation_name.downcase}_listing_original != 'NC'").
-    joins(join_sql).
-    group(group_columns).
+    # join_sql = <<-SQL
+    #   JOIN listing_changes_mview 
+    #   ON listing_changes_mview.taxon_concept_id = taxon_concepts_mview.id
+    #   AND designation_name = ?
+    #   AND is_current
+    #   AND change_type_name = 'ADDITION'
+    #   JOIN taxon_concepts_mview original_taxon_concepts_mview
+    #   ON listing_changes_mview.original_taxon_concept_id = original_taxon_concepts_mview.id
+    #   LEFT JOIN taxon_concepts_mview inclusion_taxon_concepts_mview
+    #   ON listing_changes_mview.inclusion_taxon_concept_id = inclusion_taxon_concepts_mview.id
+    # SQL
+    # join_sql = MTaxonConcept.send(:sanitize_sql_array, [join_sql, @designation_name])
+    # rel = MTaxonConcept.select(select_columns).without_non_accepted.
+    # where(
+    #   :taxonomy_id => @designation.taxonomy_id,
+    #   :"#{@designation_name.downcase}_show" => true,
+    #   :rank_name => [Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY]
+    # ).
+    # where("taxon_concepts_mview.#{@designation_name.downcase}_listing_original != 'NC'").
+    # joins(join_sql).
+    # group(group_columns).
+    rel = MTaxonConcept.from('cites_species_listing_view').
     order('taxon_concepts_mview.taxonomic_position')
     rel = if @geo_entities_ids
       MTaxonConceptFilterByAppendixPopulationQuery.new(

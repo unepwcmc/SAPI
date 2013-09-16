@@ -179,7 +179,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     CREATE INDEX full_name_idx ON taxon_concepts_mview USING BTREE(UPPER(full_name) text_pattern_ops);
     CREATE INDEX ON taxon_concepts_mview (taxonomy_is_cites_eu, cites_listed, kingdom_position);
     CREATE INDEX ON taxon_concepts_mview (taxonomy_is_cites_eu, rank_name); --this one used for Species+ autocomplete (both main and higher taxa in downloads)
-
+    CREATE INDEX ON taxon_concepts_mview (cms_show, name_status, cms_listing_original, taxonomy_is_cites_eu, rank_name) -- cms csv download
   END;
   $$;
 
