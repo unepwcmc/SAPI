@@ -5,19 +5,15 @@
   <table summary="data table">
     <thead>
       <tr>
-        <th class="col1">&nbsp;</th>
         <th class="col2">NAME</th>
-        <th class="col3">DATE</th>
-        <th class="col1">&nbsp;</th>
+        <th class="col2">DATE</th>
       </tr>
     </thead>
     <tbody>
       {{#each agreement in cmsInstruments}}
           <tr class="current">
-            <td>&nbsp;</td>
             <td>{{agreement.name}}</td>
-            <td>{{agreement.effective_from_formatted}}</td>
-            <td class="last">&nbsp;</td>
+            <td class="last">{{agreement.effective_from_formatted}}</td>
           </tr>
       {{/each}}
     </tbody>
