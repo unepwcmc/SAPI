@@ -126,14 +126,17 @@ form, fieldset {
 #nav > li.add > a:hover { 
   border-bottom: none;; 
   }
-#nav > li:hover > div.popup-holder { display: block; }
+#nav > li:hover > div.popup-holder { 
+  display: block; 
+  z-index: 900;
+}
 
 #nav > li > div.popup-holder {
 	display: none;
 	position: absolute;
 	left: 6px;
 	top: 10px;
-	width: 180px;
+	width: 240px;
 	padding: 22px 0 0;
 }
 #nav > li > div.popup-holder ul {
