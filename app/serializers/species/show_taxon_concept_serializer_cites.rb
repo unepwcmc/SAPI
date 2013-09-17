@@ -74,7 +74,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       ).
       order(<<-SQL
             trade_restrictions.is_current DESC,
-            events.effective_at DESC, geo_entities.name_en ASC,
+            trade_restrictions.start_date DESC, geo_entities.name_en ASC,
             subspecies_info DESC
         SQL
       )

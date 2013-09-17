@@ -5,19 +5,16 @@
   <table summary="data table">
     <thead>
       <tr>
-        <th class="col1">&nbsp;</th>
         <th class="col2">DATE</th>
-        <th class="col3">COUNTRY</th>
-        <th class="col13">EU DECISIONS</th>
-        <th class="col10">NOTES</th>
-        <th class="col7">DOCUMENT</th>
-        <th class="col1">&nbsp;</th>
+        <th class="col2">COUNTRY</th>
+        <th class="col2">EU DECISIONS</th>
+        <th class="col3">NOTES</th>
+        <th class="col3">DOCUMENT</th>       
       </tr>
     </thead>
     <tbody {{bindAttr class="controller.euDecisionsExpanded:historic_expanded"}}>
       {{#each decision in currentEuDecisions}}
         <tr class="current">
-          <td>&nbsp;</td>
           <td>{{decision.start_date}}</td>
           <td>{{decision.geo_entity.name}}</td>
           <td>
@@ -41,18 +38,15 @@
             {{decision.term.name_en}} {{decision.source.name_en}} <br />
             {{{decision.notes}}}
           </td>
-          <td>
+          <td class="last">
             <a class="legal-links" href="{{unbound decision.start_event.url}}">
               {{decision.start_event.name}}
             </a>
           </td>
-          <td class="last">&nbsp;</td>
         </tr>
       {{else}}
         <tr class="current">
-          <td>&nbsp;</td>
           <td colspan=6>There are no current decisions in place for this species.</td>
-          <td>&nbsp;</td>
         </tr>
       {{/each}}
     </tbody>
@@ -62,19 +56,16 @@
       <table summary="data table">
         <thead>
           <tr>
-            <th class="col1">&nbsp;</th>
+            <th class="col2">&nbsp;</th>
+            <th class="col2">&nbsp;</th>
             <th class="col2">&nbsp;</th>
             <th class="col3">&nbsp;</th>
-            <th class="col13">&nbsp;</th>
-            <th class="col10">&nbsp;</th>
-            <th class="col7">&nbsp;</th>
-            <th class="col1">&nbsp;</th>
+            <th class="col3">&nbsp;</th>
           </tr>
         </thead>
         <tbody>
           {{#each decision in historicEuDecisions}}
             <tr>
-              <td>&nbsp;</td>
               <td>{{decision.start_date}}</td>
               <td>{{decision.geo_entity.name}}</td>
               <td>
@@ -98,12 +89,11 @@
                 {{decision.term.name_en}} {{decision.source.name_en}} <br />
                 {{{decision.notes}}}
               </td>
-              <td>
+              <td class="last">
                 <a class="legal-links" href="{{unbound decision.start_event.url}}">
                   {{decision.start_event.name}}
                 </a>
               </td>
-              <td class="last">&nbsp;</td>
             </tr>
           {{/each}}
         </tbody>
