@@ -55,6 +55,11 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     CREATE INDEX ON listing_changes_mview (id, taxon_concept_id);
     CREATE INDEX ON listing_changes_mview (original_taxon_concept_id);
     CREATE INDEX ON listing_changes_mview (inclusion_taxon_concept_id);
+    CREATE INDEX ON listing_changes_mview (is_current, designation_name, change_type_name); -- Species+ downloads
+
+    PERFORM rebuild_cites_species_listing_mview();
+    PERFORM rebuild_eu_species_listing_mview();
+    PERFORM rebuild_cms_species_listing_mview();
 
   END;
   $$;
