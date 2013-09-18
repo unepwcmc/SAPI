@@ -38,8 +38,8 @@
     background: url(/assets/species/cites-appendix.png);
     background-position: 0px 0px;
     span {
-      line-height: 2em;
-      margin-left: 10px;
+    line-height: 1.95em;
+    margin-left: 11px;
     }
   }
 
@@ -48,27 +48,46 @@
     background-position: 0px 156px;
     width: 44px;
     span {
-      line-height: 2em;
-      margin-left: 10px;
+      line-height: 1.95em;
+      margin-left: 11px;
     }
-    span.subscript {
-      margin-left: 14px;
+    span.subscript{
       text-transform: uppercase;
+      display: block;
+      font-size: 11px;
+      margin: -24px 0 0 30px;
     }
   }
 
-  .r_I &, &.r_I, .w_I &, &.w_I {
+  .r_I &, &.r_I {
     background: url(/assets/species/cites-appendix.png);
     background-position: 0px 78px;
     width: 44px;
     span {
-      line-height: 2em;
-      margin-left: 10px;
+      line-height: 1.95em;
+      margin-left: 11px;
     }
-    span.subscript {
-      margin-left: 14px;
+    span.subscript{
       text-transform: uppercase;
+      display: block;
       font-size: 11px;
+      margin: -25px 0 0 30px;
+    }
+  }
+  
+  .w_I &, &.w_I {
+    background: url(/assets/species/cites-appendix.png);
+    background-position: 0px 78px;
+    width: 44px;
+    span {
+      line-height: 1.95em;
+      margin-left: 11px;
+    }
+    span.subscript{
+      text-transform: uppercase;
+      display: block;
+      font-size: 11px;
+      margin: -25px 0 0 29px;
     }
   }
 
@@ -89,12 +108,15 @@
       line-height: 2em;
       margin-left: 9px;
     }
-    span.subscript {
-      margin-left: 14px;
+    span.subscript{
+      text-transform: uppercase;
+      display: block;
+      font-size: 11px;
+      margin: -24px 0 0 30px;
     }
   }
 
-  .r_II &, &.r_II, .w_II &, &.w_II {
+  .r_II &, &.r_II {
     background: url(/assets/species/cites-appendix.png);
     background-position: 0px 52px;
     width: 44px;
@@ -102,8 +124,28 @@
       line-height: 2em;
       margin-left: 9px;
     }
-    span.subscript {
-      margin-left: 14px;
+    span.subscript{
+      text-transform: uppercase;
+      display: block;
+      font-size: 11px;
+      margin: -26px 0 0 31px;
+    }
+  }
+  
+  
+  .w_II &, &.w_II {
+    background: url(/assets/species/cites-appendix.png);
+    background-position: 0px 52px;
+    width: 44px;
+    span {
+      line-height: 2em;
+      margin-left: 9px;
+    }
+    span.subscript{
+      text-transform: uppercase;
+      display: block;
+      font-size: 11px;
+      margin: -25px 0 0 29px;
     }
   }
 
@@ -124,12 +166,15 @@
       line-height: 2em;
       margin-left: 7.5px;
     }
-    span.subscript {
-      margin-left: 14px;
+    span.subscript{
+      text-transform: uppercase;
+      display: block;
+      font-size: 11px;
+      margin: -24px 0 0 30px;
     }
   }
 
-  .r_III &, &.r_III, .w_III &, &.w_III {
+  .r_III &, &.r_III {
     background: url(/assets/species/cites-appendix.png);
     background-position: 0px 26px;
     width: 44px;
@@ -137,11 +182,30 @@
       line-height: 2em;
       margin-left: 7.5px;
     }
-    span.subscript {
-      margin-left: 14px;
+    span.subscript{
+      text-transform: uppercase;
+      display: block;
+      font-size: 11px;
+      margin: -26px 0 0 31px;
     }
   }
-
+  
+  .w_III &, &.w_III {
+    background: url(/assets/species/cites-appendix.png);
+    background-position: 0px 26px;
+    width: 44px;
+    span {
+      line-height: 2em;
+      margin-left: 7.5px;
+    }
+    span.subscript{
+      text-transform: uppercase;
+      display: block;
+      font-size: 11px;
+      margin: -25px 0 0 29px;
+    }
+  }
+  
   .nc &, .inactive &, &.nc, &.inactive {
     background: url(/assets/species/cites-appendix.png);
     background-position: 0px 182px;
@@ -154,8 +218,8 @@
 
   color: #fff;
 
-  span, div {
-    line-height: 2em;
+  span {
+    line-height: 1.9em;
     margin-left: 9px;
   }
 

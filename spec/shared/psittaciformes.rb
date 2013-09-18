@@ -225,6 +225,7 @@ shared_context "Psittaciformes" do
       :listing_change => eu_lc2
     )
 
+    cms_designation
     Sapi.rebuild(:except => [:taxonomy])
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)

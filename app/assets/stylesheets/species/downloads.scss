@@ -1,4 +1,4 @@
-.message-area {margin-top: 10px }
+.message-area {margin-top: 0px }
 .popup-area { position: relative; }
 .popup-holder01 {
 	position: absolute;
@@ -16,15 +16,15 @@
 		background: #f5f5f7;
 		-webkit-border-radius: 5px;
 		border-radius: 5px;
-		border: #80a3bb solid 1px;
+		border: #8fb7cf solid 1px;
 		
 
 		.search-block01 {
 			-webkit-border-radius: 5px 5px 0 0;
 			border-radius: 5px 5px 0 0;
-			background: #8fb7cf;
+			background: #A4C5DA;
 			padding: 19px 18px 9px;
-			border-bottom: #80a3bb solid 1px;
+			border-bottom: #8fb7cf solid 1px;
 
 			li {
 				font-size: 11px;
@@ -58,7 +58,7 @@
 				overflow: hidden;
 				-webkit-border-radius: 20px;
 				border-radius: 20px;
-				border: 1px solid #6e96b1;
+				border: 1px solid #8fb7cf;
 
 				input[type="text"] {
 					padding: 3px 8px;
@@ -109,11 +109,12 @@
 		content: "";
 		position: absolute;
 		top: -10px;
-		right: 56px;
+		right: 28px;
 		width: 11px;
 		height: 11px;
 		z-index: 1;
 		background: url(/assets/species/arrow05.png) no-repeat;
+		background-size: 100%;
 	}
 
 }
@@ -184,7 +185,7 @@
 
 .two-columns {
 	width: 100%;
-	padding: 16px 0 17px;
+	padding: 16px 58px 17px;
 	/*overflow: hidden;*/
 
 	&.add .col { width: 150px; }
@@ -192,17 +193,16 @@
 
 	.col {
 		float: left;
-		width: 200px;
-		padding: 0 0 0 13px;
+		padding: 0;
 
 		.link {
 			float: left;
-			min-width: 62px;
+			min-width: 85px;
 			font-size: 13px;
 			font-weight: bold;
 			text-transform: uppercase;
 			color: #fff;
-			padding: 8px 25px 7px 10px;
+			padding: 8px 19px 7px 13px;
 			position: relative;
 			background: #376382;
 			line-height: 16px;
@@ -224,8 +224,7 @@
 	}
 
 	.col:first-child {
-		width: 112px;
-		padding: 4px 0 0 30px;
+		padding: 4px 15px 0 0;
 		border-right: 1px solid #e8e8e9;
 	}
 
@@ -238,7 +237,10 @@
 
 
 
-.col .row { overflow: hidden; }
+.col .row { 
+  overflow: hidden;
+  padding-left: 15px;
+  }
 .col label {
 	font-size: 13px;
 	float: left;
@@ -264,6 +266,7 @@
 	display: block;
 	margin: 0 0 4px;
 	text-transform: uppercase;
+	padding-left: 15px;
 }
 
 .popup-area .link { cursor: pointer; }
@@ -274,28 +277,27 @@
 .bottom-columns {
 	border-top: 1px solid #d6d7d7;
 	width: 100%;
-	padding: 19px 0 20px;
+	padding: 19px 73px 20px;
 
 	.col {
 		float: left;
-		width: 130px;
-		margin: 0 0 0 34px;
+		padding: 0 0 0 15px;
 		position: relative;
 
 		.link {
 			float: left;
-			min-width: 68px;
+			min-width: 85px;
 			font-size: 13px;
-			position: relative;
 			font-weight: bold;
 			text-transform: uppercase;
 			color: #fff;
-			padding: 8px 19px 7px 10px;
+			padding: 8px 19px 7px 13px;
+			position: relative;
 			background: #376382;
 			line-height: 16px;
+			text-decoration: none;
 			-webkit-border-radius: 20px;
 			border-radius: 20px;
-			text-decoration: none;
 		}
 
 		.link:before {
@@ -313,7 +315,7 @@
 	}
 
 	.col:first-child {
-		padding: 0 0 0 49px;
+		padding: 0 15px 0 0;
 		margin: 0;
 		border-right: 1px solid #e8e8e9;
 	}
@@ -342,7 +344,7 @@
 	background: #f5f5f7;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
-	border: #80a3bb solid 1px;
+	border: #8fb7cf solid 1px;
 
 	&:after {
 		content: "";
@@ -353,6 +355,7 @@
 		height: 11px;
 		z-index: 1;
 		background: url(/assets/species/arrow07.png) no-repeat;
+		background-size: 100%;
 	}
 
 

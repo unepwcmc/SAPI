@@ -6,8 +6,6 @@ Species.SelectedGeoEntitiesCollectionView = Ember.CollectionView.extend
 
   itemViewClass: Ember.View.extend
     contextBinding: 'content',
-    template: Ember.Handlebars.compile('{{name}} <span {{action "deleteSelection" target="view"}} class="delete">x</span>')
-
-    deleteSelection: (event) ->
-      @get('controller.selectedGeoEntities').removeObject(@get('context'))
-
+    template: Ember.Handlebars.compile(
+      '{{name}} <span {{action "deleteGeoEntitySelection" this}} class="delete">x</span>'
+    )

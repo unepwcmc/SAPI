@@ -57,25 +57,30 @@ CREATE OR REPLACE FUNCTION rebuild_descendant_listing_for_designation_and_node(
       CASE
         WHEN designation.name = 'CITES' THEN slice(h.listing, ARRAY['cites_I', 'cites_II', 'cites_III'])
         WHEN designation.name = 'EU' THEN slice(h.listing, ARRAY['eu_A', 'eu_B', 'eu_C', 'eu_D'])
+        WHEN designation.name = 'CMS' THEN slice(h.listing, ARRAY['cms_I', 'cms_II'])
         ELSE ''::HSTORE
       END
       AS inherited_listing
       FROM taxon_concepts h
-      WHERE listing->status_original_flag = 't' AND
-      CASE WHEN node_id IS NOT NULL THEN id = node_id ELSE TRUE END
+      JOIN taxonomies ON h.taxonomy_id = taxonomies.id
+      AND taxonomies.name = CASE WHEN designation.name = 'CMS' THEN 'CMS' ELSE 'CITES_EU' END
+      WHERE CASE WHEN node_id IS NOT NULL THEN h.id = node_id ELSE h.parent_id IS NULL END
 
       UNION
 
       SELECT hi.id, hi.parent_id,
       CASE
       WHEN
-        hi.listing->status_original_flag = 't'
+        (hi.listing->status_original_flag)::BOOLEAN
       THEN
         hstore(listing_flag, hi.listing->listing_original_flag) ||
         slice(hi.listing, ARRAY[listing_original_flag, fully_covered_flag,'hash_ann_symbol', 'ann_symbol']) ||
         CASE
           WHEN designation.name = 'CITES' THEN slice(hi.listing, ARRAY['cites_I', 'cites_II', 'cites_III'])
           WHEN designation.name = 'EU' THEN slice(hi.listing, ARRAY['eu_A', 'eu_B', 'eu_C', 'eu_D'])
+          WHEN designation.name = 'CMS' 
+          THEN HSTORE('cms_I', COALESCE(hi.listing->'cms_I', inherited_listing->'cms_I'))
+          || HSTORE('cms_II', COALESCE(hi.listing->'cms_II', inherited_listing->'cms_II'))
           ELSE ''::HSTORE
         END
       ELSE

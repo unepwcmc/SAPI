@@ -2,12 +2,12 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
   LANGUAGE plpgsql
   AS $$
   BEGIN
-    RAISE NOTICE 'Dropping taxon concepts materialized view';
+    RAISE INFO 'Dropping taxon concepts materialized view';
     DROP table IF EXISTS taxon_concepts_mview CASCADE;
-    RAISE NOTICE 'Dropping taxon concepts view';
+    RAISE INFO 'Dropping taxon concepts view';
     DROP view IF EXISTS taxon_concepts_view;
 
-    RAISE NOTICE 'Creating taxon concepts view';
+    RAISE INFO 'Creating taxon concepts view';
     CREATE OR REPLACE VIEW taxon_concepts_view AS
     SELECT taxon_concepts.id,
     taxon_concepts.parent_id,
@@ -166,14 +166,14 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       GROUP BY taxon_concepts.id
     ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt;
 
-    RAISE NOTICE 'Creating taxon concepts materialized view';
+    RAISE INFO 'Creating taxon concepts materialized view';
     CREATE TABLE taxon_concepts_mview AS
     SELECT *,
     false as dirty,
     null::timestamp with time zone as expiry
     FROM taxon_concepts_view;
 
-    RAISE NOTICE 'Creating indexes on taxon_concepts materialized view';
+    RAISE INFO 'Creating indexes on taxon_concepts materialized view';
     CREATE INDEX ON taxon_concepts_mview (id);
     CREATE INDEX ON taxon_concepts_mview (parent_id);
     CREATE INDEX full_name_idx ON taxon_concepts_mview USING BTREE(UPPER(full_name) text_pattern_ops);

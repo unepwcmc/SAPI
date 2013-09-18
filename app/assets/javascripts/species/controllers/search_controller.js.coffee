@@ -36,10 +36,13 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
   geoEntityQueryObserver: ( ->
     re = new RegExp("^"+@get('geoEntityQuery'),"i")
 
-    @set 'autoCompleteRegions', @get('controllers.geoEntities.regions')
+    @set 'autoCompleteCountries', @get('controllers.geoEntities.countries')
     .filter (item, index, enumerable) =>
       re.test item.get('name')
-    @set 'autoCompleteCountries', @get('controllers.geoEntities.countries')
+
+    re = new RegExp("^[0-9]- "+@get('geoEntityQuery'),"i")
+
+    @set 'autoCompleteRegions', @get('controllers.geoEntities.regions')
     .filter (item, index, enumerable) =>
       re.test item.get('name')
   ).observes('geoEntityQuery')
@@ -80,13 +83,16 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
     @transitionToRoute('taxon_concept.legal', m)
 
   actions:
-    openSearchPage: (taxonFullName, page, perPage) =>
+    openSearchPage: (taxonFullName, page, perPage) ->
       @openSearchPage(taxonFullName, page, perPage)
 
-    openTaxonPage: (taxonConceptId) =>
+    openTaxonPage: (taxonConceptId) ->
       @openTaxonPage(taxonConceptId)
 
     redirectToOpenSearchPage: (params) ->
       for property, val of params
         @set(property, val)
       @openSearchPage()
+
+    deleteGeoEntitySelection: (context) ->
+      @get('selectedGeoEntities').removeObject(context)
