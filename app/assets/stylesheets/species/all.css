@@ -145,6 +145,7 @@ form, fieldset {
 	-webkit-border-radius: 7px;
 	border-radius: 7px;
 	border: 1px solid #8fb7cf;
+  width: 230px;
 	z-index: 1000;
 }
 #nav > li > div.popup-holder:after {
@@ -454,7 +455,7 @@ body.inner #footer .holder{
 .dwonload-block {
 	width: 441px;
 	margin-left: -180px;
-	position: fixed;
+	position: absolute;
 	left: 50%;
 	background: #f5f5f7;
 	-webkit-border-radius: 12px;
@@ -1177,7 +1178,7 @@ body.inner #footer .holder{
 .columns-holder .col {
 	float: left;
 	width: 370px;
-	margin: 0 0 0 108px;
+	margin: 0 0 0 46px;
 }
 .columns-holder .col li {
 	font-size: 14px;
