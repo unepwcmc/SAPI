@@ -93,3 +93,6 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
       for property, val of params
         @set(property, val)
       @openSearchPage()
+
+    deleteGeoEntitySelection: (context) ->
+      @get('selectedGeoEntities').removeObject(context)

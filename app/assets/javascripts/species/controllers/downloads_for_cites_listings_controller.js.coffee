@@ -90,3 +90,9 @@ Species.DownloadsForCitesListingsController = Ember.Controller.extend
         else
           @set('downloadMessage', 'No results')
       )
+
+    deleteTaxonConceptSelection: (context) ->
+      @set('selectedTaxonConcepts', [])
+
+    deleteGeoEntitySelection: (context) ->
+      @get('selectedGeoEntities').removeObject(context)
