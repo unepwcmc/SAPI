@@ -454,7 +454,7 @@ body.inner #footer .holder{
 .dwonload-block {
 	width: 441px;
 	margin-left: -180px;
-	position: fixed;
+	position: absolute;
 	left: 50%;
 	background: #f5f5f7;
 	-webkit-border-radius: 12px;
