@@ -156,6 +156,8 @@ GEM
       has_scope (~> 0.5.0)
       responders (~> 0.6)
     journey (1.0.4)
+    jquery-mousewheel-rails (0.0.2)
+      railties (>= 3.1)
     jquery-rails (2.1.4)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
@@ -339,6 +341,7 @@ DEPENDENCIES
   guard-livereload
   immigrant
   inherited_resources
+  jquery-mousewheel-rails
   jquery-rails (= 2.1.4)
   json_spec
   kaminari
