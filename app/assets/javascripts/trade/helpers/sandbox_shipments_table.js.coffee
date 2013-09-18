@@ -1,7 +1,7 @@
 Trade.SandboxShipmentsTable = Ember.Namespace.create()
 Trade.SandboxShipmentsTable.EditableTableCell = Ember.Table.TableCell.extend
   classNames: 'editable-table-cell'
-  templateName: 'editable-table-cell'
+  templateName: 'trade/editable-table/editable-table-cell'
   isEditing:  no
   type:       'text'
 
@@ -26,7 +26,7 @@ Trade.SandboxShipmentsTable.EditableTableCell.extend
 
 Trade.SandboxShipmentsTable.RatingTableCell = Ember.Table.TableCell.extend
   classNames: 'rating-table-cell'
-  templateName: 'rating-table-cell'
+  templateName: 'trade/editable-table/rating-table-cell'
   didInsertElement: ->
     @_super()
     @onRowContentDidChange()
@@ -52,40 +52,81 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
   numFixedColumns: 0
   numRows: 100
   rowHeight: 30
+  shipments: null
   selection: null
 
   columns: Ember.computed ->
-    columnNames = ['open', 'close']
-    dateColumn = Ember.Table.ColumnDefinition.create
-      columnWidth: 100
-      headerCellName: 'Date'
-      tableCellViewClass: 'Trade.SandboxShipmentsTable.DatePickerTableCell'
-      getCellContent: (row) -> row['date'].toString('yyyy-MM-dd')
-      setCellContent: (row, value) -> row['date'] = value
-    ratingColumn = Ember.Table.ColumnDefinition.create
-      columnWidth: 150
-      headerCellName: 'Analyst Rating'
-      tableCellViewClass: 'Trade.SandboxShipmentsTable.RatingTableCell'
-      contentPath: 'rating'
-      setCellContent: (row, value) -> row['rating'] = value
-    columns= columnNames.map (key, index) ->
-      name = key.charAt(0).toUpperCase() + key.slice(1)
+    columnNames = [
+      'appendix', 'species_name', 'term_code', 'quantity', 'unit_code',
+      'trading_partner', 'country_of_origin', 'import_permit', 'export_permit',
+      'origin_permit', 'purpose_code', 'source_code', 'year'
+    ]
+    columnProperties = 
+      appendix:
+        width: 50
+        header: 'Appdx'
+      species_name:
+        width: 200
+        header: 'Species Name'
+      term_code:
+        width: 50
+        header: 'Term'
+      quantity:
+        width: 50
+        header: 'Qty'
+      unit_code:
+        width: 50
+        header: 'Unit'
+      trading_partner:
+        width: 100
+        header: 'Trading partner'
+      country_of_origin:
+        width: 100
+        header: 'Ctry of Origin'
+      import_permit:
+        width: 150
+        header: 'Import Permit'
+      export_permit:
+        width: 150
+        header: 'Export Permit'
+      origin_permit:
+        width: 150
+        header: 'Origin Permit'
+      purpose_code:
+        width: 50
+        header: 'Purpose'
+      source_code:
+        width: 50
+        header: 'Source'
+      year:
+        width: 50
+        header: 'Year'
+    
+    columnNames.map (key, index) ->
       Ember.Table.ColumnDefinition.create
-        columnWidth: 100
-        headerCellName: name
+        columnWidth: columnProperties[key]['width'] || 100
+        headerCellName: columnProperties[key]['header']
         tableCellViewClass: 'Trade.SandboxShipmentsTable.EditableTableCell'
-        getCellContent: (row) -> row[key].toFixed(2)
+        getCellContent: (row) -> 
+          row[key]#.toFixed(2)
         setCellContent: (row, value) -> row[key] = +value
-    columns.unshift(ratingColumn)
-    columns.unshift(dateColumn)
-    columns
   .property()
 
   content: Ember.computed ->
-    [0...@get('numRows')].map (num, idx) ->
+    @get('shipments').map (shipment, idx) ->
       index: idx
-      date:  Date.today().add(days: idx)
-      open:  Math.random() * 100 - 50
-      close: Math.random() * 100 - 50
-      rating:Math.round(Math.random() * 4)
-  .property 'numRows'
+      appendix: shipment.get('appendix')
+      species_name: shipment.get('species_name')
+      term_code: shipment.get('term_code')
+      quantity: shipment.get('quantity')
+      unit_code: shipment.get('unit_code')
+      trading_partner: shipment.get('trading_partner')
+      country_of_origin: shipment.get('country_of_origin')
+      import_permit: shipment.get('import_permit')
+      export_permit: shipment.get('export_permit')
+      origin_permit: shipment.get('origin_permit')
+      purpose_code: shipment.get('purpose_code')
+      source_code: shipment.get('source_code')
+      year: shipment.get('year')
+  .property 'shipments'
+
