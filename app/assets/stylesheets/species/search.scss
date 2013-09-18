@@ -135,7 +135,7 @@
 			max-height: 218px;
 			overflow: auto;
 			padding: 10px 0 0;
-			line-height: 18px;
+			line-height: 20px;
 		}
 		.popup > ul > li {
 			font-size: 13px;
@@ -241,32 +241,28 @@
 .inner .search-block.add .search { width: 509px; }
 .inner .search-block.add .search input[type="text"] { width: 395px; }
 
-/*to add class="search-results" to the search block in the search results page*/
-
-/*
+/* When in search results page, need more room to fit the total results */
 .search-block.search-results .search-form {
-width: 425px;
+  width: 420px;
 }
 .inner .search-block.search-results .search {
-width: 415px;
+  width: 410px;
 }
 .inner .search-block.search-results .search input[type="text"] {
-width: 300px;
+  width: 295px;
 }
-*/
-
 
 .total-species {
 	float: left;
 	text-align: left;
-	font-size: 19px;
+	font-size: 17px;
 	color: #2a425a;
 	line-height: 30px;
 	font-weight: bold;
 	padding: 12px 0 15px 15px;
 	border-left: 1px solid #8fb7cf;
 }
-.total-species span { font-size: 23px; }
+.total-species span { font-size: 22px; }
 
 .location-area {
 	float: left;

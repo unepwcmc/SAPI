@@ -104,7 +104,7 @@ GEM
     em-websocket (0.4.0)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.5.3)
-    ember-data-source (0.13)
+    ember-data-source (0.14)
       ember-source
     ember-rails (0.13.0)
       active_model_serializers
@@ -114,14 +114,13 @@ GEM
       execjs (>= 1.2)
       handlebars-source
       railties (>= 3.1)
-    ember-source (1.0.0.rc8)
+    ember-source (1.0.0)
       handlebars-source (= 1.0.12)
     erubis (2.7.0)
     eventmachine (1.0.0)
     exception_notification (2.6.1)
       actionmailer (>= 3.0.4)
-    execjs (1.4.0)
-      multi_json (~> 1.0)
+    execjs (2.0.1)
     facter (1.6.17)
     factory_girl (4.2.0)
       activesupport (>= 3.0.0)
@@ -333,7 +332,7 @@ DEPENDENCIES
   database_cleaner
   debugger
   ember-rails
-  ember-source (= 1.0.0.rc8)
+  ember-source (= 1.0.0)
   exception_notification (= 2.6.1)
   factory_girl_rails (~> 4.0)
   foreigner
