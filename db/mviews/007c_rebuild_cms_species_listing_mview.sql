@@ -90,7 +90,11 @@ UNION
 SELECT
   taxon_concepts_mview.id AS id,
   taxon_concepts_mview.taxonomic_position,
-  NULL, NULL, NULL, NULL, NULL,
+  taxon_concepts_mview.kingdom_id AS kingdom_id,
+  taxon_concepts_mview.phylum_id AS phylum_id,
+  taxon_concepts_mview.class_id AS class_id,
+  taxon_concepts_mview.order_id AS order_id,
+  taxon_concepts_mview.family_id AS family_id,
   taxon_concepts_mview.phylum_name AS phylum_name,
   taxon_concepts_mview.class_name AS class_name,
   taxon_concepts_mview.order_name AS order_name,
