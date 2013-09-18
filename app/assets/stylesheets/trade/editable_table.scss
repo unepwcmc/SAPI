@@ -1,0 +1,34 @@
+.editable-table-cell input, .editable-table-cell div {
+  width: 100%;
+  height: 100%;
+}
+.rating {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+  font-size: 20px;
+  margin: auto;
+  width: 100px;
+}
+.rating span {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+}
+.rating span:hover {
+  cursor: pointer;
+}
+.rating span.active:before,
+.rating span.active ~ span:before {
+  content: "\f005";
+}
+.rating span:before,
+.rating:hover span.active:before,
+.rating:hover span.active ~ span:before {
+  content: "\f006";
+  padding-right: 5px;
+}
+.rating span:hover:before,
+.rating span:hover ~ span:before {
+  content: "\f005" !important;
+}

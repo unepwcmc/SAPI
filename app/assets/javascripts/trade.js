@@ -12,12 +12,14 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require jquery.ui.widget
+//= require jquery-ui
+//= require jquery.mousewheel
 //= require jquery.iframe-transport
 //= require jquery.fileupload
 //= require handlebars
 //= require ember
 //= require ember-data
+//= require ember-table.min
 
 //= require_self
 
@@ -30,4 +32,9 @@
 //= require ./trade/router
 //= require_tree ./trade/routes
 
-Trade = Ember.Application.create({LOG_TRANSITIONS: true});
+Trade = Ember.Application.create({
+  LOG_TRANSITIONS: true,
+  customEvents: {
+    blur: 'blur' 
+  }
+});
