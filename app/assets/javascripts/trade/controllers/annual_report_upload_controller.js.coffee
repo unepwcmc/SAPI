@@ -17,3 +17,14 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
     showMatchingRecords: (context) ->
       @set('tableController.shipments', context.get('sandboxShipments'))
+
+    saveShipments: () ->
+        @get('store').commit()
+        console.log('changes saved')
+        @transitionToRoute('annual_report_upload', @)
+
+    destroyShipment: (shipment) ->
+      if (window.confirm("Are you sure you want to delete this shipment?"))
+        shipment.deleteRecord()
+        @get('store').commit()
+        @transitionToRoute('annual_report_upload', @)

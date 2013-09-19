@@ -108,8 +108,10 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
         headerCellName: columnProperties[key]['header']
         tableCellViewClass: 'Trade.SandboxShipmentsTable.EditableTableCell'
         getCellContent: (row) -> 
-          row[key]#.toFixed(2)
-        setCellContent: (row, value) -> row[key] = +value
+          row[key]
+        setCellContent: (row, value) -> 
+          row['shipment'].set(key, value)
+          row[key] = value
   .property()
 
   content: Ember.computed ->
@@ -128,5 +130,6 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
       purpose_code: shipment.get('purpose_code')
       source_code: shipment.get('source_code')
       year: shipment.get('year')
+      shipment: shipment
   .property 'shipments'
 
