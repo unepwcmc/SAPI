@@ -1,22 +1,29 @@
 class Checklist::TaxonConceptPrefixMatcher
-  attr_reader :taxon_concepts
+  include CacheIterator
+  include SearchCache # this provides #cached_results and #cached_total_cnt
 
-  def initialize(search_params)
-    @scientific_name = search_params[:scientific_name]
+  def initialize(options)
+    @options = options
+    @scientific_name = options[:scientific_name]
+    return [] unless @scientific_name
+    initialize_query
   end
 
-  def taxon_concepts
-    build_rel
-    @taxon_concepts
+  def results
+    @query.limit(@options[:per_page]).all
+  end
+
+  def total_cnt
+    @query.count
   end
 
   protected
 
-  def build_rel
-    @taxon_concepts = MTaxonConcept.by_cites_eu_taxonomy.without_non_accepted.without_hidden
+  def initialize_query
+    @query = MTaxonConcept.by_cites_eu_taxonomy.without_non_accepted.without_hidden
     if @scientific_name
       @scientific_name.upcase!.chomp!
-      @taxon_concepts = @taxon_concepts.select(
+      @query = @query.select(
         ActiveRecord::Base.send(:sanitize_sql_array, [
         "DISTINCT id, ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1),
         full_name, rank_name,

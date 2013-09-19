@@ -27,6 +27,9 @@ namespace :db do
     desc "Rebuild all computed values"
     task :rebuild_all => [:migrate] do
       Sapi.rebuild(:disable_triggers => true)
+      # increment cache iterators
+      Species::Search.increment_cache_iterator
+      Species::TaxonConceptPrefixMatcher.increment_cache_iterator
     end
     desc "Rebuild all materialized views"
     task :rebuild_mviews => [:rebuild_taxon_concepts_mview, :rebuild_listing_changes_mview]
