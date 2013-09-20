@@ -9,25 +9,6 @@
 
 module SearchCache
 
-  # def self.included(base)
-  #   base.extend ClassMethods
-  # end
-
-  # module ClassMethods
-
-  #   def cache_iterator
-  #     # fetch the cache key
-  #     # if there isn't one yet, assign it a random integer between 0 and 10
-  #     Rails.cache.fetch("{name}-cache-iterator") { rand(10) }
-  #   end
-
-  #   def increment_cache_iterator
-  #     puts "#{name} incrementing cache iterator"
-  #     Rails.cache.write("#{name}-cache-iterator", self.cache_iterator + 1)
-  #   end
-
-  # end
-
   def cached_results
     Rails.cache.fetch(results_cache_key, :expires_in => 24.hours) do
       results
@@ -43,14 +24,14 @@ module SearchCache
 private
 
   def results_cache_key
-    puts @options.to_a.sort.unshift("#{self.class.name}-results").
+    Rails.logger.debug @options.to_a.sort.unshift("#{self.class.name}-results").
       push(self.class.cache_iterator).inspect
     @options.to_a.sort.unshift("#{self.class.name}-results").
       push(self.class.cache_iterator)
   end
 
   def total_cnt_cache_key
-    puts @options.to_a.sort.unshift("#{self.class.name}-total_cnt").
+    Rails.logger.debug @options.to_a.sort.unshift("#{self.class.name}-total_cnt").
       push(self.class.cache_iterator).inspect
     @options.to_a.sort.unshift("#{self.class.name}-total_cnt").
       push(self.class.cache_iterator)
