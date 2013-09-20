@@ -18,8 +18,8 @@ class Species::SearchParams < Hash
       :higher_taxa_ids => params[:higher_taxa_ids] ? params[:higher_taxa_ids] : nil,
       :ranks => params[:ranks] ? 
         Rank.dict & params[:ranks].map(&:upcase) : [Rank::SPECIES],
-      :page => params[:page].to_i || 1,
-      :per_page => params[:per_page].to_i || 25
+      :page => params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
+      :per_page => params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 25
     }
     unless [:cites_eu, :cms].include? sanitized_params[:taxonomy]
       sanitized_params[:taxonomy] = :cites_eu

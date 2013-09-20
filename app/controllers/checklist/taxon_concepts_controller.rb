@@ -1,11 +1,9 @@
 class Checklist::TaxonConceptsController < ApplicationController
-  caches_action :index, :cache_path => Proc.new { |c| c.params }
-  cache_sweeper :taxon_concept_sweeper
 
   def index
     checklist = Checklist::Checklist.new(params)
       
-    render :json => checklist.generate(params[:page], params[:per_page]),
+    render :json => checklist.generate,
       :each_serializer => Checklist::ChecklistSerializer,
       :authors => checklist.authors,
       :synonyms => checklist.synonyms,

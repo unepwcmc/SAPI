@@ -5,6 +5,13 @@ require 'sapi/summary.rb'
 module Sapi
   def self.rebuild(options = {})
   	Sapi::StoredProcedures.rebuild(options)
+
+    # increment cache iterators
+    Species::Search.increment_cache_iterator
+    Species::TaxonConceptPrefixMatcher.increment_cache_iterator
+    Checklist::Checklist.increment_cache_iterator
+    Checklist::TaxonConceptPrefixMatcher.increment_cache_iterator
+
   end
   def self.disable_triggers
   	Sapi::Triggers.disable_triggers
