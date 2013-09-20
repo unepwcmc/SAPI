@@ -15,6 +15,9 @@ module Sapi
       Sapi::Triggers.disable_triggers if options[:disable_triggers]
       procedures = REBUILD_PROCEDURES - (options[:except] || [])
       procedures &= options[:only] unless options[:only].nil?
+      if procedures && [:taxon_concepts_mview, :listing_changes_mview]
+        procedures << :touch_taxon_concepts
+      end
       procedures.each{ |p|
         puts "Starting procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")

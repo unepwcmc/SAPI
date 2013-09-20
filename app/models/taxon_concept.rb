@@ -38,7 +38,7 @@ class TaxonConcept < ActiveRecord::Base
 
   has_one :m_taxon_concept, :foreign_key => :id
 
-  belongs_to :parent, :class_name => 'TaxonConcept'
+  belongs_to :parent, :class_name => 'TaxonConcept', :touch => true
   has_many :children, :class_name => 'TaxonConcept', :foreign_key => :parent_id
   belongs_to :rank
   belongs_to :taxonomy
