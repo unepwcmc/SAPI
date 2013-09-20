@@ -3,6 +3,7 @@
 # Table name: taxon_concepts
 #
 #  id                 :integer          not null, primary key
+#  taxonomy_id        :integer          default(1), not null
 #  parent_id          :integer
 #  rank_id            :integer          not null
 #  taxon_name_id      :integer          not null
@@ -17,7 +18,8 @@
 #  name_status        :string(255)      default("A"), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  taxonomy_id        :integer          default(1), not null
+#  mview_hash         :text
+#  touched_at         :datetime
 #
 
 class TaxonConcept < ActiveRecord::Base
