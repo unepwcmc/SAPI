@@ -107,8 +107,9 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       order('geo_entities.name_en')
   end
 
-  def cached_key
-    [object]
+  def cache_key
+    Rails.logger.debug "CACHE KEY: #{self.class.name}#{object.id}"
+    "#{self.class.name}#{object.id}"
   end
 end
 
