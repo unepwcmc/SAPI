@@ -38,6 +38,14 @@ body {
 	background-position: top center;
 }
 
+html.lt-ie9 body {
+  background: none;
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
+  src='/assets/species/background_1.jpg',
+  sizingMethod='scale');
+}
+
+
 body.inner {
   background-attachment: fixed;
 }
@@ -60,6 +68,15 @@ form, fieldset {
 	padding: 0;
 	border-style: none;
 }
+
+p.browsehappy {
+  text-align: center;
+  color: black;
+}
+p.browsehappy a {
+  color: darkRed;
+}
+
 #wrapper { min-height: 100%; }
 .w1 {
 	width: 940px;
@@ -76,8 +93,8 @@ form, fieldset {
 	display: block;
 }
 #header .logo {
-  margin-top: -6px;
-	width: 140px;
+  margin-top: -1px;
+	width: 160px;
 	height: 43px;
 	float: left;
 	text-indent: -9999px;
@@ -85,6 +102,14 @@ form, fieldset {
 	background: url(/assets/species/species+_logo_header.png) no-repeat;
 	background-size:100%;
 }
+
+html.lt-ie9 #header .logo{
+  background: none;
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
+  src='/assets/species/species+_logo_header.png',
+  sizingMethod='scale');
+}
+
 #header .logo a {
 	display: block;
 	height: 100%;
@@ -206,7 +231,8 @@ form, fieldset {
 	line-height: 60px;
 }
 .text-species {
-	width: 200px;
+  margin-top: 10px;
+	width: 210px;
 	vertical-align: top;
 	height: 61px;
 	display: inline-block;
@@ -214,6 +240,12 @@ form, fieldset {
 	text-indent: -9999px;
 	background: url(/assets/species/species+_logo_text.png) no-repeat;
 	background-size: 100%;
+}
+html.lt-ie9 .text-species{
+  background: none;
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
+  src='/assets/species/species+_logo_text.png',
+  sizingMethod='scale');
 }
 a.learn-more {
   color: #2D3237;

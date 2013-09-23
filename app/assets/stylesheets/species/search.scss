@@ -50,6 +50,7 @@
 		border-right: 1px solid #8fb7cf;
 	}
 
+
 	.search {
 		background: #fff;
 		height: 28px;
@@ -296,3 +297,7 @@
 .inner .location-area { padding: 13px 15px 0; }
 .inner .search-block.add .location-area { padding: 15px 0 0 15px; }
 .search-block .search fieldset.parent-focus.parent-active .popup { display: block; }
+
+html.lt-ie9 .search-block .search-form {
+  width: 490px;
+}
