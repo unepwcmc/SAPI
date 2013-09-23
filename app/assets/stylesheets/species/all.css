@@ -100,7 +100,7 @@ p.browsehappy a {
 	text-indent: -9999px;
 	overflow: hidden;
 	background: url(/assets/species/species+_logo_header.png) no-repeat;
-	background-size:cover;
+	background-size:100%;
 }
 
 html.lt-ie9 #header .logo{
