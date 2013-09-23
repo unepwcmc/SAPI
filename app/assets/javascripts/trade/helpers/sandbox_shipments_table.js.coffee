@@ -20,28 +20,26 @@ Trade.SandboxShipmentsTable.EditableTableCell = Ember.Table.TableCell.extend
     @set 'isEditing', yes
     event.stopPropagation()
 
-Trade.SandboxShipmentsTable.DatePickerTableCell =
-Trade.SandboxShipmentsTable.EditableTableCell.extend
-  type: 'date'
+Trade.SandboxShipmentsTable.CheckboxTableCell = Ember.Table.TableCell.extend
+  classNames: 'checkbox-table-cell'
+  templateName: 'trade/editable-table/checkbox-table-cell'
+  isEditing:  no
+  type:       'checkbox'
 
-Trade.SandboxShipmentsTable.RatingTableCell = Ember.Table.TableCell.extend
-  classNames: 'rating-table-cell'
-  templateName: 'trade/editable-table/rating-table-cell'
-  didInsertElement: ->
-    @_super()
-    @onRowContentDidChange()
-  applyRating: (rating) ->
-    @$('.rating span').removeClass('active')
-    span   = @$('.rating span').get(rating)
-    $(span).addClass('active')
-  click: (event) ->
-    rating = @$('.rating span').index(event.target)
-    return if rating is -1
-    @get('column').setCellContent(@get('rowContent'), rating)
-    @applyRating(rating)
+  innerCheckbox: Ember.Checkbox.extend
+    typeBinding:  'parentView.type'
+    checkedBinding: 'parentView.cellContent'
+    didInsertElement: -> @$().focus()
+    blur: (event) ->
+      @set 'parentView.isEditing', no
+
   onRowContentDidChange: Ember.observer ->
-    @applyRating @get('cellContent')
-  , 'cellContent'
+    @set 'isEditing', no
+  , 'rowContent'
+
+  click: (event) ->
+    @set 'isEditing', yes
+    event.stopPropagation()
 
 Trade.SandboxShipmentsTable.TablesContainer =
 Ember.Table.TablesContainer.extend Ember.Table.RowSelectionMixin
@@ -102,34 +100,25 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
         width: 50
         header: 'Year'
     
-    columnNames.map (key, index) ->
+    columns = columnNames.map (key, index) ->
       Ember.Table.ColumnDefinition.create
         columnWidth: columnProperties[key]['width'] || 100
         headerCellName: columnProperties[key]['header']
         tableCellViewClass: 'Trade.SandboxShipmentsTable.EditableTableCell'
-        getCellContent: (row) -> 
-          row[key]
-        setCellContent: (row, value) -> 
-          row['shipment'].set(key, value)
-          row[key] = value
+        getCellContent: (row) -> row.get(key)
+        setCellContent: (row, value) -> row.set(key, value)
+    deleteColumn = Ember.Table.ColumnDefinition.create
+      columnWidth: 50
+      headerCellName: 'Delete'
+      tableCellViewClass: 'Trade.SandboxShipmentsTable.CheckboxTableCell'
+      getCellContent: (row) -> row.get('_destroyed')
+      setCellContent: (row, value) -> 
+        row.set('_destroyed', value)
+    columns.push deleteColumn
+    columns
   .property()
 
   content: Ember.computed ->
-    @get('shipments').map (shipment, idx) ->
-      index: idx
-      appendix: shipment.get('appendix')
-      species_name: shipment.get('species_name')
-      term_code: shipment.get('term_code')
-      quantity: shipment.get('quantity')
-      unit_code: shipment.get('unit_code')
-      trading_partner: shipment.get('trading_partner')
-      country_of_origin: shipment.get('country_of_origin')
-      import_permit: shipment.get('import_permit')
-      export_permit: shipment.get('export_permit')
-      origin_permit: shipment.get('origin_permit')
-      purpose_code: shipment.get('purpose_code')
-      source_code: shipment.get('source_code')
-      year: shipment.get('year')
-      shipment: shipment
+    @get('shipments')
   .property 'shipments'
 

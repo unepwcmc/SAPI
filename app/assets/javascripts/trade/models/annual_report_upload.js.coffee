@@ -9,5 +9,5 @@ Trade.AnnualReportUpload = DS.Model.extend
 
 Trade.Adapter.map('Trade.AnnualReportUpload', {
   sandboxShipments: { embedded: 'always' }
-  validationErrors: { embedded: 'always' }
+  validationErrors: { embedded: 'load' }
 })
