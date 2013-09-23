@@ -58,14 +58,6 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
     @set('autoCompleteRegions', @get('controllers.geoEntities.regions'))
     @set('autoCompleteCountries', @get('controllers.geoEntities.countries'))
 
-  openTaxonPage: (taxonConceptId) ->
-    @set('redirected', false)
-    $(".search fieldset").removeClass('parent-focus parent-active')
-    m = Species.TaxonConcept.find(taxonConceptId)
-    # Setting a spinner until content is loaded.
-    $(@spinnerSelector).css("visibility", "visible")
-    @transitionToRoute('taxon_concept.legal', m)
-
   openSearchPage: (taxonFullName, page, perPage) ->
     $(".search fieldset").removeClass('parent-focus parent-active')
     if taxonFullName == undefined
@@ -82,7 +74,25 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
       per_page: perPage or 100
     })
 
-  redirectToOpenSearchPage: (params) ->
-    for property, val of params
-      @set(property, val)
-    @openSearchPage()
+  openTaxonPage: (taxonConceptId) ->
+    @set('redirected', false)
+    $(".search fieldset").removeClass('parent-focus parent-active')
+    m = Species.TaxonConcept.find(taxonConceptId)
+    # Setting a spinner until content is loaded.
+    $(@spinnerSelector).css("visibility", "visible")
+    @transitionToRoute('taxon_concept.legal', m)
+
+  actions:
+    openSearchPage: (taxonFullName, page, perPage) ->
+      @openSearchPage(taxonFullName, page, perPage)
+
+    openTaxonPage: (taxonConceptId) ->
+      @openTaxonPage(taxonConceptId)
+
+    redirectToOpenSearchPage: (params) ->
+      for property, val of params
+        @set(property, val)
+      @openSearchPage()
+
+    deleteGeoEntitySelection: (context) ->
+      @get('selectedGeoEntities').removeObject(context)

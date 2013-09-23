@@ -7,7 +7,7 @@ development:
   adapter: postgresql
   database: sapi_development
   pool: 5
-  username: blancatortajada
+  username: postgres
   password: 
   timeout: 5000
   port: 5432
@@ -20,7 +20,7 @@ test:
   adapter: postgresql
   database: sapi_test
   pool: 5
-  username: blancatortajada
+  username: postgres
   password: 
   timeout: 5000
   port: 5432
@@ -30,8 +30,8 @@ staging:
   adapter: postgresql
   database: sapi_development
   pool: 10
-  username: blancatortajada
-  password: postgres
+  username: postgres
+  password: 
   host: localhost
   port: 5432
   password: 

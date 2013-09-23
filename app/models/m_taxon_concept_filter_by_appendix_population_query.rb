@@ -6,6 +6,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
     @original_geo_entities_ids = geo_entities_ids
     @geo_entities_ids = GeoEntity.nodes_and_descendants(geo_entities_ids).map(&:id)
     @geo_entities_in_clause = @geo_entities_ids.compact.join(',')
+    @table = @relation.from_value || 'taxon_concepts_mview'
   end
 
   def relation(designation_name = 'CITES')
@@ -24,12 +25,12 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
         UNION
         (
           -- not on level of listing but occurs in specified geo entities
-          SELECT taxon_concepts_mview.id
-          FROM taxon_concepts_mview
+          SELECT #{@table}.id
+          FROM #{@table}
           INNER JOIN distributions
-            ON distributions.taxon_concept_id = taxon_concepts_mview.id
+            ON distributions.taxon_concept_id = #{@table}.id
           WHERE distributions.geo_entity_id IN (#{@geo_entities_in_clause})
-          AND cites_listed = FALSE
+          AND #{designation_name.downcase}_listed = FALSE
           #{"AND (#{@appendix_abbreviations_conditions})" unless @appendix_abbreviations.empty? }
         )
 
@@ -70,7 +71,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
           )
 
         )
-      ) taxa_in_populations ON #{@relation.table_name}.id = taxa_in_populations.taxon_concept_id
+      ) taxa_in_populations ON #{@table}.id = taxa_in_populations.taxon_concept_id
       SQL
     )
   end

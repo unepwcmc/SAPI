@@ -4,8 +4,6 @@ Species.SelectedHigherTaxaCollectionView = Ember.CollectionView.extend
 
   itemViewClass: Ember.View.extend
     contextBinding: 'content',
-    template: Ember.Handlebars.compile('{{fullName}} <span {{action "deleteSelection" target="view"}} class="delete">x</span>')
-
-    deleteSelection: (event) ->
-      @set('controller.selectedTaxonConcepts', [])
-
+    template: Ember.Handlebars.compile(
+      '{{fullName}} <span {{action "deleteTaxonConceptSelection" this}} class="delete">x</span>'
+    )

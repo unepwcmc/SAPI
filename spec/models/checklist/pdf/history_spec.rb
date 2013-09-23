@@ -31,6 +31,8 @@ describe Checklist::Pdf::History do
             :language => en
           )
         )
+        eu
+        cms_designation
         Sapi.rebuild(:except => [:taxonomy])
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name, :show_english => true) }
@@ -48,6 +50,8 @@ describe Checklist::Pdf::History do
           :taxon_concept_id => tc.id,
           :is_current => true
         )
+        eu
+        cms_designation
         Sapi.rebuild(:except => [:taxonomy])
         MListingChange.find(lc.id)
       }
@@ -63,6 +67,8 @@ describe Checklist::Pdf::History do
           :taxon_concept_id => tc.id,
           :is_current => true
         )
+        eu
+        cms_designation
         Sapi.rebuild(:except => [:taxonomy])
         MListingChange.find(lc.id)
       }
@@ -90,6 +96,8 @@ describe Checklist::Pdf::History do
           :annotation_id => annotation.id,
           :is_current => true
         )
+        eu
+        cms_designation
         Sapi.rebuild(:except => [:taxonomy])
         MListingChange.find(lc.id)
       }

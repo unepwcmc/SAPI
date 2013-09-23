@@ -5,6 +5,10 @@ class Checklist::ChecklistSerializer < ActiveModel::Serializer
   has_many :plantae, :serializer => Checklist::TaxonConceptSerializer
 
   def result_cnt
-    object.taxon_concepts.size
+    object.cached_results.size
+  end
+
+  def total_cnt
+    object.cached_total_cnt
   end
 end

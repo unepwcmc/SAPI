@@ -1,5 +1,6 @@
 <!doctype html>
-<html>
+<!--[if lt IE 9]>      <html class="lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html> <!--<![endif]-->
   <head>
   	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8">
@@ -17,6 +18,9 @@
     <%= csrf_meta_tags %>
   </head>
   <body class="inner">
+    <!--[if lt IE 9]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
   
     <div class="spinner"><img src="/assets/species/loader.gif"></div>
     
@@ -32,10 +36,29 @@
   
       (function() {
          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async =   true;
-         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.  google-analytics.com/ga.js';
+         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
        })();
   
+     </script>
+  <% if ["development", "production"].include? Rails.env %>
+    <!-- UserVoice JavaScript SDK (only needed once on a page) -->
+    <script>(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/jTNaQjW8TOHM5SR03PSoyA.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})()</script>
+
+    <!-- A tab to launch the Classic Widget -->
+    <script>
+    UserVoice = window.UserVoice || [];
+    UserVoice.push(['showTab', 'classic_widget', {
+      mode: 'support',
+      primary_color: '#cc6d00',
+      link_color: '#007dbf',
+      support_tab_name: 'Feedback',
+      tab_label: 'Feedback',
+      tab_color: '#cc6d00',
+      tab_position: 'middle-right',
+      tab_inverted: false
+    }]);
     </script>
+  <% end %>
 </body>
 </html>
