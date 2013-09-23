@@ -826,10 +826,10 @@ body.inner #footer .holder{
 
 #main .tabset > li > a.active, #main .tabset > li:hover > a.active {
 	background: #f5f5f7;
-  	color: #25475F;
-  	border-top: solid 1px #ACC7DF;
-  	border-left: solid 1px #ACC7DF;
-  	border-right: solid 1px #ACC7DF;
+  color: #25475F;
+  border-top: solid 1px #ACC7DF;
+  border-left: solid 1px #ACC7DF;
+  border-right: solid 1px #ACC7DF;
 }
 
 #main .tabset > li:hover > a {
@@ -861,6 +861,10 @@ body.inner #footer .holder{
 
 #main .tabset > li > ul >li.first {
   padding-left: 59px;
+}
+
+html.lt-ie9 #main .tabset > li > ul >li.first {
+  padding-left: 30px;
 }
 
 #main .tabset > li > ul >li.last {
