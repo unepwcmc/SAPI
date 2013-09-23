@@ -7,7 +7,8 @@ class Checklist::TaxonConceptSerializer < ActiveModel::Serializer
     :author_year, :english_names, :spanish_names, :french_names,
     :synonyms_with_authors, :synonyms, :ancestors_ids, :ancestors_path, :item_type
 
-  has_many :current_additions, :serializer => Checklist::ListingChangeSerializer
+  has_many :current_cites_additions, :serializer => Checklist::ListingChangeSerializer,
+    :key => :current_additions
 
   def id
     if object.is_a? Checklist::HigherTaxaItem
