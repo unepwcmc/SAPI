@@ -76,8 +76,8 @@ form, fieldset {
 	display: block;
 }
 #header .logo {
-  margin-top: -6px;
-	width: 140px;
+  margin-top: -1px;
+	width: 160px;
 	height: 43px;
 	float: left;
 	text-indent: -9999px;
@@ -198,7 +198,8 @@ form, fieldset {
 	line-height: 60px;
 }
 .text-species {
-	width: 200px;
+  margin-top: 10px;
+	width: 210px;
 	vertical-align: top;
 	height: 61px;
 	display: inline-block;
