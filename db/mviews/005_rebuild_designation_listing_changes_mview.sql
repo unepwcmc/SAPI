@@ -75,6 +75,7 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     listing_changes.is_current,
     listing_changes.explicit_change,
     populations.countries_ids_ary,
+    listing_changes.updated_at,
     CASE
     WHEN change_types.name != ''EXCEPTION'' AND listing_changes.explicit_change
     THEN TRUE
