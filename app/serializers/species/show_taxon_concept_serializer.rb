@@ -77,7 +77,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
           END AS convention_language
         SQL
       ).
-      group("languages.name_en").order("languages.name_en")
+      group("languages.name_en").order("languages.name_en").all
   end
 
   def distributions
@@ -89,13 +89,13 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
         LEFT JOIN tags ON tags.id = taggings.tag_id").
       select("string_agg(tags.name, ', ') AS tags_list").
       group('geo_entities.name_en').
-      order('geo_entities.name_en')
+      order('geo_entities.name_en').all
   end
 
   def subspecies
     TaxonConcept.where(:parent_id => object.id).
       select([:full_name, :author_year]).
-      order(:full_name)
+      order(:full_name).all
   end
 
   def distribution_references
@@ -104,11 +104,17 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       select("geo_entities.name_en AS country").
       select("string_agg(\"references\".citation, '; ') AS country_references").
       group('geo_entities.name_en').
-      order('geo_entities.name_en')
+      order('geo_entities.name_en').all
   end
 
-  def cached_key
-    [object]
+  def cache_key  
+    key = [
+      self.class.name,
+      self.id,
+      object.updated_at
+    ]
+    Rails.logger.debug "CACHE KEY: #{key.inspect}"
+    key
   end
 end
 

@@ -12,8 +12,7 @@ describe Checklist do
         :show_spanish => '1',
         :show_french => '1'
       })
-      @checklist.generate(0,100)
-      @taxon_concepts = @checklist.taxon_concepts
+      @taxon_concepts = @checklist.results
       @australis = @taxon_concepts.select{ |e| e.full_name == @species1.full_name }.first
       @arctocephalus = @taxon_concepts.select{ |e| e.full_name == @genus.full_name }.first
     end

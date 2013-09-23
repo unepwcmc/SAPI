@@ -1,33 +1,42 @@
 class Species::TaxonConceptPrefixMatcher
-  attr_reader :taxon_concepts
+  include CacheIterator
+  include SearchCache # this provides #cached_results and #cached_total_cnt
 
   def initialize(options)
-    options = Species::SearchParams.sanitize(options)
-    options.keys.each { |k| instance_variable_set("@#{k}", options[k]) }
+    initialize_options(options)
     return [] unless @taxon_concept_query || !@ranks.empty?
+    initialize_query
   end
 
-  def taxon_concepts
-    build_rel
-    @taxon_concepts
+  def results
+    @query.limit(@options[:per_page]).all
   end
 
-  protected
+  def total_cnt
+    @query.count
+  end
 
-  def build_rel
-    @taxon_concepts = MTaxonConcept.order("ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1), full_name")
+  private
+
+  def initialize_options(options)
+    @options = Species::SearchParams.sanitize(options)
+    @options.keys.each { |k| instance_variable_set("@#{k}", @options[k]) }
+  end
+
+  def initialize_query
+    @query = MTaxonConcept.order("ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1), full_name")
     unless @ranks.empty?
-      @taxon_concepts = @taxon_concepts.where(:rank_name => @ranks)
+      @query = @query.where(:rank_name => @ranks)
     end
 
-    @taxon_concepts = if @taxonomy == :cms
-      @taxon_concepts.by_cms_taxonomy
+    @query = if @taxonomy == :cms
+      @query.by_cms_taxonomy
     else
-      @taxon_concepts.by_cites_eu_taxonomy
+      @query.by_cites_eu_taxonomy
     end
 
     if @taxon_concept_query
-      @taxon_concepts = @taxon_concepts.select(
+      @query = @query.select(
         ActiveRecord::Base.send(:sanitize_sql_array, [
         "id, full_name, rank_name,
         ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1),

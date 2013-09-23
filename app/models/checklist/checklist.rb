@@ -2,8 +2,9 @@
 class Checklist::Checklist
   include ActiveModel::SerializerSupport
   include ActionView::Helpers::TextHelper
-  attr_accessor :taxon_concepts_rel, :taxon_concepts, :animalia, :plantae,
-  :authors, :synonyms, :synonyms_with_authors,
+  include CacheIterator
+  include SearchCache # this provides #cached_results and #cached_total_cnt
+  attr_accessor :animalia, :plantae, :authors, :synonyms, :synonyms_with_authors,
   :english_common_names, :spanish_common_names, :french_common_names, :total_cnt
 
   # Constructs a query to retrieve CITES listed taxon concepts based on user
@@ -15,9 +16,18 @@ class Checklist::Checklist
     initialize_query
   end
 
+  def results
+    puts @query.limit(@per_page).offset(@per_page * @page).to_sql
+    @query.limit(@per_page).offset(@per_page * (@page - 1)).all
+  end
+
+  def total_cnt
+    @query.count
+  end
+
   def initialize_params(options)
-    options = Checklist::ChecklistParams.sanitize(options)
-    options.keys.each { |k| instance_variable_set("@#{k}", options[k]) }
+    @options = Checklist::ChecklistParams.sanitize(options)
+    @options.keys.each { |k| instance_variable_set("@#{k}", @options[k]) }
   end
 
   def initialize_query
@@ -52,6 +62,10 @@ class Checklist::Checklist
     else
       @taxon_concepts_rel.alphabetical_layout
     end
+
+    @query = @taxon_concepts_rel.
+      includes(:current_cites_additions).
+      without_non_accepted.without_hidden
   end
 
   def prepare_queries
@@ -62,22 +76,13 @@ class Checklist::Checklist
   def prepare_main_query; end
   def prepare_kindom_queries; end
 
-  # Takes the current search query, paginates it and adds metadata
+  # Takes the current search query and adds metadata
+  # TODO: there is probably no need to return animals and plants separately
   #
-  # @param [Integer] page the current page number to offset by
-  # @param [Integer] per_page the number of results per page
   # @return [Array] an array containing a hash of search results and
   #   related metadata
-  def generate(page, per_page)
-    @taxon_concepts_rel = @taxon_concepts_rel.
-      includes(:current_listing_changes).
-      without_non_accepted.without_hidden
-    page ||= 0
-    per_page ||= 20
-    @total_cnt = @taxon_concepts_rel.count
-    @taxon_concepts_rel = @taxon_concepts_rel.limit(per_page).offset(per_page.to_i * page.to_i)
-    @taxon_concepts = @taxon_concepts_rel.all
-    @animalia, @plantae = @taxon_concepts.partition{ |item| item.kingdom_position == 0 }
+  def generate
+    @animalia, @plantae = cached_results.partition{ |item| item.kingdom_position == 0 }
     if @output_layout == :taxonomic
        injector = Checklist::HigherTaxaInjector.new(@animalia)
        @animalia = injector.run
