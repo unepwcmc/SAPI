@@ -689,11 +689,10 @@ execute <<-SQL
     ON "geo_entity_types"."id" = "geo_entities"."geo_entity_type_id"
     AND geo_entity_types.name = 'COUNTRY'
     GROUP BY taxon_concepts.id
-    ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt
-  SQL
-  Sapi.rebuild(:only => [:taxon_concepts_mview], :disable_triggers => false)
+    ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt;
 
-execute <<-SQL
+    SELECT * FROM rebuild_taxon_concepts_mview();
+
     DROP VIEW IF EXISTS listing_changes_view;
     CREATE VIEW listing_changes_view AS
     SELECT
@@ -754,9 +753,10 @@ execute <<-SQL
     WHEN change_types.name = 'RESERVATION' THEN 1
     WHEN change_types.name = 'RESERVATION_WITHDRAWAL' THEN 2
     WHEN change_types.name = 'DELETION' THEN 3
-    END
+    END;
+
+    SELECT * FROM rebuild_listing_changes_mview();
   SQL
 
-    Sapi.rebuild(:only => [:listing_changes_mview], :disable_triggers => false)
   end
 end
