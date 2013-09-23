@@ -1,5 +1,4 @@
 class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerializer
-  cached
 
   attributes :cites_listing, :eu_listing
   has_many :quotas, :serializer => Species::QuotaSerializer, :key => :cites_quotas
@@ -42,7 +41,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.start_date DESC, geo_entities.name_en ASC, trade_restrictions.notes ASC,
               subspecies_info DESC
             SQL
-      )
+      ).all
   end
 
   def cites_suspensions
@@ -77,7 +76,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
             trade_restrictions.start_date DESC, geo_entities.name_en ASC,
             subspecies_info DESC
         SQL
-      )
+      ).all
   end
 
   def eu_decisions
@@ -113,7 +112,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
             geo_entities.name_en ASC, eu_decisions.start_date DESC,
             subspecies_info DESC
         SQL
-      )
+      ).all
   end
 
   def cites_listing_changes
@@ -174,7 +173,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           END,
           subspecies_info DESC
         SQL
-      )
+      ).all
   end
 
   def eu_listing_changes
@@ -226,7 +225,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           END,
           subspecies_info DESC
         SQL
-      )
+      ).all
   end
 
 
