@@ -25,11 +25,11 @@ class Trade::Sandbox
   def shipments=(new_shipments)
     #TODO handle errors
     new_shipments.each do |shipment|
-      s = @ar_klass.find_by_id(shipment['id'])
-      if shipment['_destroyed']
+      s = @ar_klass.find_by_id(shipment.delete('id'))
+      if shipment.delete('_destroyed')
         s && s.delete
       else
-        s && s.update_attributes(shipment, :without_protection => true)
+        s && s.update_attributes(shipment)
       end
     end
   end

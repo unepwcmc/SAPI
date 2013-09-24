@@ -39,6 +39,19 @@ class Trade::SandboxTemplate < ActiveRecord::Base
       klass = Class.new(ActiveRecord::Base) do
         self.table_name = table_name
         include ActiveModel::ForbiddenAttributesProtection
+        attr_accessible :appendix,
+          :species_name,
+          :term_code,
+          :quantity,
+          :unit_code,
+          :trading_partner,
+          :country_of_origin,
+          :import_permit,
+          :export_permit,
+          :origin_permit,
+          :purpose_code,
+          :source_code,
+          :year
       end
       Trade.const_set(klass_name, klass)
     end

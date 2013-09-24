@@ -13,4 +13,3 @@ Trade.SandboxShipment = DS.Model.extend
   source_code: DS.attr('string')
   year: DS.attr('string')
   _destroyed: DS.attr('boolean')
-  _modified: DS.attr('boolean')

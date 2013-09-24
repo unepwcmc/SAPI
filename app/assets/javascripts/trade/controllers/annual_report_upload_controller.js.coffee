@@ -17,6 +17,6 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     showMatchingRecords: (context) ->
       @set('tableController.shipments', context.get('sandboxShipments'))
 
-    saveShipments: () ->
+    saveChanges: () ->
       @get('store').commit()
       @transitionToRoute('annual_report_upload', @.get('content'))
