@@ -3,6 +3,7 @@ Trade.AnnualReportUploadFieldView = Ember.TextField.extend
   attributeBindings: ['name', 'controller']
 
   didInsertElement: ()->
+    controller = @get('parentView.controller')
     @.$().fileupload
       dataType: 'json'
 
@@ -17,7 +18,7 @@ Trade.AnnualReportUploadFieldView = Ember.TextField.extend
         $.each data.result.files, (index, file) =>
           if file.id != undefined
             aru = Trade.AnnualReportUpload.find(file.id)
-            @get('controller').send('transitionToReportUpload', aru)
+            controller.send('transitionToReportUpload', aru)
           else
-            @get('controller').send('transitionToReportUploads')
+            controller.send('transitionToReportUploads')
           $('#upload-message').text(file.error)

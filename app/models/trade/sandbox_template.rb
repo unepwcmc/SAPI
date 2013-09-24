@@ -29,10 +29,39 @@ class Trade::SandboxTemplate < ActiveRecord::Base
   IMPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER
   EXPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER - ['import_permit']
 
+  # Dynamically define AR class for table_name
+  # (unless one exists already)
+  def self.ar_klass(table_name)
+    klass_name = table_name.camelize
+    begin
+      "Trade::#{klass_name}".constantize
+    rescue NameError
+      klass = Class.new(ActiveRecord::Base) do
+        self.table_name = table_name
+        include ActiveModel::ForbiddenAttributesProtection
+        attr_accessible :appendix,
+          :species_name,
+          :term_code,
+          :quantity,
+          :unit_code,
+          :trading_partner,
+          :country_of_origin,
+          :import_permit,
+          :export_permit,
+          :origin_permit,
+          :purpose_code,
+          :source_code,
+          :year
+      end
+      Trade.const_set(klass_name, klass)
+    end
+  end
+
   private
   def self.create_stmt(target_table_name)
     sql = <<-SQL
-      CREATE TABLE #{target_table_name} () INHERITS (#{table_name})
+      CREATE TABLE #{target_table_name} (PRIMARY KEY(id))
+      INHERITS (#{table_name})
     SQL
   end
 
@@ -50,8 +79,6 @@ class Trade::SandboxTemplate < ActiveRecord::Base
       ENCODING 'utf-8'
       CSV HEADER
     PSQL
-    sanitize_sql_array([
-                       sql, csv_file_path
-    ])
+    sanitize_sql_array([sql, csv_file_path])
   end
 end
