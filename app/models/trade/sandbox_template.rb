@@ -78,8 +78,6 @@ class Trade::SandboxTemplate < ActiveRecord::Base
       ENCODING 'utf-8'
       CSV HEADER
     PSQL
-    sanitize_sql_array([
-                       sql, csv_file_path
-    ])
+    sanitize_sql_array([sql, csv_file_path])
   end
 end
