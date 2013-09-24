@@ -19,19 +19,6 @@
 #
 
 class Trade::SandboxTemplate < ActiveRecord::Base
-  attr_accessible :appendix,
-    :species_name,
-    :term_code,
-    :quantity,
-    :unit_code,
-    :trading_partner,
-    :country_of_origin,
-    :import_permit,
-    :export_permit,
-    :origin_permit,
-    :purpose_code,
-    :source_code,
-    :year
   self.table_name = :trade_sandbox_template
 
   COLUMNS_IN_CSV_ORDER = [
@@ -51,6 +38,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
     rescue NameError
       klass = Class.new(ActiveRecord::Base) do
         self.table_name = table_name
+        include ActiveModel::ForbiddenAttributesProtection
       end
       Trade.const_set(klass_name, klass)
     end

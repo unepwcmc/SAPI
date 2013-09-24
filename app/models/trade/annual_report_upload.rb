@@ -16,8 +16,7 @@
 
 require 'csv_column_headers_validator'
 class Trade::AnnualReportUpload < ActiveRecord::Base
-  attr_accessible :number_of_rows, :csv_source_file, :trading_country_id,
-    :point_of_view, :sandbox_shipments
+  include ActiveModel::ForbiddenAttributesProtection
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
   belongs_to :trading_country, :class_name => GeoEntity, :foreign_key => :trading_country_id
   validates :csv_source_file, :csv_column_headers => true
@@ -42,14 +41,12 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
   def update_attributes_and_sandbox(attributes)
     Trade::AnnualReportUpload.transaction do
       update_sandbox(attributes.delete(:sandbox_shipments))
-      attributes.delete(:created_at) #TODO
-      attributes.delete(:updated_at) #TODO
       update_attributes(attributes)
     end
   end
 
   def update_sandbox(shipments)
-    return nil if is_done
+    return true if is_done
     sandbox.shipments= shipments
   end
 
