@@ -78,7 +78,7 @@ SELECT
 FROM "taxon_concepts_mview"
 JOIN listing_changes_mview 
   ON listing_changes_mview.taxon_concept_id = taxon_concepts_mview.id
-  AND designation_name = 'CITES'
+  AND designation_name = 'EU'
   AND is_current
   AND change_type_name = 'ADDITION'
 JOIN taxon_concepts_mview original_taxon_concepts_mview
