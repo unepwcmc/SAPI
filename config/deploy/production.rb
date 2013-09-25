@@ -11,6 +11,7 @@ set :application, "sapi"
 set :server_name, "sapi.unepwcmc-013.vm.brightbox.net"
 set :sudo_user, "rails"
 set :app_port, "80"
+set :branch, "production"
 
 set :default_environment, {
 'PATH' => "/home/rails/.rvm/gems/ruby-1.9.2-p320/bin:/home/rails/.rvm/bin:/home/rails/.rvm/rubies/ruby-1.9.2-p320/bin:$PATH",
