@@ -1,4 +1,12 @@
 <p>Number of rows: {{numberOfRows}}</p>
+<p>
+  {{#if isExporter}}
+    Exporter:
+  {{else}}
+    Importer:
+  {{/if}}
+  {{tradingCountry.name}}
+</p>
 <p>Uploaded at: {{createdAt}}</p>
 <p>Uploaded by: TODO</p>
 <button {{action submitShipments}}>Submit shipments</button>
