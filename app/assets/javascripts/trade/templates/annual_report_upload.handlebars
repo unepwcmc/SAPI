@@ -11,23 +11,13 @@
   </thead>
   {{collection Trade.ValidationErrorsView contentBinding='validationErrors'}}
 </table>
-<hr>
 
-<table>
-  <thead>
-    <th>Appendix</th>
-    <th>Species Name</th>
-    <th>Term Code</th>
-    <th>Quantity</th>
-    <th>Unit Code</th>
-    <th>Trading Partner</th>
-    <th>Country of Origin</th>
-    <th>Import Permit</th>
-    <th>Export Permit</th>
-    <th>Origin Permit</th>
-    <th>Purpose Code</th>
-    <th>Source Code</th>
-    <th>Year</th>
-  </thead>
-  {{collection Trade.SandboxShipmentsView contentBinding='controllers.visibleSandboxShipments'}}
-</table>
+<hr>
+<button {{action 'saveChanges'}}>Save changes</button>
+
+<div class='presentation-container'>
+  {{view Trade.SandboxShipmentsTable.TablesContainer
+    controllerBinding="tableController"
+    selectionBinding="tableController.selection"
+  }}
+</div>

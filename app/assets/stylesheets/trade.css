@@ -10,5 +10,6 @@
  *
  *= require_self
  *= require jquery.fileupload-ui
+ *= require ember-table
  *= require_tree ./trade
  */
