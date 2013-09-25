@@ -10,8 +10,7 @@ describe Checklist do
         :output_layout => 'alphabetical',
         :locale => 'en'
       })
-      @checklist.generate(0, 100)
-      @taxon_concepts = @checklist.taxon_concepts_rel
+      @taxon_concepts = @checklist.results
     end
     context 'for species Caiman latirostris' do
       subject { @taxon_concepts.select{ |e| e.full_name == 'Caiman latirostris' }.first }

@@ -3,13 +3,14 @@ class MTaxonConceptFilterByAppendixQuery
   def initialize(relation = MTaxonConcept.scoped, appendix_abbreviations = [])
     @relation = relation
     @appendix_abbreviations = appendix_abbreviations
+    @table = @relation.from_value || 'taxon_concepts_mview'
   end
 
   def initialize_species_listings_conditions(designation_name = 'CITES')
     unless @appendix_abbreviations.empty?
       @appendix_abbreviations_conditions = <<-SQL
         REGEXP_SPLIT_TO_ARRAY(
-          taxon_concepts_mview.#{designation_name.downcase}_listing_original,
+          #{@table}.#{designation_name.downcase}_listing_original,
           '/'
         ) &&
         ARRAY[#{@appendix_abbreviations.map{ |e| "'#{e}'" }.join(',')}]::TEXT[]

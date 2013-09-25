@@ -4,6 +4,7 @@ class Trade::Sandbox
     @annual_report_upload = annual_report_upload
     @csv_file_path = @annual_report_upload.csv_source_file.current_path
     @table_name = "trade_sandbox_#{@annual_report_upload.id}"
+    @ar_klass = Trade::SandboxTemplate.ar_klass(@table_name)
   end
 
   def copy
@@ -18,7 +19,19 @@ class Trade::Sandbox
   end
 
   def shipments
-    Trade::SandboxTemplate.select('*').from(@table_name)
+    @ar_klass.order(:id).all
+  end
+
+  def shipments=(new_shipments)
+    #TODO handle errors
+    new_shipments.each do |shipment|
+      s = @ar_klass.find_by_id(shipment.delete('id'))
+      if shipment.delete('_destroyed')
+        s && s.delete
+      else
+        s && s.update_attributes(shipment)
+      end
+    end
   end
 
   def submit_permits

@@ -1,5 +1,4 @@
 class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializer
-  cached
 
   attributes :cms_listing
   has_many :cms_listing_changes, :serializer => Species::ListingChangeSerializer,
@@ -64,13 +63,12 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
           END,
           subspecies_info DESC
         SQL
-      )
+      ).all
   end
 
   def cms_instruments
     object.taxon_instruments.includes(:instrument)
   end
-
 
   def cms_listing
     object.listing && object.listing['cms_listing']

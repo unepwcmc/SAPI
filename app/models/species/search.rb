@@ -1,4 +1,6 @@
 class Species::Search
+  include CacheIterator
+  include SearchCache # this provides #cached_results and #cached_total_cnt
 
   # Constructs a query to retrieve taxon concepts based on user defined
   # parameters
@@ -10,38 +12,49 @@ class Species::Search
     initialize_query
   end
 
+  def results
+    @query.limit(@options[:per_page]).
+      offset(@options[:per_page] * (@options[:page] - 1)).all
+  end
+
+  def total_cnt
+    @query.count
+  end
+
+private
+
   def initialize_params(options)
-    options = Species::SearchParams.sanitize(options)
-    options.keys.each { |k| instance_variable_set("@#{k}", options[k]) }
+    @options = Species::SearchParams.sanitize(options)
+    @options.keys.each { |k| instance_variable_set("@#{k}", @options[k]) }
     @scientific_name = @taxon_concept_query
   end
 
   def initialize_query
-    @taxon_concepts_rel = MTaxonConcept.taxonomic_layout.
+    @query = MTaxonConcept.taxonomic_layout.
       where(:rank_name => @ranks, :name_status => 'A')
 
-    @taxon_concepts_rel = if @taxonomy == :cms
-      @taxon_concepts_rel.by_cms_taxonomy
+    @query = if @taxonomy == :cms
+      @query.by_cms_taxonomy
     else
-      @taxon_concepts_rel.by_cites_eu_taxonomy
+      @query.by_cites_eu_taxonomy
     end
 
     if !@geo_entities.empty? && @geo_entity_scope == :cites
-      @taxon_concepts_rel = MTaxonConceptFilterByAppendixPopulationQuery.new(
-        @taxon_concepts_rel, ['I', 'II', 'III'], @geo_entities
+      @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
+        @query, ['I', 'II', 'III'], @geo_entities
       ).relation('CITES')
     elsif !@geo_entities.empty? && @geo_entity_scope == :eu
-      @taxon_concepts_rel = MTaxonConceptFilterByAppendixPopulationQuery.new(
-        @taxon_concepts_rel, ['A', 'B', 'C', 'D'], @geo_entities
+      @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
+        @query, ['A', 'B', 'C', 'D'], @geo_entities
       ).relation('EU')
     elsif !@geo_entities.empty? && @geo_entity_scope == :occurrences
-      @taxon_concepts_rel = MTaxonConceptFilterByAppendixPopulationQuery.new(
-        @taxon_concepts_rel, [], @geo_entities
+      @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
+        @query, [], @geo_entities
       ).relation
     end
 
     unless @scientific_name.blank?
-      @taxon_concepts_rel = @taxon_concepts_rel.
+      @query = @query.
         by_name(@scientific_name, {:synonyms => true, :subspecies => true, :common_names => false}).
         select(<<-SQL
                 taxon_concepts_mview.*,
@@ -51,10 +64,7 @@ class Species::Search
                SQL
         )
     end
-  end
-
-  def results
-    @taxon_concepts_rel
+    @query = @query
   end
 
 end

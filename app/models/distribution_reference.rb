@@ -11,5 +11,5 @@ class DistributionReference < ActiveRecord::Base
   attr_accessible :reference_id, :distribution_id
 
   belongs_to :reference
-  belongs_to :distribution
+  belongs_to :distribution, :touch => true
 end

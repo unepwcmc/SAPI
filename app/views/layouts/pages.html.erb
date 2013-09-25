@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
-  
+
   <%= stylesheet_link_tag "pages" %>
 
   <%= csrf_meta_tags %>
@@ -20,46 +20,66 @@
         <ul id="nav">
           <li><a href="/about">About</a></li>
           <li class="add"><a href="#">Related Resources</a>
+          <div class="popup-holder">
             <ul>
-             <li><a href="http://checklist.cites.org">CITES Checklist</a></li>
-             <li><a href="http://www.unep-wcmc-apps.org/citestrade/expert_accord.cfm">CITES Trade Database    </a></li>
-             <li><a href="http://captivebreeding.unep-wcmc.org">EU Captive breeding database</a></li>
-             <li><a href="http://elibrary.unep-wcmc.org/">EU E-library</a></li>
-           </ul>
-         </li>
-         <li><a href="/terms-of-use">Terms of use</a></li>
-       </ul>
-     </div>
-     <%= yield %>
-   </div>
- </div>
-
- <div id="footer">
-  <div class="holder">
-   <ul class="sponsor">
-    <li><a href="http://www.cites.org"><img src="/assets/species/logo-CITES.png" alt="CITES logo" width="77" height="44" /></a></li>
-    <li><a href="http://www.cms.int"><img src="/assets/species/logo-CMS.png" alt="CMS logo" width="31" height="44" /></a></li>
-    <li><a href="http://www.unep.org"><img src="/assets/species/logo-UNEP.png" alt="UNEP logo" width="37" height="43" /></a></li>
-    <li><a href="http://ec.europa.eu/environment/cites/home_en.htm"><img src="/assets/species/logo-EU.png" alt="EU logo" width="65" height="44" /></a></li>
-  </ul>
-  <div class="power-by">
-  <a href="http://www.unep-wcmc.org"><img src="/assets/species/powered_by.png" alt="Powered by logo" width="66" height="44" /></a>
+              <li><a href="http://www.unep-wcmc-apps.org/citestrade/expert_accord.cfm">CITES Trade Database</a></li>
+              <li><a href="http://captivebreeding.unep-wcmc.org">EU Captive breeding database</a></li>
+              <li><a href="http://elibrary.unep-wcmc.org/">EU E-library</a></li>
+            </ul>
+          </div>
+          </li>
+          <li><a href="/terms-of-use">Terms of use</a></li>
+        </ul>
+      </div>
+      <%= yield %>
+    </div>
   </div>
-</div>
-</div>
 
-<script type="text/javascript">
+  <div id="footer">
+    <div class="holder">
+      <ul class="sponsor">
+        <li><a href="http://www.cites.org"><img src="/assets/species/logo-CITES.png" alt="CITES logo" width="77" height="44" /></a></li>
+        <li><a href="http://www.cms.int"><img src="/assets/species/logo-CMS.png" alt="CMS logo" width="31" height="44" /></a></li>
+        <li><a href="http://www.unep.org"><img src="/assets/species/logo-UNEP.png" alt="UNEP logo" width="37" height="43" /></a></li>
+        <li><a href="http://ec.europa.eu/environment/cites/home_en.htm"><img src="/assets/species/logo-EU.png" alt="EU logo" width="65" height="44" /></a></li>
+      </ul>
+      <div class="power-by">
+        <a href="http://www.unep-wcmc.org"><img src="/assets/species/powered_by.png" alt="Powered by logo" width="66" height="44" /></a>
+      </div>
+    </div>
+  </div>
 
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-21313092-1']);
-_gaq.push(['_trackPageview']);
+  <script type="text/javascript">
 
-(function() {
- var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.  async = true;
- ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www'  ) + '.google-analytics.com/ga.js';
- var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(  ga, s);
-})();
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-21313092-1']);
+    _gaq.push(['_trackPageview']);
 
-</script>
-</body>
+    (function() {
+     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.  async = true;
+     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www'  ) + '.google-analytics.com/ga.js';
+     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(  ga, s);
+     })();
+
+   </script>
+  <% if ["development", "production"].include? Rails.env %>
+    <!-- UserVoice JavaScript SDK (only needed once on a page) -->
+    <script>(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/jTNaQjW8TOHM5SR03PSoyA.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})()</script>
+
+    <!-- A tab to launch the Classic Widget -->
+    <script>
+    UserVoice = window.UserVoice || [];
+    UserVoice.push(['showTab', 'classic_widget', {
+      mode: 'support',
+      primary_color: '#cc6d00',
+      link_color: '#007dbf',
+      support_tab_name: 'Feedback',
+      tab_label: 'Feedback',
+      tab_color: '#cc6d00',
+      tab_position: 'middle-right',
+      tab_inverted: false
+    }]);
+    </script>
+  <% end %>
+ </body>
 </html>

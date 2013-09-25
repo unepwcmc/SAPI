@@ -7,8 +7,10 @@ class Species::ListingsExportFactory
     end
     if @designation && @designation.name == 'CMS'
       Species::CmsListingsExport.new(@designation, filters)
+    elsif @designation && @designation.name == 'EU'
+      Species::EuListingsExport.new(@designation, filters)
     else
-      Species::ListingsExport.new(@designation, filters)
+      Species::CitesListingsExport.new(@designation, filters)
     end
   end
 end
