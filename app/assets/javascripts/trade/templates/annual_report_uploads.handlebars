@@ -1,3 +1,14 @@
 {{view Trade.AnnualReportUploadFormView controllerBinding="controller"}}
 
-{{outlet}}
+Annual report uploads in progress:
+<ul>
+{{#each controller}}
+  <li>
+    {{#linkTo 'annual_report_upload' this}}
+      {{this.numberOfRows}} rows uploaded at {{this.createdAt}}
+    {{/linkTo}}
+  </li>
+{{else}}
+  <li>No annual report uploads found.</li>
+{{/each}}
+</ul>
