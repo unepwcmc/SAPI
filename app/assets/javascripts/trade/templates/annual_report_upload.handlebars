@@ -1,16 +1,7 @@
-<p>Number of rows: {{numberOfRows}}</p>
-<p>
-  {{#if isExporter}}
-    Exporter:
-  {{else}}
-    Importer:
-  {{/if}}
-  {{tradingCountry.name}}
-</p>
-<p>Uploaded at: {{createdAt}}</p>
-<p>Uploaded by: TODO</p>
-<button {{action submitShipments}}>Submit shipments</button>
-<hr>
+<h2>Annual report upload summary</h2>
+<p>{{summary}}</p>
+
+<h2>Validation errors</h2>
 
 <table>
   <thead>
@@ -20,7 +11,14 @@
   {{collection Trade.ValidationErrorsView contentBinding='validationErrors'}}
 </table>
 
-<hr>
+<button {{action submitShipments}}>Submit shipments</button>
+
+<h2>Shipments</h2>
+
+TODO filters here
+
+TODO reset filters button
+
 <button {{action 'saveChanges'}}>Save changes</button>
 
 <div class='presentation-container'>
@@ -29,3 +27,5 @@
     selectionBinding="tableController.selection"
   }}
 </div>
+
+<button {{action 'saveChanges'}}>Save changes</button>

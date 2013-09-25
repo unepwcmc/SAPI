@@ -8,9 +8,12 @@ Trade.AnnualReportUpload = DS.Model.extend
   # TODO updated_by
   sandboxShipments: DS.hasMany('Trade.SandboxShipment')
   validationErrors: DS.hasMany('Trade.ValidationError')
-  isExporter: (->
-  	@get('pointOfView') == 'E'
-  ).property('pointOfView')
+
+  summary: (->
+  	@get('numberOfRows') + ' shipments reported by ' + 
+  	@get('tradingCountry.name') + ' (' + @get('pointOfView') + ')' +
+  	' uploaded on ' + @get('createdAt') + ' by TODO'
+  ).property('numberOfRows', 'tradingCountry.name')
 
 Trade.Adapter.map('Trade.AnnualReportUpload', {
   sandboxShipments: { embedded: 'always' }

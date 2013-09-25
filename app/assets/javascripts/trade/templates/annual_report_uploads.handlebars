@@ -5,7 +5,7 @@ Annual report uploads in progress:
 {{#each controller}}
   <li>
     {{#linkTo 'annual_report_upload' this}}
-      {{this.numberOfRows}} rows uploaded at {{this.createdAt}}
+      {{this.summary}}
     {{/linkTo}}
   </li>
 {{else}}
