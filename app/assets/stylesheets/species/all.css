@@ -81,7 +81,7 @@ p.browsehappy a {
 .w1 {
 	width: 940px;
 	margin: 0 auto -30px;
-	padding: 0 0 20px;
+	padding: 0 0 203px;
 }
 #header {
 	width: 100%;
@@ -264,12 +264,15 @@ a.learn-more:hover {
 
 #footer {
 	background: #A4C5DA;
+  height: 202px;
 	border-top: 1px solid #6b94af;
+  position: relative;
+  margin: -203px 0 0;
 }
 #footer .holder {
 	margin: 0 auto;
 	width: 940px;
-	padding: 44px 0;
+	padding: 44px 0 0;
 	overflow: hidden;
 }
 .power-by {
@@ -285,6 +288,7 @@ a.learn-more:hover {
 }
 #footer .sponsor {
 	float: left;
+  padding: 24px 0 0;
 }
 #footer .sponsor li {
 	float: left;
