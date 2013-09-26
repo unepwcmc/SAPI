@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     EXECUTE 'DROP TABLE IF EXISTS ' || lc_table_name || ' CASCADE';
 
     RAISE INFO '* creating % materialized view', lc_table_name;
-    sql := 'CREATE TEMP TABLE ' || lc_table_name || ' AS
+    sql := 'CREATE TABLE ' || lc_table_name || ' AS
     WITH applicable_listing_changes AS (
         SELECT affected_taxon_concept_id,'
         || LOWER(designation.name) || '_applicable_listing_changes_for_node(
