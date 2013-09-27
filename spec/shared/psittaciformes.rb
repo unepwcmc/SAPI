@@ -134,8 +134,7 @@ shared_context "Psittaciformes" do
     )
     create_eu_B_addition(
      :taxon_concept => @family2,
-     :effective_at => '1981-06-06',
-     :is_current => true
+     :effective_at => '1981-06-06'
     )
 
     create_cites_II_addition(
@@ -144,8 +143,7 @@ shared_context "Psittaciformes" do
     )
     create_cites_II_addition(
      :taxon_concept => @family2,
-     :effective_at => '1981-06-06',
-     :is_current => true
+     :effective_at => '1981-06-06'
     )
     cites_lc1 = create_cites_II_addition(
      :taxon_concept => @family2,

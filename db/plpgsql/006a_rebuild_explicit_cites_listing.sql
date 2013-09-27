@@ -14,29 +14,30 @@ CREATE OR REPLACE FUNCTION rebuild_explicit_cites_listing_for_node(node_id integ
       hstore('cites_listing_original', ARRAY_TO_STRING(
         -- unnest to filter out the nulls
         ARRAY(SELECT * FROM UNNEST(
-          ARRAY[listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III', listing -> 'cites_not_listed']) s
-          WHERE s IS NOT NULL),
+          ARRAY[
+            listing -> 'cites_I', listing -> 'cites_II', listing -> 'cites_III',
+            listing -> 'cites_not_listed'
+          ]
+        ) s WHERE s IS NOT NULL),
           '/'
         )
       ) AS listing
       FROM (
-        SELECT taxon_concept_id,
-          hstore('cites_I', CASE WHEN BOOL_OR(abbreviation = 'I') THEN 'I' ELSE NULL END) ||
-          hstore('cites_II', CASE WHEN BOOL_OR(abbreviation = 'II') THEN 'II' ELSE NULL END) ||
-          hstore('cites_III', CASE WHEN BOOL_OR(abbreviation = 'III') THEN 'III' ELSE NULL END)
-          AS listing
-        FROM (
-          SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type
-          FROM listing_changes
-          INNER JOIN change_types ON change_type_id = change_types.id
-            AND change_types.name = 'ADDITION'
-          INNER JOIN  designations ON change_types.designation_id = designations.id
-            AND designations.name = 'CITES'
-          INNER JOIN species_listings ON species_listing_id = species_listings.id
-          LEFT JOIN listing_distributions
-            ON listing_distributions.listing_change_id = listing_changes.id
-          WHERE effective_at <= NOW() AND is_current = 't'
-        ) AS q
+        SELECT taxon_concept_id, 
+        CASE 
+          WHEN BOOL_OR(species_listing_name = 'I') 
+          THEN hstore('cites_I', 'I') ELSE hstore('cites_I', NULL)
+        END || 
+        CASE
+          WHEN BOOL_OR(species_listing_name = 'II') 
+          THEN hstore('cites_II', 'II') ELSE hstore('cites_II', NULL)
+        END ||
+        CASE
+          WHEN BOOL_OR(species_listing_name = 'III') 
+          THEN hstore('cites_III', 'III') ELSE hstore('cites_III', NULL)
+        END AS listing
+        FROM cites_listing_changes_mview
+        WHERE change_type_name = 'ADDITION' AND is_current
         GROUP BY taxon_concept_id
       ) AS qq
     ) AS qqq

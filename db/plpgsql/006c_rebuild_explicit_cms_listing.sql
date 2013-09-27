@@ -13,40 +13,26 @@ CREATE OR REPLACE FUNCTION rebuild_explicit_cms_listing_for_node(node_id integer
       hstore('cms_listing_original', ARRAY_TO_STRING(
         -- unnest to filter out the nulls
         ARRAY(SELECT * FROM UNNEST(
-          ARRAY[listing -> 'cms_I', listing -> 'cms_II']) s
-          WHERE s IS NOT NULL),
+          ARRAY[
+            listing -> 'cms_I', listing -> 'cms_II',
+            listing -> 'cms_not_listed'
+          ]
+        ) s WHERE s IS NOT NULL),
           '/'
         )
       ) AS listing
       FROM (
         SELECT taxon_concept_id,
-          hstore('cms_I', CASE WHEN SUM(cms_I) > 0 THEN 'I' ELSE NULL END) ||
-          hstore('cms_II', CASE WHEN SUM(cms_II) > 0 THEN 'II' ELSE NULL END)
-          AS listing
-        FROM (
-          SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type,
-          CASE
-            WHEN species_listings.abbreviation = 'I' AND change_types.name = 'ADDITION' THEN 1
-            WHEN (species_listings.abbreviation = 'I' OR species_listing_id IS NULL)
-              AND change_types.name = 'DELETION' THEN -1
-            ELSE 0
-          END AS cms_I,
-          CASE
-            WHEN species_listings.abbreviation = 'II' AND change_types.name = 'ADDITION' THEN 1
-            WHEN (species_listings.abbreviation = 'II' OR species_listing_id IS NULL)
-              AND change_types.name = 'DELETION' THEN -1
-            ELSE 0
-          END AS cms_II
-          FROM listing_changes
-          INNER JOIN change_types ON change_type_id = change_types.id
-            AND change_types.name IN ('ADDITION','DELETION')
-          INNER JOIN  designations ON change_types.designation_id = designations.id
-            AND designations.name = 'CMS'
-          INNER JOIN species_listings ON species_listing_id = species_listings.id
-          LEFT JOIN listing_distributions
-            ON listing_distributions.listing_change_id = listing_changes.id
-          WHERE effective_at <= NOW() AND is_current = 't'
-        ) AS q
+        CASE 
+          WHEN BOOL_OR(species_listing_name = 'I') 
+          THEN hstore('cms_I', 'I') ELSE hstore('cms_I', NULL)
+        END || 
+        CASE
+          WHEN BOOL_OR(species_listing_name = 'II') 
+          THEN hstore('cms_II', 'II') ELSE hstore('cms_II', NULL)
+        END AS listing
+        FROM cms_listing_changes_mview
+        WHERE change_type_name = 'ADDITION' AND is_current
         GROUP BY taxon_concept_id
       ) AS qq
     ) AS qqq
