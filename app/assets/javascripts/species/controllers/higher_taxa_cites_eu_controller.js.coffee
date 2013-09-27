@@ -26,5 +26,6 @@ Species.HigherTaxaCitesEuController = Ember.ArrayController.extend
         Species.AutoCompleteTaxonConcept.find({
           taxonomy: 'cites_eu'
           ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY']
+          per_page: 1000
         })
       )
