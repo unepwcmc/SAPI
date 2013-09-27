@@ -271,7 +271,7 @@ a.learn-more:hover {
   height: 202px;
 }
 body.inner .push {
-  height: 0;
+  height: 30px;
 }
 #footer {
 	background: #A4C5DA;
