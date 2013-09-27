@@ -2712,7 +2712,7 @@ mydas,Species,200201,Genus,31002,A,"(Linnaeus, 1758)",,CMS
 caretta,Species,200200,Genus,31001,A,"(Linnaeus, 1758)",,CMS
 glama,Species,200180,Genus,2405,A,"(Linnaeus, 1758)",,CITES_EU
 """North Cape""",Species,105509,Genus,3099,A,Nielsen et al. 2011,,CITES_EU
-alfredi,Species,105505,Species,1998,A,"Krefft, 1868",,CITES_EU
+alfredi,Species,105505,Genus,1998,A,"Krefft, 1868",,CITES_EU
 huso x acipenser baerii,Species,105484,Genus,2169,H,NULL,,CITES_EU
 sameiti,Species,105482,Genus,5183,A,"Böhme & Ibisch, 1990",,CITES_EU
 toraro,Species,105481,Genus,19640,A,"Brown, Twomey, Amézquita, Barbosa de Souza, Caldwell, et al., 2011",,CITES_EU
@@ -8359,7 +8359,7 @@ nigricollis,Species,9523,Genus,1944,A,"Przevalski, 1876",,"CITES_EU,CMS"
 monacha,Species,9522,Genus,1944,A,"Temminck, 1835",,"CITES_EU,CMS"
 leucogeranus,Species,9521,Genus,1944,A,"Pallas, 1773",,"CITES_EU,CMS"
 japonensis,Species,9520,Genus,1944,A,"(Müller, 1776)",,"CITES_EU,CMS"
-grus,Species,9519,Genus,1944,A,"(Linnaeus, 1758)",,CITES_EU
+grus,Species,9519,Genus,1944,A,"(Linnaeus, 1758)",,"CITES_EU,CMS"
 carunculatus,Species,9518,Genus,6329,A,"(Gmelin, 1789)",,CITES_EU
 canadensis,Species,9515,Genus,1944,A,"(Linnaeus, 1758)",,CITES_EU
 antigone,Species,9514,Genus,1944,A,"(Linnaeus, 1758)",,CITES_EU
@@ -11674,7 +11674,7 @@ perobliqua,Subspecies,7884,Species,7885,A,"(Conrad, 1836)",,CITES_EU
 florentina,Subspecies,7869,Species,32195,A,"(I. Lea, 1857)",,CITES_EU
 inornatus,Subspecies,7828,Species,7821,A,"(Reinhardt, 1843)",,CITES_EU
 cenchria,Subspecies,7827,Species,7816,A,"(Linnaeus, 1758)",,CITES_EU
-fosteri,Subspecies,7825,Genus,7824,N,"Barbour, 1941",,CITES_EU
+fosteri,Subspecies,7825,Species,7824,N,"Barbour, 1941",,CITES_EU
 nereis,Subspecies,7751,Species,7750,A,"(Merriam, 1904)",,CITES_EU
 richardsi,Subspecies,6854,Species,30756,A,"Tristram, 1879",,CITES_EU
 phillipsii,Subspecies,6674,Species,6692,A,"Gray, 1841",,CITES_EU
