@@ -29,11 +29,11 @@ body {
 	margin: 0;
 	color: #868686;
 	font: 14px/18px 'Open Sans', Helvetica, Arial, sans-serif;
-	background: #f3f1f1;
+  background: #f3f1f1;
 	height: 100%;
 	min-width: 980px;
 	background-image: url(/assets/species/background_1.jpg);
-	background-size: 100%;
+	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: top center;
 }
@@ -288,7 +288,6 @@ a.learn-more:hover {
 }
 #footer .sponsor {
 	float: left;
-  padding: 24px 0 0;
 }
 #footer .sponsor li {
 	float: left;
