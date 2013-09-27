@@ -60,30 +60,12 @@ shared_context "Loxodonta africana" do
       :parent => @genus
     )
 
-    cites_lc1 = create_cites_III_addition(
-     :taxon_concept => @species,
-     :effective_at => '1976-02-26'
-    )
-    create(
-      :listing_distribution,
-      :geo_entity => ghana,
-      :listing_change => cites_lc1
-    )
-    create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '1977-02-04'
-    )
-    create_cites_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '1990-01-18',
-     :is_current => true
-    )
-    create_eu_A_addition(
-     :taxon_concept => @species,
-     :effective_at => '1990-01-18',
-     :is_current => true
-    )
+    create(:distribution, :taxon_concept_id => @species.id, :geo_entity_id => botswana.id)
 
+    cites_lc1 = create_cites_I_addition(
+     :taxon_concept => @species,
+     :effective_at => '1997-09-18'
+    )
     cites_lc2 = create_cites_II_addition(
      :taxon_concept => @species,
      :effective_at => '1997-09-18'
@@ -96,12 +78,22 @@ shared_context "Loxodonta africana" do
         :is_party => false
       )
     end
-    cites_lc3 = create_cites_II_addition(
+    cites_lc1 = create_cites_I_addition(
      :taxon_concept => @species,
      :effective_at => '2000-07-19',
      :is_current => true
     )
-    eu_lc3 = create_eu_B_addition(
+    cites_lc2 = create_cites_II_addition(
+     :taxon_concept => @species,
+     :effective_at => '2000-07-19',
+     :is_current => true
+    )
+    eu_lc1 = create_eu_A_addition(
+     :taxon_concept => @species,
+     :effective_at => '2000-07-19',
+     :is_current => true
+    )
+    eu_lc2 = create_eu_B_addition(
      :taxon_concept => @species,
      :effective_at => '2000-07-19',
      :is_current => true
@@ -110,13 +102,13 @@ shared_context "Loxodonta africana" do
       create(
         :listing_distribution,
         :geo_entity => country,
-        :listing_change => cites_lc3,
+        :listing_change => cites_lc2,
         :is_party => false
       )
       create(
         :listing_distribution,
         :geo_entity => country,
-        :listing_change => eu_lc3,
+        :listing_change => eu_lc2,
         :is_party => false
       )
     end
