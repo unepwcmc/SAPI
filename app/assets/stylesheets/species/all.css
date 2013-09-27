@@ -277,6 +277,7 @@ a.learn-more:hover {
 }
 .power-by {
 	float: right;
+	padding: 24px 0 0;
 }
 
 .power-by img { display: block; }
