@@ -22,11 +22,16 @@ BEGIN
      WHEN (
       -- there are listed populations
       ARRAY_UPPER(listed_geo_entities_ids, 1) IS NOT NULL
-      -- and the taxon does not occur in any of them
+      -- and the taxon has its own distribution and does not occur in any of them
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
       AND NOT listed_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
     )
     -- when all populations are excluded
-    OR excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+    OR (
+      ARRAY_UPPER(excluded_geo_entities_ids, 1) IS NOT NULL
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
+      AND excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+    )
     THEN FALSE
     WHEN ARRAY_UPPER(excluded_taxon_concept_ids, 1) IS NOT NULL 
     -- if taxon or any of its ancestors is excluded from this listing
@@ -93,11 +98,16 @@ BEGIN
     WHEN (
       -- there are listed populations
       ARRAY_UPPER(hi.listed_geo_entities_ids, 1) IS NOT NULL
-      -- and the taxon does not occur in any of them
+      -- and the taxon has its own distribution and does not occur in any of them
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
       AND NOT hi.listed_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
     )
     -- when all populations are excluded
-    OR hi.excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+    OR (
+      ARRAY_UPPER(hi.excluded_geo_entities_ids, 1) IS NOT NULL
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
+      AND hi.excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+    )
     THEN FALSE
     WHEN ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL 
     -- if taxon or any of its ancestors is excluded from this listing
@@ -114,6 +124,8 @@ BEGIN
     THEN FALSE
     WHEN listing_changes_timeline.context -> hi.species_listing_id::TEXT = hi.taxon_concept_id::TEXT
     OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
+    -- this line to make Moschus leucogaster happy
+    OR AVALS(listing_changes_timeline.context) @> ARRAY[hi.taxon_concept_id::TEXT] 
     THEN TRUE
     WHEN listing_changes_timeline.context = ''''::HSTORE  --this would be the case when deleted
     AND hi.change_type_name = ''ADDITION''
