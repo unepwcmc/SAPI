@@ -285,7 +285,11 @@ body.inner .push {
 }
 .power-by {
 	float: right;
-	padding: 24px 0 0;
+	padding: 30px 0 0;
+}
+
+body.inner .power-by {
+  padding: 50px 0 0;
 }
 
 .power-by img { display: block; }
@@ -297,8 +301,13 @@ body.inner .push {
 }
 #footer .sponsor {
 	float: left;
-  padding: 24px 0 0;
+  padding: 30px 0 0;
 }
+
+body.inner #footer .sponsor {
+  padding: 50px 0 0;
+}
+
 #footer .sponsor li {
 	float: left;
 	margin: 0 20px 0 0;
@@ -315,7 +324,6 @@ body.inner .push {
 body.inner #footer .holder{
   margin: 0 auto;
 	width: 940px;
-	padding: 80px 0;
 	overflow: hidden;
 }
 
