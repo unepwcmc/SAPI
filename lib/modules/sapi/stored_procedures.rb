@@ -2,13 +2,16 @@ module Sapi
   module StoredProcedures
 
     REBUILD_PROCEDURES = [
+      :listing_changes_mview,
       :taxonomy,
       :cites_listing,
       :eu_listing,
       :cms_listing,
       :cites_accepted_flags,
       :taxon_concepts_mview,
-      :listing_changes_mview
+      :cites_species_listing_mview,
+      :eu_species_listing_mview,
+      :cms_species_listing_mview
     ]
 
     def self.rebuild(options = {})
@@ -17,6 +20,9 @@ module Sapi
       procedures &= options[:only] unless options[:only].nil?
       if procedures && [:taxon_concepts_mview, :listing_changes_mview]
         procedures << :touch_taxon_concepts
+      end
+      if procedures && [:cites_listing, :eu_listing, :cms_listing]
+        procedures.unshift :listing_changes_mview
       end
       procedures.each{ |p|
         puts "Starting procedure: #{p}"
