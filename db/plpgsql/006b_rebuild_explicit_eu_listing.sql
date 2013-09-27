@@ -13,56 +13,34 @@ CREATE OR REPLACE FUNCTION rebuild_explicit_eu_listing_for_node(node_id integer)
       hstore('eu_listing_original', ARRAY_TO_STRING(
         -- unnest to filter out the nulls
         ARRAY(SELECT * FROM UNNEST(
-          ARRAY[listing -> 'eu_A', listing -> 'eu_B', listing -> 'eu_C', listing -> 'eu_D']) s
-          WHERE s IS NOT NULL),
+          ARRAY[
+            listing -> 'eu_A', listing -> 'eu_B', listing -> 'eu_C',
+            listing -> 'eu_D', listing -> 'eu_not_listed'
+          ]
+        ) s WHERE s IS NOT NULL),
           '/'
         )
       ) AS listing
       FROM (
         SELECT taxon_concept_id,
-          hstore('eu_A', CASE WHEN SUM(eu_A) > 0 THEN 'A' ELSE NULL END) ||
-          hstore('eu_B', CASE WHEN SUM(eu_B) > 0 THEN 'B' ELSE NULL END) ||
-          hstore('eu_C', CASE WHEN SUM(eu_C) > 0 THEN 'C' ELSE NULL END) ||
-          hstore('eu_D', CASE WHEN SUM(eu_D) > 0 THEN 'D' ELSE NULL END)
-          AS listing
-        FROM (
-          SELECT taxon_concept_id, effective_at, species_listings.abbreviation, change_types.name AS change_type,
-          CASE
-            WHEN species_listings.abbreviation = 'A' AND change_types.name = 'ADDITION' THEN 1
-            WHEN (species_listings.abbreviation = 'A' OR species_listing_id IS NULL)
-              AND change_types.name = 'DELETION' THEN -1
-            ELSE 0
-          END AS eu_A,
-          CASE
-            WHEN species_listings.abbreviation = 'B' AND change_types.name = 'ADDITION' THEN 1
-            WHEN (species_listings.abbreviation = 'B' OR species_listing_id IS NULL)
-              AND change_types.name = 'DELETION' THEN -1
-            ELSE 0
-          END AS eu_B,
-          CASE
-            WHEN species_listings.abbreviation = 'C' AND change_types.name = 'ADDITION' THEN 1
-            WHEN (species_listings.abbreviation = 'C' OR species_listing_id IS NULL)
-              AND change_types.name = 'DELETION' AND
-                (listing_distributions.id IS NULL OR NOT listing_distributions.is_party) THEN -1
-            ELSE 0
-          END AS eu_C,
-          CASE
-            WHEN species_listings.abbreviation = 'D' AND change_types.name = 'ADDITION' THEN 1
-            WHEN (species_listings.abbreviation = 'D' OR species_listing_id IS NULL)
-              AND change_types.name = 'DELETION' AND
-                (listing_distributions.id IS NULL OR NOT listing_distributions.is_party) THEN -1
-            ELSE 0
-          END AS eu_D
-          FROM listing_changes
-          INNER JOIN change_types ON change_type_id = change_types.id
-            AND change_types.name IN ('ADDITION','DELETION')
-          INNER JOIN  designations ON change_types.designation_id = designations.id
-            AND designations.name = 'EU'
-          INNER JOIN species_listings ON species_listing_id = species_listings.id
-          LEFT JOIN listing_distributions
-            ON listing_distributions.listing_change_id = listing_changes.id
-          WHERE effective_at <= NOW() AND is_current = 't'
-        ) AS q
+        CASE 
+          WHEN BOOL_OR(species_listing_name = 'A') 
+          THEN hstore('eu_A', 'A') ELSE hstore('eu_A', NULL)
+        END || 
+        CASE 
+          WHEN BOOL_OR(species_listing_name = 'B') 
+          THEN hstore('eu_B', 'B') ELSE hstore('eu_B', NULL)
+        END || 
+        CASE 
+          WHEN BOOL_OR(species_listing_name = 'C') 
+          THEN hstore('eu_C', 'C') ELSE hstore('eu_C', NULL)
+        END || 
+        CASE
+          WHEN BOOL_OR(species_listing_name = 'D') 
+          THEN hstore('eu_D', 'D') ELSE hstore('eu_D', NULL)
+        END AS listing
+        FROM eu_listing_changes_mview
+        WHERE change_type_name = 'ADDITION' AND is_current
         GROUP BY taxon_concept_id
       ) AS qq
     ) AS qqq

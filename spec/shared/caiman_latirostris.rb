@@ -50,6 +50,8 @@ shared_context "Caiman latirostris" do
       :name_status => 'S'
     )
 
+    create(:distribution, :taxon_concept_id => @species.id, :geo_entity_id => argentina.id)
+
     create(
       :taxon_relationship,
       :taxon_relationship_type => has_synonym,
