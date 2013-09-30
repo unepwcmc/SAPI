@@ -58,6 +58,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
 
     -- set status property to 'LISTED' for all explicitly listed taxa
     -- i.e. ones which have at least one current ADDITION
+    -- that is not an inclusion
     -- also set status_original & level_of_listing flags to true
     -- also set the listing_updated_at property
     WITH listed_taxa AS (
@@ -68,6 +69,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
         AND is_current = 't'
         AND change_type_id = addition_id
       WHERE taxonomy_id = designation.taxonomy_id
+      AND inclusion_taxon_concept_id IS NULL
       GROUP BY taxon_concepts.id
     )
     UPDATE taxon_concepts
