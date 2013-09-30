@@ -2,8 +2,8 @@ module Sapi
   module StoredProcedures
 
     REBUILD_PROCEDURES = [
-      :listing_changes_mview,
       :taxonomy,
+      :listing_changes_mview,
       :cites_listing,
       :eu_listing,
       :cms_listing,
@@ -17,25 +17,6 @@ module Sapi
     def self.rebuild(options = {})
       Sapi::Triggers.disable_triggers
       procedures = REBUILD_PROCEDURES - (options[:except] || [])
-      procedures &= options[:only] unless options[:only].nil?
-      unless (procedures & [:cites_listing, :eu_listing, :cms_listing]).empty?
-        # move to beginning
-        procedures -= [:listing_changes_mview]
-        procedures.unshift :listing_changes_mview
-      end
-      unless (procedures & [:listing_changes_mview]).empty?
-        # move to end
-        procedures -= [
-          :cites_species_listing_mview,
-          :eu_species_listing_mview,
-          :cms_species_listing_mview
-        ]
-        procedures += [
-          :cites_species_listing_mview,
-          :eu_species_listing_mview,
-          :cms_species_listing_mview
-        ]
-      end
       unless (procedures & [:taxon_concepts_mview, :listing_changes_mview]).empty?
         procedures << :touch_taxon_concepts
       end
