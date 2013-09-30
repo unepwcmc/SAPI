@@ -94,7 +94,7 @@ namespace :import do
     Rake::Task["import:fix_symbols"].invoke
 
     Sapi::create_indexes
-    Sapi::rebuild(:disable_triggers => true)
+    Sapi::rebuild
 
     Sapi::enable_triggers
 
@@ -102,7 +102,7 @@ namespace :import do
   end
 
   desc 'Drops and reimports db'
-  task :redo => ["db:drop", "db:create", "db:migrate", "import:cleaned"]
+  task :redo => ["db:drop", "db:create", "db:migrate", "import:cleaned", "downloads:cache:clear"]
 
   desc 'Shows database summary stats'
   task :stats => :environment do
