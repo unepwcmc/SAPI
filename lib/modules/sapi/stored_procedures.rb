@@ -2,8 +2,8 @@ module Sapi
   module StoredProcedures
 
     REBUILD_PROCEDURES = [
-      :listing_changes_mview,
       :taxonomy,
+      :listing_changes_mview,
       :cites_listing,
       :eu_listing,
       :cms_listing,
@@ -17,12 +17,8 @@ module Sapi
     def self.rebuild(options = {})
       Sapi::Triggers.disable_triggers
       procedures = REBUILD_PROCEDURES - (options[:except] || [])
-      procedures &= options[:only] unless options[:only].nil?
-      if procedures && [:taxon_concepts_mview, :listing_changes_mview]
+      unless (procedures & [:taxon_concepts_mview, :listing_changes_mview]).empty?
         procedures << :touch_taxon_concepts
-      end
-      if procedures && [:cites_listing, :eu_listing, :cms_listing]
-        procedures.unshift :listing_changes_mview
       end
       procedures.each{ |p|
         puts "Starting procedure: #{p}"

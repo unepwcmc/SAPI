@@ -25,18 +25,8 @@ namespace :db do
       end
     end
     desc "Rebuild all computed values"
-    task :rebuild_all => [:migrate] do
-      Sapi.rebuild(:disable_triggers => true)
-    end
-    desc "Rebuild all materialized views"
-    task :rebuild_mviews => [:rebuild_taxon_concepts_mview, :rebuild_listing_changes_mview]
-    desc "Rebuild taxon concepts materialized view"
-    task :rebuild_taxon_concepts_mview => [:migrate] do
-      Sapi.rebuild(:only => [:taxon_concepts_mview], :disable_triggers => false)
-    end
-    desc "Rebuild listing changes materialized view"
-    task :rebuild_listing_changes_mview => [:migrate] do
-      Sapi.rebuild(:only => [:listing_changes_mview], :disable_triggers => false)
+    task :rebuild => [:migrate] do
+      Sapi.rebuild
     end
   end
   task :migrate do
