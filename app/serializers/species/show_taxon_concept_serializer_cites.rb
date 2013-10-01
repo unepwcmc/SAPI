@@ -138,6 +138,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       select(<<-SQL
               CASE
                 WHEN listing_changes_mview.change_type_name = 'DELETION'
+                  OR listing_changes_mview.change_type_name = 'RESERVATION_WITHDRAWAL'
                   THEN 'f'
                 ELSE listing_changes_mview.is_current
               END AS is_current,
