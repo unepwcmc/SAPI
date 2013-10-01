@@ -101,8 +101,8 @@
           ORDER BY effective_at,
           CASE
             WHEN change_type_name = ''DELETION'' THEN 0
-            WHEN change_type_name = ''ADDITION'' THEN 1
-            WHEN change_type_name = ''RESERVATION_WITHDRAWAL'' THEN 2
+            WHEN change_type_name = ''RESERVATION_WITHDRAWAL'' THEN 1
+            WHEN change_type_name = ''ADDITION'' THEN 2
             WHEN change_type_name = ''RESERVATION'' THEN 3
             WHEN change_type_name = ''EXCEPTION'' THEN 4
           END,
