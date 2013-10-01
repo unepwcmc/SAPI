@@ -22,6 +22,15 @@ describe TaxonConcept do
           specify { @species2.cites_listed.should == false }
         end
       end
+
+      describe :cites_show do
+        context "for species Dalbergia abbreviata" do
+          specify { @species1.cites_show.should be_false }
+        end
+        context "for species Dalbergia abrahamii" do
+          specify { @species2.cites_show.should be_true }
+        end
+      end
     end
   end
 end
