@@ -82,8 +82,10 @@ BEGIN
     hi.change_type_id,
     hi.effective_at,
     CASE 
-    WHEN hi.inclusion_taxon_concept_id IS NOT NULL
-    OR hi.tree_distance < listing_changes_timeline.context_tree_distance
+    WHEN (
+        hi.inclusion_taxon_concept_id IS NOT NULL
+        AND AVALS(listing_changes_timeline.context) @> ARRAY[hi.taxon_concept_id::TEXT]
+      ) OR hi.tree_distance < listing_changes_timeline.context_tree_distance
     THEN hi.tree_distance
     ELSE listing_changes_timeline.context_tree_distance
     END,
