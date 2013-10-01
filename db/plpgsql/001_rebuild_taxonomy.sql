@@ -286,7 +286,11 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomy_for_node(node_id integer) RETURNS vo
     FROM q
     WHERE taxon_concepts.id = q.id;
 
-    PERFORM rebuild_taxonomic_positions_for_node(node_id);
+    -- do not recalculate position for individual node
+    -- as it takes too long to run on insert trigger
+    IF node_id IS NULL THEN
+      PERFORM rebuild_taxonomic_positions_for_node(node_id);
+    END IF;
 
   END;
   $$;
