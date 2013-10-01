@@ -10,8 +10,7 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :country_ids => [america.id]
         })
-        checklist.generate(0,100)
-        checklist.taxon_concepts
+        checklist.results
       }
       specify do
         subject.should_not include(@species)
@@ -22,8 +21,7 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :country_ids => [mexico.id]
         })
-        checklist.generate(0,100)
-        checklist.taxon_concepts
+        checklist.results
       }
       specify do
         subject.should_not include(@species)
@@ -34,8 +32,7 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :country_ids => [canada.id]
         })
-        checklist.generate(0,100)
-        checklist.taxon_concepts
+        checklist.results
       }
       specify do
         subject.should_not include(@species)
@@ -46,8 +43,7 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :country_ids => [argentina.id]
         })
-        checklist.generate(0,100)
-        checklist.taxon_concepts
+        checklist.results
       }
       specify do
         subject.should include(@species)
@@ -58,8 +54,7 @@ describe Checklist do
     #    checklist = Checklist::Checklist.new({
     #      :country_ids => [south_america.id]
     #    })
-    #    checklist.generate(0,100)
-    #    checklist.taxon_concepts
+    #    checklist.results
     #  }
     #  specify do
     #    subject.should include(@species)
@@ -70,8 +65,7 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :country_ids => [north_america.id]
         })
-        checklist.generate(0,100)
-        checklist.taxon_concepts
+        checklist.results
       }
       specify do
         subject.should_not include(@species)
@@ -82,8 +76,7 @@ describe Checklist do
         checklist = Checklist::Checklist.new({
           :country_ids => [north_america.id, argentina.id]
         })
-        checklist.generate(0,100)
-        checklist.taxon_concepts
+        checklist.results
       }
       specify do
         subject.should include(@species)

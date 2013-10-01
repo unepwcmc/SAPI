@@ -11,8 +11,7 @@ describe Checklist do
           :scientific_name => "Arctocephalus townsendi",
           :output_layout => :taxonomic
         })
-        checklist.generate(0,100)
-        checklist.taxon_concepts
+        checklist.results
       }
       specify{
       	subject.first.full_name.should == @species2.full_name
@@ -25,8 +24,7 @@ describe Checklist do
           :scientific_name => "Guadalupe Fur Seal",
           :output_layout => :taxonomic
         })
-        checklist.generate(0,100)
-        checklist.taxon_concepts
+        checklist.results
       }
       specify{
       	subject.first.full_name.should == @species2.full_name

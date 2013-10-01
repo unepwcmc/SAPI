@@ -1,6 +1,11 @@
 Trade.AnnualReportUploadController = Ember.ObjectController.extend
   content: null
-  needs: ['visibleSandboxShipments']
+
+  tableController: Ember.computed ->
+    controller = Ember.get('Trade.SandboxShipmentsTable.TableController').create()
+    controller.set 'shipments', @get('content.sandboxShipments')
+    controller
+  .property()
 
   actions:
     submitShipments: ()->
@@ -10,4 +15,8 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
       @transitionToRoute('annual_report_uploads')
 
     showMatchingRecords: (context) ->
-      @set('controllers.visibleSandboxShipments.content', context.get('sandboxShipments'))
+      @set('tableController.shipments', context.get('sandboxShipments'))
+
+    saveChanges: () ->
+      @get('store').commit()
+      @transitionToRoute('annual_report_upload', @.get('content'))
