@@ -247,6 +247,37 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
       EXECUTE sql;
     END IF;
 
+    -- current inclusions superceded by deletions of higher taxa or self
+    -- Notomys aquilo, Caracara lutosa, Sceloglaux albifacies
+
+    sql := 'WITH current_inclusions AS (
+      SELECT * FROM ' || lc_table_name || '
+      WHERE change_type_name = ''ADDITION''
+      AND inclusion_taxon_concept_id IS NOT NULL
+      AND is_current
+    ), deleted_inclusions AS (
+      SELECT current_inclusions.id, current_inclusions.taxon_concept_id
+      FROM current_inclusions
+      JOIN ' || lc_table_name || ' deletions
+      ON deletions.change_type_name = ''DELETION''
+      AND deletions.explicit_change
+      AND deletions.taxon_concept_id = current_inclusions.taxon_concept_id
+      AND (
+        -- either the higher taxon was deleted
+        deletions.original_taxon_concept_id = current_inclusions.inclusion_taxon_concept_id
+        -- or the included taxon itself
+        OR deletions.taxon_concept_id = deletions.original_taxon_concept_id
+      )
+      AND deletions.effective_at > current_inclusions.effective_at 
+    )
+    UPDATE ' || lc_table_name || ' lc
+    SET is_current = FALSE
+    FROM deleted_inclusions
+    WHERE lc.id = deleted_inclusions.id 
+    AND lc.taxon_concept_id = deleted_inclusions.taxon_concept_id';
+
+    EXECUTE sql;
+
     RAISE INFO '* % merging inclusion records with their ancestor counterparts', lc_table_name;
 
     sql := 'WITH double_inclusions AS (
