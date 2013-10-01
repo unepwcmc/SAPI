@@ -67,10 +67,18 @@ shared_context "Moschus" do
         :geo_entity => country
       )
     end
-    create(
-      :distribution,
-      :taxon_concept => @species2,
-      :geo_entity => china
+    [@species2, @subspecies].each do |taxon|
+      create(
+        :distribution,
+        :taxon_concept => taxon,
+        :geo_entity => china
+      )
+    end
+
+    create_cites_I_addition(
+     :taxon_concept => @subspecies,
+     :effective_at => '1975-07-01',
+     :is_current => false
     )
 
     create_cites_II_addition(
@@ -79,10 +87,29 @@ shared_context "Moschus" do
      :is_current => false
     )
 
+    lc = create_cites_I_addition(
+     :taxon_concept => @species2,
+     :effective_at => '1979-06-28',
+     :is_current => false
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => china,
+      :listing_change => lc,
+      :is_party => false
+    )
+
+    create_cites_II_addition(
+     :taxon_concept => @species2,
+     :effective_at => '1979-06-28',
+     :inclusion_taxon_concept_id => @genus.id,
+     :is_current => false
+    )
+
     create_cites_I_addition(
      :taxon_concept => @subspecies,
      :effective_at => '1979-06-28',
-     :inclusion_taxon_concept_id => @species2,
+     :inclusion_taxon_concept_id => @species2.id,
      :is_current => true
     )
 
