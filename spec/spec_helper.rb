@@ -1,15 +1,12 @@
-require "codeclimate-test-reporter"
-CodeClimate::TestReporter.start
+require 'codeclimate-test-reporter' if ENV['CI']
 require 'simplecov'
 require 'coveralls'
 
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-  SimpleCov::Formatter::HTMLFormatter,
-  Coveralls::SimpleCov::Formatter
-]
-SimpleCov.start 'rails' do
- use_merging true
-end
+formatters = [Coveralls::SimpleCov::Formatter, SimpleCov::Formatter::HTMLFormatter]
+formatters.push CodeClimate::TestReporter::Formatter if ENV['CI']
+
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[*formatters]
+SimpleCov.start 'rails'
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
@@ -53,6 +50,7 @@ RSpec.configure do |config|
   end
 
   config.before(:all) do
+    #Rails.cache.clear
     DatabaseCleaner.clean_with(:truncation)
   end
 

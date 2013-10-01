@@ -83,15 +83,36 @@ shared_context "Psittaciformes" do
      :taxon_concept => @order,
      :effective_at => '1981-06-06'
     )
-    create_cites_II_addition(
+    cites_lc = create_cites_II_addition(
      :taxon_concept => @order,
      :effective_at => '2005-01-12',
      :is_current => true
     )
-    create_eu_B_addition(
+    create_cites_II_exception(
+      :taxon_concept => @species2_1,
+      :effective_at => '2005-01-12',
+      :parent_id => cites_lc.id
+    )
+    create_cites_II_exception(
+      :taxon_concept => @species2_3,
+      :effective_at => '2005-01-12',
+      :parent_id => cites_lc.id
+    )
+
+    eu_lc = create_eu_B_addition(
      :taxon_concept => @order,
      :effective_at => '2005-01-12',
      :is_current => true
+    )
+    create_eu_B_exception(
+      :taxon_concept => @species2_1,
+      :effective_at => '2005-01-12',
+      :parent_id => eu_lc.id
+    )
+    create_eu_B_exception(
+      :taxon_concept => @species2_3,
+      :effective_at => '2005-01-12',
+      :parent_id => eu_lc.id
     )
 
     create_cites_II_addition(
@@ -134,8 +155,7 @@ shared_context "Psittaciformes" do
     )
     create_eu_B_addition(
      :taxon_concept => @family2,
-     :effective_at => '1981-06-06',
-     :is_current => true
+     :effective_at => '1981-06-06'
     )
 
     create_cites_II_addition(
@@ -144,8 +164,7 @@ shared_context "Psittaciformes" do
     )
     create_cites_II_addition(
      :taxon_concept => @family2,
-     :effective_at => '1981-06-06',
-     :is_current => true
+     :effective_at => '1981-06-06'
     )
     cites_lc1 = create_cites_II_addition(
      :taxon_concept => @family2,

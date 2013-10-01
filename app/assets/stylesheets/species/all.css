@@ -29,11 +29,11 @@ body {
 	margin: 0;
 	color: #868686;
 	font: 14px/18px 'Open Sans', Helvetica, Arial, sans-serif;
-	background: #f3f1f1;
+  background: #f3f1f1;
 	height: 100%;
 	min-width: 980px;
 	background-image: url(/assets/species/background_1.jpg);
-	background-size: 100%;
+	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: top center;
 }
@@ -77,11 +77,16 @@ p.browsehappy a {
   color: darkRed;
 }
 
-#wrapper { min-height: 100%; }
+#wrapper { min-height: 100%; 
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -202px;
+}
 .w1 {
 	width: 940px;
 	margin: 0 auto -30px;
-	padding: 0 0 203px;
+	padding: 0 0 202px;
 }
 #header {
 	width: 100%;
@@ -113,6 +118,12 @@ html.lt-ie9 #header .logo{
 #header .logo a {
 	display: block;
 	height: 100%;
+}
+span.beta{
+  font-size: 13px;
+  color: #f66;
+  font-style: italic;
+  margin-left: 10px;
 }
 #nav {
 	float: right;
@@ -262,21 +273,29 @@ a.learn-more:hover {
 	transition: all 0.5s ease;
 }
 
+.push {
+  height: 202px;
+}
+body.inner .push {
+  height: 30px;
+}
 #footer {
 	background: #A4C5DA;
   height: 202px;
 	border-top: 1px solid #6b94af;
-  position: relative;
-  margin: -203px 0 0;
 }
 #footer .holder {
 	margin: 0 auto;
 	width: 940px;
-	padding: 44px 0 0;
 	overflow: hidden;
 }
 .power-by {
 	float: right;
+	padding: 30px 0 0;
+}
+
+body.inner .power-by {
+  padding: 50px 0 0;
 }
 
 .power-by img { display: block; }
@@ -288,8 +307,13 @@ a.learn-more:hover {
 }
 #footer .sponsor {
 	float: left;
-  padding: 24px 0 0;
+  padding: 30px 0 0;
 }
+
+body.inner #footer .sponsor {
+  padding: 50px 0 0;
+}
+
 #footer .sponsor li {
 	float: left;
 	margin: 0 20px 0 0;
@@ -306,7 +330,6 @@ a.learn-more:hover {
 body.inner #footer .holder{
   margin: 0 auto;
 	width: 940px;
-	padding: 80px 0;
 	overflow: hidden;
 }
 

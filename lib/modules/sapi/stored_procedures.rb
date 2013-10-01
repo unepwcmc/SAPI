@@ -3,25 +3,23 @@ module Sapi
 
     REBUILD_PROCEDURES = [
       :taxonomy,
+      :listing_changes_mview,
       :cites_listing,
       :eu_listing,
       :cms_listing,
       :cites_accepted_flags,
       :taxon_concepts_mview,
-      :listing_changes_mview
+      :cites_species_listing_mview,
+      :eu_species_listing_mview,
+      :cms_species_listing_mview,
+      :touch_taxon_concepts
     ]
 
     def self.rebuild(options = {})
       Sapi::Triggers.disable_triggers
-      procedures = REBUILD_PROCEDURES - (options[:except] || [])
-      procedures &= options[:only] unless options[:only].nil?
-      if procedures && [:taxon_concepts_mview, :listing_changes_mview]
-        procedures << :touch_taxon_concepts
-      end
-      procedures.each{ |p|
-        puts "Starting procedure: #{p}"
+      REBUILD_PROCEDURES.each{ |p|
+        puts "Procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
-        puts "Ending procedure: #{p}"
       }
 
       changed_cnt = TaxonConcept.where('touched_at IS NOT NULL AND touched_at > updated_at').count

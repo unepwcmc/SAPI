@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       exception_id int;
       status_flag varchar;
       status_original_flag varchar;
+      listing_original_flag varchar;
+      listing_flag varchar;
       listing_updated_at_flag varchar;
       not_listed_flag varchar;
       show_flag varchar;
@@ -24,6 +26,8 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
 
     status_flag = LOWER(designation.name) || '_status';
     status_original_flag = LOWER(designation.name) || '_status_original';
+    listing_original_flag := LOWER(designation.name) || '_listing_original';
+    listing_flag := LOWER(designation.name) || '_listing';
     listing_updated_at_flag = LOWER(designation.name) || '_updated_at';
     level_of_listing_flag := LOWER(designation.name) || '_level_of_listing';
     not_listed_flag := LOWER(designation.name) || '_not_listed';
@@ -31,9 +35,9 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     
     
     flags_to_reset := ARRAY[
-      status_flag, status_original_flag, not_listed_flag,
-      listing_updated_at_flag, level_of_listing_flag, show_flag,
-      LOWER(designation.name) || '_listing'
+      status_flag, status_original_flag, listing_flag, listing_original_flag, 
+      not_listed_flag, listing_updated_at_flag, level_of_listing_flag,
+      show_flag
     ];
     IF designation.name = 'CITES' THEN
       flags_to_reset := flags_to_reset ||
@@ -54,6 +58,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
 
     -- set status property to 'LISTED' for all explicitly listed taxa
     -- i.e. ones which have at least one current ADDITION
+    -- that is not an inclusion
     -- also set status_original & level_of_listing flags to true
     -- also set the listing_updated_at property
     WITH listed_taxa AS (
@@ -64,6 +69,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
         AND is_current = 't'
         AND change_type_id = addition_id
       WHERE taxonomy_id = designation.taxonomy_id
+      AND inclusion_taxon_concept_id IS NULL
       GROUP BY taxon_concepts.id
     )
     UPDATE taxon_concepts

@@ -59,6 +59,9 @@ BEGIN
     -- BEGIN context
     CASE
     WHEN change_types.name = ''DELETION''
+    AND hi.taxon_concept_id = hi.affected_taxon_concept_id
+    THEN listing_changes_timeline.context - ARRAY[hi.species_listing_id::TEXT]
+    WHEN change_types.name = ''DELETION''
     THEN listing_changes_timeline.context - HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
     WHEN change_types.name = ''ADDITION''
     THEN listing_changes_timeline.context || HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)

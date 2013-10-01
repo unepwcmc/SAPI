@@ -63,6 +63,9 @@ BEGIN
     )
     THEN HSTORE(hi.species_listing_id::TEXT, hi.inclusion_taxon_concept_id::TEXT)
     WHEN change_types.name = ''DELETION''
+    AND hi.taxon_concept_id = hi.affected_taxon_concept_id
+    THEN listing_changes_timeline.context - ARRAY[hi.species_listing_id::TEXT]
+    WHEN change_types.name = ''DELETION''
     THEN listing_changes_timeline.context - HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
     WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
     AND change_types.name = ''ADDITION''
@@ -82,8 +85,10 @@ BEGIN
     hi.change_type_id,
     hi.effective_at,
     CASE 
-    WHEN hi.inclusion_taxon_concept_id IS NOT NULL
-    OR hi.tree_distance < listing_changes_timeline.context_tree_distance
+    WHEN (
+        hi.inclusion_taxon_concept_id IS NOT NULL
+        AND AVALS(listing_changes_timeline.context) @> ARRAY[hi.taxon_concept_id::TEXT]
+      ) OR hi.tree_distance < listing_changes_timeline.context_tree_distance
     THEN hi.tree_distance
     ELSE listing_changes_timeline.context_tree_distance
     END,
@@ -116,6 +121,12 @@ BEGIN
     OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
     THEN TRUE
     WHEN listing_changes_timeline.context = ''''::HSTORE  --this would be the case when deleted
+    AND (
+      ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL
+      AND NOT hi.excluded_taxon_concept_ids && ARRAY[hi.affected_taxon_concept_id]
+      OR ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NULL
+    )
+    AND hi.inclusion_taxon_concept_id IS NULL
     AND hi.change_type_name = ''ADDITION''
     THEN TRUE -- allows for re-listing
     WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance

@@ -38,7 +38,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
              SQL
       ).
       order(<<-SQL
-              trade_restrictions.start_date DESC, geo_entities.name_en ASC, trade_restrictions.notes ASC,
+              trade_restrictions.start_date DESC,
+              geo_entities.name_en ASC, trade_restrictions.notes ASC,
               subspecies_info DESC
             SQL
       ).all
@@ -138,6 +139,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       select(<<-SQL
               CASE
                 WHEN listing_changes_mview.change_type_name = 'DELETION'
+                  OR listing_changes_mview.change_type_name = 'RESERVATION_WITHDRAWAL'
                   THEN 'f'
                 ELSE listing_changes_mview.is_current
               END AS is_current,
@@ -166,10 +168,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       order(<<-SQL
           effective_at DESC,
           CASE
-            WHEN change_type_name = 'ADDITION' THEN 3
-            WHEN change_type_name = 'RESERVATION' THEN 2
-            WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
-            WHEN change_type_name = 'DELETION' THEN 0
+            WHEN change_type_name = 'ADDITION' THEN 0
+            WHEN change_type_name = 'RESERVATION' THEN 1
+            WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
+            WHEN change_type_name = 'DELETION' THEN 3
           END,
           subspecies_info DESC
         SQL
