@@ -20,13 +20,13 @@ module Sapi
 
     def self.disable_triggers
       TABLES_WITH_TRIGGERS.each do |table|
-        ActiveRecord::Base.connection.execute("ALTER TABLE IF EXISTS #{table} DISABLE TRIGGER USER")
+        ActiveRecord::Base.connection.execute("ALTER TABLE #{table} DISABLE TRIGGER USER")
       end
     end
 
     def self.enable_triggers
       TABLES_WITH_TRIGGERS.each do |table|
-        ActiveRecord::Base.connection.execute("ALTER TABLE IF EXISTS #{table} ENABLE TRIGGER USER")
+        ActiveRecord::Base.connection.execute("ALTER TABLE #{table} ENABLE TRIGGER USER")
       end
     end
 
