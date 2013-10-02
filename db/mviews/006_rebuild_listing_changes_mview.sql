@@ -44,7 +44,6 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     END LOOP;
 
     sql := sql || ARRAY_TO_STRING(designations, ' UNION ');
-    RAISE INFO '%', sql;
 
     EXECUTE sql;
 

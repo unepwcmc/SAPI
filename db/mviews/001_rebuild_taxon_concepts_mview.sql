@@ -133,8 +133,16 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     ) common_names ON taxon_concepts.id = common_names.taxon_concept_id_com
     LEFT JOIN (
       SELECT taxon_concepts.id AS taxon_concept_id_syn,
-      ARRAY_AGG(synonym_tc.full_name) AS synonyms_ary,
-      ARRAY_AGG(synonym_tc.author_year) AS synonyms_author_years_ary
+      ARRAY(
+        SELECT *
+        FROM UNNEST(ARRAY_AGG(synonym_tc.full_name)) s
+        WHERE s IS NOT NULL
+      ) AS synonyms_ary,
+      ARRAY(
+        SELECT *
+        FROM UNNEST(ARRAY_AGG(synonym_tc.author_year)) s
+        WHERE s IS NOT NULL
+      ) AS synonyms_author_years_ary
       FROM taxon_concepts
       LEFT JOIN taxon_relationships
       ON "taxon_relationships"."taxon_concept_id" = "taxon_concepts"."id"
@@ -154,7 +162,11 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     ) subspecies ON taxon_concepts.id = subspecies.taxon_concept_id_sub
     LEFT JOIN (
       SELECT taxon_concepts.id AS taxon_concept_id_cnt,
-      ARRAY_AGG(geo_entities.id ORDER BY geo_entities.name_en) AS countries_ids_ary
+      ARRAY(
+        SELECT *
+        FROM UNNEST(ARRAY_AGG(geo_entities.id ORDER BY geo_entities.name_en)) s
+        WHERE s IS NOT NULL
+      ) AS countries_ids_ary
       FROM taxon_concepts
       LEFT JOIN distributions
       ON "distributions"."taxon_concept_id" = "taxon_concepts"."id"
