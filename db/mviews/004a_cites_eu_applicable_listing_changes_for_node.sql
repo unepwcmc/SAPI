@@ -11,7 +11,11 @@ BEGIN
     designation_id,
     affected_taxon_concept_id AS original_taxon_concept_id,
     taxon_concept_id AS current_taxon_concept_id,
-    HSTORE(species_listing_id::TEXT, taxon_concept_id::TEXT) AS context,
+    CASE
+      WHEN inclusion_taxon_concept_id IS NULL
+      THEN HSTORE(species_listing_id::TEXT, taxon_concept_id::TEXT)
+      ELSE HSTORE(species_listing_id::TEXT, inclusion_taxon_concept_id::TEXT)
+    END AS context,
     inclusion_taxon_concept_id,
     species_listing_id,
     change_type_id,
@@ -22,11 +26,16 @@ BEGIN
      WHEN (
       -- there are listed populations
       ARRAY_UPPER(listed_geo_entities_ids, 1) IS NOT NULL
-      -- and the taxon does not occur in any of them
+      -- and the taxon has its own distribution and does not occur in any of them
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
       AND NOT listed_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
     )
     -- when all populations are excluded
-    OR excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+    OR (
+      ARRAY_UPPER(excluded_geo_entities_ids, 1) IS NOT NULL
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
+      AND excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+    )
     THEN FALSE
     WHEN ARRAY_UPPER(excluded_taxon_concept_ids, 1) IS NOT NULL 
     -- if taxon or any of its ancestors is excluded from this listing
@@ -67,9 +76,15 @@ BEGIN
     THEN listing_changes_timeline.context - ARRAY[hi.species_listing_id::TEXT]
     WHEN change_types.name = ''DELETION''
     THEN listing_changes_timeline.context - HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
+    -- if it is a new listing at closer level that replaces an older listing, wipe out the context
     WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
+    AND hi.effective_at > listing_changes_timeline.effective_at
     AND change_types.name = ''ADDITION''
     THEN HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
+    -- if it is a same day split listing we don''t want to wipe the other part of the split from the context
+    WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
+    AND change_types.name = ''ADDITION''
+    THEN listing_changes_timeline.context || HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
     WHEN hi.tree_distance <= listing_changes_timeline.context_tree_distance
     AND hi.affected_taxon_concept_id = hi.taxon_concept_id
     AND change_types.name = ''ADDITION''
@@ -98,11 +113,16 @@ BEGIN
     WHEN (
       -- there are listed populations
       ARRAY_UPPER(hi.listed_geo_entities_ids, 1) IS NOT NULL
-      -- and the taxon does not occur in any of them
+      -- and the taxon has its own distribution and does not occur in any of them
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
       AND NOT hi.listed_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
     )
     -- when all populations are excluded
-    OR hi.excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+    OR (
+      ARRAY_UPPER(hi.excluded_geo_entities_ids, 1) IS NOT NULL
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
+      AND hi.excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+    )
     THEN FALSE
     WHEN ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL 
     -- if taxon or any of its ancestors is excluded from this listing
@@ -119,6 +139,8 @@ BEGIN
     THEN FALSE
     WHEN listing_changes_timeline.context -> hi.species_listing_id::TEXT = hi.taxon_concept_id::TEXT
     OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
+    -- this line to make Moschus leucogaster happy
+    OR AVALS(listing_changes_timeline.context) @> ARRAY[hi.taxon_concept_id::TEXT] 
     THEN TRUE
     WHEN listing_changes_timeline.context = ''''::HSTORE  --this would be the case when deleted
     AND (
