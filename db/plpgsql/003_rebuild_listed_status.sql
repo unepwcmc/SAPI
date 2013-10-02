@@ -76,7 +76,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     SET listing = listing || hstore(status_flag, 'LISTED') ||
       hstore(status_original_flag, 't') ||
       hstore(level_of_listing_flag, 't') ||
-      hstore(listing_updated_at_flag, listing_updated_at::VARCHAR)
+      hstore(listing_updated_at_flag, listing_updated_at::VARCHAR) 
     FROM listed_taxa
     WHERE taxon_concepts.id = listed_taxa.id AND
       CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
@@ -140,7 +140,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
         ON taxon_concepts.parent_id = deleted_taxa.id
         JOIN ranks
         ON taxon_concepts.rank_id = ranks.id AND ranks.name = 'SUBSPECIES'
-        WHERE taxon_concepts.listing->'cites_status' = 'LISTED'
+        WHERE taxon_concepts.listing->status_flag = 'LISTED'
     )
     UPDATE taxon_concepts
     SET listing = listing || hstore(status_flag, 'DELETED') ||
@@ -175,39 +175,72 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     WHERE taxon_concepts_with_inclusions_only.id = taxon_concepts.id;
 
     -- propagate cites_status to descendants
+
     WITH RECURSIVE q AS
     (
-      SELECT  h.id, h.parent_id,
-      listing->status_flag AS inherited_cites_status,
-      listing->listing_updated_at_flag AS inherited_listing_updated_at
+      SELECT
+        h.id,
+        h.parent_id,
+        listing->status_flag AS inherited_cites_status,
+        listing->listing_updated_at_flag AS inherited_listing_updated_at,
+        listed_geo_entities_ids,
+        excluded_geo_entities_ids,
+        excluded_taxon_concept_ids,
+        HSTORE(status_original_flag, 't') || HSTORE(status_flag, 'LISTED') AS cites_status_hstore
       FROM    taxon_concepts h
-      WHERE (listing->status_original_flag)::BOOLEAN = 't' AND
-        CASE WHEN node_id IS NOT NULL THEN id = node_id ELSE TRUE END
+      JOIN cites_tmp_listing_changes_mview lc
+      ON h.id = lc.taxon_concept_id
+      AND lc.change_type_name = 'ADDITION'
+      GROUP BY
+        h.id,
+        listed_geo_entities_ids,
+        excluded_geo_entities_ids,
+        excluded_taxon_concept_ids
 
       UNION
 
-      SELECT  hi.id, hi.parent_id,
-      inherited_cites_status,
-      inherited_listing_updated_at
-      FROM    q
-      JOIN    taxon_concepts hi
-      ON      hi.parent_id = q.id
-      WHERE listing IS NULL OR
-        (listing->status_original_flag)::BOOLEAN IS NULL OR
-        (listing->status_original_flag)::BOOLEAN = 'f'
+      SELECT
+        hi.id,
+        hi.parent_id,
+        inherited_cites_status,
+        inherited_listing_updated_at,
+        listed_geo_entities_ids,
+        excluded_geo_entities_ids,
+        excluded_taxon_concept_ids,
+        HSTORE(status_original_flag, 'f') ||
+        CASE
+          WHEN ARRAY_UPPER(excluded_geo_entities_ids, 1) IS NOT NULL 
+            AND excluded_geo_entities_ids @> ARRAY[hi.id]
+          THEN HSTORE(status_flag, 'EXCLUDED')
+          WHEN ARRAY_UPPER(excluded_geo_entities_ids, 1) IS NOT NULL 
+            AND EXISTS (
+            SELECT 1 FROM distributions
+            WHERE q.excluded_geo_entities_ids @> ARRAY[geo_entity_id] AND taxon_concept_id = hi.id
+          )
+          THEN HSTORE(status_flag, 'EXCLUDED')
+          WHEN ARRAY_UPPER(listed_geo_entities_ids, 1) IS NOT NULL 
+            AND NOT EXISTS (
+            SELECT 1 FROM distributions
+            WHERE q.listed_geo_entities_ids @> ARRAY[geo_entity_id] AND taxon_concept_id = hi.id
+          )
+          THEN HSTORE(status_flag, NULL)
+          ELSE HSTORE(status_flag, 'LISTED')
+        END
+      FROM q
+      JOIN taxon_concepts hi
+        ON hi.parent_id = q.id
+        AND NOT (hi.listing->status_original_flag)::BOOLEAN
     )
     UPDATE taxon_concepts
     SET listing = COALESCE(listing, ''::HSTORE) ||
-      hstore(status_flag, inherited_cites_status) ||
-      hstore(status_original_flag, 'f') ||
+      hstore(status_flag, cites_status_hstore->status_flag) ||
+      hstore(status_original_flag, cites_status_hstore->status_original_flag) ||
       hstore(not_listed_flag, NULL) ||
       hstore(listing_updated_at_flag, inherited_listing_updated_at)
     FROM q
-    WHERE taxon_concepts.id = q.id AND (
-      listing IS NULL OR
-      (listing->status_original_flag)::BOOLEAN IS NULL OR
-      (listing->status_original_flag)::BOOLEAN = 'f'
-    );
+    WHERE taxon_concepts.id = q.id;
+
+
 
     -- set cites_status property to 'LISTED' for ancestors of listed taxa
     WITH qq AS (
