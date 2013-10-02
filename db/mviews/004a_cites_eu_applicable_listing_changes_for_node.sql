@@ -11,7 +11,11 @@ BEGIN
     designation_id,
     affected_taxon_concept_id AS original_taxon_concept_id,
     taxon_concept_id AS current_taxon_concept_id,
-    HSTORE(species_listing_id::TEXT, taxon_concept_id::TEXT) AS context,
+    CASE
+      WHEN inclusion_taxon_concept_id IS NULL
+      THEN HSTORE(species_listing_id::TEXT, taxon_concept_id::TEXT)
+      ELSE HSTORE(species_listing_id::TEXT, inclusion_taxon_concept_id::TEXT)
+    END AS context,
     inclusion_taxon_concept_id,
     species_listing_id,
     change_type_id,
@@ -72,9 +76,15 @@ BEGIN
     THEN listing_changes_timeline.context - ARRAY[hi.species_listing_id::TEXT]
     WHEN change_types.name = ''DELETION''
     THEN listing_changes_timeline.context - HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
+    -- if it is a new listing at closer level that replaces an older listing, wipe out the context
     WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
+    AND hi.effective_at > listing_changes_timeline.effective_at
     AND change_types.name = ''ADDITION''
     THEN HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
+    -- if it is a same day split listing we don''t want to wipe the other part of the split from the context
+    WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
+    AND change_types.name = ''ADDITION''
+    THEN listing_changes_timeline.context || HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
     WHEN hi.tree_distance <= listing_changes_timeline.context_tree_distance
     AND hi.affected_taxon_concept_id = hi.taxon_concept_id
     AND change_types.name = ''ADDITION''

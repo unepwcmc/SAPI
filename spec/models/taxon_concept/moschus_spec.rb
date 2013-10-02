@@ -56,6 +56,15 @@ describe TaxonConcept do
             addition.species_listing_name.should == 'II'
           }
         end
+        context "for subspecies Moschus moschiferus moschiferus" do
+          specify {
+            @subspecies.current_cites_additions.size.should == 1
+            addition = @subspecies.current_cites_additions.first
+            addition.original_taxon_concept_id.should == @genus.id
+            # should inherit just the II listing from split listed genus
+            addition.species_listing_name.should == 'II'
+          }
+        end
       end
     end
   end

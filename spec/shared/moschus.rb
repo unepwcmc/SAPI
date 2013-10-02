@@ -146,6 +146,19 @@ shared_context "Moschus" do
       )
     end
 
+    cites_lc3 = create_cites_I_deletion(
+     :taxon_concept => @species2,
+     :effective_at => '1983-07-29',
+     :is_current => false
+    )
+
+    create(
+      :listing_distribution,
+      :geo_entity => china,
+      :listing_change => cites_lc3,
+      :is_party => false
+    )
+
     eu
     cms_designation
     Sapi.rebuild(:except => [:taxonomy])
