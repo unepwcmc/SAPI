@@ -56,12 +56,14 @@ private
     unless @scientific_name.blank?
       @query = @query.
         by_name(@scientific_name, {:synonyms => true, :subspecies => true, :common_names => false}).
-        select(<<-SQL
-                taxon_concepts_mview.*,
-                ARRAY(
-                  SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE '#{@scientific_name}%'
-                ) AS synonyms_ary
-               SQL
+        select(
+          ActiveRecord::Base.send(:sanitize_sql_array, [
+            "taxon_concepts_mview.*,
+              ARRAY(
+                SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE :sci_name_prefix
+              ) AS synonyms_ary",
+            :sci_name_prefix => "#{@scientific_name}%"
+          ])
         )
     end
     @query = @query

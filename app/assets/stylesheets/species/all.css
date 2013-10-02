@@ -119,6 +119,12 @@ html.lt-ie9 #header .logo{
 	display: block;
 	height: 100%;
 }
+span.beta{
+  font-size: 13px;
+  color: #f66;
+  font-style: italic;
+  margin-left: 10px;
+}
 #nav {
 	float: right;
 	margin: 0 -25px 0 0;
