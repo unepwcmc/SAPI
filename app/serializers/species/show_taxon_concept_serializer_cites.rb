@@ -3,7 +3,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   attributes :cites_listing, :eu_listing
   has_many :quotas, :serializer => Species::QuotaSerializer, :key => :cites_quotas
   has_many :cites_suspensions, :serializer => Species::CitesSuspensionSerializer
-  has_many :cites_listing_changes, :serializer => Species::ListingChangeSerializer,
+  has_many :cites_listing_changes, :serializer => Species::CitesListingChangeSerializer,
     :key => :cites_listings
   has_many :eu_listing_changes, :serializer => Species::EuListingChangeSerializer,
     :key => :eu_listings
@@ -205,9 +205,13 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.effective_at,
               listing_changes_mview.full_note_en,
               listing_changes_mview.short_note_en,
+              listing_changes_mview.auto_note,
               listing_changes_mview.hash_full_note_en,
               listing_changes_mview.hash_ann_parent_symbol,
               listing_changes_mview.hash_ann_symbol,
+              listing_changes_mview.inclusion_taxon_concept_id,
+              listing_changes_mview.inherited_full_note_en,
+              listing_changes_mview.inherited_short_note_en,
               events.description AS event_name,
               events.url AS event_url,
               CASE
