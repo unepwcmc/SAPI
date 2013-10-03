@@ -23,7 +23,13 @@ shared_context 'Agalychnis' do
 
     create_eu_B_addition(
      :taxon_concept => @genus,
-     :effective_at => '2010-06-23',
+     :effective_at => '2012-12-15',
+     :is_current => false
+    )
+
+    create_eu_B_addition(
+     :taxon_concept => @genus,
+     :effective_at => '2013-08-10',
      :is_current => true
     )
 

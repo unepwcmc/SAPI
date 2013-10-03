@@ -25,7 +25,12 @@ shared_context "Ailuropoda" do
     )
     create_eu_B_addition(
      :taxon_concept => @family,
-     :effective_at => '1992-06-11',
+     :effective_at => '1997-06-01',
+     :is_current => false
+    )
+    create_eu_B_addition(
+     :taxon_concept => @family,
+     :effective_at => '2013-08-10',
      :is_current => true
     )
     create_cites_I_addition(
@@ -35,7 +40,12 @@ shared_context "Ailuropoda" do
     )
     create_eu_A_addition(
      :taxon_concept => @species,
-     :effective_at => '1984-03-14',
+     :effective_at => '1997-06-01',
+     :is_current => false
+    )
+    create_eu_A_addition(
+     :taxon_concept => @species,
+     :effective_at => '2013-08-10',
      :is_current => true
     )
 

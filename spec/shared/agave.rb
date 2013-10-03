@@ -35,7 +35,8 @@ shared_context "Agave" do
     )
     create_eu_A_addition(
      :taxon_concept => @species1,
-     :effective_at => '1983-07-29'
+     :effective_at => '1997-06-01',
+     :is_current => false
     )
 
     create_cites_I_addition(
@@ -45,8 +46,8 @@ shared_context "Agave" do
     )
     create_eu_A_addition(
      :taxon_concept => @species2,
-     :effective_at => '1983-07-29',
-     :is_current => true
+     :effective_at => '1997-06-01',
+     :is_current => false
     )
 
     create_cites_I_deletion(
@@ -56,7 +57,13 @@ shared_context "Agave" do
     )
     create_eu_A_deletion(
      :taxon_concept => @species1,
-     :effective_at => '2007-09-13',
+     :effective_at => '2008-04-11',
+     :is_current => false
+    )
+
+    create_eu_A_addition(
+     :taxon_concept => @species2,
+     :effective_at => '2013-08-10',
      :is_current => true
     )
 
