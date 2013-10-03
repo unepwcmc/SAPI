@@ -13,12 +13,7 @@ class Admin::EuOpinionsController < Admin::SimpleCrudController
       }
       failure.html {
         load_lib_objects
-        render 'new'
-      }
-
-      success.js { render 'create' }
-      failure.js {
-        load_lib_objects
+        load_search
         render 'new'
       }
     end
@@ -30,7 +25,10 @@ class Admin::EuOpinionsController < Admin::SimpleCrudController
         redirect_to admin_taxon_concept_eu_opinions_url(params[:taxon_concept_id]),
         :notice => 'Operation successful'
       }
-      failure.html { render 'create' }
+      failure.html {
+        load_search
+        render 'new'
+      }
     end
   end
 
