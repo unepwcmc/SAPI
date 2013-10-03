@@ -77,9 +77,8 @@ SELECT
     E'\n'
   ) AS original_taxon_concept_hash_full_note_en
 FROM "taxon_concepts_mview"
-JOIN listing_changes_mview 
+JOIN cites_listing_changes_mview listing_changes_mview 
   ON listing_changes_mview.taxon_concept_id = taxon_concepts_mview.id
-  AND designation_name = 'CITES'
   AND is_current
   AND change_type_name = 'ADDITION'
 JOIN taxon_concepts_mview original_taxon_concepts_mview
