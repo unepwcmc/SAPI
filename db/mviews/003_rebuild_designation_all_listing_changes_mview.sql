@@ -30,6 +30,7 @@
         listing_changes.species_listing_id,
         listing_changes.change_type_id,
         listing_changes.inclusion_taxon_concept_id,
+        listing_changes.is_current,
         listing_changes.effective_at::DATE,
         ARRAY_AGG_NOTNULL(taxonomic_exceptions.taxon_concept_id) AS excluded_taxon_concept_ids
       FROM listing_changes
@@ -46,6 +47,7 @@
         listing_changes.species_listing_id,
         listing_changes.change_type_id,
         listing_changes.inclusion_taxon_concept_id,
+        listing_changes.is_current,
         listing_changes.effective_at::DATE
     )
     -- the purpose of this CTE is to aggregate listed and excluded populations
@@ -57,6 +59,7 @@
       lc.change_type_id,
       lc.inclusion_taxon_concept_id,
       lc.effective_at,
+      lc.is_current,
       lc.excluded_taxon_concept_ids,
       party_distribution.geo_entity_id AS party_id,
       ARRAY_AGG_NOTNULL(listing_distributions.geo_entity_id) AS listed_geo_entities_ids,
@@ -79,6 +82,7 @@
       lc.change_type_id,
       lc.inclusion_taxon_concept_id,
       lc.effective_at,
+      lc.is_current,
       party_distribution.geo_entity_id,
       lc.excluded_taxon_concept_ids';
 

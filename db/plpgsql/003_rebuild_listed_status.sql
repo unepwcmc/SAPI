@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       deletion_id int;
       addition_id int;
       exception_id int;
+      designation_name TEXT;
       status_flag varchar;
       status_original_flag varchar;
       listing_original_flag varchar;
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       show_flag varchar;
       level_of_listing_flag varchar;
       flags_to_reset text[];
+      sql TEXT;
     BEGIN
     SELECT id INTO deletion_id FROM change_types
       WHERE designation_id = designation.id AND name = 'DELETION';
@@ -23,15 +25,15 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       WHERE designation_id = designation.id AND name = 'ADDITION';
     SELECT id INTO exception_id FROM change_types
       WHERE designation_id = designation.id AND name = 'EXCEPTION';
-
-    status_flag = LOWER(designation.name) || '_status';
-    status_original_flag = LOWER(designation.name) || '_status_original';
-    listing_original_flag := LOWER(designation.name) || '_listing_original';
-    listing_flag := LOWER(designation.name) || '_listing';
-    listing_updated_at_flag = LOWER(designation.name) || '_updated_at';
-    level_of_listing_flag := LOWER(designation.name) || '_level_of_listing';
-    not_listed_flag := LOWER(designation.name) || '_not_listed';
-    show_flag := LOWER(designation.name) || '_show';
+    designation_name = LOWER(designation.name);
+    status_flag = designation_name || '_status';
+    status_original_flag = designation_name || '_status_original';
+    listing_original_flag := designation_name || '_listing_original';
+    listing_flag := designation_name || '_listing';
+    listing_updated_at_flag = designation_name || '_updated_at';
+    level_of_listing_flag := designation_name || '_level_of_listing';
+    not_listed_flag := designation_name || '_not_listed';
+    show_flag := designation_name || '_show';
     
     
     flags_to_reset := ARRAY[
@@ -156,46 +158,37 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     WHERE taxon_concepts.id = deleted_taxa.id AND
       CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
 
-    -- set the level_of_listing flag to false for taxa included in parent listing
-    -- unless the inclusion is part of split listing where the other part is actually
-    -- an explicit listing
-    UPDATE taxon_concepts
-    SET listing = listing || hstore(level_of_listing_flag, 'f')
-    FROM (
-    SELECT taxon_concepts.id
-    FROM taxon_concepts
-    JOIN listing_changes ON taxon_concepts.id = listing_changes.taxon_concept_id
-    JOIN change_types ON change_types.id = listing_changes.change_type_id
-    WHERE is_current = TRUE AND designation_id = designation.id
-    AND
-    CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END
-    GROUP BY taxon_concepts.id, designation_id
-    HAVING EVERY(inclusion_taxon_concept_id IS NOT NULL)
-    ) taxon_concepts_with_inclusions_only
-    WHERE taxon_concepts_with_inclusions_only.id = taxon_concepts.id;
-
     -- propagate cites_status to descendants
 
-    WITH RECURSIVE q AS
-    (
+    sql := 'WITH RECURSIVE q AS (
       SELECT
         h.id,
         h.parent_id,
-        listing->status_flag AS inherited_cites_status,
-        listing->listing_updated_at_flag AS inherited_listing_updated_at,
+        listing->''' || designation_name || '_status'' AS inherited_cites_status,
+        listing->''' || designation_name || '_updated_at'' AS inherited_listing_updated_at,
         listed_geo_entities_ids,
         excluded_geo_entities_ids,
         excluded_taxon_concept_ids,
-        HSTORE(status_original_flag, 't') || HSTORE(status_flag, 'LISTED') AS cites_status_hstore
+        HSTORE(''' || designation_name || '_status_original'', ''t'') || 
+        CASE 
+          WHEN lc.change_type_name = ''DELETION''
+          THEN HSTORE(''' || designation_name || '_status'',  ''DELETED'') || 
+            HSTORE(''' || designation_name || '_not_listed'', ''NC'')
+          ELSE HSTORE(''' || designation_name || '_status'',  ''LISTED'') || 
+            HSTORE(''' || designation_name || '_not_listed'', NULL)
+        END AS status_hstore
       FROM    taxon_concepts h
-      JOIN cites_tmp_listing_changes_mview lc
+      JOIN ' || designation_name || '_tmp_listing_changes_mview lc
       ON h.id = lc.taxon_concept_id
-      AND lc.change_type_name = 'ADDITION'
+      AND lc.change_type_name IN (''ADDITION'', ''DELETION'')
+      AND lc.is_current
+      AND inclusion_taxon_concept_id IS NULL
       GROUP BY
         h.id,
         listed_geo_entities_ids,
         excluded_geo_entities_ids,
-        excluded_taxon_concept_ids
+        excluded_taxon_concept_ids,
+        lc.change_type_name
 
       UNION
 
@@ -207,40 +200,86 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
         listed_geo_entities_ids,
         excluded_geo_entities_ids,
         excluded_taxon_concept_ids,
-        HSTORE(status_original_flag, 'f') ||
         CASE
-          WHEN ARRAY_UPPER(excluded_geo_entities_ids, 1) IS NOT NULL 
-            AND excluded_geo_entities_ids @> ARRAY[hi.id]
-          THEN HSTORE(status_flag, 'EXCLUDED')
-          WHEN ARRAY_UPPER(excluded_geo_entities_ids, 1) IS NOT NULL 
-            AND EXISTS (
-            SELECT 1 FROM distributions
-            WHERE q.excluded_geo_entities_ids @> ARRAY[geo_entity_id] AND taxon_concept_id = hi.id
-          )
-          THEN HSTORE(status_flag, 'EXCLUDED')
-          WHEN ARRAY_UPPER(listed_geo_entities_ids, 1) IS NOT NULL 
-            AND NOT EXISTS (
-            SELECT 1 FROM distributions
-            WHERE q.listed_geo_entities_ids @> ARRAY[geo_entity_id] AND taxon_concept_id = hi.id
-          )
-          THEN HSTORE(status_flag, NULL)
-          ELSE HSTORE(status_flag, 'LISTED')
+        WHEN (hi.listing->''' || designation_name || '_status_original'')::BOOLEAN
+        THEN SLICE(hi.listing, ARRAY[
+          ''' || designation_name || '_status_original'', 
+          ''' || designation_name || '_status'', 
+          ''' || designation_name || '_level_of_listing'',
+          ''' || designation_name || '_updated_at'', 
+          ''' || designation_name || '_not_listed''
+        ])
+        ELSE
+          HSTORE(''' || designation_name || '_status_original'', ''f'') ||
+            HSTORE(''' || designation_name || '_level_of_listing'', ''f'') ||
+            CASE
+              WHEN ARRAY_UPPER(excluded_taxon_concept_ids, 1) IS NOT NULL 
+                AND excluded_taxon_concept_ids @> ARRAY[hi.id]
+              THEN HSTORE(''' || designation_name || '_status'', ''EXCLUDED'') || 
+                HSTORE(''' || designation_name || '_not_listed'', ''NC'')
+              WHEN ARRAY_UPPER(excluded_geo_entities_ids, 1) IS NOT NULL 
+                AND EXISTS (
+                SELECT 1 FROM distributions
+                WHERE q.excluded_geo_entities_ids @> ARRAY[geo_entity_id]
+                  AND taxon_concept_id = hi.id
+              )
+              THEN HSTORE(''' || designation_name || '_status'', ''EXCLUDED'') ||
+                HSTORE(''' || designation_name || '_not_listed'', ''NC'')
+              WHEN ARRAY_UPPER(listed_geo_entities_ids, 1) IS NOT NULL 
+                AND NOT EXISTS (
+                SELECT 1 FROM distributions
+                WHERE q.listed_geo_entities_ids @> ARRAY[geo_entity_id]
+                  AND taxon_concept_id = hi.id
+              )
+              THEN HSTORE(''' || designation_name || '_status'', NULL) ||
+                HSTORE(''' || designation_name || '_not_listed'', ''NC'')
+              ELSE HSTORE(
+                ''' || designation_name || '_status'',
+                q.status_hstore->''' || designation_name || '_status''
+              ) || HSTORE(
+              ''' || designation_name || '_not_listed'',
+              q.status_hstore->''' || designation_name || '_not_listed''
+              )
+            END
         END
       FROM q
       JOIN taxon_concepts hi
-        ON hi.parent_id = q.id
-        AND NOT (hi.listing->status_original_flag)::BOOLEAN
+        ON hi.parent_id = q.id      
+    ), grouped AS (
+      SELECT id, 
+      HSTORE(
+        ''' || designation_name || '_status'',
+        CASE
+          WHEN BOOL_OR(status_hstore->''' || designation_name || '_status'' = ''LISTED'')
+          THEN ''LISTED''
+          ELSE MAX(status_hstore->''' || designation_name || '_status'')
+        END
+      ) ||
+      HSTORE(
+        ''' || designation_name || '_status_original'',
+        BOOL_OR((status_hstore->''' || designation_name || '_status_original'')::BOOLEAN)::TEXT
+      ) ||
+      HSTORE(
+        ''' || designation_name || '_not_listed'',
+        CASE
+          WHEN BOOL_AND(status_hstore->''' || designation_name || '_not_listed'' = ''NC'')
+          THEN ''NC''
+          ELSE NULL
+        END
+      ) ||
+      HSTORE(
+        ''' || designation_name || '_updated_at'',
+        MAX(inherited_listing_updated_at)
+      ) AS status_hstore
+    FROM q
+    GROUP BY q.id --this grouping is to accommodate for split listings
     )
     UPDATE taxon_concepts
-    SET listing = COALESCE(listing, ''::HSTORE) ||
-      hstore(status_flag, cites_status_hstore->status_flag) ||
-      hstore(status_original_flag, cites_status_hstore->status_original_flag) ||
-      hstore(not_listed_flag, NULL) ||
-      hstore(listing_updated_at_flag, inherited_listing_updated_at)
-    FROM q
-    WHERE taxon_concepts.id = q.id;
+    SET listing = COALESCE(listing, ''''::HSTORE) || grouped.status_hstore
+    FROM grouped
+    WHERE taxon_concepts.id = grouped.id';
 
-
+    EXECUTE sql;
 
     -- set cites_status property to 'LISTED' for ancestors of listed taxa
     WITH qq AS (
