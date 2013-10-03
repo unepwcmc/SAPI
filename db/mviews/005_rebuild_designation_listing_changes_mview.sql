@@ -152,8 +152,6 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
 
     EXECUTE sql;
 
-    RAISE INFO 'Terminating non-current inherited listings';
-
     SELECT id INTO deletion_id FROM change_types WHERE name = 'DELETION' AND designation_id = designation.id;
     SELECT id INTO addition_id FROM change_types WHERE name = 'ADDITION' AND designation_id = designation.id;
     -- find inherited listing changes superceded by own listing changes
@@ -275,8 +273,6 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
       AND lc.taxon_concept_id = non_current_inclusions.taxon_concept_id';
 
     EXECUTE sql;
-
-    RAISE INFO '* % merging inclusion records with their ancestor counterparts', lc_table_name;
 
     sql := 'WITH double_inclusions AS (
       SELECT lc.taxon_concept_id, lc.id AS own_inclusion_id, lc_inh.id AS inherited_inclusion_id, 
