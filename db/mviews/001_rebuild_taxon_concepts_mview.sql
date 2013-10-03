@@ -3,9 +3,9 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
   AS $$
   BEGIN
     DROP table IF EXISTS taxon_concepts_mview_tmp CASCADE;
+    DROP view IF EXISTS taxon_concepts_view_tmp;
 
-    RAISE INFO 'Creating taxon concepts materialized view (tmp)';
-    CREATE TABLE taxon_concepts_mview_tmp AS
+    CREATE OR REPLACE VIEW taxon_concepts_view_tmp AS
     SELECT taxon_concepts.id,
     taxon_concepts.parent_id,
     taxon_concepts.taxonomy_id,
@@ -103,9 +103,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     common_names.*,
     synonyms.*,
     subspecies.subspecies_ary,
-    countries_ids_ary,
-    false as dirty,
-    null::timestamp with time zone as expiry
+    countries_ids_ary
     FROM taxon_concepts
     LEFT JOIN taxonomies
     ON taxonomies.id = taxon_concepts.taxonomy_id
@@ -177,6 +175,13 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       GROUP BY taxon_concepts.id
     ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt;
 
+    RAISE INFO 'Creating taxon concepts materialized view (tmp)';
+    CREATE TABLE taxon_concepts_mview_tmp AS
+    SELECT *,
+    false as dirty,
+    null::timestamp with time zone as expiry
+    FROM taxon_concepts_view_tmp;
+
     RAISE INFO 'Creating indexes on taxon_concepts materialized view (tmp)';
     CREATE INDEX ON taxon_concepts_mview_tmp (id);
     CREATE INDEX ON taxon_concepts_mview_tmp (parent_id);
@@ -190,7 +195,8 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     RAISE INFO 'Swapping concepts materialized view';
     DROP table IF EXISTS taxon_concepts_mview CASCADE;
     ALTER TABLE taxon_concepts_mview_tmp RENAME TO taxon_concepts_mview;
-
+    DROP view IF EXISTS taxon_concepts_view CASCADE;
+    ALTER TABLE taxon_concepts_view_tmp RENAME TO taxon_concepts_view;
   END;
   $$;
 
