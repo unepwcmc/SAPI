@@ -8,8 +8,6 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     i INT;
     sql TEXT;
   BEGIN
-    DROP TABLE IF EXISTS all_listing_changes_mview CASCADE;
-
     RAISE INFO 'Creating listing_changes_mview materialized view (tmp)';
     DROP TABLE IF EXISTS listing_changes_mview_tmp CASCADE;
 
