@@ -40,7 +40,9 @@ class Admin::EuSuspensionsController < Admin::SimpleCrudController
     @terms = Term.order(:code)
     @sources = Source.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+      where(:is_current => true,
+            :geo_entity_types => {:name => [GeoEntityType::COUNTRY,
+                                            GeoEntityType::TERRITORY]})
     @eu_regulations = EuSuspensionRegulation.order("effective_at DESC")
     @eu_decision_types = EuDecisionType.suspensions
   end
