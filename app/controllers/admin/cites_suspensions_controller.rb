@@ -46,6 +46,6 @@ class Admin::CitesSuspensionsController < Admin::SimpleCrudController
 
   def collection
     @cites_suspensions ||= end_of_association_chain.order('start_date').
-      page(params[:page])
+      page(params[:page]).search(params[:query])
   end
 end

@@ -102,7 +102,11 @@
   </div>
 
   <p class="pull-right">
-    <%= link_to 'Cancel', admin_taxon_concept_cites_suspensions_path(@taxon_concept),
-      :class => "btn" %>
+    <% if @taxon_concept %>
+      <%= link_to 'Cancel', admin_taxon_concept_cites_suspensions_path(@taxon_concept),
+        :class => "btn" %>
+    <% else %>
+      <%= link_to 'Cancel', admin_cites_suspensions_path %>
+    <% end %>
     <%= f.submit "Save", :class => "btn btn-primary save-button" %>
   </p>
