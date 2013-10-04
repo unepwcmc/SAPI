@@ -42,7 +42,9 @@ class Admin::QuotasController < Admin::SimpleCrudController
     @sources = Source.order(:code)
     @purposes = Purpose.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+      where(:is_current => true,
+            :geo_entity_types => {:name => [GeoEntityType::COUNTRY,
+                                            GeoEntityType::TERRITORY]})
   end
 
   def collection
