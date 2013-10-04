@@ -2,7 +2,7 @@
   <%= error_messages_for(@distribution) %>
 
   <div class="control-group">
-    <label>Country</label>
+    <label>Country or Territory</label>
     <%= f.select :geo_entity_id,
       options_from_collection_for_select(
         @geo_entities,
