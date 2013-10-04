@@ -70,7 +70,7 @@ shared_context "Dalbergia" do
 
     eu
     cms_designation
-    Sapi.rebuild(:except => [:taxonomy])
+    Sapi.rebuild
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
