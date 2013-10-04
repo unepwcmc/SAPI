@@ -33,7 +33,7 @@ describe Checklist::Pdf::History do
         )
         eu
         cms_designation
-        Sapi.rebuild(:except => [:taxonomy])
+        Sapi.rebuild
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name, :show_english => true) }
       specify{
@@ -52,7 +52,7 @@ describe Checklist::Pdf::History do
         )
         eu
         cms_designation
-        Sapi.rebuild(:except => [:taxonomy])
+        Sapi.rebuild
         MListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
@@ -69,7 +69,7 @@ describe Checklist::Pdf::History do
         )
         eu
         cms_designation
-        Sapi.rebuild(:except => [:taxonomy])
+        Sapi.rebuild
         MListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
@@ -98,7 +98,7 @@ describe Checklist::Pdf::History do
         )
         eu
         cms_designation
-        Sapi.rebuild(:except => [:taxonomy])
+        Sapi.rebuild
         MListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new({}) }
