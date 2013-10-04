@@ -2,9 +2,10 @@ CREATE OR REPLACE FUNCTION rebuild_cms_species_listing_mview() RETURNS VOID
   LANGUAGE plpgsql
   AS $$
   BEGIN
-DROP TABLE IF EXISTS cms_species_listing_mview;
 
-CREATE TABLE cms_species_listing_mview AS
+  DROP TABLE IF EXISTS cms_species_listing_mview_tmp;
+
+CREATE TABLE cms_species_listing_mview_tmp AS
 SELECT
   taxon_concepts_mview.id AS id,
   taxon_concepts_mview.taxonomic_position,
@@ -113,5 +114,9 @@ SELECT
    ON taxon_instruments.taxon_concept_id = taxon_concepts_mview.id
  JOIN instruments
    ON taxon_instruments.instrument_id = instruments.id;
+
+  DROP TABLE IF EXISTS cms_species_listing_mview;
+  ALTER TABLE cms_species_listing_mview_tmp RENAME TO cms_species_listing_mview;
+
 END;
 $$;

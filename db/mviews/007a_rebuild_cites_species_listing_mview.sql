@@ -2,9 +2,10 @@ CREATE OR REPLACE FUNCTION rebuild_cites_species_listing_mview() RETURNS VOID
   LANGUAGE plpgsql
   AS $$
   BEGIN
-DROP TABLE IF EXISTS cites_species_listing_mview;
+  
+  DROP TABLE IF EXISTS cites_species_listing_mview_tmp;
 
-CREATE TABLE cites_species_listing_mview AS
+CREATE TABLE cites_species_listing_mview_tmp AS
 SELECT
   taxon_concepts_mview.id AS id,
   taxon_concepts_mview.taxonomic_position,
@@ -124,5 +125,9 @@ GROUP BY
   COALESCE(inclusion_taxon_concepts_mview.full_name, original_taxon_concepts_mview.full_name),
   COALESCE(inclusion_taxon_concepts_mview.spp, original_taxon_concepts_mview.spp),
   taxon_concepts_mview.taxonomic_position;
+
+  DROP TABLE IF EXISTS cites_species_listing_mview;
+  ALTER TABLE cites_species_listing_mview_tmp RENAME TO cites_species_listing_mview;
+
 END;
 $$;
