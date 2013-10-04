@@ -13,6 +13,7 @@ class Admin::EuSuspensionsController < Admin::SimpleCrudController
       }
       failure.html {
         load_lib_objects
+        load_search
         render 'new'
       }
 
@@ -30,7 +31,10 @@ class Admin::EuSuspensionsController < Admin::SimpleCrudController
         redirect_to admin_taxon_concept_eu_suspensions_url(params[:taxon_concept_id]),
         :notice => 'Operation successful'
       }
-      failure.html { render 'create' }
+      failure.html { 
+        load_search
+        render 'create'
+      }
     end
   end
 
