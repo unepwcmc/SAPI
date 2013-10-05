@@ -1,23 +1,36 @@
 module Sapi
   module StoredProcedures
 
-    REBUILD_PROCEDURES = [
-      :taxonomy,
-      :listing_changes_mview,
-      :cites_listing,
-      :eu_listing,
-      :cms_listing,
-      :cites_accepted_flags,
-      :taxon_concepts_mview,
-      :cites_species_listing_mview,
-      :eu_species_listing_mview,
-      :cms_species_listing_mview,
-      :touch_taxon_concepts
-    ]
+    def self.rebuild
+      run_procedures([
+        :taxonomy,
+        :cites_accepted_flags,
+        :listing_changes_mview,
+        :cites_listing,
+        :eu_listing,
+        :cms_listing,
+        :taxon_concepts_mview,
+        :cites_species_listing_mview,
+        :eu_species_listing_mview,
+        :cms_species_listing_mview,
+        :touch_taxon_concepts
+      ])
+    end
 
-    def self.rebuild(options = {})
+    def self.rebuild_taxonomy
+      run_procedures([
+        :taxonomy,
+        :cites_accepted_flags,
+        :taxon_concepts_mview,
+        :touch_taxon_concepts
+      ])
+    end
+  
+  private
+
+    def self.run_procedures(procedures)
       Sapi::Triggers.disable_triggers
-      REBUILD_PROCEDURES.each{ |p|
+      procedures.each{ |p|
         puts "Procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
       }
@@ -39,6 +52,6 @@ module Sapi
 
       Sapi::Triggers.enable_triggers
     end
-    
+
   end
 end
