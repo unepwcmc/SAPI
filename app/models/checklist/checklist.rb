@@ -17,7 +17,6 @@ class Checklist::Checklist
   end
 
   def results
-    puts @query.limit(@per_page).offset(@per_page * @page).to_sql
     @query.limit(@per_page).offset(@per_page * (@page - 1)).all
   end
 

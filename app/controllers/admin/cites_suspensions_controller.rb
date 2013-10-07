@@ -38,7 +38,9 @@ class Admin::CitesSuspensionsController < Admin::SimpleCrudController
     @sources = Source.order(:code)
     @purposes = Purpose.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+      where(:is_current => true,
+            :geo_entity_types => {:name => [GeoEntityType::COUNTRY,
+                                            GeoEntityType::TERRITORY]})
     @suspension_notifications = CitesSuspensionNotification.
       select([:id, :name]).
       order('effective_at DESC')
@@ -46,6 +48,6 @@ class Admin::CitesSuspensionsController < Admin::SimpleCrudController
 
   def collection
     @cites_suspensions ||= end_of_association_chain.order('start_date').
-      page(params[:page])
+      page(params[:page]).search(params[:query])
   end
 end

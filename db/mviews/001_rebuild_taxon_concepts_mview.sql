@@ -2,13 +2,10 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
   LANGUAGE plpgsql
   AS $$
   BEGIN
-    RAISE INFO 'Dropping taxon concepts materialized view';
-    DROP table IF EXISTS taxon_concepts_mview CASCADE;
-    RAISE INFO 'Dropping taxon concepts view';
-    DROP view IF EXISTS taxon_concepts_view;
+    DROP table IF EXISTS taxon_concepts_mview_tmp CASCADE;
+    DROP view IF EXISTS taxon_concepts_view_tmp;
 
-    RAISE INFO 'Creating taxon concepts view';
-    CREATE OR REPLACE VIEW taxon_concepts_view AS
+    CREATE OR REPLACE VIEW taxon_concepts_view_tmp AS
     SELECT taxon_concepts.id,
     taxon_concepts.parent_id,
     taxon_concepts.taxonomy_id,
@@ -133,8 +130,16 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     ) common_names ON taxon_concepts.id = common_names.taxon_concept_id_com
     LEFT JOIN (
       SELECT taxon_concepts.id AS taxon_concept_id_syn,
-      ARRAY_AGG(synonym_tc.full_name) AS synonyms_ary,
-      ARRAY_AGG(synonym_tc.author_year) AS synonyms_author_years_ary
+      ARRAY(
+        SELECT *
+        FROM UNNEST(ARRAY_AGG(synonym_tc.full_name)) s
+        WHERE s IS NOT NULL
+      ) AS synonyms_ary,
+      ARRAY(
+        SELECT *
+        FROM UNNEST(ARRAY_AGG(synonym_tc.author_year)) s
+        WHERE s IS NOT NULL
+      ) AS synonyms_author_years_ary
       FROM taxon_concepts
       LEFT JOIN taxon_relationships
       ON "taxon_relationships"."taxon_concept_id" = "taxon_concepts"."id"
@@ -154,7 +159,11 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     ) subspecies ON taxon_concepts.id = subspecies.taxon_concept_id_sub
     LEFT JOIN (
       SELECT taxon_concepts.id AS taxon_concept_id_cnt,
-      ARRAY_AGG(geo_entities.id ORDER BY geo_entities.name_en) AS countries_ids_ary
+      ARRAY(
+        SELECT *
+        FROM UNNEST(ARRAY_AGG(geo_entities.id ORDER BY geo_entities.name_en)) s
+        WHERE s IS NOT NULL
+      ) AS countries_ids_ary
       FROM taxon_concepts
       LEFT JOIN distributions
       ON "distributions"."taxon_concept_id" = "taxon_concepts"."id"
@@ -166,23 +175,28 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       GROUP BY taxon_concepts.id
     ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt;
 
-    RAISE INFO 'Creating taxon concepts materialized view';
-    CREATE TABLE taxon_concepts_mview AS
+    RAISE INFO 'Creating taxon concepts materialized view (tmp)';
+    CREATE TABLE taxon_concepts_mview_tmp AS
     SELECT *,
     false as dirty,
     null::timestamp with time zone as expiry
-    FROM taxon_concepts_view;
+    FROM taxon_concepts_view_tmp;
 
-    RAISE INFO 'Creating indexes on taxon_concepts materialized view';
-    CREATE INDEX ON taxon_concepts_mview (id);
-    CREATE INDEX ON taxon_concepts_mview (parent_id);
-    CREATE INDEX full_name_idx ON taxon_concepts_mview USING BTREE(UPPER(full_name) text_pattern_ops);
-    CREATE INDEX ON taxon_concepts_mview (taxonomy_is_cites_eu, cites_listed, kingdom_position);
-    CREATE INDEX ON taxon_concepts_mview (taxonomy_is_cites_eu, rank_name); --this one used for Species+ autocomplete (both main and higher taxa in downloads)
-    CREATE INDEX ON taxon_concepts_mview (cms_show, name_status, cms_listing_original, taxonomy_is_cites_eu, rank_name); -- cms csv download
-    CREATE INDEX ON taxon_concepts_mview (cites_show, name_status, cites_listing_original, taxonomy_is_cites_eu, rank_name); -- cites csv download
-    CREATE INDEX ON taxon_concepts_mview (eu_show, name_status, eu_listing_original, taxonomy_is_cites_eu, rank_name); -- eu csv download
+    RAISE INFO 'Creating indexes on taxon_concepts materialized view (tmp)';
+    CREATE INDEX ON taxon_concepts_mview_tmp (id);
+    CREATE INDEX ON taxon_concepts_mview_tmp (parent_id);
+    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops);
+    CREATE INDEX ON taxon_concepts_mview_tmp (taxonomy_is_cites_eu, cites_listed, kingdom_position);
+    CREATE INDEX ON taxon_concepts_mview_tmp (taxonomy_is_cites_eu, rank_name); --this one used for Species+ autocomplete (both main and higher taxa in downloads)
+    CREATE INDEX ON taxon_concepts_mview_tmp (cms_show, name_status, cms_listing_original, taxonomy_is_cites_eu, rank_name); -- cms csv download
+    CREATE INDEX ON taxon_concepts_mview_tmp (cites_show, name_status, cites_listing_original, taxonomy_is_cites_eu, rank_name); -- cites csv download
+    CREATE INDEX ON taxon_concepts_mview_tmp (eu_show, name_status, eu_listing_original, taxonomy_is_cites_eu, rank_name); -- eu csv download
 
+    RAISE INFO 'Swapping concepts materialized view';
+    DROP table IF EXISTS taxon_concepts_mview CASCADE;
+    ALTER TABLE taxon_concepts_mview_tmp RENAME TO taxon_concepts_mview;
+    DROP view IF EXISTS taxon_concepts_view CASCADE;
+    ALTER TABLE taxon_concepts_view_tmp RENAME TO taxon_concepts_view;
   END;
   $$;
 
