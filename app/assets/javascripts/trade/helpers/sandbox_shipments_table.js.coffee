@@ -57,13 +57,13 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
   rowHeight: 30
   shipments: null
   selection: null
-
-  columns: Ember.computed ->
-    columnNames = [
+  columnNames: [
       'appendix', 'speciesName', 'termCode', 'quantity', 'unitCode',
       'tradingPartner', 'countryOfOrigin', 'importPermit', 'exportPermit',
       'originPermit', 'purposeCode', 'sourceCode', 'year'
     ]
+
+  columns: Ember.computed ->
     columnProperties = 
       appendix:
         width: 50
@@ -105,7 +105,7 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
         width: 50
         header: 'Year'
     
-    columns = columnNames.map (key, index) ->
+    columns = @get('columnNames').map (key, index) ->
       Ember.Table.ColumnDefinition.create
         columnWidth: columnProperties[key]['width'] || 100
         headerCellName: columnProperties[key]['header']

@@ -14,8 +14,84 @@
 <button {{action submitShipments}}>Submit shipments</button>
 
 <h2>Shipments</h2>
-
-TODO filters here
+{{view Trade.Select2
+  prompt="Please select appendix values"
+  contentBinding="allAppendixValues" 
+  selectionBinding="selectedAppendixValues"
+  multiple="true"
+}}
+{{view Trade.Select2 
+  prompt="Please select species names"
+  contentBinding="controller.allSpeciesNameValues" 
+  selectionBinding="controller.selectedSpeciesNameValues"
+  multiple="true"
+}}
+{{view Trade.Select2 
+  prompt="Please select term code values"
+  contentBinding="controller.allTermCodeValues" 
+  selectionBinding="controller.selectedTermCodeValues"
+  multiple="true"
+}}
+{{view Trade.Select2 
+  prompt="Please select quantity values"
+  contentBinding="controller.allQuantityValues" 
+  selectionBinding="controller.selectedQuantityValues"
+  multiple="true"
+}}
+{{view Trade.Select2 
+  prompt="Please select unit values"
+  contentBinding="controller.allUnitValues" 
+  selectionBinding="controller.selectedUnitValues"
+  multiple="true"
+}}
+{{view Trade.Select2 
+  prompt="Please select trading partner values"
+  contentBinding="controller.allTradingPartnerValues" 
+  selectionBinding="controller.selectedTradingPartnerValues"
+  multiple="true"
+}}
+{{! view Trade.Select2 
+  prompt="Please select country of origin values"
+  contentBinding="controller.allCountryOfOriginValues" 
+  selectionBinding="controller.selectedCountryOfOriginValues"
+  multiple="true"
+}}
+{{! view Trade.Select2 
+  prompt="Please select import permit values"
+  contentBinding="controller.allImportPermitValues" 
+  selectionBinding="controller.selectedImportPermitValues"
+  multiple="true"
+}}
+{{! view Trade.Select2 
+  prompt="Please select export permit values"
+  contentBinding="controller.allExportPermitValues" 
+  selectionBinding="controller.selectedExportPermitValues"
+  multiple="true"
+ }}
+{{! view Trade.Select2 
+  prompt="Please select origin permit values"
+  contentBinding="controller.allOriginPermitValues" 
+  selectionBinding="controller.selectedOriginPermitValues"
+  multiple="true"
+}}
+{{view Trade.Select2 
+  prompt="Please select purpose code values"
+  contentBinding="controller.allPurposeCodeValues" 
+  selectionBinding="controller.selectedPurposeCodeValues"
+  multiple="true"
+}}
+{{view Trade.Select2 
+  prompt="Please select source code values"
+  contentBinding="controller.allSourceCodeValues" 
+  selectionBinding="controller.selectedSourceCodeValues"
+  multiple="true"
+}}
+{{view Trade.Select2 
+  prompt="Please select year values"
+  contentBinding="controller.allYearValues" 
+  selectionBinding="controller.selectedYearValues"
+  multiple="true"
+}}
 
 <button {{action 'resetFilters'}}>Reset filters</button>
 
@@ -28,5 +104,5 @@ TODO filters here
 
 {{#if unsavedChanges}}There are unsaved changes.{{/if}}
 
-<button {{action 'saveChanges'}}>Save changes</button>
+<button {{action 'saveChanges'}}  {{bind-attr disabled="unsavedChanges"}}>Save changes</button>
 <button {{action 'cancelChanges'}}>Cancel changes</button>

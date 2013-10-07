@@ -21,6 +21,7 @@
 //= require ember-data
 //= require ember-table
 //= require date
+//= require select2
 
 //= require_self
 
