@@ -5,7 +5,6 @@ describe Checklist do
   include_context "Pecari tajacu"
 
   context "search by cites populations" do
-    before(:each){ Sapi.rebuild }
     context "when America" do
       subject{
         checklist = Checklist::Checklist.new({
@@ -53,7 +52,7 @@ describe Checklist do
     context "when South America" do
      subject{
        checklist = Checklist::Checklist.new({
-         :country_ids => [south_america.id]
+         :cites_region_ids => [south_america.id]
        })
        checklist.results
      }
@@ -64,7 +63,7 @@ describe Checklist do
     context "when North America" do
       subject{
         checklist = Checklist::Checklist.new({
-          :country_ids => [north_america.id]
+          :cites_region_ids => [north_america.id]
         })
         checklist.results
       }
@@ -75,7 +74,8 @@ describe Checklist do
     context "when North America and Argentina" do
       subject{
         checklist = Checklist::Checklist.new({
-          :country_ids => [north_america.id, argentina.id]
+          :cites_region_ids => [north_america.id],
+          :country_ids => [argentina.id]
         })
         checklist.results
       }

@@ -31,9 +31,6 @@ describe Checklist::Pdf::IndexFetcher do
     )
     tc.common_names << english_common_name
     tc.common_names << spanish_common_name
-    eu
-    cms_designation
-    Sapi.rebuild
     tc
   }
   let(:rel){ MTaxonConcept.by_scientific_name('Lolcatus') }
@@ -73,9 +70,6 @@ describe Checklist::Pdf::IndexFetcher do
         :taxon_concept_id => tc.id,
         :other_taxon_concept_id => synonym.id,
       )
-      eu
-      cms_designation
-      Sapi.rebuild
     }
     let(:query){
       Checklist::Pdf::IndexQuery.new(
