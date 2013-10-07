@@ -268,3 +268,11 @@ namespace :downloads do
     end
   end
 end
+
+namespace :deploy do
+  desc 'Rebuild database mviews'
+  task :rebuild, :roles => [:db] do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake db:migrate:rebuild"
+  end
+end
+after "deploy:rebuild", "downloads:cache:clear"

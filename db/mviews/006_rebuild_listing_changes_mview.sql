@@ -8,10 +8,8 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     i INT;
     sql TEXT;
   BEGIN
-    DROP TABLE IF EXISTS all_listing_changes_mview CASCADE;
-
-    RAISE INFO 'Creating listing_changes_mview materialized view';
-    DROP TABLE IF EXISTS listing_changes_mview CASCADE;
+    RAISE INFO 'Creating listing_changes_mview materialized view (tmp)';
+    DROP TABLE IF EXISTS listing_changes_mview_tmp CASCADE;
 
     SELECT * INTO taxonomy FROM taxonomies WHERE name = 'CITES_EU';
     IF FOUND THEN
@@ -38,28 +36,27 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
       END IF;
     END IF;
 
-    sql := 'CREATE TABLE listing_changes_mview AS ';
+    sql := 'CREATE TABLE listing_changes_mview_tmp AS ';
     FOR i IN 1..ARRAY_UPPER(designations, 1) LOOP
       designations[i] := 'SELECT * FROM ' || LOWER(designations[i]) || '_listing_changes_mview';
     END LOOP;
 
     sql := sql || ARRAY_TO_STRING(designations, ' UNION ');
-    RAISE INFO '%', sql;
 
     EXECUTE sql;
 
 
-    RAISE INFO 'Creating indexes on listing changes materialized view';
-    CREATE INDEX ON listing_changes_mview (show_in_timeline, taxon_concept_id, designation_id);
-    CREATE INDEX ON listing_changes_mview (show_in_downloads, taxon_concept_id, designation_id);
-    CREATE INDEX ON listing_changes_mview (id, taxon_concept_id);
-    CREATE INDEX ON listing_changes_mview (original_taxon_concept_id);
-    CREATE INDEX ON listing_changes_mview (inclusion_taxon_concept_id);
-    CREATE INDEX ON listing_changes_mview (is_current, designation_name, change_type_name); -- Species+ downloads
+    RAISE INFO 'Creating indexes on listing changes materialized view (tmp)';
+    CREATE INDEX ON listing_changes_mview_tmp (show_in_timeline, taxon_concept_id, designation_id);
+    CREATE INDEX ON listing_changes_mview_tmp (show_in_downloads, taxon_concept_id, designation_id);
+    CREATE INDEX ON listing_changes_mview_tmp (id, taxon_concept_id);
+    CREATE INDEX ON listing_changes_mview_tmp (original_taxon_concept_id);
+    CREATE INDEX ON listing_changes_mview_tmp (inclusion_taxon_concept_id);
+    CREATE INDEX ON listing_changes_mview_tmp (is_current, designation_name, change_type_name); -- Species+ downloads
 
-    PERFORM rebuild_cites_species_listing_mview();
-    PERFORM rebuild_eu_species_listing_mview();
-    PERFORM rebuild_cms_species_listing_mview();
+    RAISE INFO 'Swapping listing_changes_mview materialized view';
+    DROP TABLE IF EXISTS listing_changes_mview CASCADE;
+    ALTER TABLE listing_changes_mview_tmp RENAME TO listing_changes_mview;
 
   END;
   $$;

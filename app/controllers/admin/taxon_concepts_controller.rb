@@ -55,6 +55,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
       failure.js {
         @taxonomies = Taxonomy.order(:name)
         @ranks = Rank.order(:taxonomic_position)
+        load_tags
         render 'new'
       }
       success.html {
@@ -64,6 +65,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
       failure.html {
         @taxonomies = Taxonomy.order(:name)
         @ranks = Rank.order(:taxonomic_position)
+        load_tags
         render 'edit'
       }
     end

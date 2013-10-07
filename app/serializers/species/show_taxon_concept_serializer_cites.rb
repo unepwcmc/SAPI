@@ -3,7 +3,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   attributes :cites_listing, :eu_listing
   has_many :quotas, :serializer => Species::QuotaSerializer, :key => :cites_quotas
   has_many :cites_suspensions, :serializer => Species::CitesSuspensionSerializer
-  has_many :cites_listing_changes, :serializer => Species::ListingChangeSerializer,
+  has_many :cites_listing_changes, :serializer => Species::CitesListingChangeSerializer,
     :key => :cites_listings
   has_many :eu_listing_changes, :serializer => Species::EuListingChangeSerializer,
     :key => :eu_listings
@@ -38,7 +38,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
              SQL
       ).
       order(<<-SQL
-              trade_restrictions.start_date DESC, geo_entities.name_en ASC, trade_restrictions.notes ASC,
+              trade_restrictions.start_date DESC,
+              geo_entities.name_en ASC, trade_restrictions.notes ASC,
               subspecies_info DESC
             SQL
       ).all
@@ -138,6 +139,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       select(<<-SQL
               CASE
                 WHEN listing_changes_mview.change_type_name = 'DELETION'
+                  OR listing_changes_mview.change_type_name = 'RESERVATION_WITHDRAWAL'
                   THEN 'f'
                 ELSE listing_changes_mview.is_current
               END AS is_current,
@@ -166,10 +168,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       order(<<-SQL
           effective_at DESC,
           CASE
-            WHEN change_type_name = 'ADDITION' THEN 3
-            WHEN change_type_name = 'RESERVATION' THEN 2
-            WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
-            WHEN change_type_name = 'DELETION' THEN 0
+            WHEN change_type_name = 'ADDITION' THEN 0
+            WHEN change_type_name = 'RESERVATION' THEN 1
+            WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
+            WHEN change_type_name = 'DELETION' THEN 3
           END,
           subspecies_info DESC
         SQL
@@ -203,9 +205,13 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.effective_at,
               listing_changes_mview.full_note_en,
               listing_changes_mview.short_note_en,
+              listing_changes_mview.auto_note,
               listing_changes_mview.hash_full_note_en,
               listing_changes_mview.hash_ann_parent_symbol,
               listing_changes_mview.hash_ann_symbol,
+              listing_changes_mview.inclusion_taxon_concept_id,
+              listing_changes_mview.inherited_full_note_en,
+              listing_changes_mview.inherited_short_note_en,
               events.description AS event_name,
               events.url AS event_url,
               CASE

@@ -157,6 +157,13 @@ CREATE OR REPLACE FUNCTION rebuild_not_listed_status_for_designation_and_node(
     CASE
       WHEN name_status = 'H'
       THEN hstore(show_flag, 'f')
+      WHEN (
+        data->'rank_name' = 'SUBSPECIES'
+        OR data->'rank_name' = 'VARIETY'
+      )
+      AND listing->status_flag = 'LISTED'
+      AND (listing->status_original_flag)::BOOLEAN = FALSE
+      THEN hstore(show_flag, 'f')  
       WHEN NOT (
         data->'rank_name' = 'SPECIES'
       )

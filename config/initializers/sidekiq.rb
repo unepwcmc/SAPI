@@ -3,7 +3,7 @@ require 'sidekiq-status'
 
 Sidekiq.configure_client do |config|
   config.client_middleware do |chain|
-    chain.add Sidekiq::Status::ClientMiddleware
+    chain.add Sidekiq::Status::ClientMiddleware unless Rails.env.test?
   end
 end
 

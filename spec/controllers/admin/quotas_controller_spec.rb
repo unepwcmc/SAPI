@@ -23,6 +23,12 @@ describe Admin::QuotasController do
       get :new, :taxon_concept_id => @taxon_concept.id
       response.should render_template('new')
     end
+    it "assigns @geo_entities (country and territory) with two objects" do
+      geo_entity_type_t = create(:geo_entity_type, :name => "TERRITORY")
+      territory = create(:geo_entity, :geo_entity_type_id => geo_entity_type_t.id)
+      get :new, :taxon_concept_id => @taxon_concept.id
+      assigns(:geo_entities).size.should == 2
+    end
   end
 
   describe "POST create" do
@@ -59,6 +65,12 @@ describe Admin::QuotasController do
     it "renders the edit template" do
       get :edit, :id => @quota.id, :taxon_concept_id => @taxon_concept.id
       response.should render_template('edit')
+    end
+    it "assigns @geo_entities (country and territory) with two objects" do
+      geo_entity_type_t = create(:geo_entity_type, :name => "TERRITORY")
+      territory = create(:geo_entity, :geo_entity_type_id => geo_entity_type_t.id)
+      get :edit, :id => @quota.id, :taxon_concept_id => @taxon_concept.id
+      assigns(:geo_entities).size.should == 2
     end
   end
 

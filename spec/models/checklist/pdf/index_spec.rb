@@ -62,7 +62,7 @@ describe Checklist::Pdf::Index do
     )
     eu
     cms_designation
-    Sapi.rebuild(:except => [:taxonomy])
+    Sapi.rebuild
   }
   describe :annotations_key do
     subject{ Checklist::Pdf::Index.new({}) }

@@ -2,7 +2,7 @@
   <th>Year</th>
   <th>Published at</th>
   <th>Current</th>
-  <th>Party</th>
+  <th>Country or Territory</th>
   <th>Purpose</th>
   <th>Term</th>
   <th>Source</th>
@@ -25,7 +25,7 @@
       <td><%= suspension.notes %></td>
       <td>
         <% if suspension.taxon_concept %>
-          <%= link_to suspension.taxon_concept.full_name, edit_admin_taxon_concept_path(suspension.taxon_concept) %>
+          <%= link_to suspension.taxon_concept.full_name, admin_taxon_concept_cites_suspensions_path(suspension.taxon_concept) %>
         <% end %>
       </td>
       <td>

@@ -5,6 +5,7 @@ describe Checklist do
   include_context "Canis lupus"
 
   context "search by cites populations" do
+    before(:each){ Sapi.rebuild }
     context "when Nepal" do
       subject{
         checklist = Checklist::Checklist.new({
@@ -29,6 +30,7 @@ describe Checklist do
     end
   end
   context "search by cites appendices" do
+    before(:each){ Sapi.rebuild }
     context "when App I" do
       subject{
         checklist = Checklist::Checklist.new({
@@ -64,6 +66,7 @@ describe Checklist do
     end
   end
   context "search by cites populations and appendices" do
+    before(:each){ Sapi.rebuild }
     context "when Nepal" do
       context "when App I" do
         subject{

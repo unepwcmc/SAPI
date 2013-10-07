@@ -11,13 +11,14 @@ FactoryGirl.define do
   end
 
   factory :geo_entity_type do
-    name 'Country'
+    name 'COUNTRY'
   end
 
   factory :geo_entity, :aliases => [:related_geo_entity, :trading_country] do
     geo_entity_type
     name 'Wonderland'
-    sequence(:iso_code2) {|n| "#{n}X"}
+    sequence(:iso_code2) { |n| [n, n+1].map{ |i|  (65 + i%26).chr }.join }
+    is_current true
   end
 
   factory :distribution do

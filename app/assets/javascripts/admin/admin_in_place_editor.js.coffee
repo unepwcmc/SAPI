@@ -124,7 +124,7 @@ class TaxonConceptsEditor extends AdminEditor
 
         #initialize this typeahead
         $(@).typeahead
-          source: (query, process) ->
+          source: (query, process) =>
             $.get('/admin/taxon_concepts/autocomplete',
             {
               search_params: {

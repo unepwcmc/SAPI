@@ -248,6 +248,13 @@ shared_context :sapi do
       :parent => cites_eu_chordata
     )
   }
+  let(:cms_reptilia){
+    create_cms_class(
+      :taxonomic_position => '1.1.3',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Reptilia'),
+      :parent => cms_chordata
+    )
+  }
   let(:cites_eu_amphibia){
     create_cites_eu_class(
       :taxonomic_position => '1.1.4',

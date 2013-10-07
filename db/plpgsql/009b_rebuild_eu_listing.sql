@@ -6,7 +6,6 @@ CREATE OR REPLACE FUNCTION rebuild_eu_listing_for_node(node_id integer) RETURNS 
     PERFORM rebuild_eu_not_listed_status_for_node(node_id);
     --PERFORM rebuild_eu_hash_annotation_symbols_for_node(node_id);
     PERFORM rebuild_explicit_eu_listing_for_node(node_id);
-    PERFORM rebuild_descendant_eu_listing_for_node(node_id);
     PERFORM rebuild_ancestor_eu_listing_for_node(node_id);
     END;
   $$;

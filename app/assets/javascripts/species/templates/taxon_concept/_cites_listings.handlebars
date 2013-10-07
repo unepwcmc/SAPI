@@ -34,58 +34,9 @@
             {{/if}}
 
             {{#if listing.is_inclusion}}
-              <!-- inclusion records have a combined inherited + own note -->
-              <!-- own note first -->
-              <p>
-                {{#if listing.full_note_en}}
-                  {{#sizeGt listing.full_note_en max=800}}
-                    {{{unbound listing.short_note_en}}}<br />
-                    <a class="legal-links" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
-                  {{else}}
-                    {{{unbound listing.full_note_en}}}
-                  {{/sizeGt}}
-                {{else}}
-                  {{{unbound listing.short_note_en}}}
-                {{/if}}
-              </p>
-              <!-- inherited note -->
-              <p>
-                {{#if listing.auto_note}}
-                  [{{unbound listing.auto_note}}]<br /><br />
-                {{/if}}
-
-                {{#if listing.inherited_full_note_en}}
-                  {{#sizeGt listing.inherited_full_note_en max=800}}
-                    {{{unbound listing.inherited_short_note_en}}}<br />
-                    <a class="see-full-note" {{action 'showFullNote' "Full note" listing.inherited_full_note_en}}>See full note</a>
-                  {{else}}
-                    {{{unbound listing.inherited_full_note_en}}}
-                  {{/sizeGt}}
-                {{else}}
-                  {{{unbound listing.inherited_short_note_en}}}
-                {{/if}}
-              </p>              
+              {{ partial 'species/taxon_concept/inclusion_listing_note' }}
             {{else}}
-              <!-- other records have single inherited or own note -->
-              {{#if listing.auto_note}}
-                [{{unbound listing.auto_note}}]<br /><br />
-              {{/if}}
-              {{#if listing.hash_full_note_en}}
-                <a class="legal-links" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
-                  {{unbound listing.hash_display}}
-                </a><br /><br />
-              {{/if}}
-
-              {{#if listing.full_note_en}}
-                {{#sizeGt listing.full_note_en max=800}}
-                  {{{ unbound listing.short_note_en}}}<br />
-                  <a class="legal-links" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
-                {{else}}
-                  {{{unbound listing.full_note_en}}}
-                {{/sizeGt}}
-              {{else}}
-                {{{unbound listing.short_note_en}}}
-              {{/if}}
+              {{ partial 'species/taxon_concept/listing_note' }}
             {{/if}}
           </td>
         </tr>
@@ -124,23 +75,11 @@
                 {{#if listing.subspecies_info}}
                   {{{unbound listing.subspecies_info}}}<br /><br />
                 {{/if}}
-                {{#if listing.auto_note}}
-                  [{{unbound listing.auto_note}}]<br /><br />
-                {{/if}}
-                {{#if listing.hash_full_note_en}}
-                  <a class="legal-links" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
-                    {{unbound listing.hash_display}}
-                  </a><br /><br />
-                {{/if}}
-                {{#if listing.full_note_en}}
-                  {{#sizeGt listing.full_note_en max=800}}
-                    {{{unbound listing.short_note_en}}}<br />
-                    <a class="legal-links" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
-                  {{else}}
-                    {{{unbound listing.full_note_en}}}
-                  {{/sizeGt}}
+
+                {{#if listing.is_inclusion}}
+                  {{ partial 'species/taxon_concept/inclusion_listing_note' }}
                 {{else}}
-                  {{{unbound listing.short_note_en}}}
+                  {{ partial 'species/taxon_concept/listing_note' }}
                 {{/if}}
               </td>
             </tr>

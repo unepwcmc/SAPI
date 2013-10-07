@@ -30,20 +30,10 @@
             {{#if listing.subspecies_info}}
               {{{listing.subspecies_info}}}<br />
             {{/if}}
-            {{#if listing.hash_full_note_en}}
-              <a class="legal-links" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
-                {{listing.hash_display}}
-              </a><br />
-            {{/if}}
-            {{#if listing.full_note_en}}
-            {{#sizeGt listing.full_note_en max=800}}
-                {{#if listing.short_note_en}}
-                  {{{listing.short_note_en}}}<br />
-                {{/if}}
-                <a class="legal-links" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
-              {{else}}
-                {{{listing.full_note_en}}}
-              {{/sizeGt}}
+            {{#if listing.is_inclusion}}
+              {{ partial 'species/taxon_concept/inclusion_listing_note' }}
+            {{else}}
+              {{ partial 'species/taxon_concept/listing_note' }}
             {{/if}}
           </td>
           <td class="last">
@@ -89,20 +79,10 @@
                 {{#if listing.subspecies_info}}
                   {{{listing.subspecies_info}}}<br />
                 {{/if}}
-                {{#if listing.hash_full_note_en}}
-                  <a class="legal-links" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
-                    {{listing.hash_display}}
-                  </a><br />
-                {{/if}}
-                {{#if listing.full_note_en}}
-                  {{#sizeGt listing.full_note_en max=800}}
-                    {{#if listing.short_note_en}}
-                      {{{listing.short_note_en}}}<br />
-                    {{/if}}
-                    <a class="legal-links" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
-                  {{else}}
-                    {{{listing.full_note_en}}}
-                  {{/sizeGt}}
+                {{#if listing.is_inclusion}}
+                  {{ partial 'species/taxon_concept/inclusion_listing_note' }}
+                {{else}}
+                  {{ partial 'species/taxon_concept/listing_note' }}
                 {{/if}}
               </td>
               <td class="last">

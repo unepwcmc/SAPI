@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     EXECUTE 'DROP TABLE IF EXISTS ' || lc_table_name || ' CASCADE';
 
     RAISE INFO '* creating % materialized view', lc_table_name;
-    sql := 'CREATE TEMP TABLE ' || lc_table_name || ' AS
+    sql := 'CREATE TABLE ' || lc_table_name || ' AS
     WITH applicable_listing_changes AS (
         SELECT affected_taxon_concept_id,'
         || LOWER(designation.name) || '_applicable_listing_changes_for_node(
@@ -152,8 +152,6 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
 
     EXECUTE sql;
 
-    RAISE INFO 'Terminating non-current inherited listings';
-
     SELECT id INTO deletion_id FROM change_types WHERE name = 'DELETION' AND designation_id = designation.id;
     SELECT id INTO addition_id FROM change_types WHERE name = 'ADDITION' AND designation_id = designation.id;
     -- find inherited listing changes superceded by own listing changes
@@ -247,7 +245,34 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
       EXECUTE sql;
     END IF;
 
-    RAISE INFO '* % merging inclusion records with their ancestor counterparts', lc_table_name;
+    -- current inclusions superceded by:
+    -- deletions of higher taxa or self
+    -- Notomys aquilo, Caracara lutosa, Sceloglaux albifacies
+    -- other additions, including appendix transitions
+    -- Moschus moschiferus moschiferus
+
+    sql := 'WITH current_inclusions AS (
+      SELECT * FROM ' || lc_table_name || '
+      WHERE change_type_name = ''ADDITION''
+      AND inclusion_taxon_concept_id IS NOT NULL
+      AND is_current
+      ), non_current_inclusions AS (
+        SELECT current_inclusions.id, current_inclusions.taxon_concept_id 
+        FROM current_inclusions
+        JOIN ' || lc_table_name || ' lc
+        ON lc.change_type_name IN (''ADDITION'', ''DELETION'')
+        AND lc.explicit_change
+        AND lc.taxon_concept_id = current_inclusions.taxon_concept_id
+        AND lc.effective_at > current_inclusions.effective_at
+        AND lc.is_current
+      )
+      UPDATE ' || lc_table_name || ' lc
+      SET is_current = FALSE
+      FROM non_current_inclusions
+      WHERE lc.id = non_current_inclusions.id 
+      AND lc.taxon_concept_id = non_current_inclusions.taxon_concept_id';
+
+    EXECUTE sql;
 
     sql := 'WITH double_inclusions AS (
       SELECT lc.taxon_concept_id, lc.id AS own_inclusion_id, lc_inh.id AS inherited_inclusion_id, 

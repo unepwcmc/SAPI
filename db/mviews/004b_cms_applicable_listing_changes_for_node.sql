@@ -6,7 +6,6 @@ AS $$
 DECLARE
   sql TEXT;
 BEGIN
-
   sql := 'WITH RECURSIVE listing_changes_timeline AS (
     SELECT all_listing_changes_mview.id,
     designation_id,
@@ -23,11 +22,16 @@ BEGIN
      WHEN (
       -- there are listed populations
       ARRAY_UPPER(listed_geo_entities_ids, 1) IS NOT NULL
-      -- and the taxon does not occur in any of them
+      -- and the taxon has its own distribution and does not occur in any of them
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
       AND NOT listed_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
     )
     -- when all populations are excluded
-    OR excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+    OR (
+      ARRAY_UPPER(excluded_geo_entities_ids, 1) IS NOT NULL
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
+      AND excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+    )
     THEN FALSE
     WHEN ARRAY_UPPER(excluded_taxon_concept_ids, 1) IS NOT NULL 
     -- if taxon or any of its ancestors is excluded from this listing
@@ -59,6 +63,9 @@ BEGIN
     -- BEGIN context
     CASE
     WHEN change_types.name = ''DELETION''
+    AND hi.taxon_concept_id = hi.affected_taxon_concept_id
+    THEN listing_changes_timeline.context - ARRAY[hi.species_listing_id::TEXT]
+    WHEN change_types.name = ''DELETION''
     THEN listing_changes_timeline.context - HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
     WHEN change_types.name = ''ADDITION''
     THEN listing_changes_timeline.context || HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
@@ -81,11 +88,16 @@ BEGIN
     WHEN (
       -- there are listed populations
       ARRAY_UPPER(hi.listed_geo_entities_ids, 1) IS NOT NULL
-      -- and the taxon does not occur in any of them
+      -- and the taxon has its own distribution and does not occur in any of them
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
       AND NOT hi.listed_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
     )
     -- when all populations are excluded
-    OR hi.excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+    OR (
+      ARRAY_UPPER(hi.excluded_geo_entities_ids, 1) IS NOT NULL
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
+      AND hi.excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+    )
     THEN FALSE
     WHEN ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL 
     -- if taxon or any of its ancestors is excluded from this listing
