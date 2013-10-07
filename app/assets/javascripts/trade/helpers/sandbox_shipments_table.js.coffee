@@ -60,45 +60,45 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
 
   columns: Ember.computed ->
     columnNames = [
-      'appendix', 'species_name', 'term_code', 'quantity', 'unit_code',
-      'trading_partner', 'country_of_origin', 'import_permit', 'export_permit',
-      'origin_permit', 'purpose_code', 'source_code', 'year'
+      'appendix', 'speciesName', 'termCode', 'quantity', 'unitCode',
+      'tradingPartner', 'countryOfOrigin', 'importPermit', 'exportPermit',
+      'originPermit', 'purposeCode', 'sourceCode', 'year'
     ]
     columnProperties = 
       appendix:
         width: 50
         header: 'Appdx'
-      species_name:
+      speciesName:
         width: 200
         header: 'Species Name'
-      term_code:
+      termCode:
         width: 50
         header: 'Term'
       quantity:
         width: 50
         header: 'Qty'
-      unit_code:
+      unitCode:
         width: 50
         header: 'Unit'
-      trading_partner:
+      tradingPartner:
         width: 100
         header: 'Trading partner'
-      country_of_origin:
+      countryOfOrigin:
         width: 100
         header: 'Ctry of Origin'
-      import_permit:
+      importPermit:
         width: 150
         header: 'Import Permit'
-      export_permit:
+      exportPermit:
         width: 150
         header: 'Export Permit'
-      origin_permit:
+      originPermit:
         width: 150
         header: 'Origin Permit'
-      purpose_code:
+      purposeCode:
         width: 50
         header: 'Purpose'
-      source_code:
+      sourceCode:
         width: 50
         header: 'Source'
       year:
