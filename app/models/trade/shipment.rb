@@ -25,5 +25,10 @@
 #
 
 class Trade::Shipment < ActiveRecord::Base
-  attr_accessible :annual_report_upload_id, :appendix, :country_of_origin_id, :country_of_origin_permit_id, :exporter_id, :import_permit_id, :importer_id, :purpose_id, :quantity, :reported_appendix, :reported_by_exporter, :reported_species_name, :source_id, :taxon_concept_id, :term_id, :unit_id, :year
+  attr_accessible :annual_report_upload_id, :appendix,
+    :country_of_origin_id, :country_of_origin_permit_id,
+    :exporter_id, :import_permit_id, :importer_id, :purpose_id,
+    :quantity, :reported_appendix, :reported_by_exporter,
+    :reported_species_name, :source_id, :taxon_concept_id,
+    :term_id, :unit_id, :year
 end
