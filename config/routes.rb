@@ -86,6 +86,7 @@ SAPI::Application.routes.draw do
       end
     end
     resources :validation_rules
+    resources :shipments
     resources :geo_entities, :only => [:index]
     root :to => 'ember#start'
   end

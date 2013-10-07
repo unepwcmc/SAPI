@@ -1,5 +1,5 @@
-Trade.SandboxShipmentsTable = Ember.Namespace.create()
-Trade.SandboxShipmentsTable.EditableTableCell = Ember.Table.TableCell.extend
+Trade.ShipmentsTable = Ember.Namespace.create()
+Trade.ShipmentsTable.EditableTableCell = Ember.Table.TableCell.extend
   classNames: 'editable-table-cell'
   templateName: 'trade/editable-table/editable-table-cell'
   isEditing:  no
@@ -20,7 +20,7 @@ Trade.SandboxShipmentsTable.EditableTableCell = Ember.Table.TableCell.extend
     @set 'isEditing', yes
     event.stopPropagation()
 
-Trade.SandboxShipmentsTable.CheckboxTableCell = Ember.Table.TableCell.extend
+Trade.ShipmentsTable.CheckboxTableCell = Ember.Table.TableCell.extend
   classNames: 'checkbox-table-cell'
   templateName: 'trade/editable-table/checkbox-table-cell'
   isEditing:  no
@@ -41,10 +41,10 @@ Trade.SandboxShipmentsTable.CheckboxTableCell = Ember.Table.TableCell.extend
     @set 'isEditing', yes
     event.stopPropagation()
 
-Trade.SandboxShipmentsTable.TablesContainer =
+Trade.ShipmentsTable.TablesContainer =
 Ember.Table.TablesContainer.extend Ember.Table.RowSelectionMixin
 
-Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
+Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
   hasHeader: yes
   hasFooter: no
   numFixedColumns: 0
@@ -55,14 +55,17 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
 
   columns: Ember.computed ->
     columnNames = [
-      'appendix', 'species_name', 'term_code', 'quantity', 'unit_code',
+      'appendix', 'reported_appendix', 'species_name', 'term_code', 'quantity', 'unit_code',
       'trading_partner', 'country_of_origin', 'import_permit', 'export_permit',
       'origin_permit', 'purpose_code', 'source_code', 'year'
     ]
     columnProperties = 
       appendix:
-        width: 50
+        width: 45
         header: 'Appdx'
+      reported_appendix:
+        width: 55
+        header: 'Rep. Appdx'
       species_name:
         width: 200
         header: 'Species Name'
@@ -97,20 +100,20 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
         width: 50
         header: 'Source'
       year:
-        width: 50
+        width: 40
         header: 'Year'
 
     columns = columnNames.map (key, index) ->
       Ember.Table.ColumnDefinition.create
         columnWidth: columnProperties[key]['width'] || 100
         headerCellName: columnProperties[key]['header']
-        tableCellViewClass: 'Trade.SandboxShipmentsTable.EditableTableCell'
+        tableCellViewClass: 'Trade.ShipmentsTable.EditableTableCell'
         getCellContent: (row) -> row.get(key)
         setCellContent: (row, value) -> row.set(key, value)
     deleteColumn = Ember.Table.ColumnDefinition.create
       columnWidth: 50
       headerCellName: 'Delete'
-      tableCellViewClass: 'Trade.SandboxShipmentsTable.CheckboxTableCell'
+      tableCellViewClass: 'Trade.ShipmentsTable.CheckboxTableCell'
       getCellContent: (row) -> row.get('_destroyed')
       setCellContent: (row, value) -> 
         row.set('_destroyed', value)
