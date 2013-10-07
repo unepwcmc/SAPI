@@ -3,6 +3,7 @@ Trade.SandboxShipmentsTable.EditableTableCell = Ember.Table.TableCell.extend
   classNames: 'editable-table-cell'
   templateName: 'trade/editable-table/editable-table-cell'
   isEditing:  no
+  hasChanged: false
   type:       'text'
 
   innerTextField: Ember.TextField.extend
@@ -11,6 +12,10 @@ Trade.SandboxShipmentsTable.EditableTableCell = Ember.Table.TableCell.extend
     didInsertElement: -> @$().focus()
     blur: (event) ->
       @set 'parentView.isEditing', no
+
+  onCellContentDidChange: Ember.observer ->
+    @set 'hasChanged', @get('isEditing')
+  , 'cellContent'
 
   onRowContentDidChange: Ember.observer ->
     @set 'isEditing', no

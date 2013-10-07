@@ -17,9 +17,7 @@
 
 TODO filters here
 
-TODO reset filters button
-
-<button {{action 'saveChanges'}}>Save changes</button>
+<button {{action 'resetFilters'}}>Reset filters</button>
 
 <div class='presentation-container'>
   {{view Trade.SandboxShipmentsTable.TablesContainer
@@ -28,4 +26,7 @@ TODO reset filters button
   }}
 </div>
 
+{{#if unsavedChanges}}There are unsaved changes.{{/if}}
+
 <button {{action 'saveChanges'}}>Save changes</button>
+<button {{action 'cancelChanges'}}>Cancel changes</button>

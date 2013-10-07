@@ -7,6 +7,13 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     controller
   .property()
 
+  unsavedChanges: (->
+    @get('content.isDirty')
+  ).property('content.isDirty')
+
+  appendix: []
+  appendixBlank: false
+
   actions:
     submitShipments: ()->
       $.post '/trade/annual_report_uploads/'+@get('id')+'/submit', {}, (data) ->
@@ -19,4 +26,12 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
     saveChanges: () ->
       @get('store').commit()
-      @transitionToRoute('annual_report_upload', @.get('content'))
+      @transitionToRoute('annual_report_upload', @get('content'))
+
+    cancelChanges: () ->
+      if (!@get('content').get('isSaving'))
+        @get('content').get('transaction').rollback() 
+
+    resetFilters: () ->
+      #TODO
+      console.log('resetting filters')
