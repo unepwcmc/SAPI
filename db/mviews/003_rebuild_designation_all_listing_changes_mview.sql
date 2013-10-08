@@ -13,7 +13,6 @@
     SELECT LOWER(designation.name) || '_tmp_listing_changes_mview' INTO tmp_lc_table_name;
     SELECT LOWER(taxonomy.name) || '_taxon_concepts_and_ancestors_mview' INTO tc_table_name;
 
-    RAISE INFO '* creating % tmp table', tmp_lc_table_name;
     EXECUTE 'DROP TABLE IF EXISTS ' || tmp_lc_table_name || ' CASCADE';
     
     sql := 'CREATE TEMP TABLE ' || tmp_lc_table_name || ' AS
@@ -30,6 +29,7 @@
         listing_changes.species_listing_id,
         listing_changes.change_type_id,
         listing_changes.inclusion_taxon_concept_id,
+        listing_changes.is_current,
         listing_changes.effective_at::DATE,
         ARRAY_AGG_NOTNULL(taxonomic_exceptions.taxon_concept_id) AS excluded_taxon_concept_ids
       FROM listing_changes
@@ -46,6 +46,7 @@
         listing_changes.species_listing_id,
         listing_changes.change_type_id,
         listing_changes.inclusion_taxon_concept_id,
+        listing_changes.is_current,
         listing_changes.effective_at::DATE
     )
     -- the purpose of this CTE is to aggregate listed and excluded populations
@@ -57,6 +58,7 @@
       lc.change_type_id,
       lc.inclusion_taxon_concept_id,
       lc.effective_at,
+      lc.is_current,
       lc.excluded_taxon_concept_ids,
       party_distribution.geo_entity_id AS party_id,
       ARRAY_AGG_NOTNULL(listing_distributions.geo_entity_id) AS listed_geo_entities_ids,
@@ -79,6 +81,7 @@
       lc.change_type_id,
       lc.inclusion_taxon_concept_id,
       lc.effective_at,
+      lc.is_current,
       party_distribution.geo_entity_id,
       lc.excluded_taxon_concept_ids';
 
@@ -86,7 +89,6 @@
   
     EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (taxon_concept_id)';
 
-    RAISE INFO '* creating % materialized view', all_lc_table_name;
     EXECUTE 'DROP TABLE IF EXISTS ' || all_lc_table_name || ' CASCADE';
 
     sql := 'CREATE TABLE ' || all_lc_table_name || ' AS
@@ -118,7 +120,6 @@
     EXECUTE 'CREATE INDEX ON ' || all_lc_table_name || ' (affected_taxon_concept_id, inclusion_taxon_concept_id)';
     EXECUTE 'CREATE INDEX ON ' || all_lc_table_name || ' (id, affected_taxon_concept_id)';
 
-    RAISE INFO '* fixing inclusion tree distance in % materialized view', all_lc_table_name;
     -- make the tree distance reflect distance from inclusion (Rhinopittecus roxellana)
     sql := 'UPDATE ' || all_lc_table_name
     || ' SET tree_distance = tc.tree_distance

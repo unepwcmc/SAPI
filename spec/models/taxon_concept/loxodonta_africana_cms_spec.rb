@@ -19,13 +19,13 @@ describe TaxonConcept do
       end
       describe :ancestors do
         context "family" do
-          specify{ @species.family_name == 'Elephantidae' }
+          specify{ @species.family_name.should == 'Elephantidae' }
         end
         context "order" do
-          specify{ @species.order_name == 'Proboscidea' }
+          specify{ @species.order_name.should == 'Proboscidea' }
         end
         context "class" do
-          specify{ @species.class_name == 'Mammalia' }
+          specify{ @species.class_name.should == 'Mammalia' }
         end
       end
     end
