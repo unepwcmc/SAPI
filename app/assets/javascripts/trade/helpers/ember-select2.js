@@ -56,19 +56,19 @@ Trade.Select2 = Ember.Select.extend({
   },
 
   willDestroyElement : function() {
-      console.log('destroying select2');
+      //console.log('destroying select2');
       this.$().select2('destroy');
   },
 
   // when data is loaded, update select2 to show
   // this data
   itemsLoaded : function() {
-    console.log('select2 items loaded');
+    //console.log('select2 items loaded');
     Ember.run.sync();
     // trigger change event on selectbox once data
     // has been loaded to update options values
     Ember.run.next(this, function() {
-      console.log('updating select2 options list');
+      //console.log('updating select2 options list');
       // trigger change event on select2
       if (this.$())
         this.$().change();

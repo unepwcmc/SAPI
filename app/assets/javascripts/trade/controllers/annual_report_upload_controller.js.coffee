@@ -82,7 +82,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
   filtersChanged: ( ->
     shipments = @get('content.sandboxShipments')
-    @get('tableController.columnNames').forEach (columnName) =>
+    @get('columnNames').forEach (columnName) =>
       capitalisedColumnName = @capitaliseFirstLetter(columnName)
       selectedValuesName = 'selected' + capitalisedColumnName + 'Values'
       blankValue = 'blank' + capitalisedColumnName
@@ -112,12 +112,16 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
   )
 
   resetFilters: ->
-    @get('tableController.columnNames').forEach (columnName) =>
+    @get('columnNames').forEach (columnName) =>
       selectedValuesName = 'selected' + @capitaliseFirstLetter(columnName) + 'Values'
       @set(selectedValuesName, [])
 
   capitaliseFirstLetter: (string) ->
     string.charAt(0).toUpperCase() + string.slice(1)
+
+  columnNames: ( ->
+    @get('tableController.columnNames')
+  ).property('tableController.columnNames')
 
   actions:
     submitShipments: ()->
@@ -141,3 +145,20 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     resetFilters: () ->
       @resetFilters()
       @set('tableController.shipments', @get('content.sandboxShipments'))
+
+    deleteSelection: () ->
+      currentShipments = @get('tableController.shipments')
+      currentShipments.forEach (shipment) ->
+        shipment.set('_destroyed', true)
+      @set('tableController.shipments', currentShipments)
+
+    updateSelection: () ->
+      valuesToUpdate = {}
+      @get('columnNames').forEach (columnName) =>
+        el = $('#transformations').find('input[name=' + columnName + ']')
+        valuesToUpdate[columnName] = el.val() if el && el.val()
+      currentShipments = @get('tableController.shipments')
+      currentShipments.forEach (shipment) ->
+        for columnName, value of valuesToUpdate
+          shipment.set(columnName, value)
+      @set('tableController.shipments', currentShipments)
