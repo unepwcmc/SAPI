@@ -14,12 +14,12 @@ class TaxonConceptObserver < ActiveRecord::Observer
         name
       end
       taxon_concept.data = taxon_concept.parent.data.slice(
-        :kingdom_id, :kingdom_name, :phylum_id, :phylum_name, :class_id,
-        :class_name, :order_id, :order_name, :family_id, :family_name,
-        :subfamily_id, :subfamily_name, :genus_id, :genus_name, :species_id,
-        :species_name
+        "kingdom_id", "kingdom_name", "phylum_id", "phylum_name", "class_id",
+        "class_name", "order_id", "order_name", "family_id", "family_name",
+        "subfamily_id", "subfamily_name", "genus_id", "genus_name", "species_id",
+        "species_name"
       ).merge({
-        :rank_name => rank_name
+        "rank_name" => rank_name
       })
     else
       taxon_concept.full_name = taxon_concept.taxon_name && taxon_concept.taxon_name.scientific_name
