@@ -1,14 +1,19 @@
 <div class="navbar navbar-fixed-top">
-	<div class="navbar-inner">
-	  <a class="brand" href="#">Trade DB Management Tool</a>
-	  <ul class="nav">
-	    <li class="active"><a href="#">Home</a></li>
-	    <li>{{#linkTo "annual_report_uploads"}}Annual Report Uploads{{/linkTo}}</li>
+  <div class="navbar-inner">
+    <a class="brand" href="#">Trade DB Management Tool</a>
+    <ul class="nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li>{{#linkTo "annual_report_uploads"}}Annual Report Uploads{{/linkTo}}</li>
           <li>{{#linkTo "validation_rules"}}Validation rules{{/linkTo}}</li>
-	  </ul>
+    </ul>
   </div>
 </div>
 
-<div id="content">
-{{outlet}}
-</div>
+
+<div class="container">
+  {{outlet}}
+  <hr>
+  <footer>
+    <p>&copy; UNEP-WCMC {{view.currentYear}}</p>
+  </footer>
+</div><!--/.fluid-container-->

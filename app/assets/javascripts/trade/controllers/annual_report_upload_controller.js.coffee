@@ -11,85 +11,114 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     @get('content.isDirty')
   ).property('content.isDirty')
 
+  allValuesFor: (attr) ->
+    @get('content.sandboxShipments').mapBy(attr).compact().uniq()
+
   allAppendixValues: (->
-    @get('content.sandboxShipments').mapProperty('appendix').uniq()
+    @allValuesFor('appendix')
   ).property('content.sandboxShipments.@each.appendix')
   selectedAppendixValues: []
+  blankAppendix: false
   allSpeciesNameValues: (->
-    @get('content.sandboxShipments').mapProperty('speciesName').uniq()
+    @allValuesFor('speciesName')
   ).property('content.sandboxShipments.@each.speciesName')
   selectedSpeciesNameValues: []
+  blankSpeciesName: false
   allTermCodeValues: (->
-    @get('content.sandboxShipments').mapProperty('termCode').uniq()
+    @allValuesFor('termCode')
   ).property('content.sandboxShipments.@each.termCode')
-  selectedTermCodeValues: [] 
+  selectedTermCodeValues: []
+  blankTermCode: false
   allQuantityValues: (->
-    @get('content.sandboxShipments').mapProperty('quantity').uniq()
+    @allValuesFor('quantity')
   ).property('content.sandboxShipments.@each.quantity')
-  selectedQuantityValues: [] 
+  selectedQuantityValues: []
+  blankQuantity: false
   allUnitCodeValues: (->
-    @get('content.sandboxShipments').mapProperty('unitCode').uniq()
+    @allValuesFor('unitCode')
   ).property('content.sandboxShipments.@each.unitCode')
-  selectedUnitCodeValues: [] 
+  selectedUnitCodeValues: []
+  blankUnitCode: false
   allTradingPartnerValues: (->
-    @get('content.sandboxShipments').mapProperty('tradingPartner').uniq()
+    @allValuesFor('tradingPartner')
   ).property('content.sandboxShipments.@each.tradingPartner')
-  selectedTradingPartnerValues: [] 
+  selectedTradingPartnerValues: []
+  blankTradingPartner: false
   allCountryOfOriginValues: (->
-    @get('content.sandboxShipments').mapProperty('countryOfOrigin').uniq()
+    @allValuesFor('countryOfOrigin')
   ).property('content.sandboxShipments.@each.countryOfOrigin')
-  selectedCountryOfOriginValues: [] 
+  selectedCountryOfOriginValues: []
+  blankCountryOfOrigin: false
   allImportPermitValues: (->
-    @get('content.sandboxShipments').mapProperty('importPermit').uniq()
+    @allValuesFor('importPermit')
   ).property('content.sandboxShipments.@each.importPermit')
-  selectedImportPermitValues: [] 
+  selectedImportPermitValues: []
+  blankImportPermit: false
   allExportPermitValues: (->
-    @get('content.sandboxShipments').mapProperty('exportPermit').uniq()
+    @allValuesFor('exportPermit')
   ).property('content.sandboxShipments.@each.exportPermit')
-  selectedExportPermitValues: [] 
+  selectedExportPermitValues: []
+  blankExportPermit: false
   allOriginPermitValues: (->
-    @get('content.sandboxShipments').mapProperty('originPermit').uniq()
+    @allValuesFor('originPermit')
   ).property('content.sandboxShipments.@each.originPermit')
-  selectedOriginPermitValues: [] 
+  selectedOriginPermitValues: []
+  blankOriginPermit: false
   allPurposeCodeValues: (->
-    @get('content.sandboxShipments').mapProperty('purposeCode').uniq()
+    @allValuesFor('purposeCode')
   ).property('content.sandboxShipments.@each.purposeCode')
-  selectedPurposeCodeValues: [] 
+  selectedPurposeCodeValues: []
+  blankPurposeCode: false
   allSourceCodeValues: (->
-    @get('content.sandboxShipments').mapProperty('sourceCode').uniq()
+    @allValuesFor('sourceCode')
   ).property('content.sandboxShipments.@each.sourceCode')
-  selectedSourceCodeValues: [] 
+  selectedSourceCodeValues: []
+  blankSourceCode: false
   allYearValues: (->
-    @get('content.sandboxShipments').mapProperty('year').uniq()
+    @allValuesFor('year')
   ).property('content.sandboxShipments.@each.year')
-  selectedYearValues: [] 
+  selectedYearValues: []
+  blankYear: false
 
   filtersChanged: ( ->
     shipments = @get('content.sandboxShipments')
-    @get('tableController.columnNames').forEach( (columnName) =>
-      selectedValuesName = 'selected' + @capitaliseFirstLetter(columnName) + 'Values'
-      if @get(selectedValuesName + '.length') > 0
+    @get('tableController.columnNames').forEach (columnName) =>
+      capitalisedColumnName = @capitaliseFirstLetter(columnName)
+      selectedValuesName = 'selected' + capitalisedColumnName + 'Values'
+      blankValue = 'blank' + capitalisedColumnName
+      if @get(selectedValuesName + '.length') > 0 || @get(blankValue)
         shipments = shipments.filter((element) =>
-          return @get(selectedValuesName).contains(element.get(columnName))
+          return @get(selectedValuesName).contains(element.get(columnName)) ||
+            @get(blankValue) && (
+              # check if null, undefined or blank
+              !element.get(columnName) || /^\s*$/.test(element.get(columnName))
+            )
         )
-    )
     @set('tableController.shipments', shipments)
-  ).observes('selectedAppendixValues.@each', 'selectedSpeciesNameValues.@each',
-    'selectedTermCodeValues.@each', 'selectedQuantityValues.@each',
-    'selectedUnitCodeValues.@each', 'selectedTradingPartnerValues.@each',
-    'selectedTradingPartnerValues.@each', 'selectedCountryOfOriginValues.@each',
-    'selectedImportPermitValues.@each', 'selectedExportPermitValues.@each',
-    'selectedOriginPermitValues.@each', 'selectedPurposeCodeValues.@each',
-    'selectedSourceCodeValues.@each', 'selectedYearValues.@each')
+  ).observes(
+    'selectedAppendixValues.@each', 'blankAppendix',
+    'selectedSpeciesNameValues.@each', 'blankSpeciesName',
+    'selectedTermCodeValues.@each', 'blankTermCode',
+    'selectedQuantityValues.@each', 'blankQuantity',
+    'selectedUnitCodeValues.@each', 'blankUnitCode',
+    'selectedTradingPartnerValues.@each', 'blankTradingPartner',
+    'selectedCountryOfOriginValues.@each', 'blankCountryOfOrigin',
+    'selectedImportPermitValues.@each', 'blankImportPermit',
+    'selectedExportPermitValues.@each', 'blankExportPermit',
+    'selectedOriginPermitValues.@each', 'blankOriginPermit',
+    'selectedPurposeCodeValues.@each', 'blankPurposeCode',
+    'selectedSourceCodeValues.@each', 'blankSourceCode',
+    'selectedYearValues.@each', 'blankYear'
+  )
 
   resetFilters: ->
-    @set('selectedAppendixValues', [])
-    @set('selectedSpeciesNameValues', [])
-    @set('selectedTermCodeValues', [])
+    @get('tableController.columnNames').forEach (columnName) =>
+      selectedValuesName = 'selected' + @capitaliseFirstLetter(columnName) + 'Values'
+      @set(selectedValuesName, [])
 
   capitaliseFirstLetter: (string) ->
     string.charAt(0).toUpperCase() + string.slice(1)
-  
+
   actions:
     submitShipments: ()->
       $.post '/trade/annual_report_uploads/'+@get('id')+'/submit', {}, (data) ->
@@ -107,7 +136,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
     cancelChanges: () ->
       if (!@get('content').get('isSaving'))
-        @get('content').get('transaction').rollback() 
+        @get('content').get('transaction').rollback()
 
     resetFilters: () ->
       @resetFilters()

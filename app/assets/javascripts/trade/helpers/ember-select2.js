@@ -76,8 +76,13 @@ Trade.Select2 = Ember.Select.extend({
   }.observes('controller.content.isLoaded'),
 
   setSelectedValue: function(value) {
-    console.log('setting select2 selected value to ' + value);
-    this.$().select2('val', value);   
+    if (!value) {
+      //clear the selection + show placeholder again
+      this.$().select2('data', null);
+    } else {
+      //console.log('setting select2 selected value to ' + value);
+      this.$().select2('val', value);
+    }
   },
 
   // observe controller selected content and update select2

@@ -1,99 +1,256 @@
-<h2>Annual report upload summary</h2>
-<p>{{summary}}</p>
+<div class="page-header">
+  <h1>Annual report upload <small>SANDBOX</small></h1>
+  {{summary}}
+</div>
 
-<h2>Validation errors</h2>
+<div class="well well-small">
+  <div class="row-fluid">
+    <div class="span8">
+      <h3>Validation errors</h3>
+    </div>
+    <div class="span4">
+      <button {{action submitShipments}} class="pull-right btn btn-danger">
+        Submit shipments
+      </button>
+    </div>
+  </div>
+</div>
 
-<table>
-  <thead>
-    <th>Error message</th>
-    <th>Error count</th>
-  </thead>
-  {{collection Trade.ValidationErrorsView contentBinding='validationErrors'}}
-</table>
+{{collection Trade.ValidationErrorsView contentBinding='validationErrors'}}
 
-<button {{action submitShipments}}>Submit shipments</button>
+<div class="well well-small">
+  <div class="row-fluid">
+    <div class="span8">
+      <h3>Filters</h3>
+    </div>
+    <div class="span4">
+      <button {{action 'resetFilters'}} class="pull-right btn">Reset filters</button>
+    </div>
+  </div>
+</div>
 
-<h2>Shipments</h2>
-{{view Trade.Select2
-  prompt="Please select appendix values"
-  contentBinding="allAppendixValues" 
-  selectionBinding="selectedAppendixValues"
-  multiple="true"
-}}
-{{view Trade.Select2 
-  prompt="Please select species names"
-  contentBinding="controller.allSpeciesNameValues" 
-  selectionBinding="controller.selectedSpeciesNameValues"
-  multiple="true"
-}}
-{{view Trade.Select2 
-  prompt="Please select term code values"
-  contentBinding="controller.allTermCodeValues" 
-  selectionBinding="controller.selectedTermCodeValues"
-  multiple="true"
-}}
-{{view Trade.Select2 
-  prompt="Please select quantity values"
-  contentBinding="controller.allQuantityValues" 
-  selectionBinding="controller.selectedQuantityValues"
-  multiple="true"
-}}
-{{view Trade.Select2 
-  prompt="Please select unit values"
-  contentBinding="controller.allUnitValues" 
-  selectionBinding="controller.selectedUnitValues"
-  multiple="true"
-}}
-{{view Trade.Select2 
-  prompt="Please select trading partner values"
-  contentBinding="controller.allTradingPartnerValues" 
-  selectionBinding="controller.selectedTradingPartnerValues"
-  multiple="true"
-}}
-{{! view Trade.Select2 
-  prompt="Please select country of origin values"
-  contentBinding="controller.allCountryOfOriginValues" 
-  selectionBinding="controller.selectedCountryOfOriginValues"
-  multiple="true"
-}}
-{{! view Trade.Select2 
-  prompt="Please select import permit values"
-  contentBinding="controller.allImportPermitValues" 
-  selectionBinding="controller.selectedImportPermitValues"
-  multiple="true"
-}}
-{{! view Trade.Select2 
-  prompt="Please select export permit values"
-  contentBinding="controller.allExportPermitValues" 
-  selectionBinding="controller.selectedExportPermitValues"
-  multiple="true"
- }}
-{{! view Trade.Select2 
-  prompt="Please select origin permit values"
-  contentBinding="controller.allOriginPermitValues" 
-  selectionBinding="controller.selectedOriginPermitValues"
-  multiple="true"
-}}
-{{view Trade.Select2 
-  prompt="Please select purpose code values"
-  contentBinding="controller.allPurposeCodeValues" 
-  selectionBinding="controller.selectedPurposeCodeValues"
-  multiple="true"
-}}
-{{view Trade.Select2 
-  prompt="Please select source code values"
-  contentBinding="controller.allSourceCodeValues" 
-  selectionBinding="controller.selectedSourceCodeValues"
-  multiple="true"
-}}
-{{view Trade.Select2 
-  prompt="Please select year values"
-  contentBinding="controller.allYearValues" 
-  selectionBinding="controller.selectedYearValues"
-  multiple="true"
-}}
+<div class="filters row-fluid">
+  <div class="span4">
+    <div class="clearfix">
+      <label>
+        Appendix<br>
+        {{view Trade.Select2
+          prompt="Please select appendix values"
+          contentBinding="allAppendixValues"
+          selectionBinding="selectedAppendixValues"
+          multiple="true"
+        }}
+      </label>
+      <label>
+        {{view Ember.Checkbox checkedBinding="blankAppendix"}}
+        blank
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Species name<br>
+        {{view Trade.Select2
+          prompt="Please select species names"
+          contentBinding="controller.allSpeciesNameValues"
+          selectionBinding="controller.selectedSpeciesNameValues"
+          multiple="true"
+        }}
+      </label>
+      <label>
+        {{view Ember.Checkbox checkedBinding="blankSpeciesName"}}
+        blank
+      </label>
+    </div>
+  </div>
+  <div class="span4">
+    <div class="clearfix">
+      <label>
+        Term Code<br>
+        {{view Trade.Select2
+          prompt="Please select term code values"
+          contentBinding="controller.allTermCodeValues"
+          selectionBinding="controller.selectedTermCodeValues"
+          multiple="true"
+        }}
+      </label>
+      <label>
+        {{view Ember.Checkbox checkedBinding="blankTermCode"}}
+        blank
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Quantity<br>
+        {{view Trade.Select2
+          prompt="Please select quantity values"
+          contentBinding="controller.allQuantityValues"
+          selectionBinding="controller.selectedQuantityValues"
+          multiple="true"
+        }}
+      </label>
+      <label>
+        {{view Ember.Checkbox checkedBinding="blankQuantity"}}
+        blank
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Unit<br>
+        {{view Trade.Select2
+          prompt="Please select unit code values"
+          contentBinding="controller.allUnitCodeValues"
+          selectionBinding="controller.selectedUnitCodeValues"
+          multiple="true"
+        }}
+      </label>
+      <label>
+        {{view Ember.Checkbox checkedBinding="blankUnitCode"}}
+        blank
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Trading Partner<br>
+        {{view Trade.Select2
+          prompt="Please select trading partner values"
+          contentBinding="controller.allTradingPartnerValues"
+          selectionBinding="controller.selectedTradingPartnerValues"
+          multiple="true"
+        }}
+      </label>
+      <label>
+        {{view Ember.Checkbox checkedBinding="blankTradingPartner"}}
+        blank
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Country of Origin<br>
+        {{view Trade.Select2
+          prompt="Please select country of origin values"
+          contentBinding="controller.allCountryOfOriginValues"
+          selectionBinding="controller.selectedCountryOfOriginValues"
+          multiple="true"
+        }}
+      </label>
+      <label>
+        {{view Ember.Checkbox checkedBinding="blankCountryOfOrigin"}}
+        blank
+      </label>
+    </div>
+  </div>
+  <div class="span4">
+    <div class="clearfix">
+      <label>
+        Import Permit<br>
+        {{view Trade.Select2
+          prompt="Please select import permit values"
+          contentBinding="controller.allImportPermitValues"
+          selectionBinding="controller.selectedImportPermitValues"
+          multiple="true"
+        }}
+      </label>
+      <label>
+        {{view Ember.Checkbox checkedBinding="blankImportPermit"}}
+        blank
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Export Permit<br>
+        {{view Trade.Select2
+          prompt="Please select export permit values"
+          contentBinding="controller.allExportPermitValues"
+          selectionBinding="controller.selectedExportPermitValues"
+          multiple="true"
+         }}
+      </label>
+      <label>
+        {{view Ember.Checkbox checkedBinding="blankExportPermit"}}
+        blank
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Origin Permit<br>
+        {{view Trade.Select2
+          prompt="Please select origin permit values"
+          contentBinding="controller.allOriginPermitValues"
+          selectionBinding="controller.selectedOriginPermitValues"
+          multiple="true"
+        }}
+      </label>
+      <label>
+        {{view Ember.Checkbox checkedBinding="blankOriginPermit"}}
+        blank
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Purpose Code<br>
+        {{view Trade.Select2
+          prompt="Please select purpose code values"
+          contentBinding="controller.allPurposeCodeValues"
+          selectionBinding="controller.selectedPurposeCodeValues"
+          multiple="true"
+        }}
+      </label>
+      <label>
+        {{view Ember.Checkbox checkedBinding="blankPurposeCode"}}
+        blank
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Source Code<br>
+        {{view Trade.Select2
+          prompt="Please select source code values"
+          contentBinding="controller.allSourceCodeValues"
+          selectionBinding="controller.selectedSourceCodeValues"
+          multiple="true"
+        }}
+      </label>
+      <label>
+        {{view Ember.Checkbox checkedBinding="blankSourceCode"}}
+        blank
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Year<br>
+        {{view Trade.Select2
+          prompt="Please select year values"
+          contentBinding="controller.allYearValues"
+          selectionBinding="controller.selectedYearValues"
+          multiple="true"
+        }}
+      </label>
+      <label>
+        {{view Ember.Checkbox checkedBinding="blankYear"}}
+        blank
+      </label>
+    </div>
+  </div>
+</div>
 
-<button {{action 'resetFilters'}}>Reset filters</button>
+<div class="well well-small">
+  <div class="row-fluid">
+    <div class="span8"><h3>Sandbox</h3></div>
+    <div class="span4">
+      {{#if unsavedChanges}}
+        <span class="label label-danger pull-right">There are unsaved changes.</span>
+      {{/if}}<br>
+      <button {{action 'saveChanges'}}
+        {{bind-attr class="unsavedChanges::disabled :pull-right :btn :btn-primary"}}
+        {{bind-attr disabled="unsavedChanges::disabled"}}>
+        Save changes
+      </button>
+      <button {{action 'cancelChanges'}} class="pull-right btn clearfix">
+        Cancel changes
+      </button>
+    </div>
+  </div>
+</div>
 
 <div class='presentation-container'>
   {{view Trade.SandboxShipmentsTable.TablesContainer
@@ -101,8 +258,3 @@
     selectionBinding="tableController.selection"
   }}
 </div>
-
-{{#if unsavedChanges}}There are unsaved changes.{{/if}}
-
-<button {{action 'saveChanges'}}  {{bind-attr disabled="unsavedChanges"}}>Save changes</button>
-<button {{action 'cancelChanges'}}>Cancel changes</button>
