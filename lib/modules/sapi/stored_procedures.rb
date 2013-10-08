@@ -2,7 +2,7 @@ module Sapi
   module StoredProcedures
 
     def self.rebuild
-      run_procedures([
+      [
         :taxonomy,
         :cites_accepted_flags,
         :listing_changes_mview,
@@ -14,23 +14,7 @@ module Sapi
         :eu_species_listing_mview,
         :cms_species_listing_mview,
         :touch_taxon_concepts
-      ])
-    end
-
-    def self.rebuild_taxonomy
-      run_procedures([
-        :taxonomy,
-        :cites_accepted_flags,
-        :taxon_concepts_mview,
-        :touch_taxon_concepts
-      ])
-    end
-  
-  private
-
-    def self.run_procedures(procedures)
-      Sapi::Triggers.disable_triggers
-      procedures.each{ |p|
+      ].each{ |p|
         puts "Procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
       }
@@ -49,8 +33,6 @@ module Sapi
           'touched_at IS NOT NULL AND touched_at > updated_at'
         )
       end
-
-      Sapi::Triggers.enable_triggers
     end
 
   end
