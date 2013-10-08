@@ -9,6 +9,9 @@ describe Checklist::Pdf::History do
     tc = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Foobaridae')
     )
+    eu
+    cms_designation
+    Sapi.rebuild
     MTaxonConcept.find(tc.id)
   }
   let(:genus_tc){
@@ -16,6 +19,9 @@ describe Checklist::Pdf::History do
       :parent_id => family_tc.id,
       :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus')
     )
+    eu
+    cms_designation
+    Sapi.rebuild
     MTaxonConcept.find(tc.id)
   }
   describe :higher_taxon_name do
