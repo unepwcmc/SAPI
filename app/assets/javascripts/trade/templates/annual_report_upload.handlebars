@@ -3,12 +3,12 @@
   {{summary}}
 </div>
 
-<div class="well well-small">
+<div class="sandbox-header well well-small">
   <div class="row-fluid">
-    <div class="span8">
+    <div class="span6">
       <h3>Validation errors</h3>
     </div>
-    <div class="span4">
+    <div class="sandbox-header-buttons span6">
       <button {{action submitShipments}} class="pull-right btn btn-danger">
         Submit shipments
       </button>
@@ -18,28 +18,45 @@
 
 {{collection Trade.ValidationErrorsView contentBinding='validationErrors'}}
 
-<div class="well well-small">
-  <div class="row-fluid">
-    <div class="span8">
-      <h3>Filters</h3>
-    </div>
-    <div class="span4">
-      <button {{action 'resetFilters'}} class="pull-right btn">Reset filters</button>
+{{#view controllerBinding='controller' isVisibleBinding='controller.filtersVisible'}}
+  <div class="sandbox-header well well-small">
+    <h3>Filter records for batch editing</h3>
+  </div>
+
+  <div class="sandbox-form row-fluid">
+    {{ partial 'trade/annual_report_upload/filters' }}
+    <div class="row-fluid">
+      <div class="span6 offset6">
+        <button {{action 'resetFilters'}} class="pull-right btn">Reset filters</button>
+        <button {{action selectForUpdate}} class="pull-right btn btn-primary">Select for update</button>
+      </div>
     </div>
   </div>
-</div>
+{{/view}}
+{{#view controllerBinding='controller' isVisibleBinding='controller.updatesVisible'}}
+  <div class="sandbox-header well well-small">
+    <h3>Batch edit selected records</h3>
+  </div>
 
-<div class="filters row-fluid">
-  {{ partial 'trade/annual_report_upload/filters' }}
-</div>
+  <div class="sandbox-form row-fluid">
+    {{ partial 'trade/annual_report_upload/batch_operations' }}
+    <div class="row-fluid">
+      <div class="span6 offset6">
+        <button {{action cancelSelectForUpdate}} class="pull-right btn">Cancel</button>
+        <button {{action updateSelection}} class="pull-right btn btn-primary">Update Selection</button>
+        <button {{action deleteSelection}} class="pull-right btn btn-primary">Delete Selection</button>
+      </div>
+    </div>
+  </div>
+{{/view}}
 
-<div class="well well-small">
+<div class="sandbox-header well well-small">
   <div class="row-fluid">
-    <div class="span8"><h3>Sandbox</h3></div>
-    <div class="span4">
+    <div class="span6"><h3>Sandbox</h3></div>
+    <div class="sandbox-header-buttons span6">
       {{#if unsavedChanges}}
         <span class="label label-danger pull-right">There are unsaved changes.</span>
-      {{/if}}<br>
+      {{/if}}
       <button {{action 'saveChanges'}}
         {{bind-attr class="unsavedChanges::disabled :pull-right :btn :btn-primary"}}
         {{bind-attr disabled="unsavedChanges::disabled"}}>
@@ -50,10 +67,6 @@
       </button>
     </div>
   </div>
-</div>
-
-<div class="batch-operations row-fluid">
-  {{ partial 'trade/annual_report_upload/batch_operations' }}
 </div>
 
 <div class='presentation-container'>

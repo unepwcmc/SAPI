@@ -80,6 +80,11 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
   selectedYearValues: []
   blankYear: false
 
+  filtersVisible: true
+  updatesVisible: ( ->
+    !@get('filtersVisible')
+  ).property('filtersVisible')
+
   filtersChanged: ( ->
     shipments = @get('content.sandboxShipments')
     @get('columnNames').forEach (columnName) =>
@@ -162,3 +167,10 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
         for columnName, value of valuesToUpdate
           shipment.set(columnName, value)
       @set('tableController.shipments', currentShipments)
+
+    selectForUpdate: () ->
+      @set('filtersVisible', false)
+
+    cancelSelectForUpdate: () ->
+      $('#transformations').find('input[type=text]').val(null)
+      @set('filtersVisible', true)

@@ -2,8 +2,19 @@ a {
   cursor: pointer
 }
 
-.filters {
-  label {
-    display: inline;
+.sandbox-form {
+  button {
+    margin: 10px 5px;
   }
+  label { display: inline; }
+  label.blank-checkbox { display: none }
+  label.blank-checkbox > input[type=checkbox]:checked { display: inline }
+  .attribute-area:hover label.blank-checkbox { display: inline; }
+}
+
+.sandbox-header {
+  button {
+    margin: 10px 5px;
+  }
+  margin-top: 10px;
 }
