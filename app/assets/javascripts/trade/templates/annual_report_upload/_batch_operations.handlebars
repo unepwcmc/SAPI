@@ -1,0 +1,76 @@
+Modify current row selection (to finalise operations click 'Save changes')
+<div id="transformations">
+  <div class="span4">
+    <div class="clearfix">
+      <label>
+        Appendix<br><input type="text" name="appendix">
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Species name<br><input type="text" name="speciesName">
+      </label>
+    </div>
+  </div>
+  <div class="span4">
+    <div class="clearfix">
+      <label>
+        Term Code<br><input type="text" name="termCode">
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Quantity<br><input type="text" name="quantity">
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Unit Code<br><input type="text" name="unitCode">
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Trading Partner<br><input type="text" name="tradingPartner">
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Country of Origin<br><input type="text" name="countryOfOrigin">
+      </label>
+    </div>
+  </div>
+  <div class="span4">
+    <div class="clearfix">
+      <label>
+        Import Permit<br><input type="text" name="importPermit">
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Export Permit<br><input type="text" name="exportPermit">
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Origin Permit<br><input type="text" name="originPermit">
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Purpose Code<br><input type="text" name="purposeCode">
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Source Code<br><input type="text" name="sourceCode">
+      </label>
+    </div>
+    <div class="clearfix">
+      <label>
+        Year<br><input type="text" name="year">
+      </label>
+    </div>
+  </div>
+</div>
+<button class="btn btn-primary" {{action updateSelection}}>Update Selection</button>
+<button class="btn btn-primary" {{action deleteSelection}}>Delete Selection</button>

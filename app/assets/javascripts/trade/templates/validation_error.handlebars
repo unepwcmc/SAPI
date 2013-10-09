@@ -1,4 +1,10 @@
-<tr>
-  <td>{{errorMessage}}</td>
-  <td><button {{action showMatchingRecords this}}>{{errorCount}}</button></td>
-</tr>
+<div class="row-fluid">
+  <div class="span2">
+    <span class="label label-important">PRIMARY</span>
+  </div>
+  <div class="span10">
+    <a {{action setVisibleShipments this.sandboxShipments }}>
+      {{errorMessage}} ({{errorCount}})
+    </a>
+  </div>
+</div>
