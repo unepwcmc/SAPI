@@ -7,9 +7,6 @@ a {
     margin: 10px 5px;
   }
   label { display: inline; }
-  label.blank-checkbox { display: none }
-  label.blank-checkbox > input[type=checkbox]:checked { display: inline }
-  .attribute-area:hover label.blank-checkbox { display: inline; }
 }
 
 .sandbox-header {
