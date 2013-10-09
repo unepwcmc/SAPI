@@ -160,8 +160,10 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     updateSelection: () ->
       valuesToUpdate = {}
       @get('columnNames').forEach (columnName) =>
-        el = $('#transformations').find('input[name=' + columnName + ']')
+        el = $('.sandbox-form').find('input[type=text][name=' + columnName + ']')
+        blank = $('.sandbox-form').find('input[type=checkbox][name=' + columnName + ']:checked')
         valuesToUpdate[columnName] = el.val() if el && el.val()
+        valuesToUpdate[columnName] = null if blank.length > 0
       currentShipments = @get('tableController.shipments')
       currentShipments.forEach (shipment) ->
         for columnName, value of valuesToUpdate
