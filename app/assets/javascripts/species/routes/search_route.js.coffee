@@ -6,7 +6,7 @@ Species.SearchRoute = Ember.Route.extend
   model: (params) ->
     # what follows here is the deserialisation of params
     # this hook is executed only when entering from url
-    $.deparam(params.params)
+    $.deparam(params.params) if params
 
   setupController: (controller, model) ->
     # this hook is executed whether entering from url or transition
