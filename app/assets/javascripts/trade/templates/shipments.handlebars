@@ -1,13 +1,13 @@
 <div class="paging">
-  <ul>
+  <ul class="pager">
     {{# if controller.showPrevPage }}
-      <li><a class="btn-prev" href="#" {{action "prevPage" target="view" on="click"}}>&#9664;</a>  </li>
+      <li><a href="#" {{action "prevPage" target="view" on="click"}}>&#9664;</a></li>
     {{/if}}
 
     <li>Page {{controller.page}} of {{controller.pages}}</li>
 
     {{# if controller.showNextPage }}
-      <li><a class="btn-next" href="#" {{action "nextPage" target="view" on="click"}}>&#9654;</a>  </li>
+      <li><a href="#" {{action "nextPage" target="view" on="click"}}>&#9654;</a></li>
     {{/if}}
   </ul>
 </div>
