@@ -168,7 +168,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
       @set('tableController.shipments', currentShipments)
 
     updateSelection: () ->
-      valuesToUpdate = {}
+      valuesToUpdate = {'_modified': true}
       @get('columnNames').forEach (columnName) =>
         el = $('.sandbox-form').find('input[type=text][name=' + columnName + ']')
         blank = $('.sandbox-form').find('input[type=checkbox][name=' + columnName + ']:checked')
@@ -176,10 +176,8 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
         valuesToUpdate[columnName] = null if blank.length > 0
       currentShipments = @get('tableController.shipments')
       currentShipments.forEach (shipment) ->
-        for columnName, value of valuesToUpdate
-          shipment.set(columnName, value)
+        shipment.setProperties(valuesToUpdate)
       @set('tableController.shipments', currentShipments)
-<<<<<<< HEAD
 
     selectForUpdate: () ->
       @set('filtersVisible', false)
@@ -187,5 +185,3 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     cancelSelectForUpdate: () ->
       $('#transformations').find('input[type=text]').val(null)
       @set('filtersVisible', true)
-=======
->>>>>>> develop
