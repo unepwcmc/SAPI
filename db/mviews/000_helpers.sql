@@ -44,6 +44,15 @@ CREATE OR REPLACE FUNCTION higher_or_equal_ranks_names(in_rank_name VARCHAR(255)
 COMMENT ON FUNCTION higher_or_equal_ranks_names(in_rank_name VARCHAR(255)) IS
   'Returns an array of rank names above the given rank (sorted lowest first).';
 
+CREATE OR REPLACE FUNCTION squish(TEXT) RETURNS TEXT
+  LANGUAGE SQL IMMUTABLE
+  AS $$
+    SELECT BTRIM(regexp_replace($1, E'\\s+', ' ', 'g'));
+  $$;
+
+COMMENT ON FUNCTION squish(TEXT) IS
+  'Squishes whitespace characters in a string';
+
 CREATE OR REPLACE FUNCTION strip_tags(TEXT) RETURNS TEXT
   LANGUAGE SQL IMMUTABLE
   AS $$

@@ -54,7 +54,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     s = Arel::Table.new(table_name)
     v = Arel::Table.new(valid_values_view)
     arel_nodes = column_names.map do |c|
-      func =Arel::Nodes::NamedFunction.new 'btrim', [s[c]]
+      func =Arel::Nodes::NamedFunction.new 'squish', [s[c]]
       v[c].eq(func)
     end
     join_conditions = arel_nodes.shift

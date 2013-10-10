@@ -117,7 +117,8 @@ class Trade::Sandbox
       LEFT JOIN geo_entities AS origins ON origins.iso_code2 = #{@table_name}.country_of_origin
       LEFT JOIN trade_permits AS origin_permits ON origin_permits.number = #{@table_name}.origin_permit
       LEFT JOIN trade_permits AS import_permits ON import_permits.number = #{@table_name}.import_permit
-      INNER JOIN taxon_concepts_mview AS taxon_concepts ON taxon_concepts.full_name = #{@table_name}.species_name
+      INNER JOIN taxon_concepts_mview AS taxon_concepts
+        ON taxon_concepts.full_name = squish(#{@table_name}.species_name)
     SQL
     ActiveRecord::Base.connection.execute(cmd)
   end
