@@ -18,38 +18,44 @@
 
 {{collection Trade.ValidationErrorsView contentBinding='validationErrors'}}
 
-{{#view controllerBinding='controller' isVisibleBinding='controller.filtersVisible'}}
-  <div class="sandbox-header well well-small">
-    <h3>Filter records for batch editing</h3>
-  </div>
+<div class="clearfix">
+  <button type="button" class="btn btn-link pull-right" data-toggle="collapse" data-target="#sandbox-form-area">
+  Show filters & batch updates >>
+  </button>
+</div>
+<div id="sandbox-form-area" class="collapse">
+  {{#view controllerBinding='controller' isVisibleBinding='controller.filtersVisible'}}
+    <div class="sandbox-header well well-small">
+      <h3>Filter records for batch editing</h3>
+    </div>
 
-  <div class="sandbox-form row-fluid">
-    {{ partial 'trade/annual_report_upload/filters' }}
-    <div class="row-fluid">
-      <div class="span6 offset6">
-        <button {{action 'resetFilters'}} class="pull-right btn">Reset filters</button>
-        <button {{action selectForUpdate}} class="pull-right btn btn-primary">Select for update</button>
+    <div class="sandbox-form row-fluid">
+      {{ partial 'trade/annual_report_upload/filters' }}
+      <div class="row-fluid">
+        <div class="span6 offset6">
+          <button {{action 'resetFilters'}} class="pull-right btn">Reset filters</button>
+          <button {{action selectForUpdate}} class="pull-right btn btn-primary">Select for update</button>
+        </div>
       </div>
     </div>
-  </div>
-{{/view}}
-{{#view controllerBinding='controller' isVisibleBinding='controller.updatesVisible'}}
-  <div class="sandbox-header well well-small">
-    <h3>Batch edit selected records</h3>
-  </div>
+  {{/view}}
+  {{#view controllerBinding='controller' isVisibleBinding='controller.updatesVisible'}}
+    <div class="sandbox-header well well-small">
+      <h3>Batch edit selected records</h3>
+    </div>
 
-  <div class="sandbox-form row-fluid">
-    {{ partial 'trade/annual_report_upload/batch_operations' }}
-    <div class="row-fluid">
-      <div class="span6 offset6">
-        <button {{action cancelSelectForUpdate}} class="pull-right btn">Cancel</button>
-        <button {{action updateSelection}} class="pull-right btn btn-primary">Update Selection</button>
-        <button {{action deleteSelection}} class="pull-right btn btn-primary">Delete Selection</button>
+    <div class="sandbox-form row-fluid">
+      {{ partial 'trade/annual_report_upload/batch_operations' }}
+      <div class="row-fluid">
+        <div class="span6 offset6">
+          <button {{action cancelSelectForUpdate}} class="pull-right btn">Cancel</button>
+          <button {{action updateSelection}} class="pull-right btn btn-primary">Update Selection</button>
+          <button {{action deleteSelection}} class="pull-right btn btn-primary">Delete Selection</button>
+        </div>
       </div>
     </div>
-  </div>
-{{/view}}
-
+  {{/view}}
+</div>
 <div class="sandbox-header well well-small">
   <div class="row-fluid">
     <div class="span6">
