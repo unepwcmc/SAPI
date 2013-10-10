@@ -1,20 +1,61 @@
-<p>Number of rows: {{numberOfRows}}</p>
-<p>Uploaded at: {{createdAt}}</p>
-<p>Uploaded by: TODO</p>
-<button {{action submitShipments}}>Submit shipments</button>
-<hr>
+<div class="page-header">
+  <h1>Annual report upload <small>SANDBOX</small></h1>
+  {{summary}}
+</div>
 
-<table>
-  <thead>
-    <th>Error message</th>
-    <th>Error count</th>
-  </thead>
-  {{collection Trade.ValidationErrorsView contentBinding='validationErrors'}}
-</table>
+<div class="well well-small">
+  <div class="row-fluid">
+    <div class="span8">
+      <h3>Validation errors</h3>
+    </div>
+    <div class="span4">
+      <button {{action submitShipments}} class="pull-right btn btn-danger">
+        Submit shipments
+      </button>
+    </div>
+  </div>
+</div>
 
-<hr>
-<button {{action 'saveChanges'}}>Save changes</button>
+{{collection Trade.ValidationErrorsView contentBinding='validationErrors'}}
 
+<div class="well well-small">
+  <div class="row-fluid">
+    <div class="span8">
+      <h3>Filters</h3>
+    </div>
+    <div class="span4">
+      <button {{action 'resetFilters'}} class="pull-right btn">Reset filters</button>
+    </div>
+  </div>
+</div>
+
+<div class="filters row-fluid">
+  {{ partial 'trade/annual_report_upload/filters' }}
+</div>
+
+<div class="well well-small">
+  <div class="row-fluid">
+    <div class="span8"><h3>Sandbox</h3></div>
+    <div class="span4">
+      {{#if unsavedChanges}}
+        <span class="label label-danger pull-right">There are unsaved changes.</span>
+      {{/if}}<br>
+      <button {{action 'saveChanges'}}
+        {{bind-attr class="unsavedChanges::disabled :pull-right :btn :btn-primary"}}
+        {{bind-attr disabled="unsavedChanges::disabled"}}>
+        Save changes
+      </button>
+      <button {{action 'cancelChanges'}} class="pull-right btn clearfix">
+        Cancel changes
+      </button>
+    </div>
+  </div>
+</div>
+<!--
+<div class="batch-operations row-fluid">
+  {{ partial 'trade/annual_report_upload/batch_operations' }}
+</div>
+-->
 <div class='presentation-container'>
   {{view Trade.SandboxShipmentsTable.TablesContainer
     controllerBinding="tableController"

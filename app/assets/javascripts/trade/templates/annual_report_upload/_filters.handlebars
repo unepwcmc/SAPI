@@ -1,0 +1,201 @@
+<div class="span4">
+  <div class="clearfix">
+    <label>
+      Appendix<br>
+      {{view Trade.Select2
+        prompt="Please select appendix values"
+        contentBinding="allAppendixValues"
+        selectionBinding="selectedAppendixValues"
+        multiple="true"
+      }}
+    </label>
+    <label>
+      {{view Ember.Checkbox checkedBinding="blankAppendix"}}
+      blank
+    </label>
+  </div>
+  <div class="clearfix">
+    <label>
+      Species name<br>
+      {{view Trade.Select2
+        prompt="Please select species names"
+        contentBinding="controller.allSpeciesNameValues"
+        selectionBinding="controller.selectedSpeciesNameValues"
+        multiple="true"
+      }}
+    </label>
+    <label>
+      {{view Ember.Checkbox checkedBinding="blankSpeciesName"}}
+      blank
+    </label>
+  </div>
+</div>
+<div class="span4">
+  <div class="clearfix">
+    <label>
+      Term Code<br>
+      {{view Trade.Select2
+        prompt="Please select term code values"
+        contentBinding="controller.allTermCodeValues"
+        selectionBinding="controller.selectedTermCodeValues"
+        multiple="true"
+      }}
+    </label>
+    <label>
+      {{view Ember.Checkbox checkedBinding="blankTermCode"}}
+      blank
+    </label>
+  </div>
+  <div class="clearfix">
+    <label>
+      Quantity<br>
+      {{view Trade.Select2
+        prompt="Please select quantity values"
+        contentBinding="controller.allQuantityValues"
+        selectionBinding="controller.selectedQuantityValues"
+        multiple="true"
+      }}
+    </label>
+    <label>
+      {{view Ember.Checkbox checkedBinding="blankQuantity"}}
+      blank
+    </label>
+  </div>
+  <div class="clearfix">
+    <label>
+      Unit Code<br>
+      {{view Trade.Select2
+        prompt="Please select unit code values"
+        contentBinding="controller.allUnitCodeValues"
+        selectionBinding="controller.selectedUnitCodeValues"
+        multiple="true"
+      }}
+    </label>
+    <label>
+      {{view Ember.Checkbox checkedBinding="blankUnitCode"}}
+      blank
+    </label>
+  </div>
+  <div class="clearfix">
+    <label>
+      Trading Partner<br>
+      {{view Trade.Select2
+        prompt="Please select trading partner values"
+        contentBinding="controller.allTradingPartnerValues"
+        selectionBinding="controller.selectedTradingPartnerValues"
+        multiple="true"
+      }}
+    </label>
+    <label>
+      {{view Ember.Checkbox checkedBinding="blankTradingPartner"}}
+      blank
+    </label>
+  </div>
+  <div class="clearfix">
+    <label>
+      Country of Origin<br>
+      {{view Trade.Select2
+        prompt="Please select country of origin values"
+        contentBinding="controller.allCountryOfOriginValues"
+        selectionBinding="controller.selectedCountryOfOriginValues"
+        multiple="true"
+      }}
+    </label>
+    <label>
+      {{view Ember.Checkbox checkedBinding="blankCountryOfOrigin"}}
+      blank
+    </label>
+  </div>
+</div>
+<div class="span4">
+  <div class="clearfix">
+    <label>
+      Import Permit<br>
+      {{view Trade.Select2
+        prompt="Please select import permit values"
+        contentBinding="controller.allImportPermitValues"
+        selectionBinding="controller.selectedImportPermitValues"
+        multiple="true"
+      }}
+    </label>
+    <label>
+      {{view Ember.Checkbox checkedBinding="blankImportPermit"}}
+      blank
+    </label>
+  </div>
+  <div class="clearfix">
+    <label>
+      Export Permit<br>
+      {{view Trade.Select2
+        prompt="Please select export permit values"
+        contentBinding="controller.allExportPermitValues"
+        selectionBinding="controller.selectedExportPermitValues"
+        multiple="true"
+       }}
+    </label>
+    <label>
+      {{view Ember.Checkbox checkedBinding="blankExportPermit"}}
+      blank
+    </label>
+  </div>
+  <div class="clearfix">
+    <label>
+      Origin Permit<br>
+      {{view Trade.Select2
+        prompt="Please select origin permit values"
+        contentBinding="controller.allOriginPermitValues"
+        selectionBinding="controller.selectedOriginPermitValues"
+        multiple="true"
+      }}
+    </label>
+    <label>
+      {{view Ember.Checkbox checkedBinding="blankOriginPermit"}}
+      blank
+    </label>
+  </div>
+  <div class="clearfix">
+    <label>
+      Purpose Code<br>
+      {{view Trade.Select2
+        prompt="Please select purpose code values"
+        contentBinding="controller.allPurposeCodeValues"
+        selectionBinding="controller.selectedPurposeCodeValues"
+        multiple="true"
+      }}
+    </label>
+    <label>
+      {{view Ember.Checkbox checkedBinding="blankPurposeCode"}}
+      blank
+    </label>
+  </div>
+  <div class="clearfix">
+    <label>
+      Source Code<br>
+      {{view Trade.Select2
+        prompt="Please select source code values"
+        contentBinding="controller.allSourceCodeValues"
+        selectionBinding="controller.selectedSourceCodeValues"
+        multiple="true"
+      }}
+    </label>
+    <label>
+      {{view Ember.Checkbox checkedBinding="blankSourceCode"}}
+      blank
+    </label>
+  </div>
+  <div class="clearfix">
+    <label>
+      Year<br>
+      {{view Trade.Select2
+        prompt="Please select year values"
+        contentBinding="controller.allYearValues"
+        selectionBinding="controller.selectedYearValues"
+        multiple="true"
+      }}
+    </label>
+    <label>
+      {{view Ember.Checkbox checkedBinding="blankYear"}}
+      blank
+    </label>
+  </div>
+</div>
