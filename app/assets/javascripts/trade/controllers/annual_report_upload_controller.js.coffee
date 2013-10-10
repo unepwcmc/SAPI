@@ -134,13 +134,16 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
   actions:
     submitShipments: ()->
-      @set('sandboxShipmentsSubmitting', true)
-      $.post '/trade/annual_report_uploads/'+@get('id')+'/submit', {}, (data) ->
-        'json'
-      .done( =>
-        @set('sandboxShipmentsSubmitting', false)
-      )
-      @transitionToRoute('annual_report_uploads')
+      if @get('content.isDirty')
+        alert "You have unsaved changes, please save those before submitting your shipments"
+      else
+        @set('sandboxShipmentsSubmitting', true)
+        $.post '/trade/annual_report_uploads/'+@get('id')+'/submit', {}, (data) ->
+          'json'
+        .done( =>
+          @set('sandboxShipmentsSubmitting', false)
+        )
+        @transitionToRoute('annual_report_uploads')
 
     setVisibleShipments: (shipments) ->
       @resetFilters()
@@ -176,6 +179,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
         for columnName, value of valuesToUpdate
           shipment.set(columnName, value)
       @set('tableController.shipments', currentShipments)
+<<<<<<< HEAD
 
     selectForUpdate: () ->
       @set('filtersVisible', false)
@@ -183,3 +187,5 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     cancelSelectForUpdate: () ->
       $('#transformations').find('input[type=text]').val(null)
       @set('filtersVisible', true)
+=======
+>>>>>>> develop

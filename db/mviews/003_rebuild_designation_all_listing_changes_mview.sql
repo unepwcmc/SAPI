@@ -91,7 +91,7 @@
 
     EXECUTE 'DROP TABLE IF EXISTS ' || all_lc_table_name || ' CASCADE';
 
-    sql := 'CREATE TABLE ' || all_lc_table_name || ' AS
+    sql := 'CREATE TEMP TABLE ' || all_lc_table_name || ' AS
     SELECT
       lc.*, 
       tc.taxon_concept_id AS affected_taxon_concept_id, 

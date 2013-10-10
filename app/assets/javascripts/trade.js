@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-deparam
 //= require jquery-ui
 //= require jquery.mousewheel
 //= require jquery.iframe-transport
