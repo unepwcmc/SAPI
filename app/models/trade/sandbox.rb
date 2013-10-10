@@ -10,6 +10,7 @@ class Trade::Sandbox
   def copy
     create_target_table
     copy_csv_to_target_table
+    duplicate_columns_in_target_table
   end
 
   def destroy
@@ -90,9 +91,8 @@ class Trade::Sandbox
         import_permit_id, reported_by_exporter, taxon_concept_id,
         reported_species_name, year, created_at, updated_at)
       SELECT sources.id, units.id, purposes.id,
-        terms.id, #{@table_name}.quantity::NUMERIC, #{@table_name}.appendix,
-        #{@table_name}.appendix, -- TODO: get currect appendix
-        #{@annual_report_upload.id}, exporters.id, importers.id,
+        terms.id, #{@table_name}.quantity::NUMERIC, #{@table_name}.reported_appendix,
+        #{@table_name}.appendix, #{@annual_report_upload.id}, exporters.id, importers.id,
         origins.id, origin_permits.id, import_permits.id,
         '#{ @annual_report_upload.point_of_view == "E" ? 't' : 'f'}'::BOOLEAN,
         taxon_concepts.id, #{@table_name}.species_name, #{@table_name}.year::INTEGER,
@@ -143,5 +143,15 @@ class Trade::Sandbox
     end
     cmd = Trade::SandboxTemplate.copy_stmt(@table_name, @csv_file_path, columns_in_csv_order)
     PsqlCommand.new(cmd).execute
+  end
+
+  def duplicate_columns_in_target_table
+    require 'psql_command'
+    cmd = Trade::SandboxTemplate.duplicate_column_stmt(@table_name,
+                                                        "appendix",
+                                                        "reported_appendix")
+    Thread.new do
+      Trade::SandboxTemplate.connection.execute(cmd)
+    end
   end
 end
