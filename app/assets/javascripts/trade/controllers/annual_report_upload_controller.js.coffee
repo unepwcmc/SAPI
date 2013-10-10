@@ -1,5 +1,9 @@
 Trade.AnnualReportUploadController = Ember.ObjectController.extend
   content: null
+  sandboxShipmentsSaving: ( ->
+    @get('content.isSaving')
+  ).property('content.isSaving')
+  sandboxShipmentsSubmitting: false
 
   tableController: Ember.computed ->
     controller = Ember.get('Trade.SandboxShipmentsTable.TableController').create()
@@ -130,9 +134,12 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
   actions:
     submitShipments: ()->
+      @set('sandboxShipmentsSubmitting', true)
       $.post '/trade/annual_report_uploads/'+@get('id')+'/submit', {}, (data) ->
-        console.log(data)
         'json'
+      .done( =>
+        @set('sandboxShipmentsSubmitting', false)
+      )
       @transitionToRoute('annual_report_uploads')
 
     setVisibleShipments: (shipments) ->
