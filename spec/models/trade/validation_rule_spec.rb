@@ -97,24 +97,32 @@ describe Trade::FormatValidationRule do
 
 describe Trade::InclusionValidationRule do
     describe :validation_errors do
-      let(:country){
-        create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-      }
-      let!(:france){
-        create(
-          :geo_entity,
-          :geo_entity_type => country,
-          :name => 'France',
-          :iso_code2 => 'FR'
-        )
-      }
-      let!(:sandbox_records){
-        Trade::SandboxTemplate.connection.execute <<-SQL
-          INSERT INTO #{sandbox_table_name}
-          (trading_partner) VALUES ('Neverland')
-        SQL
-      }
       context 'trading partner should be a valid iso code' do
+        let(:country){
+          create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
+        }
+        let!(:france){
+          create(
+            :geo_entity,
+            :geo_entity_type => country,
+            :name => 'France',
+            :iso_code2 => 'FR'
+          )
+        }
+        let!(:sandbox_records){
+          Trade::SandboxTemplate.connection.execute <<-SQL
+            INSERT INTO #{sandbox_table_name}
+            (trading_partner) VALUES ('Neverland')
+          SQL
+          Trade::SandboxTemplate.connection.execute <<-SQL
+            INSERT INTO #{sandbox_table_name}
+            (trading_partner) VALUES ('')
+          SQL
+          Trade::SandboxTemplate.connection.execute <<-SQL
+            INSERT INTO #{sandbox_table_name}
+            (trading_partner) VALUES (NULL)
+          SQL
+        }
         subject{
           create(
             :inclusion_validation_rule,
