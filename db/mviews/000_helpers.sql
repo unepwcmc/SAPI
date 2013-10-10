@@ -102,6 +102,26 @@ CREATE OR REPLACE FUNCTION rebuild_mviews() RETURNS void
 
 COMMENT ON FUNCTION rebuild_mviews() IS 'Procedure to rebuild materialized views in the database.';
 
+CREATE OR REPLACE FUNCTION drop_trade_sandboxes() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  DECLARE
+    current_table_name TEXT;
+  BEGIN
+    FOR current_table_name IN SELECT table_name FROM information_schema.tables
+    WHERE table_name LIKE 'trade_sandbox%' AND table_name != 'trade_sandbox_template'
+    LOOP
+      EXECUTE 'DROP TABLE ' || current_table_name;
+    END LOOP;
+    RETURN;
+  END;
+  $$;
+
+COMMENT ON FUNCTION drop_trade_sandboxes() IS '
+Drops all trade_sandbox_n tables. Used in specs only, you need to know what 
+you''re doing. If you''re looking to drop all sandboxes in the live system, 
+use the rake db:drop_sandboxes task instead.';
+
 CREATE OR REPLACE FUNCTION rebuild_touch_taxon_concepts() RETURNS void
   LANGUAGE plpgsql
   AS $$
