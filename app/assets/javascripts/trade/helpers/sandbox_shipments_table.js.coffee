@@ -64,7 +64,7 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
     ]
 
   columns: Ember.computed ->
-    columnProperties = 
+    columnProperties =
       appendix:
         width: 50
         header: 'Appdx'
@@ -104,7 +104,7 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
       year:
         width: 50
         header: 'Year'
-    
+
     columns = @get('columnNames').map (key, index) ->
       Ember.Table.ColumnDefinition.create
         columnWidth: columnProperties[key]['width'] || 100
@@ -117,7 +117,7 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
       headerCellName: 'Delete'
       tableCellViewClass: 'Trade.SandboxShipmentsTable.CheckboxTableCell'
       getCellContent: (row) -> row.get('_destroyed')
-      setCellContent: (row, value) -> 
+      setCellContent: (row, value) ->
         row.set('_destroyed', value)
     columns.push deleteColumn
     columns
