@@ -52,11 +52,10 @@
 
 <div class="sandbox-header well well-small">
   <div class="row-fluid">
-    <div class="span6"><h3>Sandbox</h3></div>
+    <div class="span6">
+      <h3>Sandbox</h3>
+    </div>
     <div class="sandbox-header-buttons span6">
-      {{#if unsavedChanges}}
-        <span class="label label-danger pull-right">There are unsaved changes.</span>
-      {{/if}}
       <button {{action 'saveChanges'}}
         {{bind-attr class="unsavedChanges::disabled :pull-right :btn :btn-primary"}}
         {{bind-attr disabled="unsavedChanges::disabled"}}>
@@ -65,6 +64,9 @@
       <button {{action 'cancelChanges'}} class="pull-right btn clearfix">
         Cancel changes
       </button>
+      {{#if unsavedChanges}}
+        <span class="pull-right label label-important">There are unsaved changes.</span>
+      {{/if}}
     </div>
   </div>
 </div>
