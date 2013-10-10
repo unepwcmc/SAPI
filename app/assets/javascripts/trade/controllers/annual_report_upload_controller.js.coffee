@@ -125,10 +125,13 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
   actions:
     submitShipments: ()->
-      $.post '/trade/annual_report_uploads/'+@get('id')+'/submit', {}, (data) ->
-        console.log(data)
-        'json'
-      @transitionToRoute('annual_report_uploads')
+      if @get('content.isDirty')
+        alert "You have unsaved changes, please save those before submitting your shipments"
+      else
+        $.post '/trade/annual_report_uploads/'+@get('id')+'/submit', {}, (data) ->
+          console.log(data)
+          'json'
+        @transitionToRoute('annual_report_uploads')
 
     setVisibleShipments: (shipments) ->
       @resetFilters()
