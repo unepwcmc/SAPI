@@ -12,8 +12,12 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
   .property()
 
   unsavedChanges: (->
-    @get('content.isDirty')
-  ).property('content.isDirty')
+    @get('changedRowsCount') > 0
+  ).property('changedRowsCount')
+
+  changedRowsCount: (->
+    @get('content.sandboxShipments').filterBy('_modified', true).length
+  ).property('content.sandboxShipments.@each._modified')
 
   allValuesFor: (attr) ->
     @get('content.sandboxShipments').mapBy(attr).compact().uniq()
@@ -157,6 +161,8 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     cancelChanges: () ->
       if (!@get('content').get('isSaving'))
         @get('content').get('transaction').rollback()
+        @get('content.sandboxShipments').forEach (shipment) ->
+          shipment.set('_modified', false)
 
     resetFilters: () ->
       @resetFilters()

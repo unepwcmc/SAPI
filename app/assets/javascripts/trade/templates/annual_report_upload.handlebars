@@ -61,10 +61,10 @@
 </div>
 <div class="sandbox-header well well-small">
   <div class="row-fluid">
-    <div class="span6">
+    <div class="span5">
       <h3>Sandbox</h3>
     </div>
-    <div class="sandbox-header-buttons span6">
+    <div class="sandbox-header-buttons span7">
       {{#view tagName='span' class='pull-right' isVisibleBinding='controller.sandboxShipmentsSaving'}}
         <img src="/assets/loading.gif"> Saving...
       {{/view}}
@@ -77,7 +77,7 @@
         Cancel changes
       </button>
       {{#if unsavedChanges}}
-        <span class="pull-right label label-important">There are unsaved changes.</span>
+        <span class="pull-right label label-important">There are {{changedRowsCount}} unsaved changes.</span>
       {{/if}}
     </div>
   </div>

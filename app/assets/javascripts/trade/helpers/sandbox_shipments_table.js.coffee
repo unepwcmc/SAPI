@@ -16,6 +16,10 @@ Trade.SandboxShipmentsTable.EditableTableCell = Ember.Table.TableCell.extend
     @set 'isEditing', no
   , 'rowContent'
 
+  onCellContentDidChange: Ember.observer ->
+    @set('rowContent._modified', true) if @get('isEditing')
+  , 'cellContent'
+
   click: (event) ->
     @set 'isEditing', yes
     event.stopPropagation()
@@ -41,6 +45,12 @@ Trade.SandboxShipmentsTable.CheckboxTableCell = Ember.Table.TableCell.extend
     @set 'isEditing', yes
     event.stopPropagation()
 
+Trade.SandboxShipmentsTable.TableRow = Ember.Table.TableRow.extend
+  classNameBindings: ['modified']
+  modified: Ember.computed ->
+    @get('row._modified')
+  .property('row._modified')
+
 Trade.SandboxShipmentsTable.TablesContainer =
 Ember.Table.TablesContainer.extend Ember.Table.RowSelectionMixin
 
@@ -53,6 +63,7 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
   shipments: null
   selection: null
   fluidTable: yes
+  tableRowViewClass: "Trade.SandboxShipmentsTable.TableRow"
 
   columnNames: [
       'appendix', 'speciesName', 'termCode', 'quantity', 'unitCode',
