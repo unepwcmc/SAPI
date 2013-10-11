@@ -147,6 +147,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
     setVisibleShipments: (shipments) ->
       @resetFilters()
+      @set('filtersVisible', false)
       @set('tableController.shipments', shipments)
 
     saveChanges: () ->
