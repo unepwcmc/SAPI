@@ -7,6 +7,8 @@ describe Trade::Sandbox do
       )
     end
     let(:annual_report_upload){
+      genus = create_cites_eu_genus(:taxon_name => create(:taxon_name, :scientific_name => 'Acipenser'))
+      create_cites_eu_species(:taxon_name => create(:taxon_name, :scientific_name => 'baerii'), :parent_id => genus.id)
       create(
         :annual_report_upload,
         :point_of_view => 'I',
@@ -18,6 +20,14 @@ describe Trade::Sandbox do
       specify {
         table_name = subject.table_name; subject.destroy
         Trade::SandboxTemplate.select('*').from(table_name).should raise_exception
+      }
+    end
+
+    describe :submit_shipments do
+      subject { annual_report_upload.sandbox }
+      specify {
+        subject.submit_shipments
+        Trade::SandboxTemplate.ar_klass(subject.table_name).count.should == Trade::Shipment.count
       }
     end
 end
