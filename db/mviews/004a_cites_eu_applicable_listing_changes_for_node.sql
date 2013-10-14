@@ -54,7 +54,8 @@ BEGIN
     TRUE 
     END AS is_applicable
     FROM ' || LOWER(designation_name) || '_all_listing_changes_mview all_listing_changes_mview
-    JOIN taxon_concepts_mview ON all_listing_changes_mview.affected_taxon_concept_id = taxon_concepts_mview.id 
+    JOIN cites_eu_tmp_taxon_concepts_mview taxon_concepts_mview
+    ON all_listing_changes_mview.affected_taxon_concept_id = taxon_concepts_mview.id 
     WHERE all_listing_changes_mview.affected_taxon_concept_id = $1
     AND timeline_position = 1
 
@@ -161,7 +162,8 @@ BEGIN
     AND listing_changes_timeline.original_taxon_concept_id = hi.affected_taxon_concept_id
     AND listing_changes_timeline.timeline_position + 1 = hi.timeline_position
     JOIN change_types ON hi.change_type_id = change_types.id
-    JOIN taxon_concepts_mview ON hi.affected_taxon_concept_id = taxon_concepts_mview.id 
+    JOIN cites_eu_tmp_taxon_concepts_mview taxon_concepts_mview 
+    ON hi.affected_taxon_concept_id = taxon_concepts_mview.id 
   )
   SELECT listing_changes_timeline.id
   FROM listing_changes_timeline
