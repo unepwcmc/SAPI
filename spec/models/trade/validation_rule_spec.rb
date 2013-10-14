@@ -22,18 +22,15 @@ describe Trade::ValidationRule do
       :csv_source_file => Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv'))
     )
   }
-  let(:sandbox_table_name){
-    annual_report_upload.sandbox.table_name
+  let(:sandbox_klass){
+    Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   }
 
   describe Trade::PresenceValidationRule do
     describe :validation_errors do
-      let!(:sandbox_records){
-        Trade::SandboxTemplate.connection.execute <<-SQL
-          INSERT INTO #{sandbox_table_name}
-          (trading_partner) VALUES (NULL)
-        SQL
-      }
+      before(:each) do
+        sandbox_klass.create(:trading_partner => nil)
+      end
       context 'trading_partner should not be blank' do
         subject{
           create(
@@ -50,13 +47,9 @@ describe Trade::ValidationRule do
 
   describe Trade::NumericalityValidationRule do
     describe :validation_errors do
-
-      let!(:sandbox_records){
-        Trade::SandboxTemplate.connection.execute <<-SQL
-          INSERT INTO #{sandbox_table_name}
-          (quantity) VALUES ('www')
-        SQL
-      }
+      before(:each) do
+        sandbox_klass.create(:quantity => 'www')
+      end
       context 'quantity should be a number' do
         subject{
           create(
@@ -73,13 +66,9 @@ describe Trade::ValidationRule do
 
 describe Trade::FormatValidationRule do
     describe :validation_errors do
-
-      let!(:sandbox_records){
-        Trade::SandboxTemplate.connection.execute <<-SQL
-          INSERT INTO #{sandbox_table_name}
-          (year) VALUES ('33333')
-        SQL
-      }
+      before(:each) do
+        sandbox_klass.create(:year => '33333')
+      end
       context 'year should be a 4 digit value' do
         subject{
           create(
@@ -96,25 +85,45 @@ describe Trade::FormatValidationRule do
   end
 
 describe Trade::InclusionValidationRule do
-    describe :validation_errors do
-      let(:country){
-        create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-      }
-      let!(:france){
-        create(
-          :geo_entity,
-          :geo_entity_type => country,
-          :name => 'France',
-          :iso_code2 => 'FR'
-        )
-      }
-      let!(:sandbox_records){
-        Trade::SandboxTemplate.connection.execute <<-SQL
-          INSERT INTO #{sandbox_table_name}
-          (trading_partner) VALUES ('Neverland')
-        SQL
-      }
+  describe :validation_errors do
+      context 'species name may have extra whitespace between name segments' do
+        before(:each) do
+          genus = create_cites_eu_genus(
+            :taxon_name => create(:taxon_name, :scientific_name => 'Acipenser')
+          )
+          create_cites_eu_species(
+            :taxon_name => create(:taxon_name, :scientific_name => 'baerii'),
+            :parent => genus
+          )
+        end
+        subject{
+          create(
+            :inclusion_validation_rule,
+            :column_names => ['species_name'],
+            :valid_values_view => 'valid_species_name_view'
+          )
+        }
+        specify{
+          subject.validation_errors(annual_report_upload).should be_empty
+        }
+      end
       context 'trading partner should be a valid iso code' do
+        before(:each) do
+          sandbox_klass.create(:trading_partner => 'Neverland')
+          sandbox_klass.create(:trading_partner => '')
+          sandbox_klass.create(:trading_partner => nil)
+        end
+        let(:country){
+          create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
+        }
+        let!(:france){
+          create(
+            :geo_entity,
+            :geo_entity_type => country,
+            :name => 'France',
+            :iso_code2 => 'FR'
+          )
+        }
         subject{
           create(
             :inclusion_validation_rule,

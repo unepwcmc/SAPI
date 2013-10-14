@@ -46,21 +46,24 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     group(column_names).having(column_names.map{ |cn| "#{cn} IS NOT NULL"}.join(' AND '))
   end
 
-  # Returns records from sandbox where values in column_names are not included
-  # in valid_values_view.
+  # Returns records from sandbox where values in column_names are not null
+  # and not included in valid_values_view.
   # The valid_values_view should have the same column names and data types as
   # the sandbox columns specified in column_names.
   def matching_records_arel(table_name)
     s = Arel::Table.new(table_name)
     v = Arel::Table.new(valid_values_view)
     arel_nodes = column_names.map do |c|
-      func =Arel::Nodes::NamedFunction.new 'btrim', [s[c]]
+      func =Arel::Nodes::NamedFunction.new 'squish', [s[c]]
       v[c].eq(func)
     end
     join_conditions = arel_nodes.shift
     arel_nodes.each{ |n| join_conditions = join_conditions.and(n) }
     valid_values = s.project(s['*']).join(v).on(join_conditions)
-    s.project('*').except(valid_values)
+    not_null_nodes = column_names.map { |c| s[c].not_eq(nil).and(s[c].not_eq('')) }
+    not_null_conds = not_null_nodes.shift
+    not_null_nodes.each{ |n| not_null_conds = not_null_conds.and(n) }
+    s.project('*').where(not_null_conds).except(valid_values)
   end
 
 end
