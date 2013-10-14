@@ -2,11 +2,19 @@ class Trade::AnnualReportUploadsController < ApplicationController
   respond_to :json
 
   def index
-    respond_with []
+    @annual_report_uploads = Trade::AnnualReportUpload.scoped
+    if params[:is_done]
+      @annual_report_uploads = @annual_report_uploads.where(
+        :is_done => (params[:is_done] == 1)
+      )
+    end
+    render :json => @annual_report_uploads,
+      :each_serializer => Trade::AnnualReportUploadSerializer
   end
 
   def show
-    respond_with Trade::AnnualReportUpload.find(params[:id])
+    render :json => Trade::AnnualReportUpload.find(params[:id]),
+      :serializer => Trade::ShowAnnualReportUploadSerializer
   end
 
   def create
@@ -21,7 +29,8 @@ class Trade::AnnualReportUploadsController < ApplicationController
     if @annual_report_upload.update_attributes_and_sandbox(
       annual_report_upload_params
     )
-      render :json => @annual_report_upload, :status => :ok
+      render :json => @annual_report_upload, :status => :ok,
+        :serializer => Trade::ShowAnnualReportUploadSerializer
     else
       render :json => @annual_report_upload.errors, :status => :unprocessable_entity
     end
@@ -30,7 +39,8 @@ class Trade::AnnualReportUploadsController < ApplicationController
   def submit
     @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
     @annual_report_upload.submit
-    respond_with @annual_report_upload
+    render :json => @annual_report_upload,
+      :serializer => Trade::ShowAnnualReportUploadSerializer
   end
 
 private

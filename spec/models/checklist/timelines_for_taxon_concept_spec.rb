@@ -20,7 +20,7 @@ describe Checklist::TimelinesForTaxonConcept do
         )
         eu
         cms_designation
-        Sapi.rebuild(:except => [:taxonomy])
+        Sapi.rebuild
         MTaxonConcept.find(tc.id)
       }
       subject{ Checklist::TimelinesForTaxonConcept.new(tc) }
@@ -43,7 +43,7 @@ describe Checklist::TimelinesForTaxonConcept do
         )
         eu
         cms_designation
-        Sapi.rebuild(:except => [:taxonomy])
+        Sapi.rebuild
         MTaxonConcept.find(tc.id)
       }
       subject{ Checklist::TimelinesForTaxonConcept.new(tc) }
@@ -66,7 +66,7 @@ describe Checklist::TimelinesForTaxonConcept do
         )
         eu
         cms_designation
-        Sapi.rebuild(:except => [:taxonomy])
+        Sapi.rebuild
         MTaxonConcept.find(tc.id)
       }
       subject{ Checklist::TimelinesForTaxonConcept.new(tc) }
@@ -82,7 +82,7 @@ describe Checklist::TimelinesForTaxonConcept do
         tc = create(:taxon_concept)
         eu
         cms_designation
-        Sapi.rebuild(:except => [:taxonomy])
+        Sapi.rebuild
         MTaxonConcept.find(tc.id)
       }
       subject{ Checklist::TimelinesForTaxonConcept.new(tc).timeline_years }

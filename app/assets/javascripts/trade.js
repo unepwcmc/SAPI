@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-deparam
 //= require jquery-ui
 //= require jquery.mousewheel
 //= require jquery.iframe-transport
@@ -21,6 +22,7 @@
 //= require ember-data
 //= require ember-table
 //= require date
+//= require select2
 
 //= require_self
 

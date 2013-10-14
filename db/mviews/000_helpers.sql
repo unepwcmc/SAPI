@@ -44,6 +44,15 @@ CREATE OR REPLACE FUNCTION higher_or_equal_ranks_names(in_rank_name VARCHAR(255)
 COMMENT ON FUNCTION higher_or_equal_ranks_names(in_rank_name VARCHAR(255)) IS
   'Returns an array of rank names above the given rank (sorted lowest first).';
 
+CREATE OR REPLACE FUNCTION squish(TEXT) RETURNS TEXT
+  LANGUAGE SQL IMMUTABLE
+  AS $$
+    SELECT BTRIM(regexp_replace($1, E'\\s+', ' ', 'g'));
+  $$;
+
+COMMENT ON FUNCTION squish(TEXT) IS
+  'Squishes whitespace characters in a string';
+
 CREATE OR REPLACE FUNCTION strip_tags(TEXT) RETURNS TEXT
   LANGUAGE SQL IMMUTABLE
   AS $$
@@ -92,6 +101,26 @@ CREATE OR REPLACE FUNCTION rebuild_mviews() RETURNS void
   $$;
 
 COMMENT ON FUNCTION rebuild_mviews() IS 'Procedure to rebuild materialized views in the database.';
+
+CREATE OR REPLACE FUNCTION drop_trade_sandboxes() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  DECLARE
+    current_table_name TEXT;
+  BEGIN
+    FOR current_table_name IN SELECT table_name FROM information_schema.tables
+    WHERE table_name LIKE 'trade_sandbox%' AND table_name != 'trade_sandbox_template'
+    LOOP
+      EXECUTE 'DROP TABLE ' || current_table_name;
+    END LOOP;
+    RETURN;
+  END;
+  $$;
+
+COMMENT ON FUNCTION drop_trade_sandboxes() IS '
+Drops all trade_sandbox_n tables. Used in specs only, you need to know what 
+you''re doing. If you''re looking to drop all sandboxes in the live system, 
+use the rake db:drop_sandboxes task instead.';
 
 CREATE OR REPLACE FUNCTION rebuild_touch_taxon_concepts() RETURNS void
   LANGUAGE plpgsql
