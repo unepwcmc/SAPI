@@ -186,7 +186,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     deleteSelection: () ->
       @beginPropertyChanges()
       @get('visibleShipments').forEach (shipment) ->
-        shipment.set('_destroyed', true)
+        shipment.setProperties({'_destroyed': true, '_modified': true})
       @endPropertyChanges()
       @resetVisibleShipments()
 
