@@ -18,7 +18,6 @@
 #  name_status        :string(255)      default("A"), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  mview_hash         :text
 #  touched_at         :datetime
 #
 
