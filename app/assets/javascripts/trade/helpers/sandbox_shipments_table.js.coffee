@@ -60,7 +60,7 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
   numFixedColumns: 0
   numRows: 100
   rowHeight: 30
-  shipments: null
+  contentBinding: 'annualReportUploadController.visibleShipments'
   selection: null
   fluidTable: yes
   tableRowViewClass: "Trade.SandboxShipmentsTable.TableRow"
@@ -130,8 +130,3 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
     columns.push deleteColumn
     columns
   .property()
-
-  content: Ember.computed ->
-    @get('shipments')
-  .property 'shipments'
-

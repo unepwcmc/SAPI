@@ -1,5 +1,11 @@
 Trade.AnnualReportUploadController = Ember.ObjectController.extend
   content: null
+  visibleShipments: null
+
+  sandboxShipmentsDidLoad: ( ->
+    @set('visibleShipments', @get('content.sandboxShipments'))
+  ).observes('content.sanboxShipments.@each.didLoad')
+
   sandboxShipmentsSaving: ( ->
     @get('content.isSaving')
   ).property('content.isSaving')
@@ -7,7 +13,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
   tableController: Ember.computed ->
     controller = Ember.get('Trade.SandboxShipmentsTable.TableController').create()
-    controller.set 'shipments', @get('content.sandboxShipments')
+    controller.set('annualReportUploadController', @)
     controller
   .property()
 
@@ -107,7 +113,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
               !element.get(columnName) || /^\s*$/.test(element.get(columnName))
             )
         )
-    @set('tableController.shipments', shipments)
+    @set('visibleShipments', shipments)
   ).observes(
     'selectedAppendixValues.@each', 'blankAppendix',
     'selectedSpeciesNameValues.@each', 'blankSpeciesName',
@@ -152,7 +158,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     setVisibleShipments: (shipments) ->
       @resetFilters()
       @set('filtersVisible', false)
-      @set('tableController.shipments', shipments)
+      @set('visibleShipments', shipments)
 
     saveChanges: () ->
       @get('store').commit()
@@ -166,13 +172,12 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
     resetFilters: () ->
       @resetFilters()
-      @set('tableController.shipments', @get('content.sandboxShipments'))
+      @set('visibleShipments', @get('content.sandboxShipments'))
 
     deleteSelection: () ->
-      currentShipments = @get('tableController.shipments')
+      currentShipments = @get('visibleShipments')
       currentShipments.forEach (shipment) ->
         shipment.set('_destroyed', true)
-      @set('tableController.shipments', currentShipments)
 
     updateSelection: () ->
       valuesToUpdate = {'_modified': true}
@@ -181,10 +186,9 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
         blank = $('.sandbox-form').find('input[type=checkbox][name=' + columnName + ']:checked')
         valuesToUpdate[columnName] = el.val() if el && el.val()
         valuesToUpdate[columnName] = null if blank.length > 0
-      currentShipments = @get('tableController.shipments')
+      currentShipments = @get('visibleShipments')
       currentShipments.forEach (shipment) ->
         shipment.setProperties(valuesToUpdate)
-      @set('tableController.shipments', currentShipments)
 
     selectForUpdate: () ->
       @set('filtersVisible', false)
