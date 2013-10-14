@@ -62,9 +62,7 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
   rowHeight: 30
   contentBinding: 'annualReportUploadController.visibleShipments'
   selection: null
-  fluidTable: yes
   tableRowViewClass: "Trade.SandboxShipmentsTable.TableRow"
-
   columnNames: [
       'appendix', 'speciesName', 'termCode', 'quantity', 'unitCode',
       'tradingPartner', 'countryOfOrigin', 'importPermit', 'exportPermit',
@@ -74,43 +72,43 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
   columns: Ember.computed ->
     columnProperties =
       appendix:
-        width: '4%'
+        width: 50
         header: 'Appdx'
       speciesName:
-        width: '15%'
+        width: 200
         header: 'Species Name'
       termCode:
-        width: '5%'
+        width: 50
         header: 'Term'
       quantity:
-        width: '6%'
+        width: 50
         header: 'Qty'
       unitCode:
-        width: '4%'
+        width: 50
         header: 'Unit'
       tradingPartner:
-        width: '5%'
+        width: 100
         header: 'Trading partner'
       countryOfOrigin:
-        width: '5%'
+        width: 100
         header: 'Ctry of Origin'
       importPermit:
-        width: '13%'
+        width: 140
         header: 'Import Permit'
       exportPermit:
-        width: '13%'
+        width: 140
         header: 'Export Permit'
       originPermit:
-        width: '13%'
+        width: 140
         header: 'Origin Permit'
       purposeCode:
-        width: '4%'
+        width: 50
         header: 'Purpose'
       sourceCode:
-        width: '4%'
+        width: 50
         header: 'Source'
       year:
-        width: '5%'
+        width: 50
         header: 'Year'
 
     columns = @get('columnNames').map (key, index) ->
@@ -121,8 +119,8 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
         getCellContent: (row) -> row.get(key)
         setCellContent: (row, value) -> row.set(key, value)
     deleteColumn = Ember.Table.ColumnDefinition.create
-      columnWidth: '4%'
-      headerCellName: 'Del'
+      columnWidth: 50
+      headerCellName: 'Delete'
       tableCellViewClass: 'Trade.SandboxShipmentsTable.CheckboxTableCell'
       getCellContent: (row) -> row.get('_destroyed')
       setCellContent: (row, value) ->
