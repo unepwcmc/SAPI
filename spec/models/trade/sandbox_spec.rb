@@ -18,8 +18,9 @@ describe Trade::Sandbox do
     describe :destroy do
       subject { annual_report_upload.sandbox }
       specify {
-        table_name = subject.table_name; subject.destroy
-        Trade::SandboxTemplate.select('*').from(table_name).should raise_exception
+        sandbox_klass = Trade::SandboxTemplate.ar_klass(subject.table_name)
+        subject.destroy
+        ActiveRecord::Base.connection.table_exists?('trade_sandbox_1').should be_false
       }
     end
 
