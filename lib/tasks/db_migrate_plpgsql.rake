@@ -34,4 +34,7 @@ namespace :db do
     Rake::Task['db:migrate:mviews'].invoke
     Rake::Task['db:migrate:plpgsql'].invoke
   end
+  task :drop_sandboxes => :environment do
+    Trade::AnnualReportUpload.where(:is_done => false).delete_all
+  end
 end

@@ -104,14 +104,14 @@ shared_context "Pecari tajacu" do
       create(
         :geo_relationship,
         :geo_entity => north_america,
-        :other_geo_entity_id => country.id,
+        :related_geo_entity => country,
         :geo_relationship_type => contains
       )
     end
     create(
       :geo_relationship,
       :geo_entity => south_america,
-      :other_geo_entity_id => argentina.id,
+      :related_geo_entity => argentina,
       :geo_relationship_type => contains
     )
 
