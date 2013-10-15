@@ -67,8 +67,10 @@ FactoryGirl.define do
       name_en "Boxes"
     end
   end
+
   factory :term_trade_codes_pair do
     term
+    trade_code
   end
 
   factory :cites_suspension do
