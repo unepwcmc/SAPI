@@ -376,5 +376,6 @@ Trade::InclusionValidationRule.create(
 Trade::SpeciesNameAppendixYearValidationRule.create(
   :column_names => ['species_name', 'appendix', 'year'],
   :valid_values_view => 'valid_species_name_appendix_year_mview',
-  :run_order => 4
+  :run_order => 4,
+  :is_primary => false
 )

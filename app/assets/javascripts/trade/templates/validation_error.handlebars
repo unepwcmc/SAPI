@@ -1,6 +1,10 @@
 <div class="row-fluid">
   <div class="span2">
-    <span class="label label-important">PRIMARY</span>
+    {{#if isPrimary}}
+      <span class="label label-important">PRIMARY</span>
+    {{else}}
+      <span class="label label-warning">SECONDARY</span>
+    {{/if}}
   </div>
   <div class="span10">
     <a {{action setVisibleShipments this.sandboxShipments }}>

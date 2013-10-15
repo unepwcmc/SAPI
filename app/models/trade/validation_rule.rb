@@ -13,7 +13,7 @@
 #
 
 class Trade::ValidationRule < ActiveRecord::Base
-  attr_accessible :column_names, :run_order
+  attr_accessible :column_names, :run_order, :is_primary
   include PgArrayParser
 
   def column_names
@@ -33,7 +33,8 @@ class Trade::ValidationRule < ActiveRecord::Base
           :annual_report_upload_id => annual_report_upload.id,
           :validation_rule_id => self.id,
           :error_count => error_count,
-          :matching_records_ids => matching_records.map(&:id)
+          :matching_records_ids => matching_records.map(&:id),
+          :is_primary => self.is_primary
         )
       ]
     else
