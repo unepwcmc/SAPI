@@ -146,12 +146,35 @@ describe Trade::ValidationRule do
                 :trade_code_type => unit.type)
           sandbox_klass.create(:term_code => 'BAL', :unit_code => 'BAG')
           sandbox_klass.create(:term_code => 'CAV', :unit_code => 'KIL')
+          sandbox_klass.create(:term_code => 'CAV', :unit_code => '')
         end
         subject{
           create(
             :inclusion_validation_rule,
             :column_names => ['term_code', 'unit_code'],
             :valid_values_view => 'valid_term_unit_view'
+          )
+        }
+        specify{
+          subject.validation_errors(annual_report_upload).size.should == 1
+        }
+      end
+      context 'term can only be paired with purpose as defined by term_trade_codes_pairs table' do
+        before do
+          cav = create(:term, :code => "CAV")
+          create(:purpose, :code => "B")
+          purpose = create(:purpose, :code => "P")
+          create(:term_trade_codes_pair, :term_id => cav.id, :trade_code_id => purpose.id,
+                :trade_code_type => purpose.type)
+          sandbox_klass.create(:term_code => 'CAV', :purpose_code => 'B')
+          sandbox_klass.create(:term_code => 'CAV', :purpose_code => 'P')
+          sandbox_klass.create(:term_code => 'CAV', :purpose_code => '')
+        end
+        subject{
+          create(
+            :inclusion_validation_rule,
+            :column_names => ['term_code', 'purpose_code'],
+            :valid_values_view => 'valid_term_purpose_view'
           )
         }
         specify{
