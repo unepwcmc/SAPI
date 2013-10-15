@@ -2,8 +2,19 @@ a {
   cursor: pointer
 }
 
-.filters {
-  label {
-    display: inline;
+.sandbox-form {
+  button {
+    margin: 10px 5px;
   }
+  label { display: inline; }
+}
+
+.sandbox-header {
+  button {
+    margin: 10px 5px;
+  }
+  span {
+    margin-top: 15px;
+  }
+  margin-top: 10px;
 }
