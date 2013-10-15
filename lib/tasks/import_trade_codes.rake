@@ -190,20 +190,20 @@ namespace :import do
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
-    initial_count = TradeCodesPair.count
+    initial_count = TermTradeCodesPair.count
     sql = <<-SQL
-      INSERT INTO trade_codes_pairs(trade_code_id, trade_code_type,
-        other_trade_code_id, other_trade_code_type, created_at, updated_at)
-      SELECT DISTINCT trade_codes.id, trade_codes.type, other_trade_codes.id,
-        other_trade_codes.type, current_date, current_date
+      INSERT INTO term_trade_codes_pairs(term_id,
+        trade_code_id, trade_code_type, created_at, updated_at)
+      SELECT DISTINCT terms.id, trade_codes.id,
+        trade_codes.type, current_date, current_date
       FROM #{TMP_TABLE}
-      INNER JOIN trade_codes ON BTRIM(UPPER(trade_codes.code)) = BTRIM(UPPER(#{TMP_TABLE}.TERM_CODE))
-        AND trade_codes.type = 'Term'
-      INNER JOIN trade_codes AS other_trade_codes ON BTRIM(UPPER(other_trade_codes.code)) = BTRIM(UPPER(#{TMP_TABLE}.PURPOSE_CODE))
-        AND other_trade_codes.type = 'Purpose';
+      INNER JOIN trade_codes AS terms ON BTRIM(UPPER(terms.code)) = BTRIM(UPPER(#{TMP_TABLE}.TERM_CODE))
+        AND terms.type = 'Term'
+      INNER JOIN trade_codes AS trade_codes ON BTRIM(UPPER(trade_codes.code)) = BTRIM(UPPER(#{TMP_TABLE}.PURPOSE_CODE))
+        AND trade_codes.type = 'Purpose';
     SQL
     ActiveRecord::Base.connection.execute(sql)
-    puts "#{TradeCodesPair.count - initial_count} terms and purpose codes pairs created"
+    puts "#{TermTradeCodesPair.count - initial_count} terms and purpose codes pairs created"
   end
 
   desc "Import terms and unit codes acceptable pairing"
@@ -213,19 +213,19 @@ namespace :import do
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
-    initial_count = TradeCodesPair.count
+    initial_count = TermTradeCodesPair.count
     sql = <<-SQL
-      INSERT INTO trade_codes_pairs(trade_code_id, trade_code_type,
-        other_trade_code_id, other_trade_code_type, created_at, updated_at)
-      SELECT DISTINCT trade_codes.id, trade_codes.type, other_trade_codes.id,
-        other_trade_codes.type, current_date, current_date
+      INSERT INTO term_trade_codes_pairs(term_id,
+        trade_code_id, trade_code_type, created_at, updated_at)
+      SELECT DISTINCT terms.id, trade_codes.id,
+        trade_codes.type, current_date, current_date
       FROM #{TMP_TABLE}
-      INNER JOIN trade_codes ON BTRIM(UPPER(trade_codes.code)) = BTRIM(UPPER(#{TMP_TABLE}.TERM_CODE))
-        AND trade_codes.type = 'Term'
-      INNER JOIN trade_codes AS other_trade_codes ON BTRIM(UPPER(other_trade_codes.code)) = BTRIM(UPPER(#{TMP_TABLE}.UNIT_CODE))
-        AND other_trade_codes.type = 'Unit';
+      INNER JOIN trade_codes AS terms ON BTRIM(UPPER(terms.code)) = BTRIM(UPPER(#{TMP_TABLE}.TERM_CODE))
+        AND terms.type = 'Term'
+      INNER JOIN trade_codes AS trade_codes ON BTRIM(UPPER(trade_codes.code)) = BTRIM(UPPER(#{TMP_TABLE}.UNIT_CODE))
+        AND trade_codes.type = 'Unit';
     SQL
     ActiveRecord::Base.connection.execute(sql)
-    puts "#{TradeCodesPair.count - initial_count} terms and unit codes pairs created"
+    puts "#{TermTradeCodesPair.count - initial_count} terms and unit codes pairs created"
   end
 end
