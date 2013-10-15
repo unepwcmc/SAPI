@@ -24,9 +24,14 @@ describe Trade::AnnualReportUploadsController do
     )
   }
   describe "GET index" do
-    let!(:annual_report_upload){ create(:annual_report_upload) }
+    let!(:annual_report_upload){ 
+      annual_report_upload = build(:annual_report_upload)
+      annual_report_upload.save(:validate => false)
+      annual_report_upload
+    }
     let!(:annual_report_upload_completed){
-      aru = create(:annual_report_upload)
+      aru = build(:annual_report_upload)
+      aru.save(:validate => false)
       aru.submit
       aru
     }
