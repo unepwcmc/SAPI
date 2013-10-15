@@ -373,3 +373,8 @@ Trade::InclusionValidationRule.create(
   :valid_values_view => 'valid_appendix_view',
   :run_order => 3
 )
+Trade::InclusionValidationRule.create(
+  :column_names => ['term_code', 'unit_code'],
+  :valid_values_view => 'valid_term_unit_view',
+  :run_order => 4
+)
