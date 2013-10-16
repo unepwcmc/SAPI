@@ -29,7 +29,8 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
           :annual_report_upload_id => annual_report_upload.id,
           :validation_rule_id => self.id,
           :error_count => mr.error_count,
-          :matching_records_ids => parse_pg_array(mr.matching_records_ids)
+          :matching_records_ids => parse_pg_array(mr.matching_records_ids),
+          :is_primary => self.is_primary
       )
     end
   end
@@ -38,12 +39,15 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # Returns matching records grouped by column_names to return the count of
   # specific errors and ids of matching records
   def matching_records_grouped(table_name)
+    squished_column_names = column_names.map{ |c| "SQUISH(#{c})" }
     Trade::SandboxTemplate.
     select(
-      column_names +
+      squished_column_names.each_with_index.map { |c, idx| "#{c} AS #{column_names[idx]}"} +
       ['COUNT(*) AS error_count', 'ARRAY_AGG(id) AS matching_records_ids']
     ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
-    group(column_names).having(column_names.map{ |cn| "#{cn} IS NOT NULL"}.join(' AND '))
+    group(squished_column_names).having(
+      squished_column_names.map{ |cn| "#{cn} IS NOT NULL"}.join(' AND ')
+    )
   end
 
   # Returns records from sandbox where values in column_names are not null

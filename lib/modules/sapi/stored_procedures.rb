@@ -13,6 +13,7 @@ module Sapi
         :cites_species_listing_mview,
         :eu_species_listing_mview,
         :cms_species_listing_mview,
+        :valid_species_name_appendix_year_mview,
         :touch_taxon_concepts
       ].each{ |p|
         puts "Procedure: #{p}"
