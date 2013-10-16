@@ -373,13 +373,21 @@ Trade::InclusionValidationRule.create(
   :valid_values_view => 'valid_appendix_view',
   :run_order => 3
 )
+Trade::SpeciesNameAppendixYearValidationRule.create(
+  :column_names => ['species_name', 'appendix', 'year'],
+  :valid_values_view => 'valid_species_name_appendix_year_mview',
+  :run_order => 4,
+  :is_primary => false
+)
 Trade::InclusionValidationRule.create(
   :column_names => ['term_code', 'unit_code'],
   :valid_values_view => 'valid_term_unit_view',
   :run_order => 4
+  :is_primary => false
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['term_code', 'purpose_code'],
   :valid_values_view => 'valid_term_purpose_view',
   :run_order => 4
+  :is_primary => false
 )

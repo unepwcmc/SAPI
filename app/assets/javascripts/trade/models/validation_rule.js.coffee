@@ -4,5 +4,6 @@ Trade.ValidationRule = DS.Model.extend
   columnNames: DS.attr('array')
   validValuesView: DS.attr('string')
   formatRe: DS.attr('string')
+  isPrimary: DS.attr('boolean')
   createdAt: DS.attr('date')
   updatedAt: DS.attr('date')
