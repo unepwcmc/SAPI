@@ -1,5 +1,5 @@
 {{#if view.isEditing}}
   {{view view.innerTextField}}
 {{else}}
-  <span {{bind-attr class=":content view.hasChanged"}}>{{view.cellContent}}</span>
+  <span>{{view.cellContent}}</span>
 {{/if}}
