@@ -24,7 +24,7 @@ describe Trade::AnnualReportUploadsController do
     )
   }
   describe "GET index" do
-    let!(:annual_report_upload){ 
+    let!(:annual_report_upload){
       annual_report_upload = build(:annual_report_upload)
       annual_report_upload.save(:validate => false)
       annual_report_upload
@@ -48,6 +48,7 @@ describe Trade::AnnualReportUploadsController do
   describe "GET show" do
     it "should return success" do
       get :show, id: annual_report_upload.id, format: :json
+      debugger
       response.body.should have_json_path('annual_report_upload')
     end
   end

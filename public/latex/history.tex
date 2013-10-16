@@ -14,6 +14,7 @@
 \usepackage{fancyhdr}
 \usepackage{textcomp}
 \usepackage{array}
+\usepackage{eso-pic}
 
 \DeclareUnicodeCharacter{B0}{\textdegree}
 \DeclareUnicodeCharacter{00A0}{~}
@@ -67,9 +68,32 @@
   \end{longtable}
 }
 
-\includepdf[pages={-}]{../../public/latex/static_history.pdf}
+\newcommand\AtPageLowerRight[1]{
+  \AtPageUpperLeft{%
+    \put(
+      \LenToUnit{0.75\paperwidth},
+      \LenToUnit{-0.99\paperheight}
+    ){#1}
+  }%
+}
 
 \rmfamily
+\AddToShipoutPictureFG*{
+  \AtPageLowerRight{
+    \begin{LARGE}
+      \hyperlink{contentstart}{
+        \textbf{
+          \textcolor{white}{SKIP INTRO}
+        }
+      }
+    \end{LARGE}
+  }
+}
+
+\includepdf[pages=1]{../../public/latex/static_history.pdf}
+\includepdf[pages=2-]{../../public/latex/static_history.pdf}
+
+\hypertarget{contentstart}{}
 \include{_history}
 
 \end{document}

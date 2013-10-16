@@ -11,12 +11,14 @@ Trade.AnnualReportUploadFieldView = Ember.TextField.extend
         $("input[type=submit]").attr("disabled", null)
           .click( (e) ->
               e.preventDefault()
+              $('#upload-message').text('Uploading...')
               data.submit()
           )
 
       done: (e, data) =>
         $.each data.result.files, (index, file) =>
           if file.id != undefined
+            $('#upload-message').text('Upload finished')
             aru = Trade.AnnualReportUpload.find(file.id)
             controller.send('transitionToReportUpload', aru)
           else
