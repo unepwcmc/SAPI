@@ -16,11 +16,12 @@ require 'spec_helper'
 
 describe Trade::ValidationRule do
   let(:annual_report_upload){
-    create(
+    annual_report = build(
       :annual_report_upload,
-      :point_of_view => 'E',
-      :csv_source_file => Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv'))
+      :point_of_view => 'E'
     )
+    annual_report.save(:validate => false)
+    annual_report
   }
   let(:sandbox_klass){
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
@@ -64,7 +65,7 @@ describe Trade::ValidationRule do
     end
   end
 
-describe Trade::FormatValidationRule do
+  describe Trade::FormatValidationRule do
     describe :validation_errors do
       before(:each) do
         sandbox_klass.create(:year => '33333')
@@ -84,8 +85,8 @@ describe Trade::FormatValidationRule do
     end
   end
 
-describe Trade::InclusionValidationRule do
-  describe :validation_errors do
+  describe Trade::InclusionValidationRule do
+    describe :validation_errors do
       context 'species name may have extra whitespace between name segments' do
         before(:each) do
           genus = create_cites_eu_genus(
@@ -129,6 +130,51 @@ describe Trade::InclusionValidationRule do
             :inclusion_validation_rule,
             :column_names => ['trading_partner'],
             :valid_values_view => 'valid_trading_partner_view'
+          )
+        }
+        specify{
+          subject.validation_errors(annual_report_upload).size.should == 1
+        }
+      end
+      context 'term can only be paired with unit as defined by term_trade_codes_pairs table' do
+        before do
+          create(:term, :code => "BAL")
+          cav = create(:term, :code => "CAV")
+          create(:unit, :code => "BAG")
+          unit = create(:unit, :code => "KIL")
+          create(:term_trade_codes_pair, :term_id => cav.id, :trade_code_id => unit.id,
+                :trade_code_type => unit.type)
+          sandbox_klass.create(:term_code => 'BAL', :unit_code => 'BAG')
+          sandbox_klass.create(:term_code => 'CAV', :unit_code => 'KIL')
+          sandbox_klass.create(:term_code => 'CAV', :unit_code => '')
+        end
+        subject{
+          create(
+            :inclusion_validation_rule,
+            :column_names => ['term_code', 'unit_code'],
+            :valid_values_view => 'valid_term_unit_view'
+          )
+        }
+        specify{
+          subject.validation_errors(annual_report_upload).size.should == 1
+        }
+      end
+      context 'term can only be paired with purpose as defined by term_trade_codes_pairs table' do
+        before do
+          cav = create(:term, :code => "CAV")
+          create(:purpose, :code => "B")
+          purpose = create(:purpose, :code => "P")
+          create(:term_trade_codes_pair, :term_id => cav.id, :trade_code_id => purpose.id,
+                :trade_code_type => purpose.type)
+          sandbox_klass.create(:term_code => 'CAV', :purpose_code => 'B')
+          sandbox_klass.create(:term_code => 'CAV', :purpose_code => 'P')
+          sandbox_klass.create(:term_code => 'CAV', :purpose_code => '')
+        end
+        subject{
+          create(
+            :inclusion_validation_rule,
+            :column_names => ['term_code', 'purpose_code'],
+            :valid_values_view => 'valid_term_purpose_view'
           )
         }
         specify{

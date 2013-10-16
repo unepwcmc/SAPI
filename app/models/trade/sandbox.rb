@@ -94,7 +94,7 @@ class Trade::Sandbox
         terms.id, #{@table_name}.quantity::NUMERIC, #{@table_name}.reported_appendix,
         #{@table_name}.appendix, #{@annual_report_upload.id}, exporters.id, importers.id,
         origins.id, origin_permits.id, import_permits.id,
-        '#{ @annual_report_upload.point_of_view == "E" ? 't' : 'f'}'::BOOLEAN,
+        #{ @annual_report_upload.point_of_view == "E" ? 'true' : 'false'},
         taxon_concepts.id, #{@table_name}.species_name, #{@table_name}.year::INTEGER,
         current_date, current_date
       FROM #{@table_name}

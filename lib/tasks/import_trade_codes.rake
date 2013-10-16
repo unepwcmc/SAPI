@@ -183,4 +183,49 @@ namespace :import do
     puts "#{TradeCode.count} trade codes created"
   end
 
+  desc "Import terms and purpose codes acceptable pairing"
+  task :trade_codes_t_p_pairs => [:environment] do
+    TMP_TABLE = "terms_and_purpose_pairs_import"
+    file = "lib/files/term_purpose_pairs_utf8.csv"
+    drop_table(TMP_TABLE)
+    create_table_from_csv_headers(file, TMP_TABLE)
+    copy_data(file, TMP_TABLE)
+    initial_count = TermTradeCodesPair.count
+    sql = <<-SQL
+      INSERT INTO term_trade_codes_pairs(term_id,
+        trade_code_id, trade_code_type, created_at, updated_at)
+      SELECT DISTINCT terms.id, trade_codes.id,
+        trade_codes.type, current_date, current_date
+      FROM #{TMP_TABLE}
+      INNER JOIN trade_codes AS terms ON BTRIM(UPPER(terms.code)) = BTRIM(UPPER(#{TMP_TABLE}.TERM_CODE))
+        AND terms.type = 'Term'
+      INNER JOIN trade_codes AS trade_codes ON BTRIM(UPPER(trade_codes.code)) = BTRIM(UPPER(#{TMP_TABLE}.PURPOSE_CODE))
+        AND trade_codes.type = 'Purpose';
+    SQL
+    ActiveRecord::Base.connection.execute(sql)
+    puts "#{TermTradeCodesPair.count - initial_count} terms and purpose codes pairs created"
+  end
+
+  desc "Import terms and unit codes acceptable pairing"
+  task :trade_codes_t_u_pairs => [:environment] do
+    TMP_TABLE = "terms_and_unit_pairs_import"
+    file = "lib/files/term_unit_pairs_utf8.csv"
+    drop_table(TMP_TABLE)
+    create_table_from_csv_headers(file, TMP_TABLE)
+    copy_data(file, TMP_TABLE)
+    initial_count = TermTradeCodesPair.count
+    sql = <<-SQL
+      INSERT INTO term_trade_codes_pairs(term_id,
+        trade_code_id, trade_code_type, created_at, updated_at)
+      SELECT DISTINCT terms.id, trade_codes.id,
+        trade_codes.type, current_date, current_date
+      FROM #{TMP_TABLE}
+      INNER JOIN trade_codes AS terms ON BTRIM(UPPER(terms.code)) = BTRIM(UPPER(#{TMP_TABLE}.TERM_CODE))
+        AND terms.type = 'Term'
+      INNER JOIN trade_codes AS trade_codes ON BTRIM(UPPER(trade_codes.code)) = BTRIM(UPPER(#{TMP_TABLE}.UNIT_CODE))
+        AND trade_codes.type = 'Unit';
+    SQL
+    ActiveRecord::Base.connection.execute(sql)
+    puts "#{TermTradeCodesPair.count - initial_count} terms and unit codes pairs created"
+  end
 end
