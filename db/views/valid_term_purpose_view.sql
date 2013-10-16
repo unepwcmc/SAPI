@@ -1,6 +1,6 @@
 DROP VIEW IF EXISTS valid_term_purpose_view;
 CREATE VIEW valid_term_purpose_view AS
-SELECT DISTINCT
+SELECT
   terms.code AS term_code,
   purposes.code AS purpose_code
 FROM term_trade_codes_pairs

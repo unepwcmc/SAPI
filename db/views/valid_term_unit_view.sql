@@ -1,6 +1,6 @@
 DROP VIEW IF EXISTS valid_term_unit_view;
 CREATE VIEW valid_term_unit_view AS
-SELECT DISTINCT
+SELECT
   terms.code AS term_code,
   units.code AS unit_code
 FROM term_trade_codes_pairs
