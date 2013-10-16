@@ -78,6 +78,8 @@ namespace :import do
     )
 
     Rake::Task["import:trade_codes"].invoke
+    Rake::Task["import:trade_codes_t_p_pairs"].invoke
+    Rake::Task["import:trade_codes_t_u_pairs"].invoke
 
     Rake::Task["import:cites_quotas"].invoke(
       'lib/files/quotas_utf8.csv'

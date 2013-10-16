@@ -68,6 +68,11 @@ FactoryGirl.define do
     end
   end
 
+  factory :term_trade_codes_pair do
+    term
+    trade_code
+  end
+
   factory :cites_suspension do
     taxon_concept
     start_notification
