@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Trade::SpeciesNameAppendixYearValidationRule do
   let(:annual_report_upload){
-    aru = create(:annual_report_upload)
+    aru = build(:annual_report_upload)
     aru.save(:validate => false)
     aru
   }
