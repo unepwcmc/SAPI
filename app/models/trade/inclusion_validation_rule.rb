@@ -29,7 +29,8 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
           :annual_report_upload_id => annual_report_upload.id,
           :validation_rule_id => self.id,
           :error_count => mr.error_count,
-          :matching_records_ids => parse_pg_array(mr.matching_records_ids)
+          :matching_records_ids => parse_pg_array(mr.matching_records_ids),
+          :is_primary => self.is_primary
       )
     end
   end
