@@ -7,7 +7,7 @@
   - cascading listing / current listing calculations (CITES/EU and CMS)
   - Species+ search
   
-### 0.2.0 (unreleased)
+### 0.2.0 (2013-10-16)
 
 * updating / deleting individual sandbox shipments
 * batch updating / deleting sandbox shipments
