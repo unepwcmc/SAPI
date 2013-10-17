@@ -228,4 +228,25 @@ namespace :import do
     ActiveRecord::Base.connection.execute(sql)
     puts "#{TermTradeCodesPair.count - initial_count} terms and unit codes pairs created"
   end
+
+  desc "Import taxon concepts terms acceptable pairing. (i.e.: which terms can go with each taxon concept)"
+  task :taxon_concept_terms_pairs => [:environment] do
+    TMP_TABLE = "taxon_concepts_and_terms_pairs_import"
+    file = "lib/files/taxon_concept_term_pairs_utf8.csv"
+    drop_table(TMP_TABLE)
+    create_table_from_csv_headers(file, TMP_TABLE)
+    copy_data(file, TMP_TABLE)
+    initial_count = Trade::TaxonConceptCodePair.count
+    sql = <<-SQL
+      INSERT INTO trade_taxon_concept_code_pairs(taxon_concept_id, trade_code_id, trade_code_type,
+        created_at, updated_at)
+      SELECT DISTINCT taxon_concepts.id, terms.id, 'Term', current_date, current_date
+      FROM #{TMP_TABLE}
+      INNER JOIN taxon_concepts_mview AS taxon_concepts ON UPPER(BTRIM(taxon_concepts.full_name)) = UPPER(BTRIM(#{TMP_TABLE}.TAXON_FAMILY))
+      INNER JOIN trade_codes AS terms ON UPPER(BTRIM(terms.code)) = UPPER(BTRIM(#{TMP_TABLE}.TERM_CODE))
+      WHERE taxon_concepts.rank_name = '#{Rank::FAMILY}' AND taxon_concepts.taxonomy_is_cites_eu
+    SQL
+    ActiveRecord::Base.connection.execute(sql)
+    puts "#{Trade::TaxonConceptCodePair.count - initial_count} terms and unit codes pairs created"
+  end
 end
