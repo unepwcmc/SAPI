@@ -201,6 +201,8 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
       @get('visibleShipments').forEach (shipment) ->
         shipment.setProperties(valuesToUpdate)
       @endPropertyChanges()
+      $('.sandbox-form').find('input[type=text]').val('')
+      $('.sandbox-form').find('input[type=checkbox]').attr('checked', false)
       @resetVisibleShipments()
 
     selectForUpdate: () ->
