@@ -126,7 +126,7 @@ class Trade::Sandbox
       )
       INSERT INTO trade_shipment_export_permits( trade_shipment_id,
         trade_permit_id, created_at, updated_at)
-      SELECT inserted_shipments.id, trade_permits.id, current_date, current_date
+      SELECT DISTINCT inserted_shipments.id, trade_permits.id, current_date, current_date
       FROM inserted_shipments
       INNER JOIN #{@table_name} ON #{@table_name}.id = inserted_shipments.sandbox_id
       INNER JOIN trade_permits ON trade_permits.number = #{@table_name}.export_permit;
