@@ -88,7 +88,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomy_tmp_taxon_concepts_mview(taxonomy ta
 
     EXECUTE sql USING taxonomy.id;
 
-    EXECUTE 'CREATE INDEX ON ' || tc_table_name || ' (id)';
+    EXECUTE 'CREATE UNIQUE INDEX ON ' || tc_table_name || ' (id)';
   END
   $$;
 
