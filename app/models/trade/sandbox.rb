@@ -129,7 +129,10 @@ class Trade::Sandbox
       SELECT inserted_shipments.id, trade_permits.id, current_date, current_date
       FROM inserted_shipments
       INNER JOIN #{@table_name} ON #{@table_name}.id = inserted_shipments.sandbox_id
-      INNER JOIN trade_permits ON trade_permits.number = #{@table_name}.export_permit
+      INNER JOIN trade_permits ON trade_permits.number = #{@table_name}.export_permit;
+      UPDATE trade_shipments
+      SET sandbox_id = NULL
+      WHERE trade_shipments.trade_annual_report_upload_id = #{@annual_report_upload.id}
     SQL
     ActiveRecord::Base.connection.execute(cmd)
   end
