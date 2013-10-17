@@ -382,12 +382,21 @@ Trade::SpeciesNameAppendixYearValidationRule.create(
 Trade::InclusionValidationRule.create(
   :column_names => ['term_code', 'unit_code'],
   :valid_values_view => 'valid_term_unit_view',
-  :run_order => 4
+  :run_order => 4,
   :is_primary => false
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['term_code', 'purpose_code'],
   :valid_values_view => 'valid_term_purpose_view',
-  :run_order => 4
+  :run_order => 4,
+  :is_primary => false
+)
+Trade::InclusionValidationRule.create(
+  :scope => {
+    :source_code => 'W'
+  },
+  :column_names => ['species_name', 'country_of_origin'],
+  :valid_values_view => 'valid_species_name_country_of_origin_view',
+  :run_order => 4,
   :is_primary => false
 )
