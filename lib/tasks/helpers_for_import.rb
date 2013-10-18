@@ -238,6 +238,10 @@ class CsvToDbMap
     'terms_and_unit_pairs_import' => {
       'TERM_CODE' => 'TERM_CODE varchar',
       'UNIT_CODE' => 'UNIT_CODE varchar'
+    },
+    'taxon_concepts_and_terms_pairs_import' => {
+      'TAXON_FAMILY' => 'TAXON_FAMILY varchar',
+      'TERM_CODE' => 'TERM_CODE varchar'
     }
   }
 
