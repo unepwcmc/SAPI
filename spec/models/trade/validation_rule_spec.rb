@@ -181,6 +181,26 @@ describe Trade::ValidationRule, :drops_tables => true do
           subject.validation_errors(annual_report_upload).size.should == 1
         }
       end
+      context 'taxon_concept species_name can only be paired with term as defined by trade_taxon_concept_code_pairs table' do
+        before do
+          cav = create(:term, :code => "CAV")
+          create(:term, :code => "BAL")
+          pair = create(:trade_taxon_concept_code_pair, :trade_code_id => cav.id,
+                :trade_code_type => cav.type)
+          sandbox_klass.create(:term_code => 'CAV', :species_name => pair.taxon_concept.full_name)
+          sandbox_klass.create(:term_code => 'BAL', :species_name => pair.taxon_concept.full_name)
+        end
+        subject{
+          create(
+            :inclusion_validation_rule,
+            :column_names => ['species_name', 'term_code'],
+            :valid_values_view => 'valid_taxon_concept_term_view'
+          )
+        }
+        specify{
+          subject.validation_errors(annual_report_upload).size.should == 1
+        }
+      end
     end
   end
 
