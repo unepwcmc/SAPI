@@ -92,7 +92,7 @@ end
 group :test, :development do
   gem "rspec-rails"
   gem "json_spec"
-  gem "database_cleaner"
+  gem "database_cleaner", ">=1.2.0"
   gem "timecop"
 end
 
