@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Trade::PovInclusionValidationRule do
+describe Trade::PovInclusionValidationRule, :drops_tables => true do
   describe :validation_errors do
     include_context 'Pecari tajacu'
     context "when Export and W source and country of origin blank and exporter doesn't match distribution" do

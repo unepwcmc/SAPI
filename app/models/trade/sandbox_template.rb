@@ -88,7 +88,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
 
   def self.drop_stmt(target_table_name)
     sql = <<-SQL
-      DROP TABLE #{target_table_name}
+      DROP TABLE #{target_table_name} CASCADE
     SQL
   end
 

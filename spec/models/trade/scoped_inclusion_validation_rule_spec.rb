@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Trade::InclusionValidationRule do
+describe Trade::InclusionValidationRule, :drops_tables => true do
   let(:annual_report_upload){
     aru = build(:annual_report_upload)
     aru.save(:validate => false)
