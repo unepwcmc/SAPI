@@ -16,7 +16,7 @@
 
 require 'spec_helper'
 
-describe Trade::AnnualReportUpload do
+describe Trade::AnnualReportUpload, :drops_tables => true do
   def exporter_file
     Rack::Test::UploadedFile.new(
       File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv')

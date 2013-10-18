@@ -14,5 +14,5 @@ class TermTradeCodesPair < ActiveRecord::Base
   attr_accessible :trade_code_id, :trade_code_type, :term_id
 
   belongs_to :term, :class_name => "TradeCode"
-  belongs_to :trade_code, :polymorphic => true
+  belongs_to :trade_code
 end
