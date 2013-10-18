@@ -392,6 +392,12 @@ Trade::InclusionValidationRule.create(
   :is_primary => false
 )
 Trade::InclusionValidationRule.create(
+  :column_names => ['species_name', 'term_code'],
+  :valid_values_view => 'valid_taxon_concept_term_view',
+  :run_order => 4,
+  :is_primary => false
+)
+Trade::InclusionValidationRule.create(
   :scope => {
     :source_code => 'W'
   },
@@ -400,7 +406,7 @@ Trade::InclusionValidationRule.create(
   :run_order => 4,
   :is_primary => false
 )
-Trade::POVInclusionValidationRule.create(
+Trade::PovInclusionValidationRule.create(
   :scope => {
     :point_of_view => 'E',
     :source_code => 'W', :country_of_origin_blank => true

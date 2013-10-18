@@ -26,4 +26,10 @@ FactoryGirl.define do
     end
   end
 
+  factory :trade_taxon_concept_code_pair, :class => Trade::TaxonConceptCodePair do
+    taxon_concept
+    trade_code
+  end
+
+
 end

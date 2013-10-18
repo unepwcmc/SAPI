@@ -45,13 +45,17 @@ RSpec.configure do |config|
   config.include JsonSpec::Helpers
   config.include SapiSpec::Helpers
 
-  config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
-  end
-
   config.before(:all) do
     #Rails.cache.clear
     DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each, :drops_tables => true) do
+    DatabaseCleaner.strategy = :deletion, {:cache_tables => false}
   end
 
   config.before(:each) do

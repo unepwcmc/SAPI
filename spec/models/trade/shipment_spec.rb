@@ -26,6 +26,6 @@
 
 require 'spec_helper'
 
-describe Trade::Shipment do
+describe Trade::Shipment, :drops_tables => true do
   pending "add some examples to (or delete) #{__FILE__}"
 end

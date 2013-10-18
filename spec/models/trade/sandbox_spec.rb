@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Trade::Sandbox do
+describe Trade::Sandbox, :drops_tables => true do
     def importer_file
       Rack::Test::UploadedFile.new(
         File.join(Rails.root, 'spec', 'support', 'annual_report_upload_importer.csv')
