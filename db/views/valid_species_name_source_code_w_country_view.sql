@@ -1,3 +1,5 @@
+DROP VIEW IF EXISTS valid_species_name_exporter_view;
+DROP VIEW IF EXISTS valid_species_name_country_of_origin_view;
 DROP VIEW IF EXISTS valid_species_name_country_view;
 CREATE VIEW valid_species_name_country_view AS
 SELECT full_name AS species_name,
@@ -10,7 +12,11 @@ JOIN distributions
 JOIN geo_entities
   ON geo_entities.id = distributions.geo_entity_id;
 
-DROP VIEW IF EXISTS valid_species_name_country_of_origin_view;
+
+CREATE VIEW valid_species_name_exporter_view AS
+SELECT species_name, iso_code2 AS exporter
+FROM valid_species_name_country_view;
+
 CREATE VIEW valid_species_name_country_of_origin_view AS
 SELECT species_name, iso_code2 AS country_of_origin
 FROM valid_species_name_country_view;

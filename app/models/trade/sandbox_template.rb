@@ -58,10 +58,31 @@ class Trade::SandboxTemplate < ActiveRecord::Base
   end
 
   private
-  def self.create_stmt(target_table_name)
+  def self.create_table_stmt(target_table_name)
     sql = <<-SQL
       CREATE TABLE #{target_table_name} (PRIMARY KEY(id))
       INHERITS (#{table_name})
+    SQL
+  end
+
+  def self.create_view_stmt(target_table_name, idx)
+    sql = <<-SQL
+      CREATE VIEW #{target_table_name}_view AS
+      SELECT aru.point_of_view,
+      CASE
+        WHEN aru.point_of_view = 'E'
+        THEN geo_entities.iso_code2
+        ELSE trading_partner
+      END AS exporter,
+      CASE
+        WHEN aru.point_of_view = 'E'
+        THEN trading_partner
+        ELSE geo_entities.iso_code2 
+      END AS importer,
+      #{target_table_name}.*
+      FROM #{target_table_name}
+      JOIN trade_annual_report_uploads aru ON aru.id = #{idx}
+      JOIN geo_entities ON geo_entities.id = aru.trading_country_id
     SQL
   end
 

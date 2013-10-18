@@ -23,7 +23,7 @@ describe Trade::InclusionValidationRule do
           :inclusion_validation_rule,
           :scope => {:source_code => 'W'},
           :column_names => ['species_name', 'country_of_origin'],
-          :valid_values_view => 'valid_species_source_code_country_of_origin_view'
+          :valid_values_view => 'valid_species_name_country_of_origin_view'
         )
       }
       specify{
@@ -42,7 +42,7 @@ describe Trade::InclusionValidationRule do
           :inclusion_validation_rule,
           :scope => {:source_code => 'W'},
           :column_names => ['species_name', 'country_of_origin'],
-          :valid_values_view => 'valid_species_source_code_country_of_origin_view'
+          :valid_values_view => 'valid_species_name_country_of_origin_view'
         )
       }
       specify{
