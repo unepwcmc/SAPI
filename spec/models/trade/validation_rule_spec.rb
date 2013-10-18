@@ -14,7 +14,7 @@
 
 require 'spec_helper'
 
-describe Trade::ValidationRule do
+describe Trade::ValidationRule, :drops_tables => true do
   let(:annual_report_upload){
     annual_report = build(
       :annual_report_upload,

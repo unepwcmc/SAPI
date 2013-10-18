@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Trade::Sandbox do
+describe Trade::Sandbox, :drops_tables => true do
     def importer_file
       Rack::Test::UploadedFile.new(
         File.join(Rails.root, 'spec', 'support', 'annual_report_upload_importer.csv')
@@ -15,7 +15,7 @@ describe Trade::Sandbox do
         :csv_source_file => importer_file
       )
     }
-    describe :destroy, :drops_tables => true do
+    describe :destroy do
       subject { annual_report_upload.sandbox }
       specify {
         sandbox_klass = Trade::SandboxTemplate.ar_klass(subject.table_name)
@@ -24,7 +24,7 @@ describe Trade::Sandbox do
       }
     end
 
-    describe :submit_shipments, :drops_tables => true do
+    describe :submit_shipments do
       subject { annual_report_upload.sandbox }
       specify {
         subject.submit_shipments
