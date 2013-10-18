@@ -84,8 +84,6 @@ class Trade::SandboxTemplate < ActiveRecord::Base
 
   def self.duplicate_column_stmt target_table_name, origin_col, destiny_col, data_type="varchar"
     sql = <<-SQL
-      ALTER TABLE #{target_table_name}
-      ADD COLUMN #{destiny_col} #{data_type};
       UPDATE #{target_table_name}
       SET #{destiny_col} = #{origin_col};
     SQL
