@@ -16,9 +16,22 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   attr_accessible :valid_values_view
 
   def error_message(values_ary)
-    column_names.each_with_index.map do |cn, idx|
+    scope_info = scope && scope.map do |scope_column, scope_value|
+      scope_column =~ /(.+?)(_blank)?$/
+      scope_column = $1
+      scope_value = nil unless $2.nil? #if _blank, then check for null
+      if (
+        Trade::SandboxTemplate.column_names +
+        ['point_of_view', 'importer', 'exporter']
+      ).include? scope_column
+        "#{scope_column} = #{scope_value}"
+      end
+    end.compact.join(', ')
+    info = column_names.each_with_index.map do |cn, idx|
       "#{cn} #{values_ary[idx]}"
-    end.join(" with ") + ' is invalid'
+    end.join(" with ")
+    info = "#{info} (#{scope_info})" unless scope_info.blank?
+    info + ' is invalid'
   end
 
   def validation_errors(annual_report_upload)
