@@ -109,9 +109,11 @@ CREATE OR REPLACE FUNCTION drop_trade_sandboxes() RETURNS void
     current_table_name TEXT;
   BEGIN
     FOR current_table_name IN SELECT table_name FROM information_schema.tables
-    WHERE table_name LIKE 'trade_sandbox%' AND table_name != 'trade_sandbox_template'
+    WHERE table_name LIKE 'trade_sandbox%'
+      AND table_name != 'trade_sandbox_template'
+      AND table_type != 'VIEW'
     LOOP
-      EXECUTE 'DROP TABLE ' || current_table_name;
+      EXECUTE 'DROP TABLE ' || current_table_name || ' CASCADE';
     END LOOP;
     RETURN;
   END;
