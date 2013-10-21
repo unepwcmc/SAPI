@@ -24,6 +24,9 @@ FactoryGirl.define do
       :class => Trade::SpeciesNameAppendixYearValidationRule do
       valid_values_view 'valid_species_name_appendix_year_mview'
     end
+    factory :pov_distinct_values_validation_rule,
+      :class => Trade::PovDistinctValuesValidationRule
+
   end
 
   factory :trade_taxon_concept_code_pair, :class => Trade::TaxonConceptCodePair do

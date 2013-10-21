@@ -415,3 +415,13 @@ Trade::PovInclusionValidationRule.create(
   :run_order => 4,
   :is_primary => false
 )
+Trade::PovDistinctValuesValidationRule.create(
+  :column_names => ['exporter', 'country_of_origin'],
+  :run_order => 4,
+  :is_primary => false
+)
+Trade::PovDistinctValuesValidationRule.create(
+  :column_names => ['exporter', 'importer'],
+  :run_order => 4,
+  :is_primary => false
+)
