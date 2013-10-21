@@ -408,7 +408,6 @@ Trade::InclusionValidationRule.create(
 )
 Trade::PovInclusionValidationRule.create(
   :scope => {
-    :point_of_view => 'E',
     :source_code => 'W', :country_of_origin_blank => true
   },
   :column_names => ['species_name', 'exporter'],
