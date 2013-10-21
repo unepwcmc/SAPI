@@ -1,15 +1,12 @@
 require 'spec_helper'
 
 describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
-  let(:annual_report_upload){
-    aru = build(:annual_report_upload)
-    aru.save(:validate => false)
-    aru
-  }
-  let(:sandbox_klass){
-    Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
-  }
   describe :validation_errors do
+    before(:each) do
+      @aru = build(:annual_report_upload)
+      @aru.save(:validate => false)
+      @sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
+    end
     include_context 'Loxodonta africana'
 
     context "when split listing" do
@@ -20,11 +17,10 @@ describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
         Timecop.return
       end
       before(:each) do
-        sandbox_klass.delete_all
-        sandbox_klass.create(
+        @sandbox_klass.create(
           :species_name => 'Loxodonta africana', :appendix => 'I', :year => '2010'
         )
-        sandbox_klass.create(
+        @sandbox_klass.create(
           :species_name => 'Loxodonta africana', :appendix => 'II', :year => '2010'
         )
       end
@@ -36,7 +32,7 @@ describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
         )
       }
       specify{
-        subject.validation_errors(annual_report_upload).size.should == 0
+        subject.validation_errors(@aru).size.should == 0
       }
     end
     context "when old listing" do
@@ -47,11 +43,10 @@ describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
         Timecop.return
       end
       before(:each) do
-        sandbox_klass.delete_all
-        sandbox_klass.create(
+        @sandbox_klass.create(
           :species_name => 'Loxodonta africana', :appendix => 'II', :year => '1991'
         )
-        sandbox_klass.create(
+        @sandbox_klass.create(
           :species_name => 'Loxodonta africana', :appendix => 'I', :year => '1991'
         )
       end
@@ -59,7 +54,7 @@ describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
         create(:species_name_appendix_year_validation_rule)
       }
       specify{
-        subject.validation_errors(annual_report_upload).size.should == 1
+        subject.validation_errors(@aru).size.should == 1
       }
     end
   end
