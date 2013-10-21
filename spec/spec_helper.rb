@@ -47,7 +47,7 @@ RSpec.configure do |config|
 
   config.before(:all) do
     #Rails.cache.clear
-    DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.clean_with(:deletion, {:cache_tables => false})
   end
 
   config.before(:each) do
@@ -56,12 +56,13 @@ RSpec.configure do |config|
 
   config.before(:each, :drops_tables => true) do
     DatabaseCleaner.strategy = :deletion, {:cache_tables => false}
+    ActiveRecord::Base.connection.execute('SELECT * FROM drop_trade_sandboxes()')
   end
 
   config.before(:each) do
     DatabaseCleaner.start
   end
-  
+
   config.after(:each) do
     DatabaseCleaner.clean
   end
@@ -69,7 +70,7 @@ RSpec.configure do |config|
 end
 
 def build_attributes(*args)
-  FactoryGirl.build(*args).attributes.delete_if do |k, v| 
+  FactoryGirl.build(*args).attributes.delete_if do |k, v|
     ["id", "created_at", "updated_at", "touched_at"].member?(k)
   end
 end
