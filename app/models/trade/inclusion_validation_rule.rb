@@ -51,7 +51,33 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   end
 
   # Returns records from sandbox where values in column_names are not null
-  # and not included in valid_values_view.
+  # and optionally filtered down by specified scope
+  # Pass Arel::Table
+  def scoped_records_arel(s)
+    not_null_nodes = column_names.map { |c| s[c].not_eq(nil).and(s[c].not_eq('')) }
+    not_null_conds = not_null_nodes.shift
+    not_null_nodes.each{ |n| not_null_conds = not_null_conds.and(n) }
+    result = s.project('*').where(not_null_conds)
+    scope_nodes = scope && scope.map do |scope_column, scope_value|
+      scope_column =~ /(.+?)(_blank)?$/
+      scope_column = $1
+      scope_value = nil unless $2.nil? #if _blank, then check for null
+      if (
+        Trade::SandboxTemplate.column_names +
+        ['point_of_view', 'importer', 'exporter']
+      ).include? scope_column
+        s[scope_column].eq(scope_value)
+      end
+    end.compact #filter out incorrectly specified scope conditions
+    scope_conds = scope_nodes.shift
+    scope_nodes.each{ |n| scope_conds = not_null_conds.and(n) }
+    result = result.where(scope_conds) if scope_conds
+
+    result
+  end
+
+  # Returns records from sandbox where values in column_names are not included
+  # in valid_values_view.
   # The valid_values_view should have the same column names and data types as
   # the sandbox columns specified in column_names.
   def matching_records_arel(table_name)
@@ -64,10 +90,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     join_conditions = arel_nodes.shift
     arel_nodes.each{ |n| join_conditions = join_conditions.and(n) }
     valid_values = s.project(s['*']).join(v).on(join_conditions)
-    not_null_nodes = column_names.map { |c| s[c].not_eq(nil).and(s[c].not_eq('')) }
-    not_null_conds = not_null_nodes.shift
-    not_null_nodes.each{ |n| not_null_conds = not_null_conds.and(n) }
-    s.project('*').where(not_null_conds).except(valid_values)
+    scoped_records_arel(s).except(valid_values)
   end
 
 end

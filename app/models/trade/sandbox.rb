@@ -143,7 +143,10 @@ class Trade::Sandbox
     unless Trade::SandboxTemplate.connection.table_exists? @table_name
       Thread.new do
         Trade::SandboxTemplate.connection.execute(
-          Trade::SandboxTemplate.create_stmt(@table_name)
+          Trade::SandboxTemplate.create_table_stmt(@table_name)
+        )
+        Trade::SandboxTemplate.connection.execute(
+          Trade::SandboxTemplate.create_view_stmt(@table_name, @annual_report_upload.id)
         )
       end.join
     end

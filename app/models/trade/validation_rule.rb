@@ -13,8 +13,9 @@
 #
 
 class Trade::ValidationRule < ActiveRecord::Base
-  attr_accessible :column_names, :run_order, :is_primary
+  attr_accessible :column_names, :run_order, :is_primary, :scope
   include PgArrayParser
+  serialize :scope, ActiveRecord::Coders::Hstore
 
   def column_names
     parse_pg_array(read_attribute(:column_names))

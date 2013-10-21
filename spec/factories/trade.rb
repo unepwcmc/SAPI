@@ -16,6 +16,10 @@ FactoryGirl.define do
     factory :inclusion_validation_rule, :class => Trade::InclusionValidationRule do
       valid_values_view 'valid_species_name_view'
     end
+    factory :pov_inclusion_validation_rule,
+      :class => Trade::PovInclusionValidationRule do
+      valid_values_view 'valid_species_name_country_of_origin_view'
+    end
     factory :species_name_appendix_year_validation_rule,
       :class => Trade::SpeciesNameAppendixYearValidationRule do
       valid_values_view 'valid_species_name_appendix_year_mview'

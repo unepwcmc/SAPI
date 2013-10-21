@@ -397,3 +397,21 @@ Trade::InclusionValidationRule.create(
   :run_order => 4,
   :is_primary => false
 )
+Trade::InclusionValidationRule.create(
+  :scope => {
+    :source_code => 'W'
+  },
+  :column_names => ['species_name', 'country_of_origin'],
+  :valid_values_view => 'valid_species_name_country_of_origin_view',
+  :run_order => 4,
+  :is_primary => false
+)
+Trade::PovInclusionValidationRule.create(
+  :scope => {
+    :source_code => 'W', :country_of_origin_blank => true
+  },
+  :column_names => ['species_name', 'exporter'],
+  :valid_values_view => 'valid_species_name_exporter_view',
+  :run_order => 4,
+  :is_primary => false
+)
