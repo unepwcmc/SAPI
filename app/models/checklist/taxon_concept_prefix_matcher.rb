@@ -22,7 +22,7 @@ class Checklist::TaxonConceptPrefixMatcher
   def initialize_query
     @query = MTaxonConcept.by_cites_eu_taxonomy.without_non_accepted.without_hidden
     if @scientific_name
-      @scientific_name.upcase!.chomp!
+      @scientific_name = @scientific_name.upcase.chomp
       @query = @query.select(
         ActiveRecord::Base.send(:sanitize_sql_array, [
         "DISTINCT id, ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1),
