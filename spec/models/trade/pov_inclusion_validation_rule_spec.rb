@@ -44,7 +44,7 @@ describe Trade::PovInclusionValidationRule, :drops_tables => true do
           :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => nil
         )
         sandbox_klass.create(
-          :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => argentina.id
+          :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => argentina.iso_code2
         )
       end
       subject{
@@ -68,7 +68,7 @@ describe Trade::PovInclusionValidationRule, :drops_tables => true do
           :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => nil, :trading_partner => 'PL'
         )
         sandbox_klass.create(
-          :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => argentina.id
+          :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => argentina.iso_code2
         )
       end
       subject{
@@ -89,7 +89,7 @@ describe Trade::PovInclusionValidationRule, :drops_tables => true do
         @aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
         sandbox_klass.create(
-          :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => argentina.id
+          :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => argentina.iso_code2
         )
       end
       subject{
