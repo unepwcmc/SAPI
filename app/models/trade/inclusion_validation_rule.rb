@@ -83,7 +83,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
       end
     end.compact #filter out incorrectly specified scope conditions
     scope_conds = scope_nodes.shift
-    scope_nodes.each{ |n| scope_conds = not_null_conds.and(n) }
+    scope_nodes.each{ |n| scope_conds = scope_conds.and(n) }
     result = result.where(scope_conds) if scope_conds
 
     result
