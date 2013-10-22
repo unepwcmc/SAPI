@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: trade_validation_rules
+#
+#  id                :integer          not null, primary key
+#  valid_values_view :string(255)
+#  type              :string(255)      not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  format_re         :string(255)
+#  run_order         :integer          not null
+#  column_names      :string(255)
+#  is_primary        :boolean          default(TRUE), not null
+#  scope             :hstore
+#
+
 require 'spec_helper'
 
 describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do

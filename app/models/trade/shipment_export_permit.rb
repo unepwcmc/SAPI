@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: trade_exporter_permits
+# Table name: trade_shipment_export_permits
 #
 #  id                :integer          not null, primary key
 #  trade_permit_id   :integer

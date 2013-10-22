@@ -22,6 +22,7 @@
 #  year                          :integer
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
+#  sandbox_id                    :integer
 #
 
 class Trade::Shipment < ActiveRecord::Base

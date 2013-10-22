@@ -10,6 +10,8 @@
 #  format_re         :string(255)
 #  run_order         :integer          not null
 #  column_names      :string(255)
+#  is_primary        :boolean          default(TRUE), not null
+#  scope             :hstore
 #
 
 class Trade::ValidationRule < ActiveRecord::Base

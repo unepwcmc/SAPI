@@ -2,6 +2,7 @@
 #
 # Table name: trade_sandbox_template
 #
+#  id                :integer          not null, primary key
 #  appendix          :string(255)
 #  species_name      :string(255)
 #  term_code         :string(255)
@@ -15,7 +16,7 @@
 #  source_code       :string(255)
 #  year              :string(255)
 #  import_permit     :string(255)
-#  id                :integer          not null, primary key
+#  reported_appendix :string
 #
 
 class Trade::SandboxTemplate < ActiveRecord::Base
