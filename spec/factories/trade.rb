@@ -26,6 +26,8 @@ FactoryGirl.define do
     end
     factory :pov_distinct_values_validation_rule,
       :class => Trade::PovDistinctValuesValidationRule
+    factory :taxon_concept_source_validation_rule,
+      :class => Trade::TaxonConceptSourceValidationRule
 
   end
 

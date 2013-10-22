@@ -425,3 +425,9 @@ Trade::PovDistinctValuesValidationRule.create(
   :run_order => 4,
   :is_primary => false
 )
+
+Trade::TaxonConceptSourceValidationRule.create(
+  :column_names => ['species_name', 'source_code'],
+  :run_order => 4,
+  :is_primary => false
+)
