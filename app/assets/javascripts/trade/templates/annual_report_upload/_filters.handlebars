@@ -110,51 +110,6 @@
 <div class="span4">
   <div class="attribute-area clearfix">
     <label>
-      Import Permit<br>
-      {{view Ember.Select
-        prompt="Please select import permit values"
-        contentBinding="controller.allImportPermitValues"
-        selectionBinding="controller.selectedImportPermitValues"
-        multiple="true"
-      }}
-    </label>
-    <label class="blank-checkbox">
-      {{view Ember.Checkbox checkedBinding="blankImportPermit"}}
-      blank
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Export Permit<br>
-      {{view Ember.Select
-        prompt="Please select export permit values"
-        contentBinding="controller.allExportPermitValues"
-        selectionBinding="controller.selectedExportPermitValues"
-        multiple="true"
-       }}
-    </label>
-    <label class="blank-checkbox">
-      {{view Ember.Checkbox checkedBinding="blankExportPermit"}}
-      blank
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Origin Permit<br>
-      {{view Ember.Select
-        prompt="Please select origin permit values"
-        contentBinding="controller.allOriginPermitValues"
-        selectionBinding="controller.selectedOriginPermitValues"
-        multiple="true"
-      }}
-    </label>
-    <label class="blank-checkbox">
-      {{view Ember.Checkbox checkedBinding="blankOriginPermit"}}
-      blank
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
       Purpose Code<br>
       {{view Ember.Select
         prompt="Please select purpose code values"
@@ -195,6 +150,51 @@
     </label>
     <label class="blank-checkbox">
       {{view Ember.Checkbox checkedBinding="blankYear"}}
+      blank
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Import Permit<br>
+      {{view Ember.Select
+        prompt="Please select import permit values"
+        contentBinding="controller.allImportPermitValues"
+        selectionBinding="controller.selectedImportPermitValues"
+        multiple="true"
+      }}
+    </label>
+    <label class="blank-checkbox">
+      {{view Ember.Checkbox checkedBinding="blankImportPermit"}}
+      blank
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Export Permit<br>
+      {{view Ember.Select
+        prompt="Please select export permit values"
+        contentBinding="controller.allExportPermitValues"
+        selectionBinding="controller.selectedExportPermitValues"
+        multiple="true"
+       }}
+    </label>
+    <label class="blank-checkbox">
+      {{view Ember.Checkbox checkedBinding="blankExportPermit"}}
+      blank
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Origin Permit<br>
+      {{view Ember.Select
+        prompt="Please select origin permit values"
+        contentBinding="controller.allOriginPermitValues"
+        selectionBinding="controller.selectedOriginPermitValues"
+        multiple="true"
+      }}
+    </label>
+    <label class="blank-checkbox">
+      {{view Ember.Checkbox checkedBinding="blankOriginPermit"}}
       blank
     </label>
   </div>

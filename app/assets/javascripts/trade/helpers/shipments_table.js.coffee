@@ -56,10 +56,10 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
   columns: Ember.computed ->
     columnNames = [
       'appendix', 'reported_appendix', 'species_name', 'term_code', 'quantity', 'unit_code',
-      'trading_partner', 'country_of_origin', 'import_permit', 'export_permit',
-      'origin_permit', 'purpose_code', 'source_code', 'year'
+      'trading_partner', 'country_of_origin', 'purpose_code', 'source_code', 'year',
+      'import_permit', 'export_permit', 'origin_permit'
     ]
-    columnProperties = 
+    columnProperties =
       appendix:
         width: 45
         header: 'Appdx'
@@ -84,15 +84,6 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
       country_of_origin:
         width: 100
         header: 'Ctry of Origin'
-      import_permit:
-        width: 150
-        header: 'Import Permit'
-      export_permit:
-        width: 150
-        header: 'Export Permit'
-      origin_permit:
-        width: 150
-        header: 'Origin Permit'
       purpose_code:
         width: 50
         header: 'Purpose'
@@ -102,6 +93,15 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
       year:
         width: 40
         header: 'Year'
+      import_permit:
+        width: 150
+        header: 'Import Permit'
+      export_permit:
+        width: 150
+        header: 'Export Permit'
+      origin_permit:
+        width: 150
+        header: 'Origin Permit'
 
     columns = columnNames.map (key, index) ->
       Ember.Table.ColumnDefinition.create
@@ -117,7 +117,7 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
       getCellContent: (row) -> row.get('_destroyed')
       setCellContent: (row, value) -> 
         row.set('_destroyed', value)
-    columns.push deleteColumn
+    columns.unshift deleteColumn
     columns
   .property()
 
