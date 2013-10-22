@@ -16,16 +16,8 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   attr_accessible :valid_values_view
 
   def error_message(values_ary)
-    scope_info = scope && scope.map do |scope_column, scope_value|
-      scope_column =~ /(.+?)(_blank)?$/
-      scope_column = $1
-      scope_value = nil unless $2.nil? #if _blank, then check for null
-      if (
-        Trade::SandboxTemplate.column_names +
-        ['point_of_view', 'importer', 'exporter']
-      ).include? scope_column
-        "#{scope_column} = #{scope_value}"
-      end
+    scope_info = sanitized_scope.map do |scope_column, scope_value|
+      "#{scope_column} = #{scope_value}"
     end.compact.join(', ')
     info = column_names.each_with_index.map do |cn, idx|
       "#{cn} #{values_ary[idx]}"
@@ -49,6 +41,24 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   end
 
   private
+  # Sanitizes column names provided within the scope attribute
+  # Also replaces attr_blank => true with attr => nil
+  def sanitized_scope
+    res = {}
+    scope && scope.each do |scope_column, scope_value|
+      scope_column =~ /(.+?)(_blank)?$/
+      scope_column = $1
+      scope_value = nil unless $2.nil? #if _blank, then check for null
+      if (
+        Trade::SandboxTemplate.column_names +
+        ['point_of_view', 'importer', 'exporter']
+      ).include? scope_column
+        res[scope_column] = scope_value
+      end
+    end
+    res
+  end
+
   # Returns matching records grouped by column_names to return the count of
   # specific errors and ids of matching records
   def matching_records_grouped(table_name)
@@ -71,17 +81,9 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     not_null_conds = not_null_nodes.shift
     not_null_nodes.each{ |n| not_null_conds = not_null_conds.and(n) }
     result = s.project('*').where(not_null_conds)
-    scope_nodes = scope && scope.map do |scope_column, scope_value|
-      scope_column =~ /(.+?)(_blank)?$/
-      scope_column = $1
-      scope_value = nil unless $2.nil? #if _blank, then check for null
-      if (
-        Trade::SandboxTemplate.column_names +
-        ['point_of_view', 'importer', 'exporter']
-      ).include? scope_column
-        s[scope_column].eq(scope_value)
-      end
-    end.compact #filter out incorrectly specified scope conditions
+    scope_nodes = sanitized_scope.map do |scope_column, scope_value|
+      s[scope_column].eq(scope_value)
+    end
     scope_conds = scope_nodes.shift
     scope_nodes.each{ |n| scope_conds = scope_conds.and(n) }
     result = result.where(scope_conds) if scope_conds
