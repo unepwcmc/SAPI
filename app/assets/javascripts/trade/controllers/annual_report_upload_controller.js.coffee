@@ -164,7 +164,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
         .done( =>
           @set('sandboxShipmentsSubmitting', false)
         )
-        @transitionToRoute('annual_report_uploads')
+        @transitionToRoute('shipments', {page: 1})
 
     setVisibleShipments: (shipments) ->
       @resetVisibleShipments(shipments)
