@@ -7,8 +7,12 @@
     {{/if}}
   </div>
   <div class="span10">
-    <a {{action setVisibleShipments this.sandboxShipments }}>
+    <a {{action setFiltersFromErrorSelector errorSelector}}>
       {{errorMessage}} ({{errorCount}})
     </a>
+    <a {{action setVisibleShipments this.sandboxShipments }}>
+      (old buggy link)
+    </a>
+
   </div>
 </div>

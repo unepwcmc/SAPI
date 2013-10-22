@@ -30,12 +30,14 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
 
   def validation_errors(annual_report_upload)
     matching_records_grouped(annual_report_upload.sandbox.table_name).map do |mr|
+      error_selector = error_selector(mr, annual_report_upload.point_of_view)
       values_ary = column_names.map{ |cn| mr.send(cn) }
       Trade::ValidationError.new(
           :error_message => error_message(values_ary),
           :annual_report_upload_id => annual_report_upload.id,
           :validation_rule_id => self.id,
           :error_count => mr.error_count,
+          :error_selector => error_selector,
           :matching_records_ids => parse_pg_array(mr.matching_records_ids),
           :is_primary => self.is_primary
       )
@@ -61,6 +63,25 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   end
 
   private
+
+  # Returns a hash with column values to be used to select invalid rows.
+  # e.g.
+  # {
+  #    :species_name => 'Loxodonta africana',
+  #    :term_code => 'CAV'
+  #
+  # }
+  # Expects a single grouped matching record.
+  def error_selector(matching_record, point_of_view)
+    res = {}
+    column_names.each do |cn|
+      res[cn] = matching_record.send(cn)
+    end
+    sanitized_scope.map do |scn, val|
+      res[scn] = val
+    end
+    res
+  end
 
   # Returns matching records grouped by column_names to return the count of
   # specific errors and ids of matching records
