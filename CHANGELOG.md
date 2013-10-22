@@ -1,4 +1,4 @@
-### 0.3.0 (unreleased)
+### 0.3.0 (2013-10-22)
 * adds secondary validations to trade management tool:
   - term + unit
   - term + purpose
