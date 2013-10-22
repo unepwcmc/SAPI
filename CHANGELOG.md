@@ -6,6 +6,9 @@
   - species + term
   - source 'W' + country of origin + distribution
   - source 'W' + exporter + distribution
+  - Export country + Origin country
+  - Export country + Import country
+  - Species name + Source code
 
 ### 0.2.0 (2013-10-16)
 
