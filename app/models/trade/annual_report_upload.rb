@@ -53,12 +53,11 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
 
   def validation_errors
     return [] if is_done
-    @validation_errors = []
-    validation_rules = Trade::ValidationRule.order(:run_order)
-    validation_rules.each do |vr|
-      @validation_errors << vr.validation_errors(self)
+    run_primary_validations
+    if (@validation_errors.count == 0)
+      run_secondary_validations
     end
-    @validation_errors.flatten
+    @validation_errors
   end
 
   def to_jq_upload
@@ -99,6 +98,28 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
 
     #flag as submitted
     update_attribute(:is_done, true)
+  end
+
+  private
+  # Expects a relation object
+  def run_validations(validation_rules)
+    validation_errors = []
+    validation_rules.order(:run_order).each do |vr|
+      validation_errors << vr.validation_errors(self)
+    end
+    validation_errors.flatten
+  end
+
+  def run_primary_validations
+    @validation_errors = run_validations(
+      Trade::ValidationRule.where(:is_primary => true)
+    )
+  end
+
+  def run_secondary_validations
+    @validation_errors += run_validations(
+      Trade::ValidationRule.where(:is_primary => false)
+    )
   end
 
 end

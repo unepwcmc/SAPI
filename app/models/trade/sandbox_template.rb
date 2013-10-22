@@ -66,6 +66,20 @@ class Trade::SandboxTemplate < ActiveRecord::Base
     SQL
   end
 
+  def self.create_indexes_stmt(target_table_name)
+    sql = <<-SQL
+      CREATE INDEX ON #{target_table_name} (squish_null(trading_partner));
+      CREATE INDEX ON #{target_table_name} (squish_null(term_code));
+      CREATE INDEX ON #{target_table_name} (squish_null(species_name));
+      CREATE INDEX ON #{target_table_name} (squish_null(appendix));
+      CREATE INDEX ON #{target_table_name} (squish_null(quantity));
+      CREATE INDEX ON #{target_table_name} (squish_null(source_code));
+      CREATE INDEX ON #{target_table_name} (squish_null(purpose_code));
+      CREATE INDEX ON #{target_table_name} (squish_null(unit_code));
+      CREATE INDEX ON #{target_table_name} (squish_null(country_of_origin));
+    SQL
+  end
+
   def self.create_view_stmt(target_table_name, idx)
     sql = <<-SQL
       CREATE VIEW #{target_table_name}_view AS

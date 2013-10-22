@@ -65,8 +65,8 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
   tableRowViewClass: "Trade.SandboxShipmentsTable.TableRow"
   columnNames: [
       'appendix', 'speciesName', 'termCode', 'quantity', 'unitCode',
-      'tradingPartner', 'countryOfOrigin', 'importPermit', 'exportPermit',
-      'originPermit', 'purposeCode', 'sourceCode', 'year'
+      'tradingPartner', 'countryOfOrigin', 'purposeCode', 'sourceCode', 'year',
+      'importPermit', 'exportPermit', 'originPermit'
     ]
 
   columns: Ember.computed ->
@@ -92,15 +92,6 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
       countryOfOrigin:
         width: 100
         header: 'Ctry of Origin'
-      importPermit:
-        width: 140
-        header: 'Import Permit'
-      exportPermit:
-        width: 140
-        header: 'Export Permit'
-      originPermit:
-        width: 140
-        header: 'Origin Permit'
       purposeCode:
         width: 50
         header: 'Purpose'
@@ -110,6 +101,15 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
       year:
         width: 50
         header: 'Year'
+      importPermit:
+        width: 140
+        header: 'Import Permit'
+      exportPermit:
+        width: 140
+        header: 'Export Permit'
+      originPermit:
+        width: 140
+        header: 'Origin Permit'
 
     columns = @get('columnNames').map (key, index) ->
       Ember.Table.ColumnDefinition.create
@@ -125,6 +125,6 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
       getCellContent: (row) -> row.get('_destroyed')
       setCellContent: (row, value) ->
         row.set('_destroyed', value)
-    columns.push deleteColumn
+    columns.unshift deleteColumn
     columns
   .property()

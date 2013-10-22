@@ -65,7 +65,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # Returns matching records grouped by column_names to return the count of
   # specific errors and ids of matching records
   def matching_records_grouped(table_name)
-    squished_column_names = column_names.map{ |c| "SQUISH(#{c})" }
+    squished_column_names = column_names.map{ |c| "SQUISH_NULL(#{c})" }
     Trade::SandboxTemplate.
     select(
       squished_column_names.each_with_index.map { |c, idx| "#{c} AS #{column_names[idx]}"} +
@@ -80,7 +80,10 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # and optionally filtered down by specified scope
   # Pass Arel::Table
   def scoped_records_arel(s)
-    not_null_nodes = column_names.map { |c| s[c].not_eq(nil).and(s[c].not_eq('')) }
+    not_null_nodes = column_names.map do |c|
+      func =Arel::Nodes::NamedFunction.new 'SQUISH_NULL', [s[c]]
+      func.not_eq(nil)
+    end
     not_null_conds = not_null_nodes.shift
     not_null_nodes.each{ |n| not_null_conds = not_null_conds.and(n) }
     result = s.project('*').where(not_null_conds)
@@ -102,7 +105,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     s = Arel::Table.new(table_name)
     v = Arel::Table.new(valid_values_view)
     arel_nodes = column_names.map do |c|
-      func =Arel::Nodes::NamedFunction.new 'squish', [s[c]]
+      func =Arel::Nodes::NamedFunction.new 'SQUISH_NULL', [s[c]]
       v[c].eq(func)
     end
     join_conditions = arel_nodes.shift
