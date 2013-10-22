@@ -54,12 +54,11 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def children_and_ancestors
-    m_concept = object.m_taxon_concept
     ids = object.children.select(:id).map(&:id)+
-            [m_concept.kingdom_id, m_concept.phylum_id,
-              m_concept.order_id, m_concept.class_id,
-              m_concept.family_id, m_concept.subfamily_id,
-              m_concept.genus_id]
+            [object.data['kingdom_id'], object.data['phylum_id'],
+              object.data['order_id'], object.data['class_id'],
+              object.data['family_id'], object.data['subfamily_id'],
+              object.data['genus_id']]
     ids.reject{|r| r.nil?} #remove nils
   end
 
