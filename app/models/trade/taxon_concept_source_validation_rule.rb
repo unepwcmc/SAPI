@@ -47,23 +47,23 @@ class Trade::TaxonConceptSourceValidationRule < Trade::ValidationRule
     sandbox_klass = Trade::SandboxTemplate.ar_klass(table_name)
     sandbox_klass.
       joins(<<-SQL
-            INNER JOIN taxon_concepts ON taxon_concepts.full_name = SQUISH(species_name)
+            INNER JOIN taxon_concepts ON taxon_concepts.full_name = SQUISH_NULL(species_name)
             INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
            SQL
       ).where(<<-SQL
           (
             UPPER(taxon_concepts.data->'kingdom_name') = 'ANIMALIA'
-              AND source_code IN (#{INVALID_KINGDOM_SOURCE['ANIMALIA'].map{|c| "'#{c}'"}.join(',')})
+              AND SQUISH_NULL(source_code) IN (#{INVALID_KINGDOM_SOURCE['ANIMALIA'].map{|c| "'#{c}'"}.join(',')})
           ) OR
           (
             UPPER(taxon_concepts.data->'kingdom_name') = 'PLANTAE'
-              AND source_code IN (#{INVALID_KINGDOM_SOURCE['PLANTAE'].map{|c| "'#{c}'"}.join(',')})
+              AND SQUISH_NULL(source_code) IN (#{INVALID_KINGDOM_SOURCE['PLANTAE'].map{|c| "'#{c}'"}.join(',')})
           )
         SQL
      ).
      where(:taxonomies => {:name => Taxonomy::CITES_EU}).
      select(['COUNT(*) AS error_count', "ARRAY_AGG(#{table_name}.id) AS matching_records_ids", 
-            'SQUISH(species_name)', 'SQUISH(source_code)']).
-     group('species_name, source_code')
+            'SQUISH_NULL(species_name) AS species_name', 'SQUISH_NULL(source_code) AS source_code']).
+     group('SQUISH_NULL(species_name), SQUISH_NULL(source_code)')
   end
 end
