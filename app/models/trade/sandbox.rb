@@ -146,6 +146,9 @@ class Trade::Sandbox
           Trade::SandboxTemplate.create_table_stmt(@table_name)
         )
         Trade::SandboxTemplate.connection.execute(
+          Trade::SandboxTemplate.create_indexes_stmt(@table_name)
+        )
+        Trade::SandboxTemplate.connection.execute(
           Trade::SandboxTemplate.create_view_stmt(@table_name, @annual_report_upload.id)
         )
       end.join

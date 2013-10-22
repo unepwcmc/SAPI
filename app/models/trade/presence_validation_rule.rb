@@ -27,7 +27,10 @@ class Trade::PresenceValidationRule < Trade::ValidationRule
   # using AND.
   def matching_records(table_name)
     s = Arel::Table.new(table_name)
-    arel_nodes = column_names.map{|c| s[c].eq(nil).or(s[c].eq(''))}
+    arel_nodes = column_names.map do |c|
+      func =Arel::Nodes::NamedFunction.new 'SQUISH_NULL', [s[c]]
+      func.eq(nil)
+    end
     conditions = arel_nodes.shift
     arel_nodes.each{ |n| conditions = conditions.and(n) }
     Trade::SandboxTemplate.select('*').from(table_name).where(conditions)
