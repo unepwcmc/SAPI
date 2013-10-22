@@ -1,10 +1,10 @@
 DROP VIEW IF EXISTS valid_taxon_concept_term_view;
 CREATE VIEW valid_taxon_concept_term_view AS
 WITH RECURSIVE self_and_descendants(id, species_name, pair_id) AS (
-  SELECT taxon_concepts.id, full_name, trade_taxon_concept_code_pairs.id 
-    FROM trade_taxon_concept_code_pairs
+  SELECT taxon_concepts.id, full_name, trade_taxon_concept_term_pairs.id 
+    FROM trade_taxon_concept_term_pairs
     INNER JOIN taxon_concepts
-      ON trade_taxon_concept_code_pairs.taxon_concept_id = taxon_concepts.id
+      ON trade_taxon_concept_term_pairs.taxon_concept_id = taxon_concepts.id
     WHERE name_status = 'A'
 
   UNION
@@ -14,8 +14,8 @@ WITH RECURSIVE self_and_descendants(id, species_name, pair_id) AS (
     WHERE name_status = 'A'
 )
 SELECT species_name, terms.code AS term_code FROM self_and_descendants
-INNER JOIN trade_taxon_concept_code_pairs
-  ON trade_taxon_concept_code_pairs.id = self_and_descendants.pair_id
+INNER JOIN trade_taxon_concept_term_pairs
+  ON trade_taxon_concept_term_pairs.id = self_and_descendants.pair_id
 INNER JOIN trade_codes AS terms
-  ON terms.id = trade_taxon_concept_code_pairs.trade_code_id
-  AND trade_taxon_concept_code_pairs.trade_code_type = 'Term'
+  ON terms.id = trade_taxon_concept_term_pairs.term_id
+  AND terms.type = 'Term'
