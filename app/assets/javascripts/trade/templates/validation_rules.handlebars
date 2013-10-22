@@ -2,6 +2,7 @@
 <thead>
   <th>Type</th>
   <th>Column names</th>
+  <th>Scope</th>
   <th>Valid values view</th>
   <th>Format RE</th>
   <th>Run order</th>
@@ -16,6 +17,13 @@
       <ul>
       {{#each columnName in columnNames}}
         <li>{{columnName}}</li>
+      {{/each}}
+      </ul>
+    </td>
+    <td>
+      <ul>
+      {{#each scopePart in scope}}
+        <li>{{scopePart}}</li>
       {{/each}}
       </ul>
     </td>

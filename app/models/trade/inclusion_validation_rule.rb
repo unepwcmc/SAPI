@@ -40,7 +40,6 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     end
   end
 
-  private
   # Sanitizes column names provided within the scope attribute
   # Also replaces attr_blank => true with attr => nil
   def sanitized_scope
@@ -58,6 +57,8 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     end
     res
   end
+
+  private
 
   # Returns matching records grouped by column_names to return the count of
   # specific errors and ids of matching records
