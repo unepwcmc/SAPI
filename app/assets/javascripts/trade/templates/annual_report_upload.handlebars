@@ -12,7 +12,8 @@
       {{#view tagName='span' class='pull-right' isVisibleBinding='controller.sandboxShipmentsSubmitting'}}
         <img src="/assets/loading.gif"> Submitting...
       {{/view}}
-      <button {{action submitShipments}} class="pull-right btn btn-danger">
+      <button {{action submitShipments}}
+        {{bind-attr class="hasPrimaryErrors:disabled :pull-right :btn :btn-danger"}}>
         Submit shipments
       </button>
     </div>
@@ -69,8 +70,7 @@
         <img src="/assets/loading.gif"> Saving...
       {{/view}}
       <button {{action 'saveChanges'}}
-        {{bind-attr class="unsavedChanges::disabled :pull-right :btn :btn-primary"}}
-        {{bind-attr disabled="unsavedChanges::disabled"}}>
+        {{bind-attr class="unsavedChanges::disabled :pull-right :btn :btn-primary"}}>
         Save changes
       </button>
       <button {{action 'cancelChanges'}} class="pull-right btn clearfix">
