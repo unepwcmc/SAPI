@@ -22,6 +22,22 @@ class Trade::PresenceValidationRule < Trade::ValidationRule
   end
 
   private
+  # Returns a hash with column values to be used to select invalid rows.
+  # For presence validation this will be simply a pair
+  # of validated field => nil.
+  # e.g.
+  # {
+  #    :species_name => nil
+  # }
+  # Expects a single grouped matching record.
+  def error_selector(matching_records)
+    res = {}
+    column_names.each do |cn|
+      res[cn] = nil if matching_records.select("SQUISH_NULL(#{cn}) AS #{cn}").count > 0
+    end
+    res
+  end
+
   # Returns records where the specified columns are NULL.
   # In case more than one column is specified, predicates are combined
   # using AND.

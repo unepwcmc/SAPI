@@ -134,6 +134,8 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     @get('columnNames').forEach (columnName) =>
       selectedValuesName = 'selected' + @capitaliseFirstLetter(columnName) + 'Values'
       @set(selectedValuesName, [])
+      blankValueName = 'blank' + @capitaliseFirstLetter(columnName)
+      @set(blankValueName, false)
 
   resetVisibleShipments: (shipments) ->
     shipments = @get('content.sandboxShipments') if shipments == null
@@ -165,6 +167,21 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
           @set('sandboxShipmentsSubmitting', false)
         )
         @transitionToRoute('shipments', {page: 1})
+
+    setFiltersFromErrorSelector: (errorSelector) ->
+      @resetVisibleShipments()
+      @beginPropertyChanges()
+      for errorColumn, errorValue of errorSelector
+        capitalisedColumnName = (errorColumn.split(/_/).map (word) -> word[0].toUpperCase() + word[1..-1].toLowerCase()).join ''
+        selectedValuesName = 'selected' + capitalisedColumnName + 'Values'
+        if errorValue == null
+          blankValueName = 'blank'  + capitalisedColumnName
+          @set(blankValueName, true)
+        else if typeof errorValue == 'object'
+          @set(selectedValuesName, errorValue)
+        else
+          @set(selectedValuesName, [errorValue])
+      @endPropertyChanges()
 
     setVisibleShipments: (shipments) ->
       @resetVisibleShipments(shipments)

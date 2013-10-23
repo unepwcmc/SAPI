@@ -51,7 +51,7 @@ describe Trade::PovInclusionValidationRule, :drops_tables => true do
     )
   end
   describe :validation_errors do
-    context "when W source and country of origin blank and exporter doesn't match distribution" do
+    context "when W source and country of origin blank and exporter doesn't match distribution (E)" do
       before(:each) do
         @aru = build(:annual_report_upload, :point_of_view => 'E', :trading_country_id => canada.id)
         @aru.save(:validate => false)
@@ -74,17 +74,24 @@ describe Trade::PovInclusionValidationRule, :drops_tables => true do
       specify{
         subject.validation_errors(@aru).size.should == 1
       }
+      specify{
+        ve = subject.validation_errors(@aru).first
+        ve.error_selector.should == {'species_name' => 'Pecari tajacu', 'country_of_origin' => nil, 'source_code' => 'W'}
+      }
     end
-    context "when W source and country of origin blank and exporter doesn't match distribution" do
+    context "when W source and country of origin blank and exporter doesn't match distribution (I)" do
       before(:each) do
-        @aru = build(:annual_report_upload, :point_of_view => 'I', :trading_country_id => canada.id)
+        @aru = build(:annual_report_upload, :point_of_view => 'I', :trading_country_id => argentina.id)
         @aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
         sandbox_klass.create(
-          :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => nil, :trading_partner => 'PL'
+          :species_name => 'Pecari tajacu', :source_code => 'W',
+          :trading_partner => canada.iso_code2, :country_of_origin => nil
         )
         sandbox_klass.create(
-          :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => argentina.iso_code2
+          :species_name => 'Pecari tajacu', :source_code => 'W',
+          :trading_partner => canada.iso_code2,
+          :country_of_origin => argentina.iso_code2
         )
       end
       subject{
@@ -97,6 +104,12 @@ describe Trade::PovInclusionValidationRule, :drops_tables => true do
       }
       specify{
         subject.validation_errors(@aru).size.should == 1
+      }
+      specify{
+        ve = subject.validation_errors(@aru).first
+        ve.error_selector.should == {
+          'species_name' => 'Pecari tajacu', 'country_of_origin' => nil,
+          'source_code' => 'W', 'trading_partner' => canada.iso_code2}
       }
     end
     context "when invalid scope specified" do

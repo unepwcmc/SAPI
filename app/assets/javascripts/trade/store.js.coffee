@@ -13,6 +13,16 @@ DS.RESTAdapter.registerTransform('array',
     return value
 )
 
+DS.RESTAdapter.registerTransform('hash',
+  serialize: (value) ->
+    if (Em.typeOf(value) == 'hash')
+      return value
+    else
+      return {}
+  deserialize: (value) ->
+    return value
+)
+
 Trade.Store.registerAdapter('Trade.GeoEntity', DS.RESTAdapter.extend({
   namespace: "api/v1"
 }))
