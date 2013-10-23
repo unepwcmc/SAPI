@@ -118,8 +118,9 @@ GEM
       handlebars-source (= 1.0.12)
     erubis (2.7.0)
     eventmachine (1.0.0)
-    exception_notification (2.6.1)
+    exception_notification (4.0.1)
       actionmailer (>= 3.0.4)
+      activesupport (>= 3.0.4)
     execjs (2.0.2)
     factory_girl (4.2.0)
       activesupport (>= 3.0.0)
@@ -338,7 +339,7 @@ DEPENDENCIES
   debugger
   ember-rails
   ember-source (= 1.0.0)
-  exception_notification (= 2.6.1)
+  exception_notification (~> 4.0)
   factory_girl_rails (~> 4.0)
   foreigner
   guard-bundler
