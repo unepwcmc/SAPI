@@ -106,4 +106,63 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           subject.destroy
       }
   end
+
+  describe :submit do
+    before(:each) do
+      genus = create_cites_eu_genus(
+        :taxon_name => create(:taxon_name, :scientific_name => 'Acipenser')
+      )
+      species = create_cites_eu_species(
+        :taxon_name => create(:taxon_name, :scientific_name => 'baerii'),
+        :parent_id => genus.id
+      )
+    end
+    context "when no primary errors" do
+      subject { #aru no primary errors
+        aru = build(:annual_report_upload)
+        aru.save(:validate => false)
+        sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
+        sandbox_klass.create(
+          :species_name => 'Acipenser baerii',
+          :appendix => 'II',
+          :term_code => 'CAV',
+          :unit_code => 'KIL',
+          :year => '2010'
+        )
+        create(
+          :format_validation_rule,
+          :column_names => ['year'],
+          :format_re => '^\d{4}$'
+        )
+        aru
+      }
+      specify {
+        expect{subject.submit}.to change{Trade::Shipment.count}.by(1)
+      }
+    end
+    context "when primary errors present" do
+      subject { #aru with primary errors
+        aru = build(:annual_report_upload)
+        aru.save(:validate => false)
+        sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
+        sandbox_klass.create(
+          :species_name => 'Acipenser baerii',
+          :appendix => 'II',
+          :term_code => 'CAV',
+          :unit_code => 'KIL',
+          :year => '10'
+        )
+        create(
+          :format_validation_rule,
+          :column_names => ['year'],
+          :format_re => '^\d{4}$'
+        )
+        aru
+      }
+      specify {
+        expect{subject.submit}.not_to change{Trade::Shipment.count}
+      }
+    end
+  end
+
 end

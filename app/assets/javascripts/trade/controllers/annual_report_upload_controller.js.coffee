@@ -159,6 +159,8 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     submitShipments: ()->
       if @get('content.isDirty')
         alert "You have unsaved changes, please save those before submitting your shipments"
+      else if @get('content.hasPrimaryErrors')
+        alert "Primary errors detected, cannot submit shipments"
       else
         @set('sandboxShipmentsSubmitting', true)
         $.post '/trade/annual_report_uploads/'+@get('id')+'/submit', {}, (data) ->

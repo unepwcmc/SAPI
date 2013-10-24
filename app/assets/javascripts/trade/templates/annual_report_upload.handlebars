@@ -13,7 +13,8 @@
         <img src="/assets/loading.gif"> Submitting...
       {{/view}}
       <button {{action submitShipments}}
-        {{bind-attr class="hasPrimaryErrors:disabled :pull-right :btn :btn-danger"}}>
+        {{bind-attr class="hasPrimaryErrors:disabled :pull-right :btn :btn-danger"}}
+        {{bind-attr disabled="hasPrimaryErrors"}}>
         Submit shipments
       </button>
     </div>

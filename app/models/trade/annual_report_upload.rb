@@ -78,6 +78,8 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
 
   #TODO: this method needs error checking
   def submit
+    run_primary_validations
+    return false unless @validation_errors.count == 0
     sandbox.submit_permits
     sandbox.submit_shipments
     #TODO probably would be good to wrap in transaction
