@@ -4,7 +4,6 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
   tableController: Ember.computed ->
     controller = Ember.get('Trade.SandboxShipmentsTable.TableController').create()
-    console.log('controller set')
     controller.set('annualReportUploadController', @)
     controller
   .property('sandboxShipmentsLoaded')
