@@ -82,6 +82,7 @@ group :development do
   # Deploy with Capistrano
   gem 'capistrano'
   gem 'capistrano-ext'
+  gem 'rvm-capistrano'
   gem 'brightbox', '>=2.3.9'
   gem 'rack-cors', :require => 'rack/cors'
   gem 'quiet_assets'

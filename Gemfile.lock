@@ -253,6 +253,8 @@ GEM
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
       rspec-mocks (~> 2.12.0)
+    rvm-capistrano (1.5.1)
+      capistrano (~> 2.15.4)
     sass (3.2.7)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
@@ -363,6 +365,7 @@ DEPENDENCIES
   rails (= 3.2.15)
   rake (~> 10.0.3)
   rspec-rails
+  rvm-capistrano
   sass-rails (~> 3.2.3)
   select2-rails
   sextant
