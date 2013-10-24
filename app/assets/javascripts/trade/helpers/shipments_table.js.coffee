@@ -29,7 +29,6 @@ Trade.ShipmentsTable.CheckboxTableCell = Ember.Table.TableCell.extend
   innerCheckbox: Ember.Checkbox.extend
     typeBinding:  'parentView.type'
     checkedBinding: 'parentView.cellContent'
-    didInsertElement: -> @$().focus()
     blur: (event) ->
       @set 'parentView.isEditing', no
 
