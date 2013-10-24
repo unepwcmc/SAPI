@@ -183,6 +183,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
           @set(selectedValuesName, errorValue)
         else
           @set(selectedValuesName, [errorValue])
+      @set('filtersVisible', false)
       @endPropertyChanges()
 
     setVisibleShipments: (shipments) ->
