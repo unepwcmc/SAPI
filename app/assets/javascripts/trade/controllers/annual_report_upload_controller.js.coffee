@@ -1,6 +1,6 @@
 Trade.AnnualReportUploadController = Ember.ObjectController.extend
   content: null
-  visibleShipments: null
+  visibleShipments: []
 
   tableController: Ember.computed ->
     controller = Ember.get('Trade.SandboxShipmentsTable.TableController').create()
