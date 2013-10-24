@@ -27,6 +27,11 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       File.join(Rails.root, 'spec', 'support', 'annual_report_upload_importer.csv')
     )
   end
+  def importer_file_w_blanks
+    Rack::Test::UploadedFile.new(
+      File.join(Rails.root, 'spec', 'support', 'annual_report_upload_importer_blanks.csv')
+    )
+  end
   def invalid_file
     Rack::Test::UploadedFile.new(
       File.join(Rails.root, 'spec', 'support', 'annual_report_upload_invalid.csv')
@@ -91,6 +96,22 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         )
       }
       specify{ subject.validation_errors.should be_empty}
+  end
+
+  describe :create do
+    context "when blank lines in import file" do
+      subject{
+        create(
+          :annual_report_upload,
+          :point_of_view => 'I',
+          :csv_source_file => importer_file_w_blanks
+        )
+      }
+      specify {
+        sandbox_klass = Trade::SandboxTemplate.ar_klass(subject.sandbox.table_name)
+        sandbox_klass.count.should == 10
+      }
+    end
   end
 
   describe :destroy do
