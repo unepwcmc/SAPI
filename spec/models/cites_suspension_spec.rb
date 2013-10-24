@@ -25,8 +25,131 @@
 require 'spec_helper'
 
 describe CitesSuspension do
+  let(:country){
+    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
+  }
+  let(:tanzania){
+    create(
+      :geo_entity,
+      :geo_entity_type => country,
+      :name => 'United Republic of Tanzania',
+      :iso_code2 => 'TZ'
+    )
+  }
+  let(:rwanda){
+    create(
+      :geo_entity,
+      :geo_entity_type => country,
+      :name => 'Republic of Rwanda',
+      :iso_code2 => 'RW'
+    )
+  }
   before do
+    Timecop.freeze(10.minutes.ago)
     @taxon_concept = create(:taxon_concept)
+    @another_taxon_concept = create(:taxon_concept)
+    create(
+      :distribution,
+      :taxon_concept_id => @taxon_concept.id,
+      :geo_entity_id => tanzania.id
+    )
+    create(
+      :distribution,
+      :taxon_concept_id => @another_taxon_concept.id,
+      :geo_entity_id => rwanda.id
+    )
+    Timecop.return
+  end
+
+  context "touching taxa" do
+    describe :create do
+      context "when taxon specific suspension" do
+        subject{
+          build(
+            :cites_suspension,
+            :taxon_concept => @taxon_concept,
+            :start_notification => create_cites_suspension_notification
+          )
+        }
+        specify{
+          expect{subject.save}.to change{@taxon_concept.updated_at}
+        }
+      end
+      context "when global suspension" do
+        subject{
+          build(
+            :cites_suspension,
+            :taxon_concept_id => nil,
+            :geo_entity_id => tanzania.id,
+            :start_notification => create_cites_suspension_notification
+          )
+        }
+        specify{
+          expect{subject.save}.to change{@taxon_concept.reload.updated_at}
+        }
+      end
+    end
+    describe :update do
+      context "when taxon specific suspension" do
+        subject{
+          create(
+            :cites_suspension,
+            :taxon_concept => @taxon_concept,
+            :start_notification => create_cites_suspension_notification
+          )
+        }
+        specify{
+          expect{subject.update_attribute(:taxon_concept_id, @another_taxon_concept.id)}.
+            to change{@taxon_concept.updated_at}
+        }
+      end
+      context "when global suspension" do
+        subject{
+          create(
+            :cites_suspension,
+            :taxon_concept_id => nil,
+            :geo_entity_id => tanzania.id,
+            :start_notification => create_cites_suspension_notification
+          )
+        }
+        specify{
+          expect{subject.update_attribute(:geo_entity_id, rwanda.id)}.
+            to change{@taxon_concept.reload.updated_at}
+        }
+        specify{
+          expect{subject.update_attribute(:geo_entity_id, rwanda.id)}.
+            to change{@another_taxon_concept.reload.updated_at}
+        }
+      end
+    end
+    describe :destroy do
+      context "when taxon specific suspension" do
+        subject{
+          create(
+            :cites_suspension,
+            :taxon_concept => @taxon_concept,
+            :start_notification => create_cites_suspension_notification
+          )
+        }
+        specify{
+          expect{subject.destroy}.to change{@taxon_concept.updated_at}
+        }
+      end
+      context "when global suspension" do
+        subject{
+          create(
+            :cites_suspension,
+            :taxon_concept_id => nil,
+            :geo_entity_id => tanzania.id,
+            :start_notification => create_cites_suspension_notification
+          )
+        }
+        specify{
+          expect{subject.destroy}.
+            to change{@taxon_concept.reload.updated_at}
+        }
+      end
+    end
   end
 
   context "validations" do
