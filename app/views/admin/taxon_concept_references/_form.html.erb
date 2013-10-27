@@ -8,7 +8,7 @@
   <div class="tab-content">
     <div class="tab-pane fade in active reference_search_form" id="search">
       <label>Search by citation:</label>
-      <%= text_field_tag 'reference_search', nil, :class =>'references-typeahead' %>
+      <%= text_field_tag 'reference_search', nil, :class =>'references-typeahead input-xxlarge' %>
       <%= text_field_tag 'reference[id]', nil, :class =>'hidden' %>
       <label>Is standard?</label>
       <%= check_box_tag 'taxon_concept_reference[is_standard]' %>
@@ -19,7 +19,7 @@
     <div class="tab-pane fade" id="new">
       <%= f.fields_for :reference do |ff| %>
         <label>Citation</label>
-        <%= ff.text_field :citation %>
+        <%= ff.text_area :citation, :class => "input-xlarge" %>
         <hr>
       <% end %>
     </div>

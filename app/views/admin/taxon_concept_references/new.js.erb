@@ -1,14 +1,14 @@
 var form = $("<%= escape_javascript(render('form')) %>");
 
 $('#admin-new-taxon_concept_reference-form').html(form);
-
-window.adminEditor.initModals();
-
-window.adminEditor.clearModalForm($('#admin-new-taxon_concept_reference-form'));
+window.adminEditor.initSaveAndReOpenButton();
+window.adminEditor.initReferencesTypeahead();
 $('#new-taxon_concept_reference').modal('show');
+
 
 $('.nav-tabs a').click(function (e) {
   e.preventDefault();
   window.adminEditor.clearModalForm($('#admin-new-taxon_concept_reference-form'));
   $(this).tab('show');
 });
+

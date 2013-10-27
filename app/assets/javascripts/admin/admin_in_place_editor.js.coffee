@@ -4,6 +4,8 @@ $(document).ready ->
     window.adminEditor = new TaxonConceptsEditor()
   else if window.editorClass == 'listing_changes' 
     window.adminEditor = new ListingChangesEditor()
+  else if window.editorClass == 'taxon_concept_references'
+    window.adminEditor = new TaxonReferencesEditor()
   else
     window.adminEditor = new AdminInPlaceEditor()
   window.adminEditor.init()
@@ -106,7 +108,6 @@ class TaxonConceptsEditor extends AdminEditor
     super
     @saveAndReopen = false
     @initTaxonConceptTypeaheads()
-    @initReferencesTypeahead()
     $('.distributions-list > a').popover({});
 
   initTaxonConceptTypeaheads: () ->
@@ -148,30 +149,6 @@ class TaxonConceptsEditor extends AdminEditor
             )
           $().add(taxonomyEl).add(rankEl).change () =>
             $(@).val(null)
-
-  initReferencesTypeahead: () ->
-    @references = {}
-    @referencesLabels = []
-    $('.references-typeahead').typeahead(
-      source: (query, process) =>
-        $.get(
-          '/admin/references/autocomplete',
-          { query: query },
-          (data) =>
-            _.each(data, (item, i, list) =>
-              if (_.has(@references, item.value))
-                item.value = item.value + ' (' + item.id + ')'
-
-              @referencesLabels.push(item.value)
-              @references[item.value] = item.id
-            )
-            process(@referencesLabels)
-        )
-      updater: (item) =>
-        $('#reference_id').val(@references[item])
-        $('#reference_search').val(item)
-        return item
-    )
 
   alertSuccess: (txt) ->
     $('.alert').remove()
@@ -291,3 +268,39 @@ class ListingChangesEditor extends AdminEditor
             $('#listing_change_effective_at').val(data.event.effective_at_formatted)
         )
       )
+
+class TaxonReferencesEditor extends AdminEditor
+  init: () ->
+    super
+    @initSaveAndReOpenButton()
+    @initReferencesTypeahead()
+
+  initSaveAndReOpenButton: () ->
+    @saveAndReopen = false
+    $('.modal .modal-footer .save-and-reopen-button').click () =>
+      @saveAndReopen = true
+
+  initReferencesTypeahead: () ->
+    @references = {}
+    @referencesLabels = []
+    $('.references-typeahead').typeahead(
+      source: (query, process) =>
+        $.get(
+          '/admin/references/autocomplete',
+          { query: query },
+          (data) =>
+            _.each(data, (item, i, list) =>
+              if (_.has(@references, item.value))
+                item.value = item.value + ' (' + item.id + ')'
+
+              @referencesLabels.push(item.value)
+              @references[item.value] = item.id
+            )
+            process(@referencesLabels)
+        )
+      updater: (item) =>
+        $('#reference_id').val(@references[item])
+        $('#reference_search').val(item)
+        return item
+    )
+

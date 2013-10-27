@@ -3,6 +3,8 @@ $('#admin-new-taxon_concept_reference-form').html(form);
 
 var saveAndReopen = window.adminEditor.saveAndReopen;
 window.adminEditor.initModals();
+window.adminEditor.initSaveAndReOpenButton();
+window.adminEditor.initReferencesTypeahead();
 
 if (saveAndReopen){
   window.adminEditor.alertSuccess("Operation successful");
