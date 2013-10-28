@@ -275,12 +275,14 @@ class TaxonReferencesEditor extends AdminEditor
     @nonSuperInit()
 
   nonSuperInit: () ->
+    $("[rel='tooltip']").tooltip()
     $(".nav-tabs.new-reference-tabs a").click (e) ->
       e.preventDefault()
       window.adminEditor.clearModalForm $("#admin-new-taxon_concept_reference-form")
       $(this).tab "show"
     @initSaveAndReOpenButton()
     @initReferencesTypeahead()
+    @initTaxonConceptsExcluded()
 
   initSaveAndReOpenButton: () ->
     @saveAndReopen = false
@@ -310,4 +312,44 @@ class TaxonReferencesEditor extends AdminEditor
         $('#reference_search').val(item)
         return item
     )
+
+  initTaxonConceptsExcluded: () ->
+    $("#excluded_taxon_concepts_ids").select2({
+      placeholder: 'Select taxa'
+      minimumInputLength: 3
+      multiple: true
+      initSelection: (element, callback) ->
+        data = []
+        ids = []
+        $(element.val().split(",")).each(() ->
+          tmp = this.split(":")
+          ids.push(tmp[0])
+          data.push({id: tmp[0], text: tmp[1]})
+        )
+        element.val(ids)
+        callback(data)
+      ajax: {
+        url: '/admin/taxon_concepts/autocomplete',
+        dataType: 'json',
+        quietMillis: 100,
+        data: (query) ->
+          search_params:
+            scientific_name: query
+            taxon_concept:
+              id: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-id')
+              scope: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-scope')
+          limit: 25
+        results: (data) ->
+            results = []
+            $.each(data, (i, e) ->
+              results.push(
+                id: e.id
+                text: e.full_name
+              )
+            )
+            results: results
+        dropdownCssClass: 'bigdrop'
+        placeholder: 'Select taxa'
+      }
+    })
 

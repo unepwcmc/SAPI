@@ -23,9 +23,19 @@
       </div>
     <% end %>
 
-    <label>Is standard?</label>
+    <%= f.label :is_standard, "Is Standard?" %>
     <%= f.check_box :is_standard %>
-    <label>Cascade?</label>
+    <%= f.label :is_cascaded, "Cascade?" %>
     <%= f.check_box :is_cascaded %>
+
+    <%= f.label :excluded_taxon_concepts_ids, "Excluded taxa" %>
+    <%= f.hidden_field :excluded_taxon_concepts_ids,
+      "data-taxon-concept-scope" => 'descendants',
+      "data-taxon-concept-id" => @taxon_concept.id,
+      "data-taxonomy-id" => @taxon_concept.taxonomy_id,
+      :style => 'width: 220px',
+      :id => 'excluded_taxon_concepts_ids',
+      :value => @taxon_concept_reference.excluded_taxon_concepts.map{|tc| "#{tc.id}:#{tc.full_name}"}.join(',')
+    %>
   </div>
 <% end %>

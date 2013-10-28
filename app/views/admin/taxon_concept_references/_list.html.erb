@@ -5,6 +5,9 @@
         Standard References
       </th>
       <th>
+        Excluded taxa
+      </th>
+      <th>
         Inherited?
       </th>
     </thead>
@@ -14,10 +17,20 @@
           <td>
             <p class="reference-citation"><%= ref.citation %></p>
           </td>
+          <% taxon_reference = ref.taxon_concept_references.
+            find_by_taxon_concept_id(ref[:taxon_concept_id]) %>
           <td>
-            <% not_inherited = @taxon_concept.
-              taxon_concept_references.find_by_reference_id(ref.id).try(:is_standard) %>
-            <%= true_false_icon(!not_inherited) %>
+            <a rel="tooltip" href="#"
+              data-original-title="<%= excluded_taxon_concepts_tooltip(taxon_reference) %>">
+              <%= taxon_reference.excluded_taxon_concepts.count %>
+            </a>
+          </td>
+          <td>
+            <%= true_false_icon(taxon_reference.taxon_concept_id != @taxon_concept.id) %>
+            <% unless taxon_reference.taxon_concept_id == @taxon_concept.id %>
+              (<%= link_to taxon_reference.taxon_concept.full_name,
+                admin_taxon_concept_taxon_concept_references_url(taxon_reference.taxon_concept) %>)
+            <% end %>
           </td>
         </tr>
         <br>

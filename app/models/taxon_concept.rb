@@ -218,7 +218,7 @@ class TaxonConcept < ActiveRecord::Base
         LEFT JOIN taxon_concept_references hi_refs
         ON hi_refs.taxon_concept_id = hi.id
       )
-      SELECT refs.* FROM inherited_references inh_refs
+      SELECT refs.*, inh_refs.id as taxon_concept_id FROM inherited_references inh_refs
       INNER JOIN "references" refs
       ON inh_refs.reference_id = refs.id
         AND inh_refs.is_standard AND (inh_refs.is_cascaded OR inh_refs.id = #{id})
