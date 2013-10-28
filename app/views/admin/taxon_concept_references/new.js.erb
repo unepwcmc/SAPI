@@ -1,5 +1,12 @@
 var form = $("<%= escape_javascript(render('form')) %>");
 
+$("#new-taxon_concept_reference-label").text("<%= 
+   if @taxon_concept_reference.new_record?
+    "Add new"
+   else
+     "Edit"
+   end %> Taxon Concept Reference");
+
 $('#admin-new-taxon_concept_reference-form').html(form);
 window.adminEditor.nonSuperInit();
 $('#new-taxon_concept_reference').modal('show');
