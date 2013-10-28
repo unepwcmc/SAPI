@@ -110,7 +110,8 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     key = [
       self.class.name,
       self.id,
-      object.updated_at
+      object.updated_at,
+      object.m_taxon_concept.updated_at
     ]
     Rails.logger.debug "CACHE KEY: #{key.inspect}"
     key
