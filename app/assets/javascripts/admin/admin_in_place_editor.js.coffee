@@ -275,7 +275,7 @@ class TaxonReferencesEditor extends AdminEditor
     @nonSuperInit()
 
   nonSuperInit: () ->
-    $(".nav-tabs a").click (e) ->
+    $(".nav-tabs.new-reference-tabs a").click (e) ->
       e.preventDefault()
       window.adminEditor.clearModalForm $("#admin-new-taxon_concept_reference-form")
       $(this).tab "show"
