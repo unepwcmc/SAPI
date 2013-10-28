@@ -15,7 +15,8 @@
       <% @taxon_concept.standard_references.each do |ref| %>
         <tr>
           <td>
-            <p class="reference-citation"><%= ref.citation %></p>
+            <p class="reference-citation"><%= link_to ref.citation,
+            admin_references_url(:query => ref.citation) %></p>
           </td>
           <% taxon_reference = ref.taxon_concept_references.
             find_by_taxon_concept_id(ref[:taxon_concept_id]) %>
