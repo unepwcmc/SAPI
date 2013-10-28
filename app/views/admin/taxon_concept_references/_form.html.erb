@@ -10,10 +10,6 @@
       <label>Search by citation:</label>
       <%= text_field_tag 'reference_search', nil, :class =>'references-typeahead input-xxlarge' %>
       <%= text_field_tag 'reference[id]', nil, :class =>'hidden' %>
-      <label>Is standard?</label>
-      <%= check_box_tag 'taxon_concept_reference[is_standard]' %>
-      <label>Cascade?</label>
-      <%= check_box_tag 'taxon_concept_reference[is_cascaded]' %>
     </div>
 
     <div class="tab-pane fade" id="new">
@@ -23,5 +19,9 @@
         <hr>
       <% end %>
     </div>
+    <label>Is standard?</label>
+    <%= f.check_box :is_standard %>
+    <label>Cascade?</label>
+    <%= f.check_box :is_cascaded %>
   </div>
 <% end %>

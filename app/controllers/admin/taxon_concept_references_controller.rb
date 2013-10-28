@@ -25,8 +25,8 @@ class Admin::TaxonConceptReferencesController < Admin::SimpleCrudController
       @taxon_concept_reference = TaxonConceptReference.new(
         :taxon_concept_id => params["taxon_concept_id"],
         :reference_id     => reference_id,
-        :is_standard => params[:taxon_concept_reference][:is_standard] == true,
-        :is_cascaded => params[:taxon_concept_reference][:is_cascaded] == true,
+        :is_standard => "1" == params[:taxon_concept_reference][:is_standard],
+        :is_cascaded => "1" == params[:taxon_concept_reference][:is_cascaded],
         :excluded_taxon_concepts_ids => params[:taxon_concept_reference][:excluded_taxon_concepts_ids]
       )
     end
