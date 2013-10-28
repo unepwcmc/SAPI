@@ -145,11 +145,6 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
       blankValueName = 'blank' + @capitaliseFirstLetter(columnName)
       @set(blankValueName, false)
 
-  resetVisibleShipments: (shipments) ->
-    shipments = @get('content.sandboxShipments') if shipments == null
-    @resetFilters()
-    @set('visibleShipments', shipments)
-
   capitaliseFirstLetter: (string) ->
     string.charAt(0).toUpperCase() + string.slice(1)
 
@@ -179,7 +174,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
         @transitionToRoute('shipments', {page: 1})
 
     setFiltersFromErrorSelector: (errorSelector) ->
-      @resetVisibleShipments()
+      @resetFilters()
       @beginPropertyChanges()
       for errorColumn, errorValue of errorSelector
         capitalisedColumnName = (errorColumn.split(/_/).map (word) -> word[0].toUpperCase() + word[1..-1].toLowerCase()).join ''
@@ -193,10 +188,6 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
           @set(selectedValuesName, [errorValue])
       @set('filtersVisible', false)
       @endPropertyChanges()
-
-    setVisibleShipments: (shipments) ->
-      @resetVisibleShipments(shipments)
-      @set('filtersVisible', false)
 
     saveChanges: () ->
       @get('store').commit()
@@ -216,7 +207,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
       @get('visibleShipments').forEach (shipment) ->
         shipment.setProperties({'_destroyed': true, '_modified': true})
       @endPropertyChanges()
-      @resetVisibleShipments()
+      @resetFilters()
 
     updateSelection: () ->
       valuesToUpdate = {'_modified': true}
@@ -231,7 +222,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
       @endPropertyChanges()
       $('.sandbox-form').find('input[type=text]').val('')
       $('.sandbox-form').find('input[type=checkbox]').attr('checked', false)
-      @resetVisibleShipments()
+      @resetFilters()
 
     selectForUpdate: () ->
       @set('filtersVisible', false)
