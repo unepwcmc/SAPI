@@ -38,7 +38,6 @@
       {{ partial 'trade/annual_report_upload/filters' }}
       <div class="row-fluid">
         <div class="span6 offset6">
-          <button {{action 'resetFilters'}} class="pull-right btn">Reset filters</button>
           <button {{action selectForUpdate}} class="pull-right btn btn-primary">Select for update</button>
         </div>
       </div>
@@ -82,6 +81,12 @@
       {{/if}}
     </div>
   </div>
+</div>
+<div>
+  {{#if filtersSelected}}
+    {{visibleShipmentsCount}} rows selected
+    <button {{action 'resetFilters'}} class="pull-right btn">Reset selection</button>
+  {{/if}}
 </div>
 
 <div class='presentation-container'>

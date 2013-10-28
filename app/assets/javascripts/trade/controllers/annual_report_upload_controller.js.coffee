@@ -1,6 +1,7 @@
 Trade.AnnualReportUploadController = Ember.ObjectController.extend
   content: null
   visibleShipments: []
+  filtersSelected: false
 
   tableController: Ember.computed ->
     controller = Ember.get('Trade.SandboxShipmentsTable.TableController').create()
@@ -25,6 +26,10 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
   changedRowsCount: (->
     @get('content.sandboxShipments').filterBy('_modified', true).length
   ).property('content.sandboxShipments.@each._modified')
+
+  visibleShipmentsCount: (->
+    @get('visibleShipments.length')
+  ).property('visibleShipments')
 
   allValuesFor: (attr) ->
     @get('content.sandboxShipments').mapBy(attr).compact().uniq()
@@ -101,12 +106,14 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
   ).property('filtersVisible')
 
   filtersChanged: ( ->
+    @set('filtersSelected', false)
     shipments = @get('content.sandboxShipments')
     @get('columnNames').forEach (columnName) =>
       capitalisedColumnName = @capitaliseFirstLetter(columnName)
       selectedValuesName = 'selected' + capitalisedColumnName + 'Values'
       blankValue = 'blank' + capitalisedColumnName
       if @get(selectedValuesName + '.length') > 0 || @get(blankValue)
+        @set('filtersSelected', true)
         shipments = shipments.filter((element) =>
           return @get(selectedValuesName).contains(element.get(columnName)) ||
             @get(blankValue) && (
@@ -202,7 +209,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
         @clearModifiedFlags()
 
     resetFilters: () ->
-      @resetVisibleShipments()
+      @resetFilters()
 
     deleteSelection: () ->
       @beginPropertyChanges()
