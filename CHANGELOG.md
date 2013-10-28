@@ -1,3 +1,6 @@
+### 0.3.1 (2013-10-28)
+* bugfixes to upload validation process
+
 ### 0.3.0 (2013-10-22)
 * adds secondary validations to trade management tool:
   - term + unit
