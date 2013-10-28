@@ -105,45 +105,82 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     !@get('filtersVisible')
   ).property('filtersVisible')
 
-  filtersChanged: ( ->
-    @set('filtersSelected', false)
-    shipments = @get('content.sandboxShipments')
-    @get('columnNames').forEach (columnName) =>
-      capitalisedColumnName = @capitaliseFirstLetter(columnName)
-      selectedValuesName = 'selected' + capitalisedColumnName + 'Values'
-      blankValue = 'blank' + capitalisedColumnName
-      if @get(selectedValuesName + '.length') > 0 || @get(blankValue)
-        @set('filtersSelected', true)
-        shipments = shipments.filter((element) =>
-          return @get(selectedValuesName).contains(element.get(columnName)) ||
-            @get(blankValue) && (
-              # check if null, undefined or blank
-              !element.get(columnName) || /^\s*$/.test(element.get(columnName))
-            )
-        )
-    @set('visibleShipments', shipments)
-  ).observes(
-    'selectedAppendixValues.@each', 'blankAppendix',
-    'selectedSpeciesNameValues.@each', 'blankSpeciesName',
-    'selectedTermCodeValues.@each', 'blankTermCode',
-    'selectedQuantityValues.@each', 'blankQuantity',
-    'selectedUnitCodeValues.@each', 'blankUnitCode',
-    'selectedTradingPartnerValues.@each', 'blankTradingPartner',
-    'selectedCountryOfOriginValues.@each', 'blankCountryOfOrigin',
-    'selectedImportPermitValues.@each', 'blankImportPermit',
-    'selectedExportPermitValues.@each', 'blankExportPermit',
-    'selectedOriginPermitValues.@each', 'blankOriginPermit',
-    'selectedPurposeCodeValues.@each', 'blankPurposeCode',
-    'selectedSourceCodeValues.@each', 'blankSourceCode',
-    'selectedYearValues.@each', 'blankYear'
-  )
+  selectedAppendixChanged: ( ->
+    @applyFilter('appendix')
+  ).observes('selectedAppendixValues.@each', 'blankAppendix')
+
+  selectedSpeciesNameChanged: ( ->
+    @applyFilter('speciesName')
+  ).observes('selectedSpeciesNameValues.@each', 'blankSpeciesName')
+
+  selectedTermCodeChanged: ( ->
+    @applyFilter('termCode')
+  ).observes('selectedTermCodeValues.@each', 'blankTermCode')
+
+  selectedQuantityChanged: ( ->
+    @applyFilter('quantity')
+  ).observes('selectedQuantityValues.@each', 'blankQuantity')
+
+  selectedUnitCodeChanged: ( ->
+    @applyFilter('unitCode')
+  ).observes('selectedUnitCodeValues.@each', 'blankUnitCode')
+
+  selectedTradingPartnerChanged: ( ->
+    @applyFilter('tradingPartner')
+  ).observes('selectedTradingPartnerValues.@each', 'blankTradingPartner')
+
+  selectedCountryOfOriginChanged: ( ->
+    @applyFilter('countryOfOrigin')
+  ).observes('selectedCountryOfOriginValues.@each', 'blankCountryOfOrigin')
+
+  selectedImportPermitChanged: ( ->
+    @applyFilter('importPermit')
+  ).observes('selectedImportPermitValues.@each', 'blankImportPermit')
+
+  selectedExportPermitChanged: ( ->
+    @applyFilter('exportPermit')
+  ).observes('selectedExportPermitValues.@each', 'blankExportPermit')
+
+  selectedOriginPermitChanged: ( ->
+    @applyFilter('originPermit')
+  ).observes('selectedOriginPermitValues.@each', 'blankOriginPermit')
+
+  selectedPurposeCodeChanged: ( ->
+    @applyFilter('purposeCode')
+  ).observes('selectedPurposeCodeValues.@each', 'blankPurposeCode')
+
+  selectedSourceCodeChanged: ( ->
+    @applyFilter('sourceCode')
+  ).observes('selectedSourceCodeValues.@each', 'blankSourceCode')
+
+  selectedYearChanged: ( ->
+    @applyFilter('year')
+  ).observes('selectedYearValues.@each', 'blankYear')
+
+  applyFilter: (columnName) ->
+    capitalisedColumnName = @capitaliseFirstLetter(columnName)
+    selectedValuesName = 'selected' + capitalisedColumnName + 'Values'
+    blankValue = 'blank' + capitalisedColumnName
+    if @get(selectedValuesName + '.length') > 0 || @get(blankValue)
+      @set('filtersSelected', true)
+      shipments = @get('visibleShipments').filter((element) =>
+        value = element.get(columnName)
+        return @get(selectedValuesName).contains(value) ||
+          # check if null, undefined or blank
+          @get(blankValue) && (!value || /^\s*$/.test(value))
+      )
+      @set('visibleShipments', shipments)
 
   resetFilters: ->
+    @beginPropertyChanges()
     @get('columnNames').forEach (columnName) =>
       selectedValuesName = 'selected' + @capitaliseFirstLetter(columnName) + 'Values'
       @set(selectedValuesName, [])
       blankValueName = 'blank' + @capitaliseFirstLetter(columnName)
       @set(blankValueName, false)
+    @set('visibleShipments', @get('content.sandboxShipments'))
+    @set('filtersSelected', false)
+    @endPropertyChanges()
 
   capitaliseFirstLetter: (string) ->
     string.charAt(0).toUpperCase() + string.slice(1)
