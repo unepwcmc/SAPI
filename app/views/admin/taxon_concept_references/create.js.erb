@@ -1,5 +1,6 @@
 var form = $("<%= escape_javascript(render('form')) %>");
 $('#admin-new-taxon_concept_reference-form').html(form);
+$('#references-list').html("<%= escape_javascript(render('list')) %>");
 
 var saveAndReopen = window.adminEditor.saveAndReopen;
 window.adminEditor.initModals();
@@ -15,4 +16,3 @@ if (saveAndReopen){
   $('#new-taxon_concept_reference').modal('hide');
 }
 
-$('#references-list').html("<%= escape_javascript(render('list')) %>");
