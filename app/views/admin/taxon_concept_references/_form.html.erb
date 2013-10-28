@@ -5,37 +5,59 @@
   <% end %>
 </ul>
 
-<%= nested_form_for [:admin, @taxon_concept, @taxon_concept_reference], :remote => true do |f| %>
+<%= nested_form_for [:admin, @taxon_concept, @taxon_concept_reference], :remote => true, :html => { :class => "form-horizontal" } do |f| %>
   <%= error_messages_for(@taxon_concept_reference) %>
   <div class="tab-content">
     <div class="tab-pane fade in active" id="new">
       <%= f.fields_for :reference do |ff| %>
-        <label>Citation</label>
-        <%= ff.text_area :citation, :class => "input-xlarge", :disabled => !@taxon_concept_reference.new_record? %>
-        <hr>
+        <div class="control-group">
+          <%= ff.label :citation %>
+          <div class="controls">
+            <%= ff.text_area :citation, :class => "input-xxlarge", :disabled => !@taxon_concept_reference.new_record? %>
+          </div>
+        </div>
       <% end %>
     </div>
     <% if @taxon_concept_reference.new_record? %>
       <div class="tab-pane fade reference_search_form" id="search">
-        <label>Search by citation:</label>
-        <%= text_field_tag 'reference_search', nil, :class =>'references-typeahead input-xxlarge' %>
-        <%= text_field_tag 'reference[id]', nil, :class =>'hidden' %>
+        <div class="control-group">
+          <label>Search by citation:</label>
+          <div class="controls">
+            <%= text_field_tag 'reference_search', nil, :class =>'references-typeahead input-xxlarge' %>
+            <%= text_field_tag 'reference[id]', nil, :class =>'hidden' %>
+          </div>
+        </div>
       </div>
     <% end %>
+    <div class="control-group">
+      <div class="controls">
+        <label class="checkbox">
+          <%= f.check_box :is_standard %>
+          Is Standard?
+        </label>
+      </div>
+    </div>
+    <div class="control-group">
+      <div class="controls">
+        <label class="checkbox">
+          <%= f.check_box :is_cascaded %>
+          Cascade?
+        </label>
+      </div>
+    </div>
 
-    <%= f.label :is_standard, "Is Standard?" %>
-    <%= f.check_box :is_standard %>
-    <%= f.label :is_cascaded, "Cascade?" %>
-    <%= f.check_box :is_cascaded %>
-
-    <%= f.label :excluded_taxon_concepts_ids, "Excluded taxa" %>
-    <%= f.hidden_field :excluded_taxon_concepts_ids,
-      "data-taxon-concept-scope" => 'descendants',
-      "data-taxon-concept-id" => @taxon_concept.id,
-      "data-taxonomy-id" => @taxon_concept.taxonomy_id,
-      :style => 'width: 220px',
-      :id => 'excluded_taxon_concepts_ids',
-      :value => @taxon_concept_reference.excluded_taxon_concepts.map{|tc| "#{tc.id}:#{tc.full_name}"}.join(',')
-    %>
+    <div class="control-group">
+      <%= f.label :excluded_taxon_concepts_ids, "Excluded taxa" %>
+      <div class="controls">
+        <%= f.hidden_field :excluded_taxon_concepts_ids,
+          "data-taxon-concept-scope" => 'descendants',
+          "data-taxon-concept-id" => @taxon_concept.id,
+          "data-taxonomy-id" => @taxon_concept.taxonomy_id,
+          :style => 'width: 600px',
+          :id => 'excluded_taxon_concepts_ids',
+          :value => @taxon_concept_reference.excluded_taxon_concepts.map{|tc| "#{tc.id}:#{tc.full_name}"}.join(',')
+        %>
+      </div>
+    </div>
   </div>
 <% end %>

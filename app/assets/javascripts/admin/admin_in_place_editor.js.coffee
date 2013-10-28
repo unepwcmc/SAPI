@@ -61,6 +61,46 @@ class AdminEditor
           return process(labels)
         )
 
+  excludeTaxonConceptsIds: () ->
+    $("#excluded_taxon_concepts_ids").select2({
+      placeholder: 'Select taxa'
+      minimumInputLength: 3
+      multiple: true
+      initSelection: (element, callback) ->
+        data = []
+        ids = []
+        $(element.val().split(",")).each(() ->
+          tmp = this.split(":")
+          ids.push(tmp[0])
+          data.push({id: tmp[0], text: tmp[1]})
+        )
+        element.val(ids)
+        callback(data)
+      ajax: {
+        url: '/admin/taxon_concepts/autocomplete',
+        dataType: 'json',
+        quietMillis: 100,
+        data: (query) ->
+          search_params:
+            scientific_name: query
+            taxon_concept:
+              id: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-id')
+              scope: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-scope')
+          limit: 25
+        results: (data) ->
+            results = []
+            $.each(data, (i, e) ->
+              results.push(
+                id: e.id
+                text: e.full_name
+              )
+            )
+            results: results
+        dropdownCssClass: 'bigdrop'
+        placeholder: 'Select taxa'
+      }
+    })
+
 class AdminInPlaceEditor extends AdminEditor
   init: () ->
     super
@@ -184,44 +224,7 @@ class ListingChangesEditor extends AdminEditor
       placeholder: 'Select countries'
     })
 
-    $("#excluded_taxon_concepts_ids").select2({
-      placeholder: 'Select taxa'
-      minimumInputLength: 3
-      multiple: true
-      initSelection: (element, callback) ->
-        data = []
-        ids = []
-        $(element.val().split(",")).each(() ->
-          tmp = this.split(":")
-          ids.push(tmp[0])
-          data.push({id: tmp[0], text: tmp[1]})
-        )
-        element.val(ids)
-        callback(data)
-      ajax: {
-        url: '/admin/taxon_concepts/autocomplete',
-        dataType: 'json',
-        quietMillis: 100,
-        data: (query) ->
-          search_params:
-            scientific_name: query
-            taxon_concept:
-              id: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-id')
-              scope: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-scope')
-          limit: 25
-        results: (data) ->
-            results = []
-            $.each(data, (i, e) ->
-              results.push(
-                id: e.id
-                text: e.full_name
-              )
-            )
-            results: results
-        dropdownCssClass: 'bigdrop'
-        placeholder: 'Select taxa'
-      }
-    })
+    @excludeTaxonConceptsIds()
 
     $("#inclusion_taxon_concept_id").select2({
       placeholder: 'Select taxon'
@@ -282,7 +285,7 @@ class TaxonReferencesEditor extends AdminEditor
       $(this).tab "show"
     @initSaveAndReOpenButton()
     @initReferencesTypeahead()
-    @initTaxonConceptsExcluded()
+    @excludeTaxonConceptsIds()
 
   initSaveAndReOpenButton: () ->
     @saveAndReopen = false
@@ -312,44 +315,3 @@ class TaxonReferencesEditor extends AdminEditor
         $('#reference_search').val(item)
         return item
     )
-
-  initTaxonConceptsExcluded: () ->
-    $("#excluded_taxon_concepts_ids").select2({
-      placeholder: 'Select taxa'
-      minimumInputLength: 3
-      multiple: true
-      initSelection: (element, callback) ->
-        data = []
-        ids = []
-        $(element.val().split(",")).each(() ->
-          tmp = this.split(":")
-          ids.push(tmp[0])
-          data.push({id: tmp[0], text: tmp[1]})
-        )
-        element.val(ids)
-        callback(data)
-      ajax: {
-        url: '/admin/taxon_concepts/autocomplete',
-        dataType: 'json',
-        quietMillis: 100,
-        data: (query) ->
-          search_params:
-            scientific_name: query
-            taxon_concept:
-              id: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-id')
-              scope: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-scope')
-          limit: 25
-        results: (data) ->
-            results = []
-            $.each(data, (i, e) ->
-              results.push(
-                id: e.id
-                text: e.full_name
-              )
-            )
-            results: results
-        dropdownCssClass: 'bigdrop'
-        placeholder: 'Select taxa'
-      }
-    })
-
