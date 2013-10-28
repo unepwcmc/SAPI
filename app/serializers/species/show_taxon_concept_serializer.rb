@@ -111,7 +111,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       self.class.name,
       self.id,
       object.updated_at,
-      object.m_taxon_concept.try(:updated_at) || object.updated_at
+      object.m_taxon_concept.try(:updated_at) || ""
     ]
     Rails.logger.debug "CACHE KEY: #{key.inspect}"
     key
