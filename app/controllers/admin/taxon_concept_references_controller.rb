@@ -41,6 +41,23 @@ class Admin::TaxonConceptReferencesController < Admin::SimpleCrudController
     end
   end
 
+  def edit
+    edit! do |format|
+      format.js { render 'new' }
+    end
+  end
+
+  def update
+    update! do |success, failure|
+      success.js {
+        @taxon_concept_reference = TaxonConceptReference.new
+        @taxon_concept_reference.reference = Reference.new
+        render 'create'
+      }
+      failure.js { render 'new' }
+    end
+  end
+
   def destroy
     destroy! do |success, failure|
       success.html {

@@ -43,6 +43,9 @@
             <p class="reference-citation"><%= ref.citation %></p>
           </td>
           <td>
+            <%= link_to edit_icon,
+              edit_admin_taxon_concept_taxon_concept_reference_url(@taxon_concept, tc_ref),
+              :remote => true %>
             <%= link_to delete_icon,
               admin_taxon_concept_taxon_concept_reference_url(@taxon_concept, tc_ref),
               :confirm => "Warning: you are about to delete data. are you sure?", :method => :delete
