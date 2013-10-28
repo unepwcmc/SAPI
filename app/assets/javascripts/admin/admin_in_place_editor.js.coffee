@@ -272,6 +272,13 @@ class ListingChangesEditor extends AdminEditor
 class TaxonReferencesEditor extends AdminEditor
   init: () ->
     super
+    @nonSuperInit()
+
+  nonSuperInit: () ->
+    $(".nav-tabs a").click (e) ->
+      e.preventDefault()
+      window.adminEditor.clearModalForm $("#admin-new-taxon_concept_reference-form")
+      $(this).tab "show"
     @initSaveAndReOpenButton()
     @initReferencesTypeahead()
 

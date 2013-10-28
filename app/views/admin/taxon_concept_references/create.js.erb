@@ -3,8 +3,7 @@ $('#admin-new-taxon_concept_reference-form').html(form);
 
 var saveAndReopen = window.adminEditor.saveAndReopen;
 window.adminEditor.initModals();
-window.adminEditor.initSaveAndReOpenButton();
-window.adminEditor.initReferencesTypeahead();
+window.adminEditor.nonSuperInit();
 
 if (saveAndReopen){
   window.adminEditor.alertSuccess("Operation successful");
@@ -15,11 +14,5 @@ if (saveAndReopen){
   window.adminEditor.__proto__.__proto__.alertSuccess("Operation successful");
   $('#new-taxon_concept_reference').modal('hide');
 }
-
-$('.nav-tabs a').click(function (e) {
-  e.preventDefault();
-  window.adminEditor.clearModalForm($('#admin-new-taxon_concept_reference-form'));
-  $(this).tab('show');
-});
 
 $('#references-list').html("<%= escape_javascript(render('list')) %>");
