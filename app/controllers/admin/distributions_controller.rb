@@ -26,7 +26,7 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
       }
       failure.js {
         load_tags_and_geo_entities
-        render 'new'
+        render 'edit'
       }
     end
   end
