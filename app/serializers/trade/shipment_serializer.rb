@@ -1,8 +1,8 @@
 class Trade::ShipmentSerializer < ActiveModel::Serializer
-  attributes :id, :appendix, :reported_appendix, :term_code,
-    :quantity, :unit_code, :trading_partner, :country_of_origin,
-    :import_permit, :export_permit, :purpose_code, :source_code,
-    :year, :species_name, :origin_permit
+  attributes :id, :appendix, :reported_appendix, :species_name,
+    :term_code, :quantity, :unit_code, :purpose_code, :source_code, :year,
+    :importer, :exporter, :reporter_type, :country_of_origin,
+    :import_permit, :export_permit, :origin_permit
 
   def species_name
     object.taxon_concept.full_name
@@ -19,21 +19,21 @@ class Trade::ShipmentSerializer < ActiveModel::Serializer
   def unit_code
     object.unit.try(:code)
   end
-  
+
   def purpose_code
     object.purpose.try(:code)
   end
 
-  def country_of_origin
-    object.country_of_origin.try(:name_en)
+  def importer
+    object.importer.try(:name_en)
   end
 
-  def trading_partner
-    if object.reported_by_exporter?
-      object.importer.try(:name_en)
-    else
-      object.exporter.try(:name_en)
-    end
+  def exporter
+    object.exporter.try(:name_en)
+  end
+
+  def country_of_origin
+    object.country_of_origin.try(:name_en)
   end
 
   def export_permit
