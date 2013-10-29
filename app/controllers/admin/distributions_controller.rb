@@ -11,7 +11,7 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
 
   def edit
     edit! do |format|
-      format.js { render 'edit' }
+      format.js { render 'new' }
     end
   end
 
@@ -26,7 +26,7 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
       }
       failure.js {
         load_tags_and_geo_entities
-        render 'edit'
+        render 'new'
       }
     end
   end
