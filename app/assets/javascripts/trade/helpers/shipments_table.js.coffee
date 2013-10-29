@@ -54,10 +54,10 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
 
   columns: Ember.computed ->
     columnNames = [
-      'appendix', 'reported_appendix', 'species_name', 'term_code',
-      'quantity', 'unit_code', 'importer', 'exporter', 'reporter_type',
-      'country_of_origin', 'purpose_code', 'source_code', 'year',
-      'import_permit', 'export_permit', 'origin_permit'
+      'appendix', 'reported_appendix', 'species_name', 'reported_species_name',
+      'term_code', 'quantity', 'unit_code', 'importer', 'exporter',
+      'reporter_type', 'country_of_origin', 'purpose_code', 'source_code',
+      'year', 'import_permit', 'export_permit', 'origin_permit'
     ]
     columnProperties =
       appendix:
@@ -68,7 +68,10 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
         header: 'Rep. Appdx'
       species_name:
         width: 200
-        header: 'Species Name'
+        header: 'Species'
+      reported_species_name:
+        width:200
+        header: 'Rep. Species'
       term_code:
         width: 50
         header: 'Term'

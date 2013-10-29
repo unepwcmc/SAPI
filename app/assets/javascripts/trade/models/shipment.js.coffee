@@ -2,6 +2,7 @@ Trade.Shipment = DS.Model.extend
   appendix: DS.attr('string')
   reported_appendix: DS.attr('string')
   species_name: DS.attr('string')
+  reported_species_name: DS.attr('string')
   term_code: DS.attr('string')
   quantity: DS.attr('string')
   unit_code: DS.attr('string')

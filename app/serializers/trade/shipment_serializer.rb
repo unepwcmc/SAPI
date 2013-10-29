@@ -1,8 +1,9 @@
 class Trade::ShipmentSerializer < ActiveModel::Serializer
-  attributes :id, :appendix, :reported_appendix, :species_name,
+  attributes :id, :appendix, :species_name,
     :term_code, :quantity, :unit_code, :purpose_code, :source_code, :year,
     :importer, :exporter, :reporter_type, :country_of_origin,
-    :import_permit, :export_permit, :origin_permit
+    :import_permit, :export_permit, :origin_permit,
+    :reported_appendix, :reported_species_name
 
   def species_name
     object.taxon_concept.full_name
