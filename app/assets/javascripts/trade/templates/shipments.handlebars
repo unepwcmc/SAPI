@@ -11,6 +11,29 @@
     {{/if}}
   </ul>
 </div>
+<div class="shipments-header well well-small">
+  <div class="row-fluid">
+    <div class="span5">
+      <h3>Shipments</h3>
+    </div>
+    <div class="sandbox-header-buttons span7">
+      {{#view tagName='span' class='pull-right' isVisibleBinding='controller.shipmentsSaving'}}
+        <img src="/assets/loading.gif"> Saving...
+      {{/view}}
+      <button {{action 'saveChanges'}}
+        {{bind-attr class="unsavedChanges::disabled :pull-right :btn :btn-primary"}}>
+        Save changes
+      </button>
+      <button {{action 'cancelChanges'}} class="pull-right btn clearfix">
+        Cancel changes
+      </button>
+      {{#if unsavedChanges}}
+        <span class="pull-right label label-important">There are {{changedRowsCount}} unsaved changes.</span>
+      {{/if}}
+    </div>
+  </div>
+</div>
+
 <div class='presentation-container'>
   {{view Trade.ShipmentsTable.TablesContainer
     controllerBinding="tableController"

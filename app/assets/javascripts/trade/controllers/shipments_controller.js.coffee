@@ -3,6 +3,18 @@ Trade.ShipmentsController = Ember.ArrayController.extend
   pages: null
   page: 1
 
+  shipmentsSaving: ( ->
+    @get('content').filterBy('isSaving', true).length > 0
+  ).property('content.@each.isSaving')
+
+  unsavedChanges: (->
+    @get('changedRowsCount') > 0
+  ).property('changedRowsCount')
+
+  changedRowsCount: (->
+    @get('content').filterBy('isDirty', true).length
+  ).property('content.@each.isDirty')
+
   setFilters: (filtersHash) ->
     @set('page', filtersHash.page)
 
@@ -48,3 +60,12 @@ Trade.ShipmentsController = Ember.ArrayController.extend
     @transitionToRoute('shipments', {
       page: page or 1
     })
+
+  actions:
+    saveChanges: () ->
+      @get('store').commit()
+
+    cancelChanges: () ->
+      @get('content').forEach (shipment) ->
+        if (!shipment.get('isSaving'))
+          shipment.get('transaction').rollback()

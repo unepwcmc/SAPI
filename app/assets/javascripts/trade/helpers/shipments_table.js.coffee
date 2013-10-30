@@ -40,6 +40,12 @@ Trade.ShipmentsTable.CheckboxTableCell = Ember.Table.TableCell.extend
     @set 'isEditing', yes
     event.stopPropagation()
 
+Trade.ShipmentsTable.TableRow = Ember.Table.TableRow.extend
+  classNameBindings: ['modified']
+  modified: Ember.computed ->
+    @get('row.isDirty')
+  .property('row.isDirty')
+
 Trade.ShipmentsTable.TablesContainer =
 Ember.Table.TablesContainer.extend Ember.Table.RowSelectionMixin
 
@@ -51,7 +57,7 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
   rowHeight: 30
   shipments: null
   selection: null
-
+  tableRowViewClass: "Trade.ShipmentsTable.TableRow"
   columns: Ember.computed ->
     columnNames = [
       'appendix', 'reported_appendix', 'species_name', 'reported_species_name',
