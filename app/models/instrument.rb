@@ -12,5 +12,16 @@
 class Instrument < ActiveRecord::Base
   attr_accessible :designation_id, :name
 
+  validates :name, :presence => true, :uniqueness => { :scope => :designation_id}
+
   belongs_to :designation
+
+  def self.search query
+    if query
+      where("UPPER(name) LIKE UPPER(:query)", 
+            :query => "%#{query}%")
+    else
+      scoped
+    end
+  end
 end
