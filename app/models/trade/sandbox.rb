@@ -96,7 +96,7 @@ class Trade::Sandbox
           #{@table_name}.appendix, #{@annual_report_upload.id}, exporters.id, importers.id,
           origins.id, origin_permits.id, import_permits.id,
           #{ @annual_report_upload.point_of_view == "E" ? 'true' : 'false'},
-          taxon_concepts.id, #{@table_name}.species_name, #{@table_name}.year::INTEGER,
+          taxon_concepts.id, #{@table_name}.reported_species_name, #{@table_name}.year::INTEGER,
           current_date, current_date, #{@table_name}.id
         FROM #{@table_name}
         LEFT JOIN trade_codes AS sources ON #{@table_name}.source_code = sources.code
@@ -168,11 +168,16 @@ class Trade::Sandbox
 
   def duplicate_columns_in_target_table
     require 'psql_command'
-    cmd = Trade::SandboxTemplate.duplicate_column_stmt(@table_name,
-                                                        "appendix",
-                                                        "reported_appendix")
+    cmds = [
+      Trade::SandboxTemplate.duplicate_column_stmt(
+        @table_name, "appendix", "reported_appendix"
+      ),
+      Trade::SandboxTemplate.duplicate_column_stmt(
+        @table_name, "species_name", "reported_species_name"
+      )
+    ]
     Thread.new do
-      Trade::SandboxTemplate.connection.execute(cmd)
+      cmds.each { |cmd| Trade::SandboxTemplate.connection.execute(cmd) }
     end
   end
 end
