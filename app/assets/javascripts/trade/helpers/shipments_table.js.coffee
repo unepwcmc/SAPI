@@ -58,70 +58,69 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
   shipments: null
   selection: null
   tableRowViewClass: "Trade.ShipmentsTable.TableRow"
+  columnNames: [
+    'appendix', 'reported_appendix', 'species_name', 'reported_species_name',
+    'term_code', 'quantity', 'unit_code', 'importer', 'exporter',
+    'reporter_type', 'country_of_origin', 'purpose_code', 'source_code',
+    'year', 'import_permit', 'export_permit', 'origin_permit'
+  ]
+  columnProperties:
+    appendix:
+      width: 45
+      header: 'Appdx'
+    reported_appendix:
+      width: 55
+      header: 'Rep. Appdx'
+    species_name:
+      width: 200
+      header: 'Species'
+    reported_species_name:
+      width:200
+      header: 'Rep. Species'
+    term_code:
+      width: 50
+      header: 'Term'
+    quantity:
+      width: 50
+      header: 'Qty'
+    unit_code:
+      width: 50
+      header: 'Unit'
+    importer:
+      width: 100
+      header: 'Importer'
+    exporter:
+      width: 100
+      header: 'Exporter'
+    reporter_type:
+      width: 50
+      header: 'Reporter Type'
+    country_of_origin:
+      width: 100
+      header: 'Ctry of Origin'
+    purpose_code:
+      width: 50
+      header: 'Purpose'
+    source_code:
+      width: 50
+      header: 'Source'
+    year:
+      width: 40
+      header: 'Year'
+    import_permit:
+      width: 150
+      header: 'Import Permit'
+    export_permit:
+      width: 150
+      header: 'Export Permit'
+    origin_permit:
+      width: 150
+      header: 'Origin Permit'
   columns: Ember.computed ->
-    columnNames = [
-      'appendix', 'reported_appendix', 'species_name', 'reported_species_name',
-      'term_code', 'quantity', 'unit_code', 'importer', 'exporter',
-      'reporter_type', 'country_of_origin', 'purpose_code', 'source_code',
-      'year', 'import_permit', 'export_permit', 'origin_permit'
-    ]
-    columnProperties =
-      appendix:
-        width: 45
-        header: 'Appdx'
-      reported_appendix:
-        width: 55
-        header: 'Rep. Appdx'
-      species_name:
-        width: 200
-        header: 'Species'
-      reported_species_name:
-        width:200
-        header: 'Rep. Species'
-      term_code:
-        width: 50
-        header: 'Term'
-      quantity:
-        width: 50
-        header: 'Qty'
-      unit_code:
-        width: 50
-        header: 'Unit'
-      importer:
-        width: 100
-        header: 'Importer'
-      exporter:
-        width: 100
-        header: 'Exporter'
-      reporter_type:
-        width: 50
-        header: 'Reporter Type'
-      country_of_origin:
-        width: 100
-        header: 'Ctry of Origin'
-      purpose_code:
-        width: 50
-        header: 'Purpose'
-      source_code:
-        width: 50
-        header: 'Source'
-      year:
-        width: 40
-        header: 'Year'
-      import_permit:
-        width: 150
-        header: 'Import Permit'
-      export_permit:
-        width: 150
-        header: 'Export Permit'
-      origin_permit:
-        width: 150
-        header: 'Origin Permit'
-
-    columns = columnNames.map (key, index) ->
+    columns = @get('columnNames').map (key, index) =>
       Ember.Table.ColumnDefinition.create
-        columnWidth: columnProperties[key]['width'] || 100
-        headerCellName: columnProperties[key]['header']
+        columnWidth: @get('columnProperties')[key]['width'] || 100
+        headerCellName: @get('columnProperties')[key]['header']
         tableCellViewClass: 'Trade.ShipmentsTable.EditableTableCell'
         getCellContent: (row) -> row.get(key)
         setCellContent: (row, value) -> row.set(key, value)
