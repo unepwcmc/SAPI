@@ -152,4 +152,5 @@ module AdminHelper
       render :partial => 'admin/simple_crud/simple_search'
     end
   end
+
 end

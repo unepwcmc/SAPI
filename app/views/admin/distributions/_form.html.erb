@@ -1,57 +1,63 @@
-<%= nested_form_for [:admin, @taxon_concept, @distribution],  :remote => true do |f| %>
+<%= nested_form_for [:admin, @taxon_concept, @distribution],  :remote => true, :html => { :class => "form-horizontal" } do |f| %>
   <%= error_messages_for(@distribution) %>
 
   <div class="control-group">
     <label>Country or Territory</label>
-    <%= f.select :geo_entity_id,
-      options_from_collection_for_select(
-        @geo_entities,
-        :id,
-        :name_en,
-        @distribution.geo_entity_id
-      ), { },
-      { :class => 'distribution', :style => "width: 220px"}
-    %>
+    <div class="controls">
+      <%= f.select :geo_entity_id,
+        options_from_collection_for_select(
+          @geo_entities,
+          :id,
+          :name_en,
+          @distribution.geo_entity_id
+        ), { },
+        { :class => 'distribution', :style => "width: 450px"}
+      %>
+    </div>
   </div>
 
   <div class="control-group">
     <label>Tags</label>
-    <%= f.select :tag_list,
-      options_from_collection_for_select(
-        @tags,
-        :name,
-        :name,
-        @distribution.tag_list
-      ), {},
-      { :multiple => true, :class => 'distribution', :style => "width: 220px"}
-    %>
+    <div class="controls">
+      <%= f.select :tag_list,
+        options_from_collection_for_select(
+          @tags,
+          :name,
+          :name,
+          @distribution.tag_list
+        ), {},
+        { :multiple => true, :class => 'distribution', :style => "width: 450px"}
+      %>
+    </div>
   </div>
 
   <h4>References</h4>
 
-  <ul class="nav nav-tabs">
+  <ul class="nav nav-tabs distribution-references">
     <li><a href="#search">Search for a reference</a></li>
     <li class="active"><a href="#new">Create new references</a></li>
   </ul>
 
   <div class="tab-content">
     <div class="tab-pane fade" id="search">
-      <label>Search by title, author or year:</label>
-      <%= text_field_tag 'reference_search', nil, :class => 'typeahead' %>
-      <%= hidden_field_tag 'reference[id]', nil %>
+      <div class="control-group">
+        <label>Search by citation:</label>
+        <div class="controls">
+          <%= text_field_tag 'reference_search', nil, :class => 'typeahead input-xxlarge' %>
+          <%= hidden_field_tag 'reference[id]', nil %>
+        </div>
+      </div>
       <ul class="distribution_references"></ul>
     </div>
 
     <div class="tab-pane fade in active" id="new">
       <%= f.fields_for :references do |ff| %>
-        <label>Title</label>
-        <%= ff.text_field :title %>
-
-        <label>Author</label>
-        <%= ff.text_field :author %>
-
-        <label>Year</label>
-        <%= ff.text_field :year %>
+        <div class="control-group">
+          <label>Citation</label>
+          <div class="controls">
+            <%= ff.text_field :citation, :disabled => !ff.object.new_record?, :class => "input-xxlarge" %>
+          </div>
+        </div>
 
         <p>
           <%= ff.link_to_remove "Remove reference" %>

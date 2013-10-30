@@ -1,5 +1,12 @@
 var template = $("<%= escape_javascript(render('form')) %>");
 
+$("#new-distribution-label").text("<%= 
+   if @distribution.new_record?
+    "Add new"
+   else
+     "Edit"
+   end %> distribution location");
+
 var distributionReferences = new DistributionReferences({el: template.find('#search ul')});
 
 var references = {};
@@ -38,7 +45,7 @@ $('#admin-new-distribution-form').html(template);
 $('#admin-new-distribution-form .distribution').select2();
 $('#new-distribution').modal('show');
 
-$('.nav-tabs a').click(function (e) {
+$('.nav-tabs.distribution-references a').click(function (e) {
   e.preventDefault();
   $(this).tab('show');
 });
