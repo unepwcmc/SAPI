@@ -11,7 +11,7 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
 
   def edit
     edit! do |format|
-      format.js { render 'edit' }
+      format.js { render 'new' }
     end
   end
 

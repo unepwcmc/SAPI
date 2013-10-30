@@ -7,10 +7,6 @@ module ListingChangesHelper
     listing_change.excluded_geo_entities.map(&:name).join(', ')
   end
 
-  def excluded_taxon_concepts_tooltip(listing_change)
-    listing_change.excluded_taxon_concepts.map(&:full_name).join(', ')
-  end
-
   def annotation_tooltip(listing_change)
     if listing_change.annotation
       "#{listing_change.annotation.short_note} (#{listing_change.annotation.full_note})"

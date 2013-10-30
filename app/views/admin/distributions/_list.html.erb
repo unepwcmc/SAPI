@@ -25,7 +25,8 @@
       <td>
         <ul class="unstyled">
           <% d.references.each do |r| %>
-            <li class="reference-citation"><%= r.citation %></li>
+            <li class="reference-citation"><%= link_to r.citation,
+            admin_references_url(:query => r.citation) %></li>
           <% end %>
         </ul>
       </td>
