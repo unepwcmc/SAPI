@@ -1,0 +1,9 @@
+<%= form_for resource_instance_name, :url => collection_path, :remote => true do |f| %>
+
+  <%= error_messages_for(@instrument) %>
+  <label>MEA</label>
+  <%= f.select :designation_id,
+    options_from_collection_for_select(@designations, :id, :name, @instrument && @instrument.designation_id)
+  %><br />
+  <label>Name</label><%= f.text_field :name %><br />
+<% end %>

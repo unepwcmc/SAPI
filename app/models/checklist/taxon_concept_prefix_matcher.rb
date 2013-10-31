@@ -5,16 +5,15 @@ class Checklist::TaxonConceptPrefixMatcher
   def initialize(options)
     @options = options
     @scientific_name = options[:scientific_name]
-    return [] unless @scientific_name
     initialize_query
   end
 
   def results
-    @query.limit(@options[:per_page]).all
+    @scientific_name && @query.limit(@options[:per_page]).all || []
   end
 
   def total_cnt
-    @query.count
+    @scientific_name && @query.count || 0
   end
 
   protected

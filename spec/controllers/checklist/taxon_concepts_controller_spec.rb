@@ -9,5 +9,11 @@ describe Checklist::TaxonConceptsController do
         response.body.should have_json_size(1)
       end
     end
+    context "when query blank" do
+      it "returns 0 results" do
+        xhr :get, :autocomplete, :format => 'json'
+        response.body.should have_json_size(0)
+      end
+    end
   end
 end

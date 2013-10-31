@@ -1,3 +1,7 @@
+### 0.3.1 (unreleased)
+* Trade Admin: shipment validation bugfixes
+* Species Admin: references bugfixes, caching issues
+
 ### 0.3.0 (2013-10-22)
 * adds secondary validations to trade management tool:
   - term + unit
