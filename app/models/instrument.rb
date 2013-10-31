@@ -15,6 +15,11 @@ class Instrument < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => { :scope => :designation_id}
 
   belongs_to :designation
+  has_many :taxon_instruments
+
+  def can_be_deleted?
+    !taxon_instruments.any?
+  end
 
   def self.search query
     if query
