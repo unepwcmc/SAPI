@@ -15,6 +15,11 @@ FactoryGirl.define do
     designation
   end
 
+  factory :taxon_instrument do
+    taxon_concept
+    instrument
+  end
+
   factory :event do
     sequence(:name) {|n| "CoP#{n}"}
     effective_at '2012-01-01'
