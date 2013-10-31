@@ -26,6 +26,9 @@ Trade.ShipmentsController = Ember.ArrayController.extend
     controller
   .property('content')
 
+  allAppendixValues: ['I', 'II', 'III']
+  allReporterTypeValues: ['E', 'I']
+
   setPages: ->
     total = @get('content.meta.total')
     if total

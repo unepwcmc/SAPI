@@ -13,7 +13,7 @@
       {{view Ember.Select
         prompt="Please select appendix value"
         contentBinding="controller.allAppendixValues"
-        selectionBinding="controller.selectedAppendixValue"
+        selectionBinding="currentShipment.appendix"
       }}
     </label>
   </div>
@@ -42,10 +42,9 @@
   <div class="attribute-area clearfix">
     <label>
       Quantity<br>
-      {{view Ember.Select
-        prompt="Please select quantity value"
-        contentBinding="controller.allQuantityValues"
-        selectionBinding="controller.selectedQuantityValue"
+      {{view Ember.TextField
+        prompt="Please type quantity value"
+        valueBinding="currentShipment.quantity"
       }}
     </label>
   </div>
@@ -89,7 +88,7 @@
       {{view Ember.Select
         prompt="Please select reporter type"
         contentBinding="controller.allReporterTypeValues"
-        selectionBinding="controller.selectedReporterTypeValue"
+        selectionBinding="currentShipment.reporterType"
       }}
     </label>
   </div>
@@ -130,40 +129,36 @@
   <div class="attribute-area clearfix">
     <label>
       Year<br>
-      {{view Ember.Select
-        prompt="Please select year value"
-        contentBinding="controller.allYearValues"
-        selectionBinding="controller.selectedYearValue"
+      {{view Ember.TextField
+        prompt="Please type year value"
+        valueBinding="currentShipment.year"
       }}
     </label>
   </div>
   <div class="attribute-area clearfix">
     <label>
       Import Permit<br>
-      {{view Ember.Select
-        prompt="Please select import permit value"
-        contentBinding="controller.allImportPermitValues"
-        selectionBinding="controller.selectedImportPermitValue"
+      {{view Ember.TextField
+        prompt="Please type import permit value"
+        valueBinding="currentShipment.importPermit"
       }}
     </label>
   </div>
   <div class="attribute-area clearfix">
     <label>
       Export Permit<br>
-      {{view Ember.Select
-        prompt="Please select export permit value"
-        contentBinding="controller.allExportPermitValues"
-        selectionBinding="controller.selectedExportPermitValue"
-       }}
+      {{view Ember.TextField
+        prompt="Please type export permit value"
+        valueBinding="currentShipment.exportPermit"
+      }}
     </label>
   </div>
   <div class="attribute-area clearfix">
     <label>
       Origin Permit<br>
-      {{view Ember.Select
-        prompt="Please select origin permit value"
-        contentBinding="controller.allOriginPermitValues"
-        selectionBinding="controller.selectedOriginPermitValue"
+      {{view Ember.TextField
+        prompt="Please type origin permit value"
+        valueBinding="currentShipment.originPermit"
       }}
     </label>
   </div>
