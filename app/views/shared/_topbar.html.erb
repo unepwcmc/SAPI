@@ -28,6 +28,9 @@
             <li class="<%= if controller_name == 'designations' then 'active' end%>">
               <%= link_to 'MEAs', admin_designations_path %>
             </li>
+            <li class="<%= if controller_name == 'instruments' then 'active' end%>">
+              <%= link_to 'Instruments', admin_instruments_path %>
+            </li>
             <li class="<%= if controller_name == 'species_listings' then 'active' end%>">
               <%= link_to 'Species listings', admin_species_listings_path %>
             </li>

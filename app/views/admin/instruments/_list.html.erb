@@ -1,0 +1,28 @@
+<thead>
+  <th width="20%">MEA</th>
+  <th>Name</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |instrument| -%>
+    <tr>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="select" data-resource="instrument" data-name="designation_id"
+          data-placeholder="Required" data-original-title="Enter the instrument's MEA" data-source="/admin/taxonomies/"
+          data-url="<%= resource_url(instrument) %>" data-pk="<%= instrument.id %>" data-value="<%= instrument.designation_id %>">
+          <%= instrument.designation.name %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="instrument" data-name="name"
+          data-placeholder="Required" data-original-title="Enter the instrument's name"
+          data-url="<%= resource_url(instrument) %>" data-pk="<%= instrument.id %>">
+          <%= instrument.name %>
+        </a>
+      </td>
+      <td>
+        <%= link_to delete_icon, resource_url(instrument), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>
