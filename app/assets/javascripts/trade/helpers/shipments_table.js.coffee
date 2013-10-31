@@ -43,31 +43,31 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
   contentBinding: 'shipmentsController.content'
   tableRowViewClass: "Trade.ShipmentsTable.TableRow"
   columnNames: [
-    'appendix', 'reported_appendix', 'species_name', 'reported_species_name',
-    'term_code', 'quantity', 'unit_code', 'importer', 'exporter',
-    'reporter_type', 'country_of_origin', 'purpose_code', 'source_code',
-    'year', 'import_permit', 'export_permit', 'origin_permit'
+    'appendix', 'reportedAppendix', 'speciesName', 'reportedSpeciesName',
+    'termCode', 'quantity', 'unitCode', 'importer', 'exporter',
+    'reporterType', 'countryOfOrigin', 'purposeCode', 'sourceCode',
+    'year', 'importPermit', 'exportPermit', 'originPermit'
   ]
   columnProperties:
     appendix:
       width: 45
       header: 'Appdx'
-    reported_appendix:
+    reportedAppendix:
       width: 55
       header: 'Rep. Appdx'
-    species_name:
+    speciesName:
       width: 200
       header: 'Species'
-    reported_species_name:
+    reportedSpeciesName:
       width:200
       header: 'Rep. Species'
-    term_code:
+    termCode:
       width: 50
       header: 'Term'
     quantity:
       width: 50
       header: 'Qty'
-    unit_code:
+    unitCode:
       width: 50
       header: 'Unit'
     importer:
@@ -78,29 +78,29 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
       width: 100
       header: 'Exporter'
       labelPath: 'exporter.name'
-    reporter_type:
+    reporterType:
       width: 50
       header: 'Reporter Type'
-    country_of_origin:
+    countryOfOrigin:
       width: 100
       header: 'Ctry of Origin'
       labelPath: 'countryOfOrigin.name'
-    purpose_code:
+    purposeCode:
       width: 50
       header: 'Purpose'
-    source_code:
+    sourceCode:
       width: 50
       header: 'Source'
     year:
       width: 40
       header: 'Year'
-    import_permit:
+    importPermit:
       width: 150
       header: 'Import Permit'
-    export_permit:
+    exportPermit:
       width: 150
       header: 'Export Permit'
-    origin_permit:
+    originPermit:
       width: 150
       header: 'Origin Permit'
   columns: Ember.computed ->
