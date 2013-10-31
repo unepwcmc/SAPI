@@ -1,5 +1,7 @@
 Trade.ShipmentsController = Ember.ArrayController.extend
+  needs: ['speciesListings', 'geoEntities']
   content: null
+  currentShipment: null
   pages: null
   page: 1
 
@@ -20,7 +22,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend
 
   tableController: Ember.computed ->
     controller = Ember.get('Trade.ShipmentsTable.TableController').create()
-    controller.set 'shipments', @get('content')
+    controller.set('shipmentsController', @)
     controller
   .property('content')
 

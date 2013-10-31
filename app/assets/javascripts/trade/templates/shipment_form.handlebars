@@ -1,0 +1,178 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h3>Modal header</h3>
+</div>
+<div class="modal-body">
+<form action="#">
+<fieldset>
+<div class="row-fluid">
+<div class="span4">
+  <div class="attribute-area clearfix">
+    <label>
+      Appendix<br>
+      {{view Ember.Select
+        prompt="Please select appendix value"
+        contentBinding="controller.allAppendixValues"
+        selectionBinding="controller.selectedAppendixValue"
+      }}
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Species name<br>
+      {{view Trade.Select2
+        prompt="Please select species names"
+        contentBinding="controller.allSpeciesNameValues"
+        selectionBinding="controller.selectedSpeciesNameValue"
+      }}
+    </label>
+  </div>
+</div>
+<div class="span4">
+  <div class="attribute-area clearfix">
+    <label>
+      Term Code<br>
+      {{view Ember.Select
+        prompt="Please select term code value"
+        contentBinding="controller.allTermCodeValues"
+        selectionBinding="controller.selectedTermCodeValue"
+      }}
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Quantity<br>
+      {{view Ember.Select
+        prompt="Please select quantity value"
+        contentBinding="controller.allQuantityValues"
+        selectionBinding="controller.selectedQuantityValue"
+      }}
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Unit Code<br>
+      {{view Ember.Select
+        prompt="Please select unit code value"
+        contentBinding="controller.allUnitCodeValues"
+        selectionBinding="controller.selectedUnitCodeValue"
+      }}
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Importer<br>
+      {{view Ember.Select
+        prompt="Please select importer"
+        contentBinding="controllers.geoEntities"
+        optionValuePath="content.id"
+        optionLabelPath="content.name"
+        selectionBinding="currentShipment.importer"
+      }}
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Exporter<br>
+      {{view Ember.Select
+        prompt="Please select exporter"
+        contentBinding="controllers.geoEntities"
+        optionValuePath="content.id"
+        optionLabelPath="content.name"
+        selectionBinding="currentShipment.exporter"
+      }}
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Reporter type<br>
+      {{view Ember.Select
+        prompt="Please select reporter type"
+        contentBinding="controller.allReporterTypeValues"
+        selectionBinding="controller.selectedReporterTypeValue"
+      }}
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Country of Origin<br>
+      {{view Ember.Select
+        prompt="Please select country of origin value"
+        contentBinding="controllers.geoEntities"
+        optionValuePath="content.id"
+        optionLabelPath="content.name"
+        selectionBinding="currentShipment.countryOfOrigin"
+      }}
+    </label>
+  </div>
+</div>
+<div class="span4">
+  <div class="attribute-area clearfix">
+    <label>
+      Purpose Code<br>
+      {{view Ember.Select
+        prompt="Please select purpose code value"
+        contentBinding="controller.allPurposeCodeValues"
+        selectionBinding="controller.selectedPurposeCodeValue"
+      }}
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Source Code<br>
+      {{view Ember.Select
+        prompt="Please select source code value"
+        contentBinding="controller.allSourceCodeValues"
+        selectionBinding="controller.selectedSourceCodeValue"
+      }}
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Year<br>
+      {{view Ember.Select
+        prompt="Please select year value"
+        contentBinding="controller.allYearValues"
+        selectionBinding="controller.selectedYearValue"
+      }}
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Import Permit<br>
+      {{view Ember.Select
+        prompt="Please select import permit value"
+        contentBinding="controller.allImportPermitValues"
+        selectionBinding="controller.selectedImportPermitValue"
+      }}
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Export Permit<br>
+      {{view Ember.Select
+        prompt="Please select export permit value"
+        contentBinding="controller.allExportPermitValues"
+        selectionBinding="controller.selectedExportPermitValue"
+       }}
+    </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Origin Permit<br>
+      {{view Ember.Select
+        prompt="Please select origin permit value"
+        contentBinding="controller.allOriginPermitValues"
+        selectionBinding="controller.selectedOriginPermitValue"
+      }}
+    </label>
+  </div>
+</div>
+</div>
+</fieldset>
+</form>
+</div>
+<div class="modal-footer">
+<a href="#" class="btn">Close</a>
+<a href="#" class="btn btn-primary">Save changes</a>
+</div>

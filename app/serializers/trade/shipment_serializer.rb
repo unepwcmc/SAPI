@@ -1,7 +1,7 @@
 class Trade::ShipmentSerializer < ActiveModel::Serializer
   attributes :id, :appendix, :species_name,
     :term_code, :quantity, :unit_code, :purpose_code, :source_code, :year,
-    :importer, :exporter, :reporter_type, :country_of_origin,
+    :importer_id, :exporter_id, :reporter_type, :country_of_origin_id,
     :import_permit, :export_permit, :origin_permit,
     :reported_appendix, :reported_species_name
 
@@ -23,18 +23,6 @@ class Trade::ShipmentSerializer < ActiveModel::Serializer
 
   def purpose_code
     object.purpose.try(:code)
-  end
-
-  def importer
-    object.importer.try(:name_en)
-  end
-
-  def exporter
-    object.exporter.try(:name_en)
-  end
-
-  def country_of_origin
-    object.country_of_origin.try(:name_en)
   end
 
   def export_permit
