@@ -34,8 +34,8 @@
       Term Code<br>
       {{view Ember.Select
         prompt="Please select term code value"
-        contentBinding="controller.allTermCodeValues"
-        selectionBinding="controller.selectedTermCodeValue"
+        contentBinding="controllers.terms"
+        selectionBinding="currentShipment.term"
       }}
     </label>
   </div>
@@ -53,8 +53,8 @@
       Unit Code<br>
       {{view Ember.Select
         prompt="Please select unit code value"
-        contentBinding="controller.allUnitCodeValues"
-        selectionBinding="controller.selectedUnitCodeValue"
+        contentBinding="controllers.units"
+        selectionBinding="currentShipment.unit"
       }}
     </label>
   </div>
@@ -111,8 +111,8 @@
       Purpose Code<br>
       {{view Ember.Select
         prompt="Please select purpose code value"
-        contentBinding="controller.allPurposeCodeValues"
-        selectionBinding="controller.selectedPurposeCodeValue"
+        contentBinding="controllers.purposes"
+        selectionBinding="currentShipment.purpose"
       }}
     </label>
   </div>
@@ -121,8 +121,8 @@
       Source Code<br>
       {{view Ember.Select
         prompt="Please select source code value"
-        contentBinding="controller.allSourceCodeValues"
-        selectionBinding="controller.selectedSourceCodeValue"
+        contentBinding="controllers.sources"
+        selectionBinding="currentShipment.source"
       }}
     </label>
   </div>

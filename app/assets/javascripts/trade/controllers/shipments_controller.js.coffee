@@ -1,5 +1,5 @@
 Trade.ShipmentsController = Ember.ArrayController.extend
-  needs: ['speciesListings', 'geoEntities']
+  needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
   pages: null

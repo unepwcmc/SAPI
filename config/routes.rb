@@ -10,6 +10,10 @@ SAPI::Application.routes.draw do
       resources :taxon_concepts, :only => [:index, :show]
       resources :auto_complete_taxon_concepts, :only => [:index, :show]
       resources :geo_entities, :only => [:index]
+      resources :terms, :only => [:index]
+      resources :units, :only => [:index]
+      resources :sources, :only => [:index]
+      resources :purposes, :only => [:index]
     end
     resources :terms, :only => [:index]
     resources :sources, :only => [:index]
