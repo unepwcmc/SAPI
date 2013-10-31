@@ -33,6 +33,7 @@ SAPI::Application.routes.draw do
     resources :languages, :only => [:index, :create, :update, :destroy]
     resources :users, :only => [:index, :create, :update, :destroy]
     resources :designations, :only => [:index, :create, :update, :destroy]
+    resources :instruments, :only => [:index, :create, :update, :destroy]
     resources :species_listings, :only => [:index, :create, :update, :destroy]
     resources :change_types, :only => [:index, :create, :update, :destroy]
     resources :ranks, :only => [:index, :create, :update, :destroy]
