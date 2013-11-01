@@ -29,10 +29,9 @@
   <div class="attribute-area clearfix">
     <label>
       Species name<br>
-      {{view Trade.Select2
+      {{view Trade.TaxonConceptSelect2
         prompt="Please select species names"
-        contentBinding="controller.allSpeciesNameValues"
-        selectionBinding="controller.selectedSpeciesNameValue"
+        valueBinding="currentShipment.taxonConceptId"
       }}
     </label>
   </div>
