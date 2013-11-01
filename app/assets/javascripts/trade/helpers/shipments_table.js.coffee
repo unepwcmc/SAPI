@@ -64,12 +64,14 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
     termCode:
       width: 50
       header: 'Term'
+      labelPath: 'term.code'
     quantity:
       width: 50
       header: 'Qty'
     unitCode:
       width: 50
       header: 'Unit'
+      labelPath: 'unit.code'
     importer:
       width: 100
       header: 'Importer'
@@ -88,9 +90,11 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
     purposeCode:
       width: 50
       header: 'Purpose'
+      labelPath: 'purpose.code'
     sourceCode:
       width: 50
       header: 'Source'
+      labelPath: 'source.code'
     year:
       width: 40
       header: 'Year'
