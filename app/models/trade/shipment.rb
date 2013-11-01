@@ -45,7 +45,8 @@ class Trade::Shipment < ActiveRecord::Base
   belongs_to :importer, :class_name => "GeoEntity"
 
   belongs_to :country_of_origin_permit, :class_name => "Trade::Permit"
-  belongs_to :export_permit, :class_name => "Trade::Permit"
+  has_many :shipment_export_permits, :foreign_key => :trade_shipment_id, :class_name => "Trade::ShipmentExportPermit"
+  has_many :export_permits, :through => :shipment_export_permits
   belongs_to :import_permit, :class_name => "Trade::Permit"
 
   def reporter_type
@@ -53,6 +54,6 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def reporter_type=(str)
-    self.reported_by_exporter = (str.upcase.trim == 'E' ? 'E' : 'I')
+    self.reported_by_exporter = (str.upcase.strip == 'E' ? 'E' : 'I')
   end
 end

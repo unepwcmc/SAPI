@@ -6,7 +6,7 @@ class Trade::ShipmentsController < ApplicationController
     @shipments = Trade::Shipment.includes([
        :exporter, :importer, :country_of_origin, :purpose,
        :source, :term, :unit, :country_of_origin_permit,
-       :import_permit, :export_permit, :taxon_concept
+       :import_permit, :export_permits, :taxon_concept
       ]).order('year DESC').page(params[:page]).limit(PER_PAGE)
     render :json => @shipments,
       :each_serializer => Trade::ShipmentSerializer,
@@ -32,7 +32,7 @@ private
     params.require(:shipment).permit(
       :id,
       :appendix,
-      :species_name,
+      :taxon_concept_id,
       :term_id,
       :quantity,
       :unit_id,
@@ -40,15 +40,14 @@ private
       :exporter_id,
       :reporter_type,
       :country_of_origin_id,
-      :import_permit,
-      :export_permit,
-      :origin_permit,
+      # :import_permit,
+      # :export_permit,
+      # :origin_permit,
       :purpose_id,
       :source_id,
       :year,
       :reported_species_name,
-      :reported_appendix,
-      :_destroyed
+      :reported_appendix
     )
   end
 

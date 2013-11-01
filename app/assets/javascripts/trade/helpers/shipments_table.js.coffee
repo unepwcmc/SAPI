@@ -58,6 +58,7 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
     speciesName:
       width: 200
       header: 'Species'
+      labelPath: 'taxonConcept.fullName'
     reportedSpeciesName:
       width:200
       header: 'Rep. Species'
