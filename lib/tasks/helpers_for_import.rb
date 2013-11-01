@@ -230,6 +230,18 @@ class CsvToDbMap
       'Term' => 'term varchar',
       'DecNotes' => 'notes varchar',
       'Internal_Notes' => 'internal_notes varchar'
+    },
+    'terms_and_purpose_pairs_import' => {
+      'TERM_CODE' => 'TERM_CODE varchar',
+      'PURPOSE_CODE' => 'PURPOSE_CODE varchar'
+    },
+    'terms_and_unit_pairs_import' => {
+      'TERM_CODE' => 'TERM_CODE varchar',
+      'UNIT_CODE' => 'UNIT_CODE varchar'
+    },
+    'taxon_concepts_and_terms_pairs_import' => {
+      'TAXON_FAMILY' => 'TAXON_FAMILY varchar',
+      'TERM_CODE' => 'TERM_CODE varchar'
     }
   }
 

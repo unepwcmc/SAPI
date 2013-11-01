@@ -1,27 +1,40 @@
 module Sapi
   module StoredProcedures
 
-    REBUILD_PROCEDURES = [
-      :taxonomy,
-      :cites_listing,
-      :eu_listing,
-      :cms_listing,
-      :cites_accepted_flags,
-      :taxon_concepts_mview,
-      :listing_changes_mview
-    ]
-
-    def self.rebuild(options = {})
-      Sapi::Triggers.disable_triggers if options[:disable_triggers]
-      procedures = REBUILD_PROCEDURES - (options[:except] || [])
-      procedures &= options[:only] unless options[:only].nil?
-      procedures.each{ |p|
-        puts "Starting procedure: #{p}"
+    def self.rebuild
+      [
+        :taxonomy,
+        :cites_accepted_flags,
+        :listing_changes_mview,
+        :cites_listing,
+        :eu_listing,
+        :cms_listing,
+        :taxon_concepts_mview,
+        :cites_species_listing_mview,
+        :eu_species_listing_mview,
+        :cms_species_listing_mview,
+        :valid_species_name_appendix_year_mview,
+        :touch_taxon_concepts
+      ].each{ |p|
+        puts "Procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
-        puts "Ending procedure: #{p}"
       }
-      Sapi::Triggers.enable_triggers if options[:disable_triggers]
+
+      changed_cnt = TaxonConcept.where('touched_at IS NOT NULL AND touched_at > updated_at').count
+
+      if changed_cnt > 0
+        # increment cache iterators if anything changed
+        Species::Search.increment_cache_iterator
+        Species::TaxonConceptPrefixMatcher.increment_cache_iterator
+        Checklist::Checklist.increment_cache_iterator
+        Checklist::TaxonConceptPrefixMatcher.increment_cache_iterator
+
+        TaxonConcept.update_all(
+          'updated_at = touched_at',
+          'touched_at IS NOT NULL AND touched_at > updated_at'
+        )
+      end
     end
-    
+
   end
 end

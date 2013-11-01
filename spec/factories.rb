@@ -10,6 +10,16 @@ FactoryGirl.define do
     taxonomy
   end
 
+  factory :instrument do
+    sequence(:name) {|n| "ACAP#{n}"}
+    designation
+  end
+
+  factory :taxon_instrument do
+    taxon_concept
+    instrument
+  end
+
   factory :event do
     sequence(:name) {|n| "CoP#{n}"}
     effective_at '2012-01-01'
@@ -66,6 +76,11 @@ FactoryGirl.define do
       sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (65 + i%26).chr }.join }
       name_en "Boxes"
     end
+  end
+
+  factory :term_trade_codes_pair do
+    term
+    trade_code
   end
 
   factory :cites_suspension do

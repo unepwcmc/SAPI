@@ -10,7 +10,6 @@ Species.TaxonConcept = DS.Model.extend
   commonNames: DS.attr("array")
   synonyms: DS.attr("array")
   subspecies: DS.attr("array")
-  mTaxonConcept: DS.attr("array")
   distributions: DS.attr("array")
   references: DS.attr("array")
   standardReferences: DS.attr("array")

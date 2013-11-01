@@ -1,18 +1,20 @@
 .search-block {
-	background: #8fb7cf;
-	border: 1px solid #6b94af;
-	padding: 18px 18px 17px;
+	background: #A4C5DA;
+	border: 1px solid #8fb7cf;
+	padding: 20px 40px 20px;
 	box-shadow: 2px 2px 2px rgba(0,0,0,0.05);
+	&.add {
+	  padding: 20px 60px 20px;
+	}
 
 	.links-area {
 		float: left;
-		width: 125px;
 		line-height: 30px;
 		font-size: 13px;
 		font-weight: bold;
-		padding: 14px 0 14px 10px;
+		padding: 14px 15px 14px 0;
 		text-transform: uppercase;
-		border-right: 1px solid #739cb7;
+		border-right: 1px solid #8fb7cf;
 
 		a {
 			color: #fff;
@@ -42,27 +44,27 @@
 
 	.search-form {
 		float: left;
-		width: 531px;
-		padding: 10px 0 13px 17px;
+		width: 493px;
+		padding: 10px 15px 13px 15px;
 		text-transform: uppercase;
-		border-right: 1px solid #739cb7;
+		border-right: 1px solid #8fb7cf;
 	}
+
 
 	.search {
 		background: #fff;
-		width: 507px;
 		height: 28px;
 		padding: 3px 4px 5px;
 		position: relative;
 		-webkit-border-radius: 20px;
 		border-radius: 20px;
-		border: 1px solid #6c95b0;
+		border: 1px solid #8fb7cf;
 
 		input[type="text"] {
 			padding: 3px;
       padding-left: 10px;
 			float: left;
-			width: 386px;
+			width: 326px;
 			height: 26px;
 			font-size: 13px;
 			line-height: 26px;
@@ -134,7 +136,7 @@
 			max-height: 218px;
 			overflow: auto;
 			padding: 10px 0 0;
-			line-height: 18px;
+			line-height: 20px;
 		}
 		.popup > ul > li {
 			font-size: 13px;
@@ -153,13 +155,13 @@
 			}
 			
 		.popup > ul > li a span { 
-			border-bottom: 1px dotted #525263;
+			border-bottom: 1px solid #525263;
 			}
 			
 		.popup > ul > li a:hover { 
 			text-decoration: none;
 			color: #2d3237;
-			border-bottom: 1px dotted #2d3237;
+			border-bottom: 1px solid #2d3237;
 			-webkit-transition: all 0.5s ease;
 			-moz-transition: all 0.5s ease;
 			-ms-transition: all 0.5s ease;
@@ -229,31 +231,39 @@
 
 
 
-.inner .search-block .search { width: 429px; }
-.inner .search-block .links-area { width: 126px; }
+.inner .search-block .search { width: 469px; }
 .inner .search-block .search-form {
-	padding: 10px 0 13px 14px;
-	width: 454px;
+	padding: 10px 15px 13px 15px;
 }
-.inner .search-block .search input[type="text"] { width: 313px; }
+.inner .search-block .search input[type="text"] { width: 353px; }
 
-.inner .search-block.add .search-form { width: 612px; }
+.inner .search-block.add .search-form { width: 522px; }
 
-.inner .search-block.add .search { width: 589px; }
-.inner .search-block.add .search input[type="text"] { width: 475px; }
+.inner .search-block.add .search { width: 509px; }
+.inner .search-block.add .search input[type="text"] { width: 395px; }
+
+/* When in search results page, need more room to fit the total results */
+.search-block.search-results .search-form {
+  width: 420px;
+}
+.inner .search-block.search-results .search {
+  width: 410px;
+}
+.inner .search-block.search-results .search input[type="text"] {
+  width: 295px;
+}
 
 .total-species {
 	float: left;
 	text-align: left;
-	font-size: 19px;
+	font-size: 17px;
 	color: #2a425a;
 	line-height: 30px;
 	font-weight: bold;
-	width: 130px;
 	padding: 12px 0 15px 15px;
-	border-left: 1px solid #739cb7;
+	border-left: 1px solid #8fb7cf;
 }
-.total-species span { font-size: 23px; }
+.total-species span { font-size: 22px; }
 
 .location-area {
 	float: left;
@@ -285,5 +295,9 @@
 }
 
 .inner .location-area { padding: 13px 15px 0; }
-.inner .search-block.add .location-area { padding: 15px 0 0 14px; }
+.inner .search-block.add .location-area { padding: 15px 0 0 15px; }
 .search-block .search fieldset.parent-focus.parent-active .popup { display: block; }
+
+html.lt-ie9 .search-block .search-form {
+  width: 490px;
+}

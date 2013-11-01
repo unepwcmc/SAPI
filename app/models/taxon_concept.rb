@@ -3,6 +3,7 @@
 # Table name: taxon_concepts
 #
 #  id                 :integer          not null, primary key
+#  taxonomy_id        :integer          default(1), not null
 #  parent_id          :integer
 #  rank_id            :integer          not null
 #  taxon_name_id      :integer          not null
@@ -17,7 +18,7 @@
 #  name_status        :string(255)      default("A"), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  taxonomy_id        :integer          default(1), not null
+#  touched_at         :datetime
 #
 
 class TaxonConcept < ActiveRecord::Base
@@ -217,7 +218,7 @@ class TaxonConcept < ActiveRecord::Base
         LEFT JOIN taxon_concept_references hi_refs
         ON hi_refs.taxon_concept_id = hi.id
       )
-      SELECT refs.* FROM inherited_references inh_refs
+      SELECT refs.*, inh_refs.id as taxon_concept_id FROM inherited_references inh_refs
       INNER JOIN "references" refs
       ON inh_refs.reference_id = refs.id
         AND inh_refs.is_standard AND (inh_refs.is_cascaded OR inh_refs.id = #{id})

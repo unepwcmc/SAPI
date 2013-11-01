@@ -1,3 +1,2 @@
-Trade.ValidationRulesController = Ember.ArrayController.extend({
+Trade.ValidationRulesController = Ember.ArrayController.extend
   content: null
-});

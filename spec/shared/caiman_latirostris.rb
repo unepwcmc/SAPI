@@ -50,6 +50,8 @@ shared_context "Caiman latirostris" do
       :name_status => 'S'
     )
 
+    create(:distribution, :taxon_concept_id => @species.id, :geo_entity_id => argentina.id)
+
     create(
       :taxon_relationship,
       :taxon_relationship_type => has_synonym,
@@ -124,7 +126,8 @@ shared_context "Caiman latirostris" do
       :is_party => false
     )
 
-    Sapi.rebuild(:except => [:taxonomy])
+    cms_designation
+    Sapi.rebuild
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

@@ -6,7 +6,6 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listing_for_node(node_id integer) RETUR
     PERFORM rebuild_cites_not_listed_status_for_node(node_id);
     PERFORM rebuild_cites_hash_annotation_symbols_for_node(node_id);
     PERFORM rebuild_explicit_cites_listing_for_node(node_id);
-    PERFORM rebuild_descendant_cites_listing_for_node(node_id);
     PERFORM rebuild_ancestor_cites_listing_for_node(node_id);
     END;
   $$;

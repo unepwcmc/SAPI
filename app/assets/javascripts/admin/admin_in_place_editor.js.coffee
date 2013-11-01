@@ -4,6 +4,8 @@ $(document).ready ->
     window.adminEditor = new TaxonConceptsEditor()
   else if window.editorClass == 'listing_changes' 
     window.adminEditor = new ListingChangesEditor()
+  else if window.editorClass == 'taxon_concept_references'
+    window.adminEditor = new TaxonReferencesEditor()
   else
     window.adminEditor = new AdminInPlaceEditor()
   window.adminEditor.init()
@@ -59,6 +61,46 @@ class AdminEditor
           return process(labels)
         )
 
+  excludeTaxonConceptsIds: () ->
+    $("#excluded_taxon_concepts_ids").select2({
+      placeholder: 'Select taxa'
+      minimumInputLength: 3
+      multiple: true
+      initSelection: (element, callback) ->
+        data = []
+        ids = []
+        $(element.val().split(",")).each(() ->
+          tmp = this.split(":")
+          ids.push(tmp[0])
+          data.push({id: tmp[0], text: tmp[1]})
+        )
+        element.val(ids)
+        callback(data)
+      ajax: {
+        url: '/admin/taxon_concepts/autocomplete',
+        dataType: 'json',
+        quietMillis: 100,
+        data: (query) ->
+          search_params:
+            scientific_name: query
+            taxon_concept:
+              id: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-id')
+              scope: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-scope')
+          limit: 25
+        results: (data) ->
+            results = []
+            $.each(data, (i, e) ->
+              results.push(
+                id: e.id
+                text: e.full_name
+              )
+            )
+            results: results
+        dropdownCssClass: 'bigdrop'
+        placeholder: 'Select taxa'
+      }
+    })
+
 class AdminInPlaceEditor extends AdminEditor
   init: () ->
     super
@@ -106,7 +148,6 @@ class TaxonConceptsEditor extends AdminEditor
     super
     @saveAndReopen = false
     @initTaxonConceptTypeaheads()
-    @initReferencesTypeahead()
     $('.distributions-list > a').popover({});
 
   initTaxonConceptTypeaheads: () ->
@@ -124,7 +165,7 @@ class TaxonConceptsEditor extends AdminEditor
 
         #initialize this typeahead
         $(@).typeahead
-          source: (query, process) ->
+          source: (query, process) =>
             $.get('/admin/taxon_concepts/autocomplete',
             {
               search_params: {
@@ -148,30 +189,6 @@ class TaxonConceptsEditor extends AdminEditor
             )
           $().add(taxonomyEl).add(rankEl).change () =>
             $(@).val(null)
-
-  initReferencesTypeahead: () ->
-    @references = {}
-    @referencesLabels = []
-    $('.references-typeahead').typeahead(
-      source: (query, process) =>
-        $.get(
-          '/admin/references/autocomplete',
-          { query: query },
-          (data) =>
-            _.each(data, (item, i, list) =>
-              if (_.has(@references, item.value))
-                item.value = item.value + ' (' + item.id + ')'
-
-              @referencesLabels.push(item.value)
-              @references[item.value] = item.id
-            )
-            process(@referencesLabels)
-        )
-      updater: (item) =>
-        $('#reference_id').val(@references[item])
-        $('#reference_search').val(item)
-        return item
-    )
 
   alertSuccess: (txt) ->
     $('.alert').remove()
@@ -207,44 +224,7 @@ class ListingChangesEditor extends AdminEditor
       placeholder: 'Select countries'
     })
 
-    $("#excluded_taxon_concepts_ids").select2({
-      placeholder: 'Select taxa'
-      minimumInputLength: 3
-      multiple: true
-      initSelection: (element, callback) ->
-        data = []
-        ids = []
-        $(element.val().split(",")).each(() ->
-          tmp = this.split(":")
-          ids.push(tmp[0])
-          data.push({id: tmp[0], text: tmp[1]})
-        )
-        element.val(ids)
-        callback(data)
-      ajax: {
-        url: '/admin/taxon_concepts/autocomplete',
-        dataType: 'json',
-        quietMillis: 100,
-        data: (query) ->
-          search_params:
-            scientific_name: query
-            taxon_concept:
-              id: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-id')
-              scope: $("#excluded_taxon_concepts_ids").attr('data-taxon-concept-scope')
-          limit: 25
-        results: (data) ->
-            results = []
-            $.each(data, (i, e) ->
-              results.push(
-                id: e.id
-                text: e.full_name
-              )
-            )
-            results: results
-        dropdownCssClass: 'bigdrop'
-        placeholder: 'Select taxa'
-      }
-    })
+    @excludeTaxonConceptsIds()
 
     $("#inclusion_taxon_concept_id").select2({
       placeholder: 'Select taxon'
@@ -291,3 +271,47 @@ class ListingChangesEditor extends AdminEditor
             $('#listing_change_effective_at').val(data.event.effective_at_formatted)
         )
       )
+
+class TaxonReferencesEditor extends AdminEditor
+  init: () ->
+    super
+    @nonSuperInit()
+
+  nonSuperInit: () ->
+    $("[rel='tooltip']").tooltip()
+    $(".nav-tabs.new-reference-tabs a").click (e) ->
+      e.preventDefault()
+      window.adminEditor.clearModalForm $("#admin-new-taxon_concept_reference-form")
+      $(this).tab "show"
+    @initSaveAndReOpenButton()
+    @initReferencesTypeahead()
+    @excludeTaxonConceptsIds()
+
+  initSaveAndReOpenButton: () ->
+    @saveAndReopen = false
+    $('.modal .modal-footer .save-and-reopen-button').click () =>
+      @saveAndReopen = true
+
+  initReferencesTypeahead: () ->
+    @references = {}
+    @referencesLabels = []
+    $('.references-typeahead').typeahead(
+      source: (query, process) =>
+        $.get(
+          '/admin/references/autocomplete',
+          { query: query },
+          (data) =>
+            _.each(data, (item, i, list) =>
+              if (_.has(@references, item.value))
+                item.value = item.value + ' (' + item.id + ')'
+
+              @referencesLabels.push(item.value)
+              @references[item.value] = item.id
+            )
+            process(@referencesLabels)
+        )
+      updater: (item) =>
+        $('#reference_id').val(@references[item])
+        $('#reference_search').val(item)
+        return item
+    )

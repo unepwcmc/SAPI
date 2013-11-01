@@ -10,7 +10,7 @@ namespace :import do
       'lib/files/plants/plantae_taxa_utf8.csv'
     )
     Rake::Task["import:cites_regions"].invoke(
-      'lib/files/cites_regions.csv'
+      'lib/files/cites_regions_utf8.csv'
     )
     Rake::Task["import:countries"].invoke(
       'lib/files/countries_utf8.csv'
@@ -78,6 +78,8 @@ namespace :import do
     )
 
     Rake::Task["import:trade_codes"].invoke
+    Rake::Task["import:trade_codes_t_p_pairs"].invoke
+    Rake::Task["import:trade_codes_t_u_pairs"].invoke
 
     Rake::Task["import:cites_quotas"].invoke(
       'lib/files/quotas_utf8.csv'
@@ -91,10 +93,10 @@ namespace :import do
       'lib/files/eu_decisions_utf8.csv'
     )
 
-    #Rake::Task["import:fix_symbols"].invoke
+    Rake::Task["import:fix_symbols"].invoke
 
     Sapi::create_indexes
-    Sapi::rebuild(:disable_triggers => true)
+    Sapi::rebuild
 
     Sapi::enable_triggers
 
@@ -102,7 +104,7 @@ namespace :import do
   end
 
   desc 'Drops and reimports db'
-  task :redo => ["db:drop", "db:create", "db:migrate", "import:cleaned"]
+  task :redo => ["db:drop", "db:create", "db:migrate", "import:cleaned", "downloads:cache:clear"]
 
   desc 'Shows database summary stats'
   task :stats => :environment do

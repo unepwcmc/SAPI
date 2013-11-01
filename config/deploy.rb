@@ -11,6 +11,9 @@ set :generate_webserver_config, false
 set :whenever_environment, defer { stage }
 require 'whenever/capistrano'
 
+require 'rvm/capistrano'
+set :rvm_ruby_string, '1.9.3'
+
 ssh_options[:forward_agent] = true
 
 # The name of your application.  Used for deployment directory and filenames
@@ -268,3 +271,11 @@ namespace :downloads do
     end
   end
 end
+
+namespace :deploy do
+  desc 'Rebuild database mviews'
+  task :rebuild, :roles => [:db] do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake db:migrate:rebuild"
+  end
+end
+after "deploy:rebuild", "downloads:cache:clear"

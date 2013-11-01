@@ -81,9 +81,6 @@ class MTaxonConcept < ActiveRecord::Base
 
   belongs_to :taxon_concept, :foreign_key => :id
   has_many :listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange
-  has_many :current_listing_changes, :foreign_key => :taxon_concept_id,
-    :class_name => MListingChange,
-    :conditions => "is_current = 't' AND change_type_name <> '#{ChangeType::EXCEPTION}'"
   has_many :historic_cites_listing_changes_for_downloads, :foreign_key => :taxon_concept_id,
     :class_name => MListingChange,
     :conditions => "show_in_downloads = 't' AND designation_name = '#{Designation::CITES}'",
@@ -96,20 +93,14 @@ class MTaxonConcept < ActiveRecord::Base
       WHEN change_type_name = 'DELETION' THEN 3
       END
     SQL
+  has_many :current_additions, :foreign_key => :taxon_concept_id,
+    :class_name => MListingChange,
+    :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'",
+    :order => 'effective_at DESC, species_listing_name ASC'
   has_many :current_cites_additions, :foreign_key => :taxon_concept_id,
     :class_name => MListingChange,
     :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'" +
       " AND designation_name = '#{Designation::CITES}'",
-    :order => 'effective_at DESC, species_listing_name ASC'
-  has_many :current_eu_additions, :foreign_key => :taxon_concept_id,
-    :class_name => MListingChange,
-    :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'" +
-      " AND designation_name = '#{Designation::EU}'",
-    :order => 'effective_at DESC, species_listing_name ASC'
-   has_many :current_cms_additions, :foreign_key => :taxon_concept_id,
-    :class_name => MListingChange,
-    :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'" +
-      " AND designation_name = '#{Designation::CMS}'",
     :order => 'effective_at DESC, species_listing_name ASC'
   scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
   scope :by_cms_taxonomy, where(:taxonomy_is_cites_eu => false)
@@ -205,10 +196,12 @@ class MTaxonConcept < ActiveRecord::Base
     return (cites_listing_updated_at ? cites_listing_updated_at > 8.year.ago : false)
   end
 
+  # the methods below are for checklist downloads only and a bad idea as well
+
   ['en', 'es', 'fr'].each do |lng|
     ["hash_full_note_#{lng.downcase}", "full_note_#{lng.downcase}", "short_note_#{lng.downcase}"].each do |method_name|
       define_method(method_name) do
-        current_listing_changes.map do |lc|
+        current_cites_additions.map do |lc|
           note = lc.send(method_name)
           note && "Appendix #{lc.species_listing_name}:" + note || ''
         end.join("\n")
@@ -228,12 +221,6 @@ class MTaxonConcept < ActiveRecord::Base
 
   def current_parties_full_names
     CountryDictionary.instance.get_names_by_ids(current_parties_ids).compact
-  end
-
-  # returns the current listing changes
-  # used only for CITES Checklist atm, therefore a designation filter is applied
-  def current_additions
-    current_cites_additions
   end
 
 end

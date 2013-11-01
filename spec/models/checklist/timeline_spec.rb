@@ -14,7 +14,9 @@ describe Checklist::Timeline do
         :effective_at => '1975-06-07',
         :is_current => false
       )
-      Sapi.rebuild(:except => [:taxonomy])
+      eu
+      cms_designation
+      Sapi.rebuild
       MTaxonConcept.find(tc.id)
     }
     let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
@@ -74,7 +76,9 @@ describe Checklist::Timeline do
         :listing_change => lc4,
         :is_party => true
       )
-      Sapi.rebuild(:except => [:taxonomy])
+      eu
+      cms_designation
+      Sapi.rebuild
       MTaxonConcept.find(tc.id)
     }
     let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
@@ -103,7 +107,9 @@ describe Checklist::Timeline do
         :effective_at => '1975-06-08',
         :is_current => true
       )
-      Sapi.rebuild(:except => [:taxonomy])
+      eu
+      cms_designation
+      Sapi.rebuild
       MTaxonConcept.find(tc.id)
     }
     let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
@@ -126,7 +132,9 @@ describe Checklist::Timeline do
         :effective_at => '1975-06-08',
         :is_current => true
       )
-      Sapi.rebuild(:except => [:taxonomy])
+      eu
+      cms_designation
+      Sapi.rebuild
       MTaxonConcept.find(tc.id)
     }
     let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}

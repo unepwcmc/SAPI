@@ -1,14 +1,12 @@
 class Api::V1::TaxonConceptsController < ApplicationController
-  caches_action :index, :cache_path => Proc.new { |c| c.params }
-  cache_sweeper :taxon_concept_sweeper
 
   def index
     @search = Species::Search.new(params)
-    @taxon_concepts = @search.results.page(params[:page]).per(params[:per_page] || 100)
+    @taxon_concepts = @search.cached_results
     render :json => @taxon_concepts,
       :each_serializer => Species::TaxonConceptSerializer,
       :meta => {
-        :total => @search.results.count,
+        :total => @search.cached_total_cnt,
         :higher_taxa_headers => Checklist::HigherTaxaInjector.new(@taxon_concepts).run_summary,
         :page => params[:page]
       }  

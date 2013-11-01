@@ -6,9 +6,9 @@ module Checklist::Json::IndexContent
       :each_serializer => Checklist::IndexTaxonConceptSerializer,
       :authors => @authors,
       :synonyms => @synonyms,
-      :english_names => @english_names,
-      :spanish_names => @spanish_names,
-      :french_names => @french_names
+      :english_names => @english_common_names,
+      :spanish_names => @spanish_common_names,
+      :french_names => @french_common_names
     ).to_json    
   end
 

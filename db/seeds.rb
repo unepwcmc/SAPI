@@ -373,3 +373,61 @@ Trade::InclusionValidationRule.create(
   :valid_values_view => 'valid_appendix_view',
   :run_order => 3
 )
+Trade::SpeciesNameAppendixYearValidationRule.create(
+  :column_names => ['species_name', 'appendix', 'year'],
+  :valid_values_view => 'valid_species_name_appendix_year_mview',
+  :run_order => 4,
+  :is_primary => false
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['term_code', 'unit_code'],
+  :valid_values_view => 'valid_term_unit_view',
+  :run_order => 4,
+  :is_primary => false
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['term_code', 'purpose_code'],
+  :valid_values_view => 'valid_term_purpose_view',
+  :run_order => 4,
+  :is_primary => false
+)
+Trade::InclusionValidationRule.create(
+  :column_names => ['species_name', 'term_code'],
+  :valid_values_view => 'valid_taxon_concept_term_view',
+  :run_order => 4,
+  :is_primary => false
+)
+Trade::InclusionValidationRule.create(
+  :scope => {
+    :source_code => 'W'
+  },
+  :column_names => ['species_name', 'country_of_origin'],
+  :valid_values_view => 'valid_species_name_country_of_origin_view',
+  :run_order => 4,
+  :is_primary => false
+)
+Trade::PovInclusionValidationRule.create(
+  :scope => {
+    :source_code => 'W', :country_of_origin_blank => true
+  },
+  :column_names => ['species_name', 'exporter'],
+  :valid_values_view => 'valid_species_name_exporter_view',
+  :run_order => 4,
+  :is_primary => false
+)
+Trade::PovDistinctValuesValidationRule.create(
+  :column_names => ['exporter', 'country_of_origin'],
+  :run_order => 4,
+  :is_primary => false
+)
+Trade::PovDistinctValuesValidationRule.create(
+  :column_names => ['exporter', 'importer'],
+  :run_order => 4,
+  :is_primary => false
+)
+
+Trade::TaxonConceptSourceValidationRule.create(
+  :column_names => ['species_name', 'source_code'],
+  :run_order => 4,
+  :is_primary => false
+)

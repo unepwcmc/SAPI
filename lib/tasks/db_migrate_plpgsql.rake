@@ -24,20 +24,18 @@ namespace :db do
         ActiveRecord::Base.connection.execute(File.read(file))
       end
     end
-    desc "Rebuild all materialized views"
-    task :rebuild_all => [:rebuild_taxon_concepts_mview, :rebuild_listing_changes_mview]
-    desc "Rebuild taxon concepts materialized view"
-    task :rebuild_taxon_concepts_mview => [:migrate] do
-      Sapi.rebuild(:only => [:taxon_concepts_mview], :disable_triggers => false)
-    end
-    desc "Rebuild listing changes materialized view"
-    task :rebuild_listing_changes_mview => [:migrate] do
-      Sapi.rebuild(:only => [:listing_changes_mview], :disable_triggers => false)
+    desc "Rebuild all computed values"
+    task :rebuild => [:migrate] do
+      Sapi.rebuild
     end
   end
   task :migrate do
     Rake::Task['db:migrate:views'].invoke
     Rake::Task['db:migrate:mviews'].invoke
     Rake::Task['db:migrate:plpgsql'].invoke
+  end
+  desc "Drop sandboxes in progress"
+  task :drop_sandboxes => :environment do
+    Trade::AnnualReportUpload.where(:is_done => false).delete_all
   end
 end

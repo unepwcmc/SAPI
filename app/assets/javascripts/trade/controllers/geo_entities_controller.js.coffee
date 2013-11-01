@@ -1,2 +1,11 @@
 Trade.GeoEntitiesController = Ember.ArrayController.extend
-  content:  null
+  content: null
+  loaded: false
+
+  contentObserver: ( ->
+    @set('loaded', true)
+  ).observes("content.@each.didLoad")
+
+  load: ->
+    unless @get('loaded')
+      @set('content', Trade.GeoEntity.find({geo_entity_type: 'COUNTRY'}))

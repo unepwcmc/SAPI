@@ -5,16 +5,19 @@
   <div class="w1">
     <div id="header">
       <strong class="logo"><a href="/species">Species+</a></strong>
+      <span class="beta" title="We will be launching the new Species Database soon. Please try it out and give us your feedback.">Beta</span>
       {{outlet downloads}}
       <ul id="nav">
         <li><a href="/about">About</a></li>
         <li class="add"><a href="#">Related Resources</a>
+        <div class="popup-holder">
           <ul>
-            <li><a href="http://checklist.cites.org">CITES Checklist</a></li>
+            <li><a href="http://checklist.cites.org">Checklist of CITES Species</a></li>
             <li><a href="http://www.unep-wcmc-apps.org/citestrade/expert_accord.cfm">CITES Trade Database</a></li>
             <li><a href="http://captivebreeding.unep-wcmc.org">EU Captive breeding database</a></li>
             <li><a href="http://elibrary.unep-wcmc.org/">EU E-library</a></li>
           </ul>
+        </div>
         </li>
         <li><a href="/terms-of-use">Terms of use</a></li>
       </ul>
@@ -23,6 +26,7 @@
     {{outlet main}}
 
   </div>
+  <div class="push"></div>
 </div>
 <div id="footer">
   <div class="holder">
@@ -33,11 +37,7 @@
       <li><a href="http://ec.europa.eu/environment/cites/home_en.htm"><img src="/assets/species/logo-EU.png" alt="EU logo" width="65" height="44" /></a></li>
     </ul>
     <div class="power-by">
-      <strong class="title">Powered by</strong>
-      <ul>
-        <li><a href="http://www.unep-wcmc.org"><img src="/assets/species/logo-UNEP.png" alt="image description" width="37" height="43" /></a></li>
-        <li><a href="http://www.unep-wcmc.org"><img src="/assets/species/logo-WCMC.png" alt="image description" width="43" height="44" /></a></li>
-      </ul>
+    <a href="http://www.unep-wcmc.org"><img src="/assets/species/powered_by.png" alt="Powered by logo" width="66" height="44" /></a>
     </div>
   </div>
 </div>

@@ -10,8 +10,12 @@ module Sapi
         :on => 'taxon_concepts (parent_id)'
       },
       {
-        :name => 'index_taxon_concepts_on_full_name',
+        :name => 'index_taxon_concepts_on_full_name_prefix',
         :on => 'taxon_concepts USING BTREE(UPPER(full_name) text_pattern_ops)'
+      },
+      {
+        :name => 'index_taxon_concepts_on_full_name',
+        :on => 'taxon_concepts (full_name)'
       },
       {
         :name => 'index_listing_changes_on_annotation_id',
@@ -24,6 +28,14 @@ module Sapi
       {
         :name => 'index_listing_changes_on_parent_id',
         :on => 'listing_changes (parent_id)'
+      },
+      {
+        :name => 'index_listing_changes_on_taxon_concept_id',
+        :on => 'listing_changes (taxon_concept_id)'
+      },
+      {
+        :name => 'index_listing_changes_on_inclusion_taxon_concept_id',
+        :on => 'listing_changes (inclusion_taxon_concept_id)'
       },
       {
         :name => 'index_listing_distributions_on_geo_entity_id',

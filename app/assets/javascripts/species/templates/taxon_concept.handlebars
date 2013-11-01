@@ -6,30 +6,31 @@
     </div>
   {{/if}}
   <div class="heading-holder">
-    <h1>{{fullName}} <strong>{{authorYear}}</strong></h1>
+    <h1>{{fullName}}</h1>
+    <h2>{{authorYear}}</h2>
     <ul class="list">
       <li>
-      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound mTaxonConcept.phylum_name}}"
-        {{action 'searchFor' mTaxonConcept.phylum_name}}>
-          {{mTaxonConcept.phylum_name}}
+      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound phylumName}}"
+        {{action 'searchFor' phylumName}}>
+          {{phylumName}}
         </a>
       </li>
       <li>
-      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound mTaxonConcept.class_name}}"
-        {{action 'searchFor' mTaxonConcept.class_name}}>
-          {{mTaxonConcept.class_name}}
+      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound className}}"
+        {{action 'searchFor' className}}>
+          {{className}}
         </a>
       </li>
       <li>
-      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound mTaxonConcept.order_name}}"
-        {{action 'searchFor' mTaxonConcept.order_name}}>
-          {{mTaxonConcept.order_name}}
+      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound orderName}}"
+        {{action 'searchFor' orderName}}>
+          {{orderName}}
         </a>
       </li>
       <li>
-      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound mTaxonConcept.family_name}}"
-        {{action 'searchFor' mTaxonConcept.family_name}}>
-          {{mTaxonConcept.family_name}}
+      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound familyName}}"
+        {{action 'searchFor' familyName}}>
+          {{familyName}}
         </a>
       </li>
     </ul>
@@ -38,11 +39,11 @@
     <li>{{#linkTo 'taxon_concept.legal'}}LEGAL{{/linkTo}}
       <ul>
         {{#unless isCms }}
-          <li><a href="#cites_listings" class="scroll-to">CITES Listing</a></li>
+          <li class="first"><a href="#cites_listings" class="scroll-to">CITES Listing</a></li>
           <li><a href="#cites_quotas" class="scroll-to">CITES Quotas</a></li>
           <li><a href="#cites_suspensions" class="scroll-to">CITES Suspensions</a></li>
           <li><a href="#eu_listings" class="scroll-to">EU Listing</a></li>
-          <li><a href="#eu_decisions" class="scroll-to">EU Decisions</a></li>
+          <li class="last"><a href="#eu_decisions" class="scroll-to">EU Decisions</a></li>
         {{/unless}}
       </ul>
     </li>

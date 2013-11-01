@@ -2,6 +2,7 @@
 #
 # Table name: trade_sandbox_template
 #
+#  id                :integer          not null, primary key
 #  appendix          :string(255)
 #  species_name      :string(255)
 #  term_code         :string(255)
@@ -15,7 +16,7 @@
 #  source_code       :string(255)
 #  year              :string(255)
 #  import_permit     :string(255)
-#  id                :integer          not null, primary key
+#  reported_appendix :string
 #
 
 class Trade::SandboxTemplate < ActiveRecord::Base
@@ -29,16 +30,80 @@ class Trade::SandboxTemplate < ActiveRecord::Base
   IMPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER
   EXPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER - ['import_permit']
 
+  # Dynamically define AR class for table_name
+  # (unless one exists already)
+  def self.ar_klass(table_name)
+    klass_name = table_name.camelize
+    begin
+      "Trade::#{klass_name}".constantize
+    rescue NameError
+      klass = Class.new(ActiveRecord::Base) do
+        self.table_name = table_name
+        include ActiveModel::ForbiddenAttributesProtection
+        attr_accessible :appendix,
+          :species_name,
+          :term_code,
+          :quantity,
+          :unit_code,
+          :trading_partner,
+          :country_of_origin,
+          :import_permit,
+          :export_permit,
+          :origin_permit,
+          :purpose_code,
+          :source_code,
+          :year
+      end
+      Trade.const_set(klass_name, klass)
+    end
+  end
+
   private
-  def self.create_stmt(target_table_name)
+  def self.create_table_stmt(target_table_name)
     sql = <<-SQL
-      CREATE TABLE #{target_table_name} () INHERITS (#{table_name})
+      CREATE TABLE #{target_table_name} (PRIMARY KEY(id))
+      INHERITS (#{table_name})
+    SQL
+  end
+
+  def self.create_indexes_stmt(target_table_name)
+    sql = <<-SQL
+      CREATE INDEX ON #{target_table_name} (squish_null(trading_partner));
+      CREATE INDEX ON #{target_table_name} (squish_null(term_code));
+      CREATE INDEX ON #{target_table_name} (squish_null(species_name));
+      CREATE INDEX ON #{target_table_name} (squish_null(appendix));
+      CREATE INDEX ON #{target_table_name} (squish_null(quantity));
+      CREATE INDEX ON #{target_table_name} (squish_null(source_code));
+      CREATE INDEX ON #{target_table_name} (squish_null(purpose_code));
+      CREATE INDEX ON #{target_table_name} (squish_null(unit_code));
+      CREATE INDEX ON #{target_table_name} (squish_null(country_of_origin));
+    SQL
+  end
+
+  def self.create_view_stmt(target_table_name, idx)
+    sql = <<-SQL
+      CREATE VIEW #{target_table_name}_view AS
+      SELECT aru.point_of_view,
+      CASE
+        WHEN aru.point_of_view = 'E'
+        THEN geo_entities.iso_code2
+        ELSE trading_partner
+      END AS exporter,
+      CASE
+        WHEN aru.point_of_view = 'E'
+        THEN trading_partner
+        ELSE geo_entities.iso_code2 
+      END AS importer,
+      #{target_table_name}.*
+      FROM #{target_table_name}
+      JOIN trade_annual_report_uploads aru ON aru.id = #{idx}
+      JOIN geo_entities ON geo_entities.id = aru.trading_country_id
     SQL
   end
 
   def self.drop_stmt(target_table_name)
     sql = <<-SQL
-      DROP TABLE #{target_table_name}
+      DROP TABLE #{target_table_name} CASCADE
     SQL
   end
 
@@ -48,10 +113,15 @@ class Trade::SandboxTemplate < ActiveRecord::Base
       FROM ?
       WITH DELIMITER ','
       ENCODING 'utf-8'
-      CSV HEADER
+      CSV HEADER;
     PSQL
-    sanitize_sql_array([
-                       sql, csv_file_path
-    ])
+    sanitize_sql_array([sql, csv_file_path])
+  end
+
+  def self.duplicate_column_stmt target_table_name, origin_col, destiny_col, data_type="varchar"
+    sql = <<-SQL
+      UPDATE #{target_table_name}
+      SET #{destiny_col} = #{origin_col};
+    SQL
   end
 end

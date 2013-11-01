@@ -16,10 +16,11 @@
 
 require 'csv_column_headers_validator'
 class Trade::AnnualReportUpload < ActiveRecord::Base
-  attr_accessible :number_of_rows, :csv_source_file, :trading_country_id, :point_of_view
+  include ActiveModel::ForbiddenAttributesProtection
+  attr_accessible :csv_source_file, :trading_country_id, :point_of_view
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
   belongs_to :trading_country, :class_name => GeoEntity, :foreign_key => :trading_country_id
-  validates :csv_source_file, :csv_column_headers => true
+  validates :csv_source_file, :csv_column_headers => true, :on => :create
 
   def copy_to_sandbox
     sandbox.copy
@@ -38,14 +39,25 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     sandbox.shipments
   end
 
+  def update_attributes_and_sandbox(attributes)
+    Trade::AnnualReportUpload.transaction do
+      update_sandbox(attributes.delete(:sandbox_shipments))
+      update_attributes(attributes)
+    end
+  end
+
+  def update_sandbox(shipments)
+    return true if is_done
+    sandbox.shipments= shipments
+  end
+
   def validation_errors
-      return [] if is_done
-      @validation_errors = []
-      validation_rules = Trade::ValidationRule.order(:run_order)
-      validation_rules.each do |vr|
-        @validation_errors << vr.validation_errors(self)
-      end
-      @validation_errors.flatten
+    return [] if is_done
+    run_primary_validations
+    if (@validation_errors.count == 0)
+      run_secondary_validations
+    end
+    @validation_errors
   end
 
   def to_jq_upload
@@ -66,6 +78,8 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
 
   #TODO: this method needs error checking
   def submit
+    run_primary_validations
+    return false unless @validation_errors.count == 0
     sandbox.submit_permits
     sandbox.submit_shipments
     #TODO probably would be good to wrap in transaction
@@ -86,6 +100,28 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
 
     #flag as submitted
     update_attribute(:is_done, true)
+  end
+
+  private
+  # Expects a relation object
+  def run_validations(validation_rules)
+    validation_errors = []
+    validation_rules.order(:run_order).each do |vr|
+      validation_errors << vr.validation_errors(self)
+    end
+    validation_errors.flatten
+  end
+
+  def run_primary_validations
+    @validation_errors = run_validations(
+      Trade::ValidationRule.where(:is_primary => true)
+    )
+  end
+
+  def run_secondary_validations
+    @validation_errors += run_validations(
+      Trade::ValidationRule.where(:is_primary => false)
+    )
   end
 
 end

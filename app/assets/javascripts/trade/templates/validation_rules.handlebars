@@ -2,9 +2,11 @@
 <thead>
   <th>Type</th>
   <th>Column names</th>
+  <th>Scope</th>
   <th>Valid values view</th>
   <th>Format RE</th>
   <th>Run order</th>
+  <th>Is primary</th>
 </thead>
 <tbody>
 
@@ -18,9 +20,17 @@
       {{/each}}
       </ul>
     </td>
+    <td>
+      <ul>
+      {{#each scopePart in scope}}
+        <li>{{scopePart}}</li>
+      {{/each}}
+      </ul>
+    </td>
     <td>{{validValuesView}}</td>
     <td>{{formatRe}}</td>
     <td>{{runOrder}}</td>
+    <td>{{isPrimary}}</td>
   </tr>
   {{/each}}
 </tbody>

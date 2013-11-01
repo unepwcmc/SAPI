@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.13'
+gem 'rails', '3.2.15'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -13,6 +13,7 @@ gem 'oj' #optimised JSON (picked by multi_json)
 gem 'nokogiri'
 gem 'inherited_resources'
 gem 'traco'
+gem 'strong_parameters'
 
 gem 'sidekiq'
 gem 'sidekiq-status'
@@ -20,8 +21,9 @@ gem 'sidekiq-status'
 gem 'whenever', :require => false
 
 gem 'ember-rails'
-gem 'ember-source', '1.0.0.rc6' # or the version you need
+gem 'ember-source', '1.0.0', :tag => "v1.0.0-beta.2" # or the version you need
 gem 'jquery-rails', '2.1.4' #do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
+gem 'jquery-mousewheel-rails'
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'kaminari'
 gem 'select2-rails'
@@ -62,7 +64,7 @@ end
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
 group :staging, :production do
-  gem 'exception_notification', '=2.6.1', :require => 'exception_notifier'
+  gem 'exception_notification', '~>4.0'
   gem 'newrelic_rpm', '>=3.5.5'
 end
 
@@ -80,6 +82,7 @@ group :development do
   # Deploy with Capistrano
   gem 'capistrano'
   gem 'capistrano-ext'
+  gem 'rvm-capistrano'
   gem 'brightbox', '>=2.3.9'
   gem 'rack-cors', :require => 'rack/cors'
   gem 'quiet_assets'
@@ -90,11 +93,12 @@ end
 group :test, :development do
   gem "rspec-rails"
   gem "json_spec"
-  gem "database_cleaner"
+  gem "database_cleaner", ">=1.2.0"
   gem "timecop"
 end
 
 group :test do
+  gem "codeclimate-test-reporter", require: nil
   gem "factory_girl_rails", "~> 4.0"
   gem 'simplecov', :require => false
   gem 'coveralls', :require => false

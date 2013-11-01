@@ -1,10 +1,17 @@
 a.legal-links {
   cursor: pointer;
-	background: url(/assets/species/sep01.png) repeat-x 0 100%;
+	border-bottom: 1px dotted #666;
 }
 
 a.legal-links:hover {
   text-decoration: none;
+  color: #7CA8C6;
+  border-bottom: 1px dotted #7CA8C6;
+  -webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-ms-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
 }
 
 #eu_decisions .link-holder {
@@ -57,9 +64,8 @@ a.legal-links:hover {
 #full-note-legal {
 	width: 590px;
 	margin-left: -295px;
-	position: fixed;
+	position: absolute;
 	left: 50%;
-  top: 25%;
 	background: #f5f5f7;
 	-webkit-border-radius: 12px;
 	border-radius: 12px;

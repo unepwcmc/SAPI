@@ -9,6 +9,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{fancyhdr}
 \usepackage{xcolor}
+\usepackage{eso-pic}
 
 \DeclareUnicodeCharacter{00A0}{~}
 
@@ -36,13 +37,36 @@
     \fbox{\color{currentcolor}#2}}%
 }
 
-\includepdf[pages={-}]{../../public/latex/static_index.pdf}
+\newcommand\AtPageLowerRight[1]{
+  \AtPageUpperLeft{%
+    \put(
+      \LenToUnit{0.73\paperwidth},
+      \LenToUnit{-0.99\paperheight}
+    ){#1}
+  }%
+}
+\rmfamily
+\AddToShipoutPictureFG*{
+  \AtPageLowerRight{
+    \begin{LARGE}
+      \hyperlink{contentstart}{
+        \textbf{
+          \textcolor{white}{Skip Introduction}
+        }
+      }
+    \end{LARGE}
+  }
+}
+
+\includepdf[pages=1]{../../public/latex/static_index.pdf}
+\includepdf[pages=2-]{../../public/latex/static_index.pdf}
 \rmfamily
 \raggedright
 \leftskip 0.1in
 \parindent -0.2in
 
-\rmfamily
+
+\hypertarget{contentstart}{}
 \include{_index}
 
 \end{document}

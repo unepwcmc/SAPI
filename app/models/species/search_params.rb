@@ -13,11 +13,13 @@ class Species::SearchParams < Hash
         params[:geo_entity_scope] ? params[:geo_entity_scope].to_sym : nil,
       #filtering options
       :taxon_concept_query =>
-        params[:taxon_concept_query] ? params[:taxon_concept_query].upcase.chomp : nil,
+        params[:taxon_concept_query] ? params[:taxon_concept_query].upcase.strip : nil,
       :geo_entities => params[:geo_entities_ids].blank? ? [] : params[:geo_entities_ids],
       :higher_taxa_ids => params[:higher_taxa_ids] ? params[:higher_taxa_ids] : nil,
       :ranks => params[:ranks] ? 
-        Rank.dict & params[:ranks].map(&:upcase) : [Rank::SPECIES]
+        Rank.dict & params[:ranks].map(&:upcase) : [Rank::SPECIES],
+      :page => params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
+      :per_page => params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 25
     }
     unless [:cites_eu, :cms].include? sanitized_params[:taxonomy]
       sanitized_params[:taxonomy] = :cites_eu

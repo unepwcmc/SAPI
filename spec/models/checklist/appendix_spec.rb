@@ -10,8 +10,7 @@ describe Checklist do
         @checklist = Checklist::Checklist.new({
           :cites_appendices => ['I']
         })
-        @checklist.generate(0,100)
-        @taxon_concepts = @checklist.taxon_concepts
+        @taxon_concepts = @checklist.results
       end
       it "should return Cacatua goffiniana" do
         @taxon_concepts.select{ |e| e.full_name == @species1_2_1.full_name }.first.should_not be_nil

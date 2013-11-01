@@ -68,4 +68,21 @@ class CitesSuspension < TradeRestriction
   def end_date_formatted
     end_date ? end_date.strftime('%d/%m/%Y') : ''
   end
+
+  def self.search query
+    if query
+      where("UPPER(geo_entities.name_en) LIKE UPPER(:query)
+            OR UPPER(geo_entities.iso_code2) LIKE UPPER(:query)
+            OR trade_restrictions.start_date::text LIKE :query
+            OR trade_restrictions.end_date::text LIKE :query
+            OR UPPER(trade_restrictions.notes) LIKE UPPER(:query)
+            OR UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
+            OR UPPER(events.subtype) LIKE UPPER(:query)",
+            :query => "%#{query}%").
+      joins([:geo_entity, :start_notification,
+            :taxon_concept])
+    else
+      scoped
+    end
+  end
 end

@@ -1,30 +1,26 @@
 Trade.AnnualReportUploadFieldView = Ember.TextField.extend
-    type: 'file'
-    attributeBindings: ['name', 'controller']
+  type: 'file'
+  attributeBindings: ['name', 'controller']
 
-    didInsertElement: ()->
-      @.$().fileupload
-          dataType: 'json'
+  didInsertElement: ()->
+    controller = @get('parentView.controller')
+    @.$().fileupload
+      dataType: 'json'
 
-          add: (e, data) ->
-             $("input[type=submit]").attr("disabled", null)
-                .click( (e) ->
-                    e.preventDefault()
-                    data.submit()
-                )
+      add: (e, data) ->
+        $("input[type=submit]").attr("disabled", null)
+          .click( (e) ->
+              e.preventDefault()
+              $('#upload-message').text('Uploading...')
+              data.submit()
+          )
 
-          done: (e, data) =>
-            $.each data.result.files, (index, file) =>
-              if file.id != undefined
-                aru = Trade.AnnualReportUpload.find(file.id)
-                @get('controller').send(
-                  'transitionToRoute',
-                  'annual_report_upload',
-                  aru
-                )
-              else
-                @get('controller').send(
-                  'transitionToRoute',
-                  'annual_report_uploads'
-                )
-              $('#upload-message').text(file.error)
+      done: (e, data) =>
+        $.each data.result.files, (index, file) =>
+          if file.id != undefined
+            $('#upload-message').text('Upload finished')
+            aru = Trade.AnnualReportUpload.find(file.id)
+            controller.send('transitionToReportUpload', aru)
+          else
+            controller.send('transitionToReportUploads')
+          $('#upload-message').text(file.error)

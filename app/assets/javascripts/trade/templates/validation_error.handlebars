@@ -1,4 +1,14 @@
-<tr>
-  <td>{{errorMessage}}</td>
-  <td><button {{action showMatchingRecords this}}>{{errorCount}}</button></td>
-</tr>
+<div class="row-fluid">
+  <div class="span2">
+    {{#if isPrimary}}
+      <span class="label label-important">PRIMARY</span>
+    {{else}}
+      <span class="label label-warning">SECONDARY</span>
+    {{/if}}
+  </div>
+  <div class="span10">
+    <a {{action setFiltersFromErrorSelector errorSelector}}>
+      {{errorMessage}} ({{errorCount}})
+    </a>
+  </div>
+</div>

@@ -9,6 +9,9 @@ describe Checklist::Pdf::History do
     tc = create_cites_eu_family(
       :taxon_name => create(:taxon_name, :scientific_name => 'Foobaridae')
     )
+    eu
+    cms_designation
+    Sapi.rebuild
     MTaxonConcept.find(tc.id)
   }
   let(:genus_tc){
@@ -16,6 +19,9 @@ describe Checklist::Pdf::History do
       :parent_id => family_tc.id,
       :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus')
     )
+    eu
+    cms_designation
+    Sapi.rebuild
     MTaxonConcept.find(tc.id)
   }
   describe :higher_taxon_name do
@@ -31,7 +37,9 @@ describe Checklist::Pdf::History do
             :language => en
           )
         )
-        Sapi.rebuild(:except => [:taxonomy])
+        eu
+        cms_designation
+        Sapi.rebuild
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name, :show_english => true) }
       specify{
@@ -48,7 +56,9 @@ describe Checklist::Pdf::History do
           :taxon_concept_id => tc.id,
           :is_current => true
         )
-        Sapi.rebuild(:except => [:taxonomy])
+        eu
+        cms_designation
+        Sapi.rebuild
         MListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
@@ -63,7 +73,9 @@ describe Checklist::Pdf::History do
           :taxon_concept_id => tc.id,
           :is_current => true
         )
-        Sapi.rebuild(:except => [:taxonomy])
+        eu
+        cms_designation
+        Sapi.rebuild
         MListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
@@ -90,7 +102,9 @@ describe Checklist::Pdf::History do
           :annotation_id => annotation.id,
           :is_current => true
         )
-        Sapi.rebuild(:except => [:taxonomy])
+        eu
+        cms_designation
+        Sapi.rebuild
         MListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new({}) }

@@ -13,12 +13,7 @@ class Admin::EuOpinionsController < Admin::SimpleCrudController
       }
       failure.html {
         load_lib_objects
-        render 'new'
-      }
-
-      success.js { render 'create' }
-      failure.js {
-        load_lib_objects
+        load_search
         render 'new'
       }
     end
@@ -30,7 +25,10 @@ class Admin::EuOpinionsController < Admin::SimpleCrudController
         redirect_to admin_taxon_concept_eu_opinions_url(params[:taxon_concept_id]),
         :notice => 'Operation successful'
       }
-      failure.html { render 'create' }
+      failure.html {
+        load_search
+        render 'new'
+      }
     end
   end
 
@@ -40,7 +38,9 @@ class Admin::EuOpinionsController < Admin::SimpleCrudController
     @terms = Term.order(:code)
     @sources = Source.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+      where(:is_current => true,
+            :geo_entity_types => {:name => [GeoEntityType::COUNTRY,
+                                            GeoEntityType::TERRITORY]})
     @eu_regulations = EuRegulation.order("effective_at DESC")
     @eu_decision_types = EuDecisionType.opinions
   end

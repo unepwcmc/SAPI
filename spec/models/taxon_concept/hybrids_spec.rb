@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 describe TaxonConcept do
-  let(:hybrid_relationship_type){
+  before(:all) do
     create(
       :taxon_relationship_type,
       :name => TaxonRelationshipType::HAS_HYBRID,
       :is_intertaxonomic => false,
       :is_bidirectional => false
     )
-  }
+  end
   describe :create do
     let(:parent){
       create_cites_eu_genus(

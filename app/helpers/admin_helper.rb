@@ -1,5 +1,20 @@
 #encoding: utf-8
 module AdminHelper
+
+  def ancestors_path(taxon_concept)
+    Rank.where(
+      ["taxonomic_position < ?", taxon_concept.rank.taxonomic_position]
+      ).order(:taxonomic_position).map do |r|
+      name = taxon_concept.data["#{r.name.downcase}_name"]
+      id = taxon_concept.data["#{r.name.downcase}_id"]
+      if name && id
+        link_to(name, params.merge(:taxon_concept_id => id), :title => r.name)
+      else
+        nil
+      end
+    end.compact.join(' > ').html_safe
+  end   
+
   def edit_icon
     '<i class="icon-pencil" title="Edit"></i>'.html_safe
   end
@@ -137,4 +152,5 @@ module AdminHelper
       render :partial => 'admin/simple_crud/simple_search'
     end
   end
+
 end

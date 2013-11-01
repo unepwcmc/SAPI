@@ -150,4 +150,9 @@ module TaxonConceptHelper
       :resource => 'common_name', :save_and_reopen => true
     ){ '' }
   end
+
+  def excluded_taxon_concepts_tooltip(obj)
+    obj.excluded_taxon_concepts.
+      map(&:full_name).join(', ')
+  end
 end

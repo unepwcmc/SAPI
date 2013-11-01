@@ -10,6 +10,13 @@ describe Admin::DistributionsController do
       response.should be_success
       response.should render_template('new')
     end
+    it "assigns @geo_entities (country and territory) with two objects" do
+      geo_entity_type_t = create(:geo_entity_type, :name => "TERRITORY")
+      territory = create(:geo_entity, :geo_entity_type_id => geo_entity_type_t.id)
+      country = create(:geo_entity)
+      xhr :get, :new, :taxon_concept_id => @taxon_concept.id
+      assigns(:geo_entities).size.should == 2
+    end
     it "assigns the distribution variable" do
       xhr :get, :new, :taxon_concept_id => @taxon_concept.id
       assigns(:distribution).should_not be_nil
@@ -49,15 +56,22 @@ describe Admin::DistributionsController do
 
   describe "XHR GET edit" do
     let(:distribution) { create(:distribution, :taxon_concept_id => @taxon_concept.id) }
-    it "renders the edit template" do
+    it "renders the new template" do
       xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
         :id => distribution.id
-      response.should render_template('edit')
+      response.should render_template('new')
     end
     it "assigns the distribution variable" do
       xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
         :id => distribution.id
       assigns(:distribution).should_not be_nil
+    end
+    it "assigns @geo_entities (country and territory) with two objects" do
+      geo_entity_type_t = create(:geo_entity_type, :name => "TERRITORY")
+      territory = create(:geo_entity, :geo_entity_type_id => geo_entity_type_t.id)
+      xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
+        :id => distribution.id
+      assigns(:geo_entities).size.should == 2
     end
   end
 

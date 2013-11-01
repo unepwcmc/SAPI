@@ -10,19 +10,19 @@ describe Checklist do
   context "when taxonomic order" do
     context("Plantae") do
       before(:all) do
-        @checklist = Checklist::Checklist.new({:output_layout => :taxonomic})
-        @checklist.generate(0, 100)
+        @checklist = Checklist::Checklist.new({:output_layout => :taxonomic, :per_page => 100})
+        @checklist.generate
         @taxon_concepts = @checklist.plantae
       end
       it "should include Agave (Agavaceae) before Panax (Araliaceae)" do
-        @taxon_concepts.index{ |tc| tc.full_name == 'Agave' }.should <
-          @taxon_concepts.index{ |tc| tc.full_name == 'Panax' }
+        @taxon_concepts.index{ |tc| tc.full_name == 'Agave parviflora' }.should <
+          @taxon_concepts.index{ |tc| tc.full_name == 'Panax ginseng' }
       end
     end
     context("Animalia") do
       before(:all) do
-        @checklist = Checklist::Checklist.new({:output_layout => :taxonomic})
-        @checklist.generate(0, 100)
+        @checklist = Checklist::Checklist.new({:output_layout => :taxonomic, :per_page => 100})
+        @checklist.generate
         @taxon_concepts = @checklist.animalia
       end
       it "should include birds after last mammal" do
@@ -55,8 +55,8 @@ describe Checklist do
   end
   context "when alphabetical order" do
     before(:all) do
-      @checklist = Checklist::Checklist.new({:output_layout => :alphabetical})
-      @taxon_concepts = @checklist.taxon_concepts_rel
+      @checklist = Checklist::Checklist.new({:output_layout => :alphabetical, :per_page => 100})
+      @taxon_concepts = @checklist.results
     end
     it "should include Falconiformes (Aves) before Psittaciformes (Aves)" do
       @taxon_concepts.index{ |tc| tc.full_name == 'Falconiformes' }.should <

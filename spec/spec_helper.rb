@@ -1,13 +1,12 @@
+require 'codeclimate-test-reporter' if ENV['CI']
 require 'simplecov'
 require 'coveralls'
 
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-  SimpleCov::Formatter::HTMLFormatter,
-  Coveralls::SimpleCov::Formatter
-]
-SimpleCov.start 'rails' do
- use_merging true
-end
+formatters = [Coveralls::SimpleCov::Formatter, SimpleCov::Formatter::HTMLFormatter]
+formatters.push CodeClimate::TestReporter::Formatter if ENV['CI']
+
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[*formatters]
+SimpleCov.start 'rails'
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
@@ -46,18 +45,24 @@ RSpec.configure do |config|
   config.include JsonSpec::Helpers
   config.include SapiSpec::Helpers
 
-  config.before(:suite) do
+  config.before(:all) do
+    #Rails.cache.clear
+    DatabaseCleaner.clean_with(:deletion, {:cache_tables => false})
+  end
+
+  config.before(:each) do
     DatabaseCleaner.strategy = :transaction
   end
 
-  config.before(:all) do
-    DatabaseCleaner.clean_with(:truncation)
+  config.before(:each, :drops_tables => true) do
+    DatabaseCleaner.strategy = :deletion, {:cache_tables => false}
+    ActiveRecord::Base.connection.execute('SELECT * FROM drop_trade_sandboxes()')
   end
 
   config.before(:each) do
     DatabaseCleaner.start
   end
-  
+
   config.after(:each) do
     DatabaseCleaner.clean
   end
@@ -65,8 +70,8 @@ RSpec.configure do |config|
 end
 
 def build_attributes(*args)
-  FactoryGirl.build(*args).attributes.delete_if do |k, v| 
-    ["id", "created_at", "updated_at"].member?(k)
+  FactoryGirl.build(*args).attributes.delete_if do |k, v|
+    ["id", "created_at", "updated_at", "touched_at"].member?(k)
   end
 end
 

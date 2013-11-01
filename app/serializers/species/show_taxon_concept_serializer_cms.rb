@@ -1,6 +1,6 @@
 class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializer
-  cached
 
+  attributes :cms_listing
   has_many :cms_listing_changes, :serializer => Species::ListingChangeSerializer,
     :key => :cms_listings
   has_many :cms_instruments, :serializer => Species::CmsInstrumentsSerializer
@@ -37,10 +37,6 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
               listing_changes_mview.full_note_en,
               listing_changes_mview.short_note_en,
               listing_changes_mview.auto_note,
-              listing_changes_mview.change_type_name,
-              listing_changes_mview.hash_full_note_en,
-              listing_changes_mview.hash_ann_parent_symbol,
-              listing_changes_mview.hash_ann_symbol,
               listing_changes_mview.inclusion_taxon_concept_id,
               listing_changes_mview.inherited_full_note_en,
               listing_changes_mview.inherited_short_note_en,
@@ -55,18 +51,17 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
       ).
       order(<<-SQL
           effective_at DESC,
-          CASE
-            WHEN change_type_name = 'ADDITION' THEN 3
-            WHEN change_type_name = 'RESERVATION' THEN 2
-            WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
-            WHEN change_type_name = 'DELETION' THEN 0
-          END,
           subspecies_info DESC
         SQL
-      )
+      ).all
   end
 
   def cms_instruments
     object.taxon_instruments.includes(:instrument)
   end
+
+  def cms_listing
+    object.listing && object.listing['cms_listing']
+  end
+
 end
