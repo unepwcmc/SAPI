@@ -15,10 +15,6 @@ SAPI::Application.routes.draw do
       resources :sources, :only => [:index]
       resources :purposes, :only => [:index]
     end
-    resources :terms, :only => [:index]
-    resources :sources, :only => [:index]
-    resources :purposes, :only => [:index]
-    resources :units, :only => [:index]
     resources :languages, :only => [:index]
     resources :users, :only => [:index]
     resources :designations, :only => [:index]
