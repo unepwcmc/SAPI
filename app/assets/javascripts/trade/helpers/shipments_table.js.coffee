@@ -46,7 +46,7 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
     'appendix', 'reportedAppendix', 'speciesName', 'reportedSpeciesName',
     'termCode', 'quantity', 'unitCode', 'importer', 'exporter',
     'reporterType', 'countryOfOrigin', 'purposeCode', 'sourceCode',
-    'year', 'importPermit', 'exportPermit', 'originPermit'
+    'year', 'importPermitNumber', 'exportPermitNumber', 'countryOfOriginPermitNumber'
   ]
   columnProperties:
     appendix:
@@ -99,13 +99,13 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
     year:
       width: 40
       header: 'Year'
-    importPermit:
+    importPermitNumber:
       width: 150
       header: 'Import Permit'
-    exportPermit:
+    exportPermitNumber:
       width: 150
       header: 'Export Permit'
-    originPermit:
+    countryOfOriginPermitNumber:
       width: 150
       header: 'Origin Permit'
   columns: Ember.computed ->

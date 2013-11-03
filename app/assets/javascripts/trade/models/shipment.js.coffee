@@ -11,9 +11,9 @@ Trade.Shipment = DS.Model.extend
   exporter: DS.belongsTo('Trade.GeoEntity')
   reporterType: DS.attr('string')
   countryOfOrigin: DS.belongsTo('Trade.GeoEntity')
-  importPermit: DS.belongsTo('Trade.Permit')
-  exportPermits: DS.hasMany('Trade.Permit')
-  countryOfOriginPermit: DS.belongsTo('Trade.Permit')
+  importPermitNumber: DS.attr('string')
+  exportPermitNumber: DS.attr('string')
+  countryOfOriginPermitNumber: DS.attr('string')
   purpose: DS.belongsTo('Trade.Purpose')
   source: DS.belongsTo('Trade.Source')
   year: DS.attr('string')
@@ -21,7 +21,4 @@ Trade.Shipment = DS.Model.extend
 
 Trade.Adapter.map('Trade.Shipment', {
   taxonConcept: { embedded: 'load' }
-  importPermit: { embedded: 'load' }
-  exportPermits: { embedded: 'load' }
-  countryOfOriginPermit: { embedded: 'load' }
 })
