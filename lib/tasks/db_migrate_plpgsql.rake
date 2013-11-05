@@ -25,7 +25,7 @@ namespace :db do
       end
     end
     desc "Rebuild all computed values"
-    task :rebuild => [:migrate] do
+    task :rebuild => [:migrate, :"downloads:cache:clear:listings"] do
       Sapi.rebuild
     end
   end
