@@ -50,20 +50,10 @@ module DownloadsCache
     clear_dirs(['eu_decisions'])
   end
 
-  # keeps 100 most recently used downloads
-  def self.rotate_all
-    DOWNLOAD_DIRS.each do |dir|
-      # Sort download files by modified time descending
-      sorted_files = Dir["#{Rails.root}/public/downloads/#{dir}/*"].sort_by { |f| !test("M", f) }
-
-      files_to_delete = sorted_files[101,-1]
-
-      unless files_to_delete.nil?
-        files_to_delete.each do |file|
-          File.delete file
-        end
-      end
-    end
+  def self.update_all
+    clear_all
+    update_checklist_downloads
+    update_species_downloads
   end
 
   def self.update_checklist_downloads
