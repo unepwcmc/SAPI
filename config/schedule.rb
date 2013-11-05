@@ -5,5 +5,5 @@ every :day, :at => '2:42am' do
 end
 
 every :day, :at => '4:42am' do
-  rake "downloads:cache:update_all"
+  rake "downloads:cache:update"
 end

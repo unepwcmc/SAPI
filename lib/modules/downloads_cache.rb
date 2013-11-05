@@ -26,13 +26,8 @@ module DownloadsCache
   end
 
   # for admin purposes
-  def self.clear_all
+  def self.clear
     clear_dirs(DOWNLOAD_DIRS)
-  end
-
-  # cleared before Sapi.rebuild
-  def self.clear_listings
-    clear_dirs(LISTINGS_DOWNLOAD_DIRS)
   end
 
   # cleared after destroy
@@ -50,8 +45,8 @@ module DownloadsCache
     clear_dirs(['eu_decisions'])
   end
 
-  def self.update_all
-    clear_all
+  def self.update
+    clear
     update_checklist_downloads
     update_species_downloads
   end
