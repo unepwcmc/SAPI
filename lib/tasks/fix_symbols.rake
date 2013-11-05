@@ -14,7 +14,6 @@ namespace :import do
 
   desc 'Fix symbols in Annotations'
   task :fix_annotations_symbols => :environment do
-    Sapi.disable_triggers
     CSV.foreach('lib/files/ascii_symbols_utf8.csv', :quote_char => 'h') do |row|
       puts "############################# Cleaning Annotations  of ( #{row[0]} => #{row[1]}) #############################"
       count = Annotation.where('short_note_en LIKE :sym OR full_note_en LIKE :sym', :sym => "%#{row[0]}%").count
@@ -25,12 +24,10 @@ namespace :import do
         o.save
       end
     end
-    Sapi.enable_triggers
   end
 
   desc 'Fix symbols in Common Names'
   task :fix_common_names_symbols => :environment do
-    Sapi.disable_triggers
     CSV.foreach('lib/files/ascii_symbols_utf8.csv', :quote_char => 'h') do |row|
       puts "############################# Cleaning Common Names  of ( #{row[0]} => #{row[1]}) #############################"
       count = CommonName.where('name Like ?', "%#{row[0]}%").count
@@ -40,12 +37,10 @@ namespace :import do
         o.save
       end
     end
-    Sapi.enable_triggers
   end
 
   desc 'Fix symbols in Taxon Concepts'
   task :fix_taxon_concepts_symbols => :environment do
-    Sapi.disable_triggers
     CSV.foreach('lib/files/ascii_symbols_utf8.csv', :quote_char => 'h') do |row|
       puts "############################# Cleaning Taxon Concept of ( #{row[0]} => #{row[1]}) #############################"
       count = TaxonConcept.where('author_year Like ?', "%#{row[0]}%").count
@@ -55,12 +50,10 @@ namespace :import do
         o.save
       end
     end
-    Sapi.enable_triggers
   end
 
   desc 'Fix symbols in Geo Entities'
   task :fix_geo_entities_symbols => :environment do
-    Sapi.disable_triggers
     CSV.foreach('lib/files/ascii_symbols_utf8.csv', :quote_char => 'h') do |row|
       puts "############################# Cleaning Geo Entityes  of ( #{row[0]} => #{row[1]})  #############################"
       count = GeoEntity.where('name_en Like ?', "%#{row[0]}%").count
@@ -70,12 +63,10 @@ namespace :import do
         o.save
       end
     end
-    Sapi.enable_triggers
   end
 
   desc 'Fix symbols in References'
   task :fix_references_symbols => :environment do
-    Sapi.disable_triggers
     CSV.foreach('lib/files/ascii_symbols_utf8.csv', :quote_char => 'h') do |row|
       puts "############################# Cleaning References  of ( #{row[0]} => #{row[1]}) #############################"
       count = Reference.where('citation Like ?', "%#{row[0]}%").count
@@ -85,18 +76,15 @@ namespace :import do
         o.save
       end
     end
-    Sapi.enable_triggers
   end
 
   desc 'Add italics to references'
   task :add_italics_to_references => :environment do
-    Sapi.disable_triggers
     puts "Adding italics into references"
     puts "#{Reference.where('citation like ?', "_%_").count} records affected"
     Reference.where('citation like ? ', "_%_").each do |o|
       o.citation = o.citation.gsub(/_([^_]+)_/, "<i>\\1</i>")
       o.save
     end
-    Sapi.enable_triggers
   end
 end
