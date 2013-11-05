@@ -1,3 +1,6 @@
+### 0.3.2 (unreleased)
+* fixes downloads cache issues
+
 ### 0.3.1 (2013-10-31)
 * Trade Admin: shipment validation bugfixes
 * Species Admin: references bugfixes, caching issues
