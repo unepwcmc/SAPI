@@ -14,7 +14,7 @@
       {{#each listing in currentCmsListings}}
         <tr class="current">
           <td>
-            <div class="cms_appendix {{unbound listing.species_listing_name}}">
+            <div class="cms_appendix a_{{unbound listing.species_listing_name}}">
               <span>{{listing.species_listing_name}}</span>
             </div>
           </td>
@@ -52,7 +52,7 @@
           {{#each listing in historicCmsListings}}
             <tr>
               <td>
-                <div class="cms_appendix {{unbound listing.species_listing_name}}">
+                <div class="cms_appendix a_{{unbound listing.species_listing_name}}">
                   <span>{{listing.species_listing_name}}</span>
                 </div>
               </td>
