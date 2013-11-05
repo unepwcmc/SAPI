@@ -47,16 +47,16 @@ module DownloadsCache
 
   def self.update
     clear
-    update_checklist_downloads
     update_species_downloads
+    update_checklist_downloads
   end
 
   def self.update_checklist_downloads
     puts "Updating CITES Checklist downloads"
     modules = [
       Checklist::Pdf,
-      Checklist::Json,
-      Checklist::Csv
+      Checklist::Csv,
+      Checklist::Json
     ]
 
     # full download parameters
