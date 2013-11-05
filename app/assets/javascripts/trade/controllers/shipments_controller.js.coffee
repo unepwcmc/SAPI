@@ -68,7 +68,13 @@ Trade.ShipmentsController = Ember.ArrayController.extend
 
   actions:
     saveChanges: () ->
+      # process deletes
+      @get('content').filterBy('_destroyed', true).forEach (shipment) ->
+        shipment.deleteRecord()
+        shipment.get("transaction").commit()
+      # process updates
       @get('store').commit()
+      Ember.run.sync()
 
     cancelChanges: () ->
       @get('content').forEach (shipment) ->

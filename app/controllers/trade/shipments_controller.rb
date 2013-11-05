@@ -26,6 +26,12 @@ class Trade::ShipmentsController < ApplicationController
     end
   end
 
+  def destroy
+    @shipment = Trade::Shipment.find(params[:id])
+    @shipment.destroy
+    render :json => nil, :status => :ok
+  end
+
 private
 
   def shipment_params
