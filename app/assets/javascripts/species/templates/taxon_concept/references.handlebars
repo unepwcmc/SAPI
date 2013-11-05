@@ -8,13 +8,13 @@
       {{/if}}
     </strong>
     {{#unless controllers.taxonConcept.standardReferences}}
-      <p class="empty">There is no 
+      <p class="empty">
         {{#if controllers.taxonConcept.isCms }}
-          CMS Reference
+          Information on CMS Standard References will be displayed once an automated web feed from the CMS species database has been implemented in March 2014.
         {{else}}
-          CITES Standard Reference
+          There is no CITES Standard Reference for this species.
         {{/if}}
-        for this species.</p>
+      </p>
     {{else}}
       <table summary="data table">
         <tbody>
