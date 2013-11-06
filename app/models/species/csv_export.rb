@@ -26,7 +26,7 @@ class Species::CsvExport
     @public_file_name = "#{resource_name}_#{ctime}.csv"
     [
       @file_name,
-      {:filename => @public_file_name, :type => 'text/csv'}
+      {:filename => public_file_name, :type => 'text/csv'}
     ]
   end
 
