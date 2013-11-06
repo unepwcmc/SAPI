@@ -27,6 +27,32 @@ describe Quota do
     @taxon_concept = create(:taxon_concept)
   end
 
+  describe :create do
+    context "downloads cache should be populated" do
+      before(:each) do
+        DownloadsCache.clear_quotas
+        create(:quota, :start_date => Time.utc(2013), :geo_entity => create(:geo_entity))
+        Quota.export('set' => 'current')
+      end
+      subject { Dir["#{DownloadsCache.quotas_path}/*"] }
+      specify { subject.should_not be_empty }
+    end
+  end
+
+  describe :destroy do
+    context "downloads cache should be cleared" do
+      before(:each) do
+        DownloadsCache.clear_quotas
+        q = create(:quota, :start_date => Time.utc(2013), :geo_entity => create(:geo_entity))
+        Quota.export('set' => 'current')
+        q.destroy
+        Quota.export('set' => 'current')
+      end
+      subject { Dir["#{DownloadsCache.quotas_path}/*"] }
+      specify { subject.should be_empty }
+    end
+  end
+
   context "validations" do
     describe :create do
       before(:all) do
@@ -38,7 +64,8 @@ describe Quota do
           build(
             :quota,
             :unit => @unit,
-            :taxon_concept => @taxon_concept
+            :taxon_concept => @taxon_concept,
+            :geo_entity => create(:geo_entity)
           )
         }
 
@@ -88,7 +115,7 @@ describe Quota do
         specify { quota.should have(1).error_on(:start_date) }
       end
 
-      context "doesn't save a quota without a unit" do
+      pending "doesn't save a quota without a unit" do
         let(:quota){
           build(
             :quota,

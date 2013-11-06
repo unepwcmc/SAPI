@@ -230,6 +230,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
       @get('store').commit()
       @transitionToRoute('annual_report_upload', @get('content'))
       @clearModifiedFlags()
+      @resetFilters()
 
     cancelChanges: () ->
       if (!@get('content').get('isSaving'))

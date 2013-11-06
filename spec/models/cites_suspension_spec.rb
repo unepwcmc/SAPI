@@ -194,4 +194,41 @@ describe CitesSuspension do
       end
     end
   end
+
+  describe :create do
+    context "downloads cache should be populated" do
+      before(:each) do
+        DownloadsCache.clear_cites_suspensions
+        create(
+          :cites_suspension,
+          :taxon_concept_id => nil,
+          :geo_entity_id => tanzania.id,
+          :start_notification => create_cites_suspension_notification
+        )
+        CitesSuspension.export('set' => 'current')
+      end
+      subject { Dir["#{DownloadsCache.cites_suspensions_path}/*"] }
+      specify { subject.should_not be_empty }
+    end
+  end
+
+  describe :destroy do
+    context "downloads cache should be cleared" do
+      before(:each) do
+        DownloadsCache.clear_cites_suspensions
+        s = create(
+          :cites_suspension,
+          :taxon_concept_id => nil,
+          :geo_entity_id => tanzania.id,
+          :start_notification => create_cites_suspension_notification
+        )
+        CitesSuspension.export('set' => 'current')
+        s.destroy
+        CitesSuspension.export('set' => 'current')
+      end
+      subject { Dir["#{DownloadsCache.cites_suspensions_path}/*"] }
+      specify { subject.should be_empty }
+    end
+  end
+
 end
