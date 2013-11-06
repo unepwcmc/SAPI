@@ -1,7 +1,7 @@
 DROP VIEW IF EXISTS taxon_concepts_names;
 CREATE VIEW taxon_concepts_names AS
 SELECT
-  id,
+  taxon_concepts.id,
   legacy_id,
   data->'kingdom_name' AS kingdom_name,
   data->'phylum_name' AS phylum_name,
@@ -13,5 +13,8 @@ SELECT
   full_name,
   author_year,
   data->'rank_name' AS rank_name,
-  name_status
-FROM taxon_concepts;
+  name_status,
+  taxonomic_position,
+  taxonomies.name AS taxonomy_name
+FROM taxon_concepts
+JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id;
