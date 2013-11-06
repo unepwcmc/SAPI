@@ -1,0 +1,77 @@
+<h1>Species+ Data Statistics</h1>
+
+<div class="row-fluid">
+  <div class="span4">
+    <h3>Core</h3>
+    <ul>
+      <% @stats[:core].each do |key, value| %>
+        <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
+      <% end %>
+    </ul>
+
+    <h3>Taxon Concepts</h3>
+    <ul>
+      <% @stats[:taxonomic].each do |key, value| %>
+        <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="span4">
+    <h3>Geographic Entities</h3>
+    <ul>
+      <% @stats[:geo].each do |key, value| %>
+        <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
+      <% end %>
+    </ul>
+    <h3>References</h3>
+    <ul>
+      <% @stats[:refs].each do |key, value| %>
+        <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="span4">
+    <h3>Trade</h3>
+    <ul>
+      <% @stats[:trade].each do |key, value| %>
+        <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
+      <% end %>
+    </ul>
+    <h3>Trade Restrictions</h3>
+    <ul>
+      <% @stats[:trade_restrictions].each do |key, value| %>
+        <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+<h3>CITES - EU</h3>
+<div class="row-fluid">
+  <div class="span6">
+    <h4>Animalia</h4>
+    <ul>
+      <% @stats[:cites_eu][:animalia].each do |key, value| %>
+        <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="span6">
+    <h4>Plantae</h4>
+    <ul>
+      <% @stats[:cites_eu][:plantae].each do |key, value| %>
+        <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="span12">
+    <h3>CMS</h3>
+    <h4>Animalia</h4>
+    <ul>
+      <% @stats[:cms].each do |key, value| %>
+        <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>

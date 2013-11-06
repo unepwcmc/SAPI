@@ -79,6 +79,7 @@ SAPI::Application.routes.draw do
     end
     match 'exports' => 'exports#index'
     match 'exports/download' => 'exports#download'
+    match 'stats' => 'statistics#index'
     root :to => 'taxon_concepts#index'
   end
 
