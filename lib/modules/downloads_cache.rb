@@ -30,6 +30,10 @@ module DownloadsCache
     clear_dirs(DOWNLOAD_DIRS)
   end
 
+  def self.clear_taxon_concepts_names
+    clear_dirs(['taxon_concepts_names'])
+  end
+
   # cleared after destroy
   def self.clear_quotas
     clear_dirs(['quotas'])

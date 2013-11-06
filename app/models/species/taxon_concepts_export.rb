@@ -12,9 +12,8 @@ class Species::TaxonConceptsExport
   end
 
   def file_name
-    last_updated_at = TaxonConcept.maximum('updated_at')
     @file_name ||= path + Digest::SHA1.hexdigest(
-      @filters.merge(:last_updated_at => last_updated_at).to_hash.symbolize_keys!.sort.to_s
+      @filters.to_hash.symbolize_keys!.sort.to_s
     ) + ".csv"
   end
 
@@ -32,7 +31,8 @@ class Species::TaxonConceptsExport
   end
 
   def query
-    TaxonConcept.select(sql_columns).from(table_name).order('taxonomic_position')
+    TaxonConcept.select(sql_columns).from(table_name).
+      order('name_status, taxonomic_position')
   end
 
   def table_name
