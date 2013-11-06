@@ -15,6 +15,7 @@ SELECT
   data->'rank_name' AS rank_name,
   name_status,
   taxonomic_position,
+  taxonomy_id,
   taxonomies.name AS taxonomy_name
 FROM taxon_concepts
 JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id;
