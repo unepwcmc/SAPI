@@ -1,8 +1,9 @@
-### 0.3.2 (unreleased)
+### 0.3.2 (2013-11-06)
 * fixes downloads cache issues
 * adds importer, exporter and reporter_type to shipments view
 * resets sandbox selection on save changes
 * saves reported species name
+* fixes CITES suspensions search
 
 ### 0.3.1 (2013-10-31)
 * Trade Admin: shipment validation bugfixes
