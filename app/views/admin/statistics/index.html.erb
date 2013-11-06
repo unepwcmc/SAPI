@@ -2,14 +2,14 @@
 
 <div class="row-fluid">
   <div class="span4">
-    <h3>Core</h3>
+    <h4>Core</h4>
     <ul>
       <% @stats[:core].each do |key, value| %>
         <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
       <% end %>
     </ul>
 
-    <h3>Taxon Concepts</h3>
+    <h4>Taxon Concepts</h4>
     <ul>
       <% @stats[:taxonomic].each do |key, value| %>
         <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
@@ -17,13 +17,13 @@
     </ul>
   </div>
   <div class="span4">
-    <h3>Geographic Entities</h3>
+    <h4>Geographic Entities</h4>
     <ul>
       <% @stats[:geo].each do |key, value| %>
         <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
       <% end %>
     </ul>
-    <h3>References</h3>
+    <h4>References</h4>
     <ul>
       <% @stats[:refs].each do |key, value| %>
         <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
@@ -31,13 +31,13 @@
     </ul>
   </div>
   <div class="span4">
-    <h3>Trade</h3>
+    <h4>Trade</h4>
     <ul>
       <% @stats[:trade].each do |key, value| %>
         <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
       <% end %>
     </ul>
-    <h3>Trade Restrictions</h3>
+    <h4>Trade Restrictions</h4>
     <ul>
       <% @stats[:trade_restrictions].each do |key, value| %>
         <li><strong><%= key.to_s.titleize %>:</strong> <%= value %></li>
