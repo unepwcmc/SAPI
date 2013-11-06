@@ -1,5 +1,5 @@
-DROP VIEW IF EXISTS taxon_concepts_names;
-CREATE VIEW taxon_concepts_names AS
+DROP VIEW IF EXISTS taxon_concepts_names_view;
+CREATE VIEW taxon_concepts_names_view AS
 SELECT
   taxon_concepts.id,
   legacy_id,

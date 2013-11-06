@@ -3,7 +3,7 @@ class Admin::ExportsController < ApplicationController
   def index; end
 
   def download
-    result = Species::TaxonConceptsExport.new(params[:filters]).export
+    result = Species::TaxonConceptsNamesExport.new(params[:filters]).export
     respond_to do |format|
       format.html {
         if result.is_a?(Array)

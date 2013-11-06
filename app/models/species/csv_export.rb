@@ -1,7 +1,7 @@
 require 'digest/sha1'
 require 'csv'
-class Species::TaxonConceptsExport
-  attr_reader :file_name, :public_file_name
+class Species::CsvExport
+  attr_reader :public_file_name
 
   def initialize(filters = {})
     @filters = filters || {}
@@ -31,32 +31,25 @@ class Species::TaxonConceptsExport
   end
 
   def query
-    TaxonConcept.select(sql_columns).from(table_name).
-      order('name_status, taxonomic_position')
-  end
-
-  def table_name
-    'taxon_concepts_names'
-  end
-
-  def sql_columns
-    columns = [
-      :id, :legacy_id, :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
-      :genus_name, :species_name, :full_name, :author_year, :rank_name, :name_status
-    ]
-  end
-
-  def csv_column_headers
-    headers = [
-      'Id', 'Legacy id', 'Kingdom', 'Phylum', 'Class', 'Order', 'Family',
-      'Genus', 'Species', 'Scientific Name', 'Author', 'Rank', 'Name status'
-    ]
+    raise "Needs to be implemented"
   end
 
 private
 
   def resource_name
-    "taxon_concepts_names"
+    raise "Needs to be implemented"
+  end
+
+  def table_name
+    raise "Needs to be implemented"
+  end
+
+  def sql_columns
+    raise "Needs to be implemented"
+  end
+
+  def csv_column_headers
+    raise "Needs to be implemented"
   end
 
   def to_csv
