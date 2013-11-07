@@ -102,6 +102,7 @@ namespace :import do
       {:code => 'TIS', :name_en => 'tissue cultures'},
       {:code => 'TRO', :name_en => 'trophies'},
       {:code => 'TUS', :name_en => 'tusks'},
+      {:code => 'UNS', :name_en => 'unspecified'},
       {:code => 'VEN', :name_en => 'veneer'},
       {:code => 'VNM', :name_en => 'venom'},
       {:code => 'WAL', :name_en => 'wallets'},
@@ -119,6 +120,7 @@ namespace :import do
       {:code => 'I', :name_en => 'Confiscations/seizures'},
       {:code => 'O', :name_en => 'Pre-Convention'},
       {:code => 'R', :name_en => 'Ranched'},
+      {:code => 'U', :name_en => 'Unknown'},
       {:code => 'W', :name_en => 'Wild'}
     ]
     sources.each{ |t| Source.create(t) }
@@ -176,7 +178,8 @@ namespace :import do
       {:code => 'SQD', :name_en => 'Square decimetres'},
       {:code => 'SQF', :name_en => 'Square feet'},
       {:code => 'SQM', :name_en => 'Square metres'},
-      {:code => 'TON', :name_en => 'Metric tons'}
+      {:code => 'TON', :name_en => 'Metric tons'},
+      {:code => 'YAR', :name_en => 'yards'}
     ]
     units.each{ |t| Unit.create(t) }
 
