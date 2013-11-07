@@ -94,6 +94,10 @@ tr.current_listing {
   }
 }
 
+span.author-year {
+  font-size: 11px;
+}
+
 #new-quota,
 #new-cites_suspension {
   &.modal {
@@ -110,6 +114,8 @@ ul.relationship_parts{
   float: left;
   margin-right: 15px;
 }
+
+/* Custom Modal sizes */
 #new-taxon_relationship{ /* modal window */
   width: 780px;
   margin-left: -390px; /* half the width */
@@ -129,10 +135,20 @@ ul.relationship_parts{
   margin-left: -425px;
 }
 
-ul.typeahead.dropdown-menu li {
-  font-size: 12px;
+#new-eu_opinion.modal, #new-eu_suspension.modal {
+  width: 900px;
+  margin-left: -450px;
 }
 
-span.author-year {
-  font-size: 11px;
+#admin-new-taxon_concept_reference-form ul.typeahead.dropdown-menu, #admin-new-distribution-form ul.typeahead.dropdown-menu {
+  width: 650px;
+
+  li {
+    font-size: 12px;
+
+    a {
+      white-space: normal;
+    }
+  }
 }
+

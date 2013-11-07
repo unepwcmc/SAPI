@@ -3,8 +3,7 @@ namespace :import do
   desc 'Runs import tasks for cleaned files'
   task :cleaned => :environment do
     Sapi::drop_indexes
-    Sapi::disable_triggers
-    Rake::Task["db:seed"].invoke
+
     Rake::Task["import:species"].invoke(
       'lib/files/animals/animalia_taxa_utf8.csv',
       'lib/files/plants/plantae_taxa_utf8.csv'
@@ -98,13 +97,11 @@ namespace :import do
     Sapi::create_indexes
     Sapi::rebuild
 
-    Sapi::enable_triggers
-
     Rake::Task['import:stats'].invoke
   end
 
   desc 'Drops and reimports db'
-  task :redo => ["db:drop", "db:create", "db:migrate", "import:cleaned", "downloads:cache:clear"]
+  task :redo => ["db:drop", "db:create", "db:migrate", "db:seeds", "import:cleaned", "downloads:cache:clear"]
 
   desc 'Shows database summary stats'
   task :stats => :environment do
