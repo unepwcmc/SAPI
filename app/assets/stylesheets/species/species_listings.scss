@@ -4,7 +4,7 @@
 
   color: #fff;
 
-  .I &, &.I {
+  .a_I &, &.a_I {
     background: url(/assets/species/cms-appendix.png);
     background-position: 0px 0px;
     span {
@@ -13,7 +13,7 @@
     }
   }  
 
-  .II &, &.II {
+  .a_II &, &.a_II {
     background: url(/assets/species/cms-appendix.png);
     background-position: 0px 52px;
     span {
@@ -22,7 +22,7 @@
     }
   }
 
-  .nc &, .inactive &, &.nc, &.inactive {
+  .a_nc &, .inactive &, &.a_nc, &.inactive {
     background: url(/assets/species/cms-appendix.png);
     background-position: 0px 26px;
   }

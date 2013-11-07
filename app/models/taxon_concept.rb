@@ -236,7 +236,8 @@ class TaxonConcept < ActiveRecord::Base
     taxon_relationships.count == 0 &&
     children.count == 0 &&
     listing_changes.count == 0 &&
-    taxon_commons.count == 0
+    taxon_commons.count == 0 &&
+    taxon_instruments.count == 0
   end
 
   private

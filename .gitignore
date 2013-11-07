@@ -35,6 +35,7 @@
 /public/downloads/checklist/*.pdf
 /public/downloads/checklist/*.csv
 /public/downloads/checklist/*.json
+/public/downloads/taxon_concepts_names/*.csv
 /public/uploads/*
 
 # Ruby

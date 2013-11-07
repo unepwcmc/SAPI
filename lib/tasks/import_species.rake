@@ -108,27 +108,27 @@ def import_data_for kingdom, rank, synonyms=nil
         author_year, legacy_id, legacy_type, notes, name_status, data,
         created_at, updated_at
       )
-      SELECT * FROM to_be_inserted
-      WHERE NOT EXISTS (
-        SELECT to_be_inserted.taxon_name_id
-        FROM to_be_inserted
-        INNER JOIN taxon_concepts
-          ON
-            taxon_concepts.taxon_name_id = to_be_inserted.taxon_name_id
-            AND taxon_concepts.rank_id = to_be_inserted.rank_id
-            AND taxon_concepts.taxonomy_id = to_be_inserted.taxonomy_id
-            AND taxon_concepts.parent_id = to_be_inserted.parent_id
-            AND UPPER(taxon_concepts.name_status) = UPPER(to_be_inserted.name_status)
-            AND taxon_concepts.legacy_id = to_be_inserted.legacy_id
-            AND UPPER(taxon_concepts.legacy_type) = UPPER(to_be_inserted.legacy_type)
-            AND (
-              (taxon_concepts.data->'accepted_legacy_id')::INT IS NULL
-              OR (
-                (taxon_concepts.data->'accepted_legacy_id')::INT = (to_be_inserted.data->'accepted_legacy_id')::INT
-                AND UPPER(BTRIM(taxon_concepts.data->'accepted_rank')) = to_be_inserted.data->'accepted_rank'
-              )
+      SELECT *
+      FROM to_be_inserted
+      EXCEPT
+      SELECT to_be_inserted.*
+      FROM to_be_inserted
+      INNER JOIN taxon_concepts
+        ON
+          taxon_concepts.taxon_name_id = to_be_inserted.taxon_name_id
+          AND taxon_concepts.rank_id = to_be_inserted.rank_id
+          AND taxon_concepts.taxonomy_id = to_be_inserted.taxonomy_id
+          AND taxon_concepts.parent_id = to_be_inserted.parent_id
+          AND UPPER(taxon_concepts.name_status) = UPPER(to_be_inserted.name_status)
+          AND taxon_concepts.legacy_id = to_be_inserted.legacy_id
+          AND UPPER(taxon_concepts.legacy_type) = UPPER(to_be_inserted.legacy_type)
+          AND (
+            (taxon_concepts.data->'accepted_legacy_id')::INT IS NULL
+            OR (
+              (taxon_concepts.data->'accepted_legacy_id')::INT = (to_be_inserted.data->'accepted_legacy_id')::INT
+              AND UPPER(BTRIM(taxon_concepts.data->'accepted_rank')) = to_be_inserted.data->'accepted_rank'
             )
-      )
+          )
       RETURNING id;
     SQL
 

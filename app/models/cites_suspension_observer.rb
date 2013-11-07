@@ -16,6 +16,7 @@ class CitesSuspensionObserver < ActiveRecord::Observer
     else
       touch_taxa_with_applicable_distribution(cites_suspension)
     end
+    DownloadsCache.clear_cites_suspensions
   end
 
   def touch_taxa_with_applicable_distribution(cites_suspension)
