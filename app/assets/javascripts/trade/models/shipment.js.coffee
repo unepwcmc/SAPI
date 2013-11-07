@@ -25,6 +25,11 @@ Trade.Shipment = DS.Model.extend
   year: DS.attr('string')
   _destroyed: DS.attr('boolean')
 
+  taxonConceptIdDidChange: ( ->
+    if @get('taxonConceptId')
+      @set('taxonConcept', Trade.TaxonConcept.find(@get('taxonConceptId')))
+  ).observes('taxonConceptId')
+
 Trade.Adapter.map('Trade.Shipment', {
   taxonConcept: { embedded: 'load' }
 })
