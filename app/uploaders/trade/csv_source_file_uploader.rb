@@ -35,6 +35,22 @@ class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
   #   # do something
   # end
 
+  process :remove_blank_lines
+
+  def remove_blank_lines
+    cache_stored_file! if !cached?
+    directory = File.dirname( current_path )
+    tmp_path = File.join( directory, "tmpfile" )
+    require 'csv'
+    CSV.open(tmp_path, "wb") do |tmp_csv|
+      CSV.foreach(current_path) do |row|
+        tmp_csv << row unless row.compact.empty?
+      end
+    end
+    File.delete current_path
+    File.rename tmp_path, current_path
+  end
+
   # Create different versions of your uploaded files:
   # version :thumb do
   #   process :scale => [50, 50]

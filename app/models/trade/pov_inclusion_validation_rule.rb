@@ -17,6 +17,33 @@
 class Trade::PovInclusionValidationRule < Trade::InclusionValidationRule
 
   private
+
+  # Returns a hash with column values to be used to select invalid rows.
+  # e.g.
+  # {
+  #    :species_name => 'Loxodonta africana',
+  #    :term_code => 'CAV'
+  #
+  # }
+  # Expects a single grouped matching record.
+  # Renames 'exporter' / 'importer' to 'trading_partner'
+  def error_selector(matching_record, point_of_view)
+    res = {}
+    column_names.each do |cn|
+      if cn == 'exporter' && point_of_view == 'I'
+        res['trading_partner'] = matching_record.send(cn)
+      elsif cn == 'importer' && point_of_view == 'E'
+        res['trading_partner'] = matching_record.send(cn)
+      elsif !['importer', 'exporter'].include?(cn)
+        res[cn] = matching_record.send(cn)
+      end
+    end
+    sanitized_scope.map do |scn, val|
+      res[scn] = val
+    end
+    res
+  end
+
   # Difference from superclass: test on sandbox view rather than table
   # to allow for POV checks
   def matching_records_arel(table_name)

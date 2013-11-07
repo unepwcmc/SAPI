@@ -28,6 +28,32 @@ describe EuDecision do
     @taxon_concept = create(:taxon_concept)
   end
 
+  describe :create do
+    context "downloads cache should be populated" do
+      before(:each) do
+        DownloadsCache.clear_eu_decisions
+        create(:eu_decision, :start_date => Time.utc(2013))
+        EuDecision.export('set' => 'current', 'decision_types' => {})
+      end
+      subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
+      specify { subject.should_not be_empty }
+    end
+  end
+
+  describe :destroy do
+    context "downloads cache should be cleared" do
+      before(:each) do
+        DownloadsCache.clear_eu_decisions
+        d = create(:eu_decision, :start_date => Time.utc(2013))
+        EuDecision.export('set' => 'current', 'decision_types' => {})
+        d.destroy
+        EuDecision.export('set' => 'current', 'decision_types' => {})
+      end
+      subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
+      specify { subject.should be_empty }
+    end
+  end
+
   #describe :start_date do
   #  context 'change type with start_date' do
   #    let(:eu_decision) { create(:eu_decision, :start_date => Time.utc(2013)) }

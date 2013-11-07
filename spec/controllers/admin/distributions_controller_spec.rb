@@ -56,10 +56,10 @@ describe Admin::DistributionsController do
 
   describe "XHR GET edit" do
     let(:distribution) { create(:distribution, :taxon_concept_id => @taxon_concept.id) }
-    it "renders the edit template" do
+    it "renders the new template" do
       xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
         :id => distribution.id
-      response.should render_template('edit')
+      response.should render_template('new')
     end
     it "assigns the distribution variable" do
       xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,

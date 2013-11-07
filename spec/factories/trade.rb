@@ -22,6 +22,7 @@ FactoryGirl.define do
     end
     factory :species_name_appendix_year_validation_rule,
       :class => Trade::SpeciesNameAppendixYearValidationRule do
+      column_names ['species_name', 'appendix', 'year']
       valid_values_view 'valid_species_name_appendix_year_mview'
     end
     factory :pov_distinct_values_validation_rule,

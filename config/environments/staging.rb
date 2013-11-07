@@ -67,9 +67,12 @@ SAPI::Application.configure do
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   #Exception Notification
-  config.middleware.use ExceptionNotifier, :email_prefix => "[SAPI Exception] ",
-    :sender_address => %{"SAPI Exception Notifier" <no-reply@unep-wcmc.org>},
-    :exception_recipients => %w{simao.belchior@unep-wcmc.org agnieszka.figiel@unep-wcmc.org}
+  config.middleware.use ExceptionNotification::Rack,
+    :email => {
+      :email_prefix => "[SAPI STAGING] ",
+      :sender_address => %{"SAPI Exception Notifier" <no-reply@unep-wcmc.org>},
+      :exception_recipients => %w{simao.belchior@unep-wcmc.org agnieszka.figiel@unep-wcmc.org}
+    }
 
   config.ember.variant = :production
 end

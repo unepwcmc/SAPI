@@ -45,6 +45,10 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       specify{
         subject.validation_errors(@aru).size.should == 1
       }
+      specify{
+        ve = subject.validation_errors(@aru).first
+        ve.error_selector.should == {'species_name' => 'Pecari tajacu', 'source_code' => 'W', 'country_of_origin' => 'PL'}
+      }
     end
 
   end

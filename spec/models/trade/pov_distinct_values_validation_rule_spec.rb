@@ -43,7 +43,7 @@ describe Trade::PovDistinctValuesValidationRule, :drops_tables => true do
       @aru.save(:validate => false)
       @sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
     end
-    context 'exporter should not equal importer' do
+    context 'exporter should not equal importer (E)' do
       before(:each) do
         @sandbox_klass.create(:trading_partner => argentina.iso_code2)
         @sandbox_klass.create(:trading_partner => canada.iso_code2)
@@ -57,8 +57,34 @@ describe Trade::PovDistinctValuesValidationRule, :drops_tables => true do
       specify{
         subject.validation_errors(@aru).size.should == 1
       }
+      specify{
+        ve = subject.validation_errors(@aru).first
+        ve.error_selector.should == {'trading_partner' => canada.iso_code2}
+      }
     end
-
+    context 'exporter should not equal importer (I)' do
+      before(:each) do
+        @aru = build(:annual_report_upload, :point_of_view => 'I',
+          :trading_country_id => canada.id)
+        @aru.save(:validate => false)
+        @sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
+        @sandbox_klass.create(:trading_partner => argentina.iso_code2)
+        @sandbox_klass.create(:trading_partner => canada.iso_code2)
+      end
+      subject{
+        create(
+          :pov_distinct_values_validation_rule,
+          :column_names => ['exporter', 'importer']
+        )
+      }
+      specify{
+        subject.validation_errors(@aru).size.should == 1
+      }
+      specify{
+        ve = subject.validation_errors(@aru).first
+        ve.error_selector.should == {'trading_partner' => canada.iso_code2}
+      }
+    end
     context 'exporter should not equal country of origin' do
       before(:each) do
         @sandbox_klass.create(:country_of_origin => argentina.iso_code2)
@@ -72,6 +98,10 @@ describe Trade::PovDistinctValuesValidationRule, :drops_tables => true do
       }
       specify{
         subject.validation_errors(@aru).size.should == 1
+      }
+      specify{
+        ve = subject.validation_errors(@aru).first
+        ve.error_selector.should == {'country_of_origin' => canada.iso_code2}
       }
     end
   end
