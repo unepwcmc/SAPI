@@ -7,10 +7,16 @@ Trade.Shipment = DS.Model.extend
   term: DS.belongsTo('Trade.Term')
   quantity: DS.attr('string')
   unit: DS.belongsTo('Trade.Unit')
-  importer: DS.belongsTo('Trade.GeoEntity')
-  exporter: DS.belongsTo('Trade.GeoEntity')
+  importer: DS.belongsTo('Trade.GeoEntity', {
+    inverse: 'importedShipments'
+  })
+  exporter: DS.belongsTo('Trade.GeoEntity', {
+    inverse: 'exportedShipments'
+  })
   reporterType: DS.attr('string')
-  countryOfOrigin: DS.belongsTo('Trade.GeoEntity')
+  countryOfOrigin: DS.belongsTo('Trade.GeoEntity', {
+    inverse: 'countryOfOriginShipments'
+  })
   importPermitNumber: DS.attr('string')
   exportPermitNumber: DS.attr('string')
   countryOfOriginPermitNumber: DS.attr('string')
