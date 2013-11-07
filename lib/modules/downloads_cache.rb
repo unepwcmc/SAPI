@@ -30,6 +30,22 @@ module DownloadsCache
     clear_dirs(DOWNLOAD_DIRS)
   end
 
+  def self.clear_cites_listings
+    clear_dirs(['cites_listings'])
+  end
+
+  def self.clear_eu_listings
+    clear_dirs(['eu_listings'])
+  end
+
+  def self.clear_cms_listings
+    clear_dirs(['cms_listings'])
+  end
+
+  def self.clear_taxon_concepts_names
+    clear_dirs(['taxon_concepts_names'])
+  end
+
   # cleared after destroy
   def self.clear_quotas
     clear_dirs(['quotas'])

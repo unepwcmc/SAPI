@@ -26,3 +26,7 @@ body { padding-top: 40px; }
 .search-btn {
   vertical-align: top;
 }
+
+.container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-botton .container {
+  width: 970px;
+}
