@@ -201,13 +201,20 @@ higher_taxa = [
   :taxonomic_position => '1.1.3',
   :legacy_id => 23,
   :legacy_type => 'Animalia'
-},
+  },
   {
   :name => 'Sarcopterygii',
   :taxonomic_position => '1.1.7',
   :legacy_id => 24,
   :legacy_type => 'Animalia'
-}
+  },
+  {
+  :name => 'Cephalaspidomorphi',
+  :taxonomic_position => '1.1.8',
+  :legacy_id => 7,
+  :legacy_type => 'Animalia'
+  }
+
 ]
 },
   {
@@ -237,11 +244,17 @@ higher_taxa = [
   :legacy_type => 'Animalia',
   :sub_taxa => [
     {
-  :name => 'Holothuroidea',
-  :taxonomic_position => '1.2.1',
-  :legacy_id => 41,
-  :legacy_type => 'Animalia'
-}
+      :name => 'Holothuroidea',
+      :taxonomic_position => '1.2.1',
+      :legacy_id => 41,
+      :legacy_type => 'Animalia'
+    },
+    {
+      :name => 'Stelleroidea',
+      :taxonomic_position => '1.2.2',
+      :legacy_id => 26,
+      :legacy_type => 'Animalia'
+    }
 ]
 },
   {
