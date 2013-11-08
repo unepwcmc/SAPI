@@ -39,6 +39,6 @@
 Trade = Ember.Application.create({
   LOG_TRANSITIONS: true,
   customEvents: {
-    blur: 'blur' 
+    blur: 'blur'
   }
 });

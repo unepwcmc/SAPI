@@ -7,7 +7,7 @@ class Trade::ShipmentsController < ApplicationController
        :exporter, :importer, :country_of_origin, :purpose,
        :source, :term, :unit, :country_of_origin_permit,
        :import_permit, :export_permit, :taxon_concept
-      ]).order('year DESC').page(params[:page]).limit(PER_PAGE)
+      ]).order('year DESC').offset((params[:page].to_i - 1) * PER_PAGE).limit(PER_PAGE)
     render :json => @shipments,
       :each_serializer => Trade::ShipmentSerializer,
       :meta => {
