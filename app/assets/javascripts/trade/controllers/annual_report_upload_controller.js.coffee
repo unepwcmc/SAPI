@@ -208,7 +208,9 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
         .done( =>
           @set('sandboxShipmentsSubmitting', false)
         )
-        @transitionToRoute('shipments', {page: 1})
+        @transitionToRoute('shipments', {queryParams:
+          page: 1
+        })
 
     setFiltersFromErrorSelector: (errorSelector) ->
       @resetFilters()
