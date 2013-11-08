@@ -74,7 +74,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend
         shipment.get("transaction").commit()
       # process updates
       @get('store').commit()
-      Ember.run.sync()
+      @openShipmentsPage(@get('page'))
 
     cancelChanges: () ->
       @get('content').forEach (shipment) ->
