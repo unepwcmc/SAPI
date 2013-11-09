@@ -15,10 +15,18 @@ namespace :import do
 
       sql = <<-SQL
         INSERT INTO common_names(name, language_id, created_at, updated_at)
-        SELECT DISTINCT ON( BTRIM(UPPER(#{TMP_TABLE}.name)), languages.id) #{TMP_TABLE}.name,
-          languages.id, current_date, current_date
-        FROM #{TMP_TABLE}
-        INNER JOIN languages ON UPPER(#{TMP_TABLE}.language) = UPPER(languages.iso_code3);
+        SELECT subquery.*, NOW(), NOW()
+        FROM (
+          SELECT DISTINCT ON( BTRIM(UPPER(#{TMP_TABLE}.name)), languages.id) #{TMP_TABLE}.name,
+            languages.id
+          FROM #{TMP_TABLE}
+          INNER JOIN languages ON UPPER(#{TMP_TABLE}.language) = UPPER(languages.iso_code3)
+
+          EXCEPT
+
+          SELECT name, language_id
+          FROM common_names
+        ) AS subquery;
       SQL
       ActiveRecord::Base.connection.execute(sql)
 
@@ -28,18 +36,23 @@ namespace :import do
         sql = <<-SQL
 
           INSERT INTO taxon_commons(taxon_concept_id, common_name_id, created_at, updated_at)
-          SELECT DISTINCT taxon_concepts.id, common_names.id, current_date, current_date
+          SELECT subquery.*, NOW(), NOW()
+          FROM (
+            SELECT DISTINCT taxon_concepts.id, common_names.id
             FROM #{TMP_TABLE}
             INNER JOIN common_names ON UPPER(BTRIM(#{TMP_TABLE}.name)) = UPPER(common_names.name)
             INNER JOIN languages ON UPPER(#{TMP_TABLE}.language) = UPPER(languages.iso_code3)
             LEFT JOIN ranks ON UPPER(BTRIM(#{TMP_TABLE}.rank)) = UPPER(ranks.name)
-            LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = '#{kingdom}' AND taxon_concepts.rank_id = ranks.id
+            LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id
+              AND taxon_concepts.legacy_type = '#{kingdom}' AND taxon_concepts.rank_id = ranks.id
             LEFT JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
-            WHERE taxon_concepts.id IS NOT NULL AND NOT EXISTS (
-              SELECT id FROM taxon_commons
-              WHERE taxon_commons.taxon_concept_id = taxon_concepts.id AND
-                taxon_commons.common_name_id = common_names.id
-            ) AND taxonomies.id = #{taxonomy.id}
+            WHERE taxon_concepts.id IS NOT NULL AND taxonomies.id = #{taxonomy.id}
+
+            EXCEPT
+
+            SELECT taxon_concept_id, common_name_id
+            FROM taxon_commons
+          ) AS subquery
         SQL
         ActiveRecord::Base.connection.execute(sql)
       end
