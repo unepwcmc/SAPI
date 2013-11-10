@@ -14,6 +14,9 @@
       <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <%= stylesheet_link_tag    "species" %>
+    <script type="text/javascript">
+      ENV = {FEATURES: {'query-params' : true}};
+    </script>
     <%= javascript_include_tag "species" %>
     <%= csrf_meta_tags %>
   
