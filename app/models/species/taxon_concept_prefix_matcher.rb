@@ -9,7 +9,8 @@ class Species::TaxonConceptPrefixMatcher
   end
 
   def results
-    @query.limit(@options[:per_page]).all
+    @query.limit(@options[:per_page]).
+      offset(@options[:per_page] * (@options[:page] - 1)).all
   end
 
   def total_cnt

@@ -1,16 +1,33 @@
 Trade.ShipmentsController = Ember.ArrayController.extend
+  needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
+  currentShipment: null
   pages: null
   page: 1
+
+  shipmentsSaving: ( ->
+    @get('content').filterBy('isSaving', true).length > 0
+  ).property('content.@each.isSaving')
+
+  unsavedChanges: (->
+    @get('changedRowsCount') > 0
+  ).property('changedRowsCount')
+
+  changedRowsCount: (->
+    @get('content').filterBy('isDirty', true).length
+  ).property('content.@each.isDirty')
 
   setFilters: (filtersHash) ->
     @set('page', filtersHash.page)
 
   tableController: Ember.computed ->
     controller = Ember.get('Trade.ShipmentsTable.TableController').create()
-    controller.set 'shipments', @get('content')
+    controller.set('shipmentsController', @)
     controller
   .property('content')
+
+  allAppendixValues: ['I', 'II', 'III']
+  allReporterTypeValues: ['E', 'I']
 
   setPages: ->
     total = @get('content.meta.total')
@@ -48,3 +65,17 @@ Trade.ShipmentsController = Ember.ArrayController.extend
     @transitionToRoute('shipments', {
       page: page or 1
     })
+
+  actions:
+    saveChanges: () ->
+      # process deletes
+      @get('content').filterBy('_destroyed', true).forEach (shipment) ->
+        shipment.deleteRecord()
+      # process updates
+      @get('store').commit()
+      @openShipmentsPage(@get('page'))
+
+    cancelChanges: () ->
+      @get('content').forEach (shipment) ->
+        if (!shipment.get('isSaving'))
+          shipment.get('transaction').rollback()
