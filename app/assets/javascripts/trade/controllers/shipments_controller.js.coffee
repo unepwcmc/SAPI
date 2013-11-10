@@ -71,7 +71,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend
       # process deletes
       @get('content').filterBy('_destroyed', true).forEach (shipment) ->
         shipment.deleteRecord()
-        shipment.get("transaction").commit()
       # process updates
       @get('store').commit()
       @openShipmentsPage(@get('page'))
