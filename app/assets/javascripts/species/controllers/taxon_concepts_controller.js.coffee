@@ -17,17 +17,16 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner,
   ).property('content.meta')
 
   pages: ( ->
-    console.log(@get('content.meta'))
-    total = @get('content.meta.total')
+    total = parseInt(@get('content.meta.total'))
     if total
       Math.ceil(total / @perPage)
     else
       1
-  ).property("content.meta.total")
+  ).property("content.isLoaded")
 
   page: ( ->
-    @get('content.meta.page') || 1
-  ).property("content.meta.page")
+    parseInt(@get('content.meta.page')) || 1
+  ).property("content.isLoaded")
 
   showPageControls: ( ->
     if @get('pages') > 1 then return yes else return no
@@ -51,15 +50,12 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner,
       {taxon_concept_query: false, page: false}
     })
 
-  transitionToPage: (forward) ->
-    page = if forward
-      parseInt(@page) + 1
-    else
-      parseInt(@page) - 1
-    @get("controllers.search").openSearchPage undefined, page, @perPage
-
   actions:
     openTaxonPage: (taxonConceptId, redirected) ->
       @openTaxonPage(taxonConceptId, redirected)
 
+    nextPage: ->
+      @get("controllers.search").openSearchPage undefined, @get('page') + 1, @perPage
 
+    prevPage: ->
+      @get("controllers.search").openSearchPage undefined, @get('page') - 1, @perPage
