@@ -1,7 +1,6 @@
 require 'digest/sha1'
 require 'csv'
-class Species::ListingsExport
-  attr_reader :file_name, :public_file_name
+class Species::ListingsExport < Species::CsvExport
 
   def initialize(designation, filters)
     @designation = designation
@@ -18,31 +17,8 @@ class Species::ListingsExport
        SpeciesListing.where(
         :abbreviation => filters[:appendices],
         :designation_id => @designation.id
-      ).map(&:abbreviation)   
-    end  
-  end
-
-  def path 
-    @path ||= "public/downloads/#{resource_name}/"
-  end
-
-  def file_name
-    @file_name ||= path + Digest::SHA1.hexdigest(
-      @filters.to_hash.symbolize_keys!.sort.to_s
-    ) + ".csv"
-  end
-
-  def export
-    if !File.file?(file_name)
-      return false unless query.any?
-      to_csv
+      ).map(&:abbreviation)
     end
-    ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
-    @public_file_name = "#{resource_name}_#{ctime}.csv"
-    [
-      @file_name,
-      {:filename => @public_file_name, :type => 'text/csv'}
-    ]
   end
 
   def query
@@ -74,24 +50,6 @@ private
 
   def table_name
     "#{designation_name}_species_listing_mview"
-  end
-
-  def to_csv
-    limit = 5000
-    offset = 0
-    CSV.open(@file_name, 'wb') do |csv|
-      csv << csv_column_headers
-      until (records = query.limit(limit).offset(offset)).empty? do
-        records.to_a.each do |rec|
-          row = []
-          sql_columns.each do |c|
-            row << rec[c.to_sym]
-          end
-          csv << row
-        end
-        offset += limit
-      end
-    end
   end
 
 end

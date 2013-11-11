@@ -17,7 +17,9 @@ namespace :import do
         taxonomy = Taxonomy.find_by_name(taxonomy_name)
         sql = <<-SQL
         INSERT INTO distributions(taxon_concept_id, geo_entity_id, created_at, updated_at)
-        SELECT DISTINCT taxon_concepts.id, geo_entities.id, current_date, current_date
+        SELECT subquery.*, NOW(), NOW()
+        FROM (
+          SELECT DISTINCT taxon_concepts.id, geo_entities.id
           FROM #{TMP_TABLE}
           INNER JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(#{TMP_TABLE}.rank))
           INNER JOIN geo_entities ON geo_entities.iso_code2 = #{TMP_TABLE}.iso2 AND UPPER(geo_entities.legacy_type) = UPPER(BTRIM(geo_entity_type))
@@ -32,11 +34,12 @@ namespace :import do
                     "UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CMS%'"
                   end}
             AND taxonomies.id = #{taxonomy.id}
-            AND NOT EXISTS (
-              SELECT * FROM distributions
-              WHERE distributions.taxon_concept_id = taxon_concepts.id AND
-                distributions.geo_entity_id = geo_entities.id
-            )
+
+            EXCEPT
+
+            SELECT taxon_concept_id, geo_entity_id FROM distributions
+
+          ) AS subquery
           SQL
           #TODO do sth about those unknown distributions!
           ActiveRecord::Base.connection.execute(sql)
