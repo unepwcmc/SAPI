@@ -3,10 +3,3 @@ Species.TaxonConceptsView = Ember.View.extend
   didInsertElement: () ->
     $('body').addClass('inner')
     $(".search-block").addClass("search-results")
-
-  actions:
-    nextPage: ->
-      @controller.transitionToPage yes
-
-    prevPage: ->
-      @controller.transitionToPage no

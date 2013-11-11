@@ -2,10 +2,9 @@ Trade.ShipmentsController = Ember.ArrayController.extend
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
-  pages: null
-  page: 1
 
   shipmentsSaving: ( ->
+    return false unless @get('content.isLoaded')
     @get('content').filterBy('isSaving', true).length > 0
   ).property('content.@each.isSaving')
 
@@ -14,11 +13,9 @@ Trade.ShipmentsController = Ember.ArrayController.extend
   ).property('changedRowsCount')
 
   changedRowsCount: (->
+    return false unless @get('content.isLoaded')
     @get('content').filterBy('isDirty', true).length
   ).property('content.@each.isDirty')
-
-  setFilters: (filtersHash) ->
-    @set('page', filtersHash.page)
 
   tableController: Ember.computed ->
     controller = Ember.get('Trade.ShipmentsTable.TableController').create()
@@ -29,40 +26,37 @@ Trade.ShipmentsController = Ember.ArrayController.extend
   allAppendixValues: ['I', 'II', 'III']
   allReporterTypeValues: ['E', 'I']
 
-  setPages: ->
+  pages: ( ->
     total = @get('content.meta.total')
     if total
-      pages = Math.ceil( total / @get('content.meta.per_page'))
-      @set 'pages', pages
-      return pages
+      return Math.ceil( total / @get('content.meta.per_page'))
+    else
+      return 1
+  ).property('content.meta.total')
 
   page: ( ->
-    page = @get('content.meta.page') || 1
-    if page
-      @set('page', page)
-      return page
-  ).property('content.meta')
+    @get('content.meta.page') || 1
+  ).property('content.meta.page')
 
   showPrevPage: ( ->
     page = @get('page')
     if page > 1 then return yes else return no
-  ).property('content.meta')
+  ).property('page')
 
   showNextPage: ( ->
     page = @get('page')
-    if page < @setPages() then return yes else return no
-  ).property('content.meta')
+    if page < @get('pages') then return yes else return no
+  ).property('page')
 
   transitionToPage: (forward) ->
-    if forward
-      @set("page", parseInt(@page) + 1)
+    page = if forward
+      parseInt(@get('page')) + 1
     else
-      @set("page", parseInt(@page) - 1)
-    @openShipmentsPage @page
+      parseInt(@get('page')) - 1
+    @openShipmentsPage page
 
   openShipmentsPage: (page) ->
-    unless page then @set('page', 1)
-    @transitionToRoute('shipments', {
+    @transitionToRoute('shipments', {queryParams:
       page: page or 1
     })
 
