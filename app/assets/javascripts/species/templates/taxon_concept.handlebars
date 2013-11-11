@@ -10,25 +10,25 @@
     <h2>{{authorYear}}</h2>
     <ul class="list">
       <li>
-      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound phylumName}}"
+      <a href="/species/taxonConcepts?taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound phylumName}}"
         {{action 'searchFor' phylumName}}>
           {{phylumName}}
         </a>
       </li>
       <li>
-      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound className}}"
+      <a href="/species/taxonConcepts?taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound className}}"
         {{action 'searchFor' className}}>
           {{className}}
         </a>
       </li>
       <li>
-      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound orderName}}"
+      <a href="/species/taxonConcepts?taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound orderName}}"
         {{action 'searchFor' orderName}}>
           {{orderName}}
         </a>
       </li>
       <li>
-      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound familyName}}"
+      <a href="/species/taxonConcepts?taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound familyName}}"
         {{action 'searchFor' familyName}}>
           {{familyName}}
         </a>

@@ -65,7 +65,6 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
     else
       query = taxonFullName
     # Resetting the page property if no page value has been passed.
-    unless page then @get("controllers.taxonConcepts").set('page', 1)
     @transitionToRoute('taxonConcepts', {queryParams: {
       taxonomy: @get('taxonomy')
       taxon_concept_query: query
