@@ -260,7 +260,7 @@ namespace :import do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:references"
   end
 
-  desc 'Print db stats'  desc 'Run species import'
+  desc 'Print db stats'
   task :stats, :roles => [:db] do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:stats"
   end
