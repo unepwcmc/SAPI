@@ -242,22 +242,22 @@ namespace :import do
 
   desc 'Run species import'
   task :species, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:all:species"
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:species"
   end
 
   desc 'Run distributions import'
   task :distributions, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:all:distributions"
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:distributions"
   end
 
   desc 'Run common names import'
   task :common_names, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:all:common_names"
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:common_names"
   end
 
   desc 'Run references import'
   task :references, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:all:references"
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:references"
   end
 
   desc 'Print db stats'
