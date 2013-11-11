@@ -221,34 +221,37 @@ end
 after "deploy:setup", :setup_production_database_configuration
 
 namespace :seeds do
-
-  desc 'Runs all import tasks, including rake db:seed'
-  task :import_all, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:all"
-  end
   desc 'plants seeds, defined inside db/seeds.rb file'
   task :plant, :roles => [:db] do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} rake db:seed"
   end
+end
 
-  desc "Redo full import"
+namespace :import do
+
+  namespace :cleaned do
+    task :species, :roles => [:db] do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:cleaned:species"
+    end
+    task :distributions, :roles => [:db] do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:cleaned:distributions"
+    end
+    task :common_names, :roles => [:db] do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:cleaned:common_names"
+    end
+    task :references, :roles => [:db] do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:cleaned:references"
+    end
+  end
+
+  desc "Run full import"
+  task :cleaned, :roles => [:db] do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:cleaned"
+  end
+
+  desc "Redo full import (drop / create db, seeds, full import)"
   task :redo, :roles => [:db] do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:redo"
-  end
-
-  desc 'Imports data obtained from legacy database'
-  task :import, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:species && RAILS_ENV=#{rails_env} rake import:distributions:remove_table"
-  end
-
-  desc 'Import countries from legacy database'
-  task :import_countries, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:countries && RAILS_ENV=#{rails_env} rake import:distributions:remove_table"
-  end
-
-  desc 'Import distributions from legacy database'
-  task :import_distributions, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:distributions && RAILS_ENV=#{rails_env} rake import:distributions:remove_table"
   end
 end
 
