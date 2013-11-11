@@ -222,34 +222,49 @@ after "deploy:setup", :setup_production_database_configuration
 
 namespace :seeds do
 
-  desc 'Runs all import tasks, including rake db:seed'
-  task :import_all, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:all"
-  end
   desc 'plants seeds, defined inside db/seeds.rb file'
   task :plant, :roles => [:db] do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} rake db:seed"
   end
 
-  desc "Redo full import"
+end
+
+namespace :import do
+  desc "Drop db, plant seeds, run full import"
   task :redo, :roles => [:db] do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:redo"
   end
 
-  desc 'Imports data obtained from legacy database'
-  task :import, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:species && RAILS_ENV=#{rails_env} rake import:distributions:remove_table"
+  desc 'Run full import'
+  task :cleaned, :roles => [:db] do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:cleaned"
   end
 
-  desc 'Import countries from legacy database'
-  task :import_countries, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:countries && RAILS_ENV=#{rails_env} rake import:distributions:remove_table"
+  desc 'Run species import'
+  task :species, :roles => [:db] do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:species"
   end
 
-  desc 'Import distributions from legacy database'
-  task :import_distributions, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:distributions && RAILS_ENV=#{rails_env} rake import:distributions:remove_table"
+  desc 'Run distributions import'
+  task :species, :roles => [:db] do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:distributions"
   end
+
+  desc 'Run common names import'
+  task :common_names, :roles => [:db] do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:common_names"
+  end
+
+  desc 'Run references import'
+  task :references, :roles => [:db] do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:references"
+  end
+
+  desc 'Print db stats'  desc 'Run species import'
+  task :stats, :roles => [:db] do
+    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:stats"
+  end
+
 end
 
 namespace :downloads do

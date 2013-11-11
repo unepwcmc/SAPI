@@ -16,22 +16,26 @@ namespace :import do
       puts "There are #{ActiveRecord::Base.connection.execute('SELECT COUNT(*) FROM tags').first["count"]} tags in the tags table"
       puts "ADDING: preset_tags and tags"
       sql = <<-SQL
-        INSERT INTO preset_tags(model, created_at, updated_at, name)
-        SELECT DISTINCT 'Distribution', current_date, current_date, BTRIM(tmp.tag)
-        FROM #{TMP_TABLE}, (
-          SELECT DISTINCT regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag
-            FROM #{TMP_TABLE}
-            ) AS tmp
-        WHERE NOT EXISTS (
-          SELECT * FROM preset_tags
-          WHERE UPPER(preset_tags.name) = BTRIM(UPPER(tmp.tag)) AND
-          model = 'Distribution'
-        );
+        INSERT INTO preset_tags(model, name, created_at, updated_at)
+        SELECT subquery.*, NOW(), NOW()
+        FROM (
+          SELECT DISTINCT 'Distribution', BTRIM(tmp.tag)
+          FROM #{TMP_TABLE}, (
+            SELECT DISTINCT regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag
+              FROM #{TMP_TABLE}
+              ) AS tmp
+          EXCEPT
+
+          SELECT model, preset_tags.name
+          FROM preset_tags WHERE model = 'Distribution'
+        ) AS subquery;
+
         INSERT INTO tags(name)
         SELECT name FROM preset_tags
-        WHERE NOT EXISTS(
-          SELECT * FROM tags where tags.name = preset_tags.name
-        );
+
+        EXCEPT
+
+        SELECT name FROM tags;
       SQL
       ActiveRecord::Base.connection.execute(sql)
       puts "There are now #{PresetTag.where(:model => 'Distribution').count} distribution tags"
@@ -39,7 +43,7 @@ namespace :import do
 
       puts "There are #{ActiveRecord::Base.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
       [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
-        puts "Import #{taxonomy_name} common names"
+        puts "Import #{taxonomy_name} taggigns"
         taxonomy = Taxonomy.find_by_name(taxonomy_name)
         sql = <<-SQL
           WITH tmp AS (
@@ -54,25 +58,29 @@ namespace :import do
                }
           )
           INSERT INTO taggings(tag_id, taggable_id, taggable_type, context, created_at)
-          SELECT tags.id, distributions.id, 'Distribution', 'tags', current_date
-          FROM tmp
-          INNER JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(tmp.rank))
-          INNER JOIN geo_entity_types ON UPPER(geo_entity_types.name) = UPPER(BTRIM(tmp.geo_entity_type))
-          INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = tmp.legacy_id AND
-            taxon_concepts.legacy_type = '#{kingdom}' AND taxon_concepts.rank_id = ranks.id
-          INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(tmp.iso_code2)) AND
-            geo_entities.geo_entity_type_id = geo_entity_types.id
-          INNER JOIN distributions ON distributions.geo_entity_id = geo_entities.id AND
-            distributions.taxon_concept_id = taxon_concepts.id
-          INNER JOIN tags ON UPPER(tags.name) = UPPER(BTRIM(tmp.tag))
-          INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
-          WHERE NOT EXISTS (
-            SELECT * from taggings
-            WHERE taggings.tag_id = tags.id AND
-              taggings.taggable_id = distributions.id AND
-              taggings.taggable_type = 'Distribution' AND
-              taggings.context = 'tags'
-          ) AND taxonomies.id = #{taxonomy.id}
+          SELECT subquery.*, NOW()
+          FROM (
+            SELECT tags.id, distributions.id, 'Distribution', 'tags'
+            FROM tmp
+            INNER JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(tmp.rank))
+            INNER JOIN geo_entity_types ON UPPER(geo_entity_types.name) = UPPER(BTRIM(tmp.geo_entity_type))
+            INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = tmp.legacy_id AND
+              taxon_concepts.legacy_type = '#{kingdom}' AND taxon_concepts.rank_id = ranks.id
+            INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(tmp.iso_code2)) AND
+              geo_entities.geo_entity_type_id = geo_entity_types.id
+            INNER JOIN distributions ON distributions.geo_entity_id = geo_entities.id AND
+              distributions.taxon_concept_id = taxon_concepts.id
+            INNER JOIN tags ON UPPER(tags.name) = UPPER(BTRIM(tmp.tag))
+            INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
+            WHERE taxonomies.id = #{taxonomy.id}
+
+            EXCEPT
+
+            SELECT tag_id, taggable_id, taggable_type, context
+            FROM taggings
+            WHERE taggable_type = 'Distribution' AND context = 'tags'
+
+          ) AS subquery;
         SQL
         puts "ADDING: distribution taggings"
         ActiveRecord::Base.connection.execute(sql)
