@@ -43,7 +43,7 @@ namespace :import do
 
       puts "There are #{ActiveRecord::Base.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
       [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
-        puts "Import #{taxonomy_name} common names"
+        puts "Import #{taxonomy_name} taggigns"
         taxonomy = Taxonomy.find_by_name(taxonomy_name)
         sql = <<-SQL
           WITH tmp AS (
