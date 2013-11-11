@@ -1,3 +1,15 @@
+### 0.3.3 (unreleased)
+* fixes references management pages (distribution, taxonomic references
+  and standard references)
+* adds statistic pages to the management tool
+* adds taxon names download pages per Taxonomy
+* fixes small bugs
+* fixes import tasks that were using NOT EXISTS and not importing all
+  the necessary data
+* changes import script tasks to allow appending data from import files
+  that was not imported previously (instead of dropping all the data
+  before each import)
+
 ### 0.3.2 (2013-11-06)
 * fixes downloads cache issues
 * adds importer, exporter and reporter_type to shipments view

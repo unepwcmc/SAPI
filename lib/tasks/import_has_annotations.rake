@@ -14,17 +14,19 @@ namespace :import do
 
       sql = <<-SQL
         INSERT INTO annotations (symbol, parent_symbol, event_id, full_note_en, created_at, updated_at)
-        SELECT BTRIM(symbol), BTRIM(events.name), events.id, BTRIM(full_note_en), current_date, current_date
+        SELECT subquery.*, NOW(), NOW()
+        FROM (
+          SELECT BTRIM(symbol), BTRIM(events.name), events.id, BTRIM(full_note_en)
           FROM #{TMP_TABLE}
           INNER JOIN events ON events.legacy_id = #{TMP_TABLE}.event_legacy_id
             AND events.designation_id = #{designation_id}
-          WHERE  NOT EXISTS (
-            SELECT id
-            FROM annotations
-            WHERE UPPER(annotations.symbol) = BTRIM(UPPER(#{TMP_TABLE}.symbol))
-              AND UPPER(annotations.full_note_en) = BTRIM(UPPER(#{TMP_TABLE}.full_note_en))
-              AND annotations.event_id = events.id
-          )
+
+          EXCEPT
+
+          SELECT symbol, parent_symbol, event_id, full_note_en
+          FROM annotations
+
+        ) AS subquery
       SQL
       ActiveRecord::Base.connection.execute(sql)
     end
