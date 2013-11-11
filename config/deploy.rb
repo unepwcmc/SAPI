@@ -246,7 +246,7 @@ namespace :import do
   end
 
   desc 'Run distributions import'
-  task :distributions, :roles => [:db] do
+  task :species, :roles => [:db] do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:distributions"
   end
 
