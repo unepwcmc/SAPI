@@ -1,4 +1,4 @@
-### 0.3.3 (unreleased)
+### 0.3.3 (2013-11-11)
 * fixes references management pages (distribution, taxonomic references
   and standard references)
 * adds statistic pages to the management tool
