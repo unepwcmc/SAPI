@@ -242,11 +242,10 @@ namespace :import do
     task :references, :roles => [:db] do
       run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:cleaned:references"
     end
-  end
-
-  desc "Run full import"
-  task :cleaned, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:cleaned"
+    desc "Run full import"
+    task :all, :roles => [:db] do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:cleaned"
+    end
   end
 
   desc "Redo full import (drop / create db, seeds, full import)"
