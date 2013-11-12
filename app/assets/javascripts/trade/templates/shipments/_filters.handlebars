@@ -1,3 +1,4 @@
+<div>
   <fieldset>
     {{ view Trade.TaxonConceptSearchTextField
       valueBinding="controller.taxonConceptQuery"
@@ -14,8 +15,9 @@
 
   {{  view Ember.Select 
         viewName="appendices"
-        content=appendices
+        contentBinding="controller.allAppendixValues"
         prompt="Pick an appendix:"
+        multiple="true"
   }}
 
   {{  view Ember.Select 
@@ -29,3 +31,77 @@
         content=dates
         prompt="To:"
   }}
+</div>
+
+<div>
+  {{view Ember.Select
+    prompt="All terms"
+    contentBinding="controllers.terms"
+    selectionBinding="controller.selectedTermCodeValues"
+    optionValuePath="content.id"
+    optionLabelPath="content.code"
+    multiple="true"
+  }}
+
+  {{view Ember.Select
+    prompt="All units"
+    contentBinding="controllers.units"
+    selectionBinding="controller.selectedUnitsCodeValues"
+    optionValuePath="content.id"
+    optionLabelPath="content.code"
+    multiple="true"
+  }}
+
+  {{view Ember.Select
+    prompt="All purposes"
+    contentBinding="controllers.purposes"
+    selectionBinding="controller.selectedPurposesCodeValues"
+    optionValuePath="content.id"
+    optionLabelPath="content.code"
+    multiple="true"
+  }}
+
+  {{view Ember.Select
+    prompt="All sources"
+    contentBinding="controllers.sources"
+    selectionBinding="controller.selectedSourcesCodeValues"
+    optionValuePath="content.id"
+    optionLabelPath="content.code"
+    multiple="true"
+  }}
+
+</div>
+
+<div>
+
+  {{view Ember.Select
+    prompt="All countries"
+    contentBinding="controllers.geoEntities"
+    selectionBinding="controller.selectedImporterValues"
+    optionValuePath="content.id"
+    optionLabelPath="content.name"
+  }}
+
+  {{view Ember.Select
+    prompt="All countries"
+    contentBinding="controllers.geoEntities"
+    selectionBinding="controller.selectedExporterValues"
+    optionValuePath="content.id"
+    optionLabelPath="content.name"
+  }}
+
+  {{view Ember.Select
+    prompt="All countries"
+    contentBinding="controller.geoEntities"
+    selectionBinding="controller.selectedCountryOfOriginValues"
+    optionValuePath="content.id"
+    optionLabelPath="content.name"
+  }}
+
+  {{view Ember.Select
+    prompt="All types"
+    contentBinding="controller.allReporterTypeValues"
+    selectionBinding="controller.selectedReporterTypeValues"
+  }}
+
+</div>
