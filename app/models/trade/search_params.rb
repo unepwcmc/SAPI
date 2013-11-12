@@ -8,7 +8,7 @@ class Trade::SearchParams < Hash
       :taxon_concepts_ids =>
         params[:taxon_concepts_ids].blank? ? [] : params[:taxon_concepts_ids].sort,
       :appendices =>
-        params[:appendices].blank? ? [] : params[:appendices_ids].sort,
+        params[:appendices].blank? ? [] : params[:appendices].sort,
       :time_range_start => params[:time_range_start].to_i,
       :time_range_end => params[:time_range_end].to_i,
       :terms_ids => params[:terms_ids].blank? ? [] : params[:terms_ids].sort,
