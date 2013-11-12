@@ -1,4 +1,4 @@
-Trade.ShipmentsRoute = Ember.Route.extend
+Trade.ShipmentsRoute = Ember.Route.extend Trade.QueryParams,
 
   beforeModel: ->
     @controllerFor('geoEntities').load()
@@ -9,4 +9,5 @@ Trade.ShipmentsRoute = Ember.Route.extend
 
   model: (params, queryParams, transition) ->
     queryParams.page = 1 unless queryParams.page
+    # TODO: what about all the other params?
     Trade.Shipment.find(queryParams)
