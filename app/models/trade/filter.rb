@@ -27,6 +27,8 @@ class Trade::Filter
       :import_permit, :export_permits, :taxon_concept
     ]).order('year DESC')
 
+
+    # Id's (array)
     unless @taxon_concepts_ids.empty?
       @query = @query.where(:taxon_concept_id => @taxon_concepts_ids)
     end
@@ -35,10 +37,6 @@ class Trade::Filter
       @query = @query.where(:appendix => @appendices)
     end
     
-    unless @time_range_start == 0 || @time_range_end == 0
-      @query = @query.where(:year => @time_range_start..@time_range_end)
-    end
-
     unless @terms_ids.empty?
       @query = @query.where(:term_id => @terms_ids)
     end
@@ -67,6 +65,19 @@ class Trade::Filter
       @query = @query.where(:country_of_origin_id => @countries_of_origin_ids)
     end
 
+    # Other cases
+
+    unless @time_range_start == 0 && @time_range_end == 0
+      if @time_range_start == 0
+        @query = @query.where(:year => 1900..@time_range_end)
+      elsif @time_range_end == 0
+        @query = @query.where(:year => @time_range_start..2200)
+      else
+        @query = @query.where(:year => @time_range_start..@time_range_end)
+      end
+    end
+
+
     unless @reporter_type.nil?
       if @reporter_type == 'E'
         @query = @query.where(:reported_by_exporter => true)
@@ -77,7 +88,10 @@ class Trade::Filter
     end
 
     unless @permits_ids.empty?
-      @query = @query.where("import_permit_id = ? or country_of_origin_permit_id = ?",  @permits_ids , @permits_ids)
+      @query = @query.where("import_permit_id = ? or country_of_origin_permit_id = ? 
+                             or trade_shipment_export_permits.trade_permit_id = ?",
+                             @permits_ids , @permits_ids, @permits_ids)
+                      
     end
 
     unless @quantity.nil?
