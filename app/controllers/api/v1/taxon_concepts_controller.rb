@@ -9,7 +9,7 @@ class Api::V1::TaxonConceptsController < ApplicationController
         :total => @search.cached_total_cnt,
         :higher_taxa_headers => Checklist::HigherTaxaInjector.new(@taxon_concepts).run_summary,
         :page => params[:page]
-      }  
+      }
   end
 
   def show

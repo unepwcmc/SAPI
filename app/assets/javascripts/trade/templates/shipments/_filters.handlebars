@@ -1,0 +1,31 @@
+  <fieldset>
+    {{ view Trade.TaxonConceptSearchTextField
+      valueBinding="controller.taxonConceptQuery"
+      id="scientific_name"
+      title="search"
+      placeholder="Species, higher taxon or synonym..."
+      autocomplete="off"
+    }}
+    {{!-- view Species.TaxonConceptSearchDropdown
+     valueBinding="controller.autoCompleteTaxonConcepts"
+     isVisibleBinding="controller.taxonConceptsDropdownVisible"
+    --}}
+  </fieldset>
+
+  {{  view Ember.Select 
+        viewName="appendices"
+        content=appendices
+        prompt="Pick an appendix:"
+  }}
+
+  {{  view Ember.Select 
+        viewName="from"
+        content=dates
+        prompt="From:"
+  }}
+
+  {{  view Ember.Select 
+        viewName="to"
+        content=dates
+        prompt="To:"
+  }}

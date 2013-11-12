@@ -68,52 +68,52 @@ Trade.SandboxShipmentsTable.TableController = Ember.Table.TableController.extend
       'importPermit', 'exportPermit', 'originPermit'
     ]
 
-  columns: Ember.computed ->
-    columnProperties =
-      appendix:
-        width: 50
-        header: 'Appdx'
-      speciesName:
-        width: 200
-        header: 'Species Name'
-      termCode:
-        width: 50
-        header: 'Term'
-      quantity:
-        width: 50
-        header: 'Qty'
-      unitCode:
-        width: 50
-        header: 'Unit'
-      tradingPartner:
-        width: 100
-        header: 'Trading partner'
-      countryOfOrigin:
-        width: 100
-        header: 'Ctry of Origin'
-      purposeCode:
-        width: 50
-        header: 'Purpose'
-      sourceCode:
-        width: 50
-        header: 'Source'
-      year:
-        width: 50
-        header: 'Year'
-      importPermit:
-        width: 140
-        header: 'Import Permit'
-      exportPermit:
-        width: 140
-        header: 'Export Permit'
-      originPermit:
-        width: 140
-        header: 'Origin Permit'
+  columnProperties:
+    appendix:
+      width: 50
+      header: 'Appdx'
+    speciesName:
+      width: 200
+      header: 'Species Name'
+    termCode:
+      width: 50
+      header: 'Term'
+    quantity:
+      width: 50
+      header: 'Qty'
+    unitCode:
+      width: 50
+      header: 'Unit'
+    tradingPartner:
+      width: 100
+      header: 'Trading partner'
+    countryOfOrigin:
+      width: 100
+      header: 'Ctry of Origin'
+    purposeCode:
+      width: 50
+      header: 'Purpose'
+    sourceCode:
+      width: 50
+      header: 'Source'
+    year:
+      width: 50
+      header: 'Year'
+    importPermit:
+      width: 140
+      header: 'Import Permit'
+    exportPermit:
+      width: 140
+      header: 'Export Permit'
+    originPermit:
+      width: 140
+      header: 'Origin Permit'
 
-    columns = @get('columnNames').map (key, index) ->
+  columns: Ember.computed ->
+    columns = @get('columnNames').map (key, index) =>
       Ember.Table.ColumnDefinition.create
-        columnWidth: columnProperties[key]['width'] || 100
-        headerCellName: columnProperties[key]['header']
+        columnWidth: @get('columnProperties')[key]['width'] || 100
+        headerCellName: @get('columnProperties')[key]['header']
         tableCellViewClass: 'Trade.SandboxShipmentsTable.EditableTableCell'
         getCellContent: (row) -> row.get(key)
         setCellContent: (row, value) -> row.set(key, value)

@@ -11,5 +11,45 @@ class Trade::ShipmentsController < ApplicationController
         :per_page => 25
       }
   end
-end
 
+  def update
+    @shipment = Trade::Shipment.find(params[:id])
+    if @shipment.update_attributes(shipment_params)
+      render :json => @shipment, :status => :ok
+    else
+      render :json => @shipment.errors, :status => :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @shipment = Trade::Shipment.find(params[:id])
+    @shipment.destroy
+    render :json => nil, :status => :ok
+  end
+
+private
+
+  def shipment_params
+    params.require(:shipment).permit(
+      :id,
+      :appendix,
+      :taxon_concept_id,
+      :term_id,
+      :quantity,
+      :unit_id,
+      :importer_id,
+      :exporter_id,
+      :reporter_type,
+      :country_of_origin_id,
+      :import_permit_number,
+      :export_permit_number,
+      :country_of_origin_permit_number,
+      :purpose_id,
+      :source_id,
+      :year,
+      :reported_species_name,
+      :reported_appendix
+    )
+  end
+
+end

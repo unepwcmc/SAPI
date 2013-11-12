@@ -28,6 +28,14 @@ namespace :db do
     task :rebuild => :migrate do
       Sapi.rebuild
     end
+
+    task :drop_indexes => :migrate do
+      Sapi::drop_indexes
+    end
+
+    task :create_indexes => :migrate do
+      Sapi::create_indexes
+    end
   end
   task :migrate do
     Rake::Task['db:migrate:views'].invoke
