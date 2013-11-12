@@ -3,6 +3,11 @@ Trade.ShipmentsController = Ember.ArrayController.extend
   content: null
   currentShipment: null
 
+  #appendices: ['I', 'II']
+  allAppendixValues: ['I', 'II', 'III']
+  allReporterTypeValues: ['E', 'I']
+  dates: (x for x in [1950..2020] by 5)
+
   shipmentsSaving: ( ->
     return false unless @get('content.isLoaded')
     @get('content').filterBy('isSaving', true).length > 0
@@ -23,8 +28,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend
     controller
   .property('content')
 
-  allAppendixValues: ['I', 'II', 'III']
-  allReporterTypeValues: ['E', 'I']
 
   pages: ( ->
     total = @get('content.meta.total')
