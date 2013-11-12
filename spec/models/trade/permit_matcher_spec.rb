@@ -9,6 +9,10 @@ describe Trade::PermitMatcher do
         subject { Trade::PermitMatcher.new({:permit_query => '006'}).results }
         specify { subject.should include(@permit)}
       end
+      context "when wildcard query" do
+        subject { Trade::PermitMatcher.new({:permit_query => '%AA'}).results }
+        specify { subject.should include(@permit)}
+      end
       context "when malicious query" do
         subject { Trade::PermitMatcher.new({:permit_query => '006\''}).results }
         specify { subject.should be_empty}
