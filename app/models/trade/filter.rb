@@ -24,7 +24,7 @@ class Trade::Filter
     @query = Trade::Shipment.includes([
       :exporter, :importer, :country_of_origin, :purpose,
       :source, :term, :unit, :country_of_origin_permit,
-      :import_permit, :export_permit, :taxon_concept
+      :import_permit, :export_permits, :taxon_concept
     ]).order('year DESC')
 
     #@query = @taxon_concepts_id.blank? ? "" : TaxonConcept.where(taxon_concepts_ids: @taxon_concepts_ids)
