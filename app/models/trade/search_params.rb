@@ -7,8 +7,8 @@ class Trade::SearchParams < Hash
     sanitized_params = {
       :taxon_concepts_ids =>
         params[:taxon_concepts_ids].blank? ? [] : params[:taxon_concepts_ids].sort,
-      :appendices_ids =>
-        params[:appendices_ids].blank? ? [] : params[:appendices_ids].sort,
+      :appendices =>
+        params[:appendices].blank? ? [] : params[:appendices_ids].sort,
       :time_range_start => params[:time_range_start].to_i,
       :time_range_end => params[:time_range_end].to_i,
       :terms_ids => params[:terms_ids].blank? ? [] : params[:terms_ids].sort,
