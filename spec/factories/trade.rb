@@ -37,5 +37,15 @@ FactoryGirl.define do
     term
   end
 
+  factory :shipment, :class => Trade::Shipment do
+    taxon_concept
+    term
+    unit
+    purpose
+    source
+  end
 
+  factory :permit, :class => Trade::Permit do
+    number 'XXX'
+  end
 end
