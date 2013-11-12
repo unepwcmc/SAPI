@@ -73,3 +73,24 @@ Trade.ShipmentsController = Ember.ArrayController.extend
       @get('content').forEach (shipment) ->
         if (!shipment.get('isSaving'))
           shipment.get('transaction').rollback()
+
+    # creates a local new shipment (bound to currentShipment)
+    newShipment: () ->
+      @set('currentShipment', Trade.Shipment.createRecord())
+      $('.modal').modal('show')
+
+    # saves the new shipment (bound to currentShipment) to the db
+    saveNewShipment: () ->
+      shipment = @get('currentShipment')
+      if (!shipment.get('isSaving'))
+        @get('currentShipment').save()
+        @set('currentShipment', null)
+        $('.modal').modal('hide')
+
+    # discards the new shipment (bound to currentShipment)
+    cancelNewShipment: () ->
+      shipment = @get('currentShipment')
+      if (!shipment.get('isSaving'))
+        @get('currentShipment').deleteRecord()
+        @set('currentShipment', null)
+        $('.modal').modal('hide')

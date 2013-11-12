@@ -27,6 +27,9 @@
       <button {{action 'cancelChanges'}} class="pull-right btn clearfix">
         Cancel changes
       </button>
+      <button {{action 'newShipment'}} class="pull-right btn clearfix">
+        Add shipment
+      </button>
       {{#if unsavedChanges}}
         <span class="pull-right label label-important">There are {{changedRowsCount}} unsaved changes.</span>
       {{/if}}

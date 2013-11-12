@@ -17,6 +17,15 @@ class Trade::ShipmentsController < ApplicationController
       }
   end
 
+  def create
+    @shipment = Trade::Shipment.new(shipment_params)
+    if @shipment.save
+      render :json => @shipment, :status => :ok
+    else
+      render :json => @shipment.errors, :status => :unprocessable_entity
+    end
+  end
+
   def update
     @shipment = Trade::Shipment.find(params[:id])
     if @shipment.update_attributes(shipment_params)
