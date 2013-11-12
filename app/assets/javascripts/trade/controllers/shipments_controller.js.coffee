@@ -83,13 +83,11 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
         # TODO: implement this in a cleaner way!
         obj = self.get(prop.name)
         p = [] unless obj
-        if obj?.mapBy
+        if obj?.mapBy('id') and obj.mapBy('id')[0]
           p = obj.mapBy('id')
-        else if obj?.get
+        else if obj?.get('id')
           p = obj.get('id')
         else
           p = obj
         params[prop.param] = p
       @openShipmentsPage params
-
-
