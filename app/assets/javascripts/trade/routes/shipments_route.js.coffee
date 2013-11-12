@@ -8,6 +8,5 @@ Trade.ShipmentsRoute = Ember.Route.extend
     @controllerFor('purposes').set('content', Trade.Purpose.find())
 
   model: (params, queryParams, transition) ->
-    console.log(queryParams)
     queryParams.page = 1 unless queryParams.page
     Trade.Shipment.find(queryParams)
