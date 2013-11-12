@@ -1,13 +1,16 @@
 class Trade::Filter
   def initialize(options)
     initialize_params(options)
+    initialize_query
   end
 
   def results
-
+    @query.limit(@options[:per_page]).
+      offset(@options[:per_page] * (@options[:page] - 1)).all
   end
 
   def total_cnt
+    @query.count
   end
 
   private
@@ -18,10 +21,15 @@ class Trade::Filter
   end
 
   def initialize_query
-    
-      @query = @taxon_concepts_id.blank? ? "" : TaxonConcept.where(taxon_concepts_ids: @taxon_concepts_ids)
+    @query = Trade::Shipment.includes([
+      :exporter, :importer, :country_of_origin, :purpose,
+      :source, :term, :unit, :country_of_origin_permit,
+      :import_permit, :export_permit, :taxon_concept
+    ]).order('year DESC')
 
-    
+    #@query = @taxon_concepts_id.blank? ? "" : TaxonConcept.where(taxon_concepts_ids: @taxon_concepts_ids)
+
+
 
 
   end

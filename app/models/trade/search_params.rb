@@ -23,7 +23,7 @@ class Trade::SearchParams < Hash
         params[:exporters_ids].blank? ? [] : params[:exporters_ids].sort,
       :countries_of_origin_ids=>
         params[:countries_of_origin_ids].blank? ? [] : params[:countries_of_origin_ids].sort,
-      :reporter_type => params[:reporter_type].upcase,
+      :reporter_type => params[:reporter_type].blank? ? nil : params[:reporter_type].upcase,
       :permits_ids => params[:permits_ids].blank? ? [] : params[:permits_ids].sort,
       :quantity => params[:quantity],
       :page => params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
