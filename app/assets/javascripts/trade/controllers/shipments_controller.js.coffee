@@ -3,10 +3,18 @@ Trade.ShipmentsController = Ember.ArrayController.extend
   content: null
   currentShipment: null
 
-  #appendices: ['I', 'II']
   allAppendixValues: ['I', 'II', 'III']
   allReporterTypeValues: ['E', 'I']
   dates: (x for x in [1950..2020] by 5)
+
+  selectedTermCodeValues: []
+  selectedUnitsCodeValues: []
+  selectedPurposesCodeValues: []
+  selectedSourcesCodeValues: []
+  selectedImporterValues: []
+  selectedExporterValues: []
+  selectedCountryOfOriginValues: []
+  selectedReporterTypeValues: []
 
   shipmentsSaving: ( ->
     return false unless @get('content.isLoaded')
