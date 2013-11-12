@@ -1,19 +1,14 @@
 class Trade::ShipmentsController < ApplicationController
   respond_to :json
-  PER_PAGE= 500
 
   def index
-    @shipments = Trade::Shipment.includes([
-       :exporter, :importer, :country_of_origin, :purpose,
-       :source, :term, :unit, :country_of_origin_permit,
-       :import_permit, :export_permits, :taxon_concept
-      ]).order('year DESC').offset((params[:page].to_i - 1) * PER_PAGE).limit(PER_PAGE)
-    render :json => @shipments,
+    @search = Trade::Filter.new(params)
+    render :json => @search.results,
       :each_serializer => Trade::ShipmentSerializer,
       :meta => {
-        :total => Trade::Shipment.count,
+        :total => @search.total_cnt,
         :page => params[:page] || 1,
-        :per_page => PER_PAGE
+        :per_page => 25
       }
   end
 
