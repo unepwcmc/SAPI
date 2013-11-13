@@ -87,7 +87,7 @@ group :development do
   gem 'rack-cors', :require => 'rack/cors'
   gem 'quiet_assets'
   gem 'webrick', '1.3.1'
-
+  gem 'jslint_on_rails'
 end
 
 group :test, :development do
