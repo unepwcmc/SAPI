@@ -30,6 +30,7 @@
 
 //= require ./trade/store
 //= require_tree ./trade/models
+//= require ./trade/query_params
 //= require_tree ./trade/controllers
 //= require_tree ./trade/views
 //= require_tree ./trade/helpers

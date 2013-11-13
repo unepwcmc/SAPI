@@ -1,4 +1,5 @@
 <div>
+  <p>Species names</p>
   <fieldset>
     {{ view Trade.TaxonConceptSearchTextField
       valueBinding="controller.taxonConceptQuery"
@@ -13,13 +14,16 @@
     --}}
   </fieldset>
 
+  <p>Appendix</p>
   {{  view Ember.Select 
         viewName="appendices"
         contentBinding="controller.allAppendixValues"
+        selectionBinding="controller.selectedAppendixValues"
         prompt="Pick an appendix:"
         multiple="true"
   }}
 
+  <p>Time range</p>
   {{  view Ember.Select 
         viewName="from"
         content=dates
@@ -34,6 +38,7 @@
 </div>
 
 <div>
+  <p>Terms</p>
   {{view Ember.Select
     prompt="All terms"
     contentBinding="controllers.terms"
@@ -43,6 +48,7 @@
     multiple="true"
   }}
 
+  <p>Units</p>
   {{view Ember.Select
     prompt="All units"
     contentBinding="controllers.units"
@@ -52,6 +58,7 @@
     multiple="true"
   }}
 
+  <p>Purpouses</p>
   {{view Ember.Select
     prompt="All purposes"
     contentBinding="controllers.purposes"
@@ -60,7 +67,8 @@
     optionLabelPath="content.code"
     multiple="true"
   }}
-
+   
+  <p>Sources</p>
   {{view Ember.Select
     prompt="All sources"
     contentBinding="controllers.sources"
@@ -73,7 +81,8 @@
 </div>
 
 <div>
-
+  
+  <p>Importer</p>
   {{view Ember.Select
     prompt="All countries"
     contentBinding="controllers.geoEntities"
@@ -82,6 +91,7 @@
     optionLabelPath="content.name"
   }}
 
+  <p>Exporter</p>
   {{view Ember.Select
     prompt="All countries"
     contentBinding="controllers.geoEntities"
@@ -90,18 +100,22 @@
     optionLabelPath="content.name"
   }}
 
+  <p>Country of origin</p>
   {{view Ember.Select
     prompt="All countries"
-    contentBinding="controller.geoEntities"
+    contentBinding="controllers.geoEntities"
     selectionBinding="controller.selectedCountryOfOriginValues"
     optionValuePath="content.id"
     optionLabelPath="content.name"
   }}
 
+  <p>Reporter type</p>
   {{view Ember.Select
     prompt="All types"
     contentBinding="controller.allReporterTypeValues"
     selectionBinding="controller.selectedReporterTypeValues"
   }}
+
+  <button {{ action 'testQueryParams' }}>GO</button>
 
 </div>

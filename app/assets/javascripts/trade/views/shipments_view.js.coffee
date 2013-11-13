@@ -7,3 +7,6 @@ Trade.ShipmentsView = Ember.View.extend
 
     prevPage: ->
       @controller.transitionToPage no
+
+    testQueryParams: ->
+      @controller.testQueryParams
