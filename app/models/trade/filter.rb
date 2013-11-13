@@ -78,20 +78,20 @@ class Trade::Filter
     end
 
 
-    unless @reporter_type.nil?
+    if ['I', 'E'].include? @reporter_type
       if @reporter_type == 'E'
         @query = @query.where(:reported_by_exporter => true)
       elsif @reporter_type == 'I'
         @query = @query.where(:reported_by_exporter => false)
       else
       end
+    else
     end
 
     unless @permits_ids.empty?
       @query = @query.where("import_permit_id = ? or country_of_origin_permit_id = ? 
                              or trade_shipment_export_permits.trade_permit_id = ?",
                              @permits_ids , @permits_ids, @permits_ids)
-                      
     end
 
     unless @quantity.nil?
