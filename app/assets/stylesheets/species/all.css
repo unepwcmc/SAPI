@@ -73,6 +73,11 @@ p.browsehappy {
   text-align: center;
   color: black;
   z-index: 1000;
+  width: 960px;
+  position: fixed;
+  top: 0px;
+  left: 50%;
+  margin-left: -480px;
 }
 p.browsehappy a {
   color: darkRed;
