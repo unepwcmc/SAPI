@@ -116,6 +116,24 @@
     selectionBinding="controller.selectedReporterTypeValues"
   }}
 
+  <p>Permits</p>
+  <fieldset>
+    {{ view Trade.PermitSearchTextField
+      valueBinding = "controller.permitQuery"
+      id="permit_name"
+      title="search"
+      placeholder="Permit name..."
+      autocomplete="off"
+    }}
+    {{ view Trade.PermitSearchDropdown
+     valueBinding="controller.autoCompleteTaxonConcepts"
+     isVisibleBinding="controller.taxonConceptsDropdownVisible"
+    }}
+    {{#each controller.autoCompletePermits}}
+       {{ this }}
+    {{/each}}
+  </fieldset>
+
   <button {{ action 'testQueryParams' }}>GO</button>
 
 </div>

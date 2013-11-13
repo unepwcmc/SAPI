@@ -10,6 +10,3 @@ Trade.GeoEntity = DS.Model.extend
   countryOfOriginShipments: DS.hasMany('Trade.Shipment', {
     inverse: 'countryOfOrigin'
   })
-  permits: DS.hasMany('Trade.Permit', {
-    inverse: 'geoEntity'
-  })
