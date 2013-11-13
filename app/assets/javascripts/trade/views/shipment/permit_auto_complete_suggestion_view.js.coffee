@@ -1,17 +1,19 @@
 Trade.PermitAutoCompleteSuggestionView = Ember.View.extend
   tagName: 'li'
-  permitId: null
-
-  autoCompletePermit: ( -> 
-    Trade.AutoCompletePermit.find(@get('permitId'))
-  ).property('permitId')
+  permit: null
 
   template: ( ->
     Ember.Handlebars.compile(
-      '
-        {{#highlight view.autoCompletePermit.autoCompleteSuggestion query=controller.ShipmentsController}}
+      '<a href="#" {{action storePermit target="view"}}>
+        {{#highlight view.permit.number query=controller.permitQuery}}
           {{unbound this}}
         {{/highlight}}
-      ')
+      </a>')
   ).property()
+
+  actions:
+
+    storePermit: ->
+      @get('controller').selectedPermitProperties.addObject @.get("permit.number")
+
 

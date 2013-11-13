@@ -14,7 +14,6 @@ Trade.PermitSearchTextField = Em.TextField.extend
 #    @hideDropdown() if !@get('parentView.mousedOver')
 #
   keyUp: (event) ->
-    #debugger
     @set('controller.permitQuery', event.currentTarget.value)
     @showDropdown()
 #

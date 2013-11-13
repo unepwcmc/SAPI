@@ -35,6 +35,10 @@ Trade.QueryParams = Ember.Mixin.create({
     {
       name: "selectedReporterTypeValues"
       param: 'reporter_type'
+    },
+    {
+      name: "selectedPermitProperties"
+      param: 'permits_ids[]'
     }
   ]
 });

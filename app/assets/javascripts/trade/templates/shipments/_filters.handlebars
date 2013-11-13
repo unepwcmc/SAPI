@@ -126,12 +126,9 @@
       autocomplete="off"
     }}
     {{ view Trade.PermitSearchDropdown
-     valueBinding="controller.autoCompleteTaxonConcepts"
-     isVisibleBinding="controller.taxonConceptsDropdownVisible"
+     valueBinding="controller.autoCompletePermits"
     }}
-    {{#each controller.autoCompletePermits}}
-       {{ this }}
-    {{/each}}
+    
   </fieldset>
 
   <button {{ action 'testQueryParams' }}>GO</button>
