@@ -1,20 +1,12 @@
-Trade.ShipmentsController = Ember.ArrayController.extend
+Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
 
+  dates: (x for x in [1950..2020] by 5) #tmp
+
   allAppendixValues: ['I', 'II', 'III']
   allReporterTypeValues: ['E', 'I']
-  dates: (x for x in [1950..2020] by 5)
-
-  selectedTermCodeValues: []
-  selectedUnitsCodeValues: []
-  selectedPurposesCodeValues: []
-  selectedSourcesCodeValues: []
-  selectedImporterValues: []
-  selectedExporterValues: []
-  selectedCountryOfOriginValues: []
-  selectedReporterTypeValues: []
 
   shipmentsSaving: ( ->
     return false unless @get('content.isLoaded')
@@ -35,7 +27,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend
     controller.set('shipmentsController', @)
     controller
   .property('content')
-
 
   pages: ( ->
     total = @get('content.meta.total')
@@ -64,12 +55,32 @@ Trade.ShipmentsController = Ember.ArrayController.extend
       parseInt(@get('page')) + 1
     else
       parseInt(@get('page')) - 1
-    @openShipmentsPage page
+    @openShipmentsPage {page: page}
 
-  openShipmentsPage: (page) ->
-    @transitionToRoute('shipments', {queryParams:
-      page: page or 1
-    })
+  openShipmentsPage: (params) ->
+    params.page = params.page or 1
+    console.log params
+    @transitionToRoute('shipments', {queryParams: params})
+
+  parseSelectedParams: (params) ->
+    if params?.mapBy and params.mapBy('id')[0]
+      return params.mapBy('id')
+    if params?.mapBy
+      return params
+    if params?.get and params.get('id')
+      return params.get('id')
+    return []
+
+  permitQuery: ""
+  autoCompletePermits: ( ->
+    permitQuery = @get('permitQuery')
+    if !permitQuery || permitQuery.length < 3
+      return;
+
+    Trade.Permit.find(
+      permit_query: @get('permitQuery')
+    )
+  ).property('permitQuery')
 
   actions:
     saveChanges: () ->
@@ -78,9 +89,18 @@ Trade.ShipmentsController = Ember.ArrayController.extend
         shipment.deleteRecord()
       # process updates
       @get('store').commit()
-      @openShipmentsPage(@get('page'))
+      @openShipmentsPage( {page: @get('page')} )
 
     cancelChanges: () ->
       @get('content').forEach (shipment) ->
         if (!shipment.get('isSaving'))
           shipment.get('transaction').rollback()
+
+    testQueryParams: ->
+      self = @
+      params = {}
+      @selectedQueryParamNames.forEach (property) ->
+        selectedParams = self.get(property.name)
+        param = self.parseSelectedParams(selectedParams)
+        params[property.param] = param
+      @openShipmentsPage params

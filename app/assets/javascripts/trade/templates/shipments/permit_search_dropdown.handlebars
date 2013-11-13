@@ -1,0 +1,7 @@
+<ul>
+  {{#each permitId in this.permit_ids}}
+    {{view Trade.PermitAutoCompleteSuggestionView 
+      permitIdBinding="permitId"
+    }}
+  {{/each}}
+</ul>

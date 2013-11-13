@@ -1,4 +1,4 @@
-Trade.ShipmentsRoute = Ember.Route.extend
+Trade.ShipmentsRoute = Ember.Route.extend Trade.QueryParams,
 
   beforeModel: ->
     @controllerFor('geoEntities').load()
