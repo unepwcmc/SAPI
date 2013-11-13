@@ -72,6 +72,7 @@ form, fieldset {
 p.browsehappy {
   text-align: center;
   color: black;
+  z-index: 1000;
 }
 p.browsehappy a {
   color: darkRed;
