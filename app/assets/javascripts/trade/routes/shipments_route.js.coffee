@@ -9,5 +9,4 @@ Trade.ShipmentsRoute = Ember.Route.extend Trade.QueryParams,
 
   model: (params, queryParams, transition) ->
     queryParams.page = 1 unless queryParams.page
-    # TODO: what about all the other params?
     Trade.Shipment.find(queryParams)

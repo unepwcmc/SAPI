@@ -62,6 +62,15 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     console.log params
     @transitionToRoute('shipments', {queryParams: params})
 
+  parseSelectedParams: (params) ->
+    if params?.mapBy and params.mapBy('id')[0]
+      return params.mapBy('id')
+    if params?.mapBy
+      return params
+    if params?.get and params.get('id')
+      return params.get('id')
+    return []
+
   actions:
     saveChanges: () ->
       # process deletes
@@ -79,15 +88,8 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     testQueryParams: ->
       self = @
       params = {}
-      @selectedQueryParamNames.forEach (prop) ->
-        # TODO: implement this in a cleaner way!
-        obj = self.get(prop.name)
-        p = [] unless obj
-        if obj?.mapBy('id') and obj.mapBy('id')[0]
-          p = obj.mapBy('id')
-        else if obj?.get('id')
-          p = obj.get('id')
-        else
-          p = obj
-        params[prop.param] = p
+      @selectedQueryParamNames.forEach (property) ->
+        selectedParams = self.get(property.name)
+        param = self.parseSelectedParams(selectedParams)
+        params[property.param] = param
       @openShipmentsPage params
