@@ -1,0 +1,28 @@
+<div class="popup">
+  <div class="search-block01">
+    <div class="row01">
+      {{ view Trade.TaxonConceptSearchTextField
+        valueBinding="view.query"
+        title="search"
+        placeholder="Species, higher taxon or synonym..."
+        autocomplete="off"
+      }}
+    </div>
+    <strong class="title01">YOUR SELECTION</strong>
+    {{collection Trade.SelectedTaxonConceptsCollectionView
+      contentBinding="view.selectedValues"}}
+  </div>
+  <div class="list-holder">
+    <ul>
+    {{#each controller.autoCompleteTaxonConceptsByRank}}
+      <li class="header">{{this.rank_name}}</li>
+      {{#each taxonConcept in this.taxon_concepts}}
+        {{view Trade.TaxonConceptAutoCompleteSuggestionView
+          contentBinding="taxonConcept"
+          selectedValuesBinding="view.selectedValues"
+        }}
+      {{/each}}
+    {{/each}}
+    </ul>
+  </div>
+</div>

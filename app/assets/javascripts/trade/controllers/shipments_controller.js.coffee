@@ -83,6 +83,30 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     )
   ).property('permitQuery')
 
+  taxonConceptQuery: null
+  autoCompleteTaxonConcepts: ( ->
+    taxonConceptQuery = @get('taxonConceptQuery')
+    if !taxonConceptQuery || taxonConceptQuery.length < 3
+      return [];
+
+    Trade.AutoCompleteTaxonConcept.find(
+      taxonomy: 'CITES'
+      taxon_concept_query: taxonConceptQuery
+      ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY', 'GENUS', 'SPECIES']
+      autocomplete: true
+    )
+  ).property('taxonConceptQuery')
+
+  autoCompleteTaxonConceptsByRank: ( ->
+    return [] unless @get('autoCompleteTaxonConcepts.meta.rank_headers')
+    @get('autoCompleteTaxonConcepts.meta.rank_headers').map (rh) ->
+      rank_name:rh.rank_name
+      taxon_concepts: rh.taxon_concept_ids.map (tc_id) ->
+        Trade.AutoCompleteTaxonConcept.find(tc_id)
+  ).property('autoCompleteTaxonConcepts.meta.rank_headers')
+
+  selectedTaxonConcepts: []
+
   actions:
     saveChanges: () ->
       # process deletes
