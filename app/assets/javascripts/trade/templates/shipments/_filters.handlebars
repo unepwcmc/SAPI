@@ -167,6 +167,7 @@
     <div id="collapseFour" class="accordion-body collapse in">
       <div class="accordion-inner">
         <p>Permits</p>
+        <div class="popup-area">
           {{ view Trade.PermitSearchTextField
             valueBinding = "controller.permitQuery"
             id="permit_name"
@@ -174,10 +175,13 @@
             placeholder="Permit name..."
             autocomplete="off"
           }}
-          {{ view Trade.PermitSelectedList }}
-          {{ view Trade.PermitSearchDropdown
-           valueBinding="controller.autoCompletePermits"
-          }}
+          <div class="popup-holder01">
+            {{ view Trade.PermitSelectedList }}
+            {{ view Trade.PermitSearchDropdown
+             valueBinding="controller.autoCompletePermits"
+            }}
+          </div>
+        </div>
       </div>
     </div>
   </div>

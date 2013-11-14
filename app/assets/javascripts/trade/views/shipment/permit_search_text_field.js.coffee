@@ -22,4 +22,5 @@ Trade.PermitSearchTextField = Em.TextField.extend
 #
   showDropdown: () ->
     if @.$().val().length > 2
-      $('.search fieldset').addClass('parent-focus parent-active')
+      #$('.search fieldset').addClass('parent-focus parent-active')
+      $('.popup-holder01').css("display": "block")

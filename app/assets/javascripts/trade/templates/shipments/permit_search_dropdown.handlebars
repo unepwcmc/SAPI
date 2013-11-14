@@ -1,7 +1,9 @@
-<ul>
-  {{#each controller.autoCompletePermits}}
-    {{view Trade.PermitAutoCompleteSuggestionView 
-      permitBinding="this"
-    }}
-  {{/each}}
-</ul>
+<div class="list-holder">
+  <ul>
+    {{#each controller.autoCompletePermits}}
+      {{view Trade.PermitAutoCompleteSuggestionView 
+        permitBinding="this"
+      }}
+    {{/each}}
+  </ul>
+</div>
