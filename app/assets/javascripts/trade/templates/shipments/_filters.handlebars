@@ -36,13 +36,15 @@
           <p>Time range</p>
           {{  view Ember.Select 
                 viewName="from"
-                content=dates
+                contentBinding="dates"
+                selectionBinding="controller.selectedTimeStart"
                 prompt="From:"
           }}
             
           {{  view Ember.Select 
                 viewName="to"
-                content=dates
+                contentBinding="dates"
+                selectionBinding="controller.selectedTimeEnd"
                 prompt="To:"
           }}
         </div>

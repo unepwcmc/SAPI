@@ -63,12 +63,15 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     @transitionToRoute('shipments', {queryParams: params})
 
   parseSelectedParams: (params) ->
+    # TODO: better ideas?
     if params?.mapBy and params.mapBy('id')[0]
       return params.mapBy('id')
     if params?.mapBy
       return params
     if params?.get and params.get('id')
       return params.get('id')
+    if params
+      return params
     return []
 
   permitQuery: "FR1"

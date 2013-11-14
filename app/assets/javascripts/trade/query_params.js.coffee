@@ -5,6 +5,14 @@ Trade.QueryParams = Ember.Mixin.create({
       param: 'appendices[]'
     },
     {
+      name: "selectedTimeStart"
+      param: 'time_range_start'
+    },
+    {
+      name: "selectedTimeEnd"
+      param: 'time_range_end'
+    },
+    {
       name: "selectedTermCodeValues"
       param: 'terms_ids[]'
     },
