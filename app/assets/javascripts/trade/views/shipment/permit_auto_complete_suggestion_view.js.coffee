@@ -14,6 +14,7 @@ Trade.PermitAutoCompleteSuggestionView = Ember.View.extend
   actions:
 
     storePermit: ->
-      @get('controller').selectedPermitProperties.addObject @.get("permit.number")
+      @get('controller').selectedPermitProperties
+        .addObject @.get("permit.number")
 
 
