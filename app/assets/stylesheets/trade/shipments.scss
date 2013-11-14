@@ -9,7 +9,10 @@
   cursor: pointer
 }
 
-.accordion-inner {
+.go, .heading {clear: left;}
+
+.inner {
+  clear: left;
   div.left {
     float: left;
   }
@@ -22,14 +25,9 @@
   }
 }
 
+//.popup-holder01 { display: block; }
 
-.popup-area {
-  position: relative;
+.body.in {
+  overflow:visible;
 }
-.popup-holder01 {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-.popup-holder01 { display: block; }
 

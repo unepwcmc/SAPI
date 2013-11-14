@@ -1,12 +1,13 @@
-<div class="accordion">
-  <div class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" href="#collapseOne">
+
+<div>
+ 
+    <div class="heading">
+      <a data-toggle="collapse" href="#collapseOne">
         Name Appendix and Year
       </a>
     </div>
-    <div id="collapseOne" class="accordion-body collapse in">
-      <div class="accordion-inner">
+    <div id="collapseOne" class="body collapse in">
+      <div class="inner">
         <div class="left">
           <p>Species names</p>
           <div class="popup-area">
@@ -50,16 +51,15 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" href="#collapseTwo">
+
+    <div class="heading">
+      <a data-toggle="collapse" href="#collapseTwo">
         Trade Codes
       </a>
     </div>
-    <div id="collapseTwo" class="accordion-body collapse in">
-      <div class="accordion-inner">
+    <div id="collapseTwo" class="body collapse in">
+      <div class="inner">
         <div class="left">
           <p>Terms</p>
           {{view Ember.Select
@@ -106,16 +106,14 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" href="#collapseThree">
+    <div class="heading">
+      <a data-toggle="collapse" href="#collapseThree">
         Trading Partners
       </a>
     </div>
-    <div id="collapseThree" class="accordion-body collapse in">
-      <div class="accordion-inner">
+    <div id="collapseThree" class="body collapse in">
+      <div class="inner">
         <div class="left">
           <p>Importer</p>
           {{view Ember.Select
@@ -156,18 +154,19 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" href="#collapseFour">
+
+    <div class="heading">
+      <a class="toggle" data-toggle="collapse" href="#collapseFour">
         Trading Partners
       </a>
     </div>
-    <div id="collapseFour" class="accordion-body collapse in">
-      <div class="accordion-inner">
-        <p>Permits</p>
-        <div class="popup-area">
+    <div id="collapseFour" class="body collapse in">
+      <div class="inner">
+
+        <div class="left popup-area">  
+          <p>Permits</p>
+          <div class="search-block01">
           {{ view Trade.PermitSearchTextField
             valueBinding = "controller.permitQuery"
             id="permit_name"
@@ -175,17 +174,27 @@
             placeholder="Permit name..."
             autocomplete="off"
           }}
+          </div>
           <div class="popup-holder01">
-            {{ view Trade.PermitSelectedList }}
-            {{ view Trade.PermitSearchDropdown
-             valueBinding="controller.autoCompletePermits"
-            }}
+            <div class="popup">
+              <div class="search-block01">
+                {{ view Trade.PermitSelectedList }}
+                <div class="list-holder">
+                  {{ view Trade.PermitSearchDropdown
+                   valueBinding="controller.autoCompletePermits"
+                  }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
     </div>
-  </div>
+
 
 </div>
 
+<div class="go">
 <button {{ action 'testQueryParams' }}>GO</button>
+</div>
