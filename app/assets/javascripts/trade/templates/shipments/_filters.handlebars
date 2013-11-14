@@ -9,42 +9,43 @@
     </div>
     <div id="collapseOne" class="accordion-body collapse in">
       <div class="accordion-inner">
-        <p>Species names</p>
-        <fieldset>
-          {{ view Trade.TaxonConceptSearchTextField
-            valueBinding="controller.taxonConceptQuery"
-            id="scientific_name"
-            title="search"
-            placeholder="Species, higher taxon or synonym..."
-            autocomplete="off"
+        <div class="left">
+          <p>Species names</p>
+            {{ view Trade.TaxonConceptSearchTextField
+              valueBinding="controller.taxonConceptQuery"
+              id="scientific_name"
+              title="search"
+              placeholder="Species, higher taxon or synonym..."
+              autocomplete="off"
+            }}
+            {{!-- view Species.TaxonConceptSearchDropdown
+             valueBinding="controller.autoCompleteTaxonConcepts"
+             isVisibleBinding="controller.taxonConceptsDropdownVisible"
+            --}}
+        </div>
+        <div class="left">
+          <p>Appendix</p>
+            {{  view Ember.Select 
+                  viewName="appendices"
+                  contentBinding="controller.allAppendixValues"
+                  selectionBinding="controller.selectedAppendixValues"
+                  prompt="Pick an appendix:"
+                  multiple="true"
+            }}
+        </div>
+        <div class="left">
+          <p>Time range</p>
+          {{  view Ember.Select 
+                viewName="from"
+                content=dates
+                prompt="From:"
+          }} 
+          {{  view Ember.Select 
+                viewName="to"
+                content=dates
+                prompt="To:"
           }}
-          {{!-- view Species.TaxonConceptSearchDropdown
-           valueBinding="controller.autoCompleteTaxonConcepts"
-           isVisibleBinding="controller.taxonConceptsDropdownVisible"
-          --}}
-        </fieldset>
-        
-        <p>Appendix</p>
-        {{  view Ember.Select 
-              viewName="appendices"
-              contentBinding="controller.allAppendixValues"
-              selectionBinding="controller.selectedAppendixValues"
-              prompt="Pick an appendix:"
-              multiple="true"
-        }}
-         
-        <p>Time range</p>
-        {{  view Ember.Select 
-              viewName="from"
-              content=dates
-              prompt="From:"
-        }}
-          
-        {{  view Ember.Select 
-              viewName="to"
-              content=dates
-              prompt="To:"
-        }}
+        </div>
       </div>
     </div>
   </div>
@@ -57,47 +58,50 @@
     </div>
     <div id="collapseTwo" class="accordion-body collapse in">
       <div class="accordion-inner">
-
-        <p>Terms</p>
-        {{view Ember.Select
-          prompt="All terms"
-          contentBinding="controllers.terms"
-          selectionBinding="controller.selectedTermCodeValues"
-          optionValuePath="content.id"
-          optionLabelPath="content.code"
-          multiple="true"
-        }}
-      
-        <p>Units</p>
-        {{view Ember.Select
-          prompt="All units"
-          contentBinding="controllers.units"
-          selectionBinding="controller.selectedUnitsCodeValues"
-          optionValuePath="content.id"
-          optionLabelPath="content.code"
-          multiple="true"
-        }}
-      
-        <p>Purpouses</p>
-        {{view Ember.Select
-          prompt="All purposes"
-          contentBinding="controllers.purposes"
-          selectionBinding="controller.selectedPurposesCodeValues"
-          optionValuePath="content.id"
-          optionLabelPath="content.code"
-          multiple="true"
-        }}
-         
+        <div class="left">
+          <p>Terms</p>
+          {{view Ember.Select
+            prompt="All terms"
+            contentBinding="controllers.terms"
+            selectionBinding="controller.selectedTermCodeValues"
+            optionValuePath="content.id"
+            optionLabelPath="content.code"
+            multiple="true"
+          }}
+        </div>
+        <div class="left">
+          <p>Units</p>
+          {{view Ember.Select
+            prompt="All units"
+            contentBinding="controllers.units"
+            selectionBinding="controller.selectedUnitsCodeValues"
+            optionValuePath="content.id"
+            optionLabelPath="content.code"
+            multiple="true"
+          }}
+        </div>
+        <div class="left">
+          <p>Purpouses</p>
+          {{view Ember.Select
+            prompt="All purposes"
+            contentBinding="controllers.purposes"
+            selectionBinding="controller.selectedPurposesCodeValues"
+            optionValuePath="content.id"
+            optionLabelPath="content.code"
+            multiple="true"
+          }}
+        </div>
+        <div class="left">
         <p>Sources</p>
-        {{view Ember.Select
-          prompt="All sources"
-          contentBinding="controllers.sources"
-          selectionBinding="controller.selectedSourcesCodeValues"
-          optionValuePath="content.id"
-          optionLabelPath="content.code"
-          multiple="true"
-        }}
-      
+          {{view Ember.Select
+            prompt="All sources"
+            contentBinding="controllers.sources"
+            selectionBinding="controller.selectedSourcesCodeValues"
+            optionValuePath="content.id"
+            optionLabelPath="content.code"
+            multiple="true"
+          }}
+        </div>
       </div>
     </div>
   </div>
@@ -110,41 +114,44 @@
     </div>
     <div id="collapseThree" class="accordion-body collapse in">
       <div class="accordion-inner">
-  
-        <p>Importer</p>
-        {{view Ember.Select
-          prompt="All countries"
-          contentBinding="controllers.geoEntities"
-          selectionBinding="controller.selectedImporterValues"
-          optionValuePath="content.id"
-          optionLabelPath="content.name"
-        }}
-      
-        <p>Exporter</p>
-        {{view Ember.Select
-          prompt="All countries"
-          contentBinding="controllers.geoEntities"
-          selectionBinding="controller.selectedExporterValues"
-          optionValuePath="content.id"
-          optionLabelPath="content.name"
-        }}
-      
-        <p>Country of origin</p>
-        {{view Ember.Select
-          prompt="All countries"
-          contentBinding="controllers.geoEntities"
-          selectionBinding="controller.selectedCountryOfOriginValues"
-          optionValuePath="content.id"
-          optionLabelPath="content.name"
-        }}
-      
-        <p>Reporter type</p>
-        {{view Ember.Select
-          prompt="All types"
-          contentBinding="controller.allReporterTypeValues"
-          selectionBinding="controller.selectedReporterTypeValues"
-        }}
-
+        <div class="left">
+          <p>Importer</p>
+          {{view Ember.Select
+            prompt="All countries"
+            contentBinding="controllers.geoEntities"
+            selectionBinding="controller.selectedImporterValues"
+            optionValuePath="content.id"
+            optionLabelPath="content.name"
+          }}
+        </div>
+        <div class="left">
+          <p>Exporter</p>
+          {{view Ember.Select
+            prompt="All countries"
+            contentBinding="controllers.geoEntities"
+            selectionBinding="controller.selectedExporterValues"
+            optionValuePath="content.id"
+            optionLabelPath="content.name"
+          }}
+        </div>
+        <div class="left">
+          <p>Country of origin</p>
+          {{view Ember.Select
+            prompt="All countries"
+            contentBinding="controllers.geoEntities"
+            selectionBinding="controller.selectedCountryOfOriginValues"
+            optionValuePath="content.id"
+            optionLabelPath="content.name"
+          }}
+        </div>
+        <div class="left">
+          <p>Reporter type</p>
+          {{view Ember.Select
+            prompt="All types"
+            contentBinding="controller.allReporterTypeValues"
+            selectionBinding="controller.selectedReporterTypeValues"
+          }}
+        </div>
       </div>
     </div>
   </div>
@@ -158,7 +165,6 @@
     <div id="collapseFour" class="accordion-body collapse in">
       <div class="accordion-inner">
         <p>Permits</p>
-        <fieldset>
           {{ view Trade.PermitSearchTextField
             valueBinding = "controller.permitQuery"
             id="permit_name"
@@ -166,14 +172,10 @@
             placeholder="Permit name..."
             autocomplete="off"
           }}
-      
           {{ view Trade.PermitSelectedList }}
-          
           {{ view Trade.PermitSearchDropdown
            valueBinding="controller.autoCompletePermits"
           }}
-        </fieldset>
-
       </div>
     </div>
   </div>

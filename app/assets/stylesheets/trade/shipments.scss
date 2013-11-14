@@ -8,3 +8,17 @@
 .table-row {
   cursor: pointer
 }
+
+.accordion-inner {
+  div.left {
+    float: left;
+  }
+  // overriding boostrap
+  select {
+    width: 160px;
+    border: 1px solid #cccccc;
+    background-color: white;
+    margin: 5px 10px;
+  }
+}
+
