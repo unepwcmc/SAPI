@@ -71,7 +71,8 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       return params.get('id')
     return []
 
-  permitQuery: ""
+  permitQuery: "FR1"
+  selectedPermitProperties: []
   autoCompletePermits: ( ->
     permitQuery = @get('permitQuery')
     if !permitQuery || permitQuery.length < 3
