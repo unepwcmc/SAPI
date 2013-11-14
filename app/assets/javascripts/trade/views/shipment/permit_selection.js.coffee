@@ -3,7 +3,7 @@ Trade.PermitSelection = Ember.View.extend
 
   template: ( ->
     Ember.Handlebars.compile(
-      '<button {{ action "deletePermit" this  target="view"}}>X</button>{{this}}')
+      '<span class"selection">{{this}}</span><button {{ action "deletePermit" this  target="view"}}>X</button>')
   ).property()
 
   actions:
