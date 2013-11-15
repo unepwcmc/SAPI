@@ -1,8 +1,8 @@
-
 <div>
  
     <div class="heading">
       <a data-toggle="collapse" href="#collapseOne">
+
         Name Appendix and Year
       </a>
     </div>
@@ -62,46 +62,41 @@
       <div class="inner">
         <div class="left">
           <p>Terms</p>
-          {{view Ember.Select
-            prompt="All terms"
-            contentBinding="controllers.terms"
-            selectionBinding="controller.selectedTermCodeValues"
-            optionValuePath="content.id"
-            optionLabelPath="content.code"
-            multiple="true"
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.terms"
+            selectedValuesBinding="controller.selectedTerms"
+            selectedValuesCollectionName="terms"
+            selectedValueDisplayProperty="fullName"
+            selectedValueShortDisplayProperty="code"
           }}
         </div>
         <div class="left">
           <p>Units</p>
-          {{view Ember.Select
-            prompt="All units"
-            contentBinding="controllers.units"
-            selectionBinding="controller.selectedUnitsCodeValues"
-            optionValuePath="content.id"
-            optionLabelPath="content.code"
-            multiple="true"
-          }}
-        </div>
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.units"
+            selectedValuesBinding="controller.selectedUnits"
+            selectedValuesCollectionName="units"
+            selectedValueDisplayProperty="fullName"
+            selectedValueShortDisplayProperty="code"
+          }}        </div>
         <div class="left">
-          <p>Purpouses</p>
-          {{view Ember.Select
-            prompt="All purposes"
-            contentBinding="controllers.purposes"
-            selectionBinding="controller.selectedPurposesCodeValues"
-            optionValuePath="content.id"
-            optionLabelPath="content.code"
-            multiple="true"
+          <p>Purposes</p>
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.purposes"
+            selectedValuesBinding="controller.selectedPurposes"
+            selectedValuesCollectionName="purposes"
+            selectedValueDisplayProperty="fullName"
+            selectedValueShortDisplayProperty="code"
           }}
         </div>
         <div class="left">
         <p>Sources</p>
-          {{view Ember.Select
-            prompt="All sources"
-            contentBinding="controllers.sources"
-            selectionBinding="controller.selectedSourcesCodeValues"
-            optionValuePath="content.id"
-            optionLabelPath="content.code"
-            multiple="true"
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.sources"
+            selectedValuesBinding="controller.selectedSources"
+            selectedValuesCollectionName="sources"
+            selectedValueDisplayProperty="fullName"
+            selectedValueShortDisplayProperty="code"
           }}
         </div>
       </div>
@@ -116,32 +111,29 @@
       <div class="inner">
         <div class="left">
           <p>Importer</p>
-          {{view Ember.Select
-            prompt="All countries"
-            contentBinding="controllers.geoEntities"
-            selectionBinding="controller.selectedImporterValues"
-            optionValuePath="content.id"
-            optionLabelPath="content.name"
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.geoEntities"
+            selectedValuesBinding="controller.selectedImporters"
+            selectedValuesCollectionName="importers"
+            selectedValueDisplayProperty="name"
           }}
         </div>
         <div class="left">
           <p>Exporter</p>
-          {{view Ember.Select
-            prompt="All countries"
-            contentBinding="controllers.geoEntities"
-            selectionBinding="controller.selectedExporterValues"
-            optionValuePath="content.id"
-            optionLabelPath="content.name"
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.geoEntities"
+            selectedValuesBinding="controller.selectedExporters"
+            selectedValuesCollectionName="exporters"
+            selectedValueDisplayProperty="name"
           }}
         </div>
         <div class="left">
           <p>Country of origin</p>
-          {{view Ember.Select
-            prompt="All countries"
-            contentBinding="controllers.geoEntities"
-            selectionBinding="controller.selectedCountryOfOriginValues"
-            optionValuePath="content.id"
-            optionLabelPath="content.name"
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.geoEntities"
+            selectedValuesBinding="controller.selectedCountriesOfOrigin"
+            selectedValuesCollectionName="countries of origin"
+            selectedValueDisplayProperty="name"
           }}
         </div>
         <div class="left">

@@ -109,6 +109,13 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   ).property('autoCompleteTaxonConcepts.meta.rank_headers')
 
   selectedTaxonConcepts: []
+  selectedTerms: []
+  selectedUnits: []
+  selectedPurposes: []
+  selectedSources: []
+  selectedImporters: []
+  selectedExporters: []
+  selectedCountriesOfOrigin: []
 
   actions:
     saveChanges: () ->

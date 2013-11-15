@@ -1,0 +1,17 @@
+<div class="popup">
+  <div class="search-block01">
+    <strong class="title01">YOUR SELECTION</strong>
+    {{collection Trade.MultiSelectSelectedValuesCollectionView
+      contentBinding="view.selectedValues"
+      selectedValueDisplayPropertyBinding="view.selectedValueDisplayProperty"
+      selectedValueShortDisplayPropertyBinding="view.selectedValueShortDisplayProperty"
+    }}
+  </div>
+  <div class="list-holder">
+    {{collection Trade.MultiSelectAllValuesCollectionView
+      contentBinding="view.allValues"
+      selectedValuesBinding="view.selectedValues"
+      selectedValueDisplayPropertyBinding="view.selectedValueDisplayProperty"
+    }}
+  </div>
+</div>
