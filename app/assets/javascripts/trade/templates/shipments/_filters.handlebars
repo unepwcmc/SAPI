@@ -8,9 +8,9 @@
     </div>
     <div id="collapseOne" class="body collapse in">
       <div class="inner">
-        <div class="left">
+        <div class="left filter-group">
           <p>Species names</p>
-          <div class="popup-area">
+          <div class="">
             {{view Trade.TaxonConceptsSearchButton
               selectedValuesBinding="controller.selectedTaxonConcepts"
               selectedValuesCollectionName="taxa"
@@ -60,7 +60,7 @@
     </div>
     <div id="collapseTwo" class="body collapse in">
       <div class="inner">
-        <div class="left">
+        <div class="left filter-group">
           <p>Terms</p>
           {{view Trade.MultiSelect
             allValuesBinding="controllers.terms"
@@ -70,7 +70,7 @@
             selectedValueShortDisplayProperty="code"
           }}
         </div>
-        <div class="left">
+        <div class="left filter-group">
           <p>Units</p>
           {{view Trade.MultiSelect
             allValuesBinding="controllers.units"
@@ -79,7 +79,7 @@
             selectedValueDisplayProperty="fullName"
             selectedValueShortDisplayProperty="code"
           }}        </div>
-        <div class="left">
+        <div class="left filter-group">
           <p>Purposes</p>
           {{view Trade.MultiSelect
             allValuesBinding="controllers.purposes"
@@ -89,7 +89,7 @@
             selectedValueShortDisplayProperty="code"
           }}
         </div>
-        <div class="left">
+        <div class="left filter-group">
         <p>Sources</p>
           {{view Trade.MultiSelect
             allValuesBinding="controllers.sources"
@@ -156,7 +156,7 @@
     <div id="collapseFour" class="body collapse in">
       <div class="inner">
 
-        <div class="left popup-area">  
+        <div class="left filter-group">  
           <p>Permits</p>
           <div class="search-block01">
           {{ view Trade.PermitSearchTextField

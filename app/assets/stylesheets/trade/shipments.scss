@@ -70,42 +70,60 @@ div.filters {
   }
 }
 
+
+.filter-group {
+  width: 190px;
+}
+
+
 div.popup-holder01 { 
   //display: block; 
-  top: 58px;
+  top: 20px;
   left: -11px;
 
-  div.search-block01.no-padding {
-    padding: 0;
-    background-color: #ffffff;
-    border-bottom: #00a2db solid 1px;
-    .choices {
-      background-color: #00a2db;
-      height: 100px;
-      .selection {
-        padding: 6px;
+  .popup {
+    border: $dark-blue solid 1px;
+
+    div.search-block01.no-padding {
+      padding: 0;
+      background-color: $dark-blue;
+      border-bottom: #00a2db solid 1px;
+      .choices {
+        background-color: #00a2db;
+        height: 100px;
+        .selection {
+          padding: 6px;
+        }
+        overflow: auto;
       }
-      overflow: auto;
     }
-  }
+
+    div.list-holder {
+      background-color: #ffffff;
+      a {
+        text-decoration: none;
+      }
+    }
+    
+//    .selections {
+//      background-color: #ffffff;
+//      height: 60px;
+//    }
+//  
+//    .list-holder ul li a span {
+//      text-decoration: none;
+//    }
   
-  .selections {
-    background-color: #ffffff;
-    height: 60px;
-  }
+    button {
+      height: 15px;
+      width: 15px;
+      border-radius: 15px;
+      font-size: 10px;
+      line-height: 12px;
+      padding: 0;
+      text-align:center;
+    }
 
-  .list-holder ul li a span {
-    text-decoration: none;
-  }
-
-  button {
-    height: 15px;
-    width: 15px;
-    border-radius: 15px;
-    font-size: 10px;
-    line-height: 12px;
-    padding: 0;
-    text-align:center;
   }
 }
 
