@@ -5,7 +5,11 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
 
   dates: (x for x in [1950..2020] by 5) #tmp
 
-  allAppendixValues: ['I', 'II', 'III']
+  allAppendices: [
+    {id: 'I', name: 'Appendix I'},
+    {id: 'II', name: 'Appendix II'},
+    {id: 'III', name: 'Appendix III'}
+  ]
   allReporterTypeValues: ['E', 'I']
 
   shipmentsSaving: ( ->
@@ -108,6 +112,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   ).property('autoCompleteTaxonConcepts.meta.rank_headers')
 
   selectedTaxonConcepts: []
+  selectedAppendices: []
   selectedTerms: []
   selectedUnits: []
   selectedPurposes: []
@@ -136,5 +141,11 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       @selectedQueryParamNames.forEach (property) =>
         selectedParams = @get(property.name)
         params[property.param] = @parseSelectedParams(selectedParams)
-      console.log params
       @openShipmentsPage params
+
+    resetFilters: ->
+      @selectedQueryParamNames.forEach (property) =>
+        if /.+$/.test property.param
+          @set(property.name, [])
+        else
+          @set(property.name, null)

@@ -25,12 +25,12 @@
         </div>
         <div class="left filter-group one">
           <p>Appendix</p>
-          {{  view Ember.Select 
-                viewName="appendices"
-                contentBinding="controller.allAppendixValues"
-                selectionBinding="controller.selectedAppendixValues"
-                prompt="Pick an appendix:"
-                multiple="true"
+          {{view Trade.MultiSelect
+            allValuesBinding="controller.allAppendices"
+            selectedValuesBinding="controller.selectedAppendices"
+            selectedValuesCollectionName="appendices"
+            selectedValueDisplayProperty="name"
+            selectedValueShortDisplayProperty="id"
           }}
         </div>
         <div class="left filter-group one time">
