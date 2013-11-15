@@ -41,6 +41,10 @@ Trade.MultiSelectDropdown = Ember.View.extend
     @get('query') != undefined
   ).property()
 
+  hasGroupedOptions: ( ->
+    @get('allValuesGrouped') != undefined
+  ).property()
+
 Trade.MultiSelectSelectedValuesCollectionView = Ember.CollectionView.extend
   tagName: 'ul'
   content: null
@@ -111,3 +115,19 @@ Trade.MultiSelectSearchTextField = Em.TextField.extend
   showDropdown: () ->
     if @.$().val().length > 2
       $('.search fieldset').addClass('parent-focus parent-active')
+
+Trade.TaxonConceptAutoCompleteSuggestionView = Ember.View.extend
+  tagName: 'li'
+  content: null
+  contextBinding: 'content'
+  selectedValues: null
+  template: ( ->
+    Ember.Handlebars.compile(
+      '{{#highlight view.content.autoCompleteSuggestion query=view.query}}
+        {{unbound view.content}}
+      {{/highlight}}'
+    )
+  ).property()
+
+  click: (event) ->
+    @get('selectedValues').addObject(@get('context'))

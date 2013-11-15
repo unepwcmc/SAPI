@@ -12,7 +12,7 @@
           <p>Taxa</p>
           {{view Trade.MultiSelect
             queryBinding="controller.taxonConceptQuery"
-            allValuesBinding="controller.autoCompleteTaxonConcepts"
+            allValuesGroupedBinding="controller.autoCompleteTaxonConceptsByRank"
             selectedValuesBinding="controller.selectedTaxonConcepts"
             selectedValuesCollectionName="taxa"
             selectedValueDisplayProperty="fullName"
