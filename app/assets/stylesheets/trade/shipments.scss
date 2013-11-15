@@ -2,7 +2,7 @@
 
 $dark-grey: #dddddd;
 $light-grey: #f7f7f7;
-$dark-blue: #00a1de;
+$dark-blue: #0e76b1;
 $light-blue: #00a2db;
 $link-blue: #0088cc;
 
@@ -75,7 +75,6 @@ div.filters {
     background-color: #fff;
     a { 
       color: darken($dark-grey, 54%);
-      
       padding: 0 6px;
     }
   }
@@ -100,58 +99,79 @@ div.filters {
   }
 }
 
-
 div.popup-holder01 { 
   //display: block; 
-  top: 20px;
-  left: -11px;
+  top: 52px;
+  left: 0px;
+  padding: 0;
+
+  .popup:after {
+    right: 78px;
+  }
 
   .popup {
-    border: $dark-blue solid 1px;
+
+    border: $light-blue solid 1px;
+    border-radius: 0;
+    //.search-block01
 
     div.search-block01.no-padding {
       padding: 0;
-      background-color: $dark-blue;
+      border-radius: 0;
+      background-color: $light-blue;
       border-bottom: #00a2db solid 1px;
-      .choices {
-        background-color: #00a2db;
-        height: 100px;
-        .selection {
-          padding: 6px;
+
+      strong {
+        padding: 12px 4px 0 12px;
+        color: #fff;
+      }
+
+      ul {
+        padding: 0 0 4px 12px;
+        margin: 0;
+        
+        li {
+          border-radius: 0;
+          background-color: $dark-blue;
+          color: #fff;
+          padding: 0 5px;
+          a {
+            color: #fff;
+          }
         }
-        overflow: auto;
       }
     }
 
     div.list-holder {
+      width: 252px;
       background-color: #ffffff;
-      a {
-        text-decoration: none;
+      padding: 12px 0 0 12px;
+      margin: 0;
+      ul {
+        margin: 0;
+        list-style-type: none;
+        li {
+          cursor: pointer; 
+          cursor: hand;
+        }
+        li:hover {
+          color: $light-blue;
+          text-decoration: underline;
+        }
       }
     }
     
-//    .selections {
-//      background-color: #ffffff;
-//      height: 60px;
-//    }
-//  
-//    .list-holder ul li a span {
-//      text-decoration: none;
-//    }
-  
-    button {
-      height: 15px;
-      width: 15px;
-      border-radius: 15px;
-      font-size: 10px;
-      line-height: 12px;
-      padding: 0;
-      text-align:center;
-    }
-
   }
 }
 
 .body.in {
   overflow:visible;
 }
+
+
+// For debugging
+//.xxx {
+//  div.popup-holder01 {
+//    display: block; 
+//  }
+//}
