@@ -136,6 +136,17 @@
             selectedValueDisplayProperty="name"
           }}
         </div>
+      </div>
+    </div>
+
+
+    <div class="heading">
+      <a class="toggle" data-toggle="collapse" href="#collapseFour">
+        Permits & Quantity
+      </a>
+    </div>
+    <div id="collapseFour" class="body collapse in">
+      <div class="inner">
         <div class="left">
           <p>Reporter type</p>
           {{view Ember.Select
@@ -144,18 +155,6 @@
             selectionBinding="controller.selectedReporterTypeValues"
           }}
         </div>
-      </div>
-    </div>
-
-
-    <div class="heading">
-      <a class="toggle" data-toggle="collapse" href="#collapseFour">
-        Trading Partners
-      </a>
-    </div>
-    <div id="collapseFour" class="body collapse in">
-      <div class="inner">
-
         <div class="left filter-group">  
           <p>Permits</p>
           <div class="search-block01">
@@ -179,6 +178,13 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="left">
+          <p>Quantity</p>
+          {{  view Ember.TextField
+                valueBinding="controller.selectedQuantity"
+                placeholder="Enter a quantity"
+          }}
         </div>
 
       </div>

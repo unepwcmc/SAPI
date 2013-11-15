@@ -115,6 +115,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   selectedImporters: []
   selectedExporters: []
   selectedCountriesOfOrigin: []
+  selectedQuantity: null
 
   actions:
     saveChanges: () ->
