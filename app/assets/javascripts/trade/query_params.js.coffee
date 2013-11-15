@@ -1,6 +1,10 @@
 Trade.QueryParams = Ember.Mixin.create({
   selectedQueryParamNames: [
     {
+      name: "selectedTaxonConcepts"
+      param: 'appendices[]'
+    },
+    {
       name: "selectedAppendixValues"
       param: 'appendices[]'
     },
@@ -13,31 +17,31 @@ Trade.QueryParams = Ember.Mixin.create({
       param: 'time_range_end'
     },
     {
-      name: "selectedTermCodeValues"
+      name: "selectedTerms"
       param: 'terms_ids[]'
     },
     {
-      name: "selectedUnitsCodeValues"
+      name: "selectedUnits"
       param: 'units_ids[]'
     },
     {
-      name: "selectedPurposesCodeValues"
+      name: "selectedPurposes"
       param: 'purposes_ids[]'
     },
     {
-      name: "selectedSourcesCodeValues"
+      name: "selectedSources"
       param: 'sources_ids[]'
     },
     {
-      name: "selectedImporterValues"
+      name: "selectedImporters"
       param: 'importers_ids[]'
     },
     {
-      name: "selectedExporterValues"
+      name: "selectedExporters"
       param: 'exporters_ids[]'
     },
     {
-      name: "selectedCountryOfOriginValues"
+      name: "selectedCountriesOfOrigin"
       param: 'countries_of_origin_ids[]'
     },
     {

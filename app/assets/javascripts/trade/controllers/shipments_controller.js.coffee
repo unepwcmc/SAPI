@@ -59,7 +59,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
 
   openShipmentsPage: (params) ->
     params.page = params.page or 1
-    console.log params
     @transitionToRoute('shipments', {queryParams: params})
 
   parseSelectedParams: (params) ->
@@ -131,11 +130,10 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
         if (!shipment.get('isSaving'))
           shipment.get('transaction').rollback()
 
-    testQueryParams: ->
-      self = @
+    search: ->
       params = {}
-      @selectedQueryParamNames.forEach (property) ->
-        selectedParams = self.get(property.name)
-        param = self.parseSelectedParams(selectedParams)
-        params[property.param] = param
+      @selectedQueryParamNames.forEach (property) =>
+        selectedParams = @get(property.name)
+        params[property.param] = @parseSelectedParams(selectedParams)
+      console.log params
       @openShipmentsPage params
