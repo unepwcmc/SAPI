@@ -9,22 +9,17 @@
     <div id="collapseOne" class="body collapse in">
       <div class="inner one">
         <div class="left filter-group">
-          <p>Species names</p>
-          <div class="">
-            {{view Trade.TaxonConceptsSearchButton
-              selectedValuesBinding="controller.selectedTaxonConcepts"
-              selectedValuesCollectionName="taxa"
-              selectedValueDisplayProperty="fullName"
-            }}
-            {{view Trade.TaxonConceptSearchDropdown
-              queryBinding="controller.taxonConceptQuery"
-              allValuesBinding="controller.autoCompleteTaxonConcepts"
-              selectedValuesBinding="controller.selectedTaxonConcepts"
-            }}
-          </div>
+          <p>Taxa</p>
+          {{view Trade.MultiSelect
+            queryBinding="controller.taxonConceptQuery"
+            allValuesBinding="controller.autoCompleteTaxonConcepts"
+            selectedValuesBinding="controller.selectedTaxonConcepts"
+            selectedValuesCollectionName="taxa"
+            selectedValueDisplayProperty="fullName"
+          }}
         </div>
         <div class="left filter-group one">
-          <p>Appendix</p>
+          <p>Appendices</p>
           {{view Trade.MultiSelect
             allValuesBinding="controller.allAppendices"
             selectedValuesBinding="controller.selectedAppendices"

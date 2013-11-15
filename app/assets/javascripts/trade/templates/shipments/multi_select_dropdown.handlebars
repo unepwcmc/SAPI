@@ -1,6 +1,16 @@
 <div class="popup-holder01">
   <div class="popup">
     <div class="search-block01 no-padding">
+      {{#if view.hasAutoComplete}}
+      <div class="row01">
+        {{ view Trade.MultiSelectSearchTextField
+          valueBinding="view.query"
+          title="search"
+          placeholder="Species, higher taxon or synonym..."
+          autocomplete="off"
+        }}
+      </div>
+      {{/if}}
       <strong class="title01">YOUR SELECTION</strong>
         {{collection Trade.MultiSelectSelectedValuesCollectionView
           contentBinding="view.selectedValues"
