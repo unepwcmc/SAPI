@@ -48,6 +48,11 @@ div.filters {
   .row01 {
     padding-top: 6px;
   }
+
+  .popup-holder01 .popup:after {
+    background: url(/assets/species/arrow05-dark.png) no-repeat;
+    background-size: 100%;
+  }
 }
 
 .go, .heading {clear: left;}
