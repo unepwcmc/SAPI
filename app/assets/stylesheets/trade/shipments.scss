@@ -1,3 +1,10 @@
+// Colours
+
+$dark-grey: #dddddd;
+$light-grey: #f7f7f7;
+$dark-blue: #00a1de;
+$light-blue: #00a2db;
+
 .modal {
   /* new custom width */
   width: 940px;
@@ -9,6 +16,40 @@
   cursor: pointer
 }
 
+h2 {
+  padding: 16px 0;
+  border-bottom: 1px solid lighten($dark-grey, 6%);
+  margin-bottom: 29px;
+}
+
+div.filters {
+  background-color: $light-grey;
+  .heading {
+    background-color: $dark-grey;
+    text-transform: uppercase;
+    padding: 6px;
+    margin: 8px;
+    a {
+      color: #fff;
+      font-size: 17px;
+    }
+  }
+  //.body .left {
+  //  padding: 8px;
+  //}
+  div.left {
+    padding: 8px 15px;
+  }
+  p {
+    padding-bottom: 3px;
+    border-bottom: 1px solid lighten($dark-grey, 6%);
+    color: darken($dark-grey, 48%);
+  }
+  .row01 {
+    padding-top: 6px;
+  }
+}
+
 .go, .heading {clear: left;}
 
 .inner {
@@ -16,7 +57,6 @@
   div.left {
     float: left;
   }
-  // overriding boostrap
   select {
     width: 160px;
     border: 1px solid #cccccc;
@@ -64,8 +104,6 @@ div.popup-holder01 {
   }
 }
 
-
 .body.in {
   overflow:visible;
 }
-
