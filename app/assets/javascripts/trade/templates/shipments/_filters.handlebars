@@ -111,32 +111,29 @@
       <div class="inner">
         <div class="left">
           <p>Importer</p>
-          {{view Ember.Select
-            prompt="All countries"
-            contentBinding="controllers.geoEntities"
-            selectionBinding="controller.selectedImporterValues"
-            optionValuePath="content.id"
-            optionLabelPath="content.name"
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.geoEntities"
+            selectedValuesBinding="controller.selectedImporters"
+            selectedValuesCollectionName="importers"
+            selectedValueDisplayProperty="name"
           }}
         </div>
         <div class="left">
           <p>Exporter</p>
-          {{view Ember.Select
-            prompt="All countries"
-            contentBinding="controllers.geoEntities"
-            selectionBinding="controller.selectedExporterValues"
-            optionValuePath="content.id"
-            optionLabelPath="content.name"
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.geoEntities"
+            selectedValuesBinding="controller.selectedExporters"
+            selectedValuesCollectionName="exporters"
+            selectedValueDisplayProperty="name"
           }}
         </div>
         <div class="left">
           <p>Country of origin</p>
-          {{view Ember.Select
-            prompt="All countries"
-            contentBinding="controllers.geoEntities"
-            selectionBinding="controller.selectedCountryOfOriginValues"
-            optionValuePath="content.id"
-            optionLabelPath="content.name"
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.geoEntities"
+            selectedValuesBinding="controller.selectedCountriesOfOrigin"
+            selectedValuesCollectionName="countries of origin"
+            selectedValueDisplayProperty="name"
           }}
         </div>
         <div class="left">
