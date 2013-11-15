@@ -56,8 +56,6 @@ div.filters {
   }
 }
 
-.go, .heading {clear: left;}
-
 .inner {
   clear: left;
   div.left {
@@ -78,9 +76,16 @@ div.filters {
       padding: 0 6px;
     }
   }
-  .popup-area :hover {
-    clor: $link-blue;
+  .popup-area:hover {
+    color: $link-blue;
     background-color: #fff;
+    .link {
+      background-color: #fff;
+      color: $link-blue;
+    }
+    li {
+      color: darken($dark-grey, 54%);
+    }
   }
 
 }
@@ -114,17 +119,14 @@ div.popup-holder01 {
   background-color : transparent;
 
   .popup {
-
     padding-top: 11px;
-    //border: $light-blue solid 1px;
-    //border-radius: 0;
     border: none;
     
     div.search-block01.no-padding {
       padding: 0;
       border-radius: 0;
       background-color: $light-blue;
-      border-bottom: #00a2db solid 1px;
+      border: $dark-blue solid 1px;
 
       strong {
         padding: 12px 4px 0 12px;
@@ -148,7 +150,10 @@ div.popup-holder01 {
     }
 
     div.list-holder {
-      width: 248px;
+      border-bottom: $dark-blue solid 1px;
+      border-left: $dark-blue solid 1px;
+      border-right: $dark-blue solid 1px;
+      width: 246px;
       background-color: #ffffff;
       padding: 12px 0 0 12px;
       margin: 0;
@@ -171,6 +176,12 @@ div.popup-holder01 {
 
 .body.in {
   overflow:visible;
+}
+
+.go, .heading {clear: left;}
+
+.go {
+  padding: 18px 9px 10px 10px;
 }
 
 
