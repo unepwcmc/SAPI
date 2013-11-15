@@ -38,7 +38,6 @@ Trade.MultiSelectDropdown = Ember.View.extend
   selectedValues: null
 
   hasAutoComplete: ( ->
-    console.log @get('query') != undefined
     @get('query') != undefined
   ).property()
 

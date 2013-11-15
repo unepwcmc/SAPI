@@ -77,24 +77,22 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       return params
     return []
 
-  permitQuery: "FR1"
-  selectedPermitProperties: []
+  permitQuery: null
   autoCompletePermits: ( ->
     permitQuery = @get('permitQuery')
     if !permitQuery || permitQuery.length < 3
       return;
-
     Trade.Permit.find(
       permit_query: @get('permitQuery')
     )
   ).property('permitQuery')
+  selectedPermits: []
 
   taxonConceptQuery: null
   autoCompleteTaxonConcepts: ( ->
     taxonConceptQuery = @get('taxonConceptQuery')
     if !taxonConceptQuery || taxonConceptQuery.length < 3
       return [];
-
     Trade.AutoCompleteTaxonConcept.find(
       taxonomy: 'CITES'
       taxon_concept_query: taxonConceptQuery
@@ -102,7 +100,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       autocomplete: true
     )
   ).property('taxonConceptQuery')
-
   autoCompleteTaxonConceptsByRank: ( ->
     return [] unless @get('autoCompleteTaxonConcepts.meta.rank_headers')
     @get('autoCompleteTaxonConcepts.meta.rank_headers').map (rh) ->
@@ -110,8 +107,8 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       taxon_concepts: rh.taxon_concept_ids.map (tc_id) ->
         Trade.AutoCompleteTaxonConcept.find(tc_id)
   ).property('autoCompleteTaxonConcepts.meta.rank_headers')
-
   selectedTaxonConcepts: []
+
   selectedAppendices: []
   selectedTerms: []
   selectedUnits: []
