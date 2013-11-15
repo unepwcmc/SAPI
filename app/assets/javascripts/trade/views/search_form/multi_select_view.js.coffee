@@ -41,14 +41,25 @@ Trade.MultiSelectSelectedValuesCollectionView = Ember.CollectionView.extend
   tagName: 'ul'
   content: null
   selectedValueDisplayProperty: 'name'
+  selectedValueShortDisplayProperty: null
 
   itemViewClass: Ember.View.extend
     contextBinding: 'content'
     displayName: ( ->
+      if @get('parentView.selectedValueShortDisplayProperty')
+        @get('content.' + @get('parentView.selectedValueShortDisplayProperty'))
+      else
+        @get('content.' + @get('parentView.selectedValueDisplayProperty'))
+    ).property(
+      'parentView.selectedValueShortDisplayProperty',
+      'parentView.selectedValueDisplayProperty'
+    )
+    longDisplayName: ( ->
       @get('content.' + @get('parentView.selectedValueDisplayProperty'))
     ).property('parentView.selectedValueDisplayProperty')
     template: Ember.Handlebars.compile(
-      '{{view.displayName}} <a {{action "deleteSelection" this target="view.parentView"}} class="delete">x</a>'
+      '<span title="{{view.longDisplayName}}">{{view.displayName}}</span>' +
+      '<a {{action "deleteSelection" this target="view.parentView"}} class="delete">x</a>'
     )
 
   actions:
