@@ -9,22 +9,17 @@
     <div id="collapseOne" class="body collapse in">
       <div class="inner one">
         <div class="left filter-group">
-          <p>Species names</p>
-          <div class="">
-            {{view Trade.TaxonConceptsSearchButton
-              selectedValuesBinding="controller.selectedTaxonConcepts"
-              selectedValuesCollectionName="taxa"
-              selectedValueDisplayProperty="fullName"
-            }}
-            {{view Trade.TaxonConceptSearchDropdown
-              queryBinding="controller.taxonConceptQuery"
-              allValuesBinding="controller.autoCompleteTaxonConcepts"
-              selectedValuesBinding="controller.selectedTaxonConcepts"
-            }}
-          </div>
+          <p>Taxa</p>
+          {{view Trade.MultiSelect
+            queryBinding="controller.taxonConceptQuery"
+            allValuesBinding="controller.autoCompleteTaxonConcepts"
+            selectedValuesBinding="controller.selectedTaxonConcepts"
+            selectedValuesCollectionName="taxa"
+            selectedValueDisplayProperty="fullName"
+          }}
         </div>
         <div class="left filter-group one">
-          <p>Appendix</p>
+          <p>Appendices</p>
           {{view Trade.MultiSelect
             allValuesBinding="controller.allAppendices"
             selectedValuesBinding="controller.selectedAppendices"
@@ -155,35 +150,21 @@
             selectionBinding="controller.selectedReporterTypeValues"
           }}
         </div>
-        <div class="left filter-group">  
+        <div class="left filter-group">
           <p>Permits</p>
-          <div class="search-block01">
-          {{ view Trade.PermitSearchTextField
-            valueBinding = "controller.permitQuery"
-            id="permit_name"
-            title="search"
-            placeholder="Permit name..."
-            autocomplete="off"
+          {{view Trade.MultiSelect
+            queryBinding="controller.permitQuery"
+            allValuesBinding="controller.autoCompletePermits"
+            selectedValuesBinding="controller.selectedPermits"
+            selectedValuesCollectionName="permits"
+            selectedValueDisplayProperty="number"
           }}
-          </div>
-          <div class="popup-holder01">
-            <div class="popup">
-              <div class="search-block01 no-padding">
-                {{ view Trade.PermitSelectedList }}
-                <div class="list-holder">
-                  {{ view Trade.PermitSearchDropdown
-                   valueBinding="controller.autoCompletePermits"
-                  }}
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
         <div class="left">
           <p>Quantity</p>
-          {{  view Ember.TextField
-                valueBinding="controller.selectedQuantity"
-                placeholder="Enter a quantity"
+          {{view Ember.TextField
+            valueBinding="controller.selectedQuantity"
+            placeholder="Enter a quantity"
           }}
         </div>
 

@@ -89,9 +89,10 @@ class Trade::Filter
     end
 
     unless @permits_ids.empty?
-      @query = @query.where("import_permit_id = ? or country_of_origin_permit_id = ? 
-                             or trade_shipment_export_permits.trade_permit_id = ?",
-                             @permits_ids , @permits_ids, @permits_ids)
+      @query = @query.where("import_permit_id IN (?)
+                            OR country_of_origin_permit_id IN (?)
+                            OR trade_shipment_export_permits.trade_permit_id IN (?)",
+                            @permits_ids , @permits_ids, @permits_ids)
     end
 
     unless @quantity.nil?

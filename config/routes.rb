@@ -14,7 +14,6 @@ SAPI::Application.routes.draw do
       resources :units, :only => [:index]
       resources :sources, :only => [:index]
       resources :purposes, :only => [:index]
-      resources :permits, :only => [:index]
     end
     resources :languages, :only => [:index]
     resources :users, :only => [:index]
@@ -93,6 +92,7 @@ SAPI::Application.routes.draw do
     resources :validation_rules
     resources :shipments
     resources :geo_entities, :only => [:index]
+    resources :permits, :only => [:index]
     root :to => 'ember#start'
   end
 
