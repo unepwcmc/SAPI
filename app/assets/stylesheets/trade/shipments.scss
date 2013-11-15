@@ -101,20 +101,25 @@ div.filters {
 
 div.popup-holder01 { 
   //display: block; 
-  top: 52px;
+  top: 42px;
   left: 0px;
-  padding: 0;
+  padding-top: 0;
 
   .popup:after {
     right: 78px;
+    top: 0;
   }
+
+  border: none;
+  background-color : transparent;
 
   .popup {
 
-    border: $light-blue solid 1px;
-    border-radius: 0;
-    //.search-block01
-
+    padding-top: 11px;
+    //border: $light-blue solid 1px;
+    //border-radius: 0;
+    border: none;
+    
     div.search-block01.no-padding {
       padding: 0;
       border-radius: 0;
@@ -143,7 +148,7 @@ div.popup-holder01 {
     }
 
     div.list-holder {
-      width: 252px;
+      width: 248px;
       background-color: #ffffff;
       padding: 12px 0 0 12px;
       margin: 0;
