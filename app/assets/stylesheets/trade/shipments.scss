@@ -56,8 +56,6 @@ div.filters {
   }
 }
 
-.go, .heading {clear: left;}
-
 .inner {
   clear: left;
   div.left {
@@ -178,6 +176,12 @@ div.popup-holder01 {
 
 .body.in {
   overflow:visible;
+}
+
+.go, .heading {clear: left;}
+
+.go {
+  padding: 18px 9px 10px 10px;
 }
 
 
