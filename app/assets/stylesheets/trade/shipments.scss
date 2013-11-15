@@ -4,6 +4,7 @@ $dark-grey: #dddddd;
 $light-grey: #f7f7f7;
 $dark-blue: #00a1de;
 $light-blue: #00a2db;
+$link-blue: #0088cc;
 
 .modal {
   /* new custom width */
@@ -68,6 +69,21 @@ div.filters {
     background-color: white;
     margin: 5px 10px;
   }
+  .popup-area {
+    padding: 6px 0;
+    margin-bottom: 6px;
+    background-color: #fff;
+    a { 
+      color: darken($dark-grey, 54%);
+      
+      padding: 0 6px;
+    }
+  }
+  .popup-area :hover {
+    clor: $link-blue;
+    background-color: #fff;
+  }
+
 }
 
 .inner.one, .inner.four {

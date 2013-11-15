@@ -21,7 +21,7 @@ Trade.MultiSelectButton = Ember.View.extend
   summary: ( ->
     if (@get('selectedValues').length == 0)
       return "All " +
-        @get('selectedValuesCollectionName') + " yet"
+        @get('selectedValuesCollectionName')
     else if (@get('selectedValues').length == 1)
       return @get('selectedValues')[0].get(
         @get('selectedValueDisplayProperty')
