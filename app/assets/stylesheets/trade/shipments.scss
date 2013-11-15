@@ -68,12 +68,20 @@ div.filters {
     background-color: white;
     margin: 5px 10px;
   }
+  .filter-group.one {
+    width: 262px;
+  }
+  .filter-group.one.time select {
+    width: 108px;
+  }
+  .filter-group {
+    width: 190px;
+  }
+
 }
 
 
-.filter-group {
-  width: 190px;
-}
+
 
 
 div.popup-holder01 { 

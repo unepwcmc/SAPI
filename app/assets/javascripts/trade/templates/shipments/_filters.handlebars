@@ -8,7 +8,7 @@
     </div>
     <div id="collapseOne" class="body collapse in">
       <div class="inner">
-        <div class="left filter-group">
+        <div class="left filter-group one">
           <p>Species names</p>
           <div class="">
             {{view Trade.TaxonConceptsSearchButton
@@ -23,7 +23,7 @@
             }}
           </div>
         </div>
-        <div class="left">
+        <div class="left filter-group one">
           <p>Appendix</p>
           {{  view Ember.Select 
                 viewName="appendices"
@@ -33,7 +33,7 @@
                 multiple="true"
           }}
         </div>
-        <div class="left">
+        <div class="left filter-group one time">
           <p>Time range</p>
           {{  view Ember.Select 
                 viewName="from"
@@ -109,7 +109,7 @@
     </div>
     <div id="collapseThree" class="body collapse in">
       <div class="inner">
-        <div class="left">
+        <div class="left filter-group">
           <p>Importer</p>
           {{view Trade.MultiSelect
             allValuesBinding="controllers.geoEntities"
@@ -118,7 +118,7 @@
             selectedValueDisplayProperty="name"
           }}
         </div>
-        <div class="left">
+        <div class="left filter-group">
           <p>Exporter</p>
           {{view Trade.MultiSelect
             allValuesBinding="controllers.geoEntities"
@@ -127,7 +127,7 @@
             selectedValueDisplayProperty="name"
           }}
         </div>
-        <div class="left">
+        <div class="left filter-group">
           <p>Country of origin</p>
           {{view Trade.MultiSelect
             allValuesBinding="controllers.geoEntities"
@@ -136,7 +136,7 @@
             selectedValueDisplayProperty="name"
           }}
         </div>
-        <div class="left">
+        <div class="left filter-group">
           <p>Reporter type</p>
           {{view Ember.Select
             prompt="All types"
