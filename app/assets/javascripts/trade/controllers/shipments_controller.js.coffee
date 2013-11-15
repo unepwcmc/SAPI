@@ -136,5 +136,11 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       @selectedQueryParamNames.forEach (property) =>
         selectedParams = @get(property.name)
         params[property.param] = @parseSelectedParams(selectedParams)
-      console.log params
       @openShipmentsPage params
+
+    resetFilters: ->
+      @selectedQueryParamNames.forEach (property) =>
+        if /.+$/.test property.param
+          @set(property.name, [])
+        else
+          @set(property.name, null)
