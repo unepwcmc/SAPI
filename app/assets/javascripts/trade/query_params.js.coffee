@@ -2,7 +2,7 @@ Trade.QueryParams = Ember.Mixin.create({
   selectedQueryParamNames: [
     {
       name: "selectedTaxonConcepts"
-      param: 'appendices[]'
+      param: 'taxon_concepts_ids[]'
     },
     {
       name: "selectedAppendixValues"

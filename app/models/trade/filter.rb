@@ -67,11 +67,11 @@ class Trade::Filter
 
     # Other cases
 
-    unless @time_range_start == 0 && @time_range_end == 0
-      if @time_range_start == 0
-        @query = @query.where(:year => 1900..@time_range_end)
-      elsif @time_range_end == 0
-        @query = @query.where(:year => @time_range_start..2200)
+    unless @time_range_start.blank? && @time_range_end.blank?
+      if @time_range_start.blank?
+        @query = @query.where(["year <= ?", @time_range_end])
+      elsif @time_range_end.blank?
+        @query = @query.where(["year >= ?", @time_range_start])
       else
         @query = @query.where(:year => @time_range_start..@time_range_end)
       end
