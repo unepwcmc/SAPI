@@ -70,7 +70,7 @@ div.filters {
   }
 }
 
-.inner.one {
+.inner.one, .inner.four {
   .filter-group {
     width: 262px;
   }
@@ -78,22 +78,9 @@ div.filters {
     width: 108px;
   }
 }
-.inner.two {
+.inner.two, .inner.three {
   .filter-group {
     width: 190px;
-  }
-  .filter-group.time select {
-    width: 108px;
-  }
-}
-.inner.three {
-  .filter-group {
-    width: 262px;
-  }
-}
-.inner.four {
-  .filter-group {
-    width: 262px;
   }
 }
 
