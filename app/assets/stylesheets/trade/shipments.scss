@@ -95,21 +95,29 @@ div.filters {
     width: 190px;
   }
   .filter-group.time {
-    width: 264px;
+    width: 192px;
   }
   .filter-group select {
-    margin-left: 0;
-    margin-top: 0;
+    margin: 0;
+    width: 88px;
   }
   .filter-group.time select {
-    width: 108px;
+    width: 87px;
   }
-
+  .filter-group.time > select {
+    margin-right: 7px;
+  }
 }
 .inner.two, .inner.three {
   .filter-group {
     width: 190px;
   }
+}
+.inner.one > div.filter-group:first-child {
+   width: 410px;
+   select: {
+    widht: 410px;
+   }
 }
 
 div.popup-holder01 { 
