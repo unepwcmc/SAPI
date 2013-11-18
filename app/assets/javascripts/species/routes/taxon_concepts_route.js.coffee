@@ -1,6 +1,9 @@
 Species.TaxonConceptsRoute = Ember.Route.extend
 
   beforeModel: (queryParams, transition) ->
+    #dirty hack to check if we have an array or comma separated string here
+    if queryParams.geo_entities_ids && queryParams.geo_entities_ids.substring
+      queryParams.geo_entities_ids = queryParams.geo_entities_ids.split(',')
     @controllerFor('search').setFilters(queryParams)
 
   model: (params, queryParams, transition) ->
