@@ -92,16 +92,32 @@ div.filters {
 
 .inner.one, .inner.four {
   .filter-group {
-    width: 262px;
+    width: 190px;
+  }
+  .filter-group.time {
+    width: 192px;
+  }
+  .filter-group select {
+    margin: 0;
+    width: 88px;
   }
   .filter-group.time select {
-    width: 108px;
+    width: 87px;
+  }
+  .filter-group.time > select {
+    margin-right: 7px;
   }
 }
 .inner.two, .inner.three {
   .filter-group {
     width: 190px;
   }
+}
+.inner.one > div.filter-group:first-child {
+   width: 410px;
+   select: {
+    widht: 410px;
+   }
 }
 
 div.popup-holder01 { 
@@ -208,11 +224,7 @@ div.popup-holder01 {
   overflow:visible;
 }
 
-.go, .heading {clear: left;}
-
-.go {
-  padding: 18px 9px 10px 10px;
-}
+.heading {clear: left;}
 
 
 // For debugging

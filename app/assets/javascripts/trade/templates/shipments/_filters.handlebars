@@ -173,8 +173,15 @@
 
 </div>
 
-<div class="go">
-<button {{ action 'resetFilters' }}><i class="icon-remove"></i> Reset all filters</button>
-<button {{ action 'search' }}><i class="icon-edit"></i>Display and edit results</button>
-<button {{ action 'download' }}><i class="icon-download-alt"></i>Download results</button>
+<div class="shipments-header clearfix">
+  <button class="btn btn-primary pull-right" {{ action 'download' }}>
+    <i class="icon-download-alt"></i>Download results
+  </button>
+  <button class="btn btn-primary pull-right" {{ action 'search' }}>
+    <i class="icon-edit"></i>Display and edit results
+  </button>
+
+  <button class="btn pull-right" {{ action 'resetFilters' }}>
+    <i class="icon-remove"></i> Reset all filters
+  </button>
 </div>
