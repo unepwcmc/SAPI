@@ -72,7 +72,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     [1975..new Date().getFullYear()].reverse()
   ).property()
   selectedTimeStart: ( ->
-    new Date().getFullYear()
+    new Date().getFullYear() - 5
   ).property()
   selectedTimeEnd: ( ->
     new Date().getFullYear()
@@ -156,3 +156,4 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
           @set(property.name, null)
       @set('permitQuery', null)
       @set('taxonConceptQuery', null)
+      @openShipmentsPage(false)
