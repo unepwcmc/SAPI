@@ -1,4 +1,4 @@
-Trade.ShipmentsController = Ember.ArrayController.extend
+Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
@@ -22,9 +22,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend
     controller.set('shipmentsController', @)
     controller
   .property('content')
-
-  allAppendixValues: ['I', 'II', 'III']
-  allReporterTypeValues: ['E', 'I']
 
   pages: ( ->
     total = @get('content.meta.total')
@@ -53,12 +50,82 @@ Trade.ShipmentsController = Ember.ArrayController.extend
       parseInt(@get('page')) + 1
     else
       parseInt(@get('page')) - 1
-    @openShipmentsPage page
+    @openShipmentsPage {page: page}
 
-  openShipmentsPage: (page) ->
-    @transitionToRoute('shipments', {queryParams:
-      page: page or 1
-    })
+  openShipmentsPage: (params) ->
+    params.page = params.page or 1
+    @transitionToRoute('shipments', {queryParams: params})
+
+  parseSelectedParams: (params) ->
+    # TODO: better ideas?
+    if params?.mapBy and params.mapBy('id')[0]
+      return params.mapBy('id')
+    if params?.mapBy
+      return params
+    if params?.get and params.get('id')
+      return params.get('id')
+    if params
+      return params
+    return []
+
+  years: ( ->
+    [1975..new Date().getFullYear()].reverse()
+  ).property()
+  selectedTimeStart: ( ->
+    new Date().getFullYear()
+  ).property()
+  selectedTimeEnd: ( ->
+    new Date().getFullYear()
+  ).property()
+
+  allAppendices: [
+    {id: 'I', name: 'Appendix I'},
+    {id: 'II', name: 'Appendix II'},
+    {id: 'III', name: 'Appendix III'}
+  ]
+  allReporterTypeValues: ['E', 'I']
+
+  permitQuery: null
+  autoCompletePermits: ( ->
+    permitQuery = @get('permitQuery')
+    if !permitQuery || permitQuery.length < 3
+      return;
+    Trade.Permit.find(
+      permit_query: @get('permitQuery')
+    )
+  ).property('permitQuery')
+  selectedPermits: []
+
+  taxonConceptQuery: null
+  autoCompleteTaxonConcepts: ( ->
+    taxonConceptQuery = @get('taxonConceptQuery')
+    if !taxonConceptQuery || taxonConceptQuery.length < 3
+      return [];
+    Trade.AutoCompleteTaxonConcept.find(
+      taxonomy: 'CITES'
+      taxon_concept_query: taxonConceptQuery
+      ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY', 'GENUS', 'SPECIES']
+      autocomplete: true
+    )
+  ).property('taxonConceptQuery')
+  autoCompleteTaxonConceptsByRank: ( ->
+    return [] unless @get('autoCompleteTaxonConcepts.meta.rank_headers')
+    @get('autoCompleteTaxonConcepts.meta.rank_headers').map (rh) ->
+      rank_name:rh.rank_name
+      taxon_concepts: rh.taxon_concept_ids.map (tc_id) ->
+        Trade.AutoCompleteTaxonConcept.find(tc_id)
+  ).property('autoCompleteTaxonConcepts.meta.rank_headers')
+  selectedTaxonConcepts: []
+
+  selectedAppendices: []
+  selectedTerms: []
+  selectedUnits: []
+  selectedPurposes: []
+  selectedSources: []
+  selectedImporters: []
+  selectedExporters: []
+  selectedCountriesOfOrigin: []
+  selectedQuantity: null
 
   actions:
     saveChanges: () ->
@@ -67,9 +134,23 @@ Trade.ShipmentsController = Ember.ArrayController.extend
         shipment.deleteRecord()
       # process updates
       @get('store').commit()
-      @openShipmentsPage(@get('page'))
+      @openShipmentsPage( {page: @get('page')} )
 
     cancelChanges: () ->
       @get('content').forEach (shipment) ->
         if (!shipment.get('isSaving'))
           shipment.get('transaction').rollback()
+
+    search: ->
+      params = {}
+      @selectedQueryParamNames.forEach (property) =>
+        selectedParams = @get(property.name)
+        params[property.param] = @parseSelectedParams(selectedParams)
+      @openShipmentsPage params
+
+    resetFilters: ->
+      @selectedQueryParamNames.forEach (property) =>
+        if /.+$/.test property.param
+          @set(property.name, [])
+        else
+          @set(property.name, null)

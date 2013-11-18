@@ -1,3 +1,11 @@
+// Colours
+
+$dark-grey: #dddddd;
+$light-grey: #f7f7f7;
+$dark-blue: #0e76b1;
+$light-blue: #00a2db;
+$link-blue: #0088cc;
+
 .modal {
   /* new custom width */
   width: 940px;
@@ -7,4 +15,221 @@
 
 .table-row {
   cursor: pointer
+}
+
+h2 {
+  padding: 16px 0;
+  border-bottom: 1px solid lighten($dark-grey, 6%);
+  margin-bottom: 29px;
+}
+
+div.filters {
+  background-color: $light-grey;
+  .heading {
+    background-color: $dark-grey;
+    text-transform: uppercase;
+    padding: 6px;
+    margin: 8px;
+    a {
+      color: #fff;
+      font-size: 17px;
+    }
+  }
+  //.body .left {
+  //  padding: 8px;
+  //}
+  div.left {
+    padding: 8px 15px;
+  }
+  p {
+    padding-bottom: 3px;
+    border-bottom: 1px solid lighten($dark-grey, 6%);
+    color: darken($dark-grey, 48%);
+  }
+  .row01 {
+    padding-top: 6px;
+  }
+
+  .popup-holder01 .popup:after {
+    background: url(/assets/species/arrow05-dark.png) no-repeat;
+    background-size: 100%;
+  }
+}
+
+.inner {
+  clear: left;
+  div.left {
+    float: left;
+  }
+  select {
+    width: 160px;
+    border: 1px solid #cccccc;
+    background-color: white;
+    margin: 5px 10px;
+  }
+  .popup-area {
+    padding: 6px 0;
+    margin-bottom: 6px;
+    background-color: #fff;
+    a { 
+      color: darken($dark-grey, 54%);
+      padding: 0 6px;
+    }
+  }
+  .popup-area:hover {
+    color: $link-blue;
+    background-color: #fff;
+    .link {
+      background-color: #fff;
+      color: $link-blue;
+    }
+    li {
+      color: darken($dark-grey, 54%);
+    }
+  }
+
+}
+
+.inner.one, .inner.four {
+  .filter-group {
+    width: 190px;
+  }
+  .filter-group.time {
+    width: 192px;
+  }
+  .filter-group select {
+    margin: 0;
+    width: 88px;
+  }
+  .filter-group.time select {
+    width: 87px;
+  }
+  .filter-group.time > select {
+    margin-right: 7px;
+  }
+}
+.inner.two, .inner.three {
+  .filter-group {
+    width: 190px;
+  }
+}
+.inner.one > div.filter-group:first-child {
+   width: 410px;
+   select: {
+    widht: 410px;
+   }
+}
+
+div.popup-holder01 { 
+  //display: block; 
+  top: 42px;
+  left: 0px;
+  padding-top: 0;
+
+  .popup:after {
+    right: 78px;
+    top: 0;
+  }
+
+  border: none;
+  background-color : transparent;
+
+  .popup {
+    padding-top: 11px;
+    border: none;
+    
+    div.search-block01.no-padding {
+      padding: 0;
+      border-radius: 0;
+      background-color: $light-blue;
+      border: $dark-blue solid 1px;
+
+      strong {
+        padding: 12px 4px 0 12px;
+        color: #fff;
+      }
+
+      ul {
+        padding: 0 0 4px 12px;
+        margin: 0;
+        
+        li {
+          border-radius: 0;
+          background-color: $dark-blue;
+          color: #fff;
+          padding: 0 5px;
+          a {
+            color: #fff;
+          }
+        }
+      }
+
+      div.row01 {
+        padding: 0;
+        margin: 0;
+        border-radius: 0;
+        border: none;
+        background: $light-blue;
+        height: 39px;
+        width: 246px;
+        input[type="text"] {
+          margin-left: 12px;
+          margin-top: 12px;
+          padding: 3px 8px;
+          background: #fff;
+          height: 21px;
+          width: 218px;
+        }
+      }
+    }
+
+    div.list-holder {
+      border-bottom: $dark-blue solid 1px;
+      border-left: $dark-blue solid 1px;
+      border-right: $dark-blue solid 1px;
+      width: 246px;
+      background-color: #ffffff;
+      padding: 12px 0 0 12px;
+      margin: 0;
+      ul {
+        margin: 0;
+        list-style-type: none;
+        li {
+          cursor: pointer; 
+          cursor: hand;
+        }
+        li:hover {
+          color: $light-blue;
+          text-decoration: underline;
+        }
+        li.header {
+          text-transform: uppercase;
+          display: block;
+          font-weight: bold;
+          color: #376381;
+          padding: 10px 0 0 0;
+          cursor: default;
+        }
+        li.header:hover {
+          color: #376381;
+          text-decoration: none;
+        }
+      }
+    }
+    
+  }
+}
+
+.body.in {
+  overflow:visible;
+}
+
+.heading {clear: left;}
+
+
+// For debugging
+.xxx {
+  div.popup-holder01 {
+    display: block; 
+  }
 }
