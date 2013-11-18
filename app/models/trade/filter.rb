@@ -30,7 +30,8 @@ class Trade::Filter
 
     # Id's (array)
     unless @taxon_concepts_ids.empty?
-      @query = @query.where(:taxon_concept_id => @taxon_concepts_ids)
+      taxa = MTaxonConceptFilterByIdWithDescendants.new(nil, @taxon_concepts_ids).relation
+      @query = @query.where(:taxon_concept_id => taxa.select(:id))
     end
 
     unless @appendices.empty?

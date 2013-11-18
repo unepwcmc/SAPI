@@ -2,13 +2,22 @@ require 'spec_helper'
 describe Trade::Filter do
   describe :results do
     before(:each) do
+      @family = create_cites_eu_family
+      @genus1 = create_cites_eu_genus(
+        :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus'),
+        :parent => @family
+      )
       @taxon_concept1 = create_cites_eu_species(
         :taxon_name => create(:taxon_name, :scientific_name => 'abstractus'),
-        :parent => create_cites_eu_genus(:taxon_name => create(:taxon_name, :scientific_name => 'Foobarus'))
+        :parent => @genus1
+      )
+      @genus2 = create_cites_eu_genus(
+        :taxon_name => create(:taxon_name, :scientific_name => 'Nullificus'),
+        :parent => @family
       )
       @taxon_concept2 = create_cites_eu_species(
         :taxon_name => create(:taxon_name, :scientific_name => 'totalus'),
-        :parent => create_cites_eu_genus(:taxon_name => create(:taxon_name, :scientific_name => 'Nullificus'))
+        :parent => @genus2
       )
 
       @argentina = create(:geo_entity,
@@ -64,9 +73,29 @@ describe Trade::Filter do
       )
     end
     context "when searching by taxon concepts ids" do
-      subject { Trade::Filter.new({:taxon_concepts_ids => [@taxon_concept1.id]}).results }
-      specify { subject.should include(@shipment1) }
-      specify { subject.length.should == 1 }
+      before(:each){ eu; cms_designation; Sapi.rebuild }
+      context "at GENUS rank" do
+        subject { Trade::Filter.new({:taxon_concepts_ids => [@genus1.id]}).results }
+        specify { subject.should include(@shipment1) }
+        specify { subject.should_not include(@shipment2) }
+        specify { subject.length.should == 1 }
+      end
+      context "at FAMILY rank" do
+        subject { Trade::Filter.new({:taxon_concepts_ids => [@family.id]}).results }
+        specify { subject.should include(@shipment1) }
+        specify { subject.should include(@shipment2) }
+        specify { subject.length.should == 2 }
+      end
+      context "at mixed ranks" do
+        subject {
+          Trade::Filter.new({
+            :taxon_concepts_ids => [@genus1.id, @taxon_concept2.id]
+          }).results
+        }
+        specify { subject.should include(@shipment1) }
+        specify { subject.should include(@shipment2) }
+        specify { subject.length.should == 2 }
+      end
     end
     context "when searching by appendices" do
       subject { Trade::Filter.new({:appendices => ['I']}).results }
