@@ -155,12 +155,14 @@ div.popup-holder01 {
         border: none;
         background: $light-blue;
         height: 39px;
+        width: 246px;
         input[type="text"] {
           margin-left: 12px;
           margin-top: 12px;
           padding: 3px 8px;
           background: #fff;
           height: 21px;
+          width: 218px;
         }
       }
     }
@@ -190,6 +192,11 @@ div.popup-holder01 {
           font-weight: bold;
           color: #376381;
           padding: 10px 0 0 0;
+          cursor: default;
+        }
+        li.header:hover {
+          color: #376381;
+          text-decoration: none;
         }
       }
     }
