@@ -24,7 +24,7 @@ class Species::SearchParams < Hash
     unless [:cites_eu, :cms].include? sanitized_params[:taxonomy]
       sanitized_params[:taxonomy] = :cites_eu
     end
-    unless [:cites, :eu, :occurrences].include? sanitized_params[:geo_entity_scope]
+    unless [:cites, :eu, :cms].include? sanitized_params[:geo_entity_scope]
       sanitized_params[:geo_entity_scope] = :cites
     end
     super(sanitized_params)

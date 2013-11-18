@@ -39,7 +39,11 @@ private
       @query.by_cites_eu_taxonomy
     end
 
-    if !@geo_entities.empty? && @geo_entity_scope == :cites
+    if !@geo_entities.empty? && @geo_entity_scope == :cms
+      @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
+        @query, ['I', 'II'], @geo_entities
+      ).relation('CMS')
+    elsif !@geo_entities.empty? && @geo_entity_scope == :cites
       @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
         @query, ['I', 'II', 'III'], @geo_entities
       ).relation('CITES')
