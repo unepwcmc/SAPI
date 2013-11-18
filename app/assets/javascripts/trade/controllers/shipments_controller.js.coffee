@@ -3,15 +3,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   content: null
   currentShipment: null
 
-  dates: (x for x in [1950..2020] by 5) #tmp
-
-  allAppendices: [
-    {id: 'I', name: 'Appendix I'},
-    {id: 'II', name: 'Appendix II'},
-    {id: 'III', name: 'Appendix III'}
-  ]
-  allReporterTypeValues: ['E', 'I']
-
   shipmentsSaving: ( ->
     return false unless @get('content.isLoaded')
     @get('content').filterBy('isSaving', true).length > 0
@@ -76,6 +67,23 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     if params
       return params
     return []
+
+  years: ( ->
+    [1975..new Date().getFullYear()].reverse()
+  ).property()
+  selectedTimeStart: ( ->
+    new Date().getFullYear()
+  ).property()
+  selectedTimeEnd: ( ->
+    new Date().getFullYear()
+  ).property()
+
+  allAppendices: [
+    {id: 'I', name: 'Appendix I'},
+    {id: 'II', name: 'Appendix II'},
+    {id: 'III', name: 'Appendix III'}
+  ]
+  allReporterTypeValues: ['E', 'I']
 
   permitQuery: null
   autoCompletePermits: ( ->
