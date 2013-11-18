@@ -1,0 +1,180 @@
+<div>
+ 
+    <div class="heading">
+      <a data-toggle="collapse" href="#collapseOne">
+
+        Name Appendix and Year
+      </a>
+    </div>
+    <div id="collapseOne" class="body collapse in">
+      <div class="inner one">
+        <div class="left filter-group">
+          <p>Taxa</p>
+          {{view Trade.MultiSelect
+            queryBinding="controller.taxonConceptQuery"
+            allValuesGroupedBinding="controller.autoCompleteTaxonConceptsByRank"
+            selectedValuesBinding="controller.selectedTaxonConcepts"
+            selectedValuesCollectionName="taxa"
+            selectedValueDisplayProperty="fullName"
+          }}
+        </div>
+        <div class="left filter-group one">
+          <p>Appendices</p>
+          {{view Trade.MultiSelect
+            allValuesBinding="controller.allAppendices"
+            selectedValuesBinding="controller.selectedAppendices"
+            selectedValuesCollectionName="appendices"
+            selectedValueDisplayProperty="name"
+            selectedValueShortDisplayProperty="id"
+          }}
+        </div>
+        <div class="left filter-group one time">
+          <p>Time range</p>
+          {{  view Ember.Select
+                viewName="from"
+                contentBinding="years"
+                selectionBinding="controller.selectedTimeStart"
+                prompt="From:"
+          }}
+          {{  view Ember.Select
+                viewName="to"
+                contentBinding="years"
+                selectionBinding="controller.selectedTimeEnd"
+                prompt="To:"
+          }}
+        </div>
+      </div>
+    </div>
+
+
+    <div class="heading">
+      <a data-toggle="collapse" href="#collapseTwo">
+        Trade Codes
+      </a>
+    </div>
+    <div id="collapseTwo" class="body collapse in">
+      <div class="inner two">
+        <div class="left filter-group">
+          <p>Terms</p>
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.terms"
+            selectedValuesBinding="controller.selectedTerms"
+            selectedValuesCollectionName="terms"
+            selectedValueDisplayProperty="fullName"
+            selectedValueShortDisplayProperty="code"
+          }}
+        </div>
+        <div class="left filter-group">
+          <p>Units</p>
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.units"
+            selectedValuesBinding="controller.selectedUnits"
+            selectedValuesCollectionName="units"
+            selectedValueDisplayProperty="fullName"
+            selectedValueShortDisplayProperty="code"
+          }}        </div>
+        <div class="left filter-group">
+          <p>Purposes</p>
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.purposes"
+            selectedValuesBinding="controller.selectedPurposes"
+            selectedValuesCollectionName="purposes"
+            selectedValueDisplayProperty="fullName"
+            selectedValueShortDisplayProperty="code"
+          }}
+        </div>
+        <div class="left filter-group">
+        <p>Sources</p>
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.sources"
+            selectedValuesBinding="controller.selectedSources"
+            selectedValuesCollectionName="sources"
+            selectedValueDisplayProperty="fullName"
+            selectedValueShortDisplayProperty="code"
+          }}
+        </div>
+      </div>
+    </div>
+
+    <div class="heading">
+      <a data-toggle="collapse" href="#collapseThree">
+        Trading Partners
+      </a>
+    </div>
+    <div id="collapseThree" class="body collapse in">
+      <div class="inner three">
+        <div class="left filter-group">
+          <p>Importer</p>
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.geoEntities"
+            selectedValuesBinding="controller.selectedImporters"
+            selectedValuesCollectionName="importers"
+            selectedValueDisplayProperty="name"
+          }}
+        </div>
+        <div class="left filter-group">
+          <p>Exporter</p>
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.geoEntities"
+            selectedValuesBinding="controller.selectedExporters"
+            selectedValuesCollectionName="exporters"
+            selectedValueDisplayProperty="name"
+          }}
+        </div>
+        <div class="left filter-group">
+          <p>Country of origin</p>
+          {{view Trade.MultiSelect
+            allValuesBinding="controllers.geoEntities"
+            selectedValuesBinding="controller.selectedCountriesOfOrigin"
+            selectedValuesCollectionName="countries of origin"
+            selectedValueDisplayProperty="name"
+          }}
+        </div>
+      </div>
+    </div>
+
+
+    <div class="heading">
+      <a class="toggle" data-toggle="collapse" href="#collapseFour">
+        Permits & Quantity
+      </a>
+    </div>
+    <div id="collapseFour" class="body collapse">
+      <div class="inner four">
+        <div class="left filter-group">
+          <p>Reporter type</p>
+          {{view Ember.Select
+            prompt="All types"
+            contentBinding="controller.allReporterTypeValues"
+            selectionBinding="controller.selectedReporterTypeValues"
+          }}
+        </div>
+        <div class="left filter-group">
+          <p>Permits</p>
+          {{view Trade.MultiSelect
+            queryBinding="controller.permitQuery"
+            allValuesBinding="controller.autoCompletePermits"
+            selectedValuesBinding="controller.selectedPermits"
+            selectedValuesCollectionName="permits"
+            selectedValueDisplayProperty="number"
+          }}
+        </div>
+        <div class="left">
+          <p>Quantity</p>
+          {{view Ember.TextField
+            valueBinding="controller.selectedQuantity"
+            placeholder="Enter a quantity"
+          }}
+        </div>
+
+      </div>
+    </div>
+
+
+</div>
+
+<div class="go">
+<button {{ action 'resetFilters' }}><i class="icon-remove"></i> Reset all filters</button>
+<button {{ action 'search' }}><i class="icon-edit"></i>Display and edit results</button>
+<button {{ action 'download' }}><i class="icon-download-alt"></i>Download results</button>
+</div>

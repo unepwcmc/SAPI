@@ -1,0 +1,43 @@
+<div class="popup-holder01">
+  <div class="popup">
+    <div class="search-block01 no-padding">
+      {{#if view.hasAutoComplete}}
+      <div class="row01">
+        {{ view Trade.MultiSelectSearchTextField
+          valueBinding="view.query"
+          title="search"
+          placeholder="Species, higher taxon or synonym..."
+          autocomplete="off"
+        }}
+      </div>
+      {{/if}}
+      <strong class="title01">YOUR SELECTION</strong>
+        {{collection Trade.MultiSelectSelectedValuesCollectionView
+          contentBinding="view.selectedValues"
+          selectedValueDisplayPropertyBinding="view.selectedValueDisplayProperty"
+          selectedValueShortDisplayPropertyBinding="view.selectedValueShortDisplayProperty"
+        }}
+      </div>
+      <div class="list-holder">
+        {{#if view.hasGroupedOptions}}
+        <ul>
+        {{#each view.allValuesGrouped}}
+          <li class="header">{{this.rank_name}}</li>
+          {{#each taxonConcept in this.taxon_concepts}}
+            {{view Trade.TaxonConceptAutoCompleteSuggestionView
+              contentBinding="taxonConcept"
+              selectedValuesBinding="view.selectedValues"
+            }}
+          {{/each}}
+        {{/each}}
+        </ul>
+        {{else}}
+        {{collection Trade.MultiSelectAllValuesCollectionView
+          contentBinding="view.allValues"
+          selectedValuesBinding="view.selectedValues"
+          selectedValueDisplayPropertyBinding="view.selectedValueDisplayProperty"
+        }}
+        {{/if}}
+      </div>
+  </div>
+</div>

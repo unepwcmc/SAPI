@@ -41,6 +41,9 @@ Trade.Store.registerAdapter('Trade.Source', DS.RESTAdapter.extend({
 Trade.Store.registerAdapter('Trade.TaxonConcept', DS.RESTAdapter.extend({
   namespace: "api/v1"
 }))
+Trade.Store.registerAdapter('Trade.AutoCompleteTaxonConcept', DS.RESTAdapter.extend({
+  namespace: "api/v1"
+}))
 
 DS.RESTAdapter.configure("plurals", { geo_entity: "geo_entities" })
 
