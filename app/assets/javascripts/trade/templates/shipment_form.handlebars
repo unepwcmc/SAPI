@@ -193,6 +193,10 @@
 </form>
 </div>
 <div class="modal-footer">
+TODO: this form is used for both editing existing shipments and adding new ones
+in both cases we need a save and cancel button, but they will probably need to point
+to different actions in the shipments controller
+TODO: handle display of backend validations
 <a href="#" class="btn" data-dismiss="modal">OK</a>
   <button {{action 'saveNewShipment'}} class="pull-right btn btn-primary">
     Save
