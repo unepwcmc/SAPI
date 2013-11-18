@@ -30,16 +30,15 @@
         </div>
         <div class="left filter-group one time">
           <p>Time range</p>
-          {{  view Ember.Select 
+          {{  view Ember.Select
                 viewName="from"
-                contentBinding="dates"
+                contentBinding="years"
                 selectionBinding="controller.selectedTimeStart"
                 prompt="From:"
           }}
-            
-          {{  view Ember.Select 
+          {{  view Ember.Select
                 viewName="to"
-                contentBinding="dates"
+                contentBinding="years"
                 selectionBinding="controller.selectedTimeEnd"
                 prompt="To:"
           }}
