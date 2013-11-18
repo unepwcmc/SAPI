@@ -92,11 +92,19 @@ div.filters {
 
 .inner.one, .inner.four {
   .filter-group {
-    width: 262px;
+    width: 190px;
+  }
+  .filter-group.time {
+    width: 264px;
+  }
+  .filter-group select {
+    margin-left: 0;
+    margin-top: 0;
   }
   .filter-group.time select {
     width: 108px;
   }
+
 }
 .inner.two, .inner.three {
   .filter-group {
