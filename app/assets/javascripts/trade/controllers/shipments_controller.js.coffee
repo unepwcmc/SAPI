@@ -154,3 +154,5 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
           @set(property.name, [])
         else
           @set(property.name, null)
+      @set('permitQuery', null)
+      @set('taxonConceptQuery', null)
