@@ -25,7 +25,15 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
 
   total: ( ->
     @get('content.meta.total')
-  ).property('content.meta.total')
+  ).property('content.isLoaded')
+
+  perPage: ( ->
+    parseInt(@get('content.meta.per_page')) || 100
+  ).property("content.isLoaded")
+
+  page: ( ->
+    parseInt(@get('content.meta.page')) || 1
+  ).property("content.isLoaded")
 
   pages: ( ->
     if @get('total')
@@ -33,10 +41,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     else
       return 1
   ).property('total', 'perPage')
-
-  page: ( ->
-    @get('content.meta.page') || 1
-  ).property('content.meta.page')
 
   showPrevPage: ( ->
     page = @get('page')

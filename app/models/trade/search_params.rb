@@ -27,7 +27,7 @@ class Trade::SearchParams < Hash
       :time_range_end => params[:time_range_end],
       :quantity => params[:quantity],
       :page => params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
-      :per_page => params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 25
+      :per_page => params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 100
     }
     unless ['I', 'E'].include? sanitized_params[:reporter_type]
       sanitized_params[:reporter_type] = nil
