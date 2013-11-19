@@ -75,14 +75,20 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       return params
     return []
 
+  defaultTimeStart: ( ->
+    new Date().getFullYear() - 5
+  ).property()
+  defaultTimeEnd: ( ->
+    new Date().getFullYear()
+  ).property()
   years: ( ->
     [1975..new Date().getFullYear()].reverse()
   ).property()
   selectedTimeStart: ( ->
-    new Date().getFullYear() - 5
+    @get('defaultTimeStart')
   ).property()
   selectedTimeEnd: ( ->
-    new Date().getFullYear()
+    @get('defaultTimeEnd')
   ).property()
 
   allAppendices: [
@@ -163,4 +169,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
           @set(property.name, null)
       @set('permitQuery', null)
       @set('taxonConceptQuery', null)
+      @set('selectedTimeStart', @get('defaultTimeStart'))
+      @set('selectedTimeEnd', @get('defaultTimeEnd'))
       @openShipmentsPage(false)
