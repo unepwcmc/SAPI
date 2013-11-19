@@ -19,28 +19,10 @@
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Reported appendix<br>
-      {{view Ember.TextField
-        prompt="Please type appendix"
-        valueBinding="currentShipment.reportedAppendix"
-      }}
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
       Species name<br>
       {{view Trade.TaxonConceptSelect2
         prompt="Please select species names"
         valueBinding="currentShipment.taxonConceptId"
-      }}
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Reported species name<br>
-      {{view Ember.TextField
-        prompt="Please type species name"
-        valueBinding="currentShipment.reportedSpeciesName"
       }}
     </label>
   </div>

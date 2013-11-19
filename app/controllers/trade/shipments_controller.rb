@@ -46,9 +46,7 @@ private
       :country_of_origin_permit_number,
       :purpose_id,
       :source_id,
-      :year,
-      :reported_species_name,
-      :reported_appendix
+      :year
     )
   end
 

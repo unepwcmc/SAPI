@@ -10,7 +10,6 @@ class Trade::Sandbox
   def copy
     create_target_table
     copy_csv_to_target_table
-    duplicate_columns_in_target_table
   end
 
   def destroy
@@ -86,17 +85,17 @@ class Trade::Sandbox
     cmd = <<-SQL
       WITH inserted_shipments AS (
         INSERT INTO trade_shipments (source_id, unit_id, purpose_id,
-          term_id, quantity, reported_appendix, appendix,
+          term_id, quantity, appendix,
           trade_annual_report_upload_id, exporter_id, importer_id,
           country_of_origin_id, country_of_origin_permit_id,
           import_permit_id, reported_by_exporter, taxon_concept_id,
-          reported_species_name, year, created_at, updated_at, sandbox_id)
+          year, created_at, updated_at, sandbox_id)
         SELECT sources.id, units.id, purposes.id,
-          terms.id, #{@table_name}.quantity::NUMERIC, #{@table_name}.reported_appendix,
+          terms.id, #{@table_name}.quantity::NUMERIC,
           #{@table_name}.appendix, #{@annual_report_upload.id}, exporters.id, importers.id,
           origins.id, origin_permits.id, import_permits.id,
           #{ @annual_report_upload.point_of_view == "E" ? 'true' : 'false'},
-          taxon_concepts.id, #{@table_name}.reported_species_name, #{@table_name}.year::INTEGER,
+          taxon_concepts.id, #{@table_name}.year::INTEGER,
           current_date, current_date, #{@table_name}.id
         FROM #{@table_name}
         LEFT JOIN trade_codes AS sources ON #{@table_name}.source_code = sources.code
@@ -166,18 +165,4 @@ class Trade::Sandbox
     PsqlCommand.new(cmd).execute
   end
 
-  def duplicate_columns_in_target_table
-    require 'psql_command'
-    cmds = [
-      Trade::SandboxTemplate.duplicate_column_stmt(
-        @table_name, "appendix", "reported_appendix"
-      ),
-      Trade::SandboxTemplate.duplicate_column_stmt(
-        @table_name, "species_name", "reported_species_name"
-      )
-    ]
-    Thread.new do
-      cmds.each { |cmd| Trade::SandboxTemplate.connection.execute(cmd) }
-    end
-  end
 end

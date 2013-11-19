@@ -16,7 +16,6 @@
 #  source_code       :string(255)
 #  year              :string(255)
 #  import_permit     :string(255)
-#  reported_appendix :string
 #
 
 class Trade::SandboxTemplate < ActiveRecord::Base
