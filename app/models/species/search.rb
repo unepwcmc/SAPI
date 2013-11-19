@@ -1,6 +1,7 @@
 class Species::Search
   include CacheIterator
   include SearchCache # this provides #cached_results and #cached_total_cnt
+  attr_reader :page, :per_page
 
   # Constructs a query to retrieve taxon concepts based on user defined
   # parameters
@@ -13,8 +14,8 @@ class Species::Search
   end
 
   def results
-    @query.limit(@options[:per_page]).
-      offset(@options[:per_page] * (@options[:page] - 1)).all
+    @query.limit(@per_page).
+      offset(@per_page * (@page - 1)).all
   end
 
   def total_cnt
