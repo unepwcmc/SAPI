@@ -227,9 +227,7 @@ div.popup-holder01 {
 .heading {clear: left;}
 
 
-// For debugging
-.xxx {
-  div.popup-holder01 {
-    display: block; 
-  }
+span.error {
+  font-size: 10px;
+  color: red;
 }

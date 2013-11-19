@@ -1,4 +1,7 @@
 Trade.Shipment = DS.Model.extend
+
+  termId: DS.attr('number')
+  
   appendix: DS.attr('string')
   reportedAppendix: DS.attr('string')
   taxonConceptId: DS.attr('number')

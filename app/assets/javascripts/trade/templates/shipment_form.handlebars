@@ -9,38 +9,22 @@
 <div class="span4">
   <div class="attribute-area clearfix">
     <label>
-      Appendix<br>
+      Appendix <span class="error">{{errors.appendix}}</span><br>
       {{view Ember.Select
         prompt="Please select appendix value"
-        contentBinding="controller.allAppendixValues"
-        selectionBinding="currentShipment.appendix"
+        valueBinding="currentShipment.appendix"
+        contentBinding='controller.allAppendices'
+        optionValuePath="content.id"
+        optionLabelPath="content.name"
       }}
     </label>
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Reported appendix<br>
-      {{view Ember.TextField
-        prompt="Please type appendix"
-        valueBinding="currentShipment.reportedAppendix"
-      }}
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Species name<br>
+      Species name <span class="error">{{errors.taxonConceptId}}</span><br>
       {{view Trade.TaxonConceptSelect2
         prompt="Please select species names"
         valueBinding="currentShipment.taxonConceptId"
-      }}
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Reported species name<br>
-      {{view Ember.TextField
-        prompt="Please type species name"
-        valueBinding="currentShipment.reportedSpeciesName"
       }}
     </label>
   </div>
@@ -48,7 +32,7 @@
 <div class="span4">
   <div class="attribute-area clearfix">
     <label>
-      Term Code<br>
+      Term Code <span class="error">{{errors.termId}}</span><br>
       {{view Ember.Select
         prompt="Please select term code value"
         contentBinding="controllers.terms"
@@ -60,7 +44,7 @@
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Quantity<br>
+      Quantity <span class="error">{{errors.quantity}}</span><br>
       {{view Ember.TextField
         prompt="Please type quantity value"
         valueBinding="currentShipment.quantity"
@@ -69,7 +53,7 @@
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Unit Code<br>
+      Unit Code <span class="error">{{errors.unitId}}</span><br>
       {{view Ember.Select
         prompt="Please select unit code value"
         contentBinding="controllers.units"
@@ -81,7 +65,7 @@
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Importer<br>
+      Importer <span class="error">{{errors.importerId}}</span><br>
       {{view Ember.Select
         prompt="Please select importer"
         contentBinding="controllers.geoEntities"
@@ -93,7 +77,7 @@
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Exporter<br>
+      Exporter <span class="error">{{errors.exporterId}}</span><br>
       {{view Ember.Select
         prompt="Please select exporter"
         contentBinding="controllers.geoEntities"
@@ -105,7 +89,7 @@
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Reporter type<br>
+      Reporter type <span class="error">{{errors.reporterTypeId}}</span><br>
       {{view Ember.Select
         prompt="Please select reporter type"
         contentBinding="controller.allReporterTypeValues"
@@ -115,7 +99,7 @@
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Country of Origin<br>
+      Country of Origin <span class="error">{{errors.countryOfOriginId}}</span><br>
       {{view Ember.Select
         prompt="Please select country of origin value"
         contentBinding="controllers.geoEntities"
@@ -129,7 +113,7 @@
 <div class="span4">
   <div class="attribute-area clearfix">
     <label>
-      Purpose Code<br>
+      Purpose Code <span class="error">{{errors.purposeId}}</span><br>
       {{view Ember.Select
         prompt="Please select purpose code value"
         contentBinding="controllers.purposes"
@@ -141,7 +125,7 @@
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Source Code<br>
+      Source Code <span class="error">{{errors.sourceId}}</span><br>
       {{view Ember.Select
         prompt="Please select source code value"
         contentBinding="controllers.sources"
@@ -153,7 +137,7 @@
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Year<br>
+      Year <span class="error">{{errors.year}}</span><br>
       {{view Ember.TextField
         prompt="Please type year value"
         valueBinding="currentShipment.year"
@@ -162,7 +146,7 @@
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Import Permit<br>
+      Import Permit <span class="error">{{errors.importPermitNumber}}</span><br>
       {{view Ember.TextField
         prompt="Please type import permit value"
         valueBinding="currentShipment.importPermitNumber"
@@ -171,7 +155,7 @@
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Export Permit<br>
+      Export Permit <span class="error">{{errors.exportPermitNumber}}</span><br>
       {{view Ember.TextField
         prompt="Please type export permit value"
         valueBinding="currentShipment.exportPermitNumber"
@@ -180,7 +164,7 @@
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Origin Permit<br>
+      Origin Permit <span class="error">{{errors.countryOfOriginPermitNumber}}</span><br>
       {{view Ember.TextField
         prompt="Please type origin permit value"
         valueBinding="currentShipment.countryOfOriginPermitNumber"
@@ -197,8 +181,8 @@ TODO: this form is used for both editing existing shipments and adding new ones
 in both cases we need a save and cancel button, but they will probably need to point
 to different actions in the shipments controller
 TODO: handle display of backend validations
-<a href="#" class="btn" data-dismiss="modal">OK</a>
-  <button {{action 'saveNewShipment'}} class="pull-right btn btn-primary">
+
+  <button {{action 'saveShipment'}} class="pull-right btn btn-primary">
     Save
   </button>
   <button {{action 'cancelNewShipment'}} class="pull-right btn btn-primary">

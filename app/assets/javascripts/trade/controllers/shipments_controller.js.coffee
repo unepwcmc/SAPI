@@ -2,6 +2,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
+  errors: null
 
   shipmentsSaving: ( ->
     return false unless @get('content.isLoaded')
@@ -153,13 +154,24 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       $('.modal').modal('show')
 
     # saves the new shipment (bound to currentShipment) to the db
-    saveNewShipment: () ->
+    saveShipment: () ->
       shipment = @get('currentShipment')
-      if (!shipment.get('isSaving'))
-        @get('currentShipment').save()
+      
+      unless shipment.get('isValid')
+        shipment.send("becameValid")
+      unless shipment.get('isSaving')
+        shipment.get('transaction').commit()
+      
+      shipment.one('didCreate', this, ->
+        @set('errors', '')
         @set('currentShipment', null)
+        @set('shipment', null) # is this needed?
         $('.modal').modal('hide')
-
+      )
+      shipment.one('becameInvalid', this, ->
+        @set 'errors', @get('currentShipment.errors')
+      )
+  
     # discards the new shipment (bound to currentShipment)
     cancelNewShipment: () ->
       shipment = @get('currentShipment')
