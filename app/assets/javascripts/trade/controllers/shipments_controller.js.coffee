@@ -79,9 +79,9 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   ).property()
 
   allAppendices: [
-    {id: 'I', name: 'Appendix I'},
-    {id: 'II', name: 'Appendix II'},
-    {id: 'III', name: 'Appendix III'}
+    Ember.Object.create({id: 'I', name: 'Appendix I'}),
+    Ember.Object.create({id: 'II', name: 'Appendix II'}),
+    Ember.Object.create({id: 'III', name: 'Appendix III'})
   ]
   allReporterTypeValues: ['E', 'I']
 
