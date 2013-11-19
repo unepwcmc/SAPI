@@ -23,13 +23,16 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     controller
   .property('content')
 
+  total: ( ->
+    @get('content.meta.total')
+  ).property('content.meta.total')
+
   pages: ( ->
-    total = @get('content.meta.total')
-    if total
-      return Math.ceil( total / @get('content.meta.per_page'))
+    if @get('total')
+      return Math.ceil( @get('total') / @get('perPage'))
     else
       return 1
-  ).property('content.meta.total')
+  ).property('total', 'perPage')
 
   page: ( ->
     @get('content.meta.page') || 1
