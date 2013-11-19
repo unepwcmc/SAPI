@@ -178,6 +178,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       if (!shipment.get('isSaving'))
         @get('currentShipment').deleteRecord()
         @set('currentShipment', null)
+        @set 'errors', null
         $('.modal').modal('hide')
 
     search: ->
