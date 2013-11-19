@@ -135,10 +135,28 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   selectedUnits: []
   selectedPurposes: []
   selectedSources: []
+  importerQuery: null
+  autoCompleteImporters: ( ->
+    @geoEntitiesWithMatchingPrefix(@get('importerQuery'))
+  ).property('importerQuery')
   selectedImporters: []
+  exporterQuery: null
+  autoCompleteExporters: ( ->
+    @geoEntitiesWithMatchingPrefix(@get('exporterQuery'))
+  ).property('exporterQuery')
   selectedExporters: []
+  countryOfOriginQuery: null
+  autoCompleteCountriesOfOrigin: ( ->
+    @geoEntitiesWithMatchingPrefix(@get('countryOfOriginQuery'))
+  ).property('countryOfOriginQuery')
   selectedCountriesOfOrigin: []
   selectedQuantity: null
+
+  geoEntitiesWithMatchingPrefix: (query) ->
+    return @get('controllers.geoEntities') unless query
+    re = new RegExp("^" + query, "i")
+    @get('controllers.geoEntities').filter (element) ->
+      re.test(element.get('name'))
 
   actions:
     saveChanges: () ->
@@ -169,6 +187,9 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
           @set(property.name, null)
       @set('permitQuery', null)
       @set('taxonConceptQuery', null)
+      @set('exporterQuery', null)
+      @set('importerQuery', null)
+      @set('countryOfOriginQuery', null)
       @set('selectedTimeStart', @get('defaultTimeStart'))
       @set('selectedTimeEnd', @get('defaultTimeEnd'))
       @openShipmentsPage(false)

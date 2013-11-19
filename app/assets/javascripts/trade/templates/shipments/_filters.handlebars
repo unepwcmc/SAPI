@@ -106,28 +106,34 @@
       <div class="left filter-group">
         <p>Importer</p>
         {{view Trade.MultiSelect
-          allValuesBinding="controllers.geoEntities"
+          queryBinding="controller.importerQuery"
+          allValuesBinding="controller.autoCompleteImporters"
           selectedValuesBinding="controller.selectedImporters"
           selectedValuesCollectionName="importers"
           selectedValueDisplayProperty="name"
+          placeholder="Country name"
         }}
       </div>
       <div class="left filter-group">
         <p>Exporter</p>
         {{view Trade.MultiSelect
-          allValuesBinding="controllers.geoEntities"
+          queryBinding="controller.exporterQuery"
+          allValuesBinding="controller.autoCompleteExporters"
           selectedValuesBinding="controller.selectedExporters"
           selectedValuesCollectionName="exporters"
           selectedValueDisplayProperty="name"
+          placeholder="Country name"
         }}
       </div>
       <div class="left filter-group">
         <p>Country of origin</p>
         {{view Trade.MultiSelect
-          allValuesBinding="controllers.geoEntities"
+          queryBinding="controller.countryOfOriginQuery"
+          allValuesBinding="controller.autoCompleteCountriesOfOrigin"
           selectedValuesBinding="controller.selectedCountriesOfOrigin"
           selectedValuesCollectionName="countries of origin"
           selectedValueDisplayProperty="name"
+          placeholder="Country name"
         }}
       </div>
     </div>
