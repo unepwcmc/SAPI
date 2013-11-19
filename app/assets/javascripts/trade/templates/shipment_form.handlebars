@@ -1,191 +1,178 @@
-<div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-  <h3>Modal header</h3>
-</div>
-<div class="modal-body">
-<form action="#">
-<fieldset>
-<div class="row-fluid">
-<div class="span4">
-  <div class="attribute-area clearfix">
-    <label>
-      Appendix <span class="error">{{errors.appendix}}</span><br>
-      {{view Ember.Select
-        prompt="Please select appendix value"
-        valueBinding="currentShipment.appendix"
-        contentBinding='controller.allAppendices'
-        optionValuePath="content.id"
-        optionLabelPath="content.name"
-      }}
-    </label>
+<div id="shipment_form_modal">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Shipment Edit</h3>
   </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Species name <span class="error">{{errors.taxonConceptId}}</span><br>
-      {{view Trade.TaxonConceptSelect2
-        prompt="Please select species names"
-        valueBinding="currentShipment.taxonConceptId"
-      }}
-    </label>
+  
+  <div class="modal-body filters">
+  
+    <form action="#">
+    
+    <fieldset>
+    
+      <div class="heading">
+        Name, Appendix and Year
+      </div>
+      <div class="inner">
+        <div class="attribute-area left species">
+          <p>Species name <span class="error">{{errors.taxonConceptId}}</span></p>
+          {{view Trade.TaxonConceptSelect2
+            prompt="Please select species names"
+            valueBinding="currentShipment.taxonConceptId"
+          }}
+        </div>
+        <div class="attribute-area left">
+          <p>Appendix <span class="error">{{errors.appendix}}</span></p>
+            {{view Ember.Select
+              prompt="Please select appendix value"
+              valueBinding="currentShipment.appendix"
+              contentBinding='controller.allAppendices'
+              optionValuePath="content.id"
+              optionLabelPath="content.name"
+            }}
+        </div>
+        <div class="attribute-area left year">
+          <p>Year <span class="error">{{errors.year}}</span></p>
+            {{view Ember.TextField
+              prompt="Please type year value"
+              valueBinding="currentShipment.year"
+            }}
+        </div>
+      </div>
+    
+      <div class="heading">
+        Trade Codes
+      </div>
+      <div class="inner">
+        <div class="attribute-area left">
+          <p>Term Code <span class="error">{{errors.termId}}</span></p>
+            {{view Ember.Select
+              prompt="Please select term code value"
+              contentBinding="controllers.terms"
+              optionValuePath="content.id"
+              optionLabelPath="content.code"
+              selectionBinding="currentShipment.term"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Unit Code <span class="error">{{errors.unitId}}</span></p>
+            {{view Ember.Select
+              prompt="Please select unit code value"
+              contentBinding="controllers.units"
+              optionValuePath="content.id"
+              optionLabelPath="content.code"
+              selectionBinding="currentShipment.unit"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Purpose Code <span class="error">{{errors.purposeId}}</span></p>
+            {{view Ember.Select
+              prompt="Please select purpose code value"
+              contentBinding="controllers.purposes"
+              optionValuePath="content.id"
+              optionLabelPath="content.code"
+              selectionBinding="currentShipment.purpose"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Source Code <span class="error">{{errors.sourceId}}</span></p>
+            {{view Ember.Select
+              prompt="Please select source code value"
+              contentBinding="controllers.sources"
+              optionValuePath="content.id"
+              optionLabelPath="content.code"
+              selectionBinding="currentShipment.source"
+            }}
+        </div>
+      </div>
+    
+      <div class="heading">
+        Trading Partners
+      </div>
+      <div class="inner">
+        <div class="attribute-area left">
+          <p>Importer <span class="error">{{errors.importerId}}</span></p>
+            {{view Ember.Select
+              prompt="Please select importer"
+              contentBinding="controllers.geoEntities"
+              optionValuePath="content.id"
+              optionLabelPath="content.name"
+              selectionBinding="currentShipment.importer"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Exporter <span class="error">{{errors.exporterId}}</span></p>
+            {{view Ember.Select
+              prompt="Please select exporter"
+              contentBinding="controllers.geoEntities"
+              optionValuePath="content.id"
+              optionLabelPath="content.name"
+              selectionBinding="currentShipment.exporter"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Country of Origin <span class="error">{{errors.countryOfOriginId}}</span></p>
+            {{view Ember.Select
+              prompt="Please select country of origin value"
+              contentBinding="controllers.geoEntities"
+              optionValuePath="content.id"
+              optionLabelPath="content.name"
+              selectionBinding="currentShipment.countryOfOrigin"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Reporter type <span class="error">{{errors.reporterTypeId}}</span></p>
+            {{view Ember.Select
+              prompt="Please select reporter type"
+              contentBinding="controller.allReporterTypeValues"
+              selectionBinding="currentShipment.reporterType"
+            }}
+        </div>
+      </div>
+    
+      <div class="heading">
+        Permit & Quantity
+      </div>
+      <div class="inner">
+        <div class="attribute-area left">
+          <p>Import Permit <span class="error">{{errors.importPermitNumber}}</span></p>
+            {{view Ember.TextField
+              prompt="Please type import permit value"
+              valueBinding="currentShipment.importPermitNumber"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Export Permit <span class="error">{{errors.exportPermitNumber}}</span></p>
+            {{view Ember.TextField
+              prompt="Please type export permit value"
+              valueBinding="currentShipment.exportPermitNumber"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Origin Permit <span class="error">{{errors.countryOfOriginPermitNumber}}</span></p>
+            {{view Ember.TextField
+              prompt="Please type origin permit value"
+              valueBinding="currentShipment.countryOfOriginPermitNumber"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Quantity <span class="error">{{errors.quantity}}</span></p>
+            {{view Ember.TextField
+              prompt="Please type quantity value"
+              valueBinding="currentShipment.quantity"
+            }}
+        </div>
+      </div>
+    
+    </fieldset>
+    </form>
   </div>
-</div>
-<div class="span4">
-  <div class="attribute-area clearfix">
-    <label>
-      Term Code <span class="error">{{errors.termId}}</span><br>
-      {{view Ember.Select
-        prompt="Please select term code value"
-        contentBinding="controllers.terms"
-        optionValuePath="content.id"
-        optionLabelPath="content.code"
-        selectionBinding="currentShipment.term"
-      }}
-    </label>
+  <div class="modal-footer">
+    <button {{action 'saveShipment'}} class="pull-right btn btn-primary">
+      Save Changes
+    </button>
+    <button {{action 'cancelNewShipment'}} class="pull-right btn btn-primary">
+      Cancel
+    </button>
   </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Quantity <span class="error">{{errors.quantity}}</span><br>
-      {{view Ember.TextField
-        prompt="Please type quantity value"
-        valueBinding="currentShipment.quantity"
-      }}
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Unit Code <span class="error">{{errors.unitId}}</span><br>
-      {{view Ember.Select
-        prompt="Please select unit code value"
-        contentBinding="controllers.units"
-        optionValuePath="content.id"
-        optionLabelPath="content.code"
-        selectionBinding="currentShipment.unit"
-      }}
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Importer <span class="error">{{errors.importerId}}</span><br>
-      {{view Ember.Select
-        prompt="Please select importer"
-        contentBinding="controllers.geoEntities"
-        optionValuePath="content.id"
-        optionLabelPath="content.name"
-        selectionBinding="currentShipment.importer"
-      }}
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Exporter <span class="error">{{errors.exporterId}}</span><br>
-      {{view Ember.Select
-        prompt="Please select exporter"
-        contentBinding="controllers.geoEntities"
-        optionValuePath="content.id"
-        optionLabelPath="content.name"
-        selectionBinding="currentShipment.exporter"
-      }}
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Reporter type <span class="error">{{errors.reporterTypeId}}</span><br>
-      {{view Ember.Select
-        prompt="Please select reporter type"
-        contentBinding="controller.allReporterTypeValues"
-        selectionBinding="currentShipment.reporterType"
-      }}
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Country of Origin <span class="error">{{errors.countryOfOriginId}}</span><br>
-      {{view Ember.Select
-        prompt="Please select country of origin value"
-        contentBinding="controllers.geoEntities"
-        optionValuePath="content.id"
-        optionLabelPath="content.name"
-        selectionBinding="currentShipment.countryOfOrigin"
-      }}
-    </label>
-  </div>
-</div>
-<div class="span4">
-  <div class="attribute-area clearfix">
-    <label>
-      Purpose Code <span class="error">{{errors.purposeId}}</span><br>
-      {{view Ember.Select
-        prompt="Please select purpose code value"
-        contentBinding="controllers.purposes"
-        optionValuePath="content.id"
-        optionLabelPath="content.code"
-        selectionBinding="currentShipment.purpose"
-      }}
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Source Code <span class="error">{{errors.sourceId}}</span><br>
-      {{view Ember.Select
-        prompt="Please select source code value"
-        contentBinding="controllers.sources"
-        optionValuePath="content.id"
-        optionLabelPath="content.code"
-        selectionBinding="currentShipment.source"
-      }}
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Year <span class="error">{{errors.year}}</span><br>
-      {{view Ember.TextField
-        prompt="Please type year value"
-        valueBinding="currentShipment.year"
-      }}
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Import Permit <span class="error">{{errors.importPermitNumber}}</span><br>
-      {{view Ember.TextField
-        prompt="Please type import permit value"
-        valueBinding="currentShipment.importPermitNumber"
-      }}
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Export Permit <span class="error">{{errors.exportPermitNumber}}</span><br>
-      {{view Ember.TextField
-        prompt="Please type export permit value"
-        valueBinding="currentShipment.exportPermitNumber"
-      }}
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Origin Permit <span class="error">{{errors.countryOfOriginPermitNumber}}</span><br>
-      {{view Ember.TextField
-        prompt="Please type origin permit value"
-        valueBinding="currentShipment.countryOfOriginPermitNumber"
-      }}
-    </label>
-  </div>
-</div>
-</div>
-</fieldset>
-</form>
-</div>
-<div class="modal-footer">
-TODO: this form is used for both editing existing shipments and adding new ones
-in both cases we need a save and cancel button, but they will probably need to point
-to different actions in the shipments controller
-TODO: handle display of backend validations
-
-  <button {{action 'saveShipment'}} class="pull-right btn btn-primary">
-    Save
-  </button>
-  <button {{action 'cancelNewShipment'}} class="pull-right btn btn-primary">
-    Cancel
-  </button>
 </div>
