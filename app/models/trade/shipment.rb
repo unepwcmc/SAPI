@@ -34,7 +34,7 @@ class Trade::Shipment < ActiveRecord::Base
     :term_id, :unit_id, :year,
     :import_permit_number, :export_permit_number, :country_of_origin_permit_number
 
-  validates :source_id, presence: true
+  #validates :source_id, presence: true
   validates :quantity, presence: true
   #validates :reported_appendix, presence: true
   validates :appendix, presence: true
@@ -45,11 +45,11 @@ class Trade::Shipment < ActiveRecord::Base
   #validates :reported_species_name, presence: true
   validates :year, presence: true
   validates :taxon_concept_id, presence: true
-  validates :purpose_id, presence: true
-  validates :term_id, presence: true
+  #validates :purpose_id, presence: true
+  #validates :term_id, presence: true
   validates :exporter_id, presence: true
   validates :importer_id, presence: true
-  validates :unit_id, presence: true
+  #validates :unit_id, presence: true
 
   belongs_to :taxon_concept
   belongs_to :purpose, :class_name => "TradeCode"
