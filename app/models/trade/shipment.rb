@@ -34,22 +34,13 @@ class Trade::Shipment < ActiveRecord::Base
     :term_id, :unit_id, :year,
     :import_permit_number, :export_permit_number, :country_of_origin_permit_number
 
-  #validates :source_id, presence: true
   validates :quantity, presence: true
-  #validates :reported_appendix, presence: true
   validates :appendix, presence: true
-  #validates :trade_annual_report_upload_id, presence: true
-  validates :import_permit_id, presence: true
-  #validates :reported_by_exporter, presence: true
-  validates :export_permit_number, presence: true
-  #validates :reported_species_name, presence: true
   validates :year, presence: true
   validates :taxon_concept_id, presence: true
-  #validates :purpose_id, presence: true
-  #validates :term_id, presence: true
+  validates :term_id, presence: true
   validates :exporter_id, presence: true
   validates :importer_id, presence: true
-  #validates :unit_id, presence: true
 
   belongs_to :taxon_concept
   belongs_to :purpose, :class_name => "TradeCode"
@@ -65,13 +56,14 @@ class Trade::Shipment < ActiveRecord::Base
   has_many :export_permits, :through => :shipment_export_permits
   belongs_to :import_permit, :class_name => "Trade::Permit"
 
+
   def reporter_type
     reported_by_exporter ? 'E' : 'I'
   end
 
   def reporter_type=(str)
     if str
-      self.reported_by_exporter = (str.upcase.strip == 'E' ? 'E' : 'I')
+      self.reported_by_exporter = str.upcase.strip
     end
   end
 

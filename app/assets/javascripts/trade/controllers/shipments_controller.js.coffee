@@ -156,16 +156,16 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     # saves the new shipment (bound to currentShipment) to the db
     saveShipment: () ->
       shipment = @get('currentShipment')
-      
+      # Before trying to save a shipment 
+      # we need to reset the model to a valid state.
       unless shipment.get('isValid')
         shipment.send("becameValid")
       unless shipment.get('isSaving')
         shipment.get('transaction').commit()
-      
       shipment.one('didCreate', this, ->
         @set('errors', '')
         @set('currentShipment', null)
-        @set('shipment', null) # is this needed?
+        @set('shipment', null) #TODO: is this needed?
         $('.modal').modal('hide')
       )
       shipment.one('becameInvalid', this, ->
