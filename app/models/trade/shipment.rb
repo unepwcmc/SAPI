@@ -72,8 +72,10 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def import_permit_number=(str)
-    permit = Trade::Permit.find_or_create_by_number(str)
-    self.import_permit = permit
+    if str
+      permit = Trade::Permit.find_or_create_by_number(str)
+      self.import_permit = permit
+    end
   end
 
   def export_permit_number
@@ -94,7 +96,9 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def country_of_origin_permit_number=(str)
-    permit = Trade::Permit.find_or_create_by_number(str)
-    self.country_of_origin_permit = permit
+    if str
+      permit = Trade::Permit.find_or_create_by_number(str)
+      self.country_of_origin_permit = permit
+    end
   end
 end
