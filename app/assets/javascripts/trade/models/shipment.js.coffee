@@ -1,7 +1,7 @@
 Trade.Shipment = DS.Model.extend
 
   importerId: DS.attr('string')
-  exporterID: DS.attr('string')
+  exporterId: DS.attr('string')
 
   appendix: DS.attr('string')
   reportedAppendix: DS.attr('string')
