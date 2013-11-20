@@ -1,4 +1,11 @@
 Trade.Shipment = DS.Model.extend
+
+  importerId: DS.attr('number')
+  exporterId: DS.attr('number')
+  termId: DS.attr('number')
+
+  reporterType: DS.attr('string')
+
   appendix: DS.attr('string')
   reportedAppendix: DS.attr('string')
   taxonConceptId: DS.attr('number')
@@ -13,7 +20,6 @@ Trade.Shipment = DS.Model.extend
   exporter: DS.belongsTo('Trade.GeoEntity', {
     inverse: 'exportedShipments'
   })
-  reporterType: DS.attr('string')
   countryOfOrigin: DS.belongsTo('Trade.GeoEntity', {
     inverse: 'countryOfOriginShipments'
   })

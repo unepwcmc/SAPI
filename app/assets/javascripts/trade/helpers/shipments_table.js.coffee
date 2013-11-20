@@ -27,7 +27,8 @@ Trade.ShipmentsTable.TableRow = Ember.Table.TableRow.extend
   .property('row.isDirty')
 
   click: (event) ->
-    @get('controller.shipmentsController').set('currentShipment', @get('content'))
+    content = @get('content').content
+    @get('controller.shipmentsController').set('currentShipment', content)
     $('.modal').modal('show')
 
 Trade.ShipmentsTable.TablesContainer =

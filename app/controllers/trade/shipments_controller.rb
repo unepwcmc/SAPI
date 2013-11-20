@@ -12,12 +12,21 @@ class Trade::ShipmentsController < ApplicationController
       }
   end
 
+  def create
+    @shipment = Trade::Shipment.new(shipment_params)
+    if @shipment.save
+      render :json => @shipment, :status => :ok
+    else
+      render :json => { "errors" => @shipment.errors }, :status => :unprocessable_entity
+    end
+  end
+
   def update
     @shipment = Trade::Shipment.find(params[:id])
     if @shipment.update_attributes(shipment_params)
       render :json => @shipment, :status => :ok
     else
-      render :json => @shipment.errors, :status => :unprocessable_entity
+      render :json => { "errors" => @shipment.errors }, :status => :unprocessable_entity
     end
   end
 
@@ -46,9 +55,7 @@ private
       :country_of_origin_permit_number,
       :purpose_id,
       :source_id,
-      :year,
-      :reported_species_name,
-      :reported_appendix
+      :year
     )
   end
 
