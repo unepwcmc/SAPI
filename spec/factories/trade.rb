@@ -43,6 +43,10 @@ FactoryGirl.define do
     unit
     purpose
     source
+    importer
+    exporter
+    quantity 1
+    year 2013
   end
 
   factory :permit, :class => Trade::Permit do
