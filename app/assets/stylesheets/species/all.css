@@ -38,14 +38,6 @@ body {
 	background-position: top center;
 }
 
-html.lt-ie9 body {
-  background: none;
-  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
-  src='/assets/species/background_1.jpg',
-  sizingMethod='scale');
-}
-
-
 body.inner {
   background-attachment: fixed;
 }
