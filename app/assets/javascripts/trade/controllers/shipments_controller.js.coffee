@@ -24,17 +24,24 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     controller
   .property('content')
 
-  pages: ( ->
-    total = @get('content.meta.total')
-    if total
-      return Math.ceil( total / @get('content.meta.per_page'))
-    else
-      return 1
-  ).property('content.meta.total')
+  total: ( ->
+    @get('content.meta.total')
+  ).property('content.isLoaded')
+
+  perPage: ( ->
+    parseInt(@get('content.meta.per_page')) || 100
+  ).property("content.isLoaded")
 
   page: ( ->
-    @get('content.meta.page') || 1
-  ).property('content.meta.page')
+    parseInt(@get('content.meta.page')) || 1
+  ).property("content.isLoaded")
+
+  pages: ( ->
+    if @get('total')
+      return Math.ceil( @get('total') / @get('perPage'))
+    else
+      return 1
+  ).property('total', 'perPage')
 
   showPrevPage: ( ->
     page = @get('page')
@@ -69,20 +76,26 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       return params
     return []
 
+  defaultTimeStart: ( ->
+    new Date().getFullYear() - 5
+  ).property()
+  defaultTimeEnd: ( ->
+    new Date().getFullYear()
+  ).property()
   years: ( ->
     [1975..new Date().getFullYear()].reverse()
   ).property()
   selectedTimeStart: ( ->
-    new Date().getFullYear()
+    @get('defaultTimeStart')
   ).property()
   selectedTimeEnd: ( ->
-    new Date().getFullYear()
+    @get('defaultTimeEnd')
   ).property()
 
   allAppendices: [
-    {id: 'I', name: 'Appendix I'},
-    {id: 'II', name: 'Appendix II'},
-    {id: 'III', name: 'Appendix III'}
+    Ember.Object.create({id: 'I', name: 'Appendix I'}),
+    Ember.Object.create({id: 'II', name: 'Appendix II'}),
+    Ember.Object.create({id: 'III', name: 'Appendix III'})
   ]
   allReporterTypeValues: ['E', 'I']
 
@@ -123,10 +136,28 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   selectedUnits: []
   selectedPurposes: []
   selectedSources: []
+  importerQuery: null
+  autoCompleteImporters: ( ->
+    @geoEntitiesWithMatchingPrefix(@get('importerQuery'))
+  ).property('importerQuery')
   selectedImporters: []
+  exporterQuery: null
+  autoCompleteExporters: ( ->
+    @geoEntitiesWithMatchingPrefix(@get('exporterQuery'))
+  ).property('exporterQuery')
   selectedExporters: []
+  countryOfOriginQuery: null
+  autoCompleteCountriesOfOrigin: ( ->
+    @geoEntitiesWithMatchingPrefix(@get('countryOfOriginQuery'))
+  ).property('countryOfOriginQuery')
   selectedCountriesOfOrigin: []
   selectedQuantity: null
+
+  geoEntitiesWithMatchingPrefix: (query) ->
+    return @get('controllers.geoEntities') unless query
+    re = new RegExp("^" + query, "i")
+    @get('controllers.geoEntities').filter (element) ->
+      re.test(element.get('name'))
 
   actions:
     # TODO this might need to be dropped
@@ -194,3 +225,11 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
           @set(property.name, [])
         else
           @set(property.name, null)
+      @set('permitQuery', null)
+      @set('taxonConceptQuery', null)
+      @set('exporterQuery', null)
+      @set('importerQuery', null)
+      @set('countryOfOriginQuery', null)
+      @set('selectedTimeStart', @get('defaultTimeStart'))
+      @set('selectedTimeEnd', @get('defaultTimeEnd'))
+      @openShipmentsPage(false)

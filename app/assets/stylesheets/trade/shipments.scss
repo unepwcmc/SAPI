@@ -45,6 +45,7 @@ div.filters {
     padding-bottom: 3px;
     border-bottom: 1px solid lighten($dark-grey, 6%);
     color: darken($dark-grey, 48%);
+    font-weight: bold;
   }
   .row01 {
     padding-top: 6px;
@@ -226,6 +227,11 @@ div.popup-holder01 {
 
 .heading {clear: left;}
 
+.total-matches {
+  color: $dark-grey;
+  font-size: 17px;
+  line-height: 60px;
+}
 
 #shipment_form_modal {
   form {

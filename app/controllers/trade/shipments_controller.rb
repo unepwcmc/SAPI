@@ -7,8 +7,8 @@ class Trade::ShipmentsController < ApplicationController
       :each_serializer => Trade::ShipmentSerializer,
       :meta => {
         :total => @search.total_cnt,
-        :page => params[:page] || 1,
-        :per_page => 25
+        :page => @search.page,
+        :per_page => @search.per_page
       }
   end
 

@@ -10,7 +10,7 @@ class MTaxonConceptFilterByIdWithDescendants
     @relation.where(
       <<-SQL
       ARRAY[
-        #{@table}.id,
+        #{@table}.id, #{@table}.genus_id,
         #{@table}.family_id, #{@table}.order_id,
         #{@table}.class_id, #{@table}.phylum_id,
         #{@table}.kingdom_id] && --overlap

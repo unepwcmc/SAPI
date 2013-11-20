@@ -69,6 +69,10 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
       taxonomy: @get('taxonomy')
       taxon_concept_query: query
       geo_entities_ids: @get('selectedGeoEntities').mapProperty('id')
+      geo_entity_scope: if @get('taxonomy') == 'cms'
+        'cms'
+      else
+        'cites'
       page: page or 1
     }})
 

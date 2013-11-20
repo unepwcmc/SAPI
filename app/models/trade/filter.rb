@@ -1,12 +1,13 @@
 class Trade::Filter
+  attr_reader :page, :per_page
   def initialize(options)
     initialize_params(options)
     initialize_query
   end
 
   def results
-    @query.limit(@options[:per_page]).
-      offset(@options[:per_page] * (@options[:page] - 1)).all
+    @query.limit(@per_page).
+      offset(@per_page * (@page - 1)).all
   end
 
   def total_cnt
@@ -14,7 +15,7 @@ class Trade::Filter
   end
 
   private
-  
+
   def initialize_params(options)
     @options = Trade::SearchParams.sanitize(options)
     @options.keys.each { |k| instance_variable_set("@#{k}", @options[k]) }
@@ -30,13 +31,14 @@ class Trade::Filter
 
     # Id's (array)
     unless @taxon_concepts_ids.empty?
-      @query = @query.where(:taxon_concept_id => @taxon_concepts_ids)
+      taxa = MTaxonConceptFilterByIdWithDescendants.new(nil, @taxon_concepts_ids).relation
+      @query = @query.where(:taxon_concept_id => taxa.select(:id))
     end
 
     unless @appendices.empty?
       @query = @query.where(:appendix => @appendices)
     end
-    
+
     unless @terms_ids.empty?
       @query = @query.where(:term_id => @terms_ids)
     end
@@ -98,22 +100,6 @@ class Trade::Filter
     unless @quantity.nil?
       @query = @query.where(:quantity => @quantity)
     end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   end
 

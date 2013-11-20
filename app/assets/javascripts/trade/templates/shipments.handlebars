@@ -3,16 +3,19 @@
   Welcome to the Shipments Database
 </h2>
 
-<div class="filters">
-  {{ partial 'trade/shipments/filters' }}
-</div>
+
+{{ partial 'trade/shipments/filters' }}
+
 
 <div class="shipments-header well well-small">
   <div class="row-fluid">
-    <div class="span5">
-      <h3>Shipments</h3>
+    <div class="span3">
+      <h3>Search results</h3>
     </div>
-    <div class="sandbox-header-buttons span7">
+    <div class="span3">
+      <span class="total-matches">{{total}} matches</span>
+    </div>
+    <div class="sandbox-header-buttons span6">
       {{#view tagName='span' class='pull-right' isVisibleBinding='controller.shipmentsSaving'}}
         <img src="/assets/loading.gif"> Saving...
       {{/view}}
