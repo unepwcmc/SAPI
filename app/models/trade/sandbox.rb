@@ -82,45 +82,105 @@ class Trade::Sandbox
   end
 
   def submit_shipments
+    taxonomy_id = Taxonomy.find_by_name(Taxonomy::CITES_EU).id
     cmd = <<-SQL
-      WITH inserted_shipments AS (
-        INSERT INTO trade_shipments (source_id, unit_id, purpose_id,
-          term_id, quantity, appendix,
-          trade_annual_report_upload_id, exporter_id, importer_id,
-          country_of_origin_id, country_of_origin_permit_id,
-          import_permit_id, reported_by_exporter, taxon_concept_id,
-          year, created_at, updated_at, sandbox_id)
-        SELECT sources.id, units.id, purposes.id,
-          terms.id, #{@table_name}.quantity::NUMERIC,
-          #{@table_name}.appendix, #{@annual_report_upload.id}, exporters.id, importers.id,
-          origins.id, origin_permits.id, import_permits.id,
-          #{ @annual_report_upload.point_of_view == "E" ? 'true' : 'false'},
-          taxon_concepts.id, #{@table_name}.year::INTEGER,
-          current_date, current_date, #{@table_name}.id
+      WITH resolved_reported_taxa AS (
+        SELECT DISTINCT ON (1)
+          #{@table_name}.id AS sandbox_shipment_id,
+          taxon_concepts.id AS taxon_concept_id
         FROM #{@table_name}
+        JOIN taxon_concepts
+          ON UPPER(taxon_concepts.full_name) = UPPER(squish(#{@table_name}.species_name))
+          AND taxonomy_id = #{taxonomy_id}
+        ORDER BY 1, CASE
+          WHEN taxon_concepts.name_status = 'A' THEN 1
+          ELSE 2
+        END
+      ), resolved_taxa AS (
+        SELECT DISTINCT ON (1)
+          sandbox_shipment_id,
+          resolved_reported_taxa.taxon_concept_id,
+          accepted_taxon_concepts.id AS accepted_taxon_concept_id
+        FROM resolved_reported_taxa
+        LEFT JOIN taxon_relationships
+          ON taxon_relationships.other_taxon_concept_id = resolved_reported_taxa.taxon_concept_id
+        LEFT JOIN taxon_relationship_types
+          ON taxon_relationships.taxon_relationship_type_id = taxon_relationship_types.id
+          AND taxon_relationship_types.name = '#{TaxonRelationshipType::HAS_SYNONYM}'
+        LEFT JOIN taxon_concepts accepted_taxon_concepts
+          ON accepted_taxon_concepts.id = taxon_relationships.taxon_concept_id
+          AND taxonomy_id = #{taxonomy_id}
+        ORDER BY 1, CASE
+          WHEN accepted_taxon_concepts.name_status = 'A' THEN 1
+          ELSE 2
+        END
+      ), inserted_shipments AS (
+        INSERT INTO trade_shipments (
+          source_id,
+          unit_id,
+          purpose_id,
+          term_id,
+          quantity,
+          appendix,
+          trade_annual_report_upload_id,
+          exporter_id,
+          importer_id,
+          country_of_origin_id,
+          country_of_origin_permit_id,
+          import_permit_id,
+          reported_by_exporter,
+          taxon_concept_id,
+          reported_taxon_concept_id,
+          year,
+          created_at,
+          updated_at,
+          sandbox_id
+        )
+        SELECT
+          sources.id,
+          units.id,
+          purposes.id,
+          terms.id,
+          #{@table_name}.quantity::NUMERIC,
+          #{@table_name}.appendix,
+          #{@annual_report_upload.id},
+          exporters.id,
+          importers.id,
+          origins.id,
+          origin_permits.id,
+          import_permits.id,
+          #{ @annual_report_upload.point_of_view == "E" ? 'true' : 'false'},
+          CASE WHEN resolved_taxa.accepted_taxon_concept_id IS NOT NULL
+          THEN resolved_taxa.accepted_taxon_concept_id
+          ELSE resolved_taxa.taxon_concept_id
+          END,
+          resolved_taxa.taxon_concept_id,
+          #{@table_name}.year::INTEGER,
+          current_date,
+          current_date,
+          #{@table_name}.id
+        FROM #{@table_name}
+        JOIN resolved_taxa ON #{@table_name}.id = resolved_taxa.sandbox_shipment_id
+        JOIN trade_codes AS terms ON #{@table_name}.term_code = terms.code
+          AND terms.type = 'Term'
+        JOIN geo_entities AS exporters ON
+          #{if @annual_report_upload.point_of_view == 'E'
+              then "exporters.id = #{@annual_report_upload.trading_country_id}"
+              else "exporters.iso_code2 = #{@table_name+'.trading_partner'}" end}
+        JOIN geo_entities AS importers ON
+          #{if @annual_report_upload.point_of_view == 'E'
+              then "importers.iso_code2 = #{@table_name+'.trading_partner'}"
+              else "importers.id = #{@annual_report_upload.trading_country_id}" end}
         LEFT JOIN trade_codes AS sources ON #{@table_name}.source_code = sources.code
           AND sources.type = 'Source'
         LEFT JOIN trade_codes AS units ON #{@table_name}.unit_code = units.code
           AND units.type = 'Unit'
         LEFT JOIN trade_codes AS purposes ON #{@table_name}.purpose_code = purposes.code
           AND purposes.type = 'Purpose'
-        LEFT JOIN trade_codes AS terms ON #{@table_name}.term_code = terms.code
-          AND terms.type = 'Term'
-        LEFT JOIN geo_entities AS exporters ON
-          #{if @annual_report_upload.point_of_view == 'E'
-              then "exporters.id = #{@annual_report_upload.trading_country_id}"
-              else "exporters.iso_code2 = #{@table_name+'.trading_partner'}" end}
-        LEFT JOIN geo_entities AS importers ON
-          #{if @annual_report_upload.point_of_view == 'E'
-              then "importers.iso_code2 = #{@table_name+'.trading_partner'}"
-              else "importers.id = #{@annual_report_upload.trading_country_id}" end}
         LEFT JOIN geo_entities AS origins ON origins.iso_code2 = #{@table_name}.country_of_origin
         LEFT JOIN trade_permits AS origin_permits ON origin_permits.number = #{@table_name}.origin_permit
         LEFT JOIN trade_permits AS import_permits ON import_permits.number = #{@table_name}.import_permit
-        INNER JOIN taxon_concepts
-          ON taxon_concepts.full_name = squish(#{@table_name}.species_name)
-        INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
-          AND taxonomies.name = '#{Taxonomy::CITES_EU}'
+
         RETURNING id, sandbox_id
       )
       INSERT INTO trade_shipment_export_permits( trade_shipment_id,
@@ -133,6 +193,7 @@ class Trade::Sandbox
       SET sandbox_id = NULL
       WHERE trade_shipments.trade_annual_report_upload_id = #{@annual_report_upload.id}
     SQL
+
     ActiveRecord::Base.connection.execute(cmd)
   end
 

@@ -117,10 +117,4 @@ class Trade::SandboxTemplate < ActiveRecord::Base
     sanitize_sql_array([sql, csv_file_path])
   end
 
-  def self.duplicate_column_stmt target_table_name, origin_col, destiny_col, data_type="varchar"
-    sql = <<-SQL
-      UPDATE #{target_table_name}
-      SET #{destiny_col} = #{origin_col};
-    SQL
-  end
 end
