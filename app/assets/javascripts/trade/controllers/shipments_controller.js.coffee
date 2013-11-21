@@ -98,6 +98,8 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   ]
   allReporterTypeValues: ['E', 'I']
 
+  allUnits: [Ember.Object.create({fullName: 'Empty', code: -1})]
+
   permitQuery: null
   autoCompletePermits: ( ->
     permitQuery = @get('permitQuery')
