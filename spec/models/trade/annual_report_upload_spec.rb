@@ -165,7 +165,8 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           :unit_code => 'KIL',
           :year => '2010',
           :quantity => 1,
-          :import_permit => 'XXX'
+          :import_permit => 'XXX',
+          :export_permit => 'AAA;BBB'
         )
         create(
           :format_validation_rule,
@@ -177,10 +178,16 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       specify {
         expect{subject.submit}.to change{Trade::Shipment.count}.by(1)
       }
+      specify {
+        expect{subject.submit}.to change{Trade::Permit.count}.by(3)
+      }
+      specify {
+        expect{subject.submit}.to change{Trade::ShipmentExportPermit.count}.by(2)
+      }
       context "when permit previously reported" do
         before(:each) { create(:permit, :number => 'XXX', :geo_entity => @argentina) }
         specify {
-          expect{subject.submit}.not_to change{Trade::Permit.count}
+          expect{subject.submit}.to change{Trade::Permit.count}.by(2)
         }
       end
     end

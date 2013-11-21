@@ -31,9 +31,15 @@ BEGIN
   EXECUTE 'SELECT COUNT(*) FROM ' || table_name INTO total_rows;
   RAISE INFO 'Copying % rows from %', total_rows, table_name;
 
-  sql := '
+
+  sql := 'WITH split_export_permits AS (
+      SELECT id, origin_permit, import_permit,
+        regexp_split_to_table(export_permit, ''[:;,]'') AS export_permit,
+        country_of_origin, trading_partner
+      FROM '|| table_name || '
+    )
     SELECT origin_permit, geo_entities.id
-    FROM ' || table_name || '
+    FROM split_export_permits
     INNER JOIN geo_entities ON geo_entities.iso_code2 = country_of_origin
     WHERE origin_permit IS NOT NULL AND country_of_origin IS NOT NULL
       AND NOT EXISTS (
@@ -45,7 +51,7 @@ BEGIN
     sql := sql || 'UNION
       SELECT export_permit, ' || aru.trading_country_id ||
       '
-      FROM ' || table_name || '
+      FROM split_export_permits
       INNER JOIN geo_entities ON geo_entities.iso_code2 = trading_partner
       WHERE export_permit IS NOT NULL
         AND NOT EXISTS (
@@ -55,7 +61,7 @@ BEGIN
         )
       UNION
       SELECT import_permit, geo_entities.id
-      FROM ' || table_name || '
+      FROM split_export_permits
       INNER JOIN geo_entities ON geo_entities.iso_code2 = trading_partner
       WHERE import_permit IS NOT NULL
         AND NOT EXISTS (
@@ -66,7 +72,7 @@ BEGIN
   ELSE
     sql := sql || 'UNION
       SELECT DISTINCT export_permit, geo_entities.id
-      FROM ' || table_name || '
+      FROM split_export_permits
       INNER JOIN geo_entities ON geo_entities.iso_code2 = trading_partner
       WHERE export_permit IS NOT NULL
         AND NOT EXISTS (
@@ -77,7 +83,7 @@ BEGIN
       UNION
       SELECT DISTINCT import_permit, ' || aru.trading_country_id ||
       '
-      FROM ' || table_name || '
+      FROM split_export_permits
       INNER JOIN geo_entities ON geo_entities.iso_code2 = trading_partner
       WHERE import_permit IS NOT NULL
         AND NOT EXISTS (
@@ -215,13 +221,17 @@ BEGIN
 
   EXECUTE sql;
 
-  GET DIAGNOSTICS inserted_rows = ROW_COUNT;
-  RAISE INFO 'Inserted % shipments out of %', inserted_rows, total_rows;
-  IF inserted_rows < total_rows THEN
+  GET DIAGNOSTICS inserted_shipments = ROW_COUNT;
+  RAISE INFO '[%] Inserted % shipments out of %', table_name, inserted_shipments, total_shipments;
+  IF inserted_shipments < total_shipments THEN
     RETURN -1;
   END IF;
 
-  sql := 'INSERT INTO trade_shipment_export_permits(
+  sql := 'WITH split_export_permits AS (
+    SELECT id, regexp_split_to_table(export_permit, ''[:;,]'') AS export_permit
+    FROM '|| table_name || '
+  )
+  INSERT INTO trade_shipment_export_permits(
       trade_shipment_id,
       trade_permit_id,
       created_at,
