@@ -9,12 +9,13 @@ DECLARE
   cites_taxonomy_id INTEGER;
   reported_by_exporter BOOLEAN;
   inserted_rows INTEGER;
-  total_rows INTEGER;
+  inserted_shipments INTEGER;
+  total_shipments INTEGER;
   sql TEXT;
 BEGIN
   SELECT * INTO aru FROM trade_annual_report_uploads WHERE id = annual_report_upload_id;
   IF NOT FOUND THEN
-    RAISE NOTICE 'Annual report upload not found.';
+    RAISE NOTICE '[%] Annual report upload not found.', table_name;
     RETURN -1;
   END IF;
   IF aru.point_of_view = 'E' THEN
@@ -24,12 +25,12 @@ BEGIN
   END IF;
   SELECT id INTO cites_taxonomy_id FROM taxonomies WHERE name = 'CITES_EU';
   IF NOT FOUND THEN
-    RAISE NOTICE 'Taxonomy not found.';
+    RAISE NOTICE '[%] Taxonomy not found.', table_name;
     RETURN -1;
   END IF;
   table_name = 'trade_sandbox_' || annual_report_upload_id;
-  EXECUTE 'SELECT COUNT(*) FROM ' || table_name INTO total_rows;
-  RAISE INFO 'Copying % rows from %', total_rows, table_name;
+  EXECUTE 'SELECT COUNT(*) FROM ' || table_name INTO total_shipments;
+  RAISE INFO '[%] Copying % rows from %', table_name, total_shipments, table_name;
 
 
   sql := 'WITH split_export_permits AS (
@@ -104,6 +105,9 @@ BEGIN
   FROM permits_to_be_inserted';
 
   EXECUTE sql;
+
+  GET DIAGNOSTICS inserted_rows = ROW_COUNT;
+  RAISE INFO '[%] Inserted % permits', table_name, inserted_rows;
 
   sql := '
     CREATE TEMP TABLE ' || table_name || '_for_submit AS
@@ -243,19 +247,22 @@ BEGIN
       current_date,
       current_date
     FROM '|| table_name || '_for_submit shipments_for_submit
-    INNER JOIN '|| table_name || ' sandbox_table
-      ON sandbox_table.id = shipments_for_submit.sandbox_id
+    INNER JOIN split_export_permits
+      ON split_export_permits.id = shipments_for_submit.sandbox_id
     INNER JOIN trade_permits
-      ON trade_permits.number = sandbox_table.export_permit';
+      ON trade_permits.number = split_export_permits.export_permit';
 
   EXECUTE sql;
+
+  GET DIAGNOSTICS inserted_rows = ROW_COUNT;
+  RAISE INFO '[%] Inserted % shipment export permits', table_name, inserted_rows;
 
   sql := 'UPDATE trade_shipments SET sandbox_id = NULL
   WHERE trade_shipments.trade_annual_report_upload_id = ' || aru.id;
   EXECUTE sql;
-  RETURN inserted_rows;
+  RETURN inserted_shipments;
 END;
-  $$;
+$$;
 
 COMMENT ON FUNCTION copy_transactions_from_sandbox_to_shipments(annual_report_upload_id INTEGER) IS
   'Procedure to copy transactions from sandbox to shipments. Returns the number of rows copied if success, 0 if failure.'
