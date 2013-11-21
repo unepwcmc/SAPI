@@ -2,6 +2,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
+  errors: null
 
   shipmentsSaving: ( ->
     return false unless @get('content.isLoaded')
@@ -159,6 +160,9 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       re.test(element.get('name'))
 
   actions:
+    # TODO this might need to be dropped
+    # because it will be easier to handle validations
+    # if shipments are saved one by one
     saveChanges: () ->
       # process deletes
       @get('content').filterBy('_destroyed', true).forEach (shipment) ->
@@ -167,10 +171,46 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       @get('store').commit()
       @openShipmentsPage( {page: @get('page')} )
 
+    # TODO this might need to be dropped
+    # because it will be easier to handle validations
+    # if shipments are saved one by one
     cancelChanges: () ->
       @get('content').forEach (shipment) ->
         if (!shipment.get('isSaving'))
           shipment.get('transaction').rollback()
+
+    # creates a local new shipment (bound to currentShipment)
+    newShipment: () ->
+      @set('currentShipment', Trade.Shipment.createRecord())
+      $('.modal').modal('show')
+
+    # saves the new shipment (bound to currentShipment) to the db
+    saveShipment: () ->
+      shipment = @get('currentShipment')
+      # Before trying to save a shipment 
+      # we need to reset the model to a valid state.
+      unless shipment.get('isValid')
+        shipment.send("becameValid")
+      unless shipment.get('isSaving')
+        shipment.get('transaction').commit()
+      shipment.one('didCreate', this, ->
+        @set('errors', '')
+        @set('currentShipment', null)
+        @set('shipment', null) #TODO: is this needed?
+        $('.modal').modal('hide')
+      )
+      shipment.one('becameInvalid', this, ->
+        @set 'errors', @get('currentShipment.errors')
+      )
+  
+    # discards the new shipment (bound to currentShipment)
+    cancelNewShipment: () ->
+      shipment = @get('currentShipment')
+      if (!shipment.get('isSaving'))
+        @get('currentShipment').deleteRecord()
+        @set('currentShipment', null)
+        @set 'errors', null
+        $('.modal').modal('hide')
 
     search: ->
       params = {}

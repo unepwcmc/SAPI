@@ -33,29 +33,37 @@ class Trade::Shipment < ActiveRecord::Base
     :term_id, :unit_id, :year,
     :import_permit_number, :export_permit_number, :country_of_origin_permit_number
 
-  belongs_to :taxon_concept
+  validates :quantity, presence: true
+  validates :appendix, presence: true
+  validates :year, presence: true
+  validates :taxon_concept_id, presence: true
+  validates :term_id, presence: true
+  validates :exporter_id, presence: true
+  validates :importer_id, presence: true
 
+  belongs_to :taxon_concept
   belongs_to :purpose, :class_name => "TradeCode"
   belongs_to :source, :class_name => "TradeCode"
   belongs_to :term, :class_name => "TradeCode"
   belongs_to :unit, :class_name => "TradeCode"
-
   belongs_to :country_of_origin, :class_name => "GeoEntity"
   belongs_to :exporter, :class_name => "GeoEntity"
   belongs_to :importer, :class_name => "GeoEntity"
-
   belongs_to :country_of_origin_permit, :class_name => "Trade::Permit"
   has_many :shipment_export_permits, :foreign_key => :trade_shipment_id,
     :class_name => "Trade::ShipmentExportPermit", :dependent => :destroy
   has_many :export_permits, :through => :shipment_export_permits
   belongs_to :import_permit, :class_name => "Trade::Permit"
 
+
   def reporter_type
     reported_by_exporter ? 'E' : 'I'
   end
 
   def reporter_type=(str)
-    self.reported_by_exporter = (str.upcase.strip == 'E' ? 'E' : 'I')
+    if str
+      self.reported_by_exporter = str.upcase.strip
+    end
   end
 
   def import_permit_number
@@ -63,8 +71,10 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def import_permit_number=(str)
-    permit = Trade::Permit.find_or_create_by_number(str)
-    self.import_permit = permit
+    if str
+      permit = Trade::Permit.find_or_create_by_number(str)
+      self.import_permit = permit
+    end
   end
 
   def export_permit_number
@@ -72,10 +82,12 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def export_permit_number=(str)
-    permits = str.split(';').compact.map do |number|
-      Trade::Permit.find_or_create_by_number(number)
+    if str
+      permits = str.split(';').compact.map do |number|
+        Trade::Permit.find_or_create_by_number(number)
+      end
+      self.export_permits = permits
     end
-    self.export_permits = permits
   end
 
   def country_of_origin_permit_number
@@ -83,7 +95,9 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def country_of_origin_permit_number=(str)
-    permit = Trade::Permit.find_or_create_by_number(str)
-    self.country_of_origin_permit = permit
+    if str
+      permit = Trade::Permit.find_or_create_by_number(str)
+      self.country_of_origin_permit = permit
+    end
   end
 end
