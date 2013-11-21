@@ -137,18 +137,35 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         :taxon_name => create(:taxon_name, :scientific_name => 'baerii'),
         :parent_id => genus.id
       )
+      create(:term, :code => 'CAV')
+      create(:unit, :code => 'KIL')
+      country = create(:geo_entity_type, :name => 'COUNTRY')
+      @argentina = create(:geo_entity,
+                          :geo_entity_type => country,
+                          :name => 'Argentina',
+                          :iso_code2 => 'AR'
+                         )
+
+      @portugal = create(:geo_entity,
+                         :geo_entity_type => country,
+                         :name => 'Portugal',
+                         :iso_code2 => 'PT'
+                        )
     end
     context "when no primary errors" do
       subject { #aru no primary errors
-        aru = build(:annual_report_upload)
+        aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
         aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
         sandbox_klass.create(
           :species_name => 'Acipenser baerii',
           :appendix => 'II',
+          :trading_partner => @portugal.iso_code2,
           :term_code => 'CAV',
           :unit_code => 'KIL',
-          :year => '2010'
+          :year => '2010',
+          :quantity => 1,
+          :import_permit => 'XXX'
         )
         create(
           :format_validation_rule,
@@ -160,6 +177,12 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       specify {
         expect{subject.submit}.to change{Trade::Shipment.count}.by(1)
       }
+      context "when permit previously reported" do
+        before(:each) { create(:permit, :number => 'XXX', :geo_entity => @argentina) }
+        specify {
+          expect{subject.submit}.not_to change{Trade::Permit.count}
+        }
+      end
     end
     context "when primary errors present" do
       subject { #aru with primary errors
@@ -184,6 +207,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         expect{subject.submit}.not_to change{Trade::Shipment.count}
       }
     end
+
   end
 
 end

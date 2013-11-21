@@ -2,7 +2,6 @@ class AddConstraintsToShipmentsColumns < ActiveRecord::Migration
   #legitimately blank fields: unit, purpose, source, origin country
   def change
     change_column :trade_shipments, :taxon_concept_id, :integer, :null => false
-    change_column :trade_shipments, :reported_taxon_concept_id, :integer, :null => false
     change_column :trade_shipments, :term_id, :integer, :null => false
     change_column :trade_shipments, :exporter_id, :integer, :null => false
     change_column :trade_shipments, :importer_id, :integer, :null => false

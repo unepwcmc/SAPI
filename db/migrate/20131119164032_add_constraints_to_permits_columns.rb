@@ -4,7 +4,7 @@ class AddConstraintsToPermitsColumns < ActiveRecord::Migration
     Trade::Shipment.delete_all
     Trade::Permit.delete_all
     change_column :trade_permits, :number, :string, :null => false
-    add_index :trade_permits, :number, :unique => true
+    add_index :trade_permits, [:geo_entity_id, :number], :unique => true
     change_column :trade_shipment_export_permits, :trade_permit_id, :integer, :null => false
     change_column :trade_shipment_export_permits, :trade_shipment_id, :integer, :null => false
     add_index :trade_shipment_export_permits, [:trade_shipment_id, :trade_permit_id],

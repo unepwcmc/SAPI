@@ -46,6 +46,7 @@ FactoryGirl.define do
   end
 
   factory :permit, :class => Trade::Permit do
+    geo_entity
     number 'XXX'
   end
 end

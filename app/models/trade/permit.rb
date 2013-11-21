@@ -11,4 +11,5 @@
 
 class Trade::Permit < ActiveRecord::Base
   attr_accessible :number, :geo_entity_id
+  belongs_to :geo_entity
 end
