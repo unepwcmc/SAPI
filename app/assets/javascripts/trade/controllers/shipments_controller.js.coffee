@@ -4,6 +4,8 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   currentShipment: null
   errors: null
 
+  columns: ['quantity', 'taxonConcept.fullName']
+
   shipmentsSaving: ( ->
     return false unless @get('content.isLoaded')
     @get('content').filterBy('isSaving', true).length > 0
@@ -17,12 +19,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     return false unless @get('content.isLoaded')
     @get('content').filterBy('isDirty', true).length
   ).property('content.@each.isDirty')
-
-  tableController: Ember.computed ->
-    controller = Ember.get('Trade.ShipmentsTable.TableController').create()
-    controller.set('shipmentsController', @)
-    controller
-  .property('content')
 
   total: ( ->
     @get('content.meta.total')
@@ -199,18 +195,35 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
         @set('shipment', null) #TODO: is this needed?
         $('.modal').modal('hide')
       )
+      shipment.one('didUpdate', this, ->
+        @set('errors', '')
+        @set('currentShipment', null)
+        @set('shipment', null) #TODO: is this needed?
+        $('.modal').modal('hide')
+      )
       shipment.one('becameInvalid', this, ->
         @set 'errors', @get('currentShipment.errors')
       )
+
+    cancelShipment: () ->
+      @set('currentShipment', null)
+      @set 'errors', null
+      $('.modal').modal('hide')
   
     # discards the new shipment (bound to currentShipment)
-    cancelNewShipment: () ->
+    deleteShipment: () ->
       shipment = @get('currentShipment')
       if (!shipment.get('isSaving'))
-        @get('currentShipment').deleteRecord()
-        @set('currentShipment', null)
-        @set 'errors', null
-        $('.modal').modal('hide')
+        shipment.deleteRecord()
+        shipment.get('transaction').commit()
+        shipment.one('didDelete', this, ->
+          @set('currentShipment', null)
+          @set 'errors', null
+          @send('search')
+        )
+
+    editShipment: () ->
+      $('.modal').modal('show')
 
     search: ->
       params = {}

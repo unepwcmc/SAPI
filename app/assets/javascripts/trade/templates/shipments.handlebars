@@ -39,11 +39,13 @@
 {{view Trade.ShipmentForm}}
 
 <div class='presentation-container'>
-  {{view Trade.ShipmentsTable.TablesContainer
-    controllerBinding="tableController"
-    selectionBinding="tableController.selection"
-  }}
-</div>
+  <table>
+  {{#each controller.content}}
+    {{view Trade.ShipmentTableView contentBinding='this'}}
+  {{/each}}
+  </table>
+</div> 
+
 <div class="paging">
   <ul class="pager">
     {{# if controller.showPrevPage }}

@@ -7,3 +7,11 @@ Ember.Handlebars.registerHelper('highlight', (suggestion, options) ->
     "<span class='match'>" + match + "</span>"
   new Handlebars.SafeString(suggestion.replace(new RegExp("(" + query + ")", "gi"), transform))
 )
+
+Ember.Handlebars.helper('dataRow', (columns) ->
+  data = []
+  for column in columns
+    data.push @get(column)
+  data = '<td>' + data.join("</td><td>") + '</td>'
+  new Handlebars.SafeString(data)
+)
