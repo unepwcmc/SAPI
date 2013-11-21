@@ -26,6 +26,10 @@ class Trade::SearchParams < Hash
       :time_range_start => params[:time_range_start],
       :time_range_end => params[:time_range_end],
       :quantity => params[:quantity],
+      :unit_blank => params[:unit_blank],
+      :purpose_blank => params[:purpose_blank],
+      :source_blank => params[:source_blank],
+      :country_of_origin_blank => params[:country_of_origin_blank],
       :page => params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
       :per_page => params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 100
     }

@@ -44,15 +44,15 @@ class Trade::Filter
     end
 
     unless @units_ids.empty?
-      @query = @units_ids == ["-1"] ? @query.where(:unit_id => nil) : @query.where(:unit_id => @units_ids)
+      @query = @query.where(:unit_id => @units_ids)
     end
 
     unless @purposes_ids.empty?
-      @query = @purpose_ids == ["-1"] ? @query.where(:purpose_id => nil) : @query.where(:purpose_id => @units_ids)
+      @query = @query.where(:purpose_id => @units_ids)
     end
 
     unless @sources_ids.empty?
-      @query = @sources_ids == ["-1"] ? @query.where(:source_id => nil) : @query.where(:source_id => @sources_ids)
+      @query = @query.where(:source_id => @sources_ids)
     end
 
     unless @importers_ids.empty?
@@ -64,7 +64,7 @@ class Trade::Filter
     end
 
     unless @countries_of_origin_ids.empty?
-      @query = @countries_of_origin_ids == ["-1"] ? @query.where(:country_of_origin_id => nil) : @query.where(:country_of_origin_id => @countries_of_origin_ids)
+      @query = @query.where(:country_of_origin_id => @countries_of_origin_ids)
     end
 
     # Other cases
@@ -100,6 +100,14 @@ class Trade::Filter
     unless @quantity.nil?
       @query = @query.where(:quantity => @quantity)
     end
+
+    # blanks
+
+    @query = @query.where(:unit_id => nil) if @unit_blank
+    @query = @query.where(:purpose_id => nil) if @purpose_blank
+    @query = @query.where(:source_id => nil) if @source_blank
+    @query = @query.where(:country_of_origin_id => nil) if @country_of_origin_blank
+
 
   end
 

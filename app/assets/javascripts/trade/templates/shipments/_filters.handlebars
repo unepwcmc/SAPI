@@ -68,6 +68,7 @@
         <p>Units</p>
         {{view Trade.MultiSelect
           allValuesBinding="controllers.units"
+          blankValueBinding = "controller.unitBlank"
           selectedValuesBinding="controller.selectedUnits"
           selectedValuesCollectionName="units"
           selectedValueDisplayProperty="fullName"
@@ -77,6 +78,7 @@
         <p>Purposes</p>
         {{view Trade.MultiSelect
           allValuesBinding="controllers.purposes"
+          blankValueBinding = "controller.purposeBlank"
           selectedValuesBinding="controller.selectedPurposes"
           selectedValuesCollectionName="purposes"
           selectedValueDisplayProperty="fullName"
@@ -87,6 +89,7 @@
       <p>Sources</p>
         {{view Trade.MultiSelect
           allValuesBinding="controllers.sources"
+          blankValueBinding = "controller.sourceBlank"
           selectedValuesBinding="controller.selectedSources"
           selectedValuesCollectionName="sources"
           selectedValueDisplayProperty="fullName"
@@ -125,6 +128,7 @@
         <p>Country of origin</p>
         {{view Trade.MultiSelect
           allValuesBinding="controllers.geoEntities"
+          blankValueBinding = "controller.countryOfOriginBlank"
           selectedValuesBinding="controller.selectedCountriesOfOrigin"
           selectedValuesCollectionName="countries of origin"
           selectedValueDisplayProperty="name"

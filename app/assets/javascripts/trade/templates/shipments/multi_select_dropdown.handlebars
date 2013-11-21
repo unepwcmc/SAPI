@@ -11,6 +11,9 @@
         }}
       </div>
       {{/if}}
+      {{#if view.hasBlankValue}}
+        {{view Ember.Checkbox checkedBinding = "view.blankValue"}} select empty
+      {{/if}}
       <strong class="title01">YOUR SELECTION</strong>
         {{collection Trade.MultiSelectSelectedValuesCollectionView
           contentBinding="view.selectedValues"
