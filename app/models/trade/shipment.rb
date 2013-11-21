@@ -6,21 +6,22 @@
 #  source_id                     :integer
 #  unit_id                       :integer
 #  purpose_id                    :integer
-#  term_id                       :integer
-#  quantity                      :decimal(, )
-#  appendix                      :string(255)
+#  term_id                       :integer          not null
+#  quantity                      :decimal(, )      not null
+#  appendix                      :string(255)      not null
 #  trade_annual_report_upload_id :integer
-#  exporter_id                   :integer
-#  importer_id                   :integer
+#  exporter_id                   :integer          not null
+#  importer_id                   :integer          not null
 #  country_of_origin_id          :integer
 #  country_of_origin_permit_id   :integer
 #  import_permit_id              :integer
-#  reported_by_exporter          :boolean
-#  taxon_concept_id              :integer
-#  year                          :integer
+#  reported_by_exporter          :boolean          default(TRUE), not null
+#  taxon_concept_id              :integer          not null
+#  year                          :integer          not null
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
 #  sandbox_id                    :integer
+#  reported_taxon_concept_id     :integer
 #
 
 class Trade::Shipment < ActiveRecord::Base
