@@ -44,15 +44,21 @@ class Trade::Filter
     end
 
     unless @units_ids.empty?
-      @query = @query.where(:unit_id => @units_ids)
+      @local_field = "unit_id"
+      @blank_query = @unit_blank ? "OR unit_id IS NULL" : ""
+      @query = @query.where("#{@local_field} IN (?) #{@blank_query}", @units_ids)
     end
 
     unless @purposes_ids.empty?
-      @query = @query.where(:purpose_id => @units_ids)
+      @local_field = "purpose_id"
+      @blank_query = @purpose_blank ? "OR purpose_id IS NULL" : ""
+      @query = @query.where("#{@local_field} IN (?) #{@blank_query}", @purposes_ids)
     end
 
     unless @sources_ids.empty?
-      @query = @query.where(:source_id => @sources_ids)
+      @local_field = "source_id"
+      @blank_query = @source_blank ? "OR source_id IS NULL" : ""
+      @query = @query.where("#{@local_field} IN (?) #{@blank_query}", @sources_ids)
     end
 
     unless @importers_ids.empty?
@@ -64,7 +70,9 @@ class Trade::Filter
     end
 
     unless @countries_of_origin_ids.empty?
-      @query = @query.where(:country_of_origin_id => @countries_of_origin_ids)
+      @local_field = "country_of_origin_id"
+      @blank_query = @countries_of_origin_blank ? "OR country_of_origin_id IS NULL" : ""
+      @query = @query.where("#{@local_field} IN (?) #{@blank_query}", @countries_of_origin_ids)
     end
 
     # Other cases
@@ -100,14 +108,6 @@ class Trade::Filter
     unless @quantity.nil?
       @query = @query.where(:quantity => @quantity)
     end
-
-    # blanks
-
-    @query = @query.where(:unit_id => nil) if @unit_blank
-    @query = @query.where(:purpose_id => nil) if @purpose_blank
-    @query = @query.where(:source_id => nil) if @source_blank
-    @query = @query.where(:country_of_origin_id => nil) if @country_of_origin_blank
-
 
   end
 
