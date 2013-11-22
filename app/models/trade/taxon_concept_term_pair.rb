@@ -1,11 +1,10 @@
 # == Schema Information
 #
-# Table name: trade_taxon_concept_code_pairs
+# Table name: trade_taxon_concept_term_pairs
 #
 #  id               :integer          not null, primary key
 #  taxon_concept_id :integer
-#  trade_code_id    :integer
-#  trade_code_type  :string(255)
+#  term_id          :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #

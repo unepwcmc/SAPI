@@ -1,77 +1,78 @@
 require 'spec_helper'
 describe Trade::Filter do
+  before(:each) do
+    @family = create_cites_eu_family
+    @genus1 = create_cites_eu_genus(
+      :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus'),
+      :parent => @family
+    )
+    @taxon_concept1 = create_cites_eu_species(
+      :taxon_name => create(:taxon_name, :scientific_name => 'abstractus'),
+      :parent => @genus1
+    )
+    @genus2 = create_cites_eu_genus(
+      :taxon_name => create(:taxon_name, :scientific_name => 'Nullificus'),
+      :parent => @family
+    )
+    @taxon_concept2 = create_cites_eu_species(
+      :taxon_name => create(:taxon_name, :scientific_name => 'totalus'),
+      :parent => @genus2
+    )
+
+    country = create(:geo_entity_type, :name => 'COUNTRY')
+    @argentina = create(:geo_entity,
+                        :geo_entity_type => country,
+                        :name => 'Argentina',
+                        :iso_code2 => 'AR'
+                       )
+
+    @portugal = create(:geo_entity,
+                       :geo_entity_type => country,
+                       :name => 'Portugal',
+                       :iso_code2 => 'PT'
+                      )
+
+    @term = create(:term, :code => 'CAV')
+    @unit = create(:unit, :code => 'KIL')
+    @purpose = create(:purpose, :code => 'T')
+    @source = create(:source, :code => 'W')
+    @import_permit = create(:permit, :number => 'AAA')
+    @export_permit1 = create(:permit, :number => 'BBB')
+    @export_permit2 = create(:permit, :number => 'CCC')
+    @shipment1 = create(
+      :shipment,
+      :taxon_concept => @taxon_concept1,
+      :appendix => 'I',
+      :purpose => @purpose,
+      :source => @source,
+      :term => @term,
+      :unit => @unit,
+      :importer => @argentina,
+      :exporter => @portugal,
+      :country_of_origin => @argentina,
+      :year => 2012,
+      :reported_by_exporter => true,
+      :import_permit => @import_permit,
+      :export_permits=> [@export_permit1, @export_permit2],
+      :quantity => 20
+    )
+    @shipment2 = create(
+      :shipment,
+      :taxon_concept => @taxon_concept2,
+      :appendix => 'II',
+      :purpose => @purpose,
+      :source => @source,
+      :term => @term,
+      :unit => @unit,
+      :importer => @portugal,
+      :exporter => @argentina,
+      :country_of_origin => @portugal,
+      :year => 2013,
+      :reported_by_exporter => false,
+      :quantity => 10
+    )
+  end
   describe :results do
-    before(:each) do
-      @family = create_cites_eu_family
-      @genus1 = create_cites_eu_genus(
-        :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus'),
-        :parent => @family
-      )
-      @taxon_concept1 = create_cites_eu_species(
-        :taxon_name => create(:taxon_name, :scientific_name => 'abstractus'),
-        :parent => @genus1
-      )
-      @genus2 = create_cites_eu_genus(
-        :taxon_name => create(:taxon_name, :scientific_name => 'Nullificus'),
-        :parent => @family
-      )
-      @taxon_concept2 = create_cites_eu_species(
-        :taxon_name => create(:taxon_name, :scientific_name => 'totalus'),
-        :parent => @genus2
-      )
-
-      @argentina = create(:geo_entity,
-                          :geo_entity_type => create(:geo_entity_type, :name => 'COUNTRY'),
-                          :name => 'Argentina',
-                          :iso_code2 => 'AR'
-                         )
-
-      @portugal = create(:geo_entity,
-                         :geo_entity_type => create(:geo_entity_type, :name => 'COUNTRY'),
-                         :name => 'Portugal',
-                         :iso_code2 => 'PT'
-                        )
-
-      @term = create(:term, :code => 'CAV')
-      @unit = create(:unit, :code => 'KIL')
-      @purpose = create(:purpose, :code => 'T')
-      @source = create(:source, :code => 'W')
-      @import_permit = create(:permit, :number => 'AAA')
-      @export_permit1 = create(:permit, :number => 'BBB')
-      @export_permit2 = create(:permit, :number => 'CCC')
-      @shipment1 = create(
-        :shipment,
-        :taxon_concept => @taxon_concept1,
-        :appendix => 'I',
-        :purpose => @purpose,
-        :source => @source,
-        :term => @term,
-        :unit => @unit,
-        :importer => @argentina,
-        :exporter => @portugal,
-        :country_of_origin => @argentina,
-        :year => 2012,
-        :reported_by_exporter => true,
-        :import_permit => @import_permit,
-        :export_permits=> [@export_permit1, @export_permit2],
-        :quantity => 20
-      )
-      @shipment2 = create(
-        :shipment,
-        :taxon_concept => @taxon_concept2,
-        :appendix => 'II',
-        :purpose => @purpose,
-        :source => @source,
-        :term => @term,
-        :unit => @unit,
-        :importer => @portugal,
-        :exporter => @argentina,
-        :country_of_origin => @portugal,
-        :year => 2013,
-        :reported_by_exporter => false
-
-      )
-    end
     context "when searching by taxon concepts ids" do
       before(:each){ eu; cms_designation; Sapi.rebuild }
       context "at GENUS rank" do
@@ -205,16 +206,7 @@ describe Trade::Filter do
   end
 
   describe :total_cnt do
-    before(:each) do
-      @shipment1 = create(:shipment,
-                          :appendix => 'I',
-                          :quantity => 20)
-      @shipment1 = create(:shipment,
-                          :appendix => 'II',
-                          :quantity => 20)
-    end
-
-    context "when noone matches" do
+    context "when none matches" do
       subject { Trade::Filter.new({:appendices => ['III']}) }
       specify { subject.total_cnt.should == 0 }
     end
@@ -225,7 +217,7 @@ describe Trade::Filter do
     end
 
     context "when two match" do
-      subject { Trade::Filter.new({:quantity => 20}) }
+      subject { Trade::Filter.new({:purposes_ids => [@purpose.id]}) }
       specify { subject.total_cnt.should == 2 }
     end
 

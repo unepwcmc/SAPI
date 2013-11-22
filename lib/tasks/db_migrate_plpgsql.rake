@@ -44,6 +44,8 @@ namespace :db do
   end
   desc "Drop sandboxes in progress"
   task :drop_sandboxes => :environment do
-    Trade::AnnualReportUpload.where(:is_done => false).delete_all
+    Trade::AnnualReportUpload.where(:is_done => false).each do |aru|
+      aru.destroy
+    end
   end
 end

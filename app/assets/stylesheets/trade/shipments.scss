@@ -233,9 +233,50 @@ div.popup-holder01 {
   line-height: 60px;
 }
 
-// For debugging
-.xxx {
-  div.popup-holder01 {
-    display: block; 
+#shipment_form_modal {
+  form {
+    margin-bottom: 0;
   }
+  .modal-body {
+    max-height: 680px;
+    .heading {
+      margin: 5px 1px;
+    }
+    .attribute-area {
+      width: 190px;
+      margin: 0 0 10px 0;
+      input {
+        width: 175px;
+      }
+      select {
+        width: 190px;
+        margin: 0;
+        option { 
+          color: $link-blue;
+        }
+      }
+    }
+    .attribute-area.year {
+      height: 64px;
+    }
+    .attribute-area.species {
+      width: 408px;
+      a {
+        width: 400px;
+      }
+    }
+  }
+  button {
+    margin: 2px 10px;
+  }
+}
+
+
+span.error {
+  font-size: 10px;
+  color: red;
+}
+
+.select2-drop {
+  width: 410px !important;
 }
