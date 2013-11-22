@@ -44,7 +44,7 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
   contentBinding: 'shipmentsController.content'
   tableRowViewClass: "Trade.ShipmentsTable.TableRow"
   columnNames: [
-    'appendix', 'reportedAppendix', 'speciesName', 'reportedSpeciesName',
+    'appendix', 'speciesName',
     'termCode', 'quantity', 'unitCode', 'importer', 'exporter',
     'reporterType', 'countryOfOrigin', 'purposeCode', 'sourceCode',
     'year', 'importPermitNumber', 'exportPermitNumber', 'countryOfOriginPermitNumber'
@@ -53,16 +53,10 @@ Trade.ShipmentsTable.TableController = Ember.Table.TableController.extend
     appendix:
       width: 45
       header: 'Appdx'
-    reportedAppendix:
-      width: 55
-      header: 'Rep. Appdx'
     speciesName:
       width: 200
       header: 'Species'
       labelPath: 'taxonConcept.fullName'
-    reportedSpeciesName:
-      width:200
-      header: 'Rep. Species'
     termCode:
       width: 50
       header: 'Term'

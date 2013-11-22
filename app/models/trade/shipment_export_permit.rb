@@ -3,8 +3,8 @@
 # Table name: trade_shipment_export_permits
 #
 #  id                :integer          not null, primary key
-#  trade_permit_id   :integer
-#  trade_shipment_id :integer
+#  trade_permit_id   :integer          not null
+#  trade_shipment_id :integer          not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
