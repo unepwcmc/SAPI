@@ -19,31 +19,28 @@
       {{#view tagName='span' class='pull-right' isVisibleBinding='controller.shipmentsSaving'}}
         <img src="/assets/loading.gif"> Saving...
       {{/view}}
-      <button {{action 'saveChanges'}}
-        {{bind-attr class="unsavedChanges::disabled :pull-right :btn :btn-primary"}}>
-        Save changes
-      </button>
-      <button {{action 'cancelChanges'}} class="pull-right btn clearfix">
-        Cancel changes
-      </button>
       <button {{action 'newShipment'}} class="pull-right btn clearfix">
         Add shipment
       </button>
-      {{#if unsavedChanges}}
-        <span class="pull-right label label-important">There are {{changedRowsCount}} unsaved changes.</span>
-      {{/if}}
     </div>
   </div>
 </div>
 
 {{view Trade.ShipmentForm}}
 
-<div class='presentation-container'>
-  {{view Trade.ShipmentsTable.TablesContainer
-    controllerBinding="tableController"
-    selectionBinding="tableController.selection"
-  }}
-</div>
+<div class='shipments-presentation-container'>
+  <table>
+    <thead>
+      <tr><th>Actions</th>{{dataHead controller.columns}}</tr>
+    </thead>
+    <tbody>
+    {{#each controller.content}}
+      {{view Trade.ShipmentTableView contentBinding='this'}}
+    {{/each}}
+    </tbody>
+  </table>
+</div> 
+
 <div class="paging">
   <ul class="pager">
     {{# if controller.showPrevPage }}
