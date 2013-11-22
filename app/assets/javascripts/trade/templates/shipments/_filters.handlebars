@@ -68,27 +68,32 @@
       <div class="left filter-group">
         <p>Units</p>
         {{view Trade.MultiSelect
+          blankValueBinding = "controller.unitBlank"
           queryBinding="controller.unitQuery"
           allValuesBinding="controller.autoCompleteUnits"
           selectedValuesBinding="controller.selectedUnits"
           selectedValuesCollectionName="units"
           selectedValueDisplayProperty="fullName"
           selectedValueShortDisplayProperty="code"
-        }}        </div>
+        }}        
+      </div>
       <div class="left filter-group">
         <p>Purposes</p>
         {{view Trade.MultiSelect
           allValuesBinding="controllers.purposes"
+          blankValueBinding = "controller.purposeBlank"
           selectedValuesBinding="controller.selectedPurposes"
           selectedValuesCollectionName="purposes"
           selectedValueDisplayProperty="fullName"
           selectedValueShortDisplayProperty="code"
+          
         }}
       </div>
       <div class="left filter-group">
       <p>Sources</p>
         {{view Trade.MultiSelect
           allValuesBinding="controllers.sources"
+          blankValueBinding = "controller.sourceBlank"
           selectedValuesBinding="controller.selectedSources"
           selectedValuesCollectionName="sources"
           selectedValueDisplayProperty="fullName"
@@ -130,6 +135,7 @@
       <div class="left filter-group">
         <p>Country of origin</p>
         {{view Trade.MultiSelect
+          blankValueBinding = "controller.countryOfOriginBlank"
           queryBinding="controller.countryOfOriginQuery"
           allValuesBinding="controller.autoCompleteCountriesOfOrigin"
           selectedValuesBinding="controller.selectedCountriesOfOrigin"

@@ -1,6 +1,9 @@
+@import "compass/css3";
+
 // Colours
 
-$dark-grey: #dddddd;
+$dark-grey: #666666;
+$medium-grey: #dddddd;
 $light-grey: #f7f7f7;
 $dark-blue: #0e76b1;
 $light-blue: #00a2db;
@@ -19,14 +22,14 @@ $link-blue: #0088cc;
 
 h2 {
   padding: 16px 0;
-  border-bottom: 1px solid lighten($dark-grey, 6%);
+  border-bottom: 1px solid lighten($medium-grey, 6%);
   margin-bottom: 29px;
 }
 
 div.filters {
   background-color: $light-grey;
   .heading {
-    background-color: $dark-grey;
+    background-color: $medium-grey;
     text-transform: uppercase;
     padding: 6px;
     margin: 8px;
@@ -43,8 +46,8 @@ div.filters {
   }
   p {
     padding-bottom: 3px;
-    border-bottom: 1px solid lighten($dark-grey, 6%);
-    color: darken($dark-grey, 48%);
+    border-bottom: 1px solid lighten($medium-grey, 6%);
+    color: darken($medium-grey, 48%);
     font-weight: bold;
   }
   .row01 {
@@ -73,7 +76,7 @@ div.filters {
     margin-bottom: 6px;
     background-color: #fff;
     a { 
-      color: darken($dark-grey, 54%);
+      color: darken($medium-grey, 54%);
       padding: 0 6px;
     }
   }
@@ -85,7 +88,7 @@ div.filters {
       color: $link-blue;
     }
     li {
-      color: darken($dark-grey, 54%);
+      color: darken($medium-grey, 54%);
     }
   }
 
@@ -228,7 +231,7 @@ div.popup-holder01 {
 .heading {clear: left;}
 
 .total-matches {
-  color: $dark-grey;
+  color: $medium-grey;
   font-size: 17px;
   line-height: 60px;
 }
@@ -238,7 +241,7 @@ div.popup-holder01 {
     margin-bottom: 0;
   }
   .modal-body {
-    max-height: 680px;
+    //max-height: 680px;
     .heading {
       margin: 5px 1px;
     }
@@ -279,4 +282,33 @@ span.error {
 
 .select2-drop {
   width: 410px !important;
+}
+
+
+.shipments-presentation-container {
+  width: 941px;
+  //max-height: 600px;
+  overflow: auto;
+  table {
+    color: $dark-grey;
+    font-size: 0.8em;
+    border-collapse: collapse;
+    td, th {
+      border: 1px solid $dark-grey;
+      padding: 0.2rem;
+      text-align: left;
+    }
+
+    tbody:hover > tr td {
+      @include opacity(0.7);
+      /* uncomment for blur effect */
+      /* color:transparent;
+      @include text-shadow(0px 0px 2px rgba(0,0,0,0.8));*/
+    }
+    tbody:hover > tr:hover td {
+      @include text-shadow(none);
+      color: darken($dark-grey, 10%);
+      @include opacity(1.0);
+    }
+  }
 }

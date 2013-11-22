@@ -25,6 +25,7 @@
 //= require bootstrap-collapse
 //= require date
 //= require select2
+//= require bootstrap-tooltip
 
 //= require_self
 
