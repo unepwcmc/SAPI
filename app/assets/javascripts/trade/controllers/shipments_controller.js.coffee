@@ -21,15 +21,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     @get('content').filterBy('isSaving', true).length > 0
   ).property('content.@each.isSaving')
 
-  unsavedChanges: (->
-    @get('changedRowsCount') > 0
-  ).property('changedRowsCount')
-
-  changedRowsCount: (->
-    return false unless @get('content.isLoaded')
-    @get('content').filterBy('isDirty', true).length
-  ).property('content.@each.isDirty')
-
   total: ( ->
     @get('content.meta.total')
   ).property('content.isLoaded')
