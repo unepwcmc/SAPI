@@ -62,7 +62,7 @@ class Trade::Filter
     if !@purposes_ids.empty?
       local_field = "purpose_id"
       blank_query = @purpose_blank ? "OR purpose_id IS NULL" : ""
-      @query = @query.where("#{@local_field} IN (?) #{blank_query}", @purposes_ids)
+      @query = @query.where("#{local_field} IN (?) #{blank_query}", @purposes_ids)
     elsif @purpose_blank
       @query = @query.where(:purpose_id => nil)
     end

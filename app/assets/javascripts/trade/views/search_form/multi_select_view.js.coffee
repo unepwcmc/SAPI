@@ -8,11 +8,6 @@ Trade.MultiSelect = Ember.View.extend
 
   templateName: 'trade/shipments/multi_select'
 
-  includeEmptyOption: (->
-    if @get('allValues')
-      @get('allValues').append('Empty')
-  ).property('allValues')
-
 Trade.MultiSelectButton = Ember.View.extend
   tagName: 'a'
   href: '#'
