@@ -1,3 +1,8 @@
+### 0.3.6 (2013-11-22)
+ * fixes some IE issues
+ * upgrades newrelic agent
+ * adds a license
+ 
 ### 0.3.3 (2013-11-11)
 * fixes references management pages (distribution, taxonomic references
   and standard references)
