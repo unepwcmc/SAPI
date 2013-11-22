@@ -152,6 +152,11 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   ).property('countryOfOriginQuery')
   selectedCountriesOfOrigin: []
   selectedQuantity: null
+  
+  unitBlank: false
+  purposeBlank: false
+  sourceBlank: false
+  countryOfOriginBlank: false
   termQuery: null
   autoCompleteTerms: ( ->
     @autoCompleteObjects('controllers.terms', 'code', @get('termQuery'))
@@ -225,6 +230,10 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       @selectedQueryParamNames.forEach (property) =>
         selectedParams = @get(property.name)
         params[property.param] = @parseSelectedParams(selectedParams)
+        params['unit_blank'] = @get('unitBlank')
+        params['purpose_blank'] = @get('purposeBlank')
+        params['source_blank'] = @get('sourceBlank')
+        params['country_of_origin_blank'] = @get('countryOfOriginBlank')
       @openShipmentsPage params
 
     resetFilters: ->

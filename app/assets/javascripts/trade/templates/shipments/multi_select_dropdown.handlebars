@@ -1,6 +1,6 @@
 <div class="popup-holder01">
   <div class="popup">
-    <div class="search-block01 no-padding">
+    <div class="search-block01 no-padding clearfix">
       {{#if view.hasAutoComplete}}
       <div class="row01">
         {{ view Trade.MultiSelectSearchTextField
@@ -11,7 +11,12 @@
         }}
       </div>
       {{/if}}
-      <strong class="title01">YOUR SELECTION</strong>
+      {{#if view.hasBlankValue}}
+        <strong class="pull-right">
+        {{view Ember.Checkbox checkedBinding = "view.blankValue"}} empty
+        </strong>
+      {{/if}}
+      <strong class="title01 pull-left">YOUR SELECTION</strong>
         {{collection Trade.MultiSelectSelectedValuesCollectionView
           contentBinding="view.selectedValues"
           selectedValueDisplayPropertyBinding="view.selectedValueDisplayProperty"
