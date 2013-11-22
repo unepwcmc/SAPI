@@ -143,26 +143,34 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   selectedSources: []
   importerQuery: null
   autoCompleteImporters: ( ->
-    @geoEntitiesWithMatchingPrefix(@get('importerQuery'))
+    @autoCompleteObjects('controllers.geoEntities', 'name', @get('importerQuery'))
   ).property('importerQuery')
   selectedImporters: []
   exporterQuery: null
   autoCompleteExporters: ( ->
-    @geoEntitiesWithMatchingPrefix(@get('exporterQuery'))
+    @autoCompleteObjects('controllers.geoEntities', 'name', @get('exporterQuery'))
   ).property('exporterQuery')
   selectedExporters: []
   countryOfOriginQuery: null
   autoCompleteCountriesOfOrigin: ( ->
-    @geoEntitiesWithMatchingPrefix(@get('countryOfOriginQuery'))
+    @autoCompleteObjects('controllers.geoEntities', 'name', @get('countryOfOriginQuery'))
   ).property('countryOfOriginQuery')
   selectedCountriesOfOrigin: []
   selectedQuantity: null
+  termQuery: null
+  autoCompleteTerms: ( ->
+    @autoCompleteObjects('controllers.terms', 'code', @get('termQuery'))
+  ).property('termQuery')
+  unitQuery: null
+  autoCompleteUnits: ( ->
+    @autoCompleteObjects('controllers.units', 'code', @get('unitQuery'))
+  ).property('unitQuery')
 
-  geoEntitiesWithMatchingPrefix: (query) ->
-    return @get('controllers.geoEntities') unless query
+  autoCompleteObjects: (collectionName, columnName, query) ->
+    return @get(collectionName) unless query
     re = new RegExp("^" + query, "i")
-    @get('controllers.geoEntities').filter (element) ->
-      re.test(element.get('name'))
+    @get(collectionName).filter (element) ->
+      re.test(element.get(columnName))
 
   actions:
     # creates a local new shipment (bound to currentShipment)
@@ -233,6 +241,8 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       @set('exporterQuery', null)
       @set('importerQuery', null)
       @set('countryOfOriginQuery', null)
+      @set('termQuery', null)
+      @set('unitQuery', null)
       @set('selectedTimeStart', @get('defaultTimeStart'))
       @set('selectedTimeEnd', @get('defaultTimeEnd'))
       @openShipmentsPage(false)

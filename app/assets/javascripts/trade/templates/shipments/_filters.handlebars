@@ -57,7 +57,8 @@
       <div class="left filter-group">
         <p>Terms</p>
         {{view Trade.MultiSelect
-          allValuesBinding="controllers.terms"
+          queryBinding="controller.termQuery"
+          allValuesBinding="controller.autoCompleteTerms"
           selectedValuesBinding="controller.selectedTerms"
           selectedValuesCollectionName="terms"
           selectedValueDisplayProperty="fullName"
@@ -67,7 +68,8 @@
       <div class="left filter-group">
         <p>Units</p>
         {{view Trade.MultiSelect
-          allValuesBinding="controllers.units"
+          queryBinding="controller.unitQuery"
+          allValuesBinding="controller.autoCompleteUnits"
           selectedValuesBinding="controller.selectedUnits"
           selectedValuesCollectionName="units"
           selectedValueDisplayProperty="fullName"
