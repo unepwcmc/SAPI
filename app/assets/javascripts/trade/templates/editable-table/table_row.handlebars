@@ -1,10 +1,7 @@
-
-{{dataRow controller.columns}} 
-<td><button name="delete">delete</button></td>
-<td><button name="edit">edit</button></td>
-
-
-
-
-
-   
+<tr>
+  <td>
+    <a href="#" {{action 'editShipment' this}}><i class="icon-pencil" title="edit"></i></a>
+    <a href="#" {{action 'deleteShipment' this}}><i class="icon-trash" title="delete"></i></a>
+  </td>
+  {{dataRow controller.columns controller.codeMappings}} 
+</tr>
