@@ -1,5 +1,7 @@
-class Admin::ListingChangesController < Admin::SimpleCrudController
+class Admin::TaxonListingChangesController < Admin::SimpleCrudController
   respond_to :js, :only => [:create, :update]
+  defaults :resource_class => ListingChange,
+    :collection_name => 'listing_changes', :instance_name => 'listing_change'
   belongs_to :taxon_concept, :designation
   before_filter :load_search, :except => [:create, :update, :destroy]
   layout 'taxon_concepts'

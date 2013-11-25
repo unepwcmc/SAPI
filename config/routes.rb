@@ -62,7 +62,7 @@ SAPI::Application.routes.draw do
       resources :children, :only => [:index]
       resources :taxon_relationships, :only => [:index, :create, :destroy]
       resources :designations, :only => [] do
-        resources :listing_changes
+        resources :taxon_listing_changes, :as => :listing_changes
       end
       resources :taxon_commons, :only => [:new, :create, :edit, :update, :destroy]
       resources :distributions, :only => [:index, :new, :create, :edit, :update, :destroy]
