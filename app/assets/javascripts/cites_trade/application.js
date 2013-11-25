@@ -1,5 +1,10 @@
 $(document).ready(function(){
 
+  var ajaxFail, initExpctyImpcty, initTerms, initSources, initPurposes;
+
+  ajaxFail = function (xhr, ajaxOptions, thrownError) {
+  	console.log(xhr, ajaxOptions, thrownError);
+  };
 
 
   // Your code here
@@ -141,8 +146,7 @@ $("#genus_all_id").chosen({
  }
 
  //function to reset all the countrols on the expert_accord page
- function resetSelects()
- {
+ function resetSelects() {
  	//$("#expcty option:selected").removeAttr("selected");
  	//$(".RemoveAll").trigger('click');
 	$('#qryFrom').find('option:first').attr('selected', 'selected').trigger('change');
@@ -299,8 +303,7 @@ function getSelectionTextNew(source)
 	return values.join(',')
 } 
 
-function getSelectionText(source)
-{
+function getSelectionText(source) {
 	myValues = new Array();
 
 	//growlMe('Source value is:' + source);
@@ -311,151 +314,206 @@ function getSelectionText(source)
 	return myValues.toString();
 }
 
-//aplying the select2 control
-$('#expcty').select2({
-	width: '75%',
-	allowClear: false,
-	closeOnSelect: false
-}).on('change', function(e){
-	// growlMe($(this).attr('id'));
-	selection = "agjhgjhg";
-	if (e.val.length == 0)
-	{
-		// growlMe('You need to make at least one selection! - ' + e.val);
-		$(this).select2("val","all_exp");
-	}
-	prop = $(this).select2('data');
-	selection = getText(prop);
-	if (e.val.length > 1)
-	{
-		new_array = new Array();
-		new_array = checkforAllOptions(prop,'all_exp');
-		$(this).select2('data', new_array);
 
-		// growlMe(JSON.stringify(prop));
-		// growlMe ('new Array: ' + new_array.toString());
-		selection = getText(new_array);
-	}
-	$('#expcty_out').text(selection);
-	//obj = jQuery.parseJSON(prop);
-	//growlMe(obj.text);
-});
+initExpctyImpcty = function (data) {
+	var exp_selection = $('#expcty'),
+	  imp_selection = $('#impcty'),
+	  args = {
+	  	data: data.geo_entities,
+	  	condition: function (item) {return item.iso_code2},
+	  	text: function (item) {return item.name}
+	  };
 
-$('#impcty').select2({
-	width: '75%',
-	allowClear: false,
-	closeOnSelect: false
-}).on('change', function(e){
-	// growlMe($(this).attr('id'));
-	selection = "";
-	if (e.val.length == 0)
-	{
-		// growlMe('You need to make at least one selection! - ' + e.val);
-		$(this).select2("val","all_imp");
-	}
-	prop = $(this).select2('data');
-	selection = getText(prop);
-	if (e.val.length > 1)
-	{
-		new_array = new Array();
-		new_array = checkforAllOptions(prop,'all_imp');
-		$(this).select2('data', new_array);
+	populateSelect(_.extend(args, {
+		selection: exp_selection,
+		value: function (item) {return 'exp_' + item.iso_code2}
+	}));
+  exp_selection.select2({
+  	width: '75%',
+  	allowClear: false,
+  	closeOnSelect: false
+  }).on('change', function(e){
+  	// growlMe($(this).attr('id'));
+  	selection = "agjhgjhg";
+  	if (e.val.length == 0)
+  	{
+  		// growlMe('You need to make at least one selection! - ' + e.val);
+  		$(this).select2("val","all_exp");
+  	}
+  	prop = $(this).select2('data');
+  	selection = getText(prop);
+  	if (e.val.length > 1)
+  	{
+  		new_array = new Array();
+  		new_array = checkforAllOptions(prop,'all_exp');
+  		$(this).select2('data', new_array);
+  
+  		// growlMe(JSON.stringify(prop));
+  		// growlMe ('new Array: ' + new_array.toString());
+  		selection = getText(new_array);
+  	}
+  	$('#expcty_out').text(selection);
+  	//obj = jQuery.parseJSON(prop);
+  	//growlMe(obj.text);
+  });
 
-		// growlMe(JSON.stringify(prop));
-		// growlMe ('new Array: ' + new_array.toString());
-		selection = getText(new_array);
-	}
-	$('#impcty_out').text(selection);
-	//obj = jQuery.parseJSON(prop);
-	//growlMe(obj.text);
-});
+  populateSelect(_.extend(args, {
+		selection: imp_selection,
+		value: function (item) {return 'imp_' + item.iso_code2}
+	}));
+  imp_selection.select2({
+  	width: '75%',
+  	allowClear: false,
+  	closeOnSelect: false
+  }).on('change', function(e){
+  	// growlMe($(this).attr('id'));
+  	selection = "";
+  	if (e.val.length == 0)
+  	{
+  		// growlMe('You need to make at least one selection! - ' + e.val);
+  		$(this).select2("val","all_imp");
+  	}
+  	prop = $(this).select2('data');
+  	selection = getText(prop);
+  	if (e.val.length > 1)
+  	{
+  		new_array = new Array();
+  		new_array = checkforAllOptions(prop,'all_imp');
+  		$(this).select2('data', new_array);
+  
+  		// growlMe(JSON.stringify(prop));
+  		// growlMe ('new Array: ' + new_array.toString());
+  		selection = getText(new_array);
+  	}
+  	$('#impcty_out').text(selection);
+  	//obj = jQuery.parseJSON(prop);
+  	//growlMe(obj.text);
+  });
+};
 
-$('#terms').select2({
-	width: '75%',
-	allowClear: false,
-	closeOnSelect: false
-}).on('change', function(e){
-	// growlMe($(this).attr('id'));
-	selection = "";
-	if (e.val.length == 0)
-	{
-		// growlMe('You need to make at least one selection! - ' + e.val);
-		$(this).select2("val","all_ter");
-	}
-	prop = $(this).select2('data');
-	selection = getText(prop);
-	if (e.val.length > 1)
-	{
-		new_array = new Array();
-		new_array = checkforAllOptions(prop,'all_ter');
-		$(this).select2('data', new_array);
+initTerms = function (data) { 
+	var selection = $('#terms'),
+	  args = {
+	  	selection: selection,
+	  	data: data.terms,
+	  	condition: function (item) {return item.code},
+	  	value: function (item) {return 'ter_' + item.code},
+	  	text: function (item) {return item.name_en}
+	  };
+	
+	populateSelect(args);
+  selection.select2({
+  	width: '75%',
+  	allowClear: false,
+  	closeOnSelect: false
+  }).on('change', function(e){
+  	// growlMe($(this).attr('id'));
+  	selection = "";
+  	if (e.val.length == 0)
+  	{
+  		// growlMe('You need to make at least one selection! - ' + e.val);
+  		$(this).select2("val","all_ter");
+  	}
+  	prop = $(this).select2('data');
+  	selection = getText(prop);
+  	if (e.val.length > 1)
+  	{
+  		new_array = new Array();
+  		new_array = checkforAllOptions(prop,'all_ter');
+  		$(this).select2('data', new_array);
+  
+  		// growlMe(JSON.stringify(prop));
+  		// growlMe ('new Array: ' + new_array.toString());
+  		selection = getText(new_array);
+  	}
+  	$('#terms_out').text(selection);
+  	//obj = jQuery.parseJSON(prop);
+  	//growlMe(obj.text);
+  });
+}
 
-		// growlMe(JSON.stringify(prop));
-		// growlMe ('new Array: ' + new_array.toString());
-		selection = getText(new_array);
-	}
-	$('#terms_out').text(selection);
-	//obj = jQuery.parseJSON(prop);
-	//growlMe(obj.text);
-});
+initSources = function (data) {
+	var selection = $('#sources'),
+	  args = {
+	  	selection: selection,
+	  	data: data.sources,
+	  	condition: function (item) {return item.code},
+	  	value: function (item) {return 'sou_' + item.code},
+	  	text: function (item) {return item.name_en}
+	  };
+	
+	populateSelect(args);
+  selection.select2({
+  	width: '75%',
+  	allowClear: false,
+  	closeOnSelect: false
+  }).on('change', function(e){
+  	// growlMe($(this).attr('id'));
+  	selection = "";
+  	if (e.val.length == 0)
+  	{
+  		// growlMe('You need to make at least one selection! - ' + e.val);
+  		$(this).select2("val","all_sou");
+  	}
+  	prop = $(this).select2('data');
+  	selection = getText(prop);
+  	if (e.val.length > 1)
+  	{
+  		new_array = new Array();
+  		new_array = checkforAllOptions(prop,'all_sou');
+  		$(this).select2('data', new_array);
+  
+  		// growlMe(JSON.stringify(prop));
+  		// growlMe ('new Array: ' + new_array.toString());
+  		selection = getText(new_array);
+  	}
+  	$('#sources_out').text(selection);
+  	//obj = jQuery.parseJSON(prop);
+  	//growlMe(obj.text);
+  });
+};
+  
+initPurposes = function (data) {
+	var selection = $('#purposes'),
+	  args = {
+	  	selection: selection,
+	  	data: data.purposes,
+	  	condition: function (item) {return item.code},
+	  	value: function (item) {return 'pur_' + item.code},
+	  	text: function (item) {return item.name_en}
+	  };
+	
+	populateSelect(args); 
+  selection.select2({
+  	width: '75%',
+  	allowClear: false,
+  	closeOnSelect: false
+  }).on('change', function(e){
+  	// growlMe($(this).attr('id'));
+  	selection = "";
+  	if (e.val.length == 0)
+  	{
+  		// growlMe('You need to make at least one selection! - ' + e.val);
+  		$(this).select2("val","all_pur");
+  	}
+  	prop = $(this).select2('data');
+  	selection = getText(prop);
+  	if (e.val.length > 1)
+  	{
+  		new_array = new Array();
+  		new_array = checkforAllOptions(prop,'all_pur');
+  		$(this).select2('data', new_array);
+  
+  		// growlMe(JSON.stringify(prop));
+  		// growlMe ('new Array: ' + new_array.toString());
+  		selection = getText(new_array);
+  	}
+  	$('#purposes_out').text(selection);
+  	//obj = jQuery.parseJSON(prop);
+  	//growlMe(obj.text);
+  });
+};
 
-$('#sources').select2({
-	width: '75%',
-	allowClear: false,
-	closeOnSelect: false
-}).on('change', function(e){
-	// growlMe($(this).attr('id'));
-	selection = "";
-	if (e.val.length == 0)
-	{
-		// growlMe('You need to make at least one selection! - ' + e.val);
-		$(this).select2("val","all_sou");
-	}
-	prop = $(this).select2('data');
-	selection = getText(prop);
-	if (e.val.length > 1)
-	{
-		new_array = new Array();
-		new_array = checkforAllOptions(prop,'all_sou');
-		$(this).select2('data', new_array);
-
-		// growlMe(JSON.stringify(prop));
-		// growlMe ('new Array: ' + new_array.toString());
-		selection = getText(new_array);
-	}
-	$('#sources_out').text(selection);
-	//obj = jQuery.parseJSON(prop);
-	//growlMe(obj.text);
-});
-
-$('#purposes').select2({
-	width: '75%',
-	allowClear: false,
-	closeOnSelect: false
-}).on('change', function(e){
-	// growlMe($(this).attr('id'));
-	selection = "";
-	if (e.val.length == 0)
-	{
-		// growlMe('You need to make at least one selection! - ' + e.val);
-		$(this).select2("val","all_pur");
-	}
-	prop = $(this).select2('data');
-	selection = getText(prop);
-	if (e.val.length > 1)
-	{
-		new_array = new Array();
-		new_array = checkforAllOptions(prop,'all_pur');
-		$(this).select2('data', new_array);
-
-		// growlMe(JSON.stringify(prop));
-		// growlMe ('new Array: ' + new_array.toString());
-		selection = getText(new_array);
-	}
-	$('#purposes_out').text(selection);
-	//obj = jQuery.parseJSON(prop);
-	//growlMe(obj.text);
-});
 
 //function to check if all countries is in the list
 function checkforAllOptions(source, alloption)
@@ -545,14 +603,14 @@ $("#taxon_search").autocomplete({
     });
   },
 	select: function( event, ui ) {
-			//$( "#project" ).val( ui.item.label );
-			//$( "#project-id" ).val( ui.item.value );
-			//$( "#project-description" ).html( ui.item.desc );
-			$(this).val(ui.item.label);
-			$('#species_out').text(ui.item.label);	
-			//growlMe(ui.item.label);
-			return false;
-		}
+		//$( "#project" ).val( ui.item.label );
+		//$( "#project-id" ).val( ui.item.value );
+		//$( "#project-description" ).html( ui.item.desc );
+		$(this).val(ui.item.label);
+		$('#species_out').text(ui.item.label);	
+		//growlMe(ui.item.label);
+		return false;
+	}
 });
 
  //Run the function
@@ -673,5 +731,26 @@ $('#qryFrom, #qryTo').on('change',function()
    initialiseControls();
    //Set the form posting function to work
    formPosting();
+
+  function populateSelect(args) {
+  	var data = args.data,
+  	  selection = args.selection,
+  	  condition = args.condition,
+  	  value = args.value,
+  	  text = args.text;
+  	_.each(data, function (item) {
+	  	if (condition(item)) {
+	      selection.append('<option title="' + text(item)
+	      	+ '" value="' + value(item) + '">' + text(item) + '</option>');
+	    } 
+    });
+  }
+
+  $.when($.ajax("/api/v1/geo_entities")).then(initExpctyImpcty, ajaxFail);
+  $.when($.ajax("/api/v1/terms")).then(initTerms, ajaxFail);
+  $.when($.ajax("/api/v1/sources")).then(initSources, ajaxFail);
+  $.when($.ajax("/api/v1/purposes")).then(initPurposes, ajaxFail);
+
+
   
 });

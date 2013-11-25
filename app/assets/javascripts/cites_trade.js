@@ -1,6 +1,7 @@
 //= require underscore
 
 //= require cites_trade/jquery.jgrowl_minimized
+//= require cites_trade/jquery.multi-select
 //= require cites_trade/select2
 //= require cites_trade/jquery.qtip.min
 //= require cites_trade/jquery.tipTip.minified
