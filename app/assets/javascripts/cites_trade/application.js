@@ -487,8 +487,7 @@ function getText(source)
 	return myValues.toString();
 }
 
-function show_values_selection()
-{
+function show_values_selection() {
 	var year_from = $('#qryFrom').val();
 	var year_to = $('#qryTo').val();
 	var exp_cty = $('#expctyms2side__dx').text();
@@ -515,37 +514,46 @@ $('#side .ui-button, #form .ui-button').hover(function() {
  
 //Autocomplete for cites_names
 $("#taxon_search").autocomplete({
-        //source: availableCats,
-		//minLength: 2
-		
-		source: function(request, response) {
-            $.ajax({
-                url: "species_autocomplete.cfm",
-				//contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: {
-                    term: request.term       
-                },
-                success: function(data) {
-					//growlMe(data);
-                    response(data);
-                },
-				error : function(xhr, ajaxOptions, thrownError){
-					growlMe(xhr.status + " ====== " + thrownError);
-				}
-            })
-        },
-		select: function( event, ui ) {
-				//$( "#project" ).val( ui.item.label );
-				//$( "#project-id" ).val( ui.item.value );
-				//$( "#project-description" ).html( ui.item.desc );
-				$(this).val(ui.item.label);
-				$('#species_out').text(ui.item.label);	
-				//growlMe(ui.item.label);
-				return false;
+	source: function(request, response) {
+    $.ajax({
+      url: "/api/v1/auto_complete_taxon_concepts",
+      dataType: "json",
+      data: {
+        taxonomy: 'CITES',
+        taxon_concept_query: request.term,
+        autocomplete: true
+      },
+      success: function(data) {
+	      var d = data.auto_complete_taxon_concepts,
+	        filterData, mapData, parsedData;
+	      filterData = function (d) {
+	        return _.filter(d, function (element, index) {
+	        	return element.rank_name === "SPECIES";
+	        });
+	      };
+	      mapData = function (d) {
+	        return _.map(d, function (element, index) {
+	        	return {'value': element.id, 'label': element.full_name};
+	        });
+	      };
+	      parsedData = _.compose(mapData, filterData);
+        response(parsedData(d));
+      },
+			error : function(xhr, ajaxOptions, thrownError){
+				growlMe(xhr.status + " ====== " + thrownError);
 			}
-		
- });
+    });
+  },
+	select: function( event, ui ) {
+			//$( "#project" ).val( ui.item.label );
+			//$( "#project-id" ).val( ui.item.value );
+			//$( "#project-description" ).html( ui.item.desc );
+			$(this).val(ui.item.label);
+			$('#species_out').text(ui.item.label);	
+			//growlMe(ui.item.label);
+			return false;
+		}
+});
 
  //Run the function
 show_values_selection();
