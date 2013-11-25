@@ -1,5 +1,6 @@
 class Admin::SourcesController < Admin::SimpleCrudController
   inherit_resources
+  respond_to :json, :only => [:update]
 
   def index
     index! do |format|
