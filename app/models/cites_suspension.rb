@@ -77,7 +77,6 @@ class CitesSuspension < TradeRestriction
             OR trade_restrictions.end_date::text LIKE :query
             OR UPPER(trade_restrictions.notes) LIKE UPPER(:query)
             OR UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
-            OR UPPER(trade_restrictions.notes) LIKE UPPER(:query)
             OR UPPER(events.subtype) LIKE UPPER(:query)",
             :query => "%#{query}%").
       joins([:start_notification]).
