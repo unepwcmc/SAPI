@@ -1,0 +1,23 @@
+.navButton {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	background-color: #006699;
+}
+.usrLevel {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #006699;
+	background-color: #FFFFFF;
+	font-size: 75%;
+	font-weight: bold;
+}
+
+.span_label {
+color:#003300;
+font-style:italic;
+font-weight:700;
+}
+
+.select_label td{
+padding: 3px 3px;
+}
+
