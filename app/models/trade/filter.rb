@@ -1,5 +1,5 @@
 class Trade::Filter
-  attr_reader :page, :per_page
+  attr_reader :page, :per_page, :query
   def initialize(options)
     initialize_params(options)
     initialize_query
@@ -22,17 +22,13 @@ class Trade::Filter
   end
 
   def initialize_query
-    @query = Trade::Shipment.includes([
-      :exporter, :importer, :country_of_origin, :purpose,
-      :source, :term, :unit, :country_of_origin_permit,
-      :import_permit, :export_permits, :taxon_concept
-    ]).order('year DESC')
-
+    @query = Trade::Shipment.from('trade_shipments_view trade_shipments').
+      order('year DESC').preload(:taxon_concept) #includes would override the select clause
 
     # Id's (array)
     unless @taxon_concepts_ids.empty?
       taxa = MTaxonConceptFilterByIdWithDescendants.new(nil, @taxon_concepts_ids).relation
-      @query = @query.where(:taxon_concept_id => taxa.select(:id))
+      @query = @query.where(:taxon_concept_id => taxa.select(:id).map(&:id))
     end
 
     unless @appendices.empty?
@@ -108,7 +104,7 @@ class Trade::Filter
     unless @permits_ids.empty?
       @query = @query.where("import_permit_id IN (?)
                             OR country_of_origin_permit_id IN (?)
-                            OR trade_shipment_export_permits.trade_permit_id IN (?)",
+                            OR export_permits_ids && ARRAY[?]::INT[]",
                             @permits_ids , @permits_ids, @permits_ids)
     end
 

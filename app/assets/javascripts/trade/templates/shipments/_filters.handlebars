@@ -186,9 +186,9 @@
 </div>
 
 <div class="shipments-header clearfix">
-  <button class="btn btn-primary pull-right" {{ action 'download' }}>
+  <a href="#downloads-modal" role="button" class="btn btn-primary pull-right" data-toggle="modal">
     <i class="icon-download-alt"></i>Download results
-  </button>
+  </a>
   <button class="btn btn-primary pull-right" {{ action 'search' }}>
     <i class="icon-edit"></i>Display and edit results
   </button>
@@ -196,4 +196,22 @@
   <button class="btn pull-right" {{ action 'resetFilters' }}>
     <i class="icon-remove"></i> Reset all filters
   </button>
+</div>
+
+<div id="downloads-modal" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3>Search results download</h3>
+  </div>
+  <div class="modal-body">
+    <p>
+    Choose the format you wish to download
+    </p>
+
+    <a {{bind-attr href="rawDownloadUrl"}} class="btn btn-primary">Raw</a>
+
+    TODO Comparative tabulation
+    TODO Net / Gross
+
+  </div>
 </div>
