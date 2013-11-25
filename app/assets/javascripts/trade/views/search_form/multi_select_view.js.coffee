@@ -45,6 +45,10 @@ Trade.MultiSelectDropdown = Ember.View.extend
     @get('allValuesGrouped') != undefined
   ).property()
 
+  hasBlankValue: ( ->
+    @get('blankValue') != undefined
+  ).property()
+
 Trade.MultiSelectSelectedValuesCollectionView = Ember.CollectionView.extend
   tagName: 'ul'
   content: null

@@ -76,17 +76,19 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     end
   end
 
-  #TODO: this method needs error checking
   def submit
     run_primary_validations
     return false unless @validation_errors.count == 0
-    sandbox.submit_permits
-    sandbox.submit_shipments
-    #TODO probably would be good to wrap in transaction
-    # and return number of inserted shipments?
-
-    # none of the below should happen if there are rows that
-    # we were unable to move over
+    Trade::Shipment.transaction do
+      pg_result = Trade::AnnualReportUpload.connection.execute(
+        Trade::AnnualReportUpload.send(:sanitize_sql_array, [
+        'SELECT * FROM copy_transactions_from_sandbox_to_shipments(?)',
+        id
+      ]))
+      moved_rows_cnt = pg_result.first['copy_transactions_from_sandbox_to_shipments'].to_i
+      # if -1 returned, not all rows have been moved
+      raise ActiveRecord::Rollback if moved_rows_cnt < 0
+    end
 
     #remove uploaded file
     store_dir = csv_source_file.store_dir

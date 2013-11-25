@@ -43,18 +43,6 @@ class Trade::Filter
       @query = @query.where(:term_id => @terms_ids)
     end
 
-    unless @units_ids.empty?
-      @query = @query.where(:unit_id => @units_ids)
-    end
-
-    unless @purposes_ids.empty?
-      @query = @query.where(:purpose_id => @purposes_ids)
-    end
-
-    unless @sources_ids.empty?
-      @query = @query.where(:source_id => @sources_ids)
-    end
-
     unless @importers_ids.empty?
       @query = @query.where(:importer_id => @importers_ids)
     end
@@ -63,8 +51,37 @@ class Trade::Filter
       @query = @query.where(:exporter_id => @exporters_ids)
     end
 
-    unless @countries_of_origin_ids.empty?
-      @query = @query.where(:country_of_origin_id => @countries_of_origin_ids)
+    if !@units_ids.empty?
+      local_field = "unit_id"
+      blank_query = @unit_blank ? "OR unit_id IS NULL" : ""
+      @query = @query.where("#{local_field} IN (?) #{blank_query}", @units_ids)
+    elsif @unit_blank
+      @query = @query.where(:unit_id => nil)
+    end
+
+    if !@purposes_ids.empty?
+      local_field = "purpose_id"
+      blank_query = @purpose_blank ? "OR purpose_id IS NULL" : ""
+      @query = @query.where("#{local_field} IN (?) #{blank_query}", @purposes_ids)
+    elsif @purpose_blank
+      @query = @query.where(:purpose_id => nil)
+    end
+
+    if !@sources_ids.empty?
+      local_field = "source_id"
+      blank_query = @source_blank ? "OR source_id IS NULL" : ""
+      @query = @query.where("#{local_field} IN (?) #{blank_query}", @sources_ids)
+    elsif @source_blank
+      @query = @query.where(:source_id => nil)
+    end
+
+
+    if !@countries_of_origin_ids.empty?
+      local_field = "country_of_origin_id"
+      blank_query = @country_of_origin_blank ? "OR country_of_origin_id IS NULL" : ""
+      @query = @query.where("#{local_field} IN (?) #{blank_query}", @countries_of_origin_ids)
+    elsif @country_of_origin_blank
+      @query = @query.where(:country_of_origin_id => nil)
     end
 
     # Other cases
@@ -85,9 +102,7 @@ class Trade::Filter
         @query = @query.where(:reported_by_exporter => true)
       elsif @reporter_type == 'I'
         @query = @query.where(:reported_by_exporter => false)
-      else
       end
-    else
     end
 
     unless @permits_ids.empty?
