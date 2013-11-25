@@ -43,6 +43,7 @@ SAPI::Application.routes.draw do
     resources :eu_regulations do
       post :activate, :on => :member
     end
+    resources :listing_changes
     resources :cites_cops
     resources :cites_suspension_notifications
     resources :eu_suspension_regulations
@@ -72,7 +73,7 @@ SAPI::Application.routes.draw do
       resources :quotas, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_opinions, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
-      resources :taxon_concept_cites_suspensions,
+      resources :taxon_cites_suspensions,
         :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :cites_suspensions
       resources :taxon_instruments, :only => [ :index, :new, :create, :edit, :update, :destroy ]
