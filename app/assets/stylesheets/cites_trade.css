@@ -4,6 +4,7 @@
  *= require cites_trade/select2
  *= require cites_trade/jquery.jgrowl
  *= require cites_trade/chosen
+ *= require cites_trade/tipTip
 
  *= require cites_trade/citestrade
  *= require cites_trade/cites
