@@ -1,5 +1,6 @@
 class Admin::UnitsController < Admin::AdminController
   inherit_resources
+  respond_to :json, :only => [:update]
 
   def index
     index! do |format|
