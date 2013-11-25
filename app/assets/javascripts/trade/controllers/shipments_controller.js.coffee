@@ -148,7 +148,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   ).property('countryOfOriginQuery')
   selectedCountriesOfOrigin: []
   selectedQuantity: null
-  
+
   unitBlank: false
   purposeBlank: false
   sourceBlank: false
@@ -177,7 +177,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     # saves the new shipment (bound to currentShipment) to the db
     saveShipment: ->
       shipment = @get('currentShipment')
-      # Before trying to save a shipment 
+      # Before trying to save a shipment
       # we need to reset the model to a valid state.
       unless shipment.get('isValid')
         shipment.send("becameValid")
@@ -203,7 +203,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       @set('currentShipment', null)
       @set 'errors', null
       $('.modal').modal('hide')
-  
+
     # discards the new shipment (bound to currentShipment)
     deleteShipment: (shipment) ->
       if (!shipment.get('isSaving'))
