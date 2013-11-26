@@ -47,7 +47,8 @@ function notySticky(message){
 	noty({ layout: 'top',
  			   type: 'information',
  			   closeWith: ['button'],
-  			 text: message
+  			 text: message,
+         timeout: 1000
   });
 };
 
@@ -97,35 +98,49 @@ $("#genus_all_id").chosen({
 
  };
 
- //function to check when form is being posted
- function formPosting() {
+//function to check when form is being posted
+function formPosting() {
+
+  function buildHeader (data) {
+    var header = 
+      "<tr><% _.each(res, function(value, key) { %> <td><%=key %></td> <% }); %></tr>";
+    return _.template(header, {res: data});
+  }
+
+  function buildRows (data) {
+    var t = "";
+    _.each(data, function(data_row) {
+      var row = 
+        "<tr><% _.each(res, function(value) { %> <td>" + 
+        "<%= (value && value.full_name) ? value.full_name : value %>" +
+        "</td> <% }); %></tr>";
+      t += _.template(row, {res: data_row});
+    });
+    return t;
+  }
 
   $("#form_expert").submit(function(e) {
-      var postData = $(this).serializeArray();
-      var formURL = $(this).attr("action");
-      var table = $('#query_results').find('table');
-      $.ajax(
-        {
-          url : formURL,
-          type: "GET",
-          data : postData,
-          success:function(data, textStatus, jqXHR) {
-            var data_rows = data.shipments;
-            var t = ""
-            _.each(data_rows, function(data_row) {
-            	var row = "<tr><% _.each(res, function(value) { %> <td><%=value %></td> <% }); %></tr>";
-            	t += _.template(row, {res: data_row});
-            });
-            table.html(t);
-          },
-          error: function(jqXHR, textStatus, errorThrown) 
-          {
-            console.log('failure!');
-          }
-      });
-      e.preventDefault();
+     var postData = $(this).serializeArray();
+     var formURL = $(this).attr("action");
+     var table = $('#query_results_table');
+     $.ajax(
+       {
+         url : formURL,
+         type: "GET",
+         data : postData,
+         success: function(data, textStatus, jqXHR) {
+           var data_rows = data.shipments;
+           var table_tmpl = buildHeader(data_rows[0]) + buildRows(data_rows);
+           table.html(table_tmpl);
+         },
+         error: function(jqXHR, textStatus, errorThrown) 
+         {
+           console.log('failure!');
+         }
+     });
+     e.preventDefault();
   });
-  }
+}
 
  //function to reset all the countrols on the expert_accord page
  function resetSelects() {
