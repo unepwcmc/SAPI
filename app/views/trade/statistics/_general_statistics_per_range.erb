@@ -8,13 +8,7 @@
     <%= text_field_tag :stats_end_date, @end_date,
       {:class => "datepicker", :placeholder => 'End Date'} %>
   </div>
-
-
-  <div class="form-actions">
-    <%= submit_tag("Update")%>
-  </div>
-
-
+  <%= submit_tag("Update", {:class => 'btn btn-primary'})%>
  <% end %>
 
 </div>
