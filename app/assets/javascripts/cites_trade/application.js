@@ -112,38 +112,57 @@ $("#genus_all_id").chosen({
  };
 
  //function to check when form is being posted
- function formPosting()
- {
- 	$('#form_expert').submit(function()
- 	{
- 		notySticky('Please wait while the search is being carried out');
- 		return true;
- 	});
+ function formPosting() {
 
- 	$('#form_report').submit(function()
- 	{
- 		notySticky('Please wait while your data is being compiled');
- 		return true;
- 	});
+  $("#form_expert").submit(function(e) {
+      var postData = $(this).serializeArray();
+      var formURL = $(this).attr("action");
+      var table = $('#query_results').find('table');
+      $.ajax(
+        {
+          url : formURL,
+          type: "GET",
+          data : postData,
+          success:function(data, textStatus, jqXHR) {
+            var data_rows = data.shipments;
+            var t = ""
+            _.each(data_rows, function(data_row) {
+            	var row = "<tr><% _.each(res, function(value) { %> <td><%=value %></td> <% }); %></tr>";
+            	t += _.template(row, {res: data_row});
+            });
+            table.html(t);
+          },
+          error: function(jqXHR, textStatus, errorThrown) 
+          {
+            console.log('failure!');
+          }
+      });
+      e.preventDefault(); //STOP default action
+  });
 
- 	$('#submit_expert').click(function(){
- 		// growlMe('Button is being clicked');
- 	});
-
- 	$('#button_report').click(function(){
- 		// growlMe('Button is being clicked');
- 		notySticky('Please wait while your data is being compiled');
- 	});
-
- 	$('#form_process').submit(function()
- 	{
- 		notyNormal('Going back to the search page');
- 		$.post("reset_session.cfm", function() {
-      // alert("success");
-    	});
- 		return true;
- 	});
- }
+// 	$('#form_report').submit(function(){
+// 		notySticky('Please wait while your data is being compiled');
+// 		return true;
+// 	});
+//
+// 	$('#submit_expert').click(function(){
+// 		// growlMe('Button is being clicked');
+// 	});
+//
+// 	$('#button_report').click(function(){
+// 		// growlMe('Button is being clicked');
+// 		notySticky('Please wait while your data is being compiled');
+// 	});
+//
+// 	$('#form_process').submit(function()
+// 	{
+// 		notyNormal('Going back to the search page');
+// 		$.post("reset_session.cfm", function() {
+//      // alert("success");
+//    	});
+// 		return true;
+//  });
+  }
 
  //function to reset all the countrols on the expert_accord page
  function resetSelects() {
@@ -328,7 +347,7 @@ initExpctyImpcty = function (data) {
 
 	populateSelect(_.extend(args, {
 		selection: exp_selection,
-		value: function (item) {return 'exp_' + item.iso_code2}
+		value: function (item) {return item.id}
 	}));
   exp_selection.select2({
   	width: '75%',
@@ -361,7 +380,7 @@ initExpctyImpcty = function (data) {
 
   populateSelect(_.extend(args, {
 		selection: imp_selection,
-		value: function (item) {return 'imp_' + item.iso_code2}
+		value: function (item) {return item.id}
 	}));
   imp_selection.select2({
   	width: '75%',
@@ -399,7 +418,7 @@ initTerms = function (data) {
 	  	selection: selection,
 	  	data: data.terms,
 	  	condition: function (item) {return item.code},
-	  	value: function (item) {return 'ter_' + item.code},
+	  	value: function (item) {return item.id},
 	  	text: function (item) {return item.name_en}
 	  };
 	
@@ -440,7 +459,7 @@ initSources = function (data) {
 	  	selection: selection,
 	  	data: data.sources,
 	  	condition: function (item) {return item.code},
-	  	value: function (item) {return 'sou_' + item.code},
+	  	value: function (item) {return item.id},
 	  	text: function (item) {return item.name_en}
 	  };
 	
@@ -481,7 +500,7 @@ initPurposes = function (data) {
 	  	selection: selection,
 	  	data: data.purposes,
 	  	condition: function (item) {return item.code},
-	  	value: function (item) {return 'pur_' + item.code},
+	  	value: function (item) {return item.id},
 	  	text: function (item) {return item.name_en}
 	  };
 	
