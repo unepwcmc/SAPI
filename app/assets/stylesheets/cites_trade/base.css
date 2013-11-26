@@ -6,16 +6,16 @@ a:link, a:visited {color: #360; text-decoration: underline;}
 a:hover, a:active {	color: #f63; text-decoration: inherit;}
 .markeeta #outer {background-image:url(/i/css/outer.gif);background-repeat:no-repeat;background-position: top;text-align:center;width: 998px; height:auto;margin: 0 auto;}
 .markeeta #container {width: 986px; height:auto;margin: 0 auto;background: #FFF; text-align: left;} 
-.markeeta #header { width:986px; height: 99px; background-image:url(/eng/i/eng-home-banner3.jpg); no-repeat; position:relative;} 
-.markeeta #header_fra { width:986px; height:99px;background-image:url(/fra/i/fra-home-banner.jpg); no-repeat; position:relative;} 
-.markeeta #header_esp { width:986px; height:99px;background-image:url(/esp/i/esp-home-banner40.jpg); no-repeat; position:relative;} 
+.markeeta #header { width:986px; height: 99px; background-image:url(/eng/i/eng-home-banner3.jpg) no-repeat; position:relative;} 
+.markeeta #header_fra { width:986px; height:99px;background-image:url(/fra/i/fra-home-banner.jpg) no-repeat; position:relative;} 
+.markeeta #header_esp { width:986px; height:99px;background-image:url(/esp/i/esp-home-banner40.jpg) no-repeat; position:relative;} 
 .markeeta #menutop {background-image:url(/i/css/2/menubar_bg.gif); background-repeat: repeat-x; top: 100px; height: 35px; padding: 0 10px 0 20px;clear: both;}
 .markeeta #search {float:right;margin:4px;}
 .markeeta #search input[type="text"] {background: url(/i/css/search-white.png) no-repeat 5px 4px #43631c; border: 0 none; font: bold 10px Arial,Helvetica,Sans-serif; color: #d7d7d7; width:90px;padding: 4px 15px 5px 23px;    -webkit-border-radius: 20px; -moz-border-radius: 20px;border-radius: 20px; text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset; -webkit-transition: all 0.7s ease 0s; -moz-transition: all 0.7s ease 0s;-o-transition: all 0.7s ease 0s; transition: all 0.7s ease 0s;}
 .markeeta #search input[type="text"]:focus {background: url(/i/css/search-dark.png) no-repeat 5px 4px #fcfcfc;color: #6a6f75;width: 130px;outline: none; -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset; -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.9) inset; text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);}
 ::-webkit-input-placeholder {color: #a6b3a8;}
 :-moz-placeholder {color: #a6b3a8;}
-.markeeta #gauche {	float: left; width: top: 135px;	width: 180px; padding: 5px 10px;}
+.markeeta #gauche {	float: left; top: 135px;	width: 180px; padding: 5px 10px;}
 .markeeta #main { margin: 0 0 0 200px; 	padding: 20px 30px;	border-left: 1px solid #d5d3d0; vertical-align: top;}
 .markeeta #footer {background: #eee url(/i/new/footerbg.gif) no-repeat;	height: 43px;	border-top-style: solid 1px #999; font-size: 0.9em; color: #666;}
 .markeeta #footer a:link, #footer a:visited {font-family: Verdana, Arial, Helvetica, sans-serif; color: #666; text-decoration:none; text-align: center; background-image: none;}
