@@ -6,6 +6,7 @@
  *= require cites_trade/jquery.jgrowl
  *= require cites_trade/chosen
  *= require cites_trade/tipTip
+ *= require cites_trade/jquery.qtip.min
 
  *= require cites_trade/base
  *= require cites_trade/citestrade
