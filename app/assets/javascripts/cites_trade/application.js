@@ -153,7 +153,8 @@ $("#genus_all_id").chosen({
 	$('#qryTo').find('option:first').attr('selected', 'selected').trigger('change');
 
 	$('#taxon_search').val('');
-	$("#genus_all_id").val('').trigger("liszt:updated");
+	$('#genus_search').val('');
+	////$("#genus_all_id").val('').trigger("liszt:updated");
 	$('#species_out').text('');
 
 	// $('#sources').multiSelect('deselect_all');
@@ -238,7 +239,7 @@ $('#report_new_search').click(function(){
 		$('#div_taxon :input').attr('disabled', true);
 		$('#div_genus :input').removeAttr('disabled');
 
-		$('#genus_all_id_chzn').addClass('chzn-container-active').removeClass('chzn-disabled');
+		////$('#genus_all_id_chzn').addClass('chzn-container-active').removeClass('chzn-disabled');
 
 		$('#taxon_search').val('');
 		$('#species_out').text('');
@@ -252,9 +253,10 @@ $('#report_new_search').click(function(){
 		$('#div_taxon :input').removeAttr('disabled');
 		$('#div_genus :input').attr('disabled', true);
 
-		$('#genus_all_id_chzn').removeClass('chzn-container-active').addClass('chzn-disabled');
+		////$('#genus_all_id_chzn').removeClass('chzn-container-active').addClass('chzn-disabled');
 
-		$("#genus_all_id").val('').trigger("liszt:updated");
+		////$("#genus_all_id").val('').trigger("liszt:updated");
+		$('#genus_search').val('');
 		$('#species_out').text('');
 		// $("#genus_all_id_chzn").attr('disabled', true).trigger("liszt:updated");
 			
@@ -569,6 +571,13 @@ function show_values_selection() {
 $('#side .ui-button, #form .ui-button').hover(function() {
 		$(this).toggleClass('ui-state-hover');
 	});
+
+function parseTaxonData (data) {
+  var d = data.auto_complete_taxon_concepts;
+	return _.map(d, function (element, index) {
+	  return {'value': element.id, 'label': element.full_name};
+	});
+}
  
 //Autocomplete for cites_names
 $("#taxon_search").autocomplete({
@@ -579,23 +588,11 @@ $("#taxon_search").autocomplete({
       data: {
         taxonomy: 'CITES',
         taxon_concept_query: request.term,
-        autocomplete: true
+        autocomplete: true,
+        'ranks[]': "SPECIES"
       },
       success: function(data) {
-	      var d = data.auto_complete_taxon_concepts,
-	        filterData, mapData, parsedData;
-	      filterData = function (d) {
-	        return _.filter(d, function (element, index) {
-	        	return element.rank_name === "SPECIES";
-	        });
-	      };
-	      mapData = function (d) {
-	        return _.map(d, function (element, index) {
-	        	return {'value': element.id, 'label': element.full_name};
-	        });
-	      };
-	      parsedData = _.compose(mapData, filterData);
-        response(parsedData(d));
+        response(parseTaxonData(data));
       },
 			error : function(xhr, ajaxOptions, thrownError){
 				growlMe(xhr.status + " ====== " + thrownError);
@@ -609,6 +606,33 @@ $("#taxon_search").autocomplete({
 		$(this).val(ui.item.label);
 		$('#species_out').text(ui.item.label);	
 		//growlMe(ui.item.label);
+		return false;
+	}
+});
+
+//Autocomplete for cites_genus
+$("#genus_search").autocomplete({
+	source: function(request, response) {
+    $.ajax({
+      url: "/api/v1/auto_complete_taxon_concepts",
+      dataType: "json",
+      data: {
+        taxonomy: 'CITES',
+        taxon_concept_query: request.term,
+        autocomplete: true,
+        'ranks[]': 'GENUS'
+      },
+      success: function(data) {
+        response(parseTaxonData(data));
+      },
+			error : function(xhr, ajaxOptions, thrownError){
+				growlMe(xhr.status + " ====== " + thrownError);
+			}
+    });
+  },
+	select: function( event, ui ) {
+		$(this).val(ui.item.label);
+		$('#species_out').text(ui.item.label);	
 		return false;
 	}
 });
