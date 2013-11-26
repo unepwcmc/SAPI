@@ -100,6 +100,9 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     #remove sandbox table
     sandbox.destroy
 
+    #clear downloads cache
+    DownloadsCache.clear_shipments
+
     #flag as submitted
     update_attribute(:is_done, true)
   end

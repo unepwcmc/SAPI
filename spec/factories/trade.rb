@@ -47,6 +47,7 @@ FactoryGirl.define do
     exporter
     quantity 1
     year 2013
+    appendix 'II'
   end
 
   factory :permit, :class => Trade::Permit do

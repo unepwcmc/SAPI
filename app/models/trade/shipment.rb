@@ -67,7 +67,7 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def import_permit_number
-    import_permit && import_permit.number
+    self['import_permit_number'] || import_permit && import_permit.number
   end
 
   def import_permit_number=(str)
@@ -78,7 +78,7 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def export_permit_number
-    export_permits.map(&:number).join(';')
+    self['export_permit_number'] || export_permits.map(&:number).join(';')
   end
 
   def export_permit_number=(str)
@@ -91,7 +91,7 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def country_of_origin_permit_number
-    country_of_origin_permit && country_of_origin_permit.number
+    self['country_of_origin_permit_number'] ||  country_of_origin_permit && country_of_origin_permit.number
   end
 
   def country_of_origin_permit_number=(str)

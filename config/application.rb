@@ -34,7 +34,8 @@ module SAPI
       :cites_cop_observer, :cites_suspension_notification_observer,
       :eu_regulation_observer, :"trade/annual_report_upload_observer",
       :listing_change_observer, :taxon_concept_observer,
-      :cites_suspension_observer, :quota_observer, :eu_decision_observer
+      :cites_suspension_observer, :quota_observer, :eu_decision_observer,
+      :"trade/shipment_observer"
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
