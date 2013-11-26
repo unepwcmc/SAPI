@@ -1,0 +1,40 @@
+@import "compass/css3";
+
+// Colours
+
+$dark-grey: #666666;
+$medium-grey: #dddddd;
+$light-grey: #f7f7f7;
+$dark-blue: #0e76b1;
+$light-blue: #00a2db;
+$link-blue: #0088cc;
+
+#query_results {
+  width: 1185px;
+  //max-height: 600px;
+  overflow: auto;
+  margin: 10px;
+  table {
+    background-color: #fff;
+    color: $dark-grey;
+    font-size: 0.8em;
+    border-collapse: collapse;
+    td, th {
+      border: 1px solid $dark-grey;
+      padding: 0.2rem;
+      text-align: left;
+    }
+
+    tbody:hover > tr td {
+      @include opacity(0.7);
+      /* uncomment for blur effect */
+      /* color:transparent;
+      @include text-shadow(0px 0px 2px rgba(0,0,0,0.8));*/
+    }
+    tbody:hover > tr:hover td {
+      @include text-shadow(none);
+      color: darken($dark-grey, 10%);
+      @include opacity(1.0);
+    }
+  }
+}
