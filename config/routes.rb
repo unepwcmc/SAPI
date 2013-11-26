@@ -93,6 +93,7 @@ SAPI::Application.routes.draw do
     resources :shipments
     resources :geo_entities, :only => [:index]
     resources :permits, :only => [:index]
+    match 'stats' => 'statistics#index'
     root :to => 'ember#start'
   end
 
