@@ -21,7 +21,7 @@
 <%= render 'general_statistics_per_range' %>
 
   <h2>Summary of CITES annual reports</h2>
-  <%= select_tag :year, options_for_select(@years) %>
+
   <table class="trade-stats-table">
     <thead>
       <tr>
@@ -50,7 +50,7 @@
     </thead>
     <tbody>
 
-    TODO
+    <%= @statistics_table %>
 
     </tbody>
   </table>

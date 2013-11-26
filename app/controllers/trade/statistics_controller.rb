@@ -1,5 +1,6 @@
 class Trade::StatisticsController < ApplicationController
   layout 'admin'
+  require Statistics
 
   def index
   	@start_date = params[:stats_start_date] || Date.today.strftime("01/01/%Y")
@@ -10,6 +11,9 @@ class Trade::StatisticsController < ApplicationController
     @shipments_uploaded = Trade::Shipment.where(:created_at => @start_date..@end_date).count
     @shipments_amended = Trade::Shipment.where(:updated_at => @start_date..@end_date).count
     @taxon_concepts_in_trade = Trade::Shipment.count(:taxon_concept_id, :distinct => true)
+    @statistics_table = Statistics.get_total_transactions_per_year
   end
+
+
 
 end
