@@ -3,70 +3,54 @@
 <a href="/trade">Back to Trade DB Admin Tool</a>
 <h2>General Statistics</h2>
 
-<div class="control-group">
-  <label class="control-label">Filter date range</label>
-  <div class="controls">
-    <%= text_field_tag :stats_start_date, (Date.today - 5.years).strftime("%d/%m/%y"),
-    :class => "datepicker", :placeholder => 'Start Date' %>
-    <%= text_field_tag :stats_end_date, Date.today.strftime("%d/%m/%y"),
-    :class => "datepicker", :placeholder => 'End Date' %>
-  </div>
-</div>
-
 <table class="trade-stats-table">
-<tr>
-  <th>Total shipments</th>
-  <td><%= @total_shipments %></td>
-</tr>
-<tr>
-  <th>Last updated</th>
-  <td></td>
-</tr>
-<tr>
-  <th>No of shipments uploaded</th>
-  <td></td>
-</tr>
-<tr>
-  <th>No of shipments amended</th>
-  <td></td>
-</tr>
-<tr>
-  <th>No of taxon concepts in trade</th>
-  <td></td>
-</tr>
-</table>
-
-<h2>Summary of CITES annual reports</h2>
-<%= select_tag :year, options_for_select(@years) %>
-<table class="trade-stats-table">
-<thead>
   <tr>
-    <th>No</th>
-    <th>Country</th>
-    <th>Year</th>
-    <th>Type</th>
+    <th>Total shipments</th>
+    <td><%= @total_shipments %></td>
   </tr>
-</thead>
-<tbody>
-
-TODO
-
-</tbody>
-</table>
-
-<h2>Summary of trade transactions</h2>
-<table class="trade-stats-table">
-<thead>
   <tr>
-    <th>Year</th>
-    <th>Reported by Exporters</th>
-    <th>Reported by Importers</th>
-    <th>Total transactions</th>
+    <th>Last updated</th>
+    <td><%= @last_updated %></td>
   </tr>
-</thead>
-<tbody>
-
-TODO
-
-</tbody>
+  <tr>
+    <th>No of taxon concepts in trade</th>
+    <td><%= @taxon_concepts_in_trade %></td>
+  </tr>
 </table>
+
+<%= render 'general_statistics_per_range' %>
+
+  <h2>Summary of CITES annual reports</h2>
+  <%= select_tag :year, options_for_select(@years) %>
+  <table class="trade-stats-table">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Country</th>
+        <th>Year</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    TODO
+
+    </tbody>
+  </table>
+
+  <h2>Summary of trade transactions</h2>
+  <table class="trade-stats-table">
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>Reported by Exporters</th>
+        <th>Reported by Importers</th>
+        <th>Total transactions</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    TODO
+
+    </tbody>
+  </table>
