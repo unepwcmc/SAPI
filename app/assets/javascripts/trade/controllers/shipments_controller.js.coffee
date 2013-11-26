@@ -189,7 +189,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   rawDownloadUrl: (->
     params = @searchParamsForUrl()
     params['report_type'] = 'raw' #TODO this will likely be a property in its own right
-    console.log 'hello download url', $.param({'filters': params})
     '/trade/exports/download?' + $.param({'filters': params})
   ).property(
     'selectedTaxonConcepts.@each', 'selectedAppendices.@each',
