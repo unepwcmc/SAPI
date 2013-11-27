@@ -55,11 +55,4 @@ describe Trade::Sandbox, :drops_tables => true do
     }
   end
 
-  describe :submit_shipments do
-    subject { annual_report_upload.sandbox }
-    specify {
-      subject.submit_shipments
-      Trade::SandboxTemplate.ar_klass(subject.table_name).count.should == Trade::Shipment.count
-    }
-  end
 end
