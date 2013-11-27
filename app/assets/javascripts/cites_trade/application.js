@@ -120,25 +120,40 @@ function formPosting() {
   }
 
   $("#form_expert").submit(function(e) {
-     var postData = $(this).serializeArray();
-     var formURL = $(this).attr("action");
-     var table = $('#query_results_table');
-     $.ajax(
-       {
-         url : formURL,
-         type: "GET",
-         data : postData,
-         success: function(data, textStatus, jqXHR) {
-           var data_rows = data.shipments;
-           var table_tmpl = buildHeader(data_rows[0]) + buildRows(data_rows);
-           table.html(table_tmpl);
-         },
-         error: function(jqXHR, textStatus, errorThrown) 
-         {
-           console.log('failure!');
-         }
-     });
-     e.preventDefault();
+    var postData = $(this).serializeArray();
+    var formURL = '/trade/shipments';
+    var table = $('#query_results_table');
+    $.ajax(
+      {
+        url : formURL,
+        type: "GET",
+        data : postData,
+        success: function(data, textStatus, jqXHR) {
+          var data_rows = data.shipments;
+          var table_tmpl = buildHeader(data_rows[0]) + buildRows(data_rows);
+          table.html(table_tmpl);
+        },
+        error: function(jqXHR, textStatus, errorThrown) 
+        {
+          console.log('failure!');
+        }
+    });
+    e.preventDefault();
+  });
+
+  $("#download_expert").click(function(e) {
+    var $a = $(this);
+    var href = $a.attr('href');
+    var $inputs = $('#form_expert :input');
+    var values = {};
+    $inputs.each(function() {
+      var name = this.name.replace('[]', '');
+      if (name !== "" && name !== void 0 && name !== null) {
+        values[name] = $(this).val();
+      }
+    });
+    values['report_type'] = 'raw';
+    $a.attr('href', href + $.param({'filters': values}));
   });
 }
 

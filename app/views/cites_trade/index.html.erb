@@ -14,7 +14,7 @@
   </div>
   <br><br>
   
-  <form id='form_expert' action="/trade/shipments">
+  <form id='form_expert'>
     
     
     <input type="hidden" name="ssname" value="ct_60847153">
@@ -233,7 +233,7 @@
             <input type="radio" name="selection_taxon" value="genus">&nbsp;
           </div>
           <div id="div_genus" class="grid_8">
-            <span style="padding:10px 0px">Search for a lamp genie:</span><br />
+            <span style="padding:10px 0px">Search for genus:</span><br />
             <input type="text" size="30" name="taxon_concepts_ids[]" id="genus_search" value=""><br>
           </div>
           
@@ -262,6 +262,7 @@
         <img src="/assets/cites_trade/find.png" alt=""/>
         Search
         </button>
+        <a id='download_expert' href="/trade/exports/download?">Download</a>
         <button type="reset" name="reset" style="float:right" id="reset_search">
         <img src="/assets/cites_trade/refresh1.png" alt=""/>
         Reset
