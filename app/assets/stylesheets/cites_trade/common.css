@@ -5,9 +5,9 @@
 	http://developer.yahoo.net/yui/license.txt
 	version: 2.2.0
 	*/
-	body {font:13px 'Helvetica',arial,clean,sans-serif;*font-size:small;*font:x-small;}
+	body {font:13px Helvetica, arial, clean, sans-serif;*font-size:small;*font:x-small;}
 	table {font-size:inherit;font:100%;}
-	select, input, textarea {Lucida grande, arial,helvetica,clean,sans-serif;font-size:1.1em}
+	select, input, textarea {font-family:Lucida grande, arial,helvetica,clean,sans-serif;font-size:1.1em}
 	pre, code {font:115% monospace;*font-size:100%;}body * {line-height:1.22em;}
 	body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}
 	img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}/*ol,ul {list-style:none;}*/caption,th {text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym {border:0;}
