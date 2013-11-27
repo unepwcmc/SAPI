@@ -6,23 +6,18 @@ module Statistics
     years = Trade::Shipment.where("year is not null").uniq.pluck(:year)
     years.each{ |y|
      unless y.nil?
-      reported_by_exporter = Trade::Shipment.where(:year => y, :reported_by_exporter => true).count
-      reported_by_importer = Trade::Shipment.where(:year => y, :reported_by_exporter => false).count
+      reported_by_exporter = Trade::Shipment.where(:year => y, 
+        :reported_by_exporter => true).count
+      reported_by_importer = Trade::Shipment.where(:year => y, 
+        :reported_by_exporter => false).count
       total_transactions = Trade::Shipment.where(:year => y).count
-      trade_transactions[y] = {:total => @total_transactions, :reported_by_exporter => @reported_by_exporter, :reported_by_importer => @reported_by_importer}
+      trade_transactions[y] = {:total => total_transactions, 
+        :reported_by_exporter => reported_by_exporter, 
+        :reported_by_importer => reported_by_importer}
      end
      }
-     trade_transactions.each{ |key,value|
-     Statistics.hash_to_html
-     }
+     trade_transactions
   end
 
-  def self.hash_to_html key,value
-    puts "<tr>"
-    puts "<td>#{key}</td>"
-    value.each {|k,v|
-      puts "<td>#{v}</td>"
-    }
-    puts "</tr>"
-  end
+
 end

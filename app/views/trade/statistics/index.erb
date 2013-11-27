@@ -3,7 +3,7 @@
 <a href="/trade">Back to Trade DB Admin Tool</a>
 <h2>General Statistics</h2>
 
-<table class="trade-stats-table">
+<table class="table table-bordered table-striped ">
   <tr>
     <th>Total shipments</th>
     <td><%= @total_shipments %></td>
@@ -22,7 +22,7 @@
 
   <h2>Summary of CITES annual reports</h2>
 
-  <table class="trade-stats-table">
+  <table class="table table-bordered table-striped ">
     <thead>
       <tr>
         <th>No</th>
@@ -39,7 +39,7 @@
   </table>
 
   <h2>Summary of trade transactions</h2>
-  <table class="trade-stats-table">
+  <table class="table table-bordered table-striped">
     <thead>
       <tr>
         <th>Year</th>
@@ -50,7 +50,14 @@
     </thead>
     <tbody>
 
-    <%= @statistics_table %>
+    <%  @transactions.keys.sort.each do |year| %>
+      <tr>
+        <td><%= year %></td>
+        <td><%= @transactions[year][:reported_by_exporter] %></td>
+        <td><%= @transactions[year][:reported_by_importer] %></td>
+        <td><%= @transactions[year][:total] %></td>
+      </tr>
+    <% end %>
 
     </tbody>
   </table>
