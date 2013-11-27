@@ -54,6 +54,6 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
                :geo_entities, :change_type, :hash_annotation,
                :annotation]).
       order('taxon_concepts.full_name').
-      page(params[:page]).search(params[:query])
+      page(params[:page]).per(200).search(params[:query])
   end
 end
