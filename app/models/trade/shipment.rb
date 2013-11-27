@@ -32,14 +32,16 @@ class Trade::Shipment < ActiveRecord::Base
     :source_id, :taxon_concept_id,
     :term_id, :unit_id, :year,
     :import_permit_number, :export_permit_number, :country_of_origin_permit_number
+  attr_accessor :reporter_type
 
-  validates :quantity, presence: true
-  validates :appendix, presence: true
-  validates :year, presence: true
+  validates :quantity, presence: true, :numericality => true
+  validates :appendix, presence: true, :inclusion => { :in => ['I', 'II', 'III'], :message => 'should be one of I, II, III' }
+  validates :year, presence: true, numericality: { only_integer: true }
   validates :taxon_concept_id, presence: true
   validates :term_id, presence: true
   validates :exporter_id, presence: true
   validates :importer_id, presence: true
+  validates :reporter_type, presence: true, :inclusion => { :in => ['E', 'I'], :message => 'should be one of E, I' }
 
   belongs_to :taxon_concept
   belongs_to :purpose, :class_name => "TradeCode"
@@ -57,12 +59,17 @@ class Trade::Shipment < ActiveRecord::Base
 
 
   def reporter_type
+    return nil if reported_by_exporter.nil? 
     reported_by_exporter ? 'E' : 'I'
   end
 
   def reporter_type=(str)
-    if str
-      self.reported_by_exporter = str.upcase.strip
+    self.reported_by_exporter = if str && str.upcase.strip == 'E'
+      true
+    elsif str && str.upcase.strip == 'I'
+      false
+    else
+      nil
     end
   end
 
