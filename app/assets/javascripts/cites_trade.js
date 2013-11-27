@@ -1,5 +1,7 @@
 //= require underscore
-
+//= require jquery
+//= require jquery_ujs
+//= require jquery.ui.all
 //= require cites_trade/jquery.jgrowl_minimized
 //= require cites_trade/jquery.multi-select
 //= require cites_trade/select2
@@ -12,9 +14,5 @@
 //= require cites_trade/top
 //= require cites_trade/topLeft
 //= require cites_trade/topRight
-
-
-
 //= require cites_trade/application
-
 //= require_self
