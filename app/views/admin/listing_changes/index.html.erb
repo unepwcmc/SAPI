@@ -1,0 +1,17 @@
+<div class="admin-header">
+  <h1>Listing changes</h1>
+  <div class="action-buttons">
+    <%= admin_add_new_button(
+      :resource => 'listing_change',
+      :href => new_admin_eu_regulation_listing_change_url(@eu_regulation),
+      :"data-toggle" => nil,
+      :role => nil
+    ) %>
+  </div>
+</div>
+
+<%= admin_simple_search %>
+<%= admin_table %>
+
+<%= paginate collection %>
+

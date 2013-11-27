@@ -27,7 +27,8 @@
         ) { '' } %>
       </td>
       <td>
-        <%= link_to eu_regulation.listing_changes.count, admin_listing_changes_url(:event_id => eu_regulation.id) %>
+        <%= link_to eu_regulation.listing_changes.count,
+          admin_eu_regulation_listing_changes_url(eu_regulation) %>
       </td>
       <td>
         <%= link_to edit_icon, edit_resource_url(eu_regulation), :remote => true %>
