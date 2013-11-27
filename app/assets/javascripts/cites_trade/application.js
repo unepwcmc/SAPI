@@ -600,9 +600,11 @@ $('#qryFrom, #qryTo').on('change',function()
     });
   }
 
-  $.when($.ajax("/api/v1/geo_entities")).then(initExpctyImpcty, ajaxFail);
-  $.when($.ajax("/api/v1/terms")).then(initTerms, ajaxFail);
-  $.when($.ajax("/api/v1/sources")).then(initSources, ajaxFail);
-  $.when($.ajax("/api/v1/purposes")).then(initPurposes, ajaxFail);
+  var data_type = {dataType: 'json'};
+
+  $.when($.ajax("/api/v1/geo_entities", data_type)).then(initExpctyImpcty, ajaxFail);
+  $.when($.ajax("/api/v1/terms", data_type)).then(initTerms, ajaxFail);
+  $.when($.ajax("/api/v1/sources", data_type)).then(initSources, ajaxFail);
+  $.when($.ajax("/api/v1/purposes", data_type)).then(initPurposes, ajaxFail);
 
 });
