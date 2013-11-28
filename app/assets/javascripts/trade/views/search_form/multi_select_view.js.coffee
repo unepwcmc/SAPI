@@ -20,16 +20,22 @@ Trade.MultiSelectButton = Ember.View.extend
 
   summary: ( ->
     if (@get('selectedValues').length == 0)
-      return "All " +
-        @get('selectedValuesCollectionName')
+      msg = if @get('blankValue')
+        'Blank '
+      else
+        'All '
+      msg += @get('selectedValuesCollectionName')
     else if (@get('selectedValues').length == 1)
-      return @get('selectedValues')[0].get(
+      msg = @get('selectedValues')[0].get(
         @get('selectedValueDisplayProperty')
       )
+      msg += ' or blank' if @get('blankValue')
     else
-      return @get('selectedValues').length + " " +
+      msg = @get('selectedValues').length + " " +
       @get('selectedValuesCollectionName') + " selected"
-  ).property("selectedValues.@each")
+      msg += ' or blank' if @get('blankValue')
+    msg
+  ).property("selectedValues.@each", 'blankValue')
 
 Trade.MultiSelectDropdown = Ember.View.extend
   templateName: 'trade/shipments/multi_select_dropdown'
