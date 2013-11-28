@@ -15,6 +15,8 @@ $link-blue: #0088cc;
   overflow: auto;
   margin: 10px;
   table {
+    margin-left:auto; 
+    margin-right:auto;
     background-color: #fff;
     color: $dark-grey;
     font-size: 0.8em;
@@ -36,5 +38,13 @@ $link-blue: #0088cc;
       color: darken($dark-grey, 10%);
       @include opacity(1.0);
     }
+
+    thead td {
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+  }
+  .info {
+    color: white;
   }
 }

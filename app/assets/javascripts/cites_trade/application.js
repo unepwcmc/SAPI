@@ -1,11 +1,12 @@
 $(document).ready(function(){
 
-  var ajaxFail, initExpctyImpcty, initTerms, initSources, initPurposes;
+  var ajaxFail, initExpctyImpcty, initTerms, initSources, initPurposes,
+    countries = {}, units = {}, terms = {}, purposes = {}, sources = {};
 
   ajaxFail = function (xhr, ajaxOptions, thrownError) {
-  	console.log(xhr, ajaxOptions, thrownError);
+  	//console.log(xhr, ajaxOptions, thrownError);
+    growlMe("The request failed.");
   };
-
 
   // Your code here
   $(".tipify").tipTip();
@@ -101,10 +102,77 @@ $("#genus_all_id").chosen({
 //function to check when form is being posted
 function formPosting() {
 
+  var headers = [
+      'id', 'year', 'appendix', 'taxon',  'term', 'quantity', 'unit',  
+      'importer', 'exporter', 'origin', 'purpose', 'source', 'reporter_type', 
+      'imp_permit', 'exp_permit', 'origin_permit' ],
+    fields = ['id', 'year', 'appendix', 'taxon',  'term', 'quantity', 'unit',  
+      'importer', 'exporter', 'origin', 'purpose', 'source', 'reporter_type', 
+      'import_permit_number', 'export_permit_number', 
+      'country_of_origin_permit_number' ];
+
+  function formatDataRow (data_row) {
+    return _.map(fields, function (field) {
+      if (data_row[field]) {
+        return data_row[field];
+      } else if (field === 'importer') {
+        if (countries[data_row.importer_id]) {
+          return countries[data_row.importer_id].iso_code2;
+        } else {
+          return '';
+        }
+      } else if (field === 'exporter') {
+        if (countries[data_row.exporter_id]) {
+          return countries[data_row.exporter_id].iso_code2;
+        } else {
+          return '';
+        }
+      } else if (field === 'origin') {
+        if (countries[data_row.country_of_origin_id]) {
+          return countries[data_row.country_of_origin_id].iso_code2;
+        } else {
+          return '';
+        }
+      } else if (field === 'unit') {
+        if (units[data_row.unit_id]) {
+          return units[data_row.unit_id].code;
+        } else {
+          return '';
+        }
+      } else if (field === 'taxon') {
+        if (data_row.taxon_concept) {
+          return data_row.taxon_concept.full_name;
+        } else {
+          return '';
+        }
+      } else if (field === 'term') {
+        if (terms[data_row.term_id]) {
+          return terms[data_row.term_id].code;
+        } else {
+          return '';
+        }
+      } else if (field === 'purpose') {
+        if (purposes[data_row.purpose_id]) {
+          return purposes[data_row.purpose_id].code;
+        } else {
+          return '';
+        }
+      } else if (field === 'source') {
+        if (sources[data_row.source_id]) {
+          return sources[data_row.source_id].code;
+        } else {
+          return '';
+        }
+      } else {
+        return '';
+      }
+    });
+  }
+
   function buildHeader (data) {
     var header = 
-      "<tr><% _.each(res, function(value, key) { %> <td><%=key %></td> <% }); %></tr>";
-    return _.template(header, {res: data});
+      "<thead><tr><% _.each(res, function(head) { %> <td><%=head %></td> <% }); %></tr></thead>";
+    return _.template(header, {res: headers});
   }
 
   function buildRows (data) {
@@ -114,48 +182,90 @@ function formPosting() {
         "<tr><% _.each(res, function(value) { %> <td>" + 
         "<%= (value && value.full_name) ? value.full_name : value %>" +
         "</td> <% }); %></tr>";
-      t += _.template(row, {res: data_row});
+      t += _.template(row, { res: formatDataRow(data_row) });
     });
     return t;
   }
 
   $("#form_expert").submit(function(e) {
-    var postData = $(this).serializeArray();
-    var formURL = '/trade/shipments';
-    var table = $('#query_results_table');
+    var postData = $(this).serializeArray(),
+      formURL = '/trade/shipments',
+      table = $('#query_results_table'),
+      data_rows, table_tmpl;
     $.ajax(
       {
         url : formURL,
         type: "GET",
         data : postData,
         success: function(data, textStatus, jqXHR) {
-          var data_rows = data.shipments;
-          var table_tmpl = buildHeader(data_rows[0]) + buildRows(data_rows);
-          table.html(table_tmpl);
+          if (data.meta.total === 0) {
+            $('#search-error-message').show();
+            table.html('');
+          } else {
+            data_rows = data.shipments;
+            table_tmpl = buildHeader(data_rows[0]) + buildRows(data_rows);
+            $('#search-error-message').hide();
+            table.html(table_tmpl);
+            $('#query_results .info').text(
+              'Showing ' + data.shipments.length + ' rows of ' + data.meta.total
+            );
+          }
         },
-        error: function(jqXHR, textStatus, errorThrown) 
-        {
-          console.log('failure!');
-        }
+        error: ajaxFail
     });
     e.preventDefault();
   });
 
-  $("#download_expert").click(function(e) {
-    var $a = $(this);
-    var href = $a.attr('href');
-    var $inputs = $('#form_expert :input');
-    var values = {};
-    $inputs.each(function() {
-      var name = this.name.replace('[]', '');
-      if (name !== "" && name !== void 0 && name !== null) {
-        values[name] = $(this).val();
-      }
-    });
-    values['report_type'] = 'raw';
-    $a.attr('href', href + $.param({'filters': values}));
-  });
 }
+
+function parseInputs ($inputs) {
+  var values = {};
+  $inputs.each(function() {
+    var name = this.name.replace('[]', '');
+    if (name !== "" && name !== void 0 && name !== null) {
+      values[name] = $(this).val();
+    }
+  });
+  values['report_type'] = 'raw';
+  return values;
+}
+
+function downloadResults () {
+  var href, inputs, values, params, $link;
+  if (downloadResults.ajax) {
+    href = '/trade/exports/download.json';
+    values = parseInputs($('#form_expert :input'));
+    params = $.param({'filters': values});
+    $.ajax({
+      url: href,
+      dataType: 'json',
+      data: params,
+      type: 'GET'
+    }).then( function (res) {
+      if (res.total > 0) {
+        // There is something to download!
+        downloadResults.ajax = false;
+        downloadResults.call(this);
+      } else {
+        $('#search-error-message').show();
+      }
+    }, ajaxFail);
+  } else {
+    $link = $(this);
+    values = parseInputs($('#form_expert :input'));
+    params = $.param({'filters': values});
+    href = '/trade/exports/download?' + params;
+    downloadResults.ajax = true;
+    $('#search-error-message').hide();
+    $link.attr('href', href).click();
+    window.location.href = $link.attr("href");
+  }
+}
+downloadResults.ajax = true;
+$("#download_expert").click(function(e) {
+  downloadResults.call(this);
+});
+
 
  //function to reset all the countrols on the expert_accord page
  function resetSelects() {
@@ -175,6 +285,9 @@ function formPosting() {
 $('#reset_search').click(function() {
 	resetSelects();
 	show_values_selection();
+  // Removing the table results on reset
+  $('#query_results_table').html('');
+  $('#query_results').first('.info').html('');
 	return false;
  });
  
@@ -225,6 +338,36 @@ function getSelectionText(source) {
 	return myValues.toString();
 }
 
+initUnitsObj = function (data) {
+  _.each(data.units, function (unit) {
+    units[unit.id] = unit;
+  });
+}
+
+initCountriesObj = function (data) {
+  _.each(data.geo_entities, function (country) {
+    countries[country.id] = country;
+  });
+}
+
+initTermsObj = function (data) {
+  _.each(data.terms, function (term) {
+    terms[term.id] = term;
+  });
+}
+
+initPurposesObj = function (data) {
+  _.each(data.purposes, function (purpose) {
+    purposes[purpose.id] = purpose;
+  });
+}
+
+initSourcesObj = function (data) {
+  _.each(data.sources, function (source) {
+    sources[source.id] = source;
+  });
+}
+
 initExpctyImpcty = function (data) {
 	var exp_selection = $('#expcty'),
 	  imp_selection = $('#impcty'),
@@ -234,6 +377,7 @@ initExpctyImpcty = function (data) {
 	  	text: function (item) {return item.name}
 	  };
 
+  initCountriesObj(data);
 	populateSelect(_.extend(args, {
 		selection: exp_selection,
 		value: function (item) {return item.id}
@@ -294,7 +438,8 @@ initTerms = function (data) {
 	  	value: function (item) {return item.id},
 	  	text: function (item) {return item.name_en}
 	  };
-	
+  
+  initTermsObj(data);
 	populateSelect(args);
   selection.select2({
   	width: '75%',
@@ -331,6 +476,7 @@ initSources = function (data) {
 	  	text: function (item) {return item.name_en}
 	  };
 	
+  initSourcesObj(data);
 	populateSelect(args);
   selection.select2({
   	width: '75%',
@@ -365,6 +511,7 @@ initPurposes = function (data) {
 	  	text: function (item) {return item.name_en}
 	  };
 	
+  initPurposesObj(data);
 	populateSelect(args); 
   selection.select2({
   	width: '75%',
@@ -602,6 +749,7 @@ $('#qryFrom, #qryTo').on('change',function()
 
   var data_type = {dataType: 'json'};
 
+  $.when($.ajax("/api/v1/units", data_type)).then(initUnitsObj, ajaxFail);
   $.when($.ajax("/api/v1/geo_entities", data_type)).then(initExpctyImpcty, ajaxFail);
   $.when($.ajax("/api/v1/terms", data_type)).then(initTerms, ajaxFail);
   $.when($.ajax("/api/v1/sources", data_type)).then(initSources, ajaxFail);
