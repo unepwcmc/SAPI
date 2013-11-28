@@ -44,6 +44,7 @@ class Trade::Shipment < ActiveRecord::Base
   validates :reporter_type, presence: true, :inclusion => { :in => ['E', 'I'], :message => 'should be one of E, I' }
 
   belongs_to :taxon_concept
+  belongs_to :reported_taxon_concept, :class_name => 'TaxonConcept'
   belongs_to :purpose, :class_name => "TradeCode"
   belongs_to :source, :class_name => "TradeCode"
   belongs_to :term, :class_name => "TradeCode"
