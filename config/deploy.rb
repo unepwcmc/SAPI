@@ -8,8 +8,6 @@ require 'brightbox/passenger'
 require 'sidekiq/capistrano'
 
 set :generate_webserver_config, false
-set :whenever_environment, defer { stage }
-require 'whenever/capistrano'
 
 require 'rvm/capistrano'
 set :rvm_ruby_string, '1.9.3'
