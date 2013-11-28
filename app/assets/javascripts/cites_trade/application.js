@@ -3,9 +3,9 @@ $(document).ready(function(){
   var ajaxFail, initExpctyImpcty, initTerms, initSources, initPurposes;
 
   ajaxFail = function (xhr, ajaxOptions, thrownError) {
-  	console.log(xhr, ajaxOptions, thrownError);
+  	//console.log(xhr, ajaxOptions, thrownError);
+    growlMe("The request failed.");
   };
-
 
   // Your code here
   $(".tipify").tipTip();
@@ -129,33 +129,71 @@ function formPosting() {
         type: "GET",
         data : postData,
         success: function(data, textStatus, jqXHR) {
-          var data_rows = data.shipments;
-          var table_tmpl = buildHeader(data_rows[0]) + buildRows(data_rows);
-          table.html(table_tmpl);
+          if (data.meta.total === 0) {
+            $('#search-error-message').show();
+            table.html('');
+          } else {
+            var data_rows = data.shipments;
+            var table_tmpl = buildHeader(data_rows[0]) + buildRows(data_rows);
+            $('#search-error-message').hide();
+            table.html(table_tmpl);
+          }
         },
-        error: function(jqXHR, textStatus, errorThrown) 
-        {
-          console.log('failure!');
-        }
+        error: ajaxFail
     });
     e.preventDefault();
   });
 
-  $("#download_expert").click(function(e) {
-    var $a = $(this);
-    var href = $a.attr('href');
-    var $inputs = $('#form_expert :input');
-    var values = {};
-    $inputs.each(function() {
-      var name = this.name.replace('[]', '');
-      if (name !== "" && name !== void 0 && name !== null) {
-        values[name] = $(this).val();
-      }
-    });
-    values['report_type'] = 'raw';
-    $a.attr('href', href + $.param({'filters': values}));
-  });
 }
+
+function parseInputs ($inputs) {
+  var values = {};
+  $inputs.each(function() {
+    var name = this.name.replace('[]', '');
+    if (name !== "" && name !== void 0 && name !== null) {
+      values[name] = $(this).val();
+    }
+  });
+  values['report_type'] = 'raw';
+  return values;
+}
+
+function downloadResults () {
+  var href, inputs, values, params, $link;
+  if (downloadResults.ajax) {
+    href = '/trade/exports/download.json';
+    values = parseInputs($('#form_expert :input'));
+    params = $.param({'filters': values});
+    $.ajax({
+      url: href,
+      dataType: 'json',
+      data: params,
+      type: 'GET'
+    }).then( function (res) {
+      if (res.total > 0) {
+        // There is something to download!
+        downloadResults.ajax = false;
+        downloadResults.call(this);
+      } else {
+        $('#search-error-message').show();
+      }
+    }, ajaxFail);
+  } else {
+    $link = $(this);
+    values = parseInputs($('#form_expert :input'));
+    params = $.param({'filters': values});
+    href = '/trade/exports/download?' + params;
+    downloadResults.ajax = true;
+    $('#search-error-message').hide();
+    $link.attr('href', href).click();
+    window.location.href = $link.attr("href");
+  }
+}
+downloadResults.ajax = true;
+$("#download_expert").click(function(e) {
+  downloadResults.call(this);
+});
+
 
  //function to reset all the countrols on the expert_accord page
  function resetSelects() {
