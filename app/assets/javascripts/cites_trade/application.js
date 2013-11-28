@@ -234,8 +234,8 @@ function parseInputs ($inputs) {
   $inputs.each(function() {
     var name = this.name.replace('[]', '');
     if (name !== "" && name !== void 0 && name !== null) {
-      if (name === 'taxon_concepts_ids[]') {
-        values[name] = selected_taxa;
+      if (name === 'taxon_concepts_ids') {
+        values[name] = [selected_taxa];
       } else {
         values[name] = $(this).val();
       }
