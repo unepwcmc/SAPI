@@ -285,6 +285,9 @@ $("#download_expert").click(function(e) {
 $('#reset_search').click(function() {
 	resetSelects();
 	show_values_selection();
+  // Removing the table results on reset
+  $('#query_results_table').html('');
+  $('#query_results').first('.info').html('');
 	return false;
  });
  
