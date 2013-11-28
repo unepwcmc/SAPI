@@ -1,7 +1,8 @@
 $(document).ready(function(){
 
   var ajaxFail, initExpctyImpcty, initTerms, initSources, initPurposes,
-    countries = {}, units = {}, terms = {}, purposes = {}, sources = {};
+    countries = {}, units = {}, terms = {}, purposes = {}, sources = {},
+    selected_taxa = '';
 
   ajaxFail = function (xhr, ajaxOptions, thrownError) {
   	//console.log(xhr, ajaxOptions, thrownError);
@@ -187,8 +188,18 @@ function formPosting() {
     return t;
   }
 
+  function fixTaxonId (arr) {
+    return _.map(arr, function (obj) {
+      if (obj.name === 'taxon_concepts_ids[]') {
+        return {name: 'taxon_concepts_ids[]', value: selected_taxa};
+      } else {
+        return obj;
+      }
+    });
+  }
+
   $("#form_expert").submit(function(e) {
-    var postData = $(this).serializeArray(),
+    var postData = fixTaxonId($(this).serializeArray()),
       formURL = '/trade/shipments',
       table = $('#query_results_table'),
       data_rows, table_tmpl;
@@ -223,7 +234,11 @@ function parseInputs ($inputs) {
   $inputs.each(function() {
     var name = this.name.replace('[]', '');
     if (name !== "" && name !== void 0 && name !== null) {
-      values[name] = $(this).val();
+      if (name === 'taxon_concepts_ids[]') {
+        values[name] = selected_taxa;
+      } else {
+        values[name] = $(this).val();
+      }
     }
   });
   values['report_type'] = 'raw';
@@ -288,6 +303,8 @@ $('#reset_search').click(function() {
   // Removing the table results on reset
   $('#query_results_table').html('');
   $('#query_results').first('.info').html('');
+  // and resetting globals...
+  selected_taxa = '';
 	return false;
  });
  
@@ -610,8 +627,9 @@ $("#taxon_search").autocomplete({
     });
   },
 	select: function( event, ui ) {
-		$(this).val(ui.item.label);
-		$('#species_out').text(ui.item.label);	
+		$(this).attr('value', ui.item.label);
+    selected_taxa = ui.item.value;
+		$('#species_out').text(ui.item.label);
 		return false;
 	}
 });
