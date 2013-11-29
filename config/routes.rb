@@ -95,6 +95,8 @@ SAPI::Application.routes.draw do
     resources :shipments
     resources :geo_entities, :only => [:index]
     resources :permits, :only => [:index]
+    match 'exports/download' => 'exports#download'
+    match 'stats' => 'statistics#index'
     root :to => 'ember#start'
   end
 
@@ -131,7 +133,7 @@ SAPI::Application.routes.draw do
   # first created -> highest priority.
 
   # Sample of regular route:
-  #   match 'products/:id' => 'catalog#view'
+  match 'cites_trade' => 'cites_trade#index'
   # Keep in mind you can assign values other than :controller and :action
 
   # Sample of named route:

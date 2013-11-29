@@ -34,4 +34,9 @@ input.annotation, textarea.annotation {
   width: 80%;
 }
 
-
+.trade-stats-table {
+  td, th {
+    border: 1px solid #ddd;
+  }
+  th {text-align: left}
+}

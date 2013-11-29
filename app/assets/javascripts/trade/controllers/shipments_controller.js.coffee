@@ -5,10 +5,12 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   errors: null
 
   columns: [
-    'taxonConcept.fullName', 'year', 'quantity', 'appendix', 'term.code',
-    'unit.code', 'importer.isoCode2', 'exporter.isoCode2', 'countryOfOrigin.isoCode2',
-    'importPermitNumber', 'exportPermitNumber', 'countryOfOriginPermitNumber',
-    'purpose.code', 'source.code'
+    'id', 'year', 'appendix', 'taxonConcept.fullName',
+    'reportedTaxonConcept.fullName',
+    'term.code', 'quantity',  'unit.code',
+    'importer.isoCode2', 'exporter.isoCode2', 'countryOfOrigin.isoCode2',
+    'purpose.code', 'source.code', 'reporterType',
+    'importPermitNumber', 'exportPermitNumber', 'countryOfOriginPermitNumber'
   ]
 
   codeMappings: {
@@ -148,7 +150,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   ).property('countryOfOriginQuery')
   selectedCountriesOfOrigin: []
   selectedQuantity: null
-  
+
   unitBlank: false
   purposeBlank: false
   sourceBlank: false
@@ -168,6 +170,39 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     @get(collectionName).filter (element) ->
       re.test(element.get(columnName))
 
+  # sth amiss with array query params, which is why we pass a different
+  # params object for transitioning than we do when parametrising the
+  # download url below.
+  # TODO would be good to isolate the issue with array query params
+  searchParamsForTransition: () ->
+    params = {}
+    @selectedQueryParamNames.forEach (property) =>
+      selectedParams = @get(property.name)
+      params[property.param] = @parseSelectedParams(selectedParams)
+    params
+
+  searchParamsForUrl: () ->
+    params = {}
+    @selectedQueryParamNames.forEach (property) =>
+      selectedParams = @get(property.name)
+      params[property.urlParam] = @parseSelectedParams(selectedParams)
+    params
+
+  rawDownloadUrl: (->
+    params = @searchParamsForUrl()
+    params['report_type'] = 'raw' #TODO this will likely be a property in its own right
+    '/trade/exports/download?' + $.param({'filters': params})
+  ).property(
+    'selectedTaxonConcepts.@each', 'selectedAppendices.@each',
+    'selectedTimeStart', 'selectedTimeEnd', 'selectedQuantity',
+    'selectedUnits.@each', 'unitBlank.@each', 'selectedTerms.@each',
+    'selectedSources.@each', 'sourceBlank',
+    'selectedPurposes.@each', 'purposeBlank',
+    'selectedImporters.@each', 'selectedExporters.@each',
+    'selectedCountriesOfOrigin.@each', 'countryOfOriginBlank',
+    'selectedPermits.@each'
+  )
+
   actions:
     # creates a local new shipment (bound to currentShipment)
     newShipment: () ->
@@ -177,7 +212,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     # saves the new shipment (bound to currentShipment) to the db
     saveShipment: ->
       shipment = @get('currentShipment')
-      # Before trying to save a shipment 
+      # Before trying to save a shipment
       # we need to reset the model to a valid state.
       unless shipment.get('isValid')
         shipment.send("becameValid")
@@ -203,7 +238,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       @set('currentShipment', null)
       @set 'errors', null
       $('.modal').modal('hide')
-  
+
     # discards the new shipment (bound to currentShipment)
     deleteShipment: (shipment) ->
       if (!shipment.get('isSaving'))
@@ -220,15 +255,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       $('.modal').modal('show')
 
     search: ->
-      params = {}
-      @selectedQueryParamNames.forEach (property) =>
-        selectedParams = @get(property.name)
-        params[property.param] = @parseSelectedParams(selectedParams)
-        params['unit_blank'] = @get('unitBlank')
-        params['purpose_blank'] = @get('purposeBlank')
-        params['source_blank'] = @get('sourceBlank')
-        params['country_of_origin_blank'] = @get('countryOfOriginBlank')
-      @openShipmentsPage params
+      @openShipmentsPage @searchParamsForTransition()
 
     resetFilters: ->
       @selectedQueryParamNames.forEach (property) =>
