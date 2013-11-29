@@ -210,7 +210,7 @@ function formPosting() {
         success: function(data, textStatus, jqXHR) {
           if (data.meta.total === 0) {
             $('#search-error-message').show();
-            table.html('');
+            $("#query_results_table").find('thead,tbody').remove();
           } else {
             data_rows = data.shipments;
             table_tmpl = buildHeader(data_rows[0]) + buildRows(data_rows);
