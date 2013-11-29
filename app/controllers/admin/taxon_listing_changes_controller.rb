@@ -46,7 +46,11 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
   def update
     update! do |success, failure|
       success.html {
-        redirect_to admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
+        if  "1" == params[:redirect_to_eu_reg]
+          redirect_to admin_eu_regulation_listing_changes_path(@listing_change.event)
+        else
+          redirect_to admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
+        end
       }
       failure.html {
         load_change_types

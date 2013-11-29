@@ -2,6 +2,9 @@
 
 <%= nested_form_for [:admin, @taxon_concept, @designation, @listing_change] do |f| %>
   <%= error_messages_for(@listing_change) %>
+  <%= hidden_field_tag :redirect_to_eu_reg,
+    request.referrer.include?("eu_regulations") ? 1 : 0
+  %>
 
   <table class="listing-change">
     <thead>
