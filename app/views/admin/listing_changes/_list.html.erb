@@ -66,7 +66,7 @@
                                                                    @eu_regulation.designation,
                                                                    listing_change) %>
         <%= link_to delete_icon,
-          admin_listing_change_path(listing_change),
+          admin_eu_regulation_listing_change_path(@eu_regulation, listing_change),
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
