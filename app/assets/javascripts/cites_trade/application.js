@@ -201,7 +201,6 @@ function formPosting() {
   $("#form_expert").submit(function(e) {
     var postData = fixTaxonId($(this).serializeArray()),
       formURL = '/trade/shipments',
-      table = $('#query_results_table'),
       data_rows, table_tmpl;
     $.ajax(
       {
@@ -216,7 +215,7 @@ function formPosting() {
             data_rows = data.shipments;
             table_tmpl = buildHeader(data_rows[0]) + buildRows(data_rows);
             $('#search-error-message').hide();
-            table.html(table_tmpl);
+            $('#query_results_table').html(table_tmpl);
             $('#query_results .info').text(
               'Showing ' + data.shipments.length + ' rows of ' + data.meta.total
             );
@@ -289,11 +288,11 @@ $("#download_expert").click(function(e) {
 	$('#taxon_search').val('');
 	$('#genus_search').val('');
 	$('#species_out').text('');
-	$('#sources').select2("val","");
-	$('#purposes').select2("val","");
-	$('#terms').select2("val","");
-	$('#expcty').select2("val","");
-	$('#impcty').select2("val","");	
+	$('#sources').select2("val","all_sou");
+	$('#purposes').select2("val","all_pur");
+	$('#terms').select2("val","all_ter");
+	$('#expcty').select2("val","all_exp");
+	$('#impcty').select2("val","all_imp");	
   notySticky('Values are being reset...');
  };
 
@@ -301,8 +300,8 @@ $('#reset_search').click(function() {
 	resetSelects();
 	show_values_selection();
   // Removing the table results on reset
-  $('#query_results_table').html('');
-  $('#query_results').first('.info').html('');
+  $("#query_results_table").find('thead,tbody').remove();
+  $('#query_results').find('p.info').text('');
   // and resetting globals...
   selected_taxa = '';
 	return false;
@@ -399,20 +398,19 @@ initExpctyImpcty = function (data) {
 		selection: exp_selection,
 		value: function (item) {return item.id}
 	}));
-  exp_selection.select2({
+  $('#expcty').select2({
   	width: '75%',
   	allowClear: false,
   	closeOnSelect: false
   }).on('change', function(e){
-  	selection = "agjhgjhg";
+  	var selection = "";
   	if (e.val.length == 0) {
   		$(this).select2("val","all_exp");
     }
-  	prop = $(this).select2('data');
+  	var prop = $(this).select2('data');
   	selection = getText(prop);
-  	if (e.val.length > 1)
-  	{
-  		new_array = new Array();
+  	if (e.val.length > 1) {
+  		var new_array = [];
   		new_array = checkforAllOptions(prop,'all_exp');
   		$(this).select2('data', new_array);
   		selection = getText(new_array);
@@ -670,80 +668,26 @@ $('#qryFrom, #qryTo').on('change',function()
 	$('#year_out').text("From: " + y_from + " to " + y_to); 
 });
  
- $('.multisel, .multi_countries').on('change',function()
-	{
-		var $myId = $(this).attr('id');
-		myVal = $('#' + $myId).val();
-		main_select_value = ($myId == 'sources' ? 'all_sou' : $myId == 'purposes' ? 'all_pur' : $myId == 'terms' ? 'all_ter' 
-			: $myId == 'expcty' ? 'all_exp' : $myId == 'impcty' ? 'all_imp' : '');
-		if (myVal != null) 
+ $('.multisel, .multi_countries').on('change',function() {
+	var $myId = $(this).attr('id');
+	var myVal = $('#' + $myId).val();
+	var main_select_value = ($myId == 'sources' ? 'all_sou' : $myId == 'purposes' ? 'all_pur' : $myId == 'terms' ? 'all_ter' 
+		: $myId == 'expcty' ? 'all_exp' : $myId == 'impcty' ? 'all_imp' : '');
+	if (myVal !== null) {
+		// if one of the all is selected
+		if ((myVal.length > 1) && ((myVal.indexOf('all_sou') > -1) || (myVal.indexOf('all_pur') > -1) || (myVal.indexOf('all_ter') > -1) || (myVal.indexOf('all_imp') > -1) || (myVal.indexOf('all_exp') > -1)))
 		{
-			// if one of the all is selected
-			if ((myVal.length > 1) && ((myVal.indexOf('all_sou') > -1) || (myVal.indexOf('all_pur') > -1) || (myVal.indexOf('all_ter') > -1) || (myVal.indexOf('all_imp') > -1) || (myVal.indexOf('all_exp') > -1)))
-			{
-				$('#' + $myId).multiSelect('deselect', main_select_value);
-  				return false;
-			}
+			//$('#' + $myId).multiSelect('deselect', main_select_value);
+  		return false;
 		}
-		if (myVal == null )
-		{
-			$('#' + $myId).multiSelect('select', main_select_value);
-  			return false;	
-		}
-		
-	});
+	} else {
+		$('#' + $myId).multiSelect('select', main_select_value);
+  	return false;	
+	}		
+});
 
- $('.multi2side_dx, .multi2side_sx').change(function(){
 
-		var $myId = $(this).attr('id');
-		var $myDestId = 0;
-		var $mySrcId =0;
-		//growlMe('ID is:' + $myId);
-		if ($myId.indexOf('dx') >= 0)
-		{
-			$myDestId = $myId;
-			$mySrcId = $myDestId.replace("dx","sx");
-		}
-		else
-		{
-			$mySrcId = $myId;
-			$myDestId = $mySrcId.replace("sx","dx");
-		}
-		// Putting the code to manage the changes/movements in the multiselects--->
-		 var myOpts = document.getElementById($myDestId).options;
-		 //if countries are being added, and move the all countries out
-		 $("select[name=" + $myDestId + "]").children().each(function(i, selected){
-			var this_val = $(selected).val();
-			if (( (this_val.indexOf('all') != -1) || (this_val == "pur_") || (this_val == "sou_") || (this_val == "ter_")) && myOpts.length > 1)
-			{
-				$(this).remove().prependTo($("select[name=" + $mySrcId + "]"));		
-			}
-		});
-		 
-		 //if all the countries have been removed
-		 if(myOpts.length < 1)
-		 {
-			 $("select[name=" + $mySrcId + "]").children().each(function(i, selected){
-				var this_val = $(selected).val();
-				if ( (this_val.indexOf('all') != -1) || (this_val == "pur_") || (this_val == "sou_") || (this_val == "ter_") )
-				{
-					$(this).remove().prependTo($("select[name=" + $myDestId + "]"));		
-				}
-			});
-		 }	
-		 
-		 var stout = "";
-		 var stout2 = "";
-		 $("select[name=" + $myDestId + "]").children().each(function(i, selected){
-					var this_val = $(selected).val();
-					stout2 += $(selected).text() + " ,";
-					stout += this_val + " ,";
-		 });
-		 
-		 var component = "#" + $myDestId.substring(0,$myDestId.indexOf("ms2side")) + "_out";
 
-		 $(component).text(stout2);	 
-	});
 
 
   //Put functions to be executed here
