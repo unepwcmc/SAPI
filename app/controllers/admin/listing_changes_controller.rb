@@ -31,9 +31,6 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
   protected
 
   def load_lib_objects
-    @current_suspensions = CitesSuspension.
-      where(:is_current => true).
-      where(:taxon_concept_id => nil)
     @units = Unit.order(:code)
     @terms = Term.order(:code)
     @sources = Source.order(:code)
@@ -49,11 +46,17 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
 
   def collection
     @listing_changes ||= end_of_association_chain.
-      joins(:taxon_concept).
-      includes([:species_listing, {:listing_distributions => :geo_entity},
-               :geo_entities, :change_type, :hash_annotation,
-               :annotation]).
-      order('taxon_concepts.full_name').
-      page(params[:page]).per(200).search(params[:query])
+      includes([
+        :species_listing,
+        :change_type,
+        :party_geo_entity,
+        :geo_entities,
+        :annotation,
+        :taxon_concept,
+        :exclusions => [:geo_entities, :taxon_concept]
+      ]).
+      where("change_types.name <> '#{ChangeType::EXCEPTION}'").
+      order('taxon_concepts.full_name ASC').
+      page(params[:page]).per(200).where(:parent_id => nil)
   end
 end

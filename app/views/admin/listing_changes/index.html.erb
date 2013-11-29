@@ -11,7 +11,8 @@
 </div>
 
 <%= admin_simple_search %>
-<p><strong><%= @eu_regulation.description %></strong></p>
+<p><strong><%= link_to @eu_regulation.description,
+  admin_eu_regulations_path(:query => @eu_regulation.description) %></strong></p>
 <%= admin_table %>
 
 <%= paginate collection %>

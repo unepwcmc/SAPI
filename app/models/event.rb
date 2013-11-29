@@ -36,8 +36,8 @@ class Event < ActiveRecord::Base
 
   def self.search query
     if query
-      where("UPPER(name) LIKE UPPER(:query)
-            OR UPPER(description) LIKE UPPER(:query)", 
+      where("UPPER(events.name) LIKE UPPER(:query)
+            OR UPPER(events.description) LIKE UPPER(:query)", 
             :query => "%#{query}%")
     else
       scoped
