@@ -42,7 +42,7 @@ SAPI::Application.routes.draw do
     resources :events
     resources :eu_regulations do
       post :activate, :on => :member
-      resources :listing_changes, :only => [:index, :new]
+      resources :listing_changes, :only => [:index, :destroy]
     end
     resources :listing_changes, :only => [:create, :update, :destroy]
     resources :cites_cops

@@ -61,6 +61,10 @@
         ><%= true_false_icon(listing_change.hash_annotation) %></a>
       </td>
       <td>
+        <%= link_to edit_icon,
+          edit_admin_taxon_concept_designation_listing_change_path(listing_change.taxon_concept,
+                                                                   @eu_regulation.designation,
+                                                                   listing_change) %>
         <%= link_to delete_icon,
           admin_listing_change_path(listing_change),
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
