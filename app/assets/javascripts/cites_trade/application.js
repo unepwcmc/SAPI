@@ -654,6 +654,7 @@ $("#genus_search").autocomplete({
   },
 	select: function( event, ui ) {
 		$(this).val(ui.item.label);
+    selected_taxa = ui.item.value;
 		$('#species_out').text(ui.item.label);	
 		return false;
 	}
