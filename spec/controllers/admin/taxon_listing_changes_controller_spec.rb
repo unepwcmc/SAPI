@@ -139,6 +139,43 @@ describe Admin::TaxonListingChangesController do
           admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
         )
       end
+      it "redirects to eu regulation listing changes page when param is set" do
+        taxon_concept = create(:taxon_concept)
+        eu_designation = create(:designation, :name => "EU",
+                                :taxonomy => taxon_concept.taxonomy)
+        eu_regulation = create(:eu_regulation, :designation_id => eu_designation.id)
+        annex = create(
+          :species_listing,
+          :designation_id => eu_designation.id,
+          :name => 'Annex A',
+          :abbreviation => 'A'
+        )
+        addition = create(
+          :change_type,
+          :designation_id => eu_designation.id,
+          :name => 'ADDITION'
+        )
+        listing_change2 = create(
+          :listing_change,
+          :taxon_concept_id => taxon_concept.id,
+          :change_type_id => addition.id,
+          :species_listing_id => annex.id,
+          :effective_at => 1.week.ago,
+          :event_id => eu_regulation.id
+        )
+        put :update, :listing_change => {
+            :change_type_id => addition.id,
+            :species_listing_id => annex.id,
+            :effective_at => 1.week.ago
+          },
+          :id => listing_change2.id,
+          :taxon_concept_id => taxon_concept.id,
+          :designation_id => eu_designation.id,
+          :redirect_to_eu_reg => "1"
+        response.should redirect_to(
+          admin_eu_regulation_listing_changes_url(eu_regulation)
+        )
+      end
     end
     it "renders edit when not successful" do
       put :update, :listing_change => {:effective_at => nil},

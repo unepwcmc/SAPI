@@ -5,11 +5,11 @@ describe Admin::ListingChangesController do
     @taxon_concept = create(:taxon_concept)
     @designation = create(:designation, :name => "EU", :taxonomy => @taxon_concept.taxonomy)
     @eu_regulation = create(:eu_regulation, :designation_id => @designation.id)
-    @appendix = create(
+    @annex = create(
       :species_listing,
       :designation_id => @designation.id,
-      :name => 'Appendix I',
-      :abbreviation => 'I'
+      :name => 'Annex A',
+      :abbreviation => 'A'
     )
     @addition = create(
       :change_type,
@@ -27,14 +27,14 @@ describe Admin::ListingChangesController do
     it "assigns @listing_changes sorted by effective_at" do
       listing_change1 = create(
         :listing_change,
-        :species_listing => @appendix,
+        :species_listing => @annex,
         :taxon_concept_id => @taxon_concept.id,
         :change_type_id => @addition.id,
         :event_id => @eu_regulation.id,
         :effective_at => 2.weeks.ago)
       listing_change2 = create(
         :listing_change,
-        :species_listing => @appendix,
+        :species_listing => @annex,
         :taxon_concept_id => @taxon_concept.id,
         :change_type_id => @addition.id,
         :event_id => @eu_regulation.id,
@@ -60,7 +60,7 @@ describe Admin::ListingChangesController do
         :listing_change,
         :taxon_concept_id => @taxon_concept.id,
         :change_type_id => @addition.id,
-        :species_listing_id => @appendix.id,
+        :species_listing_id => @annex.id,
         :event_id => @eu_regulation.id,
         :effective_at => 1.week.ago
       )
