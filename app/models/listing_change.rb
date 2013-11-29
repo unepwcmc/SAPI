@@ -102,13 +102,9 @@ class ListingChange < ActiveRecord::Base
 
   def self.search query
     if query.present?
-      where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query)",
-            :query => "%#{query}%").
-      joins(<<-SQL
-          LEFT JOIN taxon_concepts
-            ON taxon_concepts.id = listing_changes.taxon_concept_id
-        SQL
-      )
+      where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
+             OR UPPER(change_types.name) LIKE UPPER(:query)
+            ", :query => "%#{query}%")
     else
       scoped
     end

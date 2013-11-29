@@ -70,7 +70,7 @@ class CitesSuspension < TradeRestriction
   end
 
   def self.search query
-    if query
+    if query.present?
       where("UPPER(geo_entities.name_en) LIKE UPPER(:query)
             OR UPPER(geo_entities.iso_code2) LIKE UPPER(:query)
             OR trade_restrictions.start_date::text LIKE :query
