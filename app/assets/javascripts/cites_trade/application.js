@@ -385,9 +385,7 @@ initSourcesObj = function (data) {
 }
 
 initExpctyImpcty = function (data) {
-	var exp_selection = $('#expcty'),
-	  imp_selection = $('#impcty'),
-	  args = {
+	var args = {
 	  	data: data.geo_entities,
 	  	condition: function (item) {return item.iso_code2},
 	  	text: function (item) {return item.name}
@@ -395,7 +393,7 @@ initExpctyImpcty = function (data) {
 
   initCountriesObj(data);
 	populateSelect(_.extend(args, {
-		selection: exp_selection,
+		selection: $('#expcty'),
 		value: function (item) {return item.id}
 	}));
   $('#expcty').select2({
@@ -419,10 +417,10 @@ initExpctyImpcty = function (data) {
   });
 
   populateSelect(_.extend(args, {
-		selection: imp_selection,
+		selection: $('#impcty'),
 		value: function (item) {return item.id}
 	}));
-  imp_selection.select2({
+  $('#impcty').select2({
   	width: '75%',
   	allowClear: false,
   	closeOnSelect: false
