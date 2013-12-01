@@ -19,7 +19,8 @@ class Admin::EuRegulationsController < Admin::EventsController
     end
 
     def load_associations
-      @eu_regulations_for_dropdown = EuRegulation.order(:effective_at)
+      @eu_regulations_for_dropdown = EuRegulation.
+        order('effective_at DESC')
     end
 
 end
