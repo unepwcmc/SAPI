@@ -10,7 +10,7 @@
   %>
   <% if @eu_suspension_regulation.new_record? %>
     <label>Copy listing changes from:</label>
-    <%= f.select :listing_changes_event_id,
+    <%= f.select :eu_suspensions_event_id,
       options_from_collection_for_select(
         @eu_suspension_regulations_for_dropdown, :id, :name
       ),

@@ -19,5 +19,8 @@
 #
 
 class EuSuspensionRegulation < Event
+  attr_accessible :eu_suspensions_event_id
+  attr_accessor :eu_suspensions_event_id
+
   has_many :eu_suspensions, :foreign_key => :start_event_id
 end
