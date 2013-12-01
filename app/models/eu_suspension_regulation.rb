@@ -18,5 +18,6 @@
 #  subtype        :string(255)
 #
 
-class EuSuspensionRegulation < Event; end
-
+class EuSuspensionRegulation < Event
+  has_many :eu_suspensions, :foreign_key => :start_event_id
+end

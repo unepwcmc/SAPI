@@ -3,6 +3,7 @@
   <th>Effective from</th>
   <th>Current</th>
   <th>URL</th>
+  <th>No of EU Suspensions</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
@@ -24,6 +25,9 @@
           '<i class="icon-share" title="Go to URL"></i>'.html_safe,
           eu_suspension_regulation.url
         ) { '' } %>
+      </td>
+      <td>
+        <%= eu_suspension_regulation.eu_suspensions.count %>
       </td>
       <td>
         <%= link_to edit_icon, edit_resource_url(eu_suspension_regulation), :remote => true %>
