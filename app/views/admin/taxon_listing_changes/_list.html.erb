@@ -1,6 +1,12 @@
 <thead>
   <th>Event</th>
-  <th>Appx</th>
+  <th>
+    <% if @designation.is_eu? %>
+      Annex
+    <% else %>
+      Appx
+    <% end %>
+  </th>
   <th>Type</th>
   <th>Effective from</th>
   <th>Current</th>
