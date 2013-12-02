@@ -37,33 +37,37 @@
   <table class="listing-change">
     <thead>
       <tr>
-        <th>
-          <label>
-            <% if @designation.is_cites? %>
-              App. III or reservation Party
-            <% else %>
-              Annex C
-            <% end %>
-          </label>
-        </th>
+        <% unless @designation.is_cms? %>
+          <th>
+            <label>
+              <% if @designation.is_cites? %>
+                App. III or reservation Party
+              <% else %>
+                Annex C
+              <% end %>
+            </label>
+          </th>
+        <% end %>
         <th><%= f.label :inclusion_scientific_name, "Inclusion in higher taxon" %></th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <%= f.fields_for :party_listing_distribution do |b| %>
-          <td>
-            <%= b.select :geo_entity_id,
-              options_from_collection_for_select(
-                @geo_entities,
-                :id,
-                :name_en,
-                @listing_change.party_listing_distribution && @listing_change.party_listing_distribution.geo_entity_id
-              ),
-              { :include_blank => true },
-              {:class => 'distribution', :style => 'width: 220px' }
-            %>
-          </td>
+        <% unless @designation.is_cms? %>
+          <%= f.fields_for :party_listing_distribution do |b| %>
+            <td>
+              <%= b.select :geo_entity_id,
+                options_from_collection_for_select(
+                  @geo_entities,
+                  :id,
+                  :name_en,
+                  @listing_change.party_listing_distribution && @listing_change.party_listing_distribution.geo_entity_id
+                ),
+                { :include_blank => true },
+                {:class => 'distribution', :style => 'width: 220px' }
+              %>
+            </td>
+          <% end %>
         <% end %>
 
         <td>
