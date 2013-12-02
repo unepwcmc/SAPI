@@ -5,10 +5,12 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   errors: null
 
   columns: [
-    'taxonConcept.fullName', 'year', 'quantity', 'appendix', 'term.code',
-    'unit.code', 'importer.isoCode2', 'exporter.isoCode2', 'countryOfOrigin.isoCode2',
-    'importPermitNumber', 'exportPermitNumber', 'countryOfOriginPermitNumber',
-    'purpose.code', 'source.code'
+    'id', 'year', 'appendix', 'taxonConcept.fullName',
+    'reportedTaxonConcept.fullName',
+    'term.code', 'quantity',  'unit.code',
+    'importer.isoCode2', 'exporter.isoCode2', 'countryOfOrigin.isoCode2',
+    'purpose.code', 'source.code', 'reporterType',
+    'importPermitNumber', 'exportPermitNumber', 'countryOfOriginPermitNumber'
   ]
 
   codeMappings: {
@@ -270,4 +272,8 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       @set('unitQuery', null)
       @set('selectedTimeStart', @get('defaultTimeStart'))
       @set('selectedTimeEnd', @get('defaultTimeEnd'))
+      @set('unitBlank', false)
+      @set('purposeBlank', false)
+      @set('sourceBlank', false)
+      @set('countryOfOriginBlank', false)
       @openShipmentsPage(false)

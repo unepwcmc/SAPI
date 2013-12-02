@@ -24,17 +24,14 @@ describe Trade::AnnualReportUploadsController do
     )
   }
   describe "GET index" do
-    let!(:annual_report_upload){
-      annual_report_upload = build(:annual_report_upload)
-      annual_report_upload.save(:validate => false)
-      annual_report_upload
-    }
-    let!(:annual_report_upload_completed){
-      aru = build(:annual_report_upload)
-      aru.save(:validate => false)
-      aru.submit
-      aru
-    }
+    before(:each) do
+      cites_eu
+      @aru = build(:annual_report_upload)
+      @aru.save(:validate => false)
+      @completed_aru = build(:annual_report_upload)
+      @completed_aru.save(:validate => false)
+      @completed_aru.submit
+    end
     it "should return all annual report uploads" do
       get :index, format: :json
       response.body.should have_json_size(2).at_path('annual_report_uploads')
