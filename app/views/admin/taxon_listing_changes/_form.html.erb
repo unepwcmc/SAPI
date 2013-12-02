@@ -37,7 +37,15 @@
   <table class="listing-change">
     <thead>
       <tr>
-        <th><label>App. III or reservation Party</label></th>
+        <th>
+          <label>
+            <% if @designation.is_cites? %>
+              App. III or reservation Party
+            <% else %>
+              Annex C
+            <% end %>
+          </label>
+        </th>
         <th><%= f.label :inclusion_scientific_name, "Inclusion in higher taxon" %></th>
       </tr>
     </thead>
@@ -165,9 +173,11 @@
 
 
   <%= f.fields_for :annotation do |ff| %>
-    <% Annotation.locale_columns(:short_note).each do |column| %>
-      <%= ff.label column %>
-      <%= ff.text_field column, :class => :annotation %>
+    <% if @designation.is_cites? %>
+      <% Annotation.locale_columns(:short_note).each do |column| %>
+        <%= ff.label column %>
+        <%= ff.text_field column, :class => :annotation %>
+      <% end %>
     <% end %>
     <% Annotation.locale_columns(:full_note).each do |column| %>
       <%= ff.label column %>
