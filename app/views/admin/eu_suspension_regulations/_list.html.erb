@@ -27,7 +27,8 @@
         ) { '' } %>
       </td>
       <td>
-        <%= eu_suspension_regulation.eu_suspensions.count %>
+        <%= link_to eu_suspension_regulation.eu_suspensions.count,
+          admin_eu_suspension_regulation_eu_suspensions_url(eu_suspension_regulation) %>
       </td>
       <td>
         <%= link_to edit_icon, edit_resource_url(eu_suspension_regulation), :remote => true %>

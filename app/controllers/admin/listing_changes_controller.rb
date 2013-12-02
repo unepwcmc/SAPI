@@ -16,6 +16,7 @@ class Admin::ListingChangesController < Admin::SimpleCrudController
       ]).
       where("change_types.name <> '#{ChangeType::EXCEPTION}'").
       page(params[:page]).per(200).where(:parent_id => nil).
-      order('taxon_concepts.full_name ASC, listing_changes.effective_at DESC').search(params[:query])
+      order('taxon_concepts.full_name ASC, listing_changes.effective_at DESC').
+      search(params[:query])
   end
 end
