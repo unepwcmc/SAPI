@@ -17,7 +17,7 @@ class Trade::ShipmentsController < ApplicationController
     if @shipment.save
       render :json => @shipment, :status => :ok
     else
-      render :json => { "errors" => @shipment.errors }, :status => :unprocessable_entity
+      render :json => { "errors" => @shipment.errors, "warnings" => @shipment.warnings }, :status => :unprocessable_entity
     end
   end
 
@@ -26,7 +26,7 @@ class Trade::ShipmentsController < ApplicationController
     if @shipment.update_attributes(shipment_params)
       render :json => @shipment, :status => :ok
     else
-      render :json => { "errors" => @shipment.errors }, :status => :unprocessable_entity
+      render :json => { "errors" => @shipment.errors, "warnings" => @shipment.warnings }, :status => :unprocessable_entity
     end
   end
 

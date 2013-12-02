@@ -27,7 +27,7 @@ Trade.Shipment = DS.Model.extend
   purpose: DS.belongsTo('Trade.Purpose')
   source: DS.belongsTo('Trade.Source')
   year: DS.attr('string')
-  _destroyed: DS.attr('boolean')
+  warnings: DS.attr('array')
 
   taxonConceptIdDidChange: ( ->
     if @get('taxonConceptId')

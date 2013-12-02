@@ -42,6 +42,14 @@ class Trade::TaxonConceptSourceValidationRule < Trade::ValidationRule
     end
   end
 
+  def validation_errors_for_shipment(shipment)
+    # return nil unless shipment.data['kingdom_name'] == 'Animalia' && INVALID_KINGDOM_SOURCE['ANIMALIA'].include? shipment.source.source_code ||
+    #   shipment.data['kingdom_name'] == 'Plantae' && INVALID_KINGDOM_SOURCE['PLANTAE'].include? shipment.source.source_code
+    # error_message(shipments_columns.map{ |c| shipment.send(c) })
+    # TODO
+    nil
+  end
+
   private
 
   # Returns a hash with column values to be used to select invalid rows.

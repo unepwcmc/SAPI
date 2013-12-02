@@ -32,7 +32,7 @@ class Trade::Shipment < ActiveRecord::Base
     :source_id, :taxon_concept_id,
     :term_id, :unit_id, :year,
     :import_permit_number, :export_permit_number, :country_of_origin_permit_number
-  attr_accessor :reporter_type
+  attr_accessor :reporter_type, :warnings
 
   validates :quantity, presence: true, :numericality => true
   validates :appendix, presence: true, :inclusion => { :in => ['I', 'II', 'III'], :message => 'should be one of I, II, III' }
@@ -42,6 +42,7 @@ class Trade::Shipment < ActiveRecord::Base
   validates :exporter_id, presence: true
   validates :importer_id, presence: true
   validates :reporter_type, presence: true, :inclusion => { :in => ['E', 'I'], :message => 'should be one of E, I' }
+  validates_with Trade::ShipmentSecondaryErrorsValidator
 
   belongs_to :taxon_concept
   belongs_to :purpose, :class_name => "TradeCode"
@@ -56,7 +57,6 @@ class Trade::Shipment < ActiveRecord::Base
     :class_name => "Trade::ShipmentExportPermit", :dependent => :destroy
   has_many :export_permits, :through => :shipment_export_permits
   belongs_to :import_permit, :class_name => "Trade::Permit"
-
 
   def reporter_type
     return nil if reported_by_exporter.nil? 

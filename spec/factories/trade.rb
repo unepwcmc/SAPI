@@ -46,6 +46,7 @@ FactoryGirl.define do
     importer
     exporter
     quantity 1
+    appendix 'I'
     year 2013
   end
 
