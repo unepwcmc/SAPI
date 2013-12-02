@@ -12,7 +12,7 @@ class Admin::EuRegulationsController < Admin::EventsController
   protected
     def collection
       @eu_regulations ||= end_of_association_chain.
-        order('designation_id ASC, events.name ASC').
+        order('designation_id ASC, events.effective_at DESC, events.name ASC').
         includes(:designation).
         page(params[:page]).
         search(params[:query])

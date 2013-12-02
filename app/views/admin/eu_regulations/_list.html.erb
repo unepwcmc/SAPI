@@ -1,5 +1,6 @@
 <thead>
   <th>Name</th>
+  <th>Description</th>
   <th>Effective from</th>
   <th>Current</th>
   <th>URL</th>
@@ -15,6 +16,14 @@
           data-placeholder="Required" data-original-title="Enter the EU Regulation's name"
           data-url="<%= resource_url(eu_regulation) %>" data-pk="<%= eu_regulation.id %>">
           <%= eu_regulation.name %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required"
+          data-type="text" data-resource="eu_regulation" data-name="description"
+          data-placeholder="Required" data-original-title="Enter the EU Regulation's description"
+          data-url="<%= resource_url(eu_regulation) %>" data-pk="<%= eu_regulation.id %>">
+          <%= eu_regulation.description %>
         </a>
       </td>
       <td><%= eu_regulation.effective_at_formatted %></td>
