@@ -105,11 +105,10 @@ class Trade::ValidationRule < ActiveRecord::Base
         res[scope_column] = scope_value
       when /(.+)_code$/
         res[$1 + '_id'] = TradeCode.find_by_type_and_code($1.capitalize, scope_value).id
-      else #TODO trading partner?
+      else
         res[scope_column + '_id'] = scope_value
-      end      
+      end
     end
-    puts res.inspect
     res
   end
 

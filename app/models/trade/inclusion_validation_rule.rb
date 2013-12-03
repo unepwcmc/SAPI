@@ -48,9 +48,6 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     shipment_in_scope = true
     # check if shipment is in scope of this validation
     shipments_scope.each do |scope_column, scope_value|
-      puts scope_column
-      puts shipment.send(scope_column).inspect
-      puts scope_value.inspect
       shipment_in_scope = false if shipment.send(scope_column) != scope_value
     end
     # make sure the validated fields are not blank
@@ -63,7 +60,6 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     arel_nodes = shipments_columns.map { |c| v[c].eq(shipment.send(c)) }
     conditions = arel_nodes.shift
     arel_nodes.each{ |n| conditions = conditions.and(n) }
-    puts v.project('*').where(conditions).to_sql
     return nil if Trade::Shipment.find_by_sql(v.project('*').where(conditions)).any?
     error_message(shipments_columns.map{ |c| shipment.send(c) })
   end

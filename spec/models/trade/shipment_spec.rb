@@ -13,8 +13,14 @@ describe Trade::Shipment do
 
 
     before(:each) do
+      # an animal
       genus = create_cites_eu_genus(
-        :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus')
+        :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus'),
+        :parent => create_cites_eu_family(
+          :parent => create_cites_eu_order(
+            :parent => cites_eu_amphibia
+          )
+        )
       )
       @taxon_concept = create_cites_eu_species(
         :taxon_name => create(:taxon_name, :scientific_name => 'yolocatus'),
@@ -226,7 +232,7 @@ describe Trade::Shipment do
             :country_of_origin => @argentina
           )
         }
-        specify { puts subject.warnings.inspect; subject.warnings.should be_empty }
+        specify { subject.warnings.should be_empty }
       end
     end
     context "when exporter + importer" do
@@ -258,8 +264,12 @@ describe Trade::Shipment do
     end
     context "when species name + source code" do
       before(:each) do
-        @wild = create(:trade_code, :type => 'Source', :code => 'A', :name_en => 'Artificially propagated')
+        @artificial = create(:trade_code, :type => 'Source', :code => 'A', :name_en => 'Artificially propagated')
         create_taxon_concept_source_validation
+        cites
+        eu
+        Sapi.rebuild
+        @taxon_concept.reload
       end
       context "invalid" do
         subject{

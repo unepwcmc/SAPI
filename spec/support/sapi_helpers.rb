@@ -386,7 +386,7 @@ shared_context :sapi do
   end
 
   def create_species_name_appendix_year_validation
-    create(:species_name_appendix_year_validation_rule)
+    create(:species_name_appendix_year_validation_rule, :is_primary => false)
   end
   def create_term_unit_validation
     create(:inclusion_validation_rule,
