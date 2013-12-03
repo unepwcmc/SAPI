@@ -44,10 +44,12 @@ SAPI::Application.routes.draw do
       post :activate, :on => :member
       resources :listing_changes, :only => [:index, :destroy]
     end
-    resources :listing_changes, :only => [:create, :update, :destroy]
+    #resources :listing_changes, :only => [:create, :update, :destroy]
     resources :cites_cops
     resources :cites_suspension_notifications
-    resources :eu_suspension_regulations
+    resources :eu_suspension_regulations do
+      resources :eu_suspensions, :only => [:index, :destroy]
+    end
     resources :references, :only => [:index, :create, :update, :destroy] do
       get :autocomplete, :on => :collection
     end
@@ -73,7 +75,9 @@ SAPI::Application.routes.draw do
       resources :names, :only => [:index]
       resources :quotas, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_opinions, :only => [:index, :new, :create, :edit, :update, :destroy]
-      resources :eu_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
+
+      resources :taxon_eu_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy], :as => :eu_suspensions
+      
       resources :taxon_cites_suspensions,
         :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :cites_suspensions
