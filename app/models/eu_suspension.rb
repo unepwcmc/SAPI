@@ -32,4 +32,8 @@ class EuSuspension < EuDecision
     end
   end
 
+  def start_date_formatted
+    start_date ? start_date.strftime('%d/%m/%Y') : ''
+  end
+
 end
