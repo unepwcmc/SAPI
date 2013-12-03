@@ -76,7 +76,9 @@ SAPI::Application.routes.draw do
       resources :quotas, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_opinions, :only => [:index, :new, :create, :edit, :update, :destroy]
 
-      resources :taxon_eu_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy], :as => :eu_suspensions
+      resources :taxon_eu_suspensions, 
+        :only => [:index, :new, :create, :edit, :update, :destroy], 
+        :as => :eu_suspensions
       
       resources :taxon_cites_suspensions,
         :only => [:index, :new, :create, :edit, :update, :destroy],

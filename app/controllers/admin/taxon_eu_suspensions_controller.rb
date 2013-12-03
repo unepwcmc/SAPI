@@ -1,5 +1,7 @@
 class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
   belongs_to :taxon_concept
+  defaults :resource_class => EuSuspension,
+    :collection_name => 'eu_suspensions', :instance_name => 'eu_suspension'
   before_filter :load_lib_objects
   before_filter :load_search, :only => [:new, :index, :edit]
 
@@ -8,8 +10,14 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
   def update
     update! do |success, failure|
       success.html {
-        redirect_to admin_taxon_concept_eu_suspensions_url(params[:taxon_concept_id]),
-        :notice => 'Operation successful'
+        if  "1" == params[:redirect_to_eu_suspension_reg]
+          redirect_to admin_eu_suspension_regulation_eu_suspensions_url(
+            @eu_suspension.start_event_id)
+        else
+          redirect_to admin_taxon_concept_eu_suspensions_url(
+            params[:taxon_concept_id]),
+          :notice => 'Operation successful'
+        end
       }
       failure.html {
         load_lib_objects

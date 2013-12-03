@@ -9,7 +9,7 @@ class Admin::EuSuspensionsController < Admin::SimpleCrudController
         :geo_entity,
         :taxon_concept
       ]).
-      page(params[:page]).per(200).#where(:parent_id => nil).
+      page(params[:page]).per(200).
       order('taxon_concepts.full_name ASC, eu_decisions.start_date DESC').
       search(params[:query])
   end

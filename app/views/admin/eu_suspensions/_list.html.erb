@@ -33,11 +33,11 @@
       <td><%= eu_suspension.internal_notes %></td>
       <td><%= true_false_icon(eu_suspension.is_current) %></td>
       <td>
-        <%# link_to edit_icon,
-          edit_admin_eu_suspensions_path(@taxon_concept, eu_suspension)
+        <%= link_to edit_icon,
+          edit_admin_taxon_concept_eu_suspension_path(eu_suspension.taxon_concept, eu_suspension)
         %>
-        <%# link_to delete_icon,
-          admin_taxon_eu_suspension_path(@taxon_concept, eu_suspension),
+        <%= link_to delete_icon,
+          admin_taxon_concept_eu_suspension_path(eu_suspension.taxon_concept, eu_suspension),
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
