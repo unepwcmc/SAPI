@@ -33,7 +33,15 @@
     </thead>
     <tbody>
 
-    TODO
+    <%  @countries_reported_by_year.each do |country| %>
+    <tr>
+        <th><%= country["no"] %></th>
+        <th><%= country["name_en"] %></th>
+        <th><%= country["year"] %></th>
+        <th><%= country["type"] %></th>
+      </tr>
+    <% end %>
+    </thead>
 
     </tbody>
   </table>
