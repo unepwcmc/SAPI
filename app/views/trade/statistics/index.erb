@@ -22,31 +22,10 @@
 
   <h2>Summary of CITES annual reports</h2>
 
-  <table class="table table-bordered table-striped ">
-    <thead>
-      <tr>
-        <th>No</th>
-        <th>Country</th>
-        <th>Year</th>
-        <th>Type</th>
-      </tr>
-    </thead>
-    <tbody>
-
-    <%  @countries_reported_by_year.each do |country| %>
-    <tr>
-        <th><%= country["no"] %></th>
-        <th><%= country["name_en"] %></th>
-        <th><%= country["year"] %></th>
-        <th><%= country["type"] %></th>
-      </tr>
-    <% end %>
-    </thead>
-
-    </tbody>
-  </table>
+<%= render 'number_of_reports_per_year_country' %>
 
   <h2>Summary of trade transactions</h2>
+
   <table class="table table-bordered table-striped">
     <thead>
       <tr>

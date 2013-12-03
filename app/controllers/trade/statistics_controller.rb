@@ -10,7 +10,8 @@ class Trade::StatisticsController < ApplicationController
     @shipments_uploaded = Trade::Shipment.where(:created_at => @start_date..@end_date).count
     @shipments_amended = Trade::Shipment.where(:updated_at => @start_date..@end_date).count
     @taxon_concepts_in_trade = Trade::Shipment.count(:taxon_concept_id, :distinct => true)
-    @countries_reported_by_year = ActiveRecord::Base.connection.select_all("select * from year_annual_reports_by_countries")
+    @year_selected = params[:date] ? Date.parse("01/01/#{params[:date]['yearSelected']}") : Date.today
+    @countries_reported_by_year = YearAnnualReportsByCountry.where(:year => @year_selected.year)
     @transactions = Statistics.get_total_transactions_per_year
   end
 

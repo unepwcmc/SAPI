@@ -1,6 +1,6 @@
-class YearAnualReportsByCountry < ActiveRecord::Base
+class YearAnnualReportsByCountry < ActiveRecord::Base
   attr_accessible :no,
                   :name_en,
                   :year,
-                  :type
+                  :reporter_type
 end

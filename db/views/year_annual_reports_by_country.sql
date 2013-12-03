@@ -8,7 +8,7 @@ SELECT ROW_NUMBER() OVER (
            WHEN SUM = 0 THEN 'I/E'
            WHEN SUM = 1 THEN 'E'
            WHEN SUM = -1 THEN 'I'
-    END AS type
+    END AS reporter_type
 FROM
   (SELECT name_en,
           year,
