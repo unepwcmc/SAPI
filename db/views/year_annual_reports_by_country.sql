@@ -9,22 +9,33 @@ SELECT ROW_NUMBER() OVER (
            WHEN SUM = 1 THEN 'E'
            WHEN SUM = -1 THEN 'I'
     END AS reporter_type
+    , created_at
+    , updated_at
+
 FROM
   (SELECT name_en,
           year,
-          SUM(type)
+          SUM(type),
+          created_at,
+          updated_at
    FROM
      (SELECT DISTINCT name_en,
                       year,
-                      1 AS type
-      FROM trade_shipments
-      LEFT JOIN geo_entities ON trade_shipments.exporter_id = geo_entities.id
-      WHERE trade_shipments.reported_by_exporter = 't'
+                      1 AS type,
+                      t.created_at,
+                      t.updated_at
+      FROM trade_shipments t 
+      LEFT JOIN geo_entities g ON t.exporter_id = g.id
+      WHERE t.reported_by_exporter = 't'
       UNION ALL SELECT DISTINCT name_en,
                                 year,
-                                -1 AS type
-      FROM trade_shipments
-      LEFT JOIN geo_entities ON trade_shipments.importer_id = geo_entities.id
-      WHERE trade_shipments.reported_by_exporter = 'f') a
-   GROUP BY a.name_en,
-            a.year) b ;
+                                -1 AS type,
+                                t.created_at,
+                                t.updated_at
+      FROM trade_shipments t
+      LEFT JOIN geo_entities g ON t.importer_id = g.id
+      WHERE t.reported_by_exporter = 'f') a
+   GROUP BY a.name_en
+            , a.year
+            , a.created_at
+            , a.updated_at) b ;

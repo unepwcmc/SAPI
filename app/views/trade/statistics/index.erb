@@ -1,7 +1,7 @@
 <h1>Trade Statistics</h1>
 
 <a href="/trade">Back to Trade DB Admin Tool</a>
-<h2>General Statistics</h2>
+<h3>General Statistics</h3>
 
 <table class="table table-bordered table-striped ">
   <tr>
@@ -20,11 +20,15 @@
 
 <%= render 'general_statistics_per_range' %>
 
-  <h2>Summary of CITES annual reports</h2>
+  <h3>Summary of CITES annual reports</h3>
 
 <%= render 'number_of_reports_per_year_country' %>
 
-  <h2>Summary of trade transactions</h2>
+  <h3>Summary of CITES annual reports by created date </h3>
+
+<%= render 'number_of_reports_per_year_country_by_date' %>
+
+  <h3>Summary of trade transactions</h3>
 
   <table class="table table-bordered table-striped">
     <thead>
