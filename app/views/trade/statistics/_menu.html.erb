@@ -1,0 +1,11 @@
+<ul id="trade-stats-tabs" class="nav nav-tabs">
+  <li class="<%= if action_name == "index" then 'active' end %>">
+    <%= link_to "General Statistics", 'stats' %>
+  </li>
+  <li class="<%= if action_name == "summary_creation" then 'active' end %>">
+    <%= link_to "Annual Reports uploaded per year", 'summary_creation' %>
+  </li>
+  <li class="<%= if action_name == "summary_year" then 'active' end %>">
+    <%= link_to "Annual Reports for given year", 'summary_year' %>
+  </li>
+</ul>

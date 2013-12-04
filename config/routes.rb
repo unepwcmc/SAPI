@@ -103,6 +103,8 @@ SAPI::Application.routes.draw do
     resources :permits, :only => [:index]
     match 'exports/download' => 'exports#download'
     match 'stats' => 'statistics#index'
+    match 'summary_year' => 'statistics#summary_year'
+    match 'summary_creation' => 'statistics#summary_creation'
     root :to => 'ember#start'
   end
 
