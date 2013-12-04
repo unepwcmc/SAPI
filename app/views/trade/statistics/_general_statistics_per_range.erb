@@ -1,0 +1,27 @@
+<%= form_tag("stats", :method => "get") do %> 
+<h3>Data changes per date range</h3>
+<div class="control-group">
+  <label class="control-label">Filter date range</label>
+  <div class="controls">
+    <%= text_field_tag :stats_start_date, @start_date.strftime("%d/%m/%Y"),
+      {:class => "datepicker", :placeholder => 'Start Date'} %>
+    <%= text_field_tag :stats_end_date, @end_date.strftime("%d/%m/%Y"),
+      {:class => "datepicker", :placeholder => 'End Date'} %>
+  </div>
+  <%= submit_tag("Update", {:class => 'btn btn-primary'})%>
+ <% end %>
+
+</div>
+
+
+  <table class="table table-bordered table-striped ">
+    <tr>
+      <th>No of shipments uploaded</th>
+      <td><%= @shipments_uploaded %></td>
+    </tr>
+    <tr>
+      <th>No of shipments amended</th>
+      <td><%= @shipments_amended %></td>
+    </tr>
+  </table>
+

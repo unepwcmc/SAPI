@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Admin::TaxonConceptCitesSuspensionsController do
+describe Admin::TaxonCitesSuspensionsController do
   before do
     @taxon_concept = create(:taxon_concept)
     @cites_suspension = create(

@@ -1,5 +1,6 @@
 <thead>
   <th>Name</th>
+  <th>Description</th>
   <th>Effective from</th>
   <th>Current</th>
   <th>URL</th>
@@ -17,6 +18,14 @@
           <%= eu_regulation.name %>
         </a>
       </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required"
+          data-type="text" data-resource="eu_regulation" data-name="description"
+          data-placeholder="Required" data-original-title="Enter the EU Regulation's description"
+          data-url="<%= resource_url(eu_regulation) %>" data-pk="<%= eu_regulation.id %>">
+          <%= eu_regulation.description %>
+        </a>
+      </td>
       <td><%= eu_regulation.effective_at_formatted %></td>
       <td><%= true_false_icon(eu_regulation.is_current) %></td>
       <td>
@@ -27,7 +36,8 @@
         ) { '' } %>
       </td>
       <td>
-        <%= eu_regulation.listing_changes.count %>
+        <%= link_to eu_regulation.listing_changes.count,
+          admin_eu_regulation_listing_changes_url(eu_regulation) %>
       </td>
       <td>
         <%= link_to edit_icon, edit_resource_url(eu_regulation), :remote => true %>

@@ -1,0 +1,18 @@
+<h3>General Statistics</h3>
+
+<table class="table table-bordered table-striped ">
+  <tr>
+    <th>Total shipments</th>
+    <td><%= @total_shipments %></td>
+  </tr>
+  <tr>
+    <th>Last updated</th>
+    <td><%= @last_updated %></td>
+  </tr>
+  <tr>
+    <th>No of taxon concepts in trade</th>
+    <td><%= @taxon_concepts_in_trade %></td>
+  </tr>
+</table>
+
+<%= render 'general_statistics_per_range' %>

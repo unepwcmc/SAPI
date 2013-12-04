@@ -1,19 +1,10 @@
 <div class="admin-header">
-  <h3>EU Suspensions</h3>
-  <div class="action-buttons">
-    <%= admin_add_new_button(
-      :resource => 'eu_suspension',
-      :href => new_admin_taxon_concept_eu_suspension_path(@taxon_concept),
-      :"data-toggle" => nil,
-      :role => nil,
-      :name => 'Add new EU Suspension'
-    ) %>
-  </div>
+  <h1>EU Annex Regulation Suspensions</h1>
 </div>
 
-<%= admin_new_modal{ '' } %>
-
+<%= admin_simple_search %>
+<p><strong><%= link_to @eu_suspension_regulation.description,
+  admin_eu_suspension_regulations_path(:query => @eu_suspension_regulation.description) %></strong></p>
 <%= admin_table %>
 
 <%= paginate collection %>
-

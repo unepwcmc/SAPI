@@ -366,6 +366,12 @@ shared_context :sapi do
       options.merge({:designation => eu})
     )
   end
+  def create_eu_suspension_regulation(options = {})
+    create(
+      :eu_suspension_regulation,
+      options.merge({:designation => eu})
+    )
+  end
   def build_cites_cop(options = {})
     build(
       :cites_cop,

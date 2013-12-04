@@ -26,6 +26,7 @@ FactoryGirl.define do
     designation
 
     factory :eu_regulation, :class => EuRegulation
+    factory :eu_suspension_regulation, :class => EuSuspensionRegulation
     factory :cites_cop, :class => CitesCop
     factory :cites_suspension_notification, :class => CitesSuspensionNotification,
       :aliases => [:start_notification] do

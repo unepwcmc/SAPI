@@ -11,6 +11,9 @@
   </p>
 
   <%= error_messages_for(@eu_suspension) %>
+  <%= hidden_field_tag :redirect_to_eu_suspension_reg,
+    request.referrer.include?("eu_suspensions") ? 1 : 0
+  %>
 
   <div class="control-group">
     <%= f.label :start_event_id, "Suspension Regulation", :class => 'control-label' %>

@@ -9,6 +9,7 @@ Trade.Shipment = DS.Model.extend
   appendix: DS.attr('string')
   taxonConceptId: DS.attr('number')
   taxonConcept: DS.belongsTo('Trade.TaxonConcept')
+  reportedTaxonConcept: DS.belongsTo('Trade.TaxonConcept')
   term: DS.belongsTo('Trade.Term')
   quantity: DS.attr('string')
   unit: DS.belongsTo('Trade.Unit')
@@ -60,4 +61,5 @@ Trade.Shipment = DS.Model.extend
 
 Trade.Adapter.map('Trade.Shipment', {
   taxonConcept: { embedded: 'load' }
+  reportedTaxonConcept: { embedded: 'load' }
 })

@@ -94,7 +94,7 @@ class GeoEntity < ActiveRecord::Base
   end
 
   def self.search query
-    if query
+    if query.present?
       where("UPPER(name_en) LIKE UPPER(:query)
             OR UPPER(name_fr) LIKE UPPER(:query)
             OR UPPER(name_es) LIKE UPPER(:query)
