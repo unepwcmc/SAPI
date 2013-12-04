@@ -7,13 +7,11 @@
  *= require cites_trade/chosen
  *= require cites_trade/tipTip
  *= require cites_trade/jquery.qtip.min
-
+ *= require cites_trade/common
  *= require cites_trade/base
  *= require cites_trade/citestrade
  *= require cites_trade/cites
- *= require cites_trade/common
-
  *= require cites_trade/table_results
-
+ *= require cites_trade/customisations
  *= require_self
 */

@@ -1,5 +1,5 @@
 html {overflow-y: scroll;}
-body  {	font: 100% Arial, Verdana, Helvetica, sans-serif; background: #000; margin: 0;	padding: 0;	text-align: left; color: #000;background-image:url(/assets/cites_trade/bodybg_green.gif); background-position: top; background-repeat:repeat-x; word-wrap:break-word;}
+body  {	font: 100% Arial, Verdana, Helvetica, sans-serif; background: #000; margin: 0;	padding: 0;	text-align: center; color: #000;background-image:url(/assets/cites_trade/bodybg_green.gif); background-position: top; background-repeat:repeat-x; word-wrap:break-word;}
 body, p, div, li, ol, td, br {font-family: Arial, Helvetica, sans-serif;font-size: 12px;}
 a {color: #360;}
 a:link, a:visited {color: #360; text-decoration: underline;}
