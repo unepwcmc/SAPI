@@ -23,4 +23,12 @@ class EuSuspensionRegulation < Event
   attr_accessor :eu_suspensions_event_id
 
   has_many :eu_suspensions, :foreign_key => :start_event_id
+
+  validate :designation_is_eu
+  validates :effective_at, :presence => true
+
+  def can_be_deleted?
+    eu_suspensions.count == 0
+  end
+
 end
