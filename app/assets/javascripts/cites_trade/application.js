@@ -453,7 +453,7 @@ $(document).ready(function(){
   	  	data: data.terms,
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.name_en}
+  	  	text: function (item) {return item.code + ' - ' + item.name_en}
   	  };
     
     initTermsObj(data);
@@ -490,7 +490,7 @@ $(document).ready(function(){
   	  	data: data.sources,
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.name_en}
+  	  	text: function (item) {return item.code + ' - ' + item.name_en}
   	  };
   	
     initSourcesObj(data);
@@ -525,7 +525,7 @@ $(document).ready(function(){
   	  	data: data.purposes,
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.name_en}
+  	  	text: function (item) {return item.code + ' - ' + item.name_en}
   	  };
   	
     initPurposesObj(data);
