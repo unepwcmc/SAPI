@@ -11,38 +11,40 @@
         }}
       </div>
       {{/if}}
-      {{#if view.hasBlankValue}}
-        <strong class="pull-right">
-        {{view Ember.Checkbox checkedBinding = "view.blankValue"}} empty
-        </strong>
-      {{/if}}
-      <strong class="title01 pull-left">YOUR SELECTION</strong>
-        {{collection Trade.MultiSelectSelectedValuesCollectionView
-          contentBinding="view.selectedValues"
-          selectedValueDisplayPropertyBinding="view.selectedValueDisplayProperty"
-          selectedValueShortDisplayPropertyBinding="view.selectedValueShortDisplayProperty"
-        }}
-      </div>
-      <div class="list-holder">
-        {{#if view.hasGroupedOptions}}
-        <ul>
-        {{#each view.allValuesGrouped}}
-          <li class="header">{{this.rank_name}}</li>
-          {{#each taxonConcept in this.taxon_concepts}}
-            {{view Trade.TaxonConceptAutoCompleteSuggestionView
-              contentBinding="taxonConcept"
-              selectedValuesBinding="view.selectedValues"
-            }}
-          {{/each}}
-        {{/each}}
-        </ul>
-        {{else}}
-        {{collection Trade.MultiSelectAllValuesCollectionView
-          contentBinding="view.allValues"
-          selectedValuesBinding="view.selectedValues"
-          selectedValueDisplayPropertyBinding="view.selectedValueDisplayProperty"
-        }}
+      <div class="clearfix">
+        {{#if view.hasBlankValue}}
+          <strong class="pull-right">
+          {{view Ember.Checkbox checkedBinding = "view.blankValue"}} blank
+          </strong>
         {{/if}}
+        <strong class="title01 pull-left">YOUR SELECTION</strong>
       </div>
+      {{collection Trade.MultiSelectSelectedValuesCollectionView
+        contentBinding="view.selectedValues"
+        selectedValueDisplayPropertyBinding="view.selectedValueDisplayProperty"
+        selectedValueShortDisplayPropertyBinding="view.selectedValueShortDisplayProperty"
+      }}
+    </div>
+    <div class="list-holder">
+      {{#if view.hasGroupedOptions}}
+      <ul>
+      {{#each view.allValuesGrouped}}
+        <li class="header">{{this.rank_name}}</li>
+        {{#each taxonConcept in this.taxon_concepts}}
+          {{view Trade.TaxonConceptAutoCompleteSuggestionView
+            contentBinding="taxonConcept"
+            selectedValuesBinding="view.selectedValues"
+          }}
+        {{/each}}
+      {{/each}}
+      </ul>
+      {{else}}
+      {{collection Trade.MultiSelectAllValuesCollectionView
+        contentBinding="view.allValues"
+        selectedValuesBinding="view.selectedValues"
+        selectedValueDisplayPropertyBinding="view.selectedValueDisplayProperty"
+      }}
+      {{/if}}
+    </div>
   </div>
 </div>
