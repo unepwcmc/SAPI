@@ -46,6 +46,15 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
     end
   end
 
+  def destroy
+    destroy! do |success, failure|
+      success.html {
+        redirect_to admin_taxon_concept_eu_suspensions_url(@taxon_concept),
+        :notice => 'Operation successful'
+      }
+    end
+  end
+
   protected
 
   def load_lib_objects
