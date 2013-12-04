@@ -34,3 +34,52 @@
 <%= render 'general_statistics_per_range' %>
 
 </ul>
+
+<h3>Summary of trade transactions</h3>
+
+
+
+<table class="table table-bordered table-striped">
+
+  <thead>
+
+    <tr>
+
+      <th>Year</th>
+
+      <th>Reported by Exporters</th>
+
+      <th>Reported by Importers</th>
+
+      <th>Total transactions</th>
+
+    </tr>
+
+  </thead>
+
+  <tbody>
+
+
+
+  <%  @transactions.keys.sort.each do |year| %>
+
+    <tr>
+
+      <td><%= year %></td>
+
+      <td><%= @transactions[year][:reported_by_exporter] %></td>
+
+      <td><%= @transactions[year][:reported_by_importer] %></td>
+
+      <td><%= @transactions[year][:total] %></td>
+
+    </tr>
+
+  <% end %>
+
+  </tbody>
+
+</table>
+
+
+
