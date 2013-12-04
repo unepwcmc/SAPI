@@ -23,12 +23,12 @@ CREATE OR REPLACE FUNCTION copy_eu_suspensions_across_events(
         source.conditions_apply, current_date, current_date, 
         source.eu_decision_type_id, source.term_id, source_id
       FROM eu_decisions source
-      WHERE source.start_event_id = from_event_id
+      WHERE source.start_event_id = from_event_id  AND type = 'EuSuspension'
       RETURNING id, source_id
     )
 
-    UPDATE eu_decisions SET is_current = false WHERE id = from_event_id;
-    UPDATE eu_decisions SET end_date = to_event.effective_at WHERE id = from_event_id;
+    UPDATE eu_decisions SET is_current = false WHERE start_event_id = from_event_id AND type = 'EuSuspension';
+    UPDATE eu_decisions SET end_date = to_event.effective_at WHERE start_event_id = from_event_id AND type = 'EuSuspension';
 
     END;
   $$;
