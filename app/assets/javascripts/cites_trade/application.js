@@ -54,7 +54,7 @@ $(document).ready(function(){
     });
   };
 
-  //Accordiong
+  //Accordion
   $( "#accordion_expert" ).accordion(
 		{
 			event : 'mouseover',
@@ -599,13 +599,23 @@ $(document).ready(function(){
   };
 
   $('#side .ui-button, #form .ui-button').hover(function() {
-  		$(this).toggleClass('ui-state-hover');
-  	});
+  	$(this).toggleClass('ui-state-hover');
+  });
+
+  function getFormattedSynonyms (d) {
+    if (d.synonyms.length > 0 ) {
+      return ' (' + d.synonyms.join(', ') + ')';
+    }
+    return '';
+  }
   
   function parseTaxonData (data) {
     var d = data.auto_complete_taxon_concepts;
   	return _.map(d, function (element, index) {
-  	  return {'value': element.id, 'label': element.full_name};
+  	  return {
+        'value': element.id, 
+        'label': element.full_name + getFormattedSynonyms(element)
+      };
   	});
   }
    
