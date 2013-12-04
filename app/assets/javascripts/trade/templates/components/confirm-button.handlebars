@@ -1,0 +1,5 @@
+{{#if needsConfirmation}}
+  <button {{action "showConfirmation"}} class="pull-right btn btn-primary">{{title}}</button>
+{{else}}
+  <button {{action "confirm"}} class="pull-right btn btn-primary">{{title}}</button>
+{{/if}}

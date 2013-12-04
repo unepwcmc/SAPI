@@ -2,7 +2,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
-  errors: null
 
   columns: [
     'taxonConcept.fullName', 'year', 'quantity', 'appendix', 'term.code',
@@ -148,7 +147,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   ).property('countryOfOriginQuery')
   selectedCountriesOfOrigin: []
   selectedQuantity: null
-  
+
   unitBlank: false
   purposeBlank: false
   sourceBlank: false
@@ -175,35 +174,33 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       $('.modal').modal('show')
 
     # saves the new shipment (bound to currentShipment) to the db
-    saveShipment: ->
+    saveShipment: (ignoreWarnings) ->
       shipment = @get('currentShipment')
-      # Before trying to save a shipment 
+      shipment.set('ignoreWarnings', ignoreWarnings)
+      # Before trying to save a shipment
       # we need to reset the model to a valid state.
       unless shipment.get('isValid')
         shipment.send("becameValid")
       unless shipment.get('isSaving')
         shipment.get('transaction').commit()
+      # this is here so that after another validation
+      # the user gets the secondary validation warning
+      shipment.set('propertyChanged', false)
       shipment.one('didCreate', this, ->
-        @set('errors', '')
         @set('currentShipment', null)
         $('.modal').modal('hide')
         @send('search')
       )
       shipment.one('didUpdate', this, ->
-        @set('errors', '')
         @set('currentShipment', null)
         $('.modal').modal('hide')
         @send('search')
       )
-      shipment.one('becameInvalid', this, ->
-        @set 'errors', shipment.errors
-      )
 
     cancelShipment: () ->
       @set('currentShipment', null)
-      @set 'errors', null
       $('.modal').modal('hide')
-  
+
     # discards the new shipment (bound to currentShipment)
     deleteShipment: (shipment) ->
       if (!shipment.get('isSaving'))
@@ -211,7 +208,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
         shipment.get('transaction').commit()
         shipment.one('didDelete', this, ->
           @set('currentShipment', null)
-          @set 'errors', null
           @send('search')
         )
 

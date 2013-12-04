@@ -31,8 +31,9 @@ class Trade::Shipment < ActiveRecord::Base
     :quantity, :reporter_type,
     :source_id, :taxon_concept_id,
     :term_id, :unit_id, :year,
-    :import_permit_number, :export_permit_number, :country_of_origin_permit_number
-  attr_accessor :reporter_type, :warnings
+    :import_permit_number, :export_permit_number, :country_of_origin_permit_number,
+    :ignore_warnings
+  attr_accessor :reporter_type, :warnings, :ignore_warnings
 
   validates :quantity, presence: true, :numericality => true
   validates :appendix, presence: true, :inclusion => { :in => ['I', 'II', 'III'], :message => 'should be one of I, II, III' }
@@ -58,8 +59,15 @@ class Trade::Shipment < ActiveRecord::Base
   has_many :export_permits, :through => :shipment_export_permits
   belongs_to :import_permit, :class_name => "Trade::Permit"
 
+  after_validation do
+    unless self.errors.empty? && self.ignore_warnings
+      #inject warnings here
+      warnings.each { |w| self.errors[:warnings] << w }
+    end
+  end
+
   def reporter_type
-    return nil if reported_by_exporter.nil? 
+    return nil if reported_by_exporter.nil?
     reported_by_exporter ? 'E' : 'I'
   end
 
@@ -107,4 +115,5 @@ class Trade::Shipment < ActiveRecord::Base
       self.country_of_origin_permit = permit
     end
   end
+
 end
