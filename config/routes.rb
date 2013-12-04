@@ -44,12 +44,11 @@ SAPI::Application.routes.draw do
       post :activate, :on => :member
       resources :listing_changes, :only => [:index, :destroy]
     end
-    #resources :listing_changes, :only => [:create, :update, :destroy]
-    resources :cites_cops
-    resources :cites_suspension_notifications
     resources :eu_suspension_regulations do
       resources :eu_suspensions, :only => [:index, :destroy]
     end
+    resources :cites_cops
+    resources :cites_suspension_notifications
     resources :references, :only => [:index, :create, :update, :destroy] do
       get :autocomplete, :on => :collection
     end
