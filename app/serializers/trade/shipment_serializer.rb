@@ -5,4 +5,5 @@ class Trade::ShipmentSerializer < ActiveModel::Serializer
     :import_permit_number, :export_permit_number, :country_of_origin_permit_number
 
   has_one :taxon_concept, :serializer => Trade::TaxonConceptSerializer
+  has_one :reported_taxon_concept, :serializer => Trade::TaxonConceptSerializer
 end

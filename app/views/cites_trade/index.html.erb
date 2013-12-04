@@ -1,0 +1,309 @@
+<div class="container clearfix">
+  <div class="grid_16 cites_header">
+    
+    <div style="text-align: center;position:relative;width:'100%'">
+      <a href="http://www.cites.org/" target="_blank"><img width='100%' src="/assets/cites_trade/cites_banner_en.jpg" alt="CITES" ></a>
+    </div>
+    
+  </div>
+  
+  <div id="language_links" class="linkStyle">
+    <font size="-1" face="Verdana, Arial, Helvetica, sans-serif">
+    <a href="http://www.unep-wcmc-apps.org//citestrade/expert_accord.cfm?language=spanish">Espanol</a>   <a href="http://www.unep-wcmc-apps.org//citestrade/expert_accord.cfm?language=french">Francais</a>
+    </font>
+  </div>
+  <br><br>
+  
+  <form id='form_expert'>
+    
+    
+    <input type="hidden" name="ssname" value="ct_60847153">
+    <input type="hidden" name="ssID" value="CT8F02EFDC">
+    
+    <br>
+    
+    <div class="grid_16 main_content">
+      
+      <div class='heading_label' style="text-align: center;"> &nbsp; CITES Trade Database </div>
+      <div style="font-size:16px;font-weight:150;text-align: left;"> &nbsp; Please enter your search below: </div>
+      <div class="grid_8">
+      </div>
+      <!--Error message -->
+      <div class="grid_8">
+
+        <div style="text-align: left; color:#FF0000; font-weight:bold; display:none;" id="search-error-message">Your query has returned no data.<br>Please select other variables or check in the UNEP-WCMC Species Database that you are using the correct spelling/scientific name.</font></div>
+        
+      </div>
+      <hr class="space">
+      
+      <div class="grid_10">
+        <div id="tabs" style="display: none;">
+          
+          <ul>
+            <li><a href="#tabs-year">
+              Year Range :<span class="information qtipify" title="This is a test">&nbsp;</span></a>
+            </li>
+            <li>
+              <a href="#tabs-exp">
+              Exporting countries: <span class="information qtipify" title=" Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected. ">&nbsp;</span></a>
+            </li>
+            <li><a href="#tabs-imp">
+              Importing countries: <span class="information qtipify" title=" Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected. ">&nbsp;</span></a>
+            </li>
+            <li><a href="#tabs-source">
+              Source: <span class="information qtipify" title=" Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected. ">&nbsp;</span></a>
+            </li>
+          </li>
+          <li><a href="#tabs-purpose">
+            Purpose: <span class="information qtipify" title=" Type the purpose or purposes (e.g. 'T- Commercial' or 'S- Scientific') you wish to include in your final output. To include data for all purposes, leave 'All Purposes' selected. ">&nbsp;</span>
+            </a>
+          </li>
+          
+          <li><a href="#tabs-terms">
+            Trade Terms:
+            <span class="information qtipify" title=" Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected. ">&nbsp;</span>
+            </a>
+          </li>
+          
+          <li><a href="#tabs-taxon"> Search by taxon :</a></li>
+        </ul>
+
+        <div id="tabs-year">
+          <div id="year" class="label_style"> Year Range :
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title=" Select start (From) and end (To) years for your query. It is advisable to limit your data request to a year span not exceeding 5 years. " />
+          </div>
+          From
+          <select name="time_range_start" id="qryFrom">
+            <option selected value="2012">2012</option>
+            <option  value="2011">2011</option>
+            <option  value="2010">2010</option>
+            <option  value="2009">2009</option>
+            <option  value="2008">2008</option>
+            <option  value="2007">2007</option>
+            <option  value="2006">2006</option>
+            <option  value="2005">2005</option>
+            <option  value="2004">2004</option>
+            <option  value="2003">2003</option>
+            <option  value="2002">2002</option>
+            <option  value="2001">2001</option>
+            <option  value="2000">2000</option>
+            <option  value="1999">1999</option>
+            <option  value="1998">1998</option>
+            <option  value="1997">1997</option>
+            <option  value="1996">1996</option>
+            <option  value="1995">1995</option>
+            <option  value="1994">1994</option>
+            <option  value="1993">1993</option>
+            <option  value="1992">1992</option>
+            <option  value="1991">1991</option>
+            <option  value="1990">1990</option>
+            <option  value="1989">1989</option>
+            <option  value="1988">1988</option>
+            <option  value="1987">1987</option>
+            <option  value="1986">1986</option>
+            <option  value="1985">1985</option>
+            <option  value="1984">1984</option>
+            <option  value="1983">1983</option>
+            <option  value="1982">1982</option>
+            <option  value="1981">1981</option>
+            <option  value="1980">1980</option>
+            <option  value="1979">1979</option>
+            <option  value="1978">1978</option>
+            <option  value="1977">1977</option>
+            <option  value="1976">1976</option>
+            <option  value="1975">1975</option>
+          </select> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          To
+          <select name="time_range_end" id="qryTo">
+            <option  value="2012">2012</option>
+            <option  value="2011">2011</option>
+            <option  value="2010">2010</option>
+            <option  value="2009">2009</option>
+            <option  value="2008">2008</option>
+            <option  value="2007">2007</option>
+            <option  value="2006">2006</option>
+            <option  value="2005">2005</option>
+            <option  value="2004">2004</option>
+            <option  value="2003">2003</option>
+            <option  value="2002">2002</option>
+            <option  value="2001">2001</option>
+            <option  value="2000">2000</option>
+            <option  value="1999">1999</option>
+            <option  value="1998">1998</option>
+            <option  value="1997">1997</option>
+            <option  value="1996">1996</option>
+            <option  value="1995">1995</option>
+            <option  value="1994">1994</option>
+            <option  value="1993">1993</option>
+            <option  value="1992">1992</option>
+            <option  value="1991">1991</option>
+            <option  value="1990">1990</option>
+            <option  value="1989">1989</option>
+            <option  value="1988">1988</option>
+            <option  value="1987">1987</option>
+            <option  value="1986">1986</option>
+            <option  value="1985">1985</option>
+            <option  value="1984">1984</option>
+            <option  value="1983">1983</option>
+            <option  value="1982">1982</option>
+            <option  value="1981">1981</option>
+            <option  value="1980">1980</option>
+            <option  value="1979">1979</option>
+            <option  value="1978">1978</option>
+            <option  value="1977">1977</option>
+            <option  value="1976">1976</option>
+            <option  value="1975">1975</option>
+          </select>
+          <span class="information qtipify" title=" Select start (From) and end (To) years for your query. It is advisable to limit your data request to a year span not exceeding 5 years. ">&nbsp;</span>
+        </div>
+        <div id="tabs-exp">
+          <div class="label_style"> Exporting countries:
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title=" Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected. " />
+          </div>
+          <div>
+            <select id="expcty" class="multi_countries" multiple="multiple" name="exporters_ids[]">
+              <option selected value="all_exp"> All Countries </option>
+            </select>
+          </div>
+        </div>
+        <div id="tabs-imp">
+          <div class="label_style"> Importing countries:
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title=" Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected. " />
+          </div>
+          <div>
+            <select id="impcty" class="multi_countries" multiple="multiple"  name="importers_ids[]">
+              <option selected value="all_imp"> All Countries </option>
+            </select>
+          </div>
+        </div>
+        <div id="tabs-source">
+          <div class="label_style"> Source:
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title=" Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected. " />
+          </div>
+          <div>
+            <select name="sources_ids[]" id="sources"  multiple="multiple" class="multisel">
+              <option value="all_sou"  selected> All Sources </option>
+            </select>
+          </div>
+        </div>
+        <div id="tabs-purpose">
+          <div class="label_style"> Purpose:
+            
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title=" Type the purpose or purposes (e.g. 'T- Commercial' or 'S- Scientific') you wish to include in your final output. To include data for all purposes, leave 'All Purposes' selected. " />
+          </div>
+          <div>
+            <select name="purposes_ids[]" id="purposes"  multiple="multiple" class="multisel">
+              <option value="all_pur"  selected> All Purposes </option>
+            </select>
+          </div>
+        </div>
+        
+        <div id="tabs-terms">
+          <div class="label_style"> Trade Terms:
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title=" Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected. " />
+          </div>
+          <div>
+            <select name="terms_ids[]" id="terms" class="multisel" multiple="multiple">
+              <option value="all_ter"  selected> All Terms </option>
+            </select>
+          </div>
+        </div>
+        
+        <div id="tabs-taxon">
+          
+          <div>
+            
+            To retrieve data for a specific taxon, type in the taxon name. Data on specimens recorded in trade at the higher taxon level (e.g. Scleractinia spp.) can also be retrieved through this search.
+            To retrieve data for all species within a particular genus, select a genus from the drop-down below.
+            To select all taxa, leave these sections blank.
+            <br>
+            
+          </div>
+          <hr />
+          <hr class="space" />
+          <div class="grid_2">
+            <input type="radio" name="selection_taxon" value="taxon">&nbsp;
+          </div>
+          <div  id="div_taxon" class="grid_8">
+            <span style="padding:10px 0px">Search for taxon reported trade:</span><br />
+            <input type="text" size="30" name="taxon_concepts_ids[]" id="taxon_search" value=""><br>
+          </div>
+          <hr class="space">
+
+          <div class="grid_2">
+            <input type="radio" name="selection_taxon" value="genus">&nbsp;
+          </div>
+          <div id="div_genus" class="grid_8">
+            <span style="padding:10px 0px">Search for genus:</span><br />
+            <input type="text" size="30" name="taxon_concepts_ids[]" id="genus_search" value=""><br>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="grid_5 selection_box">
+      <div id="empty_box">
+        <div style="font-weight:600; font-size:16px"> Search Selection: </div><br />
+        <table id="table_selection" class="select_label" border="1" width="95%">
+          <tr><td width="30%"> Year selection: </td><td width="70%"><span id="year_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"> Exporting countries: </td><td  width="70%"><span id="expcty_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"> Importing countries: </td><td  width="70%"><span id="impcty_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"> Source: </td><td  width="70%"><span id="sources_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"> Purpose: </td><td  width="70%"> <span id="purposes_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"> Trade Terms: </td><td  width="70%"><span id="terms_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"> Species: </td><td  width="70%"> <span id="species_out" class="span_label"></span></td></tr>
+        </table>
+      </div>
+      
+      
+      <hr class="space">
+      <div class="buttons">
+        <button type="submit" name="result" class="positive" id='submit_expert'>
+        <img src="/assets/cites_trade/find.png" alt=""/>
+        Search
+        </button>
+        <a id='download_expert' href="#">Download</a>
+        <button type="reset" name="reset" style="float:right" id="reset_search">
+        <img src="/assets/cites_trade/refresh1.png" alt=""/>
+        Reset
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div id="query_results" class="grid_16 results">
+  <table id="query_results_table">
+  </table>
+  <p class="info"></p>
+</div>
+
+<div class="grid_16 other_info">
+  <p align="center"><strong> Download </strong> <a href="docs/CITESTradeDatabaseGuide_v7.pdf" target="doc"> A Guide to Using the CITES Trade Database </a></p>
+</div>
+</div>
+
+
+</div>
+</div>
+
+</div>
+<div class="container clearfix">
+<div class="grid_16 footer">
+<br />
+<div class='grid_14' align="center">
+<font size="-2" face="Verdana, Arial, Helvetica, sans-serif">
+The CITES Trade Database was developed and is maintained by UNEP-WCMC on behalf of the CITES Secretariat.
+:&nbsp;<br>
+<a href="http://www.unep-wcmc.org/species_20.html">UNEP-WCMC</a> |
+<a href="http://www.cites.org/eng/resources/species.html"> Species Databases </a> |
+<a href="mailto:species@unep-wcmc.org" target="_blank"> Contact Us </a>
+</font>
+</div>
+<div class='grid_1' align='right' ><a href="/"><img src="/assets/cites_trade/logoUNEP_WCMC_Transparent_sm.gif" alt="UNEP-WCMC" width="80" height="44" border="0" float='right'></a></div>
+
+
+
+</div>
+</div>
