@@ -1,49 +1,36 @@
 <h1>Trade Statistics</h1>
 
-<ul id="trade-stats-tabs" class="nav nav-tabs">
+<%= render 'menu' %>
 
-  <li class="<%= 'active' %>">
-    <%= link_to "General Statistics", 'stats' %>
-  </li>
+<div class="row-fluid">
+<p>Summary of CITES annual reports uploaded into
+  the CITES Trade Database in a given year</p>
 
-  <li class="<%= 'active' %>">
-    <%= link_to "Year Statistics", 'year' %>
-  </li>
-
-  <li class="<%= 'active' %>">
-    <%= link_to "Creation Date Statistics", 'creation' %>
-  </li>
-</ul>
-        <%= form_tag("creation", :method => "get") do %> 
-
-      <table class="table table-bordered table-striped ">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Country</th>
-            <th>Year</th>
-            <th>Type</th>
-          </tr>
-        </thead>
-
-    <div class="control-group">
-    <%= select_year(@created_date_selected, :start_year => 1975, :end_year => Time.now.year, :field_name => "createdDateSelected") %>
+<%= form_tag("summary_creation", :method => "get") do %> 
+  <div class="control-group">
+    <%= select_year(@created_date_selected, :start_year => 1975,
+                    :end_year => Time.now.year, :field_name => "createdDateSelected") %>
     <%= submit_tag("Update", {:class => 'btn btn-primary'})%>
-        </div>
-  <%= submit_tag("Update", {:class => 'btn btn-primary'})%>
-    </div>
-    <tbody>
+  </div>
+<% end %>
 
-        <%  @countries_reported_by_date_created.to_enum.with_index(1).each do |country, i| %>
-        <tr>
-            <th><%= i %></th>
-            <th><%= country[:name_en] %></th>
-            <th><%= country[:year] %></th>
-            <th><%= country[:reporter_type] %></th>
-          </tr>
-        <% end %>
-        </thead>
-
-        </tbody>
-    </table>
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Country</th>
+      <th>Year</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%  @countries_reported_by_date_created.to_enum.with_index(1).each do |country, i| %>
+      <tr>
+        <td><%= i %></td>
+        <td><%= country[:name_en] %></td>
+        <td><%= country[:year] %></td>
+        <td><%= country[:reporter_type] %></td>
+      </tr>
     <% end %>
+  </tbody>
+</table>
