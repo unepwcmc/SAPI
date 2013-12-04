@@ -186,8 +186,8 @@ BEGIN
         resolved_taxa.taxon_concept_id AS reported_taxon_concept_id,
         sandbox_table.year::INTEGER AS year,
         sandbox_table.id AS sandbox_id,
-        current_date,
-        current_date
+        current_timestamp,
+        current_timestamp
       FROM '|| table_name || ' sandbox_table
       JOIN resolved_taxa ON sandbox_table.id = resolved_taxa.sandbox_shipment_id';
 
