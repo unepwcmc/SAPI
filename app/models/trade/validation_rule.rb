@@ -71,8 +71,6 @@ class Trade::ValidationRule < ActiveRecord::Base
     'shipment validation not implemented'
   end
 
-  private
-
   # Sanitizes column names provided within the scope attribute
   # Also replaces attr_blank => true with attr => nil
   def sanitized_scope
@@ -90,6 +88,8 @@ class Trade::ValidationRule < ActiveRecord::Base
     end
     res
   end
+
+  private
 
   # so if sandbox scope was {source_code = W}, shipments
   # scope needs to be {source_id = [id of W]}
