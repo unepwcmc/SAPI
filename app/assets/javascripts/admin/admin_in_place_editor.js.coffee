@@ -2,7 +2,8 @@ $(document).ready ->
   console.log(window.editorClass)
   if window.editorClass == 'taxon_concepts'
     window.adminEditor = new TaxonConceptsEditor()
-  else if window.editorClass == 'listing_changes' 
+  else if window.editorClass == 'taxon_listing_changes' or\
+  window.editorClass == 'listing_changes'
     window.adminEditor = new ListingChangesEditor()
   else if window.editorClass == 'taxon_concept_references'
     window.adminEditor = new TaxonReferencesEditor()

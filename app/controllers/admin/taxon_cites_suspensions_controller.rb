@@ -1,4 +1,4 @@
-class Admin::TaxonConceptCitesSuspensionsController < Admin::SimpleCrudController
+class Admin::TaxonCitesSuspensionsController < Admin::SimpleCrudController
   defaults :resource_class => CitesSuspension,
     :collection_name => 'cites_suspensions', :instance_name => 'cites_suspension'
   belongs_to :taxon_concept

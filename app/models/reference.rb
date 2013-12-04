@@ -22,7 +22,7 @@ class Reference < ActiveRecord::Base
   has_many :distribution_references
 
   def self.search query
-    if query
+    if query.present?
       where("UPPER(citation) LIKE UPPER(:query)",
         :query => "%#{query}%")
     else

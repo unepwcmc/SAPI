@@ -42,10 +42,14 @@ SAPI::Application.routes.draw do
     resources :events
     resources :eu_regulations do
       post :activate, :on => :member
+      resources :listing_changes, :only => [:index, :destroy]
+    end
+    resources :eu_suspension_regulations do
+      post :activate, :on => :member
+      resources :eu_suspensions, :only => [:index, :destroy]
     end
     resources :cites_cops
     resources :cites_suspension_notifications
-    resources :eu_suspension_regulations
     resources :references, :only => [:index, :create, :update, :destroy] do
       get :autocomplete, :on => :collection
     end
@@ -61,7 +65,7 @@ SAPI::Application.routes.draw do
       resources :children, :only => [:index]
       resources :taxon_relationships, :only => [:index, :create, :destroy]
       resources :designations, :only => [] do
-        resources :listing_changes
+        resources :taxon_listing_changes, :as => :listing_changes
       end
       resources :taxon_commons, :only => [:new, :create, :edit, :update, :destroy]
       resources :distributions, :only => [:index, :new, :create, :edit, :update, :destroy]
@@ -71,8 +75,12 @@ SAPI::Application.routes.draw do
       resources :names, :only => [:index]
       resources :quotas, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_opinions, :only => [:index, :new, :create, :edit, :update, :destroy]
-      resources :eu_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
-      resources :taxon_concept_cites_suspensions,
+
+      resources :taxon_eu_suspensions, 
+        :only => [:index, :new, :create, :edit, :update, :destroy], 
+        :as => :eu_suspensions
+      
+      resources :taxon_cites_suspensions,
         :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :cites_suspensions
       resources :taxon_instruments, :only => [ :index, :new, :create, :edit, :update, :destroy ]

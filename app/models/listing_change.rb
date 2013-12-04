@@ -100,6 +100,16 @@ class ListingChange < ActiveRecord::Base
     taxon_concept && taxon_concept.full_name
   end
 
+  def self.search query
+    if query.present?
+      where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
+             OR UPPER(change_types.name) LIKE UPPER(:query)
+            ", :query => "%#{query}%")
+    else
+      scoped
+    end
+  end
+
   private
 
   def inclusion_at_higher_rank
