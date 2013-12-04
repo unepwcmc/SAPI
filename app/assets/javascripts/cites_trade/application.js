@@ -54,7 +54,7 @@ $(document).ready(function(){
     });
   };
 
-  //Accordiong
+  //Accordion
   $( "#accordion_expert" ).accordion(
 		{
 			event : 'mouseover',
@@ -453,7 +453,7 @@ $(document).ready(function(){
   	  	data: data.terms,
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.name_en}
+  	  	text: function (item) {return item.code + ' - ' + item.name_en}
   	  };
     
     initTermsObj(data);
@@ -490,7 +490,7 @@ $(document).ready(function(){
   	  	data: data.sources,
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.name_en}
+  	  	text: function (item) {return item.code + ' - ' + item.name_en}
   	  };
   	
     initSourcesObj(data);
@@ -525,7 +525,7 @@ $(document).ready(function(){
   	  	data: data.purposes,
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.name_en}
+  	  	text: function (item) {return item.code + ' - ' + item.name_en}
   	  };
   	
     initPurposesObj(data);
@@ -599,13 +599,23 @@ $(document).ready(function(){
   };
 
   $('#side .ui-button, #form .ui-button').hover(function() {
-  		$(this).toggleClass('ui-state-hover');
-  	});
+  	$(this).toggleClass('ui-state-hover');
+  });
+
+  function getFormattedSynonyms (d) {
+    if (d.synonyms.length > 0 ) {
+      return ' (' + d.synonyms.join(', ') + ')';
+    }
+    return '';
+  }
   
   function parseTaxonData (data) {
     var d = data.auto_complete_taxon_concepts;
   	return _.map(d, function (element, index) {
-  	  return {'value': element.id, 'label': element.full_name};
+  	  return {
+        'value': element.id, 
+        'label': element.full_name + getFormattedSynonyms(element)
+      };
   	});
   }
    

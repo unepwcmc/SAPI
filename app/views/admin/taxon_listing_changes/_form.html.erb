@@ -2,6 +2,9 @@
 
 <%= nested_form_for [:admin, @taxon_concept, @designation, @listing_change] do |f| %>
   <%= error_messages_for(@listing_change) %>
+  <%= hidden_field_tag :redirect_to_eu_reg,
+    request.referrer.include?("eu_regulations") ? 1 : 0
+  %>
 
   <table class="listing-change">
     <thead>
@@ -34,25 +37,37 @@
   <table class="listing-change">
     <thead>
       <tr>
-        <th><label>App. III or reservation Party</label></th>
+        <% unless @designation.is_cms? %>
+          <th>
+            <label>
+              <% if @designation.is_cites? %>
+                App. III or reservation Party
+              <% else %>
+                Annex C
+              <% end %>
+            </label>
+          </th>
+        <% end %>
         <th><%= f.label :inclusion_scientific_name, "Inclusion in higher taxon" %></th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <%= f.fields_for :party_listing_distribution do |b| %>
-          <td>
-            <%= b.select :geo_entity_id,
-              options_from_collection_for_select(
-                @geo_entities,
-                :id,
-                :name_en,
-                @listing_change.party_listing_distribution && @listing_change.party_listing_distribution.geo_entity_id
-              ),
-              { :include_blank => true },
-              {:class => 'distribution', :style => 'width: 220px' }
-            %>
-          </td>
+        <% unless @designation.is_cms? %>
+          <%= f.fields_for :party_listing_distribution do |b| %>
+            <td>
+              <%= b.select :geo_entity_id,
+                options_from_collection_for_select(
+                  @geo_entities,
+                  :id,
+                  :name_en,
+                  @listing_change.party_listing_distribution && @listing_change.party_listing_distribution.geo_entity_id
+                ),
+                { :include_blank => true },
+                {:class => 'distribution', :style => 'width: 220px' }
+              %>
+            </td>
+          <% end %>
         <% end %>
 
         <td>
@@ -162,9 +177,11 @@
 
 
   <%= f.fields_for :annotation do |ff| %>
-    <% Annotation.locale_columns(:short_note).each do |column| %>
-      <%= ff.label column %>
-      <%= ff.text_field column, :class => :annotation %>
+    <% if @designation.is_cites? %>
+      <% Annotation.locale_columns(:short_note).each do |column| %>
+        <%= ff.label column %>
+        <%= ff.text_field column, :class => :annotation %>
+      <% end %>
     <% end %>
     <% Annotation.locale_columns(:full_note).each do |column| %>
       <%= ff.label column %>
