@@ -272,4 +272,8 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       @set('unitQuery', null)
       @set('selectedTimeStart', @get('defaultTimeStart'))
       @set('selectedTimeEnd', @get('defaultTimeEnd'))
+      @set('unitBlank', false)
+      @set('purposeBlank', false)
+      @set('sourceBlank', false)
+      @set('countryOfOriginBlank', false)
       @openShipmentsPage(false)
