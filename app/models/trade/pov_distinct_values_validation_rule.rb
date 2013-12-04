@@ -37,7 +37,7 @@ class Trade::PovDistinctValuesValidationRule < Trade::PovInclusionValidationRule
       end
     end
     return nil if distinct_values
-    error_message(shipments_columns.map{ |c| shipment.send(c) })
+    error_message
   end
 
   private

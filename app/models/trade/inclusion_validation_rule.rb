@@ -17,12 +17,12 @@
 class Trade::InclusionValidationRule < Trade::ValidationRule
   attr_accessible :valid_values_view
 
-  def error_message(values_ary)
+  def error_message(values_ary = nil)
     scope_info = sanitized_scope.map do |scope_column, scope_value|
       "#{scope_column} = #{scope_value}"
     end.compact.join(', ')
     info = column_names.each_with_index.map do |cn, idx|
-      "#{cn} #{values_ary[idx]}"
+      "#{cn} #{values_ary && values_ary[idx]}"
     end.join(" with ")
     info = "#{info} (#{scope_info})" unless scope_info.blank?
     info + ' is invalid'
@@ -61,7 +61,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     conditions = arel_nodes.shift
     arel_nodes.each{ |n| conditions = conditions.and(n) }
     return nil if Trade::Shipment.find_by_sql(v.project('*').where(conditions)).any?
-    error_message(shipments_columns.map{ |c| shipment.send(c) })
+    error_message
   end
 
   private

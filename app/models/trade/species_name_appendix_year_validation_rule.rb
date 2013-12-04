@@ -37,7 +37,7 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
     species_name_node = actual_species_name.eq(shipment.taxon_concept.full_name)
     conditions = appendix_node.and(year_node).and(species_name_node)
     return nil if Trade::Shipment.find_by_sql(v.project('*').where(conditions)).any?
-    error_message(shipments_columns.map{ |c| shipment.send(c) })
+    error_message
   end
 
   private
