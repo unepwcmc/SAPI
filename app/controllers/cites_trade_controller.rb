@@ -8,4 +8,8 @@ class CitesTradeController < ApplicationController
 
   end
 
+  def view
+
+  end
+
 end

@@ -710,6 +710,13 @@ $(document).ready(function(){
     });
   }
 
+  function goToResults (q) {
+    var $link = $('#view_genie'),
+     href = '/cites_trade/download/view?' + q;
+    $link.attr('href', href).click();
+    window.location.href = $link.attr("href");
+  }
+
   function downloadResults (q) {
     var $link = $('#download_genie'),
       href = '/trade/exports/download?' + q;
@@ -720,14 +727,20 @@ $(document).ready(function(){
   function handleDownloadRequest () {
     var output_type = $( "input[name='outputType']:checked" ).val(),
       report_type, // TODO
-      query = decodeURIComponent( location.search.substr(1) );
+      query = location.search.substr(1);
       if (output_type === 'web') {
-        displayResults(query);
+        goToResults(query);
       } else {
-        downloadResults(query);
+        downloadResults( decodeURIComponent( query ) );
       }
   }
 
   $('#button_report').click( function (e) {handleDownloadRequest() });
+
+  ///////////View page specific:
+  if ( $('#query_results').length > 0 ) {
+    var query = decodeURIComponent( location.search.substr(1) );
+    displayResults(query);
+  }
 
 });
