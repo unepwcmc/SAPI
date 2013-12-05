@@ -84,7 +84,7 @@ class TaxonConcept < ActiveRecord::Base
     :through => :hybrid_relationships, :source => :other_taxon_concept
   has_many :hybrid_parents, :class_name => 'TaxonConcept',
     :through => :inverse_hybrid_relationships, :source => :taxon_concept
-  has_many :distributions
+  has_many :distributions, :dependent => :destroy
   has_many :geo_entities, :through => :distributions
   has_many :listing_changes
   has_many :current_listing_changes, :class_name => 'ListingChange', :conditions => 'is_current = true'
@@ -92,7 +92,7 @@ class TaxonConcept < ActiveRecord::Base
   has_many :taxon_commons, :dependent => :destroy, :include => :common_name
   has_many :common_names, :through => :taxon_commons
 
-  has_many :taxon_concept_references, :include => :reference
+  has_many :taxon_concept_references, :dependent => :destroy, :include => :reference
   has_many :references, :through => :taxon_concept_references
 
   has_many :quotas, :order => 'start_date DESC'
@@ -236,7 +236,10 @@ class TaxonConcept < ActiveRecord::Base
     taxon_relationships.count == 0 &&
     children.count == 0 &&
     listing_changes.count == 0 &&
-    taxon_commons.count == 0 &&
+    cites_suspensions.count == 0 &&
+    quotas.count == 0 &&
+    eu_suspensions.count == 0 &&
+    eu_opinions.count == 0 &&
     taxon_instruments.count == 0
   end
 
