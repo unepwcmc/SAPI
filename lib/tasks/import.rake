@@ -120,15 +120,15 @@ namespace :import do
   desc 'Runs import tasks for cleaned files'
   task :cleaned => [
     :environment,
-    :"db:drop_indexes",
+    :"db:migrate:drop_indexes",
     :"cleaned:species", :"cleaned:geo_entities", :"cleaned:languages",
     :"cleaned:events", :"cleaned:distributions", :"cleaned:listings",
     :"cleaned:common_names", :"cleaned:synonyms", :"cleaned:references",
     :"import:trade_codes", :"import:trade_codes_t_p_pairs", :"import:trade_codes_t_u_pairs",
     :"cleaned:cites_quotas", :"cleaned:cites_suspensions", :"cleaned:cites_quotas",
     :"import:fix_symbols",
-    :"db:create_indexes",
-    :"db:rebuild",
+    :"db:migrate:create_indexes",
+    :"db:migrate:rebuild",
     :"import:stats"
   ]
 
