@@ -23,7 +23,7 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
 
   def validation_errors(annual_report_upload)
     matching_records_grouped(annual_report_upload.sandbox.table_name).map do |mr|
-      error_selector = error_selector(mr)
+      error_selector = error_selector(mr, annual_report_upload.point_of_view)
       Trade::ValidationError.new(
           :error_message => error_message(error_selector),
           :annual_report_upload_id => annual_report_upload.id,

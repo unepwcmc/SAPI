@@ -48,7 +48,7 @@ FactoryGirl.define do
     quantity 1
     appendix 'I'
     year 2013
-    appendix 'II'
+    ignore_warnings true
   end
 
   factory :permit, :class => Trade::Permit do
