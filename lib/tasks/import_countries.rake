@@ -42,7 +42,7 @@ namespace :import do
 
   desc "Add country names in spanish and french"
   task :countries_translations => [:environment] do
-    CSV.foreach("lib/files/country_codes_en_es_fr.csv") do |row|
+    CSV.foreach("lib/files/country_codes_en_es_fr_utf8.csv") do |row|
       country = GeoEntity.find_or_initialize_by_iso_code2(row[0].strip.upcase)
       unless country.id.nil?
          country.update_attributes(:name_fr => row[1].strip,
