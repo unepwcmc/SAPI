@@ -39,7 +39,20 @@ namespace :import do
     puts "There are now #{GeoEntity.count(conditions: {geo_entity_type_id: territory_type.id})} territories in the database."
   end
 
+
+  desc "Add country names in spanish and french"
+  task :countries_translations => [:environment] do
+    CSV.foreach("lib/files/country_codes_en_es_fr.csv") do |row|
+      country = GeoEntity.find_or_initialize_by_iso_code2(row[0].strip.upcase)
+      unless country.id.nil?
+         country.update_attributes(:name_fr => row[1].strip,
+                                :name_es => row[2].strip)
+      end
+    end
+  puts "Countries updated with french and spanish names"
+  end
 end
+
 
 def link_countries
   puts "Link territories to countries and countries to respective CITES regions"
@@ -108,4 +121,3 @@ def link_countries
 
   puts "There are now #{GeoRelationship.count} geo_relationships in the database."
 end
-
