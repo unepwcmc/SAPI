@@ -1,6 +1,8 @@
 class Trade::Filter
   attr_reader :page, :per_page, :query
-  def initialize(options)
+  def initialize(options, shipments_rel=nil)
+    @shipments_rel = shipments_rel ||
+      Trade::Shipment.from('trade_shipments_view trade_shipments')
     initialize_params(options)
     initialize_query
   end
@@ -22,7 +24,7 @@ class Trade::Filter
   end
 
   def initialize_query
-    @query = Trade::Shipment.from('trade_shipments_view trade_shipments').
+    @query = @shipments_rel.
       order('year DESC').preload(:taxon_concept) #includes would override the select clause
 
     # Id's (array)

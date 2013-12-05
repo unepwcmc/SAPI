@@ -181,17 +181,13 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       params[property.param] = @parseSelectedParams(selectedParams)
     params
 
-  searchParamsForUrl: () ->
+  searchParamsForUrl: ( ->
     params = {}
     @selectedQueryParamNames.forEach (property) =>
       selectedParams = @get(property.name)
       params[property.urlParam] = @parseSelectedParams(selectedParams)
+    params['internal'] = true #TODO remove this once authentication in place
     params
-
-  rawDownloadUrl: (->
-    params = @searchParamsForUrl()
-    params['report_type'] = 'raw' #TODO this will likely be a property in its own right
-    '/trade/exports/download?' + $.param({'filters': params})
   ).property(
     'selectedTaxonConcepts.@each', 'selectedAppendices.@each',
     'selectedTimeStart', 'selectedTimeEnd', 'selectedQuantity',
@@ -202,6 +198,18 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     'selectedCountriesOfOrigin.@each', 'countryOfOriginBlank',
     'selectedPermits.@each'
   )
+
+  rawDownloadUrl: (->
+    params = @get('searchParamsForUrl')
+    params['report_type'] = 'raw' #TODO this will likely be a property in its own right
+    '/trade/exports/download?' + $.param({filters: params})
+  ).property('searchParamsForUrl')
+
+  comptabDownloadUrl: (->
+    params = @get('searchParamsForUrl')
+    params['report_type'] = 'comptab' #TODO this will likely be a property in its own right
+    '/trade/exports/download?' + $.param({filters: params})
+  ).property('searchParamsForUrl')
 
   actions:
     # creates a local new shipment (bound to currentShipment)

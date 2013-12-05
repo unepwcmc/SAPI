@@ -4,6 +4,7 @@ class Trade::ShipmentsExport < Species::CsvExport
 
   def initialize(filters = {})
     @filters = filters || {}
+    @internal = filters[:internal]
     @search = Trade::Filter.new(@filters)
   end
 
@@ -12,10 +13,7 @@ class Trade::ShipmentsExport < Species::CsvExport
     select_columns = sql_columns.each_with_index.map do |c, i|
       "#{c} AS \\\"#{headers[i]}\\\""
     end
-    puts select_columns.inspect
     @search.query.select(select_columns)
-
-    #@search.query.select(sql_columns)
   end
 
 private
@@ -43,30 +41,43 @@ private
     PsqlCommand.new(copy_stmt(query)).execute
   end
 
+  def available_columns
+    {
+      :id => {},
+      :year => {},
+      :appendix => {},
+      :taxon => {},
+      :taxon_concept_id => {:internal => true},
+      :reported_taxon => {:internal => true},
+      :reported_taxon_concept_id => {:internal => true},
+      :term => {:en => :term_name_en, :es => :term_name_es, :fr => :term_name_fr},
+      :quantity => {},
+      :unit => {:en => :unit_name_en, :es => :unit_name_es, :fr => :unit_name_fr},
+      :importer => {},
+      :exporter => {},
+      :country_of_origin => {},
+      :purpose => {},
+      :source => {},
+      :reporter_type => {:internal => true},
+      :import_permit_number => {:internal => true},
+      :export_permit_number => {:internal => true},
+      :country_of_origin_permit_number => {:internal => true}
+    }
+  end
+
+  def report_columns
+    # reject internal columns when producing a public report
+    available_columns.reject{ |column, properties| !@internal && properties[:internal] }
+  end
+
   def sql_columns
-    [
-      :id,
-      :year,
-      :appendix,
-      :taxon,
-      :reported_taxon,
-      :term,
-      :quantity,
-      :unit,
-      :importer,
-      :exporter,
-      :country_of_origin,
-      :purpose,
-      :source,
-      :reporter_type,
-      :import_permit_number,
-      :export_permit_number,
-      :country_of_origin_permit_number
-    ]
+    report_columns.map{ |column, properties| properties[I18n.locale] || column }
   end
 
   def csv_column_headers
-    sql_columns.map{ |c| c.to_s.humanize }
+    report_columns.map do |column, properties|
+      I18n.t "csv.#{column}"
+    end
   end
 
 end

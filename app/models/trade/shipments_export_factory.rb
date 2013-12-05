@@ -9,7 +9,7 @@ class Trade::ShipmentsExportFactory
     end
     case @report_type
       when :comptab
-        raise "comptab is not implemented yet"
+        Trade::ShipmentsComptabExport.new(filters)
       when :net_gross
         raise "net/gross is not implemented yet"
       else
