@@ -198,33 +198,33 @@ $(document).ready(function(){
       });
     }
   
-    $("#form_expert").submit(function(e) {
-      var postData = fixTaxonId($(this).serializeArray()),
-        formURL = '/trade/shipments',
-        data_rows, table_tmpl;
-      $.ajax(
-        {
-          url : formURL,
-          type: "GET",
-          data : postData,
-          success: function(data, textStatus, jqXHR) {
-            if (data.meta.total === 0) {
-              $('#search-error-message').show();
-              $("#query_results_table").find('thead,tbody').remove();
-            } else {
-              data_rows = data.shipments;
-              table_tmpl = buildHeader(data_rows[0]) + buildRows(data_rows);
-              $('#search-error-message').hide();
-              $('#query_results_table').html(table_tmpl);
-              $('#query_results .info').text(
-                'Showing ' + data.shipments.length + ' rows of ' + data.meta.total
-              );
-            }
-          },
-          error: ajaxFail
-      });
-      e.preventDefault();
-    });
+    //$("#form_expert").submit(function(e) {
+    //  var postData = fixTaxonId($(this).serializeArray()),
+    //    formURL = '/trade/shipments',
+    //    data_rows, table_tmpl;
+    //  $.ajax(
+    //    {
+    //      url : formURL,
+    //      type: "GET",
+    //      data : postData,
+    //      success: function(data, textStatus, jqXHR) {
+    //        if (data.meta.total === 0) {
+    //          $('#search-error-message').show();
+    //          $("#query_results_table").find('thead,tbody').remove();
+    //        } else {
+    //          data_rows = data.shipments;
+    //          table_tmpl = buildHeader(data_rows[0]) + buildRows(data_rows);
+    //          $('#search-error-message').hide();
+    //          $('#query_results_table').html(table_tmpl);
+    //          $('#query_results .info').text(
+    //            'Showing ' + data.shipments.length + ' rows of ' + data.meta.total
+    //          );
+    //        }
+    //      },
+    //      error: ajaxFail
+    //  });
+    //  e.preventDefault();
+    //});
 
   }
 
@@ -268,7 +268,7 @@ $(document).ready(function(){
       $link = $(this);
       values = parseInputs($('#form_expert :input'));
       params = $.param({'filters': values});
-      href = '/trade/exports/download?' + params;
+      href = '/cites_trade/download?' + params;
       downloadResults.ajax = true;
       $('#search-error-message').hide();
       $link.attr('href', href).click();
@@ -276,7 +276,7 @@ $(document).ready(function(){
     }
   }
   downloadResults.ajax = true;
-  $("#download_expert").click(function(e) {
+  $("#submit_expert").click(function(e) {
     downloadResults.call(this);
   });
 
