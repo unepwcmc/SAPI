@@ -206,7 +206,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     # creates a local new shipment (bound to currentShipment)
     newShipment: () ->
       @set('currentShipment', Trade.Shipment.createRecord())
-      $('.modal').modal('show')
+      $('.shipment-form-modal').modal('show')
 
     # saves the new shipment (bound to currentShipment) to the db
     saveShipment: (ignoreWarnings) ->
@@ -223,18 +223,18 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       shipment.set('propertyChanged', false)
       shipment.one('didCreate', this, ->
         @set('currentShipment', null)
-        $('.modal').modal('hide')
+        $('.shipment-form-modal').modal('hide')
         @send('search')
       )
       shipment.one('didUpdate', this, ->
         @set('currentShipment', null)
-        $('.modal').modal('hide')
+        $('.shipment-form-modal').modal('hide')
         @send('search')
       )
 
     cancelShipment: () ->
       @set('currentShipment', null)
-      $('.modal').modal('hide')
+      $('.shipment-form-modal').modal('hide')
 
     # discards the new shipment (bound to currentShipment)
     deleteShipment: (shipment) ->
@@ -248,7 +248,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
 
     editShipment: (shipment) ->
       @set('currentShipment', shipment)
-      $('.modal').modal('show')
+      $('.shipment-form-modal').modal('show')
 
     search: ->
       @openShipmentsPage @searchParamsForTransition()

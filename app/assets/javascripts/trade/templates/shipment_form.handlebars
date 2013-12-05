@@ -1,20 +1,17 @@
-<div id="shipment_form_modal">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>Shipment Edit</h3>
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h3>Shipment Edit</h3>
+</div>
+
+<div class="modal-body filters">
+  <div class="secondary-errors">
+    {{#each currentShipment.errors.warnings}}
+      <p class="text-warning"><i class="icon-exclamation-sign"></i>{{this}}</p>
+    {{/each}}
   </div>
 
-  <div class="modal-body filters">
-    <div class="secondary-errors">
-      {{#each currentShipment.errors.warnings}}
-        <p class="text-warning"><i class="icon-exclamation-sign"></i>{{this}}</p>
-      {{/each}}
-    </div>
-
-    <form action="#">
-
+  <form action="#">
     <fieldset>
-
       <div class="heading">
         Name, Appendix and Year
       </div>
@@ -169,22 +166,21 @@
         </div>
       </div>
 
-   </fieldset>
-    </form>
-  </div>
-  <div class="modal-footer">
-    {{confirm-button title="Save changes" action="saveShipment"
-      needsConfirmationBinding="currentShipment.warningsConfirmation"
-      ignoreWarningBinding="currentShipment.ignoreWarnings"
-    }}
-    <button {{action 'cancelShipment'}} class="pull-right btn btn-primary">
-      Cancel
-    </button>
-    {{#if currentShipment.warningsPresent}}
-      <span class="label label-warning">WARNING</span> Secondary errors detected.
-      {{#if currentShipment.warningsConfirmation}}
-        Click 'Save changes' again to save anyway.
-      {{/if}}
+    </fieldset>
+  </form>
+</div>
+<div class="modal-footer">
+  {{confirm-button title="Save changes" action="saveShipment"
+    needsConfirmationBinding="currentShipment.warningsConfirmation"
+    ignoreWarningBinding="currentShipment.ignoreWarnings"
+  }}
+  <button {{action 'cancelShipment'}} class="pull-right btn btn-primary">
+    Cancel
+  </button>
+  {{#if currentShipment.warningsPresent}}
+    <span class="label label-warning">WARNING</span> Secondary errors detected.
+    {{#if currentShipment.warningsConfirmation}}
+      Click 'Save changes' again to save anyway.
     {{/if}}
-  </div>
+  {{/if}}
 </div>
