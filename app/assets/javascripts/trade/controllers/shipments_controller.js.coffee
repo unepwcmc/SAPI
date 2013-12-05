@@ -209,8 +209,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       $('.shipment-form-modal').modal('show')
 
     # saves the new shipment (bound to currentShipment) to the db
-    saveShipment: (ignoreWarnings) ->
-      shipment = @get('currentShipment')
+    saveShipment: (shipment, ignoreWarnings) ->
       shipment.set('ignoreWarnings', ignoreWarnings)
       # Before trying to save a shipment
       # we need to reset the model to a valid state.

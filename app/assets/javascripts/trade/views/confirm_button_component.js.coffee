@@ -3,7 +3,7 @@ Trade.ConfirmButtonComponent = Ember.Component.extend
   actions:
     showConfirmation: () ->
       if confirm("Secondary errors detected. Save anyway?")
-        @sendAction('action', true)
+        @sendAction('action', @get('shipment'), true)
 
     confirm: () ->
-      @sendAction('action', false)
+      @sendAction('action', @get('shipment'), false)

@@ -50,14 +50,67 @@ Trade.Shipment = DS.Model.extend
   taxonConceptIdDidChange: ( ->
     if @get('taxonConceptId')
       @set('taxonConcept', Trade.TaxonConcept.find(@get('taxonConceptId')))
+    @set('propertyChanged', true)
   ).observes('taxonConceptId')
 
-  propertyDidChange: ( ->
+  # for some reason you can't put all of the following into one observer
+  # because as a result the record freezes in root.loaded.materializing.firstTime
+  # and updating does not work thereafter
+  appendixDidChange: ( ->
     @set('propertyChanged', true)
-  ).observes('taxonConceptId', 'appendix', 'year',
-  'term', 'unit', 'purpose', 'source', 'quantity',
-  'importer', 'exporter', 'countryOfOrigin',
-  'importPermitNumber', 'exportPermitNumber', 'countryOfOriginPermitNumber')
+  ).observes('appendix')
+
+  yearDidChange: ( ->
+    @set('propertyChanged', true)
+  ).observes('year')
+
+  termDidChange: ( ->
+    @set('propertyChanged', true)
+  ).observes('term')
+
+  unitDidChange: ( ->
+    @set('propertyChanged', true)
+  ).observes('unit')
+
+  purposeDidChange: ( ->
+    @set('propertyChanged', true)
+  ).observes('purpose')
+
+  sourceDidChange: ( ->
+    @set('propertyChanged', true)
+  ).observes('source')
+
+  quantityDidChange: ( ->
+    @set('propertyChanged', true)
+  ).observes('quantity')
+
+  importerDidChange: ( ->
+    @set('propertyChanged', true)
+  ).observes('importer')
+
+  exporterDidChange: ( ->
+    @set('propertyChanged', true)
+  ).observes('exporter')
+
+  countryOfOriginDidChange: ( ->
+    @set('propertyChanged', true)
+  ).observes('countryOfOrigin')
+
+  reporterTypeDidChange: ( ->
+    @set('propertyChanged', true)
+  ).observes('reporterType')
+
+  importPermitNumberDidChange: ( ->
+    @set('propertyChanged', true)
+  ).observes('importPermitNumber')
+
+  exportPermitNumberDidChange: ( ->
+    @set('propertyChanged', true)
+  ).observes('exportPermitNumber')
+
+  countryOfOriginPermitNumberDidChange: ( ->
+    @set('propertyChanged', true)
+  ).observes('countryOfOriginPermitNumber')
 
 Trade.Adapter.map('Trade.Shipment', {
   taxonConcept: { embedded: 'load' }

@@ -170,7 +170,7 @@
   </form>
 </div>
 <div class="modal-footer">
-  {{confirm-button title="Save changes" action="saveShipment"
+  {{confirm-button title="Save changes" action="saveShipment" shipmentBinding="currentShipment"
     needsConfirmationBinding="currentShipment.warningsConfirmation"
     ignoreWarningBinding="currentShipment.ignoreWarnings"
   }}
