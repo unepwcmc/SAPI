@@ -213,9 +213,9 @@ $(document).ready(function(){
     return values;
   }
   
-  function downloadResults () {
+  function queryResults () {
     var href, inputs, values, params, $link;
-    if (downloadResults.ajax) {
+    if (queryResults.ajax) {
       href = '/trade/exports/download.json';
       values = parseInputs($('#form_expert :input'));
       params = $.param({'filters': values});
@@ -227,8 +227,8 @@ $(document).ready(function(){
       }).then( function (res) {
         if (res.total > 0) {
           // There is something to download!
-          downloadResults.ajax = false;
-          downloadResults.call(this);
+          queryResults.ajax = false;
+          queryResults.call(this);
         } else {
           $('#search-error-message').show();
         }
@@ -238,15 +238,15 @@ $(document).ready(function(){
       values = parseInputs($('#form_expert :input'));
       params = $.param({'filters': values});
       href = '/cites_trade/download?' + params;
-      downloadResults.ajax = true;
+      queryResults.ajax = true;
       $('#search-error-message').hide();
       $link.attr('href', href).click();
       window.location.href = $link.attr("href");
     }
   }
-  downloadResults.ajax = true;
+  queryResults.ajax = true;
   $("#submit_expert").click(function(e) {
-    downloadResults.call(this);
+    queryResults.call(this);
   });
 
 
