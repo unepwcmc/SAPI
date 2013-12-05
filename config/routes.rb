@@ -142,6 +142,8 @@ SAPI::Application.routes.draw do
 
   # Sample of regular route:
   match 'cites_trade' => 'cites_trade#index'
+  match 'cites_trade/download' => 'cites_trade#download'
+  match 'cites_trade/download/view' => 'cites_trade#view'
   # Keep in mind you can assign values other than :controller and :action
 
   # Sample of named route:
