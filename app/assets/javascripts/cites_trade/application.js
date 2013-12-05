@@ -709,6 +709,13 @@ $(document).ready(function(){
         error: ajaxFail
     });
   }
+
+  function downloadResults (q) {
+    var $link = $('#download_genie'),
+      href = '/trade/exports/download?' + q;
+    $link.attr('href', href).click();
+    window.location.href = $link.attr("href");
+  }
   
   function handleDownloadRequest () {
     var output_type = $( "input[name='outputType']:checked" ).val(),
@@ -716,6 +723,8 @@ $(document).ready(function(){
       query = decodeURIComponent( location.search.substr(1) );
       if (output_type === 'web') {
         displayResults(query);
+      } else {
+        downloadResults(query);
       }
   }
 
