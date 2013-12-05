@@ -19,7 +19,7 @@ class Trade::StatisticsController < ApplicationController
   end
 
   def summary_creation
-    @created_date_selected = params[:date] ? params[:date]['createdDateSelected'] : Date.today.year
+    @created_date_selected = params[:date] ? params[:date]['createdDateSelected'].to_i : Time.now.year
     @countries_reported_by_date_created = YearAnnualReportsByCountry.where(
       :year_created => @created_date_selected)
   end
