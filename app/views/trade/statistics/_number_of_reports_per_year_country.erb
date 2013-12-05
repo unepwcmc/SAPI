@@ -1,0 +1,31 @@
+        <%= form_tag("stats", :method => "get") do %> 
+
+      <table class="table table-bordered table-striped ">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Country</th>
+            <th>Year</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+
+    <div class="control-group">
+    <%= select_year(@date_selected, :start_year => 1975, :end_year => Time.now.year, :field_name => "yearSelected") %>
+    <%= submit_tag("Update", {:class => 'btn btn-primary'})%>
+    </div>
+    <tbody>
+
+        <%  @countries_reported_by_year.to_enum.with_index(1).each do |country, i| %>
+        <tr>
+            <th><%= i %></th>
+            <th><%= country[:name_en] %></th>
+            <th><%= country[:year] %></th>
+            <th><%= country[:reporter_type] %></th>
+          </tr>
+        <% end %>
+        </thead>
+
+        </tbody>
+    </table>
+    <% end %>

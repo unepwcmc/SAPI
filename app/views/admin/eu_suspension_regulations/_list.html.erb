@@ -1,5 +1,6 @@
 <thead>
   <th>Name</th>
+  <th>Description</th>
   <th>Effective from</th>
   <th>Current</th>
   <th>URL</th>
@@ -15,6 +16,14 @@
           data-placeholder="Required" data-original-title="Enter the EU Suspension Regulation's name"
           data-url="<%= resource_url(eu_suspension_regulation) %>" data-pk="<%= eu_suspension_regulation.id %>">
           <%= eu_suspension_regulation.name %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required"
+          data-type="text" data-resource="eu_suspension_regulation" data-name="description"
+          data-placeholder="Required" data-original-title="Enter the EU Suspension Regulation's description"
+          data-url="<%= resource_url(eu_suspension_regulation) %>" data-pk="<%= eu_suspension_regulation.id %>">
+          <%= eu_suspension_regulation.description %>
         </a>
       </td>
       <td><%= eu_suspension_regulation.effective_at_formatted %></td>
@@ -34,6 +43,13 @@
         <%= link_to edit_icon, edit_resource_url(eu_suspension_regulation), :remote => true %>
         <%= link_to delete_icon, resource_url(eu_suspension_regulation),
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+        %>
+        <%= link_to_if(
+          eu_suspension_regulation.can_be_activated?,
+          '<i class="icon-cog" title="Activate"></i>'.html_safe,
+          activate_admin_eu_suspension_regulation_url(eu_suspension_regulation),
+          :confirm => 'Warning: you are about to modify a batch of data. Are you sure?', :method => :post, :remote => true
+        ) { '' }
         %>
       </td>
     </tr>

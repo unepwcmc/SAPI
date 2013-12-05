@@ -1,7 +1,8 @@
 <h1>Trade Statistics</h1>
 
-<a href="/trade">Back to Trade DB Admin Tool</a>
-<h2>General Statistics</h2>
+<%= render 'menu' %>
+
+<h3>General Statistics</h3>
 
 <table class="table table-bordered table-striped ">
   <tr>
@@ -20,44 +21,30 @@
 
 <%= render 'general_statistics_per_range' %>
 
-  <h2>Summary of CITES annual reports</h2>
 
-  <table class="table table-bordered table-striped ">
-    <thead>
-      <tr>
-        <th>No</th>
-        <th>Country</th>
-        <th>Year</th>
-        <th>Type</th>
-      </tr>
-    </thead>
-    <tbody>
+<h3>Summary of trade transactions</h3>
 
-    TODO
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Year</th>
+      <th>Reported by Exporters</th>
+      <th>Reported by Importers</th>
+      <th>Total transactions</th>
+    </tr>
+  </thead>
+  <tbody>
 
-    </tbody>
-  </table>
+  <%  @transactions.keys.sort.each do |year| %>
+    <tr>
+      <td><%= year %></td>
+      <td><%= @transactions[year][:reported_by_exporter] %></td>
+      <td><%= @transactions[year][:reported_by_importer] %></td>
+      <td><%= @transactions[year][:total] %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
 
-  <h2>Summary of trade transactions</h2>
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>Year</th>
-        <th>Reported by Exporters</th>
-        <th>Reported by Importers</th>
-        <th>Total transactions</th>
-      </tr>
-    </thead>
-    <tbody>
 
-    <%  @transactions.keys.sort.each do |year| %>
-      <tr>
-        <td><%= year %></td>
-        <td><%= @transactions[year][:reported_by_exporter] %></td>
-        <td><%= @transactions[year][:reported_by_importer] %></td>
-        <td><%= @transactions[year][:total] %></td>
-      </tr>
-    <% end %>
 
-    </tbody>
-  </table>

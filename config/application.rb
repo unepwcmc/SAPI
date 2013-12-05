@@ -32,7 +32,8 @@ module SAPI
     # Activate observers that should always be running.
     config.active_record.observers = :destroy_observer, :annotation_observer,
       :cites_cop_observer, :cites_suspension_notification_observer,
-      :eu_regulation_observer, :eu_suspension_regulation_observer, :"trade/annual_report_upload_observer",
+      :eu_regulation_observer, :eu_suspension_regulation_observer,
+      :"trade/annual_report_upload_observer",
       :listing_change_observer, :taxon_concept_observer,
       :cites_suspension_observer, :quota_observer, :eu_decision_observer,
       :"trade/shipment_observer"
