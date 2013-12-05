@@ -100,133 +100,102 @@ $(document).ready(function(){
 	  $('input,select').keypress(function(event) { return event.keyCode != 13; });
   };
 
-  //function to check when form is being posted
-  function formPosting() {
 
-    var headers = [
-        'id', 'year', 'appendix', 'taxon',  'term', 'quantity', 'unit',  
-        'importer', 'exporter', 'origin', 'purpose', 'source', 'reporter_type', 
-        'imp_permit', 'exp_permit', 'origin_permit' ],
-      fields = ['id', 'year', 'appendix', 'taxon',  'term', 'quantity', 'unit',  
-        'importer', 'exporter', 'origin', 'purpose', 'source', 'reporter_type', 
-        'import_permit_number', 'export_permit_number', 
-        'country_of_origin_permit_number' ];
+  var headers = [
+      'id', 'year', 'appendix', 'taxon',  'term', 'quantity', 'unit',  
+      'importer', 'exporter', 'origin', 'purpose', 'source', 'reporter_type', 
+      'imp_permit', 'exp_permit', 'origin_permit' ],
+    fields = ['id', 'year', 'appendix', 'taxon',  'term', 'quantity', 'unit',  
+      'importer', 'exporter', 'origin', 'purpose', 'source', 'reporter_type', 
+      'import_permit_number', 'export_permit_number', 
+      'country_of_origin_permit_number' ];
   
-    function formatDataRow (data_row) {
-      return _.map(fields, function (field) {
-        if (data_row[field]) {
-          return data_row[field];
-        } else if (field === 'importer') {
-          if (countries[data_row.importer_id]) {
-            return countries[data_row.importer_id].iso_code2;
-          } else {
-            return '';
-          }
-        } else if (field === 'exporter') {
-          if (countries[data_row.exporter_id]) {
-            return countries[data_row.exporter_id].iso_code2;
-          } else {
-            return '';
-          }
-        } else if (field === 'origin') {
-          if (countries[data_row.country_of_origin_id]) {
-            return countries[data_row.country_of_origin_id].iso_code2;
-          } else {
-            return '';
-          }
-        } else if (field === 'unit') {
-          if (units[data_row.unit_id]) {
-            return units[data_row.unit_id].code;
-          } else {
-            return '';
-          }
-        } else if (field === 'taxon') {
-          if (data_row.taxon_concept) {
-            return data_row.taxon_concept.full_name;
-          } else {
-            return '';
-          }
-        } else if (field === 'term') {
-          if (terms[data_row.term_id]) {
-            return terms[data_row.term_id].code;
-          } else {
-            return '';
-          }
-        } else if (field === 'purpose') {
-          if (purposes[data_row.purpose_id]) {
-            return purposes[data_row.purpose_id].code;
-          } else {
-            return '';
-          }
-        } else if (field === 'source') {
-          if (sources[data_row.source_id]) {
-            return sources[data_row.source_id].code;
-          } else {
-            return '';
-          }
+  function formatDataRow (data_row) {
+    return _.map(fields, function (field) {
+      if (data_row[field]) {
+        return data_row[field];
+      } else if (field === 'importer') {
+        if (countries[data_row.importer_id]) {
+          return countries[data_row.importer_id].iso_code2;
         } else {
           return '';
         }
-      });
-    }
-
-    function buildHeader (data) {
-      var header = 
-        "<thead><tr><% _.each(res, function(head) { %> <td><%=head %></td> <% }); %></tr></thead>";
-      return _.template(header, {res: headers});
-    }
-  
-    function buildRows (data) {
-      var t = "";
-      _.each(data, function(data_row) {
-        var row = 
-          "<tr><% _.each(res, function(value) { %> <td>" + 
-          "<%= (value && value.full_name) ? value.full_name : value %>" +
-          "</td> <% }); %></tr>";
-        t += _.template(row, { res: formatDataRow(data_row) });
-      });
-      return t;
-    }
-  
-    function fixTaxonId (arr) {
-      return _.map(arr, function (obj) {
-        if (obj.name === 'taxon_concepts_ids[]') {
-          return {name: 'taxon_concepts_ids[]', value: selected_taxa};
+      } else if (field === 'exporter') {
+        if (countries[data_row.exporter_id]) {
+          return countries[data_row.exporter_id].iso_code2;
         } else {
-          return obj;
+          return '';
         }
-      });
-    }
-  
-    //$("#form_expert").submit(function(e) {
-    //  var postData = fixTaxonId($(this).serializeArray()),
-    //    formURL = '/trade/shipments',
-    //    data_rows, table_tmpl;
-    //  $.ajax(
-    //    {
-    //      url : formURL,
-    //      type: "GET",
-    //      data : postData,
-    //      success: function(data, textStatus, jqXHR) {
-    //        if (data.meta.total === 0) {
-    //          $('#search-error-message').show();
-    //          $("#query_results_table").find('thead,tbody').remove();
-    //        } else {
-    //          data_rows = data.shipments;
-    //          table_tmpl = buildHeader(data_rows[0]) + buildRows(data_rows);
-    //          $('#search-error-message').hide();
-    //          $('#query_results_table').html(table_tmpl);
-    //          $('#query_results .info').text(
-    //            'Showing ' + data.shipments.length + ' rows of ' + data.meta.total
-    //          );
-    //        }
-    //      },
-    //      error: ajaxFail
-    //  });
-    //  e.preventDefault();
-    //});
-
+      } else if (field === 'origin') {
+        if (countries[data_row.country_of_origin_id]) {
+          return countries[data_row.country_of_origin_id].iso_code2;
+        } else {
+          return '';
+        }
+      } else if (field === 'unit') {
+        if (units[data_row.unit_id]) {
+          return units[data_row.unit_id].code;
+        } else {
+          return '';
+        }
+      } else if (field === 'taxon') {
+        if (data_row.taxon_concept) {
+          return data_row.taxon_concept.full_name;
+        } else {
+          return '';
+        }
+      } else if (field === 'term') {
+        if (terms[data_row.term_id]) {
+          return terms[data_row.term_id].code;
+        } else {
+          return '';
+        }
+      } else if (field === 'purpose') {
+        if (purposes[data_row.purpose_id]) {
+          return purposes[data_row.purpose_id].code;
+        } else {
+          return '';
+        }
+      } else if (field === 'source') {
+        if (sources[data_row.source_id]) {
+          return sources[data_row.source_id].code;
+        } else {
+          return '';
+        }
+      } else {
+        return '';
+      }
+    });
   }
+
+  function buildHeader (data) {
+    var header = 
+      "<thead><tr><% _.each(res, function(head) { %> <td><%=head %></td> <% }); %></tr></thead>";
+    return _.template(header, {res: headers});
+  }
+
+  function buildRows (data) {
+    var t = "";
+    _.each(data, function(data_row) {
+      var row = 
+        "<tr><% _.each(res, function(value) { %> <td>" + 
+        "<%= (value && value.full_name) ? value.full_name : value %>" +
+        "</td> <% }); %></tr>";
+      t += _.template(row, { res: formatDataRow(data_row) });
+    });
+    return t;
+  }
+  
+  function fixTaxonId (arr) {
+    return _.map(arr, function (obj) {
+      if (obj.name === 'taxon_concepts_ids[]') {
+        return {name: 'taxon_concepts_ids[]', value: selected_taxa};
+      } else {
+        return obj;
+      }
+    });
+  }
+  
 
   function parseInputs ($inputs) {
     var values = {};
@@ -686,8 +655,6 @@ $(document).ready(function(){
 
   //Put functions to be executed here
   initialiseControls();
-  //Set the form posting function to work
-  formPosting();
   
   function populateSelect(args) {
   	var data = args.data,
@@ -705,10 +672,53 @@ $(document).ready(function(){
 
   var data_type = {dataType: 'json'};
 
-  $.when($.ajax("/api/v1/units", data_type)).then(initUnitsObj, ajaxFail);
-  $.when($.ajax("/api/v1/geo_entities", data_type)).then(initExpctyImpcty, ajaxFail);
-  $.when($.ajax("/api/v1/terms", data_type)).then(initTerms, ajaxFail);
-  $.when($.ajax("/api/v1/sources", data_type)).then(initSources, ajaxFail);
-  $.when($.ajax("/api/v1/purposes", data_type)).then(initPurposes, ajaxFail);
+  // This is used for checking on which page we are, because we only need this
+  // stuff on the query page, not on the download one.
+  if ($('#form_expert').length > 0) {
+    $.when($.ajax("/api/v1/units", data_type)).then(initUnitsObj, ajaxFail);
+    $.when($.ajax("/api/v1/geo_entities", data_type)).then(initExpctyImpcty, ajaxFail);
+    $.when($.ajax("/api/v1/terms", data_type)).then(initTerms, ajaxFail);
+    $.when($.ajax("/api/v1/sources", data_type)).then(initSources, ajaxFail);
+    $.when($.ajax("/api/v1/purposes", data_type)).then(initPurposes, ajaxFail);
+  }
+
+  //////////////////////////
+  // Download page specific:
+
+  function displayResults (q) {
+    var formURL = '/trade/shipments';
+    $.ajax(
+      {
+        url : formURL,
+        type: "GET",
+        data : q,
+        success: function(data, textStatus, jqXHR) {
+          if (data.meta.total === 0) {
+            $('#search-error-message').show();
+            $("#query_results_table").find('thead,tbody').remove();
+          } else {
+            data_rows = data.shipments;
+            table_tmpl = buildHeader(data_rows[0]) + buildRows(data_rows);
+            $('#search-error-message').hide();
+            $('#query_results_table').html(table_tmpl);
+            $('#query_results .info').text(
+              'Showing ' + data.shipments.length + ' rows of ' + data.meta.total
+            );
+          }
+        },
+        error: ajaxFail
+    });
+  }
+  
+  function handleDownloadRequest () {
+    var output_type = $( "input[name='outputType']:checked" ).val(),
+      report_type, // TODO
+      query = decodeURIComponent( location.search.substr(1) );
+      if (output_type === 'web') {
+        displayResults(query);
+      }
+  }
+
+  $('#button_report').click( function (e) {handleDownloadRequest() });
 
 });

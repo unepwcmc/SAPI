@@ -48,7 +48,7 @@
         <br><br>
         <div align="right">
           
-          <button type= "submit" style="float:left" id='button_report'value=" Get report ">
+          <button style="float:left" id='button_report' value=" Get report ">
           <img src="/assets/cites_trade/page.gif" alt=""/>
           Get report
           </button>
@@ -68,16 +68,15 @@
     </form>
     <tr><td>
       <hr>
-      <form id="form_process" action="expert_accord.cfm" method="post" onsubmit="return _CF_checkCFForm_2(this)">
+      
         <div align="center">
-          
-          <button type= "submit" style="float:left" value=" New Search ">
+          <button id="new_search" style="float:left" value=" New Search ">
           <img src="/assets/cites_trade/refresh1.png" alt=""/>
           New Search
           </button>
           <br>
         </div>
-      </form>
+
       <br />
       <div align="left">
         <strong> Download :</strong> <a class="linkStyle" href="docs/A Guide to Interpreting Comparative Tabulation Outputs.pdf" target="doc"> A Guide to Interpreting Comparative Tabulation Outputs </a>.
@@ -88,6 +87,12 @@
     </td></tr>
   </table>
   
+</div>
+
+<div id="query_results" class="grid_16 results">
+  <table id="query_results_table">
+  </table>
+  <p class="info"></p>
 </div>
 
 </div>
