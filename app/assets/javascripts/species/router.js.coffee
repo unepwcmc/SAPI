@@ -1,11 +1,13 @@
 Species.Router.map (match) ->
-  @route 'search', { path: 'search/:params' }
+  @resource 'taxonConcepts', {
+    queryParams: ['taxonomy', 'taxon_concept_query', 'geo_entities_ids', 'geo_entity_scope', 'page']
+    }, () ->
+    @resource 'taxonConcept', { path: "/:taxon_concept_id" }, () ->
+      @route 'legal'
+      @route 'names'
+      @route 'distribution'
+      @route 'references'
   @route 'about'
-  @resource 'taxon_concept', { path: 'taxon_concepts/:taxon_concept_id' }, () ->
-    @route 'legal'
-    @route 'names'
-    @route 'distribution'
-    @route 'references'
 
 Species.Router.reopen
   didTransition: (infos) ->

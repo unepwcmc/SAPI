@@ -1,8 +1,13 @@
+### 0.4.0 (unreleased)
+* adds functionality for managing trade data:
+  - filtering by all shipment properties
+  - adding / editing / deleting individual shipments
+
 ### 0.3.6 (2013-11-22)
- * fixes some IE issues
- * upgrades newrelic agent
- * adds a license
- 
+* fixes some IE issues
+* upgrades newrelic agent
+* adds a licence
+
 ### 0.3.3 (2013-11-11)
 * fixes references management pages (distribution, taxonomic references
   and standard references)

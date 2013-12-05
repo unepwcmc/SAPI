@@ -17,7 +17,7 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   timeScopeIsCurrent: ( ->
     @get('timeScope') == 'current'
   ).property('timeScope')
-  years: [1975..2013]
+  years: [1975..new Date().getFullYear()]
   selectedYears: []
   positiveOpinions: true
   negativeOpinions: true

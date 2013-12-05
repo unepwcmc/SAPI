@@ -10,25 +10,25 @@
     <h2>{{authorYear}}</h2>
     <ul class="list">
       <li>
-      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound phylumName}}"
+      <a href="/species/taxonConcepts?taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound phylumName}}"
         {{action 'searchFor' phylumName}}>
           {{phylumName}}
         </a>
       </li>
       <li>
-      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound className}}"
+      <a href="/species/taxonConcepts?taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound className}}"
         {{action 'searchFor' className}}>
           {{className}}
         </a>
       </li>
       <li>
-      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound orderName}}"
+      <a href="/species/taxonConcepts?taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound orderName}}"
         {{action 'searchFor' orderName}}>
           {{orderName}}
         </a>
       </li>
       <li>
-      <a href="/species/search/taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound familyName}}"
+      <a href="/species/taxonConcepts?taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound familyName}}"
         {{action 'searchFor' familyName}}>
           {{familyName}}
         </a>
@@ -36,7 +36,7 @@
     </ul>
   </div>
   <ul class="tabset">
-    <li>{{#linkTo 'taxon_concept.legal'}}LEGAL{{/linkTo}}
+    <li>{{#linkTo 'taxonConcept.legal'}}LEGAL{{/linkTo}}
       <ul>
         {{#unless isCms }}
           <li class="first"><a href="#cites_listings" class="scroll-to">CITES Listing</a></li>
@@ -47,15 +47,15 @@
         {{/unless}}
       </ul>
     </li>
-    <li>{{#linkTo 'taxon_concept.names'}}NAMES{{/linkTo}}
+    <li>{{#linkTo 'taxonConcept.names'}}NAMES{{/linkTo}}
       <ul>
       </ul>
     </li>
-    <li class="add">{{#linkTo 'taxon_concept.distribution'}}DISTRIBUTION{{/linkTo}}
+    <li class="add">{{#linkTo 'taxonConcept.distribution'}}DISTRIBUTION{{/linkTo}}
       <ul>
       </ul>
     </li>
-    <li class="last-child">{{#linkTo 'taxon_concept.references'}}REFERENCES{{/linkTo}}
+    <li class="last-child">{{#linkTo 'taxonConcept.references'}}REFERENCES{{/linkTo}}
       <ul>
       </ul>
     </li>

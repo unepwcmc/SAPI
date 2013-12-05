@@ -1,19 +1,41 @@
 Trade.Shipment = DS.Model.extend
+
+  importerId: DS.attr('number')
+  exporterId: DS.attr('number')
+  termId: DS.attr('number')
+
+  reporterType: DS.attr('string')
+
   appendix: DS.attr('string')
-  reported_appendix: DS.attr('string')
-  species_name: DS.attr('string')
-  reported_species_name: DS.attr('string')
-  term_code: DS.attr('string')
+  taxonConceptId: DS.attr('number')
+  taxonConcept: DS.belongsTo('Trade.TaxonConcept')
+  reportedTaxonConcept: DS.belongsTo('Trade.TaxonConcept')
+  term: DS.belongsTo('Trade.Term')
   quantity: DS.attr('string')
-  unit_code: DS.attr('string')
-  importer: DS.attr('string')
-  exporter: DS.attr('string')
-  reporter_type: DS.attr('string')
-  country_of_origin: DS.attr('string')
-  import_permit: DS.attr('string')
-  export_permit: DS.attr('string')
-  origin_permit: DS.attr('string')
-  purpose_code: DS.attr('string')
-  source_code: DS.attr('string')
+  unit: DS.belongsTo('Trade.Unit')
+  importer: DS.belongsTo('Trade.GeoEntity', {
+    inverse: 'importedShipments'
+  })
+  exporter: DS.belongsTo('Trade.GeoEntity', {
+    inverse: 'exportedShipments'
+  })
+  countryOfOrigin: DS.belongsTo('Trade.GeoEntity', {
+    inverse: 'countryOfOriginShipments'
+  })
+  importPermitNumber: DS.attr('string')
+  exportPermitNumber: DS.attr('string')
+  countryOfOriginPermitNumber: DS.attr('string')
+  purpose: DS.belongsTo('Trade.Purpose')
+  source: DS.belongsTo('Trade.Source')
   year: DS.attr('string')
   _destroyed: DS.attr('boolean')
+
+  taxonConceptIdDidChange: ( ->
+    if @get('taxonConceptId')
+      @set('taxonConcept', Trade.TaxonConcept.find(@get('taxonConceptId')))
+  ).observes('taxonConceptId')
+
+Trade.Adapter.map('Trade.Shipment', {
+  taxonConcept: { embedded: 'load' }
+  reportedTaxonConcept: { embedded: 'load' }
+})

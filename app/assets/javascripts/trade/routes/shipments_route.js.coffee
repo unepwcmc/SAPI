@@ -1,13 +1,12 @@
 Trade.ShipmentsRoute = Ember.Route.extend
-  serialize: (model) ->
-    {params: $.param(model)}
 
-  model: (params) ->
-    # what follows here is the deserialisation of params
-    # this hook is executed only when entering from url
-    $.deparam(params.params)
+  beforeModel: ->
+    @controllerFor('geoEntities').load()
+    @controllerFor('terms').set('content', Trade.Term.find())
+    @controllerFor('units').set('content', Trade.Unit.find())
+    @controllerFor('sources').set('content', Trade.Source.find())
+    @controllerFor('purposes').set('content', Trade.Purpose.find())
 
-  setupController: (controller, model) ->
-    # this hook is executed whether entering from url or transition
-    controller.setFilters(model)
-    controller.set('content', Trade.Shipment.find(model))
+  model: (params, queryParams, transition) ->
+    queryParams.page = 1 unless queryParams.page
+    Trade.Shipment.find(queryParams)

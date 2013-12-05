@@ -211,7 +211,9 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
 
   actions:
     searchFor: (query) ->
-      @transitionToRoute('search', {
-        taxonomy: @get('taxonomy'),
-        taxon_concept_query: query
+      @transitionToRoute('taxonConcepts', {
+        queryParams: {
+          taxonomy: @get('taxonomy'),
+          taxon_concept_query: query
+        }
       })
