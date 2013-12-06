@@ -1,8 +1,8 @@
 # Implements "comptab" shipments export
 class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
 
-  def initialize(filters = {})
-    @filters = filters || {}
+  def initialize(filters)
+    @filters = filters
     @search = Trade::Filter.new(
       @filters,
       Trade::Shipment.from('trade_shipments_comptab_view trade_shipments')
