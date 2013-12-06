@@ -177,12 +177,22 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   # params object for transitioning than we do when parametrising the
   # download url below.
   # TODO would be good to isolate the issue with array query params
-  searchParamsForTransition: () ->
+  searchParamsForTransition: ( ->
     params = {}
     @selectedQueryParamNames.forEach (property) =>
       selectedParams = @get(property.name)
       params[property.param] = @parseSelectedParams(selectedParams)
     params
+  ).property(
+    'selectedTaxonConcepts.@each', 'selectedAppendices.@each',
+    'selectedTimeStart', 'selectedTimeEnd', 'selectedQuantity',
+    'selectedUnits.@each', 'unitBlank.@each', 'selectedTerms.@each',
+    'selectedSources.@each', 'sourceBlank',
+    'selectedPurposes.@each', 'purposeBlank',
+    'selectedImporters.@each', 'selectedExporters.@each',
+    'selectedCountriesOfOrigin.@each', 'countryOfOriginBlank',
+    'selectedPermits.@each'
+  )
 
   searchParamsForUrl: ( ->
     params = {}
@@ -214,6 +224,37 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     '/trade/exports/download?' + $.param({filters: params})
   ).property('searchParamsForUrl')
 
+  resetFilters: ->
+    @beginPropertyChanges()
+    @selectedQueryParamNames.forEach (property) =>
+      if /.+$/.test property.param
+        @set(property.name, [])
+      else
+        @set(property.name, null)
+    @set('permitQuery', null)
+    @set('taxonConceptQuery', null)
+    @set('exporterQuery', null)
+    @set('importerQuery', null)
+    @set('countryOfOriginQuery', null)
+    @set('termQuery', null)
+    @set('unitQuery', null)
+    @set('selectedTimeStart', @get('defaultTimeStart'))
+    @set('selectedTimeEnd', @get('defaultTimeEnd'))
+    @set('unitBlank', false)
+    @set('purposeBlank', false)
+    @set('sourceBlank', false)
+    @set('countryOfOriginBlank', false)
+    @endPropertyChanges()
+    @openShipmentsPage @get('searchParamsForTransition')
+
+  flashMessage: (msg) ->
+    $('#flash').html('
+      <div class="alert alert-success fade in">
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+        <span>' + msg + '</span>
+      </div>'
+    )
+
   actions:
     # creates a local new shipment (bound to currentShipment)
     newShipment: () ->
@@ -237,12 +278,14 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       shipment.one('didCreate', this, ->
         @set('currentShipment', null)
         $('.shipment-form-modal').modal('hide')
-        @send('search')
+        @flashMessage('Successfully created shipment.')
+        @resetFilters()
       )
       shipment.one('didUpdate', this, ->
         @set('currentShipment', null)
         $('.shipment-form-modal').modal('hide')
-        @send('search')
+        @flashMessage('Successfully updated shipment.')
+        @resetFilters()
       )
 
     cancelShipment: () ->
@@ -252,38 +295,22 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
 
     # discards the new shipment (bound to currentShipment)
     deleteShipment: (shipment) ->
-      if (!shipment.get('isSaving'))
-        shipment.deleteRecord()
-        shipment.get('transaction').commit()
-        shipment.one('didDelete', this, ->
-          @set('currentShipment', null)
-          @send('search')
-        )
+      if confirm("This will delete a shipment. Proceed?")
+        if (!shipment.get('isSaving'))
+          shipment.deleteRecord()
+          shipment.get('transaction').commit()
+          shipment.one('didDelete', this, ->
+            @set('currentShipment', null)
+            @flashMessage('Successfully deleted shipment.')
+            @resetFilters()
+          )
 
     editShipment: (shipment) ->
       @set('currentShipment', shipment)
       $('.shipment-form-modal').modal('show')
 
     search: ->
-      @openShipmentsPage @searchParamsForTransition()
+      @openShipmentsPage @get('searchParamsForTransition')
 
     resetFilters: ->
-      @selectedQueryParamNames.forEach (property) =>
-        if /.+$/.test property.param
-          @set(property.name, [])
-        else
-          @set(property.name, null)
-      @set('permitQuery', null)
-      @set('taxonConceptQuery', null)
-      @set('exporterQuery', null)
-      @set('importerQuery', null)
-      @set('countryOfOriginQuery', null)
-      @set('termQuery', null)
-      @set('unitQuery', null)
-      @set('selectedTimeStart', @get('defaultTimeStart'))
-      @set('selectedTimeEnd', @get('defaultTimeEnd'))
-      @set('unitBlank', false)
-      @set('purposeBlank', false)
-      @set('sourceBlank', false)
-      @set('countryOfOriginBlank', false)
-      @openShipmentsPage(false)
+      @resetFilters()

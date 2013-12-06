@@ -23,6 +23,7 @@
 //= require ember-table
 //= require bootstrap-modal
 //= require bootstrap-collapse
+//= require bootstrap-alert
 //= require date
 //= require select2
 //= require bootstrap-tooltip
