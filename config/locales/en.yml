@@ -2,4 +2,25 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  cites_title: "CITES Trade Database"
+  cites_sub_title: "Please enter your search below"
+  errors:
+    no_data_1: "Your query has returned no data"
+    no_data_2: "Please select other variables or check in the UNEP-WCMC Species Database that you are using the correct spelling/scientific name"
+  left_tabs:
+    year_text: "Year Range"
+    year_tip: "Select start (From) and end (To) years for your query. It is advisable to limit your data request to a year span not exceeding 5 years"
+    export_text: "Exporting countries"
+    export_tip: "Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected"
+    import_text: "Pays importateurs"
+    import_tip: "Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected" 
+    source_text: "Source"
+    source_tip: "Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected"
+    purpose_text: "Purpose"
+    purpose_tip: "Type the purpose or purposes (e.g. 'T- Commercial' or 'S- Scientific') you wish to include in your final output. To include data for all purposes, leave 'All Purposes' selected"
+    trade_text: "Trade Terms"
+    trade_tip: "Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected"
+    taxon_text: "Search by taxon"
+    taxon_tip: "To retrieve data for a specific taxon, type in the taxon name. Data on specimens recorded in trade at the higher taxon level (e.g. Scleractinia spp.) can also be retrieved through this search. To retrieve data for all species within a particular genus, select a genus from the drop-down below. To select all taxa, leave these sections blank."
+    taxon_title: "Search for taxon reported trade:"
+    genus_title: "Search for genus:"  

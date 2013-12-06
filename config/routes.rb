@@ -140,10 +140,12 @@ SAPI::Application.routes.draw do
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
-  # Sample of regular route:
-  match 'cites_trade' => 'cites_trade#index'
-  match 'cites_trade/download' => 'cites_trade#download'
-  match 'cites_trade/download/view' => 'cites_trade#view'
+  #match '/:locale' => 'cites_trade#index'
+  scope "(:locale)", :locale => /en|es|fr/ do
+    match 'cites_trade' => 'cites_trade#index'
+    match 'cites_trade/download' => 'cites_trade#download'
+    match 'cites_trade/download/view' => 'cites_trade#view'
+  end
   # Keep in mind you can assign values other than :controller and :action
 
   # Sample of named route:
