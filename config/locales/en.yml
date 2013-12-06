@@ -33,3 +33,17 @@ en:
   search_selection: "Search Selection:"
   search: "Search"
   reset: "Reset"
+
+  download: "Download"
+  db_guide: "A Guide to Using the CITES Trade Database"
+  tabulation_guide: "A Guide to Interpreting Comparative Tabulation Outputs ."
+  trade_guide: "A Guide to Interpreting Gross/Net Trade Outputs."
+
+  reports: "REPORTS"
+  select_output: "Select output type:"
+  select_report: "Select report type: "
+  comparative_tabulations: "Comparative Tabulations"
+  trade_tabulations: "Gross/Net Trade Tabulations"
+  get_report: "Get report"
+  new_search: "New Search"
+

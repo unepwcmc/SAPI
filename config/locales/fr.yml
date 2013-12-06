@@ -31,3 +31,16 @@ fr:
   search: "Rechercher"
   reset: "Réinitialiser"
 
+  download: "Télécharger"
+  db_guide: "Un Guide d'Utilisation de la Base de Données sur le Commerce CITES"
+  tabulation_guide: ""
+  trade_guide: ""
+
+  reports: "RAPPORTS"
+  select_output: "Sélectionnez le type de sortie:"
+  select_report: "Sélectionnez le type de rapport:"
+  comparative_tabulations: "Tabulations Comparatives"
+  trade_tabulations: "Tabulations du Commerce Brut/Net"
+  get_report: "Obtenir le rapport"
+  new_search: "Nouvelle Recherche"  
+

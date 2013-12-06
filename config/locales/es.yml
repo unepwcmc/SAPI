@@ -30,3 +30,16 @@ es:
   search_selection: "Criterios de búsqueda seleccionados:"
   search: "Buscar"
   reset: "Reajustar"
+
+  download: "Descargar"
+  db_guide: "Una Guía para Utilizar la Base de Datos sobre el Comercio CITES"
+  tabulation_guide: "Una Guía para Interpretar las Salidas de Tabulaciones Comparativas"
+  trade_guide: "Una Guía para Interpretar las Salidas de Comercio Bruto/Neto"
+
+  reports: "INFORMES"
+  select_output: "Seleccionar el tipo de salida:"
+  select_report: "Seleccione el tipo de informe:"
+  comparative_tabulations: "Tabulaciónes Comparativas"
+  trade_tabulations: " Tabulaciones del Comercio Bruto/Neto"
+  get_report: "Obtener el informe"
+  new_search: "Nueva Búsqueda"

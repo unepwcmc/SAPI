@@ -3,12 +3,12 @@
     
     <table border="0" align="center">
       <tr>
-        <td><h3 align="center"><font face="Verdana, Arial, Helvetica, sans-serif"> REPORTS <br>
+        <td><h3 align="center"><font face="Verdana, Arial, Helvetica, sans-serif"> <%= t('reports') %> <br>
         </font></h3></td>
       </tr>
       <tr>
         <td>
-          <span style="font-weight:900;font-size:14px"> Select output type: </span>
+          <span style="font-weight:900;font-size:14px"> <%= t('select_output') %> </span>
           <font size="large" face="Verdana, Arial, Helvetica, sans-serif">
           
           <br><input type="radio" name="outputType" value="web" checked> web
@@ -20,9 +20,9 @@
       
       <tr>
         <td><font face="Verdana, Arial, Helvetica, sans-serif">
-          <span style="font-weight:900;font-size:14px"> Select report type: </span> <br>
-          <input name="report" id="report" type="radio" value="comparative" checked="checked"  /> Comparative Tabulations
-          <br><input name="report" id="report" type="radio" value="gross_net" /> Gross/Net Trade Tabulations <select name="reportType" style='background-color:#CCFFFF' id="report_type" >
+          <span style="font-weight:900;font-size:14px"> <%= t('select_report') %> </span> <br>
+          <input name="report" id="report" type="radio" value="comparative" checked="checked"  /> <%= t('comparative_tabulations') %>
+          <br><input name="report" id="report" type="radio" value="gross_net" /> <%= t('trade_tabulations') %> <select name="reportType" style='background-color:#CCFFFF' id="report_type" >
           <option value="GE"> Gross Exports </option>
           <option value="GI"> Gross Imports </option>
           <option value="NE"> Net Exports </option>
@@ -34,7 +34,7 @@
         <div align="right">
           <button style="float:left" id='button_report' value=" Get report ">
           <img src="/assets/cites_trade/page.gif" alt=""/>
-          Get report
+          <%= t('get_report') %>
           </button>
           <a id='view_genie' href="" style="display:none"></a>
           <a id='download_genie' href="#" style="display:none"></a>
@@ -58,7 +58,7 @@
         <div id="new_search_wrapper" align="center">
           <button id="new_search" style="float:left" value=" New Search ">
             <a id="new_search" style="float:left" href="/cites_trade/">
-              <img src="/assets/cites_trade/refresh1.png" alt=""/> New Search
+              <img src="/assets/cites_trade/refresh1.png" alt=""/> <%= t('new_search') %>
             </a>
           </button>
           <br>
