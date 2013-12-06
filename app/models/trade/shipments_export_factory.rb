@@ -1,6 +1,7 @@
 class Trade::ShipmentsExportFactory
   def self.new(filters)
     filters ||= {}
+    filters = filters.merge({:locale => I18n.locale})
     puts filters.inspect
     @report_type = filters && filters[:report_type] &&
       filters[:report_type].downcase.strip.to_sym
@@ -9,7 +10,7 @@ class Trade::ShipmentsExportFactory
     end
     case @report_type
       when :comptab
-        raise "comptab is not implemented yet"
+        Trade::ShipmentsComptabExport.new(filters)
       when :net_gross
         raise "net/gross is not implemented yet"
       else
