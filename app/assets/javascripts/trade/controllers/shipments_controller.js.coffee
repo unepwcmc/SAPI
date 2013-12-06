@@ -3,6 +3,10 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   content: null
   currentShipment: null
 
+  init: ->
+    transaction = @get('store').transaction()
+    @set('transaction', transaction)
+
   columns: [
     'id', 'year', 'appendix', 'taxonConcept.fullName',
     'reportedTaxonConcept.fullName',
@@ -216,7 +220,9 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       unless shipment.get('isValid')
         shipment.send("becameValid")
       unless shipment.get('isSaving')
-        shipment.get('transaction').commit()
+        transaction = @get('transaction')
+        transaction.add(shipment)
+        transaction.commit()
       # this is here so that after another validation
       # the user gets the secondary validation warning
       shipment.set('propertyChanged', false)
