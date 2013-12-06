@@ -4,4 +4,12 @@ class CitesTradeController < ApplicationController
     
   end
 
+  def download
+
+  end
+
+  def view
+
+  end
+
 end

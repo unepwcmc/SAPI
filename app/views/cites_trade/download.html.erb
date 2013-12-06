@@ -1,0 +1,77 @@
+
+  <div class="grid_16 main_content">
+    
+    <table border="0" align="center">
+      <tr>
+        <td><h3 align="center"><font face="Verdana, Arial, Helvetica, sans-serif"> REPORTS <br>
+        </font></h3></td>
+      </tr>
+      <tr>
+        <td>
+          <span style="font-weight:900;font-size:14px"> Select output type: </span>
+          <font size="large" face="Verdana, Arial, Helvetica, sans-serif">
+          
+          <br><input type="radio" name="outputType" value="web" checked> web
+          <br><input type="radio" name="outputType" value="csv"> csv
+          <br>
+          <br>
+        </font></td>
+      </tr>
+      
+      <tr>
+        <td><font face="Verdana, Arial, Helvetica, sans-serif">
+          <span style="font-weight:900;font-size:14px"> Select report type: </span> <br>
+          <input name="report" id="report" type="radio" value="comparative" checked="checked"  /> Comparative Tabulations
+          <br><input name="report" id="report" type="radio" value="gross_net" /> Gross/Net Trade Tabulations <select name="reportType" style='background-color:#CCFFFF' id="report_type" >
+          <option value="GE"> Gross Exports </option>
+          <option value="GI"> Gross Imports </option>
+          <option value="NE"> Net Exports </option>
+          <option value="NI"> Net Imports </option>
+          
+          <option value="AL"> All </option></option>
+        </select>
+        <br><br>
+        <div align="right">
+          <button style="float:left" id='button_report' value=" Get report ">
+          <img src="/assets/cites_trade/page.gif" alt=""/>
+          Get report
+          </button>
+          <a id='view_genie' href="" style="display:none"></a>
+          <a id='download_genie' href="#" style="display:none"></a>
+        </div>
+        
+        </font>
+        <p><br><br></p>
+        <input type="hidden" name="appendix" value="'1','2','3','N'">
+        <input type="hidden" name="sYearF" value="2011">
+        <input type="hidden" name="sYearT" value="2011">
+        <input type="hidden" name="ssName" value="CTC249F57A">
+        <input type="hidden" name="ssID" value="13657">
+        <input type="hidden" value="" name="taxName">
+        <input type="hidden" name="note" value="yes">
+        
+      </td></tr>
+    </form>
+    <tr><td>
+      <hr>
+      
+        <div id="new_search_wrapper" align="center">
+          <button id="new_search" style="float:left" value=" New Search ">
+            <a id="new_search" style="float:left" href="/cites_trade/">
+              <img src="/assets/cites_trade/refresh1.png" alt=""/> New Search
+            </a>
+          </button>
+          <br>
+        </div>
+
+      <br />
+      <div align="left">
+        <strong> Download :</strong> <a class="linkStyle" href="docs/A Guide to Interpreting Comparative Tabulation Outputs.pdf" target="doc"> A Guide to Interpreting Comparative Tabulation Outputs </a>.
+        <br><strong> Download :</strong> <a href="docs/A Guide to Interpreting Gross &amp; Net Trade Outputs.pdf" target="doc"> A Guide to Interpreting Gross/Net Trade Outputs </a>.
+        
+      </div>
+      
+    </td></tr>
+  </table>
+  
+</div>

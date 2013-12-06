@@ -8,8 +8,8 @@
 
 <%= form_tag("summary_creation", :method => "get") do %> 
   <div class="control-group">
-    <%= select_year(@created_date_selected, :start_year => 1975,
-                    :end_year => Time.now.year, :field_name => "createdDateSelected") %>
+    <%= select_year(@created_date_selected, :start_year => Time.now.year,
+                    :end_year => 1975, :field_name => "createdDateSelected") %>
     <%= submit_tag("Update", {:class => 'btn btn-primary'})%>
   </div>
 <% end %>
