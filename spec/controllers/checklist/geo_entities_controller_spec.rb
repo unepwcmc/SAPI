@@ -14,6 +14,9 @@ describe Checklist::GeoEntitiesController do
       :name => 'Europe'
     )
   }
+  let(:territory){
+    create(:geo_entity_type, :name => GeoEntityType::TERRITORY)
+  }
   let!(:france){
     create(
       :geo_entity,
@@ -31,6 +34,15 @@ describe Checklist::GeoEntitiesController do
           :iso_code2 => 'AD'
         )
   }
+  let!(:french_guiana){
+    create(
+      :geo_entity,
+      :geo_entity_type => territory,
+      :name => 'French Guiana',
+      :iso_code2 => 'GF',
+      :designations => [cites]
+    )
+  }
   describe "GET index" do
     it "returns CITES parties only" do
       get :index, :geo_entity_type => :country, :designation => :cites
@@ -43,6 +55,10 @@ describe Checklist::GeoEntitiesController do
     it "returns countries" do
       get :index, :geo_entity_type => :country
       response.body.should have_json_size(2)
+    end
+    it "returns countries & territories" do
+      get :index, :geo_entity_types => [:country, :territory]
+      response.body.should have_json_size(3)
     end
   end
 end
