@@ -74,9 +74,9 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       return params
     if params?.get and params.get('id')
       return params.get('id')
-    if params
+    if params || typeof(params) == "boolean"
       return params
-    return []
+    return null
 
   defaultTimeStart: ( ->
     new Date().getFullYear() - 5
@@ -173,15 +173,11 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     @get(collectionName).filter (element) ->
       re.test(element.get(columnName))
 
-  # sth amiss with array query params, which is why we pass a different
-  # params object for transitioning than we do when parametrising the
-  # download url below.
-  # TODO would be good to isolate the issue with array query params
-  searchParamsForTransition: ( ->
+  searchParams: ( ->
     params = {}
-    @selectedQueryParamNames.forEach (property) =>
-      selectedParams = @get(property.name)
-      params[property.param] = @parseSelectedParams(selectedParams)
+    @get('selectedQueryParamNames').forEach (property) =>
+      value = @parseSelectedParams(@get(property.name))
+      params[property.name] = value if value
     params
   ).property(
     'selectedTaxonConcepts.@each', 'selectedAppendices.@each',
@@ -194,23 +190,25 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     'selectedPermits.@each'
   )
 
-  searchParamsForUrl: ( ->
+  # sth amiss with array query params, which is why we pass a different
+  # params object for transitioning than we do when parametrising the
+  # download url below.
+  # TODO would be good to isolate the issue with array query params
+  searchParamsForTransition: ( ->
     params = {}
-    @selectedQueryParamNames.forEach (property) =>
-      selectedParams = @get(property.name)
-      params[property.urlParam] = @parseSelectedParams(selectedParams)
+    for name, value of @get('searchParams')
+      params[@get('queryParamsProperties')[name].param] = value
     params['internal'] = true #TODO remove this once authentication in place
     params
-  ).property(
-    'selectedTaxonConcepts.@each', 'selectedAppendices.@each',
-    'selectedTimeStart', 'selectedTimeEnd', 'selectedQuantity',
-    'selectedUnits.@each', 'unitBlank.@each', 'selectedTerms.@each',
-    'selectedSources.@each', 'sourceBlank',
-    'selectedPurposes.@each', 'purposeBlank',
-    'selectedImporters.@each', 'selectedExporters.@each',
-    'selectedCountriesOfOrigin.@each', 'countryOfOriginBlank',
-    'selectedPermits.@each'
-  )
+  ).property('searchParams.@each', 'queryParamsProperties')
+
+  searchParamsForUrl: ( ->
+    params = {}
+    for name, value of @get('searchParams')
+      params[@get('queryParamsProperties')[name].urlParam] = value
+    params['internal'] = true #TODO remove this once authentication in place
+    params
+  ).property('searchParams.@each', 'queryParamsProperties')
 
   rawDownloadUrl: (->
     params = @get('searchParamsForUrl')
@@ -226,7 +224,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
 
   resetFilters: ->
     @beginPropertyChanges()
-    @selectedQueryParamNames.forEach (property) =>
+    @get('selectedQueryParamNames').forEach (property) =>
       if /.+$/.test property.param
         @set(property.name, [])
       else
@@ -240,10 +238,10 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     @set('unitQuery', null)
     @set('selectedTimeStart', @get('defaultTimeStart'))
     @set('selectedTimeEnd', @get('defaultTimeEnd'))
-    @set('unitBlank', false)
-    @set('purposeBlank', false)
-    @set('sourceBlank', false)
-    @set('countryOfOriginBlank', false)
+    # @set('unitBlank', false)
+    # @set('purposeBlank', false)
+    # @set('sourceBlank', false)
+    # @set('countryOfOriginBlank', false)
     @endPropertyChanges()
     @openShipmentsPage @get('searchParamsForTransition')
 
