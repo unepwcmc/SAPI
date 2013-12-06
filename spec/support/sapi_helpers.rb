@@ -390,6 +390,70 @@ shared_context :sapi do
       options.merge({:designation => cites})
     )
   end
+
+  def create_species_name_appendix_year_validation
+    create(:species_name_appendix_year_validation_rule, :is_primary => false)
+  end
+  def create_term_unit_validation
+    create(:inclusion_validation_rule,
+      :column_names => ['term_code', 'unit_code'],
+      :valid_values_view => 'valid_term_unit_view',
+      :is_primary => false
+    )
+  end
+  def create_term_purpose_validation
+    create(:inclusion_validation_rule,
+      :column_names => ['term_code', 'purpose_code'],
+      :valid_values_view => 'valid_term_purpose_view',
+      :is_primary => false
+    )
+  end
+  def create_species_name_term_validation
+    create(:inclusion_validation_rule,
+      :column_names => ['species_name', 'term_code'],
+      :valid_values_view => 'valid_taxon_concept_term_view',
+      :is_primary => false
+    )
+  end
+  def create_species_name_country_of_origin_validation
+    create(:inclusion_validation_rule,
+      :scope => {
+        :source_code => 'W'
+      },
+      :column_names => ['species_name', 'country_of_origin'],
+      :valid_values_view => 'valid_species_name_country_of_origin_view',
+      :is_primary => false
+    )
+  end
+  def create_species_name_exporter_validation
+    create(:pov_inclusion_validation_rule,
+      :scope => {
+        :source_code => 'W', :country_of_origin_blank => true
+      },
+      :column_names => ['species_name', 'exporter'],
+      :valid_values_view => 'valid_species_name_exporter_view',
+      :is_primary => false
+    )
+  end
+  def create_exporter_country_of_origin_validation
+    create(:pov_distinct_values_validation_rule,
+      :column_names => ['exporter', 'country_of_origin'],
+      :is_primary => false
+    )
+  end
+  def create_exporter_importer_validation
+    create(:pov_distinct_values_validation_rule,
+      :column_names => ['exporter', 'importer'],
+      :is_primary => false
+    )
+  end
+  def create_taxon_concept_source_validation
+    create(:taxon_concept_source_validation_rule,
+      :column_names => ['species_name', 'source_code'],
+      :is_primary => false
+    )
+  end
+
 end
 
 module SapiSpec

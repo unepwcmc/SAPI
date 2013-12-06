@@ -8,6 +8,7 @@ $light-grey: #f7f7f7;
 $dark-blue: #0e76b1;
 $light-blue: #00a2db;
 $link-blue: #0088cc;
+$warning-yellow: #c09853;
 
 .modal {
   /* new custom width */
@@ -63,6 +64,15 @@ div.filters {
   .popup-holder01 .popup:after {
     background: url(/assets/species/arrow05-dark.png) no-repeat;
     background-size: 100%;
+  }
+}
+
+div.secondary-errors {
+  p {
+    padding-bottom: 0;
+    border-bottom: 0;
+    color: $warning-yellow;
+    font-weight: normal;
   }
 }
 
@@ -242,7 +252,7 @@ div.popup-holder01 {
   line-height: 60px;
 }
 
-#shipment_form_modal {
+.shipment-form-modal {
   form {
     margin-bottom: 0;
   }
