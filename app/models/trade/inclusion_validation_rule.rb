@@ -17,12 +17,12 @@
 class Trade::InclusionValidationRule < Trade::ValidationRule
   attr_accessible :valid_values_view
 
-  def error_message(values_ary)
+  def error_message(values_ary = nil)
     scope_info = sanitized_scope.map do |scope_column, scope_value|
       "#{scope_column} = #{scope_value}"
     end.compact.join(', ')
     info = column_names.each_with_index.map do |cn, idx|
-      "#{cn} #{values_ary[idx]}"
+      "#{cn} #{values_ary && values_ary[idx]}"
     end.join(" with ")
     info = "#{info} (#{scope_info})" unless scope_info.blank?
     info + ' is invalid'
@@ -44,22 +44,24 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     end
   end
 
-  # Sanitizes column names provided within the scope attribute
-  # Also replaces attr_blank => true with attr => nil
-  def sanitized_scope
-    res = {}
-    scope && scope.each do |scope_column, scope_value|
-      scope_column =~ /(.+?)(_blank)?$/
-      scope_column = $1
-      scope_value = nil unless $2.nil? #if _blank, then check for null
-      if (
-        Trade::SandboxTemplate.column_names +
-        ['point_of_view', 'importer', 'exporter']
-      ).include? scope_column
-        res[scope_column] = scope_value
-      end
+  def validation_errors_for_shipment(shipment)
+    shipment_in_scope = true
+    # check if shipment is in scope of this validation
+    shipments_scope.each do |scope_column, scope_value|
+      shipment_in_scope = false if shipment.send(scope_column) != scope_value
     end
-    res
+    # make sure the validated fields are not blank
+    shipments_columns.each do |column|
+      shipments_in_scope = false if shipment.send(column).blank?
+    end
+    return nil unless shipment_in_scope
+    # if it is, check if it has a match in valid values view
+    v = Arel::Table.new(valid_values_view)
+    arel_nodes = shipments_columns.map { |c| v[c].eq(shipment.send(c)) }
+    conditions = arel_nodes.shift
+    arel_nodes.each{ |n| conditions = conditions.and(n) }
+    return nil if Trade::Shipment.find_by_sql(v.project('*').where(conditions)).any?
+    error_message
   end
 
   private

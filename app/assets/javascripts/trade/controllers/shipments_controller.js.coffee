@@ -2,7 +2,10 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
-  errors: null
+
+  init: ->
+    transaction = @get('store').transaction()
+    @set('transaction', transaction)
 
   columns: [
     'id', 'year', 'appendix', 'taxonConcept.fullName',
@@ -181,17 +184,13 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       params[property.param] = @parseSelectedParams(selectedParams)
     params
 
-  searchParamsForUrl: () ->
+  searchParamsForUrl: ( ->
     params = {}
     @selectedQueryParamNames.forEach (property) =>
       selectedParams = @get(property.name)
       params[property.urlParam] = @parseSelectedParams(selectedParams)
+    params['internal'] = true #TODO remove this once authentication in place
     params
-
-  rawDownloadUrl: (->
-    params = @searchParamsForUrl()
-    params['report_type'] = 'raw' #TODO this will likely be a property in its own right
-    '/trade/exports/download?' + $.param({'filters': params})
   ).property(
     'selectedTaxonConcepts.@each', 'selectedAppendices.@each',
     'selectedTimeStart', 'selectedTimeEnd', 'selectedQuantity',
@@ -203,41 +202,53 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     'selectedPermits.@each'
   )
 
+  rawDownloadUrl: (->
+    params = @get('searchParamsForUrl')
+    params['report_type'] = 'raw' #TODO this will likely be a property in its own right
+    '/trade/exports/download?' + $.param({filters: params})
+  ).property('searchParamsForUrl')
+
+  comptabDownloadUrl: (->
+    params = @get('searchParamsForUrl')
+    params['report_type'] = 'comptab' #TODO this will likely be a property in its own right
+    '/trade/exports/download?' + $.param({filters: params})
+  ).property('searchParamsForUrl')
+
   actions:
     # creates a local new shipment (bound to currentShipment)
     newShipment: () ->
       @set('currentShipment', Trade.Shipment.createRecord())
-      $('.modal').modal('show')
+      $('.shipment-form-modal').modal('show')
 
     # saves the new shipment (bound to currentShipment) to the db
-    saveShipment: ->
-      shipment = @get('currentShipment')
+    saveShipment: (shipment, ignoreWarnings) ->
+      shipment.set('ignoreWarnings', ignoreWarnings)
       # Before trying to save a shipment
       # we need to reset the model to a valid state.
       unless shipment.get('isValid')
         shipment.send("becameValid")
       unless shipment.get('isSaving')
-        shipment.get('transaction').commit()
+        transaction = @get('transaction')
+        transaction.add(shipment)
+        transaction.commit()
+      # this is here so that after another validation
+      # the user gets the secondary validation warning
+      shipment.set('propertyChanged', false)
       shipment.one('didCreate', this, ->
-        @set('errors', '')
         @set('currentShipment', null)
-        $('.modal').modal('hide')
+        $('.shipment-form-modal').modal('hide')
         @send('search')
       )
       shipment.one('didUpdate', this, ->
-        @set('errors', '')
         @set('currentShipment', null)
-        $('.modal').modal('hide')
+        $('.shipment-form-modal').modal('hide')
         @send('search')
-      )
-      shipment.one('becameInvalid', this, ->
-        @set 'errors', shipment.errors
       )
 
     cancelShipment: () ->
+      @get('currentShipment').rollback()
       @set('currentShipment', null)
-      @set 'errors', null
-      $('.modal').modal('hide')
+      $('.shipment-form-modal').modal('hide')
 
     # discards the new shipment (bound to currentShipment)
     deleteShipment: (shipment) ->
@@ -246,13 +257,12 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
         shipment.get('transaction').commit()
         shipment.one('didDelete', this, ->
           @set('currentShipment', null)
-          @set 'errors', null
           @send('search')
         )
 
     editShipment: (shipment) ->
       @set('currentShipment', shipment)
-      $('.modal').modal('show')
+      $('.shipment-form-modal').modal('show')
 
     search: ->
       @openShipmentsPage @searchParamsForTransition()

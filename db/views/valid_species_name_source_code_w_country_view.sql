@@ -3,7 +3,9 @@ DROP VIEW IF EXISTS valid_species_name_country_of_origin_view;
 DROP VIEW IF EXISTS valid_species_name_country_view;
 CREATE VIEW valid_species_name_country_view AS
 SELECT full_name AS species_name,
-geo_entities.iso_code2 AS iso_code2
+taxon_concepts.id AS taxon_concept_id,
+geo_entities.iso_code2 AS iso_code2,
+geo_entities.id AS geo_entity_id
 FROM taxon_concepts
 JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
   AND taxonomies.name = 'CITES_EU'
@@ -14,9 +16,11 @@ JOIN geo_entities
 
 
 CREATE VIEW valid_species_name_exporter_view AS
-SELECT species_name, iso_code2 AS exporter
+SELECT species_name, taxon_concept_id,
+iso_code2 AS exporter, geo_entity_id AS exporter_id
 FROM valid_species_name_country_view;
 
 CREATE VIEW valid_species_name_country_of_origin_view AS
-SELECT species_name, iso_code2 AS country_of_origin
+SELECT species_name, taxon_concept_id,
+iso_code2 AS country_of_origin, geo_entity_id AS country_of_origin_id
 FROM valid_species_name_country_view;

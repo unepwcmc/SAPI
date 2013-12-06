@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION rebuild_valid_species_name_appendix_year_mview() RETU
   )
   SELECT
     taxon_concepts.full_name species_name,
+    taxon_concepts.id taxon_concept_id,
     appendix_year "year",
     CASE
       WHEN appendix IS NOT NULL THEN appendix
