@@ -2,7 +2,9 @@
 class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
 
   def initialize(filters)
-    @filters = filters
+    @filters = filters.delete_if do |k,v|
+      ['quantity', 'permits_ids', 'reporter_type'].include? k
+    end
     @search = Trade::Filter.new(
       @filters,
       Trade::Shipment.from('trade_shipments_comptab_view trade_shipments')
