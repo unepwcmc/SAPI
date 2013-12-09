@@ -23,9 +23,9 @@ fr:
   genus_title: "Sélectionnez un genre"
 
   all_countries: "Tous les Pays"
-  all_sources: "All Sources"
-  all_purposes: "All Purposes"
-  all_terms: "All Terms"
+  all_sources: "Toutes les Sources"
+  all_purposes: "Tous les Buts"
+  all_terms: "Tous les Termes"
 
   search_selection: "Critères de recherche sélectionnés:"
   search: "Rechercher"
@@ -37,6 +37,7 @@ fr:
   trade_guide: ""
 
   reports: "RAPPORTS"
+  report: "Rapport"
   select_output: "Sélectionnez le type de sortie:"
   select_report: "Sélectionnez le type de rapport:"
   comparative_tabulations: "Tabulations Comparatives"

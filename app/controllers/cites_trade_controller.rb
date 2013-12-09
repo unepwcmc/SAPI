@@ -7,7 +7,7 @@ class CitesTradeController < ApplicationController
   def download
   end
 
-  def view
+  def view_results
   end
 
   def set_locale

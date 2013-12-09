@@ -422,7 +422,7 @@ $(document).ready(function(){
   	  	data: data.terms,
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.code + ' - ' + item.name_en}
+  	  	text: function (item) {return item.code + ' - ' + item.name}
   	  };
     
     initTermsObj(data);
@@ -459,7 +459,7 @@ $(document).ready(function(){
   	  	data: data.sources,
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.code + ' - ' + item.name_en}
+  	  	text: function (item) {return item.code + ' - ' + item.name}
   	  };
   	
     initSourcesObj(data);
@@ -494,7 +494,7 @@ $(document).ready(function(){
   	  	data: data.purposes,
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.code + ' - ' + item.name_en}
+  	  	text: function (item) {return item.code + ' - ' + item.name}
   	  };
   	
     initPurposesObj(data);
@@ -675,11 +675,11 @@ $(document).ready(function(){
   // This is used for checking on which page we are, because we only need this
   // stuff on the query page, not on the download one.
   if ($('#form_expert').length > 0) {
-    $.when($.ajax("/api/v1/units", data_type)).then(initUnitsObj, ajaxFail);
-    $.when($.ajax("/api/v1/geo_entities", data_type)).then(initExpctyImpcty, ajaxFail);
-    $.when($.ajax("/api/v1/terms", data_type)).then(initTerms, ajaxFail);
-    $.when($.ajax("/api/v1/sources", data_type)).then(initSources, ajaxFail);
-    $.when($.ajax("/api/v1/purposes", data_type)).then(initPurposes, ajaxFail);
+    $.when($.ajax("/api/v1/units?locale=" + locale, data_type)).then(initUnitsObj, ajaxFail);
+    $.when($.ajax("/api/v1/geo_entities?locale=" + locale, data_type)).then(initExpctyImpcty, ajaxFail);
+    $.when($.ajax("/api/v1/terms?locale=" + locale, data_type)).then(initTerms, ajaxFail);
+    $.when($.ajax("/api/v1/sources?locale=" + locale, data_type)).then(initSources, ajaxFail);
+    $.when($.ajax("/api/v1/purposes?locale=" + locale, data_type)).then(initPurposes, ajaxFail);
   }
 
   //////////////////////////
@@ -712,7 +712,7 @@ $(document).ready(function(){
 
   function goToResults (q) {
     var $link = $('#view_genie'),
-     href = '/' + locale + '/cites_trade/download/view?' + q;
+     href = '/' + locale + '/cites_trade/download/view_results?' + q;
     $link.attr('href', href).click();
     window.location.href = $link.attr("href");
   }
