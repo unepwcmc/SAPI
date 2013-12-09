@@ -11,7 +11,7 @@
  *= require cites_trade/base
  *= require cites_trade/citestrade
  *= require cites_trade/cites
- *= require cites_trade/table_results
+ *= require cites_trade/customisations
  *= require cites_trade/translations
  *= require_self
 */
