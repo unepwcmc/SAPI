@@ -237,7 +237,7 @@ $(document).ready(function(){
       $link = $(this);
       values = parseInputs($('#form_expert :input'));
       params = $.param({'filters': values});
-      href = '/cites_trade/download?' + params;
+      href = '/' + locale + '/cites_trade/download?' + params;
       queryResults.ajax = true;
       $('#search-error-message').hide();
       $link.attr('href', href).click();
@@ -712,7 +712,7 @@ $(document).ready(function(){
 
   function goToResults (q) {
     var $link = $('#view_genie'),
-     href = '/cites_trade/download/view?' + q;
+     href = '/' + locale + '/cites_trade/download/view?' + q;
     $link.attr('href', href).click();
     window.location.href = $link.attr("href");
   }
