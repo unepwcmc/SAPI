@@ -577,13 +577,24 @@ $(document).ready(function(){
     }
     return '';
   }
+
+  function getTaxonLabel (element, term) {
+    var name = element.full_name,
+      term = term.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&"),
+      suggestion = element.full_name + getFormattedSynonyms(element),
+      transform = function (match) {
+        return "<span class='match'>" + match + "</span>";
+      };
+    return suggestion.replace(new RegExp("(" + term + ")", "gi"), transform);
+  }
   
-  function parseTaxonData (data) {
+  function parseTaxonData (data, term) {
     var d = data.auto_complete_taxon_concepts;
   	return _.map(d, function (element, index) {
   	  return {
         'value': element.id, 
-        'label': element.full_name + getFormattedSynonyms(element)
+        'label': element.full_name + getFormattedSynonyms(element),
+        'drop_label': getTaxonLabel(element, term)
       };
   	});
   }
@@ -591,17 +602,18 @@ $(document).ready(function(){
   //Autocomplete for cites_names
   $("#taxon_search").autocomplete({
   	source: function(request, response) {
+      var term = request.term;
       $.ajax({
         url: "/api/v1/auto_complete_taxon_concepts",
         dataType: "json",
         data: {
           taxonomy: 'CITES',
-          taxon_concept_query: request.term,
+          taxon_concept_query: term,
           autocomplete: true,
           'ranks[]': "SPECIES"
         },
         success: function(data) {
-          response(parseTaxonData(data));
+          response(parseTaxonData(data, term));
         },
   			error : function(xhr, ajaxOptions, thrownError){
   				growlMe(xhr.status + " ====== " + thrownError);
@@ -614,7 +626,11 @@ $(document).ready(function(){
   		$('#species_out').text(ui.item.label);
   		return false;
   	}
-  });
+  }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+    return $( "<li>" )
+      .append( "<a>" + item.drop_label + "</a>" )
+      .appendTo( ul );
+    };
 
   //Autocomplete for cites_genus
   $("#genus_search").autocomplete({
