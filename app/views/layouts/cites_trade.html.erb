@@ -5,6 +5,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <%= stylesheet_link_tag "cites_trade" %>
   <%= javascript_include_tag "cites_trade" %>
+  <script>
+    var locale = "<%= I18n.locale %>";
+  </script>
 </head>
 
 <body class="markeeta">
@@ -18,15 +21,22 @@
     </div>
   
     <div id="language_links" class="linkStyle">
-      <font size="-1" face="Verdana, Arial, Helvetica, sans-serif">
-        <a href="http://www.unep-wcmc-apps.org//citestrade/process.cfm?language=spanish">
-        Espanol
-        </a>
-        <a href="http://www.unep-wcmc-apps.org//citestrade/process.cfm?language=french">
-        Francais
-        </a>
-      </font>
+      <% if I18n.locale == I18n.default_locale %>
+        <%= link_to "Espanol", :locale=>'es'%>
+        <%= link_to "Francais", :locale=>'fr'%>
+      <%end%>
+
+      <% if I18n.locale == :es %>
+        <%= link_to "English", :locale=>'en'%>
+        <%= link_to "Francais", :locale=>'fr'%>
+      <%end%>
+
+      <% if I18n.locale == :fr %>
+        <%= link_to "English", :locale=>'en'%>
+        <%= link_to "Espanol", :locale=>'es'%>
+      <%end%>
     </div>
+
     <br><br>
   <%= yield %>
   <div class="container clearfix">
