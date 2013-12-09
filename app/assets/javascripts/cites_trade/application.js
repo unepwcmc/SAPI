@@ -726,8 +726,14 @@ $(document).ready(function(){
   
   function handleDownloadRequest () {
     var output_type = $( "input[name='outputType']:checked" ).val(),
-      report_type, // TODO
+      report_type = $( "input[name='report']:checked" ).val(),
       query = location.search.substr(1);
+      if ( report_type === 'comparative' ) {
+        query = query.replace("report_type%5D=raw", "report_type%5D=comptab");
+      } else {
+        query = query.replace(/report_type%5D=(raw|comptab)/, "report_type%5D=net_gross");
+        return; // TODO
+      }
       if (output_type === 'web') {
         goToResults(query);
       } else {
@@ -738,6 +744,7 @@ $(document).ready(function(){
   $('#button_report').click( function (e) {handleDownloadRequest() });
 
   ///////////View page specific:
+
   if ( $('#query_results').length > 0 ) {
     var query = decodeURIComponent( location.search.substr(1) );
     displayResults(query);
