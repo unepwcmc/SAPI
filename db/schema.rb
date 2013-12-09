@@ -120,6 +120,7 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
+    t.integer "genus_id"
     t.text    "kingdom_name"
     t.text    "phylum_name"
     t.text    "class_name"
@@ -231,6 +232,7 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
+    t.integer "genus_id"
     t.text    "phylum_name"
     t.text    "class_name"
     t.text    "order_name"
@@ -369,22 +371,6 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.integer  "source_id"
   end
 
-  create_table "eu_decisions_import", :id => false, :force => true do |t|
-    t.boolean "is_current"
-    t.string  "taxonomy",        :limit => nil
-    t.integer "event_legacy_id"
-    t.integer "legacy_id"
-    t.string  "rank",            :limit => nil
-    t.string  "kingdom",         :limit => nil
-    t.string  "country_iso2",    :limit => nil
-    t.string  "opinion",         :limit => nil
-    t.date    "start_date"
-    t.string  "source",          :limit => nil
-    t.string  "term",            :limit => nil
-    t.string  "notes",           :limit => nil
-    t.string  "internal_notes",  :limit => nil
-  end
-
   create_table "eu_listing_changes_mview", :id => false, :force => true do |t|
     t.integer  "taxon_concept_id"
     t.integer  "id"
@@ -458,6 +444,7 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
+    t.integer "genus_id"
     t.text    "kingdom_name"
     t.text    "phylum_name"
     t.text    "class_name"
@@ -1064,22 +1051,6 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.string   "excluded_taxon_concepts_ids", :limit => nil
   end
 
-  create_table "trade_sandbox_3", :force => true do |t|
-    t.string "appendix"
-    t.string "species_name"
-    t.string "term_code"
-    t.string "quantity"
-    t.string "unit_code"
-    t.string "trading_partner"
-    t.string "country_of_origin"
-    t.string "export_permit"
-    t.string "origin_permit"
-    t.string "purpose_code"
-    t.string "source_code"
-    t.string "year"
-    t.string "import_permit"
-  end
-
   create_table "trade_sandbox_template", :force => true do |t|
     t.string "appendix"
     t.string "species_name"
@@ -1157,8 +1128,9 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
 
   create_table "valid_species_name_appendix_year_mview", :id => false, :force => true do |t|
     t.string  "species_name"
+    t.integer "taxon_concept_id"
     t.integer "year"
-    t.string  "appendix",     :limit => nil
+    t.string  "appendix",         :limit => nil
   end
 
   add_index "valid_species_name_appendix_year_mview", ["species_name", "appendix", "year"], :name => "valid_species_name_appendix_year_species_name_appendix_year_idx"

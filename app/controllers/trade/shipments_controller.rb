@@ -55,7 +55,8 @@ private
       :country_of_origin_permit_number,
       :purpose_id,
       :source_id,
-      :year
+      :year,
+      :ignore_warnings
     )
   end
 

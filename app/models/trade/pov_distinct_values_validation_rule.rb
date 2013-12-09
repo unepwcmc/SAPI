@@ -18,6 +18,28 @@ class Trade::PovDistinctValuesValidationRule < Trade::PovInclusionValidationRule
 
   # TODO should have a validation for at least 2 column names
 
+  def validation_errors_for_shipment(shipment)
+    shipment_in_scope = true
+    # check if shipment is in scope of this validation
+    shipments_scope.each do |scope_column, scope_value|
+      shipment_in_scope = false if shipment.send(scope_column) != scope_value
+    end
+    # make sure the validated fields are not blank
+    shipments_columns.each do |column|
+      shipments_in_scope = false if shipment.send(column).blank?
+    end
+    return nil unless shipment_in_scope
+    # if it is, check if validated columns are not equal
+    distinct_values = true
+    shipments_columns.each do |c1|
+      shipments_columns.each do |c2|
+        distinct_values = false if c1 != c2 && shipment.send(c1) == shipment.send(c2)
+      end
+    end
+    return nil if distinct_values
+    error_message
+  end
+
   private
   # Returns records that have the same value for both columns
   # specified in column_names. If more then 2 columns are specified,
