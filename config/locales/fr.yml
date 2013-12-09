@@ -43,5 +43,8 @@ fr:
   comparative_tabulations: "Tabulations Comparatives"
   trade_tabulations: "Tabulations du Commerce Brut/Net"
   get_report: "Obtenir le rapport"
-  new_search: "Nouvelle Recherche"  
+  new_search: "Nouvelle Recherche" 
+
+  from: "De"
+  to: "A"
 
