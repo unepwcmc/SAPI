@@ -600,37 +600,39 @@ $(document).ready(function(){
   }
    
   //Autocomplete for cites_names
-  $("#taxon_search").autocomplete({
-  	source: function(request, response) {
-      var term = request.term;
-      $.ajax({
-        url: "/api/v1/auto_complete_taxon_concepts",
-        dataType: "json",
-        data: {
-          taxonomy: 'CITES',
-          taxon_concept_query: term,
-          autocomplete: true,
-          'ranks[]': "SPECIES"
-        },
-        success: function(data) {
-          response(parseTaxonData(data, term));
-        },
-  			error : function(xhr, ajaxOptions, thrownError){
-  				growlMe(xhr.status + " ====== " + thrownError);
-  			}
-      });
-    },
-  	select: function( event, ui ) {
-  		$(this).attr('value', ui.item.label);
-      selected_taxa = ui.item.value;
-  		$('#species_out').text(ui.item.label);
-  		return false;
-  	}
-  }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
-    return $( "<li>" )
-      .append( "<a>" + item.drop_label + "</a>" )
-      .appendTo( ul );
-    };
+  if ($('#form_expert').length > 0) {
+    $("#taxon_search").autocomplete({
+    	source: function(request, response) {
+        var term = request.term;
+        $.ajax({
+          url: "/api/v1/auto_complete_taxon_concepts",
+          dataType: "json",
+          data: {
+            taxonomy: 'CITES',
+            taxon_concept_query: term,
+            autocomplete: true,
+            'ranks[]': "SPECIES"
+          },
+          success: function(data) {
+            response(parseTaxonData(data, term));
+          },
+    			error : function(xhr, ajaxOptions, thrownError){
+    				growlMe(xhr.status + " ====== " + thrownError);
+    			}
+        });
+      },
+    	select: function( event, ui ) {
+    		$(this).attr('value', ui.item.label);
+        selected_taxa = ui.item.value;
+    		$('#species_out').text(ui.item.label);
+    		return false;
+    	}
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+      return $( "<li>" )
+        .append( "<a>" + item.drop_label + "</a>" )
+        .appendTo( ul );
+      };
+  }
 
   //Autocomplete for cites_genus
   $("#genus_search").autocomplete({
