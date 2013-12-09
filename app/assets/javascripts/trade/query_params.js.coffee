@@ -1,5 +1,15 @@
 Trade.QueryParams = Ember.Mixin.create({
 
+  queryParamsProperties: (->
+    result = {}
+    @get('selectedQueryParamNames').forEach (property) =>
+      result[property.name] = {
+        param: property.param
+        urlParam: property.urlParam
+      }
+    result
+  ).property('selectedQueryParamNames')
+
   selectedQueryParamNames: [
     {
       name: "selectedTaxonConcepts"
