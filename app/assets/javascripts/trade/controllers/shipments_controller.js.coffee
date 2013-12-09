@@ -18,7 +18,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
 
   codeMappings: {
     isoCode2: "name"
-    code: "nameEn"
+    code: "name"
   }
 
   shipmentsSaving: ( ->
