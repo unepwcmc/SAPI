@@ -9,14 +9,14 @@
     
     <div class="grid_16 main_content">
       
-      <div class='heading_label' style="text-align: center;"> &nbsp; CITES Trade Database </div>
-      <div style="font-size:16px;font-weight:150;text-align: left;"> &nbsp; Please enter your search below: </div>
+      <div class='heading_label' style="text-align: center;"> &nbsp; <%= t('cites_title') %> </div>
+      <div style="font-size:16px;font-weight:150;text-align: left;"> &nbsp; <%= t('cites_sub_title') %>: </div>
       <div class="grid_8">
       </div>
       <!--Error message -->
       <div class="grid_8">
 
-        <div style="text-align: left; color:#FF0000; font-weight:bold; display:none;" id="search-error-message">Your query has returned no data.<br>Please select other variables or check in the UNEP-WCMC Species Database that you are using the correct spelling/scientific name.</font></div>
+        <div style="text-align: left; color:#FF0000; font-weight:bold; display:none;" id="search-error-message"><%= t('errors.no_data_1') %>.<br><%= t('errors.no_data_2') %>.</font></div>
         
       </div>
       <hr class="space">
@@ -26,38 +26,37 @@
           
           <ul>
             <li><a href="#tabs-year">
-              Year Range:<span class="information qtipify" title="This is a test">&nbsp;</span></a>
+              <%= t('year_text') %>:<span>&nbsp;</span></a>
             </li>
             <li>
               <a href="#tabs-exp">
-              Exporting countries: <span class="information qtipify" title=" Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected. ">&nbsp;</span></a>
+              <%= t('export_text') %>: <span>&nbsp;</span></a>
             </li>
             <li><a href="#tabs-imp">
-              Importing countries: <span class="information qtipify" title=" Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected. ">&nbsp;</span></a>
+              <%= t('import_text') %>: <span>&nbsp;</span></a>
             </li>
             <li><a href="#tabs-source">
-              Source: <span class="information qtipify" title=" Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected. ">&nbsp;</span></a>
+              <%= t('source_text') %>: <span>&nbsp;</span></a>
             </li>
           </li>
           <li><a href="#tabs-purpose">
-            Purpose: <span class="information qtipify" title=" Type the purpose or purposes (e.g. 'T- Commercial' or 'S- Scientific') you wish to include in your final output. To include data for all purposes, leave 'All Purposes' selected. ">&nbsp;</span>
+            <%= t('purpose_text') %>: <span>&nbsp;</span>
             </a>
           </li>
           
           <li><a href="#tabs-terms">
-            Trade Terms:
-            <span class="information qtipify" title=" Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected. ">&nbsp;</span>
+            <%= t('trade_text') %>: <span>&nbsp;</span>
             </a>
           </li>
           
-          <li><a href="#tabs-taxon">Search by taxon:</a></li>
+          <li><a href="#tabs-taxon"><%= t('taxon_text') %>:</a></li>
         </ul>
 
         <div id="tabs-year">
-          <div id="year" class="label_style"> Year Range :
-            <img src="/assets/cites_trade/information3.gif" class="qtipify" title=" Select start (From) and end (To) years for your query. It is advisable to limit your data request to a year span not exceeding 5 years. " />
+          <div id="year" class="label_style"><%= t('year_text') %> :
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('year_tip') %> " />
           </div>
-          From
+          <%= t('from') %>
           <select name="time_range_start" id="qryFrom">
             <option selected value="2012">2012</option>
             <option  value="2011">2011</option>
@@ -98,7 +97,7 @@
             <option  value="1976">1976</option>
             <option  value="1975">1975</option>
           </select> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-          To
+          <%= t('to') %>
           <select name="time_range_end" id="qryTo">
             <option  value="2012">2012</option>
             <option  value="2011">2011</option>
@@ -139,57 +138,57 @@
             <option  value="1976">1976</option>
             <option  value="1975">1975</option>
           </select>
-          <span class="information qtipify" title=" Select start (From) and end (To) years for your query. It is advisable to limit your data request to a year span not exceeding 5 years. ">&nbsp;</span>
+          <span class="information qtipify" title="<%= t('year_text') %>">&nbsp;</span>
         </div>
         <div id="tabs-exp">
-          <div class="label_style"> Exporting countries:
-            <img src="/assets/cites_trade/information3.gif" class="qtipify" title=" Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected. " />
+          <div class="label_style"> <%= t('export_text') %>:
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('export_tip') %>" />
           </div>
           <div>
             <select id="expcty" class="multi_countries" multiple="multiple" name="exporters_ids[]">
-              <option selected value="all_exp"> All Countries </option>
+              <option selected value="all_exp"> <%= t('all_countries') %> </option>
             </select>
           </div>
         </div>
         <div id="tabs-imp">
-          <div class="label_style"> Importing countries:
-            <img src="/assets/cites_trade/information3.gif" class="qtipify" title=" Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected. " />
+          <div class="label_style"> <%= t('import_text') %>:
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('import_tip') %>" />
           </div>
           <div>
             <select id="impcty" class="multi_countries" multiple="multiple"  name="importers_ids[]">
-              <option selected value="all_imp"> All Countries </option>
+              <option selected value="all_imp"> <%= t('all_countries') %> </option>
             </select>
           </div>
         </div>
         <div id="tabs-source">
-          <div class="label_style"> Source:
-            <img src="/assets/cites_trade/information3.gif" class="qtipify" title=" Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected. " />
+          <div class="label_style"> <%= t('source_text') %>:
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('source_tip') %>" />
           </div>
           <div>
             <select name="sources_ids[]" id="sources"  multiple="multiple" class="multisel">
-              <option value="all_sou"  selected> All Sources </option>
+              <option value="all_sou"  selected> <%= t('all_sources') %> </option>
             </select>
           </div>
         </div>
         <div id="tabs-purpose">
-          <div class="label_style"> Purpose:
+          <div class="label_style"> <%= t('purpose_text') %>:
             
-            <img src="/assets/cites_trade/information3.gif" class="qtipify" title=" Type the purpose or purposes (e.g. 'T- Commercial' or 'S- Scientific') you wish to include in your final output. To include data for all purposes, leave 'All Purposes' selected. " />
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('purpose_tip') %>" />
           </div>
           <div>
             <select name="purposes_ids[]" id="purposes"  multiple="multiple" class="multisel">
-              <option value="all_pur"  selected> All Purposes </option>
+              <option value="all_pur"  selected>  <%= t('all_purposes') %>  </option>
             </select>
           </div>
         </div>
         
         <div id="tabs-terms">
-          <div class="label_style"> Trade Terms:
-            <img src="/assets/cites_trade/information3.gif" class="qtipify" title=" Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected. " />
+          <div class="label_style"> <%= t('trade_text') %>:
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('trade_tip') %>" />
           </div>
           <div>
             <select name="terms_ids[]" id="terms" class="multisel" multiple="multiple">
-              <option value="all_ter"  selected> All Terms </option>
+              <option value="all_ter"  selected>  <%= t('all_terms') %>  </option>
             </select>
           </div>
         </div>
@@ -197,10 +196,7 @@
         <div id="tabs-taxon">
           
           <div>
-            
-            To retrieve data for a specific taxon, type in the taxon name. Data on specimens recorded in trade at the higher taxon level (e.g. Scleractinia spp.) can also be retrieved through this search.
-            To retrieve data for all species within a particular genus, select a genus from the drop-down below.
-            To select all taxa, leave these sections blank.
+            <%= t('taxon_tip') %>
             <br>
             
           </div>
@@ -210,7 +206,7 @@
             <input type="radio" name="selection_taxon" value="taxon">&nbsp;
           </div>
           <div  id="div_taxon" class="grid_8">
-            <span style="padding:10px 0px">Search for taxon reported trade:</span><br />
+            <span style="padding:10px 0px"><%= t('taxon_title') %></span><br />
             <input type="text" size="30" name="taxon_concepts_ids[]" id="taxon_search" value=""><br>
           </div>
           <hr class="space">
@@ -219,7 +215,7 @@
             <input type="radio" name="selection_taxon" value="genus">&nbsp;
           </div>
           <div id="div_genus" class="grid_8">
-            <span style="padding:10px 0px">Search for genus:</span><br />
+            <span style="padding:10px 0px"><%= t('genus_title') %></span><br />
             <input type="text" size="30" name="taxon_concepts_ids[]" id="genus_search" value=""><br>
           </div>
           
@@ -229,7 +225,7 @@
 
     <div class="grid_5 selection_box">
       <div id="empty_box">
-        <div style="font-weight:600; font-size:16px"> Search Selection: </div><br />
+        <div style="font-weight:600; font-size:16px"> <%= t('search_selection') %> </div><br />
         <table id="table_selection" class="select_label" border="1" width="95%">
           <tr><td width="30%">Year selection: </td><td width="70%"><span id="year_out" class="span_label"></span></td></tr>
           <tr><td width="30%">Exporting countries: </td><td  width="70%"><span id="expcty_out" class="span_label"></span></td></tr>
@@ -244,10 +240,10 @@
       
       <hr class="space">
       <div class="buttons">
-        <a id='submit_expert' href="#">Search</a>
+        <a id='submit_expert' href="#"><%= t('search') %></a>
         <button type="reset" name="reset" style="float:right" id="reset_search">
         <img src="/assets/cites_trade/refresh1.png" alt=""/>
-        Reset
+        <%= t('reset') %>
         </button>
       </div>
     </div>
@@ -255,7 +251,7 @@
 </form>
 
 <div class="grid_16 other_info">
-  <p align="center"><strong> Download </strong> <a href="docs/CITESTradeDatabaseGuide_v7.pdf" target="doc"> A Guide to Using the CITES Trade Database </a></p>
+  <p align="center"><strong> <%= t('download') %> </strong> <a href="/downloads/cites_trade/CITESTradeDatabaseGuide_v7.pdf"><%= t('db_guide') %></a></p>
 </div>
 </div>
 
