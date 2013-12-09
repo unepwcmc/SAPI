@@ -246,7 +246,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       )
 
     cancelShipment: () ->
-      @get('currentShipment').rollback()
+      @get('transaction').rollback()
       @set('currentShipment', null)
       $('.shipment-form-modal').modal('hide')
 
