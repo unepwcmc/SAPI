@@ -44,3 +44,6 @@ es:
   trade_tabulations: " Tabulaciones del Comercio Bruto/Neto"
   get_report: "Obtener el informe"
   new_search: "Nueva Búsqueda"
+
+  from: "Desde"
+  to: "A"
