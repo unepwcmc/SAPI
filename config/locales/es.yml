@@ -23,9 +23,9 @@ es:
   genus_title: "Seleccione un género:"
 
   all_countries: "Todos los Países"
-  all_sources: "All Sources"
-  all_purposes: "All Purposes"
-  all_terms: "All Terms"
+  all_sources: "Todos los Orígenes"
+  all_purposes: "Todos los Objetivos"
+  all_terms: "Todos los Términos"
 
   search_selection: "Criterios de búsqueda seleccionados:"
   search: "Buscar"
