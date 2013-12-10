@@ -5,14 +5,27 @@ class Trade::ShipmentsExportFactory
     puts filters.inspect
     @report_type = filters && filters[:report_type] &&
       filters[:report_type].downcase.strip.to_sym
-    unless [:raw, :comptab, :net_gross].include? @report_type
+    unless [:raw, :comptab, :gross_exports, :gross_imports].include? @report_type
       @report_type = :comptab
     end
+    puts @report_type
     case @report_type
       when :comptab
+        filters = filters.delete_if do |k,v|
+          ['quantity', 'permits_ids', 'reporter_type'].include? k
+        end
         Trade::ShipmentsComptabExport.new(filters)
-      when :net_gross
-        raise "net/gross is not implemented yet"
+      when :gross_exports
+        filters = filters.delete_if do |k,v|
+          ['quantity', 'permits_ids', 'reporter_type', 'purpose_id', 'source_id'].include? k
+        end
+        puts filters.inspect
+        Trade::ShipmentsGrossExportsExport.new(filters)
+      when :gross_imports
+        filters = filters.delete_if do |k,v|
+          ['quantity', 'permits_ids', 'reporter_type', 'purpose_id', 'source_id'].include? k
+        end
+        Trade::ShipmentsGrossImportsExport.new(filters)
       else
         Trade::ShipmentsExport.new(filters)
     end

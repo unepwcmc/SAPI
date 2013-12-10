@@ -2,21 +2,11 @@
 class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
 
   def initialize(filters)
-    @filters = filters.delete_if do |k,v|
-      ['quantity', 'permits_ids', 'reporter_type'].include? k
-    end
+    @filters = filters
     @search = Trade::Filter.new(
       @filters,
-      Trade::Shipment.from('trade_shipments_comptab_view trade_shipments')
+      Trade::Shipment.from("#{table_name} trade_shipments")
     )
-  end
-
-  def query
-    headers = csv_column_headers
-    select_columns = sql_columns.each_with_index.map do |c, i|
-      "#{c} AS \\\"#{headers[i]}\\\""
-    end
-    @search.query.select(select_columns)
   end
 
 private

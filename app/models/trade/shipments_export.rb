@@ -4,7 +4,6 @@ class Trade::ShipmentsExport < Species::CsvExport
 
   def initialize(filters)
     @filters = filters
-    @internal = filters[:internal]
     @search = Trade::Filter.new(@filters)
   end
 
