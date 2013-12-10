@@ -689,18 +689,9 @@ $(document).ready(function(){
   function populateSelect(args) {
   	var data = args.data,
   	  selection = args.selection,
-      id = selection.attr('id'),
   	  condition = args.condition,
   	  value = args.value,
   	  text = args.text;
-    if ( id.match(/sources|purposes|terms/) ) {
-      data = _.sortBy(data, function (item) {
-        // Sorts by name:
-        return text(item).split('-')[1];
-        // If we want to sort by code:
-        //return text(item);
-      }); 
-    }
   	_.each(data, function (item) {
 	  	if (condition(item)) {
 	      selection.append('<option title="' + text(item)
