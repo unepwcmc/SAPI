@@ -30,11 +30,14 @@ class ListingChange < ActiveRecord::Base
   attr_accessor :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
 
   belongs_to :event
+  has_many :listing_change_copies, :foreign_key => :source_id,
+    :class_name => "ListingChange", :dependent => :nullify
   belongs_to :species_listing
   belongs_to :taxon_concept, :touch => true
   belongs_to :change_type
   has_many :listing_distributions, :conditions => {:is_party => false}, :dependent => :destroy
-  has_one :party_listing_distribution, :class_name => 'ListingDistribution', :conditions => {:is_party => true}, :dependent => :destroy
+  has_one :party_listing_distribution, :class_name => 'ListingDistribution',
+    :conditions => {:is_party => true}, :dependent => :destroy
   has_many :geo_entities, :through => :listing_distributions
   has_one :party_geo_entity, :class_name => 'GeoEntity',
     :through => :party_listing_distribution, :source => :geo_entity
