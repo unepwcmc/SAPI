@@ -767,17 +767,15 @@ $(document).ready(function(){
   }
 
   if (is_download_page) {
-    (function setUpControlls () {
-      var net_gross_options = $( '#net_gross_options' );
-      net_gross_options.hide();
-      $( "input[name='outputType']").click( function () {
-        if ($(this).val() === 'csv') {
-          net_gross_options.show();
-        } else {
-          net_gross_options.hide();
-        }
-      });
-    })();
+    var net_gross_options = $( '#net_gross_options' );
+    net_gross_options.hide();
+    $( "input[name='outputType']").click( function () {
+      if ($(this).val() === 'csv') {
+        net_gross_options.show();
+      } else {
+        net_gross_options.hide();
+      }
+    });
   }
 
   $('#button_report').click( function (e) {handleDownloadRequest() });
