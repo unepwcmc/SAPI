@@ -371,6 +371,7 @@ $(document).ready(function(){
   		selection: $('#expcty'),
   		value: function (item) {return item.id}
   	}));
+    allOptionsDictionary["all_exp"] = true;
     $('#expcty').select2({
     	width: '75%',
     	allowClear: false,
@@ -379,6 +380,7 @@ $(document).ready(function(){
     	var selection = "";
     	if (e.val.length == 0) {
     		$(this).select2("val","all_exp");
+        allOptionsDictionary["all_exp"] = true;
       }
     	var prop = $(this).select2('data');
     	selection = getText(prop);
@@ -395,6 +397,7 @@ $(document).ready(function(){
   		selection: $('#impcty'),
   		value: function (item) {return item.id}
   	}));
+    allOptionsDictionary["all_imp"] = true;
     $('#impcty').select2({
     	width: '75%',
     	allowClear: false,
@@ -403,6 +406,7 @@ $(document).ready(function(){
     	selection = "";
     	if (e.val.length == 0) {
     		$(this).select2("val","all_imp");
+        allOptionsDictionary["all_imp"] = true;
     	}
     	prop = $(this).select2('data');
     	selection = getText(prop);
@@ -425,8 +429,9 @@ $(document).ready(function(){
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
   	  	text: function (item) {return item.code + ' - ' + item.name}
-  	  };
-    
+  	  },
+      alloption = 'all_ter';
+    allOptionsDictionary[alloption] = true;
     initTermsObj(data);
   	populateSelect(args);
     selection.select2({
@@ -436,17 +441,17 @@ $(document).ready(function(){
     }).on('change', function(e){
     	// growlMe($(this).attr('id'));
     	selection = "";
-    	if (e.val.length == 0)
-    	{
+    	if (e.val.length == 0) {
     		// growlMe('You need to make at least one selection! - ' + e.val);
-    		$(this).select2("val","all_ter");
+    		$(this).select2("val", alloption);
+        allOptionsDictionary[alloption] = true;
     	}
     	prop = $(this).select2('data');
     	selection = getText(prop);
     	if (e.val.length > 1)
     	{
     		new_array = new Array();
-    		new_array = checkforAllOptions(prop,'all_ter');
+    		new_array = checkforAllOptions(prop, alloption);
     		$(this).select2('data', new_array);
     		selection = getText(new_array);
     	}
@@ -462,8 +467,9 @@ $(document).ready(function(){
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
   	  	text: function (item) {return item.code + ' - ' + item.name}
-  	  };
-  	
+  	  },
+      alloption = 'all_sou';
+  	allOptionsDictionary[alloption] = true;
     initSourcesObj(data);
   	populateSelect(args);
     selection.select2({
@@ -474,14 +480,15 @@ $(document).ready(function(){
     	// growlMe($(this).attr('id'));
     	selection = "";
     	if (e.val.length == 0) {
-    		$(this).select2("val","all_sou");
+    		$(this).select2("val", alloption);
+        allOptionsDictionary[alloption] = true;
     	}
     	prop = $(this).select2('data');
     	selection = getText(prop);
     	if (e.val.length > 1)
     	{
     		new_array = new Array();
-    		new_array = checkforAllOptions(prop,'all_sou');
+    		new_array = checkforAllOptions(prop, alloption);
     		$(this).select2('data', new_array);
     		selection = getText(new_array);
     	}
@@ -497,8 +504,9 @@ $(document).ready(function(){
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
   	  	text: function (item) {return item.code + ' - ' + item.name}
-  	  };
-  	
+  	  },
+      alloption = 'all_pur';
+  	allOptionsDictionary[alloption] = true;
     initPurposesObj(data);
   	populateSelect(args); 
     selection.select2({
@@ -508,13 +516,14 @@ $(document).ready(function(){
     }).on('change', function(e){
     	selection = "";
     	if (e.val.length == 0) {
-    		$(this).select2("val","all_pur");
+    		$(this).select2("val", alloption);
+        allOptionsDictionary[alloption] = true;
     	}
     	prop = $(this).select2('data');
     	selection = getText(prop);
     	if (e.val.length > 1) {
     		new_array = new Array();
-    		new_array = checkforAllOptions(prop,'all_pur');
+    		new_array = checkforAllOptions(prop, alloption);
     		$(this).select2('data', new_array);
     		selection = getText(new_array);
     	}
@@ -527,11 +536,12 @@ $(document).ready(function(){
   function checkforAllOptions(source, alloption) {
   	var myValues = [];
   	for (var i=0; i < source.length; i++) {
-  		if (source[i].id == alloption && !allOptionsDictionary[alloption]) {
+  		if (source[i].id == alloption && allOptionsDictionary[alloption]) {
+        // Removing alloption
   			source.splice(i,1);
         allOptionsDictionary[alloption] = true;
   			break;
-  		} else if (source[i].id == alloption && allOptionsDictionary[alloption]) {
+  		} else if (source[i].id == alloption && !allOptionsDictionary[alloption]) {
         source = source.splice(i,1);
         allOptionsDictionary[alloption] = false;
         break;
