@@ -2,7 +2,9 @@ $(document).ready(function(){
 
   var ajaxFail, initExpctyImpcty, initTerms, initSources, initPurposes,
     countries = {}, units = {}, terms = {}, purposes = {}, sources = {},
-    selected_taxa = '';
+    selected_taxa = '',
+    is_search_page = $('#form_expert').length > 0,
+    is_download_page = $('#net_gross_options').length > 0;
 
   ajaxFail = function (xhr, ajaxOptions, thrownError) {
   	//console.log(xhr, ajaxOptions, thrownError);
@@ -600,7 +602,7 @@ $(document).ready(function(){
   }
    
   //Autocomplete for cites_names
-  if ($('#form_expert').length > 0) {
+  if (is_search_page) {
     $("#taxon_search").autocomplete({
     	source: function(request, response) {
         var term = request.term;
@@ -692,7 +694,7 @@ $(document).ready(function(){
 
   // This is used for checking on which page we are, because we only need this
   // stuff on the query page, not on the download one.
-  if ($('#form_expert').length > 0) {
+  if (is_search_page) {
     $.when($.ajax("/api/v1/units?locale=" + locale, data_type)).then(initUnitsObj, ajaxFail);
     $.when($.ajax("/api/v1/geo_entities?locale=" + locale, data_type)).then(initExpctyImpcty, ajaxFail);
     $.when($.ajax("/api/v1/terms?locale=" + locale, data_type)).then(initTerms, ajaxFail);
@@ -746,17 +748,36 @@ $(document).ready(function(){
     var output_type = $( "input[name='outputType']:checked" ).val(),
       report_type = $( "input[name='report']:checked" ).val(),
       query = location.search.substr(1);
+    if (output_type === 'web') {
+      goToResults(query);
+      return;
+    } else {
       if ( report_type === 'comparative' ) {
-        query = query.replace("report_type%5D=raw", "report_type%5D=comptab");
+        query = query.replace(/report_type%5D=(raw|net_gross)/, 
+          "report_type%5D=comptab");
       } else {
-        query = query.replace(/report_type%5D=(raw|comptab)/, "report_type%5D=net_gross");
+        query = query.replace(/report_type%5D=(raw|comptab)/, 
+          "report_type%5D=net_gross");
+        growlMe("Not implemented yet! Coming soon!");
         return; // TODO
       }
-      if (output_type === 'web') {
-        goToResults(query);
-      } else {
-        downloadResults( decodeURIComponent( query ) );
-      }
+      downloadResults( decodeURIComponent( query ) );
+      return
+    }
+  }
+
+  if (is_download_page) {
+    (function setUpControlls () {
+      var net_gross_options = $( '#net_gross_options' );
+      net_gross_options.hide();
+      $( "input[name='outputType']").click( function () {
+        if ($(this).val() === 'csv') {
+          net_gross_options.show();
+        } else {
+          net_gross_options.hide();
+        }
+      });
+    })();
   }
 
   $('#button_report').click( function (e) {handleDownloadRequest() });
