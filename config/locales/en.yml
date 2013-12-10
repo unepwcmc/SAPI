@@ -40,10 +40,14 @@ en:
   trade_guide: "A Guide to Interpreting Gross/Net Trade Outputs."
 
   reports: "REPORTS"
+  report: "Report"
   select_output: "Select output type:"
   select_report: "Select report type: "
   comparative_tabulations: "Comparative Tabulations"
   trade_tabulations: "Gross/Net Trade Tabulations"
   get_report: "Get report"
   new_search: "New Search"
+
+  from: "From"
+  to: "To"
 

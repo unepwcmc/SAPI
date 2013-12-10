@@ -422,7 +422,7 @@ $(document).ready(function(){
   	  	data: data.terms,
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.code + ' - ' + item.name_en}
+  	  	text: function (item) {return item.code + ' - ' + item.name}
   	  };
     
     initTermsObj(data);
@@ -459,7 +459,7 @@ $(document).ready(function(){
   	  	data: data.sources,
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.code + ' - ' + item.name_en}
+  	  	text: function (item) {return item.code + ' - ' + item.name}
   	  };
   	
     initSourcesObj(data);
@@ -494,7 +494,7 @@ $(document).ready(function(){
   	  	data: data.purposes,
   	  	condition: function (item) {return item.code},
   	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.code + ' - ' + item.name_en}
+  	  	text: function (item) {return item.code + ' - ' + item.name}
   	  };
   	
     initPurposesObj(data);
@@ -577,44 +577,62 @@ $(document).ready(function(){
     }
     return '';
   }
+
+  function getTaxonLabel (element, term) {
+    var name = element.full_name,
+      term = term.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&"),
+      suggestion = element.full_name + getFormattedSynonyms(element),
+      transform = function (match) {
+        return "<span class='match'>" + match + "</span>";
+      };
+    return suggestion.replace(new RegExp("(" + term + ")", "gi"), transform);
+  }
   
-  function parseTaxonData (data) {
+  function parseTaxonData (data, term) {
     var d = data.auto_complete_taxon_concepts;
   	return _.map(d, function (element, index) {
   	  return {
         'value': element.id, 
-        'label': element.full_name + getFormattedSynonyms(element)
+        'label': element.full_name + getFormattedSynonyms(element),
+        'drop_label': getTaxonLabel(element, term)
       };
   	});
   }
    
   //Autocomplete for cites_names
-  $("#taxon_search").autocomplete({
-  	source: function(request, response) {
-      $.ajax({
-        url: "/api/v1/auto_complete_taxon_concepts",
-        dataType: "json",
-        data: {
-          taxonomy: 'CITES',
-          taxon_concept_query: request.term,
-          autocomplete: true,
-          'ranks[]': "SPECIES"
-        },
-        success: function(data) {
-          response(parseTaxonData(data));
-        },
-  			error : function(xhr, ajaxOptions, thrownError){
-  				growlMe(xhr.status + " ====== " + thrownError);
-  			}
-      });
-    },
-  	select: function( event, ui ) {
-  		$(this).attr('value', ui.item.label);
-      selected_taxa = ui.item.value;
-  		$('#species_out').text(ui.item.label);
-  		return false;
-  	}
-  });
+  if ($('#form_expert').length > 0) {
+    $("#taxon_search").autocomplete({
+    	source: function(request, response) {
+        var term = request.term;
+        $.ajax({
+          url: "/api/v1/auto_complete_taxon_concepts",
+          dataType: "json",
+          data: {
+            taxonomy: 'CITES',
+            taxon_concept_query: term,
+            autocomplete: true,
+            'ranks[]': "SPECIES"
+          },
+          success: function(data) {
+            response(parseTaxonData(data, term));
+          },
+    			error : function(xhr, ajaxOptions, thrownError){
+    				growlMe(xhr.status + " ====== " + thrownError);
+    			}
+        });
+      },
+    	select: function( event, ui ) {
+    		$(this).attr('value', ui.item.label);
+        selected_taxa = ui.item.value;
+    		$('#species_out').text(ui.item.label);
+    		return false;
+    	}
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+      return $( "<li>" )
+        .append( "<a>" + item.drop_label + "</a>" )
+        .appendTo( ul );
+      };
+  }
 
   //Autocomplete for cites_genus
   $("#genus_search").autocomplete({
@@ -675,11 +693,11 @@ $(document).ready(function(){
   // This is used for checking on which page we are, because we only need this
   // stuff on the query page, not on the download one.
   if ($('#form_expert').length > 0) {
-    $.when($.ajax("/api/v1/units", data_type)).then(initUnitsObj, ajaxFail);
-    $.when($.ajax("/api/v1/geo_entities", data_type)).then(initExpctyImpcty, ajaxFail);
-    $.when($.ajax("/api/v1/terms", data_type)).then(initTerms, ajaxFail);
-    $.when($.ajax("/api/v1/sources", data_type)).then(initSources, ajaxFail);
-    $.when($.ajax("/api/v1/purposes", data_type)).then(initPurposes, ajaxFail);
+    $.when($.ajax("/api/v1/units?locale=" + locale, data_type)).then(initUnitsObj, ajaxFail);
+    $.when($.ajax("/api/v1/geo_entities?locale=" + locale, data_type)).then(initExpctyImpcty, ajaxFail);
+    $.when($.ajax("/api/v1/terms?locale=" + locale, data_type)).then(initTerms, ajaxFail);
+    $.when($.ajax("/api/v1/sources?locale=" + locale, data_type)).then(initSources, ajaxFail);
+    $.when($.ajax("/api/v1/purposes?locale=" + locale, data_type)).then(initPurposes, ajaxFail);
   }
 
   //////////////////////////
@@ -712,7 +730,7 @@ $(document).ready(function(){
 
   function goToResults (q) {
     var $link = $('#view_genie'),
-     href = '/' + locale + '/cites_trade/download/view?' + q;
+     href = '/' + locale + '/cites_trade/download/view_results?' + q;
     $link.attr('href', href).click();
     window.location.href = $link.attr("href");
   }

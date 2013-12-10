@@ -144,7 +144,7 @@ SAPI::Application.routes.draw do
   scope "(:locale)", :locale => /en|es|fr/ do
     match 'cites_trade' => 'cites_trade#index'
     match 'cites_trade/download' => 'cites_trade#download'
-    match 'cites_trade/download/view' => 'cites_trade#view'
+    match 'cites_trade/download/view_results' => 'cites_trade#view_results'
   end
   # Keep in mind you can assign values other than :controller and :action
 

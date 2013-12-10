@@ -4,12 +4,12 @@
   <div id="new_search_wrapper" align="center">
     <button id="new_search" style="float:right; margin-right:15px;" value=" New Search ">
       <a id="new_search" style="float:left" href="/<%= I18n.locale %>/cites_trade/">
-        <img src="/assets/cites_trade/refresh1.png" alt=""/> New Search
+        <img src="/assets/cites_trade/refresh1.png" alt=""/> <%= t('new_search') %>
       </a>
     </button>
     <br>
   </div>
-  <h3 style="text-align:center">Comparative Tabulation Report</h3>
+  <h3 style="text-align:center"><%= t('report') %></h3>
   <table id="query_results_table">
   </table>
   <p class="info"></p>
