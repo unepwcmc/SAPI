@@ -9,6 +9,7 @@ Species.TaxonConcept = DS.Model.extend
   familyName: DS.attr("string")
   commonNames: DS.attr("array")
   synonyms: DS.attr("array")
+  otherSearchMatches: DS.attr("array")
   subspecies: DS.attr("array")
   distributions: DS.attr("array")
   references: DS.attr("array")
@@ -25,7 +26,7 @@ Species.TaxonConcept = DS.Model.extend
 
   searchResultDisplay: ( ->
     baseDisplay = @get('fullName') + ' <span class="author-year">' + @get('authorYear') + '</span>'
-    if @get('synonyms') != undefined && @get('synonyms').length > 0
-      baseDisplay = baseDisplay + ' <span class="synonyms">(' + @get('synonyms').join(', ') + ')</span>'
+    if @get('otherSearchMatches') != undefined && @get('otherSearchMatches').length > 0
+      baseDisplay = baseDisplay + ' <span class="synonyms">(' + @get('otherSearchMatches').join(', ') + ')</span>'
     baseDisplay
-  ).property('fullName', 'synonyms', 'authorYear')
+  ).property('fullName', 'otherSearchMatches', 'authorYear')
