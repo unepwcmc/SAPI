@@ -11,6 +11,10 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
 
 private
 
+  def resource_name
+    "gross_exports"
+  end
+
   def outer_report_columns
     # reject subquery columns
     puts report_columns.inspect

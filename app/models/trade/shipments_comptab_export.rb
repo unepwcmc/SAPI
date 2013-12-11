@@ -11,6 +11,10 @@ class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
 
 private
 
+  def resource_name
+    "comptab"
+  end
+
   def table_name
     "trade_shipments_comptab_view"
   end
