@@ -47,6 +47,7 @@ private
 
   def available_columns
     {
+      :appendix => {},
       :taxon => {},
       :taxon_concept_id => {:internal => true},
       :term => {:en => :term_name_en, :es => :term_name_es, :fr => :term_name_fr},
@@ -60,6 +61,7 @@ private
   # extra columns returned by crosstab
   def crosstab_columns
     {
+      :appendix => {:pg_type => 'TEXT'},
       :taxon_concept_id => {:pg_type => 'INT'},
       :taxon => {:pg_type => 'TEXT'},
       :term => {:pg_type => 'TEXT'},
