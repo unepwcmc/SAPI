@@ -10,12 +10,16 @@ class Trade::ShipmentsExport < Species::CsvExport
   def query
     headers = csv_column_headers
     select_columns = sql_columns.each_with_index.map do |c, i|
-      "#{c} AS \\\"#{headers[i]}\\\""
+      "#{c} AS \"#{headers[i]}\""
     end
     @search.query.select(select_columns)
   end
 
 private
+
+  def internal?
+    @filters['internal'] == true
+  end
 
   def resource_name
     "shipments"
@@ -26,8 +30,9 @@ private
   end
 
   def copy_stmt(query)
+    # escape quotes around attributes for psql
     sql = <<-PSQL
-      \\COPY (#{query.to_sql})
+      \\COPY (#{query.to_sql.gsub(/"/,"\\\"")})
       TO ?
       WITH DELIMITER ','
       ENCODING 'utf-8'
@@ -66,7 +71,9 @@ private
 
   def report_columns
     # reject internal columns when producing a public report
-    available_columns.reject{ |column, properties| !@internal && properties[:internal] }
+    available_columns.delete_if do |column, properties|
+      !internal? && properties[:internal] == true
+    end
   end
 
   def sql_columns

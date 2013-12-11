@@ -19,7 +19,6 @@ class Trade::ShipmentsExportFactory
         filters = filters.delete_if do |k,v|
           ['quantity', 'permits_ids', 'reporter_type', 'purpose_id', 'source_id'].include? k
         end
-        puts filters.inspect
         Trade::ShipmentsGrossExportsExport.new(filters)
       when :gross_imports
         filters = filters.delete_if do |k,v|
