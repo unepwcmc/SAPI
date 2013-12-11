@@ -13,8 +13,8 @@ class Checklist::TaxonConceptsController < ApplicationController
   end
 
   def autocomplete
-    matcher = Checklist::TaxonConceptPrefixMatcher.new(
-      :scientific_name => params[:scientific_name],
+    matcher = Species::TaxonConceptPrefixMatcher.new(
+      :taxon_concept_query => params[:scientific_name],
       :per_page => params[:per_page]
     )
     render :json => matcher.cached_results.
