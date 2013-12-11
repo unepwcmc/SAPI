@@ -7,6 +7,18 @@ class Trade::ShipmentsExport < Species::CsvExport
     @search = Trade::Filter.new(@filters)
   end
 
+  def export
+    if !File.file?(file_name)
+      to_csv
+    end
+    ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
+    @public_file_name = "#{resource_name}_#{ctime}.csv"
+    [
+      @file_name,
+      {:filename => public_file_name, :type => 'text/csv'}
+    ]
+  end
+
   def query
     headers = csv_column_headers
     select_columns = sql_columns.each_with_index.map do |c, i|
