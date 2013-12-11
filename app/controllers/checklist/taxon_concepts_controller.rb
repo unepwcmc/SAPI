@@ -2,7 +2,7 @@ class Checklist::TaxonConceptsController < ApplicationController
 
   def index
     checklist = Checklist::Checklist.new(params)
-      
+
     render :json => checklist.generate,
       :each_serializer => Checklist::ChecklistSerializer,
       :authors => checklist.authors,

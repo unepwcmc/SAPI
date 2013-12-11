@@ -1,11 +1,11 @@
 Species.AutoCompleteTaxonConcept = DS.Model.extend
   rankName: DS.attr("string")
   fullName: DS.attr("string")
-  synonyms: DS.attr("array")
+  otherMatches: DS.attr("array")
 
   autoCompleteSuggestion: ( ->
-    if @get('synonyms') != undefined && @get('synonyms').length > 0
-      @get('fullName') + ' (' + @get('synonyms').join( ', ') + ')'
+    if @get('otherMatches') != undefined && @get('otherMatches').length > 0
+      @get('fullName') + ' (' + @get('otherMatches').join( ', ') + ')'
     else
       @get('fullName')
-  ).property('fullName', 'synonyms')
+  ).property('fullName', 'otherMatches')

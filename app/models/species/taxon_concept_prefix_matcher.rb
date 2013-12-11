@@ -43,8 +43,17 @@ class Species::TaxonConceptPrefixMatcher
         ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1),
         ARRAY(
           SELECT * FROM UNNEST(synonyms_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
-        ) AS synonyms_ary",
-        :sci_name_prefix => "#{@taxon_concept_query}%"
+        ) AS synonyms_ary,
+        ARRAY(
+          SELECT * FROM UNNEST(english_names_ary) name WHERE UPPER(name) LIKE :sci_name_infix
+        ) AS english_names_ary,
+        ARRAY(
+          SELECT * FROM UNNEST(french_names_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
+        ) AS french_names_ary,
+        ARRAY(
+          SELECT * FROM UNNEST(spanish_names_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
+        ) AS spanish_names_ary",
+        :sci_name_prefix => "#{@taxon_concept_query}%", :sci_name_infix => "%#{@taxon_concept_query}%"
         ])
       ).
       where([
@@ -52,8 +61,14 @@ class Species::TaxonConceptPrefixMatcher
         OR
         EXISTS (
           SELECT * FROM UNNEST(synonyms_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
+          UNION
+          SELECT * FROM UNNEST(english_names_ary) name WHERE UPPER(name) LIKE :sci_name_infix
+          UNION
+          SELECT * FROM UNNEST(french_names_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
+          UNION
+          SELECT * FROM UNNEST(spanish_names_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
         )
-      ", :sci_name_prefix => "#{@taxon_concept_query}%"
+      ", :sci_name_prefix => "#{@taxon_concept_query}%", :sci_name_infix => "%#{@taxon_concept_query}%"
       ]).where(:name_status => 'A')
     end
   end
