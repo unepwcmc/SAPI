@@ -142,6 +142,13 @@ module Trade::ShipmentReportQueries
   end
 
   def gross_exports_query
+  "WITH gross_net_subquery AS (
+    #{gross_net_query}
+  )
+  #{gross_exports_subquery}"
+  end
+
+  def gross_exports_subquery
   "SELECT
     year,
     appendix,
@@ -160,7 +167,7 @@ module Trade::ShipmentReportQueries
     exporter_id AS country_id,
     exporter AS country,
     SUM(gross_quantity) AS gross_quantity
-  FROM (#{gross_net_query}) gross_net_subquery
+  FROM gross_net_subquery
   GROUP BY
     year,
     appendix,
@@ -181,6 +188,13 @@ module Trade::ShipmentReportQueries
   end
 
   def gross_imports_query
+  "WITH gross_net_subquery AS (
+    #{gross_net_query}
+  )
+  #{gross_imports_subquery}"
+  end
+
+  def gross_imports_subquery
   "SELECT
     year,
     appendix,
@@ -199,7 +213,7 @@ module Trade::ShipmentReportQueries
     importer_id AS country_id,
     importer AS country,
     SUM(gross_quantity) AS gross_quantity
-  FROM (#{gross_net_query}) gross_net_subquery
+  FROM gross_net_subquery
   GROUP BY
     year,
     appendix,
@@ -220,6 +234,15 @@ module Trade::ShipmentReportQueries
   end
 
   def net_exports_query
+  "WITH exports AS (
+    #{gross_exports_query}
+  ), imports AS (
+    #{gross_imports_query}
+  )
+  #{net_exports_subquery}"
+  end
+
+  def net_exports_subquery
   "SELECT
     exports.year,
     exports.appendix,
@@ -242,8 +265,8 @@ module Trade::ShipmentReportQueries
       THEN exports.gross_quantity - COALESCE(imports.gross_quantity, 0)
       ELSE 0
     END AS gross_quantity
-  FROM (#{gross_exports_query}) exports
-  LEFT JOIN (#{gross_imports_query}) imports
+  FROM exports
+  LEFT JOIN imports
   ON exports.taxon_concept_id = imports.taxon_concept_id
   AND exports.appendix = imports.appendix
   AND exports.year = imports.year
@@ -254,6 +277,15 @@ module Trade::ShipmentReportQueries
   end
 
   def net_imports_query
+  "WITH exports AS (
+    #{gross_exports_query}
+  ), imports AS (
+    #{gross_imports_query}
+  )
+  #{net_imports_subquery}"
+  end
+
+  def net_imports_subquery
   "SELECT
     imports.year,
     imports.appendix,
@@ -269,15 +301,15 @@ module Trade::ShipmentReportQueries
     imports.unit_name_en,
     imports.unit_name_es,
     imports.unit_name_fr,
-    imports.importer_id,
+    imports.country_id,
     imports.country,
     CASE
       WHEN (imports.gross_quantity - COALESCE(exports.gross_quantity, 0)) > 0
       THEN imports.gross_quantity - COALESCE(exports.gross_quantity, 0)
       ELSE 0
     END AS gross_quantity
-  FROM (#{gross_imports_query}) imports
-  LEFT JOIN (#{gross_exports_query}) exports
+  FROM imports
+  LEFT JOIN exports
   ON exports.taxon_concept_id = imports.taxon_concept_id
   AND exports.appendix = imports.appendix
   AND exports.year = imports.year
