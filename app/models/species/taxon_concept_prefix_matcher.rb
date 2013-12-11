@@ -36,6 +36,10 @@ class Species::TaxonConceptPrefixMatcher
       @query.by_cites_eu_taxonomy
     end
 
+    if @from_checklist
+      @query = @query.without_hidden
+    end
+
     if @taxon_concept_query
       @query = @query.select(
         ActiveRecord::Base.send(:sanitize_sql_array, [
