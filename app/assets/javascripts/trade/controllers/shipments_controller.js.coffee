@@ -204,13 +204,37 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
 
   rawDownloadUrl: (->
     params = @get('searchParamsForUrl')
-    params['report_type'] = 'raw' #TODO this will likely be a property in its own right
+    params['report_type'] = 'raw'
     '/trade/exports/download?' + $.param({filters: params})
   ).property('searchParamsForUrl')
 
   comptabDownloadUrl: (->
     params = @get('searchParamsForUrl')
-    params['report_type'] = 'comptab' #TODO this will likely be a property in its own right
+    params['report_type'] = 'comptab'
+    '/trade/exports/download?' + $.param({filters: params})
+  ).property('searchParamsForUrl')
+
+  grossExportsDownloadUrl: (->
+    params = @get('searchParamsForUrl')
+    params['report_type'] = 'gross_exports'
+    '/trade/exports/download?' + $.param({filters: params})
+  ).property('searchParamsForUrl')
+
+  grossImportsDownloadUrl: (->
+    params = @get('searchParamsForUrl')
+    params['report_type'] = 'gross_imports'
+    '/trade/exports/download?' + $.param({filters: params})
+  ).property('searchParamsForUrl')
+
+  netExportsDownloadUrl: (->
+    params = @get('searchParamsForUrl')
+    params['report_type'] = 'net_exports'
+    '/trade/exports/download?' + $.param({filters: params})
+  ).property('searchParamsForUrl')
+
+  netImportsDownloadUrl: (->
+    params = @get('searchParamsForUrl')
+    params['report_type'] = 'net_imports'
     '/trade/exports/download?' + $.param({filters: params})
   ).property('searchParamsForUrl')
 
