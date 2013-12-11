@@ -1,14 +1,16 @@
 # Implements "net exports" shipments export
 class Trade::ShipmentsNetExportsExport < Trade::ShipmentsGrossExportsExport
+  include Trade::ShipmentReportQueries
 
 private
 
-  def resource_name
-    "net_exports"
+  # the query before pivoting
+  def subquery_sql
+    net_exports_query
   end
 
-  def table_name
-    "trade_shipments_net_exports_view"
+  def resource_name
+    "net_exports"
   end
 
 end

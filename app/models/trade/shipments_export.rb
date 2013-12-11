@@ -29,6 +29,10 @@ class Trade::ShipmentsExport < Species::CsvExport
 
 private
 
+  def query_sql
+    query.to_sql
+  end
+
   def internal?
     @filters['internal'] == true
   end
@@ -44,7 +48,7 @@ private
   def copy_stmt(query)
     # escape quotes around attributes for psql
     sql = <<-PSQL
-      \\COPY (#{query.to_sql.gsub(/"/,"\\\"")})
+      \\COPY (#{query_sql.gsub(/"/,"\\\"")})
       TO ?
       WITH DELIMITER ','
       ENCODING 'utf-8'

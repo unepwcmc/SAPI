@@ -13,29 +13,14 @@ class Trade::ShipmentsExportFactory
     end
     case @report_type
       when :comptab
-        filters = filters.delete_if do |k,v|
-          ['quantity', 'permits_ids', 'reporter_type'].include? k
-        end
         Trade::ShipmentsComptabExport.new(filters)
       when :gross_exports
-        filters = filters.delete_if do |k,v|
-          ['quantity', 'permits_ids', 'reporter_type', 'purpose_id', 'source_id'].include? k
-        end
         Trade::ShipmentsGrossExportsExport.new(filters)
       when :gross_imports
-        filters = filters.delete_if do |k,v|
-          ['quantity', 'permits_ids', 'reporter_type', 'purpose_id', 'source_id'].include? k
-        end
         Trade::ShipmentsGrossImportsExport.new(filters)
       when :net_exports
-        filters = filters.delete_if do |k,v|
-          ['quantity', 'permits_ids', 'reporter_type', 'purpose_id', 'source_id'].include? k
-        end
         Trade::ShipmentsNetExportsExport.new(filters)
       when :net_imports
-        filters = filters.delete_if do |k,v|
-          ['quantity', 'permits_ids', 'reporter_type', 'purpose_id', 'source_id'].include? k
-        end
         Trade::ShipmentsNetImportsExport.new(filters)
       else
         Trade::ShipmentsExport.new(filters)

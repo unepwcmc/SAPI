@@ -1,15 +1,20 @@
 # Implements "gross exports" shipments export
 class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
+  include Trade::ShipmentReportQueries
 
   def query
+    Trade::Shipment.find_by_sql(query_sql)
+  end
+
+private
+
+  def query_sql
     headers = csv_column_headers
     select_columns = sql_columns.each_with_index.map do |c, i|
       "#{c} AS \"#{headers[i]}\""
     end + years_columns
-    Trade::Shipment.select(select_columns).from("(#{crosstab_query}) ct_subquery")
+    "SELECT #{select_columns.join(', ')} FROM (#{ct_subquery_sql}) ct_subquery"
   end
-
-private
 
   def resource_name
     "gross_exports"
@@ -29,10 +34,6 @@ private
     outer_report_columns.map do |column, properties|
       I18n.t "csv.#{column}"
     end
-  end
-
-  def table_name
-    "trade_shipments_gross_exports_view"
   end
 
   def years
@@ -69,19 +70,19 @@ private
   end
 
   # the query before pivoting
-  def subquery
-    @search.query.select(report_columns.keys)
+  def subquery_sql
+    gross_exports_query
   end
 
   # pivots the quantity by year
-  def crosstab_query
+  def ct_subquery_sql
     extra_crosstab_columns = crosstab_columns.keys
     extra_crosstab_columns &= report_columns.keys
     # the source query contains a viariable number of "extra" columns
     # ones needed in the output but not involved in pivoting
     source_sql = "SELECT ARRAY[taxon, term, unit, country],
       #{extra_crosstab_columns.join(', ')}, year, gross_quantity
-      FROM (#{subquery.to_sql}) subquery
+      FROM (#{subquery_sql}) subquery
       ORDER BY 1, #{extra_crosstab_columns.length + 2}" #order by row_name and year
     source_sql = ActiveRecord::Base.send(:sanitize_sql_array, [source_sql, years])
     source_sql = ActiveRecord::Base.connection.quote_string(source_sql)

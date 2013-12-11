@@ -1,14 +1,16 @@
 # Implements "gross imports" shipments export
 class Trade::ShipmentsGrossImportsExport < Trade::ShipmentsGrossExportsExport
+  include Trade::ShipmentReportQueries
 
 private
 
-  def resource_name
-    "gross_imports"
+  # the query before pivoting
+  def subquery_sql
+    gross_imports_query
   end
 
-  def table_name
-    "trade_shipments_gross_imports_view"
+  def resource_name
+    "gross_imports"
   end
 
 end
