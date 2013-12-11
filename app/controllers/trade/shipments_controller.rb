@@ -2,7 +2,7 @@ class Trade::ShipmentsController < ApplicationController
   respond_to :json
 
   def index
-    if params[:filters][:report_type] == "comptab"
+    if params[:filters] && params[:filters][:report_type] == "comptab"
       @search = Trade::ShipmentsComptabExport.new(params[:filters])
       render :json => @search
     else
