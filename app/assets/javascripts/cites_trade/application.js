@@ -595,7 +595,8 @@ $(document).ready(function(){
   	var purposes = $('#purposesms2side__dx').text();
   	var terms = $('#termsms2side__dx').text();
   	
-  	$('#year_out').text("From: " + year_from + " to " + year_to); 
+  	$('#year_from > span').text(year_from);
+    $('#year_to > span').text(year_to);
   	$('#expcty_out').text(getSelectionText('expcty'));
   	$('#impcty_out').text(getSelectionText('impcty'));
   	$('#sources_out').text(getSelectionText('sources'));
@@ -701,11 +702,11 @@ $(document).ready(function(){
 
   show_values_selection();
 
-  $('#qryFrom, #qryTo').on('change',function()
-  {
+  $('#qryFrom, #qryTo').on('change',function() {
   	var y_from = $('#qryFrom').val();
   	var y_to = $('#qryTo').val();
-  	$('#year_out').text("From: " + y_from + " to " + y_to); 
+    $('#year_from > span').text(y_from);
+    $('#year_to > span').text(y_to);
   });
 
   //Put functions to be executed here

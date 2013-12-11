@@ -33,8 +33,8 @@ fr:
 
   download: "Télécharger"
   db_guide: "Un Guide d'Utilisation de la Base de Données sur le Commerce CITES"
-  tabulation_guide: ""
-  trade_guide: ""
+  tabulation_guide: "Un Guide pour Interpréter les Sorties de Tabulations Comparatives"
+  trade_guide: "Un Guide pour Interpréter les Sorties du Commerce Brut/Net"
 
   reports: "RAPPORTS"
   report: "Rapport"
@@ -47,4 +47,11 @@ fr:
 
   from: "De"
   to: "A"
+  species: "Espèce" 
+
+  gross_exports: "Exportations Brutes"
+  gross_imports: "Importations Brutes"
+  net_exports: "Exportations Nettes"
+  net_imports: "Importations Nettes"
+  all: "Tout"
 
