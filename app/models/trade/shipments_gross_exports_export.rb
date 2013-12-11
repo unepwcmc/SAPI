@@ -17,8 +17,6 @@ private
 
   def outer_report_columns
     # reject subquery columns
-    puts report_columns.inspect
-    puts internal?
     report_columns.delete_if { |column, properties| properties[:subquery] == true }
   end
 
@@ -86,6 +84,7 @@ private
       FROM (#{subquery.to_sql}) subquery
       ORDER BY 1, #{extra_crosstab_columns.length + 2}" #order by row_name and year
     source_sql = ActiveRecord::Base.send(:sanitize_sql_array, [source_sql, years])
+    source_sql = ActiveRecord::Base.connection.quote_string(source_sql)
     # the categories query returns values by which to pivot (years)
     categories_sql = 'SELECT * FROM UNNEST(ARRAY[?])'
     categories_sql = ActiveRecord::Base.send(:sanitize_sql_array, [categories_sql, years.map(&:to_i)])

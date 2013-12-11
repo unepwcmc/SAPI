@@ -113,7 +113,8 @@ SELECT
   unit_name_en,
   unit_name_es,
   unit_name_fr,
-  exporter_id AS country_id,
+  exporter_id,
+  -- exporter_id AS country_id,
   exporter AS country,
   SUM(gross_quantity) AS gross_quantity
 FROM trade_shipments_netgross_view
@@ -152,7 +153,8 @@ SELECT
   unit_name_en,
   unit_name_es,
   unit_name_fr,
-  importer_id AS country_id,
+  importer_id,
+  -- importer_id AS country_id,
   importer AS country,
   SUM(gross_quantity) AS gross_quantity
 FROM trade_shipments_netgross_view
@@ -191,20 +193,22 @@ SELECT
   exports.unit_name_en,
   exports.unit_name_es,
   exports.unit_name_fr,
-  exports.country_id,
+  exports.exporter_id,
   exports.country,
   CASE
-    WHEN (exports.gross_quantity - imports.gross_quantity) > 0
-    THEN exports.gross_quantity - imports.gross_quantity
+    WHEN (exports.gross_quantity - COALESCE(imports.gross_quantity, 0)) > 0
+    THEN exports.gross_quantity - COALESCE(imports.gross_quantity, 0)
     ELSE 0
   END AS gross_quantity
 FROM trade_shipments_gross_exports_view exports
-JOIN trade_shipments_gross_imports_view imports
+LEFT JOIN trade_shipments_gross_imports_view imports
 ON exports.taxon_concept_id = imports.taxon_concept_id
-AND exports.term_id = imports.term_id
-AND exports.unit_id = imports.unit_id
+AND exports.appendix = imports.appendix
 AND exports.year = imports.year
-AND exports.country_id = imports.country_id;
+AND exports.term_id = imports.term_id
+AND (exports.unit_id = imports.unit_id OR exports.unit_id IS NULL AND imports.unit_id IS NULL)
+AND exports.year = imports.year
+AND exports.exporter_id = imports.importer_id;
 
 DROP VIEW IF EXISTS trade_shipments_net_imports_view;
 CREATE VIEW trade_shipments_net_imports_view AS
@@ -223,16 +227,18 @@ SELECT
   imports.unit_name_en,
   imports.unit_name_es,
   imports.unit_name_fr,
-  imports.country_id,
+  imports.importer_id,
   imports.country,
   CASE
-    WHEN (imports.gross_quantity - exports.gross_quantity) > 0
-    THEN imports.gross_quantity - exports.gross_quantity
+    WHEN (imports.gross_quantity - COALESCE(exports.gross_quantity, 0)) > 0
+    THEN imports.gross_quantity - COALESCE(exports.gross_quantity, 0)
     ELSE 0
   END AS gross_quantity
-FROM trade_shipments_gross_exports_view exports
-JOIN trade_shipments_gross_imports_view imports
+FROM trade_shipments_gross_imports_view imports
+LEFT JOIN trade_shipments_gross_exports_view exports
 ON exports.taxon_concept_id = imports.taxon_concept_id
+AND exports.appendix = imports.appendix
+AND exports.year = imports.year
 AND exports.term_id = imports.term_id
-AND exports.unit_id = imports.unit_id
-AND exports.country_id = imports.country_id;
+AND (exports.unit_id = imports.unit_id OR exports.unit_id IS NULL AND imports.unit_id IS NULL)
+AND exports.exporter_id = imports.importer_id;

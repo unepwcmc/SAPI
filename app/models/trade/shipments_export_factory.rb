@@ -5,10 +5,12 @@ class Trade::ShipmentsExportFactory
     puts filters.inspect
     @report_type = filters && filters[:report_type] &&
       filters[:report_type].downcase.strip.to_sym
-    unless [:raw, :comptab, :gross_exports, :gross_imports].include? @report_type
+    unless [
+      :raw, :comptab, :gross_exports, :gross_imports,
+      :net_exports, :net_imports
+    ].include? @report_type
       @report_type = :comptab
     end
-    puts @report_type
     case @report_type
       when :comptab
         filters = filters.delete_if do |k,v|
@@ -25,6 +27,16 @@ class Trade::ShipmentsExportFactory
           ['quantity', 'permits_ids', 'reporter_type', 'purpose_id', 'source_id'].include? k
         end
         Trade::ShipmentsGrossImportsExport.new(filters)
+      when :net_exports
+        filters = filters.delete_if do |k,v|
+          ['quantity', 'permits_ids', 'reporter_type', 'purpose_id', 'source_id'].include? k
+        end
+        Trade::ShipmentsNetExportsExport.new(filters)
+      when :net_imports
+        filters = filters.delete_if do |k,v|
+          ['quantity', 'permits_ids', 'reporter_type', 'purpose_id', 'source_id'].include? k
+        end
+        Trade::ShipmentsNetImportsExport.new(filters)
       else
         Trade::ShipmentsExport.new(filters)
     end
