@@ -1,33 +1,35 @@
 <div class="grid_16 main_content">
   
-  <table border="0" align="center">
+  <table id="this_should_not_be_a_table" border="0" align="center">
     <tr>
-      <td><h3 align="center"><font face="Verdana, Arial, Helvetica, sans-serif"> <%= t('reports') %> <br>
-      </font></h3></td>
+      <td><h3 align="center"><%= t('reports') %> <br>
+      </h3></td>
     </tr>
     <tr>
       <td>
         <span style="font-weight:900;font-size:14px"> <%= t('select_output') %> </span>
-        <font size="large" face="Verdana, Arial, Helvetica, sans-serif">
+        
         
         <br><input type="radio" name="outputType" value="web" checked> web
         <br><input type="radio" name="outputType" value="csv"> csv
         <br>
         <br>
-      </font></td>
+      </td>
     </tr>
     
     <tr id="net_gross_options">
-      <td><font face="Verdana, Arial, Helvetica, sans-serif">
+      <td>
         <span style="font-weight:900;font-size:14px"> <%= t('select_report') %> </span> <br>
-        <input name="report" id="report" type="radio" value="comparative" checked="checked"  /> <%= t('comparative_tabulations') %>
-        <br><input name="report" id="report" type="radio" value="gross_net" /> <%= t('trade_tabulations') %> <select name="reportType" style='background-color:#CCFFFF' id="report_type" >
-        <option value="GE"> Gross Exports </option>
-        <option value="GI"> Gross Imports </option>
-        <option value="NE"> Net Exports </option>
-        <option value="NI"> Net Imports </option>
-        
-        <option value="AL"> All </option></option>
+        <input name="report" id="report_comparative" type="radio" value="comparative" checked="checked"  /> <%= t('comparative_tabulations') %>
+        <br>
+        <div id="gross_net_section">
+          <input name="report" id="report_gross_net" type="radio" value="gross_net" /> <%= t('trade_tabulations') %> <select name="reportType" style='background-color:#CCFFFF' id="report_type" >
+          <option value="GE"> Gross Exports </option>
+          <option value="GI"> Gross Imports </option>
+          <option value="NE"> Net Exports </option>
+          <option value="NI"> Net Imports </option>
+          <option value="AL"> All </option></option>
+        </div>
       </select>
     </td></tr>
     <tr>
@@ -41,7 +43,7 @@
           <a id='download_genie' href="#" style="display:none"></a>
         </div>
         
-        </font>
+        
         <p><br><br></p>
         
       </td></tr>

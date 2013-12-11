@@ -2,14 +2,19 @@ class Trade::ShipmentsController < ApplicationController
   respond_to :json
 
   def index
-    @search = Trade::Filter.new(params)
-    render :json => @search.results,
-      :each_serializer => Trade::ShipmentSerializer,
-      :meta => {
-        :total => @search.total_cnt,
-        :page => @search.page,
-        :per_page => @search.per_page
-      }
+    if params[:filters][:report_type] == "comptab"
+      @search = Trade::ShipmentsComptabExport.new(params[:filters])
+      render :json => @search
+    else
+      @search = Trade::Filter.new(params)
+      render :json => @search.results,
+        :each_serializer => Trade::ShipmentSerializer,
+        :meta => {
+          :total => @search.total_cnt,
+          :page => @search.page,
+          :per_page => @search.per_page
+        }
+    end
   end
 
   def create
