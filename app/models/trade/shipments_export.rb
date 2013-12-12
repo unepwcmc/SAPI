@@ -1,6 +1,7 @@
 require 'psql_command'
 # Implements "raw" shipments export
 class Trade::ShipmentsExport < Species::CsvExport
+  include ActiveModel::SerializerSupport
 
   def initialize(filters)
     @filters = filters
@@ -25,6 +26,12 @@ class Trade::ShipmentsExport < Species::CsvExport
       "#{c} AS \"#{headers[i]}\""
     end
     @search.query.select(select_columns)
+  end
+
+  def csv_column_headers
+    report_columns.map do |column, properties|
+      I18n.t "csv.#{column}"
+    end
   end
 
 private
@@ -94,12 +101,6 @@ private
 
   def sql_columns
     report_columns.map{ |column, properties| properties[I18n.locale] || column }
-  end
-
-  def csv_column_headers
-    report_columns.map do |column, properties|
-      I18n.t "csv.#{column}"
-    end
   end
 
 end

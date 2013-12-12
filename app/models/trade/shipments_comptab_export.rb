@@ -3,7 +3,7 @@ class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
   include Trade::ShipmentReportQueries
 
   def query
-    Trade::Shipment.find_by_sql(query_sql)
+    ActiveRecord::Base.connection.execute(query_sql)
   end
 
 private
