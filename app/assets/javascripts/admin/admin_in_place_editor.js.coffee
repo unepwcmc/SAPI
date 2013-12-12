@@ -139,6 +139,10 @@ class AdminInPlaceEditor extends AdminEditor
       'option', 'source', window.geoEntities
     )
 
+    $('#admin-in-place-editor .editable-is-current').editable(
+      'option', 'source', {1: 'current', 0: 'not current'}
+    )
+
 class TaxonConceptsEditor extends AdminEditor
   init: () ->
     super
