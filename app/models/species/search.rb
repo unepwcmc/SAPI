@@ -60,7 +60,7 @@ private
 
     unless @scientific_name.blank?
       @query = @query.
-        by_name(@scientific_name, {:synonyms => true, :subspecies => true, :common_names => false}).
+        by_name(@scientific_name, {:synonyms => true, :subspecies => true, :common_names => true}).
         select(
           ActiveRecord::Base.send(:sanitize_sql_array, [
             "taxon_concepts_mview.*,

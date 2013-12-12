@@ -2,7 +2,7 @@ class Checklist::TaxonConceptsController < ApplicationController
 
   def index
     checklist = Checklist::Checklist.new(params)
-      
+
     render :json => checklist.generate,
       :each_serializer => Checklist::ChecklistSerializer,
       :authors => checklist.authors,
@@ -13,8 +13,10 @@ class Checklist::TaxonConceptsController < ApplicationController
   end
 
   def autocomplete
-    matcher = Checklist::TaxonConceptPrefixMatcher.new(
-      :scientific_name => params[:scientific_name],
+    matcher = Species::TaxonConceptPrefixMatcher.new(
+      :taxon_concept_query => params[:scientific_name],
+      :ranks => [],
+      :from_checklist => true,
       :per_page => params[:per_page]
     )
     render :json => matcher.cached_results.
