@@ -4,17 +4,17 @@ class Species::TaxonConceptPrefixMatcher
 
   def initialize(options)
     initialize_options(options)
-    return [] unless @taxon_concept_query || !@ranks.empty?
     initialize_query
   end
 
   def results
+    (@taxon_concept_query || !@ranks.empty?) &&
     @query.limit(@options[:per_page]).
-      offset(@options[:per_page] * (@options[:page] - 1)).all
+      offset(@options[:per_page] * (@options[:page] - 1)).all || []
   end
 
   def total_cnt
-    @query.count
+    (@taxon_concept_query || !@ranks.empty?) && @query.count || 0
   end
 
   private
@@ -36,8 +36,10 @@ class Species::TaxonConceptPrefixMatcher
       @query.by_cites_eu_taxonomy
     end
 
-    if @from_checklist
-      @query = @query.without_hidden
+    @query = if @from_checklist
+      @query.without_hidden
+    else
+      @query.without_hidden_subspecies
     end
 
     if @taxon_concept_query
