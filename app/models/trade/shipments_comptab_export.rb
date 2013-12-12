@@ -2,6 +2,10 @@
 class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
   include Trade::ShipmentReportQueries
 
+  def total_cnt
+    query.ntuples
+  end
+
   def query
     ActiveRecord::Base.connection.execute(query_sql)
   end

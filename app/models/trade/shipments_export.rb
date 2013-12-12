@@ -20,6 +20,10 @@ class Trade::ShipmentsExport < Species::CsvExport
     ]
   end
 
+  def total_cnt
+    query.count
+  end
+
   def query
     headers = csv_column_headers
     select_columns = sql_columns.each_with_index.map do |c, i|
