@@ -227,13 +227,13 @@
       <div id="empty_box">
         <div style="font-weight:600; font-size:16px"> <%= t('search_selection') %> </div><br />
         <table id="table_selection" class="select_label" border="1" width="95%">
-          <tr><td width="30%">Year selection: </td><td width="70%"><span id="year_out" class="span_label"></span></td></tr>
-          <tr><td width="30%">Exporting countries: </td><td  width="70%"><span id="expcty_out" class="span_label"></span></td></tr>
-          <tr><td width="30%">Importing countries: </td><td  width="70%"><span id="impcty_out" class="span_label"></span></td></tr>
-          <tr><td width="30%">Source: </td><td  width="70%"><span id="sources_out" class="span_label"></span></td></tr>
-          <tr><td width="30%">Purpose: </td><td  width="70%"> <span id="purposes_out" class="span_label"></span></td></tr>
-          <tr><td width="30%">Trade Terms: </td><td  width="70%"><span id="terms_out" class="span_label"></span></td></tr>
-          <tr><td width="30%">Species: </td><td  width="70%"> <span id="species_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"><%= t('year_text') %>: </td><td width="70%"><span id="year_from" class="span_label"><%= t('from') %>: <span></span></span> <span id="year_to" class="span_label"><%= t('to') %>: <span></span></span></td></tr>
+          <tr><td width="30%"><%= t('export_text') %>: </td><td  width="70%"><span id="expcty_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"><%= t('import_text') %>: </td><td  width="70%"><span id="impcty_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"><%= t('source_text') %>: </td><td  width="70%"><span id="sources_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"><%= t('purpose_text') %>: </td><td  width="70%"> <span id="purposes_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"><%= t('trade_text') %>: </td><td  width="70%"><span id="terms_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"><%= t('species') %>: </td><td  width="70%"> <span id="species_out" class="span_label"></span></td></tr>
         </table>
       </div>
       

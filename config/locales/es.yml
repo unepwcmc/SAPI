@@ -47,3 +47,10 @@ es:
 
   from: "Desde"
   to: "A"
+  species: "Especies"
+
+  gross_exports: "Exportaciones Brutas"
+  gross_imports: "Importaciones Brutas"
+  net_exports: "Exportaciones Netas"
+  net_imports: "Importaciones Netas"
+  all: "Todos"
