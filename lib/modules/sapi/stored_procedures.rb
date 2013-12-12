@@ -27,7 +27,6 @@ module Sapi
         Species::Search.increment_cache_iterator
         Species::TaxonConceptPrefixMatcher.increment_cache_iterator
         Checklist::Checklist.increment_cache_iterator
-        Checklist::TaxonConceptPrefixMatcher.increment_cache_iterator
 
         TaxonConcept.update_all(
           'updated_at = touched_at',

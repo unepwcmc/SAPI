@@ -19,7 +19,8 @@ class Species::SearchParams < Hash
       :ranks => params[:ranks] ? 
         Rank.dict & params[:ranks].map(&:upcase) : [Rank::SPECIES],
       :page => params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
-      :per_page => params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 25
+      :per_page => params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 25,
+      :from_checklist => params[:from_checklist] ? true : false
     }
     unless [:cites_eu, :cms].include? sanitized_params[:taxonomy]
       sanitized_params[:taxonomy] = :cites_eu

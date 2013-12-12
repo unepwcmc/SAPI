@@ -1,24 +1,80 @@
 require 'spec_helper'
 describe Species::TaxonConceptPrefixMatcher do
-  include_context "Canis lupus"
+  include_context "Boa constrictor"
   describe :results do
     context "when searching by scientific name" do
       context "when regular query" do
-        subject { Species::TaxonConceptPrefixMatcher.new({:taxon_concept_query => 'canis'}).results }
-        specify { subject.should include(@species)}
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'boa',
+            :ranks => []
+          })
+        }
+        specify { subject.results.should include(@species)}
       end
       context "when malicious query" do
-        subject { Species::TaxonConceptPrefixMatcher.new({:taxon_concept_query => 'canis\''}).results }
-        specify { subject.should be_empty}
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'boa\'',
+            :ranks => []
+          })
+        }
+        specify { subject.results.should be_empty}
       end
       context "when leading whitespace" do
-        subject { Species::TaxonConceptPrefixMatcher.new({:taxon_concept_query => ' canis'}).results }
-        specify { subject.should include(@species)}
-      end      
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => ' boa',
+            :ranks => []
+          })
+        }
+        specify { subject.results.should include(@species)}
+      end
       context "when trailing whitespace" do
-        subject { Species::TaxonConceptPrefixMatcher.new({:taxon_concept_query => 'canis '}).results }
-        specify { subject.should include(@species)}
-      end 
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'boa ',
+            :ranks => []
+          })
+        }
+        specify { subject.results.should include(@species)}
+      end
+      context "when implicitly listed subspecies" do
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'boa constrictor',
+            :ranks => []
+          })
+        }
+        specify { subject.results.should_not include(@subspecies2)}
+      end
+      context "when explicitly listed subspecies" do
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'boa constrictor',
+            :ranks => []
+          })
+        }
+        specify { subject.results.should include(@subspecies1)}
+      end
+      context "when implicitly listed higher taxon (without an explicitly listed ancestor)" do
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'serpentes',
+            :ranks => []
+          })
+        }
+        specify { subject.results.should include(@order)}
+      end
+      context "when explicitly listed higher taxon" do
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'boidae',
+            :ranks => []
+          })
+        }
+        specify { subject.results.should include(@family)}
+      end
     end
   end
 end

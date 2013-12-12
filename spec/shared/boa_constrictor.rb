@@ -1,4 +1,14 @@
 shared_context "Boa constrictor" do
+  let(:en){
+   create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA')
+   create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')   
+   create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') 
+  }
+  let(:has_synonym){
+    create(
+      :taxon_relationship_type, :name => TaxonRelationshipType::HAS_SYNONYM
+    )
+  }
   before(:all) do
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Serpentes'),
@@ -14,7 +24,10 @@ shared_context "Boa constrictor" do
     )
     @species = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'Constrictor'),
-      :parent => @genus
+      :parent => @genus,
+      :common_names => [
+        create(:common_name, :name => 'Red-tailed boa', :language => en)
+      ]
     )
     @subspecies1 = create_cites_eu_subspecies(
       :taxon_name => create(:taxon_name, :scientific_name => 'Occidentalis'),
@@ -23,6 +36,16 @@ shared_context "Boa constrictor" do
     @subspecies2 = create_cites_eu_subspecies(
       :taxon_name => create(:taxon_name, :scientific_name => 'Constrictor'),
       :parent => @species
+    )
+    @synonym = create_cites_eu_species(
+      :full_name => 'Constrictor constrictor',
+      :name_status => 'S'
+    )
+    create(
+      :taxon_relationship,
+      :taxon_relationship_type => has_synonym,
+      :taxon_concept => @species,
+      :other_taxon_concept => @synonym
     )
 
   #Boidae
