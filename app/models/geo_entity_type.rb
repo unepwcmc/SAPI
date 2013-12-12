@@ -12,5 +12,6 @@ class GeoEntityType < ActiveRecord::Base
   attr_accessible :name
 
   include Dictionary
-  build_dictionary :country, :cites_region, :region, :territory, :aquatic_territory, :bru
+  build_dictionary :country, :cites_region, :region, :territory,
+    :aquatic_territory, :bru, :trade_entity
 end
