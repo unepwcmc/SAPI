@@ -3,6 +3,7 @@ class Api::V1::GeoEntitiesController < ApplicationController
   cache_sweeper :geo_entity_sweeper
 
   def index
+    locale = params['locale'] || I18n.locale
     geo_entity_types = (
       if params[:geo_entity_types]
         params[:geo_entity_types].map(&:upcase)
@@ -14,7 +15,7 @@ class Api::V1::GeoEntitiesController < ApplicationController
       Designation.dict &
       [params[:designation] && params[:designation].upcase]
     ).first
-    @geo_entities = GeoEntity.includes(:geo_entity_type).current.order(:name_en)
+    @geo_entities = GeoEntity.includes(:geo_entity_type).current.order("name_#{locale}")
     unless geo_entity_types.empty?
       @geo_entities = @geo_entities.
         joins(:geo_entity_type).

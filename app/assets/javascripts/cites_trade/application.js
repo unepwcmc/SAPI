@@ -5,6 +5,7 @@ $(document).ready(function(){
     selected_taxa = '',
     is_search_page = $('#form_expert').length > 0,
     is_download_page = $('#net_gross_options').length > 0;
+    is_view_results_page = $('#query_results_table').length > 0;
 
   ajaxFail = function (xhr, ajaxOptions, thrownError) {
   	//console.log(xhr, ajaxOptions, thrownError);
@@ -102,21 +103,30 @@ $(document).ready(function(){
 	  $('input,select').keypress(function(event) { return event.keyCode != 13; });
   };
 
-
-  var headers = [
+  var raw_headers = [
       'id', 'year', 'appendix', 'taxon',  'term', 'quantity', 'unit',  
       'importer', 'exporter', 'origin', 'purpose', 'source', 'reporter_type', 
       'imp_permit', 'exp_permit', 'origin_permit' ],
-    fields = ['id', 'year', 'appendix', 'taxon',  'term', 'quantity', 'unit',  
+    raw_fields = ['id', 'year', 'appendix', 'taxon',  'term', 'quantity', 'unit',  
       'importer', 'exporter', 'origin', 'purpose', 'source', 'reporter_type', 
       'import_permit_number', 'export_permit_number', 
-      'country_of_origin_permit_number' ];
-  
-  function formatDataRow (data_row) {
+      'country_of_origin_permit_number' ],
+    comptab_headers = ['Year', 'Appendix', 'Family', 'Taxon', 'Importer', 'Exporter',
+      'origin',  'Importer-reported quantity', 'Exporter-reported quantity', 'Term', 'Unit',  
+      'Purpose', 'Source'],
+    comptab_fields = ['year', 'appendix', 'family', 'taxon', 'importer', 'exporter',
+      'origin',  'importer_quantity', 'exporter_quantity', 'term', 'unit',  
+      'purpose', 'source'];
+
+  function formatDataRow (data_row, data_type) {
+    var fields;
+    if (data_type === 'raw') {
+      fields = raw_fields;
+    } else if (data_type === 'comptab') {
+      fields = comptab_fields;
+    }
     return _.map(fields, function (field) {
-      if (data_row[field]) {
-        return data_row[field];
-      } else if (field === 'importer') {
+      if (field === 'importer') {
         if (countries[data_row.importer_id]) {
           return countries[data_row.importer_id].iso_code2;
         } else {
@@ -143,6 +153,8 @@ $(document).ready(function(){
       } else if (field === 'taxon') {
         if (data_row.taxon_concept) {
           return data_row.taxon_concept.full_name;
+        } else if (data_row.taxon) {
+          return data_row.taxon
         } else {
           return '';
         }
@@ -164,26 +176,34 @@ $(document).ready(function(){
         } else {
           return '';
         }
+      } else if (data_row[field]) {
+        return data_row[field];
       } else {
         return '';
       }
     });
   }
 
-  function buildHeader (data) {
+  function buildHeader (data, data_type) {
     var header = 
-      "<thead><tr><% _.each(res, function(head) { %> <td><%=head %></td> <% }); %></tr></thead>";
+      "<thead><tr><% _.each(res, function(head) { %> <td><%=head %></td> <% }); %></tr></thead>",
+      headers;
+    if (data_type === 'raw') {
+      headers = raw_headers;
+    } else if (data_type === 'comptab') {
+      headers = comptab_headers;
+    }
     return _.template(header, {res: headers});
   }
 
-  function buildRows (data) {
+  function buildRows (data, data_type) {
     var t = "";
     _.each(data, function(data_row) {
       var row = 
         "<tr><% _.each(res, function(value) { %> <td>" + 
         "<%= (value && value.full_name) ? value.full_name : value %>" +
         "</td> <% }); %></tr>";
-      t += _.template(row, { res: formatDataRow(data_row) });
+      t += _.template(row, { res: formatDataRow(data_row, data_type) });
     });
     return t;
   }
@@ -333,30 +353,35 @@ $(document).ready(function(){
     _.each(data.units, function (unit) {
       units[unit.id] = unit;
     });
+    unLock('initUnitsObj');
   }
   
   initCountriesObj = function (data) {
     _.each(data.geo_entities, function (country) {
       countries[country.id] = country;
     });
+    unLock('initCountriesObj');
   }
   
   initTermsObj = function (data) {
     _.each(data.terms, function (term) {
       terms[term.id] = term;
     });
+    unLock('initTermsObj');
   }
   
   initPurposesObj = function (data) {
     _.each(data.purposes, function (purpose) {
       purposes[purpose.id] = purpose;
     });
+    unLock('initPurposesObj');
   }
 
   initSourcesObj = function (data) {
     _.each(data.sources, function (source) {
       sources[source.id] = source;
     });
+    unLock('initSourcesObj');
   }
 
   initExpctyImpcty = function (data) {
@@ -421,7 +446,7 @@ $(document).ready(function(){
     });
   };
   
-  initTerms = function (data) { 
+  initTerms = function (data) {
   	var selection = $('#terms'),
   	  args = {
   	  	selection: selection,
@@ -570,7 +595,8 @@ $(document).ready(function(){
   	var purposes = $('#purposesms2side__dx').text();
   	var terms = $('#termsms2side__dx').text();
   	
-  	$('#year_out').text("From: " + year_from + " to " + year_to); 
+  	$('#year_from > span').text(year_from);
+    $('#year_to > span').text(year_to);
   	$('#expcty_out').text(getSelectionText('expcty'));
   	$('#impcty_out').text(getSelectionText('impcty'));
   	$('#sources_out').text(getSelectionText('sources'));
@@ -676,11 +702,11 @@ $(document).ready(function(){
 
   show_values_selection();
 
-  $('#qryFrom, #qryTo').on('change',function()
-  {
+  $('#qryFrom, #qryTo').on('change',function() {
   	var y_from = $('#qryFrom').val();
   	var y_to = $('#qryTo').val();
-  	$('#year_out').text("From: " + y_from + " to " + y_to); 
+    $('#year_from > span').text(y_from);
+    $('#year_to > span').text(y_to);
   });
 
   //Put functions to be executed here
@@ -704,7 +730,8 @@ $(document).ready(function(){
 
   // This is used for checking on which page we are, because we only need this
   // stuff on the query page, not on the download one.
-  if (is_search_page) {
+
+  if (is_search_page || is_view_results_page) {
     $.when($.ajax("/api/v1/units?locale=" + locale, data_type)).then(initUnitsObj, ajaxFail);
     $.when($.ajax("/api/v1/geo_entities?locale=" + locale, data_type)).then(initExpctyImpcty, ajaxFail);
     $.when($.ajax("/api/v1/terms?locale=" + locale, data_type)).then(initTerms, ajaxFail);
@@ -716,25 +743,32 @@ $(document).ready(function(){
   // Download page specific:
 
   function displayResults (q) {
-    var formURL = '/trade/shipments';
+    var formURL = '/trade/shipments',
+      data_rows, table_tmpl;
     $.ajax(
       {
         url : formURL,
         type: "GET",
         data : q,
         success: function(data, textStatus, jqXHR) {
-          if (data.meta.total === 0) {
-            $('#search-error-message').show();
-            $("#query_results_table").find('thead,tbody').remove();
+          if ( q.indexOf('[report_type]=comptab') !== -1 ) {
+            data_rows = data.search.shipments_rel;
+            table_tmpl = buildHeader(data_rows[0], 'comptab') + buildRows(data_rows, 'comptab');
           } else {
-            data_rows = data.shipments;
-            table_tmpl = buildHeader(data_rows[0]) + buildRows(data_rows);
-            $('#search-error-message').hide();
-            $('#query_results_table').html(table_tmpl);
-            $('#query_results .info').text(
-              'Showing ' + data.shipments.length + ' rows of ' + data.meta.total
-            );
+            if (data.meta.total === 0) {
+              $('#search-error-message').show();
+              $("#query_results_table").find('thead,tbody').remove();
+            } else {
+              data_rows = data.shipments;
+              table_tmpl = buildHeader(data_rows[0], 'raw') + buildRows(data_rows, 'raw');
+              $('#search-error-message').hide();
+              
+              $('#query_results .info').text(
+                'Showing ' + data.shipments.length + ' rows of ' + data.meta.total
+              );
+            }
           }
+          $('#query_results_table').html(table_tmpl);
         },
         error: ajaxFail
     });
@@ -758,43 +792,66 @@ $(document).ready(function(){
     var output_type = $( "input[name='outputType']:checked" ).val(),
       report_type = $( "input[name='report']:checked" ).val(),
       query = location.search.substr(1);
+    if ( report_type === 'comparative' ) {
+      query = query.replace(/report_type%5D=(raw|net_gross)/, 
+        "report_type%5D=comptab");
+    } else {
+      query = query.replace(/report_type%5D=(raw|comptab)/, 
+        "report_type%5D=net_gross");
+      growlMe("Not implemented yet! Coming soon!");
+      return; // TODO
+    }
+      
     if (output_type === 'web') {
       goToResults(query);
       return;
     } else {
-      if ( report_type === 'comparative' ) {
-        query = query.replace(/report_type%5D=(raw|net_gross)/, 
-          "report_type%5D=comptab");
-      } else {
-        query = query.replace(/report_type%5D=(raw|comptab)/, 
-          "report_type%5D=net_gross");
-        growlMe("Not implemented yet! Coming soon!");
-        return; // TODO
-      }
       downloadResults( decodeURIComponent( query ) );
       return
     }
   }
 
   if (is_download_page) {
-    var net_gross_options = $( '#net_gross_options' );
+    var net_gross_options = $( '#gross_net_section' );
     net_gross_options.hide();
     $( "input[name='outputType']").click( function () {
       if ($(this).val() === 'csv') {
         net_gross_options.show();
       } else {
         net_gross_options.hide();
+        $( "#report_comparative").attr("checked", "checked");
       }
     });
   }
 
   $('#button_report').click( function (e) {handleDownloadRequest() });
 
-  ///////////View page specific:
+  //////////////////////////////
+  // View results page specific:
 
-  if ( $('#query_results').length > 0 ) {
-    var query = decodeURIComponent( location.search.substr(1) );
-    displayResults(query);
+  // This locks-unLock rubbish is used to guarantee that, when populating the
+  // results tables, all the ajax calls for the drop-down menus (that also 
+  // populate our data objects) are terminated!
+  var locks = {
+    'initUnitsObj': true, 
+    'initCountriesObj': true, 
+    'initTermsObj': true, 
+    'initPurposesObj': true, 
+    'initSourcesObj': true
+  };
+  function unLock (function_name) {
+    var l, query;
+    if ( locks[function_name] ) {
+      locks[function_name] = false;
+    }
+    l = _.find(locks, function (value, key) {
+      return value === true;
+    });
+    if (!l && is_view_results_page) {
+      // It is time to show these tables!
+      query = decodeURIComponent( location.search.substr(1) );
+      displayResults(query);
+    }
   }
 
 });

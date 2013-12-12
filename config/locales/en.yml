@@ -12,7 +12,7 @@ en:
   year_tip: "Select start (From) and end (To) years for your query. It is advisable to limit your data request to a year span not exceeding 5 years"
   export_text: "Exporting countries"
   export_tip: "Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected"
-  import_text: "Pays importateurs"
+  import_text: "Importing countries"
   import_tip: "Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected" 
   source_text: "Source"
   source_tip: "Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected"
@@ -50,4 +50,11 @@ en:
 
   from: "From"
   to: "To"
+  species: "Species"
+
+  gross_exports: "Gross Exports"
+  gross_imports: "Gross Imports"
+  net_exports: "Net Exports"
+  net_imports: "Net Imports"
+  all: "All"
 
