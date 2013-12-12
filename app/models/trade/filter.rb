@@ -22,7 +22,7 @@ class Trade::Filter
   end
 
   def initialize_query
-    @query = Trade::Shipment.
+    @query = Trade::Shipment.from('trade_shipments_view trade_shipments').
       order('year DESC').preload(:taxon_concept) #includes would override the select clause
 
     # Id's (array)
