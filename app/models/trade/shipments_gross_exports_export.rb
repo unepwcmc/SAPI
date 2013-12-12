@@ -6,6 +6,11 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
     Trade::Shipment.find_by_sql(query_sql)
   end
 
+  # for the serializer
+  def full_csv_column_headers
+    csv_column_headers + years
+  end
+
 private
 
   def query_sql

@@ -111,12 +111,11 @@ $(document).ready(function(){
       'importer', 'exporter', 'origin', 'purpose', 'source', 'reporter_type', 
       'import_permit_number', 'export_permit_number', 
       'country_of_origin_permit_number' ],
-    comptab_headers = ['Year', 'Appendix', 'Family', 'Taxon', 'Importer', 'Exporter',
-      'origin',  'Importer-reported quantity', 'Exporter-reported quantity', 'Term', 'Unit',  
+    //TODO this could come translated from the backend
+    comptab_headers = ['Year', 'App.', 'Family', 'Taxon', 'Importer', 'Exporter',
+      'Origin',  'Importer-reported quantity', 'Exporter-reported quantity', 'Term', 'Unit',  
       'Purpose', 'Source'],
-    comptab_fields = ['year', 'appendix', 'family', 'taxon', 'importer', 'exporter',
-      'origin',  'importer_quantity', 'exporter_quantity', 'term', 'unit',  
-      'purpose', 'source'];
+    comptab_fields = comptab_headers;
 
   function formatDataRow (data_row, data_type) {
     var fields;
@@ -752,7 +751,7 @@ $(document).ready(function(){
         data : q,
         success: function(data, textStatus, jqXHR) {
           if ( q.indexOf('[report_type]=comptab') !== -1 ) {
-            data_rows = data.search.shipments_rel;
+            data_rows = data.shipment_comptab_export.rows;
             table_tmpl = buildHeader(data_rows[0], 'comptab') + buildRows(data_rows, 'comptab');
           } else {
             if (data.meta.total === 0) {
