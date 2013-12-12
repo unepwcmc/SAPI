@@ -2,7 +2,6 @@ class Trade::ShipmentsExportFactory
   def self.new(filters)
     filters ||= {}
     filters = filters.merge({:locale => I18n.locale})
-    puts filters.inspect
     @report_type = filters && filters[:report_type] &&
       filters[:report_type].downcase.strip.to_sym
     unless [

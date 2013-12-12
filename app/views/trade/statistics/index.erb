@@ -35,7 +35,7 @@
   </thead>
   <tbody>
 
-  <%  @transactions.keys.sort.each do |year| %>
+    <%  @transactions.keys.reject{|a| a == :total}.sort.each do |year| %>
     <tr>
       <td><%= year %></td>
       <td><%= @transactions[year][:reported_by_exporter] %></td>
@@ -43,6 +43,12 @@
       <td><%= @transactions[year][:total] %></td>
     </tr>
   <% end %>
+  <tr>
+    <th>Total</th>
+    <th><%= @transactions[:total][:by_exporter] %></th>
+    <th><%= @transactions[:total][:by_importer] %></th>
+    <th><%= @transactions[:total][:all] %></th>
+  </tr>
   </tbody>
 </table>
 
