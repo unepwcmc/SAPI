@@ -31,7 +31,7 @@ private
       \\COPY (#{query.to_sql})
       TO ?
       WITH DELIMITER ','
-      ENCODING 'utf-8'
+      ENCODING 'latin1'
       CSV HEADER;
     PSQL
     ActiveRecord::Base.send(:sanitize_sql_array, [sql, @file_name])
