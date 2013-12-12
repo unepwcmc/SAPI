@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131119164032) do
+ActiveRecord::Schema.define(:version => 20131212171122) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
