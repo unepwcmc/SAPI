@@ -36,11 +36,7 @@ class Species::TaxonConceptPrefixMatcher
       @query.by_cites_eu_taxonomy
     end
 
-    @query = if @from_checklist
-      @query.without_hidden
-    else
-      @query.without_hidden_subspecies
-    end
+    @query = @query.without_hidden_subspecies
 
     if @taxon_concept_query
       @query = @query.select(
