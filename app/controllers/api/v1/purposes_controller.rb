@@ -1,5 +1,5 @@
 class Api::V1::PurposesController < ApplicationController
-  caches_action :index
+  caches_action :index, :cache_path => Proc.new { |c| c.params }
   def index
     @purposes = Purpose.all(:order => "code")
     render :json => @purposes,

@@ -1,5 +1,5 @@
 class Api::V1::UnitsController < ApplicationController
-  caches_action :index
+  caches_action :index, :cache_path => Proc.new { |c| c.params }
   def index
     @units = Unit.all
     render :json => @units,

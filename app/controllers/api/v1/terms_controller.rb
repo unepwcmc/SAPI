@@ -1,5 +1,5 @@
 class Api::V1::TermsController < ApplicationController
-  caches_action :index
+  caches_action :index, :cache_path => Proc.new { |c| c.params }
   def index
     @terms = Term.all(:order => "code")
     render :json => @terms,
