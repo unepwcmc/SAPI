@@ -36,10 +36,10 @@ class Trade::Shipment < ActiveRecord::Base
   attr_accessor :reporter_type, :warnings, :ignore_warnings
 
   validates :quantity, presence: true, :numericality => {
-    :message => 'should be a number'
+    :greater_than_or_equal_to => 0, :message => 'should be a positive number'
   }
-  validates :appendix, presence: true, :inclusion => { 
-    :in => ['I', 'II', 'III'], :message => 'should be one of I, II, III' 
+  validates :appendix, presence: true, :inclusion => {
+    :in => ['I', 'II', 'III'], :message => 'should be one of I, II, III'
   }
   validates :year, presence: true, :numericality => {
     :only_integer => true, :greater_than_or_equal_to => 1975, :less_than => 3000,

@@ -1,28 +1,31 @@
 # Implements "comptab" shipments export
 class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
+  include Trade::ShipmentReportQueries
 
-  def initialize(filters)
-    @filters = filters.delete_if do |k,v|
-      ['quantity', 'permits_ids', 'reporter_type'].include? k
-    end
-    @search = Trade::Filter.new(
-      @filters,
-      Trade::Shipment.from('trade_shipments_comptab_view trade_shipments')
-    )
+  def total_cnt
+    query.ntuples
   end
 
   def query
-    headers = csv_column_headers
-    select_columns = sql_columns.each_with_index.map do |c, i|
-      "#{c} AS \\\"#{headers[i]}\\\""
-    end
-    @search.query.select(select_columns)
+    ActiveRecord::Base.connection.execute(query_sql)
   end
 
 private
 
-  def table_name
-    "trade_shipments_comptab_view"
+  def query_sql
+    headers = csv_column_headers
+    select_columns = sql_columns.each_with_index.map do |c, i|
+      "#{c} AS \"#{headers[i]}\""
+    end
+    "SELECT #{select_columns.join(', ')} FROM (#{subquery_sql}) subquery"
+  end
+
+  def subquery_sql
+    comptab_query
+  end
+
+  def resource_name
+    "comptab"
   end
 
   def available_columns
