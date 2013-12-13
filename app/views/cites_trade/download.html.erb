@@ -1,73 +1,69 @@
-
-  <div class="grid_16 main_content">
+<div class="grid_16 main_content">
+  
+  <table id="this_should_not_be_a_table" border="0" align="center">
+    <tr>
+      <td><h3 align="center"><%= t('reports') %> <br>
+      </h3></td>
+    </tr>
+    <tr>
+      <td>
+        <span style="font-weight:900;font-size:14px"> <%= t('select_output') %> </span>
+        
+        
+        <br><input type="radio" name="outputType" value="web" checked> web
+        <br><input type="radio" name="outputType" value="csv"> csv
+        <br>
+        <br>
+      </td>
+    </tr>
     
-    <table border="0" align="center">
-      <tr>
-        <td><h3 align="center"><font face="Verdana, Arial, Helvetica, sans-serif"> REPORTS <br>
-        </font></h3></td>
-      </tr>
-      <tr>
-        <td>
-          <span style="font-weight:900;font-size:14px"> Select output type: </span>
-          <font size="large" face="Verdana, Arial, Helvetica, sans-serif">
-          
-          <br><input type="radio" name="outputType" value="web" checked> web
-          <br><input type="radio" name="outputType" value="csv"> csv
-          <br>
-          <br>
-        </font></td>
-      </tr>
-      
-      <tr>
-        <td><font face="Verdana, Arial, Helvetica, sans-serif">
-          <span style="font-weight:900;font-size:14px"> Select report type: </span> <br>
-          <input name="report" id="report" type="radio" value="comparative" checked="checked"  /> Comparative Tabulations
-          <br><input name="report" id="report" type="radio" value="gross_net" /> Gross/Net Trade Tabulations <select name="reportType" style='background-color:#CCFFFF' id="report_type" >
-          <option value="GE"> Gross Exports </option>
-          <option value="GI"> Gross Imports </option>
-          <option value="NE"> Net Exports </option>
-          <option value="NI"> Net Imports </option>
-          
-          <option value="AL"> All </option></option>
-        </select>
-        <br><br>
+    <tr id="net_gross_options">
+      <td>
+        <span style="font-weight:900;font-size:14px"> <%= t('select_report') %> </span> <br>
+        <input name="report" id="report_comparative" type="radio" value="comparative" checked="checked"  /> <%= t('comparative_tabulations') %>
+        <br>
+        <div id="gross_net_section">
+          <input name="report" id="report_gross_net" type="radio" value="gross_net" /> <%= t('trade_tabulations') %> <select name="reportType" style='background-color:#CCFFFF' id="report_type" >
+          <option value="GE"> <%= t('gross_exports') %> </option>
+          <option value="GI"> <%= t('gross_imports') %> </option>
+          <option value="NE"> <%= t('net_exports') %> </option>
+          <option value="NI"> <%= t('net_imports') %> </option>
+          <option value="AL"> <%= t('all') %> </option></option>
+        </div>
+      </select>
+    </td></tr>
+    <tr>
+      <td>
         <div align="right">
-          <button style="float:left" id='button_report' value=" Get report ">
+          <button style="float:left; margin-top:12px" id='button_report' value=" Get report ">
           <img src="/assets/cites_trade/page.gif" alt=""/>
-          Get report
+          <%= t('get_report') %>
           </button>
           <a id='view_genie' href="" style="display:none"></a>
           <a id='download_genie' href="#" style="display:none"></a>
         </div>
         
-        </font>
         <p><br><br></p>
-        <input type="hidden" name="appendix" value="'1','2','3','N'">
-        <input type="hidden" name="sYearF" value="2011">
-        <input type="hidden" name="sYearT" value="2011">
-        <input type="hidden" name="ssName" value="CTC249F57A">
-        <input type="hidden" name="ssID" value="13657">
-        <input type="hidden" value="" name="taxName">
-        <input type="hidden" name="note" value="yes">
         
       </td></tr>
     </form>
     <tr><td>
       <hr>
       
-        <div id="new_search_wrapper" align="center">
+      <div id="new_search_wrapper" align="center">
+        
+        <a id="new_search" style="float:left" href="/<%= I18n.locale %>/cites_trade/">
           <button id="new_search" style="float:left" value=" New Search ">
-            <a id="new_search" style="float:left" href="/cites_trade/">
-              <img src="/assets/cites_trade/refresh1.png" alt=""/> New Search
-            </a>
+            <img src="/assets/cites_trade/refresh1.png" alt=""/> <%= t('new_search') %>
           </button>
-          <br>
-        </div>
-
+        </a>
+        
+        <br>
+      </div>
       <br />
       <div align="left">
-        <strong> Download :</strong> <a class="linkStyle" href="docs/A Guide to Interpreting Comparative Tabulation Outputs.pdf" target="doc"> A Guide to Interpreting Comparative Tabulation Outputs </a>.
-        <br><strong> Download :</strong> <a href="docs/A Guide to Interpreting Gross &amp; Net Trade Outputs.pdf" target="doc"> A Guide to Interpreting Gross/Net Trade Outputs </a>.
+        <strong> <%= t('download') %> :</strong> <a class="linkStyle" href="/downloads/cites_trade/AGuidetoInterpretingComparativeTabulationOutputs.pdf" target="doc"> <%= t('tabulation_guide') %></a>.
+        <br><strong> <%= t('download') %>:</strong> <a href="/downloads/cites_trade/AGuidetoInterpretingGrossNetTradeOutputs.pdf" target="doc"> <%= t('trade_guide') %> </a>.
         
       </div>
       

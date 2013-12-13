@@ -1,0 +1,57 @@
+fr:
+  cites_title: "Base de Données sur le Commerce CITES"
+  cites_sub_title: "S'il vous plaît entrer votre recherche ci-dessous"
+  errors:
+    no_data_1: "Votre recherche n'a retourné aucune donnée"
+    no_data_2: "S'il vous plaît sélectionner autres variables ou vérifier dans la Base de Données des Espèces UNEP-WCMC que vous utilisez l'orthographe/nom scientifique corrects"
+
+  year_text: "Gamme des Années"
+  year_tip: "Sélectionnez les années de début (De) et de fin (A) pour votre recherche. Il est conseillé de limiter votre demande de données avec une gamme des années de 5 ans ou moins"
+  export_text: "Pays d'exportation"
+  export_tip: "Entrez le nom du/des pays que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous les pays, laissez 'Tous les Pays' sélectionné"
+  import_text: "Pays importateurs"
+  import_tip: "Entrez le nom du/des pays que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous les pays, laissez 'Tous les Pays' sélectionné" 
+  source_text: "Source"
+  source_tip: "Entrez le source/les sources (par ex. 'W- Prélevés dans la nature') que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous les sources, laissez 'Tous les Sources' sélectionné"
+  purpose_text: "But"
+  purpose_tip: "Entrez le but/les buts (par ex. 'T- Transaction commerciale' ou 'S- Fins scientifiques') que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous buts, laissez 'Tous les Buts' sélectionné"
+  trade_text: "Termes du Commerce"
+  trade_tip: "Entrez le terme/les termes (par ex. 'vivant' ou 'peau') que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous les termes, laissez 'Tous les Termes' sélectionné"
+  taxon_text: "Recherche par taxon :"
+  taxon_tip: "Pour récupérer des données pour un taxon spécifique, tapez le nom du taxon. Les données sur les spécimens enregistrés dans le commerce à un niveau taxonomique supérieur (par exemple Scleractinia spp.) peuvent aussi être récupérées par cette recherche. Pour récupérer des données pour toutes les espèces dans un genre particulier, sélectionnez un genre dans le menu déroulant ci-dessous. Pour sélectionner tous les taxons, laissez ces sections vides."
+  taxon_title: "Search for taxon reported trade:"
+  genus_title: "Sélectionnez un genre"
+
+  all_countries: "Tous les Pays"
+  all_sources: "Toutes les Sources"
+  all_purposes: "Tous les Buts"
+  all_terms: "Tous les Termes"
+
+  search_selection: "Critères de recherche sélectionnés:"
+  search: "Rechercher"
+  reset: "Réinitialiser"
+
+  download: "Télécharger"
+  db_guide: "Un Guide d'Utilisation de la Base de Données sur le Commerce CITES"
+  tabulation_guide: "Un Guide pour Interpréter les Sorties de Tabulations Comparatives"
+  trade_guide: "Un Guide pour Interpréter les Sorties du Commerce Brut/Net"
+
+  reports: "RAPPORTS"
+  report: "Rapport"
+  select_output: "Sélectionnez le type de sortie:"
+  select_report: "Sélectionnez le type de rapport:"
+  comparative_tabulations: "Tabulations Comparatives"
+  trade_tabulations: "Tabulations du Commerce Brut/Net"
+  get_report: "Obtenir le rapport"
+  new_search: "Nouvelle Recherche" 
+
+  from: "De"
+  to: "A"
+  species: "Espèce" 
+
+  gross_exports: "Exportations Brutes"
+  gross_imports: "Importations Brutes"
+  net_exports: "Exportations Nettes"
+  net_imports: "Importations Nettes"
+  all: "Tout"
+
