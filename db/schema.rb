@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131119164032) do
+ActiveRecord::Schema.define(:version => 20131213140544) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -120,7 +120,6 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
-    t.integer "genus_id"
     t.text    "kingdom_name"
     t.text    "phylum_name"
     t.text    "class_name"
@@ -232,7 +231,6 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
-    t.integer "genus_id"
     t.text    "phylum_name"
     t.text    "class_name"
     t.text    "order_name"
@@ -371,6 +369,22 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.integer  "source_id"
   end
 
+  create_table "eu_decisions_import", :id => false, :force => true do |t|
+    t.boolean "is_current"
+    t.string  "taxonomy",        :limit => nil
+    t.integer "event_legacy_id"
+    t.integer "legacy_id"
+    t.string  "rank",            :limit => nil
+    t.string  "kingdom",         :limit => nil
+    t.string  "country_iso2",    :limit => nil
+    t.string  "opinion",         :limit => nil
+    t.date    "start_date"
+    t.string  "source",          :limit => nil
+    t.string  "term",            :limit => nil
+    t.string  "notes",           :limit => nil
+    t.string  "internal_notes",  :limit => nil
+  end
+
   create_table "eu_listing_changes_mview", :id => false, :force => true do |t|
     t.integer  "taxon_concept_id"
     t.integer  "id"
@@ -444,7 +458,6 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
-    t.integer "genus_id"
     t.text    "kingdom_name"
     t.text    "phylum_name"
     t.text    "class_name"
@@ -1001,6 +1014,24 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "trade_data_downloads", :force => true do |t|
+    t.string   "user_ip"
+    t.string   "report_type"
+    t.integer  "year_from"
+    t.integer  "year_to"
+    t.string   "taxon"
+    t.string   "appendix"
+    t.string   "importer"
+    t.string   "exporter"
+    t.string   "origin"
+    t.string   "term"
+    t.string   "unit"
+    t.string   "source"
+    t.string   "purpose"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "trade_permits", :force => true do |t|
     t.string   "number",        :null => false
     t.integer  "geo_entity_id"
@@ -1049,6 +1080,22 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.integer  "start_notification_id"
     t.integer  "end_notification_id"
     t.string   "excluded_taxon_concepts_ids", :limit => nil
+  end
+
+  create_table "trade_sandbox_3", :force => true do |t|
+    t.string "appendix"
+    t.string "species_name"
+    t.string "term_code"
+    t.string "quantity"
+    t.string "unit_code"
+    t.string "trading_partner"
+    t.string "country_of_origin"
+    t.string "export_permit"
+    t.string "origin_permit"
+    t.string "purpose_code"
+    t.string "source_code"
+    t.string "year"
+    t.string "import_permit"
   end
 
   create_table "trade_sandbox_template", :force => true do |t|
@@ -1133,7 +1180,7 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.string  "appendix",         :limit => nil
   end
 
-  add_index "valid_species_name_appendix_year_mview", ["species_name", "appendix", "year"], :name => "valid_species_name_appendix_year_species_name_appendix_year_idx"
+  add_index "valid_species_name_appendix_year_mview", ["species_name", "appendix", "year"], :name => "valid_species_name_appendix_yea_species_name_appendix_year_idx1"
 
   add_foreign_key "annotations", "annotations", name: "annotations_source_id_fk", column: "source_id"
   add_foreign_key "annotations", "events", name: "annotations_event_id_fk"

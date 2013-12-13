@@ -153,7 +153,7 @@ $(document).ready(function(){
     } else {
       $link = $(this);
       values = parseInputs($('#form_expert :input'));
-      params = $.param({'filters': values});
+      params = $.param({'filters': values, 'origin': 'public'});
       href = '/' + locale + '/cites_trade/download?' + params;
       queryResults.ajax = true;
       $('#search-error-message').hide();
@@ -505,8 +505,8 @@ $(document).ready(function(){
   });
 
   function getFormattedSynonyms (d) {
-    if (d.synonyms.length > 0 ) {
-      return ' (' + d.synonyms.join(', ') + ')';
+    if (d.matching_names.length > 0 ) {
+      return ' (' + d.matching_names.join(', ') + ')';
     }
     return '';
   }
