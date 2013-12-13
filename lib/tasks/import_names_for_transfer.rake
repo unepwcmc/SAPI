@@ -1,18 +1,75 @@
-namespace :import do
-  desc "Import names from csv file"
-  task :names_for_transfer => [:environment] do
-    TMP_TABLE = "names_for_transfer_import"
-    file = "lib/files/names_for_transfer.csv"
-    drop_table(TMP_TABLE)
-    create_table_from_csv_headers(file, TMP_TABLE)
-    copy_data(file, TMP_TABLE)
-  end
-    desc "Import names from csv file"
-  task :shipments => [:environment] do
-    TMP_TABLE = "shipments_import"
-    file = "lib/files/SHIPMENT_DETAILS_DATA_TABLE.csv"
-    drop_table(TMP_TABLE)
-    create_table_from_csv_headers(file, TMP_TABLE)
-    copy_data(file, TMP_TABLE)
+  namespace :import do
+      desc "Import names from csv file"
+      task :names_for_transfer => [:environment] do
+        TMP_TABLE = "names_for_transfer_import"
+        file = "lib/files/names_for_transfer.csv"
+        drop_table(TMP_TABLE)
+        create_table_from_csv_headers(file, TMP_TABLE)
+        copy_data(file, TMP_TABLE)
+      end
+      desc "Import shipments from csv file"
+        task :shipments => [:environment] do
+          TMP_TABLE = "shipments_import"
+          file = "lib/files/SHIPMENT_DETAILS_DATA_TABLE.csv"
+          drop_table(TMP_TABLE)
+          create_table_from_csv_headers(file, TMP_TABLE)
+          copy_data(file, TMP_TABLE)
+          sql = <<-SQL 
+          INSERT INTO trade_shipments(
+          source_id,
+          unit_id,
+          purpose_id,
+          term_id ,
+          quantity,
+          appendix,
+          exporter_id,
+          importer_id,
+          country_of_origin_id ,
+          reported_by_exporter,
+          taxon_concept_id,
+          year,
+          created_at,
+          updated_at,
+          reported_taxon_concept_id)
+  SELECT sources.id AS source_id,
+         units.id AS unit_id,
+         purposes.id AS purpose_id,
+         terms.id AS term_id,
+         quantity_1,
+         CASE
+             WHEN appendix='1' THEN 'I'
+             WHEN appendix='2' THEN 'II'
+             WHEN appendix='3' THEN 'III'
+             ELSE 'other'
+         END AS appendix ,
+         exporters.id AS exporter_id,
+         importers.id AS importer_id,
+         origins.id AS country_of_origin_id,
+         CASE
+             WHEN reporter_type = 'E' THEN TRUE
+             ELSE FALSE
+         END AS reported_by_exporter,
+         species_plus_id AS taxon_concepts_id,
+         shipment_year AS YEAR,
+         to_date(shipment_year::varchar, 'yyyy') AS created_at,
+         to_date(shipment_year::varchar, 'yyyy') AS updated_at,
+         species_plus_id AS reported_taxon_concept_id
+  FROM shipments_import si
+  LEFT JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code
+  LEFT JOIN trade_codes AS sources ON si.source_code = sources.code
+  AND sources.type = 'Source'
+  LEFT JOIN trade_codes AS units ON si.unit_code_1 = units.code
+  AND units.type = 'Unit'
+  LEFT JOIN trade_codes AS purposes ON si.purpose_code = purposes.code
+  AND purposes.type = 'Purpose'
+  LEFT JOIN trade_codes AS terms ON si.term_code_1 = terms.code
+  AND terms.type = 'Term'
+  LEFT JOIN geo_entities AS exporters ON si.export_country_code = exporters.iso_code2
+  LEFT JOIN geo_entities AS importers ON si.import_country_code = importers.iso_code2
+  LEFT JOIN geo_entities AS origins ON si.import_country_code = origins.iso_code2
+  WHERE rank <> '0' AND term_code_1 IS NOT NULL
+  LIMIT 20;
+        SQL
+  ActiveRecord::Base.connection.execute(sql)
   end
 end
