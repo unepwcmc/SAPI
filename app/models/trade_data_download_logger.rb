@@ -23,17 +23,39 @@ module TradeDataDownloadLogger
     w.save
   end
 
+  module_function
+
+  def export
+    file_name = self.get_file_name
+    unless File.file?(PATH + file_name)
+      File.open(PATH + self.get_file_name, 'w') do |f|
+        TradeDataDownload.pg_copy_to do |line|
+          f.write line
+        end
+      end
+    end
+    file_name
+  end
+
+  PATH = "public/downloads/trade_download_stats/"
+
   private
+
+  def self.get_file_name
+    Digest::SHA1.hexdigest(
+      DateTime.now.year.to_s + DateTime.now.month.to_s + DateTime.now.day.to_s
+    ) + ".csv"
+  end
 
   def self.get_field_values param, model
     if param == "" then return 'All' end
     if param == nil then return '' end
     if model.to_s == 'GeoEntity'
       return model.find_all_by_id(param.map(&:to_i)).
-        map { |r| r.iso_code2 }.join ','
+        map { |r| r.iso_code2 }.join ' '
     else
       return model.find_all_by_id(param.map(&:to_i)).
-        map { |r| r.code }.join ','
+        map { |r| r.code }.join ' '
     end
   end
 end

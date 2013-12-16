@@ -16,6 +16,7 @@ class Trade::StatisticsController < ApplicationController
       count
     @taxon_concepts_in_trade = Trade::Shipment.count(:taxon_concept_id, :distinct => true)
     @transactions = Statistics.get_total_transactions_per_year
+    @trade_pubblic_interface_stats = TradeDataDownloadLogger.export
   end
 
   def summary_creation
