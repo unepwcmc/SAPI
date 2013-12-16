@@ -1,4 +1,4 @@
-Trade.ShipmentsRoute = Ember.Route.extend
+Trade.ShipmentsRoute = Ember.Route.extend Trade.QueryParams,
 
   beforeModel: ->
     (new Ember.RSVP.Promise((resolve) =>
@@ -16,5 +16,8 @@ Trade.ShipmentsRoute = Ember.Route.extend
     ))
 
   model: (params, queryParams, transition) ->
-    queryParams.page = 1 unless queryParams.page
+    # redo the array params if we're coming from the url
+    @get('selectedQueryParamNames').forEach (property) ->
+      if property.type == 'array' && queryParams[property.param] == true
+        queryParams[property.param] = []
     Trade.Shipment.find(queryParams)
