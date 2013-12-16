@@ -52,7 +52,7 @@ describe Trade::Filter do
       :country_of_origin => @argentina,
       :year => 2012,
       :reported_by_exporter => true,
-      :import_permit => @import_permit,
+      :import_permits => [@import_permit],
       :export_permits=> [@export_permit1, @export_permit2],
       :quantity => 20
     )

@@ -92,7 +92,7 @@ private
       :reporter_type => {:internal => true},
       :import_permit_number => {:internal => true},
       :export_permit_number => {:internal => true},
-      :country_of_origin_permit_number => {:internal => true}
+      :origin_permit_number => {:internal => true}
     }
   end
 

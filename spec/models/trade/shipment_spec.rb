@@ -1,3 +1,27 @@
+# == Schema Information
+#
+# Table name: trade_shipments
+#
+#  id                            :integer          not null, primary key
+#  source_id                     :integer
+#  unit_id                       :integer
+#  purpose_id                    :integer
+#  term_id                       :integer          not null
+#  quantity                      :decimal(, )      not null
+#  appendix                      :string(255)      not null
+#  trade_annual_report_upload_id :integer
+#  exporter_id                   :integer          not null
+#  importer_id                   :integer          not null
+#  country_of_origin_id          :integer
+#  reported_by_exporter          :boolean          default(TRUE), not null
+#  taxon_concept_id              :integer          not null
+#  year                          :integer          not null
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#  sandbox_id                    :integer
+#  reported_taxon_concept_id     :integer
+#
+
 require 'spec_helper'
 
 describe Trade::Shipment do
@@ -6,6 +30,53 @@ describe Trade::Shipment do
     context "when reporter_type not given" do
       subject { build(:shipment, :reporter_type => nil) }
       specify { subject.should have(2).error_on(:reporter_type) }
+    end
+    context "when country of origin not given" do
+      context "and origin permit not given" do
+        subject { build(:shipment, :country_of_origin => nil, :origin_permit_number => nil) }
+        specify { subject.should have(0).error_on(:country_of_origin) }
+      end
+      context "and origin permit given" do
+        subject { build(:shipment, :country_of_origin => nil, :origin_permit_number => 'a;b') }
+        specify { subject.should have(1).error_on(:country_of_origin) }
+      end
+    end
+    context "when permit numbers given" do
+      before(:each) do
+        country = create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
+        @poland = create(:geo_entity,
+          :name_en => 'Poland', :iso_code2 => 'PL',
+          :geo_entity_type => country
+        )
+        @argentina = create(:geo_entity,
+          :name_en => 'Argentina', :iso_code2 => 'AR',
+          :geo_entity_type => country
+        )
+        @bolivia = create(:geo_entity,
+          :name_en => 'Bolivia', :iso_code2 => 'BO',
+          :geo_entity_type => country
+        )
+        @shipment = create(:shipment,
+          :exporter_id => @poland.id,
+          :importer_id => @argentina.id,
+          :country_of_origin_id => @bolivia.id,
+          :export_permit_number => 'a',
+          :import_permit_number => 'b',
+          :origin_permit_number => 'c'
+        )
+      end
+      context "when export permit" do
+        subject { @shipment.export_permits.first }
+        specify { subject.geo_entity_id.should == @poland.id }
+      end
+      context "when import permit" do
+        subject { @shipment.import_permits.first }
+        specify { subject.geo_entity_id.should == @argentina.id }
+      end
+      context "when origin permit" do
+        subject { @shipment.origin_permits.first }
+        specify { subject.geo_entity_id.should == @bolivia.id }
+      end
     end
   end
 
