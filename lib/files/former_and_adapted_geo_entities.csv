@@ -1,0 +1,8 @@
+name_en,iso2_code,name_fr,name_es,long_name,legacy_type,is_current
+Former East Germany,DD,Allemagne de l'Est,Antigua Alemania Oriental,German Democratic Republic,COUNTRY,FALSE
+Former UN Pacific Island Trust Territories,PC,Territoire sous tutelle des îles du Pacifique,Antíguo Territorio en Fideicomiso de las Islas del Pacífico,Former Trust Territory of the Pacific Islands,TERRITORY,FALSE
+Former South Yemen,YD,Ex-Yémen du Sud,Antiguo Yemen del Sur,Fomer Democratic Republic of Yemen,COUNTRY,FALSE
+Neutral Zone,NT,Zone Neutre,Zona Neutral,Neutral Zone,TERRITORY,TRUE 
+Unknown,XX,Inconnu,Desconocido,Unknown,TRADE_ENTITY,TRUE
+Various,XV,Divers,Vários,Various,TRADE_ENTITY,TRUE
+Introduction from the sea,ZZ,Introduction en provenance de la mer,Introducción procedente del mar,Introduction from the sea,TRADE_ENTITY,TRUE

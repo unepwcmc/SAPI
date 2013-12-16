@@ -7,6 +7,24 @@
         create_table_from_csv_headers(file, TMP_TABLE)
         copy_data(file, TMP_TABLE)
       end
+
+      desc "Import unusual geo_entities"
+      task :unusual_geo_entities => [:environment] do
+        CSV.foreach("lib/files/former_and_adapted_geo_entities.csv", :headers => true) do |row|
+          puts GeoEntity.find_or_create_by_iso_code2(
+            iso_code2: row[1],
+            geo_entity_type_id:  GeoEntityType.where(name: row[5]).first.id,
+            name_en: row[0], 
+            name_fr: row[2], 
+            name_es: row[3], 
+            long_name: row[4], 
+            legacy_type: row[5], 
+            is_current: row[6]
+            )
+        end
+      end
+
+
       desc "Import shipments from csv file"
         task :shipments => [:environment] do
           TMP_TABLE = "shipments_import"
@@ -55,7 +73,7 @@
          to_date(shipment_year::varchar, 'yyyy') AS updated_at,
          species_plus_id AS reported_taxon_concept_id
   FROM shipments_import si
-  LEFT JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code
+  INNER JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code
   LEFT JOIN trade_codes AS sources ON si.source_code = sources.code
   AND sources.type = 'Source'
   LEFT JOIN trade_codes AS units ON si.unit_code_1 = units.code
