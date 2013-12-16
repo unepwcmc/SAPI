@@ -43,7 +43,8 @@ module TradeDataDownloadLogger
 
   def self.get_file_name
     Digest::SHA1.hexdigest(
-      DateTime.now.year.to_s + DateTime.now.month.to_s + DateTime.now.day.to_s
+      DateTime.now.year.to_s + DateTime.now.month.to_s + 
+      DateTime.now.day.to_s + DateTime.now.hour.to_s
     ) + ".csv"
   end
 
