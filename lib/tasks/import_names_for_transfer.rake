@@ -45,9 +45,11 @@
             SQL
             ActiveRecord::Base.connection.execute(sql)
           end
+        end
 
 
-
+      desc "Import shipments from csv file"
+        task :populate_shipments => [:environment] do
           sql = <<-SQL 
           INSERT INTO trade_shipments(
           source_id,
@@ -65,44 +67,52 @@
           created_at,
           updated_at,
           reported_taxon_concept_id)
-  SELECT sources.id AS source_id,
-         units.id AS unit_id,
-         purposes.id AS purpose_id,
-         terms.id AS term_id,
-         quantity_1,
-         CASE
-             WHEN appendix='1' THEN 'I'
-             WHEN appendix='2' THEN 'II'
-             WHEN appendix='3' THEN 'III'
-             ELSE 'other'
-         END AS appendix ,
-         exporters.id AS exporter_id,
-         importers.id AS importer_id,
-         origins.id AS country_of_origin_id,
-         CASE
-             WHEN reporter_type = 'E' THEN TRUE
-             ELSE FALSE
-         END AS reported_by_exporter,
-         species_plus_id AS taxon_concepts_id,
-         shipment_year AS YEAR,
-         to_date(shipment_year::varchar, 'yyyy') AS created_at,
-         to_date(shipment_year::varchar, 'yyyy') AS updated_at,
-         species_plus_id AS reported_taxon_concept_id
-  FROM shipments_import si
-  INNER JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code
-  LEFT JOIN trade_codes AS sources ON si.source_code = sources.code
-  AND sources.type = 'Source'
-  LEFT JOIN trade_codes AS units ON si.unit_code_1 = units.code
-  AND units.type = 'Unit'
-  LEFT JOIN trade_codes AS purposes ON si.purpose_code = purposes.code
-  AND purposes.type = 'Purpose'
-  LEFT JOIN trade_codes AS terms ON si.term_code_1 = terms.code
-  AND terms.type = 'Term'
-  LEFT JOIN geo_entities AS exporters ON si.export_country_code = exporters.iso_code2
-  LEFT JOIN geo_entities AS importers ON si.import_country_code = importers.iso_code2
-  LEFT JOIN geo_entities AS origins ON si.import_country_code = origins.iso_code2
-  WHERE rank <> '0' AND term_code_1 IS NOT NULL
-  LIMIT 20;
+SELECT sources.id AS source_id,
+       units.id AS unit_id,
+       purposes.id AS purpose_id,
+       terms.id AS term_id,
+       quantity_1,
+       CASE
+           WHEN appendix='1' THEN 'I'
+           WHEN appendix='2' THEN 'II'
+           WHEN appendix='3' THEN 'III'
+           ELSE 'other'
+       END AS appendix ,
+       exporters.id AS exporter_id,
+       importers.id AS importer_id,
+       origins.id AS country_of_origin_id,
+       CASE
+           WHEN reporter_type = 'E' THEN TRUE
+           ELSE FALSE
+       END AS reported_by_exporter,
+       shipment_year AS YEAR,
+        CASE
+           WHEN rank = '0' THEN jt.taxon_concept_id
+           ELSE species_plus_id
+       END AS taxon_concept_id
+       to_date(shipment_year::varchar, 'yyyy') AS created_at,
+       to_date(shipment_year::varchar, 'yyyy') AS updated_at,
+       species_plus_id AS reported_taxon_concept_id,
+
+FROM shipments_import_testing si
+INNER JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code
+LEFT JOIN trade_codes AS sources ON si.source_code = sources.code
+AND sources.type = 'Source'
+LEFT JOIN trade_codes AS units ON si.unit_code_1 = units.code
+AND units.type = 'Unit'
+LEFT JOIN trade_codes AS purposes ON si.purpose_code = purposes.code
+AND purposes.type = 'Purpose'
+LEFT JOIN trade_codes AS terms ON si.term_code_1 = terms.code
+AND terms.type = 'Term'
+LEFT JOIN geo_entities AS exporters ON si.export_country_code = exporters.iso_code2
+LEFT JOIN geo_entities AS importers ON si.import_country_code = importers.iso_code2
+LEFT JOIN geo_entities AS origins ON si.import_country_code = origins.iso_code2
+LEFT JOIN
+  (SELECT tr.taxon_concept_id,
+          si.shipment_number
+   FROM shipments_import_testing si
+   INNER JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code
+   INNER JOIN taxon_relationships tr ON other_taxon_concept_id = nti.species_plus_id) jt ON jt.shipment_number = si.shipment_number ;
         SQL
   ActiveRecord::Base.connection.execute(sql)
   end
