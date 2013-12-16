@@ -20,7 +20,33 @@ describe Trade::ExportsController do
       #   puts response.body.inspect
       #   response.code.should eql(204)
       # end
+      it "logs download information from public interface to the TradeDataDownload model" do
+        create(:shipment)
+        Trade::ShipmentsExport.any_instance.stub(:public_file_name).and_return('shipments.csv')
+        get :download, :filters => {
+            :report_type => :raw,
+            :exporters_ids => ['40'],
+            :time_range_start => '1975',
+            :time_range_end => '2000'
+          }, :origin => :public
+        last_download = TradeDataDownload.last
+        last_download.report_type.should eq('raw')
+        last_download.year_from.should eq(1975)
+      end
+      it "does not log download information from the admin interface" do
+        create(:shipment)
+        Trade::ShipmentsExport.any_instance.stub(:public_file_name).and_return('shipments.csv')
+        get :download, :filters => {
+            :report_type => :raw, 
+            :exporters_ids => ['40'],
+            :time_range_start => '1975',
+            :time_range_end => '2000'
+          }
+        last_download = TradeDataDownload.last
+        last_download.should eq(nil)
+      end
     end
+
 
 
   end
