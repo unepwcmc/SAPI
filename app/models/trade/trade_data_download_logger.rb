@@ -5,19 +5,20 @@ module Trade::TradeDataDownloadLogger
   def log_download request, params
     unless params['origin'] == 'public' then return end
     data = {}
+    # !! Not all the params can be sanitized with Trade::SearchParams.sanitize
     filters = Trade::SearchParams.sanitize(params['filters'])
     data["user_ip"] = request.ip
-    data["report_type"] = filters['report_type']
-    data["year_from"] = filters['time_range_start']
-    data["year_to"] = filters['time_range_end']
-    data["appendix"] = filters['appendix']
-    data["unit"] = filters['unit']
-    data["taxon"] = filters['selection_taxon']
-    data["term"] = self.get_field_values(filters['terms_ids'], Term)
-    data["purpose"] = self.get_field_values(filters['purposes_ids'], Purpose)
-    data["source"] = self.get_field_values(filters['sources_ids'], Source)
-    data["importer"] = self.get_field_values(filters['importers_ids'], GeoEntity)
-    data["exporter"] = self.get_field_values(filters['exporters_ids'], GeoEntity)
+    data["report_type"] = params['filters']['report_type']
+    data["year_from"] = filters[:time_range_start]
+    data["year_to"] = filters[:time_range_end]
+    data["appendix"] = params['filters']['appendix']
+    data["unit"] = params['filters']['unit']
+    data["taxon"] = params['filters']['selection_taxon']
+    data["term"] = self.get_field_values(filters[:terms_ids], Term)
+    data["purpose"] = self.get_field_values(filters[:purposes_ids], Purpose)
+    data["source"] = self.get_field_values(filters[:sources_ids], Source)
+    data["importer"] = self.get_field_values(filters[:importers_ids], GeoEntity)
+    data["exporter"] = self.get_field_values(filters[:exporters_ids], GeoEntity)
 
     w = Trade::TradeDataDownload.new(data)
     w.save
