@@ -153,7 +153,7 @@ $(document).ready(function(){
     } else {
       $link = $(this);
       values = parseInputs($('#form_expert :input'));
-      params = $.param({'filters': values, 'origin': 'public'});
+      params = $.param({'filters': values});
       href = '/' + locale + '/cites_trade/download?' + params;
       queryResults.ajax = true;
       $('#search-error-message').hide();
