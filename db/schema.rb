@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131217102142) do
+ActiveRecord::Schema.define(:version => 20131217121051) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -1150,8 +1150,9 @@ ActiveRecord::Schema.define(:version => 20131217102142) do
     t.string   "unit"
     t.string   "source"
     t.string   "purpose"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "number_of_rows"
   end
 
   create_table "trade_validation_rules", :force => true do |t|

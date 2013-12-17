@@ -2,12 +2,14 @@ module Trade::TradeDataDownloadLogger
 
   module_function
 
-  def log_download request, params
-    unless params['internal'] == false then return end
+  def log_download request, params, rows
+
+    if params['internal'] == true then return end
     data = {}
     # !! Not all the params can be sanitized with Trade::SearchParams.sanitize
     filters = Trade::SearchParams.sanitize(params['filters'])
     data["user_ip"] = request.ip
+    data["number_of_rows"] = rows
     data["report_type"] = params['filters']['report_type']
     data["year_from"] = filters[:time_range_start]
     data["year_to"] = filters[:time_range_end]

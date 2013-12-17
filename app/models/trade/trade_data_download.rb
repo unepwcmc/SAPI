@@ -21,6 +21,7 @@
 class Trade::TradeDataDownload < ActiveRecord::Base
 
   attr_accessible :user_ip, :report_type, :year_from, :year_to, :taxon,
-   :appendix, :importer, :exporter, :origin, :term, :unit, :source, :purpose
+   :appendix, :importer, :exporter, :origin, :term, :unit, :source, :purpose,
+   :number_of_rows
 
 end
