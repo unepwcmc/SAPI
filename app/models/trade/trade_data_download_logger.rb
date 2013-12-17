@@ -5,7 +5,7 @@ module Trade::TradeDataDownloadLogger
   def log_download request, params
     unless params['origin'] == 'public' then return end
     data = {}
-    filters = params['filters']
+    filters = Trade::SearchParams.sanitize(params['filters'])
     data["user_ip"] = request.ip
     data["report_type"] = filters['report_type']
     data["year_from"] = filters['time_range_start']
