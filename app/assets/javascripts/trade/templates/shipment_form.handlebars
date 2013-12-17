@@ -151,10 +151,10 @@
             }}
         </div>
         <div class="attribute-area left">
-          <p>Origin Permit <span class="error">{{currentShipment.errors.countryOfOriginPermitNumber}}</span></p>
+          <p>Origin Permit <span class="error">{{currentShipment.errors.originPermitNumber}}</span></p>
             {{view Ember.TextField
               prompt="Please type origin permit value"
-              valueBinding="currentShipment.countryOfOriginPermitNumber"
+              valueBinding="currentShipment.originPermitNumber"
             }}
         </div>
         <div class="attribute-area left">

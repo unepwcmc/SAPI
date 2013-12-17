@@ -77,7 +77,7 @@ private
       :country_of_origin_id,
       :import_permit_number,
       :export_permit_number,
-      :country_of_origin_permit_number,
+      :origin_permit_number,
       :purpose_id,
       :source_id,
       :year,

@@ -12,6 +12,7 @@ DECLARE
   inserted_shipments INTEGER;
   total_shipments INTEGER;
   sql TEXT;
+  permit_type TEXT;
 BEGIN
   SELECT * INTO aru FROM trade_annual_report_uploads WHERE id = annual_report_upload_id;
   IF NOT FOUND THEN
@@ -34,13 +35,23 @@ BEGIN
 
 
   sql := 'WITH split_export_permits AS (
-      SELECT id, origin_permit, import_permit,
-        regexp_split_to_table(export_permit, ''[:;,]'') AS export_permit,
-        country_of_origin, trading_partner
+      SELECT id,
+      regexp_split_to_table(export_permit, ''[:;,]'') AS export_permit,
+      trading_partner
+      FROM '|| table_name || '
+    ), split_import_permits AS (
+      SELECT id,
+      regexp_split_to_table(import_permit, ''[:;,]'') AS import_permit,
+      country_of_origin, trading_partner
+      FROM '|| table_name || '
+    ), split_origin_permits AS (
+      SELECT id,
+      regexp_split_to_table(origin_permit, ''[:;,]'') AS origin_permit,
+      country_of_origin
       FROM '|| table_name || '
     )
     SELECT origin_permit, geo_entities.id
-    FROM split_export_permits
+    FROM split_origin_permits
     INNER JOIN geo_entities ON geo_entities.iso_code2 = country_of_origin
     WHERE origin_permit IS NOT NULL AND country_of_origin IS NOT NULL
       AND NOT EXISTS (
@@ -62,7 +73,7 @@ BEGIN
         )
       UNION
       SELECT import_permit, geo_entities.id
-      FROM split_export_permits
+      FROM split_import_permits
       INNER JOIN geo_entities ON geo_entities.iso_code2 = trading_partner
       WHERE import_permit IS NOT NULL
         AND NOT EXISTS (
@@ -84,7 +95,7 @@ BEGIN
       UNION
       SELECT DISTINCT import_permit, ' || aru.trading_country_id ||
       '
-      FROM split_export_permits
+      FROM split_import_permits
       INNER JOIN geo_entities ON geo_entities.iso_code2 = trading_partner
       WHERE import_permit IS NOT NULL
         AND NOT EXISTS (
@@ -155,8 +166,6 @@ BEGIN
         exporter_id,
         importer_id,
         country_of_origin_id,
-        country_of_origin_permit_id,
-        import_permit_id,
         reported_by_exporter,
         taxon_concept_id,
         reported_taxon_concept_id,
@@ -175,9 +184,7 @@ BEGIN
         aru.id || 'AS trade_annual_report_upload_id,
         exporters.id AS exporter_id,
         importers.id AS importer_id,
-        origins.id AS country_of_origin_id,
-        origin_permits.id AS country_of_origin_permit_id,
-        import_permits.id AS import_permit_id,' ||
+        origins.id AS country_of_origin_id,' ||
         reported_by_exporter || ' AS reported_by_exporter,
         CASE WHEN resolved_taxa.accepted_taxon_concept_id IS NOT NULL
         THEN resolved_taxa.accepted_taxon_concept_id
@@ -218,8 +225,6 @@ BEGIN
       LEFT JOIN trade_codes AS purposes ON sandbox_table.purpose_code = purposes.code
         AND purposes.type = ''Purpose''
       LEFT JOIN geo_entities AS origins ON origins.iso_code2 = sandbox_table.country_of_origin
-      LEFT JOIN trade_permits AS origin_permits ON origin_permits.number = sandbox_table.origin_permit
-      LEFT JOIN trade_permits AS import_permits ON import_permits.number = sandbox_table.import_permit
       RETURNING *
     ) SELECT * FROM inserted_shipments';
 
@@ -231,31 +236,35 @@ BEGIN
     RETURN -1;
   END IF;
 
-  sql := 'WITH split_export_permits AS (
-    SELECT id, regexp_split_to_table(export_permit, ''[:;,]'') AS export_permit
-    FROM '|| table_name || '
-  )
-  INSERT INTO trade_shipment_export_permits(
-      trade_shipment_id,
-      trade_permit_id,
-      created_at,
-      updated_at
+  FOREACH permit_type IN ARRAY ARRAY['export', 'import', 'origin'] LOOP
+
+    sql := 'WITH split_permits AS (
+      SELECT id, regexp_split_to_table(' || permit_type || '_permit, ''[:;,]'') AS permit
+      FROM '|| table_name || '
     )
-    SELECT DISTINCT ON (1,2)
-      shipments_for_submit.id,
-      trade_permits.id,
-      current_date,
-      current_date
-    FROM '|| table_name || '_for_submit shipments_for_submit
-    INNER JOIN split_export_permits
-      ON split_export_permits.id = shipments_for_submit.sandbox_id
-    INNER JOIN trade_permits
-      ON trade_permits.number = split_export_permits.export_permit';
+    INSERT INTO trade_shipment_' || permit_type || '_permits(
+        trade_shipment_id,
+        trade_permit_id,
+        created_at,
+        updated_at
+      )
+      SELECT DISTINCT ON (1,2)
+        shipments_for_submit.id,
+        trade_permits.id,
+        current_date,
+        current_date
+      FROM '|| table_name || '_for_submit shipments_for_submit
+      INNER JOIN split_permits
+        ON split_permits.id = shipments_for_submit.sandbox_id
+      INNER JOIN trade_permits
+        ON trade_permits.number = split_permits.permit';
 
-  EXECUTE sql;
+    EXECUTE sql;
 
-  GET DIAGNOSTICS inserted_rows = ROW_COUNT;
-  RAISE INFO '[%] Inserted % shipment export permits', table_name, inserted_rows;
+    GET DIAGNOSTICS inserted_rows = ROW_COUNT;
+    RAISE INFO '[%] Inserted % shipment % permits', table_name, inserted_rows, permit_type;
+
+  END LOOP;
 
   sql := 'UPDATE trade_shipments SET sandbox_id = NULL
   WHERE trade_shipments.trade_annual_report_upload_id = ' || aru.id;

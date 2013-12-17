@@ -182,6 +182,9 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         expect{subject.submit}.to change{Trade::Permit.count}.by(3)
       }
       specify {
+        expect{subject.submit}.to change{Trade::ShipmentImportPermit.count}.by(1)
+      }
+      specify {
         expect{subject.submit}.to change{Trade::ShipmentExportPermit.count}.by(2)
       }
       context "when permit previously reported" do

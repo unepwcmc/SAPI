@@ -102,8 +102,8 @@ class Trade::Filter
     end
 
     unless @permits_ids.empty?
-      @query = @query.where("import_permit_id IN (?)
-                            OR country_of_origin_permit_id IN (?)
+      @query = @query.where("import_permits_ids && ARRAY[?]::INT[]
+                            OR origin_permits_ids && ARRAY[?]::INT[]
                             OR export_permits_ids && ARRAY[?]::INT[]",
                             @permits_ids , @permits_ids, @permits_ids)
     end
