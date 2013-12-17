@@ -50,7 +50,8 @@
 
       desc "Import shipments from csv file"
         task :populate_shipments => [:environment] do
-          sql = <<-SQL 
+          sql = <<-SQL
+          DELETE from  trade_shipments;
           INSERT INTO trade_shipments(
           source_id,
           unit_id,
@@ -89,12 +90,12 @@ SELECT sources.id AS source_id,
         CASE
            WHEN rank = '0' THEN jt.taxon_concept_id
            ELSE species_plus_id
-       END AS taxon_concept_id
+       END AS taxon_concept_id,
        to_date(shipment_year::varchar, 'yyyy') AS created_at,
        to_date(shipment_year::varchar, 'yyyy') AS updated_at,
-       species_plus_id AS reported_taxon_concept_id,
+       species_plus_id AS reported_taxon_concept_id
 
-FROM shipments_import_testing si
+FROM shipments_import si
 INNER JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code
 LEFT JOIN trade_codes AS sources ON si.source_code = sources.code
 AND sources.type = 'Source'
@@ -110,7 +111,7 @@ LEFT JOIN geo_entities AS origins ON si.import_country_code = origins.iso_code2
 LEFT JOIN
   (SELECT tr.taxon_concept_id,
           si.shipment_number
-   FROM shipments_import_testing si
+   FROM shipments_import si
    INNER JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code
    INNER JOIN taxon_relationships tr ON other_taxon_concept_id = nti.species_plus_id) jt ON jt.shipment_number = si.shipment_number ;
         SQL
