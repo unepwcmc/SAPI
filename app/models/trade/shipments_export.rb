@@ -1,22 +1,52 @@
 require 'psql_command'
 # Implements "raw" shipments export
 class Trade::ShipmentsExport < Species::CsvExport
+  include ActiveModel::SerializerSupport
 
   def initialize(filters)
     @filters = filters
-    @internal = filters[:internal]
     @search = Trade::Filter.new(@filters)
+  end
+
+  def export
+    if !File.file?(file_name)
+      to_csv
+    end
+    ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
+    @public_file_name = "#{resource_name}_#{ctime}.csv"
+    [
+      @file_name,
+      {:filename => public_file_name, :type => 'text/csv'}
+    ]
+  end
+
+  def total_cnt
+    query.count
   end
 
   def query
     headers = csv_column_headers
     select_columns = sql_columns.each_with_index.map do |c, i|
-      "#{c} AS \\\"#{headers[i]}\\\""
+      "#{c} AS \"#{headers[i]}\""
     end
     @search.query.select(select_columns)
   end
 
+  def csv_column_headers
+    report_columns.map do |column, properties|
+      I18n.t "csv.#{column}"
+    end
+  end
+
 private
+
+  def query_sql
+    query.to_sql
+  end
+
+  def internal?
+    @filters['internal'] == true
+  end
 
   def resource_name
     "shipments"
@@ -27,11 +57,12 @@ private
   end
 
   def copy_stmt(query)
+    # escape quotes around attributes for psql
     sql = <<-PSQL
-      \\COPY (#{query.to_sql})
+      \\COPY (#{query_sql.gsub(/"/,"\\\"")})
       TO ?
       WITH DELIMITER ','
-      ENCODING 'utf-8'
+      ENCODING 'latin1'
       CSV HEADER;
     PSQL
     ActiveRecord::Base.send(:sanitize_sql_array, [sql, @file_name])
@@ -67,17 +98,13 @@ private
 
   def report_columns
     # reject internal columns when producing a public report
-    available_columns.reject{ |column, properties| !@internal && properties[:internal] }
+    available_columns.delete_if do |column, properties|
+      !internal? && properties[:internal] == true
+    end
   end
 
   def sql_columns
     report_columns.map{ |column, properties| properties[I18n.locale] || column }
-  end
-
-  def csv_column_headers
-    report_columns.map do |column, properties|
-      I18n.t "csv.#{column}"
-    end
   end
 
 end
