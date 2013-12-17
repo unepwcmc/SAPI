@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131119164032) do
+ActiveRecord::Schema.define(:version => 20131217121051) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -72,7 +72,7 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.text     "auto_note"
     t.boolean  "is_current"
     t.boolean  "explicit_change"
-    t.string   "countries_ids_ary",          :limit => nil
+    t.string   "countries_ids_ary"
     t.datetime "updated_at"
     t.boolean  "show_in_history"
     t.boolean  "show_in_downloads"
@@ -86,30 +86,30 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
   add_index "cites_listing_changes_mview", ["taxon_concept_id", "original_taxon_concept_id", "change_type_id", "effective_at"], :name => "cites_listing_changes_mview_taxon_concept_id_original_taxon_idx"
 
   create_table "cites_listings_import", :id => false, :force => true do |t|
-    t.string  "rank",                      :limit => nil
+    t.string  "rank"
     t.integer "legacy_id"
-    t.string  "appendix",                  :limit => nil
+    t.string  "appendix"
     t.date    "listing_date"
-    t.string  "country_iso2",              :limit => nil
+    t.string  "country_iso2"
     t.boolean "is_current"
-    t.string  "populations_iso2",          :limit => nil
-    t.string  "excluded_populations_iso2", :limit => nil
+    t.string  "populations_iso2"
+    t.string  "excluded_populations_iso2"
     t.boolean "is_inclusion"
     t.integer "included_in_rec_id"
-    t.string  "rank_for_inclusions",       :limit => nil
-    t.string  "excluded_taxa",             :limit => nil
-    t.string  "short_note_en",             :limit => nil
-    t.string  "short_note_es",             :limit => nil
-    t.string  "short_note_fr",             :limit => nil
-    t.string  "full_note_en",              :limit => nil
+    t.string  "rank_for_inclusions"
+    t.string  "excluded_taxa"
+    t.string  "short_note_en"
+    t.string  "short_note_es"
+    t.string  "short_note_fr"
+    t.string  "full_note_en"
     t.integer "index_annotation"
     t.integer "history_annotation"
-    t.string  "hash_note",                 :limit => nil
-    t.string  "notes",                     :limit => nil
+    t.string  "hash_note"
+    t.string  "notes"
   end
 
   create_table "cites_regions_import", :id => false, :force => true do |t|
-    t.string "name", :limit => nil
+    t.string "name"
   end
 
   create_table "cites_species_listing_mview", :id => false, :force => true do |t|
@@ -120,7 +120,6 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
-    t.integer "genus_id"
     t.text    "kingdom_name"
     t.text    "phylum_name"
     t.text    "class_name"
@@ -150,13 +149,13 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
 
   create_table "cites_suspensions_import", :id => false, :force => true do |t|
     t.boolean "is_current"
-    t.string  "kingdom",                      :limit => nil
-    t.string  "rank",                         :limit => nil
+    t.string  "kingdom"
+    t.string  "rank"
     t.integer "legacy_id"
-    t.string  "country_iso2",                 :limit => nil
+    t.string  "country_iso2"
     t.integer "start_notification_legacy_id"
     t.integer "end_notification_legacy_id"
-    t.string  "notes",                        :limit => nil
+    t.string  "notes"
     t.text    "exclusions"
   end
 
@@ -194,7 +193,7 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.text     "auto_note"
     t.boolean  "is_current"
     t.boolean  "explicit_change"
-    t.string   "countries_ids_ary",          :limit => nil
+    t.string   "countries_ids_ary"
     t.datetime "updated_at"
     t.boolean  "show_in_history"
     t.boolean  "show_in_downloads"
@@ -208,20 +207,20 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
   add_index "cms_listing_changes_mview", ["taxon_concept_id", "original_taxon_concept_id", "change_type_id", "effective_at"], :name => "cms_listing_changes_mview_taxon_concept_id_original_taxon_c_idx"
 
   create_table "cms_listings_import", :id => false, :force => true do |t|
-    t.string  "rank",                      :limit => nil
+    t.string  "rank"
     t.integer "legacy_id"
-    t.string  "appendix",                  :limit => nil
-    t.string  "listing_date",              :limit => nil
+    t.string  "appendix"
+    t.string  "listing_date"
     t.boolean "is_current"
-    t.string  "populations_iso2",          :limit => nil
-    t.string  "excluded_populations_iso2", :limit => nil
+    t.string  "populations_iso2"
+    t.string  "excluded_populations_iso2"
     t.boolean "is_inclusion"
     t.integer "included_in_rec_id"
-    t.string  "rank_for_inclusions",       :limit => nil
-    t.string  "excluded_taxa",             :limit => nil
-    t.string  "full_note_en",              :limit => nil
-    t.string  "designation",               :limit => nil
-    t.string  "notes",                     :limit => nil
+    t.string  "rank_for_inclusions"
+    t.string  "excluded_taxa"
+    t.string  "full_note_en"
+    t.string  "designation"
+    t.string  "notes"
   end
 
   create_table "cms_species_listing_mview", :id => false, :force => true do |t|
@@ -232,7 +231,6 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
-    t.integer "genus_id"
     t.text    "phylum_name"
     t.text    "class_name"
     t.text    "order_name"
@@ -241,7 +239,7 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.string  "full_name"
     t.string  "author_year"
     t.text    "rank_name"
-    t.string  "agreement",                                 :limit => nil
+    t.string  "agreement"
     t.boolean "cms_listed"
     t.text    "cms_listing_original"
     t.text    "original_taxon_concept_full_name_with_spp"
@@ -250,12 +248,12 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
   end
 
   create_table "common_name_import", :id => false, :force => true do |t|
-    t.string  "name",         :limit => nil
-    t.string  "language",     :limit => nil
+    t.string  "name"
+    t.string  "language"
     t.integer "legacy_id"
-    t.string  "rank",         :limit => nil
-    t.string  "designation",  :limit => nil
-    t.string  "reference_id", :limit => nil
+    t.string  "rank"
+    t.string  "designation"
+    t.string  "reference_id"
   end
 
   add_index "common_name_import", ["name", "language", "rank"], :name => "common_name_import_name_language_rank_idx"
@@ -268,13 +266,13 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
   end
 
   create_table "countries_import", :id => false, :force => true do |t|
-    t.string "iso2",             :limit => nil
-    t.string "name",             :limit => nil
-    t.string "geo_entity_type",  :limit => nil
-    t.string "parent_iso_code2", :limit => nil
-    t.string "current_name",     :limit => nil
-    t.string "long_name",        :limit => nil
-    t.string "cites_region",     :limit => nil
+    t.string "iso2"
+    t.string "name"
+    t.string "geo_entity_type"
+    t.string "parent_iso_code2"
+    t.string "current_name"
+    t.string "long_name"
+    t.string "cites_region"
   end
 
   create_table "designation_geo_entities", :force => true do |t|
@@ -293,11 +291,11 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
 
   create_table "distribution_import", :id => false, :force => true do |t|
     t.integer "legacy_id"
-    t.string  "rank",            :limit => nil
-    t.string  "geo_entity_type", :limit => nil
-    t.string  "iso2",            :limit => nil
+    t.string  "rank"
+    t.string  "geo_entity_type"
+    t.string  "iso2"
     t.integer "reference_id"
-    t.string  "designation",     :limit => nil
+    t.string  "designation"
   end
 
   create_table "distribution_references", :force => true do |t|
@@ -310,11 +308,11 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
 
   create_table "distribution_tags_import", :id => false, :force => true do |t|
     t.integer "legacy_id"
-    t.string  "rank",            :limit => nil
-    t.string  "geo_entity_type", :limit => nil
-    t.string  "iso_code2",       :limit => nil
-    t.string  "tags",            :limit => nil
-    t.string  "designation",     :limit => nil
+    t.string  "rank"
+    t.string  "geo_entity_type"
+    t.string  "iso_code2"
+    t.string  "tags"
+    t.string  "designation"
   end
 
   create_table "distributions", :force => true do |t|
@@ -371,6 +369,22 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.integer  "source_id"
   end
 
+  create_table "eu_decisions_import", :id => false, :force => true do |t|
+    t.boolean "is_current"
+    t.string  "taxonomy"
+    t.integer "event_legacy_id"
+    t.integer "legacy_id"
+    t.string  "rank"
+    t.string  "kingdom"
+    t.string  "country_iso2"
+    t.string  "opinion"
+    t.date    "start_date"
+    t.string  "source"
+    t.string  "term"
+    t.string  "notes"
+    t.string  "internal_notes"
+  end
+
   create_table "eu_listing_changes_mview", :id => false, :force => true do |t|
     t.integer  "taxon_concept_id"
     t.integer  "id"
@@ -405,7 +419,7 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.text     "auto_note"
     t.boolean  "is_current"
     t.boolean  "explicit_change"
-    t.string   "countries_ids_ary",          :limit => nil
+    t.string   "countries_ids_ary"
     t.datetime "updated_at"
     t.boolean  "show_in_history"
     t.boolean  "show_in_downloads"
@@ -420,20 +434,20 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
 
   create_table "eu_listings_import", :id => false, :force => true do |t|
     t.integer "event_legacy_id"
-    t.string  "rank",                      :limit => nil
+    t.string  "rank"
     t.integer "legacy_id"
-    t.string  "annex",                     :limit => nil
+    t.string  "annex"
     t.date    "listing_date"
-    t.string  "country_iso2",              :limit => nil
+    t.string  "country_iso2"
     t.boolean "is_current"
-    t.string  "hash_note",                 :limit => nil
-    t.string  "populations_iso2",          :limit => nil
-    t.string  "excluded_populations_iso2", :limit => nil
+    t.string  "hash_note"
+    t.string  "populations_iso2"
+    t.string  "excluded_populations_iso2"
     t.boolean "is_inclusion"
     t.integer "included_in_rec_id"
-    t.string  "rank_for_inclusions",       :limit => nil
-    t.string  "excluded_taxa",             :limit => nil
-    t.string  "full_note_en",              :limit => nil
+    t.string  "rank_for_inclusions"
+    t.string  "excluded_taxa"
+    t.string  "full_note_en"
   end
 
   create_table "eu_species_listing_mview", :id => false, :force => true do |t|
@@ -444,7 +458,6 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
-    t.integer "genus_id"
     t.text    "kingdom_name"
     t.text    "phylum_name"
     t.text    "class_name"
@@ -483,11 +496,11 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
 
   create_table "events_import", :id => false, :force => true do |t|
     t.integer "legacy_id"
-    t.string  "designation",  :limit => nil
-    t.string  "name",         :limit => nil
+    t.string  "designation"
+    t.string  "name"
     t.date    "effective_at"
-    t.string  "type",         :limit => nil
-    t.string  "subtype",      :limit => nil
+    t.string  "type"
+    t.string  "subtype"
     t.text    "description"
     t.text    "url"
   end
@@ -528,10 +541,10 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
   end
 
   create_table "hash_annotations_import", :id => false, :force => true do |t|
-    t.string  "symbol",          :limit => nil
+    t.string  "symbol"
     t.integer "event_legacy_id"
-    t.string  "ignore",          :limit => nil
-    t.string  "full_note_en",    :limit => nil
+    t.string  "ignore"
+    t.string  "full_note_en"
   end
 
   create_table "instruments", :force => true do |t|
@@ -552,9 +565,9 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
   end
 
   create_table "languages_import", :id => false, :force => true do |t|
-    t.string "iso_code3", :limit => nil
-    t.string "name_en",   :limit => nil
-    t.string "iso_code1", :limit => nil
+    t.string "iso_code3"
+    t.string "name_en"
+    t.string "iso_code1"
   end
 
   create_table "listing_changes", :force => true do |t|
@@ -616,7 +629,7 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.text     "auto_note"
     t.boolean  "is_current"
     t.boolean  "explicit_change"
-    t.string   "countries_ids_ary",          :limit => nil
+    t.string   "countries_ids_ary"
     t.datetime "updated_at"
     t.boolean  "show_in_history"
     t.boolean  "show_in_downloads"
@@ -652,23 +665,23 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
   end
 
   create_table "quotas_import", :id => false, :force => true do |t|
-    t.string  "kingdom",          :limit => nil
+    t.string  "kingdom"
     t.integer "legacy_id"
-    t.string  "rank",             :limit => nil
-    t.string  "country_iso2",     :limit => nil
+    t.string  "rank"
+    t.string  "country_iso2"
     t.float   "quota"
-    t.string  "unit",             :limit => nil
+    t.string  "unit"
     t.date    "start_date"
     t.date    "end_date"
     t.integer "year"
-    t.string  "notes",            :limit => nil
-    t.string  "terms",            :limit => nil
-    t.string  "sources",          :limit => nil
+    t.string  "notes"
+    t.string  "terms"
+    t.string  "sources"
     t.date    "created_at"
     t.date    "publication_date"
     t.boolean "is_current"
     t.boolean "public_display"
-    t.string  "url",              :limit => nil
+    t.string  "url"
   end
 
   create_table "ranks", :force => true do |t|
@@ -736,15 +749,15 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
   end
 
   create_table "species_import", :id => false, :force => true do |t|
-    t.string  "name",             :limit => nil
-    t.string  "rank",             :limit => nil
+    t.string  "name"
+    t.string  "rank"
     t.integer "legacy_id"
-    t.string  "parent_rank",      :limit => nil
+    t.string  "parent_rank"
     t.integer "parent_legacy_id"
-    t.string  "status",           :limit => nil
-    t.string  "author",           :limit => nil
-    t.string  "notes",            :limit => nil
-    t.string  "taxonomy",         :limit => nil
+    t.string  "status"
+    t.string  "author"
+    t.string  "notes"
+    t.string  "taxonomy"
   end
 
   add_index "species_import", ["name"], :name => "species_import_name"
@@ -758,25 +771,25 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
   end
 
   create_table "standard_reference_links_import", :id => false, :force => true do |t|
-    t.string  "scientific_name", :limit => nil
-    t.string  "rank",            :limit => nil
+    t.string  "scientific_name"
+    t.string  "rank"
     t.integer "taxon_legacy_id"
     t.integer "ref_legacy_id"
-    t.string  "exclusions",      :limit => nil
+    t.string  "exclusions"
     t.boolean "is_cascaded"
   end
 
   create_table "synonym_import", :id => false, :force => true do |t|
-    t.string  "name",               :limit => nil
-    t.string  "rank",               :limit => nil
+    t.string  "name"
+    t.string  "rank"
     t.integer "legacy_id"
-    t.string  "parent_rank",        :limit => nil
+    t.string  "parent_rank"
     t.integer "parent_legacy_id"
-    t.string  "status",             :limit => nil
-    t.string  "author",             :limit => nil
-    t.string  "notes",              :limit => nil
-    t.string  "taxonomy",           :limit => nil
-    t.string  "accepted_rank",      :limit => nil
+    t.string  "status"
+    t.string  "author"
+    t.string  "notes"
+    t.string  "taxonomy"
+    t.string  "accepted_rank"
     t.integer "accepted_legacy_id"
   end
 
@@ -807,13 +820,13 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
   end
 
   create_table "taxon_concept_references", :force => true do |t|
-    t.integer  "taxon_concept_id",                                              :null => false
-    t.integer  "reference_id",                                                  :null => false
-    t.boolean  "is_standard",                                :default => false, :null => false
-    t.boolean  "is_cascaded",                                :default => false, :null => false
-    t.datetime "created_at",                                                    :null => false
-    t.datetime "updated_at",                                                    :null => false
-    t.string   "excluded_taxon_concepts_ids", :limit => nil
+    t.integer  "taxon_concept_id",                               :null => false
+    t.integer  "reference_id",                                   :null => false
+    t.boolean  "is_standard",                 :default => false, :null => false
+    t.boolean  "is_cascaded",                 :default => false, :null => false
+    t.datetime "created_at",                                     :null => false
+    t.datetime "updated_at",                                     :null => false
+    t.string   "excluded_taxon_concepts_ids"
   end
 
   add_index "taxon_concept_references", ["taxon_concept_id", "reference_id"], :name => "index_taxon_concept_references_on_taxon_concept_id_and_ref_id"
@@ -897,20 +910,20 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.text     "cms_listing_original"
     t.text     "cms_listing"
     t.datetime "cms_listing_updated_at"
-    t.string   "species_listings_ids",            :limit => nil
-    t.string   "species_listings_ids_aggregated", :limit => nil
+    t.string   "species_listings_ids"
+    t.string   "species_listings_ids_aggregated"
     t.string   "author_year"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "taxon_concept_id_com"
-    t.string   "english_names_ary",               :limit => nil
-    t.string   "spanish_names_ary",               :limit => nil
-    t.string   "french_names_ary",                :limit => nil
+    t.string   "english_names_ary"
+    t.string   "spanish_names_ary"
+    t.string   "french_names_ary"
     t.integer  "taxon_concept_id_syn"
-    t.string   "synonyms_ary",                    :limit => nil
-    t.string   "synonyms_author_years_ary",       :limit => nil
-    t.string   "subspecies_ary",                  :limit => nil
-    t.string   "countries_ids_ary",               :limit => nil
+    t.string   "synonyms_ary"
+    t.string   "synonyms_author_years_ary"
+    t.string   "subspecies_ary"
+    t.string   "countries_ids_ary"
     t.boolean  "dirty"
     t.datetime "expiry"
   end
@@ -970,13 +983,13 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
   end
 
   create_table "terms_and_purpose_pairs_import", :id => false, :force => true do |t|
-    t.string "term_code",    :limit => nil
-    t.string "purpose_code", :limit => nil
+    t.string "term_code"
+    t.string "purpose_code"
   end
 
   create_table "terms_and_unit_pairs_import", :id => false, :force => true do |t|
-    t.string "term_code", :limit => nil
-    t.string "unit_code", :limit => nil
+    t.string "term_code"
+    t.string "unit_code"
   end
 
   create_table "trade_annual_report_uploads", :force => true do |t|
@@ -1032,7 +1045,7 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
   end
 
   create_table "trade_restrictions", :force => true do |t|
-    t.boolean  "is_current",                                 :default => true
+    t.boolean  "is_current",                  :default => true
     t.datetime "start_date"
     t.datetime "end_date"
     t.integer  "geo_entity_id"
@@ -1042,13 +1055,29 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.string   "type"
     t.integer  "unit_id"
     t.integer  "taxon_concept_id"
-    t.boolean  "public_display",                             :default => true
+    t.boolean  "public_display",              :default => true
     t.text     "url"
-    t.datetime "created_at",                                                   :null => false
-    t.datetime "updated_at",                                                   :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.integer  "start_notification_id"
     t.integer  "end_notification_id"
-    t.string   "excluded_taxon_concepts_ids", :limit => nil
+    t.string   "excluded_taxon_concepts_ids"
+  end
+
+  create_table "trade_sandbox_3", :force => true do |t|
+    t.string "appendix"
+    t.string "species_name"
+    t.string "term_code"
+    t.string "quantity"
+    t.string "unit_code"
+    t.string "trading_partner"
+    t.string "country_of_origin"
+    t.string "export_permit"
+    t.string "origin_permit"
+    t.string "purpose_code"
+    t.string "source_code"
+    t.string "year"
+    t.string "import_permit"
   end
 
   create_table "trade_sandbox_template", :force => true do |t|
@@ -1107,6 +1136,25 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.datetime "updated_at",       :null => false
   end
 
+  create_table "trade_trade_data_downloads", :force => true do |t|
+    t.string   "user_ip"
+    t.string   "report_type"
+    t.integer  "year_from"
+    t.integer  "year_to"
+    t.string   "taxon"
+    t.string   "appendix"
+    t.string   "importer"
+    t.string   "exporter"
+    t.string   "origin"
+    t.string   "term"
+    t.string   "unit"
+    t.string   "source"
+    t.string   "purpose"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "number_of_rows"
+  end
+
   create_table "trade_validation_rules", :force => true do |t|
     t.string   "valid_values_view"
     t.string   "type",                                :null => false
@@ -1130,10 +1178,10 @@ ActiveRecord::Schema.define(:version => 20131119164032) do
     t.string  "species_name"
     t.integer "taxon_concept_id"
     t.integer "year"
-    t.string  "appendix",         :limit => nil
+    t.string  "appendix"
   end
 
-  add_index "valid_species_name_appendix_year_mview", ["species_name", "appendix", "year"], :name => "valid_species_name_appendix_year_species_name_appendix_year_idx"
+  add_index "valid_species_name_appendix_year_mview", ["species_name", "appendix", "year"], :name => "valid_species_name_appendix_yea_species_name_appendix_year_idx1"
 
   add_foreign_key "annotations", "annotations", name: "annotations_source_id_fk", column: "source_id"
   add_foreign_key "annotations", "events", name: "annotations_event_id_fk"

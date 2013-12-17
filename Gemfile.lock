@@ -198,6 +198,11 @@ GEM
     pg-hstore (1.2.0)
     pg_array_parser (0.0.9)
     polyglot (0.3.3)
+    postgres-copy (0.6.0)
+      activerecord (>= 3.0.0)
+      pg
+      rails (>= 3.0.0)
+      responders
     pry (0.9.11.4)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -365,6 +370,7 @@ DEPENDENCIES
   oj
   pg
   pg_array_parser
+  postgres-copy (= 0.6)
   quiet_assets
   rack-cors
   rack-livereload

@@ -505,8 +505,8 @@ $(document).ready(function(){
   });
 
   function getFormattedSynonyms (d) {
-    if (d.synonyms.length > 0 ) {
-      return ' (' + d.synonyms.join(', ') + ')';
+    if (d.matching_names.length > 0 ) {
+      return ' (' + d.matching_names.join(', ') + ')';
     }
     return '';
   }

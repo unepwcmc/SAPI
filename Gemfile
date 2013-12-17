@@ -114,3 +114,5 @@ gem 'memcache-client'
 #gem 'high_voltage'
 
 gem 'jquery-ui-rails'
+
+gem 'postgres-copy', "0.6"
