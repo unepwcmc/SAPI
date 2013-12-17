@@ -3,7 +3,8 @@ module DownloadsCache
   LISTINGS_DOWNLOAD_DIRS = ['checklist', 'eu_listings', 'cites_listings', 'cms_listings']
   DOWNLOAD_DIRS = LISTINGS_DOWNLOAD_DIRS + [
     'quotas', 'cites_suspensions', 'eu_decisions', 'shipments', 'comptab',
-    'gross_exports', 'gross_imports', 'net_exports', 'net_imports'
+    'gross_exports', 'gross_imports', 'net_exports', 'net_imports', 
+    'trade_download_stats'
   ]
 
   def self.quotas_path
@@ -72,6 +73,10 @@ module DownloadsCache
     clear_dirs(['gross_imports'])
     clear_dirs(['net_exports'])
     clear_dirs(['net_imports'])
+  end
+
+  def self.clear_trade_download_stats
+    clear_dirs(['trade_download_stats'])
   end
 
   def self.update
