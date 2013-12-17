@@ -1359,17 +1359,16 @@ html.lt-ie9 #main .tabset > li > ul >li.first {
 
 div#banner {
   background: #376382;
-  padding: 10px 40px;
-  position: relative;
-  top: -250px;
-  width: 780px;
-  left: 40px;
+  width: 860px;
   opacity: 0.8;
 }
 
 div#banner p {
   color: #fff;
   opacity: 1;
+  text-align: left;
+  margin: 0;
+  padding: 10px 50px 10px 40px;
 }
 
 div#banner p strong {
@@ -1378,8 +1377,10 @@ div#banner p strong {
   letter-spacing: 0.0075em;
 }
 
-div#banner p img {
+div#banner p button#remove {
   float: right;
-  padding-right: 12px;
-  padding-top: 2px;
+  padding: 0;
+  border: none;
+  background: none;
+  outline: none;
 }
