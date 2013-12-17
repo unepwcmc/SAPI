@@ -37,7 +37,7 @@ module Trade::TradeDataDownloadLogger
         end
       end
     end
-    file_name
+    PATH + file_name
   end
 
   PATH = "public/downloads/trade_download_stats/"

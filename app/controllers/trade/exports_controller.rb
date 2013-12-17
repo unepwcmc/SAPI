@@ -22,4 +22,13 @@ class Trade::ExportsController < ApplicationController
       }
     end
   end
+
+  def download_stats
+    stats = Trade::TradeDataDownloadLogger.export
+    respond_to do |format|
+      format.html {
+        send_file stats, :type => 'text/csv'
+      }
+    end
+  end
 end
