@@ -18,7 +18,7 @@
 # t.datetime "created_at",  :null => false
 # t.datetime "updated_at",  :null => false
 
-class TradeDataDownload < ActiveRecord::Base
+class Trade::TradeDataDownload < ActiveRecord::Base
 
   attr_accessible :user_ip, :report_type, :year_from, :year_to, :taxon,
    :appendix, :importer, :exporter, :origin, :term, :unit, :source, :purpose

@@ -11,7 +11,7 @@ class Trade::ExportsController < ApplicationController
         result = search.export
         if result.is_a?(Array)
           send_file result[0], result[1]
-          TradeDataDownloadLogger.log_download request, params
+          Trade::TradeDataDownloadLogger.log_download request, params
         else
           head :no_content
         end

@@ -1,4 +1,4 @@
-module TradeDataDownloadLogger
+module Trade::TradeDataDownloadLogger
 
   module_function
 
@@ -19,7 +19,7 @@ module TradeDataDownloadLogger
     data["importer"] = self.get_field_values(filters['importers_ids'], GeoEntity)
     data["exporter"] = self.get_field_values(filters['exporters_ids'], GeoEntity)
 
-    w = TradeDataDownload.new(data)
+    w = Trade::TradeDataDownload.new(data)
     w.save
   end
 
@@ -29,7 +29,7 @@ module TradeDataDownloadLogger
     file_name = self.get_file_name
     unless File.file?(PATH + file_name)
       File.open(PATH + self.get_file_name, 'w') do |f|
-        TradeDataDownload.pg_copy_to do |line|
+        Trade::TradeDataDownload.pg_copy_to do |line|
           f.write line
         end
       end

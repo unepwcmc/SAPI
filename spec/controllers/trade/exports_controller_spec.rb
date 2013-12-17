@@ -29,7 +29,7 @@ describe Trade::ExportsController do
             :time_range_start => '1975',
             :time_range_end => '2000'
           }, :origin => :public
-        last_download = TradeDataDownload.last
+        last_download = Trade::TradeDataDownload.last
         last_download.report_type.should eq('raw')
         last_download.year_from.should eq(1975)
       end
@@ -42,7 +42,7 @@ describe Trade::ExportsController do
             :time_range_start => '1975',
             :time_range_end => '2000'
           }
-        last_download = TradeDataDownload.last
+        last_download = Trade::TradeDataDownload.last
         last_download.should eq(nil)
       end
     end
