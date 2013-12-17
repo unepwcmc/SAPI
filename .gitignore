@@ -42,6 +42,7 @@
 /public/downloads/gross_imports/*.csv
 /public/downloads/net_exports/*.csv
 /public/downloads/net_imports/*.csv
+/public/downloads/trade_download_stats/*.csv
 /public/uploads/*
 
 # Ruby
