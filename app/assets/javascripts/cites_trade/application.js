@@ -505,8 +505,8 @@ $(document).ready(function(){
   });
 
   function getFormattedSynonyms (d) {
-    if (d.synonyms.length > 0 ) {
-      return ' (' + d.synonyms.join(', ') + ')';
+    if (d.matching_names.length > 0 ) {
+      return ' (' + d.matching_names.join(', ') + ')';
     }
     return '';
   }
@@ -628,7 +628,7 @@ $(document).ready(function(){
 
   if (is_search_page || is_view_results_page) {
     $.when($.ajax("/api/v1/units?locale=" + locale, data_type)).then(initUnitsObj, ajaxFail);
-    $.when($.ajax("/api/v1/geo_entities?locale=" + locale, data_type)).then(initExpctyImpcty, ajaxFail);
+    $.when($.ajax("/api/v1/geo_entities?geo_entity_types[]=COUNTRY&geo_entity_types[]=TERRITORY&locale=" + locale, data_type)).then(initExpctyImpcty, ajaxFail);
     $.when($.ajax("/api/v1/terms?locale=" + locale, data_type)).then(initTerms, ajaxFail);
     $.when($.ajax("/api/v1/sources?locale=" + locale, data_type)).then(initSources, ajaxFail);
     $.when($.ajax("/api/v1/purposes?locale=" + locale, data_type)).then(initPurposes, ajaxFail);

@@ -2,6 +2,12 @@ class Admin::GeoEntitiesController < Admin::SimpleCrudController
 
   before_filter :load_geo_entity_types, :only => [:index, :create]
 
+  def index
+    index! do |format|
+      @geo_entity = GeoEntity.new(:is_current => true)
+    end
+  end
+
   def autocomplete
     render :json => GeoEntity.
       select([:"geo_entities.id", :"geo_entities.name_en", :"geo_entities.iso_code2"]).

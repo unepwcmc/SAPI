@@ -5,6 +5,7 @@
   <th width="15%">Name (EN)</th>
   <th width="15%">Name (ES)</th>
   <th width="15%">Name (FR)</th>
+  <th width="5%">Current</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
@@ -57,6 +58,13 @@
           data-original-title="Enter the name in French"
           data-url="<%= resource_url(geo_entity) %>" data-pk="<%= geo_entity.id %>">
           <%= geo_entity.name_fr %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-required editable-is-current" data-type="checklist" data-resource="geo_entity" data-name="is_current" data-value="<%= geo_entity.is_current ? 1 : 0 %>"
+          data-original-title="Is current?"
+          data-url="<%= resource_url(geo_entity) %>" data-pk="<%= geo_entity.id %>">
+          <%= geo_entity.is_current ? 'current' : 'not current' %>
         </a>
       </td>
       <td>
