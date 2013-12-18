@@ -53,5 +53,11 @@ fr:
   gross_imports: "Importations Brutes"
   net_exports: "Exportations Nettes"
   net_imports: "Importations Nettes"
-  all: "Tout"
+
+  table_title:
+    gross_imports: "Rapport de la Importations Brutes"
+    gross_exports: "Rapport de la Exportations Brutes"
+    net_imports: "Rapport de la Importations Nettes"
+    net_exports: "Rapport de la Exportations Nettes"
+    comptab: "Rapport de la Tabulation Comparative"
 

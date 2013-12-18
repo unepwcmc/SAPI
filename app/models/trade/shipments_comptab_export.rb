@@ -10,6 +10,10 @@ class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
     ActiveRecord::Base.connection.execute(query_sql)
   end
 
+  def resource_name
+    "comptab"
+  end
+
 private
 
   def query_sql
@@ -22,10 +26,6 @@ private
 
   def subquery_sql
     comptab_query
-  end
-
-  def resource_name
-    "comptab"
   end
 
   def available_columns

@@ -7,7 +7,6 @@ class Trade::ShipmentComptabExportSerializer < ActiveModel::Serializer
     object.csv_column_headers
   end
   def table_title
-    debugger
-    I18n.t "csv.#{column}"
+    I18n.t "table_title.#{object.resource_name}"
   end
 end

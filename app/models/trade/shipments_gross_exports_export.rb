@@ -7,6 +7,10 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
     csv_column_headers + years
   end
 
+  def resource_name
+    "gross_exports"
+  end
+
 private
 
   def query_sql
@@ -15,10 +19,6 @@ private
       "#{c} AS \"#{headers[i]}\""
     end + years_columns
     "SELECT #{select_columns.join(', ')} FROM (#{ct_subquery_sql}) ct_subquery"
-  end
-
-  def resource_name
-    "gross_exports"
   end
 
   def outer_report_columns

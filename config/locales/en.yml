@@ -56,5 +56,10 @@ en:
   gross_imports: "Gross Imports"
   net_exports: "Net Exports"
   net_imports: "Net Imports"
-  all: "All"
 
+  table_title:
+    gross_imports: "Gross Imports Report"
+    gross_exports: "Gross Exports Report"
+    net_imports: "Net Imports Report"
+    net_exports: "Net Exports Report"
+    comptab: "Comparative Tabulation Report"
