@@ -1,8 +1,8 @@
 $(document).ready ->
-  console.log(window.editorClass)
   if window.editorClass == 'taxon_concepts'
     window.adminEditor = new TaxonConceptsEditor()
-  else if window.editorClass == 'listing_changes' 
+  else if window.editorClass == 'taxon_listing_changes' or\
+  window.editorClass == 'listing_changes'
     window.adminEditor = new ListingChangesEditor()
   else if window.editorClass == 'taxon_concept_references'
     window.adminEditor = new TaxonReferencesEditor()
@@ -113,10 +113,13 @@ class AdminInPlaceEditor extends AdminEditor
         dataType: 'json'
         type: 'put'
       params: (params) ->
+        value = params.value
+        if params.name == 'is_current'
+          value = params.value[0] || false
         #originally params contain pk, name and value
         newParams = id: params.pk
         newParams[$(@).attr('data-resource')] = {}
-        newParams[$(@).attr('data-resource')][params.name] = params.value
+        newParams[$(@).attr('data-resource')][params.name] = value
         return newParams
 
     $('a[data-toggle="popover"]').popover(html: true, placement: 'bottom')
@@ -136,6 +139,14 @@ class AdminInPlaceEditor extends AdminEditor
 
     $('#admin-in-place-editor .editable-geo-entity').editable(
       'option', 'source', window.geoEntities
+    )
+
+    $('#admin-in-place-editor .editable-is-current').editable(
+      'option', 'source', [{value: 1, text: 'current'}]
+    )
+
+    $('#admin-in-place-editor .editable-is-current').editable(
+      'option', 'emptytext', 'not current'
     )
 
 class TaxonConceptsEditor extends AdminEditor

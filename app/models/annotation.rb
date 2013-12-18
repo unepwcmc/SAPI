@@ -34,7 +34,7 @@ class Annotation < ActiveRecord::Base
     order([:parent_symbol, :symbol])
 
   def self.search query
-    if query
+    if query.present?
       where("UPPER(symbol) LIKE UPPER(:query)
             OR UPPER(parent_symbol) LIKE UPPER(:query)
             OR UPPER(short_note_en) LIKE UPPER(:query)

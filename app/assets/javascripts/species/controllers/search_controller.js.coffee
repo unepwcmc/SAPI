@@ -24,7 +24,10 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
     Species.AutoCompleteTaxonConcept.find(
       taxonomy: @get('taxonomy')
       taxon_concept_query: taxonConceptQuery
-      ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY', 'GENUS', 'SPECIES']
+      ranks: [
+        'KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY',
+        'GENUS', 'SPECIES', 'SUBSPECIES', 'VARIETY'
+      ]
       autocomplete: true
     )
   ).property('taxonConceptQuery')
@@ -65,14 +68,16 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
     else
       query = taxonFullName
     # Resetting the page property if no page value has been passed.
-    unless page then @get("controllers.taxonConcepts").set('page', 1)
-    @transitionToRoute('search', {
+    @transitionToRoute('taxonConcepts', {queryParams: {
       taxonomy: @get('taxonomy')
       taxon_concept_query: query
       geo_entities_ids: @get('selectedGeoEntities').mapProperty('id')
+      geo_entity_scope: if @get('taxonomy') == 'cms'
+        'cms'
+      else
+        'cites'
       page: page or 1
-      per_page: perPage or 100
-    })
+    }})
 
   openTaxonPage: (taxonConceptId) ->
     @set('redirected', false)
@@ -80,7 +85,9 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
     m = Species.TaxonConcept.find(taxonConceptId)
     # Setting a spinner until content is loaded.
     $(@spinnerSelector).css("visibility", "visible")
-    @transitionToRoute('taxon_concept.legal', m)
+    @transitionToRoute('taxonConcept.legal', m, {queryParams:
+      {taxon_concept_query: false, page: false}
+    })
 
   actions:
     openSearchPage: (taxonFullName, page, perPage) ->

@@ -32,15 +32,20 @@ class Trade::AnnualReportUploadsController < ApplicationController
       render :json => @annual_report_upload, :status => :ok,
         :serializer => Trade::ShowAnnualReportUploadSerializer
     else
-      render :json => @annual_report_upload.errors, :status => :unprocessable_entity
+      render :json => { "errors" => @annual_report_upload.errors },
+        :status => :unprocessable_entity
     end
   end
 
   def submit
     @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
-    @annual_report_upload.submit
-    render :json => @annual_report_upload,
-      :serializer => Trade::ShowAnnualReportUploadSerializer
+    if @annual_report_upload.submit
+      render :json => @annual_report_upload, :status =>:ok,
+        :serializer => Trade::ShowAnnualReportUploadSerializer
+    else
+      render :json => { "errors" => @annual_report_upload.errors },
+        :status => :unprocessable_entity
+    end
   end
 
 private

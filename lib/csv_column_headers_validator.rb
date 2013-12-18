@@ -12,11 +12,17 @@ class CsvColumnHeadersValidator < ActiveModel::EachValidator
           else
             Trade::SandboxTemplate::IMPORTER_COLUMNS
           end.map(&:classify).map(&:downcase)
-          if !(
-            (required_column_headers - reported_column_headers).empty? && 
-            (reported_column_headers - required_column_headers).empty?
-            )
-            record.errors.add(attribute, "file does not have required column headers", {})
+          missing_columns = required_column_headers - reported_column_headers
+          excess_columns = reported_column_headers - required_column_headers
+          if !(missing_columns.empty? && excess_columns.empty?)
+            error_msg = "invalid column headers: "
+            unless missing_columns.empty?
+              error_msg += 'missing: ' + missing_columns.join(', ') + '; '
+            end
+            unless excess_columns.empty?
+              error_msg += 'excess: ' + excess_columns.join(', ') + '; '
+            end
+            record.errors.add(attribute, error_msg, {})
           end
       end
     rescue

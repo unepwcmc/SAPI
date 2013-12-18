@@ -9,8 +9,8 @@ a {
   label { display: inline; }
 }
 
-.sandbox-header {
-  button {
+.sandbox-header, .shipments-header {
+  button, a.btn {
     margin: 10px 5px;
   }
   span {

@@ -1,3 +1,3 @@
 class Species::TradeCodeSerializer < ActiveModel::Serializer
-  attributes :code, :name_en
+  attributes :id, :code, :name
 end

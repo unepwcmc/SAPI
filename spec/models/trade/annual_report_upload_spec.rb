@@ -133,22 +133,40 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       genus = create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'Acipenser')
       )
-      species = create_cites_eu_species(
+      @species = create_cites_eu_species(
         :taxon_name => create(:taxon_name, :scientific_name => 'baerii'),
         :parent_id => genus.id
       )
+      create(:term, :code => 'CAV')
+      create(:unit, :code => 'KIL')
+      country = create(:geo_entity_type, :name => 'COUNTRY')
+      @argentina = create(:geo_entity,
+                          :geo_entity_type => country,
+                          :name => 'Argentina',
+                          :iso_code2 => 'AR'
+                         )
+
+      @portugal = create(:geo_entity,
+                         :geo_entity_type => country,
+                         :name => 'Portugal',
+                         :iso_code2 => 'PT'
+                        )
     end
     context "when no primary errors" do
       subject { #aru no primary errors
-        aru = build(:annual_report_upload)
+        aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
         aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
         sandbox_klass.create(
           :species_name => 'Acipenser baerii',
           :appendix => 'II',
+          :trading_partner => @portugal.iso_code2,
           :term_code => 'CAV',
           :unit_code => 'KIL',
-          :year => '2010'
+          :year => '2010',
+          :quantity => 1,
+          :import_permit => 'XXX',
+          :export_permit => 'AAA;BBB'
         )
         create(
           :format_validation_rule,
@@ -160,6 +178,21 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       specify {
         expect{subject.submit}.to change{Trade::Shipment.count}.by(1)
       }
+      specify {
+        expect{subject.submit}.to change{Trade::Permit.count}.by(3)
+      }
+      specify {
+        expect{subject.submit}.to change{Trade::ShipmentImportPermit.count}.by(1)
+      }
+      specify {
+        expect{subject.submit}.to change{Trade::ShipmentExportPermit.count}.by(2)
+      }
+      context "when permit previously reported" do
+        before(:each) { create(:permit, :number => 'XXX', :geo_entity => @argentina) }
+        specify {
+          expect{subject.submit}.to change{Trade::Permit.count}.by(2)
+        }
+      end
     end
     context "when primary errors present" do
       subject { #aru with primary errors
@@ -184,6 +217,60 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         expect{subject.submit}.not_to change{Trade::Shipment.count}
       }
     end
+    context "when reported under a synonym" do
+      before(:each) do
+        synonym_relationship_type =
+          create(
+            :taxon_relationship_type,
+            :name => TaxonRelationshipType::HAS_SYNONYM,
+            :is_intertaxonomic => false,
+            :is_bidirectional => false
+          )
+        @synonym = create_cites_eu_species(
+          :name_status => 'S',
+          :full_name => 'Acipenser stenorrhynchus'
+        )
+        create(:taxon_relationship,
+          :taxon_relationship_type_id => synonym_relationship_type.id,
+          :taxon_concept => @species,
+          :other_taxon_concept => @synonym
+        )
+      end
+      subject { #aru no primary errors
+        aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
+        aru.save(:validate => false)
+        sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
+        sandbox_klass.create(
+          :species_name => 'Acipenser stenorrhynchus',
+          :appendix => 'II',
+          :trading_partner => @portugal.iso_code2,
+          :term_code => 'CAV',
+          :unit_code => 'KIL',
+          :year => '2010',
+          :quantity => 1,
+          :import_permit => 'XXX',
+          :export_permit => 'AAA;BBB'
+        )
+        create(
+          :format_validation_rule,
+          :column_names => ['year'],
+          :format_re => '^\d{4}$'
+        )
+        aru
+      }
+      specify {
+        expect{subject.submit}.to change{Trade::Shipment.count}.by(1)
+      }
+      specify {
+        subject.submit
+        Trade::Shipment.first.taxon_concept_id.should == @species.id
+      }
+      specify {
+        subject.submit
+        Trade::Shipment.first.reported_taxon_concept_id.should == @synonym.id
+      }
+    end
+
   end
 
 end

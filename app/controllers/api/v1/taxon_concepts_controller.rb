@@ -1,5 +1,7 @@
 class Api::V1::TaxonConceptsController < ApplicationController
 
+  #makes params available to the ActiveModel::Serializers
+  serialization_scope :view_context
   def index
     @search = Species::Search.new(params)
     @taxon_concepts = @search.cached_results
@@ -8,8 +10,9 @@ class Api::V1::TaxonConceptsController < ApplicationController
       :meta => {
         :total => @search.cached_total_cnt,
         :higher_taxa_headers => Checklist::HigherTaxaInjector.new(@taxon_concepts).run_summary,
-        :page => params[:page]
-      }  
+        :page => @search.page,
+        :per_page => @search.per_page
+      }
   end
 
   def show

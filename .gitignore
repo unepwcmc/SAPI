@@ -36,6 +36,13 @@
 /public/downloads/checklist/*.csv
 /public/downloads/checklist/*.json
 /public/downloads/taxon_concepts_names/*.csv
+/public/downloads/shipments/*.csv
+/public/downloads/comptab/*.csv
+/public/downloads/gross_exports/*.csv
+/public/downloads/gross_imports/*.csv
+/public/downloads/net_exports/*.csv
+/public/downloads/net_imports/*.csv
+/public/downloads/trade_download_stats/*.csv
 /public/uploads/*
 
 # Ruby

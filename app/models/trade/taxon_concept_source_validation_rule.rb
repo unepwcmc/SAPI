@@ -14,22 +14,16 @@
 #  scope             :hstore
 #
 
-class Trade::TaxonConceptSourceValidationRule < Trade::ValidationRule
+class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
 
   INVALID_KINGDOM_SOURCE = {
     'ANIMALIA' => ['A'],
     'PLANTAE' => ['C', 'R']
   }
 
-  def error_message error_selector
-    "#{column_names[0]} (#{error_selector[column_names[0]]})
-      with #{column_names[1]} (#{error_selector[column_names[0]]})
-      is invalid"
-  end
-
   def validation_errors(annual_report_upload)
     matching_records_grouped(annual_report_upload.sandbox.table_name).map do |mr|
-      error_selector = error_selector(mr)
+      error_selector = error_selector(mr, annual_report_upload.point_of_view)
       Trade::ValidationError.new(
           :error_message => error_message(error_selector),
           :annual_report_upload_id => annual_report_upload.id,
@@ -40,6 +34,17 @@ class Trade::TaxonConceptSourceValidationRule < Trade::ValidationRule
           :is_primary => self.is_primary
       )
     end
+  end
+
+  def validation_errors_for_shipment(shipment)
+    return nil unless shipment.source && (
+      shipment.taxon_concept &&
+      shipment.taxon_concept.data['kingdom_name'] == 'Animalia' &&
+      INVALID_KINGDOM_SOURCE['ANIMALIA'].include?(shipment.source.code) ||
+      shipment.taxon_concept.data['kingdom_name'] == 'Plantae' &&
+      INVALID_KINGDOM_SOURCE['PLANTAE'].include?(shipment.source.code)
+    )
+    error_message
   end
 
   private
@@ -54,13 +59,13 @@ class Trade::TaxonConceptSourceValidationRule < Trade::ValidationRule
   # Expects a single grouped matching record.
   # TODO this is the same as for InclusionValidationRule: could this
   # class inherit from there?
-  def error_selector(matching_record)
-    res = {}
-    column_names.each do |cn|
-      res[cn] = matching_record.send(cn)
-    end
-    res
-  end
+  # def error_selector(matching_record)
+  #   res = {}
+  #   column_names.each do |cn|
+  #     res[cn] = matching_record.send(cn)
+  #   end
+  #   res
+  # end
 
   # Returns matching records grouped by column_names to return the count of
   # specific errors and ids of matching records

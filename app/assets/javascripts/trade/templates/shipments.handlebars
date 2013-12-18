@@ -1,22 +1,48 @@
-<div class="paging">
-  <ul class="pager">
-    {{# if controller.showPrevPage }}
-      <li><a href="#" {{action "prevPage" target="view" on="click"}}>&#9664;</a></li>
-    {{/if}}
 
-    <li>Page {{controller.page}} of {{controller.pages}}</li>
+<h2>
+  Welcome to the Shipments Database
+</h2>
 
-    {{# if controller.showNextPage }}
-      <li><a href="#" {{action "nextPage" target="view" on="click"}}>&#9654;</a></li>
-    {{/if}}
-  </ul>
+
+{{ partial 'trade/shipments/filters' }}
+
+
+<div class="shipments-header well well-small">
+  <div class="row-fluid">
+    <div class="span3">
+      <h3>Search results</h3>
+    </div>
+    <div class="span3">
+      <span class="total-matches">{{total}} matches</span>
+    </div>
+    <div class="sandbox-header-buttons span6">
+      {{#view tagName='span' class='pull-right' isVisibleBinding='controller.shipmentsSaving'}}
+        <img src="/assets/loading.gif"> Saving...
+      {{/view}}
+      <button {{action 'newShipment'}} class="pull-right btn clearfix">
+        Add shipment
+      </button>
+    </div>
+  </div>
 </div>
-<div class='presentation-container'>
-  {{view Trade.ShipmentsTable.TablesContainer
-    controllerBinding="tableController"
-    selectionBinding="tableController.selection"
-  }}
-</div>
+
+{{view Trade.ShipmentForm}}
+
+<div id="flash"></div>
+
+<div class='shipments-presentation-container'>
+  <table>
+    <thead>
+      <tr><th>Actions</th>{{dataHead controller.columns}}</tr>
+    </thead>
+    <tbody>
+    {{#each controller.content}}
+      {{view Trade.ShipmentTableView contentBinding='this'}}
+    {{/each}}
+    </tbody>
+  </table>
+</div> 
+
 <div class="paging">
   <ul class="pager">
     {{# if controller.showPrevPage }}

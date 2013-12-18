@@ -1,0 +1,36 @@
+<h1>Trade Statistics</h1>
+
+<%= render 'menu' %>
+
+<div class="row-fluid">
+<p>Summary of CITES annual reports uploaded into
+  the CITES Trade Database in a given year</p>
+
+<%= form_tag("summary_creation", :method => "get") do %> 
+  <div class="control-group">
+    <%= select_year(@created_date_selected, :start_year => Time.now.year,
+                    :end_year => 1975, :field_name => "createdDateSelected") %>
+    <%= submit_tag("Update", {:class => 'btn btn-primary'})%>
+  </div>
+<% end %>
+
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Country</th>
+      <th>Year</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%  @countries_reported_by_date_created.to_enum.with_index(1).each do |country, i| %>
+      <tr>
+        <td><%= i %></td>
+        <td><%= country[:name_en] %></td>
+        <td><%= country[:year] %></td>
+        <td><%= country[:reporter_type] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

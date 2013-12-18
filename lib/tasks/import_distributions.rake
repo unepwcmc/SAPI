@@ -13,7 +13,7 @@ namespace :import do
       kingdom = file.split('/').last.split('_')[0].titleize
 
       [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
-        puts "Import #{taxonomy_name} common names"
+        puts "Import #{taxonomy_name} distributions"
         taxonomy = Taxonomy.find_by_name(taxonomy_name)
         sql = <<-SQL
         INSERT INTO distributions(taxon_concept_id, geo_entity_id, created_at, updated_at)

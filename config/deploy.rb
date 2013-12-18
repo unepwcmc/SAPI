@@ -8,8 +8,6 @@ require 'brightbox/passenger'
 require 'sidekiq/capistrano'
 
 set :generate_webserver_config, false
-set :whenever_environment, defer { stage }
-require 'whenever/capistrano'
 
 require 'rvm/capistrano'
 set :rvm_ruby_string, '1.9.3'
@@ -109,7 +107,11 @@ set :local_shared_files, %w(config/database.yml)
 set :local_shared_dirs, %w(tmp/pids public/downloads public/uploads
   public/downloads/cites_listings public/downloads/eu_listings public/downloads/cms_listings
   public/downloads/eu_decisions public/downloads/cites_suspensions public/downloads/quotas
-  public/downloads/checklist public/downloads/taxon_concepts_names)
+  public/downloads/checklist public/downloads/taxon_concepts_names
+  public/downloads/shipments public/downloads/comptab
+  public/downloads/gross_exports public/downloads/gross_imports
+  public/downloads/net_exports public/downloads/net_imports
+  public/downloads/trade_download_stats)
 
 ## Global Shared Area
 # These are the list of files and directories that you want
@@ -221,34 +223,36 @@ end
 after "deploy:setup", :setup_production_database_configuration
 
 namespace :seeds do
-
-  desc 'Runs all import tasks, including rake db:seed'
-  task :import_all, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:all"
-  end
   desc 'plants seeds, defined inside db/seeds.rb file'
   task :plant, :roles => [:db] do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} rake db:seed"
   end
+end
 
-  desc "Redo full import"
+namespace :import do
+
+  namespace :cleaned do
+    task :species, :roles => [:db] do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:cleaned:species"
+    end
+    task :distributions, :roles => [:db] do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:cleaned:distributions"
+    end
+    task :common_names, :roles => [:db] do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:cleaned:common_names"
+    end
+    task :references, :roles => [:db] do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:cleaned:references"
+    end
+    desc "Run full import"
+    task :all, :roles => [:db] do
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:cleaned"
+    end
+  end
+
+  desc "Redo full import (drop / create db, seeds, full import)"
   task :redo, :roles => [:db] do
     run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake import:redo"
-  end
-
-  desc 'Imports data obtained from legacy database'
-  task :import, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:species && RAILS_ENV=#{rails_env} rake import:distributions:remove_table"
-  end
-
-  desc 'Import countries from legacy database'
-  task :import_countries, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:countries && RAILS_ENV=#{rails_env} rake import:distributions:remove_table"
-  end
-
-  desc 'Import distributions from legacy database'
-  task :import_distributions, :roles => [:db] do
-    run "cd #{current_path} && RAILS_ENV=#{rails_env} rake import:distributions && RAILS_ENV=#{rails_env} rake import:distributions:remove_table"
   end
 end
 

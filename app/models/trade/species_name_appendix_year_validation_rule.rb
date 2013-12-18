@@ -16,6 +16,32 @@
 
 class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationRule
 
+  def validation_errors_for_shipment(shipment)
+    shipment_in_scope = true
+    # check if shipment is in scope of this validation
+    shipments_scope.each do |scope_column, scope_value|
+      shipment_in_scope = false if shipment.send(scope_column) != scope_value
+    end
+    # make sure the validated fields are not blank
+    shipments_columns.each do |column|
+      shipment_in_scope = false if shipment.send(column).blank?
+    end
+    return nil unless shipment_in_scope
+    # if it is, check if it has a match in valid values view
+    v = Arel::Table.new(valid_values_view)
+    actual_appendix = Arel::Nodes::NamedFunction.new('ANY', [v['appendix']])
+    appendix_node = Arel::Nodes::Equality.new(shipment.appendix, actual_appendix)
+    actual_year = v['year']
+    year_node = actual_year.eq(shipment.year)
+    actual_species_name = v['species_name']
+    species_name_node = actual_species_name.eq(shipment.taxon_concept.full_name)
+    conditions = appendix_node.and(year_node).and(species_name_node)
+    return nil if Trade::Shipment.find_by_sql(v.project('*').where(conditions)).any?
+    error_message
+  end
+
+  private
+
   # Difference from superclass: rather than equality, check if appendix
   # is contained in valid appendix array (to allow for split listings)
   def matching_records_arel(table_name)

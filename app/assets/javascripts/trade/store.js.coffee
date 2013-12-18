@@ -26,6 +26,24 @@ DS.RESTAdapter.registerTransform('hash',
 Trade.Store.registerAdapter('Trade.GeoEntity', DS.RESTAdapter.extend({
   namespace: "api/v1"
 }))
+Trade.Store.registerAdapter('Trade.Term', DS.RESTAdapter.extend({
+  namespace: "api/v1"
+}))
+Trade.Store.registerAdapter('Trade.Unit', DS.RESTAdapter.extend({
+  namespace: "api/v1"
+}))
+Trade.Store.registerAdapter('Trade.Purpose', DS.RESTAdapter.extend({
+  namespace: "api/v1"
+}))
+Trade.Store.registerAdapter('Trade.Source', DS.RESTAdapter.extend({
+  namespace: "api/v1"
+}))
+Trade.Store.registerAdapter('Trade.TaxonConcept', DS.RESTAdapter.extend({
+  namespace: "api/v1"
+}))
+Trade.Store.registerAdapter('Trade.AutoCompleteTaxonConcept', DS.RESTAdapter.extend({
+  namespace: "api/v1"
+}))
 
 DS.RESTAdapter.configure("plurals", { geo_entity: "geo_entities" })
 

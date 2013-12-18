@@ -7,6 +7,9 @@ describe Api::V1::GeoEntitiesController do
   let(:country){
     create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
   }
+  let(:territory){
+    create(:geo_entity_type, :name => GeoEntityType::TERRITORY)
+  }
   let!(:europe){
     create(
       :geo_entity,
@@ -31,6 +34,15 @@ describe Api::V1::GeoEntitiesController do
           :iso_code2 => 'AD'
         )
   }
+  let!(:french_guiana){
+    create(
+      :geo_entity,
+      :geo_entity_type => territory,
+      :name => 'French Guiana',
+      :iso_code2 => 'GF',
+      :designations => [cites]
+    )
+  }
   describe "GET index" do
     it "returns CITES parties only" do
       get :index, :geo_entity_type => :country, :designation => :cites
@@ -43,6 +55,10 @@ describe Api::V1::GeoEntitiesController do
     it "returns countries" do
       get :index, :geo_entity_type => :country
       response.body.should have_json_size(2).at_path('geo_entities')
+    end
+    it "returns countries & territories" do
+      get :index, :geo_entity_types => [:country, :territory]
+      response.body.should have_json_size(3).at_path('geo_entities')
     end
   end
 end

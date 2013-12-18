@@ -26,6 +26,7 @@ FactoryGirl.define do
     designation
 
     factory :eu_regulation, :class => EuRegulation
+    factory :eu_suspension_regulation, :class => EuSuspensionRegulation
     factory :cites_cop, :class => CitesCop
     factory :cites_suspension_notification, :class => CitesSuspensionNotification,
       :aliases => [:start_notification] do
@@ -58,23 +59,23 @@ FactoryGirl.define do
 
   factory :trade_code do
     factory :source, :class => Source do
-      sequence(:code) { |n| (65 + n%26).chr }
-      name_en "Wild"
+      sequence(:code) { |n| (97 + n%26).chr }
+      sequence(:name) { |n| "Source @{n}" }
     end
 
     factory :purpose, :class => Purpose do
-      sequence(:code) { |n| (65 + n%26).chr }
-      name_en "Zoo"
+      sequence(:code) { |n| (97 + n%26).chr }
+      sequence(:name) { |n| "Purpose @{n}" }
     end
 
     factory :term, :class => Term do
-      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (65 + i%26).chr }.join }
-      name_en "Bones"
+      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (97 + i%26).chr }.join }
+      sequence(:name) { |n| "Term @{n}" }
     end
 
     factory :unit, :class => Unit do
-      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (65 + i%26).chr }.join }
-      name_en "Boxes"
+      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (97 + i%26).chr }.join }
+      sequence(:name) { |n| "Unit @{n}" }
     end
   end
 

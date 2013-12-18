@@ -1,0 +1,263 @@
+
+  <form id='form_expert'>
+    
+    
+    <input type="hidden" name="ssname" value="ct_60847153">
+    <input type="hidden" name="ssID" value="CT8F02EFDC">
+    
+    <br>
+    
+    <div class="grid_16 main_content">
+      
+      <div class='heading_label' style="text-align: center;"> &nbsp; <%= t('cites_title') %> </div>
+      <div style="font-size:16px;font-weight:150;text-align: left;"> &nbsp; <%= t('cites_sub_title') %>: </div>
+      <div class="grid_8">
+      </div>
+      <!--Error message -->
+      <div class="grid_8">
+
+        <div style="text-align: left; color:#FF0000; font-weight:bold; display:none;" id="search-error-message"><%= t('errors.no_data_1') %>.<br><%= t('errors.no_data_2') %>.</font></div>
+        
+      </div>
+      <hr class="space">
+      
+      <div class="grid_10">
+        <div id="tabs" style="display: none;">
+          
+          <ul>
+            <li><a href="#tabs-year">
+              <%= t('year_text') %>:<span>&nbsp;</span></a>
+            </li>
+            <li>
+              <a href="#tabs-exp">
+              <%= t('export_text') %>: <span>&nbsp;</span></a>
+            </li>
+            <li><a href="#tabs-imp">
+              <%= t('import_text') %>: <span>&nbsp;</span></a>
+            </li>
+            <li><a href="#tabs-source">
+              <%= t('source_text') %>: <span>&nbsp;</span></a>
+            </li>
+          </li>
+          <li><a href="#tabs-purpose">
+            <%= t('purpose_text') %>: <span>&nbsp;</span>
+            </a>
+          </li>
+          
+          <li><a href="#tabs-terms">
+            <%= t('trade_text') %>: <span>&nbsp;</span>
+            </a>
+          </li>
+          
+          <li><a href="#tabs-taxon"><%= t('taxon_text') %>:</a></li>
+        </ul>
+
+        <div id="tabs-year">
+          <div id="year" class="label_style"><%= t('year_text') %> :
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('year_tip') %> " />
+          </div>
+          <%= t('from') %>
+          <select name="time_range_start" id="qryFrom">
+            <option selected value="2012">2012</option>
+            <option  value="2011">2011</option>
+            <option  value="2010">2010</option>
+            <option  value="2009">2009</option>
+            <option  value="2008">2008</option>
+            <option  value="2007">2007</option>
+            <option  value="2006">2006</option>
+            <option  value="2005">2005</option>
+            <option  value="2004">2004</option>
+            <option  value="2003">2003</option>
+            <option  value="2002">2002</option>
+            <option  value="2001">2001</option>
+            <option  value="2000">2000</option>
+            <option  value="1999">1999</option>
+            <option  value="1998">1998</option>
+            <option  value="1997">1997</option>
+            <option  value="1996">1996</option>
+            <option  value="1995">1995</option>
+            <option  value="1994">1994</option>
+            <option  value="1993">1993</option>
+            <option  value="1992">1992</option>
+            <option  value="1991">1991</option>
+            <option  value="1990">1990</option>
+            <option  value="1989">1989</option>
+            <option  value="1988">1988</option>
+            <option  value="1987">1987</option>
+            <option  value="1986">1986</option>
+            <option  value="1985">1985</option>
+            <option  value="1984">1984</option>
+            <option  value="1983">1983</option>
+            <option  value="1982">1982</option>
+            <option  value="1981">1981</option>
+            <option  value="1980">1980</option>
+            <option  value="1979">1979</option>
+            <option  value="1978">1978</option>
+            <option  value="1977">1977</option>
+            <option  value="1976">1976</option>
+            <option  value="1975">1975</option>
+          </select> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+          <%= t('to') %>
+          <select name="time_range_end" id="qryTo">
+            <option  value="2012">2012</option>
+            <option  value="2011">2011</option>
+            <option  value="2010">2010</option>
+            <option  value="2009">2009</option>
+            <option  value="2008">2008</option>
+            <option  value="2007">2007</option>
+            <option  value="2006">2006</option>
+            <option  value="2005">2005</option>
+            <option  value="2004">2004</option>
+            <option  value="2003">2003</option>
+            <option  value="2002">2002</option>
+            <option  value="2001">2001</option>
+            <option  value="2000">2000</option>
+            <option  value="1999">1999</option>
+            <option  value="1998">1998</option>
+            <option  value="1997">1997</option>
+            <option  value="1996">1996</option>
+            <option  value="1995">1995</option>
+            <option  value="1994">1994</option>
+            <option  value="1993">1993</option>
+            <option  value="1992">1992</option>
+            <option  value="1991">1991</option>
+            <option  value="1990">1990</option>
+            <option  value="1989">1989</option>
+            <option  value="1988">1988</option>
+            <option  value="1987">1987</option>
+            <option  value="1986">1986</option>
+            <option  value="1985">1985</option>
+            <option  value="1984">1984</option>
+            <option  value="1983">1983</option>
+            <option  value="1982">1982</option>
+            <option  value="1981">1981</option>
+            <option  value="1980">1980</option>
+            <option  value="1979">1979</option>
+            <option  value="1978">1978</option>
+            <option  value="1977">1977</option>
+            <option  value="1976">1976</option>
+            <option  value="1975">1975</option>
+          </select>
+          <span class="information qtipify" title="<%= t('year_text') %>">&nbsp;</span>
+        </div>
+        <div id="tabs-exp">
+          <div class="label_style"> <%= t('export_text') %>:
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('export_tip') %>" />
+          </div>
+          <div>
+            <select id="expcty" class="multi_countries" multiple="multiple" name="exporters_ids[]">
+              <option selected value="all_exp"> <%= t('all_countries') %> </option>
+            </select>
+          </div>
+        </div>
+        <div id="tabs-imp">
+          <div class="label_style"> <%= t('import_text') %>:
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('import_tip') %>" />
+          </div>
+          <div>
+            <select id="impcty" class="multi_countries" multiple="multiple"  name="importers_ids[]">
+              <option selected value="all_imp"> <%= t('all_countries') %> </option>
+            </select>
+          </div>
+        </div>
+        <div id="tabs-source">
+          <div class="label_style"> <%= t('source_text') %>:
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('source_tip') %>" />
+          </div>
+          <div>
+            <select name="sources_ids[]" id="sources"  multiple="multiple" class="multisel">
+              <option value="all_sou"  selected> <%= t('all_sources') %> </option>
+            </select>
+          </div>
+        </div>
+        <div id="tabs-purpose">
+          <div class="label_style"> <%= t('purpose_text') %>:
+            
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('purpose_tip') %>" />
+          </div>
+          <div>
+            <select name="purposes_ids[]" id="purposes"  multiple="multiple" class="multisel">
+              <option value="all_pur"  selected>  <%= t('all_purposes') %>  </option>
+            </select>
+          </div>
+        </div>
+        
+        <div id="tabs-terms">
+          <div class="label_style"> <%= t('trade_text') %>:
+            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('trade_tip') %>" />
+          </div>
+          <div>
+            <select name="terms_ids[]" id="terms" class="multisel" multiple="multiple">
+              <option value="all_ter"  selected>  <%= t('all_terms') %>  </option>
+            </select>
+          </div>
+        </div>
+        
+        <div id="tabs-taxon">
+          
+          <div>
+            <%= t('taxon_tip') %>
+            <br>
+            
+          </div>
+          <hr />
+          <hr class="space" />
+          <div class="grid_2">
+            <input type="radio" name="selection_taxon" value="">&nbsp;
+          </div>
+          <div  id="div_taxon" class="grid_8">
+            <span style="padding:10px 0px"><%= t('taxon_title') %></span><br />
+            <input type="text" size="30" name="taxon_concepts_ids[]" id="taxon_search" value=""><br>
+          </div>
+          <hr class="space">
+
+          <div class="grid_2">
+            <input type="radio" name="selection_taxon" value="">&nbsp;
+          </div>
+          <div id="div_genus" class="grid_8">
+            <span style="padding:10px 0px"><%= t('genus_title') %></span><br />
+            <input type="text" size="30" name="taxon_concepts_ids[]" id="genus_search" value=""><br>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="grid_5 selection_box">
+      <div id="empty_box">
+        <div style="font-weight:600; font-size:16px"> <%= t('search_selection') %> </div><br />
+        <table id="table_selection" class="select_label" border="1" width="95%">
+          <tr><td width="30%"><%= t('year_text') %>: </td><td width="70%"><span id="year_from" class="span_label"><%= t('from') %>: <span></span></span> <span id="year_to" class="span_label"><%= t('to') %>: <span></span></span></td></tr>
+          <tr><td width="30%"><%= t('export_text') %>: </td><td  width="70%"><span id="expcty_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"><%= t('import_text') %>: </td><td  width="70%"><span id="impcty_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"><%= t('source_text') %>: </td><td  width="70%"><span id="sources_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"><%= t('purpose_text') %>: </td><td  width="70%"> <span id="purposes_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"><%= t('trade_text') %>: </td><td  width="70%"><span id="terms_out" class="span_label"></span></td></tr>
+          <tr><td width="30%"><%= t('species') %>: </td><td  width="70%"> <span id="species_out" class="span_label"></span></td></tr>
+        </table>
+      </div>
+      
+      
+      <hr class="space">
+      <div class="buttons">
+        <a id='submit_expert' href="#"><%= t('search') %></a>
+        <button type="reset" name="reset" style="float:right" id="reset_search">
+        <img src="/assets/cites_trade/refresh1.png" alt=""/>
+        <%= t('reset') %>
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="grid_16 other_info">
+  <p align="center"><strong> <%= t('download') %> </strong> <a href="/downloads/cites_trade/CITESTradeDatabaseGuide_v7.pdf"><%= t('db_guide') %></a></p>
+</div>
+</div>
+
+
+</div>
+</div>
+
+</div>
+</div>

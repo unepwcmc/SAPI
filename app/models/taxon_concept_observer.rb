@@ -31,7 +31,6 @@ class TaxonConceptObserver < ActiveRecord::Observer
     Species::Search.increment_cache_iterator
     Species::TaxonConceptPrefixMatcher.increment_cache_iterator
     Checklist::Checklist.increment_cache_iterator
-    Checklist::TaxonConceptPrefixMatcher.increment_cache_iterator
   end
 
   def after_destroy(taxon_concept)
@@ -39,7 +38,6 @@ class TaxonConceptObserver < ActiveRecord::Observer
     Species::Search.increment_cache_iterator
     Species::TaxonConceptPrefixMatcher.increment_cache_iterator
     Checklist::Checklist.increment_cache_iterator
-    Checklist::TaxonConceptPrefixMatcher.increment_cache_iterator
   end
 
   def after_update(taxon_concept)
@@ -51,7 +49,6 @@ class TaxonConceptObserver < ActiveRecord::Observer
       Species::Search.increment_cache_iterator
       Species::TaxonConceptPrefixMatcher.increment_cache_iterator
       Checklist::Checklist.increment_cache_iterator
-      Checklist::TaxonConceptPrefixMatcher.increment_cache_iterator
     end
   end
 

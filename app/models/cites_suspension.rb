@@ -70,14 +70,13 @@ class CitesSuspension < TradeRestriction
   end
 
   def self.search query
-    if query
+    if query.present?
       where("UPPER(geo_entities.name_en) LIKE UPPER(:query)
             OR UPPER(geo_entities.iso_code2) LIKE UPPER(:query)
             OR trade_restrictions.start_date::text LIKE :query
             OR trade_restrictions.end_date::text LIKE :query
             OR UPPER(trade_restrictions.notes) LIKE UPPER(:query)
             OR UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
-            OR UPPER(trade_restrictions.notes) LIKE UPPER(:query)
             OR UPPER(events.subtype) LIKE UPPER(:query)",
             :query => "%#{query}%").
       joins([:start_notification]).

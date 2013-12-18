@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <%= stylesheet_link_tag "cites_trade" %>
+  <%= javascript_include_tag "cites_trade" %>
+  <script>
+    var locale = "<%= I18n.locale %>";
+  </script>
+</head>
+
+<body class="markeeta">
+  <div class="container clearfix">
+    <div class="grid_16 cites_header">
+      <div style="text-align: center;position:relative;width:'100%'">
+        <a href="http://www.cites.org/" target="_blank">
+          <img width='100%' src="/assets/cites_trade/cites_banner_en.jpg" alt="CITES" >
+        </a>
+      </div>
+    </div>
+  
+    <div id="language_links" class="linkStyle">
+      <% if I18n.locale == I18n.default_locale %>
+        <%= link_to "Espanol", :locale=>'es'%>
+        <%= link_to "Francais", :locale=>'fr'%>
+      <%end%>
+
+      <% if I18n.locale == :es %>
+        <%= link_to "English", :locale=>'en'%>
+        <%= link_to "Francais", :locale=>'fr'%>
+      <%end%>
+
+      <% if I18n.locale == :fr %>
+        <%= link_to "English", :locale=>'en'%>
+        <%= link_to "Espanol", :locale=>'es'%>
+      <%end%>
+    </div>
+
+    <br><br>
+  <%= yield %>
+  <div class="container clearfix">
+  <div class="grid_16 footer">
+  <br />
+  <div class='grid_14' align="center">
+  <font size="-2" face="Verdana, Arial, Helvetica, sans-serif">
+  The CITES Trade Database was developed and is maintained by UNEP-WCMC on behalf of the CITES Secretariat.
+  :&nbsp;<br>
+  <a href="http://www.unep-wcmc.org/species_20.html">UNEP-WCMC</a> |
+  <a href="http://www.cites.org/eng/resources/species.html"> Species Databases </a> |
+  <a href="mailto:species@unep-wcmc.org" target="_blank"> Contact Us </a>
+  </font>
+  </div>
+  <div class='grid_1' align='right' ><a href="/"><img src="/assets/cites_trade/logoUNEP_WCMC_Transparent_sm.gif" alt="UNEP-WCMC" width="80" height="44" border="0" float='right'></a></div>
+  </div>
+</body>
+</html>

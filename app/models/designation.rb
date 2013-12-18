@@ -44,7 +44,7 @@ class Designation < ActiveRecord::Base
   end
 
   def self.search query
-    if query
+    if query.present?
       where("UPPER(name) LIKE UPPER(:query)", 
             :query => "%#{query}%")
     else

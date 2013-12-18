@@ -205,10 +205,16 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
         @set('sandboxShipmentsSubmitting', true)
         $.post '/trade/annual_report_uploads/'+@get('id')+'/submit', {}, (data) ->
           'json'
-        .done( =>
+        .success( =>
           @set('sandboxShipmentsSubmitting', false)
+          @transitionToRoute('shipments', {queryParams:
+            page: 1
+          })
         )
-        @transitionToRoute('shipments', {page: 1})
+        .error( (xhr, msg, error) =>
+          @set('sandboxShipmentsSubmitting', false)
+          console.log "bad luck: ", xhr.responseText
+        )
 
     setFiltersFromErrorSelector: (errorSelector) ->
       @resetFilters()

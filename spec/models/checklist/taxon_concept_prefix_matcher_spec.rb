@@ -1,29 +1,41 @@
 require 'spec_helper'
 
-describe Checklist::TaxonConceptPrefixMatcher do
-  include_context "Caiman latirostris"
-  describe :taxon_concepts do
+describe Species::TaxonConceptPrefixMatcher do
+  include_context "Boa constrictor"
+  describe :results do
     context "when query in capital letters" do
       subject{
-        Checklist::TaxonConceptPrefixMatcher.new({:scientific_name => 'CAI'})
+        Species::TaxonConceptPrefixMatcher.new({
+          :taxon_concept_query => 'BOA',
+          :ranks => []
+        })
       }
-      specify{ subject.results.size.should == 2 }
+      specify{ subject.results.size.should == 3 }
     end
     context "when match on accepted name" do
       subject{
-        Checklist::TaxonConceptPrefixMatcher.new({:scientific_name => 'cai'})
+        Species::TaxonConceptPrefixMatcher.new({
+          :taxon_concept_query => 'boa',
+          :ranks => []
+        })
       }
-      specify{ subject.results.size.should == 2 }
+      specify{ subject.results.size.should == 3 }
     end
     context "when match on synonym" do
       subject{
-        Checklist::TaxonConceptPrefixMatcher.new({:scientific_name => 'alligator'})
+        Species::TaxonConceptPrefixMatcher.new({
+          :taxon_concept_query => 'constrictor',
+          :ranks => []
+        })
       }
-      specify{ subject.results.size.should == 2 }
+      specify{ subject.results.size.should == 1 }
     end
     context "when match on common name" do
       subject{
-        Checklist::TaxonConceptPrefixMatcher.new({:scientific_name => 'broad'})
+        Species::TaxonConceptPrefixMatcher.new({
+          :taxon_concept_query => 'red',
+          :ranks => []
+        })
       }
       specify{ subject.results.size.should == 1 }
     end

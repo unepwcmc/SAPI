@@ -7,6 +7,7 @@
 # - responds to results (which returs expected results for given parameters)
 # - responds to total_cnt (which returns total number of results for given parameters)
 
+require 'digest/md5'
 module SearchCache
 
   def cached_results
@@ -24,17 +25,17 @@ module SearchCache
 private
 
   def results_cache_key
-    Rails.logger.debug @options.to_a.sort.unshift("#{self.class.name}-results").
+    raw_key = @options.to_a.sort.unshift("#{self.class.name}-results").
       push(self.class.cache_iterator).inspect
-    @options.to_a.sort.unshift("#{self.class.name}-results").
-      push(self.class.cache_iterator)
+    Rails.logger.debug raw_key
+    Digest::MD5.hexdigest(raw_key)
   end
 
   def total_cnt_cache_key
-    Rails.logger.debug @options.to_a.sort.unshift("#{self.class.name}-total_cnt").
+    raw_key = @options.to_a.sort.unshift("#{self.class.name}-total_cnt").
       push(self.class.cache_iterator).inspect
-    @options.to_a.sort.unshift("#{self.class.name}-total_cnt").
-      push(self.class.cache_iterator)
+    Rails.logger.debug raw_key
+    Digest::MD5.hexdigest(raw_key)
   end
 
 end

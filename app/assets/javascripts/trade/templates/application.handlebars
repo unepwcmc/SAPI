@@ -2,10 +2,10 @@
   <div class="navbar-inner">
     <a class="brand" href="#">Trade DB Management Tool</a>
     <ul class="nav">
-      <li class="active"><a href="#">Home</a></li>
-      <li><a href="#/shipments/page=1">Shipments</a></li>
+      <li>{{#linkTo "shipments" queryParams=false}}Home{{/linkTo}}</li>
 	    <li>{{#linkTo "annual_report_uploads"}}Annual Report Uploads{{/linkTo}}</li>
       <li>{{#linkTo "validation_rules"}}Validation rules{{/linkTo}}</li>
+      <li><a href="/trade/stats">Stats</a></li>
     </ul>
   </div>
 </div>

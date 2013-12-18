@@ -1,17 +1,11 @@
 <div class="admin-header">
-  <h3><%= @designation.name %> Listings</h3>
-  <div class="action-buttons">
-    <%= admin_add_new_button(
-      :resource => 'listing_change',
-      :href => new_admin_taxon_concept_designation_listing_change_url(@taxon_concept, @designation),
-      :name => "Add a new #{@designation.name} Listing",
-      :"data-toggle" => nil,
-      :role => nil
-    ) %>
-  </div>
+  <h1>EU Annex Regulation Listing changes</h1>
 </div>
 
-<%= admin_new_modal{ '' } %>
+<%= admin_simple_search %>
+
+<p><strong><%= link_to @eu_regulation.description,
+  admin_eu_regulations_path(:query => @eu_regulation.description) %></strong></p>
 
 <%= admin_table %>
 

@@ -19,6 +19,25 @@ class Trade::ValidationRule < ActiveRecord::Base
   include PgArrayParser
   serialize :scope, ActiveRecord::Coders::Hstore
 
+  # returns column names as in the shipments table, based on the
+  # list of column_names in sandbox
+  def shipments_columns
+    column_names.map do |column|
+      case column
+      when 'species_name'
+        'taxon_concept_id'
+      when 'appendix'
+        column
+      when 'year'
+        column
+      when /(.+)_code$/
+        $1 + '_id'
+      else
+        column + '_id'
+      end
+    end
+  end
+
   def column_names
     parse_pg_array(read_attribute(:column_names))
   end
@@ -46,7 +65,52 @@ class Trade::ValidationRule < ActiveRecord::Base
     end
   end
 
+  def validation_errors_for_shipment(shipment)
+    return nil if is_primary #primary validations are handled by AR
+    #raise "Not implemented"
+    'shipment validation not implemented'
+  end
+
+  # Sanitizes column names provided within the scope attribute
+  # Also replaces attr_blank => true with attr => nil
+  def sanitized_scope
+    res = {}
+    scope && scope.each do |scope_column, scope_value|
+      scope_column =~ /(.+?)(_blank)?$/
+      scope_column = $1
+      scope_value = nil unless $2.nil? #if _blank, then check for null
+      if (
+        Trade::SandboxTemplate.column_names +
+        ['point_of_view', 'importer', 'exporter']
+      ).include? scope_column
+        res[scope_column] = scope_value
+      end
+    end
+    res
+  end
+
   private
+
+  # so if sandbox scope was {source_code = W}, shipments
+  # scope needs to be {source_id = [id of W]}
+  def shipments_scope
+    res = {}
+    sanitized_scope.each do |scope_column, scope_value|
+      case scope_column
+      when 'species_name'
+        false #basically no point scoping rules on taxon id
+      when 'appendix'
+        res[scope_column] = scope_value
+      when 'year'
+        res[scope_column] = scope_value
+      when /(.+)_code$/
+        res[$1 + '_id'] = TradeCode.find_by_type_and_code($1.capitalize, scope_value).id
+      else
+        res[scope_column + '_id'] = scope_value
+      end
+    end
+    res
+  end
 
   # Returns a hash with column values to be used to select invalid rows.
   # For most primary validations this will be a pair

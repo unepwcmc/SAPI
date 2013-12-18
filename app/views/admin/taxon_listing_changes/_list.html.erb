@@ -1,0 +1,77 @@
+<thead>
+  <th>Event</th>
+  <th>
+    <% if @designation.is_eu? %>
+      Annex
+    <% else %>
+      Appx
+    <% end %>
+  </th>
+  <th>Type</th>
+  <th>Effective from</th>
+  <th>Current</th>
+  <th>Party</th>
+  <th>Geo entities</th>
+  <th>Inclusion</th>
+  <th>Excl. taxa</th>
+  <th>Excl. popns</th>
+  <th>Annotation</th>
+  <th>Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |listing_change| -%>
+    <tr class="<%= if listing_change.is_current? then "current_listing" end %>">
+      <td><%= listing_change.event && link_to(listing_change.event.name,
+                                              admin_eu_regulation_listing_changes_path(listing_change.event)) %></td>
+      <td><%= listing_change.species_listing && listing_change.species_listing.abbreviation %></td>
+      <td><%= listing_change.change_type.abbreviation %></td>
+      <td><%= listing_change.effective_at_formatted %></td>
+      <td><%= true_false_icon(listing_change.is_current) %></td>
+      <td><%= listing_change.party_geo_entity && listing_change.party_geo_entity.iso_code2 %></td>
+      <td>
+        <% if listing_change.geo_entities.count > 0 %>
+        <a rel="tooltip" href="#"
+          data-original-title="<%= geo_entities_tooltip(listing_change) %>"
+        ><%= listing_change.geo_entities.count %></a>
+        <% end %>
+      </td>
+      <td>
+        <a rel="tooltip" href="#"
+          data-original-title="<%= listing_change.inclusion_scientific_name %>"
+        ><%= true_false_icon(listing_change.inclusion) %></a>
+      </td>
+      <td>
+        <% if listing_change.excluded_taxon_concepts.count > 0 %>
+        <a rel="tooltip" href="#"
+          data-original-title="<%= excluded_taxon_concepts_tooltip(listing_change) %>"
+        ><%= listing_change.excluded_taxon_concepts.count %></a>
+        <% end %>
+      </td>
+      <td>
+        <% if listing_change.excluded_geo_entities.count > 0 %>
+        <a rel="tooltip" href="#"
+          data-original-title="<%= excluded_geo_entities_tooltip(listing_change) %>"
+        ><%= listing_change.excluded_geo_entities.count %></a>
+        <% end %>
+      </td>
+      <td>
+        <a rel="tooltip" href="#"
+          data-original-title="<%= annotation_tooltip(listing_change) %>"
+        ><%= true_false_icon(listing_change.annotation) %></a>
+        <a rel="tooltip" href="#"
+          data-original-title="<%= hash_annotation_tooltip(listing_change) %>"
+        ><%= true_false_icon(listing_change.hash_annotation) %></a>
+      </td>
+      <td>
+        <%= link_to edit_icon,
+          edit_admin_taxon_concept_designation_listing_change_path(@taxon_concept, @designation, listing_change)
+        %>
+        <%= link_to delete_icon,
+          admin_taxon_concept_designation_listing_change_path(@taxon_concept, @designation, listing_change),
+          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+        %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>
+

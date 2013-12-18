@@ -1,0 +1,62 @@
+es:
+  cites_title: "Base de Datos sobre el Comercio CITES"
+  cites_sub_title: "Por favor introduzca sus criterios de búsqueda más abajo"
+  errors:
+    no_data_1: "Su consulta ha devuelto ningún dato"
+    no_data_2: "Por favor selecciona otras variables o verifica en la Base de Datos de Especies UNEP-WCMC que está utilizando la ortografía/el nombre correctos"
+
+  year_text: "Rango de Años"
+  year_tip: "Seleccione el año de inicio (De) y el año final (A) para su búsqueda. Es aconsejable limitar su búsqueda de datos a un rango que no exceda de los 5 años"
+  export_text: "Países de exportación"
+  export_tip: "Introduzca el país/los países que desea incluir en el producto final. Para incluir datos de todos los países, mantenga seleccionado 'Todos los Países'"
+  import_text: "Países importadores"
+  import_tip: "Introduzca el país/los países que desea incluir en el producto final. Para incluir datos de todos los países, mantenga seleccionado 'Todos los Países'" 
+  source_text: "Origen"
+  source_tip: "Introduzca el origen/los origenes (ej. 'W- Recolectados en el medio silvestre') que desea incluir en el producto final.  Para incluir datos de todos los orígenes, mantenga seleccionado  'Todos los Orígenes'"
+  purpose_text: "Objetivo"
+  purpose_tip: "Introduzca el objetivo/los objetivos (ej. 'T- Comercial' o 'S- Científico') que desea incluir en el producto final.  Para incluir datos de todos los objetivos, mantenga seleccionado 'Todos los Objetivos'"
+  trade_text: "Términos del Comercio"
+  trade_tip: "Introduzca el término/los términos (ej. 'vivo' o 'piel') que desea incluir en el producto final.  Para incluir datos de todos los los términos, mantenga seleccionado 'Todos los Términos'"
+  taxon_text: "Buscar por taxón :"
+  taxon_tip: "Para recuperar datos de un taxón específico, escriba el nombre del taxón. Los datos sobre especímenes registrados en el comercio a un nivel de taxón superior (por ejemplo, Scleractinia spp.) también pueden ser recuperados a través de esta búsqueda. Para recuperar los datos de todas las especies dentro de un género en particular, seleccione un género desde el menú desplegable debajo. Para seleccionar todos los taxones, dejar estos secciones en blanco."
+  taxon_title: "Buscar por taxón:"
+  genus_title: "Seleccione un género:"
+
+  all_countries: "Todos los Países"
+  all_sources: "Todos los Orígenes"
+  all_purposes: "Todos los Objetivos"
+  all_terms: "Todos los Términos"
+
+  search_selection: "Criterios de búsqueda seleccionados:"
+  search: "Buscar"
+  reset: "Reajustar"
+
+  download: "Descargar"
+  db_guide: "Una Guía para Utilizar la Base de Datos sobre el Comercio CITES"
+  tabulation_guide: "Una Guía para Interpretar las Salidas de Tabulaciones Comparativas"
+  trade_guide: "Una Guía para Interpretar las Salidas de Comercio Bruto/Neto"
+
+  reports: "INFORMES"
+  report: "informe"
+  select_output: "Seleccionar el tipo de salida:"
+  select_report: "Seleccione el tipo de informe:"
+  comparative_tabulations: "Tabulaciónes Comparativas"
+  trade_tabulations: " Tabulaciones del Comercio Bruto/Neto"
+  get_report: "Obtener el informe"
+  new_search: "Nueva Búsqueda"
+
+  from: "De"
+  to: "A"
+  species: "Especies"
+
+  gross_exports: "Exportaciones Brutas"
+  gross_imports: "Importaciones Brutas"
+  net_exports: "Exportaciones Netas"
+  net_imports: "Importaciones Netas"
+
+  table_title:
+    gross_imports: "Informe de la Importaciones Brutas"
+    gross_exports: "Informe de la Exportaciones Brutas"
+    net_imports: "Informe de la Importaciones Netas"
+    net_exports: "Informe de la Exportaciones Netas"
+    comptab: "Informe de la Tabulaciónes Comparativas"
