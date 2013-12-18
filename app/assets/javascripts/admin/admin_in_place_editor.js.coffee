@@ -1,5 +1,4 @@
 $(document).ready ->
-  console.log(window.editorClass)
   if window.editorClass == 'taxon_concepts'
     window.adminEditor = new TaxonConceptsEditor()
   else if window.editorClass == 'taxon_listing_changes' or\
