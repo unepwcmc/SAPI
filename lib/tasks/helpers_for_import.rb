@@ -276,7 +276,7 @@ class CsvToDbMap
     'permits_import' => {
       'SHIPMENT_NUMBER' => 'shipment_number int',
       'PERMIT_ENTRY_NUMBER' => 'permit_entry_number int',
-      'PERMIT_NUMBER' => 'permit_number int',
+      'PERMIT_NUMBER' => 'permit_number varchar',
       'PERMIT_YEAR' => 'permit_year int',
       'PERMIT_REPORTER_TYPE' => 'permit_reporter_type varchar',
       'ENTITY_CODE' => 'entity_code varchar'
