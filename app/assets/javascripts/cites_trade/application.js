@@ -655,7 +655,7 @@ $(document).ready(function(){
   // Download page specific:
 
   function displayResults (q) {
-    var formURL = '/trade/shipments',
+    var table_view_title, formURL = '/trade/shipments',
       data_headers, data_rows, table_tmpl, 
       comptab_regex = /comptab/, 
       gross_net_regex = /(gross_exports|gross_imports|net_exports|net_imports)/;
@@ -666,14 +666,17 @@ $(document).ready(function(){
         data : q,
         success: function(data, textStatus, jqXHR) {
           if ( comptab_regex.test(q) ) {
+            table_view_title = data['shipment_comptab_export'].table_title;
             data_headers = data['shipment_comptab_export'].column_headers;
             data_rows = data['shipment_comptab_export'].rows;
             table_tmpl = buildHeader(data_headers) + buildRows(data_headers, data_rows);
           } else if ( gross_net_regex.test(q) ) {
+            table_view_title = data['shipment_gross_net_export'].table_title;
             data_headers = data['shipment_gross_net_export'].column_headers;
             data_rows = data['shipment_gross_net_export'].rows;
             table_tmpl = buildHeader(data_headers) + buildRows(data_headers, data_rows);
           }
+          $('#table_title').text(table_view_title);
           $('#query_results_table').html(table_tmpl);
         },
         error: ajaxFail
