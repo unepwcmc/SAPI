@@ -734,7 +734,7 @@ $(document).ready(function(){
     'initSourcesObj': true
   };
   function unLock (function_name) {
-    var l, query, table_title;
+    var l, query;
     if ( locks[function_name] ) {
       locks[function_name] = false;
     }
