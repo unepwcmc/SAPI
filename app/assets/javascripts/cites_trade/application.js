@@ -720,6 +720,14 @@ $(document).ready(function(){
   //////////////////////////////
   // View results page specific:
 
+  //var table_title_obj = {
+  //  'comptab'
+  //  'gross_exports'
+  //  'gross_imports'
+  //  'net_exports'
+  //  'net_imports'
+  //}
+
   // This locks-unLock rubbish is used to guarantee that, when populating the
   // results tables, all the ajax calls for the drop-down menus (that also 
   // populate our data objects) are terminated!
@@ -731,7 +739,7 @@ $(document).ready(function(){
     'initSourcesObj': true
   };
   function unLock (function_name) {
-    var l, query;
+    var l, query, table_title;
     if ( locks[function_name] ) {
       locks[function_name] = false;
     }
@@ -742,6 +750,8 @@ $(document).ready(function(){
       // It is time to show these tables!
       query = decodeURIComponent( location.search.substr(1) );
       displayResults(query);
+      table_title = query.split('[report_type]=')[1].split('_').join(' ');
+      $('#title_prefix').text(table_title)
     }
   }
 

@@ -37,7 +37,7 @@ es:
   trade_guide: "Una Guía para Interpretar las Salidas de Comercio Bruto/Neto"
 
   reports: "INFORMES"
-  report: "Informe"
+  report: "informe"
   select_output: "Seleccionar el tipo de salida:"
   select_report: "Seleccione el tipo de informe:"
   comparative_tabulations: "Tabulaciónes Comparativas"
