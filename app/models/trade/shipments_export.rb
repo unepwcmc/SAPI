@@ -38,6 +38,10 @@ class Trade::ShipmentsExport < Species::CsvExport
     end
   end
 
+  def get_resource_name
+    resource_name
+  end
+
 private
 
   def query_sql

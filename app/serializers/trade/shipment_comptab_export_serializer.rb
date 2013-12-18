@@ -7,6 +7,6 @@ class Trade::ShipmentComptabExportSerializer < ActiveModel::Serializer
     object.csv_column_headers
   end
   def table_title
-    I18n.t "table_title.#{object.resource_name}"
+    I18n.t "table_title.#{object.get_resource_name}"
   end
 end
