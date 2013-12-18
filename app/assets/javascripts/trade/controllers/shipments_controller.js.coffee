@@ -63,8 +63,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     @openShipmentsPage {page: page}
 
   openShipmentsPage: (params) ->
-    params.page = params.page or 1
-    @transitionToRoute('shipments', {queryParams: params})
+    @transitionToRoute('shipments', queryParams: params)
 
   parseSelectedParams: (params) ->
     # TODO: better ideas?
@@ -177,7 +176,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     params = {}
     @get('selectedQueryParamNames').forEach (property) =>
       value = @parseSelectedParams(@get(property.name))
-      params[property.name] = value if value
+      params[property.name] = value
     params
   ).property(
     'selectedTaxonConcepts.@each', 'selectedAppendices.@each',
@@ -198,6 +197,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     params = {}
     for name, value of @get('searchParams')
       params[@get('queryParamsProperties')[name].param] = value
+    params['page'] = @get('page')
     params['internal'] = true #TODO remove this once authentication in place
     params
   ).property('searchParams.@each', 'queryParamsProperties')
@@ -206,6 +206,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     params = {}
     for name, value of @get('searchParams')
       params[@get('queryParamsProperties')[name].urlParam] = value
+    params['page'] = @get('page')
     params['internal'] = true #TODO remove this once authentication in place
     params
   ).property('searchParams.@each', 'queryParamsProperties')
@@ -249,8 +250,10 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   resetFilters: ->
     @beginPropertyChanges()
     @get('selectedQueryParamNames').forEach (property) =>
-      if /.+$/.test property.param
+      if property.type == 'array'
         @set(property.name, [])
+      else if property.type == 'boolean'
+        @set(property.name, false)
       else
         @set(property.name, null)
     @set('permitQuery', null)
@@ -262,10 +265,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     @set('unitQuery', null)
     @set('selectedTimeStart', @get('defaultTimeStart'))
     @set('selectedTimeEnd', @get('defaultTimeEnd'))
-    # @set('unitBlank', false)
-    # @set('purposeBlank', false)
-    # @set('sourceBlank', false)
-    # @set('countryOfOriginBlank', false)
     @endPropertyChanges()
     @openShipmentsPage @get('searchParamsForTransition')
 
