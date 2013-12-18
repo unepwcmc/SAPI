@@ -181,7 +181,8 @@ $(document).ready(function(){
  	  $('#terms').select2("val","all_ter");
  	  $('#expcty').select2("val","all_exp");
  	  $('#impcty').select2("val","all_imp");	
-     notySticky('Values are being reset...');
+    notySticky('Values are being reset...');
+    $('#search-error-message').hide();
   };
 
   $('#reset_search').click(function() {
