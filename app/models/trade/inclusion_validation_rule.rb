@@ -129,8 +129,12 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     s = Arel::Table.new(table_name)
     v = Arel::Table.new(valid_values_view)
     arel_nodes = column_names.map do |c|
-      func =Arel::Nodes::NamedFunction.new 'SQUISH_NULL', [s[c]]
-      if required_column_names.include? c
+      func = Arel::Nodes::NamedFunction.new 'SQUISH_NULL', [s[c]]
+      if c == 'species_name'
+        reference = Arel::Nodes::NamedFunction.new 'LOWER', [v[c]]
+        sample = Arel::Nodes::NamedFunction.new 'LOWER', [func]
+        reference.eq(sample)
+      elsif required_column_names.include? c
         v[c].eq(func)
       else
         # if optional, check if NULL is allowed for this particular combination
