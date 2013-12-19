@@ -41,6 +41,7 @@ class Trade::ValidationRule < ActiveRecord::Base
   def column_names
     parse_pg_array(read_attribute(:column_names))
   end
+
   def column_names=(ary)
     write_attribute(:column_names, '{' + ary.join(',') + '}')
   end
@@ -90,6 +91,18 @@ class Trade::ValidationRule < ActiveRecord::Base
   end
 
   private
+
+  def required_column_names
+    column_names & ['species_name', 'appendix', 'year', 'term_code',
+      'trading_partner', 'importer', 'exporter', 'reporter_type', 'quantity'
+    ]
+  end
+
+  def required_shipments_columns
+    shipments_columns & ['taxon_concept_id', 'appendix', 'year', 'term_id',
+      'exporter_id', 'importer_id', 'reporter_type', 'quantity'
+    ]
+  end
 
   # so if sandbox scope was {source_code = W}, shipments
   # scope needs to be {source_id = [id of W]}
