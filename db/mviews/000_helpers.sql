@@ -62,6 +62,15 @@ CREATE OR REPLACE FUNCTION squish_null(TEXT) RETURNS TEXT
 COMMENT ON FUNCTION squish_null(TEXT) IS
   'Squishes whitespace characters in a string and returns null for empty string';
 
+CREATE OR REPLACE FUNCTION sanitize_species_name(TEXT) RETURNS TEXT
+  LANGUAGE SQL IMMUTABLE
+  AS $$
+    SELECT regexp_replace(SQUISH_NULL($1), E' spp(\.)?$', '');
+  $$;
+
+COMMENT ON FUNCTION sanitize_species_name(TEXT) IS
+  'Removes spp. and squish_nulls the species name';
+
 CREATE OR REPLACE FUNCTION strip_tags(TEXT) RETURNS TEXT
   LANGUAGE SQL IMMUTABLE
   AS $$

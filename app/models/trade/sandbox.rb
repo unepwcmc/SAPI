@@ -10,6 +10,14 @@ class Trade::Sandbox
   def copy
     create_target_table
     copy_csv_to_target_table
+    sanitize
+  end
+
+  def sanitize(id = nil)
+    @ar_klass.update_all(
+      'species_name = sanitize_species_name(species_name)',
+      id.blank? ? nil : {:id => id}
+    )
   end
 
   def destroy
@@ -29,7 +37,7 @@ class Trade::Sandbox
       if shipment.delete('_destroyed')
         s && s.delete
       else
-        s && s.update_attributes(shipment)
+        s && s.update_attributes(shipment) && sanitize(s.id)
       end
     end
   end
