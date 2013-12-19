@@ -92,8 +92,7 @@ $(document).ready(function(){
   $('#taxon_search').width(300);
  
   function initialiseControls() {
-	  $('input[name="selection_taxon"]').filter('[value="taxon"]')
-      .attr('checked', true);
+	  $('#selection_taxon_taxon').attr('checked', true);
 	  $('#div_genus').find('button').addClass('ui-state-disabled')
       .removeClass('ui-state-enabled');
 	  $('#genus_all_id_chzn').removeClass('chzn-container-active')
@@ -198,8 +197,8 @@ $(document).ready(function(){
  
   //Radio selector for genus or taxon search
   $("input[name='selection_taxon']").on('change',function(){
-	  var myValue = $(this).val();
-	  if (myValue == 'genus') {
+	  var myValue = $(this).attr('id');
+	  if (myValue == 'selection_taxon_genus') {
 	  	$('#div_taxon').find('input').addClass('ui-state-disabled')
         .removeClass('ui-state-enabled');
 	  	$('#div_genus').find('button').removeClass('ui-state-disabled')
@@ -208,7 +207,7 @@ $(document).ready(function(){
 	  	$('#div_genus :input').removeAttr('disabled');
 	  	$('#taxon_search').val('');
 	  	$('#species_out').text('');
-	  } else if (myValue == "taxon") {
+	  } else {
 	  	$('#div_genus').find('button').addClass('ui-state-disabled')
         .removeClass('ui-state-enabled');
 	  	$('#div_taxon').find('input').removeClass('ui-state-disabled')
@@ -571,6 +570,7 @@ $(document).ready(function(){
   //Autocomplete for cites_genus
   $("#genus_search").autocomplete({
   	source: function(request, response) {
+      var term = request.term;
       $.ajax({
         url: "/api/v1/auto_complete_taxon_concepts",
         dataType: "json",
@@ -581,7 +581,7 @@ $(document).ready(function(){
           'ranks[]': 'GENUS'
         },
         success: function(data) {
-          response(parseTaxonData(data));
+          response(parseTaxonData(data, term));
         },
   			error : function(xhr, ajaxOptions, thrownError){
   				growlMe(xhr.status + " ====== " + thrownError);
@@ -594,7 +594,11 @@ $(document).ready(function(){
   		$('#species_out').text(ui.item.label);	
   		return false;
   	}
-  });
+  }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+    return $( "<li>" )
+      .append( "<a>" + item.drop_label + "</a>" )
+      .appendTo( ul );
+    };
 
   show_values_selection();
 
