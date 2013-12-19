@@ -128,8 +128,14 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     s = Arel::Table.new(table_name)
     v = Arel::Table.new(valid_values_view)
     arel_nodes = column_names.map do |c|
-      func =Arel::Nodes::NamedFunction.new 'SQUISH_NULL', [s[c]]
-      v[c].eq(func)
+      func = Arel::Nodes::NamedFunction.new 'SQUISH_NULL', [s[c]]
+      if c == 'species_name'
+        reference = Arel::Nodes::NamedFunction.new 'LOWER', [v[c]]
+        sample = Arel::Nodes::NamedFunction.new 'LOWER', [func]
+        reference.eq(sample)
+      else
+        v[c].eq(func)
+      end
     end
     join_conditions = arel_nodes.shift
     arel_nodes.each{ |n| join_conditions = join_conditions.and(n) }
