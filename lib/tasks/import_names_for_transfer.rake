@@ -107,8 +107,8 @@ def populate_shipments
               WHEN appendix='2' THEN 'II'
               WHEN appendix='3' THEN 'III'
               WHEN appendix='0' THEN '0'
-              ELSE 'N' 
-              ELSE 'other'
+              WHEN appendix='N' THEN 'N'
+              WHEN appendix IS NULL THEN 'Null'
               END AS appendix,
               CASE
               WHEN exporters.id IS NULL THEN #{xx_id}
