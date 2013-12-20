@@ -9,7 +9,7 @@
 #  updated_at        :datetime         not null
 #
 
-class Trade::ShipmentExportPermit < ActiveRecord::Base #rename to: ShipmentExportPermit
+class Trade::ShipmentExportPermit < ActiveRecord::Base
   attr_accessible :trade_permit_id, :trade_shipment_id
   belongs_to :export_permit, :foreign_key => :trade_permit_id, :class_name => "Trade::Permit"
 end

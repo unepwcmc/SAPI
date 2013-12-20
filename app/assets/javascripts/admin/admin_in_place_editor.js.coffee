@@ -1,5 +1,4 @@
 $(document).ready ->
-  console.log(window.editorClass)
   if window.editorClass == 'taxon_concepts'
     window.adminEditor = new TaxonConceptsEditor()
   else if window.editorClass == 'taxon_listing_changes' or\
@@ -114,10 +113,13 @@ class AdminInPlaceEditor extends AdminEditor
         dataType: 'json'
         type: 'put'
       params: (params) ->
+        value = params.value
+        if params.name == 'is_current'
+          value = params.value[0] || false
         #originally params contain pk, name and value
         newParams = id: params.pk
         newParams[$(@).attr('data-resource')] = {}
-        newParams[$(@).attr('data-resource')][params.name] = params.value
+        newParams[$(@).attr('data-resource')][params.name] = value
         return newParams
 
     $('a[data-toggle="popover"]').popover(html: true, placement: 'bottom')
@@ -140,7 +142,11 @@ class AdminInPlaceEditor extends AdminEditor
     )
 
     $('#admin-in-place-editor .editable-is-current').editable(
-      'option', 'source', {1: 'current', 0: 'not current'}
+      'option', 'source', [{value: 1, text: 'current'}]
+    )
+
+    $('#admin-in-place-editor .editable-is-current').editable(
+      'option', 'emptytext', 'not current'
     )
 
 class TaxonConceptsEditor extends AdminEditor

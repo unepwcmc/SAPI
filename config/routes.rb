@@ -102,6 +102,7 @@ SAPI::Application.routes.draw do
     resources :geo_entities, :only => [:index]
     resources :permits, :only => [:index]
     match 'exports/download' => 'exports#download'
+    match 'exports/download_stats' => 'exports#download_stats', :as => :trade_download_stats
     match 'stats' => 'statistics#index'
     match 'summary_year' => 'statistics#summary_year'
     match 'summary_creation' => 'statistics#summary_creation'

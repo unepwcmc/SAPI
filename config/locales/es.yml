@@ -19,7 +19,7 @@ es:
   trade_tip: "Introduzca el término/los términos (ej. 'vivo' o 'piel') que desea incluir en el producto final.  Para incluir datos de todos los los términos, mantenga seleccionado 'Todos los Términos'"
   taxon_text: "Buscar por taxón :"
   taxon_tip: "Para recuperar datos de un taxón específico, escriba el nombre del taxón. Los datos sobre especímenes registrados en el comercio a un nivel de taxón superior (por ejemplo, Scleractinia spp.) también pueden ser recuperados a través de esta búsqueda. Para recuperar los datos de todas las especies dentro de un género en particular, seleccione un género desde el menú desplegable debajo. Para seleccionar todos los taxones, dejar estos secciones en blanco."
-  taxon_title: "Search for taxon reported trade:"
+  taxon_title: "Buscar por taxón:"
   genus_title: "Seleccione un género:"
 
   all_countries: "Todos los Países"
@@ -45,7 +45,7 @@ es:
   get_report: "Obtener el informe"
   new_search: "Nueva Búsqueda"
 
-  from: "Desde"
+  from: "De"
   to: "A"
   species: "Especies"
 

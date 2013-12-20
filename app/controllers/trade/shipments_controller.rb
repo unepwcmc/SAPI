@@ -2,9 +2,29 @@ class Trade::ShipmentsController < ApplicationController
   respond_to :json
 
   def index
-    if params[:filters] && params[:filters][:report_type] == "comptab"
-      @search = Trade::ShipmentsComptabExport.new(params[:filters])
-      render :json => @search
+    if params[:filters]
+      case params[:filters][:report_type]
+        when "gross_exports"
+          @search = Trade::ShipmentsGrossExportsExport.new(params[:filters])
+          render :json => @search,
+            :serializer => Trade::ShipmentGrossNetExportSerializer
+        when "gross_imports"
+          @search = Trade::ShipmentsGrossImportsExport.new(params[:filters])
+          render :json => @search,
+            :serializer => Trade::ShipmentGrossNetExportSerializer
+        when "net_exports"
+          @search = Trade::ShipmentsNetExportsExport.new(params[:filters])
+          render :json => @search,
+            :serializer => Trade::ShipmentGrossNetExportSerializer
+        when "net_imports"
+          @search = Trade::ShipmentsNetImportsExport.new(params[:filters])
+          render :json => @search,
+            :serializer => Trade::ShipmentGrossNetExportSerializer
+        else # default to comptab
+          @search = Trade::ShipmentsComptabExport.new(params[:filters])
+          render :json => @search,
+            :serializer => Trade::ShipmentComptabExportSerializer
+        end
     else
       @search = Trade::Filter.new(params)
       render :json => @search.results,
@@ -57,7 +77,7 @@ private
       :country_of_origin_id,
       :import_permit_number,
       :export_permit_number,
-      :country_of_origin_permit_number,
+      :origin_permit_number,
       :purpose_id,
       :source_id,
       :year,

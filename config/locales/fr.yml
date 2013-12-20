@@ -19,7 +19,7 @@ fr:
   trade_tip: "Entrez le terme/les termes (par ex. 'vivant' ou 'peau') que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous les termes, laissez 'Tous les Termes' sélectionné"
   taxon_text: "Recherche par taxon :"
   taxon_tip: "Pour récupérer des données pour un taxon spécifique, tapez le nom du taxon. Les données sur les spécimens enregistrés dans le commerce à un niveau taxonomique supérieur (par exemple Scleractinia spp.) peuvent aussi être récupérées par cette recherche. Pour récupérer des données pour toutes les espèces dans un genre particulier, sélectionnez un genre dans le menu déroulant ci-dessous. Pour sélectionner tous les taxons, laissez ces sections vides."
-  taxon_title: "Search for taxon reported trade:"
+  taxon_title: "Recherche par taxon:"
   genus_title: "Sélectionnez un genre"
 
   all_countries: "Tous les Pays"

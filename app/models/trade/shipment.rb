@@ -13,8 +13,6 @@
 #  exporter_id                   :integer          not null
 #  importer_id                   :integer          not null
 #  country_of_origin_id          :integer
-#  country_of_origin_permit_id   :integer
-#  import_permit_id              :integer
 #  reported_by_exporter          :boolean          default(TRUE), not null
 #  taxon_concept_id              :integer          not null
 #  year                          :integer          not null
@@ -26,12 +24,12 @@
 
 class Trade::Shipment < ActiveRecord::Base
   attr_accessible :annual_report_upload_id, :appendix,
-    :country_of_origin_id, :country_of_origin_permit_id,
+    :country_of_origin_id, :origin_permit_id,
     :exporter_id, :import_permit_id, :importer_id, :purpose_id,
     :quantity, :reporter_type,
     :source_id, :taxon_concept_id,
     :term_id, :unit_id, :year,
-    :import_permit_number, :export_permit_number, :country_of_origin_permit_number,
+    :import_permit_number, :export_permit_number, :origin_permit_number,
     :ignore_warnings
   attr_accessor :reporter_type, :warnings, :ignore_warnings
 
@@ -52,6 +50,8 @@ class Trade::Shipment < ActiveRecord::Base
   validates :reporter_type, presence: true, :inclusion => {
     :in => ['E', 'I'], :message => 'should be one of E, I'
   }
+  validates :country_of_origin, :presence => true,
+    :unless => Proc.new { |s| s.origin_permit_number.blank? }
   validates_with Trade::ShipmentSecondaryErrorsValidator
 
   belongs_to :taxon_concept
@@ -63,11 +63,15 @@ class Trade::Shipment < ActiveRecord::Base
   belongs_to :country_of_origin, :class_name => "GeoEntity"
   belongs_to :exporter, :class_name => "GeoEntity"
   belongs_to :importer, :class_name => "GeoEntity"
-  belongs_to :country_of_origin_permit, :class_name => "Trade::Permit"
+  has_many :shipment_import_permits, :foreign_key => :trade_shipment_id,
+    :class_name => "Trade::ShipmentImportPermit", :dependent => :destroy
+  has_many :import_permits, :through => :shipment_import_permits
   has_many :shipment_export_permits, :foreign_key => :trade_shipment_id,
     :class_name => "Trade::ShipmentExportPermit", :dependent => :destroy
   has_many :export_permits, :through => :shipment_export_permits
-  belongs_to :import_permit, :class_name => "Trade::Permit"
+  has_many :shipment_origin_permits, :foreign_key => :trade_shipment_id,
+    :class_name => "Trade::ShipmentOriginPermit", :dependent => :destroy
+  has_many :origin_permits, :through => :shipment_origin_permits
 
   after_validation do
     unless self.errors.empty? && self.ignore_warnings
@@ -92,37 +96,40 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def import_permit_number
-    self['import_permit_number'] || import_permit && import_permit.number
+    get_permit_number('import')
   end
 
   def import_permit_number=(str)
-    if str
-      permit = Trade::Permit.find_or_create_by_number(str)
-      self.import_permit = permit
-    end
+    set_permit_number('import', str, self.importer_id)
   end
 
   def export_permit_number
-    self['export_permit_number'] || export_permits.map(&:number).join(';')
+    get_permit_number('export')
   end
 
   def export_permit_number=(str)
+    set_permit_number('export', str, self.exporter_id)
+  end
+
+  def origin_permit_number
+    get_permit_number('origin')
+  end
+
+  def origin_permit_number=(str)
+    set_permit_number('origin', str, self.country_of_origin_id)
+  end
+
+  private
+  def get_permit_number(permit_type)
+    self["#{permit_type}_permit_number"] || self.send("#{permit_type}_permits").map(&:number).join(';')
+  end
+
+  def set_permit_number(permit_type, str, geo_entity_id)
     if str
       permits = str.split(';').compact.map do |number|
-        Trade::Permit.find_or_create_by_number(number)
+        Trade::Permit.find_or_create_by_number_and_geo_entity_id(number, geo_entity_id)
       end
-      self.export_permits = permits
-    end
-  end
-
-  def country_of_origin_permit_number
-    self['country_of_origin_permit_number'] ||  country_of_origin_permit && country_of_origin_permit.number
-  end
-
-  def country_of_origin_permit_number=(str)
-    if str
-      permit = Trade::Permit.find_or_create_by_number(str)
-      self.country_of_origin_permit = permit
+      self.send("#{permit_type}_permits=", permits)
     end
   end
 

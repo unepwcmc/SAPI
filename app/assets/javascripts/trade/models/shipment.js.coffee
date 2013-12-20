@@ -24,7 +24,7 @@ Trade.Shipment = DS.Model.extend
   })
   importPermitNumber: DS.attr('string')
   exportPermitNumber: DS.attr('string')
-  countryOfOriginPermitNumber: DS.attr('string')
+  originPermitNumber: DS.attr('string')
   purpose: DS.belongsTo('Trade.Purpose')
   source: DS.belongsTo('Trade.Source')
   year: DS.attr('string')
@@ -108,9 +108,9 @@ Trade.Shipment = DS.Model.extend
     @set('propertyChanged', true)
   ).observes('exportPermitNumber')
 
-  countryOfOriginPermitNumberDidChange: ( ->
+  originPermitNumberDidChange: ( ->
     @set('propertyChanged', true)
-  ).observes('countryOfOriginPermitNumber')
+  ).observes('originPermitNumber')
 
 Trade.Adapter.map('Trade.Shipment', {
   taxonConcept: { embedded: 'load' }

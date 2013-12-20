@@ -103,111 +103,6 @@ $(document).ready(function(){
 	  $('input,select').keypress(function(event) { return event.keyCode != 13; });
   };
 
-  var raw_headers = [
-      'id', 'year', 'appendix', 'taxon',  'term', 'quantity', 'unit',  
-      'importer', 'exporter', 'origin', 'purpose', 'source', 'reporter_type', 
-      'imp_permit', 'exp_permit', 'origin_permit' ],
-    raw_fields = ['id', 'year', 'appendix', 'taxon',  'term', 'quantity', 'unit',  
-      'importer', 'exporter', 'origin', 'purpose', 'source', 'reporter_type', 
-      'import_permit_number', 'export_permit_number', 
-      'country_of_origin_permit_number' ],
-    comptab_headers = ['Year', 'Appendix', 'Family', 'Taxon', 'Importer', 'Exporter',
-      'origin',  'Importer-reported quantity', 'Exporter-reported quantity', 'Term', 'Unit',  
-      'Purpose', 'Source'],
-    comptab_fields = ['year', 'appendix', 'family', 'taxon', 'importer', 'exporter',
-      'origin',  'importer_quantity', 'exporter_quantity', 'term', 'unit',  
-      'purpose', 'source'];
-
-  function formatDataRow (data_row, data_type) {
-    var fields;
-    if (data_type === 'raw') {
-      fields = raw_fields;
-    } else if (data_type === 'comptab') {
-      fields = comptab_fields;
-    }
-    return _.map(fields, function (field) {
-      if (field === 'importer') {
-        if (countries[data_row.importer_id]) {
-          return countries[data_row.importer_id].iso_code2;
-        } else {
-          return '';
-        }
-      } else if (field === 'exporter') {
-        if (countries[data_row.exporter_id]) {
-          return countries[data_row.exporter_id].iso_code2;
-        } else {
-          return '';
-        }
-      } else if (field === 'origin') {
-        if (countries[data_row.country_of_origin_id]) {
-          return countries[data_row.country_of_origin_id].iso_code2;
-        } else {
-          return '';
-        }
-      } else if (field === 'unit') {
-        if (units[data_row.unit_id]) {
-          return units[data_row.unit_id].code;
-        } else {
-          return '';
-        }
-      } else if (field === 'taxon') {
-        if (data_row.taxon_concept) {
-          return data_row.taxon_concept.full_name;
-        } else if (data_row.taxon) {
-          return data_row.taxon
-        } else {
-          return '';
-        }
-      } else if (field === 'term') {
-        if (terms[data_row.term_id]) {
-          return terms[data_row.term_id].code;
-        } else {
-          return '';
-        }
-      } else if (field === 'purpose') {
-        if (purposes[data_row.purpose_id]) {
-          return purposes[data_row.purpose_id].code;
-        } else {
-          return '';
-        }
-      } else if (field === 'source') {
-        if (sources[data_row.source_id]) {
-          return sources[data_row.source_id].code;
-        } else {
-          return '';
-        }
-      } else if (data_row[field]) {
-        return data_row[field];
-      } else {
-        return '';
-      }
-    });
-  }
-
-  function buildHeader (data, data_type) {
-    var header = 
-      "<thead><tr><% _.each(res, function(head) { %> <td><%=head %></td> <% }); %></tr></thead>",
-      headers;
-    if (data_type === 'raw') {
-      headers = raw_headers;
-    } else if (data_type === 'comptab') {
-      headers = comptab_headers;
-    }
-    return _.template(header, {res: headers});
-  }
-
-  function buildRows (data, data_type) {
-    var t = "";
-    _.each(data, function(data_row) {
-      var row = 
-        "<tr><% _.each(res, function(value) { %> <td>" + 
-        "<%= (value && value.full_name) ? value.full_name : value %>" +
-        "</td> <% }); %></tr>";
-      t += _.template(row, { res: formatDataRow(data_row, data_type) });
-    });
-    return t;
-  }
-  
   function fixTaxonId (arr) {
     return _.map(arr, function (obj) {
       if (obj.name === 'taxon_concepts_ids[]') {
@@ -610,8 +505,8 @@ $(document).ready(function(){
   });
 
   function getFormattedSynonyms (d) {
-    if (d.synonyms.length > 0 ) {
-      return ' (' + d.synonyms.join(', ') + ')';
+    if (d.matching_names.length > 0 ) {
+      return ' (' + d.matching_names.join(', ') + ')';
     }
     return '';
   }
@@ -739,34 +634,45 @@ $(document).ready(function(){
     $.when($.ajax("/api/v1/purposes?locale=" + locale, data_type)).then(initPurposes, ajaxFail);
   }
 
+  function buildHeader (data) {
+    var header = 
+      "<thead><tr><% _.each(d, function(h) { %> <td><%=h%></td> <% }); %></tr></thead>";
+    return _.template(header, {d: data});
+  }
+
+  function buildRows (data_headers, data_rows) {
+    var t = "";
+    _.each(data_rows, function(data_row) {
+      var row = 
+        "<tr><% _.each(d, function(value) { %> <td>" + 
+        "<%= data_row[value] %> </td> <% }); %></tr>";
+      t += _.template(row, { d: data_headers, data_row: data_row });
+    });
+    return t;
+  }
+
   //////////////////////////
   // Download page specific:
 
   function displayResults (q) {
     var formURL = '/trade/shipments',
-      data_rows, table_tmpl;
+      data_headers, data_rows, table_tmpl, 
+      comptab_regex = /comptab/, 
+      gross_net_regex = /(gross_exports|gross_imports|net_exports|net_imports)/;
     $.ajax(
       {
         url : formURL,
         type: "GET",
         data : q,
         success: function(data, textStatus, jqXHR) {
-          if ( q.indexOf('[report_type]=comptab') !== -1 ) {
-            data_rows = data.search.shipments_rel;
-            table_tmpl = buildHeader(data_rows[0], 'comptab') + buildRows(data_rows, 'comptab');
-          } else {
-            if (data.meta.total === 0) {
-              $('#search-error-message').show();
-              $("#query_results_table").find('thead,tbody').remove();
-            } else {
-              data_rows = data.shipments;
-              table_tmpl = buildHeader(data_rows[0], 'raw') + buildRows(data_rows, 'raw');
-              $('#search-error-message').hide();
-              
-              $('#query_results .info').text(
-                'Showing ' + data.shipments.length + ' rows of ' + data.meta.total
-              );
-            }
+          if ( comptab_regex.test(q) ) {
+            data_headers = data['shipment_comptab_export'].column_headers;
+            data_rows = data['shipment_comptab_export'].rows;
+            table_tmpl = buildHeader(data_headers) + buildRows(data_headers, data_rows);
+          } else if ( gross_net_regex.test(q) ) {
+            data_headers = data['shipment_gross_net_export'].column_headers;
+            data_rows = data['shipment_gross_net_export'].rows;
+            table_tmpl = buildHeader(data_headers) + buildRows(data_headers, data_rows);
           }
           $('#query_results_table').html(table_tmpl);
         },
@@ -796,12 +702,10 @@ $(document).ready(function(){
       query = query.replace(/report_type%5D=(raw|net_gross)/, 
         "report_type%5D=comptab");
     } else {
-      query = query.replace(/report_type%5D=(raw|comptab)/, 
-        "report_type%5D=net_gross");
-      growlMe("Not implemented yet! Coming soon!");
-      return; // TODO
+      report_type = $( "select[name='reportType']" ).val();
+      query = query.replace(/report_type%5D=(raw|comptab)/,
+        "report_type%5D=" + report_type);
     }
-      
     if (output_type === 'web') {
       goToResults(query);
       return;
@@ -809,19 +713,6 @@ $(document).ready(function(){
       downloadResults( decodeURIComponent( query ) );
       return
     }
-  }
-
-  if (is_download_page) {
-    var net_gross_options = $( '#gross_net_section' );
-    net_gross_options.hide();
-    $( "input[name='outputType']").click( function () {
-      if ($(this).val() === 'csv') {
-        net_gross_options.show();
-      } else {
-        net_gross_options.hide();
-        $( "#report_comparative").attr("checked", "checked");
-      }
-    });
   }
 
   $('#button_report').click( function (e) {handleDownloadRequest() });

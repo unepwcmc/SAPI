@@ -21,7 +21,7 @@ en:
     reporter_type: 'Reporter Type'
     import_permit_number: 'Import Permit'
     export_permit_number: 'Export Permit'
-    country_of_origin_permit_number: 'Origin Permit'
+    origin_permit_number: 'Origin Permit'
     country: 'Country'
 
 es:
@@ -29,7 +29,7 @@ es:
     id: 'ID'
     year: 'Año'
     appendix: 'Apéndice'
-    # family: 'Family'
+    family: 'Familia'
     taxon: 'Taxón'
     taxon_concept_id: 'Taxón ID'
     reported_taxon: 'Taxón Reportado'
@@ -47,7 +47,7 @@ es:
     reporter_type: 'Reporter Type'
     # import_permit_number: 'Import Permit'
     # export_permit_number: 'Export Permit'
-    # country_of_origin_permit_number: 'Origin Permit'
+    # origin_permit_number: 'Origin Permit'
     country: 'País'
 
 fr:
@@ -55,7 +55,7 @@ fr:
     id: 'ID'
     year: 'Année'
     appendix: 'Annexe'
-    # family: 'Family'
+    family: 'Famille'
     taxon: 'Taxon'
     taxon_concept_id: 'Taxon ID'
     # reported_taxon: 'Reported Taxon'
@@ -73,5 +73,5 @@ fr:
     # reporter_type: 'Reporter Type'
     # import_permit_number: 'Import Permit'
     # export_permit_number: 'Export Permit'
-    # country_of_origin_permit_number: 'Origin Permit'
+    # origin_permit_number: 'Origin Permit'
     country: 'Pays'
