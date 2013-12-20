@@ -80,7 +80,6 @@ end
 def populate_shipments
   puts "Inserting into trade_shipments table"
   sql = <<-SQL
-            DELETE from  trade_shipments;
             INSERT INTO trade_shipments(
               source_id,
               unit_id,
