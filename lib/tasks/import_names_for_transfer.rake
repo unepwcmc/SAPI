@@ -1,7 +1,7 @@
 namespace :import do
   desc "Import names from csv file"
   task :names_for_trade => [:environment] do
-    TMP_TABLE = "names_for_trade_import"
+    TMP_TABLE = "names_for_transfer_import"
     file = "lib/files/names_for_transfer.csv"
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
@@ -32,9 +32,6 @@ namespace :import do
     file = ARGV.last
     task file.to_s do 
       drop_create_and_copy_temp(TMP_TABLE, file)
-
-      drop_create_and_copy_temp(TMP_TABLE, file)
-
 
       sql = <<-SQL
         DELETE FROM shipments_import  WHERE shipment_number =  8122168;
@@ -79,6 +76,7 @@ end
 
 def populate_shipments
   puts "Inserting into trade_shipments table"
+  xx_id = GeoEntity.find_by_iso_code2('XX').id
   sql = <<-SQL
             INSERT INTO trade_shipments(
               source_id,
@@ -108,10 +106,12 @@ def populate_shipments
               WHEN appendix='1' THEN 'I'
               WHEN appendix='2' THEN 'II'
               WHEN appendix='3' THEN 'III'
+              WHEN appendix='0' THEN '0'
+              ELSE 'N' 
               ELSE 'other'
               END AS appendix,
               CASE
-              WHEN exporters.id IS NULL THEN (SELECT id from geo_entities where iso_code2 = 'XX')
+              WHEN exporters.id IS NULL THEN #{xx_id}
               ELSE exporters.id
               END AS exporter_id,
               importers.id AS importer_id,
@@ -137,7 +137,7 @@ def populate_shipments
                   AND units.type = 'Unit'
                   LEFT JOIN trade_codes AS purposes ON si.purpose_code = purposes.code
                   AND purposes.type = 'Purpose'
-                  LEFT JOIN trade_codes AS terms ON si.term_code_1 = terms.code
+                  INNER JOIN trade_codes AS terms ON si.term_code_1 = terms.code
                   AND terms.type = 'Term'
                   LEFT JOIN geo_entities AS exporters ON si.export_country_code = exporters.iso_code2
                   LEFT JOIN geo_entities AS importers ON si.import_country_code = importers.iso_code2
