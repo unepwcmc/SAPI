@@ -216,9 +216,9 @@
     <a {{bind-attr href="netExportsDownloadUrl"}} class="btn btn-mini btn-primary">Net Exp</a>
     <a {{bind-attr href="netImportsDownloadUrl"}} class="btn btn-mini btn-primary">Net Imp</a>
 
-    <div>
+    <div id="csv_options">
       {{view Ember.RadioButton name="csv_separator" selectionBinding="csvSeparator" value="comma_separated"}} Comma Separated
-      {{view Ember.RadioButton name="csv_separator" selectionBinding="csvSeparator" value="semicolon_separated"}} Semicolon separated
+      {{view Ember.RadioButton name="csv_separator" selectionBinding="csvSeparator" value="semicolon_separated"}} Semicolon Separated
     </div>
 
   </div>
