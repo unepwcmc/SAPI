@@ -12,4 +12,5 @@
 class Trade::ShipmentImportPermit < ActiveRecord::Base
   attr_accessible :trade_permit_id, :trade_shipment_id
   belongs_to :import_permit, :foreign_key => :trade_permit_id, :class_name => "Trade::Permit"
+  validates :trade_permit_id, :uniqueness => {:scope => :trade_shipment_id}
 end

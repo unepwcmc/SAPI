@@ -1,8 +1,12 @@
-### 0.4.0 (unreleased)
+### 0.4.0 (2013-12-18)
 * adds functionality for managing trade data:
   - filtering by all shipment properties
   - adding / editing / deleting individual shipments
-
+* adds downloads of trade data
+* adds search by common names to Species+
+* adds search by territories to Species+
+* adds a number of features and bugfixes for species management tool
+ 
 ### 0.3.6 (2013-11-22)
 * fixes some IE issues
 * upgrades newrelic agent
