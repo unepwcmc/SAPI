@@ -22,7 +22,10 @@ WITH shipments AS (
     countries_of_origin.iso_code2 AS country_of_origin,
     quantity,
     unit_id,
-    units.code AS unit,
+    CASE 
+      WHEN units.code IS NULL THEN ''
+      ELSE units.code 
+      END AS unit,
     units.name_en AS unit_name_en,
     units.name_es AS unit_name_es,
     units.name_fr AS unit_name_fr,
@@ -32,9 +35,16 @@ WITH shipments AS (
     terms.name_es AS term_name_es,
     terms.name_fr AS term_name_fr,
     purpose_id,
-    purposes.code AS purpose,
+    CASE 
+      WHEN purposes.code IS NULL THEN ''
+      ELSE purposes.code 
+      END
+    AS purpose,
     source_id,
-    sources.code AS source
+    CASE 
+      WHEN sources.code IS NULL THEN ''
+      ELSE sources.code 
+      END AS source
   FROM trade_shipments shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
