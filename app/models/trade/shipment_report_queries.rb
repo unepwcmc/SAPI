@@ -20,24 +20,24 @@ module Trade::ShipmentReportQueries
     terms.name_en AS term_name_en,
     terms.name_es AS term_name_es,
     terms.name_fr AS term_name_fr,
-    unit_id,
     CASE 
-      WHEN units.code IS NULL THEN ''
-      ELSE units.code 
-      END AS unit,
+      WHEN unit_id IS NULL THEN 9991
+      ELSE unit_id 
+      END AS unit_id,
+    unit,
     units.name_en AS unit_name_en,
     units.name_es AS unit_name_es,
     units.name_fr AS unit_name_fr,
-    purpose_id,
     CASE 
-      WHEN purposes.code IS NULL THEN ''
-      ELSE purposes.code 
-      END AS purpose,
-    source_id,
+      WHEN purpose_id IS NULL THEN 9993
+      ELSE purpose_id 
+      END AS purpose_id,
+    purpose,
     CASE 
-      WHEN sources.code IS NULL THEN ''
-      ELSE sources.code 
-      END AS source
+      WHEN source_id IS NULL THEN 9992
+      ELSE source_id 
+      END AS source_id,
+    source
   FROM (#{@search.query.to_sql}) shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
