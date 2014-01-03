@@ -21,11 +21,11 @@ WITH shipments AS (
     country_of_origin_id,
     countries_of_origin.iso_code2 AS country_of_origin,
     quantity,
-    unit_id,
     CASE 
-      WHEN units.code IS NULL THEN ''
-      ELSE units.code 
-      END AS unit,
+      WHEN unit_id IS NULL THEN 9991
+      ELSE unit_id 
+      END AS unit_id,
+    units.code AS unit,
     units.name_en AS unit_name_en,
     units.name_es AS unit_name_es,
     units.name_fr AS unit_name_fr,
@@ -34,17 +34,16 @@ WITH shipments AS (
     terms.name_en AS term_name_en,
     terms.name_es AS term_name_es,
     terms.name_fr AS term_name_fr,
-    purpose_id,
     CASE 
-      WHEN purposes.code IS NULL THEN ''
-      ELSE purposes.code 
-      END
-    AS purpose,
-    source_id,
+      WHEN purpose_id IS NULL THEN 9993
+      ELSE purpose_id 
+      END AS purpose_id,
+    purposes.code AS purpose,
     CASE 
-      WHEN sources.code IS NULL THEN ''
-      ELSE sources.code 
-      END AS source
+      WHEN source_id IS NULL THEN 9992
+      ELSE source_id 
+      END AS source_id,
+    sources.code AS source
   FROM trade_shipments shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
@@ -92,7 +91,7 @@ WITH shipments AS (
     purposes.code,
     source_id,
     sources.code
-), shipments_with_import_permits AS (
+) , shipments_with_import_permits AS (
 SELECT trade_shipment_import_permits.trade_shipment_id,
   ARRAY_AGG(trade_shipment_import_permits.trade_permit_id) AS import_permits_ids,
   ARRAY_TO_STRING(ARRAY_AGG(import_permits.number), ';') AS import_permit_number
