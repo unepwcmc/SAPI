@@ -1,21 +1,13 @@
 Trade.ShipmentsRoute = Ember.Route.extend Trade.QueryParams,
 
   beforeModel: ->
-    new Ember.RSVP.Promise((resolve) =>
-      resolve(@controllerFor('geoEntities').load())
-    )
-    new Ember.RSVP.Promise((resolve) =>
-      resolve(@controllerFor('terms').set('content', Trade.Term.find()))
-    )
-    new Ember.RSVP.Promise((resolve) =>
-      resolve(@controllerFor('units').set('content', Trade.Unit.find()))
-    )
-    new Ember.RSVP.Promise((resolve) =>
-      resolve(@controllerFor('sources').set('content', Trade.Source.find()))
-    )
-    new Ember.RSVP.Promise((resolve) =>
-      resolve(@controllerFor('purposes').set('content', Trade.Purpose.find()))
-    )
+
+    @controllerFor('geoEntities').load()
+
+    @controllerFor('terms').set('content', Trade.Term.find())
+    @controllerFor('units').set('content', Trade.Unit.find())
+    @controllerFor('sources').set('content', Trade.Source.find())
+    @controllerFor('purposes').set('content', Trade.Purpose.find())
     Ember.run.sync()
 
   model: (params, queryParams, transition) ->
