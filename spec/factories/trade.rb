@@ -1,5 +1,27 @@
 FactoryGirl.define do
 
+  factory :trade_code do
+    factory :source, :class => Source do
+      sequence(:code) { |n| (97 + n%26).chr }
+      sequence(:name) { |n| "Source #{n}" }
+    end
+
+    factory :purpose, :class => Purpose do
+      sequence(:code) { |n| (97 + n%26).chr }
+      sequence(:name) { |n| "Purpose #{n}" }
+    end
+
+    factory :term, :class => Term do
+      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (97 + i%26).chr }.join }
+      sequence(:name) { |n| "Term #{n}" }
+    end
+
+    factory :unit, :class => Unit do
+      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (97 + i%26).chr }.join }
+      sequence(:name) { |n| "Unit #{n}" }
+    end
+  end
+
   factory :annual_report_upload, :class => Trade::AnnualReportUpload do
     trading_country
     point_of_view 'E'
@@ -37,6 +59,11 @@ FactoryGirl.define do
     term
   end
 
+  factory :term_trade_codes_pair do
+    term
+    trade_code
+  end
+
   factory :shipment, :class => Trade::Shipment do
     taxon_concept
     term
@@ -53,6 +80,6 @@ FactoryGirl.define do
 
   factory :permit, :class => Trade::Permit do
     geo_entity
-    number 'XXX'
+    sequence(:number) { |n| "Permit #{n}" }
   end
 end
