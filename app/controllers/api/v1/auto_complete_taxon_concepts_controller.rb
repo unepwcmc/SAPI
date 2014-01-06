@@ -1,7 +1,7 @@
 class Api::V1::AutoCompleteTaxonConceptsController < ApplicationController
 
   def index
-    params['params'] ||= []
+    params['ranks'] ||= []
     matcher = Species::TaxonConceptPrefixMatcher.new params
     @taxon_concepts = matcher.cached_results
     render :json => @taxon_concepts,
