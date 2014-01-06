@@ -20,10 +20,14 @@ class Trade::ShipmentsController < ApplicationController
           @search = Trade::ShipmentsNetImportsExport.new(params[:filters])
           render :json => @search,
             :serializer => Trade::ShipmentGrossNetExportSerializer
-        else # default to comptab
+        when "comptab"
           @search = Trade::ShipmentsComptabExport.new(params[:filters])
           render :json => @search,
-            :serializer => Trade::ShipmentComptabExportSerializer
+            :serializer => Trade::ShipmentGrossNetExportSerializer
+        else # default to comptab
+          @search = Trade::ShipmentsExport.new(params[:filters])
+          render :json => @search,
+            :serializer => Trade::ShipmentExportSerializer
         end
     else
       @search = Trade::Filter.new(params)

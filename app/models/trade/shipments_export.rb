@@ -30,6 +30,8 @@ class Trade::ShipmentsExport < Species::CsvExport
       "#{c} AS \"#{headers[i]}\""
     end
     @search.query.select(select_columns)
+    debugger
+    puts "a"
   end
 
   def csv_column_headers
@@ -45,7 +47,7 @@ private
   end
 
   def internal?
-    @filters['internal'] == true
+    @filters['internal'] == "true"
   end
 
   def resource_name
