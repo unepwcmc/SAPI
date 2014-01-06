@@ -30,8 +30,6 @@ class Trade::ShipmentsExport < Species::CsvExport
       "#{c} AS \"#{headers[i]}\""
     end
     @search.query.select(select_columns)
-    debugger
-    puts "a"
   end
 
   def csv_column_headers
