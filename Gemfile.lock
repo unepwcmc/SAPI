@@ -66,6 +66,7 @@ GEM
       json (>= 1.7)
     celluloid (0.15.1)
       timers (~> 1.1.0)
+    charlock_holmes (0.6.9)
     chronic (0.10.2)
     chunky_png (1.2.8)
     codeclimate-test-reporter (0.1.1)
@@ -341,6 +342,7 @@ DEPENDENCIES
   capistrano
   capistrano-ext
   carrierwave
+  charlock_holmes (= 0.6.9)
   codeclimate-test-reporter
   coffee-rails (~> 3.2.1)
   compass (>= 0.12.2)
