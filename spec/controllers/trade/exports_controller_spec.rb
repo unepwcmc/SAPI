@@ -40,8 +40,9 @@ describe Trade::ExportsController do
             :report_type => :raw, 
             :exporters_ids => ['40'],
             :time_range_start => '1975',
-            :time_range_end => '2000'
-          }, :internal => true
+            :time_range_end => '2000',
+            :internal => "true"
+          }
         last_download = Trade::TradeDataDownload.last
         last_download.should eq(nil)
       end
