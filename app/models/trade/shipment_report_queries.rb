@@ -1,6 +1,8 @@
 module Trade::ShipmentReportQueries
 
   def comptab_query
+    importer_quantity_sum = "SUM(CASE WHEN reported_by_exporter THEN 0 ELSE quantity END)"
+    exporter_quantity_sum = "SUM(CASE WHEN reported_by_exporter THEN quantity ELSE 0 END)"
   "SELECT
     year,
     appendix,
@@ -11,27 +13,24 @@ module Trade::ShipmentReportQueries
     importers.iso_code2 AS importer,
     exporter_id,
     exporters.iso_code2 AS exporter,
-    CASE 
-      WHEN country_of_origin_id IS NULL THEN 9991
-      ELSE country_of_origin_id
-      END AS country_of_origin_id,
+    COALESCE(country_of_origin_id, 9991) AS source_id,
     countries_of_origin.iso_code2 AS country_of_origin,
-    SUM(CASE WHEN reported_by_exporter THEN 0 ELSE quantity END) AS importer_quantity,
-    SUM(CASE WHEN reported_by_exporter THEN quantity ELSE 0 END) AS exporter_quantity,
+    CASE WHEN #{importer_quantity_sum} = 0 THEN '' ELSE #{importer_quantity_sum} :: char END AS importer_quantity,
+    CASE WHEN #{exporter_quantity_sum} = 0 THEN '' ELSE #{exporter_quantity_sum} :: char END AS exporter_quantity,
     term_id,
     terms.code AS term,
     terms.name_en AS term_name_en,
     terms.name_es AS term_name_es,
     terms.name_fr AS term_name_fr,
     COALESCE(unit_id, 9991) as unit_id,
-    unit,
+    units.code as unit,
     units.name_en AS unit_name_en,
     units.name_es AS unit_name_es,
     units.name_fr AS unit_name_fr,
     COALESCE(purpose_id, 9991) as purpose_id,
     purposes.code AS purpose,
     COALESCE(source_id, 9991) AS source_id,
-    source
+    sources.code as source
   FROM (#{@search.query.to_sql}) shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id

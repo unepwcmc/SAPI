@@ -19,11 +19,10 @@ WITH shipments AS (
       ELSE 'I'
     END AS reporter_type,
     CASE 
-      WHEN country_of_origin_id IS NULL THEN 9991
+      WHEN country_of_origin_id IS NULL THEN ''
       ELSE country_of_origin_id
       END AS country_of_origin_id,
     countries_of_origin.iso_code2 AS country_of_origin,
-    quantity,
     COALESCE(unit_id, 9991) as unit_id,
     units.code AS unit,
     units.name_en AS unit_name_en,
