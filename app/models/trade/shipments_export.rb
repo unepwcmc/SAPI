@@ -49,7 +49,7 @@ private
   end
 
   def internal?
-    @filters['internal'] == true
+    @filters['internal'] == "true"
   end
 
   def resource_name
