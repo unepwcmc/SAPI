@@ -116,3 +116,4 @@ gem 'memcache-client'
 gem 'jquery-ui-rails'
 
 gem 'postgres-copy', "0.6"
+gem 'geoip'
