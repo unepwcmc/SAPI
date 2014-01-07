@@ -11,7 +11,10 @@ module Trade::ShipmentReportQueries
     importers.iso_code2 AS importer,
     exporter_id,
     exporters.iso_code2 AS exporter,
-    country_of_origin_id,
+    CASE 
+      WHEN country_of_origin_id IS NULL THEN 9991
+      ELSE country_of_origin_id
+      END AS country_of_origin_id,
     countries_of_origin.iso_code2 AS country_of_origin,
     SUM(CASE WHEN reported_by_exporter THEN 0 ELSE quantity END) AS importer_quantity,
     SUM(CASE WHEN reported_by_exporter THEN quantity ELSE 0 END) AS exporter_quantity,

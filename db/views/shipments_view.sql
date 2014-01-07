@@ -18,7 +18,10 @@ WITH shipments AS (
       WHEN reported_by_exporter THEN 'E'
       ELSE 'I'
     END AS reporter_type,
-    country_of_origin_id,
+    CASE 
+      WHEN country_of_origin_id IS NULL THEN 9991
+      ELSE country_of_origin_id
+      END AS country_of_origin_id,
     countries_of_origin.iso_code2 AS country_of_origin,
     quantity,
     CASE 
