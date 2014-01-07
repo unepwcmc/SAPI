@@ -15,7 +15,17 @@ class Trade::Sandbox
 
   def sanitize(id = nil)
     @ar_klass.update_all(
-      'species_name = sanitize_species_name(species_name)',
+      'species_name = sanitize_species_name(species_name),
+      appendix = UPPER(SQUISH_NULL(appendix)),
+      year = SQUISH_NULL(year),
+      term_code = UPPER(SQUISH_NULL(term_code)),
+      unit_code = UPPER(SQUISH_NULL(unit_code)),
+      purpose_code = UPPER(SQUISH_NULL(purpose_code)),
+      source_code = UPPER(SQUISH_NULL(source_code)),
+      quantity = SQUISH_NULL(quantity),
+      trading_partner = UPPER(SQUISH_NULL(trading_partner)),
+      country_of_origin = UPPER(SQUISH_NULL(country_of_origin))
+      ',
       id.blank? ? nil : {:id => id}
     )
   end
