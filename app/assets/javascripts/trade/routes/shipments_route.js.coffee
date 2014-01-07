@@ -12,7 +12,7 @@ Trade.ShipmentsRoute = Ember.Route.extend Trade.QueryParams,
     )).then(new Ember.RSVP.Promise((resolve) =>
       resolve(@controllerFor('purposes').set('content', Trade.Purpose.find()))
     )).then(new Ember.RSVP.Promise((resolve) =>
-      return resolve(Ember.run.sync())
+      resolve(Ember.run.sync())
     ))
 
   model: (params, queryParams, transition) ->
