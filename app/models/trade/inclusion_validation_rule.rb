@@ -22,7 +22,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
       "#{scope_column} = #{scope_value}"
     end.compact.join(', ')
     info = column_names.each_with_index.map do |cn, idx|
-      "#{cn} #{values_ary && values_ary[idx]}"
+      "#{cn} #{values_ary && (values_ary[idx].blank? ? '[BLANK]' : values_ary[idx])}"
     end.join(" with ")
     info = "#{info} (#{scope_info})" unless scope_info.blank?
     info + ' is invalid'
@@ -51,8 +51,8 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
       shipment_in_scope = false if shipment.send(scope_column) != scope_value
     end
     # make sure the validated fields are not blank
-    shipments_columns.each do |column|
-      shipments_in_scope = false if shipment.send(column).blank?
+    required_shipments_columns.each do |column|
+      shipment_in_scope = false if shipment.send(column).blank?
     end
     return nil unless shipment_in_scope
     # if it is, check if it has a match in valid values view
@@ -89,13 +89,14 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # specific errors and ids of matching records
   def matching_records_grouped(table_name)
     squished_column_names = column_names.map{ |c| "SQUISH_NULL(#{c})" }
+    squished_required_column_names = required_column_names.map{ |c| "SQUISH_NULL(#{c})" }
     Trade::SandboxTemplate.
     select(
       squished_column_names.each_with_index.map { |c, idx| "#{c} AS #{column_names[idx]}"} +
       ['COUNT(*) AS error_count', 'ARRAY_AGG(id) AS matching_records_ids']
     ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
     group(squished_column_names).having(
-      squished_column_names.map{ |cn| "#{cn} IS NOT NULL"}.join(' AND ')
+      squished_required_column_names.map{ |cn| "#{cn} IS NOT NULL"}.join(' AND ')
     )
   end
 
@@ -103,7 +104,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # and optionally filtered down by specified scope
   # Pass Arel::Table
   def scoped_records_arel(s)
-    not_null_nodes = column_names.map do |c|
+    not_null_nodes = required_column_names.map do |c|
       func =Arel::Nodes::NamedFunction.new 'SQUISH_NULL', [s[c]]
       func.not_eq(nil)
     end
@@ -128,8 +129,18 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     s = Arel::Table.new(table_name)
     v = Arel::Table.new(valid_values_view)
     arel_nodes = column_names.map do |c|
-      func =Arel::Nodes::NamedFunction.new 'SQUISH_NULL', [s[c]]
-      v[c].eq(func)
+      func = Arel::Nodes::NamedFunction.new 'SQUISH_NULL', [s[c]]
+      if c == 'species_name'
+        reference = Arel::Nodes::NamedFunction.new 'LOWER', [v[c]]
+        sample = Arel::Nodes::NamedFunction.new 'LOWER', [func]
+        reference.eq(sample)
+      elsif required_column_names.include? c
+        v[c].eq(func)
+      else
+        # if optional, check if NULL is allowed for this particular combination
+        # e.g. unit code can be blank only if paired with certain terms
+        v[c].eq(func).or(v[c].eq(nil).and(func.eq(nil)))
+      end
     end
     join_conditions = arel_nodes.shift
     arel_nodes.each{ |n| join_conditions = join_conditions.and(n) }

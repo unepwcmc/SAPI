@@ -1,7 +1,9 @@
 class Api::V1::AutoCompleteTaxonConceptsController < ApplicationController
 
   def index
-    matcher = Species::TaxonConceptPrefixMatcher.new(params)
+    matcher = Species::TaxonConceptPrefixMatcher.new(
+      params.merge({:ranks => []})
+    )
     @taxon_concepts = matcher.cached_results
     render :json => @taxon_concepts,
       :each_serializer => Species::AutocompleteTaxonConceptSerializer,

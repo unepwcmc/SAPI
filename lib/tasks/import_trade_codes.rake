@@ -26,11 +26,11 @@ namespace :import do
       INSERT INTO term_trade_codes_pairs(term_id,
         trade_code_id, trade_code_type, created_at, updated_at)
       SELECT DISTINCT terms.id, trade_codes.id,
-        trade_codes.type, current_date, current_date
+        'Purpose', current_date, current_date
       FROM #{TMP_TABLE}
       INNER JOIN trade_codes AS terms ON BTRIM(UPPER(terms.code)) = BTRIM(UPPER(#{TMP_TABLE}.TERM_CODE))
         AND terms.type = 'Term'
-      INNER JOIN trade_codes AS trade_codes ON BTRIM(UPPER(trade_codes.code)) = BTRIM(UPPER(#{TMP_TABLE}.PURPOSE_CODE))
+      LEFT JOIN trade_codes AS trade_codes ON BTRIM(UPPER(trade_codes.code)) = BTRIM(UPPER(#{TMP_TABLE}.PURPOSE_CODE))
         AND trade_codes.type = 'Purpose';
     SQL
     ActiveRecord::Base.connection.execute(sql)
@@ -49,11 +49,11 @@ namespace :import do
       INSERT INTO term_trade_codes_pairs(term_id,
         trade_code_id, trade_code_type, created_at, updated_at)
       SELECT DISTINCT terms.id, trade_codes.id,
-        trade_codes.type, current_date, current_date
+        'Unit', current_date, current_date
       FROM #{TMP_TABLE}
       INNER JOIN trade_codes AS terms ON BTRIM(UPPER(terms.code)) = BTRIM(UPPER(#{TMP_TABLE}.TERM_CODE))
         AND terms.type = 'Term'
-      INNER JOIN trade_codes AS trade_codes ON BTRIM(UPPER(trade_codes.code)) = BTRIM(UPPER(#{TMP_TABLE}.UNIT_CODE))
+      LEFT JOIN trade_codes AS trade_codes ON BTRIM(UPPER(trade_codes.code)) = BTRIM(UPPER(#{TMP_TABLE}.UNIT_CODE))
         AND trade_codes.type = 'Unit';
     SQL
     ActiveRecord::Base.connection.execute(sql)

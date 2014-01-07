@@ -1,8 +1,8 @@
 namespace :geo_locate do
+  desc "Updates Trade::TradeDataDownload table records with country, city and organization information,
+    based on the IP address"
   task data_downloads: :environment do
-
     ips_to_geo_locate = Trade::TradeDataDownload.where(country: nil)
-    
     cdb = GeoIP.new(GEO_IP_CONFIG['city_db'])
     orgdb = GeoIP.new(GEO_IP_CONFIG['org_db'])
 
@@ -16,9 +16,5 @@ namespace :geo_locate do
 
       Trade::TradeDataDownload.find(download.id).update_attributes(city: city, country: country, organization: organization)
     end
-      
-
-
-
   end
 end
