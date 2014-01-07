@@ -16,7 +16,6 @@ Trade.ShipmentsRoute = Ember.Route.extend Trade.QueryParams,
     ))
 
   model: (params, queryParams, transition) ->
-
     # redo the array params if we're coming from the url
     @get('selectedQueryParamNames').forEach (property) ->
       if property.type == 'array' && queryParams[property.param] == true
