@@ -15,7 +15,7 @@ class Trade::Sandbox
 
   def sanitize(id = nil)
     @ar_klass.update_all(
-      'species_name = sanitize_species_name(species_name),
+      'species_name = LOWER(sanitize_species_name(species_name)),
       appendix = UPPER(SQUISH_NULL(appendix)),
       year = SQUISH_NULL(year),
       term_code = UPPER(SQUISH_NULL(term_code)),
