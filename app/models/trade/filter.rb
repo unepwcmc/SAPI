@@ -22,8 +22,8 @@ class Trade::Filter
   end
 
   def initialize_query
-    @query = Trade::Shipment.from('trade_shipments_view trade_shipments').
-      order('year DESC').preload(:taxon_concept) #includes would override the select clause
+    @query = Trade::Shipment.order('year DESC').
+      preload(:taxon_concept) #includes would override the select clause
 
     # Id's (array)
     unless @taxon_concepts_ids.empty?
@@ -92,6 +92,13 @@ class Trade::Filter
       end
     end
 
+    initialize_internal_query if @internal
+
+  end
+
+  def initialize_internal_query
+    @query = @query.from('trade_shipments_view trade_shipments').
+      preload(:reported_taxon_concept) #includes would override the select clause
 
     if ['I', 'E'].include? @reporter_type
       if @reporter_type == 'E'

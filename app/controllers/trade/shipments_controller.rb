@@ -25,8 +25,8 @@ class Trade::ShipmentsController < ApplicationController
           render :json => @search,
             :serializer => Trade::ShipmentComptabExportSerializer
         end
-    else
-      @search = Trade::Filter.new(params)
+    else #TODO check user permissions, admin only
+      @search = Trade::Filter.new({:internal => true}.merge(params))
       render :json => @search.results,
         :each_serializer => Trade::ShipmentSerializer,
         :meta => {
