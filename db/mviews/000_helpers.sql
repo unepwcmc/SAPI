@@ -65,7 +65,10 @@ COMMENT ON FUNCTION squish_null(TEXT) IS
 CREATE OR REPLACE FUNCTION sanitize_species_name(TEXT) RETURNS TEXT
   LANGUAGE SQL IMMUTABLE
   AS $$
-    SELECT regexp_replace(SQUISH_NULL($1), E' spp(\.)?$', '');
+    SELECT regexp_replace(
+      upper(substring(SQUISH_NULL($1) from 1 for 1)) || 
+      lower(substring(SQUISH_NULL($1) from 2 for length(SQUISH_NULL($1)))), 
+      E' spp(\.)?$', '');
   $$;
 
 COMMENT ON FUNCTION sanitize_species_name(TEXT) IS
