@@ -23,23 +23,14 @@ module Trade::ShipmentReportQueries
     terms.name_en AS term_name_en,
     terms.name_es AS term_name_es,
     terms.name_fr AS term_name_fr,
-    CASE 
-      WHEN unit_id IS NULL THEN 9991
-      ELSE unit_id 
-      END AS unit_id,
+    COALESCE(unit_id, 9991) as unit_id,
     unit,
     units.name_en AS unit_name_en,
     units.name_es AS unit_name_es,
     units.name_fr AS unit_name_fr,
-    CASE 
-      WHEN purpose_id IS NULL THEN 9993
-      ELSE purpose_id 
-      END AS purpose_id,
-    purpose,
-    CASE 
-      WHEN source_id IS NULL THEN 9992
-      ELSE source_id 
-      END AS source_id,
+    COALESCE(purpose_id, 9991) as purpose_id,
+    purposes.code AS purpose,
+    COALESCE(source_id, 9991) AS source_id,
     source
   FROM (#{@search.query.to_sql}) shipments
   JOIN taxon_concepts
