@@ -117,6 +117,8 @@ private
       return ','
     when 'semicolon_separated'
       return ';'
+    else
+      return ','
     end
   end
 
