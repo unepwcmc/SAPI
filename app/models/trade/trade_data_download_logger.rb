@@ -21,7 +21,8 @@ module Trade::TradeDataDownloadLogger
     data["source"] = self.get_field_values(filters[:sources_ids], Source)
     data["importer"] = self.get_field_values(filters[:importers_ids], GeoEntity)
     data["exporter"] = self.get_field_values(filters[:exporters_ids], GeoEntity)
-
+    data["city"], data["country"] = self.city_country_from(request.ip)
+    data["organization"] = self.organization_from(request.ip)
     w = Trade::TradeDataDownload.new(data)
     w.save
   end
@@ -59,4 +60,23 @@ module Trade::TradeDataDownloadLogger
         map { |r| r.code }.join ' '
     end
   end
+
+
+
+  def self.city_country_from ip
+    cdb = GeoIP.new(GEO_IP_CONFIG['city_db']) 
+    cdb_names = cdb.city(ip)   
+    country = cdb_names.nil? ? "Unkwown" : cdb_names.country_code2
+    city = cdb_names.nil? ? "Unkwown" : cdb_names.city_name
+    [city, country]
+  end
+
+
+
+  def self.organization_from ip
+    orgdb = GeoIP.new(GEO_IP_CONFIG['org_db'])
+    org_names = orgdb.organization(ip)
+    org_names.nil? ? "Unkown" : org_names.isp
+  end
+
 end
