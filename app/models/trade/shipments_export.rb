@@ -49,7 +49,7 @@ private
   end
 
   def internal?
-    @filters['internal'] == true
+    @filters['internal'] == "true"
   end
 
   def resource_name
@@ -117,6 +117,8 @@ private
       return ','
     when 'semicolon_separated'
       return ';'
+    else
+      return ','
     end
   end
 
