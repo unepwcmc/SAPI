@@ -92,8 +92,7 @@ $(document).ready(function(){
   $('#taxon_search').width(300);
  
   function initialiseControls() {
-	  $('input[name="selection_taxon"]').filter('[value="taxon"]')
-      .attr('checked', true);
+	  $('#selection_taxon_taxon').attr('checked', true);
 	  $('#div_genus').find('button').addClass('ui-state-disabled')
       .removeClass('ui-state-enabled');
 	  $('#genus_all_id_chzn').removeClass('chzn-container-active')
@@ -181,7 +180,8 @@ $(document).ready(function(){
  	  $('#terms').select2("val","all_ter");
  	  $('#expcty').select2("val","all_exp");
  	  $('#impcty').select2("val","all_imp");	
-     notySticky('Values are being reset...');
+    notySticky('Values are being reset...');
+    $('#search-error-message').hide();
   };
 
   $('#reset_search').click(function() {
@@ -197,8 +197,8 @@ $(document).ready(function(){
  
   //Radio selector for genus or taxon search
   $("input[name='selection_taxon']").on('change',function(){
-	  var myValue = $(this).val();
-	  if (myValue == 'genus') {
+	  var myValue = $(this).attr('id');
+	  if (myValue == 'selection_taxon_genus') {
 	  	$('#div_taxon').find('input').addClass('ui-state-disabled')
         .removeClass('ui-state-enabled');
 	  	$('#div_genus').find('button').removeClass('ui-state-disabled')
@@ -207,7 +207,7 @@ $(document).ready(function(){
 	  	$('#div_genus :input').removeAttr('disabled');
 	  	$('#taxon_search').val('');
 	  	$('#species_out').text('');
-	  } else if (myValue == "taxon") {
+	  } else {
 	  	$('#div_genus').find('button').addClass('ui-state-disabled')
         .removeClass('ui-state-enabled');
 	  	$('#div_taxon').find('input').removeClass('ui-state-disabled')
@@ -568,32 +568,39 @@ $(document).ready(function(){
   }
 
   //Autocomplete for cites_genus
-  $("#genus_search").autocomplete({
-  	source: function(request, response) {
-      $.ajax({
-        url: "/api/v1/auto_complete_taxon_concepts",
-        dataType: "json",
-        data: {
-          taxonomy: 'CITES',
-          taxon_concept_query: request.term,
-          autocomplete: true,
-          'ranks[]': 'GENUS'
-        },
-        success: function(data) {
-          response(parseTaxonData(data));
-        },
-  			error : function(xhr, ajaxOptions, thrownError){
-  				growlMe(xhr.status + " ====== " + thrownError);
-  			}
-      });
-    },
-  	select: function( event, ui ) {
-  		$(this).val(ui.item.label);
-      selected_taxa = ui.item.value;
-  		$('#species_out').text(ui.item.label);	
-  		return false;
-  	}
-  });
+  if (is_search_page) {
+    $("#genus_search").autocomplete({
+    	source: function(request, response) {
+        var term = request.term;
+        $.ajax({
+          url: "/api/v1/auto_complete_taxon_concepts",
+          dataType: "json",
+          data: {
+            taxonomy: 'CITES',
+            taxon_concept_query: request.term,
+            autocomplete: true,
+            'ranks[]': 'GENUS'
+          },
+          success: function(data) {
+            response(parseTaxonData(data, term));
+          },
+    			error : function(xhr, ajaxOptions, thrownError){
+    				growlMe(xhr.status + " ====== " + thrownError);
+    			}
+        });
+      },
+    	select: function( event, ui ) {
+    		$(this).val(ui.item.label);
+        selected_taxa = ui.item.value;
+    		$('#species_out').text(ui.item.label);	
+    		return false;
+    	}
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+      return $( "<li>" )
+        .append( "<a>" + item.drop_label + "</a>" )
+        .appendTo( ul );
+      };
+  }
 
   show_values_selection();
 
@@ -655,7 +662,7 @@ $(document).ready(function(){
   // Download page specific:
 
   function displayResults (q) {
-    var formURL = '/trade/shipments',
+    var table_view_title, formURL = '/trade/shipments',
       data_headers, data_rows, table_tmpl, 
       comptab_regex = /comptab/, 
       gross_net_regex = /(gross_exports|gross_imports|net_exports|net_imports)/;
@@ -666,14 +673,17 @@ $(document).ready(function(){
         data : q,
         success: function(data, textStatus, jqXHR) {
           if ( comptab_regex.test(q) ) {
+            table_view_title = data['shipment_comptab_export'].table_title;
             data_headers = data['shipment_comptab_export'].column_headers;
             data_rows = data['shipment_comptab_export'].rows;
             table_tmpl = buildHeader(data_headers) + buildRows(data_headers, data_rows);
           } else if ( gross_net_regex.test(q) ) {
+            table_view_title = data['shipment_gross_net_export'].table_title;
             data_headers = data['shipment_gross_net_export'].column_headers;
             data_rows = data['shipment_gross_net_export'].rows;
             table_tmpl = buildHeader(data_headers) + buildRows(data_headers, data_rows);
           }
+          $('#table_title').text(table_view_title);
           $('#query_results_table').html(table_tmpl);
         },
         error: ajaxFail

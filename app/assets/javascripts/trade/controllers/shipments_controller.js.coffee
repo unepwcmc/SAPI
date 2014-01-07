@@ -2,6 +2,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
+  csvSeparator: "comma_separated"
 
   init: ->
     transaction = @get('store').transaction()
@@ -214,38 +215,44 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   rawDownloadUrl: (->
     params = @get('searchParamsForUrl')
     params['report_type'] = 'raw'
+    params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl')
+  ).property('searchParamsForUrl', 'csvSeparator')
 
   comptabDownloadUrl: (->
     params = @get('searchParamsForUrl')
     params['report_type'] = 'comptab'
+    params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl')
+  ).property('searchParamsForUrl', 'csvSeparator')
 
   grossExportsDownloadUrl: (->
     params = @get('searchParamsForUrl')
     params['report_type'] = 'gross_exports'
+    params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl')
+  ).property('searchParamsForUrl', 'csvSeparator')
 
   grossImportsDownloadUrl: (->
     params = @get('searchParamsForUrl')
     params['report_type'] = 'gross_imports'
+    params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl')
+  ).property('searchParamsForUrl', 'csvSeparator')
 
   netExportsDownloadUrl: (->
     params = @get('searchParamsForUrl')
     params['report_type'] = 'net_exports'
+    params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl')
+  ).property('searchParamsForUrl', 'csvSeparator')
 
   netImportsDownloadUrl: (->
     params = @get('searchParamsForUrl')
     params['report_type'] = 'net_imports'
+    params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl')
+  ).property('searchParamsForUrl', 'csvSeparator')
 
   resetFilters: ->
     @beginPropertyChanges()
