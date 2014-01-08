@@ -32,8 +32,6 @@ module Trade::ShipmentReportQueries
   FROM (#{@search.query.to_sql}) shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
-  LEFT JOIN taxon_concepts reported_taxon_concepts
-    ON reported_taxon_concept_id = reported_taxon_concepts.id
   JOIN geo_entities importers
     ON importers.id = importer_id
   JOIN geo_entities exporters
