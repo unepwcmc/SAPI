@@ -118,6 +118,9 @@ class Trade::Shipment < ActiveRecord::Base
 
   private
 
+  # note: this updates the precomputed fields
+  # needs to be invoked via custom permit number setters
+  # (import_permit_number=, export_permit_number=, origin_permit_number=)
   def set_permit_number(permit_type, str, geo_entity_id)
     if str
       permits = str.split(';').compact.map do |number|
