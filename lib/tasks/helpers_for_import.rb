@@ -242,6 +242,44 @@ class CsvToDbMap
     'taxon_concepts_and_terms_pairs_import' => {
       'TAXON_FAMILY' => 'TAXON_FAMILY varchar',
       'TERM_CODE' => 'TERM_CODE varchar'
+    },
+    'names_for_transfer_import' => {
+        'cites_name' => 'cites_name varchar',
+        'cites_taxon_code' => 'cites_taxon_code varchar',
+        'speciesplusid' => 'species_plus_id int',
+        'speciesplusname' => 'species_plus_name varchar',
+        'rank' => 'rank varchar'
+    },
+
+    'shipments_import' => {
+        "SHIPMENT_NUMBER" => 'shipment_number int',
+        "ISO_COUNTRY_CODE" => 'iso_country_code varchar',
+        "REPORTER_TYPE" => 'reporter_type varchar',
+        "SHIPMENT_YEAR" => 'shipment_year int',
+        "APPENDIX" => 'appendix varchar',
+        "CITES_TAXON_CODE" => 'cites_taxon_code varchar',
+        "TERM_CODE_1" => 'term_code_1 varchar',
+        "TERM_CODE_2" => 'term_code_2 varchar',
+        "UNIT_CODE_1" => 'unit_code_1 varchar',
+        "UNIT_CODE_2" => 'unit_code_2 varchar',
+        "QUANTITY_1" => 'quantity_1 numeric',
+        "QUANTITY_2" => 'quantity_2 numeric',
+        "EXPORT_COUNTRY_CODE" => 'export_country_code varchar',
+        "IMPORT_COUNTRY_CODE" => 'import_country_code varchar',
+        "ORIGIN_COUNTRY_CODE" => 'origin_country_code varchar',
+        "SOURCE_CODE" => 'source_code varchar',
+        "PURPOSE_CODE" => 'purpose_code varchar',
+        "PERMIT_NUMBER_COUNT" => 'permit_number_count int',
+        "RECORD_LOAD_STATUS" => 'record_load_status varchar'
+    },
+
+    'permits_import' => {
+      'SHIPMENT_NUMBER' => 'shipment_number int',
+      'PERMIT_ENTRY_NUMBER' => 'permit_entry_number int',
+      'PERMIT_NUMBER' => 'permit_number varchar',
+      'PERMIT_YEAR' => 'permit_year int',
+      'PERMIT_REPORTER_TYPE' => 'permit_reporter_type varchar',
+      'ENTITY_CODE' => 'entity_code varchar'
     }
   }
 
