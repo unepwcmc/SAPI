@@ -23,6 +23,7 @@
 #
 
 class Trade::Shipment < ActiveRecord::Base
+  include PgArrayParser
   attr_accessible :annual_report_upload_id, :appendix,
     :country_of_origin_id, :origin_permit_id,
     :exporter_id, :import_permit_id, :importer_id, :purpose_id,
@@ -95,42 +96,40 @@ class Trade::Shipment < ActiveRecord::Base
     end
   end
 
-  def import_permit_number
-    get_permit_number('import')
-  end
-
   def import_permit_number=(str)
     set_permit_number('import', str, self.importer_id)
-  end
-
-  def export_permit_number
-    get_permit_number('export')
   end
 
   def export_permit_number=(str)
     set_permit_number('export', str, self.exporter_id)
   end
 
-  def origin_permit_number
-    get_permit_number('origin')
-  end
-
   def origin_permit_number=(str)
     set_permit_number('origin', str, self.country_of_origin_id)
   end
 
-  private
-  def get_permit_number(permit_type)
-    self["#{permit_type}_permit_number"] || self.send("#{permit_type}_permits").map(&:number).join(';')
+  def permits_ids
+    parse_pg_array(read_attribute(:permits_ids))
   end
+
+  def permits_ids=(ary)
+    write_attribute(:permits_ids, '{' + ary.join(',') + '}')
+  end
+
+  private
 
   def set_permit_number(permit_type, str, geo_entity_id)
     if str
       permits = str.split(';').compact.map do |number|
-        Trade::Permit.find_or_create_by_number_and_geo_entity_id(number, geo_entity_id)
+        Trade::Permit.find_or_create_by_number_and_geo_entity_id(number.strip, geo_entity_id)
       end
       self.send("#{permit_type}_permits=", permits)
+      str = permits.map(&:number).join(';')
     end
+    # save the concatenated permit numbers in the precomputed field
+    write_attribute("#{permit_type}_permit_number", str)
+    # save all the permit ids in the precomputed field
+    update_attribute(:permits_ids, (import_permits + export_permits + origin_permits).map(&:id))
   end
 
 end
