@@ -116,4 +116,5 @@ gem 'memcache-client'
 gem 'jquery-ui-rails'
 
 gem 'postgres-copy', "0.6"
-gem 'charlock_holmes', '0.6.9'
+gem 'geoip'
+gem 'charlock_holmes', github: "tooky/charlock_holmes", branch: "bundle-icu"
