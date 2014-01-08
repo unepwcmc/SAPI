@@ -97,8 +97,11 @@ class Trade::Filter
   end
 
   def initialize_internal_query
-    @query = @query.from('trade_shipments_view trade_shipments').
-      preload(:reported_taxon_concept) #includes would override the select clause
+    if @report_type == :raw
+      # only use the view for the raw report in admin
+      @query = @query.from('trade_shipments_view trade_shipments').
+        preload(:reported_taxon_concept) #includes would override the select clause
+    end
 
     if ['I', 'E'].include? @reporter_type
       if @reporter_type == 'E'

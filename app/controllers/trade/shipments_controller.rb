@@ -2,7 +2,7 @@ class Trade::ShipmentsController < ApplicationController
   respond_to :json
 
   def index
-    if params[:filters]
+    if params[:filters] # public, maybe improve this check
       case params[:filters][:report_type]
         when "gross_exports"
           @search = Trade::ShipmentsGrossExportsExport.new(params[:filters])
@@ -26,7 +26,7 @@ class Trade::ShipmentsController < ApplicationController
             :serializer => Trade::ShipmentComptabExportSerializer
         end
     else #TODO check user permissions, admin only
-      @search = Trade::Filter.new({:internal => true}.merge(params))
+      @search = Trade::Filter.new(params.merge({:internal => true, :report_type => :raw}))
       render :json => @search.results,
         :each_serializer => Trade::ShipmentSerializer,
         :meta => {
