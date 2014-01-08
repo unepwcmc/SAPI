@@ -30,7 +30,8 @@ namespace :import do
 
     TMP_TABLE = "shipments_import"
     file = ARGV.last
-    task file.to_s do 
+    task file.to_s do
+      Sapi::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
 
       sql = <<-SQL
@@ -46,7 +47,7 @@ namespace :import do
         ActiveRecord::Base.connection.execute(sql)
       end
       populate_shipments
-      ; 
+      Sapi::Indexes.create_indexes_on_shipments
     end
   end
 
@@ -56,13 +57,15 @@ namespace :import do
     TMP_TABLE = "shipments_import"
     puts "opening file"
     file = ARGV.last
-    task file.to_s do 
+    task file.to_s do
+      Sapi::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
       populate_shipments
-      ; 
+      Sapi::Indexes.create_indexes_on_shipments
     end
   end
 end
+
 
 def drop_create_and_copy_temp(tmp_table, file)
   puts "Creating temp table"
@@ -70,9 +73,6 @@ def drop_create_and_copy_temp(tmp_table, file)
   create_table_from_csv_headers(file, tmp_table)
   copy_data(file, tmp_table)
 end
-
-
-
 
 def populate_shipments
   puts "Inserting into trade_shipments table"
