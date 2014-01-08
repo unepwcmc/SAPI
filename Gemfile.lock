@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/tooky/charlock_holmes.git
+  revision: f2ac0461f39397b863e4bf5c7fecb0602b9439ab
+  branch: bundle-icu
+  specs:
+    charlock_holmes (0.6.13)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -342,6 +349,7 @@ DEPENDENCIES
   capistrano
   capistrano-ext
   carrierwave
+  charlock_holmes!
   codeclimate-test-reporter
   coffee-rails (~> 3.2.1)
   compass (>= 0.12.2)
