@@ -66,13 +66,13 @@ CREATE OR REPLACE FUNCTION sanitize_species_name(TEXT) RETURNS TEXT
   LANGUAGE SQL IMMUTABLE
   AS $$
     SELECT regexp_replace(
-      upper(substring(SQUISH_NULL($1) from 1 for 1)) || 
-      lower(substring(SQUISH_NULL($1) from 2 for length(SQUISH_NULL($1)))), 
+      upper(substring(SQUISH_NULL($1) from 1 for 1)) ||
+      lower(substring(SQUISH_NULL($1) from 2 for length(SQUISH_NULL($1)))),
       E' spp(\.)?$', '');
   $$;
 
 COMMENT ON FUNCTION sanitize_species_name(TEXT) IS
-  'Removes spp. and squish_nulls the species name';
+  'Converts the case, removes spp. and squish_nulls the species name';
 
 CREATE OR REPLACE FUNCTION strip_tags(TEXT) RETURNS TEXT
   LANGUAGE SQL IMMUTABLE
