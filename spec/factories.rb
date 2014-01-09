@@ -57,33 +57,6 @@ FactoryGirl.define do
     other_hybrid_parent_scientific_name ''
   end
 
-  factory :trade_code do
-    factory :source, :class => Source do
-      sequence(:code) { |n| (65 + n%26).chr }
-      name_en "Wild"
-    end
-
-    factory :purpose, :class => Purpose do
-      sequence(:code) { |n| (65 + n%26).chr }
-      name_en "Zoo"
-    end
-
-    factory :term, :class => Term do
-      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (65 + i%26).chr }.join }
-      name_en "Bones"
-    end
-
-    factory :unit, :class => Unit do
-      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (65 + i%26).chr }.join }
-      name_en "Boxes"
-    end
-  end
-
-  factory :term_trade_codes_pair do
-    term
-    trade_code
-  end
-
   factory :cites_suspension do
     taxon_concept
     start_notification

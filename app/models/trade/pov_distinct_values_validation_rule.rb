@@ -26,7 +26,7 @@ class Trade::PovDistinctValuesValidationRule < Trade::PovInclusionValidationRule
     end
     # make sure the validated fields are not blank
     shipments_columns.each do |column|
-      shipments_in_scope = false if shipment.send(column).blank?
+      shipment_in_scope = false if shipment.send(column).blank?
     end
     return nil unless shipment_in_scope
     # if it is, check if validated columns are not equal

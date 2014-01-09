@@ -10,17 +10,17 @@
       <div class="three-columns">
         <ul class="col">
           {{#eachPart controllers.taxonConcept.distributions parts=3 page=0}}
-            <li>{{name_en}} {{formattedTags tags_list}}</li>
+            <li>{{name}} {{formattedTags tags_list}}</li>
           {{/eachPart}}
         </ul>
         <ul class="col">
           {{#eachPart controllers.taxonConcept.distributions parts=3 page=1}}
-            <li>{{name_en}} {{formattedTags tags_list}}</li>
+            <li>{{name}} {{formattedTags tags_list}}</li>
           {{/eachPart}}
         </ul>
         <ul class="col last-child">
           {{#eachPart controllers.taxonConcept.distributions parts=3 page=2}}
-            <li>{{name_en}} {{formattedTags tags_list}}</li>
+            <li>{{name}} {{formattedTags tags_list}}</li>
           {{/eachPart}}
         </ul>
       </div>

@@ -84,30 +84,57 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
     end
     context 'term can only be paired with unit as defined by term_trade_codes_pairs table' do
       before do
-        create(:term, :code => "BAL")
+        cap = create(:term, :code => "CAP")
         cav = create(:term, :code => "CAV")
         create(:unit, :code => "BAG")
-        unit = create(:unit, :code => "KIL")
-        create(:term_trade_codes_pair, :term_id => cav.id, :trade_code_id => unit.id,
-              :trade_code_type => unit.type)
-        sandbox_klass.create(:term_code => 'BAL', :unit_code => 'BAG')
+        kil = create(:unit, :code => "KIL")
+        create(:term_trade_codes_pair, :term_id => cav.id, :trade_code_id => kil.id,
+              :trade_code_type => kil.type)
+        create(:term_trade_codes_pair, :term_id => cav.id, :trade_code_id => nil,
+              :trade_code_type => kil.type)
+        create(:term_trade_codes_pair, :term_id => cap.id, :trade_code_id => kil.id,
+              :trade_code_type => kil.type)
         sandbox_klass.create(:term_code => 'CAV', :unit_code => 'KIL')
         sandbox_klass.create(:term_code => 'CAV', :unit_code => '')
       end
-      subject{
-        create(
-          :inclusion_validation_rule,
-          :column_names => ['term_code', 'unit_code'],
-          :valid_values_view => 'valid_term_unit_view'
-        )
-      }
-      specify{
-        subject.validation_errors(annual_report_upload).size.should == 1
-      }
-      specify{
-        ve = subject.validation_errors(annual_report_upload).first
-        ve.error_selector.should == {'term_code' => 'BAL', 'unit_code' => 'BAG'}
-      }
+      context "when invalid combination" do
+        before(:each) do
+          sandbox_klass.create(:term_code => 'CAP', :unit_code => 'BAG')
+        end
+        subject{
+          create(
+            :inclusion_validation_rule,
+            :column_names => ['term_code', 'unit_code'],
+            :valid_values_view => 'valid_term_unit_view'
+          )
+        }
+        specify{
+          subject.validation_errors(annual_report_upload).size.should == 1
+        }
+        specify{
+          ve = subject.validation_errors(annual_report_upload).first
+          ve.error_selector.should == {'term_code' => 'CAP', 'unit_code' => 'BAG'}
+        }
+      end
+      context "when required unit blank" do
+        before(:each) do
+          sandbox_klass.create(:term_code => 'CAP', :unit_code => '')
+        end
+        subject{
+          create(
+            :inclusion_validation_rule,
+            :column_names => ['term_code', 'unit_code'],
+            :valid_values_view => 'valid_term_unit_view'
+          )
+        }
+        specify{
+          subject.validation_errors(annual_report_upload).size.should == 1
+        }
+        specify{
+          ve = subject.validation_errors(annual_report_upload).first
+          ve.error_selector.should == {'term_code' => 'CAP', 'unit_code' => nil}
+        }
+      end
     end
     context 'term can only be paired with purpose as defined by term_trade_codes_pairs table' do
       before do
@@ -128,7 +155,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         )
       }
       specify{
-        subject.validation_errors(annual_report_upload).size.should == 1
+        subject.validation_errors(annual_report_upload).size.should == 2
       }
       specify{
         ve = subject.validation_errors(annual_report_upload).first

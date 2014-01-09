@@ -81,7 +81,7 @@ private
     extra_crosstab_columns &= report_columns.keys
     # the source query contains a viariable number of "extra" columns
     # ones needed in the output but not involved in pivoting
-    source_sql = "SELECT ARRAY[taxon, term, unit, country],
+    source_sql = "SELECT ARRAY[appendix, taxon, term, unit, country],
       #{extra_crosstab_columns.join(', ')}, year, gross_quantity
       FROM (#{subquery_sql}) subquery
       ORDER BY 1, #{extra_crosstab_columns.length + 2}" #order by row_name and year

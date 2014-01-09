@@ -22,6 +22,9 @@
       <button {{action 'newShipment'}} class="pull-right btn clearfix">
         Add shipment
       </button>
+      <button {{action 'deleteFiltered'}} class="pull-right btn clearfix">
+        Delete Filtered Shipments
+      </button>
     </div>
   </div>
 </div>
@@ -37,7 +40,7 @@
     </thead>
     <tbody>
     {{#each controller.content}}
-      {{view Trade.ShipmentTableView contentBinding='this'}}
+      {{ view Trade.ShipmentTableView contentBinding='this'}}
     {{/each}}
     </tbody>
   </table>

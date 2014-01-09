@@ -21,21 +21,6 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
     'PLANTAE' => ['C', 'R']
   }
 
-  def validation_errors(annual_report_upload)
-    matching_records_grouped(annual_report_upload.sandbox.table_name).map do |mr|
-      error_selector = error_selector(mr, annual_report_upload.point_of_view)
-      Trade::ValidationError.new(
-          :error_message => error_message(error_selector),
-          :annual_report_upload_id => annual_report_upload.id,
-          :validation_rule_id => self.id,
-          :error_count => mr.error_count,
-          :error_selector => error_selector,
-          :matching_records_ids => parse_pg_array(mr.matching_records_ids),
-          :is_primary => self.is_primary
-      )
-    end
-  end
-
   def validation_errors_for_shipment(shipment)
     return nil unless shipment.source && (
       shipment.taxon_concept &&
@@ -48,24 +33,6 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
   end
 
   private
-
-  # Returns a hash with column values to be used to select invalid rows.
-  # e.g.
-  # {
-  #    :species_name => 'Loxodonta africana',
-  #    :source_code => 'A'
-  #
-  # }
-  # Expects a single grouped matching record.
-  # TODO this is the same as for InclusionValidationRule: could this
-  # class inherit from there?
-  # def error_selector(matching_record)
-  #   res = {}
-  #   column_names.each do |cn|
-  #     res[cn] = matching_record.send(cn)
-  #   end
-  #   res
-  # end
 
   # Returns matching records grouped by column_names to return the count of
   # specific errors and ids of matching records
