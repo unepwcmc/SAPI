@@ -98,7 +98,9 @@ SAPI::Application.routes.draw do
       end
     end
     resources :validation_rules
-    resources :shipments
+    resources :shipments do
+      post :destroy_batch, :on => :collection
+    end
     resources :geo_entities, :only => [:index]
     resources :permits, :only => [:index]
     match 'exports/download' => 'exports#download'
