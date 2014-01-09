@@ -6,5 +6,9 @@
         drop_table(TMP_TABLE)
         create_table_from_csv_headers(file, TMP_TABLE)
         copy_data(file, TMP_TABLE)
+
+        sql = <<-SQL "INSERT INTO trade_permits number"
+        SQL
       end
+
   end

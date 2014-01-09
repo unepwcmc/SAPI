@@ -79,6 +79,7 @@ def populate_shipments
   xx_id = GeoEntity.find_by_iso_code2('XX').id
   sql = <<-SQL
             INSERT INTO trade_shipments(
+              legacy_id,
               source_id,
               unit_id,
               purpose_id,
@@ -94,7 +95,9 @@ def populate_shipments
               created_at,
               updated_at,
               reported_taxon_concept_id)
-            SELECT sources.id AS source_id,
+            SELECT 
+              si.shipment_number as legacy_id,
+              sources.id AS source_id,
               units.id AS unit_id,
               purposes.id AS purpose_id,
               terms.id AS term_id,
