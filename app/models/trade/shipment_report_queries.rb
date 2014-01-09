@@ -4,9 +4,9 @@ module Trade::ShipmentReportQueries
   "SELECT
     year,
     appendix,
-    taxon_concepts.data->'family_name' AS family,
+    full_name_with_spp('FAMILY', taxon_concepts.data->'family_name') AS family,
     taxon_concept_id,
-    taxon_concepts.full_name AS taxon,
+    full_name_with_spp(ranks.name, taxon_concepts.full_name) AS taxon,
     importer_id,
     importers.iso_code2 AS importer,
     exporter_id,
@@ -32,6 +32,8 @@ module Trade::ShipmentReportQueries
   FROM (#{@search.query.to_sql}) shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
+  JOIN ranks
+    ON ranks.id = taxon_concepts.rank_id
   LEFT JOIN taxon_concepts reported_taxon_concepts
     ON reported_taxon_concept_id = reported_taxon_concepts.id
   JOIN geo_entities importers
@@ -54,6 +56,7 @@ module Trade::ShipmentReportQueries
     taxon_concepts.data,
     taxon_concept_id,
     taxon_concepts.full_name,
+    ranks.name,
     importer_id,
     importers.iso_code2,
     exporter_id,
@@ -84,7 +87,7 @@ module Trade::ShipmentReportQueries
     year,
     appendix,
     taxon_concept_id,
-    taxon_concepts.full_name AS taxon,
+    full_name_with_spp(ranks.name, taxon_concepts.full_name) AS taxon,
     importer_id,
     importers.iso_code2 AS importer,
     exporter_id,
@@ -106,6 +109,8 @@ module Trade::ShipmentReportQueries
   FROM (#{@search.query.to_sql}) shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
+  JOIN ranks
+    ON ranks.id = taxon_concepts.rank_id
   JOIN geo_entities importers
     ON importers.id = importer_id
   JOIN geo_entities exporters
@@ -125,6 +130,7 @@ module Trade::ShipmentReportQueries
     appendix,
     taxon_concept_id,
     taxon_concepts.full_name,
+    ranks.name,
     importer_id,
     importers.iso_code2,
     exporter_id,

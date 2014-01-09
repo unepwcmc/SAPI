@@ -6,7 +6,7 @@ WITH shipments AS (
     year,
     appendix,
     taxon_concept_id,
-    taxon_concepts.full_name AS taxon,
+    full_name_with_spp(ranks.name, taxon_concepts.full_name) AS taxon,
     reported_taxon_concept_id,
     reported_taxon_concepts.full_name AS reported_taxon,
     importer_id,
@@ -38,6 +38,8 @@ WITH shipments AS (
   FROM trade_shipments shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
+  JOIN ranks
+    ON ranks.id = taxon_concepts.rank_id
   LEFT JOIN taxon_concepts reported_taxon_concepts
     ON reported_taxon_concept_id = reported_taxon_concepts.id
   JOIN geo_entities importers
@@ -60,6 +62,7 @@ WITH shipments AS (
     appendix,
     taxon_concept_id,
     taxon_concepts.full_name,
+    ranks.name,
     reported_taxon_concept_id,
     reported_taxon_concepts.full_name,
     importer_id,
