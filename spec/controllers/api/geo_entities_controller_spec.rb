@@ -57,7 +57,7 @@ describe Api::V1::GeoEntitiesController do
       response.body.should have_json_size(2).at_path('geo_entities')
     end
     it "returns countries & territories" do
-      get :index, :geo_entity_types => [:country, :territory]
+      get :index, :geo_entity_types_set => "2"
       response.body.should have_json_size(3).at_path('geo_entities')
     end
   end
