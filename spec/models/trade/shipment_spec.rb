@@ -150,9 +150,14 @@ describe Trade::Shipment do
     context "when term + unit" do
       before(:each) do
         @cav = create(:term, :code => "CAV")
+        @cap = create(:term, :code => "CAP")
         @bag = create(:unit, :code => "BAG")
         @kil = create(:unit, :code => "KIL")
         create(:term_trade_codes_pair, :term_id => @cav.id, :trade_code_id => @kil.id,
+            :trade_code_type => @kil.type)
+        create(:term_trade_codes_pair, :term_id => @cav.id, :trade_code_id => nil,
+            :trade_code_type => @kil.type)
+        create(:term_trade_codes_pair, :term_id => @cap.id, :trade_code_id => @kil.id,
             :trade_code_type => @kil.type)
         create_term_unit_validation
       end
@@ -173,6 +178,24 @@ describe Trade::Shipment do
           )
         }
         specify { subject.warnings.should be_empty }
+      end
+      context "blank unit is valid" do
+        subject{
+          create(
+            :shipment,
+            :term => @cav, :unit => nil
+          )
+        }
+        specify { subject.warnings.should be_empty }
+      end
+      context "blank unit is invalid" do
+        subject{
+          create(
+            :shipment,
+            :term => @cap, :unit => nil
+          )
+        }
+        specify { subject.warnings.should_not be_empty }
       end
     end
     context "when term + purpose" do

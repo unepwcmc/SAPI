@@ -568,37 +568,39 @@ $(document).ready(function(){
   }
 
   //Autocomplete for cites_genus
-  $("#genus_search").autocomplete({
-  	source: function(request, response) {
-      var term = request.term;
-      $.ajax({
-        url: "/api/v1/auto_complete_taxon_concepts",
-        dataType: "json",
-        data: {
-          taxonomy: 'CITES',
-          taxon_concept_query: request.term,
-          autocomplete: true,
-          'ranks[]': 'GENUS'
-        },
-        success: function(data) {
-          response(parseTaxonData(data, term));
-        },
-  			error : function(xhr, ajaxOptions, thrownError){
-  				growlMe(xhr.status + " ====== " + thrownError);
-  			}
-      });
-    },
-  	select: function( event, ui ) {
-  		$(this).val(ui.item.label);
-      selected_taxa = ui.item.value;
-  		$('#species_out').text(ui.item.label);	
-  		return false;
-  	}
-  }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
-    return $( "<li>" )
-      .append( "<a>" + item.drop_label + "</a>" )
-      .appendTo( ul );
-    };
+  if (is_search_page) {
+    $("#genus_search").autocomplete({
+    	source: function(request, response) {
+        var term = request.term;
+        $.ajax({
+          url: "/api/v1/auto_complete_taxon_concepts",
+          dataType: "json",
+          data: {
+            taxonomy: 'CITES',
+            taxon_concept_query: request.term,
+            autocomplete: true,
+            'ranks[]': 'GENUS'
+          },
+          success: function(data) {
+            response(parseTaxonData(data, term));
+          },
+    			error : function(xhr, ajaxOptions, thrownError){
+    				growlMe(xhr.status + " ====== " + thrownError);
+    			}
+        });
+      },
+    	select: function( event, ui ) {
+    		$(this).val(ui.item.label);
+        selected_taxa = ui.item.value;
+    		$('#species_out').text(ui.item.label);	
+    		return false;
+    	}
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+      return $( "<li>" )
+        .append( "<a>" + item.drop_label + "</a>" )
+        .appendTo( ul );
+      };
+  }
 
   show_values_selection();
 

@@ -2,6 +2,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
+  csvSeparator: "comma_separated"
 
   init: ->
     transaction = @get('store').transaction()
@@ -215,38 +216,44 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   rawDownloadUrl: (->
     params = @get('searchParamsForUrl')
     params['report_type'] = 'raw'
+    params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl')
+  ).property('searchParamsForUrl', 'csvSeparator')
 
   comptabDownloadUrl: (->
     params = @get('searchParamsForUrl')
     params['report_type'] = 'comptab'
+    params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl')
+  ).property('searchParamsForUrl', 'csvSeparator')
 
   grossExportsDownloadUrl: (->
     params = @get('searchParamsForUrl')
     params['report_type'] = 'gross_exports'
+    params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl')
+  ).property('searchParamsForUrl', 'csvSeparator')
 
   grossImportsDownloadUrl: (->
     params = @get('searchParamsForUrl')
     params['report_type'] = 'gross_imports'
+    params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl')
+  ).property('searchParamsForUrl', 'csvSeparator')
 
   netExportsDownloadUrl: (->
     params = @get('searchParamsForUrl')
     params['report_type'] = 'net_exports'
+    params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl')
+  ).property('searchParamsForUrl', 'csvSeparator')
 
   netImportsDownloadUrl: (->
     params = @get('searchParamsForUrl')
     params['report_type'] = 'net_imports'
+    params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl')
+  ).property('searchParamsForUrl', 'csvSeparator')
 
   resetFilters: ->
     @beginPropertyChanges()
@@ -278,7 +285,10 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     )
 
   actions:
+
+    
     # creates a local new shipment (bound to currentShipment)
+
     newShipment: () ->
       @set('currentShipment', Trade.Shipment.createRecord())
       $('.shipment-form-modal').modal('show')
@@ -326,6 +336,21 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
             @flashMessage('Successfully deleted shipment.')
             @resetFilters()
           )
+
+    deleteFiltered: ->
+      if confirm("This will delete all filtered shipments. Are you sure?")
+        $.post '/trade/shipments/destroy_batch', @get('searchParamsForTransition'), (data) ->
+           'json'
+        .success( =>
+          @set('currentShipment', null)
+          @flashMessage('Successfully deleted filtered shipments.')
+          @resetFilters()
+        )
+        #.error( (xhr, msg, error) =>
+        #  @set('sandboxShipmentsSubmitting', false)
+        #  console.log "bad luck: ", xhr.responseText
+        #)
+
 
     editShipment: (shipment) ->
       @set('currentShipment', shipment)

@@ -75,6 +75,37 @@ describe Species::TaxonConceptPrefixMatcher do
         }
         specify { subject.results.should include(@family)}
       end
+      #check ranks filtering
+      context "when explicitly listed higher taxon but ranks expected FAMILY" do
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'boidae',
+            :ranks => ["FAMILY"]
+          })
+        }
+        specify { subject.results.should include(@family)}
+      end
+      context "when explicitly listed higher taxon but ranks expected SPECIES" do
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'boidae',
+            :ranks => ["SPECIES"]
+          })
+        }
+        specify { subject.results.should be_empty }
+      end
+      context "when searching for name that matches Species and Subspecies but  ranks expected SUBSPECIES" do
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'boa constrictor',
+            :ranks => ["SUBSPECIES"]
+          })
+        }
+        specify {
+          subject.results.should_not include(@species)
+          subject.results.should include(@subspecies1)
+        }
+      end
     end
   end
 end
