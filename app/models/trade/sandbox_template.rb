@@ -97,15 +97,15 @@ class Trade::SandboxTemplate < ActiveRecord::Base
 
   def self.create_indexes_stmt(target_table_name)
     sql = <<-SQL
-      CREATE INDEX ON #{target_table_name} (squish_null(trading_partner));
-      CREATE INDEX ON #{target_table_name} (squish_null(term_code));
-      CREATE INDEX ON #{target_table_name} (squish_null(species_name));
-      CREATE INDEX ON #{target_table_name} (squish_null(appendix));
-      CREATE INDEX ON #{target_table_name} (squish_null(quantity));
-      CREATE INDEX ON #{target_table_name} (squish_null(source_code));
-      CREATE INDEX ON #{target_table_name} (squish_null(purpose_code));
-      CREATE INDEX ON #{target_table_name} (squish_null(unit_code));
-      CREATE INDEX ON #{target_table_name} (squish_null(country_of_origin));
+      CREATE INDEX ON #{target_table_name} (trading_partner);
+      CREATE INDEX ON #{target_table_name} (term_code);
+      CREATE INDEX ON #{target_table_name} (species_name);
+      CREATE INDEX ON #{target_table_name} (appendix);
+      CREATE INDEX ON #{target_table_name} (quantity);
+      CREATE INDEX ON #{target_table_name} (source_code);
+      CREATE INDEX ON #{target_table_name} (purpose_code);
+      CREATE INDEX ON #{target_table_name} (unit_code);
+      CREATE INDEX ON #{target_table_name} (country_of_origin);
     SQL
   end
 

@@ -35,7 +35,7 @@ FactoryGirl.define do
   end
 
   factory :taxon_name do
-    sequence(:scientific_name) {|n| "lupus#{n}"}
+    sequence(:scientific_name) {|n| "Lupus#{n}"}
   end
 
   factory :rank do
