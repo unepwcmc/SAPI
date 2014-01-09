@@ -13,7 +13,7 @@ module Trade::ShipmentReportQueries
     importers.iso_code2 AS importer,
     exporter_id,
     exporters.iso_code2 AS exporter,
-    COALESCE(country_of_origin_id, 9991) AS source_id,
+    country_of_origin_id,
     countries_of_origin.iso_code2 AS country_of_origin,
     CASE WHEN #{importer_quantity_sum} = 0 THEN '' ELSE #{importer_quantity_sum} :: char END AS importer_quantity,
     CASE WHEN #{exporter_quantity_sum} = 0 THEN '' ELSE #{exporter_quantity_sum} :: char END AS exporter_quantity,
@@ -22,15 +22,15 @@ module Trade::ShipmentReportQueries
     terms.name_en AS term_name_en,
     terms.name_es AS term_name_es,
     terms.name_fr AS term_name_fr,
-    COALESCE(unit_id, 9991) as unit_id,
-    units.code as unit,
+    unit_id,
+    units.code AS unit,
     units.name_en AS unit_name_en,
     units.name_es AS unit_name_es,
     units.name_fr AS unit_name_fr,
-    COALESCE(purpose_id, 9991) as purpose_id,
+    purpose_id,
     purposes.code AS purpose,
-    COALESCE(source_id, 9991) AS source_id,
-    sources.code as source
+    source_id,
+    sources.code AS source
   FROM (#{@search.query.to_sql}) shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
