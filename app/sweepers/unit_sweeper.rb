@@ -16,6 +16,9 @@ class UnitSweeper < ActionController::Caching::Sweeper
   private
 
   def expire_cache(tc)
-    expire_action(:controller => "api/v1/units", :action => "index")
+    ["en", "fr", "es"].each do |lang|
+      expire_action(:controller => "api/v1/units", :action => "index",
+                    :locale => lang)
+    end
   end
 end

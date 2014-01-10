@@ -17,4 +17,4 @@ Species.GeoEntitiesController = Ember.ArrayController.extend
 
   load: ->
     unless @get('loaded')
-      @set('content', Species.GeoEntity.find({geo_entity_types: ['CITES_REGION', 'COUNTRY', 'TERRITORY']}))
+      @set('content', Species.GeoEntity.find({geo_entity_types_set: "3"}))

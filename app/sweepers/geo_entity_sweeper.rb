@@ -16,7 +16,20 @@ class GeoEntitySweeper < ActionController::Caching::Sweeper
   private
 
   def expire_cache(tc)
-    expire_action(:controller => "checklist/geo_entities", :action => "index")
-    expire_action(:controller => "api/v1/geo_entities", :action => "index")
+    ["en", "fr", "es"].each do |lang|
+      ["1", "2"].each do |set|
+        expire_action(:controller => "/checklist/geo_entities", :action => "index",
+                     :geo_entity_types_set => set, :locale => lang)
+      end
+    end
+
+    expire_params = { :controller => "/api/v1/geo_entities", :action => "index"}
+    ["en", "fr", "es"].each do |lang|
+      ["1", "2", "3", "4"].each do |set|
+        expire_action(
+          expire_params.merge({ :geo_entity_types_set => set, :locale => lang })
+        )
+      end
+    end
   end
 end
