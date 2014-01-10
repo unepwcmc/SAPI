@@ -1,5 +1,7 @@
 class Api::V1::SourcesController < ApplicationController
-  caches_action :index, :cache_path => Proc.new { |c| c.params }
+  caches_action :index, :cache_path => Proc.new { |c|
+      {:locale => "en"}.merge(c.params.select{|k,v| "locale" == k})
+    }
   def index
     @sources = Source.all(:order => "code")
     render :json => @sources,

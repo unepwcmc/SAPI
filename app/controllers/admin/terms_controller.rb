@@ -1,6 +1,7 @@
 class Admin::TermsController < Admin::SimpleCrudController
   inherit_resources
   respond_to :json, :only => [:update]
+  cache_sweeper :term_sweeper
 
   def index
     index! do |format|

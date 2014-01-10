@@ -1,6 +1,7 @@
 class Admin::UnitsController < Admin::AdminController
   inherit_resources
   respond_to :json, :only => [:update]
+  cache_sweeper :unit_sweeper
 
   def index
     index! do |format|
