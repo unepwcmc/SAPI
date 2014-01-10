@@ -13,8 +13,8 @@ module Trade::ShipmentReportQueries
     exporters.iso_code2 AS exporter,
     country_of_origin_id,
     countries_of_origin.iso_code2 AS country_of_origin,
-    SUM(CASE WHEN reported_by_exporter THEN 0 ELSE quantity END) AS importer_quantity,
-    SUM(CASE WHEN reported_by_exporter THEN quantity ELSE 0 END) AS exporter_quantity,
+    SUM(CASE WHEN reported_by_exporter THEN NULL ELSE quantity END) AS importer_quantity,
+    SUM(CASE WHEN reported_by_exporter THEN quantity ELSE NULL END) AS exporter_quantity,
     term_id,
     terms.code AS term,
     terms.name_en AS term_name_en,
@@ -93,8 +93,8 @@ module Trade::ShipmentReportQueries
     exporter_id,
     exporters.iso_code2 AS exporter,
     GREATEST(
-      SUM(CASE WHEN reported_by_exporter THEN 0 ELSE quantity END),
-      SUM(CASE WHEN reported_by_exporter THEN quantity ELSE 0 END)
+      SUM(CASE WHEN reported_by_exporter THEN NULL ELSE quantity END),
+      SUM(CASE WHEN reported_by_exporter THEN quantity ELSE NULL END)
     ) AS gross_quantity,
     term_id,
     terms.code AS term,
@@ -269,7 +269,7 @@ module Trade::ShipmentReportQueries
     CASE
       WHEN (exports.gross_quantity - COALESCE(imports.gross_quantity, 0)) > 0
       THEN exports.gross_quantity - COALESCE(imports.gross_quantity, 0)
-      ELSE 0
+      ELSE NULL
     END AS gross_quantity
   FROM exports
   LEFT JOIN imports
@@ -312,7 +312,7 @@ module Trade::ShipmentReportQueries
     CASE
       WHEN (imports.gross_quantity - COALESCE(exports.gross_quantity, 0)) > 0
       THEN imports.gross_quantity - COALESCE(exports.gross_quantity, 0)
-      ELSE 0
+      ELSE NULL
     END AS gross_quantity
   FROM imports
   LEFT JOIN exports

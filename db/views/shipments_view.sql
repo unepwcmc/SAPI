@@ -20,7 +20,7 @@ WITH shipments AS (
     END AS reporter_type,
     country_of_origin_id,
     countries_of_origin.iso_code2 AS country_of_origin,
-    quantity,
+    CASE WHEN quantity = 0 THEN NULL ELSE quantity END,
     unit_id,
     units.code AS unit,
     units.name_en AS unit_name_en,
