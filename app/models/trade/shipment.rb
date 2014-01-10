@@ -127,7 +127,7 @@ class Trade::Shipment < ActiveRecord::Base
   def set_permit_number(permit_type, str, geo_entity_id)
     if str
       permits = str.split(';').compact.map do |number|
-        Trade::Permit.find_or_create_by_number_and_geo_entity_id(number, geo_entity_id)
+        Trade::Permit.find_or_create_by_number_and_geo_entity_id(number.strip, geo_entity_id)
       end
       self.send("#{permit_type}_permits=", permits)
     end
