@@ -134,10 +134,10 @@ module Sapi
         ON trade_shipments
         USING btree
         (year);
-      CREATE INDEX index_trade_shipments_on_legacy_id
+      CREATE INDEX index_trade_shipments_on_legacy_shipment_number
         ON trade_shipments
         USING btree
-        (legacy_id);
+        (legacy_shipment_number);
       CREATE INDEX index_trade_shipments_on_permits_ids
         ON trade_shipments
         USING GIN
