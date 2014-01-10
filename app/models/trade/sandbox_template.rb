@@ -52,6 +52,36 @@ class Trade::SandboxTemplate < ActiveRecord::Base
           :purpose_code,
           :source_code,
           :year
+
+        def sanitize
+          self.class.sanitize(self.id)
+        end
+
+        def self.sanitize(id = nil)
+          update_all(
+            'species_name = sanitize_species_name(species_name),
+            appendix = UPPER(SQUISH_NULL(appendix)),
+            year = SQUISH_NULL(year),
+            term_code = UPPER(SQUISH_NULL(term_code)),
+            unit_code = UPPER(SQUISH_NULL(unit_code)),
+            purpose_code = UPPER(SQUISH_NULL(purpose_code)),
+            source_code = UPPER(SQUISH_NULL(source_code)),
+            quantity = SQUISH_NULL(quantity),
+            trading_partner = UPPER(SQUISH_NULL(trading_partner)),
+            country_of_origin = UPPER(SQUISH_NULL(country_of_origin)),
+            import_permit = UPPER(SQUISH_NULL(import_permit)),
+            export_permit = UPPER(SQUISH_NULL(export_permit)),
+            origin_permit = UPPER(SQUISH_NULL(origin_permit))
+            ',
+            id.blank? ? nil : {:id => id}
+          )
+        end
+
+        def save(attributes = {})
+          super(attributes)
+          sanitize
+        end
+
       end
       Trade.const_set(klass_name, klass)
     end
@@ -67,15 +97,15 @@ class Trade::SandboxTemplate < ActiveRecord::Base
 
   def self.create_indexes_stmt(target_table_name)
     sql = <<-SQL
-      CREATE INDEX ON #{target_table_name} (squish_null(trading_partner));
-      CREATE INDEX ON #{target_table_name} (squish_null(term_code));
-      CREATE INDEX ON #{target_table_name} (squish_null(species_name));
-      CREATE INDEX ON #{target_table_name} (squish_null(appendix));
-      CREATE INDEX ON #{target_table_name} (squish_null(quantity));
-      CREATE INDEX ON #{target_table_name} (squish_null(source_code));
-      CREATE INDEX ON #{target_table_name} (squish_null(purpose_code));
-      CREATE INDEX ON #{target_table_name} (squish_null(unit_code));
-      CREATE INDEX ON #{target_table_name} (squish_null(country_of_origin));
+      CREATE INDEX ON #{target_table_name} (trading_partner);
+      CREATE INDEX ON #{target_table_name} (term_code);
+      CREATE INDEX ON #{target_table_name} (species_name);
+      CREATE INDEX ON #{target_table_name} (appendix);
+      CREATE INDEX ON #{target_table_name} (quantity);
+      CREATE INDEX ON #{target_table_name} (source_code);
+      CREATE INDEX ON #{target_table_name} (purpose_code);
+      CREATE INDEX ON #{target_table_name} (unit_code);
+      CREATE INDEX ON #{target_table_name} (country_of_origin);
     SQL
   end
 
@@ -102,7 +132,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
 
   def self.drop_stmt(target_table_name)
     sql = <<-SQL
-      DROP TABLE #{target_table_name} CASCADE
+      DROP TABLE IF EXISTS #{target_table_name} CASCADE
     SQL
   end
 

@@ -33,7 +33,7 @@ class Trade::PresenceValidationRule < Trade::ValidationRule
   def error_selector(matching_records)
     res = {}
     column_names.each do |cn|
-      res[cn] = nil if matching_records.select("SQUISH_NULL(#{cn}) AS #{cn}").count > 0
+      res[cn] = nil if matching_records.select(cn).count > 0
     end
     res
   end
@@ -44,8 +44,7 @@ class Trade::PresenceValidationRule < Trade::ValidationRule
   def matching_records(table_name)
     s = Arel::Table.new(table_name)
     arel_nodes = column_names.map do |c|
-      func =Arel::Nodes::NamedFunction.new 'SQUISH_NULL', [s[c]]
-      func.eq(nil)
+      s[c].eq(nil)
     end
     conditions = arel_nodes.shift
     arel_nodes.each{ |n| conditions = conditions.and(n) }

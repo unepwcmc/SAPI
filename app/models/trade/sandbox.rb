@@ -10,6 +10,7 @@ class Trade::Sandbox
   def copy
     create_target_table
     copy_csv_to_target_table
+    @ar_klass.sanitize
   end
 
   def destroy
