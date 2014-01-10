@@ -88,15 +88,13 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # Returns matching records grouped by column_names to return the count of
   # specific errors and ids of matching records
   def matching_records_grouped(table_name)
-    squished_column_names = column_names.map{ |c| "SQUISH_NULL(#{c})" }
-    squished_required_column_names = required_column_names.map{ |c| "SQUISH_NULL(#{c})" }
     Trade::SandboxTemplate.
     select(
-      squished_column_names.each_with_index.map { |c, idx| "#{c} AS #{column_names[idx]}"} +
+      column_names +
       ['COUNT(*) AS error_count', 'ARRAY_AGG(id) AS matching_records_ids']
     ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
-    group(squished_column_names).having(
-      squished_required_column_names.map{ |cn| "#{cn} IS NOT NULL"}.join(' AND ')
+    group(column_names).having(
+      required_column_names.map{ |cn| "#{cn} IS NOT NULL"}.join(' AND ')
     )
   end
 
@@ -105,8 +103,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # Pass Arel::Table
   def scoped_records_arel(s)
     not_null_nodes = required_column_names.map do |c|
-      func =Arel::Nodes::NamedFunction.new 'SQUISH_NULL', [s[c]]
-      func.not_eq(nil)
+      s[c].not_eq(nil)
     end
     not_null_conds = not_null_nodes.shift
     not_null_nodes.each{ |n| not_null_conds = not_null_conds.and(n) }
@@ -129,17 +126,12 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     s = Arel::Table.new(table_name)
     v = Arel::Table.new(valid_values_view)
     arel_nodes = column_names.map do |c|
-      func = Arel::Nodes::NamedFunction.new 'SQUISH_NULL', [s[c]]
-      if c == 'species_name'
-        reference = Arel::Nodes::NamedFunction.new 'LOWER', [v[c]]
-        sample = Arel::Nodes::NamedFunction.new 'LOWER', [func]
-        reference.eq(sample)
-      elsif required_column_names.include? c
-        v[c].eq(func)
+      if required_column_names.include? c
+        v[c].eq(s[c])
       else
         # if optional, check if NULL is allowed for this particular combination
         # e.g. unit code can be blank only if paired with certain terms
-        v[c].eq(func).or(v[c].eq(nil).and(func.eq(nil)))
+        v[c].eq(s[c]).or(v[c].eq(nil).and(s[c].eq(nil)))
       end
     end
     join_conditions = arel_nodes.shift

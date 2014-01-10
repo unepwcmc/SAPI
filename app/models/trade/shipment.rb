@@ -37,7 +37,7 @@ class Trade::Shipment < ActiveRecord::Base
     :greater_than_or_equal_to => 0, :message => 'should be a positive number'
   }
   validates :appendix, presence: true, :inclusion => {
-    :in => ['I', 'II', 'III'], :message => 'should be one of I, II, III'
+    :in => ['I', 'II', 'III', 'N'], :message => 'should be one of I, II, III, N'
   }
   validates :year, presence: true, :numericality => {
     :only_integer => true, :greater_than_or_equal_to => 1975, :less_than => 3000,
