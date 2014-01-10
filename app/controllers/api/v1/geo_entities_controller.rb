@@ -2,7 +2,6 @@ class Api::V1::GeoEntitiesController < ApplicationController
   caches_action :index, :cache_path => Proc.new { |c| c.params.select{ |k,v|
     ["geo_entity_types_set", "locale"].include?(k)
   }}
-  cache_sweeper :geo_entity_sweeper
 
   def index
     locale = params['locale'] || I18n.locale
