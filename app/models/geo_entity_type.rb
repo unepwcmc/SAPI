@@ -15,6 +15,7 @@ class GeoEntityType < ActiveRecord::Base
   build_dictionary :country, :cites_region, :region, :territory,
     :aquatic_territory, :bru, :trade_entity
 
+  DEFAULT_SET = "2"
   SETS = {
     "1" => [CITES_REGION],
     "2" => [COUNTRY, TERRITORY],
