@@ -7,4 +7,5 @@ class Trade::ShipmentSerializer < ActiveModel::Serializer
 
   has_one :taxon_concept, :serializer => Trade::TaxonConceptSerializer
   has_one :reported_taxon_concept, :serializer => Trade::TaxonConceptSerializer
+
 end
