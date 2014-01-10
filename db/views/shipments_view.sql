@@ -8,7 +8,7 @@ WITH shipments AS (
     taxon_concept_id,
     full_name_with_spp(ranks.name, taxon_concepts.full_name) AS taxon,
     reported_taxon_concept_id,
-    reported_taxon_concepts.full_name AS reported_taxon,
+    full_name_with_spp(reported_taxon_ranks.name, reported_taxon_concepts.full_name) AS reported_taxon,
     importer_id,
     importers.iso_code2 AS importer,
     exporter_id,
@@ -42,6 +42,8 @@ WITH shipments AS (
     ON ranks.id = taxon_concepts.rank_id
   LEFT JOIN taxon_concepts reported_taxon_concepts
     ON reported_taxon_concept_id = reported_taxon_concepts.id
+  JOIN ranks AS reported_taxon_ranks
+    ON reported_taxon_ranks.id = reported_taxon_concepts.rank_id
   JOIN geo_entities importers
     ON importers.id = importer_id
   JOIN geo_entities exporters
@@ -65,6 +67,7 @@ WITH shipments AS (
     ranks.name,
     reported_taxon_concept_id,
     reported_taxon_concepts.full_name,
+    reported_taxon_ranks.name,
     importer_id,
     importers.iso_code2,
     exporter_id,
