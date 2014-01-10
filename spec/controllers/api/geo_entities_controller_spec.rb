@@ -44,17 +44,9 @@ describe Api::V1::GeoEntitiesController do
     )
   }
   describe "GET index" do
-    it "returns CITES parties only" do
-      get :index, :geo_entity_type => :country, :designation => :cites
-      response.body.should have_json_size(1).at_path('geo_entities')
-    end
     it "returns regions" do
-      get :index, :geo_entity_type => :cites_region
+      get :index, :geo_entity_types_set => "1"
       response.body.should have_json_size(1).at_path('geo_entities')
-    end
-    it "returns countries" do
-      get :index, :geo_entity_type => :country
-      response.body.should have_json_size(2).at_path('geo_entities')
     end
     it "returns countries & territories" do
       get :index, :geo_entity_types_set => "2"
