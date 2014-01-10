@@ -27,11 +27,7 @@ class GeoEntitySweeper < ActionController::Caching::Sweeper
     ["en", "fr", "es"].each do |lang|
       ["1", "2", "3", "4"].each do |set|
         expire_action(
-          if lang.present?
-            expire_params.merge({ :geo_entity_types_set => set, :locale => lang })
-          else
-            expire_params.merge({ :geo_entity_types_set => set })
-          end
+          expire_params.merge({ :geo_entity_types_set => set, :locale => lang })
         )
       end
     end
