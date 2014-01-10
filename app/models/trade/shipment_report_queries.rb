@@ -135,6 +135,7 @@ module Trade::ShipmentReportQueries
     importers.iso_code2,
     exporter_id,
     exporters.iso_code2,
+    country_of_origin_id,
     unit_id,
     units.code,
     units.name_en,
@@ -144,7 +145,9 @@ module Trade::ShipmentReportQueries
     terms.code,
     terms.name_en,
     terms.name_es,
-    terms.name_fr"
+    terms.name_fr,
+    purpose_id,
+    source_id"
   end
 
   def gross_exports_query
