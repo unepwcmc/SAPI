@@ -1,7 +1,10 @@
 Trade.AnnualReportUploadController = Ember.ObjectController.extend
+  #needs: ['sandboxShipments']
   content: null
   visibleShipments: []
   filtersSelected: false
+
+  sandboxShipmentsController: null
 
   tableController: Ember.computed ->
     controller = Ember.get('Trade.SandboxShipmentsTable.TableController').create()
@@ -12,6 +15,8 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
   sandboxShipmentsDidLoad: ( ->
     @set('visibleShipments', @get('content.sandboxShipments'))
     @set('sandboxShipmentsLoaded', true)
+    @sandboxShipmentsController = Ember.get('Trade.SandboxShipmentsController').create()
+    @sandboxShipmentsController.set('visibleShipments', @get('visibleShipments'))
   ).observes('content.sanboxShipments.@each.didLoad')
 
   sandboxShipmentsSaving: ( ->

@@ -89,9 +89,15 @@
   {{/if}}
 </div>
 
-<div class='presentation-container'>
-  {{view Trade.SandboxShipmentsTable.TablesContainer
-    controllerBinding="tableController"
-    selectionBinding="tableController.selection"
-  }}
+<div class='shipments-presentation-container'>
+  <table>
+    <thead>
+      <tr><th>Actions</th>{{dataHead sandboxShipmentsController.columns}}</tr>
+    </thead>
+    <tbody>
+    {{#each sandboxShipmentsController.visibleShipments}}
+      {{view Trade.SandboxShipmentTableView contentBinding='sandboxShipmentsController'}}
+    {{/each}}
+    </tbody>
+  </table>
 </div>
