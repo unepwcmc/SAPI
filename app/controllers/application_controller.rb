@@ -5,5 +5,4 @@ class ApplicationController < ActionController::Base
     # if params[:locale] is nil then I18n.default_locale will be used
     I18n.locale = params[:locale]
   end
-
 end
