@@ -2,15 +2,15 @@ class Trade::ExportsController < ApplicationController
   respond_to :json
 
   def download
-    
+
     search = Trade::ShipmentsExportFactory.new(params[:filters])
 
     respond_to do |format|
-      
+
       format.html {
         result = search.export
         if result.is_a?(Array)
-          send_file result[0], result[1]
+          send_file Pathname.new(result[0]).realpath, result[1]
           rows = search.total_cnt
           Trade::TradeDataDownloadLogger.log_download request, params, rows
         else
@@ -27,7 +27,7 @@ class Trade::ExportsController < ApplicationController
     stats = Trade::TradeDataDownloadLogger.export
     respond_to do |format|
       format.html {
-        send_file stats, :type => 'text/csv'
+        send_file Pathname.new(stats).realpath, :type => 'text/csv'
       }
     end
   end

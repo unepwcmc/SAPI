@@ -14,7 +14,7 @@ class Species::ExportsController < ApplicationController
     respond_to do |format|
       format.html {
         if result.is_a?(Array)
-          send_file result[0], result[1]
+          send_file Pathname.new(result[0]).realpath, result[1]
         else
           redirect_to species_exports_path, :notice => "There are no #{params[:data_type]} to download."
         end
