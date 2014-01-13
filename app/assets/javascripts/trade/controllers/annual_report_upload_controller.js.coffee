@@ -1,22 +1,39 @@
 Trade.AnnualReportUploadController = Ember.ObjectController.extend
-  #needs: ['sandboxShipments']
+  needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   visibleShipments: []
+  currentShipment: null
+  currentCountryOfOriginId: null
   filtersSelected: false
 
-  sandboxShipmentsController: null
+  columns: [
+    'appendix', 'speciesName',
+    'termCode', 'quantity',  'unitCode',
+    'tradingPartner', 'countryOfOrigin',
+    'importPermit', 'exportPermit', 'originPermit',
+    'purposeCode', 'sourceCode', 'year'
+  ]
+  codeMappings: {}
+  allAppendices: [
+    Ember.Object.create({id: 'I', name: 'Appendix I'}),
+    Ember.Object.create({id: 'II', name: 'Appendix II'}),
+    Ember.Object.create({id: 'III', name: 'Appendix III'})
+  ]
+  allReporterTypeValues: ['E', 'I']
 
-  tableController: Ember.computed ->
-    controller = Ember.get('Trade.SandboxShipmentsTable.TableController').create()
-    controller.set('annualReportUploadController', @)
-    controller
-  .property('sandboxShipmentsLoaded')
+  #sandboxShipmentsController: null
+
+  #tableController: Ember.computed ->
+  #  controller = Ember.get('Trade.SandboxShipmentsTable.TableController').create()
+  #  controller.set('annualReportUploadController', @)
+  #  controller
+  #.property('sandboxShipmentsLoaded')
 
   sandboxShipmentsDidLoad: ( ->
     @set('visibleShipments', @get('content.sandboxShipments'))
     @set('sandboxShipmentsLoaded', true)
-    @sandboxShipmentsController = Ember.get('Trade.SandboxShipmentsController').create()
-    @sandboxShipmentsController.set('visibleShipments', @get('visibleShipments'))
+    #@sandboxShipmentsController = Ember.get('Trade.SandboxShipmentsController').create()
+    #@sandboxShipmentsController.set('visibleShipments', @get('visibleShipments'))
   ).observes('content.sanboxShipments.@each.didLoad')
 
   sandboxShipmentsSaving: ( ->
@@ -201,6 +218,11 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
   ).property('tableController.columnNames')
 
   actions:
+
+    editShipment: (shipment) ->
+      @set('currentShipment', shipment)
+      $('.shipment-form-modal').modal('show')
+
     submitShipments: ()->
       if @get('content.isDirty')
         alert "You have unsaved changes, please save those before submitting your shipments"
