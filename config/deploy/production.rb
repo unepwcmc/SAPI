@@ -41,6 +41,15 @@ server {
   add_header 'Access-Control-Allow-Methods' "GET, POST, PUT, DELETE, OPTIONS";
   add_header 'Access-Control-Allow-Headers' "X-Requested-With, X-Prototype-Version";
   add_header 'Access-Control-Max-Age' 1728000;
+
+    # Enable serving files through nginx
+    passenger_set_cgi_param HTTP_X_ACCEL_MAPPING /home/rails/sapi/shared/public/downloads/=/downloads/;
+    passenger_pass_header X-Accel-Redirect;
+
+    location ~ ^/downloads/(.*)$ {
+      alias /home/rails/sapi/shared/public/downloads/$1;
+      internal;
+    }
   
   gzip on;
   location ^~ /assets/ {

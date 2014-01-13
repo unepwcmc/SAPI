@@ -24,7 +24,7 @@ vhost_config =<<-EOF
 server {
   listen 80;
   client_max_body_size 4G;
-  server_name #{application}.unepwcmc-012.vm.brightbox.net #{application}.sw02.matx.info;
+  server_name #{application}.unepwcmc-013.vm.brightbox.net #{application}.sw02.matx.info;
   keepalive_timeout 5;
   root #{deploy_to}/current/public;
   passenger_enabled on;
@@ -34,13 +34,22 @@ server {
   add_header 'Access-Control-Allow-Methods' "GET, POST, PUT, DELETE, OPTIONS";
   add_header 'Access-Control-Allow-Headers' "X-Requested-With, X-Prototype-Version";
   add_header 'Access-Control-Max-Age' 1728000;
-  
+
+  # Enable serving files through nginx
+  passenger_set_cgi_param HTTP_X_ACCEL_MAPPING /home/rails/sapi/shared/public/downloads/=/downloads/;
+  passenger_pass_header X-Accel-Redirect;
+
+  location ~ ^/downloads/(.*)$ {
+    alias /home/rails/sapi/shared/public/downloads/$1;
+    internal;
+  }
+
   gzip on;
   location ^~ /assets/ {
     expires max;
     add_header Cache-Control public;
   }
-  
+
   if (-f $document_root/system/maintenance.html) {
     return 503;
   }
