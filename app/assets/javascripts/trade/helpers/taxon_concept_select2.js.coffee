@@ -17,9 +17,14 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
       closeOnSelect: this.get('closeOnSelect')
       width: this.get('width')
       initSelection: (element, callback) =>
-        # value is the id
-        tc = Trade.TaxonConcept.find(@get('value'))
-        callback({id: tc.get('id'), text: tc.get('fullName')})
+        value = @get('value')
+        # if value is the id
+        if typeof(value) is 'number'
+          tc = Trade.TaxonConcept.find(value)
+          callback({id: tc.get('id'), text: tc.get('fullName')})
+        # but value can also be a name
+        else
+          callback({id: 'init-selection-value', text: value})
       ajax:
         url: "/api/v1/auto_complete_taxon_concepts.json"
         dataType: 'json'

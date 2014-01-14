@@ -152,17 +152,9 @@
   </form>
 </div>
 <div class="modal-footer">
-  {{confirm-button title="Save changes" action="saveShipment" shipmentBinding="currentShipment"
-    needsConfirmationBinding="currentShipment.warningsConfirmation"
-    ignoreWarningBinding="currentShipment.ignoreWarnings"
+  {{confirm-button title="Update" action="updateShipment" shipmentBinding="currentShipment"
   }}
   <button {{action 'cancelShipment'}} class="pull-right btn btn-primary">
     Cancel
   </button>
-  {{#if currentShipment.warningsPresent}}
-    <span class="label label-warning">WARNING</span> Secondary errors detected.
-    {{#if currentShipment.warningsConfirmation}}
-      Click 'Save changes' again to save anyway.
-    {{/if}}
-  {{/if}}
 </div>

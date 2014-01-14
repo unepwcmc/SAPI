@@ -98,7 +98,7 @@
     </thead>
     <tbody>
     {{#each controller.visibleShipments}}
-      {{view Trade.ShipmentTableView contentBinding='controller.visibleShipments'}}
+      {{view Trade.ShipmentTableView valueBinding='this'}}
     {{/each}}
     </tbody>
   </table>
