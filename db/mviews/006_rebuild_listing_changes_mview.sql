@@ -1,3 +1,74 @@
+CREATE OR REPLACE FUNCTION rebuild_cites_eu_taxon_concepts_and_ancestors_mview() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  DECLARE
+    taxonomy taxonomies%ROWTYPE;
+  BEGIN
+    SELECT * INTO taxonomy FROM taxonomies WHERE name = 'CITES_EU';
+    IF FOUND THEN
+      PERFORM rebuild_taxonomy_taxon_concepts_and_ancestors_mview(taxonomy);
+    END IF;
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION rebuild_cms_taxon_concepts_and_ancestors_mview() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  DECLARE
+    taxonomy taxonomies%ROWTYPE;
+  BEGIN
+    SELECT * INTO taxonomy FROM taxonomies WHERE name = 'CMS';
+    IF FOUND THEN
+      PERFORM rebuild_taxonomy_taxon_concepts_and_ancestors_mview(taxonomy);
+    END IF;
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION rebuild_cites_listing_changes_mview() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  DECLARE
+    taxonomy taxonomies%ROWTYPE;
+    designation designations%ROWTYPE;
+  BEGIN
+    SELECT * INTO designation FROM designations WHERE name = 'CITES';
+    IF FOUND THEN
+      SELECT * INTO taxonomy FROM taxonomies WHERE id = designation.taxonomy_id;
+      PERFORM rebuild_designation_listing_changes_mview(taxonomy, designation);
+    END IF;
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION rebuild_eu_listing_changes_mview() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  DECLARE
+    taxonomy taxonomies%ROWTYPE;
+    designation designations%ROWTYPE;
+  BEGIN
+    SELECT * INTO designation FROM designations WHERE name = 'EU';
+    IF FOUND THEN
+      SELECT * INTO taxonomy FROM taxonomies WHERE id = designation.taxonomy_id;
+      PERFORM rebuild_designation_listing_changes_mview(taxonomy, designation);
+    END IF;
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION rebuild_cms_listing_changes_mview() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  DECLARE
+    taxonomy taxonomies%ROWTYPE;
+    designation designations%ROWTYPE;
+  BEGIN
+    SELECT * INTO designation FROM designations WHERE name = 'CMS';
+    IF FOUND THEN
+      SELECT * INTO taxonomy FROM taxonomies WHERE id = designation.taxonomy_id;
+      PERFORM rebuild_designation_listing_changes_mview(taxonomy, designation);
+    END IF;
+  END;
+  $$;
+
 CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
   LANGUAGE plpgsql
   AS $$
@@ -11,30 +82,12 @@ CREATE OR REPLACE FUNCTION rebuild_listing_changes_mview() RETURNS void
     RAISE INFO 'Creating listing_changes_mview materialized view (tmp)';
     DROP TABLE IF EXISTS listing_changes_mview_tmp CASCADE;
 
-    SELECT * INTO taxonomy FROM taxonomies WHERE name = 'CITES_EU';
-    IF FOUND THEN
-      PERFORM rebuild_taxonomy_taxon_concepts_and_ancestors_mview(taxonomy);
-      SELECT * INTO designation FROM designations WHERE name = 'CITES';
-      IF FOUND THEN
-        designations := ARRAY_APPEND(designations, 'CITES');
-        PERFORM rebuild_designation_listing_changes_mview(taxonomy, designation);
-      END IF;
-      SELECT * INTO designation FROM designations WHERE name = 'EU';
-      IF FOUND THEN
-        designations := ARRAY_APPEND(designations, 'EU');
-        PERFORM rebuild_designation_listing_changes_mview(taxonomy, designation);
-      END IF;
-    END IF;
-
-    SELECT * INTO taxonomy FROM taxonomies WHERE name = 'CMS';
-    IF FOUND THEN
-      PERFORM rebuild_taxonomy_taxon_concepts_and_ancestors_mview(taxonomy);
-      SELECT * INTO designation FROM designations WHERE name = 'CMS';
-      IF FOUND THEN
-        designations := ARRAY_APPEND(designations, 'CMS');
-        PERFORM rebuild_designation_listing_changes_mview(taxonomy, designation);
-      END IF;
-    END IF;
+    PERFORM rebuild_cites_eu_taxon_concepts_and_ancestors_mview();
+    PERFORM rebuild_cms_taxon_concepts_and_ancestors_mview();
+    PERFORM rebuild_cites_listing_changes_mview();
+    PERFORM rebuild_eu_listing_changes_mview();
+    PERFORM rebuild_cms_listing_changes_mview();
+    designations := ARRAY['CITES', 'EU', 'CMS'];
 
     sql := 'CREATE TABLE listing_changes_mview_tmp AS ';
     FOR i IN 1..ARRAY_UPPER(designations, 1) LOOP
