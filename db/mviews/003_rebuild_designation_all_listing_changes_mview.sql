@@ -14,7 +14,7 @@
     SELECT LOWER(taxonomy.name) || '_taxon_concepts_and_ancestors_mview' INTO tc_table_name;
 
     EXECUTE 'DROP TABLE IF EXISTS ' || tmp_lc_table_name || ' CASCADE';
-    
+
     sql := 'CREATE TEMP TABLE ' || tmp_lc_table_name || ' AS
     -- affected_taxon_concept -- is a taxon concept that is affected by this listing change,
     -- even though it might not have an explicit connection to it
@@ -29,15 +29,16 @@
         listing_changes.species_listing_id,
         listing_changes.change_type_id,
         listing_changes.inclusion_taxon_concept_id,
-        listing_changes.is_current,
+        listing_changes.event_id,
         listing_changes.effective_at::DATE,
+        listing_changes.is_current,
         ARRAY_AGG_NOTNULL(taxonomic_exceptions.taxon_concept_id) AS excluded_taxon_concept_ids
       FROM listing_changes
       LEFT JOIN listing_changes taxonomic_exceptions
-      ON listing_changes.id = taxonomic_exceptions.parent_id 
+      ON listing_changes.id = taxonomic_exceptions.parent_id
       AND listing_changes.taxon_concept_id != taxonomic_exceptions.taxon_concept_id
       JOIN change_types ON change_types.id = listing_changes.change_type_id
-      AND change_types.designation_id = ' || designation.id 
+      AND change_types.designation_id = ' || designation.id
       || 'GROUP BY
         listing_changes.id,
         change_types.designation_id,
@@ -46,17 +47,19 @@
         listing_changes.species_listing_id,
         listing_changes.change_type_id,
         listing_changes.inclusion_taxon_concept_id,
-        listing_changes.is_current,
-        listing_changes.effective_at::DATE
+        listing_changes.event_id,
+        listing_changes.effective_at::DATE,
+        listing_changes.is_current
     )
     -- the purpose of this CTE is to aggregate listed and excluded populations
-    SELECT lc.id, 
+    SELECT lc.id,
       lc.designation_id,
       lc.change_type_name,
       lc.taxon_concept_id,
       lc.species_listing_id,
       lc.change_type_id,
       lc.inclusion_taxon_concept_id,
+      lc.event_id,
       lc.effective_at,
       lc.is_current,
       lc.excluded_taxon_concept_ids,
@@ -69,7 +72,7 @@
     LEFT JOIN listing_distributions party_distribution
     ON lc.id = party_distribution.listing_change_id AND party_distribution.is_party
     LEFT JOIN listing_changes population_exceptions
-    ON lc.id = population_exceptions.parent_id 
+    ON lc.id = population_exceptions.parent_id
     AND lc.taxon_concept_id = population_exceptions.taxon_concept_id
     LEFT JOIN listing_distributions excluded_distributions
     ON population_exceptions.id = excluded_distributions.listing_change_id AND NOT excluded_distributions.is_party
@@ -80,13 +83,14 @@
       lc.species_listing_id,
       lc.change_type_id,
       lc.inclusion_taxon_concept_id,
+      lc.event_id,
       lc.effective_at,
       lc.is_current,
       party_distribution.geo_entity_id,
       lc.excluded_taxon_concept_ids';
 
     EXECUTE sql;
-  
+
     EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (taxon_concept_id)';
 
     EXECUTE 'DROP TABLE IF EXISTS ' || all_lc_table_name || ' CASCADE';

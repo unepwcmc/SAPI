@@ -19,6 +19,7 @@ BEGIN
     inclusion_taxon_concept_id,
     species_listing_id,
     change_type_id,
+    event_id,
     effective_at,
     tree_distance AS context_tree_distance,
     timeline_position,
@@ -99,6 +100,7 @@ BEGIN
     hi.inclusion_taxon_concept_id,
     hi.species_listing_id,
     hi.change_type_id,
+    hi.event_id,
     hi.effective_at,
     CASE 
     WHEN (
@@ -153,7 +155,12 @@ BEGIN
     AND hi.change_type_name = ''ADDITION''
     THEN TRUE -- allows for re-listing
     WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
-    THEN TRUE
+    THEN TRUE' || CASE WHEN LOWER(designation_name) = 'eu' THEN '
+    -- this to make Diospyros aculeata happy within EU listings
+    -- that was a case when previously listed at C and then included in genus listing
+    -- but we don''t have inclusions for EU, so it ended up as not listed
+    WHEN hi.event_id != listing_changes_timeline.event_id AND hi.effective_at > listing_changes_timeline.effective_at
+    THEN TRUE' ELSE '' END || '
     ELSE FALSE
     END
     FROM ' || LOWER(designation_name) || '_all_listing_changes_mview hi

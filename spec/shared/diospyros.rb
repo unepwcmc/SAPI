@@ -18,6 +18,12 @@ shared_context "Diospyros" do
       :iso_code2 => 'LK'
     )
   }
+  let(:reg2012){
+    create(:eu_regulation, :name => 'No 1158/2012', :designation => eu)
+  }
+  let(:reg2013){
+    create(:eu_regulation, :name => 'No 750/2013', :designation => eu)
+  }
   before(:all) do
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Ebenales'),
@@ -68,6 +74,7 @@ shared_context "Diospyros" do
     eu_lc = create_eu_C_addition(
      :taxon_concept => @species1,
      :effective_at => '2012-12-15',
+     :event => reg2012,
      :is_current => false
     )
 
@@ -114,6 +121,7 @@ shared_context "Diospyros" do
     eu_lc = create_eu_B_addition(
      :taxon_concept => @genus,
      :effective_at => '2013-08-10',
+     :event => reg2013,
      :is_current => true
     )
 
