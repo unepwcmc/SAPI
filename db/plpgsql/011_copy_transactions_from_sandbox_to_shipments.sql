@@ -36,17 +36,17 @@ BEGIN
 
   sql := 'WITH split_export_permits AS (
       SELECT id,
-      regexp_split_to_table(export_permit, ''[:;,]'') AS export_permit,
+      SQUISH(regexp_split_to_table(export_permit, ''[:;,]'')) AS export_permit,
       trading_partner
       FROM '|| table_name || '
     ), split_import_permits AS (
       SELECT id,
-      regexp_split_to_table(import_permit, ''[:;,]'') AS import_permit,
+      SQUISH(regexp_split_to_table(import_permit, ''[:;,]'')) AS import_permit,
       country_of_origin, trading_partner
       FROM '|| table_name || '
     ), split_origin_permits AS (
       SELECT id,
-      regexp_split_to_table(origin_permit, ''[:;,]'') AS origin_permit,
+      SQUISH(regexp_split_to_table(origin_permit, ''[:;,]'')) AS origin_permit,
       country_of_origin
       FROM '|| table_name || '
     )
@@ -239,7 +239,7 @@ BEGIN
   FOREACH permit_type IN ARRAY ARRAY['export', 'import', 'origin'] LOOP
 
     sql := 'WITH split_permits AS (
-      SELECT id, regexp_split_to_table(' || permit_type || '_permit, ''[:;,]'') AS permit
+      SELECT id, SQUISH(regexp_split_to_table(' || permit_type || '_permit, ''[:;,]'')) AS permit
       FROM '|| table_name || '
     )
     INSERT INTO trade_shipment_' || permit_type || '_permits(

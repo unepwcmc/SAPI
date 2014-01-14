@@ -109,7 +109,11 @@ class Trade::Filter
     end
 
     unless @quantity.nil?
-      @query = @query.where(:quantity => @quantity)
+      if @quantity == 0
+        @query = @query.where('quantity = 0 OR quantity IS NULL')
+      else
+        @query = @query.where(:quantity => @quantity)
+      end
     end
 
   end

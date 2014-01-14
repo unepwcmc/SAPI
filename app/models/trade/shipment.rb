@@ -37,7 +37,7 @@ class Trade::Shipment < ActiveRecord::Base
     :greater_than_or_equal_to => 0, :message => 'should be a positive number'
   }
   validates :appendix, presence: true, :inclusion => {
-    :in => ['I', 'II', 'III'], :message => 'should be one of I, II, III'
+    :in => ['I', 'II', 'III', 'N'], :message => 'should be one of I, II, III, N'
   }
   validates :year, presence: true, :numericality => {
     :only_integer => true, :greater_than_or_equal_to => 1975, :less_than => 3000,
@@ -127,7 +127,7 @@ class Trade::Shipment < ActiveRecord::Base
   def set_permit_number(permit_type, str, geo_entity_id)
     if str
       permits = str.split(';').compact.map do |number|
-        Trade::Permit.find_or_create_by_number_and_geo_entity_id(number, geo_entity_id)
+        Trade::Permit.find_or_create_by_number_and_geo_entity_id(number.strip, geo_entity_id)
       end
       self.send("#{permit_type}_permits=", permits)
     end
