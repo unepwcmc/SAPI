@@ -117,12 +117,14 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def cites_listing_changes
-    cites = Designation.find_by_name(Designation::CITES)
-    MListingChange.
-      where(:taxon_concept_id => object_and_children, :show_in_history => true, :designation_id => cites && cites.id).
+    MCitesListingChange.from('cites_listing_changes_mview listing_changes_mview').
+      where(
+        'listing_changes_mview.taxon_concept_id' => object_and_children,
+        'listing_changes_mview.show_in_history' => true
+      ).
       where(<<-SQL
-              taxon_concepts_mview.rank_name = 'SPECIES' OR 
-              ( 
+              taxon_concepts_mview.rank_name = 'SPECIES' OR
+              (
                 (
                   taxon_concepts_mview.rank_name = 'SUBSPECIES'
                   OR taxon_concepts_mview.rank_name = 'VARIETY'
@@ -179,11 +181,13 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def eu_listing_changes
-    eu = Designation.find_by_name(Designation::EU)
-    MListingChange.
-      where(:taxon_concept_id => object_and_children, :show_in_history => true, :designation_id => eu && eu.id).
+    MEuListingChange.from('eu_listing_changes_mview listing_changes_mview').
+      where(
+        'listing_changes_mview.taxon_concept_id' => object_and_children,
+        'listing_changes_mview.show_in_history' => true
+      ).
       where(<<-SQL
-              taxon_concepts_mview.rank_name = 'SPECIES' OR 
+              taxon_concepts_mview.rank_name = 'SPECIES' OR
               ( taxon_concepts_mview.rank_name = 'SUBSPECIES' AND
                 listing_changes_mview.auto_note IS NULL )
             SQL

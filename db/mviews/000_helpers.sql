@@ -15,7 +15,13 @@ CREATE OR REPLACE FUNCTION rebuild_touch_taxon_concepts() RETURNS void
   BEGIN
     WITH max_timestamp AS (
       SELECT lc.taxon_concept_id, GREATEST(tc.updated_at, MAX(lc.updated_at)) AS updated_at
-      FROM listing_changes_mview lc
+      FROM (
+        SELECT * FROM cites_listing_changes_mview
+        UNION
+        SELECT * FROM eu_listing_changes_mview
+        UNION
+        SELECT * FROM cms_listing_changes_mview
+      ) lc
       JOIN taxon_concepts_mview tc
       ON lc.taxon_concept_id = tc.id
       GROUP BY taxon_concept_id, tc.updated_at

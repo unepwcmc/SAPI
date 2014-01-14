@@ -10,13 +10,17 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
   end
 
   def relation(designation_name = 'CITES')
+    unless ['cites', 'eu', 'cms'].include? designation_name.downcase
+      designation_name = 'CITES'
+    end
+    listing_changes_mview = "#{designation_name.downcase}_listing_changes_mview"
     initialize_species_listings_conditions(designation_name)
     @relation.joins(
       <<-SQL
       INNER JOIN (
         -- listed in specified geo entities
         SELECT DISTINCT original_taxon_concept_id AS taxon_concept_id
-        FROM listing_changes_mview
+        FROM #{listing_changes_mview} listing_changes_mview
         INNER JOIN listing_distributions ON listing_changes_mview.id = listing_distributions.listing_change_id AND NOT is_party
         WHERE is_current = 't' AND change_type_name = 'ADDITION'
         AND listing_distributions.geo_entity_id IN (#{@geo_entities_in_clause})
@@ -38,7 +42,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
         (
           -- has listing changes that do not have distribution attached
           SELECT DISTINCT original_taxon_concept_id AS taxon_concept_id
-          FROM listing_changes_mview
+          FROM #{listing_changes_mview} listing_changes_mview
           LEFT JOIN listing_distributions ON listing_changes_mview.id = listing_distributions.listing_change_id AND NOT is_party
           WHERE is_current = 't' AND change_type_name = 'ADDITION'
           #{"AND species_listing_id IN (#{@species_listings_in_clause})" unless @appendix_abbreviations.empty? }
@@ -57,8 +61,8 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
             EXCEPT
             (
               SELECT DISTINCT listing_changes_mview.original_taxon_concept_id AS taxon_concept_id, listing_distributions.geo_entity_id as geo_entity_id
-              FROM listing_changes_mview
-              INNER JOIN listing_changes_mview parent_listing_changes_mview
+              FROM #{listing_changes_mview} listing_changes_mview
+              INNER JOIN #{listing_changes_mview} parent_listing_changes_mview
               ON parent_listing_changes_mview.id = listing_changes_mview.parent_id 
               AND parent_listing_changes_mview.is_current 
               AND parent_listing_changes_mview.change_type_name = 'ADDITION'
