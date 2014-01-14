@@ -89,14 +89,14 @@ shared_context "Diospyros" do
       :listing_change => cites_lc,
       :geo_entity => madagascar,
       :is_party => true
-    )    
+    )
 
     cites_lc = create_cites_II_addition(
      :taxon_concept => @genus,
      :effective_at => '2013-06-12',
      :is_current => true
     )
-    
+
     create(
       :listing_distribution,
       :listing_change => cites_lc,
@@ -116,7 +116,7 @@ shared_context "Diospyros" do
      :effective_at => '2013-08-10',
      :is_current => true
     )
-    
+
     create(
       :listing_distribution,
       :listing_change => eu_lc,
