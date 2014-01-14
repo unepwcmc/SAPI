@@ -15,11 +15,10 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
   ]
   codeMappings: {}
   allAppendices: [
-    Ember.Object.create({id: 'I', name: 'Appendix I'}),
-    Ember.Object.create({id: 'II', name: 'Appendix II'}),
-    Ember.Object.create({id: 'III', name: 'Appendix III'})
+    Ember.Object.create({id: 'I', name: '1'}),
+    Ember.Object.create({id: 'II', name: '2'}),
+    Ember.Object.create({id: 'III', name: '3'})
   ]
-  allReporterTypeValues: ['E', 'I']
 
   #sandboxShipmentsController: null
 
