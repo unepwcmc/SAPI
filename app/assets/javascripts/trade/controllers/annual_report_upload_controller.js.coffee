@@ -13,26 +13,16 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     'importPermit', 'exportPermit', 'originPermit',
     'purposeCode', 'sourceCode', 'year'
   ]
-  codeMappings: {}
+
   allAppendices: [
     Ember.Object.create({id: 'I', name: 'I'}),
     Ember.Object.create({id: 'II', name: 'II'}),
     Ember.Object.create({id: 'III', name: 'III'})
   ]
 
-  #sandboxShipmentsController: null
-
-  #tableController: Ember.computed ->
-  #  controller = Ember.get('Trade.SandboxShipmentsTable.TableController').create()
-  #  controller.set('annualReportUploadController', @)
-  #  controller
-  #.property('sandboxShipmentsLoaded')
-
   sandboxShipmentsDidLoad: ( ->
     @set('visibleShipments', @get('content.sandboxShipments'))
     @set('sandboxShipmentsLoaded', true)
-    #@sandboxShipmentsController = Ember.get('Trade.SandboxShipmentsController').create()
-    #@sandboxShipmentsController.set('visibleShipments', @get('visibleShipments'))
   ).observes('content.sanboxShipments.@each.didLoad')
 
   sandboxShipmentsSaving: ( ->
@@ -218,21 +208,6 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
   actions:
 
-    editShipment: (shipment) ->
-      @set('currentShipment', shipment)
-      $('.shipment-form-modal').modal('show')
-
-    updateShipment: (shipment) ->
-      shipment.setProperties({'_modified': true})
-      $('.shipment-form-modal').modal('hide')
-
-    deleteShipment: (shipment) ->
-      shipment.setProperties({'_destroyed': true, '_modified': true})
-
-    cancelShipmentEdit: (shipment) ->
-      # ???
-      console.log shipment
-
     submitShipments: ()->
       if @get('content.isDirty')
         alert "You have unsaved changes, please save those before submitting your shipments"
@@ -311,3 +286,23 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     cancelSelectForUpdate: () ->
       $('.sandbox-form').find('input[type=text]').val(null)
       @set('filtersVisible', true)
+
+    
+    #### Single shipment related ####
+
+    editShipment: (shipment) ->
+      @set('currentShipment', shipment)
+      $('.shipment-form-modal').modal('show')
+
+    updateShipment: (shipment) ->
+      shipment.setProperties({'_modified': true})
+      @set('currentShipment', null)
+      $('.shipment-form-modal').modal('hide')
+
+    deleteShipment: (shipment) ->
+      shipment.setProperties({'_destroyed': true, '_modified': true})
+
+    cancelShipmentEdit: (shipment) ->
+      shipment.setProperties(shipment.get('data'))
+      @set('currentShipment', null)
+      $('.shipment-form-modal').modal('hide')
