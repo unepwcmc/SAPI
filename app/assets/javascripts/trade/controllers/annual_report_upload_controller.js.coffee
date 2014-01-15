@@ -201,10 +201,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     @get('content.sandboxShipments').forEach (shipment) ->
       shipment.set('_modified', false)
     @endPropertyChanges()
-
-  columnNames: ( ->
-    @get('tableController.columnNames')
-  ).property('tableController.columnNames')
+    
 
   actions:
 
@@ -267,7 +264,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
     updateSelection: () ->
       valuesToUpdate = {'_modified': true}
-      @get('columnNames').forEach (columnName) =>
+      @get('columns').forEach (columnName) =>
         el = $('.sandbox-form').find('input[type=text][name=' + columnName + ']')
         blank = $('.sandbox-form').find('input[type=checkbox][name=' + columnName + ']:checked')
         valuesToUpdate[columnName] = el.val() if el && el.val()
