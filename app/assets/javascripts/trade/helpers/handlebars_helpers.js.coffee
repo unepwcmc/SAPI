@@ -29,7 +29,7 @@ Ember.Handlebars.helper('dataRow', (columns, codeMappings) ->
     split = column.split('.')
     if split?[1] and codeMappings[split[1]]
       data.push(
-        "<td><span class='t' title='#{@get(split[0]+'.'+codeMappings[split[1]])}'>#{@get(column)}</span></td>"
+        "<td><span class='t' title='#{@get(split[0]+'.'+codeMappings[split[1]])}'>#{@get(column) || ''}</span></td>"
       )
     else
       value = @get(column) or ""

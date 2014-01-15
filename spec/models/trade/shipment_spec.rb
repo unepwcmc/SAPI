@@ -31,6 +31,14 @@ describe Trade::Shipment do
       subject { build(:shipment, :reporter_type => nil) }
       specify { subject.should have(2).error_on(:reporter_type) }
     end
+    context "when appendix valid" do
+      subject { build(:shipment, :appendix => 'N') }
+      specify { subject.should be_valid }
+    end
+    context "when appendix not valid" do
+      subject { build(:shipment, :appendix => 'I/II') }
+      specify { subject.should have(1).error_on(:appendix) }
+    end
     context "when country of origin not given" do
       context "and origin permit not given" do
         subject { build(:shipment, :country_of_origin => nil, :origin_permit_number => nil) }

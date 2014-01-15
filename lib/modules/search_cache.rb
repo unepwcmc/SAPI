@@ -2,7 +2,7 @@
 # classes. It s used to cache TaxonConcept searches in Species+ and Checklist.
 # 
 # This module makes the following assumptions about cached classes:
-# - responds to cache_key and returns and object that can be used as Rails.cache key
+# - responds to cache_key and returns an object that can be used as Rails.cache key
 # e.g. normalised search parameters
 # - responds to results (which returs expected results for given parameters)
 # - responds to total_cnt (which returns total number of results for given parameters)

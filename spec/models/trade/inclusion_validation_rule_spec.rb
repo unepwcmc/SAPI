@@ -79,7 +79,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       }
       specify{
         ve = subject.validation_errors(annual_report_upload).first
-        ve.error_selector.should == {'trading_partner' => 'Neverland'}
+        ve.error_selector.should == {'trading_partner' => 'NEVERLAND'}
       }
     end
     context 'term can only be paired with unit as defined by term_trade_codes_pairs table' do
