@@ -17,14 +17,16 @@
       </div>
       <div class="inner">
         <div class="attribute-area left species">
-          <p>Species name <span class="error">{{currentShipment.errors.speciesName}}</span></p>
+          <p>Species name</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.speciesName}}</p>
           {{view Trade.TaxonConceptSelect2
             prompt="Please select species names"
             valueBinding="currentShipment.speciesName"
           }}
         </div>
         <div class="attribute-area left">
-          <p>Appendix <span class="error">{{currentShipment.errors.appendix}}</span></p>
+          <p>Appendix</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.appendix}}</p>
             {{view Ember.Select
               prompt="Please select appendix value"
               valueBinding="currentShipment.appendix"
@@ -34,7 +36,8 @@
             }}
         </div>
         <div class="attribute-area left year">
-          <p>Year <span class="error">{{currentShipment.errors.year}}</span></p>
+          <p>Year</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.year}}</p>
             {{view Ember.TextField
               prompt="Please type year value"
               valueBinding="currentShipment.year"
@@ -47,7 +50,8 @@
       </div>
       <div class="inner">
         <div class="attribute-area left">
-          <p>Term Code <span class="error">{{currentShipment.errors.termCode}}</span></p>
+          <p>Term Code</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.termCode}}</p>
             {{view Ember.Select
               prompt="Please select term code value"
               contentBinding="controllers.terms"
@@ -57,7 +61,8 @@
             }}
         </div>
         <div class="attribute-area left">
-          <p>Unit Code <span class="error">{{currentShipment.errors.unitCode}}</span></p>
+          <p>Unit Code</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.unitCode}}</p>
             {{view Ember.Select
               prompt="Please select unit code value"
               contentBinding="controllers.units"
@@ -67,7 +72,8 @@
             }}
         </div>
         <div class="attribute-area left">
-          <p>Purpose Code <span class="error">{{currentShipment.errors.purposeCode}}</span></p>
+          <p>Purpose Code</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.purposeCode}}</p>
             {{view Ember.Select
               prompt="Please select purpose code value"
               contentBinding="controllers.purposes"
@@ -77,7 +83,8 @@
             }}
         </div>
         <div class="attribute-area left">
-          <p>Source Code <span class="error">{{currentShipment.errors.sourceCode}}</span></p>
+          <p>Source Code</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.sourceCode}}</p>
             {{view Ember.Select
               prompt="Please select source code value"
               contentBinding="controllers.sources"
@@ -93,7 +100,8 @@
       </div>
       <div class="inner">
         <div class="attribute-area left">
-          <p>TradingPartner <span class="error">{{currentShipment.errors.tradingPartner}}</span></p>
+          <p>TradingPartner</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.tradingPartner}}</p>
             {{view Ember.Select
               prompt="Please select trading partner"
               contentBinding="controllers.geoEntities"
@@ -103,7 +111,8 @@
             }}
         </div>
         <div class="attribute-area left">
-          <p>Country of Origin <span class="error">{{currentShipment.errors.countryOfOrigin}}</span></p>
+          <p>Country of Origin</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.countryOfOrigin}}</p>
             {{view Ember.Select
               prompt="Please select country of origin value"
               contentBinding="controllers.geoEntities"
@@ -119,28 +128,32 @@
       </div>
       <div class="inner">
         <div class="attribute-area left">
-          <p>Import Permit <span class="error">{{currentShipment.errors.importPermit}}</span></p>
+          <p>Import Permit</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.importPermit}}</p>
             {{view Ember.TextField
               prompt="Please type import permit value"
               valueBinding="currentShipment.importPermit"
             }}
         </div>
         <div class="attribute-area left">
-          <p>Export Permit <span class="error">{{currentShipment.errors.exportPermit}}</span></p>
+          <p>Export Permit</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.exportPermit}}</p>
             {{view Ember.TextField
               prompt="Please type export permit value"
               valueBinding="currentShipment.exportPermit"
             }}
         </div>
         <div class="attribute-area left">
-          <p>Origin Permit <span class="error">{{currentShipment.errors.originPermit}}</span></p>
+          <p>Origin Permit</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.originPermit}}</p>
             {{view Ember.TextField
               prompt="Please type origin permit value"
               valueBinding="currentShipment.originPermit"
             }}
         </div>
         <div class="attribute-area left">
-          <p>Quantity <span class="error">{{currentShipment.errors.quantity}}</span></p>
+          <p>Quantity</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.quantity}}</span></p>
             {{view Ember.TextField
               prompt="Please type quantity value"
               valueBinding="currentShipment.quantity"

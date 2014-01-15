@@ -21,7 +21,7 @@ Ember.Handlebars.helper('dataHead', (columns) ->
   new Handlebars.SafeString(data)
 )
 
-Ember.Handlebars.helper('dataRow', (columns, codeMappings) ->
+Ember.Handlebars.registerBoundHelper('dataRow', ((columns, codeMappings) ->
   # TODO: the way the titles are added to the markup does not look nice,
   # maybe a more explicit config object?
   data = []
@@ -35,5 +35,5 @@ Ember.Handlebars.helper('dataRow', (columns, codeMappings) ->
       value = @get(column) or ""
       data.push "<td><span class='t' title='#{value}'>#{value}</span></td>"
   data = data.join("")
-  new Handlebars.SafeString(data)
+  new Handlebars.SafeString(data)), 'appendix'
 )

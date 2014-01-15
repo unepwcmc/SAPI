@@ -57,6 +57,13 @@ div.filters {
     color: darken($medium-grey, 48%);
     font-weight: bold;
   }
+  p.small {
+    font-weight: lighter;
+    border-bottom: none;
+  }
+  span.blue {
+    color: steelblue;
+  }
   .row01 {
     padding-top: 6px;
   }

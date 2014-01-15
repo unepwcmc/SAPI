@@ -15,9 +15,9 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
   ]
   codeMappings: {}
   allAppendices: [
-    Ember.Object.create({id: 'I', name: '1'}),
-    Ember.Object.create({id: 'II', name: '2'}),
-    Ember.Object.create({id: 'III', name: '3'})
+    Ember.Object.create({id: 'I', name: 'I'}),
+    Ember.Object.create({id: 'II', name: 'II'}),
+    Ember.Object.create({id: 'III', name: 'III'})
   ]
 
   #sandboxShipmentsController: null
@@ -197,7 +197,6 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
       )
       @set('visibleShipments', shipments)
 
-  # used
   resetFilters: ->
     @beginPropertyChanges()
     @get('columns').forEach (columnName) =>
