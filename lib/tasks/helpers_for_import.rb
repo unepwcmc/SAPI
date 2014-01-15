@@ -242,6 +242,15 @@ class CsvToDbMap
     'taxon_concepts_and_terms_pairs_import' => {
       'TAXON_FAMILY' => 'TAXON_FAMILY varchar',
       'TERM_CODE' => 'TERM_CODE varchar'
+    },
+    'hybrids_import' => {
+      'Legacy_CITES_TAXON_CODE' => 'legacy_cites_taxon_code integer',
+      'Full Hybrid Name' => 'full_hybrid_name varchar',
+      'Hybrid Rank' => 'hybrid_rank varchar',
+      'SpeciesPlusID' => 'species_plus_id integer',
+      'Parent' => 'parent varchar',
+      'ParentRank' => 'parent_rank varchar',
+      'Status' => 'status varchar'
     }
   }
 
