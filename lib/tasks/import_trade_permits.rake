@@ -47,7 +47,7 @@ def insert_into_trade_shipments
     FROM (SELECT array_agg(id) id, 
     shipment_number 
     from trade_permits
-    where type = '#{v}'
+    where legacy_reporter_type = '#{v}'
     group by shipment_number) a
     where legacy_shipment_number = a.shipment_number
     SQL
