@@ -3,7 +3,6 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
   content: null
   visibleShipments: []
   currentShipment: null
-  currentCountryOfOriginId: null
   filtersSelected: false
 
   columns: [
