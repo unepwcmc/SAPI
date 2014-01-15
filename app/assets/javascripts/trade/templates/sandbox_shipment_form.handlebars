@@ -4,11 +4,6 @@
 </div>
 
 <div class="modal-body filters">
-  <div class="secondary-errors">
-    {{#each currentShipment.errors.warnings}}
-      <p class="text-warning"><i class="icon-exclamation-sign"></i>{{this}}</p>
-    {{/each}}
-  </div>
 
   <form action="#">
     <fieldset>
@@ -22,6 +17,7 @@
           {{view Trade.TaxonConceptSelect2
             prompt="Please select species names"
             valueBinding="currentShipment.speciesName"
+            origin="sandbox"
           }}
         </div>
         <div class="attribute-area left">

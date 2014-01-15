@@ -5,11 +5,12 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
   allowClear: true
   closeOnSelect: true
   type: 'hidden'
+  origin: null
 
   didInsertElement: () ->
-    placeholderText = this.get('prompt') || '';
+    placeholderText = this.get('prompt') || ''
     if (!@.$().select2)
-      throw new Exception('select2 is required for Trade.TaxonConceptSelect2 control');
+      throw new Exception('select2 is required for Trade.TaxonConceptSelect2 control')
     @.$().select2(
       placeholder: placeholderText
       minimumInputLength: 3
@@ -17,6 +18,7 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
       closeOnSelect: this.get('closeOnSelect')
       width: this.get('width')
       initSelection: (element, callback) =>
+        @origin = @get('origin')
         value = @get('value')
         # if value is the id
         if typeof(value) is 'number'
@@ -32,10 +34,10 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
           taxon_concept_query: term # search term
           per_page: 10
           page: page
-        results: (data, page) -> # parse the results into the format expected by Select2.
+        results: (data, page) => # parse the results into the format expected by Select2.
           more = (page * 10) < data.meta.total
-          formatted_taxon_concepts = data.auto_complete_taxon_concepts.map (tc) ->
-            id: tc.id
+          formatted_taxon_concepts = data.auto_complete_taxon_concepts.map (tc) =>
+            id: if @origin is 'sandbox' then tc.full_name else tc.id
             text: tc.full_name
           results: formatted_taxon_concepts
           more: more
