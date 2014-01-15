@@ -75,7 +75,7 @@ module Sapi
       DROP INDEX IF EXISTS index_trade_shipments_on_unit_id;
       DROP INDEX IF EXISTS index_trade_shipments_on_year;
       DROP INDEX IF EXISTS index_trade_shipments_on_permits_ids;
-      DROP INDEX IF EXISTS index_trade_shipments_on_legacy_id;
+      DROP INDEX IF EXISTS index_trade_shipments_on_legacy_shipment_number;
       SQL
       ActiveRecord::Base.connection.execute(sql)
     end
@@ -138,10 +138,6 @@ module Sapi
         ON trade_shipments
         USING btree
         (legacy_shipment_number);
-      CREATE INDEX index_trade_shipments_on_permits_ids
-        ON trade_shipments
-        USING GIN
-        (permits_ids);
       SQL
       ActiveRecord::Base.connection.execute(sql)
     end
