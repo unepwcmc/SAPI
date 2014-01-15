@@ -262,6 +262,13 @@ shared_context :sapi do
       :parent => cites_eu_chordata
     )
   }
+  let(:cites_eu_elasmobranchii){
+    create_cites_eu_class(
+      :taxonomic_position => '1.1.5',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Elasmobranchii'),
+      :parent => cites_eu_chordata
+    )
+  }
   let(:cites_eu_arthropoda){
     create_cites_eu_phylum(
       :taxonomic_position => '1.3',
