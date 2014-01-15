@@ -311,7 +311,7 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (show_in_timeline, taxon_concept_id)';
     EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (show_in_downloads, taxon_concept_id)';
     EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (original_taxon_concept_id)';
-    EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (taxon_concept_id, is_current, change_type_name)'; -- Species+ downloads
+    EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (is_current, change_type_name)'; -- Species+ downloads
 
     RAISE INFO 'Swapping %  materialized view', lc_table_name;
     EXECUTE 'DROP TABLE IF EXISTS ' || lc_table_name || ' CASCADE';
