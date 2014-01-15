@@ -12,9 +12,8 @@ namespace :import do
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
-      drop_indices(trade_permits_to_index)
       add_shipment_number_tmp_column
-      create_indices(trade_permits_to_index)
+      create_indices(permits_import_to_index)
       populate_trade_permits
       create_indices(trade_permits_to_index)
       insert_into_trade_shipments
