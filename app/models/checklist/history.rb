@@ -31,15 +31,13 @@ class Checklist::History < Checklist::Checklist
   end
 
   def prepare_main_query
-    cites = Designation.find_by_name(Designation::CITES)
     @taxon_concepts_rel = MTaxonConcept.where(:taxonomy_is_cites_eu => true).
       where(
         <<-SQL
         EXISTS (
-          SELECT * FROM listing_changes_mview
-          WHERE taxon_concept_id = taxon_concepts_mview.id 
+          SELECT * FROM cites_listing_changes_mview
+          WHERE taxon_concept_id = taxon_concepts_mview.id
           AND show_in_downloads
-          AND designation_id = #{cites.id}
         )
         SQL
       ).

@@ -11,9 +11,8 @@ CREATE OR REPLACE FUNCTION rebuild_valid_species_name_appendix_year_mview() RETU
       taxon_concept_id,
       ARRAY_AGG(species_listing_name)::TEXT[] AS appendix,
       EXTRACT(YEAR FROM effective_at)::INT AS appendix_year
-    FROM listing_changes_mview lc
-    WHERE designation_name = 'CITES'
-      AND change_type_name = 'ADDITION'
+    FROM cites_listing_changes_mview lc
+    WHERE change_type_name = 'ADDITION'
     GROUP BY taxon_concept_id, EXTRACT(YEAR FROM effective_at)
   )
   SELECT

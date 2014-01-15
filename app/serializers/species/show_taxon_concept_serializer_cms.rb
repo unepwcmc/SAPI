@@ -6,12 +6,14 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
   has_many :cms_instruments, :serializer => Species::CmsInstrumentsSerializer
 
   def cms_listing_changes
-    cms = Designation.find_by_name(Designation::CMS)
-    MListingChange.
-      where(:taxon_concept_id => object_and_children, :show_in_history => true, :designation_id => cms && cms.id).
+    MCmsListingChange.from('cms_listing_changes_mview listing_changes_mview').
+      where(
+        'listing_changes_mview.taxon_concept_id' => object_and_children,
+        'listing_changes_mview.show_in_history' => true
+      ).
       where(<<-SQL
-              taxon_concepts_mview.rank_name = 'SPECIES' OR 
-              ( 
+              taxon_concepts_mview.rank_name = 'SPECIES' OR
+              (
                 (
                   taxon_concepts_mview.rank_name = 'SUBSPECIES'
                   OR taxon_concepts_mview.rank_name = 'VARIETY'
