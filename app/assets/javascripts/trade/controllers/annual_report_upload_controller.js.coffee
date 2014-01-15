@@ -35,11 +35,6 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     #@sandboxShipmentsController.set('visibleShipments', @get('visibleShipments'))
   ).observes('content.sanboxShipments.@each.didLoad')
 
-  #currentShipmentIsEdited: ( ->
-  #  console.log 'JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ'
-  #  @set('visibleShipments', @get('content.sandboxShipments'))
-  #).observes('currentShipment')
-
   sandboxShipmentsSaving: ( ->
     @get('content.isSaving')
   ).property('content.isSaving')
@@ -228,11 +223,15 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
       $('.shipment-form-modal').modal('show')
 
     updateShipment: (shipment) ->
+      shipment.setProperties({'_modified': true})
       $('.shipment-form-modal').modal('hide')
 
+    deleteShipment: (shipment) ->
+      shipment.setProperties({'_destroyed': true, '_modified': true})
 
-    cancelShipment: ->
-
+    cancelShipmentEdit: (shipment) ->
+      # ???
+      console.log shipment
 
     submitShipments: ()->
       if @get('content.isDirty')
