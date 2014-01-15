@@ -23,41 +23,6 @@ namespace :import do
   end
 end
 
-def populate_trade_permits
-  sql = <<-SQL
-  INSERT INTO trade_permits (number, shipment_number, legacy_reporter_type, created_At, updated_at)
-  SELECT permit_number,
-         shipment_number,
-         permit_reporter_type,
-         now()::date AS created_at,
-         now()::date AS updated_at
-  FROM permits_import;
-  SQL
-  puts "Inserting into trade_permits"
-  execute_query(sql)
-end
-
-
-def insert_into_trade_shipments
-  permits_entity = {"import" => "I", "export" => 'E', "origin" => 'O'}
-  permits_entity.each do |k,v|
-    sql = <<-SQL          
-    UPDATE trade_shipments
-    SET #{k}_permits_ids = a.ids
-    FROM (SELECT array_agg(id) as ids, 
-    shipment_number
-    from trade_permits
-    where legacy_reporter_type = '#{v}'
-    group by shipment_number) AS a
-    where legacy_shipment_number = a.shipment_number
-    SQL
-    puts "Inserting into trade_shipments"
-    execute_query(sql)
-  end
-  end
-
-      
-
 def execute_query(sql)
  ActiveRecord::Base.connection.execute(sql)
 end
@@ -95,9 +60,46 @@ def add_shipment_number_tmp_column
   SQL
   execute_query(sql)
 end
+
 def delete_shipment_number_tmp_column
   sql = <<-SQL 
   ALTER TABlE trade_permits DROP COLUMN shipment_number;
   SQL
   execute_query(sql)
 end
+
+def populate_trade_permits
+  sql = <<-SQL
+  INSERT INTO trade_permits (number, shipment_number, legacy_reporter_type, created_At, updated_at)
+  SELECT permit_number,
+         shipment_number,
+         permit_reporter_type,
+         now()::date AS created_at,
+         now()::date AS updated_at
+  FROM permits_import;
+  SQL
+  puts "Inserting into trade_permits"
+  execute_query(sql)
+end
+
+def insert_into_trade_shipments
+  permits_entity = {"import" => "I", "export" => 'E', "origin" => 'O'}
+  permits_entity.each do |k,v|
+    sql = <<-SQL          
+    UPDATE trade_shipments
+    SET #{k}_permits_ids = a.ids
+    FROM (SELECT array_agg(id) as ids, 
+    shipment_number
+    from trade_permits
+    where legacy_reporter_type = '#{v}'
+    group by shipment_number) AS a
+    where legacy_shipment_number = a.shipment_number
+    SQL
+    puts "Inserting into trade_shipments"
+    execute_query(sql)
+  end
+end
+
+      
+
+
