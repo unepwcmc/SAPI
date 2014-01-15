@@ -10,7 +10,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
   end
 
   def relation(designation_name = 'CITES')
-    unless ['cites', 'eu', 'cms'].include? designation_name.downcase
+    unless ['CITES', 'EU', 'CMS'].include? designation_name
       designation_name = 'CITES'
     end
     listing_changes_mview = "#{designation_name.downcase}_listing_changes_mview"
