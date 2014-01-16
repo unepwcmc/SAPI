@@ -244,7 +244,7 @@ class CsvToDbMap
       'TERM_CODE' => 'TERM_CODE varchar'
     },
     'hybrids_import' => {
-      'Legacy_CITES_TAXON_CODE' => 'legacy_cites_taxon_code integer',
+      'Legacy_CITES_TAXON_CODE' => 'legacy_cites_taxon_code varchar',
       'Full Hybrid Name' => 'full_hybrid_name varchar',
       'Hybrid Rank' => 'hybrid_rank varchar',
       'SpeciesPlusID' => 'species_plus_id integer',

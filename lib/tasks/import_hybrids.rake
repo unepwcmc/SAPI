@@ -22,6 +22,19 @@ namespace :import do
         # 2- Join back to insert the taxon_concepts
         # 3- Create taxon_relationships
         sql = <<-SQL
+
+        INSERT INTO taxon_names(scientific_name, created_at, updated_at)
+        SELECT full_hybrid_name,
+        now()::date AS created_at,
+        now()::date AS updated_at
+        from 
+
+
+
+        SELECT full_hybrid_name, r.id
+        FROM hybrids_import
+        LEFT JOIN ranks r
+        ON hybrid_rank = r.name
         SQL
 
         ActiveRecord::Base.connection.execute(sql)
