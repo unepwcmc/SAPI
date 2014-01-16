@@ -1,33 +1,45 @@
 namespace :import do
     desc "Import trade permits from csv file"
     task :trade_permits => [:environment] do
+
       TMP_TABLE = "permits_import"
       file = "lib/files/permit_details.csv"
       permits_import_to_index = {"permits_import" => ["permit_number", "shipment_number", "permit_reporter_type"]}
       trade_permits_to_index = {"trade_permits" => ["shipment_number", "legacy_reporter_type"]}
+      trade_shipments_indexed = {"trade_shipments" => ["export_permits_ids", "import_permits_ids", "origin_permits_ids"]}
+      trade_shipments_to_index = {"trade_shipments" => ["legacy_shipment_number"]}
 
-      #delete_shipment_number_tmp_column
-      #drop_indices(trade_permits_to_index)
-      #drop_indices(permits_import_to_index)
-      #drop_table(TMP_TABLE)
-      #create_table_from_csv_headers(file, TMP_TABLE)
-      #copy_data(file, TMP_TABLE)
-      #add_shipment_number_tmp_column
-      #create_indices(permits_import_to_index)
-      #populate_trade_permits
-      #create_indices(trade_permits_to_index)
-      insert_into_trade_shipments
-      drop_indices(permits_import_to_index)
+      delete_shipment_number_tmp_column
       drop_indices(trade_permits_to_index)
+      drop_indices(permits_import_to_index)
+
+      drop_table(TMP_TABLE)
+      create_table_from_csv_headers(file, TMP_TABLE)
+      copy_data(file, TMP_TABLE)
+
+      add_shipment_number_tmp_column
+      create_indices(permits_import_to_index, "btree")
+
+      populate_trade_permits
+
+      create_indices(trade_permits_to_index, "btree")
+      drop_indices(trade_shipments_indexed)
+      create_indices(trade_shipments_to_index, "btree")
+
+      insert_into_trade_shipments
+
+      create_indices(trade_shipments_indexed, "GIN")
+      drop_indices(trade_shipments_to_index)
+      drop_indices(permits_import_to_index)
       delete_shipment_number_tmp_column
   end
 end
 
-def execute_query(sql)
+def execute_query sql
  ActiveRecord::Base.connection.execute(sql)
 end
 
-def drop_indices(index)
+def drop_indices index
   index.each do |table, columns|
     columns.each do |column|
       sql = <<-SQL
@@ -39,13 +51,13 @@ def drop_indices(index)
   end
 end
 
-def create_indices(table_columns)
+def create_indices table_columns, method
   table_columns.each do |table,columns|
     columns.each do |column|
       sql = <<-SQL
       CREATE INDEX index_#{table}_on_#{column}
       ON #{table}
-      USING btree
+      USING #{method}
       (#{column});   
       SQL
       puts "Creating index for #{column}"
