@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140113173345) do
+ActiveRecord::Schema.define(:version => 20140116134521) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -120,7 +120,6 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
-    t.integer "genus_id"
     t.text    "kingdom_name"
     t.text    "phylum_name"
     t.text    "class_name"
@@ -232,7 +231,6 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
-    t.integer "genus_id"
     t.text    "phylum_name"
     t.text    "class_name"
     t.text    "order_name"
@@ -371,6 +369,22 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
     t.integer  "source_id"
   end
 
+  create_table "eu_decisions_import", :id => false, :force => true do |t|
+    t.boolean "is_current"
+    t.string  "taxonomy",        :limit => nil
+    t.integer "event_legacy_id"
+    t.integer "legacy_id"
+    t.string  "rank",            :limit => nil
+    t.string  "kingdom",         :limit => nil
+    t.string  "country_iso2",    :limit => nil
+    t.string  "opinion",         :limit => nil
+    t.date    "start_date"
+    t.string  "source",          :limit => nil
+    t.string  "term",            :limit => nil
+    t.string  "notes",           :limit => nil
+    t.string  "internal_notes",  :limit => nil
+  end
+
   create_table "eu_listing_changes_mview", :id => false, :force => true do |t|
     t.integer  "taxon_concept_id"
     t.integer  "id"
@@ -444,7 +458,6 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
-    t.integer "genus_id"
     t.text    "kingdom_name"
     t.text    "phylum_name"
     t.text    "class_name"
@@ -532,6 +545,16 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
     t.integer "event_legacy_id"
     t.string  "ignore",          :limit => nil
     t.string  "full_note_en",    :limit => nil
+  end
+
+  create_table "hybrids_import", :id => false, :force => true do |t|
+    t.string  "legacy_cites_taxon_code", :limit => nil
+    t.string  "full_hybrid_name",        :limit => nil
+    t.string  "hybrid_rank",             :limit => nil
+    t.integer "species_plus_id"
+    t.string  "parent",                  :limit => nil
+    t.string  "parent_rank",             :limit => nil
+    t.string  "status",                  :limit => nil
   end
 
   create_table "instruments", :force => true do |t|
@@ -625,12 +648,12 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
     t.datetime "expiry"
   end
 
-  add_index "listing_changes_mview", ["id", "taxon_concept_id"], :name => "listing_changes_mview_tmp_id_taxon_concept_id_idx"
-  add_index "listing_changes_mview", ["inclusion_taxon_concept_id"], :name => "listing_changes_mview_tmp_inclusion_taxon_concept_id_idx"
-  add_index "listing_changes_mview", ["is_current", "designation_name", "change_type_name"], :name => "listing_changes_mview_tmp_is_current_designation_name_chang_idx"
-  add_index "listing_changes_mview", ["original_taxon_concept_id"], :name => "listing_changes_mview_tmp_original_taxon_concept_id_idx"
-  add_index "listing_changes_mview", ["show_in_downloads", "taxon_concept_id", "designation_id"], :name => "listing_changes_mview_tmp_show_in_downloads_taxon_concept_i_idx"
-  add_index "listing_changes_mview", ["show_in_timeline", "taxon_concept_id", "designation_id"], :name => "listing_changes_mview_tmp_show_in_timeline_taxon_concept_id_idx"
+  add_index "listing_changes_mview", ["id", "taxon_concept_id"], :name => "listing_changes_mview_tmp_id_taxon_concept_id_idx1"
+  add_index "listing_changes_mview", ["inclusion_taxon_concept_id"], :name => "listing_changes_mview_tmp_inclusion_taxon_concept_id_idx1"
+  add_index "listing_changes_mview", ["is_current", "designation_name", "change_type_name"], :name => "listing_changes_mview_tmp_is_current_designation_name_chan_idx1"
+  add_index "listing_changes_mview", ["original_taxon_concept_id"], :name => "listing_changes_mview_tmp_original_taxon_concept_id_idx1"
+  add_index "listing_changes_mview", ["show_in_downloads", "taxon_concept_id", "designation_id"], :name => "listing_changes_mview_tmp_show_in_downloads_taxon_concept__idx1"
+  add_index "listing_changes_mview", ["show_in_timeline", "taxon_concept_id", "designation_id"], :name => "listing_changes_mview_tmp_show_in_timeline_taxon_concept_i_idx1"
 
   create_table "listing_distributions", :force => true do |t|
     t.integer  "listing_change_id",                   :null => false
@@ -643,6 +666,27 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
 
   add_index "listing_distributions", ["geo_entity_id"], :name => "index_listing_distributions_on_geo_entity_id"
   add_index "listing_distributions", ["listing_change_id"], :name => "index_listing_distributions_on_listing_change_id"
+
+  create_table "names_for_transfer_import", :id => false, :force => true do |t|
+    t.string  "cites_name",        :limit => nil
+    t.string  "cites_taxon_code",  :limit => nil
+    t.integer "species_plus_id"
+    t.string  "species_plus_name", :limit => nil
+    t.string  "rank",              :limit => nil
+  end
+
+  create_table "permits_import", :id => false, :force => true do |t|
+    t.integer "shipment_number"
+    t.integer "permit_entry_number"
+    t.string  "permit_number",        :limit => nil
+    t.integer "permit_year"
+    t.string  "permit_reporter_type", :limit => nil
+    t.string  "entity_code",          :limit => nil
+  end
+
+  add_index "permits_import", ["permit_number"], :name => "index_permits_import_on_permit_number"
+  add_index "permits_import", ["permit_reporter_type"], :name => "index_permits_import_on_permit_reporter_type"
+  add_index "permits_import", ["shipment_number"], :name => "index_permits_import_on_shipment_number"
 
   create_table "preset_tags", :force => true do |t|
     t.string   "name"
@@ -733,6 +777,50 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
     t.integer "legacy_id",       :null => false
     t.text    "legacy_type",     :null => false
     t.integer "alias_legacy_id", :null => false
+  end
+
+  create_table "shipments_import", :id => false, :force => true do |t|
+    t.integer "shipment_number"
+    t.string  "iso_country_code",    :limit => nil
+    t.string  "reporter_type",       :limit => nil
+    t.integer "shipment_year"
+    t.string  "appendix",            :limit => nil
+    t.string  "cites_taxon_code",    :limit => nil
+    t.string  "term_code_1",         :limit => nil
+    t.string  "term_code_2",         :limit => nil
+    t.string  "unit_code_1",         :limit => nil
+    t.string  "unit_code_2",         :limit => nil
+    t.decimal "quantity_1"
+    t.decimal "quantity_2"
+    t.string  "export_country_code", :limit => nil
+    t.string  "import_country_code", :limit => nil
+    t.string  "origin_country_code", :limit => nil
+    t.string  "source_code",         :limit => nil
+    t.string  "purpose_code",        :limit => nil
+    t.integer "permit_number_count"
+    t.string  "record_load_status",  :limit => nil
+  end
+
+  create_table "shipments_import_testing", :id => false, :force => true do |t|
+    t.integer "shipment_number"
+    t.string  "iso_country_code",    :limit => nil
+    t.string  "reporter_type",       :limit => nil
+    t.integer "shipment_year"
+    t.string  "appendix",            :limit => nil
+    t.string  "cites_taxon_code",    :limit => nil
+    t.string  "term_code_1",         :limit => nil
+    t.string  "term_code_2",         :limit => nil
+    t.string  "unit_code_1",         :limit => nil
+    t.string  "unit_code_2",         :limit => nil
+    t.decimal "quantity_1"
+    t.decimal "quantity_2"
+    t.string  "export_country_code", :limit => nil
+    t.string  "import_country_code", :limit => nil
+    t.string  "origin_country_code", :limit => nil
+    t.string  "source_code",         :limit => nil
+    t.string  "purpose_code",        :limit => nil
+    t.integer "permit_number_count"
+    t.string  "record_load_status",  :limit => nil
   end
 
   create_table "species_import", :id => false, :force => true do |t|
@@ -837,10 +925,14 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
     t.datetime "touched_at"
   end
 
-  add_index "taxon_concepts", ["full_name"], :name => "index_taxon_concepts_on_full_name"
   add_index "taxon_concepts", ["name_status"], :name => "index_taxon_concepts_on_name_status"
   add_index "taxon_concepts", ["parent_id"], :name => "index_taxon_concepts_on_parent_id"
   add_index "taxon_concepts", ["taxonomy_id"], :name => "index_taxon_concepts_on_taxonomy_id"
+
+  create_table "taxon_concepts_and_terms_pairs_import", :id => false, :force => true do |t|
+    t.string "taxon_family", :limit => nil
+    t.string "term_code",    :limit => nil
+  end
 
   create_table "taxon_concepts_mview", :id => false, :force => true do |t|
     t.integer  "id"
@@ -981,6 +1073,16 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
     t.string "unit_code", :limit => nil
   end
 
+  create_table "testhstore0", :id => false, :force => true do |t|
+    t.integer "a"
+    t.text    "b"
+    t.decimal "c"
+    t.float   "d"
+  end
+
+# Could not dump table "testhstore1" because of following StandardError
+#   Unknown type 'hstestdom1' for column 'e'
+
   create_table "trade_annual_report_uploads", :force => true do |t|
     t.integer  "created_by"
     t.integer  "updated_by"
@@ -1004,11 +1106,18 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
   end
 
   create_table "trade_permits", :force => true do |t|
-    t.string   "number",               :null => false
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.string   "number",                              :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
     t.string   "legacy_reporter_type"
+    t.string   "permit_number",        :limit => nil
+    t.integer  "shipment_number"
   end
+
+  add_index "trade_permits", ["id"], :name => "index_ids_on_trade_permits"
+  add_index "trade_permits", ["legacy_reporter_type"], :name => "index_trade_permits_on_legacy_reporter_type"
+  add_index "trade_permits", ["number"], :name => "index_numbers_on_trade_permits"
+  add_index "trade_permits", ["shipment_number"], :name => "index_trade_permits_on_shipment_number"
 
   create_table "trade_restriction_purposes", :force => true do |t|
     t.integer  "trade_restriction_id"
@@ -1051,7 +1160,7 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
     t.string   "excluded_taxon_concepts_ids", :limit => nil
   end
 
-  create_table "trade_sandbox_1", :force => true do |t|
+  create_table "trade_sandbox_3", :force => true do |t|
     t.string "appendix"
     t.string "species_name"
     t.string "term_code"
@@ -1066,68 +1175,6 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
     t.string "year"
     t.string "import_permit"
   end
-
-  add_index "trade_sandbox_1", ["appendix"], :name => "trade_sandbox_1_appendix_idx"
-  add_index "trade_sandbox_1", ["country_of_origin"], :name => "trade_sandbox_1_country_of_origin_idx"
-  add_index "trade_sandbox_1", ["purpose_code"], :name => "trade_sandbox_1_purpose_code_idx"
-  add_index "trade_sandbox_1", ["quantity"], :name => "trade_sandbox_1_quantity_idx"
-  add_index "trade_sandbox_1", ["source_code"], :name => "trade_sandbox_1_source_code_idx"
-  add_index "trade_sandbox_1", ["species_name"], :name => "trade_sandbox_1_species_name_idx"
-  add_index "trade_sandbox_1", ["term_code"], :name => "trade_sandbox_1_term_code_idx"
-  add_index "trade_sandbox_1", ["trading_partner"], :name => "trade_sandbox_1_trading_partner_idx"
-  add_index "trade_sandbox_1", ["unit_code"], :name => "trade_sandbox_1_unit_code_idx"
-
-  create_table "trade_sandbox_5", :force => true do |t|
-    t.string "appendix"
-    t.string "species_name"
-    t.string "term_code"
-    t.string "quantity"
-    t.string "unit_code"
-    t.string "trading_partner"
-    t.string "country_of_origin"
-    t.string "export_permit"
-    t.string "origin_permit"
-    t.string "purpose_code"
-    t.string "source_code"
-    t.string "year"
-    t.string "import_permit"
-  end
-
-  add_index "trade_sandbox_5", ["appendix"], :name => "trade_sandbox_5_appendix_idx"
-  add_index "trade_sandbox_5", ["country_of_origin"], :name => "trade_sandbox_5_country_of_origin_idx"
-  add_index "trade_sandbox_5", ["purpose_code"], :name => "trade_sandbox_5_purpose_code_idx"
-  add_index "trade_sandbox_5", ["quantity"], :name => "trade_sandbox_5_quantity_idx"
-  add_index "trade_sandbox_5", ["source_code"], :name => "trade_sandbox_5_source_code_idx"
-  add_index "trade_sandbox_5", ["species_name"], :name => "trade_sandbox_5_species_name_idx"
-  add_index "trade_sandbox_5", ["term_code"], :name => "trade_sandbox_5_term_code_idx"
-  add_index "trade_sandbox_5", ["trading_partner"], :name => "trade_sandbox_5_trading_partner_idx"
-  add_index "trade_sandbox_5", ["unit_code"], :name => "trade_sandbox_5_unit_code_idx"
-
-  create_table "trade_sandbox_6", :force => true do |t|
-    t.string "appendix"
-    t.string "species_name"
-    t.string "term_code"
-    t.string "quantity"
-    t.string "unit_code"
-    t.string "trading_partner"
-    t.string "country_of_origin"
-    t.string "export_permit"
-    t.string "origin_permit"
-    t.string "purpose_code"
-    t.string "source_code"
-    t.string "year"
-    t.string "import_permit"
-  end
-
-  add_index "trade_sandbox_6", ["appendix"], :name => "trade_sandbox_6_appendix_idx"
-  add_index "trade_sandbox_6", ["country_of_origin"], :name => "trade_sandbox_6_country_of_origin_idx"
-  add_index "trade_sandbox_6", ["purpose_code"], :name => "trade_sandbox_6_purpose_code_idx"
-  add_index "trade_sandbox_6", ["quantity"], :name => "trade_sandbox_6_quantity_idx"
-  add_index "trade_sandbox_6", ["source_code"], :name => "trade_sandbox_6_source_code_idx"
-  add_index "trade_sandbox_6", ["species_name"], :name => "trade_sandbox_6_species_name_idx"
-  add_index "trade_sandbox_6", ["term_code"], :name => "trade_sandbox_6_term_code_idx"
-  add_index "trade_sandbox_6", ["trading_partner"], :name => "trade_sandbox_6_trading_partner_idx"
-  add_index "trade_sandbox_6", ["unit_code"], :name => "trade_sandbox_6_unit_code_idx"
 
   create_table "trade_sandbox_template", :force => true do |t|
     t.string "appendix"
@@ -1144,33 +1191,6 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
     t.string "year"
     t.string "import_permit"
   end
-
-  create_table "trade_shipment_export_permits", :force => true do |t|
-    t.integer  "trade_permit_id",   :null => false
-    t.integer  "trade_shipment_id", :null => false
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-  end
-
-  add_index "trade_shipment_export_permits", ["trade_shipment_id", "trade_permit_id"], :name => "index_shipment_export_permits_on_shipment_id_and_permit_id", :unique => true
-
-  create_table "trade_shipment_import_permits", :force => true do |t|
-    t.integer  "trade_permit_id",   :null => false
-    t.integer  "trade_shipment_id", :null => false
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-  end
-
-  add_index "trade_shipment_import_permits", ["trade_shipment_id", "trade_permit_id"], :name => "index_shipment_import_permits_on_shipment_id_and_permit_id", :unique => true
-
-  create_table "trade_shipment_origin_permits", :force => true do |t|
-    t.integer  "trade_permit_id",   :null => false
-    t.integer  "trade_shipment_id", :null => false
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-  end
-
-  add_index "trade_shipment_origin_permits", ["trade_shipment_id", "trade_permit_id"], :name => "index_shipment_origin_permits_on_shipment_id_and_permit_id", :unique => true
 
   create_table "trade_shipments", :force => true do |t|
     t.integer  "source_id"
@@ -1193,7 +1213,6 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
     t.string   "import_permit_number"
     t.string   "export_permit_number"
     t.string   "origin_permit_number"
-    t.string   "permits_ids",                   :limit => nil
     t.integer  "legacy_shipment_number"
     t.string   "import_permits_ids",            :limit => nil
     t.string   "export_permits_ids",            :limit => nil
@@ -1202,9 +1221,12 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
 
   add_index "trade_shipments", ["appendix"], :name => "index_trade_shipments_on_appendix"
   add_index "trade_shipments", ["country_of_origin_id"], :name => "index_trade_shipments_on_country_of_origin_id"
+  add_index "trade_shipments", ["export_permits_ids"], :name => "index_trade_shipments_on_export_permits_ids"
   add_index "trade_shipments", ["exporter_id"], :name => "index_trade_shipments_on_exporter_id"
+  add_index "trade_shipments", ["import_permits_ids"], :name => "index_trade_shipments_on_import_permits_ids"
   add_index "trade_shipments", ["importer_id"], :name => "index_trade_shipments_on_importer_id"
   add_index "trade_shipments", ["legacy_shipment_number"], :name => "index_trade_shipments_on_legacy_shipment_number"
+  add_index "trade_shipments", ["origin_permits_ids"], :name => "index_trade_shipments_on_origin_permits_ids"
   add_index "trade_shipments", ["purpose_id"], :name => "index_trade_shipments_on_purpose_id"
   add_index "trade_shipments", ["quantity"], :name => "index_trade_shipments_on_quantity"
   add_index "trade_shipments", ["reported_taxon_concept_id"], :name => "index_trade_shipments_on_reported_taxon_concept_id"
@@ -1265,9 +1287,8 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
 
   create_table "valid_species_name_appendix_year_mview", :id => false, :force => true do |t|
     t.string  "species_name"
-    t.integer "taxon_concept_id"
     t.integer "year"
-    t.string  "appendix",         :limit => nil
+    t.string  "appendix",     :limit => nil
   end
 
   add_index "valid_species_name_appendix_year_mview", ["species_name", "appendix", "year"], :name => "valid_species_name_appendix_yea_species_name_appendix_year_idx1"
@@ -1368,15 +1389,6 @@ ActiveRecord::Schema.define(:version => 20140113173345) do
   add_foreign_key "trade_restrictions", "geo_entities", name: "trade_restrictions_geo_entity_id_fk"
   add_foreign_key "trade_restrictions", "taxon_concepts", name: "trade_restrictions_taxon_concept_id_fk"
   add_foreign_key "trade_restrictions", "trade_codes", name: "trade_restrictions_unit_id_fk", column: "unit_id"
-
-  add_foreign_key "trade_shipment_export_permits", "trade_permits", name: "trade_shipment_export_permits_trade_permit_id_fk"
-  add_foreign_key "trade_shipment_export_permits", "trade_shipments", name: "trade_shipment_export_permits_trade_shipment_id_fk"
-
-  add_foreign_key "trade_shipment_import_permits", "trade_permits", name: "trade_shipment_import_permits_trade_permit_id_fk"
-  add_foreign_key "trade_shipment_import_permits", "trade_shipments", name: "trade_shipment_import_permits_trade_shipment_id_fk"
-
-  add_foreign_key "trade_shipment_origin_permits", "trade_permits", name: "trade_shipment_origin_permits_trade_permit_id_fk"
-  add_foreign_key "trade_shipment_origin_permits", "trade_shipments", name: "trade_shipment_origin_permits_trade_shipment_id_fk"
 
   add_foreign_key "trade_shipments", "geo_entities", name: "trade_shipments_country_of_origin_id_fk", column: "country_of_origin_id"
   add_foreign_key "trade_shipments", "geo_entities", name: "trade_shipments_exporter_id_fk", column: "exporter_id"

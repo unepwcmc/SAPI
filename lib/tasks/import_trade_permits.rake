@@ -12,10 +12,11 @@ namespace :import do
       delete_shipment_number_tmp_column
       drop_indices(trade_permits_to_index)
       drop_indices(permits_import_to_index)
+      drop_indices(trade_shipments_to_index)
 
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      #drop_table(TMP_TABLE)
+      #create_table_from_csv_headers(file, TMP_TABLE)
+      #copy_data(file, TMP_TABLE)
 
       add_shipment_number_tmp_column
       create_indices(permits_import_to_index, "btree")
@@ -45,7 +46,7 @@ def drop_indices index
       sql = <<-SQL
       DROP INDEX IF EXISTS index_#{table}_on_#{column};
       SQL
-      puts "Dropping index #{index}"
+      puts "Dropping index #{column} on #{table}"
       execute_query(sql)
     end
   end
@@ -99,8 +100,9 @@ def insert_into_trade_shipments
   permits_entity.each do |k,v|
     sql = <<-SQL          
     UPDATE trade_shipments
-    SET #{k}_permits_ids = a.ids
+    SET #{k}_permits_ids = a.ids, #{k}_permit_number = permit_number
     FROM (SELECT array_agg(id) as ids, 
+    string_agg(permit_number, ';') AS permit_number
     shipment_number
     from trade_permits
     where legacy_reporter_type = '#{v}'
