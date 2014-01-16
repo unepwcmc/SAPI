@@ -9,23 +9,23 @@ namespace :import do
       trade_shipments_indexed = {"trade_shipments" => ["export_permits_ids", "import_permits_ids", "origin_permits_ids"]}
       trade_shipments_to_index = {"trade_shipments" => ["legacy_shipment_number"]}
 
-      delete_shipment_number_tmp_column
-      drop_indices(trade_permits_to_index)
-      drop_indices(permits_import_to_index)
-      drop_indices(trade_shipments_to_index)
+      #delete_shipment_number_tmp_column
+      #drop_indices(trade_permits_to_index)
+      #drop_indices(permits_import_to_index)
+      #drop_indices(trade_shipments_to_index)
 
       #drop_table(TMP_TABLE)
       #create_table_from_csv_headers(file, TMP_TABLE)
       #copy_data(file, TMP_TABLE)
 
-      add_shipment_number_tmp_column
-      create_indices(permits_import_to_index, "btree")
+      #add_shipment_number_tmp_column
+      #create_indices(permits_import_to_index, "btree")
 
-      populate_trade_permits
+      #populate_trade_permits
 
-      create_indices(trade_permits_to_index, "btree")
-      drop_indices(trade_shipments_indexed)
-      create_indices(trade_shipments_to_index, "btree")
+      #create_indices(trade_permits_to_index, "btree")
+      #drop_indices(trade_shipments_indexed)
+      #create_indices(trade_shipments_to_index, "btree")
 
       insert_into_trade_shipments
 
@@ -102,7 +102,7 @@ def insert_into_trade_shipments
     UPDATE trade_shipments
     SET #{k}_permits_ids = a.ids, #{k}_permit_number = permit_number
     FROM (SELECT array_agg(id) as ids, 
-    string_agg(permit_number, ';') AS permit_number
+    string_agg(permit_number, ';') AS permit_number,
     shipment_number
     from trade_permits
     where legacy_reporter_type = '#{v}'
