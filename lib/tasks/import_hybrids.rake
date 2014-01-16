@@ -31,11 +31,11 @@ namespace :import do
 
         INSERT INTO taxon_concepts
         (name, 
-          ranks_id, 
-          taxon_names_id, 
-          legacy_trade_code, 
-          created_at, 
-          updated_at)
+        ranks_id, 
+        taxon_names_id, 
+        legacy_trade_code, 
+        created_at, 
+        updated_at)
         SELECT
         full_hybrid_name, 
         r.id as ranks_id, 
