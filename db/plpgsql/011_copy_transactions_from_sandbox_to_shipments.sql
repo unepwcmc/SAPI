@@ -53,7 +53,7 @@ BEGIN
       SELECT number FROM trade_permits
     )
     INSERT INTO trade_permits(number, created_at, updated_at)
-    SELECT number, current_date, current_date
+    SELECT number, current_timestamp, current_timestamp
     FROM permits_to_be_inserted';
 
   EXECUTE sql;
@@ -182,30 +182,21 @@ BEGIN
     sql := 'WITH split_permits AS (
       SELECT id, SQUISH(regexp_split_to_table(' || permit_type || '_permit, ''[:;,]'')) AS permit
       FROM '|| table_name || '
-    ), inserted_shipment_permits AS (
-      INSERT INTO trade_shipment_' || permit_type || '_permits(
-        trade_shipment_id,
-        trade_permit_id,
-        created_at,
-        updated_at
-      )
+    ), shipment_permits AS (
       SELECT DISTINCT ON (1,2)
-        shipments_for_submit.id,
-        trade_permits.id,
-        current_date,
-        current_date
+        shipments_for_submit.id AS trade_shipment_id,
+        trade_permits.id AS trade_permit_id,
+        trade_permits.number
       FROM '|| table_name || '_for_submit shipments_for_submit
       INNER JOIN split_permits
         ON split_permits.id = shipments_for_submit.sandbox_id
       INNER JOIN trade_permits
         ON trade_permits.number = split_permits.permit
-      RETURNING *
     ), agg_shipment_permits AS (
       SELECT trade_shipment_id,
       ARRAY_AGG(trade_permit_id) AS permits_ids,
       ARRAY_TO_STRING(ARRAY_AGG(number), '';'') AS permit_number
-      FROM inserted_shipment_permits
-      JOIN trade_permits ON trade_permits.id = inserted_shipment_permits.trade_permit_id
+      FROM shipment_permits
       GROUP BY trade_shipment_id
     )
     UPDATE trade_shipments

@@ -62,15 +62,6 @@ class Trade::Shipment < ActiveRecord::Base
   belongs_to :country_of_origin, :class_name => "GeoEntity"
   belongs_to :exporter, :class_name => "GeoEntity"
   belongs_to :importer, :class_name => "GeoEntity"
-  has_many :shipment_import_permits, :foreign_key => :trade_shipment_id,
-    :class_name => "Trade::ShipmentImportPermit", :dependent => :destroy
-  has_many :import_permits, :through => :shipment_import_permits
-  has_many :shipment_export_permits, :foreign_key => :trade_shipment_id,
-    :class_name => "Trade::ShipmentExportPermit", :dependent => :destroy
-  has_many :export_permits, :through => :shipment_export_permits
-  has_many :shipment_origin_permits, :foreign_key => :trade_shipment_id,
-    :class_name => "Trade::ShipmentOriginPermit", :dependent => :destroy
-  has_many :origin_permits, :through => :shipment_origin_permits
 
   after_validation do
     unless self.errors.empty? && self.ignore_warnings
@@ -139,11 +130,8 @@ class Trade::Shipment < ActiveRecord::Base
     permits = str && str.split(';').compact.map do |number|
       Trade::Permit.find_or_create_by_number(number.strip)
     end
-    self.send("#{permit_type}_permits=", permits)
-    str = permits && permits.map(&:number).join(';')
-
     # save the concatenated permit numbers in the precomputed field
-    write_attribute("#{permit_type}_permit_number", str)
+    write_attribute("#{permit_type}_permit_number", permits && permits.map(&:number).join(';'))
     # save the array of permit ids in the precomputed field
     update_attribute("#{permit_type}_permits_ids", permits && permits.map(&:id))
   end

@@ -74,7 +74,9 @@ module Sapi
       DROP INDEX IF EXISTS index_trade_shipments_on_term_id;
       DROP INDEX IF EXISTS index_trade_shipments_on_unit_id;
       DROP INDEX IF EXISTS index_trade_shipments_on_year;
-      DROP INDEX IF EXISTS index_trade_shipments_on_permits_ids;
+      DROP INDEX IF EXISTS index_trade_shipments_on_import_permits_ids;
+      DROP INDEX IF EXISTS index_trade_shipments_on_export_permits_ids;
+      DROP INDEX IF EXISTS index_trade_shipments_on_origin_permits_ids;
       DROP INDEX IF EXISTS index_trade_shipments_on_legacy_shipment_number;
       SQL
       ActiveRecord::Base.connection.execute(sql)
@@ -134,6 +136,18 @@ module Sapi
         ON trade_shipments
         USING btree
         (year);
+      CREATE INDEX index_trade_shipments_on_import_permits_ids
+        ON trade_shipments
+        USING GIN
+        (import_permits_ids);
+      CREATE INDEX index_trade_shipments_on_export_permits_ids
+        ON trade_shipments
+        USING GIN
+        (export_permits_ids);
+      CREATE INDEX index_trade_shipments_on_origin_permits_ids
+        ON trade_shipments
+        USING GIN
+        (origin_permits_ids);
       CREATE INDEX index_trade_shipments_on_legacy_shipment_number
         ON trade_shipments
         USING btree
