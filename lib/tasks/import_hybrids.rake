@@ -27,14 +27,28 @@ namespace :import do
         SELECT full_hybrid_name,
         now()::date AS created_at,
         now()::date AS updated_at
-        from 
+        FROM hybrids_import;
 
-
-
-        SELECT full_hybrid_name, r.id
+        INSERT INTO taxon_concepts
+        (name, 
+          ranks_id, 
+          taxon_names_id, 
+          legacy_trade_code, 
+          created_at, 
+          updated_at)
+        SELECT
+        full_hybrid_name, 
+        r.id as ranks_id, 
+        tn.id as taxon_names_id, 
+        legacy_cites_taxon_code as legacy_trade_code,
+        tx.id,
+        now()::date AS created_at,
+        now()::date AS updated_at
         FROM hybrids_import
-        LEFT JOIN ranks r
-        ON hybrid_rank = r.name
+        INNER JOIN ranks r ON hybrid_rank = r.name
+        INNER JOIN taxon_names tn ON full_hybrid_name = tn.scientific_name,
+        taxonomies tx 
+        WHERE tx.name = 'CITES_EU'
         SQL
 
         ActiveRecord::Base.connection.execute(sql)
