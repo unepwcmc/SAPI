@@ -1,13 +1,24 @@
 Trade.AnnualReportUploadController = Ember.ObjectController.extend
+  needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   visibleShipments: []
+  currentShipment: null
   filtersSelected: false
 
-  tableController: Ember.computed ->
-    controller = Ember.get('Trade.SandboxShipmentsTable.TableController').create()
-    controller.set('annualReportUploadController', @)
-    controller
-  .property('sandboxShipmentsLoaded')
+  columns: [
+    'appendix', 'speciesName',
+    'termCode', 'quantity',  'unitCode',
+    'tradingPartner', 'countryOfOrigin',
+    'importPermit', 'exportPermit', 'originPermit',
+    'purposeCode', 'sourceCode', 'year'
+  ]
+
+  allAppendices: [
+    Ember.Object.create({id: 'I', name: 'I'}),
+    Ember.Object.create({id: 'II', name: 'II'}),
+    Ember.Object.create({id: 'III', name: 'III'}),
+    Ember.Object.create({id: 'N', name: 'N'})
+  ]
 
   sandboxShipmentsDidLoad: ( ->
     @set('visibleShipments', @get('content.sandboxShipments'))
@@ -173,7 +184,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
   resetFilters: ->
     @beginPropertyChanges()
-    @get('columnNames').forEach (columnName) =>
+    @get('columns').forEach (columnName) =>
       selectedValuesName = 'selected' + @capitaliseFirstLetter(columnName) + 'Values'
       @set(selectedValuesName, [])
       blankValueName = 'blank' + @capitaliseFirstLetter(columnName)
@@ -190,12 +201,10 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     @get('content.sandboxShipments').forEach (shipment) ->
       shipment.set('_modified', false)
     @endPropertyChanges()
-
-  columnNames: ( ->
-    @get('tableController.columnNames')
-  ).property('tableController.columnNames')
+    
 
   actions:
+
     submitShipments: ()->
       if @get('content.isDirty')
         alert "You have unsaved changes, please save those before submitting your shipments"
@@ -255,7 +264,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
     updateSelection: () ->
       valuesToUpdate = {'_modified': true}
-      @get('columnNames').forEach (columnName) =>
+      @get('columns').forEach (columnName) =>
         el = $('.sandbox-form').find('input[type=text][name=' + columnName + ']')
         blank = $('.sandbox-form').find('input[type=checkbox][name=' + columnName + ']:checked')
         valuesToUpdate[columnName] = el.val() if el && el.val()
@@ -274,3 +283,23 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
     cancelSelectForUpdate: () ->
       $('.sandbox-form').find('input[type=text]').val(null)
       @set('filtersVisible', true)
+
+    
+    #### Single shipment related ####
+
+    editShipment: (shipment) ->
+      @set('currentShipment', shipment)
+      $('.shipment-form-modal').modal('show')
+
+    updateShipment: (shipment) ->
+      shipment.setProperties({'_modified': true})
+      @set('currentShipment', null)
+      $('.shipment-form-modal').modal('hide')
+
+    deleteShipment: (shipment) ->
+      shipment.setProperties({'_destroyed': true, '_modified': true})
+
+    cancelShipmentEdit: (shipment) ->
+      shipment.setProperties(shipment.get('data'))
+      @set('currentShipment', null)
+      $('.shipment-form-modal').modal('hide')
