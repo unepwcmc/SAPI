@@ -242,6 +242,11 @@ class CsvToDbMap
     'taxon_concepts_and_terms_pairs_import' => {
       'TAXON_FAMILY' => 'TAXON_FAMILY varchar',
       'TERM_CODE' => 'TERM_CODE varchar'
+    },
+    'eu_annex_regulations_end_dates_import' => {
+      'Name' => 'name varchar',
+      'Effective from' => 'effective_at date',
+      'End Date' => 'end_date date'
     }
   }
 
