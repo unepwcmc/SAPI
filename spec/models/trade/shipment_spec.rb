@@ -39,35 +39,9 @@ describe Trade::Shipment do
       subject { build(:shipment, :appendix => 'I/II') }
       specify { subject.should have(1).error_on(:appendix) }
     end
-    context "when country of origin not given" do
-      context "and origin permit not given" do
-        subject { build(:shipment, :country_of_origin => nil, :origin_permit_number => nil) }
-        specify { subject.should have(0).error_on(:country_of_origin) }
-      end
-      context "and origin permit given" do
-        subject { build(:shipment, :country_of_origin => nil, :origin_permit_number => 'a;b') }
-        specify { subject.should have(1).error_on(:country_of_origin) }
-      end
-    end
     context "when permit numbers given" do
       before(:each) do
-        country = create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-        @poland = create(:geo_entity,
-          :name_en => 'Poland', :iso_code2 => 'PL',
-          :geo_entity_type => country
-        )
-        @argentina = create(:geo_entity,
-          :name_en => 'Argentina', :iso_code2 => 'AR',
-          :geo_entity_type => country
-        )
-        @bolivia = create(:geo_entity,
-          :name_en => 'Bolivia', :iso_code2 => 'BO',
-          :geo_entity_type => country
-        )
         @shipment = create(:shipment,
-          :exporter_id => @poland.id,
-          :importer_id => @argentina.id,
-          :country_of_origin_id => @bolivia.id,
           :export_permit_number => 'a',
           :import_permit_number => 'b',
           :origin_permit_number => 'c'
@@ -75,15 +49,15 @@ describe Trade::Shipment do
       end
       context "when export permit" do
         subject { @shipment.export_permits.first }
-        specify { subject.geo_entity_id.should == @poland.id }
+        specify { subject.number.should == 'a' }
       end
       context "when import permit" do
         subject { @shipment.import_permits.first }
-        specify { subject.geo_entity_id.should == @argentina.id }
+        specify { subject.number.should == 'b' }
       end
       context "when origin permit" do
         subject { @shipment.origin_permits.first }
-        specify { subject.geo_entity_id.should == @bolivia.id }
+        specify { subject.number.should == 'c' }
       end
     end
   end

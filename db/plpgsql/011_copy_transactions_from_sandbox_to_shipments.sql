@@ -34,86 +34,27 @@ BEGIN
   RAISE INFO '[%] Copying % rows from %', table_name, total_shipments, table_name;
 
 
-  sql := 'WITH split_export_permits AS (
+  sql := '
+    WITH split_permits AS (
       SELECT id,
-      SQUISH(regexp_split_to_table(export_permit, ''[:;,]'')) AS export_permit,
-      trading_partner
+      SQUISH(regexp_split_to_table(export_permit, ''[:;,]'')) AS permit
       FROM '|| table_name || '
-    ), split_import_permits AS (
+      UNION
       SELECT id,
-      SQUISH(regexp_split_to_table(import_permit, ''[:;,]'')) AS import_permit,
-      country_of_origin, trading_partner
+      SQUISH(regexp_split_to_table(import_permit, ''[:;,]'')) AS permit
       FROM '|| table_name || '
-    ), split_origin_permits AS (
+      UNION
       SELECT id,
-      SQUISH(regexp_split_to_table(origin_permit, ''[:;,]'')) AS origin_permit,
-      country_of_origin
+      SQUISH(regexp_split_to_table(origin_permit, ''[:;,]'')) AS permit
       FROM '|| table_name || '
+    ), permits_to_be_inserted (number) AS (
+      SELECT DISTINCT permit FROM split_permits WHERE permit IS NOT NULL
+      EXCEPT
+      SELECT number FROM trade_permits
     )
-    SELECT origin_permit, geo_entities.id
-    FROM split_origin_permits
-    INNER JOIN geo_entities ON geo_entities.iso_code2 = country_of_origin
-    WHERE origin_permit IS NOT NULL AND country_of_origin IS NOT NULL
-      AND NOT EXISTS (
-        SELECT id FROM trade_permits
-        WHERE geo_entity_id = geo_entities.id
-          AND number = origin_permit
-      )';
-  IF aru.point_of_view = 'E' THEN
-    sql := sql || 'UNION
-      SELECT export_permit, ' || aru.trading_country_id ||
-      '
-      FROM split_export_permits
-      INNER JOIN geo_entities ON geo_entities.iso_code2 = trading_partner
-      WHERE export_permit IS NOT NULL
-        AND NOT EXISTS (
-          SELECT id from trade_permits
-          WHERE geo_entity_id = ' || aru.trading_country_id ||
-          ' AND number = export_permit
-        )
-      UNION
-      SELECT import_permit, geo_entities.id
-      FROM split_import_permits
-      INNER JOIN geo_entities ON geo_entities.iso_code2 = trading_partner
-      WHERE import_permit IS NOT NULL
-        AND NOT EXISTS (
-          SELECT id from trade_permits
-          WHERE geo_entity_id = geo_entities.id
-            AND number = import_permit
-        )';
-  ELSE
-    sql := sql || 'UNION
-      SELECT DISTINCT export_permit, geo_entities.id
-      FROM split_export_permits
-      INNER JOIN geo_entities ON geo_entities.iso_code2 = trading_partner
-      WHERE export_permit IS NOT NULL
-        AND NOT EXISTS (
-          SELECT id from trade_permits
-          WHERE geo_entity_id = geo_entities.id
-            AND number = export_permit
-        )
-      UNION
-      SELECT DISTINCT import_permit, ' || aru.trading_country_id ||
-      '
-      FROM split_import_permits
-      INNER JOIN geo_entities ON geo_entities.iso_code2 = trading_partner
-      WHERE import_permit IS NOT NULL
-        AND NOT EXISTS (
-          SELECT id from trade_permits
-          WHERE geo_entity_id = ' || aru.trading_country_id ||
-          ' AND number = import_permit
-        )';
-  END IF;
-
-  sql := 'WITH permits_to_be_inserted (number, geo_entity_id) AS (' ||
-    sql ||
-    '
-    EXCEPT
-    SELECT number, geo_entity_id FROM trade_permits
-  )
-  INSERT INTO trade_permits(number, geo_entity_id, created_at, updated_at)
-  SELECT DISTINCT number, geo_entity_id, current_date, current_date
-  FROM permits_to_be_inserted';
+    INSERT INTO trade_permits(number, created_at, updated_at)
+    SELECT number, current_date, current_date
+    FROM permits_to_be_inserted';
 
   EXECUTE sql;
 

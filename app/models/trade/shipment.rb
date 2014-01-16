@@ -51,8 +51,6 @@ class Trade::Shipment < ActiveRecord::Base
   validates :reporter_type, presence: true, :inclusion => {
     :in => ['E', 'I'], :message => 'should be one of E, I'
   }
-  validates :country_of_origin, :presence => true,
-    :unless => Proc.new { |s| s.origin_permit_number.blank? }
   validates_with Trade::ShipmentSecondaryErrorsValidator
 
   belongs_to :taxon_concept
@@ -97,15 +95,15 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def import_permit_number=(str)
-    set_permit_number('import', str, self.importer_id)
+    set_permit_number('import', str)
   end
 
   def export_permit_number=(str)
-    set_permit_number('export', str, self.exporter_id)
+    set_permit_number('export', str)
   end
 
   def origin_permit_number=(str)
-    set_permit_number('origin', str, self.country_of_origin_id)
+    set_permit_number('origin', str)
   end
 
   def permits_ids
@@ -121,10 +119,10 @@ class Trade::Shipment < ActiveRecord::Base
   # note: this updates the precomputed fields
   # needs to be invoked via custom permit number setters
   # (import_permit_number=, export_permit_number=, origin_permit_number=)
-  def set_permit_number(permit_type, str, geo_entity_id)
+  def set_permit_number(permit_type, str)
     if str
       permits = str.split(';').compact.map do |number|
-        Trade::Permit.find_or_create_by_number_and_geo_entity_id(number.strip, geo_entity_id)
+        Trade::Permit.find_or_create_by_number(number.strip)
       end
       self.send("#{permit_type}_permits=", permits)
       str = permits.map(&:number).join(';')

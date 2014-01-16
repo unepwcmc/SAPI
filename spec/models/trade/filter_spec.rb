@@ -36,9 +36,9 @@ describe Trade::Filter do
     @unit = create(:unit, :code => 'KIL')
     @purpose = create(:purpose, :code => 'T')
     @source = create(:source, :code => 'W')
-    @import_permit = create(:permit, :number => 'AAA', :geo_entity_id => @argentina.id)
-    @export_permit1 = create(:permit, :number => 'BBB', :geo_entity_id => @portugal.id)
-    @export_permit2 = create(:permit, :number => 'CCC', :geo_entity_id => @portugal.id)
+    @import_permit = create(:permit, :number => 'AAA')
+    @export_permit1 = create(:permit, :number => 'BBB')
+    @export_permit2 = create(:permit, :number => 'CCC')
     @shipment1 = create(
       :shipment,
       :taxon_concept => @taxon_concept1,
