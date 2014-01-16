@@ -24,7 +24,7 @@ namespace :import do
         sql = <<-SQL
 
         INSERT INTO taxon_names(scientific_name, created_at, updated_at)
-        SELECT full_hybrid_name,
+        SELECT DISTINCT full_hybrid_name,
         now()::date AS created_at,
         now()::date AS updated_at
         FROM hybrids_import;
@@ -41,16 +41,21 @@ namespace :import do
         r.id as ranks_id, 
         tn.id as taxon_names_id, 
         legacy_cites_taxon_code as legacy_trade_code,
-        tx.id,
+        #{taxonomy_id},
         now()::date AS created_at,
         now()::date AS updated_at
         FROM hybrids_import
         INNER JOIN ranks r ON hybrid_rank = r.name
-        INNER JOIN taxon_names tn ON full_hybrid_name = tn.scientific_name,
-        taxonomies tx 
-        WHERE tx.name = 'CITES_EU'
-        SQL
+        INNER JOIN taxon_names tn ON full_hybrid_name = tn.scientific_name
+        
 
+
+        INSERT INTO taxon_relationships
+        (taxon_concept_id,
+
+
+        )
+        SQL
         ActiveRecord::Base.connection.execute(sql)
         puts "There are now #{Quota.count} CITES quotas in the database"
       end
