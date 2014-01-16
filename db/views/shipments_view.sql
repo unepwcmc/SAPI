@@ -5,9 +5,9 @@ CREATE VIEW trade_shipments_view AS
     year,
     appendix,
     taxon_concept_id,
-    taxon_concepts.full_name AS taxon,
+    full_name_with_spp(ranks.name, taxon_concepts.full_name) AS taxon,
     reported_taxon_concept_id,
-    reported_taxon_concepts.full_name AS reported_taxon,
+    full_name_with_spp(reported_taxon_ranks.name, reported_taxon_concepts.full_name) AS reported_taxon,
     importer_id,
     importers.iso_code2 AS importer,
     exporter_id,
@@ -19,7 +19,7 @@ CREATE VIEW trade_shipments_view AS
     END AS reporter_type,
     country_of_origin_id,
     countries_of_origin.iso_code2 AS country_of_origin,
-    quantity,
+    CASE WHEN quantity = 0 THEN NULL ELSE quantity END,
     unit_id,
     units.code AS unit,
     units.name_en AS unit_name_en,
@@ -41,8 +41,12 @@ CREATE VIEW trade_shipments_view AS
   FROM trade_shipments shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
+  JOIN ranks
+    ON ranks.id = taxon_concepts.rank_id
   LEFT JOIN taxon_concepts reported_taxon_concepts
     ON reported_taxon_concept_id = reported_taxon_concepts.id
+  JOIN ranks AS reported_taxon_ranks
+    ON reported_taxon_ranks.id = reported_taxon_concepts.rank_id
   JOIN geo_entities importers
     ON importers.id = importer_id
   JOIN geo_entities exporters

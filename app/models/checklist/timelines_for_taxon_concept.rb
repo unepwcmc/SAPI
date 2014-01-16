@@ -6,12 +6,11 @@ class Checklist::TimelinesForTaxonConcept
   def initialize(taxon_concept)
     @taxon_concept_id = taxon_concept.id
     @id = @taxon_concept_id
-    cites = Designation.find_by_name(Designation::CITES)
-    listing_changes = taxon_concept.listing_changes.where(
-      :designation_id => cites && cites.id, :show_in_timeline => true
+    listing_changes = taxon_concept.cites_listing_changes.where(
+      :show_in_timeline => true
     ).order(:effective_at)
     @current_appendices = listing_changes.where(
-      :is_current => true, 
+      :is_current => true,
       :change_type_name => ChangeType::ADDITION
     ).map(&:species_listing_name)
     @timeline_events = listing_changes.map(&:to_timeline_event)

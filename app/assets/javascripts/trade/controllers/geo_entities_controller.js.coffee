@@ -9,5 +9,5 @@ Trade.GeoEntitiesController = Ember.ArrayController.extend
   load: ->
     unless @get('loaded')
       @set('content', Trade.GeoEntity.find({
-      	geo_entity_types: ['COUNTRY', 'TERRITORY', 'TRADE_ENTITY']
+      	geo_entity_types_set: "4"
       }))

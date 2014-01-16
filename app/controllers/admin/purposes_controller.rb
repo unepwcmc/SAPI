@@ -1,6 +1,7 @@
 class Admin::PurposesController < Admin::AdminController
   inherit_resources
   respond_to :json, :only => [:update]
+  cache_sweeper :purpose_sweeper
 
   def index
     index! do |format|

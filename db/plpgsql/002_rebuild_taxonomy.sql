@@ -36,16 +36,6 @@ CREATE OR REPLACE FUNCTION full_name(rank_name VARCHAR(255), ancestors HSTORE) R
     END;
   $$;
 
-CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255)) RETURNS VARCHAR(255)
-  LANGUAGE sql IMMUTABLE
-  AS $$
-    SELECT CASE
-      WHEN $1 IN ('ORDER', 'FAMILY')
-      THEN $2 || ' spp.'
-      ELSE $2
-    END;
-  $$;
-
 CREATE OR REPLACE FUNCTION ancestors_names(node_id INTEGER) RETURNS HSTORE
   LANGUAGE sql
   AS $$

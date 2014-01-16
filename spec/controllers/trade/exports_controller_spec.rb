@@ -11,6 +11,8 @@ describe Trade::ExportsController do
       it "returns raw shipments file" do
         create(:shipment)
         Trade::ShipmentsExport.any_instance.stub(:public_file_name).and_return('shipments.csv')
+        Trade::TradeDataDownloadLogger.stub(:city_country_from).and_return(["Cambridge", "United Kingdom"])
+        Trade::TradeDataDownloadLogger.stub(:organization_from).and_return(["UNEP-WCMC"])
         get :download, :filters => {:report_type => :raw}
         response.content_type.should eq("text/csv")
         response.headers["Content-Disposition"].should eq("attachment; filename=\"shipments.csv\"")
@@ -23,6 +25,8 @@ describe Trade::ExportsController do
       it "logs download information from public interface to the TradeDataDownload model" do
         create(:shipment)
         Trade::ShipmentsExport.any_instance.stub(:public_file_name).and_return('shipments.csv')
+        Trade::TradeDataDownloadLogger.stub(:city_country_from).and_return(["Cambridge", "United Kingdom"])
+        Trade::TradeDataDownloadLogger.stub(:organization_from).and_return(["UNEP-WCMC"])
         get :download, :filters => {
             :report_type => :raw,
             :exporters_ids => ['40'],

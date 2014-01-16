@@ -25,15 +25,15 @@ describe TaxonConcept do
     end
 
     context "CASCADING LISTING" do
-      describe :current_additions do
+      describe :current_cms_additions do
         context "for family Cheloniidae" do
           specify {
-            @family.current_additions.size.should == 1
+            @family.current_cms_additions.size.should == 1
           }
         end
         context "for species Caretta caretta" do
           specify {
-            @species.current_additions.size.should == 2
+            @species.current_cms_additions.size.should == 2
           }
         end
       end

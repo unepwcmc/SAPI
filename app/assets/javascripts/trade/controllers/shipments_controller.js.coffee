@@ -98,6 +98,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     Ember.Object.create({id: 'I', name: 'Appendix I'}),
     Ember.Object.create({id: 'II', name: 'Appendix II'}),
     Ember.Object.create({id: 'III', name: 'Appendix III'})
+    Ember.Object.create({id: 'N', name: 'Appendix N'})
   ]
   allReporterTypeValues: ['E', 'I']
 
@@ -284,7 +285,10 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     )
 
   actions:
+
+    
     # creates a local new shipment (bound to currentShipment)
+
     newShipment: () ->
       @set('currentShipment', Trade.Shipment.createRecord())
       $('.shipment-form-modal').modal('show')
@@ -332,6 +336,21 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
             @flashMessage('Successfully deleted shipment.')
             @resetFilters()
           )
+
+    deleteFiltered: ->
+      if confirm("This will delete all filtered shipments. Are you sure?")
+        $.post '/trade/shipments/destroy_batch', @get('searchParamsForTransition'), (data) ->
+           'json'
+        .success( =>
+          @set('currentShipment', null)
+          @flashMessage('Successfully deleted filtered shipments.')
+          @resetFilters()
+        )
+        #.error( (xhr, msg, error) =>
+        #  @set('sandboxShipmentsSubmitting', false)
+        #  console.log "bad luck: ", xhr.responseText
+        #)
+
 
     editShipment: (shipment) ->
       @set('currentShipment', shipment)
