@@ -50,8 +50,7 @@ class Trade::PovInclusionValidationRule < Trade::InclusionValidationRule
     s = Arel::Table.new("#{table_name}_view")
     v = Arel::Table.new(valid_values_view)
     arel_nodes = column_names.map do |c|
-      func =Arel::Nodes::NamedFunction.new 'SQUISH_NULL', [s[c]]
-      v[c].eq(func)
+      v[c].eq(s[c])
     end
     join_conditions = arel_nodes.shift
     arel_nodes.each{ |n| join_conditions = join_conditions.and(n) }

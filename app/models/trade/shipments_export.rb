@@ -113,12 +113,10 @@ private
 
   def csv_separator
     case @filters['csv_separator']
-    when 'comma_separated'
-      return ','
-    when 'semicolon_separated'
-      return ';'
-    else
-      return ','
+      when 'semicolon_separated'
+        return ';'
+      else #default is 'comma_separated'
+        return ','
     end
   end
 

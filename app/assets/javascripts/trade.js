@@ -20,7 +20,6 @@
 //= require handlebars
 //= require ember
 //= require ember-data
-//= require ember-table
 //= require bootstrap-modal
 //= require bootstrap-collapse
 //= require bootstrap-alert

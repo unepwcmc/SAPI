@@ -79,7 +79,6 @@ FactoryGirl.define do
   end
 
   factory :permit, :class => Trade::Permit do
-    geo_entity
     sequence(:number) { |n| "Permit #{n}" }
   end
 end

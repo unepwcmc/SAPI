@@ -61,6 +61,12 @@ class Trade::ShipmentsController < ApplicationController
     render :json => nil, :status => :ok
   end
 
+  def destroy_batch
+    @search = Trade::Filter.new(params)
+    @search.query.destroy_all
+    render :json => nil, :status => :ok
+  end
+
 private
 
   def shipment_params

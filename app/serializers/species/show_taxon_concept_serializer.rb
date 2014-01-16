@@ -3,8 +3,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   root 'taxon_concept'
   attributes :id, :full_name, :author_year, :standard_references,
     :common_names, :distributions, :subspecies, :distribution_references,
-    :taxonomy,
-    :kingdom_name, :phylum_name, :order_name, :class_name, :family_name,
+    :taxonomy, :kingdom_name, :phylum_name, :order_name, :class_name, :family_name,
     :genus_name, :species_name
 
   has_many :synonyms, :serializer => Species::SynonymSerializer
@@ -81,7 +80,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
 
   def distributions
     object.distributions.joins(:geo_entity).
-      select('geo_entities.name_en AS name_en').
+      select('geo_entities.name_en AS name').
       joins("LEFT JOIN taggings ON
         taggings.taggable_id = distributions.id
         AND taggings.taggable_type = 'Distribution'
