@@ -37,7 +37,9 @@ CREATE VIEW trade_shipments_view AS
     import_permit_number,
     export_permit_number,
     origin_permit_number,
-    permits_ids
+    import_permits_ids,
+    export_permits_ids,
+    origin_permits_ids
   FROM trade_shipments shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id

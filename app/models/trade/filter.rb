@@ -112,7 +112,12 @@ class Trade::Filter
     end
 
     unless @permits_ids.empty?
-      @query = @query.where("permits_ids && ARRAY[?]::INT[]", @permits_ids)
+      @query = @query.where(
+        "import_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
+        OR export_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
+        OR origin_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]",
+        :permits_ids => @permits_ids
+      )
     end
 
     unless @quantity.nil?

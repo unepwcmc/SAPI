@@ -106,12 +106,28 @@ class Trade::Shipment < ActiveRecord::Base
     set_permit_number('origin', str)
   end
 
-  def permits_ids
-    parse_pg_array(read_attribute(:permits_ids))
+  def import_permits_ids
+    parse_pg_array(read_attribute(:import_permits_ids))
   end
 
-  def permits_ids=(ary)
-    write_attribute(:permits_ids, '{' + ary.join(',') + '}')
+  def import_permits_ids=(ary)
+    write_attribute(:import_permits_ids, '{' + ary.join(',') + '}')
+  end
+
+  def export_permits_ids
+    parse_pg_array(read_attribute(:export_permits_ids))
+  end
+
+  def export_permits_ids=(ary)
+    write_attribute(:export_permits_ids, '{' + ary.join(',') + '}')
+  end
+
+  def origin_permits_ids
+    parse_pg_array(read_attribute(:origin_permits_ids))
+  end
+
+  def origin_permits_ids=(ary)
+    write_attribute(:origin_permits_ids, '{' + ary.join(',') + '}')
   end
 
   private
@@ -120,17 +136,16 @@ class Trade::Shipment < ActiveRecord::Base
   # needs to be invoked via custom permit number setters
   # (import_permit_number=, export_permit_number=, origin_permit_number=)
   def set_permit_number(permit_type, str)
-    if str
-      permits = str.split(';').compact.map do |number|
-        Trade::Permit.find_or_create_by_number(number.strip)
-      end
-      self.send("#{permit_type}_permits=", permits)
-      str = permits.map(&:number).join(';')
+    permits = str && str.split(';').compact.map do |number|
+      Trade::Permit.find_or_create_by_number(number.strip)
     end
+    self.send("#{permit_type}_permits=", permits)
+    str = permits && permits.map(&:number).join(';')
+
     # save the concatenated permit numbers in the precomputed field
     write_attribute("#{permit_type}_permit_number", str)
-    # save all the permit ids in the precomputed field
-    update_attribute(:permits_ids, (import_permits + export_permits + origin_permits).map(&:id))
+    # save the array of permit ids in the precomputed field
+    update_attribute("#{permit_type}_permits_ids", permits && permits.map(&:id))
   end
 
 end
