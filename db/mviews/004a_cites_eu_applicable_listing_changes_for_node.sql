@@ -38,7 +38,7 @@ BEGIN
       AND excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
     )
     THEN FALSE
-    WHEN ARRAY_UPPER(excluded_taxon_concept_ids, 1) IS NOT NULL 
+    WHEN ARRAY_UPPER(excluded_taxon_concept_ids, 1) IS NOT NULL
     -- if taxon or any of its ancestors is excluded from this listing
     AND excluded_taxon_concept_ids && ARRAY[
       affected_taxon_concept_id,
@@ -52,11 +52,11 @@ BEGIN
     ]
     THEN FALSE
     ELSE
-    TRUE 
+    TRUE
     END AS is_applicable
     FROM ' || LOWER(designation_name) || '_all_listing_changes_mview all_listing_changes_mview
     JOIN cites_eu_tmp_taxon_concepts_mview taxon_concepts_mview
-    ON all_listing_changes_mview.affected_taxon_concept_id = taxon_concepts_mview.id 
+    ON all_listing_changes_mview.affected_taxon_concept_id = taxon_concepts_mview.id
     WHERE all_listing_changes_mview.affected_taxon_concept_id = $1
     AND timeline_position = 1
 
@@ -102,7 +102,7 @@ BEGIN
     hi.change_type_id,
     hi.event_id,
     hi.effective_at,
-    CASE 
+    CASE
     WHEN (
         hi.inclusion_taxon_concept_id IS NOT NULL
         AND AVALS(listing_changes_timeline.context) @> ARRAY[hi.taxon_concept_id::TEXT]
@@ -127,7 +127,7 @@ BEGIN
       AND hi.excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
     )
     THEN FALSE
-    WHEN ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL 
+    WHEN ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL
     -- if taxon or any of its ancestors is excluded from this listing
     AND hi.excluded_taxon_concept_ids && ARRAY[
       hi.affected_taxon_concept_id,
@@ -143,7 +143,7 @@ BEGIN
     WHEN listing_changes_timeline.context -> hi.species_listing_id::TEXT = hi.taxon_concept_id::TEXT
     OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
     -- this line to make Moschus leucogaster happy
-    OR AVALS(listing_changes_timeline.context) @> ARRAY[hi.taxon_concept_id::TEXT] 
+    OR AVALS(listing_changes_timeline.context) @> ARRAY[hi.taxon_concept_id::TEXT]
     THEN TRUE
     WHEN listing_changes_timeline.context = ''''::HSTORE  --this would be the case when deleted
     AND (
@@ -164,8 +164,8 @@ BEGIN
     AND listing_changes_timeline.original_taxon_concept_id = hi.affected_taxon_concept_id
     AND listing_changes_timeline.timeline_position + 1 = hi.timeline_position
     JOIN change_types ON hi.change_type_id = change_types.id
-    JOIN cites_eu_tmp_taxon_concepts_mview taxon_concepts_mview 
-    ON hi.affected_taxon_concept_id = taxon_concepts_mview.id 
+    JOIN cites_eu_tmp_taxon_concepts_mview taxon_concepts_mview
+    ON hi.affected_taxon_concept_id = taxon_concepts_mview.id
   )
   SELECT listing_changes_timeline.id
   FROM listing_changes_timeline
