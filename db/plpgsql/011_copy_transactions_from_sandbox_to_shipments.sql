@@ -201,7 +201,7 @@ BEGIN
     )
     UPDATE trade_shipments
     SET ' || permit_type || '_permit_number = sp.permit_number,
-    ' || permit_type || '_permits_ids = sp.permits_ids::VARCHAR[] --TODO fix this
+    ' || permit_type || '_permits_ids = sp.permits_ids
     FROM agg_shipment_permits sp
     WHERE sp.trade_shipment_id = trade_shipments.id;
     ';
