@@ -1,0 +1,169 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h3>Shipment Edit</h3>
+</div>
+
+<div class="modal-body filters">
+
+  <form action="#">
+    <fieldset>
+      <div class="heading">
+        Name, Appendix and Year
+      </div>
+      <div class="inner">
+        <div class="attribute-area left species">
+          <p>Species name</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.speciesName}}</p>
+          {{view Trade.TaxonConceptSelect2
+            prompt="Please select species names"
+            valueBinding="currentShipment.speciesName"
+            origin="sandbox"
+          }}
+        </div>
+        <div class="attribute-area left">
+          <p>Appendix</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.appendix}}</p>
+            {{view Ember.Select
+              prompt="Please select appendix value"
+              valueBinding="currentShipment.appendix"
+              contentBinding='controller.allAppendices'
+              optionValuePath="content.name"
+              optionLabelPath="content.name"
+            }}
+        </div>
+        <div class="attribute-area left year">
+          <p>Year</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.year}}</p>
+            {{view Ember.TextField
+              prompt="Please type year value"
+              valueBinding="currentShipment.year"
+            }}
+        </div>
+      </div>
+
+      <div class="heading">
+        Trade Codes
+      </div>
+      <div class="inner">
+        <div class="attribute-area left">
+          <p>Term Code</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.termCode}}</p>
+            {{view Ember.Select
+              prompt="Please select term code value"
+              contentBinding="controllers.terms"
+              optionValuePath="content.code"
+              optionLabelPath="content.code"
+              valueBinding="currentShipment.termCode"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Unit Code</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.unitCode}}</p>
+            {{view Ember.Select
+              prompt="Please select unit code value"
+              contentBinding="controllers.units"
+              optionValuePath="content.code"
+              optionLabelPath="content.code"
+              valueBinding="currentShipment.unitCode"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Purpose Code</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.purposeCode}}</p>
+            {{view Ember.Select
+              prompt="Please select purpose code value"
+              contentBinding="controllers.purposes"
+              optionValuePath="content.code"
+              optionLabelPath="content.code"
+              valueBinding="currentShipment.purposeCode"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Source Code</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.sourceCode}}</p>
+            {{view Ember.Select
+              prompt="Please select source code value"
+              contentBinding="controllers.sources"
+              optionValuePath="content.code"
+              optionLabelPath="content.code"
+              valueBinding="currentShipment.sourceCode"
+            }}
+        </div>
+      </div>
+
+      <div class="heading">
+        Trading Partners
+      </div>
+      <div class="inner">
+        <div class="attribute-area left">
+          <p>TradingPartner</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.tradingPartner}}</p>
+            {{view Ember.Select
+              prompt="Please select trading partner"
+              contentBinding="controllers.geoEntities"
+              optionValuePath="content.isoCode2"
+              optionLabelPath="content.isoCode2"
+              valueBinding="currentShipment.tradingPartner"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Country of Origin</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.countryOfOrigin}}</p>
+            {{view Ember.Select
+              prompt="Please select country of origin value"
+              contentBinding="controllers.geoEntities"
+              optionValuePath="content.isoCode2"
+              optionLabelPath="content.isoCode2"
+              valueBinding="currentShipment.countryOfOrigin"
+            }}
+        </div>
+      </div>
+
+      <div class="heading">
+        Permit & Quantity
+      </div>
+      <div class="inner">
+        <div class="attribute-area left">
+          <p>Import Permit</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.importPermit}}</p>
+            {{view Ember.TextField
+              prompt="Please type import permit value"
+              valueBinding="currentShipment.importPermit"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Export Permit</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.exportPermit}}</p>
+            {{view Ember.TextField
+              prompt="Please type export permit value"
+              valueBinding="currentShipment.exportPermit"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Origin Permit</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.originPermit}}</p>
+            {{view Ember.TextField
+              prompt="Please type origin permit value"
+              valueBinding="currentShipment.originPermit"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Quantity</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.quantity}}</span></p>
+            {{view Ember.TextField
+              prompt="Please type quantity value"
+              valueBinding="currentShipment.quantity"
+            }}
+        </div>
+      </div>
+
+    </fieldset>
+  </form>
+</div>
+<div class="modal-footer">
+  {{confirm-button title="Update" action="updateShipment" shipmentBinding="currentShipment"
+  }}
+  <button {{action 'cancelShipmentEdit' currentShipment }} class="pull-right btn btn-primary">
+    Cancel
+  </button>
+</div>
