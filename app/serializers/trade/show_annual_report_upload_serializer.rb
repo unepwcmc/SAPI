@@ -4,7 +4,7 @@ class Trade::ShowAnnualReportUploadSerializer < ActiveModel::Serializer
   :is_done, :has_primary_errors, :created_at, :updated_at
   # has_one :created_by
   # has_one :updated_by
-  has_many :sandbox_shipments
+  # has_many :sandbox_shipments
   has_many :validation_errors
   def has_primary_errors
     !validation_errors.index{ |ve| ve.is_primary }.nil?
