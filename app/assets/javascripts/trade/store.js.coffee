@@ -44,6 +44,15 @@ Trade.Store.registerAdapter('Trade.TaxonConcept', DS.RESTAdapter.extend({
 Trade.Store.registerAdapter('Trade.AutoCompleteTaxonConcept', DS.RESTAdapter.extend({
   namespace: "api/v1"
 }))
+Trade.Store.registerAdapter('Trade.SandboxShipment', DS.RESTAdapter.extend({
+  namespace: "annual_report_uploads"
+  buildURL: () ->
+    hash = location.hash.split('?')
+    annual_report_upload_id = hash[0].split("/").find( (el) -> 
+      el.match(/[1-9]\d*/)
+    )
+    "trade/annual_report_uploads/#{annual_report_upload_id}/sandbox_shipments"
+}))
 
 DS.RESTAdapter.configure("plurals", { geo_entity: "geo_entities" })
 
