@@ -1,38 +1,45 @@
 namespace :import do
-    desc "Import trade permits from csv file"
-    task :trade_permits => [:environment] do
+    desc "Import trade permits from csv file (usage: rake import:trade_permits[path/to/file])"
+    task :trade_permits, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
 
       TMP_TABLE = "permits_import"
-      file = "lib/files/permit_details.csv"
       permits_import_to_index = {"permits_import" => ["permit_number", "shipment_number", "permit_reporter_type"]}
       trade_permits_to_index = {"trade_permits" => ["shipment_number", "legacy_reporter_type"]}
       trade_shipments_indexed = {"trade_shipments" => ["export_permits_ids", "import_permits_ids", "origin_permits_ids"]}
       trade_shipments_to_index = {"trade_shipments" => ["legacy_shipment_number"]}
 
-      #delete_shipment_number_tmp_column
-      #drop_indices(trade_permits_to_index)
-      #drop_indices(permits_import_to_index)
-      #drop_indices(trade_shipments_to_index)
 
-      #drop_table(TMP_TABLE)
-      #create_table_from_csv_headers(file, TMP_TABLE)
-      #copy_data(file, TMP_TABLE)
+      files = files_from_args(t, args)
+      files.each do |file|
+        drop_table(TMP_TABLE)
+        create_table_from_csv_headers(file, TMP_TABLE)
+        copy_data(file, TMP_TABLE)
 
-      #add_shipment_number_tmp_column
-      #create_indices(permits_import_to_index, "btree")
+        delete_shipment_number_tmp_column
+        drop_indices(trade_permits_to_index)
+        drop_indices(permits_import_to_index)
+        drop_indices(trade_shipments_to_index)
 
-      #populate_trade_permits
+        drop_table(TMP_TABLE)
+        create_table_from_csv_headers(file, TMP_TABLE)
+        copy_data(file, TMP_TABLE)
 
-      #create_indices(trade_permits_to_index, "btree")
-      #drop_indices(trade_shipments_indexed)
-      #create_indices(trade_shipments_to_index, "btree")
+        add_shipment_number_tmp_column
+        create_indices(permits_import_to_index, "btree")
 
-      insert_into_trade_shipments
+        populate_trade_permits
 
-      create_indices(trade_shipments_indexed, "GIN")
-      drop_indices(trade_shipments_to_index)
-      drop_indices(permits_import_to_index)
-      delete_shipment_number_tmp_column
+        create_indices(trade_permits_to_index, "btree")
+        drop_indices(trade_shipments_indexed)
+        create_indices(trade_shipments_to_index, "btree")
+
+        insert_into_trade_shipments
+
+        create_indices(trade_shipments_indexed, "GIN")
+        drop_indices(trade_shipments_to_index)
+        drop_indices(permits_import_to_index)
+        delete_shipment_number_tmp_column
+      end
   end
 end
 
