@@ -24,21 +24,20 @@ namespace :import do
     end
   end
 
-  desc "Import first shipments from csv file"
-  task :first_shipments => [:environment] do
+  desc "Import first shipments from csv file (usage: rake import:first_shipments[path/to/file])"
+  task :first_shipments, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     puts "opening file"
 
     TMP_TABLE = "shipments_import"
-    file = ARGV.last
-    task file.to_s do
+
+    files = files_from_args(t, args)
+    files.each do |file|  
       Sapi::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
-
       sql = <<-SQL
         DELETE FROM shipments_import  WHERE shipment_number =  8122168;
       SQL
       ActiveRecord::Base.connection.execute(sql)
-
       fix_term_codes = {12227624 => "LIV", 12225022 => "DER", 12224783 => "DER"}
       fix_term_codes.each do |shipment_number,term_code|
         sql = <<-SQL
@@ -48,16 +47,17 @@ namespace :import do
       end
       populate_shipments
       Sapi::Indexes.create_indexes_on_shipments
+
     end
   end
 
 
-  desc "Import shipments from csv file"
-  task :shipments => [:environment] do
+  desc "Import shipments from csv file (usage: rake import:first_shipments[path/to/file])"
+  task :first_shipments, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     TMP_TABLE = "shipments_import"
     puts "opening file"
-    file = ARGV.last
-    task file.to_s do
+    files = files_from_args(t, args)
+    files.each do |file|  
       Sapi::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
       populate_shipments
