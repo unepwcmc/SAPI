@@ -5,7 +5,7 @@ namespace :import do
   task :hybrids, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     TMP_TABLE = 'hybrids_import'
     taxonomy_id = Taxonomy.where(:name => 'CITES_EU').first.id
-    taxon_relationship_id = TaxonRelationship.joins(:taxon_relationship_type).where(:taxon_relationship_types => {:name => 'HAS_HYBRID'}).first.id
+    taxon_relationship_id = TaxonRelationshipType.where(:name => 'HAS_HYBRID').first.id
 
     puts "There are #{TaxonConcept.where(:name_status => "H",
       :taxonomy_id => taxonomy_id).count} in the database"
@@ -34,7 +34,8 @@ namespace :import do
         (full_name, 
         ranks_id, 
         taxon_names_id, 
-        legacy_trade_code, 
+        legacy_trade_code,
+        taxonomy_id, 
         created_at, 
         updated_at)
         SELECT
@@ -49,21 +50,19 @@ namespace :import do
         INNER JOIN ranks r ON hybrid_rank = r.name
         INNER JOIN taxon_names tn ON full_hybrid_name = tn.scientific_name;
         
-
-
         INSERT INTO taxon_relationships
         (taxon_concept_id,
         other_taxon_concept_id,
         taxon_relationship_id)
         SELECT 
-        species_plus_id,
-        id,
+        taxon_concepts.id,
+        other_taxon_concepts.id,
         #{taxon_relationship_id}
-        FROM hybrids_import
-        LEFT JOIN taxon_concepts 
-        ON full_hybrid_name = taxon_concepts.full_name
-
-
+        FROM hybrids_import hi
+        INNER JOIN taxon_concepts
+        ON species_plus_id = taxon_concepts.id;
+        LEFT JOIN taxon_concepts other_taxon_concepts
+        ON full_hybrid_name = other_taxon_concepts.full_name
         )
         SQL
         ActiveRecord::Base.connection.execute(sql)
