@@ -3,9 +3,13 @@ Trade.Router.map (match)->
 
   @resource 'annual_report_upload', { path: 'annual_report_uploads/:annual_report_upload_id' }, ->
 
-    @resource 'sandbox_shipments', { 
-      path: 'sandbox_shipments', 
-      queryParams: ['page']
+    @resource 'sandbox_shipments', {  
+      queryParams: [
+        'page', 'appendix', 'speciesName',
+        'termCode', 'quantity',  'unitCode',
+        'tradingPartner', 'countryOfOrigin',
+        'importPermit', 'exportPermit', 'originPermit',
+        'purposeCode', 'sourceCode', 'year']
     }
 
   @resource 'validation_rules'
