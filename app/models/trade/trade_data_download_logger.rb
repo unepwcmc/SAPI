@@ -15,7 +15,8 @@ module Trade::TradeDataDownloadLogger
     data["year_to"] = filters[:time_range_end]
     data["appendix"] = params['filters']['appendix']
     data["unit"] = params['filters']['unit']
-    data["taxon"] = params['filters']['selection_taxon']
+    data["taxon"] = TaxonConcept.where(:id => filters[:taxon_concepts_ids]).
+      order(:full_name).select(:full_name).map(&:full_name).join(", ")
     data["term"] = self.get_field_values(filters[:terms_ids], Term)
     data["purpose"] = self.get_field_values(filters[:purposes_ids], Purpose)
     data["source"] = self.get_field_values(filters[:sources_ids], Source)
@@ -61,8 +62,6 @@ module Trade::TradeDataDownloadLogger
     end
   end
 
-
-
   def self.city_country_from ip
     cdb = GeoIP.new(GEO_IP_CONFIG['city_db']) 
     cdb_names = cdb.city(ip)   
@@ -71,12 +70,9 @@ module Trade::TradeDataDownloadLogger
     [city, country]
   end
 
-
-
   def self.organization_from ip
     orgdb = GeoIP.new(GEO_IP_CONFIG['org_db'])
     org_names = orgdb.organization(ip)
     org_names.nil? ? "Unkown" : org_names.isp
   end
-
 end

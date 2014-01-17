@@ -3,15 +3,13 @@ class Checklist::Csv::History < Checklist::History
   include Checklist::Csv::HistoryContent
 
   def prepare_main_query
-    cites = Designation.find_by_name(Designation::CITES)
     @taxon_concepts_rel = MTaxonConcept.
       select(select_columns).
       where(:taxonomy_is_cites_eu => true).
-      joins(:listing_changes).where(
-        :"listing_changes_mview.show_in_downloads" => true,
-        :"listing_changes_mview.designation_id" => cites && cites.id
+      joins(:cites_listing_changes).where(
+        :"cites_listing_changes_mview.show_in_downloads" => true
       ).
-      joins('LEFT JOIN geo_entities ON listing_changes_mview.party_id = geo_entities.id').
+      joins('LEFT JOIN geo_entities ON cites_listing_changes_mview.party_id = geo_entities.id').
       order(<<-SQL
         taxonomic_position, effective_at,
         CASE
@@ -38,18 +36,18 @@ class Checklist::Csv::History < Checklist::History
       "taxon_concepts_mview.full_name",
       "taxon_concepts_mview.author_year",
       "taxon_concepts_mview.rank_name",
-      "listing_changes_mview.species_listing_name",
-      "listing_changes_mview.party_iso_code",
+      "cites_listing_changes_mview.species_listing_name",
+      "cites_listing_changes_mview.party_iso_code",
       "geo_entities.name_en AS party_full_name",
-      "listing_changes_mview.change_type_name",
+      "cites_listing_changes_mview.change_type_name",
       "to_char(effective_at, 'DD/MM/YYYY') AS effective_at_formatted",
-      "listing_changes_mview.is_current",
-      "listing_changes_mview.hash_ann_symbol",
-      "strip_tags(listing_changes_mview.hash_full_note_en) AS hash_full_note_en",
-      "strip_tags(listing_changes_mview.full_note_en) AS full_note_en",
-      "strip_tags(listing_changes_mview.short_note_en) AS short_note_en",
-      "strip_tags(listing_changes_mview.short_note_es) AS short_note_es",
-      "strip_tags(listing_changes_mview.short_note_fr) AS short_note_fr"
+      "cites_listing_changes_mview.is_current",
+      "cites_listing_changes_mview.hash_ann_symbol",
+      "strip_tags(cites_listing_changes_mview.hash_full_note_en) AS hash_full_note_en",
+      "strip_tags(cites_listing_changes_mview.full_note_en) AS full_note_en",
+      "strip_tags(cites_listing_changes_mview.short_note_en) AS short_note_en",
+      "strip_tags(cites_listing_changes_mview.short_note_es) AS short_note_es",
+      "strip_tags(cites_listing_changes_mview.short_note_fr) AS short_note_fr"
     ]
   end
  

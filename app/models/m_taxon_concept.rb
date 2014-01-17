@@ -80,10 +80,10 @@ class MTaxonConcept < ActiveRecord::Base
   self.primary_key = :id
 
   belongs_to :taxon_concept, :foreign_key => :id
-  has_many :listing_changes, :foreign_key => :taxon_concept_id, :class_name => MListingChange
+  has_many :cites_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MCitesListingChange
   has_many :historic_cites_listing_changes_for_downloads, :foreign_key => :taxon_concept_id,
-    :class_name => MListingChange,
-    :conditions => "show_in_downloads = 't' AND designation_name = '#{Designation::CITES}'",
+    :class_name => MCitesListingChange,
+    :conditions => {:show_in_downloads => true},
     :order => <<-SQL
       effective_at,
       CASE
@@ -93,14 +93,13 @@ class MTaxonConcept < ActiveRecord::Base
       WHEN change_type_name = 'DELETION' THEN 3
       END
     SQL
-  has_many :current_additions, :foreign_key => :taxon_concept_id,
-    :class_name => MListingChange,
-    :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'",
-    :order => 'effective_at DESC, species_listing_name ASC'
   has_many :current_cites_additions, :foreign_key => :taxon_concept_id,
-    :class_name => MListingChange,
-    :conditions => "is_current = 't' AND change_type_name = '#{ChangeType::ADDITION}'" +
-      " AND designation_name = '#{Designation::CITES}'",
+    :class_name => MCitesListingChange,
+    :conditions => {:is_current => true, :change_type_name => ChangeType::ADDITION},
+    :order => 'effective_at DESC, species_listing_name ASC'
+  has_many :current_cms_additions, :foreign_key => :taxon_concept_id,
+    :class_name => MCmsListingChange,
+    :conditions => {:is_current => true, :change_type_name => ChangeType::ADDITION},
     :order => 'effective_at DESC, species_listing_name ASC'
   scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
   scope :by_cms_taxonomy, where(:taxonomy_is_cites_eu => false)
