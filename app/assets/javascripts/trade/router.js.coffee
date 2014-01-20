@@ -3,13 +3,16 @@ Trade.Router.map (match)->
 
   @resource 'annual_report_upload', { path: 'annual_report_uploads/:annual_report_upload_id' }, ->
 
-    @resource 'sandbox_shipments', {  
+    @resource 'sandbox_shipments', {
       queryParams: [
-        'page', 'appendix', 'speciesName',
-        'termCode', 'quantity',  'unitCode',
-        'tradingPartner', 'countryOfOrigin',
-        'importPermit', 'exportPermit', 'originPermit',
-        'purposeCode', 'sourceCode', 'year']
+        # params' names in underscore separated format
+        # because like they are created in the validation
+        # error views;
+        'page', 'appendix', 'species_name',
+        'term_code', 'quantity',  'unit_code',
+        'trading_partner', 'country_of_origin',
+        'import_permit', 'export_permit', 'origin_permit',
+        'purpose_code', 'source_code', 'year']
     }
 
   @resource 'validation_rules'

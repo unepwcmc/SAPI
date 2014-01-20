@@ -311,4 +311,3 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
       @transitionToRoute('sandbox_shipments', {
         queryParams: errorSelector
       })
-
