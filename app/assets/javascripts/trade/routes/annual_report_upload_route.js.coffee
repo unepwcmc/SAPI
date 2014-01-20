@@ -10,3 +10,13 @@ Trade.AnnualReportUploadRoute = Ember.Route.extend
   afterModel: (aru, transition) ->
     if (aru.get('sandboxShipments.length') == 0)
       aru.reload()
+
+  #setupController: () ->
+  #  debugger
+
+  #model: (params, queryParams, transition) ->
+  #  debugger
+
+  #actions:
+  #  queryParamsDidChange: ->
+  #    @refresh()

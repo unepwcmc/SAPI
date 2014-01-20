@@ -10,3 +10,4 @@ Trade.AnnualReportUploadView = Ember.View.extend
       label = $(@).children('label.blank-checkbox').first()
       unless label.children('input[type=checkbox]:checked').length > 0
         label.hide()
+
