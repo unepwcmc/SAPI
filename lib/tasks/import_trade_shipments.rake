@@ -74,6 +74,38 @@ def drop_create_and_copy_temp(tmp_table, file)
   copy_data(file, tmp_table)
 end
 
+def update_country_codes
+  sql = <<-SQL
+    UPDATE shipments_import
+    SET export_country_code = 'ZZ'
+    WHERE export_country_code = '*S';
+    UPDATE shipments_import
+    SET origin_country_code = 'ZZ'
+    WHERE origin_country_code = '*S';
+    UPDATE shipments_import
+    SET export_country_code = 'MF'
+    WHERE export_country_code = 'FR' AND import_country_code = 'XA' AND reporter_type = 'E';
+    UPDATE shipments_import
+    SET export_country_code = 'MF'
+    WHERE export_country_code = 'KN' AND import_country_code = 'XA' AND reporter_type = 'E';
+    UPDATE shipments_import
+    SET export_country_code = 'DE'
+    WHERE export_country_code = 'AU' AND import_country_code = 'DD' AND reporter_type = 'E' AND shipment_year = 1998;
+    UPDATE shipments_import
+    SET export_country_code = 'XX'
+    WHERE export_country_code = 'AU' OR import_country_code = 'DD' AND reporter_type = 'E' AND shipment_year = 1998;
+    UPDATE shipments_import
+    SET export_country_code = 'XX'
+    WHERE export_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS');
+    UPDATE shipments_import
+    SET import_country_code = 'XX'
+    WHERE import_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS'); 
+    UPDATE shipments_import
+    SET origin_country_code = 'XX'
+    WHERE origin_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS');
+  SQL
+end
+
 def populate_shipments
   puts "Inserting into trade_shipments table"
   xx_id = GeoEntity.find_by_iso_code2('XX').id
