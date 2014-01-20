@@ -5,10 +5,10 @@ namespace :import do
   task :hybrids, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     TMP_TABLE = 'hybrids_import'
     taxonomy_id = Taxonomy.where(:name => 'CITES_EU').first.id
-    taxon_relationship_id = TaxonRelationshipType.where(:name => 'HAS_HYBRID').first.id
+    taxon_relationship_type_id = TaxonRelationshipType.where(:name => 'HAS_HYBRID').first.id
 
     puts "There are #{TaxonConcept.where(:name_status => "H",
-      :taxonomy_id => taxonomy_id).count} in the database"
+      :taxonomy_id => taxonomy_id).count} Hybrids in the database"
 
       files = files_from_args(t, args)
       files.each do |file|
@@ -25,51 +25,85 @@ namespace :import do
         sql = <<-SQL
 
         INSERT INTO taxon_names(scientific_name, created_at, updated_at)
-        SELECT DISTINCT full_hybrid_name,
-        now()::date AS created_at,
-        now()::date AS updated_at
-        FROM hybrids_import;
+        SELECT subquery.*,
+          now()::date AS created_at,
+          now()::date AS created_at
+        FROM (
+          SELECT DISTINCT full_hybrid_name
+          FROM hybrids_import
 
-        INSERT INTO taxon_concepts
-        (full_name, 
-        rank_id, 
-        taxon_name_id, 
-        legacy_trade_code,
-        taxonomy_id, 
-        created_at, 
-        updated_at)
+          EXCEPT
+
+          SELECT scientific_name
+          FROM taxon_names
+        ) AS subquery;
+
+        INSERT INTO taxon_concepts (full_name,
+          rank_id,
+          taxon_name_id,
+          legacy_trade_code,
+          taxonomy_id,
+          created_at,
+          updated_at)
         SELECT
-        full_hybrid_name, 
-        r.id as rank_id, 
-        tn.id as taxon_names_id, 
-        legacy_cites_taxon_code as legacy_trade_code,
-        #{taxonomy_id},
-        now()::date AS created_at,
-        now()::date AS updated_at
-        FROM hybrids_import
-        INNER JOIN ranks r ON hybrid_rank = r.name
-        INNER JOIN taxon_names tn ON full_hybrid_name = tn.scientific_name;
-        
+          subquery.*,
+          now()::date AS created_at,
+          now()::date AS updated_at
+        FROM (
+          SELECT
+            full_hybrid_name,
+            r.id as rank_id,
+            tn.id as taxon_names_id,
+            legacy_cites_taxon_code as legacy_trade_code,
+            #{taxonomy_id}
+          FROM hybrids_import
+          INNER JOIN ranks r ON hybrid_rank = r.name
+          INNER JOIN taxon_names tn ON full_hybrid_name = tn.scientific_name
+
+          EXCEPT
+
+          SELECT full_name, rank_id, taxon_name_id,
+            legacy_trade_code,
+            taxonomy_id
+          FROM taxon_concepts
+          WHERE taxon_concepts.taxonomy_id = #{taxonomy_id}
+          AND legacy_trade_code IS NOT NULL
+
+        ) AS subquery;
+
         INSERT INTO taxon_relationships
-        (taxon_concept_id,
-        other_taxon_concept_id,
-        taxon_relationship_type_id, 
-        created_at, 
-        updated_at)
-        SELECT 
-        taxon_concepts.id,
-        other_taxon_concepts.id,
-        #{taxon_relationship_id},
-        now()::date AS created_at,
-        now()::date AS updated_at
-        FROM hybrids_import hi
-        INNER JOIN taxon_concepts
-        ON species_plus_id = taxon_concepts.id
-        LEFT JOIN taxon_concepts other_taxon_concepts
-        ON full_hybrid_name = other_taxon_concepts.full_name;
+          (taxon_concept_id,
+          other_taxon_concept_id,
+          taxon_relationship_type_id,
+          created_at,
+          updated_at)
+        SELECT
+          subquery.*,
+          now()::date AS created_at,
+          now()::date AS updated_at
+        FROM (
+          SELECT
+            taxon_concepts.id,
+            other_taxon_concepts.id,
+            #{taxon_relationship_type_id}
+          FROM hybrids_import hi
+          INNER JOIN taxon_concepts
+          ON species_plus_id = taxon_concepts.id
+          LEFT JOIN taxon_concepts other_taxon_concepts
+          ON full_hybrid_name = other_taxon_concepts.full_name
+
+          EXCEPT
+
+          SELECT taxon_concept_id, other_taxon_concept_id,
+            taxon_relationship_type_id
+          FROM taxon_relationships
+          WHERE taxon_relationship_type_id = #{taxon_relationship_type_id}
+        ) AS subquery;
         SQL
         ActiveRecord::Base.connection.execute(sql)
-        puts "There are now #{Quota.count} CITES quotas in the database"
+        puts "There are #{TaxonConcept.where(:name_status => "H",
+          :taxonomy_id => taxonomy_id).count} Hybrids in the database"
+
       end
   end
 end
