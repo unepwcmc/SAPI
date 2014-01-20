@@ -3,6 +3,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend
   content: null
   updatesVisible: false
   currentShipment: null
+  errorParams: null
 
   sandboxShipmentsSaving: false # FIXME
 
@@ -56,9 +57,9 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend
         valuesToUpdate[columnName] = null if blank.length > 0
       #TODO: better ideas? 
       $.when($.ajax({
-        url: "trade/annual_report_uploads/#{annualReportUploadId}/"
+        url: "trade/annual_report_uploads/#{annualReportUploadId}/sandbox_shipments"
         type: "PUT"
-        data: valuesToUpdate
+        data: {filters: @errorParams, updates: valuesToUpdate}
       })).then( 
         @transitionToRoute('annual_report_upload', annualReportUploadId), 
         console.log arguments
