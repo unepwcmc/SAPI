@@ -59,7 +59,7 @@ describe Checklist::Pdf::History do
         eu
         cms_designation
         Sapi.rebuild
-        MListingChange.find(lc.id)
+        MCitesListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
       specify{
@@ -76,7 +76,7 @@ describe Checklist::Pdf::History do
         eu
         cms_designation
         Sapi.rebuild
-        MListingChange.find(lc.id)
+        MCitesListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
       specify{
@@ -105,7 +105,7 @@ describe Checklist::Pdf::History do
         eu
         cms_designation
         Sapi.rebuild
-        MListingChange.find(lc.id)
+        MCitesListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new({}) }
       specify{
