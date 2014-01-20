@@ -43,6 +43,7 @@ namespace :import do
           taxon_name_id,
           legacy_trade_code,
           taxonomy_id,
+          name_status,
           created_at,
           updated_at)
         SELECT
@@ -55,7 +56,7 @@ namespace :import do
             r.id as rank_id,
             tn.id as taxon_names_id,
             legacy_cites_taxon_code as legacy_trade_code,
-            #{taxonomy_id}
+            #{taxonomy_id}, 'H'
           FROM hybrids_import
           INNER JOIN ranks r ON hybrid_rank = r.name
           INNER JOIN taxon_names tn ON full_hybrid_name = tn.scientific_name
@@ -64,10 +65,10 @@ namespace :import do
 
           SELECT full_name, rank_id, taxon_name_id,
             legacy_trade_code,
-            taxonomy_id
+            taxonomy_id, name_status
           FROM taxon_concepts
           WHERE taxon_concepts.taxonomy_id = #{taxonomy_id}
-          AND legacy_trade_code IS NOT NULL
+          AND legacy_trade_code IS NOT NULL AND name_status = 'H'
 
         ) AS subquery;
 
