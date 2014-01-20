@@ -5,20 +5,20 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
   currentShipment: null
   filtersSelected: false
 
-  columns: [
-    'appendix', 'speciesName',
-    'termCode', 'quantity',  'unitCode',
-    'tradingPartner', 'countryOfOrigin',
-    'importPermit', 'exportPermit', 'originPermit',
-    'purposeCode', 'sourceCode', 'year'
-  ]
-
-  allAppendices: [
-    Ember.Object.create({id: 'I', name: 'I'}),
-    Ember.Object.create({id: 'II', name: 'II'}),
-    Ember.Object.create({id: 'III', name: 'III'}),
-    Ember.Object.create({id: 'N', name: 'N'})
-  ]
+#  columns: [
+#    'appendix', 'speciesName',
+#    'termCode', 'quantity',  'unitCode',
+#    'tradingPartner', 'countryOfOrigin',
+#    'importPermit', 'exportPermit', 'originPermit',
+#    'purposeCode', 'sourceCode', 'year'
+#  ]
+#
+#  allAppendices: [
+#    Ember.Object.create({id: 'I', name: 'I'}),
+#    Ember.Object.create({id: 'II', name: 'II'}),
+#    Ember.Object.create({id: 'III', name: 'III'}),
+#    Ember.Object.create({id: 'N', name: 'N'})
+#  ]
 
   sandboxShipmentsDidLoad: ( ->
     @set('visibleShipments', @get('content.sandboxShipments'))
@@ -303,3 +303,11 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
       shipment.setProperties(shipment.get('data'))
       @set('currentShipment', null)
       $('.shipment-form-modal').modal('hide')
+
+
+    # new for sandbox shipments updateSelection
+
+    transitionToSandboxShipments: (errorSelector) ->
+      @transitionToRoute('sandbox_shipments', {
+        queryParams: errorSelector
+      })

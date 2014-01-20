@@ -1,5 +1,6 @@
 Trade.AnnualReportUploadView = Ember.View.extend
   templateName: 'trade/annual_report_upload'
+
   didInsertElement: ->
     $('label.blank-checkbox').hide()
     # show the enclosing label when checkbox selected

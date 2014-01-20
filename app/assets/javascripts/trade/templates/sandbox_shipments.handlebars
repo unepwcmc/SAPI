@@ -1,0 +1,14 @@
+{{view Trade.SandboxShipmentForm}}
+
+<div class='shipments-presentation-container'>
+  <table>
+    <thead>
+      <tr><th>Actions</th>{{dataHead controller.columns}}</tr>
+    </thead>
+    <tbody>
+    {{#each controller.content}}
+      {{view Trade.ShipmentTableViewNoHelper valueBinding='this'}}
+    {{/each}}
+    </tbody>
+  </table>
+</div>

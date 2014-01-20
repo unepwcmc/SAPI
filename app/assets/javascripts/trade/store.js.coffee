@@ -46,6 +46,7 @@ Trade.Store.registerAdapter('Trade.AutoCompleteTaxonConcept', DS.RESTAdapter.ext
 }))
 Trade.Store.registerAdapter('Trade.SandboxShipment', DS.RESTAdapter.extend({
   namespace: "annual_report_uploads"
+  # TODO: this is an ugly hack. Is there a better way?
   buildURL: () ->
     hash = location.hash.split('?')
     annual_report_upload_id = hash[0].split("/").find( (el) -> 
