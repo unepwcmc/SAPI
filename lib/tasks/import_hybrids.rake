@@ -32,15 +32,15 @@ namespace :import do
 
         INSERT INTO taxon_concepts
         (full_name, 
-        ranks_id, 
-        taxon_names_id, 
+        rank_id, 
+        taxon_name_id, 
         legacy_trade_code,
         taxonomy_id, 
         created_at, 
         updated_at)
         SELECT
         full_hybrid_name, 
-        r.id as ranks_id, 
+        r.id as rank_id, 
         tn.id as taxon_names_id, 
         legacy_cites_taxon_code as legacy_trade_code,
         #{taxonomy_id},
@@ -53,17 +53,20 @@ namespace :import do
         INSERT INTO taxon_relationships
         (taxon_concept_id,
         other_taxon_concept_id,
-        taxon_relationship_id)
+        taxon_relationship_type_id, 
+        created_at, 
+        updated_at)
         SELECT 
         taxon_concepts.id,
         other_taxon_concepts.id,
-        #{taxon_relationship_id}
+        #{taxon_relationship_id},
+        now()::date AS created_at,
+        now()::date AS updated_at
         FROM hybrids_import hi
         INNER JOIN taxon_concepts
-        ON species_plus_id = taxon_concepts.id;
+        ON species_plus_id = taxon_concepts.id
         LEFT JOIN taxon_concepts other_taxon_concepts
-        ON full_hybrid_name = other_taxon_concepts.full_name
-        )
+        ON full_hybrid_name = other_taxon_concepts.full_name;
         SQL
         ActiveRecord::Base.connection.execute(sql)
         puts "There are now #{Quota.count} CITES quotas in the database"
