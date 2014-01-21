@@ -60,7 +60,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
         blank = $('.sandbox-form')
           .find("input[type=checkbox][name=#{columnName}]:checked")
         valuesToUpdate[columnName] = el.val() if el && el.val()
-        valuesToUpdate[columnName] = null if blank.length > 0 
+        valuesToUpdate[columnName] = null if blank.length > 0
       $.when($.ajax({
         url: "trade/annual_report_uploads/#{annualReportUploadId}"
         type: "PUT"
