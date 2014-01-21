@@ -126,7 +126,7 @@ namespace :import do
     :"cleaned:common_names", :"cleaned:synonyms", :"cleaned:references",
     :"import:trade_codes", :"import:trade_codes_t_p_pairs", :"import:trade_codes_t_u_pairs",
     :"cleaned:cites_quotas", :"cleaned:cites_suspensions", :"cleaned:cites_quotas",
-    :"import:fix_symbols",
+    :"import:eu_annex_regulations_end_dates", :"import:fix_symbols",
     :"db:migrate:create_indexes",
     :"db:migrate:rebuild",
     :"import:stats"
