@@ -9,19 +9,39 @@ CREATE OR REPLACE FUNCTION rebuild_mviews() RETURNS void
 
 COMMENT ON FUNCTION rebuild_mviews() IS 'Procedure to rebuild materialized views in the database.';
 
-CREATE OR REPLACE FUNCTION rebuild_touch_taxon_concepts() RETURNS void
+CREATE OR REPLACE FUNCTION rebuild_touch_cites_taxon_concepts() RETURNS void
   LANGUAGE plpgsql
   AS $$
   BEGIN
-    WITH max_timestamp AS (
+    PERFORM rebuild_touch_designation_taxon_concepts('CITES');
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION rebuild_touch_eu_taxon_concepts() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  BEGIN
+    PERFORM rebuild_touch_designation_taxon_concepts('EU');
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION rebuild_touch_cms_taxon_concepts() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  BEGIN
+    PERFORM rebuild_touch_designation_taxon_concepts('CMS');
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION rebuild_touch_designation_taxon_concepts(designation_name TEXT) RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  DECLARE
+    sql TEXT;
+  BEGIN
+    sql := 'WITH max_timestamp AS (
       SELECT lc.taxon_concept_id, GREATEST(tc.updated_at, MAX(lc.updated_at)) AS updated_at
-      FROM (
-        SELECT * FROM cites_listing_changes_mview
-        UNION
-        SELECT * FROM eu_listing_changes_mview
-        UNION
-        SELECT * FROM cms_listing_changes_mview
-      ) lc
+      FROM ' || designation_name || '_listing_changes_mview lc
       JOIN taxon_concepts_mview tc
       ON lc.taxon_concept_id = tc.id
       GROUP BY taxon_concept_id, tc.updated_at
@@ -33,6 +53,7 @@ CREATE OR REPLACE FUNCTION rebuild_touch_taxon_concepts() RETURNS void
     AND (
       taxon_concepts.touched_at < max_timestamp.updated_at
       OR taxon_concepts.touched_at IS NULL
-    );
+    );';
+    EXECUTE sql;
   END;
   $$;

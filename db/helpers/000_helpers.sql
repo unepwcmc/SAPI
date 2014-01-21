@@ -134,18 +134,31 @@ Drops all trade_sandbox_n tables. Used in specs only, you need to know what
 you''re doing. If you''re looking to drop all sandboxes in the live system,
 use the rake db:drop_sandboxes task instead.';
 
-CREATE OR REPLACE FUNCTION listing_changes_mview_name(prefix TEXT, designation TEXT, start_date DATE, end_date DATE)
+CREATE OR REPLACE FUNCTION drop_eu_lc_mviews() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  DECLARE
+    current_table_name TEXT;
+  BEGIN
+    FOR current_table_name IN SELECT table_name FROM information_schema.tables
+    WHERE table_name LIKE 'eu_%_listing_changes_mview'
+      AND table_type != 'VIEW'
+    LOOP
+      EXECUTE 'DROP TABLE ' || current_table_name || ' CASCADE';
+    END LOOP;
+    RETURN;
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION listing_changes_mview_name(prefix TEXT, designation TEXT, event_id INT)
   RETURNS TEXT
   LANGUAGE SQL IMMUTABLE
   AS $$
     SELECT CASE WHEN prefix IS NULL THEN '' ELSE prefix || '_' END ||
     designation ||
     CASE
-      WHEN start_date IS NOT NULL AND end_date IS NOT NULL
-      THEN '_' || TO_CHAR(start_date, 'YYYYMMDD') || '_' ||
-        TO_CHAR(end_date, 'YYYYMMDD')
-      WHEN start_date IS NOT NULL
-      THEN '_' || TO_CHAR(start_date, 'YYYYMMDD')
+      WHEN event_id IS NOT NULL
+      THEN '_' || event_id
       ELSE ''
     END || '_listing_changes_mview';
   $$;

@@ -2,23 +2,26 @@ DROP FUNCTION IF EXISTS rebuild_designation_listing_changes_mview(
   taxonomy taxonomies, designation designations
 );
 CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
-  taxonomy taxonomies, designation designations, start_date DATE, end_date DATE
+  taxonomy taxonomies, designation designations, event_id INT
   ) RETURNS void
   LANGUAGE plpgsql
   AS $$
   DECLARE
     all_lc_table_name TEXT;
     tmp_lc_table_name TEXT;
+    raw_lc_table_name TEXT;
     lc_table_name TEXT;
     sql TEXT;
     addition_id INT;
     deletion_id INT;
   BEGIN
-    SELECT listing_changes_mview_name('all', designation.name, start_date, end_date)
+    SELECT listing_changes_mview_name('all', designation.name, event_id)
     INTO all_lc_table_name;
-    SELECT listing_changes_mview_name('tmp_cascaded', designation.name, start_date, end_date)
+    SELECT listing_changes_mview_name('tmp', designation.name, event_id)
+    INTO raw_lc_table_name;
+    SELECT listing_changes_mview_name('tmp_cascaded', designation.name, event_id)
     INTO tmp_lc_table_name;
-    SELECT listing_changes_mview_name(NULL, designation.name, start_date, end_date)
+    SELECT listing_changes_mview_name(NULL, designation.name, event_id)
     INTO lc_table_name;
 
 
@@ -38,14 +41,15 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     applicable_listing_changes.affected_taxon_concept_id AS taxon_concept_id,
     listing_changes.id AS id,
     listing_changes.taxon_concept_id AS original_taxon_concept_id,
-    effective_at,
-    species_listing_id,
+    listing_changes.effective_at,
+    listing_changes.species_listing_id,
     species_listings.abbreviation AS species_listing_name,
-    change_type_id, change_types.name AS change_type_name,
+    listing_changes.change_type_id,
+    change_types.name AS change_type_name,
     change_types.designation_id AS designation_id,
     designations.name AS designation_name,
     listing_changes.parent_id,
-    listing_distributions.geo_entity_id AS party_id,
+    tmp_lc.party_id,
     geo_entities.iso_code2 AS party_iso_code,
     annotations.symbol AS ann_symbol,
     annotations.full_note_en,
@@ -61,11 +65,11 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     hash_annotations.full_note_en AS hash_full_note_en,
     hash_annotations.full_note_es AS hash_full_note_es,
     hash_annotations.full_note_fr AS hash_full_note_fr,
-    inclusion_taxon_concept_id,
+    listing_changes.inclusion_taxon_concept_id,
     NULL::TEXT AS inherited_short_note_en, -- this column is populated later
     NULL::TEXT AS inherited_full_note_en, -- this column is populated later
     CASE
-    WHEN inclusion_taxon_concept_id IS NOT NULL
+    WHEN listing_changes.inclusion_taxon_concept_id IS NOT NULL
     THEN ancestor_listing_auto_note(
       inclusion_taxon_concepts.data->''rank_name'',
       inclusion_taxon_concepts.full_name,
@@ -81,7 +85,7 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     END AS auto_note,
     listing_changes.is_current,
     listing_changes.explicit_change,
-    populations.countries_ids_ary,
+    --populations.countries_ids_ary,
     listing_changes.updated_at,
     CASE
     WHEN change_types.name != ''EXCEPTION'' AND listing_changes.explicit_change
@@ -98,11 +102,16 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     THEN TRUE
     ELSE FALSE
     END AS show_in_timeline,
+    tmp_lc.listed_geo_entities_ids,
+    tmp_lc.excluded_geo_entities_ids,
+    tmp_lc.excluded_taxon_concept_ids,
     false as dirty,
     null::timestamp with time zone as expiry
     FROM
     applicable_listing_changes
     JOIN listing_changes ON applicable_listing_changes.listing_change_id  = listing_changes.id
+    JOIN ' || raw_lc_table_name || ' tmp_lc
+    ON applicable_listing_changes.listing_change_id  = tmp_lc.id
     JOIN taxon_concepts original_taxon_concepts
     ON original_taxon_concepts.id = listing_changes.taxon_concept_id
     LEFT JOIN taxon_concepts inclusion_taxon_concepts
@@ -113,24 +122,24 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     ON change_types.designation_id = designations.id
     LEFT JOIN species_listings
     ON listing_changes.species_listing_id = species_listings.id
-    LEFT JOIN listing_distributions
-    ON listing_changes.id = listing_distributions.listing_change_id
-    AND listing_distributions.is_party = ''t''
+    --LEFT JOIN listing_distributions
+    --ON listing_changes.id = listing_distributions.listing_change_id
+    --AND listing_distributions.is_party = ''t''
     LEFT JOIN geo_entities ON
-    geo_entities.id = listing_distributions.geo_entity_id
+    geo_entities.id = tmp_lc.party_id
     LEFT JOIN annotations ON
     annotations.id = listing_changes.annotation_id
     LEFT JOIN annotations hash_annotations ON
     hash_annotations.id = listing_changes.hash_annotation_id
-    LEFT JOIN (
-    SELECT listing_change_id, ARRAY_AGG(geo_entities.id) AS countries_ids_ary
-    FROM listing_distributions
-    INNER JOIN geo_entities
-    ON geo_entities.id = listing_distributions.geo_entity_id
-    WHERE NOT is_party
-    GROUP BY listing_change_id
-    ) populations ON populations.listing_change_id = listing_changes.id
-    ORDER BY taxon_concept_id, effective_at,
+    --LEFT JOIN (
+    --SELECT listing_change_id, ARRAY_AGG(geo_entities.id) AS countries_ids_ary
+    --FROM listing_distributions
+    --INNER JOIN geo_entities
+    --ON geo_entities.id = listing_distributions.geo_entity_id
+    --WHERE NOT is_party
+    --GROUP BY listing_change_id
+    --) populations ON populations.listing_change_id = listing_changes.id
+    ORDER BY taxon_concept_id, listing_changes.effective_at,
     CASE
     WHEN change_types.name = ''ADDITION'' THEN 0
     WHEN change_types.name = ''RESERVATION'' THEN 1
@@ -325,6 +334,6 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
   $$;
 
 COMMENT ON FUNCTION rebuild_designation_listing_changes_mview(
-  taxonomy taxonomies, designation designations, start_date DATE, end_date DATE
+  taxonomy taxonomies, designation designations, event_id INT
 ) IS
 'Procedure to rebuild designation listing changes materialized view in the database.';

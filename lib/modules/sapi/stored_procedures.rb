@@ -14,7 +14,9 @@ module Sapi
         :eu_species_listing_mview,
         :cms_species_listing_mview,
         :valid_species_name_appendix_year_mview,
-        :touch_taxon_concepts
+        :touch_cites_taxon_concepts,
+        :touch_eu_taxon_concepts,
+        :touch_cms_taxon_concepts
       ].each{ |p|
         puts "Procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
@@ -43,7 +45,7 @@ module Sapi
         :cms_listing,
         :taxon_concepts_mview,
         :cms_species_listing_mview,
-        :touch_taxon_concepts
+        :touch_cms_taxon_concepts
       ]
     end
 
@@ -56,7 +58,7 @@ module Sapi
         :cites_listing,
         :taxon_concepts_mview,
         :cites_species_listing_mview,
-        :touch_taxon_concepts
+        :touch_cites_taxon_concepts
       ]
     end
 
@@ -68,7 +70,7 @@ module Sapi
         :eu_listing,
         :taxon_concepts_mview,
         :eu_species_listing_mview,
-        :touch_taxon_concepts
+        :touch_eu_taxon_concepts
       ]
     end
 

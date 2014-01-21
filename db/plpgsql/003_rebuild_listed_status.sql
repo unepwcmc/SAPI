@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       level_of_listing_flag varchar;
       flags_to_reset text[];
       sql TEXT;
-      tmp_listing_changes_mview TEXT;
+      tmp_current_listing_changes_mview TEXT;
     BEGIN
     SELECT id INTO deletion_id FROM change_types
       WHERE designation_id = designation.id AND name = 'DELETION';
@@ -160,14 +160,14 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
 
     -- propagate cites_status to descendants
-    SELECT listing_changes_mview_name('current', designation.name, NULL, NULL)
-    INTO tmp_listing_changes_mview;
+    SELECT listing_changes_mview_name('tmp_current', designation.name, NULL)
+    INTO tmp_current_listing_changes_mview;
 
     sql := 'WITH RECURSIVE q AS (
       SELECT
         h.id,
         h.parent_id,
-        listing->''' || designation_name || '_status'' AS inherited_cites_status,
+        listing->''' || designation_name || '_status'' AS inherited_status,
         listing->''' || designation_name || '_updated_at'' AS inherited_listing_updated_at,
         listed_geo_entities_ids,
         excluded_geo_entities_ids,
@@ -181,7 +181,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
             HSTORE(''' || designation_name || '_not_listed'', NULL)
         END AS status_hstore
       FROM    taxon_concepts h
-      JOIN ' || tmp_listing_changes_mview || ' lc
+      JOIN ' || tmp_current_listing_changes_mview || ' lc
       ON h.id = lc.taxon_concept_id
       AND lc.change_type_name IN (''ADDITION'', ''DELETION'')
       AND inclusion_taxon_concept_id IS NULL
@@ -197,7 +197,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       SELECT
         hi.id,
         hi.parent_id,
-        inherited_cites_status,
+        inherited_status,
         inherited_listing_updated_at,
         listed_geo_entities_ids,
         excluded_geo_entities_ids,
@@ -288,7 +288,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       WITH RECURSIVE q AS
       (
         SELECT  h.id, h.parent_id,
-        listing->status_flag AS inherited_cites_status,
+        listing->status_flag AS inherited_status,
         (listing->listing_updated_at_flag)::TIMESTAMP AS inherited_listing_updated_at
         FROM    taxon_concepts h
         WHERE
@@ -303,7 +303,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
         CASE
           WHEN (listing->status_original_flag)::BOOLEAN = 't'
           THEN listing->status_flag
-          ELSE inherited_cites_status
+          ELSE inherited_status
         END,
         CASE
           WHEN (listing->listing_updated_at_flag)::TIMESTAMP IS NOT NULL
@@ -315,13 +315,13 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
         ON      hi.id = q.parent_id
         WHERE (listing->status_original_flag)::BOOLEAN IS NULL
       )
-      SELECT DISTINCT id, inherited_cites_status,
+      SELECT DISTINCT id, inherited_status,
         inherited_listing_updated_at
       FROM q
     )
     UPDATE taxon_concepts
     SET listing = COALESCE(listing, ''::HSTORE) ||
-      hstore(status_flag, inherited_cites_status) ||
+      hstore(status_flag, inherited_status) ||
       hstore(status_original_flag, 'f') ||
       hstore(level_of_listing_flag, 'f') ||
       hstore(listing_updated_at_flag, inherited_listing_updated_at::VARCHAR)
