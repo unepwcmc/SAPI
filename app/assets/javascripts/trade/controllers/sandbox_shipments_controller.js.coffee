@@ -1,4 +1,4 @@
-Trade.SandboxShipmentsController = Ember.ArrayController.extend
+Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPagination,
   needs: ['annualReportUpload', 'geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   updatesVisible: false
@@ -25,6 +25,17 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend
   #sandboxShipmentsSaving: ( ->
   #  @get('content.isSaving')
   #).property('content.isSaving')
+
+  transitionToPage: (forward) ->
+    page = if forward
+      parseInt(@get('page')) + 1
+    else
+      parseInt(@get('page')) - 1
+    @openShipmentsPage {page: page}
+
+  openShipmentsPage: (params) ->
+    queryParams = $.extend({}, @errorParams, params)
+    @transitionToRoute('sandbox_shipments', 'queryParams': queryParams)
 
   clearModifiedFlags: ->
     @beginPropertyChanges()
@@ -90,3 +101,5 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend
       shipment.setProperties(shipment.get('data'))
       @set('currentShipment', null)
       $('.shipment-form-modal').modal('hide')
+
+  
