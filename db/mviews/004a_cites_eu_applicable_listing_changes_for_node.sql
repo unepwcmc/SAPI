@@ -1,4 +1,5 @@
-CREATE OR REPLACE FUNCTION cites_eu_applicable_listing_changes_for_node(designation_name TEXT, node_id INT)
+DROP FUNCTION IF EXISTS cites_eu_applicable_listing_changes_for_node(designation_name TEXT, node_id INT);
+CREATE OR REPLACE FUNCTION cites_eu_applicable_listing_changes_for_node(all_listing_changes_mview TEXT, node_id INT)
 RETURNS SETOF INT
 LANGUAGE plpgsql STRICT
 STABLE
@@ -54,7 +55,7 @@ BEGIN
     ELSE
     TRUE
     END AS is_applicable
-    FROM ' || LOWER(designation_name) || '_all_listing_changes_mview all_listing_changes_mview
+    FROM ' || all_listing_changes_mview || ' all_listing_changes_mview
     JOIN cites_eu_tmp_taxon_concepts_mview taxon_concepts_mview
     ON all_listing_changes_mview.affected_taxon_concept_id = taxon_concepts_mview.id
     WHERE all_listing_changes_mview.affected_taxon_concept_id = $1
@@ -158,7 +159,7 @@ BEGIN
     THEN TRUE
     ELSE FALSE
     END
-    FROM ' || LOWER(designation_name) || '_all_listing_changes_mview hi
+    FROM ' || all_listing_changes_mview || ' hi
     JOIN listing_changes_timeline
     ON hi.designation_id = listing_changes_timeline.designation_id
     AND listing_changes_timeline.original_taxon_concept_id = hi.affected_taxon_concept_id
@@ -176,24 +177,27 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION cites_applicable_listing_changes_for_node(node_id INT)
+
+DROP FUNCTION IF EXISTS cites_applicable_listing_changes_for_node(node_id INT);
+CREATE OR REPLACE FUNCTION cites_applicable_listing_changes_for_node(all_listing_changes_mview TEXT, node_id INT)
 RETURNS SETOF INT
 LANGUAGE SQL STRICT
 STABLE
 AS $$
-  SELECT * FROM cites_eu_applicable_listing_changes_for_node('CITES', $1);
+  SELECT * FROM cites_eu_applicable_listing_changes_for_node($1, $2);
 $$;
 
-COMMENT ON FUNCTION cites_applicable_listing_changes_for_node(node_id INT) IS
+COMMENT ON FUNCTION cites_applicable_listing_changes_for_node(all_listing_changes_mview TEXT, node_id INT) IS
   'Returns applicable listing changes for a given node, including own and ancestors (following CITES cascading rules).';
 
-CREATE OR REPLACE FUNCTION eu_applicable_listing_changes_for_node(node_id INT)
+DROP FUNCTION IF EXISTS eu_applicable_listing_changes_for_node(node_id INT);
+CREATE OR REPLACE FUNCTION eu_applicable_listing_changes_for_node(all_listing_changes_mview TEXT, node_id INT)
 RETURNS SETOF INT
 LANGUAGE SQL STRICT
 STABLE
 AS $$
-  SELECT * FROM cites_eu_applicable_listing_changes_for_node('EU', $1);
+  SELECT * FROM cites_eu_applicable_listing_changes_for_node($1, $2);
 $$;
 
-COMMENT ON FUNCTION eu_applicable_listing_changes_for_node(node_id INT) IS
+COMMENT ON FUNCTION eu_applicable_listing_changes_for_node(all_listing_changes_mview TEXT, node_id INT) IS
   'Returns applicable listing changes for a given node, including own and ancestors (following EU cascading rules).';

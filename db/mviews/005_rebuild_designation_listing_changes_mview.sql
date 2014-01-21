@@ -1,7 +1,10 @@
-CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
+DROP FUNCTION IF EXISTS rebuild_designation_listing_changes_mview(
   taxonomy taxonomies, designation designations
+);
+CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
+  taxonomy taxonomies, designation designations, start_date DATE, end_date DATE
   ) RETURNS void
-  LANGUAGE plpgsql STRICT
+  LANGUAGE plpgsql
   AS $$
   DECLARE
     all_lc_table_name TEXT;
@@ -11,11 +14,13 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     addition_id INT;
     deletion_id INT;
   BEGIN
-    PERFORM rebuild_designation_all_listing_changes_mview(taxonomy, designation);
+    SELECT listing_changes_mview_name('all', designation.name, start_date, end_date)
+    INTO all_lc_table_name;
+    SELECT listing_changes_mview_name('tmp_cascaded', designation.name, start_date, end_date)
+    INTO tmp_lc_table_name;
+    SELECT listing_changes_mview_name(NULL, designation.name, start_date, end_date)
+    INTO lc_table_name;
 
-    SELECT LOWER(designation.name) || '_all_listing_changes_mview' INTO all_lc_table_name;
-    SELECT LOWER(designation.name) || '_tmp_cascaded_listing_changes_mview' INTO tmp_lc_table_name;
-    SELECT LOWER(designation.name) || '_listing_changes_mview' INTO lc_table_name;
 
     RAISE INFO 'Creating %', tmp_lc_table_name;
     EXECUTE 'DROP TABLE IF EXISTS ' || tmp_lc_table_name || ' CASCADE';
@@ -23,8 +28,8 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     sql := 'CREATE TABLE ' || tmp_lc_table_name || ' AS
     WITH applicable_listing_changes AS (
         SELECT affected_taxon_concept_id,'
-        || LOWER(designation.name) || '_applicable_listing_changes_for_node(
-          affected_taxon_concept_id
+        || designation.name || '_applicable_listing_changes_for_node(''' ||
+          all_lc_table_name || ''', affected_taxon_concept_id
         ) AS listing_change_id
         FROM ' || all_lc_table_name
         || ' GROUP BY affected_taxon_concept_id
@@ -319,5 +324,7 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
   END;
   $$;
 
-COMMENT ON FUNCTION rebuild_designation_listing_changes_mview(taxonomy taxonomies, designation designations) IS 
+COMMENT ON FUNCTION rebuild_designation_listing_changes_mview(
+  taxonomy taxonomies, designation designations, start_date DATE, end_date DATE
+) IS
 'Procedure to rebuild designation listing changes materialized view in the database.';

@@ -1,7 +1,10 @@
-  CREATE OR REPLACE FUNCTION rebuild_designation_all_listing_changes_mview(
+  DROP FUNCTION IF EXISTS rebuild_designation_all_listing_changes_mview(
     taxonomy taxonomies, designation designations
+  );
+  CREATE OR REPLACE FUNCTION rebuild_designation_all_listing_changes_mview(
+    taxonomy taxonomies, designation designations, start_date DATE, end_date DATE
   ) RETURNS void
-  LANGUAGE plpgsql STRICT
+  LANGUAGE plpgsql
   AS $$
   DECLARE
     all_lc_table_name TEXT;
@@ -9,8 +12,11 @@
     tc_table_name TEXT;
     sql TEXT;
   BEGIN
-    SELECT LOWER(designation.name) || '_all_listing_changes_mview' INTO all_lc_table_name;
-    SELECT LOWER(designation.name) || '_tmp_listing_changes_mview' INTO tmp_lc_table_name;
+    SELECT listing_changes_mview_name('all', designation.name, start_date, end_date)
+    INTO all_lc_table_name;
+    SELECT listing_changes_mview_name('tmp', designation.name, start_date, end_date)
+    INTO tmp_lc_table_name;
+
     SELECT LOWER(taxonomy.name) || '_taxon_concepts_and_ancestors_mview' INTO tc_table_name;
 
     EXECUTE 'DROP TABLE IF EXISTS ' || tmp_lc_table_name || ' CASCADE';
@@ -39,7 +45,16 @@
       AND listing_changes.taxon_concept_id != taxonomic_exceptions.taxon_concept_id
       JOIN change_types ON change_types.id = listing_changes.change_type_id
       AND change_types.designation_id = ' || designation.id
-      || 'GROUP BY
+      || CASE
+      WHEN start_date IS NOT NULL AND end_date IS NOT NULL
+      THEN ' WHERE listing_changes.effective_at >= ''' || start_date || '''' ||
+      ' AND listing_changes.effective_at <= ''' || end_date || ''''
+      WHEN start_date IS NOT NULL
+      THEN ' WHERE listing_changes.effective_at >= ''' || start_date || ''''
+      ELSE ''
+      END ||
+      '
+      GROUP BY
         listing_changes.id,
         change_types.designation_id,
         change_types.name,
@@ -92,6 +107,19 @@
     EXECUTE sql;
 
     EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (taxon_concept_id)';
+    -- for the current listing calculation
+    EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (taxon_concept_id, is_current, change_type_name, inclusion_taxon_concept_id)';
+
+    IF designation.name = 'EU' AND (end_date IS NULL OR end_date >= current_date) THEN -- current
+      -- this is for the purpose of calculating current eu listing
+      EXECUTE 'CREATE VIEW ' ||
+        listing_changes_mview_name('current', designation.name, NULL, NULL) ||
+        ' AS SELECT * FROM ' || tmp_lc_table_name;
+    ELSEIF designation.name != 'EU' THEN
+      EXECUTE 'CREATE VIEW ' ||
+        listing_changes_mview_name('current', designation.name, NULL, NULL) ||
+        ' AS SELECT * FROM ' || tmp_lc_table_name || ' WHERE is_current';
+    END IF;
 
     EXECUTE 'DROP TABLE IF EXISTS ' || all_lc_table_name || ' CASCADE';
 
@@ -139,7 +167,9 @@
   END;
   $$;
 
-  COMMENT ON FUNCTION rebuild_designation_all_listing_changes_mview(taxonomy taxonomies, designation designations) IS
+  COMMENT ON FUNCTION rebuild_designation_all_listing_changes_mview(
+    taxonomy taxonomies, designation designations, start_date DATE, end_date DATE
+  ) IS
   'Procedure to create a helper table with all listing changes 
   + their included / excluded populations 
   + tree distance between affected taxon concept and the taxon concept this listing change applies to.';

@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       level_of_listing_flag varchar;
       flags_to_reset text[];
       sql TEXT;
+      tmp_listing_changes_mview TEXT;
     BEGIN
     SELECT id INTO deletion_id FROM change_types
       WHERE designation_id = designation.id AND name = 'DELETION';
@@ -159,6 +160,8 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
 
     -- propagate cites_status to descendants
+    SELECT listing_changes_mview_name('current', designation.name, NULL, NULL)
+    INTO tmp_listing_changes_mview;
 
     sql := 'WITH RECURSIVE q AS (
       SELECT
@@ -178,10 +181,9 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
             HSTORE(''' || designation_name || '_not_listed'', NULL)
         END AS status_hstore
       FROM    taxon_concepts h
-      JOIN ' || designation_name || '_tmp_listing_changes_mview lc
+      JOIN ' || tmp_listing_changes_mview || ' lc
       ON h.id = lc.taxon_concept_id
       AND lc.change_type_name IN (''ADDITION'', ''DELETION'')
-      AND lc.is_current
       AND inclusion_taxon_concept_id IS NULL
       GROUP BY
         h.id,
