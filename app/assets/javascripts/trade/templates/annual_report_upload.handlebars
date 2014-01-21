@@ -9,10 +9,10 @@
       <h3>Validation errors</h3>
     </div>
     <div class="sandbox-header-buttons span6">
-      {{#view tagName='span' class='pull-right' isVisibleBinding='controllers.sandboxShipments.sandboxShipmentsSubmitting'}}
+      {{#view tagName='span' class='pull-right' isVisibleBinding='sandboxShipmentsSubmitting'}}
         <img src="/assets/loading.gif"> Submitting...
       {{/view}}
-      <button {{action controllers.sandboxShipments.submitShipments}}
+      <button {{action submitShipments}}
         {{bind-attr class="hasPrimaryErrors:disabled :pull-right :btn :btn-danger"}}
         {{bind-attr disabled="hasPrimaryErrors"}}>
         Submit shipments

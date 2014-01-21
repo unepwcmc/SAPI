@@ -4,7 +4,6 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend
   updatesVisible: false
   currentShipment: null
   errorParams: null
-
   sandboxShipmentsSaving: false # FIXME
 
   columns: [
@@ -22,11 +21,10 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend
     Ember.Object.create({id: 'N', name: 'N'})
   ]
 
-  # FIXME
+  # FIXME !!!
   #sandboxShipmentsSaving: ( ->
   #  @get('content.isSaving')
   #).property('content.isSaving')
-  sandboxShipmentsSubmitting: false
 
   clearModifiedFlags: ->
     @beginPropertyChanges()
@@ -42,20 +40,16 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend
       # to the parent controller up the nested routing!
       false
 
-    saveChanges: () ->
-      @get('store').commit()
-      #@transitionToRoute('annual_report_upload', @get('content'))
-      @clearModifiedFlags()
-
+    # Batch edits on the selected error
     updateSelection: () ->
       valuesToUpdate = {}
       annualReportUploadId = @get('controllers.annualReportUpload.id')
       @get('columns').forEach (columnName) =>
-        el = $('.sandbox-form').find('input[type=text][name=' + columnName + ']')
-        blank = $('.sandbox-form').find('input[type=checkbox][name=' + columnName + ']:checked')
+        el = $('.sandbox-form').find("input[type=text][name=#{columnName}]")
+        blank = $('.sandbox-form')
+          .find("input[type=checkbox][name=#{columnName}]:checked")
         valuesToUpdate[columnName] = el.val() if el && el.val()
-        valuesToUpdate[columnName] = null if blank.length > 0
-      #TODO: better ideas? 
+        valuesToUpdate[columnName] = null if blank.length > 0 
       $.when($.ajax({
         url: "trade/annual_report_uploads/#{annualReportUploadId}/sandbox_shipments"
         type: "PUT"
@@ -65,11 +59,19 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend
         console.log arguments
       )
 
+    #### Save and cancel changes made on shipments table ####
+
+    saveChanges: () ->
+      @get('store').commit()
+      @clearModifiedFlags()
+
+    cancelChanges: () ->
+      @get('store').get('currentTransaction').rollback()
+      @clearModifiedFlags()
+
     #### Single shipment related ####
 
     editShipment: (shipment) ->
-      #this.get('controllers.annualReportUpload.id')
-      #debugger
       @set('currentShipment', shipment)
       $('.shipment-form-modal').modal('show')
 
