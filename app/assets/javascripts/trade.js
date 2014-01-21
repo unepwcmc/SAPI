@@ -33,6 +33,7 @@
 //= require_tree ./trade/models
 //= require ./trade/query_params
 //= require ./trade/shipment_pagination
+//= require ./trade/utils
 //= require_tree ./trade/controllers
 //= require_tree ./trade/views
 //= require_tree ./trade/helpers

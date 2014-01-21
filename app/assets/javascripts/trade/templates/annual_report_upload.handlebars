@@ -7,6 +7,7 @@
   <div class="row-fluid">
     <div class="span6">
       <h3>Validation errors</h3>
+      <p>{{errorMessage}} ({{errorCount}})</p>
     </div>
     <div class="sandbox-header-buttons span6">
       {{#view tagName='span' class='pull-right' isVisibleBinding='sandboxShipmentsSubmitting'}}
@@ -22,8 +23,6 @@
 </div>
 
 {{collection Trade.ValidationErrorsView contentBinding='validationErrors'}}
-
-
 
 {{ outlet }}
 

@@ -1,9 +1,11 @@
-Trade.AnnualReportUploadController = Ember.ObjectController.extend
+Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes', 'sandboxShipments']
   content: null
   visibleShipments: []
   currentShipment: null
   filtersSelected: false
+  errorMessage: ""
+  errorCount: ""
 
   sandboxShipmentsDidLoad: ( ->
     @set('visibleShipments', @get('content.sandboxShipments'))
@@ -111,9 +113,12 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 
 
     # new for sandbox shipments updateSelection
-    transitionToSandboxShipments: (errorSelector) ->
+    transitionToSandboxShipments: (errorSelector, errorMessage, errorCount) ->
+      @set('errorMessage', errorMessage)
+      @set('errorCount', errorCount)
       params = @sanitizeQueryParams(errorSelector)
       params.page = 1
+      params.error_identifier = @hashCode errorMessage
       @transitionToRoute('sandbox_shipments', {
         queryParams: params
       })

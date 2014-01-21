@@ -1,9 +1,18 @@
-Trade.SandboxShipmentsRoute = Ember.Route.extend
+Trade.SandboxShipmentsRoute = Ember.Route.extend Trade.Utils, 
   
   model: (params, queryParams, transition) ->
     Trade.SandboxShipment.find(queryParams)
 
   setupController: (controller, model, queryParams) ->
+    aru_controller = controller.get('controllers.annualReportUpload')
+    error = aru_controller
+      .get('content.validationErrors.content')
+      .find( (error) =>
+        +queryParams.error_identifier == @hashCode error.data.error_message
+      )
+    if error
+      aru_controller.set('errorMessage', error.data.error_message)
+      aru_controller.set('errorCount', error.data.error_count)
     controller.set('model', model)
     controller.set('errorParams', queryParams)
 

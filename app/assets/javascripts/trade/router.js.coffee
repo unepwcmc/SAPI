@@ -8,7 +8,7 @@ Trade.Router.map (match)->
         # params' names in underscore separated format
         # because like they are created in the validation
         # error views;
-        'page', 'appendix', 'species_name',
+        'error_identifier', 'page', 'appendix', 'species_name',
         'term_code', 'quantity',  'unit_code',
         'trading_partner', 'country_of_origin',
         'import_permit', 'export_permit', 'origin_permit',
