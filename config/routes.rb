@@ -79,7 +79,7 @@ SAPI::Application.routes.draw do
       resources :taxon_eu_suspensions, 
         :only => [:index, :new, :create, :edit, :update, :destroy], 
         :as => :eu_suspensions
-      
+
       resources :taxon_cites_suspensions,
         :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :cites_suspensions
