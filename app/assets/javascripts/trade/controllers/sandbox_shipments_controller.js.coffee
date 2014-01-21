@@ -7,11 +7,11 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   sandboxShipmentsSaving: false # FIXME
 
   columns: [
-    'appendix', 'speciesName',
-    'termCode', 'quantity',  'unitCode',
-    'tradingPartner', 'countryOfOrigin',
-    'importPermit', 'exportPermit', 'originPermit',
-    'purposeCode', 'sourceCode', 'year'
+    'appendix', 'species_name',
+    'term_code', 'quantity',  'unit_code',
+    'tradingPartner', 'country_of_origin',
+    'import_permit', 'export_permit', 'origin_permit',
+    'purpose_code', 'source_code', 'year'
   ]
 
   allAppendices: [
