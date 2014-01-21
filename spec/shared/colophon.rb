@@ -45,7 +45,7 @@ shared_context 'Colophon' do
     eu_lc = create_eu_C_addition(
      :taxon_concept => @genus,
      :effective_at => '2013-10-08',
-     :event_id => reg2013,
+     :event => reg2013,
      :is_current => true
     )
     create(

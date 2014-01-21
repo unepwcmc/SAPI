@@ -125,7 +125,7 @@ describe Trade::Shipment do
           :effective_at => '2013-01-01',
           :is_current => true
         )
-        Sapi.rebuild
+        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_species_name_appendix_year_validation
       end
       context "invalid" do
@@ -370,7 +370,7 @@ describe Trade::Shipment do
         create_taxon_concept_source_validation
         cites
         eu
-        Sapi.rebuild
+        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         @taxon_concept.reload
       end
       context "invalid" do

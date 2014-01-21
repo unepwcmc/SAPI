@@ -34,13 +34,13 @@ shared_context "Tapiridae" do
     create_eu_A_addition(
      :taxon_concept => @family,
      :effective_at => '2013-10-08',
-     :event_id => reg2013,
+     :event => reg2013,
      :is_current => true
     )
     create_eu_B_addition(
      :taxon_concept => @species,
      :effective_at => '2013-10-08',
-     :event_id => reg2013,
+     :event => reg2013,
      :is_current => true
     )
 

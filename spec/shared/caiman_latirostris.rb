@@ -17,13 +17,20 @@ shared_context "Caiman latirostris" do
       :iso_code2 => 'AR'
     )
   }
+  let(:brazil){
+    create(
+      :geo_entity,
+      :geo_entity_type => country,
+      :name => 'Brazil',
+      :iso_code2 => 'BR'
+    )
+  }
   let(:has_synonym){
     create(
       :taxon_relationship_type, :name => TaxonRelationshipType::HAS_SYNONYM
     )
   }
   before(:all) do
-    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Crocodylia'),
       :parent => cites_eu_reptilia
@@ -51,6 +58,7 @@ shared_context "Caiman latirostris" do
     )
 
     create(:distribution, :taxon_concept_id => @species.id, :geo_entity_id => argentina.id)
+    create(:distribution, :taxon_concept_id => @species.id, :geo_entity_id => brazil.id)
 
     create(
       :taxon_relationship,
@@ -110,25 +118,19 @@ shared_context "Caiman latirostris" do
     create_eu_A_addition(
      :taxon_concept => @species,
      :effective_at => '1997-06-01',
-     :event_id => reg1997
+     :event => reg1997
     )
     create_eu_B_addition(
      :taxon_concept => @order,
      :effective_at => '2013-10-08',
-     :event_id => reg2013,
-     :is_current => true
-    )
-    create_eu_A_addition(
-     :taxon_concept => @species,
-     :effective_at => '2013-10-08',
-     :event_id => reg2013,
+     :event => reg2013,
      :is_current => true
     )
     eu_lc_b = create_eu_B_addition(
      :taxon_concept => @species,
      :annotation_id => a_II.id,
      :effective_at => '2013-10-08',
-     :event_id => reg2013,
+     :event => reg2013,
      :is_current => true
     )
     create(
@@ -141,13 +143,15 @@ shared_context "Caiman latirostris" do
      :taxon_concept => @species,
      :annotation_id => a_I.id,
      :effective_at => '2013-10-08',
-     :event_id => reg2013,
+     :event => reg2013,
      :is_current => true
     )
     eu_lc_a_exception = create_eu_A_exception(
      :taxon_concept => @species,
      :effective_at => '2013-10-08',
-     :event_id => reg2013
+     :event => reg2013,
+     :parent_id => eu_lc_a.id,
+     :is_current => true
     )
     create(
       :listing_distribution,

@@ -41,7 +41,7 @@ describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
        :effective_at => '1997-09-18',
        :is_current => true
       )
-      Sapi.rebuild
+      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       @aru = build(:annual_report_upload)
       @aru.save(:validate => false)
       @sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)

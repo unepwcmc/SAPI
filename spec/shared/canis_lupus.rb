@@ -129,19 +129,19 @@ shared_context "Canis lupus" do
     eu_lc_A = create_eu_A_addition(
       :taxon_concept => @species,
       :effective_at => '2013-10-08',
-      :event_id => reg2013,
+      :event => reg2013,
       :is_current => true
     )
     eu_lc_A_exc = create_eu_A_exception(
       :taxon_concept => @species,
       :effective_at => '2013-10-08',
-      :event_id => reg2013,
+      :event => reg2013,
       :parent_id => eu_lc_A.id
     )
     eu_lc_B = create_eu_B_addition(
       :taxon_concept => @species,
       :effective_at => '2013-10-08',
-      :event_id => reg2013,
+      :event => reg2013,
       :is_current => true
     )
 
