@@ -106,12 +106,12 @@ describe Species::ListingsExport do
         }
         specify { subject.query.all.size.should == 1 }
 
-        context "when Poland" do
+        context "when Spain" do
           subject {
             Species::ListingsExportFactory.new({
               :designation_id => eu.id,
               :species_listings_ids => [eu_A.id],
-              :geo_entities_ids => [poland.id]
+              :geo_entities_ids => [spain.id]
             })
           }
           specify { subject.query.all.size.should == 0 }

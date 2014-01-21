@@ -1,11 +1,5 @@
 #Encoding: utf-8
 shared_context 'Platysternon megacephalum' do
-  let(:reg2012){
-    create(:eu_regulation, :name => 'No 1158/2012', :designation => eu)
-  }
-  let(:reg2013){
-    create(:eu_regulation, :name => 'No 750/2013', :designation => eu)
-  }
   before(:all) do
     @klass = cites_eu_reptilia
     @order = create_cites_eu_order(
@@ -58,8 +52,8 @@ shared_context 'Platysternon megacephalum' do
      :is_current => true
     )
 
-    cms_designation
-    Sapi.rebuild
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

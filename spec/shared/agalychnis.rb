@@ -24,12 +24,14 @@ shared_context 'Agalychnis' do
     create_eu_B_addition(
      :taxon_concept => @genus,
      :effective_at => '2012-12-15',
+     :event => reg2012,
      :is_current => false
     )
 
     create_eu_B_addition(
      :taxon_concept => @genus,
      :effective_at => '2013-08-10',
+     :event => reg2013,
      :is_current => true
     )
 
@@ -50,8 +52,8 @@ shared_context 'Agalychnis' do
       :excluded_taxon_concepts_ids => "{#{@genus.id}}"
     )
 
-    cms_designation
-    Sapi.rebuild
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

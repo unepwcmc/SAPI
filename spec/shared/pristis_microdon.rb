@@ -1,11 +1,5 @@
 #Encoding: utf-8
 shared_context 'Pristis microdon' do
-  let(:reg2012){
-    create(:eu_regulation, :name => 'No 1158/2012', :designation => eu)
-  }
-  let(:reg2013){
-    create(:eu_regulation, :name => 'No 750/2013', :designation => eu)
-  }
   before(:all) do
     @klass = cites_eu_elasmobranchii
     @order = create_cites_eu_order(
@@ -30,11 +24,16 @@ shared_context 'Pristis microdon' do
      :effective_at => '2007-09-13',
      :is_current => true
     )
-
     create_cites_II_addition(
      :taxon_concept => @species,
      :effective_at => '2007-09-13',
      :is_current => false
+    )
+    create_cites_I_addition(
+     :taxon_concept => @species,
+     :effective_at => '2013-06-12',
+     :inclusion_taxon_concept_id => @family.id,
+     :is_current => true
     )
 
     eu_lc = create_eu_A_addition(
@@ -43,27 +42,17 @@ shared_context 'Pristis microdon' do
      :event => reg2012,
      :is_current => false
     )
-
     create_eu_A_exception(
       :taxon_concept => @species,
       :effective_at => '2012-12-15',
       :parent_id => eu_lc.id
     )
-
     create_eu_B_addition(
      :taxon_concept => @family,
      :effective_at => '2012-12-15',
      :event => reg2012,
      :is_current => false
     )
-
-    create_cites_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '2013-06-12',
-     :inclusion_taxon_concept_id => @family.id,
-     :is_current => true
-    )
-
     create_eu_A_addition(
      :taxon_concept => @family,
      :effective_at => '2013-08-10',
@@ -71,8 +60,8 @@ shared_context 'Pristis microdon' do
      :is_current => true
     )
 
-    cms_designation
-    Sapi.rebuild
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

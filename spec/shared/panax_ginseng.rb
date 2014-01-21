@@ -66,7 +66,8 @@ shared_context "Panax ginseng" do
     )
     eu_lc1 = create_eu_B_addition(
       :taxon_concept => @species,
-      :effective_at => '2000-07-19',
+      :effective_at => '2013-08-10',
+      :event => reg2013,
       :hash_annotation_id => a1.id,
       :annotation_id => a2.id,
       :is_current => true
