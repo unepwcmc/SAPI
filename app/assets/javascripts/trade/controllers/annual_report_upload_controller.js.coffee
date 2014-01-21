@@ -145,5 +145,3 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
       if result[attrname] is undefined
         result[attrname] = reseter[attrname]
     result
-
-
