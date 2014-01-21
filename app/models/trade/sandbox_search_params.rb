@@ -7,6 +7,7 @@ class Trade::SandboxSearchParams < Hash
     sanitized_params = {
       :annual_report_upload_id => params[:annual_report_upload_id],
       :appendix => params[:appendix],
+      :quantity => params[:quantity],
       :species_name => params[:species_name],
       :term_code => params[:term_code],
       :unit_code => params[:unit_code],

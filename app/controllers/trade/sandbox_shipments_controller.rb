@@ -2,7 +2,7 @@ class Trade::SandboxShipmentsController < ApplicationController
   respond_to :json
 
   def index
-    @search = Trade::FilterSandbox.new(params)
+    @search = Trade::SandboxFilter.new(params)
     render :json => @search.results,
       :each_serializer => Trade::SandboxShipmentSerializer,
       :meta => {

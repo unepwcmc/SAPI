@@ -306,8 +306,38 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
 #
 
     # new for sandbox shipments updateSelection
-
     transitionToSandboxShipments: (errorSelector) ->
+      params = @sanitizeQueryParams(errorSelector)
       @transitionToRoute('sandbox_shipments', {
-        queryParams: errorSelector
+        queryParams: params
       })
+
+  sanitizeQueryParams: (selected) ->
+    reseter = {
+      appendix: false,
+      species_name: false,
+      term_code: false,
+      quantity: false,
+      unit_code : false,
+      trading_partner: false,
+      country_of_origin: false,
+      import_permit: false,
+      export_permit: false,
+      origin_permit: false,
+      purpose_code: false,
+      source_code: false,
+      year: false
+    }
+    result = {}
+    for attrname of selected
+      if selected[attrname] == null
+        result[attrname] = -1
+      else
+        result[attrname] = selected[attrname]
+
+    for attrname of reseter
+      if result[attrname] is undefined
+        result[attrname] = reseter[attrname]
+    result
+
+
