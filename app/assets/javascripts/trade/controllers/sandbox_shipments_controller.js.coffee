@@ -4,7 +4,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   updatesVisible: false
   currentShipment: null
   errorParams: null
-  sandboxShipmentsSaving: false # FIXME
+  sandboxShipmentsSaving: false
 
   columns: [
     'appendix', 'species_name',
@@ -21,10 +21,10 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
     Ember.Object.create({id: 'N', name: 'N'})
   ]
 
-  # FIXME !!!
-  #sandboxShipmentsSaving: ( ->
-  #  @get('content.isSaving')
-  #).property('content.isSaving')
+  sandboxShipmentsSaving: ( ->
+    return false unless @get('content.isLoaded')
+    @get('content').filterBy('isSaving', true).length > 0
+  ).property('content.@each.isSaving')
 
   transitionToPage: (forward) ->
     page = if forward
