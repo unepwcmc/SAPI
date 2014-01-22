@@ -7,13 +7,18 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils,
   errorMessage: ""
   errorCount: ""
 
+  errorHeader: ( ->
+    if @errorMessage.length > 0
+      return "Selected error: #{@errorMessage} (#{@errorCount})"
+    ""
+  ).property('errorMessage', 'errorCount')
+
   sandboxShipmentsDidLoad: ( ->
     @set('visibleShipments', @get('content.sandboxShipments'))
     @set('sandboxShipmentsLoaded', true)
   ).observes('content.sanboxShipments.@each.didLoad')
 
   sandboxShipmentsSubmitting: false
-
 
   selectedAppendixChanged: ( ->
     @applyFilter('appendix')

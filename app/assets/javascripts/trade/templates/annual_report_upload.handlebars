@@ -7,9 +7,9 @@
   <div class="row-fluid">
     <div class="span6">
       <h3>Validation errors</h3>
-      <p>{{errorMessage}} ({{errorCount}})</p>
+      <p>{{errorHeader}}</p>
     </div>
-    <div class="sandbox-header-buttons span6">
+    <div class="sandbox-header-buttons span4">
       {{#view tagName='span' class='pull-right' isVisibleBinding='sandboxShipmentsSubmitting'}}
         <img src="/assets/loading.gif"> Submitting...
       {{/view}}
@@ -17,6 +17,9 @@
         {{bind-attr class="hasPrimaryErrors:disabled :pull-right :btn :btn-danger"}}
         {{bind-attr disabled="hasPrimaryErrors"}}>
         Submit shipments
+      </button>
+      <button type="button" id="toggle-errors" class="btn btn-info" data-toggle="collapse" data-target=".collapse">
+        Show errors
       </button>
     </div>
   </div>

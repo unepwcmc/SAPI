@@ -101,5 +101,3 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
       shipment.setProperties(shipment.get('data'))
       @set('currentShipment', null)
       $('.shipment-form-modal').modal('hide')
-
-  
