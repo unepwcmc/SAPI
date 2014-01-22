@@ -274,7 +274,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomy_for_node(node_id integer) RETURNS vo
       hstore(LOWER(ranks.name) || '_id', (hi.id)::VARCHAR)
       FROM q
       JOIN taxon_concepts hi
-      ON hi.parent_id = q.id
+      ON hi.parent_id = q.id AND hi.name_status NOT IN ('H', 'S')
       INNER JOIN taxon_names ON hi.taxon_name_id = taxon_names.id
       INNER JOIN ranks ON hi.rank_id = ranks.id
     )
