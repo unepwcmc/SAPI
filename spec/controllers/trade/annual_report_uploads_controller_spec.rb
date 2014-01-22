@@ -70,11 +70,13 @@ describe Trade::AnnualReportUploadsController do
   end
 
   describe "PUT update" do
-    it "should return updated object" do
+    it "should return nothing" do
+      sandbox_shipment = annual_report_upload.sandbox_shipments.first
+      filters = {:appendix => sandbox_shipment.appendix}
+      updates = {:appendix => "N", :species_name => "Canis lupus signatus"}
       xhr :put, :update, :id => annual_report_upload.id,
-        :annual_report_upload => annual_report_upload.attributes.
-        merge(:sandbox_shipments => annual_report_upload.sandbox_shipments)
-      response.body.should have_json_path('annual_report_upload')
+        :filters => filters, :updates => updates
+      response.body.should == " "
     end
   end
 end
