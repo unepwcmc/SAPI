@@ -2,7 +2,7 @@
     taxonomy taxonomies, designation designations
   );
   CREATE OR REPLACE FUNCTION rebuild_designation_all_listing_changes_mview(
-    taxonomy taxonomies, designation designations, event_id INT
+    taxonomy taxonomies, designation designations, events_ids INT[]
   ) RETURNS void
   LANGUAGE plpgsql
   AS $$
@@ -12,9 +12,9 @@
     tc_table_name TEXT;
     sql TEXT;
   BEGIN
-    SELECT listing_changes_mview_name('all', designation.name, event_id)
+    SELECT listing_changes_mview_name('all', designation.name, events_ids)
     INTO all_lc_table_name;
-    SELECT listing_changes_mview_name('tmp', designation.name, event_id)
+    SELECT listing_changes_mview_name('tmp', designation.name, events_ids)
     INTO tmp_lc_table_name;
 
     SELECT LOWER(taxonomy.name) || '_taxon_concepts_and_ancestors_mview' INTO tc_table_name;
@@ -46,8 +46,8 @@
       JOIN change_types ON change_types.id = listing_changes.change_type_id
       AND change_types.designation_id = ' || designation.id
       || CASE
-      WHEN event_id IS NOT NULL
-      THEN ' WHERE listing_changes.event_id = ' || event_id
+      WHEN events_ids IS NOT NULL AND ARRAY_UPPER(events_ids, 1) IS NOT NULL
+      THEN ' WHERE listing_changes.event_id = ANY (''{' || ARRAY_TO_STRING(events_ids, ', ') || '}''::INT[])'
       ELSE ''
       END ||
       '
@@ -154,7 +154,7 @@
   $$;
 
   COMMENT ON FUNCTION rebuild_designation_all_listing_changes_mview(
-    taxonomy taxonomies, designation designations, event_id INT
+    taxonomy taxonomies, designation designations, events_ids INT[]
   ) IS
   'Procedure to create a helper table with all listing changes 
   + their included / excluded populations 

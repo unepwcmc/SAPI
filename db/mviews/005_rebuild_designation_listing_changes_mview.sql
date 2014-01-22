@@ -2,7 +2,7 @@ DROP FUNCTION IF EXISTS rebuild_designation_listing_changes_mview(
   taxonomy taxonomies, designation designations
 );
 CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
-  taxonomy taxonomies, designation designations, event_id INT
+  taxonomy taxonomies, designation designations, events_ids INT[]
   ) RETURNS void
   LANGUAGE plpgsql
   AS $$
@@ -15,13 +15,13 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     addition_id INT;
     deletion_id INT;
   BEGIN
-    SELECT listing_changes_mview_name('all', designation.name, event_id)
+    SELECT listing_changes_mview_name('all', designation.name, events_ids)
     INTO all_lc_table_name;
-    SELECT listing_changes_mview_name('tmp', designation.name, event_id)
+    SELECT listing_changes_mview_name('tmp', designation.name, events_ids)
     INTO raw_lc_table_name;
-    SELECT listing_changes_mview_name('tmp_cascaded', designation.name, event_id)
+    SELECT listing_changes_mview_name('tmp_cascaded', designation.name, events_ids)
     INTO tmp_lc_table_name;
-    SELECT listing_changes_mview_name(NULL, designation.name, event_id)
+    SELECT listing_changes_mview_name(NULL, designation.name, events_ids)
     INTO lc_table_name;
 
 
@@ -334,6 +334,6 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
   $$;
 
 COMMENT ON FUNCTION rebuild_designation_listing_changes_mview(
-  taxonomy taxonomies, designation designations, event_id INT
+  taxonomy taxonomies, designation designations, events_ids INT[]
 ) IS
 'Procedure to rebuild designation listing changes materialized view in the database.';

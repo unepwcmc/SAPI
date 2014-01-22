@@ -150,15 +150,15 @@ CREATE OR REPLACE FUNCTION drop_eu_lc_mviews() RETURNS void
   END;
   $$;
 
-CREATE OR REPLACE FUNCTION listing_changes_mview_name(prefix TEXT, designation TEXT, event_id INT)
+CREATE OR REPLACE FUNCTION listing_changes_mview_name(prefix TEXT, designation TEXT, events_ids INT[])
   RETURNS TEXT
   LANGUAGE SQL IMMUTABLE
   AS $$
     SELECT CASE WHEN prefix IS NULL THEN '' ELSE prefix || '_' END ||
     designation ||
     CASE
-      WHEN event_id IS NOT NULL
-      THEN '_' || event_id
+      WHEN events_ids IS NOT NULL
+      THEN '_' || ARRAY_TO_STRING(events_ids, '_')
       ELSE ''
     END || '_listing_changes_mview';
   $$;

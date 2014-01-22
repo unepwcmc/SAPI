@@ -58,6 +58,7 @@ module Sapi
         :cites_listing,
         :taxon_concepts_mview,
         :cites_species_listing_mview,
+        :valid_species_name_appendix_year_mview,
         :touch_cites_taxon_concepts
       ]
     end
