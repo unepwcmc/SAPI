@@ -114,7 +114,7 @@ def update_country_codes
     SET origin_country_code = 'XK'
     WHERE origin_country_code = 'KX';
     DELETE FROM shipments_import 
-    WHERE quantity_1 IS NULL AND quantity_2 IS NULL;
+    WHERE quantity_1 IS NULL;
   SQL
   ActiveRecord::Base.connection.execute(sql)
   puts "Cleaning Up Import Table"
