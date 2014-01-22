@@ -10,6 +10,7 @@ namespace :import do
 
   desc "Import unusual geo_entities"
   task :unusual_geo_entities => [:environment] do
+    GeoEntityType.find_or_create_by_name('TRADE_ENTITY')
     CSV.foreach("lib/files/former_and_adapted_geo_entities.csv", :headers => true) do |row|
       GeoEntity.find_or_create_by_iso_code2(
         iso_code2: row[1],
@@ -47,7 +48,6 @@ namespace :import do
       end
       populate_shipments
       Sapi::Indexes.create_indexes_on_shipments
-
     end
   end
 
@@ -60,6 +60,7 @@ namespace :import do
     files.each do |file|  
       Sapi::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
+      update_country_codes
       populate_shipments
       Sapi::Indexes.create_indexes_on_shipments
     end
@@ -103,7 +104,20 @@ def update_country_codes
     UPDATE shipments_import
     SET origin_country_code = 'XX'
     WHERE origin_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS');
+    UPDATE shipments_import
+    SET origin_country_code = 'XK'
+    WHERE export_country_code = 'KX';
+    UPDATE shipments_import
+    SET import_country_code = 'XK'
+    WHERE import_country_code = 'KX';
+    UPDATE shipments_import
+    SET origin_country_code = 'XK'
+    WHERE origin_country_code = 'KX';
+    DELETE FROM shipments_import 
+    WHERE quantity_1 IS NULL AND quantity_2 IS NULL;
   SQL
+  ActiveRecord::Base.connection.execute(sql)
+  puts "Cleaning Up Import Table"
 end
 
 def populate_shipments
@@ -112,7 +126,7 @@ def populate_shipments
   sql = <<-SQL
             DELETE FROM trade_shipments;
             INSERT INTO trade_shipments(
-              legacy_id,
+              legacy_shipment_number,
               source_id,
               unit_id,
               purpose_id,
@@ -121,7 +135,7 @@ def populate_shipments
               appendix,
               exporter_id,
               importer_id,
-              country_of_origin_id ,
+              country_of_origin_id,
               reported_by_exporter,
               year,
               taxon_concept_id,
@@ -129,15 +143,12 @@ def populate_shipments
               updated_at,
               reported_taxon_concept_id)
             SELECT 
-              si.shipment_number as legacy_id,
+              si.shipment_number as legacy_shipment_number,
               sources.id AS source_id,
               units.id AS unit_id,
               purposes.id AS purpose_id,
               terms.id AS term_id,
-              CASE
-              WHEN quantity_1 IS NULL THEN 0
-              ELSE quantity_1
-              END,
+              quantity_1,
               CASE
               WHEN appendix='1' THEN 'I'
               WHEN appendix='2' THEN 'II'
@@ -150,8 +161,14 @@ def populate_shipments
               WHEN exporters.id IS NULL THEN #{xx_id}
               ELSE exporters.id
               END AS exporter_id,
-              importers.id AS importer_id,
-              origins.id AS country_of_origin_id,
+              CASE
+              WHEN importers.id IS NULL THEN #{xx_id}
+              ELSE importers.id
+              END AS importer_id,
+              CASE
+              WHEN origins.id IS NULL THEN #{xx_id}
+              ELSE origins.id
+              END AS country_of_origin_id,
               CASE
               WHEN reporter_type = 'E' THEN TRUE
               ELSE FALSE
@@ -166,7 +183,7 @@ def populate_shipments
               species_plus_id AS reported_taxon_concept_id
                   FROM shipments_import si
                   INNER JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code
-                  LEFT JOIN taxon_concepts tc ON species_plus_id = tc.id
+                  INNER JOIN taxon_concepts tc ON species_plus_id = tc.id
                   LEFT JOIN trade_codes AS sources ON si.source_code = sources.code
                   AND sources.type = 'Source'
                   LEFT JOIN trade_codes AS units ON si.unit_code_1 = units.code
@@ -189,4 +206,5 @@ def populate_shipments
                   WHERE (rank = '0' AND jt.taxon_concept_id IS NOT NULL) OR (rank <> '0' AND tc.id IS NOT NULL)
   SQL
   ActiveRecord::Base.connection.execute(sql)
+  puts "Populating trade_shipments"
 end
