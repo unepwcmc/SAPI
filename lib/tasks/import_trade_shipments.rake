@@ -42,29 +42,17 @@ namespace :import do
       fix_term_codes = {12227624 => "LIV", 12225022 => "DER", 12224783 => "DER"}
       fix_term_codes.each do |shipment_number,term_code|
         sql = <<-SQL
-                UPDATE shipments_import SET term_code_1 = '#{term_code}' WHERE shipment_number =  #{shipment_number};
+        UPDATE shipments_import SET term_code_1 = '#{term_code}' WHERE shipment_number =  #{shipment_number};
         SQL
         ActiveRecord::Base.connection.execute(sql)
       end
-      populate_shipments
-      Sapi::Indexes.create_indexes_on_shipments
-    end
-  end
-
-
-  desc "Import shipments from csv file (usage: rake import:first_shipments[path/to/file])"
-  task :first_shipments, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
-    TMP_TABLE = "shipments_import"
-    puts "opening file"
-    files = files_from_args(t, args)
-    files.each do |file|  
-      Sapi::Indexes.drop_indexes_on_shipments
-      drop_create_and_copy_temp(TMP_TABLE, file)
       update_country_codes
       populate_shipments
       Sapi::Indexes.create_indexes_on_shipments
     end
   end
+
+
 end
 
 
