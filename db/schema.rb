@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131217121051) do
+ActiveRecord::Schema.define(:version => 20140116182242) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -38,27 +38,52 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.datetime "updated_at",     :null => false
   end
 
-  create_table "cites_all_listing_changes_mview", :id => false, :force => true do |t|
-    t.integer "id"
-    t.integer "designation_id"
-    t.string  "change_type_name"
-    t.integer "taxon_concept_id"
-    t.integer "species_listing_id"
-    t.integer "change_type_id"
-    t.integer "inclusion_taxon_concept_id"
-    t.date    "effective_at"
-    t.string  "excluded_taxon_concept_ids", :limit => nil
-    t.integer "party_id"
-    t.string  "listed_geo_entities_ids",    :limit => nil
-    t.string  "excluded_geo_entities_ids",  :limit => nil
-    t.integer "affected_taxon_concept_id"
-    t.integer "tree_distance"
-    t.integer "timeline_position"
+  create_table "cites_listing_changes_mview", :id => false, :force => true do |t|
+    t.integer  "taxon_concept_id"
+    t.integer  "id"
+    t.integer  "original_taxon_concept_id"
+    t.datetime "effective_at"
+    t.integer  "species_listing_id"
+    t.string   "species_listing_name"
+    t.integer  "change_type_id"
+    t.string   "change_type_name"
+    t.integer  "designation_id"
+    t.string   "designation_name"
+    t.integer  "parent_id"
+    t.integer  "party_id"
+    t.string   "party_iso_code"
+    t.string   "ann_symbol"
+    t.text     "full_note_en"
+    t.text     "full_note_es"
+    t.text     "full_note_fr"
+    t.text     "short_note_en"
+    t.text     "short_note_es"
+    t.text     "short_note_fr"
+    t.boolean  "display_in_index"
+    t.boolean  "display_in_footnote"
+    t.string   "hash_ann_symbol"
+    t.string   "hash_ann_parent_symbol"
+    t.text     "hash_full_note_en"
+    t.text     "hash_full_note_es"
+    t.text     "hash_full_note_fr"
+    t.integer  "inclusion_taxon_concept_id"
+    t.text     "inherited_short_note_en"
+    t.text     "inherited_full_note_en"
+    t.text     "auto_note"
+    t.boolean  "is_current"
+    t.boolean  "explicit_change"
+    t.string   "countries_ids_ary",          :limit => nil
+    t.datetime "updated_at"
+    t.boolean  "show_in_history"
+    t.boolean  "show_in_downloads"
+    t.boolean  "show_in_timeline"
+    t.boolean  "dirty"
+    t.datetime "expiry"
   end
 
-  add_index "cites_all_listing_changes_mview", ["affected_taxon_concept_id", "inclusion_taxon_concept_id"], :name => "cites_all_listing_changes_mvi_affected_taxon_concept_id_inc_idx"
-  add_index "cites_all_listing_changes_mview", ["designation_id", "timeline_position", "affected_taxon_concept_id"], :name => "cites_all_listing_changes_mvi_designation_id_timeline_posit_idx"
-  add_index "cites_all_listing_changes_mview", ["id", "affected_taxon_concept_id"], :name => "cites_all_listing_changes_mvie_id_affected_taxon_concept_id_idx"
+  add_index "cites_listing_changes_mview", ["id", "taxon_concept_id"], :name => "cites_listing_changes_mview_id_taxon_concept_id_idx"
+  add_index "cites_listing_changes_mview", ["inclusion_taxon_concept_id"], :name => "cites_listing_changes_mview_inclusion_taxon_concept_id_idx"
+  add_index "cites_listing_changes_mview", ["taxon_concept_id", "original_taxon_concept_id", "change_type_id", "effective_at"], :name => "cites_listing_changes_mview_taxon_concept_id_original_taxon_idx"
 
   create_table "cites_listings_import", :id => false, :force => true do |t|
     t.string  "rank",                      :limit => nil
@@ -95,6 +120,7 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
+    t.integer "genus_id"
     t.text    "kingdom_name"
     t.text    "phylum_name"
     t.text    "class_name"
@@ -134,27 +160,52 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.text    "exclusions"
   end
 
-  create_table "cms_all_listing_changes_mview", :id => false, :force => true do |t|
-    t.integer "id"
-    t.integer "designation_id"
-    t.string  "change_type_name"
-    t.integer "taxon_concept_id"
-    t.integer "species_listing_id"
-    t.integer "change_type_id"
-    t.integer "inclusion_taxon_concept_id"
-    t.date    "effective_at"
-    t.string  "excluded_taxon_concept_ids", :limit => nil
-    t.integer "party_id"
-    t.string  "listed_geo_entities_ids",    :limit => nil
-    t.string  "excluded_geo_entities_ids",  :limit => nil
-    t.integer "affected_taxon_concept_id"
-    t.integer "tree_distance"
-    t.integer "timeline_position"
+  create_table "cms_listing_changes_mview", :id => false, :force => true do |t|
+    t.integer  "taxon_concept_id"
+    t.integer  "id"
+    t.integer  "original_taxon_concept_id"
+    t.datetime "effective_at"
+    t.integer  "species_listing_id"
+    t.string   "species_listing_name"
+    t.integer  "change_type_id"
+    t.string   "change_type_name"
+    t.integer  "designation_id"
+    t.string   "designation_name"
+    t.integer  "parent_id"
+    t.integer  "party_id"
+    t.string   "party_iso_code"
+    t.string   "ann_symbol"
+    t.text     "full_note_en"
+    t.text     "full_note_es"
+    t.text     "full_note_fr"
+    t.text     "short_note_en"
+    t.text     "short_note_es"
+    t.text     "short_note_fr"
+    t.boolean  "display_in_index"
+    t.boolean  "display_in_footnote"
+    t.string   "hash_ann_symbol"
+    t.string   "hash_ann_parent_symbol"
+    t.text     "hash_full_note_en"
+    t.text     "hash_full_note_es"
+    t.text     "hash_full_note_fr"
+    t.integer  "inclusion_taxon_concept_id"
+    t.text     "inherited_short_note_en"
+    t.text     "inherited_full_note_en"
+    t.text     "auto_note"
+    t.boolean  "is_current"
+    t.boolean  "explicit_change"
+    t.string   "countries_ids_ary",          :limit => nil
+    t.datetime "updated_at"
+    t.boolean  "show_in_history"
+    t.boolean  "show_in_downloads"
+    t.boolean  "show_in_timeline"
+    t.boolean  "dirty"
+    t.datetime "expiry"
   end
 
-  add_index "cms_all_listing_changes_mview", ["affected_taxon_concept_id", "inclusion_taxon_concept_id"], :name => "cms_all_listing_changes_mview_affected_taxon_concept_id_inc_idx"
-  add_index "cms_all_listing_changes_mview", ["designation_id", "timeline_position", "affected_taxon_concept_id"], :name => "cms_all_listing_changes_mview_designation_id_timeline_posit_idx"
-  add_index "cms_all_listing_changes_mview", ["id", "affected_taxon_concept_id"], :name => "cms_all_listing_changes_mview_id_affected_taxon_concept_id_idx"
+  add_index "cms_listing_changes_mview", ["id", "taxon_concept_id"], :name => "cms_listing_changes_mview_id_taxon_concept_id_idx"
+  add_index "cms_listing_changes_mview", ["inclusion_taxon_concept_id"], :name => "cms_listing_changes_mview_inclusion_taxon_concept_id_idx"
+  add_index "cms_listing_changes_mview", ["taxon_concept_id", "original_taxon_concept_id", "change_type_id", "effective_at"], :name => "cms_listing_changes_mview_taxon_concept_id_original_taxon_c_idx"
 
   create_table "cms_listings_import", :id => false, :force => true do |t|
     t.string  "rank",                      :limit => nil
@@ -181,6 +232,7 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
+    t.integer "genus_id"
     t.text    "phylum_name"
     t.text    "class_name"
     t.text    "order_name"
@@ -285,28 +337,6 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.datetime "updated_at",                          :null => false
   end
 
-  create_table "eu_all_listing_changes_mview", :id => false, :force => true do |t|
-    t.integer "id"
-    t.integer "designation_id"
-    t.string  "change_type_name"
-    t.integer "taxon_concept_id"
-    t.integer "species_listing_id"
-    t.integer "change_type_id"
-    t.integer "inclusion_taxon_concept_id"
-    t.date    "effective_at"
-    t.string  "excluded_taxon_concept_ids", :limit => nil
-    t.integer "party_id"
-    t.string  "listed_geo_entities_ids",    :limit => nil
-    t.string  "excluded_geo_entities_ids",  :limit => nil
-    t.integer "affected_taxon_concept_id"
-    t.integer "tree_distance"
-    t.integer "timeline_position"
-  end
-
-  add_index "eu_all_listing_changes_mview", ["affected_taxon_concept_id", "inclusion_taxon_concept_id"], :name => "eu_all_listing_changes_mview_affected_taxon_concept_id_incl_idx"
-  add_index "eu_all_listing_changes_mview", ["designation_id", "timeline_position", "affected_taxon_concept_id"], :name => "eu_all_listing_changes_mview_designation_id_timeline_positi_idx"
-  add_index "eu_all_listing_changes_mview", ["id", "affected_taxon_concept_id"], :name => "eu_all_listing_changes_mview_id_affected_taxon_concept_id_idx"
-
   create_table "eu_decision_confirmations", :force => true do |t|
     t.integer  "eu_decision_id"
     t.integer  "event_id"
@@ -357,6 +387,53 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.string  "internal_notes",  :limit => nil
   end
 
+  create_table "eu_listing_changes_mview", :id => false, :force => true do |t|
+    t.integer  "taxon_concept_id"
+    t.integer  "id"
+    t.integer  "original_taxon_concept_id"
+    t.datetime "effective_at"
+    t.integer  "species_listing_id"
+    t.string   "species_listing_name"
+    t.integer  "change_type_id"
+    t.string   "change_type_name"
+    t.integer  "designation_id"
+    t.string   "designation_name"
+    t.integer  "parent_id"
+    t.integer  "party_id"
+    t.string   "party_iso_code"
+    t.string   "ann_symbol"
+    t.text     "full_note_en"
+    t.text     "full_note_es"
+    t.text     "full_note_fr"
+    t.text     "short_note_en"
+    t.text     "short_note_es"
+    t.text     "short_note_fr"
+    t.boolean  "display_in_index"
+    t.boolean  "display_in_footnote"
+    t.string   "hash_ann_symbol"
+    t.string   "hash_ann_parent_symbol"
+    t.text     "hash_full_note_en"
+    t.text     "hash_full_note_es"
+    t.text     "hash_full_note_fr"
+    t.integer  "inclusion_taxon_concept_id"
+    t.text     "inherited_short_note_en"
+    t.text     "inherited_full_note_en"
+    t.text     "auto_note"
+    t.boolean  "is_current"
+    t.boolean  "explicit_change"
+    t.string   "countries_ids_ary",          :limit => nil
+    t.datetime "updated_at"
+    t.boolean  "show_in_history"
+    t.boolean  "show_in_downloads"
+    t.boolean  "show_in_timeline"
+    t.boolean  "dirty"
+    t.datetime "expiry"
+  end
+
+  add_index "eu_listing_changes_mview", ["id", "taxon_concept_id"], :name => "eu_listing_changes_mview_id_taxon_concept_id_idx"
+  add_index "eu_listing_changes_mview", ["inclusion_taxon_concept_id"], :name => "eu_listing_changes_mview_inclusion_taxon_concept_id_idx"
+  add_index "eu_listing_changes_mview", ["taxon_concept_id", "original_taxon_concept_id", "change_type_id", "effective_at"], :name => "eu_listing_changes_mview_taxon_concept_id_original_taxon_co_idx"
+
   create_table "eu_listings_import", :id => false, :force => true do |t|
     t.integer "event_legacy_id"
     t.string  "rank",                      :limit => nil
@@ -383,6 +460,7 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.integer "class_id"
     t.integer "order_id"
     t.integer "family_id"
+    t.integer "genus_id"
     t.text    "kingdom_name"
     t.text    "phylum_name"
     t.text    "class_name"
@@ -470,6 +548,16 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.integer "event_legacy_id"
     t.string  "ignore",          :limit => nil
     t.string  "full_note_en",    :limit => nil
+  end
+
+  create_table "hybrids_import", :id => false, :force => true do |t|
+    t.string  "legacy_cites_taxon_code", :limit => nil
+    t.string  "full_hybrid_name",        :limit => nil
+    t.string  "hybrid_rank",             :limit => nil
+    t.integer "species_plus_id"
+    t.string  "parent",                  :limit => nil
+    t.string  "parent_rank",             :limit => nil
+    t.string  "status",                  :limit => nil
   end
 
   create_table "instruments", :force => true do |t|
@@ -563,12 +651,12 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.datetime "expiry"
   end
 
-  add_index "listing_changes_mview", ["id", "taxon_concept_id"], :name => "listing_changes_mview_id_taxon_concept_id_idx"
-  add_index "listing_changes_mview", ["inclusion_taxon_concept_id"], :name => "listing_changes_mview_inclusion_taxon_concept_id_idx"
-  add_index "listing_changes_mview", ["is_current", "designation_name", "change_type_name"], :name => "listing_changes_mview_is_current_designation_name_change_ty_idx"
-  add_index "listing_changes_mview", ["original_taxon_concept_id"], :name => "listing_changes_mview_original_taxon_concept_id_idx"
-  add_index "listing_changes_mview", ["show_in_downloads", "taxon_concept_id", "designation_id"], :name => "listing_changes_mview_show_in_downloads_taxon_concept_id_de_idx"
-  add_index "listing_changes_mview", ["show_in_timeline", "taxon_concept_id", "designation_id"], :name => "listing_changes_mview_show_in_timeline_taxon_concept_id_des_idx"
+  add_index "listing_changes_mview", ["id", "taxon_concept_id"], :name => "listing_changes_mview_tmp_id_taxon_concept_id_idx1"
+  add_index "listing_changes_mview", ["inclusion_taxon_concept_id"], :name => "listing_changes_mview_tmp_inclusion_taxon_concept_id_idx1"
+  add_index "listing_changes_mview", ["is_current", "designation_name", "change_type_name"], :name => "listing_changes_mview_tmp_is_current_designation_name_chan_idx1"
+  add_index "listing_changes_mview", ["original_taxon_concept_id"], :name => "listing_changes_mview_tmp_original_taxon_concept_id_idx1"
+  add_index "listing_changes_mview", ["show_in_downloads", "taxon_concept_id", "designation_id"], :name => "listing_changes_mview_tmp_show_in_downloads_taxon_concept__idx1"
+  add_index "listing_changes_mview", ["show_in_timeline", "taxon_concept_id", "designation_id"], :name => "listing_changes_mview_tmp_show_in_timeline_taxon_concept_i_idx1"
 
   create_table "listing_distributions", :force => true do |t|
     t.integer  "listing_change_id",                   :null => false
@@ -665,6 +753,8 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.text "volume"
     t.text "number"
     t.text "publisher"
+    t.text "pub_place"
+    t.text "pagination"
   end
 
   create_table "references_legacy_id_mapping", :force => true do |t|
@@ -773,8 +863,10 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.datetime "touched_at"
+    t.string   "legacy_trade_code"
   end
 
+  add_index "taxon_concepts", ["full_name"], :name => "index_taxon_concepts_on_full_name"
   add_index "taxon_concepts", ["name_status"], :name => "index_taxon_concepts_on_name_status"
   add_index "taxon_concepts", ["parent_id"], :name => "index_taxon_concepts_on_parent_id"
   add_index "taxon_concepts", ["taxonomy_id"], :name => "index_taxon_concepts_on_taxonomy_id"
@@ -852,13 +944,13 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.datetime "expiry"
   end
 
-  add_index "taxon_concepts_mview", ["cites_show", "name_status", "cites_listing_original", "taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_cites_show_name_status_cites_listing_o_idx"
-  add_index "taxon_concepts_mview", ["cms_show", "name_status", "cms_listing_original", "taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_cms_show_name_status_cms_listing_origi_idx"
-  add_index "taxon_concepts_mview", ["eu_show", "name_status", "eu_listing_original", "taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_eu_show_name_status_eu_listing_origina_idx"
-  add_index "taxon_concepts_mview", ["id"], :name => "taxon_concepts_mview_id_idx"
-  add_index "taxon_concepts_mview", ["parent_id"], :name => "taxon_concepts_mview_parent_id_idx"
-  add_index "taxon_concepts_mview", ["taxonomy_is_cites_eu", "cites_listed", "kingdom_position"], :name => "taxon_concepts_mview_taxonomy_is_cites_eu_cites_listed_king_idx"
-  add_index "taxon_concepts_mview", ["taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_taxonomy_is_cites_eu_rank_name_idx"
+  add_index "taxon_concepts_mview", ["cites_show", "name_status", "cites_listing_original", "taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_tmp_cites_show_name_status_cites_listi_idx"
+  add_index "taxon_concepts_mview", ["cms_show", "name_status", "cms_listing_original", "taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_tmp_cms_show_name_status_cms_listing_o_idx"
+  add_index "taxon_concepts_mview", ["eu_show", "name_status", "eu_listing_original", "taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_tmp_eu_show_name_status_eu_listing_ori_idx"
+  add_index "taxon_concepts_mview", ["id"], :name => "taxon_concepts_mview_tmp_id_idx"
+  add_index "taxon_concepts_mview", ["parent_id"], :name => "taxon_concepts_mview_tmp_parent_id_idx"
+  add_index "taxon_concepts_mview", ["taxonomy_is_cites_eu", "cites_listed", "kingdom_position"], :name => "taxon_concepts_mview_tmp_taxonomy_is_cites_eu_cites_listed__idx"
+  add_index "taxon_concepts_mview", ["taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_tmp_taxonomy_is_cites_eu_rank_name_idx"
 
   create_table "taxon_instruments", :force => true do |t|
     t.integer  "taxon_concept_id"
@@ -899,11 +991,23 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
   end
 
   create_table "term_trade_codes_pairs", :force => true do |t|
-    t.integer  "term_id"
+    t.integer  "term_id",         :null => false
     t.integer  "trade_code_id"
     t.string   "trade_code_type"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+  end
+
+  add_index "term_trade_codes_pairs", ["term_id", "trade_code_id", "trade_code_type"], :name => "index_term_trade_codes_pairs_on_term_and_trade_code", :unique => true
+
+  create_table "terms_and_purpose_pairs_import", :id => false, :force => true do |t|
+    t.string "term_code",    :limit => nil
+    t.string "purpose_code", :limit => nil
+  end
+
+  create_table "terms_and_unit_pairs_import", :id => false, :force => true do |t|
+    t.string "term_code", :limit => nil
+    t.string "unit_code", :limit => nil
   end
 
   create_table "trade_annual_report_uploads", :force => true do |t|
@@ -977,6 +1081,80 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.integer  "end_notification_id"
     t.string   "excluded_taxon_concepts_ids", :limit => nil
   end
+
+  create_table "trade_sandbox_2", :force => true do |t|
+    t.string "appendix"
+    t.string "species_name"
+    t.string "term_code"
+    t.string "quantity"
+    t.string "unit_code"
+    t.string "trading_partner"
+    t.string "country_of_origin"
+    t.string "export_permit"
+    t.string "origin_permit"
+    t.string "purpose_code"
+    t.string "source_code"
+    t.string "year"
+    t.string "import_permit"
+  end
+
+  create_table "trade_sandbox_5", :force => true do |t|
+    t.string "appendix"
+    t.string "species_name"
+    t.string "term_code"
+    t.string "quantity"
+    t.string "unit_code"
+    t.string "trading_partner"
+    t.string "country_of_origin"
+    t.string "export_permit"
+    t.string "origin_permit"
+    t.string "purpose_code"
+    t.string "source_code"
+    t.string "year"
+    t.string "import_permit"
+  end
+
+  create_table "trade_sandbox_6", :force => true do |t|
+    t.string "appendix"
+    t.string "species_name"
+    t.string "term_code"
+    t.string "quantity"
+    t.string "unit_code"
+    t.string "trading_partner"
+    t.string "country_of_origin"
+    t.string "export_permit"
+    t.string "origin_permit"
+    t.string "purpose_code"
+    t.string "source_code"
+    t.string "year"
+    t.string "import_permit"
+  end
+
+  create_table "trade_sandbox_8", :force => true do |t|
+    t.string "appendix"
+    t.string "species_name"
+    t.string "term_code"
+    t.string "quantity"
+    t.string "unit_code"
+    t.string "trading_partner"
+    t.string "country_of_origin"
+    t.string "export_permit"
+    t.string "origin_permit"
+    t.string "purpose_code"
+    t.string "source_code"
+    t.string "year"
+    t.string "import_permit"
+  end
+
+  add_index "trade_sandbox_8", ["appendix"], :name => "trade_sandbox_8_appendix_idx"
+  add_index "trade_sandbox_8", ["country_of_origin"], :name => "trade_sandbox_8_country_of_origin_idx"
+  add_index "trade_sandbox_8", ["purpose_code"], :name => "trade_sandbox_8_purpose_code_idx"
+  add_index "trade_sandbox_8", ["quantity"], :name => "trade_sandbox_8_quantity_idx"
+  add_index "trade_sandbox_8", ["source_code"], :name => "trade_sandbox_8_source_code_idx"
+  add_index "trade_sandbox_8", ["species_name"], :name => "trade_sandbox_8_species_name_idx"
+  add_index "trade_sandbox_8", ["term_code"], :name => "trade_sandbox_8_term_code_idx"
+  add_index "trade_sandbox_8", ["trading_partner"], :name => "trade_sandbox_8_trading_partner_idx"
+  add_index "trade_sandbox_8", ["unit_code"], :name => "trade_sandbox_8_unit_code_idx"
 
   create_table "trade_sandbox_template", :force => true do |t|
     t.string "appendix"
@@ -1064,9 +1242,12 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.string   "unit"
     t.string   "source"
     t.string   "purpose"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
     t.integer  "number_of_rows"
+    t.string   "city",           :limit => nil
+    t.string   "country",        :limit => nil
+    t.string   "organization",   :limit => nil
   end
 
   create_table "trade_validation_rules", :force => true do |t|
@@ -1087,6 +1268,15 @@ ActiveRecord::Schema.define(:version => 20131217121051) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "valid_species_name_appendix_year_mview", :id => false, :force => true do |t|
+    t.string  "species_name"
+    t.integer "taxon_concept_id"
+    t.integer "year"
+    t.string  "appendix",         :limit => nil
+  end
+
+  add_index "valid_species_name_appendix_year_mview", ["species_name", "appendix", "year"], :name => "valid_species_name_appendix_year_species_name_appendix_year_idx"
 
   add_foreign_key "annotations", "annotations", name: "annotations_source_id_fk", column: "source_id"
   add_foreign_key "annotations", "events", name: "annotations_event_id_fk"

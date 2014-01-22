@@ -247,6 +247,15 @@ class CsvToDbMap
       'Name' => 'name varchar',
       'Effective from' => 'effective_at date',
       'End Date' => 'end_date date'
+    },
+    'hybrids_import' => {
+      'Legacy_CITES_TAXON_CODE' => 'legacy_cites_taxon_code varchar',
+      'Full Hybrid Name' => 'full_hybrid_name varchar',
+      'Hybrid Rank' => 'hybrid_rank varchar',
+      'SpeciesPlusID' => 'species_plus_id integer',
+      'Parent' => 'parent varchar',
+      'ParentRank' => 'parent_rank varchar',
+      'Status' => 'status varchar'
     }
   }
 
