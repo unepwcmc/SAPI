@@ -43,6 +43,13 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
       shipment.set('_modified', false)
     @endPropertyChanges()
 
+  transitionToParentController: ->
+    annualReportUpload = @get('controllers.annualReportUpload')
+    annualReportUpload.set('errorMessage', "")
+    annualReportUploadId = annualReportUpload.get('id')
+    @transitionToRoute('annual_report_upload', annualReportUploadId)
+    
+
   actions:
 
     toggleUpdatesVisible: ->
@@ -66,8 +73,8 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
         type: "PUT"
         data: {filters: @errorParams, updates: valuesToUpdate}
       })).then( 
-        @transitionToRoute('annual_report_upload', annualReportUploadId), 
-        console.log arguments
+        @transitionToParentController(), 
+        console.log arguments # error callback!
       )
 
     cancelSelectForUpdate: () ->
@@ -78,6 +85,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
     saveChanges: () ->
       @get('store').commit()
       @clearModifiedFlags()
+      @transitionToParentController()
 
     cancelChanges: () ->
       @get('store').get('currentTransaction').rollback()

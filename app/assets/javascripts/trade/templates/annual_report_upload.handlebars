@@ -19,13 +19,12 @@
         Submit shipments
       </button>
       <button type="button" id="toggle-errors" class="btn btn-info" data-toggle="collapse" data-target=".collapse">
-        Show errors
       </button>
     </div>
   </div>
 </div>
 
-{{collection Trade.ValidationErrorsView contentBinding='validationErrors'}}
+{{collection Trade.ValidationErrorsView contentBinding='validationErrors' controller=this}}
 
 {{ outlet }}
 
