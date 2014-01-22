@@ -92,6 +92,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
 
   def subspecies
     TaxonConcept.where(:parent_id => object.id).
+      where("name_status != 'S'").
       select([:full_name, :author_year]).
       order(:full_name).all
   end
