@@ -1,7 +1,12 @@
 {{view Trade.AnnualReportUploadFormView controllerBinding="controller"}}
 
 Annual report uploads in progress:
+<button {{action 'deleteAllReports'}}>
+        
+        Delete All
+      </button>
 <ul>
+
 {{#each controller}}
   <li>
     {{#linkTo 'annual_report_upload' this}}

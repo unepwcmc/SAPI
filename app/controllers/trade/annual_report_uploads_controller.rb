@@ -37,6 +37,13 @@ class Trade::AnnualReportUploadsController < ApplicationController
     end
   end
 
+  def destroy
+    @annual_report_upload = Trade::AnnualReportUpload.where(params[:id]).destroy_all
+  end
+
+
+
+
   def submit
     @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
     if @annual_report_upload.submit
