@@ -108,7 +108,7 @@ def insert_into_trade_shipments
     UPDATE trade_shipments
     SET #{k}_permits_ids = a.ids, #{k}_permit_number = permit_number
     FROM (SELECT array_agg(id) as ids,
-    string_agg(permit_number, ';') AS permit_number,
+    string_agg(number, ';') AS permit_number,
     shipment_number
     from trade_permits
     where legacy_reporter_type = '#{v}'
