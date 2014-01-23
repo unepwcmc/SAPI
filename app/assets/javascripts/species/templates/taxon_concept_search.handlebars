@@ -2,6 +2,8 @@
   <fieldset>
     {{view Species.TaxonConceptSearchTextField
       valueBinding="controller.taxonConceptQuery"
+      queryBinding="controller.taxonConceptQuery"
+      queryActiveBinding="controller.taxonConceptQueryIsActive"
       id="scientific_name"
       title="search"
       placeholder="Species, higher taxon, synonym or common name..."

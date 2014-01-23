@@ -3,19 +3,17 @@ Species.TaxonConceptSearchTextField = Em.TextField.extend
 
   attributeBindings: ['autocomplete']
 
-  click: (event) ->  
-    if (@.$().val() == @get('placeholder'))
-      @.$().val('')
-    @.$().attr('placeholder', '')
-    @showDropdown()
-
   focusOut: (event) ->
+    @set('queryActive', false)
     @.$().attr('placeholder', @get('placeholder'))
     @hideDropdown() if !@get('parentView.mousedOver')
 
   keyUp: (event) ->
-    @set('controller.taxonConceptQuery', event.currentTarget.value)
-    @showDropdown()
+    if @get('queryActive') is false
+      @set('queryActive', true)
+    else
+      @showDropdown()
+    @set('query', event.currentTarget.value)
 
   hideDropdown: () -> 
     $('.search fieldset').removeClass('parent-focus parent-active')

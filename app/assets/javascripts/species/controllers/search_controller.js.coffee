@@ -2,6 +2,7 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
   needs: ['geoEntities', 'taxonConcepts']
   taxonomy: 'cites_eu'
   taxonConceptQuery: null
+  taxonConceptQueryIsActive: false
   geoEntityQuery: null
   autoCompleteRegions: null
   autoCompleteCountries: null
@@ -18,9 +19,9 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
 
   autoCompleteTaxonConcepts: ( ->
     taxonConceptQuery = @get('taxonConceptQuery')
-    if !taxonConceptQuery || taxonConceptQuery.length < 3
+    taxonConceptQueryIsActive = @get('taxonConceptQueryIsActive')
+    if not taxonConceptQueryIsActive or not taxonConceptQuery or taxonConceptQuery.length < 3
       return;
-
     Species.AutoCompleteTaxonConcept.find(
       taxonomy: @get('taxonomy')
       taxon_concept_query: taxonConceptQuery
