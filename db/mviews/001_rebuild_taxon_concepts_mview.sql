@@ -153,8 +153,9 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       SELECT taxon_concepts.parent_id AS taxon_concept_id_sub,
       ARRAY_AGG(taxon_concepts.full_name) AS subspecies_ary
       FROM taxon_concepts
-      JOIN ranks ON ranks.id = taxon_concepts.rank_id 
+      JOIN ranks ON ranks.id = taxon_concepts.rank_id
       AND ranks.name IN ('SUBSPECIES', 'VARIETY')
+      WHERE name_status != 'S'
       GROUP BY taxon_concepts.parent_id
     ) subspecies ON taxon_concepts.id = subspecies.taxon_concept_id_sub
     LEFT JOIN (

@@ -243,6 +243,7 @@ class CsvToDbMap
       'TAXON_FAMILY' => 'TAXON_FAMILY varchar',
       'TERM_CODE' => 'TERM_CODE varchar'
     },
+
     'names_for_transfer_import' => {
         'cites_name' => 'cites_name varchar',
         'cites_taxon_code' => 'cites_taxon_code varchar',
@@ -280,6 +281,16 @@ class CsvToDbMap
       'PERMIT_YEAR' => 'permit_year int',
       'PERMIT_REPORTER_TYPE' => 'permit_reporter_type varchar',
       'ENTITY_CODE' => 'entity_code varchar'
+    },
+
+    'hybrids_import' => {
+      'Legacy_CITES_TAXON_CODE' => 'legacy_cites_taxon_code varchar',
+      'Full Hybrid Name' => 'full_hybrid_name varchar',
+      'Hybrid Rank' => 'hybrid_rank varchar',
+      'SpeciesPlusID' => 'species_plus_id integer',
+      'Parent' => 'parent varchar',
+      'ParentRank' => 'parent_rank varchar',
+      'Status' => 'status varchar'
     }
   }
 
