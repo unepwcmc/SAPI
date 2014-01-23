@@ -25,8 +25,8 @@ namespace :import do
     end
   end
 
-  desc "Import first shipments from csv file (usage: rake import:first_shipments[path/to/file])"
-  task :first_shipments, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  desc "Import first shipments from csv file (usage: rake import:shipments[path/to/file])"
+  task :shipments, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     puts "opening file"
 
     TMP_TABLE = "shipments_import"
