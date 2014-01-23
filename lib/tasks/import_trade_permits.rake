@@ -115,7 +115,7 @@ def insert_into_trade_shipments
     group by shipment_number) AS a
     where legacy_shipment_number = a.shipment_number
     SQL
-    puts "Inserting into trade_shipments"
+    puts "Inserting #{k} permits into trade_shipments"
     execute_query(sql)
   end
 end
