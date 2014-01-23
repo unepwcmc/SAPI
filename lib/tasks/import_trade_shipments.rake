@@ -112,7 +112,6 @@ def populate_shipments
   puts "Inserting into trade_shipments table"
   xx_id = GeoEntity.find_by_iso_code2('XX').id
   sql = <<-SQL
-            DELETE FROM trade_shipments;
             INSERT INTO trade_shipments(
               legacy_shipment_number,
               source_id,
