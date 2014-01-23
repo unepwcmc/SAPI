@@ -59,5 +59,103 @@ module Sapi
       end
     end
 
+    def self.drop_indexes_on_shipments
+      sql = <<-SQL
+      DROP INDEX IF EXISTS index_trade_shipments_on_appendix;
+      DROP INDEX IF EXISTS index_trade_shipments_on_country_of_origin_id;
+      DROP INDEX IF EXISTS index_trade_shipments_on_exporter_id;
+      DROP INDEX IF EXISTS index_trade_shipments_on_importer_id;
+      DROP INDEX IF EXISTS index_trade_shipments_on_purpose_id;
+      DROP INDEX IF EXISTS index_trade_shipments_on_quantity;
+      DROP INDEX IF EXISTS index_trade_shipments_on_sandbox_id;
+      DROP INDEX IF EXISTS index_trade_shipments_on_source_id;
+      DROP INDEX IF EXISTS index_trade_shipments_on_taxon_concept_id;
+      DROP INDEX IF EXISTS index_trade_shipments_on_reported_taxon_concept_id;
+      DROP INDEX IF EXISTS index_trade_shipments_on_term_id;
+      DROP INDEX IF EXISTS index_trade_shipments_on_unit_id;
+      DROP INDEX IF EXISTS index_trade_shipments_on_year;
+      DROP INDEX IF EXISTS index_trade_shipments_on_import_permits_ids;
+      DROP INDEX IF EXISTS index_trade_shipments_on_export_permits_ids;
+      DROP INDEX IF EXISTS index_trade_shipments_on_origin_permits_ids;
+      DROP INDEX IF EXISTS index_trade_shipments_on_legacy_shipment_number;
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
+    end
+
+    def self.create_indexes_on_shipments
+      sql = <<-SQL
+      CREATE INDEX index_trade_shipments_on_appendix
+        ON trade_shipments
+        USING btree
+        (appendix COLLATE pg_catalog."default");
+      CREATE INDEX index_trade_shipments_on_country_of_origin_id
+        ON trade_shipments
+        USING btree
+        (country_of_origin_id);
+      CREATE INDEX index_trade_shipments_on_exporter_id
+        ON trade_shipments
+        USING btree
+        (exporter_id);
+      CREATE INDEX index_trade_shipments_on_importer_id
+        ON trade_shipments
+        USING btree
+        (importer_id);
+      CREATE INDEX index_trade_shipments_on_purpose_id
+        ON trade_shipments
+        USING btree
+        (purpose_id);
+      CREATE INDEX index_trade_shipments_on_quantity
+        ON trade_shipments
+        USING btree
+        (quantity);
+      CREATE INDEX index_trade_shipments_on_sandbox_id
+        ON trade_shipments
+        USING btree
+        (sandbox_id);
+      CREATE INDEX index_trade_shipments_on_source_id
+        ON trade_shipments
+        USING btree
+        (source_id);
+      CREATE INDEX index_trade_shipments_on_taxon_concept_id
+        ON trade_shipments
+        USING btree
+        (taxon_concept_id);
+      CREATE INDEX index_trade_shipments_on_reported_taxon_concept_id
+        ON trade_shipments
+        USING btree
+        (reported_taxon_concept_id);
+      CREATE INDEX index_trade_shipments_on_term_id
+        ON trade_shipments
+        USING btree
+        (term_id);
+      CREATE INDEX index_trade_shipments_on_unit_id
+        ON trade_shipments
+        USING btree
+        (unit_id);
+      CREATE INDEX index_trade_shipments_on_year
+        ON trade_shipments
+        USING btree
+        (year);
+      CREATE INDEX index_trade_shipments_on_import_permits_ids
+        ON trade_shipments
+        USING GIN
+        (import_permits_ids);
+      CREATE INDEX index_trade_shipments_on_export_permits_ids
+        ON trade_shipments
+        USING GIN
+        (export_permits_ids);
+      CREATE INDEX index_trade_shipments_on_origin_permits_ids
+        ON trade_shipments
+        USING GIN
+        (origin_permits_ids);
+      CREATE INDEX index_trade_shipments_on_legacy_shipment_number
+        ON trade_shipments
+        USING btree
+        (legacy_shipment_number);
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
+    end
+
+
   end
 end
