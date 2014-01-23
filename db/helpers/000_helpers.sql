@@ -26,6 +26,17 @@ CREATE AGGREGATE array_agg_notnull(ANYELEMENT) (
     INITCOND = '{}'
 );
 
+CREATE OR REPLACE FUNCTION array_intersect(anyarray, anyarray)
+  RETURNS anyarray
+  language SQL
+AS $FUNCTION$
+    SELECT ARRAY(
+        SELECT UNNEST($1)
+        INTERSECT
+        SELECT UNNEST($2)
+    );
+$FUNCTION$;
+
 CREATE OR REPLACE FUNCTION higher_or_equal_ranks_names(in_rank_name VARCHAR(255))
   RETURNS TEXT[]
   LANGUAGE sql IMMUTABLE

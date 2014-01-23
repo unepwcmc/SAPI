@@ -122,23 +122,12 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     ON change_types.designation_id = designations.id
     LEFT JOIN species_listings
     ON listing_changes.species_listing_id = species_listings.id
-    --LEFT JOIN listing_distributions
-    --ON listing_changes.id = listing_distributions.listing_change_id
-    --AND listing_distributions.is_party = ''t''
     LEFT JOIN geo_entities ON
     geo_entities.id = tmp_lc.party_id
     LEFT JOIN annotations ON
     annotations.id = listing_changes.annotation_id
     LEFT JOIN annotations hash_annotations ON
     hash_annotations.id = listing_changes.hash_annotation_id
-    --LEFT JOIN (
-    --SELECT listing_change_id, ARRAY_AGG(geo_entities.id) AS countries_ids_ary
-    --FROM listing_distributions
-    --INNER JOIN geo_entities
-    --ON geo_entities.id = listing_distributions.geo_entity_id
-    --WHERE NOT is_party
-    --GROUP BY listing_change_id
-    --) populations ON populations.listing_change_id = listing_changes.id
     ORDER BY taxon_concept_id, listing_changes.effective_at,
     CASE
     WHEN change_types.name = ''ADDITION'' THEN 0
@@ -326,6 +315,9 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (show_in_downloads, taxon_concept_id)';
     EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (original_taxon_concept_id)';
     EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (is_current, change_type_name)'; -- Species+ downloads
+    EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' USING GIN (listed_geo_entities_ids)'; -- search by geo entity
+    EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' USING GIN (excluded_geo_entities_ids)'; -- search by geo entity
+
 
     RAISE INFO 'Swapping %  materialized view', lc_table_name;
     EXECUTE 'DROP TABLE IF EXISTS ' || lc_table_name || ' CASCADE';
