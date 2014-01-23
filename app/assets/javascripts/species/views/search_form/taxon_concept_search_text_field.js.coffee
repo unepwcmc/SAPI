@@ -10,10 +10,8 @@ Species.TaxonConceptSearchTextField = Em.TextField.extend
     @hideDropdown() if !@get('parentView.mousedOver')
 
   keyUp: (event) ->
-    @set('queryActive', false)
     Ember.run.cancel(@currentTimeout)
     @currentTimeout = Ember.run.later(@, ->
-      @set('queryActive', true)
       @showDropdown()
       @set('query', event.target.value)
     , 1000)
