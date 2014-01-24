@@ -5,7 +5,6 @@ Species.TaxonConceptSearchTextField = Em.TextField.extend
   attributeBindings: ['autocomplete']
 
   focusOut: (event) ->
-    @set('queryActive', false)
     @.$().attr('placeholder', @get('placeholder'))
     @hideDropdown() if !@get('parentView.mousedOver')
 
@@ -16,9 +15,9 @@ Species.TaxonConceptSearchTextField = Em.TextField.extend
       @set('query', event.target.value)
     , 1000)
 
-  hideDropdown: () -> 
+  hideDropdown: () ->
     $('.search fieldset').removeClass('parent-focus parent-active')
 
   showDropdown: () ->
     if @.$().val().length > 2
-      $('.search fieldset').addClass('parent-focus parent-active') 
+      $('.search fieldset').addClass('parent-focus parent-active')
