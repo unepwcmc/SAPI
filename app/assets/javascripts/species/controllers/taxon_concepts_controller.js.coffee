@@ -50,7 +50,12 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner,
       @get('controllers.search').set('redirected', false)
     m = Species.TaxonConcept.find(taxonConceptId)
     @transitionToRoute('taxonConcept.legal', m, {queryParams:
-      {taxon_concept_query: false, page: false}
+      {
+        taxon_concept_query: false,
+        geo_entities_ids: false,
+        geo_entity_scope: false,
+        page: false
+      }
     })
 
   actions:
