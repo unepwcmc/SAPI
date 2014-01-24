@@ -52,7 +52,7 @@
             data=controllers.terms.content
             name="code" 
             selection=currentTerm
-            limit=10
+            limit=12
             classNames='term'
           }}
         </div>
@@ -60,8 +60,9 @@
           <p>Unit Code <span class="error">{{currentShipment.errors.unitId}}</span></p>
             {{type-ahead 
               data=controllers.units.content
-              name="code" 
+              name="code"
               selection=currentUnit
+              limit=12
               classNames='unit'
             }}
         </div>
