@@ -130,6 +130,8 @@ GROUP BY
   taxon_concepts_mview.taxonomic_position,
   taxon_concepts_mview.countries_ids_ary;
 
+  CREATE INDEX ON cites_species_listing_mview_tmp USING GIN (countries_ids_ary); -- search by geo entity
+
   DROP TABLE IF EXISTS cites_species_listing_mview;
   ALTER TABLE cites_species_listing_mview_tmp RENAME TO cites_species_listing_mview;
 

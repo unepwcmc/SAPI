@@ -121,6 +121,8 @@ SELECT
  JOIN instruments
    ON taxon_instruments.instrument_id = instruments.id;
 
+  CREATE INDEX ON cms_species_listing_mview_tmp USING GIN (countries_ids_ary); -- search by geo entity
+
   DROP TABLE IF EXISTS cms_species_listing_mview;
   ALTER TABLE cms_species_listing_mview_tmp RENAME TO cms_species_listing_mview;
 
