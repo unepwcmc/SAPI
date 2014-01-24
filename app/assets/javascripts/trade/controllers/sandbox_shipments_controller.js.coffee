@@ -39,7 +39,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
 
   clearModifiedFlags: ->
     @beginPropertyChanges()
-    @get('content').forEach (shipment) ->
+    Trade.SandboxShipment.all().forEach (shipment) ->
       shipment.set('_modified', false)
     @endPropertyChanges()
 
@@ -48,7 +48,13 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
     annualReportUpload.set('errorMessage', "")
     annualReportUploadId = annualReportUpload.get('id')
     @transitionToRoute('annual_report_upload', annualReportUploadId)
-    
+
+  unsavedChanges: (->
+    @get('changedRowsCount') > 0
+  ).property('changedRowsCount')
+  changedRowsCount: (->
+    Trade.SandboxShipment.all().filterBy('_modified', true).length
+  ).property('content', 'currentShipment')
 
   actions:
 
