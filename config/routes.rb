@@ -79,7 +79,7 @@ SAPI::Application.routes.draw do
       resources :taxon_eu_suspensions, 
         :only => [:index, :new, :create, :edit, :update, :destroy], 
         :as => :eu_suspensions
-      
+
       resources :taxon_cites_suspensions,
         :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :cites_suspensions
@@ -93,6 +93,7 @@ SAPI::Application.routes.draw do
 
   namespace :trade do
     resources :annual_report_uploads do
+      resources :sandbox_shipments
       member do
         post 'submit'
       end
