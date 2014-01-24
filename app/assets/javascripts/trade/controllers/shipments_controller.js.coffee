@@ -22,6 +22,16 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
     code: "name"
   }
 
+  currentTerm: null
+  termObserver: ( ->
+    @currentShipment.set('term', @currentTerm)
+  ).observes('currentTerm')
+
+  currentUnit: null
+  UnitObserver: ( ->
+    @currentShipment.set('unit', @currentUnit)
+  ).observes('currentUnit')
+
   shipmentsSaving: ( ->
     return false unless @get('content.isLoaded')
     @get('content').filterBy('isSaving', true).length > 0

@@ -344,3 +344,27 @@ span.error {
     margin-left: 5px;
   }
 }
+
+
+.twitter-typeahead {
+  .tt-hint {
+    color: #b2b2b2;
+  }
+  
+  .tt-query {
+    color: #333333;
+  }
+
+  .tt-dropdown-menu {
+    width: 190px;
+    background-color: white;
+  
+    .tt-suggestion.tt-is-under-cursor {
+      color: #fff;
+      background-color: #0097cf;
+      p {
+        color: #fff;
+      }
+    }
+  }
+}
