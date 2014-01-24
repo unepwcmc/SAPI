@@ -48,13 +48,13 @@
       <div class="inner">
         <div class="attribute-area left">
           <p>Term Code <span class="error">{{currentShipment.errors.termId}}</span></p>
-          {{type-ahead 
-            data=controllers.terms.content
-            name="code" 
-            selection=currentTerm
-            limit=12
-            classNames='term'
-          }}
+          {{view Trade.Select2
+              prompt="Please select term code value"
+              contentBinding="controllers.terms"
+              optionValuePath="content.id"
+              optionLabelPath="content.code"
+              selectionBinding="currentShipment.term"
+            }}
         </div>
         <div class="attribute-area left">
           <p>Unit Code <span class="error">{{currentShipment.errors.unitId}}</span></p>
