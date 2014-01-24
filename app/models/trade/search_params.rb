@@ -31,6 +31,7 @@ class Trade::SearchParams < Hash
       :source_blank => ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:source_blank]),
       :country_of_origin_blank => ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:country_of_origin_blank]),
       :internal => ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:internal]),
+      :report_type => params[:report_type] ? params[:report_type].to_sym : :raw,
       :page => params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
       :per_page => params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 100
     }

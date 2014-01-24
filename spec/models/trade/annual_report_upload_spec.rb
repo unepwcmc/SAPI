@@ -181,17 +181,11 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       specify {
         expect{subject.submit}.to change{Trade::Permit.count}.by(3)
       }
-      specify {
-        expect{subject.submit}.to change{Trade::ShipmentImportPermit.count}.by(1)
-      }
-      specify {
-        expect{subject.submit}.to change{Trade::ShipmentExportPermit.count}.by(2)
-      }
       specify { #make sure leading space is stripped
         subject.submit; Trade::Permit.find_by_number('BBB').should_not be_nil
       }
       context "when permit previously reported" do
-        before(:each) { create(:permit, :number => 'XXX', :geo_entity => @argentina) }
+        before(:each) { create(:permit, :number => 'XXX') }
         specify {
           expect{subject.submit}.to change{Trade::Permit.count}.by(2)
         }

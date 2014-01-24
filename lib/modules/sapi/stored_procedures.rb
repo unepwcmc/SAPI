@@ -81,5 +81,6 @@ module Sapi
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
       }
     end
+
   end
 end

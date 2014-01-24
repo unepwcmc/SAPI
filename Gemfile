@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+source 'http://gems.github.com'
 
 gem 'rails', '3.2.15'
 
@@ -43,7 +44,6 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
-  
   gem "susy"
   gem 'compass', '>= 0.12.2'
   gem 'compass-rails', '>= 1.0.3'
