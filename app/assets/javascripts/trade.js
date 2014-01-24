@@ -26,6 +26,8 @@
 //= require date
 //= require select2
 //= require bootstrap-tooltip
+//= require typeahead
+//= require ember-typeahead
 
 //= require_self
 
