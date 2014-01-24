@@ -1,7 +1,7 @@
 class AddConstraintsToShipmentsColumns < ActiveRecord::Migration
   #legitimately blank fields: unit, purpose, source, origin country
   def change
-    Trade::ShipmentExportPermit.delete_all
+    execute 'DELETE FROM trade_shipment_export_permits'
     Trade::Shipment.delete_all
     Trade::Permit.delete_all
     change_column :trade_shipments, :taxon_concept_id, :integer, :null => false
