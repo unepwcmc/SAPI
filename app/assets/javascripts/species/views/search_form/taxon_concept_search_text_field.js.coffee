@@ -13,7 +13,7 @@ Species.TaxonConceptSearchTextField = Em.TextField.extend
     @currentTimeout = Ember.run.later(@, ->
       @showDropdown()
       @set('query', event.target.value)
-    , 1000)
+    , 500)
 
   hideDropdown: () ->
     $('.search fieldset').removeClass('parent-focus parent-active')
