@@ -76,7 +76,7 @@ describe Trade::AnnualReportUploadsController do
       updates = {:appendix => "N", :species_name => "Canis lupus signatus"}
       xhr :put, :update, :id => annual_report_upload.id,
         :filters => filters, :updates => updates
-      response.body.should == " "
+      response.should be_success
     end
   end
 end

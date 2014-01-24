@@ -17,6 +17,6 @@ class Trade::SandboxShipmentsController < ApplicationController
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
     @sandbox_shipment = sandbox_klass.find(params[:id])
     @sandbox_shipment.delete_or_update_attributes(params[:sandbox_shipment])
-    render :nothing => true
+    head :no_content
   end
 end

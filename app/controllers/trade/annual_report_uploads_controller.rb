@@ -27,7 +27,7 @@ class Trade::AnnualReportUploadsController < ApplicationController
   def update
     @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
     if @annual_report_upload.update_attributes_and_sandbox(params)
-      render :nothing => true
+      head :no_content
     else
       render :json => { "errors" => @annual_report_upload.errors },
         :status => :unprocessable_entity
