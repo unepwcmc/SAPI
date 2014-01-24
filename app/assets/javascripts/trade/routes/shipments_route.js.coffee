@@ -20,4 +20,7 @@ Trade.ShipmentsRoute = Ember.Route.extend Trade.QueryParams,
     @get('selectedQueryParamNames').forEach (property) ->
       if property.type == 'array' && queryParams[property.param] == true
         queryParams[property.param] = []
-    Trade.Shipment.find(queryParams)
+    if $.isEmptyObject(queryParams)
+      Trade.Shipment.all().clear()
+    else
+      Trade.Shipment.find(queryParams)
