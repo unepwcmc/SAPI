@@ -68,9 +68,7 @@ shared_context "Dalbergia" do
       :is_party => false
     )
 
-    eu
-    cms_designation
-    Sapi.rebuild
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

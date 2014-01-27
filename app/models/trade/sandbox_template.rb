@@ -19,6 +19,7 @@
 #
 
 class Trade::SandboxTemplate < ActiveRecord::Base
+
   self.table_name = :trade_sandbox_template
 
   COLUMNS_IN_CSV_ORDER = [
@@ -80,6 +81,14 @@ class Trade::SandboxTemplate < ActiveRecord::Base
         def save(attributes = {})
           super(attributes)
           sanitize
+        end
+
+        def delete_or_update_attributes params
+          if params.delete('_destroyed')
+            self && self.delete
+          else
+            self && self.update_attributes(params.symbolize_keys)
+          end
         end
 
       end

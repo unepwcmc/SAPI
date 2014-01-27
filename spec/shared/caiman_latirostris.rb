@@ -17,13 +17,20 @@ shared_context "Caiman latirostris" do
       :iso_code2 => 'AR'
     )
   }
+  let(:brazil){
+    create(
+      :geo_entity,
+      :geo_entity_type => country,
+      :name => 'Brazil',
+      :iso_code2 => 'BR'
+    )
+  }
   let(:has_synonym){
     create(
       :taxon_relationship_type, :name => TaxonRelationshipType::HAS_SYNONYM
     )
   }
   before(:all) do
-    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Crocodylia'),
       :parent => cites_eu_reptilia
@@ -51,6 +58,7 @@ shared_context "Caiman latirostris" do
     )
 
     create(:distribution, :taxon_concept_id => @species.id, :geo_entity_id => argentina.id)
+    create(:distribution, :taxon_concept_id => @species.id, :geo_entity_id => brazil.id)
 
     create(
       :taxon_relationship,
@@ -78,30 +86,24 @@ shared_context "Caiman latirostris" do
       :effective_at => '1977-02-04',
       :is_current => true
     )
-    create_eu_B_addition(
-      :taxon_concept => @order,
-      :effective_at => '1977-02-04',
-      :is_current => true
-    )
-
     create_cites_I_addition(
      :taxon_concept => @species,
      :effective_at => '1975-07-01',
      :is_current => true
     )
-    create_eu_A_addition(
-     :taxon_concept => @species,
-     :effective_at => '1975-07-01',
-     :is_current => true
+    a_I = create(
+      :annotation,
+      :full_note_en => 'All populations except AR',
+      :display_in_index => true
     )
-    a1 = create(
+    a_II = create(
       :annotation,
       :full_note_en => 'Population of AR; included in CROCODYLIA spp.',
       :display_in_index => true
     )
-    cites_lc1 = create_cites_II_addition(
+    cites_lc = create_cites_II_addition(
      :taxon_concept => @species,
-     :annotation_id => a1.id,
+     :annotation_id => a_II.id,
      :effective_at => '1997-09-18',
      :inclusion_taxon_concept_id => @order.id,
      :is_current => true
@@ -109,25 +111,58 @@ shared_context "Caiman latirostris" do
     create(
       :listing_distribution,
       :geo_entity => argentina,
-      :listing_change => cites_lc1,
-      :is_party => false
-    )
-    eu_lc1 = create_eu_B_addition(
-     :taxon_concept => @species,
-     :annotation_id => a1.id,
-     :effective_at => '1997-09-18',
-     :inclusion_taxon_concept_id => @order.id,
-     :is_current => true
-    )
-    create(
-      :listing_distribution,
-      :geo_entity => argentina,
-      :listing_change => eu_lc1,
+      :listing_change => cites_lc,
       :is_party => false
     )
 
-    cms_designation
-    Sapi.rebuild
+    create_eu_A_addition(
+     :taxon_concept => @species,
+     :effective_at => '1997-06-01',
+     :event => reg1997
+    )
+    create_eu_B_addition(
+     :taxon_concept => @order,
+     :effective_at => '2013-10-08',
+     :event => reg2013,
+     :is_current => true
+    )
+    eu_lc_b = create_eu_B_addition(
+     :taxon_concept => @species,
+     :annotation_id => a_II.id,
+     :effective_at => '2013-10-08',
+     :event => reg2013,
+     :is_current => true
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => argentina,
+      :listing_change => eu_lc_b,
+      :is_party => false
+    )
+    eu_lc_a = create_eu_A_addition(
+     :taxon_concept => @species,
+     :annotation_id => a_I.id,
+     :effective_at => '2013-10-08',
+     :event => reg2013,
+     :is_current => true
+    )
+    eu_lc_a_exception = create_eu_A_exception(
+     :taxon_concept => @species,
+     :effective_at => '2013-10-08',
+     :event => reg2013,
+     :parent_id => eu_lc_a.id,
+     :is_current => true
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => argentina,
+      :listing_change => eu_lc_a_exception,
+      :is_party => false
+    )
+
+
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

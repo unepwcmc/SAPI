@@ -41,14 +41,16 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
 
   def update_attributes_and_sandbox(attributes)
     Trade::AnnualReportUpload.transaction do
-      update_sandbox(attributes.delete(:sandbox_shipments))
-      update_attributes(attributes)
+      update_sandbox(attributes.delete(:filters),
+                    attributes.delete(:updates))
     end
   end
 
-  def update_sandbox(shipments)
+  def update_sandbox(filters, updates)
     return true if is_done
-    sandbox.shipments= shipments
+    sandbox_shipments = Trade::SandboxFilter.new(filters.
+      merge({:annual_report_upload_id => self.id}))
+    sandbox_shipments.query.update_all(updates)
   end
 
   def validation_errors

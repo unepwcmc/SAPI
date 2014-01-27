@@ -77,7 +77,8 @@ SELECT
       ORDER BY species_listing_name
     ),
     E'\n'
-  ) AS original_taxon_concept_hash_full_note_en
+  ) AS original_taxon_concept_hash_full_note_en,
+  taxon_concepts_mview.countries_ids_ary
 FROM "taxon_concepts_mview"
 JOIN cites_listing_changes_mview listing_changes_mview 
   ON listing_changes_mview.taxon_concept_id = taxon_concepts_mview.id
@@ -126,7 +127,10 @@ GROUP BY
   END,
   COALESCE(inclusion_taxon_concepts_mview.full_name, original_taxon_concepts_mview.full_name),
   COALESCE(inclusion_taxon_concepts_mview.spp, original_taxon_concepts_mview.spp),
-  taxon_concepts_mview.taxonomic_position;
+  taxon_concepts_mview.taxonomic_position,
+  taxon_concepts_mview.countries_ids_ary;
+
+  CREATE INDEX ON cites_species_listing_mview_tmp USING GIN (countries_ids_ary); -- search by geo entity
 
   DROP TABLE IF EXISTS cites_species_listing_mview;
   ALTER TABLE cites_species_listing_mview_tmp RENAME TO cites_species_listing_mview;

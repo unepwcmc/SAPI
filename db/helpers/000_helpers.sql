@@ -26,6 +26,17 @@ CREATE AGGREGATE array_agg_notnull(ANYELEMENT) (
     INITCOND = '{}'
 );
 
+CREATE OR REPLACE FUNCTION array_intersect(anyarray, anyarray)
+  RETURNS anyarray
+  language SQL
+AS $FUNCTION$
+    SELECT ARRAY(
+        SELECT UNNEST($1)
+        INTERSECT
+        SELECT UNNEST($2)
+    );
+$FUNCTION$;
+
 CREATE OR REPLACE FUNCTION higher_or_equal_ranks_names(in_rank_name VARCHAR(255))
   RETURNS TEXT[]
   LANGUAGE sql IMMUTABLE
@@ -133,3 +144,32 @@ COMMENT ON FUNCTION drop_trade_sandboxes() IS '
 Drops all trade_sandbox_n tables. Used in specs only, you need to know what
 you''re doing. If you''re looking to drop all sandboxes in the live system,
 use the rake db:drop_sandboxes task instead.';
+
+CREATE OR REPLACE FUNCTION drop_eu_lc_mviews() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  DECLARE
+    current_table_name TEXT;
+  BEGIN
+    FOR current_table_name IN SELECT table_name FROM information_schema.tables
+    WHERE table_name LIKE 'eu_%_listing_changes_mview'
+      AND table_type != 'VIEW'
+    LOOP
+      EXECUTE 'DROP TABLE ' || current_table_name || ' CASCADE';
+    END LOOP;
+    RETURN;
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION listing_changes_mview_name(prefix TEXT, designation TEXT, events_ids INT[])
+  RETURNS TEXT
+  LANGUAGE SQL IMMUTABLE
+  AS $$
+    SELECT CASE WHEN prefix IS NULL THEN '' ELSE prefix || '_' END ||
+    designation ||
+    CASE
+      WHEN events_ids IS NOT NULL
+      THEN '_' || ARRAY_TO_STRING(events_ids, '_')
+      ELSE ''
+    END || '_listing_changes_mview';
+  $$;

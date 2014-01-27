@@ -15,24 +15,24 @@ namespace :import do
       GeoEntity.find_or_create_by_iso_code2(
         iso_code2: row[1],
         geo_entity_type_id: GeoEntityType.where(name: row[5]).first.id,
-        name_en: row[0], 
-        name_fr: row[2], 
-        name_es: row[3], 
-        long_name: row[4], 
-        legacy_type: row[5], 
+        name_en: row[0],
+        name_fr: row[2],
+        name_es: row[3],
+        long_name: row[4],
+        legacy_type: row[5],
         is_current: row[6]
       )
     end
   end
 
-  desc "Import first shipments from csv file (usage: rake import:first_shipments[path/to/file])"
-  task :first_shipments, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  desc "Import first shipments from csv file (usage: rake import:shipments[path/to/file])"
+  task :shipments, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     puts "opening file"
 
     TMP_TABLE = "shipments_import"
 
     files = files_from_args(t, args)
-    files.each do |file|  
+    files.each do |file|
       Sapi::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
       sql = <<-SQL
@@ -88,7 +88,7 @@ def update_country_codes
     WHERE export_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS');
     UPDATE shipments_import
     SET import_country_code = 'XX'
-    WHERE import_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS'); 
+    WHERE import_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS');
     UPDATE shipments_import
     SET origin_country_code = 'XX'
     WHERE origin_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS');
@@ -101,7 +101,7 @@ def update_country_codes
     UPDATE shipments_import
     SET origin_country_code = 'XK'
     WHERE origin_country_code = 'KX';
-    DELETE FROM shipments_import 
+    DELETE FROM shipments_import
     WHERE quantity_1 IS NULL;
   SQL
   ActiveRecord::Base.connection.execute(sql)
@@ -112,7 +112,6 @@ def populate_shipments
   puts "Inserting into trade_shipments table"
   xx_id = GeoEntity.find_by_iso_code2('XX').id
   sql = <<-SQL
-            DELETE FROM trade_shipments;
             INSERT INTO trade_shipments(
               legacy_shipment_number,
               source_id,
@@ -130,7 +129,7 @@ def populate_shipments
               created_at,
               updated_at,
               reported_taxon_concept_id)
-            SELECT 
+            SELECT
               si.shipment_number as legacy_shipment_number,
               sources.id AS source_id,
               units.id AS unit_id,
@@ -190,7 +189,7 @@ def populate_shipments
                     INNER JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code AND rank = '0'
                     INNER JOIN taxon_relationships tr ON other_taxon_concept_id = nti.species_plus_id
                     INNER JOIN taxon_relationship_types trt ON trt.id = taxon_relationship_type_id AND trt.name = 'HAS_SYNONYM'
-                    ) jt ON jt.shipment_number = si.shipment_number 
+                    ) jt ON jt.shipment_number = si.shipment_number
                   WHERE (rank = '0' AND jt.taxon_concept_id IS NOT NULL) OR (rank <> '0' AND tc.id IS NOT NULL)
   SQL
   ActiveRecord::Base.connection.execute(sql)

@@ -52,7 +52,8 @@ SELECT
       ORDER BY listing_changes_mview.species_listing_name
     ),
     E'\n'
-  ) AS original_taxon_concept_full_note_en
+  ) AS original_taxon_concept_full_note_en,
+  taxon_concepts_mview.countries_ids_ary
 FROM "taxon_concepts_mview"
 JOIN cms_listing_changes_mview listing_changes_mview
    ON listing_changes_mview.taxon_concept_id = taxon_concepts_mview.id
@@ -84,8 +85,9 @@ GROUP BY
   taxon_concepts_mview.author_year,
   taxon_concepts_mview.rank_name,
   taxon_concepts_mview.cms_listed,
-  taxon_concepts_mview.cms_listing_original, 
-  taxon_concepts_mview.taxonomic_position 
+  taxon_concepts_mview.cms_listing_original,
+  taxon_concepts_mview.taxonomic_position,
+  taxon_concepts_mview.countries_ids_ary
 
 UNION
 
@@ -111,12 +113,15 @@ SELECT
   '',
   '',
   to_char(taxon_instruments.effective_from, 'DD/MM/YYYY') AS effective_at,
-  ''
+  '',
+  '{}'::INT[]
  FROM taxon_instruments
  JOIN taxon_concepts_mview
    ON taxon_instruments.taxon_concept_id = taxon_concepts_mview.id
  JOIN instruments
    ON taxon_instruments.instrument_id = instruments.id;
+
+  CREATE INDEX ON cms_species_listing_mview_tmp USING GIN (countries_ids_ary); -- search by geo entity
 
   DROP TABLE IF EXISTS cms_species_listing_mview;
   ALTER TABLE cms_species_listing_mview_tmp RENAME TO cms_species_listing_mview;

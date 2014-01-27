@@ -15,7 +15,6 @@ namespace :import do
         create_table_from_csv_headers(file, TMP_TABLE)
         copy_data(file, TMP_TABLE)
 
-        delete_shipment_number_tmp_column
         drop_indices(trade_permits_to_index)
         drop_indices(permits_import_to_index)
         drop_indices(trade_shipments_to_index)
@@ -66,7 +65,7 @@ def create_indices table_columns, method
       CREATE INDEX index_#{table}_on_#{column}
       ON #{table}
       USING #{method}
-      (#{column});   
+      (#{column});
       SQL
       puts "Creating index for #{column}"
       execute_query(sql)
@@ -82,7 +81,7 @@ def add_shipment_number_tmp_column
 end
 
 def delete_shipment_number_tmp_column
-  sql = <<-SQL 
+  sql = <<-SQL
   ALTER TABlE trade_permits DROP COLUMN shipment_number;
   SQL
   execute_query(sql)
@@ -105,22 +104,18 @@ end
 def insert_into_trade_shipments
   permits_entity = {"import" => "I", "export" => 'E', "origin" => 'O'}
   permits_entity.each do |k,v|
-    sql = <<-SQL          
+    sql = <<-SQL
     UPDATE trade_shipments
     SET #{k}_permits_ids = a.ids, #{k}_permit_number = permit_number
-    FROM (SELECT array_agg(id) as ids, 
-    string_agg(permit_number, ';') AS permit_number,
+    FROM (SELECT array_agg(id) as ids,
+    string_agg(number, ';') AS permit_number,
     shipment_number
     from trade_permits
     where legacy_reporter_type = '#{v}'
     group by shipment_number) AS a
     where legacy_shipment_number = a.shipment_number
     SQL
-    puts "Inserting into trade_shipments"
+    puts "Inserting #{k} permits into trade_shipments"
     execute_query(sql)
   end
 end
-
-      
-
-
