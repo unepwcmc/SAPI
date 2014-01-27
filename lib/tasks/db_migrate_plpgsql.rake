@@ -32,4 +32,15 @@ namespace :db do
       aru.destroy
     end
   end
+
+  desc "Drop all trade (shipments, permits, arus & sandboxes - use responsibly)"
+  task :drop_trade => [:environment] do
+    puts "Deleting shipments"
+    ActiveRecord::Base.connection.execute('DELETE FROM trade_shipments')
+    puts "Deleting permits"
+    ActiveRecord::Base.connection.execute('DELETE FROM trade_permits')
+    puts "Deleting annual report uploads & dropping sandboxes"
+    Trade::AnnualReportUpload.all.each{ |aru| aru.destroy }
+  end
+
 end

@@ -1,3 +1,3 @@
 class Trade::PermitSerializer < ActiveModel::Serializer
-  attributes :id, :number, :geo_entity_id
+  attributes :id, :number
 end

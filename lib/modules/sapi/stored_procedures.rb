@@ -81,5 +81,18 @@ module Sapi
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
       }
     end
+
+    def self.rebuild_permit_numbers
+      puts "Procedure: #{p}"
+      ActiveRecord::Base.connection.execute("DROP INDEX IF EXISTS index_trade_shipments_on_permits_ids")
+      ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_permit_numbers()")
+      sql = <<-SQL
+      CREATE INDEX index_trade_shipments_on_permits_ids
+        ON trade_shipments
+        USING GIN
+        (permits_ids);
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
+    end
   end
 end

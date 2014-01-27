@@ -16,12 +16,12 @@ class Api::V1::TaxonConceptsController < ApplicationController
   end
 
   def show
-    @taxon_concept = TaxonConcept.where(:id => params[:id]).
+    @taxon_concept = TaxonConcept.
       includes(:common_names => :language,
                :distributions => :geo_entity,
                :quotas => :geo_entity,
                :cites_suspensions => :geo_entity).
-      includes(:taxonomy).first
+      includes(:taxonomy).find(params[:id])
     if @taxon_concept.taxonomy.name == Taxonomy::CMS
       s = Species::ShowTaxonConceptSerializerCms
     else
