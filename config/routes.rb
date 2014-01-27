@@ -93,6 +93,7 @@ SAPI::Application.routes.draw do
 
   namespace :trade do
     resources :annual_report_uploads do
+      delete 'delete_all', :on => :collection
       member do
         post 'submit'
       end

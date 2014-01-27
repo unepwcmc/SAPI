@@ -37,16 +37,6 @@ class Trade::AnnualReportUploadsController < ApplicationController
     end
   end
 
-    def destroy
-      @annual_report_upload = Trade::AnnualReportUpload.where(is_done: 'false')
-      @annual_report_upload.destroy_all
-      @annual_report_uploads = Trade::AnnualReportUpload.scoped.where(
-        :is_done => 'true')
-      render :json => @annual_report_uploads,
-        :each_serializer => Trade::AnnualReportUploadSerializer
-    end
-
-
   def submit
     @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
     if @annual_report_upload.submit
@@ -56,6 +46,16 @@ class Trade::AnnualReportUploadsController < ApplicationController
       render :json => { "errors" => @annual_report_upload.errors },
         :status => :unprocessable_entity
     end
+  end
+
+
+  def delete_all
+      @annual_report_upload = Trade::AnnualReportUpload.where(is_done: 'false')
+      @annual_report_upload.destroy_all
+      @annual_report_uploads = Trade::AnnualReportUpload.scoped.where(
+        :is_done => 'true')
+      render :json => @annual_report_uploads,
+        :each_serializer => Trade::AnnualReportUploadSerializer
   end
 
 private

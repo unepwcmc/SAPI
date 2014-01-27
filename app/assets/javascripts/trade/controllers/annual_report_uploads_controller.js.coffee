@@ -13,7 +13,7 @@ Trade.AnnualReportUploadsController = Ember.ArrayController.extend
     deleteAllReports: ()->
     	$.ajax({
             type: "DELETE"
-            url: '/trade/annual_report_uploads/'+@get('id')
+            url: '/trade/annual_report_uploads/delete_all'
             dataType: 'json'
           })
       window.location.reload(true)
