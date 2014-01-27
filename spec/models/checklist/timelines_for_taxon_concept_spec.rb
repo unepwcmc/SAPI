@@ -18,9 +18,7 @@ describe Checklist::TimelinesForTaxonConcept do
           :effective_at => '1975-06-06',
           :is_current => true
         )
-        eu
-        cms_designation
-        Sapi.rebuild
+        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MTaxonConcept.find(tc.id)
       }
       subject{ Checklist::TimelinesForTaxonConcept.new(tc) }
@@ -41,9 +39,7 @@ describe Checklist::TimelinesForTaxonConcept do
           :listing_change => lc,
           :is_party => true
         )
-        eu
-        cms_designation
-        Sapi.rebuild
+        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MTaxonConcept.find(tc.id)
       }
       subject{ Checklist::TimelinesForTaxonConcept.new(tc) }
@@ -64,9 +60,7 @@ describe Checklist::TimelinesForTaxonConcept do
           :listing_change => lc,
           :is_party => true
         )
-        eu
-        cms_designation
-        Sapi.rebuild
+        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MTaxonConcept.find(tc.id)
       }
       subject{ Checklist::TimelinesForTaxonConcept.new(tc) }
@@ -80,9 +74,7 @@ describe Checklist::TimelinesForTaxonConcept do
     context "when in 1990" do
       let(:tc){
         tc = create(:taxon_concept)
-        eu
-        cms_designation
-        Sapi.rebuild
+        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MTaxonConcept.find(tc.id)
       }
       subject{ Checklist::TimelinesForTaxonConcept.new(tc).timeline_years }

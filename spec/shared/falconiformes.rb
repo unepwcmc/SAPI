@@ -65,39 +65,16 @@ shared_context "Falconiformes" do
      :effective_at => '1979-06-28',
      :parent_id => cites_lc1.id
     )
-    eu_lc1 = create_eu_B_addition(
-     :taxon_concept => @order,
-     :effective_at => '1979-06-28',
-     :is_current => true
-    )
-    create_eu_B_exception(
-     :taxon_concept => @family1,
-     :effective_at => '1979-06-28',
-     :parent_id => eu_lc1.id
-    )
-
     create_cites_I_addition(
      :taxon_concept => @species1_1,
      :effective_at => '1975-07-01',
      :is_current => true
     )
-    create_eu_A_addition(
-     :taxon_concept => @species1_1,
-     :effective_at => '1975-07-01',
-     :is_current => true
-    )
-
     create_cites_III_addition(
      :taxon_concept => @species1_2,
      :effective_at => '1987-04-13',
      :is_current => true
     )
-    create_eu_C_addition(
-     :taxon_concept => @species1_2,
-     :effective_at => '1987-04-13',
-     :is_current => true
-    )
-
     create_cites_II_addition(
      :taxon_concept => @family2,
      :effective_at => '1975-07-01'
@@ -108,13 +85,6 @@ shared_context "Falconiformes" do
      :inclusion_taxon_concept_id => @order.id,
      :is_current => true
     )
-    create_eu_B_addition(
-     :taxon_concept => @family2,
-     :effective_at => '1979-06-28',
-     :inclusion_taxon_concept_id => @order.id,
-     :is_current => true
-    )
-
     create_cites_II_addition(
      :taxon_concept => @species2_1,
      :effective_at => '1975-07-01'
@@ -124,14 +94,39 @@ shared_context "Falconiformes" do
      :effective_at => '1977-02-04',
      :is_current => true
     )
+
+    eu_lc1 = create_eu_B_addition(
+     :taxon_concept => @order,
+     :effective_at => '2013-08-10',
+     :event => reg2013,
+     :is_current => true
+    )
+    create_eu_B_exception(
+     :taxon_concept => @family1,
+     :effective_at => '2013-08-10',
+     :parent_id => eu_lc1.id
+    )
+    create_eu_A_addition(
+     :taxon_concept => @species1_1,
+     :effective_at => '2013-08-10',
+     :event => reg2013,
+     :is_current => true
+    )
+    create_eu_C_addition(
+     :taxon_concept => @species1_2,
+     :effective_at => '2013-08-10',
+     :event => reg2013,
+     :is_current => true
+    )
     create_eu_A_addition(
      :taxon_concept => @species2_1,
-     :effective_at => '1977-02-04',
+     :effective_at => '2013-08-10',
+     :event => reg2013,
      :is_current => true
     )
 
-    cms_designation
-    Sapi.rebuild
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

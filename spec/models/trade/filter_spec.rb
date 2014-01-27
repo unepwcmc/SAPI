@@ -74,7 +74,7 @@ describe Trade::Filter do
   end
   describe :results do
     context "when searching by taxon concepts ids" do
-      before(:each){ cites; eu; cms_designation; Sapi.rebuild }
+      before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
       context "at GENUS rank" do
         subject { Trade::Filter.new({:taxon_concepts_ids => [@genus1.id]}).results }
         specify { subject.should include(@shipment1) }

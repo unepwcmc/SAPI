@@ -14,7 +14,9 @@ module Sapi
         :eu_species_listing_mview,
         :cms_species_listing_mview,
         :valid_species_name_appendix_year_mview,
-        :touch_taxon_concepts
+        :touch_cites_taxon_concepts,
+        :touch_eu_taxon_concepts,
+        :touch_cms_taxon_concepts
       ].each{ |p|
         puts "Procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
@@ -35,6 +37,51 @@ module Sapi
       end
     end
 
+    def self.rebuild_cms_taxonomy_and_listings
+      run_procedures [
+        :taxonomy,
+        :cms_taxon_concepts_and_ancestors_mview,
+        :cms_listing_changes_mview,
+        :cms_listing,
+        :taxon_concepts_mview,
+        :cms_species_listing_mview,
+        :touch_cms_taxon_concepts
+      ]
+    end
+
+    def self.rebuild_cites_taxonomy_and_listings
+      run_procedures [
+        :taxonomy,
+        :cites_accepted_flags,
+        :cites_eu_taxon_concepts_and_ancestors_mview,
+        :cites_listing_changes_mview,
+        :cites_listing,
+        :taxon_concepts_mview,
+        :cites_species_listing_mview,
+        :valid_species_name_appendix_year_mview,
+        :touch_cites_taxon_concepts
+      ]
+    end
+
+    def self.rebuild_eu_taxonomy_and_listings
+      run_procedures [
+        :taxonomy,
+        :cites_eu_taxon_concepts_and_ancestors_mview,
+        :eu_listing_changes_mview,
+        :eu_listing,
+        :taxon_concepts_mview,
+        :eu_species_listing_mview,
+        :touch_eu_taxon_concepts
+      ]
+    end
+
+    def self.run_procedures(procedures)
+      procedures.each{ |p|
+        puts "Procedure: #{p}"
+        ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
+      }
+    end
+
     def self.rebuild_permit_numbers
       puts "Procedure: #{p}"
       ActiveRecord::Base.connection.execute("DROP INDEX IF EXISTS index_trade_shipments_on_permits_ids")
@@ -47,6 +94,5 @@ module Sapi
       SQL
       ActiveRecord::Base.connection.execute(sql)
     end
-
   end
 end
