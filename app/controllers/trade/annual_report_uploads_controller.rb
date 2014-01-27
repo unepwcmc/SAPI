@@ -48,14 +48,14 @@ class Trade::AnnualReportUploadsController < ApplicationController
     end
   end
 
-
-  def delete_all
-      @annual_report_upload = Trade::AnnualReportUpload.where(is_done: 'false')
-      @annual_report_upload.destroy_all
-      @annual_report_uploads = Trade::AnnualReportUpload.scoped.where(
-        :is_done => 'true')
-      render :json => @annual_report_uploads,
-        :each_serializer => Trade::AnnualReportUploadSerializer
+  def destroy
+    @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
+    unless @annual_report_upload.is_done
+      @annual_report_upload.destroy
+      render :json => nil, :status => :ok
+    else
+      head 403
+    end
   end
 
 private
