@@ -40,19 +40,11 @@ class Trade::AnnualReportUploadsController < ApplicationController
     def destroy
       @annual_report_upload = Trade::AnnualReportUpload.where(is_done: 'false')
       @annual_report_upload.destroy_all
-      if @annual_report_upload.empty?
-          @annual_report_uploads = @annual_report_uploads.where(
-          :is_done => (params[:is_done] == 1)
-        )
-        render :json => @annual_report_uploads,
+      @annual_report_uploads = Trade::AnnualReportUpload.scoped.where(
+        :is_done => 'true')
+      render :json => @annual_report_uploads,
         :each_serializer => Trade::AnnualReportUploadSerializer
-      else
-        render :json => { "errors" => @annual_report_upload.errors },
-          :status => :unprocessable_entity
-      end
     end
-
-
 
 
   def submit

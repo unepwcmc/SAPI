@@ -9,13 +9,14 @@ Trade.AnnualReportUploadsController = Ember.ArrayController.extend
     transitionToReportUploads: ()->
       @transitionToRoute('annual_report_uploads')
 
-    onSuccess: ()->
-      @transitionToRoute('annual_report_uploads')
 
     deleteAllReports: ()->
-    	$.when($.ajax({
+    	$.ajax({
             type: "DELETE"
-            url: "/trade/annual_report_uploads/1"
+            url: '/trade/annual_report_uploads/'+@get('id')
             dataType: 'json'
-          }))
+          })
+      window.location.reload(true)
+
+
       
