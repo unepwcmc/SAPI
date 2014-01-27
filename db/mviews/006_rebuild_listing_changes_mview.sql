@@ -106,6 +106,8 @@ CREATE OR REPLACE FUNCTION rebuild_eu_listing_changes_mview() RETURNS void
       EXECUTE 'CREATE INDEX ON ' || tmp_listing_changes_mview || ' (show_in_downloads, taxon_concept_id)';
       EXECUTE 'CREATE INDEX ON ' || tmp_listing_changes_mview || ' (original_taxon_concept_id)';
       EXECUTE 'CREATE INDEX ON ' || tmp_listing_changes_mview || ' (is_current, change_type_name)'; -- Species+ downloads
+      EXECUTE 'CREATE INDEX ON ' || tmp_listing_changes_mview || ' USING GIN (listed_geo_entities_ids)'; -- search by geo entity
+      EXECUTE 'CREATE INDEX ON ' || tmp_listing_changes_mview || ' USING GIN (excluded_geo_entities_ids)'; -- search by geo entity
 
       RAISE INFO 'Swapping eu_listing_changes materialized view';
       EXECUTE 'DROP TABLE IF EXISTS ' || listing_changes_mview || ' CASCADE';
