@@ -16,7 +16,7 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
       minimumInputLength: 3
       allowClear: this.get('allowClear')
       closeOnSelect: this.get('closeOnSelect')
-      width: this.get('width')
+      dropdownCssClass: 'species_autocomplete'
       initSelection: (element, callback) =>
         @origin = @get('origin')
         value = @get('value')

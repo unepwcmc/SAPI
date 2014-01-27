@@ -303,8 +303,10 @@ span.error {
   color: red;
 }
 
-.select2-drop {
-  width: 410px !important;
+.species_autocomplete {
+  .select2-drop {
+    width: 410px !important;
+  }
 }
 
 
@@ -345,26 +347,18 @@ span.error {
   }
 }
 
-
-.twitter-typeahead {
-  .tt-hint {
-    color: #b2b2b2;
-  }
-  
-  .tt-query {
-    color: #333333;
-  }
-
-  .tt-dropdown-menu {
+.autocomplete {
+  .select2-container, .select2-results {
     width: 190px;
-    background-color: white;
-  
-    .tt-suggestion.tt-is-under-cursor {
-      color: #fff;
-      background-color: #0097cf;
-      p {
-        color: #fff;
-      }
-    }
+  } 
+}
+
+.select2-drop.other_autocomplete {
+  .select2-results {
+    color: #0088cc;
+  }
+  .select2-results .select2-highlighted {
+    color: #fff;
   }
 }
+

@@ -46,7 +46,7 @@
         Trade Codes
       </div>
       <div class="inner">
-        <div class="attribute-area left">
+        <div class="attribute-area left autocomplete">
           <p>Term Code <span class="error">{{currentShipment.errors.termId}}</span></p>
           {{view Trade.Select2
               prompt="Please select term code value"
@@ -56,15 +56,15 @@
               selectionBinding="currentShipment.term"
             }}
         </div>
-        <div class="attribute-area left">
+        <div class="attribute-area left autocomplete">
           <p>Unit Code <span class="error">{{currentShipment.errors.unitId}}</span></p>
-            {{type-ahead 
-              data=controllers.units.content
-              name="code"
-              selection=currentUnit
-              limit=12
-              classNames='unit'
-            }}
+          {{view Trade.Select2
+            prompt="Please select unit code value"
+            contentBinding="controllers.units"
+            optionValuePath="content.id"
+            optionLabelPath="content.code"
+            selectionBinding="currentShipment.unit"
+          }}
         </div>
         <div class="attribute-area left">
           <p>Purpose Code <span class="error">{{currentShipment.errors.purposeId}}</span></p>
