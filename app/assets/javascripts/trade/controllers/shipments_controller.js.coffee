@@ -228,6 +228,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
 
   resetFilters: ->
     @beginPropertyChanges()
+    queryParams = false
     @get('selectedQueryParamNames').forEach (property) =>
       if property.type == 'array'
         @set(property.name, [])
@@ -235,17 +236,8 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
         @set(property.name, false)
       else
         @set(property.name, null)
-    @set('permitQuery', null)
-    @set('taxonConceptQuery', null)
-    @set('exporterQuery', null)
-    @set('importerQuery', null)
-    @set('countryOfOriginQuery', null)
-    @set('termQuery', null)
-    @set('unitQuery', null)
-    @set('selectedTimeStart', @get('defaultTimeStart'))
-    @set('selectedTimeEnd', @get('defaultTimeEnd'))
     @endPropertyChanges()
-    @openShipmentsPage @get('searchParamsForTransition')
+    @openShipmentsPage queryParams 
 
   flashMessage: (msg) ->
     $('#flash').html('
@@ -257,7 +249,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
 
   actions:
 
-    
     # creates a local new shipment (bound to currentShipment)
 
     newShipment: () ->
