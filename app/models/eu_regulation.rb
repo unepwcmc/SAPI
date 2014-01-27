@@ -22,14 +22,14 @@ class EuRegulation < Event
   attr_accessible :listing_changes_event_id
   attr_accessor :listing_changes_event_id
 
-  has_many :listing_changes, :foreign_key => :event_id
+  has_many :listing_changes, :foreign_key => :event_id, dependent: :destroy
 
   validate :designation_is_eu
   validates :effective_at, :presence => true
 
 
   def can_be_deleted?
-    listing_changes.count == 0
+    true
   end
 
 end
