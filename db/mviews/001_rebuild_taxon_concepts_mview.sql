@@ -130,16 +130,8 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     ) common_names ON taxon_concepts.id = common_names.taxon_concept_id_com
     LEFT JOIN (
       SELECT taxon_concepts.id AS taxon_concept_id_syn,
-      ARRAY(
-        SELECT *
-        FROM UNNEST(ARRAY_AGG(synonym_tc.full_name)) s
-        WHERE s IS NOT NULL
-      ) AS synonyms_ary,
-      ARRAY(
-        SELECT *
-        FROM UNNEST(ARRAY_AGG(synonym_tc.author_year)) s
-        WHERE s IS NOT NULL
-      ) AS synonyms_author_years_ary
+      ARRAY_AGG_NOTNULL(synonym_tc.full_name) AS synonyms_ary,
+      ARRAY_AGG_NOTNULL(synonym_tc.author_year) AS synonyms_author_years_ary
       FROM taxon_concepts
       LEFT JOIN taxon_relationships
       ON "taxon_relationships"."taxon_concept_id" = "taxon_concepts"."id"
@@ -147,6 +139,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       ON "taxon_relationship_types"."id" = "taxon_relationships"."taxon_relationship_type_id"
       LEFT JOIN taxon_concepts AS synonym_tc
       ON synonym_tc.id = taxon_relationships.other_taxon_concept_id
+      AND "taxon_relationship_types"."name" = 'HAS_SYNONYM'
       GROUP BY taxon_concepts.id
     ) synonyms ON taxon_concepts.id = synonyms.taxon_concept_id_syn
     LEFT JOIN (
