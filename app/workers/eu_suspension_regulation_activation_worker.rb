@@ -1,11 +1,12 @@
-class EventActivationWorker
+class EuSuspensionRegulationActivationWorker
   include Sidekiq::Worker
   def perform(event_id, state)
     Event.transaction do
       ActiveRecord::Base.connection.execute <<-SQL
-        UPDATE listing_changes
+        UPDATE eu_decisions
         SET is_current = #{state}
-        WHERE event_id = #{event_id}
+        WHERE start_event_id = #{event_id} AND
+         type = 'EuSuspension'
       SQL
     end
   end

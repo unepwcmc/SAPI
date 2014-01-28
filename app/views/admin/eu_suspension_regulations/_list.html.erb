@@ -44,13 +44,15 @@
         <%= link_to delete_icon, resource_url(eu_suspension_regulation),
           :confirm => "Warning: you are about to delete data. This might take a long time, depending on the number of associated objects. Are you sure?", :method => :delete
         %>
-        <%= link_to_if(
-          eu_suspension_regulation.can_be_activated?,
-          '<i class="icon-cog" title="Activate"></i>'.html_safe,
-          activate_admin_eu_suspension_regulation_url(eu_suspension_regulation),
-          :confirm => 'Warning: you are about to modify a batch of data. Are you sure?', :method => :post, :remote => true
-        ) { '' }
-        %>
+        <% if eu_suspension_regulation.is_current? %>
+          <%= link_to '<i class="icon-ban-circle" title="Set not current"></i>'.html_safe,
+            deactivate_admin_eu_suspension_regulation_url(eu_suspension_regulation),
+            :confirm => 'Warning: you are about to modify a batch of data. Are you sure?', :method => :post, :remote => true %>
+        <% else %>
+          <%= link_to '<i class="icon-cog" title="Set current"></i>'.html_safe,
+            activate_admin_eu_suspension_regulation_url(eu_suspension_regulation),
+            :confirm => 'Warning: you are about to modify a batch of data. Are you sure?', :method => :post, :remote => true %>
+      <% end %>
       </td>
     </tr>
   <% end -%>

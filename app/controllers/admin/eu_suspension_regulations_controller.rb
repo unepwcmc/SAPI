@@ -9,6 +9,12 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
     render 'create'
   end
 
+  def deactivate
+    @eu_suspension_regulation = EuSuspensionRegulation.find(params[:id])
+    @eu_suspension_regulation.deactivate!
+    render 'create'
+  end
+
   protected
     def collection
       @eu_suspension_regulations ||= end_of_association_chain.

@@ -14,11 +14,11 @@ class EuRegulationObserver < ActiveRecord::Observer
   end
 
   def after_activate(eu_regulation)
-    EventActivationWorker.perform_async(eu_regulation.id, true)
+    EuRegulationActivationWorker.perform_async(eu_regulation.id, true)
   end
 
   def after_deactivate(eu_regulation)
-    EventActivationWorker.perform_async(eu_regulation.id, false)
+    EuRegulationActivationWorker.perform_async(eu_regulation.id, false)
   end
 
 end
