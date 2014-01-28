@@ -44,7 +44,8 @@ shared_context 'Colophon' do
 
     eu_lc = create_eu_C_addition(
      :taxon_concept => @genus,
-     :effective_at => '2000-09-13',
+     :effective_at => '2013-10-08',
+     :event => reg2013,
      :is_current => true
     )
     create(
@@ -54,8 +55,8 @@ shared_context 'Colophon' do
       :is_party => true
     )
 
-    cms_designation
-    Sapi.rebuild
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

@@ -26,11 +26,8 @@ class Trade::AnnualReportUploadsController < ApplicationController
 
   def update
     @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
-    if @annual_report_upload.update_attributes_and_sandbox(
-      annual_report_upload_params
-    )
-      render :json => @annual_report_upload, :status => :ok,
-        :serializer => Trade::ShowAnnualReportUploadSerializer
+    if @annual_report_upload.update_attributes_and_sandbox(params)
+      head :no_content
     else
       render :json => { "errors" => @annual_report_upload.errors },
         :status => :unprocessable_entity
@@ -45,6 +42,16 @@ class Trade::AnnualReportUploadsController < ApplicationController
     else
       render :json => { "errors" => @annual_report_upload.errors },
         :status => :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
+    unless @annual_report_upload.is_done
+      @annual_report_upload.destroy
+      render :json => nil, :status => :ok
+    else
+      head 403
     end
   end
 

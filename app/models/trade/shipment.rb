@@ -23,6 +23,7 @@
 #
 
 class Trade::Shipment < ActiveRecord::Base
+  include PgArrayParser
   attr_accessible :annual_report_upload_id, :appendix,
     :country_of_origin_id, :origin_permit_id,
     :exporter_id, :import_permit_id, :importer_id, :purpose_id,
@@ -33,25 +34,23 @@ class Trade::Shipment < ActiveRecord::Base
     :ignore_warnings
   attr_accessor :reporter_type, :warnings, :ignore_warnings
 
-  validates :quantity, presence: true, :numericality => {
+  validates :quantity, :presence => true, :numericality => {
     :greater_than_or_equal_to => 0, :message => 'should be a positive number'
   }
-  validates :appendix, presence: true, :inclusion => {
+  validates :appendix, :presence => true, :inclusion => {
     :in => ['I', 'II', 'III', 'N'], :message => 'should be one of I, II, III, N'
   }
-  validates :year, presence: true, :numericality => {
+  validates :year, :presence => true, :numericality => {
     :only_integer => true, :greater_than_or_equal_to => 1975, :less_than => 3000,
     :message => 'should be a 4 digit year'
   }
-  validates :taxon_concept_id, presence: true
-  validates :term_id, presence: true
-  validates :exporter_id, presence: true
-  validates :importer_id, presence: true
-  validates :reporter_type, presence: true, :inclusion => {
+  validates :taxon_concept_id, :presence => true
+  validates :term_id, :presence => true
+  validates :exporter_id, :presence => true
+  validates :importer_id, :presence => true
+  validates :reporter_type, :presence => true, :inclusion => {
     :in => ['E', 'I'], :message => 'should be one of E, I'
   }
-  validates :country_of_origin, :presence => true,
-    :unless => Proc.new { |s| s.origin_permit_number.blank? }
   validates_with Trade::ShipmentSecondaryErrorsValidator
 
   belongs_to :taxon_concept
@@ -63,15 +62,6 @@ class Trade::Shipment < ActiveRecord::Base
   belongs_to :country_of_origin, :class_name => "GeoEntity"
   belongs_to :exporter, :class_name => "GeoEntity"
   belongs_to :importer, :class_name => "GeoEntity"
-  has_many :shipment_import_permits, :foreign_key => :trade_shipment_id,
-    :class_name => "Trade::ShipmentImportPermit", :dependent => :destroy
-  has_many :import_permits, :through => :shipment_import_permits
-  has_many :shipment_export_permits, :foreign_key => :trade_shipment_id,
-    :class_name => "Trade::ShipmentExportPermit", :dependent => :destroy
-  has_many :export_permits, :through => :shipment_export_permits
-  has_many :shipment_origin_permits, :foreign_key => :trade_shipment_id,
-    :class_name => "Trade::ShipmentOriginPermit", :dependent => :destroy
-  has_many :origin_permits, :through => :shipment_origin_permits
 
   after_validation do
     unless self.errors.empty? && self.ignore_warnings
@@ -95,42 +85,55 @@ class Trade::Shipment < ActiveRecord::Base
     end
   end
 
-  def import_permit_number
-    get_permit_number('import')
-  end
-
   def import_permit_number=(str)
-    set_permit_number('import', str, self.importer_id)
-  end
-
-  def export_permit_number
-    get_permit_number('export')
+    set_permit_number('import', str)
   end
 
   def export_permit_number=(str)
-    set_permit_number('export', str, self.exporter_id)
-  end
-
-  def origin_permit_number
-    get_permit_number('origin')
+    set_permit_number('export', str)
   end
 
   def origin_permit_number=(str)
-    set_permit_number('origin', str, self.country_of_origin_id)
+    set_permit_number('origin', str)
+  end
+
+  def import_permits_ids
+    parse_pg_array(read_attribute(:import_permits_ids))
+  end
+
+  def import_permits_ids=(ary)
+    write_attribute(:import_permits_ids, "{#{ary && ary.join(',')}}")
+  end
+
+  def export_permits_ids
+    parse_pg_array(read_attribute(:export_permits_ids))
+  end
+
+  def export_permits_ids=(ary)
+    write_attribute(:export_permits_ids, "{#{ary && ary.join(',')}}")
+  end
+
+  def origin_permits_ids
+    parse_pg_array(read_attribute(:origin_permits_ids))
+  end
+
+  def origin_permits_ids=(ary)
+    write_attribute(:origin_permits_ids, "{#{ary && ary.join(',')}}")
   end
 
   private
-  def get_permit_number(permit_type)
-    self["#{permit_type}_permit_number"] || self.send("#{permit_type}_permits").map(&:number).join(';')
-  end
 
-  def set_permit_number(permit_type, str, geo_entity_id)
-    if str
-      permits = str.split(';').compact.map do |number|
-        Trade::Permit.find_or_create_by_number_and_geo_entity_id(number.strip, geo_entity_id)
-      end
-      self.send("#{permit_type}_permits=", permits)
+  # note: this updates the precomputed fields
+  # needs to be invoked via custom permit number setters
+  # (import_permit_number=, export_permit_number=, origin_permit_number=)
+  def set_permit_number(permit_type, str)
+    permits = str && str.split(';').compact.map do |number|
+      Trade::Permit.find_or_create_by_number(number.strip)
     end
+    # save the concatenated permit numbers in the precomputed field
+    write_attribute("#{permit_type}_permit_number", permits && permits.map(&:number).join(';'))
+    # save the array of permit ids in the precomputed field
+    send("#{permit_type}_permits_ids=", permits && permits.map(&:id))
   end
 
 end

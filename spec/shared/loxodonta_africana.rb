@@ -90,12 +90,14 @@ shared_context "Loxodonta africana" do
     )
     eu_lc1 = create_eu_A_addition(
      :taxon_concept => @species,
-     :effective_at => '2000-07-19',
+     :effective_at => '2013-08-10',
+     :event => reg2013,
      :is_current => true
     )
     eu_lc2 = create_eu_B_addition(
      :taxon_concept => @species,
-     :effective_at => '2000-07-19',
+     :effective_at => '2013-08-10',
+     :event => reg2013,
      :is_current => true
     )
     [botswana, namibia, zambia, zimbabwe].each do |country|
@@ -113,8 +115,8 @@ shared_context "Loxodonta africana" do
       )
     end
 
-    cms_designation
-    Sapi.rebuild
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

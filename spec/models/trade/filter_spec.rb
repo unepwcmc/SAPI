@@ -52,8 +52,8 @@ describe Trade::Filter do
       :country_of_origin => @argentina,
       :year => 2012,
       :reported_by_exporter => true,
-      :import_permits => [@import_permit],
-      :export_permits=> [@export_permit1, @export_permit2],
+      :import_permit_number => 'AAA',
+      :export_permit_number=> 'BBB;CCC',
       :quantity => 20
     )
     @shipment2 = create(
@@ -74,7 +74,7 @@ describe Trade::Filter do
   end
   describe :results do
     context "when searching by taxon concepts ids" do
-      before(:each){ cites; eu; cms_designation; Sapi.rebuild }
+      before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
       context "at GENUS rank" do
         subject { Trade::Filter.new({:taxon_concepts_ids => [@genus1.id]}).results }
         specify { subject.should include(@shipment1) }
@@ -174,18 +174,18 @@ describe Trade::Filter do
 
     context "when searching by reporter_type" do
       context "when reporter type is not I or E" do
-        subject { Trade::Filter.new({:reporter_type => 'K'}).results }
+        subject { Trade::Filter.new({:internal => true, :reporter_type => 'K'}).results }
         specify { subject.length.should == 2 }
       end
 
       context "when reporter type is I" do
-        subject { Trade::Filter.new({:reporter_type => 'I'}).results }
+        subject { Trade::Filter.new({:internal => true, :reporter_type => 'I'}).results }
         specify { subject.should include(@shipment2) }
         specify { subject.length.should == 1 }
       end
 
       context "when reporter type is E" do
-        subject { Trade::Filter.new({:reporter_type => 'E'}).results }
+        subject { Trade::Filter.new({:internal => true, :reporter_type => 'E'}).results }
         specify { subject.should include(@shipment1) }
         specify { subject.length.should == 1 }
       end
@@ -193,13 +193,13 @@ describe Trade::Filter do
 
 
     context "when searching by permit" do
-      subject { Trade::Filter.new({:permits_ids => [@export_permit1.id]}).results }
+      subject { Trade::Filter.new({:internal => true, :permits_ids => [@export_permit1.id]}).results }
       specify { subject.should include(@shipment1) }
       specify { subject.length.should == 1 }
     end
 
     context "when searching by quantity" do
-      subject { Trade::Filter.new({:quantity => 20}).results }
+      subject { Trade::Filter.new({:internal => true, :quantity => 20}).results }
       specify { subject.should include(@shipment1) }
       specify { subject.length.should == 1 }
     end

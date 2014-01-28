@@ -1,4 +1,4 @@
-Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
+Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trade.ShipmentPagination,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
@@ -36,35 +36,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     return false unless @get('content.isLoaded')
     @get('content').filterBy('isSaving', true).length > 0
   ).property('content.@each.isSaving')
-
-  total: ( ->
-    @get('content.meta.total')
-  ).property('content.isLoaded')
-
-  perPage: ( ->
-    parseInt(@get('content.meta.per_page')) || 100
-  ).property("content.isLoaded")
-
-  page: ( ->
-    parseInt(@get('content.meta.page')) || 1
-  ).property("content.isLoaded")
-
-  pages: ( ->
-    if @get('total')
-      return Math.ceil( @get('total') / @get('perPage'))
-    else
-      return 1
-  ).property('total', 'perPage')
-
-  showPrevPage: ( ->
-    page = @get('page')
-    if page > 1 then return yes else return no
-  ).property('page')
-
-  showNextPage: ( ->
-    page = @get('page')
-    if page < @get('pages') then return yes else return no
-  ).property('page')
 
   transitionToPage: (forward) ->
     page = if forward

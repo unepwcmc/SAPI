@@ -1,7 +1,10 @@
-  CREATE OR REPLACE FUNCTION rebuild_designation_all_listing_changes_mview(
+  DROP FUNCTION IF EXISTS rebuild_designation_all_listing_changes_mview(
     taxonomy taxonomies, designation designations
+  );
+  CREATE OR REPLACE FUNCTION rebuild_designation_all_listing_changes_mview(
+    taxonomy taxonomies, designation designations, events_ids INT[]
   ) RETURNS void
-  LANGUAGE plpgsql STRICT
+  LANGUAGE plpgsql
   AS $$
   DECLARE
     all_lc_table_name TEXT;
@@ -9,12 +12,15 @@
     tc_table_name TEXT;
     sql TEXT;
   BEGIN
-    SELECT LOWER(designation.name) || '_all_listing_changes_mview' INTO all_lc_table_name;
-    SELECT LOWER(designation.name) || '_tmp_listing_changes_mview' INTO tmp_lc_table_name;
+    SELECT listing_changes_mview_name('all', designation.name, events_ids)
+    INTO all_lc_table_name;
+    SELECT listing_changes_mview_name('tmp', designation.name, events_ids)
+    INTO tmp_lc_table_name;
+
     SELECT LOWER(taxonomy.name) || '_taxon_concepts_and_ancestors_mview' INTO tc_table_name;
 
     EXECUTE 'DROP TABLE IF EXISTS ' || tmp_lc_table_name || ' CASCADE';
-    
+
     sql := 'CREATE TEMP TABLE ' || tmp_lc_table_name || ' AS
     -- affected_taxon_concept -- is a taxon concept that is affected by this listing change,
     -- even though it might not have an explicit connection to it
@@ -29,16 +35,23 @@
         listing_changes.species_listing_id,
         listing_changes.change_type_id,
         listing_changes.inclusion_taxon_concept_id,
-        listing_changes.is_current,
+        listing_changes.event_id,
         listing_changes.effective_at::DATE,
+        listing_changes.is_current,
         ARRAY_AGG_NOTNULL(taxonomic_exceptions.taxon_concept_id) AS excluded_taxon_concept_ids
       FROM listing_changes
       LEFT JOIN listing_changes taxonomic_exceptions
-      ON listing_changes.id = taxonomic_exceptions.parent_id 
+      ON listing_changes.id = taxonomic_exceptions.parent_id
       AND listing_changes.taxon_concept_id != taxonomic_exceptions.taxon_concept_id
       JOIN change_types ON change_types.id = listing_changes.change_type_id
-      AND change_types.designation_id = ' || designation.id 
-      || 'GROUP BY
+      AND change_types.designation_id = ' || designation.id
+      || CASE
+      WHEN events_ids IS NOT NULL AND ARRAY_UPPER(events_ids, 1) IS NOT NULL
+      THEN ' WHERE listing_changes.event_id = ANY (''{' || ARRAY_TO_STRING(events_ids, ', ') || '}''::INT[])'
+      ELSE ''
+      END ||
+      '
+      GROUP BY
         listing_changes.id,
         change_types.designation_id,
         change_types.name,
@@ -46,17 +59,19 @@
         listing_changes.species_listing_id,
         listing_changes.change_type_id,
         listing_changes.inclusion_taxon_concept_id,
-        listing_changes.is_current,
-        listing_changes.effective_at::DATE
+        listing_changes.event_id,
+        listing_changes.effective_at::DATE,
+        listing_changes.is_current
     )
     -- the purpose of this CTE is to aggregate listed and excluded populations
-    SELECT lc.id, 
+    SELECT lc.id,
       lc.designation_id,
       lc.change_type_name,
       lc.taxon_concept_id,
       lc.species_listing_id,
       lc.change_type_id,
       lc.inclusion_taxon_concept_id,
+      lc.event_id,
       lc.effective_at,
       lc.is_current,
       lc.excluded_taxon_concept_ids,
@@ -69,7 +84,7 @@
     LEFT JOIN listing_distributions party_distribution
     ON lc.id = party_distribution.listing_change_id AND party_distribution.is_party
     LEFT JOIN listing_changes population_exceptions
-    ON lc.id = population_exceptions.parent_id 
+    ON lc.id = population_exceptions.parent_id
     AND lc.taxon_concept_id = population_exceptions.taxon_concept_id
     LEFT JOIN listing_distributions excluded_distributions
     ON population_exceptions.id = excluded_distributions.listing_change_id AND NOT excluded_distributions.is_party
@@ -80,14 +95,17 @@
       lc.species_listing_id,
       lc.change_type_id,
       lc.inclusion_taxon_concept_id,
+      lc.event_id,
       lc.effective_at,
       lc.is_current,
       party_distribution.geo_entity_id,
       lc.excluded_taxon_concept_ids';
 
     EXECUTE sql;
-  
+
     EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (taxon_concept_id)';
+    -- for the current listing calculation
+    EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (taxon_concept_id, is_current, change_type_name, inclusion_taxon_concept_id)';
 
     EXECUTE 'DROP TABLE IF EXISTS ' || all_lc_table_name || ' CASCADE';
 
@@ -135,7 +153,9 @@
   END;
   $$;
 
-  COMMENT ON FUNCTION rebuild_designation_all_listing_changes_mview(taxonomy taxonomies, designation designations) IS
+  COMMENT ON FUNCTION rebuild_designation_all_listing_changes_mview(
+    taxonomy taxonomies, designation designations, events_ids INT[]
+  ) IS
   'Procedure to create a helper table with all listing changes 
   + their included / excluded populations 
   + tree distance between affected taxon concept and the taxon concept this listing change applies to.';
