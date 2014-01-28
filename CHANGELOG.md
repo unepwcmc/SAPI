@@ -1,3 +1,7 @@
+### 0.4.1
+* fixes synonyms showing as subspecies
+* fixes hybrids showing as synonyms
+
 ### 0.4.0 (2013-12-18)
 * adds functionality for managing trade data:
   - filtering by all shipment properties
