@@ -34,21 +34,21 @@ class Trade::Shipment < ActiveRecord::Base
     :ignore_warnings
   attr_accessor :reporter_type, :warnings, :ignore_warnings
 
-  validates :quantity, presence: true, :numericality => {
+  validates :quantity, :presence => true, :numericality => {
     :greater_than_or_equal_to => 0, :message => 'should be a positive number'
   }
-  validates :appendix, presence: true, :inclusion => {
+  validates :appendix, :presence => true, :inclusion => {
     :in => ['I', 'II', 'III', 'N'], :message => 'should be one of I, II, III, N'
   }
-  validates :year, presence: true, :numericality => {
+  validates :year, :presence => true, :numericality => {
     :only_integer => true, :greater_than_or_equal_to => 1975, :less_than => 3000,
     :message => 'should be a 4 digit year'
   }
-  validates :taxon_concept_id, presence: true
-  validates :term_id, presence: true
-  validates :exporter_id, presence: true
-  validates :importer_id, presence: true
-  validates :reporter_type, presence: true, :inclusion => {
+  validates :taxon_concept_id, :presence => true
+  validates :term_id, :presence => true
+  validates :exporter_id, :presence => true
+  validates :importer_id, :presence => true
+  validates :reporter_type, :presence => true, :inclusion => {
     :in => ['E', 'I'], :message => 'should be one of E, I'
   }
   validates_with Trade::ShipmentSecondaryErrorsValidator
