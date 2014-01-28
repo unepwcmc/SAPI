@@ -165,11 +165,11 @@ CREATE OR REPLACE FUNCTION listing_changes_mview_name(prefix TEXT, designation T
   RETURNS TEXT
   LANGUAGE SQL IMMUTABLE
   AS $$
-    SELECT CASE WHEN prefix IS NULL THEN '' ELSE prefix || '_' END ||
-    designation ||
+    SELECT CASE WHEN $1 IS NULL THEN '' ELSE $1 || '_' END ||
+    $2 ||
     CASE
-      WHEN events_ids IS NOT NULL
-      THEN '_' || ARRAY_TO_STRING(events_ids, '_')
+      WHEN $3 IS NOT NULL
+      THEN '_' || ARRAY_TO_STRING($3, '_')
       ELSE ''
     END || '_listing_changes_mview';
   $$;
