@@ -102,7 +102,7 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def import_permits_ids=(ary)
-    write_attribute(:import_permits_ids, '{' + ary.join(',') + '}')
+    write_attribute(:import_permits_ids, "{#{ary && ary.join(',')}}")
   end
 
   def export_permits_ids
@@ -110,7 +110,7 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def export_permits_ids=(ary)
-    write_attribute(:export_permits_ids, '{' + ary.join(',') + '}')
+    write_attribute(:export_permits_ids, "{#{ary && ary.join(',')}}")
   end
 
   def origin_permits_ids
@@ -118,7 +118,7 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def origin_permits_ids=(ary)
-    write_attribute(:origin_permits_ids, '{' + ary.join(',') + '}')
+    write_attribute(:origin_permits_ids, "{#{ary && ary.join(',')}}")
   end
 
   private
