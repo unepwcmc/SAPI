@@ -21,7 +21,9 @@
 class Event < ActiveRecord::Base
   attr_accessible :name, :designation_id, :description, :url, :effective_at, :is_current
   attr_reader :effective_at_formatted
+
   belongs_to :designation
+  has_many :annotations, :dependent => :destroy
 
   validates :name, :presence => true, :uniqueness => true
   validates :url, :format => URI::regexp(%w(http https)), :allow_blank => true

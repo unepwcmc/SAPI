@@ -24,7 +24,11 @@ class Annotation < ActiveRecord::Base
   attr_accessible :listing_change_id, :symbol, :parent_symbol, :short_note_en,
     :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
     :display_in_index, :display_in_footnote, :event_id
-  belongs_to :listing_change
+
+  has_many :listing_changes, :dependent => :nullify
+  has_many :hashed_listing_changes, :dependent => :nullify,
+    :foreign_key => :hash_annotation_id, :class_name => "ListingChange"
+
   belongs_to :event
   translates :short_note, :full_note
 
