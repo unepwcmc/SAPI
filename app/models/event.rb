@@ -46,18 +46,14 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def can_be_activated?
-    current_event = self.class.where(:is_current => true).
-      order('effective_at DESC').first
-    !is_current && (
-      current_event && current_event.effective_at < effective_at ||
-      current_event.nil?
-    )
-  end
-
   def activate!
     update_attribute(:is_current, true)
     notify_observers(:after_activate)
+  end
+
+  def deactivate!
+    update_attribute(:is_current, false)
+    notify_observers(:after_deactivate)
   end
 
   protected
