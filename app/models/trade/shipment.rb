@@ -133,7 +133,7 @@ class Trade::Shipment < ActiveRecord::Base
     # save the concatenated permit numbers in the precomputed field
     write_attribute("#{permit_type}_permit_number", permits && permits.map(&:number).join(';'))
     # save the array of permit ids in the precomputed field
-    update_attribute("#{permit_type}_permits_ids", permits && permits.map(&:id))
+    send("#{permit_type}_permits_ids=", permits && permits.map(&:id))
   end
 
 end
