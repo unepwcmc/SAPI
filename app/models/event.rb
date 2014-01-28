@@ -19,7 +19,7 @@
 #
 
 class Event < ActiveRecord::Base
-  attr_accessible :name, :designation_id, :description, :url, :effective_at
+  attr_accessible :name, :designation_id, :description, :url, :effective_at, :is_current
   attr_reader :effective_at_formatted
   belongs_to :designation
 
