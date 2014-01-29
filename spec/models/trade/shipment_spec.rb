@@ -121,7 +121,7 @@ describe Trade::Shipment do
 
     context "when species name + appendix N + year" do
       before(:each) do
-        create_eu_D_addition(
+        create_eu_B_addition(
           :taxon_concept => @taxon_concept,
           :effective_at => '2013-01-01',
           :event => reg2013,

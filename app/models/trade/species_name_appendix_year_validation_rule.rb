@@ -29,11 +29,9 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
     return nil unless shipment_in_scope
     # if it is, check if it has a match in valid values view
     
-    # if appendix given as N, check for annex D in the valid annex view
+    # if appendix given as N, check in the valid annex view
     if shipment.appendix == 'N'
       v = Arel::Table.new('valid_species_name_annex_year_mview')
-      actual_appendix = Arel::Nodes::NamedFunction.new('ANY', [v['annex']])
-      appendix_node = Arel::Nodes::Equality.new('D', actual_appendix)
     else
       v = Arel::Table.new(valid_values_view)
       actual_appendix = Arel::Nodes::NamedFunction.new('ANY', [v['appendix']])
@@ -44,7 +42,11 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
     year_node = actual_year.eq(shipment.year)
     actual_species_name = v['species_name']
     species_name_node = actual_species_name.eq(shipment.taxon_concept.full_name)
-    conditions = appendix_node.and(year_node).and(species_name_node)
+    conditions = if appendix_node
+      appendix_node.and(year_node).and(species_name_node)
+    else
+      year_node.and(species_name_node)
+    end
     return nil if Trade::Shipment.find_by_sql(v.project('*').where(conditions)).any?
     error_message
   end
@@ -70,11 +72,7 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
   end
 
   def appendix_n_join_node(s, v)
-    sandbox_appendix = s['appendix']
-    actual_appendix = Arel::Nodes::NamedFunction.new('ANY', [v['annex']])
-    appendix_node = sandbox_appendix.eq('N').and(
-      Arel::SqlLiteral.new("'D'").eq(actual_appendix)
-    )
+    s['appendix'].eq('N')
   end
 
   def valid_values_arel(s)
