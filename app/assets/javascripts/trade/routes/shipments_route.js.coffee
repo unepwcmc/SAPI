@@ -20,4 +20,18 @@ Trade.ShipmentsRoute = Ember.Route.extend Trade.QueryParams,
     @get('selectedQueryParamNames').forEach (property) ->
       if property.type == 'array' && queryParams[property.param] == true
         queryParams[property.param] = []
-    Trade.Shipment.find(queryParams)
+    if $.isEmptyObject(queryParams)
+      Trade.Shipment.all().clear()
+    else
+      Trade.Shipment.find(queryParams)
+
+  afterModel: (model, transition) ->
+    # Resetting the default values in the form.
+    controller = @controllerFor("shipments")
+    unless controller.get('selectedTimeStart')
+      timeStart = controller.get('defaultTimeStart')
+      controller.set('selectedTimeStart', timeStart)
+    unless controller.get('selectedTimeEnd')
+      timeStart = controller.get('defaultTimeEnd')
+      controller.set('selectedTimeEnd', timeStart)
+

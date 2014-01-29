@@ -76,18 +76,7 @@ shared_context "Arctocephalus" do
      :effective_at => '1977-02-04',
      :is_current => true
     )
-    create_eu_B_addition(
-     :taxon_concept => @genus,
-     :effective_at => '1977-02-04',
-     :is_current => true
-    )
     create_cites_II_addition(
-     :taxon_concept => @species1,
-     :effective_at => '1977-02-04',
-     :inclusion_taxon_concept_id => @genus.id,
-     :is_current => true
-    )
-    create_eu_B_addition(
      :taxon_concept => @species1,
      :effective_at => '1977-02-04',
      :inclusion_taxon_concept_id => @genus.id,
@@ -103,14 +92,22 @@ shared_context "Arctocephalus" do
      :effective_at => '1979-06-28',
      :is_current => true
     )
+
     create_eu_A_addition(
      :taxon_concept => @species2,
-     :effective_at => '1979-06-28',
+     :effective_at => '2013-08-10',
+     :event => reg2013,
+     :is_current => true
+    )
+    create_eu_B_addition(
+     :taxon_concept => @genus,
+     :effective_at => '2013-08-10',
+     :event => reg2013,
      :is_current => true
     )
 
-    cms_designation
-    Sapi.rebuild
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

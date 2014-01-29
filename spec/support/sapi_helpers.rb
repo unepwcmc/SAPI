@@ -262,6 +262,13 @@ shared_context :sapi do
       :parent => cites_eu_chordata
     )
   }
+  let(:cites_eu_elasmobranchii){
+    create_cites_eu_class(
+      :taxonomic_position => '1.1.5',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Elasmobranchii'),
+      :parent => cites_eu_chordata
+    )
+  }
   let(:cites_eu_arthropoda){
     create_cites_eu_phylum(
       :taxonomic_position => '1.3',
@@ -453,6 +460,27 @@ shared_context :sapi do
       :is_primary => false
     )
   end
+
+  let(:reg1997){
+    create(:eu_regulation, :name => 'No 938/97', :designation => eu,
+      :effective_at => '1997-06-01', :end_date => '2000-12-18')
+  }
+  let(:reg2005){
+    create(:eu_regulation, :name => 'No 1332/2005', :designation => eu,
+      :effective_at => '2005-08-22', :end_date => '2008-04-11')
+  }
+  let(:reg2008){
+    create(:eu_regulation, :name => 'No 318/2008', :designation => eu,
+      :effective_at => '2008-04-11', :end_date => '2009-05-22')
+  }
+  let(:reg2012){
+    create(:eu_regulation, :name => 'No 1158/2012', :designation => eu,
+      :effective_at => '2012-12-15', :end_date => '2013-08-10')
+  }
+  let(:reg2013){
+    create(:eu_regulation, :name => 'No 750/2013', :designation => eu,
+      :effective_at => '2013-08-10', :end_date => nil, :is_current => true)
+  }
 
 end
 

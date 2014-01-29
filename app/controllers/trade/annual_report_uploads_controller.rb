@@ -45,6 +45,16 @@ class Trade::AnnualReportUploadsController < ApplicationController
     end
   end
 
+  def destroy
+    @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
+    unless @annual_report_upload.is_done
+      @annual_report_upload.destroy
+      render :json => nil, :status => :ok
+    else
+      head 403
+    end
+  end
+
 private
 
   def annual_report_upload_params

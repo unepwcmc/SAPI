@@ -19,7 +19,7 @@
 #
 
 class EuRegulation < Event
-  attr_accessible :listing_changes_event_id
+  attr_accessible :listing_changes_event_id, :end_date
   attr_accessor :listing_changes_event_id
 
   has_many :listing_changes, :foreign_key => :event_id,
