@@ -19,6 +19,7 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  touched_at         :datetime
+#  legacy_trade_code  :string(255)
 #
 
 class TaxonConcept < ActiveRecord::Base
