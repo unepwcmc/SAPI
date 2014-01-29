@@ -28,9 +28,18 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
     end
     return nil unless shipment_in_scope
     # if it is, check if it has a match in valid values view
-    v = Arel::Table.new(valid_values_view)
-    actual_appendix = Arel::Nodes::NamedFunction.new('ANY', [v['appendix']])
-    appendix_node = Arel::Nodes::Equality.new(shipment.appendix, actual_appendix)
+    
+    # if appendix given as N, check for annex D in the valid annex view
+    if shipment.appendix == 'N'
+      v = Arel::Table.new('valid_species_name_annex_year_mview')
+      actual_appendix = Arel::Nodes::NamedFunction.new('ANY', [v['annex']])
+      appendix_node = Arel::Nodes::Equality.new('D', actual_appendix)
+    else
+      v = Arel::Table.new(valid_values_view)
+      actual_appendix = Arel::Nodes::NamedFunction.new('ANY', [v['appendix']])
+      appendix_node = Arel::Nodes::Equality.new(shipment.appendix, actual_appendix)
+    end
+    
     actual_year = v['year']
     year_node = actual_year.eq(shipment.year)
     actual_species_name = v['species_name']
@@ -42,30 +51,62 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
 
   private
 
+  def year_join_node(s, v)
+    sandbox_year = Arel::Nodes::NamedFunction.new "CAST", [ s['year'].as('INT') ]
+    actual_year = v['year']
+    year_node = sandbox_year.eq(actual_year)
+  end
+
+  def species_name_join_node(s, v)
+    sandbox_species_name = s['species_name']
+    actual_species_name = v['species_name']
+    species_name_node = sandbox_species_name.eq(actual_species_name)
+  end
+
+  def appendix_join_node(s, v)
+    sandbox_appendix = s['appendix']
+    actual_appendix = Arel::Nodes::NamedFunction.new('ANY', [v['appendix']])
+    appendix_node = sandbox_appendix.eq(actual_appendix)
+  end
+
+  def appendix_n_join_node(s, v)
+    sandbox_appendix = s['appendix']
+    actual_appendix = Arel::Nodes::NamedFunction.new('ANY', [v['annex']])
+    appendix_node = sandbox_appendix.eq('N').and(
+      Arel::SqlLiteral.new("'D'").eq(actual_appendix)
+    )
+  end
+
+  def valid_values_arel(s)
+    v = Arel::Table.new(valid_values_view)
+    join_conditions = appendix_join_node(s, v).and(year_join_node(s, v)).
+      and(species_name_join_node(s, v))
+    s.project(s['*']).join(v).on(join_conditions)
+  end
+
+  def valid_appendix_n_values_arel(s)
+    v = Arel::Table.new('valid_species_name_annex_year_mview')
+    join_conditions = appendix_n_join_node(s, v).and(year_join_node(s, v)).
+      and(species_name_join_node(s, v))
+    s.project(s['*']).join(v).on(join_conditions)
+  end
+
   # Difference from superclass: rather than equality, check if appendix
   # is contained in valid appendix array (to allow for split listings)
   def matching_records_arel(table_name)
     s = Arel::Table.new(table_name)
-    v = Arel::Table.new(valid_values_view)
 
-    sandbox_appendix = s['appendix']
-    actual_appendix = Arel::Nodes::NamedFunction.new('ANY', [v['appendix']])
-    appendix_node = sandbox_appendix.eq(actual_appendix)
-    sandbox_year = Arel::Nodes::NamedFunction.new "CAST", [ s['year'].as('INT') ]
-    actual_year = v['year']
-    year_node = sandbox_year.eq(actual_year)
-    sandbox_species_name = s['species_name']
-    actual_species_name = v['species_name']
-    species_name_node = sandbox_species_name.eq(actual_species_name)
-
-    join_conditions = appendix_node.and(year_node).and(species_name_node)
-    valid_values = s.project(s['*']).join(v).on(join_conditions)
     not_null_nodes = column_names.map do |c|
       s[c].not_eq(nil)
     end
     not_null_conds = not_null_nodes.shift
     not_null_nodes.each{ |n| not_null_conds = not_null_conds.and(n) }
-    s.project('*').where(not_null_conds).except(valid_values)
+    s.project('*').where(not_null_conds).except(
+      s.project('*').from(
+        valid_values_arel(s).union(valid_appendix_n_values_arel(s)).to_sql +
+        'AS valid_values'
+      )
+    )
   end
 
 end

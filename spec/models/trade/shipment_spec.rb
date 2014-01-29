@@ -118,6 +118,29 @@ describe Trade::Shipment do
         specify{ subject.warnings.should be_empty }
       end
     end
+
+    context "when species name + appendix N + year" do
+      before(:each) do
+        create_eu_D_addition(
+          :taxon_concept => @taxon_concept,
+          :effective_at => '2013-01-01',
+          :event => reg2013,
+          :is_current => true
+        )
+        Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
+        create_species_name_appendix_year_validation
+      end
+      context "valid" do
+        subject{
+          create(
+            :shipment,
+            :taxon_concept => @taxon_concept, :appendix => 'N', :year => 2013
+          )
+        }
+        specify{ subject.warnings.should be_empty }
+      end
+    end
+
     context "when term + unit" do
       before(:each) do
         @cav = create(:term, :code => "CAV")
