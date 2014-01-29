@@ -74,15 +74,16 @@ def create_indices table_columns, method
 end
 
 def add_shipment_number_tmp_column
+  delete_shipment_number_tmp_column
   sql = <<-SQL
-  ALTER TABlE trade_permits ADD COLUMN shipment_number int;
+    ALTER TABlE trade_permits ADD COLUMN shipment_number int;
   SQL
   execute_query(sql)
 end
 
 def delete_shipment_number_tmp_column
   sql = <<-SQL
-  ALTER TABlE trade_permits DROP COLUMN shipment_number;
+    ALTER TABlE trade_permits DROP COLUMN IF EXISTS shipment_number;
   SQL
   execute_query(sql)
 end

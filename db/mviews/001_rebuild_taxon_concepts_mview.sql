@@ -130,16 +130,8 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     ) common_names ON taxon_concepts.id = common_names.taxon_concept_id_com
     LEFT JOIN (
       SELECT taxon_concepts.id AS taxon_concept_id_syn,
-      ARRAY(
-        SELECT *
-        FROM UNNEST(ARRAY_AGG(synonym_tc.full_name)) s
-        WHERE s IS NOT NULL
-      ) AS synonyms_ary,
-      ARRAY(
-        SELECT *
-        FROM UNNEST(ARRAY_AGG(synonym_tc.author_year)) s
-        WHERE s IS NOT NULL
-      ) AS synonyms_author_years_ary
+      ARRAY_AGG_NOTNULL(synonym_tc.full_name) AS synonyms_ary,
+      ARRAY_AGG_NOTNULL(synonym_tc.author_year) AS synonyms_author_years_ary
       FROM taxon_concepts
       LEFT JOIN taxon_relationships
       ON "taxon_relationships"."taxon_concept_id" = "taxon_concepts"."id"
@@ -147,6 +139,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       ON "taxon_relationship_types"."id" = "taxon_relationships"."taxon_relationship_type_id"
       LEFT JOIN taxon_concepts AS synonym_tc
       ON synonym_tc.id = taxon_relationships.other_taxon_concept_id
+      AND "taxon_relationship_types"."name" = 'HAS_SYNONYM'
       GROUP BY taxon_concepts.id
     ) synonyms ON taxon_concepts.id = synonyms.taxon_concept_id_syn
     LEFT JOIN (
@@ -160,11 +153,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     ) subspecies ON taxon_concepts.id = subspecies.taxon_concept_id_sub
     LEFT JOIN (
       SELECT taxon_concepts.id AS taxon_concept_id_cnt,
-      ARRAY(
-        SELECT *
-        FROM UNNEST(ARRAY_AGG(geo_entities.id ORDER BY geo_entities.name_en)) s
-        WHERE s IS NOT NULL
-      ) AS countries_ids_ary
+      ARRAY_AGG_NOTNULL(geo_entities.id ORDER BY geo_entities.name_en) AS countries_ids_ary
       FROM taxon_concepts
       LEFT JOIN distributions
       ON "distributions"."taxon_concept_id" = "taxon_concepts"."id"
@@ -173,6 +162,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       LEFT JOIN "geo_entity_types"
       ON "geo_entity_types"."id" = "geo_entities"."geo_entity_type_id"
       AND (geo_entity_types.name = 'COUNTRY' OR geo_entity_types.name = 'TERRITORY')
+      -- TODO handle EXTINCT
       GROUP BY taxon_concepts.id
     ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt;
 
@@ -192,6 +182,8 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     CREATE INDEX ON taxon_concepts_mview_tmp (cms_show, name_status, cms_listing_original, taxonomy_is_cites_eu, rank_name); -- cms csv download
     CREATE INDEX ON taxon_concepts_mview_tmp (cites_show, name_status, cites_listing_original, taxonomy_is_cites_eu, rank_name); -- cites csv download
     CREATE INDEX ON taxon_concepts_mview_tmp (eu_show, name_status, eu_listing_original, taxonomy_is_cites_eu, rank_name); -- eu csv download
+    CREATE INDEX ON taxon_concepts_mview_tmp USING GIN (countries_ids_ary);
+
 
     RAISE INFO 'Swapping concepts materialized view';
     DROP table IF EXISTS taxon_concepts_mview CASCADE;

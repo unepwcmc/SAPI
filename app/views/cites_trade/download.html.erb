@@ -8,15 +8,14 @@
     <tr>
       <td>
         <span style="font-weight:900;font-size:14px"> <%= t('select_output') %> </span>
-        
-        
+
         <br><input type="radio" name="outputType" value="web" checked> web
         <br><input type="radio" name="outputType" value="csv"> csv
         <br>
         <br>
       </td>
     </tr>
-    
+
     <tr id="net_gross_options">
       <td>
         <span style="font-weight:900;font-size:14px"> <%= t('select_report') %> </span> <br>
@@ -41,32 +40,32 @@
           <a id='view_genie' href="" style="display:none"></a>
           <a id='download_genie' href="#" style="display:none"></a>
         </div>
-        
+
         <p><br><br></p>
-        
+
       </td></tr>
     </form>
     <tr><td>
       <hr>
-      
+
       <div id="new_search_wrapper" align="center">
-        
+
         <a id="new_search" style="float:left" href="/<%= I18n.locale %>/cites_trade/">
           <button id="new_search" style="float:left" value=" New Search ">
             <img src="/assets/cites_trade/refresh1.png" alt=""/> <%= t('new_search') %>
           </button>
         </a>
-        
+
         <br>
       </div>
       <br />
       <div align="left">
-        <strong> <%= t('download') %> :</strong> <a class="linkStyle" href="/downloads/cites_trade/AGuidetoInterpretingComparativeTabulationOutputs.pdf" target="doc"> <%= t('tabulation_guide') %></a>.
-        <br><strong> <%= t('download') %>:</strong> <a href="/downloads/cites_trade/AGuidetoInterpretingGrossNetTradeOutputs.pdf" target="doc"> <%= t('trade_guide') %> </a>.
-        
+        <strong><%= t('download') %>: </strong>
+      <a href="/downloads/cites_trade/<%= I18n.locale %>-CITES_Trade_Database_Guide.pdf"><%= t('db_guide') %></a>
+
       </div>
-      
+
     </td></tr>
   </table>
-  
+
 </div>

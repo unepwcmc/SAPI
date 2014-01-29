@@ -33,35 +33,41 @@ shared_context "Agave" do
      :taxon_concept => @species1,
      :effective_at => '1983-07-29'
     )
-    create_eu_A_addition(
-     :taxon_concept => @species1,
-     :effective_at => '1983-07-29'
-    )
-
     create_cites_I_addition(
      :taxon_concept => @species2,
      :effective_at => '1983-07-29',
      :is_current => true
     )
-    create_eu_A_addition(
-     :taxon_concept => @species2,
-     :effective_at => '1983-07-29',
-     :is_current => true
-    )
-
     create_cites_I_deletion(
      :taxon_concept => @species1,
      :effective_at => '2007-09-13',
      :is_current => true
     )
+
+    create_eu_A_addition(
+     :taxon_concept => @species1,
+     :effective_at => '1997-06-01',
+     :is_current => false
+    )
+    create_eu_A_addition(
+     :taxon_concept => @species2,
+     :effective_at => '1997-06-01',
+     :is_current => false
+    )
     create_eu_A_deletion(
      :taxon_concept => @species1,
-     :effective_at => '2007-09-13',
+     :effective_at => '2008-04-11',
+     :is_current => false
+    )
+    create_eu_A_addition(
+     :taxon_concept => @species2,
+     :effective_at => '2013-08-10',
+     :event => reg2013,
      :is_current => true
     )
 
-    cms_designation
-    Sapi.rebuild
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
