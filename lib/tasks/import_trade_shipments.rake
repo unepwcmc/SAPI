@@ -110,87 +110,86 @@ end
 
 def populate_shipments
   puts "Inserting into trade_shipments table"
-  xx_id = GeoEntity.find_by_iso_code2('XX').id
   sql = <<-SQL
-            INSERT INTO trade_shipments(
-              legacy_shipment_number,
-              source_id,
-              unit_id,
-              purpose_id,
-              term_id ,
-              quantity,
-              appendix,
-              exporter_id,
-              importer_id,
-              country_of_origin_id,
-              reported_by_exporter,
-              year,
-              taxon_concept_id,
-              created_at,
-              updated_at,
-              reported_taxon_concept_id)
-            SELECT
-              si.shipment_number as legacy_shipment_number,
-              sources.id AS source_id,
-              units.id AS unit_id,
-              purposes.id AS purpose_id,
-              terms.id AS term_id,
-              quantity_1,
-              CASE
-              WHEN appendix='1' THEN 'I'
-              WHEN appendix='2' THEN 'II'
-              WHEN appendix='3' THEN 'III'
-              WHEN appendix='0' THEN '0'
-              WHEN appendix='N' THEN 'N'
-              WHEN appendix IS NULL THEN 'Null'
-              END AS appendix,
-              CASE
-              WHEN exporters.id IS NULL THEN #{xx_id}
-              ELSE exporters.id
-              END AS exporter_id,
-              CASE
-              WHEN importers.id IS NULL THEN #{xx_id}
-              ELSE importers.id
-              END AS importer_id,
-              CASE
-              WHEN origins.id IS NULL THEN #{xx_id}
-              ELSE origins.id
-              END AS country_of_origin_id,
-              CASE
-              WHEN reporter_type = 'E' THEN TRUE
-              ELSE FALSE
-              END AS reported_by_exporter,
-              shipment_year AS YEAR,
-              CASE
-              WHEN rank = '0' THEN jt.taxon_concept_id
-              ELSE species_plus_id
-              END AS taxon_concept_id,
-              to_date(shipment_year::varchar, 'yyyy') AS created_at,
-              to_date(shipment_year::varchar, 'yyyy') AS updated_at,
-              species_plus_id AS reported_taxon_concept_id
-                  FROM shipments_import si
-                  INNER JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code
-                  INNER JOIN taxon_concepts tc ON species_plus_id = tc.id
-                  LEFT JOIN trade_codes AS sources ON si.source_code = sources.code
-                  AND sources.type = 'Source'
-                  LEFT JOIN trade_codes AS units ON si.unit_code_1 = units.code
-                  AND units.type = 'Unit'
-                  LEFT JOIN trade_codes AS purposes ON si.purpose_code = purposes.code
-                  AND purposes.type = 'Purpose'
-                  INNER JOIN trade_codes AS terms ON si.term_code_1 = terms.code
-                  AND terms.type = 'Term'
-                  LEFT JOIN geo_entities AS exporters ON si.export_country_code = exporters.iso_code2
-                  LEFT JOIN geo_entities AS importers ON si.import_country_code = importers.iso_code2
-                  LEFT JOIN geo_entities AS origins ON si.import_country_code = origins.iso_code2
-                  LEFT JOIN
-                  (SELECT tr.taxon_concept_id,
-                    si.shipment_number
-                    FROM shipments_import si
-                    INNER JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code AND rank = '0'
-                    INNER JOIN taxon_relationships tr ON other_taxon_concept_id = nti.species_plus_id
-                    INNER JOIN taxon_relationship_types trt ON trt.id = taxon_relationship_type_id AND trt.name = 'HAS_SYNONYM'
-                    ) jt ON jt.shipment_number = si.shipment_number
-                  WHERE (rank = '0' AND jt.taxon_concept_id IS NOT NULL) OR (rank <> '0' AND tc.id IS NOT NULL)
+    INSERT INTO trade_shipments(
+      legacy_shipment_number,
+      source_id,
+      unit_id,
+      purpose_id,
+      term_id ,
+      quantity,
+      appendix,
+      exporter_id,
+      importer_id,
+      country_of_origin_id,
+      reported_by_exporter,
+      year,
+      taxon_concept_id,
+      created_at,
+      updated_at,
+      reported_taxon_concept_id)
+    SELECT
+      si.shipment_number as legacy_shipment_number,
+      sources.id AS source_id,
+      units.id AS unit_id,
+      purposes.id AS purpose_id,
+      terms.id AS term_id,
+      quantity_1,
+      CASE
+        WHEN appendix='1' THEN 'I'
+        WHEN appendix='2' THEN 'II'
+        WHEN appendix='3' THEN 'III'
+        WHEN appendix='0' THEN '0'
+        WHEN appendix='N' THEN 'N'
+        WHEN appendix IS NULL THEN 'Null'
+      END AS appendix,
+      CASE
+        WHEN exporters.id IS NULL THEN NULL
+        ELSE exporters.id
+      END AS exporter_id,
+      CASE
+        WHEN importers.id IS NULL THEN NULL
+        ELSE importers.id
+      END AS importer_id,
+      CASE
+        WHEN origins.id IS NULL THEN NULL
+        ELSE origins.id
+      END AS country_of_origin_id,
+      CASE
+        WHEN reporter_type = 'E' THEN TRUE
+        ELSE FALSE
+      END AS reported_by_exporter,
+      shipment_year AS YEAR,
+      CASE
+        WHEN rank = '0' THEN jt.taxon_concept_id
+        ELSE species_plus_id
+      END AS taxon_concept_id,
+      to_date(shipment_year::varchar, 'yyyy') AS created_at,
+      to_date(shipment_year::varchar, 'yyyy') AS updated_at,
+      species_plus_id AS reported_taxon_concept_id
+    FROM shipments_import si
+    INNER JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code
+    INNER JOIN taxon_concepts tc ON species_plus_id = tc.id
+    LEFT JOIN trade_codes AS sources ON si.source_code = sources.code
+      AND sources.type = 'Source'
+    LEFT JOIN trade_codes AS units ON si.unit_code_1 = units.code
+      AND units.type = 'Unit'
+    LEFT JOIN trade_codes AS purposes ON si.purpose_code = purposes.code
+      AND purposes.type = 'Purpose'
+    INNER JOIN trade_codes AS terms ON si.term_code_1 = terms.code
+      AND terms.type = 'Term'
+    LEFT JOIN geo_entities AS exporters ON si.export_country_code = exporters.iso_code2
+    LEFT JOIN geo_entities AS importers ON si.import_country_code = importers.iso_code2
+    LEFT JOIN geo_entities AS origins ON si.origin_country_code = origins.iso_code2
+    LEFT JOIN
+    (SELECT tr.taxon_concept_id,
+      si.shipment_number
+      FROM shipments_import si
+      INNER JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code AND rank = '0'
+      INNER JOIN taxon_relationships tr ON other_taxon_concept_id = nti.species_plus_id
+      INNER JOIN taxon_relationship_types trt ON trt.id = taxon_relationship_type_id AND trt.name = 'HAS_SYNONYM'
+      ) jt ON jt.shipment_number = si.shipment_number
+    WHERE (rank = '0' AND jt.taxon_concept_id IS NOT NULL) OR (rank <> '0' AND tc.id IS NOT NULL)
   SQL
   ActiveRecord::Base.connection.execute(sql)
   puts "Populating trade_shipments"
