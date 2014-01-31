@@ -4,7 +4,7 @@ class Trade::AnnualReportUploadSerializer < ActiveModel::Serializer
   # has_one :created_by
   # has_one :updated_by
   def file_name
-    File.basename(object.csv_source_file.path)
+    object.csv_source_file.try(:path) && File.basename(object.csv_source_file.path)
   end
   def created_at
     object.created_at.strftime("%d/%m/%y")

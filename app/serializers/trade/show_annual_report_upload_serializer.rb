@@ -4,7 +4,7 @@ class Trade::ShowAnnualReportUploadSerializer < ActiveModel::Serializer
   :file_name, :is_done, :has_primary_errors, :created_at, :updated_at
   has_many :validation_errors
   def file_name
-    File.basename(object.csv_source_file.path)
+    object.csv_source_file.try(:path) && File.basename(object.csv_source_file.path)
   end
   def has_primary_errors
     !validation_errors.index{ |ve| ve.is_primary }.nil?
