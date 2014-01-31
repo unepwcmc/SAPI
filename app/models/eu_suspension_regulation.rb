@@ -32,4 +32,7 @@ class EuSuspensionRegulation < Event
     eu_suspensions.count == 0
   end
 
+  def name_and_date
+    "#{self.name} (Effective from: #{self.effective_at.strftime("%d/%m/%Y")})"
+  end
 end
