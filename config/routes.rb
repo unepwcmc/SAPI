@@ -42,10 +42,12 @@ SAPI::Application.routes.draw do
     resources :events
     resources :eu_regulations do
       post :activate, :on => :member
+      post :deactivate, :on => :member
       resources :listing_changes, :only => [:index, :destroy]
     end
     resources :eu_suspension_regulations do
       post :activate, :on => :member
+      post :deactivate, :on => :member
       resources :eu_suspensions, :only => [:index, :destroy]
     end
     resources :cites_cops

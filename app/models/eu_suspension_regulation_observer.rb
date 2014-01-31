@@ -12,9 +12,4 @@ class EuSuspensionRegulationObserver < ActiveRecord::Observer
       )
     end
   end
-
-  def after_activate(eu_suspension_regulation)
-    EventActivationWorker.perform_async(eu_suspension_regulation.id)
-  end
-
 end

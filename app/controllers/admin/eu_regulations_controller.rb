@@ -9,6 +9,12 @@ class Admin::EuRegulationsController < Admin::EventsController
     render 'create'
   end
 
+  def deactivate
+    @eu_regulation = EuRegulation.find(params[:id])
+    @eu_regulation.deactivate!
+    render 'create'
+  end
+
   protected
     def collection
       @eu_regulations ||= end_of_association_chain.

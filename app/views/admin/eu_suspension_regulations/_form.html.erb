@@ -9,6 +9,8 @@
   <%= f.text_field :effective_at, :class => "datepicker",
     :value => @eu_suspension_regulation.effective_at_formatted
   %>
+  <label>Is current <%= f.check_box :is_current %></label>
+
   <% if @eu_suspension_regulation.new_record? %>
     <label>Copy eu suspensions from:</label>
     <%= f.select :eu_suspensions_event_id,
