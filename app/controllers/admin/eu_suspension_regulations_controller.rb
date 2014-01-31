@@ -26,6 +26,7 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
 
     def load_associations
       @eu_suspension_regulations_for_dropdown = EuSuspensionRegulation.
+        where(:is_current => true).
         order('effective_at DESC')
     end
 
