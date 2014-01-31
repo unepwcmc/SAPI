@@ -32,8 +32,21 @@ class EuSuspension < EuDecision
     end
   end
 
-  def start_date_formatted
-    start_date ? start_date.strftime('%d/%m/%Y') : ''
+  def start_date
+    start_event && start_event.effective_at
   end
 
+  def end_date
+    end_event && end_event.effective_at
+  end
+
+  def end_date_formatted
+    end_date ? end_date.strftime('%d/%m/%Y') : ''
+  end
+
+  def is_current
+    return false if !start_event
+    return start_event.effective_at <= Date.today && (
+      !end_event || end_event.effective_at > Date.today )
+  end
 end

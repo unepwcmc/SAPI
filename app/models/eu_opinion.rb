@@ -22,4 +22,5 @@
 #
 
 class EuOpinion < EuDecision
+  validates :start_date, presence: true
 end
