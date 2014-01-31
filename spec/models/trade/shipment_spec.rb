@@ -71,7 +71,7 @@ describe Trade::Shipment do
 
     before(:each) do
       # an animal
-      genus = create_cites_eu_genus(
+      @genus = create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus'),
         :parent => create_cites_eu_family(
           :parent => create_cites_eu_order(
@@ -81,7 +81,7 @@ describe Trade::Shipment do
       )
       @taxon_concept = create_cites_eu_species(
         :taxon_name => create(:taxon_name, :scientific_name => 'yolocatus'),
-        :parent => genus
+        :parent => @genus
       )
       country = create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
       @poland = create(:geo_entity,
@@ -104,6 +104,7 @@ describe Trade::Shipment do
           :is_current => true
         )
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
         create_species_name_appendix_year_validation
       end
       context "invalid" do
@@ -111,6 +112,15 @@ describe Trade::Shipment do
           create(
             :shipment,
             :taxon_concept => @taxon_concept, :appendix => 'II', :year => 2013
+          )
+        }
+        specify{ subject.warnings.should_not be_empty }
+      end
+      context "invalid" do
+        subject{
+          create(
+            :shipment,
+            :taxon_concept => @taxon_concept, :appendix => 'N', :year => 2013
           )
         }
         specify{ subject.warnings.should_not be_empty }
@@ -125,6 +135,51 @@ describe Trade::Shipment do
         specify{ subject.warnings.should be_empty }
       end
     end
+
+    context "when species name + appendix N + year" do
+      before(:each) do
+        create_eu_B_addition(
+          :taxon_concept => @taxon_concept,
+          :effective_at => '2013-01-01',
+          :event => reg2013,
+          :is_current => true
+        )
+        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
+        create_species_name_appendix_year_validation
+      end
+      context "valid" do
+        subject{
+          create(
+            :shipment,
+            :taxon_concept => @taxon_concept, :appendix => 'N', :year => 2013
+          )
+        }
+        specify{ subject.warnings.should be_empty }
+      end
+    end
+
+    context "when species name + appendix N + year" do
+      before(:each) do
+        @taxon_concept = create_cites_eu_species(
+          :taxon_name => create(:taxon_name, :scientific_name => 'nonsignificatus'),
+          :parent => @genus
+        )
+        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
+        create_species_name_appendix_year_validation
+      end
+      context "not CITES listed and not EU listed" do
+        subject{
+          create(
+            :shipment,
+            :taxon_concept => @taxon_concept, :appendix => 'N', :year => 2013
+          )
+        }
+        specify{ subject.warnings.should_not be_empty }
+      end
+    end
+
     context "when term + unit" do
       before(:each) do
         @cav = create(:term, :code => "CAV")

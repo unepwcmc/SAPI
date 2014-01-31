@@ -14,6 +14,7 @@ module Sapi
         :eu_species_listing_mview,
         :cms_species_listing_mview,
         :valid_species_name_appendix_year_mview,
+        :valid_species_name_annex_year_mview,
         :touch_cites_taxon_concepts,
         :touch_eu_taxon_concepts,
         :touch_cms_taxon_concepts
@@ -71,6 +72,7 @@ module Sapi
         :eu_listing,
         :taxon_concepts_mview,
         :eu_species_listing_mview,
+        :valid_species_name_annex_year_mview,
         :touch_eu_taxon_concepts
       ]
     end
