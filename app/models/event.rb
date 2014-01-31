@@ -48,12 +48,10 @@ class Event < ActiveRecord::Base
 
   def activate!
     update_attribute(:is_current, true)
-    notify_observers(:after_activate)
   end
 
   def deactivate!
     update_attribute(:is_current, false)
-    notify_observers(:after_deactivate)
   end
 
   protected

@@ -29,6 +29,17 @@ class EuRegulation < Event
   validates :effective_at, :presence => true
 
 
+
+  def activate!
+    super
+    notify_observers(:after_activate)
+  end
+
+  def deactivate!
+    super
+    notify_observers(:after_deactivate)
+  end
+
   def can_be_deleted?
     true
   end
