@@ -50,6 +50,7 @@ describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
          :is_current => true
         )
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
       end
 
       context "when split listing" do
@@ -88,8 +89,25 @@ describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
           ve.error_selector.should == {'species_name' => 'Loxodonta africana', 'appendix' => 'II', 'year' => '1996'}
         }
       end
+      context "when appendix N and CITES listed" do
+        before(:each) do
+          @sandbox_klass.create(
+            :species_name => 'Loxodonta africana', :appendix => 'N', :year => '1996'
+          )
+        end
+        subject{
+          create(:species_name_appendix_year_validation_rule)
+        }
+        specify{
+          subject.validation_errors(@aru).size.should == 1
+        }
+        specify{
+          ve = subject.validation_errors(@aru).first
+          ve.error_selector.should == {'species_name' => 'Loxodonta africana', 'appendix' => 'N', 'year' => '1996'}
+        }
+      end
     end
-    context "when NC / Annex D" do
+    context "when not CITES listed but EU listed" do
       include_context "Cedrela montana"
       before(:each) do
         @sandbox_klass.create(
@@ -101,6 +119,20 @@ describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
       }
       specify{
         subject.validation_errors(@aru).size.should == 0
+      }
+    end
+    context "when not CITES listed and not EU listed" do
+      include_context "Agave"
+      before(:each) do
+        @sandbox_klass.create(
+          :species_name => 'Agave arizonica', :appendix => 'N', :year => '2013'
+        )
+      end
+      subject{
+        create(:species_name_appendix_year_validation_rule)
+      }
+      specify{
+        subject.validation_errors(@aru).size.should == 1
       }
     end
   end

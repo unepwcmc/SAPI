@@ -34,12 +34,12 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
       v = Arel::Table.new('valid_species_name_annex_year_mview')
     else
       v = Arel::Table.new(valid_values_view)
-      actual_appendix = Arel::Nodes::NamedFunction.new('ANY', [v['appendix']])
-      appendix_node = Arel::Nodes::Equality.new(shipment.appendix, actual_appendix)
+      appendix_node = v['appendix'].eq(shipment.appendix)
     end
     
-    actual_year = v['year']
-    year_node = actual_year.eq(shipment.year)
+    effective_from = Arel::Nodes::NamedFunction.new "DATE_PART", ["year", v['effective_from']]
+    effective_to = Arel::Nodes::NamedFunction.new "DATE_PART", ["year", v['effective_to']]
+    year_node = effective_from.lteq(shipment.year).and(effective_to.gteq(shipment.year).or(effective_to.eq(nil)))
     actual_species_name = v['species_name']
     species_name_node = actual_species_name.eq(shipment.taxon_concept.full_name)
     conditions = if appendix_node
@@ -55,26 +55,24 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
 
   def year_join_node(s, v)
     sandbox_year = Arel::Nodes::NamedFunction.new "CAST", [ s['year'].as('INT') ]
-    actual_year = v['year']
-    year_node = sandbox_year.eq(actual_year)
+    effective_from = Arel::Nodes::NamedFunction.new "DATE_PART", ["year", v['effective_from']]
+    effective_to = Arel::Nodes::NamedFunction.new "DATE_PART", ["year", v['effective_to']]
+    effective_from.lteq(sandbox_year).and(effective_to.gteq(sandbox_year).or(effective_to.eq(nil)))
   end
 
   def species_name_join_node(s, v)
-    sandbox_species_name = s['species_name']
-    actual_species_name = v['species_name']
-    species_name_node = sandbox_species_name.eq(actual_species_name)
+    s['species_name'].eq(v['species_name'])
   end
 
   def appendix_join_node(s, v)
-    sandbox_appendix = s['appendix']
-    actual_appendix = Arel::Nodes::NamedFunction.new('ANY', [v['appendix']])
-    appendix_node = sandbox_appendix.eq(actual_appendix)
+    s['appendix'].eq(v['appendix'])
   end
 
   def appendix_n_join_node(s, v)
     s['appendix'].eq('N')
   end
 
+  # rows that have a match on species name + appendix + year in valid appendix mview
   def valid_values_arel(s)
     v = Arel::Table.new(valid_values_view)
     join_conditions = appendix_join_node(s, v).and(year_join_node(s, v)).
@@ -82,8 +80,20 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
     s.project(s['*']).join(v).on(join_conditions)
   end
 
+  # rows reported at appendix N
+  # which have a match on species name + year in valid annex mview
+  # and do not have a match on species name + year in valid appendix mview
   def valid_appendix_n_values_arel(s)
     v = Arel::Table.new('valid_species_name_annex_year_mview')
+    join_conditions = appendix_n_join_node(s, v).and(year_join_node(s, v)).
+      and(species_name_join_node(s, v))
+    s.project(s['*']).join(v).on(join_conditions).except(
+      invalid_appendix_n_values_arel(s)
+    )
+  end
+
+  def invalid_appendix_n_values_arel(s)
+    v = Arel::Table.new(valid_values_view)
     join_conditions = appendix_n_join_node(s, v).and(year_join_node(s, v)).
       and(species_name_join_node(s, v))
     s.project(s['*']).join(v).on(join_conditions)
@@ -99,10 +109,16 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
     end
     not_null_conds = not_null_nodes.shift
     not_null_nodes.each{ |n| not_null_conds = not_null_conds.and(n) }
+    
+    # for some reason Arel doesn't like chaining set operations (union, except)
+    # so to make this work I'm wraping them in subqueries
     s.project('*').where(not_null_conds).except(
       s.project('*').from(
-        valid_values_arel(s).union(valid_appendix_n_values_arel(s)).to_sql +
-        'AS valid_values'
+        valid_values_arel(s).union(
+          s.project('*').from(
+            valid_appendix_n_values_arel(s).to_sql + 'AS valid_nc_values'
+          )
+        ).to_sql + 'AS valid_values'
       )
     )
   end
