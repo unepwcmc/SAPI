@@ -4,7 +4,7 @@ Trade.ValidationErrorsView = Ember.CollectionView.extend
   itemViewClass: Ember.View.extend
     templateName: 'trade/validation_error'
   emptyView: Ember.View.extend
-    template: Ember.Handlebars.compile("No results")
+    template: Ember.Handlebars.compile("No errors detected")
 
   showMessage: 'Show errors'
   hideMessage: 'Hide errors'
