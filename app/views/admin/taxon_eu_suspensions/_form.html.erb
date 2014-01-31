@@ -44,8 +44,10 @@
   <div class="control-group">
     <label class="control-label">Validity</label>
     <div class="controls">
-      <%= f.text_field :start_date, :class => "eu_suspension datepicker", :value =>  @eu_suspension.start_date && @eu_suspension.start_date.strftime('%d/%m/%Y'), :placeholder => 'Start Date' %>
-      <%= f.text_field :end_date, :class => "eu_suspension datepicker", :value => @eu_suspension.end_date && @eu_suspension.end_date.strftime('%d/%m/%Y'), :placeholder => 'End Date' %>
+      <%= f.text_field :start_date, :class => "eu_suspension",
+        :value => @eu_suspension.start_date_formatted, :disabled => true %>
+      <%= f.text_field :end_date, :class => "eu_suspension",
+        :value => @eu_suspension.end_date_formatted, :disabled => true %>
     </div>
   </div>
 
