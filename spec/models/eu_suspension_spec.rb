@@ -27,14 +27,31 @@ describe EuSuspension do
       specify { eu_suspension.is_current.should be_false }
     end
 
+    context "when start_event is set but is not current" do
+      let(:start_event) {
+        create(:event,
+               :effective_at => 2.days.ago,
+               :is_current => false)
+      }
+      let(:eu_suspension) {
+        create(:eu_suspension,
+               :start_event => start_event,
+               :end_event => nil)
+      }
+
+      specify { eu_suspension.is_current.should be_false }
+    end
+
     context "when start_event is set but date is in past or present" do
       let(:start_event) {
         create(:event,
-               :effective_at => Date.today)
+               :effective_at => Date.today,
+               :is_current => true)
       }
       let(:start_event2) {
         create(:event,
-               :effective_at => 1.days.ago)
+               :effective_at => 1.days.ago,
+               :is_current => true)
       }
       let(:eu_suspension) {
         create(:eu_suspension,
@@ -91,7 +108,8 @@ describe EuSuspension do
       }
       let(:start_event) {
         create(:event,
-               :effective_at => 1.day.ago)
+               :effective_at => 1.day.ago,
+               :is_current => true)
       }
       let(:eu_suspension) {
         create(:eu_suspension,
