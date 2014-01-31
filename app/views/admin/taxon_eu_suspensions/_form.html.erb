@@ -19,8 +19,18 @@
     <%= f.label :start_event_id, "Suspension Regulation", :class => 'control-label' %>
     <div class="controls">
       <%= f.select :start_event_id,
-        options_from_collection_for_select(@eu_regulations, :id, :name, @eu_suspension.start_event_id),
+        options_from_collection_for_select(@eu_regulations, :id, :name_and_date, @eu_suspension.start_event_id),
         {}, :class => "select2"
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :end_event_id, "Terminating Regulation", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :end_event_id,
+        options_from_collection_for_select(@eu_regulations, :id, :name_and_date, @eu_suspension.end_event_id),
+        {:include_blank => true}, { :class => "select2", :style => 'width: 295px' }
       %>
     </div>
   </div>
@@ -38,16 +48,6 @@
         { :include_blank => true },
         {:class => 'eu_suspension select2', :style => 'width: 220px' }
       %>
-    </div>
-  </div>
-
-  <div class="control-group">
-    <label class="control-label">Validity</label>
-    <div class="controls">
-      <%= f.text_field :start_date, :class => "eu_suspension",
-        :value => @eu_suspension.start_date_formatted, :disabled => true %>
-      <%= f.text_field :end_date, :class => "eu_suspension",
-        :value => @eu_suspension.end_date_formatted, :disabled => true %>
     </div>
   </div>
 
