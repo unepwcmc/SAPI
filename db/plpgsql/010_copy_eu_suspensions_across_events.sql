@@ -27,8 +27,6 @@ CREATE OR REPLACE FUNCTION copy_eu_suspensions_across_events(
       RETURNING id, source_id
     )
 
-    UPDATE eu_decisions SET is_current = false WHERE start_event_id = from_event_id AND type = 'EuSuspension';
-    UPDATE eu_decisions SET end_date = to_event.effective_at WHERE start_event_id = from_event_id AND type = 'EuSuspension';
     UPDATE eu_decisions SET end_event_id = to_event.id WHERE start_event_id = from_event_id AND type = 'EuSuspension';
 
     END;
