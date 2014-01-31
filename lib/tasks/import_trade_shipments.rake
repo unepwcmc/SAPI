@@ -181,7 +181,7 @@ def populate_shipments
       AND terms.type = 'Term'
     LEFT JOIN geo_entities AS exporters ON si.export_country_code = exporters.iso_code2
     LEFT JOIN geo_entities AS importers ON si.import_country_code = importers.iso_code2
-    LEFT JOIN geo_entities AS origins ON si.import_country_code = origins.iso_code2
+    LEFT JOIN geo_entities AS origins ON si.origin_country_code = origins.iso_code2
     LEFT JOIN
     (SELECT tr.taxon_concept_id,
       si.shipment_number
