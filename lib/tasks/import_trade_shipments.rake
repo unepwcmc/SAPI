@@ -110,7 +110,6 @@ end
 
 def populate_shipments
   puts "Inserting into trade_shipments table"
-  xx_id = GeoEntity.find_by_iso_code2('XX').id
   sql = <<-SQL
     INSERT INTO trade_shipments(
       legacy_shipment_number,
@@ -145,15 +144,15 @@ def populate_shipments
         WHEN appendix IS NULL THEN 'Null'
       END AS appendix,
       CASE
-        WHEN exporters.id IS NULL THEN #{xx_id}
+        WHEN exporters.id IS NULL THEN NULL
         ELSE exporters.id
       END AS exporter_id,
       CASE
-        WHEN importers.id IS NULL THEN #{xx_id}
+        WHEN importers.id IS NULL THEN NULL
         ELSE importers.id
       END AS importer_id,
       CASE
-        WHEN origins.id IS NULL THEN #{xx_id}
+        WHEN origins.id IS NULL THEN NULL
         ELSE origins.id
       END AS country_of_origin_id,
       CASE
