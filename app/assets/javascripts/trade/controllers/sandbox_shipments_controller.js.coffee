@@ -9,7 +9,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   columns: [
     'appendix', 'species_name',
     'term_code', 'quantity',  'unit_code',
-    'tradingPartner', 'country_of_origin',
+    'trading_partner', 'country_of_origin',
     'import_permit', 'export_permit', 'origin_permit',
     'purpose_code', 'source_code', 'year'
   ]
