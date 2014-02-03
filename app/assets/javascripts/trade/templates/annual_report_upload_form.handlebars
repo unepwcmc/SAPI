@@ -17,8 +17,8 @@
 
 <span class="btn btn-success fileinput-button">
   <i class="icon-plus icon-white"></i>
-  <span>Select file</span>
-  {{view Trade.AnnualReportUploadFieldView name="annual_report_upload[csv_source_file]"}}
+  <span>Select file</span> {{view.fileInput.value}}
+  {{view view.fileInput name="annual_report_upload[csv_source_file]"}}
 </span>
 <div id="upload-message"></div>
 
