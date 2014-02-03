@@ -5,7 +5,11 @@ Trade.ApplicationController = Ember.Controller.extend
   # example: @get('controllers.application').notify({title: "Error!", message: "An error occurred in foobar.", type: "alert-error"})
   #
   notify: (options) ->
-    @set('notification', options)
+    # do not display message in loading route, wait until any loading is done.
+    routeName = this.get('routeName')
+    if (routeName != "loading")
+      @set('notification', options)
+    
 
   actions:
     # close notification alert
