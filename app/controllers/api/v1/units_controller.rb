@@ -3,7 +3,7 @@ class Api::V1::UnitsController < ApplicationController
       {:locale => "en"}.merge(c.params.select{|k,v| !v.blank? && "locale" == k})
     }
   def index
-    @units = Unit.all
+    @units = Unit.all(:order => "code")
     render :json => @units,
       :each_serializer => Species::UnitSerializer,
       :meta => {:total => @units.count}
