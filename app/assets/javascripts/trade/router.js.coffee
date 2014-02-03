@@ -24,3 +24,5 @@ Trade.Router.map (match)->
       'countries_of_origin_ids[]', 'reporter_type', 'permits_ids[]', 'quantity', 
       'unit_blank', 'purpose_blank', 'source_blank', 'country_of_origin_blank']
   }
+
+Trade.LoadingRoute = Ember.Route.extend()
