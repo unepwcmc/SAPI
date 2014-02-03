@@ -11,6 +11,16 @@
 </div>
 
 <div class="container">
+  {{#if notification}}
+    <div {{bindAttr class=":alert :fade :in notification.type"}} id="notification">
+      <a class="close" data-dismiss="alert" {{action "closeNotification"}}>&times;</a>
+      {{#if notification.title}}
+        <h3>{{notification.title}}</h3>
+      {{/if}}
+      {{notification.message}}
+    </div>
+  {{/if}}
+
   {{outlet}}
   <hr>
   <footer>

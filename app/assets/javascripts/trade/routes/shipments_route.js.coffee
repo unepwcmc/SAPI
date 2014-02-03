@@ -1,4 +1,4 @@
-Trade.ShipmentsRoute = Ember.Route.extend Trade.QueryParams,
+Trade.ShipmentsRoute = Trade.BeforeRoute.extend Trade.QueryParams,
 
   beforeModel: ->
     (new Ember.RSVP.Promise((resolve) =>
