@@ -96,10 +96,10 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, 
       onSuccess = => 
         @set('sandboxShipmentsSubmitting', false)
         @transitionToRoute('shipments', {queryParams: page: 1})
-        @flashSuccess("#{@get('numberOfRows')} shipments submitted.", true)
+        @flashSuccess(message: "#{@get('numberOfRows')} shipments submitted.", persists: true)
       onError = (xhr, msg, error) =>
         @set('sandboxShipmentsSubmitting', false)
-        @flashError(xhr.responseText)
+        @flashError(message: xhr.responseText)
       if @get('content.isDirty')
         alert "You have unsaved changes, please save those before submitting your shipments"
       else if @get('content.hasPrimaryErrors')

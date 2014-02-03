@@ -264,13 +264,13 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
       shipment.one('didCreate', this, ->
         @set('currentShipment', null)
         $('.shipment-form-modal').modal('hide')
-        @flashSuccess('Successfully created shipment.')
+        @flashSuccess(message: 'Successfully created shipment.')
         @resetFilters()
       )
       shipment.one('didUpdate', this, ->
         @set('currentShipment', null)
         $('.shipment-form-modal').modal('hide')
-        @flashSuccess('Successfully updated shipment.')
+        @flashSuccess(message: 'Successfully updated shipment.')
         @resetFilters()
       )
 
@@ -287,7 +287,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
           shipment.get('transaction').commit()
           shipment.one('didDelete', this, ->
             @set('currentShipment', null)
-            @flashSuccess('Successfully deleted shipment.')
+            @flashSuccess(message: 'Successfully deleted shipment.')
             @resetFilters()
           )
 
@@ -297,7 +297,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
            'json'
         .success( =>
           @set('currentShipment', null)
-          @flashSuccess('Successfully deleted filtered shipments.')
+          @flashSuccess(message: 'Successfully deleted filtered shipments.')
           @resetFilters()
         )
         #.error( (xhr, msg, error) =>

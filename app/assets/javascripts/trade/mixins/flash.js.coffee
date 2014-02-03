@@ -2,17 +2,19 @@ Trade.Flash = Ember.Mixin.create
   needs: 'application'
   application: Ember.computed.alias('controllers.application')
   notification: Ember.computed.alias('controllers.application.notification')
-  flashSuccess: (msg, persists) ->
+  flashSuccess: (options) ->
     @get('application').notify({
-      message: msg,
+      title: "Done"
+      message: options.message,
       type: "alert-success",
-      persists: persists || false
+      persists: options.persists
     })
   flashError: (msg, persists) ->
     @get('application').notify({
-      message: msg,
+      title: "Error"
+      message: options.message,
       type: "alert-error",
-      persists: persists || false
+      persists: options.persists
     })
   flashClear: ->
     @get('application').send('closeNotification')
