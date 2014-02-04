@@ -1,4 +1,4 @@
-Trade.AnnualReportUploadRoute = Ember.Route.extend
+Trade.AnnualReportUploadRoute = Trade.BeforeRoute.extend
   model: (params) ->
     @controllerFor('geoEntities').load()
     @controllerFor('sources').set('content', Trade.Source.find())

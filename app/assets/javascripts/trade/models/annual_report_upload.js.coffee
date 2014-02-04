@@ -2,6 +2,7 @@ Trade.AnnualReportUpload = DS.Model.extend
   numberOfRows: DS.attr('number')
   pointOfView: DS.attr('string')
   tradingCountry: DS.belongsTo('Trade.GeoEntity', {key: 'trading_country_id'})
+  fileName: DS.attr('string')
   hasPrimaryErrors: DS.attr('boolean')
   createdAt: DS.attr('string')
   updatedAt: DS.attr('string')
@@ -13,7 +14,8 @@ Trade.AnnualReportUpload = DS.Model.extend
   summary: (->
     @get('tradingCountry.name') + ' (' + @get('pointOfView') + '), ' +
     @get('numberOfRows') + ' shipments ' +
-    ' uploaded on ' + @get('createdAt') + ' by TODO'
+    ' uploaded on ' + @get('createdAt') + ' by TODO (' +
+    @get('fileName') + ')'
   ).property('numberOfRows', 'tradingCountry.name', 'pointOfView')
 
 Trade.Adapter.map('Trade.AnnualReportUpload', {

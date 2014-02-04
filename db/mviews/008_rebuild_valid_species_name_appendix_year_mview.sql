@@ -30,56 +30,61 @@ CREATE OR REPLACE FUNCTION rebuild_valid_species_name_appendix_year_designation_
     END IF;
     mview_name := 'valid_species_name_' || appendix || '_year_mview';
 
-    EXECUTE 'DROP TABLE IF EXISTS tmp_' || mview_name;
+    EXECUTE 'DROP TABLE IF EXISTS ' || designation_name || '_listing_changes_intervals_mview;';
+
+    EXECUTE 'CREATE TEMP TABLE ' || designation_name || '_listing_changes_intervals_mview AS
+    WITH additions_and_deletions AS (
+      SELECT change_type_name, effective_at, species_listing_name, taxon_concept_id 
+      FROM ' || designation_name || '_listing_changes_mview
+      WHERE change_type_name = ''ADDITION'' OR change_type_name = ''DELETION''
+    ), additions AS (
+      SELECT change_type_name, effective_at, species_listing_name, taxon_concept_id
+      FROM additions_and_deletions
+      WHERE change_type_name = ''ADDITION''
+    )
+    SELECT a.taxon_concept_id, a.species_listing_name, a.effective_at AS effective_from, MIN(ad.effective_at) AS effective_to 
+    FROM additions a
+    LEFT JOIN additions_and_deletions ad
+    ON a.taxon_concept_id = ad.taxon_concept_id
+    AND a.effective_at < ad.effective_at
+    GROUP BY a.taxon_concept_id, a.species_listing_name, a.effective_at
+    ORDER BY taxon_concept_id, effective_from;';
+
+    EXECUTE 'DROP TABLE IF EXISTS tmp_' || mview_name || ';';
 
     EXECUTE 'CREATE TABLE tmp_' || mview_name || ' AS
-    WITH appendices AS (
+    WITH RECURSIVE unmerged_intervals AS (
       SELECT
-        taxon_concept_id,
-        ARRAY_AGG(species_listing_name)::TEXT[] AS appendix,
-        EXTRACT(YEAR FROM effective_at)::INT AS appendix_year
-      FROM '|| designation_name || '_listing_changes_mview lc
-      WHERE change_type_name = ''ADDITION''
-      GROUP BY taxon_concept_id, EXTRACT(YEAR FROM effective_at)
+      taxon_concept_id, species_listing_name, effective_from, effective_to
+      FROM ' || designation_name || '_listing_changes_intervals_mview
+
+      UNION
+
+      SELECT l.taxon_concept_id, l.species_listing_name, l.effective_from, r.effective_to 
+      FROM unmerged_intervals l
+      JOIN ' || designation_name || '_listing_changes_intervals_mview r
+      ON r.taxon_concept_id = l.taxon_concept_id
+      AND r.species_listing_name = l.species_listing_name
+      AND r.effective_from = l.effective_to
+    ), left_merged_intervals AS (
+      SELECT taxon_concept_id, species_listing_name, MIN(effective_from) AS effective_from, effective_to
+      FROM unmerged_intervals
+      GROUP BY taxon_concept_id, species_listing_name, effective_to
+    ), merged_intervals AS (
+      SELECT taxon_concept_id, species_listing_name, effective_from, 
+      CASE WHEN EVERY(effective_to IS NOT NULL) THEN MAX(effective_to) ELSE NULL END AS effective_to 
+      FROM left_merged_intervals
+      GROUP BY taxon_concept_id, species_listing_name, effective_from
     )
-    SELECT
-      taxon_concepts.full_name species_name,
-      taxon_concepts.id taxon_concept_id,
-      appendix_year "year",
-      CASE
-        WHEN appendix IS NOT NULL THEN appendix
-        ELSE FIRST_VALUE(appendix) OVER (PARTITION BY taxon_concept_id, c ORDER BY appendix_year)
-      END ' || appendix || '
-    FROM (
-      SELECT
-          a.taxon_concept_id,
-          a.appendix_year,
-          s.appendix,
-          COUNT(appendix) OVER (PARTITION BY a.taxon_concept_id ORDER BY a.appendix_year) c
-      FROM (
-        SELECT taxon_concept_id, g.d::INT appendix_year
-        FROM
-        (
-            SELECT DISTINCT taxon_concept_id
-            FROM appendices
-        ) s
-        CROSS JOIN
-          generate_series(
-            1975,
-            EXTRACT(YEAR FROM NOW())::INT,
-            1
-          ) g(d)
-        ) a
-        LEFT JOIN appendices s
-        ON a.taxon_concept_id = s.taxon_concept_id
-        AND a.appendix_year = s.appendix_year
-    ) s
-    JOIN taxon_concepts ON taxon_concepts.id = s.taxon_concept_id';
+    SELECT taxon_concept_id, taxon_concepts.full_name AS species_name, species_listing_name AS ' || appendix || ', effective_from, effective_to
+    FROM merged_intervals
+    JOIN taxon_concepts
+    ON taxon_concepts.id = merged_intervals.taxon_concept_id
+    ORDER BY taxon_concept_id, ' || appendix || ', effective_from, effective_to;';
 
-    EXECUTE 'CREATE INDEX ON tmp_' || mview_name || ' (species_name, ' || appendix || ', year)';
+    EXECUTE 'CREATE INDEX ON tmp_' || mview_name || ' (species_name, ' || appendix || ', effective_from, effective_to);';
 
-    EXECUTE 'DROP TABLE IF EXISTS ' || mview_name;
-    EXECUTE 'ALTER TABLE tmp_' || mview_name || ' RENAME TO ' || mview_name;
-
+    EXECUTE 'DROP TABLE IF EXISTS ' || mview_name || ';';
+    EXECUTE 'ALTER TABLE tmp_' || mview_name || ' RENAME TO ' || mview_name || ';';
   END;
 $$;

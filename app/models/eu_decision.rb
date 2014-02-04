@@ -35,9 +35,10 @@ class EuDecision < ActiveRecord::Base
   belongs_to :source, :class_name => 'TradeCode'
   belongs_to :term, :class_name => 'TradeCode'
   belongs_to :start_event, :class_name => 'Event'
-  has_many :eu_decision_confirmations
+  belongs_to :end_event, :class_name => 'Event'
+  has_many :eu_decision_confirmations,
+    :dependent => :destroy
 
-  validates :start_date, presence: true
   validates :taxon_concept, presence: true
   validates :eu_decision_type, presence: true
 

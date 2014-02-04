@@ -9,6 +9,12 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
     render 'create'
   end
 
+  def deactivate
+    @eu_suspension_regulation = EuSuspensionRegulation.find(params[:id])
+    @eu_suspension_regulation.deactivate!
+    render 'create'
+  end
+
   protected
     def collection
       @eu_suspension_regulations ||= end_of_association_chain.
@@ -20,6 +26,7 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
 
     def load_associations
       @eu_suspension_regulations_for_dropdown = EuSuspensionRegulation.
+        where(:is_current => true).
         order('effective_at DESC')
     end
 

@@ -2,11 +2,11 @@
 #
 # Table name: trade_permits
 #
-#  id            :integer          not null, primary key
-#  number        :string(255)      not null
-#  geo_entity_id :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id                   :integer          not null, primary key
+#  number               :string(255)      not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  legacy_reporter_type :string(255)
 #
 
 class Trade::Permit < ActiveRecord::Base
