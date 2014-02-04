@@ -9,22 +9,19 @@ Trade.AnnualReportUploadFormView = Ember.View.extend
     type: 'file'
     attributeBindings: ['name', 'controller']
 
-    change: (e) ->
-      console.log('hello change')
-
     didInsertElement: ()->
       controller = @get('parentView.controller')
       @.$().fileupload
         dataType: 'json'
 
-        add: (e, data) ->
+        add: (e, data) =>
+          @set('parentView.fileName', data.files[0] && data.files[0].name)
           $("input[type=submit]").attr("disabled", null)
             .click( (e) ->
                 e.preventDefault()
                 $('#upload-message').text('Uploading...')
                 data.submit()
             )
-
         done: (e, data) =>
           $.each data.result.files, (index, file) =>
             if file.id != undefined

@@ -17,9 +17,10 @@
 
 <span class="btn btn-success fileinput-button">
   <i class="icon-plus icon-white"></i>
-  <span>Select file</span> {{view.fileInput.value}}
+  <span>Select file</span>
   {{view view.fileInput name="annual_report_upload[csv_source_file]"}}
 </span>
+<span>{{view.fileName}}</span>
 <div id="upload-message"></div>
 
 <input type="submit" value="Upload" disabled="disabled">
