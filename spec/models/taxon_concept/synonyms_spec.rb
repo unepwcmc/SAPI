@@ -106,10 +106,7 @@ describe TaxonConcept do
       specify { @synonym.full_name.should == 'Lolcatus lolus furiatus' }
       context "overnight calculations" do
         before(:each) do
-          cites
-          eu
-          cms_designation
-          Sapi.rebuild
+          Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         end
         # should not modify a synonym's full name overnight
         specify { @synonym.reload.full_name.should == 'Lolcatus lolus furiatus' }

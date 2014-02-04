@@ -4,6 +4,14 @@ describe TaxonConcept do
   context "Falconiformes" do
     include_context "Falconiformes"
 
+    context "TAXONOMY" do
+      describe :rank_name do
+        context "for Falco hybrid" do
+          specify { @hybrid.rank_name.should == Rank::GENUS }
+        end
+      end
+    end
+
     context "LISTING" do
       describe :cites_listing do
         context "for order Falconiformes" do
@@ -104,6 +112,9 @@ describe TaxonConcept do
         end
         context "for family Falconidae" do
           specify { @family2.cites_show.should be_true }
+        end
+        context "for Falco hybrid" do
+          specify { @hybrid.cites_show.should be_false }
         end
       end
 
