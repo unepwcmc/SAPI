@@ -130,6 +130,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
   purposeBlank: false
   sourceBlank: false
   countryOfOriginBlank: false
+  permitBlank: false
   termQuery: null
   autoCompleteTerms: ( ->
     @autoCompleteObjects('controllers.terms', 'code', @get('termQuery'))
@@ -159,7 +160,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
     'selectedPurposes.@each', 'purposeBlank',
     'selectedImporters.@each', 'selectedExporters.@each',
     'selectedCountriesOfOrigin.@each', 'countryOfOriginBlank',
-    'selectedPermits.@each'
+    'selectedPermits.@each', 'permitBlank'
   )
 
   # sth amiss with array query params, which is why we pass a different
