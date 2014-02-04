@@ -1,8 +1,8 @@
 namespace :import do
   desc "Import names from csv file"
-  task :names_for_trade => [:environment] do
-    TMP_TABLE = "names_for_transfer_import"
-    file = "lib/files/names_for_transfer.csv"
+  task :trade_species_mapping => [:environment] do
+    TMP_TABLE = "trade_species_mapping_import"
+    file = "lib/files/trade_species_mapping_29114.csv"
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
@@ -168,7 +168,7 @@ def populate_shipments
       to_date(shipment_year::varchar, 'yyyy') AS updated_at,
       species_plus_id AS reported_taxon_concept_id
     FROM shipments_import si
-    INNER JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code
+    INNER JOIN trade_species_mapping_import nti ON si.cites_taxon_code = nti.cites_taxon_code
     INNER JOIN taxon_concepts tc ON species_plus_id = tc.id
     LEFT JOIN trade_codes AS sources ON si.source_code = sources.code
       AND sources.type = 'Source'
@@ -185,7 +185,7 @@ def populate_shipments
     (SELECT tr.taxon_concept_id,
       si.shipment_number
       FROM shipments_import si
-      INNER JOIN names_for_transfer_import nti ON si.cites_taxon_code = nti.cites_taxon_code AND rank = '0'
+      INNER JOIN trade_species_mapping_import nti ON si.cites_taxon_code = nti.cites_taxon_code AND rank = '0'
       INNER JOIN taxon_relationships tr ON other_taxon_concept_id = nti.species_plus_id
       INNER JOIN taxon_relationship_types trt ON trt.id = taxon_relationship_type_id AND trt.name = 'HAS_SYNONYM'
       ) jt ON jt.shipment_number = si.shipment_number
