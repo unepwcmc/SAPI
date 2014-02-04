@@ -21,8 +21,9 @@ Trade.Router.map (match)->
       'page', 'taxon_concepts_ids[]', 'appendices[]', 'time_range_start',
       'time_range_end', 'terms_ids[]', 'units_ids[]', 'purposes_ids[]', 
       'sources_ids[]', 'importers_ids[]', 'exporters_ids[]', 
-      'countries_of_origin_ids[]', 'reporter_type', 'permits_ids[]', 'quantity', 
-      'unit_blank', 'purpose_blank', 'source_blank', 'country_of_origin_blank']
+      'countries_of_origin_ids[]', 'reporter_type', 'permits_ids[]',
+      'quantity', 'unit_blank', 'purpose_blank', 'source_blank',
+      'country_of_origin_blank', 'permit_blank']
   }
 
 Trade.LoadingRoute = Ember.Route.extend()

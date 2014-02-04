@@ -1,77 +1,7 @@
 require 'spec_helper'
 describe Trade::Filter do
-  before(:each) do
-    @family = create_cites_eu_family
-    @genus1 = create_cites_eu_genus(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus'),
-      :parent => @family
-    )
-    @taxon_concept1 = create_cites_eu_species(
-      :taxon_name => create(:taxon_name, :scientific_name => 'abstractus'),
-      :parent => @genus1
-    )
-    @genus2 = create_cites_eu_genus(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Nullificus'),
-      :parent => @family
-    )
-    @taxon_concept2 = create_cites_eu_species(
-      :taxon_name => create(:taxon_name, :scientific_name => 'totalus'),
-      :parent => @genus2
-    )
+  include_context 'Shipments'
 
-    country = create(:geo_entity_type, :name => 'COUNTRY')
-    @argentina = create(:geo_entity,
-                        :geo_entity_type => country,
-                        :name => 'Argentina',
-                        :iso_code2 => 'AR'
-                       )
-
-    @portugal = create(:geo_entity,
-                       :geo_entity_type => country,
-                       :name => 'Portugal',
-                       :iso_code2 => 'PT'
-                      )
-
-    @term = create(:term, :code => 'CAV')
-    @unit = create(:unit, :code => 'KIL')
-    @purpose = create(:purpose, :code => 'T')
-    @source = create(:source, :code => 'W')
-    @import_permit = create(:permit, :number => 'AAA')
-    @export_permit1 = create(:permit, :number => 'BBB')
-    @export_permit2 = create(:permit, :number => 'CCC')
-    @shipment1 = create(
-      :shipment,
-      :taxon_concept => @taxon_concept1,
-      :appendix => 'I',
-      :purpose => @purpose,
-      :source => @source,
-      :term => @term,
-      :unit => @unit,
-      :importer => @argentina,
-      :exporter => @portugal,
-      :country_of_origin => @argentina,
-      :year => 2012,
-      :reported_by_exporter => true,
-      :import_permit_number => 'AAA',
-      :export_permit_number=> 'BBB;CCC',
-      :quantity => 20
-    )
-    @shipment2 = create(
-      :shipment,
-      :taxon_concept => @taxon_concept2,
-      :appendix => 'II',
-      :purpose => @purpose,
-      :source => @source,
-      :term => @term,
-      :unit => @unit,
-      :importer => @portugal,
-      :exporter => @argentina,
-      :country_of_origin => @portugal,
-      :year => 2013,
-      :reported_by_exporter => false,
-      :quantity => 10
-    )
-  end
   describe :results do
     context "when searching by taxon concepts ids" do
       before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
@@ -193,9 +123,20 @@ describe Trade::Filter do
 
 
     context "when searching by permit" do
-      subject { Trade::Filter.new({:internal => true, :permits_ids => [@export_permit1.id]}).results }
-      specify { subject.should include(@shipment1) }
-      specify { subject.length.should == 1 }
+      context "when permit number" do
+        subject { Trade::Filter.new({:internal => true, :permits_ids => [@export_permit1.id]}).results }
+        specify { subject.should include(@shipment1) }
+        specify { subject.length.should == 1 }
+      end
+      context "when blank" do
+        subject { Trade::Filter.new({:internal => true, :permit_blank => true}).results }
+        specify { subject.should include(@shipment2) }
+        specify { subject.length.should == 1 }
+      end
+      context "when both permit number and blank" do
+        subject { Trade::Filter.new({:internal => true, :permits_ids => [@export_permit1.id], :permit_blank => true}).results }
+        specify { subject.length.should == 2 }
+      end
     end
 
     context "when searching by quantity" do
