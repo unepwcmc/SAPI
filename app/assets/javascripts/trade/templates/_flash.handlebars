@@ -1,0 +1,9 @@
+{{#if notification}}
+  <div {{bindAttr class=":alert :fade :in notification.type"}} id="notification">
+    <a class="close" data-dismiss="alert" {{action "flashClear"}}>&times;</a>
+    {{#if notification.title}}
+      <h3>{{notification.title}}</h3>
+    {{/if}}
+    {{notification.message}}
+  </div>
+{{/if}}

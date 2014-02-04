@@ -1,4 +1,4 @@
-Trade.SandboxShipmentsRoute = Ember.Route.extend Trade.Utils, 
+Trade.SandboxShipmentsRoute = Trade.BeforeRoute.extend Trade.Utils, 
   
   model: (params, queryParams, transition) ->
     Trade.SandboxShipment.find(queryParams)

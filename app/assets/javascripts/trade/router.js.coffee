@@ -25,4 +25,19 @@ Trade.Router.map (match)->
       'unit_blank', 'purpose_blank', 'source_blank', 'country_of_origin_blank']
   }
 
+  @route('promise');
+
+Trade.PromiseRoute = Ember.Route.extend
+  model: () ->
+    new Ember.RSVP.Promise((resolve) ->
+      Ember.run.later(() ->
+        resolve()
+      , 100)
+    )
+
 Trade.LoadingRoute = Ember.Route.extend()
+
+Trade.BeforeRoute = Ember.Route.extend
+  # close any open notifications before a route loads
+  activate: ->
+    @controllerFor('application').send('closeNotification')
