@@ -1,4 +1,4 @@
-Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trade.ShipmentPagination,
+Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trade.ShipmentPagination, Trade.Flash,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
@@ -240,14 +240,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
     @endPropertyChanges()
     @openShipmentsPage queryParams 
 
-  flashMessage: (msg) ->
-    $('#flash').html('
-      <div class="alert alert-success fade in">
-        <a class="close" data-dismiss="alert" href="#">&times;</a>
-        <span>' + msg + '</span>
-      </div>'
-    )
-
   actions:
 
     # creates a local new shipment (bound to currentShipment)
@@ -273,13 +265,13 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
       shipment.one('didCreate', this, ->
         @set('currentShipment', null)
         $('.shipment-form-modal').modal('hide')
-        @flashMessage('Successfully created shipment.')
+        @flashSuccess(message: 'Successfully created shipment.')
         @resetFilters()
       )
       shipment.one('didUpdate', this, ->
         @set('currentShipment', null)
         $('.shipment-form-modal').modal('hide')
-        @flashMessage('Successfully updated shipment.')
+        @flashSuccess(message: 'Successfully updated shipment.')
         @resetFilters()
       )
 
@@ -296,7 +288,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
           shipment.get('transaction').commit()
           shipment.one('didDelete', this, ->
             @set('currentShipment', null)
-            @flashMessage('Successfully deleted shipment.')
+            @flashSuccess(message: 'Successfully deleted shipment.')
             @resetFilters()
           )
 
@@ -306,7 +298,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
            'json'
         .success( =>
           @set('currentShipment', null)
-          @flashMessage('Successfully deleted filtered shipments.')
+          @flashSuccess(message: 'Successfully deleted filtered shipments.')
           @resetFilters()
         )
         #.error( (xhr, msg, error) =>
@@ -320,7 +312,9 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
       $('.shipment-form-modal').modal('show')
 
     search: ->
+      @flashClear()
       @openShipmentsPage @get('searchParamsForTransition')
 
     resetFilters: ->
+      @flashClear()
       @resetFilters()
