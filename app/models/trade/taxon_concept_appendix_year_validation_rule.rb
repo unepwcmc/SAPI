@@ -14,7 +14,7 @@
 #  scope             :hstore
 #
 
-class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationRule
+class Trade::TaxonConceptAppendixYearValidationRule < Trade::InclusionValidationRule
 
   def validation_errors_for_shipment(shipment)
     shipment_in_scope = true

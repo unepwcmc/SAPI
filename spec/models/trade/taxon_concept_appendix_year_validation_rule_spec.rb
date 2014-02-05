@@ -16,7 +16,7 @@
 
 require 'spec_helper'
 
-describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
+describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
   describe :validation_errors do
 
     before(:each) do
@@ -63,7 +63,7 @@ describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
           )
         end
         subject{
-          create(:species_name_appendix_year_validation_rule)
+          create(:taxon_concept_appendix_year_validation_rule)
         }
         specify{
           subject.validation_errors(@aru).size.should == 0
@@ -79,7 +79,7 @@ describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
           )
         end
         subject{
-          create(:species_name_appendix_year_validation_rule)
+          create(:taxon_concept_appendix_year_validation_rule)
         }
         specify{
           subject.validation_errors(@aru).size.should == 1
@@ -96,7 +96,7 @@ describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
           )
         end
         subject{
-          create(:species_name_appendix_year_validation_rule)
+          create(:taxon_concept_appendix_year_validation_rule)
         }
         specify{
           subject.validation_errors(@aru).size.should == 1
@@ -115,7 +115,7 @@ describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
         )
       end
       subject{
-        create(:species_name_appendix_year_validation_rule)
+        create(:taxon_concept_appendix_year_validation_rule)
       }
       specify{
         subject.validation_errors(@aru).size.should == 0
@@ -129,7 +129,7 @@ describe Trade::SpeciesNameAppendixYearValidationRule, :drops_tables => true do
         )
       end
       subject{
-        create(:species_name_appendix_year_validation_rule)
+        create(:taxon_concept_appendix_year_validation_rule)
       }
       specify{
         subject.validation_errors(@aru).size.should == 1
