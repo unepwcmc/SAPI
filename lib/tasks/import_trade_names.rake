@@ -1,5 +1,5 @@
 namespace :import do
-  desc "Import names from csv file"
+  desc "Import trade - species_plus mapping table from csv file"
   task :trade_species_mapping => [:environment] do
     TMP_TABLE = "trade_species_mapping_import"
     file = "lib/files/trade_species_mapping_29114.csv"
@@ -8,7 +8,7 @@ namespace :import do
     copy_data(file, TMP_TABLE)
   end
 
-  desc "Import trade names from csv file"
+  desc "Import trade names (which didn't exist in SpeciesPlus) from csv file"
   task :trade_names => [:environment] do
     TMP_TABLE = "trade_names_import"
     file = "lib/files/trade_names_to_add_8132.csv"
