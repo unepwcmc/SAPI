@@ -76,6 +76,14 @@ class Trade::SandboxTemplate < ActiveRecord::Base
             ',
             id.blank? ? nil : {:id => id}
           )
+          # resolve reported & accepted taxon
+          connection.execute(
+            sanitize_sql_array([
+              'SELECT * FROM resolve_taxa_in_sandbox(?, ?)',
+              @table_name,
+              id
+            ])
+          )
         end
 
         def save(attributes = {})

@@ -1,3 +1,76 @@
+CREATE OR REPLACE FUNCTION resolve_taxa_in_sandbox(
+  table_name VARCHAR,
+  shipment_id INTEGER
+  ) RETURNS INTEGER
+  LANGUAGE plpgsql
+  AS $$
+DECLARE
+  cites_taxonomy_id INTEGER;
+  sql TEXT;
+  updated_rows INTEGER;
+BEGIN
+  SELECT id INTO cites_taxonomy_id FROM taxonomies WHERE name = 'CITES_EU';
+  IF NOT FOUND THEN
+    RAISE NOTICE '[%] Taxonomy not found.', table_name;
+    RETURN -1;
+  END IF;
+
+  sql :=  'WITH resolved_reported_taxa AS (
+      SELECT DISTINCT ON (1)
+        sandbox_table.id AS sandbox_shipment_id,
+        taxon_concepts.id AS taxon_concept_id
+      FROM ' || table_name || ' sandbox_table
+      JOIN taxon_concepts
+        ON UPPER(taxon_concepts.full_name) = UPPER(squish(sandbox_table.species_name))
+        AND taxonomy_id = ' || cites_taxonomy_id ||
+      CASE WHEN shipment_id IS NOT NULL
+        THEN ' WHERE sandbox_table.id = ' || shipment_id
+        ELSE ''
+      END ||
+      '
+      ORDER BY 1, CASE
+        WHEN taxon_concepts.name_status = ''A'' THEN 1
+        ELSE 2
+      END
+    ), resolved_taxa AS (
+      SELECT DISTINCT ON (1)
+        sandbox_shipment_id,
+        resolved_reported_taxa.taxon_concept_id,
+        accepted_taxon_concepts.id AS accepted_taxon_concept_id
+      FROM resolved_reported_taxa
+      LEFT JOIN taxon_relationships
+        ON taxon_relationships.other_taxon_concept_id = resolved_reported_taxa.taxon_concept_id
+      LEFT JOIN taxon_relationship_types
+        ON taxon_relationships.taxon_relationship_type_id = taxon_relationship_types.id
+        AND taxon_relationship_types.name = ''HAS_SYNONYM''
+      LEFT JOIN taxon_concepts accepted_taxon_concepts
+        ON accepted_taxon_concepts.id = taxon_relationships.taxon_concept_id
+        AND taxonomy_id = ' || cites_taxonomy_id ||
+      '
+      ORDER BY 1, CASE
+        WHEN accepted_taxon_concepts.name_status = ''A'' THEN 1
+        ELSE 2
+      END
+    )
+    UPDATE ' || table_name ||
+    '
+    SET reported_taxon_concept_id = resolved_taxa.taxon_concept_id,
+    taxon_concept_id = CASE
+      WHEN resolved_taxa.accepted_taxon_concept_id IS NULL
+      THEN resolved_taxa.taxon_concept_id
+      ELSE resolved_taxa.accepted_taxon_concept_id
+    END
+    FROM resolved_taxa
+    WHERE ' || table_name || '.id = resolved_taxa.sandbox_shipment_id';
+    EXECUTE sql;
+
+    GET DIAGNOSTICS updated_rows = ROW_COUNT;
+    RAISE INFO '[%] Updated % sandbox shipments', table_name, updated_rows;
+
+    RETURN updated_rows;
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION copy_transactions_from_sandbox_to_shipments(
   annual_report_upload_id INTEGER
   ) RETURNS INTEGER
@@ -29,7 +102,7 @@ BEGIN
     RAISE NOTICE '[%] Taxonomy not found.', table_name;
     RETURN -1;
   END IF;
-  table_name = 'trade_sandbox_' || annual_report_upload_id;
+  table_name := 'trade_sandbox_' || annual_report_upload_id;
   EXECUTE 'SELECT COUNT(*) FROM ' || table_name INTO total_shipments;
   RAISE INFO '[%] Copying % rows from %', table_name, total_shipments, table_name;
 
@@ -63,39 +136,7 @@ BEGIN
 
   sql := '
     CREATE TEMP TABLE ' || table_name || '_for_submit AS
-    WITH resolved_reported_taxa AS (
-      SELECT DISTINCT ON (1)
-        sandbox_table.id AS sandbox_shipment_id,
-        taxon_concepts.id AS taxon_concept_id
-      FROM ' || table_name || ' sandbox_table
-      JOIN taxon_concepts
-        ON UPPER(taxon_concepts.full_name) = UPPER(squish(sandbox_table.species_name))
-        AND taxonomy_id = ' || cites_taxonomy_id ||
-      '
-      ORDER BY 1, CASE
-        WHEN taxon_concepts.name_status = ''A'' THEN 1
-        ELSE 2
-      END
-    ), resolved_taxa AS (
-      SELECT DISTINCT ON (1)
-        sandbox_shipment_id,
-        resolved_reported_taxa.taxon_concept_id,
-        accepted_taxon_concepts.id AS accepted_taxon_concept_id
-      FROM resolved_reported_taxa
-      LEFT JOIN taxon_relationships
-        ON taxon_relationships.other_taxon_concept_id = resolved_reported_taxa.taxon_concept_id
-      LEFT JOIN taxon_relationship_types
-        ON taxon_relationships.taxon_relationship_type_id = taxon_relationship_types.id
-        AND taxon_relationship_types.name = ''HAS_SYNONYM''
-      LEFT JOIN taxon_concepts accepted_taxon_concepts
-        ON accepted_taxon_concepts.id = taxon_relationships.taxon_concept_id
-        AND taxonomy_id = ' || cites_taxonomy_id ||
-      '
-      ORDER BY 1, CASE
-        WHEN accepted_taxon_concepts.name_status = ''A'' THEN 1
-        ELSE 2
-      END
-    ), inserted_shipments AS (
+    WITH inserted_shipments AS (
       INSERT INTO trade_shipments (
         source_id,
         unit_id,
@@ -127,17 +168,13 @@ BEGIN
         importers.id AS importer_id,
         origins.id AS country_of_origin_id,' ||
         reported_by_exporter || ' AS reported_by_exporter,
-        CASE WHEN resolved_taxa.accepted_taxon_concept_id IS NOT NULL
-        THEN resolved_taxa.accepted_taxon_concept_id
-        ELSE resolved_taxa.taxon_concept_id
-        END AS taxon_concept_id,
-        resolved_taxa.taxon_concept_id AS reported_taxon_concept_id,
+        taxon_concept_id,
+        reported_taxon_concept_id,
         sandbox_table.year::INTEGER AS year,
         sandbox_table.id AS sandbox_id,
         current_timestamp,
         current_timestamp
-      FROM '|| table_name || ' sandbox_table
-      JOIN resolved_taxa ON sandbox_table.id = resolved_taxa.sandbox_shipment_id';
+      FROM '|| table_name || ' sandbox_table';
 
     IF reported_by_exporter THEN
       sql := sql ||
