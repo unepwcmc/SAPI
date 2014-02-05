@@ -13,6 +13,26 @@ class Trade::Sandbox
     @ar_klass.sanitize
   end
 
+  def copy_from_sandbox_to_shipments
+    success = true
+    Trade::Shipment.transaction do
+      pg_result = Trade::SandboxTemplate.connection.execute(
+        Trade::SandboxTemplate.send(:sanitize_sql_array, [
+          'SELECT * FROM copy_transactions_from_sandbox_to_shipments(?)',
+          @annual_report_upload.id
+        ])
+      )
+      moved_rows_cnt = pg_result.first['copy_transactions_from_sandbox_to_shipments'].to_i
+      if moved_rows_cnt < 0
+        # if -1 returned, not all rows have been moved
+        self.errors[:base] << "Submit failed, could not save all rows."
+        success = false
+        raise ActiveRecord::Rollback
+      end
+    end
+    success
+  end
+
   def destroy
     Trade::SandboxTemplate.connection.execute(
       Trade::SandboxTemplate.drop_stmt(@table_name)
