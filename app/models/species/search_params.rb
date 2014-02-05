@@ -16,8 +16,9 @@ class Species::SearchParams < Hash
         params[:taxon_concept_query] ? params[:taxon_concept_query].upcase.strip : nil,
       :geo_entities => params[:geo_entities_ids].blank? ? [] : params[:geo_entities_ids],
       :higher_taxa_ids => params[:higher_taxa_ids] ? params[:higher_taxa_ids] : nil,
-      :ranks => params[:ranks] ? 
+      :ranks => params[:ranks] ?
         Rank.dict & params[:ranks].map(&:upcase) : [Rank::SPECIES],
+      :visibility => params[:visibility] ? params[:visibility].downcase.to_sym : nil,
       :page => params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
       :per_page => params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 25
     }
@@ -26,6 +27,9 @@ class Species::SearchParams < Hash
     end
     unless [:cites, :eu, :cms].include? sanitized_params[:geo_entity_scope]
       sanitized_params[:geo_entity_scope] = :cites
+    end
+    unless [:speciesplus, :trade].include? sanitized_params[:visibility]
+      sanitized_params[:visibility] = :speciesplus
     end
     super(sanitized_params)
     self.merge!(sanitized_params)
