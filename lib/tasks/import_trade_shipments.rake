@@ -1,12 +1,4 @@
 namespace :import do
-  desc "Import names from csv file"
-  task :trade_species_mapping => [:environment] do
-    TMP_TABLE = "trade_species_mapping_import"
-    file = "lib/files/trade_species_mapping_29114.csv"
-    drop_table(TMP_TABLE)
-    create_table_from_csv_headers(file, TMP_TABLE)
-    copy_data(file, TMP_TABLE)
-  end
 
   desc "Import unusual geo_entities"
   task :unusual_geo_entities => [:environment] do
@@ -51,8 +43,6 @@ namespace :import do
       Sapi::Indexes.create_indexes_on_shipments
     end
   end
-
-
 end
 
 
