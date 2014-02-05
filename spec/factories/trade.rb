@@ -44,8 +44,8 @@ FactoryGirl.define do
     end
     factory :taxon_concept_appendix_year_validation_rule,
       :class => Trade::TaxonConceptAppendixYearValidationRule do
-      column_names ['species_name', 'appendix', 'year']
-      valid_values_view 'valid_species_name_appendix_year_mview'
+      column_names ['taxon_concept_id', 'appendix', 'year']
+      valid_values_view 'valid_taxon_concept_appendix_year_mview'
     end
     factory :pov_distinct_values_validation_rule,
       :class => Trade::PovDistinctValuesValidationRule

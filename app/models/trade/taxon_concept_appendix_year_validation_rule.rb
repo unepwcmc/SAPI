@@ -31,7 +31,7 @@ class Trade::TaxonConceptAppendixYearValidationRule < Trade::InclusionValidation
     
     # if appendix given as N, check in the valid annex view
     if shipment.appendix == 'N'
-      v = Arel::Table.new('valid_species_name_annex_year_mview')
+      v = Arel::Table.new('valid_taxon_concept_annex_year_mview')
     else
       v = Arel::Table.new(valid_values_view)
       appendix_node = v['appendix'].eq(shipment.appendix)
@@ -83,7 +83,7 @@ class Trade::TaxonConceptAppendixYearValidationRule < Trade::InclusionValidation
   # which have a match on species name + year in valid annex mview
   # and do not have a match on species name + year in valid appendix mview
   def valid_appendix_n_values_arel(s)
-    v = Arel::Table.new('valid_species_name_annex_year_mview')
+    v = Arel::Table.new('valid_taxon_concept_annex_year_mview')
     join_conditions = appendix_n_join_node(s, v).and(year_join_node(s, v)).
       and(taxon_concept_join_node(s, v))
     s.project(s['*']).join(v).on(join_conditions).except(
