@@ -26,7 +26,11 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
     end
 
     context "when CITES listed" do
-
+      let(:has_synonym){
+        create(
+          :taxon_relationship_type, :name => TaxonRelationshipType::HAS_SYNONYM
+        )
+      }
       before(:each) do
         genus = create_cites_eu_genus(
           :taxon_name => create(:taxon_name, :scientific_name => 'Loxodonta')
@@ -48,6 +52,16 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
          :taxon_concept => species,
          :effective_at => '1997-09-18',
          :is_current => true
+        )
+        synonym = create_cites_eu_species(
+          :taxon_name => create(:taxon_name, :scientific_name => 'Loxodonta cyclotis'),
+          :name_status => 'S'
+        )
+        create(
+          :taxon_relationship,
+          :taxon_relationship_type => has_synonym,
+          :taxon_concept => species,
+          :other_taxon_concept => synonym
         )
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
@@ -104,6 +118,19 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
         specify{
           ve = subject.validation_errors(@aru).first
           ve.error_selector.should == {'species_name' => 'Loxodonta africana', 'appendix' => 'N', 'year' => '1996'}
+        }
+      end
+      context "when reported under a synonym, but otherwise fine" do
+        before(:each) do
+          @sandbox_klass.create(
+            :species_name => 'Loxodonta cyclotis', :appendix => 'I', :year => '2013'
+          )
+        end
+        subject{
+          create(:taxon_concept_appendix_year_validation_rule)
+        }
+        specify{
+          subject.validation_errors(@aru).size.should == 0
         }
       end
     end

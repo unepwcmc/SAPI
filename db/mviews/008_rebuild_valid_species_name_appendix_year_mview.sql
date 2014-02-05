@@ -82,7 +82,7 @@ CREATE OR REPLACE FUNCTION rebuild_valid_species_name_appendix_year_designation_
     ON taxon_concepts.id = merged_intervals.taxon_concept_id
     ORDER BY taxon_concept_id, ' || appendix || ', effective_from, effective_to;';
 
-    EXECUTE 'CREATE INDEX ON tmp_' || mview_name || ' (species_name, ' || appendix || ', effective_from, effective_to);';
+    EXECUTE 'CREATE INDEX ON tmp_' || mview_name || ' (taxon_concept_id, ' || appendix || ', effective_from, effective_to);';
 
     EXECUTE 'DROP TABLE IF EXISTS ' || mview_name || ';';
     EXECUTE 'ALTER TABLE tmp_' || mview_name || ' RENAME TO ' || mview_name || ';';

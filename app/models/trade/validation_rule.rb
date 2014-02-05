@@ -32,6 +32,8 @@ class Trade::ValidationRule < ActiveRecord::Base
         column
       when /(.+)_code$/
         $1 + '_id'
+      when /(.+)_id$/
+        column
       else
         column + '_id'
       end
