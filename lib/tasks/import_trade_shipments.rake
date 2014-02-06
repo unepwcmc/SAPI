@@ -17,7 +17,7 @@ namespace :import do
     end
   end
 
-  desc "Import first shipments from csv file (usage: rake import:shipments[path/to/file])"
+  desc "Import shipments from csv file (usage: rake import:shipments[path/to/file])"
   task :shipments, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     puts "opening file"
 
@@ -34,12 +34,41 @@ namespace :import do
       fix_term_codes = {12227624 => "LIV", 12225022 => "DER", 12224783 => "DER"}
       fix_term_codes.each do |shipment_number,term_code|
         sql = <<-SQL
-        UPDATE shipments_import SET term_code_1 = '#{term_code}' WHERE shipment_number =  #{shipment_number};
+          UPDATE shipments_import SET term_code_1 = '#{term_code}' WHERE shipment_number =  #{shipment_number};
         SQL
         ActiveRecord::Base.connection.execute(sql)
       end
       update_country_codes
       populate_shipments
+      populate_shipments_for_trade_names
+      Sapi::Indexes.create_indexes_on_shipments
+    end
+  end
+
+  desc "Import shipments for Trade Names from csv file (usage: rake import:shipmets[path/to/file])"
+  task :shipments_for_trade_names, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+    puts "opening file"
+
+    TMP_TABLE = "shipments_import"
+
+    files = files_from_args(t, args)
+    files.each do |file|
+      Sapi::Indexes.drop_indexes_on_shipments
+      drop_create_and_copy_temp(TMP_TABLE, file)
+      sql = <<-SQL
+        DELETE FROM shipments_import  WHERE shipment_number =  8122168;
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
+      fix_term_codes = {12227624 => "LIV", 12225022 => "DER", 12224783 => "DER"}
+      fix_term_codes.each do |shipment_number,term_code|
+        sql = <<-SQL
+          UPDATE shipments_import SET term_code_1 = '#{term_code}' WHERE shipment_number =  #{shipment_number};
+        SQL
+        ActiveRecord::Base.connection.execute(sql)
+      end
+      update_country_codes
+      #populate_shipments
+      populate_shipments_for_trade_names
       Sapi::Indexes.create_indexes_on_shipments
     end
   end
@@ -158,8 +187,10 @@ def populate_shipments
       to_date(shipment_year::varchar, 'yyyy') AS updated_at,
       species_plus_id AS reported_taxon_concept_id
     FROM shipments_import si
+
     INNER JOIN trade_species_mapping_import nti ON si.cites_taxon_code = nti.cites_taxon_code
-    INNER JOIN taxon_concepts tc ON species_plus_id = tc.id
+    INNER JOIN taxon_concepts tc ON nti.species_plus_id = tc.id
+
     LEFT JOIN trade_codes AS sources ON si.source_code = sources.code
       AND sources.type = 'Source'
     LEFT JOIN trade_codes AS units ON si.unit_code_1 = units.code
@@ -172,15 +203,97 @@ def populate_shipments
     LEFT JOIN geo_entities AS importers ON si.import_country_code = importers.iso_code2
     LEFT JOIN geo_entities AS origins ON si.origin_country_code = origins.iso_code2
     LEFT JOIN
-    (SELECT tr.taxon_concept_id,
-      si.shipment_number
-      FROM shipments_import si
-      INNER JOIN trade_species_mapping_import nti ON si.cites_taxon_code = nti.cites_taxon_code AND rank = '0'
-      INNER JOIN taxon_relationships tr ON other_taxon_concept_id = nti.species_plus_id
-      INNER JOIN taxon_relationship_types trt ON trt.id = taxon_relationship_type_id AND trt.name = 'HAS_SYNONYM'
+      (
+        SELECT tr.taxon_concept_id,
+        si.shipment_number
+        FROM shipments_import si
+        INNER JOIN trade_species_mapping_import nti ON si.cites_taxon_code = nti.cites_taxon_code AND rank = '0'
+        INNER JOIN taxon_relationships tr ON other_taxon_concept_id = nti.species_plus_id
+        INNER JOIN taxon_relationship_types trt ON trt.id = taxon_relationship_type_id AND trt.name = 'HAS_SYNONYM'
       ) jt ON jt.shipment_number = si.shipment_number
     WHERE (rank = '0' AND jt.taxon_concept_id IS NOT NULL) OR (rank <> '0' AND tc.id IS NOT NULL)
   SQL
   ActiveRecord::Base.connection.execute(sql)
   puts "Populating trade_shipments"
+end
+
+def populate_shipments_for_trade_names
+  puts "Inserting into trade_shipments Trade Names' shipments table"
+  sql = <<-SQL
+    INSERT INTO trade_shipments(
+      legacy_shipment_number,
+      source_id,
+      unit_id,
+      purpose_id,
+      term_id ,
+      quantity,
+      appendix,
+      exporter_id,
+      importer_id,
+      country_of_origin_id,
+      reported_by_exporter,
+      year,
+      taxon_concept_id,
+      created_at,
+      updated_at,
+      reported_taxon_concept_id)
+    SELECT
+      si.shipment_number as legacy_shipment_number,
+      sources.id AS source_id,
+      units.id AS unit_id,
+      purposes.id AS purpose_id,
+      terms.id AS term_id,
+      quantity_1,
+      CASE
+        WHEN appendix='1' THEN 'I'
+        WHEN appendix='2' THEN 'II'
+        WHEN appendix='3' THEN 'III'
+        WHEN appendix='0' THEN '0'
+        WHEN appendix='N' THEN 'N'
+        WHEN appendix IS NULL THEN 'Null'
+      END AS appendix,
+      CASE
+        WHEN exporters.id IS NULL THEN NULL
+        ELSE exporters.id
+      END AS exporter_id,
+      CASE
+        WHEN importers.id IS NULL THEN NULL
+        ELSE importers.id
+      END AS importer_id,
+      CASE
+        WHEN origins.id IS NULL THEN NULL
+        ELSE origins.id
+      END AS country_of_origin_id,
+      CASE
+        WHEN reporter_type = 'E' THEN TRUE
+        ELSE FALSE
+      END AS reported_by_exporter,
+      shipment_year AS YEAR,
+      taxon_concepts.id AS taxon_concept_id,
+      to_date(shipment_year::varchar, 'yyyy') AS created_at,
+      to_date(shipment_year::varchar, 'yyyy') AS updated_at,
+      reported_as.id AS reported_taxon_concept_id
+    FROM shipments_import si
+
+    INNER JOIN taxon_concepts reported_as ON reported_as.legacy_trade_code = si.cites_taxon_code
+      AND reported_as.name_status = 'T'
+    INNER JOIN taxon_relationships ON taxon_relationships.other_taxon_concept_id = reported_as.id
+    INNER JOIN taxon_concepts ON taxon_concepts.id = taxon_relationships.taxon_concept_id
+    INNER JOIN taxon_relationship_types ON taxon_relationship_types.id = taxon_relationships.taxon_relationship_type_id AND
+      taxon_relationship_types.name = 'HAS_TRADE_NAME'
+
+    LEFT JOIN trade_codes AS sources ON si.source_code = sources.code
+      AND sources.type = 'Source'
+    LEFT JOIN trade_codes AS units ON si.unit_code_1 = units.code
+      AND units.type = 'Unit'
+    LEFT JOIN trade_codes AS purposes ON si.purpose_code = purposes.code
+      AND purposes.type = 'Purpose'
+    INNER JOIN trade_codes AS terms ON si.term_code_1 = terms.code
+      AND terms.type = 'Term'
+    LEFT JOIN geo_entities AS exporters ON si.export_country_code = exporters.iso_code2
+    LEFT JOIN geo_entities AS importers ON si.import_country_code = importers.iso_code2
+    LEFT JOIN geo_entities AS origins ON si.origin_country_code = origins.iso_code2
+  SQL
+  ActiveRecord::Base.connection.execute(sql)
+  puts "Populating trade_shipments with Trade Names' shipments"
 end
