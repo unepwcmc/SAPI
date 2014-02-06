@@ -38,10 +38,6 @@ FactoryGirl.define do
     factory :inclusion_validation_rule, :class => Trade::InclusionValidationRule do
       valid_values_view 'valid_taxon_concept_view'
     end
-    factory :pov_inclusion_validation_rule,
-      :class => Trade::PovInclusionValidationRule do
-      valid_values_view 'valid_taxon_concept_country_of_origin_view'
-    end
     factory :taxon_concept_appendix_year_validation_rule,
       :class => Trade::TaxonConceptAppendixYearValidationRule do
       column_names ['taxon_concept_id', 'appendix', 'year']

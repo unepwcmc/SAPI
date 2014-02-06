@@ -419,7 +419,7 @@ Trade::InclusionValidationRule.create(
   :run_order => 4,
   :is_primary => false
 )
-Trade::PovInclusionValidationRule.create(
+Trade::InclusionValidationRule.create(
   :scope => {
     :source_code => 'W', :country_of_origin_blank => true
   },

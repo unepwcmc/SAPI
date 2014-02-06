@@ -93,8 +93,14 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # Expects a single grouped matching record.
   def error_selector(matching_record, point_of_view)
     res = {}
-    column_names_for_matching.each do |cn|
-      res[cn] = matching_record.send(cn)
+    column_names.each do |cn|
+      if cn == 'exporter' && point_of_view == 'I'
+        res['trading_partner'] = matching_record.send(cn)
+      elsif cn == 'importer' && point_of_view == 'E'
+        res['trading_partner'] = matching_record.send(cn)
+      elsif !['importer', 'exporter'].include?(cn)
+        res[cn] = matching_record.send(cn)
+      end
     end
     sanitized_scope.map do |scn, val|
       res[scn] = val
@@ -140,7 +146,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # The valid_values_view should have the same column names and data types as
   # the sandbox columns specified in column_names.
   def matching_records_arel(table_name)
-    s = Arel::Table.new(table_name)
+    s = Arel::Table.new("#{table_name}_view")
     v = Arel::Table.new(valid_values_view)
     arel_nodes = column_names_for_matching.map do |c|
       if required_column_names.include? c

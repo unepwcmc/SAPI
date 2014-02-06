@@ -16,7 +16,7 @@
 
 require 'spec_helper'
 
-describe Trade::PovInclusionValidationRule, :drops_tables => true do
+describe Trade::InclusionValidationRule, :drops_tables => true do
   let(:country){
     create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
   }
@@ -65,7 +65,7 @@ describe Trade::PovInclusionValidationRule, :drops_tables => true do
       end
       subject{
         create(
-          :pov_inclusion_validation_rule,
+          :inclusion_validation_rule,
           :scope => {:source_code => 'W', :country_of_origin_blank => true},
           :column_names => ['taxon_concept_id', 'exporter'],
           :valid_values_view => 'valid_taxon_concept_exporter_view'
@@ -96,7 +96,7 @@ describe Trade::PovInclusionValidationRule, :drops_tables => true do
       end
       subject{
         create(
-          :pov_inclusion_validation_rule,
+          :inclusion_validation_rule,
           :scope => {:source_code => 'W', :country_of_origin_blank => true},
           :column_names => ['taxon_concept_id', 'exporter'],
           :valid_values_view => 'valid_taxon_concept_exporter_view'
@@ -123,8 +123,8 @@ describe Trade::PovInclusionValidationRule, :drops_tables => true do
       end
       subject{
         create(
-          :pov_inclusion_validation_rule,
-          :scope => {:source_code => 'W', :country_of_originnn_blank => true},
+          :inclusion_validation_rule,
+          :scope => {:source_code => 'W', :country_of_origin_blank => true},
           :column_names => ['taxon_concept_id', 'exporter'],
           :valid_values_view => 'valid_taxon_concept_exporter_view'
         )

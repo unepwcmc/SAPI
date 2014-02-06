@@ -433,7 +433,7 @@ shared_context :sapi do
     )
   end
   def create_species_name_exporter_validation
-    create(:pov_inclusion_validation_rule,
+    create(:inclusion_validation_rule,
       :scope => {
         :source_code => 'W', :country_of_origin_blank => true
       },
