@@ -134,6 +134,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, 
     reseter = {
       appendix: false,
       species_name: false,
+      taxon_concept_id: false,
       term_code: false,
       quantity: false,
       unit_code : false,

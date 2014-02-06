@@ -9,6 +9,7 @@ class Trade::SandboxSearchParams < Hash
       :appendix => params[:appendix],
       :quantity => params[:quantity],
       :species_name => params[:species_name],
+      :taxon_concept_id => params[:taxon_concept_id],
       :term_code => params[:term_code],
       :unit_code => params[:unit_code],
       :source_code => params[:source_code],
