@@ -45,11 +45,11 @@ class Stats
 
   def trade
     trade_results = {}
-    exports = Trade::Shipment.where(
+    exports = Trade::ShipmentView.where(
       :importer_id => @geo_entity.id
     ).count
     trade_results['exports'] = exports
-    imports = Trade::Shipment.where(
+    imports = Trade::ShipmentView.where(
       :exporter_id => @geo_entity.id
     ).count
     trade_results['imports'] = imports
