@@ -14,7 +14,7 @@
 #  scope             :hstore
 #
 
-class Trade::PovDistinctValuesValidationRule < Trade::InclusionValidationRule
+class Trade::DistinctValuesValidationRule < Trade::InclusionValidationRule
 
   # TODO should have a validation for at least 2 column names
 

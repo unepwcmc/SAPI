@@ -443,13 +443,13 @@ shared_context :sapi do
     )
   end
   def create_exporter_country_of_origin_validation
-    create(:pov_distinct_values_validation_rule,
+    create(:distinct_values_validation_rule,
       :column_names => ['exporter', 'country_of_origin'],
       :is_primary => false
     )
   end
   def create_exporter_importer_validation
-    create(:pov_distinct_values_validation_rule,
+    create(:distinct_values_validation_rule,
       :column_names => ['exporter', 'importer'],
       :is_primary => false
     )
