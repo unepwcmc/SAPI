@@ -142,10 +142,12 @@ class Trade::SandboxTemplate < ActiveRecord::Base
         THEN trading_partner
         ELSE geo_entities.iso_code2 
       END AS importer,
+      taxon_concepts.full_name AS taxon_name,
       #{target_table_name}.*
       FROM #{target_table_name}
       JOIN trade_annual_report_uploads aru ON aru.id = #{idx}
       JOIN geo_entities ON geo_entities.id = aru.trading_country_id
+      LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
     SQL
   end
 
