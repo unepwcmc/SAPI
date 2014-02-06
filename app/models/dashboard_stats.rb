@@ -1,4 +1,4 @@
-class Stats
+class DashboardStats
 
   include ActiveModel::Serializers::JSON
 
@@ -19,7 +19,7 @@ class Stats
 
   def getSpeciesClasses
     MTaxonConcept.where(
-      :rank_name => 'CLASS', :kingdom_name => @kingdom, :taxonomy_is_cites_eu => 'f').
+      :rank_name => 'CLASS', :kingdom_name => @kingdom).uniq.
       map do |s| s.class_name end
   end
 
