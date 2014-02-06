@@ -12,5 +12,8 @@ Trade.SandboxShipment = DS.Model.extend
   purposeCode: DS.attr('string')
   sourceCode: DS.attr('string')
   year: DS.attr('string')
+
+  #annualReportUpload: DS.belongsTo('Trade.AnnualReportUpload')
+
   _destroyed: DS.attr('boolean')
   _modified: false

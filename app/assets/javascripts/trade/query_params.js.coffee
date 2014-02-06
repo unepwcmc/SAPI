@@ -114,6 +114,12 @@ Trade.QueryParams = Ember.Mixin.create({
       param: 'country_of_origin_blank'
       urlParam: 'country_of_origin_blank'
       type: 'boolean'
+    },
+    {
+      name: "permitBlank"
+      param: 'permit_blank'
+      urlParam: 'permit_blank'
+      type: 'boolean'
     }
   ]
 });

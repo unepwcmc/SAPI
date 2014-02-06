@@ -98,23 +98,6 @@ shared_context "Psittaciformes" do
       :effective_at => '2005-01-12',
       :parent_id => cites_lc.id
     )
-
-    eu_lc = create_eu_B_addition(
-     :taxon_concept => @order,
-     :effective_at => '2005-01-12',
-     :is_current => true
-    )
-    create_eu_B_exception(
-      :taxon_concept => @species2_1,
-      :effective_at => '2005-01-12',
-      :parent_id => eu_lc.id
-    )
-    create_eu_B_exception(
-      :taxon_concept => @species2_3,
-      :effective_at => '2005-01-12',
-      :parent_id => eu_lc.id
-    )
-
     create_cites_II_addition(
      :taxon_concept => @species1_1,
      :effective_at => '1975-07-01'
@@ -124,12 +107,6 @@ shared_context "Psittaciformes" do
      :effective_at => '1987-10-22',
      :is_current => true
     )
-    create_eu_A_addition(
-     :taxon_concept => @species1_1,
-     :effective_at => '1987-10-22',
-     :is_current => true
-    )
-
     create_cites_II_addition(
      :taxon_concept => @species1_2_1,
      :effective_at => '1981-06-06'
@@ -139,12 +116,6 @@ shared_context "Psittaciformes" do
      :effective_at => '1992-06-11',
      :is_current => true
     )
-    create_eu_A_addition(
-     :taxon_concept => @species1_2_1,
-     :effective_at => '1992-06-11',
-     :is_current => true
-    )
-
     create_cites_III_addition(
      :taxon_concept => @family2,
      :effective_at => '1976-02-26'
@@ -153,11 +124,6 @@ shared_context "Psittaciformes" do
      :taxon_concept => @family2,
      :effective_at => '1981-06-06'
     )
-    create_eu_B_addition(
-     :taxon_concept => @family2,
-     :effective_at => '1981-06-06'
-    )
-
     create_cites_II_addition(
      :taxon_concept => @genus2_1,
      :effective_at => '1981-06-06'
@@ -184,36 +150,11 @@ shared_context "Psittaciformes" do
      :effective_at => '2005-01-12',
      :is_current => true
     )
-    eu_lc1 = create_eu_B_addition(
-     :taxon_concept => @family2,
-     :effective_at => '2005-01-12',
-     :is_current => true
-    )
-    create_eu_B_exception(
-      :taxon_concept => @species2_1,
-      :parent_id => eu_lc1.id
-    )
-    create_eu_B_exception(
-      :taxon_concept => @species2_3,
-      :parent_id => eu_lc1.id
-    )
-    create_eu_B_deletion(
-     :taxon_concept => @species2_1,
-     :effective_at => '2005-01-12',
-     :is_current => true
-    )
-
     create_cites_II_addition(
      :taxon_concept => @species2_2,
      :effective_at => '1981-06-06',
      :is_current => true
     )
-    create_eu_B_addition(
-     :taxon_concept => @species2_2,
-     :effective_at => '1981-06-06',
-     :is_current => true
-    )
-
     cites_lc1 = create_cites_III_addition(
      :taxon_concept => @species2_3,
      :effective_at => '1976-02-26'
@@ -233,10 +174,68 @@ shared_context "Psittaciformes" do
       :geo_entity => ghana,
       :listing_change => cites_lc2
     )
+
+    eu_lc = create_eu_B_addition(
+      :taxon_concept => @order,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
+    )
+    create_eu_B_exception(
+      :taxon_concept => @species2_1,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :parent_id => eu_lc.id
+    )
+    create_eu_B_exception(
+      :taxon_concept => @species2_3,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :parent_id => eu_lc.id
+    )
+    create_eu_A_addition(
+      :taxon_concept => @species1_1,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
+    )
+    create_eu_A_addition(
+      :taxon_concept => @species1_2_1,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
+    )
+    eu_lc1 = create_eu_B_addition(
+      :taxon_concept => @family2,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
+    )
+    create_eu_B_exception(
+      :taxon_concept => @species2_1,
+      :parent_id => eu_lc1.id
+    )
+    create_eu_B_exception(
+      :taxon_concept => @species2_3,
+      :parent_id => eu_lc1.id
+    )
+    create_eu_B_deletion(
+      :taxon_concept => @species2_1,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
+    )
+    create_eu_B_addition(
+      :taxon_concept => @species2_2,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
+    )
     eu_lc2 = create_eu_C_deletion(
-     :taxon_concept => @species2_3,
-     :effective_at => '2007-03-04',
-     :is_current => true
+      :taxon_concept => @species2_3,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
     )
     create(
       :listing_distribution,
@@ -244,8 +243,8 @@ shared_context "Psittaciformes" do
       :listing_change => eu_lc2
     )
 
-    cms_designation
-    Sapi.rebuild
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

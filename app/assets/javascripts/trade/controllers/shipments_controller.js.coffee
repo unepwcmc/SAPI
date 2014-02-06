@@ -1,4 +1,4 @@
-Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
+Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trade.ShipmentPagination, Trade.Flash,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
@@ -36,35 +36,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     return false unless @get('content.isLoaded')
     @get('content').filterBy('isSaving', true).length > 0
   ).property('content.@each.isSaving')
-
-  total: ( ->
-    @get('content.meta.total')
-  ).property('content.isLoaded')
-
-  perPage: ( ->
-    parseInt(@get('content.meta.per_page')) || 100
-  ).property("content.isLoaded")
-
-  page: ( ->
-    parseInt(@get('content.meta.page')) || 1
-  ).property("content.isLoaded")
-
-  pages: ( ->
-    if @get('total')
-      return Math.ceil( @get('total') / @get('perPage'))
-    else
-      return 1
-  ).property('total', 'perPage')
-
-  showPrevPage: ( ->
-    page = @get('page')
-    if page > 1 then return yes else return no
-  ).property('page')
-
-  showNextPage: ( ->
-    page = @get('page')
-    if page < @get('pages') then return yes else return no
-  ).property('page')
 
   transitionToPage: (forward) ->
     page = if forward
@@ -169,6 +140,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
   purposeBlank: false
   sourceBlank: false
   countryOfOriginBlank: false
+  permitBlank: false
   termQuery: null
   autoCompleteTerms: ( ->
     @autoCompleteObjects('controllers.terms', 'code', @get('termQuery'))
@@ -198,7 +170,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
     'selectedPurposes.@each', 'purposeBlank',
     'selectedImporters.@each', 'selectedExporters.@each',
     'selectedCountriesOfOrigin.@each', 'countryOfOriginBlank',
-    'selectedPermits.@each'
+    'selectedPermits.@each', 'permitBlank'
   )
 
   # sth amiss with array query params, which is why we pass a different
@@ -267,6 +239,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
 
   resetFilters: ->
     @beginPropertyChanges()
+    queryParams = false
     @get('selectedQueryParamNames').forEach (property) =>
       if property.type == 'array'
         @set(property.name, [])
@@ -274,29 +247,11 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
         @set(property.name, false)
       else
         @set(property.name, null)
-    @set('permitQuery', null)
-    @set('taxonConceptQuery', null)
-    @set('exporterQuery', null)
-    @set('importerQuery', null)
-    @set('countryOfOriginQuery', null)
-    @set('termQuery', null)
-    @set('unitQuery', null)
-    @set('selectedTimeStart', @get('defaultTimeStart'))
-    @set('selectedTimeEnd', @get('defaultTimeEnd'))
     @endPropertyChanges()
-    @openShipmentsPage @get('searchParamsForTransition')
-
-  flashMessage: (msg) ->
-    $('#flash').html('
-      <div class="alert alert-success fade in">
-        <a class="close" data-dismiss="alert" href="#">&times;</a>
-        <span>' + msg + '</span>
-      </div>'
-    )
+    @openShipmentsPage queryParams 
 
   actions:
 
-    
     # creates a local new shipment (bound to currentShipment)
 
     newShipment: () ->
@@ -320,13 +275,13 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       shipment.one('didCreate', this, ->
         @set('currentShipment', null)
         $('.shipment-form-modal').modal('hide')
-        @flashMessage('Successfully created shipment.')
+        @flashSuccess(message: 'Successfully created shipment.')
         @resetFilters()
       )
       shipment.one('didUpdate', this, ->
         @set('currentShipment', null)
         $('.shipment-form-modal').modal('hide')
-        @flashMessage('Successfully updated shipment.')
+        @flashSuccess(message: 'Successfully updated shipment.')
         @resetFilters()
       )
 
@@ -343,7 +298,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
           shipment.get('transaction').commit()
           shipment.one('didDelete', this, ->
             @set('currentShipment', null)
-            @flashMessage('Successfully deleted shipment.')
+            @flashSuccess(message: 'Successfully deleted shipment.')
             @resetFilters()
           )
 
@@ -353,7 +308,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
            'json'
         .success( =>
           @set('currentShipment', null)
-          @flashMessage('Successfully deleted filtered shipments.')
+          @flashSuccess(message: 'Successfully deleted filtered shipments.')
           @resetFilters()
         )
         #.error( (xhr, msg, error) =>
@@ -367,7 +322,9 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams,
       $('.shipment-form-modal').modal('show')
 
     search: ->
+      @flashClear()
       @openShipmentsPage @get('searchParamsForTransition')
 
     resetFilters: ->
+      @flashClear()
       @resetFilters()

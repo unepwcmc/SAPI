@@ -34,8 +34,6 @@ module Trade::ShipmentReportQueries
     ON taxon_concept_id = taxon_concepts.id
   JOIN ranks
     ON ranks.id = taxon_concepts.rank_id
-  LEFT JOIN taxon_concepts reported_taxon_concepts
-    ON reported_taxon_concept_id = reported_taxon_concepts.id
   JOIN geo_entities importers
     ON importers.id = importer_id
   JOIN geo_entities exporters
@@ -135,7 +133,6 @@ module Trade::ShipmentReportQueries
     importers.iso_code2,
     exporter_id,
     exporters.iso_code2,
-    country_of_origin_id,
     unit_id,
     units.code,
     units.name_en,
@@ -145,9 +142,7 @@ module Trade::ShipmentReportQueries
     terms.code,
     terms.name_en,
     terms.name_es,
-    terms.name_fr,
-    purpose_id,
-    source_id"
+    terms.name_fr"
   end
 
   def gross_exports_query

@@ -22,10 +22,12 @@ FactoryGirl.define do
 
   factory :event do
     sequence(:name) {|n| "CoP#{n}"}
-    effective_at '2012-01-01'
+    effective_at '2011-01-01'
     designation
 
-    factory :eu_regulation, :class => EuRegulation
+    factory :eu_regulation, :class => EuRegulation do
+      end_date '2012-01-01'
+    end
     factory :eu_suspension_regulation, :class => EuSuspensionRegulation
     factory :cites_cop, :class => CitesCop
     factory :cites_suspension_notification, :class => CitesSuspensionNotification,

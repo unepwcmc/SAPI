@@ -7,7 +7,7 @@
     {{/if}}
   </div>
   <div class="span10">
-    <a {{action setFiltersFromErrorSelector errorSelector}}>
+    <a {{action transitionToSandboxShipments errorSelector errorMessage errorCount}}>
       {{errorMessage}} ({{errorCount}})
     </a>
   </div>

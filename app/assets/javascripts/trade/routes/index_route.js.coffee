@@ -1,3 +1,3 @@
-Trade.IndexRoute = Ember.Route.extend
+Trade.IndexRoute = Trade.BeforeRoute.extend
   beforeModel: () ->
     @transitionTo('shipments');

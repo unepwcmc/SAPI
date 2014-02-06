@@ -34,4 +34,27 @@ namespace :import do
     puts "There are now #{Event.count} events in the database"
   end
 
+  task :eu_annex_regulations_end_dates => [:environment] do
+    TMP_TABLE = "eu_annex_regulations_end_dates_import"
+    file = "lib/files/eu_annex_regulations_end_dates_utf8.csv"
+    drop_table(TMP_TABLE)
+    create_table_from_csv_headers(file, TMP_TABLE)
+    copy_data(file, TMP_TABLE)
+
+    sql = <<-SQL
+      WITH eu_annex_regulations AS (
+        SELECT events.id, e.end_date FROM
+        #{TMP_TABLE} e
+        JOIN events
+        ON events.type = 'EuRegulation'
+        AND UPPER(SQUISH(events.name)) = UPPER(SQUISH(e.name))
+      )
+      UPDATE events
+      SET end_date = e.end_date
+      FROM eu_annex_regulations e
+      WHERE e.id = events.id;
+    SQL
+    ActiveRecord::Base.connection.execute(sql)
+  end
+
 end

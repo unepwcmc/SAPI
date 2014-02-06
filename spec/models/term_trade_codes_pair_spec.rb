@@ -3,7 +3,7 @@
 # Table name: term_trade_codes_pairs
 #
 #  id              :integer          not null, primary key
-#  term_id         :integer
+#  term_id         :integer          not null
 #  trade_code_id   :integer
 #  trade_code_type :string(255)
 #  created_at      :datetime         not null

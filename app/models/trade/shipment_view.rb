@@ -6,9 +6,9 @@
 #  year                      :integer
 #  appendix                  :string(255)
 #  taxon_concept_id          :integer
-#  taxon                     :string(255)
+#  taxon                     :string
 #  reported_taxon_concept_id :integer
-#  reported_taxon            :string(255)
+#  reported_taxon            :string
 #  importer_id               :integer
 #  importer                  :string(255)
 #  exporter_id               :integer
@@ -32,12 +32,12 @@
 #  purpose                   :string(255)
 #  source_id                 :integer
 #  source                    :string(255)
+#  import_permit_number      :string(255)
+#  export_permit_number      :string(255)
+#  origin_permit_number      :string(255)
 #  import_permits_ids        :string
-#  import_permit_number      :text
 #  export_permits_ids        :string
-#  export_permit_number      :text
 #  origin_permits_ids        :string
-#  origin_permit_number      :text
 #
 
 class Trade::ShipmentView < ActiveRecord::Base

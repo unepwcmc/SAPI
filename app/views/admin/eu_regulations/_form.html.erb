@@ -9,6 +9,13 @@
   <%= f.text_field :effective_at, :class => "datepicker",
     :value => @eu_regulation.effective_at_formatted
   %>
+  <label>End date</label>
+  <%= f.text_field :end_date, :class => "datepicker",
+    :value => @eu_regulation.end_date_formatted
+  %>
+
+  <label>Is current <%= f.check_box :is_current %></label>
+
   <% if @eu_regulation.new_record? %>
     <label>Copy listing changes from:</label>
     <%= f.select :listing_changes_event_id,

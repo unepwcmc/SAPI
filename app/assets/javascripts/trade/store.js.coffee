@@ -44,6 +44,17 @@ Trade.Store.registerAdapter('Trade.TaxonConcept', DS.RESTAdapter.extend({
 Trade.Store.registerAdapter('Trade.AutoCompleteTaxonConcept', DS.RESTAdapter.extend({
   namespace: "api/v1"
 }))
+Trade.Store.registerAdapter('Trade.SandboxShipment', DS.RESTAdapter.extend({
+  namespace: "annual_report_uploads"
+  # TODO: this is an ugly hack. Is there a better way?
+  buildURL: (model_name, model_id) ->
+    model_id ||= ""
+    hash = location.hash.split('?')
+    annual_report_upload_id = hash[0].split("/").find( (el) -> 
+      el.match(/[1-9]\d*/)
+    )
+    "trade/annual_report_uploads/#{annual_report_upload_id}/sandbox_shipments/#{model_id}"
+}))
 
 DS.RESTAdapter.configure("plurals", { geo_entity: "geo_entities" })
 

@@ -115,9 +115,7 @@ shared_context "Pecari tajacu" do
       :geo_relationship_type => contains
     )
 
-    eu
-    cms_designation
-    Sapi.rebuild
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

@@ -165,11 +165,12 @@
       <div class="left filter-group">
         <p>Permits</p>
         {{view Trade.MultiSelect
+          blankValueBinding = "controller.permitBlank"
           queryBinding="controller.permitQuery"
           allValuesBinding="controller.autoCompletePermits"
           selectedValuesBinding="controller.selectedPermits"
           selectedValuesCollectionName="permits"
-          selectedValueDisplayProperty="displayNumber"
+          selectedValueDisplayProperty="number"
           placeholder="Permit number"
         }}
       </div>
