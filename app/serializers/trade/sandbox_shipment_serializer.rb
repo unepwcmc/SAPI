@@ -4,6 +4,6 @@ class Trade::SandboxShipmentSerializer < ActiveModel::Serializer
     :export_permit, :origin_permit, :purpose_code, :source_code,
     :year, :import_permit
   def accepted_taxon_name
-    object.taxon_concept.full_name
+    object.taxon_concept && object.taxon_concept.full_name
   end
 end
