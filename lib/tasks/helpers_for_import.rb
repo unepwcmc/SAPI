@@ -248,7 +248,7 @@ class CsvToDbMap
       'Effective from' => 'effective_at date',
       'End Date' => 'end_date date'
     },
-    'names_for_transfer_import' => {
+    'trade_species_mapping_import' => {
         'cites_name' => 'cites_name varchar',
         'cites_taxon_code' => 'cites_taxon_code varchar',
         'speciesplusid' => 'species_plus_id int',
