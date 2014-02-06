@@ -2,7 +2,7 @@ namespace :import do
   desc "Import trade - species_plus mapping table from csv file"
   task :trade_species_mapping => [:environment] do
     TMP_TABLE = "trade_species_mapping_import"
-    file = "lib/files/trade_species_mapping_29114.csv"
+    file = "lib/files/names_for_transfer_29114.csv"
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
