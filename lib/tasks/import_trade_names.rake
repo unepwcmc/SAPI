@@ -14,7 +14,8 @@ namespace :import do
     file = "lib/files/trade_names_to_add_8132.csv"
 
     taxonomy_id = Taxonomy.where(:name => 'CITES_EU').first.id
-    taxon_relationship_type_id = TaxonRelationshipType.find_or_create_by_name(:name => 'HAS_TRADE_NAME').id
+    taxon_relationship_type_id = TaxonRelationshipType.
+      find_or_create_by_name(:name => TaxonRelationshipType::HAS_TRADE_NAME).id
 
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
