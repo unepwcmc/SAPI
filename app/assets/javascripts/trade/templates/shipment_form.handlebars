@@ -68,7 +68,7 @@
         </div>
         <div class="attribute-area left">
           <p>Purpose Code <span class="error">{{currentShipment.errors.purposeId}}</span></p>
-            {{view Ember.Select
+            {{view Trade.Select2
               prompt="Please select purpose code value"
               contentBinding="controllers.purposes"
               optionValuePath="content.id"
@@ -78,7 +78,7 @@
         </div>
         <div class="attribute-area left">
           <p>Source Code <span class="error">{{currentShipment.errors.sourceId}}</span></p>
-            {{view Ember.Select
+            {{view Trade.Select2
               prompt="Please select source code value"
               contentBinding="controllers.sources"
               optionValuePath="content.id"
@@ -94,7 +94,7 @@
       <div class="inner">
         <div class="attribute-area left">
           <p>Importer <span class="error">{{currentShipment.errors.importerId}}</span></p>
-            {{view Ember.Select
+            {{view Trade.Select2
               prompt="Please select importer"
               contentBinding="controllers.geoEntities"
               optionValuePath="content.id"
@@ -104,7 +104,7 @@
         </div>
         <div class="attribute-area left">
           <p>Exporter <span class="error">{{currentShipment.errors.exporterId}}</span></p>
-            {{view Ember.Select
+            {{view Trade.Select2
               prompt="Please select exporter"
               contentBinding="controllers.geoEntities"
               optionValuePath="content.id"
@@ -114,7 +114,7 @@
         </div>
         <div class="attribute-area left">
           <p>Country of Origin <span class="error">{{currentShipment.errors.countryOfOriginId}}</span></p>
-            {{view Ember.Select
+            {{view Trade.Select2
               prompt="Please select country of origin value"
               contentBinding="controllers.geoEntities"
               optionValuePath="content.id"
