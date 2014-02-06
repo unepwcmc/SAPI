@@ -40,8 +40,9 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
     sandbox_klass = Trade::SandboxTemplate.ar_klass(table_name)
     sandbox_klass.
       joins(<<-SQL
-            INNER JOIN taxon_concepts ON taxon_concepts.full_name = species_name
+            INNER JOIN taxon_concepts ON taxon_concepts.id = taxon_concept_id
             INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
+            AND taxonomies.name = '#{Taxonomy::CITES_EU}'
            SQL
       ).where(<<-SQL
           (
@@ -54,9 +55,8 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
           )
         SQL
      ).
-     where(:taxonomies => {:name => Taxonomy::CITES_EU}).
      select(['COUNT(*) AS error_count', "ARRAY_AGG(#{table_name}.id) AS matching_records_ids",
-            'species_name', 'source_code']).
-     group('species_name, source_code')
+            'taxon_concept_id', 'species_name', 'source_code']).
+     group('taxon_concept_id, species_name, source_code')
   end
 end

@@ -95,7 +95,7 @@ class Trade::ValidationRule < ActiveRecord::Base
   private
 
   def required_column_names
-    column_names & ['species_name', 'appendix', 'year', 'term_code',
+    column_names & ['taxon_concept_id', 'species_name', 'appendix', 'year', 'term_code',
       'trading_partner', 'importer', 'exporter', 'reporter_type', 'quantity'
     ]
   end

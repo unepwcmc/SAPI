@@ -17,12 +17,17 @@
 class Trade::InclusionValidationRule < Trade::ValidationRule
   attr_accessible :valid_values_view
 
-  def error_message(values_ary = nil)
+  def error_message(values_hash = nil)
     scope_info = sanitized_scope.map do |scope_column, scope_value|
       "#{scope_column} = #{scope_value}"
     end.compact.join(', ')
-    info = column_names.each_with_index.map do |cn, idx|
-      "#{cn} #{values_ary && (values_ary[idx].blank? ? '[BLANK]' : values_ary[idx])}"
+    info = column_names_for_matching.each_with_index.map do |cn|
+      # for taxon concept validations output human readable species_name
+      if cn == 'taxon_concept_id'
+        "species_name #{values_hash && (values_hash['species_name'].blank? ? '[BLANK]' : values_hash['species_name'])}"
+      else
+        "#{cn} #{values_hash && (values_hash[cn].blank? ? '[BLANK]' : values_hash[cn])}"
+      end
     end.join(" with ")
     info = "#{info} (#{scope_info})" unless scope_info.blank?
     info + ' is invalid'
@@ -31,9 +36,9 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   def validation_errors(annual_report_upload)
     matching_records_grouped(annual_report_upload.sandbox.table_name).map do |mr|
       error_selector = error_selector(mr, annual_report_upload.point_of_view)
-      values_ary = column_names.map{ |cn| mr.send(cn) }
+      values_hash = Hash[column_names_for_display.map{ |cn| [cn, mr.send(cn)] }]
       Trade::ValidationError.new(
-          :error_message => error_message(values_ary),
+          :error_message => error_message(values_hash),
           :annual_report_upload_id => annual_report_upload.id,
           :validation_rule_id => self.id,
           :error_count => mr.error_count,
@@ -66,6 +71,18 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
 
   private
 
+  def column_names_for_matching
+    column_names
+  end
+
+  def column_names_for_display
+    if column_names.include? ('taxon_concept_id')
+      column_names << 'species_name'
+    else
+      column_names
+    end
+  end
+
   # Returns a hash with column values to be used to select invalid rows.
   # e.g.
   # {
@@ -76,7 +93,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # Expects a single grouped matching record.
   def error_selector(matching_record, point_of_view)
     res = {}
-    column_names.each do |cn|
+    column_names_for_matching.each do |cn|
       res[cn] = matching_record.send(cn)
     end
     sanitized_scope.map do |scn, val|
@@ -90,10 +107,10 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   def matching_records_grouped(table_name)
     Trade::SandboxTemplate.
     select(
-      column_names +
+      column_names_for_display +
       ['COUNT(*) AS error_count', 'ARRAY_AGG(id) AS matching_records_ids']
     ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
-    group(column_names).having(
+    group(column_names_for_display).having(
       required_column_names.map{ |cn| "#{cn} IS NOT NULL"}.join(' AND ')
     )
   end
@@ -125,7 +142,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   def matching_records_arel(table_name)
     s = Arel::Table.new(table_name)
     v = Arel::Table.new(valid_values_view)
-    arel_nodes = column_names.map do |c|
+    arel_nodes = column_names_for_matching.map do |c|
       if required_column_names.include? c
         v[c].eq(s[c])
       else

@@ -117,6 +117,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
       CREATE INDEX ON #{target_table_name} (trading_partner);
       CREATE INDEX ON #{target_table_name} (term_code);
       CREATE INDEX ON #{target_table_name} (species_name);
+      CREATE INDEX ON #{target_table_name} (taxon_concept_id);
       CREATE INDEX ON #{target_table_name} (appendix);
       CREATE INDEX ON #{target_table_name} (quantity);
       CREATE INDEX ON #{target_table_name} (source_code);

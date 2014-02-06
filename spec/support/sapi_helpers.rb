@@ -417,7 +417,7 @@ shared_context :sapi do
   end
   def create_species_name_term_validation
     create(:inclusion_validation_rule,
-      :column_names => ['species_name', 'term_code'],
+      :column_names => ['taxon_concept_id', 'term_code'],
       :valid_values_view => 'valid_taxon_concept_term_view',
       :is_primary => false
     )
@@ -427,8 +427,8 @@ shared_context :sapi do
       :scope => {
         :source_code => 'W'
       },
-      :column_names => ['species_name', 'country_of_origin'],
-      :valid_values_view => 'valid_species_name_country_of_origin_view',
+      :column_names => ['taxon_concept_id', 'country_of_origin'],
+      :valid_values_view => 'valid_taxon_concept_country_of_origin_view',
       :is_primary => false
     )
   end
@@ -437,8 +437,8 @@ shared_context :sapi do
       :scope => {
         :source_code => 'W', :country_of_origin_blank => true
       },
-      :column_names => ['species_name', 'exporter'],
-      :valid_values_view => 'valid_species_name_exporter_view',
+      :column_names => ['taxon_concept_id', 'exporter'],
+      :valid_values_view => 'valid_taxon_concept_exporter_view',
       :is_primary => false
     )
   end
@@ -456,7 +456,7 @@ shared_context :sapi do
   end
   def create_taxon_concept_source_validation
     create(:taxon_concept_source_validation_rule,
-      :column_names => ['species_name', 'source_code'],
+      :column_names => ['taxon_concept_id', 'source_code'],
       :is_primary => false
     )
   end

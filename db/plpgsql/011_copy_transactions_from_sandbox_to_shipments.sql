@@ -65,7 +65,7 @@ BEGIN
     EXECUTE sql;
 
     GET DIAGNOSTICS updated_rows = ROW_COUNT;
-    RAISE INFO '[%] Updated % sandbox shipments', table_name, updated_rows;
+    -- RAISE INFO '[%] Updated % sandbox shipments', table_name, updated_rows;
 
     RETURN updated_rows;
 END;
