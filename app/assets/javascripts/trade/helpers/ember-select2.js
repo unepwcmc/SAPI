@@ -100,8 +100,8 @@ Trade.Select2 = Ember.Select.extend({
     var selected = this.get('selection');
     var sel2Val = this.$().select2('val');
     if (selected) { 
-      fieldvalue = selected.get(fieldname) 
-    };
+      fieldvalue = selected.get(fieldname);
+    }
     Ember.run.sync();
     // trigger change event on selectbox once data
     // has been loaded to update options values
