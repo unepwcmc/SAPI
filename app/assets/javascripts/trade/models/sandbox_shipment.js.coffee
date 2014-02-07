@@ -1,6 +1,7 @@
 Trade.SandboxShipment = DS.Model.extend
   appendix: DS.attr('string')
-  speciesName: DS.attr('string')
+  taxonName: DS.attr('string')
+  acceptedTaxonName: DS.attr('string')
   termCode: DS.attr('string')
   quantity: DS.attr('string')
   unitCode: DS.attr('string')

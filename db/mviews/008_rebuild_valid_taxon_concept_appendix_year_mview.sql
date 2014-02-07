@@ -1,20 +1,25 @@
-CREATE OR REPLACE FUNCTION rebuild_valid_species_name_annex_year_mview() RETURNS VOID
+DROP FUNCTION IF EXISTS rebuild_valid_species_name_annex_year_mview();
+CREATE OR REPLACE FUNCTION rebuild_valid_taxon_concept_annex_year_mview() RETURNS VOID
   LANGUAGE plpgsql
   AS $$
   BEGIN
-    PERFORM rebuild_valid_species_name_appendix_year_designation_mview('EU');
+    PERFORM rebuild_valid_taxon_concept_appendix_year_designation_mview('EU');
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION rebuild_valid_species_name_appendix_year_mview() RETURNS VOID
+DROP FUNCTION IF EXISTS rebuild_valid_species_name_appendix_year_mview();
+CREATE OR REPLACE FUNCTION rebuild_valid_taxon_concept_appendix_year_mview() RETURNS VOID
   LANGUAGE plpgsql
   AS $$
   BEGIN
-    PERFORM rebuild_valid_species_name_appendix_year_designation_mview('CITES');
+    PERFORM rebuild_valid_taxon_concept_appendix_year_designation_mview('CITES');
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION rebuild_valid_species_name_appendix_year_designation_mview(
+DROP FUNCTION IF EXISTS rebuild_valid_species_name_appendix_year_designation_mview(
+  designation_name TEXT
+  );
+CREATE OR REPLACE FUNCTION rebuild_valid_taxon_concept_appendix_year_designation_mview(
   designation_name TEXT
   ) RETURNS VOID
   LANGUAGE plpgsql
@@ -28,7 +33,7 @@ CREATE OR REPLACE FUNCTION rebuild_valid_species_name_appendix_year_designation_
     ELSE
       appendix := 'appendix';
     END IF;
-    mview_name := 'valid_species_name_' || appendix || '_year_mview';
+    mview_name := 'valid_taxon_concept_' || appendix || '_year_mview';
 
     EXECUTE 'DROP TABLE IF EXISTS ' || designation_name || '_listing_changes_intervals_mview;';
 
@@ -76,14 +81,15 @@ CREATE OR REPLACE FUNCTION rebuild_valid_species_name_appendix_year_designation_
       FROM left_merged_intervals
       GROUP BY taxon_concept_id, species_listing_name, effective_from
     )
-    SELECT taxon_concept_id, taxon_concepts.full_name AS species_name, species_listing_name AS ' || appendix || ', effective_from, effective_to
+    SELECT taxon_concept_id, species_listing_name AS ' || appendix || ', effective_from, effective_to
     FROM merged_intervals
     JOIN taxon_concepts
     ON taxon_concepts.id = merged_intervals.taxon_concept_id
     ORDER BY taxon_concept_id, ' || appendix || ', effective_from, effective_to;';
 
-    EXECUTE 'CREATE INDEX ON tmp_' || mview_name || ' (species_name, ' || appendix || ', effective_from, effective_to);';
+    EXECUTE 'CREATE INDEX ON tmp_' || mview_name || ' (taxon_concept_id, ' || appendix || ', effective_from, effective_to);';
 
+    EXECUTE 'DROP TABLE IF EXISTS valid_species_name_' || appendix || '_year_mview;';
     EXECUTE 'DROP TABLE IF EXISTS ' || mview_name || ';';
     EXECUTE 'ALTER TABLE tmp_' || mview_name || ' RENAME TO ' || mview_name || ';';
   END;

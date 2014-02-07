@@ -337,7 +337,7 @@ puts "#{Language.delete_all} languages deleted"
 puts "#{Reference.delete_all} references deleted"
 puts "#{TradeRestriction.delete_all} trade restrictions deleted"
 
-['trading_partner', 'term_code', 'species_name', 'appendix', 'quantity'].each do |col|
+['trading_partner', 'term_code', 'taxon_name', 'appendix', 'quantity'].each do |col|
   Trade::PresenceValidationRule.create(:column_names => [col], :run_order => 1)
 end
 ['quantity', 'year'].each do |col|
@@ -377,8 +377,8 @@ Trade::InclusionValidationRule.create(
   :run_order => 3
 )
 Trade::InclusionValidationRule.create(
-  :column_names => ['species_name'],
-  :valid_values_view => 'valid_species_name_view',
+  :column_names => ['taxon_name'],
+  :valid_values_view => 'valid_taxon_name_view',
   :run_order => 3
 )
 Trade::InclusionValidationRule.create(
@@ -386,9 +386,9 @@ Trade::InclusionValidationRule.create(
   :valid_values_view => 'valid_appendix_view',
   :run_order => 3
 )
-Trade::SpeciesNameAppendixYearValidationRule.create(
-  :column_names => ['species_name', 'appendix', 'year'],
-  :valid_values_view => 'valid_species_name_appendix_year_mview',
+Trade::TaxonConceptAppendixYearValidationRule.create(
+  :column_names => ['taxon_concept_id', 'appendix', 'year'],
+  :valid_values_view => 'valid_taxon_concept_appendix_year_mview',
   :run_order => 4,
   :is_primary => false
 )
@@ -405,7 +405,7 @@ Trade::InclusionValidationRule.create(
   :is_primary => false
 )
 Trade::InclusionValidationRule.create(
-  :column_names => ['species_name', 'term_code'],
+  :column_names => ['taxon_concept_id', 'term_code'],
   :valid_values_view => 'valid_taxon_concept_term_view',
   :run_order => 4,
   :is_primary => false
@@ -414,33 +414,33 @@ Trade::InclusionValidationRule.create(
   :scope => {
     :source_code => 'W'
   },
-  :column_names => ['species_name', 'country_of_origin'],
-  :valid_values_view => 'valid_species_name_country_of_origin_view',
+  :column_names => ['taxon_concept_id', 'country_of_origin'],
+  :valid_values_view => 'valid_taxon_concept_country_of_origin_view',
   :run_order => 4,
   :is_primary => false
 )
-Trade::PovInclusionValidationRule.create(
+Trade::InclusionValidationRule.create(
   :scope => {
     :source_code => 'W', :country_of_origin_blank => true
   },
-  :column_names => ['species_name', 'exporter'],
-  :valid_values_view => 'valid_species_name_exporter_view',
+  :column_names => ['taxon_concept_id', 'exporter'],
+  :valid_values_view => 'valid_taxon_concept_exporter_view',
   :run_order => 4,
   :is_primary => false
 )
-Trade::PovDistinctValuesValidationRule.create(
+Trade::DistinctValuesValidationRule.create(
   :column_names => ['exporter', 'country_of_origin'],
   :run_order => 4,
   :is_primary => false
 )
-Trade::PovDistinctValuesValidationRule.create(
+Trade::DistinctValuesValidationRule.create(
   :column_names => ['exporter', 'importer'],
   :run_order => 4,
   :is_primary => false
 )
 
 Trade::TaxonConceptSourceValidationRule.create(
-  :column_names => ['species_name', 'source_code'],
+  :column_names => ['taxon_concept_id', 'source_code'],
   :run_order => 4,
   :is_primary => false
 )

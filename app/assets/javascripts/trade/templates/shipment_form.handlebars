@@ -16,10 +16,10 @@
         Name, Appendix and Year
       </div>
       <div class="inner">
-        <div class="attribute-area left species">
-          <p>Species name <span class="error">{{currentShipment.errors.taxonConceptId}}</span></p>
+        <div class="attribute-area left taxon-name">
+          <p>taxon name <span class="error">{{currentShipment.errors.taxonConceptId}}</span></p>
           {{view Trade.TaxonConceptSelect2
-            prompt="Please select species names"
+            prompt="Please select taxon names"
             valueBinding="currentShipment.taxonConceptId"
           }}
         </div>

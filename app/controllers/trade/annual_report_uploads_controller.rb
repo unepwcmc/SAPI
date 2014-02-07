@@ -63,7 +63,7 @@ private
       :sandbox_shipments => [
         :id,
         :appendix,
-        :species_name,
+        :taxon_name,
         :term_code,
         :quantity,
         :unit_code,
