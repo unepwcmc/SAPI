@@ -52,9 +52,10 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   unsavedChanges: (->
     @get('changedRowsCount') > 0
   ).property('changedRowsCount')
+
   changedRowsCount: (->
     Trade.SandboxShipment.all().filterBy('_modified', true).length
-  ).property('content', 'currentShipment')
+  ).property('content.@each._modified', 'currentShipment')
 
   actions:
 
