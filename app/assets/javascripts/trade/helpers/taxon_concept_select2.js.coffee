@@ -6,6 +6,7 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
   closeOnSelect: true
   type: 'hidden'
   origin: null
+  classNames: ['select2']
 
   didInsertElement: () ->
     placeholderText = this.get('prompt') || ''
