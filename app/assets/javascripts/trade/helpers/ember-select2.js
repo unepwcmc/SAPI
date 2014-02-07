@@ -39,6 +39,7 @@ Trade.Select2 = Ember.Select.extend({
   width: 'resolve',
   allowClear: true,
   closeOnSelect: true,
+  classNames: ['select2'],
 
   // initialize Select2 once view is inserted in DOM
   didInsertElement : function() {

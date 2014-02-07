@@ -84,7 +84,8 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
       )
 
     cancelSelectForUpdate: () ->
-      $('.sandbox-form').find('input[type=text]').val(null)
+      $('.sandbox-form').find('select,input[type=text]').val(null)
+      $('.sandbox-form .select2').select2('val', null)
 
     #### Save and cancel changes made on shipments table ####
 
