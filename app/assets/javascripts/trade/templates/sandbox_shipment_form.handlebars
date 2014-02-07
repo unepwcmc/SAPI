@@ -48,7 +48,7 @@
         <div class="attribute-area left">
           <p>Term Code</p>
           <p class="small">Current value: <span class="blue">{{currentShipment.termCode}}</p>
-            {{view Ember.Select
+            {{view Trade.Select2
               prompt="Please select term code value"
               contentBinding="controllers.terms"
               optionValuePath="content.code"
@@ -59,7 +59,7 @@
         <div class="attribute-area left">
           <p>Unit Code</p>
           <p class="small">Current value: <span class="blue">{{currentShipment.unitCode}}</p>
-            {{view Ember.Select
+            {{view Trade.Select2
               prompt="Please select unit code value"
               contentBinding="controllers.units"
               optionValuePath="content.code"
@@ -70,7 +70,7 @@
         <div class="attribute-area left">
           <p>Purpose Code</p>
           <p class="small">Current value: <span class="blue">{{currentShipment.purposeCode}}</p>
-            {{view Ember.Select
+            {{view Trade.Select2
               prompt="Please select purpose code value"
               contentBinding="controllers.purposes"
               optionValuePath="content.code"
@@ -81,7 +81,7 @@
         <div class="attribute-area left">
           <p>Source Code</p>
           <p class="small">Current value: <span class="blue">{{currentShipment.sourceCode}}</p>
-            {{view Ember.Select
+            {{view Trade.Select2
               prompt="Please select source code value"
               contentBinding="controllers.sources"
               optionValuePath="content.code"
@@ -98,7 +98,7 @@
         <div class="attribute-area left">
           <p>TradingPartner</p>
           <p class="small">Current value: <span class="blue">{{currentShipment.tradingPartner}}</p>
-            {{view Ember.Select
+            {{view Trade.Select2
               prompt="Please select trading partner"
               contentBinding="controllers.geoEntities"
               optionValuePath="content.isoCode2"
@@ -109,7 +109,7 @@
         <div class="attribute-area left">
           <p>Country of Origin</p>
           <p class="small">Current value: <span class="blue">{{currentShipment.countryOfOrigin}}</p>
-            {{view Ember.Select
+            {{view Trade.Select2
               prompt="Please select country of origin value"
               contentBinding="controllers.geoEntities"
               optionValuePath="content.isoCode2"
