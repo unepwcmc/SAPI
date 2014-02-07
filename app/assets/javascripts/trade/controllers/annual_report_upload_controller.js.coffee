@@ -24,9 +24,9 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, 
     @applyFilter('appendix')
   ).observes('selectedAppendixValues.@each', 'blankAppendix')
 
-  selectedSpeciesNameChanged: ( ->
-    @applyFilter('speciesName')
-  ).observes('selectedSpeciesNameValues.@each', 'blankSpeciesName')
+  selectedTaxonNameChanged: ( ->
+    @applyFilter('taxonName')
+  ).observes('selectedTaxonNameValues.@each', 'blankTaxonName')
 
   selectedTermCodeChanged: ( ->
     @applyFilter('termCode')
@@ -133,7 +133,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, 
   sanitizeQueryParams: (selected) ->
     reseter = {
       appendix: false,
-      species_name: false,
+      taxon_name: false,
       taxon_concept_id: false,
       term_code: false,
       quantity: false,

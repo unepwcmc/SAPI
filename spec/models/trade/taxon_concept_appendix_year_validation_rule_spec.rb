@@ -70,10 +70,10 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
       context "when split listing" do
         before(:each) do
           @sandbox_klass.create(
-            :species_name => 'Loxodonta africana', :appendix => 'I', :year => '1997'
+            :taxon_name => 'Loxodonta africana', :appendix => 'I', :year => '1997'
           )
           @sandbox_klass.create(
-            :species_name => 'Loxodonta africana', :appendix => 'II', :year => '1997'
+            :taxon_name => 'Loxodonta africana', :appendix => 'II', :year => '1997'
           )
         end
         subject{
@@ -86,10 +86,10 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
       context "when old listing" do
         before(:each) do
           @sandbox_klass.create(
-            :species_name => 'Loxodonta africana', :appendix => 'II', :year => '1996'
+            :taxon_name => 'Loxodonta africana', :appendix => 'II', :year => '1996'
           )
           @sandbox_klass.create(
-            :species_name => 'Loxodonta africana', :appendix => 'I', :year => '1996'
+            :taxon_name => 'Loxodonta africana', :appendix => 'I', :year => '1996'
           )
         end
         subject{
@@ -101,13 +101,13 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
         specify{
           ve = subject.validation_errors(@aru).first
           ve.error_selector.should == {'taxon_concept_id' => @species.id, 'appendix' => 'II', 'year' => '1996'}
-          ve.error_message.should == 'species_name Loxodonta africana with appendix II with year 1996 is invalid'
+          ve.error_message.should == 'taxon_name Loxodonta africana with appendix II with year 1996 is invalid'
         }
       end
       context "when appendix N and CITES listed" do
         before(:each) do
           @sandbox_klass.create(
-            :species_name => 'Loxodonta africana', :appendix => 'N', :year => '1996'
+            :taxon_name => 'Loxodonta africana', :appendix => 'N', :year => '1996'
           )
         end
         subject{
@@ -119,13 +119,13 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
         specify{
           ve = subject.validation_errors(@aru).first
           ve.error_selector.should == {'taxon_concept_id' => @species.id, 'appendix' => 'N', 'year' => '1996'}
-          ve.error_message.should == 'species_name Loxodonta africana with appendix N with year 1996 is invalid'
+          ve.error_message.should == 'taxon_name Loxodonta africana with appendix N with year 1996 is invalid'
         }
       end
       context "when reported under a synonym, but otherwise fine" do
         before(:each) do
           @sandbox_klass.create(
-            :species_name => 'Loxodonta cyclotis', :appendix => 'I', :year => '2013'
+            :taxon_name => 'Loxodonta cyclotis', :appendix => 'I', :year => '2013'
           )
         end
         subject{
@@ -140,7 +140,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
       include_context "Cedrela montana"
       before(:each) do
         @sandbox_klass.create(
-          :species_name => 'Cedrela montana', :appendix => 'N', :year => '2013'
+          :taxon_name => 'Cedrela montana', :appendix => 'N', :year => '2013'
         )
       end
       subject{
@@ -154,7 +154,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
       include_context "Agave"
       before(:each) do
         @sandbox_klass.create(
-          :species_name => 'Agave arizonica', :appendix => 'N', :year => '2013'
+          :taxon_name => 'Agave arizonica', :appendix => 'N', :year => '2013'
         )
       end
       subject{

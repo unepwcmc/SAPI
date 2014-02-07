@@ -28,7 +28,7 @@ FactoryGirl.define do
   end
 
   factory :validation_rule, :class => Trade::ValidationRule do
-    column_names ['species_name']
+    column_names ['taxon_name']
     run_order 1
     factory :presence_validation_rule, :class => Trade::PresenceValidationRule
     factory :numericality_validation_rule, :class => Trade::NumericalityValidationRule

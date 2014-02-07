@@ -38,7 +38,7 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
   # specific errors and ids of matching records
   def matching_records_grouped(table_name)
     sandbox_klass = Trade::SandboxTemplate.ar_klass(table_name)
-    sandbox_klass.
+    sandbox_klass.from("#{table_name}_view #{table_name}").
       joins(<<-SQL
             INNER JOIN taxon_concepts ON taxon_concepts.id = taxon_concept_id
             INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
@@ -56,7 +56,7 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
         SQL
      ).
      select(['COUNT(*) AS error_count', "ARRAY_AGG(#{table_name}.id) AS matching_records_ids",
-            'taxon_concept_id', 'species_name', 'source_code']).
-     group('taxon_concept_id, species_name, source_code')
+            'taxon_concept_id', 'accepted_taxon_name', 'source_code']).
+     group('taxon_concept_id, accepted_taxon_name, source_code')
   end
 end

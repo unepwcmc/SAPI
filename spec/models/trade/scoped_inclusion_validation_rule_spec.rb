@@ -12,7 +12,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       include_context 'Pecari tajacu'
       before(:each) do
         @sandbox_klass.create(
-          :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => 'AR'
+          :taxon_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => 'AR'
         )
       end
       subject{
@@ -32,7 +32,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       include_context 'Pecari tajacu'
       before(:each) do
         @sandbox_klass.create(
-          :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => 'PL'
+          :taxon_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => 'PL'
         )
       end
       subject{

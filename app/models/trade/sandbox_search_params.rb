@@ -8,7 +8,7 @@ class Trade::SandboxSearchParams < Hash
       :annual_report_upload_id => params[:annual_report_upload_id],
       :appendix => params[:appendix],
       :quantity => params[:quantity],
-      :species_name => params[:species_name],
+      :taxon_name => params[:taxon_name],
       :taxon_concept_id => params[:taxon_concept_id],
       :term_code => params[:term_code],
       :unit_code => params[:unit_code],

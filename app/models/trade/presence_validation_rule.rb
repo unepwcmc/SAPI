@@ -27,7 +27,7 @@ class Trade::PresenceValidationRule < Trade::ValidationRule
   # of validated field => nil.
   # e.g.
   # {
-  #    :species_name => nil
+  #    :taxon_name => nil
   # }
   # Expects a single grouped matching record.
   def error_selector(matching_records)

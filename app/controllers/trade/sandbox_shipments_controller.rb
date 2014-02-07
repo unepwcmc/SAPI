@@ -25,7 +25,7 @@ private
   def sandbox_shipment_params
     params.require(:sandbox_shipment).permit(
       :appendix,
-      :species_name,
+      :taxon_name,
       :term_code,
       :quantity,
       :unit_code,

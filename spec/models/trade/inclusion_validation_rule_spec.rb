@@ -42,8 +42,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       subject{
         create(
           :inclusion_validation_rule,
-          :column_names => ['species_name'],
-          :valid_values_view => 'valid_species_name_view'
+          :column_names => ['taxon_name'],
+          :valid_values_view => 'valid_taxon_name_view'
         )
       }
       specify{
@@ -168,8 +168,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         cav = create(:term, :code => "CAV")
         create(:term, :code => "BAL")
         @pair = create(:trade_taxon_concept_term_pair, :term_id => cav.id, :taxon_concept_id => @species.id)
-        sandbox_klass.create(:term_code => 'CAV', :species_name => @species.full_name)
-        sandbox_klass.create(:term_code => 'BAL', :species_name => @species.full_name)
+        sandbox_klass.create(:term_code => 'CAV', :taxon_name => @species.full_name)
+        sandbox_klass.create(:term_code => 'BAL', :taxon_name => @species.full_name)
       end
       subject{
         create(

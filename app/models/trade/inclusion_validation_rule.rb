@@ -22,9 +22,9 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
       "#{scope_column} = #{scope_value}"
     end.compact.join(', ')
     info = column_names_for_matching.each_with_index.map do |cn|
-      # for taxon concept validations output human readable species_name
+      # for taxon concept validations output human readable taxon_name
       if cn == 'taxon_concept_id'
-        "species_name #{values_hash && (values_hash['species_name'].blank? ? '[BLANK]' : values_hash['species_name'])}"
+        "taxon_name #{values_hash && (values_hash['accepted_taxon_name'].blank? ? '[BLANK]' : values_hash['accepted_taxon_name'])}"
       else
         "#{cn} #{values_hash && (values_hash[cn].blank? ? '[BLANK]' : values_hash[cn])}"
       end
@@ -77,7 +77,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
 
   def column_names_for_display
     if column_names.include? ('taxon_concept_id')
-      column_names << 'species_name'
+      column_names << 'accepted_taxon_name'
     else
       column_names
     end
@@ -86,7 +86,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # Returns a hash with column values to be used to select invalid rows.
   # e.g.
   # {
-  #    :species_name => 'Loxodonta africana',
+  #    :taxon_name => 'Loxodonta africana',
   #    :term_code => 'CAV'
   #
   # }

@@ -16,16 +16,16 @@
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Species name<br>
+      taxon name<br>
       {{view Trade.Select2
-        prompt="Please select species names"
-        contentBinding="controller.allSpeciesNameValues"
-        selectionBinding="controller.selectedSpeciesNameValues"
+        prompt="Please select taxon names"
+        contentBinding="controller.allTaxonNameValues"
+        selectionBinding="controller.selectedTaxonNameValues"
         multiple="true"
       }}
     </label>
     <label class="blank-checkbox">
-      {{view Ember.Checkbox checkedBinding="blankSpeciesName"}}
+      {{view Ember.Checkbox checkedBinding="blankTaxonName"}}
       blank
     </label>
   </div>

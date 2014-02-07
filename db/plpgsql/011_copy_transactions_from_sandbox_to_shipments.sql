@@ -21,7 +21,7 @@ BEGIN
         taxon_concepts.id AS taxon_concept_id
       FROM ' || table_name || ' sandbox_table
       JOIN taxon_concepts
-        ON UPPER(taxon_concepts.full_name) = UPPER(squish(sandbox_table.species_name))
+        ON UPPER(taxon_concepts.full_name) = UPPER(squish(sandbox_table.taxon_name))
         AND taxonomy_id = ' || cites_taxonomy_id ||
       CASE WHEN shipment_id IS NOT NULL
         THEN ' WHERE sandbox_table.id = ' || shipment_id

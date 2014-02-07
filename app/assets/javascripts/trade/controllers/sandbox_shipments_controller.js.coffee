@@ -7,7 +7,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   sandboxShipmentsSaving: false
 
   columns: [
-    'appendix', 'species_name', 'accepted_taxon_name',
+    'appendix', 'taxon_name', 'accepted_taxon_name',
     'term_code', 'quantity',  'unit_code',
     'trading_partner', 'country_of_origin',
     'import_permit', 'export_permit', 'origin_permit',

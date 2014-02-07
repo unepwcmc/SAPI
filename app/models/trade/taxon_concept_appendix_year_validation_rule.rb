@@ -101,7 +101,7 @@ class Trade::TaxonConceptAppendixYearValidationRule < Trade::InclusionValidation
   # Difference from superclass: rather than equality, check if appendix
   # is contained in valid appendix array (to allow for split listings)
   def matching_records_arel(table_name)
-    s = Arel::Table.new(table_name)
+    s = Arel::Table.new("#{table_name}_view")
 
     not_null_nodes = column_names.map do |c|
       s[c].not_eq(nil)
