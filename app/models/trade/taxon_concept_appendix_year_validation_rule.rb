@@ -14,7 +14,7 @@
 #  scope             :hstore
 #
 
-class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationRule
+class Trade::TaxonConceptAppendixYearValidationRule < Trade::InclusionValidationRule
 
   def validation_errors_for_shipment(shipment)
     shipment_in_scope = true
@@ -31,7 +31,7 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
     
     # if appendix given as N, check in the valid annex view
     if shipment.appendix == 'N'
-      v = Arel::Table.new('valid_species_name_annex_year_mview')
+      v = Arel::Table.new('valid_taxon_concept_annex_year_mview')
     else
       v = Arel::Table.new(valid_values_view)
       appendix_node = v['appendix'].eq(shipment.appendix)
@@ -40,12 +40,11 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
     effective_from = Arel::Nodes::NamedFunction.new "DATE_PART", ["year", v['effective_from']]
     effective_to = Arel::Nodes::NamedFunction.new "DATE_PART", ["year", v['effective_to']]
     year_node = effective_from.lteq(shipment.year).and(effective_to.gteq(shipment.year).or(effective_to.eq(nil)))
-    actual_species_name = v['species_name']
-    species_name_node = actual_species_name.eq(shipment.taxon_concept.full_name)
+    taxon_concept_node = v['taxon_concept_id'].eq(shipment.taxon_concept_id)
     conditions = if appendix_node
-      appendix_node.and(year_node).and(species_name_node)
+      appendix_node.and(year_node).and(taxon_concept_node)
     else
-      year_node.and(species_name_node)
+      year_node.and(taxon_concept_node)
     end
     return nil if Trade::Shipment.find_by_sql(v.project('*').where(conditions)).any?
     error_message
@@ -60,8 +59,8 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
     effective_from.lteq(sandbox_year).and(effective_to.gteq(sandbox_year).or(effective_to.eq(nil)))
   end
 
-  def species_name_join_node(s, v)
-    s['species_name'].eq(v['species_name'])
+  def taxon_concept_join_node(s, v)
+    s['taxon_concept_id'].eq(v['taxon_concept_id'])
   end
 
   def appendix_join_node(s, v)
@@ -76,7 +75,7 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
   def valid_values_arel(s)
     v = Arel::Table.new(valid_values_view)
     join_conditions = appendix_join_node(s, v).and(year_join_node(s, v)).
-      and(species_name_join_node(s, v))
+      and(taxon_concept_join_node(s, v))
     s.project(s['*']).join(v).on(join_conditions)
   end
 
@@ -84,9 +83,9 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
   # which have a match on species name + year in valid annex mview
   # and do not have a match on species name + year in valid appendix mview
   def valid_appendix_n_values_arel(s)
-    v = Arel::Table.new('valid_species_name_annex_year_mview')
+    v = Arel::Table.new('valid_taxon_concept_annex_year_mview')
     join_conditions = appendix_n_join_node(s, v).and(year_join_node(s, v)).
-      and(species_name_join_node(s, v))
+      and(taxon_concept_join_node(s, v))
     s.project(s['*']).join(v).on(join_conditions).except(
       invalid_appendix_n_values_arel(s)
     )
@@ -95,14 +94,14 @@ class Trade::SpeciesNameAppendixYearValidationRule < Trade::InclusionValidationR
   def invalid_appendix_n_values_arel(s)
     v = Arel::Table.new(valid_values_view)
     join_conditions = appendix_n_join_node(s, v).and(year_join_node(s, v)).
-      and(species_name_join_node(s, v))
+      and(taxon_concept_join_node(s, v))
     s.project(s['*']).join(v).on(join_conditions)
   end
 
   # Difference from superclass: rather than equality, check if appendix
   # is contained in valid appendix array (to allow for split listings)
   def matching_records_arel(table_name)
-    s = Arel::Table.new(table_name)
+    s = Arel::Table.new("#{table_name}_view")
 
     not_null_nodes = column_names.map do |c|
       s[c].not_eq(nil)

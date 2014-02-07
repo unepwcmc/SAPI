@@ -16,7 +16,7 @@
 
 require 'spec_helper'
 
-describe Trade::PovDistinctValuesValidationRule, :drops_tables => true do
+describe Trade::DistinctValuesValidationRule, :drops_tables => true do
   let(:country){
     create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
   }
@@ -50,7 +50,7 @@ describe Trade::PovDistinctValuesValidationRule, :drops_tables => true do
       end
       subject{
         create(
-          :pov_distinct_values_validation_rule,
+          :distinct_values_validation_rule,
           :column_names => ['exporter', 'importer']
         )
       }
@@ -73,7 +73,7 @@ describe Trade::PovDistinctValuesValidationRule, :drops_tables => true do
       end
       subject{
         create(
-          :pov_distinct_values_validation_rule,
+          :distinct_values_validation_rule,
           :column_names => ['exporter', 'importer']
         )
       }
@@ -92,7 +92,7 @@ describe Trade::PovDistinctValuesValidationRule, :drops_tables => true do
       end
       subject{
         create(
-          :pov_distinct_values_validation_rule,
+          :distinct_values_validation_rule,
           :column_names => ['exporter', 'country_of_origin']
         )
       }

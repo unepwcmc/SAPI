@@ -42,8 +42,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       subject{
         create(
           :inclusion_validation_rule,
-          :column_names => ['species_name'],
-          :valid_values_view => 'valid_species_name_view'
+          :column_names => ['taxon_name'],
+          :valid_values_view => 'valid_taxon_name_view'
         )
       }
       specify{
@@ -162,18 +162,19 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         ve.error_selector.should == {'term_code' => 'CAV', 'purpose_code' => 'B'}
       }
     end
-    context 'taxon_concept species_name can only be paired with term as defined by trade_taxon_concept_term_pairs table' do
+    context 'taxon_concept_id can only be paired with term as defined by trade_taxon_concept_term_pairs table' do
       before do
+        @species = create_cites_eu_species
         cav = create(:term, :code => "CAV")
         create(:term, :code => "BAL")
-        @pair = create(:trade_taxon_concept_term_pair, :term_id => cav.id)
-        sandbox_klass.create(:term_code => 'CAV', :species_name => @pair.taxon_concept.full_name)
-        sandbox_klass.create(:term_code => 'BAL', :species_name => @pair.taxon_concept.full_name)
+        @pair = create(:trade_taxon_concept_term_pair, :term_id => cav.id, :taxon_concept_id => @species.id)
+        sandbox_klass.create(:term_code => 'CAV', :taxon_name => @species.full_name)
+        sandbox_klass.create(:term_code => 'BAL', :taxon_name => @species.full_name)
       end
       subject{
         create(
           :inclusion_validation_rule,
-          :column_names => ['species_name', 'term_code'],
+          :column_names => ['taxon_concept_id', 'term_code'],
           :valid_values_view => 'valid_taxon_concept_term_view'
         )
       }
@@ -182,7 +183,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       }
       specify{
         ve = subject.validation_errors(annual_report_upload).first
-        ve.error_selector.should == {'term_code' => 'BAL', 'species_name' => @pair.taxon_concept.full_name}
+        ve.error_selector.should == {'term_code' => 'BAL', 'taxon_concept_id' => @species.id}
       }
     end
   end

@@ -13,7 +13,7 @@ class Trade::SandboxFilter < Trade::Filter
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
     @query = sandbox_klass.scoped
 
-    [:appendix, :year, :species_name, :term_code, :unit_code,
+    [:appendix, :year, :taxon_name, :taxon_concept_id, :term_code, :unit_code,
      :source_code, :purpose_code, :trading_partner, :country_of_origin,
      :export_permit, :origin_permit, :import_permit, :quantity ].each do |var|
       if @options[var]

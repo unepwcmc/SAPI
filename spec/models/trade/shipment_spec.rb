@@ -105,7 +105,7 @@ describe Trade::Shipment do
         )
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
-        create_species_name_appendix_year_validation
+        create_taxon_concept_appendix_year_validation
       end
       context "invalid" do
         subject{
@@ -146,7 +146,7 @@ describe Trade::Shipment do
         )
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
-        create_species_name_appendix_year_validation
+        create_taxon_concept_appendix_year_validation
       end
       context "valid" do
         subject{
@@ -167,7 +167,7 @@ describe Trade::Shipment do
         )
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
-        create_species_name_appendix_year_validation
+        create_taxon_concept_appendix_year_validation
       end
       context "not CITES listed and not EU listed" do
         subject{
@@ -266,7 +266,7 @@ describe Trade::Shipment do
         create(:trade_taxon_concept_term_pair,
           :taxon_concept_id => @taxon_concept.id, :term_id => @bal.id
         )
-        create_species_name_term_validation
+        create_taxon_concept_term_validation
       end
       context "invalid" do
         subject{
@@ -289,7 +289,7 @@ describe Trade::Shipment do
     end
     context "when species name + country of origin" do
       before(:each) do
-        create_species_name_country_of_origin_validation
+        create_taxon_concept_country_of_origin_validation
       end
       context "invalid" do
         subject{
@@ -316,7 +316,7 @@ describe Trade::Shipment do
     end
     context "when species name + exporter" do
       before(:each) do
-        create_species_name_exporter_validation
+        create_taxon_concept_exporter_validation
       end
       context "invalid" do
         subject{
