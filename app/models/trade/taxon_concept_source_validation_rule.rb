@@ -26,6 +26,7 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
       shipment.taxon_concept &&
       shipment.taxon_concept.data['kingdom_name'] == 'Animalia' &&
       INVALID_KINGDOM_SOURCE['ANIMALIA'].include?(shipment.source.code) ||
+      shipment.taxon_concept &&
       shipment.taxon_concept.data['kingdom_name'] == 'Plantae' &&
       INVALID_KINGDOM_SOURCE['PLANTAE'].include?(shipment.source.code)
     )
