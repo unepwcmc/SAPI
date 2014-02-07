@@ -108,5 +108,5 @@ Trade.Select2 = Ember.Select.extend({
     Ember.run.next(this, function() {
       this.setSelectedValue(fieldvalue);
     });
-  }.observes('selection')
+  }.observes('selection');
 });

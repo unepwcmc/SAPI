@@ -32,6 +32,7 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
         dataType: 'json'
         data: (term, page) ->
           taxon_concept_query: term # search term
+          visibility: 'trade'
           per_page: 10
           page: page
         results: (data, page) => # parse the results into the format expected by Select2.

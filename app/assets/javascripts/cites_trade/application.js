@@ -543,8 +543,8 @@ $(document).ready(function(){
           data: {
             taxonomy: 'CITES',
             taxon_concept_query: term,
-            autocomplete: true,
-            'ranks[]': "SPECIES"
+            'ranks[]': 'SPECIES',
+            visibility: 'trade'
           },
           success: function(data) {
             response(parseTaxonData(data, term));
@@ -578,8 +578,8 @@ $(document).ready(function(){
           data: {
             taxonomy: 'CITES',
             taxon_concept_query: request.term,
-            autocomplete: true,
-            'ranks[]': 'GENUS'
+            'ranks[]': 'GENUS',
+            visibility: 'trade'
           },
           success: function(data) {
             response(parseTaxonData(data, term));

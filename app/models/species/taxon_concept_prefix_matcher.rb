@@ -36,7 +36,11 @@ class Species::TaxonConceptPrefixMatcher
       @query.by_cites_eu_taxonomy
     end
 
-    @query = @query.without_hidden_subspecies
+    if @visibility == :trade
+      @query = @query.where(:name_status => ['A', 'H', 'T'])
+    else
+      @query = @query.without_hidden_subspecies.where(:name_status => 'A')
+    end
 
     if @taxon_concept_query
       @query = @query.select(
@@ -71,7 +75,7 @@ class Species::TaxonConceptPrefixMatcher
           SELECT * FROM UNNEST(spanish_names_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
         )
       ", :sci_name_prefix => "#{@taxon_concept_query}%", :sci_name_infix => "%#{@taxon_concept_query}%"
-      ]).where(:name_status => 'A')
+      ])
     end
   end
 

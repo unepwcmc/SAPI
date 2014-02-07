@@ -15,17 +15,28 @@ class Trade::StatisticsController < ApplicationController
       where('created_at != updated_at').
       count
     @taxon_concepts_in_trade = Trade::Shipment.count(:taxon_concept_id, :distinct => true)
-    @transactions = Statistics.get_total_transactions_per_year
   end
 
   def summary_creation
-    @created_date_selected = params[:date] ? params[:date]['createdDateSelected'].to_i : Time.now.year
-    @countries_reported_by_date_created = YearAnnualReportsByCountry.where(
-      :year_created => @created_date_selected)
+    @created_date_selected = if params[:date] 
+                               params[:date]['createdDateSelected'].to_i 
+                             else
+                               Time.now.year
+                             end
+    @countries_reported_by_date_created = YearAnnualReportsByCountry.
+      where(:year_created => @created_date_selected)
   end
 
   def summary_year
-    @date_selected = params[:date] ? Date.parse("01/01/#{params[:date]['yearSelected']}") : Date.today
+    @date_selected = if params[:date] 
+                       Date.parse("01/01/#{params[:date]['yearSelected']}") 
+                     else
+                       Date.today
+                     end
     @countries_reported_by_year = YearAnnualReportsByCountry.where(:year => @date_selected.year)
+  end
+
+  def trade_transactions
+    @transactions = Statistics.get_total_transactions_per_year
   end
 end

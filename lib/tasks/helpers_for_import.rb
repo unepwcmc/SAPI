@@ -248,7 +248,7 @@ class CsvToDbMap
       'Effective from' => 'effective_at date',
       'End Date' => 'end_date date'
     },
-    'names_for_transfer_import' => {
+    'trade_species_mapping_import' => {
         'cites_name' => 'cites_name varchar',
         'cites_taxon_code' => 'cites_taxon_code varchar',
         'speciesplusid' => 'species_plus_id int',
@@ -292,6 +292,14 @@ class CsvToDbMap
       'Parent' => 'parent varchar',
       'ParentRank' => 'parent_rank varchar',
       'Status' => 'status varchar'
+    },
+    'trade_names_import' => {
+      'cites_trade_name' => 'cites_trade_name varchar',
+      'legacy_cites_ID' => 'legacy_cites_taxon_code varchar',
+      'valid_name_species_plus_id' => 'valid_name_speciesplus_id integer',
+      'valid_name' => 'valid_name varchar',
+      'trade_name_rank' => 'trade_name_rank varchar',
+      'name_status' => 'name_status varchar'
     }
   }
 
