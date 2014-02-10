@@ -87,10 +87,10 @@ def insert_into_trade_shipments
     UPDATE trade_shipments
     SET #{k}_permits_ids = a.ids, #{k}_permit_number = permit_number
     FROM (SELECT array_agg(id) as ids,
-    string_agg(number, ';') AS permit_number
+    string_agg(number, ';') AS permit_number,
     permits_import.shipment_number AS shipment_number
     from trade_permits
-    INNER JOIN permits_import ON permits_import.legacy_reporter_type = '#{v}'
+    INNER JOIN permits_import ON permits_import.permit_reporter_type = '#{v}'
     group by permits_import.shipment_number) AS a
     WHERE a.shipment_number = legacy_shipment_number
     SQL
