@@ -11,8 +11,8 @@ class TaxonConceptStatsSerializer < ActiveModel::Serializer
       ListingChange.count,
       ListingDistribution.count,
       Trade::Shipment.count,
-      @object.getGeoEntity.id,
-      @object.getKingdom
+      @object.get_geo_entity.id,
+      @object.get_kingdom
     ]
     Rails.logger.debug "CACHE KEY: #{key.inspect}"
     key
