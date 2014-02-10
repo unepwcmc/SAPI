@@ -16,5 +16,5 @@ Trade.SandboxShipment = DS.Model.extend
 
   #annualReportUpload: DS.belongsTo('Trade.AnnualReportUpload')
 
-  _destroyed: DS.attr('boolean')
+  _destroyed: false
   _modified: false

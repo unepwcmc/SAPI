@@ -24,16 +24,6 @@ class Trade::AnnualReportUploadsController < ApplicationController
     render :json => {:files => [@annual_report_upload.to_jq_upload]}
   end
 
-  def update
-    @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
-    if @annual_report_upload.update_attributes_and_sandbox(params)
-      head :no_content
-    else
-      render :json => { "errors" => @annual_report_upload.errors },
-        :status => :unprocessable_entity
-    end
-  end
-
   def submit
     @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
     if @annual_report_upload.submit

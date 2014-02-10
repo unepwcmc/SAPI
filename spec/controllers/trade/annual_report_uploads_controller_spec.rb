@@ -68,14 +68,4 @@ describe Trade::AnnualReportUploadsController do
     end
   end
 
-  describe "PUT update" do
-    it "should return nothing" do
-      sandbox_shipment = annual_report_upload.sandbox_shipments.first
-      filters = {:appendix => sandbox_shipment.appendix}
-      updates = {:appendix => "N", :taxon_name => "Canis lupus signatus"}
-      xhr :put, :update, :id => annual_report_upload.id,
-        :filters => filters, :updates => updates
-      response.should be_success
-    end
-  end
 end
