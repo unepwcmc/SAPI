@@ -9,11 +9,11 @@ class DashboardStats
     @species_classes = get_species_classes
   end
 
-  def getGeoEntity
+  def get_geo_entity
     @geo_entity
   end
 
-  def getKingdom
+  def get_kingdom
     @kingdom
   end
 
