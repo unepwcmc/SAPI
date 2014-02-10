@@ -6,7 +6,6 @@ class DashboardStats
     @iso_code = iso_code
     @kingdom = kingdom || 'Animalia'
     @geo_entity = GeoEntity.where(:iso_code2 => iso_code).first
-    @species_classes = get_species_classes
   end
 
   def get_geo_entity
@@ -17,9 +16,9 @@ class DashboardStats
     @kingdom
   end
 
-  def get_species_classes
+  def get_species_classes taxonomy
     MTaxonConcept.where(
-      :rank_name => 'CLASS', :kingdom_name => @kingdom).
+      :rank_name => 'CLASS', :kingdom_name => @kingdom, :taxonomy => taxonomy).
       select([:class_name, :english_names_ary]).uniq.
       map do |s| 
         {:name => s.class_name, :common_name_en => s.english_names.first}
@@ -30,7 +29,7 @@ class DashboardStats
     species_results = {}
     [:cites_eu, :cms].each do |taxonomy|
       species_results[taxonomy] = []
-      @species_classes.each do |species_class|
+      get_species_classes(taxonomy).each do |species_class|
         taxonomy_is_cites_eu = taxonomy == :cites_eu ? 't' : 'f'
         search = MTaxonConcept.where(
           "taxonomy_is_cites_eu = '#{taxonomy_is_cites_eu}'
