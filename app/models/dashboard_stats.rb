@@ -17,8 +17,9 @@ class DashboardStats
   end
 
   def get_species_classes taxonomy
+    taxonomy_id = Taxonomy.where(:name => taxonomy.upcase).select('id').first
     MTaxonConcept.where(
-      :rank_name => 'CLASS', :kingdom_name => @kingdom, :taxonomy => taxonomy).
+      :rank_name => 'CLASS', :kingdom_name => @kingdom, :taxonomy_id => taxonomy_id).
       select([:class_name, :english_names_ary]).uniq.
       map do |s| 
         {:name => s.class_name, :common_name_en => s.english_names.first}
