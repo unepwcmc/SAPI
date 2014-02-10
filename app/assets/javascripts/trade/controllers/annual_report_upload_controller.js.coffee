@@ -4,13 +4,6 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, 
   visibleShipments: []
   currentShipment: null
   filtersSelected: false
-  errorMessage: ""
-
-  errorHeader: ( ->
-    if @errorMessage.length > 0
-      return "Selected error: #{@errorMessage} (#{@errorCount})"
-    ""
-  ).property('errorMessage', 'errorCount')
 
   sandboxShipmentsDidLoad: ( ->
     @set('visibleShipments', @get('content.sandboxShipments'))
@@ -118,12 +111,11 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, 
 
 
     # new for sandbox shipments updateSelection
-    transitionToSandboxShipments: (errorSelector, errorMessage, errorCount) ->
-      @set('errorMessage', errorMessage)
-      @set('errorCount', errorCount)
-      params = @sanitizeQueryParams(errorSelector)
+    transitionToSandboxShipments: (error) ->
+      @set('currentError', error)
+      params = @sanitizeQueryParams(error.get('errorSelector'))
       params.page = 1
-      params.error_identifier = @hashCode errorMessage
+      params.error_identifier = @hashCode error.get('errorMessage')
       @transitionToRoute('sandbox_shipments', {
         queryParams: params
       })
