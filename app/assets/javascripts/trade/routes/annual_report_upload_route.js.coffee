@@ -13,4 +13,5 @@ Trade.AnnualReportUploadRoute = Trade.BeforeRoute.extend
 
   setupController: (controller, model, queryParams) ->
     controller.set('model', model)
+    controller.set('errorCount', model.get('validationErrors.content').length)
     controller.set('errorMessage', "")
