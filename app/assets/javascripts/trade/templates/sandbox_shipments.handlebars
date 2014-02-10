@@ -6,7 +6,16 @@
 
   {{#view controllerBinding='controller' isVisibleBinding='controller.updatesVisible'}}
     <div class="sandbox-header well well-small">
-      <h3>Batch edit selected records</h3>
+      <div class="row-fluid">
+        <div class="span5">
+          <h3>Batch edit selected records</h3>
+        </div>
+        <div class="sandbox-header-buttons span7">
+          <button {{action 'deleteSelection'}} class="pull-right btn clearfix">
+            Delete all
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="sandbox-form row-fluid">

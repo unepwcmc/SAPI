@@ -1,4 +1,4 @@
-Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPagination,
+Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPagination, Trade.Flash,
   needs: ['annualReportUpload', 'geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   updatesVisible: false
@@ -67,22 +67,41 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
 
     # Batch edits on the selected error
     updateSelection: () ->
-      valuesToUpdate = {}
-      annualReportUploadId = @get('controllers.annualReportUpload.id')
-      @get('columns').forEach (columnName) =>
-        el = $('.sandbox-form').find("select[name=#{columnName}],input[type=text][name=#{columnName}]")
-        blank = $('.sandbox-form')
-          .find("input[type=checkbox][name=#{columnName}]:checked")
-        valuesToUpdate[columnName] = el.val() if el && el.val()
-        valuesToUpdate[columnName] = null if blank.length > 0
-      $.when($.ajax({
-        url: "trade/annual_report_uploads/#{annualReportUploadId}"
-        type: "PUT"
-        data: {filters: @errorParams, updates: valuesToUpdate}
-      })).then( 
-        @transitionToParentController(), 
-        console.log arguments # error callback!
-      )
+      if confirm("This will update all shipments with this error. Proceed?")
+        valuesToUpdate = {}
+        annualReportUploadId = @get('controllers.annualReportUpload.id')
+        @get('columns').forEach (columnName) =>
+          el = $('.sandbox-form').find("select[name=#{columnName}],input[type=text][name=#{columnName}]")
+          blank = $('.sandbox-form')
+            .find("input[type=checkbox][name=#{columnName}]:checked")
+          valuesToUpdate[columnName] = el.val() if el && el.val()
+          valuesToUpdate[columnName] = null if blank.length > 0
+        $.ajax(
+          url: "trade/annual_report_uploads/#{annualReportUploadId}/sandbox_shipments/update_batch"
+          type: "POST"
+          data: {filters: @errorParams, updates: valuesToUpdate}
+        ).success( (data, textStatus, jqXHR) =>
+          @flashSuccess(message: 'Successfully updated shipments.', persists: true)
+        ).error( (jqXHR, textStatus, errorThrown) =>
+          @flashError(message: errorThrown, persists: true)
+        ).complete( (jqXHR, textStatus) =>
+          @transitionToParentController()
+        )
+
+    deleteSelection: () ->
+      if confirm("This will delete all shipments with this error. Proceed?")
+        annualReportUploadId = @get('controllers.annualReportUpload.id')
+        $.ajax(
+          url: "trade/annual_report_uploads/#{annualReportUploadId}/sandbox_shipments/destroy_batch"
+          type: "POST"
+          data: {filters: @errorParams}
+        ).success( (data, textStatus, jqXHR) =>
+          @flashSuccess(message: 'Successfully destroyed shipments.', persists: true)
+        ).error( (jqXHR, textStatus, errorThrown) =>
+          @flashError(message: errorThrown, persists: true)
+        ).complete( (jqXHR, textStatus) =>
+          @transitionToParentController()
+        )
 
     cancelSelectForUpdate: () ->
       $('.sandbox-form').find('select,input[type=text]').val(null)
@@ -91,6 +110,10 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
     #### Save and cancel changes made on shipments table ####
 
     saveChanges: () ->
+      Trade.SandboxShipment.filter((shipment) ->
+        shipment.get('_destroyed') == true
+        ).forEach (shipment) ->
+        shipment.deleteRecord()
       @get('store').commit()
       @clearModifiedFlags()
       @transitionToParentController()
