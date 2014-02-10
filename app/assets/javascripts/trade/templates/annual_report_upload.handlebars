@@ -20,8 +20,10 @@
         {{bind-attr disabled="hasPrimaryErrors"}}>
         Submit shipments
       </button>
-      <button type="button" id="toggle-errors" {{bind-attr class=":btn :btn-info hasNoErrors:hide"}} data-toggle="collapse" data-target=".collapse">
-      </button>
+      {{#if hasErrors}}
+        <button type="button" id="toggle-errors" class="btn btn-info" data-toggle="collapse" data-target=".collapse">
+        </button>
+      {{/if}}
     </div>
   </div>
 </div>

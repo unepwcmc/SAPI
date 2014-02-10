@@ -5,11 +5,6 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, 
   currentShipment: null
   filtersSelected: false
   errorMessage: ""
-  errorCount: ""
-
-  hasNoErrors: ( ->
-    if @errorCount > 0 then no else yes
-  ).property('errorCount')
 
   errorHeader: ( ->
     if @errorMessage.length > 0
