@@ -81,11 +81,11 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
           type: "POST"
           data: {filters: @errorParams, updates: valuesToUpdate}
         ).success( (data, textStatus, jqXHR) =>
-          @transitionToParentController()
           @flashSuccess(message: 'Successfully updated shipments.', persists: true)
         ).error( (jqXHR, textStatus, errorThrown) =>
-          @transitionToParentController()
           @flashError(message: errorThrown, persists: true)
+        ).complete( (jqXHR, textStatus) =>
+          @transitionToParentController()
         )
 
     deleteSelection: () ->
@@ -110,7 +110,6 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
     #### Save and cancel changes made on shipments table ####
 
     saveChanges: () ->
-      console.log(Trade.SandboxShipment.all())
       Trade.SandboxShipment.filter((shipment) ->
         shipment.get('_destroyed') == true
         ).forEach (shipment) ->
