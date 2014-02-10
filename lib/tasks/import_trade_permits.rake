@@ -23,7 +23,6 @@ namespace :import do
         create_table_from_csv_headers(file, TMP_TABLE)
         copy_data(file, TMP_TABLE)
 
-        add_shipment_number_tmp_column
         create_indices(permits_import_to_index, "btree")
 
         populate_trade_permits
@@ -37,7 +36,6 @@ namespace :import do
         create_indices(trade_shipments_indexed, "GIN")
         drop_indices(trade_shipments_to_index)
         drop_indices(permits_import_to_index)
-        delete_shipment_number_tmp_column
       end
   end
 end
@@ -73,27 +71,10 @@ def create_indices table_columns, method
   end
 end
 
-def add_shipment_number_tmp_column
-  delete_shipment_number_tmp_column
-  sql = <<-SQL
-    ALTER TABlE trade_permits ADD COLUMN shipment_number int;
-  SQL
-  execute_query(sql)
-end
-
-def delete_shipment_number_tmp_column
-  sql = <<-SQL
-    ALTER TABlE trade_permits DROP COLUMN IF EXISTS shipment_number;
-  SQL
-  execute_query(sql)
-end
-
 def populate_trade_permits
   sql = <<-SQL
-  INSERT INTO trade_permits (number, shipment_number, legacy_reporter_type, created_At, updated_at)
-  SELECT permit_number,
-         shipment_number,
-         permit_reporter_type,
+  INSERT INTO trade_permits (number, created_At, updated_at)
+  SELECT DISTINCT permit_number,
          now()::date AS created_at,
          now()::date AS updated_at
   FROM permits_import;
@@ -109,12 +90,12 @@ def insert_into_trade_shipments
     UPDATE trade_shipments
     SET #{k}_permits_ids = a.ids, #{k}_permit_number = permit_number
     FROM (SELECT array_agg(id) as ids,
-    string_agg(number, ';') AS permit_number,
-    shipment_number
+    string_agg(number, ';') AS permit_number
+    permits_import.shipment_number AS shipment_number
     from trade_permits
-    where legacy_reporter_type = '#{v}'
-    group by shipment_number) AS a
-    where legacy_shipment_number = a.shipment_number
+    INNER JOIN permits_import ON permits_import.legacy_reporter_type = '#{v}'
+    group by permits_import.shipment_number) AS a
+    WHERE a.shipment_number = legacy_shipment_number
     SQL
     puts "Inserting #{k} permits into trade_shipments"
     execute_query(sql)
