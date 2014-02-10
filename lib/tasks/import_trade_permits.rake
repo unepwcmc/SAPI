@@ -4,7 +4,6 @@ namespace :import do
 
       TMP_TABLE = "permits_import"
       permits_import_to_index = {"permits_import" => ["permit_number", "shipment_number", "permit_reporter_type"]}
-      trade_permits_to_index = {"trade_permits" => ["shipment_number", "legacy_reporter_type"]}
       trade_shipments_indexed = {"trade_shipments" => ["export_permits_ids", "import_permits_ids", "origin_permits_ids"]}
       trade_shipments_to_index = {"trade_shipments" => ["legacy_shipment_number"]}
 
@@ -15,7 +14,6 @@ namespace :import do
         create_table_from_csv_headers(file, TMP_TABLE)
         copy_data(file, TMP_TABLE)
 
-        drop_indices(trade_permits_to_index)
         drop_indices(permits_import_to_index)
         drop_indices(trade_shipments_to_index)
 
@@ -27,7 +25,6 @@ namespace :import do
 
         populate_trade_permits
 
-        create_indices(trade_permits_to_index, "btree")
         drop_indices(trade_shipments_indexed)
         create_indices(trade_shipments_to_index, "btree")
 
