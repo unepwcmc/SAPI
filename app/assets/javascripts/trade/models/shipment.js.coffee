@@ -25,6 +25,7 @@ Trade.Shipment = DS.Model.extend
   importPermitNumber: DS.attr('string')
   exportPermitNumber: DS.attr('string')
   originPermitNumber: DS.attr('string')
+  legacyShipmentNumber: DS.attr('string')
   purpose: DS.belongsTo('Trade.Purpose')
   source: DS.belongsTo('Trade.Source')
   year: DS.attr('string')
