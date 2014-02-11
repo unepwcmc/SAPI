@@ -84,16 +84,19 @@ def insert_into_trade_shipments
   permits_entity = {"import" => "I", "export" => 'E', "origin" => 'O'}
   permits_entity.each do |k,v|
     sql = <<-SQL
-    UPDATE trade_shipments
-    SET #{k}_permits_ids = a.ids, #{k}_permit_number = permit_number
-    FROM (SELECT array_agg(id) as ids,
-    string_agg(number, ';') AS permit_number,
-    permits_import.shipment_number AS shipment_number
-    from trade_permits
-    INNER JOIN permits_import ON permits_import.permit_reporter_type = '#{v}'
-      AND permits_import.permit_number = trade_permits.number
-    group by permits_import.shipment_number) AS a
-    WHERE a.shipment_number = legacy_shipment_number
+      WITH grouped_permits AS (
+        SELECT array_agg(id) AS ids,
+          string_agg(number, ';') AS permit_number,
+          permits_import.shipment_number AS shipment_number
+        FROM trade_permits
+        INNER JOIN permits_import ON permits_import.permit_reporter_type = '#{v}'
+        AND permits_import.permit_number = trade_permits.number
+        GROUP BY permits_import.shipment_number
+      )
+      UPDATE trade_shipments
+      SET #{k}_permits_ids = grouped_permits.ids, #{k}_permit_number = grouped_permits.permit_number
+      FROM grouped_permits
+      WHERE trade_shipments.legacy_shipment_number = grouped_permits.shipment_number
     SQL
     puts "Inserting #{k} permits into trade_shipments"
     execute_query(sql)
