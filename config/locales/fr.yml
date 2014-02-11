@@ -4,6 +4,10 @@ fr:
   errors:
     no_data_1: "Votre recherche n'a retourné aucune donnée"
     no_data_2: "S'il vous plaît sélectionner autres variables ou vérifier dans la Base de Données des Espèces UNEP-WCMC que vous utilisez l'orthographe/nom scientifique corrects"
+  warnings:
+    net_trade_1: "S'il vous plaît lire attentivement:"
+    net_trade_2: "Le commerce net est le résultat de la soustraction des réexportations d'un pays de ses importations. Par conséquent, si votre sélection de données concerne des importations ou des exportations des pays spécifiés, vous ne pouvez pas calculer les importations ou les exportations nettes."
+    net_trade_3: "Le résultat sera l'importation ou exportation brute."
 
   year_text: "Gamme des Années"
   year_tip: "Sélectionnez les années de début (De) et de fin (A) pour votre recherche. Il est conseillé de limiter votre demande de données avec une gamme des années de 5 ans ou moins"
@@ -30,6 +34,8 @@ fr:
   search_selection: "Critères de recherche sélectionnés:"
   search: "Rechercher"
   reset: "Réinitialiser"
+  reselect: "Resélectionner les Données"
+  continue: "Continuer"
 
   download: "Télécharger"
   db_guide: "Un Guide d'Utilisation de la Base de Données sur le Commerce CITES"

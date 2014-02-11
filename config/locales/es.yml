@@ -4,6 +4,10 @@ es:
   errors:
     no_data_1: "Su consulta ha devuelto ningún dato"
     no_data_2: "Por favor selecciona otras variables o verifica en la Base de Datos de Especies UNEP-WCMC que está utilizando la ortografía/el nombre correctos"
+  warnings:
+    net_trade_1: "Por favor, lea cuidadosamente:"
+    net_trade_2: "El comercio neto es el resultado de sustraer los re-exportaciones de un país de sus importaciones. Por lo tanto, si su selección de datos involucrada las importaciones o las exportaciones procedentes de países determinados, no se puede calcular las importaciones o exportaciones netas."
+    net_trade_3: "El resultado será la importación o la exportación bruta."
 
   year_text: "Rango de Años"
   year_tip: "Seleccione el año de inicio (De) y el año final (A) para su búsqueda. Es aconsejable limitar su búsqueda de datos a un rango que no exceda de los 5 años"
@@ -30,6 +34,8 @@ es:
   search_selection: "Criterios de búsqueda seleccionados:"
   search: "Buscar"
   reset: "Reajustar"
+  reselect: "Volver a Seleccionar los Datos"
+  continue: "Continuar"
 
   download: "Descargar"
   db_guide: "Una Guía para Utilizar la Base de Datos sobre el Comercio CITES"
