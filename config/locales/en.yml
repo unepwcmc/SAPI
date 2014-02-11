@@ -7,6 +7,10 @@ en:
   errors:
     no_data_1: "Your query has returned no data"
     no_data_2: "Please select other variables or check in the UNEP-WCMC Species Database that you are using the correct spelling/scientific name"
+  warnings:
+    net_trade_1: "Please read carefully:"
+    net_trade_2: "Net trade is the result of subtracting a country's re-exports from its imports. Therefore if your data selection involved imports to or exports from specified countries then you cannot calculate net imports or exports."
+    net_trade_3: "The result will be gross import or export."
 
   year_text: "Year Range"
   year_tip: "Select start (From) and end (To) years for your query. It is advisable to limit your data request to a year span not exceeding 5 years"
@@ -33,6 +37,8 @@ en:
   search_selection: "Search Selection:"
   search: "Search"
   reset: "Reset"
+  reselect: "Reselect Data"
+  continue: "Continue"
 
   download: "Download"
   db_guide: "A Guide to Using the CITES Trade Database"

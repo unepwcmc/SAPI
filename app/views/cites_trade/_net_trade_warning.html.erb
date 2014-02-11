@@ -1,0 +1,36 @@
+<table id="net-trade-warning" width="80%" cellspacing="0" cellpadding="10" border="0" align="center" style="display:none">
+  <tbody>
+  <tr>
+    <td valign="top" class="style1">
+      <span style="font-size:14px;font-weight:bold;color:red;">
+        <%= t('warnings.net_trade_1') %>
+      </span>
+      <br><br>
+      <hr class="space">
+      <%= t('warnings.net_trade_2') %><br><%= t('warnings.net_trade_3') %>
+      <br><br>
+      <hr class="space">
+      <table>
+        <tbody>
+        <tr>
+          <td>
+            <a href="/<%= I18n.locale %>/cites_trade/">
+              <button value=" New Search " style="float:right" name="reset" type="submit">
+                <img alt="" src="/assets/cites_trade/page_find.gif">
+                <%= t('reselect') %>
+              </button>
+            </a>
+          </td>
+          <td>
+            <button id="ignore_warning_button_report" value=" New Search " style="float:right" name="ngTrade" type="submit">
+              <img alt="" src="/assets/cites_trade/page_right.gif">
+              <%= t('continue') %>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+  </tr>
+  </tbody>
+</table>
