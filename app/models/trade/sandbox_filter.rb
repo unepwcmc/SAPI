@@ -17,7 +17,8 @@ class Trade::SandboxFilter < Trade::Filter
      :source_code, :purpose_code, :trading_partner, :country_of_origin,
      :export_permit, :origin_permit, :import_permit, :quantity ].each do |var|
       if @options[var]
-        @query = @query.where(var => (@options[var] == "-1" ? nil : @options[var]))
+        @query = @query.
+          where(var => (@options[var] == "-1" ? nil : @options[var].split(',')))
       end
     end
   end
