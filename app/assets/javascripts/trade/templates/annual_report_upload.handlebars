@@ -9,7 +9,11 @@
   <div class="row-fluid">
     <div class="span6">
       <h3>Validation errors</h3>
-      <p>{{errorHeader}}</p>
+      <p>
+      {{#if currentError}}
+        Selected error: {{currentError.errorMessage}} ({{currentError.errorCount}})
+      {{/if}}
+      </p>
     </div>
     <div class="sandbox-header-buttons span4">
       {{#view tagName='span' class='pull-right' isVisibleBinding='sandboxShipmentsSubmitting'}}
@@ -20,8 +24,10 @@
         {{bind-attr disabled="hasPrimaryErrors"}}>
         Submit shipments
       </button>
-      <button type="button" id="toggle-errors" {{bind-attr class=":btn :btn-info hasNoErrors:hide"}} data-toggle="collapse" data-target=".collapse">
-      </button>
+      {{#if hasErrors}}
+        <button type="button" id="toggle-errors" class="btn btn-info" data-toggle="collapse" data-target=".collapse">
+        </button>
+      {{/if}}
     </div>
   </div>
 </div>
