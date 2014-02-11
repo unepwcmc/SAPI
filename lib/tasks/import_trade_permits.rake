@@ -91,6 +91,7 @@ def insert_into_trade_shipments
     permits_import.shipment_number AS shipment_number
     from trade_permits
     INNER JOIN permits_import ON permits_import.permit_reporter_type = '#{v}'
+      AND permits_import.permit_number = trade_permits.number
     group by permits_import.shipment_number) AS a
     WHERE a.shipment_number = legacy_shipment_number
     SQL
