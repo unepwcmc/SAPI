@@ -704,7 +704,7 @@ $(document).ready(function(){
     window.location.href = $link.attr("href");
   }
   
-  function handleDownloadRequest () {
+  function handleDownloadRequest (ignoreWarning) {
     var output_type = $( "input[name='outputType']:checked" ).val(),
       report_type = $( "input[name='report']:checked" ).val(),
       query = location.search.substr(1);
@@ -716,6 +716,13 @@ $(document).ready(function(){
       query = query.replace(/report_type%5D=(raw|comptab)/,
         "report_type%5D=" + report_type);
     }
+    if (!ignoreWarning &&
+      (report_type == 'net_imports' || report_type == 'net_exports')
+    ) {
+      $('#this_should_not_be_a_table').hide();
+      $('#net-trade-warning').show();
+      return;
+    }
     if (output_type === 'web') {
       goToResults(query);
       return;
@@ -725,7 +732,8 @@ $(document).ready(function(){
     }
   }
 
-  $('#button_report').click( function (e) {handleDownloadRequest() });
+  $('#button_report').click( function (e) {handleDownloadRequest(false) });
+  $('#ignore_warning_button_report').click( function (e) {handleDownloadRequest(true) });
 
   //////////////////////////////
   // View results page specific:
