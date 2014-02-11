@@ -14,7 +14,8 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
     'term.code', 'quantity',  'unit.code',
     'importer.isoCode2', 'exporter.isoCode2', 'countryOfOrigin.isoCode2',
     'purpose.code', 'source.code', 'reporterType',
-    'importPermitNumber', 'exportPermitNumber', 'originPermitNumber'
+    'importPermitNumber', 'exportPermitNumber', 'originPermitNumber',
+    'legacyShipmentNumber'
   ]
 
   codeMappings: {

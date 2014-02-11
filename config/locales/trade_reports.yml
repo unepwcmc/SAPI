@@ -23,6 +23,7 @@ en:
     export_permit_number: 'Export Permit'
     origin_permit_number: 'Origin Permit'
     country: 'Country'
+    legacy_shipment_number: 'Legacy Shipment No'
 
 es:
   csv:
@@ -49,6 +50,7 @@ es:
     # export_permit_number: 'Export Permit'
     # origin_permit_number: 'Origin Permit'
     country: 'País'
+    #legacy_shipment_number: 'Legacy Shipment No'
 
 fr:
   csv:
@@ -75,3 +77,4 @@ fr:
     # export_permit_number: 'Export Permit'
     # origin_permit_number: 'Origin Permit'
     country: 'Pays'
+    # legacy_shipment_number: 'Legacy Shipment No'
