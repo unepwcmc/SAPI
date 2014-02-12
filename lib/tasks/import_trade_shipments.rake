@@ -123,8 +123,8 @@ def update_country_codes
     DELETE FROM shipments_import
     WHERE quantity_1 IS NULL;
   SQL
+  puts "Cleaning Up Import Table #{Time.now.strftime("%d/%m/%Y")}"
   ActiveRecord::Base.connection.execute(sql)
-  puts "Cleaning Up Import Table"
 end
 
 def populate_shipments
@@ -212,8 +212,8 @@ def populate_shipments
     WHERE (tc.name_status = 'A') OR 
       (tc.name_status = 'S' AND taxon_relationships.other_taxon_concept_id = tc.id)
   SQL
+  puts "Populating trade_shipments #{Time.now.strftime("%d/%m/%Y")}"
   ActiveRecord::Base.connection.execute(sql)
-  puts "Populating trade_shipments"
 end
 
 def populate_shipments_for_trade_names
@@ -293,6 +293,6 @@ def populate_shipments_for_trade_names
     LEFT JOIN geo_entities AS importers ON si.import_country_code = importers.iso_code2
     LEFT JOIN geo_entities AS origins ON si.origin_country_code = origins.iso_code2
   SQL
+  puts "Populating trade_shipments with Trade Names' shipments #{Time.now.strftime("%d/%m/%Y")}"
   ActiveRecord::Base.connection.execute(sql)
-  puts "Populating trade_shipments with Trade Names' shipments"
 end
