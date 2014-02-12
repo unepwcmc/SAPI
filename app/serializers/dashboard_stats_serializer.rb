@@ -1,4 +1,4 @@
-class TaxonConceptStatsSerializer < ActiveModel::Serializer
+class DashboardStatsSerializer < ActiveModel::Serializer
   cached
 
   attributes :species, :trade
