@@ -14,7 +14,7 @@ SAPI::Application.routes.draw do
       resources :units, :only => [:index]
       resources :sources, :only => [:index]
       resources :purposes, :only => [:index]
-      match '/stats/:iso_code' => 'stats#index'
+      match '/dashboard_stats/:iso_code' => 'dashboard_stats#index'
     end
     resources :languages, :only => [:index]
     resources :users, :only => [:index]
