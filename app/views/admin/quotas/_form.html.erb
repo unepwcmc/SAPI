@@ -1,0 +1,18 @@
+<%= admin_new_modal({:title => "Current CITES Quotas"}) {
+  render :partial => "current_quotas_form",
+    :locals => {:current_quotas => @current_quotas}
+} %>
+
+<%= nested_form_for [:admin, @quota], :html => {:class => 'form-horizontal'} do |f| %>
+
+  <p>
+    <%= link_to("View Current Quotas", "#new-quota",
+      {
+        :role => "button",
+        :"data-toggle" => "modal",
+      }) %>
+  </p>
+
+  <%= render :partial => 'form_shared', :locals => {:f => f} %>
+
+<% end %>
