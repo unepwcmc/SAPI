@@ -1,5 +1,7 @@
-class Admin::QuotasController < Admin::SimpleCrudController
+class Admin::TaxonQuotasController < Admin::SimpleCrudController
   belongs_to :taxon_concept
+  defaults :resource_class => Quota,
+    :collection_name => 'quotas', :instance_name => 'quota'
   before_filter :load_lib_objects
   before_filter :load_search, :except => [:destroy]
 
@@ -31,6 +33,15 @@ class Admin::QuotasController < Admin::SimpleCrudController
         :notice => 'Operation successful'
       }
       failure.html { render 'create' }
+    end
+  end
+
+  def destroy
+    destroy! do |success, failure|
+      success.html {
+        redirect_to admin_taxon_concept_quotas_url(@taxon_concept),
+        :notice => 'Operation successful'
+      }
     end
   end
 
