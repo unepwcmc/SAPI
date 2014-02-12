@@ -63,8 +63,7 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
   def load_tags_and_geo_entities
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true,
-            :geo_entity_types => {:name => [GeoEntityType::COUNTRY,
-                                            GeoEntityType::TERRITORY]})
+            :geo_entity_types => {:name => GeoEntityType::SETS[GeoEntityType::DEFAULT_SET]})
     @tags = PresetTag.where(:model => PresetTag::TYPES[:Distribution])
   end
 
