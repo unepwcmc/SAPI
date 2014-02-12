@@ -6,13 +6,9 @@ class TaxonConceptStatsSerializer < ActiveModel::Serializer
   def cache_key
     key = [
       self.class.name,
-      Distribution.count,
-      TaxonConcept.count,
-      ListingChange.count,
-      ListingDistribution.count,
-      Trade::Shipment.count,
       @object.get_geo_entity.id,
-      @object.get_kingdom
+      @object.get_kingdom,
+      @object.get_trade_limit
     ]
     Rails.logger.debug "CACHE KEY: #{key.inspect}"
     key
