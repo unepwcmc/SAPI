@@ -76,8 +76,10 @@ SAPI::Application.routes.draw do
       resources :hybrid_relationships, :only => [:new, :create, :edit, :update, :destroy]
       resources :taxon_concept_references, :only => [:index, :new, :create, :destroy, :edit, :update]
       resources :names, :only => [:index]
-      resources :quotas, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_opinions, :only => [:index, :new, :create, :edit, :update, :destroy]
+
+      resources :taxon_quotas, :only => [:index, :new, :create, :edit, :update, :destroy],
+        :as => :quotas
 
       resources :taxon_eu_suspensions, 
         :only => [:index, :new, :create, :edit, :update, :destroy], 
