@@ -9,15 +9,15 @@ class DashboardStats
     @geo_entity = GeoEntity.where(:iso_code2 => iso_code).first
   end
 
-  def get_geo_entity
+  def geo_entity
     @geo_entity
   end
 
-  def get_kingdom
+  def kingdom
     @kingdom
   end
 
-  def get_trade_limit
+  def trade_limit
     @trade_limit
   end
 

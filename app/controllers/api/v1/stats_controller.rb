@@ -3,7 +3,7 @@ class Api::V1::StatsController < ApplicationController
   def index
     iso_code = params['iso_code']
     kingdom = params['kingdom']
-    trade_limit = params['limit']
+    trade_limit = params['trade_limit']
     geo_entity = GeoEntity.where(:iso_code2 => iso_code).first
     stats = DashboardStats.new(iso_code, kingdom, trade_limit)
     render :json => stats, :serializer => TaxonConceptStatsSerializer
