@@ -1,0 +1,29 @@
+<% if current_suspensions.count > 0 %>
+  <table class="cites_suspension table table-bordered table-striped">
+    <thead>
+      <th>Year</th>
+      <th>Published at</th>
+      <th>Country or Territory</th>
+      <th>Notes</th>
+      <th>Current</th>
+    </thead>
+
+    <tbody>
+    <% current_suspensions.each do |suspension| %>
+
+      <tr>
+        <td><%= suspension.year %></td>
+        <td><%= suspension.publication_date_formatted %></td>
+        <td><%= suspension.geo_entity && suspension.geo_entity.iso_code2 %></td>
+        <td><%= suspension.notes %></td>
+        <td>
+          <%= form_for [:admin, suspension], :remote => true do |f| %>
+            <%= f.check_box :is_current %>
+          <% end %>
+        </td>
+      </tr>
+
+    <% end %>
+    </tbody>
+  </table>
+<% end %>
