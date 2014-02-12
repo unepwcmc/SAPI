@@ -45,7 +45,6 @@ describe Trade::AnnualReportUploadsController do
   describe "GET show" do
     it "should return success" do
       get :show, id: annual_report_upload.id, format: :json
-      debugger
       response.body.should have_json_path('annual_report_upload')
     end
   end
@@ -69,14 +68,4 @@ describe Trade::AnnualReportUploadsController do
     end
   end
 
-  describe "PUT update" do
-    it "should return nothing" do
-      sandbox_shipment = annual_report_upload.sandbox_shipments.first
-      filters = {:appendix => sandbox_shipment.appendix}
-      updates = {:appendix => "N", :species_name => "Canis lupus signatus"}
-      xhr :put, :update, :id => annual_report_upload.id,
-        :filters => filters, :updates => updates
-      response.should be_success
-    end
-  end
 end

@@ -111,13 +111,20 @@ class Trade::Filter
       end
     end
 
-    unless @permits_ids.empty?
+    permit_blank_query = 
+      'ARRAY_UPPER(import_permits_ids, 1) IS NULL
+      OR ARRAY_UPPER(export_permits_ids, 1) IS NULL
+      OR ARRAY_UPPER(origin_permits_ids, 1) IS NULL'
+    if !@permits_ids.empty?
       @query = @query.where(
         "import_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
         OR export_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
-        OR origin_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]",
+        OR origin_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
+        #{@permit_blank ? "OR #{permit_blank_query}" : ''}",
         :permits_ids => @permits_ids
-      )
+        )
+    elsif @permit_blank
+      @query = @query.where(permit_blank_query)
     end
 
     unless @quantity.nil?

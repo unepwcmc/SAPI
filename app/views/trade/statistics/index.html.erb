@@ -1,0 +1,31 @@
+<h1>Trade Statistics</h1>
+
+<%= render 'menu' %>
+
+<h3>General Statistics</h3>
+
+<table class="table table-bordered table-striped ">
+  <tr>
+    <th>Total shipments</th>
+    <td><%= @total_shipments %></td>
+  </tr>
+  <tr>
+    <th>Last updated</th>
+    <td><%= @last_updated %></td>
+  </tr>
+  <tr>
+    <th>No of taxon concepts in trade</th>
+    <td><%= @taxon_concepts_in_trade %></td>
+  </tr>
+</table>
+
+<%= render 'general_statistics_per_range' %>
+
+
+<h3>Information on Trade Public Interface data downloads</h3>
+<p>
+  <%= link_to "Download CSV", trade_trade_download_stats_path, html_options = {class: "btn"} %>
+</p>
+
+
+

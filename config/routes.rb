@@ -96,7 +96,12 @@ SAPI::Application.routes.draw do
 
   namespace :trade do
     resources :annual_report_uploads do
-      resources :sandbox_shipments
+      resources :sandbox_shipments do
+        collection do
+          post :update_batch
+          post :destroy_batch
+        end
+      end
       member do
         post 'submit'
       end
@@ -112,6 +117,7 @@ SAPI::Application.routes.draw do
     match 'stats' => 'statistics#index'
     match 'summary_year' => 'statistics#summary_year'
     match 'summary_creation' => 'statistics#summary_creation'
+    match 'trade_transactions' => 'statistics#trade_transactions'
     root :to => 'ember#start'
   end
 

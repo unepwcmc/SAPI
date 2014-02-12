@@ -54,6 +54,11 @@ shared_context "Falconiformes" do
       :parent => @genus2_1,
       :name_status => 'A'
     )
+    @hybrid = create_cites_eu_genus(
+      :taxon_name => create(:taxon_name, :scientific_name => 'Falco hybrid'),
+      :parent => nil,
+      :name_status => 'H'
+    )
 
     cites_lc1 = create_cites_II_addition(
      :taxon_concept => @order,

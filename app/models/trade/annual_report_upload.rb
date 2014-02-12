@@ -39,20 +39,6 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     sandbox.shipments
   end
 
-  def update_attributes_and_sandbox(attributes)
-    Trade::AnnualReportUpload.transaction do
-      update_sandbox(attributes.delete(:filters),
-                    attributes.delete(:updates))
-    end
-  end
-
-  def update_sandbox(filters, updates)
-    return true if is_done
-    sandbox_shipments = Trade::SandboxFilter.new(filters.
-      merge({:annual_report_upload_id => self.id}))
-    sandbox_shipments.query.update_all(updates)
-  end
-
   def validation_errors
     return [] if is_done
     run_primary_validations
@@ -84,22 +70,7 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
       self.errors[:base] << "Submit failed, primary validation errors present."
       return false
     end
-    success = true
-    Trade::Shipment.transaction do
-      pg_result = Trade::AnnualReportUpload.connection.execute(
-        Trade::AnnualReportUpload.send(:sanitize_sql_array, [
-        'SELECT * FROM copy_transactions_from_sandbox_to_shipments(?)',
-        id
-      ]))
-      moved_rows_cnt = pg_result.first['copy_transactions_from_sandbox_to_shipments'].to_i
-      if moved_rows_cnt < 0
-        # if -1 returned, not all rows have been moved
-        self.errors[:base] << "Submit failed, could not save all rows."
-        success = false
-        raise ActiveRecord::Rollback
-      end
-    end
-    return false unless success
+    return false unless sandbox.copy_from_sandbox_to_shipments
     #remove uploaded file
     store_dir = csv_source_file.store_dir
     remove_csv_source_file!

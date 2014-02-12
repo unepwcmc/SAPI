@@ -105,6 +105,7 @@ set :copy_exclude, [ '.git' ]
 # items are symlinked in when the code is updated.
 set :local_shared_files, %w(config/database.yml)
 set :local_shared_dirs, %w(tmp/pids public/downloads public/uploads
+  public/downloads/cites_trade
   public/downloads/cites_listings public/downloads/eu_listings public/downloads/cms_listings
   public/downloads/eu_decisions public/downloads/cites_suspensions public/downloads/quotas
   public/downloads/checklist public/downloads/taxon_concepts_names

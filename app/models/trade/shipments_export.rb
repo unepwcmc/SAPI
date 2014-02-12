@@ -96,7 +96,8 @@ private
       :reporter_type => {:internal => true},
       :import_permit_number => {:internal => true},
       :export_permit_number => {:internal => true},
-      :origin_permit_number => {:internal => true}
+      :origin_permit_number => {:internal => true},
+      :legacy_shipment_number => {:internal => true}
     }
   end
 

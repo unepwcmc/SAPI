@@ -7,3 +7,4 @@ Trade.ShipmentForm = Ember.View.extend
     @.$().on('hidden', () =>
       @set('controller.currentShipment', null)
     )
+      

@@ -285,7 +285,7 @@ div.popup-holder01 {
     .attribute-area.year {
       height: 64px;
     }
-    .attribute-area.species {
+    .attribute-area.taxon-name {
       width: 408px;
       a {
         width: 400px;
@@ -303,8 +303,10 @@ span.error {
   color: red;
 }
 
-.select2-drop {
-  width: 410px !important;
+.species_autocomplete {
+  .select2-drop {
+    width: 410px !important;
+  }
 }
 
 
@@ -344,3 +346,19 @@ span.error {
     margin-left: 5px;
   }
 }
+
+.autocomplete {
+  .select2-container, .select2-results {
+    width: 190px;
+  } 
+}
+
+.select2-drop.other_autocomplete {
+  .select2-results {
+    color: #0088cc;
+  }
+  .select2-results .select2-highlighted {
+    color: #fff;
+  }
+}
+

@@ -4,7 +4,7 @@
 #
 #  id                :integer          not null, primary key
 #  appendix          :string(255)
-#  species_name      :string(255)
+#  taxon_name      :string(255)
 #  term_code         :string(255)
 #  quantity          :string(255)
 #  unit_code         :string(255)
@@ -27,8 +27,10 @@ class Trade::SandboxTemplate < ActiveRecord::Base
     "trading_partner", "country_of_origin", "import_permit", "export_permit",
     "origin_permit", "purpose_code", "source_code", "year"
   ]
-  IMPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER
-  EXPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER - ['import_permit']
+  CSV_IMPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER
+  CSV_EXPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER - ['import_permit']
+  IMPORTER_COLUMNS = CSV_IMPORTER_COLUMNS.map{ |c| c == 'species_name' ? 'taxon_name' : c }
+  EXPORTER_COLUMNS = CSV_EXPORTER_COLUMNS.map{ |c| c == 'species_name' ? 'taxon_name' : c }
 
   # Dynamically define AR class for table_name
   # (unless one exists already)
@@ -41,7 +43,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
         self.table_name = table_name
         include ActiveModel::ForbiddenAttributesProtection
         attr_accessible :appendix,
-          :species_name,
+          :taxon_name,
           :term_code,
           :quantity,
           :unit_code,
@@ -53,6 +55,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
           :purpose_code,
           :source_code,
           :year
+        belongs_to :taxon_concept
 
         def sanitize
           self.class.sanitize(self.id)
@@ -60,7 +63,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
 
         def self.sanitize(id = nil)
           update_all(
-            'species_name = sanitize_species_name(species_name),
+            'taxon_name = sanitize_taxon_name(taxon_name),
             appendix = UPPER(SQUISH_NULL(appendix)),
             year = SQUISH_NULL(year),
             term_code = UPPER(SQUISH_NULL(term_code)),
@@ -76,19 +79,19 @@ class Trade::SandboxTemplate < ActiveRecord::Base
             ',
             id.blank? ? nil : {:id => id}
           )
+          # resolve reported & accepted taxon
+          connection.execute(
+            sanitize_sql_array([
+              'SELECT * FROM resolve_taxa_in_sandbox(?, ?)',
+              @table_name,
+              id
+            ])
+          )
         end
 
         def save(attributes = {})
           super(attributes)
           sanitize
-        end
-
-        def delete_or_update_attributes params
-          if params.delete('_destroyed')
-            self && self.delete
-          else
-            self && self.update_attributes(params.symbolize_keys)
-          end
         end
 
       end
@@ -108,7 +111,8 @@ class Trade::SandboxTemplate < ActiveRecord::Base
     sql = <<-SQL
       CREATE INDEX ON #{target_table_name} (trading_partner);
       CREATE INDEX ON #{target_table_name} (term_code);
-      CREATE INDEX ON #{target_table_name} (species_name);
+      CREATE INDEX ON #{target_table_name} (taxon_name);
+      CREATE INDEX ON #{target_table_name} (taxon_concept_id);
       CREATE INDEX ON #{target_table_name} (appendix);
       CREATE INDEX ON #{target_table_name} (quantity);
       CREATE INDEX ON #{target_table_name} (source_code);
@@ -132,10 +136,12 @@ class Trade::SandboxTemplate < ActiveRecord::Base
         THEN trading_partner
         ELSE geo_entities.iso_code2 
       END AS importer,
+      taxon_concepts.full_name AS accepted_taxon_name,
       #{target_table_name}.*
       FROM #{target_table_name}
       JOIN trade_annual_report_uploads aru ON aru.id = #{idx}
       JOIN geo_entities ON geo_entities.id = aru.trading_country_id
+      LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
     SQL
   end
 

@@ -6,6 +6,7 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
   closeOnSelect: true
   type: 'hidden'
   origin: null
+  classNames: ['select2']
 
   didInsertElement: () ->
     placeholderText = this.get('prompt') || ''
@@ -16,7 +17,7 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
       minimumInputLength: 3
       allowClear: this.get('allowClear')
       closeOnSelect: this.get('closeOnSelect')
-      width: this.get('width')
+      dropdownCssClass: 'species_autocomplete'
       initSelection: (element, callback) =>
         @origin = @get('origin')
         value = @get('value')
@@ -32,6 +33,7 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
         dataType: 'json'
         data: (term, page) ->
           taxon_concept_query: term # search term
+          visibility: 'trade'
           per_page: 10
           page: page
         results: (data, page) => # parse the results into the format expected by Select2.

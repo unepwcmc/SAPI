@@ -4,14 +4,6 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, 
   visibleShipments: []
   currentShipment: null
   filtersSelected: false
-  errorMessage: ""
-  errorCount: ""
-
-  errorHeader: ( ->
-    if @errorMessage.length > 0
-      return "Selected error: #{@errorMessage} (#{@errorCount})"
-    ""
-  ).property('errorMessage', 'errorCount')
 
   sandboxShipmentsDidLoad: ( ->
     @set('visibleShipments', @get('content.sandboxShipments'))
@@ -24,9 +16,9 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, 
     @applyFilter('appendix')
   ).observes('selectedAppendixValues.@each', 'blankAppendix')
 
-  selectedSpeciesNameChanged: ( ->
-    @applyFilter('speciesName')
-  ).observes('selectedSpeciesNameValues.@each', 'blankSpeciesName')
+  selectedTaxonNameChanged: ( ->
+    @applyFilter('taxonName')
+  ).observes('selectedTaxonNameValues.@each', 'blankTaxonName')
 
   selectedTermCodeChanged: ( ->
     @applyFilter('termCode')
@@ -119,12 +111,11 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, 
 
 
     # new for sandbox shipments updateSelection
-    transitionToSandboxShipments: (errorSelector, errorMessage, errorCount) ->
-      @set('errorMessage', errorMessage)
-      @set('errorCount', errorCount)
-      params = @sanitizeQueryParams(errorSelector)
+    transitionToSandboxShipments: (error) ->
+      @set('currentError', error)
+      params = @sanitizeQueryParams(error.get('errorSelector'))
       params.page = 1
-      params.error_identifier = @hashCode errorMessage
+      params.error_identifier = @hashCode error.get('errorMessage')
       @transitionToRoute('sandbox_shipments', {
         queryParams: params
       })
@@ -133,7 +124,8 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, 
   sanitizeQueryParams: (selected) ->
     reseter = {
       appendix: false,
-      species_name: false,
+      taxon_name: false,
+      taxon_concept_id: false,
       term_code: false,
       quantity: false,
       unit_code : false,

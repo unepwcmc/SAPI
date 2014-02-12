@@ -87,6 +87,7 @@ group :development do
   gem 'quiet_assets'
   gem 'webrick', '1.3.1'
   gem 'jslint_on_rails'
+  gem 'git_pretty_accept'
 end
 
 group :test, :development do

@@ -30,7 +30,7 @@ namespace :import do
           now()::date AS created_at
         FROM (
           SELECT DISTINCT full_hybrid_name
-          FROM hybrids_import
+          FROM #{TMP_TABLE}
 
           EXCEPT
 
@@ -57,7 +57,7 @@ namespace :import do
             tn.id as taxon_names_id,
             legacy_cites_taxon_code as legacy_trade_code,
             #{taxonomy_id}, 'H'
-          FROM hybrids_import
+          FROM #{TMP_TABLE}
           INNER JOIN ranks r ON hybrid_rank = r.name
           INNER JOIN taxon_names tn ON full_hybrid_name = tn.scientific_name
 
@@ -87,7 +87,7 @@ namespace :import do
             taxon_concepts.id,
             other_taxon_concepts.id,
             #{taxon_relationship_type_id}
-          FROM hybrids_import hi
+          FROM #{TMP_TABLE} hi
           INNER JOIN taxon_concepts
           ON species_plus_id = taxon_concepts.id
           LEFT JOIN taxon_concepts other_taxon_concepts

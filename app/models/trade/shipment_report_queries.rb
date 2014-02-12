@@ -277,7 +277,8 @@ module Trade::ShipmentReportQueries
   AND exports.term_id = imports.term_id
   AND (exports.unit_id = imports.unit_id OR exports.unit_id IS NULL AND imports.unit_id IS NULL)
   AND exports.year = imports.year
-  AND exports.country_id = imports.country_id"
+  AND exports.country_id = imports.country_id
+  WHERE (exports.gross_quantity - COALESCE(imports.gross_quantity, 0)) > 0"
   end
 
   def net_imports_query
@@ -319,7 +320,8 @@ module Trade::ShipmentReportQueries
   AND exports.year = imports.year
   AND exports.term_id = imports.term_id
   AND (exports.unit_id = imports.unit_id OR exports.unit_id IS NULL AND imports.unit_id IS NULL)
-  AND exports.country_id = imports.country_id"
+  AND exports.country_id = imports.country_id
+  WHERE (imports.gross_quantity - COALESCE(exports.gross_quantity, 0)) > 0"
   end
 
 end

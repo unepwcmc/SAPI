@@ -14,7 +14,8 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
     'term.code', 'quantity',  'unit.code',
     'importer.isoCode2', 'exporter.isoCode2', 'countryOfOrigin.isoCode2',
     'purpose.code', 'source.code', 'reporterType',
-    'importPermitNumber', 'exportPermitNumber', 'originPermitNumber'
+    'importPermitNumber', 'exportPermitNumber', 'originPermitNumber',
+    'legacyShipmentNumber'
   ]
 
   codeMappings: {
@@ -92,8 +93,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
     Trade.AutoCompleteTaxonConcept.find(
       taxonomy: 'CITES'
       taxon_concept_query: taxonConceptQuery
-      ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY', 'GENUS', 'SPECIES']
-      autocomplete: true
+      visibility: 'trade'
     )
   ).property('taxonConceptQuery')
   autoCompleteTaxonConceptsByRank: ( ->
@@ -130,6 +130,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
   purposeBlank: false
   sourceBlank: false
   countryOfOriginBlank: false
+  permitBlank: false
   termQuery: null
   autoCompleteTerms: ( ->
     @autoCompleteObjects('controllers.terms', 'code', @get('termQuery'))
@@ -159,7 +160,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
     'selectedPurposes.@each', 'purposeBlank',
     'selectedImporters.@each', 'selectedExporters.@each',
     'selectedCountriesOfOrigin.@each', 'countryOfOriginBlank',
-    'selectedPermits.@each'
+    'selectedPermits.@each', 'permitBlank'
   )
 
   # sth amiss with array query params, which is why we pass a different

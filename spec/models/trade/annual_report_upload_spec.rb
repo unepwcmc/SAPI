@@ -158,7 +158,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
         sandbox_klass.create(
-          :species_name => 'Acipenser baerii',
+          :taxon_name => 'Acipenser baerii',
           :appendix => 'II',
           :trading_partner => @portugal.iso_code2,
           :term_code => 'CAV',
@@ -197,7 +197,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
         sandbox_klass.create(
-          :species_name => 'Acipenser baerii',
+          :taxon_name => 'Acipenser baerii',
           :appendix => 'II',
           :term_code => 'CAV',
           :unit_code => 'KIL',
@@ -238,7 +238,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
         sandbox_klass.create(
-          :species_name => 'Acipenser stenorrhynchus',
+          :taxon_name => 'Acipenser stenorrhynchus',
           :appendix => 'II',
           :trading_partner => @portugal.iso_code2,
           :term_code => 'CAV',

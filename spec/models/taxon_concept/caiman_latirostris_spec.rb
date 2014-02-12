@@ -4,12 +4,25 @@ describe TaxonConcept do
   context "Caiman latirostris" do
     include_context "Caiman latirostris"
 
+    context "TAXONOMY" do
+      describe :full_name do
+        context "for species synonym Alligator cynocephalus" do
+          specify { @species1.full_name.should == 'Alligator cynocephalus' }
+        end
+      end
+      describe :rank_name do
+        context "for species synonym Alligator cynocephalus" do
+          specify { @species1.rank_name.should == Rank::SPECIES }
+        end
+      end
+    end
+
     context "REFERENCES" do
       describe :cites_accepted do
         context 'for species Caiman latirostris' do
           specify { @species.cites_accepted.should be_true }
         end
-        context "for species Alligator cynocephalus" do
+        context "for synonym species Alligator cynocephalus" do
           specify { @species1.cites_accepted.should == false }
         end
       end
@@ -74,6 +87,9 @@ describe TaxonConcept do
         end
         context "for species Caiman latoristris" do
           specify { @species.cites_show.should be_true }
+        end
+        context "for synonym species Alligator cynocephalus" do
+          specify { @species1.cites_show.should be_false }
         end
       end
 
