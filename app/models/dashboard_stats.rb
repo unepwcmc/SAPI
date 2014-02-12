@@ -2,9 +2,10 @@ class DashboardStats
 
   include ActiveModel::Serializers::JSON
 
-  def initialize (iso_code, kingdom)
+  def initialize (iso_code, kingdom, trade_limit)
     @iso_code = iso_code
     @kingdom = kingdom || 'Animalia'
+    @trade_limit = trade_limit || 5
     @geo_entity = GeoEntity.where(:iso_code2 => iso_code).first
   end
 
@@ -14,6 +15,10 @@ class DashboardStats
 
   def get_kingdom
     @kingdom
+  end
+
+  def get_trade_limit
+    @trade_limit
   end
 
   def get_species_classes taxonomy
@@ -49,15 +54,36 @@ class DashboardStats
 
   def trade
     trade_results = {}
-    exports = Trade::ShipmentView.where(
-      :importer_id => @geo_entity.id
-    ).count
-    trade_results['exports'] = exports
-    imports = Trade::ShipmentView.where(
-      :exporter_id => @geo_entity.id
-    ).count
-    trade_results['imports'] = imports
+    trade_results[:exports] = get_trade_stats 'exports'
+    trade_results[:imports] = get_trade_stats 'imports'
     trade_results
   end
+
+  private
+
+  def get_trade_stats trade_type
+    hash = {:top_traded => []}
+    geo_id = trade_type == "exports" ? :exporter_id : :importer_id
+    totals = Trade::ShipmentView.where(
+      geo_id => @geo_entity.id
+    ).count
+    hash[:totals] = totals
+    tops = Trade::ShipmentView.
+      select("taxon_concept_id, count(*) as count_all").
+      where(geo_id => @geo_entity.id).
+      group(:taxon_concept_id).
+      order("count_all desc").
+      limit(@trade_limit)
+    tops.each do |top|
+      taxon_concept = MTaxonConcept.find(top.taxon_concept_id)
+      top_traded = {
+        :name => taxon_concept[:full_name],
+        :common_name_en => taxon_concept.english_names.first,
+        :count => top.count_all.to_i
+      }
+      hash[:top_traded] << top_traded
+    end
+    hash
+  end 
 
 end
