@@ -1,5 +1,5 @@
 class Admin::QuotasController < Admin::SimpleCrudController
-  before_filter :load_lib_objects, :only => [:new, :edit]
+  before_filter :load_lib_objects, :only => [:new]
 
   def create
     create! do |success, failure|
@@ -10,19 +10,6 @@ class Admin::QuotasController < Admin::SimpleCrudController
       failure.html {
         load_lib_objects
         render 'new'
-      }
-    end
-  end
-
-  def update
-    update! do |success, failure|
-      success.html {
-        redirect_to admin_quotas_url,
-        :notice => 'Operation successful'
-      }
-      failure.html {
-        load_lib_objects
-        render 'edit'
       }
     end
   end
