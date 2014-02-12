@@ -2,23 +2,13 @@ class DashboardStats
 
   include ActiveModel::Serializers::JSON
 
+  attr_reader :geo_entity, :kingdom, :trade_limit
+
   def initialize (iso_code, kingdom, trade_limit)
     @iso_code = iso_code
     @kingdom = kingdom || 'Animalia'
     @trade_limit = trade_limit || 5
     @geo_entity = GeoEntity.where(:iso_code2 => iso_code).first
-  end
-
-  def geo_entity
-    @geo_entity
-  end
-
-  def kingdom
-    @kingdom
-  end
-
-  def trade_limit
-    @trade_limit
   end
 
   def get_species_classes taxonomy
