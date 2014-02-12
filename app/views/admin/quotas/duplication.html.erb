@@ -1,0 +1,78 @@
+<div class="admin-header">
+  <h1>CITES Quotas</h1>
+</div>
+
+<div style="clear:both;"></div>
+
+<%= form_tag duplicate_admin_quotas_url, :method => :post, :class => "form-horizontal" do %>
+  <fieldset>
+    <legend>Duplicate CITES quotas</legend>
+    <div class="control-group">
+      <%= label_tag "from_year", nil, :class => "control-label" %>
+      <div class="controls">
+        <%= select_tag :from_year, options_for_select(@years) %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= label_tag "to_year", "New quota year", :class => "control-label" %>
+      <div class="controls">
+        <%= text_field_tag :to_year, Time.now.year %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= label_tag :publication_date, nil, :class => 'control-label' %>
+      <div class="controls">
+        <%= text_field_tag :publication_date, Time.now.strftime("%d/%m/%Y"), :class => "quota datepicker" %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= label_tag :included_geo_entities, "For", :class => 'control-label' %>
+      <div class="controls">
+        <%= select_tag :included_geo_entities,
+          options_from_collection_for_select(
+            @geo_entities,
+            :id,
+            :name_en
+          ), { :include_blank => true, :multiple => true,
+           :class => 'quota select2', :style => 'width: 220px' }
+        %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= label_tag :excluded_geo_entities, "Except for", :class => 'control-label' %>
+      <div class="controls">
+        <%= select_tag :excluded_geo_entities,
+          options_from_collection_for_select(
+            @geo_entities,
+            :id,
+            :name_en
+          ), { :include_blank => true, :multiple => true,
+           :class => 'quota select2', :style => 'width: 220px' }
+        %>
+      </div>
+    </div>
+    <p>Number of quotas that will be duplicated: <strong><span id="quotas-count"><%= @count %></span></strong>.</p>
+    <p>
+      <%= link_to 'Cancel', admin_quotas_path,
+        :class => "btn" %>
+      <%= submit_tag "Save", :class => "btn btn-primary save-button" %>
+    </p>
+  </fieldset>
+<% end %>
+
+<script type="text/javascript">
+  $(function(){
+      $("#from_year, #excluded_geo_entities, #included_geo_entities").change(function(e){
+        $.get('/admin/quotas/count', {
+          year: $("#from_year").val(),
+          included_geo_entities: $("#included_geo_entities").val(),
+          excluded_geo_entities: $("#excluded_geo_entities").val()
+          }, function(data, textStatus, jqXHR){
+            $("#quotas-count").text(data);
+          },'json'
+        );
+      });
+  });
+</script>
