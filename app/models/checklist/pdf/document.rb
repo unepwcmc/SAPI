@@ -9,7 +9,12 @@ module Checklist::Pdf::Document
     tmp_dir_path = [Rails.root, "/tmp/", SecureRandom.hex(8)].join
     FileUtils.mkdir tmp_dir_path
     # copy the template to intermediate directory
-    FileUtils.cp [Rails.root, "/public/latex/", "#{@input_name}.tex"].join, tmp_dir_path
+    FileUtils.cp [Rails.root, "/public/latex/", "#{@input_name}.tex"].join,
+      tmp_dir_path
+    # copy the dictionary to intermediate directory
+    FileUtils.copy_file [Rails.root, "/public/latex/", "_dict_#{I18n.locale}.tex"].join,
+      [tmp_dir_path, '/_dict.tex'].join
+
     @template_tex = [tmp_dir_path, "/#{@input_name}.tex"].join
     @tmp_tex    = [tmp_dir_path, "/_#{@input_name}.tex"].join
     # create the dynamic part
