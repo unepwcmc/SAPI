@@ -13,12 +13,6 @@
         <%= select_tag "quotas[from_year]", options_for_select(@years) %>
       </div>
     </div>
-    <div class="control-group">
-      <%= label_tag "quotas[to_year]", "New quota year", :class => "control-label" %>
-      <div class="controls">
-        <%= text_field_tag "quotas[to_year]", Time.now.year %>
-      </div>
-    </div>
     <h5>Dates</h5>
     <div class="control-group">
       <%= label_tag "quotas[start_date]", 'Start date', :class => 'control-label' %>
