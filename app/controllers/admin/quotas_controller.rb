@@ -9,8 +9,8 @@ class Admin::QuotasController < Admin::SimpleCrudController
   end
 
   def duplicate
-    debugger
-    true
+    QuotasCopyWorker.perform_async(params[:quotas])
+    redirect_to admin_quotas_path
   end
 
   def count
@@ -28,7 +28,7 @@ class Admin::QuotasController < Admin::SimpleCrudController
         #{ if params[:included_taxon_concepts_ids].present?
            "AND taxon_concept_id IN (:included_taxon_concepts)"
           end}
-        ",
+        AND is_current = true",
         :year => params[:year],
         :excluded_geo_entities => params[:excluded_geo_entities_ids],
         :included_geo_entities => params[:included_geo_entities_ids],
