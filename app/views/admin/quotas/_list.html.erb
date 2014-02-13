@@ -1,5 +1,7 @@
 <thead>
   <th>Year</th>
+  <th>Start date</th>
+  <th>End date</th>
   <th>Country or Territory</th>
   <th>Quantity</th>
   <th>Unit</th>
@@ -15,6 +17,8 @@
   <% collection.each do |quota| -%>
     <tr class="<%= if quota.is_current? then "current_listing" end %>">
       <td><%= quota.year %></td>
+      <td><%= quota.start_date_formatted %></td>
+      <td><%= quota.end_date_formatted %></td>
       <td><%= quota.geo_entity && quota.geo_entity.name_en %></td>
       <td>
         <% if quota.quota == -1 %>
