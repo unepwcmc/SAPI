@@ -8,28 +8,56 @@
   <fieldset>
     <legend>Duplicate CITES quotas</legend>
     <div class="control-group">
-      <%= label_tag "from_year", nil, :class => "control-label" %>
+      <%= label_tag "quotas[from_year]", 'From year', :class => "control-label" %>
       <div class="controls">
-        <%= select_tag :from_year, options_for_select(@years) %>
+        <%= select_tag "quotas[from_year]", options_for_select(@years) %>
       </div>
     </div>
     <div class="control-group">
-      <%= label_tag "to_year", "New quota year", :class => "control-label" %>
+      <%= label_tag "quotas[to_year]", "New quota year", :class => "control-label" %>
       <div class="controls">
-        <%= text_field_tag :to_year, Time.now.year %>
+        <%= text_field_tag "quotas[to_year]", Time.now.year %>
+      </div>
+    </div>
+    <h5>Dates</h5>
+    <div class="control-group">
+      <%= label_tag "quotas[start_date]", 'Start date', :class => 'control-label' %>
+      <div class="controls">
+        <%= text_field_tag "quotas[start_date]", Time.now.beginning_of_year.strftime("%d/%m/%Y"), :class => "quota datepicker" %>
       </div>
     </div>
     <div class="control-group">
-      <%= label_tag :publication_date, nil, :class => 'control-label' %>
+      <%= label_tag "quotas[end_date]", 'End date', :class => 'control-label' %>
       <div class="controls">
-        <%= text_field_tag :publication_date, Time.now.strftime("%d/%m/%Y"), :class => "quota datepicker" %>
+        <%= text_field_tag "quotas[end_date]", Time.now.end_of_year.strftime("%d/%m/%Y"), :class => "quota datepicker" %>
       </div>
     </div>
-
     <div class="control-group">
-      <%= label_tag :included_geo_entities, "For", :class => 'control-label' %>
+      <%= label_tag "quotas[publication_date]", 'Publication date', :class => 'control-label' %>
       <div class="controls">
-        <%= select_tag :included_geo_entities,
+        <%= text_field_tag "quotas[publication_date]", Time.now.strftime("%d/%m/%Y"), :class => "quota datepicker" %>
+      </div>
+    </div>
+    <h5>Taxon Concepts</h5>
+    <div class="control-group">
+      <%= label_tag "quotas[included_taxon_concepts_ids]", "For", :class => 'control-label' %>
+      <div class="controls">
+        <%= hidden_field_tag "quotas[included_taxon_concepts_ids]", nil,
+          :style => "width: 220px" %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= label_tag "quotas[excluded_taxon_concepts_ids]", "Except for", :class => 'control-label' %>
+      <div class="controls">
+        <%= hidden_field_tag "quotas[excluded_taxon_concepts_ids]", nil,
+          :style => "width: 220px" %>
+      </div>
+    </div>
+    <h5>Countries and Territories</h5>
+    <div class="control-group">
+      <%= label_tag "quotas[included_geo_entities_ids]", "For", :class => 'control-label' %>
+      <div class="controls">
+        <%= select_tag "quotas[included_geo_entities_ids]",
           options_from_collection_for_select(
             @geo_entities,
             :id,
@@ -39,11 +67,10 @@
         %>
       </div>
     </div>
-
     <div class="control-group">
-      <%= label_tag :excluded_geo_entities, "Except for", :class => 'control-label' %>
+      <%= label_tag "quotas[excluded_geo_entities_ids]", "Except for", :class => 'control-label' %>
       <div class="controls">
-        <%= select_tag :excluded_geo_entities,
+        <%= select_tag "quotas[excluded_geo_entities_ids]",
           options_from_collection_for_select(
             @geo_entities,
             :id,
@@ -64,15 +91,63 @@
 
 <script type="text/javascript">
   $(function(){
-      $("#from_year, #excluded_geo_entities, #included_geo_entities").change(function(e){
-        $.get('/admin/quotas/count', {
-          year: $("#from_year").val(),
-          included_geo_entities: $("#included_geo_entities").val(),
-          excluded_geo_entities: $("#excluded_geo_entities").val()
-          }, function(data, textStatus, jqXHR){
-            $("#quotas-count").text(data);
-          },'json'
-        );
+      $("#quotas_from_year").change(function(e){
+        getCount();
       });
+      $("#quotas_excluded_geo_entities_ids, #quotas_included_geo_entities_ids").on("change", function(){
+        getCount();
+      });
+
+      $("#quotas_excluded_taxon_concepts_ids, #quotas_included_taxon_concepts_ids").select2({
+        placeholder: 'Select taxon',
+        multiple: true,
+        minimumInputLength: 3,
+        ajax: {
+          url: '/admin/taxon_concepts/autocomplete',
+          dataType: 'json',
+          quietMillis: 100,
+          data: function(query) {
+            return {
+              search_params: {
+                scientific_name: query,
+                taxonomy: {
+                  id: 1
+                }
+              },
+              limit: 25
+            };
+          },
+          results: function(data) {
+            var results;
+            results = [];
+            $.each(data, function(i, e) {
+              return results.push({
+                id: e.id,
+                text: e.full_name
+              });
+            });
+            return {
+              results: results
+            };
+          },
+          dropdownCssClass: 'bigdrop',
+          placeholder: 'Select taxa'
+        }
+      }).on("change", function(){
+        getCount();
+      });
+
+      function getCount() {
+        $.get('/admin/quotas/count', {
+          year: $("#quotas_from_year").val(),
+          included_geo_entities_ids: $("#quotas_included_geo_entities_ids").val(),
+          excluded_geo_entities_ids: $("#quotas_excluded_geo_entities_ids").val(),
+          included_taxon_concepts_ids: $("#quotas_included_taxon_concepts_ids").val(),
+          excluded_taxon_concepts_ids: $("#quotas_excluded_taxon_concepts_ids").val()
+        }, function(data, textStatus, jqXHR){
+          $("#quotas-count").text(data);
+        },'json'
+      );
+    };
   });
 </script>
