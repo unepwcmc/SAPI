@@ -21,7 +21,7 @@
 
 \pagestyle{fancy}
 \fancyfoot{}
-\fancyfoot[C]{History of CITES listings – \thepage}
+\fancyfoot[C]{\historyFooter – \thepage}
 \renewcommand{\headrulewidth}{0pt}
 
 \iftrue
@@ -32,6 +32,8 @@
 \fi
 
 \begin{document}
+
+\include{_dict}
 
 \renewcommand{\rmdefault}{phv}
 
@@ -83,15 +85,15 @@
     \begin{LARGE}
       \hyperlink{contentstart}{
         \textbf{
-          \textcolor{white}{Skip Introduction}
+          \textcolor{white}{\skipIntro}
         }
       }
     \end{LARGE}
   }
 }
 
-\includepdf[pages=1]{../../public/latex/static_history.pdf}
-\includepdf[pages=2-]{../../public/latex/static_history.pdf}
+\includepdf[pages=1]{\historyIntroductionFile}
+\includepdf[pages=2-]{\historyIntroductionFile}
 
 \hypertarget{contentstart}{}
 \include{_history}

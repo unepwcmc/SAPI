@@ -15,7 +15,7 @@
 
 \pagestyle{fancy}
 \fancyfoot{}
-\fancyfoot[C]{Index of CITES species – \thepage}
+\fancyfoot[C]{\indexFooter – \thepage}
 \renewcommand{\headrulewidth}{0pt}
 
 \iftrue
@@ -26,6 +26,8 @@
 \fi
 
 \begin{document}
+
+\include{_dict}
 
 \renewcommand{\rmdefault}{phv}
 \newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
@@ -51,15 +53,15 @@
     \begin{LARGE}
       \hyperlink{contentstart}{
         \textbf{
-          \textcolor{white}{Skip Introduction}
+          \textcolor{white}{\skipIntro}
         }
       }
     \end{LARGE}
   }
 }
 
-\includepdf[pages=1]{../../public/latex/static_index.pdf}
-\includepdf[pages=2-]{../../public/latex/static_index.pdf}
+\includepdf[pages=1]{\indexIntroductionFile}
+\includepdf[pages=2-]{\indexIntroductionFile}
 \rmfamily
 \raggedright
 \leftskip 0.1in
