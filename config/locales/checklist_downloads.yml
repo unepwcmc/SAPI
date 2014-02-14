@@ -1,16 +1,22 @@
 en:
+  index_title: 'Index of CITES Species'
+  history_title: 'History of CITES Listings'
   pdf:
     annotations_key: 'Annotations key'
     non_hash_annotations: 'Annotations not preceded by "#"'
     hash_annotations: 'Annotations preceded by "#"'
 
 es:
+  index_title: 'Índice de especies CITES'
+  history_title: 'Historia de las inclusiones en los Apéndices de la CITES'
   pdf:
     annotations_key: 'ES Annotations key'
     non_hash_annotations: 'ES Annotations not preceded by "#"'
     hash_annotations: 'ES Annotations preceded by "#"'
 
 fr:
+  index_title: 'Répertoire des espèces CITES'
+  history_title: 'Annales des inscriptions à la CITES'
   pdf:
     annotations_key: 'FR Annotations key'
     non_hash_annotations: 'FR Annotations not preceded by "#"'
