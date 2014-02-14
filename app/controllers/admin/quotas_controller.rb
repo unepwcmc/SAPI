@@ -1,5 +1,11 @@
 class Admin::QuotasController < Admin::SimpleCrudController
 
+  def index
+    @years = Quota.select('EXTRACT(year from start_date) years').
+      group(:years).order('years DESC').map(&:years)
+    index!
+  end
+
   def duplication
     @years = Quota.select('EXTRACT(year from start_date) years').
       group(:years).order('years DESC').map(&:years)
@@ -10,7 +16,8 @@ class Admin::QuotasController < Admin::SimpleCrudController
 
   def duplicate
     QuotasCopyWorker.perform_async(params[:quotas])
-    redirect_to admin_quotas_path
+    redirect_to admin_quotas_path, :notice => "Your quotas are being duplicated in the background.
+      They will show in this page in a few seconds"
   end
 
   def count
@@ -43,5 +50,7 @@ class Admin::QuotasController < Admin::SimpleCrudController
   def collection
     @quotas ||= end_of_association_chain.order('start_date DESC').
       page(params[:page]).search(params[:query])
+    return @quotas if !params[:year]
+    @quotas = @quotas.where('EXTRACT(year from start_date) = ?', params[:year])
   end
 end
