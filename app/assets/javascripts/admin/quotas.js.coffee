@@ -53,4 +53,10 @@ $ ->
     getCount()
     return
 
+  $(".toggle-extra-options").click (e) ->
+    e.preventDefault()
+    $(this).next(".extra-options").toggle()
+    $(this).children('span').toggle()
+    return
   return
+
