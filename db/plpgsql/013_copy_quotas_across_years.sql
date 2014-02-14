@@ -14,6 +14,8 @@ DECLARE
    cites_taxonomy_id INTEGER;
    updated_rows INTEGER;
 BEGIN
+
+    SET DateStyle = "ISO,DMY";
     SELECT id into cites_taxonomy_id FROM taxonomies WHERE name = 'CITES_EU';
 
     -- fetch included_taxon_concepts
