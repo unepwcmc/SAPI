@@ -52,7 +52,8 @@ class Checklist::History < Checklist::Checklist
       end
     end
     ctime = File.ctime(@download_path).strftime('%Y-%m-%d %H:%M')
-    @download_name = "History_of_CITES_Listings_#{has_full_options? ? '' : '[CUSTOM]_'}#{ctime}.#{ext}"
+    doc_name = I18n.t('history_title').split.join('_')
+    @download_name = "#{doc_name}_#{has_full_options? ? '' : '[CUSTOM]_'}#{ctime}.#{ext}"
     @download_path
   end
 
