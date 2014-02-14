@@ -1,4 +1,7 @@
-<%= admin_new_modal({:title => "Current CITES Quotas"}) { render "current_quotas_form" } %>
+<%= admin_new_modal({:title => "Current CITES Quotas"}) { 
+  render :partial => "current_quotas_form",
+    :locals => {:current_quotas => @taxon_concept.current_quotas}
+} %>
 
 <%= nested_form_for [:admin, @taxon_concept, @quota], :html => {:class => 'form-horizontal'} do |f| %>
 
@@ -104,5 +107,4 @@
       :class => "btn" %>
     <%= f.submit "Save", :class => "btn btn-primary save-button" %>
   </p>
-
 <% end %>
