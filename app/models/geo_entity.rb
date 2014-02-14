@@ -27,6 +27,7 @@ class GeoEntity < ActiveRecord::Base
   has_many :distributions
   has_many :designation_geo_entities
   has_many :designations, :through => :designation_geo_entities
+  has_many :quotas
   validates :geo_entity_type_id, :presence => true
   validates :iso_code2, :uniqueness => true, :allow_blank => true
   validates :iso_code2, :presence => true, :length => {:is => 2},

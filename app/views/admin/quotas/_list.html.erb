@@ -1,0 +1,52 @@
+<thead>
+  <th>Year</th>
+  <th>Start date</th>
+  <th>End date</th>
+  <th>Country or Territory</th>
+  <th>Quantity</th>
+  <th>Unit</th>
+  <th>Term</th>
+  <th>Source</th>
+  <th>Notes</th>
+  <th>Date</th>
+  <th>Public display?</th>
+  <th>Taxon Concept</th>
+  <th>Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |quota| -%>
+    <tr class="<%= if quota.is_current? then "current_listing" end %>">
+      <td><%= quota.year %></td>
+      <td><%= quota.start_date_formatted %></td>
+      <td><%= quota.end_date_formatted %></td>
+      <td><%= quota.geo_entity && quota.geo_entity.name_en %></td>
+      <td>
+        <% if quota.quota == -1 %>
+          in preparation
+        <% else %>
+          <%= quota.quota %>
+        <% end %>
+      </td>
+      <td><%= quota.unit.try(:code) %></td>
+      <td><%= quota.terms && quota.terms.map(&:code).join(', ') %></td>
+      <td><%= quota.sources && quota.sources.map(&:code).join(', ') %></td>
+      <td><%= quota.notes %></td>
+      <td><%= quota.publication_date_formatted %></td>
+      <td><%= true_false_icon(quota.public_display) %></td>
+      <td>
+        <% if quota.taxon_concept %>
+          <%= link_to quota.taxon_concept.full_name, admin_taxon_concept_quotas_path(quota.taxon_concept) %>
+        <% end %>
+      </td>
+      <td>
+        <%= link_to edit_icon,
+          edit_admin_taxon_concept_quota_path(quota.taxon_concept, quota)
+        %>
+        <%= link_to delete_icon,
+          admin_quota_path(quota),
+          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+        %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>

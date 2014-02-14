@@ -1,0 +1,19 @@
+<div class="admin-header">
+  <h1>CITES Quotas</h1>
+  <div class="action-buttons">
+    <%= admin_add_new_button(
+      :resource => 'quota',
+      :href => duplication_admin_quotas_url,
+      :"data-toggle" => nil,
+      :role => nil,
+      :name => "Duplicate quotas"
+    ) %>
+  </div>
+</div>
+
+<%= admin_simple_search %>
+<p>Showing <%= collection.count %> of <%= collection.total_count %> quotas.</p>
+<%= admin_table %>
+
+<%= paginate collection %>
+
