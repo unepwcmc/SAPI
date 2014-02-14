@@ -10,7 +10,9 @@ class QuotasCopyWorker
           ARRAY[:excluded_taxon_concepts_ids]::integer[],
           ARRAY[:included_taxon_concepts_ids]::integer[],
           ARRAY[:excluded_geo_entities_ids]::integer[],
-          ARRAY[:included_geo_entities_ids]::integer[]
+          ARRAY[:included_geo_entities_ids]::integer[],
+          :from_text,
+          :to_text
         )
       SQL
     ActiveRecord::Base.connection.execute(
@@ -23,7 +25,9 @@ class QuotasCopyWorker
         :excluded_geo_entities_ids => (options["excluded_geo_entities_ids"] && 
                                        options["excluded_geo_entities_ids"].join(",")),
         :included_geo_entities_ids => (options["included_geo_entities_ids"] &&
-                                       options["included_geo_entities_ids"].join(","))
+                                       options["included_geo_entities_ids"].join(",")),
+        :from_text => options["from_text"],
+        :to_text => options["to_text"]
     ]))
   end
 end
