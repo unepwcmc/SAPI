@@ -1,0 +1,17 @@
+en:
+  pdf:
+    annotations_key: 'Annotations key'
+    non_hash_annotations: 'Annotations not preceded by "#"'
+    hash_annotations: 'Annotations preceded by "#"'
+
+es:
+  pdf:
+    annotations_key: 'ES Annotations key'
+    non_hash_annotations: 'ES Annotations not preceded by "#"'
+    hash_annotations: 'ES Annotations preceded by "#"'
+
+fr:
+  pdf:
+    annotations_key: 'FR Annotations key'
+    non_hash_annotations: 'FR Annotations not preceded by "#"'
+    hash_annotations: 'FR Annotations preceded by "#"'
