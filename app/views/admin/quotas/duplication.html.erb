@@ -82,15 +82,15 @@
     <h5 class="toggle-extra-options">Notes <span>+</span><span class="hide">-</span></h5>
     <div class="extra-options hide">
       <div class="control-group">
-        <%= label_tag "quotas[old_note]", "Replace", :class => 'control-label' %>
+        <%= label_tag "quotas[from_text]", "Replace", :class => 'control-label' %>
         <div class="controls">
-          <%= text_field_tag "old_note", nil %>
+          <%= text_field_tag "quotas[from_text]", nil %>
         </div>
       </div>
       <div class="control-group">
-        <%= label_tag "quotas[new_note]", "With", :class => 'control-label' %>
+        <%= label_tag "quotas[to_text]", "With", :class => 'control-label' %>
         <div class="controls">
-          <%= text_field_tag "new_note", nil %>
+          <%= text_field_tag "quotas[to_text]", nil %>
         </div>
       </div>
     </div>

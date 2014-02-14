@@ -1,7 +1,8 @@
 CREATE OR REPLACE FUNCTION copy_quotas_across_years(
   from_year INTEGER, new_start_date DATE, new_end_date DATE, new_publication_date DATE,
   excluded_taxon_concepts_ids INTEGER[], included_taxon_concepts_ids INTEGER[],
-   excluded_geo_entities_ids INTEGER[], included_geo_entities_ids INTEGER[]
+  excluded_geo_entities_ids INTEGER[], included_geo_entities_ids INTEGER[],
+  from_text VARCHAR, to_text VARCHAR
   ) RETURNS VOID
   LANGUAGE plpgsql
   AS $$
@@ -84,10 +85,15 @@ BEGIN
     publication_date, notes, unit_id, taxon_concept_id, public_display, url, created_at, updated_at,
     excluded_taxon_concepts_ids)
     SELECT 'Quota', is_current, new_start_date, new_end_date, geo_entity_id, quota,
-    new_publication_date, notes, unit_id, taxon_concept_id, public_display, url, current_date,
+    new_publication_date,
+    CASE
+      WHEN LENGTH(from_text) = 0
+      THEN notes
+    ELSE
+      REPLACE(notes, from_text, to_text)
+    END, unit_id, taxon_concept_id, public_display, url, current_date,
     current_date, trade_restrictions.excluded_taxon_concepts_ids
     FROM original_current_quotas AS trade_restrictions;
-
 
     GET DIAGNOSTICS updated_rows = ROW_COUNT;
     RAISE INFO '[%] Copied % quotas', 'trade_transactions', updated_rows;
@@ -98,5 +104,5 @@ COMMENT ON FUNCTION copy_quotas_across_years(
   from_year INTEGER, new_start_date DATE, new_end_date DATE,
   new_publication_date DATE, excluded_taxon_concepts_ids INTEGER[],
   included_taxon_concepts_ids INTEGER[], excluded_geo_entities_ids INTEGER[],
-  included_geo_entities_ids INTEGER[]) IS
+  included_geo_entities_ids INTEGER[], from_text VARCHAR, to_text VARCHAR) IS
   'Procedure to copy quotas across two years with some filtering parameters.';
