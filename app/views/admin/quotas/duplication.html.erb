@@ -18,6 +18,7 @@
       <%= label_tag "quotas[start_date]", 'Start date', :class => 'control-label' %>
       <div class="controls">
         <%= text_field_tag "quotas[start_date]", Time.now.beginning_of_year.strftime("%d/%m/%Y"), :class => "quota datepicker" %>
+        <span class="help-block">New quota year will be extracted from start date</span>
       </div>
     </div>
     <div class="control-group">
