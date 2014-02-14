@@ -189,6 +189,7 @@ class Checklist::Checklist
 
     @filename = Digest::SHA1.hexdigest(params
                                        .merge(type: type)
+                                       .merge(locale: I18n.locale)
                                        .to_hash
                                        .symbolize_keys!
                                        .sort
