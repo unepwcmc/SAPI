@@ -13,7 +13,7 @@ gem 'foreigner'
 gem 'oj' #optimised JSON (picked by multi_json)
 gem 'nokogiri'
 gem 'inherited_resources'
-gem 'traco'
+gem 'traco', '~> 2.0.0'
 gem 'strong_parameters'
 
 gem 'sidekiq'
