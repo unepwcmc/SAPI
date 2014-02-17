@@ -107,7 +107,7 @@ class Checklist::Checklist
     # country
     @countries_count = 0
     unless @countries.empty?
-      summary = ["Results from"]  if summary.length == 0
+      summary = [I18n.t('filter_summary.when_no_taxon')]  if summary.length == 0
 
       countries = GeoEntity.find_all_by_id(@countries)
 
@@ -115,52 +115,53 @@ class Checklist::Checklist
       if (1..3).include?(@countries_count)
         summary << countries.map { |c| c.name }.join(", ")
       elsif @countries_count > 3
-        summary << "#{@countries_count} countries"
+        summary << "#{@countries_count} #{I18n.t('filter_summary.countries')}"
       end
     end
 
     # region
     @regions_count = 0
     unless @cites_regions.empty?
-      summary = ["Results from"]  if summary.length == 0
+      summary = [I18n.t('filter_summary.when_no_taxon')]  if summary.length == 0
 
       regions = GeoEntity.find_all_by_id(params[:cites_region_ids])
 
       @regions_count = regions.count
       if @regions_count > 0
-        summary << "within"  if @countries_count > 0
+        summary << I18n.t('filter_summary.within_regions')  if @countries_count > 0
         summary << "#{pluralize(regions.count, 'region')}" #uses ActionView::Helpers::TextHelper
       end
     end
 
     # appendix
     unless @cites_appendices.empty?
-      summary = ["Results from"]  if summary.length == 0
+      summary = [I18n.t('filter_summary.when_no_taxon')]  if summary.length == 0
 
       if (!@cites_regions.empty? ||
           !@countries.empty?) &&
          (@countries_count > 0 ||
           @regions_count > 0)
-        summary << "on"
+        summary << I18n.t('filter_summary.on_appx')
+      else
+        summary << I18n.t('filter_summary.from_appx')
       end
 
-      summary << "appx"
       summary << @cites_appendices.join(", ")
     end
 
     # name
     unless @scientific_name.blank?
-      summary = ["Results"]  if summary.length == 0
+      summary = [I18n.t('filter_summary.when_taxon')]  if summary.length == 0
 
-      summary << "for '#{@scientific_name}'"
+      summary << "'#{@scientific_name}'"
     end
 
     # synonyms
     if @synonyms
       if summary.length == 0
-        summary << "All results including synonyms"
+        summary << I18n.t('filter_summary.all_with_synonyms')
       else
-        summary << "(showing synonyms)"
+        summary << I18n.t('filter_summary.with_synonyms')
       end
     end
 
@@ -169,7 +170,7 @@ class Checklist::Checklist
     if summary.length > 0
       summary.join(" ")
     else
-      "All results"
+      I18n.t('filter_summary.all')
     end
   end
 
