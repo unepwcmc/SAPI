@@ -32,6 +32,7 @@ module DownloadsCache
   # for admin purposes
   def self.clear
     clear_dirs(DOWNLOAD_DIRS)
+    Download.delete_all
   end
 
   def self.clear_cites_listings
