@@ -5,6 +5,16 @@ en:
     annotations_key: 'Annotations key'
     non_hash_annotations: 'Annotations not preceded by "#"'
     hash_annotations: 'Annotations preceded by "#"'
+  filter_summary:
+    all: 'All results'
+    all_with_synonyms: 'All results including synonyms'
+    with_synonyms: '(showing synonyms)'
+    when_taxon: 'Results for'
+    when_no_taxon: 'Results from'
+    within_regions: 'within'
+    countries: 'countries'
+    on_appx: 'on appx'
+    from_appx: 'appx'
 
 es:
   index_title: 'Índice de especies CITES'
