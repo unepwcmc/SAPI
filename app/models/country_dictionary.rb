@@ -3,7 +3,9 @@ class CountryDictionary
 
   def initialize
     @collection = GeoEntity.
-      select([:"geo_entities.id", :"geo_entities.name_en", :"UPPER(geo_entities.iso_code2) AS iso_code2"]).
+      select([:"geo_entities.id", :name_en, :name_es, :name_fr,
+        :"UPPER(geo_entities.iso_code2) AS iso_code2"
+      ]).
       joins(:geo_entity_type).
       where(:"geo_entity_types.name" => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]).
       all
