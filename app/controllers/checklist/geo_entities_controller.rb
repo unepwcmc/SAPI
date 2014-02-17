@@ -16,7 +16,7 @@ class Checklist::GeoEntitiesController < ApplicationController
       Designation.dict &
       [params[:designation] && params[:designation].upcase]
     ).first
-    @geo_entities = GeoEntity.current.order(:name_en)
+    @geo_entities = GeoEntity.current.order(:"name_#{I18n.locale}")
     unless geo_entity_types.empty?
       @geo_entities = @geo_entities.
         joins(:geo_entity_type).
