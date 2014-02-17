@@ -13,7 +13,7 @@ class Checklist::GeoEntitiesController < ApplicationController
                        else
                          GeoEntityType::SETS[GeoEntityType::DEFAULT_SET]
                        end
-    @geo_entities = GeoEntity.current.order(:name_en)
+    @geo_entities = GeoEntity.current.order(:"name_#{I18n.locale}")
     unless geo_entity_types.empty?
       @geo_entities = @geo_entities.
         joins(:geo_entity_type).
