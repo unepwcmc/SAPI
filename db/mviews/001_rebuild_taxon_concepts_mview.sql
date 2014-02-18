@@ -15,14 +15,18 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     END AS taxonomy_is_cites_eu,
     full_name,
     name_status,
-    data->'rank_name' AS rank_name,
+    rank_id,
+    ranks.name AS rank_name,
+    ranks.display_name_en AS rank_display_name_en,
+    ranks.display_name_es AS rank_display_name_es,
+    ranks.display_name_fr AS rank_display_name_fr,
     (data->'spp')::BOOLEAN AS spp,
     (data->'cites_accepted')::BOOLEAN AS cites_accepted,
     CASE
     WHEN data->'kingdom_name' = 'Animalia' THEN 0
     ELSE 1
     END AS kingdom_position,
-    taxonomic_position,
+    taxon_concepts.taxonomic_position,
     data->'kingdom_name' AS kingdom_name,
     data->'phylum_name' AS phylum_name,
     data->'class_name' AS class_name,
@@ -103,10 +107,40 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     common_names.*,
     synonyms.*,
     subspecies.subspecies_ary,
-    countries_ids_ary
+    countries_ids_ary,
+    CASE
+      WHEN
+        name_status = 'A'
+        AND (
+          ranks.name != 'SUBSPECIES'
+          AND ranks.name != 'VARIETY'
+          OR (listing->'cites_show')::BOOLEAN
+        )
+      THEN TRUE
+      ELSE FALSE
+    END AS show_in_species_plus_ac,
+    CASE
+      WHEN
+        name_status = 'A'
+        AND listing->'cites_status' != 'LISTED'
+        AND (
+          ranks.name != 'SUBSPECIES'
+          AND ranks.name != 'VARIETY'
+          OR (listing->'cites_show')::BOOLEAN
+        )
+      THEN TRUE
+      ELSE FALSE
+    END AS show_in_checklist_ac,
+    CASE
+      WHEN
+        taxonomies.name = 'CITES_EU'
+        AND ARRAY['A', 'H', 'T']::VARCHAR[] && ARRAY[name_status]
+      THEN TRUE
+      ELSE FALSE
+    END AS show_in_trade_ac
     FROM taxon_concepts
-    LEFT JOIN taxonomies
-    ON taxonomies.id = taxon_concepts.taxonomy_id
+    JOIN ranks ON ranks.id = rank_id
+    JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
     LEFT JOIN (
       SELECT *
       FROM
@@ -179,12 +213,17 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     RAISE INFO 'Creating indexes on taxon_concepts materialized view (tmp)';
     CREATE INDEX ON taxon_concepts_mview_tmp (id);
     CREATE INDEX ON taxon_concepts_mview_tmp (parent_id);
-    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops);
     CREATE INDEX ON taxon_concepts_mview_tmp (taxonomy_is_cites_eu, cites_listed, kingdom_position);
-    CREATE INDEX ON taxon_concepts_mview_tmp (taxonomy_is_cites_eu, rank_name); --this one used for Species+ autocomplete (both main and higher taxa in downloads)
     CREATE INDEX ON taxon_concepts_mview_tmp (cms_show, name_status, cms_listing_original, taxonomy_is_cites_eu, rank_name); -- cms csv download
     CREATE INDEX ON taxon_concepts_mview_tmp (cites_show, name_status, cites_listing_original, taxonomy_is_cites_eu, rank_name); -- cites csv download
     CREATE INDEX ON taxon_concepts_mview_tmp (eu_show, name_status, eu_listing_original, taxonomy_is_cites_eu, rank_name); -- eu csv download
+
+    --this one used for Species+ autocomplete (both main and higher taxa in downloads)
+    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_species_plus_ac);
+    --this one used for Checklist autocomplete
+    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_checklist_ac);
+    --this one used for Trade autocomplete
+    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_trade_ac);
 
     RAISE INFO 'Swapping concepts materialized view';
     DROP table IF EXISTS taxon_concepts_mview CASCADE;
