@@ -4,5 +4,9 @@
   <%= f.select :designation_id,
     options_from_collection_for_select(@designations, :id, :name, @change_type && @change_type.designation_id)
   %><br />
-  <label>Name</label><%= f.text_field :name %><br />
+  <label>Code</label><%= f.text_field :name %><br />
+  <p>Name</p>
+  <label>EN</label> <%= f.text_field :display_name_en %><br />
+  <label>ES</label> <%= f.text_field :display_name_es %><br />
+  <label>FR</label> <%= f.text_field :display_name_fr %><br />
 <% end %>
