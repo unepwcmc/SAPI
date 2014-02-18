@@ -49,6 +49,9 @@ class MListingChange < ActiveRecord::Base
   self.table_name = :listing_changes_mview
   self.primary_key = :id
 
+  translates :short_note, :full_note, :hash_full_note,
+    :inherited_short_note, :inherited_full_note
+
   belongs_to :designation
   belongs_to :taxon_concept, :class_name => 'MTaxonConcept'
   belongs_to :listing_change, :foreign_key => :id
@@ -90,11 +93,13 @@ class MListingChange < ActiveRecord::Base
         :only => [
           :id, :change_type_name, :species_listing_name, :party_id,
           :is_current, :hash_ann_symbol, :hash_ann_parent_symbol,
-          :effective_at, :short_note_en, :full_note_en, :hash_full_note_en,
-          :auto_note, :inclusion_taxon_concept_id,
-          :inherited_short_note_en, :inherited_full_note_en
+          :effective_at, :auto_note, :inclusion_taxon_concept_id
         ],
-        :methods => [:countries_ids]
+        :methods => [
+          :countries_ids,
+          :short_note, :full_note, :hash_full_note,
+          :inherited_short_note, :inherited_full_note,
+        ]
       ).symbolize_keys
     )
   end
