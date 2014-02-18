@@ -1,8 +1,14 @@
 class Api::V1::DashboardStatsController < ApplicationController
 
   def index
-    stats = DashboardStats.new(params['iso_code'], params['kingdom'], params['trade_limit'])
-    render :json => stats, :serializer => DashboardStatsSerializer
+    iso_code = params['iso_code']
+    geo_entity = GeoEntity.where(:iso_code2 => iso_code).first
+    if geo_entity
+      stats = DashboardStats.new(geo_entity, params['kingdom'], params['trade_limit'])
+      render :json => stats, :serializer => DashboardStatsSerializer
+    else
+      render :json => 'Non valid iso2 code!'
+    end
   end
 
 end
