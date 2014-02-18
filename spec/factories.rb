@@ -39,7 +39,8 @@ FactoryGirl.define do
   end
 
   factory :rank do
-    sequence(:name) {|n| "Kingdom#{n}"}
+    sequence(:name) {|n| "rank#{n}"}
+    display_name_en { name }
     taxonomic_position '1'
   end
 

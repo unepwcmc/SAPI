@@ -3,5 +3,10 @@
   <%= error_messages_for(@rank) %>
 
   <label>Sort order</label> <%= f.text_field :taxonomic_position %><br />
-  <label>Name</label><%= f.text_field :name %><br />
+  <label>Code</label><%= f.text_field :name %><br />
+  <p>Name</p>
+  <label>EN</label> <%= f.text_field :display_name_en %><br />
+  <label>ES</label> <%= f.text_field :display_name_es %><br />
+  <label>FR</label> <%= f.text_field :display_name_fr %><br />
+
 <% end %>
