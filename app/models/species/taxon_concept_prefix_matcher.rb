@@ -25,7 +25,8 @@ class Species::TaxonConceptPrefixMatcher
   end
 
   def initialize_query
-    @query = MTaxonConcept.order("ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1), full_name")
+    @query = MTaxonConcept.
+      order("ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1), full_name")
     unless @ranks.empty?
       @query = @query.where(:rank_name => @ranks)
     end
@@ -48,6 +49,7 @@ class Species::TaxonConceptPrefixMatcher
       @query = @query.select(
         ActiveRecord::Base.send(:sanitize_sql_array, [
         "id, full_name, rank_name,
+        rank_display_name_en, rank_display_name_es, rank_display_name_fr,
         ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1),
         ARRAY(
           SELECT * FROM UNNEST(synonyms_ary) name WHERE UPPER(name) LIKE :sci_name_prefix

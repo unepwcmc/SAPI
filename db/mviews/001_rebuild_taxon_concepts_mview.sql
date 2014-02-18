@@ -15,7 +15,11 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     END AS taxonomy_is_cites_eu,
     full_name,
     name_status,
-    data->'rank_name' AS rank_name,
+    rank_id,
+    ranks.name AS rank_name,
+    ranks.display_name_en AS rank_display_name_en,
+    ranks.display_name_es AS rank_display_name_es,
+    ranks.display_name_fr AS rank_display_name_fr,
     (data->'spp')::BOOLEAN AS spp,
     (data->'cites_accepted')::BOOLEAN AS cites_accepted,
     CASE
@@ -169,7 +173,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
         )
       THEN TRUE
       ELSE FALSE
-      END AS show_in_species_plus
+    END AS show_in_species_plus
     FROM taxon_concepts
     JOIN ranks ON ranks.id = rank_id
     JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
@@ -309,6 +313,13 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     CREATE INDEX ON taxon_concepts_mview_tmp (cites_show, name_status, cites_listing_original, taxonomy_is_cites_eu, rank_name); -- cites csv download
     CREATE INDEX ON taxon_concepts_mview_tmp (eu_show, name_status, eu_listing_original, taxonomy_is_cites_eu, rank_name); -- eu csv download
     CREATE INDEX ON taxon_concepts_mview_tmp USING GIN (countries_ids_ary);
+
+    --this one used for Species+ autocomplete (both main and higher taxa in downloads)
+    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_species_plus_ac);
+    --this one used for Checklist autocomplete
+    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_checklist_ac);
+    --this one used for Trade autocomplete
+    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_trade_ac);
 
     --this one used for Species+ autocomplete (both main and higher taxa in downloads)
     CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_species_plus_ac);

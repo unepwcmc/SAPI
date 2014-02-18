@@ -18,8 +18,8 @@ class Checklist::TaxonConceptsController < ApplicationController
       :ranks => [],
       :per_page => params[:per_page]
     )
-    render :json => matcher.cached_results.
-      to_json(:methods => [:full_name, :rank_name, :matching_names])
+    render :json => matcher.cached_results,
+      :each_serializer => Checklist::AutocompleteTaxonConceptSerializer
   end
 
   def summarise_filters
