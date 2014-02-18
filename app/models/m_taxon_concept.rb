@@ -107,11 +107,6 @@ class MTaxonConcept < ActiveRecord::Base
   scope :without_non_accepted, where(:name_status => ['A', 'H'])
 
   scope :without_hidden, where("#{table_name}.cites_show = 't'")
-  scope :without_hidden_subspecies, where("
-    #{table_name}.rank_name != '#{Rank::SUBSPECIES}'
-    AND #{table_name}.rank_name != '#{Rank::VARIETY}'
-    OR #{table_name}.cites_show = 't'"
-  )
 
   scope :by_name, lambda { |name, match_options|
     MTaxonConceptFilterByScientificNameWithDescendants.new(
@@ -131,6 +126,7 @@ class MTaxonConcept < ActiveRecord::Base
 
   scope :taxonomic_layout, order('taxonomic_position')
   scope :alphabetical_layout, order(['kingdom_position', 'full_name'])
+  translates :rank_display_name
 
   # leftover from old Checklist code, this field is used in returned json
   def current_listing
@@ -174,6 +170,7 @@ class MTaxonConcept < ActiveRecord::Base
     end
   end
 
+  # TODO do we need this?
   def matching_names
     (synonyms + english_names + french_names + spanish_names).flatten
   end

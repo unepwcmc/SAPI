@@ -8,10 +8,10 @@ class Api::V1::AutoCompleteTaxonConceptsController < ApplicationController
       :each_serializer => Species::AutocompleteTaxonConceptSerializer,
       :meta => {
         :total => matcher.cached_total_cnt,
-        :rank_headers => @taxon_concepts.map(&:rank_name).uniq.map do |r|
+        :rank_headers => @taxon_concepts.map(&:rank_display_name).uniq.map do |r|
           {
             :rank_name => r,
-            :taxon_concept_ids => @taxon_concepts.select{|tc| tc.rank_name == r}.map(&:id)
+            :taxon_concept_ids => @taxon_concepts.select{|tc| tc.rank_display_name == r}.map(&:id)
           }
         end
       }
