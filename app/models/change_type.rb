@@ -10,14 +10,18 @@
 #
 
 class ChangeType < ActiveRecord::Base
-  attr_accessible :designation_id, :name
+  attr_accessible :name, :display_name_en, :display_name_es, :display_name_fr,
+    :designation_id
   include Dictionary
+  build_dictionary :addition, :deletion, :reservation, :reservation_withdrawal, :exception
+
+  translates :display_name
+
   belongs_to :designation
   has_many :listing_changes
 
   validates :name, :presence => true, :uniqueness => {:scope => :designation_id}
-
-  build_dictionary :addition, :deletion, :reservation, :reservation_withdrawal, :exception
+  validates :display_name_en, :presence => true, :uniqueness => {:scope => :designation_id}
 
   def abbreviation
     self.name.split('_').
