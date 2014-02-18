@@ -7,7 +7,8 @@ FactoryGirl.define do
   end
 
   factory :change_type do
-    name 'ADDITION'
+    sequence(:name) {|n| "change#{n}"}
+    display_name_en { name }
     designation
   end
 

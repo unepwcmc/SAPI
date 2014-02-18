@@ -1,6 +1,9 @@
 <thead>
-  <th>Name</th>
-  <th>Sort order</th>
+  <th width="20%">Code</th>
+  <th width="20%">Name (EN)</th>
+  <th width="20%">Name (ES)</th>
+  <th width="20%">Name (FR)</th>
+  <th width="10%">Sort order</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
@@ -8,14 +11,35 @@
   <% collection.each do |rank| -%>
     <tr>
       <td>
-        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="rank" data-name="name"
-          data-placeholder="Required" data-original-title="Enter the rank name"
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="rank"  data-name="name"
+          data-placeholder="Required" data-original-title="Enter the rank code"
           data-url="<%= resource_url(rank) %>" data-pk="<%= rank.id %>">
           <%= rank.name %>
         </a>
       </td>
       <td>
-        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="rank" data-name="taxonomic_position"
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="rank"  data-name="display_name_en"
+          data-placeholder="Required" data-original-title="Enter the name in English"
+          data-url="<%= resource_url(rank) %>" data-pk="<%= rank.id %>">
+          <%= rank.display_name_en %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="rank"  data-name="display_name_es"
+          data-placeholder="Required" data-original-title="Enter the name in Spanish"
+          data-url="<%= resource_url(rank) %>" data-pk="<%= rank.id %>">
+          <%= rank.display_name_es %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="rank"  data-name="display_name_fr"
+          data-placeholder="Required" data-original-title="Enter the name in French"
+          data-url="<%= resource_url(rank) %>" data-pk="<%= rank.id %>">
+          <%= rank.display_name_fr %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="rank"  data-name="taxonomic_position"
           data-placeholder="Required" data-original-title="Enter the sort order position"
           data-url="<%= resource_url(rank) %>" data-pk="<%= rank.id %>">
           <%= rank.taxonomic_position %>

@@ -11,13 +11,17 @@
 #
 
 class Rank < ActiveRecord::Base
-  attr_accessible :name, :taxonomic_position, :fixed_order
+  attr_accessible :name, :display_name_en, :display_name_es, :display_name_fr,
+    :taxonomic_position, :fixed_order
   include Dictionary
   build_dictionary :kingdom, :phylum, :class, :order, :family, :subfamily, :genus, :species, :subspecies, :variety
+
+  translates :display_name
 
   has_many :taxon_concepts
 
   validates :name, :presence => true, :uniqueness => true
+  validates :display_name_en, :presence => true, :uniqueness => true
   validates :taxonomic_position, :presence => true,
     :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" }
 
