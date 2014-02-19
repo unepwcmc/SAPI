@@ -21,22 +21,19 @@ class DashboardStats
   end
 
   def species
-    species_results = {}
-    [:cites_eu, :cms].each do |taxonomy|
-      species_results[taxonomy] = []
-      get_species_classes(taxonomy).each do |species_class|
-        taxonomy_is_cites_eu = taxonomy == :cites_eu ? 't' : 'f'
-        search = MTaxonConcept.where(
-          "taxonomy_is_cites_eu = '#{taxonomy_is_cites_eu}'
-          AND class_name = '#{species_class[:name]}'
-          AND countries_ids_ary && ARRAY[#{@geo_entity.id}]")
-        result = { 
-          :name => species_class[:name],
-          :common_name_en => species_class[:common_name_en],
-          :count => search.count
-        }
-        species_results[taxonomy] << result
-      end
+    species_results = []
+    get_species_classes(:cites_eu).each do |species_class|
+      search = MTaxonConcept.where(
+        "taxonomy_is_cites_eu = 't'
+        AND cites_listed = 't'
+        AND class_name = '#{species_class[:name]}'
+        AND countries_ids_ary && ARRAY[#{@geo_entity.id}]")
+      result = { 
+        :name => species_class[:name],
+        :common_name_en => species_class[:common_name_en],
+        :count => search.count
+      }
+      species_results << result
     end
     species_results
   end
@@ -54,12 +51,22 @@ class DashboardStats
     hash = {:top_traded => []}
     geo_id = trade_type == "exports" ? :exporter_id : :importer_id
     totals = Trade::ShipmentView.where(
-      geo_id => @geo_entity.id
+      geo_id => @geo_entity.id,
+      :country_of_origin_id => nil,
+      :term => "LIV",
+      :unit => nil,
+      :source => "W"
     ).count
     hash[:totals] = totals
     tops = Trade::ShipmentView.
       select("taxon_concept_id, count(*) as count_all").
-      where(geo_id => @geo_entity.id).
+      where(
+        geo_id => @geo_entity.id,
+        :country_of_origin_id => nil,
+        :term => "LIV",
+        :unit => nil,
+        :source => "W"
+      ).
       group(:taxon_concept_id).
       order("count_all desc").
       limit(@trade_limit)
