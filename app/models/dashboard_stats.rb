@@ -24,8 +24,7 @@ class DashboardStats
     species_results = []
     get_species_classes(:cites_eu).each do |species_class|
       search = MTaxonConcept.where(
-        "taxonomy_is_cites_eu = 't'
-        AND cites_listed = 't'
+        "cites_listed IS NOT NULL
         AND class_name = '#{species_class[:name]}'
         AND countries_ids_ary && ARRAY[#{@geo_entity.id}]")
       result = { 
