@@ -4,11 +4,10 @@ class DashboardStats
 
   attr_reader :geo_entity, :kingdom, :trade_limit
 
-  def initialize (iso_code, kingdom, trade_limit)
-    @iso_code = iso_code
+  def initialize (geo_entity, kingdom, trade_limit)
     @kingdom = kingdom || 'Animalia'
     @trade_limit = trade_limit || 5
-    @geo_entity = GeoEntity.where(:iso_code2 => iso_code).first
+    @geo_entity = geo_entity
   end
 
   def get_species_classes taxonomy
