@@ -45,6 +45,21 @@ class DashboardStats
     trade_results
   end
 
+  def meta 
+    {
+      :trade => {   
+        :country_of_origin_id => nil,
+        :term => "LIV",
+        :unit => nil,
+        :source => "W"
+      },
+      :species => {
+        :cites_listed => true,
+        :cites_eu => true
+      }
+    }
+  end
+
   private
 
   def get_trade_stats trade_type
