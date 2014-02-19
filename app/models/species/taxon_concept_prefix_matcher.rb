@@ -25,7 +25,8 @@ class Species::TaxonConceptPrefixMatcher
   end
 
   def initialize_query
-    @query = MTaxonConcept.order("ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1), full_name")
+    @query = MTaxonConcept.
+      order("ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1), full_name")
     unless @ranks.empty?
       @query = @query.where(:rank_name => @ranks)
     end
@@ -36,12 +37,13 @@ class Species::TaxonConceptPrefixMatcher
       @query.by_cites_eu_taxonomy
     end
 
-    @query = @query.without_hidden_subspecies
+    @query = @query.where(:show_in_species_plus_ac => true)
 
     if @taxon_concept_query
       @query = @query.select(
         ActiveRecord::Base.send(:sanitize_sql_array, [
         "id, full_name, rank_name,
+        rank_display_name_en, rank_display_name_es, rank_display_name_fr,
         ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1),
         ARRAY(
           SELECT * FROM UNNEST(synonyms_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
@@ -71,7 +73,7 @@ class Species::TaxonConceptPrefixMatcher
           SELECT * FROM UNNEST(spanish_names_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
         )
       ", :sci_name_prefix => "#{@taxon_concept_query}%", :sci_name_infix => "%#{@taxon_concept_query}%"
-      ]).where(:name_status => 'A')
+      ])
     end
   end
 
