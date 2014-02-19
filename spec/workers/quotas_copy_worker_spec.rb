@@ -210,6 +210,37 @@ describe QuotasCopyWorker do
     specify { Quota.where(:is_current => false).first.id.should == quota.id }
   end
 
+  describe "When multiple quotas copy quota for both taxon_concepts" do
+    before(:each) do
+      geo_entity2 = create(:geo_entity)
+      tc = create(:taxon_concept,
+                 :taxonomy_id => taxonomy.id)
+      @quota2 = create(:quota,
+             :start_date => quota.start_date,
+             :end_date => quota.end_date,
+             :is_current => true,
+             :geo_entity_id => geo_entity2.id,
+             :taxon_concept_id => tc.id)
+      QuotasCopyWorker.new.perform({
+        "from_year" => quota.start_date.year,
+        "start_date" => Time.now.strftime("%d/%m/%Y"),
+        "end_date" => 1.day.from_now.strftime("%d/%m/%Y"),
+        "publication_date" => Time.now.strftime("%d/%m/%Y"),
+        "excluded_taxon_concepts_ids" => nil,
+        "included_taxon_concepts_ids" => "#{taxon_concept.id},#{tc.id}",
+        "excluded_geo_entities_ids" => nil,
+        "included_geo_entities_ids" => nil,
+        "from_text" => '',
+        "to_text" => ''
+      })
+    end
+    specify { Quota.count(true).should == 4}
+    specify { Quota.where(:is_current => true).count(true).should == 2}
+    specify { Quota.where(:is_current => true).map(&:id).include?(@quota2.id) }
+    specify { Quota.where(:is_current => false).count(true).should == 2}
+    specify { Quota.where(:is_current => false).first.id.should == quota.id }
+  end
+
   describe "When multiple quotas don't copy quota for given taxon_concept" do
     before(:each) do
       geo_entity2 = create(:geo_entity)
