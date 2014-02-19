@@ -54,7 +54,7 @@ CREATE OR REPLACE FUNCTION copy_listing_changes_across_events(
       )
       SELECT source.change_type_id, source.species_listing_id,
         copied_annotations.id, copied_hash_annotations.id, source.parent_id,
-        source.taxon_concept_id, to_event.id, to_event.effective_at, false,
+        source.taxon_concept_id, to_event.id, to_event.effective_at, to_event.is_current,
         current_date, current_date, source.id
       FROM listing_changes source
       LEFT JOIN copied_annotations
