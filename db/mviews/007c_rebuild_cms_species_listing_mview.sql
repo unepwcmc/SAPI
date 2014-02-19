@@ -42,7 +42,7 @@ SELECT
     ARRAY_AGG(
       '**' || listing_changes_mview.species_listing_name || '** '
       || CASE 
-      WHEN LENGTH(listing_changes_mview.auto_note) > 0 THEN '[' || listing_changes_mview.auto_note || '] ' 
+      WHEN LENGTH(listing_changes_mview.auto_note_en) > 0 THEN '[' || listing_changes_mview.auto_note_en || '] ' 
       ELSE '' 
       END 
       || CASE 
