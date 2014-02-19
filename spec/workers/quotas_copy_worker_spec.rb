@@ -167,7 +167,7 @@ describe QuotasCopyWorker do
         "publication_date" => Time.now.strftime("%d/%m/%Y"),
         "excluded_taxon_concepts_ids" => nil,
         "included_taxon_concepts_ids" => nil,
-        "excluded_geo_entities_ids" => [geo_entity2.id],
+        "excluded_geo_entities_ids" => [geo_entity2.id.to_s],
         "included_geo_entities_ids" => nil,
         "from_text" => '',
         "to_text" => ''
