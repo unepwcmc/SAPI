@@ -29,13 +29,13 @@ CREATE OR REPLACE FUNCTION copy_listing_changes_across_events(
     ), copied_hash_annotations AS (
       -- copy hash annotations
       INSERT INTO annotations (
-        symbol, parent_symbol,
+        symbol, parent_symbol, event_id,
         short_note_en, short_note_es, short_note_fr,
         full_note_en, full_note_es, full_note_fr,
         display_in_index, display_in_footnote,
         created_at, updated_at, source_id
       )
-      SELECT DISTINCT symbol, parent_symbol,
+      SELECT DISTINCT symbol, to_event.name, to_event_id,
         short_note_en, short_note_es, short_note_fr,
         full_note_en, full_note_es, full_note_fr,
         display_in_index, display_in_footnote,
@@ -54,7 +54,7 @@ CREATE OR REPLACE FUNCTION copy_listing_changes_across_events(
       )
       SELECT source.change_type_id, source.species_listing_id,
         copied_annotations.id, copied_hash_annotations.id, source.parent_id,
-        source.taxon_concept_id, to_event.id, to_event.effective_at, false,
+        source.taxon_concept_id, to_event.id, to_event.effective_at, to_event.is_current,
         current_date, current_date, source.id
       FROM listing_changes source
       LEFT JOIN copied_annotations
