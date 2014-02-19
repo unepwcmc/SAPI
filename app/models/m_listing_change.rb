@@ -8,7 +8,7 @@ module MListingChange
       belongs_to :listing_change, :foreign_key => :id
       belongs_to :event
       translates :short_note, :full_note, :hash_full_note,
-        :inherited_short_note, :inherited_full_note
+        :inherited_short_note, :inherited_full_note, :auto_note
     end
   end
 
@@ -48,12 +48,12 @@ module MListingChange
         :only => [
           :id, :change_type_name, :species_listing_name, :party_id,
           :is_current, :hash_ann_symbol, :hash_ann_parent_symbol,
-          :effective_at, :auto_note, :inclusion_taxon_concept_id
+          :effective_at, :inclusion_taxon_concept_id
         ],
         :methods => [
           :countries_ids,
           :short_note, :full_note, :hash_full_note,
-          :inherited_short_note, :inherited_full_note,
+          :inherited_short_note, :inherited_full_note, :auto_note
         ]
       ).symbolize_keys
     )
