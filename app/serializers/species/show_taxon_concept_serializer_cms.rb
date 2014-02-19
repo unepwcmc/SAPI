@@ -16,7 +16,7 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
                   taxon_concepts_mview.rank_name = 'SUBSPECIES'
                   OR taxon_concepts_mview.rank_name = 'VARIETY'
                 )
-                AND listing_changes_mview.auto_note IS NULL
+                AND listing_changes_mview.auto_note_en IS NULL
               )
             SQL
       ).
@@ -36,7 +36,7 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
               listing_changes_mview.effective_at,
               listing_changes_mview.full_note_en,
               listing_changes_mview.short_note_en,
-              listing_changes_mview.auto_note,
+              listing_changes_mview.auto_note_en,
               listing_changes_mview.inclusion_taxon_concept_id,
               listing_changes_mview.inherited_full_note_en,
               listing_changes_mview.inherited_short_note_en,
