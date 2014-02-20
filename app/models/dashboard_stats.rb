@@ -4,7 +4,7 @@ class DashboardStats
 
   attr_reader :geo_entity, :kingdom, :trade_limit
 
-  def initialize (geo_entity, kingdom='Animalia', trade_limit=5)
+  def initialize (geo_entity, kingdom, trade_limit)
     @kingdom = kingdom
     @trade_limit = trade_limit
     @geo_entity = geo_entity
