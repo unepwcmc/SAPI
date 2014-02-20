@@ -1,7 +1,7 @@
 #Encoding: UTF-8
 require 'spec_helper'
 
-describe Checklist::Pdf::Index do
+describe Checklist::Pdf::IndexAnnotationsKey do
   let(:en){ create(:language, :name => 'English', :iso_code1 => 'EN') }
   let(:family_tc){
     tc = create_cites_eu_family(
@@ -66,7 +66,7 @@ describe Checklist::Pdf::Index do
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
   }
   describe :annotations_key do
-    subject{ Checklist::Pdf::Index.new({}) }
+    subject{ Checklist::Pdf::IndexAnnotationsKey.new }
     specify{
       LatexToPdf.stub(:html2latex).and_return('x')
       subject.annotations_key.should ==  "\\parindent 0in\\cpart{Annotations key}\n\\section*{Annotations not preceded by \"\\#\"}\n\\cfbox{green}{\\superscript{1} \\textbf{FOOBARIDAE spp.}}\n\nx\n\n\\cfbox{green}{\\superscript{2} \\textbf{\\textit{Foobarus} spp.}}\n\nx\n\n\\cfbox{green}{\\superscript{3} \\textbf{\\textit{Foobarus bizarrus}}}\n\nx\n\n\\parindent -0.1in"

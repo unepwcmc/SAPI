@@ -1,6 +1,7 @@
 #Encoding: utf-8
 class Checklist::Pdf::History < Checklist::History
   include Checklist::Pdf::Document
+  include Checklist::Pdf::Helpers
   include Checklist::Pdf::HistoryContent
 
   def initialize(options={})
