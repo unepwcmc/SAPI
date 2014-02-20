@@ -1,7 +1,9 @@
 <thead>
   <th>Event</th>
   <th>Symbol</th>
-  <th>Note</th>
+  <th>Note (EN)</th>
+  <th>Note (ES)</th>
+  <th>Note (FR)</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
@@ -24,9 +26,23 @@
       </td>
       <td>
         <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="annotation" data-name="full_note_en"
-          data-placeholder="Required" data-original-title="Enter the note"
+          data-placeholder="Required" data-original-title="Enter the note in English"
           data-url="<%= resource_url(annotation) %>" data-pk="<%= annotation.id %>">
           <%= annotation.full_note_en %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="annotation" data-name="full_note_es"
+          data-placeholder="Required" data-original-title="Enter the note in Spanish"
+          data-url="<%= resource_url(annotation) %>" data-pk="<%= annotation.id %>">
+          <%= annotation.full_note_es %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="annotation" data-name="full_note_fr"
+          data-placeholder="Required" data-original-title="Enter the note in French"
+          data-url="<%= resource_url(annotation) %>" data-pk="<%= annotation.id %>">
+          <%= annotation.full_note_fr %>
         </a>
       </td>
       <td>
