@@ -62,20 +62,38 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     NULL::TEXT AS inherited_short_note_fr, -- this column is populated later
     NULL::TEXT AS inherited_full_note_fr, -- this column is populated later
     CASE
-    WHEN inclusion_taxon_concept_id IS NOT NULL
-    THEN ancestor_listing_auto_note(
-      inclusion_taxon_concepts.data->''rank_name'',
-      inclusion_taxon_concepts.full_name,
-      change_types.name
+    WHEN listing_changes.inclusion_taxon_concept_id IS NOT NULL
+    THEN ancestor_listing_auto_note_en(
+      inclusion_taxon_concepts, listing_changes
     )
     WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
-    THEN ancestor_listing_auto_note(
-      original_taxon_concepts.data->''rank_name'',
-      original_taxon_concepts.full_name,
-      change_types.name
+    THEN ancestor_listing_auto_note_en(
+      original_taxon_concepts, listing_changes
     )
     ELSE NULL
-    END AS auto_note,
+    END AS auto_note_en,
+    CASE
+    WHEN listing_changes.inclusion_taxon_concept_id IS NOT NULL
+    THEN ancestor_listing_auto_note_es(
+      inclusion_taxon_concepts, listing_changes
+    )
+    WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
+    THEN ancestor_listing_auto_note_es(
+      original_taxon_concepts, listing_changes
+    )
+    ELSE NULL
+    END AS auto_note_es,
+    CASE
+    WHEN listing_changes.inclusion_taxon_concept_id IS NOT NULL
+    THEN ancestor_listing_auto_note_fr(
+      inclusion_taxon_concepts, listing_changes
+    )
+    WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
+    THEN ancestor_listing_auto_note_fr(
+      original_taxon_concepts, listing_changes
+    )
+    ELSE NULL
+    END AS auto_note_fr,
     listing_changes.is_current,
     listing_changes.explicit_change,
     populations.countries_ids_ary,
