@@ -4,9 +4,9 @@ class DashboardStats
 
   attr_reader :geo_entity, :kingdom, :trade_limit
 
-  def initialize (geo_entity, kingdom, trade_limit)
-    @kingdom = kingdom || 'Animalia'
-    @trade_limit = trade_limit || 5
+  def initialize (geo_entity, kingdom='Animalia', trade_limit=5)
+    @kingdom = kingdom
+    @trade_limit = trade_limit
     @geo_entity = geo_entity
   end
 
@@ -53,8 +53,7 @@ class DashboardStats
         :source => "W"
       },
       :species => {
-        :cites_listed => true,
-        :cites_eu => true
+        :cites_listed => 'IS NOT NULL'
       }
     }
   end
