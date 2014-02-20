@@ -22,10 +22,10 @@ describe DashboardStats do
     )
   }
   let(:ds_ar){
-    DashboardStats.new argentina
+    DashboardStats.new argentina, 'Animalia', 5
   }
   let(:ds_gh){
-    DashboardStats.new ghana
+    DashboardStats.new ghana, 'Animalia', 5
   }
 
   describe "#new" do
