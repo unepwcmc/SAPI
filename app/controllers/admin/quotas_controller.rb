@@ -2,6 +2,9 @@ class Admin::QuotasController < Admin::SimpleCrudController
 
   def index
     @years = Quota.years_array
+    if params[:year] && !@years.include?(params[:year])
+      @years = @years.push(params[:year]).sort{|a,b| b <=> a}
+    end
     index!
   end
 
