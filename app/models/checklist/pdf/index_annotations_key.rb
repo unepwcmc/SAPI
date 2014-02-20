@@ -4,34 +4,58 @@ class Checklist::Pdf::IndexAnnotationsKey
   def annotations_key
     tex = "\\parindent 0in"
     tex << "\\cpart{#{LatexToPdf.escape_latex(I18n.t('pdf.annotations_key'))}}\n"
-    cites = Designation.find_by_name(Designation::CITES)
-    full_note_field = "full_note_#{I18n.locale}"
-    taxa_with_index_annotations = MTaxonConcept.
-      select("taxon_concepts_mview.*, annotations.symbol, annotations.#{full_note_field}").
-      joins( <<-SQL
-        JOIN listing_changes
-        ON listing_changes.taxon_concept_id = taxon_concepts_mview.id
-        AND listing_changes.is_current
-        JOIN change_types
-        ON change_types.id = listing_changes.change_type_id
-        AND designation_id = #{cites.id}
-        AND change_types.name = 'ADDITION'
-        JOIN annotations
-        ON listing_changes.annotation_id = annotations.id
-        AND annotations.display_in_index
-        AND annotations.symbol IS NOT NULL
-      SQL
-      ).
-      order("annotations.symbol::INT")
-
-    tex << "\\section*{#{LatexToPdf.escape_latex(I18n.t('pdf.non_hash_annotations'))}}\n"
-    taxa_with_index_annotations.each do |tc|
-        box_colour = (tc.kingdom_name == 'Animalia' ? 'orange' : 'green')
-        tex << "\\cfbox{#{box_colour}}{\\superscript{#{tc['symbol']}} \\textbf{#{taxon_name_at_rank(tc)}}}\n\n"
-        tex << "#{LatexToPdf.html2latex(tc[full_note_field])}\n\n"
-      end
+    tex << non_hash_annotations_key
+    tex << hash_annotations_key
     tex << "\\parindent -0.1in"
     tex
+  end
+
+  def non_hash_annotations_key
+    tex = ''
+    tex << "\\section*{#{LatexToPdf.escape_latex(I18n.t('pdf.non_hash_annotations'))}}\n"
+    non_hash_annotations.each do |a|
+      box_colour = (a[:taxon_concept].kingdom_name == 'Animalia' ? 'orange' : 'green')
+      tex << "\\cfbox{#{box_colour}}{\\superscript{#{a[:symbol]}} \\textbf{#{taxon_name_at_rank(a[:taxon_concept])}}}\n\n"
+      tex << "#{LatexToPdf.html2latex(a[:note])}\n\n"
+    end
+    tex
+  end
+
+  def hash_annotations_key
+    tex = ''
+    tex << "\\section*{#{LatexToPdf.escape_latex(I18n.t('pdf.hash_annotations'))}}\n"
+    tex << LatexToPdf.escape_latex(I18n.t('pdf.hash_annotations_index_info')) + "\n\n"
+    cop = CitesCop.find_by_is_current(true)
+    unless cop && !cop.hash_annotations.empty?
+      tex << "No current hash annotations found.\n\n"
+      return tex
+    end
+
+    tex << "#{LatexToPdf.escape_latex(cop.name)} Valid from #{cop.effective_at}\n"
+    cop.hash_annotations.each do |a|
+      tex << "#{LatexToPdf.escape_latex(a.symbol)} \n\n #{LatexToPdf.html2latex(a.full_note)} \n\n"
+    end
+    tex
+  end
+
+  private
+  def non_hash_annotations
+    cites = Designation.find_by_name(Designation::CITES)
+    MListingChange. #TODO this could just use cites_listing_changes_mview
+      joins(:taxon_concept).
+      includes(:taxon_concept).
+      where(
+        :is_current => true,
+        :display_in_index => true,
+        :designation_id => cites.id
+      ).
+      order("listing_changes_mview.ann_symbol::INT").map do |lc|
+        {
+          :taxon_concept => lc.taxon_concept,
+          :symbol => lc.ann_symbol,
+          :note => lc.full_note #TODO will this work with locale???
+        }
+      end
   end
 
 end
