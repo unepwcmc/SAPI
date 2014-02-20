@@ -130,6 +130,8 @@ end
 def populate_shipments
   has_synonym = TaxonRelationshipType.where(:name => "HAS_SYNONYM").
     select(:id).first.id
+  has_hybrid = TaxonRelationshipType.where(:name => "HAS_HYBRID").
+    select(:id).first.id
   puts "Inserting into trade_shipments table"
   sql = <<-SQL
     INSERT INTO trade_shipments(
@@ -186,6 +188,8 @@ def populate_shipments
           THEN taxon_relationships.taxon_concept_id
         WHEN tc.name_status = 'A'
           THEN tc.id
+        WHEN tc.name_status = 'H'
+          THEN tc.id
         ELSE NULL
       END AS taxon_concept_id,
       to_date(shipment_year::varchar, 'yyyy') AS created_at,
@@ -196,7 +200,11 @@ def populate_shipments
     INNER JOIN trade_species_mapping_import nti ON si.cites_taxon_code = nti.cites_taxon_code
     INNER JOIN taxon_concepts tc ON nti.species_plus_id = tc.id
     LEFT JOIN taxon_relationships ON taxon_relationships.other_taxon_concept_id = tc.id
-      AND tc.name_status = 'S' AND taxon_relationships.taxon_relationship_type_id = #{has_synonym}
+      AND (
+        (tc.name_status = 'S' AND taxon_relationships.taxon_relationship_type_id = #{has_synonym})
+        OR
+        (tc.name_status = 'H' AND taxon_relationships.taxon_relationship_type_id = #{has_hybrid})
+      )
 
     LEFT JOIN trade_codes AS sources ON si.source_code = sources.code
       AND sources.type = 'Source'
