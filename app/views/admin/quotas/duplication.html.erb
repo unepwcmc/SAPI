@@ -11,6 +11,7 @@
       <%= label_tag "quotas[from_year]", 'From year', :class => "control-label" %>
       <div class="controls">
         <%= select_tag "quotas[from_year]", options_for_select(@years) %>
+        <span class="help-block">Only quotas marked as current will be duplicated.</span>
       </div>
     </div>
     <h5>Dates</h5>
@@ -84,21 +85,24 @@
       <div class="control-group">
         <%= label_tag "quotas[from_text]", "Replace", :class => 'control-label' %>
         <div class="controls">
-          <%= text_field_tag "quotas[from_text]", nil %>
+          <%= text_area_tag "quotas[from_text]", nil %>
         </div>
       </div>
       <div class="control-group">
         <%= label_tag "quotas[to_text]", "With", :class => 'control-label' %>
         <div class="controls">
-          <%= text_field_tag "quotas[to_text]", nil %>
+          <%= text_area_tag "quotas[to_text]", nil %>
         </div>
       </div>
     </div>
     <p>Number of quotas that will be duplicated: <strong><span id="quotas-count"><%= @count %></span></strong>.</p>
+    <p><strong>Note:</strong> This count will not take into consideration descendant taxon concepts' quotas, <br />
+      so the value can be inacurate when including higher taxon concepts in the 'for' and/or 'except' fields. <br />
+      Nevertheless the background job <strong>will</strong> copy those quotas.</p>
     <p>
       <%= link_to 'Cancel', admin_quotas_path,
         :class => "btn" %>
-      <%= submit_tag "Save", :class => "btn btn-primary save-button" %>
+      <%= submit_tag "Duplicate", :class => "btn btn-primary save-button" %>
     </p>
   </fieldset>
 <% end %>
