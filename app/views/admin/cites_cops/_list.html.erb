@@ -1,6 +1,7 @@
 <thead>
   <th>Name</th>
   <th>Effective from</th>
+  <th>Current</th>
   <th>No of listing changes</th>
   <th width="10%">Actions</th>
 </thead>
@@ -16,6 +17,7 @@
         </a>
       </td>
       <td><%= cites_cop.effective_at_formatted %></td>
+      <td><%= true_false_icon(cites_cop.is_current) %></td>
       <td>
         <%= cites_cop.listing_changes.count %>
       </td>
