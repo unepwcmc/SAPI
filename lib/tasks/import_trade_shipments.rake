@@ -130,8 +130,6 @@ end
 def populate_shipments
   has_synonym = TaxonRelationshipType.where(:name => "HAS_SYNONYM").
     select(:id).first.id
-  has_hybrid = TaxonRelationshipType.where(:name => "HAS_HYBRID").
-    select(:id).first.id
   puts "Inserting into trade_shipments table"
   sql = <<-SQL
     INSERT INTO trade_shipments(
@@ -186,9 +184,7 @@ def populate_shipments
       CASE
         WHEN tc.name_status = 'S'
           THEN taxon_relationships.taxon_concept_id
-        WHEN tc.name_status = 'A'
-          THEN tc.id
-        WHEN tc.name_status = 'H'
+        WHEN tc.name_status = 'A' OR tc.name_status = 'H'
           THEN tc.id
         ELSE NULL
       END AS taxon_concept_id,
@@ -200,11 +196,7 @@ def populate_shipments
     INNER JOIN trade_species_mapping_import nti ON si.cites_taxon_code = nti.cites_taxon_code
     INNER JOIN taxon_concepts tc ON nti.species_plus_id = tc.id
     LEFT JOIN taxon_relationships ON taxon_relationships.other_taxon_concept_id = tc.id
-      AND (
-        (tc.name_status = 'S' AND taxon_relationships.taxon_relationship_type_id = #{has_synonym})
-        OR
-        (tc.name_status = 'H' AND taxon_relationships.taxon_relationship_type_id = #{has_hybrid})
-      )
+      AND tc.name_status = 'S' AND taxon_relationships.taxon_relationship_type_id = #{has_synonym}
 
     LEFT JOIN trade_codes AS sources ON si.source_code = sources.code
       AND sources.type = 'Source'
@@ -217,7 +209,7 @@ def populate_shipments
     LEFT JOIN geo_entities AS exporters ON si.export_country_code = exporters.iso_code2
     LEFT JOIN geo_entities AS importers ON si.import_country_code = importers.iso_code2
     LEFT JOIN geo_entities AS origins ON si.origin_country_code = origins.iso_code2
-    WHERE (tc.name_status = 'A') OR 
+    WHERE (tc.name_status = 'A' OR tc.name_status = 'H') OR
       (tc.name_status = 'S' AND taxon_relationships.other_taxon_concept_id = tc.id)
   SQL
   puts "Populating trade_shipments #{Time.now.strftime("%d/%m/%Y %H:%M")}"
