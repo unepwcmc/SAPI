@@ -42,7 +42,7 @@ describe TradeRestriction do
       end
       it 'should return both @quota1 and @quota2 if filter set to "all"' do
         result = Quota.filter_is_current("all")
-        result.should == [@quota1, @quota2]
+        result.should =~ [@quota1, @quota2]
       end
     end
 
@@ -59,15 +59,15 @@ describe TradeRestriction do
       end
       it 'should get all quotas if geo_entities filter not set' do
         result = Quota.filter_geo_entities({})
-        result.should == [@quota1, @quota2, @quota3, @quota4]
+        result.should =~ [@quota1, @quota2, @quota3, @quota4]
       end
       it 'should return quota1 and quota3 if geo_entities filter set to @geo_entity1' do
         result = Quota.filter_geo_entities({"geo_entities_ids" => [@geo_entity1.id]})
-        result.should == [@quota1, @quota3]
+        result.should =~ [@quota1, @quota3]
       end
       it 'should return quota1, quota3, and quota4 if geo_entities filter set to @geo_entity1 and @geo_entity3' do
         result = Quota.filter_geo_entities({"geo_entities_ids" => [@geo_entity1.id, @geo_entity3.id]})
-        result.should == [@quota1, @quota3, @quota4]
+        result.should =~ [@quota1, @quota3, @quota4]
       end
     end
 
@@ -81,15 +81,15 @@ describe TradeRestriction do
       end
       it 'should get all quotas if years filter not set' do
         result = Quota.filter_years({})
-        result.should == [@quota1, @quota2, @quota3, @quota4]
+        result.should =~ [@quota1, @quota2, @quota3, @quota4]
       end
       it 'should return quota1 and quota3 if years filter set to 2012' do
         result = Quota.filter_years({"years" => [2012]})
-        result.should == [@quota1, @quota3]
+        result.should =~ [@quota1, @quota3]
       end
       it 'should return quota1, quota3, and quota4 if years filter set to 2012 and 2013' do
         result = Quota.filter_years({"years" => [2012, 2013]})
-        result.should == [@quota1, @quota3, @quota4]
+        result.should =~ [@quota1, @quota3, @quota4]
       end
     end
   end
