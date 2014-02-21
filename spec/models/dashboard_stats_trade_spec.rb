@@ -23,7 +23,7 @@ describe DashboardStats do
   describe "#trade" do
     include_context "Shipments"
     before(:each) do
-      Sapi.rebuild
+      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     end
     it "argentina should have 60 exported animals and no imports" do
       trade_results = ds_ar.trade
