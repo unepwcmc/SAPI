@@ -72,7 +72,7 @@ class DashboardStats
     ).count
     hash[:totals] = totals
     tops = Trade::ShipmentView.
-      select("taxon_concept_id, count(*) as count_all").
+      select("taxon_concept_id, sum(quantity) as count_all").
       where(
         geo_id => @geo_entity.id,
         :country_of_origin_id => nil,

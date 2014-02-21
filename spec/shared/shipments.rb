@@ -88,5 +88,20 @@ shared_context 'Shipments' do
       :reported_by_exporter => false,
       :quantity => 10
     )
+    @shipment4 = create(
+      :shipment,
+      :taxon_concept => @taxon_concept2,
+      :appendix => 'II',
+      :purpose => @purpose,
+      :source => @source,
+      :term => @term2,
+      :unit => nil,
+      :importer => @portugal,
+      :exporter => @argentina,
+      :country_of_origin => nil,
+      :year => 2013,
+      :reported_by_exporter => false,
+      :quantity => 50
+    )
   end
 end
