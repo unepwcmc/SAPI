@@ -112,7 +112,7 @@ set :local_shared_dirs, %w(tmp/pids public/downloads public/uploads
   public/downloads/shipments public/downloads/comptab
   public/downloads/gross_exports public/downloads/gross_imports
   public/downloads/net_exports public/downloads/net_imports
-  public/downloads/trade_download_stats)
+  public/downloads/trade_download_stats public/downloads/taxon_concepts_distributions)
 
 ## Global Shared Area
 # These are the list of files and directories that you want
