@@ -21,18 +21,26 @@ class DashboardStats
   end
 
   def species
-    species_results = []
-    get_species_classes(:cites_eu).each do |species_class|
-      search = MTaxonConcept.where(
-        "cites_listed IS NOT NULL
-        AND class_name = '#{species_class[:name]}'
-        AND countries_ids_ary && ARRAY[#{@geo_entity.id}]")
-      result = { 
-        :name => species_class[:name],
-        :common_name_en => species_class[:common_name_en],
-        :count => search.count
-      }
-      species_results << result
+    species_results = {}
+    [:cites_eu, :cms].each do |taxonomy|
+      species_results[taxonomy] = []
+      get_species_classes(:cites_eu).each do |species_class|
+        if taxonomy == :cites_eu
+          cites_condition = 'cites_listed IS NOT NULL'
+        else
+          cites_condition = 'cms_listed IS NOT NULL'
+        end
+        search = MTaxonConcept.where(
+          "#{cites_condition}
+          AND class_name = '#{species_class[:name]}'
+          AND countries_ids_ary && ARRAY[#{@geo_entity.id}]")
+        result = { 
+          :name => species_class[:name],
+          :common_name_en => species_class[:common_name_en],
+          :count => search.count
+        }
+        species_results[taxonomy] << result
+      end
     end
     species_results
   end
