@@ -29,7 +29,7 @@ describe DashboardStats do
   }
 
   describe "#new" do
-    it "takes one parameter and returns a DashboardStats object" do
+    it "takes three parameters and returns a DashboardStats object" do
       ds_ar.should be_an_instance_of DashboardStats
     end
   end
