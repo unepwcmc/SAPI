@@ -33,6 +33,7 @@ shared_context 'Shipments' do
                       )
 
     @term = create(:term, :code => 'CAV')
+    @term2 = create(:term, :code => 'LIV')
     @unit = create(:unit, :code => 'KIL')
     @purpose = create(:purpose, :code => 'T')
     @source = create(:source, :code => 'W')
@@ -71,6 +72,36 @@ shared_context 'Shipments' do
       :year => 2013,
       :reported_by_exporter => false,
       :quantity => 10
+    )
+    @shipment3 = create(
+      :shipment,
+      :taxon_concept => @taxon_concept2,
+      :appendix => 'II',
+      :purpose => @purpose,
+      :source => @source,
+      :term => @term2,
+      :unit => nil,
+      :importer => @portugal,
+      :exporter => @argentina,
+      :country_of_origin => nil,
+      :year => 2013,
+      :reported_by_exporter => false,
+      :quantity => 10
+    )
+    @shipment4 = create(
+      :shipment,
+      :taxon_concept => @taxon_concept2,
+      :appendix => 'II',
+      :purpose => @purpose,
+      :source => @source,
+      :term => @term2,
+      :unit => nil,
+      :importer => @portugal,
+      :exporter => @argentina,
+      :country_of_origin => nil,
+      :year => 2013,
+      :reported_by_exporter => false,
+      :quantity => 50
     )
   end
 end
