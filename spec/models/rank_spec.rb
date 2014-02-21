@@ -44,4 +44,18 @@ describe Rank do
       specify { rank.destroy.should be_false }
     end
   end
+  describe :in_range do
+    context "when no bounds specified" do
+      subject{ Rank.in_range(nil, nil) }
+      specify{ subject.should == Rank.dict }
+    end
+    context "when lower bound specified" do
+      subject{ Rank.in_range(Rank::CLASS, nil) }
+      specify{ subject.should == [Rank::KINGDOM, Rank::PHYLUM, Rank::CLASS] }
+    end
+    context "when lower and upper bound specified" do
+      subject{ Rank.in_range(Rank::GENUS, Rank::FAMILY) }
+      specify{ subject.should == [Rank::FAMILY, Rank::SUBFAMILY, Rank::GENUS] }
+    end
+  end
 end
