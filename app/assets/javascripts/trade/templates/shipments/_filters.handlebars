@@ -1,8 +1,7 @@
 <div class="filters clearfix">
   <div class="heading">
     <a data-toggle="collapse" href="#collapseOne">
-
-      Name Appendix and Year
+      Accepted and Reported Names
     </a>
   </div>
   <div id="collapseOne" class="body collapse in">
@@ -18,7 +17,29 @@
           placeholder="Species, higher taxon or synonym..."
         }}
       </div>
-      <div class="left filter-group one">
+      <div class="left filter-group">
+        <p>Reported as Taxa</p>
+        {{view Trade.MultiSelect
+          queryBinding="controller.taxonConceptQuery"
+          allValuesGroupedBinding="controller.autoCompleteTaxonConceptsByRank"
+          selectedValuesBinding="controller.selectedTaxonConcepts"
+          selectedValuesCollectionName="taxa"
+          selectedValueDisplayProperty="fullName"
+          placeholder="Species, higher taxon or synonym..."
+        }}
+      </div>
+    </div>
+  </div>
+
+
+  <div class="heading">
+    <a data-toggle="collapse" href="#collapseTwo">
+      Appendix and Year
+    </a>
+  </div>
+  <div id="collapseTwo" class="body collapse in">
+    <div class="inner one">
+      <div class="left filter-group">
         <p>Appendices</p>
         {{view Trade.MultiSelect
           allValuesBinding="controller.allAppendices"
@@ -28,7 +49,7 @@
           selectedValueShortDisplayProperty="id"
         }}
       </div>
-      <div class="left filter-group one time">
+      <div class="left filter-group time">
         <p>Time range</p>
         {{  view Ember.Select
               viewName="from"
@@ -46,13 +67,12 @@
     </div>
   </div>
 
-
   <div class="heading">
-    <a data-toggle="collapse" href="#collapseTwo">
+    <a data-toggle="collapse" href="#collapseThree">
       Trade Codes
     </a>
   </div>
-  <div id="collapseTwo" class="body collapse in">
+  <div id="collapseThree" class="body collapse in">
     <div class="inner two">
       <div class="left filter-group">
         <p>Terms</p>
@@ -103,11 +123,11 @@
   </div>
 
   <div class="heading">
-    <a data-toggle="collapse" href="#collapseThree">
+    <a data-toggle="collapse" href="#collapseFour">
       Trading Partners
     </a>
   </div>
-  <div id="collapseThree" class="body collapse in">
+  <div id="collapseFour" class="body collapse in">
     <div class="inner three">
       <div class="left filter-group">
         <p>Importer</p>
@@ -148,11 +168,11 @@
 
 
   <div class="heading">
-    <a class="toggle" data-toggle="collapse" href="#collapseFour">
+    <a class="toggle" data-toggle="collapse" href="#collapseFive">
       Permits & Quantity
     </a>
   </div>
-  <div id="collapseFour" class="body collapse">
+  <div id="collapseFive" class="body collapse">
     <div class="inner four">
       <div class="left filter-group">
         <p>Reporter type</p>
