@@ -7,7 +7,7 @@
   <div id="collapseOne" class="body collapse in">
     <div class="inner one">
       <div class="left filter-group">
-        <p>Taxa</p>
+        <p>Accepted taxa</p>
         {{view Trade.MultiSelect
           queryBinding="controller.taxonConceptQuery"
           allValuesGroupedBinding="controller.autoCompleteTaxonConceptsByRank"
@@ -18,7 +18,7 @@
         }}
       </div>
       <div class="left filter-group">
-        <p>Reported as Taxa</p>
+        <p>Reported taxa</p>
         {{view Trade.MultiSelect
           queryBinding="controller.taxonConceptQuery"
           allValuesGroupedBinding="controller.autoCompleteTaxonConceptsByRank"
@@ -163,6 +163,14 @@
           placeholder="Country name"
         }}
       </div>
+      <div class="left filter-group">
+        <p>Reporter type</p>
+        {{view Ember.Select
+          prompt="All types"
+          contentBinding="controller.allReporterTypeValues"
+          selectionBinding="controller.selectedReporterTypeValues"
+        }}
+      </div>
     </div>
   </div>
 
@@ -174,14 +182,6 @@
   </div>
   <div id="collapseFive" class="body collapse">
     <div class="inner four">
-      <div class="left filter-group">
-        <p>Reporter type</p>
-        {{view Ember.Select
-          prompt="All types"
-          contentBinding="controller.allReporterTypeValues"
-          selectionBinding="controller.selectedReporterTypeValues"
-        }}
-      </div>
       <div class="left filter-group">
         <p>Permits</p>
         {{view Trade.MultiSelect
