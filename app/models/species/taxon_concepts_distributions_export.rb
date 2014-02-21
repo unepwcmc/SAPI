@@ -9,7 +9,7 @@ class Species::TaxonConceptsDistributionsExport < Species::CsvExport
 
   def query
     rel = TaxonConcept.select(sql_columns).from(table_name).
-      order('name_status, taxonomic_position')
+      order('taxonomic_position')
     rel = rel.where("#{table_name}.taxonomy_id" => @taxonomy.id) if @taxonomy
     rel
   end
@@ -17,24 +17,28 @@ class Species::TaxonConceptsDistributionsExport < Species::CsvExport
 private
 
   def resource_name
-    'taxon_concepts_names'
+    'taxon_concepts_distributions'
   end
 
   def table_name
-    'taxon_concepts_names_view'
+    'taxon_concepts_distributions_view'
   end
 
   def sql_columns
     columns = [
-      :id, :legacy_id, :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
-      :genus_name, :species_name, :full_name, :author_year, :rank_name, :name_status, :taxonomy_name
+      :id, :legacy_id, :phylum_name, :class_name, :order_name, :family_name,
+      :full_name, :rank_name, :geo_entity_type, :geo_entity_name,
+      :geo_entity_iso_code2, :tags, :reference_full, :reference_id,
+      :reference_legacy_id, :taxonomy_name
     ]
   end
 
   def csv_column_headers
     headers = [
-      'Id', 'Legacy id', 'Kingdom', 'Phylum', 'Class', 'Order', 'Family',
-      'Genus', 'Species', 'Scientific Name', 'Author', 'Rank', 'Name status', 'Taxonomy'
+      'Id', 'Species RecID', 'Phylum', 'Class', 'Order', 'Family',
+      'Scientific Name', 'Rank', 'Geo_entity', 'Country_full',
+      'ISO Code', 'Country Tags', 'Reference_full', 'Reference IDS',
+      'Ref Legacy ID', 'Taxonomy'
     ]
   end
 
