@@ -37,10 +37,10 @@ describe DashboardStats do
   describe "#species" do
     include_context "Caiman latirostris"
     it "has one results for argentina" do
-      ds_ar.species[0][:count].should eq 1
+      ds_ar.species[:cites_eu][0][:count].should eq 1
     end
     it "has no results for ghana" do
-      ds_gh.species[0][:count].should eq 0
+      ds_gh.species[:cites_eu][0][:count].should eq 0
     end
   end
 
