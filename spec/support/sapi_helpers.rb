@@ -429,7 +429,8 @@ shared_context :sapi do
       },
       :column_names => ['taxon_concept_id', 'country_of_origin'],
       :valid_values_view => 'valid_taxon_concept_country_of_origin_view',
-      :is_primary => false
+      :is_primary => false,
+      :is_strict => true
     )
   end
   def create_taxon_concept_exporter_validation
