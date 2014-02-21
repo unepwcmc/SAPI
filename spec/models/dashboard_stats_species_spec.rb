@@ -44,13 +44,4 @@ describe DashboardStats do
     end
   end
 
-# describe "#trade" do
-#    include_context "Shipments"
-#   it "should have some results" do
-#      ds_ar = DashboardStats.new @argentina
-#      
-#   end
-#    
-# end
-
 end
