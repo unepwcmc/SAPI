@@ -146,7 +146,7 @@ Species RecID,Rank,GEO_entity_type,ISO Code 2,Tags,Designation
 3741,Species,Country,ID,distribution uncertain,"CITES,EU"
 3741,Species,Territory,PF,distribution uncertain,"CITES,EU"
 3741,Species,Country,PG,distribution uncertain,"CITES,EU"
-3741,Species,Country,TK,distribution uncertain,"CITES,EU"
+3741,Species,Territory,TK,distribution uncertain,"CITES,EU"
 3741,Species,Country,TO,distribution uncertain,"CITES,EU"
 3744,Species,Country,BJ,distribution uncertain,"CITES,EU"
 3744,Species,Country,GM,distribution uncertain,"CITES,EU"
