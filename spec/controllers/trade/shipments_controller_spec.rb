@@ -14,7 +14,7 @@ describe Trade::ShipmentsController do
     end
     it "should return all shipments" do
       get :index, format: :json
-      response.body.should have_json_size(2).at_path('shipments')
+      response.body.should have_json_size(4).at_path('shipments')
     end
  end
 
