@@ -84,5 +84,19 @@ describe Admin::ExportsController do
         response.should redirect_to(admin_exports_path)
       end
     end
+    context "CMS" do
+      it "returns CMS taxon concepts distributions file" do
+        tc = create_cms_species
+        create(:distribution, :taxon_concept_id => tc.id)
+        Species::TaxonConceptsDistributionsExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_distributions.csv')
+        get :download, :data_type => "Distributions", :filters => {:taxonomy => 'CMS'}
+        response.content_type.should eq("text/csv")
+        response.headers["Content-Disposition"].should eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
+      end
+      it "redirects when no results" do
+        get :download, :data_type => "Distributions", :filters => {:taxonomy => 'CMS'}
+        response.should redirect_to(admin_exports_path)
+      end
+    end
   end
 end
