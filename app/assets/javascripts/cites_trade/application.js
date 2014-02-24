@@ -543,7 +543,7 @@ $(document).ready(function(){
           data: {
             taxonomy: 'CITES',
             taxon_concept_query: term,
-            'ranks[]': 'SPECIES',
+            'ranks[]': 'SPECIES,SUBSPECIES,VARIETY',
             visibility: 'trade'
           },
           success: function(data) {

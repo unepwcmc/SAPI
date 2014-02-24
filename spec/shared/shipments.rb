@@ -18,6 +18,9 @@ shared_context 'Shipments' do
       :taxon_name => create(:taxon_name, :scientific_name => 'totalus'),
       :parent => @genus2
     )
+    @subspecies = create_cites_eu_subspecies(
+      :parent => @taxon_concept1
+    )
 
     country = create(:geo_entity_type, :name => 'COUNTRY')
     @argentina = create(:geo_entity,
