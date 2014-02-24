@@ -313,6 +313,17 @@ describe Trade::Shipment do
         }
         specify { subject.warnings.should be_empty }
       end
+      context "blank" do
+        subject{
+          create(
+            :shipment,
+            :source => @wild,
+            :taxon_concept => @taxon_concept,
+            :country_of_origin => nil
+          )
+        }
+        specify { subject.warnings.should be_empty }
+      end
     end
     context "when species name + exporter" do
       before(:each) do
