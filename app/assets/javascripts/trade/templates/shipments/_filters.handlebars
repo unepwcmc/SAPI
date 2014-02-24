@@ -20,9 +20,9 @@
       <div class="left filter-group">
         <p>Reported taxa</p>
         {{view Trade.MultiSelect
-          queryBinding="controller.taxonConceptQuery"
-          allValuesGroupedBinding="controller.autoCompleteTaxonConceptsByRank"
-          selectedValuesBinding="controller.selectedTaxonConcepts"
+          queryBinding="controller.reportedTaxonConceptQuery"
+          allValuesGroupedBinding="controller.autoCompleteReportedTaxonConceptsByRank"
+          selectedValuesBinding="controller.selectedReportedTaxonConcepts"
           selectedValuesCollectionName="taxa"
           selectedValueDisplayProperty="fullName"
           placeholder="Species, higher taxon or synonym..."
