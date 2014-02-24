@@ -27,6 +27,17 @@ describe Trade::Filter do
         specify { subject.should include(@shipment2) }
         specify { subject.length.should == 4 }
       end
+      context "when subspecies shipments present" do
+        before(:each) do
+          @shipment_of_subspecies = create(:shipment, :taxon_concept_id => @subspecies.id)
+        end
+        subject {
+          Trade::Filter.new({
+            :taxon_concepts_ids => [@taxon_concept1.id]
+          }).results
+        }
+        specify { subject.should include(@shipment_of_subspecies) }
+      end
     end
     context "when searching by appendices" do
       subject { Trade::Filter.new({:appendices => ['I']}).results }

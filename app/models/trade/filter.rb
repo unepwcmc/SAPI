@@ -27,7 +27,9 @@ class Trade::Filter
 
     # Id's (array)
     unless @taxon_concepts_ids.empty?
-      taxa = MTaxonConceptFilterByIdWithDescendants.new(nil, @taxon_concepts_ids).relation
+      ancestor_ranks = Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
+      taxa = MTaxonConceptFilterByIdWithDescendants.new(nil, @taxon_concepts_ids).
+        relation(ancestor_ranks)
       @query = @query.where(:taxon_concept_id => taxa.select(:id).map(&:id))
     end
 
