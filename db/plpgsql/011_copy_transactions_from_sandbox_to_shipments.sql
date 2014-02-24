@@ -38,11 +38,11 @@ BEGIN
         resolved_reported_taxa.taxon_concept_id,
         accepted_taxon_concepts.id AS accepted_taxon_concept_id
       FROM resolved_reported_taxa
+      LEFT JOIN taxon_relationship_types
+        ON taxon_relationship_types.name = ''HAS_SYNONYM''
       LEFT JOIN taxon_relationships
         ON taxon_relationships.other_taxon_concept_id = resolved_reported_taxa.taxon_concept_id
-      LEFT JOIN taxon_relationship_types
-        ON taxon_relationships.taxon_relationship_type_id = taxon_relationship_types.id
-        AND taxon_relationship_types.name = ''HAS_SYNONYM''
+        AND taxon_relationships.taxon_relationship_type_id = taxon_relationship_types.id
       LEFT JOIN taxon_concepts accepted_taxon_concepts
         ON accepted_taxon_concepts.id = taxon_relationships.taxon_concept_id
         AND taxonomy_id = ' || cites_taxonomy_id ||
