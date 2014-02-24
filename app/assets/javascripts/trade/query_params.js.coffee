@@ -18,6 +18,12 @@ Trade.QueryParams = Ember.Mixin.create({
       type: 'array'
     },
     {
+      name: "selectedReportedTaxonConcepts"
+      param: 'reported_taxon_concepts_ids[]'
+      urlParam: 'reported_taxon_concepts_ids'
+      type: 'array'
+    },
+    {
       name: "selectedAppendices"
       param: 'appendices[]'
       urlParam: 'appendices'

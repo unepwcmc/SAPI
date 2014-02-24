@@ -104,6 +104,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
         Trade.AutoCompleteTaxonConcept.find(tc_id)
   ).property('autoCompleteTaxonConcepts.meta.rank_headers')
   selectedTaxonConcepts: []
+  selectedReportedTaxonConcepts: []
   selectedAppendices: []
   selectedTerms: []
   selectedUnits: []
@@ -153,7 +154,9 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
       params[property.name] = value
     params
   ).property(
-    'selectedTaxonConcepts.@each', 'selectedAppendices.@each',
+    'selectedTaxonConcepts.@each',
+    'selectedReportedTaxonConcepts.@each',
+    'selectedAppendices.@each',
     'selectedTimeStart', 'selectedTimeEnd', 'selectedQuantity',
     'selectedUnits.@each', 'unitBlank.@each', 'selectedTerms.@each',
     'selectedSources.@each', 'sourceBlank',
