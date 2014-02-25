@@ -1,3 +1,31 @@
+### 0.5.0 (2014-02-25)
+**Species+**
+
+* Fixes issues with autocomplete speed;
+* Fixes issue with inherited EU listings;
+* Fixes issue with strange names showing under Subspecies and synonyms;
+
+**Admin tool**
+
+* Adds EU annex regulation and EU suspension regulations bulk management;
+* Adds Quotas bulk creation;
+* Admin can now mark geo entities as not current
+
+**CITES Checklist**
+
+* Fixes bug with appendix dropdown;
+
+**Trade**
+
+* Adds download by net/gross export/imports format;
+* Adds download with commas/semi-colons on admin interface;
+* Improves usability of editing sandbox shipments;
+* Improves usability of managing shipments;
+* Adds scripts to import trade names, hybrids, shipments and permits data;
+* Adds feature to register public interface downloads, and allows downloading that list of public downloads;
+* Adds features to delete shipments;
+* Adds public interface to view shipments in the different possible formats;
+
 ### 0.4.1
 * fixes synonyms showing as subspecies
 * fixes hybrids showing as synonyms
