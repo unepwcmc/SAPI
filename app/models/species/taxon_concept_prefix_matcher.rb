@@ -36,10 +36,13 @@ class Species::TaxonConceptPrefixMatcher
       @query.by_cites_eu_taxonomy
     end
 
-    if @visibility == :trade
-      @query = @query.where(:name_status => ['A', 'H', 'T'])
+    @query = if @visibility == :trade_internal
+       @query # no filter on name_status for internal search by reported taxon
+    elsif @visibility == :trade
+      # for both public & internal search by accepted taxon
+      @query.where(:name_status => ['A', 'H'])
     else
-      @query = @query.without_hidden_subspecies.where(:name_status => 'A')
+      @query.without_hidden_subspecies.where(:name_status => 'A')
     end
 
     if @taxon_concept_query
