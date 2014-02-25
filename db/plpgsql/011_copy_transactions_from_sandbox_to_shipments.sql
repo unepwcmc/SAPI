@@ -18,10 +18,16 @@ BEGIN
   sql :=  'WITH resolved_reported_taxa AS (
       SELECT DISTINCT ON (1)
         sandbox_table.id AS sandbox_shipment_id,
-        taxon_concepts.id AS taxon_concept_id
+        taxon_concepts.id AS taxon_concept_id,
+        taxon_concepts.full_name AS full_name
       FROM ' || table_name || ' sandbox_table
       JOIN taxon_concepts
-        ON UPPER(taxon_concepts.full_name) = UPPER(squish(sandbox_table.taxon_name))
+        ON UPPER(taxon_concepts.full_name) =
+          regexp_replace(
+            UPPER(squish(sandbox_table.taxon_name)),
+            E'' SPP(\.)?$'',
+            ''''
+          )
         AND taxonomy_id = ' || cites_taxonomy_id ||
       CASE WHEN shipment_id IS NOT NULL
         THEN ' WHERE sandbox_table.id = ' || shipment_id
@@ -36,6 +42,7 @@ BEGIN
       SELECT DISTINCT ON (1)
         sandbox_shipment_id,
         resolved_reported_taxa.taxon_concept_id,
+        resolved_reported_taxa.full_name AS reported_full_name,
         accepted_taxon_concepts.id AS accepted_taxon_concept_id
       FROM resolved_reported_taxa
       LEFT JOIN taxon_relationship_types
@@ -55,6 +62,7 @@ BEGIN
     UPDATE ' || table_name ||
     '
     SET reported_taxon_concept_id = resolved_taxa.taxon_concept_id,
+    taxon_name = resolved_taxa.reported_full_name,
     taxon_concept_id = CASE
       WHEN resolved_taxa.accepted_taxon_concept_id IS NULL
       THEN resolved_taxa.taxon_concept_id
