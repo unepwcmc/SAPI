@@ -38,6 +38,31 @@ describe Trade::Filter do
         }
         specify { subject.should include(@shipment_of_subspecies) }
       end
+      context "when synonym subspecies shipments present" do
+        before(:each) do
+          @shipment_of_synonym_subspecies = create(
+            :shipment,
+            :reported_taxon_concept_id => @synonym_subspecies.id,
+            :taxon_concept_id => @taxon_concept2.id
+          )
+        end
+        context "when searching by taxonomic parent" do
+          subject {
+            Trade::Filter.new({
+              :taxon_concepts_ids => [@taxon_concept1.id]
+            }).results
+          }
+          specify { subject.should_not include(@shipment_of_synonym_subspecies) }
+        end
+        context "when searching by accepted name" do
+          subject {
+            Trade::Filter.new({
+              :taxon_concepts_ids => [@taxon_concept2.id]
+            }).results
+          }
+          specify { subject.should include(@shipment_of_synonym_subspecies) }
+        end
+      end
     end
     context "when searching by appendices" do
       subject { Trade::Filter.new({:appendices => ['I']}).results }
