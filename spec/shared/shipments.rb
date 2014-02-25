@@ -21,6 +21,19 @@ shared_context 'Shipments' do
     @subspecies = create_cites_eu_subspecies(
       :parent => @taxon_concept1
     )
+    @synonym_subspecies = create_cites_eu_subspecies(
+      :parent => @taxon_concept1,
+      :name_status => 'S'
+    )
+    create(
+      :taxon_relationship,
+      :taxon_concept => @taxon_concept2,
+      :other_taxon_concept => @synonym_subspecies,
+      :taxon_relationship_type => create(
+        :taxon_relationship_type,
+        :name => TaxonRelationshipType::HAS_SYNONYM
+      )
+    )
 
     country = create(:geo_entity_type, :name => 'COUNTRY')
     @argentina = create(:geo_entity,
