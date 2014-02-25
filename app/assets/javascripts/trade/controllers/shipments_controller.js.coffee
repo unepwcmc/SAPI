@@ -103,7 +103,26 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
       taxon_concepts: rh.taxon_concept_ids.map (tc_id) ->
         Trade.AutoCompleteTaxonConcept.find(tc_id)
   ).property('autoCompleteTaxonConcepts.meta.rank_headers')
+  reportedTaxonConceptQuery: null
+  autoCompleteReportedTaxonConcepts: ( ->
+    taxonConceptQuery = @get('reportedTaxonConceptQuery')
+    if !taxonConceptQuery || taxonConceptQuery.length < 3
+      return [];
+    Trade.AutoCompleteTaxonConcept.find(
+      taxonomy: 'CITES'
+      taxon_concept_query: taxonConceptQuery
+      visibility: 'trade_internal'
+    )
+  ).property('reportedTaxonConceptQuery')
+  autoCompleteReportedTaxonConceptsByRank: ( ->
+    return [] unless @get('autoCompleteReportedTaxonConcepts.meta.rank_headers')
+    @get('autoCompleteReportedTaxonConcepts.meta.rank_headers').map (rh) ->
+      rank_name:rh.rank_name
+      taxon_concepts: rh.taxon_concept_ids.map (tc_id) ->
+        Trade.AutoCompleteTaxonConcept.find(tc_id)
+  ).property('autoCompleteReportedTaxonConcepts.meta.rank_headers')
   selectedTaxonConcepts: []
+  selectedReportedTaxonConcepts: []
   selectedAppendices: []
   selectedTerms: []
   selectedUnits: []
@@ -153,7 +172,9 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
       params[property.name] = value
     params
   ).property(
-    'selectedTaxonConcepts.@each', 'selectedAppendices.@each',
+    'selectedTaxonConcepts.@each',
+    'selectedReportedTaxonConcepts.@each',
+    'selectedAppendices.@each',
     'selectedTimeStart', 'selectedTimeEnd', 'selectedQuantity',
     'selectedUnits.@each', 'unitBlank.@each', 'selectedTerms.@each',
     'selectedSources.@each', 'sourceBlank',

@@ -18,6 +18,7 @@ shared_context 'Shipments' do
       :taxon_name => create(:taxon_name, :scientific_name => 'totalus'),
       :parent => @genus2
     )
+
     @subspecies = create_cites_eu_subspecies(
       :parent => @taxon_concept1
     )
@@ -32,6 +33,19 @@ shared_context 'Shipments' do
       :taxon_relationship_type => create(
         :taxon_relationship_type,
         :name => TaxonRelationshipType::HAS_SYNONYM
+      )
+    )
+
+    @trade_name = create_cites_eu_species(
+      :name_status => 'T'
+    )
+    create(
+      :taxon_relationship,
+      :taxon_concept => @taxon_concept2,
+      :other_taxon_concept => @trade_name,
+      :taxon_relationship_type => create(
+        :taxon_relationship_type,
+        :name => TaxonRelationshipType::HAS_TRADE_NAME
       )
     )
 
