@@ -4,7 +4,7 @@ module DownloadsCache
   DOWNLOAD_DIRS = LISTINGS_DOWNLOAD_DIRS + [
     'quotas', 'cites_suspensions', 'eu_decisions', 'shipments', 'comptab',
     'gross_exports', 'gross_imports', 'net_exports', 'net_imports', 
-    'trade_download_stats'
+    'trade_download_stats', 'taxon_concepts_names', 'taxon_concepts_distributions'
   ]
 
   def self.quotas_path
@@ -48,6 +48,10 @@ module DownloadsCache
 
   def self.clear_taxon_concepts_names
     clear_dirs(['taxon_concepts_names'])
+  end
+
+  def self.clear_taxon_concepts_distributions
+    clear_dirs(['taxon_concepts_distributions'])
   end
 
   # cleared after destroy
