@@ -18,17 +18,11 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
 
   autoCompleteTaxonConcepts: ( ->
     taxonConceptQuery = @get('taxonConceptQuery')
-    if !taxonConceptQuery || taxonConceptQuery.length < 3
+    if not taxonConceptQuery or taxonConceptQuery.length < 3
       return;
-
     Species.AutoCompleteTaxonConcept.find(
       taxonomy: @get('taxonomy')
       taxon_concept_query: taxonConceptQuery
-      ranks: [
-        'KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY',
-        'GENUS', 'SPECIES', 'SUBSPECIES', 'VARIETY'
-      ]
-      autocomplete: true
     )
   ).property('taxonConceptQuery')
 

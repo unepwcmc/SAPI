@@ -22,7 +22,8 @@ class EuSuspensionRegulation < Event
   attr_accessible :eu_suspensions_event_id
   attr_accessor :eu_suspensions_event_id
 
-  has_many :eu_suspensions, :foreign_key => :start_event_id
+  has_many :eu_suspensions, :foreign_key => :start_event_id,
+    :dependent => :destroy
 
   validate :designation_is_eu
   validates :effective_at, :presence => true
@@ -31,4 +32,7 @@ class EuSuspensionRegulation < Event
     eu_suspensions.count == 0
   end
 
+  def name_and_date
+    "#{self.name} (Effective from: #{self.effective_at.strftime("%d/%m/%Y")})"
+  end
 end

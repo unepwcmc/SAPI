@@ -20,6 +20,13 @@
 #  updated_at                    :datetime         not null
 #  sandbox_id                    :integer
 #  reported_taxon_concept_id     :integer
+#  import_permit_number          :string(255)
+#  export_permit_number          :string(255)
+#  origin_permit_number          :string(255)
+#  legacy_shipment_number        :integer
+#  import_permits_ids            :string
+#  export_permits_ids            :string
+#  origin_permits_ids            :string
 #
 
 require 'spec_helper'
@@ -31,51 +38,30 @@ describe Trade::Shipment do
       subject { build(:shipment, :reporter_type => nil) }
       specify { subject.should have(2).error_on(:reporter_type) }
     end
-    context "when country of origin not given" do
-      context "and origin permit not given" do
-        subject { build(:shipment, :country_of_origin => nil, :origin_permit_number => nil) }
-        specify { subject.should have(0).error_on(:country_of_origin) }
-      end
-      context "and origin permit given" do
-        subject { build(:shipment, :country_of_origin => nil, :origin_permit_number => 'a;b') }
-        specify { subject.should have(1).error_on(:country_of_origin) }
-      end
+    context "when appendix valid" do
+      subject { build(:shipment, :appendix => 'N') }
+      specify { subject.should be_valid }
+    end
+    context "when appendix not valid" do
+      subject { build(:shipment, :appendix => 'I/II') }
+      specify { subject.should have(1).error_on(:appendix) }
     end
     context "when permit numbers given" do
       before(:each) do
-        country = create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-        @poland = create(:geo_entity,
-          :name_en => 'Poland', :iso_code2 => 'PL',
-          :geo_entity_type => country
-        )
-        @argentina = create(:geo_entity,
-          :name_en => 'Argentina', :iso_code2 => 'AR',
-          :geo_entity_type => country
-        )
-        @bolivia = create(:geo_entity,
-          :name_en => 'Bolivia', :iso_code2 => 'BO',
-          :geo_entity_type => country
-        )
         @shipment = create(:shipment,
-          :exporter_id => @poland.id,
-          :importer_id => @argentina.id,
-          :country_of_origin_id => @bolivia.id,
           :export_permit_number => 'a',
           :import_permit_number => 'b',
           :origin_permit_number => 'c'
         )
       end
       context "when export permit" do
-        subject { @shipment.export_permits.first }
-        specify { subject.geo_entity_id.should == @poland.id }
+        specify { @shipment.export_permit_number.should == 'a' }
       end
       context "when import permit" do
-        subject { @shipment.import_permits.first }
-        specify { subject.geo_entity_id.should == @argentina.id }
+        specify { @shipment.import_permit_number.should == 'b' }
       end
       context "when origin permit" do
-        subject { @shipment.origin_permits.first }
-        specify { subject.geo_entity_id.should == @bolivia.id }
+        specify { @shipment.origin_permit_number.should == 'c' }
       end
     end
   end
@@ -85,7 +71,7 @@ describe Trade::Shipment do
 
     before(:each) do
       # an animal
-      genus = create_cites_eu_genus(
+      @genus = create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus'),
         :parent => create_cites_eu_family(
           :parent => create_cites_eu_order(
@@ -95,7 +81,7 @@ describe Trade::Shipment do
       )
       @taxon_concept = create_cites_eu_species(
         :taxon_name => create(:taxon_name, :scientific_name => 'yolocatus'),
-        :parent => genus
+        :parent => @genus
       )
       country = create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
       @poland = create(:geo_entity,
@@ -117,14 +103,24 @@ describe Trade::Shipment do
           :effective_at => '2013-01-01',
           :is_current => true
         )
-        Sapi.rebuild
-        create_species_name_appendix_year_validation
+        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
+        create_taxon_concept_appendix_year_validation
       end
       context "invalid" do
         subject{
           create(
             :shipment,
             :taxon_concept => @taxon_concept, :appendix => 'II', :year => 2013
+          )
+        }
+        specify{ subject.warnings.should_not be_empty }
+      end
+      context "invalid" do
+        subject{
+          create(
+            :shipment,
+            :taxon_concept => @taxon_concept, :appendix => 'N', :year => 2013
           )
         }
         specify{ subject.warnings.should_not be_empty }
@@ -139,12 +135,62 @@ describe Trade::Shipment do
         specify{ subject.warnings.should be_empty }
       end
     end
+
+    context "when species name + appendix N + year" do
+      before(:each) do
+        create_eu_B_addition(
+          :taxon_concept => @taxon_concept,
+          :effective_at => '2013-01-01',
+          :event => reg2013,
+          :is_current => true
+        )
+        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
+        create_taxon_concept_appendix_year_validation
+      end
+      context "valid" do
+        subject{
+          create(
+            :shipment,
+            :taxon_concept => @taxon_concept, :appendix => 'N', :year => 2013
+          )
+        }
+        specify{ subject.warnings.should be_empty }
+      end
+    end
+
+    context "when species name + appendix N + year" do
+      before(:each) do
+        @taxon_concept = create_cites_eu_species(
+          :taxon_name => create(:taxon_name, :scientific_name => 'nonsignificatus'),
+          :parent => @genus
+        )
+        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
+        create_taxon_concept_appendix_year_validation
+      end
+      context "not CITES listed and not EU listed" do
+        subject{
+          create(
+            :shipment,
+            :taxon_concept => @taxon_concept, :appendix => 'N', :year => 2013
+          )
+        }
+        specify{ subject.warnings.should_not be_empty }
+      end
+    end
+
     context "when term + unit" do
       before(:each) do
         @cav = create(:term, :code => "CAV")
+        @cap = create(:term, :code => "CAP")
         @bag = create(:unit, :code => "BAG")
         @kil = create(:unit, :code => "KIL")
         create(:term_trade_codes_pair, :term_id => @cav.id, :trade_code_id => @kil.id,
+            :trade_code_type => @kil.type)
+        create(:term_trade_codes_pair, :term_id => @cav.id, :trade_code_id => nil,
+            :trade_code_type => @kil.type)
+        create(:term_trade_codes_pair, :term_id => @cap.id, :trade_code_id => @kil.id,
             :trade_code_type => @kil.type)
         create_term_unit_validation
       end
@@ -165,6 +211,24 @@ describe Trade::Shipment do
           )
         }
         specify { subject.warnings.should be_empty }
+      end
+      context "blank unit is valid" do
+        subject{
+          create(
+            :shipment,
+            :term => @cav, :unit => nil
+          )
+        }
+        specify { subject.warnings.should be_empty }
+      end
+      context "blank unit is invalid" do
+        subject{
+          create(
+            :shipment,
+            :term => @cap, :unit => nil
+          )
+        }
+        specify { subject.warnings.should_not be_empty }
       end
     end
     context "when term + purpose" do
@@ -202,7 +266,7 @@ describe Trade::Shipment do
         create(:trade_taxon_concept_term_pair,
           :taxon_concept_id => @taxon_concept.id, :term_id => @bal.id
         )
-        create_species_name_term_validation
+        create_taxon_concept_term_validation
       end
       context "invalid" do
         subject{
@@ -225,7 +289,7 @@ describe Trade::Shipment do
     end
     context "when species name + country of origin" do
       before(:each) do
-        create_species_name_country_of_origin_validation
+        create_taxon_concept_country_of_origin_validation
       end
       context "invalid" do
         subject{
@@ -252,7 +316,7 @@ describe Trade::Shipment do
     end
     context "when species name + exporter" do
       before(:each) do
-        create_species_name_exporter_validation
+        create_taxon_concept_exporter_validation
       end
       context "invalid" do
         subject{
@@ -339,7 +403,7 @@ describe Trade::Shipment do
         create_taxon_concept_source_validation
         cites
         eu
-        Sapi.rebuild
+        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         @taxon_concept.reload
       end
       context "invalid" do

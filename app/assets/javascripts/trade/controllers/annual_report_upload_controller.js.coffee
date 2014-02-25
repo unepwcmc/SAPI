@@ -1,117 +1,24 @@
-Trade.AnnualReportUploadController = Ember.ObjectController.extend
+Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, Trade.Flash,
+  needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes', 'sandboxShipments']
   content: null
   visibleShipments: []
+  currentShipment: null
   filtersSelected: false
-
-  tableController: Ember.computed ->
-    controller = Ember.get('Trade.SandboxShipmentsTable.TableController').create()
-    controller.set('annualReportUploadController', @)
-    controller
-  .property('sandboxShipmentsLoaded')
 
   sandboxShipmentsDidLoad: ( ->
     @set('visibleShipments', @get('content.sandboxShipments'))
     @set('sandboxShipmentsLoaded', true)
   ).observes('content.sanboxShipments.@each.didLoad')
 
-  sandboxShipmentsSaving: ( ->
-    @get('content.isSaving')
-  ).property('content.isSaving')
   sandboxShipmentsSubmitting: false
-
-  unsavedChanges: (->
-    @get('changedRowsCount') > 0
-  ).property('changedRowsCount')
-
-  changedRowsCount: (->
-    @get('content.sandboxShipments').filterBy('_modified', true).length
-  ).property('content.sandboxShipments.@each._modified')
-
-  visibleShipmentsCount: (->
-    @get('visibleShipments.length')
-  ).property('visibleShipments')
-
-  allValuesFor: (attr) ->
-    @get('content.sandboxShipments').mapBy(attr).compact().uniq()
-
-  allAppendixValues: (->
-    @allValuesFor('appendix')
-  ).property('content.sandboxShipments.@each.appendix')
-  selectedAppendixValues: []
-  blankAppendix: false
-  allSpeciesNameValues: (->
-    @allValuesFor('speciesName')
-  ).property('content.sandboxShipments.@each.speciesName')
-  selectedSpeciesNameValues: []
-  blankSpeciesName: false
-  allTermCodeValues: (->
-    @allValuesFor('termCode')
-  ).property('content.sandboxShipments.@each.termCode')
-  selectedTermCodeValues: []
-  blankTermCode: false
-  allQuantityValues: (->
-    @allValuesFor('quantity')
-  ).property('content.sandboxShipments.@each.quantity')
-  selectedQuantityValues: []
-  blankQuantity: false
-  allUnitCodeValues: (->
-    @allValuesFor('unitCode')
-  ).property('content.sandboxShipments.@each.unitCode')
-  selectedUnitCodeValues: []
-  blankUnitCode: false
-  allTradingPartnerValues: (->
-    @allValuesFor('tradingPartner')
-  ).property('content.sandboxShipments.@each.tradingPartner')
-  selectedTradingPartnerValues: []
-  blankTradingPartner: false
-  allCountryOfOriginValues: (->
-    @allValuesFor('countryOfOrigin')
-  ).property('content.sandboxShipments.@each.countryOfOrigin')
-  selectedCountryOfOriginValues: []
-  blankCountryOfOrigin: false
-  allImportPermitValues: (->
-    @allValuesFor('importPermit')
-  ).property('content.sandboxShipments.@each.importPermit')
-  selectedImportPermitValues: []
-  blankImportPermit: false
-  allExportPermitValues: (->
-    @allValuesFor('exportPermit')
-  ).property('content.sandboxShipments.@each.exportPermit')
-  selectedExportPermitValues: []
-  blankExportPermit: false
-  allOriginPermitValues: (->
-    @allValuesFor('originPermit')
-  ).property('content.sandboxShipments.@each.originPermit')
-  selectedOriginPermitValues: []
-  blankOriginPermit: false
-  allPurposeCodeValues: (->
-    @allValuesFor('purposeCode')
-  ).property('content.sandboxShipments.@each.purposeCode')
-  selectedPurposeCodeValues: []
-  blankPurposeCode: false
-  allSourceCodeValues: (->
-    @allValuesFor('sourceCode')
-  ).property('content.sandboxShipments.@each.sourceCode')
-  selectedSourceCodeValues: []
-  blankSourceCode: false
-  allYearValues: (->
-    @allValuesFor('year')
-  ).property('content.sandboxShipments.@each.year')
-  selectedYearValues: []
-  blankYear: false
-
-  filtersVisible: true
-  updatesVisible: ( ->
-    !@get('filtersVisible')
-  ).property('filtersVisible')
 
   selectedAppendixChanged: ( ->
     @applyFilter('appendix')
   ).observes('selectedAppendixValues.@each', 'blankAppendix')
 
-  selectedSpeciesNameChanged: ( ->
-    @applyFilter('speciesName')
-  ).observes('selectedSpeciesNameValues.@each', 'blankSpeciesName')
+  selectedTaxonNameChanged: ( ->
+    @applyFilter('taxonName')
+  ).observes('selectedTaxonNameValues.@each', 'blankTaxonName')
 
   selectedTermCodeChanged: ( ->
     @applyFilter('termCode')
@@ -171,106 +78,74 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend
       )
       @set('visibleShipments', shipments)
 
-  resetFilters: ->
-    @beginPropertyChanges()
-    @get('columnNames').forEach (columnName) =>
-      selectedValuesName = 'selected' + @capitaliseFirstLetter(columnName) + 'Values'
-      @set(selectedValuesName, [])
-      blankValueName = 'blank' + @capitaliseFirstLetter(columnName)
-      @set(blankValueName, false)
-    @set('visibleShipments', @get('content.sandboxShipments'))
-    @set('filtersSelected', false)
-    @endPropertyChanges()
 
   capitaliseFirstLetter: (string) ->
     string.charAt(0).toUpperCase() + string.slice(1)
 
-  clearModifiedFlags: ->
-    @beginPropertyChanges()
-    @get('content.sandboxShipments').forEach (shipment) ->
-      shipment.set('_modified', false)
-    @endPropertyChanges()
-
-  columnNames: ( ->
-    @get('tableController.columnNames')
-  ).property('tableController.columnNames')
-
   actions:
-    submitShipments: ()->
+
+    submitShipments: ->
+      onSuccess = => 
+        @set('sandboxShipmentsSubmitting', false)
+        @transitionToRoute('shipments', {queryParams: page: 1})
+        @flashSuccess(message: "#{@get('numberOfRows')} shipments submitted.", persists: true)
+      onError = (xhr, msg, error) =>
+        @set('sandboxShipmentsSubmitting', false)
+        @flashError(message: xhr.responseText)
       if @get('content.isDirty')
         alert "You have unsaved changes, please save those before submitting your shipments"
       else if @get('content.hasPrimaryErrors')
         alert "Primary errors detected, cannot submit shipments"
       else
         @set('sandboxShipmentsSubmitting', true)
-        $.post '/trade/annual_report_uploads/'+@get('id')+'/submit', {}, (data) ->
-          'json'
-        .success( =>
-          @set('sandboxShipmentsSubmitting', false)
-          @transitionToRoute('shipments', {queryParams:
-            page: 1
-          })
-        )
-        .error( (xhr, msg, error) =>
-          @set('sandboxShipmentsSubmitting', false)
-          console.log "bad luck: ", xhr.responseText
-        )
+      $.when($.ajax({
+        type: "POST"
+        url: "/trade/annual_report_uploads/#{@get('id')}/submit"
+        data: {}
+        dataType: 'json'
+      })).then(onSuccess, onError)
 
-    setFiltersFromErrorSelector: (errorSelector) ->
-      @resetFilters()
-      @beginPropertyChanges()
-      for errorColumn, errorValue of errorSelector
-        capitalisedColumnName = (errorColumn.split(/_/).map (word) -> word[0].toUpperCase() + word[1..-1].toLowerCase()).join ''
-        selectedValuesName = 'selected' + capitalisedColumnName + 'Values'
-        if errorValue == null
-          blankValueName = 'blank'  + capitalisedColumnName
-          @set(blankValueName, true)
-        else if typeof errorValue == 'object'
-          @set(selectedValuesName, errorValue)
-        else
-          @set(selectedValuesName, [errorValue])
-      @set('filtersVisible', false)
-      @endPropertyChanges()
-
-    saveChanges: () ->
-      @get('store').commit()
-      @transitionToRoute('annual_report_upload', @get('content'))
-      @clearModifiedFlags()
-      @resetFilters()
-
-    cancelChanges: () ->
-      if (!@get('content').get('isSaving'))
-        @get('content').get('transaction').rollback()
-        @clearModifiedFlags()
 
     resetFilters: () ->
       @resetFilters()
 
-    deleteSelection: () ->
-      @beginPropertyChanges()
-      @get('visibleShipments').forEach (shipment) ->
-        shipment.setProperties({'_destroyed': true, '_modified': true})
-      @endPropertyChanges()
-      @resetFilters()
 
-    updateSelection: () ->
-      valuesToUpdate = {'_modified': true}
-      @get('columnNames').forEach (columnName) =>
-        el = $('.sandbox-form').find('input[type=text][name=' + columnName + ']')
-        blank = $('.sandbox-form').find('input[type=checkbox][name=' + columnName + ']:checked')
-        valuesToUpdate[columnName] = el.val() if el && el.val()
-        valuesToUpdate[columnName] = null if blank.length > 0
-      @beginPropertyChanges()
-      @get('visibleShipments').forEach (shipment) ->
-        shipment.setProperties(valuesToUpdate)
-      @endPropertyChanges()
-      $('.sandbox-form').find('input[type=text]').val('')
-      $('.sandbox-form').find('input[type=checkbox]').attr('checked', false)
-      @resetFilters()
+    # new for sandbox shipments updateSelection
+    transitionToSandboxShipments: (error) ->
+      @set('currentError', error)
+      params = @sanitizeQueryParams(error.get('errorSelector'))
+      params.page = 1
+      params.error_identifier = @hashCode error.get('errorMessage')
+      @transitionToRoute('sandbox_shipments', {
+        queryParams: params
+      })
 
-    selectForUpdate: () ->
-      @set('filtersVisible', false)
 
-    cancelSelectForUpdate: () ->
-      $('.sandbox-form').find('input[type=text]').val(null)
-      @set('filtersVisible', true)
+  sanitizeQueryParams: (selected) ->
+    reseter = {
+      appendix: false,
+      taxon_name: false,
+      taxon_concept_id: false,
+      term_code: false,
+      quantity: false,
+      unit_code : false,
+      trading_partner: false,
+      country_of_origin: false,
+      import_permit: false,
+      export_permit: false,
+      origin_permit: false,
+      purpose_code: false,
+      source_code: false,
+      year: false
+    }
+    result = {}
+    for attrname of selected
+      if selected[attrname] == null
+        result[attrname] = -1
+      else
+        result[attrname] = selected[attrname]
+
+    for attrname of reseter
+      if result[attrname] is undefined
+        result[attrname] = reseter[attrname]
+    result

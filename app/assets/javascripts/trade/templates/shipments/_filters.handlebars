@@ -165,11 +165,12 @@
       <div class="left filter-group">
         <p>Permits</p>
         {{view Trade.MultiSelect
+          blankValueBinding = "controller.permitBlank"
           queryBinding="controller.permitQuery"
           allValuesBinding="controller.autoCompletePermits"
           selectedValuesBinding="controller.selectedPermits"
           selectedValuesCollectionName="permits"
-          selectedValueDisplayProperty="displayNumber"
+          selectedValueDisplayProperty="number"
           placeholder="Permit number"
         }}
       </div>
@@ -215,6 +216,11 @@
     <a {{bind-attr href="grossImportsDownloadUrl"}} class="btn btn-mini btn-primary">Gross Imp</a>
     <a {{bind-attr href="netExportsDownloadUrl"}} class="btn btn-mini btn-primary">Net Exp</a>
     <a {{bind-attr href="netImportsDownloadUrl"}} class="btn btn-mini btn-primary">Net Imp</a>
+
+    <div id="csv_options">
+      {{view Ember.RadioButton name="csv_separator" selectionBinding="csvSeparator" value="comma_separated"}} Comma Separated
+      {{view Ember.RadioButton name="csv_separator" selectionBinding="csvSeparator" value="semicolon_separated"}} Semicolon Separated
+    </div>
 
   </div>
 </div>

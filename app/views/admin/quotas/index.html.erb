@@ -1,17 +1,18 @@
 <div class="admin-header">
-  <h3>CITES Quotas</h3>
+  <h1>CITES Quotas</h1>
   <div class="action-buttons">
     <%= admin_add_new_button(
       :resource => 'quota',
-      :href => new_admin_taxon_concept_quota_url(@taxon_concept),
+      :href => duplication_admin_quotas_url,
       :"data-toggle" => nil,
-      :role => nil
+      :role => nil,
+      :name => "Duplicate quotas"
     ) %>
   </div>
 </div>
 
-<%= admin_new_modal{ '' } %>
-
+<%= admin_simple_search %>
+<p>Showing <%= collection.count %> of <%= collection.total_count %> quotas.</p>
 <%= admin_table %>
 
 <%= paginate collection %>

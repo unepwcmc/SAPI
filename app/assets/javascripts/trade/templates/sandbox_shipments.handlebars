@@ -1,0 +1,89 @@
+<div class="clearfix">
+  <button type="button" class="btn btn-link pull-right" {{action "toggleUpdatesVisible"}}>
+  Edit batch >>
+  </button>
+</div> 
+
+  {{#view controllerBinding='controller' isVisibleBinding='controller.updatesVisible'}}
+    <div class="sandbox-header well well-small">
+      <div class="row-fluid">
+        <div class="span5">
+          <h3>Batch edit selected records</h3>
+        </div>
+        <div class="sandbox-header-buttons span7">
+          <button {{action 'deleteSelection'}} class="pull-right btn clearfix">
+            Delete all
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sandbox-form row-fluid">
+      {{ partial 'trade/annual_report_upload/batch_operations' }}
+      <div class="row-fluid">
+        <div class="span6 offset6">
+          <button {{action cancelSelectForUpdate}} class="pull-right btn">Cancel</button>
+          <button {{action updateSelection}} class="pull-right btn btn-primary">Update Selection</button>
+        </div>
+      </div>
+    </div>
+  {{/view}}
+
+
+<div class="sandbox-header well well-small">
+  <div class="row-fluid">
+    <div class="span5">
+      <h3>Sandbox</h3>
+    </div>
+    <div class="sandbox-header-buttons span7">
+      {{#view tagName='span' class='pull-right' isVisibleBinding='controller.sandboxShipmentsSaving'}}
+        <img src="/assets/loading.gif"> Saving...
+      {{/view}}
+      <button {{action 'saveChanges'}}
+        {{bind-attr class="unsavedChanges::disabled :pull-right :btn :btn-primary"}}>
+        Save changes
+      </button>
+      <button {{action 'cancelChanges'}} class="pull-right btn clearfix">
+        Cancel changes
+      </button>
+      {{#if unsavedChanges}}
+        <span class="pull-right label label-important">There are {{changedRowsCount}} unsaved changes.</span>
+      {{/if}}
+    </div>
+  </div>
+</div>
+<div>
+  {{#if filtersSelected}}
+    {{visibleShipmentsCount}} rows selected
+    <button {{action 'resetFilters'}} class="pull-right btn">Reset selection</button>
+  {{/if}}
+</div>
+
+{{view Trade.SandboxShipmentForm}}
+
+<div class='shipments-presentation-container'>
+  <table>
+    <thead>
+      <tr><th>Actions</th>{{dataHead controller.columns}}</tr>
+    </thead>
+    <tbody>
+    {{#each controller.content}}
+      {{view Trade.ShipmentTableViewNoHelper valueBinding='this'}}
+    {{/each}}
+    </tbody>
+  </table>
+</div>
+
+<div class="paging">
+  <ul class="pager">
+    {{# if controller.showPrevPage }}
+      <li><a href="#" {{action "prevPage" target="view" on="click"}}>&#9664;</a></li>
+    {{/if}}
+
+    <li>Page {{controller.page}} of {{controller.pages}}</li>
+
+    {{# if controller.showNextPage }}
+      <li><a href="#" {{action "nextPage" target="view" on="click"}}>&#9654;</a></li>
+    {{/if}}
+  </ul>
+</div>

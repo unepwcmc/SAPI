@@ -1,0 +1,110 @@
+<%= admin_new_modal({:title => "Current CITES Quotas"}) { 
+  render :partial => "current_quotas_form",
+    :locals => {:current_quotas => @taxon_concept.current_quotas}
+} %>
+
+<%= nested_form_for [:admin, @taxon_concept, @quota], :html => {:class => 'form-horizontal'} do |f| %>
+
+  <p>
+    <%= link_to("View Current Quotas", "#new-quota",
+      {
+        :role => "button",
+        :"data-toggle" => "modal",
+      }) %>
+  </p>
+
+  <%= error_messages_for(@quota) %>
+
+  <div class="control-group">
+    <%= f.label :quota, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :quota, :value => @quota.quota %>
+      <%= f.select :unit_id,
+        options_from_collection_for_select(@units, :id, :code, @quota.unit_id),
+        { :include_blank => true },
+        {:class => 'quota select2', :style => 'width: 220px' }
+      %>
+      <span class="help-block">For quotas <strong>in prep</strong>aration use <strong>-1</strong> for quota value.</span>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :publication_date, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :publication_date, :class => "quota datepicker", :value => @quota.publication_date_formatted %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :geo_entity_id, "Country or Territory", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :geo_entity_id,
+        options_from_collection_for_select(
+          @geo_entities,
+          :id,
+          :name_en,
+          @quota.geo_entity_id
+      ),
+        { :include_blank => true },
+        {:class => 'quota select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Validity</label>
+    <div class="controls">
+      <%= f.text_field :start_date, :class => "quota datepicker", :value => @quota.start_date_formatted, :placeholder => 'Start Date' %>
+      <%= f.text_field :end_date, :class => "quota datepicker", :value => @quota.end_date_formatted, :placeholder => 'End Date' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Notes</label>
+    <div class="controls">
+      <%= f.text_area :notes, :class => 'quota', :value => @quota.notes %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :term_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :term_ids,
+        options_from_collection_for_select(@terms, :id, :code, @quota.term_ids),
+        { :include_blank => true },
+        {:class => 'quota select2', :multiple => true, :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :source_id, :class => 'control-label'  %>
+    <div class="controls">
+      <%= f.select :source_ids,
+        options_from_collection_for_select(@sources, :id, :code, @quota.source_ids),
+        { :include_blank => true},
+        {:class => 'quota select2', :multiple => true, :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :is_current, "Is current?", :class => 'control-label'%>
+    <div class="controls">
+      <%= f.check_box :is_current, :value => @quota.is_current %><br>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :public_display, "Display publicly?", :class => 'control-label'%>
+    <div class="controls">
+      <%= f.check_box :public_display, :value => @quota.public_display %><br>
+    </div>
+  </div>
+
+  <p class="pull-right">
+    <%= link_to 'Cancel', admin_taxon_concept_quotas_path(@taxon_concept),
+      :class => "btn" %>
+    <%= f.submit "Save", :class => "btn btn-primary save-button" %>
+  </p>
+<% end %>

@@ -22,8 +22,8 @@ class Trade::Filter
   end
 
   def initialize_query
-    @query = Trade::Shipment.from('trade_shipments_view trade_shipments').
-      order('year DESC').preload(:taxon_concept) #includes would override the select clause
+    @query = Trade::Shipment.order('year DESC').
+      preload(:taxon_concept) #includes would override the select clause
 
     # Id's (array)
     unless @taxon_concepts_ids.empty?
@@ -92,6 +92,16 @@ class Trade::Filter
       end
     end
 
+    initialize_internal_query if @internal
+
+  end
+
+  def initialize_internal_query
+    if @report_type == :raw
+      # only use the view for the raw report in admin
+      @query = @query.from('trade_shipments_view trade_shipments').
+        preload(:reported_taxon_concept) #includes would override the select clause
+    end
 
     if ['I', 'E'].include? @reporter_type
       if @reporter_type == 'E'
@@ -101,15 +111,28 @@ class Trade::Filter
       end
     end
 
-    unless @permits_ids.empty?
-      @query = @query.where("import_permits_ids && ARRAY[?]::INT[]
-                            OR origin_permits_ids && ARRAY[?]::INT[]
-                            OR export_permits_ids && ARRAY[?]::INT[]",
-                            @permits_ids , @permits_ids, @permits_ids)
+    permit_blank_query = 
+      'ARRAY_UPPER(import_permits_ids, 1) IS NULL
+      OR ARRAY_UPPER(export_permits_ids, 1) IS NULL
+      OR ARRAY_UPPER(origin_permits_ids, 1) IS NULL'
+    if !@permits_ids.empty?
+      @query = @query.where(
+        "import_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
+        OR export_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
+        OR origin_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
+        #{@permit_blank ? "OR #{permit_blank_query}" : ''}",
+        :permits_ids => @permits_ids
+        )
+    elsif @permit_blank
+      @query = @query.where(permit_blank_query)
     end
 
     unless @quantity.nil?
-      @query = @query.where(:quantity => @quantity)
+      if @quantity == 0
+        @query = @query.where('quantity = 0 OR quantity IS NULL')
+      else
+        @query = @query.where(:quantity => @quantity)
+      end
     end
 
   end

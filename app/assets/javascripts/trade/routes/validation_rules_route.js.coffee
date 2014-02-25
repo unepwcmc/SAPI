@@ -1,3 +1,3 @@
-Trade.ValidationRulesRoute = Ember.Route.extend
+Trade.ValidationRulesRoute = Trade.BeforeRoute.extend
   model: () ->
     Trade.ValidationRule.find()

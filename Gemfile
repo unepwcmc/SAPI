@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+source 'http://gems.github.com'
 
 gem 'rails', '3.2.15'
 
@@ -43,7 +44,6 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
-  
   gem "susy"
   gem 'compass', '>= 0.12.2'
   gem 'compass-rails', '>= 1.0.3'
@@ -87,6 +87,7 @@ group :development do
   gem 'quiet_assets'
   gem 'webrick', '1.3.1'
   gem 'jslint_on_rails'
+  gem 'git_pretty_accept'
 end
 
 group :test, :development do
@@ -115,3 +116,5 @@ gem 'memcache-client'
 gem 'jquery-ui-rails'
 
 gem 'postgres-copy', "0.6"
+gem 'geoip'
+gem 'charlock_holmes', github: "tooky/charlock_holmes", branch: "bundle-icu"

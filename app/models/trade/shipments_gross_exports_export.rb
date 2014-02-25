@@ -27,8 +27,7 @@ private
   end
 
   def sql_columns
-    # locale will already be resolved
-    outer_report_columns.map{ |column, properties| column }
+    outer_report_columns.map{ |column, properties| properties[I18n.locale] || column }
   end
 
   def csv_column_headers
@@ -59,6 +58,10 @@ private
   end
 
   # extra columns returned by crosstab
+  def row_name_columns
+    [:appendix, :taxon, :term, :unit, :country]
+  end
+
   def crosstab_columns
     {
       :appendix => {:pg_type => 'TEXT'},
@@ -70,6 +73,20 @@ private
     }
   end
 
+  def sql_row_name_columns
+    (row_name_columns & report_columns.keys).map do |c|
+      available_columns[c][I18n.locale] || c
+    end
+  end
+
+  def report_crosstab_columns
+    crosstab_columns.keys & report_columns.keys
+  end
+
+  def sql_crosstab_columns
+    report_crosstab_columns.map{ |c| available_columns[c][I18n.locale] || c }
+  end
+
   # the query before pivoting
   def subquery_sql
     gross_exports_query
@@ -77,14 +94,12 @@ private
 
   # pivots the quantity by year
   def ct_subquery_sql
-    extra_crosstab_columns = crosstab_columns.keys
-    extra_crosstab_columns &= report_columns.keys
-    # the source query contains a viariable number of "extra" columns
+    # the source query contains a variable number of "extra" columns
     # ones needed in the output but not involved in pivoting
-    source_sql = "SELECT ARRAY[appendix, taxon, term, unit, country],
-      #{extra_crosstab_columns.join(', ')}, year, gross_quantity
+    source_sql = "SELECT ARRAY[#{sql_row_name_columns.join(', ')}],
+      #{sql_crosstab_columns.join(', ')}, year, gross_quantity
       FROM (#{subquery_sql}) subquery
-      ORDER BY 1, #{extra_crosstab_columns.length + 2}" #order by row_name and year
+      ORDER BY 1, #{sql_crosstab_columns.length + 2}" #order by row_name and year
     source_sql = ActiveRecord::Base.send(:sanitize_sql_array, [source_sql, years])
     source_sql = ActiveRecord::Base.connection.quote_string(source_sql)
     # the categories query returns values by which to pivot (years)
@@ -96,7 +111,7 @@ private
       SELECT * FROM CROSSTAB('#{source_sql}', '#{categories_sql}')
       AS ct(
         row_name TEXT[],
-        #{extra_crosstab_columns.map{ |c| "#{c} #{crosstab_columns[c][:pg_type]}"}.join(', ')},
+        #{report_crosstab_columns.map.each_with_index{ |c, i| "#{sql_crosstab_columns[i]} #{crosstab_columns[c][:pg_type]}"}.join(', ')},
         #{year_columns}
       )
     SQL

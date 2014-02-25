@@ -36,16 +36,6 @@ CREATE OR REPLACE FUNCTION full_name(rank_name VARCHAR(255), ancestors HSTORE) R
     END;
   $$;
 
-CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255)) RETURNS VARCHAR(255)
-  LANGUAGE sql IMMUTABLE
-  AS $$
-    SELECT CASE
-      WHEN $1 IN ('ORDER', 'FAMILY')
-      THEN $2 || ' spp.'
-      ELSE $2
-    END;
-  $$;
-
 CREATE OR REPLACE FUNCTION ancestors_names(node_id INTEGER) RETURNS HSTORE
   LANGUAGE sql
   AS $$
@@ -254,13 +244,24 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomy_for_node(node_id integer) RETURNS vo
   LANGUAGE plpgsql
   AS $$
   BEGIN
+    -- update rank name
+    UPDATE taxon_concepts
+    SET data = COALESCE(taxon_concepts.data, ''::HSTORE) || HSTORE('rank_name', ranks.name)
+    FROM taxon_concepts q
+    JOIN ranks ON q.rank_id = ranks.id
+    WHERE taxon_concepts.id = q.id
+      AND CASE
+        WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id
+        ELSE TRUE
+      END;
+
     -- update full name
     WITH RECURSIVE q AS (
       SELECT h.id, ranks.name AS rank_name, ancestors_names(h.id) AS ancestors_names
       FROM taxon_concepts h
       INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
       INNER JOIN ranks ON h.rank_id = ranks.id
-      WHERE name_status NOT IN ('H', 'S') AND
+      WHERE name_status = 'A' AND
         CASE
         WHEN node_id IS NOT NULL THEN h.id = node_id
         ELSE h.parent_id IS NULL
@@ -274,15 +275,14 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomy_for_node(node_id integer) RETURNS vo
       hstore(LOWER(ranks.name) || '_id', (hi.id)::VARCHAR)
       FROM q
       JOIN taxon_concepts hi
-      ON hi.parent_id = q.id AND hi.name_status NOT IN ('H', 'S')
+      ON hi.parent_id = q.id AND hi.name_status = 'A'
       INNER JOIN taxon_names ON hi.taxon_name_id = taxon_names.id
       INNER JOIN ranks ON hi.rank_id = ranks.id
     )
     UPDATE taxon_concepts
     SET
     full_name = full_name(rank_name, ancestors_names),
-    data = CASE WHEN data IS NOT NULL THEN data ELSE ''::HSTORE END ||
-      ancestors_names || hstore('rank_name', rank_name)
+    data = COALESCE(data, ''::HSTORE) || ancestors_names
     FROM q
     WHERE taxon_concepts.id = q.id;
 

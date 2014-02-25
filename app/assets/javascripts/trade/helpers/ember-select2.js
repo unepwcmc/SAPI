@@ -39,6 +39,7 @@ Trade.Select2 = Ember.Select.extend({
   width: 'resolve',
   allowClear: true,
   closeOnSelect: true,
+  classNames: ['select2'],
 
   // initialize Select2 once view is inserted in DOM
   didInsertElement : function() {
@@ -99,14 +100,14 @@ Trade.Select2 = Ember.Select.extend({
     var fieldvalue = '';
     var selected = this.get('selection');
     var sel2Val = this.$().select2('val');
-    if (selected) fieldvalue = selected.get(fieldname);
-    if (sel2Val !== fieldvalue || fieldvalue == '') {
-      Ember.run.sync();
-      // trigger change event on selectbox once data
-      // has been loaded to update options values
-      Ember.run.next(this, function() {
-        this.setSelectedValue(fieldvalue);
-      });
+    if (selected) { 
+      fieldvalue = selected.get(fieldname);
     }
+    Ember.run.sync();
+    // trigger change event on selectbox once data
+    // has been loaded to update options values
+    Ember.run.next(this, function() {
+      this.setSelectedValue(fieldvalue);
+    });
   }.observes('selection')
 });

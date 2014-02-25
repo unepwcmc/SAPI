@@ -45,7 +45,6 @@ describe Trade::AnnualReportUploadsController do
   describe "GET show" do
     it "should return success" do
       get :show, id: annual_report_upload.id, format: :json
-      debugger
       response.body.should have_json_path('annual_report_upload')
     end
   end
@@ -69,12 +68,4 @@ describe Trade::AnnualReportUploadsController do
     end
   end
 
-  describe "PUT update" do
-    it "should return updated object" do
-      xhr :put, :update, :id => annual_report_upload.id,
-        :annual_report_upload => annual_report_upload.attributes.
-        merge(:sandbox_shipments => annual_report_upload.sandbox_shipments)
-      response.body.should have_json_path('annual_report_upload')
-    end
-  end
 end

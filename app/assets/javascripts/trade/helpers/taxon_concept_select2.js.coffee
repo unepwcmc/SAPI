@@ -5,32 +5,41 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
   allowClear: true
   closeOnSelect: true
   type: 'hidden'
+  origin: null
+  classNames: ['select2']
 
   didInsertElement: () ->
-    placeholderText = this.get('prompt') || '';
+    placeholderText = this.get('prompt') || ''
     if (!@.$().select2)
-      throw new Exception('select2 is required for Trade.TaxonConceptSelect2 control');
+      throw new Exception('select2 is required for Trade.TaxonConceptSelect2 control')
     @.$().select2(
       placeholder: placeholderText
       minimumInputLength: 3
       allowClear: this.get('allowClear')
       closeOnSelect: this.get('closeOnSelect')
-      width: this.get('width')
+      dropdownCssClass: 'species_autocomplete'
       initSelection: (element, callback) =>
-        # value is the id
-        tc = Trade.TaxonConcept.find(@get('value'))
-        callback({id: tc.get('id'), text: tc.get('fullName')})
+        @origin = @get('origin')
+        value = @get('value')
+        # if value is the id
+        if typeof(value) is 'number'
+          tc = Trade.TaxonConcept.find(value)
+          callback({id: tc.get('id'), text: tc.get('fullName')})
+        # but value can also be a name
+        else
+          callback({id: 'init-selection-value', text: value})
       ajax:
         url: "/api/v1/auto_complete_taxon_concepts.json"
         dataType: 'json'
         data: (term, page) ->
           taxon_concept_query: term # search term
+          visibility: 'trade'
           per_page: 10
           page: page
-        results: (data, page) -> # parse the results into the format expected by Select2.
+        results: (data, page) => # parse the results into the format expected by Select2.
           more = (page * 10) < data.meta.total
-          formatted_taxon_concepts = data.auto_complete_taxon_concepts.map (tc) ->
-            id: tc.id
+          formatted_taxon_concepts = data.auto_complete_taxon_concepts.map (tc) =>
+            id: if @origin is 'sandbox' then tc.full_name else tc.id
             text: tc.full_name
           results: formatted_taxon_concepts
           more: more

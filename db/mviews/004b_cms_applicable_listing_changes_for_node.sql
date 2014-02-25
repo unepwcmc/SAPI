@@ -1,4 +1,7 @@
-CREATE OR REPLACE FUNCTION cms_applicable_listing_changes_for_node(node_id INT)
+DROP FUNCTION IF EXISTS cms_applicable_listing_changes_for_node(node_id INT);
+CREATE OR REPLACE FUNCTION cms_applicable_listing_changes_for_node(
+  all_listing_changes_mview TEXT, node_id INT
+)
 RETURNS SETOF INT
 LANGUAGE plpgsql STRICT
 STABLE
@@ -49,7 +52,7 @@ BEGIN
     ELSE
     TRUE 
     END AS is_applicable
-    FROM cms_all_listing_changes_mview all_listing_changes_mview
+    FROM ' || all_listing_changes_mview || ' all_listing_changes_mview
     JOIN cms_tmp_taxon_concepts_mview taxon_concepts_mview
     ON all_listing_changes_mview.affected_taxon_concept_id = taxon_concepts_mview.id 
     WHERE all_listing_changes_mview.affected_taxon_concept_id = $1
@@ -116,7 +119,7 @@ BEGIN
     ELSE TRUE -- in CMS everything happily cascades
     END
     -- END is_applicable
-    FROM cms_all_listing_changes_mview hi
+    FROM ' || all_listing_changes_mview || ' hi
     JOIN listing_changes_timeline
     ON hi.designation_id = listing_changes_timeline.designation_id
     AND listing_changes_timeline.original_taxon_concept_id = hi.affected_taxon_concept_id
@@ -137,5 +140,5 @@ BEGIN
 END;
 $$;
 
-COMMENT ON FUNCTION cms_applicable_listing_changes_for_node(node_id INT) IS
+COMMENT ON FUNCTION cms_applicable_listing_changes_for_node(all_listing_changes_mview TEXT, node_id INT) IS
   'Returns applicable listing changes for a given node, including own and ancestors (following CMS cascading rules).';

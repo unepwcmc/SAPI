@@ -6,6 +6,7 @@
 
 {{ partial 'trade/shipments/filters' }}
 
+{{ partial 'trade/flash' }}
 
 <div class="shipments-header well well-small">
   <div class="row-fluid">
@@ -22,6 +23,9 @@
       <button {{action 'newShipment'}} class="pull-right btn clearfix">
         Add shipment
       </button>
+      <button {{action 'deleteFiltered'}} class="pull-right btn clearfix">
+        Delete Filtered Shipments
+      </button>
     </div>
   </div>
 </div>
@@ -30,6 +34,7 @@
 
 <div id="flash"></div>
 
+{{# if controller.content }}
 <div class='shipments-presentation-container'>
   <table>
     <thead>
@@ -37,7 +42,7 @@
     </thead>
     <tbody>
     {{#each controller.content}}
-      {{view Trade.ShipmentTableView contentBinding='this'}}
+      {{ view Trade.ShipmentTableView contentBinding='this'}}
     {{/each}}
     </tbody>
   </table>
@@ -56,3 +61,4 @@
     {{/if}}
   </ul>
 </div>
+{{/if}}

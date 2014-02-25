@@ -1,78 +1,117 @@
 <div class="span4">
   <div class="attribute-area clearfix">
     <label>
-      Appendix<br><input type="text" name="appendix">
-    </label>
-    <label class="blank-checkbox">
-      <input type="checkbox" name="appendix">set blank
+      Appendix<br>
+      {{view Ember.Select
+        prompt="Please select appendix value"
+        contentBinding='controller.allAppendices'
+        optionValuePath="content.name"
+        optionLabelPath="content.name"
+        name="appendix"
+      }}
     </label>
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Species name<br><input type="text" name="speciesName">
-    </label>
-    <label class="blank-checkbox">
-      <input type="checkbox" name="speciesName">set blank
+      Species name<br>
+      {{view Trade.TaxonConceptSelect2
+        prompt="Please select species names"
+        name="species_name"
+        origin="sandbox"
+      }}
     </label>
   </div>
 </div>
 <div class="span4">
   <div class="attribute-area clearfix">
     <label>
-      Term Code<br><input type="text" name="termCode">
-    </label>
-    <label class="blank-checkbox">
-      <input type="checkbox" name="termCode">set blank
+      Term Code<br>
+      {{view Trade.Select2
+        prompt="Please select term code value"
+        contentBinding="controllers.terms"
+        optionValuePath="content.code"
+        optionLabelPath="content.code"
+        name="term_code"
+      }}
     </label>
   </div>
   <div class="attribute-area clearfix">
     <label>
       Quantity<br><input type="text" name="quantity">
     </label>
+  </div>
+  <div class="attribute-area clearfix">
+    <label>
+      Unit Code<br>
+      {{view Trade.Select2
+        prompt="Please select unit code value"
+        contentBinding="controllers.units"
+        optionValuePath="content.code"
+        optionLabelPath="content.code"
+        name="unit_code"
+      }}
+    </label>
     <label class="blank-checkbox">
-      <input type="checkbox" name="quantity">set blank
+      <input type="checkbox" name="unit_code">set blank
     </label>
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Unit Code<br><input type="text" name="unitCode">
-    </label>
-    <label class="blank-checkbox">
-      <input type="checkbox" name="unitCode">set blank
-    </label>
-  </div>
-  <div class="attribute-area clearfix">
-    <label>
-      Trading Partner<br><input type="text" name="tradingPartner">
-    </label>
-    <label class="blank-checkbox">
-      <input type="checkbox" name="tradingPartner">set blank
+      Trading Partner<br>
+      {{view Trade.Select2
+        prompt="Please select trading partner"
+        contentBinding="controllers.geoEntities"
+        optionValuePath="content.isoCode2"
+        optionLabelPath="content.isoCode2"
+        name="trading_partner"
+      }}
     </label>
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Country of Origin<br><input type="text" name="countryOfOrigin">
+      Country of Origin<br>
+      {{view Trade.Select2
+        prompt="Please select country of origin value"
+        contentBinding="controllers.geoEntities"
+        optionValuePath="content.isoCode2"
+        optionLabelPath="content.isoCode2"
+        name="country_of_origin"
+      }}
     </label>
     <label class="blank-checkbox">
-      <input type="checkbox" name="countryOfOrigin">set blank
+      <input type="checkbox" name="country_of_origin">set blank
     </label>
   </div>
 </div>
 <div class="span4">
   <div class="attribute-area clearfix">
     <label>
-      Purpose Code<br><input type="text" name="purposeCode">
+      Purpose Code<br>
+      {{view Trade.Select2
+        prompt="Please select purpose code value"
+        contentBinding="controllers.purposes"
+        optionValuePath="content.code"
+        optionLabelPath="content.code"
+        name="purpose_code"
+      }}
     </label>
     <label class="blank-checkbox">
-      <input type="checkbox" name="purposeCode">set blank
+      <input type="checkbox" name="purpose_code">set blank
     </label>
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Source Code<br><input type="text" name="sourceCode">
+      Source Code<br>
+      {{view Trade.Select2
+        prompt="Please select source code value"
+        contentBinding="controllers.sources"
+        optionValuePath="content.code"
+        optionLabelPath="content.code"
+        name="source_code"
+      }}
     </label>
     <label class="blank-checkbox">
-      <input type="checkbox" name="sourceCode">set blank
+      <input type="checkbox" name="source_code">set blank
     </label>
   </div>
   <div class="attribute-area clearfix">
@@ -85,26 +124,26 @@
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Import Permit<br><input type="text" name="importPermit">
+      Import Permit<br><input type="text" name="import_permit">
     </label>
     <label class="blank-checkbox">
-      <input type="checkbox" name="importPermit">set blank
+      <input type="checkbox" name="import_permit">set blank
     </label>
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Export Permit<br><input type="text" name="exportPermit">
+      Export Permit<br><input type="text" name="export_permit">
     </label>
     <label class="blank-checkbox">
-      <input type="checkbox" name="exportPermit">set blank
+      <input type="checkbox" name="export_permit">set blank
     </label>
   </div>
   <div class="attribute-area clearfix">
     <label>
-      Origin Permit<br><input type="text" name="originPermit">
+      Origin Permit<br><input type="text" name="origin_permit">
     </label>
     <label class="blank-checkbox">
-      <input type="checkbox" name="originPermit">set blank
+      <input type="checkbox" name="origin_permit">set blank
     </label>
   </div>
 </div>

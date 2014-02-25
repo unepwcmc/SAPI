@@ -24,7 +24,7 @@ class Trade::ValidationRule < ActiveRecord::Base
   def shipments_columns
     column_names.map do |column|
       case column
-      when 'species_name'
+      when 'taxon_name'
         'taxon_concept_id'
       when 'appendix'
         column
@@ -32,6 +32,8 @@ class Trade::ValidationRule < ActiveRecord::Base
         column
       when /(.+)_code$/
         $1 + '_id'
+      when /(.+)_id$/
+        column
       else
         column + '_id'
       end
@@ -41,6 +43,7 @@ class Trade::ValidationRule < ActiveRecord::Base
   def column_names
     parse_pg_array(read_attribute(:column_names))
   end
+
   def column_names=(ary)
     write_attribute(:column_names, '{' + ary.join(',') + '}')
   end
@@ -91,13 +94,25 @@ class Trade::ValidationRule < ActiveRecord::Base
 
   private
 
+  def required_column_names
+    column_names & ['taxon_concept_id', 'taxon_name', 'appendix', 'year', 'term_code',
+      'trading_partner', 'importer', 'exporter', 'reporter_type', 'quantity'
+    ]
+  end
+
+  def required_shipments_columns
+    shipments_columns & ['taxon_concept_id', 'appendix', 'year', 'term_id',
+      'exporter_id', 'importer_id', 'reporter_type', 'quantity'
+    ]
+  end
+
   # so if sandbox scope was {source_code = W}, shipments
   # scope needs to be {source_id = [id of W]}
   def shipments_scope
     res = {}
     sanitized_scope.each do |scope_column, scope_value|
       case scope_column
-      when 'species_name'
+      when 'taxon_name'
         false #basically no point scoping rules on taxon id
       when 'appendix'
         res[scope_column] = scope_value
@@ -117,7 +132,7 @@ class Trade::ValidationRule < ActiveRecord::Base
   # of validated field => array of invalid values.
   # e.g.
   # {
-  #    :species_name => ['Loxodonta afticana', 'Loxadonta afacana']
+  #    :taxon_name => ['Loxodonta afticana', 'Loxadonta afacana']
   # }
   # Expects a single grouped matching record.
   def error_selector(matching_records)

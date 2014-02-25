@@ -4,17 +4,17 @@ module Trade::ShipmentReportQueries
   "SELECT
     year,
     appendix,
-    taxon_concepts.data->'family_name' AS family,
+    full_name_with_spp('FAMILY', taxon_concepts.data->'family_name') AS family,
     taxon_concept_id,
-    taxon_concepts.full_name AS taxon,
+    full_name_with_spp(ranks.name, taxon_concepts.full_name) AS taxon,
     importer_id,
     importers.iso_code2 AS importer,
     exporter_id,
     exporters.iso_code2 AS exporter,
     country_of_origin_id,
     countries_of_origin.iso_code2 AS country_of_origin,
-    SUM(CASE WHEN reported_by_exporter THEN 0 ELSE quantity END) AS importer_quantity,
-    SUM(CASE WHEN reported_by_exporter THEN quantity ELSE 0 END) AS exporter_quantity,
+    SUM(CASE WHEN reported_by_exporter THEN NULL ELSE quantity END) AS importer_quantity,
+    SUM(CASE WHEN reported_by_exporter THEN quantity ELSE NULL END) AS exporter_quantity,
     term_id,
     terms.code AS term,
     terms.name_en AS term_name_en,
@@ -32,8 +32,8 @@ module Trade::ShipmentReportQueries
   FROM (#{@search.query.to_sql}) shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
-  LEFT JOIN taxon_concepts reported_taxon_concepts
-    ON reported_taxon_concept_id = reported_taxon_concepts.id
+  JOIN ranks
+    ON ranks.id = taxon_concepts.rank_id
   JOIN geo_entities importers
     ON importers.id = importer_id
   JOIN geo_entities exporters
@@ -54,6 +54,7 @@ module Trade::ShipmentReportQueries
     taxon_concepts.data,
     taxon_concept_id,
     taxon_concepts.full_name,
+    ranks.name,
     importer_id,
     importers.iso_code2,
     exporter_id,
@@ -84,14 +85,14 @@ module Trade::ShipmentReportQueries
     year,
     appendix,
     taxon_concept_id,
-    taxon_concepts.full_name AS taxon,
+    full_name_with_spp(ranks.name, taxon_concepts.full_name) AS taxon,
     importer_id,
     importers.iso_code2 AS importer,
     exporter_id,
     exporters.iso_code2 AS exporter,
     GREATEST(
-      SUM(CASE WHEN reported_by_exporter THEN 0 ELSE quantity END),
-      SUM(CASE WHEN reported_by_exporter THEN quantity ELSE 0 END)
+      SUM(CASE WHEN reported_by_exporter THEN NULL ELSE quantity END),
+      SUM(CASE WHEN reported_by_exporter THEN quantity ELSE NULL END)
     ) AS gross_quantity,
     term_id,
     terms.code AS term,
@@ -106,6 +107,8 @@ module Trade::ShipmentReportQueries
   FROM (#{@search.query.to_sql}) shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
+  JOIN ranks
+    ON ranks.id = taxon_concepts.rank_id
   JOIN geo_entities importers
     ON importers.id = importer_id
   JOIN geo_entities exporters
@@ -125,6 +128,7 @@ module Trade::ShipmentReportQueries
     appendix,
     taxon_concept_id,
     taxon_concepts.full_name,
+    ranks.name,
     importer_id,
     importers.iso_code2,
     exporter_id,
@@ -263,7 +267,7 @@ module Trade::ShipmentReportQueries
     CASE
       WHEN (exports.gross_quantity - COALESCE(imports.gross_quantity, 0)) > 0
       THEN exports.gross_quantity - COALESCE(imports.gross_quantity, 0)
-      ELSE 0
+      ELSE NULL
     END AS gross_quantity
   FROM exports
   LEFT JOIN imports
@@ -273,7 +277,8 @@ module Trade::ShipmentReportQueries
   AND exports.term_id = imports.term_id
   AND (exports.unit_id = imports.unit_id OR exports.unit_id IS NULL AND imports.unit_id IS NULL)
   AND exports.year = imports.year
-  AND exports.country_id = imports.country_id"
+  AND exports.country_id = imports.country_id
+  WHERE (exports.gross_quantity - COALESCE(imports.gross_quantity, 0)) > 0"
   end
 
   def net_imports_query
@@ -306,7 +311,7 @@ module Trade::ShipmentReportQueries
     CASE
       WHEN (imports.gross_quantity - COALESCE(exports.gross_quantity, 0)) > 0
       THEN imports.gross_quantity - COALESCE(exports.gross_quantity, 0)
-      ELSE 0
+      ELSE NULL
     END AS gross_quantity
   FROM imports
   LEFT JOIN exports
@@ -315,7 +320,8 @@ module Trade::ShipmentReportQueries
   AND exports.year = imports.year
   AND exports.term_id = imports.term_id
   AND (exports.unit_id = imports.unit_id OR exports.unit_id IS NULL AND imports.unit_id IS NULL)
-  AND exports.country_id = imports.country_id"
+  AND exports.country_id = imports.country_id
+  WHERE (imports.gross_quantity - COALESCE(exports.gross_quantity, 0)) > 0"
   end
 
 end

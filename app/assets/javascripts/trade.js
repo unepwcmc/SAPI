@@ -20,7 +20,6 @@
 //= require handlebars
 //= require ember
 //= require ember-data
-//= require ember-table
 //= require bootstrap-modal
 //= require bootstrap-collapse
 //= require bootstrap-alert
@@ -33,6 +32,9 @@
 //= require ./trade/store
 //= require_tree ./trade/models
 //= require ./trade/query_params
+//= require ./trade/shipment_pagination
+//= require ./trade/utils
+//= require_tree ./trade/mixins
 //= require_tree ./trade/controllers
 //= require_tree ./trade/views
 //= require_tree ./trade/helpers
@@ -40,7 +42,7 @@
 //= require ./trade/router
 //= require_tree ./trade/routes
 
-Trade = Ember.Application.create({
+var Trade = Ember.Application.create({
   LOG_TRANSITIONS: true,
   customEvents: {
     blur: 'blur'

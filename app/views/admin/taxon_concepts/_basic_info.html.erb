@@ -3,10 +3,10 @@
     <%= @taxon_concept.full_name %>
     <span>
       <% if @taxon_concept.rank.name == Rank::SPECIES %>
-        <a href="/species#/taxonConcepts/<%= @taxon_concept.id %>/legal"
+        <a href="/species#/taxon_concepts/<%= @taxon_concept.id %>/legal"
           title="View this taxon concept in Species+" alt="link to this taxon concept in Species+">
       <% else %>
-        <a href="/species#/taxonConcepts?taxonomy=<%= @taxon_concept.taxonomy.name.downcase %>&taxon_concept_query=<%= @taxon_concept.full_name %>"
+        <a href="/species#/taxon_concepts?taxonomy=<%= @taxon_concept.taxonomy.name.downcase %>&taxon_concept_query=<%= @taxon_concept.full_name %>"
           title="View this taxon concept in Species+" alt="link to this taxon concept in Species+">
       <% end %>
           in Species+

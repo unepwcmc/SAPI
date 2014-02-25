@@ -56,17 +56,6 @@ shared_context "Mellivora capensis" do
       :geo_entity => botswana,
       :listing_change => cites_lc2
     )
-    eu_lc2 = create_eu_C_addition(
-     :taxon_concept => @species,
-     :effective_at => '1978-04-24',
-     :is_current => true
-    )
-    create(
-      :listing_distribution,
-      :geo_entity => botswana,
-      :listing_change => eu_lc2
-    )
-
     cites_lc3 = create_cites_III_deletion(
      :taxon_concept => @species,
      :effective_at => '2007-03-04',
@@ -77,19 +66,61 @@ shared_context "Mellivora capensis" do
       :geo_entity => ghana,
       :listing_change => cites_lc3
     )
-    eu_lc3 = create_eu_C_deletion(
+
+    eu_lc1 = create_eu_C_addition(
      :taxon_concept => @species,
-     :effective_at => '2007-03-04',
-     :is_current => true
+     :effective_at => '2005-08-22',
+     :event => reg2005
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => botswana,
+      :listing_change => eu_lc1
+    )
+    eu_lc2 = create_eu_C_addition(
+     :taxon_concept => @species,
+     :effective_at => '2005-08-22',
+     :event => reg2005
     )
     create(
       :listing_distribution,
       :geo_entity => ghana,
+      :listing_change => eu_lc2
+    )
+    eu_lc3 = create_eu_C_addition(
+     :taxon_concept => @species,
+     :effective_at => '2008-04-11',
+     :event => reg2008
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => botswana,
+      :listing_change => eu_lc3
+    )
+    eu_lc4 = create_eu_C_deletion(
+     :taxon_concept => @species,
+     :effective_at => '2008-04-11',
+     :event => reg2008
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => ghana,
+      :listing_change => eu_lc4
+    )
+    eu_lc5 = create_eu_C_addition(
+     :taxon_concept => @species,
+     :effective_at => '2013-08-10',
+     :event => reg2013,
+     :is_current => true
+    )
+    create(
+      :listing_distribution,
+      :geo_entity => botswana,
       :listing_change => eu_lc3
     )
 
-    cms_designation
-    Sapi.rebuild
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

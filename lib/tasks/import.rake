@@ -126,11 +126,25 @@ namespace :import do
     :"cleaned:common_names", :"cleaned:synonyms", :"cleaned:references",
     :"import:trade_codes", :"import:trade_codes_t_p_pairs", :"import:trade_codes_t_u_pairs",
     :"cleaned:cites_quotas", :"cleaned:cites_suspensions", :"cleaned:cites_quotas",
-    :"import:fix_symbols",
+    :"import:eu_annex_regulations_end_dates", :"import:fix_symbols",
     :"db:migrate:create_indexes",
     :"db:migrate:rebuild",
     :"import:stats"
   ]
+
+  desc 'Runs import tasks for all the trade related tasks'
+  # SHIPMENTS_FILE=path/to/file PERMITS_FILE=path/to/file rake import:trade
+  task :trade => [
+    :"import:unusual_geo_entities",
+    :"import:trade_species_mapping",
+    :"import:trade_names"] do
+    Rake::Task["import:shipments"].invoke(
+      ENV['SHIPMENTS_FILE']
+    )
+    Rake::Task["import:trade_permits"].invoke(
+      ENV['PERMITS_FILE']
+    )
+  end
 
   desc 'Drops and reimports db'
   task :redo => ["db:drop", "db:create", "db:migrate", "db:seed", "import:cleaned", "downloads:cache:clear"]

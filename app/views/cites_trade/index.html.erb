@@ -1,14 +1,10 @@
 
   <form id='form_expert'>
-    
-    
-    <input type="hidden" name="ssname" value="ct_60847153">
-    <input type="hidden" name="ssID" value="CT8F02EFDC">
-    
+ 
     <br>
-    
+
     <div class="grid_16 main_content">
-      
+
       <div class='heading_label' style="text-align: center;"> &nbsp; <%= t('cites_title') %> </div>
       <div style="font-size:16px;font-weight:150;text-align: left;"> &nbsp; <%= t('cites_sub_title') %>: </div>
       <div class="grid_8">
@@ -17,13 +13,13 @@
       <div class="grid_8">
 
         <div style="text-align: left; color:#FF0000; font-weight:bold; display:none;" id="search-error-message"><%= t('errors.no_data_1') %>.<br><%= t('errors.no_data_2') %>.</font></div>
-        
+
       </div>
       <hr class="space">
-      
+
       <div class="grid_10">
         <div id="tabs" style="display: none;">
-          
+
           <ul>
             <li><a href="#tabs-year">
               <%= t('year_text') %>:<span>&nbsp;</span></a>
@@ -43,12 +39,12 @@
             <%= t('purpose_text') %>: <span>&nbsp;</span>
             </a>
           </li>
-          
+
           <li><a href="#tabs-terms">
             <%= t('trade_text') %>: <span>&nbsp;</span>
             </a>
           </li>
-          
+
           <li><a href="#tabs-taxon"><%= t('taxon_text') %>:</a></li>
         </ul>
 
@@ -172,7 +168,7 @@
         </div>
         <div id="tabs-purpose">
           <div class="label_style"> <%= t('purpose_text') %>:
-            
+
             <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('purpose_tip') %>" />
           </div>
           <div>
@@ -181,7 +177,7 @@
             </select>
           </div>
         </div>
-        
+
         <div id="tabs-terms">
           <div class="label_style"> <%= t('trade_text') %>:
             <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('trade_tip') %>" />
@@ -192,18 +188,18 @@
             </select>
           </div>
         </div>
-        
+
         <div id="tabs-taxon">
-          
+
           <div>
             <%= t('taxon_tip') %>
             <br>
-            
+
           </div>
           <hr />
           <hr class="space" />
           <div class="grid_2">
-            <input type="radio" name="selection_taxon" value="">&nbsp;
+            <input id="selection_taxon_taxon" type="radio" name="selection_taxon" value="">&nbsp;
           </div>
           <div  id="div_taxon" class="grid_8">
             <span style="padding:10px 0px"><%= t('taxon_title') %></span><br />
@@ -212,13 +208,13 @@
           <hr class="space">
 
           <div class="grid_2">
-            <input type="radio" name="selection_taxon" value="">&nbsp;
+            <input id="selection_taxon_genus" type="radio" name="selection_taxon" value="">&nbsp;
           </div>
           <div id="div_genus" class="grid_8">
             <span style="padding:10px 0px"><%= t('genus_title') %></span><br />
             <input type="text" size="30" name="taxon_concepts_ids[]" id="genus_search" value=""><br>
           </div>
-          
+
         </div>
       </div>
     </div>
@@ -236,8 +232,7 @@
           <tr><td width="30%"><%= t('species') %>: </td><td  width="70%"> <span id="species_out" class="span_label"></span></td></tr>
         </table>
       </div>
-      
-      
+
       <hr class="space">
       <div class="buttons">
         <a id='submit_expert' href="#"><%= t('search') %></a>
@@ -251,7 +246,10 @@
 </form>
 
 <div class="grid_16 other_info">
-  <p align="center"><strong> <%= t('download') %> </strong> <a href="/downloads/cites_trade/CITESTradeDatabaseGuide_v7.pdf"><%= t('db_guide') %></a></p>
+  <p align="center">
+  <strong><%= t('download') %>:</strong>
+    <a href="/downloads/cites_trade/<%= I18n.locale %>-CITES_Trade_Database_Guide.pdf"><%= t('db_guide') %></a>
+  </p>
 </div>
 </div>
 

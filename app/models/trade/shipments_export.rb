@@ -13,7 +13,7 @@ class Trade::ShipmentsExport < Species::CsvExport
       to_csv
     end
     ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
-    @public_file_name = "#{resource_name}_#{ctime}.csv"
+    @public_file_name = "#{resource_name}_#{ctime}_#{@filters['csv_separator']}.csv"
     [
       @file_name,
       {:filename => public_file_name, :type => 'text/csv'}
@@ -49,7 +49,7 @@ private
   end
 
   def internal?
-    @filters['internal'] == true
+    @filters['internal'] == "true"
   end
 
   def resource_name
@@ -65,7 +65,7 @@ private
     sql = <<-PSQL
       \\COPY (#{query_sql.gsub(/"/,"\\\"")})
       TO ?
-      WITH DELIMITER ','
+      WITH DELIMITER '#{csv_separator}'
       ENCODING 'latin1'
       CSV HEADER;
     PSQL
@@ -96,7 +96,8 @@ private
       :reporter_type => {:internal => true},
       :import_permit_number => {:internal => true},
       :export_permit_number => {:internal => true},
-      :origin_permit_number => {:internal => true}
+      :origin_permit_number => {:internal => true},
+      :legacy_shipment_number => {:internal => true}
     }
   end
 
@@ -109,6 +110,15 @@ private
 
   def sql_columns
     report_columns.map{ |column, properties| properties[I18n.locale] || column }
+  end
+
+  def csv_separator
+    case @filters['csv_separator']
+      when 'semicolon_separated'
+        return ';'
+      else #default is 'comma_separated'
+        return ','
+    end
   end
 
 end

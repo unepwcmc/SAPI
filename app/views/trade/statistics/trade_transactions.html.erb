@@ -1,0 +1,32 @@
+<h1>Summary of trade transactions</h1>
+
+<%= render 'menu' %>
+
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Year</th>
+      <th>Reported by Exporters</th>
+      <th>Reported by Importers</th>
+      <th>Total transactions</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <%  @transactions.keys.reject{|a| a == :total}.sort.each do |year| %>
+    <tr>
+      <td><%= year %></td>
+      <td><%= @transactions[year][:reported_by_exporter] %></td>
+      <td><%= @transactions[year][:reported_by_importer] %></td>
+      <td><%= @transactions[year][:total] %></td>
+    </tr>
+  <% end %>
+  <tr>
+    <th>Total</th>
+    <th><%= @transactions[:total][:by_exporter] %></th>
+    <th><%= @transactions[:total][:by_importer] %></th>
+    <th><%= @transactions[:total][:all] %></th>
+  </tr>
+  </tbody>
+</table>
+

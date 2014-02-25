@@ -51,45 +51,24 @@ describe EuRegulation do
       specify { eu_regulation.should have(1).error_on(:effective_at) }
     end
   end
-  describe :can_be_activated? do
-    let(:eu_regulation){
-      create_eu_regulation(
-        :designation => eu,
-        :is_current => false,
-        :effective_at => '2012-05-01'
-      )
-    }
-    context "when no other eu_regulations" do
-      specify{ eu_regulation.can_be_activated?.should be_true }
-    end
-    context "when current eu_regulation is later" do
-      let!(:other_eu_regulation){
-        create_eu_regulation(
-          :designation => eu,
-          :is_current => true, :effective_at => '2012-05-10'
-        )
-      }
-      specify{ eu_regulation.can_be_activated?.should be_false }
-    end
-    context "when current eu_regulation is earlier" do
-      let!(:other_eu_regulation){
-        create_eu_regulation(
-          :designation => eu,
-          :is_current => true, :effective_at => '2012-04-10'
-        )
-      }
-      specify{ eu_regulation.can_be_activated?.should be_true }
-    end
-  end
   describe :activate do
-    let(:prev_eu_regulation){ create_eu_regulation(:name => 'REGULATION 1.0', :is_current => true) }
     let(:eu_regulation){ create_eu_regulation(:name => 'REGULATION 2.0') }
     before do
-      EventActivationWorker.jobs.clear
+      EuRegulationActivationWorker.jobs.clear
       eu_regulation.activate!
     end
     specify{ eu_regulation.is_current.should be_true }
-    specify{ EventActivationWorker.jobs.size.should == 1 }
+    specify{ EuRegulationActivationWorker.jobs.size.should == 1 }
+  end
+
+  describe :deactivate do
+    let(:eu_regulation){ create_eu_regulation(:name => 'REGULATION 2.0', :is_current => true) }
+    before do
+      EuRegulationActivationWorker.jobs.clear
+      eu_regulation.deactivate!
+    end
+    specify{ eu_regulation.is_current.should be_false }
+    specify{ EuRegulationActivationWorker.jobs.size.should == 1 }
   end
 
   describe :destroy do
@@ -100,7 +79,7 @@ describe EuRegulation do
     context "when dependent objects attached" do
       context "when listing changes" do
         let!(:listing_change){ create_eu_A_addition(:event => eu_regulation) }
-        specify { eu_regulation.destroy.should be_false }
+        specify { eu_regulation.destroy.should be_true }
       end
     end
   end

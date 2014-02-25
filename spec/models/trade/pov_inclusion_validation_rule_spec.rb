@@ -16,7 +16,7 @@
 
 require 'spec_helper'
 
-describe Trade::PovInclusionValidationRule, :drops_tables => true do
+describe Trade::InclusionValidationRule, :drops_tables => true do
   let(:country){
     create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
   }
@@ -57,18 +57,18 @@ describe Trade::PovInclusionValidationRule, :drops_tables => true do
         @aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
         sandbox_klass.create(
-          :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => nil
+          :taxon_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => nil
         )
         sandbox_klass.create(
-          :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => argentina.iso_code2
+          :taxon_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => argentina.iso_code2
         )
       end
       subject{
         create(
-          :pov_inclusion_validation_rule,
+          :inclusion_validation_rule,
           :scope => {:source_code => 'W', :country_of_origin_blank => true},
-          :column_names => ['species_name', 'exporter'],
-          :valid_values_view => 'valid_species_name_exporter_view'
+          :column_names => ['taxon_concept_id', 'exporter'],
+          :valid_values_view => 'valid_taxon_concept_exporter_view'
         )
       }
       specify{
@@ -76,7 +76,7 @@ describe Trade::PovInclusionValidationRule, :drops_tables => true do
       }
       specify{
         ve = subject.validation_errors(@aru).first
-        ve.error_selector.should == {'species_name' => 'Pecari tajacu', 'country_of_origin' => nil, 'source_code' => 'W'}
+        ve.error_selector.should == {'taxon_concept_id' => @species.id, 'country_of_origin' => nil, 'source_code' => 'W'}
       }
     end
     context "when W source and country of origin blank and exporter doesn't match distribution (I)" do
@@ -85,21 +85,21 @@ describe Trade::PovInclusionValidationRule, :drops_tables => true do
         @aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
         sandbox_klass.create(
-          :species_name => 'Pecari tajacu', :source_code => 'W',
+          :taxon_name => 'Pecari tajacu', :source_code => 'W',
           :trading_partner => canada.iso_code2, :country_of_origin => nil
         )
         sandbox_klass.create(
-          :species_name => 'Pecari tajacu', :source_code => 'W',
+          :taxon_name => 'Pecari tajacu', :source_code => 'W',
           :trading_partner => canada.iso_code2,
           :country_of_origin => argentina.iso_code2
         )
       end
       subject{
         create(
-          :pov_inclusion_validation_rule,
+          :inclusion_validation_rule,
           :scope => {:source_code => 'W', :country_of_origin_blank => true},
-          :column_names => ['species_name', 'exporter'],
-          :valid_values_view => 'valid_species_name_exporter_view'
+          :column_names => ['taxon_concept_id', 'exporter'],
+          :valid_values_view => 'valid_taxon_concept_exporter_view'
         )
       }
       specify{
@@ -108,7 +108,7 @@ describe Trade::PovInclusionValidationRule, :drops_tables => true do
       specify{
         ve = subject.validation_errors(@aru).first
         ve.error_selector.should == {
-          'species_name' => 'Pecari tajacu', 'country_of_origin' => nil,
+          'taxon_concept_id' => @species.id, 'country_of_origin' => nil,
           'source_code' => 'W', 'trading_partner' => canada.iso_code2}
       }
     end
@@ -118,15 +118,15 @@ describe Trade::PovInclusionValidationRule, :drops_tables => true do
         @aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
         sandbox_klass.create(
-          :species_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => argentina.iso_code2
+          :taxon_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => argentina.iso_code2
         )
       end
       subject{
         create(
-          :pov_inclusion_validation_rule,
-          :scope => {:source_code => 'W', :country_of_originnn_blank => true},
-          :column_names => ['species_name', 'exporter'],
-          :valid_values_view => 'valid_species_name_exporter_view'
+          :inclusion_validation_rule,
+          :scope => {:source_code => 'W', :country_of_origin_blank => true},
+          :column_names => ['taxon_concept_id', 'exporter'],
+          :valid_values_view => 'valid_taxon_concept_exporter_view'
         )
       }
       specify{

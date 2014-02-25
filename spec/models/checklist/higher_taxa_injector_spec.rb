@@ -93,9 +93,7 @@ describe Checklist::HigherTaxaInjector do
       :parent => genus2_1_1_1,
       :taxon_name => create(:taxon_name, :scientific_name => 'fatalus')
     )
-    eu
-    cms_designation
-    Sapi.rebuild
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     @order2 = MTaxonConcept.find(order2.id)
     @family1 = MTaxonConcept.find(family1.id)
     @genus1_1 = MTaxonConcept.find(genus1_1.id)

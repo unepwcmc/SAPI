@@ -1,57 +1,38 @@
 class Admin::QuotasController < Admin::SimpleCrudController
-  belongs_to :taxon_concept
-  before_filter :load_lib_objects
-  before_filter :load_search, :except => [:destroy]
 
-  layout 'taxon_concepts'
-
-  def update
-    update! do |success, failure|
-      success.html {
-        redirect_to admin_taxon_concept_quotas_url(params[:taxon_concept_id]),
-        :notice => 'Operation successful'
-      }
-      failure.html {
-        load_lib_objects
-        render 'new'
-      }
-
-      success.js { render 'create' }
-      failure.js {
-        load_lib_objects
-        render 'new'
-      }
+  def index
+    @years = Quota.years_array
+    if params[:year] && !@years.include?(params[:year])
+      @years = @years.push(params[:year]).sort{|a,b| b <=> a}
     end
+    index!
   end
 
-  def create
-    create! do |success, failure|
-      success.html {
-        redirect_to admin_taxon_concept_quotas_url(params[:taxon_concept_id]),
-        :notice => 'Operation successful'
-      }
-      failure.html { render 'create' }
-    end
+  def duplication
+    @years = Quota.years_array
+    @count = Quota.where('EXTRACT(year from start_date) = ?', @years.first).
+      count
+    @geo_entities = GeoEntity.joins(:quotas).order(:name_en).uniq
+  end
+
+  def duplicate
+    QuotasCopyWorker.perform_async(params[:quotas])
+    redirect_to admin_quotas_path({:year => params[:quotas][:start_date].split("/")[2]}), 
+      :notice => "Your quotas are being duplicated in the background.
+      They will be available from this page in a few seconds (please refresh it)"
+  end
+
+  def count
+    @count = Quota.count_matching params
+    render :json => @count.to_json
   end
 
   protected
 
-  def load_lib_objects
-    @units = Unit.order(:code)
-    @terms = Term.order(:code)
-    @sources = Source.order(:code)
-    @purposes = Purpose.order(:code)
-    @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(:is_current => true,
-            :geo_entity_types => {:name => [GeoEntityType::COUNTRY,
-                                            GeoEntityType::TERRITORY]})
-  end
-
   def collection
-    @quotas ||= end_of_association_chain.
-      joins(:geo_entity).
-      order('start_date DESC, geo_entities.name_en ASC,
-        notes ASC').
-      page(params[:page])
+    @quotas ||= end_of_association_chain.order('start_date DESC').
+      page(params[:page]).search(params[:query])
+    return @quotas if !params[:year]
+    @quotas = @quotas.where('EXTRACT(year from start_date) = ?', params[:year])
   end
 end

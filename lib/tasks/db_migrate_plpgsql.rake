@@ -1,27 +1,13 @@
 namespace :db do
   namespace :migrate do
-    desc "Migrate views"
-    task :views => :environment do
-      files = Dir.glob(Rails.root.join("db/views/*.sql"))
-      files.sort.each do |file|
-        puts file
-        ActiveRecord::Base.connection.execute(File.read(file))
-      end
-    end
-    desc "Migrate materialized views"
-    task :mviews => :environment do
-      files = Dir.glob(Rails.root.join("db/mviews/*.sql"))
-      files.sort.each do |file|
-        puts file
-        ActiveRecord::Base.connection.execute(File.read(file))
-      end
-    end
-    desc "Migrate plpgsql procedures and types"
-    task :plpgsql => :environment do
-      files = Dir.glob(Rails.root.join("db/plpgsql/*.sql"))
-      files.sort.each do |file|
-        puts file
-        ActiveRecord::Base.connection.execute(File.read(file))
+    desc "Run custom sql scripts"
+    task :sql => :environment do
+      ['helpers', 'views', 'mviews', 'plpgsql'].each do |dir|
+        files = Dir.glob(Rails.root.join("db/#{dir}/*.sql"))
+        files.sort.each do |file|
+          puts file
+          ActiveRecord::Base.connection.execute(File.read(file))
+        end
       end
     end
     desc "Rebuild all computed values"
@@ -38,9 +24,7 @@ namespace :db do
     end
   end
   task :migrate do
-    Rake::Task['db:migrate:views'].invoke
-    Rake::Task['db:migrate:mviews'].invoke
-    Rake::Task['db:migrate:plpgsql'].invoke
+    Rake::Task['db:migrate:sql'].invoke
   end
   desc "Drop sandboxes in progress"
   task :drop_sandboxes => :environment do
@@ -48,4 +32,15 @@ namespace :db do
       aru.destroy
     end
   end
+
+  desc "Drop all trade (shipments, permits, arus & sandboxes - use responsibly)"
+  task :drop_trade => [:environment] do
+    puts "Deleting shipments"
+    ActiveRecord::Base.connection.execute('DELETE FROM trade_shipments')
+    puts "Deleting permits"
+    ActiveRecord::Base.connection.execute('DELETE FROM trade_permits')
+    puts "Deleting annual report uploads & dropping sandboxes"
+    Trade::AnnualReportUpload.all.each{ |aru| aru.destroy }
+  end
+
 end

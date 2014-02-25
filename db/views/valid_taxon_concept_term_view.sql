@@ -1,7 +1,7 @@
 DROP VIEW IF EXISTS valid_taxon_concept_term_view;
 CREATE VIEW valid_taxon_concept_term_view AS
-WITH RECURSIVE self_and_descendants(id, species_name, pair_id, term_id) AS (
-  SELECT taxon_concepts.id, full_name,
+WITH RECURSIVE self_and_descendants(id, pair_id, term_id) AS (
+  SELECT taxon_concepts.id,
     trade_taxon_concept_term_pairs.id, trade_taxon_concept_term_pairs.term_id
     FROM trade_taxon_concept_term_pairs
     INNER JOIN taxon_concepts
@@ -10,11 +10,11 @@ WITH RECURSIVE self_and_descendants(id, species_name, pair_id, term_id) AS (
 
   UNION
 
-  SELECT hi.id, hi.full_name, d.pair_id, d.term_id FROM taxon_concepts hi
+  SELECT hi.id, d.pair_id, d.term_id FROM taxon_concepts hi
     JOIN self_and_descendants d ON d.id = hi.parent_id
     WHERE name_status = 'A'
 )
-SELECT species_name, self_and_descendants.id AS taxon_concept_id,
+SELECT self_and_descendants.id AS taxon_concept_id,
   terms.code AS term_code, self_and_descendants.term_id
 FROM self_and_descendants
 INNER JOIN trade_taxon_concept_term_pairs

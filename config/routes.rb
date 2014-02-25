@@ -14,6 +14,7 @@ SAPI::Application.routes.draw do
       resources :units, :only => [:index]
       resources :sources, :only => [:index]
       resources :purposes, :only => [:index]
+      match '/dashboard_stats/:iso_code' => 'dashboard_stats#index'
     end
     resources :languages, :only => [:index]
     resources :users, :only => [:index]
@@ -42,10 +43,12 @@ SAPI::Application.routes.draw do
     resources :events
     resources :eu_regulations do
       post :activate, :on => :member
+      post :deactivate, :on => :member
       resources :listing_changes, :only => [:index, :destroy]
     end
     resources :eu_suspension_regulations do
       post :activate, :on => :member
+      post :deactivate, :on => :member
       resources :eu_suspensions, :only => [:index, :destroy]
     end
     resources :cites_cops
@@ -60,6 +63,14 @@ SAPI::Application.routes.draw do
     resources :cites_hash_annotations, :only => [:index, :create, :update, :destroy]
     resources :eu_hash_annotations, :only => [:index, :create, :update, :destroy]
     resources :cites_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
+    resources :quotas, :only => [:index, :destroy] do
+      collection do
+        get :duplication
+        post :duplicate
+        get :count
+      end
+    end
+
     resources :taxon_concepts, :only => [:index, :create, :edit, :update, :destroy] do
       get :autocomplete, :on => :collection
       resources :children, :only => [:index]
@@ -73,13 +84,15 @@ SAPI::Application.routes.draw do
       resources :hybrid_relationships, :only => [:new, :create, :edit, :update, :destroy]
       resources :taxon_concept_references, :only => [:index, :new, :create, :destroy, :edit, :update]
       resources :names, :only => [:index]
-      resources :quotas, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :eu_opinions, :only => [:index, :new, :create, :edit, :update, :destroy]
+
+      resources :taxon_quotas, :only => [:index, :new, :create, :edit, :update, :destroy],
+        :as => :quotas
 
       resources :taxon_eu_suspensions, 
         :only => [:index, :new, :create, :edit, :update, :destroy], 
         :as => :eu_suspensions
-      
+
       resources :taxon_cites_suspensions,
         :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :cites_suspensions
@@ -93,12 +106,20 @@ SAPI::Application.routes.draw do
 
   namespace :trade do
     resources :annual_report_uploads do
+      resources :sandbox_shipments do
+        collection do
+          post :update_batch
+          post :destroy_batch
+        end
+      end
       member do
         post 'submit'
       end
     end
     resources :validation_rules
-    resources :shipments
+    resources :shipments do
+      post :destroy_batch, :on => :collection
+    end
     resources :geo_entities, :only => [:index]
     resources :permits, :only => [:index]
     match 'exports/download' => 'exports#download'
@@ -106,6 +127,7 @@ SAPI::Application.routes.draw do
     match 'stats' => 'statistics#index'
     match 'summary_year' => 'statistics#summary_year'
     match 'summary_creation' => 'statistics#summary_creation'
+    match 'trade_transactions' => 'statistics#trade_transactions'
     root :to => 'ember#start'
   end
 

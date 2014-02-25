@@ -50,6 +50,22 @@ shared_context "Canis lupus" do
       :iso_code2 => 'AR'
     )
   }
+  let(:spain){
+    create(
+      :geo_entity,
+      :geo_entity_type => country,
+      :name => 'Spain',
+      :iso_code2 => 'ES'
+    )
+  }
+  let(:greece){
+    create(
+      :geo_entity,
+      :geo_entity_type => country,
+      :name => 'Greece',
+      :iso_code2 => 'GR'
+    )
+  }
   before(:all) do
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Carnivora'),
@@ -68,87 +84,7 @@ shared_context "Canis lupus" do
       :parent => @genus
     )
 
-    create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '1977-02-04'
-    )
-    cites_lc1 = create_cites_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '1979-06-28'
-    )
-    [bhutan, india, nepal, pakistan].each do |country|
-      create(
-        :listing_distribution,
-        :geo_entity => country,
-        :listing_change => cites_lc1,
-        :is_party => false
-      )
-    end
-    create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '1979-06-28'
-    )
-
-    cites_lc2 = create_cites_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '2010-06-23',
-     :is_current => true
-    )
-    eu_lc2 = create_eu_A_addition(
-     :taxon_concept => @species,
-     :effective_at => '2010-06-23',
-     :is_current => true
-    )
-    cites_lc3 = create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '2010-06-23',
-     :is_current => true
-    )
-    cites_lc3_exc = create_cites_II_exception(
-      :taxon_concept => @species,
-      :effective_at => '1979-06-28',
-      :parent_id => cites_lc3.id,
-     :is_current => true
-    )
-    eu_lc3 = create_eu_B_addition(
-     :taxon_concept => @species,
-     :effective_at => '2010-06-23',
-     :is_current => true
-    )
-    eu_lc3_exc = create_eu_B_exception(
-      :taxon_concept => @species,
-      :effective_at => '1979-06-28',
-      :parent_id => eu_lc3.id,
-     :is_current => true
-    )
-    [bhutan, india, nepal, pakistan].each do |country|
-      create(
-        :listing_distribution,
-        :geo_entity => country,
-        :listing_change => cites_lc2,
-        :is_party => false
-      )
-      create(
-        :listing_distribution,
-        :geo_entity => country,
-        :listing_change => cites_lc3_exc,
-        :is_party => false
-      )
-      create(
-        :listing_distribution,
-        :geo_entity => country,
-        :listing_change => eu_lc2,
-        :is_party => false
-      )
-      create(
-        :listing_distribution,
-        :geo_entity => country,
-        :listing_change => eu_lc3_exc,
-        :is_party => false
-      )
-    end
-
-    [bhutan, india, nepal, pakistan, poland].each do |country|
+    [bhutan, india, nepal, pakistan, poland, spain, greece].each do |country|
       create(
         :distribution,
         :taxon_concept => @species,
@@ -156,8 +92,76 @@ shared_context "Canis lupus" do
       )
     end
 
-    cms_designation
-    Sapi.rebuild
+    create_cites_II_addition(
+     :taxon_concept => @species,
+     :effective_at => '1977-02-04'
+    )
+    cites_lc_I = create_cites_I_addition(
+     :taxon_concept => @species,
+     :effective_at => '2010-06-23',
+     :is_current => true
+    )
+    cites_lc_II = create_cites_II_addition(
+     :taxon_concept => @species,
+     :effective_at => '2010-06-23',
+     :is_current => true
+    )
+    cites_lc_II_exc = create_cites_II_exception(
+      :taxon_concept => @species,
+      :effective_at => '2010-06-23',
+      :parent_id => cites_lc_II.id
+    )
+    [bhutan, india, nepal, pakistan].each do |country|
+      create(
+        :listing_distribution,
+        :geo_entity => country,
+        :listing_change => cites_lc_I,
+        :is_party => false
+      )
+      create(
+        :listing_distribution,
+        :geo_entity => country,
+        :listing_change => cites_lc_II_exc,
+        :is_party => false
+      )
+    end
+
+    eu_lc_A = create_eu_A_addition(
+      :taxon_concept => @species,
+      :effective_at => '2013-10-08',
+      :event => reg2013,
+      :is_current => true
+    )
+    eu_lc_A_exc = create_eu_A_exception(
+      :taxon_concept => @species,
+      :effective_at => '2013-10-08',
+      :event => reg2013,
+      :parent_id => eu_lc_A.id
+    )
+    eu_lc_B = create_eu_B_addition(
+      :taxon_concept => @species,
+      :effective_at => '2013-10-08',
+      :event => reg2013,
+      :is_current => true
+    )
+
+    [spain, greece].each do |country|
+      create(
+        :listing_distribution,
+        :geo_entity => country,
+        :listing_change => eu_lc_B,
+        :is_party => false
+      )
+      create(
+        :listing_distribution,
+        :geo_entity => country,
+        :listing_change => eu_lc_A_exc,
+        :is_party => false
+      )
+    end
+
+    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

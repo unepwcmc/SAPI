@@ -24,19 +24,6 @@ class Trade::AnnualReportUploadsController < ApplicationController
     render :json => {:files => [@annual_report_upload.to_jq_upload]}
   end
 
-  def update
-    @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
-    if @annual_report_upload.update_attributes_and_sandbox(
-      annual_report_upload_params
-    )
-      render :json => @annual_report_upload, :status => :ok,
-        :serializer => Trade::ShowAnnualReportUploadSerializer
-    else
-      render :json => { "errors" => @annual_report_upload.errors },
-        :status => :unprocessable_entity
-    end
-  end
-
   def submit
     @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
     if @annual_report_upload.submit
@@ -48,6 +35,16 @@ class Trade::AnnualReportUploadsController < ApplicationController
     end
   end
 
+  def destroy
+    @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
+    unless @annual_report_upload.is_done
+      @annual_report_upload.destroy
+      render :json => nil, :status => :ok
+    else
+      head 403
+    end
+  end
+
 private
 
   def annual_report_upload_params
@@ -56,7 +53,7 @@ private
       :sandbox_shipments => [
         :id,
         :appendix,
-        :species_name,
+        :taxon_name,
         :term_code,
         :quantity,
         :unit_code,

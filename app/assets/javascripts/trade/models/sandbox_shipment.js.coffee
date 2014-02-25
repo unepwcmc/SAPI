@@ -1,6 +1,7 @@
 Trade.SandboxShipment = DS.Model.extend
   appendix: DS.attr('string')
-  speciesName: DS.attr('string')
+  taxonName: DS.attr('string')
+  acceptedTaxonName: DS.attr('string')
   termCode: DS.attr('string')
   quantity: DS.attr('string')
   unitCode: DS.attr('string')
@@ -12,5 +13,8 @@ Trade.SandboxShipment = DS.Model.extend
   purposeCode: DS.attr('string')
   sourceCode: DS.attr('string')
   year: DS.attr('string')
-  _destroyed: DS.attr('boolean')
+
+  #annualReportUpload: DS.belongsTo('Trade.AnnualReportUpload')
+
+  _destroyed: false
   _modified: false

@@ -1,0 +1,108 @@
+<div class="admin-header">
+  <h1>CITES Quotas</h1>
+</div>
+
+<div style="clear:both;"></div>
+
+<%= form_tag duplicate_admin_quotas_url, :method => :post, :class => "form-horizontal" do %>
+  <fieldset>
+    <legend>Duplicate CITES quotas</legend>
+    <div class="control-group">
+      <%= label_tag "quotas[from_year]", 'From year', :class => "control-label" %>
+      <div class="controls">
+        <%= select_tag "quotas[from_year]", options_for_select(@years) %>
+        <span class="help-block">Only quotas marked as current will be duplicated.</span>
+      </div>
+    </div>
+    <h5>Dates</h5>
+    <div class="control-group">
+      <%= label_tag "quotas[start_date]", 'Start date', :class => 'control-label' %>
+      <div class="controls">
+        <%= text_field_tag "quotas[start_date]", Time.now.beginning_of_year.strftime("%d/%m/%Y"), :class => "quota datepicker" %>
+        <span class="help-block">New quota year will be extracted from start date</span>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= label_tag "quotas[end_date]", 'End date', :class => 'control-label' %>
+      <div class="controls">
+        <%= text_field_tag "quotas[end_date]", Time.now.end_of_year.strftime("%d/%m/%Y"), :class => "quota datepicker" %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= label_tag "quotas[publication_date]", 'Publication date', :class => 'control-label' %>
+      <div class="controls">
+        <%= text_field_tag "quotas[publication_date]", Time.now.strftime("%d/%m/%Y"), :class => "quota datepicker" %>
+      </div>
+    </div>
+    <h5 class="toggle-extra-options">Taxon Concepts <span>+</span><span class="hide">-</span></h5>
+    <div class="extra-options hide">
+      <div class="control-group">
+        <%= label_tag "quotas[included_taxon_concepts_ids]", "For", :class => 'control-label' %>
+        <div class="controls">
+          <%= hidden_field_tag "quotas[included_taxon_concepts_ids]", nil,
+            :style => "width: 220px" %>
+        </div>
+      </div>
+      <div class="control-group">
+        <%= label_tag "quotas[excluded_taxon_concepts_ids]", "Except for", :class => 'control-label' %>
+        <div class="controls">
+          <%= hidden_field_tag "quotas[excluded_taxon_concepts_ids]", nil,
+            :style => "width: 220px" %>
+        </div>
+      </div>
+    </div>
+    <h5 class="toggle-extra-options">Countries and Territories <span>+</span><span class="hide">-</span></h5>
+    <div class="extra-options hide">
+      <div class="control-group">
+        <%= label_tag "quotas[included_geo_entities_ids]", "For", :class => 'control-label' %>
+        <div class="controls">
+          <%= select_tag "quotas[included_geo_entities_ids]",
+            options_from_collection_for_select(
+              @geo_entities,
+              :id,
+              :name_en
+            ), { :include_blank => true, :multiple => true,
+             :class => 'quota select2', :style => 'width: 220px' }
+          %>
+        </div>
+      </div>
+      <div class="control-group">
+        <%= label_tag "quotas[excluded_geo_entities_ids]", "Except for", :class => 'control-label' %>
+        <div class="controls">
+          <%= select_tag "quotas[excluded_geo_entities_ids]",
+            options_from_collection_for_select(
+              @geo_entities,
+              :id,
+              :name_en
+            ), { :include_blank => true, :multiple => true,
+             :class => 'quota select2', :style => 'width: 220px' }
+          %>
+        </div>
+      </div>
+    </div>
+    <h5 class="toggle-extra-options">Notes <span>+</span><span class="hide">-</span></h5>
+    <div class="extra-options hide">
+      <div class="control-group">
+        <%= label_tag "quotas[from_text]", "Replace", :class => 'control-label' %>
+        <div class="controls">
+          <%= text_area_tag "quotas[from_text]", nil %>
+        </div>
+      </div>
+      <div class="control-group">
+        <%= label_tag "quotas[to_text]", "With", :class => 'control-label' %>
+        <div class="controls">
+          <%= text_area_tag "quotas[to_text]", nil %>
+        </div>
+      </div>
+    </div>
+    <p>Number of quotas that will be duplicated: <strong><span id="quotas-count"><%= @count %></span></strong>.</p>
+    <p><strong>Note:</strong> This count will not take into consideration descendant taxon concepts' quotas, <br />
+      so the value can be inacurate when including higher taxon concepts in the 'for' and/or 'except' fields. <br />
+      Nevertheless the background job <strong>will</strong> copy those quotas.</p>
+    <p>
+      <%= link_to 'Cancel', admin_quotas_path,
+        :class => "btn" %>
+      <%= submit_tag "Duplicate", :class => "btn btn-primary save-button" %>
+    </p>
+  </fieldset>
+<% end %>

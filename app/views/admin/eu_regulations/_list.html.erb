@@ -2,6 +2,7 @@
   <th>Name</th>
   <th>Description</th>
   <th>Effective from</th>
+  <th>End date</th>
   <th>Current</th>
   <th>URL</th>
   <th>No of listing changes</th>
@@ -27,6 +28,7 @@
         </a>
       </td>
       <td><%= eu_regulation.effective_at_formatted %></td>
+      <td><%= eu_regulation.end_date_formatted %></td>
       <td><%= true_false_icon(eu_regulation.is_current) %></td>
       <td>
         <%= link_to_unless(
@@ -42,15 +44,17 @@
       <td>
         <%= link_to edit_icon, edit_resource_url(eu_regulation), :remote => true %>
         <%= link_to delete_icon, resource_url(eu_regulation),
-          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+          :confirm => "Warning: you are about to delete data. This might take a long time, depending on the number of associated objects. Are you sure?", :method => :delete
         %>
-        <%= link_to_if(
-          eu_regulation.can_be_activated?,
-          '<i class="icon-cog" title="Activate"></i>'.html_safe,
-          activate_admin_eu_regulation_url(eu_regulation),
-          :confirm => 'Warning: you are about to modify a batch of data. Are you sure?', :method => :post, :remote => true
-        ) { '' }
-        %>
+        <% if eu_regulation.is_current? %>
+          <%= link_to '<i class="icon-ban-circle" title="Set not current"></i>'.html_safe,
+            deactivate_admin_eu_regulation_url(eu_regulation),
+            :confirm => 'Warning: you are about to modify a batch of data. Are you sure?', :method => :post, :remote => true %>
+        <% else %>
+          <%= link_to '<i class="icon-cog" title="Set current"></i>'.html_safe,
+            activate_admin_eu_regulation_url(eu_regulation),
+            :confirm => 'Warning: you are about to modify a batch of data. Are you sure?', :method => :post, :remote => true %>
+      <% end %>
       </td>
     </tr>
   <% end -%>

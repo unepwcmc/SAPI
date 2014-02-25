@@ -10,6 +10,27 @@ class Trade::Sandbox
   def copy
     create_target_table
     copy_csv_to_target_table
+    @ar_klass.sanitize
+  end
+
+  def copy_from_sandbox_to_shipments
+    success = true
+    Trade::Shipment.transaction do
+      pg_result = Trade::SandboxTemplate.connection.execute(
+        Trade::SandboxTemplate.send(:sanitize_sql_array, [
+          'SELECT * FROM copy_transactions_from_sandbox_to_shipments(?)',
+          @annual_report_upload.id
+        ])
+      )
+      moved_rows_cnt = pg_result.first['copy_transactions_from_sandbox_to_shipments'].to_i
+      if moved_rows_cnt < 0
+        # if -1 returned, not all rows have been moved
+        self.errors[:base] << "Submit failed, could not save all rows."
+        success = false
+        raise ActiveRecord::Rollback
+      end
+    end
+    success
   end
 
   def destroy
@@ -26,11 +47,7 @@ class Trade::Sandbox
     #TODO handle errors
     new_shipments.each do |shipment|
       s = @ar_klass.find_by_id(shipment.delete('id'))
-      if shipment.delete('_destroyed')
-        s && s.delete
-      else
-        s && s.update_attributes(shipment)
-      end
+      s.delete_or_update_attributes(shipment)
     end
   end
 

@@ -22,10 +22,12 @@ FactoryGirl.define do
 
   factory :event do
     sequence(:name) {|n| "CoP#{n}"}
-    effective_at '2012-01-01'
+    effective_at '2011-01-01'
     designation
 
-    factory :eu_regulation, :class => EuRegulation
+    factory :eu_regulation, :class => EuRegulation do
+      end_date '2012-01-01'
+    end
     factory :eu_suspension_regulation, :class => EuSuspensionRegulation
     factory :cites_cop, :class => CitesCop
     factory :cites_suspension_notification, :class => CitesSuspensionNotification,
@@ -35,7 +37,7 @@ FactoryGirl.define do
   end
 
   factory :taxon_name do
-    sequence(:scientific_name) {|n| "lupus#{n}"}
+    sequence(:scientific_name) {|n| "Lupus#{n}"}
   end
 
   factory :rank do
@@ -55,33 +57,6 @@ FactoryGirl.define do
     accepted_scientific_name ''
     hybrid_parent_scientific_name ''
     other_hybrid_parent_scientific_name ''
-  end
-
-  factory :trade_code do
-    factory :source, :class => Source do
-      sequence(:code) { |n| (97 + n%26).chr }
-      sequence(:name) { |n| "Source @{n}" }
-    end
-
-    factory :purpose, :class => Purpose do
-      sequence(:code) { |n| (97 + n%26).chr }
-      sequence(:name) { |n| "Purpose @{n}" }
-    end
-
-    factory :term, :class => Term do
-      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (97 + i%26).chr }.join }
-      sequence(:name) { |n| "Term @{n}" }
-    end
-
-    factory :unit, :class => Unit do
-      sequence(:code) { |n| [n, n+1, n+2].map{ |i|  (97 + i%26).chr }.join }
-      sequence(:name) { |n| "Unit @{n}" }
-    end
-  end
-
-  factory :term_trade_codes_pair do
-    term
-    trade_code
   end
 
   factory :cites_suspension do
