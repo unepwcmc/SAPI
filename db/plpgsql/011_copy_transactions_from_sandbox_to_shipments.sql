@@ -22,7 +22,12 @@ BEGIN
         taxon_concepts.full_name AS full_name
       FROM ' || table_name || ' sandbox_table
       JOIN taxon_concepts
-        ON UPPER(taxon_concepts.full_name) = UPPER(squish(sandbox_table.taxon_name))
+        ON UPPER(taxon_concepts.full_name) =
+          regexp_replace(
+            UPPER(squish(sandbox_table.taxon_name)),
+            E'' SPP(\.)?$'',
+            ''''
+          )
         AND taxonomy_id = ' || cites_taxonomy_id ||
       CASE WHEN shipment_id IS NOT NULL
         THEN ' WHERE sandbox_table.id = ' || shipment_id
