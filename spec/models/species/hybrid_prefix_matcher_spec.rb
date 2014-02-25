@@ -13,6 +13,16 @@ describe Species::TaxonConceptPrefixMatcher do
         }
         specify { subject.results.should include(@hybrid) }
       end
+      context "when trade internal visibility" do
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'Falco hybrid',
+            :ranks => [],
+            :visibility => :trade_internal
+          })
+        }
+        specify { subject.results.should include(@hybrid) }
+      end
       context "when speciesplus visibility" do
         subject {
           Species::TaxonConceptPrefixMatcher.new({
