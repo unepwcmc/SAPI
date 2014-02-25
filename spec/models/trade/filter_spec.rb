@@ -64,6 +64,24 @@ describe Trade::Filter do
         end
       end
     end
+    context "when searching by reported taxon concepts ids" do
+      before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+      context "when trade names shipments present" do
+        before(:each) do
+          @shipment_of_trade_name = create(
+            :shipment,
+            :reported_taxon_concept_id => @trade_name.id,
+            :taxon_concept_id => @taxon_concept2.id
+          )
+        end
+        subject {
+          Trade::Filter.new({
+            :reported_taxon_concepts_ids => [@trade_name.id]
+          }).results
+        }
+        specify { subject.should include(@shipment_of_trade_name) }
+      end
+    end
     context "when searching by appendices" do
       subject { Trade::Filter.new({:appendices => ['I']}).results }
       specify { subject.should include(@shipment1) }
