@@ -6,7 +6,17 @@ class Trade::SearchParams < Hash
   def initialize(params)
     sanitized_params = {
       :taxon_concepts_ids =>
-        params[:taxon_concepts_ids].blank? ? [] : params[:taxon_concepts_ids].sort,
+        if params[:taxon_concepts_ids].blank?
+          []
+        else
+          params[:taxon_concepts_ids].sort
+        end,
+      :reported_taxon_concepts_ids =>
+        if params[:reported_taxon_concepts_ids].blank?
+          []
+        else
+          params[:reported_taxon_concepts_ids].sort
+        end,
       :appendices =>
         params[:appendices].blank? ? [] : params[:appendices].sort,
       :terms_ids => params[:terms_ids].blank? ? [] : params[:terms_ids].sort,
