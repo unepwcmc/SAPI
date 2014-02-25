@@ -19,9 +19,9 @@ SELECT
   taxonomies.name AS taxonomy_name,
   taxonomic_position,
   taxonomy_id
-FROM taxon_concepts
-JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
-INNER JOIN distributions ON distributions.taxon_concept_id = taxon_concepts.id
+FROM distributions
+INNER JOIN taxon_concepts ON distributions.taxon_concept_id = taxon_concepts.id
+INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
 INNER JOIN geo_entities ON geo_entities.id = distributions.geo_entity_id
 INNER JOIN geo_entity_types ON geo_entity_types.id = geo_entities.geo_entity_type_id
 LEFT JOIN distribution_references ON distribution_references.distribution_id = distributions.id
