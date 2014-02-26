@@ -141,7 +141,9 @@ $(document).ready(function(){
         data: params,
         type: 'GET'
       }).then( function (res) {
-        if (res.total > 0) {
+        if (res.total > res.csv_limit){
+          $('#csv-limit-exceeded-error-message').show();
+        } else if (res.total > 0) {
           // There is something to download!
           queryResults.ajax = false;
           queryResults.call(this);

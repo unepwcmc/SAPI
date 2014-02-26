@@ -29,7 +29,7 @@ module Trade::ShipmentReportQueries
     purposes.code AS purpose,
     source_id,
     sources.code AS source
-  FROM (#{@search.query.to_sql}) shipments
+  FROM (#{basic_query.to_sql}) shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
   JOIN ranks
@@ -104,7 +104,7 @@ module Trade::ShipmentReportQueries
     units.name_en AS unit_name_en,
     units.name_es AS unit_name_es,
     units.name_fr AS unit_name_fr
-  FROM (#{@search.query.to_sql}) shipments
+  FROM (#{basic_query.to_sql}) shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
   JOIN ranks

@@ -7,6 +7,8 @@ en:
   errors:
     no_data_1: "Your query has returned no data"
     no_data_2: "Please select other variables or check in the UNEP-WCMC Species Database that you are using the correct spelling/scientific name"
+    csv_limit_exceeded: "Too much data for csv"
+    web_limit_exceeded: "Too much data for web"
   warnings:
     net_trade_1: "Please read carefully:"
     net_trade_2: "Net trade is the result of subtracting a country's re-exports from its imports. Therefore if your data selection involved imports to or exports from specified countries then you cannot calculate net imports or exports."

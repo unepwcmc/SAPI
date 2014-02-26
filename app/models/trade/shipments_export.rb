@@ -1,6 +1,8 @@
 require 'psql_command'
 # Implements "raw" shipments export
 class Trade::ShipmentsExport < Species::CsvExport
+  PUBLIC_CSV_LIMIT = 1000000
+  PUBLIC_WEB_LIMIT = 50000
   include ActiveModel::SerializerSupport
   delegate :report_type, :to => :"@search"
   delegate :page, :to => :"@search"
@@ -27,12 +29,16 @@ class Trade::ShipmentsExport < Species::CsvExport
     query.count
   end
 
+  def basic_query
+    @internal ? @search.query : @search.query_with_limit
+  end
+
   def query
     headers = csv_column_headers
     select_columns = sql_columns.each_with_index.map do |c, i|
       "#{c} AS \"#{headers[i]}\""
     end
-    @search.query.select(select_columns)
+    basic_query.select(select_columns)
   end
 
   def csv_column_headers
