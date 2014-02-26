@@ -337,7 +337,7 @@ puts "#{Language.delete_all} languages deleted"
 puts "#{Reference.delete_all} references deleted"
 puts "#{TradeRestriction.delete_all} trade restrictions deleted"
 
-['trading_partner', 'term_code', 'taxon_name', 'appendix', 'quantity'].each do |col|
+['trading_partner', 'term_code', 'taxon_name', 'appendix', 'quantity', 'year'].each do |col|
   Trade::PresenceValidationRule.create(:column_names => [col], :run_order => 1)
 end
 ['quantity', 'year'].each do |col|
