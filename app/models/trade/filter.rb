@@ -1,13 +1,17 @@
 class Trade::Filter
-  attr_reader :page, :per_page, :query, :report_type
+  attr_reader :page, :per_page, :report_type
   def initialize(options)
     initialize_params(options)
     initialize_query
   end
 
-  def results
+  def query_with_limit
     @query.limit(@per_page).
-      offset(@per_page * (@page - 1)).all
+      offset(@per_page * (@page - 1))
+  end
+
+  def results
+    query_with_limit.all
   end
 
   def total_cnt
