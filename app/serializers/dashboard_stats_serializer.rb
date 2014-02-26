@@ -1,7 +1,7 @@
 class DashboardStatsSerializer < ActiveModel::Serializer
   cached
 
-  attributes :species, :trade
+  attributes :species, :trade, :meta
 
   def cache_key
     key = [

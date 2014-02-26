@@ -4,11 +4,10 @@ class DashboardStats
 
   attr_reader :geo_entity, :kingdom, :trade_limit
 
-  def initialize (iso_code, kingdom, trade_limit)
-    @iso_code = iso_code
-    @kingdom = kingdom || 'Animalia'
-    @trade_limit = trade_limit || 5
-    @geo_entity = GeoEntity.where(:iso_code2 => iso_code).first
+  def initialize (geo_entity, kingdom, trade_limit)
+    @kingdom = kingdom
+    @trade_limit = trade_limit
+    @geo_entity = geo_entity
   end
 
   def get_species_classes taxonomy
@@ -25,10 +24,14 @@ class DashboardStats
     species_results = {}
     [:cites_eu, :cms].each do |taxonomy|
       species_results[taxonomy] = []
-      get_species_classes(taxonomy).each do |species_class|
-        taxonomy_is_cites_eu = taxonomy == :cites_eu ? 't' : 'f'
+      get_species_classes(:cites_eu).each do |species_class|
+        if taxonomy == :cites_eu
+          cites_condition = 'cites_listed IS NOT NULL'
+        else
+          cites_condition = 'cms_listed IS NOT NULL'
+        end
         search = MTaxonConcept.where(
-          "taxonomy_is_cites_eu = '#{taxonomy_is_cites_eu}'
+          "#{cites_condition}
           AND class_name = '#{species_class[:name]}'
           AND countries_ids_ary && ARRAY[#{@geo_entity.id}]")
         result = { 
@@ -49,18 +52,42 @@ class DashboardStats
     trade_results
   end
 
+  def meta 
+    {
+      :trade => {   
+        :country_of_origin_id => nil,
+        :term => "LIV",
+        :unit => nil,
+        :source => "W"
+      },
+      :species => {
+        :cites_listed => 'IS NOT NULL'
+      }
+    }
+  end
+
   private
 
   def get_trade_stats trade_type
     hash = {:top_traded => []}
     geo_id = trade_type == "exports" ? :exporter_id : :importer_id
     totals = Trade::ShipmentView.where(
-      geo_id => @geo_entity.id
+      geo_id => @geo_entity.id,
+      :country_of_origin_id => nil,
+      :term => "LIV",
+      :unit => nil,
+      :source => "W"
     ).count
     hash[:totals] = totals
     tops = Trade::ShipmentView.
-      select("taxon_concept_id, count(*) as count_all").
-      where(geo_id => @geo_entity.id).
+      select("taxon_concept_id, sum(quantity) as count_all").
+      where(
+        geo_id => @geo_entity.id,
+        :country_of_origin_id => nil,
+        :term => "LIV",
+        :unit => nil,
+        :source => "W"
+      ).
       group(:taxon_concept_id).
       order("count_all desc").
       limit(@trade_limit)

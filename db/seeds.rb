@@ -417,7 +417,8 @@ Trade::InclusionValidationRule.create(
   :column_names => ['taxon_concept_id', 'country_of_origin'],
   :valid_values_view => 'valid_taxon_concept_country_of_origin_view',
   :run_order => 4,
-  :is_primary => false
+  :is_primary => false,
+  :is_strict => true
 )
 Trade::InclusionValidationRule.create(
   :scope => {

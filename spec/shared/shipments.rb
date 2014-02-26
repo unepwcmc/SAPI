@@ -19,6 +19,36 @@ shared_context 'Shipments' do
       :parent => @genus2
     )
 
+    @subspecies = create_cites_eu_subspecies(
+      :parent => @taxon_concept1
+    )
+    @synonym_subspecies = create_cites_eu_subspecies(
+      :parent => @taxon_concept1,
+      :name_status => 'S'
+    )
+    create(
+      :taxon_relationship,
+      :taxon_concept => @taxon_concept2,
+      :other_taxon_concept => @synonym_subspecies,
+      :taxon_relationship_type => create(
+        :taxon_relationship_type,
+        :name => TaxonRelationshipType::HAS_SYNONYM
+      )
+    )
+
+    @trade_name = create_cites_eu_species(
+      :name_status => 'T'
+    )
+    create(
+      :taxon_relationship,
+      :taxon_concept => @taxon_concept2,
+      :other_taxon_concept => @trade_name,
+      :taxon_relationship_type => create(
+        :taxon_relationship_type,
+        :name => TaxonRelationshipType::HAS_TRADE_NAME
+      )
+    )
+
     country = create(:geo_entity_type, :name => 'COUNTRY')
     @argentina = create(:geo_entity,
                         :geo_entity_type => country,
@@ -33,6 +63,7 @@ shared_context 'Shipments' do
                       )
 
     @term = create(:term, :code => 'CAV')
+    @term2 = create(:term, :code => 'LIV')
     @unit = create(:unit, :code => 'KIL')
     @purpose = create(:purpose, :code => 'T')
     @source = create(:source, :code => 'W')
@@ -71,6 +102,36 @@ shared_context 'Shipments' do
       :year => 2013,
       :reported_by_exporter => false,
       :quantity => 10
+    )
+    @shipment3 = create(
+      :shipment,
+      :taxon_concept => @taxon_concept2,
+      :appendix => 'II',
+      :purpose => @purpose,
+      :source => @source,
+      :term => @term2,
+      :unit => nil,
+      :importer => @portugal,
+      :exporter => @argentina,
+      :country_of_origin => nil,
+      :year => 2013,
+      :reported_by_exporter => false,
+      :quantity => 10
+    )
+    @shipment4 = create(
+      :shipment,
+      :taxon_concept => @taxon_concept2,
+      :appendix => 'II',
+      :purpose => @purpose,
+      :source => @source,
+      :term => @term2,
+      :unit => nil,
+      :importer => @portugal,
+      :exporter => @argentina,
+      :country_of_origin => nil,
+      :year => 2013,
+      :reported_by_exporter => false,
+      :quantity => 50
     )
   end
 end

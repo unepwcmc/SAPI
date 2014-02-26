@@ -1,4 +1,4 @@
-class Trade::SandboxShipmentsController < ApplicationController
+class Trade::SandboxShipmentsController < TradeController
   respond_to :json
 
   def index

@@ -132,7 +132,7 @@ $(document).ready(function(){
   function queryResults () {
     var href, inputs, values, params, $link;
     if (queryResults.ajax) {
-      href = '/trade/exports/download.json';
+      href = '/cites_trade/exports/download.json';
       values = parseInputs($('#form_expert :input'));
       params = $.param({'filters': values});
       $.ajax({
@@ -543,7 +543,7 @@ $(document).ready(function(){
           data: {
             taxonomy: 'CITES',
             taxon_concept_query: term,
-            'ranks[]': 'SPECIES',
+            'ranks[]': 'SPECIES,SUBSPECIES,VARIETY',
             visibility: 'trade'
           },
           success: function(data) {
@@ -662,7 +662,7 @@ $(document).ready(function(){
   // Download page specific:
 
   function displayResults (q) {
-    var table_view_title, formURL = '/trade/shipments',
+    var table_view_title, formURL = '/cites_trade/shipments',
       data_headers, data_rows, table_tmpl, 
       comptab_regex = /comptab/, 
       gross_net_regex = /(gross_exports|gross_imports|net_exports|net_imports)/;
@@ -699,7 +699,7 @@ $(document).ready(function(){
 
   function downloadResults (q) {
     var $link = $('#download_genie'),
-      href = '/trade/exports/download?' + q;
+      href = '/cites_trade/exports/download?' + q;
     $link.attr('href', href).click();
     window.location.href = $link.attr("href");
   }

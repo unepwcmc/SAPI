@@ -36,6 +36,7 @@
 /public/downloads/checklist/*.csv
 /public/downloads/checklist/*.json
 /public/downloads/taxon_concepts_names/*.csv
+/public/downloads/taxon_concepts_distributions/*.csv
 /public/downloads/shipments/*.csv
 /public/downloads/comptab/*.csv
 /public/downloads/gross_exports/*.csv

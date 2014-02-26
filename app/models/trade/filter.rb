@@ -1,5 +1,5 @@
 class Trade::Filter
-  attr_reader :page, :per_page, :query
+  attr_reader :page, :per_page, :query, :report_type
   def initialize(options)
     initialize_params(options)
     initialize_query
@@ -25,10 +25,23 @@ class Trade::Filter
     @query = Trade::Shipment.order('year DESC').
       preload(:taxon_concept) #includes would override the select clause
 
-    # Id's (array)
+    ancestor_ranks = Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
     unless @taxon_concepts_ids.empty?
-      taxa = MTaxonConceptFilterByIdWithDescendants.new(nil, @taxon_concepts_ids).relation
-      @query = @query.where(:taxon_concept_id => taxa.select(:id).map(&:id))
+      taxa = MTaxonConceptFilterByIdWithDescendants.new(
+        nil, @taxon_concepts_ids
+      ).relation(ancestor_ranks)
+      @query = @query.where(
+        :taxon_concept_id => taxa.select(:id).map(&:id)
+      )
+    end
+
+    unless @reported_taxon_concepts_ids.empty?
+      taxa = MTaxonConceptFilterByIdWithDescendants.new(
+        nil, @reported_taxon_concepts_ids
+      ).relation(ancestor_ranks)
+      @query = @query.where(
+        :reported_taxon_concept_id => taxa.select(:id).map(&:id)
+      )
     end
 
     unless @appendices.empty?
