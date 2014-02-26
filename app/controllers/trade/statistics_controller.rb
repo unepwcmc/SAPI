@@ -1,4 +1,4 @@
-class Trade::StatisticsController < ApplicationController
+class Trade::StatisticsController < TradeController
   layout 'admin'
 
   def index

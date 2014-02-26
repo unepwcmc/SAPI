@@ -2,6 +2,9 @@ require 'psql_command'
 # Implements "raw" shipments export
 class Trade::ShipmentsExport < Species::CsvExport
   include ActiveModel::SerializerSupport
+  delegate :report_type, :to => :"@search"
+  delegate :page, :to => :"@search"
+  delegate :per_page, :to => :"@search"
 
   def initialize(filters)
     @filters = filters
@@ -49,7 +52,7 @@ private
   end
 
   def internal?
-    @filters['internal'] == "true"
+    @filters[:internal]
   end
 
   def resource_name
