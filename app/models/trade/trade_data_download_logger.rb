@@ -3,8 +3,6 @@ module Trade::TradeDataDownloadLogger
   module_function
 
   def log_download request, params, rows
-
-    if params['filters']['internal'] == "true" then return end
     data = {}
     # !! Not all the params can be sanitized with Trade::SearchParams.sanitize
     filters = Trade::SearchParams.sanitize(params['filters'])

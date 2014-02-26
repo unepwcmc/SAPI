@@ -1,4 +1,4 @@
-class Trade::AnnualReportUploadsController < ApplicationController
+class Trade::AnnualReportUploadsController < TradeController
   respond_to :json
 
   def index

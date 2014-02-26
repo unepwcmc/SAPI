@@ -1,5 +1,4 @@
-class Trade::EmberController < ApplicationController
-  layout 'trade'
+class Trade::EmberController < TradeController
   def start
   end
 end
