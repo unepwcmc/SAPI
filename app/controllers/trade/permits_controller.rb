@@ -1,4 +1,4 @@
-class Trade::PermitsController < ApplicationController
+class Trade::PermitsController < TradeController
   caches_action :index, :cache_path => Proc.new { |c| c.params }
   cache_sweeper :permit_sweeper
 
