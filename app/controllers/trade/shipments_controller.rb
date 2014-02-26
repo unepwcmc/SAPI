@@ -1,40 +1,11 @@
-class Trade::ShipmentsController < ApplicationController
+class Trade::ShipmentsController < TradeController
   respond_to :json
 
   def index
-    if params[:filters] # public, maybe improve this check
-      case params[:filters][:report_type]
-        when "gross_exports"
-          @search = Trade::ShipmentsGrossExportsExport.new(params[:filters])
-          render :json => @search,
-            :serializer => Trade::ShipmentGrossNetExportSerializer
-        when "gross_imports"
-          @search = Trade::ShipmentsGrossImportsExport.new(params[:filters])
-          render :json => @search,
-            :serializer => Trade::ShipmentGrossNetExportSerializer
-        when "net_exports"
-          @search = Trade::ShipmentsNetExportsExport.new(params[:filters])
-          render :json => @search,
-            :serializer => Trade::ShipmentGrossNetExportSerializer
-        when "net_imports"
-          @search = Trade::ShipmentsNetImportsExport.new(params[:filters])
-          render :json => @search,
-            :serializer => Trade::ShipmentGrossNetExportSerializer
-        else # default to comptab
-          @search = Trade::ShipmentsComptabExport.new(params[:filters])
-          render :json => @search,
-            :serializer => Trade::ShipmentComptabExportSerializer
-        end
-    else #TODO check user permissions, admin only
-      @search = Trade::Filter.new(params.merge({:internal => true, :report_type => :raw}))
-      render :json => @search.results,
-        :each_serializer => Trade::ShipmentSerializer,
-        :meta => {
-          :total => @search.total_cnt,
-          :page => @search.page,
-          :per_page => @search.per_page
-        }
-    end
+    @search = Trade::Filter.new(search_params)
+    render :json => @search.results,
+      :each_serializer => Trade::ShipmentSerializer,
+      :meta => metadata_for_search(@search)
   end
 
   def create
