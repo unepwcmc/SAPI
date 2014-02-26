@@ -31,8 +31,9 @@ class Trade::SandboxShipmentsController < TradeController
   def update_batch
     aru = Trade::AnnualReportUpload.find(params[:annual_report_upload_id])
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
+    debugger
     sandbox_klass.update_batch(
-      update_batch_params[:updates], update_batch_params[:filters]
+      update_batch_params[:updates], update_batch_params[:sandbox_shipments_ids]
     )
     head :no_content
   end
@@ -40,7 +41,7 @@ class Trade::SandboxShipmentsController < TradeController
   def destroy_batch
     aru = Trade::AnnualReportUpload.find(params[:annual_report_upload_id])
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
-    sandbox_klass.destroy_batch(destroy_batch_params[:filters])
+    sandbox_klass.destroy_batch(destroy_batch_params)
     head :no_content
   end
 
@@ -51,13 +52,13 @@ private
   end
 
   def destroy_batch_params
-    params.permit(:filters => sandbox_shipment_attributes)
+    params.permit(:sandbox_shipments_ids)
   end
 
   def update_batch_params
     params.permit(
-      :filters => sandbox_shipment_attributes,
-      :updates => sandbox_shipment_attributes
+      :sandbox_shipments_ids,
+      { :updates => sandbox_shipment_attributes }
     )
   end
 
