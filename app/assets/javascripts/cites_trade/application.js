@@ -559,12 +559,19 @@ $(document).ready(function(){
         selected_taxa = ui.item.value;
     		$('#species_out').text(ui.item.label);
     		return false;
-    	}
+    	},
+      close: function( event, ui ) {
+        $(this).val('');
+      }
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
       return $( "<li>" )
         .append( "<a>" + item.drop_label + "</a>" )
         .appendTo( ul );
       };
+
+    $("#taxon_search").blur(function(e){
+      $(this).val('');
+    });
   }
 
   //Autocomplete for cites_genus
