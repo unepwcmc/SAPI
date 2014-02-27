@@ -3,22 +3,22 @@ class CitesTradeController < ApplicationController
   private
 
   def search_params
-    (params[:filters] && params[:filters].permit(
-      :taxon_concepts_ids,
-      :appendices,
-      :terms_ids,
-      :units_ids,
-      :purposes_ids,
-      :sources_ids,
-      :importers_ids,
-      :exporters_ids,
-      :countries_of_origin_ids,
+    (params[:filters] || params).permit(
+      {:taxon_concepts_ids => []},
+      {:appendices => []},
+      {:terms_ids => []},
+      {:units_ids => []},
+      {:purposes_ids => []},
+      {:sources_ids => []},
+      {:importers_ids => []},
+      {:exporters_ids => []},
+      {:countries_of_origin_ids => []},
       :time_range_start,
       :time_range_end,
       :report_type,
       :page,
       :csv_separator
-    ) || {}).merge({
+    ).merge({
       :report_type => if params[:filters] && params[:filters][:report_type] &&
         Trade::ShipmentsExportFactory.public_report_types &
         [report_type = params[:filters][:report_type].downcase.strip.to_sym]
