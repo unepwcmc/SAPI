@@ -128,19 +128,30 @@ $(document).ready(function(){
     values['report_type'] = 'raw';
     return values;
   }
-  
+
+  function getParamsFromInputs(){
+    var values = parseInputs($('#form_expert :input'));
+    return $.param({'filters': values});
+  }
+
+  function getParamsFromURI(){
+    return decodeURIComponent( location.search.substr(1) );
+  }
+
+  function getResultsCount(params){
+    var href = '/cites_trade/exports/download.json';
+    return $.ajax({
+      url: href,
+      dataType: 'json',
+      data: params,
+      type: 'GET'
+    });
+  }
+
   function queryResults () {
-    var href, inputs, values, params, $link;
+    var href, values, params, $link;
     if (queryResults.ajax) {
-      href = '/cites_trade/exports/download.json';
-      values = parseInputs($('#form_expert :input'));
-      params = $.param({'filters': values});
-      $.ajax({
-        url: href,
-        dataType: 'json',
-        data: params,
-        type: 'GET'
-      }).then( function (res) {
+      getResultsCount(getParamsFromInputs()).then( function (res) {
         if (res.total > res.csv_limit){
           $('#csv-limit-exceeded-error-message').show();
         } else if (res.total > 0) {
@@ -670,6 +681,18 @@ $(document).ready(function(){
   //////////////////////////
   // Download page specific:
 
+  initOutputType = function(data) {
+    if (data.total > data.web_limit){
+      $('#web-limit-exceeded-error-message').show();
+      $('input[value=csv]').attr('checked', 'checked');
+      $('input[name=outputType]').attr("disabled",true);
+    }
+  }
+
+  if (is_download_page) {
+    getResultsCount(getParamsFromURI()).then(initOutputType, ajaxFail);
+  }
+
   function displayResults (q) {
     var table_view_title, formURL = '/cites_trade/shipments',
       data_headers, data_rows, table_tmpl, 
@@ -767,8 +790,7 @@ $(document).ready(function(){
     });
     if (!l && is_view_results_page) {
       // It is time to show these tables!
-      query = decodeURIComponent( location.search.substr(1) );
-      displayResults(query);
+      displayResults(getParamsFromURI());
     }
   }
 
