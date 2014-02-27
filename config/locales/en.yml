@@ -7,8 +7,10 @@ en:
   errors:
     no_data_1: "Your query has returned no data"
     no_data_2: "Please select other variables or check in the UNEP-WCMC Species Database that you are using the correct spelling/scientific name"
-    csv_limit_exceeded: "Too much data for csv"
-    web_limit_exceeded: "Too much data for web"
+    csv_limit_exceeded_1: "Your query has returned too large a subset"
+    csv_limit_exceeded_2: "You must limit the year range and select at least one import/export country or one taxon"
+    web_limit_exceeded_1: "Your query has returned too large a subset to display online"
+    web_limit_exceeded_2: "You can download the results in CSV format"
   warnings:
     net_trade_1: "Please read carefully:"
     net_trade_2: "Net trade is the result of subtracting a country's re-exports from its imports. Therefore if your data selection involved imports to or exports from specified countries then you cannot calculate net imports or exports."
