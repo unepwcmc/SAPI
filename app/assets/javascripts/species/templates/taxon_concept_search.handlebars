@@ -1,6 +1,7 @@
 <form action="#" class="search">
   <fieldset>
     {{view Species.TaxonConceptSearchTextField
+      valueBinding="controller.taxonConceptQuery"
       queryBinding="controller.taxonConceptQuery"
       id="scientific_name"
       title="search"
