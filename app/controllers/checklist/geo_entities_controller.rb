@@ -7,7 +7,8 @@ class Checklist::GeoEntitiesController < ApplicationController
 
   #override the serializer by using render :text, old ember-data won't handle json root
   def index
-    geo_entity_types = if params[:geo_entity_types_set]
+    geo_entity_types = if params[:geo_entity_types_set] &&
+      GeoEntityType::SETS.has_key?(params[:geo_entity_types_set])
                          GeoEntityType::SETS[params[:geo_entity_types_set]]
                        else
                          GeoEntityType::SETS[GeoEntityType::DEFAULT_SET]
