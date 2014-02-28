@@ -6,7 +6,8 @@ class Api::V1::GeoEntitiesController < ApplicationController
 
   def index
     locale = params['locale'] || I18n.locale
-    geo_entity_types = if params[:geo_entity_types_set]
+    geo_entity_types = if params[:geo_entity_types_set] &&
+      GeoEntityType::SETS.has_key?(params[:geo_entity_types_set])
                          GeoEntityType::SETS[params[:geo_entity_types_set]]
                        else
                          GeoEntityType::SETS[GeoEntityType::DEFAULT_SET]
