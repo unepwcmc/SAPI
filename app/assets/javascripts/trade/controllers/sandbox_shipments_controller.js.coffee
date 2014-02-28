@@ -71,7 +71,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
         valuesToUpdate = {}
         annualReportUploadId = @get('controllers.annualReportUpload.id')
         @get('columns').forEach (columnName) =>
-          el = $('.sandbox-form').find("select[name=#{columnName}],input[type=text][name=#{columnName}]")
+          el = $('.sandbox-form').find("select[name=#{columnName}],input[type=text][name=#{columnName}],input[type=hidden][name=#{columnName}]")
           blank = $('.sandbox-form')
             .find("input[type=checkbox][name=#{columnName}]:checked")
           valuesToUpdate[columnName] = el.val() if el && el.val()
