@@ -1,6 +1,6 @@
 module Trade::ShipmentReportQueries
 
-  def comptab_query
+  def comptab_query(options)
   "SELECT
     year,
     appendix,
@@ -29,7 +29,7 @@ module Trade::ShipmentReportQueries
     purposes.code AS purpose,
     source_id,
     sources.code AS source
-  FROM (#{basic_query.to_sql}) shipments
+  FROM (#{basic_query(options).to_sql}) shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
   JOIN ranks
@@ -80,7 +80,7 @@ module Trade::ShipmentReportQueries
   # this query is the basis of all gross / net reports,
   # which perform further groupings
   # it is an envelope for the shipments query
-  def gross_net_query
+  def gross_net_query(options)
   "SELECT
     year,
     appendix,
@@ -104,7 +104,7 @@ module Trade::ShipmentReportQueries
     units.name_en AS unit_name_en,
     units.name_es AS unit_name_es,
     units.name_fr AS unit_name_fr
-  FROM (#{basic_query.to_sql}) shipments
+  FROM (#{basic_query(options).to_sql}) shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
   JOIN ranks
@@ -145,9 +145,9 @@ module Trade::ShipmentReportQueries
     terms.name_fr"
   end
 
-  def gross_exports_query
+  def gross_exports_query(options)
   "WITH gross_net_subquery AS (
-    #{gross_net_query}
+    #{gross_net_query(options)}
   )
   #{gross_exports_subquery}"
   end
@@ -191,9 +191,9 @@ module Trade::ShipmentReportQueries
     exporter"
   end
 
-  def gross_imports_query
+  def gross_imports_query(options)
   "WITH gross_net_subquery AS (
-    #{gross_net_query}
+    #{gross_net_query(options)}
   )
   #{gross_imports_subquery}"
   end
@@ -237,11 +237,11 @@ module Trade::ShipmentReportQueries
     importer"
   end
 
-  def net_exports_query
+  def net_exports_query(options)
   "WITH exports AS (
-    #{gross_exports_query}
+    #{gross_exports_query(options)}
   ), imports AS (
-    #{gross_imports_query}
+    #{gross_imports_query(options)}
   )
   #{net_exports_subquery}"
   end
@@ -281,11 +281,11 @@ module Trade::ShipmentReportQueries
   WHERE (exports.gross_quantity - COALESCE(imports.gross_quantity, 0)) > 0"
   end
 
-  def net_imports_query
+  def net_imports_query(options)
   "WITH exports AS (
-    #{gross_exports_query}
+    #{gross_exports_query(options)}
   ), imports AS (
-    #{gross_imports_query}
+    #{gross_imports_query(options)}
   )
   #{net_imports_subquery}"
   end
