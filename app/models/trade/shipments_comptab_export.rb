@@ -3,25 +3,25 @@ class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
   include Trade::ShipmentReportQueries
 
   def total_cnt
-    query.ntuples
+    ActiveRecord::Base.connection.execute(query_sql(:limit => false)).ntuples
   end
 
   def query
-    ActiveRecord::Base.connection.execute(query_sql)
+    ActiveRecord::Base.connection.execute(query_sql(:limit => true))
   end
 
 private
 
-  def query_sql
+  def query_sql(options)
     headers = csv_column_headers
     select_columns = sql_columns.each_with_index.map do |c, i|
       "#{c} AS \"#{headers[i]}\""
     end
-    "SELECT #{select_columns.join(', ')} FROM (#{subquery_sql}) subquery"
+    "SELECT #{select_columns.join(', ')} FROM (#{subquery_sql(options)}) subquery"
   end
 
-  def subquery_sql
-    comptab_query
+  def subquery_sql(options)
+    comptab_query(options)
   end
 
   def resource_name

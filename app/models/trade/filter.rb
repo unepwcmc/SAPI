@@ -1,5 +1,5 @@
 class Trade::Filter
-  attr_reader :page, :per_page, :report_type
+  attr_reader :page, :per_page, :query, :report_type, :options
   def initialize(options)
     initialize_params(options)
     initialize_query

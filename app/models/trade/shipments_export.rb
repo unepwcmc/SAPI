@@ -9,8 +9,8 @@ class Trade::ShipmentsExport < Species::CsvExport
   delegate :per_page, :to => :"@search"
 
   def initialize(filters)
-    @filters = filters
-    @search = Trade::Filter.new(@filters)
+    @search = Trade::Filter.new(filters)
+    @filters = @search.options
   end
 
   def export
@@ -26,11 +26,11 @@ class Trade::ShipmentsExport < Species::CsvExport
   end
 
   def total_cnt
-    query.count
+    basic_query(:limit => false).count
   end
 
-  def basic_query
-    @internal ? @search.query : @search.query_with_limit
+  def basic_query(options)
+    options[:limit] ? @search.query_with_limit : @search.query
   end
 
   def query
@@ -38,7 +38,7 @@ class Trade::ShipmentsExport < Species::CsvExport
     select_columns = sql_columns.each_with_index.map do |c, i|
       "#{c} AS \"#{headers[i]}\""
     end
-    basic_query.select(select_columns)
+    basic_query(:limit => true).select(select_columns)
   end
 
   def csv_column_headers
@@ -69,10 +69,10 @@ private
     "trade_shipments_view"
   end
 
-  def copy_stmt(query)
+  def copy_stmt
     # escape quotes around attributes for psql
     sql = <<-PSQL
-      \\COPY (#{query_sql.gsub(/"/,"\\\"")})
+      \\COPY (#{query_sql(:limit => !@internal).gsub(/"/,"\\\"")})
       TO ?
       WITH DELIMITER '#{csv_separator}'
       ENCODING 'latin1'
@@ -82,7 +82,7 @@ private
   end
 
   def to_csv
-    PsqlCommand.new(copy_stmt(query)).execute
+    PsqlCommand.new(copy_stmt).execute
   end
 
   def available_columns
