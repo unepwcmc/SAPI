@@ -138,6 +138,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
     updateShipment: (shipment) ->
       shipment.setProperties({'_modified': true})
       @set('currentShipment', null)
+      @get("controllers.annualReportUpload").set("currentError", null)
       $('.shipment-form-modal').modal('hide')
 
     deleteShipment: (shipment) ->
