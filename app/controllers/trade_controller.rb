@@ -28,7 +28,7 @@ class TradeController < ApplicationController
       :internal,
       :page,
       :csv_separator
-    ).merge({:internal => true, :report_type => :raw})
+    ).merge({:internal => true})
   end
 
 end
