@@ -31,7 +31,6 @@ class Trade::SandboxShipmentsController < TradeController
   def update_batch
     aru = Trade::AnnualReportUpload.find(params[:annual_report_upload_id])
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
-    debugger
     sandbox_klass.update_batch(
       update_batch_params[:updates], update_batch_params[:sandbox_shipments_ids]
     )
