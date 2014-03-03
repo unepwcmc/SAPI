@@ -66,7 +66,9 @@ shared_context 'Shipments' do
     @term2 = create(:term, :code => 'LIV')
     @unit = create(:unit, :code => 'KIL')
     @purpose = create(:purpose, :code => 'T')
-    @source = create(:source, :code => 'W')
+    @source = create(:source, :code => 'C')
+    @source_wild = create(:source, :code => 'W')
+    @source_unknown = create(:source, :code => 'U')
     @import_permit = create(:permit, :number => 'AAA')
     @export_permit1 = create(:permit, :number => 'BBB')
     @export_permit2 = create(:permit, :number => 'CCC')
@@ -93,7 +95,7 @@ shared_context 'Shipments' do
       :taxon_concept => @taxon_concept2,
       :appendix => 'II',
       :purpose => @purpose,
-      :source => @source,
+      :source => @source_wild,
       :term => @term,
       :unit => @unit,
       :importer => @portugal,
@@ -108,7 +110,7 @@ shared_context 'Shipments' do
       :taxon_concept => @taxon_concept2,
       :appendix => 'II',
       :purpose => @purpose,
-      :source => @source,
+      :source => @source_unknown,
       :term => @term2,
       :unit => nil,
       :importer => @portugal,
@@ -123,7 +125,7 @@ shared_context 'Shipments' do
       :taxon_concept => @taxon_concept2,
       :appendix => 'II',
       :purpose => @purpose,
-      :source => @source,
+      :source => nil,
       :term => @term2,
       :unit => nil,
       :importer => @portugal,

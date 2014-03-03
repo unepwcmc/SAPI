@@ -81,6 +81,11 @@ class Trade::Filter
     end
 
     if !@sources_ids.empty?
+      w_and_u = Source.where(:code => ['W', 'U']).map(&:id)
+      unless (@sources_ids & w_and_u).empty?
+        @sources_ids = (@sources_ids + w_and_u).uniq
+        @source_blank = true
+      end
       local_field = "source_id"
       blank_query = @source_blank ? "OR source_id IS NULL" : ""
       @query = @query.where("#{local_field} IN (?) #{blank_query}", @sources_ids)

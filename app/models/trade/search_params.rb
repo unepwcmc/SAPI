@@ -82,6 +82,7 @@ class Trade::SearchParams < Hash
       rescue ArgumentError, TypeError
         sanitized_params[integer_array_param] = []
       end
+      sanitized_params[integer_array_param] = sanitized_params[integer_array_param].map(&:to_i)
     end
     super(sanitized_params)
     self.merge!(sanitized_params)
