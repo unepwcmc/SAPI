@@ -3,7 +3,7 @@ es:
   cites_sub_title: "Por favor introduzca sus criterios de búsqueda más abajo"
   errors:
     no_data_1: "Su consulta ha devuelto ningún dato"
-    no_data_2: "Por favor selecciona otras variables o verifica en la Base de Datos de Especies UNEP-WCMC que está utilizando la ortografía/el nombre correctos"
+    no_data_2: "Por favor selecciona otras variables"
     csv_limit_exceeded_1: "Su búsqueda ha encontrado un subconjunto demasiado grande"
     csv_limit_exceeded_2: "Debe limitar el rango de años y seleccionar al menos un país de importación/exportación o un taxón"
     #web_limit_exceeded_1: "Your query has returned too large a subset to display online"

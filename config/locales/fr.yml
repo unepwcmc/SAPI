@@ -3,7 +3,7 @@ fr:
   cites_sub_title: "S'il vous plaît entrer votre recherche ci-dessous"
   errors:
     no_data_1: "Votre recherche n'a retourné aucune donnée"
-    no_data_2: "S'il vous plaît sélectionner autres variables ou vérifier dans la Base de Données des Espèces UNEP-WCMC que vous utilisez l'orthographe/nom scientifique corrects"
+    no_data_2: "S'il vous plaît sélectionner autres variables"
     csv_limit_exceeded_1: "Votre recherche a retourné un sous-ensemble trop grand"
     csv_limit_exceeded_2: "Vous devez limiter la gamme des années et selectionner au moins un pays importateur/exportateur ou un taxon"
     #web_limit_exceeded_1: "Your query has returned too large a subset to display online"
