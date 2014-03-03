@@ -1,4 +1,4 @@
-Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, Trade.Flash,
+Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes', 'sandboxShipments']
   content: null
   visibleShipments: []
