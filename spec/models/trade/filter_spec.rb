@@ -110,11 +110,27 @@ describe Trade::Filter do
 
 
     context "when searching for sources_ids" do
-      subject { Trade::Filter.new({:sources_ids => [@source.id]}).results }
-      specify { subject.should include(@shipment1) }
-      specify { subject.length.should == 4 }
+      context "when code" do
+        subject { Trade::Filter.new({:sources_ids => [@source.id]}).results }
+        specify { subject.should include(@shipment1) }
+        specify { subject.length.should == 1 }
+      end
+      context "when blank" do
+        subject { Trade::Filter.new({:source_blank => true}).results }
+        specify { subject.should include(@shipment4) }
+        specify { subject.length.should == 1 }
+      end
+      context "when both code and blank" do
+        subject { Trade::Filter.new({:sources_ids => [@source.id], :source_blank => true}).results }
+        specify { subject.should include(@shipment1) }
+        specify { subject.length.should == 2 }
+      end
+      context "when wild" do
+        subject { Trade::Filter.new({:sources_ids => [@source_wild.id], :source_blank => true}).results }
+        specify { subject.should include(@shipment3) }
+        specify { subject.length.should == 3 }
+      end
     end
-
 
     context "when searching for importers_ids" do
       subject { Trade::Filter.new({:importers_ids => [@argentina.id]}).results }
