@@ -85,9 +85,8 @@ class DashboardStats
         geo_id => @geo_entity.id,
         :country_of_origin_id => nil,
         :term => "LIV",
-        :unit => nil,
-        :source => "W"
-      ).
+        :unit => nil
+      ).where("source IN ('W', 'U') OR source IS NULL").
       group(:taxon_concept_id).
       order("count_all desc").
       limit(@trade_limit)
