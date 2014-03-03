@@ -20,19 +20,18 @@ Trade.ValidationErrorsView = Ember.CollectionView.extend
 
   errorHasChanged: ( ->
     @_updateErrorDisplay()
-  ).observes('controller.errorMessage')
+  ).observes('controller.currentError')
 
   _updateErrorDisplay: ->
     $error_button = $('#toggle-errors')
     # When there is no error message on the annual report controller, then
     # the page has not transitioned to a sandbox shipments yet, so all 
     # errors are shown. Well yes, it does sound a bit messy... any ideas?
-    if @controller.get('errorMessage').length == 0
-      $(".collapse").collapse('show')
-      $error_button.text(@hideMessage)
+    if @get('controller.currentError')
+      $(".collapse").collapse('hide')
+      $error_button.text(@showMessage)
     # The page has transitioned to sandbox_shipments and this will set an 
     # error message on the parent controller. 
     else
-      $(".collapse").collapse('hide')
-      $error_button.text(@showMessage)
-
+      $(".collapse").collapse('show')
+      $error_button.text(@hideMessage)
