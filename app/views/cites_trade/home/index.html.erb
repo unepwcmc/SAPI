@@ -12,7 +12,16 @@
       <!--Error message -->
       <div class="grid_8">
 
-        <div style="text-align: left; color:#FF0000; font-weight:bold; display:none;" id="search-error-message"><%= t('errors.no_data_1') %>.<br><%= t('errors.no_data_2') %>.</font></div>
+        <div style="text-align: left; color:#FF0000; font-weight:bold; display:none;"
+          id="search-error-message">
+          <%= t('errors.no_data_1') %>.<br><%= t('errors.no_data_2') %>.
+        </div>
+
+        <div style="text-align: left; color:#FF0000; font-weight:bold; display:none;"
+          id="csv-limit-exceeded-error-message">
+          <%= t('errors.csv_limit_exceeded_1') %>.<br>
+          <%= t('errors.csv_limit_exceeded_2') %>.
+        </div>
 
       </div>
       <hr class="space">
