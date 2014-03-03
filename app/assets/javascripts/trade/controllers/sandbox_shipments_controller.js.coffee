@@ -85,6 +85,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
           }
         ).success( (data, textStatus, jqXHR) =>
           @flashSuccess(message: 'Successfully updated shipments.', persists: true)
+          @get("controllers.annualReportUpload").set("currentError", null)
         ).error( (jqXHR, textStatus, errorThrown) =>
           @flashError(message: errorThrown, persists: true)
         ).complete( (jqXHR, textStatus) =>
@@ -102,6 +103,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
           }
         ).success( (data, textStatus, jqXHR) =>
           @flashSuccess(message: 'Successfully destroyed shipments.', persists: true)
+          @get("controllers.annualReportUpload").set("currentError", null)
         ).error( (jqXHR, textStatus, errorThrown) =>
           @flashError(message: errorThrown, persists: true)
         ).complete( (jqXHR, textStatus) =>
