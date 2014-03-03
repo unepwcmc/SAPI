@@ -110,7 +110,7 @@ shared_context 'Shipments' do
       :taxon_concept => @taxon_concept2,
       :appendix => 'II',
       :purpose => @purpose,
-      :source => @source_unknown,
+      :source => @source_wild,
       :term => @term2,
       :unit => nil,
       :importer => @portugal,
@@ -121,6 +121,36 @@ shared_context 'Shipments' do
       :quantity => 10
     )
     @shipment4 = create(
+      :shipment,
+      :taxon_concept => @taxon_concept2,
+      :appendix => 'II',
+      :purpose => @purpose,
+      :source => @source_wild,
+      :term => @term2,
+      :unit => nil,
+      :importer => @portugal,
+      :exporter => @argentina,
+      :country_of_origin => nil,
+      :year => 2013,
+      :reported_by_exporter => false,
+      :quantity => 50
+    )
+    @shipment5 = create(
+      :shipment,
+      :taxon_concept => @taxon_concept2,
+      :appendix => 'II',
+      :purpose => @purpose,
+      :source => @source_unknown,
+      :term => @term2,
+      :unit => nil,
+      :importer => @portugal,
+      :exporter => @argentina,
+      :country_of_origin => nil,
+      :year => 2013,
+      :reported_by_exporter => false,
+      :quantity => 10
+    )
+    @shipment6 = create(
       :shipment,
       :taxon_concept => @taxon_concept2,
       :appendix => 'II',

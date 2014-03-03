@@ -6,7 +6,7 @@ describe CitesTrade::ShipmentsController do
   describe "GET index" do
     it "should return all comptab shipments" do
       get :index, format: :json
-      response.body.should have_json_size(4).at_path('shipment_comptab_export/rows')
+      response.body.should have_json_size(5).at_path('shipment_comptab_export/rows')
     end
     it "should return all gross_exports shipments" do
       get :index, filters: {

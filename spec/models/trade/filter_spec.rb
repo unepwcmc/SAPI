@@ -15,7 +15,7 @@ describe Trade::Filter do
         subject { Trade::Filter.new({:taxon_concepts_ids => [@family.id]}).results }
         specify { subject.should include(@shipment1) }
         specify { subject.should include(@shipment2) }
-        specify { subject.length.should == 4 }
+        specify { subject.length.should == 6 }
       end
       context "at mixed ranks" do
         subject {
@@ -25,7 +25,7 @@ describe Trade::Filter do
         }
         specify { subject.should include(@shipment1) }
         specify { subject.should include(@shipment2) }
-        specify { subject.length.should == 4 }
+        specify { subject.length.should == 6 }
       end
       context "when subspecies shipments present" do
         before(:each) do
@@ -105,7 +105,7 @@ describe Trade::Filter do
     context "when searching for purposes_ids" do
       subject { Trade::Filter.new({:purposes_ids => [@purpose.id]}).results }
       specify { subject.should include(@shipment1) }
-      specify { subject.length.should == 4 }
+      specify { subject.length.should == 6 }
     end
 
 
@@ -117,7 +117,7 @@ describe Trade::Filter do
       end
       context "when blank" do
         subject { Trade::Filter.new({:source_blank => true}).results }
-        specify { subject.should include(@shipment4) }
+        specify { subject.should include(@shipment6) }
         specify { subject.length.should == 1 }
       end
       context "when both code and blank" do
@@ -128,7 +128,7 @@ describe Trade::Filter do
       context "when wild" do
         subject { Trade::Filter.new({:sources_ids => [@source_wild.id], :source_blank => true}).results }
         specify { subject.should include(@shipment3) }
-        specify { subject.length.should == 3 }
+        specify { subject.length.should == 5 }
       end
     end
 
@@ -141,7 +141,7 @@ describe Trade::Filter do
     context "when searching for exporters_ids" do
       subject { Trade::Filter.new({:exporters_ids => [@argentina.id]}).results }
       specify { subject.should include(@shipment2) }
-      specify { subject.length.should == 3 }
+      specify { subject.length.should == 5 }
     end
 
     context "when searching for countries_of_origin_ids" do
@@ -154,7 +154,7 @@ describe Trade::Filter do
       context "when time range specified" do
         subject { Trade::Filter.new({:time_range_start => 2013, :time_range_end => 2015}).results }
         specify { subject.should include(@shipment2) }
-        specify { subject.length.should == 3 }
+        specify { subject.length.should == 5 }
       end
       context "when time range specified incorrectly" do
         subject { Trade::Filter.new({:time_range_start => 2013, :time_range_end => 2012}).results }
@@ -163,7 +163,7 @@ describe Trade::Filter do
       context "when time range start specified" do
         subject { Trade::Filter.new({:time_range_start => 2012}).results }
         specify { subject.should include(@shipment1) }
-        specify { subject.length.should == 4 }
+        specify { subject.length.should == 6 }
       end
       context "when time range end specified" do
         subject { Trade::Filter.new({:time_range_end => 2012}).results }
@@ -175,13 +175,13 @@ describe Trade::Filter do
     context "when searching by reporter_type" do
       context "when reporter type is not I or E" do
         subject { Trade::Filter.new({:internal => true, :reporter_type => 'K'}).results }
-        specify { subject.length.should == 4 }
+        specify { subject.length.should == 6 }
       end
 
       context "when reporter type is I" do
         subject { Trade::Filter.new({:internal => true, :reporter_type => 'I'}).results }
         specify { subject.should include(@shipment2) }
-        specify { subject.length.should == 3 }
+        specify { subject.length.should == 5 }
       end
 
       context "when reporter type is E" do
@@ -201,11 +201,11 @@ describe Trade::Filter do
       context "when blank" do
         subject { Trade::Filter.new({:internal => true, :permit_blank => true}).results }
         specify { subject.should include(@shipment2) }
-        specify { subject.length.should == 3 }
+        specify { subject.length.should == 5 }
       end
       context "when both permit number and blank" do
         subject { Trade::Filter.new({:internal => true, :permits_ids => [@export_permit1.id], :permit_blank => true}).results }
-        specify { subject.length.should == 4 }
+        specify { subject.length.should == 6 }
       end
     end
 
@@ -229,7 +229,7 @@ describe Trade::Filter do
 
     context "when two match" do
       subject { Trade::Filter.new({:purposes_ids => [@purpose.id]}) }
-      specify { subject.total_cnt.should == 4 }
+      specify { subject.total_cnt.should == 6 }
     end
 
 
