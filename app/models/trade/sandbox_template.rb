@@ -95,6 +95,16 @@ class Trade::SandboxTemplate < ActiveRecord::Base
           sanitize
         end
 
+        def self.update_batch(updates, filters)
+          return unless updates
+          where(filters).update_all(updates)
+          sanitize
+        end
+
+        def self.destroy_batch(filters)
+          where(filters).delete_all
+        end
+
       end
       Trade.const_set(klass_name, klass)
     end

@@ -49,7 +49,7 @@ describe Trade::SandboxShipmentsController do
     it "should return success" do
       post :update_batch, :annual_report_upload_id => annual_report_upload.id,
         :filters => {:taxon_concept_id => @species.id},
-        :updates => {:taxon_concept_id => @genus.id},
+        :updates => {:taxon_name => @genus.full_name},
         :format => :json
       response.body.should be_blank
       sandbox_klass.where(:taxon_concept_id => @species.id).count.should == 0
