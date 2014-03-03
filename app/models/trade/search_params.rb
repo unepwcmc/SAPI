@@ -63,6 +63,12 @@ class Trade::SearchParams < Hash
         sanitized_params[:integer_param] = nil
       end
     end
+    unless sanitized_params[:time_range_start]
+      sanitized_params[:time_range_start] = 1975
+    end
+    unless sanitized_params[:time_range_end]
+      sanitized_params[:time_range_end] = Date.today.year
+    end
     [
       :taxon_concepts_ids, :terms_ids, :units_ids, :purposes_ids,
       :sources_ids, :importers_ids, :exporters_ids, :countries_of_origin_ids,

@@ -5,8 +5,8 @@ class Trade::ShipmentsNetExportsExport < Trade::ShipmentsGrossExportsExport
 private
 
   # the query before pivoting
-  def subquery_sql
-    net_exports_query
+  def subquery_sql(options)
+    net_exports_query(options)
   end
 
   def resource_name
