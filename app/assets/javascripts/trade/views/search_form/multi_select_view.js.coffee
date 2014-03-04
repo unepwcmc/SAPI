@@ -114,6 +114,9 @@ Trade.MultiSelectSearchTextField = Em.TextField.extend
 
   attributeBindings: ['autocomplete']
 
+  click: (e) ->
+    @.$().select()
+
 Trade.TaxonConceptAutoCompleteSuggestionView = Ember.View.extend
   tagName: 'li'
   content: null
