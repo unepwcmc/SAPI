@@ -2,8 +2,7 @@ class Trade::ShipmentsExportFactory
   def self.new(filters)
     filters ||= {}
     filters = filters.merge({:locale => I18n.locale})
-    @report_type = filters && filters[:report_type] &&
-      filters[:report_type]
+    @report_type = filters[:report_type]
     unless report_types.include? @report_type
       @report_type = :comptab
     end
