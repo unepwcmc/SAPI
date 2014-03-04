@@ -6,4 +6,5 @@ end
 
 every :day, :at => '4:42am' do
   rake "downloads:cache:update"
+  rake "dashboard_stats:cache:update"
 end
