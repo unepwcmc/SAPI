@@ -57,7 +57,7 @@ class Trade::ShipmentsExport < Species::CsvExport
 
 private
 
-  def query_sql
+  def query_sql(options)
     query.to_sql
   end
 

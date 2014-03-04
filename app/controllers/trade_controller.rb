@@ -28,7 +28,16 @@ class TradeController < ApplicationController
       :internal,
       :page,
       :csv_separator
-    ).merge({:internal => true})
+    ).merge({
+      :internal => true,
+      :report_type => if params[:filters] && params[:filters][:report_type] &&
+        Trade::ShipmentsExportFactory.report_types &
+        [report_type = params[:filters][:report_type].downcase.strip.to_sym]
+        report_type
+      else
+        :raw
+      end
+    })
   end
 
 end
