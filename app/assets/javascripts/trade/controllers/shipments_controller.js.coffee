@@ -258,8 +258,14 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
         @set(property.name, false)
       else
         @set(property.name, null)
+    [
+      'taxonConcept', 'reportedTaxonConcept', 'importer', 'exporter',
+      'countryOfOrigin', 'term', 'unit', 'permit'
+    ].forEach (autoCompleteField) =>
+      @set(autoCompleteField + 'Query', null)
+    @set('permitQuery', null)
     @endPropertyChanges()
-    @openShipmentsPage queryParams 
+    @openShipmentsPage queryParams
 
   actions:
 
