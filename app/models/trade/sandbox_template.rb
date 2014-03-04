@@ -95,14 +95,14 @@ class Trade::SandboxTemplate < ActiveRecord::Base
           sanitize
         end
 
-        def self.update_batch(updates, filters)
+        def self.update_batch(updates, sandbox_shipments_ids)
           return unless updates
-          where(filters).update_all(updates)
+          where(:id => sandbox_shipments_ids).update_all(updates)
           sanitize
         end
 
-        def self.destroy_batch(filters)
-          where(filters).delete_all
+        def self.destroy_batch(sandbox_shipments_ids)
+          where(:id => sandbox_shipments_ids).delete_all
         end
 
       end
