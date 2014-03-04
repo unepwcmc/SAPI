@@ -3,7 +3,6 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   content: null
   updatesVisible: false
   currentShipment: null
-  errorParams: null
   sandboxShipmentsSaving: false
 
   columns: [
@@ -34,8 +33,9 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
     @openShipmentsPage {page: page}
 
   openShipmentsPage: (params) ->
-    queryParams = $.extend({}, @errorParams, params)
-    @transitionToRoute('sandbox_shipments', 'queryParams': queryParams)
+    sandbox_shipments_ids = @get("controllers.annualReportUpload.currentError.sandboxShipments").mapBy("id")
+    queryParams = $.extend({}, sandbox_shipments_ids, params)
+    @transitionToRoute('sandbox_shipments', 'sandbox_shipments_ids': queryParams)
 
   clearModifiedFlags: ->
     @beginPropertyChanges()
@@ -79,9 +79,13 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
         $.ajax(
           url: "trade/annual_report_uploads/#{annualReportUploadId}/sandbox_shipments/update_batch"
           type: "POST"
-          data: {filters: @errorParams, updates: valuesToUpdate}
+          data: {
+            sandbox_shipments_ids: @get("controllers.annualReportUpload.currentError.sandboxShipments").mapBy("id"),
+            updates: valuesToUpdate
+          }
         ).success( (data, textStatus, jqXHR) =>
           @flashSuccess(message: 'Successfully updated shipments.', persists: true)
+          @get("controllers.annualReportUpload").set("currentError", null)
         ).error( (jqXHR, textStatus, errorThrown) =>
           @flashError(message: errorThrown, persists: true)
         ).complete( (jqXHR, textStatus) =>
@@ -94,9 +98,12 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
         $.ajax(
           url: "trade/annual_report_uploads/#{annualReportUploadId}/sandbox_shipments/destroy_batch"
           type: "POST"
-          data: {filters: @errorParams}
+          data: {
+            sandbox_shipments_ids: @get("controllers.annualReportUpload.currentError.sandboxShipments").mapBy("id")
+          }
         ).success( (data, textStatus, jqXHR) =>
           @flashSuccess(message: 'Successfully destroyed shipments.', persists: true)
+          @get("controllers.annualReportUpload").set("currentError", null)
         ).error( (jqXHR, textStatus, errorThrown) =>
           @flashError(message: errorThrown, persists: true)
         ).complete( (jqXHR, textStatus) =>
@@ -131,6 +138,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
     updateShipment: (shipment) ->
       shipment.setProperties({'_modified': true})
       @set('currentShipment', null)
+      @get("controllers.annualReportUpload").set("currentError", null)
       $('.shipment-form-modal').modal('hide')
 
     deleteShipment: (shipment) ->

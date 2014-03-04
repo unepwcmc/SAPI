@@ -48,22 +48,22 @@ describe Trade::SandboxShipmentsController do
   describe "POST update_batch" do
     it "should return success" do
       post :update_batch, :annual_report_upload_id => annual_report_upload.id,
-        :filters => {:taxon_concept_id => @species.id},
+        :sandbox_shipments_ids => [@shipment.id],
         :updates => {:taxon_name => @genus.full_name},
         :format => :json
       response.body.should be_blank
-      sandbox_klass.where(:taxon_concept_id => @species.id).count.should == 0
-      sandbox_klass.where(:taxon_concept_id => @genus.id).count.should == 1
+      sandbox_klass.where(:taxon_name => @species.full_name).count(true).should == 0
+      sandbox_klass.where(:taxon_name => @genus.full_name).count(true).should == 1
     end
   end
 
   describe "POST destroy_batch" do
     it "should return success" do
       post :destroy_batch, :annual_report_upload_id => annual_report_upload.id,
-        :filters => {:taxon_concept_id => @species.id},
+        :sandbox_shipments_ids => [@shipment.id],
         :format => :json
       response.body.should be_blank
-      sandbox_klass.where(:taxon_concept_id => @species.id).count.should == 0
+      sandbox_klass.where(:taxon_concept_id => @species.id).count(true).should == 0
     end
   end
 
