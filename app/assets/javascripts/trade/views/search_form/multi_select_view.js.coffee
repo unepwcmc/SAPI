@@ -9,8 +9,10 @@ Trade.MultiSelect = Ember.View.extend
   templateName: 'trade/shipments/multi_select'
 
   click: ->
+    wasVisible = @.$('.popup-holder01').is(':visible')
     $('.popup-holder01').hide()
-    @.$('.popup-holder01').show()
+    unless wasVisible
+      @.$('.popup-holder01').show()
 
 Trade.MultiSelectButton = Ember.View.extend
   tagName: 'a'
