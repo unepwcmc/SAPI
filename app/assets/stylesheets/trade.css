@@ -13,6 +13,5 @@
  *= require_self
  *= require jquery.fileupload-ui
  *= require select2
- *= require ./species/downloads
  *= require_tree ./trade
  */

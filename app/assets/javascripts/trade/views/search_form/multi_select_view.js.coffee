@@ -5,8 +5,12 @@ Trade.MultiSelect = Ember.View.extend
   selectedValues: null
   selectedValuesCollectionName: 'options'
   selectedValueDisplayProperty: 'name'
+  active: false
 
   templateName: 'trade/shipments/multi_select'
+
+  click: ->
+    @toggleProperty('active')
 
 Trade.MultiSelectButton = Ember.View.extend
   tagName: 'a'
@@ -37,9 +41,12 @@ Trade.MultiSelectButton = Ember.View.extend
     msg
   ).property("selectedValues.@each", 'blankValue')
 
+  click: (e) ->
+    e.stopPropagation();
+
 Trade.MultiSelectDropdown = Ember.View.extend
   templateName: 'trade/shipments/multi_select_dropdown'
-  classNames: ['popup']
+  classNames: ['popup-holder01']
   allValues: null
   selectedValues: null
 
@@ -54,6 +61,9 @@ Trade.MultiSelectDropdown = Ember.View.extend
   hasBlankValue: ( ->
     @get('blankValue') != undefined
   ).property()
+
+  click: (e) ->
+    e.stopPropagation();
 
 Trade.MultiSelectSelectedValuesCollectionView = Ember.CollectionView.extend
   tagName: 'ul'
@@ -104,27 +114,6 @@ Trade.MultiSelectSearchTextField = Em.TextField.extend
   value: ''
 
   attributeBindings: ['autocomplete']
-
-  click: (event) ->
-    if (@.$().val() == @get('placeholder'))
-      @.$().val('')
-    @.$().attr('placeholder', '')
-    @showDropdown()
-
-  focusOut: (event) ->
-    @.$().attr('placeholder', @get('placeholder'))
-    @hideDropdown() if !@get('parentView.mousedOver')
-
-  keyUp: (event) ->
-    @set('value', event.currentTarget.value)
-    @showDropdown()
-
-  hideDropdown: () ->
-    $('.search fieldset').removeClass('parent-focus parent-active')
-
-  showDropdown: () ->
-    if @.$().val().length > 2
-      $('.search fieldset').addClass('parent-focus parent-active')
 
 Trade.TaxonConceptAutoCompleteSuggestionView = Ember.View.extend
   tagName: 'li'
