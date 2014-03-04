@@ -105,14 +105,7 @@ set :copy_exclude, [ '.git' ]
 # items are symlinked in when the code is updated.
 set :local_shared_files, %w(config/database.yml)
 set :local_shared_dirs, %w(tmp/pids public/downloads public/uploads
-  public/downloads/cites_trade
-  public/downloads/cites_listings public/downloads/eu_listings public/downloads/cms_listings
-  public/downloads/eu_decisions public/downloads/cites_suspensions public/downloads/quotas
-  public/downloads/checklist public/downloads/taxon_concepts_names
-  public/downloads/shipments public/downloads/comptab
-  public/downloads/gross_exports public/downloads/gross_imports
-  public/downloads/net_exports public/downloads/net_imports
-  public/downloads/trade_download_stats public/downloads/taxon_concepts_distributions)
+  public/cites_trade_guidelines)
 
 ## Global Shared Area
 # These are the list of files and directories that you want
