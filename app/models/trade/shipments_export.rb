@@ -33,16 +33,8 @@ class Trade::ShipmentsExport < Species::CsvExport
     basic_query(:limit => false).count
   end
 
-  def basic_query(options)
-    options[:limit] ? @search.query_with_limit : @search.query
-  end
-
   def query
-    headers = csv_column_headers
-    select_columns = sql_columns.each_with_index.map do |c, i|
-      "#{c} AS \"#{headers[i]}\""
-    end
-    basic_query(:limit => true).select(select_columns)
+    ActiveRecord::Base.connection.execute(query_sql(:limit => true))
   end
 
   def csv_column_headers
@@ -57,8 +49,16 @@ class Trade::ShipmentsExport < Species::CsvExport
 
 private
 
+  def basic_query(options)
+    options[:limit] ? @search.query_with_limit : @search.query
+  end
+
   def query_sql(options)
-    query.to_sql
+    headers = csv_column_headers
+    select_columns = sql_columns.each_with_index.map do |c, i|
+      "#{c} AS \"#{headers[i]}\""
+    end
+    basic_query(options).select(select_columns).to_sql
   end
 
   def internal?
