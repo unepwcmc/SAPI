@@ -694,7 +694,7 @@ $(document).ready(function(){
     if (params['web_disabled']){
       $('#web-limit-exceeded-error-message').show();
       $('input[value=csv]').attr('checked', 'checked');
-      $('input[name=outputType]').attr("disabled",true);
+      $('input[value=web]').attr("disabled",true);
     }
   }
 
