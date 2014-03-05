@@ -157,6 +157,9 @@ $(document).ready(function(){
         } else if (res.total > 0) {
           // There is something to download!
           queryResults.ajax = false;
+          if (res.total > res.web_limit){
+            queryResults.web_limit_exceeded = true;
+          }
           queryResults.call(this);
         } else {
           $('#search-error-message').show();
@@ -165,9 +168,13 @@ $(document).ready(function(){
     } else {
       $link = $(this);
       values = parseInputs($('#form_expert :input'));
-      params = $.param({'filters': values});
+      params = $.param({
+        'filters': values,
+        'web_disabled': queryResults.web_limit_exceeded
+      });
       href = '/' + locale + '/cites_trade/download?' + params;
       queryResults.ajax = true;
+      queryResults.web_limit_exceeded = false;
       $('#search-error-message').hide();
       $link.attr('href', href).click();
       window.location.href = $link.attr("href");
@@ -681,16 +688,14 @@ $(document).ready(function(){
   //////////////////////////
   // Download page specific:
 
-  initOutputType = function(data) {
-    if (data.total > data.web_limit){
+  if (is_download_page) {
+    var params = $.deparam(getParamsFromURI());
+    console.log(params['web_disabled']);
+    if (params['web_disabled']){
       $('#web-limit-exceeded-error-message').show();
       $('input[value=csv]').attr('checked', 'checked');
       $('input[name=outputType]').attr("disabled",true);
     }
-  }
-
-  if (is_download_page) {
-    getResultsCount(getParamsFromURI()).then(initOutputType, ajaxFail);
   }
 
   function displayResults (q) {
