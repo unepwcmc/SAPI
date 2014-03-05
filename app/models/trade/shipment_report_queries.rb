@@ -4,7 +4,7 @@ module Trade::ShipmentReportQueries
   "SELECT
     year,
     appendix,
-    full_name_with_spp('FAMILY', taxon_concepts.data->'family_name') AS family,
+    taxon_concepts.data->'family_name' AS family,
     taxon_concept_id,
     full_name_with_spp(ranks.name, taxon_concepts.full_name) AS taxon,
     importer_id,
