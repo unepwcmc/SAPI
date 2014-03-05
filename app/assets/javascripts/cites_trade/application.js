@@ -678,7 +678,8 @@ $(document).ready(function(){
     var t = "";
     _.each(data_rows, function(data_row) {
       var row = 
-        "<tr><% _.each(d, function(value) { %> <td>" + 
+        "<tr><% _.each(d, function(value) { %>"+
+          "<td class=\"c-<%= value.toLowerCase().replace(/\\./g,'').replace(/ /g, '-')%>\">" + 
         "<%= data_row[value] %> </td> <% }); %></tr>";
       t += _.template(row, { d: data_headers, data_row: data_row });
     });
@@ -690,7 +691,6 @@ $(document).ready(function(){
 
   if (is_download_page) {
     var params = $.deparam(getParamsFromURI());
-    console.log(params['web_disabled']);
     if (params['web_disabled']){
       $('#web-limit-exceeded-error-message').show();
       $('input[value=csv]').attr('checked', 'checked');
@@ -719,6 +719,7 @@ $(document).ready(function(){
             data_headers = data['shipment_gross_net_export'].column_headers;
             data_rows = data['shipment_gross_net_export'].rows;
             table_tmpl = buildHeader(data_headers) + buildRows(data_headers, data_rows);
+            $('#query_results_table').addClass('net_gross');
           }
           $('#table_title').text(table_view_title);
           $('#query_results_table').html(table_tmpl);

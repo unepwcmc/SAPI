@@ -4,7 +4,7 @@ module Trade::ShipmentReportQueries
   "SELECT
     year,
     appendix,
-    full_name_with_spp('FAMILY', taxon_concepts.data->'family_name') AS family,
+    taxon_concepts.data->'family_name' AS family,
     taxon_concept_id,
     full_name_with_spp(ranks.name, taxon_concepts.full_name) AS taxon,
     importer_id,
@@ -74,6 +74,18 @@ module Trade::ShipmentReportQueries
     purpose_id,
     purposes.code,
     source_id,
+    sources.code
+  ORDER BY
+    year ASC,
+    appendix,
+    taxon_concepts.data->'family_name',
+    taxon_concepts.full_name,
+    importers.iso_code2,
+    exporters.iso_code2,
+    countries_of_origin.iso_code2,
+    terms.code,
+    units.code,
+    purposes.code,
     sources.code"
   end
 
@@ -188,7 +200,13 @@ module Trade::ShipmentReportQueries
     unit_name_es,
     unit_name_fr,
     exporter_id,
-    exporter"
+    exporter
+  ORDER BY
+    appendix,
+    taxon,
+    term,
+    unit,
+    country"
   end
 
   def gross_imports_query(options)
@@ -234,7 +252,13 @@ module Trade::ShipmentReportQueries
     unit_name_es,
     unit_name_fr,
     importer_id,
-    importer"
+    importer
+  ORDER BY
+    appendix,
+    taxon,
+    term,
+    unit,
+    country"
   end
 
   def net_exports_query(options)
@@ -278,7 +302,13 @@ module Trade::ShipmentReportQueries
   AND (exports.unit_id = imports.unit_id OR exports.unit_id IS NULL AND imports.unit_id IS NULL)
   AND exports.year = imports.year
   AND exports.country_id = imports.country_id
-  WHERE (exports.gross_quantity - COALESCE(imports.gross_quantity, 0)) > 0"
+  WHERE (exports.gross_quantity - COALESCE(imports.gross_quantity, 0)) > 0
+  ORDER BY
+    appendix,
+    taxon,
+    term,
+    unit,
+    country"
   end
 
   def net_imports_query(options)
@@ -321,7 +351,13 @@ module Trade::ShipmentReportQueries
   AND exports.term_id = imports.term_id
   AND (exports.unit_id = imports.unit_id OR exports.unit_id IS NULL AND imports.unit_id IS NULL)
   AND exports.country_id = imports.country_id
-  WHERE (imports.gross_quantity - COALESCE(exports.gross_quantity, 0)) > 0"
+  WHERE (imports.gross_quantity - COALESCE(exports.gross_quantity, 0)) > 0
+  ORDER BY
+    appendix,
+    taxon,
+    term,
+    unit,
+    country"
   end
 
 end
