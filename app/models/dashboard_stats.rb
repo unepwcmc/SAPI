@@ -88,6 +88,8 @@ class DashboardStats
         :unit => nil,
         :source => "W"
       ).
+      joins(:m_taxon_concept).
+      where("taxon_concepts_mview.cites_listed IS NOT NULL").
       group(:taxon_concept_id).
       order("count_all desc").
       limit(@trade_limit)
