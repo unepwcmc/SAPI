@@ -29,6 +29,11 @@ class Trade::Filter
     @query = Trade::Shipment.order('year DESC').
       preload(:taxon_concept) #includes would override the select clause
 
+    if @report_type == :raw
+      # only use the view for the raw report (in practice admin only)
+      @query = @query.from('trade_shipments_view trade_shipments')
+    end
+
     ancestor_ranks = Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
     unless @taxon_concepts_ids.empty?
       taxa = MTaxonConceptFilterByIdWithDescendants.new(
@@ -121,9 +126,8 @@ class Trade::Filter
 
   def initialize_internal_query
     if @report_type == :raw
-      # only use the view for the raw report in admin
-      @query = @query.from('trade_shipments_view trade_shipments').
-        preload(:reported_taxon_concept) #includes would override the select clause
+      #includes would override the select clause
+      @query = @query.preload(:reported_taxon_concept)
     end
 
     if ['I', 'E'].include? @reporter_type
