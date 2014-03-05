@@ -64,12 +64,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         )
       end
       subject{
-        create(
-          :inclusion_validation_rule,
-          :scope => {:source_code => 'W', :country_of_origin_blank => true},
-          :column_names => ['taxon_concept_id', 'exporter'],
-          :valid_values_view => 'valid_taxon_concept_exporter_view'
-        )
+        create_taxon_concept_exporter_validation
       }
       specify{
         subject.validation_errors(@aru).size.should == 1
@@ -95,12 +90,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         )
       end
       subject{
-        create(
-          :inclusion_validation_rule,
-          :scope => {:source_code => 'W', :country_of_origin_blank => true},
-          :column_names => ['taxon_concept_id', 'exporter'],
-          :valid_values_view => 'valid_taxon_concept_exporter_view'
-        )
+        create_taxon_concept_exporter_validation
       }
       specify{
         subject.validation_errors(@aru).size.should == 1
@@ -122,12 +112,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         )
       end
       subject{
-        create(
-          :inclusion_validation_rule,
-          :scope => {:source_code => 'W', :country_of_origin_blank => true},
-          :column_names => ['taxon_concept_id', 'exporter'],
-          :valid_values_view => 'valid_taxon_concept_exporter_view'
-        )
+        create_taxon_concept_exporter_validation
       }
       specify{
         expect{ subject.validation_errors(@aru) }.to_not raise_error(ActiveRecord::StatementInvalid)

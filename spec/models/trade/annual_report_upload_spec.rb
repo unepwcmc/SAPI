@@ -82,11 +82,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
 
   describe :validation_errors do
     let!(:format_validation_rule){
-      create(
-        :format_validation_rule,
-        :column_names => ['year'],
-        :format_re => '^\d{4}$'
-      )
+      create_year_format_validation
     }
       subject{
         create(
@@ -168,11 +164,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           :import_permit => 'XXX',
           :export_permit => 'AAA; BBB'
         )
-        create(
-          :format_validation_rule,
-          :column_names => ['year'],
-          :format_re => '^\d{4}$'
-        )
+        create_year_format_validation
         aru
       }
       specify {
@@ -203,11 +195,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           :unit_code => 'KIL',
           :year => '10'
         )
-        create(
-          :format_validation_rule,
-          :column_names => ['year'],
-          :format_re => '^\d{4}$'
-        )
+        create_year_format_validation
         aru
       }
       specify {
@@ -248,11 +236,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           :import_permit => 'XXX',
           :export_permit => 'AAA;BBB'
         )
-        create(
-          :format_validation_rule,
-          :column_names => ['year'],
-          :format_re => '^\d{4}$'
-        )
+        create_year_format_validation
         aru
       }
       specify {

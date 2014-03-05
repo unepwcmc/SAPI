@@ -61,7 +61,8 @@ describe Trade::ValidationRule, :drops_tables => true do
         subject{
           create(
             :numericality_validation_rule,
-            :column_names => ['quantity']
+            :column_names => ['quantity'],
+            :is_strict => true
           )
         }
         specify{
@@ -82,11 +83,7 @@ describe Trade::ValidationRule, :drops_tables => true do
       end
       context 'year should be a 4 digit value' do
         subject{
-          create(
-            :format_validation_rule,
-            :column_names => ['year'],
-            :format_re => '^\d{4}$'
-          )
+          create_year_format_validation
         }
         specify{
           subject.validation_errors(annual_report_upload).size.should == 1
