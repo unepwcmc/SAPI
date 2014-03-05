@@ -77,7 +77,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           )
         end
         subject{
-          create(:taxon_concept_appendix_year_validation_rule)
+          create_taxon_concept_appendix_year_validation
         }
         specify{
           subject.validation_errors(@aru).size.should == 0
@@ -93,7 +93,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           )
         end
         subject{
-          create(:taxon_concept_appendix_year_validation_rule)
+          create_taxon_concept_appendix_year_validation
         }
         specify{
           subject.validation_errors(@aru).size.should == 1
@@ -111,7 +111,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           )
         end
         subject{
-          create(:taxon_concept_appendix_year_validation_rule)
+          create_taxon_concept_appendix_year_validation
         }
         specify{
           subject.validation_errors(@aru).size.should == 1
@@ -129,7 +129,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           )
         end
         subject{
-          create(:taxon_concept_appendix_year_validation_rule)
+          create_taxon_concept_appendix_year_validation
         }
         specify{
           subject.validation_errors(@aru).size.should == 0
@@ -165,7 +165,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           )
         end
         subject{
-          create(:taxon_concept_appendix_year_validation_rule)
+          create_taxon_concept_appendix_year_validation
         }
         specify{
           subject.validation_errors(@aru).size.should == 0
@@ -180,7 +180,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
         )
       end
       subject{
-        create(:taxon_concept_appendix_year_validation_rule)
+        create_taxon_concept_appendix_year_validation
       }
       specify{
         subject.validation_errors(@aru).size.should == 0
@@ -194,7 +194,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
         )
       end
       subject{
-        create(:taxon_concept_appendix_year_validation_rule)
+        create_taxon_concept_appendix_year_validation
       }
       specify{
         subject.validation_errors(@aru).size.should == 1

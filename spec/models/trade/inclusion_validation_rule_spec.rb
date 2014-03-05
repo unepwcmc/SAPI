@@ -43,7 +43,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         create(
           :inclusion_validation_rule,
           :column_names => ['taxon_name'],
-          :valid_values_view => 'valid_taxon_name_view'
+          :valid_values_view => 'valid_taxon_name_view',
+          :is_strict => true
         )
       }
       specify{
@@ -71,7 +72,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         create(
           :inclusion_validation_rule,
           :column_names => ['trading_partner'],
-          :valid_values_view => 'valid_trading_partner_view'
+          :valid_values_view => 'valid_trading_partner_view',
+          :is_strict => true
         )
       }
       specify{
@@ -102,11 +104,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           sandbox_klass.create(:term_code => 'CAP', :unit_code => 'BAG')
         end
         subject{
-          create(
-            :inclusion_validation_rule,
-            :column_names => ['term_code', 'unit_code'],
-            :valid_values_view => 'valid_term_unit_view'
-          )
+          create_term_unit_validation
         }
         specify{
           subject.validation_errors(annual_report_upload).size.should == 1
@@ -121,11 +119,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           sandbox_klass.create(:term_code => 'CAP', :unit_code => '')
         end
         subject{
-          create(
-            :inclusion_validation_rule,
-            :column_names => ['term_code', 'unit_code'],
-            :valid_values_view => 'valid_term_unit_view'
-          )
+          create_term_unit_validation
         }
         specify{
           subject.validation_errors(annual_report_upload).size.should == 1
@@ -148,11 +142,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         sandbox_klass.create(:term_code => 'CAV', :purpose_code => '')
       end
       subject{
-        create(
-          :inclusion_validation_rule,
-          :column_names => ['term_code', 'purpose_code'],
-          :valid_values_view => 'valid_term_purpose_view'
-        )
+        create_term_purpose_validation
       }
       specify{
         subject.validation_errors(annual_report_upload).size.should == 2
@@ -170,11 +160,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         @pair = create(:trade_taxon_concept_term_pair, :term_id => cav.id, :taxon_concept_id => @genus.id)
       end
       subject{
-        create(
-          :inclusion_validation_rule,
-          :column_names => ['taxon_concept_id', 'term_code'],
-          :valid_values_view => 'valid_taxon_concept_term_view'
-        )
+        create_taxon_concept_term_validation
       }
       context "when accepted name" do
         before(:each) do

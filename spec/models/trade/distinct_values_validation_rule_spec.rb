@@ -49,10 +49,7 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
         @sandbox_klass.create(:trading_partner => canada.iso_code2)
       end
       subject{
-        create(
-          :distinct_values_validation_rule,
-          :column_names => ['exporter', 'importer']
-        )
+        create_exporter_importer_validation
       }
       specify{
         subject.validation_errors(@aru).size.should == 1
@@ -72,10 +69,7 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
         @sandbox_klass.create(:trading_partner => canada.iso_code2)
       end
       subject{
-        create(
-          :distinct_values_validation_rule,
-          :column_names => ['exporter', 'importer']
-        )
+        create_exporter_importer_validation
       }
       specify{
         subject.validation_errors(@aru).size.should == 1
@@ -91,10 +85,7 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
         @sandbox_klass.create(:country_of_origin => canada.iso_code2)
       end
       subject{
-        create(
-          :distinct_values_validation_rule,
-          :column_names => ['exporter', 'country_of_origin']
-        )
+        create_exporter_country_of_origin_validation
       }
       specify{
         subject.validation_errors(@aru).size.should == 1

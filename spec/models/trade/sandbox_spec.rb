@@ -39,11 +39,7 @@ describe Trade::Sandbox, :drops_tables => true do
       :import_permit => 'XXX',
       :export_permit => 'AAA;BBB'
     )
-    create(
-      :format_validation_rule,
-      :column_names => ['year'],
-      :format_re => '^\d{4}$'
-    )
+    create_year_format_validation
     aru
   }
   describe :destroy do
