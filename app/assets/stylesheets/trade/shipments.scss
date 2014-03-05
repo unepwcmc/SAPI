@@ -145,7 +145,6 @@ div.secondary-errors {
 }
 
 div.popup-holder01 { 
-  //display: block; 
   top: 42px;
   left: 0px;
   padding-top: 0;
@@ -359,3 +358,4 @@ span.error {
   }
 }
 
+.popup-area:hover .popup-holder01 { display: none; }
