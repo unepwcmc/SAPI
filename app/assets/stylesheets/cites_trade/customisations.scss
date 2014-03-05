@@ -31,6 +31,13 @@ $link-blue: #0088cc;
       max-width: 70px;
     }
 
+    td.c-app, td.c-importer, td.c-exporter, td.c-origin, td.c-purpose, td.c-source {
+      text-align: center;
+    }
+
+    td.c-importer-reported-quantity, td.c-exporter-reported-quantity {
+      text-align: right;
+    }
     thead td {
       font-size: 1.3em;
       font-weight: bold;
@@ -39,7 +46,15 @@ $link-blue: #0088cc;
   .info {
     color: white;
   }
+
+  table.net_gross {
+    td:nth-child(n+6) {
+      text-align: right;
+    }
+  }
+
 }
+
 
 span.match {
   text-decoration: underline;
