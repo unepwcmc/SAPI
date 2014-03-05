@@ -10,6 +10,11 @@ shared_context 'Shipments' do
       :taxon_name => create(:taxon_name, :scientific_name => 'abstractus'),
       :parent => @genus1
     )
+    create_cites_I_addition(
+      :taxon_concept => @taxon_concept1,
+      :effective_at => 1.day.ago,
+      :is_current => true
+    )
     @genus2 = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Nullificus'),
       :parent => @family
@@ -17,6 +22,11 @@ shared_context 'Shipments' do
     @taxon_concept2 = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'totalus'),
       :parent => @genus2
+    )
+    create_cites_II_addition(
+      :taxon_concept => @taxon_concept2,
+      :effective_at => 1.day.ago,
+      :is_current => true
     )
 
     @subspecies = create_cites_eu_subspecies(
