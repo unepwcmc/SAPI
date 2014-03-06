@@ -579,8 +579,17 @@ $(document).ready(function(){
         selected_taxa = ui.item.value;
     		$('#species_out').text(ui.item.label);
     		return false;
-    	}
+    	},
+      response: function(event, ui) {
+        if (!ui.content.length) {
+          var noResult = { value:"" };
+          ui.content.push(noResult);
+        }
+      }
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+      if (item.value === ''){
+        return $( "<li>" ).append("No results").appendTo( ul );
+      }
       return $( "<li>" )
         .append( "<a>" + item.drop_label + "</a>" )
         .appendTo( ul );
@@ -618,8 +627,17 @@ $(document).ready(function(){
         selected_taxa = ui.item.value;
     		$('#species_out').text(ui.item.label);	
     		return false;
-    	}
+    	},
+      response: function(event, ui) {
+        if (!ui.content.length) {
+          var noResult = { value:"" };
+          ui.content.push(noResult);
+        }
+      }
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+      if (item.value === ''){
+        return $( "<li>" ).append("No results").appendTo( ul );
+      }
       return $( "<li>" )
         .append( "<a>" + item.drop_label + "</a>" )
         .appendTo( ul );
