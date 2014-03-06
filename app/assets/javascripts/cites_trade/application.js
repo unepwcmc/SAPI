@@ -624,6 +624,9 @@ $(document).ready(function(){
         .append( "<a>" + item.drop_label + "</a>" )
         .appendTo( ul );
       };
+    $("#genus_search").blur(function(e){
+      $(this).val('');
+    });
   }
 
   show_values_selection();
