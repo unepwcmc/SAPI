@@ -7,6 +7,7 @@
 \usepackage[cm]{fullpage}
 \usepackage{attachfile}
 \usepackage[utf8]{inputenc}
+\usepackage{longtable}
 \usepackage{fancyhdr}
 \usepackage{xcolor}
 \usepackage{colortbl}
@@ -28,6 +29,8 @@
   }
 \fi
 
+\setlength{\headheight}{12pt}
+
 \begin{document}
 
 \include{_dict}
@@ -40,6 +43,12 @@
     \colorlet{currentcolor}{.}%
     {\color{#1}%
     \fbox{\color{currentcolor}#2}}%
+}
+
+\newcommand{\hashannotationstable}[1]{
+  \begin{longtable}[t]{>{\raggedright\arraybackslash}p{1.25cm}>{\raggedright\arraybackslash}p{15.25cm}}
+  #1
+  \end{longtable}
 }
 
 \newcommand\AtPageLowerRight[1]{

@@ -26,30 +26,31 @@ class Checklist::Pdf::IndexAnnotationsKey
     tex << "\\section*{#{LatexToPdf.escape_latex(I18n.t('pdf.hash_annotations'))}}\n"
     tex << LatexToPdf.escape_latex(I18n.t('pdf.hash_annotations_index_info')) + "\n\n"
     cop = CitesCop.find_by_is_current(true)
-    unless cop && !cop.hash_annotations.empty?
+    annotations = cop.hash_annotations.order('SUBSTRING(symbol FROM 2)::INT')
+    unless cop && !annotations.empty?
       tex << "No current hash annotations found.\n\n"
       return tex
     end
 
-    tex << "#{LatexToPdf.escape_latex(cop.name)} Valid from #{cop.effective_at}\n"
-    cop.hash_annotations.each do |a|
-      tex << "#{LatexToPdf.escape_latex(a.symbol)} \n\n #{LatexToPdf.html2latex(a.full_note)} \n\n"
+    tex << "\\hashannotationstable{\n\\rowcolor{pale_aqua}\n"
+    tex << "#{LatexToPdf.escape_latex(cop.name)} & Valid from #{cop.effective_at_formatted}\\\\\n"
+    annotations.each do |a|
+      tex << "#{LatexToPdf.escape_latex(a.symbol)} & #{LatexToPdf.html2latex(a.full_note)} \\\\\n\n"
     end
+    tex << "}\n"
     tex
   end
 
   private
   def non_hash_annotations
-    cites = Designation.find_by_name(Designation::CITES)
-    MListingChange. #TODO this could just use cites_listing_changes_mview
+    MCitesListingChange.
       joins(:taxon_concept).
       includes(:taxon_concept).
       where(
         :is_current => true,
-        :display_in_index => true,
-        :designation_id => cites.id
+        :display_in_index => true
       ).
-      order("listing_changes_mview.ann_symbol::INT").map do |lc|
+      order("cites_listing_changes_mview.ann_symbol::INT").map do |lc|
         {
           :taxon_concept => lc.taxon_concept,
           :symbol => lc.ann_symbol,
