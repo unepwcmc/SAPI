@@ -6,6 +6,8 @@ en:
     non_hash_annotations: 'Annotations not preceded by "#"'
     hash_annotations: 'Annotations preceded by "#"'
     hash_annotations_index_info: 'Annotations are used in the CITES Appendices to indicate which population, parts or derivatives are concerned by the listing or to clarify its scope. The meaning of the # annotations (applicable to flora only) has changed over the years. The # annotations that are currently valid are those adopted at the 16th Conference of the Parties (CoP 16). These are provided below.'
+    historical_summary_of_annotations: 'HISTORICAL SUMMARY OF ANNOTATIONS'
+
   filter_summary:
     all: 'All results'
     all_with_synonyms: 'All results including synonyms'

@@ -5,6 +5,8 @@ module Checklist::Pdf::HistoryContent
     kingdom(tex, fetcher, 'FAUNA')
     fetcher = Checklist::HistoryFetcher.new(@plantae_rel)
     kingdom(tex, fetcher, 'FLORA')
+    ak = Checklist::Pdf::HistoryAnnotationsKey.new
+    tex << ak.annotations_key
   end
 
   def kingdom(tex, fetcher, kingdom_name)
