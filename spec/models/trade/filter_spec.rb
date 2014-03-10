@@ -130,6 +130,13 @@ describe Trade::Filter do
         specify { subject.should include(@shipment3) }
         specify { subject.length.should == 5 }
       end
+      context "when wild and internal" do
+        subject { Trade::Filter.new({
+          :sources_ids => [@source_wild.id], :source_blank => true, :internal => true
+        }).results }
+        specify { subject.should include(@shipment3) }
+        specify { subject.length.should == 4 }
+      end
     end
 
     context "when searching for importers_ids" do
