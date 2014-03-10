@@ -585,6 +585,13 @@ $(document).ready(function(){
           var noResult = { value:"" };
           ui.content.push(noResult);
         }
+      },
+      change: function(event, ui){
+        if (ui.item === null || ui.item.label !== $(this).val() ){
+          $(this).val('');
+          $('#species_out').text('');
+          selected_taxa = '';
+        }
       }
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
       if (item.value === ''){
@@ -593,11 +600,7 @@ $(document).ready(function(){
       return $( "<li>" )
         .append( "<a>" + item.drop_label + "</a>" )
         .appendTo( ul );
-      };
-
-    $("#taxon_search").blur(function(e){
-      $(this).val('');
-    });
+      }
   }
 
   //Autocomplete for cites_genus
@@ -625,13 +628,20 @@ $(document).ready(function(){
     	select: function( event, ui ) {
     		$(this).val(ui.item.label);
         selected_taxa = ui.item.value;
-    		$('#species_out').text(ui.item.label);	
+    		$('#species_out').text(ui.item.label);
     		return false;
     	},
       response: function(event, ui) {
         if (!ui.content.length) {
           var noResult = { value:"" };
           ui.content.push(noResult);
+        }
+      },
+      change: function(event, ui){
+        if (ui.item === null || ui.item.label !== $(this).val() ){
+          $(this).val('');
+          $('#species_out').text('');
+          selected_taxa = '';
         }
       }
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
@@ -642,9 +652,6 @@ $(document).ready(function(){
         .append( "<a>" + item.drop_label + "</a>" )
         .appendTo( ul );
       };
-    $("#genus_search").blur(function(e){
-      $(this).val('');
-    });
   }
 
   show_values_selection();
