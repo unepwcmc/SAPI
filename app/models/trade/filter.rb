@@ -86,8 +86,7 @@ class Trade::Filter
     end
 
     if !@sources_ids.empty?
-      w = Source.find_by_code('W')
-      if w && @sources_ids.include?(w.id)
+      if !@internal && (w = Source.find_by_code('W')) && @sources_ids.include?(w.id)
         u = Source.find_by_code('U')
         @sources_ids << u.id if u
         @source_blank = true
