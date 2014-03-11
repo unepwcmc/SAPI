@@ -224,6 +224,13 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     --this one used for Trade autocomplete
     CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_trade_ac);
 
+    --this one used for Species+ autocomplete (both main and higher taxa in downloads)
+    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_species_plus_ac);
+    --this one used for Checklist autocomplete
+    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_checklist_ac);
+    --this one used for Trade autocomplete
+    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_trade_ac);
+
     RAISE INFO 'Swapping concepts materialized view';
     DROP table IF EXISTS taxon_concepts_mview CASCADE;
     ALTER TABLE taxon_concepts_mview_tmp RENAME TO taxon_concepts_mview;
