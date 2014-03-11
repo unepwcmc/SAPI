@@ -1,12 +1,6 @@
 en:
   index_title: 'Index of CITES Species'
   history_title: 'History of CITES Listings'
-  pdf:
-    annotations_key: 'Annotations key'
-    non_hash_annotations: 'Annotations not preceded by "#"'
-    hash_annotations: 'Annotations preceded by "#"'
-    hash_annotations_index_info: 'Annotations are used in the CITES Appendices to indicate which population, parts or derivatives are concerned by the listing or to clarify its scope. The meaning of the # annotations (applicable to flora only) has changed over the years. The # annotations that are currently valid are those adopted at the 16th Conference of the Parties (CoP 16). These are provided below.'
-    historical_summary_of_annotations: 'HISTORICAL SUMMARY OF ANNOTATIONS'
 
   filter_summary:
     all: 'All results'
@@ -22,17 +16,7 @@ en:
 es:
   index_title: 'Índice de especies CITES'
   history_title: 'Historia de las inclusiones en los Apéndices de la CITES'
-  pdf:
-    annotations_key: 'ES Annotations key'
-    non_hash_annotations: 'ES Annotations not preceded by "#"'
-    hash_annotations: 'ES Annotations preceded by "#"'
-    hash_annotations_index_info: 'ES Annotations are used in the CITES Appendices to indicate which population, parts or derivatives are concerned by the listing or to clarify its scope. The meaning of the # annotations (applicable to flora only) has changed over the years. The # annotations that are currently valid are those adopted at the 16th Conference of the Parties (CoP 16). These are provided below.'
 
 fr:
   index_title: 'Répertoire des espèces CITES'
   history_title: 'Annales des inscriptions à la CITES'
-  pdf:
-    annotations_key: 'FR Annotations key'
-    non_hash_annotations: 'FR Annotations not preceded by "#"'
-    hash_annotations: 'FR Annotations preceded by "#"'
-    hash_annotations_index_info: 'FR Annotations are used in the CITES Appendices to indicate which population, parts or derivatives are concerned by the listing or to clarify its scope. The meaning of the # annotations (applicable to flora only) has changed over the years. The # annotations that are currently valid are those adopted at the 16th Conference of the Parties (CoP 16). These are provided below.'
