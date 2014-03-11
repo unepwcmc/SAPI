@@ -107,7 +107,7 @@ module Checklist::Pdf::HistoryContent
     short_note = LatexToPdf.html2latex(short_note)
     if listing_change.display_in_footnote && lng == 'en'
       full_note = listing_change.send("full_note_#{lng}")
-      full_note = LatexToPdf.html2latex(full_note)
+      full_note = LatexToPdf.html2latex(full_note).gsub(/[\n\r]/, ' ')
       "#{short_note}\\footnote{#{full_note}}"
     else
       short_note
