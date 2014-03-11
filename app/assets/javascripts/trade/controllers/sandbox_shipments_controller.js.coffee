@@ -44,10 +44,11 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
     @endPropertyChanges()
 
   transitionToParentController: ->
-    annualReportUpload = @get('controllers.annualReportUpload')
-    annualReportUpload.set('errorMessage', "")
-    annualReportUploadId = annualReportUpload.get('id')
-    @transitionToRoute('annual_report_upload', annualReportUploadId)
+    @get("controllers.annualReportUpload").set("currentError", null)
+    @transitionToRoute(
+      'annual_report_upload',
+      @get('controllers.annualReportUpload.id')
+    )
 
   unsavedChanges: (->
     @get('changedRowsCount') > 0
@@ -123,7 +124,6 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
         shipment.deleteRecord()
       @get('store').commit()
       @clearModifiedFlags()
-      @get("controllers.annualReportUpload").set("currentError", null)
       @transitionToParentController()
 
     cancelChanges: () ->
