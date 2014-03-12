@@ -1,3 +1,25 @@
+# == Schema Information
+#
+# Table name: trade_sandbox_template
+#
+#  id                        :integer          not null, primary key
+#  appendix                  :string(255)
+#  taxon_name                :string(255)
+#  term_code                 :string(255)
+#  quantity                  :string(255)
+#  unit_code                 :string(255)
+#  trading_partner           :string(255)
+#  country_of_origin         :string(255)
+#  export_permit             :string(255)
+#  origin_permit             :string(255)
+#  purpose_code              :string(255)
+#  source_code               :string(255)
+#  year                      :string(255)
+#  import_permit             :string(255)
+#  reported_taxon_concept_id :integer
+#  taxon_concept_id          :integer
+#
+
 require 'spec_helper'
 
 describe Trade::SandboxTemplate, :drops_tables => true do
