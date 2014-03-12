@@ -12,6 +12,7 @@
 #  column_names      :string(255)
 #  is_primary        :boolean          default(TRUE), not null
 #  scope             :hstore
+#  is_strict         :boolean          default(FALSE), not null
 #
 
 class Trade::NumericalityValidationRule < Trade::ValidationRule
