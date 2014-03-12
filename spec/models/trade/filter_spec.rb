@@ -5,27 +5,65 @@ describe Trade::Filter do
   describe :results do
     context "when searching by taxon concepts ids" do
       before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
-      context "at GENUS rank" do
-        subject { Trade::Filter.new({:taxon_concepts_ids => [@genus1.id]}).results }
-        specify { subject.should include(@shipment1) }
-        specify { subject.should_not include(@shipment2) }
-        specify { subject.length.should == 1 }
+      context "in the public interface" do
+        context "at GENUS rank" do
+          subject { Trade::Filter.new({
+            :taxon_concepts_ids => [@genus1.id],
+            :internal => false
+          }).results }
+          specify { subject.should include(@shipment1) }
+          specify { subject.should_not include(@shipment2) }
+          specify { subject.length.should == 1 }
+        end
+        context "at FAMILY rank" do
+          subject { Trade::Filter.new({
+            :taxon_concepts_ids => [@family.id],
+            :internal => false
+          }).results }
+          specify { subject.length.should == 0 }
+        end
+        context "at mixed ranks" do
+          subject {
+            Trade::Filter.new({
+              :taxon_concepts_ids => [@genus1.id, @taxon_concept2.id],
+              :internal => false
+            }).results
+          }
+          specify { subject.should include(@shipment1) }
+          specify { subject.should include(@shipment2) }
+          specify { subject.length.should == 6 }
+        end
       end
-      context "at FAMILY rank" do
-        subject { Trade::Filter.new({:taxon_concepts_ids => [@family.id]}).results }
-        specify { subject.should include(@shipment1) }
-        specify { subject.should include(@shipment2) }
-        specify { subject.length.should == 6 }
-      end
-      context "at mixed ranks" do
-        subject {
-          Trade::Filter.new({
-            :taxon_concepts_ids => [@genus1.id, @taxon_concept2.id]
-          }).results
-        }
-        specify { subject.should include(@shipment1) }
-        specify { subject.should include(@shipment2) }
-        specify { subject.length.should == 6 }
+      context "in the admin interface" do
+        context "at GENUS rank" do
+          subject { Trade::Filter.new({
+            :taxon_concepts_ids => [@genus1.id],
+            :internal => true
+          }).results }
+          specify { subject.should include(@shipment1) }
+          specify { subject.should_not include(@shipment2) }
+          specify { subject.length.should == 1 }
+        end
+        context "at FAMILY rank" do
+          subject { Trade::Filter.new({
+            :taxon_concepts_ids => [@family.id],
+            :internal => true
+          }).results }
+          specify { subject.should include(@shipment1) }
+          specify { subject.should include(@shipment2) }
+          specify { subject.length.should == 6 }
+        end
+        context "at mixed ranks" do
+          subject {
+            Trade::Filter.new({
+              :taxon_concepts_ids => [@genus1.id, @taxon_concept2.id],
+              :internal => true
+            }).results
+          }
+          specify { subject.should include(@shipment1) }
+          specify { subject.should include(@shipment2) }
+          specify { subject.length.should == 6 }
+        end
       end
       context "when subspecies shipments present" do
         before(:each) do
