@@ -54,23 +54,13 @@ CREATE OR REPLACE FUNCTION cms_aggregate_children_listing(node_id INT)
       ) AS listing
       FROM taxon_concepts
       WHERE
+        -- NOTE: THIS WHERE CLAUSE DIFFERS FROM CITES & EU
         -- aggregate children's listings
         parent_id = $1
         -- as well as parent if they're explicitly listed
         OR (
           id = $1
           AND (listing->'cms_status_original')::BOOLEAN
-        )
-        -- as well as parent if they are species
-        -- the assumption being they will have subspecies
-        -- which are not listed in their own right and
-        -- should therefore inherit the cascaded listing
-        -- if one exists
-        -- this should fix Lutrinae species, which should be I/II
-        -- even though subspecies in the db are on I
-        OR (
-          id = $1
-          AND data->'rank_name' = 'SPECIES'
         )
     )
     SELECT listing
