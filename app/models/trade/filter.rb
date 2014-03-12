@@ -36,9 +36,23 @@ class Trade::Filter
 
     ancestor_ranks = Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
     unless @taxon_concepts_ids.empty?
-      taxa = MTaxonConceptFilterByIdWithDescendants.new(
-        nil, @taxon_concepts_ids
-      ).relation(ancestor_ranks)
+      taxa = if !@internal
+        # the magnificent hack to make sure we're not cascading
+        # for higher taxa if query is coming from the public
+        # interface; instead, return just trade reported at that level
+        # BTW "higher" means > genus
+        # taxa = MTaxonConcept.where(:id => @taxon_concepts_ids)
+        # higher_taxa, lower_taxa = taxa.partition do |taxon|
+        #   Rank.in_range(Rank::SUBFAMILY, Rank::KINGDOM).include? taxon.rank_name
+        # end
+        MTaxonConceptFilterByIdWithDescendants.new(
+          nil, @taxon_concepts_ids
+        ).relation(Rank.in_range(Rank::SPECIES, Rank::GENUS))
+      else
+        MTaxonConceptFilterByIdWithDescendants.new(
+          nil, @taxon_concepts_ids
+        ).relation(ancestor_ranks)
+      end
       @query = @query.where(
         :taxon_concept_id => taxa.select(:id).map(&:id)
       )
