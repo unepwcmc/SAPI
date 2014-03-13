@@ -61,6 +61,7 @@ class Trade::Shipment < ActiveRecord::Base
   validates_with Trade::ShipmentSecondaryErrorsValidator
 
   belongs_to :taxon_concept
+  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
   belongs_to :reported_taxon_concept, :class_name => 'TaxonConcept'
   belongs_to :purpose, :class_name => "TradeCode"
   belongs_to :source, :class_name => "TradeCode"

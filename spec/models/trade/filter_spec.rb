@@ -8,16 +8,16 @@ describe Trade::Filter do
       context "in the public interface" do
         context "at GENUS rank" do
           subject { Trade::Filter.new({
-            :taxon_concepts_ids => [@genus1.id],
+            :taxon_concepts_ids => [@animal_genus.id],
             :internal => false
           }).results }
           specify { subject.should include(@shipment1) }
           specify { subject.should_not include(@shipment2) }
-          specify { subject.length.should == 1 }
+          specify { subject.length.should == 2 }
         end
         context "at FAMILY rank" do
           subject { Trade::Filter.new({
-            :taxon_concepts_ids => [@family.id],
+            :taxon_concepts_ids => [@animal_family.id],
             :internal => false
           }).results }
           specify { subject.length.should == 0 }
@@ -25,7 +25,7 @@ describe Trade::Filter do
         context "at mixed ranks" do
           subject {
             Trade::Filter.new({
-              :taxon_concepts_ids => [@genus1.id, @taxon_concept2.id],
+              :taxon_concepts_ids => [@animal_genus.id, @plant_species.id],
               :internal => false
             }).results
           }
@@ -37,26 +37,26 @@ describe Trade::Filter do
       context "in the admin interface" do
         context "at GENUS rank" do
           subject { Trade::Filter.new({
-            :taxon_concepts_ids => [@genus1.id],
+            :taxon_concepts_ids => [@animal_genus.id],
             :internal => true
           }).results }
           specify { subject.should include(@shipment1) }
           specify { subject.should_not include(@shipment2) }
-          specify { subject.length.should == 1 }
+          specify { subject.length.should == 2 }
         end
         context "at FAMILY rank" do
           subject { Trade::Filter.new({
-            :taxon_concepts_ids => [@family.id],
+            :taxon_concepts_ids => [@plant_family.id],
             :internal => true
           }).results }
-          specify { subject.should include(@shipment1) }
           specify { subject.should include(@shipment2) }
-          specify { subject.length.should == 6 }
+          specify { subject.should_not include(@shipment1) }
+          specify { subject.length.should == 4 }
         end
         context "at mixed ranks" do
           subject {
             Trade::Filter.new({
-              :taxon_concepts_ids => [@genus1.id, @taxon_concept2.id],
+              :taxon_concepts_ids => [@animal_genus.id, @plant_species.id],
               :internal => true
             }).results
           }
@@ -71,7 +71,7 @@ describe Trade::Filter do
         end
         subject {
           Trade::Filter.new({
-            :taxon_concepts_ids => [@taxon_concept1.id]
+            :taxon_concepts_ids => [@animal_species.id]
           }).results
         }
         specify { subject.should include(@shipment_of_subspecies) }
@@ -81,13 +81,13 @@ describe Trade::Filter do
           @shipment_of_synonym_subspecies = create(
             :shipment,
             :reported_taxon_concept_id => @synonym_subspecies.id,
-            :taxon_concept_id => @taxon_concept2.id
+            :taxon_concept_id => @plant_species.id
           )
         end
         context "when searching by taxonomic parent" do
           subject {
             Trade::Filter.new({
-              :taxon_concepts_ids => [@taxon_concept1.id]
+              :taxon_concepts_ids => [@animal_species.id]
             }).results
           }
           specify { subject.should_not include(@shipment_of_synonym_subspecies) }
@@ -95,7 +95,7 @@ describe Trade::Filter do
         context "when searching by accepted name" do
           subject {
             Trade::Filter.new({
-              :taxon_concepts_ids => [@taxon_concept2.id]
+              :taxon_concepts_ids => [@plant_species.id]
             }).results
           }
           specify { subject.should include(@shipment_of_synonym_subspecies) }
@@ -109,7 +109,7 @@ describe Trade::Filter do
           @shipment_of_trade_name = create(
             :shipment,
             :reported_taxon_concept_id => @trade_name.id,
-            :taxon_concept_id => @taxon_concept2.id
+            :taxon_concept_id => @plant_species.id
           )
         end
         subject {
@@ -127,7 +127,7 @@ describe Trade::Filter do
     end
 
     context "when searching for terms_ids" do
-      subject { Trade::Filter.new({:terms_ids => [@term.id]}).results }
+      subject { Trade::Filter.new({:terms_ids => [@term_cav.id]}).results }
       specify { subject.should include(@shipment1) }
       specify { subject.length.should == 2 }
     end
