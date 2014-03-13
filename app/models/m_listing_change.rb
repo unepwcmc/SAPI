@@ -48,7 +48,7 @@ module MListingChange
         :only => [
           :id, :change_type_name, :species_listing_name, :party_id,
           :is_current, :hash_ann_symbol, :hash_ann_parent_symbol,
-          :effective_at, :inclusion_taxon_concept_id
+          :effective_at, :auto_note, :inclusion_taxon_concept_id
         ],
         :methods => [
           :countries_ids,
