@@ -33,5 +33,43 @@ namespace :import do
     puts "There are now #{Annotation.count} hash_annotations in the database"
   end
 
+  desc 'Import hash annotation translations'
+  task :hash_annotations_cites_translations => [:environment] do
+    TMP_TABLE = "hash_annotations_translations_import"
+    file = "lib/files/hash_annotations_cites_translations.csv"
+    drop_table(TMP_TABLE)
+    create_table_from_csv_headers(file, TMP_TABLE)
+    copy_data(file, TMP_TABLE)
+
+    res = ActiveRecord::Base.connection.execute("SELECT COUNT(*) FROM #{TMP_TABLE}")
+    puts "Attempting to import #{res[0]['count']} rows"
+
+    sql =<<-SQL
+      WITH translated_annotations AS (
+        SELECT
+        annotations.id,
+        translations.full_note_es,
+        translations.full_note_fr
+        FROM #{TMP_TABLE} translations
+        JOIN events
+        ON events.legacy_id = translations.event_legacy_id
+        JOIN designations
+        ON events.designation_id = designations.id
+          AND designations.name = 'CITES'
+        JOIN annotations
+        ON events.id = annotations.event_id
+          AND BTRIM(translations.symbol) = BTRIM(annotations.symbol)
+      )
+      UPDATE annotations
+      SET full_note_es = ta.full_note_es, full_note_fr = ta.full_note_fr
+      FROM translated_annotations ta
+      WHERE ta.id = annotations.id
+    SQL
+
+    res = ActiveRecord::Base.connection.execute(sql)
+
+    puts "Updated #{res.cmd_tuples} rows"
+  end
+
 end
 

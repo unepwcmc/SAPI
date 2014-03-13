@@ -183,6 +183,15 @@ class CsvToDbMap
       'For Display' => 'ignore varchar',
       'Text' => 'full_note_en varchar'
     },
+    'hash_annotations_translations_import' => {
+      'Event No' => 'event_legacy_id integer',
+      'Event' => 'event varchar',
+      'Hash No' => 'symbol varchar',
+      'For Display' => 'ignore varchar',
+      'Annotations_English' => 'full_note_en varchar',
+      'Annotations_Spanish' => 'full_note_es varchar',
+      'Annotations_French' => 'full_note_fr varchar'
+    },
     'eu_listings_import' => {
       'LAW_NUM' => 'event_legacy_id integer',
       'RANK_NAME' => 'rank varchar',
