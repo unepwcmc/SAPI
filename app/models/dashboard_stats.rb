@@ -10,99 +10,77 @@ class DashboardStats
     @geo_entity = geo_entity
   end
 
-  def get_species_classes taxonomy
-    taxonomy_id = Taxonomy.where(:name => taxonomy.upcase).select('id').first
-    MTaxonConcept.where(
-      :rank_name => 'CLASS', :kingdom_name => @kingdom, :taxonomy_id => taxonomy_id).
-      select([:class_name, :english_names_ary]).uniq.
-      map do |s| 
-        {:name => s.class_name, :common_name_en => s.english_names.first}
-      end
-  end
-
   def species
-    species_results = {}
-    [:cites_eu, :cms].each do |taxonomy|
-      species_results[taxonomy] = []
-      get_species_classes(:cites_eu).each do |species_class|
-        if taxonomy == :cites_eu
-          cites_condition = 'cites_listed IS NOT NULL'
-        else
-          cites_condition = 'cms_listed IS NOT NULL'
-        end
-        search = MTaxonConcept.where(
-          "#{cites_condition}
-          AND class_name = '#{species_class[:name]}'
-          AND countries_ids_ary && ARRAY[#{@geo_entity.id}]")
-        result = { 
-          :name => species_class[:name],
-          :common_name_en => species_class[:common_name_en],
-          :count => search.count
-        }
-        species_results[taxonomy] << result
-      end
-    end
-    species_results
+    {
+      :cites_eu => species_stats_per_taxonomy(Taxonomy::CITES_EU),
+      :cms => species_stats_per_taxonomy(Taxonomy::CMS)
+    }
   end
 
   def trade
-    trade_results = {}
-    trade_results[:exports] = get_trade_stats 'exports'
-    trade_results[:imports] = get_trade_stats 'imports'
-    trade_results
-  end
-
-  def meta 
     {
-      :trade => {   
-        :country_of_origin_id => nil,
-        :term => "LIV",
-        :unit => nil,
-        :source => "W"
-      },
-      :species => {
-        :cites_listed => 'IS NOT NULL'
-      }
+      :exports => trade_stats_per_reporter_type(:exporter),
+      :imports => trade_stats_per_reporter_type(:importer)
     }
   end
 
   private
 
-  def get_trade_stats trade_type
-    hash = {:top_traded => []}
-    geo_id = trade_type == "exports" ? :exporter_id : :importer_id
-    totals = Trade::ShipmentView.where(
-      geo_id => @geo_entity.id,
+  def species_stats_per_taxonomy taxonomy_name
+    taxonomy = Taxonomy.find_by_name(taxonomy_name)
+    classes = taxonomy && MTaxonConcept.where(
+      :taxonomy_id => taxonomy.id,
+      :rank_name => Rank::CLASS,
+      :kingdom_name => @kingdom
+    )
+    designation_name = (taxonomy_name == Taxonomy::CMS ? :cms : :cites)
+    classes && classes.map do |klass|
+      cnt = MTaxonConcept.where(:class_id => klass.id).
+        where("countries_ids_ary && ARRAY[#{@geo_entity.id}]").
+        where("#{designation_name}_listed IS NOT NULL").count
+      {
+        :name => klass.full_name,
+        :common_name_en => klass.english_names.first,
+        :count => cnt
+      }
+    end || []
+  end
+
+  def trade_stats_per_reporter_type reporter_type
+    source = Source.find_by_code('W')
+    term = Term.find_by_code('LIV')
+    shipments_for_country = Trade::Shipment.where(
       :country_of_origin_id => nil,
-      :term => "LIV",
-      :unit => nil,
-      :source => "W"
-    ).count
-    hash[:totals] = totals
-    tops = Trade::ShipmentView.
-      select("taxon_concept_id, sum(quantity) as count_all").
-      where(
-        geo_id => @geo_entity.id,
-        :country_of_origin_id => nil,
-        :term => "LIV",
-        :unit => nil,
-        :source => "W"
+      :term_id => term.id,
+      :unit_id => nil,
+      :source_id => source.id,
+      :"#{reporter_type}_id" => @geo_entity.id,
+      :reported_by_exporter => (reporter_type == 'exporter')
+    )
+
+    top_traded_taxa_for_country = shipments_for_country.
+      joins(<<-SQL
+        JOIN taxon_concepts_mview tc
+        ON tc.id = trade_shipments.taxon_concept_id
+        AND kingdom_name = '#{@kingdom}'
+        AND cites_listed IS NOT NULL
+      SQL
       ).
-      joins(:m_taxon_concept).
-      where("taxon_concepts_mview.cites_listed IS NOT NULL").
+      includes(:m_taxon_concept).
+      select("taxon_concept_id, sum(quantity) as count_all").
       group(:taxon_concept_id).
       order("count_all desc").
       limit(@trade_limit)
-    tops.each do |top|
-      taxon_concept = MTaxonConcept.find(top.taxon_concept_id)
-      top_traded = {
-        :name => taxon_concept[:full_name],
-        :common_name_en => taxon_concept.english_names.first,
-        :count => top.count_all.to_i
-      }
-      hash[:top_traded] << top_traded
-    end
-    hash
-  end 
+    {
+      :totals => shipments_for_country.count,
+      :top_traded => top_traded_taxa_for_country.map do |t|
+        {
+          :name => t.m_taxon_concept.full_name,
+          :common_name_en => t.m_taxon_concept.english_names.first,
+          :count => t.count_all.to_i
+        }
+      end
+    }
+  end
 
 end
