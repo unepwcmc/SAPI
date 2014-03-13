@@ -31,8 +31,11 @@
 
 \setlength{\headheight}{12pt}
 
+\newif\ifintro
+
 \begin{document}
 
+\include{_flags}
 \include{_dict}
 
 \renewcommand{\rmdefault}{phv}
@@ -72,8 +75,10 @@
   }
 }
 
+\ifintro
 \includepdf[pages=1]{\indexIntroductionFile}
 \includepdf[pages=2-]{\indexIntroductionFile}
+\fi
 
 \rmfamily
 \raggedright
