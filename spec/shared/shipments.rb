@@ -1,44 +1,53 @@
 #Encoding: utf-8
 shared_context 'Shipments' do
   before(:each) do
-    @family = create_cites_eu_family
-    @genus1 = create_cites_eu_genus(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus'),
-      :parent => @family
+    @animal_family = create_cites_eu_family(
+      :parent => create_cites_eu_order(
+        :parent => cites_eu_mammalia
+      )
     )
-    @taxon_concept1 = create_cites_eu_species(
+    @plant_family = create_cites_eu_family(
+      :parent => create_cites_eu_order(
+        :parent => cites_eu_plantae
+      )
+    )
+    @animal_genus = create_cites_eu_genus(
+      :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus'),
+      :parent => @animal_family
+    )
+    @animal_species = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'abstractus'),
-      :parent => @genus1
+      :parent => @animal_genus
     )
     create_cites_I_addition(
-      :taxon_concept => @taxon_concept1,
+      :taxon_concept => @animal_species,
       :effective_at => 1.day.ago,
       :is_current => true
     )
-    @genus2 = create_cites_eu_genus(
+    @plant_genus = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Nullificus'),
-      :parent => @family
+      :parent => @plant_family
     )
-    @taxon_concept2 = create_cites_eu_species(
+    @plant_species = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'totalus'),
-      :parent => @genus2
+      :parent => @plant_genus
     )
     create_cites_II_addition(
-      :taxon_concept => @taxon_concept2,
+      :taxon_concept => @plant_species,
       :effective_at => 1.day.ago,
       :is_current => true
     )
 
     @subspecies = create_cites_eu_subspecies(
-      :parent => @taxon_concept1
+      :parent => @animal_species
     )
     @synonym_subspecies = create_cites_eu_subspecies(
-      :parent => @taxon_concept1,
+      :parent => @animal_species,
       :name_status => 'S'
     )
     create(
       :taxon_relationship,
-      :taxon_concept => @taxon_concept2,
+      :taxon_concept => @plant_species,
       :other_taxon_concept => @synonym_subspecies,
       :taxon_relationship_type => create(
         :taxon_relationship_type,
@@ -51,7 +60,7 @@ shared_context 'Shipments' do
     )
     create(
       :taxon_relationship,
-      :taxon_concept => @taxon_concept2,
+      :taxon_concept => @plant_species,
       :other_taxon_concept => @trade_name,
       :taxon_relationship_type => create(
         :taxon_relationship_type,
@@ -72,8 +81,8 @@ shared_context 'Shipments' do
                        :iso_code2 => 'PT'
                       )
 
-    @term = create(:term, :code => 'CAV')
-    @term2 = create(:term, :code => 'LIV')
+    @term_cav = create(:term, :code => 'CAV')
+    @term_liv = create(:term, :code => 'LIV')
     @unit = create(:unit, :code => 'KIL')
     @purpose = create(:purpose, :code => 'T')
     @source = create(:source, :code => 'C')
@@ -84,11 +93,11 @@ shared_context 'Shipments' do
     @export_permit2 = create(:permit, :number => 'CCC')
     @shipment1 = create(
       :shipment,
-      :taxon_concept => @taxon_concept1,
+      :taxon_concept => @animal_species,
       :appendix => 'I',
       :purpose => @purpose,
       :source => @source,
-      :term => @term,
+      :term => @term_cav,
       :unit => @unit,
       :importer => @argentina,
       :exporter => @portugal,
@@ -102,11 +111,11 @@ shared_context 'Shipments' do
     )
     @shipment2 = create(
       :shipment,
-      :taxon_concept => @taxon_concept2,
+      :taxon_concept => @plant_species,
       :appendix => 'II',
       :purpose => @purpose,
       :source => @source_wild,
-      :term => @term,
+      :term => @term_cav,
       :unit => @unit,
       :importer => @portugal,
       :exporter => @argentina,
@@ -117,41 +126,41 @@ shared_context 'Shipments' do
     )
     @shipment3 = create(
       :shipment,
-      :taxon_concept => @taxon_concept2,
+      :taxon_concept => @plant_species,
       :appendix => 'II',
       :purpose => @purpose,
       :source => @source_wild,
-      :term => @term2,
+      :term => @term_liv,
       :unit => nil,
       :importer => @portugal,
       :exporter => @argentina,
       :country_of_origin => nil,
       :year => 2013,
       :reported_by_exporter => false,
-      :quantity => 10
+      :quantity => 25
     )
     @shipment4 = create(
       :shipment,
-      :taxon_concept => @taxon_concept2,
+      :taxon_concept => @animal_species,
       :appendix => 'II',
       :purpose => @purpose,
       :source => @source_wild,
-      :term => @term2,
+      :term => @term_liv,
       :unit => nil,
       :importer => @portugal,
       :exporter => @argentina,
       :country_of_origin => nil,
       :year => 2013,
       :reported_by_exporter => false,
-      :quantity => 50
+      :quantity => 35
     )
     @shipment5 = create(
       :shipment,
-      :taxon_concept => @taxon_concept2,
+      :taxon_concept => @plant_species,
       :appendix => 'II',
       :purpose => @purpose,
       :source => @source_unknown,
-      :term => @term2,
+      :term => @term_liv,
       :unit => nil,
       :importer => @portugal,
       :exporter => @argentina,
@@ -162,11 +171,11 @@ shared_context 'Shipments' do
     )
     @shipment6 = create(
       :shipment,
-      :taxon_concept => @taxon_concept2,
+      :taxon_concept => @plant_species,
       :appendix => 'II',
       :purpose => @purpose,
       :source => nil,
-      :term => @term2,
+      :term => @term_liv,
       :unit => nil,
       :importer => @portugal,
       :exporter => @argentina,
