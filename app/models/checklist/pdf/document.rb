@@ -14,6 +14,11 @@ module Checklist::Pdf::Document
     # copy the dictionary to intermediate directory
     FileUtils.copy_file [Rails.root, "/public/latex/", "_dict_#{I18n.locale}.tex"].join,
       [tmp_dir_path, '/_dict.tex'].join
+    # set flags for latex
+    flags_tex = [tmp_dir_path, "/_flags.tex"].join
+    File.open(flags_tex, 'wb') do |tex|
+      tex << (@intro ? "\\introtrue\n" : "\\introfalse\n")
+    end
 
     @template_tex = [tmp_dir_path, "/#{@input_name}.tex"].join
     @tmp_tex    = [tmp_dir_path, "/_#{@input_name}.tex"].join

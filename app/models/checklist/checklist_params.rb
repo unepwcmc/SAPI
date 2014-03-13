@@ -24,6 +24,7 @@ class Checklist::ChecklistParams < Hash
       :french_common_names => params[:show_french] && params[:show_french] != '0',
       :synonyms => params[:show_synonyms] && params[:show_synonyms] != '0',
       :authors => params[:show_author] && params[:show_author] != '0',
+      :intro => ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:intro]),
       :page => params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
       :per_page => params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 20
     }

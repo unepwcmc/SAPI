@@ -35,8 +35,11 @@
   }
 \fi
 
+\newif\ifintro
+
 \begin{document}
 
+\include{_flags}
 \include{_dict}
 
 \renewcommand{\rmdefault}{phv}
@@ -102,8 +105,10 @@
   }
 }
 
+\ifintro
 \includepdf[pages=1]{\historyIntroductionFile}
 \includepdf[pages=2-]{\historyIntroductionFile}
+\fi
 
 \hypertarget{contentstart}{}
 \setcounter{page}{\thepage - 2}
