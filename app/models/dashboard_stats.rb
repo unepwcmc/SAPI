@@ -54,15 +54,15 @@ class DashboardStats
       :term_id => term.id,
       :unit_id => nil,
       :source_id => source.id,
-      :"#{reporter_type}_id" => @geo_entity.id#,
-      #:reported_by_exporter => (reporter_type == 'exporter')
+      :"#{reporter_type}_id" => @geo_entity.id,
+      :reported_by_exporter => (reporter_type == 'exporter')
     )
 
     top_traded_taxa_for_country = shipments_for_country.
       joins(<<-SQL
         JOIN taxon_concepts_mview tc
         ON tc.id = trade_shipments.taxon_concept_id
-        -- AND kingdom_name = 'Animalia'
+        AND kingdom_name = '#{@kingdom}'
         AND cites_listed IS NOT NULL
       SQL
       ).
