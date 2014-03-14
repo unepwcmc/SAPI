@@ -2,12 +2,15 @@ class DashboardStats
 
   include ActiveModel::Serializers::JSON
 
-  attr_reader :geo_entity, :kingdom, :trade_limit
+  attr_reader :geo_entity, :kingdom, :time_range_start, :time_range_end,
+    :trade_limit
 
-  def initialize (geo_entity, kingdom, trade_limit)
+  def initialize (geo_entity, kingdom, trade_limit, time_range_start, time_range_end)
     @kingdom = kingdom
     @trade_limit = trade_limit
     @geo_entity = geo_entity
+    @time_range_start = time_range_start
+    @time_range_end = time_range_end
   end
 
   def species
@@ -57,6 +60,13 @@ class DashboardStats
       :"#{reporter_type}_id" => @geo_entity.id,
       :reported_by_exporter => (reporter_type == 'exporter')
     )
+
+    if @time_range_start && @time_range_end &&
+      @time_range_start < @time_range_end
+      shipments_for_country = shipments_for_country.where(
+        ["year >= ? AND year <= ?", @time_range_start, @time_range_end]
+      )
+    end
 
     top_traded_taxa_for_country = shipments_for_country.
       joins(<<-SQL
