@@ -5,8 +5,8 @@
 #  id              :integer          not null, primary key
 #  distribution_id :integer          not null
 #  reference_id    :integer          not null
-#  created_at      :datetime
-#  updated_at      :datetime
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 
 class DistributionReference < ActiveRecord::Base
@@ -14,4 +14,6 @@ class DistributionReference < ActiveRecord::Base
 
   belongs_to :reference
   belongs_to :distribution, :touch => true
+
+  validates :distribution_id, :uniqueness => {:scope => :reference_id}
 end
