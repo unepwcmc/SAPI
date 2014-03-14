@@ -22,10 +22,10 @@ describe DashboardStats do
     )
   }
   let(:ds_ar){
-    DashboardStats.new argentina, 'Animalia', 5
+    DashboardStats.new argentina, {:kingdom => 'Animalia', :trade_limit => 5}
   }
   let(:ds_gh){
-    DashboardStats.new ghana, 'Animalia', 5
+    DashboardStats.new ghana, {:kingdom => 'Animalia', :trade_limit => 5}
   }
 
   describe "#new" do

@@ -5,12 +5,12 @@ class DashboardStats
   attr_reader :geo_entity, :kingdom, :time_range_start, :time_range_end,
     :trade_limit
 
-  def initialize (geo_entity, kingdom, trade_limit, time_range_start, time_range_end)
-    @kingdom = kingdom
-    @trade_limit = trade_limit
+  def initialize (geo_entity, options)
     @geo_entity = geo_entity
-    @time_range_start = time_range_start
-    @time_range_end = time_range_end
+    @kingdom = options[:kingdom] || 'Animalia'
+    @trade_limit = options[:trade_limit]
+    @time_range_start = options[:time_range_start]
+    @time_range_end = options[:time_range_end]
   end
 
   def species
@@ -52,17 +52,19 @@ class DashboardStats
   def trade_stats_per_reporter_type reporter_type
     source = Source.find_by_code('W')
     term = Term.find_by_code('LIV')
+    purpose = Purpose.find_by_code('T')
     shipments_for_country = Trade::Shipment.where(
       :country_of_origin_id => nil,
       :term_id => term.id,
       :unit_id => nil,
       :source_id => source.id,
+      :purpose_id => purpose.id,
       :"#{reporter_type}_id" => @geo_entity.id,
       :reported_by_exporter => (reporter_type == 'exporter')
     )
 
     if @time_range_start && @time_range_end &&
-      @time_range_start < @time_range_end
+      @time_range_start <= @time_range_end
       shipments_for_country = shipments_for_country.where(
         ["year >= ? AND year <= ?", @time_range_start, @time_range_end]
       )
