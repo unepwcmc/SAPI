@@ -7,7 +7,7 @@ module DashboardStatsCache
       where("geo_entity_types.name in ('COUNTRY','TERRITORY')")
     countries.each do |country|
       puts "Warming up #{country.name_en}"
-      stats = DashboardStats.new(country, 'Animalia', 6)
+      stats = DashboardStats.new(country, {:kingdom => 'Animalia', :trade_limit => 6})
       DashboardStatsSerializer.new(stats).serializable_hash
     end
   end
