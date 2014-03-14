@@ -15,7 +15,6 @@ class Checklist::TimelineEvent
   #:hash_ann_parent_symbol e.g. CoP15
   #:pos - position (%)
   def initialize(options)
-    puts options.inspect
     @id = object_id
     @pos = options[:pos]
     @party_id = options[:party_id]
