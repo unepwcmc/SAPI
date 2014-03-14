@@ -22,7 +22,9 @@ class DashboardStatsSerializer < ActiveModel::Serializer
       self.class.name,
       @object.geo_entity.id,
       @object.kingdom,
-      @object.trade_limit
+      @object.trade_limit,
+      @object.time_range_start,
+      @object.time_range_end
     ]
     Rails.logger.debug "CACHE KEY: #{key.inspect}"
     key
