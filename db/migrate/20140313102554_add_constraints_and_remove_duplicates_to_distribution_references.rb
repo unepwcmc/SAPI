@@ -8,11 +8,11 @@ class AddConstraintsAndRemoveDuplicatesToDistributionReferences < ActiveRecord::
         AND distribution_references.id < dr.id;
 
       UPDATE distribution_references
-      SET created_at = '13/11/2013'
+      SET created_at = '2013-11-13'
       WHERE created_at IS NULL;
 
       UPDATE distribution_references
-      SET updated_at = '13/11/2013'
+      SET updated_at = '2013-11-13'
       WHERE updated_at IS NULL;
     SQL
     ActiveRecord::Base.connection.execute(sql)
