@@ -1,13 +1,17 @@
 class Trade::Filter
-  attr_reader :page, :per_page, :query
+  attr_reader :page, :per_page, :query, :report_type, :options
   def initialize(options)
     initialize_params(options)
     initialize_query
   end
 
-  def results
+  def query_with_limit
     @query.limit(@per_page).
-      offset(@per_page * (@page - 1)).all
+      offset(@per_page * (@page - 1))
+  end
+
+  def results
+    query_with_limit.all
   end
 
   def total_cnt
@@ -25,10 +29,42 @@ class Trade::Filter
     @query = Trade::Shipment.order('year DESC').
       preload(:taxon_concept) #includes would override the select clause
 
-    # Id's (array)
+    if @report_type == :raw
+      # only use the view for the raw report (in practice admin only)
+      @query = @query.from('trade_shipments_view trade_shipments')
+    end
+
+    ancestor_ranks = Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
     unless @taxon_concepts_ids.empty?
-      taxa = MTaxonConceptFilterByIdWithDescendants.new(nil, @taxon_concepts_ids).relation
-      @query = @query.where(:taxon_concept_id => taxa.select(:id).map(&:id))
+      taxa = if !@internal
+        # the magnificent hack to make sure we're not cascading
+        # for higher taxa if query is coming from the public
+        # interface; instead, return just trade reported at that level
+        # BTW "higher" means > genus
+        # taxa = MTaxonConcept.where(:id => @taxon_concepts_ids)
+        # higher_taxa, lower_taxa = taxa.partition do |taxon|
+        #   Rank.in_range(Rank::SUBFAMILY, Rank::KINGDOM).include? taxon.rank_name
+        # end
+        MTaxonConceptFilterByIdWithDescendants.new(
+          nil, @taxon_concepts_ids
+        ).relation(Rank.in_range(Rank::SPECIES, Rank::GENUS))
+      else
+        MTaxonConceptFilterByIdWithDescendants.new(
+          nil, @taxon_concepts_ids
+        ).relation(ancestor_ranks)
+      end
+      @query = @query.where(
+        :taxon_concept_id => taxa.select(:id).map(&:id)
+      )
+    end
+
+    unless @reported_taxon_concepts_ids.empty?
+      taxa = MTaxonConceptFilterByIdWithDescendants.new(
+        nil, @reported_taxon_concepts_ids
+      ).relation(ancestor_ranks)
+      @query = @query.where(
+        :reported_taxon_concept_id => taxa.select(:id).map(&:id)
+      )
     end
 
     unless @appendices.empty?
@@ -64,6 +100,11 @@ class Trade::Filter
     end
 
     if !@sources_ids.empty?
+      if !@internal && (w = Source.find_by_code('W')) && @sources_ids.include?(w.id)
+        u = Source.find_by_code('U')
+        @sources_ids << u.id if u
+        @source_blank = true
+      end
       local_field = "source_id"
       blank_query = @source_blank ? "OR source_id IS NULL" : ""
       @query = @query.where("#{local_field} IN (?) #{blank_query}", @sources_ids)
@@ -98,9 +139,8 @@ class Trade::Filter
 
   def initialize_internal_query
     if @report_type == :raw
-      # only use the view for the raw report in admin
-      @query = @query.from('trade_shipments_view trade_shipments').
-        preload(:reported_taxon_concept) #includes would override the select clause
+      #includes would override the select clause
+      @query = @query.preload(:reported_taxon_concept)
     end
 
     if ['I', 'E'].include? @reporter_type

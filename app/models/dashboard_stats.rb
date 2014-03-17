@@ -2,78 +2,97 @@ class DashboardStats
 
   include ActiveModel::Serializers::JSON
 
-  attr_reader :geo_entity, :kingdom, :trade_limit
+  attr_reader :geo_entity, :kingdom, :time_range_start, :time_range_end,
+    :trade_limit
 
-  def initialize (iso_code, kingdom, trade_limit)
-    @iso_code = iso_code
-    @kingdom = kingdom || 'Animalia'
-    @trade_limit = trade_limit || 5
-    @geo_entity = GeoEntity.where(:iso_code2 => iso_code).first
-  end
-
-  def get_species_classes taxonomy
-    taxonomy_id = Taxonomy.where(:name => taxonomy.upcase).select('id').first
-    MTaxonConcept.where(
-      :rank_name => 'CLASS', :kingdom_name => @kingdom, :taxonomy_id => taxonomy_id).
-      select([:class_name, :english_names_ary]).uniq.
-      map do |s| 
-        {:name => s.class_name, :common_name_en => s.english_names.first}
-      end
+  def initialize (geo_entity, options)
+    @geo_entity = geo_entity
+    @kingdom = options[:kingdom] || 'Animalia'
+    @trade_limit = options[:trade_limit]
+    @time_range_start = options[:time_range_start]
+    @time_range_end = options[:time_range_end]
   end
 
   def species
-    species_results = {}
-    [:cites_eu, :cms].each do |taxonomy|
-      species_results[taxonomy] = []
-      get_species_classes(taxonomy).each do |species_class|
-        taxonomy_is_cites_eu = taxonomy == :cites_eu ? 't' : 'f'
-        search = MTaxonConcept.where(
-          "taxonomy_is_cites_eu = '#{taxonomy_is_cites_eu}'
-          AND class_name = '#{species_class[:name]}'
-          AND countries_ids_ary && ARRAY[#{@geo_entity.id}]")
-        result = { 
-          :name => species_class[:name],
-          :common_name_en => species_class[:common_name_en],
-          :count => search.count
-        }
-        species_results[taxonomy] << result
-      end
-    end
-    species_results
+    {
+      :cites_eu => species_stats_per_taxonomy(Taxonomy::CITES_EU),
+      :cms => species_stats_per_taxonomy(Taxonomy::CMS)
+    }
   end
 
   def trade
-    trade_results = {}
-    trade_results[:exports] = get_trade_stats 'exports'
-    trade_results[:imports] = get_trade_stats 'imports'
-    trade_results
+    {
+      :exports => trade_stats_per_reporter_type(:exporter),
+      :imports => trade_stats_per_reporter_type(:importer)
+    }
   end
 
   private
 
-  def get_trade_stats trade_type
-    hash = {:top_traded => []}
-    geo_id = trade_type == "exports" ? :exporter_id : :importer_id
-    totals = Trade::ShipmentView.where(
-      geo_id => @geo_entity.id
-    ).count
-    hash[:totals] = totals
-    tops = Trade::ShipmentView.
-      select("taxon_concept_id, count(*) as count_all").
-      where(geo_id => @geo_entity.id).
+  def species_stats_per_taxonomy taxonomy_name
+    taxonomy = Taxonomy.find_by_name(taxonomy_name)
+    classes = taxonomy && MTaxonConcept.where(
+      :taxonomy_id => taxonomy.id,
+      :rank_name => Rank::CLASS,
+      :kingdom_name => @kingdom
+    )
+    designation_name = (taxonomy_name == Taxonomy::CMS ? :cms : :cites)
+    classes && classes.map do |klass|
+      cnt = MTaxonConcept.where(:class_id => klass.id).
+        where("countries_ids_ary && ARRAY[#{@geo_entity.id}]").
+        where("#{designation_name}_listed IS NOT NULL").count
+      {
+        :name => klass.full_name,
+        :common_name_en => klass.english_names.first,
+        :count => cnt
+      }
+    end || []
+  end
+
+  def trade_stats_per_reporter_type reporter_type
+    source = Source.find_by_code('W')
+    term = Term.find_by_code('LIV')
+    purpose = Purpose.find_by_code('T')
+    shipments_for_country = Trade::Shipment.where(
+      :country_of_origin_id => nil,
+      :term_id => term.id,
+      :unit_id => nil,
+      :source_id => source.id,
+      :purpose_id => purpose.id,
+      :"#{reporter_type}_id" => @geo_entity.id,
+      :reported_by_exporter => (reporter_type == 'exporter')
+    )
+
+    if @time_range_start && @time_range_end &&
+      @time_range_start <= @time_range_end
+      shipments_for_country = shipments_for_country.where(
+        ["year >= ? AND year <= ?", @time_range_start, @time_range_end]
+      )
+    end
+
+    top_traded_taxa_for_country = shipments_for_country.
+      joins(<<-SQL
+        JOIN taxon_concepts_mview tc
+        ON tc.id = trade_shipments.taxon_concept_id
+        AND kingdom_name = '#{@kingdom}'
+        AND cites_listed IS NOT NULL
+      SQL
+      ).
+      includes(:m_taxon_concept).
+      select("taxon_concept_id, sum(quantity) as count_all").
       group(:taxon_concept_id).
       order("count_all desc").
       limit(@trade_limit)
-    tops.each do |top|
-      taxon_concept = MTaxonConcept.find(top.taxon_concept_id)
-      top_traded = {
-        :name => taxon_concept[:full_name],
-        :common_name_en => taxon_concept.english_names.first,
-        :count => top.count_all.to_i
-      }
-      hash[:top_traded] << top_traded
-    end
-    hash
-  end 
+    {
+      :totals => shipments_for_country.count,
+      :top_traded => top_traded_taxa_for_country.map do |t|
+        {
+          :name => t.m_taxon_concept.full_name,
+          :common_name_en => t.m_taxon_concept.english_names.first,
+          :count => t.count_all.to_i
+        }
+      end
+    }
+  end
 
 end

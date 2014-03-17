@@ -121,7 +121,7 @@ Species RecID,Rank,GEO_entity_type,ISO Code 2,Tags,Designation
 175367,Species,Country,SR,distribution uncertain,CITES_EU
 175373,Species,Country,PA,distribution uncertain,CITES_EU
 175374,Species,Country,CR,distribution uncertain,CITES_EU
-17937,Species,Territory,NI,distribution uncertain,CITES_EU
+17937,Species,Country,NI,distribution uncertain,CITES_EU
 1991,Species,Country,BA,extinct,CITES_EU
 1991,Species,Country,BG,extinct,CITES_EU
 1991,Species,Country,FI,introduced,CITES_EU
@@ -307,7 +307,7 @@ Species RecID,Rank,GEO_entity_type,ISO Code 2,Tags,Designation
 5266,Species,Country,ZA,extinct,CITES_EU
 53703,Species,Country,CO,distribution uncertain,CITES_EU
 5386,Species,Country,ZA,extinct,CITES_EU
-53965,Species,Territory,NI,distribution uncertain,CITES_EU
+53965,Species,Country,NI,distribution uncertain,CITES_EU
 5762,Species,Country,ZA,extinct,CITES_EU
 61193,Species,Country,ID,distribution uncertain,CITES_EU
 61193,Species,Country,MY,distribution uncertain,CITES_EU

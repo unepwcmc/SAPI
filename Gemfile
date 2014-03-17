@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 source 'http://gems.github.com'
 
-gem 'rails', '3.2.15'
+gem 'rails', '3.2.17'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -64,7 +64,7 @@ end
 
 group :staging, :production do
   gem 'exception_notification', '~>4.0'
-  gem 'newrelic_rpm', '>=3.6.0'
+  gem 'newrelic_rpm', '>=3.7.3'
 end
 
 group :development do

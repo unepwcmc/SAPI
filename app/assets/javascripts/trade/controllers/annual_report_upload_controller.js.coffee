@@ -1,4 +1,4 @@
-Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, Trade.Flash,
+Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes', 'sandboxShipments']
   content: null
   visibleShipments: []
@@ -113,39 +113,10 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Utils, 
     # new for sandbox shipments updateSelection
     transitionToSandboxShipments: (error) ->
       @set('currentError', error)
-      params = @sanitizeQueryParams(error.get('errorSelector'))
-      params.page = 1
-      params.error_identifier = @hashCode error.get('errorMessage')
+      params = {
+        "sandbox_shipments_ids": error.get('sandboxShipments').mapBy("id")
+        page: 1
+      }
       @transitionToRoute('sandbox_shipments', {
         queryParams: params
       })
-
-
-  sanitizeQueryParams: (selected) ->
-    reseter = {
-      appendix: false,
-      taxon_name: false,
-      taxon_concept_id: false,
-      term_code: false,
-      quantity: false,
-      unit_code : false,
-      trading_partner: false,
-      country_of_origin: false,
-      import_permit: false,
-      export_permit: false,
-      origin_permit: false,
-      purpose_code: false,
-      source_code: false,
-      year: false
-    }
-    result = {}
-    for attrname of selected
-      if selected[attrname] == null
-        result[attrname] = -1
-      else
-        result[attrname] = selected[attrname]
-
-    for attrname of reseter
-      if result[attrname] is undefined
-        result[attrname] = reseter[attrname]
-    result

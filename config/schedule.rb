@@ -7,3 +7,7 @@ end
 every :day, :at => '4:42am' do
   rake "downloads:cache:update"
 end
+
+every :sunday, :at => '4:42am' do
+  rake "dashboard_stats:cache:update"
+end

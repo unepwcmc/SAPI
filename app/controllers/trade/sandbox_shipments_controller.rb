@@ -1,4 +1,4 @@
-class Trade::SandboxShipmentsController < ApplicationController
+class Trade::SandboxShipmentsController < TradeController
   respond_to :json
 
   def index
@@ -31,16 +31,16 @@ class Trade::SandboxShipmentsController < ApplicationController
   def update_batch
     aru = Trade::AnnualReportUpload.find(params[:annual_report_upload_id])
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
-    @sandbox_shipments = sandbox_klass.where(update_batch_params[:filters])
-    @sandbox_shipments.update_all(update_batch_params[:updates])
+    sandbox_klass.update_batch(
+      update_batch_params[:updates], update_batch_params[:sandbox_shipments_ids]
+    )
     head :no_content
   end
 
   def destroy_batch
     aru = Trade::AnnualReportUpload.find(params[:annual_report_upload_id])
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
-    @sandbox_shipments = sandbox_klass.where(destroy_batch_params[:filters])
-    @sandbox_shipments.delete_all
+    sandbox_klass.destroy_batch(destroy_batch_params[:sandbox_shipments_ids])
     head :no_content
   end
 
@@ -51,12 +51,12 @@ private
   end
 
   def destroy_batch_params
-    params.permit(:filters => sandbox_shipment_attributes)
+    params.permit(:sandbox_shipments_ids => [])
   end
 
   def update_batch_params
     params.permit(
-      :filters => sandbox_shipment_attributes,
+      :sandbox_shipments_ids => [],
       :updates => sandbox_shipment_attributes
     )
   end
@@ -65,6 +65,7 @@ private
     [
       :appendix,
       :taxon_concept_id,
+      :taxon_name,
       :term_code,
       :quantity,
       :unit_code,

@@ -65,8 +65,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
 
         def self.sanitize(id = nil)
           update_all(
-            'taxon_name = sanitize_taxon_name(taxon_name),
-            appendix = UPPER(SQUISH_NULL(appendix)),
+            'appendix = UPPER(SQUISH_NULL(appendix)),
             year = SQUISH_NULL(year),
             term_code = UPPER(SQUISH_NULL(term_code)),
             unit_code = UPPER(SQUISH_NULL(unit_code)),
@@ -94,6 +93,16 @@ class Trade::SandboxTemplate < ActiveRecord::Base
         def save(attributes = {})
           super(attributes)
           sanitize
+        end
+
+        def self.update_batch(updates, sandbox_shipments_ids)
+          return unless updates
+          where(:id => sandbox_shipments_ids).update_all(updates)
+          sanitize
+        end
+
+        def self.destroy_batch(sandbox_shipments_ids)
+          where(:id => sandbox_shipments_ids).delete_all
         end
 
       end

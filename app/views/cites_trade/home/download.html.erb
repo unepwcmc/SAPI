@@ -1,4 +1,9 @@
 <div class="grid_16 main_content">
+  <div style="text-align: left; color:#FF0000; font-weight:bold; display:none;"
+    id="web-limit-exceeded-error-message">
+    <%= t('errors.web_limit_exceeded_1') %>.<br>
+    <%= t('errors.web_limit_exceeded_2') %>.
+  </div>
 
   <%= render :partial => 'net_trade_warning' %>
 
@@ -63,7 +68,7 @@
       <br />
       <div align="left">
         <strong><%= t('download') %>: </strong>
-      <a href="/downloads/cites_trade/<%= I18n.locale %>-CITES_Trade_Database_Guide.pdf"><%= t('db_guide') %></a>
+      <a href="/cites_trade_guidelines/<%= I18n.locale %>-CITES_Trade_Database_Guide.pdf"><%= t('db_guide') %></a>
 
       </div>
 

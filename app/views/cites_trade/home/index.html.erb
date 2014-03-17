@@ -12,7 +12,16 @@
       <!--Error message -->
       <div class="grid_8">
 
-        <div style="text-align: left; color:#FF0000; font-weight:bold; display:none;" id="search-error-message"><%= t('errors.no_data_1') %>.<br><%= t('errors.no_data_2') %>.</font></div>
+        <div style="text-align: left; color:#FF0000; font-weight:bold; display:none;"
+          id="search-error-message">
+          <%= t('errors.no_data_1') %>.<br><%= t('errors.no_data_2') %>.
+        </div>
+
+        <div style="text-align: left; color:#FF0000; font-weight:bold; display:none;"
+          id="csv-limit-exceeded-error-message">
+          <%= t('errors.csv_limit_exceeded_1') %>.<br>
+          <%= t('errors.csv_limit_exceeded_2') %>.
+        </div>
 
       </div>
       <hr class="space">
@@ -54,7 +63,8 @@
           </div>
           <%= t('from') %>
           <select name="time_range_start" id="qryFrom">
-            <option selected value="2012">2012</option>
+            <option selected value="2013">2013</option>
+            <option  value="2012">2012</option>
             <option  value="2011">2011</option>
             <option  value="2010">2010</option>
             <option  value="2009">2009</option>
@@ -95,6 +105,7 @@
           </select> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
           <%= t('to') %>
           <select name="time_range_end" id="qryTo">
+            <option selected value="2013">2013</option>
             <option  value="2012">2012</option>
             <option  value="2011">2011</option>
             <option  value="2010">2010</option>
@@ -248,7 +259,7 @@
 <div class="grid_16 other_info">
   <p align="center">
   <strong><%= t('download') %>:</strong>
-    <a href="/downloads/cites_trade/<%= I18n.locale %>-CITES_Trade_Database_Guide.pdf"><%= t('db_guide') %></a>
+    <a href="/cites_trade_guidelines/<%= I18n.locale %>-CITES_Trade_Database_Guide.pdf"><%= t('db_guide') %></a>
   </p>
 </div>
 </div>

@@ -1,22 +1,32 @@
 class CitesTradeController < ApplicationController
-  before_filter :set_locale
 
-  def index
-  end
+  private
 
-  def download
-  end
-
-  def view_results
-  end
-
-  def set_locale
-    I18n.locale = params[:locale] || I18n.default_locale
-  end
-
-  def default_url_options(options={})
-    logger.debug "default_url_options is passed options: #{options.inspect}\n"
-    { :locale => I18n.locale }
+  def search_params
+    (params[:filters] || params).permit(
+      {:taxon_concepts_ids => []},
+      {:appendices => []},
+      {:terms_ids => []},
+      {:units_ids => []},
+      {:purposes_ids => []},
+      {:sources_ids => []},
+      {:importers_ids => []},
+      {:exporters_ids => []},
+      {:countries_of_origin_ids => []},
+      :time_range_start,
+      :time_range_end,
+      :report_type,
+      :page,
+      :csv_separator
+    ).merge({
+      :report_type => if params[:filters] && params[:filters][:report_type] &&
+        Trade::ShipmentsExportFactory.public_report_types &
+        [report_type = params[:filters][:report_type].downcase.strip.to_sym]
+        report_type
+      else
+        :comptab
+      end
+    })
   end
 
 end

@@ -1,14 +1,13 @@
 <div class="filters clearfix">
   <div class="heading">
     <a data-toggle="collapse" href="#collapseOne">
-
-      Name Appendix and Year
+      Accepted and Reported Names
     </a>
   </div>
   <div id="collapseOne" class="body collapse in">
     <div class="inner one">
       <div class="left filter-group">
-        <p>Taxa</p>
+        <p>Accepted taxa</p>
         {{view Trade.MultiSelect
           queryBinding="controller.taxonConceptQuery"
           allValuesGroupedBinding="controller.autoCompleteTaxonConceptsByRank"
@@ -18,7 +17,29 @@
           placeholder="Species, higher taxon or synonym..."
         }}
       </div>
-      <div class="left filter-group one">
+      <div class="left filter-group">
+        <p>Reported taxa</p>
+        {{view Trade.MultiSelect
+          queryBinding="controller.reportedTaxonConceptQuery"
+          allValuesGroupedBinding="controller.autoCompleteReportedTaxonConceptsByRank"
+          selectedValuesBinding="controller.selectedReportedTaxonConcepts"
+          selectedValuesCollectionName="taxa"
+          selectedValueDisplayProperty="fullName"
+          placeholder="Species, higher taxon or synonym..."
+        }}
+      </div>
+    </div>
+  </div>
+
+
+  <div class="heading">
+    <a data-toggle="collapse" href="#collapseTwo">
+      Appendix and Year
+    </a>
+  </div>
+  <div id="collapseTwo" class="body collapse in">
+    <div class="inner one">
+      <div class="left filter-group">
         <p>Appendices</p>
         {{view Trade.MultiSelect
           allValuesBinding="controller.allAppendices"
@@ -28,7 +49,7 @@
           selectedValueShortDisplayProperty="id"
         }}
       </div>
-      <div class="left filter-group one time">
+      <div class="left filter-group time">
         <p>Time range</p>
         {{  view Ember.Select
               viewName="from"
@@ -46,13 +67,12 @@
     </div>
   </div>
 
-
   <div class="heading">
-    <a data-toggle="collapse" href="#collapseTwo">
+    <a data-toggle="collapse" href="#collapseThree">
       Trade Codes
     </a>
   </div>
-  <div id="collapseTwo" class="body collapse in">
+  <div id="collapseThree" class="body collapse in">
     <div class="inner two">
       <div class="left filter-group">
         <p>Terms</p>
@@ -103,11 +123,11 @@
   </div>
 
   <div class="heading">
-    <a data-toggle="collapse" href="#collapseThree">
+    <a data-toggle="collapse" href="#collapseFour">
       Trading Partners
     </a>
   </div>
-  <div id="collapseThree" class="body collapse in">
+  <div id="collapseFour" class="body collapse in">
     <div class="inner three">
       <div class="left filter-group">
         <p>Importer</p>
@@ -143,17 +163,6 @@
           placeholder="Country name"
         }}
       </div>
-    </div>
-  </div>
-
-
-  <div class="heading">
-    <a class="toggle" data-toggle="collapse" href="#collapseFour">
-      Permits & Quantity
-    </a>
-  </div>
-  <div id="collapseFour" class="body collapse">
-    <div class="inner four">
       <div class="left filter-group">
         <p>Reporter type</p>
         {{view Ember.Select
@@ -162,6 +171,17 @@
           selectionBinding="controller.selectedReporterTypeValues"
         }}
       </div>
+    </div>
+  </div>
+
+
+  <div class="heading">
+    <a class="toggle" data-toggle="collapse" href="#collapseFive">
+      Permits & Quantity
+    </a>
+  </div>
+  <div id="collapseFive" class="body collapse">
+    <div class="inner four">
       <div class="left filter-group">
         <p>Permits</p>
         {{view Trade.MultiSelect

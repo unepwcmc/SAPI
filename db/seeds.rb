@@ -337,60 +337,78 @@ puts "#{Language.delete_all} languages deleted"
 puts "#{Reference.delete_all} references deleted"
 puts "#{TradeRestriction.delete_all} trade restrictions deleted"
 
-['trading_partner', 'term_code', 'taxon_name', 'appendix', 'quantity'].each do |col|
+['trading_partner', 'term_code', 'taxon_name', 'appendix', 'quantity', 'year'].each do |col|
   Trade::PresenceValidationRule.create(:column_names => [col], :run_order => 1)
 end
 ['quantity', 'year'].each do |col|
-  Trade::NumericalityValidationRule.create(:column_names => [col], :run_order => 2)
+  Trade::NumericalityValidationRule.create(
+    :column_names => [col],
+    :run_order => 2,
+    :is_strict => true
+  )
 end
 
-Trade::FormatValidationRule.create(:column_names => ['year'], :format_re => '^\d{4}$', :run_order => 2)
+Trade::FormatValidationRule.create(
+  :column_names => ['year'],
+  :format_re => '^\d{4}$',
+  :run_order => 2,
+  :is_strict => true
+)
 
 Trade::InclusionValidationRule.create(
   :column_names => ['term_code'],
   :valid_values_view => 'valid_term_code_view',
-  :run_order => 3
+  :run_order => 3,
+  :is_strict => true
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['source_code'],
   :valid_values_view => 'valid_source_code_view',
-  :run_order => 3
+  :run_order => 3,
+  :is_strict => true
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['purpose_code'],
   :valid_values_view => 'valid_purpose_code_view',
-  :run_order => 3
+  :run_order => 3,
+  :is_strict => true
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['unit_code'],
   :valid_values_view => 'valid_unit_code_view',
-  :run_order => 3
+  :run_order => 3,
+  :is_strict => true
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['trading_partner'],
   :valid_values_view => 'valid_trading_partner_view',
-  :run_order => 3
+  :run_order => 3,
+  :is_strict => true
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['country_of_origin'],
   :valid_values_view => 'valid_country_of_origin_view',
-  :run_order => 3
+  :run_order => 3,
+  :is_strict => true
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['taxon_name'],
   :valid_values_view => 'valid_taxon_name_view',
-  :run_order => 3
+  :run_order => 3,
+  :is_strict => true
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['appendix'],
   :valid_values_view => 'valid_appendix_view',
-  :run_order => 3
+  :run_order => 3,
+  :is_strict => true
 )
 Trade::TaxonConceptAppendixYearValidationRule.create(
   :column_names => ['taxon_concept_id', 'appendix', 'year'],
   :valid_values_view => 'valid_taxon_concept_appendix_year_mview',
   :run_order => 4,
-  :is_primary => false
+  :is_primary => false,
+  :is_strict => true
 )
 Trade::InclusionValidationRule.create(
   :column_names => ['term_code', 'unit_code'],
@@ -408,7 +426,8 @@ Trade::InclusionValidationRule.create(
   :column_names => ['taxon_concept_id', 'term_code'],
   :valid_values_view => 'valid_taxon_concept_term_view',
   :run_order => 4,
-  :is_primary => false
+  :is_primary => false,
+  :is_strict => true
 )
 Trade::InclusionValidationRule.create(
   :scope => {
@@ -417,7 +436,8 @@ Trade::InclusionValidationRule.create(
   :column_names => ['taxon_concept_id', 'country_of_origin'],
   :valid_values_view => 'valid_taxon_concept_country_of_origin_view',
   :run_order => 4,
-  :is_primary => false
+  :is_primary => false,
+  :is_strict => true
 )
 Trade::InclusionValidationRule.create(
   :scope => {
@@ -426,21 +446,25 @@ Trade::InclusionValidationRule.create(
   :column_names => ['taxon_concept_id', 'exporter'],
   :valid_values_view => 'valid_taxon_concept_exporter_view',
   :run_order => 4,
-  :is_primary => false
+  :is_primary => false,
+  :is_strict => true
 )
 Trade::DistinctValuesValidationRule.create(
   :column_names => ['exporter', 'country_of_origin'],
   :run_order => 4,
-  :is_primary => false
+  :is_primary => false,
+  :is_strict => true
 )
 Trade::DistinctValuesValidationRule.create(
   :column_names => ['exporter', 'importer'],
   :run_order => 4,
-  :is_primary => false
+  :is_primary => false,
+  :is_strict => true
 )
 
 Trade::TaxonConceptSourceValidationRule.create(
   :column_names => ['taxon_concept_id', 'source_code'],
   :run_order => 4,
-  :is_primary => false
+  :is_primary => false,
+  :is_strict => true
 )

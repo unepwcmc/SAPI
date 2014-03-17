@@ -5785,7 +5785,7 @@ Caiman crocodilus chiapasius,2212.35,39136,Caiman crocodilus chiapasius,SUBSPECI
 Caiman crocodilus crocodilus,2212.4,12250,Caiman crocodilus crocodilus,SUBSPECIES
 Caiman crocodilus fuscus,2212.5,12255,Caiman crocodilus fuscus,SUBSPECIES
 Caiman latirostris,2212.7,5390,Caiman latirostris,SPECIES
-Caiman yacare,2212.8,9632,Caiman yacare,SPECIES
+Caiman yacare,2212.8,55220,Caiman yacare,SPECIES
 Cairina spp.,1147,1313,Cairina,GENUS
 Cairina moschata,1147.1,6021,Cairina moschata,SPECIES
 Cairina scutulata,1147.2,36613,Cairina scutulata,SPECIES
@@ -7502,7 +7502,7 @@ Chlorostilbon canivetii,1669.5,3733,Chlorostilbon canivetii,SPECIES
 Chlorostilbon forficatus,1669.55,6388,Chlorostilbon forficatus,SPECIES
 Chlorostilbon gibsoni,1669.6,31199,Chlorostilbon gibsoni,SPECIES
 Chlorostilbon inexpectatus,1669.7,31218,Chlorostilbon inexpectatus,SPECIES
-Chlorostilbon lucidus,1669.75,9567,Chlorostilbon lucidus,SPECIES
+Chlorostilbon lucidus,1669.75,10147,Chlorostilbon lucidus,SPECIES
 Chlorostilbon maugaeus,1669.8,8239,Chlorostilbon maugaeus,SPECIES
 Chlorostilbon mellisugus,1669.9,10216,Chlorostilbon mellisugus,SPECIES
 Chlorostilbon notatus,1669.95,10523,Chlorostilbon notatus,SPECIES
@@ -10170,7 +10170,7 @@ Dendrobates histrionicus,2542,37387,Dendrobates histrionicus,SPECIES
 Dendrobates imitator,2542.05,34346,Dendrobates imitator,SPECIES
 Dendrobates ingeri,2542.1,33932,Dendrobates ingeri,SPECIES
 Dendrobates labialis,2542.2,35856,Dendrobates labialis,SPECIES
-Dendrobates lamasi,2542.25,33833,Dendrobates lamasi,SPECIES
+Dendrobates lamasi,2542.25,55034,Dendrobates lamasi,SPECIES
 Dendrobates lehmanni,2542.3,35741,Dendrobates lehmanni,SPECIES
 Dendrobates leucomelas,2542.4,9238,Dendrobates leucomelas,SPECIES
 Dendrobates maculatus,2542.5,34157,Dendrobates maculatus,SPECIES
@@ -20736,7 +20736,7 @@ Niltava spp.,1863,2211,Niltava,GENUS
 Niltava davidi,1863.05,4802,Niltava davidi,SPECIES
 Niltava ruecki,1863.1,36060,Niltava ruecki,SPECIES
 Nimbaphrynoides spp.,2523,1361,Nimbaphrynoides,GENUS
-Nimbaphrynoides liberiensis,2523.1,3528,Nimbaphrynoides liberiensis,SPECIES
+Nimbaphrynoides liberiensis,2523.1,54757,Nimbaphrynoides liberiensis,SPECIES
 Nimbaphrynoides occidentalis,2523.2,3194,Nimbaphrynoides occidentalis,SPECIES
 Ninox spp.,1616,1019,Ninox,GENUS
 Ninox affinis,1616.1,8847,Ninox affinis,SPECIES
@@ -21838,7 +21838,7 @@ Ornithoptera priamus,2804.9,6442,Ornithoptera priamus,SPECIES
 Ornithoptera richmondia,2806.2,36364,Ornithoptera richmondia,SPECIES
 Ornithoptera rothschildi,2806.3,6915,Ornithoptera rothschildi,SPECIES
 Ornithoptera tithonus,2806.4,10727,Ornithoptera tithonus,SPECIES
-Ornithoptera urvillianus,2806.6,6865,Ornithoptera urvillianus,SPECIES
+Ornithoptera urvillianus,2806.6,54290,Ornithoptera urvillianus,SPECIES
 Ornithoptera victoriae,2806.7,10136,Ornithoptera victoriae,SPECIES
 Oroaetus spp.,1249,1820,Oroaetus,GENUS
 Oroaetus isidori,1249.1,7769,Oroaetus isidori,SPECIES
@@ -24905,7 +24905,7 @@ Python breitensteini,2359.46,3890,Python breitensteini,SPECIES
 Python brongersmai,2359.47,9253,Python brongersmai,SPECIES
 Python curtus,2359.5,7832,Python curtus,SPECIES
 Python molurus,2359.55,4236,Python molurus,SPECIES
-Python molurus bivittatus,2359.6,12201,Python molurus bivittatus,SUBSPECIES
+Python molurus bivittatus,2359.6,54292,Python molurus bivittatus,SUBSPECIES
 Python molurus molurus,2359.65,12180,Python molurus molurus,SUBSPECIES
 Python natalensis,2359.67,8551,Python natalensis,SPECIES
 Python regius,2359.7,5467,Python regius,SPECIES
@@ -24958,7 +24958,7 @@ Ramphomicron spp.,1747,1540,Ramphomicron,GENUS
 Ramphomicron dorsale,1747.1,5873,Ramphomicron dorsale,SPECIES
 Ramphomicron microrhynchum,1747.2,7630,Ramphomicron microrhynchum,SPECIES
 Rana spp.,2560,967,Rana,GENUS
-Rana catesbeiana,2560.05,54320,Rana catesbeiana,0
+Rana catesbeiana,2560.05,54319,Rana catesbeiana,0
 Rana hexadactyla,2560.1,31534,Rana hexadactyla,SPECIES
 Rana tigerina,2560.2,31394,Rana tigerina,SPECIES
 Rangaeris spp.,7071,13163,Rangaeris,GENUS

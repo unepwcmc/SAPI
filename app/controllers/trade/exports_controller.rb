@@ -1,21 +1,12 @@
-class Trade::ExportsController < ApplicationController
+class Trade::ExportsController < TradeController
   respond_to :json
 
   def download
-
-    search = Trade::ShipmentsExportFactory.new(params[:filters])
-
+    search = Trade::ShipmentsExportFactory.new(search_params)
     respond_to do |format|
-
       format.html {
         result = search.export
-        if result.is_a?(Array)
-          send_file Pathname.new(result[0]).realpath, result[1]
-          rows = search.total_cnt
-          Trade::TradeDataDownloadLogger.log_download request, params, rows
-        else
-          head :no_content
-        end
+        send_file Pathname.new(result[0]).realpath, result[1]
       }
       format.json {
         render :json => { :total => search.total_cnt }

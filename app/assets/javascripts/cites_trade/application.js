@@ -128,22 +128,38 @@ $(document).ready(function(){
     values['report_type'] = 'raw';
     return values;
   }
-  
+
+  function getParamsFromInputs(){
+    var values = parseInputs($('#form_expert :input'));
+    return $.param({'filters': values});
+  }
+
+  function getParamsFromURI(){
+    return decodeURIComponent( location.search.substr(1) );
+  }
+
+  function getResultsCount(params){
+    var href = '/cites_trade/exports/download.json';
+    return $.ajax({
+      url: href,
+      dataType: 'json',
+      data: params,
+      type: 'GET'
+    });
+  }
+
   function queryResults () {
-    var href, inputs, values, params, $link;
+    var href, values, params, $link;
     if (queryResults.ajax) {
-      href = '/trade/exports/download.json';
-      values = parseInputs($('#form_expert :input'));
-      params = $.param({'filters': values});
-      $.ajax({
-        url: href,
-        dataType: 'json',
-        data: params,
-        type: 'GET'
-      }).then( function (res) {
-        if (res.total > 0) {
+      getResultsCount(getParamsFromInputs()).then( function (res) {
+        if (res.total > res.csv_limit){
+          $('#csv-limit-exceeded-error-message').show();
+        } else if (res.total > 0) {
           // There is something to download!
           queryResults.ajax = false;
+          if (res.total > res.web_limit){
+            queryResults.web_limit_exceeded = true;
+          }
           queryResults.call(this);
         } else {
           $('#search-error-message').show();
@@ -152,9 +168,13 @@ $(document).ready(function(){
     } else {
       $link = $(this);
       values = parseInputs($('#form_expert :input'));
-      params = $.param({'filters': values});
+      params = $.param({
+        'filters': values,
+        'web_disabled': queryResults.web_limit_exceeded
+      });
       href = '/' + locale + '/cites_trade/download?' + params;
       queryResults.ajax = true;
+      queryResults.web_limit_exceeded = false;
       $('#search-error-message').hide();
       $link.attr('href', href).click();
       window.location.href = $link.attr("href");
@@ -543,7 +563,7 @@ $(document).ready(function(){
           data: {
             taxonomy: 'CITES',
             taxon_concept_query: term,
-            'ranks[]': 'SPECIES',
+            'ranks[]': 'SPECIES,SUBSPECIES,VARIETY',
             visibility: 'trade'
           },
           success: function(data) {
@@ -559,12 +579,28 @@ $(document).ready(function(){
         selected_taxa = ui.item.value;
     		$('#species_out').text(ui.item.label);
     		return false;
-    	}
+    	},
+      response: function(event, ui) {
+        if (!ui.content.length) {
+          var noResult = { value:"" };
+          ui.content.push(noResult);
+        }
+      },
+      change: function(event, ui){
+        if (ui.item === null || ui.item.label !== $(this).val() ){
+          $(this).val('');
+          $('#species_out').text('');
+          selected_taxa = '';
+        }
+      }
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+      if (item.value === ''){
+        return $( "<li>" ).append("No results").appendTo( ul );
+      }
       return $( "<li>" )
         .append( "<a>" + item.drop_label + "</a>" )
         .appendTo( ul );
-      };
+      }
   }
 
   //Autocomplete for cites_genus
@@ -592,10 +628,26 @@ $(document).ready(function(){
     	select: function( event, ui ) {
     		$(this).val(ui.item.label);
         selected_taxa = ui.item.value;
-    		$('#species_out').text(ui.item.label);	
+    		$('#species_out').text(ui.item.label);
     		return false;
-    	}
+    	},
+      response: function(event, ui) {
+        if (!ui.content.length) {
+          var noResult = { value:"" };
+          ui.content.push(noResult);
+        }
+      },
+      change: function(event, ui){
+        if (ui.item === null || ui.item.label !== $(this).val() ){
+          $(this).val('');
+          $('#species_out').text('');
+          selected_taxa = '';
+        }
+      }
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+      if (item.value === ''){
+        return $( "<li>" ).append("No results").appendTo( ul );
+      }
       return $( "<li>" )
         .append( "<a>" + item.drop_label + "</a>" )
         .appendTo( ul );
@@ -651,7 +703,8 @@ $(document).ready(function(){
     var t = "";
     _.each(data_rows, function(data_row) {
       var row = 
-        "<tr><% _.each(d, function(value) { %> <td>" + 
+        "<tr><% _.each(d, function(value) { %>"+
+          "<td class=\"c-<%= value.toLowerCase().replace(/\\./g,'').replace(/ /g, '-')%>\">" + 
         "<%= data_row[value] %> </td> <% }); %></tr>";
       t += _.template(row, { d: data_headers, data_row: data_row });
     });
@@ -661,8 +714,17 @@ $(document).ready(function(){
   //////////////////////////
   // Download page specific:
 
+  if (is_download_page) {
+    var params = $.deparam(getParamsFromURI());
+    if (params['web_disabled']){
+      $('#web-limit-exceeded-error-message').show();
+      $('input[value=csv]').attr('checked', 'checked');
+      $('input[value=web]').attr("disabled",true);
+    }
+  }
+
   function displayResults (q) {
-    var table_view_title, formURL = '/trade/shipments',
+    var table_view_title, formURL = '/cites_trade/shipments',
       data_headers, data_rows, table_tmpl, 
       comptab_regex = /comptab/, 
       gross_net_regex = /(gross_exports|gross_imports|net_exports|net_imports)/;
@@ -682,6 +744,7 @@ $(document).ready(function(){
             data_headers = data['shipment_gross_net_export'].column_headers;
             data_rows = data['shipment_gross_net_export'].rows;
             table_tmpl = buildHeader(data_headers) + buildRows(data_headers, data_rows);
+            $('#query_results_table').addClass('net_gross');
           }
           $('#table_title').text(table_view_title);
           $('#query_results_table').html(table_tmpl);
@@ -699,7 +762,7 @@ $(document).ready(function(){
 
   function downloadResults (q) {
     var $link = $('#download_genie'),
-      href = '/trade/exports/download?' + q;
+      href = '/cites_trade/exports/download?' + q;
     $link.attr('href', href).click();
     window.location.href = $link.attr("href");
   }
@@ -758,8 +821,7 @@ $(document).ready(function(){
     });
     if (!l && is_view_results_page) {
       // It is time to show these tables!
-      query = decodeURIComponent( location.search.substr(1) );
-      displayResults(query);
+      displayResults(getParamsFromURI());
     }
   }
 
