@@ -720,6 +720,7 @@ $(document).ready(function(){
       $('#web-limit-exceeded-error-message').show();
       $('input[value=csv]').attr('checked', 'checked');
       $('input[value=web]').attr("disabled",true);
+      $('span#web-option').css('color', 'LightGray');
     }
   }
 
@@ -747,6 +748,7 @@ $(document).ready(function(){
             $('#query_results_table').addClass('net_gross');
           }
           $('#table_title').text(table_view_title);
+          $('#cites-trade-loading').hide();
           $('#query_results_table').html(table_tmpl);
         },
         error: ajaxFail
