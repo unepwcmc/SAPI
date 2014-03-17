@@ -182,6 +182,7 @@ $(document).ready(function(){
   }
   queryResults.ajax = true;
   $("#submit_expert").click(function(e) {
+    $("#cites-trade-loading").show();
     queryResults.call(this);
   });
 
@@ -202,6 +203,7 @@ $(document).ready(function(){
  	  $('#impcty').select2("val","all_imp");	
     notySticky('Values are being reset...');
     $('#search-error-message').hide();
+    $("#cites-trade-loading").hide();
   };
 
   $('#reset_search').click(function() {
