@@ -35,7 +35,7 @@ private
 
   def csv_column_headers
     headers = [
-      'Id', 'Species RecID', 'Phylum', 'Class', 'Order', 'Family',
+      'Id', 'Legacy Id', 'Phylum', 'Class', 'Order', 'Family',
       'Scientific Name', 'Rank', 'Geo_entity', 'Country_full',
       'ISO Code', 'Country Tags', 'Reference_full', 'Reference IDS',
       'Ref Legacy ID', 'Taxonomy'
