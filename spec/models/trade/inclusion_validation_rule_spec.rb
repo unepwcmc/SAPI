@@ -12,6 +12,7 @@
 #  column_names      :string(255)
 #  is_primary        :boolean          default(TRUE), not null
 #  scope             :hstore
+#  is_strict         :boolean          default(FALSE), not null
 #
 
 require 'spec_helper'
@@ -43,7 +44,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         create(
           :inclusion_validation_rule,
           :column_names => ['taxon_name'],
-          :valid_values_view => 'valid_taxon_name_view'
+          :valid_values_view => 'valid_taxon_name_view',
+          :is_strict => true
         )
       }
       specify{
@@ -71,7 +73,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         create(
           :inclusion_validation_rule,
           :column_names => ['trading_partner'],
-          :valid_values_view => 'valid_trading_partner_view'
+          :valid_values_view => 'valid_trading_partner_view',
+          :is_strict => true
         )
       }
       specify{
@@ -102,11 +105,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           sandbox_klass.create(:term_code => 'CAP', :unit_code => 'BAG')
         end
         subject{
-          create(
-            :inclusion_validation_rule,
-            :column_names => ['term_code', 'unit_code'],
-            :valid_values_view => 'valid_term_unit_view'
-          )
+          create_term_unit_validation
         }
         specify{
           subject.validation_errors(annual_report_upload).size.should == 1
@@ -121,11 +120,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           sandbox_klass.create(:term_code => 'CAP', :unit_code => '')
         end
         subject{
-          create(
-            :inclusion_validation_rule,
-            :column_names => ['term_code', 'unit_code'],
-            :valid_values_view => 'valid_term_unit_view'
-          )
+          create_term_unit_validation
         }
         specify{
           subject.validation_errors(annual_report_upload).size.should == 1
@@ -148,11 +143,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         sandbox_klass.create(:term_code => 'CAV', :purpose_code => '')
       end
       subject{
-        create(
-          :inclusion_validation_rule,
-          :column_names => ['term_code', 'purpose_code'],
-          :valid_values_view => 'valid_term_purpose_view'
-        )
+        create_term_purpose_validation
       }
       specify{
         subject.validation_errors(annual_report_upload).size.should == 2
@@ -164,27 +155,50 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
     end
     context 'taxon_concept_id can only be paired with term as defined by trade_taxon_concept_term_pairs table' do
       before do
-        @species = create_cites_eu_species
+        @genus = create_cites_eu_genus
         cav = create(:term, :code => "CAV")
         create(:term, :code => "BAL")
-        @pair = create(:trade_taxon_concept_term_pair, :term_id => cav.id, :taxon_concept_id => @species.id)
-        sandbox_klass.create(:term_code => 'CAV', :taxon_name => @species.full_name)
-        sandbox_klass.create(:term_code => 'BAL', :taxon_name => @species.full_name)
+        @pair = create(:trade_taxon_concept_term_pair, :term_id => cav.id, :taxon_concept_id => @genus.id)
       end
       subject{
-        create(
-          :inclusion_validation_rule,
-          :column_names => ['taxon_concept_id', 'term_code'],
-          :valid_values_view => 'valid_taxon_concept_term_view'
-        )
+        create_taxon_concept_term_validation
       }
-      specify{
-        subject.validation_errors(annual_report_upload).size.should == 1
-      }
-      specify{
-        ve = subject.validation_errors(annual_report_upload).first
-        ve.error_selector.should == {'term_code' => 'BAL', 'taxon_concept_id' => @species.id}
-      }
+      context "when accepted name" do
+        before(:each) do
+          @species = create_cites_eu_species(:parent => @genus)
+          sandbox_klass.create(:term_code => 'CAV', :taxon_name => @species.full_name)
+          sandbox_klass.create(:term_code => 'BAL', :taxon_name => @species.full_name)
+        end
+        specify{
+          subject.validation_errors(annual_report_upload).size.should == 1
+        }
+        specify{
+          ve = subject.validation_errors(annual_report_upload).first
+          ve.error_selector.should == {'term_code' => 'BAL', 'taxon_concept_id' => @species.id}
+        }
+      end
+      context "when hybrid" do
+        before(:each) do
+          @hybrid = create_cites_eu_species(:parent => @genus, :name_status => 'H')
+          create(
+            :taxon_relationship,
+            :taxon_concept => @genus,
+            :other_taxon_concept => @hybrid,
+            :taxon_relationship_type => create(
+              :taxon_relationship_type, :name => TaxonRelationshipType::HAS_HYBRID
+            )
+          )
+          sandbox_klass.create(:term_code => 'CAV', :taxon_name => @hybrid.full_name)
+          sandbox_klass.create(:term_code => 'BAL', :taxon_name => @hybrid.full_name)
+        end
+        specify{
+          subject.validation_errors(annual_report_upload).size.should == 1
+        }
+        specify{
+          ve = subject.validation_errors(annual_report_upload).first
+          ve.error_selector.should == {'term_code' => 'BAL', 'taxon_concept_id' => @hybrid.id}
+        }
+      end
     end
   end
 end

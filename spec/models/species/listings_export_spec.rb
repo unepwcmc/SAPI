@@ -95,6 +95,21 @@ describe Species::ListingsExport do
         }
         specify { subject.query.all.size.should == 1 }
       end
+      context "when implicitly listed subspecies present" do
+        before(:each) do
+          create_cites_eu_subspecies(
+            :parent_id => @species.id
+          )
+          Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        end
+        subject {
+          Species::ListingsExportFactory.new({
+            :designation_id => cites.id,
+            :taxon_concepts_ids => [@family.id]
+          })
+        }
+        specify { subject.query.all.size.should == 1 }
+      end
     end
     context "when EU" do
       context "when Annex A" do

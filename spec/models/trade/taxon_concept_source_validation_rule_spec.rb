@@ -12,6 +12,7 @@
 #  column_names      :string(255)
 #  is_primary        :boolean          default(TRUE), not null
 #  scope             :hstore
+#  is_strict         :boolean          default(FALSE), not null
 #
 
 require 'spec_helper'
@@ -37,10 +38,7 @@ describe Trade::TaxonConceptSourceValidationRule, :drops_tables => true do
         sandbox_klass.create(:source_code => 'B', :taxon_name => @animal.full_name)
       end
       subject{
-        create(
-          :taxon_concept_source_validation_rule,
-          :column_names => ['taxon_concept_id', 'source_code']
-        )
+        create_taxon_concept_source_validation
       }
       specify{
         subject.validation_errors(annual_report_upload).size.should == 1
@@ -61,10 +59,7 @@ describe Trade::TaxonConceptSourceValidationRule, :drops_tables => true do
         sandbox_klass.create(:source_code => 'B', :taxon_name => @plant.full_name)
       end
       subject{
-        create(
-          :taxon_concept_source_validation_rule,
-          :column_names => ['taxon_concept_id', 'source_code']
-        )
+        create_taxon_concept_source_validation
       }
       specify{
         subject.validation_errors(annual_report_upload).size.should == 2

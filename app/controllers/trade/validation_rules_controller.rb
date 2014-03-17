@@ -1,4 +1,4 @@
-class Trade::ValidationRulesController < ApplicationController
+class Trade::ValidationRulesController < TradeController
   respond_to :json
 
   def index

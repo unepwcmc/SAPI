@@ -8,19 +8,16 @@ Trade.Router.map (match)->
         # params' names in underscore separated format
         # because like they are created in the validation
         # error views;
-        'error_identifier', 'page', 'appendix', 'taxon_name',
-        'taxon_concept_id', 'term_code', 'quantity',  'unit_code',
-        'trading_partner', 'country_of_origin',
-        'import_permit', 'export_permit', 'origin_permit',
-        'purpose_code', 'source_code', 'year']
+        'page', 'sandbox_shipments_ids']
     }
 
   @resource 'validation_rules'
-  @resource 'shipments', { 
+  @resource 'shipments', {
     queryParams: [
-      'page', 'taxon_concepts_ids[]', 'appendices[]', 'time_range_start',
-      'time_range_end', 'terms_ids[]', 'units_ids[]', 'purposes_ids[]', 
-      'sources_ids[]', 'importers_ids[]', 'exporters_ids[]', 
+      'page', 'taxon_concepts_ids[]', 'reported_taxon_concepts_ids[]',
+      'appendices[]', 'time_range_start', 'time_range_end',
+      'terms_ids[]', 'units_ids[]', 'purposes_ids[]',
+      'sources_ids[]', 'importers_ids[]', 'exporters_ids[]',
       'countries_of_origin_ids[]', 'reporter_type', 'permits_ids[]',
       'quantity', 'unit_blank', 'purpose_blank', 'source_blank',
       'country_of_origin_blank', 'permit_blank']

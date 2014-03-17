@@ -121,9 +121,6 @@ div.secondary-errors {
   .filter-group {
     width: 190px;
   }
-  .filter-group.time {
-    width: 192px;
-  }
   .filter-group select {
     margin: 0;
     width: 88px;
@@ -140,7 +137,7 @@ div.secondary-errors {
     width: 190px;
   }
 }
-.inner.one > div.filter-group:first-child {
+.inner.one > div.filter-group {
    width: 410px;
    select: {
     widht: 410px;
@@ -148,7 +145,6 @@ div.secondary-errors {
 }
 
 div.popup-holder01 { 
-  //display: block; 
   top: 42px;
   left: 0px;
   padding-top: 0;
@@ -362,3 +358,4 @@ span.error {
   }
 }
 
+.popup-area:hover .popup-holder01 { display: none; }

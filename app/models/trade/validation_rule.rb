@@ -12,10 +12,11 @@
 #  column_names      :string(255)
 #  is_primary        :boolean          default(TRUE), not null
 #  scope             :hstore
+#  is_strict         :boolean          default(FALSE), not null
 #
 
 class Trade::ValidationRule < ActiveRecord::Base
-  attr_accessible :column_names, :run_order, :is_primary, :scope
+  attr_accessible :column_names, :run_order, :is_primary, :scope, :is_strict
   include PgArrayParser
   serialize :scope, ActiveRecord::Coders::Hstore
 
@@ -95,15 +96,23 @@ class Trade::ValidationRule < ActiveRecord::Base
   private
 
   def required_column_names
-    column_names & ['taxon_concept_id', 'taxon_name', 'appendix', 'year', 'term_code',
-      'trading_partner', 'importer', 'exporter', 'reporter_type', 'quantity'
-    ]
+    if is_strict
+      column_names
+    else
+      column_names & ['taxon_concept_id', 'taxon_name', 'appendix', 'year', 'term_code',
+        'trading_partner', 'importer', 'exporter', 'reporter_type', 'quantity'
+      ]
+    end
   end
 
   def required_shipments_columns
-    shipments_columns & ['taxon_concept_id', 'appendix', 'year', 'term_id',
-      'exporter_id', 'importer_id', 'reporter_type', 'quantity'
-    ]
+    if is_strict
+      shipments_columns
+    else
+      shipments_columns & ['taxon_concept_id', 'appendix', 'year', 'term_id',
+        'exporter_id', 'importer_id', 'reporter_type', 'quantity'
+      ]
+    end
   end
 
   # so if sandbox scope was {source_code = W}, shipments

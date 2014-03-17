@@ -2,6 +2,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.all
+//= require jquery-deparam
 //= require cites_trade/jquery.jgrowl_minimized
 //= require cites_trade/jquery.multi-select
 //= require cites_trade/select2

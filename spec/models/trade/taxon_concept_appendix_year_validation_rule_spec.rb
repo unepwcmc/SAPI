@@ -12,6 +12,7 @@
 #  column_names      :string(255)
 #  is_primary        :boolean          default(TRUE), not null
 #  scope             :hstore
+#  is_strict         :boolean          default(FALSE), not null
 #
 
 require 'spec_helper'
@@ -77,7 +78,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           )
         end
         subject{
-          create(:taxon_concept_appendix_year_validation_rule)
+          create_taxon_concept_appendix_year_validation
         }
         specify{
           subject.validation_errors(@aru).size.should == 0
@@ -93,7 +94,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           )
         end
         subject{
-          create(:taxon_concept_appendix_year_validation_rule)
+          create_taxon_concept_appendix_year_validation
         }
         specify{
           subject.validation_errors(@aru).size.should == 1
@@ -111,7 +112,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           )
         end
         subject{
-          create(:taxon_concept_appendix_year_validation_rule)
+          create_taxon_concept_appendix_year_validation
         }
         specify{
           subject.validation_errors(@aru).size.should == 1
@@ -129,7 +130,43 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           )
         end
         subject{
-          create(:taxon_concept_appendix_year_validation_rule)
+          create_taxon_concept_appendix_year_validation
+        }
+        specify{
+          subject.validation_errors(@aru).size.should == 0
+        }
+      end
+      context "when hybrid" do
+        before(:each) do
+          falconidae = create_cites_eu_family(
+            :taxon_name => create(:taxon_name, :scientific_name => 'Falconidae')
+          )
+          falco = create_cites_eu_genus(
+            :taxon_name => create(:taxon_name, :scientific_name => 'Falco'),
+            :parent => falconidae
+          )
+          falco_hybrid = create_cites_eu_species(
+            :taxon_name => create(:taxon_name, :scientific_name => 'Falco hybrid'),
+            :name_status => 'H'
+          )
+          create(
+            :taxon_relationship,
+            :taxon_relationship_type => create(:taxon_relationship_type, :name => 'HAS_HYBRID'),
+            :taxon_concept => falco,
+            :other_taxon_concept => falco_hybrid
+          )
+          create_cites_II_addition(
+            :taxon_concept => falconidae,
+            :effective_at => '1979-06-28',
+            :is_current => true
+          )
+          Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+          @sandbox_klass.create(
+            :taxon_name => 'Falco hybrid', :appendix => 'II', :year => '2012'
+          )
+        end
+        subject{
+          create_taxon_concept_appendix_year_validation
         }
         specify{
           subject.validation_errors(@aru).size.should == 0
@@ -144,7 +181,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
         )
       end
       subject{
-        create(:taxon_concept_appendix_year_validation_rule)
+        create_taxon_concept_appendix_year_validation
       }
       specify{
         subject.validation_errors(@aru).size.should == 0
@@ -158,7 +195,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
         )
       end
       subject{
-        create(:taxon_concept_appendix_year_validation_rule)
+        create_taxon_concept_appendix_year_validation
       }
       specify{
         subject.validation_errors(@aru).size.should == 1

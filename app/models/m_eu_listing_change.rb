@@ -35,13 +35,11 @@
 #  auto_note                  :text
 #  is_current                 :boolean
 #  explicit_change            :boolean
+#  countries_ids_ary          :string
 #  updated_at                 :datetime
 #  show_in_history            :boolean
 #  show_in_downloads          :boolean
 #  show_in_timeline           :boolean
-#  listed_geo_entities_ids    :string
-#  excluded_geo_entities_ids  :string
-#  excluded_taxon_concept_ids :string
 #  dirty                      :boolean
 #  expiry                     :datetime
 #

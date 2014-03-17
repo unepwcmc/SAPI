@@ -1,10 +1,10 @@
 module Trade::ShipmentReportQueries
 
-  def comptab_query
+  def comptab_query(options)
   "SELECT
     year,
     appendix,
-    full_name_with_spp('FAMILY', taxon_concepts.data->'family_name') AS family,
+    taxon_concepts.data->'family_name' AS family,
     taxon_concept_id,
     full_name_with_spp(ranks.name, taxon_concepts.full_name) AS taxon,
     importer_id,
@@ -29,7 +29,7 @@ module Trade::ShipmentReportQueries
     purposes.code AS purpose,
     source_id,
     sources.code AS source
-  FROM (#{@search.query.to_sql}) shipments
+  FROM (#{basic_query(options).to_sql}) shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
   JOIN ranks
@@ -74,13 +74,25 @@ module Trade::ShipmentReportQueries
     purpose_id,
     purposes.code,
     source_id,
+    sources.code
+  ORDER BY
+    year ASC,
+    appendix,
+    taxon_concepts.data->'family_name',
+    taxon_concepts.full_name,
+    importers.iso_code2,
+    exporters.iso_code2,
+    countries_of_origin.iso_code2,
+    terms.code,
+    units.code,
+    purposes.code,
     sources.code"
   end
 
   # this query is the basis of all gross / net reports,
   # which perform further groupings
   # it is an envelope for the shipments query
-  def gross_net_query
+  def gross_net_query(options)
   "SELECT
     year,
     appendix,
@@ -104,7 +116,7 @@ module Trade::ShipmentReportQueries
     units.name_en AS unit_name_en,
     units.name_es AS unit_name_es,
     units.name_fr AS unit_name_fr
-  FROM (#{@search.query.to_sql}) shipments
+  FROM (#{basic_query(options).to_sql}) shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
   JOIN ranks
@@ -145,9 +157,9 @@ module Trade::ShipmentReportQueries
     terms.name_fr"
   end
 
-  def gross_exports_query
+  def gross_exports_query(options)
   "WITH gross_net_subquery AS (
-    #{gross_net_query}
+    #{gross_net_query(options)}
   )
   #{gross_exports_subquery}"
   end
@@ -188,12 +200,18 @@ module Trade::ShipmentReportQueries
     unit_name_es,
     unit_name_fr,
     exporter_id,
-    exporter"
+    exporter
+  ORDER BY
+    appendix,
+    taxon,
+    term,
+    unit,
+    country"
   end
 
-  def gross_imports_query
+  def gross_imports_query(options)
   "WITH gross_net_subquery AS (
-    #{gross_net_query}
+    #{gross_net_query(options)}
   )
   #{gross_imports_subquery}"
   end
@@ -234,14 +252,20 @@ module Trade::ShipmentReportQueries
     unit_name_es,
     unit_name_fr,
     importer_id,
-    importer"
+    importer
+  ORDER BY
+    appendix,
+    taxon,
+    term,
+    unit,
+    country"
   end
 
-  def net_exports_query
+  def net_exports_query(options)
   "WITH exports AS (
-    #{gross_exports_query}
+    #{gross_exports_query(options)}
   ), imports AS (
-    #{gross_imports_query}
+    #{gross_imports_query(options)}
   )
   #{net_exports_subquery}"
   end
@@ -278,14 +302,20 @@ module Trade::ShipmentReportQueries
   AND (exports.unit_id = imports.unit_id OR exports.unit_id IS NULL AND imports.unit_id IS NULL)
   AND exports.year = imports.year
   AND exports.country_id = imports.country_id
-  WHERE (exports.gross_quantity - COALESCE(imports.gross_quantity, 0)) > 0"
+  WHERE (exports.gross_quantity - COALESCE(imports.gross_quantity, 0)) > 0
+  ORDER BY
+    appendix,
+    taxon,
+    term,
+    unit,
+    country"
   end
 
-  def net_imports_query
+  def net_imports_query(options)
   "WITH exports AS (
-    #{gross_exports_query}
+    #{gross_exports_query(options)}
   ), imports AS (
-    #{gross_imports_query}
+    #{gross_imports_query(options)}
   )
   #{net_imports_subquery}"
   end
@@ -321,7 +351,13 @@ module Trade::ShipmentReportQueries
   AND exports.term_id = imports.term_id
   AND (exports.unit_id = imports.unit_id OR exports.unit_id IS NULL AND imports.unit_id IS NULL)
   AND exports.country_id = imports.country_id
-  WHERE (imports.gross_quantity - COALESCE(exports.gross_quantity, 0)) > 0"
+  WHERE (imports.gross_quantity - COALESCE(exports.gross_quantity, 0)) > 0
+  ORDER BY
+    appendix,
+    taxon,
+    term,
+    unit,
+    country"
   end
 
 end

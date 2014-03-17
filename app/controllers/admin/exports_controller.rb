@@ -3,7 +3,12 @@ class Admin::ExportsController < Admin::AdminController
   def index; end
 
   def download
-    result = Species::TaxonConceptsNamesExport.new(params[:filters]).export
+    case params[:data_type]
+      when 'Names'
+        result = Species::TaxonConceptsNamesExport.new(params[:filters]).export
+      when 'Distributions'
+        result = Species::TaxonConceptsDistributionsExport.new(params[:filters]).export
+    end
     if result.is_a?(Array)
       send_file result[0], result[1]
     else

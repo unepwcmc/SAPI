@@ -3,7 +3,11 @@ es:
   cites_sub_title: "Por favor introduzca sus criterios de búsqueda más abajo"
   errors:
     no_data_1: "Su consulta ha devuelto ningún dato"
-    no_data_2: "Por favor selecciona otras variables o verifica en la Base de Datos de Especies UNEP-WCMC que está utilizando la ortografía/el nombre correctos"
+    no_data_2: "Por favor selecciona otras variables"
+    csv_limit_exceeded_1: "Su búsqueda ha encontrado un subconjunto demasiado grande"
+    csv_limit_exceeded_2: "Debe limitar el rango de años y seleccionar al menos un país de importación/exportación o un taxón"
+    web_limit_exceeded_1: "Su búsqueda ha resultado en un conjunto de datos demasiado grande para mostrarlo en línea"
+    web_limit_exceeded_2: "Puede descargar los resultados en formato CSV"
   warnings:
     net_trade_1: "Por favor, lea cuidadosamente:"
     net_trade_2: "El comercio neto es el resultado de sustraer los re-exportaciones de un país de sus importaciones. Por lo tanto, si su selección de datos involucrada las importaciones o las exportaciones procedentes de países determinados, no se puede calcular las importaciones o exportaciones netas."

@@ -6,7 +6,17 @@ class Trade::SearchParams < Hash
   def initialize(params)
     sanitized_params = {
       :taxon_concepts_ids =>
-        params[:taxon_concepts_ids].blank? ? [] : params[:taxon_concepts_ids].sort,
+        if params[:taxon_concepts_ids].blank?
+          []
+        else
+          params[:taxon_concepts_ids].sort
+        end,
+      :reported_taxon_concepts_ids =>
+        if params[:reported_taxon_concepts_ids].blank?
+          []
+        else
+          params[:reported_taxon_concepts_ids].sort
+        end,
       :appendices =>
         params[:appendices].blank? ? [] : params[:appendices].sort,
       :terms_ids => params[:terms_ids].blank? ? [] : params[:terms_ids].sort,
@@ -53,6 +63,12 @@ class Trade::SearchParams < Hash
         sanitized_params[:integer_param] = nil
       end
     end
+    unless sanitized_params[:time_range_start]
+      sanitized_params[:time_range_start] = 1975
+    end
+    unless sanitized_params[:time_range_end]
+      sanitized_params[:time_range_end] = Date.today.year
+    end
     [
       :taxon_concepts_ids, :terms_ids, :units_ids, :purposes_ids,
       :sources_ids, :importers_ids, :exporters_ids, :countries_of_origin_ids,
@@ -66,6 +82,7 @@ class Trade::SearchParams < Hash
       rescue ArgumentError, TypeError
         sanitized_params[integer_array_param] = []
       end
+      sanitized_params[integer_array_param] = sanitized_params[integer_array_param].map(&:to_i)
     end
     super(sanitized_params)
     self.merge!(sanitized_params)

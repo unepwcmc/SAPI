@@ -398,8 +398,19 @@ shared_context :sapi do
     )
   end
 
+  def create_year_format_validation
+    create(
+      :format_validation_rule,
+      :column_names => ['year'],
+      :format_re => '^\d{4}$',
+      :is_strict => true
+    )
+  end
   def create_taxon_concept_appendix_year_validation
-    create(:taxon_concept_appendix_year_validation_rule, :is_primary => false)
+    create(:taxon_concept_appendix_year_validation_rule,
+      :is_primary => false,
+      :is_strict => true
+    )
   end
   def create_term_unit_validation
     create(:inclusion_validation_rule,
@@ -419,7 +430,8 @@ shared_context :sapi do
     create(:inclusion_validation_rule,
       :column_names => ['taxon_concept_id', 'term_code'],
       :valid_values_view => 'valid_taxon_concept_term_view',
-      :is_primary => false
+      :is_primary => false,
+      :is_strict => true
     )
   end
   def create_taxon_concept_country_of_origin_validation
@@ -429,7 +441,8 @@ shared_context :sapi do
       },
       :column_names => ['taxon_concept_id', 'country_of_origin'],
       :valid_values_view => 'valid_taxon_concept_country_of_origin_view',
-      :is_primary => false
+      :is_primary => false,
+      :is_strict => true
     )
   end
   def create_taxon_concept_exporter_validation
@@ -439,25 +452,29 @@ shared_context :sapi do
       },
       :column_names => ['taxon_concept_id', 'exporter'],
       :valid_values_view => 'valid_taxon_concept_exporter_view',
-      :is_primary => false
+      :is_primary => false,
+      :is_strict => true
     )
   end
   def create_exporter_country_of_origin_validation
     create(:distinct_values_validation_rule,
       :column_names => ['exporter', 'country_of_origin'],
-      :is_primary => false
+      :is_primary => false,
+      :is_strict => true
     )
   end
   def create_exporter_importer_validation
     create(:distinct_values_validation_rule,
       :column_names => ['exporter', 'importer'],
-      :is_primary => false
+      :is_primary => false,
+      :is_strict => true
     )
   end
   def create_taxon_concept_source_validation
     create(:taxon_concept_source_validation_rule,
       :column_names => ['taxon_concept_id', 'source_code'],
-      :is_primary => false
+      :is_primary => false,
+      :is_strict => true
     )
   end
 

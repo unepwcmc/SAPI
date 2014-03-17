@@ -47,7 +47,7 @@ def drop_indices index
       sql = <<-SQL
       DROP INDEX IF EXISTS index_#{table}_on_#{column};
       SQL
-      puts "Dropping index #{column} on #{table} #{Time.now.strftime("%d/%m/%Y")}"
+      puts "Dropping index #{column} on #{table} #{Time.now.strftime("%d/%m/%Y %H:%M")}"
       execute_query(sql)
     end
   end
@@ -62,7 +62,7 @@ def create_indices table_columns, method
       USING #{method}
       (#{column});
       SQL
-      puts "Creating index for #{column} #{Time.now.strftime("%d/%m/%Y")}"
+      puts "Creating index for #{column} #{Time.now.strftime("%d/%m/%Y %H:%M")}"
       execute_query(sql)
     end
   end
@@ -76,7 +76,7 @@ def populate_trade_permits
          now()::date AS updated_at
   FROM permits_import;
   SQL
-  puts "Inserting into trade_permits #{Time.now.strftime("%d/%m/%Y")}"
+  puts "Inserting into trade_permits #{Time.now.strftime("%d/%m/%Y %H:%M")}"
   execute_query(sql)
 end
 
@@ -98,7 +98,7 @@ def insert_into_trade_shipments
       FROM grouped_permits
       WHERE trade_shipments.legacy_shipment_number = grouped_permits.shipment_number
     SQL
-    puts "Inserting #{k} permits into trade_shipments #{Time.now.strftime("%d/%m/%Y")}"
+    puts "Inserting #{k} permits into trade_shipments #{Time.now.strftime("%d/%m/%Y %H:%M")}"
     execute_query(sql)
   end
 end

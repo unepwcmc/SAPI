@@ -34,6 +34,13 @@ class Rank < ActiveRecord::Base
     !has_protected_name? && !has_dependent_objects?
   end
 
+  # returns ranks in given range
+  def self.in_range(lower_rank, higher_rank)
+    lower_rank_idx = lower_rank && dict.index(lower_rank) || dict.size - 1
+    higher_rank_idx = higher_rank && dict.index(higher_rank) || 0
+    dict[higher_rank_idx..lower_rank_idx]
+  end
+
   private
 
   def has_dependent_objects?

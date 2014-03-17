@@ -3,7 +3,11 @@ fr:
   cites_sub_title: "S'il vous plaît entrer votre recherche ci-dessous"
   errors:
     no_data_1: "Votre recherche n'a retourné aucune donnée"
-    no_data_2: "S'il vous plaît sélectionner autres variables ou vérifier dans la Base de Données des Espèces UNEP-WCMC que vous utilisez l'orthographe/nom scientifique corrects"
+    no_data_2: "S'il vous plaît sélectionner autres variables"
+    csv_limit_exceeded_1: "Votre recherche a retourné un sous-ensemble trop grand"
+    csv_limit_exceeded_2: "Vous devez limiter la gamme des années et selectionner au moins un pays importateur/exportateur ou un taxon"
+    web_limit_exceeded_1: "Les résultats de la recherche sont trop larges pour être affichés en ligne"
+    web_limit_exceeded_2: "Vous pouvez télécharger les résultats en format CSV"
   warnings:
     net_trade_1: "S'il vous plaît lire attentivement:"
     net_trade_2: "Le commerce net est le résultat de la soustraction des réexportations d'un pays de ses importations. Par conséquent, si votre sélection de données concerne des importations ou des exportations des pays spécifiés, vous ne pouvez pas calculer les importations ou les exportations nettes."

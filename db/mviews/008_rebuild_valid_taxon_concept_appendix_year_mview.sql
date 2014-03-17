@@ -39,7 +39,7 @@ CREATE OR REPLACE FUNCTION rebuild_valid_taxon_concept_appendix_year_designation
 
     EXECUTE 'CREATE TEMP TABLE ' || designation_name || '_listing_changes_intervals_mview AS
     WITH additions_and_deletions AS (
-      SELECT change_type_name, effective_at, species_listing_name, taxon_concept_id 
+      SELECT change_type_name, effective_at, species_listing_name, taxon_concept_id
       FROM ' || designation_name || '_listing_changes_mview
       WHERE change_type_name = ''ADDITION'' OR change_type_name = ''DELETION''
     ), additions AS (
@@ -47,13 +47,15 @@ CREATE OR REPLACE FUNCTION rebuild_valid_taxon_concept_appendix_year_designation
       FROM additions_and_deletions
       WHERE change_type_name = ''ADDITION''
     )
-    SELECT a.taxon_concept_id, a.species_listing_name, a.effective_at AS effective_from, MIN(ad.effective_at) AS effective_to 
+    SELECT a.taxon_concept_id, a.species_listing_name,
+    a.effective_at AS effective_from,
+    MIN(ad.effective_at) AS effective_to
     FROM additions a
     LEFT JOIN additions_and_deletions ad
     ON a.taxon_concept_id = ad.taxon_concept_id
     AND a.effective_at < ad.effective_at
     GROUP BY a.taxon_concept_id, a.species_listing_name, a.effective_at
-    ORDER BY taxon_concept_id, effective_from;';
+    ORDER BY taxon_concept_id, effective_from';
 
     EXECUTE 'DROP TABLE IF EXISTS tmp_' || mview_name || ';';
 
@@ -65,7 +67,7 @@ CREATE OR REPLACE FUNCTION rebuild_valid_taxon_concept_appendix_year_designation
 
       UNION
 
-      SELECT l.taxon_concept_id, l.species_listing_name, l.effective_from, r.effective_to 
+      SELECT l.taxon_concept_id, l.species_listing_name, l.effective_from, r.effective_to
       FROM unmerged_intervals l
       JOIN ' || designation_name || '_listing_changes_intervals_mview r
       ON r.taxon_concept_id = l.taxon_concept_id
@@ -76,16 +78,29 @@ CREATE OR REPLACE FUNCTION rebuild_valid_taxon_concept_appendix_year_designation
       FROM unmerged_intervals
       GROUP BY taxon_concept_id, species_listing_name, effective_to
     ), merged_intervals AS (
-      SELECT taxon_concept_id, species_listing_name, effective_from, 
+      SELECT taxon_concept_id, species_listing_name, effective_from,
       CASE WHEN EVERY(effective_to IS NOT NULL) THEN MAX(effective_to) ELSE NULL END AS effective_to 
       FROM left_merged_intervals
       GROUP BY taxon_concept_id, species_listing_name, effective_from
+    ), intervals AS (
+      SELECT taxon_concept_id, species_listing_name AS ' || appendix || ', effective_from, effective_to
+      FROM merged_intervals
+      JOIN taxon_concepts
+      ON taxon_concepts.id = merged_intervals.taxon_concept_id
+      ORDER BY taxon_concept_id, ' || appendix || ', effective_from, effective_to
+    ), hybrids AS (
+      SELECT other_taxon_concept_id AS hybrid_id,
+      taxon_concept_id
+      FROM taxon_relationships rel
+      JOIN taxon_relationship_types rel_type
+      ON rel.taxon_relationship_type_id = rel_type.id AND rel_type.name = ''HAS_HYBRID''
     )
-    SELECT taxon_concept_id, species_listing_name AS ' || appendix || ', effective_from, effective_to
-    FROM merged_intervals
-    JOIN taxon_concepts
-    ON taxon_concepts.id = merged_intervals.taxon_concept_id
-    ORDER BY taxon_concept_id, ' || appendix || ', effective_from, effective_to;';
+    SELECT * FROM intervals
+    UNION
+    SELECT hybrid_id, ' || appendix || ', effective_from, effective_to
+    FROM hybrids
+    JOIN intervals
+    ON intervals.taxon_concept_id = hybrids.taxon_concept_id';
 
     EXECUTE 'CREATE INDEX ON tmp_' || mview_name || ' (taxon_concept_id, ' || appendix || ', effective_from, effective_to);';
 

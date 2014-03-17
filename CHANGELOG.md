@@ -1,3 +1,22 @@
+### 0.6.0 (2014-03-17)
+**API**
+* Fixes dashboard stats
+
+**Checklist**
+* fixes issue in Checklist PDF to do with incorrect html markup
+
+** Species+ Admin tool **
+* distribution download
+
+**Trade**
+* Fixes to hybrids import
+* Fixes to report upload taxon resolution
+* Fixes to sandbox batch / individual operations
+* Fixes to validations, including hybrids
+* Fixes to searching by hybrids, synonyms, accepted names
+* Searching by reported_as for the admin tool
+* Fixes to public interface, including cap on number of results displayed online
+
 ### 0.5.0 (2014-02-25)
 **Species+**
 
