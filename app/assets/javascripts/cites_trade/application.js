@@ -154,6 +154,7 @@ $(document).ready(function(){
       getResultsCount(getParamsFromInputs()).then( function (res) {
         if (res.total > res.csv_limit){
           $('#csv-limit-exceeded-error-message').show();
+          $("#cites-trade-loading").hide();
         } else if (res.total > 0) {
           // There is something to download!
           queryResults.ajax = false;
@@ -163,6 +164,7 @@ $(document).ready(function(){
           queryResults.call(this);
         } else {
           $('#search-error-message').show();
+          $("#cites-trade-loading").hide();
         }
       }, ajaxFail);
     } else {
