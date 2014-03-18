@@ -15,8 +15,12 @@
     <tr>
       <td>
         <span style="font-weight:900;font-size:14px"> <%= t('select_output') %> </span>
-
-        <br><input type="radio" name="outputType" value="web" checked> web
+        <br /><span style="display:none;"
+          id="web-limit-exceeded-error-message">
+          <%= t('errors.web_limit_exceeded_1') %>.<br>
+          <%= t('errors.web_limit_exceeded_2') %>.
+        </span>
+        <br><input type="radio" name="outputType" value="web" checked> <span id='web-option'>web</span>
         <br><input type="radio" name="outputType" value="csv"> csv
         <br>
         <br>
