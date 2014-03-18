@@ -24,7 +24,7 @@ CREATE OR REPLACE FUNCTION eu_leaf_listing(node_id INT)
       )
     )
     FROM taxon_concepts
-    WHERE id = node_id;
+    WHERE id = $1;
   $$;
 
 CREATE OR REPLACE FUNCTION eu_aggregate_children_listing(node_id INT)
