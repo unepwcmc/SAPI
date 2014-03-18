@@ -20,6 +20,9 @@ class CitesTradeController < ApplicationController
       :page,
       :csv_separator
     ).merge({
+      # if taxon search comes from the genus selector, search descendants
+      :taxon_with_descendants =>
+        (params[:filters] && params[:filters][:selection_taxon] == 'genus'),
       :report_type => if params[:filters] && params[:filters][:report_type] &&
         Trade::ShipmentsExportFactory.public_report_types &
         [report_type = params[:filters][:report_type].downcase.strip.to_sym]
@@ -27,10 +30,6 @@ class CitesTradeController < ApplicationController
       else
         :comptab
       end
-    }).merge({
-      # if taxon search comes from the genus selector, search descendants
-      :taxon_with_descendants =>
-        (params.delete(:selection_taxon) == 'genus')
     })
   end
 
