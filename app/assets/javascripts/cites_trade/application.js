@@ -154,6 +154,7 @@ $(document).ready(function(){
       getResultsCount(getParamsFromInputs()).then( function (res) {
         if (res.total > res.csv_limit){
           $('#csv-limit-exceeded-error-message').show();
+          $("#cites-trade-loading").hide();
         } else if (res.total > 0) {
           // There is something to download!
           queryResults.ajax = false;
@@ -163,6 +164,7 @@ $(document).ready(function(){
           queryResults.call(this);
         } else {
           $('#search-error-message').show();
+          $("#cites-trade-loading").hide();
         }
       }, ajaxFail);
     } else {
@@ -182,6 +184,7 @@ $(document).ready(function(){
   }
   queryResults.ajax = true;
   $("#submit_expert").click(function(e) {
+    $("#cites-trade-loading").show();
     queryResults.call(this);
   });
 
@@ -202,6 +205,7 @@ $(document).ready(function(){
  	  $('#impcty').select2("val","all_imp");	
     notySticky('Values are being reset...');
     $('#search-error-message').hide();
+    $("#cites-trade-loading").hide();
   };
 
   $('#reset_search').click(function() {
@@ -720,6 +724,7 @@ $(document).ready(function(){
       $('#web-limit-exceeded-error-message').show();
       $('input[value=csv]').attr('checked', 'checked');
       $('input[value=web]').attr("disabled",true);
+      $('span#web-option').css('color', 'LightGray');
     }
   }
 
@@ -747,6 +752,7 @@ $(document).ready(function(){
             $('#query_results_table').addClass('net_gross');
           }
           $('#table_title').text(table_view_title);
+          $('#cites-trade-loading').hide();
           $('#query_results_table').html(table_tmpl);
         },
         error: ajaxFail
