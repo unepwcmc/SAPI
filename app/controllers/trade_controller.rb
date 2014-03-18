@@ -37,6 +37,9 @@ class TradeController < ApplicationController
       else
         :raw
       end
+    }).merge({
+      # always search descendants
+      :taxon_with_descendants => true
     })
   end
 

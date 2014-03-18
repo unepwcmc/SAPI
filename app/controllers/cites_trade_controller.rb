@@ -16,6 +16,7 @@ class CitesTradeController < ApplicationController
       :time_range_start,
       :time_range_end,
       :report_type,
+      :selection_taxon,
       :page,
       :csv_separator
     ).merge({
@@ -26,6 +27,10 @@ class CitesTradeController < ApplicationController
       else
         :comptab
       end
+    }).merge({
+      # if taxon search comes from the genus selector, search descendants
+      :taxon_with_descendants =>
+        (params.delete(:selection_taxon) == 'genus')
     })
   end
 

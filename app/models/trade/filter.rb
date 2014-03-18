@@ -36,26 +36,26 @@ class Trade::Filter
 
     ancestor_ranks = Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
     unless @taxon_concepts_ids.empty?
-      taxa = if !@internal
-        # the magnificent hack to make sure we're not cascading
-        # for higher taxa if query is coming from the public
-        # interface; instead, return just trade reported at that level
-        # BTW "higher" means > genus
-        # taxa = MTaxonConcept.where(:id => @taxon_concepts_ids)
-        # higher_taxa, lower_taxa = taxa.partition do |taxon|
-        #   Rank.in_range(Rank::SUBFAMILY, Rank::KINGDOM).include? taxon.rank_name
-        # end
+      taxa = if @internal
+        # always cascade if query is coming from the internal interface
+        MTaxonConceptFilterByIdWithDescendants.new(
+          nil, @taxon_concepts_ids
+        ).relation(ancestor_ranks)
+      elsif @taxon_with_descendants && !@internal
+        # the magnificent hack to make sure that queries coming from the public
+        # interface cascade to taxon descendants when searching by genus,
+        # but only throught the 'genus' selector, not 'taxon'
         MTaxonConceptFilterByIdWithDescendants.new(
           nil, @taxon_concepts_ids
         ).relation(Rank.in_range(Rank::SPECIES, Rank::GENUS))
       else
+        # this has to be public interface + search by taxon
+        # only cascade for species
         MTaxonConceptFilterByIdWithDescendants.new(
           nil, @taxon_concepts_ids
-        ).relation(ancestor_ranks)
+        ).relation(Rank.in_range(Rank::SPECIES, Rank::SPECIES))
       end
-      @query = @query.where(
-        :taxon_concept_id => taxa.select(:id).map(&:id)
-      )
+      @query = @query.where(:taxon_concept_id => taxa.select(:id).map(&:id))
     end
 
     unless @reported_taxon_concepts_ids.empty?
