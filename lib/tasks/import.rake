@@ -137,7 +137,8 @@ namespace :import do
   task :trade => [
     :"import:unusual_geo_entities",
     :"import:trade_species_mapping",
-    :"import:trade_names"] do
+    :"import:trade_names",
+    :"import:synonyms_to_trade_names"] do
     Rake::Task["import:shipments"].invoke(
       ENV['SHIPMENTS_FILE']
     )

@@ -111,4 +111,75 @@ namespace :import do
     puts "There are #{TaxonConcept.where(:name_status => "T",
       :taxonomy_id => taxonomy_id).count} Trade Names in the database"
   end
+
+  desc "Change status of fake synonyms to be trade_names, update leaf nodes"
+  task :synonyms_to_trade_names => [:environment] do
+    TMP_TABLE = "synonyms_to_trade_mapping"
+    file = "lib/files/synonyms_to_trade_names.csv"
+    drop_table(TMP_TABLE)
+    create_table_from_csv_headers(file, TMP_TABLE)
+    copy_data(file, TMP_TABLE)
+    has_trade_name = TaxonRelationshipType.
+      find_or_create_by_name(:name => TaxonRelationshipType::HAS_TRADE_NAME).id
+    has_synonym = TaxonRelationshipType.
+      find_or_create_by_name(:name => TaxonRelationshipType::HAS_SYNONYM).id
+    count_trade_names = TaxonConcept.where(:name_status => 'T').count
+    count_synonyms = TaxonConcept.where(:name_status => 'S').count
+    count_taxon_names = TaxonName.count
+    count_trade_relationships = TaxonRelationship.where(:taxon_relationship_type_id => has_trade_name).count
+    count_synonym_relationships = TaxonRelationship.where(:taxon_relationship_type_id => has_synonym).count
+    taxon_concept_ids = ActiveRecord::Base.connection.execute("SELECT species_plus_id AS id FROM #{TMP_TABLE}").
+      map {|h| h["id"]}
+    taxon_concept_ids.each do |id|
+      tc = TaxonConcept.find id
+      next if tc.name_status != "S"
+      puts "Updating #{tc.full_name}"
+      unless tc.accepted_names.any?
+        puts "from synonym to trade_name"
+        tc.update_attributes(:name_status => "T", :parent_id => nil)
+      end
+      puts "Update its children's taxon_name_id"
+      tc.children.each do |child|
+        if child.accepted_names.any?
+          puts "looking at #{child.full_name} scientific_name"
+          taxon_name = TaxonName.find_or_create_by_scientific_name(child.full_name)
+          child.update_attributes(:parent_id => nil, :taxon_name_id => taxon_name.id)
+        end
+      end
+    end
+    TaxonName.joins('LEFT JOIN taxon_concepts ON taxon_name_id = taxon_names.id').
+      where('taxon_concepts.id IS NULL').each do |t_name|
+        unless TaxonConcept.where(:taxon_name_id => t_name.id).any?
+          puts "deleting unnused taxon_name #{t_name.scientific_name}"
+          t_name.delete
+        end
+    end
+    puts "Create trade_names relationship"
+
+    sql = <<-SQL
+      INSERT INTO taxon_relationships(taxon_concept_id, other_taxon_concept_id, taxon_relationship_type_id,
+        created_at, updated_at)
+      SELECT DISTINCT species_plus_id, accepted_id, #{has_trade_name}, current_date, current_date
+      FROM #{TMP_TABLE}
+    SQL
+    ActiveRecord::Base.connection.execute(sql)
+
+    final_count_trade_names = TaxonConcept.where(:name_status => 'T').count
+    final_count_synonyms = TaxonConcept.where(:name_status => 'S').count
+    final_count_taxon_names = TaxonName.count
+    final_count_trade_relationships = TaxonRelationship.where(:taxon_relationship_type_id => has_trade_name).count
+    final_count_synonym_relationships = TaxonRelationship.where(:taxon_relationship_type_id => has_synonym).count
+
+    puts "############# SUMMARY ###################"
+    puts "Pre-Existing trade_names: #{count_trade_names}; Final count trade_names: #{final_count_trade_names};\
+      Diff: #{final_count_trade_names-count_trade_names}"
+    puts "Pre-Existing synonyms: #{count_synonyms}; Final count synonyms: #{final_count_synonyms};\
+      Diff: #{final_count_synonyms-count_synonyms}"
+    puts "Pre-Existing taxon_names: #{count_taxon_names}; Final count taxon_names: #{final_count_taxon_names};\
+      Diff: #{final_count_taxon_names-count_taxon_names}"
+    puts "Pre-Existing trade_relationships: #{count_trade_relationships}; Final count trade_relationships: #{final_count_trade_relationships};\
+      Diff: #{final_count_trade_relationships-count_trade_relationships}"
+    puts "Pre-Existing synonym_relationships: #{count_synonym_relationships}; Final count synonym_relationships: #{final_count_synonym_relationships};\
+      Diff: #{final_count_synonym_relationships-count_synonym_relationships}"
+  end
 end
