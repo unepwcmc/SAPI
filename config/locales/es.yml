@@ -6,7 +6,7 @@ es:
     no_data_2: "Por favor selecciona otras variables"
     csv_limit_exceeded_1: "Su búsqueda ha encontrado un subconjunto demasiado grande"
     csv_limit_exceeded_2: "Debe limitar el rango de años y seleccionar al menos un país de importación/exportación o un taxón"
-    web_limit_exceeded_1: "Su búsqueda ha resultado en un conjunto de datos demasiado grande para mostrarlo en línea"
+    web_limit_exceeded_1: "Vista en línea no está disponible para grandes subconjuntos"
     web_limit_exceeded_2: "Puede descargar los resultados en formato CSV"
   warnings:
     net_trade_1: "Por favor, lea cuidadosamente:"
