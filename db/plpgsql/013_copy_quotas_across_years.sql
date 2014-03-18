@@ -76,27 +76,57 @@ BEGIN
       AND (ARRAY_LENGTH(included_taxon_concepts, 1) IS NULL OR included_taxon_concepts @> ARRAY[taxon_concept_id])	
       AND (ARRAY_LENGTH(excluded_geo_entities, 1) IS NULL OR NOT excluded_geo_entities @> ARRAY[geo_entity_id])
       AND (ARRAY_LENGTH(included_geo_entities, 1) IS NULL OR included_geo_entities  @> ARRAY[geo_entity_id])
+    ), original_terms AS (
+      SELECT quota_terms.*
+      FROM trade_restriction_terms quota_terms
+      JOIN original_current_quotas quotas
+      ON quota_terms.trade_restriction_id = quotas.id
+    ), original_sources AS (
+      SELECT quota_sources.*
+      FROM trade_restriction_sources quota_sources
+      JOIN original_current_quotas quotas
+      ON quota_sources.trade_restriction_id = quotas.id
     ), updated_quotas AS (
       UPDATE trade_restrictions
       SET is_current = false
       FROM original_current_quotas
       WHERE trade_restrictions.id = original_current_quotas.id
+    ), inserted_quotas AS (
+      INSERT INTO trade_restrictions(type, is_current, start_date, end_date, geo_entity_id, quota,
+      publication_date, notes, unit_id, taxon_concept_id, public_display, url, created_at, updated_at,
+      excluded_taxon_concepts_ids, original_id)
+      SELECT 'Quota', is_current, new_start_date, new_end_date, geo_entity_id, quota,
+      new_publication_date,
+      CASE
+        WHEN LENGTH(from_text) = 0
+        THEN notes
+      ELSE
+        REPLACE(notes, from_text, to_text)
+      END, unit_id, taxon_concept_id, public_display, url,
+      NOW(), NOW(), trade_restrictions.excluded_taxon_concepts_ids,
+      trade_restrictions.id
+      FROM original_current_quotas AS trade_restrictions
+      RETURNING *
+    ), inserted_terms AS (
+      INSERT INTO trade_restriction_terms (
+        trade_restriction_id, term_id, created_at, updated_at
+      )
+      SELECT inserted_quotas.id, original_terms.term_id, NOW(), NOW()
+      FROM original_terms
+      JOIN inserted_quotas
+      ON inserted_quotas.original_id = original_terms.trade_restriction_id
+    ), inserted_sources AS (
+      INSERT INTO trade_restriction_sources (
+        trade_restriction_id, source_id, created_at, updated_at
+      )
+      SELECT inserted_quotas.id, original_sources.source_id, NOW(), NOW()
+      FROM original_sources
+      JOIN inserted_quotas
+      ON inserted_quotas.original_id = original_sources.trade_restriction_id
     )
-    INSERT INTO trade_restrictions(type, is_current, start_date, end_date, geo_entity_id, quota,
-    publication_date, notes, unit_id, taxon_concept_id, public_display, url, created_at, updated_at,
-    excluded_taxon_concepts_ids)
-    SELECT 'Quota', is_current, new_start_date, new_end_date, geo_entity_id, quota,
-    new_publication_date,
-    CASE
-      WHEN LENGTH(from_text) = 0
-      THEN notes
-    ELSE
-      REPLACE(notes, from_text, to_text)
-    END, unit_id, taxon_concept_id, public_display, url, current_date,
-    current_date, trade_restrictions.excluded_taxon_concepts_ids
-    FROM original_current_quotas AS trade_restrictions;
+    SELECT COUNT(*) INTO updated_rows
+    FROM inserted_quotas;
 
-    GET DIAGNOSTICS updated_rows = ROW_COUNT;
     RAISE INFO '[%] Copied % quotas', 'trade_transactions', updated_rows;
   END;
 $$;
