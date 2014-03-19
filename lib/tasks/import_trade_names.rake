@@ -128,15 +128,16 @@ namespace :import do
     count_taxon_names = TaxonName.count
     count_trade_relationships = TaxonRelationship.where(:taxon_relationship_type_id => has_trade_name).count
     count_synonym_relationships = TaxonRelationship.where(:taxon_relationship_type_id => has_synonym).count
-    taxon_concept_ids = ActiveRecord::Base.connection.execute("SELECT species_plus_id AS id FROM #{TMP_TABLE}").
-      map {|h| h["id"]}
-    taxon_concept_ids.each do |id|
+    taxon_concept_ids = ActiveRecord::Base.connection.execute("SELECT cites_taxon_code, species_plus_id AS id FROM #{TMP_TABLE}").
+      map {|h| [h["cites_taxon_code"], h["id"]]}
+    taxon_concept_ids.each do |cites_code, id|
       tc = TaxonConcept.find id
       next if tc.name_status != "S"
       puts "Updating #{tc.full_name}"
       unless tc.accepted_names.any?
         puts "from synonym to trade_name"
-        tc.update_attributes(:name_status => "T", :parent_id => nil)
+        tc.update_attributes(:name_status => "T", :parent_id => nil,
+                            :legacy_trade_code => cites_code)
       end
       puts "Update its children's taxon_name_id"
       tc.children.each do |child|
