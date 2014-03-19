@@ -17,7 +17,11 @@ class TaxonConceptMatcher
     @taxon_concepts = initialize_rel
     apply_taxonomy_options_to_rel
     if @scientific_name.present?
-      @taxon_concepts = @taxon_concepts.by_scientific_name(@scientific_name)
+      @taxon_concepts = @taxon_concepts.where([
+      "UPPER(taxon_concepts.full_name) LIKE BTRIM(UPPER(:sci_name_prefix))",
+      :sci_name_prefix => "#{@scientific_name}%"
+    ])
+
     end
   end
 
