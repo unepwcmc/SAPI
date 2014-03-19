@@ -159,8 +159,17 @@ namespace :import do
     sql = <<-SQL
       INSERT INTO taxon_relationships(taxon_concept_id, other_taxon_concept_id, taxon_relationship_type_id,
         created_at, updated_at)
-      SELECT DISTINCT species_plus_id, accepted_id, #{has_trade_name}, current_date, current_date
-      FROM #{TMP_TABLE}
+      SELECT subquery.*, current_date, current_date
+      FROM (
+        SELECT DISTINCT accepted_id, species_plus_id, #{has_trade_name}
+        FROM #{TMP_TABLE}
+
+        EXCEPT
+
+        SELECT taxon_concept_id, other_taxon_concept_id, taxon_relationship_type_id
+        FROM taxon_relationships
+        WHERE taxon_relationship_type_id = #{has_trade_name}
+      ) as subquery
     SQL
     ActiveRecord::Base.connection.execute(sql)
 
