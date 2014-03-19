@@ -125,6 +125,7 @@ $(document).ready(function(){
         }
       }
     });
+    values['selection_taxon'] = $('input[name="selection_taxon"]:checked').val();
     values['report_type'] = 'raw';
     return values;
   }
