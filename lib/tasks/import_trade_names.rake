@@ -170,7 +170,25 @@ namespace :import do
         SELECT taxon_concept_id, other_taxon_concept_id, taxon_relationship_type_id
         FROM taxon_relationships
         WHERE taxon_relationship_type_id = #{has_trade_name}
-      ) as subquery
+      ) as subquery;
+
+    SQL
+    ActiveRecord::Base.connection.execute(sql)
+
+    puts "Update trade_species_mapping_import table"
+    sql = <<-SQL
+      WITH new_mapping AS (
+        SELECT cites_taxon_code, new_mapper.full_name, new_mapper.id FROM taxon_concepts
+        INNER JOIN taxon_relationships ON other_taxon_concept_id = taxon_concepts.id
+        AND taxon_relationship_type_id = #{has_trade_name} AND taxon_concepts.name_status = 'T'
+        INNER JOIN trade_species_mapping_import ON species_plus_id = taxon_concepts.id
+        AND cites_taxon_code <> taxon_concepts.legacy_trade_code
+        INNER JOIN taxon_concepts AS new_mapper ON new_mapper.id = taxon_relationships.taxon_concept_id
+      )
+      UPDATE trade_species_mapping_import
+      SET species_plus_name = new_mapping.full_name, species_plus_id = new_mapping.id
+      FROM new_mapping
+      WHERE trade_species_mapping_import.cites_taxon_code = new_mapping.cites_taxon_code;
     SQL
     ActiveRecord::Base.connection.execute(sql)
 
