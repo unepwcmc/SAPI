@@ -15,7 +15,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
     @hybrid.build_taxon_name
     @taxon_concepts = TaxonConceptMatcher.new(@search_params).taxon_concepts.
       includes([:rank, :taxonomy, :taxon_name, :parent]).
-      order(:taxonomic_position).page(params[:page])
+      order("taxon_concepts.taxonomic_position").page(params[:page])
     if @taxon_concepts.count == 1
       redirect_to admin_taxon_concept_names_path(@taxon_concepts.first),
         :notice => "Your search returned only one result,
