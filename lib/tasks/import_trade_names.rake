@@ -2,7 +2,7 @@ namespace :import do
   desc "Import trade - species_plus mapping table from csv file"
   task :trade_species_mapping => [:environment] do
     TMP_TABLE = "trade_species_mapping_import"
-    file = "lib/files/names_for_transfer_29114.csv"
+    file = "lib/files/names_for_transfer_30342.csv"
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
@@ -11,7 +11,7 @@ namespace :import do
   desc "Import trade names (which didn't exist in SpeciesPlus) from csv file"
   task :trade_names => [:environment] do
     TMP_TABLE = "trade_names_import"
-    file = "lib/files/trade_names_to_add_8132.csv"
+    file = "lib/files/trade_names_to_add_8287.csv"
 
     taxonomy_id = Taxonomy.where(:name => 'CITES_EU').first.id
     taxon_relationship_type_id = TaxonRelationshipType.
@@ -43,7 +43,11 @@ namespace :import do
         SELECT scientific_name
         FROM taxon_names
       ) AS subquery;
+    SQL
+    puts "Inserting taxon names"
+    ActiveRecord::Base.connection.execute(sql)
 
+    sql = <<-SQL
       INSERT INTO taxon_concepts (full_name,
         rank_id,
         taxon_name_id,
@@ -64,8 +68,8 @@ namespace :import do
           legacy_cites_taxon_code as legacy_trade_code,
           #{taxonomy_id}, 'T'
         FROM #{TMP_TABLE}
-        INNER JOIN ranks r ON trade_name_rank = r.name
-        INNER JOIN taxon_names tn ON cites_trade_name = tn.scientific_name
+        INNER JOIN ranks r ON BTRIM(UPPER(trade_name_rank)) = BTRIM(UPPER(r.name))
+        INNER JOIN taxon_names tn ON BTRIM(UPPER(cites_trade_name)) = BTRIM(UPPER(tn.scientific_name))
 
         EXCEPT
 
@@ -77,7 +81,11 @@ namespace :import do
         AND name_status = 'T'
 
       ) AS subquery;
+    SQL
+    puts "Inserting the trade names into taxon_concepts table"
+    ActiveRecord::Base.connection.execute(sql)
 
+    sql = <<-SQL
       INSERT INTO taxon_relationships
         (taxon_concept_id,
         other_taxon_concept_id,
@@ -96,8 +104,8 @@ namespace :import do
         FROM #{TMP_TABLE} hi
         INNER JOIN taxon_concepts
         ON valid_name_speciesplus_id = taxon_concepts.id
-        LEFT JOIN taxon_concepts other_taxon_concepts
-        ON cites_trade_name = other_taxon_concepts.full_name
+        INNER JOIN taxon_concepts other_taxon_concepts
+        ON legacy_cites_taxon_code = other_taxon_concepts.legacy_trade_code
 
         EXCEPT
 
@@ -107,6 +115,7 @@ namespace :import do
         WHERE taxon_relationship_type_id = #{taxon_relationship_type_id}
       ) AS subquery;
     SQL
+    puts "Inserting the taxon Relationships between taxon concepts and trade_names"
     ActiveRecord::Base.connection.execute(sql)
     puts "There are #{TaxonConcept.where(:name_status => "T",
       :taxonomy_id => taxonomy_id).count} Trade Names in the database"
