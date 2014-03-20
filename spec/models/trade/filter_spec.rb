@@ -9,7 +9,8 @@ describe Trade::Filter do
         context "at GENUS rank" do
           subject { Trade::Filter.new({
             :taxon_concepts_ids => [@animal_genus.id],
-            :internal => false
+            :internal => false,
+            :taxon_with_descendants => true
           }).results }
           specify { subject.should include(@shipment1) }
           specify { subject.should_not include(@shipment2) }
@@ -18,20 +19,10 @@ describe Trade::Filter do
         context "at FAMILY rank" do
           subject { Trade::Filter.new({
             :taxon_concepts_ids => [@animal_family.id],
-            :internal => false
+            :internal => false,
+            :taxon_with_descendants => false
           }).results }
           specify { subject.length.should == 0 }
-        end
-        context "at mixed ranks" do
-          subject {
-            Trade::Filter.new({
-              :taxon_concepts_ids => [@animal_genus.id, @plant_species.id],
-              :internal => false
-            }).results
-          }
-          specify { subject.should include(@shipment1) }
-          specify { subject.should include(@shipment2) }
-          specify { subject.length.should == 6 }
         end
       end
       context "in the admin interface" do
