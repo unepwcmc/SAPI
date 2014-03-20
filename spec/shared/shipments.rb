@@ -58,6 +58,9 @@ shared_context 'Shipments' do
     @trade_name = create_cites_eu_species(
       :name_status => 'T'
     )
+    @status_N_species = create_cites_eu_species(
+      :name_status => 'N'
+    )
     create(
       :taxon_relationship,
       :taxon_concept => @plant_species,

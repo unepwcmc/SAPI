@@ -8,6 +8,10 @@ describe Species::TaxonConceptPrefixMatcher do
       :taxon_name => create(:taxon_name, :scientific_name => 'Pavona minor'),
       :name_status => 'T'
     )
+    @status_N_species = create_cites_eu_species(
+      :taxon_name => create(:taxon_name, :scientific_name => 'Vidua paradisaea'),
+      :name_status => 'N'
+    )
     create(:taxon_relationship,
       :taxon_concept => @accepted_name,
       :other_taxon_concept => @trade_name,
@@ -16,11 +20,44 @@ describe Species::TaxonConceptPrefixMatcher do
         :name => TaxonRelationshipType::HAS_TRADE_NAME
       )
     )
+    create_cites_I_addition(:taxon_concept => @accepted_name)
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     @accepted_name = MTaxonConcept.find(@accepted_name.id)
     @trade_name = MTaxonConcept.find(@trade_name.id)
+    @status_N_species = MTaxonConcept.find(@status_N_species.id)
   end
   describe :results do
+    context "when searching for status N species" do
+      context "when trade visibility" do
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'Vidua',
+            :ranks => [],
+            :visibility => :trade
+          })
+        }
+        specify { subject.results.should include(@status_N_species) }
+      end
+      context "when trade internal visibility" do
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'Vidua',
+            :ranks => [],
+            :visibility => :trade_internal
+          })
+        }
+        specify { subject.results.should include(@status_N_species) }
+      end
+      context "when speciesplus visibility" do
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'Vidua',
+            :ranks => []
+          })
+        }
+        specify { subject.results.should_not include(@status_N_species) }
+      end
+    end
     context "when searching for trade name" do
       context "when trade visibility" do
         subject {

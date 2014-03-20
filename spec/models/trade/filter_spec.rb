@@ -56,6 +56,17 @@ describe Trade::Filter do
           specify { subject.length.should == 6 }
         end
       end
+      context "when status N shipments present" do
+        before(:each) do
+          @shipment_of_status_N = create(:shipment, :taxon_concept_id => @status_N_species.id)
+        end
+        subject {
+          Trade::Filter.new({
+            :taxon_concepts_ids => [@status_N_species.id]
+          }).results
+        }
+        specify { subject.should include(@shipment_of_status_N) }
+      end
       context "when subspecies shipments present" do
         before(:each) do
           @shipment_of_subspecies = create(:shipment, :taxon_concept_id => @subspecies.id)
