@@ -132,12 +132,17 @@ namespace :import do
     :"import:stats"
   ]
 
-  desc 'Runs import tasks for all the trade related tasks'
-  # SHIPMENTS_FILE=path/to/file PERMITS_FILE=path/to/file rake import:trade
-  task :trade => [
+  desc 'Runs trade import support tasks (unnusual_geo_entities, trade_species_mapping, trade_names, synonyms_to_trade_names)'
+  task :trade_support => [
     :"import:unusual_geo_entities",
     :"import:trade_species_mapping",
-    :"import:trade_names"] do
+    :"import:trade_names",
+    :"import:synonyms_to_trade_names"
+  ]
+
+  desc 'Runs import tasks for all the trade related tasks'
+  # SHIPMENTS_FILE=path/to/file PERMITS_FILE=path/to/file rake import:trade
+  task :trade => [:"import:trade_support"] do
     Rake::Task["import:shipments"].invoke(
       ENV['SHIPMENTS_FILE']
     )
