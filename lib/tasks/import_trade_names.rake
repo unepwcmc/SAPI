@@ -209,5 +209,6 @@ namespace :import do
       Diff: #{final_count_trade_relationships-count_trade_relationships}"
     puts "Pre-Existing synonym_relationships: #{count_synonym_relationships}; Final count synonym_relationships: #{final_count_synonym_relationships};\
       Diff: #{final_count_synonym_relationships-count_synonym_relationships}"
+    Sapi::Indexes.create_indexes_on_trade_names
   end
 end
