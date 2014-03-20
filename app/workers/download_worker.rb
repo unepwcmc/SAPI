@@ -22,6 +22,7 @@ class DownloadWorker
       }
 
       params = params.symbolize_keys
+      I18n.locale = params[:locale] # because we're outside of request scope
       document_module = document_modules[@download.doc_type].new(params)
 
       @download.path     = document_module.generate
