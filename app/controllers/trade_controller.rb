@@ -30,6 +30,8 @@ class TradeController < ApplicationController
       :csv_separator
     ).merge({
       :internal => true,
+      # always search descendants
+      :taxon_with_descendants => true,
       :report_type => if params[:filters] && params[:filters][:report_type] &&
         Trade::ShipmentsExportFactory.report_types &
         [report_type = params[:filters][:report_type].downcase.strip.to_sym]

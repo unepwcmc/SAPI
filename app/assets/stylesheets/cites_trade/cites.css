@@ -53,13 +53,13 @@ body {
 	color: #000;
 }
 
-.ui-autocomplete-loading { background:url('../I/ui-anim_basic_16x16.gif') no-repeat right center }
+.ui-autocomplete-loading { background:url(ui-anim_basic_16x16.gif) no-repeat right center }
 
 div#content {
     display: none;
     }
 
-div#loading {             
+div#loading {
     top: 100 px;
     left: 500px;
     position: absolute;
@@ -67,7 +67,7 @@ div#loading {
     width: 160px;
     height: 100px;
     background: url(images/ajax-loader.gif) no-repeat;
-    cursor: wait;                
+    cursor: wait;
     }
 
 

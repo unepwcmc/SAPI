@@ -16,9 +16,13 @@ class CitesTradeController < ApplicationController
       :time_range_start,
       :time_range_end,
       :report_type,
+      :selection_taxon,
       :page,
       :csv_separator
     ).merge({
+      # if taxon search comes from the genus selector, search descendants
+      :taxon_with_descendants =>
+        (params[:filters] && params[:filters][:selection_taxon] == 'genus'),
       :report_type => if params[:filters] && params[:filters][:report_type] &&
         Trade::ShipmentsExportFactory.public_report_types &
         [report_type = params[:filters][:report_type].downcase.strip.to_sym]
