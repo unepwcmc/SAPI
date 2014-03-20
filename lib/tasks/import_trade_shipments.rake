@@ -184,7 +184,7 @@ def populate_shipments
       CASE
         WHEN tc.name_status = 'S'
           THEN taxon_relationships.taxon_concept_id
-        WHEN tc.name_status = 'A' OR tc.name_status = 'H'
+        WHEN tc.name_status = 'A' OR tc.name_status = 'H' OR tc.name_status = 'N'
           THEN tc.id
         ELSE NULL
       END AS taxon_concept_id,
@@ -209,7 +209,7 @@ def populate_shipments
     LEFT JOIN geo_entities AS exporters ON si.export_country_code = exporters.iso_code2
     LEFT JOIN geo_entities AS importers ON si.import_country_code = importers.iso_code2
     LEFT JOIN geo_entities AS origins ON si.origin_country_code = origins.iso_code2
-    WHERE (tc.name_status = 'A' OR tc.name_status = 'H') OR
+    WHERE (tc.name_status = 'A' OR tc.name_status = 'H' OR tc.name_status = 'N') OR
       (tc.name_status = 'S' AND taxon_relationships.other_taxon_concept_id = tc.id)
   SQL
   puts "Populating trade_shipments #{Time.now.strftime("%d/%m/%Y %H:%M")}"
