@@ -93,7 +93,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
     Trade.AutoCompleteTaxonConcept.find(
       taxonomy: 'CITES'
       taxon_concept_query: taxonConceptQuery
-      visibility: 'trade'
+      visibility: 'trade_internal'
     )
   ).property('taxonConceptQuery')
   autoCompleteTaxonConceptsByRank: ( ->
