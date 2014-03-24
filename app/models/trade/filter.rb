@@ -11,7 +11,7 @@ class Trade::Filter
   end
 
   def results
-    query_with_limit.all
+    query_with_limit.order('year DESC').all
   end
 
   def total_cnt
@@ -26,7 +26,7 @@ class Trade::Filter
   end
 
   def initialize_query
-    @query = Trade::Shipment.order('year DESC').
+    @query = Trade::Shipment.
       preload(:taxon_concept) #includes would override the select clause
 
     if @report_type == :raw
