@@ -81,6 +81,20 @@ module Sapi
       SQL
       ActiveRecord::Base.connection.execute(sql)
     end
+    def self.create_indexes_on_trade_names
+      puts "Add index for trade_names and trade_species_mapping_import"
+      sql = <<-SQL
+        CREATE INDEX index_taxon_concepts_on_legacy_trade_code
+          ON taxon_concepts
+          USING btree
+          (legacy_trade_code);
+        CREATE UNIQUE INDEX index_trade_species_mapping_import_cites_taxon_code
+          ON trade_species_mapping_import
+          USING btree
+          (cites_taxon_code);
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
+    end
 
     def self.create_indexes_on_shipments
       sql = <<-SQL

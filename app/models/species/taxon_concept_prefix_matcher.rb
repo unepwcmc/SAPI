@@ -37,10 +37,9 @@ class Species::TaxonConceptPrefixMatcher
     end
 
     @query = if @visibility == :trade_internal
-       @query # no filter on name_status for internal search by reported taxon
+       @query # no filter on name_status for internal search
     elsif @visibility == :trade
-      # for both public & internal search by accepted taxon
-      @query.where(:name_status => ['A', 'H'])
+      @query.where(:name_status => ['A', 'H', 'N'])
     else
       @query.without_hidden_subspecies.where(:name_status => 'A')
     end

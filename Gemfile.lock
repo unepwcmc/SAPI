@@ -51,9 +51,9 @@ GEM
       ember-source
       execjs
       handlebars-source
-    better_errors (0.3.2)
+    better_errors (1.1.0)
       coderay (>= 1.0.0)
-      erubis (>= 2.7.0)
+      erubis (>= 2.6.6)
     binding_of_caller (0.6.8)
     bootstrap-sass (2.3.1.0)
       sass (~> 3.2)
@@ -78,7 +78,7 @@ GEM
     chunky_png (1.2.8)
     codeclimate-test-reporter (0.1.1)
       simplecov (>= 0.7.1, < 1.0.0)
-    coderay (1.0.8)
+    coderay (1.0.9)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -349,7 +349,7 @@ DEPENDENCIES
   activerecord-postgres-hstore
   acts-as-taggable-on (~> 2.3.1)
   annotate (>= 2.5.0)
-  better_errors
+  better_errors (~> 1.1.0)
   binding_of_caller
   bootstrap-sass (~> 2.3.1.0)
   brightbox (>= 2.3.9)

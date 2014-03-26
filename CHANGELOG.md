@@ -5,7 +5,7 @@
 **Checklist**
 * fixes issue in Checklist PDF to do with incorrect html markup
 
-** Species+ Admin tool **
+**Species+ Admin tool**
 * distribution download
 
 **Trade**
