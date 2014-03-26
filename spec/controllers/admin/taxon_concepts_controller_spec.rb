@@ -1,10 +1,33 @@
+require 'spec_helper'
+
 describe Admin::TaxonConceptsController do
   describe "GET index" do
+    before(:each) do
+      @taxon = create_cites_eu_species(
+        :taxon_name => create(:taxon_name, :scientific_name => 'indefinitus'),
+        :taxonomic_position => '1.1.2',
+        :parent => create_cites_eu_genus(
+          :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus'),
+          :taxonomic_position => '1.1.1'
+        )
+      )
+    end
     it "renders the index template" do
-      cites_eu
       get :index
       response.should render_template("index")
       response.should render_template("layouts/admin")
+    end
+    it "redirects if 1 result" do
+      get :index, search_params: {
+        taxonomy: {id: cites_eu.id}, scientific_name: 'Foobarus i'
+      }
+      response.should redirect_to(admin_taxon_concept_names_path(@taxon))
+    end
+    it "assigns taxa in taxonomic order" do
+      get :index, search_params: {
+        taxonomy: {id: cites_eu.id}, scientific_name: 'Foobarus'
+      }
+      assigns(:taxon_concepts).should eq([@taxon.parent, @taxon])
     end
   end
 
