@@ -129,13 +129,6 @@ class TaxonConcept < ActiveRecord::Base
   before_validation :check_accepted_taxon_concept_exists
   before_validation :ensure_taxonomic_position
 
-  scope :by_scientific_name, lambda { |scientific_name|
-    where([
-      "UPPER(full_name) LIKE BTRIM(UPPER(:sci_name_prefix))",
-      :sci_name_prefix => "#{scientific_name}%"
-    ])
-  }
-
   scope :at_parent_ranks, lambda{ |rank|
     joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
