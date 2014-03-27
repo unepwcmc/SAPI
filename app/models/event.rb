@@ -47,11 +47,11 @@ class Event < ActiveRecord::Base
   end
 
   def activate!
-    update_attribute(:is_current, true)
+    update_attributes(:is_current => true)
   end
 
   def deactivate!
-    update_attribute(:is_current, false)
+    update_attributes(:is_current => false)
   end
 
   protected
