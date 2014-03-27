@@ -154,14 +154,17 @@ class EuDecision < ActiveRecord::Base
 
   def self.filter_is_current set
     if set == "current"
-      return joins('LEFT JOIN events AS end_event ON end_event.id = eu_decisions.end_event_id').
-          where(<<-SQL
+      return joins(<<-SQL
+            LEFT JOIN events AS start_event ON eu_decisions.start_event_id = start_event.id
+            LEFT JOIN events AS end_event ON eu_decisions.end_event_id = end_event.id
+          SQL
+          ).where(<<-SQL
             (
               (eu_decisions.type = 'EuOpinion' AND eu_decisions.is_current = true)
               OR
               (
                 eu_decisions.type = 'EuSuspension' AND start_event.effective_at < current_date
-                AND start_event.is_current = true
+                AND start_event.is_current = 'true'
                 AND (eu_decisions.end_event_id IS NULL OR end_event.effective_at > current_date)
               )
             )
