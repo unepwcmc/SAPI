@@ -164,7 +164,7 @@ class EuDecision < ActiveRecord::Base
               OR
               (
                 eu_decisions.type = 'EuSuspension' AND start_event.effective_at < current_date
-                AND start_event.is_current = 'true'
+                AND start_event.is_current = true
                 AND (eu_decisions.end_event_id IS NULL OR end_event.effective_at > current_date)
               )
             )
