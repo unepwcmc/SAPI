@@ -11,7 +11,7 @@ gem 'pg_array_parser'
 gem 'activerecord-postgres-hstore'
 gem 'foreigner'
 gem 'oj' #optimised JSON (picked by multi_json)
-gem 'nokogiri'
+gem 'nokogiri', '~> 1.6.0'
 gem 'inherited_resources'
 gem 'traco', '~> 2.0.0'
 gem 'strong_parameters'
