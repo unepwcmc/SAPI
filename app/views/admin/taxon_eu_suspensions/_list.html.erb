@@ -14,7 +14,9 @@
   <% collection.each do |suspension| -%>
     <tr class="<%= if suspension.is_current then "current_listing" end %>">
       <td><%= suspension.year %></td>
-      <td><%= suspension.start_event.name %></td>
+      <td><%= link_to suspension.start_event.name,
+          admin_eu_suspension_regulations_path(:query => suspension.start_event.description) %>
+      </td>
       <td><%= suspension.geo_entity && suspension.geo_entity.name_en %></td>
       <td>
         <%= suspension.eu_decision_type.name %> 
