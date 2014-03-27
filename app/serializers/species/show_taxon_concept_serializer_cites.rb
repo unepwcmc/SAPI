@@ -95,12 +95,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       joins('LEFT JOIN events AS end_event ON end_event.id = eu_decisions.end_event_id').
       select(<<-SQL
               eu_decisions.notes,
-              CASE
-                WHEN eu_decisions.type = 'EuOpinion'
-                  THEN eu_decisions.start_date
-                WHEN eu_decisions.type = 'EuSuspension'
-                  THEN start_event.effective_at
-              END AS start_date,
+              eu_decisions.start_date,
               CASE
                 WHEN eu_decisions.type = 'EuOpinion'
                   THEN eu_decisions.is_current
