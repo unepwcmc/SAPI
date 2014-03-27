@@ -151,11 +151,11 @@ class EuDecision < ActiveRecord::Base
           SQL
           ).where(<<-SQL
             (
-              (eu_decisions.type = 'Opinion' AND eu_decisions.is_current = true)
+              (eu_decisions.type = 'EuOpinion' AND eu_decisions.is_current = true)
               OR
               (
                 eu_decisions.type = 'EuSuspension' AND start_event.effective_at < current_date
-                AND start_event.is_current = 'true'
+                AND start_event.is_current = true
                 AND (eu_decisions.end_event_id IS NULL OR end_event.effective_at > current_date)
               )
             )
