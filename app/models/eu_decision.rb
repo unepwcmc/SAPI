@@ -111,21 +111,30 @@ class EuDecision < ActiveRecord::Base
         :start_event, :term, :eu_decision_type,
         {:taxon_concept => [:m_taxon_concept,
           :taxon_relationships]}]).
+      joins('LEFT JOIN events AS start_event ON start_event.id = eu_decisions.start_event_id').
       filter_is_current(filters["set"]).
       filter_geo_entities(filters).
       filter_years(filters).
       filter_taxon_concepts(filters).
       filter_decision_type(filters["decision_types"]).
-      order('taxon_concepts_mview.taxonomic_position ASC,
+      order(<<-SQL
+        taxon_concepts_mview.taxonomic_position ASC,
         geo_entities.name_en ASC,
-        eu_decisions.start_date DESC')
+        CASE
+          WHEN eu_decisions.type = 'EuOpinion'
+            THEN eu_decisions.start_date
+          WHEN eu_decisions.type = 'EuSuspension'
+          THEN start_event.effective_at
+        END DESC
+      SQL
+      )
   end
 
   def self.to_csv file_path, filters
     limit = 1000
     offset = 0
     CSV.open(file_path, 'wb') do |csv|
-      csv << Species::RestrictionsExport::TAXONOMY_COLUMNS + 
+      csv << Species::RestrictionsExport::TAXONOMY_COLUMNS +
         ['Remarks'] + self.csv_columns_headers
       ids = []
       until (objs = export_query(filters).limit(limit).
@@ -145,7 +154,19 @@ class EuDecision < ActiveRecord::Base
 
   def self.filter_is_current set
     if set == "current"
-      return where(:is_current => true)
+      return joins('LEFT JOIN events AS end_event ON end_event.id = eu_decisions.end_event_id').
+          where(<<-SQL
+            (
+              (eu_decisions.type = 'EuOpinion' AND eu_decisions.is_current = true)
+              OR
+              (
+                eu_decisions.type = 'EuSuspension' AND start_event.effective_at < current_date
+                AND start_event.is_current = true
+                AND (eu_decisions.end_event_id IS NULL OR end_event.effective_at > current_date)
+              )
+            )
+          SQL
+        )
     end
     scoped
   end
@@ -164,8 +185,8 @@ class EuDecision < ActiveRecord::Base
     if filters.has_key?("taxon_concepts_ids")
       conds_str = <<-SQL
         ARRAY[
-          taxon_concepts_mview.id, taxon_concepts_mview.family_id, 
-          taxon_concepts_mview.order_id, taxon_concepts_mview.class_id, 
+          taxon_concepts_mview.id, taxon_concepts_mview.family_id,
+          taxon_concepts_mview.order_id, taxon_concepts_mview.class_id,
           taxon_concepts_mview.phylum_id, taxon_concepts_mview.kingdom_id
         ] && ARRAY[?]
         OR eu_decisions.taxon_concept_id IS NULL
