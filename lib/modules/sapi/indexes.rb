@@ -81,6 +81,16 @@ module Sapi
       SQL
       ActiveRecord::Base.connection.execute(sql)
     end
+
+    def self.drop_indexes_on_trade_names
+      puts "Destroy trade_names related indexes"
+      sql = <<-SQL
+        DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_trade_code;
+        DROP INDEX IF EXISTS index_trade_species_mapping_import_cites_taxon_code;
+      SQL
+      ActiveRecord::Base.connection.execute(sql)
+    end
+
     def self.create_indexes_on_trade_names
       puts "Add index for trade_names and trade_species_mapping_import"
       sql = <<-SQL
