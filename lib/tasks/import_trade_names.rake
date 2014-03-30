@@ -123,7 +123,7 @@ namespace :import do
 
   desc "Change status of fake synonyms to be trade_names, update leaf nodes"
   task :synonyms_to_trade_names => [:environment] do
-    TMP_TABLE = "synonyms_to_trade_mapping"
+    TMP_TABLE = "synonyms_to_trade_mapping_import"
     file = "lib/files/synonyms_to_trade_names.csv"
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
