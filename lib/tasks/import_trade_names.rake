@@ -127,6 +127,7 @@ namespace :import do
     file = "lib/files/synonyms_to_trade_names.csv"
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
+    Sapi::Indexes.drop_indexes_on_trade_names
     copy_data(file, TMP_TABLE)
     has_trade_name = TaxonRelationshipType.
       find_or_create_by_name(:name => TaxonRelationshipType::HAS_TRADE_NAME).id
