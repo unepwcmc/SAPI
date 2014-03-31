@@ -7,6 +7,8 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
   init: ->
     transaction = @get('store').transaction()
     @set('transaction', transaction)
+    @set('selectedTimeStart', @get('defaultTimeStart'))
+    @set('selectedTimeEnd', @get('defaultTimeEnd'))
 
   columns: [
     'id', 'year', 'appendix', 'taxonConcept.fullName',
@@ -33,22 +35,8 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
       parseInt(@get('page')) + 1
     else
       parseInt(@get('page')) - 1
-    @openShipmentsPage {page: page}
-
-  openShipmentsPage: (params) ->
-    @transitionToRoute('shipments', queryParams: params)
-
-  parseSelectedParams: (params) ->
-    # TODO: better ideas?
-    if params?.mapBy and params.mapBy('id')[0]
-      return params.mapBy('id')
-    if params?.mapBy
-      return params
-    if params?.get and params.get('id')
-      return params.get('id')
-    if params || typeof(params) == "boolean"
-      return params
-    return null
+    @set('page', page)
+    @updateQueryParams()
 
   defaultTimeStart: ( ->
     new Date().getFullYear() - 5
@@ -58,12 +46,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
   ).property()
   years: ( ->
     [1975..new Date().getFullYear()].reverse()
-  ).property()
-  selectedTimeStart: ( ->
-    @get('defaultTimeStart')
-  ).property()
-  selectedTimeEnd: ( ->
-    @get('defaultTimeEnd')
   ).property()
 
   allAppendices: [
@@ -144,7 +126,6 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
   ).property('countryOfOriginQuery')
   selectedCountriesOfOrigin: []
   selectedQuantity: null
-
   unitBlank: false
   purposeBlank: false
   sourceBlank: false
@@ -167,9 +148,12 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
 
   searchParams: ( ->
     params = {}
-    @get('selectedQueryParamNames').forEach (property) =>
-      value = @parseSelectedParams(@get(property.name))
-      params[property.name] = value
+    @get('propertyMapping').forEach( (p) =>
+      if p.type == 'array'
+        params[p.urlParam] = @get(p.name).mapBy('id')
+      else
+        params[p.urlParam] = @get(p.name)
+    )
     params
   ).property(
     'selectedTaxonConcepts.@each',
@@ -179,79 +163,67 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
     'selectedUnits.@each', 'unitBlank.@each', 'selectedTerms.@each',
     'selectedSources.@each', 'sourceBlank',
     'selectedPurposes.@each', 'purposeBlank',
+    'selectedReporterType',
     'selectedImporters.@each', 'selectedExporters.@each',
     'selectedCountriesOfOrigin.@each', 'countryOfOriginBlank',
     'selectedPermits.@each', 'permitBlank'
   )
 
-  # sth amiss with array query params, which is why we pass a different
-  # params object for transitioning than we do when parametrising the
-  # download url below.
-  # TODO would be good to isolate the issue with array query params
-  searchParamsForTransition: ( ->
-    params = {}
-    for name, value of @get('searchParams')
-      params[@get('queryParamsProperties')[name].param] = value
-    params['page'] = @get('page')
-    params['internal'] = true #TODO remove this once authentication in place
-    params
-  ).property('searchParams.@each', 'queryParamsProperties')
-
-  searchParamsForUrl: ( ->
-    params = {}
-    for name, value of @get('searchParams')
-      params[@get('queryParamsProperties')[name].urlParam] = value
-    params['page'] = @get('page')
-    params['internal'] = true #TODO remove this once authentication in place
-    params
-  ).property('searchParams.@each', 'queryParamsProperties')
-
   rawDownloadUrl: (->
-    params = @get('searchParamsForUrl')
+    params = @get('searchParams')
     params['report_type'] = 'raw'
     params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl', 'csvSeparator')
+  ).property('searchParams', 'csvSeparator')
 
   comptabDownloadUrl: (->
-    params = @get('searchParamsForUrl')
+    params = @get('searchParams')
     params['report_type'] = 'comptab'
     params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl', 'csvSeparator')
+  ).property('searchParams', 'csvSeparator')
 
   grossExportsDownloadUrl: (->
-    params = @get('searchParamsForUrl')
+    params = @get('searchParams')
     params['report_type'] = 'gross_exports'
     params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl', 'csvSeparator')
+  ).property('searchParams', 'csvSeparator')
 
   grossImportsDownloadUrl: (->
-    params = @get('searchParamsForUrl')
+    params = @get('searchParams')
     params['report_type'] = 'gross_imports'
     params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl', 'csvSeparator')
+  ).property('searchParams', 'csvSeparator')
 
   netExportsDownloadUrl: (->
-    params = @get('searchParamsForUrl')
+    params = @get('searchParams')
     params['report_type'] = 'net_exports'
     params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl', 'csvSeparator')
+  ).property('searchParams', 'csvSeparator')
 
   netImportsDownloadUrl: (->
-    params = @get('searchParamsForUrl')
+    params = @get('searchParams')
     params['report_type'] = 'net_imports'
     params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
-  ).property('searchParamsForUrl', 'csvSeparator')
+  ).property('searchParams', 'csvSeparator')
+
+  updateQueryParams: ->
+    @beginPropertyChanges()
+    @get('propertyMapping').forEach( (p) =>
+      if p.type == 'array'
+        @set(p.param, @get(p.name).mapBy('id'))
+      else
+        @set(p.param, @get(p.name))
+    )
+    @endPropertyChanges()
 
   resetFilters: ->
     @beginPropertyChanges()
-    queryParams = false
-    @get('selectedQueryParamNames').forEach (property) =>
+    @get('propertyMapping').forEach (property) =>
       if property.type == 'array'
         @set(property.name, [])
       else if property.type == 'boolean'
@@ -263,9 +235,8 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
       'countryOfOrigin', 'term', 'unit', 'permit'
     ].forEach (autoCompleteField) =>
       @set(autoCompleteField + 'Query', null)
-    @set('permitQuery', null)
     @endPropertyChanges()
-    @openShipmentsPage queryParams
+    @updateQueryParams()
 
   actions:
 
@@ -321,7 +292,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
 
     deleteFiltered: ->
       if confirm("This will delete all filtered shipments. Are you sure?")
-        $.post '/trade/shipments/destroy_batch', @get('searchParamsForTransition'), (data) ->
+        $.post '/trade/shipments/destroy_batch', @get('searchParams'), (data) ->
            'json'
         .success( =>
           @set('currentShipment', null)
@@ -340,7 +311,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
 
     search: ->
       @flashClear()
-      @openShipmentsPage @get('searchParamsForTransition')
+      @updateQueryParams()
 
     resetFilters: ->
       @flashClear()
