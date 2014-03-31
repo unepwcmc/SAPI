@@ -114,7 +114,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash,
     transitionToSandboxShipments: (error) ->
       @set('currentError', error)
       params = {
-        "sandbox_shipments_ids": error.get('sandboxShipments').mapBy("id")
+        sandbox_shipments_ids: @get('currentError.sandboxShipmentsIds')
         page: 1
       }
       @transitionToRoute('sandbox_shipments', {

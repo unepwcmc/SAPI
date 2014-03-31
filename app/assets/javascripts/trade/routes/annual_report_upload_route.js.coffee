@@ -11,6 +11,6 @@ Trade.AnnualReportUploadRoute = Trade.BeforeRoute.extend
     if (aru.get('sandboxShipments.length') == 0)
       aru.reload()
 
-  setupController: (controller, model, queryParams) ->
+  setupController: (controller, model) ->
     controller.set('model', model)
     controller.set('currentError', null)
