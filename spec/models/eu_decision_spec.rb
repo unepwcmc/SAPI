@@ -32,7 +32,7 @@ describe EuDecision do
     context "downloads cache should be populated" do
       before(:each) do
         DownloadsCache.clear_eu_decisions
-        create(:eu_decision, :start_date => Time.utc(2013))
+        create(:eu_decision, :start_date => Time.utc(2013), :type => 'EuOpinion')
         EuDecision.export('set' => 'current', 'decision_types' => {})
       end
       subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }

@@ -13,7 +13,7 @@
 </thead>
 <tbody>
   <% collection.each do |eu_suspension| -%>
-    <tr class="<%= if eu_suspension.is_current? then "current_listing" end %>">
+    <tr class="<%= if eu_suspension.is_current then "current_listing" end %>">
       <td>
         <%= link_to eu_suspension.taxon_concept.full_name,
           admin_taxon_concept_eu_suspensions_path(
