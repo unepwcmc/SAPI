@@ -1,3 +1,17 @@
+### 0.6.1 (2014-04-01)
+
+This is a bug fix release:
+
+** Species+ **
+* Fixes display of quotas with -1 value, as they should show as "in prep" on Species+
+* Fixes "VALID" value on EU Decisions download to use new way to
+  calculate it from the start and end events
+
+** Species+ Admin tool **
+* Fixes the calculation of is_current value for EU Suspensions, to use
+  the start and end event, instead of the is_current attribute in the
+table
+
 ### 0.6.0 (2014-03-17)
 **API**
 * Fixes dashboard stats
