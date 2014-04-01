@@ -1,5 +1,7 @@
 class QuotasCopyWorker
   include Sidekiq::Worker
+  sidekiq_options :queue => :admin, :retry => false, :backtrace => 50
+
   def perform(options)
     sql = <<-SQL
         SELECT * FROM copy_quotas_across_years(
