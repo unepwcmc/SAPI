@@ -4,6 +4,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   updatesVisible: false
   currentShipment: null
   sandboxShipmentsSaving: false
+  queryParams: ['page', 'sandboxShipmentsIds:sandbox_shipments_ids']
 
   columns: [
     'appendix', 'taxon_name', 'accepted_taxon_name',
@@ -30,12 +31,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
       parseInt(@get('page')) + 1
     else
       parseInt(@get('page')) - 1
-    @openShipmentsPage {page: page}
-
-  openShipmentsPage: (params) ->
-    sandbox_shipments_ids = @get("controllers.annualReportUpload.currentError.sandboxShipments").mapBy("id")
-    queryParams = $.extend({}, sandbox_shipments_ids, params)
-    @transitionToRoute('sandbox_shipments', 'sandbox_shipments_ids': queryParams)
+    @set('page', page)
 
   clearModifiedFlags: ->
     @beginPropertyChanges()
@@ -44,11 +40,12 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
     @endPropertyChanges()
 
   transitionToParentController: ->
-    @get("controllers.annualReportUpload").set("currentError", null)
+    @get('controllers.annualReportUpload.content').reload()
     @transitionToRoute(
       'annual_report_upload',
       @get('controllers.annualReportUpload.id')
     )
+    @set('controllers.annualReportUpload.currentError', null)
 
   unsavedChanges: (->
     @get('changedRowsCount') > 0
