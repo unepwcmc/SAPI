@@ -2,7 +2,7 @@ namespace :import do
   desc "Import trade - species_plus mapping table from csv file"
   task :trade_species_mapping => [:environment] do
     TMP_TABLE = "trade_species_mapping_import"
-    file = "lib/files/names_for_transfer_30342.csv"
+    file = "lib/files/names_for_transfer_29116.csv"
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
@@ -11,7 +11,7 @@ namespace :import do
   desc "Import trade names (which didn't exist in SpeciesPlus) from csv file"
   task :trade_names => [:environment] do
     TMP_TABLE = "trade_names_import"
-    file = "lib/files/trade_names_to_add_8287.csv"
+    file = "lib/files/trade_names_to_add_9513.csv"
 
     taxonomy_id = Taxonomy.where(:name => 'CITES_EU').first.id
     taxon_relationship_type_id = TaxonRelationshipType.
@@ -123,10 +123,11 @@ namespace :import do
 
   desc "Change status of fake synonyms to be trade_names, update leaf nodes"
   task :synonyms_to_trade_names => [:environment] do
-    TMP_TABLE = "synonyms_to_trade_mapping"
+    TMP_TABLE = "synonyms_to_trade_mapping_import"
     file = "lib/files/synonyms_to_trade_names.csv"
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
+    Sapi::Indexes.drop_indexes_on_trade_names
     copy_data(file, TMP_TABLE)
     has_trade_name = TaxonRelationshipType.
       find_or_create_by_name(:name => TaxonRelationshipType::HAS_TRADE_NAME).id

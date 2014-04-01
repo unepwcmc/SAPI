@@ -12,4 +12,10 @@ class EuSuspensionRegulationObserver < ActiveRecord::Observer
       )
     end
   end
+
+  def after_update(eu_suspension_regulation)
+    eu_suspension_regulation.eu_suspensions.each do |susp|
+      susp.touch
+    end
+  end
 end
