@@ -1,83 +1,9 @@
 Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes', 'sandboxShipments']
   content: null
-  visibleShipments: []
   currentShipment: null
   filtersSelected: false
-
-  sandboxShipmentsDidLoad: ( ->
-    @set('visibleShipments', @get('content.sandboxShipments'))
-    @set('sandboxShipmentsLoaded', true)
-  ).observes('content.sanboxShipments.@each.didLoad')
-
   sandboxShipmentsSubmitting: false
-
-  selectedAppendixChanged: ( ->
-    @applyFilter('appendix')
-  ).observes('selectedAppendixValues.@each', 'blankAppendix')
-
-  selectedTaxonNameChanged: ( ->
-    @applyFilter('taxonName')
-  ).observes('selectedTaxonNameValues.@each', 'blankTaxonName')
-
-  selectedTermCodeChanged: ( ->
-    @applyFilter('termCode')
-  ).observes('selectedTermCodeValues.@each', 'blankTermCode')
-
-  selectedQuantityChanged: ( ->
-    @applyFilter('quantity')
-  ).observes('selectedQuantityValues.@each', 'blankQuantity')
-
-  selectedUnitCodeChanged: ( ->
-    @applyFilter('unitCode')
-  ).observes('selectedUnitCodeValues.@each', 'blankUnitCode')
-
-  selectedTradingPartnerChanged: ( ->
-    @applyFilter('tradingPartner')
-  ).observes('selectedTradingPartnerValues.@each', 'blankTradingPartner')
-
-  selectedCountryOfOriginChanged: ( ->
-    @applyFilter('countryOfOrigin')
-  ).observes('selectedCountryOfOriginValues.@each', 'blankCountryOfOrigin')
-
-  selectedImportPermitChanged: ( ->
-    @applyFilter('importPermit')
-  ).observes('selectedImportPermitValues.@each', 'blankImportPermit')
-
-  selectedExportPermitChanged: ( ->
-    @applyFilter('exportPermit')
-  ).observes('selectedExportPermitValues.@each', 'blankExportPermit')
-
-  selectedOriginPermitChanged: ( ->
-    @applyFilter('originPermit')
-  ).observes('selectedOriginPermitValues.@each', 'blankOriginPermit')
-
-  selectedPurposeCodeChanged: ( ->
-    @applyFilter('purposeCode')
-  ).observes('selectedPurposeCodeValues.@each', 'blankPurposeCode')
-
-  selectedSourceCodeChanged: ( ->
-    @applyFilter('sourceCode')
-  ).observes('selectedSourceCodeValues.@each', 'blankSourceCode')
-
-  selectedYearChanged: ( ->
-    @applyFilter('year')
-  ).observes('selectedYearValues.@each', 'blankYear')
-
-  applyFilter: (columnName) ->
-    capitalisedColumnName = @capitaliseFirstLetter(columnName)
-    selectedValuesName = 'selected' + capitalisedColumnName + 'Values'
-    blankValue = 'blank' + capitalisedColumnName
-    if @get(selectedValuesName + '.length') > 0 || @get(blankValue)
-      @set('filtersSelected', true)
-      shipments = @get('visibleShipments').filter((element) =>
-        value = element.get(columnName)
-        return @get(selectedValuesName).contains(value) ||
-          # check if null, undefined or blank
-          @get(blankValue) && (!value || /^\s*$/.test(value))
-      )
-      @set('visibleShipments', shipments)
-
 
   capitaliseFirstLetter: (string) ->
     string.charAt(0).toUpperCase() + string.slice(1)
@@ -114,7 +40,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash,
     transitionToSandboxShipments: (error) ->
       @set('currentError', error)
       params = {
-        "sandbox_shipments_ids": error.get('sandboxShipments').mapBy("id")
+        sandbox_shipments_ids: @get('currentError.sandboxShipmentsIds')
         page: 1
       }
       @transitionToRoute('sandbox_shipments', {

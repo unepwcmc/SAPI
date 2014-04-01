@@ -4,3 +4,6 @@ Trade.ValidationError = DS.Model.extend
   errorSelector: DS.attr('hash')
   isPrimary: DS.attr('boolean')
   sandboxShipments: DS.hasMany('Trade.SandboxShipment')
+  sandboxShipmentsIds: ( ->
+    @get('sandboxShipments').mapBy('id')
+  ).property('sandboxShipments.@each')

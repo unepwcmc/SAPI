@@ -1,6 +1,30 @@
 Trade.ShipmentsRoute = Trade.BeforeRoute.extend Trade.QueryParams,
 
-  beforeModel: ->
+  queryParams: {
+    taxon_concepts_ids: { refreshModel: true },
+    reported_taxon_concepts_ids: { refreshModel: true },
+    appendices: { refreshModel: true },
+    time_range_start: { refreshModel: true },
+    time_range_end: { refreshModel: true },
+    terms_ids: { refreshModel: true },
+    units_ids: { refreshModel: true },
+    purposes_ids: { refreshModel: true },
+    sources_ids: { refreshModel: true },
+    importers_ids: { refreshModel: true },
+    exporters_ids: { refreshModel: true },
+    countries_of_origin_ids: { refreshModel: true },
+    reporter_type: { refreshModel: true },
+    permits_ids: { refreshModel: true },
+    quantity: { refreshModel: true },
+    unit_blank: { refreshModel: true },
+    purpose_blank: { refreshModel: true },
+    source_blank: { refreshModel: true },
+    country_of_origin_blank: { refreshModel: true },
+    permit_blank: { refreshModel: true },
+    page: { refreshModel: true }
+  }
+
+  beforeModel: (params) ->
     Ember.RSVP.all([
       @controllerFor('geoEntities').load()
       @controllerFor('terms').load()
@@ -9,23 +33,15 @@ Trade.ShipmentsRoute = Trade.BeforeRoute.extend Trade.QueryParams,
       @controllerFor('purposes').load()
     ])
 
-  model: (params, queryParams, transition) ->
-    # redo the array params if we're coming from the url
-    @get('selectedQueryParamNames').forEach (property) ->
-      if property.type == 'array' && queryParams[property.param] == true
-        queryParams[property.param] = []
-    if $.isEmptyObject(queryParams)
-      Trade.Shipment.all().clear()
+  model: (params, transition) ->
+    paramsNotEmpty = @get('propertyMapping').find((p) ->
+      val = params[p.urlParam]
+      !(
+        val == undefined || val == null ||
+        p.type == 'array' && val.length == 0
+      )
+    )
+    if paramsNotEmpty
+      Trade.Shipment.find(params)
     else
-      Trade.Shipment.find(queryParams)
-
-  afterModel: (model, transition) ->
-    # Resetting the default values in the form.
-    controller = @controllerFor("shipments")
-    unless controller.get('selectedTimeStart')
-      timeStart = controller.get('defaultTimeStart')
-      controller.set('selectedTimeStart', timeStart)
-    unless controller.get('selectedTimeEnd')
-      timeStart = controller.get('defaultTimeEnd')
-      controller.set('selectedTimeEnd', timeStart)
-
+      Trade.Shipment.all().clear()

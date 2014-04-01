@@ -1,4 +1,8 @@
 Trade.SandboxShipmentsRoute = Trade.BeforeRoute.extend
+  queryParams: {
+    sandbox_shipments_ids: { refreshModel: true },
+    page: { refreshModel: true }
+  }
 
-  model: (params, queryParams, transition) ->
-    Trade.SandboxShipment.find(queryParams)
+  model: (params, transition) ->
+    Trade.SandboxShipment.find(params)
