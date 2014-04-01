@@ -9,5 +9,5 @@ staging:
 production:
   :concurrency: 50
 :queues:
-  - [default, 5]
-  - [trade, 5]
+  - [default, 7]
+  - [admin, 4]

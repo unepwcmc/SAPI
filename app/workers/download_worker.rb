@@ -2,7 +2,7 @@ class DownloadWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker
 
-  sidekiq_options :retry => false
+  sidekiq_options :retry => false, :backtrace => 50
 
   def perform(download_id, params)
     @download = Download.find(download_id)
