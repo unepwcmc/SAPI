@@ -301,7 +301,7 @@ class CsvToDbMap
       'trade_name_rank' => 'trade_name_rank varchar',
       'name_status' => 'name_status varchar'
     },
-    'synonyms_to_trade_mapping' => {
+    'synonyms_to_trade_mapping_import' => {
       'cites_taxon_code' => 'cites_taxon_code varchar',
       'species_plus_id' => 'species_plus_id integer',
       'accepted_id' => 'accepted_id integer'
