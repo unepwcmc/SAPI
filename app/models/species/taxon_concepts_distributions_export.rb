@@ -1,6 +1,4 @@
-require 'digest/sha1'
-require 'csv'
-class Species::TaxonConceptsDistributionsExport < Species::CsvExport
+class Species::TaxonConceptsDistributionsExport < Species::CsvCopyExport
 
   def initialize(filters)
     @filters = filters || {}
@@ -8,7 +6,7 @@ class Species::TaxonConceptsDistributionsExport < Species::CsvExport
   end
 
   def query
-    rel = TaxonConcept.select(sql_columns).from(table_name).
+    rel = TaxonConcept.from(table_name).
       order('taxonomic_position, geo_entity_name')
     rel = rel.where("#{table_name}.taxonomy_id" => @taxonomy.id) if @taxonomy
     rel
