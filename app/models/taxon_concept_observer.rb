@@ -5,7 +5,7 @@ class TaxonConceptObserver < ActiveRecord::Observer
     data = taxon_concept.data || {}
     data['rank_name'] = taxon_concept.rank && taxon_concept.rank.name
     if taxon_concept.parent
-      data.merge taxon_concept.parent.data.slice(
+      data = data.merge taxon_concept.parent.data.slice(
         'kingdom_id', 'kingdom_name', 'phylum_id', 'phylum_name', 'class_id',
         'class_name', 'order_id', 'order_name', 'family_id', 'family_name',
         'subfamily_id', 'subfamily_name', 'genus_id', 'genus_name', 'species_id',
