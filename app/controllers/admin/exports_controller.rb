@@ -6,6 +6,8 @@ class Admin::ExportsController < Admin::AdminController
     case params[:data_type]
       when 'Names'
         result = Species::TaxonConceptsNamesExport.new(params[:filters]).export
+      when 'SynonymsAndTradeNames'
+        result = Species::SynonymsAndTradeNamesExport.new(params[:filters]).export
       when 'Distributions'
         result = Species::TaxonConceptsDistributionsExport.new(params[:filters]).export
     end

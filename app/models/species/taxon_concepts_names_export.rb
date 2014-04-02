@@ -1,6 +1,4 @@
-require 'digest/sha1'
-require 'csv'
-class Species::TaxonConceptsNamesExport < Species::CsvExport
+class Species::TaxonConceptsNamesExport < Species::CsvCopyExport
 
   def initialize(filters)
     @filters = filters || {}
@@ -8,7 +6,7 @@ class Species::TaxonConceptsNamesExport < Species::CsvExport
   end
 
   def query
-    rel = TaxonConcept.select(sql_columns).from(table_name).
+    rel = TaxonConcept.from(table_name).
       order('name_status, taxonomic_position')
     rel = rel.where("#{table_name}.taxonomy_id" => @taxonomy.id) if @taxonomy
     rel
