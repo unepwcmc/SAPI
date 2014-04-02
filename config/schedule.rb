@@ -4,10 +4,10 @@ every :day, :at => '2:42am' do
   rake "db:migrate:rebuild"
 end
 
-every :day, :at => '4:42am' do
+every :day, :at => '4:05am' do
   rake "downloads:cache:update"
 end
 
-every :sunday, :at => '4:42am' do
+every :sunday, :at => '4:45am' do
   rake "dashboard_stats:cache:update"
 end
