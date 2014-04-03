@@ -161,14 +161,17 @@ module DownloadsCache
   def self.update_admin_downloads
     puts "Updating admin downloads"
     [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
+      puts "#{taxonomy_name} Names"
       elapsed_time = Benchmark.realtime do
         Species::TaxonConceptsNamesExport.new(:taxonomy => taxonomy_name).export
       end
       puts "#{Time.now} Taxon Concepts Names #{taxonomy_name} download generated in #{elapsed_time}s"
+      puts "#{taxonomy_name} Synonyms and Trade Names"
       elapsed_time = Benchmark.realtime do
         Species::SynonymsAndTradeNamesExport.new(:taxonomy => taxonomy_name).export
       end
       puts "#{Time.now} Synonyms & Trade Names #{taxonomy_name} download generated in #{elapsed_time}s"
+      puts "#{taxonomy_name} Distributions"
       elapsed_time = Benchmark.realtime do
         Species::TaxonConceptsDistributionsExport.new(:taxonomy => taxonomy_name).export
       end
