@@ -40,12 +40,13 @@ describe DashboardStats do
     context "when no time range specified" do
       subject{
         DashboardStats.new(@argentina, {
-          :kingdom => 'Animalia', :trade_limit => 5
+          :kingdom => 'Animalia', :trade_limit => 5,
+          :time_range_start => 2010, :time_range_end => 2013
         }).trade
       }
-      it "argentina should have 35 exported animals and no imports" do
+      it "argentina should have 40 exported animals and no imports" do
         subject[:exports][:top_traded].length.should == 1
-        subject[:exports][:top_traded][0][:count].should eq 35
+        subject[:exports][:top_traded][0][:count].should eq 40
         subject[:imports][:top_traded].length.should eq 0
       end
     end
