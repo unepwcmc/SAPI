@@ -60,7 +60,7 @@ class DashboardStats
       :source_id => source.id,
       :purpose_id => purpose.id,
       :"#{reporter_type}_id" => @geo_entity.id,
-      :reported_by_exporter => (reporter_type == 'exporter')
+      :reported_by_exporter => (reporter_type == :exporter)
     )
 
     if @time_range_start && @time_range_end &&
