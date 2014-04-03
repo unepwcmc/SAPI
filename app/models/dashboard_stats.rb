@@ -9,8 +9,8 @@ class DashboardStats
     @geo_entity = geo_entity
     @kingdom = options[:kingdom] || 'Animalia'
     @trade_limit = options[:trade_limit]
-    @time_range_start = options[:time_range_start]
-    @time_range_end = options[:time_range_end]
+    @time_range_start = options[:time_range_start] || 2007
+    @time_range_end = options[:time_range_end] || 2012
   end
 
   def species
