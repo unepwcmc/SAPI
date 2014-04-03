@@ -20,6 +20,7 @@ SELECT
   a.data->'family_name' AS accepted_family_name,
   a.data->'genus_name' AS accepted_genus_name,
   a.data->'species_name' AS accepted_species_name,
+  taxonomies.id AS taxonomy_id,
   taxonomies.name AS taxonomy_name,
   to_char(st.created_at, 'DD/MM/YYYY') AS created_at,
   'TODO' AS created_by
