@@ -5,6 +5,7 @@ class Species::CsvExport
 
   def initialize(filters = {})
     @filters = filters || {}
+    @taxonomy = @filters[:taxonomy] && Taxonomy.find_by_name(filters[:taxonomy])
   end
 
   def path

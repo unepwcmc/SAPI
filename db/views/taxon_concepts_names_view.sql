@@ -16,6 +16,8 @@ SELECT
   name_status,
   taxonomic_position,
   taxonomy_id,
-  taxonomies.name AS taxonomy_name
+  taxonomies.name AS taxonomy_name,
+  to_char(taxon_concepts.created_at, 'DD/MM/YYYY') AS created_at,
+  'TODO' AS created_by
 FROM taxon_concepts
 JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id;
