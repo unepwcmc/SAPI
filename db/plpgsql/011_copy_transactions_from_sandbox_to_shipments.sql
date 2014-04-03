@@ -36,27 +36,29 @@ BEGIN
       '
       ORDER BY 1, CASE
         WHEN taxon_concepts.name_status = ''A'' THEN 1
-        ELSE 2
+        WHEN taxon_concepts.name_status = ''H'' THEN 2
+        ELSE 3
       END
     ), resolved_taxa AS (
       SELECT DISTINCT ON (1)
         sandbox_shipment_id,
         resolved_reported_taxa.taxon_concept_id,
         resolved_reported_taxa.full_name AS reported_full_name,
-        accepted_taxon_concepts.id AS accepted_taxon_concept_id
+        matched_taxon_concepts.id AS matched_taxon_concept_id
       FROM resolved_reported_taxa
       LEFT JOIN taxon_relationship_types
-        ON taxon_relationship_types.name = ''HAS_SYNONYM''
+        ON taxon_relationship_types.name IN (''HAS_SYNONYM'', ''HAS_TRADE_NAME'')
       LEFT JOIN taxon_relationships
         ON taxon_relationships.other_taxon_concept_id = resolved_reported_taxa.taxon_concept_id
         AND taxon_relationships.taxon_relationship_type_id = taxon_relationship_types.id
-      LEFT JOIN taxon_concepts accepted_taxon_concepts
-        ON accepted_taxon_concepts.id = taxon_relationships.taxon_concept_id
+      LEFT JOIN taxon_concepts matched_taxon_concepts
+        ON matched_taxon_concepts.id = taxon_relationships.taxon_concept_id
         AND taxonomy_id = ' || cites_taxonomy_id ||
       '
       ORDER BY 1, CASE
-        WHEN accepted_taxon_concepts.name_status = ''A'' THEN 1
-        ELSE 2
+        WHEN matched_taxon_concepts.name_status = ''A'' THEN 1
+        WHEN matched_taxon_concepts.name_status = ''H'' THEN 2
+        ELSE 3
       END
     )
     UPDATE ' || table_name ||
@@ -64,9 +66,9 @@ BEGIN
     SET reported_taxon_concept_id = resolved_taxa.taxon_concept_id,
     taxon_name = resolved_taxa.reported_full_name,
     taxon_concept_id = CASE
-      WHEN resolved_taxa.accepted_taxon_concept_id IS NULL
+      WHEN resolved_taxa.matched_taxon_concept_id IS NULL
       THEN resolved_taxa.taxon_concept_id
-      ELSE resolved_taxa.accepted_taxon_concept_id
+      ELSE resolved_taxa.matched_taxon_concept_id
     END
     FROM resolved_taxa
     WHERE ' || table_name || '.id = resolved_taxa.sandbox_shipment_id';
