@@ -1,10 +1,5 @@
 class Species::TaxonConceptsNamesExport < Species::CsvCopyExport
 
-  def initialize(filters)
-    @filters = filters || {}
-    @taxonomy = @filters[:taxonomy] && Taxonomy.find_by_name(filters[:taxonomy])
-  end
-
   def query
     rel = TaxonConcept.from(table_name).
       order('name_status, taxonomic_position')

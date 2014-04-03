@@ -1,10 +1,5 @@
 class Species::TaxonConceptsDistributionsExport < Species::CsvCopyExport
 
-  def initialize(filters)
-    @filters = filters || {}
-    @taxonomy = @filters[:taxonomy] && Taxonomy.find_by_name(filters[:taxonomy])
-  end
-
   def query
     rel = TaxonConcept.from(table_name).
       order('taxonomic_position, geo_entity_name')
