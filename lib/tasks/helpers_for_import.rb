@@ -258,6 +258,11 @@ class CsvToDbMap
       'Effective from' => 'effective_at date',
       'End Date' => 'end_date date'
     },
+    'cites_cops_start_dates_import' => {
+      'designation' => 'designation varchar',
+      'name' => 'name varchar',
+      'start_date' => 'start_date date'
+    },
     'trade_species_mapping_import' => {
         'cites_name' => 'cites_name varchar',
         'cites_taxon_code' => 'cites_taxon_code varchar',
