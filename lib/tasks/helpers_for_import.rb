@@ -320,6 +320,16 @@ class CsvToDbMap
       'cites_taxon_code' => 'cites_taxon_code varchar',
       'species_plus_id' => 'species_plus_id integer',
       'accepted_id' => 'accepted_id integer'
+    },
+    'ranks_translations_import' => {
+      'name' => 'name varchar',
+      'display_name_es' => 'display_name_es varchar',
+      'display_name_fr' => 'display_name_fr varchar'
+    },
+    'change_types_translations_import' => {
+      'name' => 'name varchar',
+      'display_name_es' => 'display_name_es varchar',
+      'display_name_fr' => 'display_name_fr varchar'
     }
   }
 
