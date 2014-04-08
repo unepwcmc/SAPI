@@ -7,7 +7,7 @@ server "unepwcmc-012.vm.brightbox.net", :app, :web, :db, :primary => true
 set :application, "sapi"
 set :server_name, "sapi.unepwcmc-012.vm.brightbox.net"
 set :sudo_user, "rails"
-set :app_port, "80" 
+set :app_port, "80"
 
 set :branch, :develop
 
@@ -24,7 +24,7 @@ task :config_vhost do
     server {
       listen 80;
       client_max_body_size 4G;
-      server_name #{application}.unepwcmc-013.vm.brightbox.net #{application}.sw02.matx.info;
+      server_name #{application}.unepwcmc-012.vm.brightbox.net #{application}.sw02.matx.info;
       keepalive_timeout 5;
       root #{deploy_to}/current/public;
       passenger_enabled on;
@@ -69,5 +69,5 @@ task :config_vhost do
   sudo "mv /tmp/vhost_config /etc/nginx/sites-available/#{application}"
   sudo "ln -s /etc/nginx/sites-available/#{application} /etc/nginx/sites-enabled/#{application}"
 end
- 
+
 after "deploy:setup", :config_vhost
