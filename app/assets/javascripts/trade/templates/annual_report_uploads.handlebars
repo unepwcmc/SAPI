@@ -13,9 +13,9 @@
 <ul>
 {{#each controller}}
   <li>
-    {{#linkTo 'annual_report_upload' this}}
+    {{#link-to 'annual_report_upload' this}}
       {{this.summary}}
-    {{/linkTo}}
+    {{/link-to}}
     <a href="#" {{action 'deleteUpload' this}} class="pull-right">
       <i class="icon-remove-sign" title="Delete"></i>
     </a>

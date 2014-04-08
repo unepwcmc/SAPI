@@ -1,13 +1,25 @@
+### 0.6.9 (2014-04-08)
+
+**Species+ Admin tool**
+* Fixes creating new taxa (copy ancestors from parent)
+* Adds synonyms and trade names download
+
+**Trade Admin tool**
+* Fixes resolving hybrids & trade names
+
+**API**
+* Fixes filtering by reporter_type in dashboard_stats
+
 ### 0.6.4 (2014-04-01)
 
 This is a bug fix release:
 
-** Species+ **
+**Species+**
 * Fixes display of quotas with -1 value, as they should show as "in prep" on Species+
 * Fixes "VALID" value on EU Decisions download to use new way to
   calculate it from the start and end events
 
-** Species+ Admin tool **
+**Species+ Admin tool**
 * Fixes the calculation of is_current value for EU Suspensions, to use
   the start and end event, instead of the is_current attribute in the
 table
