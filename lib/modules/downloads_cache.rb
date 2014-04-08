@@ -3,8 +3,9 @@ module DownloadsCache
   LISTINGS_DOWNLOAD_DIRS = ['checklist', 'eu_listings', 'cites_listings', 'cms_listings']
   DOWNLOAD_DIRS = LISTINGS_DOWNLOAD_DIRS + [
     'quotas', 'cites_suspensions', 'eu_decisions', 'shipments', 'comptab',
-    'gross_exports', 'gross_imports', 'net_exports', 'net_imports', 
-    'trade_download_stats', 'taxon_concepts_names', 'taxon_concepts_distributions'
+    'gross_exports', 'gross_imports', 'net_exports', 'net_imports',
+    'trade_download_stats', 'taxon_concepts_names', 'synonyms_and_trade_names',
+    'taxon_concepts_distributions'
   ]
 
   def self.quotas_path
@@ -87,6 +88,7 @@ module DownloadsCache
     clear
     update_species_downloads
     update_checklist_downloads
+    update_admin_downloads
   end
 
   def self.update_checklist_downloads
@@ -155,5 +157,25 @@ module DownloadsCache
       EuDecision.export('set' => 'all', 'decision_types' => {})
     end
     puts "#{Time.now} all EU Decisions download generated in #{elapsed_time}s"
+  end
+  def self.update_admin_downloads
+    puts "Updating admin downloads"
+    [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
+      puts "#{taxonomy_name} Names"
+      elapsed_time = Benchmark.realtime do
+        Species::TaxonConceptsNamesExport.new(:taxonomy => taxonomy_name).export
+      end
+      puts "#{Time.now} Taxon Concepts Names #{taxonomy_name} download generated in #{elapsed_time}s"
+      puts "#{taxonomy_name} Synonyms and Trade Names"
+      elapsed_time = Benchmark.realtime do
+        Species::SynonymsAndTradeNamesExport.new(:taxonomy => taxonomy_name).export
+      end
+      puts "#{Time.now} Synonyms & Trade Names #{taxonomy_name} download generated in #{elapsed_time}s"
+      puts "#{taxonomy_name} Distributions"
+      elapsed_time = Benchmark.realtime do
+        Species::TaxonConceptsDistributionsExport.new(:taxonomy => taxonomy_name).export
+      end
+      puts "#{Time.now} Distributions #{taxonomy_name} download generated in #{elapsed_time}s"
+    end
   end
 end
