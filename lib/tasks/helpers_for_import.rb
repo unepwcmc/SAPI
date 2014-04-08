@@ -66,9 +66,10 @@ class CsvToDbMap
       'Designation' => 'designation varchar',
       'ReferenceID' => 'reference_id varchar'
     },
-    #TODO legacy type for regions?
     'cites_regions_import' => {
-      'name' => 'name varchar'
+      'name' => 'name varchar',
+      'name_es' => 'name_es varchar',
+      'name_fr' => 'name_fr varchar'
     },
     #TODO legacy type for countries?
     'countries_import' => {
