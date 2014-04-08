@@ -1,4 +1,4 @@
-### 0.6.8 (2014-04-08)
+### 0.6.9 (2014-04-08)
 
 **Species+ Admin tool**
 * Fixes creating new taxa (copy ancestors from parent)
