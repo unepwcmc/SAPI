@@ -1,6 +1,11 @@
 namespace :import do
 
-  task :ranks_translations =>:environment do
+  task :checklist_translations => [
+    :hash_annotations_cites_translations, :cites_regions_translations,
+    :ranks_translations, :change_types_translations
+  ]
+
+  task :ranks_translations => :environment do
     TMP_TABLE = "ranks_translations_import"
     file = "lib/files/ranks.csv"
     drop_table(TMP_TABLE)
@@ -15,7 +20,7 @@ namespace :import do
     ActiveRecord::Base.connection.execute(sql)
   end
 
-  task :change_types_translations =>:environment do
+  task :change_types_translations => :environment do
     TMP_TABLE = "change_types_translations_import"
     file = "lib/files/change_types.csv"
     drop_table(TMP_TABLE)
