@@ -24,7 +24,7 @@ task :config_vhost do
     server {
       listen 80;
       client_max_body_size 4G;
-      server_name #{application}.unepwcmc-013.vm.brightbox.net #{application}.sw02.matx.info;
+      server_name #{application}.unepwcmc-012.vm.brightbox.net #{application}.sw02.matx.info;
       keepalive_timeout 5;
       root #{deploy_to}/current/public;
       passenger_enabled on;
