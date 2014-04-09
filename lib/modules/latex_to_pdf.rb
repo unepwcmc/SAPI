@@ -18,10 +18,8 @@ class LatexToPdf
       fork do
         begin
           Dir.chdir dir
-          # TODO keep an eye on this: https://github.com/jacott/rails-latex/issues/28
-          # LatexToPdf is borrowed from that gem and apparently is not compatible with Passenger 4
-          # STDOUT.reopen("#{input}.log","a")
-          # STDERR.reopen(STDOUT)
+          original_stdout, original_stderr = $stdout, $stderr
+          $stderr = $stdout = File.open("#{input}.log","a")
           args=config[:arguments] + %w[-shell-escape -interaction batchmode] + ["#{input}.tex"]
           exec config[:command],*args
         rescue
@@ -29,6 +27,7 @@ class LatexToPdf
             io.write("#{$!.message}:\n#{$!.backtrace.join("\n")}\n")
           }
         ensure
+          $stdout, $stderr = original_stdout, original_stderr
           Process.exit! 1
         end
       end)
