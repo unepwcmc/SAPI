@@ -10,5 +10,10 @@ namespace :downloads do
     task :update => :environment do
       DownloadsCache.update
     end
+
+    desc "Update the cache for the checklist downloads"
+    task :update => :environment do
+      DownloadsCache.update_checklist_downloads
+    end
   end
 end
