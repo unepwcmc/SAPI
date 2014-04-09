@@ -6,7 +6,7 @@ class Checklist::DownloadsController < ApplicationController
   # Lists a set of downloads for a given list of IDs
   def index
     ids = params[:ids] || ""
-    @downloads = Download.where(:id => ids.split(",")).order('updated_at DESC').limit(5)
+    @downloads = Download.where(:id => ids).order('updated_at DESC').limit(5)
     @downloads.map! { |v| v.attributes.except("filename", "path") }
     @downloads.each do |v|
       v["updated_at"] = v["updated_at"].strftime("%A, %e %b %Y %H:%M")
