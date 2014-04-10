@@ -5,7 +5,7 @@ module DownloadsCache
     'quotas', 'cites_suspensions', 'eu_decisions', 'shipments', 'comptab',
     'gross_exports', 'gross_imports', 'net_exports', 'net_imports',
     'trade_download_stats', 'taxon_concepts_names', 'synonyms_and_trade_names',
-    'taxon_concepts_distributions'
+    'taxon_concepts_distributions', 'common_names'
   ]
 
   def self.quotas_path
@@ -176,6 +176,12 @@ module DownloadsCache
         Species::TaxonConceptsDistributionsExport.new(:taxonomy => taxonomy_name).export
       end
       puts "#{Time.now} Distributions #{taxonomy_name} download generated in #{elapsed_time}s"
+      puts "#{Time.now} Common Names #{taxonomy_name} download generated in #{elapsed_time}s"
+      puts "#{taxonomy_name} Common Names"
+      elapsed_time = Benchmark.realtime do
+        Species::CommonNamesExport.new(:taxonomy => taxonomy_name).export
+      end
+      puts "#{Time.now} Common Names #{taxonomy_name} download generated in #{elapsed_time}s"
     end
   end
 end
