@@ -4,6 +4,8 @@
 <p><%= link_to 'CMS Species Names', admin_exports_download_path(:data_type => "Names",
                                                                :filters => {:taxonomy => 'CMS'}) %></p>
 
+<hr>
+
 <p>
   <%= link_to 'CITES/EU Synonyms & Trade Names',
     admin_exports_download_path(:data_type => "SynonymsAndTradeNames",
@@ -16,6 +18,23 @@
     :filters => {:taxonomy => 'CMS'})
   %>
 </p>
+
+<hr>
+
+<p>
+  <%= link_to 'CITES/EU Common Names',
+    admin_exports_download_path(:data_type => "CommonNames",
+    :filters => {:taxonomy => 'CITES_EU'})
+  %>
+</p>
+<p>
+  <%= link_to 'CMS Common Names',
+    admin_exports_download_path(:data_type => "CommonNames",
+    :filters => {:taxonomy => 'CMS'})
+  %>
+</p>
+
+<hr>
 
 <h2>Distribution</h2>
 <p><%= link_to 'CITES/EU Species Distribution', admin_exports_download_path(:data_type => "Distributions",

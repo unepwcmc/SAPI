@@ -8,6 +8,8 @@ class Admin::ExportsController < Admin::AdminController
         result = Species::TaxonConceptsNamesExport.new(params[:filters]).export
       when 'SynonymsAndTradeNames'
         result = Species::SynonymsAndTradeNamesExport.new(params[:filters]).export
+      when 'CommonNames'
+        result = Species::CommonNamesExport.new(params[:filters]).export
       when 'Distributions'
         result = Species::TaxonConceptsDistributionsExport.new(params[:filters]).export
     end
