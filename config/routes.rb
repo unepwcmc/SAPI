@@ -1,5 +1,7 @@
 SAPI::Application.routes.draw do
 
+  devise_for :users
+
   match 'about' => 'pages#about'
   match 'terms-of-use' => 'pages#terms_of_use'
 
