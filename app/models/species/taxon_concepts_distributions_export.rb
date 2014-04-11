@@ -19,19 +19,19 @@ private
 
   def sql_columns
     columns = [
-      :id, :legacy_id, :phylum_name, :class_name, :order_name, :family_name,
+      :distribution_id, :id, :legacy_id, :phylum_name, :class_name, :order_name, :family_name,
       :full_name, :rank_name, :geo_entity_type, :geo_entity_name,
       :geo_entity_iso_code2, :tags, :reference_full, :reference_id,
-      :reference_legacy_id, :taxonomy_name
+      :reference_legacy_id, :taxonomy_name, :created_at, :created_by
     ]
   end
 
   def csv_column_headers
     headers = [
-      'Id', 'Legacy Id', 'Phylum', 'Class', 'Order', 'Family',
+      'Distribution Id', 'Id', 'Legacy Id', 'Phylum', 'Class', 'Order', 'Family',
       'Scientific Name', 'Rank', 'Geo_entity', 'Country_full',
       'ISO Code', 'Country Tags', 'Reference_full', 'Reference IDS',
-      'Ref Legacy ID', 'Taxonomy'
+      'Ref Legacy ID', 'Taxonomy', 'Added Date', 'Added by'
     ]
   end
 
