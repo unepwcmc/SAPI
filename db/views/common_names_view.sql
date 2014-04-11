@@ -11,6 +11,7 @@ SELECT
   st.full_name AS full_name,
   st.author_year,
   st.data->'rank_name' AS rank_name,
+  st.taxonomic_position,
   n.name AS common_name,
   l.name_en AS common_name_language,
   taxonomies.name AS taxonomy_name,
