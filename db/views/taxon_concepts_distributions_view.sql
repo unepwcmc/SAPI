@@ -1,7 +1,6 @@
 DROP VIEW IF EXISTS taxon_concepts_distributions_view;
 CREATE VIEW taxon_concepts_distributions_view AS
 SELECT
-  distributions.id AS distribution_id,
   taxon_concepts.id AS id,
   taxon_concepts.legacy_id AS legacy_id,
   data->'phylum_name' AS phylum_name,
@@ -33,6 +32,6 @@ LEFT JOIN taggings ON taggings.taggable_id = distributions.id
   AND taggings.taggable_type = 'Distribution'    
 LEFT JOIN tags ON tags.id = taggings.tag_id
 WHERE taxon_concepts.name_status IN ('A')
-GROUP BY distributions.id, taxon_concepts.id, taxon_concepts.legacy_id, geo_entity_types.name,
+GROUP BY taxon_concepts.id, taxon_concepts.legacy_id, geo_entity_types.name,
   geo_entities.name_en, geo_entities.iso_code2, "references".citation, "references".id,
   taxonomies.name
