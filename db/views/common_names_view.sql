@@ -1,12 +1,13 @@
 DROP VIEW IF EXISTS common_names_view;
 CREATE VIEW common_names_view AS
+
 SELECT
   st.name_status,
   st.id,
-  a.data->'phylum_name' AS accepted_phylum_name,
-  a.data->'class_name' AS accepted_class_name,
-  a.data->'order_name' AS accepted_order_name,
-  a.data->'family_name' AS accepted_family_name,
+  st.data->'phylum_name' AS accepted_phylum_name,
+  st.data->'class_name' AS accepted_class_name,
+  st.data->'order_name' AS accepted_order_name,
+  st.data->'family_name' AS accepted_family_name,
   st.full_name AS full_name,
   st.author_year,
   st.data->'rank_name' AS rank_name,
@@ -19,14 +20,11 @@ SELECT
 
 FROM taxon_concepts st
 JOIN taxonomies ON taxonomies.id = st.taxonomy_id
-LEFT JOIN taxon_relationships
-ON taxon_relationships.other_taxon_concept_id = st.id
-LEFT JOIN taxon_concepts a
-ON taxon_relationships.taxon_concept_id = a.id
 LEFT JOIN taxon_commons c
-ON c.taxon_concept_id = a.id
+ON c.taxon_concept_id = st.id
 LEFT JOIN common_names n
 ON c.common_name_id = n.id
 LEFT JOIN languages as l
 ON n.language_id = l.id
-WHERE st.name_status IN ('S', 'T');
+
+WHERE st.name_status IN ('A');
