@@ -32,7 +32,7 @@ LEFT JOIN "references" ON "references".id = distribution_references.reference_id
 LEFT JOIN taggings ON taggings.taggable_id = distributions.id 
   AND taggings.taggable_type = 'Distribution'    
 LEFT JOIN tags ON tags.id = taggings.tag_id
-WHERE st.name_status IN ('A')
+WHERE taxon_concepts.name_status IN ('A')
 GROUP BY distributions.id, taxon_concepts.id, taxon_concepts.legacy_id, geo_entity_types.name,
   geo_entities.name_en, geo_entities.iso_code2, "references".citation, "references".id,
   taxonomies.name
