@@ -108,8 +108,8 @@ module DownloadsCache
         show_english: "1",
         show_spanish: "1",
         show_french: "1",
-        locale: locale,
-        format: "json"
+        intro: "1",
+        locale: locale
       }
 
       modules.each do |m|
