@@ -1,5 +1,11 @@
 SAPI::Application.routes.draw do
 
+  devise_for :users, :skip => [:registrations]
+  as :user do
+    get 'users/edit' => 'registrations#edit', :as => 'edit_user_registration'
+    put 'users' => 'registrations#update', :as => 'user_registration'
+  end
+
   match 'about' => 'pages#about'
   match 'terms-of-use' => 'pages#terms_of_use'
 

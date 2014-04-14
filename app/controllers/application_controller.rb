@@ -1,6 +1,14 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :set_locale
+  before_filter :configure_permitted_parameters, if: :devise_controller?
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.for(:sign_up) << :name
+    devise_parameter_sanitizer.for(:account_update) << :name
+  end
 
   private
 
@@ -17,8 +25,11 @@ class ApplicationController < ActionController::Base
     }
   end
 
-  # Overwriting the sign_out redirect path method
   def after_sign_out_path_for(resource_or_scope)
+    admin_root_path
+  end
+
+  def signed_in_root_path(resource_or_scope)
     admin_root_path
   end
 end
