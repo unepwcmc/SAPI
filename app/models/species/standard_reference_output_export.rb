@@ -25,7 +25,7 @@ private
       :accepted_species_name, :full_name, :rank_name,
       :name_status, :taxonomy,
       :reference_id, :reference_legacy_id,
-      :citation, :issued_for, :exclusions, 
+      :citation, :inherited_from, :exclusions, 
       :created_at, :created_by
     ]
   end
@@ -38,7 +38,7 @@ private
       'Species_Accepted', 'Full name', 'Rank name',
       'Name status', 'Taxonomy', 
       'Reference Id', 'Reference legacy Id', 
-      'Reference', 'Issued for', 'Exclusions',
+      'Reference', 'Inherited from', 'Exclusions',
       'Date added', 'Added by'
     ]
   end

@@ -24,11 +24,10 @@ taxon_concepts.full_name AS full_name,
 taxon_concepts.data->'rank_name' AS rank_name,
 taxon_concepts.name_status,
 taxonomies.name AS taxonomy,
---taxon_concepts.parent_id as inherited_from
 r.id AS reference_id,
 r.legacy_id AS reference_legacy_id,
 r.citation, 
-issued_for.full_name AS issued_for,
+issued_for.full_name AS inherited_from,
 array_to_string(
   ARRAY(SELECT taxon_concepts.full_name
   FROM UNNEST(inherited_references.exclusions) s
