@@ -41,6 +41,9 @@ RSpec.configure do |config|
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = true
 
+  config.include Devise::TestHelpers, type: :controller
+  config.extend ControllerMacros, :type => :controller
+
   config.include FactoryGirl::Syntax::Methods
   config.include JsonSpec::Helpers
   config.include SapiSpec::Helpers
