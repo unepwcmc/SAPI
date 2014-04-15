@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
   validates :name, :presence => true
 
   def can_be_deleted?
-    false #TODO
+    true # TODO
   end
 
 end
