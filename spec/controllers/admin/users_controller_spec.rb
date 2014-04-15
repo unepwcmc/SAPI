@@ -1,4 +1,5 @@
 require 'spec_helper'
+
 describe Admin::UsersController do
   login_admin
 

@@ -1,5 +1,8 @@
 require 'spec_helper'
+
 describe Admin::SpeciesListingsController do
+  login_admin
+
   describe "index" do
     it "assigns @species_listings sorted by designation and name" do
       designation1 = create(:designation, :name => 'BB', :taxonomy => create(:taxonomy))

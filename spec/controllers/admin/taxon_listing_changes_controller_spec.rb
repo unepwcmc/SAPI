@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Admin::TaxonListingChangesController do
+  login_admin
+
   before do
     @taxon_concept = create(:taxon_concept)
     @designation = create(:designation, :taxonomy => @taxon_concept.taxonomy)

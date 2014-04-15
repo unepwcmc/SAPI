@@ -1,5 +1,8 @@
 require 'spec_helper'
+
 describe Admin::TaxonRelationshipsController do
+  login_admin
+
   let!(:equal_relationship_type){
     create(
       :taxon_relationship_type,

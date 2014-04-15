@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Admin::TaxonQuotasController do
+  login_admin
+
   before do
     @taxon_concept = create(:taxon_concept)
     @unit = create(:unit)

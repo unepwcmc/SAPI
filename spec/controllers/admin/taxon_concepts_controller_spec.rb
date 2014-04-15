@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Admin::TaxonConceptsController do
+  login_admin
+
   describe "GET index" do
     before(:each) do
       @taxon = create_cites_eu_species(
