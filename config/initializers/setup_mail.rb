@@ -1,11 +1,4 @@
-#require 'development_mail_interceptor'
-
-ActionMailer::Base.delivery_method = :smtp
-
-ActionMailer::Base.smtp_settings = {
-  :address => "email-filter.unep-wcmc.org",
-  :port => 25,
-  :domain => "unep-wcmc.org",
-}
-
-#Mail.register_interceptor(DevelopmentMailInterceptor) if Rails.env.development?
+unless Rails.env.test? || Rails.env.development?
+  # load mailer_config.yml
+  MAILER_CONFIG = YAML.load_file("#{Rails.root}/config/mailer_config.yml")
+end
