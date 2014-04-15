@@ -1,5 +1,7 @@
 class TradeController < ApplicationController
 
+  before_filter :authenticate_user!
+
   private
 
   def search_params
