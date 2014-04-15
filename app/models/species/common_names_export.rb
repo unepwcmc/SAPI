@@ -32,12 +32,12 @@ private
 
   def csv_column_headers
     headers = [
-      'Species RecID', 
-      'Phylum', 'Class', 
+      'Species RecID',
+      'Phylum', 'Class',
       'Order', 'Family',
-      'Scientific name', 
-      'Author', 'Rank', 
-      'Common Name', 'Language', 
+      'Scientific name',
+      'Author', 'Rank',
+      'Common Name', 'Language',
       'Taxonomy',
       'Date Added', 'Added by'
     ]
