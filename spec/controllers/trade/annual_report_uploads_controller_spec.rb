@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Trade::AnnualReportUploadsController do
+  login_admin
+
   let(:france){
     create(
       :geo_entity,

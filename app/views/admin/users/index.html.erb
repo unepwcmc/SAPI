@@ -1,0 +1,18 @@
+<div class="admin-header">
+  <h3>Users</h3>
+  <div class="action-buttons">
+    <%= admin_add_new_button(
+      :resource => 'user',
+      :href => new_admin_user_url,
+      :"data-toggle" => nil,
+      :role => nil,
+      :remote => true
+    ) %>
+  </div>
+</div>
+
+<%= admin_new_modal{ '' } %>
+
+<%= admin_table %>
+
+<%= paginate collection %>

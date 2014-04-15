@@ -1,5 +1,7 @@
 require 'spec_helper'
+
 describe Admin::EuRegulationsController do
+  login_admin
 
   describe "index" do
     before(:each) do

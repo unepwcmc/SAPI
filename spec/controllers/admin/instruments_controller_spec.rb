@@ -1,5 +1,8 @@
 require 'spec_helper'
+
 describe Admin::InstrumentsController do
+  login_admin
+
   describe "GET index" do
     before(:each) do
       @instrument1 = create(:instrument, :name => 'BB', :designation => create(:designation))

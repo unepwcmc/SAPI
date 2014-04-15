@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Trade::ShipmentsController do
+  login_admin
+
   include_context 'Shipments'
 
   describe "GET index" do

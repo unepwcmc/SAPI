@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Trade::SandboxShipmentsController do
+  login_admin
+
   let(:annual_report_upload){
     aru = build(:annual_report_upload)
     aru.save(:validate => false)

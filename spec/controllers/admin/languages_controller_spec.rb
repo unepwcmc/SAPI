@@ -1,5 +1,8 @@
 require 'spec_helper'
+
 describe Admin::LanguagesController do
+  login_admin
+
   describe "GET index" do
     it "assigns @languages sorted by iso_code1" do
       language1 = create(:language, :iso_code1 => 'BB', :iso_code3 => 'BBB')

@@ -1,6 +1,13 @@
 #Encoding: utf-8
 FactoryGirl.define do
 
+  factory :user do
+    sequence(:name) {|n| "user#{n}"}
+    email { "#{name}@test.pl" }
+    password 'asdfasdf'
+    password_confirmation { password }
+  end
+
   factory :taxonomy do
     sequence(:name) {|n| "WILDLIFE#{n}"}
   end

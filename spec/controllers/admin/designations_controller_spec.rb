@@ -1,5 +1,8 @@
 require 'spec_helper'
+
 describe Admin::DesignationsController do
+  login_admin
+
   describe "GET index" do
     before(:each) do
       @designation1 = create(:designation, :name => 'BB', :taxonomy => create(:taxonomy))
