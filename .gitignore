@@ -65,3 +65,6 @@
 db/structure.sql
 
 *.xlsx
+
+#mailer config
+/config/mailer_config.yml
