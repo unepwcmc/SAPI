@@ -229,20 +229,31 @@ class TaxonConcept < ActiveRecord::Base
     standard_references.keep_if{ |ref| !ref_ids.include? ref.id }
   end
 
+  def dependent_objects
+    dependent_objects_map.map do |k, v|
+      v.limit(1).count > 0 ? k : nil
+    end.compact
+  end
+
   def can_be_deleted?
-    taxon_relationships.count == 0 &&
-    children.count == 0 &&
-    listing_changes.count == 0 &&
-    cites_suspensions.count == 0 &&
-    quotas.count == 0 &&
-    eu_suspensions.count == 0 &&
-    eu_opinions.count == 0 &&
-    taxon_instruments.count == 0 &&
-    shipments.limit(1).count == 0 &&
-    reported_shipments.limit(1).count == 0
+    dependent_objects.empty?
   end
 
   private
+
+  def dependent_objects_map
+    {
+      'children' => children,
+      'listing changes' => listing_changes,
+      'CITES suspensions' => cites_suspensions,
+      'quotas' => quotas,
+      'EU suspensions' => eu_suspensions,
+      'EU opinions' => eu_opinions,
+      'instruments' => taxon_instruments,
+      'shipments' => shipments,
+      'shipments (reported as)' => reported_shipments
+    }
+  end
 
   def self.sanitize_full_name(some_full_name)
     #strip ranks

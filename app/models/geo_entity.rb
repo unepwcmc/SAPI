@@ -25,9 +25,11 @@ class GeoEntity < ActiveRecord::Base
   belongs_to :geo_entity_type
   has_many :geo_relationships, :dependent => :destroy
   has_many :distributions
-  has_many :designation_geo_entities
+  has_many :designation_geo_entities, :dependent => :destroy
   has_many :designations, :through => :designation_geo_entities
   has_many :quotas
+  has_many :eu_opinions
+  has_many :eu_suspensions
   has_many :exported_shipments, :class_name => 'Trade::Shipment',
     :foreign_key => :exporter_id
   has_many :imported_shipments, :class_name => 'Trade::Shipment',
@@ -115,11 +117,28 @@ class GeoEntity < ActiveRecord::Base
     end
   end
 
+  def dependent_objects
+    dependent_objects_map.map do |k, v|
+      v.limit(1).count > 0 ? k : nil
+    end.compact
+  end
+
   def can_be_deleted?
-    distributions.count == 0 &&
-    exported_shipments.limit(1).count == 0 &&
-    imported_shipments.limit(1).count == 0 &&
-    originated_shipments.limit(1).count == 0
+    dependent_objects.empty?
+  end
+
+  private
+
+  def dependent_objects_map
+    {
+      'distributions' => distributions,
+      'quotas' => quotas,
+      'EU suspensions' => eu_suspensions,
+      'EU opinions' => eu_opinions,
+      'shipments (exporter)' => exported_shipments,
+      'shipments (importer)' => imported_shipments,
+      'shipments (origin)' =>originated_shipments
+    }
   end
 
 end
