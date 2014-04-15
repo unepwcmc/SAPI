@@ -1,5 +1,8 @@
 require 'spec_helper'
+
 describe Admin::HybridRelationshipsController do
+  login_admin
+
   let!(:hybrid_relationship_type){
     create(
       :taxon_relationship_type,

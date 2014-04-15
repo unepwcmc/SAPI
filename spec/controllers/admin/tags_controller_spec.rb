@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Admin::TagsController do
+  login_admin
+
   describe "GET index" do
     it "renders the index template" do
       get :index

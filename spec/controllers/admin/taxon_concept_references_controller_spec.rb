@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Admin::TaxonConceptReferencesController do
+  login_admin
+
   before do
     @taxon_concept = create(:taxon_concept)
     @reference = create(:reference)

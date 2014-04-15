@@ -1,5 +1,8 @@
 require 'spec_helper'
+
 describe Admin::SynonymRelationshipsController do
+  login_admin
+
   let!(:synonym_relationship_type){
     create(
       :taxon_relationship_type,

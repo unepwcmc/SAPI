@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Trade::ExportsController do
+  login_admin
+
   describe "GET download" do
     context "raw format" do
       it "returns count of shipments" do

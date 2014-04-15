@@ -1,5 +1,8 @@
 require 'spec_helper'
+
 describe Admin::ChangeTypesController do
+  login_admin
+
   describe "GET index" do
     it "assigns @change_types sorted by designation and name" do
       designation1 = create(:designation, :name => 'BB', :taxonomy => create(:taxonomy))

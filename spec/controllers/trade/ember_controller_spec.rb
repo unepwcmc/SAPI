@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Trade::EmberController do
+  login_admin
 
   describe "GET 'start'" do
     it "returns http success" do

@@ -1,5 +1,7 @@
 require 'spec_helper'
+
 describe Admin::TaxonomiesController do
+  login_admin
 
   describe "index" do
     before(:each) do

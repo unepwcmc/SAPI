@@ -1,6 +1,7 @@
-<%= form_for :user, :url => collection_url, :remote => true do |f| %>
-
+<%= form_for [:admin, @user], :remote => true do |f| %>
   <%= error_messages_for(@user) %>
   <label>Name</label><%= f.text_field :name %><br />
   <label>Email</label> <%= f.text_field :email %><br />
+  <label>Password</label> <%= f.password_field :password %><br />
+  <label>Password confirmation</label> <%= f.password_field :password_confirmation %><br />
 <% end %>

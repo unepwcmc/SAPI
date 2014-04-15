@@ -10,13 +10,16 @@
 #
 
 class User < ActiveRecord::Base
-  attr_accessible :email, :name
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable,
+    :trackable, :validatable
+  attr_accessible :email, :name, :password, :password_confirmation,
+    :remember_me
 
   validates :email, :uniqueness => true, :presence => true
   validates :name, :presence => true
 
   def can_be_deleted?
-    false #TODO
+    true # TODO
   end
 
 end
