@@ -13,8 +13,12 @@
 #
 
 class Purpose < TradeCode
- validates :code, :length => {:is => 1}
+  validates :code, :length => {:is => 1}
+
+  has_many :shipments, :class_name => 'Trade::Shipment'
+
   def can_be_deleted?
-    TradeRestrictionPurpose.where(:purpose_id => self.id).length == 0
+    TradeRestrictionPurpose.where(:purpose_id => self.id).length == 0 &&
+    shipments.limit(1).count == 0
   end
 end

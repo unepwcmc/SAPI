@@ -109,6 +109,9 @@ class TaxonConcept < ActiveRecord::Base
 
   has_many :taxon_instruments
   has_many :instruments, :through => :taxon_instruments
+  has_many :shipments, :class_name => 'Trade::Shipment'
+  has_many :reported_shipments, :class_name => 'Trade::Shipment',
+    :foreign_key => :reported_taxon_concept_id
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
@@ -234,7 +237,9 @@ class TaxonConcept < ActiveRecord::Base
     quotas.count == 0 &&
     eu_suspensions.count == 0 &&
     eu_opinions.count == 0 &&
-    taxon_instruments.count == 0
+    taxon_instruments.count == 0 &&
+    shipments.limit(1).count == 0 &&
+    reported_shipments.limit(1).count == 0
   end
 
   private

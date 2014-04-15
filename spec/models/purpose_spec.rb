@@ -30,6 +30,10 @@ describe Purpose do
         ) }
         specify { purpose.destroy.should be_false }
       end
+      context "when shipments" do
+        before(:each){ create(:shipment, :purpose => purpose) }
+        specify { purpose.destroy.should be_false }
+      end
     end
   end
 end

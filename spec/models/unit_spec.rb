@@ -22,9 +22,15 @@ describe Unit do
     end
     context "when dependent objects attached" do
       let(:unit){ create(:unit) }
-      let(:geo_entity){ create(:geo_entity) }
-      let!(:quota){ create(:quota, :unit => unit, :geo_entity_id => geo_entity.id)}
-      specify { unit.destroy.should be_false }
+      context "when quotas" do
+        let(:geo_entity){ create(:geo_entity) }
+        let!(:quota){ create(:quota, :unit => unit, :geo_entity_id => geo_entity.id)}
+        specify { unit.destroy.should be_false }
+      end
+      context "when shipments" do
+        before(:each){ create(:shipment, :unit => unit) }
+        specify { unit.destroy.should be_false }
+      end
     end
   end
 end
