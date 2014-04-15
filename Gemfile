@@ -15,6 +15,7 @@ gem 'nokogiri'
 gem 'inherited_resources'
 gem 'traco'
 gem 'strong_parameters'
+gem 'devise'
 
 gem 'sidekiq'
 gem 'sidekiq-status'
