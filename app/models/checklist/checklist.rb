@@ -1,7 +1,6 @@
 #Encoding: utf-8
 class Checklist::Checklist
   include ActiveModel::SerializerSupport
-  include ActionView::Helpers::TextHelper
   include CacheIterator
   include SearchCache # this provides #cached_results and #cached_total_cnt
   attr_accessor :animalia, :plantae, :authors, :synonyms, :synonyms_with_authors,
@@ -129,7 +128,7 @@ class Checklist::Checklist
       @regions_count = regions.count
       if @regions_count > 0
         summary << "within"  if @countries_count > 0
-        summary << "#{pluralize(regions.count, 'region')}" #uses ActionView::Helpers::TextHelper
+        summary << "#{regions.count} #{'region'.pluralize(regions.count)}"
       end
     end
 
