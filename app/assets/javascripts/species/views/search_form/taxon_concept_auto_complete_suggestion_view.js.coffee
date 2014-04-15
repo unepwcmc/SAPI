@@ -8,7 +8,8 @@ Species.TaxonConceptAutoCompleteSuggestionView = Ember.View.extend
 
   template: ( ->
     rankName = @get('autoCompleteTaxonConcept.rankName')
-    if rankName == 'SPECIES' or rankName == 'SUBSPECIES'
+    acceptedSubspecies = @get('autoCompleteTaxonConcept.acceptedSubspecies')
+    if rankName == 'SPECIES' or acceptedSubspecies
       Ember.Handlebars.compile(
         '<a href="#" {{action openTaxonPage view.taxonConceptId}}>
           {{#highlight view.autoCompleteTaxonConcept.autoCompleteSuggestion query=controller.taxonConceptQuery}}
