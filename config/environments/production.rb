@@ -51,6 +51,19 @@ SAPI::Application.configure do
 
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.delivery_method = :smtp #for the mac apparently run::sudo postfix start
+  config.action_mailer.asset_host = "http://speciesplus.net"
+  config.action_mailer.default_url_options = { :host => "speciesplus.net" }
+  config.action_mailer.smtp_settings = {
+    :enable_starttls_auto => true,
+    :address => "pod51017.outlook.com",
+    :port => 587,
+    :domain => "speciesplus.net",
+    :authentication => :login,
+    :user_name => MAILER_CONFIG['user_name'],
+    :password => MAILER_CONFIG['password']
+  }
+
 
   # Enable threaded mode
   # config.threadsafe!
@@ -69,10 +82,10 @@ SAPI::Application.configure do
   #Exception Notification
   config.middleware.use ExceptionNotification::Rack,
     :email => {
-      :email_prefix => "[SAPI PRODUCTION] ",
-      :sender_address => %{"SAPI Exception Notifier" <no-reply@unep-wcmc.org>},
-      :exception_recipients => %w{simao.belchior@unep-wcmc.org agnieszka.figiel@unep-wcmc.org}
-    }
+    :email_prefix => "[SAPI PRODUCTION] ",
+    :sender_address => %{"SAPI Exception Notifier" <no-reply@unep-wcmc.org>},
+    :exception_recipients => %w{simao.belchior@unep-wcmc.org agnieszka.figiel@unep-wcmc.org}
+  }
 
   config.ember.variant = :production
 end
