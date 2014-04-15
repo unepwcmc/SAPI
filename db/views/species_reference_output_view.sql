@@ -13,6 +13,7 @@ SELECT
   st.data->'rank_name' AS rank_name,
   st.name_status,
   taxonomies.name AS taxonomy,
+  taxonomies.id AS taxonomy_id,
   rf.citation AS reference,
   rf.id AS reference_id,
   rf.legacy_id AS reference_legacy_id,
