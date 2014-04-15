@@ -10,6 +10,10 @@ class Admin::ExportsController < Admin::AdminController
         result = Species::SynonymsAndTradeNamesExport.new(params[:filters]).export
       when 'CommonNames'
         result = Species::CommonNamesExport.new(params[:filters]).export
+      when 'SpeciesReferenceOutput'
+        result = Species::SpeciesReferenceOutputExport.new(params[:filters]).export
+      when 'StandardReferenceOutput'
+        result = Species::StandardReferenceOutputExport.new(params[:filters]).export
       when 'Distributions'
         result = Species::TaxonConceptsDistributionsExport.new(params[:filters]).export
     end
