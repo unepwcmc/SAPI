@@ -7,8 +7,6 @@
 # Ignore bundler config
 /.bundle
 
-/config/mailer_config.yml
-
 # Ignore all logfiles and tempfiles.
 /coverage
 /rdoc

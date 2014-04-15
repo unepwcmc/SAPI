@@ -1,9 +1,5 @@
 require File.expand_path('../boot', __FILE__)
 
-# load mailer_config.yml
-require 'yaml'
-MAILER_CONFIG = YAML.load(File.read(File.expand_path('../mailer_config.yml', __FILE__)))
-
 # Pick the frameworks you want:
 require "active_record/railtie"
 require "action_controller/railtie"
