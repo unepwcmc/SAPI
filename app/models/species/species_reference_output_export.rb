@@ -22,7 +22,7 @@ private
       :id, :legacy_id,
       :accepted_phylum_name, :accepted_class_name,
       :accepted_order_name, :accepted_family_name, :accepted_genus_name,
-      :accepted_species_name, :rank_name,
+      :accepted_species_name, :full_name, :rank_name,
       :name_status, :taxonomy,
       :reference, :reference_id, :reference_legacy_id,
       :created_at, :created_by
@@ -31,10 +31,10 @@ private
 
   def csv_column_headers
     headers = [
-      'Id', 'Legacy id', 'Legacy Trade Id',
+      'Id', 'Legacy id',
       'Phylum_Accepted', 'Class_Accepted',
       'Order_Accepted', 'Family_Accepted', 'Genus_Accepted',
-      'Species_Accepted', 'Rank', 'Name status', 'Taxonomy', 
+      'Species_Accepted', 'Full name', 'Rank', 'Name status', 'Taxonomy',
       'Reference', 'Reference Id', 'Reference legacy Id',
       'Date added', 'Added by'
     ]
