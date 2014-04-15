@@ -45,6 +45,8 @@
 /public/downloads/net_exports/*.csv
 /public/downloads/net_imports/*.csv
 /public/downloads/trade_download_stats/*.csv
+/public/downloads/species_reference_output/*.csv
+/public/downloads/standard_reference_output/*.csv
 /public/uploads/*
 
 # Ruby
