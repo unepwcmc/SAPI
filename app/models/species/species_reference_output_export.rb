@@ -19,10 +19,10 @@ private
 
   def sql_columns
     columns = [
-      :id, :legacy_id,
-      :accepted_phylum_name, :accepted_class_name,
-      :accepted_order_name, :accepted_family_name, :accepted_genus_name,
-      :accepted_species_name, :full_name, :rank_name,
+      :id, :legacy_id, :kingdom_name,
+      :phylum_name, :class_name,
+      :order_name, :family_name, :genus_name,
+      :species_name, :full_name, :author_year, :rank_name,
       :name_status, :taxonomy,
       :reference, :reference_id, :reference_legacy_id,
       :created_at, :created_by
@@ -31,10 +31,10 @@ private
 
   def csv_column_headers
     headers = [
-      'Id', 'Legacy id',
-      'Phylum_Accepted', 'Class_Accepted',
-      'Order_Accepted', 'Family_Accepted', 'Genus_Accepted',
-      'Species_Accepted', 'Full name', 'Rank', 'Name status', 'Taxonomy',
+      'Id', 'Legacy id', 'Kingdom',
+      'Phylum', 'Class',
+      'Order', 'Family', 'Genus',
+      'Species', 'Full name', 'Author', 'Rank', 'Name status', 'Taxonomy',
       'Reference', 'Reference Id', 'Reference legacy Id',
       'Date added', 'Added by'
     ]
