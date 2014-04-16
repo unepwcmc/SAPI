@@ -12,6 +12,7 @@ SELECT
   st.data->'species_name' AS species_name,
   st.full_name AS full_name,
   st.author_year,
+  st.taxonomic_position AS taxonomic_position,
   st.data->'rank_name' AS rank_name,
   st.name_status,
   taxonomies.name AS taxonomy,

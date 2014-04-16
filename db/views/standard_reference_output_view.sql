@@ -23,6 +23,7 @@ taxon_concepts.data->'genus_name' AS genus_name,
 taxon_concepts.data->'species_name' AS species_name,
 taxon_concepts.full_name AS full_name,
 taxon_concepts.author_year,
+taxon_concepts.taxonomic_position AS taxonomic_position,
 taxon_concepts.data->'rank_name' AS rank_name,
 taxon_concepts.name_status,
 taxonomies.name AS taxonomy,
@@ -30,12 +31,21 @@ taxonomies.id AS taxonomy_id,
 r.id AS reference_id,
 r.legacy_id AS reference_legacy_id,
 r.citation,
-issued_for.full_name AS inherited_from,
-array_to_string(
-  ARRAY(SELECT taxon_concepts.full_name
-  FROM UNNEST(inherited_references.exclusions) s
-  INNER JOIN taxon_concepts ON taxon_concepts.id = s
-  WHERE s IS NOT NULL), ', ') AS exclusions,
+CASE
+  WHEN issued_for.id IS NOT NULL AND issued_for.id <> taxon_concepts.id
+    THEN issued_for.full_name
+  ELSE ''
+END AS inherited_from,
+CASE
+  WHEN issued_for.id IS NOT NULL AND issued_for.id = taxon_concepts.id
+  THEN
+  array_to_string(
+    ARRAY(SELECT taxon_concepts.full_name
+    FROM UNNEST(inherited_references.exclusions) s
+    INNER JOIN taxon_concepts ON taxon_concepts.id = s
+    WHERE s IS NOT NULL), ', ')
+  ELSE ''
+END AS exclusions,
 to_char(taxon_concepts.created_at, 'DD/MM/YYYY') AS created_at,
 'TODO' AS created_by
 FROM taxon_concepts
