@@ -51,19 +51,7 @@ SAPI::Application.configure do
 
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.delivery_method = :smtp #for the mac apparently run::sudo postfix start
-  config.action_mailer.asset_host = "http://sapi.unepwcmc-012.vm.brightbox.net"
-  config.action_mailer.default_url_options = { :host => "sapi.unepwcmc-012.vm.brightbox.net" }
-  config.action_mailer.smtp_settings = {
-    :enable_starttls_auto => true,
-    :address => "pod51017.outlook.com",
-    :port => 587,
-    :domain => "unep-wcmc.org",
-    :authentication => :login,
-    :user_name => MAILER_CONFIG['user_name'],
-    :password => MAILER_CONFIG['password']
-  }
-
+  # config.action_mailer.delivery_method = :smtp #for the mac apparently run::sudo postfix start
 
   # Enable threaded mode
   # config.threadsafe!
