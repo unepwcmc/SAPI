@@ -16,7 +16,7 @@ private
       \\COPY (#{query_sql.gsub(/"/,"\\\"")})
       TO ?
       WITH DELIMITER ','
-      ENCODING 'latin1'
+      ENCODING 'utf8'
       CSV HEADER;
     PSQL
     ActiveRecord::Base.send(:sanitize_sql_array, [sql, @file_name])
