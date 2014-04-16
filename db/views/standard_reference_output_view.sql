@@ -11,7 +11,7 @@ WITH RECURSIVE inherited_references AS (
   JOIN inherited_references d ON d.taxon_concept_id = low.parent_id
   WHERE NOT COALESCE(d.exclusions, ARRAY[]::INT[]) @> ARRAY[low.id]
 )
-SELECT 
+SELECT
 taxon_concepts.id,
 taxon_concepts.legacy_id,
 taxon_concepts.data->'kingdom_name' AS kingdom_name,
@@ -29,7 +29,7 @@ taxonomies.name AS taxonomy,
 taxonomies.id AS taxonomy_id,
 r.id AS reference_id,
 r.legacy_id AS reference_legacy_id,
-r.citation, 
+r.citation,
 issued_for.full_name AS inherited_from,
 array_to_string(
   ARRAY(SELECT taxon_concepts.full_name
