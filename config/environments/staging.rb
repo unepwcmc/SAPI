@@ -58,7 +58,7 @@ SAPI::Application.configure do
     :enable_starttls_auto => true,
     :address => "pod51017.outlook.com",
     :port => 587,
-    :domain => "sapi.unepwcmc-012.vm.brightbox.net",
+    :domain => "unep-wcmc.org",
     :authentication => :login,
     :user_name => MAILER_CONFIG['user_name'],
     :password => MAILER_CONFIG['password']
