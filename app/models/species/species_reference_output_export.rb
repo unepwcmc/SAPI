@@ -2,7 +2,7 @@ class Species::SpeciesReferenceOutputExport < Species::CsvCopyExport
 
   def query
     rel = MTaxonConcept.from(table_name).
-      order('name_status, rank_name, full_name')
+      order('name_status, taxonomic_position')
     rel = rel.where("#{table_name}.taxonomy_id" => @taxonomy.id) if @taxonomy
     rel
   end
