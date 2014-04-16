@@ -117,16 +117,6 @@ class GeoEntity < ActiveRecord::Base
     end
   end
 
-  def dependent_objects
-    dependent_objects_map.map do |k, v|
-      v.limit(1).count > 0 ? k : nil
-    end.compact
-  end
-
-  def can_be_deleted?
-    dependent_objects.empty?
-  end
-
   private
 
   def dependent_objects_map

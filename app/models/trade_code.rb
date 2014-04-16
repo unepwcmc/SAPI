@@ -19,16 +19,6 @@ class TradeCode < ActiveRecord::Base
 
   validates :code, :presence => true, :uniqueness => {:scope => :type}
 
-  def dependent_objects
-    dependent_objects_map.map do |k, v|
-      v.limit(1).count > 0 ? k : nil
-    end.compact
-  end
-
-  def can_be_deleted?
-    dependent_objects.empty?
-  end
-
   def self.search query
     if query.present?
       where("UPPER(code) LIKE UPPER(:query) 

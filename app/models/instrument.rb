@@ -17,10 +17,6 @@ class Instrument < ActiveRecord::Base
   belongs_to :designation
   has_many :taxon_instruments
 
-  def can_be_deleted?
-    !taxon_instruments.any?
-  end
-
   def self.search query
     if query.present?
       where("UPPER(name) LIKE UPPER(:query)", 
@@ -29,4 +25,13 @@ class Instrument < ActiveRecord::Base
       scoped
     end
   end
+
+  private
+
+  def dependent_objects_map
+    {
+      'taxon instruments' => taxon_instruments
+    }
+  end
+
 end

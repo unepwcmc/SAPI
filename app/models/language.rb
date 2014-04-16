@@ -21,10 +21,6 @@ class Language < ActiveRecord::Base
   validates :iso_code1, :uniqueness => true, :length => {:is => 2}, :allow_blank => true
   validates :iso_code3, :presence => true, :uniqueness => true, :length => {:is => 3}
 
-  def can_be_deleted?
-    common_names.count == 0
-  end
-
   def self.search query
     if query.present?
       where("UPPER(name_en) LIKE UPPER(:query) OR
@@ -37,4 +33,13 @@ class Language < ActiveRecord::Base
       scoped
     end
   end
+
+  private
+
+  def dependent_objects_map
+    {
+      'common names' => common_names
+    }
+  end
+
 end

@@ -41,7 +41,13 @@ class CitesSuspensionNotification < Event
     select(:subtype).uniq
   end
 
-  def can_be_deleted?
-    started_suspensions.count == 0 && ended_suspensions.count == 0
+  private
+
+  def dependent_objects_map
+    {
+      'started CITES suspensions' => started_suspensions,
+      'ended CITES suspensions' => ended_suspensions
+    }
   end
+
 end
