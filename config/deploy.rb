@@ -216,7 +216,38 @@ task :setup_production_database_configuration do
   run "mkdir -p #{shared_path}/config"
   put(spec.to_yaml, "#{shared_path}/config/database.yml")
 end
+
+namespace :mailer do
+  task :setup do
+    smtp_user = Capistrano::CLI.ui.ask("SMTP username: ")
+    smtp_password = Capistrano::CLI.password_prompt("SMTP password: ")
+
+    require 'yaml'
+
+    spec = {
+      "#{rails_env}" => {
+        :default_url_options => {
+          :host => "#{domain}"
+        },
+        :smtp_settings => {
+          :enable_starttls_auto => true,
+          :address => 'pod51017.outlook.com',
+          :port => 587,
+          :domain => 'unep-wcmc.org',
+          :authentication => 'login',
+          :user_name => smtp_user,
+          :password => smtp_password
+        }
+      }
+    }
+
+    run "mkdir -p #{shared_path}/config"
+    put(spec.to_yaml, "#{shared_path}/config/mailer_config.yml")
+  end
+end
+
 after "deploy:setup", :setup_production_database_configuration
+after "deploy:setup", 'mailer:setup'
 
 namespace :seeds do
   desc 'plants seeds, defined inside db/seeds.rb file'
