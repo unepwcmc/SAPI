@@ -121,7 +121,7 @@ class MTaxonConcept < ActiveRecord::Base
 
   scope :by_scientific_name, lambda { |scientific_name|
     MTaxonConceptFilterByScientificNameWithDescendants.new(
-      self, 
+      self,
       scientific_name,
       {:synonyms => true, :common_names => true, :subspecies => false}
     ).relation
