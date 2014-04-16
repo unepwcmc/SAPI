@@ -6,11 +6,11 @@ class DestroyObserver < ActiveRecord::Observer
 
   def before_destroy(model)
     unless model.can_be_deleted?
-      if model.respond_to?(:dependent_objects)
-        model.errors.add(:base, "not allowed (dependent objects present: #{model.dependent_objects.join(', ')})")
-      else
-        model.errors.add(:base, "not allowed (dependent objects present)")
+      msg = 'not allowed'
+      unless model.dependent_objects.empty?
+        msg << " (dependent objects present: #{model.dependent_objects.join(', ')})"
       end
+      model.errors.add(:base, msg)
       return false
     end
   end
