@@ -20,33 +20,16 @@ module Trade::TradeDataDownloadLogger
     data["source"] = self.get_field_values(filters[:sources_ids], Source)
     data["importer"] = self.get_field_values(filters[:importers_ids], GeoEntity)
     data["exporter"] = self.get_field_values(filters[:exporters_ids], GeoEntity)
-    data["city"], data["country"] = self.city_country_from(request.ip)
-    data["organization"] = self.organization_from(request.ip)
+    data["city"], data["country"] = self.city_country_from(request.ip).map do |s|
+      s.force_encoding("ISO-8859-1").encode("UTF-8")
+    end
+    data["organization"] = self.organization_from(request.ip).
+      force_encoding("ISO-8859-1").encode("UTF-8")
     w = Trade::TradeDataDownload.new(data)
     w.save
   end
 
-  module_function
-
-  def export
-    file_name = self.get_file_name
-    unless File.file?(PATH + file_name)
-      File.open(PATH + self.get_file_name, 'w') do |f|
-        Trade::TradeDataDownload.pg_copy_to do |line|
-          f.write line
-        end
-      end
-    end
-    PATH + file_name
-  end
-
-  PATH = "public/downloads/trade_download_stats/"
-
   private
-
-  def self.get_file_name
-    'trade_download_stats.csv'
-  end
 
   def self.get_field_values param, model
     if param == "" then return 'All' end
@@ -61,16 +44,16 @@ module Trade::TradeDataDownloadLogger
   end
 
   def self.city_country_from ip
-    cdb = GeoIP.new(GEO_IP_CONFIG['city_db']) 
-    cdb_names = cdb.city(ip)   
-    country = cdb_names.nil? ? "Unkwown" : cdb_names.country_code2
-    city = cdb_names.nil? ? "Unkwown" : cdb_names.city_name
+    cdb = GeoIP.new(GEO_IP_CONFIG['city_db'])
+    cdb_names = cdb.city(ip)
+    country = cdb_names.nil? ? "Unknown" : cdb_names.country_code2
+    city = cdb_names.nil? ? "Unknown" : cdb_names.city_name
     [city, country]
   end
 
   def self.organization_from ip
     orgdb = GeoIP.new(GEO_IP_CONFIG['org_db'])
     org_names = orgdb.organization(ip)
-    org_names.nil? ? "Unkown" : org_names.isp
+    org_names.nil? ? "Unknown" : org_names.isp
   end
 end
