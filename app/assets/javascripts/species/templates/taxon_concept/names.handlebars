@@ -49,11 +49,13 @@
       </div>
     </div>
     <div class="block04 block05" id="subspecies">
-      <strong class="title">SUBSPECIES</strong>
+      <strong class="title tooltip" {{bind-attr data-descr=controllers.taxonConcept.currentSubspeciesTooltipText}}>SUBSPECIES</strong>
       <div class="columns-holder">
         <ul class="col">
           {{#eachPart controllers.taxonConcept.subspecies parts=2 page=0}}
-            <li>{{#linkTo 'taxonConcept.legal' id}}{{full_name}} {{author_year}}{{/linkTo}}</li>
+            <li class="tooltip">
+              {{#linkTo 'taxonConcept.legal' id}}{{full_name}} {{author_year}}{{/linkTo}}
+            </li>
           {{/eachPart}}
         </ul>
         <ul class="col">
