@@ -53,7 +53,7 @@
       <div class="columns-holder">
         <ul class="col">
           {{#eachPart controllers.taxonConcept.subspecies parts=2 page=0}}
-            <li>{{full_name}} {{author_year}}</li>
+            <li>{{#linkTo 'taxonConcept.legal' id}}{{full_name}} {{author_year}}{{/linkTo}}</li>
           {{/eachPart}}
         </ul>
         <ul class="col">
