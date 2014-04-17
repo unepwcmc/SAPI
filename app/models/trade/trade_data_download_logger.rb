@@ -29,27 +29,7 @@ module Trade::TradeDataDownloadLogger
     w.save
   end
 
-  module_function
-
-  def export
-    file_name = self.get_file_name
-    unless File.file?(PATH + file_name)
-      File.open(PATH + self.get_file_name, 'w') do |f|
-        Trade::TradeDataDownload.pg_copy_to do |line|
-          f.write line
-        end
-      end
-    end
-    PATH + file_name
-  end
-
-  PATH = "public/downloads/trade_download_stats/"
-
   private
-
-  def self.get_file_name
-    'trade_download_stats.csv'
-  end
 
   def self.get_field_values param, model
     if param == "" then return 'All' end

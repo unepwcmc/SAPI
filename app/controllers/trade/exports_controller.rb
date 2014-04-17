@@ -15,10 +15,11 @@ class Trade::ExportsController < TradeController
   end
 
   def download_stats
-    stats = Trade::TradeDataDownloadLogger.export
+    stats = Trade::TradeDataDownloadsExport.new()
     respond_to do |format|
       format.html {
-        send_file Pathname.new(stats).realpath, :type => 'text/csv'
+        result = stats.export
+        send_file Pathname.new(result[0]).realpath, result[1]
       }
     end
   end
