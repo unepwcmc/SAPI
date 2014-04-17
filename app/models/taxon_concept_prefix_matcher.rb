@@ -20,7 +20,8 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
         data,
         #{Taxonomy.table_name}.name AS taxonomy_name,
         #{TaxonConcept.table_name}.id,
-        full_name
+        full_name,
+        name_status
       SQL
     ).
     joins(:taxonomy).order(:full_name)

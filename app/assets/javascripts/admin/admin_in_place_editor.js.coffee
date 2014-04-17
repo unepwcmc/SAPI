@@ -56,8 +56,10 @@ class AdminEditor
         }, (data) =>
           labels = []
           $.each(data, (i, item) =>
-            label = item.full_name
-            labels.push(label)
+            if item.name_status == 'A'
+              labels.push(item.full_name)
+            else
+              '[' + item.name_status + '] ' + item.full_name
           )
           return process(labels)
         )

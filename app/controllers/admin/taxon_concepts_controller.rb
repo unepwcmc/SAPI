@@ -76,7 +76,7 @@ class Admin::TaxonConceptsController < Admin::SimpleCrudController
      taxon_concepts
     render :json => @taxon_concepts.to_json(
       :only => [:id, :taxonomy_name],
-      :methods => [:rank_name, :full_name]
+      :methods => [:rank_name, :full_name, :name_status]
     )
   end
 
