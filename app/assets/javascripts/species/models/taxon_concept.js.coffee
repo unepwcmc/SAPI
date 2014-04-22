@@ -1,5 +1,8 @@
 Species.TaxonConcept = DS.Model.extend
   #taxonomyName: DS.attr("string")
+  parentId: DS.attr("number")
+  speciesName: DS.attr("string")
+  genusName: DS.attr("string")
   rankName: DS.attr("string")
   fullName: DS.attr("string")
   authorYear: DS.attr("string")

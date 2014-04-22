@@ -6,6 +6,9 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
     else
       no
   ).property('taxonomy')
+  isSubspecies: ( ->
+    if @get('rankName') == 'SUBSPECIES' then yes else no
+  ).property('rankName')
   hasSubspecies: ( ->
     if @get('subspecies').length > 0 then yes else no
   ).property('subspecies')

@@ -33,6 +33,17 @@
           {{familyName}}
         </a>
       </li>
+      {{#if isSubspecies}}
+      <li>
+      <a href="/species/taxonConcepts?taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound genusName}}"
+        {{action 'searchFor' genusName}}>
+          {{genusName}}
+        </a>
+      </li>
+      <li>
+      {{#linkTo 'taxonConcept.legal' parentId}}{{speciesName}}{{/linkTo}}
+      </li>
+      {{/if}}
     </ul>
   </div>
   <ul class="tabset">
