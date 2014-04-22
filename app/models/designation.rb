@@ -40,7 +40,7 @@ class Designation < ActiveRecord::Base
   end
 
   def can_be_deleted?
-    !has_protected_name? && !has_dependent_objects?
+    super() && !has_protected_name?
   end
 
   def self.search query
@@ -55,15 +55,17 @@ class Designation < ActiveRecord::Base
   private
 
   def taxonomy_cannot_be_changed_if_dependent_objects_present
-    if taxonomy_id_changed? && has_dependent_objects?
+    if taxonomy_id_changed? && !dependent_objects.empty?
       errors.add(:taxonomy, "cannot be changed once dependent objects are attached")
       return false
     end
   end
 
-  def has_dependent_objects?
-    !(species_listings.count == 0 &&
-    change_types.count == 0)
+  def dependent_objects_map
+    {
+      'species listings' => species_listings,
+      'change types' => change_types
+    }
   end
 
   def has_protected_name?

@@ -40,8 +40,4 @@ class EuRegulation < Event
     notify_observers(:after_deactivate)
   end
 
-  def can_be_deleted?
-    true
-  end
-
 end

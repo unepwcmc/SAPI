@@ -1,4 +1,4 @@
-class Admin::UnitsController < Admin::AdminController
+class Admin::UnitsController < Admin::SimpleCrudController
   inherit_resources
   respond_to :json, :only => [:update]
   cache_sweeper :unit_sweeper

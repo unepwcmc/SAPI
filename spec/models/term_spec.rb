@@ -43,6 +43,10 @@ describe Term do
         let!(:quota){ create(:quota, :terms => [term], :geo_entity_id => geo_entity.id)}
         specify { term.destroy.should be_false }
       end
+      context "when shipments" do
+        before(:each){ create(:shipment, :term => term) }
+        specify { term.destroy.should be_false }
+      end
     end
   end
 end

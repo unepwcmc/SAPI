@@ -31,7 +31,7 @@ class Rank < ActiveRecord::Base
   end
 
   def can_be_deleted?
-    !has_protected_name? && !has_dependent_objects?
+    super() && !has_protected_name?
   end
 
   # returns ranks in given range
@@ -43,8 +43,10 @@ class Rank < ActiveRecord::Base
 
   private
 
-  def has_dependent_objects?
-    taxon_concepts.count != 0
+  def dependent_objects_map
+    {
+      'taxon concepts' => taxon_concepts
+    }
   end
 
   def has_protected_name?

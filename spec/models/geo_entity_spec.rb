@@ -77,4 +77,28 @@ describe GeoEntity do
       specify{ subject.size.should == 3 }
     end
   end
+  describe :destroy do
+    let(:geo_entity){ create(:geo_entity) }
+    context "when no dependent objects attached" do
+      specify { geo_entity.destroy.should be_true }
+    end
+    context "when dependent objects attached" do
+      context "when distributions" do
+        before(:each){ create(:distribution, :geo_entity => geo_entity) }
+        specify { geo_entity.destroy.should be_false }
+      end
+      context "when exported shipments" do
+        before(:each){ create(:shipment, :exporter => geo_entity) }
+        specify { geo_entity.destroy.should be_false }
+      end
+      context "when imported shipments" do
+        before(:each){ create(:shipment, :importer => geo_entity) }
+        specify { geo_entity.destroy.should be_false }
+      end
+      context "when originated shipments" do
+        before(:each){ create(:shipment, :country_of_origin => geo_entity) }
+        specify { geo_entity.destroy.should be_false }
+      end
+    end
+  end
 end

@@ -31,16 +31,17 @@ class Taxonomy < ActiveRecord::Base
     end
   end
 
-
   def can_be_deleted?
-    !has_protected_name? && !has_dependent_objects?
+    super() && !has_protected_name?
   end
 
   private
 
-  def has_dependent_objects?
-    !(designations.count == 0 &&
-    taxon_concepts.count == 0)
+  def dependent_objects_map
+    {
+      'designations' => designations,
+      'taxon concepts' => taxon_concepts
+    }
   end
 
   def has_protected_name?

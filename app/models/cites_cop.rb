@@ -24,8 +24,12 @@ class CitesCop < Event
   validate :designation_is_cites
   validates :effective_at, :presence => true
 
-  def can_be_deleted?
-    listing_changes.count == 0
+  private
+
+  def dependent_objects_map
+    {
+      'listing changes' => listing_changes
+    }
   end
 
 end
