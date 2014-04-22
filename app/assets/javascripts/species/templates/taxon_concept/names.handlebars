@@ -48,6 +48,8 @@
         </ul>
       </div>
     </div>
+    
+    {{#if controllers.taxonConcept.hasSubspecies}}
     <div class="block04 block05" id="subspecies">
       <strong class="title tooltip" {{bind-attr data-descr=controllers.taxonConcept.currentSubspeciesTooltipText}}>SUBSPECIES</strong>
       <div class="columns-holder">
@@ -60,10 +62,13 @@
         </ul>
         <ul class="col">
           {{#eachPart controllers.taxonConcept.subspecies parts=2 page=1}}
-            <li>{{full_name}} {{author_year}}</li>
+            <li>
+              {{#linkTo 'taxonConcept.legal' id}}{{full_name}} {{author_year}}{{/linkTo}}
+            </li>
           {{/eachPart}}
         </ul>
       </div>
     </div>
+    {{/if}}
   {{/if}}
 </div>

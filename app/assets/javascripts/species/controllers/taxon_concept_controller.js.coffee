@@ -6,7 +6,9 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
     else
       no
   ).property('taxonomy')
-
+  hasSubspecies: ( ->
+    if @get('subspecies').length > 0 then yes else no
+  ).property('subspecies')
   isCmsAndHasNoNames: ( ->
     @get('taxonomy') != undefined and
       @get('taxonomy') == 'cms' and
