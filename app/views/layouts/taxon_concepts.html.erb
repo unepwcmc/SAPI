@@ -32,7 +32,9 @@
           <div id="basic-info">
             <%= render 'admin/taxon_concepts/basic_info' %>
           </div>
-          <%= yield %>
+          <% unless @taxon_concept.is_synonym? || @taxon_concept.is_hybrid? || @taxon_concept.is_trade_name? %>
+            <%= yield %>
+          <% end %>
         </div><!--/span-->
       </div><!--/row-->
       <hr>

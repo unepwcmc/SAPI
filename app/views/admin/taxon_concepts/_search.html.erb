@@ -15,6 +15,11 @@
         ), :class => "input-xlarge"
       %>
     <% end %>
+    <%= f.select :name_status,
+      options_for_select(
+        ['A', 'N', 'H', 'S', 'T'], @search_params.name_status
+      )
+    %>
     <%= f.submit 'Search', :class => "btn"%>
 
   <% end %>

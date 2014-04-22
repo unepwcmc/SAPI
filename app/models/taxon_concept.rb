@@ -85,6 +85,22 @@ class TaxonConcept < ActiveRecord::Base
     :through => :hybrid_relationships, :source => :other_taxon_concept
   has_many :hybrid_parents, :class_name => 'TaxonConcept',
     :through => :inverse_hybrid_relationships, :source => :taxon_concept
+  has_many :trade_name_relationships,
+    :class_name => 'TaxonRelationship', :dependent => :destroy,
+    :conditions => [
+      "taxon_relationship_type_id IN
+      (SELECT id FROM taxon_relationship_types
+        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"]
+  has_many :inverse_trade_name_relationships, :class_name => 'TaxonRelationship',
+    :foreign_key => :other_taxon_concept_id, :dependent => :destroy,
+    :conditions => [
+      "taxon_relationship_type_id IN
+      (SELECT id FROM taxon_relationship_types
+        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"]
+  has_many :trade_names, :class_name => 'TaxonConcept',
+    :through => :trade_name_relationships, :source => :other_taxon_concept
+  has_many :accepted_names_for_trade_name, :class_name => 'TaxonConcept',
+    :through => :inverse_trade_name_relationships, :source => :taxon_concept
   has_many :distributions, :dependent => :destroy
   has_many :geo_entities, :through => :distributions
   has_many :listing_changes
@@ -177,6 +193,10 @@ class TaxonConcept < ActiveRecord::Base
 
   def is_hybrid?
     name_status == 'H'
+  end
+
+  def is_trade_name?
+    name_status == 'T'
   end
 
   def has_distribution?

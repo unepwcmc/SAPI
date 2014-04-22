@@ -20,6 +20,7 @@
   <% if @taxon_concept.tag_list %>
     <%= tag_list(@taxon_concept.tag_list) %><br />
   <% end %>
+  <span>NAME STATUS:</span> <%= @taxon_concept.name_status %><br>
   <% if @taxon_concept.is_synonym? %>
     <div>
       <span>SYNONYM OF:</span>
@@ -38,12 +39,21 @@
         <% end %>
       </ul>
     </div>
+  <% elsif @taxon_concept.is_trade_name? %>
+    <div>
+      <span>TRADE NAME OF:</span>
+      <ul>
+        <% @taxon_concept.accepted_names_for_trade_name.each do |tc| %>
+          <li><%= link_to tc.full_name, params.merge(:taxon_concept_id => tc.id) %></li>
+        <% end %>
+      </ul>
+    </div>
   <% end %>
   <%= ancestors_path(@taxon_concept) %>
 </div>
 
 <%= admin_new_taxon_concept_modal(:title => 'Edit Taxon Concept') %>
-
+<% unless @taxon_concept.is_synonym? || @taxon_concept.is_hybrid? || @taxon_concept.is_trade_name? %>
 <ul id="taxon-concept-tabs" class="nav nav-tabs">
 
   <% @taxon_concept.designations.each do |d| %>
@@ -106,3 +116,4 @@
     <%= link_to "Children", admin_taxon_concept_children_path(@taxon_concept) %>
   </li>
 </ul>
+<% end %>
