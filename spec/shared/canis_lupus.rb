@@ -83,6 +83,10 @@ shared_context "Canis lupus" do
       :taxon_name => create(:taxon_name, :scientific_name => 'Lupus'),
       :parent => @genus
     )
+    @subspecies = create_cites_eu_subspecies(
+      :taxon_name => create(:taxon_name, :scientific_name => 'crassodon'),
+      :parent => @species
+    )
 
     [bhutan, india, nepal, pakistan, poland, spain, greece].each do |country|
       create(

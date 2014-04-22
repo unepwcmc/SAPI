@@ -118,7 +118,6 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     CASE
       WHEN
         name_status = 'A'
-        AND listing->'cites_status' != 'LISTED'
         AND (
           ranks.name != 'SUBSPECIES'
           AND ranks.name != 'VARIETY'
