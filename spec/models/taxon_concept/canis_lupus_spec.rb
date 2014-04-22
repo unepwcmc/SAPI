@@ -20,11 +20,32 @@ describe TaxonConcept do
         context "for species Canis lupus" do
           specify{ @species.cites_listed.should be_true }
         end
+        context "for subspecies Canis lupus crassodon" do
+          specify{ @subspecies.cites_listed.should be_blank }
+        end
       end
 
       describe :eu_listed do
         context "for species Canis lupus" do
           specify{ @species.eu_listed.should be_true }
+        end
+      end
+
+      describe :show_in_species_plus_ac do
+        context "for species Canis lupus" do
+          specify{ @species.show_in_species_plus_ac.should be_true }
+        end
+        context "for subspecies Canis lupus crassodon" do
+          specify{ @subspecies.show_in_species_plus_ac.should be_false }
+        end
+      end
+
+      describe :show_in_checklist_ac do
+        context "for species Canis lupus" do
+          specify{ @species.show_in_checklist_ac.should be_true }
+        end
+        context "for subspecies Canis lupus crassodon" do
+          specify{ @subspecies.show_in_checklist_ac.should be_false }
         end
       end
 
