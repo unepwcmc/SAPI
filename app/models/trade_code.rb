@@ -31,7 +31,4 @@ class TradeCode < ActiveRecord::Base
     end
   end
 
-  def can_be_deleted?
-    true
-  end
 end

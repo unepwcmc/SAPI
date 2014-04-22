@@ -14,8 +14,17 @@
 
 class Term < TradeCode
   validates :code, :length => {:is => 3}
-  def can_be_deleted?
-    EuDecision.where(:term_id => self.id).length == 0 &&
-    TradeRestrictionTerm.where(:term_id => self.id).length == 0
+
+  has_many :trade_restriction_terms
+  has_many :eu_decisions
+  has_many :shipments, :class_name => 'Trade::Shipment'
+
+  protected
+  def dependent_objects_map
+    {
+      'EU decisions' => eu_decisions,
+      'trade restrictions' => trade_restriction_terms,
+      'shipments' => shipments
+    }
   end
 end

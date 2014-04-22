@@ -30,8 +30,13 @@ class Reference < ActiveRecord::Base
     end
   end
 
-  def can_be_deleted?
-    taxon_concept_references.count == 0 &&
-    distribution_references.count == 0
+  private
+
+  def dependent_objects_map
+    {
+      'taxon references' => taxon_concept_references,
+      'distribution references' => distribution_references
+    }
   end
+
 end

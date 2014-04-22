@@ -109,6 +109,9 @@ class TaxonConcept < ActiveRecord::Base
 
   has_many :taxon_instruments
   has_many :instruments, :through => :taxon_instruments
+  has_many :shipments, :class_name => 'Trade::Shipment'
+  has_many :reported_shipments, :class_name => 'Trade::Shipment',
+    :foreign_key => :reported_taxon_concept_id
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
@@ -226,18 +229,21 @@ class TaxonConcept < ActiveRecord::Base
     standard_references.keep_if{ |ref| !ref_ids.include? ref.id }
   end
 
-  def can_be_deleted?
-    taxon_relationships.count == 0 &&
-    children.count == 0 &&
-    listing_changes.count == 0 &&
-    cites_suspensions.count == 0 &&
-    quotas.count == 0 &&
-    eu_suspensions.count == 0 &&
-    eu_opinions.count == 0 &&
-    taxon_instruments.count == 0
-  end
-
   private
+
+  def dependent_objects_map
+    {
+      'children' => children,
+      'listing changes' => listing_changes,
+      'CITES suspensions' => cites_suspensions,
+      'quotas' => quotas,
+      'EU suspensions' => eu_suspensions,
+      'EU opinions' => eu_opinions,
+      'instruments' => taxon_instruments,
+      'shipments' => shipments,
+      'shipments (reported as)' => reported_shipments
+    }
+  end
 
   def self.sanitize_full_name(some_full_name)
     #strip ranks

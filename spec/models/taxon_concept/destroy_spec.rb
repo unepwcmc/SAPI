@@ -50,6 +50,14 @@ describe TaxonConcept do
         before(:each){ create(:eu_suspension, :taxon_concept => @taxon_concept)}
         specify { @taxon_concept.destroy.should be_false }
       end
+      context "when shipments" do
+        before(:each){ create(:shipment, :taxon_concept => @taxon_concept) }
+        specify { @taxon_concept.destroy.should be_false }
+      end
+      context "when reported shipments" do
+        before(:each){ create(:shipment, :reported_taxon_concept => @taxon_concept) }
+        specify { @taxon_concept.destroy.should be_false }
+      end
     end
   end
 end

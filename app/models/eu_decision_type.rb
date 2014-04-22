@@ -26,7 +26,12 @@ class EuDecisionType < ActiveRecord::Base
 
   has_many :eu_decisions
 
-  def can_be_deleted?
-    eu_decisions.count == 0
+  private
+
+  def dependent_objects_map
+    {
+      'EU decisions' => eu_decisions
+    }
   end
+
 end

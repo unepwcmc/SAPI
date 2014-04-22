@@ -16,8 +16,14 @@ class Unit < TradeCode
   validates :code, :length => {:is => 3}
 
   has_many :term_trade_codes_pairs, :as => :trade_code
+  has_many :quotas
+  has_many :shipments, :class_name => 'Trade::Shipment'
 
-  def can_be_deleted?
-    Quota.where(:unit_id => self.id).length == 0
+  protected
+  def dependent_objects_map
+    {
+      'quotas' => quotas,
+      'shipments' => shipments
+    }
   end
 end

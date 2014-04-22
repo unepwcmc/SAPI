@@ -28,11 +28,16 @@ class EuSuspensionRegulation < Event
   validate :designation_is_eu
   validates :effective_at, :presence => true
 
-  def can_be_deleted?
-    eu_suspensions.count == 0
-  end
-
   def name_and_date
     "#{self.name} (Effective from: #{self.effective_at.strftime("%d/%m/%Y")})"
   end
+
+  private
+
+  def dependent_objects_map
+    {
+      'EU suspensions' => eu_suspensions
+    }
+  end
+
 end
