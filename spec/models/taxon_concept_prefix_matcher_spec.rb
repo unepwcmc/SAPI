@@ -29,6 +29,38 @@ describe TaxonConceptPrefixMatcher do
       :parent => taxon_concept2
     )
   }
+  let!(:hybrid){
+    tmp = create(:taxon_concept, :taxonomy => taxonomy,
+      :taxon_name => create(:taxon_name, :scientific_name => 'Abc'),
+      :name_status => 'H'
+    )
+    create(
+      :taxon_relationship,
+      :taxon_concept => taxon_concept4,
+      :other_taxon_concept => tmp,
+      :taxon_relationship_type => create(
+        :taxon_relationship_type, :name => TaxonRelationshipType::HAS_HYBRID
+      )
+    )
+    tmp
+  }
+  context "when name status not specified" do
+    let(:matcher_params){
+      SearchParams.new(:taxonomy => {:id => taxonomy.id}, :scientific_name => 'Ab')
+    }
+    let(:matcher){ TaxonConceptPrefixMatcher.new matcher_params }
+    specify{ matcher.taxon_concepts.should include(taxon_concept4)}
+    specify{ matcher.taxon_concepts.should_not include(hybrid)}
+  end
+
+  context "when name status H" do
+    let(:matcher_params){
+      SearchParams.new(:taxonomy => {:id => taxonomy.id}, :scientific_name => 'Ab', :name_status => 'H')
+    }
+    let(:matcher){ TaxonConceptPrefixMatcher.new matcher_params }
+    specify{ matcher.taxon_concepts.should_not include(taxon_concept4)}
+    specify{ matcher.taxon_concepts.should include(hybrid)}
+  end
 
   context "when rank scope applied" do
     let(:parent_matcher_params){

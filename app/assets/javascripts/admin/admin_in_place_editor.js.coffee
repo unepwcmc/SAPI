@@ -49,7 +49,8 @@ class AdminEditor
             scientific_name: query,
             taxonomy: {
               id: $('#search_params_taxonomy_id').val()
-            }
+            },
+            name_status: $('#search_params_name_status').val()
           }
           limit: 25
         }, (data) =>

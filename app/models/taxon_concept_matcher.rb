@@ -4,6 +4,7 @@ class TaxonConceptMatcher
   def initialize(search_params)
     @taxonomy_options = search_params.taxonomy
     @scientific_name = search_params.scientific_name
+    @name_status = search_params.name_status || 'A'
   end
 
   def taxon_concepts
@@ -26,7 +27,7 @@ class TaxonConceptMatcher
   end
 
   def initialize_rel
-    TaxonConcept.where(:name_status => 'A')
+    TaxonConcept.where(:name_status => @name_status)
   end
 
   def apply_taxonomy_options_to_rel

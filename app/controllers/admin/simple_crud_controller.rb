@@ -44,7 +44,8 @@ class Admin::SimpleCrudController < Admin::AdminController
       @taxon_concept ||= TaxonConcept.find(params[:taxon_concept_id])
       @search_params = SearchParams.new(
           { :taxonomy => { :id => @taxon_concept.taxonomy_id },
-            :scientific_name => @taxon_concept.full_name
+            :scientific_name => @taxon_concept.full_name,
+            :name_status => @taxon_concept.name_status
         })
     end
 end
