@@ -52,7 +52,7 @@
 </div>
 
 <%= admin_new_taxon_concept_modal(:title => 'Edit Taxon Concept') %>
-
+<% unless @taxon_concept.is_synonym? || @taxon_concept.is_hybrid? || @taxon_concept.is_trade_name? %>
 <ul id="taxon-concept-tabs" class="nav nav-tabs">
 
   <% @taxon_concept.designations.each do |d| %>
@@ -115,3 +115,4 @@
     <%= link_to "Children", admin_taxon_concept_children_path(@taxon_concept) %>
   </li>
 </ul>
+<% end %>
