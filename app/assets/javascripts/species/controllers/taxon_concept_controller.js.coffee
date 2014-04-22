@@ -22,7 +22,6 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
       (@get('subspecies') == undefined or
       @get('subspecies').length == 0)
   ).property('taxonomy','commonNames','synonyms','subspecies')
-
   anyHistoricCmsListings: ( ->
     if @get('cmsListings') != undefined && @get('cmsListings')
      .findProperty('is_current', false) != undefined

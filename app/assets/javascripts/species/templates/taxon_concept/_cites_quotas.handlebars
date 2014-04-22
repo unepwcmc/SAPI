@@ -3,7 +3,7 @@
   {{#if citesQuotasIsLoading}}
     {{ partial 'species/spinner'}}
   {{else}}
-    <p class="empty">There are no current quotas in place for this species.</p>
+    <p class="empty">There are no current quotas in place for this {{#tolower rankName default='species'}}{{/tolower}}.</p>
   {{/if}}
 {{else}}
   <table summary="data table">
@@ -32,7 +32,7 @@
         {{/if}}
       {{else}}
         <tr class="current">
-          <td colspan=4>There are no current quotas in place for this species.</td>
+          <td colspan=4>There are no current quotas in place for this {{#tolower rankName default='species'}}{{/tolower}}.</td>
         </tr>
       {{/each}}
     </tbody>

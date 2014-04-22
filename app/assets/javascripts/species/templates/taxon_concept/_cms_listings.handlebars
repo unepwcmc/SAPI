@@ -1,6 +1,6 @@
 <strong class="title">CMS LISTING</strong>
 {{#unless cmsListings}}
-  <p class="empty">This species is not currently listed in the CMS Appendices.</p>
+  <p class="empty">This {{#tolower rankName}}{{/tolower}} is not currently listed in the CMS Appendices.</p>
 {{else}}
   <table summary="data table">
     <thead>
@@ -33,7 +33,7 @@
         </tr>
       {{else}}
         <tr class="current">
-          <td colspan=4>This species is not currently listed in the CITES Appendices.</td>
+          <td colspan=4>This {{#tolower rankName}}{{/tolower}} is not currently listed in the CITES Appendices.</td>
         </tr>
       {{/each}}
     </tbody>
