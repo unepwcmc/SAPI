@@ -5,7 +5,7 @@
 class SearchParams
   include ActiveModel::Conversion
   extend ActiveModel::Naming
-  attr_accessor :taxonomy, :rank, :taxon_concept, :scientific_name
+  attr_accessor :taxonomy, :rank, :taxon_concept, :scientific_name, :name_status
 
   def initialize(attributes = {})
     attributes.each do |name, value|

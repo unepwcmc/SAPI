@@ -6,6 +6,7 @@
   <th width="15%">Author year</th>
   <th width="15%">Parent</th>
   <th width="10%">Taxonomic position</th>
+  <th width="5%">Name status</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
@@ -40,6 +41,9 @@
         <% else %>
           N/A
         <% end %>
+      </td>
+      <td>
+        <%= taxon_concept.name_status %>
       </td>
       <td>
         <%= link_to edit_icon, admin_taxon_concept_names_path(taxon_concept) %>
