@@ -20,6 +20,7 @@
   <% if @taxon_concept.tag_list %>
     <%= tag_list(@taxon_concept.tag_list) %><br />
   <% end %>
+  <span>NAME STATUS:</span> <%= @taxon_concept.name_status %><br>
   <% if @taxon_concept.is_synonym? %>
     <div>
       <span>SYNONYM OF:</span>
