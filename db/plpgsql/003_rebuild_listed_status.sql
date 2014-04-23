@@ -362,7 +362,7 @@ CREATE OR REPLACE FUNCTION set_cites_eu_historically_listed_flag_for_node(design
     )
     UPDATE taxon_concepts
     SET listing = COALESCE(listing, ''::HSTORE) ||
-    HSTORE(LOWER(designation) || '_historically_listed', t.historically_listed::VARCHAR)
+    HSTORE(LOWER($1) || '_historically_listed', t.historically_listed::VARCHAR)
     FROM taxa_with_historically_listed_flag t
     WHERE t.id = taxon_concepts.id;
   $$;
