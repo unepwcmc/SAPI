@@ -6,7 +6,12 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
     else
       no
   ).property('taxonomy')
-
+  isSubspecies: ( ->
+    if @get('rankName') == 'SUBSPECIES' then yes else no
+  ).property('rankName')
+  hasSubspecies: ( ->
+    if @get('subspecies').length > 0 then yes else no
+  ).property('subspecies')
   isCmsAndHasNoNames: ( ->
     @get('taxonomy') != undefined and
       @get('taxonomy') == 'cms' and
@@ -17,7 +22,6 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
       (@get('subspecies') == undefined or
       @get('subspecies').length == 0)
   ).property('taxonomy','commonNames','synonyms','subspecies')
-
   anyHistoricCmsListings: ( ->
     if @get('cmsListings') != undefined && @get('cmsListings')
      .findProperty('is_current', false) != undefined

@@ -48,7 +48,7 @@ class MTaxonConceptFilterByScientificNameWithDescendants
     if @match_subspecies
       cond = <<-SQL
         EXISTS (
-          SELECT * FROM UNNEST(subspecies_ary) name 
+          SELECT * FROM UNNEST(subspecies_not_listed_ary) name 
           WHERE UPPER(name) LIKE :sci_name_prefix
         )
       SQL

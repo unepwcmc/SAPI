@@ -3,7 +3,7 @@
   {{#if citesListingsIsLoading}}
     {{ partial 'species/spinner'}}
   {{else}}
-  <p class="empty">This species is not currently listed in the CITES Appendices.</p>
+  <p class="empty">This {{#tolower controllers.taxonConcept.rankName}}{{/tolower}} is not currently listed in the CITES Appendices.</p>
   {{/if}}
 {{else}}
   <table summary="data table">
@@ -42,7 +42,7 @@
         </tr>
       {{else}}
         <tr class="current">
-          <td colspan=4>This species is not currently listed in the CITES Appendices.</td>
+          <td colspan=4>This {{#tolower controllers.taxonConcept.rankName}}{{/tolower}} is not currently listed in the CITES Appendices.</td>
         </tr>
       {{/each}}
     </tbody>

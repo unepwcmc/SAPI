@@ -22,5 +22,5 @@ Species.TaxonConceptSearchTextField = Em.TextField.extend
     $('.search fieldset').removeClass('parent-focus parent-active')
 
   showDropdown: () ->
-    if @.$().val().length > 2
+    if @.$()?.val().length > 2
       $('.search fieldset').addClass('parent-focus parent-active')

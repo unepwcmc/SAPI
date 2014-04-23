@@ -111,7 +111,7 @@ describe TaxonConcept do
         # should not modify a synonym's full name overnight
         specify { @synonym.reload.full_name.should == 'Lolcatus lolus furiatus' }
         # should not list synonym as subspecies of accepted species
-        specify { MTaxonConcept.find(tc.id).subspecies_ary.should_not include(@synonym.full_name) }
+        specify { MTaxonConcept.find(tc.id).subspecies_not_listed_ary.should_not include(@synonym.full_name) }
       end
     end
   end

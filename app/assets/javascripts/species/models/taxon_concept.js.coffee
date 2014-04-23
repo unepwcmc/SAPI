@@ -1,5 +1,8 @@
 Species.TaxonConcept = DS.Model.extend
   #taxonomyName: DS.attr("string")
+  parentId: DS.attr("number")
+  speciesName: DS.attr("string")
+  genusName: DS.attr("string")
   rankName: DS.attr("string")
   fullName: DS.attr("string")
   authorYear: DS.attr("string")
@@ -30,3 +33,12 @@ Species.TaxonConcept = DS.Model.extend
       baseDisplay = baseDisplay + ' <span class="synonyms">(' + @get('matchingNames').join(', ') + ')</span>'
     baseDisplay
   ).property('fullName', 'matchingNames', 'authorYear')
+
+  currentSubspeciesTooltipText: ( ->
+    unless @get('subspecies').length > 0 then return no
+    root = "Subspecies pages are only included within Species+ where the subspecies is or was historically listed in its own right"
+    if @get('taxonomy') == 'cms'
+      return "#{root} in CMS or the related Agreements"
+    else 
+      return "#{root} in either the CITES Appendices or the EU Wildlife Trade Regulations"
+  ).property('taxonomy', 'subspecies')

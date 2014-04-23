@@ -17,7 +17,7 @@ class Species::SearchParams < Hash
       :geo_entities => params[:geo_entities_ids].blank? ? [] : params[:geo_entities_ids],
       :higher_taxa_ids => params[:higher_taxa_ids] ? params[:higher_taxa_ids] : nil,
       :ranks => params[:ranks] ?
-        Rank.dict & params[:ranks].map(&:upcase) : [Rank::SPECIES],
+        Rank.dict & params[:ranks].map(&:upcase) : [Rank::SPECIES, Rank::SUBSPECIES],
       :visibility => params[:visibility] ? params[:visibility].downcase.to_sym : nil,
       :page => params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
       :per_page => params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 25

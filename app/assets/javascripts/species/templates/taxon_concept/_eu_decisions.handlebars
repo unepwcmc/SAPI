@@ -1,6 +1,6 @@
 <strong class="title">EU DECISIONS</strong>
 {{#unless euDecisions}}
-  <p class="empty">There are no current suspensions or opinions for this species.</p>
+  <p class="empty">There are no current suspensions or opinions for this {{#tolower rankName}}{{/tolower}}.</p>
 {{else}}
   <table summary="data table">
     <thead>
@@ -46,7 +46,7 @@
         </tr>
       {{else}}
         <tr class="current">
-          <td colspan=6>There are no current decisions in place for this species.</td>
+          <td colspan=6>There are no current decisions in place for this {{#tolower rankName}}{{/tolower}}.</td>
         </tr>
       {{/each}}
     </tbody>
