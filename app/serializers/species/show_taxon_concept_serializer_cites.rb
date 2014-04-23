@@ -31,10 +31,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.quota,
               trade_restrictions.public_display,
               CASE
-                WHEN taxon_concepts_mview.rank_name = 'SPECIES' OR
-                #{object.rank_name == Rank::SPECIES ? 'FALSE' : 'TRUE'} 
+                WHEN taxon_concepts_mview.rank_name = '#{object.rank_name}'
                 THEN NULL
-                ELSE '[Quota for ' || taxon_concepts_mview.rank_name || ' <i>' || taxon_concepts_mview.full_name || '</i>]'
+                ELSE 
+                '[Quota for ' || taxon_concepts_mview.rank_name || ' <i>' || taxon_concepts_mview.full_name || '</i>]'
               END AS subspecies_info
              SQL
       ).
@@ -67,10 +67,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.start_notification_id,
               trade_restrictions.end_notification_id,
               CASE
-                WHEN taxon_concepts_mview.rank_name = 'SPECIES' OR 
-                #{object.rank_name == Rank::SPECIES ? 'FALSE' : 'TRUE'} 
+                WHEN taxon_concepts_mview.rank_name = '#{object.rank_name}'
                 THEN NULL
-                ELSE '[Suspension for ' || taxon_concepts_mview.rank_name || ' <i>' || taxon_concepts_mview.full_name || '</i>]'
+                ELSE 
+                '[Suspension for ' || taxon_concepts_mview.rank_name || ' <i>' || taxon_concepts_mview.full_name || '</i>]'
               END AS subspecies_info
              SQL
       ).
@@ -124,10 +124,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               eu_decisions.term_id,
               eu_decisions.source_id,
               CASE
-                WHEN taxon_concepts_mview.rank_name = 'SPECIES' OR 
-                #{object.rank_name == Rank::SPECIES ? 'FALSE' : 'TRUE'} 
+                WHEN taxon_concepts_mview.rank_name = '#{object.rank_name}'
                 THEN NULL
-                ELSE '[' || taxon_concepts_mview.rank_name || ' decision <i>' || taxon_concepts_mview.full_name || '</i>]'
+                ELSE 
+                '[' || taxon_concepts_mview.rank_name || ' decision <i>' || taxon_concepts_mview.full_name || '</i>]'
               END AS subspecies_info
              SQL
       ).
