@@ -83,6 +83,9 @@ describe TaxonConcept do
         context "for species Vultur atratus" do
           specify { @species1_3.cites_listed.should be_blank }
         end
+        context "for subspecies Falco peregrinus peregrinus" do
+          specify { @subspecies2_3_1.cites_listed.should == false }
+        end
       end
 
       describe :eu_listed do
@@ -104,6 +107,9 @@ describe TaxonConcept do
         context "for species Vultur atratus" do
           specify { @species1_3.eu_listed.should be_blank }
         end
+        context "for subspecies Falco peregrinus peregrinus" do
+          specify { @subspecies2_3_1.eu_listed.should == false }
+        end
       end
 
       describe :cites_show do
@@ -115,6 +121,18 @@ describe TaxonConcept do
         end
         context "for Falco hybrid" do
           specify { @hybrid.cites_show.should be_false }
+        end
+      end
+
+      describe :show_in_checklist_ac do
+        context "for subspecies Falco peregrinus peregrinus" do
+          specify { @subspecies2_3_1.show_in_checklist_ac.should be_false }
+        end
+      end
+
+      describe :show_in_species_plus_ac do
+        context "for subspecies Falco peregrinus peregrinus" do
+          specify { @subspecies2_3_1.show_in_species_plus_ac.should be_true }
         end
       end
 
