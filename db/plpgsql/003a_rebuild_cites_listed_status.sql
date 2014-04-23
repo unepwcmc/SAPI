@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_listed_status_for_node(node_id integer)
       RETURN;
     END IF;
     PERFORM rebuild_listing_status_for_designation_and_node(designation, node_id);
-
+    PERFORM set_cites_historically_listed_flag_for_node(node_id);
     END;
   $$;
 
@@ -34,3 +34,10 @@ COMMENT ON FUNCTION rebuild_cites_listed_status() IS '
     TRUE - taxon should show up in the checklist
     FALSE
 ';
+
+CREATE OR REPLACE FUNCTION set_cites_historically_listed_flag_for_node(node_id integer)
+  RETURNS VOID
+  LANGUAGE sql
+  AS $$
+    SELECT * FROM set_cites_eu_historically_listed_flag_for_node('CITES', $1);
+  $$;

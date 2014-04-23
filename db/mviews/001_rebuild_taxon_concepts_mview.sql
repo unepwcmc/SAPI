@@ -110,7 +110,17 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
         AND (
           ranks.name != 'SUBSPECIES'
           AND ranks.name != 'VARIETY'
-          OR (listing->'cites_show')::BOOLEAN
+          OR taxonomies.name = 'CITES_EU'
+          AND (
+            (listing->'cites_show')::BOOLEAN
+            OR (listing->'cites_historically_listed')::BOOLEAN
+            OR (listing->'eu_historically_listed')::BOOLEAN
+          )
+          OR taxonomies.name = 'CMS'
+          AND (
+            (listing->'cms_show')::BOOLEAN
+            OR (listing->'cms_historically_listed')::BOOLEAN
+          )
         )
       THEN TRUE
       ELSE FALSE

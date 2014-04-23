@@ -8,7 +8,9 @@ CREATE OR REPLACE FUNCTION rebuild_cms_listed_status_for_node(node_id integer) R
     IF NOT FOUND THEN
       RETURN;
     END IF;
+
     PERFORM rebuild_listing_status_for_designation_and_node(designation, node_id);
+    PERFORM set_cms_historically_listed_flag_for_node(node_id);
     END;
   $$;
 
@@ -30,3 +32,41 @@ COMMENT ON FUNCTION rebuild_cms_listed_status() IS '
     TRUE - cites_status is explicit (original)
     FALSE - cites_status is implicit (inherited)
 ';
+
+CREATE OR REPLACE FUNCTION set_cms_historically_listed_flag_for_node(node_id integer)
+  RETURNS VOID
+  LANGUAGE sql
+  AS $$
+    WITH historical_listings_or_agreements AS (
+      SELECT taxon_concept_id
+      FROM listing_changes
+      JOIN change_types
+      ON change_types.id = change_type_id
+      JOIN designations
+      ON designations.id = designation_id AND designations.name = 'CMS'
+      WHERE CASE WHEN node_id IS NULL THEN TRUE ELSE taxon_concept_id = node_id END
+
+      UNION
+
+      SELECT taxon_concept_id
+      FROM taxon_instruments
+      WHERE CASE WHEN node_id IS NULL THEN TRUE ELSE taxon_concept_id = node_id END
+    ), historically_listed_taxa AS (
+      SELECT taxon_concept_id AS id
+      FROM historical_listings_or_agreements
+      GROUP BY taxon_concept_id
+    ), taxa_with_historically_listed_flag AS (
+      SELECT taxon_concepts.id,
+      CASE WHEN t.id IS NULL THEN FALSE ELSE TRUE END AS historically_listed
+      FROM taxon_concepts
+      JOIN taxonomies
+      ON taxonomies.id = taxon_concepts.taxonomy_id AND taxonomies.name = 'CMS'
+      LEFT JOIN historically_listed_taxa t
+      ON t.id = taxon_concepts.id
+      WHERE CASE WHEN node_id IS NULL THEN TRUE ELSE taxon_concepts.id = node_id END
+    )
+    UPDATE taxon_concepts
+    SET listing = COALESCE(listing, ''::HSTORE) || HSTORE('cms_historically_listed', t.historically_listed::VARCHAR)
+    FROM taxa_with_historically_listed_flag t
+    WHERE t.id = taxon_concepts.id;
+  $$;
