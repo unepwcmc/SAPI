@@ -134,6 +134,12 @@ describe TaxonConcept do
         end
       end
 
+      describe :show_in_species_plus do
+        context "for subspecies Amazona festiva festiva" do
+          specify { @subspecies2_2_2_1.show_in_species_plus.should be_false }
+        end
+      end
+
     end
   end
 end
