@@ -5,7 +5,7 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner,
   contentObserver: ( ->
     meta = @get('content.meta')
     if meta != undefined &&  meta.total == 1
-      @openTaxonPage(meta.higher_taxa_headers[0].taxon_concept_ids[0], true)
+      @openTaxonPage(meta.higher_taxa_headers[0].taxon_concept_ids[0], false)
   ).observes("content.meta.didLoad")
 
   didContentLoad: ( ->
