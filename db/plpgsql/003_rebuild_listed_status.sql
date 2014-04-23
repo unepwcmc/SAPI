@@ -348,7 +348,7 @@ CREATE OR REPLACE FUNCTION set_cites_eu_historically_listed_flag_for_node(design
       ON change_types.id = change_type_id
       JOIN designations
       ON designations.id = designation_id AND designations.name = UPPER($1)
-      WHERE CASE WHEN node_id IS NULL THEN TRUE ELSE taxon_concept_id = node_id END
+      WHERE CASE WHEN $2 IS NULL THEN TRUE ELSE taxon_concept_id = $2 END
       GROUP BY taxon_concept_id
     ), taxa_with_historically_listed_flag AS (
       SELECT taxon_concepts.id,
@@ -358,7 +358,7 @@ CREATE OR REPLACE FUNCTION set_cites_eu_historically_listed_flag_for_node(design
       ON taxonomies.id = taxon_concepts.taxonomy_id AND taxonomies.name = 'CITES_EU'
       LEFT JOIN historically_listed_taxa t
       ON t.id = taxon_concepts.id
-      WHERE CASE WHEN node_id IS NULL THEN TRUE ELSE taxon_concepts.id = node_id END
+      WHERE CASE WHEN $2 IS NULL THEN TRUE ELSE taxon_concepts.id = $2 END
     )
     UPDATE taxon_concepts
     SET listing = COALESCE(listing, ''::HSTORE) ||

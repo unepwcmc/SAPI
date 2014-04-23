@@ -44,13 +44,13 @@ CREATE OR REPLACE FUNCTION set_cms_historically_listed_flag_for_node(node_id int
       ON change_types.id = change_type_id
       JOIN designations
       ON designations.id = designation_id AND designations.name = 'CMS'
-      WHERE CASE WHEN node_id IS NULL THEN TRUE ELSE taxon_concept_id = node_id END
+      WHERE CASE WHEN $1 IS NULL THEN TRUE ELSE taxon_concept_id = $1 END
 
       UNION
 
       SELECT taxon_concept_id
       FROM taxon_instruments
-      WHERE CASE WHEN node_id IS NULL THEN TRUE ELSE taxon_concept_id = node_id END
+      WHERE CASE WHEN $1 IS NULL THEN TRUE ELSE taxon_concept_id = $1 END
     ), historically_listed_taxa AS (
       SELECT taxon_concept_id AS id
       FROM historical_listings_or_agreements
@@ -63,7 +63,7 @@ CREATE OR REPLACE FUNCTION set_cms_historically_listed_flag_for_node(node_id int
       ON taxonomies.id = taxon_concepts.taxonomy_id AND taxonomies.name = 'CMS'
       LEFT JOIN historically_listed_taxa t
       ON t.id = taxon_concepts.id
-      WHERE CASE WHEN node_id IS NULL THEN TRUE ELSE taxon_concepts.id = node_id END
+      WHERE CASE WHEN $1 IS NULL THEN TRUE ELSE taxon_concepts.id = $1 END
     )
     UPDATE taxon_concepts
     SET listing = COALESCE(listing, ''::HSTORE) || HSTORE('cms_historically_listed', t.historically_listed::VARCHAR)
