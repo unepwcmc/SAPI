@@ -31,7 +31,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.quota,
               trade_restrictions.public_display,
               CASE
-                WHEN taxon_concepts_mview.rank_name = 'SPECIES'
+                WHEN taxon_concepts_mview.rank_name = 'SPECIES' OR
+                #{object.rank_name == Rank::SPECIES ? 'FALSE' : 'TRUE'} 
                 THEN NULL
                 ELSE '[Quota for ' || taxon_concepts_mview.rank_name || ' <i>' || taxon_concepts_mview.full_name || '</i>]'
               END AS subspecies_info
@@ -66,7 +67,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.start_notification_id,
               trade_restrictions.end_notification_id,
               CASE
-                WHEN taxon_concepts_mview.rank_name = 'SPECIES'
+                WHEN taxon_concepts_mview.rank_name = 'SPECIES' OR 
+                #{object.rank_name == Rank::SPECIES ? 'FALSE' : 'TRUE'} 
                 THEN NULL
                 ELSE '[Suspension for ' || taxon_concepts_mview.rank_name || ' <i>' || taxon_concepts_mview.full_name || '</i>]'
               END AS subspecies_info
@@ -122,7 +124,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               eu_decisions.term_id,
               eu_decisions.source_id,
               CASE
-                WHEN taxon_concepts_mview.rank_name = 'SPECIES'
+                WHEN taxon_concepts_mview.rank_name = 'SPECIES' OR 
+                #{object.rank_name == Rank::SPECIES ? 'FALSE' : 'TRUE'} 
                 THEN NULL
                 ELSE '[' || taxon_concepts_mview.rank_name || ' decision <i>' || taxon_concepts_mview.full_name || '</i>]'
               END AS subspecies_info
@@ -142,11 +145,13 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def cites_listing_changes
-    MCitesListingChange.from('cites_listing_changes_mview listing_changes_mview').
+    rel = MCitesListingChange.from('cites_listing_changes_mview listing_changes_mview').
       where(
         'listing_changes_mview.taxon_concept_id' => object_and_children,
         'listing_changes_mview.show_in_history' => true
-      ).
+      )
+    if object.rank_name == Rank::SPECIES
+      rel = rel.
       where(<<-SQL
               taxon_concepts_mview.rank_name = 'SPECIES' OR
               (
@@ -157,7 +162,9 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 AND listing_changes_mview.auto_note IS NULL
               )
             SQL
-      ).
+      )
+    end
+    rel.
       joins(<<-SQL
               INNER JOIN taxon_concepts_mview
                 ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id
@@ -184,9 +191,11 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.inherited_full_note_en,
               listing_changes_mview.inherited_short_note_en,
               CASE
-                WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
+                WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'} 
+                AND taxon_concepts_mview.rank_name = 'SUBSPECIES'
                   THEN '[SUBSPECIES listing <i>' || taxon_concepts_mview.full_name || '</i>]'
-                WHEN taxon_concepts_mview.rank_name = 'VARIETY'
+                WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'} 
+                AND taxon_concepts_mview.rank_name = 'VARIETY'
                   THEN '[VARIETY listing <i>' || taxon_concepts_mview.full_name || '</i>]'
                 ELSE NULL
               END AS subspecies_info
@@ -206,18 +215,20 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def eu_listing_changes
-    MEuListingChange.from('eu_listing_changes_mview listing_changes_mview').
+    rel = MEuListingChange.from('eu_listing_changes_mview listing_changes_mview').
       where(
         'listing_changes_mview.taxon_concept_id' => object_and_children,
         'listing_changes_mview.show_in_history' => true
-      ).
-      where(<<-SQL
+      )
+    if object.rank_name == Rank::SPECIES
+      rel = rel.where(<<-SQL
               taxon_concepts_mview.rank_name = 'SPECIES' OR
               ( taxon_concepts_mview.rank_name = 'SUBSPECIES' AND
                 listing_changes_mview.auto_note IS NULL )
             SQL
-      ).
-      joins(<<-SQL
+      )
+    end
+    rel.joins(<<-SQL
               INNER JOIN taxon_concepts_mview
                 ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id
               INNER JOIN listing_changes
@@ -244,7 +255,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               events.description AS event_name,
               events.url AS event_url,
               CASE
-                WHEN taxon_concepts_mview.rank_name = 'SUBSPECIES'
+                WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'} 
+                AND taxon_concepts_mview.rank_name = 'SUBSPECIES'
                   THEN '[SUBSPECIES listing <i>' || taxon_concepts_mview.full_name || '</i>]'
                 ELSE NULL
               END AS subspecies_info
