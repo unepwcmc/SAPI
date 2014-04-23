@@ -102,7 +102,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     taxon_concepts.updated_at,
     common_names.*,
     synonyms.*,
-    subspecies.subspecies_ary,
+    subspecies.subspecies_not_listed_ary,
     countries_ids_ary,
     CASE
       WHEN
@@ -172,13 +172,37 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       GROUP BY taxon_concepts.id
     ) synonyms ON taxon_concepts.id = synonyms.taxon_concept_id_syn
     LEFT JOIN (
+      SELECT taxon_concept_id_sub, ARRAY_AGG(subspecies_ary) AS subspecies_not_listed_ary
+      FROM
+      (
       SELECT taxon_concepts.parent_id AS taxon_concept_id_sub,
-      ARRAY_AGG(taxon_concepts.full_name) AS subspecies_ary
+      taxon_concepts.full_name AS subspecies_ary
       FROM taxon_concepts
       JOIN ranks ON ranks.id = taxon_concepts.rank_id
-      AND ranks.name IN ('SUBSPECIES', 'VARIETY')
-      WHERE name_status != 'S'
-      GROUP BY taxon_concepts.parent_id
+      AND ranks.name = 'VARIETY'
+      WHERE name_status NOT IN ('S', 'T', 'N')
+      GROUP BY taxon_concept_id_sub, taxon_concepts.full_name
+      UNION
+      (
+      SELECT taxon_concepts.parent_id AS taxon_concept_id_sub,
+      taxon_concepts.full_name AS subspecies_ary
+      FROM taxon_concepts
+      JOIN ranks ON ranks.id = taxon_concepts.rank_id
+      AND ranks.name = 'SUBSPECIES'
+      WHERE name_status NOT IN ('S', 'T', 'N')
+      GROUP BY taxon_concept_id_sub, taxon_concepts.full_name
+      EXCEPT
+      SELECT taxon_concepts.parent_id AS taxon_concept_id_sub,
+      taxon_concepts.full_name AS subspecies_ary
+      FROM taxon_concepts
+      JOIN ranks ON ranks.id = taxon_concepts.rank_id
+      AND ranks.name = 'SUBSPECIES'
+      INNER JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id AND explicit_change = true
+      WHERE name_status NOT IN ('S', 'T', 'N')
+      GROUP BY taxon_concept_id_sub, taxon_concepts.full_name
+      )
+      ) AS subquery
+      GROUP by taxon_concept_id_sub
     ) subspecies ON taxon_concepts.id = subspecies.taxon_concept_id_sub
     LEFT JOIN (
       SELECT taxon_concepts.id AS taxon_concept_id_cnt,

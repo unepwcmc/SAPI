@@ -3,7 +3,7 @@
   {{#if citesSuspensionsIsLoading}}
     {{ partial 'species/spinner'}}
   {{else}}
-    <p class="empty">There are no current suspensions in place for this species.</p>
+    <p class="empty">There are no current suspensions in place for this {{#tolower rankName}}{{/tolower}}.</p>
   {{/if}}
 {{else}}
   <table summary="data table">
@@ -36,7 +36,7 @@
         </tr>
       {{else}}
         <tr class="current">
-          <td colspan=4>There are no current suspensions in place for this species.</td>
+          <td colspan=4>There are no current suspensions in place for this {{#tolower rankName}}{{/tolower}}.</td>
         </tr>
       {{/each}}
     </tbody>

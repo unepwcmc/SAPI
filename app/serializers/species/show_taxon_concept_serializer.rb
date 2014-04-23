@@ -1,15 +1,19 @@
 class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   cached
   root 'taxon_concept'
-  attributes :id, :full_name, :author_year, :standard_references,
+  attributes :id, :parent_id, :full_name, :author_year, :standard_references,
     :common_names, :distributions, :subspecies, :distribution_references,
     :taxonomy, :kingdom_name, :phylum_name, :order_name, :class_name, :family_name,
-    :genus_name, :species_name
+    :genus_name, :species_name, :rank_name
 
   has_many :synonyms, :serializer => Species::SynonymSerializer
   has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,
     :key => :references
 
+
+  def rank_name
+    object.data['rank_name']
+  end
 
   def kingdom_name
     object.data['kingdom_name']
@@ -93,7 +97,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   def subspecies
     TaxonConcept.where(:parent_id => object.id).
       where("name_status != 'S'").
-      select([:full_name, :author_year]).
+      select([:full_name, :author_year, :id]).
       order(:full_name).all
   end
 

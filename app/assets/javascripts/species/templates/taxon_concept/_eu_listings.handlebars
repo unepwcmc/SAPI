@@ -3,7 +3,7 @@
   {{#if euListingsIsLoading}}
     {{ partial 'species/spinner'}}
   {{else}}
-    <p class="empty">This species is not currently listed in the EU Annexes.</p>
+    <p class="empty">This {{#tolower rankName}}{{/tolower}} is not currently listed in the EU Annexes.</p>
   {{/if}}
 {{else}}
   <table summary="data table">
@@ -48,7 +48,7 @@
         </tr>
       {{else}}
         <tr class="current">
-          <td colspan=4>This species is not currently listed in the EU Annexes.</td>
+          <td colspan=4>This {{#tolower rankName}}{{/tolower}} is not currently listed in the EU Annexes.</td>
         </tr>
       {{/each}}
     </tbody>

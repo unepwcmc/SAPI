@@ -1384,3 +1384,27 @@ div#banner p button#remove {
   background: none;
   outline: none;
 }
+
+.tooltip[data-descr] {
+    position: relative;
+    cursor: help;
+    width: 10px;
+}
+
+.tooltip[data-descr]:hover::after {
+    content: attr(data-descr);
+    position: absolute;
+    float: left;
+    text-transform: none;
+    font-weight: normal;
+	  color: #666;
+    padding: 5px 15px 15px 15px;
+    background: #f5f5f7;
+    -webkit-border-radius: 7px;
+    border-radius: 7px;
+    border: 1px solid #8fb7cf;
+    width: 260px;
+    z-index: 1000;
+    left: 0;
+    top: 24px;
+}
