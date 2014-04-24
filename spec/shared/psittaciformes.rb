@@ -64,9 +64,19 @@ shared_context "Psittaciformes" do
       :taxon_name => create(:taxon_name, :scientific_name => 'Amazona'),
       :parent => @family2
     )
-    @species2_2 = create_cites_eu_species(
+    @species2_2_1 = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'Aestiva'),
       :parent => @genus2_2,
+      :name_status => 'A'
+    )
+    @species2_2_2 = create_cites_eu_species(
+      :taxon_name => create(:taxon_name, :scientific_name => 'festiva'),
+      :parent => @genus2_2,
+      :name_status => 'A'
+    )
+    @subspecies2_2_2_1 = create_cites_eu_subspecies(
+      :taxon_name => create(:taxon_name, :scientific_name => 'festiva'),
+      :parent => @species2_2_2,
       :name_status => 'A'
     )
     @genus2_3 = create_cites_eu_genus(
@@ -151,7 +161,7 @@ shared_context "Psittaciformes" do
      :is_current => true
     )
     create_cites_II_addition(
-     :taxon_concept => @species2_2,
+     :taxon_concept => @species2_2_1,
      :effective_at => '1981-06-06',
      :is_current => true
     )
@@ -226,7 +236,7 @@ shared_context "Psittaciformes" do
       :is_current => true
     )
     create_eu_B_addition(
-      :taxon_concept => @species2_2,
+      :taxon_concept => @species2_2_1,
       :effective_at => '2013-08-10',
       :event => reg2013,
       :is_current => true

@@ -100,6 +100,12 @@ shared_context "Canis lupus" do
      :taxon_concept => @species,
      :effective_at => '1977-02-04'
     )
+    create_cites_II_addition(
+     :taxon_concept => @subspecies,
+     :effective_at => '1977-02-04',
+     :inclusion_taxon_concept_id => @species.id,
+     :is_current => true
+    )
     cites_lc_I = create_cites_I_addition(
      :taxon_concept => @species,
      :effective_at => '2010-06-23',

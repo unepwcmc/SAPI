@@ -95,9 +95,9 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def subspecies
-    TaxonConcept.where(:parent_id => object.id).
-      where("name_status != 'S'").
-      select([:full_name, :author_year, :id]).
+    MTaxonConcept.where(:parent_id => object.id).
+      where("name_status NOT IN ('S', 'T', 'N')").
+      select([:full_name, :author_year, :id, :show_in_species_plus]).
       order(:full_name).all
   end
 

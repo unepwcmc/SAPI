@@ -14,11 +14,11 @@ describe Species::Search do
       context "when leading whitespace" do
         subject { Species::Search.new({:taxon_concept_query => ' canis'}).results }
         specify { subject.should include(@species)}
-      end      
+      end
       context "when trailing whitespace" do
         subject { Species::Search.new({:taxon_concept_query => 'canis '}).results }
         specify { subject.should include(@species)}
-      end 
+      end
     end
   end
 end

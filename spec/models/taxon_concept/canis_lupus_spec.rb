@@ -36,7 +36,7 @@ describe TaxonConcept do
           specify{ @species.show_in_species_plus_ac.should be_true }
         end
         context "for subspecies Canis lupus crassodon" do
-          specify{ @subspecies.show_in_species_plus_ac.should be_false }
+          specify{ @subspecies.show_in_species_plus_ac.should be_true }
         end
       end
 
@@ -46,6 +46,15 @@ describe TaxonConcept do
         end
         context "for subspecies Canis lupus crassodon" do
           specify{ @subspecies.show_in_checklist_ac.should be_false }
+        end
+      end
+
+      describe :show_in_species_plus do
+        context "for species Canis lupus" do
+          specify{ @species.show_in_species_plus.should be_true }
+        end
+        context "for subspecies Canis lupus crassodon" do
+          specify{ @subspecies.show_in_species_plus.should be_true }
         end
       end
 

@@ -110,7 +110,13 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
         AND (
           ranks.name != 'SUBSPECIES'
           AND ranks.name != 'VARIETY'
-          OR (listing->'cites_show')::BOOLEAN
+          OR taxonomies.name = 'CITES_EU'
+          AND (
+            (listing->'cites_historically_listed')::BOOLEAN
+            OR (listing->'eu_historically_listed')::BOOLEAN
+          )
+          OR taxonomies.name = 'CMS'
+          AND (listing->'cms_historically_listed')::BOOLEAN
         )
       THEN TRUE
       ELSE FALSE
@@ -132,7 +138,29 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
         AND ARRAY['A', 'H', 'N']::VARCHAR[] && ARRAY[name_status]
       THEN TRUE
       ELSE FALSE
-    END AS show_in_trade_ac
+    END AS show_in_trade_ac,
+    CASE
+      WHEN
+        name_status = 'A'
+        AND (
+          ranks.name = 'SPECIES'
+          OR (
+            ranks.name = 'SUBSPECIES'
+            AND (
+              taxonomies.name = 'CITES_EU'
+              AND (
+                (listing->'cites_historically_listed')::BOOLEAN
+                OR (listing->'eu_historically_listed')::BOOLEAN
+              )
+              OR
+              taxonomies.name = 'CMS'
+              AND (listing->'cms_historically_listed')::BOOLEAN
+            )
+          )
+        )
+      THEN TRUE
+      ELSE FALSE
+      END AS show_in_species_plus
     FROM taxon_concepts
     JOIN ranks ON ranks.id = rank_id
     JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
@@ -197,8 +225,14 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       FROM taxon_concepts
       JOIN ranks ON ranks.id = taxon_concepts.rank_id
       AND ranks.name = 'SUBSPECIES'
-      INNER JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id AND explicit_change = true
+      JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
       WHERE name_status NOT IN ('S', 'T', 'N')
+      AND CASE
+        WHEN taxonomies.name = 'CMS'
+        THEN (listing->'cms_historically_listed')::BOOLEAN
+        ELSE (listing->'cites_historically_listed')::BOOLEAN
+        OR (listing->'eu_historically_listed')::BOOLEAN
+      END
       GROUP BY taxon_concept_id_sub, taxon_concepts.full_name
       )
       ) AS subquery
