@@ -335,3 +335,34 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
 
     END;
   $$;
+
+
+CREATE OR REPLACE FUNCTION set_cites_eu_historically_listed_flag_for_node(designation text, node_id integer)
+  RETURNS VOID
+  LANGUAGE sql
+  AS $$
+    WITH historically_listed_taxa AS (
+      SELECT taxon_concept_id AS id
+      FROM listing_changes
+      JOIN change_types
+      ON change_types.id = change_type_id
+      JOIN designations
+      ON designations.id = designation_id AND designations.name = UPPER($1)
+      WHERE CASE WHEN $2 IS NULL THEN TRUE ELSE taxon_concept_id = $2 END
+      GROUP BY taxon_concept_id
+    ), taxa_with_historically_listed_flag AS (
+      SELECT taxon_concepts.id,
+      CASE WHEN t.id IS NULL THEN FALSE ELSE TRUE END AS historically_listed
+      FROM taxon_concepts
+      JOIN taxonomies
+      ON taxonomies.id = taxon_concepts.taxonomy_id AND taxonomies.name = 'CITES_EU'
+      LEFT JOIN historically_listed_taxa t
+      ON t.id = taxon_concepts.id
+      WHERE CASE WHEN $2 IS NULL THEN TRUE ELSE taxon_concepts.id = $2 END
+    )
+    UPDATE taxon_concepts
+    SET listing = COALESCE(listing, ''::HSTORE) ||
+    HSTORE(LOWER($1) || '_historically_listed', t.historically_listed::VARCHAR)
+    FROM taxa_with_historically_listed_flag t
+    WHERE t.id = taxon_concepts.id;
+  $$;

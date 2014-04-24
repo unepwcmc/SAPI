@@ -54,6 +54,16 @@ shared_context "Falconiformes" do
       :parent => @genus2_1,
       :name_status => 'A'
     )
+    @species2_3 = create_cites_eu_species(
+      :taxon_name => create(:taxon_name, :scientific_name => 'peregrinus'),
+      :parent => @genus2_1,
+      :name_status => 'A'
+    )
+    @subspecies2_3_1 = create_cites_eu_subspecies(
+      :taxon_name => create(:taxon_name, :scientific_name => 'peregrinus'),
+      :parent => @species2_3,
+      :name_status => 'A'
+    )
     @hybrid = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Falco hybrid'),
       :parent => nil,
@@ -99,6 +109,17 @@ shared_context "Falconiformes" do
      :effective_at => '1977-02-04',
      :is_current => true
     )
+    create_cites_I_addition(
+     :taxon_concept => @species2_3,
+     :effective_at => '1977-02-04',
+     :is_current => true
+    )
+    create_cites_I_addition(
+     :taxon_concept => @subspecies2_3_1,
+     :effective_at => '1977-02-04',
+     :inclusion_taxon_concept_id => @species2_3.id,
+     :is_current => true
+    )
 
     eu_lc1 = create_eu_B_addition(
      :taxon_concept => @order,
@@ -125,6 +146,12 @@ shared_context "Falconiformes" do
     )
     create_eu_A_addition(
      :taxon_concept => @species2_1,
+     :effective_at => '2013-08-10',
+     :event => reg2013,
+     :is_current => true
+    )
+    create_eu_A_addition(
+     :taxon_concept => @species2_3,
      :effective_at => '2013-08-10',
      :event => reg2013,
      :is_current => true

@@ -31,13 +31,16 @@ private
   end
 
   def initialize_query
-    @query = MTaxonConcept.taxonomic_layout.
-      where(:rank_name => @ranks, :name_status => 'A')
+    @query = MTaxonConcept.taxonomic_layout
 
     @query = if @taxonomy == :cms
       @query.by_cms_taxonomy
     else
       @query.by_cites_eu_taxonomy
+    end
+
+    if @visibility == :speciesplus
+      @query = @query.where(:show_in_species_plus => true)
     end
 
     if !@geo_entities.empty? && @geo_entity_scope == :cms
