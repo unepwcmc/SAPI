@@ -55,15 +55,25 @@
       <div class="columns-holder">
         <ul class="col">
           {{#eachPart controllers.taxonConcept.subspecies parts=2 page=0}}
-            <li class="tooltip">
-              {{#linkTo 'taxonConcept.legal' id}}{{full_name}} {{author_year}}{{/linkTo}}
+            <li>
+              {{#if show_in_species_plus}}
+                {{#linkTo 'taxonConcept.legal' id}}{{full_name}} {{author_year}}{{/linkTo}}
+              {{/if}}
+              {{#unless show_in_species_plus}}
+                {{full_name}} {{author_year}}
+              {{/unless}}
             </li>
           {{/eachPart}}
         </ul>
         <ul class="col">
           {{#eachPart controllers.taxonConcept.subspecies parts=2 page=1}}
             <li>
-              {{#linkTo 'taxonConcept.legal' id}}{{full_name}} {{author_year}}{{/linkTo}}
+              {{#if show_in_species_plus}}
+                {{#linkTo 'taxonConcept.legal' id}}{{full_name}} {{author_year}}{{/linkTo}}
+              {{/if}}
+              {{#unless show_in_species_plus}}
+                {{full_name}} {{author_year}}
+              {{/unless}}
             </li>
           {{/eachPart}}
         </ul>
