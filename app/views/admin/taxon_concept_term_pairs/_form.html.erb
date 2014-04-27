@@ -1,0 +1,10 @@
+<%= form_for resource_instance_name, :url => collection_url, :remote => true do |f| %>
+
+  <%= error_messages_for(resource_instance_name) %>
+
+  <label>Code</label><%= f.text_field :code %><br />
+  <p>Name</p>
+  <label>EN</label> <%= f.text_field :name_en %><br />
+  <label>ES</label> <%= f.text_field :name_es %><br />
+  <label>FR</label> <%= f.text_field :name_fr %><br />
+<% end %>

@@ -1,0 +1,5 @@
+$('.modal').modal('hide');
+$('#admin-in-place-editor').html("<%= escape_javascript(render('admin/trade_codes/list')) %>");
+window.adminEditor.init();
+window.adminEditor.alertSuccess("Operation successful");
+

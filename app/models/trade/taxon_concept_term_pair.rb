@@ -11,6 +11,7 @@
 
 class Trade::TaxonConceptTermPair < ActiveRecord::Base
   attr_accessible :taxon_concept_id, :term_id
+  validates :taxon_concept_id, :presence => true
 
   belongs_to :taxon_concept
   belongs_to :term, :class_name => "TradeCode"

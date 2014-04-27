@@ -6,6 +6,8 @@ $(document).ready ->
     window.adminEditor = new ListingChangesEditor()
   else if window.editorClass == 'taxon_concept_references'
     window.adminEditor = new TaxonReferencesEditor()
+  else if window.editorClass == 'inplace_taxon_concepts'
+    window.adminEditor = new AdminInPlaceEditorTaxonConcepts()
   else
     window.adminEditor = new AdminInPlaceEditor()
   window.adminEditor.init()
@@ -151,6 +153,77 @@ class AdminInPlaceEditor extends AdminEditor
     $('#admin-in-place-editor .editable-is-current').editable(
       'option', 'emptytext', 'not current'
     )
+
+    $('#admin-in-place-editor .xxx').editable(
+      'option', 'source', [{id: 'gb', text: 'Great Britain'}, {id: 'us', text: 'United States'},{id: 'ru', text: 'Russia'}]
+    )
+
+    $('#admin-in-place-editor .xxx').editable(
+      'option', 'select2', {multiple: true}
+    )
+
+class AdminInPlaceEditorTaxonConcepts extends AdminEditor
+  init: () ->
+    super
+    @initEditors()
+
+  initEditors: () ->
+
+    $('#admin-in-place-editor .editable').editable
+      placement: 'right'
+      ajaxOptions:
+        dataType: 'json'
+        type: 'put'
+      params: (params) ->
+        #originally params contain pk, name and value
+        newParams = id: params.pk
+
+        newParams[$(@).attr('data-resource')] = {}
+        newParams[$(@).attr('data-resource')][params.name] = params.value
+
+        #newParams[params.name] = params.value
+        #console.log newParams
+        return newParams
+      error: ->
+        errors = JSON.parse(arguments[0].responseText).errors
+        errorsMessages = []
+        for k, v of errors
+          errorsMessages.push v
+        errorsMessages.join ', '
+      select2:
+        placeholder: "Select Taxonomy"
+        allowClear: true
+        minimumInputLength: 3
+        id: (item) ->
+          item.id
+      
+        ajax:
+          url: "/api/v1/auto_complete_taxon_concepts.json"
+          dataType: "json"
+          data: (term, page) ->
+            taxon_concept_query: term # search term
+            visibility: 'trade_internal'
+            per_page: 10
+            page: page
+      
+          results: (data, page) ->
+            more = (page * 10) < data.meta.total
+            formatted_taxon_concepts = data.auto_complete_taxon_concepts.map (tc) =>
+              id: tc.id
+              text: tc.full_name
+            results: formatted_taxon_concepts
+            more: more
+      
+        formatResult: (item) ->
+          item.text
+          
+        formatSelection: (item) ->
+          item.text
+    $('#admin-in-place-editor .editable').on('hidden', -> 
+      val = $(@).editable('getValue')
+      debugger;
+    )
+
 
 class TaxonConceptsEditor extends AdminEditor
   init: () ->

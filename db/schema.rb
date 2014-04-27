@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140116182242) do
+ActiveRecord::Schema.define(:version => 20140411143214) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -83,15 +83,15 @@ ActiveRecord::Schema.define(:version => 20140116182242) do
     t.datetime "expiry"
   end
 
-  add_index "cites_listing_changes_mview", ["excluded_geo_entities_ids"], :name => "tmp_cascaded_cites_listing_change_excluded_geo_entities_ids_idx"
-  add_index "cites_listing_changes_mview", ["id", "taxon_concept_id"], :name => "tmp_cascaded_cites_listing_changes_mvie_id_taxon_concept_id_idx"
-  add_index "cites_listing_changes_mview", ["inclusion_taxon_concept_id"], :name => "tmp_cascaded_cites_listing_chang_inclusion_taxon_concept_id_idx"
-  add_index "cites_listing_changes_mview", ["is_current", "change_type_name"], :name => "tmp_cascaded_cites_listing_chan_is_current_change_type_name_idx"
-  add_index "cites_listing_changes_mview", ["listed_geo_entities_ids"], :name => "tmp_cascaded_cites_listing_changes__listed_geo_entities_ids_idx"
-  add_index "cites_listing_changes_mview", ["original_taxon_concept_id"], :name => "tmp_cascaded_cites_listing_change_original_taxon_concept_id_idx"
-  add_index "cites_listing_changes_mview", ["show_in_downloads", "taxon_concept_id"], :name => "tmp_cascaded_cites_listing_ch_show_in_downloads_taxon_conce_idx"
-  add_index "cites_listing_changes_mview", ["show_in_timeline", "taxon_concept_id"], :name => "tmp_cascaded_cites_listing_ch_show_in_timeline_taxon_concep_idx"
-  add_index "cites_listing_changes_mview", ["taxon_concept_id", "original_taxon_concept_id", "change_type_id", "effective_at"], :name => "tmp_cascaded_cites_listing_ch_taxon_concept_id_original_tax_idx"
+  add_index "cites_listing_changes_mview", ["excluded_geo_entities_ids"], :name => "tmp_cascaded_cites_listing_chang_excluded_geo_entities_ids_idx1"
+  add_index "cites_listing_changes_mview", ["id", "taxon_concept_id"], :name => "tmp_cascaded_cites_listing_changes_mvi_id_taxon_concept_id_idx1"
+  add_index "cites_listing_changes_mview", ["inclusion_taxon_concept_id"], :name => "tmp_cascaded_cites_listing_chan_inclusion_taxon_concept_id_idx1"
+  add_index "cites_listing_changes_mview", ["is_current", "change_type_name"], :name => "tmp_cascaded_cites_listing_cha_is_current_change_type_name_idx1"
+  add_index "cites_listing_changes_mview", ["listed_geo_entities_ids"], :name => "tmp_cascaded_cites_listing_changes_listed_geo_entities_ids_idx1"
+  add_index "cites_listing_changes_mview", ["original_taxon_concept_id"], :name => "tmp_cascaded_cites_listing_chang_original_taxon_concept_id_idx1"
+  add_index "cites_listing_changes_mview", ["show_in_downloads", "taxon_concept_id"], :name => "tmp_cascaded_cites_listing_ch_show_in_downloads_taxon_conc_idx1"
+  add_index "cites_listing_changes_mview", ["show_in_timeline", "taxon_concept_id"], :name => "tmp_cascaded_cites_listing_ch_show_in_timeline_taxon_conce_idx1"
+  add_index "cites_listing_changes_mview", ["taxon_concept_id", "original_taxon_concept_id", "change_type_id", "effective_at"], :name => "tmp_cascaded_cites_listing_ch_taxon_concept_id_original_ta_idx1"
 
   create_table "cites_listings_import", :id => false, :force => true do |t|
     t.string  "rank",                      :limit => nil
@@ -150,7 +150,7 @@ ActiveRecord::Schema.define(:version => 20140116182242) do
     t.string  "countries_ids_ary",                         :limit => nil
   end
 
-  add_index "cites_species_listing_mview", ["countries_ids_ary"], :name => "cites_species_listing_mview_tmp_countries_ids_ary_idx"
+  add_index "cites_species_listing_mview", ["countries_ids_ary"], :name => "cites_species_listing_mview_tmp_countries_ids_ary_idx1"
 
   create_table "cites_suspension_confirmations", :force => true do |t|
     t.integer  "cites_suspension_id",              :null => false
@@ -216,15 +216,15 @@ ActiveRecord::Schema.define(:version => 20140116182242) do
     t.datetime "expiry"
   end
 
-  add_index "cms_listing_changes_mview", ["excluded_geo_entities_ids"], :name => "tmp_cascaded_cms_listing_changes__excluded_geo_entities_ids_idx"
-  add_index "cms_listing_changes_mview", ["id", "taxon_concept_id"], :name => "tmp_cascaded_cms_listing_changes_mview_id_taxon_concept_id_idx"
-  add_index "cms_listing_changes_mview", ["inclusion_taxon_concept_id"], :name => "tmp_cascaded_cms_listing_changes_inclusion_taxon_concept_id_idx"
-  add_index "cms_listing_changes_mview", ["is_current", "change_type_name"], :name => "tmp_cascaded_cms_listing_change_is_current_change_type_name_idx"
-  add_index "cms_listing_changes_mview", ["listed_geo_entities_ids"], :name => "tmp_cascaded_cms_listing_changes_mv_listed_geo_entities_ids_idx"
-  add_index "cms_listing_changes_mview", ["original_taxon_concept_id"], :name => "tmp_cascaded_cms_listing_changes__original_taxon_concept_id_idx"
-  add_index "cms_listing_changes_mview", ["show_in_downloads", "taxon_concept_id"], :name => "tmp_cascaded_cms_listing_chan_show_in_downloads_taxon_conce_idx"
-  add_index "cms_listing_changes_mview", ["show_in_timeline", "taxon_concept_id"], :name => "tmp_cascaded_cms_listing_chan_show_in_timeline_taxon_concep_idx"
-  add_index "cms_listing_changes_mview", ["taxon_concept_id", "original_taxon_concept_id", "change_type_id", "effective_at"], :name => "tmp_cascaded_cms_listing_chan_taxon_concept_id_original_tax_idx"
+  add_index "cms_listing_changes_mview", ["excluded_geo_entities_ids"], :name => "tmp_cascaded_cms_listing_changes_excluded_geo_entities_ids_idx1"
+  add_index "cms_listing_changes_mview", ["id", "taxon_concept_id"], :name => "tmp_cascaded_cms_listing_changes_mview_id_taxon_concept_id_idx1"
+  add_index "cms_listing_changes_mview", ["inclusion_taxon_concept_id"], :name => "tmp_cascaded_cms_listing_change_inclusion_taxon_concept_id_idx1"
+  add_index "cms_listing_changes_mview", ["is_current", "change_type_name"], :name => "tmp_cascaded_cms_listing_chang_is_current_change_type_name_idx1"
+  add_index "cms_listing_changes_mview", ["listed_geo_entities_ids"], :name => "tmp_cascaded_cms_listing_changes_m_listed_geo_entities_ids_idx1"
+  add_index "cms_listing_changes_mview", ["original_taxon_concept_id"], :name => "tmp_cascaded_cms_listing_changes_original_taxon_concept_id_idx1"
+  add_index "cms_listing_changes_mview", ["show_in_downloads", "taxon_concept_id"], :name => "tmp_cascaded_cms_listing_chan_show_in_downloads_taxon_conc_idx1"
+  add_index "cms_listing_changes_mview", ["show_in_timeline", "taxon_concept_id"], :name => "tmp_cascaded_cms_listing_chan_show_in_timeline_taxon_conce_idx1"
+  add_index "cms_listing_changes_mview", ["taxon_concept_id", "original_taxon_concept_id", "change_type_id", "effective_at"], :name => "tmp_cascaded_cms_listing_chan_taxon_concept_id_original_ta_idx1"
 
   create_table "cms_listings_import", :id => false, :force => true do |t|
     t.string  "rank",                      :limit => nil
@@ -269,7 +269,7 @@ ActiveRecord::Schema.define(:version => 20140116182242) do
     t.string  "countries_ids_ary",                         :limit => nil
   end
 
-  add_index "cms_species_listing_mview", ["countries_ids_ary"], :name => "cms_species_listing_mview_tmp_countries_ids_ary_idx"
+  add_index "cms_species_listing_mview", ["countries_ids_ary"], :name => "cms_species_listing_mview_tmp_countries_ids_ary_idx1"
 
   create_table "common_name_import", :id => false, :force => true do |t|
     t.string  "name",         :limit => nil
@@ -323,10 +323,13 @@ ActiveRecord::Schema.define(:version => 20140116182242) do
   end
 
   create_table "distribution_references", :force => true do |t|
-    t.integer "distribution_id", :null => false
-    t.integer "reference_id",    :null => false
+    t.integer  "distribution_id", :null => false
+    t.integer  "reference_id",    :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
+  add_index "distribution_references", ["distribution_id", "reference_id"], :name => "index_distribution_refs_on_distribution_id_reference_id", :unique => true
   add_index "distribution_references", ["distribution_id"], :name => "index_distribution_references_on_distribution_id"
   add_index "distribution_references", ["reference_id"], :name => "index_distribution_references_on_reference_id"
 
@@ -1952,20 +1955,28 @@ ActiveRecord::Schema.define(:version => 20140116182242) do
     t.integer  "taxon_concept_id_syn"
     t.string   "synonyms_ary",                    :limit => nil
     t.string   "synonyms_author_years_ary",       :limit => nil
-    t.string   "subspecies_ary",                  :limit => nil
+    t.string   "subspecies_not_listed_ary",       :limit => nil
     t.string   "countries_ids_ary",               :limit => nil
+    t.boolean  "show_in_species_plus_ac"
+    t.boolean  "show_in_checklist_ac"
+    t.boolean  "show_in_trade_ac"
     t.boolean  "dirty"
     t.datetime "expiry"
   end
 
-  add_index "taxon_concepts_mview", ["cites_show", "name_status", "cites_listing_original", "taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_tmp_cites_show_name_status_cites_list_idx1"
-  add_index "taxon_concepts_mview", ["cms_show", "name_status", "cms_listing_original", "taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_tmp_cms_show_name_status_cms_listing__idx1"
-  add_index "taxon_concepts_mview", ["countries_ids_ary"], :name => "taxon_concepts_mview_tmp_countries_ids_ary_idx"
-  add_index "taxon_concepts_mview", ["eu_show", "name_status", "eu_listing_original", "taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_tmp_eu_show_name_status_eu_listing_or_idx1"
-  add_index "taxon_concepts_mview", ["id"], :name => "taxon_concepts_mview_tmp_id_idx1"
-  add_index "taxon_concepts_mview", ["parent_id"], :name => "taxon_concepts_mview_tmp_parent_id_idx1"
-  add_index "taxon_concepts_mview", ["taxonomy_is_cites_eu", "cites_listed", "kingdom_position"], :name => "taxon_concepts_mview_tmp_taxonomy_is_cites_eu_cites_listed_idx1"
-  add_index "taxon_concepts_mview", ["taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_tmp_taxonomy_is_cites_eu_rank_name_idx1"
+  add_index "taxon_concepts_mview", ["cites_show", "name_status", "cites_listing_original", "taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_tmp_cites_show_name_status_cites_listi_idx"
+  add_index "taxon_concepts_mview", ["cms_show", "name_status", "cms_listing_original", "taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_tmp_cms_show_name_status_cms_listing_o_idx"
+  add_index "taxon_concepts_mview", ["countries_ids_ary"], :name => "taxon_concepts_mview_tmp_countries_ids_ary_idx1"
+  add_index "taxon_concepts_mview", ["eu_show", "name_status", "eu_listing_original", "taxonomy_is_cites_eu", "rank_name"], :name => "taxon_concepts_mview_tmp_eu_show_name_status_eu_listing_ori_idx"
+  add_index "taxon_concepts_mview", ["id"], :name => "taxon_concepts_mview_tmp_id_idx"
+  add_index "taxon_concepts_mview", ["parent_id"], :name => "taxon_concepts_mview_tmp_parent_id_idx"
+  add_index "taxon_concepts_mview", ["taxonomy_is_cites_eu", "cites_listed", "kingdom_position"], :name => "taxon_concepts_mview_tmp_taxonomy_is_cites_eu_cites_listed__idx"
+  add_index "taxon_concepts_mview", ["taxonomy_is_cites_eu", "rank_name", "show_in_checklist_ac"], :name => "taxon_concepts_mview_tmp_upper_taxonomy_is_cites_eu_rank__idx10"
+  add_index "taxon_concepts_mview", ["taxonomy_is_cites_eu", "rank_name", "show_in_checklist_ac"], :name => "taxon_concepts_mview_tmp_upper_taxonomy_is_cites_eu_rank_n_idx7"
+  add_index "taxon_concepts_mview", ["taxonomy_is_cites_eu", "rank_name", "show_in_species_plus_ac"], :name => "taxon_concepts_mview_tmp_upper_taxonomy_is_cites_eu_rank_n_idx6"
+  add_index "taxon_concepts_mview", ["taxonomy_is_cites_eu", "rank_name", "show_in_species_plus_ac"], :name => "taxon_concepts_mview_tmp_upper_taxonomy_is_cites_eu_rank_n_idx9"
+  add_index "taxon_concepts_mview", ["taxonomy_is_cites_eu", "rank_name", "show_in_trade_ac"], :name => "taxon_concepts_mview_tmp_upper_taxonomy_is_cites_eu_rank__idx11"
+  add_index "taxon_concepts_mview", ["taxonomy_is_cites_eu", "rank_name", "show_in_trade_ac"], :name => "taxon_concepts_mview_tmp_upper_taxonomy_is_cites_eu_rank_n_idx8"
 
   create_table "taxon_instruments", :force => true do |t|
     t.integer  "taxon_concept_id"
@@ -2048,13 +2059,12 @@ ActiveRecord::Schema.define(:version => 20140116182242) do
   end
 
   create_table "trade_permits", :force => true do |t|
-    t.string   "number",               :null => false
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
-    t.string   "legacy_reporter_type"
+    t.string   "number",     :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
-  add_index "trade_permits", ["legacy_reporter_type"], :name => "index_trade_permits_on_legacy_reporter_type"
+  add_index "trade_permits", ["number"], :name => "trade_permits_number_idx", :unique => true
 
   create_table "trade_restriction_purposes", :force => true do |t|
     t.integer  "trade_restriction_id"
@@ -2095,178 +2105,141 @@ ActiveRecord::Schema.define(:version => 20140116182242) do
     t.integer  "start_notification_id"
     t.integer  "end_notification_id"
     t.string   "excluded_taxon_concepts_ids", :limit => nil
+    t.integer  "original_id"
   end
 
-  create_table "trade_sandbox_1", :force => true do |t|
-    t.string "appendix"
-    t.string "species_name"
-    t.string "term_code"
-    t.string "quantity"
-    t.string "unit_code"
-    t.string "trading_partner"
-    t.string "country_of_origin"
-    t.string "export_permit"
-    t.string "origin_permit"
-    t.string "purpose_code"
-    t.string "source_code"
-    t.string "year"
-    t.string "import_permit"
+  create_table "trade_sandbox_14", :force => true do |t|
+    t.string  "appendix"
+    t.string  "taxon_name"
+    t.string  "term_code"
+    t.string  "quantity"
+    t.string  "unit_code"
+    t.string  "trading_partner"
+    t.string  "country_of_origin"
+    t.string  "export_permit"
+    t.string  "origin_permit"
+    t.string  "purpose_code"
+    t.string  "source_code"
+    t.string  "year"
+    t.string  "import_permit"
+    t.integer "reported_taxon_concept_id"
+    t.integer "taxon_concept_id"
   end
 
-  add_index "trade_sandbox_1", ["appendix"], :name => "trade_sandbox_1_appendix_idx"
-  add_index "trade_sandbox_1", ["country_of_origin"], :name => "trade_sandbox_1_country_of_origin_idx"
-  add_index "trade_sandbox_1", ["purpose_code"], :name => "trade_sandbox_1_purpose_code_idx"
-  add_index "trade_sandbox_1", ["quantity"], :name => "trade_sandbox_1_quantity_idx"
-  add_index "trade_sandbox_1", ["source_code"], :name => "trade_sandbox_1_source_code_idx"
-  add_index "trade_sandbox_1", ["species_name"], :name => "trade_sandbox_1_species_name_idx"
-  add_index "trade_sandbox_1", ["term_code"], :name => "trade_sandbox_1_term_code_idx"
-  add_index "trade_sandbox_1", ["trading_partner"], :name => "trade_sandbox_1_trading_partner_idx"
-  add_index "trade_sandbox_1", ["unit_code"], :name => "trade_sandbox_1_unit_code_idx"
+  add_index "trade_sandbox_14", ["appendix"], :name => "trade_sandbox_14_appendix_idx"
+  add_index "trade_sandbox_14", ["country_of_origin"], :name => "trade_sandbox_14_country_of_origin_idx"
+  add_index "trade_sandbox_14", ["purpose_code"], :name => "trade_sandbox_14_purpose_code_idx"
+  add_index "trade_sandbox_14", ["quantity"], :name => "trade_sandbox_14_quantity_idx"
+  add_index "trade_sandbox_14", ["source_code"], :name => "trade_sandbox_14_source_code_idx"
+  add_index "trade_sandbox_14", ["taxon_concept_id"], :name => "trade_sandbox_14_taxon_concept_id_idx"
+  add_index "trade_sandbox_14", ["taxon_name"], :name => "trade_sandbox_14_taxon_name_idx"
+  add_index "trade_sandbox_14", ["term_code"], :name => "trade_sandbox_14_term_code_idx"
+  add_index "trade_sandbox_14", ["trading_partner"], :name => "trade_sandbox_14_trading_partner_idx"
+  add_index "trade_sandbox_14", ["unit_code"], :name => "trade_sandbox_14_unit_code_idx"
 
-  create_table "trade_sandbox_2", :force => true do |t|
-    t.string "appendix"
-    t.string "species_name"
-    t.string "term_code"
-    t.string "quantity"
-    t.string "unit_code"
-    t.string "trading_partner"
-    t.string "country_of_origin"
-    t.string "export_permit"
-    t.string "origin_permit"
-    t.string "purpose_code"
-    t.string "source_code"
-    t.string "year"
-    t.string "import_permit"
+  create_table "trade_sandbox_15", :force => true do |t|
+    t.string  "appendix"
+    t.string  "taxon_name"
+    t.string  "term_code"
+    t.string  "quantity"
+    t.string  "unit_code"
+    t.string  "trading_partner"
+    t.string  "country_of_origin"
+    t.string  "export_permit"
+    t.string  "origin_permit"
+    t.string  "purpose_code"
+    t.string  "source_code"
+    t.string  "year"
+    t.string  "import_permit"
+    t.integer "reported_taxon_concept_id"
+    t.integer "taxon_concept_id"
   end
 
-  add_index "trade_sandbox_2", ["appendix"], :name => "trade_sandbox_2_appendix_idx"
-  add_index "trade_sandbox_2", ["country_of_origin"], :name => "trade_sandbox_2_country_of_origin_idx"
-  add_index "trade_sandbox_2", ["purpose_code"], :name => "trade_sandbox_2_purpose_code_idx"
-  add_index "trade_sandbox_2", ["quantity"], :name => "trade_sandbox_2_quantity_idx"
-  add_index "trade_sandbox_2", ["source_code"], :name => "trade_sandbox_2_source_code_idx"
-  add_index "trade_sandbox_2", ["species_name"], :name => "trade_sandbox_2_species_name_idx"
-  add_index "trade_sandbox_2", ["term_code"], :name => "trade_sandbox_2_term_code_idx"
-  add_index "trade_sandbox_2", ["trading_partner"], :name => "trade_sandbox_2_trading_partner_idx"
-  add_index "trade_sandbox_2", ["unit_code"], :name => "trade_sandbox_2_unit_code_idx"
+  add_index "trade_sandbox_15", ["appendix"], :name => "trade_sandbox_15_appendix_idx"
+  add_index "trade_sandbox_15", ["country_of_origin"], :name => "trade_sandbox_15_country_of_origin_idx"
+  add_index "trade_sandbox_15", ["purpose_code"], :name => "trade_sandbox_15_purpose_code_idx"
+  add_index "trade_sandbox_15", ["quantity"], :name => "trade_sandbox_15_quantity_idx"
+  add_index "trade_sandbox_15", ["source_code"], :name => "trade_sandbox_15_source_code_idx"
+  add_index "trade_sandbox_15", ["taxon_concept_id"], :name => "trade_sandbox_15_taxon_concept_id_idx"
+  add_index "trade_sandbox_15", ["taxon_name"], :name => "trade_sandbox_15_taxon_name_idx"
+  add_index "trade_sandbox_15", ["term_code"], :name => "trade_sandbox_15_term_code_idx"
+  add_index "trade_sandbox_15", ["trading_partner"], :name => "trade_sandbox_15_trading_partner_idx"
+  add_index "trade_sandbox_15", ["unit_code"], :name => "trade_sandbox_15_unit_code_idx"
 
-  create_table "trade_sandbox_3", :force => true do |t|
-    t.string "appendix"
-    t.string "species_name"
-    t.string "term_code"
-    t.string "quantity"
-    t.string "unit_code"
-    t.string "trading_partner"
-    t.string "country_of_origin"
-    t.string "export_permit"
-    t.string "origin_permit"
-    t.string "purpose_code"
-    t.string "source_code"
-    t.string "year"
-    t.string "import_permit"
+  create_table "trade_sandbox_16", :force => true do |t|
+    t.string  "appendix"
+    t.string  "taxon_name"
+    t.string  "term_code"
+    t.string  "quantity"
+    t.string  "unit_code"
+    t.string  "trading_partner"
+    t.string  "country_of_origin"
+    t.string  "export_permit"
+    t.string  "origin_permit"
+    t.string  "purpose_code"
+    t.string  "source_code"
+    t.string  "year"
+    t.string  "import_permit"
+    t.integer "reported_taxon_concept_id"
+    t.integer "taxon_concept_id"
   end
 
-  add_index "trade_sandbox_3", ["appendix"], :name => "trade_sandbox_3_appendix_idx"
-  add_index "trade_sandbox_3", ["country_of_origin"], :name => "trade_sandbox_3_country_of_origin_idx"
-  add_index "trade_sandbox_3", ["purpose_code"], :name => "trade_sandbox_3_purpose_code_idx"
-  add_index "trade_sandbox_3", ["quantity"], :name => "trade_sandbox_3_quantity_idx"
-  add_index "trade_sandbox_3", ["source_code"], :name => "trade_sandbox_3_source_code_idx"
-  add_index "trade_sandbox_3", ["species_name"], :name => "trade_sandbox_3_species_name_idx"
-  add_index "trade_sandbox_3", ["term_code"], :name => "trade_sandbox_3_term_code_idx"
-  add_index "trade_sandbox_3", ["trading_partner"], :name => "trade_sandbox_3_trading_partner_idx"
-  add_index "trade_sandbox_3", ["unit_code"], :name => "trade_sandbox_3_unit_code_idx"
+  add_index "trade_sandbox_16", ["appendix"], :name => "trade_sandbox_16_appendix_idx"
+  add_index "trade_sandbox_16", ["country_of_origin"], :name => "trade_sandbox_16_country_of_origin_idx"
+  add_index "trade_sandbox_16", ["purpose_code"], :name => "trade_sandbox_16_purpose_code_idx"
+  add_index "trade_sandbox_16", ["quantity"], :name => "trade_sandbox_16_quantity_idx"
+  add_index "trade_sandbox_16", ["source_code"], :name => "trade_sandbox_16_source_code_idx"
+  add_index "trade_sandbox_16", ["taxon_concept_id"], :name => "trade_sandbox_16_taxon_concept_id_idx"
+  add_index "trade_sandbox_16", ["taxon_name"], :name => "trade_sandbox_16_taxon_name_idx"
+  add_index "trade_sandbox_16", ["term_code"], :name => "trade_sandbox_16_term_code_idx"
+  add_index "trade_sandbox_16", ["trading_partner"], :name => "trade_sandbox_16_trading_partner_idx"
+  add_index "trade_sandbox_16", ["unit_code"], :name => "trade_sandbox_16_unit_code_idx"
 
-  create_table "trade_sandbox_4", :force => true do |t|
-    t.string "appendix"
-    t.string "species_name"
-    t.string "term_code"
-    t.string "quantity"
-    t.string "unit_code"
-    t.string "trading_partner"
-    t.string "country_of_origin"
-    t.string "export_permit"
-    t.string "origin_permit"
-    t.string "purpose_code"
-    t.string "source_code"
-    t.string "year"
-    t.string "import_permit"
+  create_table "trade_sandbox_17", :force => true do |t|
+    t.string  "appendix"
+    t.string  "taxon_name"
+    t.string  "term_code"
+    t.string  "quantity"
+    t.string  "unit_code"
+    t.string  "trading_partner"
+    t.string  "country_of_origin"
+    t.string  "export_permit"
+    t.string  "origin_permit"
+    t.string  "purpose_code"
+    t.string  "source_code"
+    t.string  "year"
+    t.string  "import_permit"
+    t.integer "reported_taxon_concept_id"
+    t.integer "taxon_concept_id"
   end
 
-  add_index "trade_sandbox_4", ["appendix"], :name => "trade_sandbox_4_appendix_idx"
-  add_index "trade_sandbox_4", ["country_of_origin"], :name => "trade_sandbox_4_country_of_origin_idx"
-  add_index "trade_sandbox_4", ["purpose_code"], :name => "trade_sandbox_4_purpose_code_idx"
-  add_index "trade_sandbox_4", ["quantity"], :name => "trade_sandbox_4_quantity_idx"
-  add_index "trade_sandbox_4", ["source_code"], :name => "trade_sandbox_4_source_code_idx"
-  add_index "trade_sandbox_4", ["species_name"], :name => "trade_sandbox_4_species_name_idx"
-  add_index "trade_sandbox_4", ["term_code"], :name => "trade_sandbox_4_term_code_idx"
-  add_index "trade_sandbox_4", ["trading_partner"], :name => "trade_sandbox_4_trading_partner_idx"
-  add_index "trade_sandbox_4", ["unit_code"], :name => "trade_sandbox_4_unit_code_idx"
-
-  create_table "trade_sandbox_5", :force => true do |t|
-    t.string "appendix"
-    t.string "species_name"
-    t.string "term_code"
-    t.string "quantity"
-    t.string "unit_code"
-    t.string "trading_partner"
-    t.string "country_of_origin"
-    t.string "export_permit"
-    t.string "origin_permit"
-    t.string "purpose_code"
-    t.string "source_code"
-    t.string "year"
-    t.string "import_permit"
-  end
-
-  add_index "trade_sandbox_5", ["appendix"], :name => "trade_sandbox_5_appendix_idx"
-  add_index "trade_sandbox_5", ["country_of_origin"], :name => "trade_sandbox_5_country_of_origin_idx"
-  add_index "trade_sandbox_5", ["purpose_code"], :name => "trade_sandbox_5_purpose_code_idx"
-  add_index "trade_sandbox_5", ["quantity"], :name => "trade_sandbox_5_quantity_idx"
-  add_index "trade_sandbox_5", ["source_code"], :name => "trade_sandbox_5_source_code_idx"
-  add_index "trade_sandbox_5", ["species_name"], :name => "trade_sandbox_5_species_name_idx"
-  add_index "trade_sandbox_5", ["term_code"], :name => "trade_sandbox_5_term_code_idx"
-  add_index "trade_sandbox_5", ["trading_partner"], :name => "trade_sandbox_5_trading_partner_idx"
-  add_index "trade_sandbox_5", ["unit_code"], :name => "trade_sandbox_5_unit_code_idx"
-
-  create_table "trade_sandbox_6", :force => true do |t|
-    t.string "appendix"
-    t.string "species_name"
-    t.string "term_code"
-    t.string "quantity"
-    t.string "unit_code"
-    t.string "trading_partner"
-    t.string "country_of_origin"
-    t.string "export_permit"
-    t.string "origin_permit"
-    t.string "purpose_code"
-    t.string "source_code"
-    t.string "year"
-    t.string "import_permit"
-  end
-
-  add_index "trade_sandbox_6", ["appendix"], :name => "trade_sandbox_6_appendix_idx"
-  add_index "trade_sandbox_6", ["country_of_origin"], :name => "trade_sandbox_6_country_of_origin_idx"
-  add_index "trade_sandbox_6", ["purpose_code"], :name => "trade_sandbox_6_purpose_code_idx"
-  add_index "trade_sandbox_6", ["quantity"], :name => "trade_sandbox_6_quantity_idx"
-  add_index "trade_sandbox_6", ["source_code"], :name => "trade_sandbox_6_source_code_idx"
-  add_index "trade_sandbox_6", ["species_name"], :name => "trade_sandbox_6_species_name_idx"
-  add_index "trade_sandbox_6", ["term_code"], :name => "trade_sandbox_6_term_code_idx"
-  add_index "trade_sandbox_6", ["trading_partner"], :name => "trade_sandbox_6_trading_partner_idx"
-  add_index "trade_sandbox_6", ["unit_code"], :name => "trade_sandbox_6_unit_code_idx"
+  add_index "trade_sandbox_17", ["appendix"], :name => "trade_sandbox_17_appendix_idx"
+  add_index "trade_sandbox_17", ["country_of_origin"], :name => "trade_sandbox_17_country_of_origin_idx"
+  add_index "trade_sandbox_17", ["purpose_code"], :name => "trade_sandbox_17_purpose_code_idx"
+  add_index "trade_sandbox_17", ["quantity"], :name => "trade_sandbox_17_quantity_idx"
+  add_index "trade_sandbox_17", ["source_code"], :name => "trade_sandbox_17_source_code_idx"
+  add_index "trade_sandbox_17", ["taxon_concept_id"], :name => "trade_sandbox_17_taxon_concept_id_idx"
+  add_index "trade_sandbox_17", ["taxon_name"], :name => "trade_sandbox_17_taxon_name_idx"
+  add_index "trade_sandbox_17", ["term_code"], :name => "trade_sandbox_17_term_code_idx"
+  add_index "trade_sandbox_17", ["trading_partner"], :name => "trade_sandbox_17_trading_partner_idx"
+  add_index "trade_sandbox_17", ["unit_code"], :name => "trade_sandbox_17_unit_code_idx"
 
   create_table "trade_sandbox_template", :force => true do |t|
-    t.string "appendix"
-    t.string "species_name"
-    t.string "term_code"
-    t.string "quantity"
-    t.string "unit_code"
-    t.string "trading_partner"
-    t.string "country_of_origin"
-    t.string "export_permit"
-    t.string "origin_permit"
-    t.string "purpose_code"
-    t.string "source_code"
-    t.string "year"
-    t.string "import_permit"
+    t.string  "appendix"
+    t.string  "taxon_name"
+    t.string  "term_code"
+    t.string  "quantity"
+    t.string  "unit_code"
+    t.string  "trading_partner"
+    t.string  "country_of_origin"
+    t.string  "export_permit"
+    t.string  "origin_permit"
+    t.string  "purpose_code"
+    t.string  "source_code"
+    t.string  "year"
+    t.string  "import_permit"
+    t.integer "reported_taxon_concept_id"
+    t.integer "taxon_concept_id"
   end
 
   create_table "trade_shipments", :force => true do |t|
@@ -2311,6 +2284,8 @@ ActiveRecord::Schema.define(:version => 20140116182242) do
   add_index "trade_shipments", ["taxon_concept_id"], :name => "index_trade_shipments_on_taxon_concept_id"
   add_index "trade_shipments", ["term_id"], :name => "index_trade_shipments_on_term_id"
   add_index "trade_shipments", ["unit_id"], :name => "index_trade_shipments_on_unit_id"
+  add_index "trade_shipments", ["year", "exporter_id"], :name => "index_trade_shipments_on_year_exporter_id"
+  add_index "trade_shipments", ["year", "importer_id"], :name => "index_trade_shipments_on_year_importer_id"
   add_index "trade_shipments", ["year"], :name => "index_trade_shipments_on_year"
 
   create_table "trade_taxon_concept_term_pairs", :force => true do |t|
@@ -2344,42 +2319,53 @@ ActiveRecord::Schema.define(:version => 20140116182242) do
 
   create_table "trade_validation_rules", :force => true do |t|
     t.string   "valid_values_view"
-    t.string   "type",                                :null => false
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.string   "type",                                 :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.string   "format_re"
-    t.integer  "run_order",                           :null => false
+    t.integer  "run_order",                            :null => false
     t.string   "column_names"
-    t.boolean  "is_primary",        :default => true, :null => false
+    t.boolean  "is_primary",        :default => true,  :null => false
     t.hstore   "scope"
+    t.boolean  "is_strict",         :default => false, :null => false
   end
 
   create_table "users", :force => true do |t|
-    t.string   "name",       :null => false
-    t.string   "email",      :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string   "name",                                   :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.string   "email",                  :default => "", :null => false
+    t.string   "encrypted_password",     :default => "", :null => false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          :default => 0,  :null => false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
   end
 
-  create_table "valid_species_name_annex_year_mview", :id => false, :force => true do |t|
+  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "valid_taxon_concept_annex_year_mview", :id => false, :force => true do |t|
     t.integer  "taxon_concept_id"
-    t.string   "species_name"
     t.string   "annex"
     t.datetime "effective_from"
     t.datetime "effective_to"
   end
 
-  add_index "valid_species_name_annex_year_mview", ["species_name", "annex", "effective_from", "effective_to"], :name => "tmp_valid_species_name_annex__species_name_annex_effective__idx"
+  add_index "valid_taxon_concept_annex_year_mview", ["taxon_concept_id", "annex", "effective_from", "effective_to"], :name => "tmp_valid_taxon_concept_annex_taxon_concept_id_annex_effect_idx"
 
-  create_table "valid_species_name_appendix_year_mview", :id => false, :force => true do |t|
+  create_table "valid_taxon_concept_appendix_year_mview", :id => false, :force => true do |t|
     t.integer  "taxon_concept_id"
-    t.string   "species_name"
     t.string   "appendix"
     t.datetime "effective_from"
     t.datetime "effective_to"
   end
 
-  add_index "valid_species_name_appendix_year_mview", ["species_name", "appendix", "effective_from", "effective_to"], :name => "tmp_valid_species_name_append_species_name_appendix_effecti_idx"
+  add_index "valid_taxon_concept_appendix_year_mview", ["taxon_concept_id", "appendix", "effective_from", "effective_to"], :name => "tmp_valid_taxon_concept_appen_taxon_concept_id_appendix_eff_idx"
 
   add_foreign_key "annotations", "annotations", name: "annotations_source_id_fk", column: "source_id"
   add_foreign_key "annotations", "events", name: "annotations_event_id_fk"
