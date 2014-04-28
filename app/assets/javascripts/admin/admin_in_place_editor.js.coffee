@@ -6,8 +6,8 @@ $(document).ready ->
     window.adminEditor = new ListingChangesEditor()
   else if window.editorClass == 'taxon_concept_references'
     window.adminEditor = new TaxonReferencesEditor()
-  else if window.editorClass == 'inplace_taxon_concepts'
-    window.adminEditor = new AdminInPlaceEditorTaxonConcepts()
+  else if window.editorClass == 'in_place_editor_select2_ajax'
+    window.adminEditor = new AdminInPlaceEditorSelect2()
   else
     window.adminEditor = new AdminInPlaceEditor()
   window.adminEditor.init()
@@ -154,22 +154,72 @@ class AdminInPlaceEditor extends AdminEditor
       'option', 'emptytext', 'not current'
     )
 
-    $('#admin-in-place-editor .xxx').editable(
+    $('#admin-in-place-editor').editable(
       'option', 'source', [{id: 'gb', text: 'Great Britain'}, {id: 'us', text: 'United States'},{id: 'ru', text: 'Russia'}]
     )
 
-    $('#admin-in-place-editor .xxx').editable(
+    $('#admin-in-place-editor').editable(
       'option', 'select2', {multiple: true}
     )
 
-class AdminInPlaceEditorTaxonConcepts extends AdminEditor
-  init: () ->
+class AdminInPlaceEditorSelect2 extends AdminEditor
+  init: (options) ->
     super
-    @initEditors()
+    $.getJSON("/api/v1/terms").done((data) => 
+      terms = data.terms
+      optionsArr = @getOptions(terms)
+      for options in optionsArr
+        @initEditors(options)
+    )
 
-  initEditors: () ->
+  getOptions: (terms) ->
+    options = []
+    $('#admin-in-place-editor .editable').each( (i) ->
+      options.push {}
+      selection = $(@)
+      if selection.hasClass('taxon_concept')
+        options[i]['select2'] = 
+          ajax:
+            url: "/api/v1/auto_complete_taxon_concepts.json"
+            dataType: "json"
+            data: (term, page) ->
+              taxon_concept_query: term
+              visibility: 'trade_internal'
+              per_page: 10
+              page: page
+            results: (data, page) ->
+              more = (page * 10) < data.meta.total
+              results: data.auto_complete_taxon_concepts.map (t) =>
+                id: t.id
+                name: t.full_name
+              more: more
+          placeholder: "Select Taxonomy"
+          allowClear: true
+          minimumInputLength: 3
+          id: (item) ->
+            item.id
+          formatResult: (item) ->
+            item.name
+          formatSelection: (item) ->
+            item.name
+      else if selection.hasClass('term')
+        options[i]['select2'] = 
+          data:{ results: terms, text: 'code' },
+          placeholder: "Select Term"
+          allowClear: true
+          minimumInputLength: 1
+          id: (item) ->
+            item.id
+          formatResult: (item) ->
+            item.code
+          formatSelection: (item) ->
+            item.code
+      options[i]['selection'] = selection
+    )
+    options
 
-    $('#admin-in-place-editor .editable').editable
+  initEditors: (options) ->
+    options.selection.editable
       placement: 'right'
       ajaxOptions:
         dataType: 'json'
@@ -190,40 +240,7 @@ class AdminInPlaceEditorTaxonConcepts extends AdminEditor
         # Hack around: https://github.com/vitalets/x-editable/issues/431
         choice = $('.select2-container .select2-choice span').text()
         if choice then $(this).text(choice)
-      select2:
-        placeholder: "Select Taxonomy"
-        allowClear: true
-        minimumInputLength: 3
-        id: (item) ->
-          item.id
-        ajax:
-          url: "/api/v1/auto_complete_taxon_concepts.json"
-          dataType: "json"
-          data: (term, page) ->
-            taxon_concept_query: term # search term
-            visibility: 'trade_internal'
-            per_page: 10
-            page: page
-      
-          results: (data, page) ->
-            more = (page * 10) < data.meta.total
-            formatted_taxon_concepts = data.auto_complete_taxon_concepts.map (tc) =>
-              id: tc.id
-              name: tc.full_name
-            results: formatted_taxon_concepts
-            more: more
-      
-        formatResult: (item) ->
-          item.name
-          
-        formatSelection: (item) ->
-          item.name
-
-
-    $('#admin-in-place-editor .editable').on('hidden', -> 
-      val = $(@).editable('getValue')
-    )
-
+      select2: options.select2
 
 class TaxonConceptsEditor extends AdminEditor
   init: () ->
