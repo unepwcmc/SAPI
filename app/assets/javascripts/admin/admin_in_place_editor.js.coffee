@@ -177,12 +177,8 @@ class AdminInPlaceEditorTaxonConcepts extends AdminEditor
       params: (params) ->
         #originally params contain pk, name and value
         newParams = id: params.pk
-
         newParams[$(@).attr('data-resource')] = {}
         newParams[$(@).attr('data-resource')][params.name] = params.value
-
-        #newParams[params.name] = params.value
-        #console.log newParams
         return newParams
       error: ->
         errors = JSON.parse(arguments[0].responseText).errors
@@ -190,13 +186,16 @@ class AdminInPlaceEditorTaxonConcepts extends AdminEditor
         for k, v of errors
           errorsMessages.push v
         errorsMessages.join ', '
+      display: (item) ->
+        # Hack around: https://github.com/vitalets/x-editable/issues/431
+        choice = $('.select2-container .select2-choice span').text()
+        if choice then $(this).text(choice)
       select2:
         placeholder: "Select Taxonomy"
         allowClear: true
         minimumInputLength: 3
         id: (item) ->
           item.id
-      
         ajax:
           url: "/api/v1/auto_complete_taxon_concepts.json"
           dataType: "json"
@@ -210,18 +209,19 @@ class AdminInPlaceEditorTaxonConcepts extends AdminEditor
             more = (page * 10) < data.meta.total
             formatted_taxon_concepts = data.auto_complete_taxon_concepts.map (tc) =>
               id: tc.id
-              text: tc.full_name
+              name: tc.full_name
             results: formatted_taxon_concepts
             more: more
       
         formatResult: (item) ->
-          item.text
+          item.name
           
         formatSelection: (item) ->
-          item.text
+          item.name
+
+
     $('#admin-in-place-editor .editable').on('hidden', -> 
       val = $(@).editable('getValue')
-      debugger;
     )
 
 
