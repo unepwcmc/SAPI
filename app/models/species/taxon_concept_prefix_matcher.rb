@@ -25,8 +25,12 @@ class Species::TaxonConceptPrefixMatcher
   end
 
   def initialize_query
-    @query = MAutoCompleteTaxonConcept.order([:rank_order, :full_name])
-    unless @ranks.empty?
+    @query = MTaxonConcept.
+      from('auto_complete_taxon_concepts_mview AS taxon_concepts_mview').
+      order([:rank_order, :full_name])
+
+    # note: speciesplus, checklist & trade_internal consider all ranks
+    if !@ranks.empty? && @visibility == :trade
       @query = @query.where(:rank_name => @ranks)
     end
 
@@ -47,10 +51,7 @@ class Species::TaxonConceptPrefixMatcher
     if @taxon_concept_query
       @query = @query.
         select('id, full_name, rank_name,
-          ARRAY_AGG_NOTNULL(
-            CASE WHEN matched_name != full_name THEN matched_name ELSE NULL END
-            ORDER BY matched_name
-          ) AS matching_names_ary').
+          ARRAY_AGG_NOTNULL(matched_name ORDER BY matched_name) AS matching_names_ary').
       where(
         ActiveRecord::Base.send(:sanitize_sql_array, [
           "name_for_matching LIKE :sci_name_prefix",

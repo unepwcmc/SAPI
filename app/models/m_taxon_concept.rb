@@ -175,7 +175,11 @@ class MTaxonConcept < ActiveRecord::Base
   end
 
   def matching_names
-    (synonyms + english_names + french_names + spanish_names).flatten
+    if respond_to?(:matching_names_ary)
+      parse_pg_array(read_attribute(:matching_names_ary))
+    else
+      (synonyms + english_names + french_names + spanish_names).flatten
+    end
   end
 
   def countries_ids
