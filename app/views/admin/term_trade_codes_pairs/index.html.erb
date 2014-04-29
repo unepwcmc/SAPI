@@ -1,7 +1,9 @@
 <%= admin_title %>
 <%= @trade_code_type %>
 
-<%= sub_nav %>
+<%= link_to "Taxon term", '/admin/taxon_concept_term_pairs' %>
+<%= link_to "Term unit", '/admin/term_trade_codes_pairs?type=Unit' %>
+<%= link_to "Term purpose", '/admin/term_trade_codes_pairs?type=Purpose' %>
 
 <%= admin_new_modal do %>
   <%= render :partial => 'admin/term_trade_codes_pairs/form' %>
