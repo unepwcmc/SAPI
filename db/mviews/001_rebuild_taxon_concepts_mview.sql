@@ -104,6 +104,15 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     synonyms.*,
     subspecies.subspecies_not_listed_ary,
     countries_ids_ary,
+    all_distribution_ary,
+    all_distribution_iso_codes_ary,
+    native_distribution_ary,
+    introduced_distribution_ary,
+    introduced_uncertain_distribution_ary,
+    reintroduced_distribution_ary,
+    extinct_distribution_ary,
+    extinct_uncertain_distribution_ary,
+    uncertain_distribution_ary,
     CASE
       WHEN
         name_status = 'A'
@@ -252,6 +261,43 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       -- TODO handle EXTINCT
       GROUP BY taxon_concepts.id
     ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt;
+    LEFT JOIN  (
+      SELECT *
+      FROM CROSSTAB(
+        'SELECT distributions.taxon_concept_id,
+          CASE WHEN tags.name IS NULL THEN ''NATIVE'' ELSE UPPER(tags.name) END AS tag,
+          ARRAY_AGG_NOTNULL(geo_entities.name_en ORDER BY geo_entities.name_en) AS locations_ary
+        FROM distributions
+        JOIN geo_entities
+          ON geo_entities.id = distributions.geo_entity_id
+        LEFT JOIN taggings
+          ON taggable_id = distributions.id AND taggable_type = ''Distribution''
+        LEFT JOIN tags
+          ON tags.id = taggings.tag_id
+          AND (
+            UPPER(tags.name) IN (
+              ''INTRODUCED'', ''INTRODUCED (?)'', ''REINTRODUCED'',
+              ''EXTINCT'', ''EXTINCT (?)'', ''DISTRIBUTION UNCERTAIN''
+            ) OR tags.name IS NULL
+          )
+        GROUP BY distributions.taxon_concept_id, tags.name
+        ',
+        'SELECT * FROM UNNEST(
+          ARRAY[
+            ''NATIVE'', ''INTRODUCED'', ''INTRODUCED (?)'', ''REINTRODUCED'',
+            ''EXTINCT'', ''EXTINCT (?)'', ''DISTRIBUTION UNCERTAIN''
+          ])'
+      ) AS ct(
+        taxon_concept_id INTEGER,
+        native_distribution_ary VARCHAR[],
+        introduced_distribution_ary VARCHAR[],
+        introduced_uncertain_distribution_ary VARCHAR[],
+        reintroduced_distribution_ary VARCHAR[],
+        extinct_distribution_ary VARCHAR[],
+        extinct_uncertain_distribution_ary VARCHAR[],
+        uncertain_distribution_ary VARCHAR[]
+      )
+    ) distributions_by_tag ON taxon_concepts.id = distributions_by_tag.taxon_concept_id;
 
     RAISE INFO 'Creating taxon concepts materialized view (tmp)';
     CREATE TABLE taxon_concepts_mview_tmp AS

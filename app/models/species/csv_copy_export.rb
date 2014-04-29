@@ -14,12 +14,12 @@ private
     # escape quotes around attributes for psql
     sql =<<-PSQL
       \\COPY (#{query_sql.gsub(/"/,"\\\"")})
-      TO ?
+      TO :file_name
       WITH DELIMITER ','
       ENCODING 'utf8'
       CSV HEADER;
     PSQL
-    ActiveRecord::Base.send(:sanitize_sql_array, [sql, @file_name])
+    ActiveRecord::Base.send(:sanitize_sql_array, [sql, {:file_name => @file_name}])
   end
 
   def to_csv
