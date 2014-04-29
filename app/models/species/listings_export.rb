@@ -1,5 +1,3 @@
-require 'digest/sha1'
-require 'csv'
 class Species::ListingsExport < Species::CsvCopyExport
 
   def initialize(designation, filters)
@@ -23,6 +21,7 @@ class Species::ListingsExport < Species::CsvCopyExport
 
   def query
     rel = MTaxonConcept.from(table_name).
+      select(select_columns).
       order('taxonomic_position')
     rel = if @geo_entities_ids
       MTaxonConceptFilterByAppendixPopulationQuery.new(
@@ -42,6 +41,10 @@ class Species::ListingsExport < Species::CsvCopyExport
   end
 
 private
+
+  def query_sql
+    query.to_sql
+  end
 
   def resource_name
     "#{designation_name}_listings"

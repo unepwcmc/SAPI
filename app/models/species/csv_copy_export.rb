@@ -2,11 +2,14 @@ require 'psql_command'
 class Species::CsvCopyExport < Species::CsvExport
 
 private
-  def query_sql
+  def select_columns
     headers = csv_column_headers
     select_columns = sql_columns.each_with_index.map do |c, i|
       "#{c} AS \"#{headers[i]}\""
     end
+  end
+
+  def query_sql
     query.select(select_columns).to_sql
   end
 
