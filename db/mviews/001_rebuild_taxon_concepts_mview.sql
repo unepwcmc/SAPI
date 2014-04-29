@@ -177,16 +177,14 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       SELECT *
       FROM
       CROSSTAB(
-      'SELECT taxon_concepts.id AS taxon_concept_id_com, languages.iso_code1 AS lng,
-      ARRAY_AGG(common_names.name ORDER BY common_names.name) AS common_names_ary
-      FROM "taxon_concepts"
-      INNER JOIN "taxon_commons"
-      ON "taxon_commons"."taxon_concept_id" = "taxon_concepts"."id"
+      'SELECT taxon_commons.taxon_concept_id AS taxon_concept_id_com, languages.iso_code1 AS lng,
+      ARRAY_AGG_NOTNULL(common_names.name ORDER BY common_names.name) AS common_names_ary
+      FROM "taxon_commons"
       INNER JOIN "common_names"
       ON "common_names"."id" = "taxon_commons"."common_name_id"
       INNER JOIN "languages"
       ON "languages"."id" = "common_names"."language_id" AND UPPER(languages.iso_code1) IN (''EN'', ''FR'', ''ES'')
-      GROUP BY taxon_concepts.id, languages.iso_code1
+      GROUP BY taxon_commons.taxon_concept_id, languages.iso_code1
       ORDER BY 1,2',
       'SELECT DISTINCT languages.iso_code1 FROM languages WHERE UPPER(languages.iso_code1) IN (''EN'', ''FR'', ''ES'') order by 1'
       ) AS ct(
@@ -195,18 +193,16 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       )
     ) common_names ON taxon_concepts.id = common_names.taxon_concept_id_com
     LEFT JOIN (
-      SELECT taxon_concepts.id AS taxon_concept_id_syn,
+      SELECT taxon_relationships.taxon_concept_id AS taxon_concept_id_syn,
       ARRAY_AGG_NOTNULL(synonym_tc.full_name) AS synonyms_ary,
       ARRAY_AGG_NOTNULL(synonym_tc.author_year) AS synonyms_author_years_ary
-      FROM taxon_concepts
-      LEFT JOIN taxon_relationships
-      ON "taxon_relationships"."taxon_concept_id" = "taxon_concepts"."id"
-      LEFT JOIN "taxon_relationship_types"
+      FROM taxon_relationships
+      JOIN "taxon_relationship_types"
       ON "taxon_relationship_types"."id" = "taxon_relationships"."taxon_relationship_type_id"
-      LEFT JOIN taxon_concepts AS synonym_tc
-      ON synonym_tc.id = taxon_relationships.other_taxon_concept_id
       AND "taxon_relationship_types"."name" = 'HAS_SYNONYM'
-      GROUP BY taxon_concepts.id
+      JOIN taxon_concepts AS synonym_tc
+      ON synonym_tc.id = taxon_relationships.other_taxon_concept_id
+      GROUP BY taxon_relationships.taxon_concept_id
     ) synonyms ON taxon_concepts.id = synonyms.taxon_concept_id_syn
     LEFT JOIN (
       SELECT taxon_concept_id_sub, ARRAY_AGG(subspecies_ary) AS subspecies_not_listed_ary
@@ -248,19 +244,18 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       GROUP by taxon_concept_id_sub
     ) subspecies ON taxon_concepts.id = subspecies.taxon_concept_id_sub
     LEFT JOIN (
-      SELECT taxon_concepts.id AS taxon_concept_id_cnt,
-      ARRAY_AGG_NOTNULL(geo_entities.id ORDER BY geo_entities.name_en) AS countries_ids_ary
-      FROM taxon_concepts
-      LEFT JOIN distributions
-      ON "distributions"."taxon_concept_id" = "taxon_concepts"."id"
-      LEFT JOIN geo_entities
+      SELECT distributions.taxon_concept_id AS taxon_concept_id_cnt,
+      ARRAY_AGG_NOTNULL(geo_entities.id ORDER BY geo_entities.name_en) AS countries_ids_ary,
+      ARRAY_AGG_NOTNULL(geo_entities.name_en ORDER BY geo_entities.name_en) AS all_distribution_ary,
+      ARRAY_AGG_NOTNULL(geo_entities.iso_code2 ORDER BY geo_entities.name_en) AS all_distribution_iso_codes_ary
+      FROM distributions
+      JOIN geo_entities
       ON distributions.geo_entity_id = geo_entities.id
-      LEFT JOIN "geo_entity_types"
+      JOIN "geo_entity_types"
       ON "geo_entity_types"."id" = "geo_entities"."geo_entity_type_id"
       AND (geo_entity_types.name = 'COUNTRY' OR geo_entity_types.name = 'TERRITORY')
-      -- TODO handle EXTINCT
-      GROUP BY taxon_concepts.id
-    ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt;
+      GROUP BY distributions.taxon_concept_id
+    ) countries_ids ON taxon_concepts.id = countries_ids.taxon_concept_id_cnt
     LEFT JOIN  (
       SELECT *
       FROM CROSSTAB(
