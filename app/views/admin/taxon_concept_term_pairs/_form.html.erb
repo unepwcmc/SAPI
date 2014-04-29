@@ -2,9 +2,12 @@
 
   <%= error_messages_for(resource_instance_name) %>
 
-  <label>Code</label><%= f.text_field :code %><br />
-  <p>Name</p>
-  <label>EN</label> <%= f.text_field :name_en %><br />
-  <label>ES</label> <%= f.text_field :name_es %><br />
-  <label>FR</label> <%= f.text_field :name_fr %><br />
+  <label>Term Code</label>
+  <%= f.hidden_field :term_id, class: 'term select2' %>
+  <br />
+
+  <label>Taxon Concept Full Name</label>
+  <%= f.hidden_field :taxon_concept_id, class: 'taxon_concept select2' %>
+  <br />
+
 <% end %>
