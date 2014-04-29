@@ -21,7 +21,7 @@ namespace :import do
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
-    initial_count = TermTradeCodesPair.count
+    puts "#{TermTradeCodesPair.where(:trade_code_type => 'Purpose').delete_all} TermPurposePairs deleted"
     sql = <<-SQL
       INSERT INTO term_trade_codes_pairs(term_id,
         trade_code_id, trade_code_type, created_at, updated_at)
@@ -42,7 +42,7 @@ namespace :import do
       ) as subquery;
     SQL
     ActiveRecord::Base.connection.execute(sql)
-    puts "#{TermTradeCodesPair.count - initial_count} terms and purpose codes pairs created"
+    puts "#{TermTradeCodesPair.where(:trade_code_type => 'Purpose').count} terms and purpose codes pairs created"
   end
 
   desc "Import terms and unit codes acceptable pairing"
@@ -52,7 +52,7 @@ namespace :import do
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
-    initial_count = TermTradeCodesPair.count
+    puts "#{TermTradeCodesPair.where(:trade_code_type => 'Unit').delete_all} TermUnitPairs deleted"
     sql = <<-SQL
       INSERT INTO term_trade_codes_pairs(term_id,
         trade_code_id, trade_code_type, created_at, updated_at)
@@ -73,7 +73,7 @@ namespace :import do
       ) AS subquery;
     SQL
     ActiveRecord::Base.connection.execute(sql)
-    puts "#{TermTradeCodesPair.count - initial_count} terms and unit codes pairs created"
+    puts "#{TermTradeCodesPair.where(:trade_code_type => 'Unit').count} terms and unit codes pairs created"
   end
 
   desc "Import taxon concepts terms acceptable pairing. (i.e.: which terms can go with each taxon concept)"
@@ -83,7 +83,7 @@ namespace :import do
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
-    initial_count = Trade::TaxonConceptTermPair.count
+    puts "#{Trade::TaxonConceptTermPair.delete_all} taxon_concept_term_pairs deleted"
     sql = <<-SQL
       INSERT INTO trade_taxon_concept_term_pairs(taxon_concept_id, term_id,
         created_at, updated_at)
@@ -105,7 +105,7 @@ namespace :import do
       ) AS subquery;
     SQL
     ActiveRecord::Base.connection.execute(sql)
-    puts "#{Trade::TaxonConceptTermPair.count - initial_count} terms and unit codes pairs created"
+    puts "#{Trade::TaxonConceptTermPair.count} terms and unit codes pairs created"
   end
 
   desc "Empties taxon_concept_term_pairs and term_trade_codes_pairs"
