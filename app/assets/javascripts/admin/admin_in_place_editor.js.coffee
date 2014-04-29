@@ -6,8 +6,12 @@ $(document).ready ->
     window.adminEditor = new ListingChangesEditor()
   else if window.editorClass == 'taxon_concept_references'
     window.adminEditor = new TaxonReferencesEditor()
-  else if window.editorClass == 'in_place_editor_select2_ajax'
+  else if window.editorClass == 'term_pairings_select2'
     window.adminEditor = new TermPairingsSelect2Editor()
+  else if window.editorClass == 'term_pairings_select2_unit'
+    window.adminEditor = new TermPairingsSelect2Editor({trade_type: 'unit'})
+  else if window.editorClass == 'term_pairings_select2_purpose'
+    window.adminEditor = new TermPairingsSelect2Editor({trade_type: 'purpose'})
   else
     window.adminEditor = new AdminInPlaceEditor()
   window.adminEditor.init()
@@ -342,22 +346,37 @@ class TaxonReferencesEditor extends AdminEditor
 
 
 class TermPairingsSelect2Editor extends AdminEditor
+
+  constructor: (options) ->
+    @options = options
+
   init: () ->
     super
     $.getJSON("/api/v1/terms").done((data) => 
       @terms = data.terms
-      inlineOptionsArr = @getOptions(@terms, $('#admin-in-place-editor .editable'))
-      for options in inlineOptionsArr
-        @initInlineEditors(options)
-      @initModal()
+      trades = window.editorTradeCodes
+      if @options?.trade_type?
+        @initInline({trades: trades, terms: @terms})
+        @initModal({terms: @terms})
+      else
+        @initInline({terms: @terms})
+        @initModal({terms: @terms})
     )
 
-  initModal: ->
-    @modalOptionsArr = @getOptions(@terms, $('form .select2'))
+  initInline: (data) ->
+    @inlineOptionsArr = @getOptions($('#admin-in-place-editor .editable'), data)
+    for options in @inlineOptionsArr
+      @initInlineEditors(options)
+
+  initModal: (data) ->
+    data ||= {terms: @terms}
+    @modalOptionsArr = @getOptions($('form .select2'), data)
     for options in @modalOptionsArr
       @initModalEditors(options)
 
-  getOptions: (terms, selection) ->
+  getOptions: (selection, data) ->
+    terms = data.terms
+    trades = data.trades
     options = []
     selection.each( (i) ->
       options.push {}
@@ -399,6 +418,9 @@ class TermPairingsSelect2Editor extends AdminEditor
             item.code
           formatSelection: (item) ->
             item.code
+      else if selection.hasClass('trade')
+        options[i]['select'] =
+          source: trades
       options[i]['selection'] = selection
     )
     options
@@ -423,10 +445,12 @@ class TermPairingsSelect2Editor extends AdminEditor
         errorsMessages.join ', '
       display: (item) ->
         # Hack around: https://github.com/vitalets/x-editable/issues/431
-        choice = $('.select2-container .select2-choice span').text()
+        choice = $('.select2-container .select2-choice span').last().text()
         if choice then $(this).text(choice)
       select2: options.select2
+      source: options.select?.source
 
   initModalEditors: (options) ->
-    options.selection.select2 options.select2
+    if options.select2?
+      options.selection.select2 options.select2
 

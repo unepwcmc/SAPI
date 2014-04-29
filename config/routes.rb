@@ -38,6 +38,7 @@ SAPI::Application.routes.draw do
     resources :purposes, :only => [:index, :create, :update, :destroy]
     resources :units, :only => [:index, :create, :update, :destroy]
     resources :taxon_concept_term_pairs, :only => [:index, :create, :update, :destroy]
+    resources :term_trade_codes_pairs, :only => [:index, :create, :update, :destroy]
     resources :languages, :only => [:index, :create, :update, :destroy]
     resources :users
     resources :designations, :only => [:index, :create, :update, :destroy]

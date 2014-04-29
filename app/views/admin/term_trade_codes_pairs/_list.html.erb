@@ -14,10 +14,10 @@
         </a>
       </td>
       <td>
-        <a href="#" class="editable editable-click editable-required taxon_concept" data-type="select2" data-resource="<%= controller_name.singularize %>" data-name="taxon_concept_id"
+        <a href="#" class="editable editable-click editable-required trade" data-type="select" data-resource="<%= controller_name.singularize %>" data-name="trade_code_id"
           data-placeholder="Required" data-original-title="Enter the code"
           data-url="<%= resource_url(term_pair) %>" data-pk="<%= term_pair.id %>">
-          <%= term_pair.taxon_concept.full_name %>
+          <%= term_pair.trade_code.code %>
         </a>
       </td>
       <td>
@@ -28,5 +28,6 @@
 </tbody>
 
 <script>
-  window.editorClass = 'term_pairings_select2';
+  window.editorClass = 'term_pairings_select2_<%= @trade_code_type.downcase %>';
+  window.editorTradeCodes = <%= raw @trade_code_codes_obj %>;
 </script>

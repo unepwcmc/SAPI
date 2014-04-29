@@ -1,16 +1,17 @@
 <%= admin_title %>
+<%= @trade_code_type %>
 
 <%= sub_nav %>
 
 <%= admin_new_modal do %>
-  <%= render :partial => 'admin/taxon_concept_term_pairs/form' %>
+  <%= render :partial => 'admin/term_trade_codes_pairs/form' %>
 <% end %>
 
 <%= admin_simple_search %> 
 
 <%= admin_table do %>
   <%=
-    render :partial => 'admin/taxon_concept_term_pairs/list',
+    render :partial => 'admin/term_trade_codes_pairs/list',
     :locals => {:collection => collection}
   %>
 <% end %>
