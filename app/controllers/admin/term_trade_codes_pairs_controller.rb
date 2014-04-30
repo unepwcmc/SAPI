@@ -24,6 +24,7 @@ class Admin::TermTradeCodesPairsController < Admin::SimpleCrudController
     @term_trade_codes_pairs ||= end_of_association_chain.
       where(:trade_code_type => @trade_code_type).
       order('term_id').
-      page(params[:page])
+      page(params[:page]).
+      search(params[:query])
   end
 end

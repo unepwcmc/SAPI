@@ -1,14 +1,12 @@
 <%= admin_title %>
 
-<%= link_to "Taxon term", '/admin/taxon_concept_term_pairs' %>
-<%= link_to "Term unit", '/admin/term_trade_codes_pairs?type=Unit' %>
-<%= link_to "Term purpose", '/admin/term_trade_codes_pairs?type=Purpose' %>
+<%= render "shared/pairings_sub_nav" %>
 
 <%= admin_new_modal do %>
   <%= render :partial => 'admin/taxon_concept_term_pairs/form' %>
 <% end %>
 
-<%= admin_simple_search %> 
+<%= admin_simple_search %>
 
 <%= admin_table do %>
   <%=
