@@ -78,7 +78,16 @@ SELECT
     ),
     E'\n'
   ) AS original_taxon_concept_hash_full_note_en,
-  taxon_concepts_mview.countries_ids_ary
+  taxon_concepts_mview.countries_ids_ary,
+  ARRAY_TO_STRING(taxon_concepts_mview.all_distribution_ary, ',') AS all_distribution,
+  ARRAY_TO_STRING(taxon_concepts_mview.all_distribution_iso_codes_ary, ',') AS all_distribution_iso_codes,
+  ARRAY_TO_STRING(taxon_concepts_mview.native_distribution_ary, ',') AS native_distribution,
+  ARRAY_TO_STRING(taxon_concepts_mview.introduced_distribution_ary, ',') AS introduced_distribution,
+  ARRAY_TO_STRING(taxon_concepts_mview.introduced_uncertain_distribution_ary, ',') AS introduced_uncertain_distribution,
+  ARRAY_TO_STRING(taxon_concepts_mview.reintroduced_distribution_ary, ',') AS reintroduced_distribution,
+  ARRAY_TO_STRING(taxon_concepts_mview.extinct_distribution_ary, ',') AS extinct_distribution,
+  ARRAY_TO_STRING(taxon_concepts_mview.extinct_uncertain_distribution_ary, ',') AS extinct_uncertain_distribution,
+  ARRAY_TO_STRING(taxon_concepts_mview.uncertain_distribution_ary, ',') AS uncertain_distribution
 FROM "taxon_concepts_mview"
 JOIN cites_listing_changes_mview listing_changes_mview 
   ON listing_changes_mview.taxon_concept_id = taxon_concepts_mview.id
@@ -128,7 +137,16 @@ GROUP BY
   COALESCE(inclusion_taxon_concepts_mview.full_name, original_taxon_concepts_mview.full_name),
   COALESCE(inclusion_taxon_concepts_mview.spp, original_taxon_concepts_mview.spp),
   taxon_concepts_mview.taxonomic_position,
-  taxon_concepts_mview.countries_ids_ary;
+  taxon_concepts_mview.countries_ids_ary,
+  taxon_concepts_mview.all_distribution_ary,
+  taxon_concepts_mview.all_distribution_iso_codes_ary,
+  taxon_concepts_mview.native_distribution_ary,
+  taxon_concepts_mview.introduced_distribution_ary,
+  taxon_concepts_mview.introduced_uncertain_distribution_ary,
+  taxon_concepts_mview.reintroduced_distribution_ary,
+  taxon_concepts_mview.extinct_distribution_ary,
+  taxon_concepts_mview.extinct_uncertain_distribution_ary,
+  taxon_concepts_mview.uncertain_distribution_ary;
 
   CREATE INDEX ON cites_species_listing_mview_tmp USING GIN (countries_ids_ary); -- search by geo entity
 

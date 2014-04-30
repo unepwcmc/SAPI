@@ -1,6 +1,4 @@
-require 'digest/sha1'
-require 'csv'
-class Species::ListingsExport < Species::CsvExport
+class Species::ListingsExport < Species::CsvCopyExport
 
   def initialize(designation, filters)
     @designation = designation

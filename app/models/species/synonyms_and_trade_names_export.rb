@@ -4,7 +4,7 @@ class Species::SynonymsAndTradeNamesExport < Species::CsvCopyExport
     rel = MTaxonConcept.from(table_name).
       order('name_status, rank_name, full_name')
     rel = rel.where("#{table_name}.taxonomy_id" => @taxonomy.id) if @taxonomy
-    rel
+    rel.select(sql_columns)
   end
 
 private
