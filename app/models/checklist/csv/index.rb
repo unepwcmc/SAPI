@@ -18,7 +18,12 @@ class Checklist::Csv::Index < Checklist::Index
       if @english_common_names then :english_names end,
       if @spanish_common_names then :spanish_names end,
       if @french_common_names then :french_names end,
-      :cites_accepted, :countries_iso_codes, :countries_full_names
+      :cites_accepted,
+      :all_distribution_iso_codes, :all_distribution,
+      :native_distribution, :introduced_distribution,
+      :introduced_uncertain_distribution, :reintroduced_distribution,
+      :extinct_distribution, :extinct_uncertain_distribution,
+      :uncertain_distribution
     ]
   end
 
