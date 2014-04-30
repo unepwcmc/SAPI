@@ -158,14 +158,6 @@ class AdminInPlaceEditor extends AdminEditor
       'option', 'emptytext', 'not current'
     )
 
-    $('#admin-in-place-editor').editable(
-      'option', 'source', [{id: 'gb', text: 'Great Britain'}, {id: 'us', text: 'United States'},{id: 'ru', text: 'Russia'}]
-    )
-
-    $('#admin-in-place-editor').editable(
-      'option', 'select2', {multiple: true}
-    )
-
 class TaxonConceptsEditor extends AdminEditor
   init: () ->
     super
