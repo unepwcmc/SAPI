@@ -53,6 +53,10 @@
             <li class="<%= if controller_matches.include?(controller_name) then 'active' end%>">
               <%= link_to 'Trade Codes', admin_purposes_path %>
             </li>
+            <% controller_matches = ["term_trade_codes_pairs", "taxon_concept_term_pairs"] %>
+            <li class="<%= if controller_matches.include?(controller_name) then 'active' end%>">
+              <%= link_to 'Pairings', admin_taxon_concept_term_pairs_path %>
+            </li>
           </ul>
         </li>
         <% controller_matches = ["cites_cops", "cites_suspension_notifications",
