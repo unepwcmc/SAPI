@@ -5,7 +5,8 @@ module DownloadsCache
     'quotas', 'cites_suspensions', 'eu_decisions', 'shipments', 'comptab',
     'gross_exports', 'gross_imports', 'net_exports', 'net_imports',
     'trade_download_stats', 'taxon_concepts_names', 'synonyms_and_trade_names',
-    'taxon_concepts_distributions', 'common_names'
+    'taxon_concepts_distributions', 'common_names',
+    'species_reference_output', 'standard_reference_output'
   ]
 
   def self.quotas_path
