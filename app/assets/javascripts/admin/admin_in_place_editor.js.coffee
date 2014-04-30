@@ -370,7 +370,7 @@ class TermPairingsSelect2Editor extends AdminEditor
 
   initModal: (data) ->
     data ||= {terms: @terms}
-    @modalOptionsArr = @getOptions($('form .select2'), data)
+    @modalOptionsArr = @getOptions($('form .select22'), data)
     for options in @modalOptionsArr
       @initModalEditors(options)
 
@@ -445,7 +445,10 @@ class TermPairingsSelect2Editor extends AdminEditor
         errorsMessages.join ', '
       display: (item) ->
         # Hack around: https://github.com/vitalets/x-editable/issues/431
-        choice = $('.select2-container .select2-choice span').last().text()
+        if $(@).attr('data-type') == 'select'
+          choice = $('.input-medium').find(":selected").text()
+        else
+          choice = $('.select2-container .select2-choice span').last().text()
         if choice then $(this).text(choice)
       select2: options.select2
       source: options.select?.source

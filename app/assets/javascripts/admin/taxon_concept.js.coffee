@@ -14,8 +14,7 @@ $(document).ready ->
     .focus(-> $(@).animate(height: "15em", 500))
     .blur(-> $(@).animate(height: "4em", 500))
 
-  #FIXME: is this needed?
-  #$('.select2').select2()
+  $('.select2').select2()
 
   $(".datepicker").datepicker(
     format: "dd/mm/yyyy",
