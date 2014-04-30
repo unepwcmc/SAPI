@@ -344,16 +344,14 @@ class TermPairingsSelect2Editor extends AdminEditor
 
   init: () ->
     super
-    $.getJSON("/api/v1/terms").done((data) => 
-      @terms = data.terms
-      trades = window.editorTradeCodes
-      if @options?.trade_type?
-        @initInline({trades: trades, terms: @terms})
-        @initModal({terms: @terms})
-      else
-        @initInline({terms: @terms})
-        @initModal({terms: @terms})
-    )
+    @terms = window.editorTermCodes
+    trades = window.editorTradeCodes
+    if @options?.trade_type?
+      @initInline({trades: trades, terms: @terms})
+      @initModal({terms: @terms})
+    else
+      @initInline({terms: @terms})
+      @initModal({terms: @terms})
 
   initInline: (data) ->
     @inlineOptionsArr = @getOptions($('#admin-in-place-editor .editable'), data)
