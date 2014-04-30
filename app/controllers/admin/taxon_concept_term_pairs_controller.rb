@@ -1,5 +1,6 @@
 class Admin::TaxonConceptTermPairsController < Admin::SimpleCrudController
   inherit_resources
+
   defaults :resource_class => Trade::TaxonConceptTermPair, 
     :collection_name => 'taxon_concept_term_pairs', :instance_name => 'taxon_concept_term_pair'
 
