@@ -4,7 +4,7 @@ class Species::SpeciesReferenceOutputExport < Species::CsvCopyExport
     rel = MTaxonConcept.from(table_name).
       order('name_status, taxonomic_position')
     rel = rel.where("#{table_name}.taxonomy_id" => @taxonomy.id) if @taxonomy
-    rel
+    rel.select(sql_columns)
   end
 
 private
