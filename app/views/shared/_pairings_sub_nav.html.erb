@@ -1,0 +1,6 @@
+
+<ul class="nav nav-pills pairings">
+  <li class="<%= if controller_name=='taxon_concept_term_pairs' then 'active' end %>"><%= link_to "Taxon term", admin_taxon_concept_term_pairs_path %></li>
+  <li class="<%= if controller_name=='term_trade_codes_pairs' && params[:type] == 'Unit' then 'active' end %>"><%= link_to "Term unit", admin_term_trade_codes_pairs_path(:type => 'Unit') %></li>
+  <li class="<%= if controller_name=='term_trade_codes_pairs' && params[:type] == 'Purpose' then 'active' end %>"><%= link_to "Term purpose", admin_term_trade_codes_pairs_path(:type => 'Purpose') %></li>
+</ul>
