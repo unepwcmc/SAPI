@@ -1,5 +1,8 @@
 require 'spec_helper'
+
 describe Admin::RanksController do
+  login_admin
+
   describe "GET index" do
     it "assigns @ranks sorted by taxonomic position" do
       rank2 = create(:rank, :taxonomic_position => '2')
