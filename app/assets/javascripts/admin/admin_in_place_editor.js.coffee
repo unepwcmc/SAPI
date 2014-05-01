@@ -6,6 +6,12 @@ $(document).ready ->
     window.adminEditor = new ListingChangesEditor()
   else if window.editorClass == 'taxon_concept_references'
     window.adminEditor = new TaxonReferencesEditor()
+  else if window.editorClass == 'term_pairings_select2'
+    window.adminEditor = new TermPairingsSelect2Editor()
+  else if window.editorClass == 'term_pairings_select2_unit'
+    window.adminEditor = new TermPairingsSelect2Editor({trade_type: 'unit'})
+  else if window.editorClass == 'term_pairings_select2_purpose'
+    window.adminEditor = new TermPairingsSelect2Editor({trade_type: 'purpose'})
   else
     window.adminEditor = new AdminInPlaceEditor()
   window.adminEditor.init()
@@ -329,3 +335,115 @@ class TaxonReferencesEditor extends AdminEditor
         $('#reference_search').val(item)
         return item
     )
+
+
+class TermPairingsSelect2Editor extends AdminEditor
+
+  constructor: (options) ->
+    @options = options
+
+  init: () ->
+    super
+    @terms = window.editorTermCodes
+    trades = window.editorTradeCodes
+    if @options?.trade_type?
+      @initInline({trades: trades, terms: @terms})
+      @initModal({terms: @terms})
+    else
+      @initInline({terms: @terms})
+      @initModal({terms: @terms})
+
+  initInline: (data) ->
+    @inlineOptionsArr = @getOptions($('#admin-in-place-editor .editable'), data)
+    for options in @inlineOptionsArr
+      @initInlineEditors(options)
+
+  initModal: (data) ->
+    data ||= {terms: @terms}
+    @modalOptionsArr = @getOptions($('form .select22'), data)
+    for options in @modalOptionsArr
+      @initModalEditors(options)
+
+  getOptions: (selection, data) ->
+    terms = data.terms
+    trades = data.trades
+    options = []
+    selection.each( (i) ->
+      options.push {}
+      selection = $(@)
+      if selection.hasClass('taxon_concept')
+        options[i]['select2'] = 
+          ajax:
+            url: "/api/v1/auto_complete_taxon_concepts.json"
+            dataType: "json"
+            data: (term, page) ->
+              taxon_concept_query: term
+              visibility: 'trade_internal'
+              per_page: 10
+              page: page
+            results: (data, page) ->
+              more = (page * 10) < data.meta.total
+              results: data.auto_complete_taxon_concepts.map (t) =>
+                id: t.id
+                name: t.full_name
+              more: more
+          placeholder: "Select Taxon"
+          allowClear: true
+          minimumInputLength: 3
+          id: (item) ->
+            item.id
+          formatResult: (item) ->
+            item.name
+          formatSelection: (item) ->
+            item.name
+      else if selection.hasClass('term')
+        options[i]['select2'] = 
+          data:{ results: terms, text: 'code' },
+          placeholder: "Select Term"
+          allowClear: true
+          minimumInputLength: 1
+          id: (item) ->
+            item.id
+          formatResult: (item) ->
+            item.code
+          formatSelection: (item) ->
+            item.code
+      else if selection.hasClass('trade')
+        options[i]['select'] =
+          source: trades
+      options[i]['selection'] = selection
+    )
+    options
+
+  initInlineEditors: (options) ->
+    options.selection.editable
+      placement: 'right'
+      ajaxOptions:
+        dataType: 'json'
+        type: 'put'
+      params: (params) ->
+        #originally params contain pk, name and value
+        newParams = id: params.pk
+        newParams[$(@).attr('data-resource')] = {}
+        newParams[$(@).attr('data-resource')][params.name] = params.value
+        return newParams
+      error: ->
+        errors = JSON.parse(arguments[0].responseText).errors
+        errorsMessages = []
+        for k, v of errors
+          errorsMessages.push v
+        errorsMessages.join ', '
+      display: (item) ->
+        # Hack around: https://github.com/vitalets/x-editable/issues/431
+        if $(@).attr('data-type') == 'select'
+          choice = $('.input-medium').find(":selected").text()
+        else
+          choice = $('.select2-container .select2-choice span').last().text()
+        if choice then $(this).text(choice)
+      select2: options.select2
+      source: options.select?.source
+
+  initModalEditors: (options) ->
+    if options.select2?
+      options.selection.select2 options.select2
+

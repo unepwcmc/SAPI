@@ -1,0 +1,18 @@
+<%= admin_title %>
+
+<%= render "shared/pairings_sub_nav" %>
+
+<%= admin_new_modal do %>
+  <%= render :partial => 'admin/taxon_concept_term_pairs/form' %>
+<% end %>
+
+<%= admin_simple_search %>
+
+<%= admin_table do %>
+  <%=
+    render :partial => 'admin/taxon_concept_term_pairs/list',
+    :locals => {:collection => collection}
+  %>
+<% end %>
+
+<%= paginate collection %>
