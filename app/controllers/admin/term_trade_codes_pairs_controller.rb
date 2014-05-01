@@ -6,10 +6,6 @@ class Admin::TermTradeCodesPairsController < Admin::SimpleCrudController
   defaults :resource_class => TermTradeCodesPair, 
     :collection_name => 'term_trade_codes_pairs', :instance_name => 'term_trade_codes_pair'
 
-  def index
-    super
-  end
-
   protected
 
   def load_term_codes
