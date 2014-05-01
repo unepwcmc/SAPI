@@ -7,7 +7,8 @@ class PsqlCommand
     @username = db_conf[:username]
     @password = db_conf[:password]
     @database = db_conf[:database]
-    @sql_cmd = sql_cmd
+    # remove comments form multi line sql
+    @sql_cmd = sql_cmd.gsub(/--.*$/,' ')
     @psql_cmd = "psql -h #{@host} -p #{@port} -U #{@username} #{@database}"
   end
 
