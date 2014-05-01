@@ -14,7 +14,9 @@ class Admin::TermTradeCodesPairsController < Admin::SimpleCrudController
   end
 
   def load_trade_code_types
-    @trade_code_type = params[:type] || params[:term_trade_codes_pair][:trade_code_type] || 'Unit'
+    @trade_code_type = params[:type] ||
+      params[:term_trade_codes_pair] && params[:term_trade_codes_pair][:trade_code_type] ||
+      'Unit'
     @trade_code_codes = TradeCode.where(:type => @trade_code_type).
       select([:id, :code]).order('code')
     @trade_code_codes_obj = @trade_code_codes.map { |c| {"value" => c.id, "text" => c.code} }.to_json
