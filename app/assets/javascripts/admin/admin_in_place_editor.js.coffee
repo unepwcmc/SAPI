@@ -387,7 +387,7 @@ class TermPairingsSelect2Editor extends AdminEditor
                 id: t.id
                 name: t.full_name
               more: more
-          placeholder: "Select Taxonomy"
+          placeholder: "Select Taxon"
           allowClear: true
           minimumInputLength: 3
           id: (item) ->
