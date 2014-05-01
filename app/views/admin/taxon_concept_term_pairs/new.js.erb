@@ -1,0 +1,9 @@
+var currentTermData = $('form .select22.term').select2("data");
+var currentTaxonData = $('form .select22.taxon_concept').select2("data");
+
+$('#admin-new-<%= controller_name.singularize %>-form')
+  .html("<%= escape_javascript(render('admin/taxon_concept_term_pairs/form')) %>");
+window.adminEditor.initModal();
+
+$('form .select22.term').select2("data", currentTermData);
+$('form .select22.taxon_concept').select2("data", currentTaxonData);

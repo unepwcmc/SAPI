@@ -1,0 +1,13 @@
+<%= form_for resource_instance_name, :url => collection_url, :remote => true do |f| %>
+
+  <%= error_messages_for(resource_instance_name) %>
+
+  <label>Term Code</label>
+  <%= f.hidden_field :term_id, class: 'term select22' %>
+  <br />
+
+  <label>Taxon Concept Full Name</label>
+  <%= f.hidden_field :taxon_concept_id, class: 'taxon_concept select22' %>
+  <br />
+
+<% end %>

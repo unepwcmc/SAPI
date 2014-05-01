@@ -1,0 +1,34 @@
+<thead>
+  <th width="7%">Term Code</th>
+  <th width="15%">Trade Code</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |term_pair| -%>
+    <tr>
+      <td>
+        <a href="#" class="editable editable-click editable-required term" data-type="select2" data-resource="<%= controller_name.singularize %>" data-name="term_id"
+          data-placeholder="Required" data-original-title="Enter the code"
+          data-url="<%= resource_url(term_pair) %>" data-pk="<%= term_pair.id %>">
+          <%= term_pair.term.code %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required trade" data-type="select" data-resource="<%= controller_name.singularize %>" data-name="trade_code_id"
+          data-placeholder="Required" data-original-title="Enter the code"
+          data-url="<%= resource_url(term_pair) %>" data-pk="<%= term_pair.id %>">
+          <%= if term_pair.trade_code then term_pair.trade_code.code end %>
+        </a>
+      </td>
+      <td>
+        <%= link_to delete_icon, resource_url(term_pair), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>
+
+<script>
+  window.editorClass = 'term_pairings_select2_<%= @trade_code_type.downcase %>';
+  window.editorTradeCodes = <%= raw @trade_code_codes_obj %>;
+  window.editorTermCodes = <%= raw @term_codes_obj %>;
+</script>

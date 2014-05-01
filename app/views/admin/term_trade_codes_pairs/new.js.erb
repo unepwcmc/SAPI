@@ -1,0 +1,9 @@
+var currentTermData = $('form .select22.term').select2("data");
+var currentTradeData = $('form .select22.trade').select2("data");
+
+$('#admin-new-<%= controller_name.singularize %>-form')
+  .html("<%= escape_javascript(render('admin/term_trade_codes_pairs/form')) %>");
+window.adminEditor.initModal();
+
+$('form .select22.term').select2("data", currentTermData);
+$('form .select22.trade').select2("data", currentTradeData);

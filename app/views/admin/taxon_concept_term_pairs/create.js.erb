@@ -1,0 +1,4 @@
+$('.modal').modal('hide');
+$('#admin-in-place-editor').html("<%= escape_javascript(render('admin/taxon_concept_term_pairs/list')) %>");
+window.adminEditor.alertSuccess("Operation successful");
+
