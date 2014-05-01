@@ -108,15 +108,31 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     synonyms.*,
     subspecies.subspecies_not_listed_ary,
     countries_ids_ary,
-    all_distribution_ary,
     all_distribution_iso_codes_ary,
-    native_distribution_ary,
-    introduced_distribution_ary,
-    introduced_uncertain_distribution_ary,
-    reintroduced_distribution_ary,
-    extinct_distribution_ary,
-    extinct_uncertain_distribution_ary,
-    uncertain_distribution_ary,
+    all_distribution_ary_en,
+    native_distribution_ary_en,
+    introduced_distribution_ary_en,
+    introduced_uncertain_distribution_ary_en,
+    reintroduced_distribution_ary_en,
+    extinct_distribution_ary_en,
+    extinct_uncertain_distribution_ary_en,
+    uncertain_distribution_ary_en,
+    all_distribution_ary_es,
+    native_distribution_ary_es,
+    introduced_distribution_ary_es,
+    introduced_uncertain_distribution_ary_es,
+    reintroduced_distribution_ary_es,
+    extinct_distribution_ary_es,
+    extinct_uncertain_distribution_ary_es,
+    uncertain_distribution_ary_es,
+    all_distribution_ary_fr,
+    native_distribution_ary_fr,
+    introduced_distribution_ary_fr,
+    introduced_uncertain_distribution_ary_fr,
+    reintroduced_distribution_ary_fr,
+    extinct_distribution_ary_fr,
+    extinct_uncertain_distribution_ary_fr,
+    uncertain_distribution_ary_fr,
     CASE
       WHEN
         name_status = 'A'
@@ -250,8 +266,10 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     LEFT JOIN (
       SELECT distributions.taxon_concept_id AS taxon_concept_id_cnt,
       ARRAY_AGG_NOTNULL(geo_entities.id ORDER BY geo_entities.name_en) AS countries_ids_ary,
-      ARRAY_AGG_NOTNULL(geo_entities.name_en ORDER BY geo_entities.name_en) AS all_distribution_ary,
-      ARRAY_AGG_NOTNULL(geo_entities.iso_code2 ORDER BY geo_entities.name_en) AS all_distribution_iso_codes_ary
+      ARRAY_AGG_NOTNULL(geo_entities.iso_code2 ORDER BY geo_entities.name_en) AS all_distribution_iso_codes_ary,
+      ARRAY_AGG_NOTNULL(geo_entities.name_en ORDER BY geo_entities.name_en) AS all_distribution_ary_en,
+      ARRAY_AGG_NOTNULL(geo_entities.name_en ORDER BY geo_entities.name_es) AS all_distribution_ary_es,
+      ARRAY_AGG_NOTNULL(geo_entities.name_en ORDER BY geo_entities.name_fr) AS all_distribution_ary_fr
       FROM distributions
       JOIN geo_entities
       ON distributions.geo_entity_id = geo_entities.id
@@ -264,10 +282,16 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       SELECT *
       FROM CROSSTAB(
         'SELECT distributions.taxon_concept_id,
-          CASE WHEN tags.name IS NULL THEN ''NATIVE'' ELSE UPPER(tags.name) END AS tag,
-          ARRAY_AGG_NOTNULL(geo_entities.name_en ORDER BY geo_entities.name_en) AS locations_ary
+          CASE WHEN tags.name IS NULL THEN ''NATIVE'' ELSE UPPER(tags.name) END || ''_'' || lng AS tag,
+          ARRAY_AGG_NOTNULL(geo_entities.name ORDER BY geo_entities.name) AS locations_ary
         FROM distributions
-        JOIN geo_entities
+        JOIN (
+          SELECT geo_entities.id, geo_entities.iso_code2,  ''EN'' AS lng, geo_entities.name_en AS name FROM geo_entities
+          UNION
+          SELECT geo_entities.id, geo_entities.iso_code2, ''ES'' AS lng, geo_entities.name_es AS name FROM geo_entities
+          UNION
+          SELECT geo_entities.id, geo_entities.iso_code2, ''FR'' AS lng, geo_entities.name_fr AS name FROM geo_entities
+        ) geo_entities
           ON geo_entities.id = distributions.geo_entity_id
         LEFT JOIN taggings
           ON taggable_id = distributions.id AND taggable_type = ''Distribution''
@@ -279,22 +303,40 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
               ''EXTINCT'', ''EXTINCT (?)'', ''DISTRIBUTION UNCERTAIN''
             ) OR tags.name IS NULL
           )
-        GROUP BY distributions.taxon_concept_id, tags.name
+        GROUP BY distributions.taxon_concept_id, tags.name, geo_entities.lng
         ',
         'SELECT * FROM UNNEST(
           ARRAY[
-            ''NATIVE'', ''INTRODUCED'', ''INTRODUCED (?)'', ''REINTRODUCED'',
-            ''EXTINCT'', ''EXTINCT (?)'', ''DISTRIBUTION UNCERTAIN''
+            ''NATIVE_EN'', ''INTRODUCED_EN'', ''INTRODUCED (?)_EN'', ''REINTRODUCED_EN'',
+            ''EXTINCT_EN'', ''EXTINCT (?)_EN'', ''DISTRIBUTION UNCERTAIN_EN'',
+            ''NATIVE_ES'', ''INTRODUCED_ES'', ''INTRODUCED (?)_ES'', ''REINTRODUCED_ES'',
+            ''EXTINCT_ES'', ''EXTINCT (?)_ES'', ''DISTRIBUTION UNCERTAIN_ES'',
+            ''NATIVE_FR'', ''INTRODUCED_FR'', ''INTRODUCED (?)_FR'', ''REINTRODUCED_FR'',
+            ''EXTINCT_FR'', ''EXTINCT (?)_FR'', ''DISTRIBUTION UNCERTAIN_FR''
           ])'
       ) AS ct(
         taxon_concept_id INTEGER,
-        native_distribution_ary VARCHAR[],
-        introduced_distribution_ary VARCHAR[],
-        introduced_uncertain_distribution_ary VARCHAR[],
-        reintroduced_distribution_ary VARCHAR[],
-        extinct_distribution_ary VARCHAR[],
-        extinct_uncertain_distribution_ary VARCHAR[],
-        uncertain_distribution_ary VARCHAR[]
+        native_distribution_ary_en VARCHAR[],
+        introduced_distribution_ary_en VARCHAR[],
+        introduced_uncertain_distribution_ary_en VARCHAR[],
+        reintroduced_distribution_ary_en VARCHAR[],
+        extinct_distribution_ary_en VARCHAR[],
+        extinct_uncertain_distribution_ary_en VARCHAR[],
+        uncertain_distribution_ary_en VARCHAR[],
+        native_distribution_ary_es VARCHAR[],
+        introduced_distribution_ary_es VARCHAR[],
+        introduced_uncertain_distribution_ary_es VARCHAR[],
+        reintroduced_distribution_ary_es VARCHAR[],
+        extinct_distribution_ary_es VARCHAR[],
+        extinct_uncertain_distribution_ary_es VARCHAR[],
+        uncertain_distribution_ary_es VARCHAR[],
+        native_distribution_ary_fr VARCHAR[],
+        introduced_distribution_ary_fr VARCHAR[],
+        introduced_uncertain_distribution_ary_fr VARCHAR[],
+        reintroduced_distribution_ary_fr VARCHAR[],
+        extinct_distribution_ary_fr VARCHAR[],
+        extinct_uncertain_distribution_ary_fr VARCHAR[],
+        uncertain_distribution_ary_fr VARCHAR[]
       )
     ) distributions_by_tag ON taxon_concepts.id = distributions_by_tag.taxon_concept_id;
 

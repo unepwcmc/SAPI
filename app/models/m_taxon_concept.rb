@@ -126,7 +126,11 @@ class MTaxonConcept < ActiveRecord::Base
 
   scope :taxonomic_layout, order('taxonomic_position')
   scope :alphabetical_layout, order(['kingdom_position', 'full_name'])
-  translates :rank_display_name
+  translates :rank_display_name,
+    :all_distribution_ary, :native_distribution_ary,
+    :introduced_distribution_ary, :introduced_uncertain_distribution_ary,
+    :reintroduced_distribution_ary, :extinct_distribution_ary,
+    :extinct_uncertain_distribution_ary, :uncertain_distribution_ary
 
   # leftover from old Checklist code, this field is used in returned json
   def current_listing
