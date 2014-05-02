@@ -24,7 +24,7 @@ class Trade::PermitMatcher
   end
 
   def initialize_query
-    @query = Trade::Permit.scoped
+    @query = Trade::Permit.order(:number)
     if @permit_query
       @query = @query.where([
         "UPPER(number) LIKE :number", :number => "#{@permit_query}%"
