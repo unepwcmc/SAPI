@@ -284,10 +284,11 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     DROP table IF EXISTS auto_complete_taxon_concepts_mview_tmp CASCADE;
     RAISE INFO 'Creating auto complete taxon concepts materialized view (tmp)';
     CREATE TABLE auto_complete_taxon_concepts_mview_tmp AS
-    WITH match_lookup (name_for_matching, matched_name, id, full_name) AS (
+    WITH match_lookup (name_for_matching, matched_id, matched_name, id, full_name) AS (
       SELECT
         UPPER(full_name),
-        NULL,
+        id,
+        full_name,
         id,
         full_name
       FROM taxon_concepts
@@ -297,6 +298,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
 
       SELECT
         UPPER(tc.full_name),
+        tc.id,
         tc.full_name,
         atc.id,
         atc.full_name
@@ -314,6 +316,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
 
       SELECT
         UPPER(UNNEST(REGEXP_SPLIT_TO_ARRAY(common_names.name, ' '))),
+        NULL,
         common_names.name,
         tc.id,
         tc.full_name
@@ -374,11 +377,10 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
         JOIN ranks ON ranks.id = rank_id
         JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
     )
-    SELECT t1.*, name_for_matching, matched_name, full_name
-    FROM taxa_with_visibility_flags t1
+    SELECT t1.*, name_for_matching, matched_id, matched_name, full_name FROM taxa_with_visibility_flags t1
     JOIN match_lookup t2
     ON t1.id = t2.id
-    WHERE LENGTH(t2.name_for_matching) >= 3;
+    WHERE LENGTH(t2.name_for_matching) > 3;
 
     RAISE INFO 'Creating indexes on auto complete taxon concepts materialized view (tmp)';
 
