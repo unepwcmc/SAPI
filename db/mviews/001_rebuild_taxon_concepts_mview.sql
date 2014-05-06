@@ -381,7 +381,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     SELECT t1.*, name_for_matching, matched_id, matched_name, full_name FROM taxa_with_visibility_flags t1
     JOIN match_lookup t2
     ON t1.id = t2.id
-    WHERE LENGTH(t2.name_for_matching) > 3;
+    WHERE LENGTH(t2.name_for_matching) >= 3;
 
     RAISE INFO 'Creating indexes on auto complete taxon concepts materialized view (tmp)';
 
