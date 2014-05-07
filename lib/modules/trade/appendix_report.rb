@@ -31,7 +31,7 @@ class Trade::AppendixReport
     export_to_csv(
       :query => (diff ? @diff_query : @query),
       :csv_columns => [
-        'ID', 'Legacy ID', 'Taxon ID', 'Taxon', 'Year', 'Appendix', 'Auto Appendix',
+        'ID', 'Legacy Shipment ID', 'Taxon ID', 'Accepted Taxon', 'Year', 'Appendix', 'Auto Appendix',
       ],
       :file_path => file_path,
       :encoding => 'latin1',
