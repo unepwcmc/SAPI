@@ -124,13 +124,13 @@ describe TaxonConcept do
 
       describe :show_in_checklist_ac do
         context "for subspecies Amazona festiva festiva" do
-          specify { @subspecies2_2_2_1.show_in_checklist_ac.should be_false }
+          specify { @subspecies2_2_2_1_ac.show_in_checklist_ac.should be_false }
         end
       end
 
       describe :show_in_species_plus_ac do
         context "for subspecies Amazona festiva festiva" do
-          specify { @subspecies2_2_2_1.show_in_species_plus_ac.should be_false }
+          specify { @subspecies2_2_2_1_ac.show_in_species_plus_ac.should be_false }
         end
       end
 

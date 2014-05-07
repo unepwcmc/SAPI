@@ -126,13 +126,13 @@ describe TaxonConcept do
 
       describe :show_in_checklist_ac do
         context "for subspecies Falco peregrinus peregrinus" do
-          specify { @subspecies2_3_1.show_in_checklist_ac.should be_false }
+          specify { @subspecies2_3_1_ac.show_in_checklist_ac.should be_false }
         end
       end
 
       describe :show_in_species_plus_ac do
         context "for subspecies Falco peregrinus peregrinus" do
-          specify { @subspecies2_3_1.show_in_species_plus_ac.should be_true }
+          specify { @subspecies2_3_1_ac.show_in_species_plus_ac.should be_true }
         end
       end
 

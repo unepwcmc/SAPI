@@ -25,7 +25,7 @@ class Species::TaxonConceptPrefixMatcher
   end
 
   def initialize_query
-    @query = MTaxonConcept.order("ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1), full_name")
+    @query = MAutoCompleteTaxonConcept.order([:rank_order, :full_name])
     unless @ranks.empty?
       @query = @query.where(:rank_name => @ranks)
     end
@@ -41,44 +41,21 @@ class Species::TaxonConceptPrefixMatcher
     elsif @visibility == :trade
       @query.where(:show_in_trade_ac => true)
     else
-      @query = @query.where(:show_in_species_plus_ac => true)
+      @query.where(:show_in_species_plus_ac => true)
     end
 
     if @taxon_concept_query
-      @query = @query.select(
+      @query = @query.
+      select('id, full_name, rank_name,
+        ARRAY_AGG_NOTNULL(matched_name ORDER BY matched_name) AS matching_names_ary').
+      where(
         ActiveRecord::Base.send(:sanitize_sql_array, [
-        "id, full_name, rank_name,
-        ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxonomic_position,'\.'), 1),
-        ARRAY(
-          SELECT * FROM UNNEST(synonyms_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
-        ) AS synonyms_ary,
-        ARRAY(
-          SELECT * FROM UNNEST(english_names_ary) name WHERE UPPER(name) LIKE :sci_name_infix
-        ) AS english_names_ary,
-        ARRAY(
-          SELECT * FROM UNNEST(french_names_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
-        ) AS french_names_ary,
-        ARRAY(
-          SELECT * FROM UNNEST(spanish_names_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
-        ) AS spanish_names_ary",
-        :sci_name_prefix => "#{@taxon_concept_query}%", :sci_name_infix => "%#{@taxon_concept_query}%"
+          "name_for_matching LIKE :sci_name_prefix",
+          :sci_name_prefix => "#{@taxon_concept_query}%"
         ])
-      ).
-      where([
-        "UPPER(full_name) LIKE :sci_name_prefix
-        OR
-        EXISTS (
-          SELECT * FROM UNNEST(synonyms_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
-          UNION
-          SELECT * FROM UNNEST(english_names_ary) name WHERE UPPER(name) LIKE :sci_name_infix
-          UNION
-          SELECT * FROM UNNEST(french_names_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
-          UNION
-          SELECT * FROM UNNEST(spanish_names_ary) name WHERE UPPER(name) LIKE :sci_name_prefix
-        )
-      ", :sci_name_prefix => "#{@taxon_concept_query}%", :sci_name_infix => "%#{@taxon_concept_query}%"
-      ])
+      ).group([:id, :full_name, :rank_name, :rank_order])
     end
+    @query
   end
 
 end

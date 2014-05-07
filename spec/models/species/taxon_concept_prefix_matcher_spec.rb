@@ -10,7 +10,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@species)}
+        specify { subject.results.should include(@species_ac)}
       end
       context "when malicious query" do
         subject {
@@ -28,7 +28,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@species)}
+        specify { subject.results.should include(@species_ac)}
       end
       context "when trailing whitespace" do
         subject {
@@ -37,7 +37,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@species)}
+        specify { subject.results.should include(@species_ac)}
       end
       context "when implicitly listed subspecies" do
         subject {
@@ -46,7 +46,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should_not include(@subspecies2)}
+        specify { subject.results.should_not include(@subspecies2_ac)}
       end
       context "when explicitly listed subspecies" do
         subject {
@@ -55,7 +55,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@subspecies1)}
+        specify { subject.results.should include(@subspecies1_ac)}
       end
       context "when implicitly listed higher taxon (without an explicitly listed ancestor)" do
         subject {
@@ -64,7 +64,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@order)}
+        specify { subject.results.should include(@order_ac)}
       end
       context "when explicitly listed higher taxon" do
         subject {
@@ -73,23 +73,25 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@family)}
+        specify { subject.results.should include(@family_ac)}
       end
       #check ranks filtering
       context "when explicitly listed higher taxon but ranks expected FAMILY" do
         subject {
           Species::TaxonConceptPrefixMatcher.new({
             :taxon_concept_query => 'boidae',
-            :ranks => ["FAMILY"]
+            :ranks => ["FAMILY"],
+            :visibility => :trade
           })
         }
-        specify { subject.results.should include(@family)}
+        specify { subject.results.should include(@family_ac)}
       end
       context "when explicitly listed higher taxon but ranks expected SPECIES" do
         subject {
           Species::TaxonConceptPrefixMatcher.new({
             :taxon_concept_query => 'boidae',
-            :ranks => ["SPECIES"]
+            :ranks => ["SPECIES"],
+            :visibility => :trade
           })
         }
         specify { subject.results.should be_empty }
@@ -98,12 +100,13 @@ describe Species::TaxonConceptPrefixMatcher do
         subject {
           Species::TaxonConceptPrefixMatcher.new({
             :taxon_concept_query => 'boa constrictor',
-            :ranks => ["SUBSPECIES"]
+            :ranks => ["SUBSPECIES"],
+            :visibility => :trade
           })
         }
         specify {
-          subject.results.should_not include(@species)
-          subject.results.should include(@subspecies1)
+          subject.results.should_not include(@species_ac)
+          subject.results.should include(@subspecies1_ac)
         }
       end
     end

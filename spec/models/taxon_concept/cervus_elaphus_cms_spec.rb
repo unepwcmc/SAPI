@@ -19,10 +19,10 @@ describe TaxonConcept do
 
       describe :show_in_species_plus_ac do
         context "for subspecies Cervus elaphus bactrianus (instrument)" do
-          specify{ @subspecies1.show_in_species_plus_ac.should be_true }
+          specify{ @subspecies1_ac.show_in_species_plus_ac.should be_true }
         end
         context "for subspecies Cervus elaphus barbarus (listing)" do
-          specify{ @subspecies2.show_in_species_plus_ac.should be_true }
+          specify{ @subspecies2_ac.show_in_species_plus_ac.should be_true }
         end
       end
 
