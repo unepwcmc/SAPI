@@ -46,11 +46,8 @@ class Species::TaxonConceptPrefixMatcher
 
     if @taxon_concept_query
       @query = @query.
-        select('id, full_name, rank_name,
-          ARRAY_AGG_NOTNULL(
-            CASE WHEN matched_name != full_name THEN matched_name ELSE NULL END
-            ORDER BY matched_name
-          ) AS matching_names_ary').
+      select('id, full_name, rank_name,
+        ARRAY_AGG_NOTNULL(matched_name ORDER BY matched_name) AS matching_names_ary').
       where(
         ActiveRecord::Base.send(:sanitize_sql_array, [
           "name_for_matching LIKE :sci_name_prefix",
