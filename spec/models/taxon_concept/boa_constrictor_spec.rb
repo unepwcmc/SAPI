@@ -122,37 +122,37 @@ describe TaxonConcept do
 
       describe :show_in_species_plus_ac do
         context "for family Boidae" do
-          specify{ @family.show_in_species_plus_ac.should be_true }
+          specify{ @family_ac.show_in_species_plus_ac.should be_true }
         end
         context "for genus Boa" do
-          specify{ @genus.show_in_species_plus_ac.should be_true }
+          specify{ @genus_ac.show_in_species_plus_ac.should be_true }
         end
         context "for species Boa constrictor (inclusion in higher taxa listing)" do
-          specify{ @species.show_in_species_plus_ac.should be_true }
+          specify{ @species_ac.show_in_species_plus_ac.should be_true }
         end
         context "for subspecies Boa constrictor occidentalis" do
-          specify{ @subspecies1.show_in_species_plus_ac.should be_true }
+          specify{ @subspecies1_ac.show_in_species_plus_ac.should be_true }
         end
         context "for subspecies Boa constrictor constrictor" do
-          specify{ @subspecies2.show_in_species_plus_ac.should be_false }
+          specify{ @subspecies2_ac.show_in_species_plus_ac.should be_false }
         end
       end
 
       describe :show_in_checklist_ac do
         context "for family Boidae" do
-          specify{ @family.show_in_checklist_ac.should be_true }
+          specify{ @family_ac.show_in_checklist_ac.should be_true }
         end
         context "for genus Boa" do
-          specify{ @genus.show_in_checklist_ac.should be_true }
+          specify{ @genus_ac.show_in_checklist_ac.should be_true }
         end
         context "for species Boa constrictor (inclusion in higher taxa listing)" do
-          specify{ @species.show_in_checklist_ac.should be_true }
+          specify{ @species_ac.show_in_checklist_ac.should be_true }
         end
         context "for subspecies Boa constrictor occidentalis" do
-          specify{ @subspecies1.show_in_checklist_ac.should be_true }
+          specify{ @subspecies1_ac.show_in_checklist_ac.should be_true }
         end
         context "for subspecies Boa constrictor constrictor" do
-          specify{ @subspecies2.show_in_checklist_ac.should be_false }
+          specify{ @subspecies2_ac.show_in_checklist_ac.should be_false }
         end
       end
 

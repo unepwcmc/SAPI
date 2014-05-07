@@ -117,41 +117,6 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       WHEN
         name_status = 'A'
         AND (
-          ranks.name != 'SUBSPECIES'
-          AND ranks.name != 'VARIETY'
-          OR taxonomies.name = 'CITES_EU'
-          AND (
-            (listing->'cites_historically_listed')::BOOLEAN
-            OR (listing->'eu_historically_listed')::BOOLEAN
-          )
-          OR taxonomies.name = 'CMS'
-          AND (listing->'cms_historically_listed')::BOOLEAN
-        )
-      THEN TRUE
-      ELSE FALSE
-    END AS show_in_species_plus_ac,
-    CASE
-      WHEN
-        name_status = 'A'
-        AND (
-          ranks.name != 'SUBSPECIES'
-          AND ranks.name != 'VARIETY'
-          OR (listing->'cites_show')::BOOLEAN
-        )
-      THEN TRUE
-      ELSE FALSE
-    END AS show_in_checklist_ac,
-    CASE
-      WHEN
-        taxonomies.name = 'CITES_EU'
-        AND ARRAY['A', 'H', 'N']::VARCHAR[] && ARRAY[name_status]
-      THEN TRUE
-      ELSE FALSE
-    END AS show_in_trade_ac,
-    CASE
-      WHEN
-        name_status = 'A'
-        AND (
           ranks.name = 'SPECIES'
           OR (
             ranks.name = 'SUBSPECIES'
@@ -169,7 +134,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
         )
       THEN TRUE
       ELSE FALSE
-      END AS show_in_species_plus
+    END AS show_in_species_plus
     FROM taxon_concepts
     JOIN ranks ON ranks.id = rank_id
     JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
@@ -301,7 +266,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     null::timestamp with time zone as expiry
     FROM taxon_concepts_view_tmp;
 
-    RAISE INFO 'Creating indexes on taxon_concepts materialized view (tmp)';
+    RAISE INFO 'Creating indexes on taxon concepts materialized view (tmp)';
     CREATE INDEX ON taxon_concepts_mview_tmp (id);
     CREATE INDEX ON taxon_concepts_mview_tmp (parent_id);
     CREATE INDEX ON taxon_concepts_mview_tmp (taxonomy_is_cites_eu, cites_listed, kingdom_position);
@@ -310,25 +275,130 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     CREATE INDEX ON taxon_concepts_mview_tmp (eu_show, name_status, eu_listing_original, taxonomy_is_cites_eu, rank_name); -- eu csv download
     CREATE INDEX ON taxon_concepts_mview_tmp USING GIN (countries_ids_ary);
 
-    --this one used for Species+ autocomplete (both main and higher taxa in downloads)
-    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_species_plus_ac);
-    --this one used for Checklist autocomplete
-    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_checklist_ac);
-    --this one used for Trade autocomplete
-    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_trade_ac);
-
-    --this one used for Species+ autocomplete (both main and higher taxa in downloads)
-    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_species_plus_ac);
-    --this one used for Checklist autocomplete
-    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_checklist_ac);
-    --this one used for Trade autocomplete
-    CREATE INDEX ON taxon_concepts_mview_tmp USING BTREE(UPPER(full_name) text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_trade_ac);
-
-    RAISE INFO 'Swapping concepts materialized view';
+    RAISE INFO 'Swapping taxon concepts materialized view';
     DROP table IF EXISTS taxon_concepts_mview CASCADE;
     ALTER TABLE taxon_concepts_mview_tmp RENAME TO taxon_concepts_mview;
     DROP view IF EXISTS taxon_concepts_view CASCADE;
     ALTER TABLE taxon_concepts_view_tmp RENAME TO taxon_concepts_view;
+
+    DROP table IF EXISTS auto_complete_taxon_concepts_mview_tmp CASCADE;
+    RAISE INFO 'Creating auto complete taxon concepts materialized view (tmp)';
+    CREATE TABLE auto_complete_taxon_concepts_mview_tmp AS
+    WITH match_lookup (name_for_matching, matched_id, matched_name, id, full_name) AS (
+      SELECT
+        UPPER(full_name),
+        id,
+        NULL,
+        id,
+        full_name
+      FROM taxon_concepts
+      WHERE name_status != 'S'
+
+      UNION
+
+      SELECT
+        UPPER(tc.full_name),
+        tc.id,
+        tc.full_name,
+        atc.id,
+        atc.full_name
+      FROM taxon_concepts tc
+      JOIN taxon_relationships tr
+      ON tr.other_taxon_concept_id = tc.id
+      JOIN taxon_relationship_types trt
+      ON trt.id = tr.taxon_relationship_type_id
+      AND trt.name = 'HAS_SYNONYM'
+      JOIN taxon_concepts atc
+      ON atc.id = tr.taxon_concept_id
+      WHERE tc.name_status = 'S' AND atc.name_status = 'A' -- just in case
+
+      UNION
+
+      SELECT
+        UPPER(UNNEST(REGEXP_SPLIT_TO_ARRAY(common_names.name, ' '))),
+        NULL,
+        common_names.name,
+        tc.id,
+        tc.full_name
+      FROM taxon_concepts tc
+      JOIN taxon_commons
+      ON tc.id = taxon_commons.taxon_concept_id
+      JOIN common_names
+      ON common_names.id = taxon_commons.common_name_id
+      JOIN languages
+      ON languages.id = common_names.language_id
+      AND languages.iso_code1 IN ('EN', 'ES', 'FR')
+      WHERE tc.name_status = 'A' -- just in case
+    ), taxa_with_visibility_flags AS (
+      SELECT taxon_concepts.id,
+        CASE
+        WHEN taxonomies.name = 'CITES_EU' THEN TRUE
+        ELSE FALSE
+        END AS taxonomy_is_cites_eu,
+        name_status,
+        ranks.name AS rank_name,
+        ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxon_concepts.taxonomic_position,'\.'), 1) AS rank_order,
+        taxon_concepts.taxonomic_position,
+        CASE
+          WHEN
+            name_status = 'A'
+            AND (
+              ranks.name != 'SUBSPECIES'
+              AND ranks.name != 'VARIETY'
+              OR taxonomies.name = 'CITES_EU'
+              AND (
+                (listing->'cites_historically_listed')::BOOLEAN
+                OR (listing->'eu_historically_listed')::BOOLEAN
+              )
+              OR taxonomies.name = 'CMS'
+              AND (listing->'cms_historically_listed')::BOOLEAN
+            )
+          THEN TRUE
+          ELSE FALSE
+        END AS show_in_species_plus_ac,
+        CASE
+          WHEN
+            name_status = 'A'
+            AND (
+              ranks.name != 'SUBSPECIES'
+              AND ranks.name != 'VARIETY'
+              OR (listing->'cites_show')::BOOLEAN
+            )
+          THEN TRUE
+          ELSE FALSE
+        END AS show_in_checklist_ac,
+        CASE
+          WHEN
+            taxonomies.name = 'CITES_EU'
+            AND ARRAY['A', 'H', 'N']::VARCHAR[] && ARRAY[name_status]
+          THEN TRUE
+          ELSE FALSE
+        END AS show_in_trade_ac
+        FROM taxon_concepts
+        JOIN ranks ON ranks.id = rank_id
+        JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
+    )
+    SELECT t1.*, name_for_matching, matched_id, matched_name, full_name FROM taxa_with_visibility_flags t1
+    JOIN match_lookup t2
+    ON t1.id = t2.id
+    WHERE LENGTH(t2.name_for_matching) >= 3;
+
+    RAISE INFO 'Creating indexes on auto complete taxon concepts materialized view (tmp)';
+
+    --this one used for Species+ autocomplete (both main and higher taxa in downloads)
+    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
+    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_species_plus_ac);
+    --this one used for Checklist autocomplete
+    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
+    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_checklist_ac);
+    --this one used for Trade autocomplete
+    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
+    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_trade_ac);
+
+    RAISE INFO 'Swapping auto complete taxon concepts materialized view';
+    DROP table IF EXISTS auto_complete_taxon_concepts_mview CASCADE;
+    ALTER TABLE auto_complete_taxon_concepts_mview_tmp RENAME TO auto_complete_taxon_concepts_mview;
+
   END;
   $$;
 

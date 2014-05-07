@@ -164,6 +164,10 @@ shared_context "Falconiformes" do
       if var.kind_of? TaxonConcept
         self.instance_variable_set(t,MTaxonConcept.find(var.id))
         self.instance_variable_get(t).reload
+        self.instance_variable_set(:"#{t}_ac",
+          MAutoCompleteTaxonConcept.
+          where(:id => var.id).first
+        )
       end
     end
   end

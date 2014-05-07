@@ -22,9 +22,9 @@ describe Species::TaxonConceptPrefixMatcher do
     )
     create_cites_I_addition(:taxon_concept => @accepted_name)
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
-    @accepted_name = MTaxonConcept.find(@accepted_name.id)
-    @trade_name = MTaxonConcept.find(@trade_name.id)
-    @status_N_species = MTaxonConcept.find(@status_N_species.id)
+    @accepted_name_ac = MAutoCompleteTaxonConcept.find(@accepted_name.id)
+    @trade_name_ac = MAutoCompleteTaxonConcept.find(@trade_name.id)
+    @status_N_species_ac = MAutoCompleteTaxonConcept.find(@status_N_species.id)
   end
   describe :results do
     context "when searching for status N species" do
@@ -36,7 +36,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :visibility => :trade
           })
         }
-        specify { subject.results.should include(@status_N_species) }
+        specify { subject.results.should include(@status_N_species_ac) }
       end
       context "when trade internal visibility" do
         subject {
@@ -46,7 +46,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :visibility => :trade_internal
           })
         }
-        specify { subject.results.should include(@status_N_species) }
+        specify { subject.results.should include(@status_N_species_ac) }
       end
       context "when speciesplus visibility" do
         subject {
@@ -55,7 +55,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should_not include(@status_N_species) }
+        specify { subject.results.should_not include(@status_N_species_ac) }
       end
     end
     context "when searching for trade name" do
@@ -67,8 +67,8 @@ describe Species::TaxonConceptPrefixMatcher do
             :visibility => :trade
           })
         }
-        specify { subject.results.should_not include(@trade_name) }
-        specify { subject.results.should include(@accepted_name) }
+        specify { subject.results.should_not include(@trade_name_ac) }
+        specify { subject.results.should include(@accepted_name_ac) }
       end
       context "when trade internal visibility" do
         subject {
@@ -78,8 +78,8 @@ describe Species::TaxonConceptPrefixMatcher do
             :visibility => :trade_internal
           })
         }
-        specify { subject.results.should include(@trade_name) }
-        specify { subject.results.should include(@accepted_name) }
+        specify { subject.results.should include(@trade_name_ac) }
+        specify { subject.results.should include(@accepted_name_ac) }
       end
       context "when speciesplus visibility" do
         subject {
@@ -88,8 +88,8 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should_not include(@trade_name) }
-        specify { subject.results.should include(@accepted_name) }
+        specify { subject.results.should_not include(@trade_name_ac) }
+        specify { subject.results.should include(@accepted_name_ac) }
       end
     end
   end
