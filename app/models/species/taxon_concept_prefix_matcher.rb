@@ -51,16 +51,18 @@ class Species::TaxonConceptPrefixMatcher
       @query.where(:show_in_species_plus_ac => true)
     end
 
-    if @taxon_concept_query
-      @query = @query.
+    @query = @query.
       select('id, full_name, rank_name,
         ARRAY_AGG_NOTNULL(matched_name ORDER BY matched_name) AS matching_names_ary').
-      where(
+      group([:id, :full_name, :rank_name, :rank_order])
+
+    if @taxon_concept_query
+      @query = @query.where(
         ActiveRecord::Base.send(:sanitize_sql_array, [
           "name_for_matching LIKE :sci_name_prefix",
           :sci_name_prefix => "#{@taxon_concept_query}%"
         ])
-      ).group([:id, :full_name, :rank_name, :rank_order])
+      )
     end
     @query
   end
