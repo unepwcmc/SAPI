@@ -51,7 +51,11 @@
     
     {{#if controllers.taxonConcept.hasSubspecies}}
     <div class="block04 block05" id="subspecies">
-      <strong class="title tooltip" {{bind-attr data-descr=controllers.taxonConcept.currentSubspeciesTooltipText}}>SUBSPECIES</strong>
+      <strong class="title">SUBSPECIES
+      <span class="tooltip"
+      {{bind-attr data-descr=controllers.taxonConcept.currentSubspeciesTooltipText}}>
+      *</span>
+      </strong>
       <div class="columns-holder">
         <ul class="col">
           {{#eachPart controllers.taxonConcept.subspecies parts=2 page=0}}

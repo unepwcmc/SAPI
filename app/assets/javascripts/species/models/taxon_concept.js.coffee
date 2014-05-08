@@ -36,9 +36,11 @@ Species.TaxonConcept = DS.Model.extend
 
   currentSubspeciesTooltipText: ( ->
     unless @get('subspecies').length > 0 then return no
-    root = "Subspecies pages are only included within Species+ where the subspecies is or was historically listed in its own right"
-    if @get('taxonomy') == 'cms'
-      return "#{root} in CMS or the related Agreements"
-    else 
-      return "#{root} in either the CITES Appendices or the EU Wildlife Trade Regulations"
+    designationInfo = if @get('taxonomy') == 'cms'
+      " in CMS or the related Agreements"
+    else
+      " in either the CITES Appendices or the EU Wildlife Trade Regulations"
+    "Subspecies pages are only included within Species+ where the subspecies is or was historically listed in its own right" +
+    designationInfo +
+    ". Where there are no subspecies listed, this indicates that that the legal information that applies to the species applies to all subspecies equally."
   ).property('taxonomy', 'subspecies')
