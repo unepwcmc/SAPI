@@ -25,7 +25,7 @@ private
       :species_name, :full_name, :author_year, :rank_name,
       :name_status, :taxonomy,
       :reference_id, :reference_legacy_id,
-      :citation, :inherited_from, :exclusions,
+      :citation, :inherited_from, :exclusions, :is_cascaded,
       :created_at, :created_by
     ]
   end
@@ -38,7 +38,7 @@ private
       'Species', 'Full name', 'Author', 'Rank name',
       'Name status', 'Taxonomy',
       'Reference Id', 'Reference legacy Id',
-      'Reference', 'Inherited from', 'Exclusions',
+      'Reference', 'Inherited from', 'Exclusions', 'Cascaded?',
       'Date added', 'Added by'
     ]
   end

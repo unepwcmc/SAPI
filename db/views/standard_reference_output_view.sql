@@ -2,14 +2,16 @@ DROP VIEW IF EXISTS standard_reference_output_view;
 CREATE VIEW standard_reference_output_view AS
 
 WITH RECURSIVE inherited_references AS (
-  SELECT id, taxon_concept_id, excluded_taxon_concepts_ids AS exclusions
+  SELECT id, taxon_concept_id, excluded_taxon_concepts_ids AS exclusions,
+  is_cascaded
   FROM taxon_concept_references
   WHERE is_standard = true
   UNION
-  SELECT d.id, low.id, d.exclusions
+  SELECT d.id, low.id, d.exclusions, d.is_cascaded
   FROM taxon_concepts low
   JOIN inherited_references d ON d.taxon_concept_id = low.parent_id
   WHERE NOT COALESCE(d.exclusions, ARRAY[]::INT[]) @> ARRAY[low.id]
+  AND d.is_cascaded
 )
 SELECT
 taxon_concepts.id,
@@ -46,6 +48,7 @@ CASE
     WHERE s IS NOT NULL), ', ')
   ELSE ''
 END AS exclusions,
+inherited_references.is_cascaded,
 to_char(taxon_concepts.created_at, 'DD/MM/YYYY') AS created_at,
 'TODO' AS created_by
 FROM taxon_concepts
