@@ -337,7 +337,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
         END AS taxonomy_is_cites_eu,
         name_status,
         ranks.name AS rank_name,
-        ARRAY_LENGTH(REGEXP_SPLIT_TO_ARRAY(taxon_concepts.taxonomic_position,'\.'), 1) AS rank_order,
+        ranks.taxonomic_position AS rank_order,
         taxon_concepts.taxonomic_position,
         CASE
           WHEN

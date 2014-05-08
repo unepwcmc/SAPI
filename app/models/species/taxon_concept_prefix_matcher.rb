@@ -25,7 +25,14 @@ class Species::TaxonConceptPrefixMatcher
   end
 
   def initialize_query
-    @query = MAutoCompleteTaxonConcept.order([:rank_order, :full_name])
+    @query = MAutoCompleteTaxonConcept.scoped
+
+    @query = if @visibility == :trade
+      @query.order(:full_name)
+    else
+      @query.order([:rank_order, :full_name])
+    end
+
     unless @ranks.empty?
       @query = @query.where(:rank_name => @ranks)
     end
