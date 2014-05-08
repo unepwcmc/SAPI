@@ -62,7 +62,7 @@ class AdminEditor
         }, (data) =>
           labels = []
           $.each(data, (i, item) =>
-            labels.push(item.full_name + ' (' + item.name_status + ')')
+            labels.push(item.full_name)
           )
           return process(labels)
         )
