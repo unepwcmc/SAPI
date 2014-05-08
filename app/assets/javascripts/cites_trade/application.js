@@ -536,23 +536,35 @@ $(document).ready(function(){
     return '';
   }
 
-  function getTaxonLabel (element, term) {
-    var name = element.full_name,
-      term = term.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&"),
-      suggestion = element.full_name + getFormattedSynonyms(element),
+  function getTaxonDisplayName(taxon, showSpp) {
+    var displayName = taxon.full_name;
+    if (showSpp && !(
+      taxon.rank_name == 'SPECIES' ||
+      taxon.rank_name == 'SUBSPECIES' ||
+      taxon.rank_name == 'VARIETY'
+    )){
+      displayName += ' spp. ';
+    }
+    return displayName + getFormattedSynonyms(taxon);
+  }
+
+  function getTaxonLabel (taxonDisplayName, term) {
+    var term = term.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&"),
       transform = function (match) {
         return "<span class='match'>" + match + "</span>";
       };
-    return suggestion.replace(new RegExp("(" + term + ")", "gi"), transform);
+
+    return taxonDisplayName.replace(new RegExp("(" + term + ")", "gi"), transform);
   }
   
-  function parseTaxonData (data, term) {
+  function parseTaxonData (data, term, showSpp) {
     var d = data.auto_complete_taxon_concepts;
   	return _.map(d, function (element, index) {
+      var displayName = getTaxonDisplayName(element, showSpp)
   	  return {
-        'value': element.id, 
-        'label': element.full_name + getFormattedSynonyms(element),
-        'drop_label': getTaxonLabel(element, term)
+        'value': element.id,
+        'label': displayName,
+        'drop_label': getTaxonLabel(displayName, term)
       };
   	});
   }
@@ -568,11 +580,10 @@ $(document).ready(function(){
           data: {
             taxonomy: 'CITES',
             taxon_concept_query: term,
-            'ranks[]': 'SPECIES,SUBSPECIES,VARIETY',
             visibility: 'trade'
           },
           success: function(data) {
-            response(parseTaxonData(data, term));
+            response(parseTaxonData(data, term, true));
           },
     			error : function(xhr, ajaxOptions, thrownError){
     				growlMe(xhr.status + " ====== " + thrownError);
@@ -623,7 +634,7 @@ $(document).ready(function(){
             visibility: 'trade'
           },
           success: function(data) {
-            response(parseTaxonData(data, term));
+            response(parseTaxonData(data, term, false));
           },
     			error : function(xhr, ajaxOptions, thrownError){
     				growlMe(xhr.status + " ====== " + thrownError);
