@@ -6,7 +6,8 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
   closeOnSelect: true
   type: 'hidden'
   origin: null
-  classNames: ['select2']
+  classNames: ['select2'],
+  quietMillis: 500,
 
   didInsertElement: () ->
     placeholderText = this.get('prompt') || ''
@@ -17,7 +18,8 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
       minimumInputLength: 3
       allowClear: this.get('allowClear')
       closeOnSelect: this.get('closeOnSelect')
-      dropdownCssClass: 'species_autocomplete'
+      dropdownCssClass: 'species_autocomplete',
+      quietMillis: this.get('quietMillis'),
       initSelection: (element, callback) =>
         @origin = @get('origin')
         value = @get('value')

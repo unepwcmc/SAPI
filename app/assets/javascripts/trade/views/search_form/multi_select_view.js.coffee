@@ -117,6 +117,12 @@ Trade.MultiSelectSearchTextField = Em.TextField.extend
   click: (e) ->
     @.$().select()
 
+  keyUp: (event) ->
+    Ember.run.cancel(@currentTimeout)
+    @currentTimeout = Ember.run.later(@, ->
+      @set('query', @get('value'))
+    , 300)
+
 Trade.TaxonConceptAutoCompleteSuggestionView = Ember.View.extend
   tagName: 'li'
   content: null
