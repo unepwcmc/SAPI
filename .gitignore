@@ -71,3 +71,4 @@ db/structure.sql
 
 #mailer config
 /config/mailer_config.yml
+/config/secrets.yml
