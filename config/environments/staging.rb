@@ -73,6 +73,9 @@ SAPI::Application.configure do
       :email_prefix => "[SAPI STAGING] ",
       :sender_address => %{"SAPI Exception Notifier" <no-reply@unep-wcmc.org>},
       :exception_recipients => %w{simao.belchior@unep-wcmc.org agnieszka.figiel@unep-wcmc.org}
+    },
+    :webhook => {
+          :url => 'https://wcmc.slack.com/services/hooks/incoming-webhook?token=t6kz4mYI0Nm69hWH5pBgzBkC'
     }
 
   config.ember.variant = :production
