@@ -44,3 +44,7 @@ Species.TaxonConcept = DS.Model.extend
     designationInfo +
     ". Where there are no subspecies listed, this indicates that that the legal information that applies to the species applies to all subspecies equally."
   ).property('taxonomy', 'subspecies')
+
+  speciesFullName: ( -> 
+    @get('genusName') + ' ' + @get('speciesName').toLowerCase()
+  ).property('genusName', 'speciesName')

@@ -41,7 +41,7 @@
       </li>     
       {{#if isSubspecies}}
       <li> 
-      {{#linkTo 'taxonConcept.legal' parentId}}{{speciesName}}{{/linkTo}}
+      {{#linkTo 'taxonConcept.legal' parentId}}<span class="species-name">{{speciesFullName}}</span>{{/linkTo}}
       </li>
       {{/if}}
     </ul>
