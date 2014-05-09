@@ -12,7 +12,10 @@ require 'sidekiq/capistrano'
 require 'capistrano/slack'
 
 #required
-set :slack_token, "" # comes from inbound webhook integration
+require 'yaml'
+set :secrets, YAML.load(File.open('config/secrets.yml'))
+
+set :slack_token, secrets["development"]["capistrano_slack"] # comes from inbound webhook integration
 set :slack_room, "#speciesplus" # the room to send the message to
 set :slack_subdomain, "wcmc" # if your subdomain is example.slack.com
 
