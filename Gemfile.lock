@@ -169,6 +169,9 @@ GEM
     highline (1.6.19)
     hike (1.2.3)
     http_parser.rb (0.5.3)
+    httparty (0.13.1)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     i18n (0.6.9)
     immigrant (0.1.4)
       activerecord (>= 3.0)
@@ -204,6 +207,7 @@ GEM
     mime-types (1.25.1)
     mini_portile (0.5.0)
     multi_json (1.10.0)
+    multi_xml (0.5.5)
     nested_form (0.3.1)
     net-scp (1.1.1)
       net-ssh (>= 2.6.5)
@@ -380,6 +384,7 @@ DEPENDENCIES
   git_pretty_accept
   guard-bundler
   guard-livereload
+  httparty
   immigrant
   inherited_resources
   jquery-mousewheel-rails
