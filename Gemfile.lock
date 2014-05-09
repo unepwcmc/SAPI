@@ -5,6 +5,14 @@ GIT
   specs:
     charlock_holmes (0.6.13)
 
+GIT
+  remote: https://github.com/nextupdate/capistrano-slack.git
+  revision: 7e18c4b164866ad7b5f4a2f360eeec1f1c5ccc36
+  specs:
+    capistrano-slack (1.2.0)
+      capistrano (< 3.0.0)
+      capistrano-log_with_awesome (~> 0.0.2)
+
 GEM
   remote: https://rubygems.org/
   remote: http://gems.github.com/
@@ -69,6 +77,8 @@ GEM
       net-ssh-gateway (>= 1.1.0)
     capistrano-ext (1.2.1)
       capistrano (>= 1.0.0)
+    capistrano-log_with_awesome (0.0.2)
+      capistrano (>= 2.5.14)
     carrierwave (0.9.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
@@ -361,6 +371,7 @@ DEPENDENCIES
   brightbox (>= 2.3.9)
   capistrano
   capistrano-ext
+  capistrano-slack!
   carrierwave
   charlock_holmes!
   codeclimate-test-reporter

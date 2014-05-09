@@ -79,3 +79,22 @@ end
  
 after "deploy:setup", :config_vhost
 
+endpoints = [
+  {
+    name: "Species+",
+    url: "https://www.speciesplus.net"
+  },
+  {
+    name: "Public Trade",
+    url: "https://trade.cites.org"
+  },
+  {
+    name: "Private Trade",
+    url: "https://#{domain}/trade"
+  },
+  {
+    name: "Admin",
+    url: "https://#{domain}/admin"
+  }
+]
+set :urls_to_test, endpoints

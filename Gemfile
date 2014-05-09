@@ -89,6 +89,7 @@ group :development do
   gem 'webrick', '1.3.1'
   gem 'jslint_on_rails'
   gem 'git_pretty_accept'
+  gem 'capistrano-slack', :git => 'https://github.com/nextupdate/capistrano-slack.git'
 end
 
 group :test, :development do

@@ -9,6 +9,31 @@ require 'brightbox/recipes'
 require 'brightbox/passenger'
 require 'sidekiq/capistrano'
 
+require 'capistrano/slack'
+
+#required
+set :slack_token, "" # comes from inbound webhook integration
+set :slack_room, "#speciesplus" # the room to send the message to
+set :slack_subdomain, "wcmc" # if your subdomain is example.slack.com
+
+# optional
+set :slack_application, "SAPI" # override Capistrano `application`
+deployment_animals = [
+  ["Loxodonta deployana", ":elephant:"],
+  ["Canis deployus", ":wolf:"],
+  ["Panthera capistranis", ":tiger:"],
+  ["Bison deployon", ":ox:"],
+  ["Ursus capistranus", ":bear:"],
+  ["Crotalus rattledeploy", ":snake:"],
+  ["Caiman assetocompilatus", ":crocodile:"]
+]
+
+set :shuffle_deployer, deployment_animals.shuffle.first
+
+set :slack_username, shuffle_deployer[0] # displayed as name of message sender
+set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the message
+
+
 set :generate_webserver_config, false
 
 require 'rvm/capistrano'
@@ -40,7 +65,7 @@ namespace :deploy do
   end
 
 end
- 
+
 namespace :assets do
   desc "Precompile assets locally and then rsync to app servers"
     task :precompile, :only => { :primary => true } do
