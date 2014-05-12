@@ -60,7 +60,7 @@ module AdminHelper
           controller_name.titleize
         end
       ) + content_tag(:div, :class => 'action-buttons') do
-        admin_add_new_button :resource => @resource
+        admin_add_new_button :custom_btn_title => @custom_btn_title
       end
     end
   end
@@ -68,7 +68,7 @@ module AdminHelper
   def admin_add_new_button(options = {})
     resource = options[:resource] || controller_name.singularize
     href = options.delete(:href) || "#new-#{resource}"
-    name = options.delete(:name) || "Add new #{resource.titleize}"
+    name = options.delete(:name) || options[:custom_btn_title] || "Add new #{resource.titleize}"
     link_to('<i class="icon-plus-sign"></i> '.html_safe + name, href,
       {
         :role => "button",

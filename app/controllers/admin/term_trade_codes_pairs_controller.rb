@@ -9,7 +9,7 @@ class Admin::TermTradeCodesPairsController < Admin::SimpleCrudController
   def index
     load_associations
     @custom_title = custom_title
-    @resource = custom_title.singularize
+    @custom_btn_title = "Add #{custom_title.singularize}"
     index!
   end
 
