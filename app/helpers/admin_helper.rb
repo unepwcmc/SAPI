@@ -60,7 +60,7 @@ module AdminHelper
           controller_name.titleize
         end
       ) + content_tag(:div, :class => 'action-buttons') do
-        admin_add_new_button
+        admin_add_new_button :resource => @resource
       end
     end
   end
