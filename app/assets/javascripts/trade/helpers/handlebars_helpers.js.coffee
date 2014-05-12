@@ -13,7 +13,7 @@ Ember.Handlebars.helper('dataHead', (columns) ->
   for column in columns
     name = column.split('.')[0]
       # insert a space before all caps
-      .replace(/([A-Z])/g, ' $1')
+      .replace(/([A-Z])|_/g, ' $1')
       # uppercase the first character
       .replace(/^./, (str) -> str.toUpperCase() )
     data.push name
