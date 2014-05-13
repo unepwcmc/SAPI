@@ -95,7 +95,6 @@ CREATE OR REPLACE FUNCTION rebuild_valid_taxon_concept_appendix_year_mview() RET
   AS $$
     SELECT * FROM rebuild_valid_taxon_concept_appendix_year_designation_mview('CITES');
     SELECT * FROM rebuild_ancestor_valid_tc_appdx_year_designation_mview('CITES');
-    SELECT * FROM rebuild_valid_taxon_concept_annex_year_mview();
     SELECT * FROM rebuild_valid_tc_appdx_N_year_mview();
     SELECT * FROM rebuild_valid_hybrid_appdx_year_mview();
 $$;

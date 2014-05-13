@@ -65,7 +65,6 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           :other_taxon_concept => synonym
         )
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
-        Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
       end
 
       context "when split listing" do
