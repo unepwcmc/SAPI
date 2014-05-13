@@ -144,8 +144,8 @@ describe Trade::Shipment do
           :event => reg2013,
           :is_current => true
         )
-        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
+        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_taxon_concept_appendix_year_validation
       end
       context "valid" do
