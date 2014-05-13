@@ -6,7 +6,22 @@ class Admin::TermTradeCodesPairsController < Admin::SimpleCrudController
   defaults :resource_class => TermTradeCodesPair, 
     :collection_name => 'term_trade_codes_pairs', :instance_name => 'term_trade_codes_pair'
 
+  def index
+    load_associations
+    @custom_title = custom_title
+    @custom_btn_title = "Add #{custom_title.singularize}"
+    index!
+  end
+
   protected
+
+  def custom_title
+    if params[:type] == 'Unit'
+      return 'Term Unit Pairs'
+    elsif params[:type] == 'Purpose'
+      return 'Term Purpose Pairs'
+    end
+  end
 
   def load_term_codes
     @term_codes_obj = Term.select([:id, :code]).
