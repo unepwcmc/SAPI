@@ -41,12 +41,15 @@ CREATE OR REPLACE FUNCTION rebuild_valid_taxon_concept_appendix_year_designation
     AND a.effective_at < ad.effective_at
     GROUP BY a.taxon_concept_id, a.species_listing_name, a.effective_at';
 
-    EXECUTE 'DROP TABLE IF EXISTS tmp_' || mview_name || ';';
+    -- drop indexes on the mview
+    EXECUTE 'DROP INDEX IF EXISTS ' || mview_name || '_idx';
+    -- truncate the mview
+    EXECUTE 'TRUNCATE ' || mview_name;
 
     -- the following interval-merging query adapted from Solution 2
     -- http://blog.developpez.com/sqlpro/p9821/langage-sql-norme/agregation_d_intervalles_en_sql_1
 
-    EXECUTE 'CREATE TABLE tmp_' || mview_name || ' AS
+    EXECUTE '
     WITH unmerged_intervals AS (
       SELECT F.effective_from, L.effective_to, F.taxon_concept_id, F.species_listing_name
       FROM ' || designation_name || '_listing_changes_intervals_mview AS F
@@ -66,16 +69,15 @@ CREATE OR REPLACE FUNCTION rebuild_valid_taxon_concept_appendix_year_designation
         END
       ) = 0
     )
-    SELECT taxon_concept_id, species_listing_name AS ' || appendix || ',
+    INSERT INTO ' || mview_name || '
+    (taxon_concept_id, ' || appendix || ', effective_from, effective_to)
+    SELECT taxon_concept_id, species_listing_name,
     effective_from, MIN(effective_to) AS effective_to
     FROM   unmerged_intervals
     GROUP  BY taxon_concept_id, species_listing_name, effective_from';
 
-    EXECUTE 'CREATE INDEX ON tmp_' || mview_name || ' (taxon_concept_id, ' || appendix || ', effective_from, effective_to);';
-
-    EXECUTE 'DROP TABLE IF EXISTS valid_species_name_' || appendix || '_year_mview;';
-    EXECUTE 'DROP TABLE IF EXISTS ' || mview_name || ';';
-    EXECUTE 'ALTER TABLE tmp_' || mview_name || ' RENAME TO ' || mview_name || ';';
+    EXECUTE 'CREATE INDEX ' || mview_name || '_idx ON ' || mview_name || '
+    (taxon_concept_id, ' || appendix || ', effective_from, effective_to);';
   END;
 $$;
 
