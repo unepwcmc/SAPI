@@ -43,6 +43,9 @@ CREATE OR REPLACE FUNCTION rebuild_valid_taxon_concept_appendix_year_designation
     GROUP BY a.taxon_concept_id, a.species_listing_name, a.effective_at';
 
     -- drop indexes on the mview
+    IF designation_name = 'CITES' THEN
+      EXECUTE 'DROP INDEX IF EXISTS ' || mview_name || '_year_idx';
+    END IF;
     EXECUTE 'DROP INDEX IF EXISTS ' || mview_name || '_idx';
     -- truncate the mview
     EXECUTE 'TRUNCATE ' || mview_name;
@@ -77,8 +80,15 @@ CREATE OR REPLACE FUNCTION rebuild_valid_taxon_concept_appendix_year_designation
     FROM   unmerged_intervals
     GROUP  BY taxon_concept_id, species_listing_name, effective_from';
 
+    IF designation_name = 'CITES' THEN
+      EXECUTE 'CREATE INDEX ' || mview_name || '_year_idx ON ' || mview_name || '(
+        taxon_concept_id,
+        DATE_PART(''year'', effective_from), DATE_PART(''year'', effective_to), ' ||
+        appendix || '
+      );';
+    END IF;
     EXECUTE 'CREATE INDEX ' || mview_name || '_idx ON ' || mview_name || '
-    (taxon_concept_id, ' || appendix || ', effective_from, effective_to);';
+    (taxon_concept_id, effective_from, effective_to, ' || appendix || ');';
   END;
 $$;
 
