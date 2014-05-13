@@ -16,7 +16,8 @@ SELECT
   l.name_en AS common_name_language,
   taxonomies.name AS taxonomy_name,
   to_char(st.created_at, 'DD/MM/YYYY') AS created_at,
-  'TODO' AS created_by,
+  uc.name AS created_by,
+  uu.name AS updated_by,
   taxonomies.id AS taxonomy_id
 
 FROM taxon_concepts st
@@ -27,5 +28,9 @@ LEFT JOIN common_names n
 ON c.common_name_id = n.id
 LEFT JOIN languages as l
 ON n.language_id = l.id
+LEFT JOIN users as uc
+ON n.created_by_id = uc.id
+LEFT JOIN users as uu
+ON n.updated_by_id = uu.id
 
 WHERE st.name_status IN ('A');

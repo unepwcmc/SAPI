@@ -26,7 +26,7 @@ private
       :author_year, :rank_name,
       :common_name, :common_name_language,
       :taxonomy_name,
-      :created_at, :created_by
+      :created_at, :created_by, :updated_by
     ]
   end
 
@@ -39,7 +39,7 @@ private
       'Author', 'Rank',
       'Common Name', 'Language',
       'Taxonomy',
-      'Date Added', 'Added by'
+      'Date Added', 'Added by', 'Updted by'
     ]
   end
 

@@ -10,6 +10,8 @@
 #
 
 class User < ActiveRecord::Base
+  include SentientUser
+  track_who_does_it
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable
   attr_accessible :email, :name, :password, :password_confirmation,
