@@ -782,6 +782,9 @@ body.inner #footer .holder{
 	word-spacing: -3px;
 	text-align: left;
 }
+.heading-holder .species-name {
+	word-spacing: 0;
+}
 #main .heading-holder h1 {
 	font-size: 41px;
 	font-weight: bold;
