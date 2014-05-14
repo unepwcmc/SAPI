@@ -16,9 +16,12 @@
 #  legacy_id      :integer
 #  end_date       :datetime
 #  subtype        :string(255)
+#  updated_by_id :interger
+#  created_by_id :interger
 #
 
 class Event < ActiveRecord::Base
+  track_who_does_it
   attr_accessible :name, :designation_id, :description, :url, :effective_at, :is_current
   attr_reader :effective_at_formatted
 
