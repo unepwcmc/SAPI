@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140514143525) do
+ActiveRecord::Schema.define(:version => 20140514144304) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -369,6 +369,8 @@ ActiveRecord::Schema.define(:version => 20140514143525) do
     t.integer  "geo_entity_id",    :null => false
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   add_index "distributions", ["taxon_concept_id"], :name => "index_distributions_on_taxon_concept_id"
@@ -1495,6 +1497,8 @@ ActiveRecord::Schema.define(:version => 20140514143525) do
     t.integer  "legacy_id"
     t.datetime "end_date"
     t.string   "subtype"
+    t.integer  "updated_by_id"
+    t.integer  "created_by_id"
   end
 
   create_table "events_import", :id => false, :force => true do |t|

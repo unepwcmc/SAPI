@@ -7,9 +7,12 @@
 #  geo_entity_id    :integer          not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  updated_by_id :interger
+#  created_by_id :interger
 #
 
 class Distribution < ActiveRecord::Base
+  track_who_does_it
   attr_accessible :geo_entity_id, :taxon_concept_id, :tag_list, :references_attributes
   acts_as_taggable
 
