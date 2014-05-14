@@ -27,10 +27,13 @@
 #  import_permits_ids            :string
 #  export_permits_ids            :string
 #  origin_permits_ids            :string
+#  updated_by_id :interger
+#  created_by_id :interger
 #
 
 class Trade::Shipment < ActiveRecord::Base
   include PgArrayParser
+  track_who_does_it
   attr_accessible :annual_report_upload_id, :appendix,
     :country_of_origin_id, :origin_permit_id,
     :exporter_id, :import_permit_id, :importer_id, :purpose_id,

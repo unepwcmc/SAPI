@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140513084116) do
+ActiveRecord::Schema.define(:version => 20140514082122) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -2261,6 +2261,8 @@ ActiveRecord::Schema.define(:version => 20140513084116) do
     t.string   "import_permits_ids",            :limit => nil
     t.string   "export_permits_ids",            :limit => nil
     t.string   "origin_permits_ids",            :limit => nil
+    t.integer  "updated_by_id"
+    t.integer  "created_by_id"
   end
 
   add_index "trade_shipments", ["appendix"], :name => "index_trade_shipments_on_appendix"

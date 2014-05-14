@@ -40,7 +40,9 @@ CREATE VIEW trade_shipments_view AS
     import_permits_ids,
     export_permits_ids,
     origin_permits_ids,
-    legacy_shipment_number
+    legacy_shipment_number,
+    uc.name AS created_by,
+    uu.name AS updated_by
   FROM trade_shipments shipments
   JOIN taxon_concepts
     ON taxon_concept_id = taxon_concepts.id
@@ -63,4 +65,8 @@ CREATE VIEW trade_shipments_view AS
   LEFT JOIN trade_codes purposes
     ON purposes.id = purpose_id
   LEFT JOIN trade_codes sources
-    ON sources.id = source_id;
+    ON sources.id = source_id
+  LEFT JOIN users as uc
+    ON shipments.created_by_id = uc.id
+  LEFT JOIN users as uu
+    ON shipments.updated_by_id = uu.id;
