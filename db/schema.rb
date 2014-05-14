@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140514082122) do
+ActiveRecord::Schema.define(:version => 20140514131715) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -1597,6 +1597,8 @@ ActiveRecord::Schema.define(:version => 20140514082122) do
     t.datetime "created_at",                                                    :null => false
     t.datetime "updated_at",                                                    :null => false
     t.integer  "import_row_id"
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   add_index "listing_changes", ["annotation_id"], :name => "index_listing_changes_on_annotation_id"

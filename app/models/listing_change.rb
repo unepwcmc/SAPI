@@ -18,10 +18,12 @@
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  import_row_id              :integer
+#  updated_by_id :interger
+#  created_by_id :interger
 #
 
 class ListingChange < ActiveRecord::Base
-
+  track_who_does_it
   attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
     :effective_at, :is_current, :parent_id, :geo_entity_ids,
     :party_listing_distribution_attributes, :inclusion_taxon_concept_id,
