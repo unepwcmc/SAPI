@@ -20,11 +20,14 @@
 #  start_notification_id       :integer
 #  end_notification_id         :integer
 #  excluded_taxon_concepts_ids :string
+#  updated_by_id :interger
+#  created_by_id :interger
 #
 
 require 'digest/sha1'
 require 'csv'
 class TradeRestriction < ActiveRecord::Base
+  track_who_does_it
   attr_accessible :end_date, :geo_entity_id, :is_current,
     :notes, :publication_date, :purpose_ids, :quota, :type,
     :source_ids, :start_date, :term_ids, :unit_id

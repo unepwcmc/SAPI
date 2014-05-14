@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140514131715) do
+ActiveRecord::Schema.define(:version => 20140514143525) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -1357,6 +1357,8 @@ ActiveRecord::Schema.define(:version => 20140514131715) do
     t.integer  "eu_decision_type_id"
     t.integer  "term_id"
     t.integer  "source_id"
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   create_table "eu_decisions_import", :id => false, :force => true do |t|
@@ -2131,6 +2133,8 @@ ActiveRecord::Schema.define(:version => 20140514131715) do
     t.integer  "end_notification_id"
     t.string   "excluded_taxon_concepts_ids", :limit => nil
     t.integer  "original_id"
+    t.integer  "updated_by_id"
+    t.integer  "created_by_id"
   end
 
   create_table "trade_sandbox_15", :force => true do |t|
