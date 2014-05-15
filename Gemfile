@@ -68,6 +68,8 @@ group :staging, :production do
   gem 'newrelic_rpm', '>=3.7.3'
 end
 
+gem 'dasboard_client', require: false
+
 group :development do
   gem "better_errors", '~>1.1.0'
   gem "binding_of_caller"

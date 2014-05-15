@@ -112,6 +112,8 @@ GEM
       rest-client
       simplecov (>= 0.7)
       thor
+    dasboard_client (0.0.0)
+      rails (>= 3.0.0)
     database_cleaner (1.2.0)
     debugger (1.6.1)
       columnize (>= 0.3.1)
@@ -379,6 +381,7 @@ DEPENDENCIES
   compass (>= 0.12.2)
   compass-rails (>= 1.0.3)
   coveralls
+  dasboard_client
   database_cleaner (>= 1.2.0)
   debugger
   devise
