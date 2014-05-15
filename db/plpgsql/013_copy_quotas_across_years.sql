@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION copy_quotas_across_years(
   from_year INTEGER, new_start_date DATE, new_end_date DATE, new_publication_date DATE,
   excluded_taxon_concepts_ids INTEGER[], included_taxon_concepts_ids INTEGER[],
   excluded_geo_entities_ids INTEGER[], included_geo_entities_ids INTEGER[],
-  from_text VARCHAR, to_text VARCHAR
+  from_text VARCHAR, to_text VARCHAR, current_user_id INTEGER
   ) RETURNS VOID
   LANGUAGE plpgsql
   AS $$
@@ -92,11 +92,11 @@ BEGIN
       FROM original_current_quotas
       WHERE trade_restrictions.id = original_current_quotas.id
     ), inserted_quotas AS (
-      INSERT INTO trade_restrictions(type, is_current, start_date, end_date, geo_entity_id, quota,
-      publication_date, notes, unit_id, taxon_concept_id, public_display, url, created_at, updated_at,
-      excluded_taxon_concepts_ids, original_id)
-      SELECT 'Quota', is_current, new_start_date, new_end_date, geo_entity_id, quota,
-      new_publication_date,
+      INSERT INTO trade_restrictions(created_by_id, type, is_current, start_date, 
+      end_date, geo_entity_id, quota, publication_date, notes, unit_id, taxon_concept_id, 
+      public_display, url, created_at, updated_at, excluded_taxon_concepts_ids, original_id)
+      SELECT current_user_id, 'Quota', is_current, new_start_date, new_end_date, geo_entity_id, 
+      quota, new_publication_date,
       CASE
         WHEN LENGTH(from_text) = 0
         THEN notes
