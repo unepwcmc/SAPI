@@ -28,7 +28,8 @@ class ListingChange < ActiveRecord::Base
     :effective_at, :is_current, :parent_id, :geo_entity_ids,
     :party_listing_distribution_attributes, :inclusion_taxon_concept_id,
     :annotation_attributes, :hash_annotation_id,
-    :event_id, :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
+    :event_id, :excluded_geo_entities_ids, :excluded_taxon_concepts_ids,
+    :created_by_id, :updated_by_id
   attr_accessor :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
 
   belongs_to :event

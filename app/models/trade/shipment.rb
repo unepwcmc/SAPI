@@ -41,7 +41,7 @@ class Trade::Shipment < ActiveRecord::Base
     :source_id, :taxon_concept_id,
     :term_id, :unit_id, :year,
     :import_permit_number, :export_permit_number, :origin_permit_number,
-    :ignore_warnings
+    :ignore_warnings, :created_by_id, :updated_by_id
   attr_accessor :reporter_type, :warnings, :ignore_warnings
 
   validates :quantity, :presence => true, :numericality => {

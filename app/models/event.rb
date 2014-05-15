@@ -22,7 +22,8 @@
 
 class Event < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :name, :designation_id, :description, :url, :effective_at, :is_current
+  attr_accessible :name, :designation_id, :description, :url, :effective_at, 
+    :is_current, :created_by_id, :updated_by_id
   attr_reader :effective_at_formatted
 
   belongs_to :designation

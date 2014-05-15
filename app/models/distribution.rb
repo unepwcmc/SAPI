@@ -13,7 +13,8 @@
 
 class Distribution < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :geo_entity_id, :taxon_concept_id, :tag_list, :references_attributes
+  attr_accessible :geo_entity_id, :taxon_concept_id, :tag_list, 
+    :references_attributes, :created_by_id, :updated_by_id
   acts_as_taggable
 
   belongs_to :geo_entity

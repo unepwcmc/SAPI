@@ -13,7 +13,8 @@
 
 class CommonName < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :language_id, :name, :reference_id
+  attr_accessible :language_id, :name, :reference_id,
+    :created_by_id, :updated_by_id
   belongs_to :language
   validates :name, :presence => true
 
