@@ -1,4 +1,8 @@
   production:
+    instance: http://dasboard.io
+    metrics:
+      auto_complete_avg_resp_time: 11
+  staging:
     instance: http://dasboard.unepwcmc-011.vm.brightbox.net
     metrics:
       auto_complete_avg_resp_time: 9
