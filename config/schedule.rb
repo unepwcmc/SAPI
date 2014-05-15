@@ -1,5 +1,9 @@
 set :output, 'log/cron.log'
 
+every :day, :at => '1:00am' do
+  rake "dasboard:new_relic"
+end
+
 every :day, :at => '2:42am' do
   rake "db:migrate:rebuild"
 end
