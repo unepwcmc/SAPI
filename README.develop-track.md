@@ -10,7 +10,7 @@ The following models are tracked with the above gem:
 * app/models/trade/shipment.rb
 * app/models/eu_decision.rb
 
-'Duplicate CITES quotas' is tracked with a created_by_id
+'Duplicate CITES quotas' (in the batch updates) is tracked with a created_by_id
 
 The 'raw shipments download' in the trade section and the 'Common Names' download in the admin section have the 'updated by', 'created by' fields.
 
