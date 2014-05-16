@@ -1,11 +1,5 @@
 Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner, Species.TaxonConceptPagination,
   needs: ['search', 'taxonConceptLink']
-  didContentLoad: ( ->
-    c = @get('content.meta') != undefined
-    s = $(@spinnerSelector)
-    if c then s.css("visibility", "hidden") else s.css("visibility", "visible")
-    c
-  ).property('content.meta')
 
   openTaxonPage: (taxonConceptId, redirected) ->
     if redirected != undefined && redirected == true
