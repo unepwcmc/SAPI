@@ -1,4 +1,4 @@
-Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner,
+Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner, Species.TaxonConceptPagination,
   needs: ['search', 'taxonConceptLink']
   content: null
 
@@ -14,34 +14,6 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner,
     if c then s.css("visibility", "hidden") else s.css("visibility", "visible")
     c
   ).property('content.meta')
-
-  pages: ( ->
-    total = parseInt(@get('content.meta.total'))
-    if total
-      Math.ceil(total / @get('perPage'))
-    else
-      1
-  ).property("content.isLoaded")
-
-  perPage: ( ->
-    parseInt(@get('content.meta.per_page')) || 25
-  ).property("content.isLoaded")
-
-  page: ( ->
-    parseInt(@get('content.meta.page')) || 1
-  ).property("content.isLoaded")
-
-  showPageControls: ( ->
-    if @get('pages') > 1 then return yes else return no
-  ).property('pages')
-
-  showPrevPage: ( ->
-    if @get('page') > 1 then return yes else return no
-  ).property('page')
-
-  showNextPage: ( ->
-    if @get('page') < @get('pages') then return yes else return no
-  ).property('page', 'pages')
 
   openTaxonPage: (taxonConceptId, redirected) ->
     if redirected != undefined && redirected == true
