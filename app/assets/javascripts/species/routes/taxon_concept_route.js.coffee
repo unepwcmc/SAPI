@@ -1,7 +1,18 @@
-Species.TaxonConceptRoute = Ember.Route.extend
+Species.TaxonConceptRoute = Ember.Route.extend Species.Spinner,
+
+  beforeModel: ->
+    # Setting a spinner until content is loaded.
+    $(@spinnerSelector).css("visibility", "visible")
 
   model: (params) ->
     Species.TaxonConcept.find(params.taxon_concept_id)
+
+  afterModel: (model) ->
+    # The `citesListings` field is a proxy for the model completeness.
+    if model.get('citesListings') == undefined
+      model.reload()
+    # Removing spinner once content is loaded.
+    $(@spinnerSelector).css("visibility", "hidden")
 
   renderTemplate: ->
     taxonConceptController = @controllerFor('taxonConcept')

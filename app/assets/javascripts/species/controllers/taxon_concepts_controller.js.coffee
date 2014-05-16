@@ -1,4 +1,4 @@
-Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner, Species.TaxonConceptPagination,
+Species.TaxonConceptsController = Ember.ArrayController.extend Species.TaxonConceptPagination,
   needs: ['search', 'taxonConceptLink']
 
   taxonConceptsByHigherTaxon: ( ->

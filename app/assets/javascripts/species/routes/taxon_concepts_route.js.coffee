@@ -1,10 +1,12 @@
-Species.TaxonConceptsRoute = Ember.Route.extend
+Species.TaxonConceptsRoute = Ember.Route.extend Species.Spinner,
 
   beforeModel: (queryParams, transition) ->
     #dirty hack to check if we have an array or comma separated string here
     if queryParams.geo_entities_ids && queryParams.geo_entities_ids.substring
       queryParams.geo_entities_ids = queryParams.geo_entities_ids.split(',')
     @controllerFor('search').setFilters(queryParams)
+    # Setting a spinner until content is loaded.
+    $(@spinnerSelector).css("visibility", "visible")
 
   model: (params, queryParams, transition) ->
     queryParams.geo_entities_ids = [] if queryParams.geo_entities_ids == true
@@ -13,7 +15,9 @@ Species.TaxonConceptsRoute = Ember.Route.extend
   afterModel: (taxonConcepts, queryParams, transition) ->
     if taxonConcepts.meta.total == 1
       console.log('single match auto transition')
-      @transitionTo('taxonConcept.legal', taxonConcepts.objectAt(0).reload(), queryParams: false)
+      @transitionTo('taxonConcept.legal', taxonConcepts.objectAt(0), queryParams: false)
+    # Removing spinner once content is loaded.
+    $(@spinnerSelector).css("visibility", "hidden")
 
   renderTemplate: ->
     taxonConceptsController = @controllerFor('taxonConcepts')

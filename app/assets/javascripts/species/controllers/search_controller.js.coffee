@@ -77,8 +77,6 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
     @set('redirected', false)
     $(".search fieldset").removeClass('parent-focus parent-active')
     m = Species.TaxonConcept.find(taxonConceptId)
-    # Setting a spinner until content is loaded.
-    $(@spinnerSelector).css("visibility", "visible")
     @transitionToRoute('taxonConcept.legal', m, {queryParams:
       {taxon_concept_query: false, page: false}
     })

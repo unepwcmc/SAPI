@@ -1,4 +1,4 @@
-Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
+Species.TaxonConceptController = Ember.ObjectController.extend
   needs: ['search']
   isCms: ( ->
     if @get('taxonomy') != undefined
@@ -181,8 +181,6 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
     taxonomy = @get('taxonomy')
     if taxonomy
       @set('controllers.search.taxonomy', taxonomy)
-    # Removing spinner once content is loaded.
-    $(@spinnerSelector).css("visibility", "hidden")
   ).observes('content.didLoad')
 
   matchedOnSynonym: ( ->
