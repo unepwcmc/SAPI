@@ -212,12 +212,3 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.Spinner,
         '</i>. You have been redirected to the species page for <i>' +
         @get('fullName') + '</i>.'
   ).property('matchedOnSelf', 'matchedOnSynonym', 'matchedOnSubspecies')
-
-  actions:
-    searchFor: (query) ->
-      @transitionToRoute('taxonConcepts', {
-        queryParams: {
-          taxonomy: @get('taxonomy'),
-          taxon_concept_query: query
-        }
-      })

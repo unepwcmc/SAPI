@@ -10,39 +10,26 @@
     <h2>{{authorYear}}</h2>
     <ul class="list">
       <li>
-      <a href="/species/taxonConcepts?taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound phylumName}}"
-        {{action 'searchFor' phylumName}}>
-          {{phylumName}}
-        </a>
+        {{#link-to 'taxonConcepts' taxon_concept_query=phylumName}}{{unbound phylumName}}{{/link-to}}
       </li>
       <li>
-      <a href="/species/taxonConcepts?taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound className}}"
-        {{action 'searchFor' className}}>
-          {{className}}
-        </a>
+        {{#link-to 'taxonConcepts' taxon_concept_query=className}}{{unbound className}}{{/link-to}}
       </li>
       <li>
-      <a href="/species/taxonConcepts?taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound orderName}}"
-        {{action 'searchFor' orderName}}>
-          {{orderName}}
-        </a>
+        {{#link-to 'taxonConcepts' taxon_concept_query=orderName}}{{unbound orderName}}{{/link-to}}
       </li>
       <li>
-      <a href="/species/taxonConcepts?taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound familyName}}"
-        {{action 'searchFor' familyName}}>
-          {{familyName}}
-        </a>
+        {{#link-to 'taxonConcepts' taxon_concept_query=familyName}}{{unbound familyName}}{{/link-to}}
       </li>
       <li>
-      <a href="/species/taxonConcepts?taxonomy={{unbound taxonomy}}&taxon_concept_query={{unbound genusName}}"
-        {{action 'searchFor' genusName}}>
-          {{genusName}}
-        </a>
-      </li>     
+        {{#link-to 'taxonConcepts' taxon_concept_query=genusName}}{{unbound genusName}}{{/link-to}}
+      </li>
       {{#if isSubspecies}}
-      <li> 
-      {{#linkTo 'taxonConcept.legal' parentId}}<span class="species-name">{{speciesFullName}}</span>{{/linkTo}}
-      </li>
+        <li>
+          {{#linkTo 'taxonConcept.legal' parentId}}
+            <span class="species-name">{{speciesFullName}}</span>
+          {{/linkTo}}
+        </li>
       {{/if}}
     </ul>
   </div>
