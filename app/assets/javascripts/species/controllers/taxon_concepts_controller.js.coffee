@@ -1,6 +1,15 @@
 Species.TaxonConceptsController = Ember.ArrayController.extend Species.Spinner, Species.TaxonConceptPagination,
   needs: ['search', 'taxonConceptLink']
 
+  taxonConceptsByHigherTaxon: ( ->
+    return [] unless @get('content.meta.higher_taxa_headers')
+    @get('content.meta.higher_taxa_headers').map (h) ->
+      higher_taxon: h.higher_taxon
+      ancestors_path: h.higher_taxon.ancestors_path.split(',')
+      taxon_concepts: h.taxon_concept_ids.map (tc_id) ->
+        Species.TaxonConcept.find(tc_id)
+  ).property('content.meta.higher_taxa_headers')
+
   openTaxonPage: (taxonConceptId, redirected) ->
     if redirected != undefined && redirected == true
       @get('controllers.search').set('redirected', true)

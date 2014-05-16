@@ -5,19 +5,23 @@
   <div class="heading"></div>
 
   <div class="result-block">
-    {{#each header in controller.content.meta.higher_taxa_headers}}
-      <ul class="result-list">
-        {{#stringToArray header.higher_taxon.ancestors_path splitter=","}}
-          <li>
-            {{view Species.TaxonConceptLinkView}}
-          </li>
-        {{/stringToArray}}
-      </ul>
 
-      {{#each taxonConceptId in header.taxon_concept_ids}}
-        {{view Species.TaxonConceptSearchResultView
-          taxonConceptIdBinding="taxonConceptId"
-        }}
+    {{#each taxonConceptsByHigherTaxon}}
+      <ul class="result-list">
+        {{#each ancestors_path}}
+          <li>
+            {{#link-to 'taxonConcepts' taxon_concept_query=this}}{{this}}{{/link-to}}
+          </li>
+        {{/each}}
+      </ul>
+      {{#each taxonConcept in taxon_concepts}}
+        <h2>
+          {{#link-to 'taxonConcept.legal' taxonConcept taxon_concept_query=false page=false}}
+            {{#highlight taxonConcept.searchResultDisplay query=controllers.search.taxonConceptQuery}}
+              {{unbound this}}
+            {{/highlight}}
+          {{/link-to}}
+        </h2>
       {{/each}}
     {{else}}
       <div class="no-results">
