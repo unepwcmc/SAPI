@@ -10,6 +10,11 @@ Species.TaxonConceptsRoute = Ember.Route.extend
     queryParams.geo_entities_ids = [] if queryParams.geo_entities_ids == true
     Species.TaxonConcept.find(queryParams)
 
+  afterModel: (taxonConcepts, queryParams, transition) ->
+    if taxonConcepts.meta.total == 1
+      console.log('single match auto transition')
+      @transitionTo('taxonConcept.legal', taxonConcepts.objectAt(0).reload(), queryParams: false)
+
   renderTemplate: ->
     taxonConceptsController = @controllerFor('taxonConcepts')
     searchController = @controllerFor('search')
