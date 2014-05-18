@@ -1,5 +1,4 @@
 Species.TaxonConceptSearchTextField = Em.TextField.extend
-  value: ''
   currentTimeout: null
 
   attributeBindings: ['autocomplete']
