@@ -14,7 +14,6 @@ Species.TaxonConceptsRoute = Ember.Route.extend Species.Spinner,
 
   afterModel: (taxonConcepts, queryParams, transition) ->
     if taxonConcepts.meta.total == 1
-      console.log('single match auto transition')
       @transitionTo('taxonConcept.legal', taxonConcepts.objectAt(0), queryParams: false)
     # Removing spinner once content is loaded.
     $(@spinnerSelector).css("visibility", "hidden")
