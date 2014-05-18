@@ -10,23 +10,23 @@
     <h2>{{authorYear}}</h2>
     <ul class="list">
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=phylumName}}{{unbound phylumName}}{{/link-to}}
+        {{#link-to 'taxonConcepts' taxon_concept_query=phylumName taxonomy=taxonomy}}{{unbound phylumName}}{{/link-to}}
       </li>
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=className}}{{unbound className}}{{/link-to}}
+        {{#link-to 'taxonConcepts' taxon_concept_query=className taxonomy=taxonomy}}{{unbound className}}{{/link-to}}
       </li>
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=orderName}}{{unbound orderName}}{{/link-to}}
+        {{#link-to 'taxonConcepts' taxon_concept_query=orderName taxonomy=taxonomy}}{{unbound orderName}}{{/link-to}}
       </li>
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=familyName}}{{unbound familyName}}{{/link-to}}
+        {{#link-to 'taxonConcepts' taxon_concept_query=familyName taxonomy=taxonomy}}{{unbound familyName}}{{/link-to}}
       </li>
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=genusName}}{{unbound genusName}}{{/link-to}}
+        {{#link-to 'taxonConcepts' taxon_concept_query=genusName taxonomy=taxonomy}}{{unbound genusName}}{{/link-to}}
       </li>
       {{#if isSubspecies}}
         <li>
-          {{#linkTo 'taxonConcept.legal' parentId}}
+          {{#linkTo 'taxonConcept.legal' parentId queryParams=false}}
             <span class="species-name">{{speciesFullName}}</span>
           {{/linkTo}}
         </li>

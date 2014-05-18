@@ -16,7 +16,7 @@
       </ul>
       {{#each taxonConcept in taxon_concepts}}
         <h2>
-          {{#link-to 'taxonConcept.legal' taxonConcept taxon_concept_query=false page=false}}
+          {{#link-to 'taxonConcept.legal' taxonConcept queryParams=false}}
             {{#highlight taxonConcept.searchResultDisplay query=controllers.search.taxonConceptQuery}}
               {{unbound this}}
             {{/highlight}}

@@ -16,14 +16,7 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.TaxonConc
     else
       @get('controllers.search').set('redirected', false)
     m = Species.TaxonConcept.find(taxonConceptId)
-    @transitionToRoute('taxonConcept.legal', m, {queryParams:
-      {
-        taxon_concept_query: false,
-        geo_entities_ids: false,
-        geo_entity_scope: false,
-        page: false
-      }
-    })
+    @transitionToRoute('taxonConcept.legal', m, queryParams: false)
 
   actions:
     openTaxonPage: (taxonConceptId, redirected) ->
