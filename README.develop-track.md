@@ -17,3 +17,21 @@ The 'raw shipments download' in the trade section and the 'Common Names' downloa
 To run the application you need migrations and to rebuild the following views:
 * db/views/shipments_view.sql
 * db/views/common_names_view.sql
+
+
+Remaining:
+* annual report uploads
+* copy_transactions_from_sandbox_to_shipments
+* taxon concepts
+* eu annex regulation batch copy
+* eu suspension regulation batch copy
+* taxon commons (note: says no tracking in document, but then tracking expected in admin download, should probably take info from taxon_commons)
+* taxon relationships
+* references
+* taxon concept references
+* distribution references
+* species_reference_output_view
+* standard_reference_output_view
+* synonyms_and_trade_names_view
+* taxon_concepts_distributions_view
+* taxon_concepts_names_view
