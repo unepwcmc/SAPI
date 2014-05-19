@@ -9,8 +9,10 @@ The following models are tracked with the above gem:
 * app/models/event.rb
 * app/models/trade/shipment.rb
 * app/models/eu_decision.rb
+* app/models/trade/annual_report_upload.rb (AF)
 
 'Duplicate CITES quotas' (in the batch updates) is tracked with a created_by_id
+'Submit shipments' (AF)
 
 The 'raw shipments download' in the trade section and the 'Common Names' download in the admin section have the 'updated by', 'created by' fields.
 
@@ -20,8 +22,6 @@ To run the application you need migrations and to rebuild the following views:
 
 
 Remaining:
-* annual report uploads
-* copy_transactions_from_sandbox_to_shipments
 * taxon concepts
 * eu annex regulation batch copy
 * eu suspension regulation batch copy
