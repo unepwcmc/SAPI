@@ -7,7 +7,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   queryParams: ['page', 'sandboxShipmentsIds:sandbox_shipments_ids']
 
   columns: [
-    'appendix', 'taxon_name', 'accepted_taxon_name', 'taxon_name_status',
+    'appendix', 'taxon_name', 'accepted_taxon_name',
     'term_code', 'quantity',  'unit_code',
     'trading_partner', 'country_of_origin',
     'import_permit', 'export_permit', 'origin_permit',

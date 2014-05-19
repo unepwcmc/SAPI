@@ -58,6 +58,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
           :source_code,
           :year
         belongs_to :taxon_concept
+        belongs_to :reported_taxon_concept, :class_name => TaxonConcept
 
         def sanitize
           self.class.sanitize(self.id)

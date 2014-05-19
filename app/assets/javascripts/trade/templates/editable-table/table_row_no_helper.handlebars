@@ -6,13 +6,14 @@
     {{appendix}} 
   </td>
   <td>
-    {{taxonName}} 
+    {{#if reportedTaxonName}}
+      {{reportedTaxonName}}
+    {{else}}
+      {{taxonName}}
+    {{/if}}
   </td>
   <td>
     {{acceptedTaxonName}} 
-  </td>
-  <td>
-    {{taxonNameStatus}} 
   </td>
   <td>
     {{termCode}} 
