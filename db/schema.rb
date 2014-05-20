@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140519105917) do
+ActiveRecord::Schema.define(:version => 20140520125642) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -1907,6 +1907,8 @@ ActiveRecord::Schema.define(:version => 20140519105917) do
     t.datetime "updated_at",                          :null => false
     t.datetime "touched_at"
     t.string   "legacy_trade_code"
+    t.integer  "updated_by_id"
+    t.integer  "created_by_id"
   end
 
   add_index "taxon_concepts", ["name_status"], :name => "index_taxon_concepts_on_name_status"
@@ -2039,6 +2041,8 @@ ActiveRecord::Schema.define(:version => 20140519105917) do
     t.integer  "taxon_relationship_type_id", :null => false
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   create_table "taxonomies", :force => true do |t|
