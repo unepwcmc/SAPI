@@ -20,8 +20,9 @@
 #  start_notification_id       :integer
 #  end_notification_id         :integer
 #  excluded_taxon_concepts_ids :string
-#  updated_by_id               :interger
-#  created_by_id               :interger
+#  original_id                 :integer
+#  updated_by_id               :integer
+#  created_by_id               :integer
 #
 
 require 'digest/sha1'

@@ -2,13 +2,13 @@
 #
 # Table name: distribution_references
 #
-#  id                :integer          not null, primary key
-#  distribution_id   :integer          not null
-#  reference_id      :integer          not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  updated_by_id     :interger
-#  created_by_id     :interger
+#  id              :integer          not null, primary key
+#  distribution_id :integer          not null
+#  reference_id    :integer          not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  updated_by_id   :integer
+#  created_by_id   :integer
 #
 
 class DistributionReference < ActiveRecord::Base

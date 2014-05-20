@@ -7,8 +7,8 @@
 #  geo_entity_id    :integer          not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  updated_by_id    :interger
-#  created_by_id    :interger
+#  created_by_id    :integer
+#  updated_by_id    :integer
 #
 
 class Distribution < ActiveRecord::Base

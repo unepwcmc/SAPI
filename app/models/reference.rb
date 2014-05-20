@@ -2,18 +2,18 @@
 #
 # Table name: references
 #
-#  id              :integer          not null, primary key
-#  title           :text
-#  year            :string(255)
-#  author          :string(255)
-#  citation        :text             not null
-#  publisher       :text
-#  legacy_id       :integer
-#  legacy_type     :string(255)
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  updated_by_id   :interger
-#  created_by_id   :interger
+#  id            :integer          not null, primary key
+#  title         :text
+#  year          :string(255)
+#  author        :string(255)
+#  citation      :text             not null
+#  publisher     :text
+#  legacy_id     :integer
+#  legacy_type   :string(255)
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  updated_by_id :integer
+#  created_by_id :integer
 #
 
 class Reference < ActiveRecord::Base

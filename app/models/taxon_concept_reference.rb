@@ -2,16 +2,16 @@
 #
 # Table name: taxon_concept_references
 #
-#  id                           :integer          not null, primary key
-#  taxon_concept_id             :integer          not null
-#  reference_id                 :integer          not null
-#  is_standard                  :boolean          default(FALSE), not null
-#  is_cascaded                  :boolean          default(FALSE), not null
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  excluded_taxon_concepts_ids  :string
-#  updated_by_id                :interger
-#  created_by_id                :interger
+#  id                          :integer          not null, primary key
+#  taxon_concept_id            :integer          not null
+#  reference_id                :integer          not null
+#  is_standard                 :boolean          default(FALSE), not null
+#  is_cascaded                 :boolean          default(FALSE), not null
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  excluded_taxon_concepts_ids :string
+#  created_by_id               :integer
+#  updated_by_id               :integer
 #
 
 class TaxonConceptReference < ActiveRecord::Base
