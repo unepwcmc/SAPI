@@ -135,5 +135,6 @@ COMMENT ON FUNCTION copy_quotas_across_years(
   from_year INTEGER, new_start_date DATE, new_end_date DATE,
   new_publication_date DATE, excluded_taxon_concepts_ids INTEGER[],
   included_taxon_concepts_ids INTEGER[], excluded_geo_entities_ids INTEGER[],
-  included_geo_entities_ids INTEGER[], from_text VARCHAR, to_text VARCHAR) IS
+  included_geo_entities_ids INTEGER[], from_text VARCHAR, to_text VARCHAR,
+  current_user_id INTEGER) IS
   'Procedure to copy quotas across two years with some filtering parameters.';
