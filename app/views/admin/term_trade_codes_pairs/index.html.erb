@@ -2,7 +2,7 @@
 
 <%= render "shared/pairings_sub_nav" %>
 
-<%= admin_new_modal do %>
+<%= admin_new_modal(:title => @custom_btn_title) do %>
   <%= render :partial => 'admin/term_trade_codes_pairs/form' %>
 <% end %>
 
