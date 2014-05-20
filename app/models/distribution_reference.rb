@@ -2,15 +2,19 @@
 #
 # Table name: distribution_references
 #
-#  id              :integer          not null, primary key
-#  distribution_id :integer          not null
-#  reference_id    :integer          not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id                :integer          not null, primary key
+#  distribution_id   :integer          not null
+#  reference_id      :integer          not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  updated_by_id     :interger
+#  created_by_id     :interger
 #
 
 class DistributionReference < ActiveRecord::Base
-  attr_accessible :reference_id, :distribution_id
+  track_who_does_it
+  attr_accessible :reference_id, :distribution_id, :created_by_id, 
+    :updated_by_id
 
   belongs_to :reference
   belongs_to :distribution, :touch => true

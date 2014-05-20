@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140520125642) do
+ActiveRecord::Schema.define(:version => 20140520131539) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -349,6 +349,8 @@ ActiveRecord::Schema.define(:version => 20140520125642) do
     t.integer  "reference_id",    :null => false
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.integer  "updated_by_id"
+    t.integer  "created_by_id"
   end
 
   add_index "distribution_references", ["distribution_id", "reference_id"], :name => "index_distribution_refs_on_distribution_id_reference_id", :unique => true
@@ -1758,12 +1760,14 @@ ActiveRecord::Schema.define(:version => 20140520125642) do
     t.text     "title"
     t.string   "year"
     t.string   "author"
-    t.text     "citation",    :null => false
+    t.text     "citation",      :null => false
     t.text     "publisher"
     t.integer  "legacy_id"
     t.string   "legacy_type"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.integer  "updated_by_id"
+    t.integer  "created_by_id"
   end
 
   create_table "references_import", :id => false, :force => true do |t|
@@ -1885,6 +1889,8 @@ ActiveRecord::Schema.define(:version => 20140520125642) do
     t.datetime "created_at",                                                    :null => false
     t.datetime "updated_at",                                                    :null => false
     t.string   "excluded_taxon_concepts_ids", :limit => nil
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   add_index "taxon_concept_references", ["taxon_concept_id", "reference_id"], :name => "index_taxon_concept_references_on_taxon_concept_id_and_ref_id"
