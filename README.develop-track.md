@@ -10,10 +10,12 @@ The following models are tracked with the above gem:
 * app/models/trade/shipment.rb
 * app/models/eu_decision.rb
 * app/models/trade/annual_report_upload.rb (AF)
-* taxon concepts (no views updated)
-* taxon relationships
-* references
-* taxon concept references
+* app/models/taxon concepts (no views updated)
+* app/models/taxon relationships
+* app/models/references
+* app/models/taxon_concept_references
+* app/models/distribution_references
+* app/models/taxon_commons (note: says no tracking in document, but then tracking expected in admin download, should probably take info from taxon_commons)
 
 'Duplicate CITES quotas' (in the batch updates) is tracked with a created_by_id
 'Submit shipments' (AF)
@@ -30,8 +32,6 @@ Also completed:
 
 Remaining:
 
-* taxon commons (note: says no tracking in document, but then tracking expected in admin download, should probably take info from taxon_commons)
-* distribution references
 * species_reference_output_view
 * standard_reference_output_view
 * synonyms_and_trade_names_view
