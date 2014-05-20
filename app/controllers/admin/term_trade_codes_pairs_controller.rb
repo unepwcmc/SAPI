@@ -3,23 +3,33 @@ class Admin::TermTradeCodesPairsController < Admin::SimpleCrudController
 
   before_filter :load_term_codes, :only => [:index, :create]
   before_filter :load_trade_code_types, :only => [:index, :create]
-  defaults :resource_class => TermTradeCodesPair, 
+  defaults :resource_class => TermTradeCodesPair,
     :collection_name => 'term_trade_codes_pairs', :instance_name => 'term_trade_codes_pair'
 
   def index
     load_associations
     @custom_title = custom_title
-    @custom_btn_title = "Add #{custom_title.singularize}"
+    @custom_btn_title = "Add new #{custom_title.singularize}"
     index!
+  end
+
+  def destroy
+    @term_trade_codes_pair = TermTradeCodesPair.find params[:id]
+    destroy! do |format|
+      format.html {
+        redirect_to admin_term_trade_codes_pairs_path(:type =>
+                                                      @term_trade_codes_pair.trade_code_type)
+      }
+    end
   end
 
   protected
 
   def custom_title
     if params[:type] == 'Unit'
-      return 'Term Unit Pairs'
+      'Term Unit Pairs'
     elsif params[:type] == 'Purpose'
-      return 'Term Purpose Pairs'
+      'Term Purpose Pairs'
     end
   end
 

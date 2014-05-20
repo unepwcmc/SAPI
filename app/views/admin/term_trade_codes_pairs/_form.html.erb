@@ -2,15 +2,18 @@
 
   <%= error_messages_for(resource_instance_name) %>
 
-  <label>Term Code</label>
-  <%= f.hidden_field :term_id, class: 'term select22' %>
-  <br />
+  <p>
+    <label>Term Code</label>
+    <%= f.hidden_field :term_id, class: 'term select22' %>
+  </p>
 
-  <label>Trade Code</label>
-  <%= f.select :trade_code_id,
-   options_from_collection_for_select(@trade_code_codes, :id, :code, @term_trade_codes_pair && @term_trade_codes_pair.trade_code_id), class: 'trade select', :include_blank => true
-  %>
-  
+  <p>
+    <label><%= params[:type] %> Code</label>
+    <%= f.select :trade_code_id,
+     options_from_collection_for_select(@trade_code_codes, :id, :code, @term_trade_codes_pair && @term_trade_codes_pair.trade_code_id), class: 'trade select', :include_blank => true
+   %>
+ </p>
+
   <%= f.hidden_field :trade_code_type, :value => @trade_code_type %>
 
   <br />
