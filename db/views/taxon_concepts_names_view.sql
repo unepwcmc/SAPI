@@ -19,6 +19,7 @@ SELECT
   taxonomies.name AS taxonomy_name,
   to_char(taxon_concepts.created_at, 'DD/MM/YYYY') AS created_at,
   uc.name AS created_by,
+  to_char(taxon_concepts.updated_at, 'DD/MM/YYYY') AS updated_at,
   uu.name AS updated_by
 FROM taxon_concepts
 JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
