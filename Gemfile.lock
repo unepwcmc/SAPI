@@ -224,6 +224,7 @@ GEM
     net-ssh (2.6.7)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
+    netrc (0.7.7)
     newrelic_rpm (3.7.3.199)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
@@ -277,6 +278,8 @@ GEM
       railties (~> 3.1)
     rest-client (1.6.7)
       mime-types (>= 1.16)
+    rest_client (1.7.3)
+      netrc (~> 0.7.7)
     rspec (2.12.0)
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
@@ -414,6 +417,7 @@ DEPENDENCIES
   rack-livereload
   rails (= 3.2.18)
   rake (~> 10.0.3)
+  rest_client
   rspec-rails
   rvm-capistrano
   sass-rails (~> 3.2.3)

@@ -68,6 +68,7 @@ group :staging, :production do
   gem 'newrelic_rpm', '>=3.7.3'
 end
 
+gem 'rest_client', require: false
 gem 'dasboard_client', require: false
 
 group :development do
