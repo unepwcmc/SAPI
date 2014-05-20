@@ -13,6 +13,7 @@ The following models are tracked with the above gem:
 * taxon concepts (no views updated)
 * taxon relationships
 * references
+* taxon concept references
 
 'Duplicate CITES quotas' (in the batch updates) is tracked with a created_by_id
 'Submit shipments' (AF)
@@ -30,7 +31,6 @@ Also completed:
 Remaining:
 
 * taxon commons (note: says no tracking in document, but then tracking expected in admin download, should probably take info from taxon_commons)
-* taxon concept references
 * distribution references
 * species_reference_output_view
 * standard_reference_output_view
