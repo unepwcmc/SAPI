@@ -13,8 +13,8 @@ module Sapi
         :cites_species_listing_mview,
         :eu_species_listing_mview,
         :cms_species_listing_mview,
-        :valid_taxon_concept_appendix_year_mview,
         :valid_taxon_concept_annex_year_mview,
+        :valid_taxon_concept_appendix_year_mview,
         :touch_cites_taxon_concepts,
         :touch_eu_taxon_concepts,
         :touch_cms_taxon_concepts
@@ -56,9 +56,14 @@ module Sapi
         :cites_accepted_flags,
         :cites_eu_taxon_concepts_and_ancestors_mview,
         :cites_listing_changes_mview,
+        :eu_listing_changes_mview,
         :cites_listing,
+        :eu_listing,
         :taxon_concepts_mview,
         :cites_species_listing_mview,
+        :eu_species_listing_mview,
+        # valid annex calculation must precede appendix
+        :valid_taxon_concept_annex_year_mview,
         :valid_taxon_concept_appendix_year_mview,
         :touch_cites_taxon_concepts
       ]

@@ -171,7 +171,6 @@ shared_context "Canis lupus" do
     end
 
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
-    Sapi::StoredProcedures.rebuild_eu_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
