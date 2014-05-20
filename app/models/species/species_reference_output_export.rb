@@ -25,7 +25,7 @@ private
       :species_name, :full_name, :author_year, :rank_name,
       :name_status, :taxonomy,
       :reference, :reference_id, :reference_legacy_id,
-      :created_at, :created_by
+      :created_at, :created_by, :updated_by
     ]
   end
 
@@ -36,7 +36,7 @@ private
       'Order', 'Family', 'Genus',
       'Species', 'Full name', 'Author', 'Rank', 'Name status', 'Taxonomy',
       'Reference', 'Reference Id', 'Reference legacy Id',
-      'Date added', 'Added by'
+      'Date added', 'Added by', 'Updated by'
     ]
   end
 

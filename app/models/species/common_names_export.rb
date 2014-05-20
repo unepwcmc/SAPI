@@ -39,7 +39,7 @@ private
       'Author', 'Rank',
       'Common Name', 'Language',
       'Taxonomy',
-      'Date Added', 'Added by', 'Updted by'
+      'Date Added', 'Added by', 'Updated by'
     ]
   end
 

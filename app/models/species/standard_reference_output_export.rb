@@ -26,7 +26,7 @@ private
       :name_status, :taxonomy,
       :reference_id, :reference_legacy_id,
       :citation, :inherited_from, :exclusions, :is_cascaded,
-      :created_at, :created_by
+      :created_at, :created_by, :updated_by
     ]
   end
 
@@ -39,7 +39,7 @@ private
       'Name status', 'Taxonomy',
       'Reference Id', 'Reference legacy Id',
       'Reference', 'Inherited from', 'Exclusions', 'Cascaded?',
-      'Date added', 'Added by'
+      'Date added', 'Added by', 'Updated by'
     ]
   end
 
