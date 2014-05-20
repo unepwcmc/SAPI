@@ -23,11 +23,16 @@ SELECT
   taxonomies.id AS taxonomy_id,
   taxonomies.name AS taxonomy_name,
   to_char(st.created_at, 'DD/MM/YYYY') AS created_at,
-  'TODO' AS created_by
+  uc.name AS created_by,
+  uu.name AS updated_by
 FROM taxon_concepts st
 JOIN taxonomies ON taxonomies.id = st.taxonomy_id
 LEFT JOIN taxon_relationships
 ON taxon_relationships.other_taxon_concept_id = st.id
 LEFT JOIN taxon_concepts a
 ON taxon_relationships.taxon_concept_id = a.id
+LEFT JOIN users uc
+ON st.created_by_id = uc.id
+LEFT JOIN users uu
+ON st.updated_by_id = uu.id
 WHERE st.name_status IN ('S', 'T');

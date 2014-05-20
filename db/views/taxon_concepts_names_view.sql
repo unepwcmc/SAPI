@@ -18,6 +18,9 @@ SELECT
   taxonomy_id,
   taxonomies.name AS taxonomy_name,
   to_char(taxon_concepts.created_at, 'DD/MM/YYYY') AS created_at,
-  'TODO' AS created_by
+  uc.name AS created_by,
+  uu.name AS updated_by
 FROM taxon_concepts
-JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id;
+JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
+LEFT JOIN users uc ON taxon_concepts.created_by_id = uc.id
+LEFT JOIN users uu ON taxon_concepts.updated_by_id = uu.id;
