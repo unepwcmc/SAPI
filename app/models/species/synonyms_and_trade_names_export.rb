@@ -37,7 +37,7 @@ private
       'Rank_Accepted', 'Status_Accepted',
       'Kingdom_Accepted', 'Phylum_Accepted', 'Class_Accepted',
       'Order_Accepted', 'Family_Accepted', 'Genus_Accepted',
-      'Taxonomy', 'Date added', 'Added by', 'Date updated', 'Date added'
+      'Taxonomy', 'Date added', 'Added by', 'Date updated', 'Updated by'
     ]
   end
 
