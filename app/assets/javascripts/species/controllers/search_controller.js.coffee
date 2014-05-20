@@ -59,7 +59,7 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
   openSearchPage: (taxonFullName, page, perPage) ->
     $(".search fieldset").removeClass('parent-focus parent-active')
     if taxonFullName == undefined
-      query = @get('taxonConceptQuery')
+      query = @get('taxonConceptQueryForDisplay')
     else
       query = taxonFullName
     # Resetting the page property if no page value has been passed.
