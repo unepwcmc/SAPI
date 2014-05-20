@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140514144304) do
+ActiveRecord::Schema.define(:version => 20140519105917) do
 
   create_table "annotations", :force => true do |t|
     t.string   "symbol"
@@ -2077,6 +2077,8 @@ ActiveRecord::Schema.define(:version => 20140514144304) do
     t.text     "csv_source_file"
     t.integer  "trading_country_id",                    :null => false
     t.string   "point_of_view",      :default => "E",   :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   create_table "trade_codes", :force => true do |t|
