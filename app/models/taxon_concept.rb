@@ -20,6 +20,8 @@
 #  updated_at         :datetime         not null
 #  touched_at         :datetime
 #  legacy_trade_code  :string(255)
+#  updated_by_id :interger
+#  created_by_id :interger
 #
 
 class TaxonConcept < ActiveRecord::Base
