@@ -7,7 +7,7 @@ server "unepwcmc-012.vm.brightbox.net", :app, :web, :db, :primary => true
 set :application, "sapi"
 set :server_name, "sapi.unepwcmc-012.vm.brightbox.net"
 set :sudo_user, "rails"
-set :app_port, "80" 
+set :app_port, "80"
 
 set :branch, :develop
 
@@ -69,7 +69,7 @@ task :config_vhost do
   sudo "mv /tmp/vhost_config /etc/nginx/sites-available/#{application}"
   sudo "ln -s /etc/nginx/sites-available/#{application} /etc/nginx/sites-enabled/#{application}"
 end
- 
+
 after "deploy:setup", :config_vhost
 
 endpoints = [

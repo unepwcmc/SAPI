@@ -76,7 +76,7 @@ task :config_vhost do
   sudo "mv /tmp/vhost_config /etc/nginx/sites-available/#{application}"
   sudo "ln -s /etc/nginx/sites-available/#{application} /etc/nginx/sites-enabled/#{application}"
 end
- 
+
 after "deploy:setup", :config_vhost
 
 endpoints = [
