@@ -30,8 +30,6 @@ Also completed:
 * eu annex regulation batch copy
 * eu suspension regulation batch copy
 
-Remaining:
-
 * species_reference_output_view
 * standard_reference_output_view
 * synonyms_and_trade_names_view

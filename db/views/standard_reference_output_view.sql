@@ -58,7 +58,7 @@ LEFT JOIN inherited_references ON taxon_concepts.id = inherited_references.taxon
 LEFT JOIN taxon_concept_references ON taxon_concept_references.id = inherited_references.id
 LEFT JOIN "references" AS r ON r.id = taxon_concept_references.reference_id
 LEFT JOIN taxon_concepts AS issued_for ON issued_for.id = taxon_concept_references.taxon_concept_id
-LEFT JOIN users uc ON taxon_concepts.created_by_id = uc.id
-LEFT JOIN users uu ON taxon_concepts.updated_by_id = uu.id
+LEFT JOIN users uc ON taxon_concept_references.created_by_id = uc.id
+LEFT JOIN users uu ON taxon_concept_references.updated_by_id = uu.id
 WHERE taxon_concepts.name_status IN ('N', 'A')
 ORDER BY citation

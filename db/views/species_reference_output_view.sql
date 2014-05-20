@@ -20,7 +20,7 @@ SELECT
   rf.citation AS reference,
   rf.id AS reference_id,
   rf.legacy_id AS reference_legacy_id,
-  to_char(st.created_at, 'DD/MM/YYYY') AS created_at,
+  to_char(r.created_at, 'DD/MM/YYYY') AS created_at,
   uc.name AS created_by,
   uu.name AS updated_by
   
@@ -31,7 +31,7 @@ ON r.taxon_concept_id = st.id AND r.is_standard is false
 LEFT JOIN "references" rf
 ON r.reference_id = rf.id
 LEFT JOIN users uc
-ON st.created_by_id = uc.id
+ON r.created_by_id = uc.id
 LEFT JOIN users uu
-ON st.updated_by_id = uu.id
+ON r.updated_by_id = uu.id
 WHERE st.name_status IN ('A', 'N');

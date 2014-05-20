@@ -32,8 +32,8 @@ LEFT JOIN "references" ON "references".id = distribution_references.reference_id
 LEFT JOIN taggings ON taggings.taggable_id = distributions.id 
   AND taggings.taggable_type = 'Distribution'    
 LEFT JOIN tags ON tags.id = taggings.tag_id
-LEFT JOIN users uc ON taxon_concepts.created_by_id = uc.id
-LEFT JOIN users uu ON taxon_concepts.updated_by_id = uu.id
+LEFT JOIN users uc ON distributions.created_by_id = uc.id
+LEFT JOIN users uu ON distributions.updated_by_id = uu.id
 WHERE taxon_concepts.name_status IN ('A')
 GROUP BY taxon_concepts.id, taxon_concepts.legacy_id, geo_entity_types.name,
   geo_entities.name_en, geo_entities.iso_code2, "references".citation, "references".id,
