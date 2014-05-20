@@ -75,19 +75,19 @@ after "deploy:setup", :config_vhost
 endpoints = [
   {
     name: "Species+",
-    url: "http://#{domain}"
+    url: "http://#{application}.#{domain}"
   },
   {
     name: "Public Trade",
-    url: "http://#{domain}/cites_trade"
+    url: "http://#{application}.#{domain}/cites_trade"
   },
   {
     name: "Private Trade",
-    url: "http://#{domain}/trade"
+    url: "http://#{application}.#{domain}/trade"
   },
   {
     name: "Admin",
-    url: "http://#{domain}/admin"
+    url: "http://#{application}.#{domain}/admin"
   }
 ]
 set :urls_to_test, endpoints

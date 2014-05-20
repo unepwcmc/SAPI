@@ -90,11 +90,11 @@ endpoints = [
   },
   {
     name: "Private Trade",
-    url: "http://#{domain}/trade"
+    url: "http://www.speciesplus.net/trade"
   },
   {
     name: "Admin",
-    url: "http://#{domain}/admin"
+    url: "http://www.speciesplus.net/admin"
   }
 ]
 set :urls_to_test, endpoints
