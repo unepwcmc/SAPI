@@ -2,6 +2,8 @@ language: ruby
 bundler_args: --without development production staging
 rvm:
   - 1.9.3
+addons:
+  postgresql: "9.2"
 # uncomment this line if your project needs to run something other than `rake`:
 before_script:
   - psql -c 'create database sapi_test' -U postgres
