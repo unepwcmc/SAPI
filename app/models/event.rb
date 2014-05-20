@@ -16,8 +16,8 @@
 #  legacy_id      :integer
 #  end_date       :datetime
 #  subtype        :string(255)
-#  updated_by_id :interger
-#  created_by_id :interger
+#  updated_by_id  :interger
+#  created_by_id  :interger
 #
 
 class Event < ActiveRecord::Base
