@@ -18,8 +18,8 @@
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  import_row_id              :integer
-#  updated_by_id :interger
-#  created_by_id :interger
+#  updated_by_id              :interger
+#  created_by_id              :interger
 #
 
 class ListingChange < ActiveRecord::Base
