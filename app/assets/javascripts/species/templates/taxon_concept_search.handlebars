@@ -3,15 +3,13 @@
     {{view Species.TaxonConceptSearchTextField
       valueBinding="controller.taxonConceptQueryForDisplay"
       queryBinding="controller.taxonConceptQuery"
-      id="scientific_name"
       title="search"
       placeholder="Species, higher taxon, synonym or common name..."
       autocomplete="off"
     }}
     <button {{action "openSearchPage"}}>Search</button>
     {{view Species.TaxonConceptSearchDropdown
-     valueBinding="controller.autoCompleteTaxonConcepts"
-     isVisibleBinding="controller.taxonConceptsDropdownVisible"
+      valueBinding="controller.autoCompleteTaxonConcepts"
     }}
   </fieldset>
 </form>
