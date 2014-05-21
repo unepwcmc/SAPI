@@ -151,7 +151,7 @@ class Trade::Filter
       end
     end
 
-    permit_blank_query = 
+    permit_blank_query =
       'ARRAY_UPPER(import_permits_ids, 1) IS NULL
       OR ARRAY_UPPER(export_permits_ids, 1) IS NULL
       OR ARRAY_UPPER(origin_permits_ids, 1) IS NULL'
