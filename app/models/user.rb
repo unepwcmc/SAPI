@@ -20,7 +20,6 @@
 
 class User < ActiveRecord::Base
   include SentientUser
-  track_who_does_it
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable
   attr_accessible :email, :name, :password, :password_confirmation,
@@ -28,5 +27,22 @@ class User < ActiveRecord::Base
 
   validates :email, :uniqueness => true, :presence => true
   validates :name, :presence => true
+
+  def can_be_deleted?
+    tracked_objects = [
+      TaxonConcept, TaxonRelationship, CommonName, TaxonCommon,
+      Event, Distribution, ListingDistribution, Annotation,
+      ListingChange, TradeRestriction, EuDecision, TaxonInstrument,
+      TradeRestrictionPurpose, TradeRestrictionSource, TradeRestrictionTerm,
+      Reference, TaxonConceptReference, DistributionReference,
+      Trade::AnnualReportUpload, Trade::Shipment
+    ]
+    for i in 0..tracked_objects.length - 1
+      if tracked_objects[i].where(['created_by_id = :id OR updated_by_id = :id', :id => self.id]).limit(1).count > 0
+        return false
+      end
+    end
+    true
+  end
 
 end
