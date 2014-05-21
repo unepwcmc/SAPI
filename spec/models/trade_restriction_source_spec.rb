@@ -7,6 +7,8 @@
 #  source_id            :integer
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  created_by_id        :integer
+#  updated_by_id        :integer
 #
 
 require 'spec_helper'

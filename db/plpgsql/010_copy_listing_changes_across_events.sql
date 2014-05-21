@@ -50,17 +50,20 @@ CREATE OR REPLACE FUNCTION copy_listing_changes_across_events(
       INSERT INTO listing_changes (
         change_type_id, species_listing_id, annotation_id, hash_annotation_id,
         parent_id, taxon_concept_id, event_id, effective_at, is_current,
-        created_at, updated_at, source_id
+        created_at, updated_at, source_id, created_by_id, updated_by_id
       )
       SELECT source.change_type_id, source.species_listing_id,
         copied_annotations.id, copied_hash_annotations.id, source.parent_id,
         source.taxon_concept_id, to_event.id, to_event.effective_at, to_event.is_current,
-        current_date, current_date, source.id
+        current_date, current_date, source.id, 
+        events.created_by_id, events.updated_by_id
       FROM listing_changes source
       LEFT JOIN copied_annotations
         ON source.annotation_id = copied_annotations.source_id
       LEFT JOIN copied_hash_annotations
         ON source.hash_annotation_id = copied_hash_annotations.source_id
+      JOIN events
+        ON events.id = to_event_id
       WHERE source.event_id = from_event_id
       RETURNING id, source_id
     )

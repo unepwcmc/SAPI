@@ -6,15 +6,15 @@ Trade.AnnualReportUpload = DS.Model.extend
   hasPrimaryErrors: DS.attr('boolean')
   createdAt: DS.attr('string')
   updatedAt: DS.attr('string')
-  # TODO created_by
-  # TODO updated_by
+  createdBy: DS.attr('string')
+  updatedBy: DS.attr('string')
   sandboxShipments: DS.hasMany('Trade.SandboxShipment')
   validationErrors: DS.hasMany('Trade.ValidationError')
 
   summary: (->
     @get('tradingCountry.name') + ' (' + @get('pointOfView') + '), ' +
     @get('numberOfRows') + ' shipments ' +
-    ' uploaded on ' + @get('createdAt') + ' by TODO (' +
+    ' uploaded on ' + @get('createdAt') + ' by ' + @get('createdBy') + ' (' +
     @get('fileName') + ')'
   ).property('numberOfRows', 'tradingCountry.name', 'pointOfView')
 

@@ -20,7 +20,8 @@ SELECT
   taxonomic_position,
   taxonomy_id,
   to_char(taxon_concepts.created_at, 'DD/MM/YYYY') AS created_at,
-  'TODO' AS created_by
+  uc.name AS created_by,
+  uu.name AS updated_by
 FROM distributions
 RIGHT JOIN taxon_concepts ON distributions.taxon_concept_id = taxon_concepts.id
 LEFT JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
@@ -31,7 +32,9 @@ LEFT JOIN "references" ON "references".id = distribution_references.reference_id
 LEFT JOIN taggings ON taggings.taggable_id = distributions.id 
   AND taggings.taggable_type = 'Distribution'    
 LEFT JOIN tags ON tags.id = taggings.tag_id
+LEFT JOIN users uc ON distributions.created_by_id = uc.id
+LEFT JOIN users uu ON distributions.updated_by_id = uu.id
 WHERE taxon_concepts.name_status IN ('A')
 GROUP BY taxon_concepts.id, taxon_concepts.legacy_id, geo_entity_types.name,
   geo_entities.name_en, geo_entities.iso_code2, "references".citation, "references".id,
-  taxonomies.name
+  taxonomies.name, uc.name, uu.name

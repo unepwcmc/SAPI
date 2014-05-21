@@ -10,11 +10,15 @@
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
 #  excluded_taxon_concepts_ids :string
+#  created_by_id               :integer
+#  updated_by_id               :integer
 #
 
 class TaxonConceptReference < ActiveRecord::Base
+  track_who_does_it
   attr_accessible :reference_id, :taxon_concept_id, :is_standard, :is_cascaded,
-    :excluded_taxon_concepts_ids, :reference_attributes
+    :excluded_taxon_concepts_ids, :reference_attributes,
+    :created_by_id, :updated_by_id
   include PgArrayParser
 
   belongs_to :reference

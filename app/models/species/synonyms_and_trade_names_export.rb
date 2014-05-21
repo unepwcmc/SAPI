@@ -25,7 +25,7 @@ private
       :accepted_rank_name, :accepted_name_status,
       :accepted_kingdom_name, :accepted_phylum_name, :accepted_class_name,
       :accepted_order_name, :accepted_family_name, :accepted_genus_name,
-      :taxonomy_name, :created_at, :created_by
+      :taxonomy_name, :created_at, :created_by, :updated_at, :updated_by
     ]
   end
 
@@ -37,7 +37,7 @@ private
       'Rank_Accepted', 'Status_Accepted',
       'Kingdom_Accepted', 'Phylum_Accepted', 'Class_Accepted',
       'Order_Accepted', 'Family_Accepted', 'Genus_Accepted',
-      'Taxonomy', 'Date added', 'Added by'
+      'Taxonomy', 'Date added', 'Added by', 'Date updated', 'Updated by'
     ]
   end
 

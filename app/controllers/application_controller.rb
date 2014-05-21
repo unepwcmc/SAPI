@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
+  include SentientController
   before_filter :set_locale
   before_filter :configure_permitted_parameters, if: :devise_controller?
 

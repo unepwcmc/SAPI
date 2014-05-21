@@ -50,12 +50,15 @@ CASE
 END AS exclusions,
 inherited_references.is_cascaded,
 to_char(taxon_concepts.created_at, 'DD/MM/YYYY') AS created_at,
-'TODO' AS created_by
+uc.name AS created_by,
+uu.name AS updated_by
 FROM taxon_concepts
 JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
 LEFT JOIN inherited_references ON taxon_concepts.id = inherited_references.taxon_concept_id
 LEFT JOIN taxon_concept_references ON taxon_concept_references.id = inherited_references.id
 LEFT JOIN "references" AS r ON r.id = taxon_concept_references.reference_id
 LEFT JOIN taxon_concepts AS issued_for ON issued_for.id = taxon_concept_references.taxon_concept_id
+LEFT JOIN users uc ON taxon_concept_references.created_by_id = uc.id
+LEFT JOIN users uu ON taxon_concept_references.updated_by_id = uu.id
 WHERE taxon_concepts.name_status IN ('N', 'A')
 ORDER BY citation

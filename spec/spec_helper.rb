@@ -49,8 +49,9 @@ RSpec.configure do |config|
   config.include SapiSpec::Helpers
 
   config.before(:all) do
-    #Rails.cache.clear
     DatabaseCleaner.clean_with(:deletion, {:cache_tables => false})
+    @user = create(:user)
+    @user.make_current
   end
 
   config.before(:each) do
@@ -68,6 +69,9 @@ RSpec.configure do |config|
 
   config.after(:each) do
     DatabaseCleaner.clean
+    # this is duplicated here because of the :drops_tables specs
+    @user = create(:user)
+    @user.make_current
   end
 
 end

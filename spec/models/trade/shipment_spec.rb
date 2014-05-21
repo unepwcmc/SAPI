@@ -27,6 +27,8 @@
 #  import_permits_ids            :string
 #  export_permits_ids            :string
 #  origin_permits_ids            :string
+#  updated_by_id                 :integer
+#  created_by_id                 :integer
 #
 
 require 'spec_helper'

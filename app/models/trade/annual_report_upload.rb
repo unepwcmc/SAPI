@@ -12,11 +12,14 @@
 #  csv_source_file    :text
 #  trading_country_id :integer          not null
 #  point_of_view      :string(255)      default("E"), not null
+#  created_by_id      :integer
+#  updated_by_id      :integer
 #
 
 require 'csv_column_headers_validator'
 class Trade::AnnualReportUpload < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
+  track_who_does_it
   attr_accessible :csv_source_file, :trading_country_id, :point_of_view
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
   belongs_to :trading_country, :class_name => GeoEntity, :foreign_key => :trading_country_id
