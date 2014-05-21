@@ -2,15 +2,19 @@
 #
 # Table name: common_names
 #
-#  id          :integer          not null, primary key
-#  name        :string(255)      not null
-#  language_id :integer          not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id            :integer          not null, primary key
+#  name          :string(255)      not null
+#  language_id   :integer          not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  created_by_id :integer
+#  updated_by_id :integer
 #
 
 class CommonName < ActiveRecord::Base
-  attr_accessible :language_id, :name, :reference_id
+  track_who_does_it
+  attr_accessible :language_id, :name, :reference_id,
+    :created_by_id, :updated_by_id
   belongs_to :language
   validates :name, :presence => true
 

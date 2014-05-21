@@ -39,6 +39,8 @@
 #  export_permits_ids        :string
 #  origin_permits_ids        :string
 #  legacy_shipment_number    :integer
+#  created_by                :string(255)
+#  updated_by                :string(255)
 #
 
 class Trade::ShipmentView < ActiveRecord::Base

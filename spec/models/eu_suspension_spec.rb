@@ -19,6 +19,8 @@
 #  eu_decision_type_id :integer
 #  term_id             :integer
 #  source_id           :integer
+#  created_by_id       :integer
+#  updated_by_id       :integer
 #
 
 require 'spec_helper'

@@ -2,11 +2,13 @@
 #
 # Table name: common_names
 #
-#  id          :integer          not null, primary key
-#  name        :string(255)      not null
-#  language_id :integer          not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id            :integer          not null, primary key
+#  name          :string(255)      not null
+#  language_id   :integer          not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  created_by_id :integer
+#  updated_by_id :integer
 #
 
 require 'spec_helper'

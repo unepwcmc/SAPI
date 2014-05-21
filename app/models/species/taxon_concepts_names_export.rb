@@ -21,7 +21,7 @@ private
     columns = [
       :id, :legacy_id, :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
       :genus_name, :species_name, :full_name, :author_year, :rank_name, :name_status,
-      :taxonomy_name, :created_at, :created_by
+      :taxonomy_name, :created_at, :created_by, :updated_at, :updated_by
     ]
   end
 
@@ -29,7 +29,7 @@ private
     headers = [
       'Id', 'Legacy id', 'Kingdom', 'Phylum', 'Class', 'Order', 'Family',
       'Genus', 'Species', 'Scientific Name', 'Author', 'Rank', 'Name status',
-      'Taxonomy', 'Date added', 'Added by'
+      'Taxonomy', 'Date added', 'Added by', 'Date updated', 'Updated by'
     ]
   end
 

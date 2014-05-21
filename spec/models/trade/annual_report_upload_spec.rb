@@ -12,6 +12,8 @@
 #  csv_source_file    :text
 #  trading_country_id :integer          not null
 #  point_of_view      :string(255)      default("E"), not null
+#  created_by_id      :integer
+#  updated_by_id      :integer
 #
 
 require 'spec_helper'

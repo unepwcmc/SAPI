@@ -8,9 +8,12 @@
 #  effective_from   :datetime
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  created_by_id    :integer
+#  updated_by_id    :integer
 #
 
 class TaxonInstrument < ActiveRecord::Base
+  track_who_does_it
   attr_accessible :effective_from, :instrument_id, :taxon_concept_id
 
   belongs_to :instrument

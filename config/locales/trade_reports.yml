@@ -24,6 +24,8 @@ en:
     origin_permit_number: 'Origin Permit'
     country: 'Country'
     legacy_shipment_number: 'Legacy Shipment No'
+    created_by: 'Created by'
+    updated_by: 'Updated by'
 
 es:
   csv:
@@ -51,6 +53,8 @@ es:
     # origin_permit_number: 'Origin Permit'
     country: 'País'
     #legacy_shipment_number: 'Legacy Shipment No'
+    #created_by: 'Created by'
+    #updated_by: 'Updated by'
 
 fr:
   csv:
@@ -78,3 +82,5 @@ fr:
     # origin_permit_number: 'Origin Permit'
     country: 'Pays'
     # legacy_shipment_number: 'Legacy Shipment No'
+    #created_by: 'Created by'
+    #updated_by: 'Updated by'

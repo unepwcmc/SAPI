@@ -164,7 +164,9 @@ BEGIN
         year,
         sandbox_id,
         created_at,
-        updated_at
+        updated_at,
+        created_by_id,
+        updated_by_id
       )
       SELECT
         sources.id AS source_id,
@@ -183,7 +185,9 @@ BEGIN
         sandbox_table.year::INTEGER AS year,
         sandbox_table.id AS sandbox_id,
         current_timestamp,
-        current_timestamp
+        current_timestamp, ' ||
+        aru.created_by_id || ', ' ||
+        aru.updated_by_id || '
       FROM '|| table_name || ' sandbox_table';
 
     IF reported_by_exporter THEN

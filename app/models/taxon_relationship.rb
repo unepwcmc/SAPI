@@ -8,11 +8,14 @@
 #  taxon_relationship_type_id :integer          not null
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
+#  created_by_id              :integer
+#  updated_by_id              :integer
 #
 
 class TaxonRelationship < ActiveRecord::Base
+  track_who_does_it
   attr_accessible :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
-    :other_taxon_concept_attributes
+    :other_taxon_concept_attributes, :created_by_id, :updated_by_id
   belongs_to :taxon_relationship_type
   belongs_to :taxon_concept, :touch => true
   belongs_to :other_taxon_concept, :class_name => 'TaxonConcept',
