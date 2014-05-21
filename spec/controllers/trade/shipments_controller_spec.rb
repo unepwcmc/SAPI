@@ -100,9 +100,8 @@ describe Trade::ShipmentsController do
   describe "DELETE destroy" do
     before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     it "should delete 1 shipment" do
-      delete :destroy, id: @shipment1.id
+      delete :destroy_batch, id: @shipment1.id
       Trade::Shipment.where(id: @shipment1.id).should be_empty
     end
   end
-
 end
