@@ -52,8 +52,8 @@ module Trade::TradeDataDownloadLogger
   end
 
   def self.organization_from ip
-    orgdb = GeoIP.new(GEO_IP_CONFIG['org_db'])
-    org_names = orgdb.organization(ip)
+    orgdb = GEO_IP_CONFIG['org_db'] && GeoIP.new(GEO_IP_CONFIG['org_db'])
+    org_names = orgdb && orgdb.organization(ip)
     org_names.nil? ? "Unknown" : org_names.isp
   end
 end
