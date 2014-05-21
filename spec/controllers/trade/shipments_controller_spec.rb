@@ -15,6 +15,6 @@ describe Trade::ShipmentsController do
       get :index, taxon_concepts_ids: [@animal_genus.id], format: :json
       response.body.should have_json_size(2).at_path('shipments')
     end
- end
+  end
 
 end
