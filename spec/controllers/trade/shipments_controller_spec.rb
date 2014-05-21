@@ -94,4 +94,5 @@ describe Trade::ShipmentsController do
       Trade::Shipment.where(id: @shipment1.id).should be_empty
     end
   end
+
 end
