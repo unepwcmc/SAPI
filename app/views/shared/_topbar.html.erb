@@ -101,11 +101,11 @@
             <li class="<%= if controller_name == 'quotas' then 'active' end%>">
               <%= link_to 'CITES Quotas', admin_quotas_path %>
             </li>
-            <li class="<%= if controller_name == '#' then 'active' end%>">
-              <%= link_to 'EU Annexes', '#' %>
+            <li class="<%= if controller_name == 'eu_regulations' then 'active' end%>">
+              <%= link_to 'EU Annexes', admin_eu_regulations_path %>
             </li>
-            <li class="<%= if controller_name == '#' then 'active' end%>">
-              <%= link_to 'EU Decisions', '#' %>
+            <li class="<%= if controller_name == 'eu_suspension_regulations' then 'active' end%>">
+              <%= link_to 'EU Suspensions', admin_eu_suspension_regulations_path %>
             </li>
           </ul>
         </li>
