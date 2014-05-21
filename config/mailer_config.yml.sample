@@ -1,3 +1,6 @@
+development:
+  :default_url_options:
+    :host: localhost:3000
 staging:
   :default_url_options:
     :host: sapi.unepwcmc-012.vm.brightbox.net
