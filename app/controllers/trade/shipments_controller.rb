@@ -33,7 +33,7 @@ class Trade::ShipmentsController < TradeController
   end
 
   def destroy_batch
-    @search = Trade::Filter.new(params)
+    @search = Trade::Filter.new(search_params)
     @search.query.destroy_all
     render :json => nil, :status => :ok
   end
