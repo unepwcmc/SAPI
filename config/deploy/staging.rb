@@ -71,23 +71,3 @@ task :config_vhost do
 end
 
 after "deploy:setup", :config_vhost
-
-endpoints = [
-  {
-    name: "Species+",
-    url: "http://#{application}.#{domain}"
-  },
-  {
-    name: "Public Trade",
-    url: "http://#{application}.#{domain}/cites_trade"
-  },
-  {
-    name: "Private Trade",
-    url: "http://#{application}.#{domain}/trade"
-  },
-  {
-    name: "Admin",
-    url: "http://#{application}.#{domain}/admin"
-  }
-]
-set :urls_to_test, endpoints
