@@ -1,0 +1,23 @@
+<thead>
+  <th>Id</th>
+  <th>Taxon Concept</th>
+  <th>Author year</th>
+  <th>IUCN Name</th>
+  <th>IUCN ID</th>
+  <th>IUCN Author</th>
+  <th>IUCN Category</th>
+</thead>
+<tbody>
+  <% collection.each do |map| -%>
+    <tr>
+      <td><%= map.taxon_concept_id %></td>
+      <td><%= link_to map.taxon_concept.full_name,
+        admin_taxon_concept_names_path(map.taxon_concept) %></td>
+      <td><%= map.taxon_concept.author_year %></td>
+      <td><%= map.iucn_taxon_name %></td>
+      <td><%= map.iucn_taxon_id %></td>
+      <td><%= map.iucn_author %></td>
+      <td><%= map.iucn_category %></td>
+    </tr>
+  <% end -%>
+</tbody>
