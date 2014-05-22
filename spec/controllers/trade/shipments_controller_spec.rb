@@ -25,19 +25,21 @@ describe Trade::ShipmentsController do
   describe "DELETE destroy_batch" do
     before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     it "should delete 1 shipment" do
-      delete :destroy_batch, {
+      post :destroy_batch, {
         time_range_start: @shipment1.year,
         time_range_end: @shipment2.year,
         reporter_type: 'E',
-        exporters_ids: [@portugal.id.to_s]}
+        exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
+        importers_ids: [@portugal.id.to_s, @argentina.id.to_s]}
       Trade::Shipment.count.should == 5
     end
     it "should delete 4 shipment" do
-      delete :destroy_batch, {
+      post :destroy_batch, {
         time_range_start: @shipment1.year,
         time_range_end: @shipment2.year,
         reporter_type: 'I',
-        importers_ids: [@portugal.id.to_s]}
+        exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
+        importers_ids: [@portugal.id.to_s, @argentina.id.to_s]}
       Trade::Shipment.count.should == 1
     end
   end
@@ -45,7 +47,7 @@ describe Trade::ShipmentsController do
   describe "DELETE destroy" do
     before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     it "should delete 1 shipment" do
-      delete :destroy_batch, id: @shipment1.id
+      delete :destroy, id: @shipment1.id
       Trade::Shipment.where(id: @shipment1.id).should be_empty
     end
   end
