@@ -44,16 +44,6 @@ describe Trade::ShipmentsController do
       Trade::Shipment.count.should == 1
     end
 
-    it "should delete all shipments" do
-      post :destroy_batch, exporter_ids: [@portugal.id.to_s, @argentina.id.to_s]
-      Trade::Shipment.count.should == 0
-    end
-
-    it "should delete 4 shipments" do
-      post :destroy_batch, exporters_ids: [@argentina.id.to_s]
-      Trade::Shipment.count.should == 1
-    end
-
     it "should delete 1 shipments" do
       post :destroy_batch, importers_ids: [@argentina.id.to_s]
       Trade::Shipment.count.should == 5
