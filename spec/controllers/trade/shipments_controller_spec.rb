@@ -42,6 +42,58 @@ describe Trade::ShipmentsController do
         importers_ids: [@portugal.id.to_s, @argentina.id.to_s]}
       Trade::Shipment.count.should == 1
     end
+
+    it "should delete all shipments" do
+      post :destroy_batch, exporter_ids: [@portugal.id.to_s, @argentina.id.to_s]
+      Trade::Shipment.count.should == 0
+    end
+
+    it "should delete 4 shipments" do
+      post :destroy_batch, exporters_ids: [@argentina.id.to_s]
+      Trade::Shipment.count.should == 1
+    end
+
+    it "should delete 1 shipments" do
+      post :destroy_batch, importers_ids: [@argentina.id.to_s]
+      Trade::Shipment.count.should == 5
+    end
+
+    it "should delete 1 shipments" do
+      post :destroy_batch, exporters_ids: [@portugal.id.to_s]
+      Trade::Shipment.count.should == 5
+    end
+
+    it "should delete all shipments" do
+      post :destroy_batch, purposes_ids: [@purpose.id.to_s]
+      Trade::Shipment.count.should == 0
+    end
+
+    it "shouldn't delete any shipments" do
+      post :destroy_batch, purpose_blank: "true"
+      Trade::Shipment.count.should == 6
+    end
+
+    it "should delete 1 shipment" do
+      post :destroy_batch, sources_ids: [@source.id.to_s]
+      Trade::Shipment.count.should == 5
+    end
+
+    it "should delete 3 shipment" do
+      post :destroy_batch, sources_ids: [@source_wild.id.to_s]
+      Trade::Shipment.count.should == 3
+    end
+
+    it "should delete 0 shipments" do
+      post :destroy_batch, sources_ids: [@source_wild.id.to_s],
+        reporter_type: 'E'
+      Trade::Shipment.count.should == 6
+    end
+
+    it "should delete 4 shipments" do
+      post :destroy_batch, sources_ids: [@source_wild.id.to_s],
+        reporter_type: 'I', source_blank: "true"
+      Trade::Shipment.count.should == 2
+    end
   end
 
   describe "DELETE destroy" do
