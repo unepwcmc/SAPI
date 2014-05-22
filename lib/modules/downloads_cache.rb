@@ -27,6 +27,7 @@ module DownloadsCache
 
   def self.clear_dirs(dirs)
     dirs.each do |dir|
+      Rails.logger.debug("Clearing #{dir}")
       FileUtils.rm_rf(Dir["#{downloads_path(dir)}/*"], :secure => true)
     end
   end
@@ -50,6 +51,10 @@ module DownloadsCache
 
   def self.clear_taxon_concepts_names
     clear_dirs(['taxon_concepts_names'])
+  end
+
+  def self.clear_synonyms_and_trade_names
+    clear_dirs(['synonyms_and_trade_names'])
   end
 
   def self.clear_taxon_concepts_distributions
