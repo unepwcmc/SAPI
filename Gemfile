@@ -22,6 +22,7 @@ gem 'devise'
 gem 'cancan'
 gem 'ahoy_matey'
 gem 'gon'
+gem 'wicked'
 
 gem 'sidekiq'
 gem 'sidekiq-status'
