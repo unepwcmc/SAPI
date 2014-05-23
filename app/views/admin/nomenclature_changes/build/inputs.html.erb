@@ -1,0 +1,12 @@
+<h2>New nomenclature change</h2>
+<%= form_for @nomenclature_change, url: wizard_path, method: :put do |f| %>
+  <%= f.select :event_id,
+    options_from_collection_for_select(
+      @events, :id, :name,
+      @nomenclature_change.event_id
+    ),
+    { :selected => @nomenclature_change.event_id, :include_blank => true }
+  %>
+
+  <%= f.submit "Next" %>
+<% end %>
