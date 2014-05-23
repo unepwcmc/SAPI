@@ -223,8 +223,13 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
     if object.rank_name == Rank::SPECIES
       rel = rel.where(<<-SQL
               taxon_concepts_mview.rank_name = 'SPECIES' OR
-              ( taxon_concepts_mview.rank_name = 'SUBSPECIES' AND
-                listing_changes_mview.auto_note IS NULL )
+              (
+                (
+                  taxon_concepts_mview.rank_name = 'SUBSPECIES'
+                  OR taxon_concepts_mview.rank_name = 'VARIETY'
+                )
+                AND listing_changes_mview.auto_note IS NULL
+              )
             SQL
       )
     end
@@ -255,9 +260,12 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               events.description AS event_name,
               events.url AS event_url,
               CASE
-                WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'} 
+                WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'}
                 AND taxon_concepts_mview.rank_name = 'SUBSPECIES'
                   THEN '[SUBSPECIES listing <i>' || taxon_concepts_mview.full_name || '</i>]'
+                WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'}
+                AND taxon_concepts_mview.rank_name = 'VARIETY'
+                  THEN '[VARIETY listing <i>' || taxon_concepts_mview.full_name || '</i>]'
                 ELSE NULL
               END AS subspecies_info
            SQL
