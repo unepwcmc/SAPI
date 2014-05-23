@@ -144,7 +144,7 @@ SAPI::Application.routes.draw do
       resources :taxon_instruments, :only => [ :index, :new, :create, :edit, :update, :destroy ]
     end
     resources :nomenclature_changes do
-      resources :build, controller: 'nomenclature_changes/build'
+      resources :split, controller: 'nomenclature_changes/split'
     end
     match 'exports' => 'exports#index'
     match 'exports/download' => 'exports#download'
