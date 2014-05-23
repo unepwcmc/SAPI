@@ -85,8 +85,9 @@ class Admin::IucnMapping < ActiveRecord::Base
         :synonym_id => synonym.try(:id)
       )
     rescue Exception => e
-      debugger
-      true
+      puts "#######################################################################"
+      puts "########################## EXCEPTION Taxon Concept #{tc.id} ###########"
+      puts e.message
     end
   end
 
