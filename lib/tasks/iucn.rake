@@ -1,4 +1,3 @@
-#require 'uri'
 namespace :iucn do
 
   desc 'Update mapping between CITES species and IUCN species'
