@@ -129,6 +129,9 @@ SAPI::Application.routes.draw do
         :as => :cites_suspensions
       resources :taxon_instruments, :only => [ :index, :new, :create, :edit, :update, :destroy ]
     end
+    resources :nomenclature_changes do
+      resources :build, controller: 'nomenclature_changes/build'
+    end
     match 'exports' => 'exports#index'
     match 'exports/download' => 'exports#download'
     match 'stats' => 'statistics#index'

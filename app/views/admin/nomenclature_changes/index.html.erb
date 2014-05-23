@@ -1,0 +1,25 @@
+<h1>Nomenclature changes</h1>
+<ul>
+  <li>
+    <%= link_to 'Split', admin_nomenclature_change_build_index_path(:nomenclature_change_id => :new), :method => :post %>
+  </li>
+</ul>
+
+List of changes:
+<table>
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Created at</th>
+      <th>Created by</th>
+  </thead>
+  <tbody>
+  <% @nomenclature_changes.each do |nc| %>
+    <tr>
+      <td><%= nc.event.try(:name) %></td>
+      <td><%= nc.created_at %></td>
+      <td><%= nc.creator.try(:name) %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
