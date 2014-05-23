@@ -3,19 +3,13 @@
 </div>
 
 <p style="clear:both;">
-  <strong>All:</strong> <%= @totals[:all] %>
-  <% if !params[:show] || params[:show] != "ALL" %>
-    <%= link_to 'View', admin_iucn_mappings_path(:show => "ALL") %>
-  <% end %>
-  <br />
-  <strong>Matching species:</strong> <%= @totals[:with_match] %>
-  <% if !params[:show] || params[:show] != "MATCHING" %>
-    <%= link_to 'View', admin_iucn_mappings_path(:show => "MATCHING") %>
-  <% end %>
-  <br />
-  <strong>Non matching species:</strong> <%= @totals[:without_match] %>
-  <% if !params[:show] || params[:show] != "NON_MATCHING" %>
-    <%= link_to 'View', admin_iucn_mappings_path(:show => "NON_MATCHING") %>
+  <% ["ALL", "MATCHING", "NON_MATCHING", "FULL_MATCH",
+    "NAME_MATCH", "FULL_SYNONYM_MATCH", "SYNONYM_MATCH"].each do |op| %>
+    <strong><%= op.titleize %>:</strong> <%= @totals[op.downcase.to_sym] %>
+    <% if !params[:show] || params[:show] != op %>
+      <%= link_to 'View', admin_iucn_mappings_path(:show => op) %>
+    <% end %>
+    <br />
   <% end %>
 </p>
 <%= admin_table %>
