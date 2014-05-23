@@ -6,10 +6,12 @@
   <th>IUCN ID</th>
   <th>IUCN Author</th>
   <th>IUCN Category</th>
+  <th>Details</th>
+  <th>No matches</th>
 </thead>
 <tbody>
   <% collection.each do |map| -%>
-    <tr>
+    <tr class="<%= map.details["match"].try(:downcase) %>">
       <td><%= map.taxon_concept_id %></td>
       <td><%= link_to map.taxon_concept.full_name,
         admin_taxon_concept_names_path(map.taxon_concept) %></td>
@@ -18,6 +20,14 @@
       <td><%= map.iucn_taxon_id %></td>
       <td><%= map.iucn_author %></td>
       <td><%= map.iucn_category %></td>
+      <td>
+        <%= map.details["match"] %>
+        <% if (synonym = map.synonym ) %>
+          (<%= link_to synonym.full_name,
+            admin_taxon_concept_names_path(synonym) %>)
+        <% end %>
+      </td>
+      <td><%= map.details["no_matches"] %></td>
     </tr>
   <% end -%>
 </tbody>
