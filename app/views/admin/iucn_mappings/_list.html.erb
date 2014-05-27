@@ -1,5 +1,6 @@
 <thead>
   <th>Id</th>
+  <th>Class</th>
   <th>Taxon Concept</th>
   <th>Author year</th>
   <th>IUCN Name</th>
@@ -13,6 +14,7 @@
   <% collection.each do |map| -%>
     <tr class="<%= map.details["match"].try(:downcase) %>">
       <td><%= map.taxon_concept_id %></td>
+      <td><%= map.taxon_concept.data["class_name"] %></td>
       <td><%= link_to map.taxon_concept.full_name,
         admin_taxon_concept_names_path(map.taxon_concept) %></td>
       <td><%= map.taxon_concept.author_year %></td>
