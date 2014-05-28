@@ -1,7 +1,8 @@
 class Admin::AdminController < ApplicationController
   layout 'admin'
   before_filter :authenticate_user!
-  authorize_resource
+
+  authorize_resource :class => false
 
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to admin_root_path, :alert => exception.message
