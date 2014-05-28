@@ -13,13 +13,15 @@
         </a>
     </span>
   </h1>
-  <p>
+  <span class="pull-right">
     Created by <%= @taxon_concept.creator.try(:name) || "DATA_IMPORT" %> on <%= @taxon_concept.created_at.strftime("%d/%m/%Y") %> <br />
     Last updated by <%= @taxon_concept.updater.try(:name) || "DATA_IMPORT" %> on <%= @taxon_concept.updated_at.strftime("%d/%m/%Y") %>
-  </p>
+  </span>
   <%= link_to edit_icon, edit_admin_taxon_concept_url(@taxon_concept), :remote => true %>
-  <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), 
-    :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+  <% if can? :destroy, @taxon_concept %>
+    <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), 
+      :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+  <% end %>
   <%= @taxon_concept.author_year %>
   <% if @taxon_concept.tag_list %>
     <%= tag_list(@taxon_concept.tag_list) %><br />
