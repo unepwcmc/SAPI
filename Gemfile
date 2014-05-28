@@ -16,6 +16,7 @@ gem 'inherited_resources'
 gem 'traco'
 gem 'strong_parameters'
 gem 'devise'
+gem 'cancan'
 
 gem 'sidekiq'
 gem 'sidekiq-status'
