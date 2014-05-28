@@ -33,4 +33,9 @@ class ApplicationController < ActionController::Base
   def signed_in_root_path(resource_or_scope)
     admin_root_path
   end
+
+  def verify_manager
+    redirect_to admin_root_path,
+      :alert => "You are not authorized to access the trade admin page" unless current_user.is_manager?
+  end
 end
