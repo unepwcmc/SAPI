@@ -24,10 +24,15 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable
   attr_accessible :email, :name, :password, :password_confirmation,
-    :remember_me
+    :remember_me, :is_manager
 
   validates :email, :uniqueness => true, :presence => true
   validates :name, :presence => true
+
+
+  def is_contributor?
+    !is_manager?
+  end
 
   def can_be_deleted?
     tracked_objects = [
