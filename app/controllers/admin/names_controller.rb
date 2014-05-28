@@ -1,5 +1,6 @@
 class Admin::NamesController < Admin::SimpleCrudController
   belongs_to :taxon_concept
+
   before_filter :load_search
   layout 'taxon_concepts'
 
