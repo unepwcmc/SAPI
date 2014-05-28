@@ -6,5 +6,7 @@
     <label>Password</label> <%= f.password_field :password %><br />
     <label>Password confirmation</label> <%= f.password_field :password_confirmation %><br />
   <% end %>
-  <label>Is manager</label> <%= f.check_box :is_manager %>
+  <% if current_user.is_manager? %>
+    <label>Is manager</label> <%= f.check_box :is_manager %>
+  <% end %>
 <% end %>
