@@ -106,10 +106,6 @@ def update_country_codes
 
     UPDATE shipments_import
     SET export_country_code = 'XX'
-    WHERE export_country_code = 'AU' OR import_country_code = 'DD' AND reporter_type = 'E' AND shipment_year = 1998;
-
-    UPDATE shipments_import
-    SET export_country_code = 'XX'
     WHERE export_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS');
 
     UPDATE shipments_import
