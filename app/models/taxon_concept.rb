@@ -134,6 +134,7 @@ class TaxonConcept < ActiveRecord::Base
   has_many :shipments, :class_name => 'Trade::Shipment'
   has_many :reported_shipments, :class_name => 'Trade::Shipment',
     :foreign_key => :reported_taxon_concept_id
+  has_many :nomenclature_change_reassignments, :as => :reassignable
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
