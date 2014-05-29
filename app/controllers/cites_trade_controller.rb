@@ -24,8 +24,9 @@ class CitesTradeController < ApplicationController
       :taxon_with_descendants =>
         (params[:filters] && params[:filters][:selection_taxon] == 'genus'),
       :report_type => if params[:filters] && params[:filters][:report_type] &&
-        Trade::ShipmentsExportFactory.public_report_types &
-        [report_type = params[:filters][:report_type].downcase.strip.to_sym]
+        Trade::ShipmentsExportFactory.public_report_types.include?(
+          report_type = params[:filters][:report_type].downcase.strip.to_sym
+        )
         report_type
       else
         :comptab
