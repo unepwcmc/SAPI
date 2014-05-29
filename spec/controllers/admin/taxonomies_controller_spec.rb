@@ -59,4 +59,21 @@ describe Admin::TaxonomiesController do
     end
   end
 
+  describe "Authorization for contributors" do
+    login_contributor
+    describe "GET index" do
+      it "redirects to admin root" do
+        get :index
+        response.should redirect_to admin_root_path
+      end
+    end
+    describe "DELETE destroy" do
+      let(:taxonomy){ create(:taxonomy) }
+      it "fails to delete and redirects to admin_root_path" do
+        delete :destroy, :id => taxonomy.id
+        response.should redirect_to(admin_root_path)
+        Taxonomy.where(:id => taxonomy.id).count.should == 1
+      end
+    end
+  end
 end

@@ -1,4 +1,4 @@
-class Admin::TaxonomiesController < Admin::SimpleCrudController
+class Admin::TaxonomiesController < Admin::StandardAuthorizationController
   respond_to :json, :only => [:index, :update]
 
   def index
