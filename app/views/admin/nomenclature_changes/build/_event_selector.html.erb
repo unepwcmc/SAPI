@@ -1,0 +1,9 @@
+<label>Select event:
+  <%= f.select :event_id,
+    options_from_collection_for_select(
+      @events, :id, :name,
+      @nomenclature_change.event_id
+    ),
+    { :selected => @nomenclature_change.event_id, :include_blank => true }
+  %>
+</label>
