@@ -101,7 +101,7 @@ def update_country_codes
     WHERE export_country_code = 'KN' AND import_country_code = 'XA' AND reporter_type = 'E';
 
     UPDATE shipments_import
-    SET export_country_code = 'DE'
+    SET import_country_code = 'DE'
     WHERE export_country_code = 'AU' AND import_country_code = 'DD' AND reporter_type = 'E' AND shipment_year = 1998;
 
     UPDATE shipments_import
