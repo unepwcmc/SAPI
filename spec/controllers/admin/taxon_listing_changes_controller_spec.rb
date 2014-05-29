@@ -239,7 +239,7 @@ describe Admin::TaxonListingChangesController do
         response.should redirect_to(
           admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
         )
-        ListingChange.where(:id => listing_change.id).count.should == 1
+        ListingChange.find(listing_change.id).should_not be_nil
       end
     end
   end

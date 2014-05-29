@@ -154,7 +154,7 @@ describe Admin::TaxonQuotasController do
         response.should redirect_to(
           admin_taxon_concept_quotas_url(@taxon_concept)
         )
-        Quota.where(:id => quota.id).count.should == 1
+        Quota.find(quota.id).should_not be_nil
       end
     end
   end

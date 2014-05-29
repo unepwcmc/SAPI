@@ -152,7 +152,7 @@ describe Admin::TaxonEuSuspensionsController do
         response.should redirect_to(
           admin_taxon_concept_eu_suspensions_url(@taxon_concept)
         )
-        EuSuspension.where(:id => eu_suspension.id).count.should == 1
+        EuSuspension.find(eu_suspension.id).should_not be_nil
       end
     end
   end

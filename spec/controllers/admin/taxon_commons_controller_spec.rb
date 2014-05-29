@@ -119,7 +119,7 @@ describe Admin::TaxonCommonsController do
         response.should redirect_to(
           admin_taxon_concept_names_url(@taxon_concept)
         )
-        TaxonCommon.where(:id => taxon_common.id).count.should == 1
+        TaxonCommon.find(taxon_common.id).should_not be_nil
       end
     end
   end
