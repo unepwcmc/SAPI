@@ -4,6 +4,9 @@ class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesCont
   before_filter :load_search, :only => [:new, :index, :edit, :create]
   layout 'taxon_concepts'
 
+  skip_authorize_resource
+  authorize_resource :class => 'Instrument'
+
   def index
     index! do
       load_taxon_instruments

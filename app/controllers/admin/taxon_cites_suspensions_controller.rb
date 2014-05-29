@@ -7,6 +7,9 @@ class Admin::TaxonCitesSuspensionsController < Admin::SimpleCrudController
   before_filter :load_search, :except => [:create, :destroy]
   layout 'taxon_concepts'
 
+  skip_authorize_resource
+  authorize_resource :class => 'CitesSuspension'
+
   def create
     create! do |success, failure|
       success.html {

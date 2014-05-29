@@ -7,6 +7,9 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
 
   layout 'taxon_concepts'
 
+  skip_authorize_resource
+  authorize_resource :class => 'EuSuspension'
+
   def update
     update! do |success, failure|
       success.html {
@@ -39,7 +42,7 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
         redirect_to admin_taxon_concept_eu_suspensions_url(params[:taxon_concept_id]),
         :notice => 'Operation successful'
       }
-      failure.html { 
+      failure.html {
         load_search
         render 'create'
       }
