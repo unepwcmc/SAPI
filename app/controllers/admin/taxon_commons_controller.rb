@@ -44,7 +44,7 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
   def destroy
     destroy! do |success, failure|
       success.html {
-        redirect_to admin_taxon_concept_names_url(@taxon_concept), 
+        redirect_to admin_taxon_concept_names_url(@taxon_concept),
           :notice => 'Operation succeeded'
       }
       failure.html {
