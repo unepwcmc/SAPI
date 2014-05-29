@@ -72,7 +72,7 @@ describe Admin::TaxonomiesController do
       it "fails to delete and redirects to admin_root_path" do
         delete :destroy, :id => taxonomy.id
         response.should redirect_to(admin_root_path)
-        Taxonomy.where(:id => taxonomy.id).count.should == 1
+        Taxonomy.find(taxonomy.id).should_not be_nil
       end
     end
   end

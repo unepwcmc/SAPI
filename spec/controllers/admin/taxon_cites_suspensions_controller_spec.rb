@@ -111,7 +111,7 @@ describe Admin::TaxonCitesSuspensionsController do
         response.should redirect_to(
           admin_taxon_concept_cites_suspensions_url(@taxon_concept)
         )
-        CitesSuspension.where(:id => @cites_suspension.id).count.should == 1
+        CitesSuspension.find(@cites_suspension.id).should_not be_nil
       end
     end
   end
