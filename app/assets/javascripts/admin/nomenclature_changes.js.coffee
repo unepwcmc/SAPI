@@ -18,13 +18,13 @@ $(document).ready ->
           text: tc.full_name
         results: formatted_taxon_concepts
   }
-  $('.taxon_concept').select2(defaultTaxonSelect2Options)
+  $('.taxon-concept').select2(defaultTaxonSelect2Options)
 
   $(document).on('nested:fieldAdded', (event) ->
     # this field was just inserted into your form
     field = event.field
     # it's a jQuery object already
-    taxonField = field.find('.taxon_concept')
+    taxonField = field.find('.taxon-concept')
     # and activate select2
     taxonField.select2(defaultTaxonSelect2Options)
   )

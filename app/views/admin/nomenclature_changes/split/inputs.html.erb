@@ -4,10 +4,11 @@
 
   <%= render 'admin/nomenclature_changes/build/event_selector', :f => f %>
 
-  <%= f.fields_for :nomenclature_change_inputs do |ff| %>
+  <%= f.fields_for :input do |ff| %>
+    <!-- TODO figure out the restrictions on the auto complete here, none for now -->
     <label>
       Select taxon to split:
-      <%= ff.text_field :taxon_concept_id, {:class => 'taxon_concept'} %>
+      <%= ff.text_field :taxon_concept_id, {:class => 'taxon-concept'} %>
     </label>
     <%= ff.hidden_field :is_input, :value => true %>
   <% end %>
