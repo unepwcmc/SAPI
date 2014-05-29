@@ -87,39 +87,51 @@ def update_country_codes
     UPDATE shipments_import
     SET export_country_code = 'ZZ'
     WHERE export_country_code = '*S';
+
     UPDATE shipments_import
     SET origin_country_code = 'ZZ'
     WHERE origin_country_code = '*S';
+
     UPDATE shipments_import
     SET export_country_code = 'MF'
     WHERE export_country_code = 'FR' AND import_country_code = 'XA' AND reporter_type = 'E';
+
     UPDATE shipments_import
     SET export_country_code = 'MF'
     WHERE export_country_code = 'KN' AND import_country_code = 'XA' AND reporter_type = 'E';
+
     UPDATE shipments_import
     SET export_country_code = 'DE'
     WHERE export_country_code = 'AU' AND import_country_code = 'DD' AND reporter_type = 'E' AND shipment_year = 1998;
+
     UPDATE shipments_import
     SET export_country_code = 'XX'
     WHERE export_country_code = 'AU' OR import_country_code = 'DD' AND reporter_type = 'E' AND shipment_year = 1998;
+
     UPDATE shipments_import
     SET export_country_code = 'XX'
     WHERE export_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS');
+
     UPDATE shipments_import
     SET import_country_code = 'XX'
     WHERE import_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS');
+
     UPDATE shipments_import
     SET origin_country_code = 'XX'
     WHERE origin_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS');
+
     UPDATE shipments_import
     SET origin_country_code = 'XK'
     WHERE export_country_code = 'KX';
+
     UPDATE shipments_import
     SET import_country_code = 'XK'
     WHERE import_country_code = 'KX';
+
     UPDATE shipments_import
     SET origin_country_code = 'XK'
     WHERE origin_country_code = 'KX';
+
     DELETE FROM shipments_import
     WHERE quantity_1 IS NULL;
   SQL
