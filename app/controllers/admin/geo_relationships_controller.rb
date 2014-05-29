@@ -1,4 +1,4 @@
-class Admin::GeoRelationshipsController < Admin::SimpleCrudController
+class Admin::GeoRelationshipsController < Admin::StandardAuthorizationController
 
   belongs_to :geo_entity
   before_filter :load_geo_relationship_types, :only => [:index, :create]

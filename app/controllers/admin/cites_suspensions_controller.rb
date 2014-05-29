@@ -1,4 +1,4 @@
-class Admin::CitesSuspensionsController < Admin::SimpleCrudController
+class Admin::CitesSuspensionsController < Admin::StandardAuthorizationController
   before_filter :load_lib_objects, :only => [:new, :edit]
 
   def create

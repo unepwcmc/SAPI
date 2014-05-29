@@ -2,6 +2,8 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
 
+  authorize_resource
+
   def new
     new! do |format|
       load_associations

@@ -1,4 +1,4 @@
-class Admin::QuotasController < Admin::SimpleCrudController
+class Admin::QuotasController < Admin::StandardAuthorizationController
 
   def index
     @years = Quota.years_array

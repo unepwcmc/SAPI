@@ -1,5 +1,4 @@
-class Admin::TermsController < Admin::SimpleCrudController
-  inherit_resources
+class Admin::TermsController < Admin::StandardAuthorizationController
   respond_to :json, :only => [:update]
   cache_sweeper :term_sweeper
 
