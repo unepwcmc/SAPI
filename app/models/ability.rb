@@ -33,7 +33,7 @@ class Ability
 
     if user.is_manager?
       can :manage, :all
-    else
+    elsif user.is_contributor?
       can :read, :all
       can :update, :all
       can :create, :all
