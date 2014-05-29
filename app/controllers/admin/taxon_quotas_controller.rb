@@ -7,6 +7,9 @@ class Admin::TaxonQuotasController < Admin::SimpleCrudController
   before_filter :load_search, :except => [:destroy]
   layout 'taxon_concepts'
 
+  skip_authorize_resource
+  authorize_resource :class => 'Quota'
+
   def update
     update! do |success, failure|
       success.html {
