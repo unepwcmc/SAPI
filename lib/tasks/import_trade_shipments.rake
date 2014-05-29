@@ -93,11 +93,11 @@ def update_country_codes
     WHERE origin_country_code = '*S';
 
     UPDATE shipments_import
-    SET export_country_code = 'MF'
+    SET import_country_code = 'MF'
     WHERE export_country_code = 'FR' AND import_country_code = 'XA' AND reporter_type = 'E';
 
     UPDATE shipments_import
-    SET export_country_code = 'MF'
+    SET import_country_code = 'MF'
     WHERE export_country_code = 'KN' AND import_country_code = 'XA' AND reporter_type = 'E';
 
     UPDATE shipments_import
@@ -121,7 +121,7 @@ def update_country_codes
     WHERE origin_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS');
 
     UPDATE shipments_import
-    SET origin_country_code = 'XK'
+    SET export_country_code = 'XK'
     WHERE export_country_code = 'KX';
 
     UPDATE shipments_import
