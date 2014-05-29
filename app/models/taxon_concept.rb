@@ -140,6 +140,7 @@ class TaxonConcept < ActiveRecord::Base
     conditions: {comment_type: 'Nomenclature'}
   has_one :distribution_comment, class_name: 'Comment', as: 'commentable',
     conditions: {comment_type: 'Distribution'}
+  has_many :nomenclature_change_reassignments, :as => :reassignable
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
