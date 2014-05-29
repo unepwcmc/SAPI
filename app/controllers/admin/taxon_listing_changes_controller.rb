@@ -6,8 +6,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
   before_filter :load_search, :except => [:create, :update, :destroy]
   layout 'taxon_concepts'
 
-  skip_authorize_resource
-  authorize_resource :class => 'ListingChange'
+  authorize_resource :class => false
 
   def index
     index! do

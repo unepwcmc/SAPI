@@ -7,8 +7,7 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
 
   layout 'taxon_concepts'
 
-  skip_authorize_resource
-  authorize_resource :class => 'EuSuspension'
+  authorize_resource :class => false
 
   def update
     update! do |success, failure|

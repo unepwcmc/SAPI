@@ -89,4 +89,30 @@ describe Admin::TaxonCitesSuspensionsController do
       )
     end
   end
+
+  describe "Authorization for contributors" do
+    login_contributor
+
+    describe "GET index" do
+      it "renders the index template" do
+        get :index, :taxon_concept_id => @taxon_concept.id
+        response.should render_template("index")
+      end
+      it "renders the taxon_concepts_layout" do
+        get :index, :taxon_concept_id => @taxon_concept.id
+        response.should render_template('layouts/taxon_concepts')
+      end
+    end
+    describe "DELETE destroy" do
+      it "fails to delete and redirects" do
+        @request.env['HTTP_REFERER'] = admin_taxon_concept_cites_suspensions_url(@taxon_concept)
+        delete :destroy, :id => @cites_suspension.id,
+          :taxon_concept_id => @taxon_concept.id
+        response.should redirect_to(
+          admin_taxon_concept_cites_suspensions_url(@taxon_concept)
+        )
+        CitesSuspension.where(:id => @cites_suspension.id).count.should == 1
+      end
+    end
+  end
 end
