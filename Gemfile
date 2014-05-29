@@ -37,7 +37,7 @@ gem 'jquery-cookie-rails'
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'kaminari'
 gem 'select2-rails'
-gem 'nested_form', '~> 0.3.1'
+gem 'nested_form', '~> 0.3.2'
 gem 'acts-as-taggable-on', '~> 2.3.1'
 gem 'carrierwave'
 
