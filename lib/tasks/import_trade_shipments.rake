@@ -89,7 +89,7 @@ def update_country_codes
     SET export_country_code = 'ZZ'
     WHERE export_country_code = '*S';
 
-    -- all records with exporter *S should be changed to exporter ZZ (introduction from the sea).
+    -- all records with origin *S should be changed to origin ZZ (introduction from the sea).
     UPDATE shipments_import
     SET origin_country_code = 'ZZ'
     WHERE origin_country_code = '*S';
@@ -109,32 +109,32 @@ def update_country_codes
     SET import_country_code = 'DE'
     WHERE export_country_code = 'AU' AND import_country_code = 'DD' AND reporter_type = 'E' AND shipment_year = 1998;
 
-    --All records of XA, XC, XE, XF, XM, XS- amend to XX
+    --All records of exporter XA, XC, XE, XF, XM, XS- amend to XX
     UPDATE shipments_import
     SET export_country_code = 'XX'
     WHERE export_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS');
 
-    --All records of XA, XC, XE, XF, XM, XS- amend to XX
+    --All records of importer XA, XC, XE, XF, XM, XS- amend to XX
     UPDATE shipments_import
     SET import_country_code = 'XX'
     WHERE import_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS');
 
-    --All records of XA, XC, XE, XF, XM, XS- amend to XX
+    --All records of origin XA, XC, XE, XF, XM, XS- amend to XX
     UPDATE shipments_import
     SET origin_country_code = 'XX'
     WHERE origin_country_code IN ('XA', 'XC', 'XE', 'XF', 'XM', 'XS');
 
-    -- KX should be changed the XK and added as a Trade entity = entity Kosovo (disputed)
+    -- exporter KX should be changed the XK and added as a Trade entity = entity Kosovo (disputed)
     UPDATE shipments_import
     SET export_country_code = 'XK'
     WHERE export_country_code = 'KX';
 
-    -- KX should be changed the XK and added as a Trade export_country_codentity = Kosovo (disputed)
+    -- importer KX should be changed the XK and added as a Trade export_country_codentity = Kosovo (disputed)
     UPDATE shipments_import
     SET import_country_code = 'XK'
     WHERE import_country_code = 'KX';
 
-    -- KX should be changed the XK and added as a Tradede entity = Kosovo (disputed)
+    -- origin KX should be changed the XK and added as a Tradede entity = Kosovo (disputed)
     UPDATE shipments_import
     SET origin_country_code = 'XK'
     WHERE origin_country_code = 'KX';
