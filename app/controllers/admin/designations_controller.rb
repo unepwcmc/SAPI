@@ -1,4 +1,4 @@
-class Admin::DesignationsController < Admin::SimpleCrudController
+class Admin::DesignationsController < Admin::StandardAuthorizationController
   respond_to :json, :only => [:index, :update]
 
   def index

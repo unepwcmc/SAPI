@@ -1,4 +1,4 @@
-class Admin::EuOpinionsController < Admin::SimpleCrudController
+class Admin::EuOpinionsController < Admin::StandardAuthorizationController
   belongs_to :taxon_concept
   before_filter :load_lib_objects
   before_filter :load_search, :only => [:new, :index, :edit]

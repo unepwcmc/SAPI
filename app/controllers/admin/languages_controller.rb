@@ -1,4 +1,4 @@
-class Admin::LanguagesController < Admin::SimpleCrudController
+class Admin::LanguagesController < Admin::StandardAuthorizationController
 
   protected
     def collection

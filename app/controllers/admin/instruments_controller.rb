@@ -1,4 +1,4 @@
-class Admin::InstrumentsController < Admin::SimpleCrudController
+class Admin::InstrumentsController < Admin::StandardAuthorizationController
   respond_to :json, :only => [:index, :update]
 
   def index

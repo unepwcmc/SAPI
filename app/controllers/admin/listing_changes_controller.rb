@@ -1,4 +1,4 @@
-class Admin::ListingChangesController < Admin::SimpleCrudController
+class Admin::ListingChangesController < Admin::StandardAuthorizationController
   belongs_to :eu_regulation
 
 

@@ -1,5 +1,4 @@
-class Admin::UsersController < Admin::SimpleCrudController
-  inherit_resources
+class Admin::UsersController < Admin::StandardAuthorizationController
   respond_to :js, :except => [:index, :destroy]
 
   def new

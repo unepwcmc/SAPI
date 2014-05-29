@@ -1,4 +1,4 @@
-class Admin::TaxonConceptAssociatedTypesController < Admin::StandardAuthorizationController
+class Admin::TaxonConceptAssociatedTypesController < Admin::SimpleCrudController
   layout 'taxon_concepts'
   belongs_to :taxon_concept
 
