@@ -126,7 +126,6 @@ $(document).ready(function(){
       }
     });
     values['selection_taxon'] = $('input[name="selection_taxon"]:checked').val();
-    values['report_type'] = 'raw';
     return values;
   }
 
@@ -773,19 +772,15 @@ $(document).ready(function(){
     $link.attr('href', href).click();
     window.location.href = $link.attr("href");
   }
-  
+
   function handleDownloadRequest (ignoreWarning) {
     var output_type = $( "input[name='outputType']:checked" ).val(),
       report_type = $( "input[name='report']:checked" ).val(),
       query = location.search.substr(1);
-    if ( report_type === 'comparative' ) {
-      query = query.replace(/report_type%5D=(raw|net_gross)/, 
-        "report_type%5D=comptab");
-    } else {
-      report_type = $( "select[name='reportType']" ).val();
-      query = query.replace(/report_type%5D=(raw|comptab)/,
-        "report_type%5D=" + report_type);
+    if (report_type === 'comparative') {
+      report_type = 'comptab';
     }
+    query += "&filters[report_type]=" + report_type;
     if (!ignoreWarning &&
       (report_type == 'net_imports' || report_type == 'net_exports')
     ) {
