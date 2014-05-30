@@ -35,12 +35,11 @@ class Admin::IucnMapping < ActiveRecord::Base
     end
   }
 
-  API_URL = 'http://rlapiv3-beta.iucnredlist.org/api/v3/species/'
-
   def self.create_mappings
     config_location = Rails.root.join('config/secrets.yml')
     config = YAML.load_file(config_location)[Rails.env]
-    @token = config['iucn_redlist']
+    token = config['iucn_redlist']['token']
+    url = config['iucn_redlist']['url']
 
     species = Rank.where(:name => Rank::SPECIES).first
     subspecies = Rank.where(:name => Rank::SUBSPECIES).first
@@ -54,7 +53,7 @@ class Admin::IucnMapping < ActiveRecord::Base
                   else
                     tc.full_name
                   end
-      data = fetch_data_for_name full_name
+      data = fetch_data_for_name url, token, full_name
       if data["result"].empty?
         puts "#{tc.full_name} NO MATCH trying synonyms"
         match_on_synonyms tc, map, subspecies.id
@@ -71,7 +70,7 @@ class Admin::IucnMapping < ActiveRecord::Base
                   else
                     syn.full_name
                   end
-      data = fetch_data_for_name full_name
+      data = fetch_data_for_name url, token, full_name
       if data["result"] && !data["result"].empty?
         map_taxon_concept tc, map, data, syn
         return
@@ -79,8 +78,8 @@ class Admin::IucnMapping < ActiveRecord::Base
     end
   end
 
-  def self.fetch_data_for_name full_name
-    url = URI.escape("#{API_URL}#{full_name.downcase}?token=#{@token}")
+  def self.fetch_data_for_name url, token, full_name
+    url = URI.escape("#{url}#{full_name.downcase}?token=#{token}")
     JSON.parse(RestClient.get(url))
   end
 
