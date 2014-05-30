@@ -3,11 +3,6 @@ class IucnMappingManager
   class << self
 
     def sync
-      config_location = Rails.root.join('config/secrets.yml')
-      config = YAML.load_file(config_location)[Rails.env]
-      @token = config['iucn_redlist']['token']
-      @url = config['iucn_redlist']['url']
-
       species = Rank.where(:name => Rank::SPECIES).first
       @subspecies = Rank.where(:name => Rank::SUBSPECIES).first
       taxonomy = Taxonomy.where(:name => Taxonomy::CITES_EU).first
@@ -50,6 +45,11 @@ class IucnMappingManager
     end
 
     def fetch_data_for_name full_name
+      @config_location ||= Rails.root.join('config/secrets.yml')
+      @config ||= YAML.load_file(@config_location)[Rails.env]
+      @token ||= @config['iucn_redlist']['token']
+      @url ||= @config['iucn_redlist']['url']
+
       url = URI.escape("#{@url}#{full_name.downcase}?token=#{@token}")
       JSON.parse(RestClient.get(url))
     end
