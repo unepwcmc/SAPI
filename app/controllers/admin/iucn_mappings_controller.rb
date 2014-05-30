@@ -2,13 +2,13 @@ class Admin::IucnMappingsController < Admin::SimpleCrudController
 
   def index
     @totals = {
-      :matching => Admin::IucnMapping.filter("MATCHING").count,
-      :full_match => Admin::IucnMapping.filter("FULL_MATCH").count,
-      :name_match => Admin::IucnMapping.filter("NAME_MATCH").count,
-      :full_synonym_match => Admin::IucnMapping.filter("FULL_SYNONYM_MATCH").count,
-      :synonym_match => Admin::IucnMapping.filter("SYNONYM_MATCH").count,
-      :non_matching => Admin::IucnMapping.filter("NON_MATCHING").count,
-      :all => Admin::IucnMapping.count,
+      :matching => IucnMapping.filter("MATCHING").count,
+      :full_match => IucnMapping.filter("FULL_MATCH").count,
+      :name_match => IucnMapping.filter("NAME_MATCH").count,
+      :full_synonym_match => IucnMapping.filter("FULL_SYNONYM_MATCH").count,
+      :synonym_match => IucnMapping.filter("SYNONYM_MATCH").count,
+      :non_matching => IucnMapping.filter("NON_MATCHING").count,
+      :all => IucnMapping.count,
 
     }
   end
