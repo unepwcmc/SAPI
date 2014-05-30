@@ -9,7 +9,7 @@ class CitesTrade::ExportsController < CitesTradeController
         }))
         result = search.export
         send_file Pathname.new(result[0]).realpath, result[1]
-        Trade::TradeDataDownloadLogger.log_download request, params, search.total_cnt
+        Trade::TradeDataDownloadLogger.log_download request, search_params, search.total_cnt
       }
       format.json {
         search = Trade::ShipmentsExportFactory.new(search_params.merge({
