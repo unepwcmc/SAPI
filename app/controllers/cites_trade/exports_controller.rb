@@ -9,10 +9,12 @@ class CitesTrade::ExportsController < CitesTradeController
         }))
         result = search.export
         send_file Pathname.new(result[0]).realpath, result[1]
-        Trade::TradeDataDownloadLogger.log_download request, params, search.total_cnt
+        Trade::TradeDataDownloadLogger.log_download request, search_params, search.total_cnt
       }
       format.json {
-        search = Trade::ShipmentsExportFactory.new(search_params)
+        search = Trade::ShipmentsExportFactory.new(search_params.merge({
+          :report_type => :raw # get the raw count
+        }))
         render :json => {
           :total => search.total_cnt,
           :csv_limit => Trade::ShipmentsExport::PUBLIC_CSV_LIMIT,
