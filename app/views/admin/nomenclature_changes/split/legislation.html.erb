@@ -1,0 +1,16 @@
+<h2>New split: handle legislation</h2>
+<%= nested_form_for @nomenclature_change, url: wizard_path, method: :put do |f| %>
+  <%= error_messages_for(@nomenclature_change) %>
+
+  <%= f.fields_for :input do |ff| %>
+
+      <%= ff.fields_for :input_legislation_reassignments do |fff| %>
+        <%= fff.object.reassignable_type %>
+        <%= fff.text_area :note %>
+      <% end %>
+
+  <% end %>
+
+  <%= render 'admin/nomenclature_changes/build/cancel_button' %>
+  <%= f.submit "Next" %>
+<% end %>
