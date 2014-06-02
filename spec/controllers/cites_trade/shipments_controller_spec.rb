@@ -5,6 +5,26 @@ describe CitesTrade::ShipmentsController do
 
   describe "GET index" do
     before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+    context "serializer" do
+      it "should return comptab export when report_type invalid" do
+        get :index, filters: {
+          report_type: 'raw',
+        }, format: :json
+        response.body.should have_json_path('shipment_comptab_export')
+      end
+      it "should return comptab export when report_type = comptab" do
+        get :index, filters: {
+          report_type: 'comptab',
+        }, format: :json
+        response.body.should have_json_path('shipment_comptab_export')
+      end
+      it "should return gross net export when report_type = gross_exports" do
+        get :index, filters: {
+          report_type: 'gross_exports',
+        }, format: :json
+        response.body.should have_json_path('shipment_gross_net_export')
+      end
+    end
     it "should return all comptab shipments" do
       get :index, format: :json
       response.body.should have_json_size(6).at_path('shipment_comptab_export/rows')

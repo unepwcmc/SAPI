@@ -91,7 +91,7 @@ private
 
   def available_columns
     {
-      :id => {},
+      :id => {:internal => true},
       :year => {},
       :appendix => {},
       :taxon => {},
