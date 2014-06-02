@@ -47,7 +47,9 @@ class Ability
         Language, GeoEntity, GeoEntityType,
         TradeCode, Trade::TaxonConceptTermPair,
         TermTradeCodesPair, Event, CitesSuspension,
-        Quota, EuRegulation, EuSuspensionRegulation
+        Quota, EuRegulation, EuSuspensionRegulation,
+        Trade::Shipment, Trade::Permit, Trade::AnnualReportUpload,
+        Trade::ValidationRule
       ]
     end
   end
