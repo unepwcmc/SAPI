@@ -1,15 +1,17 @@
 <h1>Nomenclature changes</h1>
+<h3>New change:</h3>
 <ul>
   <li>
     <%= link_to 'Split', admin_nomenclature_change_split_index_path(:nomenclature_change_id => :new), :method => :post %>
   </li>
 </ul>
 
-List of changes:
+<h3>List of changes:</h3>
 <table>
   <thead>
     <tr>
       <th>Event</th>
+      <th>Type</th>
       <th>Created at</th>
       <th>Created by</th>
   </thead>
@@ -17,6 +19,7 @@ List of changes:
   <% @nomenclature_changes.each do |nc| %>
     <tr>
       <td><%= nc.event.try(:name) %></td>
+      <td><%= nc.type %></td>
       <td><%= nc.created_at %></td>
       <td><%= nc.creator.try(:name) %></td>
     </tr>
