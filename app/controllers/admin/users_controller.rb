@@ -1,5 +1,7 @@
-class Admin::UsersController < Admin::StandardAuthorizationController
+class Admin::UsersController < Admin::SimpleCrudController
   respond_to :js, :except => [:index, :destroy]
+
+  load_and_authorize_resource :except => :index
 
   def new
     new! do
@@ -16,7 +18,8 @@ class Admin::UsersController < Admin::StandardAuthorizationController
 
   protected
     def collection
-      @users ||= end_of_association_chain.order(:name).page(params[:page])
+      @users ||= end_of_association_chain.
+        order(:name).page(params[:page])
     end
 end
 

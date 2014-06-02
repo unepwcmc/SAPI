@@ -37,6 +37,9 @@ class Ability
       can :read, :all
       can :update, :all
       can :create, :all
+      cannot :update, User do |u|
+        u.id != user.id
+      end
       cannot :manage, [
         Taxonomy, Rank, Designation,
         Instrument, SpeciesListing,
