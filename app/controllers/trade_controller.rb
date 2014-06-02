@@ -3,6 +3,8 @@ class TradeController < ApplicationController
   before_filter :authenticate_user!
   before_filter :verify_manager
 
+  authorize_resource
+
   private
 
   def search_params
