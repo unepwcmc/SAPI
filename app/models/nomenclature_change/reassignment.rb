@@ -11,6 +11,6 @@
 class NomenclatureChange::Reassignment < ActiveRecord::Base
   attr_accessible :type, :reassignable_id, :reassignable_type,
     :nomenclature_change_input_id, :nomenclature_change_output_id,
-    :is_copy
+    :note, :is_copy
   belongs_to :reassignable, :polymorphic => true
 end

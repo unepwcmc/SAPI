@@ -26,7 +26,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
           :reassignable_type => 'TaxonConcept',
           :reassignable_id => child.id
         }
-        reassignment = input.input_parent_reassignments.where(
+        input.input_parent_reassignments.where(
           reassignment_attrs
         ).first || NomenclatureChange::ParentReassignment.new(
           reassignment_attrs
@@ -42,7 +42,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
           :reassignable_type => 'TaxonConcept',
           :reassignable_id => name.id
         }
-        reassignment = input.input_name_reassignments.where(
+        input.input_name_reassignments.where(
           reassignment_attrs
         ).first || NomenclatureChange::NameReassignment.new(
           reassignment_attrs
@@ -55,12 +55,30 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
           :reassignable_type => 'Distribution',
           :reassignable_id => distr.id
         }
-        reassignment = input.input_distribution_reassignments.where(
+        input.input_distribution_reassignments.where(
           reassignment_attrs
         ).first || NomenclatureChange::DistributionReassignment.new(
           reassignment_attrs
         )
       end
+    when :legislation
+      input.input_legislation_reassignments = [
+        input.input_legislation_reassignments.where(
+          :reassignable_type => 'ListingChange'
+        ).first || NomenclatureChange::LegislationReassignment.new(
+          :reassignable_type => 'ListingChange'
+        ),
+        input.input_legislation_reassignments.where(
+          :reassignable_type => 'CitesSuspension'
+        ).first || NomenclatureChange::LegislationReassignment.new(
+          :reassignable_type => 'CitesSuspension'
+        ),
+        input.input_legislation_reassignments.where(
+          :reassignable_type => 'Quota'
+        ).first || NomenclatureChange::LegislationReassignment.new(
+          :reassignable_type => 'Quota'
+        )
+      ]
     end
     render_wizard
   end
