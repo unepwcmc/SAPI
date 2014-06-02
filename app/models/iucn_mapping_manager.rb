@@ -49,7 +49,7 @@ class IucnMappingManager
       @config ||= YAML.load_file(@config_location)[Rails.env]
       @token ||= @config['iucn_redlist']['token']
       @url ||= @config['iucn_redlist']['url']
-
+puts "#{@url}#{full_name.downcase}?token=#{@token}"
       url = URI.escape("#{@url}#{full_name.downcase}?token=#{@token}")
       JSON.parse(RestClient.get(url))
     end
@@ -97,6 +97,7 @@ class IucnMappingManager
     end
 
     def strip_authors author
+      return '' unless author
       author.split(" ").
         reject{|p| ["and", "&", "&amp;", ","].include?(p)}.
         join(" ")
