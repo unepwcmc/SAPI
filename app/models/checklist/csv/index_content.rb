@@ -16,7 +16,7 @@ module Checklist::Csv::IndexContent
           tc.send(c)
         end
         entry = values.map do |val|
-          val = val.map{ |s| "\"#{s}\"" }.join(', ') if val.is_a? Array
+          val = val.join(', ') if val.is_a? Array
           val
         end
         csv << entry
