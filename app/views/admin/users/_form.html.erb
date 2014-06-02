@@ -2,11 +2,9 @@
   <%= error_messages_for(@user) %>
   <label>Name</label><%= f.text_field :name %><br />
   <label>Email</label> <%= f.text_field :email %><br />
-  <% if @user.new_record? %>
+  <% if @user.new_record? || current_user.is_manager? %>
     <label>Password</label> <%= f.password_field :password %><br />
     <label>Password confirmation</label> <%= f.password_field :password_confirmation %><br />
   <% end %>
-  <% if current_user.is_manager? %>
     <label>Is manager</label> <%= f.check_box :is_manager %>
-  <% end %>
 <% end %>
