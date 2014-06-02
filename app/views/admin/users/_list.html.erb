@@ -25,8 +25,12 @@
         <%= user.is_manager? ? "Manager" : "Contributor" %>
       </td>
       <td>
-        <%= link_to edit_icon, edit_resource_url(user), :remote => true %>
-        <%= link_to delete_icon, resource_url(user), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+        <% if can?(:update, user) %>
+          <%= link_to edit_icon, edit_resource_url(user), :remote => true %>
+        <% end %>
+        <% if can?(:destroy, user) %>
+          <%= link_to delete_icon, resource_url(user), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+        <% end %>
       </td>
     </tr>
   <% end -%>
