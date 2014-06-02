@@ -9,6 +9,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
   end
 
   def show
+    input = @nomenclature_change.input
     case step
     when :inputs
       set_events
@@ -20,7 +21,6 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
         :is_input => false
       ) if @nomenclature_change.outputs.empty?
     when :children
-      input = @nomenclature_change.input
       input.input_parent_reassignments = input.taxon_concept.children.map do |child|
         reassignment_attrs = {
           :reassignable_type => 'TaxonConcept',
@@ -33,7 +33,6 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
         )
       end
     when :names
-      input = @nomenclature_change.input
       input.input_name_reassignments = [
         input.taxon_concept.synonyms +
         input.taxon_concept.hybrids +
@@ -46,6 +45,19 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
         reassignment = input.input_name_reassignments.where(
           reassignment_attrs
         ).first || NomenclatureChange::NameReassignment.new(
+          reassignment_attrs
+        )
+      end
+    when :distribution
+      input.input_distribution_reassignments = input.taxon_concept.
+        distributions.map do |distr|
+        reassignment_attrs = {
+          :reassignable_type => 'Distribution',
+          :reassignable_id => distr.id
+        }
+        reassignment = input.input_distribution_reassignments.where(
+          reassignment_attrs
+        ).first || NomenclatureChange::DistributionReassignment.new(
           reassignment_attrs
         )
       end
