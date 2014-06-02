@@ -1,0 +1,12 @@
+table.table-striped tbody tr.full_match td {
+  background-color: #9d8;
+}
+table.table-striped tbody tr.name_match td {
+  background-color: #ccf;
+}
+table.table-striped tbody tr.full_synonym_match td {
+  background-color: #cde;
+}
+table.table-striped tbody tr.synonym_match td {
+  background-color: #cda;
+}
