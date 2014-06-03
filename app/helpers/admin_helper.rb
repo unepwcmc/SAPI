@@ -13,7 +13,24 @@ module AdminHelper
         nil
       end
     end.compact.join(' > ').html_safe
-  end   
+  end
+
+  def tracking_info record
+    info = <<-HTML
+      <p>Created by #{record.creator.try(:name) || "DATA_IMPORT"} on
+        #{record.created_at.strftime("%d/%m/%Y")}<br />
+        Last updated by #{record.updater.try(:name) || "DATA_IMPORT"} on
+        #{record.updated_at.strftime("%d/%m/%Y")}
+      </p>
+    HTML
+    content_tag(:a, :rel => 'tooltip', :href => '#',
+               :"data-original-title" => info, :"data-html" => true) do
+      info_icon
+    end.html_safe
+  end
+  def info_icon
+    '<i class="icon-info-sign" title="Info"></i>'.html_safe
+  end
 
   def edit_icon
     '<i class="icon-pencil" title="Edit"></i>'.html_safe
