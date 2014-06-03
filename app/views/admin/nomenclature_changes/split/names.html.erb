@@ -1,4 +1,8 @@
 <h2>New split: handle names</h2>
+<p>
+  <i class="icon-info-sign"></i>
+  Names can be assigned to multiple split outputs.
+</p>
 <%= nomenclature_change_form do |f| %>
   <%= f.fields_for :input do |ff| %>
 
@@ -12,7 +16,8 @@
           <%= fff.select :nomenclature_change_output_id,
             options_for_select(
               @nomenclature_change.outputs.map{ |o| [o.taxon_concept.full_name, o.id] },
-            )
+            ),
+            {}, {:class => 'simple-taxon-concept', :multiple => ''}
           %>
         </div>
       </div>
