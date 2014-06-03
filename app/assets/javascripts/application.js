@@ -16,4 +16,3 @@
 //= require bootstrap-dropdown
 //= require bootstrap-button
 //= require select2
-//= require_tree ./application
