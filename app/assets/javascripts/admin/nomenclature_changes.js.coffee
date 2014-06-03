@@ -4,6 +4,14 @@ $(document).ready ->
     width: '200px'
     minimumInputLength: 3
     quietMillis: 500,
+    initSelection: (element, callback) =>
+      id = $(element).val()
+      if (id != '')
+        $.ajax("/api/v1/taxon_concepts/"+id+".json").
+          done((data) ->
+            callback({id: id, text: data.taxon_concept.full_name})
+          )
+
     ajax:
       url: '/admin/taxon_concepts/autocomplete'
       dataType: 'json'
@@ -28,3 +36,19 @@ $(document).ready ->
     # and activate select2
     taxonField.select2(defaultTaxonSelect2Options)
   )
+
+  simpleTaxonSelect2Options = {
+    placeholder: 'Start typing scientific name'
+    width: '200px'
+  }
+  $('.simple-taxon-concept').select2(simpleTaxonSelect2Options)
+
+  $('.select-all-checkbox').click (e) ->
+      checkboxElement = $(e.target)
+      selectElement = checkboxElement.parent().find('select')
+      console.log(selectElement)
+      if checkboxElement.is(':checked')
+        selectElement.find('option').prop("selected","selected")
+      else
+        selectElement.find('option').removeAttr("selected")
+      selectElement.trigger("change")
