@@ -50,7 +50,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       end
     when :distribution
       input.input_distribution_reassignments = input.taxon_concept.
-        distributions.map do |distr|
+        distributions.includes(:geo_entity).order('geo_entities.name_en').map do |distr|
         reassignment_attrs = {
           :reassignable_type => 'Distribution',
           :reassignable_id => distr.id
