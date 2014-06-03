@@ -24,6 +24,7 @@ class AdminEditor
       @clearModalForm($(@))
     @initModals()
     @initSearchTypeahead()
+    $("[rel='tooltip']").tooltip()
 
   clearModalForm: (modal) ->
     form = modal.find('form')
@@ -218,10 +219,7 @@ class TaxonConceptsEditor extends AdminEditor
 
 class ListingChangesEditor extends AdminEditor
   init: () ->
-    @initEditors()
     @initForm()
-
-  initEditors: () ->
     $("[rel='tooltip']").tooltip()
 
   initForm: () ->
@@ -295,7 +293,6 @@ class TaxonReferencesEditor extends AdminEditor
     @nonSuperInit()
 
   nonSuperInit: () ->
-    $("[rel='tooltip']").tooltip()
     $(".nav-tabs.new-reference-tabs a").click (e) ->
       e.preventDefault()
       window.adminEditor.clearModalForm $("#admin-new-taxon_concept_reference-form")
@@ -369,7 +366,7 @@ class TermPairingsSelect2Editor extends AdminEditor
       options.push {}
       selection = $(@)
       if selection.hasClass('taxon_concept')
-        options[i]['select2'] = 
+        options[i]['select2'] =
           ajax:
             url: "/api/v1/auto_complete_taxon_concepts.json"
             dataType: "json"
@@ -394,7 +391,7 @@ class TermPairingsSelect2Editor extends AdminEditor
           formatSelection: (item) ->
             item.name
       else if selection.hasClass('term')
-        options[i]['select2'] = 
+        options[i]['select2'] =
           data:{ results: terms, text: 'code' },
           placeholder: "Select Term"
           allowClear: true
