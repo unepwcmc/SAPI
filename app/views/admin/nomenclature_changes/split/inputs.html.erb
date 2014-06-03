@@ -1,18 +1,14 @@
 <h2>New split</h2>
-<%= form_for @nomenclature_change, url: wizard_path, method: :put do |f| %>
-  <%= error_messages_for(@nomenclature_change) %>
-
+<%= nomenclature_change_form do |f| %>
   <%= render 'admin/nomenclature_changes/build/event_selector', :f => f %>
-
-  <%= f.fields_for :input do |ff| %>
-    <!-- TODO figure out the restrictions on the auto complete here, none for now -->
-    <label>
-      Select taxon to split:
-      <%= ff.text_field :taxon_concept_id, {:class => 'taxon-concept'} %>
-    </label>
-    <%= ff.hidden_field :is_input, :value => true %>
-  <% end %>
-
-  <%= render 'admin/nomenclature_changes/build/cancel_button' %>
-  <%= f.submit "Next" %>
+  <div class="control-group">
+    <%= f.fields_for :input do |ff| %>
+      <!-- TODO figure out the restrictions on the auto complete here, none for now -->
+      <label class="control-label">Select taxon to split:</label>
+      <div class="controls">
+        <%= ff.text_field :taxon_concept_id, {:class => 'taxon-concept'} %>
+        <%= ff.hidden_field :is_input, :value => true %>
+      </div>
+    <% end %>
+  </div>
 <% end %>
