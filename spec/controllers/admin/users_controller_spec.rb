@@ -35,15 +35,16 @@ describe Admin::UsersController do
     end
   end
 
-  describe "XHR PUT update JSON" do
+  describe "XHR PUT update JS" do
     let(:user){ create(:user) }
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'json', :id => user.id, :user => { :name => 'ZZ' }
+      xhr :put, :update, :format => 'js', :id => user.id, :user => { :name => 'ZZ' }
       response.should be_success
+      response.should render_template('create')
     end
-    it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json', :id => user.id, :user => { :name => nil }
-      JSON.parse(response.body).should include('errors')
+    it "responds with template new when not successful" do
+      xhr :put, :update, :format => 'js', :id => user.id, :user => { :name => nil }
+      response.should render_template('new')
     end
   end
 
