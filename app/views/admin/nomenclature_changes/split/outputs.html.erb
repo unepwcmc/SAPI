@@ -1,15 +1,16 @@
 <h2>New split</h2>
-<%= nested_form_for @nomenclature_change, url: wizard_path, method: :put do |f| %>
-  <%= error_messages_for(@nomenclature_change) %>
-  Select taxa to split into:
-  <%= f.fields_for :outputs do |ff| %>
-    <!-- TODO figure out the restrictions on the auto complete here, none for now -->
-    <%= ff.text_field :taxon_concept_id, {:class => 'taxon-concept'} %>
-    <%= ff.hidden_field :is_input, :value => false %>
-    <%= ff.link_to_remove "Remove" %>
-  <% end %>
-  <p><%= f.link_to_add "Add", :outputs %></p>
 
-  <%= render 'admin/nomenclature_changes/build/cancel_button' %>
-  <%= f.submit "Next" %>
+<%= nomenclature_change_form do |f| %>
+  <div class="control-group">
+    <label class="control-label">Select taxa to split into:</label>
+    <div class="controls">
+      <%= f.fields_for :outputs do |ff| %>
+        <!-- TODO figure out the restrictions on the auto complete here, none for now -->
+        <%= ff.text_field :taxon_concept_id, {:class => 'taxon-concept'} %>
+        <%= ff.hidden_field :is_input, :value => false %>
+        <%= ff.link_to_remove "Remove" %>
+      <% end %>
+      <p><%= f.link_to_add "Add", :outputs %></p>
+    </div>
+  </div>
 <% end %>

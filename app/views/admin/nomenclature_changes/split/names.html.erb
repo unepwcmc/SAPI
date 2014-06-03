@@ -1,21 +1,22 @@
 <h2>New split: handle names</h2>
-<%= nested_form_for @nomenclature_change, url: wizard_path, method: :put do |f| %>
-  <%= error_messages_for(@nomenclature_change) %>
-
+<%= nomenclature_change_form do |f| %>
   <%= f.fields_for :input do |ff| %>
 
-      <%= ff.fields_for :input_name_reassignments do |fff| %>
-        <%= fff.object.reassignable.name_status %>
-        <%= fff.object.reassignable.full_name %>
-        <%= fff.select :nomenclature_change_output_id,
-          options_for_select(
-            @nomenclature_change.outputs.map{ |o| [o.taxon_concept.full_name, o.id] },
-          )
-        %>
-      <% end %>
+    <%= ff.fields_for :input_name_reassignments do |fff| %>
+      <div class="control-group">
+        <label class="control-label">
+          <%= fff.object.reassignable.name_status %>
+          <%= fff.object.reassignable.full_name %>
+        </label>
+        <div class="controls">
+          <%= fff.select :nomenclature_change_output_id,
+            options_for_select(
+              @nomenclature_change.outputs.map{ |o| [o.taxon_concept.full_name, o.id] },
+            )
+          %>
+        </div>
+      </div>
+    <% end %>
 
   <% end %>
-
-  <%= render 'admin/nomenclature_changes/build/cancel_button' %>
-  <%= f.submit "Next" %>
 <% end %>
