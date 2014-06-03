@@ -8,6 +8,7 @@
   <th>Subtype</th>
   <th>URL</th>
   <th width="10%">Actions</th>
+  <th width="5%">Info</th>
 </thead>
 <tbody>
   <% collection.each do |event| -%>
@@ -45,6 +46,7 @@
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
+      <td><%= tracking_info(event) %></td>
     </tr>
   <% end -%>
 </tbody>
