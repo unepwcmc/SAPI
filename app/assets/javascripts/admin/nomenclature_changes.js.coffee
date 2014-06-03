@@ -7,10 +7,7 @@ $(document).ready ->
     initSelection: (element, callback) =>
       id = $(element).val()
       if (id != '')
-        $.ajax("/api/v1/taxon_concepts/"+id+".json").
-          done((data) ->
-            callback({id: id, text: data.taxon_concept.full_name})
-          )
+        callback({id: id, text: $(element).attr('data-name')})
 
     ajax:
       url: '/admin/taxon_concepts/autocomplete'
