@@ -6,6 +6,7 @@
   <th>URL</th>
   <th>No of EU Suspensions</th>
   <th width="10%">Actions</th>
+  <th width="5%">Info</th>
 </thead>
 <tbody>
   <% collection.each do |eu_suspension_regulation| -%>
@@ -54,6 +55,7 @@
             :confirm => 'Warning: you are about to modify a batch of data. Are you sure?', :method => :post, :remote => true %>
       <% end %>
       </td>
+      <td><%= tracking_info(eu_suspension_regulation) %></td>
     </tr>
   <% end -%>
 </tbody>

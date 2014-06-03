@@ -11,6 +11,7 @@
   <th>Excl. popns</th>
   <th>Annotation</th>
   <th>Actions</th>
+  <th>Info</th>
 </thead>
 <tbody>
   <% collection.each do |listing_change| -%>
@@ -70,6 +71,7 @@
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
+      <td><%= tracking_info(listing_change) %></td>
     </tr>
   <% end -%>
 </tbody>

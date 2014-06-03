@@ -10,6 +10,7 @@
   <th>Internal notes</th>
   <th>Current</th>
   <th>Actions</th>
+  <th>Info</th>
 </thead>
 <tbody>
   <% collection.each do |eu_suspension| -%>
@@ -23,7 +24,7 @@
       <td><%= eu_suspension.start_event.name %></td>
       <td><%= eu_suspension.geo_entity && eu_suspension.geo_entity.name_en %></td>
       <td>
-        <%= eu_suspension.eu_decision_type.name %> 
+        <%= eu_suspension.eu_decision_type.name %>
         <%= '(' + eu_suspension.eu_decision_type.tooltip + ')' if eu_suspension.
           eu_decision_type.tooltip.present? %>
       </td>
@@ -41,6 +42,7 @@
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
+      <td><%= tracking_info(eu_suspension) %></td>
     </tr>
   <% end -%>
 </tbody>

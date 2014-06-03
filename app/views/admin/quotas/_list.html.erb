@@ -12,6 +12,7 @@
   <th>Public display?</th>
   <th>Taxon Concept</th>
   <th>Actions</th>
+  <th>Info</th>
 </thead>
 <tbody>
   <% collection.each do |quota| -%>
@@ -47,6 +48,7 @@
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
+      <td><%= tracking_info(quota) %></td>
     </tr>
   <% end -%>
 </tbody>
