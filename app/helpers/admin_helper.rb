@@ -68,7 +68,7 @@ module AdminHelper
 
   def admin_title
     content_tag(:div, :class => 'admin-header') do
-      content_tag(:h1, 
+      content_tag(:h1,
         if block_given?
           yield
         elsif @custom_title
@@ -111,7 +111,7 @@ module AdminHelper
           :type => "button", :class => "close", :"data-dismiss" => "modal",
           :"aria-hidden" => true
         ){'×'} +
-        content_tag(:h3, 
+        content_tag(:h3,
           :id => "#{id}-label"
         ){title}
       end +
