@@ -133,7 +133,8 @@ set :copy_exclude, [ '.git' ]
 #
 # The shared area is prepared with 'deploy:setup' and all the shared
 # items are symlinked in when the code is updated.
-set :local_shared_files, %w(config/database.yml config/mailer_config.yml)
+set :local_shared_files, %w(config/database.yml config/mailer_config.yml
+                           config/secrets.yml)
 set :local_shared_dirs, %w(tmp/pids public/downloads public/uploads
   public/cites_trade_guidelines)
 
