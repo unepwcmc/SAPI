@@ -9,6 +9,7 @@
   <th>Internal notes</th>
   <th>Current</th>
   <th>Actions</th>
+  <th>Info</th>
 </thead>
 <tbody>
   <% collection.each do |opinion| -%>
@@ -17,7 +18,7 @@
       <td><%= opinion.start_event.name %></td>
       <td><%= opinion.geo_entity && opinion.geo_entity.name_en %></td>
       <td>
-        <%= opinion.eu_decision_type.name %> 
+        <%= opinion.eu_decision_type.name %>
         <%= '(' + opinion.eu_decision_type.tooltip + ')' if opinion.
           eu_decision_type.tooltip.present? %>
       </td>
@@ -35,6 +36,7 @@
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
+      <td><%= tracking_info(opinion) %></td>
     </tr>
   <% end -%>
 </tbody>
