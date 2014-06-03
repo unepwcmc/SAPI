@@ -1,21 +1,24 @@
-<h2>New split: nomenclature notes</h2>
-<%= nested_form_for @nomenclature_change, url: wizard_path, method: :put do |f| %>
-  <%= error_messages_for(@nomenclature_change) %>
-
+<h2>New split: nomenclature change notes</h2>
+<%= nomenclature_change_form do |f| %>
   <%= f.fields_for :input do |ff| %>
-    <label>
-      <%= ff.object.taxon_concept.full_name %>
-      <%= ff.text_area :note %>
-    </label>
+    <div class="control-group">
+      <label class="control-label">
+        <%= ff.object.taxon_concept.full_name %>
+      </label>
+      <div class="controls">
+        <%= ff.text_area :note, {:rows => 4} %>
+      </div>
+    </div>
   <% end %>
 
   <%= f.fields_for :outputs do |ff| %>
-    <label>
-      <%= ff.object.taxon_concept.try(:full_name) %>
-      <%= ff.text_area :note %>
-    </label>
+    <div class="control-group">
+      <label class="control-label">
+        <%= ff.object.taxon_concept.try(:full_name) %>
+      </label>
+      <div class="controls">
+        <%= ff.text_area :note, {:rows => 4} %>
+      </div>
+    </div>
   <% end %>
-
-  <%= render 'admin/nomenclature_changes/build/cancel_button' %>
-  <%= f.submit "Next" %>
 <% end %>
