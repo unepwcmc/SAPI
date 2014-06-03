@@ -6,7 +6,10 @@
     <div class="controls">
       <%= f.fields_for :outputs do |ff| %>
         <!-- TODO figure out the restrictions on the auto complete here, none for now -->
-        <%= ff.text_field :taxon_concept_id, {:class => 'taxon-concept'} %>
+        <%= ff.text_field :taxon_concept_id, {
+          :class => 'taxon-concept',
+          :'data-name' => ff.object.taxon_concept.try(:full_name)
+        } %>
         <%= ff.hidden_field :is_input, :value => false %>
         <%= ff.link_to_remove "Remove" %>
       <% end %>
