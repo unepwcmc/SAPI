@@ -36,7 +36,7 @@ class ListingChange < ActiveRecord::Base
   has_many :listing_change_copies, :foreign_key => :source_id,
     :class_name => "ListingChange", :dependent => :nullify
   belongs_to :species_listing
-  belongs_to :taxon_concept, :touch => true
+  belongs_to :taxon_concept
   belongs_to :change_type
   has_many :listing_distributions, :conditions => {:is_party => false}, :dependent => :destroy
   has_one :party_listing_distribution, :class_name => 'ListingDistribution',
