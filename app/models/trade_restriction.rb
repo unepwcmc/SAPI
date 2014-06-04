@@ -34,7 +34,7 @@ class TradeRestriction < ActiveRecord::Base
     :source_ids, :start_date, :term_ids, :unit_id, 
     :created_by_id, :updated_by_id
 
-  belongs_to :taxon_concept, :touch => true
+  belongs_to :taxon_concept
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
   belongs_to :unit, :class_name => 'TradeCode'
   has_many :trade_restriction_terms, :dependent => :destroy

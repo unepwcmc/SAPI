@@ -17,7 +17,7 @@ class TaxonRelationship < ActiveRecord::Base
   attr_accessible :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
     :other_taxon_concept_attributes, :created_by_id, :updated_by_id
   belongs_to :taxon_relationship_type
-  belongs_to :taxon_concept, :touch => true
+  belongs_to :taxon_concept
   belongs_to :other_taxon_concept, :class_name => 'TaxonConcept',
     :foreign_key => :other_taxon_concept_id
 

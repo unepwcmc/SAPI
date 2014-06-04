@@ -32,7 +32,7 @@ class EuDecision < ActiveRecord::Base
     :taxon_concept_id, :type, :conditions_apply, :term_id, :source_id,
     :created_by_id, :updated_by_id
 
-  belongs_to :taxon_concept, :touch => true
+  belongs_to :taxon_concept
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
   belongs_to :geo_entity
   belongs_to :eu_decision_type
