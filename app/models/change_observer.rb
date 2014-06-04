@@ -4,12 +4,14 @@ class ChangeObserver < ActiveRecord::Observer
     :taxon_instrument, :taxon_relationship, :trade_restriction
 
   def after_save(model)
-    model.taxon_concept.
-      update_column(:dependents_updated_at, Time.now)
+    if model.taxon_concept
+      model.taxon_concept.
+        update_column(:dependents_updated_at, Time.now)
+    end
   end
 
   def before_destroy(model)
-    if model.can_be_deleted?
+    if model.taxon_concept && model.can_be_deleted?
       model.taxon_concept.
         update_column(:dependents_updated_at, Time.now)
     end
