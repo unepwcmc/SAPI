@@ -100,6 +100,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     author_year,
     taxon_concepts.created_at,
     taxon_concepts.updated_at,
+    taxon_concepts.dependents_updated_at,
     common_names.*,
     synonyms.*,
     subspecies.subspecies_not_listed_ary,
