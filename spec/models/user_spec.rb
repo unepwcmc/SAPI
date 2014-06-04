@@ -16,7 +16,7 @@
 #  last_sign_in_at        :datetime
 #  current_sign_in_ip     :string(255)
 #  last_sign_in_ip        :string(255)
-#  is_manager             :boolean
+#  is_manager             :boolean          default(FALSE), not null
 #
 
 require 'spec_helper'

@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: admin_iucn_mappings
+# Table name: iucn_mappings
 #
 #  id               :integer          not null, primary key
 #  taxon_concept_id :integer
