@@ -102,4 +102,25 @@ describe Admin::TaxonCommonsController do
       )
     end
   end
+  describe "Authorization for contributors" do
+    login_contributor
+    let(:taxon_common) {
+      create(
+        :taxon_common,
+        :taxon_concept_id => @taxon_concept.id,
+        :common_name => @common_name
+      )
+    }
+    describe "DELETE destroy" do
+      it "fails to delete and redirects" do
+        @request.env['HTTP_REFERER'] = admin_taxon_concept_names_url(@taxon_concept)
+        delete :destroy, :id => taxon_common.id,
+          :taxon_concept_id => @taxon_concept.id
+        response.should redirect_to(
+          admin_taxon_concept_names_url(@taxon_concept)
+        )
+        TaxonCommon.find(taxon_common.id).should_not be_nil
+      end
+    end
+  end
 end

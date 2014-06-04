@@ -1,13 +1,13 @@
 <thead>
-  <th width="5%">ID</th>
+  <th width="7%">ID</th>
   <th width="10%">Taxonomy</th>
   <th width="10%">Rank</th>
-  <th width="15%">Scientific name</th>
+  <th width="20%">Scientific name</th>
   <th width="15%">Author year</th>
-  <th width="15%">Parent</th>
+  <th width="18%">Parent</th>
   <th width="10%">Taxonomic position</th>
   <th width="5%">Name status</th>
-  <th width="10%">Actions</th>
+  <th width="5%">Actions</th>
 </thead>
 <tbody>
 
@@ -47,7 +47,9 @@
       </td>
       <td>
         <%= link_to edit_icon, admin_taxon_concept_names_path(taxon_concept) %>
-        <%= link_to delete_icon, resource_url(taxon_concept), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+        <% if can? :destroy, taxon_concept %>
+          <%= link_to delete_icon, resource_url(taxon_concept), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+        <% end %>
       </td>
     </tr>
   <% end -%>

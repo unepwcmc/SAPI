@@ -1,4 +1,4 @@
-class Admin::EuDecisionTypesController < Admin::SimpleCrudController
+class Admin::EuDecisionTypesController < Admin::StandardAuthorizationController
 
   def index
     index! do |format|

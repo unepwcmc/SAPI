@@ -69,6 +69,7 @@ GEM
     brightbox (2.3.9)
       capistrano (>= 2.5)
     builder (3.0.4)
+    cancan (1.6.10)
     capistrano (2.15.4)
       highline
       net-scp (>= 1.0.0)
@@ -380,6 +381,7 @@ DEPENDENCIES
   binding_of_caller
   bootstrap-sass (~> 2.3.1.0)
   brightbox (>= 2.3.9)
+  cancan
   capistrano
   capistrano-ext
   capistrano-slack!

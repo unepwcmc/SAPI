@@ -1,5 +1,4 @@
-class Admin::SourcesController < Admin::SimpleCrudController
-  inherit_resources
+class Admin::SourcesController < Admin::StandardAuthorizationController
   respond_to :json, :only => [:update]
   cache_sweeper :source_sweeper
 

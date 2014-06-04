@@ -1,10 +1,10 @@
 <thead>
   <th>Name</th>
-  <th width="20%">Email</th>
+  <th width="30%">Email</th>
+  <th width="10%">Role</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
-
   <% collection.each do |user| -%>
     <tr>
       <td>
@@ -22,8 +22,15 @@
           </a>
       </td>
       <td>
-        <%= link_to edit_icon, edit_resource_url(user), :remote => true %>
-        <%= link_to delete_icon, resource_url(user), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+        <%= user.is_manager? ? "Manager" : "Contributor" %>
+      </td>
+      <td>
+        <% if can?(:update, user) %>
+          <%= link_to edit_icon, edit_resource_url(user), :remote => true %>
+        <% end %>
+        <% if can?(:destroy, user) %>
+          <%= link_to delete_icon, resource_url(user), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+        <% end %>
       </td>
     </tr>
   <% end -%>

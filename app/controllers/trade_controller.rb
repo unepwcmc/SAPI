@@ -1,6 +1,7 @@
 class TradeController < ApplicationController
 
   before_filter :authenticate_user!
+  before_filter :verify_manager
 
   private
 

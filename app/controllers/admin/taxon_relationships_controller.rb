@@ -1,4 +1,4 @@
-class Admin::TaxonRelationshipsController < Admin::SimpleCrudController
+class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationController
 
   belongs_to :taxon_concept
   before_filter :load_taxon_relationship_types, :only => [:index, :create]

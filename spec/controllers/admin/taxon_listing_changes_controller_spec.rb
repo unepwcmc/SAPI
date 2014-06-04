@@ -207,5 +207,41 @@ describe Admin::TaxonListingChangesController do
       )
     end
   end
+  describe "Authorization for contributors" do
+    login_contributor
+    let!(:listing_change ) {
+      create(
+        :listing_change,
+        :taxon_concept_id => @taxon_concept.id,
+        :change_type_id => @addition.id,
+        :species_listing_id => @appendix.id,
+        :effective_at => 1.week.ago
+      )
+    }
+    describe "GET index" do
+      it "renders the index template" do
+        get :index, :taxon_concept_id => @taxon_concept.id,
+          :designation_id => @designation.id
+        response.should render_template("index")
+      end
+      it "renders the taxon_concepts_layout" do
+        get :index, :taxon_concept_id => @taxon_concept.id,
+          :designation_id => @designation.id
+        response.should render_template('layouts/taxon_concepts')
+      end
+    end
+    describe "DELETE destroy" do
+      it "fails to delete and redirects" do
+        @request.env['HTTP_REFERER'] = admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
+        delete :destroy, :id => listing_change.id,
+          :taxon_concept_id => @taxon_concept.id,
+          :designation_id => @designation.id
+        response.should redirect_to(
+          admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
+        )
+        ListingChange.find(listing_change.id).should_not be_nil
+      end
+    end
+  end
 end
 

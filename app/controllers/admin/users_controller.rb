@@ -1,6 +1,7 @@
 class Admin::UsersController < Admin::SimpleCrudController
-  inherit_resources
   respond_to :js, :except => [:index, :destroy]
+
+  load_and_authorize_resource :except => :index
 
   def new
     new! do
@@ -15,9 +16,27 @@ class Admin::UsersController < Admin::SimpleCrudController
     end
   end
 
+  def update
+    update_result = if params[:user][:password].blank?
+      @user.update_without_password(params[:user])
+    else
+      @user.update_attributes(params[:user])
+    end
+    respond_to do |format|
+      format.js {
+        if update_result
+          render 'create'
+        else
+          render 'new'
+        end
+      }
+    end
+  end
+
   protected
     def collection
-      @users ||= end_of_association_chain.order(:name).page(params[:page])
+      @users ||= end_of_association_chain.
+        order(:name).page(params[:page])
     end
 end
 

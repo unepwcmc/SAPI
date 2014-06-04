@@ -6,6 +6,7 @@ FactoryGirl.define do
     email { "#{name}@test.pl" }
     password 'asdfasdf'
     password_confirmation { password }
+    is_manager true
   end
 
   factory :taxonomy do

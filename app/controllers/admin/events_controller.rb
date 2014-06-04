@@ -1,4 +1,4 @@
-class Admin::EventsController < Admin::SimpleCrudController
+class Admin::EventsController < Admin::StandardAuthorizationController
   respond_to :js, :except => [:index, :destroy]
   respond_to :json, :only => [:update, :show]
 

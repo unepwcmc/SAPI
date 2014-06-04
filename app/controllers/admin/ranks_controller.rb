@@ -1,4 +1,4 @@
-class Admin::RanksController < Admin::SimpleCrudController
+class Admin::RanksController < Admin::StandardAuthorizationController
 
   protected
 

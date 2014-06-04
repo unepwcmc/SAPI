@@ -1,9 +1,10 @@
 class Admin::TaxonConceptTermPairsController < Admin::SimpleCrudController
-  inherit_resources
 
   before_filter :load_term_codes, :only => [:index, :create]
   defaults :resource_class => Trade::TaxonConceptTermPair,
     :collection_name => 'taxon_concept_term_pairs', :instance_name => 'taxon_concept_term_pair'
+
+  authorize_resource :class => Trade::TaxonConceptTermPair
 
   protected
 

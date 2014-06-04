@@ -25,8 +25,8 @@ class Admin::SimpleCrudController < Admin::AdminController
   def destroy
     destroy! do |success, failure|
       success.html { redirect_to collection_url, :notice => 'Operation succeeded' }
-      failure.html { 
-        redirect_to collection_url, 
+      failure.html {
+        redirect_to collection_url,
           :alert => if resource.errors.present?
               "Operation #{resource.errors.messages[:base].join(", ")}"
             else

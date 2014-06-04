@@ -1,10 +1,7 @@
-class Admin::TermTradeCodesPairsController < Admin::SimpleCrudController
-  inherit_resources
+class Admin::TermTradeCodesPairsController < Admin::StandardAuthorizationController
 
   before_filter :load_term_codes, :only => [:index, :create]
   before_filter :load_trade_code_types, :only => [:index, :create]
-  defaults :resource_class => TermTradeCodesPair,
-    :collection_name => 'term_trade_codes_pairs', :instance_name => 'term_trade_codes_pair'
 
   def index
     load_associations

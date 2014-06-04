@@ -4,6 +4,8 @@ class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesC
   belongs_to :taxon_concept
   before_filter :load_hybrid_relationship_type, :only => [:new, :create, :update]
 
+  authorize_resource :class => false
+
   def new
     @taxonomies = Taxonomy.order(:name)
     @ranks = Rank.order(:taxonomic_position)

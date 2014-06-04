@@ -1,4 +1,4 @@
-class Admin::TaxonConceptsController < Admin::SimpleCrudController
+class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   respond_to :json
   layout :determine_layout
   before_filter :sanitize_search_params, :only => [:index, :autocomplete]
