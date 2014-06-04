@@ -39,43 +39,47 @@ AS $$
       END
     ) = 0
   ), cites_intervals AS (
-    SELECT taxon_concept_id, effective_from, MIN(effective_to) AS effective_to
+    SELECT taxon_concept_id, effective_from, MIN(effective_to) AS effective_to,
+    daterange(effective_from::date, MIN(effective_to)::date, '[]'::text) AS listing_interval
     FROM   unmerged_cites_intervals
     GROUP  BY taxon_concept_id, effective_from
-  ), cites_gaps (taxon_concept_id, eu_effective_from, eu_effective_to, cites_effective_from, cites_effective_to) AS (
-    SELECT eu_intervals.taxon_concept_id, eu_intervals.effective_from, eu_intervals.effective_to,
-    cites_intervals.effective_from, cites_intervals.effective_to
-    FROM eu_intervals
-    LEFT JOIN cites_intervals
-    ON eu_intervals.taxon_concept_id = cites_intervals.taxon_concept_id
-
-    EXCEPT
-
-    SELECT eu_intervals.taxon_concept_id, eu_intervals.effective_from, eu_intervals.effective_to,
-    cites_intervals.effective_from, cites_intervals.effective_to
-    FROM eu_intervals
-    JOIN cites_intervals
-    ON eu_intervals.taxon_concept_id = cites_intervals.taxon_concept_id
-    AND cites_intervals.effective_from <= eu_intervals.effective_from
-    AND (
-      cites_intervals.effective_to >= eu_intervals.effective_to
-      OR cites_intervals.effective_to IS NULL
-    )
+  ), cites_intervals_with_lag AS (
+    SELECT taxon_concept_id, listing_interval AS current,
+    LAG(listing_interval) OVER (PARTITION BY taxon_concept_id ORDER BY LOWER(listing_interval)) AS previous
+    FROM cites_intervals
+  ), cites_intervals_with_lead AS (
+    SELECT taxon_concept_id, listing_interval AS current,
+    LEAD(listing_interval) OVER (PARTITION BY taxon_concept_id ORDER BY LOWER(listing_interval)) AS next
+    FROM cites_intervals
+  ), cites_gaps (taxon_concept_id, gap_effective_from, gap_effective_to) AS (
+    SELECT taxon_concept_id, UPPER(previous), LOWER(current) FROM cites_intervals_with_lag
+    UNION
+    SELECT taxon_concept_id, UPPER(current), LOWER(next) FROM cites_intervals_with_lead
+    WHERE UPPER(current) IS NOT NULL
   )
   INSERT INTO valid_taxon_concept_appendix_year_mview (taxon_concept_id, appendix, effective_from, effective_to)
-  SELECT taxon_concept_id, 'N',
-  CASE
-    WHEN cites_effective_from IS NULL THEN eu_effective_from
-    WHEN eu_effective_from < cites_effective_from THEN eu_effective_from
-    WHEN eu_effective_to > cites_effective_to OR (eu_effective_to IS NULL AND cites_effective_to IS NOT NULL) THEN cites_effective_to
-    ELSE cites_effective_from
-  END AS effective_from,
-  CASE
-    WHEN cites_effective_from IS NULL THEN eu_effective_to
-    WHEN eu_effective_to > cites_effective_to OR (eu_effective_to IS NULL AND cites_effective_to IS NOT NULL) THEN eu_effective_to
-    WHEN eu_effective_from < cites_effective_from THEN cites_effective_from
-    ELSE cites_effective_to
-  END AS effective_to
-  FROM cites_gaps;
+  SELECT
+    cites_gaps.taxon_concept_id, 'N',
+    GREATEST(COALESCE(gap_effective_from, effective_from), effective_from) effective_from,
+    LEAST(COALESCE(gap_effective_to, effective_to), effective_to) AS effective_to
+  FROM cites_gaps
+  JOIN eu_intervals
+  ON eu_intervals.taxon_concept_id = cites_gaps.taxon_concept_id
+  AND (
+    -- gap is right closed
+    gap_effective_to IS NOT NULL
+    AND effective_from < gap_effective_to
+    OR
+    -- gap is right open
+    gap_effective_to IS NULL
+    AND (effective_to IS NULL OR effective_to > gap_effective_from)
+  )
+  UNION
+
+  SELECT eu_intervals.taxon_concept_id, 'N', eu_intervals.effective_from, eu_intervals.effective_to
+  FROM eu_intervals
+  LEFT JOIN cites_gaps
+  ON eu_intervals.taxon_concept_id = cites_gaps.taxon_concept_id
+  WHERE cites_gaps.taxon_concept_id IS NULL;
 
 $$;

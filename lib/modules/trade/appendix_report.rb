@@ -25,7 +25,7 @@ class Trade::AppendixReport
     joins('JOIN taxon_concepts ON s.taxon_concept_id = taxon_concepts.id').
     group(['s.id', :legacy_shipment_number, :taxon_concept_id,
       'taxon_concepts.full_name', :year, :appendix
-    ]).order([:full_name, :year, :appendix])
+    ]).order([:full_name, :year, :appendix, 's.id'])
 
     @diff_query = @query.having(<<-SQL
       NOT ARRAY_AGG_NOTNULL(auto_appendix) @> ARRAY[appendix]
