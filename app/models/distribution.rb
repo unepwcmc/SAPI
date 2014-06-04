@@ -18,7 +18,7 @@ class Distribution < ActiveRecord::Base
   acts_as_taggable
 
   belongs_to :geo_entity
-  belongs_to :taxon_concept, :touch => true
+  belongs_to :taxon_concept
   has_many :distribution_references, :dependent => :destroy
   has_many :references, :through => :distribution_references
   accepts_nested_attributes_for :references, :allow_destroy => true

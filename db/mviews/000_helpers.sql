@@ -40,11 +40,11 @@ CREATE OR REPLACE FUNCTION rebuild_touch_designation_taxon_concepts(designation_
     sql TEXT;
   BEGIN
     sql := 'WITH max_timestamp AS (
-      SELECT lc.taxon_concept_id, GREATEST(tc.updated_at, MAX(lc.updated_at)) AS updated_at
+      SELECT lc.taxon_concept_id, GREATEST(tc.updated_at, MAX(lc.updated_at), tc.dependents_updated_at) AS updated_at
       FROM ' || designation_name || '_listing_changes_mview lc
       JOIN taxon_concepts_mview tc
       ON lc.taxon_concept_id = tc.id
-      GROUP BY taxon_concept_id, tc.updated_at
+      GROUP BY taxon_concept_id, tc.updated_at, tc.dependents_updated_at
     )
     UPDATE taxon_concepts
     SET touched_at = max_timestamp.updated_at

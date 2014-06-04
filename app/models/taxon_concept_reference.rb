@@ -22,7 +22,7 @@ class TaxonConceptReference < ActiveRecord::Base
   include PgArrayParser
 
   belongs_to :reference
-  belongs_to :taxon_concept, :touch => true
+  belongs_to :taxon_concept
 
   delegate :citation, :to => :reference
 
