@@ -1,13 +1,12 @@
 module DownloadsCache
 
   LISTINGS_DOWNLOAD_DIRS = ['checklist', 'eu_listings', 'cites_listings', 'cms_listings']
+  ADMIN_DOWNLOAD_DIRS = ['taxon_concepts_names', 'taxon_concepts_distributions', 'common_names',
+    'species_reference_output', 'standard_reference_output', 'synonyms_and_trade_names']
   DOWNLOAD_DIRS = LISTINGS_DOWNLOAD_DIRS + [
     'quotas', 'cites_suspensions', 'eu_decisions', 'shipments', 'comptab',
     'gross_exports', 'gross_imports', 'net_exports', 'net_imports',
-    'trade_download_stats', 'taxon_concepts_names', 'synonyms_and_trade_names',
-    'taxon_concepts_distributions', 'common_names',
-    'species_reference_output', 'standard_reference_output'
-  ]
+    'trade_download_stats'] + ADMIN_DOWNLOAD_DIRS
 
   def self.quotas_path
     downloads_path('quotas')
@@ -49,6 +48,7 @@ module DownloadsCache
     clear_dirs(['cms_listings'])
   end
 
+  ## Clear admin downloads
   def self.clear_taxon_concepts_names
     clear_dirs(['taxon_concepts_names'])
   end
@@ -57,8 +57,16 @@ module DownloadsCache
     clear_dirs(['synonyms_and_trade_names'])
   end
 
-  def self.clear_taxon_concepts_distributions
+  def self.clear_distributions
     clear_dirs(['taxon_concepts_distributions'])
+  end
+
+  def self.clear_taxon_commons
+    clear_dirs(['common_names'])
+  end
+
+  def self.clear_references
+    clear_dirs(['species_reference_output','standard_reference_output'])
   end
 
   # cleared after destroy
