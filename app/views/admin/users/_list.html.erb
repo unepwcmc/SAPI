@@ -13,6 +13,7 @@
           data-url="<%= resource_url(user) %>" data-pk="<%= user.id %>">
           <%= user.name %>
         </a>
+        <%= if user == current_user then " (you)" end %>
       </td>
       <td>
           <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="user" data-name="email"

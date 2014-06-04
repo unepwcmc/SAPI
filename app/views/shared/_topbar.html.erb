@@ -126,16 +126,17 @@
           </ul>
         </li>
         <% if user_signed_in? %>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="icon-cog"></i>
-          </a>
-          <ul class="dropdown-menu">
-            <li><%= link_to "Log out", destroy_user_session_path, :method => :delete %></li>
-            <li><%= link_to "Account", edit_user_registration_path(current_user) %></li>
-            <li><%= link_to 'Manage Users', admin_users_path %></li>
-          </ul>
-        </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <%= current_user.name %>
+              <i class="icon-cog"></i>
+            </a>
+            <ul class="dropdown-menu">
+              <li><%= link_to "Log out", destroy_user_session_path, :method => :delete %></li>
+              <li><%= link_to "Account", edit_user_registration_path(current_user) %></li>
+              <li><%= link_to 'Manage Users', admin_users_path %></li>
+            </ul>
+          </li>
         <% end %>
       </ul>
     </div>
