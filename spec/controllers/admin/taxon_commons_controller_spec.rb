@@ -102,6 +102,58 @@ describe Admin::TaxonCommonsController do
       )
     end
   end
+
+  describe "ChangeObserver updates TaxonConcept's dependents_updated_at
+    when TaxonCommon is changed" do
+
+    before do
+      @taxon_common = create(
+        :taxon_common,
+        :common_name_id => @common_name.id,
+        :taxon_concept_id => @taxon_concept.id
+      )
+    end
+
+    it "updates associated @taxon_concept's
+      dependents_updated_at when taxon common is updated" do
+
+      @taxon_concept.dependents_updated_at.should be_nil
+
+      #it gets updated by the creation of the taxon_common
+      #but object needs to be reloaded
+      @taxon_concept.reload.dependents_updated_at.should_not be_nil
+      old_date = @taxon_concept.dependents_updated_at
+
+      xhr :put, :update, :format => 'js',
+        :taxon_concept_id => @taxon_concept.id,
+        :id => @taxon_common.id,
+        :taxon_common => {
+          :common_name_attributes =>
+            build_attributes(:common_name)
+      }
+
+      @taxon_concept.reload.dependents_updated_at.should_not == old_date
+    end
+
+    it "updates associated @taxon_concept's
+      dependents_updated_at when taxon common is deleted" do
+
+      @taxon_concept.dependents_updated_at.should be_nil
+
+      #it gets updated by the creation of the taxon_common
+      #but object needs to be reloaded
+      @taxon_concept.reload.dependents_updated_at.should_not be_nil
+      old_date = @taxon_concept.dependents_updated_at
+
+      delete :destroy,
+        :taxon_concept_id => @taxon_concept.id,
+        :id => @taxon_common.id
+
+      @taxon_concept.reload.dependents_updated_at.should_not == old_date
+      TaxonCommon.where(:id => @taxon_common.id).size.should == 0
+    end
+  end
+
   describe "Authorization for contributors" do
     login_contributor
     let(:taxon_common) {
