@@ -38,7 +38,7 @@ CREATE OR REPLACE FUNCTION rebuild_valid_taxon_concept_appendix_year_designation
     LEFT JOIN additions_and_deletions ad
     ON a.taxon_concept_id = ad.taxon_concept_id
     AND a.species_listing_id = ad.species_listing_id
-    AND (a.party_id = ad.party_id OR a.party_id IS NULL AND ad.party_id IS NULL)
+    AND (a.party_id = ad.party_id OR ad.party_id IS NULL)
     AND a.effective_at < ad.effective_at
     GROUP BY a.taxon_concept_id, a.species_listing_name, a.effective_at';
 
