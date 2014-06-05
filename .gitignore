@@ -48,6 +48,7 @@
 /public/downloads/species_reference_output/*.csv
 /public/downloads/standard_reference_output/*.csv
 /public/downloads/common_names/*.csv
+/public/downloads/iucn_mappings/*.csv
 /public/uploads/*
 
 # Ruby

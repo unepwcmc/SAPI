@@ -16,6 +16,8 @@ class Admin::ExportsController < Admin::AdminController
         result = Species::StandardReferenceOutputExport.new(params[:filters]).export
       when 'Distributions'
         result = Species::TaxonConceptsDistributionsExport.new(params[:filters]).export
+      when 'IucnMappings'
+        result = Species::IucnMappingsExport.new.export
     end
     if result.is_a?(Array)
       send_file result[0], result[1]
