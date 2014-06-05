@@ -92,7 +92,6 @@
               <li class="<%= if controller_name == 'eu_council_regulations' then 'active' end%>">
                 <%= link_to 'EU Council Regulations', admin_eu_council_regulations_path %>
               </li>
-
               <li class="<%= if controller_name == 'ec_srgs' then 'active' end%>">
                 <%= link_to 'European Commission SRG', admin_ec_srgs_path %>
               </li>
@@ -114,6 +113,10 @@
               </li>
               <li class="<%= if controller_name == 'eu_hash_annotations' then 'active' end%>">
                 <%= link_to 'EU hash annotations', admin_eu_hash_annotations_path %>
+              </li>
+              <li class="divider"></li>
+              <li class="<%= if controller_name == 'nomenclature_changes' then 'active' end%>">
+                <%= link_to 'Nomenclature changes', admin_nomenclature_changes_path %>
               </li>
             </ul>
           </li>
