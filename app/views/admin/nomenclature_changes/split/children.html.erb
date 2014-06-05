@@ -8,11 +8,13 @@
           <%= fff.object.reassignable.full_name %>
         </label>
         <div class="controls">
-          <%= fff.select :nomenclature_change_output_id,
-            options_for_select(
-              @nomenclature_change.outputs.map{ |o| [o.taxon_concept.full_name, o.id] },
-            )
-          %>
+          <%= fff.fields_for :reassignment_target do |ffff| %>
+            <%= ffff.select :nomenclature_change_output_id,
+              options_for_select(
+                @nomenclature_change.outputs.map{ |o| [o.taxon_concept.full_name, o.id] },
+              )
+            %>
+          <% end %>
         </div>
       </div>
     <% end %>
