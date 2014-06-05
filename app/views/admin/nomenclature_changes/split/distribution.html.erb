@@ -12,9 +12,11 @@
           <%= fff.object.reassignable.geo_entity.name %>
         </label>
         <div class="controls">
-          <%= fff.select :nomenclature_change_output_id,
+          <%= fff.select :output_ids,
             options_for_select(
               @nomenclature_change.outputs.map{ |o| [o.taxon_concept.full_name, o.id] },
+              ff.object.input_distribution_reassignments.map(&:reassignment_targets).flatten.
+              map(&:output).compact.map(&:id)
             ),
             {}, {:class => 'simple-taxon-concept', :multiple => ''}
           %>
