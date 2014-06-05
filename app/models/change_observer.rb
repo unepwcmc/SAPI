@@ -22,12 +22,6 @@ class ChangeObserver < ActiveRecord::Observer
   protected
 
   def clear_cache model
-    case (klass=model.class.to_s)
-      when "TaxonRelationship"
-        DownloadsCache.clear_synonyms_and_trade_names
-      when "ListingChange", "EuDecision", "TradeRestriction"
-      else
-        DownloadsCache.send("clear_#{klass.tableize}")
-    end
+    DownloadsCache.send("clear_#{model.class.to_s.tableize}")
   end
 end

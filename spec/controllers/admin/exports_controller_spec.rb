@@ -56,7 +56,7 @@ describe Admin::ExportsController do
   end
   describe "GET download with data_type=Distributions" do
     after(:each) do
-      DownloadsCache.clear_taxon_concepts_distributions
+      DownloadsCache.clear_distributions
     end
     context "all" do
       it "returns taxon concepts distributions file" do
