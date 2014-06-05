@@ -11,6 +11,12 @@
 class NomenclatureChange::Reassignment < ActiveRecord::Base
   attr_accessible :type, :reassignable_id, :reassignable_type,
     :nomenclature_change_input_id, :nomenclature_change_output_id,
-    :note, :is_copy
+    :note, :output_ids
   belongs_to :reassignable, :polymorphic => true
+  belongs_to :input, :conditions => 'is_input',
+    :class_name => NomenclatureChange::Component,
+    :foreign_key => :nomenclature_change_input_id
+  has_many :reassignment_targets, :class_name => NomenclatureChange::ReassignmentTarget,
+    :foreign_key => :nomenclature_change_reassignment_id
+  has_many :outputs, :through => :reassignment_targets
 end
