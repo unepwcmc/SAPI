@@ -57,6 +57,10 @@ module DownloadsCache
     clear_dirs(['synonyms_and_trade_names'])
   end
 
+  def self.clear_taxon_relationships
+    clear_dirs(['taxon_concepts_names', 'synonyms_and_trade_names'])
+  end
+
   def self.clear_distributions
     clear_dirs(['taxon_concepts_distributions'])
   end
@@ -65,7 +69,15 @@ module DownloadsCache
     clear_dirs(['common_names'])
   end
 
-  def self.clear_references
+  def self.clear_listing_changes
+    false # no op, listing changes will need mview refresh anyway
+  end
+
+  def self.clear_taxon_instruments
+    false # no op, instruments will need mview refresh anyway
+  end
+
+  def self.clear_taxon_concept_references
     clear_dirs(['species_reference_output','standard_reference_output'])
   end
 
@@ -82,6 +94,13 @@ module DownloadsCache
   # cleared after destroy
   def self.clear_eu_decisions
     clear_dirs(['eu_decisions'])
+  end
+
+  class << self
+    alias :clear_eu_opinions :clear_eu_decisions
+    alias :clear_eu_suspensions :clear_eu_decisions
+
+    #alias :clear_taxon_concepts_distributions :clear_distributions
   end
 
   # cleared after save & destroy
