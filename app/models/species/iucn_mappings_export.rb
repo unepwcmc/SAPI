@@ -21,7 +21,8 @@ private
 
   def sql_columns
     columns = [
-      :taxon_concept_id, :'taxon_concepts.full_name',
+      :taxon_concept_id, :"taxon_concepts.data->'class_name'",
+      :'taxon_concepts.full_name',
       :'taxon_concepts.author_year', :iucn_taxon_id,
       :iucn_taxon_name, :iucn_author, :iucn_category,
       :"details->'match'", :'synonyms.full_name'
@@ -30,7 +31,7 @@ private
 
   def csv_column_headers
     headers = [
-      'TaxonConcept id', 'TaxonConcept name',
+      'TaxonConcept id', 'TaxonConcept Class', 'TaxonConcept name',
       'TaxonConcept author', 'IUCN taxon id',
       'IUCN taxon name', 'IUCN taxon author',
       'IUCN category', 'Type of match', 'Synonym (if matched)'
