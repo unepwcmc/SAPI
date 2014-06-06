@@ -4,7 +4,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
     :notes, :summary
 
   def create
-    @nomenclature_change = NomenclatureChange::Split.create
+    @nomenclature_change = NomenclatureChange::Split.create(:status => 'new')
     redirect_to wizard_path(steps.first, :nomenclature_change_id => @nomenclature_change.id)
   end
 
@@ -13,25 +13,21 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
     case step
     when :inputs
       set_events
-      @nomenclature_change.build_input(
-        :is_input => true
-      ) if @nomenclature_change.input.nil?
+      @nomenclature_change.build_input if @nomenclature_change.input.nil?
     when :outputs
-      @nomenclature_change.outputs.build(
-        :is_input => false
-      ) if @nomenclature_change.outputs.empty?
+      @nomenclature_change.outputs.build if @nomenclature_change.outputs.empty?
     when :children
       default_output = if @nomenclature_change.outputs.include?(input)
         input
       else
         @nomenclature_change.outputs.first
       end
-      input.input_parent_reassignments = input.taxon_concept.children.map do |child|
+      input.parent_reassignments = input.taxon_concept.children.map do |child|
         reassignment_attrs = {
           :reassignable_type => 'TaxonConcept',
           :reassignable_id => child.id
         }
-        reassignment = input.input_parent_reassignments.where(
+        reassignment = input.parent_reassignments.where(
           reassignment_attrs
         ).first
         unless reassignment
@@ -48,7 +44,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       else
         @nomenclature_change.outputs.first
       end
-      input.input_name_reassignments = [
+      input.name_reassignments = [
         input.taxon_concept.synonyms.order(:full_name) +
         input.taxon_concept.hybrids.order(:full_name) +
         input.taxon_concept.trade_names.order(:full_name)
@@ -57,7 +53,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
           :reassignable_type => 'TaxonConcept',
           :reassignable_id => name.id
         }
-        reassignments = input.input_name_reassignments.where(
+        reassignments = input.name_reassignments.where(
           reassignment_attrs
         )
         if reassignments.empty?
@@ -71,13 +67,13 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       end.flatten
     when :distribution
       default_outputs = @nomenclature_change.outputs
-      input.input_distribution_reassignments = input.taxon_concept.
+      input.distribution_reassignments = input.taxon_concept.
         distributions.includes(:geo_entity).order('geo_entities.name_en').map do |distr|
         reassignment_attrs = {
           :reassignable_type => 'Distribution',
           :reassignable_id => distr.id
         }
-        reassignments = input.input_distribution_reassignments.where(
+        reassignments = input.distribution_reassignments.where(
           reassignment_attrs
         )
         if reassignments.empty?
@@ -92,18 +88,18 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
         reassignments
       end.flatten
     when :legislation
-      input.input_legislation_reassignments = [
-        input.input_legislation_reassignments.where(
+      input.legislation_reassignments = [
+        input.legislation_reassignments.where(
           :reassignable_type => 'ListingChange'
         ).first || NomenclatureChange::LegislationReassignment.new(
           :reassignable_type => 'ListingChange'
         ),
-        input.input_legislation_reassignments.where(
+        input.legislation_reassignments.where(
           :reassignable_type => 'CitesSuspension'
         ).first || NomenclatureChange::LegislationReassignment.new(
           :reassignable_type => 'CitesSuspension'
         ),
-        input.input_legislation_reassignments.where(
+        input.legislation_reassignments.where(
           :reassignable_type => 'Quota'
         ).first || NomenclatureChange::LegislationReassignment.new(
           :reassignable_type => 'Quota'
