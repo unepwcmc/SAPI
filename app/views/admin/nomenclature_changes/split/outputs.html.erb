@@ -10,7 +10,6 @@
           :class => 'taxon-concept',
           :'data-name' => ff.object.taxon_concept.try(:full_name)
         } %>
-        <%= ff.hidden_field :is_input, :value => false %>
         <%= ff.link_to_remove "Remove" %>
       <% end %>
       <p><%= f.link_to_add "Add", :outputs %></p>
