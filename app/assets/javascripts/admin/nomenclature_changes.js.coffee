@@ -43,7 +43,6 @@ $(document).ready ->
   $('.select-all-checkbox').click (e) ->
       checkboxElement = $(e.target)
       selectElement = checkboxElement.parent().find('select')
-      console.log(selectElement)
       if checkboxElement.is(':checked')
         selectElement.find('option').prop("selected","selected")
       else

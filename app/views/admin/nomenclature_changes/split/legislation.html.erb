@@ -5,7 +5,7 @@
 <%= nomenclature_change_form do |f| %>
   <%= f.fields_for :input do |ff| %>
 
-      <%= ff.fields_for :input_legislation_reassignments do |fff| %>
+      <%= ff.fields_for :legislation_reassignments do |fff| %>
         <div class="control-group">
           <label class="control-label">
             <%= fff.object.reassignable_type %>
