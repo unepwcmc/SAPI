@@ -9,12 +9,12 @@
 # that gets reassigned.
 # For example the reassignable_type might be 'ListingChange'
 class NomenclatureChange::Reassignment < ActiveRecord::Base
+  track_who_does_it
   attr_accessible :type, :reassignable_id, :reassignable_type,
     :nomenclature_change_input_id, :nomenclature_change_output_id,
     :note, :output_ids
   belongs_to :reassignable, :polymorphic => true
-  belongs_to :input, :conditions => 'is_input',
-    :class_name => NomenclatureChange::Component,
+  belongs_to :input, :class_name => NomenclatureChange::Input,
     :foreign_key => :nomenclature_change_input_id
   has_many :reassignment_targets, :class_name => NomenclatureChange::ReassignmentTarget,
     :foreign_key => :nomenclature_change_reassignment_id
