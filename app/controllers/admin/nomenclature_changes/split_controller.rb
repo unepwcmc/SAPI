@@ -45,13 +45,20 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
         @nomenclature_change.outputs.first
       end
       input.name_reassignments = [
-        input.taxon_concept.synonyms.order(:full_name) +
-        input.taxon_concept.hybrids.order(:full_name) +
-        input.taxon_concept.trade_names.order(:full_name)
-      ].flatten.map do |name|
+        input.taxon_concept.synonym_relationships.
+          includes(:other_taxon_concept).
+          order('taxon_concepts.full_name') +
+        input.taxon_concept.hybrid_relationships.
+          includes(:other_taxon_concept).
+          order('taxon_concepts.full_name') +
+        input.taxon_concept.trade_name_relationships.
+          includes(:other_taxon_concept).
+          order('taxon_concepts.full_name')
+        # TODO other relationships
+      ].flatten.map do |relationship|
         reassignment_attrs = {
-          :reassignable_type => 'TaxonConcept',
-          :reassignable_id => name.id
+          :reassignable_type => 'TaxonRelationship',
+          :reassignable_id => relationship.id
         }
         reassignments = input.name_reassignments.where(
           reassignment_attrs
@@ -92,19 +99,60 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
         input.legislation_reassignments.where(
           :reassignable_type => 'ListingChange'
         ).first || NomenclatureChange::LegislationReassignment.new(
-          :reassignable_type => 'ListingChange'
+          :reassignable_type => 'ListingChange',
+          :note => "Originally listed as #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.name}"
         ),
         input.legislation_reassignments.where(
           :reassignable_type => 'CitesSuspension'
         ).first || NomenclatureChange::LegislationReassignment.new(
-          :reassignable_type => 'CitesSuspension'
+          :reassignable_type => 'CitesSuspension',
+          :note => "Suspension originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.name}"
         ),
         input.legislation_reassignments.where(
           :reassignable_type => 'Quota'
         ).first || NomenclatureChange::LegislationReassignment.new(
-          :reassignable_type => 'Quota'
+          :reassignable_type => 'Quota',
+          :note => "Quota originally published for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.name}"
+        ),
+        input.legislation_reassignments.where(
+          :reassignable_type => 'EuSuspension'
+        ).first || NomenclatureChange::LegislationReassignment.new(
+          :reassignable_type => 'EuSuspension',
+          :note => "Suspension originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.name}"
+        ),
+        input.legislation_reassignments.where(
+          :reassignable_type => 'EuOpinion'
+        ).first || NomenclatureChange::LegislationReassignment.new(
+          :reassignable_type => 'EuOpinion',
+          :note => "Opinion originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.name}"
         )
       ]
+    when :notes
+      unless input.reassignments.where(
+        :reassignable_type => 'TaxonCommon'
+      ).first
+        input.reassignments << NomenclatureChange::Reassignment.new(
+          :reassignable_type => 'TaxonCommon',
+          :type => 'NomenclatureChange::Reassignment'
+        )
+      end
+      unless input.reassignments.where(
+        :reassignable_type => 'TaxonConceptReference'
+      ).first
+        input.reassignments << NomenclatureChange::Reassignment.new(
+          :reassignable_type => 'TaxonConceptReference',
+          :type => 'NomenclatureChange::Reassignment'
+        )
+      end
+      if input.note.blank?
+        outputs = @nomenclature_change.outputs.map{ |output| output.taxon_concept.full_name }.join(', ')
+        input.note = "#{input.taxon_concept.full_name} was split into #{outputs} following taxonomic changes adopted at #{event.name}"
+      end
+      @nomenclature_change.outputs.each do |output|
+        if output.note.blank?
+          output.note = "#{output.taxon_concept.full_name} was split from #{input.taxon_concept.full_name} in #{Date.today.year} following taxonomic changes adopted at #{event.name}"
+        end
+      end
     end
     render_wizard
   end
