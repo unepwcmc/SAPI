@@ -9,6 +9,9 @@ class NomenclatureChange::Input < ActiveRecord::Base
     :distribution_reassignments_attributes,
     :legislation_reassignments_attributes
   belongs_to :taxon_concept
+  has_many :reassignments,
+    :class_name => NomenclatureChange::Reassignment,
+    :foreign_key => :nomenclature_change_input_id, :dependent => :destroy
   has_many :parent_reassignments,
     :class_name => NomenclatureChange::ParentReassignment,
     :foreign_key => :nomenclature_change_input_id, :dependent => :destroy
