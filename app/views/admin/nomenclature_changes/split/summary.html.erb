@@ -2,14 +2,6 @@
 
 <p>The following changes will be performed:</p>
 
-<ul>
-  <li><%= @nomenclature_change.input.taxon_concept.full_name %> will be split into:
-    <ul>
-      <% @nomenclature_change.outputs.each do |o| %>
-        <li><%= o.taxon_concept.try(:full_name) %></li>
-      <% end %>
-    </ul>
-  </li>
-</ul>
+<%= print_summary(@nomenclature_change.summary) %>
 
 <%= nomenclature_change_form('Finish')  %>
