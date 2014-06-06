@@ -27,4 +27,14 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
+  def print_summary summary
+    if summary.kind_of?(Array)
+      content_tag(:ul) do
+        summary.each{ |line| concat print_summary(line) }
+      end
+    else
+      content_tag(:li, summary)
+    end
+  end
+
 end
