@@ -16,7 +16,7 @@ class NomenclatureChange::Split < NomenclatureChange
   end
 
   def process
-    # TODO
+    input.reassignments.each{ |reassignment| reassignment.process }
   end
 
   private
