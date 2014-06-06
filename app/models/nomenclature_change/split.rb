@@ -15,6 +15,10 @@ class NomenclatureChange::Split < NomenclatureChange
     ]
   end
 
+  def process
+    # TODO
+  end
+
   private
 
   def output_summary(output)
