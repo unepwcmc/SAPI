@@ -3,4 +3,8 @@ class NomenclatureChange < ActiveRecord::Base
   attr_accessible :created_by_id, :event_id, :updated_by_id, :status,
     :input_attributes, :outputs_attributes
   belongs_to :event
+
+  def in_progress?
+    status != 'submitted'
+  end
 end

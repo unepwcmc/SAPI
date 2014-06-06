@@ -45,6 +45,8 @@
       <th>Type</th>
       <th>Created at</th>
       <th>Created by</th>
+      <th>Status</th>
+      <th>Actions</th>
   </thead>
   <tbody>
   <% @nomenclature_changes.each do |nc| %>
@@ -53,6 +55,18 @@
       <td><%= nc.type %></td>
       <td><%= nc.created_at %></td>
       <td><%= nc.creator.try(:name) %></td>
+      <td><%= nc.status %></td>
+      <td>
+        <% if nc.in_progress? %>
+          <%= link_to edit_icon, admin_nomenclature_change_split_path(
+            :nomenclature_change_id => nc.id, :id => nc.status
+          ) %>
+          <%= link_to delete_icon, admin_nomenclature_change_path(nc),
+            :confirm => "Warning: you are about to delete data. Are you sure?",
+            :method => :delete
+          %>
+        <% end %>
+      </td>
     </tr>
   <% end %>
   </tbody>
