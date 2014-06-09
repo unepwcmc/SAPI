@@ -4,9 +4,6 @@ describe Api::V1::GeoEntitiesController do
   let(:country){
     create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
   }
-  let(:territory){
-    create(:geo_entity_type, :name => GeoEntityType::TERRITORY)
-  }
   let!(:europe){
     create(
       :geo_entity,
@@ -34,7 +31,7 @@ describe Api::V1::GeoEntitiesController do
   let!(:french_guiana){
     create(
       :geo_entity,
-      :geo_entity_type => territory,
+      :geo_entity_type => territory_geo_entity_type,
       :name => 'French Guiana',
       :iso_code2 => 'GF',
       :designations => [cites]

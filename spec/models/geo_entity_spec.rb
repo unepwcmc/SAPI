@@ -21,12 +21,6 @@ require 'spec_helper'
 
 describe GeoEntity do
   describe :nodes_and_descendants do
-    let(:territory_geo_entity_type){
-      create(:geo_entity_type, :name => GeoEntityType::TERRITORY)
-    }
-    let(:country_geo_entity_type){
-      create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-    }
     let(:europe){
       create(
         :geo_entity,

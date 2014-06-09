@@ -11,9 +11,6 @@ describe Checklist::GeoEntitiesController do
       :name => 'Europe'
     )
   }
-  let(:territory){
-    create(:geo_entity_type, :name => GeoEntityType::TERRITORY)
-  }
   let!(:france){
     create(
       :geo_entity,
@@ -34,7 +31,7 @@ describe Checklist::GeoEntitiesController do
   let!(:french_guiana){
     create(
       :geo_entity,
-      :geo_entity_type => territory,
+      :geo_entity_type => territory_geo_entity_type,
       :name => 'French Guiana',
       :iso_code2 => 'GF',
       :designations => [cites]
