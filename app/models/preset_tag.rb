@@ -30,4 +30,8 @@ class PresetTag < ActiveRecord::Base
       scoped
     end
   end
+
+  def can_be_deleted?
+    ActsAsTaggableOn::Tag.where(:name => name).joins(:taggings).limit(1).empty?
+  end
 end
