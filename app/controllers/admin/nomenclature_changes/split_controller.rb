@@ -15,6 +15,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       set_events
       @nomenclature_change.build_input if @nomenclature_change.input.nil?
     when :outputs
+      @ranks = Rank.order(:taxonomic_position)
       @nomenclature_change.outputs.build if @nomenclature_change.outputs.empty?
     when :children
       default_output = if @nomenclature_change.outputs.include?(input)
@@ -165,6 +166,8 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
     case step
     when :inputs
       set_events unless success
+    when :outputs
+      @ranks = Rank.order(:taxonomic_position) unless success
     end
     render_wizard @nomenclature_change
   end

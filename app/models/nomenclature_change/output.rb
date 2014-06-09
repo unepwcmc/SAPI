@@ -7,6 +7,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
   belongs_to :taxon_concept
   has_many :reassignment_targets, :class_name => NomenclatureChange::ReassignmentTarget,
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy
+  belongs_to :new_parent, :foreign_key => :new_parent_id
   validates_presence_of :new_full_name, :if => Proc.new { |c| c.taxon_concept_id.blank? }
   validates_presence_of :new_author_year, :if => Proc.new { |c| c.taxon_concept_id.blank? }
   validates_presence_of :new_name_status, :if => Proc.new { |c| c.taxon_concept_id.blank? }
