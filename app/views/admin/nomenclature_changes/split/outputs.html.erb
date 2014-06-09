@@ -15,4 +15,49 @@
       <p><%= f.link_to_add "Add", :outputs %></p>
     </div>
   </div>
+  <div class="control-group">
+    <label class="control-label">OR create new taxa:</label>
+    <div class="controls">
+      <%= f.fields_for :outputs do |ff| %>
+      <div class="control-group">
+        <label class="control-label">Rank:</label>
+        <div class="controls">
+          <%= ff.select :new_rank_id,
+            options_from_collection_for_select(@ranks, :id, :name, ff.object.new_rank_id)
+          %>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Parent:</label>
+        <div class="controls">
+          <!-- TODO figure out the restrictions on the auto complete here, none for now -->
+          <%= ff.text_field :new_parent_id, {
+            :class => 'taxon-concept',
+            :'data-name' => ff.object.new_parent.try(:full_name)
+          } %>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Name:</label>
+        <div class="controls">
+          <%= ff.text_field :new_full_name %>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Author & year:</label>
+        <div class="controls">
+          <%= ff.text_field :new_author_year %>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Name status:</label>
+        <div class="controls">
+          <%= ff.select :new_name_status, options_for_select(['A', 'N']) %>
+          <%= ff.link_to_remove "Remove" %>
+        </div>
+      </div>
+      <% end %>
+      <p><%= f.link_to_add "Add", :outputs %></p>
+    </div>
+  </div>
 <% end %>

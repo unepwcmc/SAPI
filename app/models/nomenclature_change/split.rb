@@ -23,7 +23,7 @@ class NomenclatureChange::Split < NomenclatureChange
 
   def output_summary(output)
     [
-      output.taxon_concept.try(:full_name),
+      output.taxon_concept.try(:full_name) || output.new_full_name,
       [
         output_children_summary(output),
         output_names_summary(output),
