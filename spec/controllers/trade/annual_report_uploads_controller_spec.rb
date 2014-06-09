@@ -6,9 +6,7 @@ describe Trade::AnnualReportUploadsController do
   let(:france){
     create(
       :geo_entity,
-      :geo_entity_type => create(
-        :geo_entity_type, :name => GeoEntityType::COUNTRY
-        ),
+      :geo_entity_type => country_geo_entity_type,
       :name => 'France',
       :iso_code2 => 'FR'
     )

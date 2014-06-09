@@ -18,13 +18,10 @@
 require 'spec_helper'
 
 describe Trade::DistinctValuesValidationRule, :drops_tables => true do
-  let(:country){
-    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-  }
   let(:canada){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Canada',
       :iso_code2 => 'CA'
     )
@@ -32,7 +29,7 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
   let(:argentina){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Argentina',
       :iso_code2 => 'AR'
     )

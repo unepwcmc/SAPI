@@ -28,13 +28,10 @@
 require 'spec_helper'
 
 describe CitesSuspension do
-  let(:country){
-    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-  }
   let(:tanzania){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'United Republic of Tanzania',
       :iso_code2 => 'TZ'
     )
@@ -42,7 +39,7 @@ describe CitesSuspension do
   let(:rwanda){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Republic of Rwanda',
       :iso_code2 => 'RW'
     )

@@ -1,11 +1,8 @@
 shared_context "Diospyros" do
-  let(:country){
-    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-  }
   let(:madagascar){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Madagascar',
       :iso_code2 => 'MG'
     )
@@ -13,7 +10,7 @@ shared_context "Diospyros" do
   let(:sri_lanka){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Sri Lanka',
       :iso_code2 => 'LK'
     )

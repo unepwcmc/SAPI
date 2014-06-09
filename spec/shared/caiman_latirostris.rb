@@ -6,13 +6,10 @@ shared_context "Caiman latirostris" do
    create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')   
    create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') 
   }
-  let(:country){
-    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-  }
   let(:argentina){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Argentina',
       :iso_code2 => 'AR'
     )
@@ -20,7 +17,7 @@ shared_context "Caiman latirostris" do
   let(:brazil){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Brazil',
       :iso_code2 => 'BR'
     )

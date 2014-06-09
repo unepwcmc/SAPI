@@ -1,11 +1,8 @@
 shared_context "Psittaciformes" do
-  let(:country){
-    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-  }
   let(:ghana){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Ghana',
       :iso_code2 => 'GH'
     )

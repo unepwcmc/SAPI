@@ -2,13 +2,10 @@ shared_context "Dalbergia" do
   let(:en){ create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') }
   let(:es){ create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA') }
   let(:fr){ create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA') }
-  let(:country){
-    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-  }
   let(:madagascar){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Madagascar',
       :iso_code2 => 'MG'
     )
@@ -16,7 +13,7 @@ shared_context "Dalbergia" do
   let(:thailand){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Thailand',
       :iso_code2 => 'TH'
     )

@@ -1,11 +1,8 @@
 shared_context "Canis lupus" do
-  let(:country){
-    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-  }
   let(:bhutan){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Bhutan',
       :iso_code2 => 'BT'
     )
@@ -13,7 +10,7 @@ shared_context "Canis lupus" do
   let(:india){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'India',
       :iso_code2 => 'IN'
     )
@@ -21,7 +18,7 @@ shared_context "Canis lupus" do
   let(:nepal){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Nepal',
       :iso_code2 => 'NP'
     )
@@ -29,7 +26,7 @@ shared_context "Canis lupus" do
   let(:pakistan){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Pakistan',
       :iso_code2 => 'PK'
     )
@@ -37,7 +34,7 @@ shared_context "Canis lupus" do
   let(:poland){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Poland',
       :iso_code2 => 'PL'
     )
@@ -45,7 +42,7 @@ shared_context "Canis lupus" do
   let(:argentina){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Argentina',
       :iso_code2 => 'AR'
     )
@@ -53,7 +50,7 @@ shared_context "Canis lupus" do
   let(:spain){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Spain',
       :iso_code2 => 'ES'
     )
@@ -61,7 +58,7 @@ shared_context "Canis lupus" do
   let(:greece){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Greece',
       :iso_code2 => 'GR'
     )

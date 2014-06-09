@@ -1,11 +1,8 @@
 shared_context "Panax ginseng" do
-  let(:country){
-    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-  }
   let(:russia){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Russia',
       :iso_code2 => 'RU'
     )
@@ -13,7 +10,7 @@ shared_context "Panax ginseng" do
   let(:china){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'China',
       :iso_code2 => 'CN'
     )

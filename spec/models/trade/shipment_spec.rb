@@ -85,14 +85,13 @@ describe Trade::Shipment do
         :taxon_name => create(:taxon_name, :scientific_name => 'yolocatus'),
         :parent => @genus
       )
-      country = create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
       @poland = create(:geo_entity,
         :name_en => 'Poland', :iso_code2 => 'PL',
-        :geo_entity_type => country
+        :geo_entity_type => country_geo_entity_type
       )
       @argentina = create(:geo_entity,
         :name_en => 'Argentina', :iso_code2 => 'AR',
-        :geo_entity_type => country
+        :geo_entity_type => country_geo_entity_type
       )
       create(:distribution, :taxon_concept => @taxon_concept, :geo_entity => @argentina)
       @wild = create(:trade_code, :type => 'Source', :code => 'W', :name_en => 'Wild')

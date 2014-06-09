@@ -2,13 +2,10 @@
 require 'spec_helper'
 
 describe DashboardStats do
-  let(:country){
-    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-  }
   let(:argentina){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Argentina',
       :iso_code2 => 'AR'
     )
@@ -16,7 +13,7 @@ describe DashboardStats do
   let(:ghana){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Ghana',
       :iso_code2 => 'GH'
     )

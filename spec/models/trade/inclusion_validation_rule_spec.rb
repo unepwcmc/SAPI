@@ -58,13 +58,10 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         sandbox_klass.create(:trading_partner => '')
         sandbox_klass.create(:trading_partner => nil)
       end
-      let(:country){
-        create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-      }
       let!(:france){
         create(
           :geo_entity,
-          :geo_entity_type => country,
+          :geo_entity_type => country_geo_entity_type,
           :name => 'France',
           :iso_code2 => 'FR'
         )

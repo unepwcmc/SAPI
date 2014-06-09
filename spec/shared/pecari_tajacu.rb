@@ -1,7 +1,4 @@
 shared_context "Pecari tajacu" do
-  let(:country){
-    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-  }
   let(:north_america){
     create(
       :geo_entity,
@@ -19,7 +16,7 @@ shared_context "Pecari tajacu" do
   let(:america){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'United States of America',
       :iso_code2 => 'US'
     )
@@ -27,7 +24,7 @@ shared_context "Pecari tajacu" do
   let(:mexico){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Mexico',
       :iso_code2 => 'MX'
     )
@@ -35,7 +32,7 @@ shared_context "Pecari tajacu" do
   let(:canada){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Canada',
       :iso_code2 => 'CA'
     )
@@ -43,7 +40,7 @@ shared_context "Pecari tajacu" do
   let(:argentina){
     create(
       :geo_entity,
-      :geo_entity_type => country,
+      :geo_entity_type => country_geo_entity_type,
       :name => 'Argentina',
       :iso_code2 => 'AR'
     )
