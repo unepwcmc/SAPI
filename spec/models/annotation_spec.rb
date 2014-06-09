@@ -40,4 +40,20 @@ describe Annotation do
       specify{ annotation.full_symbol == 'CoP1#1' }
     end
   end
+  describe :destroy do
+    let(:annotation){ create(:annotation) }
+    context "when no dependent objects attached" do
+      specify { annotation.destroy.should be_true }
+    end
+    context "when dependent objects attached" do
+      context "when listing changes" do
+        let!(:listing_change){ create_cites_I_addition(:annotation_id => annotation.id) }
+        specify { annotation.destroy.should be_false }
+      end
+      context "when hashed listing changes" do
+        let!(:listing_change){ create_cites_I_addition(:hash_annotation_id => annotation.id) }
+        specify { annotation.destroy.should be_false }
+      end
+    end
+  end
 end

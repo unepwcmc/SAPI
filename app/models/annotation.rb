@@ -28,8 +28,8 @@ class Annotation < ActiveRecord::Base
     :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
     :display_in_index, :display_in_footnote, :event_id
 
-  has_many :listing_changes, :dependent => :nullify
-  has_many :hashed_listing_changes, :dependent => :nullify,
+  has_many :listing_changes
+  has_many :hashed_listing_changes,
     :foreign_key => :hash_annotation_id, :class_name => "ListingChange"
 
   belongs_to :event
@@ -59,6 +59,15 @@ class Annotation < ActiveRecord::Base
 
   def full_symbol
     "#{parent_symbol}#{symbol}"
+  end
+
+  private
+
+  def dependent_objects_map
+    {
+      'listing changes' => listing_changes,
+      '# listing_changes' => hashed_listing_changes
+    }
   end
 
 end
