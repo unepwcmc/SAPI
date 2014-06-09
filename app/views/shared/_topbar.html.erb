@@ -60,35 +60,35 @@
               </li>
             </ul>
           </li>
+          <% controller_matches = ["cites_cops", "cites_suspension_notifications",
+            "cites_hash_annotations", "eu_regulations", "eu_hash_annotations", "events"] %>
+            <li class="dropdown <%= if controller_matches.include?(controller_name) then 'active' end %>">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Events
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="<%= if controller_name == 'cites_cops' then 'active' end%>">
+                <%= link_to 'CITES CoPs', admin_cites_cops_path %>
+              </li>
+              <li class="<%= if controller_name == 'cites_suspension_notifications' then 'active' end%>">
+                <%= link_to 'CITES Suspension Notifications', admin_cites_suspension_notifications_path %>
+              </li>
+              <li class="<%= if controller_name == 'cites_hash_annotations' then 'active' end%>">
+                <%= link_to 'CITES hash annotations', admin_cites_hash_annotations_path %>
+              </li>
+              <li class="<%= if controller_name == 'eu_regulations' then 'active' end%>">
+                <%= link_to 'EU Annex Regulations', admin_eu_regulations_path %>
+              </li>
+              <li class="<%= if controller_name == 'eu_suspension_regulations' then 'active' end%>">
+                <%= link_to 'EU Suspension Regulations', admin_eu_suspension_regulations_path %>
+              </li>
+              <li class="<%= if controller_name == 'eu_hash_annotations' then 'active' end%>">
+                <%= link_to 'EU hash annotations', admin_eu_hash_annotations_path %>
+              </li>
+            </ul>
+          </li>
         <% end %>
-        <% controller_matches = ["cites_cops", "cites_suspension_notifications",
-          "cites_hash_annotations", "eu_regulations", "eu_hash_annotations", "events"] %>
-          <li class="dropdown <%= if controller_matches.include?(controller_name) then 'active' end %>">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            Events
-            <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <li class="<%= if controller_name == 'cites_cops' then 'active' end%>">
-              <%= link_to 'CITES CoPs', admin_cites_cops_path %>
-            </li>
-            <li class="<%= if controller_name == 'cites_suspension_notifications' then 'active' end%>">
-              <%= link_to 'CITES Suspension Notifications', admin_cites_suspension_notifications_path %>
-            </li>
-            <li class="<%= if controller_name == 'cites_hash_annotations' then 'active' end%>">
-              <%= link_to 'CITES hash annotations', admin_cites_hash_annotations_path %>
-            </li>
-            <li class="<%= if controller_name == 'eu_regulations' then 'active' end%>">
-              <%= link_to 'EU Annex Regulations', admin_eu_regulations_path %>
-            </li>
-            <li class="<%= if controller_name == 'eu_suspension_regulations' then 'active' end%>">
-              <%= link_to 'EU Suspension Regulations', admin_eu_suspension_regulations_path %>
-            </li>
-            <li class="<%= if controller_name == 'eu_hash_annotations' then 'active' end%>">
-              <%= link_to 'EU hash annotations', admin_eu_hash_annotations_path %>
-            </li>
-          </ul>
-        </li>
         <li class="<%= if controller_name == 'references' then 'active' end%>"><%= link_to 'References', admin_references_path %></li>
         <% if current_user && current_user.is_manager? %>
           <% controller_matches = ["cites_suspensions"] %>
