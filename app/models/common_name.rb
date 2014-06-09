@@ -13,10 +13,11 @@
 
 class CommonName < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :language_id, :name, :reference_id,
+  attr_accessible :language_id, :name,
     :created_by_id, :updated_by_id
   belongs_to :language
-  validates :name, :presence => true
+  validates :name, :presence => true,
+    :uniqueness => {:scope => :language_id}
 
   def self.english_to_pdf common_name
     words = common_name.split
