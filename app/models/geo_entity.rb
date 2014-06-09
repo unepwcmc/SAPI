@@ -23,7 +23,7 @@ class GeoEntity < ActiveRecord::Base
     :is_current
   translates :name
   belongs_to :geo_entity_type
-  has_many :geo_relationships, :dependent => :destroy
+  has_many :geo_relationships
   has_many :distributions
   has_many :designation_geo_entities, :dependent => :destroy
   has_many :designations, :through => :designation_geo_entities
@@ -121,6 +121,7 @@ class GeoEntity < ActiveRecord::Base
 
   def dependent_objects_map
     {
+      'connected geo entities' => geo_relationships,
       'distributions' => distributions,
       'quotas' => quotas,
       'EU suspensions' => eu_suspensions,

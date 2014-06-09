@@ -99,6 +99,18 @@ describe GeoEntity do
         before(:each){ create(:shipment, :country_of_origin => geo_entity) }
         specify { geo_entity.destroy.should be_false }
       end
+      context "when connected geo entities" do
+        let(:child_geo_entity){ create(:geo_entity) }
+        before(:each) do
+          create(
+            :geo_relationship,
+            :geo_relationship_type => contains_geo_relationship_type,
+            :geo_entity => geo_entity,
+            :related_geo_entity => child_geo_entity
+          )
+        end
+        specify { geo_entity.destroy.should be_false }
+      end
     end
   end
 end

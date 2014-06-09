@@ -499,6 +499,9 @@ shared_context :sapi do
       :effective_at => '2013-08-10', :end_date => nil, :is_current => true)
   }
 
+  let(:contains_geo_relationship_type){
+    create(:geo_relationship_type, :name => GeoRelationshipType::CONTAINS)
+  }
 end
 
 module SapiSpec
