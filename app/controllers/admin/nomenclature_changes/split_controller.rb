@@ -96,39 +96,41 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
         reassignments
       end.flatten
     when :legislation
+      event = @nomenclature_change.event
       input.legislation_reassignments = [
         input.legislation_reassignments.where(
           :reassignable_type => 'ListingChange'
         ).first || NomenclatureChange::LegislationReassignment.new(
           :reassignable_type => 'ListingChange',
-          :note => "Originally listed as #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.name}"
+          :note => "Originally listed as #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
         ),
         input.legislation_reassignments.where(
           :reassignable_type => 'CitesSuspension'
         ).first || NomenclatureChange::LegislationReassignment.new(
           :reassignable_type => 'CitesSuspension',
-          :note => "Suspension originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.name}"
+          :note => "Suspension originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
         ),
         input.legislation_reassignments.where(
           :reassignable_type => 'Quota'
         ).first || NomenclatureChange::LegislationReassignment.new(
           :reassignable_type => 'Quota',
-          :note => "Quota originally published for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.name}"
+          :note => "Quota originally published for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
         ),
         input.legislation_reassignments.where(
           :reassignable_type => 'EuSuspension'
         ).first || NomenclatureChange::LegislationReassignment.new(
           :reassignable_type => 'EuSuspension',
-          :note => "Suspension originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.name}"
+          :note => "Suspension originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
         ),
         input.legislation_reassignments.where(
           :reassignable_type => 'EuOpinion'
         ).first || NomenclatureChange::LegislationReassignment.new(
           :reassignable_type => 'EuOpinion',
-          :note => "Opinion originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.name}"
+          :note => "Opinion originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
         )
       ]
     when :notes
+      event = @nomenclature_change.event
       unless input.reassignments.where(
         :reassignable_type => 'TaxonCommon'
       ).first
@@ -146,12 +148,12 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
         )
       end
       if input.note.blank?
-        outputs = @nomenclature_change.outputs.map{ |output| output.taxon_concept.full_name }.join(', ')
-        input.note = "#{input.taxon_concept.full_name} was split into #{outputs} following taxonomic changes adopted at #{event.name}"
+        outputs = @nomenclature_change.outputs.map{ |output| output.taxon_concept.try(:full_name) || output.new_full_name }.join(', ')
+        input.note = "#{input.taxon_concept.full_name} was split into #{outputs} following taxonomic changes adopted at #{event.try(:name)}"
       end
       @nomenclature_change.outputs.each do |output|
         if output.note.blank?
-          output.note = "#{output.taxon_concept.full_name} was split from #{input.taxon_concept.full_name} in #{Date.today.year} following taxonomic changes adopted at #{event.name}"
+          output.note = "#{output.taxon_concept.try(:full_name) || output.new_full_name} was split from #{input.taxon_concept.full_name} in #{Date.today.year} following taxonomic changes adopted at #{event.try(:name)}"
         end
       end
     end
