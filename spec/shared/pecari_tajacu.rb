@@ -5,9 +5,6 @@ shared_context "Pecari tajacu" do
   let(:cites_region){
     create(:geo_entity_type, :name => GeoEntityType::CITES_REGION)
   }
-  let(:contains){
-    create(:geo_relationship_type, :name => GeoRelationshipType::CONTAINS)
-  }
   let(:north_america){
     create(
       :geo_entity,
@@ -105,14 +102,14 @@ shared_context "Pecari tajacu" do
         :geo_relationship,
         :geo_entity => north_america,
         :related_geo_entity => country,
-        :geo_relationship_type => contains
+        :geo_relationship_type => contains_geo_relationship_type
       )
     end
     create(
       :geo_relationship,
       :geo_entity => south_america,
       :related_geo_entity => argentina,
-      :geo_relationship_type => contains
+      :geo_relationship_type => contains_geo_relationship_type
     )
 
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings

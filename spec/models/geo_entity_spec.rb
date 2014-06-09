@@ -21,9 +21,6 @@ require 'spec_helper'
 
 describe GeoEntity do
   describe :nodes_and_descendants do
-    let(:contains_geo_relationship_type){
-      create(:geo_relationship_type, :name => GeoRelationshipType::CONTAINS)
-    }
     let(:territory_geo_entity_type){
       create(:geo_entity_type, :name => GeoEntityType::TERRITORY)
     }
