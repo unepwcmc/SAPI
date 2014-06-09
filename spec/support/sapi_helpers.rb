@@ -502,6 +502,9 @@ shared_context :sapi do
   let(:contains_geo_relationship_type){
     create(:geo_relationship_type, :name => GeoRelationshipType::CONTAINS)
   }
+  let(:cites_region_geo_entity_type){
+    create(:geo_entity_type, :name => GeoEntityType::CITES_REGION)
+  }
 end
 
 module SapiSpec

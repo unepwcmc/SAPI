@@ -1,16 +1,13 @@
 require 'spec_helper'
 
 describe Checklist::GeoEntitiesController do
-  let(:region){
-    create(:geo_entity_type, :name => GeoEntityType::CITES_REGION)
-  }
   let(:country){
     create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
   }
   let!(:europe){
     create(
       :geo_entity,
-      :geo_entity_type => region,
+      :geo_entity_type => cites_region_geo_entity_type,
       :name => 'Europe'
     )
   }

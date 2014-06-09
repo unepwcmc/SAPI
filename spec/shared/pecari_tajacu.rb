@@ -2,20 +2,17 @@ shared_context "Pecari tajacu" do
   let(:country){
     create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
   }
-  let(:cites_region){
-    create(:geo_entity_type, :name => GeoEntityType::CITES_REGION)
-  }
   let(:north_america){
     create(
       :geo_entity,
-      :geo_entity_type => cites_region,
+      :geo_entity_type => cites_region_geo_entity_type,
       :name => "5- North America"
     )
   }
   let(:south_america){
     create(
       :geo_entity,
-      :geo_entity_type => cites_region,
+      :geo_entity_type => cites_region_geo_entity_type,
       :name => "3- Central and South America and the Caribbean"
     )
   }

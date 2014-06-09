@@ -27,9 +27,6 @@ describe GeoEntity do
     let(:country_geo_entity_type){
       create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
     }
-    let(:cites_region_geo_entity_type){
-      create(:geo_entity_type, :name => GeoEntityType::CITES_REGION)
-    }
     let(:europe){
       create(
         :geo_entity,
