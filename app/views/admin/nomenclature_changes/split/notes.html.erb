@@ -3,7 +3,7 @@
   <%= f.fields_for :input do |ff| %>
     <div class="control-group">
       <label class="control-label">
-        <%= ff.object.taxon_concept.full_name %>
+        <%= ff.object.taxon_concept.try(:full_name) || ff.object.new_full_name %>
       </label>
       <div class="controls">
         <%= ff.text_area :note, {:rows => 4} %>
@@ -14,7 +14,7 @@
   <%= f.fields_for :outputs do |ff| %>
     <div class="control-group">
       <label class="control-label">
-        <%= ff.object.taxon_concept.try(:full_name) %>
+        <%= ff.object.taxon_concept.try(:full_name) || ff.object.new_full_name %>
       </label>
       <div class="controls">
         <%= ff.text_area :note, {:rows => 4} %>
