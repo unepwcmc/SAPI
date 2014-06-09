@@ -15,7 +15,9 @@
         <div class="controls">
           <%= fff.select :output_ids,
             options_for_select(
-              @nomenclature_change.outputs.map{ |o| [o.taxon_concept.full_name, o.id] },
+              @nomenclature_change.outputs.map do |o|
+                [o.taxon_concept.try(:full_name) || o.new_full_name, o.id]
+              end,
               ff.object.name_reassignments.map(&:reassignment_targets).flatten.
                 map(&:output).compact.map(&:id)
             ),

@@ -11,7 +11,9 @@
           <%= fff.fields_for :reassignment_target do |ffff| %>
             <%= ffff.select :nomenclature_change_output_id,
               options_for_select(
-                @nomenclature_change.outputs.map{ |o| [o.taxon_concept.full_name, o.id] },
+                @nomenclature_change.outputs.map do |o|
+                  [o.taxon_concept.try(:full_name) || o.new_full_name, o.id]
+                end,
               )
             %>
           <% end %>
