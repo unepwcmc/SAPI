@@ -4,8 +4,11 @@
   <%= link_to edit_icon,
     edit_admin_taxon_concept_hybrid_relationship_url(@taxon_concept, s),
     :remote => true %>
-  <%= link_to delete_icon,
-    admin_taxon_concept_hybrid_relationship_url(@taxon_concept, s),
-    :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+  <% if can? :destroy, s %>
+    <%= link_to delete_icon,
+      admin_taxon_concept_hybrid_relationship_url(@taxon_concept, s),
+      :confirm => "Warning: you are about to delete data. Are you sure?",
+      :method => :delete %>
+  <% end %>
   <br>
 <% end %>
