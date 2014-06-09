@@ -12,7 +12,7 @@
 
   <%= error_messages_for(@eu_suspension) %>
   <%= hidden_field_tag :redirect_to_eu_suspension_reg,
-    request.referrer.include?("eu_suspensions") ? 1 : 0
+    request.referrer.include?("taxon_eu_suspensions") ? 0 : 1
   %>
 
   <div class="control-group">
