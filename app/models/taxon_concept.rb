@@ -144,6 +144,9 @@ class TaxonConcept < ActiveRecord::Base
     :presence => true,
     :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" },
     :if => :fixed_order_required?
+  validate :taxonomy_can_be_changed, :on => :update, :if => lambda { |tc|
+    tc.taxonomy && tc.taxonomy_id_changed?
+  }
 
   before_validation :check_taxon_name_exists
   before_validation :check_parent_taxon_concept_exists
@@ -276,6 +279,13 @@ class TaxonConcept < ActiveRecord::Base
     end
     #strip redundant whitespace between words
     some_full_name = some_full_name.split(/\s/).join(' ').capitalize
+  end
+
+  def taxonomy_can_be_changed
+    if !can_be_deleted?
+      errors.add(:taxonomy_id, "dependent objects present, unable to change taxonomy")
+      return false
+    end
   end
 
   def parent_in_same_taxonomy
