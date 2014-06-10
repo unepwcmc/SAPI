@@ -1,9 +1,13 @@
-<% @taxon_concept.synonym_relationships.each do |s| %>
-  <%= link_to s.other_taxon_concept.full_name, edit_admin_taxon_concept_url(s.other_taxon_concept) %>
-  <span class="author-year"><%= s.other_taxon_concept.author_year %></span>
-  <%= link_to edit_icon, edit_admin_taxon_concept_synonym_relationship_url(@taxon_concept, s), :remote => true %>
-  <% if can? :destroy, s %>
-    <%= link_to delete_icon, admin_taxon_concept_synonym_relationship_url(@taxon_concept, s),
+<% @synonym_relationships.each do |rel| %>
+  <%= link_to rel.other_taxon_concept.full_name,
+    edit_admin_taxon_concept_url(rel.other_taxon_concept) %>
+  <span class="author-year"><%= rel.other_taxon_concept.author_year %></span>
+  <%= link_to edit_icon,
+    edit_admin_taxon_concept_synonym_relationship_url(@taxon_concept, rel),
+    :remote => true %>
+  <% if can? :destroy, rel %>
+    <%= link_to delete_icon,
+      admin_taxon_concept_synonym_relationship_url(@taxon_concept, rel),
       :confirm => "Warning: you are about to delete data. Are you sure?",
       :method => :delete %>
   <% end %>

@@ -202,6 +202,10 @@ class TaxonConcept < ActiveRecord::Base
     name_status == 'H'
   end
 
+  def has_trade_names?
+    trade_names.count > 0
+  end
+
   def is_trade_name?
     name_status == 'T'
   end
@@ -307,7 +311,7 @@ class TaxonConcept < ActiveRecord::Base
   def check_taxon_name_exists
     return true unless full_name
     self.full_name = TaxonConcept.sanitize_full_name(full_name)
-    scientific_name = if is_synonym? || is_hybrid?
+    scientific_name = if is_synonym? || is_trade_name? || is_hybrid?
       full_name
     else
       TaxonName.sanitize_scientific_name(self.full_name)
