@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Admin::SynonymRelationshipsController do
+describe Admin::TradeNameRelationshipsController do
   login_admin
 
   let!(:trade_name_relationship_type){
