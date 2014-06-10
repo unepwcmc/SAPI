@@ -1,4 +1,8 @@
-<h2>New split</h2>
+<h2>New split: outputs</h2>
+
+<p>
+  <i class="icon-info-sign"></i> Leave the first field empty and fill in the rest to create a new taxon concept. To amend an existing taxon concept, fill in those properties that need to be amended.
+</p>
 
 <%= nomenclature_change_form do |f| %>
   <div class="control-group">
@@ -6,56 +10,52 @@
     <div class="controls">
       <%= f.fields_for :outputs do |ff| %>
         <!-- TODO figure out the restrictions on the auto complete here, none for now -->
-        <%= ff.text_field :taxon_concept_id, {
-          :class => 'taxon-concept',
-          :'data-name' => ff.object.taxon_concept.try(:full_name)
-        } %>
-        <%= ff.link_to_remove "Remove" %>
-      <% end %>
-      <p><%= f.link_to_add "Add", :outputs %></p>
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label">OR create new taxa:</label>
-    <div class="controls">
-      <%= f.fields_for :outputs do |ff| %>
-      <div class="control-group">
-        <label class="control-label">Rank:</label>
-        <div class="controls">
-          <%= ff.select :new_rank_id,
-            options_from_collection_for_select(@ranks, :id, :name, ff.object.new_rank_id)
-          %>
+        <div class="control-group">
+          <label class="control-label">Taxon concept:</label>
+          <div class="controls">
+            <%= ff.text_field :taxon_concept_id, {
+              :class => 'taxon-concept',
+              :'data-name' => ff.object.taxon_concept.try(:full_name)
+            } %>
+          </div>
         </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label">Parent:</label>
-        <div class="controls">
-          <!-- TODO figure out the restrictions on the auto complete here, none for now -->
-          <%= ff.text_field :new_parent_id, {
-            :class => 'taxon-concept',
-            :'data-name' => ff.object.new_parent.try(:full_name)
-          } %>
+        <div class="control-group">
+          <label class="control-label">Rank:</label>
+          <div class="controls">
+            <%= ff.select :new_rank_id,
+              options_from_collection_for_select(@ranks, :id, :name, ff.object.new_rank_id)
+            %>
+          </div>
         </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label">Name:</label>
-        <div class="controls">
-          <%= ff.text_field :new_full_name %>
+        <div class="control-group">
+          <label class="control-label">Parent:</label>
+          <div class="controls">
+            <!-- TODO figure out the restrictions on the auto complete here, none for now -->
+            <%= ff.text_field :new_parent_id, {
+              :class => 'taxon-concept',
+              :'data-name' => ff.object.new_parent.try(:full_name)
+            } %>
+          </div>
         </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label">Author & year:</label>
-        <div class="controls">
-          <%= ff.text_field :new_author_year %>
+        <div class="control-group">
+          <label class="control-label">Name:</label>
+          <div class="controls">
+            <%= ff.text_field :new_full_name %>
+          </div>
         </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label">Name status:</label>
-        <div class="controls">
-          <%= ff.select :new_name_status, options_for_select(['A', 'N']) %>
-          <%= ff.link_to_remove "Remove" %>
+        <div class="control-group">
+          <label class="control-label">Author & year:</label>
+          <div class="controls">
+            <%= ff.text_field :new_author_year %>
+          </div>
         </div>
-      </div>
+        <div class="control-group">
+          <label class="control-label">Name status:</label>
+          <div class="controls">
+            <%= ff.select :new_name_status, options_for_select(['A', 'N']) %>
+            <%= ff.link_to_remove "Remove" %>
+          </div>
+        </div>
       <% end %>
       <p><%= f.link_to_add "Add", :outputs %></p>
     </div>
