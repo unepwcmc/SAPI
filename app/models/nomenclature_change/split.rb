@@ -33,7 +33,10 @@ class NomenclatureChange::Split < NomenclatureChange
   end
 
   def process
+    Rails.logger.warn("BEGIN SPLIT")
+    outputs.each{ |output| output.process }
     input.reassignments.each{ |reassignment| reassignment.process }
+    Rails.logger.warn("END SPLIT")
   end
 
   private
