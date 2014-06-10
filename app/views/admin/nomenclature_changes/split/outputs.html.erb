@@ -19,14 +19,8 @@
             } %>
           </div>
         </div>
-        <div class="control-group">
-          <label class="control-label">Rank:</label>
-          <div class="controls">
-            <%= ff.select :new_rank_id,
-              options_from_collection_for_select(@ranks, :id, :name, ff.object.new_rank_id)
-            %>
-          </div>
-        </div>
+        <%= ff.hidden_field :new_rank_id, :value => ff.object.new_rank_id ||
+          f.object.input.taxon_concept.rank_id %>
         <div class="control-group">
           <label class="control-label">Parent:</label>
           <div class="controls">
