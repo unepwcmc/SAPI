@@ -30,6 +30,16 @@ class NomenclatureChange::Output < ActiveRecord::Base
 
   def display_full_name; new_full_name || taxon_concept.try(:full_name); end
 
+  def process
+    Rails.logger.debug("Processing output #{display_full_name}")
+    if taxon_concept.blank?
+      process_new_name
+    elsif taxon_concept.full_name != display_full_name
+      process_name_change
+    else
+    end
+  end
+
   def transformations_summary
     res = []
     rank_name = new_rank.try(:name) || taxon_concept.try(:rank).try(:name)
@@ -39,6 +49,9 @@ class NomenclatureChange::Output < ActiveRecord::Base
       res << "New #{rank_name} #{full_name} (#{name_status}) will be created"
     elsif taxon_concept.full_name != new_full_name
       res << "New #{rank_name} #{full_name} (#{name_status}) will be created, based on #{taxon_concept.full_name}"
+      if ['A', 'N', 'H'].include? taxon_concept.name_status
+        res << "#{taxon_concept.full_name} will be turned into a synonym of #{display_full_name}"
+      end
     else
       changes = []
       if new_rank
@@ -60,6 +73,36 @@ class NomenclatureChange::Output < ActiveRecord::Base
       end
     end
     res
+  end
+
+  def new_taxon_concept
+    unless taxon_concept.nil? || taxon_concept.full_name != display_full_name
+      return nil
+    end
+    taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
+    TaxonConcept.new(
+      :taxonomy_id => taxonomy.id,
+      :parent_id => new_parent_id || taxon_concept.try(:parent_id),
+      :rank_id => new_rank_id || taxon_concept.try(:rank_id),
+      :full_name => display_full_name,
+      :author_year => new_author_year || taxon_concept.try(:author_year),
+      :name_status => new_name_status || taxon_concept.try(:name_status)
+    )
+  end
+
+  private
+
+  def process_new_name
+    new_taxon_concept.save
+    Rails.logger.debug("UPDATE NEW TAXON ID")
+    self.update_attributes({:new_taxon_concept_id => new_taxon_concept.id})
+  end
+
+  def process_name_change
+    new_taxon_concept.save
+    #TODO perform status change
+    Rails.logger.debug("UPDATE NEW TAXON ID")
+    self.update_attributes({:new_taxon_concept_id => new_taxon_concept.id})
   end
 
 end
