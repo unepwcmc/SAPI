@@ -22,7 +22,7 @@ class NomenclatureChange::Reassignment < ActiveRecord::Base
 
   def process
     Rails.logger.debug("Processing #{reassignable_type} reassignment from #{input.taxon_concept.full_name}")
-    reassignment_targets.select do|target|
+    reassignment_targets.select do |target|
       target.output != input
     end.each do |target|
       if reassignable_id.blank?
