@@ -9,9 +9,26 @@ class NomenclatureChange::Split < NomenclatureChange
   accepts_nested_attributes_for :outputs, :allow_destroy => true
 
   def summary
-    [
-      input.taxon_concept.full_name,
-      outputs.map { |output| output_summary(output) }
+    res = [
+      "#{input.taxon_concept.full_name} will be split into:",
+      outputs.map do |output|
+        res = [output.display_full_name]
+        transformations = output.transformations_summary
+        unless transformations.empty?
+          res << [
+            "The following transformations will be performed:",
+            transformations
+          ]
+        end
+        reassignments = output_reassignments_summary(output)
+        unless reassignments.empty?
+          res << [
+            "The following reassignments from #{input.taxon_concept.full_name} will be performed:",
+            reassignments
+          ]
+        end
+        res
+      end
     ]
   end
 
@@ -21,23 +38,20 @@ class NomenclatureChange::Split < NomenclatureChange
 
   private
 
-  def output_summary(output)
+  def output_reassignments_summary(output)
     [
-      output.taxon_concept.try(:full_name) || output.new_full_name,
-      [
-        output_children_summary(output),
-        output_names_summary(output),
-        output_distribution_summary(output),
-        output_generic_summary(output, input.taxon_concept.taxon_commons, 'common names'),
-        output_generic_summary(output, input.taxon_concept.listing_changes, 'listing changes'),
-        output_generic_summary(output, input.taxon_concept.taxon_instruments, 'CMS instruments'),
-        output_generic_summary(output, input.taxon_concept.cites_suspensions, 'CITES suspensions'),
-        output_generic_summary(output, input.taxon_concept.quotas, 'CITES quotas'),
-        output_generic_summary(output, input.taxon_concept.eu_suspensions, 'EU suspensions'),
-        output_generic_summary(output, input.taxon_concept.eu_opinions, 'EU opinions'),
-        output_generic_summary(output, input.taxon_concept.taxon_concept_references, 'references')
-      ].compact
-    ]
+      output_children_summary(output),
+      output_names_summary(output),
+      output_distribution_summary(output),
+      output_generic_summary(output, input.taxon_concept.taxon_commons, 'common names'),
+      output_generic_summary(output, input.taxon_concept.listing_changes, 'listing changes'),
+      output_generic_summary(output, input.taxon_concept.taxon_instruments, 'CMS instruments'),
+      output_generic_summary(output, input.taxon_concept.cites_suspensions, 'CITES suspensions'),
+      output_generic_summary(output, input.taxon_concept.quotas, 'CITES quotas'),
+      output_generic_summary(output, input.taxon_concept.eu_suspensions, 'EU suspensions'),
+      output_generic_summary(output, input.taxon_concept.eu_opinions, 'EU opinions'),
+      output_generic_summary(output, input.taxon_concept.taxon_concept_references, 'references')
+    ].compact
   end
 
   def output_children_summary(output)
