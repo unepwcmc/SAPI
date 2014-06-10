@@ -21,6 +21,7 @@ class NomenclatureChange::Reassignment < ActiveRecord::Base
   has_many :outputs, :through => :reassignment_targets
 
   def process
+    Rails.logger.debug("Processing #{reassignable_type} reassignment from #{input.taxon_concept.full_name}")
     reassignment_targets.select do|target|
       target.output != input
     end.each do |target|
@@ -54,11 +55,14 @@ class NomenclatureChange::Reassignment < ActiveRecord::Base
 
   private
   def process_target(target, reassignable)
-    new_object = reassignable.clone
+    new_object = reassignable.dup
     # TODO for listing changes this needs to copy: annotations, listing distributions and exceptions
     # TODO for distributions this needs to copy distribution references
     # TODO for trade restrictions this needs to copy purpose / source / term links
-    new_object.taxon_concept_id = target.output.taxon_concept_id #TODO synonym/subspecies
+    Rails.logger.debug "NEW TAXON"
+    Rails.logger.debug target.output.reload.new_taxon_concept_id
+    new_object.taxon_concept_id = target.output.taxon_concept_id ||
+      target.output.reload.new_taxon_concept_id
     # TODO in case synonyms / subspecies were selected as outputs
     # this needs to consider the new_taxon_concept_id
     # so any taxon creations need to be resolved earlier
