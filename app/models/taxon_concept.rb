@@ -190,6 +190,10 @@ class TaxonConcept < ActiveRecord::Base
     synonyms.count > 0
   end
 
+  def has_accepted_names?
+    inverse_synonym_relationships.limit(1).count > 0
+  end
+
   def is_synonym?
     name_status == 'S'
   end
@@ -198,12 +202,20 @@ class TaxonConcept < ActiveRecord::Base
     hybrids.count > 0
   end
 
+  def has_hybrid_parents?
+    inverse_hybrid_relationships.limit(1).count > 0
+  end
+
   def is_hybrid?
     name_status == 'H'
   end
 
   def has_trade_names?
     trade_names.count > 0
+  end
+
+  def has_accepted_names_for_trade_name?
+    inverse_trade_name_relationships.limit(1).count > 0
   end
 
   def is_trade_name?
