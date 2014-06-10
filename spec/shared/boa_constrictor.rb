@@ -4,11 +4,6 @@ shared_context "Boa constrictor" do
    create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')   
    create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') 
   }
-  let(:has_synonym){
-    create(
-      :taxon_relationship_type, :name => TaxonRelationshipType::HAS_SYNONYM
-    )
-  }
   before(:all) do
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Serpentes'),
@@ -43,7 +38,7 @@ shared_context "Boa constrictor" do
     )
     create(
       :taxon_relationship,
-      :taxon_relationship_type => has_synonym,
+      :taxon_relationship_type => synonym_relationship_type,
       :taxon_concept => @species,
       :other_taxon_concept => @synonym
     )

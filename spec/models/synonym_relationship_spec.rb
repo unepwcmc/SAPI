@@ -1,14 +1,6 @@
 require 'spec_helper'
 
 describe TaxonRelationship do
-  let(:synonym_relationship_type){
-    create(
-      :taxon_relationship_type,
-      :name => TaxonRelationshipType::HAS_SYNONYM,
-      :is_intertaxonomic => false,
-      :is_bidirectional => false
-    )
-  }
   context "when synonymy" do
     let(:parent){
       create_cites_eu_genus(

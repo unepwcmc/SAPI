@@ -38,9 +38,7 @@ describe TaxonConceptPrefixMatcher do
       :taxon_relationship,
       :taxon_concept => taxon_concept4,
       :other_taxon_concept => tmp,
-      :taxon_relationship_type => create(
-        :taxon_relationship_type, :name => TaxonRelationshipType::HAS_HYBRID
-      )
+      :taxon_relationship_type => hybrid_relationship_type
     )
     tmp
   }

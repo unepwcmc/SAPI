@@ -1,14 +1,7 @@
 require 'spec_helper'
 
 describe TaxonConcept do
-  before(:all) do
-    @has_trade_name = create(
-      :taxon_relationship_type,
-      :name => TaxonRelationshipType::HAS_TRADE_NAME,
-      :is_intertaxonomic => false,
-      :is_bidirectional => false
-    )
-  end
+  before(:each){ trade_name_relationship_type }
   describe :create do
     let(:parent){
       create_cites_eu_genus(
@@ -97,7 +90,7 @@ describe TaxonConcept do
         )
         create(
           :taxon_relationship,
-          :taxon_relationship_type => @has_trade_name,
+          :taxon_relationship_type => trade_name_relationship_type,
           :taxon_concept => @subspecies,
           :other_taxon_concept => @trade_name
         )

@@ -1,14 +1,7 @@
 require 'spec_helper'
 
 describe TaxonConcept do
-  before(:all) do
-    @has_synonym = create(
-      :taxon_relationship_type,
-      :name => TaxonRelationshipType::HAS_SYNONYM,
-      :is_intertaxonomic => false,
-      :is_bidirectional => false
-    )
-  end
+  before(:each){ synonym_relationship_type }
   describe :create do
     let(:parent){
       create_cites_eu_genus(
@@ -97,7 +90,7 @@ describe TaxonConcept do
         )
         create(
           :taxon_relationship,
-          :taxon_relationship_type => @has_synonym,
+          :taxon_relationship_type => synonym_relationship_type,
           :taxon_concept => @subspecies,
           :other_taxon_concept => @synonym
         )

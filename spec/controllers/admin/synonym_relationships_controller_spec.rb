@@ -3,14 +3,7 @@ require 'spec_helper'
 describe Admin::SynonymRelationshipsController do
   login_admin
 
-  let!(:synonym_relationship_type){
-    create(
-      :taxon_relationship_type,
-      :name => TaxonRelationshipType::HAS_SYNONYM,
-      :is_intertaxonomic => false,
-      :is_bidirectional => false
-    )
-  }
+  before(:each){ synonym_relationship_type }
   let(:taxon_concept){ create(:taxon_concept) }
   let(:synonym){ create(:taxon_concept, :name_status => 'S') }
   let(:synonym_relationship){

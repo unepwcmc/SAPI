@@ -3,14 +3,7 @@ require 'spec_helper'
 describe Admin::TradeNameRelationshipsController do
   login_admin
 
-  let!(:trade_name_relationship_type){
-    create(
-      :taxon_relationship_type,
-      :name => TaxonRelationshipType::HAS_TRADE_NAME,
-      :is_intertaxonomic => false,
-      :is_bidirectional => false
-    )
-  }
+  before(:each){ trade_name_relationship_type }
   let(:taxon_concept){ create(:taxon_concept) }
   let(:trade_name){ create(:taxon_concept, :name_status => 'T') }
   let(:trade_name_relationship){

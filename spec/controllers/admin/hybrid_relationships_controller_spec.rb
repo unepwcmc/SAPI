@@ -3,16 +3,9 @@ require 'spec_helper'
 describe Admin::HybridRelationshipsController do
   login_admin
 
-  let!(:hybrid_relationship_type){
-    create(
-      :taxon_relationship_type,
-      :name => TaxonRelationshipType::HAS_HYBRID,
-      :is_intertaxonomic => false,
-      :is_bidirectional => false
-    )
-  }
+  before(:each){ hybrid_relationship_type }
   let(:taxon_concept){ create(:taxon_concept) }
-  let(:hybrid){ create(:taxon_concept, :name_status => 'S') }
+  let(:hybrid){ create(:taxon_concept, :name_status => 'H') }
   let(:hybrid_relationship){
     create(:taxon_relationship,
       :taxon_relationship_type_id => hybrid_relationship_type.id,
@@ -37,7 +30,7 @@ describe Admin::HybridRelationshipsController do
         :taxon_concept_id => taxon_concept.id,
         :taxon_relationship => {
           :other_taxon_concept_attributes =>
-            build_tc_attributes(:taxon_concept, :name_status => 'S')
+            build_tc_attributes(:taxon_concept, :name_status => 'H')
         }
       response.should render_template("create")
     end
@@ -71,7 +64,7 @@ describe Admin::HybridRelationshipsController do
         :id => hybrid_relationship.id,
         :taxon_relationship => {
           :other_taxon_concept_attributes =>
-            build_tc_attributes(:taxon_concept, :name_status => 'S')
+            build_tc_attributes(:taxon_concept, :name_status => 'H')
         }
       response.should be_success
     end
