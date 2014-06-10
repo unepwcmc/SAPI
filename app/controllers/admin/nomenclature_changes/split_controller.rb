@@ -15,7 +15,6 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       set_events
       @nomenclature_change.build_input if @nomenclature_change.input.nil?
     when :outputs
-      @ranks = Rank.order(:taxonomic_position)
       @nomenclature_change.outputs.build if @nomenclature_change.outputs.empty?
     when :children
       default_output = if @nomenclature_change.outputs.include?(input)
@@ -23,7 +22,9 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       else
         @nomenclature_change.outputs.first
       end
-      input.parent_reassignments = input.taxon_concept.children.map do |child|
+      children = input.taxon_concept.children - @nomenclature_change.
+        outputs.map(&:taxon_concept).compact
+      input.parent_reassignments = children.map do |child|
         reassignment_attrs = {
           :reassignable_type => 'TaxonConcept',
           :reassignable_id => child.id
@@ -168,8 +169,6 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
     case step
     when :inputs
       set_events unless success
-    when :outputs
-      @ranks = Rank.order(:taxonomic_position) unless success
     end
     render_wizard @nomenclature_change
   end
