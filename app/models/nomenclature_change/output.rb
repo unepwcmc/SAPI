@@ -1,9 +1,10 @@
 # Represents an output of a nomenclature change.
-# Outputs may be new taxon concepts, crated as a result of the nomenclature
+# Outputs may be new taxon concepts, created as a result of the nomenclature
 # change.
 class NomenclatureChange::Output < ActiveRecord::Base
   track_who_does_it
   attr_accessible :created_by_id, :new_author_year, :new_full_name, :new_name_status, :new_parent_id, :new_rank_id, :new_taxon_concept_id, :nomenclature_change_id, :note, :taxon_concept_id, :updated_by_id
+  belongs_to :nomenclature_change
   belongs_to :taxon_concept
   has_many :reassignment_targets, :class_name => NomenclatureChange::ReassignmentTarget,
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy
@@ -13,12 +14,12 @@ class NomenclatureChange::Output < ActiveRecord::Base
   validates_presence_of :new_author_year, :if => Proc.new { |c| c.taxon_concept_id.blank? }
   validates_presence_of :new_name_status, :if => Proc.new { |c| c.taxon_concept_id.blank? }
   validates_presence_of :new_parent_id, :if => Proc.new { |c| c.taxon_concept_id.blank? }
-  validates_presence_of :new_rank_id, :if => Proc.new { |c| c.taxon_concept_id.blank? }
 
   def new_full_name
+    name = read_attribute(:new_full_name)
+    return nil if name.blank?
     rank = new_rank || nomenclature_change.input.taxon_concept.rank
     parent = new_parent || nomenclature_change.input.taxon_concept.parent
-    name = read_attribute(:new_full_name)
     if [Rank::SPECIES, Rank::SUBSPECIES].include?(rank.name)
       parent.full_name + ' ' + name
     elsif rank.name == Rank::VARIETY
@@ -31,13 +32,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
   def display_full_name; new_full_name || taxon_concept.try(:full_name); end
 
   def process
-    Rails.logger.debug("Processing output #{display_full_name}")
-    if taxon_concept.blank?
-      process_new_name
-    elsif taxon_concept.full_name != display_full_name
-      process_name_change
-    else
-    end
+
   end
 
   def transformations_summary
@@ -88,21 +83,6 @@ class NomenclatureChange::Output < ActiveRecord::Base
       :author_year => new_author_year || taxon_concept.try(:author_year),
       :name_status => new_name_status || taxon_concept.try(:name_status)
     )
-  end
-
-  private
-
-  def process_new_name
-    new_taxon_concept.save
-    Rails.logger.debug("UPDATE NEW TAXON ID")
-    self.update_attributes({:new_taxon_concept_id => new_taxon_concept.id})
-  end
-
-  def process_name_change
-    new_taxon_concept.save
-    #TODO perform status change
-    Rails.logger.debug("UPDATE NEW TAXON ID")
-    self.update_attributes({:new_taxon_concept_id => new_taxon_concept.id})
   end
 
 end
