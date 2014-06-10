@@ -5,7 +5,7 @@
   <%= link_to edit_icon,
     edit_admin_taxon_concept_trade_name_relationship_url(@taxon_concept, rel),
     :remote => true %>
-  <% if can? :destroy, s %>
+  <% if can? :destroy, rel %>
     <%= link_to delete_icon,
       admin_taxon_concept_trade_name_relationship_url(@taxon_concept, rel),
       :confirm => "Warning: you are about to delete data. Are you sure?",
