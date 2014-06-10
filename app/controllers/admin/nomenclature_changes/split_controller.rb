@@ -148,12 +148,12 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
         )
       end
       if input.note.blank?
-        outputs = @nomenclature_change.outputs.map{ |output| output.taxon_concept.try(:full_name) || output.new_full_name }.join(', ')
+        outputs = @nomenclature_change.outputs.map{ |output| output.display_full_name }.join(', ')
         input.note = "#{input.taxon_concept.full_name} was split into #{outputs} following taxonomic changes adopted at #{event.try(:name)}"
       end
       @nomenclature_change.outputs.each do |output|
         if output.note.blank?
-          output.note = "#{output.taxon_concept.try(:full_name) || output.new_full_name} was split from #{input.taxon_concept.full_name} in #{Date.today.year} following taxonomic changes adopted at #{event.try(:name)}"
+          output.note = "#{output.display_full_name} was split from #{input.taxon_concept.full_name} in #{Date.today.year} following taxonomic changes adopted at #{event.try(:name)}"
         end
       end
     end
