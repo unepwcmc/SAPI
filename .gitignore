@@ -49,6 +49,7 @@
 /public/downloads/standard_reference_output/*.csv
 /public/downloads/common_names/*.csv
 /public/downloads/iucn_mappings/*.csv
+/public/downloads/orphaned_taxon_concepts/*.csv
 /public/uploads/*
 
 # Ruby

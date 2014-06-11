@@ -12,7 +12,7 @@ describe Admin::ExportsController do
   end
   describe "GET download with data_type=Names" do
     after(:each) do
-      DownloadsCache.clear_taxon_concepts_names
+      DownloadsCache.clear_taxon_concepts
     end
     context "all" do
       it "returns taxon concepts names file" do
