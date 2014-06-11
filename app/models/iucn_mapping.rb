@@ -11,16 +11,16 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  details          :hstore
-#  synonym_id       :integer
+#  accepted_name_id :integer
 #
 
 class IucnMapping < ActiveRecord::Base
   attr_accessible :iucn_author, :iucn_category, :iucn_taxon_id,
-    :iucn_taxon_name, :taxon_concept_id, :details, :synonym_id
+    :iucn_taxon_name, :taxon_concept_id, :details, :accepted_name_id
 
   serialize :details, ActiveRecord::Coders::Hstore
   belongs_to :taxon_concept
-  belongs_to :synonym, :class_name => 'TaxonConcept'
+  belongs_to :accepted_name, :class_name => 'TaxonConcept'
 
   scope :filter, lambda { |option|
     case option
@@ -30,6 +30,10 @@ class IucnMapping < ActiveRecord::Base
       where('iucn_taxon_id IS NOT NULL')
     when "NON_MATCHING"
       where(:iucn_taxon_id => nil)
+    when 'SYNONYMS'
+      where('accepted_name_id IS NOT NULL')
+    when 'ACCEPTED'
+      where(:accepted_name_id => nil)
     else
       where("details->'match' = ?", option)
     end

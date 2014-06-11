@@ -1,7 +1,7 @@
 <thead>
   <th>Id</th>
   <th>Class</th>
-  <th>Taxon Concept</th>
+  <th>Taxon Concept (status)</th>
   <th>Author year</th>
   <th>IUCN Name</th>
   <th>IUCN ID</th>
@@ -12,21 +12,23 @@
 </thead>
 <tbody>
   <% collection.each do |map| -%>
+    <% tc = map.taxon_concept %>
     <tr class="<%= map.details["match"].try(:downcase) %>">
-      <td><%= map.taxon_concept_id %></td>
-      <td><%= map.taxon_concept.data["class_name"] %></td>
-      <td><%= link_to map.taxon_concept.full_name,
-        admin_taxon_concept_names_path(map.taxon_concept) %></td>
-      <td><%= map.taxon_concept.author_year %></td>
+      <td><%= tc._id %></td>
+      <td><%= tc.data["class_name"] %></td>
+      <td><%= link_to "#{tc.full_name} (#{tc.name_status})",
+        admin_taxon_concept_names_path(tc) %></td>
+      <td><%= tc.author_year %></td>
       <td><%= map.iucn_taxon_name %></td>
       <td><%= map.iucn_taxon_id %></td>
       <td><%= map.iucn_author %></td>
       <td><%= map.iucn_category %></td>
       <td>
         <%= map.details["match"] %>
-        <% if (synonym = map.synonym ) %>
-          (<%= link_to synonym.full_name,
-            admin_taxon_concept_names_path(synonym) %>)
+        <% accepted = map.accepted_name %>
+        <% if accepted %>
+          (<%= link_to accepted.full_name,
+            admin_taxon_concept_names_path(accepted) %>)
         <% end %>
       </td>
       <td><%= map.details["no_matches"] %></td>
