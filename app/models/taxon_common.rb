@@ -13,28 +13,20 @@
 
 class TaxonCommon < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :common_name_id, :taxon_concept_id, :common_name,
-    :common_name_attributes, :created_by_id, :updated_by_id
+  attr_accessible :common_name_id, :taxon_concept_id, :created_by_id,
+    :updated_by_id, :name, :language_id
+  attr_accessor :name, :language_id
   belongs_to :common_name
   belongs_to :taxon_concept
-  accepts_nested_attributes_for :common_name
+
+  validates :common_name_id, :presence => true
 
   before_validation do
-    cname = self.common_name
-    return unless cname.valid?
-
-    if cname.new_record?
-      #check if it exists or use the provided details
-      self.common_name = CommonName.find_by_name_and_language_id(
-        cname.name, cname.language_id) || cname
-    elsif cname.changed? && TaxonCommon.where(:common_name_id => cname.id).count > 1
-      #if changed and associated with multiple taxonConcepts, create a new
-      #common name
-      self.common_name = CommonName.create(
-        :name => cname.name,
-        :language_id => cname.language_id
-      )
+    cname = CommonName.find_or_create_by_name_and_language_id(
+      self.name, self.language_id)
+    if cname.id && self.common_name_id != cname.id
+      self.common_name_id = cname.id
     end
-    self.touch if cname.new_record? || cname.changed?
+    #self.touch if cname.new_record? || cname.changed?
   end
 end
