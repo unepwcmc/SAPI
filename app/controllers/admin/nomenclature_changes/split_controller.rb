@@ -86,13 +86,13 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
           reassignment_attrs
         )
         if reassignments.empty?
-          reassignments = default_outputs.map do |default_output|
-            r = NomenclatureChange::DistributionReassignment.new(
-              reassignment_attrs
-            )
+          r = NomenclatureChange::DistributionReassignment.new(
+            reassignment_attrs
+          )
+          default_outputs.map do |default_output|
             r.reassignment_targets.build(:nomenclature_change_output_id => default_output.id)
-            r
           end
+          reassignments = [r]
         end
         reassignments
       end.flatten
