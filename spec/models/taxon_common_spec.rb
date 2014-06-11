@@ -15,11 +15,8 @@ require 'spec_helper'
 
 describe TaxonCommon do
   describe :update do
-    let(:common_name_attributes){
-      build_attributes(:common_name, :name => 'Lolcat')
-    }
-    let(:another_common_name_attributes){
-      build_attributes(:common_name, :name => 'Black Lolcat')
+    let(:language){
+      create(:language)
     }
     let(:parent){
       create_cites_eu_genus(
@@ -42,7 +39,8 @@ describe TaxonCommon do
       build(
         :taxon_common,
         :taxon_concept_id => tc.id,
-        :common_name_attributes => common_name_attributes
+        :name => 'Lolcat',
+        :language_id => language.id
       )
     }
     context "when common name changed" do
@@ -50,13 +48,14 @@ describe TaxonCommon do
         build(
           :taxon_common,
           :taxon_concept_id => another_tc.id,
-          :common_name_attributes => common_name_attributes
+          :name => 'Lolcat',
+          :language_id => language.id
         )
       }
       specify{
         tc_common.save
         another_tc_common.save
-        tc_common.common_name_attributes = another_common_name_attributes
+        tc_common.name = "Black lolcat"
         tc_common.save
         another_tc.common_names.map(&:name).should include('Lolcat')
       }

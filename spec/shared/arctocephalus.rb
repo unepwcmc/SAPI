@@ -23,7 +23,7 @@ shared_context "Arctocephalus" do
       :taxon_name => create(:taxon_name, :scientific_name => 'Arctocephalus'),
       :parent => @family,
       :common_names => [
-        create(:common_name, :name => 'Fur seals', :language => en),
+        create(:common_name, :name => 'Fur seals 1', :language => en),
         create(:common_name, :name => 'Southern fur seals', :language => en),
         create(:common_name, :name => 'Osos marinos', :language => es),
         create(:common_name, :name => 'Arctocéphales du sud', :language => fr),

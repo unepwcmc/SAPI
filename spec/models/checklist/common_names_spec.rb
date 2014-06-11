@@ -30,7 +30,7 @@ describe Checklist do
     end
 
     it "should return all English names for Arctocephalus spp.: 'Fur seals, Southern fur seals'" do
-      @arctocephalus.english_names.should == ['Fur seals', 'Southern fur seals']
+      @arctocephalus.english_names.should == ['Fur seals 1', 'Southern fur seals']
     end
 
     it "should return all Spanish names for Arctocephalus spp.: 'Osos marinos'" do

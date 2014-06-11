@@ -21,8 +21,8 @@ describe Admin::TaxonCommonsController do
       xhr :post, :create,
         :taxon_concept_id => @taxon_concept.id,
         :taxon_common => {
-          :common_name_attributes =>
-            build_attributes(:common_name)
+          :name => @common_name.name,
+          :language_id => @common_name.language_id
         }
       response.should render_template("create")
     end
@@ -30,7 +30,6 @@ describe Admin::TaxonCommonsController do
       xhr :post, :create,
         :taxon_concept_id => @taxon_concept.id,
         :taxon_common => {
-          :common_name_attributes => {}
         }
       response.should render_template("new")
     end
@@ -69,8 +68,8 @@ describe Admin::TaxonCommonsController do
         :taxon_concept_id => @taxon_concept.id,
         :id => @taxon_common.id,
         :taxon_common => {
-          :common_name_attributes =>
-            build_attributes(:common_name)
+          :name => @common_name.name,
+          :language_id => @common_name.language_id
         }
       response.should render_template("create")
     end
@@ -79,7 +78,7 @@ describe Admin::TaxonCommonsController do
         :taxon_concept_id => @taxon_concept.id,
         :id => @taxon_common.id,
         :taxon_common => {
-          :common_name_attributes => {}
+          :common_name_id => nil
         }
       response.should render_template('new')
     end
@@ -128,9 +127,9 @@ describe Admin::TaxonCommonsController do
         :taxon_concept_id => @taxon_concept.id,
         :id => @taxon_common.id,
         :taxon_common => {
-          :common_name_attributes =>
-            build_attributes(:common_name)
-      }
+          :name => @common_name.name,
+          :language_id => @common_name.language_id
+        }
 
       @taxon_concept.reload.dependents_updated_at.should_not == old_date
     end

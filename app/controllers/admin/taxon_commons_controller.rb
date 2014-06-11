@@ -61,6 +61,5 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
   def load_associations
     @languages = Language.order(:name_en)
   end
-
 end
 
