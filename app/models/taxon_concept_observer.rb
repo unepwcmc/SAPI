@@ -70,17 +70,11 @@ class TaxonConceptObserver < ActiveRecord::Observer
   end
 
   def after_save(taxon_concept)
-    DownloadsCache.clear_taxon_concepts_names
-    if ['S', 'T'].include? taxon_concept.name_status
-      DownloadsCache.clear_synonyms_and_trade_names
-    end
+    DownloadsCache.clear_taxon_concepts
   end
 
   def after_destroy(taxon_concept)
-    DownloadsCache.clear_taxon_concepts_names
-    if ['S', 'T'].include? taxon_concept.name_status
-      DownloadsCache.clear_synonyms_and_trade_names
-    end
+    DownloadsCache.clear_taxon_concepts
   end
 
 end
