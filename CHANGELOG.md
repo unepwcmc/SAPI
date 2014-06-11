@@ -1,3 +1,20 @@
+### 0.7.0 (2014-06-11)
+**Species+ Admin tool**
+* Authentication & authorisation
+* User stamping
+* Internal downloads
+* Stronger data consistency checks
+* Managing trade validation rules
+* Mechanism for mapping CITES <-> IUCN
+
+**Trade Admin tool**
+* Improved appendix validation process
+* Small interface improvements
+
+**Species+**
+* Subspecies pages
+* Distribution tags in Species+ & Checklist downloads
+
 ### 0.6.9 (2014-04-08)
 
 **Species+ Admin tool**
