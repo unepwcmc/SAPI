@@ -181,9 +181,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
             :taxon_relationship,
             :taxon_concept => @genus,
             :other_taxon_concept => @hybrid,
-            :taxon_relationship_type => create(
-              :taxon_relationship_type, :name => TaxonRelationshipType::HAS_HYBRID
-            )
+            :taxon_relationship_type => hybrid_relationship_type
           )
           sandbox_klass.create(:term_code => 'CAV', :taxon_name => @hybrid.full_name)
           sandbox_klass.create(:term_code => 'BAL', :taxon_name => @hybrid.full_name)

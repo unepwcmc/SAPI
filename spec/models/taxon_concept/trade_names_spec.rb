@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe TaxonConcept do
-  before(:each){ synonym_relationship_type }
+  before(:each){ trade_name_relationship_type }
   describe :create do
     let(:parent){
       create_cites_eu_genus(
@@ -14,10 +14,10 @@ describe TaxonConcept do
         :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
       )
     }
-    let(:synonym){
+    let(:trade_name){
       build_cites_eu_species(
-        :name_status => 'S',
-        :author_year => 'Taxonomus 2013',
+        :name_status => 'T',
+        :author_year => 'Taxonomus 2014',
         :accepted_scientific_name => tc.full_name,
         :full_name => 'Lolcatus lolus'
       )
@@ -25,55 +25,55 @@ describe TaxonConcept do
     context "when new" do
       specify {
         lambda do
-          synonym.save
+          trade_name.save
         end.should change(TaxonConcept, :count).by(1)
       }
       pending {
         lambda do
-          synonym.save
+          trade_name.save
         end.should change(TaxonRelationship, :count).by(1)
       }
       pending {
-        synonym.save
-        tc.has_synonyms?.should be_true
+        trade_name.save
+        tc.has_trade_names?.should be_true
       }
       specify {
-        synonym.save
-        synonym.is_synonym?.should be_true
+        trade_name.save
+        trade_name.is_trade_name?.should be_true
       }
     end
     context "when duplicate" do
       let(:duplicate){
-        synonym.dup
+        trade_name.dup
       }
       specify {
         lambda do
-          synonym.save
+          trade_name.save
           duplicate.save
         end.should change(TaxonConcept, :count).by(1)
       }
       pending {
         lambda do
-          synonym.save
+          trade_name.save
           duplicate.save
         end.should change(TaxonRelationship, :count).by(2)
       }
     end
     context "when duplicate but author name different" do
       let(:duplicate){
-        res = synonym.dup
+        res = trade_name.dup
         res.author_year = 'Hemulen 2013'
         res
       }
       specify {
         lambda do
-          synonym.save
+          trade_name.save
           duplicate.save
         end.should change(TaxonConcept, :count).by(2)
       }
       specify {
-        synonym.save
-        synonym.full_name.should == 'Lolcatus lolus'
+        trade_name.save
+        trade_name.full_name.should == 'Lolcatus lolus'
       }
     end
     context "when has accepted parent" do
@@ -82,29 +82,29 @@ describe TaxonConcept do
           :parent => tc,
           :taxon_name => create(:taxon_name, :scientific_name => 'perfidius')
         )
-        @synonym = create_cites_eu_subspecies(
+        @trade_name = create_cites_eu_subspecies(
           :parent_id => tc.id,
-          :name_status => 'S',
+          :name_status => 'T',
           :author_year => 'Taxonomus 2013',
           :full_name => 'Lolcatus lolus furiatus'
         )
         create(
           :taxon_relationship,
-          :taxon_relationship_type => synonym_relationship_type,
+          :taxon_relationship_type => trade_name_relationship_type,
           :taxon_concept => @subspecies,
-          :other_taxon_concept => @synonym
+          :other_taxon_concept => @trade_name
         )
       end
-      # should not modify a synonym's full name when saving
-      specify { @synonym.full_name.should == 'Lolcatus lolus furiatus' }
+      # should not modify a trade_name's full name when saving
+      specify { @trade_name.full_name.should == 'Lolcatus lolus furiatus' }
       context "overnight calculations" do
         before(:each) do
           Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         end
-        # should not modify a synonym's full name overnight
-        specify { @synonym.reload.full_name.should == 'Lolcatus lolus furiatus' }
-        # should not list synonym as subspecies of accepted species
-        specify { MTaxonConcept.find(tc.id).subspecies_not_listed_ary.should_not include(@synonym.full_name) }
+        # should not modify a trade_name's full name overnight
+        specify { @trade_name.reload.full_name.should == 'Lolcatus lolus furiatus' }
+        # should not list trade_name as subspecies of accepted species
+        specify { MTaxonConcept.find(tc.id).subspecies_not_listed_ary.should_not include(@trade_name.full_name) }
       end
     end
   end

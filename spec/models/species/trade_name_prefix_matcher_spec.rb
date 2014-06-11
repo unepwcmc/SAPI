@@ -15,10 +15,7 @@ describe Species::TaxonConceptPrefixMatcher do
     create(:taxon_relationship,
       :taxon_concept => @accepted_name,
       :other_taxon_concept => @trade_name,
-      :taxon_relationship_type => create(
-        :taxon_relationship_type,
-        :name => TaxonRelationshipType::HAS_TRADE_NAME
-      )
+      :taxon_relationship_type => trade_name_relationship_type
     )
     create_cites_I_addition(:taxon_concept => @accepted_name)
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings

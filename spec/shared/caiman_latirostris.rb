@@ -22,11 +22,6 @@ shared_context "Caiman latirostris" do
       :iso_code2 => 'BR'
     )
   }
-  let(:has_synonym){
-    create(
-      :taxon_relationship_type, :name => TaxonRelationshipType::HAS_SYNONYM
-    )
-  }
   before(:all) do
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Crocodylia'),
@@ -59,7 +54,7 @@ shared_context "Caiman latirostris" do
 
     create(
       :taxon_relationship,
-      :taxon_relationship_type => has_synonym,
+      :taxon_relationship_type => synonym_relationship_type,
       :taxon_concept => @species,
       :other_taxon_concept => @species1
     )

@@ -27,11 +27,6 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
     end
 
     context "when CITES listed" do
-      let(:has_synonym){
-        create(
-          :taxon_relationship_type, :name => TaxonRelationshipType::HAS_SYNONYM
-        )
-      }
       before(:each) do
         genus = create_cites_eu_genus(
           :taxon_name => create(:taxon_name, :scientific_name => 'Loxodonta')
@@ -60,7 +55,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
         )
         create(
           :taxon_relationship,
-          :taxon_relationship_type => has_synonym,
+          :taxon_relationship_type => synonym_relationship_type,
           :taxon_concept => @species,
           :other_taxon_concept => synonym
         )

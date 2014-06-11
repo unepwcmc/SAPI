@@ -1,12 +1,12 @@
-<% @taxon_concept.hybrid_relationships.each do |s| %>
-  <%= link_to s.other_taxon_concept.full_name,
-    edit_admin_taxon_concept_url(s.other_taxon_concept) %>
+<% @hybrid_relationships.each do |rel| %>
+  <%= link_to rel.other_taxon_concept.full_name,
+    edit_admin_taxon_concept_url(rel.other_taxon_concept) %>
   <%= link_to edit_icon,
-    edit_admin_taxon_concept_hybrid_relationship_url(@taxon_concept, s),
+    edit_admin_taxon_concept_hybrid_relationship_url(@taxon_concept, rel),
     :remote => true %>
-  <% if can? :destroy, s %>
+  <% if can? :destroy, rel %>
     <%= link_to delete_icon,
-      admin_taxon_concept_hybrid_relationship_url(@taxon_concept, s),
+      admin_taxon_concept_hybrid_relationship_url(@taxon_concept, rel),
       :confirm => "Warning: you are about to delete data. Are you sure?",
       :method => :delete %>
   <% end %>

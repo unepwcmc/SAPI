@@ -49,14 +49,6 @@ describe Checklist::Pdf::IndexFetcher do
     specify{ subject.next.first.sort_name.should == 'lolcat, Domestic' }
   end
   context "with synonyms and authors" do
-    let(:synonym_relationship_type){
-      create(
-        :taxon_relationship_type,
-        :name => TaxonRelationshipType::HAS_SYNONYM,
-        :is_intertaxonomic => false,
-        :is_bidirectional => false
-      )
-    }
     let!(:synonym){
       create(
         :taxon_concept,

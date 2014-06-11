@@ -206,13 +206,6 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
     end
     context "when reported under a synonym" do
       before(:each) do
-        synonym_relationship_type =
-          create(
-            :taxon_relationship_type,
-            :name => TaxonRelationshipType::HAS_SYNONYM,
-            :is_intertaxonomic => false,
-            :is_bidirectional => false
-          )
         @synonym = create_cites_eu_species(
           :name_status => 'S',
           :full_name => 'Acipenser stenorrhynchus'

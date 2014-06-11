@@ -91,6 +91,7 @@ SAPI::Application.routes.draw do
       resources :taxon_commons, :only => [:new, :create, :edit, :update, :destroy]
       resources :distributions, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :synonym_relationships, :only => [:new, :create, :edit, :update, :destroy]
+      resources :trade_name_relationships, :only => [:new, :create, :edit, :update, :destroy]
       resources :hybrid_relationships, :only => [:new, :create, :edit, :update, :destroy]
       resources :taxon_concept_references, :only => [:index, :new, :create, :destroy, :edit, :update]
       resources :names, :only => [:index]

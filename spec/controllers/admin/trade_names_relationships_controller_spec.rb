@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-describe Admin::HybridRelationshipsController do
+describe Admin::TradeNameRelationshipsController do
   login_admin
 
-  before(:each){ hybrid_relationship_type }
+  before(:each){ trade_name_relationship_type }
   let(:taxon_concept){ create(:taxon_concept) }
-  let(:hybrid){ create(:taxon_concept, :name_status => 'H') }
-  let(:hybrid_relationship){
+  let(:trade_name){ create(:taxon_concept, :name_status => 'T') }
+  let(:trade_name_relationship){
     create(:taxon_relationship,
-      :taxon_relationship_type_id => hybrid_relationship_type.id,
+      :taxon_relationship_type_id => trade_name_relationship_type.id,
       :taxon_concept => taxon_concept,
-      :other_taxon_concept => hybrid
+      :other_taxon_concept => trade_name
     )
   }
   describe "XHR GET new" do
@@ -18,9 +18,9 @@ describe Admin::HybridRelationshipsController do
       xhr :get, :new, :taxon_concept_id => taxon_concept.id
       response.should render_template('new')
     end
-    it "assigns the hybrid_relationship variable" do
+    it "assigns the trade_name_relationship variable" do
       xhr :get, :new, :taxon_concept_id => taxon_concept.id
-      assigns(:hybrid_relationship).should_not be_nil
+      assigns(:trade_name_relationship).should_not be_nil
     end
   end
 
@@ -30,7 +30,7 @@ describe Admin::HybridRelationshipsController do
         :taxon_concept_id => taxon_concept.id,
         :taxon_relationship => {
           :other_taxon_concept_attributes =>
-            build_tc_attributes(:taxon_concept, :name_status => 'H')
+            build_tc_attributes(:taxon_concept, :name_status => 'T')
         }
       response.should render_template("create")
     end
@@ -47,13 +47,13 @@ describe Admin::HybridRelationshipsController do
   describe "XHR GET edit" do
     it "renders the edit template" do
       xhr :get, :edit, :taxon_concept_id => taxon_concept.id,
-        :id => hybrid_relationship.id
+        :id => trade_name_relationship.id
       response.should render_template('new')
     end
-    it "assigns the hybrid_relationship variable" do
+    it "assigns the trade_name_relationship variable" do
       xhr :get, :edit, :taxon_concept_id => taxon_concept.id,
-        :id => hybrid_relationship.id
-      assigns(:hybrid_relationship).should_not be_nil
+        :id => trade_name_relationship.id
+      assigns(:trade_name_relationship).should_not be_nil
     end
   end
 
@@ -61,17 +61,17 @@ describe Admin::HybridRelationshipsController do
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'json',
         :taxon_concept_id => taxon_concept.id,
-        :id => hybrid_relationship.id,
+        :id => trade_name_relationship.id,
         :taxon_relationship => {
           :other_taxon_concept_attributes =>
-            build_tc_attributes(:taxon_concept, :name_status => 'H')
+            build_tc_attributes(:taxon_concept, :name_status => 'T')
         }
       response.should be_success
     end
     it "responds with json when not successful" do
       xhr :put, :update, :format => 'json',
         :taxon_concept_id => taxon_concept.id,
-        :id => hybrid_relationship.id,
+        :id => trade_name_relationship.id,
         :taxon_relationship => {
           :other_taxon_concept_attributes => { }
         }
@@ -83,9 +83,9 @@ describe Admin::HybridRelationshipsController do
     it "redirects after delete" do
       delete :destroy,
         :taxon_concept_id => taxon_concept.id,
-        :id => hybrid_relationship.id
+        :id => trade_name_relationship.id
       response.should redirect_to(
-        edit_admin_taxon_concept_url(hybrid_relationship.taxon_concept)
+        admin_taxon_concept_names_url(trade_name_relationship.taxon_concept)
       )
     end
   end

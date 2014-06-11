@@ -49,10 +49,7 @@ shared_context 'Shipments' do
       :taxon_relationship,
       :taxon_concept => @plant_species,
       :other_taxon_concept => @synonym_subspecies,
-      :taxon_relationship_type => create(
-        :taxon_relationship_type,
-        :name => TaxonRelationshipType::HAS_SYNONYM
-      )
+      :taxon_relationship_type => synonym_relationship_type
     )
 
     @trade_name = create_cites_eu_species(
@@ -65,10 +62,7 @@ shared_context 'Shipments' do
       :taxon_relationship,
       :taxon_concept => @plant_species,
       :other_taxon_concept => @trade_name,
-      :taxon_relationship_type => create(
-        :taxon_relationship_type,
-        :name => TaxonRelationshipType::HAS_TRADE_NAME
-      )
+      :taxon_relationship_type => trade_name_relationship_type
     )
 
     country = create(:geo_entity_type, :name => 'COUNTRY')

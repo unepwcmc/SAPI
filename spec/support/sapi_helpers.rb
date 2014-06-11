@@ -511,6 +511,38 @@ shared_context :sapi do
   let(:cites_region_geo_entity_type){
     create(:geo_entity_type, :name => GeoEntityType::CITES_REGION)
   }
+  let(:synonym_relationship_type){
+    create(
+      :taxon_relationship_type,
+      :name => TaxonRelationshipType::HAS_SYNONYM,
+      :is_intertaxonomic => false,
+      :is_bidirectional => false
+    )
+  }
+  let(:trade_name_relationship_type){
+    create(
+      :taxon_relationship_type,
+      :name => TaxonRelationshipType::HAS_TRADE_NAME,
+      :is_intertaxonomic => false,
+      :is_bidirectional => false
+    )
+  }
+  let(:hybrid_relationship_type){
+    create(
+      :taxon_relationship_type,
+      :name => TaxonRelationshipType::HAS_HYBRID,
+      :is_intertaxonomic => false,
+      :is_bidirectional => false
+    )
+  }
+  let(:equal_relationship_type){
+    create(
+      :taxon_relationship_type,
+      :name => TaxonRelationshipType::EQUAL_TO,
+      :is_intertaxonomic => true,
+      :is_bidirectional => true
+    )
+  }
 end
 
 module SapiSpec

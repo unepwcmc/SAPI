@@ -3,14 +3,7 @@ require 'spec_helper'
 describe Admin::TaxonRelationshipsController do
   login_admin
 
-  let!(:equal_relationship_type){
-    create(
-      :taxon_relationship_type,
-      :name => TaxonRelationshipType::EQUAL_TO,
-      :is_intertaxonomic => true,
-      :is_bidirectional => true
-    )
-  }
+  before(:each){ equal_relationship_type }
   let(:taxon_concept){ create(:taxon_concept) }
   describe "GET index" do
     let(:taxon_relationship){
