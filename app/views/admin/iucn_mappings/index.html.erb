@@ -3,8 +3,8 @@
 </div>
 
 <p style="clear:both;">
-  <% ["ALL", "MATCHING", "NON_MATCHING", "FULL_MATCH",
-    "NAME_MATCH", "FULL_SYNONYM_MATCH", "SYNONYM_MATCH"].each do |op| %>
+  <% ["ALL", 'SYNONYMS', 'ACCEPTED', "MATCHING", "NON_MATCHING", "FULL_MATCH",
+    "NAME_MATCH"].each do |op| %>
     <strong><%= op.titleize %>:</strong> <%= @totals[op.downcase.to_sym] %>
     <% if !params[:show] || params[:show] != op %>
       <%= link_to 'View', admin_iucn_mappings_path(:show => op) %>
