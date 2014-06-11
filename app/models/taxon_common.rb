@@ -27,6 +27,5 @@ class TaxonCommon < ActiveRecord::Base
     if cname.id && self.common_name_id != cname.id
       self.common_name_id = cname.id
     end
-    #self.touch if cname.new_record? || cname.changed?
   end
 end
