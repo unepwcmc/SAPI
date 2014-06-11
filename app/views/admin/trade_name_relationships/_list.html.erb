@@ -1,6 +1,6 @@
 <% @trade_name_relationships.each do |rel| %>
   <%= link_to rel.other_taxon_concept.full_name,
-    edit_admin_taxon_concept_url(rel.other_taxon_concept) %>
+    admin_taxon_concept_names_url(rel.other_taxon_concept) %>
   <span class="author-year"><%= rel.other_taxon_concept.author_year %></span>
   <%= link_to edit_icon,
     edit_admin_taxon_concept_trade_name_relationship_url(@taxon_concept, rel),
