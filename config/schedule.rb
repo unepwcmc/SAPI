@@ -14,4 +14,6 @@ end
 
 every :sunday, :at => '4:45am' do
   rake "dashboard_stats:cache:update"
+  rake "db:common_names:cleanup"
+  rake "db:taxon_names:cleanup"
 end
