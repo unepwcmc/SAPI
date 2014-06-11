@@ -23,6 +23,11 @@ class Admin::SynonymRelationshipsController < Admin::TaxonConceptAssociatedTypes
     params[:taxon_relationship][:taxon_relationship_type_id] =
       @synonym_relationship_type.id
     create! do |success, failure|
+      success.js {
+        @synonym_relationships = @taxon_concept.synonym_relationships.
+          includes(:other_taxon_concept).order('taxon_concepts.full_name')
+        render 'create'
+      }
       failure.js {
         @synonym_relationship.build_other_taxon_concept(
           :taxonomy_id => @taxon_concept.taxonomy_id,
@@ -47,10 +52,14 @@ class Admin::SynonymRelationshipsController < Admin::TaxonConceptAssociatedTypes
   end
 
   def update
-    params[:taxon_relationship][:taxon_relationship_type_id] = 
+    params[:taxon_relationship][:taxon_relationship_type_id] =
       @synonym_relationship_type.id
     update! do |success, failure|
-      success.js { render 'create' }
+      success.js {
+        @synonym_relationships = @taxon_concept.synonym_relationships.
+          includes(:other_taxon_concept).order('taxon_concepts.full_name')
+        render 'create'
+      }
       failure.js {
         load_taxonomies_and_ranks
         render 'new'

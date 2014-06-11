@@ -7,7 +7,7 @@ class IucnMappingManager
       @subspecies = Rank.where(:name => Rank::SUBSPECIES).first
       taxonomy = Taxonomy.where(:name => Taxonomy::CITES_EU).first
 
-      TaxonConcept.where(:rank_id => [species.id, @subspecies.id], :name_status => 'A',
+      TaxonConcept.where(:rank_id => [species.id, @subspecies.id], :name_status => ['A','S'],
                          :taxonomy_id => taxonomy.id).each do |taxon_concept|
         sync_taxon_concept taxon_concept
       end
@@ -22,25 +22,9 @@ class IucnMappingManager
                   end
       data = fetch_data_for_name full_name
       if data["result"].empty?
-        puts "#{taxon_concept.full_name} NO MATCH trying synonyms"
-        match_on_synonyms taxon_concept, mapping
+        puts "#{taxon_concept.full_name} NO MATCH"
       else
         map_taxon_concept taxon_concept, mapping, data
-      end
-    end
-
-    def match_on_synonyms taxon_concept, map
-      taxon_concept.synonyms.each do |syn|
-        full_name = if syn.rank_id == @subspecies.id
-                      syn.full_name.insert(syn.full_name.rindex(/ /), " ssp.")
-                    else
-                      syn.full_name
-                    end
-        data = fetch_data_for_name full_name
-        if data["result"] && !data["result"].empty?
-          map_taxon_concept taxon_concept, map, data, syn
-          return
-        end
       end
     end
 
@@ -54,7 +38,7 @@ puts "#{@url}#{full_name.downcase}?token=#{@token}"
       JSON.parse(RestClient.get(url))
     end
 
-    def map_taxon_concept taxon_concept, map, data, synonym=nil
+    def map_taxon_concept taxon_concept, map, data
       begin
         match = data["result"].first
         puts "#{taxon_concept.full_name} #{taxon_concept.author_year} <=>  #{match["scientific_name"]} #{match["authority"]}"
@@ -64,10 +48,10 @@ puts "#{@url}#{full_name.downcase}?token=#{@token}"
           :iucn_author => match['authority'],
           :iucn_category => match['category'],
           :details => {
-          :match => type_of_match(taxon_concept, match, synonym),
-          :no_matches => data["result"].size
-        },
-          :synonym_id => synonym.try(:id)
+          :match => type_of_match(taxon_concept, match),
+            :no_matches => data["result"].size
+          },
+          :accepted_name_id => taxon_concept.name_status == 'S' ? taxon_concept.accepted_names.first.try(:id) : nil
         )
       rescue Exception => e
         puts "#######################################################################"
@@ -76,7 +60,7 @@ puts "#{@url}#{full_name.downcase}?token=#{@token}"
       end
     end
 
-    def type_of_match tc, match, synonym
+    def type_of_match tc, match
       if tc.full_name == match["scientific_name"]
         if strip_authors(tc.author_year) == strip_authors(match["authority"])
           puts "FULL_MATCH!"
@@ -84,14 +68,6 @@ puts "#{@url}#{full_name.downcase}?token=#{@token}"
         else
           puts "NAME_MATCH"
           "NAME_MATCH"
-        end
-      elsif synonym.full_name == match["scientific_name"]
-        if strip_authors(synonym.author_year) == strip_authors(match["authority"])
-          puts "FULL_SYNONYM_MATCH"
-          "FULL_SYNONYM_MATCH"
-        else
-          puts "SYNONYM_MATCH"
-          "SYNONYM_MATCH"
         end
       end
     end

@@ -49,6 +49,8 @@ class TaxonRelationship < ActiveRecord::Base
     required_name_status = case taxon_relationship_type.name
       when TaxonRelationshipType::HAS_SYNONYM
         'S'
+      when TaxonRelationshipType::HAS_TRADE_NAME
+        'T'
       when TaxonRelationshipType::HAS_HYBRID
         'H'
       else
@@ -58,7 +60,13 @@ class TaxonRelationship < ActiveRecord::Base
       where(:taxonomy_id => other_taxon_concept.taxonomy_id).
       where(:rank_id => other_taxon_concept.rank_id).
       where(:full_name => other_taxon_concept.full_name).
-      where(:author_year => other_taxon_concept.author_year).
+      where(
+        if other_taxon_concept.author_year.blank?
+          'SQUISH_NULL(author_year) IS NULL'
+        else
+          {:author_year => other_taxon_concept.author_year}
+        end
+      ).
       where(:name_status => required_name_status).first
     if existing_tc
       self.other_taxon_concept = existing_tc

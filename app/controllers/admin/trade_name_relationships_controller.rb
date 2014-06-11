@@ -23,6 +23,11 @@ class Admin::TradeNameRelationshipsController < Admin::TaxonConceptAssociatedTyp
     params[:taxon_relationship][:taxon_relationship_type_id] =
       @trade_name_relationship_type.id
     create! do |success, failure|
+      success.js {
+        @trade_name_relationships = @taxon_concept.trade_name_relationships.
+          includes(:other_taxon_concept).order('taxon_concepts.full_name')
+        render 'create'
+      }
       failure.js {
         @trade_name_relationship.build_other_taxon_concept(
           :taxonomy_id => @taxon_concept.taxonomy_id,
@@ -50,7 +55,11 @@ class Admin::TradeNameRelationshipsController < Admin::TaxonConceptAssociatedTyp
     params[:taxon_relationship][:taxon_relationship_type_id] =
       @trade_name_relationship_type.id
     update! do |success, failure|
-      success.js { render 'create' }
+      success.js {
+        @trade_name_relationships = @taxon_concept.trade_name_relationships.
+          includes(:other_taxon_concept).order('taxon_concepts.full_name')
+        render 'create'
+      }
       failure.js {
         load_taxonomies_and_ranks
         render 'new'
