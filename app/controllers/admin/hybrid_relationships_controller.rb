@@ -27,6 +27,11 @@ class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesC
     params[:taxon_relationship][:taxon_relationship_type_id] =
       @hybrid_relationship_type.id
     create! do |success, failure|
+      success.js {
+        @hybrid_relationships = @taxon_concept.hybrid_relationships.
+          includes(:other_taxon_concept).order('taxon_concepts.full_name')
+        render 'create'
+      }
       failure.js {
         @taxonomies = Taxonomy.order(:name)
         @ranks = Rank.order(:taxonomic_position)
@@ -49,7 +54,11 @@ class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesC
     params[:taxon_relationship][:taxon_relationship_type_id] =
       @hybrid_relationship_type.id
     update! do |success, failure|
-      success.js { render 'create' }
+      success.js {
+        @hybrid_relationships = @taxon_concept.hybrid_relationships.
+          includes(:other_taxon_concept).order('taxon_concepts.full_name')
+        render 'create'
+      }
       failure.js { render 'new' }
     end
   end
