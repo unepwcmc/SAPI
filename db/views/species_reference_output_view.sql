@@ -22,6 +22,7 @@ SELECT
   rf.legacy_id AS reference_legacy_id,
   to_char(r.created_at, 'DD/MM/YYYY') AS created_at,
   uc.name AS created_by,
+  to_char(r.updated_at, 'DD/MM/YYYY') AS updated_at,
   uu.name AS updated_by
   
 FROM taxon_concepts st
