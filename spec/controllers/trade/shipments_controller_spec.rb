@@ -15,6 +15,7 @@ describe Trade::ShipmentsController do
       get :index, taxon_concepts_ids: [@animal_genus.id], format: :json
       response.body.should have_json_size(2).at_path('shipments')
     end
+
     it "should return 1 shipment when searching for reporter_type I" do
       get :index, time_range_start: @shipment1.year, time_range_end: @shipment2.year,
         reporter_type: "E", exporters_ids: [@portugal.id.to_s], format: :json
