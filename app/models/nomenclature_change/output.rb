@@ -10,10 +10,11 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy
   belongs_to :new_parent, :class_name => TaxonConcept, :foreign_key => :new_parent_id
   belongs_to :new_rank, :class_name => Rank, :foreign_key => :new_rank_id
-  validates_presence_of :new_full_name, :if => Proc.new { |c| c.taxon_concept_id.blank? }
-  validates_presence_of :new_author_year, :if => Proc.new { |c| c.taxon_concept_id.blank? }
-  validates_presence_of :new_name_status, :if => Proc.new { |c| c.taxon_concept_id.blank? }
-  validates_presence_of :new_parent_id, :if => Proc.new { |c| c.taxon_concept_id.blank? }
+  validates :nomenclature_change_id, :presence => true
+  validates :new_full_name, :presence => true, :if => Proc.new { |c| c.taxon_concept_id.blank? }
+  validates :new_author_year, :presence => true, :if => Proc.new { |c| c.taxon_concept_id.blank? }
+  validates :new_name_status, :presence => true, :if => Proc.new { |c| c.taxon_concept_id.blank? }
+  validates :new_parent_id, :presence => true, :if => Proc.new { |c| c.taxon_concept_id.blank? }
 
   def new_full_name
     name = read_attribute(:new_full_name)

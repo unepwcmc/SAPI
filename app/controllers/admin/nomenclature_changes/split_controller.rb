@@ -1,10 +1,9 @@
 class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::BuildController
 
-  steps :inputs, :outputs, :children, :names, :distribution, :legislation,
-    :notes, :summary
+  steps *NomenclatureChange::Split::STEPS
 
   def create
-    @nomenclature_change = NomenclatureChange::Split.create(:status => 'new')
+    @nomenclature_change = NomenclatureChange::Split.create(:status => :new)
     redirect_to wizard_path(steps.first, :nomenclature_change_id => @nomenclature_change.id)
   end
 
