@@ -1,4 +1,6 @@
 class NomenclatureChange::Split < NomenclatureChange
+  STEPS = [:inputs, :outputs, :children, :names, :distribution, :legislation, :notes]
+  STATUSES = ['new', 'submitted'] + STEPS.map(&:to_s)
   has_one :input, :class_name => NomenclatureChange::Input,
     :foreign_key => :nomenclature_change_id,
     :dependent => :destroy
@@ -7,4 +9,10 @@ class NomenclatureChange::Split < NomenclatureChange
     :dependent => :destroy
   accepts_nested_attributes_for :input, :allow_destroy => true
   accepts_nested_attributes_for :outputs, :allow_destroy => true
+
+  validates :status, inclusion: {
+    in: STATUSES,
+    message: "%{value} is not a valid status"
+  }
+
 end
