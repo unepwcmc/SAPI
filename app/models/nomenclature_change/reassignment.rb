@@ -20,6 +20,9 @@ class NomenclatureChange::Reassignment < ActiveRecord::Base
     :foreign_key => :nomenclature_change_reassignment_id, :dependent => :destroy
   has_many :outputs, :through => :reassignment_targets
 
+  validates :nomenclature_change_input_id, :presence => true
+  validates :reassignable_type, :presence => true
+
   def process
     Rails.logger.debug("Processing #{reassignable_type} reassignment from #{input.taxon_concept.full_name}")
     reassignment_targets.select do |target|
