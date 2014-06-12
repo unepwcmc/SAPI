@@ -66,6 +66,9 @@ end
 
 group :staging, :production do
   gem 'exception_notification', '~>4.0'
+end
+
+group :production do
   gem 'newrelic_rpm', '>=3.7.3'
 end
 
