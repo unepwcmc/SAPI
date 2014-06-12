@@ -22,7 +22,7 @@ class Admin::ExportsController < Admin::AdminController
         result = Species::IucnMappingsExport.new.export
     end
     if result.is_a?(Array)
-      send_file result[0], result[1]
+      send_file Pathname.new(result[0]).realpath, result[1]
     else
       redirect_to admin_exports_path, :notice => "There are no #{params[:data_type]} to download."
     end
