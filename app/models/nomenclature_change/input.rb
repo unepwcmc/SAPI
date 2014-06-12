@@ -8,6 +8,7 @@ class NomenclatureChange::Input < ActiveRecord::Base
     :name_reassignments_attributes,
     :distribution_reassignments_attributes,
     :legislation_reassignments_attributes
+  belongs_to :nomenclature_change
   belongs_to :taxon_concept
   has_many :reassignments,
     :class_name => NomenclatureChange::Reassignment,
@@ -24,7 +25,8 @@ class NomenclatureChange::Input < ActiveRecord::Base
   has_many :legislation_reassignments,
     :class_name => NomenclatureChange::LegislationReassignment,
     :foreign_key => :nomenclature_change_input_id, :dependent => :destroy
-  validates_presence_of :taxon_concept_id
+  validates :nomenclature_change_id, :presence => true
+  validates :taxon_concept_id, :presence => true
   accepts_nested_attributes_for :parent_reassignments, :allow_destroy => true
   accepts_nested_attributes_for :name_reassignments, :allow_destroy => true
   accepts_nested_attributes_for :distribution_reassignments, :allow_destroy => true
