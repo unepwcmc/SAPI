@@ -10,19 +10,19 @@
     <h2>{{authorYear}}</h2>
     <ul class="list">
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=phylumName taxonomy=taxonomy}}{{unbound phylumName}}{{/link-to}}
+        {{#link-to 'taxonConcepts' taxon_concept_query=phylumName taxonomy=taxonomy}}{{phylumName}}{{/link-to}}
       </li>
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=className taxonomy=taxonomy}}{{unbound className}}{{/link-to}}
+        {{#link-to 'taxonConcepts' taxon_concept_query=className taxonomy=taxonomy}}{{className}}{{/link-to}}
       </li>
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=orderName taxonomy=taxonomy}}{{unbound orderName}}{{/link-to}}
+        {{#link-to 'taxonConcepts' taxon_concept_query=orderName taxonomy=taxonomy}}{{orderName}}{{/link-to}}
       </li>
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=familyName taxonomy=taxonomy}}{{unbound familyName}}{{/link-to}}
+        {{#link-to 'taxonConcepts' taxon_concept_query=familyName taxonomy=taxonomy}}{{familyName}}{{/link-to}}
       </li>
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=genusName taxonomy=taxonomy}}{{unbound genusName}}{{/link-to}}
+        {{#link-to 'taxonConcepts' taxon_concept_query=genusName taxonomy=taxonomy}}{{genusName}}{{/link-to}}
       </li>
       {{#if isSubspecies}}
         <li>
