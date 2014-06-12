@@ -4,9 +4,4 @@ class Checklist::AutocompleteTaxonConceptSerializer < ActiveModel::Serializer
   def rank_name
     object.rank_display_name
   end
-
-  def matching_names
-    (object.synonyms + object.english_names +
-      object.french_names + object.spanish_names).sort
-  end
 end
