@@ -3,8 +3,12 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
   steps *NomenclatureChange::Split::STEPS
 
   def create
-    @nomenclature_change = NomenclatureChange::Split.create(:status => :new)
-    redirect_to wizard_path(steps.first, :nomenclature_change_id => @nomenclature_change.id)
+    @nomenclature_change = NomenclatureChange::Split.new(:status => NomenclatureChange::NEW)
+    if @nomenclature_change.save
+      redirect_to wizard_path(steps.first, :nomenclature_change_id => @nomenclature_change.id)
+    else
+      redirect_to admin_nomenclature_changes_url, :alert => "Could not start a new nomenclature change"
+    end
   end
 
   def show
@@ -32,7 +36,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
   end
 
   def update
-    status_attrs = {:status => (step == steps.last ? 'submitted' : step.to_s)}
+    status_attrs = {:status => (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)}
     success = @nomenclature_change.update_attributes(
       (params[:nomenclature_change_split] || {}).merge(status_attrs)
     )
