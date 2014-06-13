@@ -18,6 +18,8 @@ template.find('input.typeahead').typeahead({
       '/admin/references/autocomplete',
       { query: query },
       function (data) {
+        references = {};
+        referencesLabels = [];
         _.each(data, function(item, i, list) {
           if (_.has(references, item.value)) {
             item.value = item.value + ' (' + item.id + ')';

@@ -315,6 +315,8 @@ class TaxonReferencesEditor extends AdminEditor
           '/admin/references/autocomplete',
           { query: query },
           (data) =>
+            @referencesLabels = []
+            @refrences = {}
             _.each(data, (item, i, list) =>
               if (_.has(@references, item.value))
                 item.value = item.value + ' (' + item.id + ')'
