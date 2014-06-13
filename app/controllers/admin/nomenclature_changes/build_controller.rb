@@ -3,11 +3,6 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
 
   before_filter :set_nomenclature_change, :only => [:show, :update, :destroy]
 
-  def create
-    @nomenclature_change = NomenclatureChange.create
-    redirect_to wizard_path(steps.first, :nomenclature_change_id => @nomenclature_change.id)
-  end
-
   def finish_wizard_path
     admin_nomenclature_changes_path
   end
