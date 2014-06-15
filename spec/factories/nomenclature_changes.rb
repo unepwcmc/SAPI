@@ -5,7 +5,30 @@ FactoryGirl.define do
     status 'new'
     type 'NomenclatureChange'
 
-    factory :nomenclature_change_split, class: NomenclatureChange::Split
+    factory :nomenclature_change_split, class: NomenclatureChange::Split do
+      trait :inputs do
+        after(:create) do |split|
+          create(:nomenclature_change_input, nomenclature_change: split)
+        end
+      end
+      trait :outputs do
+        transient do
+          outputs_count 2
+        end
+        after(:create) do |split, evaluator|
+          create_list(:nomenclature_change_output, evaluator.outputs_count, nomenclature_change: split)
+        end
+      end
+      factory :nomenclature_change_split_inputs do
+        inputs
+        status NomenclatureChange::Split::INPUTS
+      end
+      factory :nomenclature_change_split_outputs do
+        inputs
+        outputs
+        status NomenclatureChange::Split::OUTPUTS
+      end
+    end
   end
 
   factory :nomenclature_change_input, class: NomenclatureChange::Input,

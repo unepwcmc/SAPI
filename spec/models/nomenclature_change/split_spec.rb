@@ -41,10 +41,11 @@ describe NomenclatureChange::Split do
     context "when output has different rank than input" do
       context "new rank not specified" do
         let(:split){
-          build(:nomenclature_change_split, :status => NomenclatureChange::Split::OUTPUTS,
-            :input_attributes => {:taxon_concept_id => create_cites_eu_species.id},
+          build(:nomenclature_change_split_inputs,
+            :status => NomenclatureChange::Split::OUTPUTS,
             :outputs_attributes => {
-              0 => {:taxon_concept_id => create_cites_eu_subspecies.id}
+              0 => {:taxon_concept_id => create_cites_eu_subspecies.id},
+              1 => {:taxon_concept_id => create_cites_eu_subspecies.id}
             }
           )
         }
@@ -52,10 +53,14 @@ describe NomenclatureChange::Split do
       end
       context "incorrect new rank specified" do
         let(:split){
-          build(:nomenclature_change_split, :status => NomenclatureChange::Split::OUTPUTS,
-            :input_attributes => {:taxon_concept_id => create_cites_eu_genus.id},
+          build(:nomenclature_change_split_inputs,
+            :status => NomenclatureChange::Split::OUTPUTS,
             :outputs_attributes => {
               0 => {
+                :taxon_concept_id => create_cites_eu_subspecies.id,
+                :new_rank_id => species_rank.id
+              },
+              1 => {
                 :taxon_concept_id => create_cites_eu_subspecies.id,
                 :new_rank_id => species_rank.id
               }
