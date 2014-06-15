@@ -15,19 +15,28 @@ class NomenclatureChange::Split < NomenclatureChange
     in: STATUSES,
     message: "%{value} is not a valid status"
   }
-  validate :must_have_input, if: :inputs_or_submitting?
-  validate :must_have_outputs, if: :outputs_or_submitting?
+  validate :required_inputs, if: :inputs_or_submitting?
+  validate :required_outputs, if: :outputs_or_submitting?
+  validate :required_ranks, if: :outputs_or_submitting?
 
-  def must_have_input
+  def required_inputs
     if input.blank?
       errors.add(:input, "Must have one input")
       return false
     end
   end
 
-  def must_have_outputs
+  def required_outputs
     if outputs.size < 2
       errors.add(:outputs, "Must have at least two outputs")
+      return false
+    end
+  end
+
+  def required_ranks
+    if !(outputs.map{ |o| o.new_rank.try(:name) || o.taxon_concept.try(:rank).try(:name) }.
+      uniq - [input.try(:taxon_concept).try(:rank).try(:name)]).empty?
+      errors.add(:outputs, "Must be at same rank as input")
       return false
     end
   end
