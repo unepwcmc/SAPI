@@ -36,10 +36,13 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
   end
 
   def update
-    status_attrs = {:status => (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)}
-    success = @nomenclature_change.update_attributes(
-      (params[:nomenclature_change_split] || {}).merge(status_attrs)
-    )
+    success = if step == steps.last
+      @nomenclature_change.submit
+    else
+      @nomenclature_change.update_attributes(
+        (params[:nomenclature_change_split] || {}).merge({:status => step.to_s})
+      )
+    end
     case step
     when :inputs
       set_events unless success
