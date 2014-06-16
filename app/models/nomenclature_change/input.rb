@@ -10,23 +10,23 @@ class NomenclatureChange::Input < ActiveRecord::Base
     :legislation_reassignments_attributes
   belongs_to :nomenclature_change
   belongs_to :taxon_concept
-  has_many :reassignments,
+  has_many :reassignments, :inverse_of => :input,
     :class_name => NomenclatureChange::Reassignment,
     :foreign_key => :nomenclature_change_input_id, :dependent => :destroy
-  has_many :parent_reassignments,
+  has_many :parent_reassignments, :inverse_of => :input,
     :class_name => NomenclatureChange::ParentReassignment,
     :foreign_key => :nomenclature_change_input_id, :dependent => :destroy
-  has_many :name_reassignments,
+  has_many :name_reassignments, :inverse_of => :input,
     :class_name => NomenclatureChange::NameReassignment,
     :foreign_key => :nomenclature_change_input_id, :dependent => :destroy
-  has_many :distribution_reassignments,
+  has_many :distribution_reassignments, :inverse_of => :input,
     :class_name => NomenclatureChange::DistributionReassignment,
     :foreign_key => :nomenclature_change_input_id, :dependent => :destroy
-  has_many :legislation_reassignments,
+  has_many :legislation_reassignments, :inverse_of => :input,
     :class_name => NomenclatureChange::LegislationReassignment,
     :foreign_key => :nomenclature_change_input_id, :dependent => :destroy
-  validates :nomenclature_change_id, :presence => true
-  validates :taxon_concept_id, :presence => true
+  validates :nomenclature_change, :presence => true
+  validates :taxon_concept, :presence => true
   accepts_nested_attributes_for :parent_reassignments, :allow_destroy => true
   accepts_nested_attributes_for :name_reassignments, :allow_destroy => true
   accepts_nested_attributes_for :distribution_reassignments, :allow_destroy => true
