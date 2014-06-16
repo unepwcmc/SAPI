@@ -84,6 +84,7 @@ describe Trade::ShipmentsController do
       post :destroy_batch, sources_ids: [@source_wild.id.to_s],
         reporter_type: 'I', source_blank: "true"
       Trade::Shipment.count.should == 2
+
     end
   end
 
