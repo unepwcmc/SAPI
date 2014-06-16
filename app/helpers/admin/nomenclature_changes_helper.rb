@@ -27,16 +27,10 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
-  def print_summary nomenclature_change
-    processor_klass = "#{nomenclature_change.type}::Summarizer".constantize
-    summary = processor_klass.summary(nomenclature_change)
-    print_summary_line summary
-  end
-
-  def print_summary_line summary
+  def print_summary summary
     if summary.kind_of?(Array)
       content_tag(:ul) do
-        summary.each{ |line| concat print_summary_line(line) }
+        summary.each{ |line| concat print_summary(line) }
       end
     else
       content_tag(:li, summary)
