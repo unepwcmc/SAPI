@@ -1,5 +1,5 @@
 class NomenclatureChange::Split < NomenclatureChange
-  STEPS = [:inputs, :outputs, :children, :names, :distribution, :legislation, :notes]
+  STEPS = [:inputs, :outputs, :children, :names, :distribution, :legislation, :notes, :summary]
   STATUSES = ['new', 'submitted'] + STEPS.map(&:to_s)
   build_basic_dictionary(*STATUSES)
   has_one :input, :class_name => NomenclatureChange::Input,
