@@ -33,7 +33,7 @@ class CreateNomenclatureChangeOutputs < ActiveRecord::Migration
     add_foreign_key 'nomenclature_change_outputs', 'taxon_concepts',
       name: 'nomenclature_change_outputs_new_parent_id_fk',
       column: 'new_parent_id'
-    add_foreign_key 'nomenclature_change_outputs', 'taxon_concepts',
+    add_foreign_key 'nomenclature_change_outputs', 'ranks',
       name: 'nomenclature_change_outputs_new_rank_id_fk',
       column: 'new_rank_id'
   end
