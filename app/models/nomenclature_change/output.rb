@@ -3,7 +3,7 @@
 # change.
 class NomenclatureChange::Output < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :created_by_id, :new_author_year, :new_full_name, :new_name_status, :new_parent_id, :new_rank_id, :new_taxon_concept_id, :nomenclature_change_id, :note, :taxon_concept_id, :updated_by_id
+  attr_accessible :created_by_id, :new_author_year, :new_scientific_name, :new_name_status, :new_parent_id, :new_rank_id, :new_taxon_concept_id, :nomenclature_change_id, :note, :taxon_concept_id, :updated_by_id
   belongs_to :nomenclature_change
   belongs_to :taxon_concept
   has_many :reassignment_targets, :class_name => NomenclatureChange::ReassignmentTarget,
@@ -11,7 +11,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
   belongs_to :new_parent, :class_name => TaxonConcept, :foreign_key => :new_parent_id
   belongs_to :new_rank, :class_name => Rank, :foreign_key => :new_rank_id
   validates :nomenclature_change_id, :presence => true
-  validates :new_full_name, :presence => true,
+  validates :new_scientific_name, :presence => true,
     :if => Proc.new { |c| c.taxon_concept_id.blank? }
   validates :new_parent_id, :presence => true,
     :if => Proc.new { |c| c.taxon_concept_id.blank? }
@@ -19,7 +19,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :if => Proc.new { |c| c.will_create_taxon? || c.will_update_taxon? }
 
   def new_full_name
-    name = read_attribute(:new_full_name)
+    name = new_scientific_name
     return nil if name.blank?
     rank = new_rank || nomenclature_change.input.taxon_concept.rank
     parent = new_parent || nomenclature_change.input.taxon_concept.parent
@@ -76,7 +76,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
   # Returns true when the new taxon has a different name from old one
   def will_create_taxon?
     taxon_concept.nil? ||
-      !read_attribute(:new_full_name).blank? &&
+      !new_scientific_name.blank? &&
       taxon_concept.full_name != display_full_name
   end
 
