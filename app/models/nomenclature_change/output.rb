@@ -19,14 +19,13 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :if => Proc.new { |c| c.will_create_taxon? || c.will_update_taxon? }
 
   def new_full_name
-    name = new_scientific_name
-    return nil if name.blank?
+    return nil if new_scientific_name.blank?
     rank = new_rank || nomenclature_change.input.taxon_concept.rank
     parent = new_parent || nomenclature_change.input.taxon_concept.parent
     if [Rank::SPECIES, Rank::SUBSPECIES].include?(rank.name)
-      parent.full_name + ' ' + name
+      parent && (parent.full_name + ' ') + new_scientific_name
     elsif rank.name == Rank::VARIETY
-      parent.full_name + ' var. ' + name
+      parent && (parent.full_name + ' var. ') + new_scientific_name
     else
       name
     end

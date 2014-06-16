@@ -32,9 +32,6 @@ class NomenclatureChange::Split::Processor
 
   def process_new_name(output)
     tc = output.new_taxon_concept
-    unless tc.save
-      puts tc.inspect
-    end
     Rails.logger.debug("UPDATE NEW TAXON ID #{tc.id}")
     output.update_attributes({:new_taxon_concept_id => tc.id})
   end
