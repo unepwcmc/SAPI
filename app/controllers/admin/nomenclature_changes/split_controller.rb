@@ -31,6 +31,8 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       builder.build_common_names_reassignments
       builder.build_references_reassignments
       builder.build_input_and_output_notes
+    when :summary
+      @summary = NomenclatureChange::Split::Summarizer.new(@nomenclature_change).summary
     end
     render_wizard
   end
