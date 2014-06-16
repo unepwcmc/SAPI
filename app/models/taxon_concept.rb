@@ -144,6 +144,7 @@ class TaxonConcept < ActiveRecord::Base
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
+  validates :name_status, :presence => true
   validate :parent_in_same_taxonomy, :if => lambda { |tc| tc.parent }
   validate :parent_at_immediately_higher_rank, :if => lambda { |tc| tc.parent }
   validates :taxon_name_id, :presence => true,
@@ -157,11 +158,18 @@ class TaxonConcept < ActiveRecord::Base
     tc.taxonomy && tc.taxonomy_id_changed?
   }
 
-  before_validation :check_taxon_name_exists
-  before_validation :check_parent_taxon_concept_exists
-  before_validation :check_hybrid_parent_taxon_concept_exists
-  before_validation :check_other_hybrid_parent_taxon_concept_exists
-  before_validation :check_accepted_taxon_concept_exists
+  before_validation :check_taxon_name_exists,
+    :if => lambda { |tc| tc.full_name }
+  before_validation :check_parent_taxon_concept_exists,
+    :if => lambda { |tc| tc.parent_scientific_name }
+  before_validation :check_hybrid_parent_taxon_concept_exists,
+    :if => lambda { |tc| tc.is_hybrid? && tc.hybrid_parent_scientific_name }
+  before_validation :check_other_hybrid_parent_taxon_concept_exists,
+    :if => lambda { |tc| tc.is_hybrid? && tc.other_hybrid_parent_scientific_name }
+  before_validation :check_accepted_taxon_concept_exists,
+    :if => lambda { |tc| tc.is_synonym? && tc.accepted_scientific_name }
+  before_validation :check_accepted_taxon_concept_for_trade_name_exists,
+    :if => lambda { |tc| tc.is_trade_name? && tc.accepted_scientific_name }
   before_validation :ensure_taxonomic_position
 
   scope :at_parent_ranks, lambda{ |rank|
@@ -336,7 +344,6 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def check_taxon_name_exists
-    return true unless full_name
     self.full_name = TaxonConcept.sanitize_full_name(full_name)
     scientific_name = if is_synonym? || is_trade_name? || is_hybrid?
       full_name
@@ -356,7 +363,6 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def check_hybrid_parent_taxon_concept_exists
-    return true unless is_hybrid?
     check_associated_taxon_concept_exists(:hybrid_parent_scientific_name) do |tc|
       inverse_taxon_relationships.build(
         :taxon_concept_id => tc.id,
@@ -367,7 +373,6 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def check_other_hybrid_parent_taxon_concept_exists
-    return true unless is_hybrid?
     check_associated_taxon_concept_exists(:other_hybrid_parent_scientific_name) do |tc|
       inverse_taxon_relationships.build(
         :taxon_concept_id => tc.id,
@@ -378,12 +383,21 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def check_accepted_taxon_concept_exists
-    return true unless is_synonym?
     check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
       inverse_taxon_relationships.build(
         :taxon_concept_id => tc.id,
         :taxon_relationship_type_id => TaxonRelationshipType.
           find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
+      )
+    end
+  end
+
+  def check_accepted_taxon_concept_for_trade_name_exists
+    check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
+      inverse_taxon_relationships.build(
+        :taxon_concept_id => tc.id,
+        :taxon_relationship_type_id => TaxonRelationshipType.
+          find_by_name(TaxonRelationshipType::HAS_TRADE_NAME).id
       )
     end
   end
