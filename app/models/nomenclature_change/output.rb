@@ -6,11 +6,12 @@ class NomenclatureChange::Output < ActiveRecord::Base
   attr_accessible :created_by_id, :new_author_year, :new_scientific_name, :new_name_status, :new_parent_id, :new_rank_id, :new_taxon_concept_id, :nomenclature_change_id, :note, :taxon_concept_id, :updated_by_id
   belongs_to :nomenclature_change
   belongs_to :taxon_concept
-  has_many :reassignment_targets, :class_name => NomenclatureChange::ReassignmentTarget,
+  has_many :reassignment_targets, :inverse_of => :output,
+    :class_name => NomenclatureChange::ReassignmentTarget,
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy
   belongs_to :new_parent, :class_name => TaxonConcept, :foreign_key => :new_parent_id
   belongs_to :new_rank, :class_name => Rank, :foreign_key => :new_rank_id
-  validates :nomenclature_change_id, :presence => true
+  validates :nomenclature_change, :presence => true
   validates :new_scientific_name, :presence => true,
     :if => Proc.new { |c| c.taxon_concept_id.blank? }
   validates :new_parent_id, :presence => true,
