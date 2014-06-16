@@ -80,6 +80,7 @@ SAPI::Application.routes.draw do
     end
 
     resources :iucn_mappings, :only => [:index]
+    resources :cms_mappings, :only => [:index]
 
     resources :taxon_concepts, :only => [:index, :create, :edit, :update, :destroy] do
       get :autocomplete, :on => :collection

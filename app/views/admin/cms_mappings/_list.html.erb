@@ -1,0 +1,35 @@
+<thead>
+  <th>Id</th>
+  <th>Class</th>
+  <th>Taxon Concept (status)</th>
+  <th>Author year</th>
+  <th>CMS Name</th>
+  <th>CMS ID</th>
+  <th>CMS Author</th>
+  <th>Details</th>
+  <th>No matches</th>
+</thead>
+<tbody>
+  <% collection.each do |map| -%>
+    <% tc = map.taxon_concept %>
+    <tr class="<%= map.details["match"].try(:downcase) %>">
+      <td><%= tc.id %></td>
+      <td><%= tc.data["class_name"] %></td>
+      <td><%= link_to "#{tc.full_name} (#{tc.name_status})",
+        admin_taxon_concept_names_path(tc) %></td>
+      <td><%= tc.author_year %></td>
+      <td><%= map.cms_taxon_name %></td>
+      <td><%= map.cms_uuid %></td>
+      <td><%= map.cms_author %></td>
+      <td>
+        <%= map.details["match"] %>
+        <% accepted = map.accepted_name %>
+        <% if accepted %>
+          (<%= link_to accepted.full_name,
+            admin_taxon_concept_names_path(accepted) %>)
+        <% end %>
+      </td>
+      <td><%= map.details["no_matches"] %></td>
+    </tr>
+  <% end -%>
+</tbody>

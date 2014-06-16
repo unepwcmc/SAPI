@@ -1,0 +1,18 @@
+<div class="admin-header">
+  <h1>CMS Mappings</h1>
+</div>
+
+<p style="clear:both;">
+  <% ["SPECIES_PLUS", 'CMS_MAPPED', 'MATCHES', 'MISSING_SPECIES_PLUS'].each do |op| %>
+    <strong><%= op.titleize %>:</strong> <%= @totals[op.downcase.to_sym] %>
+    <% if !params[:show] || params[:show] != op %>
+      <%= link_to 'View', admin_cms_mappings_path(:show => op) %>
+    <% end %>
+    <br />
+  <% end %>
+</p>
+
+<%= admin_table %>
+
+<%= paginate collection %>
+

@@ -15,4 +15,8 @@
 
 class CmsMapping < ActiveRecord::Base
   attr_accessible :accepted_name_id, :cms_author, :cms_taxon_name, :cms_uuid, :details, :taxon_concept_id
+
+  serialize :details, ActiveRecord::Coders::Hstore
+  belongs_to :taxon_concept
+  belongs_to :accepted_name, :class_name => 'TaxonConcept'
 end
