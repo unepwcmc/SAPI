@@ -6,7 +6,7 @@ class CreateNomenclatureChangeOutputs < ActiveRecord::Migration
       t.integer :new_taxon_concept_id
       t.integer :new_parent_id
       t.integer :new_rank_id
-      t.string :new_full_name
+      t.string :new_scientific_name
       t.string :new_author_year
       t.string :new_name_status
       t.text :note
