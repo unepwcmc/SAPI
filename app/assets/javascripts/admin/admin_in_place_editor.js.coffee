@@ -307,28 +307,25 @@ class TaxonReferencesEditor extends AdminEditor
       @saveAndReopen = true
 
   initReferencesTypeahead: () ->
-    @references = {}
-    @referencesLabels = []
-    $('.references-typeahead').typeahead(
-      source: (query, process) =>
-        $.get(
-          '/admin/references/autocomplete',
-          { query: query },
-          (data) =>
-            _.each(data, (item, i, list) =>
-              if (_.has(@references, item.value))
-                item.value = item.value + ' (' + item.id + ')'
+    $("#reference_id").select2
+      placeholder: "Type reference citation"
+      minimumInputLength: 3
+      ajax:
+        url: "/admin/references/autocomplete"
+        dataType: "json"
+        quietMillis: 100
+        data: (query) ->
+          query: query
 
-              @referencesLabels.push(item.value)
-              @references[item.value] = item.id
-            )
-            process(@referencesLabels)
-        )
-      updater: (item) =>
-        $('#reference_id').val(@references[item])
-        $('#reference_search').val(item)
-        return item
-    )
+        results: (data) ->
+          results = []
+          $.each data, (i, e) ->
+            results.push
+              id: e.id
+              text: e.value
+
+
+          results: results
 
 
 class TermPairingsSelect2Editor extends AdminEditor
