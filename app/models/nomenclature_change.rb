@@ -21,6 +21,14 @@ class NomenclatureChange < ActiveRecord::Base
       status_was != NomenclatureChange::CLOSED
   end
 
+  def submit
+    if in_progress?
+      update_attribute(:status, NomenclatureChange::SUBMITTED)
+    else
+      false
+    end
+  end
+
   def cannot_update_when_locked
     if status_was == NomenclatureChange::CLOSED ||
       status_was == NomenclatureChange::SUBMITTED &&
