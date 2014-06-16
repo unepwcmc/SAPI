@@ -1,6 +1,6 @@
 var template = $("<%= escape_javascript(render('form')) %>");
 
-$("#new-distribution-label").text("<%= 
+$("#new-distribution-label").text("<%=
    if @distribution.new_record?
     "Add new"
    else
@@ -9,38 +9,36 @@ $("#new-distribution-label").text("<%=
 
 var distributionReferences = new DistributionReferences({el: template.find('#search ul')});
 
-var references = {};
-var referencesLabels = [];
+$('#admin-new-distribution-form').html(template);
 
-template.find('input.typeahead').typeahead({
-  source: function(query, process)  {
-    $.get(
-      '/admin/references/autocomplete',
-      { query: query },
-      function (data) {
-        _.each(data, function(item, i, list) {
-          if (_.has(references, item.value)) {
-            item.value = item.value + ' (' + item.id + ')';
-          }
-
-          referencesLabels.push(item.value);
-          references[item.value] = item.id;
+$('#reference_id').select2({
+  placeholder: 'Type reference citation',
+  minimumInputLength: 3,
+  ajax: {
+    url: '/admin/references/autocomplete',
+    dataType: 'json',
+    quietMillis: 100,
+    data: function(query){
+      return {
+        query: query
+      };
+    },
+    results: function(data) {
+      var results = [];
+      $.each(data, function(i, e) {
+        return results.push({
+          id: e.id,
+          text: e.value
         });
-
-        return process(referencesLabels);
-      }
-    );
-  },
-  updater: function(item) {
-    distributionReferences.add(references[item], item);
-
-    // Select the form field set added by nested_form
-    var $input = template.find('input#reference_id');
-    $input.val(distributionReferences.toString());
+      });
+      return {
+        results: results
+      };
+    }
   }
 });
 
-$('#admin-new-distribution-form').html(template);
+
 
 $('#admin-new-distribution-form .distribution').select2();
 $('#new-distribution').modal('show');
