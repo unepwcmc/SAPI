@@ -17,7 +17,7 @@ class NomenclatureChange::Split::Processor
 
   def process_output(output)
     Rails.logger.debug("[#{@nc.type}] Processing output #{output.display_full_name}")
-    if output.taxon_concept.blank?
+    if output.taxon_concept.nil?
       process_new_name(output)
     elsif output.taxon_concept.full_name != output.display_full_name
       process_name_change(output)
