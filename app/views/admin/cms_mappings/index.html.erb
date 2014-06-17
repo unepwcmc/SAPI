@@ -12,6 +12,11 @@
   <% end %>
 </p>
 
+<p>
+  <%= link_to "Download as CSV", admin_exports_download_path(
+    :data_type => 'CmsMappings'
+    )%>
+</p>
 <%= admin_table %>
 
 <%= paginate collection %>

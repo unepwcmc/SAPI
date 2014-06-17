@@ -20,6 +20,8 @@ class Admin::ExportsController < Admin::AdminController
         result = Species::TaxonConceptsDistributionsExport.new(params[:filters]).export
       when 'IucnMappings'
         result = Species::IucnMappingsExport.new.export
+      when 'CmsMappings'
+        result = Species::CmsMappingsExport.new.export
     end
     if result.is_a?(Array)
       send_file Pathname.new(result[0]).realpath, result[1]
