@@ -17,14 +17,21 @@ class CmsMappingManager
         mapping = CmsMapping.find_or_create_by_taxon_concept_id_and_cms_taxon_name_and_cms_uuid(
           taxon_concept.try(:id), sp["scientific_name"], sp["node_uuid"])
 
-        #analyse mapping
+        analyse mapping
       end
     end
 
     def analyse mapping
-      species = JSON.parse(RestClient.get(@show_url+"mapping.cms_taxon_name"))
-      debugger
-      true
+      url = URI.escape(@show_url+mapping.cms_taxon_name)
+      species = JSON.parse(RestClient.get(url)).first
+      if species
+        mapping.details = {
+          :has_author => species["taxonomy"]["author"].nil?,
+          :distributions_splus => mapping.taxon_concept && mapping.taxon_concept.distributions.size,
+          :distributions_cms => species["geographic_range"]["range_states"].size
+        }
+        mapping.save
+      end
     end
   end
 end
