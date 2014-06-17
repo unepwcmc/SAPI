@@ -24,8 +24,6 @@ class NomenclatureChange < ActiveRecord::Base
   def submit
     if in_progress?
       update_attribute(:status, NomenclatureChange::SUBMITTED)
-    else
-      false
     end
   end
 
