@@ -1,7 +1,8 @@
 class NomenclatureChangeObserver < ActiveRecord::Observer
 
-  def before_save(nomenclature_change)
-    if nomenclature_change.submitting?
+  def after_save(nomenclature_change)
+    if nomenclature_change.status == nomenclature_change.class::SUBMITTED
+      Rails.logger.warn "SUBMIT #{nomenclature_change.type}"
       begin
         processor_klass = "#{nomenclature_change.type}::Processor".constantize
       rescue NameError
