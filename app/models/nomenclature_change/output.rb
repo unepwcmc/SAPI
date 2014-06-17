@@ -23,12 +23,12 @@ class NomenclatureChange::Output < ActiveRecord::Base
     return nil if new_scientific_name.blank?
     rank = new_rank || nomenclature_change.input.taxon_concept.rank
     parent = new_parent || nomenclature_change.input.taxon_concept.parent
-    if [Rank::SPECIES, Rank::SUBSPECIES].include?(rank.name)
-      parent && (parent.full_name + ' ') + new_scientific_name
-    elsif rank.name == Rank::VARIETY
-      parent && (parent.full_name + ' var. ') + new_scientific_name
+    if parent && [Rank::SPECIES, Rank::SUBSPECIES].include?(rank.name)
+      parent.full_name + ' ' + new_scientific_name
+    elsif parent && rank.name == Rank::VARIETY
+      parent.full_name + ' var. ' + new_scientific_name
     else
-      name
+      new_scientific_name
     end
   end
 
@@ -53,17 +53,26 @@ class NomenclatureChange::Output < ActiveRecord::Base
 
   def new_taxon_concept
     return @new_taxon_concept if @new_taxon_concept
-    return nil unless will_create_taxon? || will_update_taxon?
-    taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
-    @new_taxon_concept = taxon_concept || TaxonConcept.new(
-      :taxonomy_id => taxonomy.id
-    )
-    @new_taxon_concept.parent_id = new_parent_id || taxon_concept.try(:parent_id)
-    @new_taxon_concept.rank_id = new_rank_id || taxon_concept.try(:rank_id)
-    @new_taxon_concept.full_name = display_full_name
-    @new_taxon_concept.author_year = new_author_year || taxon_concept.try(:author_year)
-    @new_taxon_concept.name_status = new_name_status || taxon_concept.try(:name_status)
-    @new_taxon_concept
+    taxon_concept_attrs = {
+      :parent_id => new_parent_id || taxon_concept.try(:parent_id),
+      :rank_id => new_rank_id || taxon_concept.try(:rank_id),
+      :author_year => new_author_year || taxon_concept.try(:author_year),
+      :name_status => new_name_status || taxon_concept.try(:name_status)
+    }
+    @new_taxon_concept = if will_create_taxon?
+      taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
+      @new_taxon_concept = TaxonConcept.new(
+        taxon_concept_attrs.merge({
+          :taxonomy_id => taxonomy.id,
+          :full_name => display_full_name
+        })
+      )
+    elsif will_update_taxon?
+      taxon_concept.assign_attributes(taxon_concept_attrs)
+      taxon_concept
+    else
+      nil
+    end
   end
 
   def validate_new_taxon_concept
