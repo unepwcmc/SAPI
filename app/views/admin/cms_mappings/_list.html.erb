@@ -5,7 +5,7 @@
   <th>Author year</th>
   <th>CMS Name</th>
   <th>CMS Author</th>
-  <th>Details</th>
+  <th width="25%">Details</th>
 </thead>
 <tbody>
   <% collection.each do |map| -%>
@@ -21,12 +21,14 @@
       <td>
         <ul>
           <li>Distributions:</li>
-          <% debugger %>
-          <li>in S+:<%= map.details['distributions']['species_plus'] %></li>
-          <li>in CMS:<%= map.details['distributions']['cms'] %></li>
+          <li>S+: <%= map.details['distributions_splus'] %></li>
+          <li>CMS: <%= map.details['distributions_cms'] %></li>
           <li>Instruments:</li>
-          <li>in S+:<%= map.details['instruments']['species_plus'] %></li>
-          <li>in CMS:<%= map.details['instruments']['cms'] %></li>
+          <li>S+: <%= map.details['instruments_splus'] %></li>
+          <li>CMS: <%= map.details['instruments_cms'] %></li>
+          <li>Listing:</li>
+          <li>S+: <%= map.details['listing_splus'] %></li>
+          <li>CMS: <%= map.details['listing_cms'] %></li>
         </ul>
       </td>
     </tr>
