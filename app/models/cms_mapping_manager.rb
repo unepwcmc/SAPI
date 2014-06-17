@@ -36,12 +36,12 @@ class CmsMappingManager
               ai["instrument"] && ai["instrument"]["instrument"]
             end.join(", "),
           'listing_splus' => taxon_concept && taxon_concept.listing_changes.first &&
-            "#{taxon_concept.listing_changes.first.species_listing.name} -
-            #{taxon_concept.listing_changes.first.effective_at.strftime("%d/%m/%Y")}",
+            "#{taxon_concept.listing_changes.first.species_listing.name}: #{taxon_concept.
+              listing_changes.first.effective_at.strftime("%d/%m/%Y")}",
           'listing_cms' => if species["appendix_1_date"]
-              "Appendix I #{Date.parse(species["appendix_1_date"]).strftime("%d/%m/%Y")}"
+              "Appendix I: #{Date.parse(species["appendix_1_date"]).strftime("%d/%m/%Y")}"
             elsif species["appendix_2_date"]
-              "Appendix II #{Date.parse(species["appendix_2_date"]).strftime("%d/%m/%Y")}"
+              "Appendix II: #{Date.parse(species["appendix_2_date"]).strftime("%d/%m/%Y")}"
             else
               nil
             end
