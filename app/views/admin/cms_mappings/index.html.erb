@@ -1,0 +1,25 @@
+<div class="admin-header">
+  <h1>CMS Mappings</h1>
+</div>
+
+<p style="clear:both;">
+  <strong>Species plus:</strong> <%= @totals[:species_plus] %><br />
+  <strong>CMS mapped:</strong> <%= @totals[:cms_mapped] %><br />
+  <% ['MATCHES', 'MISSING_SPECIES_PLUS'].each do |op| %>
+    <strong><%= op.titleize %>:</strong> <%= @totals[op.downcase.to_sym] %>
+    <% if !params[:show] || params[:show] != op %>
+      <%= link_to 'View', admin_cms_mappings_path(:show => op) %>
+    <% end %>
+    <br />
+  <% end %>
+</p>
+
+<p>
+  <%= link_to "Download as CSV", admin_exports_download_path(
+    :data_type => 'CmsMappings'
+    )%>
+</p>
+<%= admin_table %>
+
+<%= paginate collection %>
+
