@@ -25,8 +25,9 @@ class CmsMappingManager
       url = URI.escape(@show_url+mapping.cms_taxon_name)
       species = JSON.parse(RestClient.get(url)).first
       if species
+        puts "setting mapping details for #{mapping.cms_taxon_name}"
+        mapping.cms_author = species["taxonomy"]["author"]
         mapping.details = {
-          :has_author => species["taxonomy"]["author"].nil?,
           :distributions_splus => mapping.taxon_concept && mapping.taxon_concept.distributions.size,
           :distributions_cms => species["geographic_range"]["range_states"].size
         }

@@ -4,10 +4,8 @@
   <th>Taxon Concept (status)</th>
   <th>Author year</th>
   <th>CMS Name</th>
-  <th>CMS ID</th>
   <th>CMS Author</th>
   <th>Details</th>
-  <th>No matches</th>
 </thead>
 <tbody>
   <% collection.each do |map| -%>
@@ -19,17 +17,13 @@
         admin_taxon_concept_names_path(tc) %></td>
       <td><%= tc.author_year %></td>
       <td><%= map.cms_taxon_name %></td>
-      <td><%= map.cms_uuid %></td>
       <td><%= map.cms_author %></td>
       <td>
-        <%= map.details["match"] %>
-        <% accepted = map.accepted_name %>
-        <% if accepted %>
-          (<%= link_to accepted.full_name,
-            admin_taxon_concept_names_path(accepted) %>)
-        <% end %>
+        <ul>
+          <li>Distributions in S+:<%= map.details['distributions_splus'] %></li>
+          <li>Distributions in CMS:<%= map.details['distributions_cms'] %></li>
+        </ul>
       </td>
-      <td><%= map.details["no_matches"] %></td>
     </tr>
   <% end -%>
 </tbody>
