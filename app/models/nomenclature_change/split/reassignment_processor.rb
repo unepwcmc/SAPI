@@ -1,0 +1,66 @@
+class NomenclatureChange::Split::ReassignmentProcessor
+
+  def initialize(input, output)
+    @input = input
+    @output = output
+    @nc = output.nomenclature_change
+  end
+
+  def run
+    @input.reassignments.each do |reassignment|
+      process_reassignment(reassignment)
+    end
+  end
+
+  private
+
+  # all objects of reassignable_type that are linked to input taxon
+  def reassignables_by_class
+    Object::const_get(@reassignment.reassignable_type).where(
+      :taxon_concept_id => @input.taxon_concept.id
+    )
+  end
+
+  def process_reassignment(reassignment)
+    Rails.logger.debug("Processing #{reassignment.reassignable_type} reassignment from #{@input.taxon_concept.full_name}")
+    reassignment.reassignment_targets.select do |target|
+      target.output != @input
+    end.each do |target|
+      if @reassignment.reassignable_id.blank?
+        reassignables_by_class.each do |reassignable|
+          process_target(target, reassignable)
+        end
+      else
+        process_target(target, @reassignment.reassignable)
+      end
+    end
+    unless @nc.outputs.include?(@input)
+      # input is not part of the split
+      # delete original association
+      Rails.logger.warn("Deleting #{reassignment.reassignable_type} (id=#{reassignment.reassignable_id}) from #{@input.taxon_concept.full_name}")
+      if reassignment.reassignable_id.blank?
+        reassignables_by_class.each do |reassignable|
+          reassignable.destroy
+        end
+      else
+        reassignment.reassignable.destroy
+      end
+    end
+  end
+
+  def process_target(target, reassignable)
+    new_object = reassignable.dup
+    # TODO for listing changes this needs to copy: annotations, listing distributions and exceptions
+    # TODO for distributions this needs to copy distribution references
+    # TODO for trade restrictions this needs to copy purpose / source / term links
+    Rails.logger.debug "NEW TAXON"
+    Rails.logger.debug target.output.reload.new_taxon_concept_id
+    new_object.taxon_concept_id = target.output.taxon_concept_id ||
+      target.output.reload.new_taxon_concept_id
+    # TODO in case synonyms / subspecies were selected as outputs
+    # this needs to consider the new_taxon_concept_id
+    # so any taxon creations need to be resolved earlier
+    new_object.save
+  end
+
+end

@@ -5,9 +5,4 @@ class NomenclatureChange::ParentReassignment < NomenclatureChange::Reassignment
     :class_name => NomenclatureChange::ReassignmentTarget,
     :foreign_key => :nomenclature_change_reassignment_id
   accepts_nested_attributes_for :reassignment_target, :allow_destroy => true
-
-  def process
-    # TODO handle name changes
-  end
-
 end
