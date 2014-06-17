@@ -8,47 +8,15 @@ class NomenclatureChange::Split::Processor
 
   def run
     Rails.logger.warn("[#{@nc.type}] BEGIN")
-    @outputs.each{ |output| process_output(output) }
-    process_input(@input)
+    @outputs.each do |output|
+      Rails.logger.debug("[#{@nc.type}] Processing output #{output.display_full_name}")
+      processor = NomenclatureChange::Split::TransformationProcessor.new(output)
+      processor.run
+      Rails.logger.debug("[#{@nc.type}] Processing reassignments from #{@input.taxon_concept.full_name}")
+      processor = NomenclatureChange::Split::ReassignmentProcessor.new(@input, output)
+      processor.run
+    end
     Rails.logger.warn("[#{@nc.type}] END")
-  end
-
-  private
-
-  def process_output(output)
-    Rails.logger.debug("[#{@nc.type}] Processing output #{output.display_full_name}")
-    if output.taxon_concept.nil?
-      process_new_name(output)
-    elsif output.taxon_concept.full_name != output.display_full_name
-      process_name_change(output)
-    else
-    end
-  end
-
-  def process_input(input)
-    Rails.logger.debug("[#{@nc.type}] Processing input #{input.taxon_concept.full_name}")
-    input.reassignments.each{ |reassignment| reassignment.process }
-  end
-
-  def process_new_name(output)
-    Rails.logger.debug("[#{@nc.type}] [NEW NAME] Processing output #{output.new_taxon_concept.full_name}")
-    tc = output.new_taxon_concept
-    unless tc.save
-      Rails.logger.warn "FAILED to save taxon #{tc.errors.inspect}"
-    end
-    Rails.logger.debug("UPDATE NEW TAXON ID #{tc.id}")
-    output.update_attributes({:new_taxon_concept_id => tc.id})
-  end
-
-  def process_name_change(output)
-    Rails.logger.debug("[#{@nc.type}] [NAME CHANGE] Processing output #{output.new_taxon_concept.full_name}")
-    tc = output.new_taxon_concept
-    unless tc.save
-      Rails.logger.warn "FAILED to save taxon #{tc.errors.inspect}"
-    end
-    #TODO perform status change
-    Rails.logger.debug("UPDATE NEW TAXON ID #{tc.id}")
-    output.update_attributes({:new_taxon_concept_id => tc.id})
   end
 
 end
