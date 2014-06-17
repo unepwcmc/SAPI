@@ -30,6 +30,21 @@ FactoryGirl.define do
     type 'NomenclatureChange::Reassignment'
     reassignable_type 'TaxonConcept'
     note 'Reassignment note'
+
+    factory :nomenclature_change_parent_reassignment do
+      type 'NomenclatureChange::ParentReassignment'
+    end
+    factory :nomenclature_change_name_reassignment do
+      type 'NomenclatureChange::NameReassignment'
+      reassignable_type 'TaxonRelationship'
+    end
+    factory :nomenclature_change_distribution_reassignment do
+      type 'NomenclatureChange::DistributionReassignment'
+      reassignable_type 'Distribution'
+    end
+    factory :nomenclature_change_legislation_reassignment do
+      type 'NomenclatureChange::LegislationReassignment'
+    end
   end
 
   factory :nomenclature_change_reassignment_target, class: NomenclatureChange::ReassignmentTarget do
