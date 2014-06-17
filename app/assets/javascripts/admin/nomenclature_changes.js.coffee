@@ -1,7 +1,7 @@
 $(document).ready ->
   defaultTaxonSelect2Options = {
     placeholder: 'Start typing scientific name'
-    width: '200px'
+    width: '300px'
     minimumInputLength: 3
     quietMillis: 500,
     initSelection: (element, callback) =>
