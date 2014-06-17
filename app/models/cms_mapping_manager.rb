@@ -27,9 +27,18 @@ class CmsMappingManager
       if species
         puts "setting mapping details for #{mapping.cms_taxon_name}"
         mapping.cms_author = species["taxonomy"]["author"]
+        taxon_concept = mapping.taxon_concept
         mapping.details = {
-          :distributions_splus => mapping.taxon_concept && mapping.taxon_concept.distributions.size,
-          :distributions_cms => species["geographic_range"]["range_states"].size
+          'distributions' => {
+            'species_plus' => taxon_concept && taxon_concept.distributions.size,
+            'cms' => species["geographic_range"]["range_states"].size
+          },
+          'instruments' => {
+            'species_plus' => taxon_concept && taxon_concept.instruments.map(&:name).join(", "),
+            'cms' => species["assessment_information"].map do |ai|
+              ai["instrument"] && ai["instrument"]["instrument"]
+            end.join(", ")
+          }
         }
         mapping.save
       end

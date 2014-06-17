@@ -20,8 +20,13 @@
       <td><%= map.cms_author %></td>
       <td>
         <ul>
-          <li>Distributions in S+:<%= map.details['distributions_splus'] %></li>
-          <li>Distributions in CMS:<%= map.details['distributions_cms'] %></li>
+          <li>Distributions:</li>
+          <% debugger %>
+          <li>in S+:<%= map.details['distributions']['species_plus'] %></li>
+          <li>in CMS:<%= map.details['distributions']['cms'] %></li>
+          <li>Instruments:</li>
+          <li>in S+:<%= map.details['instruments']['species_plus'] %></li>
+          <li>in CMS:<%= map.details['instruments']['cms'] %></li>
         </ul>
       </td>
     </tr>
