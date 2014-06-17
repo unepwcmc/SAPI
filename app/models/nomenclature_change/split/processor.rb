@@ -31,15 +31,20 @@ class NomenclatureChange::Split::Processor
   end
 
   def process_new_name(output)
+    Rails.logger.debug("[#{@nc.type}] [NEW NAME] Processing output #{output.new_taxon_concept.full_name}")
     tc = output.new_taxon_concept
+    unless tc.save
+      Rails.logger.warn "FAILED to save taxon #{tc.errors.inspect}"
+    end
     Rails.logger.debug("UPDATE NEW TAXON ID #{tc.id}")
     output.update_attributes({:new_taxon_concept_id => tc.id})
   end
 
   def process_name_change(output)
+    Rails.logger.debug("[#{@nc.type}] [NAME CHANGE] Processing output #{output.new_taxon_concept.full_name}")
     tc = output.new_taxon_concept
     unless tc.save
-      puts tc.inspect
+      Rails.logger.warn "FAILED to save taxon #{tc.errors.inspect}"
     end
     #TODO perform status change
     Rails.logger.debug("UPDATE NEW TAXON ID #{tc.id}")
