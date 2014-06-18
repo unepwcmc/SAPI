@@ -12,8 +12,9 @@ namespace :export do
       TaxonConcept.where(:name_status => ['A', 'H'], :taxonomy_id => cites.id, :rank_id => species.id).
               joins("LEFT JOIN trade_shipments ON trade_shipments.taxon_concept_id = taxon_concepts.id OR
                     trade_shipments.reported_taxon_concept_id = taxon_concepts.id").
-              joins("LEFT JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id").
-              where("trade_shipments.id IS NULL AND listing_changes.id IS NULL").each do |taxon_concept|
+              joins("LEFT JOIN cites_listing_changes_mview clc ON clc.taxon_concept_id = taxon_concepts.id").
+              joins("LEFT JOIN eu_listing_changes_mview elc ON elc.taxon_concept_id = taxon_concepts.id").
+              where("trade_shipments.id IS NULL AND clc.id IS NULL AND elc.id IS NULL").each do |taxon_concept|
          csv << [
            taxon_concept.id,
            taxon_concept.legacy_id,
