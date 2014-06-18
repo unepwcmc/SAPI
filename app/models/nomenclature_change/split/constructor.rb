@@ -167,7 +167,7 @@ class NomenclatureChange::Split::Constructor
     event = @nomenclature_change.event
     if input.note.blank?
       outputs = @nomenclature_change.outputs.map{ |output| output.display_full_name }.join(', ')
-      inputs.note = "#{input.taxon_concept.full_name} was split into #{outputs} in #{Date.today.year}"
+      input.note = "#{input.taxon_concept.full_name} was split into #{outputs} in #{Date.today.year}"
       input.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
     end
     @nomenclature_change.outputs_minus_inputs.each do |output|
