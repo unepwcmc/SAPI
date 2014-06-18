@@ -19,18 +19,22 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       builder.build_input
     when :outputs
       builder.build_outputs
-    when :children
-      builder.build_parent_reassignments
-    when :names
-      builder.build_name_reassignments
-    when :distribution
-      builder.build_distribution_reassignments
-    when :legislation
-      builder.build_legislation_reassignments
     when :notes
       builder.build_common_names_reassignments
       builder.build_references_reassignments
       builder.build_input_and_output_notes
+    when :children
+      builder.build_parent_reassignments
+      skip_step if @nomenclature_change.input.parent_reassignments.empty?
+    when :names
+      builder.build_name_reassignments
+      skip_step if @nomenclature_change.input.name_reassignments.empty?
+    when :distribution
+      builder.build_distribution_reassignments
+      skip_step if @nomenclature_change.input.distribution_reassignments.empty?
+    when :legislation
+      builder.build_legislation_reassignments
+      skip_step if @nomenclature_change.input.legislation_reassignments.empty?
     when :summary
       @summary = NomenclatureChange::Split::Summarizer.new(@nomenclature_change).summary
     end
