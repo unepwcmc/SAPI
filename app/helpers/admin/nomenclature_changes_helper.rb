@@ -37,4 +37,29 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
+  def split_blurb
+    content_tag(:div, class: 'well well-small') do
+      concat 'Splitting '
+      concat link_to(
+        @nomenclature_change.input.taxon_concept.full_name,
+        admin_taxon_concept_names_path(@nomenclature_change.input.taxon_concept)
+      )
+      unless @nomenclature_change.outputs.empty?
+        concat ' into '
+        total = @nomenclature_change.outputs.size
+        @nomenclature_change.outputs.each_with_index do |output, idx|
+          if output.taxon_concept && !output.new_full_name
+            concat link_to(
+              output.taxon_concept.full_name,
+              admin_taxon_concept_names_path(output.taxon_concept)
+            )
+          else
+            concat output.display_full_name
+          end
+          concat ', ' if idx < (total - 1)
+        end
+      end
+    end
+  end
+
 end
