@@ -790,6 +790,8 @@ $(document).ready(function(){
       query = location.search.substr(1);
     if (report_type === 'comparative') {
       report_type = 'comptab';
+    } else {
+      report_type = $( "select[name='reportType']" ).val();
     }
     query += "&filters[report_type]=" + report_type;
     if (!ignoreWarning &&
