@@ -77,7 +77,7 @@ gem 'dasboard_client', require: false
 
 group :development do
   gem "better_errors", '~>1.1.0'
-  gem "binding_of_caller"
+  gem "binding_of_caller", '>=0.7.2'
   gem 'immigrant'
   gem "guard-livereload"
   gem "yajl-ruby"
@@ -125,7 +125,6 @@ gem 'memcache-client'
 gem 'jquery-ui-rails'
 
 gem 'geoip'
-gem 'charlock_holmes', github: "tooky/charlock_holmes", branch: "bundle-icu"
 
 #track who created or edited a given object
 gem 'clerk'
