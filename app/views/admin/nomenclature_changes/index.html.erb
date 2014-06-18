@@ -29,7 +29,11 @@
   </tr>
   <tr>
     <td>
-      <button class="btn btn-block disabled">Lump</button>
+      <%= link_to admin_nomenclature_change_lump_index_path(:nomenclature_change_id => :new),
+        :method => :post do
+      %>
+        <button class="btn btn-block">Lump</button>
+      <% end %>
     </td>
     <td>
       Lump multiple taxon concepts into one and transfer any associated objects
