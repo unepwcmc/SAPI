@@ -21,6 +21,7 @@
           :class => 'taxon-concept',
           :'data-name' => ff.object.taxon_concept.try(:full_name)
         } %>
+        <%= ff.link_to_remove 'Remove output' %>
       </div>
     </div>
     <div class="well">
@@ -55,7 +56,6 @@
       <label class="control-label">Name status:</label>
       <div class="controls">
         <%= ff.select :new_name_status, options_for_select(['A', 'N']) %>
-        <%= ff.link_to_remove 'Remove output' %>
       </div>
     </div>
     </div>
