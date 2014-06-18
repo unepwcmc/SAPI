@@ -51,4 +51,8 @@ class NomenclatureChange::Split < NomenclatureChange
     status == NomenclatureChange::Split::OUTPUTS || submitting?
   end
 
+  def outputs_minus_inputs
+    outputs - [input]
+  end
+
 end
