@@ -1,0 +1,16 @@
+<h2>New split</h2>
+<%= nomenclature_change_form do |f| %>
+  <%= render 'admin/nomenclature_changes/build/event_selector', :f => f %>
+  <div class="control-group">
+    <%= f.fields_for :input do |ff| %>
+      <!-- TODO figure out the restrictions on the auto complete here, none for now -->
+      <label class="control-label">Select taxon to split:</label>
+      <div class="controls">
+        <%= ff.text_field :taxon_concept_id, {
+          :class => 'taxon-concept',
+          :'data-name' => ff.object.taxon_concept.try(:full_name)
+        } %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
