@@ -1,0 +1,20 @@
+<h2>New lump: handle legislation</h2>
+<p>
+  <i class="icon-info-sign"></i> Legislation will be copied to all outputs of the lump. The following notes will be appended to copied objects.
+</p>
+<%= nomenclature_change_form do |f| %>
+  <%= f.fields_for :input do |ff| %>
+
+      <%= ff.fields_for :legislation_reassignments do |fff| %>
+        <div class="control-group">
+          <label class="control-label">
+            <%= fff.object.reassignable_type %>
+          </label>
+          <div class="controls">
+            <%= fff.text_area :note, {:rows => 4} %>
+          </div>
+        </div>
+      <% end %>
+
+  <% end %>
+<% end %>
