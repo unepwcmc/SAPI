@@ -131,6 +131,7 @@ SAPI::Application.routes.draw do
     end
     resources :nomenclature_changes do
       resources :split, controller: 'nomenclature_changes/split'
+      resources :lump, controller: 'nomenclature_changes/lump'
     end
     match 'exports' => 'exports#index'
     match 'exports/download' => 'exports#download'
