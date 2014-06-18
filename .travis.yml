@@ -1,7 +1,7 @@
 language: ruby
 bundler_args: --without development production staging
 rvm:
-  - 1.9.3
+  - 2.0.0
 addons:
   postgresql: 9.2
   code_climate:
