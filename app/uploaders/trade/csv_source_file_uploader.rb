@@ -42,11 +42,8 @@ class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
     directory = File.dirname( current_path )
     tmp_path = File.join( directory, "tmpfile" )
     require 'csv'
-    require 'charlock_holmes'
     content = File.read(current_path)
-    detection = CharlockHolmes::EncodingDetector.detect(content)
-    utf8_encoded_content = CharlockHolmes::Converter.
-      convert content, detection[:encoding], 'UTF-8'
+    utf8_encoded_content = content.force_encoding("ISO-8859-1").encode("UTF-8")
     CSV.open(tmp_path, "wb") do |tmp_csv|
       CSV.parse(utf8_encoded_content, encoding: "UTF-8") do |row|
         tmp_csv << row unless row.compact.empty?
