@@ -107,35 +107,40 @@ class NomenclatureChange::Split::Constructor
     input.legislation_reassignments = [
       input.legislation_reassignments.where(
         :reassignable_type => 'ListingChange'
-      ).first || NomenclatureChange::LegislationReassignment.new(
+      ).first || input.taxon_concept.listing_changes.limit(1).count > 0 &&
+      NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'ListingChange',
         :note => "Originally listed as #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
-      ),
+      ) || nil,
       input.legislation_reassignments.where(
         :reassignable_type => 'CitesSuspension'
-      ).first || NomenclatureChange::LegislationReassignment.new(
+      ).first || input.taxon_concept.cites_suspensions.limit(1).count > 0 &&
+      NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'CitesSuspension',
         :note => "Suspension originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
-      ),
+      ) || nil,
       input.legislation_reassignments.where(
         :reassignable_type => 'Quota'
-      ).first || NomenclatureChange::LegislationReassignment.new(
+      ).first || input.taxon_concept.quotas.limit(1).count > 0 &&
+      NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'Quota',
         :note => "Quota originally published for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
-      ),
+      ) || nil,
       input.legislation_reassignments.where(
         :reassignable_type => 'EuSuspension'
-      ).first || NomenclatureChange::LegislationReassignment.new(
+      ).first || input.taxon_concept.eu_suspensions.limit(1).count > 0 &&
+      NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'EuSuspension',
         :note => "Suspension originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
-      ),
+      ) || nil,
       input.legislation_reassignments.where(
         :reassignable_type => 'EuOpinion'
-      ).first || NomenclatureChange::LegislationReassignment.new(
+      ).first || input.taxon_concept.eu_opinions.limit(1).count > 0 &&
+      NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'EuOpinion',
         :note => "Opinion originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
-      )
-    ]
+      ) || nil
+    ].compact
   end
 
   def build_common_names_reassignments
