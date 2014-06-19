@@ -51,8 +51,12 @@ class NomenclatureChange::Split < NomenclatureChange
     status == NomenclatureChange::Split::OUTPUTS || submitting?
   end
 
-  def outputs_minus_inputs
-    outputs - [input]
+  def outputs_except_inputs
+    outputs.reject{ |o| o.taxon_concept == input.taxon_concept }
+  end
+
+  def outputs_intersect_inputs
+    outputs.select{ |o| o.taxon_concept == input.taxon_concept }
   end
 
 end
