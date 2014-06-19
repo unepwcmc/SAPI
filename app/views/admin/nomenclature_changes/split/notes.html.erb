@@ -25,7 +25,7 @@
   <% end %>
 
 <h3>Outputs</h3>
-  <% @nomenclature_change.outputs_minus_inputs.each do |output| %>
+  <% @nomenclature_change.outputs_except_inputs.each do |output| %>
     <%= f.fields_for :outputs, output do |ff| %>
       <div class="control-group">
         <label class="control-label">

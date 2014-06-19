@@ -14,11 +14,8 @@ class NomenclatureChange::Split::Constructor
 
   def build_parent_reassignments
     input = @nomenclature_change.input
-    default_output = if @nomenclature_change.outputs.include?(input)
-      input
-    else
-      @nomenclature_change.outputs.first
-    end
+    default_output = @nomenclature_change.outputs_intersect_inputs.first
+    default_output ||= @nomenclature_change.outputs.first
     children = input.taxon_concept.children - @nomenclature_change.
       outputs.map(&:taxon_concept).compact
     input.parent_reassignments = children.map do |child|
@@ -41,11 +38,8 @@ class NomenclatureChange::Split::Constructor
 
   def build_name_reassignments
     input = @nomenclature_change.input
-    default_output = if @nomenclature_change.outputs.include?(input)
-      input
-    else
-      @nomenclature_change.outputs.first
-    end
+    default_output = @nomenclature_change.outputs_intersect_inputs.first
+    default_output ||= @nomenclature_change.outputs.first
     input.name_reassignments = [
       input.taxon_concept.synonym_relationships.
         includes(:other_taxon_concept).
@@ -147,7 +141,7 @@ class NomenclatureChange::Split::Constructor
     input = @nomenclature_change.input
     unless input.reassignments.where(
       :reassignable_type => 'TaxonCommon'
-    ).first
+    ).first || input.taxon_concept.taxon_commons.limit(1).count == 0
       input.reassignments << NomenclatureChange::Reassignment.new(
         :reassignable_type => 'TaxonCommon',
         :type => 'NomenclatureChange::Reassignment'
@@ -159,7 +153,7 @@ class NomenclatureChange::Split::Constructor
     input = @nomenclature_change.input
     unless input.reassignments.where(
       :reassignable_type => 'TaxonConceptReference'
-    ).first
+    ).first || input.taxon_concept.taxon_concept_references.limit(1).count == 0
       input.reassignments << NomenclatureChange::Reassignment.new(
         :reassignable_type => 'TaxonConceptReference',
         :type => 'NomenclatureChange::Reassignment'
@@ -175,7 +169,7 @@ class NomenclatureChange::Split::Constructor
       input.note = "#{input.taxon_concept.full_name} was split into #{outputs} in #{Date.today.year}"
       input.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
     end
-    @nomenclature_change.outputs_minus_inputs.each do |output|
+    @nomenclature_change.outputs_except_inputs.each do |output|
       if output.note.blank?
         output.note = "#{output.display_full_name} was split from #{input.taxon_concept.full_name} in #{Date.today.year}"
         output.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
