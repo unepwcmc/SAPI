@@ -1,0 +1,27 @@
+<h2>New status change: nomenclature change notes</h2>
+<%= status_change_blurb %>
+<%= nomenclature_change_form do |f| %>
+  <% @nomenclature_change.outputs_except_inputs.each do |output| %>
+    <%= f.fields_for :outputs, output do |ff| %>
+      <div class="control-group">
+        <label class="control-label">
+          <%= ff.object.display_full_name %>
+        </label>
+        <div class="controls">
+          <div class="control-group">
+            <label class="control-label">Public note</label>
+            <div class="controls">
+              <%= ff.text_area :note, {:rows => 4} %>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Internal note</label>
+            <div class="controls">
+              <%= ff.text_area :internal_note, {:rows => 4} %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
