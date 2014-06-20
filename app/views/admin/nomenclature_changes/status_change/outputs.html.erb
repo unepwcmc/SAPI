@@ -1,0 +1,37 @@
+<h2>New status change</h2>
+<%= nomenclature_change_form do |f| %>
+  <%= render 'admin/nomenclature_changes/build/event_selector', :f => f %>
+    <%= f.fields_for :outputs do |ff| %>
+    <div class="control-group">
+      <!-- TODO figure out the restrictions on the auto complete here, none for now -->
+      <label class="control-label">Taxon concept:</label>
+      <div class="controls">
+        <%= ff.text_field :taxon_concept_id, {
+          :class => 'taxon-concept',
+          :'data-name' => ff.object.taxon_concept.try(:full_name)
+        } %>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Name status:</label>
+      <div class="controls">
+        <%= ff.select :new_name_status, options_for_select(['S']) %>
+      </div>
+    </div>
+    <% end %>
+
+    <%= f.fields_for :outputs do |ff| %>
+    <div class="control-group">
+      <!-- TODO figure out the restrictions on the auto complete here, none for now -->
+      <label class="control-label">Swap status with:</label>
+      <div class="controls">
+        <%= ff.text_field :taxon_concept_id, {
+          :class => 'taxon-concept',
+          :'data-name' => ff.object.taxon_concept.try(:full_name)
+        } %>
+      </div>
+    </div>
+    <% end %>
+
+
+<% end %>
