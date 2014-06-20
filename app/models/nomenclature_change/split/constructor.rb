@@ -1,4 +1,5 @@
 class NomenclatureChange::Split::Constructor
+  include NomenclatureChange::ConstructorHelpers
 
   def initialize(nomenclature_change)
     @nomenclature_change = nomenclature_change
@@ -18,147 +19,32 @@ class NomenclatureChange::Split::Constructor
     default_output ||= @nomenclature_change.outputs.first
     children = input.taxon_concept.children - @nomenclature_change.
       outputs.map(&:taxon_concept).compact
-    input.parent_reassignments = children.map do |child|
-      reassignment_attrs = {
-        :reassignable_type => 'TaxonConcept',
-        :reassignable_id => child.id
-      }
-      reassignment = input.parent_reassignments.where(
-        reassignment_attrs
-      ).first
-      unless reassignment
-        reassignment = NomenclatureChange::ParentReassignment.new(
-          reassignment_attrs
-        )
-        reassignment.build_reassignment_target(:nomenclature_change_output_id => default_output.id)
-      end
-      reassignment
-    end
+    _build_parent_reassignments(input, default_output, children)
   end
 
   def build_name_reassignments
     input = @nomenclature_change.input
     default_output = @nomenclature_change.outputs_intersect_inputs.first
     default_output ||= @nomenclature_change.outputs.first
-    input.name_reassignments = [
-      input.taxon_concept.synonym_relationships.
-        includes(:other_taxon_concept).
-        order('taxon_concepts.full_name') +
-      input.taxon_concept.hybrid_relationships.
-        includes(:other_taxon_concept).
-        order('taxon_concepts.full_name') +
-      input.taxon_concept.trade_name_relationships.
-        includes(:other_taxon_concept).
-        order('taxon_concepts.full_name')
-      # TODO other relationships
-    ].flatten.map do |relationship|
-      reassignment_attrs = {
-        :reassignable_type => 'TaxonRelationship',
-        :reassignable_id => relationship.id
-      }
-      reassignments = input.name_reassignments.where(
-        reassignment_attrs
-      )
-      if reassignments.empty?
-        r = NomenclatureChange::NameReassignment.new(
-          reassignment_attrs
-        )
-        r.reassignment_targets.build(:nomenclature_change_output_id => default_output.id)
-        reassignments = [r]
-      end
-      reassignments
-    end.flatten
+    _build_names_reassignments(input, [default_output])
   end
 
   def build_distribution_reassignments
     input = @nomenclature_change.input
     default_outputs = @nomenclature_change.outputs
-    input.distribution_reassignments = input.taxon_concept.
-      distributions.includes(:geo_entity).order('geo_entities.name_en').map do |distr|
-      reassignment_attrs = {
-        :reassignable_type => 'Distribution',
-        :reassignable_id => distr.id
-      }
-      reassignments = input.distribution_reassignments.where(
-        reassignment_attrs
-      )
-      if reassignments.empty?
-        r = NomenclatureChange::DistributionReassignment.new(
-          reassignment_attrs
-        )
-        default_outputs.map do |default_output|
-          r.reassignment_targets.build(:nomenclature_change_output_id => default_output.id)
-        end
-        reassignments = [r]
-      end
-      reassignments
-    end.flatten
+    _build_distribution_reassignments(input, default_outputs)
   end
 
   def build_legislation_reassignments
-    input = @nomenclature_change.input
-    event = @nomenclature_change.event
-    input.legislation_reassignments = [
-      input.legislation_reassignments.where(
-        :reassignable_type => 'ListingChange'
-      ).first || input.taxon_concept.listing_changes.limit(1).count > 0 &&
-      NomenclatureChange::LegislationReassignment.new(
-        :reassignable_type => 'ListingChange',
-        :note => "Originally listed as #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
-      ) || nil,
-      input.legislation_reassignments.where(
-        :reassignable_type => 'CitesSuspension'
-      ).first || input.taxon_concept.cites_suspensions.limit(1).count > 0 &&
-      NomenclatureChange::LegislationReassignment.new(
-        :reassignable_type => 'CitesSuspension',
-        :note => "Suspension originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
-      ) || nil,
-      input.legislation_reassignments.where(
-        :reassignable_type => 'Quota'
-      ).first || input.taxon_concept.quotas.limit(1).count > 0 &&
-      NomenclatureChange::LegislationReassignment.new(
-        :reassignable_type => 'Quota',
-        :note => "Quota originally published for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
-      ) || nil,
-      input.legislation_reassignments.where(
-        :reassignable_type => 'EuSuspension'
-      ).first || input.taxon_concept.eu_suspensions.limit(1).count > 0 &&
-      NomenclatureChange::LegislationReassignment.new(
-        :reassignable_type => 'EuSuspension',
-        :note => "Suspension originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
-      ) || nil,
-      input.legislation_reassignments.where(
-        :reassignable_type => 'EuOpinion'
-      ).first || input.taxon_concept.eu_opinions.limit(1).count > 0 &&
-      NomenclatureChange::LegislationReassignment.new(
-        :reassignable_type => 'EuOpinion',
-        :note => "Opinion originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
-      ) || nil
-    ].compact
+    _build_legislation_reassignments(@nomenclature_change.input)
   end
 
   def build_common_names_reassignments
-    input = @nomenclature_change.input
-    unless input.reassignments.where(
-      :reassignable_type => 'TaxonCommon'
-    ).first || input.taxon_concept.taxon_commons.limit(1).count == 0
-      input.reassignments << NomenclatureChange::Reassignment.new(
-        :reassignable_type => 'TaxonCommon',
-        :type => 'NomenclatureChange::Reassignment'
-      )
-    end
+    _build_common_names_reassignments(@nomenclature_change.input)
   end
 
   def build_references_reassignments
-    input = @nomenclature_change.input
-    unless input.reassignments.where(
-      :reassignable_type => 'TaxonConceptReference'
-    ).first || input.taxon_concept.taxon_concept_references.limit(1).count == 0
-      input.reassignments << NomenclatureChange::Reassignment.new(
-        :reassignable_type => 'TaxonConceptReference',
-        :type => 'NomenclatureChange::Reassignment'
-      )
-    end
+    _build_references_reassignments(@nomenclature_change.input)
   end
 
   def build_input_and_output_notes
