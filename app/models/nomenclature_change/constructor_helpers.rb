@@ -1,6 +1,6 @@
 module NomenclatureChange::ConstructorHelpers
 
-  def _build_parent_reassignments(input, output, children)
+  def _build_parent_reassignments(input, output, children = nil)
     children ||= input.taxon_concept.children
     input.parent_reassignments = children.map do |child|
       reassignment_attrs = {

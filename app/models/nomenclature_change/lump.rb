@@ -43,12 +43,4 @@ class NomenclatureChange::Lump < NomenclatureChange
     end
   end
 
-  def inputs_or_submitting?
-    status == NomenclatureChange::Lump::INPUTS || submitting?
-  end
-
-  def outputs_or_submitting?
-    status == NomenclatureChange::Lump::OUTPUTS || submitting?
-  end
-
 end
