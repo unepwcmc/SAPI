@@ -1,4 +1,5 @@
 # encoding: utf-8
+require 'fileutils'
 
 class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
 
@@ -41,16 +42,11 @@ class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
     cache_stored_file! if !cached?
     directory = File.dirname( current_path )
     tmp_path = File.join( directory, "tmpfile" )
-    require 'csv'
-    content = File.read(current_path)
-    utf8_encoded_content = content.force_encoding("ISO-8859-1").encode("UTF-8")
-    CSV.open(tmp_path, "wb") do |tmp_csv|
-      CSV.parse(utf8_encoded_content, encoding: "UTF-8") do |row|
-        tmp_csv << row unless row.compact.empty?
-      end
+    if system("cat #{current_path} | sed 's/\r//g' | grep -v -P '^(\"?\s*\"?,)*$' > #{tmp_path}")
+      FileUtils.mv(tmp_path, current_path)
+    else
+      Rails.logger.error("#{$!}")
     end
-    File.delete current_path
-    File.rename tmp_path, current_path
   end
 
   # Create different versions of your uploaded files:
