@@ -19,7 +19,7 @@ class NomenclatureChange::Split::TransformationSummarizer
     name_status = new_name_status || taxon_concept.try(:name_status)
     if taxon_concept.blank?
       res << "New #{rank_name} #{full_name} (#{name_status}) will be created"
-    elsif taxon_concept.full_name != new_full_name
+    elsif new_full_name && taxon_concept.full_name != new_full_name
       res << "New #{rank_name} #{full_name} (#{name_status}) will be created, based on #{taxon_concept.full_name}"
       if ['A', 'N', 'H'].include? taxon_concept.name_status
         res << "#{taxon_concept.full_name} will be turned into a synonym of #{display_full_name}"
