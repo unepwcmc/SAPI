@@ -1,0 +1,42 @@
+<h2>New status change</h2>
+<%= status_change_blurb %>
+<p>
+  <i class="icon-info-sign"></i>
+  This status change involves downgrading a previously A/N name. Please select a way to handle the associations of the original object.
+</p>
+<%= nomenclature_change_form do |f| %>
+
+  <%= f.fields_for :secondary_output do |ff| %>
+    <div class="control-group">
+      <label class="control-label">Transfer associations to another A/N name:</label>
+      <div class="controls">
+        <%= ff.text_field :taxon_concept_id, {
+          :class => 'taxon-concept',
+          :'data-name' => ff.object.taxon_concept.try(:full_name),
+          :'data-name-status' => ff.object.taxon_concept.try(:name_status),
+          :'data-name-status-filter' => ['A', 'N']
+        } %>
+        <%= ff.hidden_field :is_primary_output %>
+      </div>
+    </div>
+  <% end %>
+
+  <p>OR</p>
+
+  <%= f.fields_for :secondary_output do |ff| %>
+    <div class="control-group">
+      <label class="control-label">Swap status with another <%= f.object.primary_output.new_name_status %> name:</label>
+      <div class="controls">
+        <%= ff.text_field :taxon_concept_id, {
+          :class => 'taxon-concept',
+          :'data-name' => ff.object.taxon_concept.try(:full_name),
+          :'data-name-status' => ff.object.taxon_concept.try(:name_status),
+          :'data-name-status-filter' => [f.object.primary_output.new_name_status]
+        } %>
+        <%= ff.hidden_field :is_primary_output %>
+        <%= ff.hidden_field :new_name_status, :value => f.object.primary_output.taxon_concept.name_status %>
+      </div>
+    </div>
+  <% end %>
+
+<% end %>
