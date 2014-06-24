@@ -6,7 +6,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
   attr_accessible :nomenclature_change_id, :taxon_concept_id,
     :new_taxon_concept_id, :new_scientific_name, :new_author_year,
     :new_name_status, :new_parent_id, :new_rank_id,
-    :note, :internal_note, :created_by_id, :updated_by_id
+    :note, :internal_note, :is_primary_output, :created_by_id, :updated_by_id
   belongs_to :nomenclature_change
   belongs_to :taxon_concept
   belongs_to :new_taxon_concept, :class_name => TaxonConcept, :foreign_key => :new_taxon_concept_id
