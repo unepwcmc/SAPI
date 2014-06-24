@@ -14,12 +14,16 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
   def show
     builder = NomenclatureChange::StatusChange::Constructor.new(@nomenclature_change)
     case step
-    when :outputs
+    when :primary_output
       set_events
-      builder.build_outputs
-    when :inputs
+      builder.build_primary_output
+    when :relay_or_swap
+      skip_step unless @nomenclature_change.needs_to_relay_associations?
+      builder.build_secondary_output
+    when :receive_or_swap
+      skip_step unless @nomenclature_change.needs_to_receive_associations?
+      builder.build_secondary_output
       builder.build_input
-      skip_step if @nomenclature_change.input.nil? || @nomenclature_change.has_auto_input?
     when :notes
       builder.build_reassignments
       builder.build_output_notes
@@ -37,7 +41,7 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
     )
     success = @nomenclature_change.valid?
     case step
-    when :inputs
+    when :outputs
       set_events unless success
     end
     render_wizard @nomenclature_change

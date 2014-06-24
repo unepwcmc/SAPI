@@ -3,12 +3,13 @@
   <%= render 'admin/nomenclature_changes/build/event_selector', :f => f %>
   <div class="control-group">
     <%= f.fields_for :input do |ff| %>
-      <!-- TODO figure out the restrictions on the auto complete here, none for now -->
       <label class="control-label">Select taxon to split:</label>
       <div class="controls">
         <%= ff.text_field :taxon_concept_id, {
           :class => 'taxon-concept',
-          :'data-name' => ff.object.taxon_concept.try(:full_name)
+          :'data-name' => ff.object.taxon_concept.try(:full_name),
+          :'data-name-status' => ff.object.taxon_concept.try(:name_status),
+          :'data-name-status-filter' => ['A', 'N'].to_json
         } %>
       </div>
     <% end %>

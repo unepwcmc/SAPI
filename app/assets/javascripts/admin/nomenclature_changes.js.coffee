@@ -3,11 +3,11 @@ $(document).ready ->
     placeholder: 'Start typing scientific name'
     width: '300px'
     minimumInputLength: 3
-    quietMillis: 500,
+    quietMillis: 500
     initSelection: (element, callback) =>
       id = $(element).val()
       if (id != '')
-        callback({id: id, text: $(element).attr('data-name')})
+        callback({id: id, text: $(element).attr('data-name') + ' ' + $(element).attr('data-name-status')})
 
     ajax:
       url: '/admin/taxon_concepts/autocomplete'
@@ -15,15 +15,41 @@ $(document).ready ->
       data: (query, page) ->
         search_params:
           scientific_name: query
+          name_status: this.data('name-status-filter')
         per_page: 25
         page: 1
       results: (data, page) => # parse the results into the format expected by Select2.
         formatted_taxon_concepts = data.map (tc) =>
           id: tc.id
-          text: tc.full_name
+          text: tc.full_name + ' ' + tc.name_status
         results: formatted_taxon_concepts
   }
   $('.taxon-concept').select2(defaultTaxonSelect2Options)
+  $('.taxon-concept.status-change').on('change', (event) ->
+    statusDropdown = $('select')
+    $.when($.ajax( '/admin/taxon_concepts/' + event.val + '.json' ) ).then(( data, textStatus, jqXHR ) ->
+      # reload the name status dropdown based on selection
+      statusFrom = data.name_status
+      $(statusDropdown).find('option').attr('disabled', true);
+      if statusFrom == 'A'
+        $(statusDropdown).find('option[value=A]').removeAttr('selected')
+        $(statusDropdown).find('option[value=N]').removeAttr('disabled')
+        $(statusDropdown).find('option[value=S]').removeAttr('disabled')
+      else if statusFrom == 'N'
+        $(statusDropdown).find('option[value=N]').removeAttr('selected')
+        $(statusDropdown).find('option[value=A]').removeAttr('disabled')
+        $(statusDropdown).find('option[value=S]').removeAttr('disabled')
+      else if statusFrom == 'S'
+        $(statusDropdown).find('option[value=S]').removeAttr('selected')
+        $(statusDropdown).find('option[value=A]').removeAttr('disabled')
+        $(statusDropdown).find('option[value=N]').removeAttr('disabled')
+      else if statusFrom == 'T'
+        $(statusDropdown).find('option[value=T]').removeAttr('selected')
+        $(statusDropdown).find('option[value=A]').removeAttr('disabled')
+        $(statusDropdown).find('option[value=N]').removeAttr('disabled')
+        $(statusDropdown).find('option[value=S]').removeAttr('disabled')
+    )
+  )
 
   $(document).on('nested:fieldAdded', (event) ->
     # this field was just inserted into your form
