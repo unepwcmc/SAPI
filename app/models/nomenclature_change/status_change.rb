@@ -11,71 +11,85 @@
 # As a rule of thumb, if there are 2 outputs that means there are reassignments
 # involved between the input and one of the outputs.
 class NomenclatureChange::StatusChange < NomenclatureChange
-  STEPS = [:outputs, :inputs, :notes, :summary]
+  STEPS = [:primary_output, :relay_or_swap, :receive_or_swap, :notes, :summary]
   STATUSES = ['new', 'submitted'] + STEPS.map(&:to_s)
   build_basic_dictionary(*STATUSES)
+  attr_accessible :primary_output_attributes, :secondary_output_attributes
   has_one :input, :inverse_of => :nomenclature_change,
     :class_name => NomenclatureChange::Input,
     :foreign_key => :nomenclature_change_id,
     :dependent => :destroy
-  has_many :outputs, :inverse_of => :nomenclature_change,
+  has_one :primary_output, :inverse_of => :nomenclature_change,
     :class_name => NomenclatureChange::Output,
     :foreign_key => :nomenclature_change_id,
+    :conditions => {:is_primary_output => true},
+    :dependent => :destroy
+  has_one :secondary_output, :inverse_of => :nomenclature_change,
+    :class_name => NomenclatureChange::Output,
+    :foreign_key => :nomenclature_change_id,
+    :conditions => {:is_primary_output => false},
     :dependent => :destroy
   accepts_nested_attributes_for :input, :allow_destroy => true
-  accepts_nested_attributes_for :outputs, :allow_destroy => true
+  accepts_nested_attributes_for :primary_output, :allow_destroy => true
+  accepts_nested_attributes_for :secondary_output, :allow_destroy => true
 
   validates :status, inclusion: {
     in: STATUSES,
     message: "%{value} is not a valid status"
   }
-  validate :required_outputs, if: :outputs_or_submitting?
-  #before_validation :build_required_inputs, if: :outputs_or_submitting?
-  validate :required_inputs, if: :inputs_or_submitting?
+  validate :required_primary_output, if: :primary_output_or_submitting?
+  validate :required_secondary_output, if: :relay_or_swap_or_submitting?
+  validate :required_inputs, if: :receive_or_swap_or_submitting?
+
+  def required_primary_output
+    if primary_output.nil?
+      errors.add(:primary_output, "Must have a primary output")
+      return false
+    end
+  end
 
   # we only need two outputs if we need a target for reassignments
   # (which happens when one of the outputs is an A/N name turning S/T)
-  def required_outputs
-    if outputs.empty?
-      errors.add(:outputs, "Must have at least one output")
-      return false
-    end
-    if output_that_needs_reassignments && outputs.size < 2
-      errors.add(:outputs, "Must have two outputs")
-      return false
-    end
-    if outputs.size > 2
-      errors.add(:outputs, "Must have at most two outputs")
+  def required_secondary_output
+    if needs_to_relay_associations? && secondary_output.nil?
+      errors.add(:secondary_output, "Must have a secondary output")
       return false
     end
   end
 
-  # we only need an input if one of the outputs is an A/N name turning S/T
+  # we only need an input if one of the outputs is an S/T name turning A/N
   def required_inputs
-    output = output_that_needs_reassignments
-    if output && (input.nil || input.taxon_concept_id != output.taxon_concept_id)
-      errors.add(:inputs, "Must have an input for accepted name reassignments")
+    if needs_to_receive_associations? &&
+      (input.nil || input.taxon_concept_id != secondary_output.taxon_concept_id)
+      errors.add(:inputs, "Must have an input")
       return false
     end
   end
 
-  def has_auto_input?
-    needs_reassignments? && input
+  def needs_to_relay_associations?
+    ['A', 'N'].include?(primary_output.try(:taxon_concept).try(:name_status)) &&
+      ['S', 'T'].include?(primary_output.try(:new_name_status))
   end
 
-  def needs_reassignments?
-    output_that_needs_reassignments
+  def needs_to_receive_associations?
+    ['S', 'T'].include?(primary_output.try(:taxon_concept).try(:name_status)) &&
+      ['A', 'N'].include?(primary_output.try(:new_name_status))
   end
 
-  def output_that_needs_reassignments
-    outputs.select do |output|
-      ['A', 'N'].include?(output.try(:taxon_concept).try(:name_status)) &&
-        ['S', 'T'].include?(output.new_name_status)
-    end.first
+  def is_swap?
+    secondary_output && input
   end
 
-  def output_that_receives_reassignments
-    (outputs - [output_that_needs_reassignments]).first
+  def primary_output_or_submitting?
+    status == NomenclatureChange::StatusChange::PRIMARY_OUTPUT || submitting?
+  end
+
+  def relay_or_swap_or_submitting?
+    status == NomenclatureChange::StatusChange::RELAY_OR_SWAP || submitting?
+  end
+
+  def receive_or_swap_or_submitting?
+    status == NomenclatureChange::StatusChange::RECEIVE_OR_SWAP || submitting?
   end
 
 end
