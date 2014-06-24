@@ -6,8 +6,9 @@ class CitesTrade::ShipmentsController < CitesTradeController
       :per_page => Trade::ShipmentsExport::PUBLIC_WEB_LIMIT
     }))
     render :json => @search,
-      :serializer => serializer_for_search(@search),
-      :meta => metadata_for_search(@search)
+      :serializer => serializer_for_search(@search)
+      # note: not returning search metadata here, since we're not paginating
+      # and calculating the total # of results for reports is expensive
   end
 
   private
