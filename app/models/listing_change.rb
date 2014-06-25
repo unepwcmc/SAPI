@@ -57,10 +57,8 @@ class ListingChange < ActiveRecord::Base
 
   accepts_nested_attributes_for :party_listing_distribution,
     :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
-  accepts_nested_attributes_for :annotation,
-    :reject_if => proc { |attributes|
-      attributes['short_note_en'].blank? && attributes['full_note_en'].blank?
-    }
+
+  accepts_nested_attributes_for :annotation
 
   scope :by_designation, lambda { |designation_id|
     joins(:change_type).where(:"change_types.designation_id" => designation_id)
@@ -141,5 +139,4 @@ class ListingChange < ActiveRecord::Base
       return false
     end
   end
-
 end
