@@ -13,7 +13,7 @@
 #  parent_id                  :integer
 #  inclusion_taxon_concept_id :integer
 #  event_id                   :integer
-#  source_id                  :integer
+#  original_id                :integer
 #  explicit_change            :boolean          default(TRUE)
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
@@ -33,7 +33,7 @@ class ListingChange < ActiveRecord::Base
   attr_accessor :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
 
   belongs_to :event
-  has_many :listing_change_copies, :foreign_key => :source_id,
+  has_many :listing_change_copies, :foreign_key => :original_id,
     :class_name => "ListingChange", :dependent => :nullify
   belongs_to :species_listing
   belongs_to :taxon_concept

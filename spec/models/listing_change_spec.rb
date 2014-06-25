@@ -13,7 +13,7 @@
 #  parent_id                  :integer
 #  inclusion_taxon_concept_id :integer
 #  event_id                   :integer
-#  source_id                  :integer
+#  original_id                :integer
 #  explicit_change            :boolean          default(TRUE)
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
