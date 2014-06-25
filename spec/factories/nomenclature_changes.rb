@@ -17,14 +17,12 @@ FactoryGirl.define do
     aliases: [:input] do
     nomenclature_change
     taxon_concept
-    note 'Input note'
   end
 
   factory :nomenclature_change_output, class: NomenclatureChange::Output,
     aliases: [:output] do
     nomenclature_change
     taxon_concept
-    note 'Output note'
   end
 
   factory :nomenclature_change_reassignment, class: NomenclatureChange::Reassignment,
