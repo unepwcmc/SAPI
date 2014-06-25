@@ -25,7 +25,6 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
       builder.build_secondary_output
       builder.build_input
     when :notes
-      builder.build_reassignments
       builder.build_output_notes
     when :summary
       @summary = NomenclatureChange::StatusChange::Summarizer.new(@nomenclature_change).summary
@@ -41,7 +40,7 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
     )
     success = @nomenclature_change.valid?
     case step
-    when :outputs
+    when :primary_output
       set_events unless success
     end
     render_wizard @nomenclature_change

@@ -8,6 +8,9 @@ FactoryGirl.define do
     factory :nomenclature_change_split, class: NomenclatureChange::Split do
       type 'NomenclatureChange::Split'
     end
+    factory :nomenclature_change_status_change, class: NomenclatureChange::StatusChange do
+      type 'NomenclatureChange::StatusChange'
+    end
   end
 
   factory :nomenclature_change_input, class: NomenclatureChange::Input,

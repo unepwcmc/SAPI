@@ -4,6 +4,7 @@ $(document).ready ->
     width: '300px'
     minimumInputLength: 3
     quietMillis: 500
+    allowClear: true
     initSelection: (element, callback) =>
       id = $(element).val()
       if (id != '')
@@ -30,24 +31,18 @@ $(document).ready ->
     $.when($.ajax( '/admin/taxon_concepts/' + event.val + '.json' ) ).then(( data, textStatus, jqXHR ) ->
       # reload the name status dropdown based on selection
       statusFrom = data.name_status
-      $(statusDropdown).find('option').attr('disabled', true);
-      if statusFrom == 'A'
-        $(statusDropdown).find('option[value=A]').removeAttr('selected')
-        $(statusDropdown).find('option[value=N]').removeAttr('disabled')
-        $(statusDropdown).find('option[value=S]').removeAttr('disabled')
-      else if statusFrom == 'N'
-        $(statusDropdown).find('option[value=N]').removeAttr('selected')
-        $(statusDropdown).find('option[value=A]').removeAttr('disabled')
-        $(statusDropdown).find('option[value=S]').removeAttr('disabled')
-      else if statusFrom == 'S'
-        $(statusDropdown).find('option[value=S]').removeAttr('selected')
-        $(statusDropdown).find('option[value=A]').removeAttr('disabled')
-        $(statusDropdown).find('option[value=N]').removeAttr('disabled')
-      else if statusFrom == 'T'
-        $(statusDropdown).find('option[value=T]').removeAttr('selected')
-        $(statusDropdown).find('option[value=A]').removeAttr('disabled')
-        $(statusDropdown).find('option[value=N]').removeAttr('disabled')
-        $(statusDropdown).find('option[value=S]').removeAttr('disabled')
+      $(statusDropdown).find('option').attr('disabled', true)
+      statusMap =
+        'A': ['S']
+        'N': ['A', 'S']
+        'S': ['A']
+        'T': ['A', 'S']
+      $(statusDropdown).find('option[value=' + statusFrom + ']').removeAttr('selected')
+      defaultStatus = statusMap[statusFrom][0]
+      $(statusDropdown).find('option[value=' + defaultStatus + ']').attr('selected', true)
+      $.each(statusMap[statusFrom], (i, status) ->
+        $(statusDropdown).find('option[value=' + status + ']').removeAttr('disabled')
+      )
     )
   )
 
