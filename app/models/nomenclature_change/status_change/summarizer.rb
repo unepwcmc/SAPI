@@ -5,7 +5,8 @@ class NomenclatureChange::StatusChange::Summarizer
   end
 
   def summary
-    res = [@status_change.primary_output, @status_change.secondary_output].map do |output|
+    res = [@status_change.primary_output, @status_change.secondary_output].
+    compact.map do |output|
       res = [output.display_full_name]
       transformations = NomenclatureChange::Split::TransformationSummarizer.new(output).summary
       unless transformations.empty?

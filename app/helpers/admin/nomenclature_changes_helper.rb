@@ -63,16 +63,18 @@ module Admin::NomenclatureChangesHelper
   end
 
   def status_change_blurb
-    # content_tag(:div, class: 'well well-small') do
-    #   concat 'Changing status of '
-    #   concat link_to(
-    #     @nomenclature_change.output.taxon_concept.full_name,
-    #     admin_taxon_concept_names_path(@nomenclature_change.input.taxon_concept)
-    #   )
-    #   concat 'to '
-    #   concat @nomenclature_change.output.taxon_concept.new_name_status
-    # end
-    content_tag(:div, 'TODO', {class: 'well well-small'})
+    content_tag(:div, class: 'well well-small') do
+      concat 'Changing status of '
+      concat link_to(
+        @nomenclature_change.primary_output.taxon_concept.full_name,
+        admin_taxon_concept_names_path(@nomenclature_change.primary_output.taxon_concept)
+      )
+      concat " from #{@nomenclature_change.primary_output.taxon_concept.name_status}"
+      concat " to #{@nomenclature_change.primary_output.new_name_status}"
+      if @nomenclature_change.is_swap?
+        concat " (status swap with #{@nomenclature_change.secondary_output.taxon_concept.full_name})"
+      end
+    end
   end
 
 end

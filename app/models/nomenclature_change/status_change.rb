@@ -39,7 +39,22 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   }
   validate :required_primary_output, if: :primary_output_or_submitting?
   validate :required_secondary_output, if: :relay_or_swap_or_submitting?
-  validate :required_inputs, if: :receive_or_swap_or_submitting?
+  validate :required_input_for_receive, if: :receive_or_swap_or_submitting?
+  validate :required_input_for_relay, if: :relay_or_swap_or_submitting?
+  before_validation do #TODO step specific before validation callbacks
+    # Build automatic input
+    # In case the primary output is an A / N name turning S / T
+    # this same name becomes an input of the nomenclature change, so that
+    # reassignments can be put in place between this input and
+    # the secondary output
+    if needs_to_relay_associations? && input.nil?
+      build_input(:taxon_concept_id => primary_output.taxon_concept_id)
+    end
+    # Build automatic reassignments
+    builder = NomenclatureChange::StatusChange::Constructor.new(self)
+    builder.build_reassignments
+    true
+  end
 
   def required_primary_output
     if primary_output.nil?
@@ -57,11 +72,20 @@ class NomenclatureChange::StatusChange < NomenclatureChange
     end
   end
 
-  # we only need an input if one of the outputs is an S/T name turning A/N
-  def required_inputs
-    if needs_to_receive_associations? &&
-      (input.nil || input.taxon_concept_id != secondary_output.taxon_concept_id)
-      errors.add(:inputs, "Must have an input")
+  # we need an auto input if one of the outputs is an A/N name turning S/T
+  def required_input_for_relay
+    if needs_to_relay_associations? && (
+      input.nil? || input.taxon_concept_id != primary_output.taxon_concept_id
+      )
+      errors.add(:inputs, "Must have auto input")
+      return false
+    end
+  end
+
+  # we need an input if one of the outputs is an S/T name turning A/N
+  def required_input_for_receive
+    if needs_to_receive_associations? && input.nil?
+      errors.add(:inputs, "Must have input")
       return false
     end
   end
