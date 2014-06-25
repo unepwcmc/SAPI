@@ -13,7 +13,7 @@
 #  full_note_fr        :text
 #  short_note_es       :text
 #  full_note_es        :text
-#  source_id           :integer
+#  original_id         :integer
 #  event_id            :integer
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
