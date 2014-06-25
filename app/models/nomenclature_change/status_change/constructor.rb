@@ -46,7 +46,7 @@ class NomenclatureChange::StatusChange::Constructor
     end
     return false unless input && output
     _build_parent_reassignments(input, output)
-    _build_names_reassignments(input, [outputs])
+    _build_names_reassignments(input, [output])
     _build_distribution_reassignments(input, [output])
     _build_legislation_reassignments(input, [output])
     _build_common_names_reassignments(input, [output])
