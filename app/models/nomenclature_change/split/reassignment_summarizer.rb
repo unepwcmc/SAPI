@@ -11,28 +11,36 @@ class NomenclatureChange::Split::ReassignmentSummarizer
       output_names_summary,
       output_distribution_summary,
       output_generic_summary(
-        @input.taxon_concept.taxon_commons, 'common names'
+        @input.taxon_concept.taxon_commons,
+        'TaxonCommon', 'common names'
+      ),
+      output_legislation_summary(
+        @input.taxon_concept.listing_changes,
+        'ListingChange', 'listing changes'
+      ),
+      output_legislation_summary(
+        @input.taxon_concept.taxon_instruments,
+        'TaxonInstrument', 'CMS instruments'
+      ),
+      output_legislation_summary(
+        @input.taxon_concept.cites_suspensions,
+        'CitesSuspension', 'CITES suspensions'
+      ),
+      output_legislation_summary(
+        @input.taxon_concept.quotas,
+        'Quota', 'CITES quotas'
+      ),
+      output_legislation_summary(
+        @input.taxon_concept.eu_suspensions,
+        'EuSuspension', 'EU suspensions'
       ),
       output_generic_summary(
-        @input.taxon_concept.listing_changes, 'listing changes'
+        @input.taxon_concept.eu_opinions,
+        'EuOpinion', 'EU opinions'
       ),
       output_generic_summary(
-        @input.taxon_concept.taxon_instruments, 'CMS instruments'
-      ),
-      output_generic_summary(
-        @input.taxon_concept.cites_suspensions, 'CITES suspensions'
-      ),
-      output_generic_summary(
-        @input.taxon_concept.quotas, 'CITES quotas'
-      ),
-      output_generic_summary(
-        @input.taxon_concept.eu_suspensions, 'EU suspensions'
-      ),
-      output_generic_summary(
-        @input.taxon_concept.eu_opinions, 'EU opinions'
-      ),
-      output_generic_summary(
-        @input.taxon_concept.taxon_concept_references, 'references'
+        @input.taxon_concept.taxon_concept_references,
+        'TaxonReference', 'references'
       )
     ].compact
   end
@@ -72,10 +80,26 @@ class NomenclatureChange::Split::ReassignmentSummarizer
     "#{cnt} (of #{distributions_cnt}) distributions"
   end
 
-  def output_generic_summary(rel, title)
+  def output_legislation_summary(rel, reassignable_type, title)
     objects_cnt = rel.count
     return nil unless objects_cnt > 0
-    "#{objects_cnt} (of #{objects_cnt}) #{title}"
+    cnt = @input.legislation_reassignments.includes(:reassignment_targets).
+      where(
+        'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
+      ).where(:reassignable_type => reassignable_type).count
+    puts "#{reassignable_type} #{cnt}"
+    "#{(cnt == 1 ? objects_cnt : 0)} (of #{objects_cnt}) #{title}"
+  end
+
+  def output_generic_summary(rel, reassignable_type, title)
+    objects_cnt = rel.count
+    return nil unless objects_cnt > 0
+    cnt = @input.reassignments.includes(:reassignment_targets).
+      where(
+        'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
+      ).where(:reassignable_type => reassignable_type).count
+    puts "#{reassignable_type} #{cnt}"
+    "#{(cnt == 1 ? objects_cnt : 0)} (of #{objects_cnt}) #{title}"
   end
 
 end
