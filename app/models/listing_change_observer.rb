@@ -36,7 +36,8 @@ class ListingChangeObserver < ActiveRecord::Observer
     listing_change.exclusions = new_exclusions
 
     #check if annotation should be deleted
-    if listing_change.annotation.short_note_en.blank? &&
+    if listing_change.annotation &&
+       listing_change.annotation.short_note_en.blank? &&
        listing_change.annotation.short_note_fr.blank? &&
        listing_change.annotation.short_note_es.blank? &&
        listing_change.annotation.full_note_en.blank? &&
