@@ -13,6 +13,13 @@ describe NomenclatureChange::Split::Constructor do
     create(:nomenclature_change_output, nomenclature_change: s)
     s
   }
+  let(:split_with_input_and_same_output){
+    s = create(:nomenclature_change_split)
+    create(:nomenclature_change_input, nomenclature_change: s, taxon_concept: input_species)
+    create(:nomenclature_change_output, nomenclature_change: s)
+    create(:nomenclature_change_output, nomenclature_change: s, taxon_concept: input_species)
+    s
+  }
   let(:constructor){ NomenclatureChange::Split::Constructor.new(split) }
   context :inputs do
     describe :build_input do
@@ -42,7 +49,10 @@ describe NomenclatureChange::Split::Constructor do
   end
   context :reassignments do
     let(:split){ split_with_input_and_output }
-    let(:input){ split.input }
+    let(:nc){ split }
+    let(:nc_with_input_and_output) { split_with_input_and_output }
+    let(:nc_with_input_and_same_output) { split_with_input_and_same_output }
+    let(:input){ nc.input }
     describe :build_input_and_output_notes do
       let(:output){ split.outputs[0] }
       before(:each) do
@@ -85,33 +95,22 @@ describe NomenclatureChange::Split::Constructor do
         @old_reassignments = input.parent_reassignments
         constructor.build_parent_reassignments
       end
-      context "when previously no reassignments in place" do
-        context "when no children" do
-          specify{ expect(input.parent_reassignments.size).to eq(0) }
-        end
-        context "when children" do
-          let(:input_species){
-            s = create_cites_eu_species
-            2.times{ create_cites_eu_subspecies(parent: s) }
-            s
-          }
-          specify{ expect(input.parent_reassignments.size).to eq(2) }
-          context "when output = input" do
-            let(:split_with_input_and_output){
-              s = create(:nomenclature_change_split)
-              create(:nomenclature_change_input, nomenclature_change: s, taxon_concept: input_species)
-              create(:nomenclature_change_output, nomenclature_change: s)
-              create(:nomenclature_change_output, nomenclature_change: s, taxon_concept: input_species)
-              s
-            }
-            let(:default_output){ split.outputs_intersect_inputs.first }
-            specify{
-              reassignment_targets = input.parent_reassignments.map(&:reassignment_target)
-              expect(reassignment_targets.map(&:output).uniq).to(eq([default_output]))
-            }
-          end
-        end
+      include_context 'parent_reassignments_examples'
+
+      context "when output = input" do
+        let(:input_species){
+          s = create_cites_eu_species
+          2.times{ create_cites_eu_subspecies(parent: s) }
+          s
+        }
+        let(:split_with_input_and_output){ split_with_input_and_same_output }
+        let(:default_output){ split.outputs_intersect_inputs.first }
+        specify{
+          reassignment_targets = input.parent_reassignments.map(&:reassignment_target)
+          expect(reassignment_targets.map(&:output).uniq).to(eq([default_output]))
+        }
       end
+
       context "when previously reassignments in place" do
         let(:input){
           i = create(:nomenclature_change_input, nomenclature_change: split, taxon_concept: input_species)
@@ -126,157 +125,58 @@ describe NomenclatureChange::Split::Constructor do
         @old_reassignments = input.name_reassignments
         constructor.build_name_reassignments
       end
-      context "when previously no reassignments in place" do
-        context "when no names" do
-          specify{ expect(input.name_reassignments.size).to eq(0) }
-        end
-        context "when names" do
-          let(:input_species){
-            s = create_cites_eu_species
-            2.times do
-              create(:taxon_relationship,
-                taxon_concept: s,
-                other_taxon_concept: create_cites_eu_species(name_status: 'S'),
-                taxon_relationship_type: synonym_relationship_type
-              )
-            end
-            s
-          }
-          specify{ expect(input.name_reassignments.size).to eq(2) }
-          context "when output = input" do
-            let(:split_with_input_and_output){
-              s = create(:nomenclature_change_split)
-              create(:nomenclature_change_input, nomenclature_change: s, taxon_concept: input_species)
-              create(:nomenclature_change_output, nomenclature_change: s)
-              create(:nomenclature_change_output, nomenclature_change: s, taxon_concept: input_species)
-              s
-            }
-            let(:default_output){ split.outputs_intersect_inputs.first }
-            specify{
-              reassignment_targets = input.name_reassignments.map do |reassignment|
-                reassignment.reassignment_targets
-              end.flatten
-              expect(reassignment_targets.map(&:output).uniq).to eq([default_output])
-            }
+      include_context 'name_reassignments_examples'
+
+      context "when output = input" do
+        let(:input_species){
+          s = create_cites_eu_species
+          2.times do
+            create(:taxon_relationship,
+              taxon_concept: s,
+              other_taxon_concept: create_cites_eu_species(name_status: 'S'),
+              taxon_relationship_type: synonym_relationship_type
+            )
           end
-        end
-      end
-      context "when previously reassignments in place" do
-        let(:input){
-          i = create(:nomenclature_change_input, nomenclature_change: split, taxon_concept: input_species)
-          create(:nomenclature_change_name_reassignment, input: i)
-          i
+          s
         }
-        specify{ expect(input.name_reassignments).to eq(@old_reassignments) }
+        let(:split_with_input_and_output){ split_with_input_and_same_output }
+        let(:default_output){ split.outputs_intersect_inputs.first }
+        specify{
+          reassignment_targets = input.name_reassignments.map do |reassignment|
+            reassignment.reassignment_targets
+          end.flatten
+          expect(reassignment_targets.map(&:output).uniq).to eq([default_output])
+        }
       end
+
     end
     describe :build_distribution_reassignments do
       before(:each) do
         @old_reassignments = input.distribution_reassignments
         constructor.build_distribution_reassignments
       end
-      context "when previously no reassignments in place" do
-        context "when no distibutions" do
-          specify{ expect(input.distribution_reassignments.size).to eq(0) }
-        end
-        context "when distributions" do
-          let(:input_species){
-            s = create_cites_eu_species
-            2.times{ create(:distribution, taxon_concept: s) }
-            s
-          }
-          specify{ expect(input.distribution_reassignments.size).to eq(2) }
-        end
-      end
-      context "when previously reassignments in place" do
-        let(:input){
-          i = create(:nomenclature_change_input, nomenclature_change: split, taxon_concept: input_species)
-          create(:nomenclature_change_distribution_reassignment, input: i)
-          i
-        }
-        specify{ expect(input.distribution_reassignments).to eq(@old_reassignments) }
-      end
+      include_context 'distribution_reassignments_examples'
     end
     describe :build_legislation_reassignments do
       before(:each) do
         @old_reassignments = input.legislation_reassignments
         constructor.build_legislation_reassignments
       end
-      context "when previously no reassignments in place" do
-        context "when no CITES listings" do
-          specify{ expect(input.legislation_reassignments.size).to eq(0) }
-        end
-        context "when CITES listings" do
-          let(:input_species){
-            s = create_cites_eu_species
-            create_cites_I_addition(taxon_concept: s)
-            s
-          }
-          specify{ expect(input.legislation_reassignments.size).to eq(1) }
-        end
-      end
-      context "when previously reassignments in place" do
-        let(:input){
-          i = create(:nomenclature_change_input, nomenclature_change: split, taxon_concept: input_species)
-          create(:nomenclature_change_legislation_reassignment, input: i)
-          i
-        }
-        specify{ expect(input.legislation_reassignments).to eq(@old_reassignments) }
-      end
+      include_context 'legislation_reassignments_examples'
     end
     describe :build_common_names_reassignments do
       before(:each) do
         @old_reassignments = input.reassignments
         constructor.build_common_names_reassignments
       end
-      context "when previously no reassignments in place" do
-        context "when no common names" do
-          specify{ expect(input.reassignments.size).to eq(0) }
-        end
-        context "when common names" do
-          let(:input_species){
-            s = create_cites_eu_species
-            2.times{ create(:taxon_common, taxon_concept: s) }
-            s
-          }
-          specify{ expect(input.reassignments.size).to eq(1) }
-        end
-      end
-      context "when previously reassignments in place" do
-        let(:input){
-          i = create(:nomenclature_change_input, nomenclature_change: split, taxon_concept: input_species)
-          create(:nomenclature_change_reassignment, input: i)
-          i
-        }
-        specify{ expect(input.reassignments).to eq(@old_reassignments) }
-      end
+      include_context 'common_name_reassignments_examples'
     end
     describe :build_references_reassignments do
       before(:each) do
         @old_reassignments = input.reassignments
         constructor.build_references_reassignments
       end
-      context "when previously no reassignments in place" do
-        context "when no references" do
-          specify{ expect(input.reassignments.size).to eq(0) }
-        end
-        context "when references" do
-          let(:input_species){
-            s = create_cites_eu_species
-            2.times{ create(:taxon_concept_reference, taxon_concept: s) }
-            s
-          }
-          specify{ expect(input.reassignments.size).to eq(1) }
-        end
-      end
-      context "when previously reassignments in place" do
-        let(:input){
-          i = create(:nomenclature_change_input, nomenclature_change: split, taxon_concept: input_species)
-          create(:nomenclature_change_reassignment, input: i)
-          i
-        }
-        specify{ expect(input.reassignments).to eq(@old_reassignments) }
-      end
+      include_context 'reference_reassignments_examples'
     end
   end
 end
