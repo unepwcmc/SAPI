@@ -101,7 +101,8 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   end
 
   def is_swap?
-    secondary_output && input
+    secondary_output &&
+      secondary_output.new_name_status == primary_output.taxon_concept.name_status
   end
 
   def primary_output_or_submitting?

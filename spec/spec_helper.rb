@@ -21,6 +21,7 @@ require 'capybara/rails'
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 Dir[Rails.root.join("spec/shared/*.rb")].each {|f| require f}
+Dir[Rails.root.join("spec/models/nomenclature_change/shared/*.rb")].each {|f| require f}
 RSpec.configure do |config|
   # ## Mock Framework
   #
