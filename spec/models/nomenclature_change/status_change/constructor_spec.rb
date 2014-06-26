@@ -47,8 +47,8 @@ describe NomenclatureChange::StatusChange::Constructor do
         specify{ expect(status_change.input).not_to be_nil }
       end
       context "when previously input in place" do
-        let(:status_change){ status_downgrade_with_input }
-        specify{ expect(status_change.input).to eq(@old_output) }
+        let(:status_change){ status_downgrade_with_input_and_secondary_output }
+        specify{ expect(status_change.input).to eq(@old_input) }
       end
     end
     context :upgrade do
