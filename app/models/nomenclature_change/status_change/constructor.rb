@@ -51,6 +51,7 @@ class NomenclatureChange::StatusChange::Constructor
     _build_legislation_reassignments(input, [output])
     _build_common_names_reassignments(input, [output])
     _build_references_reassignments(input, [output])
+    _build_trade_reassignments(input, output)
   end
 
   def build_output_notes
