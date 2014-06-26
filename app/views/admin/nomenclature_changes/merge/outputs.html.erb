@@ -11,9 +11,7 @@
 </ul>
 
 <%= nomenclature_change_form do |f| %>
-  <ol>
-  <%= f.fields_for :outputs do |ff| %>
-    <li>
+  <%= f.fields_for :output do |ff| %>
     <!-- TODO figure out the restrictions on the auto complete here, none for now -->
     <div class="control-group">
       <label class="control-label">Taxon concept:</label>
@@ -22,46 +20,42 @@
           :class => 'taxon-concept',
           :'data-name' => ff.object.taxon_concept.try(:full_name)
         } %>
-        <%= ff.link_to_remove 'Remove output' %>
       </div>
     </div>
     <div class="well">
-    <p>
-      <i class="icon-info-sign"></i>Please provide additional details if required.
-    </p>
-    <%= ff.hidden_field :new_rank_id, :value => ff.object.new_rank_id ||
-      f.object.input.taxon_concept.rank_id %>
-    <div class="control-group">
-      <label class="control-label">Parent:</label>
-      <div class="controls">
-        <!-- TODO figure out the restrictions on the auto complete here, none for now -->
-        <%= ff.text_field :new_parent_id, {
-          :class => 'taxon-concept',
-          :'data-name' => ff.object.new_parent.try(:full_name)
-        } %>
+      <p>
+        <i class="icon-info-sign"></i>Please provide additional details if required.
+      </p>
+      <%= ff.hidden_field :new_rank_id, :value => ff.object.new_rank_id ||
+        f.object.inputs.first.taxon_concept.rank_id %>
+      <div class="control-group">
+        <label class="control-label">Parent:</label>
+        <div class="controls">
+          <!-- TODO figure out the restrictions on the auto complete here, none for now -->
+          <%= ff.text_field :new_parent_id, {
+            :class => 'taxon-concept',
+            :'data-name' => ff.object.new_parent.try(:full_name)
+          } %>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Name:</label>
+        <div class="controls">
+          <%= ff.text_field :new_scientific_name %>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Author & year:</label>
+        <div class="controls">
+          <%= ff.text_field :new_author_year %>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Name status:</label>
+        <div class="controls">
+          <%= ff.select :new_name_status, options_for_select(['A', 'N']) %>
+        </div>
       </div>
     </div>
-    <div class="control-group">
-      <label class="control-label">Name:</label>
-      <div class="controls">
-        <%= ff.text_field :new_scientific_name %>
-      </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label">Author & year:</label>
-      <div class="controls">
-        <%= ff.text_field :new_author_year %>
-      </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label">Name status:</label>
-      <div class="controls">
-        <%= ff.select :new_name_status, options_for_select(['A', 'N']) %>
-      </div>
-    </div>
-    </div>
-    </li>
   <% end %>
-  </ol>
-  <p><%= f.link_to_add 'Add another output', :outputs %></p>
 <% end %>
