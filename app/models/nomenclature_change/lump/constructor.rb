@@ -5,12 +5,12 @@ class NomenclatureChange::Lump::Constructor
     @nomenclature_change = nomenclature_change
   end
 
-  def build_input
-    @nomenclature_change.build_input if @nomenclature_change.input.nil?
+  def build_inputs
+    @nomenclature_change.inputs.build if @nomenclature_change.inputs.empty?
   end
 
-  def build_outputs
-    @nomenclature_change.outputs.build if @nomenclature_change.outputs.empty?
+  def build_output
+    @nomenclature_change.build_output if @nomenclature_change.output.nil?
   end
 
   def build_parent_reassignments
