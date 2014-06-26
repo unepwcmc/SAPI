@@ -1,4 +1,4 @@
-class NomenclatureChange::Split::ReassignmentProcessor
+class NomenclatureChange::ReassignmentProcessor
 
   def initialize(input, output)
     @input = input
