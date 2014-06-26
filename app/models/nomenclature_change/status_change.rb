@@ -43,8 +43,8 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   validate :required_input_for_receive, if: :receive_or_swap_or_submitting?
   validate :required_input_for_relay, if: :relay_or_swap_or_submitting?
 
-  before_validation :build_auto_input, if: :relay_or_swap_or_submitting?
-  before_validation :build_auto_reassignments, if: :submitting?
+  before_validation :build_auto_input, if: :relay_or_swap?
+  before_validation :build_auto_reassignments, if: :notes?
 
   def build_auto_input
     # In case the primary output is an A / N name turning S / T
@@ -54,11 +54,13 @@ class NomenclatureChange::StatusChange < NomenclatureChange
     if needs_to_relay_associations? && input.nil?
       build_input(taxon_concept_id: primary_output.taxon_concept_id)
     end
+    true
   end
 
   def build_auto_reassignments
     builder = NomenclatureChange::StatusChange::Constructor.new(self)
     builder.build_reassignments
+    true
   end
 
   def required_primary_output
@@ -120,6 +122,14 @@ class NomenclatureChange::StatusChange < NomenclatureChange
 
   def receive_or_swap_or_submitting?
     status == NomenclatureChange::StatusChange::RECEIVE_OR_SWAP || submitting?
+  end
+
+  def relay_or_swap?
+    status == NomenclatureChange::StatusChange::RELAY_OR_SWAP
+  end
+
+  def notes?
+    status == NomenclatureChange::StatusChange::NOTES
   end
 
 end
