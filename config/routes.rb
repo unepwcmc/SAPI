@@ -145,7 +145,7 @@ SAPI::Application.routes.draw do
     end
     resources :nomenclature_changes do
       resources :split, controller: 'nomenclature_changes/split'
-      resources :lump, controller: 'nomenclature_changes/lump'
+      resources :merge, controller: 'nomenclature_changes/merge'
       resources :status_change, controller: 'nomenclature_changes/status_change'
     end
     match 'exports' => 'exports#index'
