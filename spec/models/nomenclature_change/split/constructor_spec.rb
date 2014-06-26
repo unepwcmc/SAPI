@@ -1,25 +1,8 @@
 require 'spec_helper'
 
 describe NomenclatureChange::Split::Constructor do
-  let(:input_species){ create_cites_eu_species }
-  let(:split_with_input){
-    s = create(:nomenclature_change_split)
-    create(:nomenclature_change_input, nomenclature_change: s)
-    s
-  }
-  let(:split_with_input_and_output){
-    s = create(:nomenclature_change_split)
-    create(:nomenclature_change_input, nomenclature_change: s, taxon_concept: input_species)
-    create(:nomenclature_change_output, nomenclature_change: s)
-    s
-  }
-  let(:split_with_input_and_same_output){
-    s = create(:nomenclature_change_split)
-    create(:nomenclature_change_input, nomenclature_change: s, taxon_concept: input_species)
-    create(:nomenclature_change_output, nomenclature_change: s)
-    create(:nomenclature_change_output, nomenclature_change: s, taxon_concept: input_species)
-    s
-  }
+  include_context 'split_definitions'
+
   let(:constructor){ NomenclatureChange::Split::Constructor.new(split) }
   context :inputs do
     describe :build_input do

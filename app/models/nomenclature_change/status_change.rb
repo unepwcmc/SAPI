@@ -41,19 +41,23 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   validate :required_secondary_output, if: :relay_or_swap_or_submitting?
   validate :required_input_for_receive, if: :receive_or_swap_or_submitting?
   validate :required_input_for_relay, if: :relay_or_swap_or_submitting?
-  before_validation do #TODO step specific before validation callbacks
-    # Build automatic input
+
+  before_validation :build_auto_input, if: :relay_or_swap_or_submitting?
+  before_validation :build_auto_reassignments, if: :submitting?
+
+  def build_auto_input
     # In case the primary output is an A / N name turning S / T
     # this same name becomes an input of the nomenclature change, so that
     # reassignments can be put in place between this input and
     # the secondary output
     if needs_to_relay_associations? && input.nil?
-      build_input(:taxon_concept_id => primary_output.taxon_concept_id)
+      build_input(taxon_concept_id: primary_output.taxon_concept_id)
     end
-    # Build automatic reassignments
+  end
+
+  def build_auto_reassignments
     builder = NomenclatureChange::StatusChange::Constructor.new(self)
     builder.build_reassignments
-    true
   end
 
   def required_primary_output
