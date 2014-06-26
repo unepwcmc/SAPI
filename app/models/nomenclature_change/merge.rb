@@ -2,6 +2,7 @@ class NomenclatureChange::Merge < NomenclatureChange
   STEPS = [:inputs, :outputs, :children, :names, :distribution, :legislation, :notes, :summary]
   STATUSES = ['new', 'submitted'] + STEPS.map(&:to_s)
   build_basic_dictionary(*STATUSES)
+  attr_accessible :inputs_attributes, :output_attributes
   has_one :output, :inverse_of => :nomenclature_change,
     :class_name => NomenclatureChange::Input,
     :foreign_key => :nomenclature_change_id,
