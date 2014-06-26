@@ -14,7 +14,8 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   STEPS = [:primary_output, :relay_or_swap, :receive_or_swap, :notes, :summary]
   STATUSES = ['new', 'submitted'] + STEPS.map(&:to_s)
   build_basic_dictionary(*STATUSES)
-  attr_accessible :primary_output_attributes, :secondary_output_attributes
+  attr_accessible :primary_output_attributes, :secondary_output_attributes,
+    :input_attributes
   has_one :input, :inverse_of => :nomenclature_change,
     :class_name => NomenclatureChange::Input,
     :foreign_key => :nomenclature_change_id,
