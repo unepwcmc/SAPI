@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe NomenclatureChange::Split::ReassignmentProcessor do
+describe NomenclatureChange::ReassignmentProcessor do
   describe :run do
     let(:input_species){ create_cites_eu_species }
     let!(:split){
@@ -20,7 +20,7 @@ describe NomenclatureChange::Split::ReassignmentProcessor do
       )
     }
     let(:processor){
-      NomenclatureChange::Split::ReassignmentProcessor.new(input, output)
+      NomenclatureChange::ReassignmentProcessor.new(input, output)
     }
 
     context "when children" do
