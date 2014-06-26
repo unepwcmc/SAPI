@@ -1,4 +1,4 @@
-class NomenclatureChange::Lump < NomenclatureChange
+class NomenclatureChange::Merge < NomenclatureChange
   STEPS = [:inputs, :outputs, :children, :names, :distribution, :legislation, :notes, :summary]
   STATUSES = ['new', 'submitted'] + STEPS.map(&:to_s)
   build_basic_dictionary(*STATUSES)

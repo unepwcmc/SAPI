@@ -1,9 +1,9 @@
-<h2>New lump</h2>
+<h2>New merge</h2>
 <%= nomenclature_change_form do |f| %>
   <%= render 'admin/nomenclature_changes/build/event_selector', :f => f %>
   <div class="control-group">
     <%= f.fields_for :inputs do |ff| %>
-      <label class="control-label">Select taxon to lump:</label>
+      <label class="control-label">Select taxon to merge:</label>
       <div class="controls">
         <%= ff.text_field :taxon_concept_id, {
           :class => 'taxon-concept',

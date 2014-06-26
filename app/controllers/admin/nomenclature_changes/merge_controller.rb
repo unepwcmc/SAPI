@@ -1,9 +1,9 @@
-class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::BuildController
+class Admin::NomenclatureChanges::MergeController < Admin::NomenclatureChanges::BuildController
 
-  steps *NomenclatureChange::Lump::STEPS
+  steps *NomenclatureChange::Merge::STEPS
 
   def create
-    @nomenclature_change = NomenclatureChange::Lump.new(:status => NomenclatureChange::NEW)
+    @nomenclature_change = NomenclatureChange::Merge.new(:status => NomenclatureChange::NEW)
     if @nomenclature_change.save
       redirect_to wizard_path(steps.first, :nomenclature_change_id => @nomenclature_change.id)
     else
@@ -12,7 +12,7 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
   end
 
   def show
-    builder = NomenclatureChange::Lump::Constructor.new(@nomenclature_change)
+    builder = NomenclatureChange::Merge::Constructor.new(@nomenclature_change)
     case step
     when :inputs
       set_events
@@ -36,14 +36,14 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
       builder.build_legislation_reassignments
       skip_step if @nomenclature_change.input.legislation_reassignments.empty?
     when :summary
-      @summary = NomenclatureChange::Lump::Summarizer.new(@nomenclature_change).summary
+      @summary = NomenclatureChange::Merge::Summarizer.new(@nomenclature_change).summary
     end
     render_wizard
   end
 
   def update
     @nomenclature_change.assign_attributes(
-      (params[:nomenclature_change_lump] || {}).merge({
+      (params[:nomenclature_change_merge] || {}).merge({
         :status => (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
       })
     )
