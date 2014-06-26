@@ -37,8 +37,8 @@ class NomenclatureChange::Merge < NomenclatureChange
   end
 
   def required_ranks
-    if !(inputs.map{ |i| i.new_rank.try(:name) || i.taxon_concept.try(:rank).try(:name) }.
-      uniq - [output.try(:taxon_concept).try(:rank).try(:name)]).empty?
+    if !(inputs.map{ |i| i.taxon_concept.try(:rank).try(:name) }.
+         include?(output.try(:taxon_concept).try(:rank).try(:name)))
       errors.add(:outputs, "Must be at same rank as inputs")
       return false
     end
