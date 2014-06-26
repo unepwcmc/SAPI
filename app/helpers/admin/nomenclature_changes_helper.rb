@@ -62,6 +62,10 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
+  def lump_blurb
+    "TODO" #TODO
+  end
+
   def status_change_blurb
     content_tag(:div, class: 'well well-small') do
       concat 'Changing status of '

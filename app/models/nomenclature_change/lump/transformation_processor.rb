@@ -20,9 +20,10 @@ class NomenclatureChange::Lump::TransformationProcessor
     tc = @output.tmp_taxon_concept
     unless tc.save
       Rails.logger.warn "FAILED to save taxon #{tc.errors.inspect}"
+      return false
     end
     Rails.logger.debug("UPDATE NEW TAXON ID #{tc.id}")
-    @output.update_attributes({:new_taxon_concept_id => tc.id})
+    @output.update_attributes({new_taxon_concept_id: tc.id})
   end
 
   def process_name_change
@@ -30,10 +31,25 @@ class NomenclatureChange::Lump::TransformationProcessor
     tc = @output.tmp_taxon_concept
     unless tc.save
       Rails.logger.warn "FAILED to save taxon #{tc.errors.inspect}"
+      return false
     end
-    #TODO perform status change
+    if @output.taxon_concept.name_status == 'A' && tc.name_status == 'A'
+      # process status change A -> S for old name
+      NomenclatureChange::StatusChange.create(
+        input_attributes: {
+          taxon_concept_id: @output.taxon_concept_id
+        },
+        primary_output_attributes: {
+          taxon_concept_id: @output.taxon_concept_id,
+          new_name_status: 'S'
+        },
+        secondary_output_attributes: {
+          taxon_concept_id: tc.id
+        }
+      )
+    end
     Rails.logger.debug("UPDATE NEW TAXON ID #{tc.id}")
-    @output.update_attributes({:new_taxon_concept_id => tc.id})
+    @output.update_attributes({new_taxon_concept_id: tc.id})
   end
 
 end

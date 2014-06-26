@@ -1,13 +1,13 @@
 class NomenclatureChange::Lump::Summarizer
 
-  def initialize(split)
-    @split = split
+  def initialize(lump)
+    @lump = lump
   end
 
   def summary
     res = [
-      "#{@split.input.taxon_concept.full_name} will be split into:",
-      @split.outputs.map do |output|
+      "#{@lump.input.taxon_concept.full_name} will be lump into:",
+      @lump.outputs.map do |output|
         res = [output.display_full_name]
         transformations = NomenclatureChange::Lump::TransformationSummarizer.new(output).summary
         unless transformations.empty?
@@ -16,10 +16,10 @@ class NomenclatureChange::Lump::Summarizer
             transformations
           ]
         end
-        reassignments = NomenclatureChange::Lump::ReassignmentSummarizer.new(@split.input, output).summary
+        reassignments = NomenclatureChange::Lump::ReassignmentSummarizer.new(@lump.input, output).summary
         unless reassignments.empty?
           res << [
-            "The following reassignments from #{@split.input.taxon_concept.full_name} will be performed:",
+            "The following reassignments from #{@lump.input.taxon_concept.full_name} will be performed:",
             reassignments
           ]
         end
