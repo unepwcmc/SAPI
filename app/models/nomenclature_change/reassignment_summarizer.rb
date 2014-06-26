@@ -41,6 +41,10 @@ class NomenclatureChange::ReassignmentSummarizer
       output_generic_summary(
         @input.taxon_concept.taxon_concept_references,
         'TaxonConceptReference', 'references'
+      ),
+      output_generic_summary(
+        @input.taxon_concept.shipments,
+        'Trade::Shipment', 'shipments'
       )
     ].compact
   end
