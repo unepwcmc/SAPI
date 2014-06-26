@@ -40,7 +40,7 @@ class NomenclatureChange::ReassignmentSummarizer
       ),
       output_generic_summary(
         @input.taxon_concept.taxon_concept_references,
-        'TaxonReference', 'references'
+        'TaxonConceptReference', 'references'
       )
     ].compact
   end
@@ -87,7 +87,6 @@ class NomenclatureChange::ReassignmentSummarizer
       where(
         'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
       ).where(:reassignable_type => reassignable_type).count
-    puts "#{reassignable_type} #{cnt}"
     "#{(cnt == 1 ? objects_cnt : 0)} (of #{objects_cnt}) #{title}"
   end
 
@@ -98,7 +97,6 @@ class NomenclatureChange::ReassignmentSummarizer
       where(
         'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
       ).where(:reassignable_type => reassignable_type).count
-    puts "#{reassignable_type} #{cnt}"
     "#{(cnt == 1 ? objects_cnt : 0)} (of #{objects_cnt}) #{title}"
   end
 

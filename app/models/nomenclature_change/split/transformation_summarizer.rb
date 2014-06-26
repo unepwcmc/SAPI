@@ -25,23 +25,17 @@ class NomenclatureChange::Split::TransformationSummarizer
         res << "#{taxon_concept.full_name} will be turned into a synonym of #{display_full_name}"
       end
     else
-      changes = []
       if new_rank
-        changes << "rank changed from #{taxon_concept.rank.name} to #{new_rank.name}"
+        res << "#{taxon_concept.full_name} rank changed from #{taxon_concept.rank.name} to #{new_rank.name}"
       end
       if new_parent
-        changes << "parent changed from #{taxon_concept.parent.full_name} to #{new_parent.full_name}"
+        res << "#{taxon_concept.full_name} parent changed from #{taxon_concept.parent.full_name} to #{new_parent.full_name}"
       end
       if new_name_status
-        changes << "name status changed from #{taxon_concept.name_status} to #{new_name_status}"
+        res << "#{taxon_concept.full_name} name status changed from #{taxon_concept.name_status} to #{new_name_status}"
       end
       if new_author_year
-        changes << "author year changed from #{taxon_concept.author_year} to #{new_author_year}"
-      end
-      changes.compact!
-      unless changes.empty?
-        res << "The following changes will be applied to #{taxon_concept.full_name}:"
-        res << changes
+        res << "#{taxon_concept.full_name} author year changed from #{taxon_concept.author_year} to #{new_author_year}"
       end
     end
     res

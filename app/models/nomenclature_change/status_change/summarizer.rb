@@ -16,6 +16,7 @@ class NomenclatureChange::StatusChange::Summarizer
         ]
       end
       reassignments = @status_change.input &&
+        @status_change.input.taxon_concept_id != output.taxon_concept_id &&
         NomenclatureChange::ReassignmentSummarizer.new(@status_change.input, output).summary || []
       unless reassignments.empty?
         res << [
