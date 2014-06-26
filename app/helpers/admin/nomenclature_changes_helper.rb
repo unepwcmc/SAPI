@@ -63,7 +63,29 @@ module Admin::NomenclatureChangesHelper
   end
 
   def lump_blurb
-    "TODO" #TODO
+    content_tag(:div, class: 'well well-small') do
+      concat 'Lumping '
+      @nomenclature_change.inputs.each_with-index do |input, idx|
+        if input.taxon_concept
+          concat link_to(
+            input.taxon_concept.full_name,
+            admin_taxon_concept_names_path(input.taxon_concept)
+          )
+        end
+        concat ', ' if idx < (total-1)
+      end
+      if @nomenclature_change.output
+        concat ' into '
+        if @nomenclature_change.output.taxon_concept && !@nomenclature_change.output.new_full_name
+          concat link_to(
+            @nomenclature_change.input.taxon_concept.full_name,
+            admin_taxon_concept_names_path(@nomenclature_change.input.taxon_concept)
+          )
+        else
+          concat @nomenclature_change.output.display_full_name
+        end
+      end
+    end
   end
 
   def status_change_blurb
