@@ -65,14 +65,15 @@ module Admin::NomenclatureChangesHelper
   def merge_blurb
     content_tag(:div, class: 'well well-small') do
       concat 'Merging '
-      @nomenclature_change.inputs.each_with-index do |input, idx|
+      total = @nomenclature_change.inputs.size
+      @nomenclature_change.inputs.each_with_index do |input, idx|
         if input.taxon_concept
           concat link_to(
             input.taxon_concept.full_name,
             admin_taxon_concept_names_path(input.taxon_concept)
           )
         end
-        concat ', ' if idx < (total-1)
+        concat ', ' if idx < (total - 1)
       end
       if @nomenclature_change.output
         concat ' into '
