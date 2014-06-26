@@ -79,8 +79,8 @@ module Admin::NomenclatureChangesHelper
         concat ' into '
         if @nomenclature_change.output.taxon_concept && !@nomenclature_change.output.new_full_name
           concat link_to(
-            @nomenclature_change.input.taxon_concept.full_name,
-            admin_taxon_concept_names_path(@nomenclature_change.input.taxon_concept)
+            @nomenclature_change.output.taxon_concept.full_name,
+            admin_taxon_concept_names_path(@nomenclature_change.output.taxon_concept)
           )
         else
           concat @nomenclature_change.output.display_full_name
