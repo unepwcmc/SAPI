@@ -2,6 +2,17 @@ shared_context 'split_definitions' do
   let(:input_species){ create_cites_eu_species }
   let(:output_species1){ create_cites_eu_species }
   let(:output_species2){ create_cites_eu_species }
+  let(:output_subspecies2){
+    create_cites_eu_subspecies(
+      :taxon_name => create(:taxon_name, :scientific_name => 'fatalus'),
+      :parent => create_cites_eu_species(
+        :taxon_name => create(:taxon_name, :scientific_name => 'fatalus'),
+        :parent => create_cites_eu_genus(
+          :taxon_name => create(:taxon_name, :scientific_name => 'Errorus')
+        )
+      )
+    )
+  }
   let(:split_with_input){
     create(:nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id }
@@ -37,7 +48,9 @@ shared_context 'split_definitions' do
         0 => { taxon_concept_id: output_species1.id },
         1 => {
           new_scientific_name: 'fatalus',
-          new_parent_id: create_cites_eu_genus.id,
+          :new_parent_id => create_cites_eu_genus(
+            :taxon_name => create(:taxon_name, :scientific_name => 'Errorus')
+          ).id,
           new_rank_id: species_rank.id,
           new_name_status: 'A'
         }
@@ -61,9 +74,13 @@ shared_context 'split_definitions' do
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
         1 => {
-          taxon_concept_id: output_species2.id,
+          taxon_concept_id: output_subspecies2.id,
           new_scientific_name: 'lolcatus',
-          new_rank_id: species_rank.id
+          :new_parent_id => create_cites_eu_genus(
+            :taxon_name => create(:taxon_name, :scientific_name => 'Errorus')
+          ).id,
+          new_rank_id: species_rank.id,
+          new_name_status: 'A'
         }
       },
       status: NomenclatureChange::Split::OUTPUTS
