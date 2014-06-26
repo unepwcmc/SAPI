@@ -6,7 +6,7 @@ class NomenclatureChange::Merge::Constructor
   end
 
   def build_inputs
-    @nomenclature_change.inputs.build if @nomenclature_change.inputs.empty?
+    2.times { @nomenclature_change.inputs.build } if @nomenclature_change.inputs.empty?
   end
 
   def build_output
