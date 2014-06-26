@@ -45,7 +45,8 @@ class NomenclatureChange::Split::TransformationProcessor
         },
         secondary_output_attributes: {
           taxon_concept_id: tc.id
-        }
+        },
+        status: NomenclatureChange::SUBMITTED
       )
     end
     Rails.logger.debug("UPDATE NEW TAXON ID #{tc.id}")
