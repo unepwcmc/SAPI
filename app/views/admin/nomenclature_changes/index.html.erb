@@ -68,8 +68,8 @@
       <td><%= nc.status %></td>
       <td>
         <% if nc.in_progress? %>
-          <%= link_to edit_icon, admin_nomenclature_change_split_path(
-            :nomenclature_change_id => nc.id, :id => nc.status
+          <%= link_to edit_icon, polymorphic_url([:admin, nc],
+            :id => nc.status
           ) %>
           <%= link_to delete_icon, admin_nomenclature_change_path(nc),
             :confirm => "Warning: you are about to delete data. Are you sure?",
