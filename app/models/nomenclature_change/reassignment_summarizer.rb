@@ -1,4 +1,4 @@
-class NomenclatureChange::Split::ReassignmentSummarizer
+class NomenclatureChange::ReassignmentSummarizer
 
   def initialize(input, output)
     @input = input
