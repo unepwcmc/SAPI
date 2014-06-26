@@ -42,6 +42,10 @@ class NomenclatureChange < ActiveRecord::Base
     outputs.select{ |o| o.taxon_concept == input.try(:taxon_concept) }
   end
 
+  def inputs_intersect_outputs
+    inputs.select{ |o| o.taxon_concept == output.try(:taxon_concept) }
+  end
+
   def cannot_update_when_locked
     if status_was == NomenclatureChange::CLOSED ||
       status_was == NomenclatureChange::SUBMITTED &&
