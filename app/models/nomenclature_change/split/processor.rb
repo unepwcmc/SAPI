@@ -13,7 +13,7 @@ class NomenclatureChange::Split::Processor
       processor = NomenclatureChange::Split::TransformationProcessor.new(output)
       processor.run
       Rails.logger.debug("[#{@nc.type}] Processing reassignments from #{@input.taxon_concept.full_name}")
-      processor = NomenclatureChange::Split::ReassignmentProcessor.new(@input, output)
+      processor = NomenclatureChange::ReassignmentProcessor.new(@input, output)
       processor.run
     end
     Rails.logger.warn("[#{@nc.type}] END")

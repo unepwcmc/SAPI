@@ -16,7 +16,7 @@ class NomenclatureChange::StatusChange::Summarizer
         ]
       end
       reassignments = @status_change.input &&
-        NomenclatureChange::Split::ReassignmentSummarizer.new(@status_change.input, output).summary || []
+        NomenclatureChange::ReassignmentSummarizer.new(@status_change.input, output).summary || []
       unless reassignments.empty?
         res << [
           "The following reassignments from #{@status_change.input.taxon_concept.full_name} will be performed:",
