@@ -1,0 +1,18 @@
+require 'spec_helper'
+
+describe NomenclatureChange::StatusChange::TransformationProcessor do
+  include_context 'status_change_definitions'
+
+  describe :run do
+    let(:processor){
+      NomenclatureChange::StatusChange::TransformationProcessor.new(primary_output)
+    }
+    before(:each) do
+      processor.run
+    end
+    context "when output is existing taxon" do
+      let(:primary_output){ status_downgrade_with_input_and_secondary_output.primary_output }
+      specify{ expect(primary_output.new_taxon_concept).to be_nil }
+    end
+  end
+end
