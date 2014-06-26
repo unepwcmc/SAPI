@@ -16,9 +16,9 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
     case step
     when :inputs
       set_events
-      builder.build_input
+      builder.build_inputs
     when :outputs
-      builder.build_outputs
+      builder.build_output
     when :notes
       builder.build_common_names_reassignments
       builder.build_references_reassignments
