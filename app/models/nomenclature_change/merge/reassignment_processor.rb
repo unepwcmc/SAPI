@@ -1,4 +1,4 @@
-class NomenclatureChange::Lump::ReassignmentProcessor
+class NomenclatureChange::Merge::ReassignmentProcessor
 
   def initialize(input, output)
     @input = input
@@ -35,7 +35,7 @@ class NomenclatureChange::Lump::ReassignmentProcessor
       end
     end
     unless @nc.outputs.include?(@input) || reassignment.kind_of?(NomenclatureChange::ParentReassignment)
-      # input is not part of the lump
+      # input is not part of the merge
       # delete original association
       Rails.logger.warn("Deleting #{reassignment.reassignable_type} (id=#{reassignment.reassignable_id}) from #{@input.taxon_concept.full_name}")
       if reassignment.reassignable_id.blank?
