@@ -11,9 +11,7 @@
 # As a rule of thumb, if there are 2 outputs that means there are reassignments
 # involved between the input and one of the outputs.
 class NomenclatureChange::StatusChange < NomenclatureChange
-  STEPS = [:primary_output, :relay_or_swap, :receive_or_swap, :notes, :summary]
-  STATUSES = ['new', 'submitted'] + STEPS.map(&:to_s)
-  build_basic_dictionary(*STATUSES)
+  build_steps(:primary_output, :relay_or_swap, :receive_or_swap, :notes, :summary)
   attr_accessible :primary_output_attributes, :secondary_output_attributes,
     :input_attributes
   has_one :input, :inverse_of => :nomenclature_change,
@@ -35,7 +33,7 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   accepts_nested_attributes_for :secondary_output, :allow_destroy => true
 
   validates :status, inclusion: {
-    in: STATUSES,
+    in: self.status_dict,
     message: "%{value} is not a valid status"
   }
   validate :required_primary_output, if: :primary_output_or_submitting?
@@ -110,26 +108,6 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   def is_swap?
     secondary_output &&
       secondary_output.new_name_status == primary_output.taxon_concept.name_status
-  end
-
-  def primary_output_or_submitting?
-    status == NomenclatureChange::StatusChange::PRIMARY_OUTPUT || submitting?
-  end
-
-  def relay_or_swap_or_submitting?
-    status == NomenclatureChange::StatusChange::RELAY_OR_SWAP || submitting?
-  end
-
-  def receive_or_swap_or_submitting?
-    status == NomenclatureChange::StatusChange::RECEIVE_OR_SWAP || submitting?
-  end
-
-  def relay_or_swap?
-    status == NomenclatureChange::StatusChange::RELAY_OR_SWAP
-  end
-
-  def notes?
-    status == NomenclatureChange::StatusChange::NOTES
   end
 
 end
