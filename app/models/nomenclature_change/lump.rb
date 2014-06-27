@@ -1,7 +1,6 @@
 class NomenclatureChange::Lump < NomenclatureChange
-  STEPS = [:inputs, :outputs, :children, :names, :distribution, :legislation, :notes, :summary]
-  STATUSES = ['new', 'submitted'] + STEPS.map(&:to_s)
-  build_basic_dictionary(*STATUSES)
+  build_steps(:inputs, :outputs, :children, :names, :distribution,
+    :legislation, :notes, :summary)
   attr_accessible :inputs_attributes, :output_attributes
   has_many :inputs, :inverse_of => :nomenclature_change,
     :class_name => NomenclatureChange::Input,
@@ -15,7 +14,7 @@ class NomenclatureChange::Lump < NomenclatureChange
   accepts_nested_attributes_for :output, :allow_destroy => true
 
   validates :status, inclusion: {
-    in: STATUSES,
+    in: self.status_dict,
     message: "%{value} is not a valid status"
   }
   validate :required_inputs, if: :inputs_or_submitting?
