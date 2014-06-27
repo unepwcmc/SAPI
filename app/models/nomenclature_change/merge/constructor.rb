@@ -15,11 +15,11 @@ class NomenclatureChange::Merge::Constructor
 
   def build_parent_reassignments
     output = @nomenclature_change.output
-    default_input = @nomenclature_change.inputs_intersect_outputs.first
-    default_input ||= @nomenclature_change.inputs.first
-    children = output.taxon_concept.children - @nomenclature_change.
-      inputs.map(&:taxon_concept).compact
-    _build_parent_reassignments(input, default_output, children)
+    @nomenclature_change.inputs.each do |input|
+      children = input.taxon_concept.children - @nomenclature_change.
+        output.taxon_concept
+      _build_parent_reassignments(input, output, children)
+    end
   end
 
   def build_name_reassignments
