@@ -1,4 +1,4 @@
-class NomenclatureChange::Merge::TransformationProcessor
+class NomenclatureChange::Lump::TransformationProcessor
 
   def initialize(output)
     @nc = output.nomenclature_change
