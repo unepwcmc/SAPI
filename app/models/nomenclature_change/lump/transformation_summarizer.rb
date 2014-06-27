@@ -1,4 +1,4 @@
-class NomenclatureChange::Merge::TransformationSummarizer
+class NomenclatureChange::Lump::TransformationSummarizer
 
   delegate :new_rank, :to => :"@output"
   delegate :new_parent, :to => :"@output"

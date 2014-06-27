@@ -134,8 +134,8 @@ SAPI::Application.routes.draw do
       resources :taxon_quotas, :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :quotas
 
-      resources :taxon_eu_suspensions,
-        :only => [:index, :new, :create, :edit, :update, :destroy],
+      resources :taxon_eu_suspensions, 
+        :only => [:index, :new, :create, :edit, :update, :destroy], 
         :as => :eu_suspensions
 
       resources :taxon_cites_suspensions,
@@ -145,7 +145,7 @@ SAPI::Application.routes.draw do
     end
     resources :nomenclature_changes do
       resources :split, controller: 'nomenclature_changes/split'
-      resources :merge, controller: 'nomenclature_changes/merge'
+      resources :lump, controller: 'nomenclature_changes/lump'
       resources :status_change, controller: 'nomenclature_changes/status_change'
     end
     match 'exports' => 'exports#index'
