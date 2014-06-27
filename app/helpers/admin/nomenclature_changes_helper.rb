@@ -62,9 +62,9 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
-  def merge_blurb
+  def lump_blurb
     content_tag(:div, class: 'well well-small') do
-      concat 'Merging '
+      concat 'Lumping '
       total = @nomenclature_change.inputs.size
       @nomenclature_change.inputs.each_with_index do |input, idx|
         if input.taxon_concept
