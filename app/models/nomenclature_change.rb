@@ -1,7 +1,7 @@
 class NomenclatureChange < ActiveRecord::Base
   include Dictionary
-  STATUSES = ['new', 'submitted', 'closed']
-  build_basic_dictionary(*STATUSES)
+  include StatusDictionary
+  build_steps
   track_who_does_it
   attr_accessible :created_by_id, :event_id, :updated_by_id, :status
 
@@ -24,14 +24,6 @@ class NomenclatureChange < ActiveRecord::Base
     if in_progress?
       update_attribute(:status, NomenclatureChange::SUBMITTED)
     end
-  end
-
-  def inputs_or_submitting?
-    status == NomenclatureChange::Split::INPUTS || submitting?
-  end
-
-  def outputs_or_submitting?
-    status == NomenclatureChange::Split::OUTPUTS || submitting?
   end
 
   def outputs_except_inputs

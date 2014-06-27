@@ -1,7 +1,6 @@
 class NomenclatureChange::Split < NomenclatureChange
-  STEPS = [:inputs, :outputs, :notes, :children, :names, :distribution, :legislation, :summary]
-  STATUSES = ['new', 'submitted'] + STEPS.map(&:to_s)
-  build_basic_dictionary(*STATUSES)
+  build_steps(:inputs, :outputs, :notes, :children, :names, :distribution,
+    :legislation, :summary)
   attr_accessible :input_attributes, :outputs_attributes
   has_one :input, :inverse_of => :nomenclature_change,
     :class_name => NomenclatureChange::Input,
@@ -15,7 +14,7 @@ class NomenclatureChange::Split < NomenclatureChange
   accepts_nested_attributes_for :outputs, :allow_destroy => true
 
   validates :status, inclusion: {
-    in: STATUSES,
+    in: self.status_dict,
     message: "%{value} is not a valid status"
   }
   validate :required_inputs, if: :inputs_or_submitting?
