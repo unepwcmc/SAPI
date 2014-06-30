@@ -6,8 +6,9 @@ class NomenclatureChange::Lump::Summarizer
 
   def summary
     res = [
-      "#{@lump.input.taxon_concept.full_name} will be lump into:",
-      @lump.outputs.map do |output|
+      "#{@lump.inputs.map{|i| i.taxon_concept.full_name}.join(", ")} will be lumped into:",
+      (
+        output = @lump.output
         res = [output.display_full_name]
         transformations = NomenclatureChange::Lump::TransformationSummarizer.new(output).summary
         unless transformations.empty?
@@ -16,15 +17,17 @@ class NomenclatureChange::Lump::Summarizer
             transformations
           ]
         end
-        reassignments = NomenclatureChange::Lump::ReassignmentSummarizer.new(@lump.input, output).summary
-        unless reassignments.empty?
-          res << [
-            "The following reassignments from #{@lump.input.taxon_concept.full_name} will be performed:",
-            reassignments
-          ]
+        @lump.inputs.each do |input|
+          reassignments = NomenclatureChange::Lump::ReassignmentSummarizer.new(input, output).summary
+          unless reassignments.empty?
+            res << [
+              "The following reassignments from #{input.taxon_concept.full_name} will be performed:",
+              reassignments
+            ]
+          end
         end
         res
-      end
+      )
     ]
   end
 
