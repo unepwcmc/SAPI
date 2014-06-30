@@ -16,7 +16,8 @@
     <div class="control-group">
       <label class="control-label">Name status:</label>
       <div class="controls">
-        <%= ff.select :new_name_status, options_for_select(['A', 'N', 'S', 'T']) %>
+        <%= ff.select :new_name_status, options_for_select(['A', 'S'],
+          ff.object.new_name_status) %>
       </div>
     </div>
     <% end %>

@@ -17,17 +17,17 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   has_one :input, :inverse_of => :nomenclature_change,
     :class_name => NomenclatureChange::Input,
     :foreign_key => :nomenclature_change_id,
-    :dependent => :destroy
+    :dependent => :destroy, autosave: true
   has_one :primary_output, :inverse_of => :nomenclature_change,
     :class_name => NomenclatureChange::Output,
     :foreign_key => :nomenclature_change_id,
     :conditions => {:is_primary_output => true},
-    :dependent => :destroy
+    :dependent => :destroy, autosave: true
   has_one :secondary_output, :inverse_of => :nomenclature_change,
     :class_name => NomenclatureChange::Output,
     :foreign_key => :nomenclature_change_id,
     :conditions => {:is_primary_output => false},
-    :dependent => :destroy
+    :dependent => :destroy, autosave: true
   accepts_nested_attributes_for :input, :allow_destroy => true
   accepts_nested_attributes_for :primary_output, :allow_destroy => true
   accepts_nested_attributes_for :secondary_output, :allow_destroy => true
@@ -42,6 +42,7 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   validate :required_input_for_relay, if: :relay_or_swap_or_submitting?
 
   before_validation :build_auto_input, if: :relay_or_swap?
+  before_validation :clear_receive_or_swap, if: :receive_or_swap?
   before_validation :build_auto_reassignments, if: :notes?
 
   def build_auto_input
@@ -53,6 +54,16 @@ class NomenclatureChange::StatusChange < NomenclatureChange
       build_input(taxon_concept_id: primary_output.taxon_concept_id)
     end
     true
+  end
+
+  def clear_receive_or_swap
+    # In case a status upgrade is carried out as a swap, clear the input.
+    # Otherwise clear the secondary output
+    if is_swap? && input
+      self.input.mark_for_destruction
+    elsif !is_swap? && secondary_output
+      self.secondary_output.mark_for_destruction
+    end
   end
 
   def build_auto_reassignments
@@ -106,8 +117,8 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   end
 
   def is_swap?
-    secondary_output &&
-      secondary_output.new_name_status == primary_output.taxon_concept.name_status
+    secondary_output && secondary_output.taxon_concept &&
+      secondary_output.new_name_status == primary_output.taxon_concept.reload.name_status
   end
 
 end

@@ -25,7 +25,7 @@ class NomenclatureChange::StatusChange::Processor
     end
     if @input && output
       Rails.logger.debug("[#{@nc.type}] Processing reassignments from #{@input.taxon_concept.full_name}")
-      processor = NomenclatureChange::StatusChange::TransformationProcessor.new(@input, output)
+      processor = NomenclatureChange::ReassignmentProcessor.new(@input, output)
       processor.run
     end
     Rails.logger.warn("[#{@nc.type}] END")
