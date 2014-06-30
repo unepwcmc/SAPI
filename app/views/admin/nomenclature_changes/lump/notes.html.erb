@@ -2,34 +2,11 @@
 <%= lump_blurb %>
 <%= nomenclature_change_form do |f| %>
 <h3>Inputs</h3>
-  <%= f.fields_for :input do |ff| %>
-    <div class="control-group">
-      <label class="control-label">
-        <%= ff.object.taxon_concept.try(:full_name) %>
-      </label>
-      <div class="controls">
-        <div class="control-group">
-          <label class="control-label">Public note</label>
-          <div class="controls">
-            <%= ff.text_area :note, {:rows => 4} %>
-          </div>
-        </div>
-        <div class="control-group">
-          <label class="control-label">Internal note</label>
-          <div class="controls">
-            <%= ff.text_area :internal_note, {:rows => 4} %>
-          </div>
-        </div>
-      </div>
-    </div>
-  <% end %>
-
-<h3>Outputs</h3>
-  <% @nomenclature_change.outputs_except_inputs.each do |output| %>
-    <%= f.fields_for :outputs, output do |ff| %>
+  <% @nomenclature_change.inputs_except_outputs.each do |input| %>
+    <%= f.fields_for :inputs, input do |ff| %>
       <div class="control-group">
         <label class="control-label">
-          <%= ff.object.display_full_name %>
+          <%= ff.object.taxon_concept.try(:full_name) %>
         </label>
         <div class="controls">
           <div class="control-group">
@@ -47,5 +24,28 @@
         </div>
       </div>
     <% end %>
+  <% end %>
+
+<h3>Output</h3>
+  <%= f.fields_for :output do |ff| %>
+    <div class="control-group">
+      <label class="control-label">
+        <%= ff.object.display_full_name %>
+      </label>
+      <div class="controls">
+        <div class="control-group">
+          <label class="control-label">Public note</label>
+          <div class="controls">
+            <%= ff.text_area :note, {:rows => 4} %>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Internal note</label>
+          <div class="controls">
+            <%= ff.text_area :internal_note, {:rows => 4} %>
+          </div>
+        </div>
+      </div>
+    </div>
   <% end %>
 <% end %>
