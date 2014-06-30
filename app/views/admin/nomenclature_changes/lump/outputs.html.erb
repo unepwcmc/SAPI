@@ -27,8 +27,6 @@
       <p>
         <i class="icon-info-sign"></i>Please provide additional details if required.
       </p>
-      <%= ff.hidden_field :new_rank_id, :value => ff.object.new_rank_id ||
-        f.object.inputs.first.taxon_concept.rank_id %>
       <div class="control-group">
         <label class="control-label">Parent:</label>
         <div class="controls">
@@ -49,12 +47,6 @@
         <label class="control-label">Author & year:</label>
         <div class="controls">
           <%= ff.text_field :new_author_year %>
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label">Name status:</label>
-        <div class="controls">
-          <%= ff.select :new_name_status, options_for_select(['A', 'N']) %>
         </div>
       </div>
     </div>
