@@ -34,7 +34,7 @@ class NomenclatureChange::ReassignmentProcessor
         process_target(target, reassignment.reassignable)
       end
     end
-    unless @nc.outputs.include?(@input) || reassignment.kind_of?(NomenclatureChange::ParentReassignment)
+    unless @nc.output == @input || reassignment.kind_of?(NomenclatureChange::ParentReassignment)
       # input is not part of the split
       # delete original association
       Rails.logger.warn("Deleting #{reassignment.reassignable_type} (id=#{reassignment.reassignable_id}) from #{@input.taxon_concept.full_name}")

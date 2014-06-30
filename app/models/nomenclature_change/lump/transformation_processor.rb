@@ -51,5 +51,4 @@ class NomenclatureChange::Lump::TransformationProcessor
     Rails.logger.debug("UPDATE NEW TAXON ID #{tc.id}")
     @output.update_attributes({new_taxon_concept_id: tc.id})
   end
-
 end
