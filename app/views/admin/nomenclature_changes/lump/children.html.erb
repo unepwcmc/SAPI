@@ -1,7 +1,7 @@
 <h2>New lump: handle children</h2>
 <%= lump_blurb %>
 <%= nomenclature_change_form do |f| %>
-  <%= f.fields_for :input do |ff| %>
+  <%= f.fields_for :inputs do |ff| %>
 
     <%= ff.fields_for :parent_reassignments do |fff| %>
       <div class="control-group">
@@ -12,9 +12,8 @@
           <%= fff.fields_for :reassignment_target do |ffff| %>
             <%= ffff.select :nomenclature_change_output_id,
               options_for_select(
-                @nomenclature_change.outputs.map do |o|
-                  [o.display_full_name, o.id]
-                end,
+                [[@nomenclature_change.output.display_full_name,
+                  @nomenclature_change.output.id]]
               )
             %>
           <% end %>
