@@ -6,15 +6,18 @@
 </p>
 <%= nomenclature_change_form do |f| %>
 
-  <%= f.fields_for :secondary_output do |ff| %>
+  <%= f.fields_for 'secondary_output_1', @nomenclature_change.secondary_output do |ff| %>
     <div class="control-group">
       <label class="control-label">Transfer associations to another A/N name:</label>
-      <div class="controls">
+      <div id="secondary_output_1" class="controls">
         <%= ff.text_field :taxon_concept_id, {
-          :class => 'taxon-concept',
-          :'data-name' => ff.object.taxon_concept.try(:full_name),
-          :'data-name-status' => ff.object.taxon_concept.try(:name_status),
-          :'data-name-status-filter' => ['A', 'N'].to_json
+          :class => 'taxon-concept clear-others',
+          :'data-name' => !@nomenclature_change.is_swap? &&
+            ff.object.taxon_concept.try(:full_name) || '',
+          :'data-name-status' => !@nomenclature_change.is_swap? &&
+            ff.object.taxon_concept.try(:name_status) || '',
+          :'data-name-status-filter' => ['A', 'N'].to_json,
+          :value => !@nomenclature_change.is_swap? && ff.object.taxon_concept_id || ''
         } %>
         <%= ff.hidden_field :is_primary_output %>
       </div>
@@ -23,20 +26,23 @@
 
   <p>OR</p>
 
-  <%= f.fields_for :secondary_output do |ff| %>
+  <%= f.fields_for 'secondary_output_2', @nomenclature_change.secondary_output do |ff| %>
     <div class="control-group">
       <label class="control-label">Swap status with another <%= f.object.primary_output.new_name_status %> name:</label>
-      <div class="controls">
+      <div id="secondary_output_2" class="controls">
         <%= ff.text_field :taxon_concept_id, {
-          :class => 'taxon-concept',
+          :class => 'taxon-concept clear-others',
           :'data-name' => ff.object.taxon_concept.try(:full_name),
           :'data-name-status' => ff.object.taxon_concept.try(:name_status),
           :'data-name-status-filter' => [f.object.primary_output.new_name_status]
         } %>
         <%= ff.hidden_field :is_primary_output %>
-        <%= ff.hidden_field :new_name_status, :value => f.object.primary_output.taxon_concept.name_status %>
+        <%= ff.hidden_field :new_name_status %>
       </div>
     </div>
   <% end %>
+
+  <%= hidden_field_tag :secondary_output,
+    @nomenclature_change.is_swap? ? 'secondary_output_2' : 'secondary_output_1' %>
 
 <% end %>

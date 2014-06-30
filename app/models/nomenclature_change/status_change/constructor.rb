@@ -14,10 +14,12 @@ class NomenclatureChange::StatusChange::Constructor
   end
 
   def build_secondary_output
-    if @nomenclature_change.needs_to_relay_associations? &&
+    if (@nomenclature_change.needs_to_relay_associations? ||
+      @nomenclature_change.needs_to_receive_associations?) &&
       @nomenclature_change.secondary_output.nil?
       @nomenclature_change.build_secondary_output(
-        :is_primary_output => false
+        :is_primary_output => false,
+        :new_name_status => @nomenclature_change.primary_output.taxon_concept.name_status
       )
     end
   end
