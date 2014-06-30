@@ -5,7 +5,7 @@
   Names can be assigned to multiple lump outputs.
 </p>
 <%= nomenclature_change_form do |f| %>
-  <%= f.fields_for :input do |ff| %>
+  <%= f.fields_for :inputs do |ff| %>
 
     <%= ff.fields_for :name_reassignments do |fff| %>
       <div class="control-group">
@@ -16,13 +16,11 @@
         <div class="controls">
           <%= fff.select :output_ids,
             options_for_select(
-              @nomenclature_change.outputs.map do |o|
-                [o.display_full_name, o.id]
-              end,
+              [[@nomenclature_change.output.display_full_name, @nomenclature_change.output.id]],
               ff.object.name_reassignments.map(&:reassignment_targets).flatten.
                 map(&:output).compact.map(&:id)
             ),
-            {}, {:class => 'simple-taxon-concept', :multiple => ''}
+            {}, {:class => 'simple-taxon-concept'}
           %>
           <input type="checkbox" class="select-all-checkbox">Select All
         </div>
