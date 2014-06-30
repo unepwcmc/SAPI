@@ -33,6 +33,15 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
   end
 
   def update
+    if step == :relay_or_swap
+      which_secondary_output =
+        params.delete(:secondary_output) || 'secondary_output_1'
+      params[:nomenclature_change_status_change][:secondary_output_attributes] =
+        params[:nomenclature_change_status_change][which_secondary_output]
+      params[:nomenclature_change_status_change].delete(:secondary_output_1)
+      params[:nomenclature_change_status_change].delete(:secondary_output_2)
+      puts params.inspect
+    end
     @nomenclature_change.assign_attributes(
       (params[:nomenclature_change_status_change] || {}).merge({
         :status => (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
