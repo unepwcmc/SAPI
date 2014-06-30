@@ -23,10 +23,10 @@ class NomenclatureChange::Lump::Constructor
   end
 
   def build_name_reassignments
-    input = @nomenclature_change.input
-    default_output = @nomenclature_change.outputs_intersect_inputs.first
-    default_output ||= @nomenclature_change.outputs.first
-    _build_names_reassignments(input, [default_output])
+    output = @nomenclature_change.output
+    @nomenclature_change.inputs.each do |input|
+      _build_names_reassignments(input, [output])
+    end
   end
 
   def build_distribution_reassignments
