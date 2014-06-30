@@ -18,12 +18,20 @@ class NomenclatureChange::Lump < NomenclatureChange
     message: "%{value} is not a valid status"
   }
   validate :required_inputs, if: :inputs_or_submitting?
+  validate :required_inputs_ranks, if: :inputs_or_submitting?
   validate :required_outputs, if: :outputs_or_submitting?
   validate :required_ranks, if: :outputs_or_submitting?
 
   def required_inputs
     if inputs.size < 2
       errors.add(:inputs, "Must have at least two inputs")
+      return false
+    end
+  end
+
+  def required_inputs_ranks
+    if inputs.map{ |i| i.taxon_concept.try(:rank_id) }.uniq.size > 1
+      errors.add(:inputs, "must be of same rank")
       return false
     end
   end
