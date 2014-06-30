@@ -30,9 +30,10 @@ class NomenclatureChange::Lump::Constructor
   end
 
   def build_distribution_reassignments
-    input = @nomenclature_change.input
-    default_outputs = @nomenclature_change.outputs
-    _build_distribution_reassignments(input, default_outputs)
+    output = @nomenclature_change.output
+    @nomenclature_change.inputs.each do |input|
+      _build_distribution_reassignments(input, [output])
+    end
   end
 
   def build_legislation_reassignments
