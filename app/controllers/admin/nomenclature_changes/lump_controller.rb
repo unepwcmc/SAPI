@@ -28,7 +28,7 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
       skip_step if @nomenclature_change.inputs.map(&:parent_reassignments).flatten.empty?
     when :names
       builder.build_name_reassignments
-      skip_step if @nomenclature_change.input.name_reassignments.empty?
+      skip_step if @nomenclature_change.inputs.map(&:name_reassignments).flatten.empty?
     when :distribution
       builder.build_distribution_reassignments
       skip_step if @nomenclature_change.input.distribution_reassignments.empty?
