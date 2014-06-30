@@ -44,9 +44,9 @@ class NomenclatureChange::Lump < NomenclatureChange
   end
 
   def required_ranks
-    if !(inputs.map{ |i| i.taxon_concept.try(:rank).try(:name) }.
-         include?(output.try(:taxon_concept).try(:rank).try(:name)))
-      errors.add(:outputs, "Must be at same rank as inputs")
+    if inputs.first.try(:taxon_concept).try(:rank).
+        try(:name) != output.try(:taxon_concept).try(:rank).try(:name)
+      errors.add(:output, "must be at same rank as inputs")
       return false
     end
   end
