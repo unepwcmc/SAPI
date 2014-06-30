@@ -23,44 +23,48 @@ class NomenclatureChange::Lump::Constructor
   end
 
   def build_name_reassignments
-    output = @nomenclature_change.output
     @nomenclature_change.inputs.each do |input|
-      _build_names_reassignments(input, [output])
+      _build_names_reassignments(input)
     end
   end
 
   def build_distribution_reassignments
-    output = @nomenclature_change.output
     @nomenclature_change.inputs.each do |input|
-      _build_distribution_reassignments(input, [output])
+      _build_distribution_reassignments(input)
     end
   end
 
   def build_legislation_reassignments
-    _build_legislation_reassignments(@nomenclature_change.input)
+    @nomenclature_change.inputs.each do |input|
+      _build_legislation_reassignments(input)
+    end
   end
 
   def build_common_names_reassignments
-    _build_common_names_reassignments(@nomenclature_change.input)
+    @nomenclature_change.inputs.each do |input|
+      _build_common_names_reassignments(input)
+    end
   end
 
   def build_references_reassignments
-    _build_references_reassignments(@nomenclature_change.input)
+    @nomenclature_change.inputs.each do |input|
+      _build_references_reassignments(input)
+    end
   end
 
   def build_input_and_output_notes
-    input = @nomenclature_change.input
+    inputs = @nomenclature_change.inputs.map{ |input| input.taxon_concept.full_name }.join(', ')
+    output = @nomenclature_change.output
     event = @nomenclature_change.event
-    if input.note.blank?
-      outputs = @nomenclature_change.outputs.map{ |output| output.display_full_name }.join(', ')
-      input.note = "#{input.taxon_concept.full_name} was lump into #{outputs} in #{Date.today.year}"
-      input.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
-    end
-    @nomenclature_change.outputs_except_inputs.each do |output|
-      if output.note.blank?
-        output.note = "#{output.display_full_name} was lump from #{input.taxon_concept.full_name} in #{Date.today.year}"
-        output.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
+    @nomenclature_change.inputs_except_outputs.each do |input|
+      if input.note.blank?
+        input.note = "#{inputs} were lumped into #{output.display_full_name} in #{Date.today.year}"
+        input.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
       end
+    end
+    if output.note.blank?
+      output.note = "#{output.display_full_name} was lumped from #{inputs} in #{Date.today.year}"
+      output.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
     end
   end
 end

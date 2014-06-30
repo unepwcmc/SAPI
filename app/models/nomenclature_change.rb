@@ -34,6 +34,10 @@ class NomenclatureChange < ActiveRecord::Base
     outputs.select{ |o| o.taxon_concept == input.try(:taxon_concept) }
   end
 
+  def inputs_except_outputs
+    inputs.reject{ |i| i.taxon_concept == output.try(:taxon_concept) }
+  end
+
   def inputs_intersect_outputs
     inputs.select{ |o| o.taxon_concept == output.try(:taxon_concept) }
   end
