@@ -16,8 +16,8 @@ class NomenclatureChange::Lump::Constructor
   def build_parent_reassignments
     output = @nomenclature_change.output
     @nomenclature_change.inputs.each do |input|
-      children = input.taxon_concept.children - @nomenclature_change.
-        output.taxon_concept
+      children = input.taxon_concept.children - [@nomenclature_change.
+        output.taxon_concept]
       _build_parent_reassignments(input, output, children)
     end
   end
