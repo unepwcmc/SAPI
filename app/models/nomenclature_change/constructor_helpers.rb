@@ -83,35 +83,40 @@ module NomenclatureChange::ConstructorHelpers
       ).first || input.taxon_concept.listing_changes.limit(1).count > 0 &&
       NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'ListingChange',
-        :note => "Originally listed as #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
+        # listing_change_note defined in constructor
+        :note => listing_change_note
       ) || nil,
       input.legislation_reassignments.where(
         :reassignable_type => 'CitesSuspension'
       ).first || input.taxon_concept.cites_suspensions.limit(1).count > 0 &&
       NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'CitesSuspension',
-        :note => "Suspension originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
+        # suspension_note defined in constructor
+        :note => suspension_note
       ) || nil,
       input.legislation_reassignments.where(
         :reassignable_type => 'Quota'
       ).first || input.taxon_concept.quotas.limit(1).count > 0 &&
       NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'Quota',
-        :note => "Quota originally published for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
+        # quota defined in constructor
+        :note => quota_note
       ) || nil,
       input.legislation_reassignments.where(
         :reassignable_type => 'EuSuspension'
       ).first || input.taxon_concept.eu_suspensions.limit(1).count > 0 &&
       NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'EuSuspension',
-        :note => "Suspension originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
+        # suspension_note defined in constructor
+        :note => suspension_note
       ) || nil,
       input.legislation_reassignments.where(
         :reassignable_type => 'EuOpinion'
       ).first || input.taxon_concept.eu_opinions.limit(1).count > 0 &&
       NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'EuOpinion',
-        :note => "Opinion originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split following #{event.try(:name)}"
+        # opinion_note defined in constructor
+        :note => opinion_note
       ) || nil
     ].compact
     unless outputs.nil?
