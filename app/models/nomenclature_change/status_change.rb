@@ -38,38 +38,53 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   }
   validate :required_primary_output, if: :primary_output_or_submitting?
   validate :required_secondary_output, if: :relay_or_swap_or_submitting?
-  validate :required_input_for_receive, if: :receive_or_swap_or_submitting?
-  validate :required_input_for_relay, if: :relay_or_swap_or_submitting?
 
-  before_validation :build_auto_input, if: :relay_or_swap?
   before_validation :clear_receive_or_swap, if: :receive_or_swap?
-  before_validation :build_auto_reassignments, if: :notes?
+  before_save :build_input_for_relay_or_swap, if: :relay_or_swap?
+  before_save :build_input_for_receive_or_swap, if: :receive_or_swap?
+  before_save :build_auto_reassignments, if: :notes?
 
-  def build_auto_input
-    # In case the primary output is an A / N name turning S / T
+  def build_input_for_relay_or_swap
+    # In case the primary output is an A / N name turning S
     # this same name becomes an input of the nomenclature change, so that
     # reassignments can be put in place between this input and
     # the secondary output
     if needs_to_relay_associations? && input.nil?
       build_input(taxon_concept_id: primary_output.taxon_concept_id)
     end
-    true
+  end
+
+  def build_input_for_receive_or_swap
+    # In case the primary output is an S / T name turning A
+    # as part of status swap with another A name
+    # this other name becomes an input of the nomenclature change, so that
+    # reassignments can be put in place between this input and
+    # the primary output
+    if needs_to_receive_associations? && is_swap? && input.nil?
+      build_input(taxon_concept_id: secondary_output.taxon_concept_id)
+    end
   end
 
   def clear_receive_or_swap
-    # In case a status upgrade is carried out as a swap, clear the input.
-    # Otherwise clear the secondary output
-    if is_swap? && input
+    # In case a status upgrade is carried out as a swap,
+    # there might be a leftover input with blank taxon to clear.
+    if is_swap? && input && input.taxon_concept_id.blank?
       self.input.mark_for_destruction
-    elsif !is_swap? && secondary_output
+    end
+    # In case a status upgrade is not a swap,
+    # there might be a leftover secondary output to clear.
+    if !is_swap? && secondary_output
       self.secondary_output.mark_for_destruction
     end
   end
 
   def build_auto_reassignments
-    builder = NomenclatureChange::StatusChange::Constructor.new(self)
-    builder.build_reassignments
-    true
+    # Reassignments will only be required when there is an input
+    # from which to reassign
+    if input
+      builder = NomenclatureChange::StatusChange::Constructor.new(self)
+      builder.build_reassignments
+    end
   end
 
   def required_primary_output
@@ -84,24 +99,6 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   def required_secondary_output
     if needs_to_relay_associations? && secondary_output.nil?
       errors.add(:secondary_output, "Must have a secondary output")
-      return false
-    end
-  end
-
-  # we need an auto input if one of the outputs is an A/N name turning S/T
-  def required_input_for_relay
-    if needs_to_relay_associations? && (
-      input.nil? || input.taxon_concept_id != primary_output.taxon_concept_id
-      )
-      errors.add(:inputs, "Must have auto input")
-      return false
-    end
-  end
-
-  # we need an input if one of the outputs is an S/T name turning A/N
-  def required_input_for_receive
-    if needs_to_receive_associations? && input.nil?
-      errors.add(:inputs, "Must have input")
       return false
     end
   end
