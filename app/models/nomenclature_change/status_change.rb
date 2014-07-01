@@ -60,7 +60,8 @@ class NomenclatureChange::StatusChange < NomenclatureChange
     # this other name becomes an input of the nomenclature change, so that
     # reassignments can be put in place between this input and
     # the primary output
-    if needs_to_receive_associations? && is_swap? && input.nil?
+    if needs_to_receive_associations? && is_swap? && (
+      input.nil? || input.taxon_concept_id.blank?)
       build_input(taxon_concept_id: secondary_output.taxon_concept_id)
     end
   end
@@ -76,6 +77,7 @@ class NomenclatureChange::StatusChange < NomenclatureChange
     if !is_swap? && secondary_output
       self.secondary_output.mark_for_destruction
     end
+    true
   end
 
   def build_auto_reassignments
@@ -85,6 +87,7 @@ class NomenclatureChange::StatusChange < NomenclatureChange
       builder = NomenclatureChange::StatusChange::Constructor.new(self)
       builder.build_reassignments
     end
+    true
   end
 
   def required_primary_output
@@ -92,6 +95,7 @@ class NomenclatureChange::StatusChange < NomenclatureChange
       errors.add(:primary_output, "Must have a primary output")
       return false
     end
+    true
   end
 
   # we only need two outputs if we need a target for reassignments
@@ -101,15 +105,22 @@ class NomenclatureChange::StatusChange < NomenclatureChange
       errors.add(:secondary_output, "Must have a secondary output")
       return false
     end
+    true
   end
 
   def needs_to_relay_associations?
-    ['A', 'N'].include?(primary_output.try(:taxon_concept).try(:name_status)) &&
+    # TODO the 'reload' here is a workaround - possibly fix the way output taxon
+    # concept validations work
+    ['A', 'N'].include?(primary_output.try(:taxon_concept).try(:reload).
+      try(:name_status)) &&
       ['S', 'T'].include?(primary_output.try(:new_name_status))
   end
 
   def needs_to_receive_associations?
-    ['S', 'T'].include?(primary_output.try(:taxon_concept).try(:name_status)) &&
+    # TODO the 'reload' here is a workaround - possibly fix the way output taxon
+    # concept validations work
+    ['S', 'T'].include?(primary_output.try(:taxon_concept).try(:reload).
+      try(:name_status)) &&
       ['A', 'N'].include?(primary_output.try(:new_name_status))
   end
 
