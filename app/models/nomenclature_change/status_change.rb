@@ -11,7 +11,8 @@
 # As a rule of thumb, if there are 2 outputs that means there are reassignments
 # involved between the input and one of the outputs.
 class NomenclatureChange::StatusChange < NomenclatureChange
-  build_steps(:primary_output, :relay_or_swap, :receive_or_swap, :notes, :summary)
+  build_steps(:primary_output, :relay_or_swap, :receive_or_swap, :notes,
+    :legislation, :summary)
   attr_accessible :primary_output_attributes, :secondary_output_attributes,
     :input_attributes
   has_one :input, :inverse_of => :nomenclature_change,

@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Admin::NomenclatureChanges::SplitController do
   login_admin
+  include_context 'split_definitions'
 
   describe 'GET show' do
     context :inputs do
@@ -15,8 +16,7 @@ describe Admin::NomenclatureChanges::SplitController do
     end
     context :outputs do
       before(:each) do
-        @split = create(:nomenclature_change_split)
-        create(:nomenclature_change_input, nomenclature_change: @split)
+        @split = split_with_input
       end
       it 'renders the outputs template' do
         get :show, id: :outputs, nomenclature_change_id: @split.id
@@ -25,10 +25,7 @@ describe Admin::NomenclatureChanges::SplitController do
     end
     context :reassignments do
       before(:each) do
-        @input_species = create_cites_eu_species
-        @split = create(:nomenclature_change_split)
-        create(:nomenclature_change_input, nomenclature_change: @split, taxon_concept: @input_species)
-        create(:nomenclature_change_output, nomenclature_change: @split)
+        @split = split_with_input_and_output
       end
       it 'renders the notes template' do
         get :show, id: :notes, nomenclature_change_id: @split.id
@@ -36,7 +33,7 @@ describe Admin::NomenclatureChanges::SplitController do
       end
       context "when children present" do
         before(:each) do
-          create_cites_eu_subspecies(parent: @input_species)
+          create_cites_eu_subspecies(parent: input_species)
         end
         it 'renders the children template' do
           get :show, id: :children, nomenclature_change_id: @split.id
@@ -54,7 +51,7 @@ describe Admin::NomenclatureChanges::SplitController do
       context "when names present" do
         before(:each) do
           create(:taxon_relationship,
-            taxon_concept: @input_species,
+            taxon_concept: input_species,
             other_taxon_concept: create_cites_eu_species(name_status: 'S'),
             taxon_relationship_type: synonym_relationship_type
           )
@@ -74,7 +71,7 @@ describe Admin::NomenclatureChanges::SplitController do
       end
       context "when distribution present" do
         before(:each) do
-          create(:distribution, taxon_concept: @input_species)
+          create(:distribution, taxon_concept: input_species)
         end
         it 'renders the distribution template' do
           get :show, id: :distribution, nomenclature_change_id: @split.id
@@ -91,7 +88,7 @@ describe Admin::NomenclatureChanges::SplitController do
       end
       context "when legislation present" do
         before(:each) do
-          create_cites_I_addition(taxon_concept: @input_species)
+          create_cites_I_addition(taxon_concept: input_species)
         end
         it 'renders the legislation template' do
           get :show, id: :legislation, nomenclature_change_id: @split.id

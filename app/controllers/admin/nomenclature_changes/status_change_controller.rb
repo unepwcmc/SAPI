@@ -26,6 +26,10 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
       builder.build_input
     when :notes
       builder.build_output_notes
+    when :legislation
+      skip_step unless @nomenclature_change.is_swap?
+      builder.build_reassignments
+      skip_step if @nomenclature_change.input.legislation_reassignments.empty?
     when :summary
       @summary = NomenclatureChange::StatusChange::Summarizer.new(@nomenclature_change).summary
     end

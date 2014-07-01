@@ -5,11 +5,11 @@ class NomenclatureChange::Split < NomenclatureChange
   has_one :input, :inverse_of => :nomenclature_change,
     :class_name => NomenclatureChange::Input,
     :foreign_key => :nomenclature_change_id,
-    :dependent => :destroy
+    :dependent => :destroy, :autosave => true
   has_many :outputs, :inverse_of => :nomenclature_change,
     :class_name => NomenclatureChange::Output,
     :foreign_key => :nomenclature_change_id,
-    :dependent => :destroy
+    :dependent => :destroy, :autosave => true
   accepts_nested_attributes_for :input, :allow_destroy => true
   accepts_nested_attributes_for :outputs, :allow_destroy => true
 
@@ -20,6 +20,7 @@ class NomenclatureChange::Split < NomenclatureChange
   validate :required_inputs, if: :inputs_or_submitting?
   validate :required_outputs, if: :outputs_or_submitting?
   validate :required_ranks, if: :outputs_or_submitting?
+  before_validation :set_outputs_name_status, if: :outputs_or_submitting?
 
   def required_inputs
     if input.blank?
@@ -41,6 +42,10 @@ class NomenclatureChange::Split < NomenclatureChange
       errors.add(:outputs, "Must be at same rank as input")
       return false
     end
+  end
+
+  def set_outputs_name_status
+    outputs.each{ |o| o.new_name_status = 'A' }
   end
 
 end
