@@ -71,4 +71,41 @@ class NomenclatureChange::StatusChange::Constructor
       output.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
     end
   end
+
+  def legislation_note
+    return nil unless @nomenclature_change.is_swap?
+    input = @nomenclature_change.input
+    output = if @nomenclature_change.needs_to_relay_associations?
+      @nomenclature_change.secondary_output
+    elsif @nomenclature_change.needs_to_receive_associations?
+      @nomenclature_change.primary_output
+    end
+    note = yield(input, output)
+    note << " following #{@nomenclature_change.event.try(:name)}" if @nomenclature_change.event
+    note + '.'
+  end
+
+  def listing_change_note
+    legislation_note do |input, output|
+      "Originally listed as #{input.taxon_concept.full_name}, which became a synonym of #{output.taxon_concept.full_name}"
+    end
+  end
+
+  def suspension_note
+    legislation_note do |input, output|
+      "Suspension originally formed for #{input.taxon_concept.full_name}, which became a synonym of #{output.taxon_concept.full_name}"
+    end
+  end
+
+  def opinion_note
+    legislation_note do |input, output|
+      "Opinion originally formed for #{input.taxon_concept.full_name}, which became a synonym of #{output.taxon_concept.full_name}"
+    end
+  end
+
+  def quota_note
+    legislation_note do |input, output|
+      "Quota originally published for #{input.taxon_concept.full_name}, which became a synonym of #{output.taxon_concept.full_name}"
+    end
+  end
 end
