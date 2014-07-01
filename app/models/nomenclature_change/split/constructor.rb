@@ -10,7 +10,7 @@ class NomenclatureChange::Split::Constructor
   end
 
   def build_outputs
-    @nomenclature_change.outputs.build if @nomenclature_change.outputs.empty?
+    @nomenclature_change.outputs.build() if @nomenclature_change.outputs.empty?
   end
 
   def build_parent_reassignments
@@ -62,4 +62,36 @@ class NomenclatureChange::Split::Constructor
       end
     end
   end
+
+  def legislation_note
+    input = @nomenclature_change.input
+    note = yield(input)
+    note << " following #{@nomenclature_change.event.try(:name)}" if @nomenclature_change.event
+    note + '.'
+  end
+
+  def listing_change_note
+    legislation_note do |input|
+      "Originally listed as #{input.taxon_concept.full_name}, from which [[output]] was split"
+    end
+  end
+
+  def suspension_note
+    legislation_note do |input|
+      "Suspension originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split"
+    end
+  end
+
+  def opinion_note
+    legislation_note do |input|
+      "Opinion originally formed for #{input.taxon_concept.full_name}, from which [[output]] was split"
+    end
+  end
+
+  def quota_note
+    legislation_note do |input|
+      "Quota originally published for #{input.taxon_concept.full_name}, from which [[output]] was split"
+    end
+  end
+
 end
