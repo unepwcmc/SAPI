@@ -11,6 +11,9 @@ FactoryGirl.define do
     factory :nomenclature_change_status_change, class: NomenclatureChange::StatusChange do
       type 'NomenclatureChange::StatusChange'
     end
+    factory :nomenclature_change_lump, class: NomenclatureChange::Lump do
+      type 'NomenclatureChange::Lump'
+    end
   end
 
   factory :nomenclature_change_input, class: NomenclatureChange::Input,
