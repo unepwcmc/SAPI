@@ -16,12 +16,15 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
     case step
     when :primary_output
       set_events
+      set_taxonomy
       builder.build_primary_output
     when :relay_or_swap
       skip_or_previous_step unless @nomenclature_change.needs_to_relay_associations?
+      set_taxonomy
       builder.build_secondary_output
     when :receive_or_swap
       skip_or_previous_step unless @nomenclature_change.needs_to_receive_associations?
+      set_taxonomy
       builder.build_secondary_output
       builder.build_input
     when :notes
@@ -54,7 +57,10 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
     success = @nomenclature_change.valid?
     case step
     when :primary_output
-      set_events unless success
+      unless success
+        set_events
+        set_taxonomy
+      end
     end
     render_wizard @nomenclature_change
   end

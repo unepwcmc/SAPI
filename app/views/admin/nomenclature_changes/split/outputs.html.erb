@@ -20,7 +20,8 @@
       <div class="controls">
         <%= ff.text_field :taxon_concept_id, {
           :class => 'taxon-concept',
-          :'data-name' => ff.object.taxon_concept.try(:full_name)
+          :'data-name' => ff.object.taxon_concept.try(:full_name),
+          :'data-taxonomy-id' => @taxonomy.id
         } %>
         <%= ff.link_to_remove 'Remove output' %>
       </div>
@@ -37,7 +38,9 @@
         <!-- TODO figure out the restrictions on the auto complete here, none for now -->
         <%= ff.text_field :new_parent_id, {
           :class => 'taxon-concept',
-          :'data-name' => ff.object.new_parent.try(:full_name)
+          :'data-name' => ff.object.new_parent.try(:full_name),
+          :'data-name-status-filter' => ['A'].to_json,
+          :'data-taxonomy-id' => @taxonomy.id
         } %>
       </div>
     </div>
