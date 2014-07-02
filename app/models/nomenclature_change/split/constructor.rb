@@ -36,15 +36,15 @@ class NomenclatureChange::Split::Constructor
   end
 
   def build_legislation_reassignments
-    _build_legislation_reassignments(@nomenclature_change.input)
+    _build_legislation_reassignments(@nomenclature_change.input, @nomenclature_change.outputs)
   end
 
   def build_common_names_reassignments
-    _build_common_names_reassignments(@nomenclature_change.input)
+    _build_common_names_reassignments(@nomenclature_change.input, @nomenclature_change.outputs)
   end
 
   def build_references_reassignments
-    _build_references_reassignments(@nomenclature_change.input)
+    _build_references_reassignments(@nomenclature_change.input, @nomenclature_change.outputs)
   end
 
   def build_input_and_output_notes
