@@ -16,39 +16,38 @@ class NomenclatureChange::Lump::Constructor
   def build_parent_reassignments
     output = @nomenclature_change.output
     @nomenclature_change.inputs.each do |input|
-      children = input.taxon_concept.children - [@nomenclature_change.
-        output.taxon_concept]
+      children = input.taxon_concept.children - [output.taxon_concept]
       _build_parent_reassignments(input, output, children)
     end
   end
 
   def build_name_reassignments
     @nomenclature_change.inputs.each do |input|
-      _build_names_reassignments(input)
+      _build_names_reassignments(input, [@nomenclature_change.output])
     end
   end
 
   def build_distribution_reassignments
     @nomenclature_change.inputs.each do |input|
-      _build_distribution_reassignments(input)
+      _build_distribution_reassignments(input, [@nomenclature_change.output])
     end
   end
 
   def build_legislation_reassignments
     @nomenclature_change.inputs.each do |input|
-      _build_legislation_reassignments(input)
+      _build_legislation_reassignments(input, [@nomenclature_change.output])
     end
   end
 
   def build_common_names_reassignments
     @nomenclature_change.inputs.each do |input|
-      _build_common_names_reassignments(input)
+      _build_common_names_reassignments(input, [@nomenclature_change.output])
     end
   end
 
   def build_references_reassignments
     @nomenclature_change.inputs.each do |input|
-      _build_references_reassignments(input)
+      _build_references_reassignments(input, [@nomenclature_change.output])
     end
   end
 
@@ -65,6 +64,37 @@ class NomenclatureChange::Lump::Constructor
     if output.note.blank?
       output.note = "#{output.display_full_name} was lumped from #{inputs} in #{Date.today.year}"
       output.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
+    end
+  end
+
+  def legislation_note
+    output = @nomenclature_change.output
+    note = yield(output)
+    note << " following #{@nomenclature_change.event.try(:name)}" if @nomenclature_change.event
+    note + '.'
+  end
+
+  def listing_change_note
+    legislation_note do |output|
+      "Originally listed as [[input]], which was lumped into #{output.taxon_concept.full_name}"
+    end
+  end
+
+  def suspension_note
+    legislation_note do |output|
+      "Suspension originally formed for [[input]], which was lumped into #{output.taxon_concept.full_name}"
+    end
+  end
+
+  def opinion_note
+    legislation_note do |output|
+      "Opinion originally formed for [[input]], which was lumped into #{output.taxon_concept.full_name}"
+    end
+  end
+
+  def quota_note
+    legislation_note do |output|
+      "Quota originally published for [[input]], which was lumped into #{output.taxon_concept.full_name}"
     end
   end
 end
