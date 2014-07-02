@@ -39,21 +39,46 @@ class NomenclatureChange::StatusChange::Constructor
     end
   end
 
-  def build_reassignments
-    input = @nomenclature_change.input
-    output = if @nomenclature_change.needs_to_relay_associations?
-      @nomenclature_change.secondary_output
-    elsif @nomenclature_change.needs_to_receive_associations?
-      @nomenclature_change.primary_output
+  def build_parent_reassignments
+    input_output_for_reassignment do
+      _build_parent_reassignments(input, output)
     end
-    return false unless input && output
-    _build_parent_reassignments(input, output)
-    _build_names_reassignments(input, [output])
-    _build_distribution_reassignments(input, [output])
-    _build_legislation_reassignments(input, [output])
-    _build_common_names_reassignments(input, [output])
-    _build_references_reassignments(input, [output])
-    _build_trade_reassignments(input, output)
+  end
+
+  def build_names_reassignments
+    input_output_for_reassignment do
+      _build_names_reassignments(input, [output])
+    end
+  end
+
+  def build_distribution_reassignments
+    input_output_for_reassignment do
+      _build_distribution_reassignments(input, [output])
+    end
+  end
+
+  def build_legislation_reassignments
+    input_output_for_reassignment do
+      _build_legislation_reassignments(input, [output])
+    end
+  end
+
+  def build_common_names_reassignments
+    input_output_for_reassignment do
+      _build_common_names_reassignments(input, [output])
+    end
+  end
+
+  def build_references_reassignments
+    input_output_for_reassignment do
+      _build_references_reassignments(input, [output])
+    end
+  end
+
+  def build_trade_reassignments
+    input_output_for_reassignment do
+      _build_trade_reassignments(input, output)
+    end
   end
 
   def build_output_notes
@@ -70,19 +95,6 @@ class NomenclatureChange::StatusChange::Constructor
       output.note = "#{output.display_full_name} status change from #{output.taxon_concept.name_status} to #{output.new_name_status} in #{Date.today.year}"
       output.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
     end
-  end
-
-  def legislation_note
-    return nil unless @nomenclature_change.is_swap?
-    input = @nomenclature_change.input
-    output = if @nomenclature_change.needs_to_relay_associations?
-      @nomenclature_change.secondary_output
-    elsif @nomenclature_change.needs_to_receive_associations?
-      @nomenclature_change.primary_output
-    end
-    note = yield(input, output)
-    note << " following #{@nomenclature_change.event.try(:name)}" if @nomenclature_change.event
-    note + '.'
   end
 
   def listing_change_note
@@ -108,4 +120,31 @@ class NomenclatureChange::StatusChange::Constructor
       "Quota originally published for #{input.taxon_concept.full_name}, which became a synonym of #{output.taxon_concept.full_name}"
     end
   end
+
+  private
+
+  def input_output_for_reassignment
+    input = @nomenclature_change.input
+    output = if @nomenclature_change.needs_to_relay_associations?
+      @nomenclature_change.secondary_output
+    elsif @nomenclature_change.needs_to_receive_associations?
+      @nomenclature_change.primary_output
+    end
+    return false unless input && output
+    yield(input, output)
+  end
+
+  def legislation_note
+    return nil unless @nomenclature_change.is_swap?
+    input = @nomenclature_change.input
+    output = if @nomenclature_change.needs_to_relay_associations?
+      @nomenclature_change.secondary_output
+    elsif @nomenclature_change.needs_to_receive_associations?
+      @nomenclature_change.primary_output
+    end
+    note = yield(input, output)
+    note << " following #{@nomenclature_change.event.try(:name)}" if @nomenclature_change.event
+    note + '.'
+  end
+
 end
