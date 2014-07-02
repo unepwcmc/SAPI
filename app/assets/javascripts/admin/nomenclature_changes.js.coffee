@@ -17,6 +17,8 @@ $(document).ready ->
         search_params:
           scientific_name: query
           name_status: this.data('name-status-filter')
+          taxonomy:
+            id: this.data('taxonomy-id')
         per_page: 25
         page: 1
       results: (data, page) => # parse the results into the format expected by Select2.
