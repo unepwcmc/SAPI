@@ -17,4 +17,12 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
     @events = CitesCop.order('effective_at DESC')
   end
 
+  def skip_or_previous_step
+    if params[:back]
+      jump_to(previous_step)
+    else
+      skip_step
+    end
+  end
+
 end
