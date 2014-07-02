@@ -72,7 +72,6 @@ describe NomenclatureChange::ReassignmentProcessor do
         processor.run
       end
       specify{ expect(output_species.synonyms).to include(input_species_synonym) }
-      specify{ expect(input_species.synonyms).not_to include(input_species_synonym) }
     end
     context "when listing changes" do
       let!(:input_species_listing){
@@ -94,7 +93,6 @@ describe NomenclatureChange::ReassignmentProcessor do
         processor.run
       end
       specify{ expect(output_species.listing_changes.count).to eq(1) }
-      specify{ expect(input_species.listing_changes.count).to eq(0) }
     end
     context "when common names" do
       let!(:input_species_common_name){
@@ -116,7 +114,6 @@ describe NomenclatureChange::ReassignmentProcessor do
         processor.run
       end
       specify{ expect(output_species.common_names.count).to eq(1) }
-      specify{ expect(input_species.common_names.count).to eq(0) }
     end
   end
 end
