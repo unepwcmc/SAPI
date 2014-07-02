@@ -19,7 +19,8 @@
         <%= ff.text_field :taxon_concept_id, {
           :class => 'taxon-concept',
           :'data-name' => ff.object.taxon_concept.try(:full_name),
-          :'data-name-status' => ff.object.taxon_concept.try(:name_status)
+          :'data-name-status' => ff.object.taxon_concept.try(:name_status),
+          :'data-taxonomy-id' => @taxonomy.id
         } %>
       </div>
     </div>
@@ -33,7 +34,9 @@
           <!-- TODO figure out the restrictions on the auto complete here, none for now -->
           <%= ff.text_field :new_parent_id, {
             :class => 'taxon-concept',
-            :'data-name' => ff.object.new_parent.try(:full_name)
+            :'data-name' => ff.object.new_parent.try(:full_name),
+            :'data-name-status-filter' => ['A'].to_json,
+            :'data-taxonomy-id' => @taxonomy.id
           } %>
         </div>
       </div>
