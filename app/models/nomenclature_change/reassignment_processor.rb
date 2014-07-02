@@ -24,7 +24,7 @@ class NomenclatureChange::ReassignmentProcessor
   def process_reassignment(reassignment)
     Rails.logger.debug("Processing #{reassignment.reassignable_type} reassignment from #{@input.taxon_concept.full_name}")
     reassignment.reassignment_targets.select do |target|
-      target.output != @input
+      target.output.taxon_concept != @input.taxon_concept
     end.each do |target|
       if reassignment.reassignable_id.blank?
         reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
@@ -32,18 +32,6 @@ class NomenclatureChange::ReassignmentProcessor
         end
       else
         process_target(target, reassignment.reassignable)
-      end
-    end
-    unless @nc.output == @input || reassignment.kind_of?(NomenclatureChange::ParentReassignment)
-      # input is not part of the split
-      # delete original association
-      Rails.logger.warn("Deleting #{reassignment.reassignable_type} (id=#{reassignment.reassignable_id}) from #{@input.taxon_concept.full_name}")
-      if reassignment.reassignable_id.blank?
-        reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
-          reassignable.destroy
-        end
-      else
-        reassignment.reassignable.destroy
       end
     end
   end

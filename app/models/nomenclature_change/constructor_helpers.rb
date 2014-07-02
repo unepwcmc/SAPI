@@ -22,7 +22,7 @@ module NomenclatureChange::ConstructorHelpers
 
   # if outputs not passed, goes to all outputs
   # in which case no need to create reassignment targets
-  def _build_names_reassignments(input, outputs = nil)
+  def _build_names_reassignments(input, outputs)
     relationships = input.taxon_concept.taxon_relationships.
       includes(:other_taxon_concept).
       order(:taxon_relationship_type_id, 'taxon_concepts.full_name')
@@ -49,7 +49,7 @@ module NomenclatureChange::ConstructorHelpers
 
   # if outputs not passed, goes to all outputs
   # in which case no need to create reassignment targets
-  def _build_distribution_reassignments(input, outputs = nil)
+  def _build_distribution_reassignments(input, outputs)
     distributions = input.taxon_concept.
       distributions.includes(:geo_entity).order('geo_entities.name_en')
     input.distribution_reassignments = distributions.map do |distr|
@@ -75,7 +75,7 @@ module NomenclatureChange::ConstructorHelpers
 
   # if outputs not passed, goes to all outputs
   # in which case no need to create reassignment targets
-  def _build_legislation_reassignments(input, outputs = nil)
+  def _build_legislation_reassignments(input, outputs)
     event = @nomenclature_change.event
     input.legislation_reassignments = [
       input.legislation_reassignments.where(
@@ -119,18 +119,16 @@ module NomenclatureChange::ConstructorHelpers
         :note => opinion_note
       ) || nil
     ].compact
-    unless outputs.nil?
-      input.legislation_reassignments.each do |reassignment|
-        outputs.map do |output|
-          reassignment.reassignment_targets.build(:nomenclature_change_output_id => output.id)
-        end
+    input.legislation_reassignments.each do |reassignment|
+      outputs.map do |output|
+        reassignment.reassignment_targets.build(:nomenclature_change_output_id => output.id)
       end
     end
   end
 
   # if outputs not passed, goes to all outputs
   # in which case no need to create reassignment targets
-  def _build_common_names_reassignments(input, outputs = nil)
+  def _build_common_names_reassignments(input, outputs)
     unless input.reassignments.where(
       :reassignable_type => 'TaxonCommon'
     ).first || input.taxon_concept.taxon_commons.limit(1).count == 0
@@ -138,10 +136,8 @@ module NomenclatureChange::ConstructorHelpers
         :reassignable_type => 'TaxonCommon',
         :type => 'NomenclatureChange::Reassignment'
       )
-      unless outputs.nil?
-        outputs.map do |output|
-          reassignment.reassignment_targets.build(:nomenclature_change_output_id => output.id)
-        end
+      outputs.map do |output|
+        reassignment.reassignment_targets.build(:nomenclature_change_output_id => output.id)
       end
       input.reassignments << reassignment
     end
@@ -149,7 +145,7 @@ module NomenclatureChange::ConstructorHelpers
 
   # if outputs not passed, goes to all outputs
   # in which case no need to create reassignment targets
-  def _build_references_reassignments(input, outputs = nil)
+  def _build_references_reassignments(input, outputs)
     unless input.reassignments.where(
       :reassignable_type => 'TaxonConceptReference'
     ).first || input.taxon_concept.taxon_concept_references.limit(1).count == 0
@@ -157,10 +153,8 @@ module NomenclatureChange::ConstructorHelpers
         :reassignable_type => 'TaxonConceptReference',
         :type => 'NomenclatureChange::Reassignment'
       )
-      unless outputs.nil?
-        outputs.map do |output|
-          reassignment.reassignment_targets.build(:nomenclature_change_output_id => output.id)
-        end
+      outputs.map do |output|
+        reassignment.reassignment_targets.build(:nomenclature_change_output_id => output.id)
       end
       input.reassignments << reassignment
     end
