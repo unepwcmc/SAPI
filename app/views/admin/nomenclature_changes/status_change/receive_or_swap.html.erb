@@ -16,6 +16,7 @@
           :'data-name-status' => !@nomenclature_change.is_swap? &&
             ff.object.taxon_concept.try(:name_status) || '',
           :'data-name-status-filter' => ['A', 'N'].to_json,
+          :'data-taxonomy-id' => @taxonomy.id,
           :value => !@nomenclature_change.is_swap? && ff.object.taxon_concept_id || ''
         } %>
       </div>
@@ -32,7 +33,8 @@
           :class => 'taxon-concept clear-others',
           :'data-name' => ff.object.taxon_concept.try(:full_name),
           :'data-name-status' => ff.object.taxon_concept.try(:name_status),
-          :'data-name-status-filter' => [f.object.primary_output.new_name_status]
+          :'data-name-status-filter' => [f.object.primary_output.new_name_status],
+          :'data-taxonomy-id' => @taxonomy.id
         } %>
         <%= ff.hidden_field :is_primary_output %>
         <%= ff.hidden_field :new_name_status %>
