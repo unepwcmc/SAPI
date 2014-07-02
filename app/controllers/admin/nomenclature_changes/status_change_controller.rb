@@ -18,18 +18,18 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
       set_events
       builder.build_primary_output
     when :relay_or_swap
-      skip_step unless @nomenclature_change.needs_to_relay_associations?
+      skip_or_previous_step unless @nomenclature_change.needs_to_relay_associations?
       builder.build_secondary_output
     when :receive_or_swap
-      skip_step unless @nomenclature_change.needs_to_receive_associations?
+      skip_or_previous_step unless @nomenclature_change.needs_to_receive_associations?
       builder.build_secondary_output
       builder.build_input
     when :notes
       builder.build_output_notes
     when :legislation
-      skip_step unless @nomenclature_change.is_swap?
+      skip_or_previous_step unless @nomenclature_change.is_swap?
       builder.build_reassignments
-      skip_step if @nomenclature_change.input.legislation_reassignments.empty?
+      skip_or_previous_step if @nomenclature_change.input.legislation_reassignments.empty?
     when :summary
       @summary = NomenclatureChange::StatusChange::Summarizer.new(@nomenclature_change).summary
     end
