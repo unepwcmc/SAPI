@@ -16,8 +16,10 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
     case step
     when :inputs
       set_events
+      set_taxonomy
       builder.build_input
     when :outputs
+      set_taxonomy
       builder.build_outputs
     when :notes
       builder.build_common_names_reassignments
@@ -50,7 +52,10 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
     success = @nomenclature_change.valid?
     case step
     when :inputs
-      set_events unless success
+      unless success
+        set_events
+        set_taxonomy
+      end
     end
     render_wizard @nomenclature_change
   end

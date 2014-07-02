@@ -16,8 +16,10 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
     case step
     when :inputs
       set_events
+      set_taxonomy
       builder.build_inputs
     when :outputs
+      set_taxonomy
       builder.build_output
     when :notes
       builder.build_common_names_reassignments
@@ -50,7 +52,10 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
     success = @nomenclature_change.valid?
     case step
     when :inputs
-      set_events unless success
+      unless success
+        set_events
+        set_taxonomy
+      end
     end
     render_wizard @nomenclature_change
   end
