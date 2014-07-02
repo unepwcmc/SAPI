@@ -52,16 +52,15 @@ class NomenclatureChange::Output < ActiveRecord::Base
   end
 
   def tmp_taxon_concept
-    return @tmp_taxon_concept if @tmp_taxon_concept
     taxon_concept_attrs = {
       :parent_id => new_parent_id || taxon_concept.try(:parent_id),
       :rank_id => new_rank_id || taxon_concept.try(:rank_id),
       :author_year => new_author_year || taxon_concept.try(:author_year),
       :name_status => new_name_status || taxon_concept.try(:name_status)
     }
-    @tmp_taxon_concept = if will_create_taxon?
+    if will_create_taxon?
       taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
-      @tmp_taxon_concept = TaxonConcept.new(
+      TaxonConcept.new(
         taxon_concept_attrs.merge({
           :taxonomy_id => taxonomy.id,
           :full_name => display_full_name
