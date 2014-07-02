@@ -11,7 +11,7 @@ module Admin::NomenclatureChangesHelper
         concat ' '
         concat f.submit(submit_label, class: 'pull-right btn btn-primary')
         concat ' '
-        concat link_to('Previous ', previous_wizard_path,
+        concat link_to('Previous ', previous_wizard_path(:back => true),
           class: 'pull-right btn btn-link')
       end
       html += progress_bar
