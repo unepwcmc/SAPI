@@ -86,7 +86,13 @@ class NomenclatureChange::StatusChange < NomenclatureChange
     # from which to reassign
     if input
       builder = NomenclatureChange::StatusChange::Constructor.new(self)
-      builder.build_reassignments
+      builder.build_parent_reassignments
+      builder.build_names_reassignments
+      builder.build_distribution_reassignments
+      builder.build_legislation_reassignments
+      build_common_names_reassignments
+      build_references_reassignments
+      build_trade_reassignments
     end
     true
   end
