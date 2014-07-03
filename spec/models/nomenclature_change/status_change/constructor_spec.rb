@@ -66,22 +66,54 @@ describe NomenclatureChange::StatusChange::Constructor do
       end
     end
   end
-  describe :build_reassignments do
+  context "reassignments" do
     let(:nc_with_input_and_output){ status_upgrade_with_input }
     let(:nc_with_input_and_same_output){ status_downgrade_with_input_and_secondary_output }
     let(:nc){ nc_with_input_and_output }
     let(:status_change){ nc }
     let(:input){ nc.input }
-    before(:each) do
-      @old_reassignments = input.reassignments
-      constructor.build_reassignments
+    describe :build_parent_reassignments do
+      before(:each) do
+        @old_reassignments = input.parent_reassignments
+        constructor.build_parent_reassignments
+      end
+      include_context 'parent_reassignments_examples'
     end
-    include_context 'parent_reassignments_examples'
-    include_context 'name_reassignments_examples'
-    include_context 'distribution_reassignments_examples'
-    include_context 'legislation_reassignments_examples'
-    include_context 'common_name_reassignments_examples'
-    include_context 'reference_reassignments_examples'
+    describe :build_name_reassignments do
+      before(:each) do
+        @old_reassignments = input.name_reassignments
+        constructor.build_name_reassignments
+      end
+      include_context 'name_reassignments_examples'
+    end
+    describe :build_distribution_reassignments do
+      before(:each) do
+        @old_reassignments = input.distribution_reassignments
+        constructor.build_distribution_reassignments
+      end
+      include_context 'distribution_reassignments_examples'
+    end
+    describe :build_legislation_reassignments do
+      before(:each) do
+        @old_reassignments = input.legislation_reassignments
+        constructor.build_legislation_reassignments
+      end
+      include_context 'legislation_reassignments_examples'
+    end
+    describe :build_common_names_reassignments do
+      before(:each) do
+        @old_reassignments = input.reassignments
+        constructor.build_common_names_reassignments
+      end
+      include_context 'common_name_reassignments_examples'
+    end
+    describe :build_references_reassignments do
+      before(:each) do
+        @old_reassignments = input.reassignments
+        constructor.build_references_reassignments
+      end
+      include_context 'reference_reassignments_examples'
+    end
   end
   describe :build_output_notes do
     let(:primary_output){ status_change.primary_output }
