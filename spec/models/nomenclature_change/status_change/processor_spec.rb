@@ -3,6 +3,7 @@ require 'spec_helper'
 describe NomenclatureChange::StatusChange::Processor do
   include_context 'status_change_definitions'
 
+  before(:each){ synonym_relationship_type }
   let(:processor){ NomenclatureChange::StatusChange::Processor.new(status_change) }
   describe :run do
     context "when downgrade" do

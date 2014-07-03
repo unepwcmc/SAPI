@@ -13,6 +13,11 @@ class NomenclatureChange::StatusChange::Processor
 
   def run
     Rails.logger.warn("[#{@nc.type}] BEGIN")
+    output = if @nc.needs_to_relay_associations?
+      @secondary_output
+    elsif @nc.needs_to_receive_associations?
+      @primary_output
+    end
     Rails.logger.debug("[#{@nc.type}] Processing primary output #{@primary_output.display_full_name}")
     processor = NomenclatureChange::StatusChange::TransformationProcessor.new(@primary_output)
     processor.run
@@ -22,18 +27,19 @@ class NomenclatureChange::StatusChange::Processor
       processor.run
     end
 
-    process_status_change
-
-    output = if @nc.needs_to_relay_associations?
-      @secondary_output
-    elsif @nc.needs_to_receive_associations?
-      @primary_output
-    end
     if @input && output
       Rails.logger.debug("[#{@nc.type}] Processing reassignments from #{@input.taxon_concept.full_name}")
-      processor = NomenclatureChange::ReassignmentProcessor.new(@input, output)
+      # if input is not one of outputs, that means it only acts as a template
+      # for associations and reassignment processor should copy rather than
+      # transfer associations
+      copy = ![@primary_output, @secondary_output].compact.map(&:taxon_concept).include?(
+        @input.taxon_concept
+      )
+      processor = NomenclatureChange::ReassignmentProcessor.new(@input, output, copy)
       processor.run
     end
+
+    process_status_change
     Rails.logger.warn("[#{@nc.type}] END")
   end
 
@@ -47,10 +53,12 @@ class NomenclatureChange::StatusChange::Processor
           rel.destroy
         end
         if @swap
+          has_synonym_rel_type = TaxonRelationshipType.
+            find_by_name(TaxonRelationshipType::HAS_SYNONYM)
           # set secondary output as synonym of primary output
           @primary_output.taxon_concept.synonym_relationships << TaxonRelationship.new(
-            taxon_relationship_type_id => has_synonym_rel_type.id,
-            other_taxon_concept_id => @secondary_output.taxon_concept.id
+            :taxon_relationship_type_id => has_synonym_rel_type.id,
+            :other_taxon_concept_id => @secondary_output.taxon_concept.id
           )
         end
       elsif @primary_old_status == 'T'
@@ -86,8 +94,8 @@ class NomenclatureChange::StatusChange::Processor
         has_synonym_rel_type = TaxonRelationshipType.
           find_by_name(TaxonRelationshipType::HAS_SYNONYM)
         @secondary_output.taxon_concept.synonym_relationships << TaxonRelationship.new(
-          taxon_relationship_type_id => has_synonym_rel_type.id,
-          other_taxon_concept_id => @primary_output.taxon_concept.id
+          :taxon_relationship_type_id => has_synonym_rel_type.id,
+          :other_taxon_concept_id => @primary_output.taxon_concept.id
         )
       end
     else
