@@ -116,24 +116,19 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   end
 
   def needs_to_relay_associations?
-    # TODO the 'reload' here is a workaround - possibly fix the way output taxon
-    # concept validations work
-    ['A', 'N'].include?(primary_output.try(:taxon_concept).try(:reload).
-      try(:name_status)) &&
+    puts primary_output.inspect
+    ['A', 'N'].include?(primary_output.try(:name_status)) &&
       ['S', 'T'].include?(primary_output.try(:new_name_status))
   end
 
   def needs_to_receive_associations?
-    # TODO the 'reload' here is a workaround - possibly fix the way output taxon
-    # concept validations work
-    ['S', 'T'].include?(primary_output.try(:taxon_concept).try(:reload).
-      try(:name_status)) &&
+    ['S', 'T'].include?(primary_output.try(:name_status)) &&
       ['A', 'N'].include?(primary_output.try(:new_name_status))
   end
 
   def is_swap?
     secondary_output && secondary_output.taxon_concept &&
-      secondary_output.new_name_status == primary_output.taxon_concept.reload.name_status
+      secondary_output.new_name_status == primary_output.name_status
   end
 
 end
