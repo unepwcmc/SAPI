@@ -36,5 +36,16 @@ describe NomenclatureChange::Output do
       }
       specify { expect(output).to have(1).errors_on(:new_parent_id) }
     end
+    context "when taxon concept specified" do
+      let(:tc){ create_cites_eu_species }
+      let(:output){
+        create(:nomenclature_change_output, :taxon_concept_id => tc.id)
+      }
+      specify{ expect(output.parent_id).to eq(tc.parent_id) }
+      specify{ expect(output.rank_id).to eq(tc.rank_id) }
+      specify{ expect(output.scientific_name).to eq(tc.full_name) }
+      specify{ expect(output.author_year).to eq(tc.author_year) }
+      specify{ expect(output.name_status).to eq(tc.name_status) }
+    end
   end
 end
