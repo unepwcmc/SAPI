@@ -116,7 +116,6 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   end
 
   def needs_to_relay_associations?
-    puts primary_output.inspect
     ['A', 'N'].include?(primary_output.try(:name_status)) &&
       ['S', 'T'].include?(primary_output.try(:new_name_status))
   end
