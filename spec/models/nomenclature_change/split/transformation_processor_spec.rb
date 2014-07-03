@@ -3,6 +3,7 @@ require 'spec_helper'
 describe NomenclatureChange::Split::TransformationProcessor do
   include_context 'split_definitions'
 
+  before(:each){ synonym_relationship_type }
   describe :run do
     let(:processor){
       NomenclatureChange::Split::TransformationProcessor.new(output)
