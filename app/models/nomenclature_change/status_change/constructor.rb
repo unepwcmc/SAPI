@@ -40,43 +40,43 @@ class NomenclatureChange::StatusChange::Constructor
   end
 
   def build_parent_reassignments
-    input_output_for_reassignment do
+    input_output_for_reassignment do |input, output|
       _build_parent_reassignments(input, output)
     end
   end
 
-  def build_names_reassignments
-    input_output_for_reassignment do
+  def build_name_reassignments
+    input_output_for_reassignment do |input, output|
       _build_names_reassignments(input, [output])
     end
   end
 
   def build_distribution_reassignments
-    input_output_for_reassignment do
+    input_output_for_reassignment do |input, output|
       _build_distribution_reassignments(input, [output])
     end
   end
 
   def build_legislation_reassignments
-    input_output_for_reassignment do
+    input_output_for_reassignment do |input, output|
       _build_legislation_reassignments(input, [output])
     end
   end
 
   def build_common_names_reassignments
-    input_output_for_reassignment do
+    input_output_for_reassignment do |input, output|
       _build_common_names_reassignments(input, [output])
     end
   end
 
   def build_references_reassignments
-    input_output_for_reassignment do
+    input_output_for_reassignment do |input, output|
       _build_references_reassignments(input, [output])
     end
   end
 
   def build_trade_reassignments
-    input_output_for_reassignment do
+    input_output_for_reassignment do |input, output|
       _build_trade_reassignments(input, output)
     end
   end
