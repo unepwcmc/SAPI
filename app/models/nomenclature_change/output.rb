@@ -28,11 +28,11 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :if => Proc.new { |c| (c.new_record? || c.taxon_concept_id_changed?) && c.taxon_concept }
 
   def populate_taxon_concept_fields
-    self.parent_id = taxon_concept.parent_id
-    self.rank_id = taxon_concept.rank_id
-    self.scientific_name = taxon_concept.full_name
-    self.author_year = taxon_concept.author_year
-    self.name_status = taxon_concept.name_status
+    self.parent_id = taxon_concept.parent_id_changed? ? taxon_concept.parent_id_was : taxon_concept.parent_id
+    self.rank_id = taxon_concept.rank_id_changed? ? taxon_concept.rank_id_was : taxon_concept.rank_id
+    self.scientific_name = taxon_concept.full_name_changed? ? taxon_concept.full_name_was : taxon_concept.full_name
+    self.author_year = taxon_concept.author_year_changed? ? taxon_concept.author_year_was : taxon_concept.author_year
+    self.name_status = taxon_concept.name_status_changed? ? taxon_concept.name_status_was : taxon_concept.name_status
   end
 
   def new_full_name
