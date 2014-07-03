@@ -9,6 +9,8 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :note, :internal_note, :is_primary_output, :created_by_id, :updated_by_id
   belongs_to :nomenclature_change
   belongs_to :taxon_concept
+  belongs_to :parent, :class_name => TaxonConcept, :foreign_key => :parent_id
+  belongs_to :rank
   belongs_to :new_taxon_concept, :class_name => TaxonConcept, :foreign_key => :new_taxon_concept_id
   has_many :reassignment_targets, :inverse_of => :output,
     :class_name => NomenclatureChange::ReassignmentTarget,
@@ -22,6 +24,16 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :if => Proc.new { |c| c.taxon_concept_id.blank? }
   validate :validate_tmp_taxon_concept,
     :if => Proc.new { |c| c.will_create_taxon? || c.will_update_taxon? }
+  before_validation :populate_taxon_concept_fields,
+    :if => Proc.new { |c| (c.new_record? || c.taxon_concept_id_changed?) && c.taxon_concept }
+
+  def populate_taxon_concept_fields
+    self.parent_id = taxon_concept.parent_id
+    self.rank_id = taxon_concept.rank_id
+    self.scientific_name = taxon_concept.full_name
+    self.author_year = taxon_concept.author_year
+    self.name_status = taxon_concept.name_status
+  end
 
   def new_full_name
     return nil if new_scientific_name.blank?
@@ -48,15 +60,15 @@ class NomenclatureChange::Output < ActiveRecord::Base
   # Returns true when the new taxon has the same name as old one
   def will_update_taxon?
     !will_create_taxon? &&
-      (new_rank_id || new_parent_id || !new_name_status.blank? || !new_author_year.blank?)
+      (!new_rank_id.blank? || !new_parent_id.blank? || !new_name_status.blank? || !new_author_year.blank?)
   end
 
   def tmp_taxon_concept
     taxon_concept_attrs = {
-      :parent_id => new_parent_id || taxon_concept.try(:parent_id),
-      :rank_id => new_rank_id || taxon_concept.try(:rank_id),
-      :author_year => new_author_year || taxon_concept.try(:author_year),
-      :name_status => new_name_status || taxon_concept.try(:name_status)
+      :parent_id => new_parent_id || parent_id,
+      :rank_id => new_rank_id || rank_id,
+      :author_year => new_author_year || author_year,
+      :name_status => new_name_status || name_status
     }
     if will_create_taxon?
       taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
@@ -75,8 +87,9 @@ class NomenclatureChange::Output < ActiveRecord::Base
   end
 
   def validate_tmp_taxon_concept
-    return true if tmp_taxon_concept.valid?
-    tmp_taxon_concept.errors.each do |attribute, message|
+    @tmp_taxon_concept = tmp_taxon_concept
+    return true if @tmp_taxon_concept.valid?
+    @tmp_taxon_concept.errors.each do |attribute, message|
       if [:parent_id, :rank_id, :name_status, :author_year, :full_name].
         include?(attribute)
         errors.add(:"new_#{attribute}", message)
