@@ -3,6 +3,7 @@ require 'spec_helper'
 describe NomenclatureChange::Split::Processor do
   include_context 'split_definitions'
 
+  before(:each){ synonym_relationship_type }
   let(:processor){ NomenclatureChange::Split::Processor.new(split) }
   describe :run do
     context "when outputs are existing taxa" do
