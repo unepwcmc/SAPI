@@ -12,10 +12,10 @@ set :app_port, "80"
 set :branch, :develop
 
 set :default_environment, {
-  'PATH' => "/home/rails/.rvm/gems/ruby-1.9.2-p320/bin:/home/rails/.rvm/bin:/home/rails/.rvm/rubies/ruby-1.9.2-p320/bin:$PATH",
-  'RUBY_VERSION' => 'ruby-1.9.2-p320',
-  'GEM_HOME' => '/home/rails/.rvm/gems/ruby-1.9.2-p320',
-  'GEM_PATH' => '/home/rails/.rvm/gems/ruby-1.9.2-p320',
+  'PATH' => "/home/rails/.rvm/gems/ruby-2.0.0-p451/bin:/home/rails/.rvm/bin:/home/rails/.rvm/rubies/ruby-2.0.0-p451/bin:$PATH",
+  'RUBY_VERSION' => 'ruby-2.0.0-p451',
+  'GEM_HOME' => '/home/rails/.rvm/gems/ruby-2.0.0-p451',
+  'GEM_PATH' => '/home/rails/.rvm/gems/ruby-2.0.0-p451',
 }
 
 desc "Configure VHost"
