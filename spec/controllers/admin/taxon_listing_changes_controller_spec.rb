@@ -119,12 +119,14 @@ describe Admin::TaxonListingChangesController do
 
   describe "PUT update" do
     before(:each) do
+      @annotation = create(:annotation)
       @listing_change = create(
         :listing_change,
         :taxon_concept_id => @taxon_concept.id,
         :change_type_id => @addition.id,
         :species_listing_id => @appendix.id,
-        :effective_at => 1.week.ago
+        :effective_at => 1.week.ago,
+        :annotation_id => @annotation.id
       )
     end
     context "when successful" do
@@ -171,7 +173,7 @@ describe Admin::TaxonListingChangesController do
             :effective_at => 1.week.ago
           },
           :id => listing_change2.id,
-          :taxon_concept_id => taxon_concept.id,
+         :taxon_concept_id => taxon_concept.id,
           :designation_id => eu_designation.id,
           :redirect_to_eu_reg => "1"
         response.should redirect_to(
@@ -185,6 +187,26 @@ describe Admin::TaxonListingChangesController do
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
       response.should render_template('edit')
+    end
+
+    it "redirects to index page and removes annotation when fields cleared" do
+      put :update,
+        :id => @listing_change.id,
+        :taxon_concept_id => @taxon_concept.id,
+        :designation_id => @designation.id,
+        :listing_change => {
+        :annotation_attributes => {
+          "short_note_en"=>"", "short_note_es"=>"",
+          "short_note_fr"=>"", "full_note_en"=>"",
+          "full_note_es"=>"", "full_note_fr"=>"",
+          "id"=> @annotation.id
+        }
+      }
+      response.should redirect_to(
+        admin_taxon_concept_designation_listing_changes_url(
+          @taxon_concept, @designation)
+      )
+      @listing_change.reload.annotation.should be_nil
     end
   end
 

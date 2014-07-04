@@ -6,7 +6,7 @@
 #  listing_change_id :integer          not null
 #  geo_entity_id     :integer          not null
 #  is_party          :boolean          default(TRUE), not null
-#  source_id         :integer
+#  original_id       :integer
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  created_by_id     :integer
