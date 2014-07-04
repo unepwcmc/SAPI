@@ -19,10 +19,6 @@ class NomenclatureChange::ReassignmentSummarizer
         'ListingChange', 'listing changes'
       ),
       output_legislation_summary(
-        @input.taxon_concept.taxon_instruments,
-        'TaxonInstrument', 'CMS instruments'
-      ),
-      output_legislation_summary(
         @input.taxon_concept.cites_suspensions,
         'CitesSuspension', 'CITES suspensions'
       ),
