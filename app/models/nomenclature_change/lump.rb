@@ -1,6 +1,5 @@
 class NomenclatureChange::Lump < NomenclatureChange
-  build_steps(:inputs, :outputs, :children, :names, :distribution,
-    :legislation, :notes, :summary)
+  build_steps(:inputs, :outputs, :notes, :legislation, :summary)
   attr_accessible :inputs_attributes, :output_attributes
   has_many :inputs, :inverse_of => :nomenclature_change,
     :class_name => NomenclatureChange::Input,
