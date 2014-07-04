@@ -25,15 +25,9 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
       builder.build_common_names_reassignments
       builder.build_references_reassignments
       builder.build_input_and_output_notes
-    when :children
       builder.build_parent_reassignments
-      skip_or_previous_step if @nomenclature_change.inputs.map(&:parent_reassignments).flatten.empty?
-    when :names
       builder.build_name_reassignments
-      skip_or_previous_step if @nomenclature_change.inputs.map(&:name_reassignments).flatten.empty?
-    when :distribution
       builder.build_distribution_reassignments
-      skip_or_previous_step if @nomenclature_change.inputs.map(&:distribution_reassignments).flatten.empty?
     when :legislation
       builder.build_legislation_reassignments
       skip_or_previous_step if @nomenclature_change.inputs.map(&:legislation_reassignments).flatten.empty?
