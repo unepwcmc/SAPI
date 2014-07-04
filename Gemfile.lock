@@ -1,11 +1,4 @@
 GIT
-  remote: git://github.com/tooky/charlock_holmes.git
-  revision: f2ac0461f39397b863e4bf5c7fecb0602b9439ab
-  branch: bundle-icu
-  specs:
-    charlock_holmes (0.6.13)
-
-GIT
   remote: https://github.com/nextupdate/capistrano-slack.git
   revision: 7e18c4b164866ad7b5f4a2f360eeec1f1c5ccc36
   specs:
@@ -63,7 +56,8 @@ GEM
     better_errors (1.1.0)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
-    binding_of_caller (0.6.8)
+    binding_of_caller (0.7.2)
+      debug_inspector (>= 0.0.1)
     bootstrap-sass (2.3.1.0)
       sass (~> 3.2)
     brightbox (2.3.9)
@@ -120,6 +114,7 @@ GEM
     dasboard_client (0.0.0)
       rails (>= 3.0.0)
     database_cleaner (1.2.0)
+    debug_inspector (0.0.2)
     debugger (1.6.1)
       columnize (>= 0.3.1)
       debugger-linecache (~> 1.2.0)
@@ -378,7 +373,7 @@ DEPENDENCIES
   acts-as-taggable-on (~> 2.3.1)
   annotate (>= 2.5.0)
   better_errors (~> 1.1.0)
-  binding_of_caller
+  binding_of_caller (>= 0.7.2)
   bootstrap-sass (~> 2.3.1.0)
   brightbox (>= 2.3.9)
   cancan
@@ -386,7 +381,6 @@ DEPENDENCIES
   capistrano-ext
   capistrano-slack!
   carrierwave
-  charlock_holmes!
   clerk
   codeclimate-test-reporter
   coffee-rails (~> 3.2.1)
