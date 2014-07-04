@@ -1,5 +1,6 @@
 class Trade::SpeciesWithoutLegislationOrTradeReport
   include CsvExportable
+  attr_reader :query
 
   def initialize
     @query = TaxonConcept.from(<<-SQL
@@ -21,6 +22,14 @@ class Trade::SpeciesWithoutLegislationOrTradeReport
           JOIN ranks ON ranks.id = taxon_concepts.rank_id AND ranks.name IN ('SPECIES', 'SUBSPECIES', 'VARIETY')
           JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id AND taxonomies.name = 'CITES_EU'
           WHERE taxon_concepts.name_status IN ('A', 'H')
+          AND (
+            NOT (listing->'cites_listed_descendants')::BOOLEAN
+            OR (listing->'cites_listed_descendants')::BOOLEAN IS NULL
+          )
+          AND (
+            NOT (listing->'eu_listed_descendants')::BOOLEAN
+            OR (listing->'eu_listed_descendants')::BOOLEAN IS NULL
+          )
         ), taxa_without_listings AS (
           SELECT taxon_concepts.*
           FROM cites_species taxon_concepts
@@ -61,7 +70,8 @@ class Trade::SpeciesWithoutLegislationOrTradeReport
         cites_listed_descendants, eu_listed_descendants, taxonomic_position
       ) taxon_concepts
     SQL
-    ).select([
+    )
+    @report_query = @query.select([
       :'taxon_concepts.id', :legacy_id,
       :kingdom_name, :phylum_name, :class_name,
       :order_name, :family_name, :genus_name, :species_name,
@@ -88,7 +98,7 @@ class Trade::SpeciesWithoutLegislationOrTradeReport
 
   def export(file_path)
     export_to_csv(
-      :query => @query,
+      :query => @report_query,
       :csv_columns => ["ID", "Legacy id", "Kingdom", "Phylum", "Class",
         "Order", "Family", "Genus", "Species",
         "Full name", "Author year", "Name Status",
