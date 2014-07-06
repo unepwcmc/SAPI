@@ -46,6 +46,8 @@ class NomenclatureChange::ReassignmentProcessor
     end
   end
 
+  # Each reassignable object implements find_duplicate,
+  # which is called from here to make sure we're not adding a duplicate.
   def process_transfer_to_target(target, reassignable)
     new_taxon_concept = target.output.taxon_concept || target.output.new_taxon_concept
     Rails.logger.debug("Processing #{reassignable.class} #{reassignable.id} transfer to #{new_taxon_concept.full_name}")
@@ -54,8 +56,9 @@ class NomenclatureChange::ReassignmentProcessor
       reassignable.parent_id = new_taxon_concept.id
       reassignable.save
     else
-      transferred_object = reassignable.class.find_by_taxon_concept_id(new_taxon_concept.id) ||
-        reassignable
+      transferred_object = reassignable.duplicates({
+        taxon_concept_id: new_taxon_concept.id
+      }).first || reassignable
       transferred_object.taxon_concept_id = new_taxon_concept.id
       transferred_object.save
     end
@@ -69,48 +72,54 @@ class NomenclatureChange::ReassignmentProcessor
       reassignable.parent_id = new_taxon_concept.id
       reassignable.save
     else
-      copied_object = reassignable.class.find_by_taxon_concept_id(new_taxon_concept.id) ||
-        reassignable.dup
+      copied_object = reassignable.duplicates({
+        taxon_concept_id: new_taxon_concept.id
+      }).first || reassignable.dup
       copied_object.taxon_concept_id = new_taxon_concept.id
       if reassignable.class == 'Distribution'
         # for distributions this needs to copy distribution references
         reassignable.distribution_references.each do |distr_ref|
-          !copied_object.new_record? &&
-            copied_object.distribution_references.find_by_reference_id(distr_ref.reference_id) ||
-            copied_object.distribution_references << distr_ref.dup
+          !copied_object.new_record? && distr_ref.duplicates({
+            distribution_id: copied_object.id
+          }).first || copied_object.distribution_references.build(distr_ref.attributes)
         end
       elsif reassignable.class == 'ListingChange'
         # for listing changes this needs to copy listing distributions and exceptions
         reassignable.listing_distributions.each do |listing_distr|
-          !copied_object.new_record? &&
-            copied_object.listing_distributions.find_by_geo_entity_id(listing_distr.geo_entity_id) ||
-            copied_object.listing_distributions << listing_distr.dup
+          !copied_object.new_record? && listing_distr.duplicates({
+            listing_change_id: copied_object.id
+          }).first || copied_object.listing_distributions.build(listing_distr.attributes)
         end
         # party distribution
-        !copied_object.new_record? && copied_object.party_distribution ||
-          copied_object.party_distribution = reassignable.party_distribution.dup
+        party_listing_distribution = copied_object.party_listing_distribution
+        !copied_object.new_record? && party_listing_distribution &&
+          party_listing_distribution.duplicates({
+            listing_change_id: copied_object.id
+          }).first || copied_object.build_party_listing_distributions(
+            party_listing_distribution.attributes
+          )
         # taxonomic exclusions (population exclusions already duplicated)
         reassignable.exclusions.where('taxon_concept_id IS NOT NULL').each do |exclusion|
-          !copied_object.new_record? &&
-            copied_object.exclusions.find_by_taxon_concept_id(exclusion.taxon_concept_id) ||
-            copied_object.exclusions << exclusion.dup
+          !copied_object.new_record? && exclusion.duplicates({
+            listing_change_id: copied_object.id
+          }).first || copied_object.exclusions.build(exclusion.attributes)
         end
       elsif reassignable.class == 'Quota' || reassignable.class == 'CitesSuspension'
         # for trade restrictions this needs to copy purpose / source / term links
         reassignable.trade_restriction_terms.each do |trade_restr_term|
-          !copied_object.new_record? &&
-            copied_object.trade_restriction_terms.find_by_term_id(trade_restr_term.term_id) ||
-            copied_object.trade_restriction_terms << trade_restr_term.dup
+          !copied_object.new_record? && trade_restr_term.duplicates({
+            trade_restriction_id: copied_object.id
+          }).first || copied_object.trade_restriction_terms.build(trade_restr_term.attributes)
         end
         reassignable.trade_restriction_sources.each do |trade_restr_source|
-          !copied_object.new_record? &&
-            copied_object.trade_restriction_sources.find_by_term_id(trade_restr_source.source_id) ||
-            copied_object.trade_restriction_sources << trade_restr_source.dup
+          !copied_object.new_record? && trade_restr_source.duplicates({
+            trade_restriction_id: copied_object.id
+          }).first || copied_object.trade_restriction_terms.build(trade_restr_source.attributes)
         end
         reassignable.trade_restriction_purposes.each do |trade_restr_purpose|
-          !copied_object.new_record? &&
-            copied_object.trade_restriction_purposes.find_by_term_id(trade_restr_purpose.purpose_id) ||
-            copied_object.trade_restriction_purposes << trade_restr_purpose.dup
+          !copied_object.new_record? && trade_restr_purpose.duplicates({
+            trade_restriction_id: copied_object.id
+          }).first || copied_object.trade_restriction_terms.build(trade_restr_purpose.attributes)
         end
       end
       copied_object.save # hope that saves the duplicated associations as well
