@@ -4,7 +4,7 @@ module NomenclatureChange::ConstructorHelpers
     if [Rank::GENUS, Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY].
       include?(rank_name)
       "<i>#{full_name}</i>"
-    elsif [Rank.CLASS, Rank::OORDEr, Rank::FAMILY, Rank::SUBFAMILY].
+    elsif [Rank::CLASS, Rank::ORDER, Rank::FAMILY, Rank::SUBFAMILY].
       include?(rank_name)
       full_name.upcase
     end
