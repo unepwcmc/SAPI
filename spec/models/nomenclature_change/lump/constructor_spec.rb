@@ -33,11 +33,8 @@ describe NomenclatureChange::Lump::Constructor do
   context :reassignments do
     let(:lump){ lump_with_inputs_and_output }
     let(:nc){ lump }
-    let(:nc_with_inputs_and_output) { lump_with_inputs_and_output }
-    let(:nc_with_inputs_and_same_output) { lump_with_inputs_and_same_output }
-    let(:inputs){ nc.inputs }
+    let(:input){ nc.inputs[0] }
     describe :build_input_and_output_notes do
-      let(:input){ lump.inputs[0] }
       let(:output){ lump.output }
       before(:each) do
         @old_input_note = input.note
@@ -56,8 +53,8 @@ describe NomenclatureChange::Lump::Constructor do
         context "when output = input" do
           let(:lump){
             s = create(:nomenclature_change_lump)
-            create(:nomenclature_change_input, nomenclature_change: s, taxon_concept: input_species1, note: nil)
-            create(:nomenclature_change_output, nomenclature_change: s, taxon_concept: input_species1, note:nil)
+            create(:nomenclature_change_input, nomenclature_change: s, taxon_concept: input_species, note: nil)
+            create(:nomenclature_change_output, nomenclature_change: s, taxon_concept: input_species, note:nil)
             s
           }
           specify{ expect(input.note).to be_blank }
@@ -76,7 +73,7 @@ describe NomenclatureChange::Lump::Constructor do
     end
     describe :build_parent_reassignments do
       before(:each) do
-        @old_reassignments = inputs.map(&:parent_reassignments).flatten
+        @old_reassignments = input.parent_reassignments
         constructor.build_parent_reassignments
       end
       include_context 'parent_reassignments_examples'
@@ -87,8 +84,9 @@ describe NomenclatureChange::Lump::Constructor do
           2.times{ create_cites_eu_subspecies(parent: s) }
           s
         }
-        let(:lump_with_input_and_output){ lump_with_input_and_same_output }
-        let(:default_output){ lump.outputs_intersect_inputs.first }
+        let(:lump_with_inputs_and_output){ lump_with_inputs_and_same_output }
+        let(:input) { lump.inputs_intersect_outputs.first }
+        let(:default_output){ lump.output }
         specify{
           reassignment_targets = input.parent_reassignments.map(&:reassignment_target)
           expect(reassignment_targets.map(&:output).uniq).to(eq([default_output]))
@@ -123,8 +121,9 @@ describe NomenclatureChange::Lump::Constructor do
           end
           s
         }
-        let(:lump_with_input_and_output){ lump_with_input_and_same_output }
-        let(:default_output){ lump.outputs_intersect_inputs.first }
+        let(:lump_with_inputs_and_output){ lump_with_inputs_and_same_output }
+        let(:input) { lump.inputs_intersect_outputs.first }
+        let(:default_output){ lump.output }
         specify{
           reassignment_targets = input.name_reassignments.map do |reassignment|
             reassignment.reassignment_targets

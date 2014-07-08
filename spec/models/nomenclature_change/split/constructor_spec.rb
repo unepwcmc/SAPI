@@ -33,8 +33,6 @@ describe NomenclatureChange::Split::Constructor do
   context :reassignments do
     let(:split){ split_with_input_and_output }
     let(:nc){ split }
-    let(:nc_with_input_and_output) { split_with_input_and_output }
-    let(:nc_with_input_and_same_output) { split_with_input_and_same_output }
     let(:input){ nc.input }
     describe :build_input_and_output_notes do
       let(:output){ split.outputs[0] }

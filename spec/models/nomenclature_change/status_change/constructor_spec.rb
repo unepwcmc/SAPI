@@ -67,9 +67,7 @@ describe NomenclatureChange::StatusChange::Constructor do
     end
   end
   context "reassignments" do
-    let(:nc_with_input_and_output){ status_upgrade_with_input }
-    let(:nc_with_input_and_same_output){ status_downgrade_with_input_and_secondary_output }
-    let(:nc){ nc_with_input_and_output }
+    let(:nc){ status_upgrade_with_input }
     let(:status_change){ nc }
     let(:input){ nc.input }
     describe :build_parent_reassignments do
