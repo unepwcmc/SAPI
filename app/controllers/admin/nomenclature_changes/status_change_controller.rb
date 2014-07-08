@@ -40,6 +40,7 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
   end
 
   def update
+    # the following handles 2 ways in which user might have filled in the form
     if step == :relay_or_swap
       which_secondary_output =
         params.delete(:secondary_output) || 'secondary_output_1'
@@ -47,6 +48,12 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
         params[:nomenclature_change_status_change][which_secondary_output]
       params[:nomenclature_change_status_change].delete(:secondary_output_1)
       params[:nomenclature_change_status_change].delete(:secondary_output_2)
+    elsif step == :receive_or_swap
+      if params.delete(:secondary_output) == 'input'
+        params[:nomenclature_change_status_change].delete(:secondary_output_attributes)
+      else
+        params[:nomenclature_change_status_change].delete(:input_attributes)
+      end
     end
     @nomenclature_change.assign_attributes(
       (params[:nomenclature_change_status_change] || {}).merge({
@@ -60,6 +67,8 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
         set_events
         set_taxonomy
       end
+    when :relay_or_swap, :receive_or_swap
+      set_taxonomy unless success
     end
     render_wizard @nomenclature_change
   end
