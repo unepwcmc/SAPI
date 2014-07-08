@@ -52,49 +52,54 @@ class NomenclatureChange::Lump::Constructor
   end
 
   def build_input_and_output_notes
-    inputs = @nomenclature_change.inputs.map{ |input| input.taxon_concept.full_name }.join(', ')
+    inputs_html = @nomenclature_change.inputs.map do |input|
+      taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
+    end.join(', ')
     output = @nomenclature_change.output
+    output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
     event = @nomenclature_change.event
     @nomenclature_change.inputs_except_outputs.each do |input|
       if input.note.blank?
-        input.note = "#{inputs} were lumped into #{output.display_full_name} in #{Date.today.year}"
+        input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
+        input.note = "#{input_html} was lumped into #{output_html} in #{Date.today.year}"
         input.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
       end
     end
     if output.note.blank?
-      output.note = "#{output.display_full_name} was lumped from #{inputs} in #{Date.today.year}"
+      output.note = "#{output_html} was lumped from #{inputs_html} in #{Date.today.year}"
       output.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
     end
   end
 
   def legislation_note
     output = @nomenclature_change.output
-    note = yield(output)
+    output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
+    note = yield(output_html)
     note << " following #{@nomenclature_change.event.try(:name)}" if @nomenclature_change.event
     note + '.'
   end
 
   def listing_change_note
-    legislation_note do |output|
-      "Originally listed as [[input]], which was lumped into #{output.taxon_concept.full_name}"
+    legislation_note do |output_html|
+      "Originally listed as [[input]], which was lumped into #{output_html}"
     end
   end
 
   def suspension_note
-    legislation_note do |output|
-      "Suspension originally formed for [[input]], which was lumped into #{output.taxon_concept.full_name}"
+    legislation_note do |output_html|
+      "Suspension originally formed for [[input]], which was lumped into #{output_html}"
     end
   end
 
   def opinion_note
-    legislation_note do |output|
-      "Opinion originally formed for [[input]], which was lumped into #{output.taxon_concept.full_name}"
+    legislation_note do |output_html|
+      "Opinion originally formed for [[input]], which was lumped into #{output_html}"
     end
   end
 
   def quota_note
-    legislation_note do |output|
-      "Quota originally published for [[input]], which was lumped into #{output.taxon_concept.full_name}"
+    legislation_note do |output_html|
+      "Quota originally published for [[input]], which was lumped into #{output_html}"
     end
   end
 end

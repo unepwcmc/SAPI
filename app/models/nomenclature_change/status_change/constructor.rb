@@ -85,39 +85,42 @@ class NomenclatureChange::StatusChange::Constructor
     event = @nomenclature_change.event
 
     if @nomenclature_change.primary_output.note.blank?
-      output = @nomenclature_change.primary_output
-      output.note = "#{output.display_full_name} status change from #{output.taxon_concept.name_status} to #{output.new_name_status} in #{Date.today.year}"
-      output.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
+      build_output_note(@nomenclature_change.primary_output, event)
     end
 
     if @nomenclature_change.is_swap? && @nomenclature_change.secondary_output.note.blank?
-      output = @nomenclature_change.secondary_output
-      output.note = "#{output.display_full_name} status change from #{output.taxon_concept.name_status} to #{output.new_name_status} in #{Date.today.year}"
-      output.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
+      build_output_note(@nomenclature_change.secondary_output, event)
     end
   end
 
+  def build_output_note(output, event)
+    output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
+    output.note = "#{output_html} status change from #{output.taxon_concept.name_status} to #{output.new_name_status} in #{Date.today.year}"
+    output.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
+  end
+
   def listing_change_note
-    legislation_note do |input, output|
-      "Originally listed as #{input.taxon_concept.full_name}, which became a synonym of #{output.taxon_concept.full_name}"
+    legislation_note do |input_html, output_html|
+      "Originally listed as #{input_html}, which became a synonym of #{output_html}"
     end
   end
 
   def suspension_note
-    legislation_note do |input, output|
-      "Suspension originally formed for #{input.taxon_concept.full_name}, which became a synonym of #{output.taxon_concept.full_name}"
+    legislation_note do |input_html, output_html|
+      "Suspension originally formed for #{input_html}, which became a synonym of #{output_html}"
     end
   end
 
   def opinion_note
-    legislation_note do |input, output|
-      "Opinion originally formed for #{input.taxon_concept.full_name}, which became a synonym of #{output.taxon_concept.full_name}"
+    legislation_note do |input_html, output_html|
+
+      "Opinion originally formed for #{input_html}, which became a synonym of #{output_html}"
     end
   end
 
   def quota_note
-    legislation_note do |input, output|
-      "Quota originally published for #{input.taxon_concept.full_name}, which became a synonym of #{output.taxon_concept.full_name}"
+    legislation_note do |input_html, output_html|
+      "Quota originally published for #{input_html}, which became a synonym of #{output_html}"
     end
   end
 
@@ -142,6 +145,8 @@ class NomenclatureChange::StatusChange::Constructor
     elsif @nomenclature_change.needs_to_receive_associations?
       @nomenclature_change.primary_output
     end
+    output = taxon_concept_html(output.display_full_name, output.display_rank_name)
+    input = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     note = yield(input, output)
     note << " following #{@nomenclature_change.event.try(:name)}" if @nomenclature_change.event
     note + '.'
