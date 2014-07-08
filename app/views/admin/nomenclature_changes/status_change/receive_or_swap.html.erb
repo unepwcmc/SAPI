@@ -8,7 +8,7 @@
   <%= f.fields_for :input do |ff| %>
     <div class="control-group">
       <label class="control-label">Copy associations from another A/N name:</label>
-      <div class="controls">
+      <div id="input" class="controls">
         <%= ff.text_field :taxon_concept_id, {
           :class => 'taxon-concept clear-others',
           :'data-name' => !@nomenclature_change.is_swap? &&
@@ -28,7 +28,7 @@
   <%= f.fields_for :secondary_output do |ff| %>
     <div class="control-group">
       <label class="control-label">Swap status with another <%= f.object.primary_output.new_name_status %> name:</label>
-      <div class="controls">
+      <div id="secondary_output" class="controls">
         <%= ff.text_field :taxon_concept_id, {
           :class => 'taxon-concept clear-others',
           :'data-name' => ff.object.taxon_concept.try(:full_name),
@@ -41,5 +41,8 @@
       </div>
     </div>
   <% end %>
+
+  <%= hidden_field_tag :secondary_output,
+    @nomenclature_change.is_swap? ? 'secondary_output' : 'input' %>
 
 <% end %>

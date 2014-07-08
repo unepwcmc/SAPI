@@ -40,7 +40,6 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   validate :required_primary_output, if: :primary_output_or_submitting?
   validate :required_secondary_output, if: :relay_or_swap_or_submitting?
 
-  before_save :clear_receive_or_swap, if: :receive_or_swap?
   before_save :build_input_for_relay_or_swap, if: :relay_or_swap?
   before_save :build_input_for_receive_or_swap, if: :receive_or_swap?
   before_save :build_auto_reassignments, if: :notes?
@@ -65,20 +64,6 @@ class NomenclatureChange::StatusChange < NomenclatureChange
       input.nil? || input.taxon_concept_id.blank?)
       build_input(taxon_concept_id: secondary_output.taxon_concept_id)
     end
-  end
-
-  def clear_receive_or_swap
-    # In case a status upgrade is carried out as a swap,
-    # there might be a leftover input with blank taxon to clear.
-    if is_swap? && input && input.taxon_concept_id.blank?
-      self.input.mark_for_destruction
-    end
-    # In case a status upgrade is not a swap,
-    # there might be a leftover secondary output to clear.
-    if !is_swap? && secondary_output
-      self.secondary_output.mark_for_destruction
-    end
-    true
   end
 
   def build_auto_reassignments
