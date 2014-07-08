@@ -43,11 +43,21 @@ class NomenclatureChange::Lump < NomenclatureChange
   end
 
   def required_ranks
-    if inputs.first.try(:taxon_concept).try(:rank).
-        try(:name) != output.try(:taxon_concept).try(:rank).try(:name)
+    if inputs.first.try(:taxon_concept).try(:rank).try(:id) != (
+        output.try(:new_rank).try(:id) ||
+        output.try(:taxon_concept).try(:rank).try(:id)
+      )
       errors.add(:output, "must be at same rank as inputs")
       return false
     end
+  end
+
+  def inputs_except_outputs
+    inputs.reject{ |i| i.taxon_concept == output.try(:taxon_concept) }
+  end
+
+  def inputs_intersect_outputs
+    inputs.select{ |o| o.taxon_concept == output.try(:taxon_concept) }
   end
 
 end

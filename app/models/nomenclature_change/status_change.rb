@@ -40,7 +40,7 @@ class NomenclatureChange::StatusChange < NomenclatureChange
   validate :required_primary_output, if: :primary_output_or_submitting?
   validate :required_secondary_output, if: :relay_or_swap_or_submitting?
 
-  before_validation :clear_receive_or_swap, if: :receive_or_swap?
+  before_save :clear_receive_or_swap, if: :receive_or_swap?
   before_save :build_input_for_relay_or_swap, if: :relay_or_swap?
   before_save :build_input_for_receive_or_swap, if: :receive_or_swap?
   before_save :build_auto_reassignments, if: :notes?
