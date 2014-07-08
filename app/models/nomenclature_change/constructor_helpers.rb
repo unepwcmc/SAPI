@@ -1,5 +1,15 @@
 module NomenclatureChange::ConstructorHelpers
 
+  def taxon_concept_html(full_name, rank_name)
+    if [Rank::GENUS, Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY].
+      include?(rank_name)
+      "<i>#{full_name}</i>"
+    elsif [Rank.CLASS, Rank::OORDEr, Rank::FAMILY, Rank::SUBFAMILY].
+      include?(rank_name)
+      full_name.upcase
+    end
+  end
+
   def _build_parent_reassignments(input, output, children = nil)
     children ||= input.taxon_concept.children
     input.parent_reassignments = children.map do |child|
