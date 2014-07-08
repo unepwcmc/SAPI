@@ -27,38 +27,38 @@
       </div>
     </div>
     <div class="well">
-    <p>
-      <i class="icon-info-sign"></i>Please provide additional details if required.
-    </p>
-    <%= ff.hidden_field :new_rank_id, :value => ff.object.new_rank_id ||
-      f.object.input.taxon_concept.rank_id %>
-    <div class="control-group">
-      <label class="control-label">Parent:</label>
-      <div class="controls">
-        <!-- TODO figure out the restrictions on the auto complete here, none for now -->
-        <%= ff.text_field :new_parent_id, {
-          :class => 'taxon-concept',
-          :'data-name' => ff.object.new_parent.try(:full_name),
-          :'data-name-status-filter' => ['A'].to_json,
-          :'data-taxonomy-id' => @taxonomy.id
-        } %>
+      <p>
+        <i class="icon-info-sign"></i>Please provide additional details if required.
+      </p>
+      <%= ff.hidden_field :new_rank_id, :value => ff.object.new_rank_id ||
+        f.object.input.taxon_concept.rank_id %>
+      <div class="control-group">
+        <label class="control-label">Parent:</label>
+        <div class="controls">
+          <!-- TODO figure out the restrictions on the auto complete here, none for now -->
+          <%= ff.text_field :new_parent_id, {
+            :class => 'taxon-concept',
+            :'data-name' => ff.object.new_parent.try(:full_name),
+            :'data-name-status-filter' => ['A'].to_json,
+            :'data-taxonomy-id' => @taxonomy.id
+          } %>
+        </div>
       </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label">Name:</label>
-      <div class="controls">
-        <%= ff.text_field :new_scientific_name %>
+      <div class="control-group">
+        <label class="control-label">Name:</label>
+        <div class="controls">
+          <%= ff.text_field :new_scientific_name %>
+        </div>
       </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label">Author & year:</label>
-      <div class="controls">
-        <%= ff.text_field :new_author_year %>
+      <div class="control-group">
+        <label class="control-label">Author & year:</label>
+        <div class="controls">
+          <%= ff.text_field :new_author_year %>
+        </div>
       </div>
-    </div>
     </div>
     </li>
   <% end %>
-  </ol>
   <p><%= f.link_to_add 'Add another output', :outputs %></p>
+  </ol>
 <% end %>
