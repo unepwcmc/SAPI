@@ -86,11 +86,17 @@ class NomenclatureChange::ReassignmentProcessor
       }).first || reassignable.dup
       copied_object.taxon_concept_id = new_taxon_concept.id
       if reassignable.class == 'Distribution'
-        # for distributions this needs to copy distribution references
+        # for distributions this needs to copy distribution references and tags
         reassignable.distribution_references.each do |distr_ref|
           !copied_object.new_record? && distr_ref.duplicates({
             distribution_id: copied_object.id
           }).first || copied_object.distribution_references.build(distr_ref.attributes)
+        end
+        # taggings
+        reassignable.taggings.each do |tagging|
+          !copied_object.new_record? && tagging.duplicates({
+            taggable_id: copied_object.id
+          }).first || copied_object.taggings.build(tagging.attributes)
         end
       elsif reassignable.class == 'ListingChange'
         # for listing changes this needs to copy listing distributions and exceptions
