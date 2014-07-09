@@ -49,7 +49,12 @@ module NomenclatureChange::ConstructorHelpers
           reassignment_attrs
         )
         outputs.map do |output|
-          r.reassignment_targets.build(:nomenclature_change_output_id => output.id)
+          unless r.reassignable_type == 'TaxonRelationship' &&
+            output.taxon_concept_id == r.reassignable.other_taxon_concept_id
+            r.reassignment_targets.build(
+              :nomenclature_change_output_id => output.id
+            )
+          end
         end
         reassignments = [r]
       end
