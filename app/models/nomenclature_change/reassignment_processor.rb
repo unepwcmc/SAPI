@@ -43,6 +43,7 @@ class NomenclatureChange::ReassignmentProcessor
           process_transfer_to_target(target, reassignment.reassignable)
         end
       end
+      # TODO delete reassignable from source unless copy or transferred already
     end
   end
 
