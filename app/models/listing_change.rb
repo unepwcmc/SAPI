@@ -127,7 +127,7 @@ class ListingChange < ActiveRecord::Base
   end
 
   def duplicates(comparison_attributes_override = {})
-    ListingChange.includes(:party_listing_distribution, :annotation).where(
+    ListingChange.eager_load(:party_listing_distribution, :annotation).where(
       comparison_attributes.merge(comparison_attributes_override)
     )
   end
