@@ -56,6 +56,10 @@ class NomenclatureChange::ReassignmentProcessor
     if target.reassignment.kind_of? NomenclatureChange::ParentReassignment
       reassignable.parent_id = new_taxon_concept.id
       reassignable.save
+    elsif reassignable.class == 'Trade::Shipment'
+      reassignable.taxon_concept_id = new_taxon_concept.id
+      reassignable.save
+      # TODO reported taxon concept id
     else
       transferred_object = reassignable.duplicates({
         taxon_concept_id: new_taxon_concept.id
@@ -72,6 +76,10 @@ class NomenclatureChange::ReassignmentProcessor
     if target.reassignment.kind_of? NomenclatureChange::ParentReassignment
       reassignable.parent_id = new_taxon_concept.id
       reassignable.save
+    elsif reassignable.class == 'Trade::Shipment'
+      reassignable.taxon_concept_id = new_taxon_concept.id
+      reassignable.save
+      # TODO reported taxon concept id
     else
       copied_object = reassignable.duplicates({
         taxon_concept_id: new_taxon_concept.id
