@@ -76,6 +76,7 @@ describe NomenclatureChange::ReassignmentProcessor do
     context "when listing changes" do
       let!(:input_species_listing){
         create_cites_I_addition(:taxon_concept => input_species)
+        create_cites_II_addition(:taxon_concept => input_species)
       }
       let(:reassignment){
         create(:nomenclature_change_legislation_reassignment,
@@ -92,7 +93,8 @@ describe NomenclatureChange::ReassignmentProcessor do
       before(:each) do
         processor.run
       end
-      specify{ expect(output_species.listing_changes.count).to eq(1) }
+      specify{ expect(output_species.listing_changes.count).to eq(2) }
+      specify{ expect(input_species.listing_changes).to be_empty }
     end
     context "when common names" do
       let!(:input_species_common_name){
