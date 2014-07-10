@@ -118,18 +118,19 @@ class ListingChange < ActiveRecord::Base
   def comparison_attributes
     res = super().except(:annotation_id)
     res = res.merge(
-      party_listing_distribution: party_listing_distribution.comparison_attributes,
+      listing_distributions: party_listing_distribution.comparison_attributes,
     ) if party_listing_distribution
     res = res.merge(
-      annotation: annotation.comparison_attributes
+      annotations: annotation.comparison_attributes
     ) if annotation
     res
   end
 
   def duplicates(comparison_attributes_override = {})
-    ListingChange.eager_load(:party_listing_distribution, :annotation).where(
-      comparison_attributes.merge(comparison_attributes_override)
-    )
+    ListingChange.includes(:party_listing_distribution, :annotation).
+      where(
+        comparison_attributes.merge(comparison_attributes_override)
+      )
   end
 
   private
