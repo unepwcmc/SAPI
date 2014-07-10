@@ -7,7 +7,7 @@ gem 'rails', '3.2.18'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'pg'
-gem 'postgres_ext'
+gem 'activeuuid', '>= 0.5.0'
 gem 'pg_array_parser'
 gem 'activerecord-postgres-hstore'
 gem 'foreigner'
