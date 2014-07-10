@@ -7,6 +7,7 @@ shared_context 'legislation_reassignments_examples' do
       let(:input_species){
         s = create_cites_eu_species
         create_cites_I_addition(taxon_concept: s)
+        create_cites_II_addition(taxon_concept: s)
         s
       }
       specify{ expect(input.legislation_reassignments.size).to eq(1) }
