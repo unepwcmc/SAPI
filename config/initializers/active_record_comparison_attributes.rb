@@ -6,7 +6,7 @@ module ComparisonAttributes
 
   module ClassMethods
     def ignored_attributes
-      [:id, :created_at, :updated_at]
+      [:id, :created_at, :updated_at, :created_by_id, :updated_by_id, :original_id]
     end
   end
 
