@@ -43,6 +43,9 @@ GEM
     activesupport (3.2.18)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
+    activeuuid (0.5.0)
+      activerecord (>= 3.1)
+      uuidtools
     acts-as-taggable-on (2.3.3)
       rails (~> 3.0)
     addressable (2.3.6)
@@ -245,9 +248,6 @@ GEM
     pg-hstore (1.2.0)
     pg_array_parser (0.0.9)
     polyglot (0.3.4)
-    postgres_ext (1.0.0)
-      activerecord (~> 3.2.0)
-      pg_array_parser (~> 0.0.9)
     pry (0.9.11.4)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -388,6 +388,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-postgres-hstore
+  activeuuid (>= 0.5.0)
   acts-as-taggable-on (~> 2.3.1)
   ahoy_matey
   annotate (>= 2.5.0)
@@ -434,7 +435,6 @@ DEPENDENCIES
   oj
   pg
   pg_array_parser
-  postgres_ext
   quiet_assets
   rack-cors
   rack-livereload
