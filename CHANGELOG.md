@@ -1,3 +1,6 @@
+### 0.7.8 (unreleased)
+Upgrade to ruby 2.0
+
 ### 0.7.0 (2014-06-11)
 **Species+ Admin tool**
 * Authentication & authorisation
