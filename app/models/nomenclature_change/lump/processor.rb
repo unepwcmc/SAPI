@@ -13,7 +13,7 @@ class NomenclatureChange::Lump::Processor
     processor.run
     @inputs.each do |input|
       Rails.logger.debug("[#{@nc.type}] Processing reassignments from #{input.taxon_concept.full_name}")
-      processor = NomenclatureChange::Lump::ReassignmentProcessor.new(input, @output)
+      processor = NomenclatureChange::ReassignmentProcessor.new(input, @output)
       processor.run
       input.reassignments.each do |reassignment|
         unless @output.taxon_concept == input.taxon_concept || reassignment.kind_of?(NomenclatureChange::ParentReassignment)
