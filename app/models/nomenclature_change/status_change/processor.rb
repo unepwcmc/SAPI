@@ -35,7 +35,11 @@ class NomenclatureChange::StatusChange::Processor
       copy = ![@primary_output, @secondary_output].compact.map(&:taxon_concept).include?(
         @input.taxon_concept
       )
-      processor = NomenclatureChange::ReassignmentProcessor.new(@input, output, copy)
+      processor = if copy
+        NomenclatureChange::ReassignmentCopyProcessor.new(@input, output)
+      else
+        NomenclatureChange::ReassignmentProcessor.new(@input, output)
+      end
       processor.run
     end
 
