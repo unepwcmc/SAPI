@@ -16,7 +16,11 @@ class NomenclatureChange::Split::Processor
       # if input is not one of outputs and this is the last output
       # transfer the associations rather than copy them
       copy = !@outputs.map(&:taxon_concept).include?(@input.taxon_concept) && idx = @outputs.length - 1
-      processor = NomenclatureChange::ReassignmentProcessor.new(@input, output)
+      processor = if copy
+        NomenclatureChange::ReassignmentCopyProcessor.new(@input, output)
+      else
+        NomenclatureChange::ReassignmentProcessor.new(@input, output)
+      end
       processor.run
     end
     Rails.logger.warn("[#{@nc.type}] END")

@@ -36,4 +36,12 @@ class NomenclatureChange::Input < ActiveRecord::Base
   accepts_nested_attributes_for :name_reassignments, :allow_destroy => true
   accepts_nested_attributes_for :distribution_reassignments, :allow_destroy => true
   accepts_nested_attributes_for :legislation_reassignments, :allow_destroy => true
+
+  # all objects of reassignable_type that are linked to input taxon
+  def reassignables_by_class(reassignable_type)
+    reassignable_type.constantize.where(
+      :taxon_concept_id => taxon_concept.id
+    )
+  end
+
 end
