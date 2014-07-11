@@ -1,4 +1,4 @@
-shared_context 'parent_reassignments_examples' do
+shared_context 'parent_reassignments_constructor_examples' do
   context "when previously no reassignments in place" do
     context "when no children" do
       specify{ expect(input.parent_reassignments.size).to eq(0) }
