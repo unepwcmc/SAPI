@@ -1,4 +1,4 @@
-shared_context 'legislation_reassignments_examples' do
+shared_context 'legislation_reassignments_constructor_examples' do
   context "when previously no reassignments in place" do
     context "when no CITES listings" do
       specify{ expect(input.legislation_reassignments.size).to eq(0) }
