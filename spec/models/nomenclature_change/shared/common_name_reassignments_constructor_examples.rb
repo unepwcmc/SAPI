@@ -1,12 +1,12 @@
-shared_context 'reference_reassignments_examples' do
+shared_context 'common_name_reassignments_constructor_examples' do
   context "when previously no reassignments in place" do
-    context "when no references" do
+    context "when no common names" do
       specify{ expect(input.reassignments.size).to eq(0) }
     end
-    context "when references" do
+    context "when common names" do
       let(:input_species){
         s = create_cites_eu_species
-        2.times{ create(:taxon_concept_reference, taxon_concept: s) }
+        2.times{ create(:taxon_common, taxon_concept: s) }
         s
       }
       specify{ expect(input.reassignments.size).to eq(1) }

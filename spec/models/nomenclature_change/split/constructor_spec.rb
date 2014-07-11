@@ -76,7 +76,7 @@ describe NomenclatureChange::Split::Constructor do
         @old_reassignments = input.parent_reassignments
         constructor.build_parent_reassignments
       end
-      include_context 'parent_reassignments_examples'
+      include_context 'parent_reassignments_constructor_examples'
 
       context "when output = input" do
         let(:input_species){
@@ -106,7 +106,7 @@ describe NomenclatureChange::Split::Constructor do
         @old_reassignments = input.name_reassignments
         constructor.build_name_reassignments
       end
-      include_context 'name_reassignments_examples'
+      include_context 'name_reassignments_constructor_examples'
 
       context "when output = input" do
         let(:input_species){
@@ -136,28 +136,28 @@ describe NomenclatureChange::Split::Constructor do
         @old_reassignments = input.distribution_reassignments
         constructor.build_distribution_reassignments
       end
-      include_context 'distribution_reassignments_examples'
+      include_context 'distribution_reassignments_constructor_examples'
     end
     describe :build_legislation_reassignments do
       before(:each) do
         @old_reassignments = input.legislation_reassignments
         constructor.build_legislation_reassignments
       end
-      include_context 'legislation_reassignments_examples'
+      include_context 'legislation_reassignments_constructor_examples'
     end
     describe :build_common_names_reassignments do
       before(:each) do
         @old_reassignments = input.reassignments
         constructor.build_common_names_reassignments
       end
-      include_context 'common_name_reassignments_examples'
+      include_context 'common_name_reassignments_constructor_examples'
     end
     describe :build_references_reassignments do
       before(:each) do
         @old_reassignments = input.reassignments
         constructor.build_references_reassignments
       end
-      include_context 'reference_reassignments_examples'
+      include_context 'reference_reassignments_constructor_examples'
     end
   end
 end
