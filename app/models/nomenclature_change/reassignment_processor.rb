@@ -45,8 +45,8 @@ class NomenclatureChange::ReassignmentProcessor
       transferred_object = reassignable.duplicates({
         taxon_concept_id: new_taxon_concept.id
       }).first || reassignable
-      transferred_object.taxon_concept_id = new_taxon_concept.id
-      transferred_object.save
+      transferred_object.update_column(:taxon_concept_id, new_taxon_concept.id)
+      transferred_object.touch
     end
   end
 end
