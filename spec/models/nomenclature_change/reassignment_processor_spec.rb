@@ -21,9 +21,11 @@ describe NomenclatureChange::ReassignmentProcessor do
       include_context 'distribution_reassignments_processor_examples'
       specify{ expect(input_species.distributions).to be_empty }
     end
-    context "when listing changes" do
+    context "when legislation" do
       include_context 'legislation_reassignments_processor_examples'
       specify{ expect(input_species.listing_changes).to be_empty }
+      specify{ expect(input_species.quotas).to be_empty }
+      specify{ expect(input_species.cites_suspensions).to be_empty }
     end
     context "when common names" do
       include_context 'common_name_reassignments_processor_examples'

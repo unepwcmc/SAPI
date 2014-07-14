@@ -115,6 +115,10 @@ class ListingChange < ActiveRecord::Base
     end
   end
 
+  def self.ignored_attributes
+    super() + [:source_id]
+  end
+
   def comparison_attributes
     res = super().except(:annotation_id)
     res = res.merge(
