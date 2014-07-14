@@ -27,7 +27,11 @@ describe NomenclatureChange::ReassignmentCopyProcessor do
     end
     context "when common names" do
       include_context 'common_name_reassignments_processor_examples'
-      specify{ expect(input_species.common_names.count).to eq(1) }
+      specify{ expect(input_species.common_names.count).to eq(2) }
+    end
+    context "when references" do
+      include_context 'reference_reassignments_processor_examples'
+      specify{ expect(input_species.taxon_concept_references.count).to eq(2) }
     end
   end
 end

@@ -29,5 +29,9 @@ describe NomenclatureChange::ReassignmentProcessor do
       include_context 'common_name_reassignments_processor_examples'
       specify{ expect(input_species.common_names).to be_empty }
     end
+    context "when references" do
+      include_context 'reference_reassignments_processor_examples'
+      specify{ expect(input_species.taxon_concept_references).to be_empty }
+    end
   end
 end
