@@ -3,6 +3,8 @@ class ListingChangeObserver < ActiveRecord::Observer
   def before_save(listing_change)
     original_change_type = ChangeType.find(listing_change.change_type_id)
     return listing_change if original_change_type.name == ChangeType::EXCEPTION
+    return listing_change if listing_change.excluded_geo_entities_ids.nil? &&
+      listing_change.excluded_taxon_concepts_ids.nil?
     new_exclusions = []
     exclusion_change_type = ChangeType.find_by_name_and_designation_id(
       ChangeType::EXCEPTION, original_change_type.designation_id

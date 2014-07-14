@@ -21,9 +21,11 @@ describe NomenclatureChange::ReassignmentCopyProcessor do
       include_context 'distribution_reassignments_processor_examples'
       specify{ expect(input_species.distributions.count).to eq(2) }
     end
-    context "when listing changes" do
+    context "when legislation" do
       include_context 'legislation_reassignments_processor_examples'
       specify{ expect(input_species.listing_changes.count).to eq(2) }
+      specify{ expect(input_species.quotas.count).to eq(2) }
+      specify{ expect(input_species.cites_suspensions.count).to eq(2) }
     end
     context "when common names" do
       include_context 'common_name_reassignments_processor_examples'
