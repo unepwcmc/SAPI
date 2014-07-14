@@ -1,8 +1,8 @@
-shared_context 'common_name_reassignments_processor_examples' do
+shared_context 'reference_reassignments_processor_examples' do
   let(:reassignment){
     create(:nomenclature_change_reassignment,
       :input => input,
-      :reassignable_type => 'TaxonCommon'
+      :reassignable_type => 'TaxonConceptReference'
     )
   }
   let!(:reassignment_target){
@@ -12,8 +12,8 @@ shared_context 'common_name_reassignments_processor_examples' do
     )
   }
   before(:each) do
-    2.times{ create(:taxon_common, :taxon_concept => input_species) }
+    2.times{ create(:taxon_concept_reference, :taxon_concept => input_species) }
     processor.run
   end
-  specify{ expect(output_species1.common_names.count).to eq(2) }
+  specify{ expect(output_species1.taxon_concept_references.count).to eq(2) }
 end
