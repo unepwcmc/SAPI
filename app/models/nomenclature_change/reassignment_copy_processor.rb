@@ -65,36 +65,44 @@ class NomenclatureChange::ReassignmentCopyProcessor
           }).first || copied_object.listing_distributions.build(listing_distr.comparison_attributes)
         end
         # party distribution
-        party_listing_distribution = copied_object.party_listing_distribution
+        party_listing_distribution = reassignable.party_listing_distribution
         !copied_object.new_record? && party_listing_distribution &&
           party_listing_distribution.duplicates({
             listing_change_id: copied_object.id
           }).first || party_listing_distribution &&
-            copied_object.build_party_listing_distributions(
+            copied_object.build_party_listing_distribution(
             party_listing_distribution.comparison_attributes
           )
         # taxonomic exclusions (population exclusions already duplicated)
         reassignable.exclusions.where('taxon_concept_id IS NOT NULL').each do |exclusion|
           !copied_object.new_record? && exclusion.duplicates({
             listing_change_id: copied_object.id
-          }).first || copied_object.exclusions.build(exclusion.comparison_attributes)
+          }).first || copied_object.exclusions.build(
+            exclusion.comparison_attributes, :without_protection => true
+          )
         end
       elsif reassignable.kind_of?(Quota) || reassignable.kind_of?(CitesSuspension)
         # for trade restrictions this needs to copy purpose / source / term links
         reassignable.trade_restriction_terms.each do |trade_restr_term|
           !copied_object.new_record? && trade_restr_term.duplicates({
             trade_restriction_id: copied_object.id
-          }).first || copied_object.trade_restriction_terms.build(trade_restr_term.comparison_attributes)
+          }).first || copied_object.trade_restriction_terms.build(
+            trade_restr_term.comparison_attributes, :without_protection => true
+          )
         end
         reassignable.trade_restriction_sources.each do |trade_restr_source|
           !copied_object.new_record? && trade_restr_source.duplicates({
             trade_restriction_id: copied_object.id
-          }).first || copied_object.trade_restriction_terms.build(trade_restr_source.comparison_attributes)
+          }).first || copied_object.trade_restriction_sources.build(
+            trade_restr_source.comparison_attributes, :without_protection => true
+          )
         end
         reassignable.trade_restriction_purposes.each do |trade_restr_purpose|
           !copied_object.new_record? && trade_restr_purpose.duplicates({
             trade_restriction_id: copied_object.id
-          }).first || copied_object.trade_restriction_terms.build(trade_restr_purpose.comparison_attributes)
+          }).first || copied_object.trade_restriction_purposes.build(
+            trade_restr_purpose.comparison_attributes, :without_protection => true
+          )
         end
       end
       copied_object.save # hope that saves the duplicated associations as well
