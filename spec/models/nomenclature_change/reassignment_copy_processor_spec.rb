@@ -35,5 +35,8 @@ describe NomenclatureChange::ReassignmentCopyProcessor do
       include_context 'reference_reassignments_processor_examples'
       specify{ expect(input_species.taxon_concept_references.count).to eq(2) }
     end
+    context "when shipments" do
+      include_context 'shipment_reassignments_processor_examples'
+    end
   end
 end

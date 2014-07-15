@@ -37,7 +37,7 @@ class NomenclatureChange::ReassignmentProcessor
     if target.reassignment.kind_of? NomenclatureChange::ParentReassignment
       reassignable.parent_id = new_taxon_concept.id
       reassignable.save
-    elsif reassignable.class == 'Trade::Shipment'
+    elsif reassignable.kind_of? Trade::Shipment
       reassignable.taxon_concept_id = new_taxon_concept.id
       reassignable.save
       # TODO reported taxon concept id
