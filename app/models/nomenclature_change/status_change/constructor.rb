@@ -96,7 +96,8 @@ class NomenclatureChange::StatusChange::Constructor
   def build_output_note(output, event)
     output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
     output.note = "#{output_html} status change from #{output.taxon_concept.name_status} to #{output.new_name_status} in #{Date.today.year}"
-    output.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
+    output.note << " following taxonomic changes adopted at #{event.name}" if event
+    output.note << '.'
   end
 
   def listing_change_note
@@ -113,7 +114,6 @@ class NomenclatureChange::StatusChange::Constructor
 
   def opinion_note
     legislation_note do |input_html, output_html|
-
       "Opinion originally formed for #{input_html}, which became a synonym of #{output_html}"
     end
   end
@@ -148,7 +148,7 @@ class NomenclatureChange::StatusChange::Constructor
     output = taxon_concept_html(output.display_full_name, output.display_rank_name)
     input = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     note = yield(input, output)
-    note << " following #{@nomenclature_change.event.try(:name)}" if @nomenclature_change.event
+    note << " following #{@nomenclature_change.event.name}" if @nomenclature_change.event
     note + '.'
   end
 
