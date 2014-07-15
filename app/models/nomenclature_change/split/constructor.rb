@@ -56,13 +56,15 @@ class NomenclatureChange::Split::Constructor
         taxon_concept_html(output.display_full_name, output.display_rank_name)
       end.join(', ')
       input.note = "#{input_html} was split into #{outputs_html} in #{Date.today.year}"
-      input.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
+      input.note << " following taxonomic changes adopted at #{event.name}" if event
+      input.note << '.'
     end
     @nomenclature_change.outputs_except_inputs.each do |output|
       if output.note.blank?
         output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
         output.note = "#{output_html} was split from #{input_html} in #{Date.today.year}"
-        output.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
+        output.note << " following taxonomic changes adopted at #{event.name}" if event
+        output.note << '.'
       end
     end
   end
@@ -71,7 +73,7 @@ class NomenclatureChange::Split::Constructor
     input = @nomenclature_change.input
     input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     note = yield(input_html)
-    note << " following #{@nomenclature_change.event.try(:name)}" if @nomenclature_change.event
+    note << " following #{@nomenclature_change.event.name}" if @nomenclature_change.event
     note + '.'
   end
 
