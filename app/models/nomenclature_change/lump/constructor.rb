@@ -62,12 +62,14 @@ class NomenclatureChange::Lump::Constructor
       if input.note.blank?
         input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
         input.note = "#{input_html} was lumped into #{output_html} in #{Date.today.year}"
-        input.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
+        input.note << " following taxonomic changes adopted at #{event.name}" if event
+        input.note << '.'
       end
     end
     if output.note.blank?
       output.note = "#{output_html} was lumped from #{inputs_html} in #{Date.today.year}"
-      output.note << " following taxonomic changes adopted at #{event.try(:name)}" if event
+      output.note << " following taxonomic changes adopted at #{event.name}" if event
+      output.note << '.'
     end
   end
 
@@ -75,7 +77,7 @@ class NomenclatureChange::Lump::Constructor
     output = @nomenclature_change.output
     output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
     note = yield(output_html)
-    note << " following #{@nomenclature_change.event.try(:name)}" if @nomenclature_change.event
+    note << " following #{@nomenclature_change.event.name}" if @nomenclature_change.event
     note + '.'
   end
 
