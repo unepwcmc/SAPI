@@ -61,7 +61,7 @@ shared_context 'legislation_reassignments_processor_examples' do
         input: input,
         reassignable_type: 'ListingChange'
       ),
-      :output => output
+      output: output
     )
     create(:nomenclature_change_reassignment_target,
       reassignment: create(
@@ -69,7 +69,7 @@ shared_context 'legislation_reassignments_processor_examples' do
         input: input,
         reassignable_type: 'CitesSuspension'
       ),
-      :output => output
+      output: output
     )
     create(:nomenclature_change_reassignment_target,
       reassignment: create(
@@ -77,7 +77,7 @@ shared_context 'legislation_reassignments_processor_examples' do
         input: input,
         reassignable_type: 'Quota'
       ),
-      :output => output
+      output: output
     )
     processor.run
   end

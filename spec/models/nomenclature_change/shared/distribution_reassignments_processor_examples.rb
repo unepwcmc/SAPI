@@ -1,14 +1,14 @@
 shared_context 'distribution_reassignments_processor_examples' do
   let(:reassignment){
     create(:nomenclature_change_distribution_reassignment,
-      :input => input,
-      :reassignable_type => 'Distribution'
+      input: input,
+      reassignable_type: 'Distribution'
     )
   }
   let!(:reassignment_target){
     create(:nomenclature_change_reassignment_target,
-      :reassignment => reassignment,
-      :output => output
+      reassignment: reassignment,
+      output: output
     )
   }
   let(:poland){
@@ -27,7 +27,7 @@ shared_context 'distribution_reassignments_processor_examples' do
       tag_list: ['extinct']
     )
     d.distribution_references.create(reference_id: create(:reference).id)
-    create(:distribution, :taxon_concept => input_species)
+    create(:distribution, taxon_concept: input_species)
     processor.run
   end
   specify{ expect(output_species1.distributions.count).to eq(2) }
