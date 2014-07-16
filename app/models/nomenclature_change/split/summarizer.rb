@@ -4,7 +4,7 @@ class NomenclatureChange::Split::Summarizer
     @split = split
   end
 
-  def summary_old
+  def summary
     res = [
       "#{@split.input.taxon_concept.full_name} will be split into:",
       @split.outputs.map do |output|
