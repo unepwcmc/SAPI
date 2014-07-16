@@ -38,4 +38,14 @@ class NomenclatureChange::StatusUpgradeProcessor
     end
   end
 
+  def summary
+    txt = "#{@input_or_output.taxon_concept.full_name} will be promoted to accepted name"
+    unless @synonyms.empty?
+      [
+        txt + " with the following synonyms:",
+        @synonyms.map(&:taxon_concept).map(&:full_name)
+      ]
+    end
+  end
+
 end
