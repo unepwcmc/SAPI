@@ -39,4 +39,16 @@ class NomenclatureChange::StatusDowngradeProcessor
     end
   end
 
+  def summary
+    txt = "#{@input_or_output.taxon_concept.full_name} will be turned into a synonym"
+    unless @accepted_names.empty?
+      [
+        txt + " with the following accepted names:",
+        @accepted_names.map(&:taxon_concept).map(&:full_name)
+      ]
+    else
+      [txt]
+    end
+  end
+
 end

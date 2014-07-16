@@ -31,4 +31,15 @@ class NomenclatureChange::Lump::Processor
     Rails.logger.warn("[#{@nc.type}] END")
   end
 
+  # Generate a summary based on the subprocessors chain
+  def summary
+    result = [[
+      "The following taxa will be lumped into #{@nc.output.taxon_concept.full_name}",
+      @nc.inputs.map(&:taxon_concept).map(&:full_name)
+      
+    ]]
+    @subprocessors.each{ |processor| result << processor.summary }
+    result.flatten(1)
+  end
+
 end
