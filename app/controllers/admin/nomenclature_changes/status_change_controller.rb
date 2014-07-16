@@ -34,7 +34,8 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
       builder.build_legislation_reassignments
       skip_or_previous_step if @nomenclature_change.input.nil? || @nomenclature_change.input.legislation_reassignments.empty?
     when :summary
-      @summary = NomenclatureChange::StatusChange::Summarizer.new(@nomenclature_change).summary
+      processor = NomenclatureChange::StatusChange::Processor.new(@nomenclature_change)
+      @summary = processor.summary
     end
     render_wizard
   end

@@ -47,4 +47,14 @@ class NomenclatureChange::Split::Processor
     Rails.logger.warn("[#{@nc.type}] END")
   end
 
+  # Generate a summary based on the subprocessors chain
+  def summary
+    result = [[
+      "#{@nc.input.taxon_concept.full_name} will be split into:",
+      @nc.outputs.map(&:display_full_name)
+    ]]
+    @subprocessors.each{ |processor| result << processor.summary }
+    result.flatten(1)
+  end
+
 end
