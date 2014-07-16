@@ -4,32 +4,30 @@ class NomenclatureChange::Lump::Processor
     @nc = nc
     @inputs = nc.inputs
     @output = nc.output
+    @subprocessors = prepare_chain
   end
 
-  def run
-    Rails.logger.warn("[#{@nc.type}] BEGIN")
-    Rails.logger.debug("[#{@nc.type}] Processing output #{@output.display_full_name}")
-    processor = NomenclatureChange::Lump::TransformationProcessor.new(@output)
-    processor.run
+  # Constructs an array of subprocessors which will be run in sequence
+  # A subprocessor needs to respond to #run
+  def prepare_chain
+    chain = []
+    chain << NomenclatureChange::TaxonConceptUpdateProcessor.new(@output)
+    if @output.new_taxon_concept && ['A', 'N'].include(@output.name_status)
+      chain << NomenclatureChange::StatusDowngradeProcessor.new(@output)
+    end
     @inputs.each do |input|
-      Rails.logger.debug("[#{@nc.type}] Processing reassignments from #{input.taxon_concept.full_name}")
-      processor = NomenclatureChange::ReassignmentProcessor.new(input, @output)
-      processor.run
-      input.reassignments.each do |reassignment|
-        unless @output.taxon_concept == input.taxon_concept || reassignment.kind_of?(NomenclatureChange::ParentReassignment)
-          # input is not part of the split
-          # delete original association
-          Rails.logger.warn("Deleting #{reassignment.reassignable_type} (id=#{reassignment.reassignable_id}) from #{input.taxon_concept.full_name}")
-          if reassignment.reassignable_id.blank?
-            reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
-              reassignable.destroy
-            end
-          else
-            reassignment.reassignable.destroy
-          end
-        end
+      unless input.taxon_concept_id == @output.taxon_concept_id && @output.new_full_name.nil?
+        chain << NomenclatureChange::ReassignmentProcessor.new(input, @output)
+        chain << NomenclatureChange::StatusDowngradeProcessor.new(input, [@output])
       end
     end
+    chain
+  end
+
+  # Runs the subprocessors chain
+  def run
+    Rails.logger.warn("[#{@nc.type}] BEGIN")
+    @subprocessors.each{ |processor| processor.run }
     Rails.logger.warn("[#{@nc.type}] END")
   end
 
