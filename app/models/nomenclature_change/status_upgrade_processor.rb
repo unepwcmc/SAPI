@@ -27,6 +27,11 @@ class NomenclatureChange::StatusUpgradeProcessor
           :other_taxon_concept_id => synonym.taxon_concept.id
         )
       end
+      Rails.logger.debug "Updating shipments where reported taxon concept = #{@input_or_output.taxon_concept.full_name} to have taxon concept = #{@input_or_output.taxon_concept.full_name}"
+      Trade::Shipment.update_all(
+        {taxon_concept_id: @input_or_output.id},
+        {reported_taxon_concept_id: @input_or_output.id}
+      )
     elsif @old_status == 'T'
       # if was T and now is A
       # remove has_trade_name associations
@@ -35,6 +40,11 @@ class NomenclatureChange::StatusUpgradeProcessor
         Rails.logger.debug "Removing HAS_TRADE_NAME relationship with #{rel.taxon_concept.full_name}"
         rel.destroy
       end
+      Rails.logger.debug "Updating shipments where reported taxon concept = #{@input_or_output.taxon_concept.full_name} to have taxon concept = #{@input_or_output.taxon_concept.full_name}"
+      Trade::Shipment.update_all(
+        {taxon_concept_id: @input_or_output.id},
+        {reported_taxon_concept_id: @input_or_output.id}
+      )
     end
   end
 
