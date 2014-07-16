@@ -12,11 +12,11 @@ class NomenclatureChange::Lump::Processor
   def prepare_chain
     chain = []
     chain << NomenclatureChange::TaxonConceptUpdateProcessor.new(@output)
-    if @output.new_taxon_concept && ['A', 'N'].include(@output.name_status)
+    if @output.will_create_taxon? && ['A', 'N'].include?(@output.name_status)
       chain << NomenclatureChange::StatusDowngradeProcessor.new(@output)
     end
     @inputs.each do |input|
-      unless input.taxon_concept_id == @output.taxon_concept_id && @output.new_full_name.nil?
+      unless input.taxon_concept_id == @output.taxon_concept_id && !@output.will_create_taxon?
         chain << NomenclatureChange::ReassignmentProcessor.new(input, @output)
         chain << NomenclatureChange::StatusDowngradeProcessor.new(input, [@output])
       end
@@ -36,7 +36,6 @@ class NomenclatureChange::Lump::Processor
     result = [[
       "The following taxa will be lumped into #{@nc.output.taxon_concept.full_name}",
       @nc.inputs.map(&:taxon_concept).map(&:full_name)
-      
     ]]
     @subprocessors.each{ |processor| result << processor.summary }
     result.flatten(1)
