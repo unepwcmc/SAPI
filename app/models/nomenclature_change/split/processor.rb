@@ -11,19 +11,18 @@ class NomenclatureChange::Split::Processor
   # A subprocessor needs to respond to #run
   def prepare_chain
     chain = []
-    input_is_one_of_outputs = @outputs.reject{ |o| o.new_full_name }.
+    input_is_one_of_outputs = @outputs.reject{ |o| o.will_create_taxon? }.
       map(&:taxon_concept_id).include?(@input.taxon_concept_id)
     @outputs.each_with_index do |output, idx|
       chain << NomenclatureChange::TaxonConceptUpdateProcessor.new(output)
-      if output.new_taxon_concept
+      if output.will_create_taxon?
         if ['A', 'N'].include?(output.name_status)
           chain << NomenclatureChange::StatusDowngradeProcessor.new(output)
         end
-        # TODO output taxon_concept becomes synonym of new_taxon_concept
-      elsif output.new_taxon_concept.nil? && ['S', 'T'].include?(output.name_status)
+      elsif !output.will_create_taxon? && ['S', 'T'].include?(output.name_status)
         chain << NomenclatureChange::StatusUpgradeProcessor.new(output)
       end
-      unless @input.taxon_concept_id == output.taxon_concept_id && output.new_full_name.nil?
+      unless @input.taxon_concept_id == output.taxon_concept_id && !output.will_create_taxon?
         # if input is not one of outputs and this is the last output
         # transfer the associations rather than copy them
         transfer = !input_is_one_of_outputs && (idx == (@outputs.length - 1))
