@@ -3,6 +3,7 @@ require 'spec_helper'
 describe NomenclatureChange::Lump::Processor do
   include_context 'lump_definitions'
 
+  before(:each){ synonym_relationship_type }
   let(:processor){ NomenclatureChange::Lump::Processor.new(lump) }
   describe :run do
     context "when outputs are existing taxa" do

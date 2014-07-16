@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe NomenclatureChange::StatusChange::TransformationProcessor do
+describe NomenclatureChange::TaxonConceptUpdateProcessor do
   include_context 'status_change_definitions'
 
   before(:each){ synonym_relationship_type }
   describe :run do
     let(:processor){
-      NomenclatureChange::StatusChange::TransformationProcessor.new(primary_output)
+      NomenclatureChange::TaxonConceptUpdateProcessor.new(primary_output)
     }
     before(:each) do
       processor.run
