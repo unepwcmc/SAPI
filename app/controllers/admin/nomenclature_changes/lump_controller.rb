@@ -32,7 +32,8 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
       builder.build_legislation_reassignments
       skip_or_previous_step if @nomenclature_change.inputs.map(&:legislation_reassignments).flatten.empty?
     when :summary
-      @summary = NomenclatureChange::Lump::Summarizer.new(@nomenclature_change).summary
+      processor = NomenclatureChange::Lump::Processor.new(@nomenclature_change)
+      @summary = processor.summary
     end
     render_wizard
   end

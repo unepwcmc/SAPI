@@ -109,4 +109,12 @@ class NomenclatureChange::ReassignmentCopyProcessor
     end
   end
 
+  def summary
+    [
+      "The following associations will be copied from #{@input.taxon_concept.full_name}
+      to #{@output.display_full_name}",
+      NomenclatureChange::ReassignmentSummarizer.new(@input, @output).summary
+    ]
+  end
+
 end
