@@ -37,8 +37,9 @@ class NomenclatureChange::Output < ActiveRecord::Base
 
   def new_full_name
     return nil if new_scientific_name.blank?
-    rank = new_rank || nomenclature_change.input.taxon_concept.rank
-    parent = new_parent || nomenclature_change.input.taxon_concept.parent
+    # TODO perhaps a different way of populating rank is needed
+    rank = new_rank #|| nomenclature_change.input.taxon_concept.rank
+    parent = new_parent #|| nomenclature_change.input.taxon_concept.parent
     if parent && [Rank::SPECIES, Rank::SUBSPECIES].include?(rank.name)
       parent.full_name + ' ' + new_scientific_name
     elsif parent && rank.name == Rank::VARIETY
