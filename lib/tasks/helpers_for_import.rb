@@ -66,9 +66,10 @@ class CsvToDbMap
       'Designation' => 'designation varchar',
       'ReferenceID' => 'reference_id varchar'
     },
-    #TODO legacy type for regions?
     'cites_regions_import' => {
-      'name' => 'name varchar'
+      'name' => 'name varchar',
+      'name_es' => 'name_es varchar',
+      'name_fr' => 'name_fr varchar'
     },
     #TODO legacy type for countries?
     'countries_import' => {
@@ -183,6 +184,15 @@ class CsvToDbMap
       'For Display' => 'ignore varchar',
       'Text' => 'full_note_en varchar'
     },
+    'hash_annotations_translations_import' => {
+      'Event No' => 'event_legacy_id integer',
+      'Event' => 'event varchar',
+      'Hash No' => 'symbol varchar',
+      'For Display' => 'ignore varchar',
+      'Annotations_English' => 'full_note_en varchar',
+      'Annotations_Spanish' => 'full_note_es varchar',
+      'Annotations_French' => 'full_note_fr varchar'
+    },
     'eu_listings_import' => {
       'LAW_NUM' => 'event_legacy_id integer',
       'RANK_NAME' => 'rank varchar',
@@ -249,6 +259,11 @@ class CsvToDbMap
       'Effective from' => 'effective_at date',
       'End Date' => 'end_date date'
     },
+    'cites_cops_start_dates_import' => {
+      'designation' => 'designation varchar',
+      'name' => 'name varchar',
+      'start_date' => 'start_date date'
+    },
     'trade_species_mapping_import' => {
         'cites_name' => 'cites_name varchar',
         'cites_taxon_code' => 'cites_taxon_code varchar',
@@ -306,6 +321,16 @@ class CsvToDbMap
       'cites_taxon_code' => 'cites_taxon_code varchar',
       'species_plus_id' => 'species_plus_id integer',
       'accepted_id' => 'accepted_id integer'
+    },
+    'ranks_translations_import' => {
+      'name' => 'name varchar',
+      'display_name_es' => 'display_name_es varchar',
+      'display_name_fr' => 'display_name_fr varchar'
+    },
+    'change_types_translations_import' => {
+      'name' => 'name varchar',
+      'display_name_es' => 'display_name_es varchar',
+      'display_name_fr' => 'display_name_fr varchar'
     }
   }
 
