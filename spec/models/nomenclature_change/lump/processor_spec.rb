@@ -60,4 +60,8 @@ describe NomenclatureChange::Lump::Processor do
       end
     end
   end
+  describe :summary do
+    let(:lump){ lump_with_inputs_and_output_existing_taxon }
+    specify { expect(processor.summary).to be_kind_of(Array) }
+  end
 end
