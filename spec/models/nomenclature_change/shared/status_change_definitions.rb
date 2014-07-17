@@ -4,7 +4,7 @@ shared_context 'status_change_definitions' do
     create(:nomenclature_change_status_change,
       primary_output_attributes: {
         is_primary_output: true,
-        taxon_concept_id: create_cites_eu_species.id,
+        taxon_concept_id: input_species.id,
         new_name_status: 'S'
       },
       status: NomenclatureChange::StatusChange::PRIMARY_OUTPUT
