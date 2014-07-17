@@ -3,7 +3,13 @@ require 'spec_helper'
 describe NomenclatureChange::Lump::Processor do
   include_context 'lump_definitions'
 
-  before(:each){ synonym_relationship_type }
+  before(:each){
+    synonym_relationship_type
+    @shipment = create(:shipment,
+      taxon_concept: input_species1,
+      reported_taxon_concept: input_species1
+    )
+  }
   let(:processor){ NomenclatureChange::Lump::Processor.new(lump) }
   describe :run do
     context "when outputs are existing taxa" do
@@ -14,6 +20,9 @@ describe NomenclatureChange::Lump::Processor do
         before(:each){ processor.run }
         specify{ expect(input_species1.reload).to be_is_synonym }
         specify{ expect(input_species1.accepted_names).to include(output_species) }
+        specify{ expect(input_species1.shipments).to be_empty }
+        specify{ expect(input_species1.reported_shipments).to include(@shipment) }
+        specify{ expect(output_species.shipments).to include(@shipment) }
       end
     end
     context "when output is new taxon" do
@@ -23,6 +32,7 @@ describe NomenclatureChange::Lump::Processor do
         before(:each){ processor.run }
         specify{ expect(input_species1.reload).to be_is_synonym }
         specify{ expect(input_species1.accepted_names).to include(lump.output.new_taxon_concept) }
+        specify{ expect(lump.output.new_taxon_concept.shipments).to include(@shipment) }
       end
     end
     context "when output is existing taxon with new status" do
@@ -34,6 +44,7 @@ describe NomenclatureChange::Lump::Processor do
         before(:each){ processor.run }
         specify{ expect(input_species1.reload).to be_is_synonym }
         specify{ expect(input_species1.accepted_names).to include(output_species) }
+        specify{ expect(output_species.shipments).to include(@shipment) }
       end
     end
     context "when output is existing taxon with new name" do
@@ -45,6 +56,7 @@ describe NomenclatureChange::Lump::Processor do
         before(:each){ processor.run }
         specify{ expect(input_species1.reload).to be_is_synonym }
         specify{ expect(input_species1.accepted_names).to include(lump.output.new_taxon_concept) }
+        specify{ expect(lump.output.new_taxon_concept.shipments).to include(@shipment) }
       end
     end
   end
