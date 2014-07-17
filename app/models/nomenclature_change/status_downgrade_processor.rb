@@ -41,7 +41,7 @@ class NomenclatureChange::StatusDowngradeProcessor
         Rails.logger.debug "Updating shipments where taxon concept = #{@input_or_output.taxon_concept.full_name} to have taxon concept = #{default_accepted_name.full_name}"
         Trade::Shipment.update_all(
           {taxon_concept_id: default_accepted_name.id},
-          {taxon_concept_id: @input_or_output.id}
+          {taxon_concept_id: @input_or_output.taxon_concept_id}
         )
       end
     end
