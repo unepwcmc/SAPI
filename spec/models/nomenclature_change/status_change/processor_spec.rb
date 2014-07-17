@@ -31,9 +31,18 @@ describe NomenclatureChange::StatusChange::Processor do
     context "when turns into synonym" do
       context "from accepted name" do
         let(:status_change){ status_downgrade_with_input_and_secondary_output }
-        before(:each){ processor.run }
+        before(:each){
+          @shipment = create(:shipment,
+            taxon_concept: primary_output_taxon_concept,
+            reported_taxon_concept: primary_output_taxon_concept
+          )
+          processor.run
+        }
         specify{ expect(primary_output_taxon_concept).to be_is_synonym }
-        specify{ expect(secondary_output_taxon_concept.name_status).to eq('A') }
+        specify{ expect(primary_output_taxon_concept.accepted_names).to include(secondary_output_taxon_concept) }
+        specify{ expect(primary_output_taxon_concept.shipments).to be_empty }
+        specify{ expect(primary_output_taxon_concept.reported_shipments).to include(@shipment) }
+        specify{ expect(secondary_output_taxon_concept.shipments).to include(@shipment) }
 
         context "when swap" do
           let(:status_change){ status_downgrade_with_swap }
@@ -43,13 +52,21 @@ describe NomenclatureChange::StatusChange::Processor do
         end
       end
       context "from trade name" do
-
         let(:input_species){ trade_name }
         let(:status_change){ status_downgrade_with_primary_output }
-        before(:each){ processor.run }
+        before(:each){
+          @shipment = create(:shipment,
+            taxon_concept: accepted_name,
+            reported_taxon_concept: primary_output_taxon_concept
+          )
+          processor.run
+        }
         specify{ expect(primary_output_taxon_concept).to be_is_synonym }
         specify{ expect(primary_output_taxon_concept.accepted_names).to include(accepted_name) }
         specify{ expect(primary_output_taxon_concept.accepted_names_for_trade_name).to be_empty }
+        specify{ expect(primary_output_taxon_concept.shipments).to be_empty }
+        specify{ expect(primary_output_taxon_concept.reported_shipments).to include(@shipment) }
+        specify{ expect(accepted_name.shipments).to include(@shipment) }
 
         context "when swap" do
           let(:status_downgrade_with_swap){
@@ -91,9 +108,18 @@ describe NomenclatureChange::StatusChange::Processor do
           ).reload
         }
         let(:status_change){ status_upgrade_with_input }
-        before(:each){ processor.run }
+        before(:each){
+          @shipment = create(:shipment,
+            taxon_concept: accepted_name,
+            reported_taxon_concept: primary_output_taxon_concept
+          )
+          processor.run
+        }
         specify{ expect(primary_output_taxon_concept.name_status).to eq('A') }
         specify{ expect(primary_output_taxon_concept.accepted_names).to be_empty }
+        specify{ expect(primary_output_taxon_concept.shipments).to include(@shipment) }
+        specify{ expect(primary_output_taxon_concept.reported_shipments).to include(@shipment) }
+        specify{ expect(accepted_name.shipments).to be_empty }
 
         context "when swap" do
           let(:status_change){ status_upgrade_with_swap }
@@ -116,9 +142,18 @@ describe NomenclatureChange::StatusChange::Processor do
           ).reload
         }
         let(:status_change){ status_upgrade_with_input }
-        before(:each){ processor.run }
+        before(:each){
+          @shipment = create(:shipment,
+            taxon_concept: accepted_name,
+            reported_taxon_concept: primary_output_taxon_concept
+          )
+          processor.run
+        }
         specify{ expect(primary_output_taxon_concept.name_status).to eq('A') }
         specify{ expect(primary_output_taxon_concept.accepted_names_for_trade_name).to be_empty }
+        specify{ expect(primary_output_taxon_concept.shipments).to include(@shipment) }
+        specify{ expect(primary_output_taxon_concept.reported_shipments).to include(@shipment) }
+        specify{ expect(accepted_name.shipments).to be_empty }
 
         context "when swap" do
           let(:status_upgrade_with_swap){

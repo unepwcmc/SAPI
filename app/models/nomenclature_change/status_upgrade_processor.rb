@@ -29,8 +29,8 @@ class NomenclatureChange::StatusUpgradeProcessor
       end
       Rails.logger.debug "Updating shipments where reported taxon concept = #{@input_or_output.taxon_concept.full_name} to have taxon concept = #{@input_or_output.taxon_concept.full_name}"
       Trade::Shipment.update_all(
-        {taxon_concept_id: @input_or_output.id},
-        {reported_taxon_concept_id: @input_or_output.id}
+        {taxon_concept_id: @input_or_output.taxon_concept_id},
+        {reported_taxon_concept_id: @input_or_output.taxon_concept_id}
       )
     elsif @old_status == 'T'
       # if was T and now is A
@@ -51,8 +51,8 @@ class NomenclatureChange::StatusUpgradeProcessor
       end
       Rails.logger.debug "Updating shipments where reported taxon concept = #{@input_or_output.taxon_concept.full_name} to have taxon concept = #{@input_or_output.taxon_concept.full_name}"
       Trade::Shipment.update_all(
-        {taxon_concept_id: @input_or_output.id},
-        {reported_taxon_concept_id: @input_or_output.id}
+        {taxon_concept_id: @input_or_output.taxon_concept_id},
+        {reported_taxon_concept_id: @input_or_output.taxon_concept_id}
       )
     end
   end
