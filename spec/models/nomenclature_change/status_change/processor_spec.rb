@@ -181,4 +181,8 @@ describe NomenclatureChange::StatusChange::Processor do
       end
     end
   end
+  describe :summary do
+    let(:status_change){ status_downgrade_with_input_and_secondary_output }
+    specify { expect(processor.summary).to be_kind_of(Array) }
+  end
 end

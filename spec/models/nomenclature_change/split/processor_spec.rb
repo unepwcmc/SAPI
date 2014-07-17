@@ -65,4 +65,8 @@ describe NomenclatureChange::Split::Processor do
       end
     end
   end
+  describe :summary do
+    let(:split){ split_with_input_and_output_existing_taxon }
+    specify { expect(processor.summary).to be_kind_of(Array) }
+  end
 end
