@@ -3,7 +3,13 @@ require 'spec_helper'
 describe NomenclatureChange::Split::Processor do
   include_context 'split_definitions'
 
-  before(:each){ synonym_relationship_type }
+  before(:each){
+    synonym_relationship_type
+    @shipment = create(:shipment,
+      taxon_concept: input_species,
+      reported_taxon_concept: input_species
+    )
+  }
   let(:processor){ NomenclatureChange::Split::Processor.new(split) }
   describe :run do
     context "when outputs are existing taxa" do
@@ -15,6 +21,9 @@ describe NomenclatureChange::Split::Processor do
         before(:each){ processor.run }
         specify{ expect(input_species.reload).to be_is_synonym }
         specify{ expect(input_species.accepted_names).to include(output_species1) }
+        specify{ expect(input_species.shipments).to be_empty }
+        specify{ expect(input_species.reported_shipments).to include(@shipment) }
+        specify{ expect(output_species1.shipments).to include(@shipment) }
       end
     end
     context "when output is new taxon" do
@@ -24,6 +33,9 @@ describe NomenclatureChange::Split::Processor do
         before(:each){ processor.run }
         specify{ expect(input_species.reload).to be_is_synonym }
         specify{ expect(input_species.accepted_names).to include(split.outputs.last.new_taxon_concept) }
+        specify{ expect(input_species.shipments).to be_empty }
+        specify{ expect(input_species.reported_shipments).to include(@shipment) }
+        specify{ expect(output_species1.shipments).to include(@shipment) }
       end
     end
     context "when output is existing taxon with new status" do
@@ -36,6 +48,7 @@ describe NomenclatureChange::Split::Processor do
         before(:each){ processor.run }
         specify{ expect(input_species.reload).to be_is_synonym }
         specify{ expect(input_species.accepted_names).to include(output_species1) }
+        specify{ expect(output_species1.shipments).to include(@shipment) }
       end
     end
     context "when output is existing taxon with new name" do
@@ -48,6 +61,7 @@ describe NomenclatureChange::Split::Processor do
         before(:each){ processor.run }
         specify{ expect(input_species.reload).to be_is_synonym }
         specify{ expect(input_species.accepted_names).to include(split.outputs.last.new_taxon_concept) }
+        specify{ expect(output_species1.shipments).to include(@shipment) }
       end
     end
   end
