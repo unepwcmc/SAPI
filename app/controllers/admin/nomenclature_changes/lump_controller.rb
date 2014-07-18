@@ -51,6 +51,10 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
         set_events
         set_taxonomy
       end
+    when :outputs
+      unless success
+        set_taxonomy
+      end
     end
     render_wizard @nomenclature_change
   end
