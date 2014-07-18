@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: nomenclature_change_inputs
+#
+#  id                     :integer          not null, primary key
+#  nomenclature_change_id :integer          not null
+#  taxon_concept_id       :integer          not null
+#  note                   :text
+#  created_by_id          :integer          not null
+#  updated_by_id          :integer          not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  internal_note          :text
+#
+
 # Represents an input of a nomenclature change.
 # Inputs are required to be existing taxon concepts.
 class NomenclatureChange::Input < ActiveRecord::Base
