@@ -24,6 +24,9 @@
 #  created_by_id              :integer
 #  dependents_updated_at      :datetime
 #  internal_notes             :text
+#  nomenclature_note_en       :text
+#  nomenclature_note_es       :text
+#  nomenclature_note_fr       :text
 #
 
 class TaxonConcept < ActiveRecord::Base
@@ -34,7 +37,9 @@ class TaxonConcept < ActiveRecord::Base
     :accepted_scientific_name, :parent_scientific_name,
     :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
     :tag_list, :legacy_trade_code, :internal_notes,
+    :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
     :created_by_id, :updated_by_id, :dependents_updated_at
+
   attr_writer :parent_scientific_name
   attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
     :other_hybrid_parent_scientific_name

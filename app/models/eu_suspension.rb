@@ -21,6 +21,7 @@
 #  source_id           :integer
 #  created_by_id       :integer
 #  updated_by_id       :integer
+#  nomenclature_note   :text
 #
 
 class EuSuspension < EuDecision
