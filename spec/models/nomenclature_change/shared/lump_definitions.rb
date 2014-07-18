@@ -55,9 +55,7 @@ shared_context 'lump_definitions' do
         new_scientific_name: 'fatalus',
         new_parent_id: create_cites_eu_genus(
           taxon_name: create(:taxon_name, scientific_name: 'Errorus')
-        ).id,
-        new_rank_id: species_rank.id,
-        new_name_status: 'A'
+        ).id
       },
       status: NomenclatureChange::Lump::OUTPUTS
     )
@@ -69,8 +67,7 @@ shared_context 'lump_definitions' do
         1 => { taxon_concept_id: input_species2.id }
       },
       output_attributes: {
-        taxon_concept_id: output_species.id,
-        new_name_status: 'A'
+        taxon_concept_id: output_species.id
       },
       status: NomenclatureChange::Lump::OUTPUTS
     )
@@ -86,9 +83,7 @@ shared_context 'lump_definitions' do
         new_scientific_name: 'lolcatus',
         new_parent_id: create_cites_eu_genus(
           taxon_name: create(:taxon_name, scientific_name: 'Errorus')
-        ).id,
-        new_rank_id: species_rank.id,
-        new_name_status: 'A'
+        ).id
       },
       status: NomenclatureChange::Lump::OUTPUTS
     )
