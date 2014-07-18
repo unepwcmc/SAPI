@@ -21,6 +21,7 @@
 #  source_id           :integer
 #  created_by_id       :integer
 #  updated_by_id       :integer
+#  nomenclature_note   :text
 #
 
 require 'digest/sha1'
@@ -30,7 +31,7 @@ class EuDecision < ActiveRecord::Base
   attr_accessible :end_date, :end_event_id, :geo_entity_id, :internal_notes,
     :is_current, :notes, :start_date, :start_event_id, :eu_decision_type_id,
     :taxon_concept_id, :type, :conditions_apply, :term_id, :source_id,
-    :created_by_id, :updated_by_id
+    :created_by_id, :updated_by_id, :nomenclature_note
 
   belongs_to :taxon_concept
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
