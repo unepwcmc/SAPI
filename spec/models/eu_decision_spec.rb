@@ -1,7 +1,7 @@
 # == Schema Information
 #
 # Table name: eu_decisions
-#
+
 #  id                   :integer          not null, primary key
 #  is_current           :boolean          default(TRUE)
 #  notes                :text
