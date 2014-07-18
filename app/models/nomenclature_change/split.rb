@@ -21,6 +21,7 @@ class NomenclatureChange::Split < NomenclatureChange
   validate :required_outputs, if: :outputs_or_submitting?
   validate :required_ranks, if: :outputs_or_submitting?
   before_validation :set_outputs_name_status, if: :outputs_or_submitting?
+  before_validation :set_outputs_rank_id, if: :outputs_or_submitting?
 
   def required_inputs
     if input.blank?
@@ -47,7 +48,19 @@ class NomenclatureChange::Split < NomenclatureChange
   end
 
   def set_outputs_name_status
-    outputs.each{ |o| o.new_name_status = 'A' }
+    outputs.each do |output|
+      if output.new_scientific_name.present?
+        output.new_rank_id = 'A'
+      end
+    end
+  end
+
+  def set_outputs_rank_id
+    outputs.each do |output|
+      if output.new_scientific_name.present?
+        output.new_rank_id = new_output_rank.id
+      end
+    end
   end
 
   def outputs_except_inputs
