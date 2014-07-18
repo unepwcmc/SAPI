@@ -49,6 +49,14 @@ class NomenclatureChange::ReassignmentCopyProcessor
         taxon_concept_id: new_taxon_concept.id
       }).first || reassignable.dup
       copied_object.taxon_concept_id = new_taxon_concept.id
+      if reassignable.kind_of? ListingChange
+        copied_object.nomenclature_note_en = (copied_object.nomenclature_note_en || '') +
+          target.reassignment.note_for_output(target.output)
+      elsif reassignable.kind_of?(CitesSuspension) || reassignable.kind_of?(Quota) ||
+        reassignable.kind_of?(EuSuspension) || reassignable.kind_of?(EuOpinion)
+        copied_object.nomenclature_note = (copied_object.nomenclature_note || '') +
+          target.reassignment.note_for_output(target.output)
+      end
       if reassignable.kind_of? Distribution
         # for distributions this needs to copy distribution references and tags
         reassignable.distribution_references.each do |distr_ref|

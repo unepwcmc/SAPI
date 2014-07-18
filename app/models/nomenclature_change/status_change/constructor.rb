@@ -95,9 +95,9 @@ class NomenclatureChange::StatusChange::Constructor
 
   def build_output_note(output, event)
     output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
-    output.note = "#{output_html} status change from #{output.taxon_concept.name_status} to #{output.new_name_status} in #{Date.today.year}"
+    output.note = "<p>#{output_html} status change from #{output.taxon_concept.name_status} to #{output.new_name_status} in #{Date.today.year}"
     output.note << " following taxonomic changes adopted at #{event.name}" if event
-    output.note << '.'
+    output.note << '.</p>'
   end
 
   def listing_change_note
@@ -147,9 +147,10 @@ class NomenclatureChange::StatusChange::Constructor
     end
     output = taxon_concept_html(output.display_full_name, output.display_rank_name)
     input = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
-    note = yield(input, output)
+    note = '<p>'
+    note << yield(input, output)
     note << " following #{@nomenclature_change.event.name}" if @nomenclature_change.event
-    note + '.'
+    note + '.</p>'
   end
 
 end
