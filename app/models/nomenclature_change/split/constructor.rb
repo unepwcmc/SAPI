@@ -55,16 +55,16 @@ class NomenclatureChange::Split::Constructor
       outputs_html = @nomenclature_change.outputs.map do |output|
         taxon_concept_html(output.display_full_name, output.display_rank_name)
       end.join(', ')
-      input.note = "#{input_html} was split into #{outputs_html} in #{Date.today.year}"
+      input.note = "<p>#{input_html} was split into #{outputs_html} in #{Date.today.year}"
       input.note << " following taxonomic changes adopted at #{event.name}" if event
-      input.note << '.'
+      input.note << '.</p>'
     end
     @nomenclature_change.outputs_except_inputs.each do |output|
       if output.note.blank?
         output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
-        output.note = "#{output_html} was split from #{input_html} in #{Date.today.year}"
+        output.note = "<p>#{output_html} was split from #{input_html} in #{Date.today.year}"
         output.note << " following taxonomic changes adopted at #{event.name}" if event
-        output.note << '.'
+        output.note << '.</p>'
       end
     end
   end
@@ -72,32 +72,34 @@ class NomenclatureChange::Split::Constructor
   def legislation_note
     input = @nomenclature_change.input
     input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
-    note = yield(input_html)
+    output_html = taxon_concept_html('[[output]]', input.taxon_concept.rank.name)
+    note = '<p>'
+    note << yield(input_html, output_html)
     note << " following #{@nomenclature_change.event.name}" if @nomenclature_change.event
-    note + '.'
+    note + '.</p>'
   end
 
   def listing_change_note
-    legislation_note do |input_html|
-      "Originally listed as #{input_html}, from which [[output]] was split"
+    legislation_note do |input_html, output_html|
+      "Originally listed as #{input_html}, from which #{output_html} was split"
     end
   end
 
   def suspension_note
-    legislation_note do |input_html|
-      "Suspension originally formed for #{input_html}, from which [[output]] was split"
+    legislation_note do |input_html, output_html|
+      "Suspension originally formed for #{input_html}, from which #{output_html} was split"
     end
   end
 
   def opinion_note
-    legislation_note do |input_html|
-      "Opinion originally formed for #{input_html}, from which [[output]] was split"
+    legislation_note do |input_html, output_html|
+      "Opinion originally formed for #{input_html}, from which #{output_html} was split"
     end
   end
 
   def quota_note
-    legislation_note do |input_html|
-      "Quota originally published for #{input_html}, from which [[output]] was split"
+    legislation_note do |input_html, output_html|
+      "Quota originally published for #{input_html}, from which #{output_html} was split"
     end
   end
 

@@ -50,8 +50,16 @@ class NomenclatureChange::ReassignmentProcessor
       transferred_object = reassignable.duplicates({
         taxon_concept_id: new_taxon_concept.id
       }).first || reassignable
-      transferred_object.update_column(:taxon_concept_id, new_taxon_concept.id)
-      transferred_object.touch
+      transferred_object.taxon_concept_id = new_taxon_concept.id
+      if reassignable.kind_of? ListingChange
+        transferred_object.nomenclature_note_en = (transferred_object.nomenclature_note_en || '') +
+          target.reassignment.note_for_output(target.output)
+      elsif reassignable.kind_of?(CitesSuspension) || reassignable.kind_of?(Quota) ||
+        reassignable.kind_of?(EuSuspension) || reassignable.kind_of?(EuOpinion)
+        transferred_object.nomenclature_note = (transferred_object.nomenclature_note || '') +
+          target.reassignment.note_for_output(target.output)
+      end
+      transferred_object.save
     end
   end
 

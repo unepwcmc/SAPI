@@ -40,4 +40,8 @@ class NomenclatureChange::Reassignment < ActiveRecord::Base
 
   validates :input, :presence => true
   validates :reassignable_type, :presence => true
+
+  def note_for_output(output)
+    note.sub(/\[\[output\]\]/, output.display_full_name)
+  end
 end
