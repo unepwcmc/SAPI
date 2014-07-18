@@ -1,4 +1,8 @@
-class Admin::AhoyEventsController < Admin::StandardAuthorizationController
+class Admin::AhoyEventsController < Admin::SimpleCrudController
+	authorize_resource :class => 'Ahoy::Event'
  respond_to :json
- layout :determine_layout
+ 
+ def index
+ 	@ahoy_events = Ahoy::Event.page(params[:page])
+ end
 end
