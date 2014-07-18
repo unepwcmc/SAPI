@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: nomenclature_changes
+#
+#  id            :integer          not null, primary key
+#  event_id      :integer
+#  type          :string(255)      not null
+#  status        :string(255)      not null
+#  created_by_id :integer          not null
+#  updated_by_id :integer          not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+
 # A status change needs to have at least one output and at most two
 # The cases where there are 2 are as follows:
 # 1. accepted taxon t1 (input) downgraded to synonym t1 (output1),
