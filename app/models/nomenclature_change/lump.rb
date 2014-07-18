@@ -17,9 +17,15 @@ class NomenclatureChange::Lump < NomenclatureChange
     message: "%{value} is not a valid status"
   }
   validate :required_inputs, if: :inputs_or_submitting?
-  validate :required_inputs_ranks, if: :inputs_or_submitting?
+  validate :required_inputs_ranks, if: Proc.new{ |nc|
+    !nc.inputs.empty? && nc.inputs_or_submitting?
+  }
   validate :required_outputs, if: :outputs_or_submitting?
-  validate :required_ranks, if: :outputs_or_submitting?
+  validate :required_ranks, if: Proc.new{ |nc|
+    nc.output && nc.outputs_or_submitting?
+  }
+  before_validation :set_output_name_status, if: :outputs_or_submitting?
+  before_validation :set_output_rank_id, if: :outputs_or_submitting?
 
   def required_inputs
     if inputs.size < 2
@@ -36,19 +42,30 @@ class NomenclatureChange::Lump < NomenclatureChange
   end
 
   def required_outputs
-    if output.blank?
+    unless output
       errors.add(:output, "Must have one output")
       return false
     end
   end
 
   def required_ranks
-    if inputs.first.try(:taxon_concept).try(:rank).try(:id) != (
-        output.try(:new_rank).try(:id) ||
-        output.try(:taxon_concept).try(:rank).try(:id)
-      )
+    if inputs.first.try(:taxon_concept).try(:rank_id) != (
+        output.will_create_taxon? ?
+          output.new_rank_id :
+          output.try(:taxon_concept).try(:rank_id)
+        )
       errors.add(:output, "must be at same rank as inputs")
       return false
+    end
+  end
+
+  def set_output_name_status
+    output && output.new_name_status = 'A'
+  end
+
+  def set_output_rank_id
+    if output && output.new_scientific_name.present?
+      output.new_rank_id = new_output_rank.id
     end
   end
 
@@ -60,4 +77,11 @@ class NomenclatureChange::Lump < NomenclatureChange
     inputs.select{ |o| o.taxon_concept == output.try(:taxon_concept) }
   end
 
+  def new_output_rank
+    inputs.first.taxon_concept.rank
+  end
+
+  def new_output_parent
+    inputs.first.taxon_concept.parent
+  end
 end
