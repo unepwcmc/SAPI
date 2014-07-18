@@ -2,11 +2,16 @@ class NomenclatureChange::StatusDowngradeProcessor
 
   def initialize(input_or_output, accepted_names = [])
     @input_or_output = input_or_output
-    @old_status = @input_or_output.taxon_concept.name_status.dup
     @accepted_names = accepted_names
+    @old_status = if @input_or_output.kind_of? NomenclatureChange::Output
+      @input_or_output.name_status.dup
+    else
+      @input_or_output.taxon_concept.name_status.dup
+    end
   end
 
   def run
+    Rails.logger.debug "#{@input_or_output.taxon_concept.full_name} status downgrade from #{@old_status}"
     @accepted_names = @accepted_names.map{ |an| an.new_taxon_concept || an.taxon_concept }
     # if output given with new taxon concept present, it becomes the accepted name
     if @input_or_output.kind_of?(NomenclatureChange::Output) && @input_or_output.new_taxon_concept
@@ -29,6 +34,18 @@ class NomenclatureChange::StatusDowngradeProcessor
       end
     else
       # if was A / N and now is S
+      # remove has_synonym associations
+      @input_or_output.taxon_concept.synonym_relationships.
+        includes(:taxon_concept).each do |rel|
+        Rails.logger.debug "Removing HAS_SYNONYM relationship with #{rel.other_taxon_concept.full_name}"
+        rel.destroy
+      end
+      # remove has_trade_name associations
+      @input_or_output.taxon_concept.trade_name_relationships.
+        includes(:taxon_concept).each do |rel|
+        Rails.logger.debug "Removing HAS_TRADE_NAME relationship with #{rel.other_taxon_concept.full_name}"
+        rel.destroy
+      end
       # set input_or_output as synonym of accepted_names
       @accepted_names.each do |accepted_name|
         accepted_name.synonym_relationships << TaxonRelationship.new(
