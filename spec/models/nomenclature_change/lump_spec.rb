@@ -61,21 +61,6 @@ describe NomenclatureChange::Lump do
         }
         specify { expect(lump).to have(1).errors_on(:output) }
       end
-      context "incorrect new rank specified" do
-        let(:lump){
-          build(:nomenclature_change_lump,
-            :status => NomenclatureChange::Lump::OUTPUTS,
-            :inputs_attributes => {
-              0 => {:taxon_concept_id => create_cites_eu_species.id},
-              1 => {:taxon_concept_id => create_cites_eu_species.id}
-            },
-            :output_attributes => {
-              :new_rank_id => subspecies_rank.id
-            }
-          )
-        }
-        specify { expect(lump).to have(1).errors_on(:output) }
-      end
     end
   end
 end
