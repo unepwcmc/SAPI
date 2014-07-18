@@ -3,13 +3,19 @@ class NomenclatureChange::StatusUpgradeProcessor
   def initialize(input_or_output, linked_names = [])
     @input_or_output = input_or_output
     @linked_names = linked_names
-    @old_status = @input_or_output.taxon_concept.name_status.dup
+    @old_status = if @input_or_output.kind_of? NomenclatureChange::Output
+      @input_or_output.name_status.dup
+    else
+      @input_or_output.taxon_concept.name_status.dup
+    end
   end
 
   def run
+    Rails.logger.debug "#{@input_or_output.taxon_concept.full_name} status upgrade from #{@old_status}"
     unless @input_or_output.taxon_concept.name_status == 'A'
       @input_or_output.taxon_concept.update_column(:name_status, 'A')
     end
+
     if @old_status == 'S'
       # if was S and now is A
       # remove has_synonym associations
@@ -61,7 +67,7 @@ class NomenclatureChange::StatusUpgradeProcessor
     txt = "#{@input_or_output.taxon_concept.full_name} will be promoted to accepted name"
     unless @linked_names.empty?
       [
-        txt + " with the following linked_names:",
+        txt + " with the following linked names:",
         @linked_names.map(&:taxon_concept).map(&:full_name)
       ]
     end
