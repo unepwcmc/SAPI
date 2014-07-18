@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: nomenclature_changes
+#
+#  id            :integer          not null, primary key
+#  event_id      :integer
+#  type          :string(255)      not null
+#  status        :string(255)      not null
+#  created_by_id :integer          not null
+#  updated_by_id :integer          not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+
 class NomenclatureChange::Split < NomenclatureChange
   build_steps(:inputs, :outputs, :notes, :children, :names, :distribution,
     :legislation, :summary)
