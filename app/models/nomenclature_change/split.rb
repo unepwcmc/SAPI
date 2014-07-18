@@ -39,8 +39,8 @@ class NomenclatureChange::Split < NomenclatureChange
   def required_ranks
     if !(
       outputs.map do |o|
-        o.try(:new_rank).try(:id) || o.try(:taxon_concept).try(:rank).try(:id)
-      end.uniq - [input.try(:taxon_concept).try(:rank).try(:id)]).empty?
+        o.try(:new_rank_id) || o.try(:taxon_concept).try(:rank_id)
+      end.uniq - [input.try(:taxon_concept).try(:rank_id)]).empty?
       errors.add(:outputs, "Must be at same rank as input")
       return false
     end
@@ -58,4 +58,11 @@ class NomenclatureChange::Split < NomenclatureChange
     outputs.select{ |o| o.taxon_concept == input.try(:taxon_concept) }
   end
 
+  def new_output_rank
+    input.taxon_concept.rank
+  end
+
+  def new_output_parent
+    input.taxon_concept.parent
+  end
 end
