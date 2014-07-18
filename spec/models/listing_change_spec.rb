@@ -24,6 +24,9 @@
 #  nomenclature_note_es       :text
 #  nomenclature_note_fr       :text
 #  internal_notes             :text
+#  nomenclature_note_en       :text
+#  nomenclature_note_es       :text
+#  nomenclature_note_fr       :text
 #
 
 require 'spec_helper'
