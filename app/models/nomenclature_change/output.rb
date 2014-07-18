@@ -37,9 +37,8 @@ class NomenclatureChange::Output < ActiveRecord::Base
 
   def new_full_name
     return nil if new_scientific_name.blank?
-    # TODO perhaps a different way of populating rank is needed
-    rank = new_rank #|| nomenclature_change.input.taxon_concept.rank
-    parent = new_parent #|| nomenclature_change.input.taxon_concept.parent
+    rank = new_rank
+    parent = new_parent || nomenclature_change.new_output_parent
     if parent && [Rank::SPECIES, Rank::SUBSPECIES].include?(rank.name)
       parent.full_name + ' ' + new_scientific_name
     elsif parent && rank.name == Rank::VARIETY
@@ -58,7 +57,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
   # Returns true when the new taxon has a different name from old one
   def will_create_taxon?
     taxon_concept.nil? ||
-      !new_scientific_name.blank? &&
+      new_scientific_name.present? &&
       taxon_concept.full_name != display_full_name
   end
 
@@ -73,7 +72,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
       :parent_id => new_parent_id || parent_id,
       :rank_id => new_rank_id || rank_id,
       :author_year => new_author_year || author_year,
-      :name_status => new_name_status || name_status
+      :name_status => new_name_status || name_status || 'A'
     }
     if will_create_taxon?
       taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
