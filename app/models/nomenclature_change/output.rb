@@ -1,3 +1,30 @@
+# == Schema Information
+#
+# Table name: nomenclature_change_outputs
+#
+#  id                     :integer          not null, primary key
+#  nomenclature_change_id :integer          not null
+#  taxon_concept_id       :integer
+#  new_taxon_concept_id   :integer
+#  new_parent_id          :integer
+#  new_rank_id            :integer
+#  new_scientific_name    :string(255)
+#  new_author_year        :string(255)
+#  new_name_status        :string(255)
+#  note                   :text
+#  created_by_id          :integer          not null
+#  updated_by_id          :integer          not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  internal_note          :text
+#  is_primary_output      :boolean          default(TRUE)
+#  parent_id              :integer
+#  rank_id                :integer
+#  scientific_name        :string(255)
+#  author_year            :string(255)
+#  name_status            :string(255)
+#
+
 # Represents an output of a nomenclature change.
 # Outputs may be new taxon concepts, created as a result of the nomenclature
 # change.
