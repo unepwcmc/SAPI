@@ -14,14 +14,14 @@
   <ol>
   <%= f.fields_for :outputs do |ff| %>
     <li>
-    <!-- TODO figure out the restrictions on the auto complete here, none for now -->
     <div class="control-group">
       <label class="control-label">Taxon concept:</label>
       <div class="controls">
         <%= ff.text_field :taxon_concept_id, {
           :class => 'taxon-concept',
           :'data-name' => ff.object.taxon_concept.try(:full_name),
-          :'data-taxonomy-id' => @taxonomy.id
+          :'data-taxonomy-id' => @taxonomy.id,
+          :'data-name-status-filter' => ['A', 'N', 'S', 'T'].to_json
         } %>
         <%= ff.link_to_remove 'Remove output' %>
       </div>
