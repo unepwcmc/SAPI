@@ -19,8 +19,16 @@ class NomenclatureChange::ReassignmentProcessor
         target.output.taxon_concept_id != @input.taxon_concept.id
     end.each do |target|
       if reassignment.reassignable_id.blank?
-        @input.reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
-          process_transfer_to_target(target, reassignable)
+        if reassignment.reassignable_type == 'Trade::Shipment'
+          new_taxon_concept = target.output.taxon_concept || target.output.new_taxon_concept
+          Trade::Shipment.update_all(
+            {taxon_concept_id: new_taxon_concept.id},
+            {taxon_concept_id: reassignment.input.taxon_concept_id}
+          )
+        else
+          @input.reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
+            process_transfer_to_target(target, reassignable)
+          end
         end
       else
         process_transfer_to_target(target, reassignment.reassignable)
@@ -34,13 +42,10 @@ class NomenclatureChange::ReassignmentProcessor
     new_taxon_concept = target.output.taxon_concept || target.output.new_taxon_concept
     Rails.logger.debug("Processing #{reassignable.class} #{reassignable.id} transfer to #{new_taxon_concept.full_name}")
 
-    if target.reassignment.kind_of? NomenclatureChange::ParentReassignment
+    if target.reassignment.kind_of?(NomenclatureChange::ParentReassignment) ||
+      reassignable.kind_of?(Trade::Shipment)
       reassignable.parent_id = new_taxon_concept.id
       reassignable.save
-    elsif reassignable.kind_of? Trade::Shipment
-      reassignable.taxon_concept_id = new_taxon_concept.id
-      reassignable.save
-      # TODO reported taxon concept id
     else
       transferred_object = reassignable.duplicates({
         taxon_concept_id: new_taxon_concept.id
