@@ -56,7 +56,9 @@ describe NomenclatureChange::Lump do
               0 => {:taxon_concept_id => create_cites_eu_subspecies.id},
               1 => {:taxon_concept_id => create_cites_eu_subspecies.id}
             },
-            :output_attributes => {:taxon_concept_id => create_cites_eu_species.id}
+            :output_attributes => {
+              :taxon_concept_id => create_cites_eu_species.id
+            }
           )
         }
         specify { expect(lump).to have(1).errors_on(:output) }
