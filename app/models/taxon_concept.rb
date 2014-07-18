@@ -2,30 +2,30 @@
 #
 # Table name: taxon_concepts
 #
-#  id                    :integer          not null, primary key
-#  taxonomy_id           :integer          default(1), not null
-#  parent_id             :integer
-#  rank_id               :integer          not null
-#  taxon_name_id         :integer          not null
-#  author_year           :string(255)
-#  legacy_id             :integer
-#  legacy_type           :string(255)
-#  data                  :hstore
-#  listing               :hstore
-#  notes                 :text
-#  taxonomic_position    :string(255)      default("0"), not null
-#  full_name             :string(255)
-#  name_status           :string(255)      default("A"), not null
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  touched_at            :datetime
-#  legacy_trade_code     :string(255)
-#  updated_by_id         :integer
-#  created_by_id         :integer
-#  dependents_updated_at :datetime
-#  nomenclature_note_en  :text
-#  nomenclature_note_es  :text
-#  nomenclature_note_fr  :text
+#  id                         :integer          not null, primary key
+#  taxonomy_id                :integer          default(1), not null
+#  parent_id                  :integer
+#  rank_id                    :integer          not null
+#  taxon_name_id              :integer          not null
+#  author_year                :string(255)
+#  legacy_id                  :integer
+#  legacy_type                :string(255)
+#  data                       :hstore
+#  listing                    :hstore
+#  notes                      :text
+#  taxonomic_position         :string(255)      default("0"), not null
+#  full_name                  :string(255)
+#  name_status                :string(255)      default("A"), not null
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  touched_at                 :datetime
+#  legacy_trade_code          :string(255)
+#  updated_by_id              :integer
+#  created_by_id              :integer
+#  dependents_updated_at      :datetime
+#  nomenclature_note_en       :text
+#  nomenclature_note_es       :text
+#  nomenclature_note_fr       :text
 #
 
 class TaxonConcept < ActiveRecord::Base
@@ -37,7 +37,7 @@ class TaxonConcept < ActiveRecord::Base
     :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
     :tag_list, :legacy_trade_code,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-    :created_by_id, :updated_by_id, :dependents_updated_at, :distributions
+    :created_by_id, :updated_by_id, :dependents_updated_at
 
   attr_writer :parent_scientific_name
   attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
