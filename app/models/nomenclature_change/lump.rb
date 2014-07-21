@@ -38,8 +38,23 @@ class NomenclatureChange::Lump < NomenclatureChange
   validate :required_ranks, if: Proc.new{ |nc|
     nc.output && nc.outputs_or_submitting?
   }
-  before_validation :set_output_name_status, if: :outputs_or_submitting?
-  before_validation :set_output_rank_id, if: :outputs_or_submitting?
+  before_validation :set_output_name_status, if: Proc.new{ |nc|
+    !nc.inputs.empty? && nc.output && nc.outputs_or_submitting?
+  }
+  before_validation :set_output_rank_id, if: Proc.new{ |nc|
+    !nc.inputs.empty? && nc.output && nc.outputs_or_submitting?
+  }
+  before_save :build_auto_reassignments, if: :notes?
+
+  def build_auto_reassignments
+    unless inputs.empty?
+      builder = NomenclatureChange::Lump::Constructor.new(self)
+      builder.build_legislation_reassignments
+      builder.build_common_names_reassignments
+      builder.build_references_reassignments
+    end
+    true
+  end
 
   def required_inputs
     if inputs.size < 2
@@ -74,11 +89,19 @@ class NomenclatureChange::Lump < NomenclatureChange
   end
 
   def set_output_name_status
-    output && output.new_name_status = 'A'
+    if output.new_name_status.blank? && (
+      output.new_scientific_name.present? ||
+      output.taxon_concept && output.taxon_concept.name_status != 'A'
+      )
+      output.new_name_status = 'A'
+    end
   end
 
   def set_output_rank_id
-    if output && output.new_scientific_name.present?
+    if output.new_rank_id.blank? && (
+      output.new_scientific_name.present? ||
+      output.taxon_concept && output.taxon_concept.rank_id != new_output_rank.id
+      )
       output.new_rank_id = new_output_rank.id
     end
   end
