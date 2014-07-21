@@ -62,21 +62,20 @@ describe NomenclatureChange::Lump do
       end
     end
     context "when output has different rank than inputs" do
-      context "output rank different from inputs" do
-        let(:lump){
-          build(:nomenclature_change_lump,
-            :status => NomenclatureChange::Lump::OUTPUTS,
-            :inputs_attributes => {
-              0 => {:taxon_concept_id => create_cites_eu_subspecies.id},
-              1 => {:taxon_concept_id => create_cites_eu_subspecies.id}
-            },
-            :output_attributes => {
-              :taxon_concept_id => create_cites_eu_species.id
-            }
-          )
-        }
-        specify { expect(lump).to have(1).errors_on(:output) }
-      end
+      let(:lump){
+        build(:nomenclature_change_lump,
+          :status => NomenclatureChange::Lump::OUTPUTS,
+          :inputs_attributes => {
+            0 => {:taxon_concept_id => create_cites_eu_subspecies.id},
+            1 => {:taxon_concept_id => create_cites_eu_subspecies.id}
+          },
+          :output_attributes => {
+            :taxon_concept_id => create_cites_eu_species.id,
+            :new_rank_id => species_rank.id
+          }
+        )
+      }
+      specify { expect(lump).to have(1).errors_on(:output) }
     end
   end
 end
