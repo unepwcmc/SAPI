@@ -13,8 +13,12 @@ class NomenclatureChange::Split::Processor
     chain = []
     input_is_one_of_outputs = @outputs.reject{ |o| o.will_create_taxon? }.
       map(&:taxon_concept_id).include?(@input.taxon_concept_id)
+
+    chain << NomenclatureChange::InputTaxonConceptProcessor.new(@input)
     @outputs.each_with_index do |output, idx|
-      chain << NomenclatureChange::TaxonConceptUpdateProcessor.new(output)
+      if @input.taxon_concept_id != output.taxon_concept_id
+        chain << NomenclatureChange::OutputTaxonConceptProcessor.new(output)
+      end
       if output.will_create_taxon?
         if ['A', 'N'].include?(output.name_status)
           chain << NomenclatureChange::StatusDowngradeProcessor.new(output)

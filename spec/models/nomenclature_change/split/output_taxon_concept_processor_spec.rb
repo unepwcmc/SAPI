@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe NomenclatureChange::TaxonConceptUpdateProcessor do
+describe NomenclatureChange::OutputTaxonConceptProcessor do
   include_context 'split_definitions'
 
   before(:each){ synonym_relationship_type }
   describe :run do
     let(:processor){
-      NomenclatureChange::TaxonConceptUpdateProcessor.new(output)
+      NomenclatureChange::OutputTaxonConceptProcessor.new(output)
     }
     before(:each) do
       processor.run
