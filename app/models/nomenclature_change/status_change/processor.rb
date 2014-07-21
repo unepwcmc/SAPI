@@ -21,9 +21,9 @@ class NomenclatureChange::StatusChange::Processor
     elsif @nc.needs_to_receive_associations?
       @primary_output
     end
-    chain << NomenclatureChange::TaxonConceptUpdateProcessor.new(@primary_output)
+    chain << NomenclatureChange::OutputTaxonConceptProcessor.new(@primary_output)
     if @swap
-      chain << NomenclatureChange::TaxonConceptUpdateProcessor.new(@secondary_output)
+      chain << NomenclatureChange::OutputTaxonConceptProcessor.new(@secondary_output)
     end
 
     if @input && output
