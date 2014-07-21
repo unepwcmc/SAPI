@@ -8,4 +8,5 @@
   <%= f.text_field :effective_at, :class => "datepicker",
     :value => @cites_cop.effective_at_formatted
   %>
+  <label>Is current <%= f.check_box :is_current %></label>
 <% end %>

@@ -1,3 +1,11 @@
+### 0.7.9 (2014-07-18)
+** Species+ Admin tool**
+* adding new translation columns to ranks & change types
+* adding functionality in the S+ admin panel to manage ranks & change types translations
+* adding functionality in the S+ admin panel to set is_current on CitesCop events
+* adding import scripts to populate translations of: ranks, change_types, Cites regions, hash annotations
+* adding import script to populate CoP start dates 
+
 ### 0.7.8 (2014-07-17)
 Upgrade to ruby 2.0
 

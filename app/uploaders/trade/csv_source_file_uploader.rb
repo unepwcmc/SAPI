@@ -36,17 +36,34 @@ class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
   #   # do something
   # end
 
+  process :convert_to_utf8
   process :remove_blank_lines
 
   def remove_blank_lines
     cache_stored_file! if !cached?
     directory = File.dirname( current_path )
     tmp_path = File.join( directory, "tmpfile" )
-    if system("cat #{current_path} | sed 's/\r//g' | grep -v -P '^(\"?\s*\"?,)*$' > #{tmp_path}")
+    if system("cat #{current_path} | sed 's/\r//g' | grep -v -E '^(\"?[[:blank:]]*\"?,)*$' > #{tmp_path}")
       FileUtils.mv(tmp_path, current_path)
     else
       Rails.logger.error("#{$!}")
     end
+  end
+
+  def convert_to_utf8
+    content = File.read(current_path)
+    begin
+      # Try it as UTF-8 directly
+      cleaned = content.dup.force_encoding('UTF-8')
+      unless cleaned.valid_encoding?
+        cleaned = content.encode( 'UTF-8', 'iso-8859-1' )
+      end
+      content = cleaned
+    rescue EncodingError
+      # Force it to UTF-8, throwing out invalid bits
+      content.encode!( 'UTF-8', invalid: :replace, undef: :replace )
+    end
+    File.open(current_path, 'w') { |file| file.write(content) }
   end
 
   # Create different versions of your uploaded files:

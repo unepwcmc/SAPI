@@ -57,4 +57,27 @@ namespace :import do
     ActiveRecord::Base.connection.execute(sql)
   end
 
+  task :cites_cops_start_dates => [:environment] do
+    TMP_TABLE = "cites_cops_start_dates_import"
+    file = "lib/files/cites_cops_start_dates.csv"
+    drop_table(TMP_TABLE)
+    create_table_from_csv_headers(file, TMP_TABLE)
+    copy_data(file, TMP_TABLE)
+
+    sql = <<-SQL
+      WITH cites_cops AS (
+        SELECT events.id, e.start_date FROM
+        #{TMP_TABLE} e
+        JOIN events
+        ON events.type = 'CitesCop'
+        AND UPPER(SQUISH(events.name)) = UPPER(SQUISH(e.name))
+      )
+      UPDATE events
+      SET effective_at = e.start_date
+      FROM cites_cops e
+      WHERE e.id = events.id;
+    SQL
+    ActiveRecord::Base.connection.execute(sql)
+  end
+
 end
