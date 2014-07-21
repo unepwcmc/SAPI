@@ -72,7 +72,7 @@ end
 namespace :assets do
   desc "Precompile assets locally and then rsync to app servers"
     task :precompile, :only => { :primary => true } do
-    run_locally "bundle exec rake RAILS_ENV=staging assets:precompile;"
+    run_locally "bundle exec rake RAILS_ENV=#{rails_env} assets:precompile;"
     servers = find_servers :roles => [:app], :except => { :no_release => true }
     servers.each do |server|
     run_locally "rsync -av ./public/assets/ rails@#{domain}:#{deploy_to}/shared/assets;"
