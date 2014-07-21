@@ -36,8 +36,8 @@ class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
   #   # do something
   # end
 
-  process :remove_blank_lines
   process :convert_to_utf8
+  process :remove_blank_lines
 
   def remove_blank_lines
     cache_stored_file! if !cached?
