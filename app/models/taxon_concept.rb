@@ -177,6 +177,8 @@ class TaxonConcept < ActiveRecord::Base
     :if => lambda { |tc| tc.is_trade_name? && tc.accepted_scientific_name }
   before_validation :ensure_taxonomic_position
 
+  translates :nomenclature_note
+
   scope :at_parent_ranks, lambda{ |rank|
     joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
