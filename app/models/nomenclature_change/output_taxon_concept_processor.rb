@@ -1,13 +1,14 @@
-class NomenclatureChange::TaxonConceptUpdateProcessor
+class NomenclatureChange::OutputTaxonConceptProcessor
 
   def initialize(output)
     @output = output
   end
 
   def run
-    return false unless @output.tmp_taxon_concept
-    Rails.logger.debug("Processing output #{@output.tmp_taxon_concept.full_name}")
-    tc = @output.tmp_taxon_concept
+    tc = @output.tmp_taxon_concept || @output.taxon_concept
+    tc.nomenclature_note_en = "#{tc.nomenclature_note_en} #{@output.note}"
+    tc.internal_nomenclature_note = "#{tc.internal_nomenclature_note} #{@output.internal_note}"
+    Rails.logger.debug("Processing output #{tc.full_name}")
     new_record = tc.new_record?
     unless tc.save
       Rails.logger.warn "FAILED to save taxon #{tc.errors.inspect}"
@@ -45,6 +46,7 @@ class NomenclatureChange::TaxonConceptUpdateProcessor
         res << "#{@output.taxon_concept.full_name} author year changed from #{@output.taxon_concept.author_year} to #{@output.new_author_year}"
       end
     end
+    res << ["Will add nomenclature note for output #{full_name}"]
     res
   end
 

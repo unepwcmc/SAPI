@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe NomenclatureChange::TaxonConceptUpdateProcessor do
+describe NomenclatureChange::OutputTaxonConceptProcessor do
   include_context 'lump_definitions'
 
   describe :run do
     let(:processor){
-      NomenclatureChange::TaxonConceptUpdateProcessor.new(output)
+      NomenclatureChange::OutputTaxonConceptProcessor.new(output)
     }
     before(:each) do
       processor.run
