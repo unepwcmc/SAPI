@@ -1,9 +1,5 @@
 <div class="admin-header">
-  <h1>Ahoy Visits</h1>
-</div>
-
-<% @ahoy_visits.each do |ahoy_visit| %>
-  <%= ahoy_visit.id %>
-<% end %>
-
-<%= paginate collection %>
+  <h1>Ahoy Visits </h1>
+ </div>
+<%= admin_table %>
+<%= paginate @ahoy_visits %>
