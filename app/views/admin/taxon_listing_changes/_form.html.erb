@@ -216,6 +216,16 @@
         </p>
       <% end %>
   <% end %>
+  <div>
+    <% ListingChange.locale_columns(:nomenclature_note).each do |column| %>
+      <%= f.label column %>
+      <%= f.text_area column, :class => :annotation %>
+    <% end %>
+    <% ListingChange.locale_columns(:internal_nomenclature_note).each do |column| %>
+      <%= f.label column %>
+      <%= f.text_area column, :class => :annotation %>
+    <% end %>
+    </div>
 
   <p class="pull-right">
     <%= link_to 'Cancel', admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation),
