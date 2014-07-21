@@ -36,6 +36,17 @@ class NomenclatureChange::Split < NomenclatureChange
   validate :required_ranks, if: :outputs_or_submitting?
   before_validation :set_outputs_name_status, if: :outputs_or_submitting?
   before_validation :set_outputs_rank_id, if: :outputs_or_submitting?
+  before_save :build_auto_reassignments, if: :notes?
+
+  def build_auto_reassignments
+    if input
+      builder = NomenclatureChange::Split::Constructor.new(self)
+      builder.build_legislation_reassignments
+      builder.build_common_names_reassignments
+      builder.build_references_reassignments
+    end
+    true
+  end
 
   def required_inputs
     if input.blank?
@@ -63,15 +74,21 @@ class NomenclatureChange::Split < NomenclatureChange
 
   def set_outputs_name_status
     outputs.each do |output|
-      if output.new_scientific_name.present?
-        output.new_rank_id = 'A'
+      if output.new_name_status.blank? && (
+        output.new_scientific_name.present? ||
+        output.taxon_concept && output.taxon_concept.name_status != 'A'
+        )
+        output.new_name_status = 'A'
       end
     end
   end
 
   def set_outputs_rank_id
     outputs.each do |output|
-      if output.new_scientific_name.present?
+      if output.new_rank_id.blank? && (
+        output.new_scientific_name.present? ||
+        output.taxon_concept && output.taxon_concept.rank_id != new_output_rank.id
+        )
         output.new_rank_id = new_output_rank.id
       end
     end

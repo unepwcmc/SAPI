@@ -22,8 +22,6 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       set_taxonomy
       builder.build_outputs
     when :notes
-      builder.build_common_names_reassignments
-      builder.build_references_reassignments
       builder.build_input_and_output_notes
     when :children
       builder.build_parent_reassignments
@@ -52,7 +50,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
     )
     success = @nomenclature_change.valid?
     case step
-    when :inputs
+    when :inputs, :outputs
       unless success
         set_events
         set_taxonomy

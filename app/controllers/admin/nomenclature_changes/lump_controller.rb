@@ -22,8 +22,6 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
       set_taxonomy
       builder.build_output
     when :notes
-      builder.build_common_names_reassignments
-      builder.build_references_reassignments
       builder.build_input_and_output_notes
       builder.build_parent_reassignments
       builder.build_name_reassignments
@@ -46,7 +44,7 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
     )
     success = @nomenclature_change.valid?
     case step
-    when :inputs
+    when :inputs, :outputs
       unless success
         set_events
         set_taxonomy
