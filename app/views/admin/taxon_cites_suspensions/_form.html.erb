@@ -15,4 +15,18 @@
 
   <%= render :partial => 'admin/cites_suspensions/form_shared', :locals => {:f => f} %>
 
+  <div class="control-group">
+    <label class="control-label">Nomenclature note</label>
+    <div class="controls">
+      <%= f.text_area :nomenclature_note, :class => 'cites_suspension', :value => @cites_suspension.nomenclature_note %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Internal nomenclature note</label>
+    <div class="controls">
+      <%= f.text_area :internal_nomenclature_note, :class => 'cites_suspension', :value => @cites_suspension.internal_nomenclature_note %>
+    </div>
+  </div>
+
 <% end %>
