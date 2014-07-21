@@ -11,7 +11,7 @@ class NomenclatureChange::Lump::Processor
   # A subprocessor needs to respond to #run
   def prepare_chain
     chain = []
-    chain << NomenclatureChange::TaxonConceptUpdateProcessor.new(@output)
+    chain << NomenclatureChange::OutputTaxonConceptProcessor.new(@output)
     if @output.will_create_taxon? && ['A', 'N'].include?(@output.name_status)
       chain << NomenclatureChange::StatusDowngradeProcessor.new(@output)
     end
@@ -19,6 +19,7 @@ class NomenclatureChange::Lump::Processor
       unless input.taxon_concept_id == @output.taxon_concept_id && !@output.will_create_taxon?
         chain << NomenclatureChange::ReassignmentProcessor.new(input, @output)
         chain << NomenclatureChange::StatusDowngradeProcessor.new(input, [@output])
+        chain << NomenclatureChange::InputTaxonConceptProcessor.new(input)
       end
     end
     chain
