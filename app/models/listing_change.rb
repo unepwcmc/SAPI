@@ -24,9 +24,7 @@
 #  nomenclature_note_en          :text
 #  nomenclature_note_es          :text
 #  nomenclature_note_fr          :text
-#  internal_nomenclature_note_en :text
-#  internal_nomenclature_note_es :text
-#  internal_nomenclature_note_fr :text
+#  internal_nomenclature_note    :text
 #
 
 class ListingChange < ActiveRecord::Base
@@ -36,9 +34,8 @@ class ListingChange < ActiveRecord::Base
     :party_listing_distribution_attributes, :inclusion_taxon_concept_id,
     :annotation_attributes, :hash_annotation_id, :event_id, 
     :excluded_geo_entities_ids, :excluded_taxon_concepts_ids, :internal_notes,
-    :nomenclature_note_en, :internal_nomenclature_note_en,
-    :nomenclature_note_es, :internal_nomenclature_note_es,
-    :nomenclature_note_fr, :internal_nomenclature_note_fr,
+    :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+    :internal_nomenclature_note
     :created_by_id, :updated_by_id
 
   attr_accessor :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
@@ -71,7 +68,7 @@ class ListingChange < ActiveRecord::Base
 
   accepts_nested_attributes_for :annotation
 
-  translates :nomenclature_note, :internal_nomenclature_note
+  translates :nomenclature_note
 
   scope :by_designation, lambda { |designation_id|
     joins(:change_type).where(:"change_types.designation_id" => designation_id)
