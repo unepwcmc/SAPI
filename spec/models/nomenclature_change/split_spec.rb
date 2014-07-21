@@ -53,38 +53,23 @@ describe NomenclatureChange::Split do
       end
     end
     context "when output has different rank than input" do
-      context "new rank not specified" do
-        let(:split){
-          build(:nomenclature_change_split,
-            :status => NomenclatureChange::Split::OUTPUTS,
-            :input_attributes => {:taxon_concept_id => create_cites_eu_species.id},
-            :outputs_attributes => {
-              0 => {:taxon_concept_id => create_cites_eu_subspecies.id},
-              1 => {:taxon_concept_id => create_cites_eu_subspecies.id}
+      let(:split){
+        build(:nomenclature_change_split,
+          :status => NomenclatureChange::Split::OUTPUTS,
+          :input_attributes => {:taxon_concept_id => create_cites_eu_species.id},
+          :outputs_attributes => {
+            0 => {
+              :taxon_concept_id => create_cites_eu_subspecies.id,
+              :new_rank_id => subspecies_rank.id
+            },
+            1 => {
+              :taxon_concept_id => create_cites_eu_subspecies.id,
+              :new_rank_id => subspecies_rank.id
             }
-          )
-        }
-        specify { expect(split).to have(1).errors_on(:outputs) }
-      end
-      context "incorrect new rank specified" do
-        let(:split){
-          build(:nomenclature_change_split,
-            :status => NomenclatureChange::Split::OUTPUTS,
-            :input_attributes => {:taxon_concept_id => create_cites_eu_species.id},
-            :outputs_attributes => {
-              0 => {
-                :taxon_concept_id => create_cites_eu_subspecies.id,
-                :new_rank_id => subspecies_rank.id
-              },
-              1 => {
-                :taxon_concept_id => create_cites_eu_subspecies.id,
-                :new_rank_id => subspecies_rank.id
-              }
-            }
-          )
-        }
-        specify { expect(split).to have(1).errors_on(:outputs) }
-      end
+          }
+        )
+      }
+      specify { expect(split).to have(1).errors_on(:outputs) }
     end
   end
 end
