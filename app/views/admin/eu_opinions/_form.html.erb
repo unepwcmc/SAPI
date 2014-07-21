@@ -73,6 +73,20 @@
   </div>
 
   <div class="control-group">
+    <label class="control-label">Nomenclature note</label>
+    <div class="controls">
+      <%= f.text_area :nomenclature_note, :class => 'eu_opinion', :value => @eu_opinion.nomenclature_note %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Internal nomenclature note</label>
+    <div class="controls">
+      <%= f.text_area :internal_nomenclature_note, :class => 'eu_opinion', :value => @eu_opinion.internal_nomenclature_note %>
+    </div>
+  </div>
+
+  <div class="control-group">
     <%= f.label :term_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.select :term_id,
