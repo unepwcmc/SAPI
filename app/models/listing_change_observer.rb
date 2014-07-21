@@ -1,6 +1,22 @@
 class ListingChangeObserver < ActiveRecord::Observer
 
   def before_save(listing_change)
+
+    #check if annotation should be deleted
+    if listing_change.annotation &&
+       listing_change.annotation.short_note_en.blank? &&
+       listing_change.annotation.short_note_fr.blank? &&
+       listing_change.annotation.short_note_es.blank? &&
+       listing_change.annotation.full_note_en.blank? &&
+       listing_change.annotation.full_note_fr.blank? &&
+       listing_change.annotation.full_note_es.blank?
+      ann = listing_change.annotation
+      listing_change.annotation = nil
+      if ann.reload.listing_changes.size == 0
+        ann.delete
+      end
+    end
+
     original_change_type = ChangeType.find(listing_change.change_type_id)
     return listing_change if original_change_type.name == ChangeType::EXCEPTION
     return listing_change if listing_change.excluded_geo_entities_ids.nil? &&
@@ -36,21 +52,6 @@ class ListingChangeObserver < ActiveRecord::Observer
     end
 
     listing_change.exclusions = new_exclusions
-
-    #check if annotation should be deleted
-    if listing_change.annotation &&
-       listing_change.annotation.short_note_en.blank? &&
-       listing_change.annotation.short_note_fr.blank? &&
-       listing_change.annotation.short_note_es.blank? &&
-       listing_change.annotation.full_note_en.blank? &&
-       listing_change.annotation.full_note_fr.blank? &&
-       listing_change.annotation.full_note_es.blank?
-      ann = listing_change.annotation
-      listing_change.annotation = nil
-      if ann.reload.listing_changes.size == 0
-        ann.delete
-      end
-    end
   end
 
 end
