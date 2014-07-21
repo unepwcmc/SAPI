@@ -7,12 +7,10 @@
 <ul>
   <li>output is a new taxon concept</li>
   <li>output is a new name of an existing taxon concept</li>
-  <li>output is an existing taxon concept but needs a status upgrade</li>
 </ul>
 
 <%= nomenclature_change_form do |f| %>
   <%= f.fields_for :output do |ff| %>
-    <!-- TODO figure out the restrictions on the auto complete here, none for now -->
     <div class="control-group">
       <label class="control-label">Taxon concept:</label>
       <div class="controls">
@@ -20,7 +18,8 @@
           :class => 'taxon-concept',
           :'data-name' => ff.object.taxon_concept.try(:full_name),
           :'data-name-status' => ff.object.taxon_concept.try(:name_status),
-          :'data-taxonomy-id' => @taxonomy.id
+          :'data-taxonomy-id' => @taxonomy.id,
+          :'data-name-status-filter' => ['A', 'N', 'S', 'T'].to_json
         } %>
       </div>
     </div>
