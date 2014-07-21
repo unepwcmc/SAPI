@@ -2,28 +2,31 @@
 #
 # Table name: listing_changes
 #
-#  id                         :integer          not null, primary key
-#  taxon_concept_id           :integer          not null
-#  species_listing_id         :integer
-#  change_type_id             :integer          not null
-#  annotation_id              :integer
-#  hash_annotation_id         :integer
-#  effective_at               :datetime         default(2012-09-21 07:32:20 UTC), not null
-#  is_current                 :boolean          default(FALSE), not null
-#  parent_id                  :integer
-#  inclusion_taxon_concept_id :integer
-#  event_id                   :integer
-#  original_id                :integer
-#  explicit_change            :boolean          default(TRUE)
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  import_row_id              :integer
-#  created_by_id              :integer
-#  updated_by_id              :integer
-#  internal_notes             :text
-#  nomenclature_note_en       :text
-#  nomenclature_note_es       :text
-#  nomenclature_note_fr       :text
+#  id                            :integer          not null, primary key
+#  taxon_concept_id              :integer          not null
+#  species_listing_id            :integer
+#  change_type_id                :integer          not null
+#  annotation_id                 :integer
+#  hash_annotation_id            :integer
+#  effective_at                  :datetime         default(2012-09-21 07:32:20 UTC), not null
+#  is_current                    :boolean          default(FALSE), not null
+#  parent_id                     :integer
+#  inclusion_taxon_concept_id    :integer
+#  event_id                      :integer
+#  original_id                   :integer
+#  explicit_change               :boolean          default(TRUE)
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#  import_row_id                 :integer
+#  created_by_id                 :integer
+#  updated_by_id                 :integer
+#  internal_notes                :text
+#  nomenclature_note_en          :text
+#  nomenclature_note_es          :text
+#  nomenclature_note_fr          :text
+#  internal_nomenclature_note_en :text
+#  internal_nomenclature_note_es :text
+#  internal_nomenclature_note_fr :text
 #
 
 class ListingChange < ActiveRecord::Base
@@ -31,10 +34,11 @@ class ListingChange < ActiveRecord::Base
   attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
     :effective_at, :is_current, :parent_id, :geo_entity_ids,
     :party_listing_distribution_attributes, :inclusion_taxon_concept_id,
-    :annotation_attributes, :hash_annotation_id,
-    :event_id, :excluded_geo_entities_ids, :excluded_taxon_concepts_ids,
-    :internal_notes,
-    :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+    :annotation_attributes, :hash_annotation_id, :event_id, 
+    :excluded_geo_entities_ids, :excluded_taxon_concepts_ids, :internal_notes,
+    :nomenclature_note_en, :internal_nomenclature_note_en,
+    :nomenclature_note_es, :internal_nomenclature_note_es,
+    :nomenclature_note_fr, :internal_nomenclature_note_fr,
     :created_by_id, :updated_by_id
 
   attr_accessor :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
@@ -66,6 +70,8 @@ class ListingChange < ActiveRecord::Base
     :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
 
   accepts_nested_attributes_for :annotation
+
+  translates :nomenclature_note, :internal_nomenclature_note
 
   scope :by_designation, lambda { |designation_id|
     joins(:change_type).where(:"change_types.designation_id" => designation_id)
