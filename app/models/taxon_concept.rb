@@ -27,9 +27,7 @@
 #  nomenclature_note_en          :text
 #  nomenclature_note_es          :text
 #  nomenclature_note_fr          :text
-#  internal_nomenclature_note_en :text
-#  internal_nomenclature_note_es :text
-#  internal_nomenclature_note_fr :text
+#  internal_nomenclature_note    :text
 #
 
 class TaxonConcept < ActiveRecord::Base
@@ -39,7 +37,8 @@ class TaxonConcept < ActiveRecord::Base
     :legacy_id, :legacy_type, :full_name, :name_status,
     :accepted_scientific_name, :parent_scientific_name,
     :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
-    :tag_list, :legacy_trade_code, :internal_notes,
+    :tag_list, :legacy_trade_code,
+    :internal_notes, :internal_nomenclature_note,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
     :created_by_id, :updated_by_id, :dependents_updated_at
 
@@ -173,6 +172,8 @@ class TaxonConcept < ActiveRecord::Base
   before_validation :check_accepted_taxon_concept_for_trade_name_exists,
     :if => lambda { |tc| tc.is_trade_name? && tc.accepted_scientific_name }
   before_validation :ensure_taxonomic_position
+
+  translates :nomenclature_note
 
   scope :at_parent_ranks, lambda{ |rank|
     joins_sql = <<-SQL
