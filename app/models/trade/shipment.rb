@@ -81,19 +81,23 @@ class Trade::Shipment < ActiveRecord::Base
     end
   end
 
-  def reporter_type
-    return nil if reported_by_exporter.nil?
-    reported_by_exporter ? 'E' : 'I'
-  end
-
-  def reporter_type=(str)
-    self.reported_by_exporter = if str && str.upcase.strip == 'E'
+  def self.reporter_type_to_reported_by_exporter(str)
+    if str && str.upcase.strip == 'E'
       true
     elsif str && str.upcase.strip == 'I'
       false
     else
       nil
     end
+  end
+
+  def reporter_type
+    return nil if reported_by_exporter.nil?
+    reported_by_exporter ? 'E' : 'I'
+  end
+
+  def reporter_type=(str)
+    self.reported_by_exporter = self.class.reporter_type_to_reported_by_exporter(str)
   end
 
   def import_permit_number=(str)

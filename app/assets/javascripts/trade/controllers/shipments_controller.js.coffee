@@ -3,6 +3,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
   content: null
   currentShipment: null
   csvSeparator: "comma_separated"
+  batchUpdateParams: Trade.ShipmentBatchUpdate.create()
 
   init: ->
     transaction = @get('store').transaction()
@@ -169,6 +170,22 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
     'selectedPermits.@each', 'permitBlank'
   )
 
+  selectionSummary: ( ->
+    result = []
+    @get('propertyMapping').forEach( (p) =>
+      if p.type == 'array'
+        if @get(p.name).length > 0
+          result.push p.displayTitle + ': ' + @get(p.name).mapBy(p.displayProperty)
+      else if p.type == 'boolean'
+        if @get(p.name) == true
+          result.push p.displayTitle + ': ' + @get(p.name)
+      else
+        if @get(p.name)
+          result.push p.displayTitle + ': ' + @get(p.name)
+    )
+    result.join(', ')
+  ).property('searchParams')
+
   rawDownloadUrl: (->
     params = @get('searchParams')
     params['report_type'] = 'raw'
@@ -278,6 +295,10 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
       @set('currentShipment', null)
       $('.shipment-form-modal').modal('hide')
 
+    cancelBatch: () ->
+      @set('currentShipment', null)
+      $('.batch-form-modal').modal('hide')
+
     # discards the new shipment (bound to currentShipment)
     deleteShipment: (shipment) ->
       if confirm("This will delete a shipment. Proceed?")
@@ -290,24 +311,55 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
             @resetFilters()
           )
 
-    deleteFiltered: ->
+    deleteBatch: (batchUpdateParams) ->
       if confirm("This will delete all filtered shipments. Are you sure?")
-        $.post '/trade/shipments/destroy_batch', @get('searchParams'), (data) ->
-           'json'
-        .success( =>
-          @set('currentShipment', null)
-          @flashSuccess(message: 'Successfully deleted filtered shipments.')
-          @resetFilters()
+        $.ajax(
+          url: '/trade/shipments/destroy_batch'
+          type: 'POST'
+          data:
+            filters: @get('searchParams')
         )
-        #.error( (xhr, msg, error) =>
-        #  @set('sandboxShipmentsSubmitting', false)
-        #  console.log "bad luck: ", xhr.responseText
-        #)
-
+        .done( (data) =>
+          @flashSuccess(message: 'Successfully deleted shipments.')
+        )
+        .fail( (xhr) =>
+          @flashError(message: 'Error occurred when deleting shipments.')
+          console.log "bad luck: ", xhr.responseText
+        )
+        .always( () =>
+          @set('currentShipment', null)
+          $('.batch-form-modal').modal('hide')
+        )
 
     editShipment: (shipment) ->
       @set('currentShipment', shipment)
       $('.shipment-form-modal').modal('show')
+
+    editBatch: ->
+      @get('batchUpdateParams').reset()
+      @set('currentShipment', @get('batchUpdateParams'))
+      $('.batch-form-modal').modal('show')
+
+    updateBatch: (batchUpdateParams) ->
+      if confirm("This will update all filtered shipments. Are you sure?")
+        $.ajax(
+          url: '/trade/shipments/update_batch'
+          type: 'POST'
+          data:
+            filters: @get('searchParams')
+            updates: batchUpdateParams.export()
+        )
+        .done( (data) =>
+          @flashSuccess(message: 'Successfully updated shipments.')
+        )
+        .fail( (xhr) =>
+          @flashError(message: 'Error occurred when updating shipments.')
+          console.log "bad luck: ", xhr.responseText
+        )
+        .always( () =>
+          @set('currentShipment', null)
+          $('.batch-form-modal').modal('hide')
+        )
 
     search: ->
       @flashClear()

@@ -139,7 +139,10 @@ SAPI::Application.routes.draw do
     end
     resources :validation_rules
     resources :shipments do
-      post :destroy_batch, :on => :collection
+      collection do
+        post :update_batch
+        post :destroy_batch
+      end
     end
     resources :geo_entities, :only => [:index]
     resources :permits, :only => [:index]

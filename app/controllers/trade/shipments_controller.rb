@@ -26,6 +26,12 @@ class Trade::ShipmentsController < TradeController
     end
   end
 
+  def update_batch
+    @search = Trade::Filter.new(search_params)
+    @search.query.update_all(batch_update_params)
+    render :json => nil, :status => :ok
+  end
+
   def destroy
     @shipment = Trade::Shipment.find(params[:id])
     @shipment.destroy
@@ -40,11 +46,12 @@ class Trade::ShipmentsController < TradeController
 
 private
 
-  def shipment_params
-    params.require(:shipment).permit(
+  def shipment_attributes
+    [
       :id,
       :appendix,
       :taxon_concept_id,
+      :reported_taxon_concept_id,
       :term_id,
       :quantity,
       :unit_id,
@@ -52,14 +59,32 @@ private
       :exporter_id,
       :reporter_type,
       :country_of_origin_id,
-      :import_permit_number,
-      :export_permit_number,
-      :origin_permit_number,
       :purpose_id,
       :source_id,
-      :year,
-      :ignore_warnings
+      :year
+    ]
+  end
+
+  def shipment_params
+    params.require(:shipment).permit(
+      shipment_attributes + [
+        :import_permit_number,
+        :export_permit_number,
+        :origin_permit_number,
+        :ignore_warnings
+      ]
     )
+  end
+
+  def batch_update_params
+    res = params.permit(
+      :updates => shipment_attributes
+    ).delete(:updates)
+    reporter_type = res.delete(:reporter_type)
+    unless reporter_type.blank?
+      res[:reported_by_exporter] = Trade::Shipment.reporter_type_to_reported_by_exporter(reporter_type)
+    end
+    res
   end
 
 end

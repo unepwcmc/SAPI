@@ -5,4 +5,4 @@ Trade.ShipmentTableView = Ember.View.extend
   layoutName: 'trade/editable-table/table_row'
 
   didInsertElement: ->
-    $('td > span.t, td i').tooltip()
+    #$('td > span.t, td i').tooltip()
