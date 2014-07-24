@@ -2,11 +2,11 @@ CREATE OR REPLACE FUNCTION rebuild_cites_annotation_symbols_for_node(node_id int
   LANGUAGE plpgsql
   AS $$
     BEGIN
-    UPDATE annotations
-    SET symbol = ordered_annotations.calculated_symbol, parent_symbol = NULL
-    FROM
-    (
-      SELECT ROW_NUMBER() OVER(ORDER BY taxonomic_position) AS calculated_symbol, MAX(annotations.id) AS id
+
+    WITH listing_changes_with_annotations AS (
+      SELECT taxon_concept_id,
+        listing_changes.id AS listing_change_id,
+        annotations.id AS annotation_id
       FROM listing_changes
       INNER JOIN annotations
         ON listing_changes.annotation_id = annotations.id
@@ -14,13 +14,26 @@ CREATE OR REPLACE FUNCTION rebuild_cites_annotation_symbols_for_node(node_id int
         ON listing_changes.change_type_id = change_types.id
       INNER JOIN designations
         ON change_types.designation_id = designations.id AND designations.name = 'CITES'
+      WHERE is_current = TRUE AND display_in_index = TRUE
+      GROUP BY taxon_concept_id, listing_changes.id, annotations.id
+    ), ordered_annotations AS (
+      SELECT ROW_NUMBER() OVER(ORDER BY taxonomic_position) AS calculated_symbol,
+        -- ignore split listings
+        MAX(listing_change_id) AS listing_change_id, MAX(annotation_id) AS annotation_id
+      FROM listing_changes_with_annotations listing_changes
       INNER JOIN taxon_concepts
         ON listing_changes.taxon_concept_id = taxon_concepts.id
-      WHERE is_current = TRUE AND display_in_index = TRUE
       GROUP BY taxon_concept_id, taxonomic_position
-      ORDER BY taxonomic_position
-    ) ordered_annotations
-    WHERE ordered_annotations.id = annotations.id;
+    ), updated_annotations AS (
+      UPDATE annotations
+      SET symbol = ordered_annotations.calculated_symbol, parent_symbol = NULL
+      FROM ordered_annotations
+      WHERE ordered_annotations.annotation_id = annotations.id
+    )
+    UPDATE cites_listing_changes_mview
+    SET ann_symbol = ordered_annotations.calculated_symbol
+    FROM ordered_annotations
+    WHERE ordered_annotations.listing_change_id = cites_listing_changes_mview.id;
 
     --clear all annotation symbols (non-hash ones)
     UPDATE taxon_concepts
