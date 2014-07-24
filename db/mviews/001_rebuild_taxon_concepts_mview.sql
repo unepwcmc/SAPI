@@ -110,6 +110,16 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     subspecies.subspecies_not_listed_ary,
     countries_ids_ary,
     all_distribution_iso_codes_ary,
+    -- BEGIN remove once checklist translation has been deployed
+    all_distribution_ary_en AS all_distribution_ary,
+    native_distribution_ary_en AS native_distribution_ary,
+    introduced_distribution_ary_en AS introduced_distribution_ary,
+    introduced_uncertain_distribution_ary_en AS introduced_uncertain_distribution_ary,
+    reintroduced_distribution_ary_en AS reintroduced_distribution_ary,
+    extinct_distribution_ary_en AS extinct_distribution_ary,
+    extinct_uncertain_distribution_ary_en AS extinct_uncertain_distribution_ary,
+    uncertain_distribution_ary_en AS uncertain_distribution_ary,
+    -- END remove once checklist translation has been deployed
     all_distribution_ary_en,
     native_distribution_ary_en,
     introduced_distribution_ary_en,
