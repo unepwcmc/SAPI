@@ -7,8 +7,10 @@ module MListingChange
       belongs_to :taxon_concept, :class_name => 'MTaxonConcept'
       belongs_to :listing_change, :foreign_key => :id
       belongs_to :event
-      translates :short_note, :full_note, :hash_full_note,
-        :inherited_short_note, :inherited_full_note, :auto_note
+      translates :short_note, fallback: false
+      translates :full_note, fallback: false
+      translates :hash_full_note, :inherited_short_note, :inherited_full_note,
+        :auto_note
     end
   end
 
