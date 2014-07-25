@@ -114,6 +114,48 @@ describe Checklist::Timeline do
     specify{ subject.timeline_intervals[0].end_pos.should == subject.timeline_intervals[1].start_pos }
   end
 
+  context "when reservation withdrawn" do
+    let(:tc){
+      tc = create_cites_eu_species
+      create_cites_I_addition(
+        :taxon_concept => tc,
+        :effective_at => '1975-06-06',
+        :is_current => true
+      )
+      cnt = create(:geo_entity, geo_entity_type: country_geo_entity_type)
+      r1 = create_cites_I_reservation(
+        :taxon_concept => tc,
+        :effective_at => '1975-06-06',
+        :is_current => false
+      )
+      create(
+        :listing_distribution,
+        :geo_entity => cnt,
+        :listing_change => r1,
+        :is_party => true
+      )
+      w = create_cites_I_reservation_withdrawal(
+        :taxon_concept => tc,
+        :effective_at => '1976-06-07',
+        :is_current => false
+      )
+      create(
+        :listing_distribution,
+        :geo_entity => cnt,
+        :listing_change => w,
+        :is_party => true
+      )
+      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+      MTaxonConcept.find(tc.id)
+    }
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
+    let(:subject){ ttc.timelines.first.timelines.first }
+
+    specify{ puts subject.timeline_events.inspect; puts subject.timeline_intervals.inspect; subject.timeline_intervals.count.should == 1 }
+    specify{ subject.timeline_events.count.should == 2 }
+    specify{ subject.timeline_intervals[0].end_pos.should == subject.timeline_events[1].pos }
+  end
+
   context "when reservation withdrawn and then readded" do
     let(:tc){
       tc = create_cites_eu_species
