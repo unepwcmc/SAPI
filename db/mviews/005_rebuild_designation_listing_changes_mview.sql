@@ -68,21 +68,56 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     listing_changes.inclusion_taxon_concept_id,
     NULL::TEXT AS inherited_short_note_en, -- this column is populated later
     NULL::TEXT AS inherited_full_note_en, -- this column is populated later
+    NULL::TEXT AS inherited_short_note_es, -- this column is populated later
+    NULL::TEXT AS inherited_full_note_es, -- this column is populated later
+    NULL::TEXT AS inherited_short_note_fr, -- this column is populated later
+    NULL::TEXT AS inherited_full_note_fr, -- this column is populated later
+    -- BEGIN remove once checklist translation has been deployed
     CASE
     WHEN listing_changes.inclusion_taxon_concept_id IS NOT NULL
-    THEN ancestor_listing_auto_note(
-      inclusion_taxon_concepts.data->''rank_name'',
-      inclusion_taxon_concepts.full_name,
-      change_types.name
+    THEN ancestor_listing_auto_note_en(
+      inclusion_taxon_concepts, listing_changes
     )
     WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
-    THEN ancestor_listing_auto_note(
-      original_taxon_concepts.data->''rank_name'',
-      original_taxon_concepts.full_name,
-      change_types.name
+    THEN ancestor_listing_auto_note_en(
+      original_taxon_concepts, listing_changes
     )
     ELSE NULL
     END AS auto_note,
+    -- END remove once checklist translation has been deployed
+    CASE
+    WHEN listing_changes.inclusion_taxon_concept_id IS NOT NULL
+    THEN ancestor_listing_auto_note_en(
+      inclusion_taxon_concepts, listing_changes
+    )
+    WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
+    THEN ancestor_listing_auto_note_en(
+      original_taxon_concepts, listing_changes
+    )
+    ELSE NULL
+    END AS auto_note_en,
+    CASE
+    WHEN listing_changes.inclusion_taxon_concept_id IS NOT NULL
+    THEN ancestor_listing_auto_note_es(
+      inclusion_taxon_concepts, listing_changes
+    )
+    WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
+    THEN ancestor_listing_auto_note_es(
+      original_taxon_concepts, listing_changes
+    )
+    ELSE NULL
+    END AS auto_note_es,
+    CASE
+    WHEN listing_changes.inclusion_taxon_concept_id IS NOT NULL
+    THEN ancestor_listing_auto_note_fr(
+      inclusion_taxon_concepts, listing_changes
+    )
+    WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
+    THEN ancestor_listing_auto_note_fr(
+      original_taxon_concepts, listing_changes
+    )
+    ELSE NULL
+    END AS auto_note_fr,
     listing_changes.is_current,
     listing_changes.explicit_change,
     --populations.countries_ids_ary,
@@ -282,7 +317,11 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     sql := 'WITH double_inclusions AS (
       SELECT lc.taxon_concept_id, lc.id AS own_inclusion_id, lc_inh.id AS inherited_inclusion_id,
       lc_inh.full_note_en AS inherited_full_note_en,
-      lc_inh.short_note_en AS inherited_short_note_en
+      lc_inh.short_note_en AS inherited_short_note_en,
+      lc_inh.full_note_es AS inherited_full_note_es,
+      lc_inh.short_note_es AS inherited_short_note_es,
+      lc_inh.full_note_fr AS inherited_full_note_fr,
+      lc_inh.short_note_fr AS inherited_short_note_fr
       FROM ' || tmp_lc_table_name || ' lc
       JOIN ' || tmp_lc_table_name || ' lc_inh
       ON lc.taxon_concept_id = lc_inh.taxon_concept_id
@@ -302,7 +341,11 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     )
     UPDATE ' || tmp_lc_table_name || ' lc
     SET inherited_full_note_en = double_inclusions.inherited_full_note_en,
-    inherited_short_note_en = double_inclusions.inherited_short_note_en
+    inherited_short_note_en = double_inclusions.inherited_short_note_en,
+    inherited_full_note_es = double_inclusions.inherited_full_note_es,
+    inherited_short_note_es = double_inclusions.inherited_short_note_es,
+    inherited_full_note_fr = double_inclusions.inherited_full_note_fr,
+    inherited_short_note_fr = double_inclusions.inherited_short_note_fr
     FROM double_inclusions
     WHERE double_inclusions.taxon_concept_id = lc.taxon_concept_id
     AND double_inclusions.own_inclusion_id = lc.id
