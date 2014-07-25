@@ -2,6 +2,9 @@ class Api::V1::TaxonConceptsController < ApplicationController
 
   #makes params available to the ActiveModel::Serializers
   serialization_scope :view_context
+  after_filter :track_index, :only => :index
+  after_filter :track_show, :only => :show
+
   def index
     @search = Species::Search.new(params)
     @taxon_concepts = @search.cached_results
@@ -29,5 +32,15 @@ class Api::V1::TaxonConceptsController < ApplicationController
     end
     render :json => @taxon_concept,
       :serializer => s
+  end
+
+  protected
+
+  def track_index
+    ahoy.track "Search", request.filtered_parameters
+  end
+
+  def track_show
+    ahoy.track "Taxon Concept", request.filtered_parameters
   end
 end
