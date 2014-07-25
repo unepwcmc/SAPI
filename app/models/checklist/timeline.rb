@@ -66,14 +66,17 @@ class Checklist::Timeline
       timeline.timeline_events.each_with_index do |event, idx|
         interval = if idx < (timeline.timeline_events.size - 1)
           next_event = timeline.timeline_events[idx + 1]
-          if !(event.is_deletion? && next_event.is_addition?)
+          if !(
+            event.is_deletion? && next_event.is_addition? ||
+            event.is_reservation_withdrawal? && next_event.is_reservation?
+            )
             Checklist::TimelineInterval.new(
               :start_pos => event.pos,
               :end_pos => next_event.pos
             )
           end
         else
-          if @current
+          if @current || event.is_reservation? && event.is_current
             Checklist::TimelineInterval.new(
               :start_pos => event.pos,
               :end_pos => 1
