@@ -58,7 +58,7 @@ describe Checklist::Pdf::HistoryAnnotationsKey do
     end
     subject{ Checklist::Pdf::HistoryAnnotationsKey.new }
     specify{
-      subject.hash_annotations_key.should == "\\hashAnnotationsHistoryInfo\n\n\\hashannotationstable{\n\\rowcolor{pale_aqua}\nCoP1 & \\validFrom 01/07/2012\\\\\n\\#1 & Only trunks \\\\\n\n}\n\\hashannotationstable{\n\\rowcolor{pale_aqua}\nCoP2 & \\validFrom 01/07/2013\\\\\n\\#1 & Only bark \\\\\n\n}\n"
+      subject.hash_annotations_key.should == "\\hashAnnotationsHistoryInfo\n\n\\hashannotationstable{\n\\rowcolor{pale_aqua}\nCoP1 & \\validFrom \\hspace{2 pt} 01/07/2012\\\\\n\\#1 & Only trunks \\\\\n\n}\n\\hashannotationstable{\n\\rowcolor{pale_aqua}\nCoP2 & \\validFrom \\hspace{2 pt} 01/07/2013\\\\\n\\#1 & Only bark \\\\\n\n}\n"
     }
   end
 

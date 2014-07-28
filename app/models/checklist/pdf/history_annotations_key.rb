@@ -20,7 +20,7 @@ class Checklist::Pdf::HistoryAnnotationsKey
       end
 
       tex << "\\hashannotationstable{\n\\rowcolor{pale_aqua}\n"
-      tex << "#{LatexToPdf.escape_latex(cop.name)} & \\validFrom #{cop.effective_at_formatted}\\\\\n"
+      tex << "#{LatexToPdf.escape_latex(cop.name)} & \\validFrom \\hspace{2 pt} #{cop.effective_at_formatted}\\\\\n"
       annotations.each do |a|
         tex << "#{LatexToPdf.escape_latex(a.symbol)} & #{LatexToPdf.html2latex(a.full_note)} \\\\\n\n"
       end
