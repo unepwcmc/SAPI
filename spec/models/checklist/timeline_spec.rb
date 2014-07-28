@@ -228,6 +228,8 @@ describe Checklist::Timeline do
       subject.timeline_events.map(&:change_type_name).should ==
         ['ADDITION', 'AMENDMENT']
     }
+    specify{ subject.timeline_intervals.count.should == 2 }
+    specify{ subject.timeline_intervals[1].end_pos.should == 1 }
   end
 
 end

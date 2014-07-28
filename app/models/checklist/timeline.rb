@@ -79,8 +79,8 @@ class Checklist::Timeline
           # the meaning of @current: there is a current listing in this appdx
           # this is to ensure an appdx III deletion does not terminate
           # the timeline if appdx III is still current
-          if (event.is_addition? || event.is_deletion?) && @current ||
-            event.is_reservation? && event.is_current
+          if (event.is_addition? || event.is_amendment? || event.is_deletion?) &&
+            @current || event.is_reservation? && event.is_current
             Checklist::TimelineInterval.new(
               :start_pos => event.pos,
               :end_pos => 1

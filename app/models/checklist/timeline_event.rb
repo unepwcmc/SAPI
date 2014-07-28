@@ -36,6 +36,10 @@ class Checklist::TimelineEvent
     @change_type_name == ChangeType::ADDITION
   end
 
+  def is_amendment?
+    @change_type_name == 'AMENDMENT'
+  end
+
   def is_deletion?
     @change_type_name == ChangeType::DELETION
   end
