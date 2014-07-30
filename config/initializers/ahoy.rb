@@ -1,3 +1,4 @@
+require 'sapi/geoip'
 class Ahoy::Store < Ahoy::Stores::ActiveRecordStore
   def report_exception(e)
     ExceptionNotifier.notify_exception(e) if defined? ExceptionNotifier
@@ -20,6 +21,10 @@ class Ahoy::Store < Ahoy::Stores::ActiveRecordStore
     visit_properties.keys.each do |key|
       visit.send(:"#{key}=", visit_properties[key]) if visit.respond_to?(:"#{key}=")
     end
+    geo_ip_data = Sapi::GeoIP.instance.resolve(request.ip)
+    visit.country = geo_ip_data[:country]
+    visit.city = geo_ip_data[:city]
+    visit.organization = geo_ip_data[:organization]
 
     begin
       visit.save!
