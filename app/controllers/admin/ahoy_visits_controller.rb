@@ -3,6 +3,6 @@ class Admin::AhoyVisitsController < Admin::SimpleCrudController
   respond_to :json
 
   def index
-    @ahoy_visits = Ahoy::Visit.page(params[:page])
+    @ahoy_visits = Ahoy::Visit.order('started_at DESC').page(params[:page])
   end
 end
