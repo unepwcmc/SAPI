@@ -3,6 +3,6 @@ class Admin::AhoyEventsController < Admin::SimpleCrudController
   respond_to :json
 
   def index
-    @ahoy_events = Ahoy::Event.page(params[:page])
+    @ahoy_events = Ahoy::Event.order('time DESC').page(params[:page])
   end
 end
