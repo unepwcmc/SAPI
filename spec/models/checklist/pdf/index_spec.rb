@@ -2,70 +2,56 @@
 require 'spec_helper'
 
 describe Checklist::Pdf::Index do
-  let(:en){ create(:language, :name => 'English', :iso_code1 => 'EN') }
   let(:family_tc){
-    tc = create_cites_eu_family(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Foobaridae')
+    create_cites_eu_family(
+      parent: create_cites_eu_order(parent: cites_eu_plantae),
+      taxon_name: create(:taxon_name, scientific_name: 'Foobaridae')
     )
-    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
-    MTaxonConcept.find(tc.id)
   }
   let(:genus_tc){
-    tc = create_cites_eu_genus(
-      :parent_id => family_tc.id,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus')
+    create_cites_eu_genus(
+      parent:  family_tc,
+      taxon_name:  create(:taxon_name, scientific_name:  'Foobarus')
     )
-    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
-    MTaxonConcept.find(tc.id)
   }
   let(:species_tc){
-    tc = create_cites_eu_species(
-      :parent_id => genus_tc.id,
-      :taxon_name => create(:taxon_name, :scientific_name => 'bizarrus')
-    )
-    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
-    MTaxonConcept.find(tc.id)
-  }
-  let(:family_annotation){
-    create(
-      :annotation,
-      :full_note_en => 'Except <i>Foobarus spp</i><p>some more stuff here</p>',
-      :display_in_index => true
+    create_cites_eu_species(
+      parent:genus_tc,
+      taxon_name:  create(:taxon_name, scientific_name:  'bizarrus')
     )
   }
-  let(:genus_annotation){
-    create(
-      :annotation,
-      :full_note_en => 'Except <i>Foobarus bizarrus</i>',
-      :display_in_index => true
-    )
-  }
-  let(:species_annotation){
-    create(
-      :annotation,
-      :full_note_en => 'Only populations of X, Y, Z',
-      :display_in_index => true
-    )
-  }
-  let!(:listings){
-    create_cites_I_addition(
-      :taxon_concept_id => family_tc.id,
-      :annotation_id => family_annotation.id,
-      :is_current => true
-    )
-    create_cites_II_addition(
-      :taxon_concept_id => genus_tc.id,
-      :annotation_id => genus_annotation.id,
-      :is_current => true
-    )
-    create_cites_III_addition(
-      :taxon_concept_id => species_tc.id,
-      :annotation_id => species_annotation.id,
-      :is_current => true
-    )
-    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
-  }
+
   describe :annotations_key do
+    before(:each) do
+      create_cites_I_addition(
+        taxon_concept:  family_tc,
+        annotation:  create(
+          :annotation,
+          full_note_en:  'Except <i>Foobarus spp</i><p>some more stuff here</p>',
+          display_in_index:  true
+        ),
+        is_current:  true
+      )
+      create_cites_II_addition(
+        taxon_concept:  genus_tc,
+        annotation:  create(
+          :annotation,
+          full_note_en:  'Except <i>Foobarus bizarrus</i>',
+          display_in_index:  true
+        ),
+        is_current:  true
+      )
+      create_cites_III_addition(
+        taxon_concept:  species_tc,
+        annotation:  create(
+          :annotation,
+          full_note_en:  'Only populations of X, Y, Z',
+          display_in_index:  true
+        ),
+        is_current:  true
+      )
+      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    end
     subject{ Checklist::Pdf::Index.new({}) }
     specify{
       LatexToPdf.stub(:html2latex).and_return('x')
