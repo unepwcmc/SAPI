@@ -32,23 +32,6 @@ describe CitesTrade::ExportsController do
             }
         end.should change(Trade::TradeDataDownload, :count).by(1)
       end
-      it "converts LATIN1 geo data to UTF8 before saving" do
-        create(:shipment)
-        latin1_city = "Bogotá".encode('ISO-8859-1', 'UTF-8')
-        Trade::ShipmentsExport.any_instance.stub(:public_file_name).and_return('shipments.csv')
-        Trade::TradeDataDownloadLogger.stub(:city_country_from).and_return([latin1_city, "Colombia"])
-        Trade::TradeDataDownloadLogger.stub(:organization_from).and_return("Telecomunicaciones S.A. Esp")
-
-        get :download, :filters => {
-            :report_type => 'comptab',
-            :exporters_ids => ['40'],
-            :time_range_start => '1975',
-            :time_range_end => '2000'
-          }
-
-        download = Trade::TradeDataDownload.last
-        download.city.should == "Bogotá"
-      end
     end
 
 
