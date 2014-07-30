@@ -9,10 +9,9 @@
   <th width="10%">OS</th>
   <th width="10%">Device type</th>
   <th width="5%">Country</th>
-  <th width="5%">Region</th>
   <th width="5%">City</th>
   <th width="5%">Organisation</th>
-  <th width="5%">Started at</th>
+  <th width="10%">Started at</th>
 </thead>
 <tbody>
   <% @ahoy_visits.each do |ahoy_visit| -%>
@@ -46,9 +45,6 @@
       </td>
       <td>
         <%= ahoy_visit.country %>
-      </td>
-      <td>
-        <%= ahoy_visit.region %>
       </td>
       <td>
         <%= ahoy_visit.city %>
