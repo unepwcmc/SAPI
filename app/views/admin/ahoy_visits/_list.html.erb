@@ -4,7 +4,6 @@
   <th width="5%">IP</th>
   <th width="10%">User agent</th>
   <th width="10%">Landing page</th>
-  <th width="10%">User id</th>
   <th width="10%">Search Keyword</th>
   <th width="10%">Browser</th>
   <th width="10%">OS</th>
@@ -12,9 +11,9 @@
   <th width="5%">Country</th>
   <th width="5%">Region</th>
   <th width="5%">City</th>
- </thead>
+  <th width="10%">Started at</th>
+</thead>
 <tbody>
-
   <% @ahoy_visits.each do |ahoy_visit| -%>
     <tr>
       <td>
@@ -31,9 +30,6 @@
       </td>
       <td>
         <%= ahoy_visit.landing_page %>
-      </td>
-      <td>
-        <%= ahoy_visit.user_id %>
       </td>
       <td>
         <%= ahoy_visit.search_keyword %>
@@ -56,5 +52,8 @@
       <td>
         <%= ahoy_visit.city %>
       </td>
-      <% end %>
+      <td>
+        <%= ahoy_visit.started_at %>
+      </td>
+    <% end %>
 </tbody>
