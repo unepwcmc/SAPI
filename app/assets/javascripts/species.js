@@ -34,4 +34,3 @@
 //= require_tree ./species/routes
 
 var Species = Ember.Application.create({LOG_TRANSITIONS: true});
-ahoy.trackAll();
