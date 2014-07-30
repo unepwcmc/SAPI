@@ -3,8 +3,16 @@ class Sapi::GeoIP
   include Singleton
 
   def initialize
-    @city_db = GEO_IP_CONFIG['city_db'] && ::GeoIP.new(GEO_IP_CONFIG['city_db'])
-    @org_db = GEO_IP_CONFIG['org_db'] && ::GeoIP.new(GEO_IP_CONFIG['org_db'])
+    begin
+      @city_db = GEO_IP_CONFIG['city_db'] && ::GeoIP.new(GEO_IP_CONFIG['city_db'])
+    rescue Errno::ENOENT
+      @city_db = nil
+    end
+    begin
+      @org_db = GEO_IP_CONFIG['org_db'] && ::GeoIP.new(GEO_IP_CONFIG['org_db'])
+    rescue Errno::ENOENT
+      @org_db = nil
+    end
   end
 
   def resolve(ip)
