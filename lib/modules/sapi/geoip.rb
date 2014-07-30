@@ -3,7 +3,7 @@ class Sapi::GeoIP
   include Singleton
 
   def initialize
-    @city_db = ::GeoIP.new(GEO_IP_CONFIG['city_db'])
+    @city_db = GEO_IP_CONFIG['city_db'] && ::GeoIP.new(GEO_IP_CONFIG['city_db'])
     @org_db = GEO_IP_CONFIG['org_db'] && ::GeoIP.new(GEO_IP_CONFIG['org_db'])
   end
 
@@ -19,7 +19,7 @@ class Sapi::GeoIP
   end
 
   def country_and_city(ip)
-    cdb_names = @city_db.city(ip)
+    cdb_names = @city_db && @city_db.city(ip)
     country = cdb_names.try(:country_code2)
     city = cdb_names.try(:city_name)
     {
