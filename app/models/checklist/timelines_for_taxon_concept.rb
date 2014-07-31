@@ -1,7 +1,7 @@
 class Checklist::TimelinesForTaxonConcept
   include ActiveModel::SerializerSupport
   attr_reader :id, :taxon_concept_id, :raw_timelines, :timelines,
-    :timeline_years, :has_descendant_timelines, :has_events
+    :timeline_years, :has_descendant_timelines, :has_events, :has_reservations
 
   def initialize(taxon_concept)
     @taxon_concept_id = taxon_concept.id
@@ -47,6 +47,7 @@ class Checklist::TimelinesForTaxonConcept
     @raw_timelines.values.each do |t|
       t.change_consecutive_additions_to_amendments
       t.add_intervals
+      @has_reservations = true if t.has_nested_timelines
     end
     @timelines = [@raw_timelines['I'], @raw_timelines['II'], @raw_timelines['III']]
   end

@@ -1,6 +1,7 @@
 class Checklist::Timeline
   include ActiveModel::SerializerSupport
-  attr_reader :id, :appendix, :party_id, :timeline_events, :timeline_intervals, :parties, :timelines
+  attr_reader :id, :appendix, :party_id, :timeline_events, :timeline_intervals,
+    :parties, :timelines, :continues_in_present, :has_nested_timelines
   def initialize(options)
     @id = object_id
     @appendix = options[:appendix]
@@ -41,6 +42,7 @@ class Checklist::Timeline
   end
 
   def add_reservation_event(event)
+    @has_nested_timelines = true
     get_party_timeline(event.party_id).timeline_events << event
   end
 
@@ -81,6 +83,7 @@ class Checklist::Timeline
           # the timeline if appdx III is still current
           if (event.is_addition? || event.is_amendment? || event.is_deletion?) &&
             @current || event.is_reservation? && event.is_current
+            @continues_in_present = true
             Checklist::TimelineInterval.new(
               :start_pos => event.pos,
               :end_pos => 1
