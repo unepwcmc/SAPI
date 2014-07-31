@@ -1,3 +1,9 @@
+### 0.7.11 (2014-07-31)
+** Species+
+* user activity tracking
+** Species+ Admin tool
+* pages to view user activity in raw form
+
 ### 0.7.9 (2014-07-18)
 ** Species+ Admin tool**
 * adding new translation columns to ranks & change types
