@@ -1,0 +1,33 @@
+<thead>
+  <th width="12%">ID</th>
+  <th width="15%">Visit ID</th>
+  <th width="15%">User ID</th>
+  <th width="20%">Name</th>
+  <th width="20%">Properties</th>
+  <th width="18%">Time</th>
+</thead>
+<tbody>
+
+  <% @ahoy_events.each do |ahoy_event| -%>
+    <tr>
+      <td>
+        <%= ahoy_event.id %>
+      </td>
+      <td>
+        <%= ahoy_event.visit_id %>
+      </td>
+      <td>
+        <%= ahoy_event.user_id %>
+      </td>
+      <td>
+        <%= ahoy_event.name %>
+      </td>
+      <td>
+        <%= ahoy_event.properties %>
+      </td>
+      <td>
+        <%= ahoy_event.time %>
+      </td>
+      </tr>
+      <% end %>
+</tbody>

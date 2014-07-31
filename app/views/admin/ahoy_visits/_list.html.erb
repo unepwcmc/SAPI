@@ -1,0 +1,59 @@
+<thead>
+  <th width="5%">ID</th>
+  <th width="5%">Visitor ID</th>
+  <th width="5%">IP</th>
+  <th width="10%">User agent</th>
+  <th width="10%">Landing page</th>
+  <th width="10%">Search Keyword</th>
+  <th width="10%">Browser</th>
+  <th width="10%">OS</th>
+  <th width="10%">Device type</th>
+  <th width="5%">Country</th>
+  <th width="5%">City</th>
+  <th width="5%">Organisation</th>
+  <th width="10%">Started at</th>
+</thead>
+<tbody>
+  <% @ahoy_visits.each do |ahoy_visit| -%>
+    <tr>
+      <td>
+        <%= ahoy_visit.id %>
+      </td>
+      <td>
+        <%= ahoy_visit.visitor_id %>
+      </td>
+      <td>
+        <%= ahoy_visit.ip %>
+      </td>
+      <td>
+        <%= ahoy_visit.user_agent %>
+      </td>
+      <td>
+        <%= ahoy_visit.landing_page %>
+      </td>
+      <td>
+        <%= ahoy_visit.search_keyword %>
+      </td>
+      <td>
+        <%= ahoy_visit.browser %>
+      </td>
+      <td>
+        <%= ahoy_visit.os %>
+      </td>
+      <td>
+        <%= ahoy_visit.device_type %>
+      </td>
+      <td>
+        <%= ahoy_visit.country %>
+      </td>
+      <td>
+        <%= ahoy_visit.city %>
+      </td>
+      <td>
+        <%= ahoy_visit.organization %>
+      </td>
+      <td>
+        <%= ahoy_visit.started_at %>
+      </td>
+    <% end %>
+</tbody>

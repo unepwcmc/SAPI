@@ -18,6 +18,7 @@
 //= require handlebars
 //= require ember
 //= require ember-data
+//= require ahoy
 //
 //= require_self
 //
