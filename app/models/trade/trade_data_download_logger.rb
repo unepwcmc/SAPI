@@ -1,3 +1,4 @@
+require 'sapi/geoip'
 module Trade::TradeDataDownloadLogger
 
   module_function
@@ -18,11 +19,10 @@ module Trade::TradeDataDownloadLogger
     data["source"] = self.get_field_values(search_params[:sources_ids], Source)
     data["importer"] = self.get_field_values(search_params[:importers_ids], GeoEntity)
     data["exporter"] = self.get_field_values(search_params[:exporters_ids], GeoEntity)
-    data["city"], data["country"] = self.city_country_from(request.ip).map do |s|
-      s.force_encoding("ISO-8859-1").encode("UTF-8")
+    geo_ip_data = Sapi::GeoIP.instance.resolve(request.ip)
+    [:country, :city, :organization].each do |col|
+      data[col] = geo_ip_data[col]
     end
-    data["organization"] = self.organization_from(request.ip).
-      force_encoding("ISO-8859-1").encode("UTF-8")
     w = Trade::TradeDataDownload.new(data)
     w.save
   end
@@ -41,17 +41,4 @@ module Trade::TradeDataDownloadLogger
     end
   end
 
-  def self.city_country_from ip
-    cdb = GeoIP.new(GEO_IP_CONFIG['city_db'])
-    cdb_names = cdb.city(ip)
-    country = cdb_names.nil? ? "Unknown" : cdb_names.country_code2
-    city = cdb_names.nil? ? "Unknown" : cdb_names.city_name
-    [city, country]
-  end
-
-  def self.organization_from ip
-    orgdb = GEO_IP_CONFIG['org_db'] && GeoIP.new(GEO_IP_CONFIG['org_db'])
-    org_names = orgdb && orgdb.organization(ip)
-    org_names.nil? ? "Unknown" : org_names.isp
-  end
 end
