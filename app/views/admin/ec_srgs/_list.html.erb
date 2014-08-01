@@ -1,0 +1,28 @@
+<thead>
+  <th>Name</th>
+  <th>Effective from</th>
+  <th>Current</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |ec_srg| -%>
+    <tr class="<%= if ec_srg.is_current? then "current_listing" end %>">
+      <td>
+        <a href="#" class="editable editable-click editable-required"
+          data-type="text" data-resource="cites_cop" data-name="name"
+          data-placeholder="Required" data-original-title="Enter the European Commission's SRG name"
+          data-url="<%= resource_url(ec_srg) %>" data-pk="<%= ec_srg.id %>">
+          <%= ec_srg.name %>
+        </a>
+      </td>
+      <td><%= ec_srg.effective_at_formatted %></td>
+      <td><%= true_false_icon(ec_srg.is_current) %></td>
+      <td>
+        <%= link_to edit_icon, edit_resource_url(ec_srg), :remote => true %>
+        <%= link_to delete_icon, resource_url(ec_srg),
+          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+        %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>
