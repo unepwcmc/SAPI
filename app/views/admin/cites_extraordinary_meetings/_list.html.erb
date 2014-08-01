@@ -1,0 +1,28 @@
+<thead>
+  <th>Name</th>
+  <th>Effective from</th>
+  <th>Current</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |cites_extraordinary_meeting| -%>
+    <tr class="<%= if cites_extraordinary_meeting.is_current? then "current_listing" end %>">
+      <td>
+        <a href="#" class="editable editable-click editable-required"
+          data-type="text" data-resource="cites_cop" data-name="name"
+          data-placeholder="Required" data-original-title="Enter the CITES Extraordinary Meetings's name"
+          data-url="<%= resource_url(cites_extraordinary_meeting) %>" data-pk="<%= cites_extraordinary_meeting.id %>">
+          <%= cites_extraordinary_meeting.name %>
+        </a>
+      </td>
+      <td><%= cites_extraordinary_meeting.effective_at_formatted %></td>
+      <td><%= true_false_icon(cites_extraordinary_meeting.is_current) %></td>
+      <td>
+        <%= link_to edit_icon, edit_resource_url(cites_extraordinary_meeting), :remote => true %>
+        <%= link_to delete_icon, resource_url(cites_extraordinary_meeting),
+          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+        %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>
