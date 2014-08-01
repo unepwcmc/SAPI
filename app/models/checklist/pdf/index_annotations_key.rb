@@ -22,7 +22,7 @@ class Checklist::Pdf::IndexAnnotationsKey
   end
 
   def hash_annotations_key
-    tex = ''
+    tex = "\\newpage\n"
     tex << "\\section*{\\hashAnnotations}\n"
     tex << "\\hashAnnotationsIndexInfo" + "\n\n"
     cop = CitesCop.find_by_is_current(true)
