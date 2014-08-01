@@ -15,7 +15,7 @@ class Checklist::TimelineEvent
   #:hash_ann_parent_symbol e.g. CoP15
   #:pos - position (%)
   def initialize(options)
-    @id = options[:id]
+    @id = (options[:taxon_concept_id] << 8) + options[:id]
     @pos = options[:pos]
     @party_id = options[:party_id]
     @change_type_name = options[:change_type_name]

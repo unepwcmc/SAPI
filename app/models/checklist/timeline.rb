@@ -3,17 +3,17 @@ class Checklist::Timeline
   attr_reader :id, :appendix, :party_id, :timeline_events, :timeline_intervals,
     :parties, :timelines, :continues_in_present, :has_nested_timelines
   def initialize(options)
-    @id = object_id
+    @taxon_concept_id = options[:taxon_concept_id]
     @appendix = options[:appendix]
     @party_id = options[:party_id]
     @timeline_events = []
     @timeline_intervals = []
     @parties = []
     @timelines = []
-    @appendix = options[:appendix]
     @time_start = options[:start]
     @time_end = options[:end]
     @current = options[:current]
+    @id = (@appendix.length << 16) + (@taxon_concept_id << 8) + (@party_id || 0)
   end
 
   def has_events?
@@ -73,6 +73,8 @@ class Checklist::Timeline
             event.is_reservation_withdrawal? && next_event.is_reservation?
             )
             Checklist::TimelineInterval.new(
+              :taxon_concept_id => @taxon_concept_id,
+              :listing_change_id => event.id,
               :start_pos => event.pos,
               :end_pos => next_event.pos
             )
@@ -85,6 +87,8 @@ class Checklist::Timeline
             @current || event.is_reservation? && event.is_current
             @continues_in_present = true
             Checklist::TimelineInterval.new(
+              :taxon_concept_id => @taxon_concept_id,
+              :listing_change_id => event.id,
               :start_pos => event.pos,
               :end_pos => 1
             )
@@ -103,6 +107,7 @@ class Checklist::Timeline
       #create party timeline
       @parties << party_id
       party_timeline = Checklist::Timeline.new(
+        :taxon_concept_id => @taxon_concept_id,
         :appendix => appendix,
         :party_id => party_id
       )
