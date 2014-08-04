@@ -15,7 +15,14 @@ class Checklist::TimelineEvent
   #:hash_ann_parent_symbol e.g. CoP15
   #:pos - position (%)
   def initialize(options)
-    @id = (options[:taxon_concept_id] << 8) + options[:id]
+    # if it is an auto-inserted deletion it won't have an id
+    id = options[:id] || (
+      (options[:species_listing_id] << 16) +
+      (options[:change_type_id] << 12) +
+      (options[:effective_at].to_i << 8) +
+      (options[:party_id] || 0)
+    )
+    @id = (options[:taxon_concept_id] << 8) + id
     @pos = options[:pos]
     @party_id = options[:party_id]
     @change_type_name = options[:change_type_name]

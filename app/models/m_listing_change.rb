@@ -48,7 +48,8 @@ module MListingChange
     Checklist::TimelineEvent.new(
       self.as_json(
         :only => [
-          :id, :taxon_concept_id, :change_type_name, :species_listing_name, :party_id,
+          :id, :taxon_concept_id, :change_type_id, :change_type_name,
+          :species_listing_id, :species_listing_name, :party_id,
           :is_current, :hash_ann_symbol, :hash_ann_parent_symbol,
           :effective_at, :auto_note, :inclusion_taxon_concept_id
         ],
