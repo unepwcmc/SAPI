@@ -232,4 +232,33 @@ describe Checklist::Timeline do
     specify{ subject.timeline_intervals[1].end_pos.should == 1 }
   end
 
+  context "when automatic deletion from ancestor listing" do
+    let(:tc){
+      genus = create_cites_eu_genus
+      tc = create_cites_eu_species(parent: genus)
+      create_cites_I_addition(
+        :taxon_concept => genus,
+        :effective_at => '1975-06-06',
+        :is_current => true
+      )
+      create_cites_II_addition(
+        :taxon_concept => tc,
+        :effective_at => '1976-06-08',
+        :is_current => true
+      )
+      # tc should have a cascaded ADD I from parent and an auto DEL I
+      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+      MTaxonConcept.find(tc.id)
+    }
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
+    let(:subject){ ttc.timelines.first }
+
+    specify{
+      subject.timeline_events.map(&:change_type_name).should ==
+        ['ADDITION', 'DELETION']
+    }
+    specify{ subject.timeline_intervals.count.should == 1 }
+    specify{ subject.timeline_intervals[0].end_pos.should == subject.timeline_events[1].pos }
+  end
+
 end
