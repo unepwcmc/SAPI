@@ -1,0 +1,44 @@
+en:
+  index_title: 'Index of CITES Species'
+  history_title: 'History of CITES Listings'
+
+  filter_summary:
+    all: 'All results'
+    all_with_synonyms: 'All results including synonyms'
+    with_synonyms: '(showing synonyms)'
+    when_taxon: 'Results for'
+    when_no_taxon: 'Results from'
+    within_regions: 'within'
+    countries: 'countries'
+    on_appx: 'on appx'
+    from_appx: 'appx'
+
+es:
+  index_title: 'Índice de especies CITES'
+  history_title: 'Historia de las inclusiones en los Apéndices de la CITES'
+
+  filter_summary:
+    all: 'Todos los resultados'
+    all_with_synonyms: 'Todos los resultados incluidos sinónimos'
+    with_synonyms: '(se muestran sinónimos)'
+    when_taxon: 'Resultados para'
+    when_no_taxon: 'Resultados de'
+    within_regions: 'dentro de'
+    countries: 'países'
+    on_appx: 'en apénd.'
+    from_appx: 'apénd.'
+
+fr:
+  index_title: 'Répertoire des espèces CITES'
+  history_title: 'Annales des inscriptions à la CITES'
+
+  filter_summary:
+    all: 'Tous les résultats'
+    all_with_synonyms: 'Tous les résultats, synonymes compris'
+    with_synonyms: '(affichage des synonymes)'
+    when_taxon: 'Résultats pour'
+    when_no_taxon: 'Résultats provenant de'
+    within_regions: 'à l''intérieur de'
+    countries: 'pays'
+    on_appx: 'sur les annexes'
+    from_appx: 'annexes'

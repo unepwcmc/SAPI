@@ -9,7 +9,17 @@ module Checklist::Pdf::Document
     tmp_dir_path = [Rails.root, "/tmp/", SecureRandom.hex(8)].join
     FileUtils.mkdir tmp_dir_path
     # copy the template to intermediate directory
-    FileUtils.cp [Rails.root, "/public/latex/", "#{@input_name}.tex"].join, tmp_dir_path
+    FileUtils.cp [Rails.root, "/public/latex/", "#{@input_name}.tex"].join,
+      tmp_dir_path
+    # copy the dictionary to intermediate directory
+    FileUtils.copy_file [Rails.root, "/public/latex/", "_dict_#{I18n.locale}.tex"].join,
+      [tmp_dir_path, '/_dict.tex'].join
+    # set flags for latex
+    flags_tex = [tmp_dir_path, "/_flags.tex"].join
+    File.open(flags_tex, 'wb') do |tex|
+      tex << (@intro ? "\\introtrue\n" : "\\introfalse\n")
+    end
+
     @template_tex = [tmp_dir_path, "/#{@input_name}.tex"].join
     @tmp_tex    = [tmp_dir_path, "/_#{@input_name}.tex"].join
     # create the dynamic part
@@ -20,20 +30,6 @@ module Checklist::Pdf::Document
     #save output at download path
     FileUtils.cp output, @download_path
     FileUtils.rm_rf(tmp_dir_path)
-  end
-
-  def common_names_with_lng_initials(taxon_concept)
-    res = ''
-    unless !@english_common_names || taxon_concept.english_names.empty?
-      res += " (E) #{LatexToPdf.escape_latex(taxon_concept.english_names.join(', '))} "
-    end
-    unless !@spanish_common_names || taxon_concept.spanish_names.empty?
-      res += " (S) #{LatexToPdf.escape_latex(taxon_concept.spanish_names.join(', '))} "
-    end
-    unless !@french_common_names || taxon_concept.french_names.empty?
-      res += " (F) #{LatexToPdf.escape_latex(taxon_concept.french_names.join(', '))} "
-    end
-    res
   end
 
 end

@@ -159,7 +159,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                   taxon_concepts_mview.rank_name = 'SUBSPECIES'
                   OR taxon_concepts_mview.rank_name = 'VARIETY'
                 )
-                AND listing_changes_mview.auto_note IS NULL
+                AND listing_changes_mview.auto_note_en IS NULL
               )
             SQL
       )
@@ -182,7 +182,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.effective_at,
               listing_changes_mview.full_note_en,
               listing_changes_mview.short_note_en,
-              listing_changes_mview.auto_note,
+              listing_changes_mview.auto_note_en,
               listing_changes_mview.change_type_name,
               listing_changes_mview.hash_full_note_en,
               listing_changes_mview.hash_ann_parent_symbol,
@@ -250,7 +250,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.effective_at,
               listing_changes_mview.full_note_en,
               listing_changes_mview.short_note_en,
-              listing_changes_mview.auto_note,
+              listing_changes_mview.auto_note_en,
               listing_changes_mview.hash_full_note_en,
               listing_changes_mview.hash_ann_parent_symbol,
               listing_changes_mview.hash_ann_symbol,

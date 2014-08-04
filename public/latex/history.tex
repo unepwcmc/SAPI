@@ -12,16 +12,23 @@
 \usepackage{longtable}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{colortbl}
 \usepackage{textcomp}
 \usepackage{array}
-\usepackage{eso-pic}
+\usepackage[shortlabels]{enumitem}
+\usepackage{changepage}
+
+\definecolor{pale_aqua}{RGB}{188, 212, 230}
 
 \DeclareUnicodeCharacter{B0}{\textdegree}
 \DeclareUnicodeCharacter{00A0}{~}
+\DeclareUnicodeCharacter{00AD}{}
+\DeclareUnicodeCharacter{2011}{-}
 
 \pagestyle{fancy}
 \fancyfoot{}
-\fancyfoot[C]{History of CITES listings – \thepage}
+\fancyfoot[C]{\historyFooter – \thepage}
 \renewcommand{\headrulewidth}{0pt}
 
 \iftrue
@@ -31,7 +38,12 @@
   }
 \fi
 
+\newif\ifintro
+
 \begin{document}
+
+\include{_flags}
+\include{_dict}
 
 \renewcommand{\rmdefault}{phv}
 
@@ -68,32 +80,21 @@
   \end{longtable}
 }
 
-\newcommand\AtPageLowerRight[1]{
-  \AtPageUpperLeft{%
-    \put(
-      \LenToUnit{0.73\paperwidth},
-      \LenToUnit{-0.99\paperheight}
-    ){#1}
-  }%
+\newcommand{\hashannotationstable}[1]{
+  \begin{longtable}[t]{>{\raggedright\arraybackslash}p{1.25cm}>{\raggedright\arraybackslash}p{15.25cm}}
+  #1
+  \end{longtable}
 }
 
 \rmfamily
-\AddToShipoutPictureFG*{
-  \AtPageLowerRight{
-    \begin{LARGE}
-      \hyperlink{contentstart}{
-        \textbf{
-          \textcolor{white}{Skip Introduction}
-        }
-      }
-    \end{LARGE}
-  }
-}
 
-\includepdf[pages=1]{../../public/latex/static_history.pdf}
-\includepdf[pages=2-]{../../public/latex/static_history.pdf}
+\ifintro
+\includepdf[pages=1]{\historyIntroductionFile}
+\includepdf[pages=2-]{\historyIntroductionFile}
+\fi
 
 \hypertarget{contentstart}{}
+\setcounter{page}{\thepage - 2}
 \include{_history}
 
 \end{document}

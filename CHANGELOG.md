@@ -1,3 +1,7 @@
+### 0.8.0 (2014-08-04)
+**CITES Checklist**
+* site and outputs available in 3 lngs
+
 ### 0.7.11 (2014-07-31)
 **Species+**
 * user activity tracking

@@ -14,11 +14,11 @@
   <% collection.each do |map| -%>
     <% tc = map.taxon_concept %>
     <tr class="<%= map.details["match"].try(:downcase) %>">
-      <td><%= tc.id %></td>
-      <td><%= tc.data["class_name"] %></td>
-      <td><%= link_to "#{tc.full_name} (#{tc.name_status})",
-        admin_taxon_concept_names_path(tc) %></td>
-      <td><%= tc.author_year %></td>
+      <td><%= tc && tc.id %></td>
+      <td><%= tc && tc.data["class_name"] %></td>
+      <td><%= tc && link_to("#{tc.full_name} (#{tc.name_status})",
+        admin_taxon_concept_names_path(tc)) %></td>
+      <td><%= tc && tc.author_year %></td>
       <td><%= map.iucn_taxon_name %></td>
       <td><%= map.iucn_taxon_id %></td>
       <td><%= map.iucn_author %></td>

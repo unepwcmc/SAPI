@@ -5,7 +5,7 @@ class Checklist::TimelineInterval
   #:start_pos - start position (%)
   #:end_pos - end position (%)
   def initialize(options)
-    @id = object_id
+    @id = (options[:taxon_concept_id] << 8) + options[:listing_change_id]
     @start_pos = options[:start_pos]
     @end_pos = options[:end_pos]
   end

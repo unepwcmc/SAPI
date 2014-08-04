@@ -53,8 +53,12 @@ class Species::TaxonConceptPrefixMatcher
 
     @query = @query.
       select('id, full_name, rank_name,
-        ARRAY_AGG_NOTNULL(matched_name ORDER BY matched_name) AS matching_names_ary').
-      group([:id, :full_name, :rank_name, :rank_order])
+        ARRAY_AGG_NOTNULL(matched_name ORDER BY matched_name) AS matching_names_ary,
+        rank_display_name_en, rank_display_name_es, rank_display_name_fr').
+      group([
+        :id, :full_name, :rank_name, :rank_order,
+        :rank_display_name_en, :rank_display_name_es, :rank_display_name_fr
+      ])
 
     if @taxon_concept_query
       @query = @query.where(

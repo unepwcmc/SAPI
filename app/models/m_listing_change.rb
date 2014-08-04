@@ -1,11 +1,16 @@
 module MListingChange
   include PgArrayParser
+
   def self.included(base)
     base.class_eval do
       belongs_to :designation
       belongs_to :taxon_concept, :class_name => 'MTaxonConcept'
       belongs_to :listing_change, :foreign_key => :id
       belongs_to :event
+      translates :short_note, fallback: false
+      translates :full_note, fallback: false
+      translates :hash_full_note, :inherited_short_note, :inherited_full_note,
+        :auto_note
     end
   end
 
@@ -43,13 +48,15 @@ module MListingChange
     Checklist::TimelineEvent.new(
       self.as_json(
         :only => [
-          :id, :change_type_name, :species_listing_name, :party_id,
+          :id, :taxon_concept_id, :change_type_name, :species_listing_name, :party_id,
           :is_current, :hash_ann_symbol, :hash_ann_parent_symbol,
-          :effective_at, :short_note_en, :full_note_en, :hash_full_note_en,
-          :auto_note, :inclusion_taxon_concept_id,
-          :inherited_short_note_en, :inherited_full_note_en
+          :effective_at, :auto_note, :inclusion_taxon_concept_id
         ],
-        :methods => [:countries_ids]
+        :methods => [
+          :countries_ids,
+          :short_note, :full_note, :hash_full_note,
+          :inherited_short_note, :inherited_full_note, :auto_note
+        ]
       ).symbolize_keys
     )
   end

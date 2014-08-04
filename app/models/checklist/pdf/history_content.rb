@@ -5,6 +5,8 @@ module Checklist::Pdf::HistoryContent
     kingdom(tex, fetcher, 'FAUNA')
     fetcher = Checklist::HistoryFetcher.new(@plantae_rel)
     kingdom(tex, fetcher, 'FLORA')
+    ak = Checklist::Pdf::HistoryAnnotationsKey.new
+    tex << ak.annotations_key
   end
 
   def kingdom(tex, fetcher, kingdom_name)
@@ -54,23 +56,22 @@ module Checklist::Pdf::HistoryContent
       is_tc_row = true #it is the first row per taxon concept
       tc.historic_cites_listing_changes_for_downloads.each do |lc|
         is_lc_row = true #it is the first row per listing change
-        multilingual_annotations(lc).each do |ann|
-          row = []
-          # tc fields
-          row << (is_tc_row ? listed_taxon_name : '')
-          is_tc_row = false
-          # lc fields
-          row << (is_lc_row ? listing_with_change_type(lc) : '')
-          row << (is_lc_row && lc.party_iso_code ? lc.party_iso_code.upcase : '')
-          row << (is_lc_row ? lc.effective_at_formatted : '')
-          if kingdom_name == 'FLORA'
-            row << (is_lc_row ? "#{LatexToPdf.escape_latex(lc.full_hash_ann_symbol)}" : '')
-          end
-          is_lc_row = false
-          # ann fields
-          row << ann
-          rows << row.join(' & ')
+        ann = annotation_for_language(lc, I18n.locale)
+        row = []
+        # tc fields
+        row << (is_tc_row ? listed_taxon_name : '')
+        is_tc_row = false
+        # lc fields
+        row << (is_lc_row ? listing_with_change_type(lc) : '')
+        row << (is_lc_row && lc.party_iso_code ? lc.party_iso_code.upcase : '')
+        row << (is_lc_row ? lc.effective_at_formatted : '')
+        if kingdom_name == 'FLORA'
+          row << (is_lc_row ? "#{LatexToPdf.escape_latex(lc.full_hash_ann_symbol)}" : '')
         end
+        is_lc_row = false
+        # ann fields
+        row << ann
+        rows << row.join(' & ')
       end
     end
     tex << rows.join("\\\\\n")
@@ -95,19 +96,13 @@ module Checklist::Pdf::HistoryContent
     "#{appendix}#{change_type}"
   end
 
-  def multilingual_annotations(listing_change)
-    res = ['en', 'es', 'fr'].map do |lng|
-      annotation_for_language(listing_change, lng).presence
-    end.compact
-    (res.empty? ? [nil] : res)
-  end
-
   def annotation_for_language(listing_change, lng)
     short_note = listing_change.send("short_note_#{lng}")
     short_note = LatexToPdf.html2latex(short_note)
-    if listing_change.display_in_footnote && lng == 'en'
+    if listing_change.display_in_footnote
       full_note = listing_change.send("full_note_#{lng}")
-      full_note = LatexToPdf.html2latex(full_note).gsub(/[\n\r]/, ' ')
+      full_note && full_note.gsub!(/[\n\r]/, ' ')
+      full_note = LatexToPdf.html2latex(full_note)
       "#{short_note}\\footnote{#{full_note}}"
     else
       short_note

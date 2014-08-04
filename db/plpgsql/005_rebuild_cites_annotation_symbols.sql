@@ -43,14 +43,8 @@ CREATE OR REPLACE FUNCTION rebuild_cites_annotation_symbols_for_node(node_id int
     SET listing = COALESCE(listing, ''::HSTORE) || hstore('ann_symbol', taxon_concept_annotations.symbol)
     FROM
     (
-      SELECT taxon_concept_id, MAX(annotations.symbol) AS symbol
-      FROM listing_changes
-      INNER JOIN annotations
-        ON listing_changes.annotation_id = annotations.id
-      INNER JOIN change_types
-        ON listing_changes.change_type_id = change_types.id
-      INNER JOIN designations
-        ON change_types.designation_id = designations.id AND designations.name = 'CITES'
+      SELECT taxon_concept_id, MAX(ann_symbol) AS symbol
+      FROM cites_listing_changes_mview
       WHERE is_current = TRUE AND display_in_index = TRUE
       GROUP BY taxon_concept_id
     ) taxon_concept_annotations
@@ -74,15 +68,9 @@ CREATE OR REPLACE FUNCTION rebuild_cites_hash_annotation_symbols_for_node(node_i
       hstore('hash_ann_parent_symbol', taxon_concept_hash_annotations.parent_symbol)
     FROM
     (
-      SELECT taxon_concept_id, MAX(annotations.symbol) AS symbol, MAX(annotations.parent_symbol) AS parent_symbol
-      FROM listing_changes
-      INNER JOIN annotations
-        ON listing_changes.hash_annotation_id = annotations.id
-      INNER JOIN change_types
-        ON listing_changes.change_type_id = change_types.id
-      INNER JOIN designations
-        ON change_types.designation_id = designations.id AND designations.name = 'CITES'
-      WHERE listing_changes.is_current = TRUE
+      SELECT taxon_concept_id, MAX(hash_ann_symbol) AS symbol, MAX(hash_ann_parent_symbol) AS parent_symbol
+      FROM cites_listing_changes_mview
+      WHERE is_current = TRUE
       GROUP BY taxon_concept_id
     ) taxon_concept_hash_annotations
     WHERE

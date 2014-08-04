@@ -1,7 +1,7 @@
 class Checklist::TimelinesForTaxonConcept
   include ActiveModel::SerializerSupport
   attr_reader :id, :taxon_concept_id, :raw_timelines, :timelines,
-    :timeline_years, :has_descendant_timelines, :has_events
+    :timeline_years, :has_descendant_timelines, :has_events, :has_reservations
 
   def initialize(taxon_concept)
     @taxon_concept_id = taxon_concept.id
@@ -28,6 +28,7 @@ class Checklist::TimelinesForTaxonConcept
     @raw_timelines = {}
     ['I', 'II', 'III'].each do |species_listing_name|
       @raw_timelines[species_listing_name] = Checklist::Timeline.new(
+        :taxon_concept_id => @taxon_concept_id,
         :appendix => species_listing_name,
         :start => @time_start,
         :end => @time_end,
@@ -47,6 +48,7 @@ class Checklist::TimelinesForTaxonConcept
     @raw_timelines.values.each do |t|
       t.change_consecutive_additions_to_amendments
       t.add_intervals
+      @has_reservations = true if t.has_nested_timelines
     end
     @timelines = [@raw_timelines['I'], @raw_timelines['II'], @raw_timelines['III']]
   end
@@ -55,7 +57,7 @@ class Checklist::TimelinesForTaxonConcept
     @timeline_years = @time_start.year.step((@time_end.year - @time_end.year % 5 + 5), 5).
       to_a.map do |year|
         Checklist::TimelineYear.new({
-          :id => year,
+          :taxon_concept_id => @taxon_concept_id,
           :year => year,
           :pos => ((Time.new("#{year}-01-01") - @time_start) / (@time_end - @time_start)).round(2)
         })

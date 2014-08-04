@@ -1,18 +1,19 @@
 class Checklist::Timeline
   include ActiveModel::SerializerSupport
-  attr_reader :id, :appendix, :party_id, :timeline_events, :timeline_intervals, :parties, :timelines
+  attr_reader :id, :appendix, :party_id, :timeline_events, :timeline_intervals,
+    :parties, :timelines, :continues_in_present, :has_nested_timelines
   def initialize(options)
-    @id = object_id
+    @taxon_concept_id = options[:taxon_concept_id]
     @appendix = options[:appendix]
     @party_id = options[:party_id]
     @timeline_events = []
     @timeline_intervals = []
     @parties = []
     @timelines = []
-    @appendix = options[:appendix]
     @time_start = options[:start]
     @time_end = options[:end]
     @current = options[:current]
+    @id = (@appendix.length << 16) + (@taxon_concept_id << 8) + (@party_id || 0)
   end
 
   def has_events?
@@ -41,6 +42,7 @@ class Checklist::Timeline
   end
 
   def add_reservation_event(event)
+    @has_nested_timelines = true
     get_party_timeline(event.party_id).timeline_events << event
   end
 
@@ -66,15 +68,27 @@ class Checklist::Timeline
       timeline.timeline_events.each_with_index do |event, idx|
         interval = if idx < (timeline.timeline_events.size - 1)
           next_event = timeline.timeline_events[idx + 1]
-          if !(event.is_deletion? && next_event.is_addition?)
+          if !(
+            event.is_deletion? && next_event.is_addition? ||
+            event.is_reservation_withdrawal? && next_event.is_reservation?
+            )
             Checklist::TimelineInterval.new(
+              :taxon_concept_id => @taxon_concept_id,
+              :listing_change_id => event.id,
               :start_pos => event.pos,
               :end_pos => next_event.pos
             )
           end
         else
-          if @current
+          # the meaning of @current: there is a current listing in this appdx
+          # this is to ensure an appdx III deletion does not terminate
+          # the timeline if appdx III is still current
+          if (event.is_addition? || event.is_amendment? || event.is_deletion?) &&
+            @current || event.is_reservation? && event.is_current
+            @continues_in_present = true
             Checklist::TimelineInterval.new(
+              :taxon_concept_id => @taxon_concept_id,
+              :listing_change_id => event.id,
               :start_pos => event.pos,
               :end_pos => 1
             )
@@ -93,6 +107,7 @@ class Checklist::Timeline
       #create party timeline
       @parties << party_id
       party_timeline = Checklist::Timeline.new(
+        :taxon_concept_id => @taxon_concept_id,
         :appendix => appendix,
         :party_id => party_id
       )

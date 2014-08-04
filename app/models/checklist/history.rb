@@ -3,10 +3,11 @@ class Checklist::History < Checklist::Checklist
 
   def initialize(options={})
     options = {
-      :output_layout => :taxononomic,
+      :output_layout => :taxonomic,
       :show_english => true,
       :show_french => true,
-      :show_spanish => true
+      :show_spanish => true,
+      :intro => true
     }
     # History cannot be parametrized like other Checklist reports
     @download_path = download_location(options, "history", ext)
@@ -52,7 +53,8 @@ class Checklist::History < Checklist::Checklist
       end
     end
     ctime = File.ctime(@download_path).strftime('%Y-%m-%d %H:%M')
-    @download_name = "History_of_CITES_Listings_#{has_full_options? ? '' : '[CUSTOM]_'}#{ctime}.#{ext}"
+    doc_name = I18n.t('history_title').split.join('_')
+    @download_name = "#{doc_name}_#{has_full_options? ? '' : '[CUSTOM]_'}#{ctime}.#{ext}"
     @download_path
   end
 

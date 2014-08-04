@@ -7,15 +7,20 @@
 \usepackage[cm]{fullpage}
 \usepackage{attachfile}
 \usepackage[utf8]{inputenc}
+\usepackage{longtable}
 \usepackage{fancyhdr}
 \usepackage{xcolor}
-\usepackage{eso-pic}
+\usepackage{colortbl}
+
+\definecolor{pale_aqua}{RGB}{188, 212, 230}
 
 \DeclareUnicodeCharacter{00A0}{~}
+\DeclareUnicodeCharacter{00AD}{}
+\DeclareUnicodeCharacter{2011}{-}
 
 \pagestyle{fancy}
 \fancyfoot{}
-\fancyfoot[C]{Index of CITES species – \thepage}
+\fancyfoot[C]{\indexFooter – \thepage}
 \renewcommand{\headrulewidth}{0pt}
 
 \iftrue
@@ -25,7 +30,14 @@
   }
 \fi
 
+\setlength{\headheight}{12pt}
+
+\newif\ifintro
+
 \begin{document}
+
+\include{_flags}
+\include{_dict}
 
 \renewcommand{\rmdefault}{phv}
 \newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
@@ -37,36 +49,24 @@
     \fbox{\color{currentcolor}#2}}%
 }
 
-\newcommand\AtPageLowerRight[1]{
-  \AtPageUpperLeft{%
-    \put(
-      \LenToUnit{0.73\paperwidth},
-      \LenToUnit{-0.99\paperheight}
-    ){#1}
-  }%
-}
-\rmfamily
-\AddToShipoutPictureFG*{
-  \AtPageLowerRight{
-    \begin{LARGE}
-      \hyperlink{contentstart}{
-        \textbf{
-          \textcolor{white}{Skip Introduction}
-        }
-      }
-    \end{LARGE}
-  }
+\newcommand{\hashannotationstable}[1]{
+  \begin{longtable}[t]{>{\raggedright\arraybackslash}p{1.25cm}>{\raggedright\arraybackslash}p{15.25cm}}
+  #1
+  \end{longtable}
 }
 
-\includepdf[pages=1]{../../public/latex/static_index.pdf}
-\includepdf[pages=2-]{../../public/latex/static_index.pdf}
+\ifintro
+\includepdf[pages=1]{\indexIntroductionFile}
+\includepdf[pages=2-]{\indexIntroductionFile}
+\fi
+
 \rmfamily
 \raggedright
 \leftskip 0.1in
 \parindent -0.2in
 
-
 \hypertarget{contentstart}{}
+\setcounter{page}{\thepage - 2}
 \include{_index}
 
 \end{document}
