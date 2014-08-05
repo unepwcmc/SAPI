@@ -38,6 +38,11 @@ FactoryGirl.define do
     end
     factory :eu_suspension_regulation, :class => EuSuspensionRegulation
     factory :cites_cop, :class => CitesCop
+    factory :cites_ac, :class => CitesAc
+    factory :cites_pc, :class => CitesPc
+    factory :cites_tc, :class => CitesTc
+    factory :cites_extraordinary_meeting, :class => CitesExtraordinaryMeeting
+    factory :ec_srg, :class => EcSrg
     factory :cites_suspension_notification, :class => CitesSuspensionNotification,
       :aliases => [:start_notification] do
       end_date '2012-01-01'
