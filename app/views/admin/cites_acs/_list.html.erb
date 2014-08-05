@@ -9,7 +9,7 @@
     <tr class="<%= if cites_ac.is_current? then "current_listing" end %>">
       <td>
         <a href="#" class="editable editable-click editable-required"
-          data-type="text" data-resource="cites_cop" data-name="name"
+          data-type="text" data-resource="cites_ac" data-name="name"
           data-placeholder="Required" data-original-title="Enter the CITES Ac's name"
           data-url="<%= resource_url(cites_ac) %>" data-pk="<%= cites_ac.id %>">
           <%= cites_ac.name %>

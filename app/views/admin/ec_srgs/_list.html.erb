@@ -9,7 +9,7 @@
     <tr class="<%= if ec_srg.is_current? then "current_listing" end %>">
       <td>
         <a href="#" class="editable editable-click editable-required"
-          data-type="text" data-resource="cites_cop" data-name="name"
+          data-type="text" data-resource="ec_srg" data-name="name"
           data-placeholder="Required" data-original-title="Enter the European Commission's SRG name"
           data-url="<%= resource_url(ec_srg) %>" data-pk="<%= ec_srg.id %>">
           <%= ec_srg.name %>
