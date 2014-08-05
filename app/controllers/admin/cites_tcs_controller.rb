@@ -1,8 +1,8 @@
 class Admin::CitesTcsController < Admin::EventsController
   #this needs to be specified, because otherwise defaults to 'event'
   defaults :resource_class => CitesTc,
-    :collection_name => 'cites_pcs',
-    :instance_name => 'cites_pc'
+    :collection_name => 'cites_tcs',
+    :instance_name => 'cites_tc'
 
   protected
     def collection
