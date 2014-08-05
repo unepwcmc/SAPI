@@ -361,6 +361,12 @@ shared_context :sapi do
       options.merge({:designation => cites})
     )
   end
+  def create_cites_ac(options = {})
+    create(
+      :cites_ac,
+      options
+    )
+  end
   def create_cites_suspension_notification(options = {})
     create(
       :cites_suspension_notification,
