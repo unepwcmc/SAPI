@@ -58,6 +58,11 @@ class Event < ActiveRecord::Base
     update_attributes(:is_current => false)
   end
 
+  # TODO REMOVE TMP
+  def documents
+   annotations
+  end
+
   protected
     def designation_is_cites
       cites = Designation.find_by_name('CITES')
