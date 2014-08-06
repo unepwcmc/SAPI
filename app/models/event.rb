@@ -28,6 +28,7 @@ class Event < ActiveRecord::Base
 
   belongs_to :designation
   has_many :annotations, :dependent => :destroy
+  has_many :documents
 
   validates :name, :presence => true, :uniqueness => true
   validates :url, :format => URI::regexp(%w(http https)), :allow_blank => true
@@ -56,11 +57,6 @@ class Event < ActiveRecord::Base
 
   def deactivate!
     update_attributes(:is_current => false)
-  end
-
-  # TODO REMOVE TMP
-  def documents
-   annotations
   end
 
   protected
