@@ -48,7 +48,9 @@ SAPI::Application.routes.draw do
     resources :ranks, :only => [:index, :create, :update, :destroy]
     resources :tags, :only => [:index, :create, :update, :destroy]
     resources :eu_decision_types, :only => [:index, :create, :update, :destroy]
-    resources :events
+    resources :events do
+      resources :documents, :controller => :event_documents, :only => [:index]
+    end
     resources :eu_regulations do
       post :activate, :on => :member
       post :deactivate, :on => :member
@@ -66,7 +68,7 @@ SAPI::Application.routes.draw do
     resources :ec_srgs
     resources :cites_extraordinary_meetings
 
-    resources :documents
+    resources :documents, :only => [:index]
 
     resources :cites_suspension_notifications
     resources :references, :only => [:index, :create, :update, :destroy] do
