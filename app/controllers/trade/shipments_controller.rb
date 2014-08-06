@@ -28,8 +28,9 @@ class Trade::ShipmentsController < TradeController
 
   def update_batch
     @search = Trade::Filter.new(search_params)
+    cnt = @search.query.count
     @search.query.update_all(batch_update_params)
-    render :json => nil, :status => :ok
+    render :json => {rows: cnt}, :status => :ok
   end
 
   def destroy
@@ -40,8 +41,9 @@ class Trade::ShipmentsController < TradeController
 
   def destroy_batch
     @search = Trade::Filter.new(search_params)
+    cnt = @search.query.count
     @search.query.destroy_all
-    render :json => nil, :status => :ok
+    render :json => {rows: cnt}, :status => :ok
   end
 
 private

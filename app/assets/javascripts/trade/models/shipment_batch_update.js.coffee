@@ -1,21 +1,22 @@
 Trade.ShipmentBatchUpdate = Ember.Object.extend
   taxonConceptId: null
+  reportedTaxonConceptId: null
   appendix: null
   year: null
-  termId: null
-  unitId: null
-  purposeId: null
-  sourceId: null
-  importerId: null
-  exporterId: null
-  countryOfOriginId: null
+  term: null
+  unit: null
+  purpose: null
+  source: null
+  importer: null
+  exporter: null
+  countryOfOrigin: null
+  reporterType: null
 
   columns: (->
     [
-      'taxonConceptId', 'appendix', 'year',
-      'termId', 'unitId', 'purposeId', 'sourceId',
-      'importerId', 'exporterId', 'countryOfOriginId',
-      'importPermitNumber', 'exportPermitNumber', 'originPermitNumber', 'quantity'
+      'taxonConceptId', 'reportedTaxonConceptId', 'appendix', 'year',
+      'term', 'unit', 'purpose', 'source',
+      'importer', 'exporter', 'countryOfOrigin', 'reporterType'
     ]
   ).property()
 
@@ -27,7 +28,13 @@ Trade.ShipmentBatchUpdate = Ember.Object.extend
   export: ->
     result = {}
     @get('columns').forEach( (c) =>
-      result[c.decamelize()] = @get(c) if @get(c)
+      property_value = @get(c)
+      if property_value
+        property_name = c.decamelize()
+        if typeof property_value == 'object'
+          result[property_name + '_id'] = property_value.get('id')
+        else
+          result[property_name] = property_value
     )
     result
 

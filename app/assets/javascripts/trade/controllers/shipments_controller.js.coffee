@@ -311,7 +311,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
             @resetFilters()
           )
 
-    deleteBatch: (batchUpdateParams) ->
+    deleteBatch: ->
       if confirm("This will delete all filtered shipments. Are you sure?")
         $.ajax(
           url: '/trade/shipments/destroy_batch'
@@ -320,7 +320,7 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
             filters: @get('searchParams')
         )
         .done( (data) =>
-          @flashSuccess(message: 'Successfully deleted shipments.')
+          @flashSuccess(message: 'Successfully deleted ' + data.rows + ' shipments.')
         )
         .fail( (xhr) =>
           @flashError(message: 'Error occurred when deleting shipments.')
@@ -340,17 +340,17 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
       @set('currentShipment', @get('batchUpdateParams'))
       $('.batch-form-modal').modal('show')
 
-    updateBatch: (batchUpdateParams) ->
+    updateBatch: ->
       if confirm("This will update all filtered shipments. Are you sure?")
         $.ajax(
           url: '/trade/shipments/update_batch'
           type: 'POST'
           data:
             filters: @get('searchParams')
-            updates: batchUpdateParams.export()
+            updates: @get('batchUpdateParams').export()
         )
         .done( (data) =>
-          @flashSuccess(message: 'Successfully updated shipments.')
+          @flashSuccess(message: 'Successfully updated ' + data.rows + ' shipments.')
         )
         .fail( (xhr) =>
           @flashError(message: 'Error occurred when updating shipments.')

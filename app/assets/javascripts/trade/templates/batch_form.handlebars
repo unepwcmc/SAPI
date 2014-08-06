@@ -4,7 +4,7 @@
 </div>
 
 <div class="modal-body filters">
-  {{total}} shipments with <b>{{selectionSummary}}</b>
+  Shipments with <b>{{selectionSummary}}</b>
   <form action="#">
     <fieldset>
       <div class="heading">
@@ -16,6 +16,13 @@
           {{view Trade.TaxonConceptSelect2
             prompt="Please select taxon names"
             valueBinding="currentShipment.taxonConceptId"
+          }}
+        </div>
+        <div class="attribute-area left taxon-name">
+          <p>Reported taxon name</p>
+          {{view Trade.TaxonConceptSelect2
+            prompt="Please select taxon names"
+            valueBinding="currentShipment.reportedTaxonConceptId"
           }}
         </div>
         <div class="attribute-area left">
@@ -131,8 +138,7 @@
   </form>
 </div>
 <div class="modal-footer">
-  {{confirm-button title="Save batch" action="updateBatch" shipmentBinding="currentShipment"
-  }}
+  {{confirm-button title="Save batch" action="updateBatch"}}
   <button {{action 'cancelBatch'}} class="pull-right btn btn-primary">
     Cancel
   </button>
