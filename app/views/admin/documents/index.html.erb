@@ -1,3 +1,75 @@
 <div class="admin-header">
+  <div class="row-fluid">
   <h1>Documents</h1>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span4">
+      <%= select_tag(:event_type, options_for_select([
+        ['Please select an event type', ''],
+        ['Cites Animal Committee', 'cites_acs'],
+        ['Cites Plant Committee', 'cites_pcs']
+      ])) %>
+    </div>
+    <div class="span4" >
+      <select id="event" name="events" style="visibility: hidden"></select>
+    </div>
+    <div class="span4">...</div>
+  </div>
+
+  <div class="row-fluid">
+    <a href="" id="event_link" style="visibility: hidden">
+      Go to event upload document page
+    </a>
+  </div>
+
 </div>
+
+<script type="text/javascript">
+$(function() {
+
+  var $event_type = $('#event_type'),
+    $event = $('#event'),
+    $event_link = $('#event_link');
+
+  function disableElements(selectors) {
+    $.each(selectors, function() {
+      this.css('visibility', 'hidden');
+    });
+  }
+
+  function enableElements(selectors) {
+    $.each(selectors, function() {
+      this.css('visibility', 'visible');
+    });
+  }
+
+  $event_type.change( function() {
+    var event_type = $(this).val();
+    if (event_type) {
+      enableElements([$event]);
+      $.getJSON(event_type+'.json', function( data ) {
+        var items = ['<option value="">Please select an event</option>'];
+        $.each(data, function( idx, obj ) {
+          items.push(
+            "<option value='" + obj.value + "'>" + obj.text + "</option>");
+        });
+        $('#event').html(items.join( "" ));
+      });
+    } else {
+      disableElements([$event, $event_link]);
+    }
+  });
+
+  $event.change( function() {
+    var event = $(this).val();
+    if (event) {
+      enableElements([$event_link]);
+      $event_link.attr('href', 'event/'+event+'/documents');
+    } else {
+      disableElements([$event_link]);
+    }
+  });
+
+});
+</script>
