@@ -11,8 +11,8 @@
         <div class="span5">
           Event type<br>
           <select id="event_type" name="event_type">
+          <option value="" disabled selected>Select your option</option>
           <%= options_for_select([
-            ['', ''],
             ['Cites Animal Committee', 'cites_acs'],
             ['Cites Plant Committee', 'cites_pcs'],
             ['Cites Technical Committee', 'cites_tcs'],
@@ -40,7 +40,7 @@
         <div class="span4">
           Document type<br>
           <select id="document_type" name="document_type" disabled>
-            <option value=""></option>
+            <option value="" disabled selected>Select your option</option>
           </select>
         </div>
       </div>
@@ -64,7 +64,7 @@ $(function() {
     if (event_type) {
       $event.attr('disabled', false);
       $.getJSON(event_type+'.json', function( data ) {
-        var items = ['<option value=""></option>'];
+        var items = ['<option value="" disabled selected>Select your option</option>'];
         $.each(data, function( idx, obj ) {
           items.push(
             "<option value='" + obj.value + "'>" + obj.text + "</option>");
