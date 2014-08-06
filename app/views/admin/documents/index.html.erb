@@ -5,20 +5,34 @@
 
   <div class="row-fluid">
     <div class="span4">
-      <%= select_tag(:event_type, options_for_select([
-        ['Please select an event type', ''],
+      Event type<br>
+      <select id="event_type" name="event_type">
+      <%= options_for_select([
+        ['', ''],
         ['Cites Animal Committee', 'cites_acs'],
-        ['Cites Plant Committee', 'cites_pcs']
-      ])) %>
+        ['Cites Plant Committee', 'cites_pcs'],
+        ['Cites Technical Committee', 'cites_tcs'],
+        ['Cites Extraordinary Meetings', 'cites_extraordinary_meetings'],
+        ['European Commission SRG', 'ec_srgs']
+      ]) %>
+      </select>
     </div>
     <div class="span4" >
-      <select id="event" name="events" style="visibility: hidden"></select>
+      Event<br>
+      <select id="event" name="event" disabled>
+        <option value=""></option>
+      </select>
     </div>
-    <div class="span4">...</div>
+    <div class="span4">
+      Document type<br>
+      <select id="document_type" name="document_type" disabled>
+        <option value=""></option>
+      </select>
+    </div>
   </div>
 
   <div class="row-fluid">
-    <a href="" id="event_link" style="visibility: hidden">
+    <a href="" id="event_link" style="visibility: hidden" disabled>
       Go to event upload document page
     </a>
   </div>
@@ -32,24 +46,12 @@ $(function() {
     $event = $('#event'),
     $event_link = $('#event_link');
 
-  function disableElements(selectors) {
-    $.each(selectors, function() {
-      this.css('visibility', 'hidden');
-    });
-  }
-
-  function enableElements(selectors) {
-    $.each(selectors, function() {
-      this.css('visibility', 'visible');
-    });
-  }
-
   $event_type.change( function() {
     var event_type = $(this).val();
     if (event_type) {
-      enableElements([$event]);
+      $event.attr('disabled', false);
       $.getJSON(event_type+'.json', function( data ) {
-        var items = ['<option value="">Please select an event</option>'];
+        var items = ['<option value=""></option>'];
         $.each(data, function( idx, obj ) {
           items.push(
             "<option value='" + obj.value + "'>" + obj.text + "</option>");
@@ -57,17 +59,19 @@ $(function() {
         $('#event').html(items.join( "" ));
       });
     } else {
-      disableElements([$event, $event_link]);
+      $event.attr('disabled', true);
+      $event_link.css('visibility', 'hidden');
     }
   });
 
   $event.change( function() {
     var event = $(this).val();
     if (event) {
-      enableElements([$event_link]);
-      $event_link.attr('href', 'event/'+event+'/documents');
+      $event_link.attr('disabled', false);
+      $event_link.css('visibility', 'visible');
+      $event_link.attr('href', 'events/'+event+'/documents');
     } else {
-      disableElements([$event_link]);
+      $event_link.css('visibility', 'hidden');
     }
   });
 
