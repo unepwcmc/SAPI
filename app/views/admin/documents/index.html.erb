@@ -4,37 +4,48 @@
   </div>
 
   <div class="row-fluid">
-    <div class="span4">
-      Event type<br>
-      <select id="event_type" name="event_type">
-      <%= options_for_select([
-        ['', ''],
-        ['Cites Animal Committee', 'cites_acs'],
-        ['Cites Plant Committee', 'cites_pcs'],
-        ['Cites Technical Committee', 'cites_tcs'],
-        ['Cites Extraordinary Meetings', 'cites_extraordinary_meetings'],
-        ['European Commission SRG', 'ec_srgs']
-      ]) %>
-      </select>
-    </div>
-    <div class="span4" >
-      Event<br>
-      <select id="event" name="event" disabled>
-        <option value=""></option>
-      </select>
-    </div>
-    <div class="span4">
-      Document type<br>
-      <select id="document_type" name="document_type" disabled>
-        <option value=""></option>
-      </select>
-    </div>
-  </div>
 
-  <div class="row-fluid">
-    <a href="" id="event_link" style="visibility: hidden" disabled>
-      Go to event upload document page
-    </a>
+    <div class="span8">
+      <div class="row-fluid"><h4 class="admin-header">Event Related</h4></div>
+      <div class="row-fluid">
+        <div class="span5">
+          Event type<br>
+          <select id="event_type" name="event_type">
+          <%= options_for_select([
+            ['', ''],
+            ['Cites Animal Committee', 'cites_acs'],
+            ['Cites Plant Committee', 'cites_pcs'],
+            ['Cites Technical Committee', 'cites_tcs'],
+            ['Cites Extraordinary Meetings', 'cites_extraordinary_meetings'],
+            ['European Commission SRG', 'ec_srgs']
+          ]) %>
+          </select>
+        </div>
+        <div class="span5" >
+          Event<br>
+          <select id="event" name="event" disabled>
+            <option value=""></option>
+          </select>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <a href="" id="event_link" style="visibility: hidden" disabled>
+          Go to event upload document page
+        </a>
+      </div>
+    </div>
+    <div class="span4">
+      <div class="row-fluid"><h4 class="admin-header">Non Event Related</h4></div>
+      <div class="row-fluid">
+        <div class="span4">
+          Document type<br>
+          <select id="document_type" name="document_type" disabled>
+            <option value=""></option>
+          </select>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div>
@@ -45,6 +56,8 @@ $(function() {
   var $event_type = $('#event_type'),
     $event = $('#event'),
     $event_link = $('#event_link');
+
+  $event_type.prop('selectedIndex',0);
 
   $event_type.change( function() {
     var event_type = $(this).val();
