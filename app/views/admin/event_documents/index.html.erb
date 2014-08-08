@@ -1,1 +1,30 @@
-here be event documents uploader
+<div class="admin-header">
+  <div class="row-fluid">
+    <h3><%= @event.name %></h3>
+    <div class="row-fluid">
+      <div class="span12">
+
+      <%= form_tag('/admin/documents', multipart: true, remote: true, class: 'documents')  do %>
+        <div class="row-fluid">
+          <label for="language">Language</label>
+          <%= select_tag "language", options_for_select([["English", "English"]]), :prompt => "Select something" %>
+          </div>
+        <div class="row-fluid">
+          <label for="is_public">Is public</label>
+          <%= check_box_tag 'is_public' %>
+        </div>
+        <div class="row-fluid">
+          <label for="files">Documents to Upload</label>
+          <%= file_field_tag "files[]", multiple: true %>
+        </div>
+        <%= hidden_field_tag "event", @event.id %>
+        <div class="row-fluid">
+          <%= submit_tag 'upload', class: 'btn' %>
+        </div>
+      <% end %>
+
+      </div>
+    </div>
+  </div>
+</div>
+
