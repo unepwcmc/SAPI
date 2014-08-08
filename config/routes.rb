@@ -68,7 +68,7 @@ SAPI::Application.routes.draw do
     resources :ec_srgs
     resources :cites_extraordinary_meetings
 
-    resources :documents, :only => [:index]
+    resources :documents, :only => [:index, :create]
 
     resources :cites_suspension_notifications
     resources :references, :only => [:index, :create, :update, :destroy] do
