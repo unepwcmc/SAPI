@@ -373,6 +373,18 @@ shared_context :sapi do
       options
     )
   end
+  def create_cites_tc(options = {})
+    create(
+      :cites_tc,
+      options
+    )
+  end
+  def create_cites_extraordinary_meeting(options = {})
+    create(
+      :cites_extraordinary_meeting,
+      options
+    )
+  end
   def create_ec_srg(options = {})
     create(
       :ec_srg,
