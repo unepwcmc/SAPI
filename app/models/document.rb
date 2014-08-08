@@ -16,10 +16,14 @@
 #
 
 class Document < ActiveRecord::Base
+  track_who_does_it
+  attr_accessible :event_id, :filename, :title, :date, :type
   belongs_to :event
   belongs_to :language
   validates :title, presence: true
   validates :date, presence: true
   validates :is_public, presence: true
   # TODO validates inclusion of type in available types
+  mount_uploader :filename, DocumentFileUploader
+  # TODO humanise filename into title
 end

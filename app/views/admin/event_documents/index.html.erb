@@ -4,7 +4,7 @@
     <div class="row-fluid">
       <div class="span12">
 
-      <%= form_tag('/admin/documents', multipart: true, remote: true, class: 'documents')  do %>
+      <%= form_tag(upload_admin_event_documents_url(@event), multipart: true, remote: true, class: 'documents')  do %>
         <div class="row-fluid">
           <label for="language">Language</label>
           <%= select_tag "language", options_for_select([["English", "English"]]), :prompt => "Select something" %>
@@ -28,6 +28,13 @@
     </div>
   </div>
 </div>
+
+<h2>Uploaded so far:</h2>
+<ul>
+<% @event.documents.each do |d| %>
+  <li> <%= d.filename %> </li>
+<% end %>
+</ul>
 
 <script type="text/javascript">
 
@@ -62,4 +69,3 @@ $(function() {
   }
 });
 </script>
-

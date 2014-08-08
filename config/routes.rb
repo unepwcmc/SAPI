@@ -49,7 +49,9 @@ SAPI::Application.routes.draw do
     resources :tags, :only => [:index, :create, :update, :destroy]
     resources :eu_decision_types, :only => [:index, :create, :update, :destroy]
     resources :events do
-      resources :documents, :controller => :event_documents, :only => [:index]
+      resources :documents, :controller => :event_documents, :only => [:index] do
+        post :upload, :on => :collection
+      end
     end
     resources :eu_regulations do
       post :activate, :on => :member
