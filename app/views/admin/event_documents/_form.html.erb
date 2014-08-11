@@ -1,7 +1,6 @@
-<%= form_for [:admin, @event, @document], {
-  url: admin_event_document_url(@event, @document), remote: true,
-  class: 'form-horizontal' 
-} do |f| %>
+<%= form_for [:admin, @event.becomes(Event), @document], 
+  remote: true, multipart: true, #TODO remete file upload or change redirect
+  html: { class: 'form-horizontal' } do |f| %>
 
   <%= error_messages_for(@document) %>
 

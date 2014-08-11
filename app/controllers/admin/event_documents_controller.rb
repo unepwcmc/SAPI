@@ -12,11 +12,26 @@ class Admin::EventDocumentsController < Admin::SimpleCrudController
     end
   end
 
+  def destroy
+    destroy! do |success, failure|
+      success.html { redirect_to admin_event_documents_url(@event), :notice => 'Operation succeeded' }
+      failure.html {
+        redirect_to admin_event_documents_url(@event),
+          :alert => if resource.errors.present?
+              "Operation #{resource.errors.messages[:base].join(", ")}"
+            else
+              "Operation failed"
+            end
+      }
+    end
+  end
+
   def upload
   	@event = Event.find(params[:event_id]) #TODO can this be set by inherited resources?
     params[:files].each do |file|
       d = Document.create(
         event_id: @event.id,
+        language_id: params[:language_id],
         filename: file, date: params[:date], type: 'Document')
       puts d.errors.inspect
     end

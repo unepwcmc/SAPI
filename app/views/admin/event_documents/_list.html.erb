@@ -4,6 +4,7 @@
   <th width="30%">Title</th>
   <th width="30%">Citations</th>
   <th>Public</th>
+  <th>Lng</th>
   <th width="5%">Actions</th>
   <th width="5%">Info</th>
 </thead>
@@ -15,6 +16,7 @@
       <td><%= link_to document.title, '#', {rel: 'tooltip', :'data-title' => document.filename} %></td>
       <td><%= link_to 'TODO citations cnt', '#', {rel: 'tooltip', :'data-title' => 'TODO Here be citations'} %></td>
       <td><%= true_false_icon(document.is_public) %></td>
+      <td><%= document.language.try(:iso_code1) %> </td>
       <td>
         <%= link_to edit_icon,
           edit_admin_event_document_path(@event, document), remote: true
