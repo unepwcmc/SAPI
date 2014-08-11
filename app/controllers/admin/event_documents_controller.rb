@@ -12,4 +12,11 @@ class Admin::EventDocumentsController < Admin::SimpleCrudController
     redirect_to admin_event_documents_url(@event)
   end
 
+  protected
+
+  def load_associations
+    @languages = Language.select([:id, :name_en, :name_es, :name_fr]).order(:name_en)
+    @english = Language.find_by_iso_code1('EN')
+  end
+
 end

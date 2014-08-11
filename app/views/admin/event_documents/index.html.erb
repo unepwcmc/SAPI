@@ -1,35 +1,46 @@
+<h1><%= @event.name %> documents</h1>
 <div class="admin-header">
-  <div class="row-fluid">
-    <h3><%= @event.name %></h3>
-    <div class="row-fluid">
-      <div class="span12">
-
-      <%= form_tag(upload_admin_event_documents_url(@event), multipart: true, remote: true, class: 'documents')  do %>
-        <div class="row-fluid">
-          <label for="language">Language</label>
-          <%= select_tag "language", options_for_select([["English", "English"]]), :prompt => "Select something" %>
-          </div>
-        <div class="row-fluid">
-          <label for="is_public">Is public</label>
-          <%= check_box_tag 'is_public' %>
-        </div>
-        <div class="row-fluid">
-          <label for="files">Documents to Upload</label>
-          <%= file_field_tag "files[]", multiple: true, id: 'files' %>
-          <ul id="list"></ul>
-        </div>
-        <%= hidden_field_tag "event", @event.id %>
-        <div class="row-fluid">
-          <%= submit_tag 'upload', class: 'btn' %>
-        </div>
-      <% end %>
-
+  <%= form_tag(upload_admin_event_documents_url(@event), multipart: true, remote: true, class: 'form-horizontal')  do %>
+    <%= hidden_field_tag "event", @event.id %>
+    <div class="control-group">
+      <label for="language_id" class="control-label">Language</label>
+      <div class="controls">
+        <%= select_tag :language_id,
+          options_for_select(
+            @languages.map { |l| [l.name, l.id] },
+            @english.id
+          )
+        %>
       </div>
     </div>
-  </div>
+    <div class="control-group">
+      <label for="date" class="control-label">Date</label>
+      <div class="controls">
+        <%= text_field_tag :date, @event.effective_at_formatted, :class => "datepicker" %>
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="is_public" class="control-label">Is public</label>
+      <div class="controls">
+        <%= check_box_tag 'is_public' %>
+      </div>
+    </div>
+    <div class="control-group">
+      <label for="files" class="control-label">Documents to Upload</label>
+      <div class="controls">
+        <%= file_field_tag "files[]", multiple: true, id: 'files' %>
+        <ul id="list"></ul>
+      </div>
+    </div>
+    <div class="control-group">
+      <div class="controls">
+        <%= submit_tag 'Upload', class: 'btn btn-primary' %>
+      </div>
+    </div>
+  <% end %>
 </div>
 
-<h2>Uploaded so far:</h2>
+<h3>Documents uploaded so far:</h3>
 <ul>
 <% @event.documents.each do |d| %>
   <li> <%= d.filename %> </li>
