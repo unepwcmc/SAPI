@@ -1,4 +1,5 @@
 class Admin::EventDocumentsController < Admin::SimpleCrudController
+  authorize_resource :class => 'Document'
   defaults :resource_class => Document,
     :collection_name => 'documents', :instance_name => 'document'
   belongs_to :event
