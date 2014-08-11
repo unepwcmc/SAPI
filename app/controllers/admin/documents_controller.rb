@@ -1,9 +1,8 @@
 class Admin::DocumentsController < Admin::SimpleCrudController
 
-  def create
-    params[:files].each do |file|
-      debugger
-    end
+  def index
+    @event_types = ['CitesCop', 'EcSrg']
+    @events = Event.where(type: @event_types)
   end
 
 end
