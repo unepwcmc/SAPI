@@ -40,12 +40,9 @@
   <% end %>
 </div>
 
-<h3>Documents uploaded so far:</h3>
-<ul>
-<% @event.documents.each do |d| %>
-  <li> <%= d.filename %> </li>
-<% end %>
-</ul>
+<%= admin_table %>
+
+<%= paginate collection %>
 
 <script type="text/javascript">
 

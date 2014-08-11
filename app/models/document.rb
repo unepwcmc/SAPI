@@ -26,4 +26,9 @@ class Document < ActiveRecord::Base
   # TODO validates inclusion of type in available types
   mount_uploader :filename, DocumentFileUploader
   # TODO humanise filename into title
+
+  def date_formatted
+    date && date.strftime("%d/%m/%Y")
+  end
+
 end

@@ -1,0 +1,30 @@
+<thead>
+  <th>Type</th>
+  <th>Date</th>
+  <th width="30%">Title</th>
+  <th width="30%">Citations</th>
+  <th>Public</th>
+  <th width="5%">Actions</th>
+  <th width="5%">Info</th>
+</thead>
+<tbody>
+  <% collection.each do |document| -%>
+    <tr class="<%= if document.is_public? then "current_listing" end %>">
+      <td><%= document.type %></td>
+      <td><%= document.date_formatted %></td>
+      <td><%= link_to document.title, '#', {rel: 'tooltip', :'data-title' => document.filename} %></td>
+      <td><%= link_to 'TODO citations cnt', '#', {rel: 'tooltip', :'data-title' => 'TODO Here be citations'} %></td>
+      <td><%= true_false_icon(document.is_public) %></td>
+      <td>
+        <%= link_to edit_icon,
+          edit_admin_event_document_path(@event, document)
+        %>
+        <%= link_to delete_icon,
+          admin_event_document_path(@event, document),
+          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+        %>
+      </td>
+      <td><%= tracking_info(document) %></td>
+    </tr>
+  <% end -%>
+</tbody>
