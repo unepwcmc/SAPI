@@ -8,7 +8,7 @@ class Admin::EventDocumentsController < Admin::SimpleCrudController
     params[:files].each do |file|
       d = Document.create(
         event_id: @event.id,
-        filename: file, title: 'test', date: params[:date], type: 'Document')
+        filename: file, date: params[:date], type: 'Document')
       puts d.errors.inspect
     end
     redirect_to admin_event_documents_url(@event)
