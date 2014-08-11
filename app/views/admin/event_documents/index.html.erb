@@ -22,7 +22,7 @@
     <div class="control-group">
       <label for="is_public" class="control-label">Is public</label>
       <div class="controls">
-        <%= check_box_tag 'is_public' %>
+        <%= check_box_tag :is_public %>
       </div>
     </div>
     <div class="control-group">
@@ -39,6 +39,8 @@
     </div>
   <% end %>
 </div>
+
+<%= admin_new_modal{ '' } %>
 
 <%= admin_table %>
 

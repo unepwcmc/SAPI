@@ -1,0 +1,47 @@
+<%= form_for [:admin, @event, @document], {
+  url: admin_event_document_url(@event, @document), remote: true,
+  class: 'form-horizontal' 
+} do |f| %>
+
+  <%= error_messages_for(@document) %>
+
+  <%= f.hidden_field :event_id %>
+
+  <div class="control-group">
+    <label for="title" class="control-label">Date</label>
+    <div class="controls">
+      <%= f.text_field :title %>
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="language_id" class="control-label">Language</label>
+    <div class="controls">
+      <%= f.select :language_id,
+        options_for_select(
+          @languages.map { |l| [l.name, l.id] },
+          @document.language_id
+        )
+      %>
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="date" class="control-label">Date</label>
+    <div class="controls">
+      <%= f.text_field :date, :class => "datepicker", :value => @document.date_formatted %>
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="is_public" class="control-label">Is public</label>
+    <div class="controls">
+      <%= f.check_box :is_public %>
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="files" class="control-label">Uploaded file</label>
+    <div class="controls">
+      <%= @document.filename %>
+      <%= f.file_field :filename %>
+    </div>
+  </div>
+
+<% end %>

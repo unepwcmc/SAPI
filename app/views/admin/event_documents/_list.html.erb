@@ -17,7 +17,7 @@
       <td><%= true_false_icon(document.is_public) %></td>
       <td>
         <%= link_to edit_icon,
-          edit_admin_event_document_path(@event, document)
+          edit_admin_event_document_path(@event, document), remote: true
         %>
         <%= link_to delete_icon,
           admin_event_document_path(@event, document),

@@ -17,7 +17,7 @@
 
 class Document < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :event_id, :filename, :date, :type
+  attr_accessible :event_id, :filename, :date, :type, :title, :is_public, :language_id
   belongs_to :event
   belongs_to :language
   validates :title, presence: true

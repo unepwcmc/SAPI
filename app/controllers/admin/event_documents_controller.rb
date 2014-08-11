@@ -3,6 +3,14 @@ class Admin::EventDocumentsController < Admin::SimpleCrudController
   defaults :resource_class => Document,
     :collection_name => 'documents', :instance_name => 'document'
   belongs_to :event
+  respond_to :js, :only => [:edit]
+
+  def edit
+    edit! do |format|
+      load_associations
+      format.js { render 'new' }
+    end
+  end
 
   def upload
   	@event = Event.find(params[:event_id]) #TODO can this be set by inherited resources?
