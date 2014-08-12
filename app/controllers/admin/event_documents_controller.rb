@@ -5,6 +5,19 @@ class Admin::EventDocumentsController < Admin::SimpleCrudController
   belongs_to :event
   respond_to :js, :only => [:edit]
 
+  def index
+    load_associations
+    index! do
+      @document_batch ||= DocumentBatch.new(
+        event_id: @event.id,
+        date: @event.effective_at_formatted,
+        language_id: @english.id,
+        is_public: false,
+        documents: [Document.new]
+      )
+    end
+  end
+
   def edit
     edit! do |format|
       load_associations
@@ -28,14 +41,13 @@ class Admin::EventDocumentsController < Admin::SimpleCrudController
 
   def upload
   	@event = Event.find(params[:event_id]) #TODO can this be set by inherited resources?
-    params[:files].each do |file|
-      d = Document.create(
-        event_id: @event.id,
-        language_id: params[:language_id],
-        filename: file, date: params[:date], type: 'Document')
-      puts d.errors.inspect
+    @document_batch = DocumentBatch.new(document_batch_params)
+    if @document_batch.save
+      redirect_to(admin_event_documents_url(@event))
+    else
+      load_associations
+      render 'index'
     end
-    redirect_to admin_event_documents_url(@event)
   end
 
   protected
@@ -49,6 +61,17 @@ class Admin::EventDocumentsController < Admin::SimpleCrudController
   def load_associations
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).order(:name_en)
     @english = Language.find_by_iso_code1('EN')
+  end
+
+  def document_batch_params
+    params.require(:document_batch).permit(
+      :event_id, :date, :language_id, :is_public,
+      :documents_attributes => [
+        :type,
+        :filename,
+        :_destroy
+      ]
+    )
   end
 
 end

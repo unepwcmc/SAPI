@@ -24,6 +24,8 @@ class CitesExtraordinaryMeeting < Event
   attr_accessible :is_current
 
   validates :effective_at, :presence => true
-
+  def self.document_types
+    [Document::Proposal]
+  end
 end
 

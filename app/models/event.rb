@@ -33,6 +33,10 @@ class Event < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => true
   validates :url, :format => URI::regexp(%w(http https)), :allow_blank => true
 
+  def self.document_types
+    [Document]
+  end
+
   def effective_at_formatted
     effective_at && effective_at.strftime("%d/%m/%Y")
   end

@@ -27,6 +27,8 @@ class Document < ActiveRecord::Base
 
   before_validation :set_title, on: :create
 
+  def self.display_name; 'Document'; end
+
   def set_title
     self.title = filename.file.filename.sub(/.\w+$/, '').humanize
   end

@@ -28,6 +28,10 @@ class CitesCop < Event
   validate :designation_is_cites
   validates :effective_at, :presence => true
 
+  def self.document_types
+    [Document::Proposal]
+  end
+
   private
 
   def dependent_objects_map
