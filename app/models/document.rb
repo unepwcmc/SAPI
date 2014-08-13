@@ -25,12 +25,14 @@ class Document < ActiveRecord::Base
   # TODO validates inclusion of type in available types
   mount_uploader :filename, DocumentFileUploader
 
-  before_validation :set_title, on: :create
+  before_validation :set_title
 
   def self.display_name; 'Document'; end
 
   def set_title
-    self.title = filename.file.filename.sub(/.\w+$/, '').humanize
+    if title.blank? && filename_changed?
+      self.title = filename.file.filename.sub(/.\w+$/, '').humanize
+    end
   end
 
   def date_formatted

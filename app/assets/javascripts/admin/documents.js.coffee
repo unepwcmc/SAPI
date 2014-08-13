@@ -1,8 +1,8 @@
 $(document).ready ->
 
-  $('#event_id').chained('#event_type')
+  $('#event-id').chained('#event-type')
 
-  $('#event_link').click( (e) ->
-    event_id = $('#event_id').val()
-    $(e.target).attr('href', 'events/' + event_id + '/documents')
+  $('#event-link').click( (e) ->
+    event_id = $('#event-id').val()
+    $(e.target).attr('href', 'events/' + event_id + '/document_batch/new')
   )

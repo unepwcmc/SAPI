@@ -1,19 +1,34 @@
-<%= form_for [:admin, @event.becomes(Event), @document], 
-  remote: true, multipart: true, #TODO remete file upload or change redirect
+<%= form_for @document, as: :document,
+  url: (@event ? admin_event_document_path(@event, @document) : admin_document_path(@document)),
+  multipart: true, remote: true,
   html: { class: 'form-horizontal' } do |f| %>
 
   <%= error_messages_for(@document) %>
 
-  <%= f.hidden_field :event_id %>
+  <% if @event %>
+    <%= f.hidden_field :event_id %>
+  <% else %>
+    <div class="control-group">
+      <%= f.label :event_id, class: 'control-label' %>
+      <div class="controls">
+        <%= f.select :event_id,
+          options_for_select(
+            @events.map { |l| [l.name, l.id] },
+            @document.event_id
+          )
+        %>
+      </div>
+    </div>
+  <% end %>
 
   <div class="control-group">
-    <label for="title" class="control-label">Date</label>
+    <%= f.label :title, class: 'control-label' %>
     <div class="controls">
       <%= f.text_field :title %>
     </div>
   </div>
   <div class="control-group">
-    <label for="language_id" class="control-label">Language</label>
+    <%= f.label :language_id, class: 'control-label' %>
     <div class="controls">
       <%= f.select :language_id,
         options_for_select(
@@ -24,19 +39,19 @@
     </div>
   </div>
   <div class="control-group">
-    <label for="date" class="control-label">Date</label>
+    <%= f.label :date, class: 'control-label' %>
     <div class="controls">
       <%= f.text_field :date, :class => "datepicker", :value => @document.date_formatted %>
     </div>
   </div>
   <div class="control-group">
-    <label for="is_public" class="control-label">Is public</label>
+    <%= f.label :is_public, class: 'control-label' %>
     <div class="controls">
       <%= f.check_box :is_public %>
     </div>
   </div>
   <div class="control-group">
-    <label for="files" class="control-label">Uploaded file</label>
+    <%= f.label :filename, class: 'control-label' %>
     <div class="controls">
       <%= @document.filename %>
       <%= f.file_field :filename %>

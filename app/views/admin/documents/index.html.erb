@@ -1,38 +1,24 @@
-<div class="admin-header">
-  <div class="row-fluid">
+<div class="admin-header clearfix">
   <h1>Documents</h1>
-  </div>
-
-  <div class="row-fluid">
-
-    <div class="span8">
-      <div class="row-fluid"><h4 class="admin-header">Event Related</h4></div>
-      <div class="row-fluid">
-        <%= select_tag :event_type, options_for_select(@event_types, @event_types.first) %>
-        <%= select_tag :event_id,
-          options_for_select(
-            @events.map { |e| [e.name, e.id, {:class => e.type}] }
-          )
-        %>
-      </div>
-      <div class="row-fluid">
-        <a id="event_link" class="btn btn-primary">
-          Go to event upload document page
-        </a>
-      </div>
-    </div>
-    <div class="span4">
-      <div class="row-fluid"><h4 class="admin-header">Non Event Related</h4></div>
-      <div class="row-fluid">
-        <div class="span4">
-          Document type<br>
-          <select id="document_type" name="document_type" disabled>
-            <option value="" disabled selected>Select your option</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
 </div>
+
+<h3>Upload documents in batch</h3>
+<%= select_tag 'event-type', options_for_select(@event_types, @event_types.first) %>
+<%= select_tag 'event-id',
+  options_for_select(
+    @events.map { |e| [e.name, e.id, {:class => e.type}] }
+  )
+%>
+<%= link_to 'Upload documents for this event', '#', class: "btn btn-primary", id: 'event-link' %>
+
+or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
+
+<h3>Search documents</h3>
+
+TODO filters here
+
+<%= admin_new_modal{ '' } %>
+
+<%= admin_table %>
+
+<%= paginate collection %>

@@ -1,75 +1,9 @@
 <h1><%= @event.name %> documents</h1>
 
+<%= admin_new_modal { '' } %>
 
-<div class="admin-header">
-  <%= nested_form_for @document_batch,
-    url: upload_admin_event_documents_url(@event), multipart: true, remote: true,
-    html: {class: 'form-horizontal'} do |f| %>
-    <%= error_messages_for(@document_batch) %>
-    <%= f.hidden_field :event_id %>
-    <div class="control-group">
-      <label for="language_id" class="control-label">Language</label>
-      <div class="controls">
-        <%= f.select :language_id,
-          options_for_select(
-            @languages.map { |l| [l.name, l.id] },
-            @document_batch.language_id
-          )
-        %>
-      </div>
-    </div>
-    <div class="control-group">
-      <div class="control-group">
-        <label for="date" class="control-label">Date</label>
-        <div class="controls">
-          <%= f.text_field :date, :value => @document_batch.date, :class => "datepicker" %>
-        </div>
-      </div>
-    </div>
-    <div class="control-group">
-      <label for="is_public" class="control-label">Is public</label>
-      <div class="controls">
-        <%= f.check_box :is_public %>
-      </div>
-    </div>
-    <div class="control-group">
-      <label for="is_public" class="control-label">Documents</label>
-      <div class="controls">
-        <%= f.fields_for :documents do |ff| %>
-          <%= error_messages_for(ff.object) %>
-          <div class="control-group">
-            <label class="control-label">Type</label>
-            <div class="controls">
-              <%= ff.select :type,
-              options_for_select(
-                @event.class.document_types.map { |l| [l.display_name, l] },
-                ff.object.type.to_s
-              ) %>
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label">File</label>
-            <div class="controls">
-              <%= ff.file_field :filename %>
-              <p>
-                <%= ff.link_to_remove "Remove document" %>
-              </p>
-            </div>
-          </div>
-        <% end %>
-        <%= f.link_to_add "Add another document", :documents %>
-      </div>
-    </div>
-    <div class="control-group">
-      <div class="controls">
-        <%= f.submit 'Upload', class: 'btn btn-primary' %>
-      </div>
-    </div>
-
-  <% end %>
-
-<%= admin_new_modal{ '' } %>
-
-<%= admin_table %>
+<%= admin_table do %>
+  <%= render 'admin/documents/list' %>
+<% end %>
 
 <%= paginate collection %>
