@@ -20,13 +20,18 @@
         <td><%= link_to document.event.name, admin_event_documents_path(document.event) if document.event %></td>
       <% end %>
       <td><%= link_to document.title, '#', {rel: 'tooltip', :'data-title' => document.filename} %></td>
-      <td><%= link_to 'TODO citations cnt', '#', {rel: 'tooltip', :'data-title' => 'TODO Here be citations'} %></td>
+      <td>
+        <%= link_to "#{document.citations.count} citations", '#', {
+          rel: 'tooltip',
+          'data-html' => true,
+          'data-title' => document_citations_tooltip(document).html_safe
+        } %>
+      </td>
       <td><%= true_false_icon(document.is_public) %></td>
       <td><%= document.language.try(:iso_code1) %> </td>
       <td>
         <%= link_to edit_icon,
-          (@event ? edit_admin_event_document_path(@event, document) : edit_admin_document_path(document)),
-          remote: true
+          (@event ? edit_admin_event_document_path(@event, document) : edit_admin_document_path(document))
         %>
         <%= link_to delete_icon,
           (@event ? admin_event_document_path(@event, document) : admin_document_path(document)),

@@ -18,14 +18,18 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   def edit
     edit! do |format|
       load_associations
-      format.js { render 'new' }
+      @document.citations.build
+      @taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
+      @geo_entities = GeoEntity.joins(:geo_entity_type).where(
+        'geo_entity_types.name' => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]
+      )
+      format.html { render 'new' }
     end
   end
 
   def update
     update! do |success, failure|
       success.html { success_redirect }
-      failure.js { load_associations; render 'new' }
       failure.html { load_associations; render 'new' }
     end
   end

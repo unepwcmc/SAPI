@@ -30,15 +30,15 @@ describe Admin::DocumentsController do
     end
   end
 
-  describe "XHR GET edit" do
+  describe "GET edit" do
     let(:document){ create(:document) }
     it "renders the edit template" do
-      xhr :get, :edit, id: document.id
+      get :edit, id: document.id
       response.should render_template('new')
     end
   end
 
-  describe "XHR PUT update" do
+  describe "PUT update" do
     context "when no event" do
       let(:document){ create(:document) }
       it "redirects to index when successful" do

@@ -17,12 +17,20 @@
 
 class Document < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :event_id, :filename, :date, :type, :title, :is_public, :language_id
+  attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
+    :language_id, :citations_attributes
   belongs_to :event
   belongs_to :language
+  has_many :citations, class_name: 'DocumentCitation'
   validates :title, presence: true
   validates :date, presence: true
   # TODO validates inclusion of type in available types
+  accepts_nested_attributes_for :citations, :allow_destroy => true,
+    :reject_if => proc { |attributes|
+    attributes['stringy_taxon_concept_ids'].blank? && (
+      attributes['geo_entity_ids'].blank? || attributes['geo_entity_ids'].reject(&:blank?).empty?
+    )
+  }
   mount_uploader :filename, DocumentFileUploader
 
   before_validation :set_title
