@@ -22,8 +22,7 @@ describe Admin::DocumentBatchesController do
     end
   end
 
-  # TODO documents_attributes not passed properly, strong params issue?
-  pending "POST create" do
+  describe "POST create" do
     let(:document_attrs){
       {
         'type' => 'Document::Proposal',
@@ -31,6 +30,7 @@ describe Admin::DocumentBatchesController do
         _destroy: false
       }
     }
+    pending("documents_attributes not passed properly, strong params issue?") do
     context "when no event" do
       let(:document){ create(:document) }
       it "redirects to index when successful" do
@@ -60,6 +60,7 @@ describe Admin::DocumentBatchesController do
         }
         response.should render_template('new')
       end
+    end
     end
   end
 
