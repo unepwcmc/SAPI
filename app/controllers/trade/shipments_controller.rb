@@ -69,12 +69,12 @@ private
 
   def shipment_params
     params.require(:shipment).permit(
-      shipment_attributes + [
+      *(shipment_attributes + [
         :import_permit_number,
         :export_permit_number,
         :origin_permit_number,
         :ignore_warnings
-      ]
+      ])
     )
   end
 
