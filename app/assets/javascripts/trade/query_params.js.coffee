@@ -63,6 +63,7 @@ Trade.QueryParams = Ember.Mixin.create({
       urlParam: 'appendices'
       type: 'array'
       displayTitle: 'appdx.'
+      displayProperty: 'name'
     },
     {
       name: "selectedTimeStart"
