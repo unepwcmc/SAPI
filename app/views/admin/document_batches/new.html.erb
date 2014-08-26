@@ -34,8 +34,8 @@
     </div>
   </div>
   <div class="control-group">
-    <label for="is_public" class="control-label">Documents</label>
-    <div class="controls">
+    <p>Documents</p>
+    <div class="controls nested">
       <%= f.fields_for :documents do |ff| %>
         <%= error_messages_for(ff.object) %>
         <div class="control-group">
