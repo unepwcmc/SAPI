@@ -38,7 +38,7 @@ class Trade::Shipment < ActiveRecord::Base
     :country_of_origin_id, :origin_permit_id,
     :exporter_id, :import_permit_id, :importer_id, :purpose_id,
     :quantity, :reporter_type,
-    :source_id, :taxon_concept_id,
+    :source_id, :taxon_concept_id, :reported_taxon_concept_id,
     :term_id, :unit_id, :year,
     :import_permit_number, :export_permit_number, :origin_permit_number,
     :ignore_warnings, :created_by_id, :updated_by_id
@@ -81,19 +81,23 @@ class Trade::Shipment < ActiveRecord::Base
     end
   end
 
-  def reporter_type
-    return nil if reported_by_exporter.nil?
-    reported_by_exporter ? 'E' : 'I'
-  end
-
-  def reporter_type=(str)
-    self.reported_by_exporter = if str && str.upcase.strip == 'E'
+  def self.reporter_type_to_reported_by_exporter(str)
+    if str && str.upcase.strip == 'E'
       true
     elsif str && str.upcase.strip == 'I'
       false
     else
       nil
     end
+  end
+
+  def reporter_type
+    return nil if reported_by_exporter.nil?
+    reported_by_exporter ? 'E' : 'I'
+  end
+
+  def reporter_type=(str)
+    self.reported_by_exporter = self.class.reporter_type_to_reported_by_exporter(str)
   end
 
   def import_permit_number=(str)

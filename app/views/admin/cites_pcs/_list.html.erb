@@ -2,6 +2,7 @@
   <th>Name</th>
   <th>Effective from</th>
   <th>Current</th>
+  <th>Documents</th>
   <th width="10%">Actions</th>
 </thead>
 <tbody>
@@ -17,6 +18,9 @@
       </td>
       <td><%= cites_pc.effective_at_formatted %></td>
       <td><%= true_false_icon(cites_pc.is_current) %></td>
+      <td>
+        <%= link_to cites_pc.documents.count, admin_event_documents_path(cites_pc) %>
+      </td>
       <td>
         <%= link_to edit_icon, edit_resource_url(cites_pc), :remote => true %>
         <%= link_to delete_icon, resource_url(cites_pc),

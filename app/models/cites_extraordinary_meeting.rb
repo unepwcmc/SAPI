@@ -25,5 +25,8 @@ class CitesExtraordinaryMeeting < Event
 
   validates :effective_at, :presence => true
 
+  def self.document_types
+    [Document::Proposal]
+  end
 end
 

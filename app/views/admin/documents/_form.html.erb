@@ -1,0 +1,98 @@
+<%= nested_form_for @document, as: :document,
+  url: (@event ? admin_event_document_path(@event, @document) : admin_document_path(@document)),
+  multipart: true,
+  html: { class: 'form-horizontal' } do |f| %>
+
+  <%= error_messages_for(@document) %>
+
+  <% if @event %>
+    <%= f.hidden_field :event_id %>
+  <% else %>
+    <div class="control-group">
+      <%= f.label :event_id, class: 'control-label' %>
+      <div class="controls">
+        <%= f.select :event_id,
+          options_for_select(
+            @events.map { |l| [l.name, l.id] },
+            @document.event_id
+          )
+        %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label :title, class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :language_id, class: 'control-label' %>
+    <div class="controls">
+      <%= f.select :language_id,
+        options_for_select(
+          @languages.map { |l| [l.name, l.id] },
+          @document.language_id
+        )
+      %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :date, class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :date, :class => "datepicker", :value => @document.date_formatted %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :is_public, class: 'control-label' %>
+    <div class="controls">
+      <%= f.check_box :is_public %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :citations, class: 'control-label' %>
+    <div class="controls">
+      <%= f.fields_for :citations do |ff| %>
+
+        <%= f.label :taxon_concept_ids %>
+        <%= ff.hidden_field :stringy_taxon_concept_ids, {
+          :class => 'citation-taxon-concept',
+          :'data-taxonomy-id' => @taxonomy.id,
+          :'data-name-status-filter' => ['A', 'N'].to_json,
+          :'data-init-selection' => ff.object.taxon_concepts.map{ |tc| {id: tc.id, text: tc.full_name} }.to_json,
+        } %>
+
+        <%= f.label :geo_entity_ids %>
+        <%= ff.select :geo_entity_ids,
+          options_from_collection_for_select(
+            @geo_entities,
+            :id,
+            :name_en,
+            ff.object.geo_entities.map(&:id)
+          ), { },
+          { :multiple => true, :class => 'citation-geo-entity', :style => 'width: 220px' }
+        %>
+
+        <%= ff.link_to_remove 'Remove citation' %>
+      <% end %>
+      <p><%= f.link_to_add 'Add another citation', :citations %></p>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :filename, class: 'control-label' %>
+    <div class="controls">
+      <%= @document.filename %>
+      <%= f.file_field :filename %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      <%= f.submit 'Save' %>
+    </div>
+  </div>
+
+<% end %>

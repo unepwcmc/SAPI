@@ -1,3 +1,11 @@
+### 0.8.1 (unreleased)
+**Trade Admin**
+* ability to update shipments in batch
+**Species+ Admin**
+* new event types in preparation for e-library integration
+**General**
+* Rails upgrade to 3.2.19
+
 ### 0.8.0 (2014-08-04)
 **CITES Checklist**
 * site and outputs available in 3 lngs

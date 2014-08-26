@@ -1,93 +1,24 @@
-<div class="admin-header">
-  <div class="row-fluid">
+<div class="admin-header clearfix">
   <h1>Documents</h1>
-  </div>
-
-  <div class="row-fluid">
-
-    <div class="span8">
-      <div class="row-fluid"><h4 class="admin-header">Event Related</h4></div>
-      <div class="row-fluid">
-        <div class="span5">
-          Event type<br>
-          <select id="event_type" name="event_type">
-          <option value="" disabled selected>Select your option</option>
-          <%= options_for_select([
-            ['Cites CoPs', 'cites_cops'],
-            ['Cites Animal Committee', 'cites_acs'],
-            ['Cites Plant Committee', 'cites_pcs'],
-            ['Cites Technical Committee', 'cites_tcs'],
-            ['Cites Extraordinary Meetings', 'cites_extraordinary_meetings'],
-            ['European Commission SRG', 'ec_srgs']
-          ]) %>
-          </select>
-        </div>
-        <div class="span5" >
-          Event<br>
-          <select id="event" name="event" disabled>
-            <option value=""></option>
-          </select>
-        </div>
-      </div>
-      <div class="row-fluid">
-        <a href="" id="event_link" style="visibility: hidden" disabled>
-          Go to event upload document page
-        </a>
-      </div>
-    </div>
-    <div class="span4">
-      <div class="row-fluid"><h4 class="admin-header">Non Event Related</h4></div>
-      <div class="row-fluid">
-        <div class="span4">
-          Document type<br>
-          <select id="document_type" name="document_type" disabled>
-            <option value="" disabled selected>Select your option</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
 </div>
 
-<script type="text/javascript">
-$(function() {
+<h3>Upload documents in batch</h3>
+<%= select_tag 'event-type', options_for_select(@event_types, @event_types.first) %>
+<%= select_tag 'event-id',
+  options_for_select(
+    @events.map { |e| [e.name, e.id, {:class => e.type}] }
+  )
+%>
+<%= link_to 'Upload documents for this event', '#', class: "btn btn-primary", id: 'event-link' %>
 
-  var $event_type = $('#event_type'),
-    $event = $('#event'),
-    $event_link = $('#event_link');
+or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
 
-  $event_type.prop('selectedIndex',0);
+<h3>Search documents</h3>
 
-  $event_type.change( function() {
-    var event_type = $(this).val();
-    if (event_type) {
-      $event.attr('disabled', false);
-      $.getJSON(event_type+'.json', function( data ) {
-        var items = ['<option value="" disabled selected>Select your option</option>'];
-        $.each(data, function( idx, obj ) {
-          items.push(
-            "<option value='" + obj.value + "'>" + obj.text + "</option>");
-        });
-        $('#event').html(items.join( "" ));
-      });
-    } else {
-      $event.attr('disabled', true);
-      $event_link.css('visibility', 'hidden');
-    }
-  });
+TODO filters here
 
-  $event.change( function() {
-    var event = $(this).val();
-    if (event) {
-      $event_link.attr('disabled', false);
-      $event_link.css('visibility', 'visible');
-      $event_link.attr('href', 'events/'+event+'/documents');
-    } else {
-      $event_link.css('visibility', 'hidden');
-    }
-  });
+<%= admin_new_modal{ '' } %>
 
-});
-</script>
+<%= admin_table %>
+
+<%= paginate collection %>
