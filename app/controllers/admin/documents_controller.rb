@@ -49,7 +49,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   end
 
   def load_associations
-    @event_types = ['CitesCop', 'EcSrg']
+    @event_types = ['CitesCop', 'CitesAc', 'CitesPc', 'EcSrg']
     @events = Event.where(type: @event_types)
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).order(:name_en)
     @english = Language.find_by_iso_code1('EN')
