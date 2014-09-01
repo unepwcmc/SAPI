@@ -99,3 +99,5 @@ endpoints = [
   }
 ]
 set :urls_to_test, endpoints
+
+after "deploy:update", "newrelic:notice_deployment"
