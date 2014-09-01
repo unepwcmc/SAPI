@@ -337,4 +337,3 @@ namespace :deploy do
   end
 end
 after "deploy:rebuild", "downloads:cache:clear"
-after "deploy:update", "newrelic:notice_deployment"
