@@ -1,6 +1,7 @@
 $(document).ready ->
 
   $('#event-id').chained('#event-type')
+  $('#event-id-search').chained('#event-type-search')
 
   $('#event-link').click( (e) ->
     event_id = $('#event-id').val()

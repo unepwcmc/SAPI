@@ -43,16 +43,28 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
 
   protected
   def collection
+
     @documents ||= end_of_association_chain.includes([:event, :language]).
       order(:date, :title).
       page(params[:page])
+
+    unless params['event-id-search'].nil?
+      @documents = @documents.where("event_id = ?", params['event-id-search'])
+    end
+
+    @documents
   end
 
   def load_associations
     @event_types = ['CitesCop', 'CitesAc', 'CitesPc', 'EcSrg']
+    @event_type_query = params['event-type-search'] || @event_types.first
     @events = Event.where(type: @event_types).order(:effective_at).reverse_order
-    @languages = Language.select([:id, :name_en, :name_es, :name_fr]).order(:name_en)
+    @event_query_obj = ( params['event-id-search'] &&
+     @events.find(params['event-id-search']) ) || @events.first
+    @languages = Language.select([:id, :name_en, :name_es, :name_fr]).
+     order(:name_en)
     @english = Language.find_by_iso_code1('EN')
+    @query = !params['event-id-search'].nil?
   end
 
   def success_redirect
