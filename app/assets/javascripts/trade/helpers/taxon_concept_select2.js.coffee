@@ -8,6 +8,7 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
   origin: null
   classNames: ['select2'],
   quietMillis: 500,
+  includeSynonyms: false,
 
   didInsertElement: () ->
     placeholderText = this.get('prompt') || ''
@@ -33,16 +34,21 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
       ajax:
         url: "/api/v1/auto_complete_taxon_concepts.json"
         dataType: 'json'
-        data: (term, page) ->
+        data: (term, page) =>
           taxon_concept_query: term # search term
           visibility: 'trade_internal'
+          include_synonyms: @get('includeSynonyms')
           per_page: 10
           page: page
         results: (data, page) => # parse the results into the format expected by Select2.
           more = (page * 10) < data.meta.total
           formatted_taxon_concepts = data.auto_complete_taxon_concepts.map (tc) =>
+            nameStatusFormatted = unless tc.name_status == 'A'
+              ' [' + tc.name_status + ']'
+            else
+              ''
             id: if @origin is 'sandbox' then tc.full_name else tc.id
-            text: tc.full_name
+            text: tc.full_name + nameStatusFormatted
           results: formatted_taxon_concepts
           more: more
     )
