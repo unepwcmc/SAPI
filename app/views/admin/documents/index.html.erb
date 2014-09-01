@@ -28,7 +28,7 @@ or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
 <% end %>
 <% if @query %>
 <p>
-  <%= link_to 'Clear Filter', 'documents', class: "btn btn-primary" %>
+  <%= link_to 'Clear Filter', 'documents', class: "btn btn-warning" %>
   <%= @event_type_query %> / <%= @event_query_obj.name %>
 </p>
 <% end %>
