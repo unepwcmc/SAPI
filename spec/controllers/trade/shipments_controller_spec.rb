@@ -23,6 +23,25 @@ describe Trade::ShipmentsController do
     end
   end
 
+  describe "PUT update" do
+    before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+    it "should auto resolve accepted taxon when blank" do
+      put :update, id: @shipment1.id,
+        shipment: {
+          reported_taxon_concept_id: @synonym_subspecies.id
+        }
+      @shipment1.reload.taxon_concept_id.should == @plant_species.id
+    end
+    it "should not auto resolve accepted taxon when given" do
+      put :update, id: @shipment1.id,
+        shipment: {
+          reported_taxon_concept_id: @synonym_subspecies.id,
+          taxon_concept_id: @animal_species.id
+        }
+      @shipment1.reload.taxon_concept_id.should == @animal_species.id
+    end
+  end
+
   describe "POST update_batch" do
     before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     it "should change reporter type from I to E" do
@@ -75,6 +94,40 @@ describe Trade::ShipmentsController do
       Trade::Shipment.where(year: 2013).count.should == 0
       Trade::Shipment.where(year: 2014).count.should > 0
     end
+
+    it "should auto resolve accepted taxon when blank" do
+      post :update_batch, {
+        filters: { # shipment1
+          time_range_start: @shipment1.year,
+          time_range_end: @shipment2.year,
+          year: 2013,
+          exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
+          importers_ids: [@portugal.id.to_s, @argentina.id.to_s]
+        },
+        updates: {
+          reported_taxon_concept_id: @synonym_subspecies.id
+        }
+      }
+      @shipment1.reload.taxon_concept_id.should == @plant_species.id
+    end
+
+    it "should not auto resolve accepted taxon when given" do
+      post :update_batch, {
+        filters: { # shipment1
+          time_range_start: @shipment1.year,
+          time_range_end: @shipment2.year,
+          year: 2013,
+          exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
+          importers_ids: [@portugal.id.to_s, @argentina.id.to_s]
+        },
+        updates: {
+          reported_taxon_concept_id: @synonym_subspecies.id,
+          taxon_concept_id: @animal_species.id
+        }
+      }
+      @shipment1.reload.taxon_concept_id.should == @animal_species.id
+    end
+
   end
 
   describe "POST destroy_batch" do

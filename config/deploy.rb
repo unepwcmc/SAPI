@@ -1,5 +1,3 @@
-require 'new_relic/recipes'
-
 set :default_stage, 'staging'
 
 require 'capistrano/ext/multistage'
