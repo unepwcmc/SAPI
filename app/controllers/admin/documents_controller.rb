@@ -48,8 +48,10 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
       order(:date, :title).
       page(params[:page])
 
-    unless params['event-id-search'].nil?
+    if !params['event-id-search'].nil?
       @documents = @documents.where("event_id = ?", params['event-id-search'])
+    elsif !params['document-title'].nil?
+      @documents = @documents.where("title = ?", params['document-title'])
     end
 
     @documents
@@ -57,14 +59,15 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
 
   def load_associations
     @event_types = ['CitesCop', 'CitesAc', 'CitesPc', 'EcSrg']
-    @event_type_query = params['event-type-search'] || @event_types.first
+    @event_type_query = params['event-type-search']
+    @document_title_query = params['document-title']
     @events = Event.where(type: @event_types).order(:effective_at).reverse_order
     @event_query_obj = ( params['event-id-search'] &&
      @events.find(params['event-id-search']) ) || @events.first
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).
      order(:name_en)
     @english = Language.find_by_iso_code1('EN')
-    @query = !params['event-id-search'].nil?
+    @is_query = !params['event-id-search'].nil? || !params['document-title'].nil?
   end
 
   def success_redirect

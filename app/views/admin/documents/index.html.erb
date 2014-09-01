@@ -3,7 +3,7 @@
 </div>
 
 <h3>Upload documents in batch</h3>
-<%= select_tag 'event-type', options_for_select(@event_types, @event_types.first) %>
+<%= select_tag 'event-type', options_for_select(@event_types), {:prompt => "select an event type"}  %>
 <%= select_tag 'event-id',
   options_for_select(
     @events.map { |e| [e.name, e.id, {:class => e.type}] }
@@ -17,19 +17,31 @@ or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
 <h3>Filter documents</h3>
 
 <%= form_tag("documents", {:method => 'get'}) do %>
-  <%= select_tag 'event-type-search', options_for_select(@event_types, @event_type_query) %>
+
+  <%= select_tag 'event-type-search', options_for_select(@event_types, @event_type_query), {:prompt => "select an event type"} %>
 
   <%= select_tag 'event-id-search',
     options_for_select(
-      @events.map { |e| [e.name, e.id, {:class => e.type}] }, @event_query_obj.id.to_i
+      @events.map { |e| [e.name, e.id, {:class => e.type}] }, @event_query_obj.id.to_i,
     )
   %>
+
+  <br>
+
+  <%= text_field_tag 'document-title', @document_title_query || 'Enter a document title...' %>
+
+  <br>
+
   <%= submit_tag('Filter', :name => nil, :class => "btn btn-primary filter") %>
+  <% if @is_query %>
+    <%= link_to 'Clear Filter', 'documents', class: "btn btn-warning filter" %>
+  <% end %>
 <% end %>
-<% if @query %>
+<% if @is_query %>
 <p>
-  <%= link_to 'Clear Filter', 'documents', class: "btn btn-warning" %>
-  <%= @event_type_query %> / <%= @event_query_obj.name %>
+  <% if @event_type_query != '' %>
+    <%= @event_type_query %> / <%= @event_query_obj.name %>
+  <% end %>
 </p>
 <% end %>
 
