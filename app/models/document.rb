@@ -16,6 +16,9 @@
 #
 
 class Document < ActiveRecord::Base
+  include PgSearch
+  pg_search_scope :search_by_title, :against => :title,
+    :using => {:tsearch => {:prefix => true}}
   track_who_does_it
   attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
     :language_id, :citations_attributes

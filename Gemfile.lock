@@ -248,6 +248,9 @@ GEM
     pg (0.17.1)
     pg-hstore (1.2.0)
     pg_array_parser (0.0.9)
+    pg_search (0.5.7)
+      activerecord (>= 3)
+      activesupport (>= 3)
     polyglot (0.3.5)
     pry (0.9.11.4)
       coderay (~> 1.0.5)
@@ -437,6 +440,7 @@ DEPENDENCIES
   oj
   pg
   pg_array_parser
+  pg_search (~> 0.5.7)
   quiet_assets
   rack-cors
   rack-livereload

@@ -6,14 +6,20 @@ describe Admin::DocumentsController do
 
   describe "index" do
     before(:each) do
-      @document1 = create(:document, :title => 'BB')
-      @document2 = create(:document, :title => 'AA')
+      @document1 = create(:document, :title => 'BB hello world')
+      @document2 = create(:document, :title => 'AA goodbye world')
     end
 
     describe "GET index" do
       it "assigns @documents sorted by name" do
         get :index
         assigns(:documents).should eq([@document2, @document1])
+      end
+      context "search" do
+        it "runs a full text search on title" do
+          get :index, 'document-title' => 'good'
+          assigns(:documents).should eq([@document2])
+        end
       end
       context "when no event" do
         it "renders the index template" do

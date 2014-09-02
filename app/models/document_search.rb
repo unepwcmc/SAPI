@@ -34,7 +34,7 @@ class DocumentSearch
       @query = @query.where("event_id = ?", params['event-id-search'])
     end
     if !params['document-title'].nil? && params['document-title'] != ""
-      @query = @query.where("title = ?", params['document-title'])
+      @query = @query.search_by_title(params['document-title'])
     end
     if !params['document-type'].nil? && params['document-type'] != ""
       @query = @query.where("documents.type = ?", params['document-type'])

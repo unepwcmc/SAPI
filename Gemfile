@@ -10,6 +10,7 @@ gem 'pg'
 gem 'activeuuid', '>= 0.5.0'
 gem 'pg_array_parser'
 gem 'activerecord-postgres-hstore'
+gem 'pg_search', '~> 0.5.7'
 gem 'foreigner'
 gem 'oj' #optimised JSON (picked by multi_json)
 gem 'nokogiri'
