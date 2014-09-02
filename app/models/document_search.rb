@@ -1,6 +1,6 @@
 class DocumentSearch
   include CacheIterator
-  include DocumentsSearchCache
+  include SearchCache # this provides #cached_results and #cached_total_cnt
   attr_reader :page, :per_page
 
   def initialize(params)
