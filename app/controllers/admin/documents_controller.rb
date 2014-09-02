@@ -57,8 +57,8 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     @document_title_query = params['document-title']
 
     @events = Event.where(type: @event_types).order(:effective_at).reverse_order
-    @event_query_obj = ( params['event-id-search'] &&
-     @events.find(params['event-id-search']) ) || @events.first
+    @event_query_obj = ( !params['event-id-search'].blank? &&
+      @events.find(params['event-id-search']) ) || @events.first
 
 
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).

@@ -22,8 +22,8 @@ or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
 
   <%= select_tag 'event-id-search',
     options_for_select(
-      @events.map { |e| [e.name, e.id, {:class => e.type}] }, @event_query_obj.id.to_i,
-    )
+      @events.map { |e| [e.name, e.id, {:class => e.type}] }, @event_query_obj.id.to_i
+    ), include_blank: true
   %>
 
   <br>
