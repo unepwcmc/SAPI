@@ -3,13 +3,9 @@ class DocumentSearch
   include SearchCache # this provides #cached_results and #cached_total_cnt
   attr_reader :page, :per_page
 
-  def initialize(params)
-    @options = params
-    #TODO
-    @per_page = params['per_page'] || 50
-    @page = params['page'] || 1
-
-    initialize_query params
+  def initialize(options)
+    initialize_params(options)
+    initialize_query
   end
 
   def results
@@ -23,18 +19,25 @@ class DocumentSearch
 
   private
 
-  def initialize_query(params)
-    @query = Document.order(:date, :title)
-    if !params['event-id-search'].nil? && params['event-id-search'] != ""
-      @query = @query.where("event_id = ?", params['event-id-search'])
+  def initialize_params(options)
+    @options = DocumentSearchParams.sanitize(options)
+    @options.keys.each { |k| instance_variable_set("@#{k}", @options[k]) }
+  end
+
+  def initialize_query
+    @query = Document.joins(:event)
+    if !@event_id.blank?
+      @query = @query.where(event_id: @event_id)
+    elsif !@event_type.blank?
+      @query = @query.where('events.type' => @event_type)
     end
-    if !params['document-title'].nil? && params['document-title'] != ""
-      @query = @query.search_by_title(params['document-title'])
+    if !@document_title.blank?
+      @query = @query.search_by_title(@document_title)
     end
-    if !params['document-type'].nil? && params['document-type'] != ""
-      @query = @query.where("documents.type = ?", params['document-type'])
+    if !@document_type.blank?
+      @query = @query.where('documents.type' => @document_type)
     end
-    @query
+    @query.order([:date, :title])
   end
 
 end
