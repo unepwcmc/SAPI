@@ -6,7 +6,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   def index
     load_associations
     @search = DocumentSearch.new(params)
-    @document_types = @search.document_types
+    @document_types_with_event_types = get_document_types_with_event_types
     index! do
       if @event
         render 'admin/event_documents/index'
@@ -60,6 +60,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     @event_query_obj = ( params['event-id-search'] &&
      @events.find(params['event-id-search']) ) || @events.first
 
+
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).
      order(:name_en)
     @english = Language.find_by_iso_code1('EN')
@@ -90,4 +91,18 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     redirect_to url, :alert => alert
   end
 
+  def get_document_types_with_event_types
+    t = {}
+    Document.select([:type, :event_id]).
+     map{|d| [d.type, d.event.type]}.uniq.each do |arr|
+      document_type = arr[0]
+      event_type = arr[1]
+      if t[document_type]
+        t[document_type] << event_type
+      else
+        t[document_type] = [event_type]
+      end
+     end
+    t
+  end
 end

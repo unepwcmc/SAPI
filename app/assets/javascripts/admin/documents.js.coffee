@@ -1,7 +1,19 @@
 $(document).ready ->
 
+  # Save the children from chained destruction!
+  documentTypeChildren =  $('#document-type').children()
+
   $('#event-id').chained('#event-type')
   $('#event-id-search').chained('#event-type-search')
+
+  $('#event-type-search').click( (e) ->
+    documentType = $('#document-type')
+    if e.target.value
+      documentType.chained('#event-type-search')
+    else
+      documentType.prop('disabled', false)
+      documentType.html(documentTypeChildren)
+  )
 
   $('#event-link').click( (e) ->
     event_id = $('#event-id').val()

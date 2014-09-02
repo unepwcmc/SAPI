@@ -28,7 +28,10 @@ or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
 
   <br>
 
-  <%= select_tag 'document-type', options_for_select(@document_types, @document_type_query), {:prompt => 'Select a document type...'} %>
+  <%= select_tag 'document-type', options_for_select(
+    @document_types_with_event_types.map { |document_type, event_types|
+      [document_type, document_type, {:class => event_types.join(' ')}]}, @document_type_query),
+    {:prompt => 'Select a document type...'} %>
   <br>
 
   <%= text_field_tag 'document-title', @document_title_query || nil, :class => "align-on-select", :placeholder => 'Enter a document title...' %>

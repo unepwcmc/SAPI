@@ -21,10 +21,6 @@ class DocumentSearch
     @query.count
   end
 
-  def document_types
-    Document.select(:type).map(&:type).uniq
-  end
-
   private
 
   def initialize_query(params)
