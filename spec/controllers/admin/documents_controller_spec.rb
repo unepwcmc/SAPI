@@ -72,7 +72,17 @@ describe Admin::DocumentsController do
   end
 
   describe "DELETE destroy" do
-    let(:document){ create(:document) }
+    let(:poland){
+      create(:geo_entity,
+        :name_en => 'Poland', :iso_code2 => 'PL',
+        :geo_entity_type => country_geo_entity_type
+      )
+    }
+    let(:document){
+      document = create(:document)
+      document.citations << DocumentCitation.new(geo_entity_ids: [poland.id])
+      document
+    }
     it "redirects after delete" do
       delete :destroy, id: document.id
       response.should redirect_to(admin_documents_url)

@@ -24,7 +24,7 @@ class Document < ActiveRecord::Base
     :language_id, :citations_attributes
   belongs_to :event
   belongs_to :language
-  has_many :citations, class_name: 'DocumentCitation'
+  has_many :citations, class_name: 'DocumentCitation', dependent: :destroy
   validates :title, presence: true
   validates :date, presence: true
   # TODO validates inclusion of type in available types
