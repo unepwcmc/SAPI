@@ -33,11 +33,12 @@ class DocumentSearch
     end
     if !@document_title.blank?
       @query = @query.search_by_title(@document_title)
+    else
+      @query = @query.order([:date, :title])
     end
     if !@document_type.blank?
       @query = @query.where('documents.type' => @document_type)
     end
-    @query.order([:date, :title])
   end
 
 end
