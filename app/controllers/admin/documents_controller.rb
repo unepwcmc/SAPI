@@ -5,6 +5,8 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
 
   def index
     load_associations
+    @search = DocumentSearch.new(params)
+    @document_types = @search.document_types
     index! do
       if @event
         render 'admin/event_documents/index'
@@ -42,33 +44,13 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   end
 
   protected
+
   def collection
-    @documents ||= end_of_association_chain.includes([:event, :language]).
-      order(:date, :title).
-      page(params[:page])
-
-    @document_types = @documents.select(:type).map(&:type).uniq
-
-    if !params['event-id-search'].nil? && params['event-id-search'] !=
-     @event_type_search_prompt
-      @documents = @documents.where("event_id = ?", params['event-id-search'])
-    end
-    if !params['document-title'].nil? && params['document-title'] !=
-     @document_title_prompt
-      @documents = @documents.where("title = ?", params['document-title'])
-    end
-    if !params['document-type'].nil? && params['document-type'] != ""
-      @documents = @documents.where("documents.type = ?", params['document-type'])
-    end
-
-    @documents
+    @documents = @search.cached_results
   end
 
   def load_associations
     @event_types = ['CitesCop', 'CitesAc', 'CitesPc', 'EcSrg']
-    @event_type_search_prompt = 'Select an event type...'
-    @document_type_prompt = 'Select a document type...'
-    @document_title_prompt = 'Enter a document title...'
 
     @event_type_query = params['event-type-search']
     @document_type_query = params['document-type']

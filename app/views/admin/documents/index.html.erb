@@ -18,7 +18,7 @@ or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
 
 <%= form_tag("documents", {:method => 'get'}) do %>
 
-  <%= select_tag 'event-type-search', options_for_select(@event_types, @event_type_query), {:prompt => @event_type_search_prompt} %>
+  <%= select_tag 'event-type-search', options_for_select(@event_types, @event_type_query), {:prompt => 'Select an event type...'} %>
 
   <%= select_tag 'event-id-search',
     options_for_select(
@@ -28,12 +28,10 @@ or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
 
   <br>
 
-  <%= select_tag 'document-type', options_for_select(@document_types, @document_type_query), {:prompt => @document_type_prompt} %>
-
+  <%= select_tag 'document-type', options_for_select(@document_types, @document_type_query), {:prompt => 'Select a document type...'} %>
   <br>
 
-  <%= text_field_tag 'document-title', @document_title_query || @document_title_prompt, :class => "align-on-select" %>
-
+  <%= text_field_tag 'document-title', @document_title_query || nil, :class => "align-on-select", :placeholder => 'Enter a document title...' %>
   <br>
 
   <%= submit_tag('Filter', :name => nil, :class => "btn btn-primary filter") %>
@@ -53,4 +51,4 @@ or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
 
 <%= admin_table %>
 
-<%= paginate collection %>
+
