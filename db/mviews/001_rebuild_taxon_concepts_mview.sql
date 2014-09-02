@@ -349,7 +349,6 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
         id,
         full_name
       FROM taxon_concepts
-      WHERE name_status != 'S'
 
       UNION
 
@@ -433,7 +432,14 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
             AND ARRAY['A', 'H', 'N']::VARCHAR[] && ARRAY[name_status]
           THEN TRUE
           ELSE FALSE
-        END AS show_in_trade_ac
+        END AS show_in_trade_ac,
+        CASE
+          WHEN
+            taxonomies.name = 'CITES_EU'
+            AND ARRAY['A', 'H', 'N', 'T']::VARCHAR[] && ARRAY[name_status]
+          THEN TRUE
+          ELSE FALSE
+        END AS show_in_trade_internal_ac
         FROM taxon_concepts
         JOIN ranks ON ranks.id = rank_id
         JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
@@ -454,6 +460,9 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     --this one used for Trade autocomplete
     CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
     USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_trade_ac);
+    --this one used for Trade internal autocomplete
+    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
+    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_trade_internal_ac);
 
     RAISE INFO 'Swapping auto complete taxon concepts materialized view';
     DROP table IF EXISTS auto_complete_taxon_concepts_mview CASCADE;

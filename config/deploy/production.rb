@@ -1,3 +1,5 @@
+require 'new_relic/recipes'
+
 set :rails_env, "production"
 
 # Primary domain name of your application. Used in the Apache configs
@@ -97,3 +99,5 @@ endpoints = [
   }
 ]
 set :urls_to_test, endpoints
+
+after "deploy:update", "newrelic:notice_deployment"

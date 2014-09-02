@@ -1,5 +1,3 @@
-require 'new_relic/recipes'
-
 set :default_stage, 'staging'
 
 require 'capistrano/ext/multistage'
@@ -339,4 +337,3 @@ namespace :deploy do
   end
 end
 after "deploy:rebuild", "downloads:cache:clear"
-after "deploy:update", "newrelic:notice_deployment"

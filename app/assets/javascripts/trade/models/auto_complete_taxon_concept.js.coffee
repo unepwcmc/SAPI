@@ -1,11 +1,16 @@
 Trade.AutoCompleteTaxonConcept = DS.Model.extend
   rankName: DS.attr("string")
   fullName: DS.attr("string")
-  synonyms: DS.attr("array")
+  nameStatus: DS.attr("string")
+  matchingNames: DS.attr("array")
 
   autoCompleteSuggestion: ( ->
-    if @get('synonyms') != undefined && @get('synonyms').length > 0
-      @get('fullName') + ' (' + @get('synonyms').join( ', ') + ')'
+    nameStatusFormatted = unless @get('nameStatus') == 'A'
+      ' [' + @get('nameStatus') + ']'
     else
-      @get('fullName')
-  ).property('fullName', 'synonyms')
+      ''
+    if @get('matchingNames') != undefined && @get('matchingNames').length > 0
+      @get('fullName') + nameStatusFormatted + ' (' + @get('matchingNames').join( ', ') + ')'
+    else
+      @get('fullName') + nameStatusFormatted
+  ).property('fullName', 'matchingNames')
