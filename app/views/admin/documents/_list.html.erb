@@ -21,11 +21,15 @@
       <% end %>
       <td><%= link_to document.title, document.filename.url, {rel: 'tooltip', :'data-title' => document.filename.url} %></td>
       <td>
-        <%= link_to "#{document.citations.count} citations", '#', {
-          rel: 'tooltip',
-          'data-html' => true,
-          'data-title' => document_citations_tooltip(document).html_safe
-        } %>
+        <% if document.citations_cnt > 0 %>
+          <%= link_to "#{document.citations_cnt} citations", '#', {
+            rel: 'tooltip',
+            'data-html' => true,
+            'data-title' => document_citations_tooltip(document).html_safe
+          } %>
+        <% else %>
+          0 citations
+        <% end %>
       </td>
       <td><%= true_false_icon(document.is_public) %></td>
       <td><%= document.language.try(:iso_code1) %> </td>

@@ -50,4 +50,15 @@ class Document < ActiveRecord::Base
     date && date.strftime("%d/%m/%Y")
   end
 
+  def citations_cnt
+    citations.map do |citation|
+      taxon_concept_count = citation.document_citation_taxon_concepts.count
+      geo_entity_count = citation.document_citation_geo_entities.count
+      (
+        (taxon_concept_count == 0 ? 1 : taxon_concept_count) *
+        (geo_entity_count == 0 ? 1 : geo_entity_count)
+      )
+    end.reduce(:+) || 0
+  end
+
 end
