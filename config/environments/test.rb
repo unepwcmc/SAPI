@@ -36,4 +36,5 @@ SAPI::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.ember.variant = :development
+  config.cache_store = :null_store
 end
