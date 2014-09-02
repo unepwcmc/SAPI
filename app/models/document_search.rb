@@ -1,6 +1,6 @@
 class DocumentSearch
   include CacheIterator
-  include DocumentsSearchCache
+  include SearchCache
   attr_reader :page, :per_page
 
   def initialize(params)
@@ -28,8 +28,7 @@ class DocumentSearch
   private
 
   def initialize_query(params)
-
-    @query = Document
+    @query = Document.order(:date, :title)
     if !params['event-id-search'].nil? && params['event-id-search'] != ""
       @query = @query.where("event_id = ?", params['event-id-search'])
     end
