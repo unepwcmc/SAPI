@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140710095812) do
+ActiveRecord::Schema.define(:version => 20140730101120) do
 
 # Could not dump table "ahoy_events" because of following StandardError
 #   Unknown type 'json' for column 'properties'
@@ -30,7 +30,6 @@ ActiveRecord::Schema.define(:version => 20140710095812) do
     t.string   "os"
     t.string   "device_type"
     t.string   "country"
-    t.string   "region"
     t.string   "city"
     t.string   "utm_source"
     t.string   "utm_medium"
@@ -38,6 +37,7 @@ ActiveRecord::Schema.define(:version => 20140710095812) do
     t.string   "utm_content"
     t.string   "utm_campaign"
     t.datetime "started_at"
+    t.text     "organization"
   end
 
   add_index "ahoy_visits", ["user_id"], :name => "index_ahoy_visits_on_user_id"
@@ -83,10 +83,13 @@ ActiveRecord::Schema.define(:version => 20140710095812) do
   add_index "auto_complete_taxon_concepts_mview", ["name_for_matching", "taxonomy_is_cites_eu", "rank_name", "show_in_trade_ac"], :name => "auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx2"
 
   create_table "change_types", :force => true do |t|
-    t.string   "name",           :null => false
-    t.integer  "designation_id", :null => false
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.string   "name",            :null => false
+    t.integer  "designation_id",  :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.text     "display_name_en", :null => false
+    t.text     "display_name_es"
+    t.text     "display_name_fr"
   end
 
   create_table "cites_listing_changes_mview", :id => false, :force => true do |t|
@@ -1472,31 +1475,6 @@ ActiveRecord::Schema.define(:version => 20140710095812) do
     t.datetime "updated_at",               :null => false
   end
 
-  create_table "impressions", :force => true do |t|
-    t.string   "impressionable_type"
-    t.integer  "impressionable_id"
-    t.integer  "user_id"
-    t.string   "controller_name"
-    t.string   "action_name"
-    t.string   "view_name"
-    t.string   "request_hash"
-    t.string   "ip_address"
-    t.string   "session_hash"
-    t.text     "message"
-    t.text     "referrer"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
-  end
-
-  add_index "impressions", ["controller_name", "action_name", "ip_address"], :name => "controlleraction_ip_index"
-  add_index "impressions", ["controller_name", "action_name", "request_hash"], :name => "controlleraction_request_index"
-  add_index "impressions", ["controller_name", "action_name", "session_hash"], :name => "controlleraction_session_index"
-  add_index "impressions", ["impressionable_type", "impressionable_id", "ip_address"], :name => "poly_ip_index"
-  add_index "impressions", ["impressionable_type", "impressionable_id", "request_hash"], :name => "poly_request_index"
-  add_index "impressions", ["impressionable_type", "impressionable_id", "session_hash"], :name => "poly_session_index"
-  add_index "impressions", ["impressionable_type", "message", "impressionable_id"], :name => "impressionable_type_message_index"
-  add_index "impressions", ["user_id"], :name => "index_impressions_on_user_id"
-
   create_table "instruments", :force => true do |t|
     t.integer  "designation_id"
     t.string   "name"
@@ -1630,6 +1608,9 @@ ActiveRecord::Schema.define(:version => 20140710095812) do
     t.boolean  "fixed_order",        :default => false, :null => false
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
+    t.text     "display_name_en",                       :null => false
+    t.text     "display_name_es"
+    t.text     "display_name_fr"
   end
 
   create_table "references", :force => true do |t|
@@ -2116,32 +2097,6 @@ ActiveRecord::Schema.define(:version => 20140710095812) do
   add_index "valid_taxon_concept_appendix_year_mview", ["taxon_concept_id", "appendix", "effective_from", "effective_to"], :name => "tmp_valid_taxon_concept_appen_taxon_concept_id_appendix_eff_idx"
   add_index "valid_taxon_concept_appendix_year_mview", ["taxon_concept_id", "appendix"], :name => "valid_taxon_concept_appendix_year_mview_year_idx"
   add_index "valid_taxon_concept_appendix_year_mview", ["taxon_concept_id", "effective_from", "effective_to", "appendix"], :name => "valid_taxon_concept_appendix_year_mview_idx"
-
-  create_table "visits", :id => false, :force => true do |t|
-    t.uuid     "id"
-    t.uuid     "visitor_id"
-    t.string   "ip"
-    t.text     "user_agent"
-    t.text     "referrer"
-    t.text     "landing_page"
-    t.integer  "user_id"
-    t.string   "referring_domain"
-    t.string   "search_keyword"
-    t.string   "browser"
-    t.string   "os"
-    t.string   "device_type"
-    t.string   "country"
-    t.string   "region"
-    t.string   "city"
-    t.string   "utm_source"
-    t.string   "utm_medium"
-    t.string   "utm_term"
-    t.string   "utm_content"
-    t.string   "utm_campaign"
-    t.datetime "started_at"
-  end
-
-  add_index "visits", ["user_id"], :name => "index_visits_on_user_id"
 
   add_foreign_key "ahoy_events", "users", name: "ahoy_events_user_id_fk"
 
