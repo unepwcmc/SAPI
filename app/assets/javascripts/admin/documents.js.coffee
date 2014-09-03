@@ -6,7 +6,12 @@ $(document).ready ->
   $('#event-id').chained('#event-type')
   $('#event-id-search').chained('#event-type-search')
 
-  $('#event-type-search').click( (e) ->
+  eventTypeSearch = $('#event-type-search')
+
+  if eventTypeSearch.val()
+    $('#document-type').chained('#event-type-search')
+
+  eventTypeSearch.click( (e) ->
     documentType = $('#document-type')
     if e.target.value
       documentType.chained('#event-type-search')
