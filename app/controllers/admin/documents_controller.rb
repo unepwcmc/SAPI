@@ -91,6 +91,9 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     redirect_to url, :alert => alert
   end
 
+  # Goodbye Agnieszka!!!
+  # hope you will not feel too bad fixing this last bit of rubbish code I am
+  # leaving you!
   def get_document_types_with_event_types
     t = {}
     Document.select([:type, :event_id]).
