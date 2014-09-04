@@ -43,8 +43,10 @@ class Species::TaxonConceptPrefixMatcher
       @query.by_cites_eu_taxonomy
     end
 
-    @query = if @visibility == :trade_internal
-       @query # no filter on name_status for internal search
+    @query = if @visibility == :trade_internal && @include_synonyms
+      @query # no filter on name_status for internal search on reported taxon
+    elsif @visibility == :trade_internal && !@include_synonyms
+      @query.where(:show_in_trade_internal_ac => true)
     elsif @visibility == :trade
       @query.where(:show_in_trade_ac => true)
     else
@@ -52,11 +54,14 @@ class Species::TaxonConceptPrefixMatcher
     end
 
     @query = @query.
-      select('id, full_name, rank_name,
-        ARRAY_AGG_NOTNULL(matched_name ORDER BY matched_name) AS matching_names_ary,
+      select('id, full_name, rank_name, name_status,
+        ARRAY_AGG_NOTNULL(
+          CASE WHEN matched_name != full_name THEN matched_name ELSE NULL END
+          ORDER BY matched_name
+        ) AS matching_names_ary,
         rank_display_name_en, rank_display_name_es, rank_display_name_fr').
       group([
-        :id, :full_name, :rank_name, :rank_order,
+        :id, :full_name, :rank_name, :name_status, :rank_order,
         :rank_display_name_en, :rank_display_name_es, :rank_display_name_fr
       ])
 

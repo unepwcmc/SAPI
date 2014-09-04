@@ -60,6 +60,12 @@ SAPI::Application.routes.draw do
       resources :eu_suspensions, :only => [:index, :destroy]
     end
     resources :cites_cops
+    resources :cites_pcs
+    resources :cites_acs
+    resources :cites_tcs
+    resources :ec_srgs
+    resources :cites_extraordinary_meetings
+
     resources :cites_suspension_notifications
     resources :references, :only => [:index, :create, :update, :destroy] do
       get :autocomplete, :on => :collection
@@ -71,6 +77,7 @@ SAPI::Application.routes.draw do
     resources :cites_hash_annotations, :only => [:index, :create, :update, :destroy]
     resources :eu_hash_annotations, :only => [:index, :create, :update, :destroy]
     resources :cites_suspensions, :only => [:index, :new, :create, :edit, :update, :destroy]
+
     resources :quotas, :only => [:index, :destroy] do
       collection do
         get :duplication
@@ -103,8 +110,8 @@ SAPI::Application.routes.draw do
       resources :taxon_quotas, :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :quotas
 
-      resources :taxon_eu_suspensions, 
-        :only => [:index, :new, :create, :edit, :update, :destroy], 
+      resources :taxon_eu_suspensions,
+        :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :eu_suspensions
 
       resources :taxon_cites_suspensions,
@@ -132,7 +139,10 @@ SAPI::Application.routes.draw do
     end
     resources :validation_rules
     resources :shipments do
-      post :destroy_batch, :on => :collection
+      collection do
+        post :update_batch
+        post :destroy_batch
+      end
     end
     resources :geo_entities, :only => [:index]
     resources :permits, :only => [:index]

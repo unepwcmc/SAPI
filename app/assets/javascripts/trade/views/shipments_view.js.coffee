@@ -1,5 +1,5 @@
 Trade.ShipmentsView = Ember.View.extend
-  templateName: 'trade/shipments'
+  layoutName: 'trade/shipments'
 
   actions:
     nextPage: ->

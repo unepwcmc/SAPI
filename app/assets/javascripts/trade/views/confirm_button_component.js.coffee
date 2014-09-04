@@ -1,5 +1,5 @@
 Trade.ConfirmButtonComponent = Ember.Component.extend
-  templateName: 'trade/components/confirm-button'
+  layoutName: 'trade/components/confirm-button'
   actions:
     showConfirmation: () ->
       if confirm("Secondary errors detected. Save anyway?")

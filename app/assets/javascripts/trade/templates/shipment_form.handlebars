@@ -17,10 +17,18 @@
       </div>
       <div class="inner">
         <div class="attribute-area left taxon-name">
-          <p>taxon name <span class="error">{{currentShipment.errors.taxonConceptId}}</span></p>
+          <p>Taxon name <span class="error">{{currentShipment.errors.taxonConceptId}}</span></p>
           {{view Trade.TaxonConceptSelect2
             prompt="Please select taxon names"
             valueBinding="currentShipment.taxonConceptId"
+          }}
+        </div>
+        <div class="attribute-area left taxon-name">
+          <p>Reported taxon name <span class="error">{{currentShipment.errors.reportedTaxonConceptId}}</span></p>
+          {{view Trade.TaxonConceptSelect2
+            prompt="Please select taxon names"
+            valueBinding="currentShipment.reportedTaxonConceptId"
+            includeSynonyms="true"
           }}
         </div>
         <div class="attribute-area left">

@@ -23,7 +23,114 @@ describe Trade::ShipmentsController do
     end
   end
 
-  describe "DELETE destroy_batch" do
+  describe "PUT update" do
+    before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+    it "should auto resolve accepted taxon when blank" do
+      put :update, id: @shipment1.id,
+        shipment: {
+          reported_taxon_concept_id: @synonym_subspecies.id
+        }
+      @shipment1.reload.taxon_concept_id.should == @plant_species.id
+    end
+    it "should not auto resolve accepted taxon when given" do
+      put :update, id: @shipment1.id,
+        shipment: {
+          reported_taxon_concept_id: @synonym_subspecies.id,
+          taxon_concept_id: @animal_species.id
+        }
+      @shipment1.reload.taxon_concept_id.should == @animal_species.id
+    end
+  end
+
+  describe "POST update_batch" do
+    before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+    it "should change reporter type from I to E" do
+      post :update_batch, {
+        filters: { # shipment2
+          time_range_start: @shipment1.year,
+          time_range_end: @shipment2.year,
+          reporter_type: 'I',
+          exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
+          importers_ids: [@portugal.id.to_s, @argentina.id.to_s]
+        },
+        updates: {
+          reporter_type: 'E'
+        }
+      }
+      @shipment1.reported_by_exporter.should be_true
+      @shipment2.reload.reported_by_exporter.should be_true
+    end
+    it "should change reporter type from E to I" do
+      post :update_batch, {
+        filters: { # shiment1
+          time_range_start: @shipment1.year,
+          time_range_end: @shipment2.year,
+          reporter_type: 'E',
+          exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
+          importers_ids: [@portugal.id.to_s, @argentina.id.to_s]
+        },
+        updates: {
+          reporter_type: 'I'
+        }
+      }
+
+      @shipment1.reload.reported_by_exporter.should be_false
+      @shipment2.reported_by_exporter.should be_false
+    end
+
+    it "should update year" do
+      post :update_batch, {
+        filters: { # shiment1
+          time_range_start: @shipment1.year,
+          time_range_end: @shipment2.year,
+          year: 2013,
+          exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
+          importers_ids: [@portugal.id.to_s, @argentina.id.to_s]
+        },
+        updates: {
+          year: 2014
+        }
+      }
+      Trade::Shipment.where(year: 2013).count.should == 0
+      Trade::Shipment.where(year: 2014).count.should > 0
+    end
+
+    it "should auto resolve accepted taxon when blank" do
+      post :update_batch, {
+        filters: { # shipment1
+          time_range_start: @shipment1.year,
+          time_range_end: @shipment2.year,
+          year: 2013,
+          exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
+          importers_ids: [@portugal.id.to_s, @argentina.id.to_s]
+        },
+        updates: {
+          reported_taxon_concept_id: @synonym_subspecies.id
+        }
+      }
+      @shipment1.reload.taxon_concept_id.should == @plant_species.id
+    end
+
+    it "should not auto resolve accepted taxon when given" do
+      post :update_batch, {
+        filters: { # shipment1
+          time_range_start: @shipment1.year,
+          time_range_end: @shipment2.year,
+          year: 2013,
+          exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
+          importers_ids: [@portugal.id.to_s, @argentina.id.to_s]
+        },
+        updates: {
+          reported_taxon_concept_id: @synonym_subspecies.id,
+          taxon_concept_id: @animal_species.id
+        }
+      }
+      @shipment1.reload.taxon_concept_id.should == @animal_species.id
+    end
+
+  end
+
+  describe "POST destroy_batch" do
     before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     it "should delete 1 shipment" do
       post :destroy_batch, {

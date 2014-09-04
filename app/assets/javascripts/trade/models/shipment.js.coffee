@@ -9,6 +9,7 @@ Trade.Shipment = DS.Model.extend
   appendix: DS.attr('string')
   taxonConceptId: DS.attr('number')
   taxonConcept: DS.belongsTo('Trade.TaxonConcept')
+  reportedTaxonConceptId: DS.attr('number')
   reportedTaxonConcept: DS.belongsTo('Trade.TaxonConcept')
   term: DS.belongsTo('Trade.Term')
   quantity: DS.attr('string')
@@ -53,6 +54,12 @@ Trade.Shipment = DS.Model.extend
       @set('taxonConcept', Trade.TaxonConcept.find(@get('taxonConceptId')))
     @set('propertyChanged', true)
   ).observes('taxonConceptId')
+
+  reportedTaxonConceptIdDidChange: ( ->
+    if @get('reportedTaxonConceptId')
+      @set('reportedTaxonConcept', Trade.TaxonConcept.find(@get('reportedTaxonConceptId')))
+    @set('propertyChanged', true)
+  ).observes('reportedTaxonConceptId')
 
   # for some reason you can't put all of the following into one observer
   # because as a result the record freezes in root.loaded.materializing.firstTime

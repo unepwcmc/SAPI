@@ -1,0 +1,19 @@
+<div class="admin-header">
+  <h3>CITES TCs</h3>
+  <div class="action-buttons">
+    <%= admin_add_new_button(
+      :resource => 'cites_tc',
+      :href => new_admin_cites_tc_url,
+      :"data-toggle" => nil,
+      :role => nil,
+      :remote => true
+    ) %>
+  </div>
+</div>
+
+<%= admin_new_modal{ '' } %>
+<%= admin_simple_search %>
+
+<%= admin_table %>
+
+<%= paginate collection %>

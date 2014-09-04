@@ -35,7 +35,7 @@ class Admin::EventsController < Admin::StandardAuthorizationController
     def collection
       @events ||= end_of_association_chain.order(:designation_id, :name).
         includes(:designation).
-        where("type NOT IN ('EuRegulation', 'CitesCop', 'CitesSuspensionNotification')").page(params[:page]).
+        where(type: 'Event').page(params[:page]).
         search(params[:query])
     end
 

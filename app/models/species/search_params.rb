@@ -19,6 +19,7 @@ class Species::SearchParams < Hash
       :ranks => params[:ranks] ?
         Rank.dict & params[:ranks].map(&:upcase) : [Rank::SPECIES, Rank::SUBSPECIES],
       :visibility => params[:visibility] ? params[:visibility].downcase.to_sym : nil,
+      :include_synonyms => params[:include_synonyms] ? ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:include_synonyms]) : false,
       :page => params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
       :per_page => params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 25
     }
