@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140730101120) do
+ActiveRecord::Schema.define(:version => 20140901112057) do
 
 # Could not dump table "ahoy_events" because of following StandardError
 #   Unknown type 'json' for column 'properties'

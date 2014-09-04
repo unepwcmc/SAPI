@@ -19,6 +19,7 @@ gem 'strong_parameters'
 gem 'devise'
 gem 'cancan'
 gem 'ahoy_matey'
+gem 'gon'
 
 gem 'sidekiq'
 gem 'sidekiq-status'

@@ -141,13 +141,6 @@ span.beta{
 	text-decoration: none;
 	}
 	
-#nav > li.act > a { 
-	border-left: 1px solid #2d3237;
-	padding-left: 25px;
-	color: #2d3237;
-	text-decoration: none;
-	}
-
 #nav > li > a:hover { 
 	border-bottom: 1px dotted #2D3237;
 	-webkit-transition: all 0.5s ease;
