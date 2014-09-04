@@ -1,0 +1,15 @@
+
+	 <div id="chart"></div>
+<%= include_gon %>
+<script>
+var chart = c3.generate({
+    bindto: '#chart',
+    data: {
+      columns: [
+        gon.taxon_concept,
+        gon.search
+      ]
+    }
+});
+</script>
+<%= render template: 'activities/toptens' %>

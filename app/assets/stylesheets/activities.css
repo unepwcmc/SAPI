@@ -1,7 +1,9 @@
+/*
+  *= require c3
+ */
 div.table {
 	float: left;
 	width: 300px;
-    background-color: #b0e0e6;
 }
 
 table, td, th {
