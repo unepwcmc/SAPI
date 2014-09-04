@@ -109,7 +109,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 WHEN eu_decisions.type = 'EuSuspension'
                   THEN
                     CASE
-                      WHEN start_event.effective_at < current_date AND start_event.is_current = true
+                      WHEN start_event.effective_at <= current_date AND start_event.is_current = true
                         AND (eu_decisions.end_event_id IS NULL OR end_event.effective_at > current_date)
                         THEN TRUE
                       ELSE
