@@ -35,9 +35,9 @@ class Admin::DocumentBatchesController < Admin::StandardAuthorizationController
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).order(:name_en)
     @english = Language.find_by_iso_code1('EN')
     @document_types = if @event
-      @event.class.document_types.map { |l| [l.display_name, l] }
+      @event.class.elibrary_document_types.map { |l| [l.display_name, l] }
     else
-      ['Document', 'Document'] # TODO other non-event types
+      Document.elibrary_current_document_types
     end
   end
 

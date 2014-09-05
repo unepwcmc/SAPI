@@ -27,4 +27,15 @@ class EcSrg < Event
 
   validates :effective_at, :presence => true
 
+  def self.elibrary_document_types
+    [
+      Document::MeetingAgenda,
+      Document::ShortSummaryOfConclusions,
+      Document::AgendaItems,
+      Document::DetailedSummaryOfConclusions,
+      Document::RangeStateConsultationLetter,
+      Document::ListOfParticipants
+    ]
+  end
+
 end

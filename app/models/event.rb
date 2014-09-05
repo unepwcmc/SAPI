@@ -33,7 +33,19 @@ class Event < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => true
   validates :url, :format => URI::regexp(%w(http https)), :allow_blank => true
 
-  def self.document_types
+  def self.elibrary_current_event_types
+    [CitesCop, CitesAc, CitesPc, EcSrg]
+  end
+
+  # Returns event types (class objects) that are relevant to E-Library
+  def self.elibrary_event_types
+    elibrary_current_event_types + [CitesTc, CitesExtraordinaryMeeting]
+  end
+
+  # Returns document types (class objects) that are relevant to E-Library and
+  # that can be associated with this event type  
+  # Should be overriden in subclasses
+  def self.elibrary_document_types
     [Document]
   end
 

@@ -28,7 +28,7 @@ class CitesCop < Event
   validate :designation_is_cites
   validates :effective_at, :presence => true
 
-  def self.document_types
+  def self.elibrary_document_types
     [Document::Proposal]
   end
 

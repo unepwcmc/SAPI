@@ -1,21 +1,15 @@
 $(document).ready ->
 
+  $('#event-id').chained('#event-type')
+  $('#event-id-search').chained('#event-type-search')
+  $('#document-type').chained('#event-type-search')
+
   # Save the children from chained destruction!
   documentTypeChildren =  $('#document-type').children()
 
-  $('#event-id').chained('#event-type')
-  $('#event-id-search').chained('#event-type-search')
-
-  eventTypeSearch = $('#event-type-search')
-
-  if eventTypeSearch.val()
-    $('#document-type').chained('#event-type-search')
-
-  eventTypeSearch.click( (e) ->
+  $('#event-type-search').change( (e) ->
     documentType = $('#document-type')
-    if e.target.value
-      documentType.chained('#event-type-search')
-    else
+    unless e.target.value
       documentType.prop('disabled', false)
       documentType.html(documentTypeChildren)
   )

@@ -27,5 +27,9 @@ class CitesPc < Event
 
   validates :effective_at, :presence => true
 
+  def self.elibrary_document_types
+    [Document::ReviewOfSignificantTrade]
+  end
+
 end
 
