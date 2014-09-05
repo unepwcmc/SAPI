@@ -25,7 +25,7 @@ class DocumentSearch
   end
 
   def initialize_query
-    @query = Document.joins(:event)
+    @query = Document.joins('LEFT JOIN events ON events.id = documents.event_id')
     if !@event_id.blank?
       @query = @query.where(event_id: @event_id)
     elsif !@event_type.blank?
