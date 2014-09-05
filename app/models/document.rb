@@ -43,7 +43,7 @@ class Document < ActiveRecord::Base
 
   # Returns document types (class objects) that are relevant to E-Library
   def self.elibrary_document_types
-    descendants
+    self.subclasses
   end
 
   # Returns event types (class objects) that are relevant to E-Library and

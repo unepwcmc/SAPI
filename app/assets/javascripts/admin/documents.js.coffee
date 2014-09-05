@@ -16,7 +16,10 @@ $(document).ready ->
 
   $('#event-link').click( (e) ->
     event_id = $('#event-id').val()
-    $(e.target).attr('href', 'events/' + event_id + '/document_batch/new')
+    if event_id
+      $(e.target).attr('href', 'events/' + event_id + '/document_batch/new')
+    else
+      $(e.target).attr('href', 'document_batch/new')
   )
 
   citationTaxonSelect2Options = {
