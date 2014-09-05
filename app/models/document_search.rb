@@ -1,7 +1,7 @@
 class DocumentSearch
   include CacheIterator
   include SearchCache # this provides #cached_results and #cached_total_cnt
-  attr_reader :page, :per_page
+  attr_reader :page, :per_page, :event_type, :event_id, :document_type, :document_title
 
   def initialize(options)
     initialize_params(options)
@@ -25,7 +25,7 @@ class DocumentSearch
   end
 
   def initialize_query
-    @query = Document.joins(:event)
+    @query = Document.joins('LEFT JOIN events ON events.id = documents.event_id')
     if !@event_id.blank?
       @query = @query.where(event_id: @event_id)
     elsif !@event_type.blank?

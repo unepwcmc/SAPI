@@ -41,6 +41,19 @@ class Document < ActiveRecord::Base
 
   def self.display_name; 'Document'; end
 
+  # Returns document types (class objects) that are relevant to E-Library
+  def self.elibrary_document_types
+    self.subclasses
+  end
+
+  # Returns event types (class objects) that are relevant to E-Library and
+  # that can be associated with this document type
+  def self.elibrary_event_types
+    Event.elibrary_event_types.select do |e_klass|
+      e_klass.elibrary_document_types.include? self
+    end
+  end
+
   def set_title
     if title.blank? && filename_changed?
       self.title = filename.file.filename.sub(/.\w+$/, '').humanize

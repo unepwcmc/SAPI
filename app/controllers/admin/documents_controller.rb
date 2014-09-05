@@ -6,7 +6,6 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   def index
     load_associations
     @search = DocumentSearch.new(params)
-    @document_types_with_event_types = get_document_types_with_event_types
     index! do
       if @event
         render 'admin/event_documents/index'
@@ -50,22 +49,11 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   end
 
   def load_associations
-    @event_types = ['CitesCop', 'CitesAc', 'CitesPc', 'EcSrg']
-
-    @event_type_query = params['event-type-search']
-    @document_type_query = params['document-type']
-    @document_title_query = params['document-title']
-
+    @event_types = Event.elibrary_current_event_types.map(&:to_s)
     @events = Event.where(type: @event_types).order(:effective_at).reverse_order
-    @event_query_obj = ( !params['event-id-search'].blank? &&
-      @events.find(params['event-id-search']) ) || @events.first
-
-
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).
      order(:name_en)
     @english = Language.find_by_iso_code1('EN')
-    @is_query = !params['event-id-search'].nil? ||
-     !params['document-type'].nil? || !params['document-title'].nil?
   end
 
   def success_redirect
@@ -89,23 +77,5 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
       "Operation failed"
     end
     redirect_to url, :alert => alert
-  end
-
-  # Goodbye Agnieszka!!!
-  # hope you will not feel too bad fixing this last bit of rubbish code I am
-  # leaving you!
-  def get_document_types_with_event_types
-    t = {}
-    Document.select([:type, :event_id]).
-     map{|d| [d.type, d.event.type]}.uniq.each do |arr|
-      document_type = arr[0]
-      event_type = arr[1]
-      if t[document_type]
-        t[document_type] << event_type
-      else
-        t[document_type] = [event_type]
-      end
-     end
-    t
   end
 end

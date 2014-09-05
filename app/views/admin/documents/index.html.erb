@@ -18,36 +18,35 @@ or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
 
 <%= form_tag("documents", {:method => 'get'}) do %>
 
-  <%= select_tag 'event-type-search', options_for_select(@event_types, @event_type_query), {:prompt => 'Select an event type...'} %>
+  <%= select_tag 'event-type-search',
+    options_for_select(@event_types, @search.event_type), {:prompt => 'Select an event type...'} %>
 
   <%= select_tag 'event-id-search',
     options_for_select(
-      @events.map { |e| [e.name, e.id, {:class => e.type}] }, @event_query_obj.id.to_i
+      @events.map { |e| [e.name, e.id, {:class => e.type}] },
+      @search.event_id
     ), include_blank: true
   %>
 
   <br>
 
   <%= select_tag 'document-type', options_for_select(
-    @document_types_with_event_types.map { |document_type, event_types|
-      [document_type, document_type, {:class => event_types.join(' ')}]}, @document_type_query),
-    {:prompt => 'Select a document type...'} %>
+      Document.elibrary_document_types.map { |document_klass|
+        [
+          document_klass.display_name,
+          document_klass.name,
+          {:class => document_klass.elibrary_event_types.map(&:name).join(' ')}
+        ]
+      }, @search.document_type
+    ), {:prompt => 'Select a document type...'} %>
   <br>
 
-  <%= text_field_tag 'document-title', @document_title_query || nil, :class => "align-on-select", :placeholder => 'Enter a document title...' %>
+  <%= text_field_tag 'document-title', @search.document_title|| nil,
+    :class => "align-on-select", :placeholder => 'Enter a document title...' %>
   <br>
 
   <%= submit_tag('Filter', :name => nil, :class => "btn btn-primary filter") %>
-  <% if @is_query %>
-    <%= link_to 'Clear Filter', 'documents', class: "btn btn-warning filter" %>
-  <% end %>
-<% end %>
-<% if @is_query %>
-<p>
-  <% if @event_type_query != '' %>
-    <%= @event_type_query %> / <%= @event_query_obj.name %>
-  <% end %>
-</p>
+  <%= link_to 'Clear Filter', 'documents', class: "btn btn-default filter" %>
 <% end %>
 
 <%= admin_new_modal{ '' } %>
