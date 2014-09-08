@@ -1,7 +1,8 @@
 class DocumentSearch
   include CacheIterator
   include SearchCache # this provides #cached_results and #cached_total_cnt
-  attr_reader :page, :per_page, :event_type, :event_id, :document_type, :document_title
+  attr_reader :page, :per_page, :offset, :event_type, :event_id,
+    :document_type, :document_title
 
   def initialize(options)
     initialize_params(options)
@@ -9,8 +10,8 @@ class DocumentSearch
   end
 
   def results
-    @query.limit(@per_page).
-      offset(@per_page * (@page - 1)).all
+    results = @query.limit(@per_page).
+      offset(@offset)
   end
 
   def total_cnt
@@ -22,6 +23,7 @@ class DocumentSearch
   def initialize_params(options)
     @options = DocumentSearchParams.sanitize(options)
     @options.keys.each { |k| instance_variable_set("@#{k}", @options[k]) }
+    @offset = @per_page * (@page - 1)
   end
 
   def initialize_query

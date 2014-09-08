@@ -45,7 +45,12 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   protected
 
   def collection
-    @documents = @search.cached_results
+    @documents = Kaminari::PaginatableArray.new(
+      @search.cached_results,
+      limit: @search.per_page,
+      offset: @search.offset,
+      total_count: @search.cached_total_cnt
+    )
   end
 
   def load_associations
