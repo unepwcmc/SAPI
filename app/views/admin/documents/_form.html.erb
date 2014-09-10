@@ -38,12 +38,21 @@
       %>
     </div>
   </div>
+
   <div class="control-group">
     <%= f.label :date, class: 'control-label' %>
     <div class="controls">
       <%= f.text_field :date, :class => "datepicker", :value => @document.date_formatted %>
     </div>
   </div>
+
+  <div class="control-group">
+    <%= f.label :number, class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :number, :value => @document.number %>
+    </div>
+  </div>
+
   <div class="control-group">
     <%= f.label :is_public, class: 'control-label' %>
     <div class="controls">

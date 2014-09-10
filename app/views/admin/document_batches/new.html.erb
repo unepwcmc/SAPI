@@ -8,6 +8,7 @@
   html: {class: 'form-horizontal'} do |f| %>
   <%= error_messages_for(@document_batch) %>
   <%= f.hidden_field :event_id %>
+
   <div class="control-group">
     <label for="language_id" class="control-label">Language</label>
     <div class="controls">
@@ -19,6 +20,7 @@
       %>
     </div>
   </div>
+
   <div class="control-group">
     <div class="control-group">
       <label for="date" class="control-label">Date</label>
@@ -27,17 +29,20 @@
       </div>
     </div>
   </div>
+
   <div class="control-group">
     <label for="is_public" class="control-label">Is public</label>
     <div class="controls">
       <%= f.check_box :is_public %>
     </div>
   </div>
+
   <div class="control-group">
     <p>Documents</p>
     <div class="controls nested">
       <%= f.fields_for :documents do |ff| %>
         <%= error_messages_for(ff.object) %>
+
         <div class="control-group">
           <label class="control-label">Type</label>
           <div class="controls">
@@ -48,6 +53,14 @@
             ) %>
           </div>
         </div>
+
+        <div class="control-group">
+          <label class="control-label">Number</label>
+          <div class="controls">
+            <%= ff.text_field :number %>
+          </div>
+        </div>
+
         <div class="control-group">
           <label class="control-label">File</label>
           <div class="controls">
@@ -58,9 +71,11 @@
           </div>
         </div>
       <% end %>
+
       <%= f.link_to_add "Add another document", :documents %>
     </div>
   </div>
+
   <div class="control-group">
     <div class="controls">
       <%= f.submit 'Upload', class: 'btn btn-primary' %>

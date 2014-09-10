@@ -11,6 +11,7 @@
 #  event_id         :integer
 #  language_id      :integer
 #  legacy_id        :integer
+#  number           :string
 #  created_by_id    :integer
 #  updated_by_id    :integer
 #
@@ -22,7 +23,7 @@ class Document < ActiveRecord::Base
     :order_within_rank => "documents.date, documents.title, documents.id"
   track_who_does_it
   attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
-    :language_id, :citations_attributes
+    :language_id, :citations_attributes, :number
   belongs_to :event
   belongs_to :language
   has_many :citations, class_name: 'DocumentCitation', dependent: :destroy

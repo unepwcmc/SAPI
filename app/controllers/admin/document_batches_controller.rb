@@ -47,6 +47,7 @@ class Admin::DocumentBatchesController < Admin::StandardAuthorizationController
       :documents_attributes => [
         :type,
         :filename,
+        :number,
         :_destroy
       ]
     )
