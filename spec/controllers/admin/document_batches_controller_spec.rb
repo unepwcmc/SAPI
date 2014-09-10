@@ -30,15 +30,17 @@ describe Admin::DocumentBatchesController do
         _destroy: false
       }
     }
-    pending("documents_attributes not passed properly, strong params issue?") do
+
     context "when no event" do
       let(:document){ create(:document) }
+
       it "redirects to index when successful" do
         post :create, document_batch: {
           date: Date.today, documents_attributes: [ document_attrs ]
         }
         response.should redirect_to(admin_documents_url)
       end
+
       it "renders new when not successful" do
         post :create, document_batch: {
           date: nil, documents_attributes: [ document_attrs ]
@@ -46,21 +48,23 @@ describe Admin::DocumentBatchesController do
         response.should render_template('new')
       end
     end
+
     context "when event" do
       let(:document){ create(:document, event_id: event.id) }
+
       it "redirects to index when successful" do
         post :create, event_id: event.id, document_batch: {
           date: Date.today, documents_attributes: [ document_attrs ]
         }
         response.should redirect_to(admin_event_documents_url(event))
       end
+
       it "renders new when not successful" do
         post :create, event_id: event.id, document_batch: {
-          date: nil, documents_attributes: { 0 => document_attrs }
+          date: nil, documents_attributes: [document_attrs]
         }
         response.should render_template('new')
       end
-    end
     end
   end
 
