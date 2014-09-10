@@ -4,7 +4,8 @@ Trade.Router.map (match)->
     @resource 'sandbox_shipments'
   @resource 'validation_rules'
   @resource 'shipments'
-
+  @resource 'search', { path: 'search' }, ->
+    @route 'results'
   @route('promise');
 
 Trade.PromiseRoute = Ember.Route.extend
