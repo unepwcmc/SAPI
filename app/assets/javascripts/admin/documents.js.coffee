@@ -1,6 +1,8 @@
 $(document).ready ->
 
-  $('#document-created-before, #document-created-after').datepicker()
+  $('#document-created-end, #document-created-start').datepicker(
+    format: 'dd/mm/yyyy'
+  )
 
   $('#event-id').chained('#event-type')
   $('#event-id-search').chained('#event-type-search')

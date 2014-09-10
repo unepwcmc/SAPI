@@ -48,11 +48,16 @@ or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
   </div>
 
   <div class="form-group">
-    <%= text_field_tag 'document-created-after', nil, class: 'align-on-select', placeholder: 'Documents created after...' %>
-    <%= text_field_tag 'document-created-before', nil, class: 'align-on-select', placeholder: 'Documents created before...' %>
+    <%= text_field_tag 'document-created-start',
+      params["document-created-start"] || nil, class: 'align-on-select',
+      placeholder: 'Documents created after...' %>
+
+    <%= text_field_tag 'document-created-end',
+      params["document-created-end"] || nil, class: 'align-on-select',
+      placeholder: 'Documents created before...' %>
   </div>
 
-  <%= submit_tag('Filter', :name => nil, :class => "btn btn-primary filter") %>
+  <%= submit_tag 'Filter', name: nil, class: "btn btn-primary filter" %>
   <%= link_to 'Clear Filter', 'documents', class: "btn btn-default filter" %>
 <% end %>
 
