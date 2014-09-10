@@ -6,8 +6,8 @@ describe Admin::DocumentsController do
 
   describe "index" do
     before(:each) do
-      @document1 = create(:document, :title => 'BB hello world', :event => event)
-      @document2 = create(:document, :title => 'AA goodbye world', :event => event)
+      @document1 = create(:document, :title => 'BB hello world', :event => event, date: DateTime.new(2014,12,25))
+      @document2 = create(:document, :title => 'AA goodbye world', :event => event, date: DateTime.new(2014,01,01))
       @document3 = create(:document, :title => 'CC no event!')
     end
 
@@ -20,6 +20,26 @@ describe Admin::DocumentsController do
         it "runs a full text search on title" do
           get :index, 'document-title' => 'good'
           assigns(:documents).should eq([@document2])
+        end
+
+        it "retrieves documents after the given date" do
+          get :index, "document-date-start" => '10/01/2014'
+          assigns(:documents).should eq([@document1])
+        end
+
+        it "retrieves documents before the given date" do
+          get :index, "document-date-end" => '10/01/2014'
+          assigns(:documents).should eq([@document2])
+        end
+
+        it "retrieves documents between two dates" do
+          get :index, "document-date-start" => '01/01/2013', "document-date-end" => '01/01/2015'
+          assigns(:documents).should eq([@document2, @document1])
+        end
+
+        it "ignores invalid dates" do
+          get :index, "document-date-start" => '34/24/12', "document-date-end" => '34/24/12'
+          assigns(:documents).should eq([@document2, @document1])
         end
       end
       context "when no event" do
