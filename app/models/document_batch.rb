@@ -46,7 +46,7 @@ class DocumentBatch
 
   def documents_attributes=(attributes)
     @documents ||= []
-    attributes.each do |document_params|
+    attributes.each do |_, document_params|
       destroy = ActiveRecord::ConnectionAdapters::Column.value_to_boolean(document_params.delete(:_destroy))
       @documents.push(Document.new(common_attributes.merge(document_params))) unless destroy
     end
