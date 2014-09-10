@@ -6,14 +6,15 @@ describe Admin::DocumentsController do
 
   describe "index" do
     before(:each) do
-      @document1 = create(:document, :title => 'BB hello world')
-      @document2 = create(:document, :title => 'AA goodbye world')
+      @document1 = create(:document, :title => 'BB hello world', :event => event)
+      @document2 = create(:document, :title => 'AA goodbye world', :event => event)
+      @document3 = create(:document, :title => 'CC no event!')
     end
 
     describe "GET index" do
-      it "assigns @documents sorted by name" do
+      it "assigns @documents sorted by time of creation" do
         get :index
-        assigns(:documents).should eq([@document2, @document1])
+        assigns(:documents).should eq([@document3, @document2, @document1])
       end
       context "search" do
         it "runs a full text search on title" do
@@ -31,6 +32,10 @@ describe Admin::DocumentsController do
         it "renders the event/documents/index template" do
           get :index, event_id: event.id
           response.should render_template('admin/event_documents/index')
+        end
+        it "assigns @documents for event, sorted by title" do
+          get :index, event_id: event.id
+          assigns(:documents).should eq([@document2, @document1])
         end
       end
     end
