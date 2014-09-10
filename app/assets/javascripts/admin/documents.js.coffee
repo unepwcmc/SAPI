@@ -1,5 +1,7 @@
 $(document).ready ->
 
+  $('#document-created-before, #document-created-after').datepicker()
+
   $('#event-id').chained('#event-type')
   $('#event-id-search').chained('#event-type-search')
   $('#document-type').chained('#event-type-search')

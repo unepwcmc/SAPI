@@ -18,32 +18,39 @@ or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
 
 <%= form_tag("documents", {:method => 'get'}) do %>
 
-  <%= select_tag 'event-type-search',
-    options_for_select(@event_types, @search.event_type), {:prompt => 'Select an event type...'} %>
+  <div class="form-group">
+    <%= select_tag 'event-type-search',
+      options_for_select(@event_types, @search.event_type), {:prompt => 'Select an event type...'} %>
 
-  <%= select_tag 'event-id-search',
-    options_for_select(
-      @events.map { |e| [e.name, e.id, {:class => e.type}] },
-      @search.event_id
-    ), include_blank: true
-  %>
+    <%= select_tag 'event-id-search',
+      options_for_select(
+        @events.map { |e| [e.name, e.id, {:class => e.type}] },
+        @search.event_id
+      ), include_blank: true
+    %>
+  </div>
 
-  <br>
+  <div class="form-group">
+    <%= select_tag 'document-type', options_for_select(
+        Document.elibrary_document_types.map { |document_klass|
+          [
+            document_klass.display_name,
+            document_klass.name,
+            {:class => document_klass.elibrary_event_types.map(&:name).join(' ')}
+          ]
+        }, @search.document_type
+      ), {:prompt => 'Select a document type...'} %>
+  </div>
 
-  <%= select_tag 'document-type', options_for_select(
-      Document.elibrary_document_types.map { |document_klass|
-        [
-          document_klass.display_name,
-          document_klass.name,
-          {:class => document_klass.elibrary_event_types.map(&:name).join(' ')}
-        ]
-      }, @search.document_type
-    ), {:prompt => 'Select a document type...'} %>
-  <br>
+  <div class="form-group">
+    <%= text_field_tag 'document-title', @search.document_title|| nil,
+      :class => "align-on-select", :placeholder => 'Enter a document title...' %>
+  </div>
 
-  <%= text_field_tag 'document-title', @search.document_title|| nil,
-    :class => "align-on-select", :placeholder => 'Enter a document title...' %>
-  <br>
+  <div class="form-group">
+    <%= text_field_tag 'document-created-after', nil, class: 'align-on-select', placeholder: 'Documents created after...' %>
+    <%= text_field_tag 'document-created-before', nil, class: 'align-on-select', placeholder: 'Documents created before...' %>
+  </div>
 
   <%= submit_tag('Filter', :name => nil, :class => "btn btn-primary filter") %>
   <%= link_to 'Clear Filter', 'documents', class: "btn btn-default filter" %>
