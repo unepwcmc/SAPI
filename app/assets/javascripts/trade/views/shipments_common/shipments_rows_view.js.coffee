@@ -1,10 +1,10 @@
-Trade.SearchResultsRowsView = Ember.CollectionView.extend
+Trade.ShipmentsRowsView = Ember.CollectionView.extend
   tagName: 'tbody'
   content: null
 
   itemViewClass: Ember.View.extend
     contextBinding: 'content'
-    templateName: 'trade/search/result_row'
+    templateName: 'trade/shipments_common/shipment_row'
     rowData: (->
       data = []
       @get('parentView.parentView.columns').forEach( (column) =>
