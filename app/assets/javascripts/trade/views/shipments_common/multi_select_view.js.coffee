@@ -6,7 +6,7 @@ Trade.MultiSelect = Ember.View.extend
   selectedValuesCollectionName: 'options'
   selectedValueDisplayProperty: 'name'
 
-  layoutName: 'trade/shipments/multi_select'
+  layoutName: 'trade/shipments_common/multi_select'
 
   click: ->
     wasVisible = @.$('.popup-holder01').is(':visible')
@@ -44,7 +44,7 @@ Trade.MultiSelectButton = Ember.View.extend
   ).property("selectedValues.@each", 'blankValue')
 
 Trade.MultiSelectDropdown = Ember.View.extend
-  layoutName: 'trade/shipments/multi_select_dropdown'
+  layoutName: 'trade/shipments_common/multi_select_dropdown'
   classNames: ['popup-holder01']
   allValues: null
   selectedValues: null

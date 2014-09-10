@@ -1,5 +1,5 @@
 Trade.SandboxShipmentsView = Ember.View.extend
-  templateName: 'trade/sandbox_shipments'
+  templateName: 'trade/annual_report_upload/sandbox_shipments'
 
   columns: [
 
