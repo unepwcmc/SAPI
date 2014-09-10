@@ -49,11 +49,11 @@ or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
 
   <div class="form-group">
     <%= text_field_tag 'document-date-start',
-      params["document-date-start"] || nil, class: 'align-on-select',
+      params["document-date-start"] || nil, class: 'align-on-select datepicker',
       placeholder: 'Documents created after...' %>
 
     <%= text_field_tag 'document-date-end',
-      params["document-date-end"] || nil, class: 'align-on-select',
+      params["document-date-end"] || nil, class: 'align-on-select datepicker',
       placeholder: 'Documents created before...' %>
   </div>
 

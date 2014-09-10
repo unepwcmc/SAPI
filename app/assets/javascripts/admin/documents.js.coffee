@@ -1,9 +1,5 @@
 $(document).ready ->
 
-  $('#document-created-end, #document-created-start').datepicker(
-    format: 'dd/mm/yyyy'
-  )
-
   $('#event-id').chained('#event-type')
   $('#event-id-search').chained('#event-type-search')
   $('#document-type').chained('#event-type-search')
