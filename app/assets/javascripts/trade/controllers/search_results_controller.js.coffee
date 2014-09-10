@@ -48,21 +48,6 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
   selectedCountriesOfOrigin: []
   selectedPermits: []
 
-  columns: [
-    'id', 'year', 'appendix', 'taxonConcept.fullName',
-    'reportedTaxonConcept.fullName',
-    'term.code', 'quantity',  'unit.code',
-    'importer.isoCode2', 'exporter.isoCode2', 'countryOfOrigin.isoCode2',
-    'purpose.code', 'source.code', 'reporterType',
-    'importPermitNumber', 'exportPermitNumber', 'originPermitNumber',
-    'legacyShipmentNumber'
-  ]
-
-  codeMappings: {
-    isoCode2: "name"
-    code: "name"
-  }
-
   shipmentsSaving: ( ->
     return false unless @get('content.isLoaded')
     @get('content').filterBy('isSaving', true).length > 0
