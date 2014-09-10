@@ -22,6 +22,16 @@ describe Admin::DocumentsController do
           assigns(:documents).should eq([@document2])
         end
 
+        it "retrieves documents inclusive of the given start date" do
+          get :index, "document-date-start" => '25/12/2014'
+          assigns(:documents).should eq([@document1])
+        end
+
+        it "retrieves documents inclusive of the given end date" do
+          get :index, "document-date-end" => '01/01/2014'
+          assigns(:documents).should eq([@document2])
+        end
+
         it "retrieves documents after the given date" do
           get :index, "document-date-start" => '10/01/2014'
           assigns(:documents).should eq([@document1])
@@ -30,11 +40,6 @@ describe Admin::DocumentsController do
         it "retrieves documents before the given date" do
           get :index, "document-date-end" => '10/01/2014'
           assigns(:documents).should eq([@document2])
-        end
-
-        it "retrieves documents between two dates" do
-          get :index, "document-date-start" => '01/01/2013', "document-date-end" => '01/01/2015'
-          assigns(:documents).should eq([@document2, @document1])
         end
 
         it "ignores invalid dates" do
