@@ -28,18 +28,35 @@ class DocumentSearch
 
   def initialize_query
     @query = Document.joins('LEFT JOIN events ON events.id = documents.event_id')
-    if !@event_id.blank?
+
+    add_conditions_for_event
+    add_conditions_for_document
+    add_ordering
+  end
+
+  def add_conditions_for_event
+    if @event_id.present?
       @query = @query.where(event_id: @event_id)
-    elsif !@event_type.blank?
+    elsif @event_type.present?
       @query = @query.where('events.type' => @event_type)
     end
-    if !@document_title.blank?
-      @query = @query.search_by_title(@document_title)
-    else
-      @query = @query.order([:date, :title])
-    end
-    if !@document_type.blank?
+  end
+
+  def add_conditions_for_document
+    @query = @query.search_by_title(@document_title) if @document_title.present?
+
+    if @document_type.present?
       @query = @query.where('documents.type' => @document_type)
+    end
+  end
+
+  def add_ordering
+    return if @document_title.present?
+
+    @query = if @event_id.present?
+      @query.order([:date, :title])
+    else
+      @query.order('created_at DESC')
     end
   end
 
