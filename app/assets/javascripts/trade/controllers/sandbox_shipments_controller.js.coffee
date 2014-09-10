@@ -6,14 +6,6 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   sandboxShipmentsSaving: false
   queryParams: ['page', 'sandboxShipmentsIds:sandbox_shipments_ids']
 
-  columns: [
-    'appendix', 'taxon_name', 'accepted_taxon_name',
-    'term_code', 'quantity',  'unit_code',
-    'trading_partner', 'country_of_origin',
-    'import_permit', 'export_permit', 'origin_permit',
-    'purpose_code', 'source_code', 'year'
-  ]
-
   allAppendices: [
     Ember.Object.create({id: 'I', name: 'I'}),
     Ember.Object.create({id: 'II', name: 'II'}),

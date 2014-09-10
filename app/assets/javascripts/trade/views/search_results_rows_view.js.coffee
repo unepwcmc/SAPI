@@ -22,4 +22,4 @@ Trade.SearchResultsRowsView = Ember.CollectionView.extend
     template: Ember.Handlebars.compile("No shipments found")
 
   didInsertElement: ->
-    $('span.has-tooltip').tooltip()
+    $('.has-tooltip').tooltip()

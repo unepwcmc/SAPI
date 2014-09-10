@@ -64,15 +64,18 @@
 <div class='shipments-presentation-container'>
   <table>
     <thead>
-      <tr><th>Actions</th>{{dataHead controller.columns}}</tr>
+      <tr>
+        <th>Actions</th>
+        {{#each view.columns}}
+          <th>{{header}}</th>
+        {{/each}}
+      </tr>
     </thead>
     <tbody>
-    {{#each controller.content}}
-      {{view Trade.ShipmentTableViewNoHelper valueBinding='this'}}
-    {{/each}}
+    {{collection Trade.SearchResultsRowsView contentBinding='controller.content' controller=this}}
     </tbody>
   </table>
-</div>
+</div> 
 
 <div class="paging">
   <ul class="pager">
