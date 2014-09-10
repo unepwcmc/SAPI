@@ -6,13 +6,13 @@ describe Admin::DocumentsController do
 
   describe "index" do
     before(:each) do
-      @document1 = create(:document, :title => 'BB hello world', :event => event, date: DateTime.new(2014,12,25))
-      @document2 = create(:document, :title => 'AA goodbye world', :event => event, date: DateTime.new(2014,01,01))
-      @document3 = create(:document, :title => 'CC no event!')
+      @document1 = create(:document, :title => 'BB hello world', event: event, date: DateTime.new(2014,12,25))
+      @document2 = create(:document, :title => 'AA goodbye world', event: event, date: DateTime.new(2014,01,01))
     end
 
     describe "GET index" do
       it "assigns @documents sorted by time of creation" do
+        @document3 = create(:document, :title => 'CC no event!')
         get :index
         assigns(:documents).should eq([@document3, @document2, @document1])
       end
