@@ -36,7 +36,7 @@
             {{view Ember.Select
               prompt="Please select appendix value"
               valueBinding="currentShipment.appendix"
-              contentBinding='controller.allAppendices'
+              contentBinding='controllers.search.allAppendices'
               optionValuePath="content.id"
               optionLabelPath="content.name"
             }}
@@ -134,7 +134,7 @@
           <p>Reporter type <span class="error">{{currentShipment.errors.reporterType}}</span></p>
             {{view Ember.Select
               prompt="Please select reporter type"
-              contentBinding="controller.allReporterTypeValues"
+              contentBinding="controllers.search.allReporterTypeValues"
               selectionBinding="currentShipment.reporterType"
             }}
         </div>

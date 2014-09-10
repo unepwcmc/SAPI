@@ -1,0 +1,11 @@
+<td>
+  <a href="#" {{action 'editShipment' this}}><i class="icon-pencil" title="edit"></i></a>
+  <a href="#" {{action 'deleteShipment' this}}><i class="icon-trash" title="delete"></i></a>
+</td>
+{{#each view.rowData}}
+  <td>
+    <span {{bind-attr class="hasTooltip::has-tooltip" data-original-title="tooltip"}}>
+      {{value}}
+    </span>
+  </td>
+{{/each}}

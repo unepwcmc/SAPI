@@ -1,45 +1,5 @@
 Trade.QueryParams = Ember.Mixin.create({
 
-  # note: this maps a property on the controller to a query param
-  # changing a property will change the url
-  queryParams: [
-    'page',
-    'selectedTaxonConceptsQP:taxon_concepts_ids',
-    'selectedReportedTaxonConceptsQP:reported_taxon_concepts_ids',
-    'selectedAppendicesQP:appendices',
-    'selectedTimeStartQP:time_range_start',
-    'selectedTimeEndQP:time_range_end',
-    'selectedTermsQP:terms_ids',
-    'selectedUnitsQP:units_ids',
-    'selectedPurposesQP:purposes_ids',
-    'selectedSourcesQP:sources_ids',
-    'selectedReporterTypeQP:reporter_type',
-    'selectedImportersQP:importers_ids',
-    'selectedExportersQP:exporters_ids',
-    'selectedCountriesOfOriginQP:countries_of_origin_ids',
-    'selectedPermitsQP:permits_ids',
-    'selectedQuantityQP:quantity',
-    'unitBlankQP:unit_blank',
-    'purposeBlankQP:purpose_blank',
-    'sourceBlankQP:source_blank',
-    'countryOfOriginBlankQP:country_of_origin_blank',
-    'permitBlankQP:permit_blank'
-  ]
-
-  # need to initialize those array query params
-  # otherwise they're not passed as arrays
-  selectedTaxonConceptsQP: []
-  selectedReportedTaxonConceptsQP: []
-  selectedAppendicesQP: []
-  selectedTermsQP: []
-  selectedUnitsQP: []
-  selectedPurposesQP: []
-  selectedSourcesQP: []
-  selectedImportersQP: []
-  selectedExportersQP: []
-  selectedCountriesOfOriginQP: []
-  selectedPermitsQP: []
-
   propertyMapping: [
     {
       name: "selectedTaxonConcepts"
@@ -48,6 +8,7 @@ Trade.QueryParams = Ember.Mixin.create({
       type: 'array'
       displayTitle: 'taxa'
       displayProperty: 'fullName'
+      collectionPath: null
     },
     {
       name: "selectedReportedTaxonConcepts"
@@ -56,6 +17,7 @@ Trade.QueryParams = Ember.Mixin.create({
       type: 'array'
       displayTitle: 'rep. taxa'
       displayProperty: 'fullName'
+      collectionPath: null
     },
     {
       name: "selectedAppendices"
@@ -64,6 +26,7 @@ Trade.QueryParams = Ember.Mixin.create({
       type: 'array'
       displayTitle: 'appdx.'
       displayProperty: 'name'
+      collectionPath: 'allAppendices'
     },
     {
       name: "selectedTimeStart"
@@ -84,6 +47,7 @@ Trade.QueryParams = Ember.Mixin.create({
       type: 'array'
       displayTitle: 'terms'
       displayProperty: 'name'
+      collectionPath: 'controllers.terms'
     },
     {
       name: "selectedUnits"
@@ -92,6 +56,7 @@ Trade.QueryParams = Ember.Mixin.create({
       type: 'array'
       displayTitle: 'units'
       displayProperty: 'name'
+      collectionPath: 'controllers.units'
     },
     {
       name: "selectedPurposes"
@@ -100,6 +65,7 @@ Trade.QueryParams = Ember.Mixin.create({
       type: 'array'
       displayTitle: 'purposes'
       displayProperty: 'name'
+      collectionPath: 'controllers.purposes'
     },
     {
       name: "selectedSources"
@@ -108,6 +74,7 @@ Trade.QueryParams = Ember.Mixin.create({
       type: 'array'
       displayTitle: 'sources'
       displayProperty: 'name'
+      collectionPath: 'controllers.sources'
     },
     {
       name: "selectedImporters"
@@ -116,6 +83,7 @@ Trade.QueryParams = Ember.Mixin.create({
       type: 'array'
       displayTitle: 'importers'
       displayProperty: 'name'
+      collectionPath: 'controllers.geoEntities'
     },
     {
       name: "selectedExporters"
@@ -124,6 +92,7 @@ Trade.QueryParams = Ember.Mixin.create({
       type: 'array'
       displayTitle: 'exporters'
       displayProperty: 'name'
+      collectionPath: 'controllers.geoEntities'
     },
     {
       name: "selectedCountriesOfOrigin"
@@ -132,6 +101,7 @@ Trade.QueryParams = Ember.Mixin.create({
       type: 'array'
       displayTitle: 'origins'
       displayProperty: 'name'
+      collectionPath: 'controllers.geoEntities'
     },
     {
       name: "selectedReporterType"
