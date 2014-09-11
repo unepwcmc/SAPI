@@ -5,6 +5,6 @@
 
 {{#each column in view.parentView.parentView.columns}}
   <td>
-    {{value-with-optional-tooltip content=view.context displayProperty=column.displayProperty longDisplayProperty=column.longDisplayProperty}}
+    {{value-with-optional-tooltip content=view.content displayProperty=column.displayProperty longDisplayProperty=column.longDisplayProperty}}
   </td>
 {{/each}}
