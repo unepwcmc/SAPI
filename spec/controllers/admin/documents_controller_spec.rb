@@ -94,6 +94,7 @@ describe Admin::DocumentsController do
         response.should render_template('new')
       end
     end
+
     context "when event" do
       let(:document){ create(:document, event_id: event.id) }
       it "redirects to index when successful" do
@@ -104,6 +105,18 @@ describe Admin::DocumentsController do
       it "renders new when not successful" do
         put :update, id: document.id, event_id: event.id, document: { date: nil }
         response.should render_template('new')
+      end
+    end
+
+    context "with nested tag attributes" do
+      let(:document){ create(:document) }
+      let(:tag){ create(:document_tag) }
+
+      it "adds existing tags to the Document" do
+        put :update, id: document.id, document: { date: Date.today, tag_ids: [tag.id] }
+        response.should redirect_to(admin_documents_url)
+
+        expect(document.reload.tags).to eq([tag])
       end
     end
   end

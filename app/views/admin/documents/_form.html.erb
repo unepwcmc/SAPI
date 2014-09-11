@@ -63,14 +63,14 @@
   <div class="control-group">
     <%= f.label :tags, class: 'control-label' %>
     <div class="controls">
-      <%= f.select :tags,
+      <%= f.select :tag_ids,
         options_from_collection_for_select(
           @tags,
+          :id,
           :name,
-          :name,
-          @document.tags
+          @document.tags.map(&:id)
         ), {},
-        { :multiple => true, :class => 'tags', :style => "width: 220px"}
+        { :multiple => true, :class => 'tags', :style => "width: 220px" }
       %>
     </div>
   </div>
