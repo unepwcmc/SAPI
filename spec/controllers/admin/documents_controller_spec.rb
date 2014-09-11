@@ -67,10 +67,17 @@ describe Admin::DocumentsController do
   end
 
   describe "GET edit" do
-    let(:document){ create(:document) }
+    let(:document_tags){ [create(:document_tag)] }
+    let(:document){ create(:document, tags: document_tags) }
+
     it "renders the edit template" do
       get :edit, id: document.id
       response.should render_template('new')
+    end
+
+    it "loads the Document's tags" do
+      get :edit, id: document.id
+      expect(assigns(:tags)).to match_array(document_tags)
     end
   end
 

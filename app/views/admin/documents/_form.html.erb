@@ -61,6 +61,21 @@
   </div>
 
   <div class="control-group">
+    <%= f.label :tags, class: 'control-label' %>
+    <div class="controls">
+      <%= f.select :tags,
+        options_from_collection_for_select(
+          @tags,
+          :name,
+          :name,
+          @document.tags
+        ), {},
+        { :multiple => true, :class => 'tags', :style => "width: 220px"}
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
     <%= f.label :citations, class: 'control-label' %>
     <div class="controls">
       <%= f.fields_for :citations do |ff| %>
