@@ -1,4 +1,4 @@
-Trade.SearchResultsRoute = Trade.BeforeRoute.extend
+Trade.SearchResultsRoute = Trade.BeforeRoute.extend Trade.LoadingModal,
 
   queryParams: {
     taxon_concepts_ids: { refreshModel: true },
@@ -25,4 +25,12 @@ Trade.SearchResultsRoute = Trade.BeforeRoute.extend
   }
 
   model: (params) ->
+    @showLoadingModal()
     Trade.Shipment.find(params)
+
+  afterModel: () ->
+    @hideLoadingModal()
+
+  actions:
+    dataChanged: () ->
+      @refresh()
