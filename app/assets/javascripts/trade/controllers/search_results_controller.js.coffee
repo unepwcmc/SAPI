@@ -113,12 +113,12 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
 
     deleteBatch: ->
       @closeFilterPopups()
-      $('#wait-modal').modal('show')
+      $('#loading-modal').modal('show')
       @transitionToRoute('search.results', {queryParams: @get('controllers.search.searchParams')})
       .then(
         # resolve
         (() =>
-          $('#wait-modal').modal('hide')
+          $('#loading-modal').modal('hide')
           if confirm("This will delete " + @get('total') + " shipments. Are you sure?")
             $.ajax(
               url: '/trade/shipments/destroy_batch'
@@ -140,7 +140,7 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
         ),
         # reject
         (() =>
-          $('#wait-modal').modal('hide')
+          $('#loading-modal').modal('hide')
         )  
       )
 
@@ -150,19 +150,19 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
 
     editBatch: ->
       @closeFilterPopups()
-      $('#wait-modal').modal('show')
+      $('#loading-modal').modal('show')
       @transitionToRoute('search.results', {queryParams: @get('controllers.search.searchParams')})
       .then(
         # resolve
         (() =>
-          $('#wait-modal').modal('hide')
+          $('#loading-modal').modal('hide')
           @get('batchUpdateParams').reset()
           @set('currentShipment', @get('batchUpdateParams'))
           $('.batch-form-modal').modal('show')     
         ),
         # reject
         (() =>
-          $('#wait-modal').modal('hide')
+          $('#loading-modal').modal('hide')
         )  
       )
 
