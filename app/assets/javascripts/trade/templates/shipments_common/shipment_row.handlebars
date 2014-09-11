@@ -2,10 +2,9 @@
   <a href="#" {{action 'editShipment' this}}><i class="icon-pencil has-tooltip" title="edit"></i></a>
   <a href="#" {{action 'deleteShipment' this}}><i class="icon-trash has-tooltip" title="delete"></i></a>
 </td>
-{{#each view.rowData}}
+
+{{#each column in view.parentView.parentView.columns}}
   <td>
-    <span {{bind-attr class="hasTooltip::has-tooltip" data-original-title="tooltip"}}>
-      {{value}}
-    </span>
+    {{value-with-optional-tooltip content=view.context displayProperty=column.displayProperty longDisplayProperty=column.longDisplayProperty}}
   </td>
 {{/each}}
