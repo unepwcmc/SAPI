@@ -90,7 +90,6 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
         @set('currentShipment', null)
         $('.shipment-form-modal').modal('hide')
         @flashSuccess(message: 'Successfully updated shipment.')
-        @send("dataChanged")
       )
 
     cancelShipment: () ->
