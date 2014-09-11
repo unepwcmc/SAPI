@@ -1,4 +1,4 @@
-Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, Trade.ShipmentPagination, Trade.Flash, Trade.FilterPopups,
+Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, Trade.ShipmentPagination, Trade.Flash,
   needs: ['search', 'geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
@@ -112,7 +112,6 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
           )
 
     deleteBatch: ->
-      @closeFilterPopups()
       $('#loading-modal').modal('show')
       @transitionToRoute('search.results', {queryParams: @get('controllers.search.searchParams')})
       .then(
@@ -149,7 +148,6 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
       $('.shipment-form-modal').modal('show')
 
     editBatch: ->
-      @closeFilterPopups()
       $('#loading-modal').modal('show')
       @transitionToRoute('search.results', {queryParams: @get('controllers.search.searchParams')})
       .then(

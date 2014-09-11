@@ -1,4 +1,4 @@
-Trade.SearchController = Ember.Controller.extend Trade.QueryParams, Trade.Flash, Trade.FilterPopups,
+Trade.SearchController = Ember.Controller.extend Trade.QueryParams, Trade.Flash,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
 
   init: ->
@@ -226,7 +226,6 @@ Trade.SearchController = Ember.Controller.extend Trade.QueryParams, Trade.Flash,
   actions:
     search: ->
       $('#loading-modal').modal('show')
-      @closeFilterPopups()
       @flashClear()
       @transitionToRoute('search.results', {queryParams: @get('searchParams')})
       .then(
@@ -241,7 +240,6 @@ Trade.SearchController = Ember.Controller.extend Trade.QueryParams, Trade.Flash,
       )
 
     resetFilters: ->
-      @closeFilterPopups()
       @flashClear()
       @resetFilters()
       @transitionToRoute('search.results', {queryParams: @get('searchParams')})
