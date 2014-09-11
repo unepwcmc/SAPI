@@ -66,6 +66,17 @@ puts "#{Event.delete_all} events deleted"
 puts "#{Designation.delete_all} designations deleted"
 puts "#{Taxonomy.delete_all} taxonomies deleted"
 
+puts "#{DocumentTag.delete_all} document tags deleted"
+[
+  "All Phases", "I", "II", "III", "IV", "June 1986",
+ "None", "Post-CoP11", "Post-CoP12", "Post-CoP13",
+ "All Outcomes", "Accepted", "Cancelled", "Deferred",
+ "Redundant", "Rejected", "Transferred to other proposals",
+ "Withdrawn", "Accepted as amended", "Rejected as amended",
+ "Adopted"
+].each { |tag_name| DocumentTag.create(name: tag_name) }
+puts "#{DocumentTag.count} document tags created"
+
 Taxonomy.dict.each do |type|
   Taxonomy.create(name: type)
 end
