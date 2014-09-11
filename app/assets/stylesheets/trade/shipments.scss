@@ -23,8 +23,15 @@ $warning-yellow: #c09853;
   margin-left: -220px;
 }
 
-.table-row {
-  cursor: pointer
+#loading-modal {
+  width: 500px;
+  /* must be half of the width, minus scrollbar on the left (30px) */
+  margin-left: -220px;  
+}
+
+.loading-box {
+  padding: 50px;
+  text-align: center;
 }
 
 h2 {
