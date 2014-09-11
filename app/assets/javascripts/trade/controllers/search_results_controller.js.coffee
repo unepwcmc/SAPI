@@ -84,11 +84,13 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
         @set('currentShipment', null)
         $('.shipment-form-modal').modal('hide')
         @flashSuccess(message: 'Successfully created shipment.')
+        @send("dataChanged")
       )
       shipment.one('didUpdate', this, ->
         @set('currentShipment', null)
         $('.shipment-form-modal').modal('hide')
         @flashSuccess(message: 'Successfully updated shipment.')
+        @send("dataChanged")
       )
 
     cancelShipment: () ->
@@ -109,15 +111,14 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
           shipment.one('didDelete', this, ->
             @set('currentShipment', null)
             @flashSuccess(message: 'Successfully deleted shipment.')
+            @send("dataChanged")
           )
 
     deleteBatch: ->
-      $('#loading-modal').modal('show')
       @transitionToRoute('search.results', {queryParams: @get('controllers.search.searchParams')})
       .then(
         # resolve
         (() =>
-          $('#loading-modal').modal('hide')
           if confirm("This will delete " + @get('total') + " shipments. Are you sure?")
             $.ajax(
               url: '/trade/shipments/destroy_batch'
@@ -127,6 +128,7 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
             )
             .done( (data) =>
               @flashSuccess(message: 'Successfully deleted ' + data.rows + ' shipments.')
+              @send("dataChanged")
             )
             .fail( (xhr) =>
               @flashError(message: 'Error occurred when deleting shipments.')
@@ -136,10 +138,6 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
               @set('currentShipment', null)
               $('.batch-form-modal').modal('hide')
             )
-        ),
-        # reject
-        (() =>
-          $('#loading-modal').modal('hide')
         )  
       )
 
@@ -148,19 +146,13 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
       $('.shipment-form-modal').modal('show')
 
     editBatch: ->
-      $('#loading-modal').modal('show')
       @transitionToRoute('search.results', {queryParams: @get('controllers.search.searchParams')})
       .then(
         # resolve
         (() =>
-          $('#loading-modal').modal('hide')
           @get('batchUpdateParams').reset()
           @set('currentShipment', @get('batchUpdateParams'))
           $('.batch-form-modal').modal('show')     
-        ),
-        # reject
-        (() =>
-          $('#loading-modal').modal('hide')
         )  
       )
 
@@ -175,6 +167,7 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
         )
         .done( (data) =>
           @flashSuccess(message: 'Successfully updated ' + data.rows + ' shipments.')
+          @send("dataChanged")
         )
         .fail( (xhr) =>
           @flashError(message: 'Error occurred when updating shipments.')

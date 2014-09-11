@@ -225,19 +225,8 @@ Trade.SearchController = Ember.Controller.extend Trade.QueryParams, Trade.Flash,
 
   actions:
     search: ->
-      $('#loading-modal').modal('show')
       @flashClear()
       @transitionToRoute('search.results', {queryParams: @get('searchParams')})
-      .then(
-        # resolve
-        (() =>
-          $('#loading-modal').modal('hide')
-        ),
-        # reject
-        (() =>
-          $('#loading-modal').modal('hide')
-        )  
-      )
 
     resetFilters: ->
       @flashClear()
