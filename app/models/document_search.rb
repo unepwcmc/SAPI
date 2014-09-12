@@ -18,6 +18,10 @@ class DocumentSearch
     @query.count
   end
 
+  def taxon_concepts
+    @taxon_concepts ||= TaxonConcept.where(id: @taxon_concepts_ids)
+  end
+
   private
 
   def initialize_params(options)
@@ -31,6 +35,7 @@ class DocumentSearch
 
     add_conditions_for_event
     add_conditions_for_document
+    add_extra_conditions
     add_ordering
   end
 
@@ -54,6 +59,19 @@ class DocumentSearch
     end
     if !@document_date_end.blank?
       @query = @query.where("documents.date <= ?", @document_date_end)
+    end
+  end
+
+  def add_extra_conditions
+    if @taxon_concepts_ids.present?
+      @query = @query.joins("""
+        LEFT JOIN document_citations
+          ON document_citations.document_id = documents.id
+        LEFT JOIN document_citation_taxon_concepts
+          ON document_citation_taxon_concepts.document_citation_id = document_citations.id
+      """.squish)
+
+      @query = @query.where("document_citation_taxon_concepts.taxon_concept_id IN (?)", @taxon_concepts_ids)
     end
   end
 

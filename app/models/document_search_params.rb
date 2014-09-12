@@ -11,6 +11,7 @@ class DocumentSearchParams < Hash
       document_title: params['document-title'] ? params['document-title'].strip : nil,
       document_date_start: (Date.parse(params['document-date-start']) rescue nil),
       document_date_end: (Date.parse(params['document-date-end']) rescue nil),
+      taxon_concepts_ids: (params['taxon-concepts-ids'].split(',').map(&:to_i) rescue []),
       page: params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
       per_page: params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 25
     }

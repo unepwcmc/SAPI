@@ -29,20 +29,27 @@ $(document).ready ->
     minimumInputLength: 3
     quietMillis: 500
     allowClear: true
-    initSelection: (element, callback) =>
+    initSelection: (element, callback) ->
       callback($(element).data('init-selection'))
     ajax:
       url: '/admin/taxon_concepts/autocomplete'
       dataType: 'json'
       data: (query, page) ->
-        search_params:
-          scientific_name: query
-          name_status: $(@).data('name-status-filter')
-          taxonomy:
-            id: $(@).data('taxonomy-id')
-        per_page: 25
-        page: 1
-      results: (data, page) => # parse the results into the format expected by Select2.
+        el_status_filter = $(@).data('name-status-filter')
+        el_taxonomy_id = $(@).data('taxonomy-id')
+        params =
+          search_params:
+            scientific_name: query
+          per_page: 25
+          page: page
+
+        if el_status_filter?
+          params.search_params.name_status = el_status_filter
+        if el_taxonomy_id?
+          params.search_params.taxonomy = {id: el_taxonomy_id}
+        params
+
+      results: (data, page) ->
         formatted_taxon_concepts = data.map (tc) =>
           id: tc.id
           text: tc.full_name
@@ -57,9 +64,7 @@ $(document).ready ->
   $('.citation-geo-entity').select2(citationGeoEntitySelect2Options)
 
   $(document).on('nested:fieldAdded', (event) ->
-    # this field was just inserted into your form
     field = event.field
-    # it's a jQuery object already
     citationTaxonField = field.find('.citation-taxon-concept')
     citationGeoEntityField = field.find('.citation-geo-entity')
     # and activate select2

@@ -7,4 +7,8 @@ FactoryGirl.define do
     type 'Document'
   end
 
+  factory :document_citation do
+    document_id 1
+  end
+
 end
