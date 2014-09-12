@@ -3,11 +3,13 @@ require 'spec_helper'
 describe Admin::DocumentsController do
   login_admin
   let(:event){ create(:event) }
+  let(:taxon_concept){ create(:taxon_concept) }
 
   describe "index" do
     before(:each) do
       @document1 = create(:document, :title => 'BB hello world', event: event, date: DateTime.new(2014,12,25))
       @document2 = create(:document, :title => 'AA goodbye world', event: event, date: DateTime.new(2014,01,01))
+      create(:document_citation, :document_id => @document1.id, :taxon_concepts => [taxon_concept])
     end
 
     describe "GET index" do
@@ -16,43 +18,45 @@ describe Admin::DocumentsController do
         get :index
         assigns(:documents).should eq([@document3, @document2, @document1])
       end
+
       context "search" do
         it "runs a full text search on title" do
           get :index, 'document-title' => 'good'
           assigns(:documents).should eq([@document2])
         end
-
         it "retrieves documents inclusive of the given start date" do
           get :index, "document-date-start" => '25/12/2014'
           assigns(:documents).should eq([@document1])
         end
-
         it "retrieves documents inclusive of the given end date" do
           get :index, "document-date-end" => '01/01/2014'
           assigns(:documents).should eq([@document2])
         end
-
         it "retrieves documents after the given date" do
           get :index, "document-date-start" => '10/01/2014'
           assigns(:documents).should eq([@document1])
         end
-
         it "retrieves documents before the given date" do
           get :index, "document-date-end" => '10/01/2014'
           assigns(:documents).should eq([@document2])
         end
-
         it "ignores invalid dates" do
           get :index, "document-date-start" => '34/24/12', "document-date-end" => '34/24/12'
           assigns(:documents).should eq([@document2, @document1])
         end
+        it "retrieves documents for taxon concept" do
+          get :index, "taxon-concepts-ids" => taxon_concept.id
+          assigns(:documents).should eq([@document1])
+        end
       end
+
       context "when no event" do
         it "renders the index template" do
           get :index
           response.should render_template("index")
         end
       end
+
       context "when event" do
         it "renders the event/documents/index template" do
           get :index, event_id: event.id
