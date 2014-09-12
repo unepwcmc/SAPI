@@ -9,10 +9,10 @@ class PagesController < ApplicationController
 
   def eu_legislation
     @eu_annex_regulations = EuRegulation.
-      select([:description, :effective_at, :url, :is_current]).
+      select([:id, :description, :effective_at, :url, :is_current]).
       order('effective_at DESC')
     @eu_suspension_regulations = EuSuspensionRegulation.
-      select([:description, :effective_at, :url, :is_current]).
+      select([:id, :description, :effective_at, :url, :is_current]).
       order('effective_at DESC')
   end
 end
