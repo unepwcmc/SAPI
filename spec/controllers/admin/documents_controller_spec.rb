@@ -4,12 +4,14 @@ describe Admin::DocumentsController do
   login_admin
   let(:event){ create(:event) }
   let(:taxon_concept){ create(:taxon_concept) }
+  let(:geo_entity){ create(:geo_entity) }
 
   describe "index" do
     before(:each) do
       @document1 = create(:document, :title => 'BB hello world', event: event, date: DateTime.new(2014,12,25))
       @document2 = create(:document, :title => 'AA goodbye world', event: event, date: DateTime.new(2014,01,01))
       create(:document_citation, :document_id => @document1.id, :taxon_concepts => [taxon_concept])
+      create(:document_citation, :document_id => @document2.id, :geo_entities => [geo_entity])
     end
 
     describe "GET index" do
@@ -47,6 +49,10 @@ describe Admin::DocumentsController do
         it "retrieves documents for taxon concept" do
           get :index, "taxon-concepts-ids" => taxon_concept.id
           assigns(:documents).should eq([@document1])
+        end
+        it "retrieves documents for geo entity" do
+          get :index, "geo-entities-ids" => geo_entity.id
+          assigns(:documents).should eq([@document2])
         end
       end
 

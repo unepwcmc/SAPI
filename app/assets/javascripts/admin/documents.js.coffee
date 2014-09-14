@@ -58,6 +58,27 @@ $(document).ready ->
 
   citationGeoEntitySelect2Options = {
     placeholder: 'Start typing country or territory'
+    multiple: true
+    width: '300px'
+    minimumInputLength: 3
+    quietMillis: 500
+    allowClear: true
+    initSelection: (element, callback) ->
+      callback($(element).data('init-selection'))
+    ajax:
+      url: '/admin/geo_entities/autocomplete'
+      dataType: 'json'
+      data: (query, page) ->
+        {
+          name: query
+          per_page: 25
+          page: page
+        }
+      results: (data, page) ->
+        formatted_geo_entities = data.geo_entities.map (ge) =>
+          id: ge.id
+          text: ge.name
+        results: formatted_geo_entities
   }
 
   $('.citation-taxon-concept').select2(citationTaxonSelect2Options)

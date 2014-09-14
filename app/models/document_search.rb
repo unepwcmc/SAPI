@@ -11,7 +11,7 @@ class DocumentSearch
 
   def results
     results = @query.limit(@per_page).
-      offset(@offset)
+      offset(@offset).uniq_by(&:id)
   end
 
   def total_cnt
@@ -20,6 +20,10 @@ class DocumentSearch
 
   def taxon_concepts
     @taxon_concepts ||= TaxonConcept.where(id: @taxon_concepts_ids)
+  end
+
+  def geo_entities
+    @geo_entities ||= GeoEntity.where(id: @geo_entities_ids)
   end
 
   private
@@ -63,16 +67,43 @@ class DocumentSearch
   end
 
   def add_extra_conditions
-    if @taxon_concepts_ids.present?
-      @query = @query.joins("""
-        LEFT JOIN document_citations
-          ON document_citations.document_id = documents.id
-        LEFT JOIN document_citation_taxon_concepts
-          ON document_citation_taxon_concepts.document_citation_id = document_citations.id
-      """.squish)
+    return unless [@taxon_concepts_ids, @geo_entities_ids].any?(&:present?)
 
-      @query = @query.where("document_citation_taxon_concepts.taxon_concept_id IN (?)", @taxon_concepts_ids)
-    end
+    @query = @query.joins("""
+      LEFT JOIN document_citations
+      ON document_citations.document_id = documents.id
+    """.squish)
+
+    add_taxon_concepts_condition if @taxon_concepts_ids.present?
+    add_geo_entities_condition if @geo_entities_ids.present?
+  end
+
+  def add_taxon_concepts_condition
+    @query = @query.joins("""
+      LEFT JOIN document_citation_taxon_concepts
+      ON document_citation_taxon_concepts.document_citation_id = document_citations.id
+    """.squish)
+    @query = @query.where(
+      'document_citation_taxon_concepts.taxon_concept_id' => @taxon_concepts_ids
+    )
+  end
+
+  def add_geo_entities_condition
+    geo_entity_type_ids = GeoEntityType.where(
+      :name => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]
+    ).pluck(:id)
+
+    @query = @query.joins("""
+      LEFT JOIN document_citation_geo_entities
+      ON document_citation_geo_entities.document_citation_id = document_citations.id
+      LEFT JOIN geo_entities
+      ON document_citation_geo_entities.geo_entity_id = geo_entities.id
+    """)
+
+    @query = @query.where(
+      'geo_entities.id' => @geo_entities_ids,
+      'geo_entities.geo_entity_type_id' => geo_entity_type_ids
+    )
   end
 
   def add_ordering
