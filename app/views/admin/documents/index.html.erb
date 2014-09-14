@@ -63,6 +63,11 @@ or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
       :'data-init-selection' => @search.taxon_concepts.map{|tc| {id: tc.id, text: tc.full_name} }.to_json,
       :multiple => true
     } %>
+    <%= hidden_field_tag 'geo-entities-ids', params['geo-entities-ids'], {
+      :class => 'citation-geo-entity',
+      :'data-init-selection' => @search.geo_entities.map{|ge| {id: ge.id, text: ge.name_en} }.to_json,
+      :multiple => true
+    } %>
   </div>
 
   <%= submit_tag 'Filter', name: nil, class: "btn btn-primary filter" %>
