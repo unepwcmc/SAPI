@@ -1,0 +1,23 @@
+<div id="main" class="page">
+  <div class="block">
+    <h2>EU Wildlife Trade Legislation</h2>
+  </div>
+  <div class="block show_more">
+    <h3>Council Regulations</h3>
+    TODO
+  </div>
+  <div class="block show_more">
+    <h3>Implementing Regulations</h3>
+    TODO
+  </div>
+  <%= render partial: 'eu_legislation_type', 
+    locals: {
+      legislation_title: 'Regulations listing species controlled', legislation_collection: @eu_annex_regulations
+    }
+  %>
+  <%= render partial: 'eu_legislation_type', 
+    locals: {
+      legislation_title: 'Suspension Regulations', legislation_collection: @eu_suspension_regulations
+    }
+  %>
+</div>
