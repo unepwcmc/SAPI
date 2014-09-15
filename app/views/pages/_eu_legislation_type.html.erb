@@ -9,7 +9,7 @@
     <tbody>
       <% legislation_collection.each do |r| %>
         <tr class="<%= r.is_current ? 'current' : 'historic hidden' %>">
-          <td><%= link_to r.description, r.url %></td>
+          <td><%= link_to r.description, r.multilingual_url %></td>
           <td><%= r.effective_at_formatted %></td>
           <td><% if r.is_current %><%= r.extended_description %><% end %></td>
         </tr>
