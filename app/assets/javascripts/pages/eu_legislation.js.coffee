@@ -3,8 +3,8 @@ $(document).ready ->
     historicRows = $(e.target).parent().prev('table').find('tr')
     if historicRows.hasClass('hidden')
       historicRows.removeClass('hidden')
-      $(e.target).text('HIDE HISTORY')
+      $(e.target).html('HIDE HISTORY')
     else
       historicRows.addClass('hidden')
-      $(e.target).text('SHOW HISTORY')
+      $(e.target).html('SHOW HISTORY')
   )
