@@ -21,7 +21,7 @@ class IucnMappingManager
                     taxon_concept.full_name
                   end
       data = fetch_data_for_name full_name
-      if data["result"].empty?
+      if !data || data["result"].empty?
         puts "#{taxon_concept.full_name} NO MATCH"
       else
         map_taxon_concept taxon_concept, mapping, data
