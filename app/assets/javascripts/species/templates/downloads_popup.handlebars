@@ -24,5 +24,10 @@
     {{view Species.DownloadsForEu isVisibleBinding="controller.designationIsEu"}}
     {{view Species.DownloadsForCms isVisibleBinding="controller.designationIsCms" controllerBinding="controllers.downloadsForCmsListings"}}
 
+    <div id="csv_options">
+      {{view Ember.RadioButton name="csv_separator" selectionBinding="csvSeparator" value="comma_separated"}} Comma Separated
+      {{view Ember.RadioButton name="csv_separator" selectionBinding="csvSeparator" value="semicolon_separated"}} Semicolon Separated
+    </div> 
+
   </fieldset>
 </form>

@@ -1,7 +1,7 @@
 Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
   designation: 'cites'
 
-  needs: ['geoEntities','higherTaxaCitesEu']
+  needs: ['geoEntities','higherTaxaCitesEu', 'downloads']
 
   higherTaxaController: ( ->
     @get('controllers.higherTaxaCitesEu')
@@ -77,6 +77,7 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
         taxon_concepts_ids: @get('selectedTaxonConceptsIds')
         set: @get('timeScope')
         years: @get('selectedYears')
+        csv_separator: @get('controllers.downloads.csvSeparator')
     }
   ).property(
     'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 
