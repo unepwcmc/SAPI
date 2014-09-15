@@ -1,6 +1,6 @@
 require 'psql_command'
 # Implements "raw" shipments export
-class Trade::ShipmentsExport < Species::CsvExport
+class Trade::ShipmentsExport < Species::CsvCopyExport
   PUBLIC_CSV_LIMIT = 1000000
   PUBLIC_WEB_LIMIT = 50000
   include ActiveModel::SerializerSupport
