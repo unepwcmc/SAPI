@@ -63,6 +63,8 @@ SAPI::Application.routes.draw do
       post :deactivate, :on => :member
       resources :eu_suspensions, :only => [:index, :destroy]
     end
+    resources :eu_implementing_regulations
+    resources :eu_council_regulations
     resources :cites_cops
     resources :cites_pcs
     resources :cites_acs
