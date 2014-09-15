@@ -355,77 +355,35 @@ shared_context :sapi do
     end
   end
 
-  def create_cites_cop(options = {})
-    create(
-      :cites_cop,
-      options.merge({:designation => cites})
-    )
+  [:cites_cop, :cites_ac, :cites_pc, :cites_tc, :cites_extraordinary_meeting,
+    :cites_suspension_notification].each do |cites_event_type|
+    define_method "create_#{cites_event_type}" do |options = {}|
+      create(
+        cites_event_type,
+        options.merge({:designation => cites})
+      )
+    end
+    define_method "build_#{cites_event_type}" do |options = {}|
+      build(
+        cites_event_type,
+        options.merge({:designation => cites})
+      )
+    end
   end
-  def create_cites_ac(options = {})
-    create(
-      :cites_ac,
-      options
-    )
-  end
-  def create_cites_pc(options = {})
-    create(
-      :cites_pc,
-      options
-    )
-  end
-  def create_cites_tc(options = {})
-    create(
-      :cites_tc,
-      options
-    )
-  end
-  def create_cites_extraordinary_meeting(options = {})
-    create(
-      :cites_extraordinary_meeting,
-      options
-    )
-  end
-  def create_ec_srg(options = {})
-    create(
-      :ec_srg,
-      options
-    )
-  end
-  def create_cites_suspension_notification(options = {})
-    create(
-      :cites_suspension_notification,
-      options.merge({:designation => cites})
-    )
-  end
-  def create_eu_regulation(options = {})
-    create(
-      :eu_regulation,
-      options.merge({:designation => eu})
-    )
-  end
-  def create_eu_suspension_regulation(options = {})
-    create(
-      :eu_suspension_regulation,
-      options.merge({:designation => eu})
-    )
-  end
-  def build_cites_cop(options = {})
-    build(
-      :cites_cop,
-      options.merge({:designation => cites})
-    )
-  end
-  def build_eu_regulation(options = {})
-    build(
-      :eu_regulation,
-      options.merge({:designation => eu})
-    )
-  end
-  def build_cites_suspension_notification(options = {})
-    build(
-      :cites_suspension_notification,
-      options.merge({:designation => cites})
-    )
+  [:eu_regulation, :eu_suspension_regulation, :eu_implementing_regulation,
+    :eu_council_regulation, :ec_srg].each do |eu_event_type|
+    define_method "create_#{eu_event_type}" do |options = {}|
+      create(
+        eu_event_type,
+        options.merge({:designation => eu})
+      )
+    end
+    define_method "build_#{eu_event_type}" do |options = {}|
+      build(
+        eu_event_type,
+        options.merge({:designation => eu})
+      )
+    end
   end
 
   def create_year_format_validation

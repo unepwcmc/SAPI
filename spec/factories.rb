@@ -37,6 +37,8 @@ FactoryGirl.define do
       end_date '2012-01-01'
     end
     factory :eu_suspension_regulation, :class => EuSuspensionRegulation
+    factory :eu_implementing_regulation, :class => EuImplementingRegulation
+    factory :eu_council_regulation, :class => EuCouncilRegulation
     factory :cites_cop, :class => CitesCop
     factory :cites_ac, :class => CitesAc
     factory :cites_pc, :class => CitesPc
