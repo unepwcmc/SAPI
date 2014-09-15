@@ -24,7 +24,7 @@ class Species::CsvExport
       to_csv
     end
     ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
-    @public_file_name = "#{resource_name}_#{ctime}.csv"
+    @public_file_name = "#{resource_name}_#{ctime}_#{@filters[:csv_separator]}_separated.csv"
     [
       @file_name,
       {:filename => public_file_name, :type => 'text/csv'}
