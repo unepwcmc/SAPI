@@ -35,20 +35,15 @@ $(document).ready ->
       url: '/admin/taxon_concepts/autocomplete'
       dataType: 'json'
       data: (query, page) ->
-        el_status_filter = $(@).data('name-status-filter')
-        el_taxonomy_id = $(@).data('taxonomy-id')
-        params =
+        {
           search_params:
             scientific_name: query
+            name_status: $(@).data('name-status-filter')
+            taxonomy:
+              id: $(@).data('taxonomy-id')
           per_page: 25
           page: page
-
-        if el_status_filter?
-          params.search_params.name_status = el_status_filter
-        if el_taxonomy_id?
-          params.search_params.taxonomy = {id: el_taxonomy_id}
-        params
-
+        }
       results: (data, page) ->
         formatted_taxon_concepts = data.map (tc) =>
           id: tc.id
