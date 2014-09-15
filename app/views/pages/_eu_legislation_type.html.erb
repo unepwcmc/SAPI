@@ -4,12 +4,14 @@
     <thead>
       <th class="col2">Title</th>
       <th class="col2">Effective from</th>
+      <th class="col2">Description</th>
     </thead>
     <tbody>
       <% legislation_collection.each do |r| %>
         <tr class="<%= r.is_current ? 'current' : 'historic hidden' %>">
           <td><%= link_to r.description, r.url %></td>
           <td><%= r.effective_at_formatted %></td>
+          <td><% if r.is_current %><%= r.extended_description %><% end %></td>
         </tr>
       <% end %>
     </tbody>
