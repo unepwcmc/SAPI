@@ -35,6 +35,11 @@
           '<i class="icon-share" title="Go to URL"></i>'.html_safe,
           eu_suspension_regulation.url
         ) { '' } %>
+        <%= link_to_unless(
+          eu_suspension_regulation.multilingual_url.blank?,
+          '<i class="icon-share" title="Go to multilingual URL"></i>'.html_safe,
+          eu_suspension_regulation.multilingual_url
+        ) { '' } %>
       </td>
       <td>
         <%= link_to eu_suspension_regulation.eu_suspensions.count,
