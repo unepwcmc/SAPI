@@ -3,8 +3,8 @@ Trade.Router.map (match)->
   @resource 'annual_report_upload', { path: 'annual_report_uploads/:annual_report_upload_id' }, ->
     @resource 'sandbox_shipments'
   @resource 'validation_rules'
-  @resource 'shipments'
-
+  @resource 'search', { path: 'search' }, ->
+    @route 'results'
   @route('promise');
 
 Trade.PromiseRoute = Ember.Route.extend

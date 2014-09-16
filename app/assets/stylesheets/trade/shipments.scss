@@ -23,8 +23,15 @@ $warning-yellow: #c09853;
   margin-left: -220px;
 }
 
-.table-row {
-  cursor: pointer
+#loading-modal {
+  width: 500px;
+  /* must be half of the width, minus scrollbar on the left (30px) */
+  margin-left: -220px;  
+}
+
+.loading-box {
+  padding: 50px;
+  text-align: center;
 }
 
 h2 {
@@ -250,7 +257,7 @@ div.popup-holder01 {
 .heading {clear: left;}
 
 .total-matches {
-  color: $medium-grey;
+  color: $dark-grey;
   font-size: 17px;
   line-height: 60px;
 }

@@ -1,10 +1,9 @@
-Trade.ShipmentForm = Ember.View.extend
+Trade.SandboxShipmentForm = Ember.View.extend
   classNames: ['modal hide fade shipment-form-modal']
-  layoutName: 'trade/shipment_form'
+  layoutName: 'trade/annual_report_upload/sandbox_shipment_form'
   content: null
 
   didInsertElement: ->
     @.$().on('hidden', () =>
       @set('controller.currentShipment', null)
     )
-      

@@ -1,11 +1,3 @@
-
-<h2>
-  Welcome to the Shipments Database
-</h2>
-
-
-{{ partial 'trade/shipments/filters' }}
-
 {{ partial 'trade/flash' }}
 
 <div class="shipments-header well well-small">
@@ -23,9 +15,9 @@
       <button {{action 'newShipment'}} class="pull-right btn clearfix">
         Add shipment
       </button>
-      <!-- button {{action 'editBatch'}} class="pull-right btn clearfix">
+      <button {{action 'editBatch'}} class="pull-right btn clearfix">
         <i class="icon-pencil"></i>
-      </button -->
+      </button>
       <button {{action 'deleteBatch'}} class="pull-right btn clearfix">
         <i class="icon-trash"></i>
       </button>
@@ -42,13 +34,14 @@
 <div class='shipments-presentation-container'>
   <table>
     <thead>
-      <tr><th>Actions</th>{{dataHead controller.columns}}</tr>
+      <tr>
+        <th>Actions</th>
+        {{#each view.columns}}
+          <th>{{header}}</th>
+        {{/each}}
+      </tr>
     </thead>
-    <tbody>
-    {{#each controller.content}}
-      {{ view Trade.ShipmentTableView contentBinding='this'}}
-    {{/each}}
-    </tbody>
+    {{collection Trade.ShipmentsRowsView contentBinding='controller.content' controller=this}}
   </table>
 </div> 
 

@@ -1,44 +1,11 @@
-Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trade.ShipmentPagination, Trade.Flash,
+Trade.SearchController = Ember.Controller.extend Trade.QueryParams, Trade.Flash,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
-  content: null
-  currentShipment: null
-  csvSeparator: "comma_separated"
-  batchUpdateParams: Trade.ShipmentBatchUpdate.create()
 
   init: ->
-    transaction = @get('store').transaction()
-    @set('transaction', transaction)
     @set('selectedTimeStart', @get('defaultTimeStart'))
     @set('selectedTimeEnd', @get('defaultTimeEnd'))
 
-  columns: [
-    'id', 'year', 'appendix', 'taxonConcept.fullName',
-    'reportedTaxonConcept.fullName',
-    'term.code', 'quantity',  'unit.code',
-    'importer.isoCode2', 'exporter.isoCode2', 'countryOfOrigin.isoCode2',
-    'purpose.code', 'source.code', 'reporterType',
-    'importPermitNumber', 'exportPermitNumber', 'originPermitNumber',
-    'legacyShipmentNumber'
-  ]
-
-  codeMappings: {
-    isoCode2: "name"
-    code: "name"
-  }
-
-  shipmentsSaving: ( ->
-    return false unless @get('content.isLoaded')
-    @get('content').filterBy('isSaving', true).length > 0
-  ).property('content.@each.isSaving')
-
-  transitionToPage: (forward) ->
-    page = if forward
-      parseInt(@get('page')) + 1
-    else
-      parseInt(@get('page')) - 1
-    @set('page', page)
-    @updateQueryParams()
-
+  csvSeparator: 'comma_separated'
   defaultTimeStart: ( ->
     new Date().getFullYear() - 5
   ).property()
@@ -188,56 +155,57 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
   ).property('searchParams')
 
   rawDownloadUrl: (->
-    params = @get('searchParams')
+    params = $.extend({}, @get('searchParams'))
     params['report_type'] = 'raw'
     params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
   ).property('searchParams', 'csvSeparator')
 
   comptabDownloadUrl: (->
-    params = @get('searchParams')
+    params = $.extend({}, @get('searchParams'))
     params['report_type'] = 'comptab'
     params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
   ).property('searchParams', 'csvSeparator')
 
   grossExportsDownloadUrl: (->
-    params = @get('searchParams')
+    params = $.extend({}, @get('searchParams'))
     params['report_type'] = 'gross_exports'
     params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
   ).property('searchParams', 'csvSeparator')
 
   grossImportsDownloadUrl: (->
-    params = @get('searchParams')
+    params = $.extend({}, @get('searchParams'))
     params['report_type'] = 'gross_imports'
     params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
   ).property('searchParams', 'csvSeparator')
 
   netExportsDownloadUrl: (->
-    params = @get('searchParams')
+    params = $.extend({}, @get('searchParams'))
     params['report_type'] = 'net_exports'
     params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
   ).property('searchParams', 'csvSeparator')
 
   netImportsDownloadUrl: (->
-    params = @get('searchParams')
+    params = $.extend({}, @get('searchParams'))
     params['report_type'] = 'net_imports'
     params['csv_separator'] = @get('csvSeparator')
     '/trade/exports/download?' + $.param({filters: params})
   ).property('searchParams', 'csvSeparator')
 
-  updateQueryParams: ->
-    @beginPropertyChanges()
+  searchParamsFromQueryParams: (params) ->
     @get('propertyMapping').forEach( (p) =>
-      if p.type == 'array'
-        @set(p.param, @get(p.name).mapBy('id'))
+      selection = if p.type == 'array' && p.collectionPath
+        @get(p.collectionPath).filter( (item) ->
+          params[p.urlParam].findBy(item.get('id')) != undefined
+        )
       else
-        @set(p.param, @get(p.name))
+        params[p.urlParam]
+      @set(p.name, selection)
     )
-    @endPropertyChanges()
 
   resetFilters: ->
     @beginPropertyChanges()
@@ -253,119 +221,21 @@ Trade.ShipmentsController = Ember.ArrayController.extend Trade.QueryParams, Trad
       'countryOfOrigin', 'term', 'unit', 'permit'
     ].forEach (autoCompleteField) =>
       @set(autoCompleteField + 'Query', null)
+    @set('selectedTimeStart', @get('defaultTimeStart'))
+    @set('selectedTimeEnd', @get('defaultTimeEnd'))
+    # this is the lamest search form reset code ever
+    # the issue being that Ember.Select seems to be broken and does not update
+    $('select[name=reporter_type]').val(null)
+    $('select[name=time_start]').val(@get('selectedTimeStart'))
+    $('select[name=time_end]').val(@get('selectedTimeEnd'))
     @endPropertyChanges()
-    @updateQueryParams()
 
   actions:
-
-    # creates a local new shipment (bound to currentShipment)
-
-    newShipment: () ->
-      @set('currentShipment', Trade.Shipment.createRecord())
-      $('.shipment-form-modal').modal('show')
-
-    # saves the new shipment (bound to currentShipment) to the db
-    saveShipment: (shipment, ignoreWarnings) ->
-      shipment.set('ignoreWarnings', ignoreWarnings)
-      # Before trying to save a shipment
-      # we need to reset the model to a valid state.
-      unless shipment.get('isValid')
-        shipment.send("becameValid")
-      unless shipment.get('isSaving')
-        transaction = @get('transaction')
-        transaction.add(shipment)
-        transaction.commit()
-      # this is here so that after another validation
-      # the user gets the secondary validation warning
-      shipment.set('propertyChanged', false)
-      shipment.one('didCreate', this, ->
-        @set('currentShipment', null)
-        $('.shipment-form-modal').modal('hide')
-        @flashSuccess(message: 'Successfully created shipment.')
-        @resetFilters()
-      )
-      shipment.one('didUpdate', this, ->
-        @set('currentShipment', null)
-        $('.shipment-form-modal').modal('hide')
-        @flashSuccess(message: 'Successfully updated shipment.')
-        @resetFilters()
-      )
-
-    cancelShipment: () ->
-      @get('transaction').rollback()
-      @set('currentShipment', null)
-      $('.shipment-form-modal').modal('hide')
-
-    cancelBatch: () ->
-      @set('currentShipment', null)
-      $('.batch-form-modal').modal('hide')
-
-    # discards the new shipment (bound to currentShipment)
-    deleteShipment: (shipment) ->
-      if confirm("This will delete a shipment. Proceed?")
-        if (!shipment.get('isSaving'))
-          shipment.deleteRecord()
-          shipment.get('transaction').commit()
-          shipment.one('didDelete', this, ->
-            @set('currentShipment', null)
-            @flashSuccess(message: 'Successfully deleted shipment.')
-            @resetFilters()
-          )
-
-    deleteBatch: ->
-      if confirm("This will delete all filtered shipments. Are you sure?")
-        $.ajax(
-          url: '/trade/shipments/destroy_batch'
-          type: 'POST'
-          data:
-            filters: @get('searchParams')
-        )
-        .done( (data) =>
-          @flashSuccess(message: 'Successfully deleted ' + data.rows + ' shipments.')
-        )
-        .fail( (xhr) =>
-          @flashError(message: 'Error occurred when deleting shipments.')
-          console.log "bad luck: ", xhr.responseText
-        )
-        .always( () =>
-          @set('currentShipment', null)
-          $('.batch-form-modal').modal('hide')
-        )
-
-    editShipment: (shipment) ->
-      @set('currentShipment', shipment)
-      $('.shipment-form-modal').modal('show')
-
-    editBatch: ->
-      @get('batchUpdateParams').reset()
-      @set('currentShipment', @get('batchUpdateParams'))
-      $('.batch-form-modal').modal('show')
-
-    updateBatch: ->
-      if confirm("This will update all filtered shipments. Are you sure?")
-        $.ajax(
-          url: '/trade/shipments/update_batch'
-          type: 'POST'
-          data:
-            filters: @get('searchParams')
-            updates: @get('batchUpdateParams').export()
-        )
-        .done( (data) =>
-          @flashSuccess(message: 'Successfully updated ' + data.rows + ' shipments.')
-        )
-        .fail( (xhr) =>
-          @flashError(message: 'Error occurred when updating shipments.')
-          console.log "bad luck: ", xhr.responseText
-        )
-        .always( () =>
-          @set('currentShipment', null)
-          $('.batch-form-modal').modal('hide')
-        )
-
     search: ->
       @flashClear()
-      @updateQueryParams()
+      @transitionToRoute('search.results', {queryParams: @get('searchParams')})
 
     resetFilters: ->
       @flashClear()
       @resetFilters()
+      @transitionToRoute('search.results', {queryParams: @get('searchParams')})

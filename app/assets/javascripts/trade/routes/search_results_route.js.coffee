@@ -1,4 +1,4 @@
-Trade.ShipmentsRoute = Trade.BeforeRoute.extend Trade.QueryParams,
+Trade.SearchResultsRoute = Trade.BeforeRoute.extend Trade.LoadingModal,
 
   queryParams: {
     taxon_concepts_ids: { refreshModel: true },
@@ -24,24 +24,13 @@ Trade.ShipmentsRoute = Trade.BeforeRoute.extend Trade.QueryParams,
     page: { refreshModel: true }
   }
 
-  beforeModel: (params) ->
-    Ember.RSVP.all([
-      @controllerFor('geoEntities').load()
-      @controllerFor('terms').load()
-      @controllerFor('units').load()
-      @controllerFor('sources').load()
-      @controllerFor('purposes').load()
-    ])
+  model: (params) ->
+    @showLoadingModal()
+    Trade.Shipment.find(params)
 
-  model: (params, transition) ->
-    paramsNotEmpty = @get('propertyMapping').find((p) ->
-      val = params[p.urlParam]
-      !(
-        val == undefined || val == null ||
-        p.type == 'array' && val.length == 0
-      )
-    )
-    if paramsNotEmpty
-      Trade.Shipment.find(params)
-    else
-      Trade.Shipment.all().clear()
+  afterModel: () ->
+    @hideLoadingModal()
+
+  actions:
+    dataChanged: () ->
+      @refresh()
