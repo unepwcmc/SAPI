@@ -3,7 +3,6 @@ Trade.QueryParams = Ember.Mixin.create({
   propertyMapping: [
     {
       name: "selectedTaxonConcepts"
-      param: 'selectedTaxonConceptsQP'
       urlParam: 'taxon_concepts_ids'
       type: 'array'
       displayTitle: 'taxa'
@@ -12,7 +11,6 @@ Trade.QueryParams = Ember.Mixin.create({
     },
     {
       name: "selectedReportedTaxonConcepts"
-      param: 'selectedReportedTaxonConceptsQP'
       urlParam: 'reported_taxon_concepts_ids'
       type: 'array'
       displayTitle: 'rep. taxa'
@@ -21,7 +19,6 @@ Trade.QueryParams = Ember.Mixin.create({
     },
     {
       name: "selectedAppendices"
-      param: 'selectedAppendicesQP'
       urlParam: 'appendices'
       type: 'array'
       displayTitle: 'appdx.'
@@ -30,19 +27,16 @@ Trade.QueryParams = Ember.Mixin.create({
     },
     {
       name: "selectedTimeStart"
-      param: 'selectedTimeStartQP'
       urlParam: 'time_range_start'
       displayTitle: 'from'
     },
     {
       name: "selectedTimeEnd"
-      param: 'selectedTimeEndQP'
       urlParam: 'time_range_end'
       displayTitle: 'to'
     },
     {
       name: "selectedTerms"
-      param: 'selectedTermsQP'
       urlParam: 'terms_ids'
       type: 'array'
       displayTitle: 'terms'
@@ -51,7 +45,6 @@ Trade.QueryParams = Ember.Mixin.create({
     },
     {
       name: "selectedUnits"
-      param: 'selectedUnitsQP'
       urlParam: 'units_ids'
       type: 'array'
       displayTitle: 'units'
@@ -60,7 +53,6 @@ Trade.QueryParams = Ember.Mixin.create({
     },
     {
       name: "selectedPurposes"
-      param: 'selectedPurposesQP'
       urlParam: 'purposes_ids'
       type: 'array'
       displayTitle: 'purposes'
@@ -69,7 +61,6 @@ Trade.QueryParams = Ember.Mixin.create({
     },
     {
       name: "selectedSources"
-      param: 'selectedSourcesQP'
       urlParam: 'sources_ids'
       type: 'array'
       displayTitle: 'sources'
@@ -78,7 +69,6 @@ Trade.QueryParams = Ember.Mixin.create({
     },
     {
       name: "selectedImporters"
-      param: 'selectedImportersQP'
       urlParam: 'importers_ids'
       type: 'array'
       displayTitle: 'importers'
@@ -87,7 +77,6 @@ Trade.QueryParams = Ember.Mixin.create({
     },
     {
       name: "selectedExporters"
-      param: 'selectedExportersQP'
       urlParam: 'exporters_ids'
       type: 'array'
       displayTitle: 'exporters'
@@ -96,7 +85,6 @@ Trade.QueryParams = Ember.Mixin.create({
     },
     {
       name: "selectedCountriesOfOrigin"
-      param: 'selectedCountriesOfOriginQP'
       urlParam: 'countries_of_origin_ids'
       type: 'array'
       displayTitle: 'origins'
@@ -105,13 +93,11 @@ Trade.QueryParams = Ember.Mixin.create({
     },
     {
       name: "selectedReporterType"
-      param: 'selectedReporterTypeQP'
       urlParam: 'reporter_type'
       displayTitle: 'reporter type'
     },
     {
       name: "selectedPermits"
-      param: 'selectedPermitsQP'
       urlParam: 'permits_ids'
       type: 'array'
       displayTitle: 'permits'
@@ -119,41 +105,35 @@ Trade.QueryParams = Ember.Mixin.create({
     },
     {
       name: "selectedQuantity"
-      param: 'selectedQuantityQP'
       urlParam: 'quantity'
       displayName: 'quantity'
     },
     {
       name: "unitBlank"
-      param: 'unitBlankQP'
       urlParam: 'unit_blank'
       type: 'boolean'
       displayTitle: 'blank unit'
     },
     {
       name: "sourceBlank"
-      param: 'sourceBlankQP'
       urlParam: 'source_blank'
       type: 'boolean'
       displayTitle: 'blank source'
     },
     {
       name: "purposeBlank"
-      param: 'purposeBlankQP'
       urlParam: 'purpose_blank'
       type: 'boolean'
       displayTitle: 'blank purpose'
     },
     {
       name: "countryOfOriginBlank"
-      param: 'countryOfOriginBlankQP'
       urlParam: 'country_of_origin_blank'
       type: 'boolean'
       displayTitle: 'blank origin'
     },
     {
       name: "permitBlank"
-      param: 'permitBlankQP'
       urlParam: 'permit_blank'
       type: 'boolean'
       displayTitle: 'blank permit'
