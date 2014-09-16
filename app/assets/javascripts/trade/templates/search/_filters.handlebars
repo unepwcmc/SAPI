@@ -52,13 +52,13 @@
       <div class="left filter-group time">
         <p>Time range</p>
         {{  view Ember.Select
-              viewName="from"
+              name="time_start"
               contentBinding="years"
               selectionBinding="controller.selectedTimeStart"
               prompt="From:"
         }}
         {{  view Ember.Select
-              viewName="to"
+              name="time_end"
               contentBinding="years"
               selectionBinding="controller.selectedTimeEnd"
               prompt="To:"
@@ -166,6 +166,7 @@
       <div class="left filter-group">
         <p>Reporter type</p>
         {{view Ember.Select
+          name="reporter_type"
           prompt="All types"
           contentBinding="controller.allReporterTypeValues"
           selectionBinding="controller.selectedReporterType"

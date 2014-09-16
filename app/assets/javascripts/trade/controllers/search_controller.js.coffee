@@ -223,6 +223,11 @@ Trade.SearchController = Ember.Controller.extend Trade.QueryParams, Trade.Flash,
       @set(autoCompleteField + 'Query', null)
     @set('selectedTimeStart', @get('defaultTimeStart'))
     @set('selectedTimeEnd', @get('defaultTimeEnd'))
+    # this is the lamest search form reset code ever
+    # the issue being that Ember.Select seems to be broken and does not update
+    $('select[name=reporter_type]').val(null)
+    $('select[name=time_start]').val(@get('selectedTimeStart'))
+    $('select[name=time_end]').val(@get('selectedTimeEnd'))
     @endPropertyChanges()
 
   actions:
