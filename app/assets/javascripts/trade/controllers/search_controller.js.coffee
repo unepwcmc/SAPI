@@ -221,6 +221,8 @@ Trade.SearchController = Ember.Controller.extend Trade.QueryParams, Trade.Flash,
       'countryOfOrigin', 'term', 'unit', 'permit'
     ].forEach (autoCompleteField) =>
       @set(autoCompleteField + 'Query', null)
+    @set('selectedTimeStart', @get('defaultTimeStart'))
+    @set('selectedTimeEnd', @get('defaultTimeEnd'))
     @endPropertyChanges()
 
   actions:
