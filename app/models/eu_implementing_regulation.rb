@@ -21,16 +21,7 @@
 #  extended_description :text
 #
 
-# Cites Tech Committee
-
-class CitesTc < Event
-  attr_accessible :is_current
-
+class EuImplementingRegulation < Event
+  validate :designation_is_eu
   validates :effective_at, :presence => true
-
-  def self.elibrary_document_types
-    [Document::ReviewOfSignificantTrade]
-  end
-
 end
-
