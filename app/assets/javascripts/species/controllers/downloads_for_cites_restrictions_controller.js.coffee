@@ -81,7 +81,7 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
     }
   ).property(
     'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 
-    'timeScope', 'years.@each', 'documentType'
+    'timeScope', 'years.@each', 'documentType', 'controllers.downloads.csvSeparator'
   )
 
   downloadUrl: ( ->

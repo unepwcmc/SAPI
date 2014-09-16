@@ -70,7 +70,8 @@ Species.DownloadsForEuListingsController = Ember.Controller.extend
         include_cites: @get('includeCites')
         csv_separator: @get('controllers.downloads.csvSeparator')
     }
-  ).property('selectedAppendices.@each', 'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 'includeCites')
+  ).property('selectedAppendices.@each', 'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each',
+  'includeCites', 'controllers.downloads.csvSeparator')
 
   downloadUrl: ( ->
     '/species/exports/download?' + $.param(@get('toParams'))
