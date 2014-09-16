@@ -68,7 +68,8 @@ Species.DownloadsForCmsListingsController = Ember.Controller.extend
         taxon_concepts_ids: @get('selectedTaxonConceptsIds')
         csv_separator: @get('controllers.downloads.csvSeparator')
     }
-  ).property('selectedAppendices.@each', 'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each')
+  ).property('selectedAppendices.@each', 'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each',
+  'controllers.downloads.csvSeparator')
 
   downloadUrl: ( ->
     '/species/exports/download?' + $.param(@get('toParams'))
