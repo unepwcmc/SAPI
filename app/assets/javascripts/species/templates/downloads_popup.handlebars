@@ -28,7 +28,6 @@
       <a {{action 'showHideCsvOptions' target='view'}}>Trouble viewing outputs?</a>
 
       <div id="csv_options">
-        <p>Try changing the option below for .csv outputs:</p>
         {{view Ember.RadioButton name="csv_separator" selectionBinding="csvSeparator" value="comma"}} Comma Separated
         {{view Ember.RadioButton name="csv_separator" selectionBinding="csvSeparator" value="semicolon"}} Semicolon Separated
       </div> 
