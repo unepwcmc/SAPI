@@ -4,7 +4,7 @@ $(document).ready(function(){
     countries = {}, units = {}, terms = {}, purposes = {}, sources = {},
     selected_taxa = '',
     is_search_page = $('#form_expert').length > 0,
-    is_download_page = $('#net_gross_options').length > 0;
+    is_download_page = $('#net_gross_options').length > 0,
     is_view_results_page = $('#query_results_table').length > 0;
 
   ajaxFail = function (xhr, ajaxOptions, thrownError) {
