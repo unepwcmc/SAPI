@@ -11,7 +11,11 @@ Species.DownloadsPopup = Ember.View.extend
 
     showHideCsvOptions: () ->
       csvOptions = $('.csv_options')
+      csvOptionsLink = $('.csv_options_holder > a')
       if $('#csv_options').is(':visible')
         $('#csv_options').hide()
+        csvOptionsLink.html('Trouble viewing outputs?')
       else
         $('#csv_options').show()
+        csvOptionsLink.html('Try changing the option below for .csv outputs:')
+
