@@ -15,27 +15,6 @@ $(document).ready(function(){
   // Your code here
   $(".tipify").tipTip();
 
-  $('.show_search').qtip({
-     content: {
-  	   text: 'If there any problems, contact blah-blah',
-  	   title: {
-                    text: 'Please make your selection in the tabs on the left',
-                    button: true
-                 }
-  	},
-     position: {
-        my: 'top left', at: 'bottom left'
-     },
-     show: {
-         event: false, // Don't specify a show event...
-         ready: true // ... but show the tooltip when ready
-      },
-      hide: false, // Don't specify a hide event either!
-      style: {
-         classes: 'ui-tooltip-shadow ui-tooltip-jtools' 
-      }
-  })
-
   function growlMe(text){
   	$.jGrowl(text);
   };
