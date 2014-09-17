@@ -737,6 +737,7 @@ $(document).ready(function(){
       $('input[value=web]').attr("disabled",true);
       $('span#web-option').css('color', 'LightGray');
     }
+    $('select[name=csvSeparator]').val($.cookie('cites_trade.csv_separator') || 'comma')
   }
 
   function displayResults (q) {
@@ -806,6 +807,7 @@ $(document).ready(function(){
       goToResults(query);
       return;
     } else {
+      $.cookie('cites_trade.csv_separator', csv_separator)
       query += '&filters[csv_separator]=' + csv_separator;
       downloadResults( decodeURIComponent( query ) );
       return
