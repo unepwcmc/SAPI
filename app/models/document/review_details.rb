@@ -12,7 +12,9 @@
 #
 
 class Document::ReviewDetails < ActiveRecord::Base
+  attr_accessible :document_id, :review_phase_id
   self.table_name = 'review_details'
 
   def self.display_name; 'Review Details'; end
+
 end

@@ -19,6 +19,9 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   def edit
     edit! do |format|
       load_associations
+      if @document.is_a?(Document::ReviewOfSignificantTrade)
+        @document.review_details ||= Document::ReviewDetails.new
+      end
       @document.citations.build
       @geo_entities = GeoEntity.joins(:geo_entity_type).where(
         'geo_entity_types.name' => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]

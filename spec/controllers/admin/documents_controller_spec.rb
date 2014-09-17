@@ -129,6 +129,20 @@ describe Admin::DocumentsController do
         expect(document.reload.tags).to eq([tag])
       end
     end
+
+    context "with nested review_details attributes" do
+      let(:document){ create(:review_of_significant_trade) }
+      let(:review_phase){ create(:document_tag, type: 'DocumentTag::ReviewPhase') }
+
+      it "assign review phase to Document" do
+        put :update, id: document.id, document: {
+          date: Date.today, review_details_attributes: {review_phase_id: review_phase.id}
+        }
+        response.should redirect_to(admin_documents_url)
+
+        expect(document.reload.review_details.review_phase_id).to eq(review_phase.id)
+      end
+    end
   end
 
   describe "DELETE destroy" do

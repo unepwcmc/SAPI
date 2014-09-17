@@ -75,6 +75,21 @@
     </div>
   </div>
 
+  <% if @document.is_a?(Document::ReviewOfSignificantTrade) %>
+    <%= f.fields_for :review_details do |ff| %>
+      <div class="control-group">
+        <%= ff.label :review_phase_id, class: 'control-label' %>
+        <div class="controls">
+          <%= ff.select :review_phase_id,
+            options_for_select(DocumentTag::ReviewPhase.all.map { |rp| [rp.name, rp.id] },
+              @document.review_details.review_phase_id),
+            { :class => 'phases', :style => 'width: 220px' }
+          %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+
   <div class="control-group">
     <%= f.label :citations, class: 'control-label' %>
     <div class="controls">
