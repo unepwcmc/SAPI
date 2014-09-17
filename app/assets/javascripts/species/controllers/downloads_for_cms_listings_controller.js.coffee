@@ -1,7 +1,7 @@
 Species.DownloadsForCmsListingsController = Ember.Controller.extend
   designation: 'cms'
   appendices: ['I', 'II']
-  needs: ['geoEntities', 'higherTaxaCms']
+  needs: ['geoEntities', 'higherTaxaCms', 'downloads']
   higherTaxaController: ( ->
     @get('controllers.higherTaxaCms')
   ).property()
@@ -66,8 +66,10 @@ Species.DownloadsForCmsListingsController = Ember.Controller.extend
         appendices: @get('selectedAppendices')
         geo_entities_ids: @get('selectedGeoEntitiesIds')
         taxon_concepts_ids: @get('selectedTaxonConceptsIds')
+        csv_separator: @get('controllers.downloads.csvSeparator')
     }
-  ).property('selectedAppendices.@each', 'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each')
+  ).property('selectedAppendices.@each', 'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each',
+  'controllers.downloads.csvSeparator')
 
   downloadUrl: ( ->
     '/species/exports/download?' + $.param(@get('toParams'))

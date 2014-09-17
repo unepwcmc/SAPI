@@ -14,6 +14,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-deparam
+//= require jquery.cookie
 //= require bootstrap-scrollspy
 //= require handlebars
 //= require ember

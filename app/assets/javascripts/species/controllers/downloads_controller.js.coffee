@@ -29,6 +29,7 @@ Species.DownloadsController = Ember.Controller.extend Species.Spinner,
   legislationIsEuDecisions: ( ->
     @get('euLegislation') == 'decisions'
   ).property('euLegislation')
+  csvSeparator: $.cookie('speciesplus.csv_separator') || 'comma'
 
   actions:
     close: () ->

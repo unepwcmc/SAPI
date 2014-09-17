@@ -1,7 +1,7 @@
 Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   designation: 'eu'
 
-  needs: ['geoEntities', 'higherTaxaCitesEu']
+  needs: ['geoEntities', 'higherTaxaCitesEu', 'downloads']
 
   higherTaxaController: ( ->
     @get('controllers.higherTaxaCitesEu')
@@ -86,11 +86,12 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
             noOpinions: @get('noOpinions')
             suspensions: @get('suspensions')
           }
+        csv_separator: @get('controllers.downloads.csvSeparator')
     }
   ).property(
     'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 
     'timeScope', 'years.@each', 'positiveOpinions', 'negativeOpinions',
-    'noOpinions', 'suspensions'
+    'noOpinions', 'suspensions', 'controllers.downloads.csvSeparator'
   )
 
   downloadUrl: ( ->
