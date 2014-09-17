@@ -1,5 +1,9 @@
 Trade.SearchController = Ember.Controller.extend Trade.QueryParams, Trade.Flash,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
+  content: null
+  currentShipment: null
+  csvSeparator: "comma"
+  batchUpdateParams: Trade.ShipmentBatchUpdate.create()
 
   init: ->
     @set('selectedTimeStart', @get('defaultTimeStart'))

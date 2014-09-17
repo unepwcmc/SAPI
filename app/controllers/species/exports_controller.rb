@@ -1,12 +1,13 @@
 class Species::ExportsController < ApplicationController
 
   def download
-    csv_separator, csv_separator_char = case params[:filters][:csv_separator]
-      when 'semicolon' then ['semicolon', ';']
-      else ['comma', ',']
-    end
     filters = params[:filters].merge({
-      csv_separator: csv_separator, csv_separator_char: csv_separator_char
+      :csv_separator => if params[:filters] && params[:filters][:csv_separator] &&
+        params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
+        :semicolon
+      else
+        :comma
+      end
     })
     case params[:data_type]
       when 'Quotas'

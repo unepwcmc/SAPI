@@ -6,6 +6,7 @@ class Species::CsvCopyExport
   def initialize(filters = {})
     @filters = filters || {}
     @taxonomy = @filters[:taxonomy] && Taxonomy.find_by_name(filters[:taxonomy])
+    initialize_csv_separator(@filters[:csv_separator])
   end
 
   def path
@@ -24,7 +25,7 @@ class Species::CsvCopyExport
       to_csv
     end
     ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
-    @public_file_name = "#{resource_name}_#{ctime}_#{@filters[:csv_separator]}_separated.csv"
+    @public_file_name = "#{resource_name}_#{ctime}_#{@csv_separator}_separated.csv"
     [
       @file_name,
       {:filename => public_file_name, :type => 'text/csv'}
@@ -37,12 +38,19 @@ class Species::CsvCopyExport
 
   private
 
+  def initialize_csv_separator(csv_separator)
+    @csv_separator, @csv_separator_char = case csv_separator
+      when :semicolon then [:semicolon, ';']
+      else [:comma, ',']
+    end
+  end 
+
   def to_csv
     export_to_csv({
       :query => query,
       :csv_columns => csv_column_headers,
       :file_path => file_name,
-      :delimiter => @filters[:csv_separator_char]
+      :delimiter => @csv_separator_char
     })
   end
 
