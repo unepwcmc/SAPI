@@ -9,12 +9,9 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
   delegate :per_page, :to => :"@search"
 
   def initialize(filters)
-    @csv_separator, @csv_separator_char = case filters['csv_separator']
-      when 'semicolon_separated' then ['semicolon_separated', ';']
-      else ['comma_separated', ',']
-    end
     @search = Trade::Filter.new(filters)
     @filters = @search.options.merge(:csv_separator => filters['csv_separator'])
+    initialize_csv_separator(filters[:csv_separator])
   end
 
   def export
@@ -22,7 +19,7 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
       to_csv
     end
     ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
-    @public_file_name = "#{resource_name}_#{ctime}_#{@csv_separator}.csv"
+    @public_file_name = "#{resource_name}_#{ctime}_#{@csv_separator}_separated.csv"
     [
       @file_name,
       {:filename => public_file_name, :type => 'text/csv'}
