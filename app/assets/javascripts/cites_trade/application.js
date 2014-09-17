@@ -787,6 +787,7 @@ $(document).ready(function(){
   function handleDownloadRequest (ignoreWarning) {
     var output_type = $( "input[name='outputType']:checked" ).val(),
       report_type = $( "input[name='report']:checked" ).val(),
+      csv_separator = $( "select[name='csvSeparator']" ).val(),
       query = location.search.substr(1);
     if (report_type === 'comparative') {
       report_type = 'comptab';
@@ -805,6 +806,7 @@ $(document).ready(function(){
       goToResults(query);
       return;
     } else {
+      query += '&filters[csv_separator]=' + csv_separator;
       downloadResults( decodeURIComponent( query ) );
       return
     }
