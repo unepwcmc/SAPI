@@ -21,6 +21,8 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
       load_associations
       if @document.is_a?(Document::ReviewOfSignificantTrade)
         @document.review_details ||= Document::ReviewDetails.new
+      elsif @document.is_a?(Document::Proposal)
+        @document.proposal_details ||= Document::ProposalDetails.new
       end
       @document.citations.build
       @geo_entities = GeoEntity.joins(:geo_entity_type).where(
