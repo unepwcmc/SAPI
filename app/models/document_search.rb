@@ -11,7 +11,7 @@ class DocumentSearch
 
   def results
     results = @query.limit(@per_page).
-      offset(@offset).uniq_by(&:id)
+      offset(@offset)
   end
 
   def total_cnt
@@ -35,8 +35,7 @@ class DocumentSearch
   end
 
   def initialize_query
-    @query = Document.joins('LEFT JOIN events ON events.id = documents.event_id')
-
+    @query = Document.from('documents_view AS documents')
     add_conditions_for_event
     add_conditions_for_document
     add_extra_conditions
@@ -44,6 +43,8 @@ class DocumentSearch
   end
 
   def add_conditions_for_event
+    return unless @event_id || @event_type
+    @query = @query.joins('LEFT JOIN events ON events.id = documents.event_id')
     if @event_id.present?
       @query = @query.where(event_id: @event_id)
     elsif @event_type.present?
@@ -67,43 +68,16 @@ class DocumentSearch
   end
 
   def add_extra_conditions
-    return unless [@taxon_concepts_ids, @geo_entities_ids].any?(&:present?)
-
-    @query = @query.joins("""
-      LEFT JOIN document_citations
-      ON document_citations.document_id = documents.id
-    """.squish)
-
     add_taxon_concepts_condition if @taxon_concepts_ids.present?
     add_geo_entities_condition if @geo_entities_ids.present?
   end
 
   def add_taxon_concepts_condition
-    @query = @query.joins("""
-      LEFT JOIN document_citation_taxon_concepts
-      ON document_citation_taxon_concepts.document_citation_id = document_citations.id
-    """.squish)
-    @query = @query.where(
-      'document_citation_taxon_concepts.taxon_concept_id' => @taxon_concepts_ids
-    )
+    @query = @query.where("taxon_concept_ids && ARRAY[#{@taxon_concepts_ids.join(',')}]")
   end
 
   def add_geo_entities_condition
-    geo_entity_type_ids = GeoEntityType.where(
-      :name => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]
-    ).pluck(:id)
-
-    @query = @query.joins("""
-      LEFT JOIN document_citation_geo_entities
-      ON document_citation_geo_entities.document_citation_id = document_citations.id
-      LEFT JOIN geo_entities
-      ON document_citation_geo_entities.geo_entity_id = geo_entities.id
-    """)
-
-    @query = @query.where(
-      'geo_entities.id' => @geo_entities_ids,
-      'geo_entities.geo_entity_type_id' => geo_entity_type_ids
-    )
+    @query = @query.where("geo_entity_ids && ARRAY[#{@geo_entities_ids.join(',')}]")
   end
 
   def add_ordering
@@ -112,7 +86,7 @@ class DocumentSearch
     @query = if @event_id.present?
       @query.order([:date, :title])
     else
-      @query.order('created_at DESC')
+      @query.order('documents.created_at DESC')
     end
   end
 

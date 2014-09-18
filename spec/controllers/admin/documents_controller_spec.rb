@@ -51,7 +51,7 @@ describe Admin::DocumentsController do
           assigns(:documents).should eq([@document1])
         end
         it "retrieves documents for geo entity" do
-          get :index, "geo-entities-ids" => geo_entity.id
+          get :index, "geo-entities-ids" => [geo_entity.id]
           assigns(:documents).should eq([@document2])
         end
       end
