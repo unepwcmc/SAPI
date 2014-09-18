@@ -60,21 +60,6 @@
     </div>
   </div>
 
-  <div class="control-group">
-    <%= f.label :tags, class: 'control-label' %>
-    <div class="controls">
-      <%= f.select :tag_ids,
-        options_from_collection_for_select(
-          @tags,
-          :id,
-          :name,
-          @document.tags.map(&:id)
-        ), {},
-        { :multiple => true, :class => 'tags', :style => "width: 220px" }
-      %>
-    </div>
-  </div>
-
   <% if @document.is_a?(Document::ReviewOfSignificantTrade) %>
     <%= f.fields_for :review_details do |ff| %>
       <div class="control-group">

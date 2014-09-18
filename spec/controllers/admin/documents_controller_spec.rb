@@ -118,18 +118,6 @@ describe Admin::DocumentsController do
       end
     end
 
-    context "with nested tag attributes" do
-      let(:document){ create(:document) }
-      let(:tag){ create(:document_tag) }
-
-      it "adds existing tags to the Document" do
-        put :update, id: document.id, document: { date: Date.today, tag_ids: [tag.id] }
-        response.should redirect_to(admin_documents_url)
-
-        expect(document.reload.tags).to eq([tag])
-      end
-    end
-
     context "with nested review_details attributes" do
       let(:document){ create(:review_of_significant_trade) }
       let(:review_phase){ create(:document_tag, type: 'DocumentTag::ReviewPhase') }
