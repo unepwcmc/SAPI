@@ -84,11 +84,6 @@ describe Admin::DocumentsController do
       get :edit, id: document.id
       response.should render_template('new')
     end
-
-    it "loads the Document's tags" do
-      get :edit, id: document.id
-      expect(assigns(:tags)).to match_array(document_tags)
-    end
   end
 
   describe "PUT update" do
@@ -118,23 +113,11 @@ describe Admin::DocumentsController do
       end
     end
 
-    context "with nested tag attributes" do
-      let(:document){ create(:document) }
-      let(:tag){ create(:document_tag) }
-
-      it "adds existing tags to the Document" do
-        put :update, id: document.id, document: { date: Date.today, tag_ids: [tag.id] }
-        response.should redirect_to(admin_documents_url)
-
-        expect(document.reload.tags).to eq([tag])
-      end
-    end
-
     context "with nested review_details attributes" do
       let(:document){ create(:review_of_significant_trade) }
       let(:review_phase){ create(:document_tag, type: 'DocumentTag::ReviewPhase') }
 
-      it "assign review phase to Document" do
+      it "assign review phase to Review" do
         put :update, id: document.id, document: {
           date: Date.today, review_details_attributes: {review_phase_id: review_phase.id}
         }
@@ -143,6 +126,21 @@ describe Admin::DocumentsController do
         expect(document.reload.review_details.review_phase_id).to eq(review_phase.id)
       end
     end
+
+    context "with nested proposal_details attributes" do
+      let(:document){ create(:proposal) }
+      let(:proposal_outcome){ create(:document_tag, type: 'DocumentTag::ProposalOutcome') }
+
+      it "assign outcome to Proposal" do
+        put :update, id: document.id, document: {
+          date: Date.today, proposal_details_attributes: {proposal_outcome_id: proposal_outcome.id}
+        }
+        response.should redirect_to(admin_documents_url)
+
+        expect(document.reload.proposal_details.proposal_outcome_id).to eq(proposal_outcome.id)
+      end
+    end
+
   end
 
   describe "DELETE destroy" do
