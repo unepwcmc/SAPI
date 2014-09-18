@@ -10,7 +10,7 @@ module MListingChange
       translates :short_note, fallback: false
       translates :full_note, fallback: false
       translates :hash_full_note, :inherited_short_note, :inherited_full_note,
-        :auto_note
+        :auto_note, :party_full_name
     end
   end
 
@@ -38,10 +38,6 @@ module MListingChange
 
   def countries_full_names
     CountryDictionary.instance.get_names_by_ids(countries_ids).compact
-  end
-
-  def party_full_name
-    CountryDictionary.instance.get_name_by_id(party_id)
   end
 
   def to_timeline_event
