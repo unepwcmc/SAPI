@@ -18,6 +18,14 @@ class DocumentSearch
     @query.count
   end
 
+  def taxon_concepts
+    @taxon_concepts ||= TaxonConcept.where(id: @taxon_concepts_ids)
+  end
+
+  def geo_entities
+    @geo_entities ||= GeoEntity.where(id: @geo_entities_ids)
+  end
+
   private
 
   def initialize_params(options)
@@ -27,14 +35,16 @@ class DocumentSearch
   end
 
   def initialize_query
-    @query = Document.joins('LEFT JOIN events ON events.id = documents.event_id')
-
+    @query = Document.from('documents_view AS documents')
     add_conditions_for_event
     add_conditions_for_document
+    add_extra_conditions
     add_ordering
   end
 
   def add_conditions_for_event
+    return unless @event_id || @event_type
+    @query = @query.joins('LEFT JOIN events ON events.id = documents.event_id')
     if @event_id.present?
       @query = @query.where(event_id: @event_id)
     elsif @event_type.present?
@@ -57,13 +67,26 @@ class DocumentSearch
     end
   end
 
+  def add_extra_conditions
+    add_taxon_concepts_condition if @taxon_concepts_ids.present?
+    add_geo_entities_condition if @geo_entities_ids.present?
+  end
+
+  def add_taxon_concepts_condition
+    @query = @query.where("taxon_concept_ids && ARRAY[#{@taxon_concepts_ids.join(',')}]")
+  end
+
+  def add_geo_entities_condition
+    @query = @query.where("geo_entity_ids && ARRAY[#{@geo_entities_ids.join(',')}]")
+  end
+
   def add_ordering
     return if @document_title.present?
 
     @query = if @event_id.present?
       @query.order([:date, :title])
     else
-      @query.order('created_at DESC')
+      @query.order('documents.created_at DESC')
     end
   end
 
