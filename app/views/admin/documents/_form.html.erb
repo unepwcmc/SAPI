@@ -88,6 +88,34 @@
         </div>
       </div>
     <% end %>
+  <% elsif @document.is_a?(Document::Proposal) %>
+    <%= f.fields_for :proposal_details do |ff| %>
+      <div class="control-group">
+        <%= ff.label :proposal_outcome_id, class: 'control-label' %>
+        <div class="controls">
+          <%= ff.select :proposal_outcome_id,
+            options_for_select(DocumentTag::ProposalOutcome.all.map { |po| [po.name, po.id] },
+              @document.proposal_details.proposal_outcome_id),
+            { :class => 'phases', :style => 'width: 220px' }
+          %>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <%= ff.label :proposal_nature, class: 'control-label' %>
+        <div class="controls">
+          <%= ff.text_field :proposal_nature %>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <%= ff.label :representation, class: 'control-label' %>
+        <div class="controls">
+          <%= ff.text_field :representation %>
+        </div>
+      </div>
+
+    <% end %>
   <% end %>
 
   <div class="control-group">

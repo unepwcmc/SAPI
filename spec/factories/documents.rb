@@ -9,6 +9,9 @@ FactoryGirl.define do
     factory :review_of_significant_trade, class: Document::ReviewOfSignificantTrade do
       type 'Document::ReviewOfSignificantTrade'
     end
+    factory :proposal, class: Document::Proposal do
+      type 'Document::Proposal'
+    end
   end
 
   factory :document_citation do
