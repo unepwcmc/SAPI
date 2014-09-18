@@ -1,0 +1,19 @@
+<div>
+ <table class="table_cms">
+ <thead>
+  <th width="100%" class="table_cms">The top 10 most visited species in CMS.</th>
+  <td class="table_cms">Number of visits</td>
+</thead>
+<tbody>
+  <% @toptens_cms.each do |topten| -%>
+    <tr>
+      <td class="table_cms">
+        <%= topten.species %>
+      </td>
+      <td class="table_cms">
+      	<%= topten.number_of_visits %>
+      </td>	
+    </tr>
+    <% end %>
+</tbody>
+</div>

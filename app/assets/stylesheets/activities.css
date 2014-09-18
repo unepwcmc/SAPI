@@ -1,13 +1,22 @@
 /*
   *= require c3
- */
-div.table {
-	float: left;
-	width: 300px;
+  */
+table.table_cites {
+  float: left;
+  width: 20%;
+}  
+td.table_cites, th.table_cites {
+  border: 1px solid black;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
-table, td, th {
-    border: 1px solid black;
-    border-collapse: collapse;
-	border-spacing: 0;
+table.table_cms{
+  float: right;
+  width: 20%;
+}
+td.table_cms, th.table_cms {
+  border: 1px solid black;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
