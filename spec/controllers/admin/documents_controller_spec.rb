@@ -84,11 +84,6 @@ describe Admin::DocumentsController do
       get :edit, id: document.id
       response.should render_template('new')
     end
-
-    it "loads the Document's tags" do
-      get :edit, id: document.id
-      expect(assigns(:tags)).to match_array(document_tags)
-    end
   end
 
   describe "PUT update" do
