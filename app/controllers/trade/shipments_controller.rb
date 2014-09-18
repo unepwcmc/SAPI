@@ -94,8 +94,9 @@ private
   def resolve_accepted_taxon_concept(update_params)
     if !update_params[:reported_taxon_concept_id].blank? && update_params[:taxon_concept_id].blank?
       # automatically resolve accepted taxon name
-      tc = TaxonConcept.find_by_id(update_params[:reported_taxon_concept_id])
-      accepted_tc = tc && tc.accepted_names.first
+      accepted_tc = Trade::ReportedTaxonConceptResolver.new(
+        update_params[:reported_taxon_concept_id]
+      ).accepted_taxa.first
       update_params[:taxon_concept_id] = accepted_tc && accepted_tc.id
     end
     update_params
