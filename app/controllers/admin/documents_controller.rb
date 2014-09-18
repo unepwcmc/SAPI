@@ -63,7 +63,6 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).
      order(:name_en)
     @english = Language.find_by_iso_code1('EN')
-    @tags = DocumentTag.all
     @taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
     @geo_entities =  GeoEntity.select(['geo_entities.id', :name_en]).
       joins(:geo_entity_type).where(
