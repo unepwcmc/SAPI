@@ -137,7 +137,11 @@ class EuDecision < ActiveRecord::Base
   def self.to_csv file_path, filters
     limit = 1000
     offset = 0
-    CSV.open(file_path, 'wb', {:col_sep => filters[:csv_separator_char]}) do |csv|
+    csv_separator_char = case filters[:csv_separator]
+      when :semicolon then ';'
+      else ','
+    end
+    CSV.open(file_path, 'wb', {:col_sep => csv_separator_char}) do |csv|
       csv << Species::RestrictionsExport::TAXONOMY_COLUMNS +
         ['Remarks'] + self.csv_columns_headers
       ids = []
