@@ -19,7 +19,7 @@ class Trade::ShipmentsController < TradeController
 
   def update
     @shipment = Trade::Shipment.find(params[:id])
-    update_params = resolve_accepted_taxon_concept(shipment_params)
+    update_params = populate_accepted_taxon_concept(shipment_params)
     if @shipment.update_attributes(update_params)
       render :json => @shipment, :status => :ok
     else
@@ -30,7 +30,7 @@ class Trade::ShipmentsController < TradeController
   def update_batch
     @search = Trade::Filter.new(search_params)
     cnt = @search.query.count
-    update_params = resolve_accepted_taxon_concept(batch_update_params)
+    update_params = populate_accepted_taxon_concept(batch_update_params)
     @search.query.update_all(update_params)
     render :json => {rows: cnt}, :status => :ok
   end
@@ -46,6 +46,12 @@ class Trade::ShipmentsController < TradeController
     cnt = @search.query.count
     @search.query.destroy_all
     render :json => {rows: cnt}, :status => :ok
+  end
+
+  def accepted_taxa_for_reported_taxon_concept
+    @resolver = Trade::ReportedTaxonConceptResolver.new(params[:reported_taxon_concept_id])
+    render :json => @resolver.accepted_taxa,
+      :each_serializer => Trade::TaxonConceptSerializer
   end
 
 private
@@ -91,7 +97,7 @@ private
     res
   end
 
-  def resolve_accepted_taxon_concept(update_params)
+  def populate_accepted_taxon_concept(update_params)
     if !update_params[:reported_taxon_concept_id].blank? && update_params[:taxon_concept_id].blank?
       # automatically resolve accepted taxon name
       accepted_tc = Trade::ReportedTaxonConceptResolver.new(

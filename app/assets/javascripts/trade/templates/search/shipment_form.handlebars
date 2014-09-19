@@ -16,21 +16,18 @@
         Name, Appendix and Year
       </div>
       <div class="inner">
+
+      {{#view Trade.TaxonConceptTextFieldsView controllerBinding="controller" currentShipmentBinding="currentShipment"}}
         <div class="attribute-area left taxon-name">
           <p>Taxon name <span class="error">{{currentShipment.errors.taxonConceptId}}</span></p>
-          {{view Trade.TaxonConceptSelect2
-            prompt="Please select taxon names"
-            valueBinding="currentShipment.taxonConceptId"
-          }}
+          {{view view.AcceptedSelect2 valueBinding="currentShipment.taxonConceptId"}}
         </div>
         <div class="attribute-area left taxon-name">
           <p>Reported taxon name <span class="error">{{currentShipment.errors.reportedTaxonConceptId}}</span></p>
-          {{view Trade.TaxonConceptSelect2
-            prompt="Please select taxon names"
-            valueBinding="currentShipment.reportedTaxonConceptId"
-            includeSynonyms="true"
-          }}
+          {{view view.ReportedSelect2 valueBinding="currentShipment.reportedTaxonConceptId"}}
         </div>
+      {{/view}}
+
         <div class="attribute-area left">
           <p>Appendix <span class="error">{{currentShipment.errors.appendix}}</span></p>
             {{view Ember.Select
