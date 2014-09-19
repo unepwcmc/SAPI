@@ -35,6 +35,7 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
               END AS is_current,
               listing_changes_mview.species_listing_name,
               listing_changes_mview.party_id,
+              listing_changes_mview.party_full_name_en,
               listing_changes_mview.effective_at,
               listing_changes_mview.full_note_en,
               listing_changes_mview.short_note_en,
