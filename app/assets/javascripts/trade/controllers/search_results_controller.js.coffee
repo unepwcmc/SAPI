@@ -191,4 +191,8 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
           Trade.TaxonConcept.find(taxon_concept_id).then( () =>
             @set('currentShipment.taxonConceptId', taxon_concept_id)
           )
+        else
+          # there were no accepted names found, this is likely a data error
+          # so clear the accepted taxon to draw attention to it
+          @set('currentShipment.taxonConceptId', null)
       )
