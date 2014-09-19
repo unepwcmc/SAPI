@@ -8,15 +8,16 @@
       </h3></td>
     </tr>
     <tr>
-      <td>
-        <span style="font-weight:900;font-size:14px"> <%= t('select_output') %> </span>
-        <br /><span style="display:none;"
+      <td style="padding:20px">
+        <span style="font-weight:900;font-size:14px;"> <%= t('select_output') %> </span>
+        <br>
+        <span style="display:none;"
           id="web-limit-exceeded-error-message">
           <%= t('errors.web_limit_exceeded_1') %>.<br>
           <%= t('errors.web_limit_exceeded_2') %>.
         </span>
-        <br><input type="radio" name="outputType" value="web" checked> <span id='web-option'>web</span>
         <br>
+        <input type="radio" name="outputType" value="web" checked> <span id='web-option'>web</span>
         <div>
           <input type="radio" name="outputType" value="csv"> csv
           <select name="csvSeparator" style='background-color:#CCFFFF' id="csv_separator" >
@@ -29,8 +30,10 @@
     </tr>
 
     <tr id="net_gross_options">
-      <td>
-        <span style="font-weight:900;font-size:14px"> <%= t('select_report') %> </span> <br>
+      <td style="padding:20px">
+        <span style="font-weight:900;font-size:14px;"> <%= t('select_report') %> </span>
+        <br>
+        <br>
         <input name="report" id="report_comparative" type="radio" value="comparative" checked="checked"  /> <%= t('comparative_tabulations') %>
         <br>
         <div id="gross_net_section">
