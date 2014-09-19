@@ -63,7 +63,10 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
 
   actions:
     newShipment: () ->
-      @set('currentShipment', Trade.Shipment.createRecord())
+      shipment = Trade.Shipment.createRecord()
+      transaction = @get('transaction')
+      transaction.add(shipment)
+      @set('currentShipment', shipment)
       $('.shipment-form-modal').modal('show')
 
     # saves the new shipment (bound to currentShipment) to the db
@@ -141,6 +144,8 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
       )
 
     editShipment: (shipment) ->
+      transaction = @get('transaction')
+      transaction.add(shipment)
       @set('currentShipment', shipment)
       $('.shipment-form-modal').modal('show')
 
