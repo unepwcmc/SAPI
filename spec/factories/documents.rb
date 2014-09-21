@@ -18,4 +18,14 @@ FactoryGirl.define do
     document_id 1
   end
 
+  factory :proposal_details, class: Document::ProposalDetails do
+    document
+    proposal_outcome
+  end
+
+  factory :review_details, class: Document::ReviewDetails do
+    document
+    review_phase
+  end
+
 end

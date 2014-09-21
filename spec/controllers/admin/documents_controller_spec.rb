@@ -5,6 +5,8 @@ describe Admin::DocumentsController do
   let(:event){ create(:event) }
   let(:taxon_concept){ create(:taxon_concept) }
   let(:geo_entity){ create(:geo_entity) }
+  let(:proposal_outcome){ create(:proposal_outcome) }
+  let(:review_phase){ create(:review_phase) }
 
   describe "index" do
     before(:each) do
@@ -53,6 +55,26 @@ describe Admin::DocumentsController do
         it "retrieves documents for geo entity" do
           get :index, "geo-entities-ids" => [geo_entity.id]
           assigns(:documents).should eq([@document2])
+        end
+        context 'by proposal outcome' do
+          before(:each) do
+            @document3 = create(:proposal, event: create_cites_cop, date: DateTime.new(2014,01,01))
+            create(:proposal_details, document_id: @document3.id, proposal_outcome_id: proposal_outcome.id)
+          end
+          it "retrieves documents for tag" do
+            get :index, "document-tags-ids" => [proposal_outcome.id]
+            assigns(:documents).should eq([@document3])
+          end
+        end
+        context 'by review phase' do
+          before(:each) do
+            @document3 = create(:review_of_significant_trade, event: create_ec_srg, date: DateTime.new(2014,01,01))
+            create(:review_details, document_id: @document3.id, review_phase_id: review_phase.id)
+          end
+          it "retrieves documents for tag" do
+            get :index, "document-tags-ids" => [review_phase.id]
+            assigns(:documents).should eq([@document3])
+          end
         end
       end
 
