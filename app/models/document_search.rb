@@ -26,6 +26,10 @@ class DocumentSearch
     @geo_entities ||= GeoEntity.where(id: @geo_entities_ids)
   end
 
+  def document_tags
+    @document_tags ||= DocumentTag.where(id: @document_tags_ids)
+  end
+
   private
 
   def initialize_params(options)
@@ -70,6 +74,7 @@ class DocumentSearch
   def add_extra_conditions
     add_taxon_concepts_condition if @taxon_concepts_ids.present?
     add_geo_entities_condition if @geo_entities_ids.present?
+    add_document_tags_condition if @document_tags_ids.present?
   end
 
   def add_taxon_concepts_condition
@@ -78,6 +83,10 @@ class DocumentSearch
 
   def add_geo_entities_condition
     @query = @query.where("geo_entity_ids && ARRAY[#{@geo_entities_ids.join(',')}]")
+  end
+
+  def add_document_tags_condition
+    @query = @query.where("document_tags_ids && ARRAY[#{@document_tags_ids.join(',')}]")
   end
 
   def add_ordering

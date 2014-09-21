@@ -56,6 +56,11 @@ class Document < ActiveRecord::Base
     end
   end
 
+  # Returns document tag types (class objects) that are relevant to E-Library
+  def self.elibrary_document_tag_types
+    [DocumentTag::ProposalOutcome, DocumentTag::ReviewPhase]
+  end
+
   def set_title
     if title.blank? && filename_changed?
       self.title = filename.file.filename.sub(/.\w+$/, '').humanize

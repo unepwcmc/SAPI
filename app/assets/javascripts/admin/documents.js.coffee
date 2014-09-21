@@ -70,8 +70,15 @@ $(document).ready ->
     allowClear: true
   }
 
+  documentTagSelect2Options = {
+    placeholder: 'Start typing a document tag'
+    width: '300px'
+    allowClear: true
+  }
+
   $('.citation-taxon-concept').select2(citationTaxonSelect2Options)
   $('.citation-geo-entity').select2(citationGeoEntitySelect2Options)
+  $('.document-tag').select2(documentTagSelect2Options)
 
   $(document).on('nested:fieldAdded', (event) ->
     field = event.field
