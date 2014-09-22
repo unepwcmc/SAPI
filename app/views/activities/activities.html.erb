@@ -1,0 +1,24 @@
+<div id="chart"></div>
+<%= include_gon %>
+<p>Chart showing the number of searches and pageviews of species -- grouped by week.</p>
+     <div id="chart"></div>
+<%= include_gon %>
+<script>
+  var chart = c3.generate({
+    bindto: '#chart',
+    data: {
+      columns: [
+        gon.taxon_concept,
+        gon.search
+      ]
+    },
+    axis: {
+      x: {
+        type: "category",
+        categories: gon.weeks
+      }
+    }
+});
+</script>
+<%= render template: 'activities/toptens_cms' %>
+<%= render template: 'activities/toptens_cites' %>
