@@ -2,8 +2,8 @@ class ActivitiesController < ApplicationController
   layout 'activities_page'
 
   def activities
-    @toptens_cites = ToptensCite.order('number_of_visits DESC')
-    @toptens_cms = ToptensCm.order('number_of_visits DESC')
+    @toptens_cites = TaxonConceptViewStats.cites_eu.order('number_of_visits DESC').limit(10)
+    @toptens_cms = TaxonConceptViewStats.cms.order('number_of_visits DESC').limit(10)
     @data_taxon_concept = Ahoy::Event.select('count(*), extract(week from time) as week, extract(year from time) as year').group('week,year').where(:name => "Taxon Concept" ).order('year,week')
     @data_search = Ahoy::Event.select('count(*), extract(week from time) as week, extract(year from time) as year').group('week,year').where(:name=> "Search").order('year,week')
     gon.taxon_concept = ['Taxon Concept'] + @data_taxon_concept.map { |dtc| dtc.count.to_i }
