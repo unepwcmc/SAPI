@@ -2,86 +2,100 @@
   <h1>Documents</h1>
 </div>
 
-<h3>Upload documents in batch</h3>
-<%= select_tag 'event-type', options_for_select(@event_types), {:prompt => "select an event type"}  %>
-<%= select_tag 'event-id',
-  options_for_select(
-    @events.map { |e| [e.name, e.id, {:class => e.type}] }
-  )
-%>
-<%= link_to 'Upload documents for this event', '#', class: "btn btn-primary", id: 'event-link' %>
-
-or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
-
-
-<h3>Filter documents</h3>
-
-<%= form_tag("documents", {:method => 'get'}) do %>
-
-  <div class="form-group">
-    <%= select_tag 'event-type-search',
-      options_for_select(@event_types, @search.event_type), {:prompt => 'Select an event type...'} %>
-
-    <%= select_tag 'event-id-search',
+<div class="well">
+  <form>
+  <fieldset>
+    <legend>Upload documents</legend>
+    <%= select_tag 'event-type', options_for_select(@event_types), {:prompt => "select an event type"}  %>
+    <%= select_tag 'event-id',
       options_for_select(
-        @events.map { |e| [e.name, e.id, {:class => e.type}] },
-        @search.event_id
-      ), include_blank: true
+        @events.map { |e| [e.name, e.id, {:class => e.type}] }
+      )
     %>
-  </div>
+    <%= link_to 'Upload documents for this event', '#', class: "btn btn-primary", id: 'event-link' %>
 
-  <div class="form-group">
-    <%= select_tag 'document-type', options_for_select(
-        Document.elibrary_document_types.map { |document_klass|
-          [
-            document_klass.display_name,
-            document_klass.name,
-            {:class => document_klass.elibrary_event_types.map(&:name).join(' ')}
-          ]
-        }, @search.document_type
-      ), {:prompt => 'Select a document type...'} %>
-  </div>
+    or <%= link_to 'Upload other document types', new_admin_document_batch_url %>
+    </fieldset>
+  </form>
+</div>
 
-  <div class="form-group">
-    <%= text_field_tag 'document-title', @search.document_title|| nil,
-      :class => "align-on-select", :placeholder => 'Enter a document title...' %>
-  </div>
+<div class="well">
+  <%= form_tag("documents", {:method => 'get'}) do %>
+    <fieldset>
+      <legend>Filter documents</legend>
+      <div class="form-group">
+        <%= select_tag 'event-type-search',
+          options_for_select(@event_types, @search.event_type), {
+            :prompt => 'Select an event type...', class: 'input-large'
+          }
+        %>
 
-  <div class="form-group">
-    <%= text_field_tag 'document-date-start',
-      params["document-date-start"] || nil, class: 'align-on-select datepicker',
-      placeholder: 'Documents date after...' %>
+        <%= select_tag 'event-id-search',
+          options_for_select(
+            @events.map { |e| [e.name, e.id, {:class => e.type}] },
+            @search.event_id
+          ), {
+            include_blank: true, class: 'input-large'
+          }
+        %>
+        <%= select_tag 'document-type', options_for_select(
+            Document.elibrary_document_types.map { |document_klass|
+              [
+                document_klass.display_name,
+                document_klass.name,
+                {:class => document_klass.elibrary_event_types.map(&:name).join(' ')}
+              ]
+            }, @search.document_type
+          ), {
+            :prompt => 'Select a document type...', class: 'input-large'
+          }
+        %>
+      </div>
 
-    <%= text_field_tag 'document-date-end',
-      params["document-date-end"] || nil, class: 'align-on-select datepicker',
-      placeholder: 'Documents date before...' %>
-  </div>
+      <div class="form-group" style="padding-bottom: 8px">
+        <%= hidden_field_tag 'taxon-concepts-ids', params['taxon-concepts-ids'], {
+          :class => 'citation-taxon-concept',
+          :'data-taxonomy-id' => @taxonomy.id,
+          :'data-name-status-filter' => ['A', 'N'].to_json,
+          :'data-init-selection' => @search.taxon_concepts.map{|tc| {id: tc.id, text: tc.full_name} }.to_json,
+          :multiple => true
+        } %>
 
-  <div class="form-group">
-    <%= hidden_field_tag 'taxon-concepts-ids', params['taxon-concepts-ids'], {
-      :class => 'citation-taxon-concept', :style => 'width: 220px',
-      :'data-taxonomy-id' => @taxonomy.id,
-      :'data-name-status-filter' => ['A', 'N'].to_json,
-      :'data-init-selection' => @search.taxon_concepts.map{|tc| {id: tc.id, text: tc.full_name} }.to_json,
-      :multiple => true
-    } %>
+        <%= select_tag 'geo-entities-ids',
+          options_from_collection_for_select(
+            @geo_entities,
+            :id,
+            :name_en,
+            @search.geo_entities.map(&:id)
+          ),
+          {
+            :multiple => true, :class => 'citation-geo-entity'
+          }
+        %>   
+      </div>
 
-    <%= select_tag 'geo-entities-ids',
-      options_from_collection_for_select(
-        @geo_entities,
-        :id,
-        :name_en,
-        @search.geo_entities.map(&:id)
-      ),
-      {
-        :multiple => true, :class => 'citation-geo-entity', :style => 'width: 220px'
-      }
-    %>    
-  </div>
+      <div class="form-group">
+        <div class="input-prepend">
+          <span class="add-on"><i class="icon-search"></i></span>
+          <%= text_field_tag 'document-title', @search.document_title|| nil,
+            :class => "align-on-select input-xxlarge", :placeholder => 'Enter a document title...', autocomplete: 'off' %>
+        </div>
+        <%= text_field_tag 'document-date-start',
+          params["document-date-start"] || nil, class: 'align-on-select datepicker input-medium',
+          placeholder: 'Date after...' %>
 
-  <%= submit_tag 'Filter', name: nil, class: "btn btn-primary filter" %>
-  <%= link_to 'Clear Filter', 'documents', class: "btn btn-default filter" %>
-<% end %>
+        <%= text_field_tag 'document-date-end',
+          params["document-date-end"] || nil, class: 'align-on-select datepicker input-medium',
+          placeholder: 'Date before...' %>
+      </div>
+
+      <div class="form-group">
+        <%= submit_tag 'Filter', name: nil, class: "btn btn-primary filter" %>
+        <%= link_to 'Clear Filter', 'documents', class: "btn btn-default filter" %>
+      </div>
+    </fieldset>
+  <% end %>
+</div>
 
 <%= admin_new_modal{ '' } %>
 
