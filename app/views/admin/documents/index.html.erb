@@ -78,7 +78,20 @@
           {
             :multiple => true, :class => 'citation-geo-entity'
           }
-        %>   
+        %>  
+
+        <%= select_tag 'document-tags-ids',
+          option_groups_from_collection_for_select(
+            Document.elibrary_document_tag_types,
+            :scoped,
+            :display_name,
+            :id, 
+            :name,
+            @search.document_tags
+          ), {
+            :multiple => true, :class => 'document-tag', :prompt => 'Select a document tag...'
+          }
+        %>
       </div>
 
       <div class="form-group">
