@@ -12,10 +12,12 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
     @search = Trade::Filter.new(filters)
     @filters = @search.options.merge(:csv_separator => filters['csv_separator'])
     initialize_csv_separator(filters[:csv_separator])
+    initialize_file_name
   end
 
   def export
-    if !File.file?(file_name)
+    if !File.file?(@file_name)
+      puts "WILL GENERATE"
       to_csv
     end
     ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
