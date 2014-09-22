@@ -9,7 +9,9 @@ $(document).ready ->
 
   $('#event-type-search').change( (e) ->
     documentType = $('#document-type')
+    # if no event type selected
     unless e.target.value
+      # enable all document types
       documentType.prop('disabled', false)
       documentType.html(documentTypeChildren)
   )
@@ -20,6 +22,17 @@ $(document).ready ->
       $(e.target).attr('href', 'events/' + event_id + '/document_batch/new')
     else
       $(e.target).attr('href', 'document_batch/new')
+  )
+
+  $('#event-type').change( (e) ->
+    newEventLink = $('#new-event-link')
+    # if no event type selected
+    unless e.target.value
+      # disable new event link
+      newEventLink.hide()
+    else
+      newEventLink.attr('href', $(this).find('option:selected').data('path'))
+      newEventLink.show()
   )
 
   citationTaxonSelect2Options = {
