@@ -35,8 +35,8 @@
 //= require ./trade/query_params
 //= require_tree ./trade/mixins
 //= require_tree ./trade/controllers
-//= require_tree ./trade/views
 //= require_tree ./trade/helpers
+//= require_tree ./trade/views
 //= require_tree ./trade/templates
 //= require ./trade/router
 //= require_tree ./trade/routes

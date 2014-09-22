@@ -5,6 +5,6 @@ Trade.ShipmentForm = Ember.View.extend
 
   didInsertElement: ->
     @.$().on('hidden', () =>
-      @set('controller.currentShipment', null)
+      @get('controller').send('cancelShipment')
     )
       

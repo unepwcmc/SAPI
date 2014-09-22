@@ -63,7 +63,10 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
 
   actions:
     newShipment: () ->
-      @set('currentShipment', Trade.Shipment.createRecord())
+      shipment = Trade.Shipment.createRecord()
+      transaction = @get('transaction')
+      transaction.add(shipment)
+      @set('currentShipment', shipment)
       $('.shipment-form-modal').modal('show')
 
     # saves the new shipment (bound to currentShipment) to the db
@@ -141,6 +144,8 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
       )
 
     editShipment: (shipment) ->
+      transaction = @get('transaction')
+      transaction.add(shipment)
       @set('currentShipment', shipment)
       $('.shipment-form-modal').modal('show')
 
@@ -176,3 +181,23 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
           @set('currentShipment', null)
           $('.batch-form-modal').modal('hide')
         )
+
+    resolveReportedTaxonConcept: (reported_taxon_concept_id) ->
+      $.ajax(
+        url: '/trade/shipments/accepted_taxa_for_reported_taxon_concept'
+        type: 'GET'
+        data:
+          reported_taxon_concept_id: reported_taxon_concept_id
+      )
+      .done( (data) =>
+        first = data['shipments'].shift()
+        if first
+          taxon_concept_id = first.id
+          Trade.TaxonConcept.find(taxon_concept_id).then( () =>
+            @set('currentShipment.taxonConceptId', taxon_concept_id)
+          )
+        else
+          # there were no accepted names found, this is likely a data error
+          # so clear the accepted taxon to draw attention to it
+          @set('currentShipment.taxonConceptId', null)
+      )

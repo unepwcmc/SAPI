@@ -151,6 +151,7 @@ SAPI::Application.routes.draw do
       collection do
         post :update_batch
         post :destroy_batch
+        get :accepted_taxa_for_reported_taxon_concept
       end
     end
     resources :geo_entities, :only => [:index]
