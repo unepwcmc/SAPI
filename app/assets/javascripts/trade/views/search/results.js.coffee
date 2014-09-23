@@ -1,6 +1,15 @@
 Trade.SearchResultsView = Ember.View.extend
   templateName: 'trade/search/results'
 
+  didInsertElement: ->
+    # without this bit expect hilarious effects when mousing out of a tooltip
+    # within a modal window
+    $('.has-tooltip','.modal').tooltip().on('show', (e) ->
+      e.stopPropagation()
+    ).on('hidden', (e) ->
+      e.stopPropagation()
+    )
+
   columns: [
     {
       header: 'ID'
