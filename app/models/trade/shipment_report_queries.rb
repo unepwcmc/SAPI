@@ -6,9 +6,9 @@ module Trade::ShipmentReportQueries
     year,
     appendix,
     taxon_concept_id,
-    full_name_with_spp(ranks.name, taxon_concepts.full_name) AS taxon,
+    full_name_with_spp(ranks.name, taxon_concept_full_name) AS taxon,
     reported_taxon_concept_id,
-    full_name_with_spp(reported_taxon_ranks.name, reported_taxon_concepts.full_name) AS reported_taxon,
+    full_name_with_spp(reported_taxon_ranks.name, reported_taxon_concept_full_name) AS reported_taxon,
     importer_id,
     importers.iso_code2 AS importer,
     exporter_id,
@@ -45,14 +45,10 @@ module Trade::ShipmentReportQueries
     uc.name AS created_by,
     uu.name AS updated_by
   FROM (#{basic_query(options).to_sql}) shipments
-  JOIN taxon_concepts
-    ON taxon_concept_id = taxon_concepts.id
   JOIN ranks
-    ON ranks.id = taxon_concepts.rank_id
-  LEFT JOIN taxon_concepts reported_taxon_concepts
-    ON reported_taxon_concept_id = reported_taxon_concepts.id
-  JOIN ranks AS reported_taxon_ranks
-    ON reported_taxon_ranks.id = reported_taxon_concepts.rank_id
+    ON ranks.id = taxon_concept_rank_id
+  LEFT JOIN ranks AS reported_taxon_ranks
+    ON reported_taxon_ranks.id = reported_taxon_concept_rank_id
   JOIN geo_entities importers
     ON importers.id = importer_id
   JOIN geo_entities exporters
@@ -77,9 +73,9 @@ module Trade::ShipmentReportQueries
   "SELECT
     year,
     appendix,
-    taxon_concepts.data->'family_name' AS family,
+    taxon_concept_family_name AS family,
     taxon_concept_id,
-    full_name_with_spp(ranks.name, taxon_concepts.full_name) AS taxon,
+    full_name_with_spp(ranks.name, taxon_concept_full_name) AS taxon,
     importer_id,
     importers.iso_code2 AS importer,
     exporter_id,
@@ -103,10 +99,8 @@ module Trade::ShipmentReportQueries
     source_id,
     sources.code AS source
   FROM (#{basic_query(options).to_sql}) shipments
-  JOIN taxon_concepts
-    ON taxon_concept_id = taxon_concepts.id
   JOIN ranks
-    ON ranks.id = taxon_concepts.rank_id
+    ON ranks.id = taxon_concept_rank_id
   JOIN geo_entities importers
     ON importers.id = importer_id
   JOIN geo_entities exporters
@@ -124,9 +118,9 @@ module Trade::ShipmentReportQueries
   GROUP BY
     year,
     appendix,
-    taxon_concepts.data,
+    taxon_concept_family_name,
     taxon_concept_id,
-    taxon_concepts.full_name,
+    taxon_concept_full_name,
     ranks.name,
     importer_id,
     importers.iso_code2,
@@ -151,8 +145,8 @@ module Trade::ShipmentReportQueries
   ORDER BY
     year ASC,
     appendix,
-    taxon_concepts.data->'family_name',
-    taxon_concepts.full_name,
+    taxon_concept_family_name,
+    taxon_concept_full_name,
     importers.iso_code2,
     exporters.iso_code2,
     countries_of_origin.iso_code2,
@@ -170,7 +164,7 @@ module Trade::ShipmentReportQueries
     year,
     appendix,
     taxon_concept_id,
-    full_name_with_spp(ranks.name, taxon_concepts.full_name) AS taxon,
+    full_name_with_spp(ranks.name, taxon_concept_full_name) AS taxon,
     importer_id,
     importers.iso_code2 AS importer,
     exporter_id,
@@ -190,10 +184,8 @@ module Trade::ShipmentReportQueries
     units.name_es AS unit_name_es,
     units.name_fr AS unit_name_fr
   FROM (#{basic_query(options).to_sql}) shipments
-  JOIN taxon_concepts
-    ON taxon_concept_id = taxon_concepts.id
   JOIN ranks
-    ON ranks.id = taxon_concepts.rank_id
+    ON ranks.id = taxon_concept_rank_id
   JOIN geo_entities importers
     ON importers.id = importer_id
   JOIN geo_entities exporters
@@ -212,7 +204,7 @@ module Trade::ShipmentReportQueries
     year,
     appendix,
     taxon_concept_id,
-    taxon_concepts.full_name,
+    taxon_concept_full_name,
     ranks.name,
     importer_id,
     importers.iso_code2,
