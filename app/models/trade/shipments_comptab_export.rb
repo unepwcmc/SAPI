@@ -1,6 +1,5 @@
 # Implements "comptab" shipments export
 class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
-  include Trade::ShipmentReportQueries
 
   def total_cnt
     ActiveRecord::Base.connection.execute(query_sql(:limit => false)).ntuples

@@ -1,6 +1,7 @@
 require 'psql_command'
 # Implements "raw" shipments export
 class Trade::ShipmentsExport < Species::CsvCopyExport
+  include Trade::ShipmentReportQueries
   PUBLIC_CSV_LIMIT = 1000000
   PUBLIC_WEB_LIMIT = 50000
   include ActiveModel::SerializerSupport
@@ -16,9 +17,12 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
   end
 
   def export
-    if !File.file?(@file_name)
-      puts "WILL GENERATE"
+    unless File.file?(@file_name)
       to_csv
+    end
+    unless File.file?(@file_name)
+      Rails.logger.error("Unable to generate output")
+      return false
     end
     ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
     @public_file_name = "#{resource_name}_#{ctime}_#{@csv_separator}_separated.csv"
@@ -57,7 +61,7 @@ private
     select_columns = sql_columns.each_with_index.map do |c, i|
       "#{c} AS \"#{headers[i]}\""
     end
-    basic_query(options).select(select_columns).to_sql
+    "SELECT #{select_columns.join(', ')} FROM (#{raw_query(options)}) subquery"
   end
 
   def internal?

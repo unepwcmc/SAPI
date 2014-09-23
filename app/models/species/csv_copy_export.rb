@@ -1,7 +1,7 @@
 require 'digest/sha1'
 class Species::CsvCopyExport
   include CsvExportable
-  attr_reader :public_file_name
+  attr_reader :public_file_name, :file_name
 
   def initialize(filters = {})
     @filters = filters || {}
@@ -15,7 +15,7 @@ class Species::CsvCopyExport
   end
 
   def export
-    if !File.file?(@file_name)
+    unless File.file?(@file_name)
       return false unless query.any?
       to_csv
     end
@@ -41,7 +41,7 @@ class Species::CsvCopyExport
   end 
 
   def initialize_file_name
-    @file_name ||= path + Digest::SHA1.hexdigest(
+    @file_name = path + Digest::SHA1.hexdigest(
       @filters.to_hash.symbolize_keys!.sort.to_s
     ) + ".csv"
   end

@@ -26,44 +26,49 @@ class Trade::Filter
   end
 
   def initialize_query
-    @query = Trade::Shipment.
-      preload(:taxon_concept) #includes would override the select clause
+    @query = Trade::Shipment.from('trade_shipments_with_taxa_view trade_shipments')
 
-    if @report_type == :raw
-      # only use the view for the raw report (in practice admin only)
-      @query = @query.from('trade_shipments_view trade_shipments')
-    end
-
-    ancestor_ranks = Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
     unless @taxon_concepts_ids.empty?
-      taxa = if @internal
+      cascading_ranks = if @internal
         # always cascade if query is coming from the internal interface
-        MTaxonConceptFilterByIdWithDescendants.new(
-          nil, @taxon_concepts_ids
-        ).relation(ancestor_ranks)
+        Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
       elsif @taxon_with_descendants && !@internal
         # the magnificent hack to make sure that queries coming from the public
         # interface cascade to taxon descendants when searching by genus,
-        # but only throught the 'genus' selector, not 'taxon'
-        MTaxonConceptFilterByIdWithDescendants.new(
-          nil, @taxon_concepts_ids
-        ).relation(Rank.in_range(Rank::SPECIES, Rank::GENUS))
+        # but only through the 'genus' selector, not 'taxon'
+        Rank.in_range(Rank::SPECIES, Rank::GENUS)
       else
         # this has to be public interface + search by taxon
         # only cascade for species
-        MTaxonConceptFilterByIdWithDescendants.new(
-          nil, @taxon_concepts_ids
-        ).relation(Rank.in_range(Rank::SPECIES, Rank::SPECIES))
+        Rank.in_range(Rank::SPECIES, Rank::SPECIES)
       end
-      @query = @query.where(:taxon_concept_id => taxa.select(:id).map(&:id))
+      taxon_concepts = MTaxonConcept.where(id: @taxon_concepts_ids)
+      taxon_concepts_conditions = 
+        taxon_concepts.map do |tc|
+          [:id, tc.id]
+        end + taxon_concepts.select do |tc|
+          cascading_ranks.include?(tc.rank_name)
+        end.map do |tc|
+          [:"#{tc.rank_name.downcase}_id", tc.id]
+        end
+      @query = @query.where(
+        taxon_concepts_conditions.map{ |c| "taxon_concept_#{c[0]} = #{c[1]}"}.join(' OR ')
+      )
     end
 
     unless @reported_taxon_concepts_ids.empty?
-      taxa = MTaxonConceptFilterByIdWithDescendants.new(
-        nil, @reported_taxon_concepts_ids
-      ).relation(ancestor_ranks)
+      cascading_ranks = Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
+      reported_taxon_concepts = MTaxonConcept.where(id: @reported_taxon_concepts_ids)
+      reported_taxon_concepts_conditions = 
+        reported_taxon_concepts.map do |tc|
+          [:id, tc.id]
+        end + reported_taxon_concepts.select do |tc|
+          cascading_ranks.include?(tc.rank_name)
+        end.map do |tc|
+          [:"#{tc.rank_name.downcase}_id", tc.id]
+        end
       @query = @query.where(
-        :reported_taxon_concept_id => taxa.select(:id).map(&:id)
+        reported_taxon_concepts_conditions.map{ |c| "reported_taxon_concept_#{c[0]} = #{c[1]}"}.join(' OR ')
       )
     end
 
