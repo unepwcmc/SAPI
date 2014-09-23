@@ -4,7 +4,7 @@ class Trade::ShipmentsController < TradeController
   def index
     @search = Trade::Filter.new(search_params)
     render :json => @search.results,
-      :each_serializer => Trade::ShipmentSerializer,
+      :each_serializer => Trade::ShipmentFromViewSerializer,
       :meta => metadata_for_search(@search)
   end
 
