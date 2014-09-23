@@ -18,6 +18,7 @@ class Species::ListingsExport < Species::CsvCopyExport
       ).map(&:abbreviation)
     end
     initialize_csv_separator(@filters[:csv_separator])
+    initialize_file_name
   end
 
   def query
