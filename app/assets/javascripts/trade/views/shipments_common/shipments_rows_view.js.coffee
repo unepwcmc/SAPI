@@ -8,6 +8,3 @@ Trade.ShipmentsRowsView = Ember.CollectionView.extend
 
   emptyView: Ember.View.extend
     template: Ember.Handlebars.compile("No shipments found")
-
-  didInsertElement: ->
-    $('.has-tooltip').tooltip()

@@ -11,21 +11,34 @@
         Name, Appendix and Year
       </div>
       <div class="inner">
-        <div class="attribute-area left taxon-name">
-          <p>Taxon name</p>
-          {{view Trade.TaxonConceptSelect2
-            prompt="Please select taxon names"
-            valueBinding="currentShipment.taxonConceptId"
-          }}
-        </div>
-        <div class="attribute-area left taxon-name">
-          <p>Reported taxon name</p>
-          {{view Trade.TaxonConceptSelect2
-            prompt="Please select taxon names"
-            valueBinding="currentShipment.reportedTaxonConceptId"
-            includeSynonyms="true"
-          }}
-        </div>
+
+        {{#view Trade.TaxonConceptTextFieldsView controllerBinding="controller" currentShipmentBinding="currentShipment"}}
+          <div class="attribute-area left taxon-name">
+            <p>
+              Taxon name
+              <a
+                {{bind-attr data-original-title="view.acceptedTaxonInfo"}}
+                href="#" rel="tooltip" data-placement="right" data-toggle="tooltip" class="has-tooltip"
+              >
+                <i class="icon-info-sign"></i>
+              </a>
+            </p>
+            {{view view.AcceptedSelect2 valueBinding="currentShipment.taxonConceptId"}}
+          </div>
+          <div class="attribute-area left taxon-name">
+            <p>
+              Reported taxon name
+              <a
+                {{bind-attr data-original-title="view.reportedTaxonInfo"}}
+                href="#" rel="tooltip" data-placement="right" data-toggle="tooltip" class="has-tooltip"
+              >
+                <i class="icon-info-sign"></i>
+              </a>
+            </p>
+            {{view view.ReportedSelect2 valueBinding="currentShipment.reportedTaxonConceptId"}}
+          </div>
+        {{/view}}
+
         <div class="attribute-area left">
           <p>Appendix</p>
             {{view Ember.Select
