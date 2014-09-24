@@ -1,8 +1,32 @@
+### 0.8.3 (2014-09-24)
+**Species+:**
+* choice of csv separator
+* EU Legislation page
+* fix to randomly appearing French country names
+* activity page
+
+**Species+ Admin:**
+* documents management for elibrary
+* documents search for elibrary
+* changes to event management for purposes of the EU Legislation page
+
+**CITES Trade:**
+* choice of csv separator
+
+**CITES Trade Admin:**
+* fixes to batch update
+* fixes to search by taxa with cascading
+* automatic resolution of reported -> accepted taxon concept
+
+### 0.8.2 (unreleased)
+
 ### 0.8.1 (unreleased)
 **Trade Admin**
 * ability to update shipments in batch
+
 **Species+ Admin**
 * new event types in preparation for e-library integration
+
 **General**
 * Rails upgrade to 3.2.19
 
