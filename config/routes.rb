@@ -8,6 +8,8 @@ SAPI::Application.routes.draw do
 
   match 'about' => 'pages#about'
   match 'terms-of-use' => 'pages#terms_of_use'
+  match 'eu_legislation' => 'pages#eu_legislation'
+  match 'activities' => 'activities#activities'
 
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
@@ -62,6 +64,8 @@ SAPI::Application.routes.draw do
       post :deactivate, :on => :member
       resources :eu_suspensions, :only => [:index, :destroy]
     end
+    resources :eu_implementing_regulations
+    resources :eu_council_regulations
     resources :cites_cops
     resources :cites_pcs
     resources :cites_acs
@@ -148,6 +152,7 @@ SAPI::Application.routes.draw do
       collection do
         post :update_batch
         post :destroy_batch
+        get :accepted_taxa_for_reported_taxon_concept
       end
     end
     resources :geo_entities, :only => [:index]

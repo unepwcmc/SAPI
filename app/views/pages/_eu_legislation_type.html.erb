@@ -1,0 +1,22 @@
+<div class="block show_more">
+  <h3><%= legislation_title %></h3>
+  <table summary="data table">
+    <thead>
+      <th class="col2">Title</th>
+      <th class="col2">Effective from</th>
+      <th class="col2">Description</th>
+    </thead>
+    <tbody>
+      <% legislation_collection.each do |r| %>
+        <tr class="<%= r.is_current ? 'current' : 'historic hidden' %>">
+          <td><%= link_to r.description, r.multilingual_url %></td>
+          <td><%= r.effective_at_formatted %></td>
+          <td><% if r.is_current %><%= r.extended_description %><% end %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <div class="btn-hloder">
+    <a class="link">SHOW HISTORY</a>
+  </div>
+</div>

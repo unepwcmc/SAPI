@@ -86,6 +86,12 @@
               <li class="<%= if controller_name == 'eu_suspension_regulations' then 'active' end%>">
                 <%= link_to 'EU Suspension Regulations', admin_eu_suspension_regulations_path %>
               </li>
+              <li class="<%= if controller_name == 'eu_implementing_regulations' then 'active' end%>">
+                <%= link_to 'EU Implementing Regulations', admin_eu_implementing_regulations_path %>
+              </li>
+              <li class="<%= if controller_name == 'eu_council_regulations' then 'active' end%>">
+                <%= link_to 'EU Council Regulations', admin_eu_council_regulations_path %>
+              </li>
 
               <li class="<%= if controller_name == 'ec_srgs' then 'active' end%>">
                 <%= link_to 'European Commission SRG', admin_ec_srgs_path %>
@@ -153,6 +159,7 @@
             <li><%= link_to 'CMS Taxon Mapping', admin_cms_mappings_path %></li>
             <li><%= link_to 'Species+ Events Tracking', admin_ahoy_events_path %></li>
             <li><%= link_to 'Species+ Visits Tracking', admin_ahoy_visits_path %></li>
+            <li><%= link_to 'Species+ Activity Page', activities_path %></li>
           </ul>
         </li>
         <% if user_signed_in? %>

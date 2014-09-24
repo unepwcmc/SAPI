@@ -1,0 +1,52 @@
+<thead>
+  <th>Number</th>
+  <th>Description</th>
+  <th>Effective from</th>
+  <th>Current</th>
+  <th>URL</th>
+  <th width="10%">Actions</th>
+  <th width="5%">Info</th>
+</thead>
+<tbody>
+  <% collection.each do |eu_regulation| -%>
+    <tr class="<%= if eu_regulation.is_current? then "current_listing" end %>">
+      <td>
+        <a href="#" class="editable editable-click editable-required"
+          data-type="text" data-resource="eu_regulation" data-name="name"
+          data-placeholder="Required" data-original-title="Enter the EU Regulation's name"
+          data-url="<%= resource_url(eu_regulation) %>" data-pk="<%= eu_regulation.id %>">
+          <%= eu_regulation.name %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required"
+          data-type="text" data-resource="eu_regulation" data-name="description"
+          data-placeholder="Required" data-original-title="Enter the EU Regulation's description"
+          data-url="<%= resource_url(eu_regulation) %>" data-pk="<%= eu_regulation.id %>">
+          <%= eu_regulation.description %>
+        </a>
+      </td>
+      <td><%= eu_regulation.effective_at_formatted %></td>
+      <td><%= true_false_icon(eu_regulation.is_current) %></td>
+      <td>
+        <%= link_to_unless(
+          eu_regulation.url.blank?,
+          '<i class="icon-share" title="Go to URL"></i>'.html_safe,
+          eu_regulation.url
+        ) { '' } %>
+        <%= link_to_unless(
+          eu_regulation.multilingual_url.blank?,
+          '<i class="icon-share" title="Go to multilingual URL"></i>'.html_safe,
+          eu_regulation.multilingual_url
+        ) { '' } %>
+      </td>
+      <td>
+        <%= link_to edit_icon, edit_resource_url(eu_regulation), :remote => true %>
+        <%= link_to delete_icon, resource_url(eu_regulation),
+          :confirm => "Warning: you are about to delete data. This might take a long time, depending on the number of associated objects. Are you sure?", :method => :delete
+        %>
+      </td>
+      <td><%= tracking_info(eu_regulation) %></td>
+    </tr>
+  <% end -%>
+</tbody>

@@ -1,5 +1,5 @@
 <thead>
-  <th>Name</th>
+  <th>Number</th>
   <th>Description</th>
   <th>Effective from</th>
   <th>End date</th>
@@ -36,6 +36,11 @@
           eu_regulation.url.blank?,
           '<i class="icon-share" title="Go to URL"></i>'.html_safe,
           eu_regulation.url
+        ) { '' } %>
+        <%= link_to_unless(
+          eu_regulation.multilingual_url.blank?,
+          '<i class="icon-share" title="Go to multilingual URL"></i>'.html_safe,
+          eu_regulation.multilingual_url
         ) { '' } %>
       </td>
       <td>

@@ -94,7 +94,7 @@ class EuDecision < ActiveRecord::Base
     path = "public/downloads/#{self.to_s.tableize}/"
     latest = self.order("updated_at DESC").
       limit(1).first.updated_at.strftime("%d%m%Y-%H%M%S")
-    public_file_name = "#{self.to_s.downcase}s_#{latest}.csv"
+    public_file_name = "#{self.to_s.downcase}s_#{latest}_#{filters[:csv_separator]}_separated.csv"
     file_name = Digest::SHA1.hexdigest(
       filters.merge(:latest_date => latest).
       to_hash.
@@ -137,7 +137,11 @@ class EuDecision < ActiveRecord::Base
   def self.to_csv file_path, filters
     limit = 1000
     offset = 0
-    CSV.open(file_path, 'wb') do |csv|
+    csv_separator_char = case filters[:csv_separator]
+      when :semicolon then ';'
+      else ','
+    end
+    CSV.open(file_path, 'wb', {:col_sep => csv_separator_char}) do |csv|
       csv << Species::RestrictionsExport::TAXONOMY_COLUMNS +
         ['Remarks'] + self.csv_columns_headers
       ids = []

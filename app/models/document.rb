@@ -23,7 +23,7 @@ class Document < ActiveRecord::Base
     :order_within_rank => "documents.date, documents.title, documents.id"
   track_who_does_it
   attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
-    :language_id, :citations_attributes, :number, :tags, :tag_ids
+    :language_id, :citations_attributes, :number
   belongs_to :event
   belongs_to :language
   has_many :citations, class_name: 'DocumentCitation', dependent: :destroy
@@ -54,6 +54,11 @@ class Document < ActiveRecord::Base
     Event.elibrary_event_types.select do |e_klass|
       e_klass.elibrary_document_types.include? self
     end
+  end
+
+  # Returns document tag types (class objects) that are relevant to E-Library
+  def self.elibrary_document_tag_types
+    [DocumentTag::ProposalOutcome, DocumentTag::ReviewPhase]
   end
 
   def set_title

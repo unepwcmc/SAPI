@@ -1,0 +1,247 @@
+<div class="filters clearfix">
+  <div class="heading">
+    <a data-toggle="collapse" href="#collapseOne">
+      Accepted and Reported Names
+    </a>
+  </div>
+  <div id="collapseOne" class="body collapse in">
+    <div class="inner one">
+      <div class="left filter-group">
+        <p>Accepted taxa</p>
+        {{view Trade.MultiSelect
+          queryBinding="controller.taxonConceptQuery"
+          allValuesGroupedBinding="controller.autoCompleteTaxonConceptsByRank"
+          selectedValuesBinding="controller.selectedTaxonConcepts"
+          selectedValuesCollectionName="taxa"
+          selectedValueDisplayProperty="fullName"
+          placeholder="Species, higher taxon or synonym..."
+        }}
+      </div>
+      <div class="left filter-group">
+        <p>Reported taxa</p>
+        {{view Trade.MultiSelect
+          queryBinding="controller.reportedTaxonConceptQuery"
+          allValuesGroupedBinding="controller.autoCompleteReportedTaxonConceptsByRank"
+          selectedValuesBinding="controller.selectedReportedTaxonConcepts"
+          selectedValuesCollectionName="taxa"
+          selectedValueDisplayProperty="fullName"
+          placeholder="Species, higher taxon or synonym..."
+        }}
+      </div>
+    </div>
+  </div>
+
+
+  <div class="heading">
+    <a data-toggle="collapse" href="#collapseTwo">
+      Appendix and Year
+    </a>
+  </div>
+  <div id="collapseTwo" class="body collapse in">
+    <div class="inner one">
+      <div class="left filter-group">
+        <p>Appendices</p>
+        {{view Trade.MultiSelect
+          allValuesBinding="controller.allAppendices"
+          selectedValuesBinding="controller.selectedAppendices"
+          selectedValuesCollectionName="appendices"
+          selectedValueDisplayProperty="name"
+          selectedValueShortDisplayProperty="id"
+        }}
+      </div>
+      <div class="left filter-group time">
+        <p>Time range</p>
+        {{  view Ember.Select
+              name="time_start"
+              contentBinding="years"
+              selectionBinding="controller.selectedTimeStart"
+              prompt="From:"
+        }}
+        {{  view Ember.Select
+              name="time_end"
+              contentBinding="years"
+              selectionBinding="controller.selectedTimeEnd"
+              prompt="To:"
+        }}
+      </div>
+    </div>
+  </div>
+
+  <div class="heading">
+    <a data-toggle="collapse" href="#collapseThree">
+      Trade Codes
+    </a>
+  </div>
+  <div id="collapseThree" class="body collapse in">
+    <div class="inner two">
+      <div class="left filter-group">
+        <p>Terms</p>
+        {{view Trade.MultiSelect
+          queryBinding="controller.termQuery"
+          allValuesBinding="controller.autoCompleteTerms"
+          selectedValuesBinding="controller.selectedTerms"
+          selectedValuesCollectionName="terms"
+          selectedValueDisplayProperty="fullName"
+          selectedValueShortDisplayProperty="code"
+        }}
+      </div>
+      <div class="left filter-group">
+        <p>Units</p>
+        {{view Trade.MultiSelect
+          blankValueBinding = "controller.unitBlank"
+          queryBinding="controller.unitQuery"
+          allValuesBinding="controller.autoCompleteUnits"
+          selectedValuesBinding="controller.selectedUnits"
+          selectedValuesCollectionName="units"
+          selectedValueDisplayProperty="fullName"
+          selectedValueShortDisplayProperty="code"
+        }}
+      </div>
+      <div class="left filter-group">
+        <p>Purposes</p>
+        {{view Trade.MultiSelect
+          allValuesBinding="controllers.purposes"
+          blankValueBinding = "controller.purposeBlank"
+          selectedValuesBinding="controller.selectedPurposes"
+          selectedValuesCollectionName="purposes"
+          selectedValueDisplayProperty="fullName"
+          selectedValueShortDisplayProperty="code"
+        }}
+      </div>
+      <div class="left filter-group">
+      <p>Sources</p>
+        {{view Trade.MultiSelect
+          allValuesBinding="controllers.sources"
+          blankValueBinding = "controller.sourceBlank"
+          selectedValuesBinding="controller.selectedSources"
+          selectedValuesCollectionName="sources"
+          selectedValueDisplayProperty="fullName"
+          selectedValueShortDisplayProperty="code"
+        }}
+      </div>
+    </div>
+  </div>
+
+  <div class="heading">
+    <a data-toggle="collapse" href="#collapseFour">
+      Trading Partners
+    </a>
+  </div>
+  <div id="collapseFour" class="body collapse in">
+    <div class="inner three">
+      <div class="left filter-group">
+        <p>Importer</p>
+        {{view Trade.MultiSelect
+          queryBinding="controller.importerQuery"
+          allValuesBinding="controller.autoCompleteImporters"
+          selectedValuesBinding="controller.selectedImporters"
+          selectedValuesCollectionName="importers"
+          selectedValueDisplayProperty="name"
+          placeholder="Country name"
+        }}
+      </div>
+      <div class="left filter-group">
+        <p>Exporter</p>
+        {{view Trade.MultiSelect
+          queryBinding="controller.exporterQuery"
+          allValuesBinding="controller.autoCompleteExporters"
+          selectedValuesBinding="controller.selectedExporters"
+          selectedValuesCollectionName="exporters"
+          selectedValueDisplayProperty="name"
+          placeholder="Country name"
+        }}
+      </div>
+      <div class="left filter-group">
+        <p>Country of origin</p>
+        {{view Trade.MultiSelect
+          blankValueBinding = "controller.countryOfOriginBlank"
+          queryBinding="controller.countryOfOriginQuery"
+          allValuesBinding="controller.autoCompleteCountriesOfOrigin"
+          selectedValuesBinding="controller.selectedCountriesOfOrigin"
+          selectedValuesCollectionName="countries of origin"
+          selectedValueDisplayProperty="name"
+          placeholder="Country name"
+        }}
+      </div>
+      <div class="left filter-group">
+        <p>Reporter type</p>
+        {{view Ember.Select
+          name="reporter_type"
+          prompt="All types"
+          contentBinding="controller.allReporterTypeValues"
+          selectionBinding="controller.selectedReporterType"
+        }}
+      </div>
+    </div>
+  </div>
+
+
+  <div class="heading">
+    <a class="toggle" data-toggle="collapse" href="#collapseFive">
+      Permits & Quantity
+    </a>
+  </div>
+  <div id="collapseFive" class="body collapse">
+    <div class="inner four">
+      <div class="left filter-group">
+        <p>Permits</p>
+        {{view Trade.MultiSelect
+          blankValueBinding = "controller.permitBlank"
+          queryBinding="controller.permitQuery"
+          allValuesBinding="controller.autoCompletePermits"
+          selectedValuesBinding="controller.selectedPermits"
+          selectedValuesCollectionName="permits"
+          selectedValueDisplayProperty="number"
+          placeholder="Permit number"
+        }}
+      </div>
+      <div class="left">
+        <p>Quantity</p>
+        {{view Ember.TextField
+          valueBinding="controller.selectedQuantity"
+          placeholder="Enter a quantity"
+        }}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="shipments-header clearfix">
+  <a href="#downloads-modal" role="button" class="btn btn-primary pull-right" data-toggle="modal">
+    <i class="icon-download-alt"></i>Download results
+  </a>
+  <button class="btn btn-primary pull-right" {{ action 'search' }}>
+    <i class="icon-edit"></i>Display and edit results
+  </button>
+
+  <button class="btn pull-right" {{ action 'resetFilters' }}>
+    <i class="icon-remove"></i> Reset all filters
+  </button>
+</div>
+
+<div id="downloads-modal" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3>Search results download</h3>
+  </div>
+  <div class="modal-body">
+    <p>
+    Choose the format you wish to download
+    </p>
+
+    <a {{bind-attr href="rawDownloadUrl"}} class="btn btn-primary">Raw</a>
+    <a {{bind-attr href="comptabDownloadUrl"}} class="btn btn-primary">CompTab</a>
+
+    <a {{bind-attr href="grossExportsDownloadUrl"}} class="btn btn-mini btn-primary">Gross Exp</a>
+    <a {{bind-attr href="grossImportsDownloadUrl"}} class="btn btn-mini btn-primary">Gross Imp</a>
+    <a {{bind-attr href="netExportsDownloadUrl"}} class="btn btn-mini btn-primary">Net Exp</a>
+    <a {{bind-attr href="netImportsDownloadUrl"}} class="btn btn-mini btn-primary">Net Imp</a>
+
+    <div id="csv_options">
+      {{view Ember.RadioButton name="csv_separator" selectionBinding="csvSeparator" value="comma"}} Comma Separated
+      {{view Ember.RadioButton name="csv_separator" selectionBinding="csvSeparator" value="semicolon"}} Semicolon Separated
+    </div>
+
+  </div>
+</div>

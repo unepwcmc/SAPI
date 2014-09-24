@@ -21,7 +21,9 @@
       <% unless @event %>
         <td><%= link_to document.event.name, admin_event_documents_path(document.event) if document.event %></td>
       <% end %>
-      <td><%= link_to document.title, document.filename.url, {rel: 'tooltip', :'data-title' => document.filename.url} %></td>
+      <td><%= link_to document.title, document.becomes(Document).filename.url, {
+        rel: 'tooltip', :'data-title' => document.becomes(Document).filename.url
+      } %></td>
       <td>
         <% if document.citations_cnt > 0 %>
           <%= link_to "#{document.citations_cnt} citations", '#', {

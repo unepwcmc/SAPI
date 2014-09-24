@@ -13,7 +13,9 @@ class PsqlCommand
   end
 
   def execute
-    system("export PGPASSWORD=#{@password} && echo \"#{@sql_cmd.split("\n").join(' ')}\" | #{@psql_cmd}")
+    unless system("export PGPASSWORD=#{@password} && echo \"#{@sql_cmd.split("\n").join(' ')}\" | #{@psql_cmd}")
+      Rails.logger.error("#{$!}")
+    end
   end
 
 end

@@ -137,7 +137,7 @@ span.beta{
 }
 #nav > li:first-child { background: none; }
 #nav > li > a { 
-	color: #2d3237;
+ 	color: #2d3237;
 	text-decoration: none;
 	}
 	
@@ -579,6 +579,12 @@ body.inner #footer .holder{
 	border-radius: 0 20px 20px 0;
 }
 .dwonload-block .tab-content { border-top: 1px solid #d6d7d7; }
+.dwonload-block .csv_options_holder {
+	margin: 10px;
+	text-align: center;
+	line-height: 180%;
+}
+#csv_options{ display: none; }
 .btn-holder {
 	border-top: 1px solid #d6d7d7;
 	text-align: center;

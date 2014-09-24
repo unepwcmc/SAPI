@@ -52,11 +52,6 @@ Trade.TaxonConceptSelect2 = Ember.TextField.extend
           results: formatted_taxon_concepts
           more: more
     )
-    # @.$().on('change', (e) ->
-    #   console.log(e)
-    #   console.log(e.added)
-    #   console.log(@get('value'))
-    # )
 
   # observe value and update select2 when changed outside of control
   updateSel2Value: ( ->

@@ -1,15 +1,23 @@
 class Species::ExportsController < ApplicationController
 
   def download
+    filters = params[:filters].merge({
+      :csv_separator => if params[:filters] && params[:filters][:csv_separator] &&
+        params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
+        :semicolon
+      else
+        :comma
+      end
+    })
     case params[:data_type]
       when 'Quotas'
-        result = Quota.export params[:filters]
+        result = Quota.export filters
       when 'CitesSuspensions'
-        result = CitesSuspension.export params[:filters]
+        result = CitesSuspension.export filters
       when 'Listings'
-        result = Species::ListingsExportFactory.new(params[:filters]).export
+        result = Species::ListingsExportFactory.new(filters).export
       when 'EuDecisions'
-        result = EuDecision.export params[:filters]
+        result = EuDecision.export filters
     end
     respond_to do |format|
       format.html {

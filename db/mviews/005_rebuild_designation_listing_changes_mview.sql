@@ -51,6 +51,9 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     listing_changes.parent_id,
     tmp_lc.party_id,
     geo_entities.iso_code2 AS party_iso_code,
+    geo_entities.name_en AS party_full_name_en,
+    geo_entities.name_es AS party_full_name_es,
+    geo_entities.name_fr AS party_full_name_fr,
     annotations.symbol AS ann_symbol,
     annotations.full_note_en,
     annotations.full_note_es,
@@ -72,19 +75,6 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     NULL::TEXT AS inherited_full_note_es, -- this column is populated later
     NULL::TEXT AS inherited_short_note_fr, -- this column is populated later
     NULL::TEXT AS inherited_full_note_fr, -- this column is populated later
-    -- BEGIN remove once checklist translation has been deployed
-    CASE
-    WHEN listing_changes.inclusion_taxon_concept_id IS NOT NULL
-    THEN ancestor_listing_auto_note_en(
-      inclusion_taxon_concepts, listing_changes
-    )
-    WHEN applicable_listing_changes.affected_taxon_concept_id != listing_changes.taxon_concept_id
-    THEN ancestor_listing_auto_note_en(
-      original_taxon_concepts, listing_changes
-    )
-    ELSE NULL
-    END AS auto_note,
-    -- END remove once checklist translation has been deployed
     CASE
     WHEN listing_changes.inclusion_taxon_concept_id IS NOT NULL
     THEN ancestor_listing_auto_note_en(

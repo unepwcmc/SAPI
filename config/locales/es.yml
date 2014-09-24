@@ -63,6 +63,8 @@ es:
   gross_imports: "Importaciones Brutas"
   net_exports: "Exportaciones Netas"
   net_imports: "Importaciones Netas"
+  comma_separated: "separado por comas"
+  semicolon_separated: "separado por punto y coma"
 
   table_title:
     gross_imports: "Informe de la Importaciones Brutas"

@@ -19,8 +19,12 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   def edit
     edit! do |format|
       load_associations
+      if @document.is_a?(Document::ReviewOfSignificantTrade)
+        @document.review_details ||= Document::ReviewDetails.new
+      elsif @document.is_a?(Document::Proposal)
+        @document.proposal_details ||= Document::ProposalDetails.new
+      end
       @document.citations.build
-      @taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
       @geo_entities = GeoEntity.joins(:geo_entity_type).where(
         'geo_entity_types.name' => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]
       )
@@ -59,7 +63,11 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).
      order(:name_en)
     @english = Language.find_by_iso_code1('EN')
-    @tags = DocumentTag.all
+    @taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
+    @geo_entities =  GeoEntity.select(['geo_entities.id', :name_en]).
+      joins(:geo_entity_type).where(
+      :"geo_entity_types.name" => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]
+    ).order(:name_en)
   end
 
   def success_redirect

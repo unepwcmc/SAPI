@@ -1,0 +1,61 @@
+{{ partial 'trade/flash' }}
+
+<div class="shipments-header well well-small">
+  <div class="row-fluid">
+    <div class="span3">
+      <h3>Search results</h3>
+    </div>
+    <div class="span3">
+      <span class="total-matches">{{total}} matches</span>
+    </div>
+    <div class="sandbox-header-buttons span6">
+      {{#view tagName='span' class='pull-right' isVisibleBinding='controller.shipmentsSaving'}}
+        <img src="/assets/loading.gif"> Saving...
+      {{/view}}
+      <button {{action 'newShipment'}} class="pull-right btn clearfix">
+        Add shipment
+      </button>
+      <button {{action 'editBatch'}} class="pull-right btn clearfix">
+        <i class="icon-pencil"></i>
+      </button>
+      <button {{action 'deleteBatch'}} class="pull-right btn clearfix">
+        <i class="icon-trash"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+{{view Trade.ShipmentForm}}
+{{view Trade.BatchForm}}
+
+<div id="flash"></div>
+
+{{# if controller.content }}
+<div class='shipments-presentation-container'>
+  <table>
+    <thead>
+      <tr>
+        <th>Actions</th>
+        {{#each view.columns}}
+          <th>{{header}}</th>
+        {{/each}}
+      </tr>
+    </thead>
+    {{collection Trade.ShipmentsRowsView contentBinding='controller.content' controller=this}}
+  </table>
+</div> 
+
+<div class="paging">
+  <ul class="pager">
+    {{# if controller.showPrevPage }}
+      <li><a href="#" {{action "prevPage" target="view" on="click"}}>&#9664;</a></li>
+    {{/if}}
+
+    <li>Page {{controller.page}} of {{controller.pages}}</li>
+
+    {{# if controller.showNextPage }}
+      <li><a href="#" {{action "nextPage" target="view" on="click"}}>&#9654;</a></li>
+    {{/if}}
+  </ul>
+</div>
+{{/if}}

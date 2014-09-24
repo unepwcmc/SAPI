@@ -4,7 +4,7 @@ $(document).ready(function(){
     countries = {}, units = {}, terms = {}, purposes = {}, sources = {},
     selected_taxa = '',
     is_search_page = $('#form_expert').length > 0,
-    is_download_page = $('#net_gross_options').length > 0;
+    is_download_page = $('#net_gross_options').length > 0,
     is_view_results_page = $('#query_results_table').length > 0;
 
   ajaxFail = function (xhr, ajaxOptions, thrownError) {
@@ -14,27 +14,6 @@ $(document).ready(function(){
 
   // Your code here
   $(".tipify").tipTip();
-
-  $('.show_search').qtip({
-     content: {
-  	   text: 'If there any problems, contact blah-blah',
-  	   title: {
-                    text: 'Please make your selection in the tabs on the left',
-                    button: true
-                 }
-  	},
-     position: {
-        my: 'top left', at: 'bottom left'
-     },
-     show: {
-         event: false, // Don't specify a show event...
-         ready: true // ... but show the tooltip when ready
-      },
-      hide: false, // Don't specify a hide event either!
-      style: {
-         classes: 'ui-tooltip-shadow ui-tooltip-jtools' 
-      }
-  })
 
   function growlMe(text){
   	$.jGrowl(text);
@@ -737,6 +716,7 @@ $(document).ready(function(){
       $('input[value=web]').attr("disabled",true);
       $('span#web-option').css('color', 'LightGray');
     }
+    $('select[name=csvSeparator]').val($.cookie('cites_trade.csv_separator') || 'comma')
   }
 
   function displayResults (q) {
@@ -787,6 +767,7 @@ $(document).ready(function(){
   function handleDownloadRequest (ignoreWarning) {
     var output_type = $( "input[name='outputType']:checked" ).val(),
       report_type = $( "input[name='report']:checked" ).val(),
+      csv_separator = $( "select[name='csvSeparator']" ).val(),
       query = location.search.substr(1);
     if (report_type === 'comparative') {
       report_type = 'comptab';
@@ -805,6 +786,8 @@ $(document).ready(function(){
       goToResults(query);
       return;
     } else {
+      $.cookie('cites_trade.csv_separator', csv_separator)
+      query += '&filters[csv_separator]=' + csv_separator;
       downloadResults( decodeURIComponent( query ) );
       return
     }

@@ -29,9 +29,26 @@ Species.DownloadsController = Ember.Controller.extend Species.Spinner,
   legislationIsEuDecisions: ( ->
     @get('euLegislation') == 'decisions'
   ).property('euLegislation')
+  csvSeparator: $.cookie('speciesplus.csv_separator') || 'comma'
+
+  showCsvOptions: () ->
+    $('#csv_options').show()
+    $('.csv_options_holder > a').html('Try changing the option below for .csv outputs:')   
+
+  hideCsvOptions: () ->
+    $('#csv_options').hide()
+    $('.csv_options_holder > a').html('Trouble viewing outputs?')   
 
   actions:
     close: () ->
       @set('downloadsPopupVisible', false)
+      @hideCsvOptions()
       # Closing the spinner cover and resetting the spinner image.
       $(@spinnerSelector).css("visibility", "hidden").find('img').show()
+
+    showHideCsvOptions: () ->
+      csvOptions = $('.csv_options')
+      if $('#csv_options').is(':visible')
+        @hideCsvOptions()
+      else
+        @showCsvOptions()

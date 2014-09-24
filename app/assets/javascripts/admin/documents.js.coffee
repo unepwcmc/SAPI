@@ -9,7 +9,9 @@ $(document).ready ->
 
   $('#event-type-search').change( (e) ->
     documentType = $('#document-type')
+    # if no event type selected
     unless e.target.value
+      # enable all document types
       documentType.prop('disabled', false)
       documentType.html(documentTypeChildren)
   )
@@ -22,6 +24,17 @@ $(document).ready ->
       $(e.target).attr('href', 'document_batch/new')
   )
 
+  $('#event-type').change( (e) ->
+    newEventLink = $('#new-event-link')
+    # if no event type selected
+    unless e.target.value
+      # disable new event link
+      newEventLink.hide()
+    else
+      newEventLink.attr('href', $(this).find('option:selected').data('path'))
+      newEventLink.show()
+  )
+
   citationTaxonSelect2Options = {
     placeholder: 'Start typing scientific name'
     multiple: true
@@ -29,20 +42,22 @@ $(document).ready ->
     minimumInputLength: 3
     quietMillis: 500
     allowClear: true
-    initSelection: (element, callback) =>
+    initSelection: (element, callback) ->
       callback($(element).data('init-selection'))
     ajax:
       url: '/admin/taxon_concepts/autocomplete'
       dataType: 'json'
       data: (query, page) ->
-        search_params:
-          scientific_name: query
-          name_status: $(@).data('name-status-filter')
-          taxonomy:
-            id: $(@).data('taxonomy-id')
-        per_page: 25
-        page: 1
-      results: (data, page) => # parse the results into the format expected by Select2.
+        {
+          search_params:
+            scientific_name: query
+            name_status: $(@).data('name-status-filter')
+            taxonomy:
+              id: $(@).data('taxonomy-id')
+          per_page: 25
+          page: page
+        }
+      results: (data, page) ->
         formatted_taxon_concepts = data.map (tc) =>
           id: tc.id
           text: tc.full_name
@@ -51,15 +66,22 @@ $(document).ready ->
 
   citationGeoEntitySelect2Options = {
     placeholder: 'Start typing country or territory'
+    width: '300px'
+    allowClear: true
+  }
+
+  documentTagSelect2Options = {
+    placeholder: 'Start typing a document tag'
+    width: '300px'
+    allowClear: true
   }
 
   $('.citation-taxon-concept').select2(citationTaxonSelect2Options)
   $('.citation-geo-entity').select2(citationGeoEntitySelect2Options)
+  $('.document-tag').select2(documentTagSelect2Options)
 
   $(document).on('nested:fieldAdded', (event) ->
-    # this field was just inserted into your form
     field = event.field
-    # it's a jQuery object already
     citationTaxonField = field.find('.citation-taxon-concept')
     citationGeoEntityField = field.find('.citation-geo-entity')
     # and activate select2

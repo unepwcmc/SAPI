@@ -2,28 +2,30 @@
 #
 # Table name: events
 #
-#  id             :integer          not null, primary key
-#  name           :string(255)
-#  designation_id :integer
-#  description    :text
-#  url            :text
-#  is_current     :boolean          default(FALSE), not null
-#  type           :string(255)      default("Event"), not null
-#  effective_at   :datetime
-#  published_at   :datetime
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  legacy_id      :integer
-#  end_date       :datetime
-#  subtype        :string(255)
-#  updated_by_id  :integer
-#  created_by_id  :integer
+#  id                   :integer          not null, primary key
+#  name                 :string(255)
+#  designation_id       :integer
+#  description          :text
+#  url                  :text
+#  is_current           :boolean          default(FALSE), not null
+#  type                 :string(255)      default("Event"), not null
+#  effective_at         :datetime
+#  published_at         :datetime
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  legacy_id            :integer
+#  end_date             :datetime
+#  subtype              :string(255)
+#  updated_by_id        :integer
+#  created_by_id        :integer
+#  extended_description :text
 #
 
 class Event < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :name, :designation_id, :description, :url, :effective_at, 
-    :is_current, :created_by_id, :updated_by_id
+  attr_accessible :name, :designation_id, :description, :extended_description,
+    :url, :multilingual_url, :effective_at, :is_current,
+    :created_by_id, :updated_by_id
   attr_reader :effective_at_formatted
 
   belongs_to :designation

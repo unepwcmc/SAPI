@@ -41,6 +41,12 @@ class TradeController < ApplicationController
         report_type
       else
         :raw
+      end,
+      :csv_separator => if params[:filters] && params[:filters][:csv_separator] &&
+        params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
+        :semicolon
+      else
+        :comma
       end
     })
   end

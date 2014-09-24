@@ -1,7 +1,7 @@
 Species.DownloadsForEuListingsController = Ember.Controller.extend
   designation: 'eu'
   appendices: ['A', 'B', 'C', 'D']
-  needs: ['geoEntities', 'higherTaxaCitesEu']
+  needs: ['geoEntities', 'higherTaxaCitesEu', 'downloads']
   higherTaxaController: ( ->
     @get('controllers.higherTaxaCitesEu')
   ).property()
@@ -68,8 +68,10 @@ Species.DownloadsForEuListingsController = Ember.Controller.extend
         geo_entities_ids: @get('selectedGeoEntitiesIds')
         taxon_concepts_ids: @get('selectedTaxonConceptsIds')
         include_cites: @get('includeCites')
+        csv_separator: @get('controllers.downloads.csvSeparator')
     }
-  ).property('selectedAppendices.@each', 'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 'includeCites')
+  ).property('selectedAppendices.@each', 'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each',
+  'includeCites', 'controllers.downloads.csvSeparator')
 
   downloadUrl: ( ->
     '/species/exports/download?' + $.param(@get('toParams'))
