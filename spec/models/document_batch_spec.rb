@@ -7,11 +7,11 @@ describe DocumentBatch do
       subject {
         DocumentBatch.new(
           documents_attributes: {
-            0 => {
-              type: 'Document',
-              filename: Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv'))
-            }
-          }
+            '0' => { type: 'Document' }
+          },
+          files: [
+            filename: Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv'))
+          ]
         )
       }
       specify{ expect(subject.save).to be_false }
@@ -22,11 +22,11 @@ describe DocumentBatch do
         DocumentBatch.new(
           date: Date.today,
           documents_attributes: {
-            0 => {
-              type: 'Document',
-              filename: Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv'))
-            }
-          }
+            '0' => { type: 'Document' }
+          },
+          files: [
+            Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv'))
+          ]
         )
       }
       specify{ expect(subject.save).to be_true }
