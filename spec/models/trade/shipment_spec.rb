@@ -93,6 +93,12 @@ describe Trade::Shipment do
         :name_en => 'Argentina', :iso_code2 => 'AR',
         :geo_entity_type => country_geo_entity_type
       )
+      @xx = create(
+        :geo_entity,
+        :geo_entity_type => trade_geo_entity_type,
+        :name => 'Unknown',
+        :iso_code2 => 'XX'
+      )
       create(:distribution, :taxon_concept => @taxon_concept, :geo_entity => @argentina)
       @wild = create(:trade_code, :type => 'Source', :code => 'W', :name_en => 'Wild')
     end
@@ -347,6 +353,18 @@ describe Trade::Shipment do
             :taxon_concept => @taxon_concept,
             :country_of_origin => nil,
             :exporter => @argentina
+          )
+        }
+        specify { subject.warnings.should be_empty }
+      end
+      context "valid with XX" do
+        subject{
+          create(
+            :shipment,
+            :source => @wild,
+            :taxon_concept => @taxon_concept,
+            :country_of_origin => nil,
+            :exporter => @xx
           )
         }
         specify { subject.warnings.should be_empty }
