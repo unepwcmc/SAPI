@@ -23,7 +23,7 @@ en:
   import_text: "Importing countries"
   import_tip: "Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected" 
   source_text: "Source"
-  source_tip: "Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected"
+  source_tip: "Type the source or sources (e.g. 'W - Wild') you wish to include in your final output. To include data for all sources, leave 'All Sources' selected"
   purpose_text: "Purpose"
   purpose_tip: "Type the purpose or purposes (e.g. 'T- Commercial' or 'S- Scientific') you wish to include in your final output. To include data for all purposes, leave 'All Purposes' selected"
   trade_text: "Trade Terms"
