@@ -66,10 +66,6 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       specify{
         subject.validation_errors(@aru).size.should == 1
       }
-      specify{
-        ve = subject.validation_errors(@aru).first
-        ve.error_selector.should == {'taxon_concept_id' => @species.id, 'country_of_origin' => nil, 'source_code' => 'W'}
-      }
     end
     context "when W source and country of origin blank and exporter doesn't match distribution (I)" do
       before(:each) do
@@ -93,10 +89,6 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         subject.validation_errors(@aru).size.should == 1
       }
       specify{
-        ve = subject.validation_errors(@aru).first
-        ve.error_selector.should == {
-          'taxon_concept_id' => @species.id, 'country_of_origin' => nil,
-          'source_code' => 'W', 'trading_partner' => canada.iso_code2}
       }
     end
     context "when invalid scope specified" do

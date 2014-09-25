@@ -77,10 +77,6 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       specify{
         subject.validation_errors(annual_report_upload).size.should == 1
       }
-      specify{
-        ve = subject.validation_errors(annual_report_upload).first
-        ve.error_selector.should == {'trading_partner' => 'NEVERLAND'}
-      }
     end
     context 'term can only be paired with unit as defined by term_trade_codes_pairs table' do
       before do
@@ -107,10 +103,6 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         specify{
           subject.validation_errors(annual_report_upload).size.should == 1
         }
-        specify{
-          ve = subject.validation_errors(annual_report_upload).first
-          ve.error_selector.should == {'term_code' => 'CAP', 'unit_code' => 'BAG'}
-        }
       end
       context "when required unit blank" do
         before(:each) do
@@ -121,10 +113,6 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         }
         specify{
           subject.validation_errors(annual_report_upload).size.should == 1
-        }
-        specify{
-          ve = subject.validation_errors(annual_report_upload).first
-          ve.error_selector.should == {'term_code' => 'CAP', 'unit_code' => nil}
         }
       end
     end
@@ -144,10 +132,6 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       }
       specify{
         subject.validation_errors(annual_report_upload).size.should == 2
-      }
-      specify{
-        ve = subject.validation_errors(annual_report_upload).first
-        ve.error_selector.should == {'term_code' => 'CAV', 'purpose_code' => 'B'}
       }
     end
     context 'taxon_concept_id can only be paired with term as defined by trade_taxon_concept_term_pairs table' do
@@ -169,10 +153,6 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         specify{
           subject.validation_errors(annual_report_upload).size.should == 1
         }
-        specify{
-          ve = subject.validation_errors(annual_report_upload).first
-          ve.error_selector.should == {'term_code' => 'BAL', 'taxon_concept_id' => @species.id}
-        }
       end
       context "when hybrid" do
         before(:each) do
@@ -188,10 +168,6 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         end
         specify{
           subject.validation_errors(annual_report_upload).size.should == 1
-        }
-        specify{
-          ve = subject.validation_errors(annual_report_upload).first
-          ve.error_selector.should == {'term_code' => 'BAL', 'taxon_concept_id' => @hybrid.id}
         }
       end
     end

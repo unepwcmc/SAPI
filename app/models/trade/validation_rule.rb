@@ -59,7 +59,6 @@ class Trade::ValidationRule < ActiveRecord::Base
           :annual_report_upload_id => annual_report_upload.id,
           :validation_rule_id => self.id,
           :error_count => error_count,
-          :error_selector => error_selector(matching_records),
           :matching_records_ids => matching_records.map(&:id),
           :is_primary => self.is_primary
         )
@@ -136,19 +135,4 @@ class Trade::ValidationRule < ActiveRecord::Base
     res
   end
 
-  # Returns a hash with column values to be used to select invalid rows.
-  # For most primary validations this will be a pair
-  # of validated field => array of invalid values.
-  # e.g.
-  # {
-  #    :taxon_name => ['Loxodonta afticana', 'Loxadonta afacana']
-  # }
-  # Expects a single grouped matching record.
-  def error_selector(matching_records)
-    res = {}
-    column_names.each do |cn|
-      res[cn] = matching_records.select(cn).uniq.map(&cn.to_sym)
-    end
-    res
-  end
 end
