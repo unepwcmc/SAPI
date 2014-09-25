@@ -18,16 +18,7 @@
 class Trade::TaxonConceptAppendixYearValidationRule < Trade::InclusionValidationRule
 
   def validation_errors_for_shipment(shipment)
-    shipment_in_scope = true
-    # check if shipment is in scope of this validation
-    shipments_scope.each do |scope_column, scope_value|
-      shipment_in_scope = false if shipment.send(scope_column) != scope_value
-    end
-    # make sure the validated fields are not blank
-    shipments_columns.each do |column|
-      shipment_in_scope = false if shipment.send(column).blank?
-    end
-    return nil unless shipment_in_scope
+    return nil unless shipment_in_scope?(shipment)
     # if it is, check if it has a match in valid values view
     v = Arel::Table.new(valid_values_view)
     appendix_node = v['appendix'].eq(shipment.appendix)

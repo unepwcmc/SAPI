@@ -447,7 +447,8 @@ Trade::InclusionValidationRule.create(
 )
 Trade::InclusionValidationRule.create(
   :scope => {
-    :source_code => 'W'
+    :source_code => { :inclusion => ['W'] },
+    :country_of_origin => { :exclusion => ['XX'] }
   },
   :column_names => ['taxon_concept_id', 'country_of_origin'],
   :valid_values_view => 'valid_taxon_concept_country_of_origin_view',
@@ -457,7 +458,9 @@ Trade::InclusionValidationRule.create(
 )
 Trade::InclusionValidationRule.create(
   :scope => {
-    :source_code => 'W', :country_of_origin_blank => true
+    :source_code => { :inclusion => ['W'] },
+    :country_of_origin => { :blank => true },
+    :exporter => { :exclusion => ['XX'] }
   },
   :column_names => ['taxon_concept_id', 'exporter'],
   :valid_values_view => 'valid_taxon_concept_exporter_view',

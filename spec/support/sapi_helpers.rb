@@ -425,7 +425,8 @@ shared_context :sapi do
   def create_taxon_concept_country_of_origin_validation
     create(:inclusion_validation_rule,
       :scope => {
-        :source_code => 'W'
+        :source_code => { :inclusion => ['W'] },
+        :country_of_origin => { :exclusion => ['XX'] }
       },
       :column_names => ['taxon_concept_id', 'country_of_origin'],
       :valid_values_view => 'valid_taxon_concept_country_of_origin_view',
@@ -436,7 +437,9 @@ shared_context :sapi do
   def create_taxon_concept_exporter_validation
     create(:inclusion_validation_rule,
       :scope => {
-        :source_code => 'W', :country_of_origin_blank => true
+        :source_code => { :inclusion => ['W'] },
+        :country_of_origin => { :blank => true },
+        :exporter => { :exclusion => ['XX'] }
       },
       :column_names => ['taxon_concept_id', 'exporter'],
       :valid_values_view => 'valid_taxon_concept_exporter_view',
@@ -498,6 +501,9 @@ shared_context :sapi do
   }
   let(:cites_region_geo_entity_type){
     create(:geo_entity_type, :name => GeoEntityType::CITES_REGION)
+  }
+  let(:trade_geo_entity_type){
+    create(:geo_entity_type, :name => GeoEntityType::TRADE_ENTITY)
   }
   let(:synonym_relationship_type){
     create(

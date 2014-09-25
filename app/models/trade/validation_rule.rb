@@ -18,7 +18,7 @@
 class Trade::ValidationRule < ActiveRecord::Base
   attr_accessible :column_names, :run_order, :is_primary, :scope, :is_strict
   include PgArrayParser
-  serialize :scope, ActiveRecord::Coders::Hstore
+  serialize :scope, ActiveRecord::Coders::NestedHstore
 
   # returns column names as in the shipments table, based on the
   # list of column_names in sandbox
@@ -74,25 +74,85 @@ class Trade::ValidationRule < ActiveRecord::Base
     'shipment validation not implemented'
   end
 
-  # Sanitizes column names provided within the scope attribute
-  # Also replaces attr_blank => true with attr => nil
-  def sanitized_scope
+  # Sanitizes column names provided within the scope attribute.
+  # Example of a scope definition:
+  # :scope => {
+  #   :source_code => { :inclusion => ['W'] },
+  #   :country_of_origin => { :blank => true },
+  #   :exporter => { :exclusion => 'XX' }
+  # }
+  # This method is public, because it is exposed in the serializer
+  def sanitized_sandbox_scope
     res = {}
-    scope && scope.each do |scope_column, scope_value|
-      scope_column =~ /(.+?)(_blank)?$/
-      scope_column = $1
-      scope_value = nil unless $2.nil? #if _blank, then check for null
+    scope && scope.each do |scope_column, scope_def|
       if (
         Trade::SandboxTemplate.column_names +
         ['point_of_view', 'importer', 'exporter']
       ).include? scope_column
-        res[scope_column] = scope_value
+        res[scope_column] = scope_def
       end
     end
     res
   end
 
   private
+
+  # If sandbox scope was :source_code => { :inclusion => ['W'] }, shipments
+  # scope needs to be :source_code => { :inclusion => [ID of W] }
+  def sanitized_shipments_scope
+    res = {}
+    sanitized_sandbox_scope.each do |scope_column, scope_def|
+      case scope_column
+      when 'taxon_name'
+        false #basically no point scoping rules on taxon id
+      when 'appendix', 'year'
+        res[scope_column] = scope_def
+      when 'exporter', 'importer', 'country_of_origin'
+        tmp_def = {}
+        (scope_def.keys & ['inclusion', 'exclusion']).each do |k|
+          tmp_def[k] = scope_def[k].map{ |value| GeoEntity.find_by_iso_code2(value).id }
+        end
+        tmp_def['blank'] = scope_def['blank'] if scope_def.has_key?('blank')
+        res[scope_column + '_id'] = tmp_def        
+      when /(.+)_code$/
+        tmp_def = {}
+        (scope_def.keys & ['inclusion', 'exclusion']).each do |k|
+          tmp_def[k] = scope_def[k].map{ |value| TradeCode.find_by_type_and_code($1.capitalize, value).id }
+        end
+        tmp_def['blank'] = scope_def['blank'] if scope_def.has_key?('blank')
+        res[$1 + '_id'] = tmp_def
+      else
+        tmp_def = {}
+        scope_def.keys & ['inclusion', 'exclusion', 'blank'].each do |k|
+          tmp_def[k] = scope_def[k]
+        end
+        res[scope_column + '_id'] = tmp_def
+      end
+    end
+    res
+  end
+
+  def shipment_in_scope?(shipment)
+    shipment_in_scope = true
+    # check if shipment is in scope of this validation
+    sanitized_shipments_scope.each do |scope_column, scope_def|
+      value = shipment.send(scope_column)
+      if scope_def['inclusion']
+        shipment_in_scope = false unless scope_def['inclusion'].include?(value)
+      end
+      if scope_def['exclusion']
+        shipment_in_scope = false if scope_def['exclusion'].include?(value)
+      end
+      if scope_def['blank']
+        shipment_in_scope = false unless shipment.send(scope_column).blank?
+      end
+    end
+    # make sure the validated fields are not blank
+    required_shipments_columns.each do |column|
+      shipment_in_scope = false if shipment.send(column).blank?
+    end
+    shipment_in_scope
+  end
 
   def required_column_names
     if is_strict
@@ -112,27 +172,6 @@ class Trade::ValidationRule < ActiveRecord::Base
         'exporter_id', 'importer_id', 'reporter_type', 'quantity'
       ]
     end
-  end
-
-  # so if sandbox scope was {source_code = W}, shipments
-  # scope needs to be {source_id = [id of W]}
-  def shipments_scope
-    res = {}
-    sanitized_scope.each do |scope_column, scope_value|
-      case scope_column
-      when 'taxon_name'
-        false #basically no point scoping rules on taxon id
-      when 'appendix'
-        res[scope_column] = scope_value
-      when 'year'
-        res[scope_column] = scope_value
-      when /(.+)_code$/
-        res[$1 + '_id'] = TradeCode.find_by_type_and_code($1.capitalize, scope_value).id
-      else
-        res[scope_column + '_id'] = scope_value
-      end
-    end
-    res
   end
 
 end

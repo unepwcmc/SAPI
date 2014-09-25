@@ -19,8 +19,18 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   attr_accessible :valid_values_view
 
   def error_message(values_hash = nil)
-    scope_info = sanitized_scope.map do |scope_column, scope_value|
-      "#{scope_column} = #{scope_value}"
+    scope_info = sanitized_sandbox_scope.map do |scope_column, scope_def|
+      tmp = []
+      if scope_def['inclusion']
+        tmp << "#{scope_column} = #{scope_def['inclusion'].join(', ')}"
+      end
+      if scope_def['exclusion']
+        tmp << "#{scope_column} != #{scope_def['exclusion'].join(', ')}"
+      end
+      if scope_def['blank']
+        tmp << "#{scope_column} is empty"
+      end
+      tmp.join(' and ')
     end.compact.join(', ')
     info = column_names_for_matching.each_with_index.map do |cn|
       # for taxon concept validations output human readable taxon_name
@@ -49,16 +59,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   end
 
   def validation_errors_for_shipment(shipment)
-    shipment_in_scope = true
-    # check if shipment is in scope of this validation
-    shipments_scope.each do |scope_column, scope_value|
-      shipment_in_scope = false if shipment.send(scope_column) != scope_value
-    end
-    # make sure the validated fields are not blank
-    required_shipments_columns.each do |column|
-      shipment_in_scope = false if shipment.send(column).blank?
-    end
-    return nil unless shipment_in_scope
+    return nil unless shipment_in_scope?(shipment)
     # if it is, check if it has a match in valid values view
     v = Arel::Table.new(valid_values_view)
     arel_nodes = shipments_columns.map { |c| v[c].eq(shipment.send(c)) }
@@ -105,9 +106,19 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     not_null_conds = not_null_nodes.shift
     not_null_nodes.each{ |n| not_null_conds = not_null_conds.and(n) }
     result = s.project('*').where(not_null_conds)
-    scope_nodes = sanitized_scope.map do |scope_column, scope_value|
-      s[scope_column].eq(scope_value)
-    end
+    scope_nodes = sanitized_sandbox_scope.map do |scope_column, scope_def|
+      tmp = []
+      if scope_def['inclusion']
+        tmp << scope_def['inclusion'].map{ |value| s[scope_column].eq(value) }
+      end
+      if scope_def['exclusion']
+        tmp << scope_def['exclusion'].map{ |value| s[scope_column].not_eq(value) }
+      end
+      if scope_def['blank']
+        tmp << s[scope_column].eq(nil)
+      end
+      tmp
+    end.flatten
     scope_conds = scope_nodes.shift
     scope_nodes.each{ |n| scope_conds = scope_conds.and(n) }
     result = result.where(scope_conds) if scope_conds
