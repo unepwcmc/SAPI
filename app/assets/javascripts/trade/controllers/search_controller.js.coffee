@@ -2,14 +2,13 @@ Trade.SearchController = Ember.Controller.extend Trade.QueryParams, Trade.Flash,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
-  csvSeparator: "comma"
+  csvSeparator: 'comma'
   batchUpdateParams: Trade.ShipmentBatchUpdate.create()
 
   init: ->
     @set('selectedTimeStart', @get('defaultTimeStart'))
     @set('selectedTimeEnd', @get('defaultTimeEnd'))
 
-  csvSeparator: 'comma_separated'
   defaultTimeStart: ( ->
     new Date().getFullYear() - 5
   ).property()
