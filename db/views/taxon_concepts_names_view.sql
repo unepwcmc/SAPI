@@ -17,6 +17,7 @@ SELECT
   taxonomic_position,
   taxonomy_id,
   taxonomies.name AS taxonomy_name,
+  internal_notes,
   to_char(taxon_concepts.created_at, 'DD/MM/YYYY') AS created_at,
   uc.name AS created_by,
   to_char(taxon_concepts.updated_at, 'DD/MM/YYYY') AS updated_at,
