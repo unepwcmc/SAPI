@@ -19,6 +19,7 @@ SELECT
   taxonomies.name AS taxonomy_name,
   taxonomic_position,
   taxonomy_id,
+  distributions.internal_notes,
   to_char(distributions.created_at, 'DD/MM/YYYY') AS created_at,
   uc.name AS created_by,
   to_char(distributions.updated_at, 'DD/MM/YYYY') AS updated_at,
@@ -38,4 +39,5 @@ LEFT JOIN users uu ON distributions.updated_by_id = uu.id
 WHERE taxon_concepts.name_status IN ('A')
 GROUP BY taxon_concepts.id, taxon_concepts.legacy_id, geo_entity_types.name,
   geo_entities.name_en, geo_entities.iso_code2, "references".citation, "references".id,
-  taxonomies.name, uc.name, uu.name, distributions.created_at, distributions.updated_at
+  taxonomies.name, distributions.internal_notes,
+  uc.name, uu.name, distributions.created_at, distributions.updated_at
