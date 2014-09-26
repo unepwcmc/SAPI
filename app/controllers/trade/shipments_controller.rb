@@ -31,7 +31,9 @@ class Trade::ShipmentsController < TradeController
     @search = Trade::Filter.new(search_params)
     cnt = @search.query.count
     update_params = populate_accepted_taxon_concept(batch_update_params)
-    @search.query.update_all(update_params)
+    @search.query.each do |shipment|
+      shipment.update_attributes(update_params)
+    end
     render :json => {rows: cnt}, :status => :ok
   end
 

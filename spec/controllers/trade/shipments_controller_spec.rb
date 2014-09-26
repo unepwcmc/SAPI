@@ -51,7 +51,8 @@ describe Trade::ShipmentsController do
           time_range_end: @shipment2.year,
           reporter_type: 'I',
           exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
-          importers_ids: [@portugal.id.to_s, @argentina.id.to_s]
+          importers_ids: [@portugal.id.to_s, @argentina.id.to_s],
+          taxon_concepts_ids: [@plant_species.id]
         },
         updates: {
           reporter_type: 'E'
@@ -62,7 +63,7 @@ describe Trade::ShipmentsController do
     end
     it "should change reporter type from E to I" do
       post :update_batch, {
-        filters: { # shiment1
+        filters: { # shipment1
           time_range_start: @shipment1.year,
           time_range_end: @shipment2.year,
           reporter_type: 'E',
@@ -80,7 +81,7 @@ describe Trade::ShipmentsController do
 
     it "should update year" do
       post :update_batch, {
-        filters: { # shiment1
+        filters: { # shipment1
           time_range_start: @shipment1.year,
           time_range_end: @shipment2.year,
           year: 2013,
@@ -138,7 +139,9 @@ describe Trade::ShipmentsController do
         time_range_end: @shipment2.year,
         reporter_type: 'E',
         exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
-        importers_ids: [@portugal.id.to_s, @argentina.id.to_s]}
+        importers_ids: [@portugal.id.to_s, @argentina.id.to_s],
+        taxon_concepts_ids: [@animal_species.id]
+      }
       Trade::Shipment.count.should == 5
     end
     it "should delete 4 shipment" do
