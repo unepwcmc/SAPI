@@ -28,11 +28,11 @@ class Trade::ShipmentsController < TradeController
   end
 
   def update_batch
-    @search = Trade::Filter.new(search_params)
-    cnt = @search.query.count
-    update_params = populate_accepted_taxon_concept(batch_update_params)
-    @search.query.update_all(update_params)
-    render :json => {rows: cnt}, :status => :ok
+    @batch_update = Trade::BatchUpdate.new(search_params)
+    affected_rows = @batch_update.execute(
+      populate_accepted_taxon_concept(batch_update_params)
+    )
+    render :json => {rows: affected_rows}, :status => :ok
   end
 
   def destroy
