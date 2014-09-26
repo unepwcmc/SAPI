@@ -65,7 +65,7 @@ es:
   net_imports: "Importaciones Netas"
   comma_separated: "separado por comas"
   semicolon_separated: "separado por punto y coma"
-  csv_separator_tip: "Please try amending the csv separator if downloaded .csv files do not open correctly in your system."
+  csv_separator_tip: "¿Problemas para ver los resultados? Intente cambiar el tipo de resultado .csv a separado por punto y coma."
 
   table_title:
     gross_imports: "Informe de la Importaciones Brutas"
