@@ -38,7 +38,10 @@
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
-      <td><%= tracking_info(quota) %></td>
+      <td>
+        <%= tracking_info(quota) %>
+        <%= internal_notes(quota) %>
+      </td>
     </tr>
   <% end -%>
 </tbody>

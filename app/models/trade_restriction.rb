@@ -31,7 +31,7 @@ class TradeRestriction < ActiveRecord::Base
   track_who_does_it
   attr_accessible :end_date, :geo_entity_id, :is_current,
     :notes, :publication_date, :purpose_ids, :quota, :type,
-    :source_ids, :start_date, :term_ids, :unit_id, 
+    :source_ids, :start_date, :term_ids, :unit_id, :internal_notes,
     :created_by_id, :updated_by_id
 
   belongs_to :taxon_concept
