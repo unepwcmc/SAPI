@@ -13,7 +13,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash,
     submitShipments: ->
       onSuccess = => 
         @set('sandboxShipmentsSubmitting', false)
-        @transitionToRoute('shipments', {queryParams: page: 1})
+        @transitionToRoute('search')
         @flashSuccess(message: "#{@get('numberOfRows')} shipments submitted.", persists: true)
       onError = (xhr, msg, error) =>
         @set('sandboxShipmentsSubmitting', false)
