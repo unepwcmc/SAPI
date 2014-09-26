@@ -23,6 +23,7 @@
 #  original_id                 :integer
 #  updated_by_id               :integer
 #  created_by_id               :integer
+#  internal_notes              :text
 #
 
 class Quota < TradeRestriction

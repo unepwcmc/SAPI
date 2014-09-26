@@ -9,6 +9,7 @@
 #  updated_at       :datetime         not null
 #  created_by_id    :integer
 #  updated_by_id    :integer
+#  internal_notes   :text
 #
 
 class Distribution < ActiveRecord::Base

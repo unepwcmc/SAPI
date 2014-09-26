@@ -20,6 +20,7 @@
 #  import_row_id              :integer
 #  created_by_id              :integer
 #  updated_by_id              :integer
+#  internal_notes             :text
 #
 
 class ListingChange < ActiveRecord::Base
