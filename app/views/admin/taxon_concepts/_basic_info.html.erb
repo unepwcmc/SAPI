@@ -22,6 +22,7 @@
     <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), 
       :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
   <% end %>
+  <%= internal_notes(@taxon_concept) %>
   <%= @taxon_concept.author_year %>
   <% if @taxon_concept.tag_list %>
     <%= tag_list(@taxon_concept.tag_list) %><br />

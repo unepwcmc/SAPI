@@ -38,7 +38,10 @@
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
-      <td><%= tracking_info(suspension) %></td>
+      <td>
+        <%= tracking_info(suspension) %>
+        <%= internal_notes(suspension) %>
+      </td>
     </tr>
   <% end -%>
 </tbody>
