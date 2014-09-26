@@ -19,6 +19,7 @@
 #  updated_by_id        :integer
 #  created_by_id        :integer
 #  extended_description :text
+#  multilingual_url     :text
 #
 
 class EuSuspensionRegulation < Event

@@ -44,6 +44,10 @@
 #  excluded_taxon_concept_ids :string
 #  dirty                      :boolean
 #  expiry                     :datetime
+#  auto_note_en               :string(255)
+#  party_full_name_en         :text
+#  party_full_name_es         :text
+#  party_full_name_fr         :text
 #
 
 class MEuListingChange < ActiveRecord::Base
