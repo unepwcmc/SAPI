@@ -425,6 +425,7 @@ shared_context :sapi do
   def create_taxon_concept_country_of_origin_validation
     create(:inclusion_validation_rule,
       :scope => {
+        :rank => { :inclusion => [Rank::SPECIES, Rank::SUBSPECIES] },
         :source_code => { :inclusion => ['W'] },
         :country_of_origin => { :exclusion => ['XX'] }
       },
@@ -437,6 +438,7 @@ shared_context :sapi do
   def create_taxon_concept_exporter_validation
     create(:inclusion_validation_rule,
       :scope => {
+        :rank => { :inclusion => [Rank::SPECIES, Rank::SUBSPECIES] },
         :source_code => { :inclusion => ['W'] },
         :country_of_origin => { :blank => true },
         :exporter => { :exclusion => ['XX'] }
