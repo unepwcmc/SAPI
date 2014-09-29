@@ -447,6 +447,7 @@ Trade::InclusionValidationRule.create(
 )
 Trade::InclusionValidationRule.create(
   :scope => {
+    :rank => { :inclusion => [Rank::SPECIES, Rank::SUBSPECIES] },
     :source_code => { :inclusion => ['W'] },
     :country_of_origin => { :exclusion => ['XX'] }
   },
@@ -458,6 +459,7 @@ Trade::InclusionValidationRule.create(
 )
 Trade::InclusionValidationRule.create(
   :scope => {
+    :rank => { :inclusion => [Rank::SPECIES, Rank::SUBSPECIES] },
     :source_code => { :inclusion => ['W'] },
     :country_of_origin => { :blank => true },
     :exporter => { :exclusion => ['XX'] }

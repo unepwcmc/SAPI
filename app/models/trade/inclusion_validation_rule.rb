@@ -109,20 +109,20 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     scope_nodes = sanitized_sandbox_scope.map do |scope_column, scope_def|
       tmp = []
       if scope_def['inclusion']
-        tmp << scope_def['inclusion'].map{ |value| s[scope_column].eq(value) }
+        inclusion_nodes = scope_def['inclusion'].map{ |value| s[scope_column].eq(value) }
+        tmp << inclusion_nodes.inject(&:or)
       end
       if scope_def['exclusion']
-        tmp << scope_def['exclusion'].map{ |value| s[scope_column].not_eq(value) }
+        exclusion_nodes = scope_def['exclusion'].map{ |value| s[scope_column].not_eq(value) }
+        tmp << exclusion_nodes.inject(&:or)
       end
       if scope_def['blank']
         tmp << s[scope_column].eq(nil)
       end
       tmp
     end.flatten
-    scope_conds = scope_nodes.shift
-    scope_nodes.each{ |n| scope_conds = scope_conds.and(n) }
+    scope_conds = scope_nodes.inject(&:and)
     result = result.where(scope_conds) if scope_conds
-
     result
   end
 
