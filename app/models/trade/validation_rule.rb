@@ -87,7 +87,7 @@ class Trade::ValidationRule < ActiveRecord::Base
     scope && scope.each do |scope_column, scope_def|
       if (
         Trade::SandboxTemplate.column_names +
-        ['point_of_view', 'importer', 'exporter']
+        ['point_of_view', 'importer', 'exporter', 'rank']
       ).include? scope_column
         res[scope_column] = scope_def
       end
@@ -103,8 +103,8 @@ class Trade::ValidationRule < ActiveRecord::Base
     res = {}
     sanitized_sandbox_scope.each do |scope_column, scope_def|
       case scope_column
-      when 'taxon_name'
-        false #basically no point scoping rules on taxon id
+      when 'taxon_name', 'rank'
+        false
       when 'appendix', 'year'
         res[scope_column] = scope_def
       when 'exporter', 'importer', 'country_of_origin'

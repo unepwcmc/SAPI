@@ -97,7 +97,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         subject.validation_errors(@aru).size.should == 1
       }
     end
-    context "when W source and country of origin blank and exporter XX" do
+    context "when W source and country XX" do
       before(:each) do
         @aru = build(:annual_report_upload, :point_of_view => 'I', :trading_country_id => argentina.id)
         @aru.save(:validate => false)
@@ -110,6 +110,28 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           :taxon_name => 'Pecari tajacu', :source_code => 'W',
           :trading_partner => xx.iso_code2,
           :country_of_origin => argentina.iso_code2
+        )
+      end
+      subject{
+        create_taxon_concept_exporter_validation
+      }
+      specify{
+        subject.validation_errors(@aru).should be_empty
+      }
+    end
+    context "when W source and country doesn't match distribution of higher taxa" do
+      before(:each) do
+        @aru = build(:annual_report_upload, :point_of_view => 'I', :trading_country_id => argentina.id)
+        @aru.save(:validate => false)
+        sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
+        sandbox_klass.create(
+          :taxon_name => 'Pecari', :source_code => 'W',
+          :trading_partner => canada.iso_code2, :country_of_origin => nil
+        )
+        sandbox_klass.create(
+          :taxon_name => 'Pecari', :source_code => 'W',
+          :trading_partner => canada.iso_code2,
+          :country_of_origin => canada.iso_code2
         )
       end
       subject{

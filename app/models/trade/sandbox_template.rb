@@ -135,26 +135,11 @@ class Trade::SandboxTemplate < ActiveRecord::Base
   end
 
   def self.create_view_stmt(target_table_name, idx)
-    sql = <<-SQL
-      CREATE VIEW #{target_table_name}_view AS
-      SELECT aru.point_of_view,
-      CASE
-        WHEN aru.point_of_view = 'E'
-        THEN geo_entities.iso_code2
-        ELSE trading_partner
-      END AS exporter,
-      CASE
-        WHEN aru.point_of_view = 'E'
-        THEN trading_partner
-        ELSE geo_entities.iso_code2 
-      END AS importer,
-      taxon_concepts.full_name AS accepted_taxon_name,
-      #{target_table_name}.*
-      FROM #{target_table_name}
-      JOIN trade_annual_report_uploads aru ON aru.id = #{idx}
-      JOIN geo_entities ON geo_entities.id = aru.trading_country_id
-      LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
-    SQL
+    sanitize_sql_array([
+      "SELECT * FROM create_trade_sandbox_view(?, ?)",
+      target_table_name,
+      idx
+    ])
   end
 
   def self.drop_stmt(target_table_name)
