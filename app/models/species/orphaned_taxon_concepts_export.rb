@@ -20,14 +20,16 @@ private
   def sql_columns
     columns = [
       :id, :legacy_id, :full_name, :author_year, :rank_name, :name_status,
-      :taxonomy_name, :created_at, :created_by, :updated_at, :updated_by
+      :taxonomy_name, :internal_notes,
+      :created_at, :created_by, :updated_at, :updated_by
     ]
   end
 
   def csv_column_headers
     headers = [
       'Id', 'Legacy id', 'Scientific Name', 'Author', 'Rank', 'Name status',
-      'Taxonomy', 'Date added', 'Added by', 'Date updated', 'Updated by'
+      'Taxonomy', 'Internal notes',
+      'Date added', 'Added by', 'Date updated', 'Updated by'
     ]
   end
 

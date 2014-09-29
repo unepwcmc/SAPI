@@ -24,10 +24,29 @@ module AdminHelper
       </p>
     HTML
     content_tag(:a, :rel => 'tooltip', :href => '#',
-               :"data-original-title" => info, :"data-html" => true) do
+      :"data-original-title" => info, :"data-html" => true
+    ) do
       info_icon
     end.html_safe
   end
+
+  def internal_notes record
+    return '' unless record.internal_notes.present?
+    info = content_tag(:div) do
+      content_tag(:b, 'Internal notes:') +
+      content_tag(:p, record.internal_notes)
+    end
+    content_tag(:a, :rel => 'tooltip', :href => '#',
+      :"data-original-title" => info, :"data-html" => true
+    ) do
+      comment_icon
+    end
+  end
+
+  def comment_icon
+    '<i class="icon-comment" title="Internal notes"></i>'.html_safe
+  end
+
   def info_icon
     '<i class="icon-info-sign" title="Info"></i>'.html_safe
   end

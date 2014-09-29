@@ -9,12 +9,13 @@
 #  updated_at       :datetime         not null
 #  created_by_id    :integer
 #  updated_by_id    :integer
+#  internal_notes   :text
 #
 
 class Distribution < ActiveRecord::Base
   track_who_does_it
   attr_accessible :geo_entity_id, :taxon_concept_id, :tag_list, 
-    :references_attributes, :created_by_id, :updated_by_id
+    :references_attributes, :internal_notes, :created_by_id, :updated_by_id
   acts_as_taggable
 
   belongs_to :geo_entity
