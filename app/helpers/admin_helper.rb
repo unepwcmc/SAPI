@@ -32,7 +32,7 @@ module AdminHelper
 
   def internal_notes record
     return '' unless record.internal_notes.present?
-    info = content_tag(:p) do
+    info = content_tag(:div) do
       content_tag(:b, 'Internal notes:') +
       content_tag(:p, record.internal_notes)
     end
