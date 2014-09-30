@@ -49,4 +49,18 @@ class NomenclatureChange < ActiveRecord::Base
     end
   end
 
+  def next_step
+    steps = self.class::STEPS
+    return nil if steps.empty?
+    if status == NomenclatureChange::NEW
+      steps.first
+    elsif self.summary?
+      NomenclatureChange::SUMMARY.to_sym
+    elsif !in_progress?
+      nil
+    else
+      steps[steps.index(self.status.to_sym) + 1]
+    end
+  end
+
 end
