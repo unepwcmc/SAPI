@@ -30,10 +30,18 @@ module NomenclatureChange::ConstructorHelpers
     end
   end
 
-  def _build_names_reassignments(input, outputs)
+  def _build_names_reassignments(input, outputs, all_outputs = nil)
     relationships = input.taxon_concept.taxon_relationships.
       includes(:other_taxon_concept).
       order(:taxon_relationship_type_id, 'taxon_concepts.full_name')
+    if all_outputs
+      # do not reassign relationships that involve outputs
+      # e.g. in case a synonym of the input of a split is one of the outputs
+      taxon_concepts_ids = all_outputs.map(&:taxon_concept_id)
+      relationships = relationships.reject do |relationship|
+        taxon_concepts_ids.include?(relationship.other_taxon_concept_id)
+      end
+    end
     input.name_reassignments = relationships.map do |relationship|
       reassignment_attrs = {
         :reassignable_type => 'TaxonRelationship',
