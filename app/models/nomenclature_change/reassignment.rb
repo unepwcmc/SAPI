@@ -42,8 +42,8 @@ class NomenclatureChange::Reassignment < ActiveRecord::Base
   validates :reassignable_type, :presence => true
 
   def note_with_resolved_placeholders(input, output)
-    note.
+    note && note.
       sub(/\[\[input\]\]/, input.taxon_concept.full_name).
-      sub(/\[\[output\]\]/, output.display_full_name)
+      sub(/\[\[output\]\]/, output.display_full_name) || ''
   end
 end
