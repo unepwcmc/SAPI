@@ -35,7 +35,7 @@ class ListingChange < ActiveRecord::Base
     :annotation_attributes, :hash_annotation_id, :event_id, 
     :excluded_geo_entities_ids, :excluded_taxon_concepts_ids, :internal_notes,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-    :internal_nomenclature_note
+    :internal_nomenclature_note,
     :created_by_id, :updated_by_id
 
   attr_accessor :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
