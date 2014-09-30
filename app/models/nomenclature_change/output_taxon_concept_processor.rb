@@ -39,10 +39,10 @@ class NomenclatureChange::OutputTaxonConceptProcessor
       if @output.new_parent
         res << "#{@output.taxon_concept.full_name} parent changed from #{@output.taxon_concept.parent.full_name} to #{@output.new_parent.full_name}"
       end
-      if @output.new_name_status
+      if @output.new_name_status.present?
         res << "#{@output.taxon_concept.full_name} name status changed from #{@output.taxon_concept.name_status} to #{@output.new_name_status}"
       end
-      if @output.new_author_year
+      if @output.new_author_year.present?
         res << "#{@output.taxon_concept.full_name} author year changed from #{@output.taxon_concept.author_year} to #{@output.new_author_year}"
       end
     end
