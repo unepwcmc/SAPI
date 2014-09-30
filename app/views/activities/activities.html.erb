@@ -20,5 +20,24 @@
     }
 });
 </script>
+<script>
+  $('.c3-axis-x g.tick text').on('click', function() {
+    location.pathname = '/activities/' + this.innerHTML;
+  });
+</script>
+
+<% if @weekly_topten.length > 0 %>
+<table>
+  <tr>
+    <th>Count</th><th>Species</th>
+  </tr>
+<% for entry in @weekly_topten %>
+  <tr>
+    <td><%= entry.count %></td><td><%= entry.species %></td>
+  </tr>
+<% end %>
+</table>
+<% end %>
+
 <%= render template: 'activities/toptens_cms' %>
 <%= render template: 'activities/toptens_cites' %>

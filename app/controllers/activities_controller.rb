@@ -16,5 +16,10 @@ class ActivitiesController < ApplicationController
     gon.taxon_concept = ['Taxon Concept'] + data.map(&:taxon_concept_cnt)
     gon.search = ['Search'] + data.map(&:search_cnt)
     gon.weeks = data.map(&:start_date)
+    if params["start_week"]
+      @weekly_topten = WeekTopten.new(params["start_week"]).data
+    else
+      @weekly_topten = []
+    end
   end
 end
