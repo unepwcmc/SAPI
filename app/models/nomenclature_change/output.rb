@@ -98,8 +98,8 @@ class NomenclatureChange::Output < ActiveRecord::Base
     taxon_concept_attrs = {
       :parent_id => new_parent_id || parent_id,
       :rank_id => new_rank_id || rank_id,
-      :author_year => new_author_year || author_year,
-      :name_status => new_name_status || name_status
+      :author_year => (new_author_year.present? ? new_author_year : author_year),
+      :name_status => (new_name_status.present? ? new_name_status : name_status)
     }
     if will_create_taxon?
       taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
