@@ -26,7 +26,7 @@ class NomenclatureChange::Split::Constructor
     input = @nomenclature_change.input
     default_output = @nomenclature_change.outputs_intersect_inputs.first
     default_output ||= @nomenclature_change.outputs.first
-    _build_names_reassignments(input, [default_output])
+    _build_names_reassignments(input, [default_output], @nomenclature_change.outputs)
   end
 
   def build_distribution_reassignments
