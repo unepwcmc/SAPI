@@ -13,7 +13,7 @@ module StatusDictionary
       define_singleton_method :status_dict do
         statuses
       end
-      steps.each do |status|
+      statuses.each do |status|
         define_dynamic_status_check(status)
         define_dynamic_status_or_submitting_check(status)
       end
