@@ -6,13 +6,8 @@ module Admin::NomenclatureChangesHelper
       html = error_messages_for(@nomenclature_change)
       html += capture { block.yield(f) } if block_given?
       html += content_tag(:div, class: 'clearfix') do
-        if @nomenclature_change.new?
-          concat link_to('Cancel', admin_nomenclature_change_path(@nomenclature_change),
-            :method => :delete)
-        else
-          concat link_to('Cancel', admin_nomenclature_changes_path,
-            class: 'pull-left btn btn-link')
-        end
+        concat link_to('Cancel', admin_nomenclature_changes_path,
+          class: 'pull-left btn btn-link')
         concat ' '
         concat f.submit(submit_label, class: 'pull-right btn btn-primary')
         concat ' '
