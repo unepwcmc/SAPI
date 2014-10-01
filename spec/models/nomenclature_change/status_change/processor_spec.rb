@@ -67,30 +67,6 @@ describe NomenclatureChange::StatusChange::Processor do
         specify{ expect(primary_output_taxon_concept.shipments).to be_empty }
         specify{ expect(primary_output_taxon_concept.reported_shipments).to include(@shipment) }
         specify{ expect(accepted_name.shipments).to include(@shipment) }
-
-        context "when swap" do
-          let(:status_downgrade_with_swap){
-            create(:nomenclature_change_status_change,
-              primary_output_attributes: {
-                is_primary_output: true,
-                taxon_concept_id: trade_name.id,
-                new_name_status: 'S'
-              },
-              input_attributes: { taxon_concept_id: input_species.id },
-              secondary_output_attributes: {
-                is_primary_output: false,
-                taxon_concept_id: synonym.id,
-                new_name_status: 'T'
-              },
-              status: NomenclatureChange::StatusChange::RELAY_OR_SWAP
-            ).reload
-          }
-          let(:status_change){ status_downgrade_with_swap }
-          specify{ expect(primary_output_taxon_concept).to be_is_synonym }
-          specify{ expect(secondary_output_taxon_concept).to be_is_trade_name }
-          specify{ expect(primary_output_taxon_concept.accepted_names_for_trade_name).to be_empty }
-          specify{ expect(primary_output_taxon_concept.accepted_names).to include(accepted_name) }
-        end
       end
     end
     context "when turns into accepted name" do
