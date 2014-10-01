@@ -130,4 +130,13 @@ class NomenclatureChange::Output < ActiveRecord::Base
     end
   end
 
+  def needs_public_note?
+    if nomenclature_change.kind_of?(NomenclatureChange::StatusChange) &&
+      new_name_status != 'A'
+      false
+    else
+      true
+    end
+  end
+
 end
