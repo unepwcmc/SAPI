@@ -47,24 +47,45 @@ class NomenclatureChange::Split::Constructor
     _build_references_reassignments(@nomenclature_change.input, @nomenclature_change.outputs)
   end
 
+  def input_split_into(input, outputs)
+    input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
+    outputs_html = @nomenclature_change.outputs.map do |output|
+      taxon_concept_html(output.display_full_name, output.display_rank_name)
+    end.join(', ')
+    "#{input_html} was split into #{outputs_html} in #{Date.today.year}"
+  end
+
+  def output_split_from(output, input)
+    output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
+    input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
+    "#{output_html} was split from #{input_html} in #{Date.today.year}"
+  end
+
+  def input_note(input, outputs, event)
+    note = '<p>'
+    note << input_split_into(input, @nomenclature_change.outputs)
+    note << following_taxonomic_changes(event) if event
+    note << '.</p>'
+    note
+  end
+
+  def output_note(output, input, event)
+    note = '<p>'
+    note << output_split_from(output, input)
+    note << following_taxonomic_changes(event) if event
+    note << '.</p>'
+    note
+  end
+
   def build_input_and_output_notes
     input = @nomenclature_change.input
-    input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     event = @nomenclature_change.event
     if input.note.blank?
-      outputs_html = @nomenclature_change.outputs.map do |output|
-        taxon_concept_html(output.display_full_name, output.display_rank_name)
-      end.join(', ')
-      input.note = "<p>#{input_html} was split into #{outputs_html} in #{Date.today.year}"
-      input.note << " following taxonomic changes adopted at #{event.name}" if event
-      input.note << '.</p>'
+      input.note = input_note(input, @nomenclature_change.outputs, event)
     end
     @nomenclature_change.outputs_except_inputs.each do |output|
       if output.note.blank?
-        output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
-        output.note = "<p>#{output_html} was split from #{input_html} in #{Date.today.year}"
-        output.note << " following taxonomic changes adopted at #{event.name}" if event
-        output.note << '.</p>'
+        output.note = output_note(output, input, event)
       end
     end
   end
