@@ -81,23 +81,39 @@ class NomenclatureChange::StatusChange::Constructor
     end
   end
 
+  def status_change_from_to(output)
+    output_html = taxon_concept_html(
+      output.display_full_name,
+      output.display_rank_name
+    )
+    "#{output_html} status change from #{output.taxon_concept.name_status} to " +
+    "#{output.new_name_status} in #{Date.today.year}"
+  end
+
+  def output_note(output, event)
+    note = '<p>'
+    note << status_change_from_to(output)
+    note << following_taxonomic_changes(event) if event
+    note << '.</p>'
+    note
+  end
+
   def build_output_notes
     event = @nomenclature_change.event
 
     if @nomenclature_change.primary_output.note.blank?
-      build_output_note(@nomenclature_change.primary_output, event)
+      @nomenclature_change.primary_output.note = output_note(
+        @nomenclature_change.primary_output,
+        event
+      )
     end
 
     if @nomenclature_change.is_swap? && @nomenclature_change.secondary_output.note.blank?
-      build_output_note(@nomenclature_change.secondary_output, event)
+      @nomenclature_change.secondary_output.note = output_note(
+        @nomenclature_change.secondary_output,
+        event
+      )
     end
-  end
-
-  def build_output_note(output, event)
-    output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
-    output.note = "<p>#{output_html} status change from #{output.taxon_concept.name_status} to #{output.new_name_status} in #{Date.today.year}"
-    output.note << " following taxonomic changes adopted at #{event.name}" if event
-    output.note << '.</p>'
   end
 
   def listing_change_note

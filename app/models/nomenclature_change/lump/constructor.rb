@@ -51,25 +51,46 @@ class NomenclatureChange::Lump::Constructor
     end
   end
 
-  def build_input_and_output_notes
+  def input_lumped_into(input, output)
+    input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
+    output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
+    "#{input_html} was lumped into #{output_html} in #{Date.today.year}"
+  end
+
+  def output_lumped_from(output, inputs)
+    output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
     inputs_html = @nomenclature_change.inputs.map do |input|
       taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     end.join(', ')
+    "#{output_html} was lumped from #{inputs_html} in #{Date.today.year}"
+  end
+
+  def input_note(input, output, event)
+    note = '<p>'
+    note << input_lumped_into(input, output)
+    note << following_taxonomic_changes(event) if event
+    note << '.</p>'
+    note
+  end
+
+  def output_note(output, inputs, event)
+    note = '<p>'
+    note << output_lumped_from(output, @nomenclature_change.inputs)
+    note << following_taxonomic_changes(event) if event
+    note << '.</p>'
+    note
+  end
+
+  def build_input_and_output_notes
     output = @nomenclature_change.output
-    output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
     event = @nomenclature_change.event
     @nomenclature_change.inputs_except_outputs.each do |input|
       if input.note.blank?
-        input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
-        input.note = "<p>#{input_html} was lumped into #{output_html} in #{Date.today.year}"
-        input.note << " following taxonomic changes adopted at #{event.name}" if event
-        input.note << '.</p>'
+        input.note = input_note(input, output, event)
       end
     end
     if output.note.blank?
-      output.note = "<p>#{output_html} was lumped from #{inputs_html} in #{Date.today.year}"
-      output.note << " following taxonomic changes adopted at #{event.name}" if event
-      output.note << '.</p>'
+      output.note = output_note(output, @nomenclature_change.inputs, event)
     end
   end
 
