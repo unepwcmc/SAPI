@@ -6,7 +6,6 @@
   <th>Term</th>
   <th>Source</th>
   <th>Notes</th>
-  <th>Internal notes</th>
   <th>Current</th>
   <th>Actions</th>
   <th>Info</th>
@@ -25,7 +24,6 @@
       <td><%= opinion.term && opinion.term.code %></td>
       <td><%= opinion.source && opinion.source.code %></td>
       <td><%= opinion.notes %></td>
-      <td><%= opinion.internal_notes %></td>
       <td><%= true_false_icon(opinion.is_current) %></td>
       <td>
         <%= link_to edit_icon,
@@ -36,7 +34,10 @@
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
-      <td><%= tracking_info(opinion) %></td>
+      <td>
+        <%= tracking_info(opinion) %>
+        <%= internal_notes(opinion) %>
+      </td>
     </tr>
   <% end -%>
 </tbody>
