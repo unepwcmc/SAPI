@@ -100,19 +100,28 @@ class NomenclatureChange::StatusChange::Constructor
 
   def build_output_notes
     event = @nomenclature_change.event
-
     if @nomenclature_change.primary_output.note.blank?
-      @nomenclature_change.primary_output.note = output_note(
+      primary_note = output_note(
         @nomenclature_change.primary_output,
         event
       )
+      if @nomenclature_change.primary_output.needs_public_note?
+        @nomenclature_change.primary_output.note = primary_note
+      else
+        @nomenclature_change.primary_output.internal_note = primary_note
+      end
     end
 
     if @nomenclature_change.is_swap? && @nomenclature_change.secondary_output.note.blank?
-      @nomenclature_change.secondary_output.note = output_note(
+      secondary_note = output_note(
         @nomenclature_change.secondary_output,
         event
       )
+      if @nomenclature_change.secondary_output.needs_public_note?
+        @nomenclature_change.secondary_output.note = secondary_note
+      else
+        @nomenclature_change.secondary_output.internal_note = secondary_note
+      end
     end
   end
 
