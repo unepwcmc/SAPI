@@ -184,4 +184,8 @@ module NomenclatureChange::ConstructorHelpers
     end
   end
 
+  def following_taxonomic_changes(event)
+    " following taxonomic changes adopted at #{event.name}"
+  end
+
 end
