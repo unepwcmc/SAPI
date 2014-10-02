@@ -6,7 +6,9 @@ class NomenclatureChange::OutputTaxonConceptProcessor
 
   def run
     tc = @output.tmp_taxon_concept || @output.taxon_concept
-    tc.nomenclature_note_en = "#{tc.nomenclature_note_en} #{@output.note}"
+    tc.nomenclature_note_en = "#{tc.nomenclature_note_en} #{@output.note_en}"
+    tc.nomenclature_note_es = "#{tc.nomenclature_note_es} #{@output.note_es}"
+    tc.nomenclature_note_fr = "#{tc.nomenclature_note_fr} #{@output.note_fr}"
     tc.internal_nomenclature_note = "#{tc.internal_nomenclature_note} #{@output.internal_note}"
     Rails.logger.debug("Processing output #{tc.full_name}")
     new_record = tc.new_record?

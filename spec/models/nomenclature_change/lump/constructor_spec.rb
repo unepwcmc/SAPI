@@ -37,44 +37,44 @@ describe NomenclatureChange::Lump::Constructor do
     describe :build_input_and_output_notes do
       let(:output){ lump.output }
       before(:each) do
-        @old_input_note = input.note
-        @old_output_note = output.note
+        @old_input_note = input.note_en
+        @old_output_note = output.note_en
         constructor.build_input_and_output_notes
       end
       context "when previously no notes in place" do
         let(:lump){
           create(:nomenclature_change_lump,
             inputs_attributes: {
-              0 => { taxon_concept_id: input_species1.id, note: nil },
-              1 => { taxon_concept_id: input_species2.id, note: nil }
+              0 => { taxon_concept_id: input_species1.id },
+              1 => { taxon_concept_id: input_species2.id }
             },
-            output_attributes: { taxon_concept_id: output_species.id, note: nil }
+            output_attributes: { taxon_concept_id: output_species.id }
           )
         }
-        specify{ expect(input.note).not_to be_blank }
-        specify{ expect(output.note).not_to be_blank }
+        specify{ expect(input.note_en).not_to be_blank }
+        specify{ expect(output.note_en).not_to be_blank }
         context "when output = input" do
           let(:lump){
             create(:nomenclature_change_lump,
               inputs_attributes: {
-                0 => { taxon_concept_id: input_species1.id, note: nil },
-                1 => { taxon_concept_id: input_species2.id, note: nil }
+                0 => { taxon_concept_id: input_species1.id },
+                1 => { taxon_concept_id: input_species2.id }
               },
-              output_attributes: { taxon_concept_id: input_species1.id, note: nil }
+              output_attributes: { taxon_concept_id: input_species1.id }
             )
           }
-          specify{ expect(input.note).to be_blank }
+          specify{ expect(input.note_en).to be_blank }
         end
       end
       context "when previously notes in place" do
         let(:input){
-          create(:nomenclature_change_input, nomenclature_change: lump, note: 'blah')
+          create(:nomenclature_change_input, nomenclature_change: lump, note_en: 'blah')
         }
         let(:output){
-          create(:nomenclature_change_output, nomenclature_change: lump, note: 'blah')
+          create(:nomenclature_change_output, nomenclature_change: lump, note_en: 'blah')
         }
-        specify{ expect(input.note).to eq(@old_input_note) }
-        specify{ expect(output.note).to eq(@old_output_note) }
+        specify{ expect(input.note_en).to eq(@old_input_note) }
+        specify{ expect(output.note_en).to eq(@old_output_note) }
       end
     end
     describe :build_parent_reassignments do

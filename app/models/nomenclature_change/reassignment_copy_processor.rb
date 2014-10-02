@@ -51,11 +51,15 @@ class NomenclatureChange::ReassignmentCopyProcessor
       copied_object.taxon_concept_id = new_taxon_concept.id
       if reassignable.kind_of? ListingChange
         copied_object.nomenclature_note_en = (copied_object.nomenclature_note_en || '') +
-          target.reassignment.note_with_resolved_placeholders(@input, @output)
+          target.reassignment.note_with_resolved_placeholders_en(@input, @output)
+        copied_object.nomenclature_note_es = (copied_object.nomenclature_note_es || '') +
+          target.reassignment.note_with_resolved_placeholders_es(@input, @output)
+        copied_object.nomenclature_note_fr = (copied_object.nomenclature_note_fr || '') +
+          target.reassignment.note_with_resolved_placeholders_fr(@input, @output)
       elsif reassignable.kind_of?(CitesSuspension) || reassignable.kind_of?(Quota) ||
         reassignable.kind_of?(EuSuspension) || reassignable.kind_of?(EuOpinion)
         copied_object.nomenclature_note = (copied_object.nomenclature_note || '') +
-          target.reassignment.note_with_resolved_placeholders(@input, @output)
+          target.reassignment.note_with_resolved_placeholders_en(@input, @output)
       end
       if reassignable.kind_of? Distribution
         # for distributions this needs to copy distribution references and tags

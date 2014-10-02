@@ -81,72 +81,122 @@ class NomenclatureChange::StatusChange::Constructor
     end
   end
 
-  def status_change_from_to(output)
+  def status_change_from_to(output, lng)
     output_html = taxon_concept_html(
       output.display_full_name,
       output.display_rank_name
     )
-    "#{output_html} status change from #{output.taxon_concept.name_status} to " +
-    "#{output.new_name_status} in #{Date.today.year}"
+    case lng
+    when :es
+      "ES #{output_html} status change from #{output.taxon_concept.name_status} to " +
+      "#{output.new_name_status} in #{Date.today.year}"
+    when :fr
+      "FR #{output_html} status change from #{output.taxon_concept.name_status} to " +
+      "#{output.new_name_status} in #{Date.today.year}"
+    else
+      "#{output_html} status change from #{output.taxon_concept.name_status} to " +
+      "#{output.new_name_status} in #{Date.today.year}"
+    end
   end
 
-  def output_note(output, event)
-    note = '<p>'
-    note << status_change_from_to(output)
-    note << following_taxonomic_changes(event) if event
-    note << '.</p>'
-    note
+  def multi_lingual_output_note(output, event)
+    result = {}
+    [:en, :es, :fr].each do |lng|
+      note = '<p>'
+      note << status_change_from_to(output, lng)
+      note << following_taxonomic_changes(event, lng) if event
+      note << '.</p>'
+      result[lng] = note
+    end
+    result
   end
 
   def build_output_notes
     event = @nomenclature_change.event
-    if @nomenclature_change.primary_output.note.blank?
-      primary_note = output_note(
+    if @nomenclature_change.primary_output.note_en.blank?
+      primary_note = multi_lingual_output_note(
         @nomenclature_change.primary_output,
         event
       )
       if @nomenclature_change.primary_output.needs_public_note?
-        @nomenclature_change.primary_output.note = primary_note
+        @nomenclature_change.primary_output.note_en = primary_note[:en]
+        @nomenclature_change.primary_output.note_es = primary_note[:es]
+        @nomenclature_change.primary_output.note_fr = primary_note[:fr]
       else
-        @nomenclature_change.primary_output.internal_note = primary_note
+        @nomenclature_change.primary_output.internal_note = primary_note[:en]
       end
     end
 
-    if @nomenclature_change.is_swap? && @nomenclature_change.secondary_output.note.blank?
-      secondary_note = output_note(
+    if @nomenclature_change.is_swap? &&
+      @nomenclature_change.secondary_output.note_en.blank?
+      secondary_note = multi_lingual_output_note(
         @nomenclature_change.secondary_output,
         event
       )
       if @nomenclature_change.secondary_output.needs_public_note?
-        @nomenclature_change.secondary_output.note = secondary_note
+        @nomenclature_change.secondary_output.note_en = secondary_note[:en]
+        @nomenclature_change.secondary_output.note_es = secondary_note[:es]
+        @nomenclature_change.secondary_output.note_fr = secondary_note[:fr]
       else
-        @nomenclature_change.secondary_output.internal_note = secondary_note
+        @nomenclature_change.secondary_output.internal_note = secondary_note[:en]
       end
     end
   end
 
-  def listing_change_note
-    legislation_note do |input_html, output_html|
-      "Originally listed as #{input_html}, which became a synonym of #{output_html}"
-    end
+  def multi_lingual_listing_change_note
+    {
+      en: legislation_note(:en) do |input_html, output_html|
+        "Originally listed as #{input_html}, which became a synonym of #{output_html}"
+      end,
+      es: legislation_note(:es) do |input_html, output_html|
+        "ES Originally listed as #{input_html}, which became a synonym of #{output_html}"
+      end,
+      fr: legislation_note(:fr) do |input_html, output_html|
+        "FR Originally listed as #{input_html}, which became a synonym of #{output_html}"
+      end,
+    }
   end
 
-  def suspension_note
-    legislation_note do |input_html, output_html|
-      "Suspension originally formed for #{input_html}, which became a synonym of #{output_html}"
-    end
+  def multi_lingual_suspension_note
+    {
+      en: legislation_note(:en) do |input_html, output_html|
+        "Suspension originally formed for #{input_html}, which became a synonym of #{output_html}"
+      end,
+      es: legislation_note(:es) do |input_html, output_html|
+        "ES Suspension originally formed for #{input_html}, which became a synonym of #{output_html}"
+      end,
+      fr: legislation_note(:fr) do |input_html, output_html|
+        "FR Suspension originally formed for #{input_html}, which became a synonym of #{output_html}"
+      end,
+    }
   end
 
-  def opinion_note
-    legislation_note do |input_html, output_html|
-      "Opinion originally formed for #{input_html}, which became a synonym of #{output_html}"
-    end
+  def multi_lingual_opinion_note
+    {
+      en: legislation_note(:en) do |input_html, output_html|
+        "Opinion originally formed for #{input_html}, which became a synonym of #{output_html}"
+      end,
+      es: legislation_note(:es) do |input_html, output_html|
+        "ES Opinion originally formed for #{input_html}, which became a synonym of #{output_html}"
+      end,
+      fr: legislation_note(:fr) do |input_html, output_html|
+        "FR Opinion originally formed for #{input_html}, which became a synonym of #{output_html}"
+      end,
+    }
   end
 
-  def quota_note
-    legislation_note do |input_html, output_html|
-      "Quota originally published for #{input_html}, which became a synonym of #{output_html}"
-    end
+  def multi_lingual_quota_note
+    {
+      en: legislation_note(:en) do |input_html, output_html|
+        "Quota originally published for #{input_html}, which became a synonym of #{output_html}"
+      end,
+      es: legislation_note(:es) do |input_html, output_html|
+        "ES Quota originally published for #{input_html}, which became a synonym of #{output_html}"
+      end,
+      fr: legislation_note(:fr) do |input_html, output_html|
+        "FR Quota originally published for #{input_html}, which became a synonym of #{output_html}"
+      end
+    }
   end
 
   private
@@ -162,7 +212,7 @@ class NomenclatureChange::StatusChange::Constructor
     yield(input, output)
   end
 
-  def legislation_note
+  def legislation_note(lng)
     return nil unless @nomenclature_change.is_swap?
     input = @nomenclature_change.input
     output = if @nomenclature_change.needs_to_relay_associations?
@@ -174,7 +224,9 @@ class NomenclatureChange::StatusChange::Constructor
     input = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     note = '<p>'
     note << yield(input, output)
-    note << " following #{@nomenclature_change.event.name}" if @nomenclature_change.event
+    if @nomenclature_change.event
+      note << following_taxonomic_changes(@nomenclature_change.event, lng)
+    end
     note + '.</p>'
   end
 
