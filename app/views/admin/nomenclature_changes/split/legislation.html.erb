@@ -11,7 +11,9 @@
           <%= fff.object.reassignable_type %>
         </label>
         <div class="controls">
-          <%= fff.text_area :note, {:rows => 4} %>
+          <%= render partial: 'admin/nomenclature_changes/build/nomenclature_notes',
+            locals: {ff: fff}
+          %>
         </div>
       </div>
     <% end %>
