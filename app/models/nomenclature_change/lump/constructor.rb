@@ -54,13 +54,14 @@ class NomenclatureChange::Lump::Constructor
   def input_lumped_into(input, output, lng)
     input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
-    case lng
-    when :es
-      "ES #{input_html} was lumped into #{output_html} in #{Date.today.year}"
-    when :fr
-      "FR #{input_html} was lumped into #{output_html} in #{Date.today.year}"
-    else
-      "#{input_html} was lumped into #{output_html} in #{Date.today.year}"
+    I18n.with_locale(lng) do
+      I18n.translate(
+        'lump.input_lumped_into',
+        input_taxon: input_html,
+        output_taxon: output_html,
+        year: Date.today.year,
+        default: 'Translation missing'
+      )
     end
   end
 
@@ -69,13 +70,14 @@ class NomenclatureChange::Lump::Constructor
     inputs_html = @nomenclature_change.inputs.map do |input|
       taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     end.join(', ')
-    case lng
-    when :es
-      "ES #{output_html} was lumped from #{inputs_html} in #{Date.today.year}"
-    when :fr
-      "FR #{output_html} was lumped from #{inputs_html} in #{Date.today.year}"
-    else
-      "#{output_html} was lumped from #{inputs_html} in #{Date.today.year}"
+    I18n.with_locale(lng) do
+      I18n.translate(
+        'lump.output_lumped_from',
+        output_taxon: output_html,
+        input_taxa: inputs_html,
+        year: Date.today.year,
+        default: 'Translation missing'
+      )
     end
   end
 
@@ -135,59 +137,18 @@ class NomenclatureChange::Lump::Constructor
   end
 
   def multi_lingual_listing_change_note
-    {
-      en: legislation_note(:en) do |input_html, output_html|
-        "Originally listed as #{input_html}, which was lumped into #{output_html}"
-      end,
-      es: legislation_note(:es) do |input_html, output_html|
-        "ES Originally listed as #{input_html}, which was lumped into #{output_html}"
-      end,
-      fr: legislation_note(:fr) do |input_html, output_html|
-        "FR Originally listed as #{input_html}, which was lumped into #{output_html}"
-      end
-    }
+    multi_lingual_legislation_note('lump.listing_change')
   end
 
   def multi_lingual_suspension_note
-    {
-      en: legislation_note(:en) do |input_html, output_html|
-        "Suspension originally formed for #{input_html}, which was lumped into #{output_html}"
-      end,
-      es: legislation_note(:es) do |input_html, output_html|
-        "ES Suspension originally formed for #{input_html}, which was lumped into #{output_html}"
-      end,
-      fr: legislation_note(:fr) do |input_html, output_html|
-        "FR Suspension originally formed for #{input_html}, which was lumped into #{output_html}"
-      end
-    }
+    multi_lingual_legislation_note('lump.suspension')
   end
 
   def multi_lingual_opinion_note
-    {
-      en: legislation_note(:en) do |input_html, output_html|
-        "Opinion originally formed for #{input_html}, which was lumped into #{output_html}"
-      end,
-      es: legislation_note(:es) do |input_html, output_html|
-        "ES Opinion originally formed for #{input_html}, which was lumped into #{output_html}"
-      end,
-      fr: legislation_note(:fr) do |input_html, output_html|
-        "FR Opinion originally formed for #{input_html}, which was lumped into #{output_html}"
-      end
-    }
-    
+    multi_lingual_legislation_note('lump.opinion')
   end
 
   def multi_lingual_quota_note
-    {
-      en: legislation_note(:en) do |input_html, output_html|
-        "Quota originally published for #{input_html}, which was lumped into #{output_html}"
-      end,
-      es: legislation_note(:es) do |input_html, output_html|
-        "ES Quota originally published for #{input_html}, which was lumped into #{output_html}"
-      end,
-      fr: legislation_note(:fr) do |input_html, output_html|
-        "FR Quota originally published for #{input_html}, which was lumped into #{output_html}"
-      end,
-    }
+    multi_lingual_legislation_note('lump.quota')
   end
 end
