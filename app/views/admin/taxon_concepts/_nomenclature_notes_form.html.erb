@@ -1,8 +1,0 @@
-<div class="control-group">
-  <% TaxonConcept.locale_columns(:nomenclature_note).each do |column| %>
-    <%= f.label column %>
-    <%= f.text_area column, :class => :annotation %>
-  <% end %>
-  <%= f.label :internal_nomenclature_note %>
-  <%= f.text_area :internal_nomenclature_note, :class => :annotation %>
-</div>

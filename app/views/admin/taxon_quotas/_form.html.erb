@@ -74,20 +74,6 @@
   </div>
 
   <div class="control-group">
-    <label class="control-label">Nomenclature note</label>
-    <div class="controls">
-      <%= f.text_area :nomenclature_note, :class => 'quota', :value => @quota.nomenclature_note %>
-    </div>
-  </div>
-
-  <div class="control-group">
-    <label class="control-label">Internal nomenclature note</label>
-    <div class="controls">
-      <%= f.text_area :internal_nomenclature_note, :class => 'quota', :value => @quota.internal_nomenclature_note %>
-    </div>
-  </div>
-
-  <div class="control-group">
     <%= f.label :term_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.select :term_ids,
@@ -122,6 +108,13 @@
       <%= f.check_box :public_display, :value => @quota.public_display %><br>
     </div>
   </div>
+
+  <%= render :partial => 'admin/shared/nomenclature_notes_form',
+    locals: {
+      f: f,
+      locale_columns: Quota.locale_columns(:nomenclature_note)
+    }
+  %>
 
   <p class="pull-right">
     <%= link_to 'Cancel', admin_taxon_concept_quotas_path(@taxon_concept),
