@@ -21,7 +21,9 @@
 #  source_id                  :integer
 #  created_by_id              :integer
 #  updated_by_id              :integer
-#  nomenclature_note          :text
+#  nomenclature_note_en       :text
+#  nomenclature_note_es       :text
+#  nomenclature_note_fr       :text
 #  internal_nomenclature_note :text
 #
 
