@@ -108,6 +108,13 @@
     </div>
   </div>
 
+  <%= render :partial => 'admin/shared/nomenclature_notes_form',
+    locals: {
+      f: f,
+      locale_columns: CitesSuspension.locale_columns(:nomenclature_note)
+    }
+  %>
+
   <p class="pull-right">
     <% if @taxon_concept %>
       <%= link_to 'Cancel', admin_taxon_concept_cites_suspensions_path(@taxon_concept),
