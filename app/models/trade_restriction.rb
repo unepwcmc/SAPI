@@ -23,9 +23,11 @@
 #  original_id                 :integer
 #  updated_by_id               :integer
 #  created_by_id               :integer
-#  internal_notes              :text
-#  nomenclature_note           :text
+#  nomenclature_note_en        :text
+#  nomenclature_note_es        :text
+#  nomenclature_note_fr        :text
 #  internal_nomenclature_note  :text
+#  internal_notes              :text
 #
 
 require 'digest/sha1'
@@ -35,8 +37,8 @@ class TradeRestriction < ActiveRecord::Base
   attr_accessible :end_date, :geo_entity_id, :is_current,
     :notes, :publication_date, :purpose_ids, :quota, :type,
     :source_ids, :start_date, :term_ids, :unit_id, :internal_notes,
-    :nomenclature_note, :internal_nomenclature_note,
-    :created_by_id, :updated_by_id
+    :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+    :internal_nomenclature_note, :created_by_id, :updated_by_id
 
   belongs_to :taxon_concept
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
@@ -52,6 +54,8 @@ class TradeRestriction < ActiveRecord::Base
 
   validates :publication_date, :presence => true
   validate :valid_dates
+
+  translates :nomenclature_note
 
   def valid_dates
     if !(start_date.nil? || end_date.nil?) && (start_date > end_date)
