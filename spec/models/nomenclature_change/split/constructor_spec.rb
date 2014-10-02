@@ -37,38 +37,38 @@ describe NomenclatureChange::Split::Constructor do
     describe :build_input_and_output_notes do
       let(:output){ split.outputs[0] }
       before(:each) do
-        @old_input_note = input.note
-        @old_output_note = output.note
+        @old_input_note = input.note_en
+        @old_output_note = output.note_en
         constructor.build_input_and_output_notes
       end
       context "when previously no notes in place" do
         let(:split){
           s = create(:nomenclature_change_split)
-          create(:nomenclature_change_input, nomenclature_change: s, note: nil)
-          create(:nomenclature_change_output, nomenclature_change: s, note: nil)
+          create(:nomenclature_change_input, nomenclature_change: s)
+          create(:nomenclature_change_output, nomenclature_change: s)
           s
         }
-        specify{ expect(input.note).not_to be_blank }
-        specify{ expect(output.note).not_to be_blank }
+        specify{ expect(input.note_en).not_to be_blank }
+        specify{ expect(output.note_en).not_to be_blank }
         context "when output = input" do
           let(:split){
             s = create(:nomenclature_change_split)
-            create(:nomenclature_change_input, nomenclature_change: s, taxon_concept: input_species, note: nil)
-            create(:nomenclature_change_output, nomenclature_change: s, taxon_concept: input_species, note:nil)
+            create(:nomenclature_change_input, nomenclature_change: s, taxon_concept: input_species)
+            create(:nomenclature_change_output, nomenclature_change: s, taxon_concept: input_species)
             s
           }
-          specify{ expect(output.note).to be_blank }
+          specify{ expect(output.note_en).to be_blank }
         end
       end
       context "when previously notes in place" do
         let(:input){
-          create(:nomenclature_change_input, nomenclature_change: split, note: 'blah')
+          create(:nomenclature_change_input, nomenclature_change: split, note_en: 'blah')
         }
         let(:output){
-          create(:nomenclature_change_output, nomenclature_change: split, note: 'blah')
+          create(:nomenclature_change_output, nomenclature_change: split, note_en: 'blah')
         }
-        specify{ expect(input.note).to eq(@old_input_note) }
-        specify{ expect(output.note).to eq(@old_output_note) }
+        specify{ expect(input.note_en).to eq(@old_input_note) }
+        specify{ expect(output.note_en).to eq(@old_output_note) }
       end
     end
     describe :build_parent_reassignments do

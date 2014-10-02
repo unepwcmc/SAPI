@@ -33,7 +33,6 @@ FactoryGirl.define do
     input
     type 'NomenclatureChange::Reassignment'
     reassignable_type 'TaxonConcept'
-    note 'Reassignment note'
 
     factory :nomenclature_change_parent_reassignment do
       type 'NomenclatureChange::ParentReassignment'
