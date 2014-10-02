@@ -96,42 +96,57 @@ module NomenclatureChange::ConstructorHelpers
       input.legislation_reassignments.where(
         :reassignable_type => 'ListingChange'
       ).first || input.taxon_concept.listing_changes.limit(1).count > 0 &&
+      # multi_lingual_listing_change_note defined in constructor
+      (note = multi_lingual_listing_change_note) &&
       NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'ListingChange',
-        # listing_change_note defined in constructor
-        :note => listing_change_note
+        :note_en => note[:en],
+        :note_es => note[:es],
+        :note_fr => note[:fr]
       ) || nil,
       input.legislation_reassignments.where(
         :reassignable_type => 'CitesSuspension'
       ).first || input.taxon_concept.cites_suspensions.limit(1).count > 0 &&
+      # multi_lingual_suspension_note defined in constructor
+      (note = multi_lingual_suspension_note) &&
       NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'CitesSuspension',
-        # suspension_note defined in constructor
-        :note => suspension_note
+        :note_en => note[:en],
+        :note_es => note[:es],
+        :note_fr => note[:fr]
       ) || nil,
       input.legislation_reassignments.where(
         :reassignable_type => 'Quota'
       ).first || input.taxon_concept.quotas.limit(1).count > 0 &&
+      # multi_lingual_quota_note defined in constructor
+      (note = multi_lingual_quota_note) &&
       NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'Quota',
-        # quota defined in constructor
-        :note => quota_note
+        :note_en => note[:en],
+        :note_es => note[:es],
+        :note_fr => note[:fr]
       ) || nil,
       input.legislation_reassignments.where(
         :reassignable_type => 'EuSuspension'
       ).first || input.taxon_concept.eu_suspensions.limit(1).count > 0 &&
+      # multi_lingual_suspension_note defined in constructor
+      (note = multi_lingual_suspension_note) &&
       NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'EuSuspension',
-        # suspension_note defined in constructor
-        :note => suspension_note
+        :note_en => note[:en],
+        :note_es => note[:es],
+        :note_fr => note[:fr]
       ) || nil,
       input.legislation_reassignments.where(
         :reassignable_type => 'EuOpinion'
       ).first || input.taxon_concept.eu_opinions.limit(1).count > 0 &&
+      # multi_lingual_opinion_note defined in constructor
+      (note = multi_lingual_opinion_note) &&
       NomenclatureChange::LegislationReassignment.new(
         :reassignable_type => 'EuOpinion',
-        # opinion_note defined in constructor
-        :note => opinion_note
+        :note_en => note[:en],
+        :note_es => note[:es],
+        :note_fr => note[:fr]
       ) || nil
     ].compact
     input.legislation_reassignments.each do |reassignment|
@@ -184,8 +199,15 @@ module NomenclatureChange::ConstructorHelpers
     end
   end
 
-  def following_taxonomic_changes(event)
-    " following taxonomic changes adopted at #{event.name}"
+  def following_taxonomic_changes(event, lng)
+    case lng
+    when :es
+      " ES following taxonomic changes adopted at #{event.name}"
+    when :fr
+      " FR following taxonomic changes adopted at #{event.name}"
+    else
+      " following taxonomic changes adopted at #{event.name}"
+    end
   end
 
 end
