@@ -52,26 +52,28 @@ class NomenclatureChange::Split::Constructor
     outputs_html = @nomenclature_change.outputs.map do |output|
       taxon_concept_html(output.display_full_name, output.display_rank_name)
     end.join(', ')
-    case lng
-    when :es
-      "ES #{input_html} was split into #{outputs_html} in #{Date.today.year}"
-    when :fr
-      "FR #{input_html} was split into #{outputs_html} in #{Date.today.year}"
-    else
-      "#{input_html} was split into #{outputs_html} in #{Date.today.year}"
+    I18n.with_locale(lng) do
+      I18n.translate(
+        'split.input_split_into',
+        output_taxa: outputs_html,
+        input_taxon: input_html,
+        year: Date.today.year,
+        default: 'Translation missing'
+      )
     end
   end
 
   def output_split_from(output, input, lng)
     output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
     input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
-    case lng
-    when :es
-      "ES #{output_html} was split from #{input_html} in #{Date.today.year}"
-    when :fr
-      "FR #{output_html} was split from #{input_html} in #{Date.today.year}"
-    else
-      "#{output_html} was split from #{input_html} in #{Date.today.year}"
+    I18n.with_locale(lng) do
+      I18n.translate(
+        'split.output_split_from',
+        output_taxon: output_html,
+        input_taxon: input_html,
+        year: Date.today.year,
+        default: 'Translation missing'
+      )
     end
   end
 
@@ -131,59 +133,19 @@ class NomenclatureChange::Split::Constructor
   end
 
   def multi_lingual_listing_change_note
-    {
-      en: legislation_note(:en) do |input_html, output_html|
-        "Originally listed as #{input_html}, from which #{output_html} was split"
-      end,
-      es: legislation_note(:en) do |input_html, output_html|
-        "ES Originally listed as #{input_html}, from which #{output_html} was split"
-      end,
-      fr: legislation_note(:en) do |input_html, output_html|
-        "FR Originally listed as #{input_html}, from which #{output_html} was split"
-      end
-    }
+    multi_lingual_legislation_note('split.listing_change')
   end
 
   def multi_lingual_suspension_note
-    {
-      en: legislation_note(:en) do |input_html, output_html|
-        "Suspension originally formed for #{input_html}, from which #{output_html} was split"
-      end,
-      es: legislation_note(:es) do |input_html, output_html|
-        "ES Suspension originally formed for #{input_html}, from which #{output_html} was split"
-      end,
-      fr: legislation_note(:fr) do |input_html, output_html|
-        "FR Suspension originally formed for #{input_html}, from which #{output_html} was split"
-      end
-    }
+    multi_lingual_legislation_note('split.suspension')
   end
 
   def multi_lingual_opinion_note
-    {
-      en: legislation_note(:en) do |input_html, output_html|
-        "Opinion originally formed for #{input_html}, from which #{output_html} was split"
-      end,
-      es: legislation_note(:es) do |input_html, output_html|
-        "ES Opinion originally formed for #{input_html}, from which #{output_html} was split"
-      end,
-      fr: legislation_note(:fr) do |input_html, output_html|
-        "FR Opinion originally formed for #{input_html}, from which #{output_html} was split"
-      end
-    }
+    multi_lingual_legislation_note('split.opinion')
   end
 
   def multi_lingual_quota_note
-    {
-      en: legislation_note(:en) do |input_html, output_html|
-        "Quota originally published for #{input_html}, from which #{output_html} was split"
-      end,
-      es: legislation_note(:es) do |input_html, output_html|
-        "ES Quota originally published for #{input_html}, from which #{output_html} was split"
-      end,
-      fr: legislation_note(:fr) do |input_html, output_html|
-        "FR Quota originally published for #{input_html}, from which #{output_html} was split"
-      end
-    }
+    multi_lingual_legislation_note('split.quota')
   end
 
 end
