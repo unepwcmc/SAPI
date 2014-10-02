@@ -14,8 +14,8 @@ module NomenclatureChange::ConstructorHelpers
     children ||= input.taxon_concept.children
     input.parent_reassignments = children.map do |child|
       reassignment_attrs = {
-        :reassignable_type => 'TaxonConcept',
-        :reassignable_id => child.id
+        reassignable_type: 'TaxonConcept',
+        reassignable_id: child.id
       }
       reassignment = input.parent_reassignments.where(
         reassignment_attrs
@@ -24,7 +24,7 @@ module NomenclatureChange::ConstructorHelpers
         reassignment = NomenclatureChange::ParentReassignment.new(
           reassignment_attrs
         )
-        reassignment.build_reassignment_target(:nomenclature_change_output_id => output.id)
+        reassignment.build_reassignment_target(nomenclature_change_output_id: output.id)
       end
       reassignment
     end
@@ -44,8 +44,8 @@ module NomenclatureChange::ConstructorHelpers
     end
     input.name_reassignments = relationships.map do |relationship|
       reassignment_attrs = {
-        :reassignable_type => 'TaxonRelationship',
-        :reassignable_id => relationship.id
+        reassignable_type: 'TaxonRelationship',
+        reassignable_id: relationship.id
       }
       reassignment = input.name_reassignments.where(
         reassignment_attrs
@@ -58,7 +58,7 @@ module NomenclatureChange::ConstructorHelpers
           unless reassignment.reassignable_type == 'TaxonRelationship' &&
             output.taxon_concept_id == reassignment.reassignable.other_taxon_concept_id
             reassignment.reassignment_targets.build(
-              :nomenclature_change_output_id => output.id
+              nomenclature_change_output_id: output.id
             )
           end
         end
@@ -72,8 +72,8 @@ module NomenclatureChange::ConstructorHelpers
       distributions.includes(:geo_entity).order('geo_entities.name_en')
     input.distribution_reassignments = distributions.map do |distr|
       reassignment_attrs = {
-        :reassignable_type => 'Distribution',
-        :reassignable_id => distr.id
+        reassignable_type: 'Distribution',
+        reassignable_id: distr.id
       }
       reassignment = input.distribution_reassignments.where(
         reassignment_attrs
@@ -83,7 +83,7 @@ module NomenclatureChange::ConstructorHelpers
           reassignment_attrs
         )
         outputs.map do |output|
-          reassignment.reassignment_targets.build(:nomenclature_change_output_id => output.id)
+          reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
         end
       end
       reassignment
@@ -94,78 +94,78 @@ module NomenclatureChange::ConstructorHelpers
     event = @nomenclature_change.event
     input.legislation_reassignments = [
       input.legislation_reassignments.where(
-        :reassignable_type => 'ListingChange'
+        reassignable_type: 'ListingChange'
       ).first || input.taxon_concept.listing_changes.limit(1).count > 0 &&
       # multi_lingual_listing_change_note defined in constructor
       (note = multi_lingual_listing_change_note) &&
       NomenclatureChange::LegislationReassignment.new(
-        :reassignable_type => 'ListingChange',
-        :note_en => note[:en],
-        :note_es => note[:es],
-        :note_fr => note[:fr]
+        reassignable_type: 'ListingChange',
+        note_en: note[:en],
+        note_es: note[:es],
+        note_fr: note[:fr]
       ) || nil,
       input.legislation_reassignments.where(
-        :reassignable_type => 'CitesSuspension'
+        reassignable_type: 'CitesSuspension'
       ).first || input.taxon_concept.cites_suspensions.limit(1).count > 0 &&
       # multi_lingual_suspension_note defined in constructor
       (note = multi_lingual_suspension_note) &&
       NomenclatureChange::LegislationReassignment.new(
-        :reassignable_type => 'CitesSuspension',
-        :note_en => note[:en],
-        :note_es => note[:es],
-        :note_fr => note[:fr]
+        reassignable_type: 'CitesSuspension',
+        note_en: note[:en],
+        note_es: note[:es],
+        note_fr: note[:fr]
       ) || nil,
       input.legislation_reassignments.where(
-        :reassignable_type => 'Quota'
+        reassignable_type: 'Quota'
       ).first || input.taxon_concept.quotas.limit(1).count > 0 &&
       # multi_lingual_quota_note defined in constructor
       (note = multi_lingual_quota_note) &&
       NomenclatureChange::LegislationReassignment.new(
-        :reassignable_type => 'Quota',
-        :note_en => note[:en],
-        :note_es => note[:es],
-        :note_fr => note[:fr]
+        reassignable_type: 'Quota',
+        note_en: note[:en],
+        note_es: note[:es],
+        note_fr: note[:fr]
       ) || nil,
       input.legislation_reassignments.where(
-        :reassignable_type => 'EuSuspension'
+        reassignable_type: 'EuSuspension'
       ).first || input.taxon_concept.eu_suspensions.limit(1).count > 0 &&
       # multi_lingual_suspension_note defined in constructor
       (note = multi_lingual_suspension_note) &&
       NomenclatureChange::LegislationReassignment.new(
-        :reassignable_type => 'EuSuspension',
-        :note_en => note[:en],
-        :note_es => note[:es],
-        :note_fr => note[:fr]
+        reassignable_type: 'EuSuspension',
+        note_en: note[:en],
+        note_es: note[:es],
+        note_fr: note[:fr]
       ) || nil,
       input.legislation_reassignments.where(
-        :reassignable_type => 'EuOpinion'
+        reassignable_type: 'EuOpinion'
       ).first || input.taxon_concept.eu_opinions.limit(1).count > 0 &&
       # multi_lingual_opinion_note defined in constructor
       (note = multi_lingual_opinion_note) &&
       NomenclatureChange::LegislationReassignment.new(
-        :reassignable_type => 'EuOpinion',
-        :note_en => note[:en],
-        :note_es => note[:es],
-        :note_fr => note[:fr]
+        reassignable_type: 'EuOpinion',
+        note_en: note[:en],
+        note_es: note[:es],
+        note_fr: note[:fr]
       ) || nil
     ].compact
     input.legislation_reassignments.each do |reassignment|
       outputs.each do |output|
-        reassignment.reassignment_targets.build(:nomenclature_change_output_id => output.id)
+        reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
       end
     end
   end
 
   def _build_common_names_reassignments(input, outputs)
     unless input.reassignments.where(
-      :reassignable_type => 'TaxonCommon'
+      reassignable_type: 'TaxonCommon'
     ).first || input.taxon_concept.taxon_commons.limit(1).count == 0
       reassignment = NomenclatureChange::Reassignment.new(
-        :reassignable_type => 'TaxonCommon',
-        :type => 'NomenclatureChange::Reassignment'
+        reassignable_type: 'TaxonCommon',
+        type: 'NomenclatureChange::Reassignment'
       )
       outputs.each do |output|
-        reassignment.reassignment_targets.build(:nomenclature_change_output_id => output.id)
+        reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
       end
       input.reassignments << reassignment
     end
@@ -173,14 +173,14 @@ module NomenclatureChange::ConstructorHelpers
 
   def _build_references_reassignments(input, outputs)
     unless input.reassignments.where(
-      :reassignable_type => 'TaxonConceptReference'
+      reassignable_type: 'TaxonConceptReference'
     ).first || input.taxon_concept.taxon_concept_references.limit(1).count == 0
       reassignment = NomenclatureChange::Reassignment.new(
-        :reassignable_type => 'TaxonConceptReference',
-        :type => 'NomenclatureChange::Reassignment'
+        reassignable_type: 'TaxonConceptReference',
+        type: 'NomenclatureChange::Reassignment'
       )
       outputs.each do |output|
-        reassignment.reassignment_targets.build(:nomenclature_change_output_id => output.id)
+        reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
       end
       input.reassignments << reassignment
     end
@@ -188,13 +188,13 @@ module NomenclatureChange::ConstructorHelpers
 
   def _build_trade_reassignments(input, output)
     unless input.reassignments.where(
-      :reassignable_type => 'Trade::Shipment'
+      reassignable_type: 'Trade::Shipment'
     ).first || input.taxon_concept.shipments.limit(1).count == 0
       reassignment = NomenclatureChange::Reassignment.new(
-        :reassignable_type => 'Trade::Shipment',
-        :type => 'NomenclatureChange::Reassignment'
+        reassignable_type: 'Trade::Shipment',
+        type: 'NomenclatureChange::Reassignment'
       )
-      reassignment.reassignment_targets.build(:nomenclature_change_output_id => output.id)
+      reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
       input.reassignments << reassignment
     end
   end
