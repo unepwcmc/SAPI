@@ -86,16 +86,15 @@ class NomenclatureChange::StatusChange::Constructor
       output.display_full_name,
       output.display_rank_name
     )
-    case lng
-    when :es
-      "ES #{output_html} status change from #{output.taxon_concept.name_status} to " +
-      "#{output.new_name_status} in #{Date.today.year}"
-    when :fr
-      "FR #{output_html} status change from #{output.taxon_concept.name_status} to " +
-      "#{output.new_name_status} in #{Date.today.year}"
-    else
-      "#{output_html} status change from #{output.taxon_concept.name_status} to " +
-      "#{output.new_name_status} in #{Date.today.year}"
+    I18n.with_locale(lng) do
+      I18n.translate(
+        'status_change.status_change_from_to',
+        output_taxon: output_html,
+        old_status: output.taxon_concept.name_status,
+        new_status: output.new_name_status,
+        year: Date.today.year,
+        default: 'Translation missing'
+      )
     end
   end
 
@@ -144,59 +143,19 @@ class NomenclatureChange::StatusChange::Constructor
   end
 
   def multi_lingual_listing_change_note
-    {
-      en: legislation_note(:en) do |input_html, output_html|
-        "Originally listed as #{input_html}, which became a synonym of #{output_html}"
-      end,
-      es: legislation_note(:es) do |input_html, output_html|
-        "ES Originally listed as #{input_html}, which became a synonym of #{output_html}"
-      end,
-      fr: legislation_note(:fr) do |input_html, output_html|
-        "FR Originally listed as #{input_html}, which became a synonym of #{output_html}"
-      end,
-    }
+    multi_lingual_legislation_note('status_change.listing_change')
   end
 
   def multi_lingual_suspension_note
-    {
-      en: legislation_note(:en) do |input_html, output_html|
-        "Suspension originally formed for #{input_html}, which became a synonym of #{output_html}"
-      end,
-      es: legislation_note(:es) do |input_html, output_html|
-        "ES Suspension originally formed for #{input_html}, which became a synonym of #{output_html}"
-      end,
-      fr: legislation_note(:fr) do |input_html, output_html|
-        "FR Suspension originally formed for #{input_html}, which became a synonym of #{output_html}"
-      end,
-    }
+    multi_lingual_legislation_note('status_change.suspension')
   end
 
   def multi_lingual_opinion_note
-    {
-      en: legislation_note(:en) do |input_html, output_html|
-        "Opinion originally formed for #{input_html}, which became a synonym of #{output_html}"
-      end,
-      es: legislation_note(:es) do |input_html, output_html|
-        "ES Opinion originally formed for #{input_html}, which became a synonym of #{output_html}"
-      end,
-      fr: legislation_note(:fr) do |input_html, output_html|
-        "FR Opinion originally formed for #{input_html}, which became a synonym of #{output_html}"
-      end,
-    }
+    multi_lingual_legislation_note('status_change.opinion')
   end
 
   def multi_lingual_quota_note
-    {
-      en: legislation_note(:en) do |input_html, output_html|
-        "Quota originally published for #{input_html}, which became a synonym of #{output_html}"
-      end,
-      es: legislation_note(:es) do |input_html, output_html|
-        "ES Quota originally published for #{input_html}, which became a synonym of #{output_html}"
-      end,
-      fr: legislation_note(:fr) do |input_html, output_html|
-        "FR Quota originally published for #{input_html}, which became a synonym of #{output_html}"
-      end
-    }
+    multi_lingual_legislation_note('status_change.quota')
   end
 
   private
