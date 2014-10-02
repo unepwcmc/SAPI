@@ -200,14 +200,29 @@ module NomenclatureChange::ConstructorHelpers
   end
 
   def following_taxonomic_changes(event, lng)
-    case lng
-    when :es
-      " ES following taxonomic changes adopted at #{event.name}"
-    when :fr
-      " FR following taxonomic changes adopted at #{event.name}"
-    else
-      " following taxonomic changes adopted at #{event.name}"
+    I18n.with_locale(lng) do
+      I18n.translate(
+        'following_taxonomic_changes',
+        event: event.name,
+        default: ''
+      )
     end
+  end
+
+  def multi_lingual_legislation_note(note_type)
+    result = {}
+    [:en, :es, :fr].each do |lng|
+      result[lng] = legislation_note(lng) do |input_html, output_html|
+        I18n.with_locale(lng) do
+          I18n.translate(
+            note_type,
+            input_taxon: input_html, output_taxon: output_html,
+            default: 'Translation missing'
+          )
+        end
+      end
+    end
+    result
   end
 
 end
