@@ -7,7 +7,10 @@
 #  type                         :string(255)      not null
 #  reassignable_type            :string(255)
 #  reassignable_id              :integer
-#  note                         :text
+#  note_en                      :text
+#  note_es                      :text
+#  note_fr                      :text
+#  internal_note                :text
 #  created_by_id                :integer          not null
 #  updated_by_id                :integer          not null
 #  created_at                   :datetime         not null
@@ -28,7 +31,7 @@ class NomenclatureChange::Reassignment < ActiveRecord::Base
   track_who_does_it
   attr_accessible :type, :reassignable_id, :reassignable_type,
     :nomenclature_change_input_id, :nomenclature_change_output_id,
-    :note, :output_ids
+    :note_en, :note_es, :note_fr, :internal_note, :output_ids
   belongs_to :reassignable, :polymorphic => true
   belongs_to :input, :class_name => NomenclatureChange::Input,
     :foreign_key => :nomenclature_change_input_id
@@ -41,7 +44,21 @@ class NomenclatureChange::Reassignment < ActiveRecord::Base
   validates :input, :presence => true
   validates :reassignable_type, :presence => true
 
-  def note_with_resolved_placeholders(input, output)
+  def note_with_resolved_placeholders_en(input, output)
+    note_with_resolved_placeholders(note_en, input, output)
+  end
+
+  def note_with_resolved_placeholders_es(input, output)
+    note_with_resolved_placeholders(note_es, input, output)
+  end
+
+  def note_with_resolved_placeholders_fr(input, output)
+    note_with_resolved_placeholders(note_fr, input, output)
+  end
+
+  private
+
+  def note_with_resolved_placeholders(note, input, output)
     note && note.
       sub(/\[\[input\]\]/, input.taxon_concept.full_name).
       sub(/\[\[output\]\]/, output.display_full_name) || ''

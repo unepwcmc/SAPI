@@ -7,7 +7,10 @@
 #  type                         :string(255)      not null
 #  reassignable_type            :string(255)
 #  reassignable_id              :integer
-#  note                         :text
+#  note_en                      :text
+#  note_es                      :text
+#  note_fr                      :text
+#  internal_note                :text
 #  created_by_id                :integer          not null
 #  updated_by_id                :integer          not null
 #  created_at                   :datetime         not null
