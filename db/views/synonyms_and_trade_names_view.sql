@@ -22,7 +22,14 @@ SELECT
   a.data->'species_name' AS accepted_species_name,
   taxonomies.id AS taxonomy_id,
   taxonomies.name AS taxonomy_name,
-  st.internal_notes,
+  ARRAY_TO_STRING(
+    ARRAY[
+      st.internal_general_note,
+      st.internal_nomenclature_note,
+      st.internal_distribution_note
+    ],
+    E'\n'
+  ) AS internal_notes,
   to_char(st.created_at, 'DD/MM/YYYY') AS created_at,
   uc.name AS created_by,
   to_char(st.updated_at, 'DD/MM/YYYY') AS updated_at,

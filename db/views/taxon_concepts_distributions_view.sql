@@ -19,7 +19,13 @@ SELECT
   taxonomies.name AS taxonomy_name,
   taxonomic_position,
   taxonomy_id,
-  distributions.internal_notes,
+  ARRAY_TO_STRING(
+    ARRAY[
+      taxon_concepts.internal_distribution_note,
+      distributions.internal_notes
+    ],
+    E'\n'
+  ) AS internal_notes,
   to_char(distributions.created_at, 'DD/MM/YYYY') AS created_at,
   uc.name AS created_by,
   to_char(distributions.updated_at, 'DD/MM/YYYY') AS updated_at,

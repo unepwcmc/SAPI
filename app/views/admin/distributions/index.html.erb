@@ -1,7 +1,7 @@
-<h3>Distribution</h3>
+<h3 class="pull-left">Distribution</h3>
 <%= admin_add_new_distribution_button %>
 <%= admin_new_distribution_modal(true) %>
-
+<%= taxon_concept_internal_note_form(:internal_distribution_note) %>
 <hr />
 <div class="distributions-list">
   <% if @taxon_concept.has_distribution? %>

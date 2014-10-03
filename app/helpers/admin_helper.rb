@@ -30,14 +30,34 @@ module AdminHelper
     end.html_safe
   end
 
+  def taxon_concept_internal_notes tc
+    notes = [
+      tc.internal_general_note,
+      tc.internal_nomenclature_note,
+      tc.internal_distribution_note
+    ].compact
+    return '' if notes.empty?
+    info = content_tag(:div) do
+      content_tag(:b, 'Internal notes:')
+      notes.each{ |n| concat content_tag(:p, n) }
+    end
+    comment_icon_with_tooltip(info)
+  end
+
   def internal_notes record
     return '' unless record.internal_notes.present?
     info = content_tag(:div) do
       content_tag(:b, 'Internal notes:') +
       content_tag(:p, record.internal_notes)
     end
-    content_tag(:a, :rel => 'tooltip', :href => '#',
-      :"data-original-title" => info, :"data-html" => true
+    comment_icon_with_tooltip(info)
+  end
+
+  def comment_icon_with_tooltip(tooltip_text)
+    content_tag(
+      :a, rel: 'tooltip', href: '#',
+      'data-original-title' => tooltip_text,
+      'data-html' => true
     ) do
       comment_icon
     end
@@ -186,6 +206,25 @@ module AdminHelper
       :style => "clear: both"
     ) do
       render :partial => 'admin/simple_crud/simple_search'
+    end
+  end
+
+  def taxon_concept_internal_note_form(note_name)
+    content_tag(:div, style: 'clear: both') do
+      form_for [:admin, @taxon_concept], remote: true do |f|
+        content_tag(:div, class: 'control-group') do
+          f.label(note_name, 'Internal notes', class: 'control-label span2') +
+          content_tag(:div, class: 'controls controls-row') do
+            f.text_area(
+              note_name,
+              value: @taxon_concept.send(note_name),
+              class: 'span9',
+              rows: 4
+            ) +
+            f.submit('Update', class: 'btn btn-primary span1')
+          end
+        end
+      end
     end
   end
 
