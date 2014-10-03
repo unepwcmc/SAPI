@@ -139,6 +139,12 @@ class TaxonConcept < ActiveRecord::Base
   has_many :shipments, :class_name => 'Trade::Shipment'
   has_many :reported_shipments, :class_name => 'Trade::Shipment',
     :foreign_key => :reported_taxon_concept_id
+  belongs_to :internal_general_note_updater, class_name: 'User',
+    foreign_key: 'internal_general_note_updated_by_id'
+  belongs_to :internal_nomenclature_note_updater, class_name: 'User',
+    foreign_key: 'internal_nomenclature_note_updated_by_id'
+  belongs_to :internal_distribution_note_updater, class_name: 'User',
+    foreign_key: 'internal_distribution_note_updated_by_id'
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
