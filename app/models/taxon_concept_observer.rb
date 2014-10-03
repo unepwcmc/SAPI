@@ -30,6 +30,23 @@ class TaxonConceptObserver < ActiveRecord::Observer
     end
   end
 
+  def before_save(taxon_concept)
+    updated_at = taxon_concept.updated_at
+    updated_by_id = taxon_concept.updated_by_id
+    if taxon_concept.internal_general_note_changed?
+      taxon_concept.internal_general_note_updated_at = updated_at
+      taxon_concept.internal_general_note_updated_by_id = updated_by_id
+    end
+    if taxon_concept.internal_nomenclature_note_changed?
+      taxon_concept.internal_nomenclature_note_updated_at = updated_at
+      taxon_concept.internal_nomenclature_note_updated_by_id = updated_by_id
+    end
+    if taxon_concept.internal_distribution_note_changed?
+      taxon_concept.internal_distribution_note_updated_at = updated_at
+      taxon_concept.internal_distribution_note_updated_by_id = updated_by_id
+    end
+  end
+
   def after_create(taxon_concept)
     ensure_species_touched(taxon_concept)
     Species::Search.increment_cache_iterator
