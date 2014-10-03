@@ -81,12 +81,13 @@ module TaxonConceptHelper
 
   def admin_add_new_distribution_button
     admin_add_new_button(
-      :resource => 'distributions',
-      :href => new_admin_taxon_concept_distribution_url(@taxon_concept),
-      :name => 'Add new distribution location',
-      :remote => true,
-      :'data-toggle' => nil,
-      :role => nil
+      resource: 'distributions',
+      href: new_admin_taxon_concept_distribution_url(@taxon_concept),
+      name: 'Add new distribution location',
+      remote: true,
+      'data-toggle' => nil,
+      role: nil,
+      class: 'btn new-button pull-right'
     )
   end
 

@@ -10,7 +10,14 @@ SELECT
   tc.author_year,
   taxonomies.id AS taxonomy_id,
   taxonomies.name AS taxonomy_name,
-  tc.internal_notes,
+  ARRAY_TO_STRING(
+    ARRAY[
+      tc.internal_general_note,
+      tc.internal_nomenclature_note,
+      tc.internal_distribution_note
+    ],
+    E'\n'
+  ) AS internal_notes,
   to_char(tc.created_at, 'DD/MM/YYYY') AS created_at,
   uc.name AS created_by,
   to_char(tc.updated_at, 'DD/MM/YYYY') AS updated_at,
