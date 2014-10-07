@@ -1,11 +1,5 @@
 $('.modal').modal('hide');
 $('#basic-info').html("<%= escape_javascript(render('basic_info')) %>");
-$('#internal_distribution_note').html(
-  "<%= escape_javascript(taxon_concept_internal_note_form('internal_distribution_note')) %>"
-);
-$('#internal_nomenclature_note').html(
-  "<%= escape_javascript(taxon_concept_internal_note_form('internal_nomenclature_note')) %>"
-);
 window.adminEditor.initEditors();
 window.adminEditor.alertSuccess("Operation successful");
 $("[rel='tooltip']").tooltip();

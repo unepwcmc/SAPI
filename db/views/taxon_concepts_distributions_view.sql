@@ -21,7 +21,7 @@ SELECT
   taxonomy_id,
   ARRAY_TO_STRING(
     ARRAY[
-      taxon_concepts.internal_distribution_note,
+      distribution_note.note,
       distributions.internal_notes
     ],
     E'\n'
@@ -40,10 +40,14 @@ LEFT JOIN "references" ON "references".id = distribution_references.reference_id
 LEFT JOIN taggings ON taggings.taggable_id = distributions.id
   AND taggings.taggable_type = 'Distribution'
 LEFT JOIN tags ON tags.id = taggings.tag_id
+LEFT JOIN  comments distribution_note
+  ON distribution_note.commentable_id = taxon_concepts.id
+  AND distribution_note.commentable_type = 'TaxonConcept'
+  AND distribution_note.comment_type = 'Distribution'
 LEFT JOIN users uc ON distributions.created_by_id = uc.id
 LEFT JOIN users uu ON distributions.updated_by_id = uu.id
 WHERE taxon_concepts.name_status IN ('A')
 GROUP BY taxon_concepts.id, taxon_concepts.legacy_id, geo_entity_types.name,
   geo_entities.name_en, geo_entities.iso_code2, "references".citation, "references".id,
-  taxonomies.name, distributions.internal_notes,
+  taxonomies.name, distributions.internal_notes, distribution_note.note,
   uc.name, uu.name, distributions.created_at, distributions.updated_at
