@@ -20,3 +20,9 @@ $(document).ready ->
     format: "dd/mm/yyyy",
     autoclose: true
   )
+
+  $('#taxon_concept_internal_notes_popover_link').popover(
+    container: 'body'
+    content: $('#taxon_concept_internal_notes_popover').html(),
+    template: '<div class="popover" style="max-width:800px"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
+  )

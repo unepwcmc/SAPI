@@ -36,8 +36,14 @@ module AdminHelper
       content_tag(:b, 'Internal notes:') +
       content_tag(:p, record.internal_notes)
     end
-    content_tag(:a, :rel => 'tooltip', :href => '#',
-      :"data-original-title" => info, :"data-html" => true
+    comment_icon_with_tooltip(info)
+  end
+
+  def comment_icon_with_tooltip(tooltip_text)
+    content_tag(
+      :a, rel: 'tooltip', href: '#',
+      'data-original-title' => tooltip_text,
+      'data-html' => true
     ) do
       comment_icon
     end

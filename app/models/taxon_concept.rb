@@ -23,7 +23,6 @@
 #  updated_by_id              :integer
 #  created_by_id              :integer
 #  dependents_updated_at      :datetime
-#  internal_notes             :text
 #
 
 class TaxonConcept < ActiveRecord::Base
@@ -33,7 +32,7 @@ class TaxonConcept < ActiveRecord::Base
     :legacy_id, :legacy_type, :full_name, :name_status,
     :accepted_scientific_name, :parent_scientific_name,
     :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
-    :tag_list, :legacy_trade_code, :internal_notes,
+    :tag_list, :legacy_trade_code,
     :created_by_id, :updated_by_id, :dependents_updated_at
   attr_writer :parent_scientific_name
   attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
@@ -134,6 +133,13 @@ class TaxonConcept < ActiveRecord::Base
   has_many :shipments, :class_name => 'Trade::Shipment'
   has_many :reported_shipments, :class_name => 'Trade::Shipment',
     :foreign_key => :reported_taxon_concept_id
+  has_many :comments, as: 'commentable'
+  has_one :general_comment, class_name: 'Comment', as: 'commentable',
+    conditions: {comment_type: 'General'}
+  has_one :nomenclature_comment, class_name: 'Comment', as: 'commentable',
+    conditions: {comment_type: 'Nomenclature'}
+  has_one :distribution_comment, class_name: 'Comment', as: 'commentable',
+    conditions: {comment_type: 'Distribution'}
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
@@ -179,6 +185,12 @@ class TaxonConcept < ActiveRecord::Base
       sanitize_sql_array([joins_sql, rank.taxonomic_position])
     )
   }
+
+  def has_comments?
+    general_comment.try(:note).try(:present?) ||
+      nomenclature_comment.try(:note).try(:present?) ||
+      distribution_comment.try(:note).try(:present?)
+  end
 
   def under_cites_eu?
     self.taxonomy.name == Taxonomy::CITES_EU

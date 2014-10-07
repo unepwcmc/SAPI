@@ -22,7 +22,6 @@
     <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), 
       :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
   <% end %>
-  <%= internal_notes(@taxon_concept) %>
   <%= @taxon_concept.author_year %>
   <% if @taxon_concept.tag_list %>
     <%= tag_list(@taxon_concept.tag_list) %><br />
@@ -149,5 +148,19 @@
   <li class="<%= if controller_name == "children" then "active" end%>">
     <%= link_to "Children", admin_taxon_concept_children_path(@taxon_concept) %>
   </li>
+
+  <li class="<%= if controller_name == "taxon_concept_comments" then "active" end%>">
+    <%= link_to admin_taxon_concept_comments_path(@taxon_concept) do %>
+      Notes
+      <% if @taxon_concept.has_comments? %>
+        <%= taxon_concept_internal_notes_popover_link %>
+      <% end %>
+    <% end %>
+  </li>
 </ul>
 <% end %>
+<div id="taxon_concept_internal_notes_popover" class="hidden">
+    <%= taxon_concept_internal_note_display(@taxon_concept.general_comment) %>
+    <%= taxon_concept_internal_note_display(@taxon_concept.nomenclature_comment) %>
+    <%= taxon_concept_internal_note_display(@taxon_concept.distribution_comment) %>
+</table>

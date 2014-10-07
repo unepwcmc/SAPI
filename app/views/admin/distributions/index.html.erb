@@ -1,9 +1,12 @@
-<h3>Distribution</h3>
-<%= admin_add_new_distribution_button %>
+<%= taxon_concept_internal_note_tab_display(@taxon_concept.distribution_comment) %>
+<div class="admin-header">
+  <h3>Distribution</h3>
+  <div class="action-buttons">
+    <%= admin_add_new_distribution_button %>
+  </div>
+</div>
 <%= admin_new_distribution_modal(true) %>
-
-<hr />
-<div class="distributions-list">
+<div class="distributions-list" style="clear:both">
   <% if @taxon_concept.has_distribution? %>
     <%= render 'admin/distributions/list' %>
   <% else %>
