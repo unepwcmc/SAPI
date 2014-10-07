@@ -2,7 +2,7 @@
   <%= error_messages_for(@distribution) %>
 
   <div class="control-group">
-    <label>Country or Territory</label>
+    <label class="control-label">Country or Territory</label>
     <div class="controls">
       <%= f.select :geo_entity_id,
         options_from_collection_for_select(
@@ -17,7 +17,7 @@
   </div>
 
   <div class="control-group">
-    <label>Tags</label>
+    <label class="control-label">Tags</label>
     <div class="controls">
       <%= f.select :tag_list,
         options_from_collection_for_select(
@@ -28,6 +28,13 @@
         ), {},
         { :multiple => true, :class => 'distribution', :style => "width: 450px"}
       %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Internal notes</label>
+    <div class="controls">
+      <%= f.text_area :internal_notes, :value => @distribution.internal_notes %>
     </div>
   </div>
 

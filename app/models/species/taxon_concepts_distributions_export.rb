@@ -22,8 +22,8 @@ private
       :id, :legacy_id, :phylum_name, :class_name, :order_name, :family_name,
       :full_name, :rank_name, :geo_entity_type, :geo_entity_name,
       :geo_entity_iso_code2, :tags, :reference_full, :reference_id,
-      :reference_legacy_id, :taxonomy_name, :created_at, :created_by,
-      :updated_at, :updated_by
+      :reference_legacy_id, :taxonomy_name, :internal_notes,
+      :created_at, :created_by, :updated_at, :updated_by
     ]
   end
 
@@ -32,8 +32,8 @@ private
       'Id', 'Legacy Id', 'Phylum', 'Class', 'Order', 'Family',
       'Scientific Name', 'Rank', 'Geo_entity', 'Country_full',
       'ISO Code', 'Country Tags', 'Reference_full', 'Reference IDS',
-      'Ref Legacy ID', 'Taxonomy', 'Date added', 'Added by',
-      'Date updated', 'Updated by'
+      'Ref Legacy ID', 'Taxonomy', 'Internal notes',
+      'Date added', 'Added by', 'Date updated', 'Updated by'
     ]
   end
 

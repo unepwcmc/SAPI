@@ -33,11 +33,6 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       subject{
         create_taxon_concept_country_of_origin_validation
       }
-      specify{
-        subject.validation_errors(@aru).size.should == 1
-        ve = subject.validation_errors(@aru).first
-        ve.error_selector.should == {'taxon_concept_id' => @species.id, 'source_code' => 'W', 'country_of_origin' => 'PL'}
-      }
     end
 
     context "when W source and country of origin blank" do

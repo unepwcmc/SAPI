@@ -2,15 +2,10 @@
   <h1 title="<%= @taxon_concept.rank.name %>">
     <%= @taxon_concept.full_name %>
     <span>
-      <% if @taxon_concept.rank.name == Rank::SPECIES %>
-        <a href="/species#/taxon_concepts/<%= @taxon_concept.id %>/legal"
-          title="View this taxon concept in Species+" alt="link to this taxon concept in Species+">
-      <% else %>
-        <a href="/species#/taxon_concepts?taxonomy=<%= @taxon_concept.taxonomy.name.downcase %>&taxon_concept_query=<%= @taxon_concept.full_name %>"
-          title="View this taxon concept in Species+" alt="link to this taxon concept in Species+">
-      <% end %>
-          in Species+
-        </a>
+      <%= link_to 'in Species+', speciesplus_taxon_concept_url(@taxon_concept),
+        title: 'View in Species+',
+        alt: 'Link to Species+'
+      %>
     </span>
   </h1>
   <span class="pull-right">
@@ -148,5 +143,19 @@
   <li class="<%= if controller_name == "children" then "active" end%>">
     <%= link_to "Children", admin_taxon_concept_children_path(@taxon_concept) %>
   </li>
+
+  <li class="<%= if controller_name == "taxon_concept_comments" then "active" end%>">
+    <%= link_to admin_taxon_concept_comments_path(@taxon_concept) do %>
+      Notes
+      <% if @taxon_concept.has_comments? %>
+        <%= taxon_concept_internal_notes_popover_link %>
+      <% end %>
+    <% end %>
+  </li>
 </ul>
 <% end %>
+<div id="taxon_concept_internal_notes_popover" class="hidden">
+    <%= taxon_concept_internal_note_display(@taxon_concept.general_comment) %>
+    <%= taxon_concept_internal_note_display(@taxon_concept.nomenclature_comment) %>
+    <%= taxon_concept_internal_note_display(@taxon_concept.distribution_comment) %>
+</table>

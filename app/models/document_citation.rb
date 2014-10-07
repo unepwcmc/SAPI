@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: document_citations
+#
+#  id            :integer          not null, primary key
+#  document_id   :integer
+#  created_by_id :integer
+#  updated_by_id :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+
 class DocumentCitation < ActiveRecord::Base
   track_who_does_it
   attr_accessible :document_id, :stringy_taxon_concept_ids, :geo_entity_ids

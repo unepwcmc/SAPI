@@ -9,7 +9,7 @@ SAPI::Application.routes.draw do
   match 'about' => 'pages#about'
   match 'terms-of-use' => 'pages#terms_of_use'
   match 'eu_legislation' => 'pages#eu_legislation'
-  match 'activities' => 'activities#activities'
+  match 'activities(/:start_week)' => 'activities#activities', as: :activities
 
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
@@ -105,6 +105,8 @@ SAPI::Application.routes.draw do
       get :autocomplete, :on => :collection
       resources :children, :only => [:index]
       resources :taxon_relationships, :only => [:index, :create, :destroy]
+      resources :comments, only: [:index, :create, :update],
+        controller: :taxon_concept_comments
       resources :designations, :only => [] do
         resources :taxon_listing_changes, :as => :listing_changes
       end

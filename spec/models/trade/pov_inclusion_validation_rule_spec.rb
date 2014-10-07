@@ -33,6 +33,14 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       :iso_code2 => 'AR'
     )
   }
+  let(:xx){
+    create(
+      :geo_entity,
+      :geo_entity_type => trade_geo_entity_type,
+      :name => 'Unknown',
+      :iso_code2 => 'XX'
+    )
+  }
   before(:each) do
     genus = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Pecari')
@@ -66,10 +74,6 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       specify{
         subject.validation_errors(@aru).size.should == 1
       }
-      specify{
-        ve = subject.validation_errors(@aru).first
-        ve.error_selector.should == {'taxon_concept_id' => @species.id, 'country_of_origin' => nil, 'source_code' => 'W'}
-      }
     end
     context "when W source and country of origin blank and exporter doesn't match distribution (I)" do
       before(:each) do
@@ -92,11 +96,49 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       specify{
         subject.validation_errors(@aru).size.should == 1
       }
+    end
+    context "when W source and country XX" do
+      before(:each) do
+        @aru = build(:annual_report_upload, :point_of_view => 'I', :trading_country_id => argentina.id)
+        @aru.save(:validate => false)
+        sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
+        sandbox_klass.create(
+          :taxon_name => 'Pecari tajacu', :source_code => 'W',
+          :trading_partner => xx.iso_code2, :country_of_origin => nil
+        )
+        sandbox_klass.create(
+          :taxon_name => 'Pecari tajacu', :source_code => 'W',
+          :trading_partner => xx.iso_code2,
+          :country_of_origin => argentina.iso_code2
+        )
+      end
+      subject{
+        create_taxon_concept_exporter_validation
+      }
       specify{
-        ve = subject.validation_errors(@aru).first
-        ve.error_selector.should == {
-          'taxon_concept_id' => @species.id, 'country_of_origin' => nil,
-          'source_code' => 'W', 'trading_partner' => canada.iso_code2}
+        subject.validation_errors(@aru).should be_empty
+      }
+    end
+    context "when W source and country doesn't match distribution of higher taxa" do
+      before(:each) do
+        @aru = build(:annual_report_upload, :point_of_view => 'I', :trading_country_id => argentina.id)
+        @aru.save(:validate => false)
+        sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
+        sandbox_klass.create(
+          :taxon_name => 'Pecari', :source_code => 'W',
+          :trading_partner => canada.iso_code2, :country_of_origin => nil
+        )
+        sandbox_klass.create(
+          :taxon_name => 'Pecari', :source_code => 'W',
+          :trading_partner => canada.iso_code2,
+          :country_of_origin => canada.iso_code2
+        )
+      end
+      subject{
+        create_taxon_concept_exporter_validation
+      }
+      specify{
+        subject.validation_errors(@aru).should be_empty
       }
     end
     context "when invalid scope specified" do

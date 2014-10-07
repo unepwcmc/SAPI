@@ -81,12 +81,13 @@ module TaxonConceptHelper
 
   def admin_add_new_distribution_button
     admin_add_new_button(
-      :resource => 'distributions',
-      :href => new_admin_taxon_concept_distribution_url(@taxon_concept),
-      :name => 'Add new distribution location',
-      :remote => true,
-      :'data-toggle' => nil,
-      :role => nil
+      resource: 'distributions',
+      href: new_admin_taxon_concept_distribution_url(@taxon_concept),
+      name: 'Add new distribution location',
+      remote: true,
+      'data-toggle' => nil,
+      role: nil,
+      class: 'btn new-button pull-right'
     )
   end
 
@@ -172,5 +173,83 @@ module TaxonConceptHelper
   def excluded_taxon_concepts_tooltip(obj)
     obj.excluded_taxon_concepts.
       map(&:full_name).join(', ')
+  end
+
+  def taxon_concept_internal_notes_popover_link
+    content_tag(
+      :span, rel: 'popover', href: '#',
+      'data-original-title' => 'Internal notes',
+      'data-html' => true,
+      'data-trigger' => 'hover',
+      'data-placement' => 'left',
+      id: 'taxon_concept_internal_notes_popover_link'
+    ) do
+      comment_icon
+    end
+  end
+
+  def taxon_concept_internal_note_label(comment)
+    content_tag(:label) do
+      content_tag(:p, class: 'internal-notes-type') do
+        comment.comment_type + ' note'
+      end +
+      content_tag(:div, class: 'internal-notes-meta') do
+        updater = comment.try(:updater)
+        if updater
+          "Last updated by #{updater.try(:name)}"
+        else
+          ''
+        end
+      end +
+      content_tag(:div, class: 'internal-notes-meta') do
+        updated_at = comment.try(:updated_at).try(:strftime, "%d/%m/%y %H:%M")
+        if updated_at
+          "at #{updated_at}"
+        else
+          ''
+        end
+      end
+    end
+  end
+
+  def taxon_concept_internal_note_form(comment)
+    form_for [:admin, @taxon_concept, comment] do |f|
+      content_tag(:table, style:'width:100%') do
+        content_tag(:tr) do
+          content_tag(:td, style:'width:30%') do
+            taxon_concept_internal_note_label(comment)
+          end +
+          content_tag(:td) do
+            f.text_area(
+              :note,
+              rows: 4,
+              style:'width:100%'
+            ) +
+            f.hidden_field(:comment_type) +
+            f.submit('Update', class: 'btn btn-primary')
+          end
+        end
+      end
+    end
+  end
+
+  def taxon_concept_internal_note_display(comment)
+    return '' unless comment
+    content_tag(:table, style:'width:100%') do
+      content_tag(:tr) do
+        content_tag(:td, style:'width:30%') do
+          taxon_concept_internal_note_label(comment)
+        end +
+        content_tag(:td, comment.note)
+      end
+    end
+  end
+
+  def taxon_concept_internal_note_tab_display(comment)
+    if comment && comment.note.present?
+      content_tag(:div, {class: 'alert alert-info'}) do
+        taxon_concept_internal_note_display(comment)
+      end
+    end
   end
 end

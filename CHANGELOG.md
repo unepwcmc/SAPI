@@ -1,3 +1,19 @@
+### 0.8.5
+**Species+:**
+* improvements to the activity page
+
+**Species+ Admin:**
+* internal notes
+* fixes to E-library document bulk upload
+
+**CITES Trade Admin:**
+* skip distribution validations for higher taxa
+* skip distribution validations when source W and XX
+* interface bugfixes
+
+### 0.8.4 (2014-09-26)
+Bug-fix release (trade bulk update issue)
+
 ### 0.8.3 (2014-09-24)
 **Species+:**
 * choice of csv separator

@@ -8,8 +8,7 @@ class Admin::DocumentBatchesController < Admin::StandardAuthorizationController
       event_id: @event.try(:id),
       date: @event.try(:effective_at_formatted),
       language_id: @english.id,
-      is_public: false,
-      documents: [Document.new]
+      is_public: false
     )
   end
 
@@ -45,11 +44,8 @@ class Admin::DocumentBatchesController < Admin::StandardAuthorizationController
     params.require(:document_batch).permit(
       :event_id, :date, :language_id, :is_public,
       :documents_attributes => [
-        :type,
-        :filename,
-        :number,
-        :_destroy
-      ]
+        :type
+      ], :files => []
     )
   end
 

@@ -95,7 +95,6 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
         }
         specify{
           ve = subject.validation_errors(@aru).first
-          ve.error_selector.should == {'taxon_concept_id' => @species.id, 'appendix' => 'II', 'year' => '1996'}
           ve.error_message.should == 'taxon_name Loxodonta africana with appendix II with year 1996 is invalid'
         }
       end
@@ -113,7 +112,6 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
         }
         specify{
           ve = subject.validation_errors(@aru).first
-          ve.error_selector.should == {'taxon_concept_id' => @species.id, 'appendix' => 'N', 'year' => '1996'}
           ve.error_message.should == 'taxon_name Loxodonta africana with appendix N with year 1996 is invalid'
         }
       end

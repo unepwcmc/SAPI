@@ -19,8 +19,18 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   attr_accessible :valid_values_view
 
   def error_message(values_hash = nil)
-    scope_info = sanitized_scope.map do |scope_column, scope_value|
-      "#{scope_column} = #{scope_value}"
+    scope_info = sanitized_sandbox_scope.map do |scope_column, scope_def|
+      tmp = []
+      if scope_def['inclusion']
+        tmp << "#{scope_column} = #{scope_def['inclusion'].join(', ')}"
+      end
+      if scope_def['exclusion']
+        tmp << "#{scope_column} != #{scope_def['exclusion'].join(', ')}"
+      end
+      if scope_def['blank']
+        tmp << "#{scope_column} is empty"
+      end
+      tmp.join(' and ')
     end.compact.join(', ')
     info = column_names_for_matching.each_with_index.map do |cn|
       # for taxon concept validations output human readable taxon_name
@@ -36,14 +46,12 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
 
   def validation_errors(annual_report_upload)
     matching_records_grouped(annual_report_upload.sandbox.table_name).map do |mr|
-      error_selector = error_selector(mr, annual_report_upload.point_of_view)
       values_hash = Hash[column_names_for_display.map{ |cn| [cn, mr.send(cn)] }]
       Trade::ValidationError.new(
           :error_message => error_message(values_hash),
           :annual_report_upload_id => annual_report_upload.id,
           :validation_rule_id => self.id,
           :error_count => mr.error_count,
-          :error_selector => error_selector,
           :matching_records_ids => parse_pg_array(mr.matching_records_ids),
           :is_primary => self.is_primary
       )
@@ -51,16 +59,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   end
 
   def validation_errors_for_shipment(shipment)
-    shipment_in_scope = true
-    # check if shipment is in scope of this validation
-    shipments_scope.each do |scope_column, scope_value|
-      shipment_in_scope = false if shipment.send(scope_column) != scope_value
-    end
-    # make sure the validated fields are not blank
-    required_shipments_columns.each do |column|
-      shipment_in_scope = false if shipment.send(column).blank?
-    end
-    return nil unless shipment_in_scope
+    return nil unless shipment_in_scope?(shipment)
     # if it is, check if it has a match in valid values view
     v = Arel::Table.new(valid_values_view)
     arel_nodes = shipments_columns.map { |c| v[c].eq(shipment.send(c)) }
@@ -82,31 +81,6 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     else
       column_names
     end
-  end
-
-  # Returns a hash with column values to be used to select invalid rows.
-  # e.g.
-  # {
-  #    :taxon_name => 'Loxodonta africana',
-  #    :term_code => 'CAV'
-  #
-  # }
-  # Expects a single grouped matching record.
-  def error_selector(matching_record, point_of_view)
-    res = {}
-    column_names.each do |cn|
-      if cn == 'exporter' && point_of_view == 'I'
-        res['trading_partner'] = matching_record.send(cn)
-      elsif cn == 'importer' && point_of_view == 'E'
-        res['trading_partner'] = matching_record.send(cn)
-      elsif !['importer', 'exporter'].include?(cn)
-        res[cn] = matching_record.send(cn)
-      end
-    end
-    sanitized_scope.map do |scn, val|
-      res[scn] = val
-    end
-    res
   end
 
   # Returns matching records grouped by column_names to return the count of
@@ -132,13 +106,23 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     not_null_conds = not_null_nodes.shift
     not_null_nodes.each{ |n| not_null_conds = not_null_conds.and(n) }
     result = s.project('*').where(not_null_conds)
-    scope_nodes = sanitized_scope.map do |scope_column, scope_value|
-      s[scope_column].eq(scope_value)
-    end
-    scope_conds = scope_nodes.shift
-    scope_nodes.each{ |n| scope_conds = scope_conds.and(n) }
+    scope_nodes = sanitized_sandbox_scope.map do |scope_column, scope_def|
+      tmp = []
+      if scope_def['inclusion']
+        inclusion_nodes = scope_def['inclusion'].map{ |value| s[scope_column].eq(value) }
+        tmp << inclusion_nodes.inject(&:or)
+      end
+      if scope_def['exclusion']
+        exclusion_nodes = scope_def['exclusion'].map{ |value| s[scope_column].not_eq(value) }
+        tmp << exclusion_nodes.inject(&:or)
+      end
+      if scope_def['blank']
+        tmp << s[scope_column].eq(nil)
+      end
+      tmp
+    end.flatten
+    scope_conds = scope_nodes.inject(&:and)
     result = result.where(scope_conds) if scope_conds
-
     result
   end
 

@@ -20,6 +20,7 @@
 #  import_row_id              :integer
 #  created_by_id              :integer
 #  updated_by_id              :integer
+#  internal_notes             :text
 #
 
 class ListingChange < ActiveRecord::Base
@@ -29,7 +30,7 @@ class ListingChange < ActiveRecord::Base
     :party_listing_distribution_attributes, :inclusion_taxon_concept_id,
     :annotation_attributes, :hash_annotation_id,
     :event_id, :excluded_geo_entities_ids, :excluded_taxon_concepts_ids,
-    :created_by_id, :updated_by_id
+    :internal_notes, :created_by_id, :updated_by_id
   attr_accessor :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
 
   belongs_to :event

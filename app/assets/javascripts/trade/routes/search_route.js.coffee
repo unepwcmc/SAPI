@@ -7,4 +7,5 @@ Trade.SearchRoute = Trade.BeforeRoute.extend
       @controllerFor('units').load()
       @controllerFor('sources').load()
       @controllerFor('purposes').load()
+      @controllerFor('search').resetFilters()
     ])

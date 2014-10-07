@@ -67,6 +67,13 @@
   </div>
 
   <div class="control-group">
+    <label class="control-label">Internal notes</label>
+    <div class="controls">
+      <%= f.text_area :internal_notes, :class => 'quota', :value => @quota.internal_notes %>
+    </div>
+  </div>
+
+  <div class="control-group">
     <%= f.label :term_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.select :term_ids,

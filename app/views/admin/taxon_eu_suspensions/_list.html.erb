@@ -6,7 +6,6 @@
   <th>Term</th>
   <th>Source</th>
   <th>Notes</th>
-  <th>Internal notes</th>
   <th>Current</th>
   <th>Actions</th>
   <th>Info</th>
@@ -27,7 +26,6 @@
       <td><%= suspension.term && suspension.term.code %></td>
       <td><%= suspension.source && suspension.source.code %></td>
       <td><%= suspension.notes %></td>
-      <td><%= suspension.internal_notes %></td>
       <td><%= true_false_icon(suspension.is_current) %></td>
       <td>
         <%= link_to edit_icon,
@@ -38,7 +36,10 @@
           :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
         %>
       </td>
-      <td><%= tracking_info(suspension) %></td>
+      <td>
+        <%= tracking_info(suspension) %>
+        <%= internal_notes(suspension) %>
+      </td>
     </tr>
   <% end -%>
 </tbody>

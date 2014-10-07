@@ -1,0 +1,15 @@
+<table class="topn-species">
+  <thead><th><%= taxonomy %></th></thead>
+  <tbody>
+  <% topn_species.each do |t| -%>
+    <tr>
+      <td>
+        <%= link_to t.tc_full_name, speciesplus_taxon_concept_id_url(t.tc_id) %>
+      </td>
+      <td>
+        <%= t.number_of_visits %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

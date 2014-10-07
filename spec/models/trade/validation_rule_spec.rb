@@ -45,10 +45,6 @@ describe Trade::ValidationRule, :drops_tables => true do
         specify{
           subject.validation_errors(annual_report_upload).size.should == 1
         }
-        specify{
-          ve = subject.validation_errors(annual_report_upload).first
-          ve.error_selector.should == {'trading_partner' => nil}
-        }
       end
     end
   end
@@ -69,10 +65,6 @@ describe Trade::ValidationRule, :drops_tables => true do
         specify{
           subject.validation_errors(annual_report_upload).size.should == 1
         }
-        specify{
-          ve = subject.validation_errors(annual_report_upload).first
-          ve.error_selector.should == {'quantity' => ['www']}
-        }
       end
     end
   end
@@ -88,10 +80,6 @@ describe Trade::ValidationRule, :drops_tables => true do
         }
         specify{
           subject.validation_errors(annual_report_upload).size.should == 1
-        }
-        specify{
-          ve = subject.validation_errors(annual_report_upload).first
-          ve.error_selector.should == {'year' => ['33333']}
         }
       end
     end

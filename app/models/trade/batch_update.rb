@@ -13,8 +13,13 @@ class Trade::BatchUpdate
   end
 
   def execute(update_params)
-    @shipments.update_all(update_params)
-    DownloadsCache.clear_shipments
+    affected_shipments = nil
+    Trade::Shipment.transaction do
+      affected_shipments = @shipments.count
+      @shipments.update_all(update_params)
+      DownloadsCache.clear_shipments
+    end
+    affected_shipments
   end
 
 end
