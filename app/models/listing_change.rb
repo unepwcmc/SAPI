@@ -2,29 +2,28 @@
 #
 # Table name: listing_changes
 #
-#  id                            :integer          not null, primary key
-#  taxon_concept_id              :integer          not null
-#  species_listing_id            :integer
-#  change_type_id                :integer          not null
-#  annotation_id                 :integer
-#  hash_annotation_id            :integer
-#  effective_at                  :datetime         default(2012-09-21 07:32:20 UTC), not null
-#  is_current                    :boolean          default(FALSE), not null
-#  parent_id                     :integer
-#  inclusion_taxon_concept_id    :integer
-#  event_id                      :integer
-#  original_id                   :integer
-#  explicit_change               :boolean          default(TRUE)
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
-#  import_row_id                 :integer
-#  created_by_id                 :integer
-#  updated_by_id                 :integer
-#  internal_notes                :text
-#  nomenclature_note_en          :text
-#  nomenclature_note_es          :text
-#  nomenclature_note_fr          :text
-#  internal_nomenclature_note    :text
+#  id                         :integer          not null, primary key
+#  taxon_concept_id           :integer          not null
+#  species_listing_id         :integer
+#  change_type_id             :integer          not null
+#  annotation_id              :integer
+#  hash_annotation_id         :integer
+#  effective_at               :datetime         default(2012-09-21 07:32:20 UTC), not null
+#  is_current                 :boolean          default(FALSE), not null
+#  parent_id                  :integer
+#  inclusion_taxon_concept_id :integer
+#  event_id                   :integer
+#  original_id                :integer
+#  explicit_change            :boolean          default(TRUE)
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  import_row_id              :integer
+#  created_by_id              :integer
+#  updated_by_id              :integer
+#  nomenclature_note_en       :text
+#  nomenclature_note_es       :text
+#  nomenclature_note_fr       :text
+#  internal_notes             :text
 #
 
 class ListingChange < ActiveRecord::Base
@@ -35,7 +34,6 @@ class ListingChange < ActiveRecord::Base
     :annotation_attributes, :hash_annotation_id, :event_id, 
     :excluded_geo_entities_ids, :excluded_taxon_concepts_ids, :internal_notes,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-    :internal_nomenclature_note,
     :created_by_id, :updated_by_id
 
   attr_accessor :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
