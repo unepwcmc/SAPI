@@ -9,8 +9,7 @@ SAPI::Application.routes.draw do
   match 'about' => 'pages#about'
   match 'terms-of-use' => 'pages#terms_of_use'
   match 'eu_legislation' => 'pages#eu_legislation'
-  match 'activities' => 'activities#activities'
-  match 'activities/:start_week' => 'activities#activities', :as => :activities
+  match 'activities(/:start_week)' => 'activities#activities', as: :activities
 
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'

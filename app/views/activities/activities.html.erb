@@ -1,6 +1,6 @@
-<div id="chart"></div>
 <%= include_gon %>
-<p>Chart showing the number of searches and pageviews of species -- grouped by week.</p>
+<h2>Break down of user actions</h2>
+<p>Chart showing the number of searches and taxon concept page views grouped by week.</p>
 <div id="chart"></div>
 
 <script>
@@ -26,18 +26,15 @@
   });
 </script>
 
-<% if @weekly_topten.length > 0 %>
-<table>
-  <tr>
-    <th>Count</th><th>Species</th>
-  </tr>
-<% for entry in @weekly_topten %>
-  <tr>
-    <td><%= entry.count %></td><td><%= entry.species %></td>
-  </tr>
-<% end %>
-</table>
+<h2>Top taxa in Species+</h2>
+
+<% if @start_week %>
+  <p>Data for the week of <%= @start_week %></p>
 <% end %>
 
-<%= render template: 'activities/toptens_cms' %>
-<%= render template: 'activities/toptens_cites' %>
+<%= render partial: 'topn_species', locals: {
+  taxonomy: 'CITES', topn_species: @toptens_cites
+} %>
+<%= render partial: 'topn_species', locals: {
+  taxonomy: 'CMS', topn_species: @toptens_cms
+} %>
