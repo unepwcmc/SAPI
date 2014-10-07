@@ -2,15 +2,10 @@
   <h1 title="<%= @taxon_concept.rank.name %>">
     <%= @taxon_concept.full_name %>
     <span>
-      <% if @taxon_concept.rank.name == Rank::SPECIES %>
-        <a href="/species#/taxon_concepts/<%= @taxon_concept.id %>/legal"
-          title="View this taxon concept in Species+" alt="link to this taxon concept in Species+">
-      <% else %>
-        <a href="/species#/taxon_concepts?taxonomy=<%= @taxon_concept.taxonomy.name.downcase %>&taxon_concept_query=<%= @taxon_concept.full_name %>"
-          title="View this taxon concept in Species+" alt="link to this taxon concept in Species+">
-      <% end %>
-          in Species+
-        </a>
+      <%= link_to 'in Species+', speciesplus_taxon_concept_url(@taxon_concept),
+        title: 'View in Species+',
+        alt: 'Link to Species+'
+      %>
     </span>
   </h1>
   <span class="pull-right">
