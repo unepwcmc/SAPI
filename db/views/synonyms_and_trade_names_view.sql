@@ -24,9 +24,9 @@ SELECT
   taxonomies.name AS taxonomy_name,
   ARRAY_TO_STRING(
     ARRAY[
-      st.internal_general_note,
-      st.internal_nomenclature_note,
-      st.internal_distribution_note
+      general_note.note,
+      nomenclature_note.note,
+      distribution_note.note
     ],
     E'\n'
   ) AS internal_notes,
@@ -40,6 +40,18 @@ LEFT JOIN taxon_relationships
 ON taxon_relationships.other_taxon_concept_id = st.id
 LEFT JOIN taxon_concepts a
 ON taxon_relationships.taxon_concept_id = a.id
+LEFT JOIN  comments general_note
+  ON general_note.commentable_id = st.id
+  AND general_note.commentable_type = 'TaxonConcept'
+  AND general_note.comment_type = 'General'
+LEFT JOIN  comments nomenclature_note
+  ON nomenclature_note.commentable_id = st.id
+  AND nomenclature_note.commentable_type = 'TaxonConcept'
+  AND nomenclature_note.comment_type = 'Nomenclature'
+LEFT JOIN  comments distribution_note
+  ON distribution_note.commentable_id = st.id
+  AND distribution_note.commentable_type = 'TaxonConcept'
+  AND distribution_note.comment_type = 'Distribution'
 LEFT JOIN users uc
 ON st.created_by_id = uc.id
 LEFT JOIN users uu

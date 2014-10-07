@@ -12,9 +12,9 @@ SELECT
   taxonomies.name AS taxonomy_name,
   ARRAY_TO_STRING(
     ARRAY[
-      tc.internal_general_note,
-      tc.internal_nomenclature_note,
-      tc.internal_distribution_note
+      general_note.note,
+      nomenclature_note.note,
+      distribution_note.note
     ],
     E'\n'
   ) AS internal_notes,
@@ -27,6 +27,18 @@ JOIN taxonomies ON taxonomies.id = tc.taxonomy_id
 LEFT JOIN taxon_relationships tr1 ON tr1.taxon_concept_id = tc.id
 LEFT JOIN taxon_relationships tr2 ON tr2.other_taxon_concept_id = tc.id
 LEFT JOIN taxon_concepts children ON children.parent_id = tc.id
+LEFT JOIN  comments general_note
+  ON general_note.commentable_id = tc.id
+  AND general_note.commentable_type = 'TaxonConcept'
+  AND general_note.comment_type = 'General'
+LEFT JOIN  comments nomenclature_note
+  ON nomenclature_note.commentable_id = tc.id
+  AND nomenclature_note.commentable_type = 'TaxonConcept'
+  AND nomenclature_note.comment_type = 'Nomenclature'
+LEFT JOIN  comments distribution_note
+  ON distribution_note.commentable_id = tc.id
+  AND distribution_note.commentable_type = 'TaxonConcept'
+  AND distribution_note.comment_type = 'Distribution'
 LEFT JOIN users uc ON tc.created_by_id = uc.id
 LEFT JOIN users uu ON tc.updated_by_id = uu.id
 WHERE tc.parent_id IS NULL
