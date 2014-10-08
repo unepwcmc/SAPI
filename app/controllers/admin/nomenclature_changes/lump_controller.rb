@@ -2,15 +2,6 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
 
   steps *NomenclatureChange::Lump::STEPS
 
-  def create
-    @nomenclature_change = NomenclatureChange::Lump.new(:status => NomenclatureChange::NEW)
-    if @nomenclature_change.save
-      redirect_to wizard_path(steps.first, :nomenclature_change_id => @nomenclature_change.id)
-    else
-      redirect_to admin_nomenclature_changes_url, :alert => "Could not start a new nomenclature change"
-    end
-  end
-
   def show
     builder = NomenclatureChange::Lump::Constructor.new(@nomenclature_change)
     case step
@@ -55,6 +46,11 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
       end
     end
     render_wizard @nomenclature_change
+  end
+
+  private
+  def klass
+    NomenclatureChange::Lump
   end
 
 end

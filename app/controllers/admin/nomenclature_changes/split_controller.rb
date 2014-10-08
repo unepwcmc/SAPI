@@ -2,15 +2,6 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
 
   steps *NomenclatureChange::Split::STEPS
 
-  def create
-    @nomenclature_change = NomenclatureChange::Split.new(:status => NomenclatureChange::NEW)
-    if @nomenclature_change.save
-      redirect_to wizard_path(steps.first, :nomenclature_change_id => @nomenclature_change.id)
-    else
-      redirect_to admin_nomenclature_changes_url, :alert => "Could not start a new nomenclature change"
-    end
-  end
-
   def show
     builder = NomenclatureChange::Split::Constructor.new(@nomenclature_change)
     case step
@@ -57,6 +48,11 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       end
     end
     render_wizard @nomenclature_change
+  end
+
+  private
+  def klass
+    NomenclatureChange::Split
   end
 
 end
