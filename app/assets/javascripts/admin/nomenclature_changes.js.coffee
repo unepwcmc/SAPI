@@ -57,7 +57,6 @@ $(document).ready ->
         $(ac).removeAttr('data-name')
         $(ac).removeAttr('data-name-status')
       )
-    $('#secondary_output').val($(this).parent().attr('id'))
   )
 
   $(document).on('nested:fieldAdded', (event) ->
