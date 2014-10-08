@@ -229,7 +229,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                   taxon_concepts_mview.rank_name = 'SUBSPECIES'
                   OR taxon_concepts_mview.rank_name = 'VARIETY'
                 )
-                AND listing_changes_mview.auto_note IS NULL
+                AND listing_changes_mview.auto_note_en IS NULL
               )
             SQL
       )

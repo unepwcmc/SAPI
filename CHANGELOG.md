@@ -1,3 +1,6 @@
+### 0.8.6 (2014-10-08)
+* fixed issue in serializer
+
 ### 0.8.5
 **Species+:**
 * improvements to the activity page
