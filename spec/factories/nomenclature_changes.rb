@@ -8,11 +8,17 @@ FactoryGirl.define do
     factory :nomenclature_change_split, class: NomenclatureChange::Split do
       type 'NomenclatureChange::Split'
     end
-    factory :nomenclature_change_status_change, class: NomenclatureChange::StatusChange do
-      type 'NomenclatureChange::StatusChange'
-    end
     factory :nomenclature_change_lump, class: NomenclatureChange::Lump do
       type 'NomenclatureChange::Lump'
+    end
+    factory :nomenclature_change_status_swap, class: NomenclatureChange::StatusSwap do
+      type 'NomenclatureChange::StatusSwap'
+    end
+    factory :nomenclature_change_status_to_accepted, class: NomenclatureChange::StatusToAccepted do
+      type 'NomenclatureChange::StatusToAccepted'
+    end
+    factory :nomenclature_change_status_to_synonym, class: NomenclatureChange::StatusToSynonym do
+      type 'NomenclatureChange::StatusToSynonym'
     end
   end
 

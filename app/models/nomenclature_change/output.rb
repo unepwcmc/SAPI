@@ -134,7 +134,8 @@ class NomenclatureChange::Output < ActiveRecord::Base
   end
 
   def needs_public_note?
-    if nomenclature_change.kind_of?(NomenclatureChange::StatusChange) &&
+    if nomenclature_change.is_a?(NomenclatureChange::StatusToSynonym) ||
+      nomenclature_change.is_a?(NomenclatureChange::StatusSwap) &&
       new_name_status != 'A'
       false
     else
