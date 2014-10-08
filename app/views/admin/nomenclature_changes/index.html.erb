@@ -15,13 +15,33 @@
   </tr>
   <tr>
     <td>
-      <%= link_to admin_nomenclature_change_status_change_index_path(:nomenclature_change_id => :new),
+      <%= link_to admin_nomenclature_change_status_to_accepted_index_path(:nomenclature_change_id => :new),
         :method => :post do
       %>
-        <button class="btn btn-block">Status change</button>
+        <button class="btn btn-block">Change into an accepted name</button>
       <% end %>
     </td>
-    <td>Promote a taxon concept from a lower status to higher (e.g. S -> A, T -> S) or vice versa (A -> N, A -> S)</td>
+    <td>Change name status to accepted (e.g. N -> A, S -> A, T -> A)</td>
+  </tr>
+  <tr>
+    <td>
+      <%= link_to admin_nomenclature_change_status_to_synonym_index_path(:nomenclature_change_id => :new),
+        :method => :post do
+      %>
+        <button class="btn btn-block">Change into a synonym</button>
+      <% end %>
+    </td>
+    <td>Change the name status to synonym (e.g. A -> S, N -> S, T -> S)</td>
+  </tr>
+  <tr>
+    <td>
+      <%= link_to admin_nomenclature_change_status_swap_index_path(:nomenclature_change_id => :new),
+        :method => :post do
+      %>
+        <button class="btn btn-block">Swap between accepted name and synonym</button>
+      <% end %>
+    </td>
+    <td>Swap the name status of two taxon concepts</td>
   </tr>
   <tr>
     <td>
