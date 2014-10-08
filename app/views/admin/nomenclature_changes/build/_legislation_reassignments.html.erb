@@ -1,0 +1,12 @@
+<%= ff.fields_for :legislation_reassignments do |fff| %>
+  <div class="control-group">
+    <label class="control-label">
+      <%= fff.object.reassignable_type %>
+    </label>
+    <div class="controls">
+      <%= render partial: 'admin/nomenclature_changes/build/nomenclature_notes',
+        locals: {ff: fff}
+      %>
+    </div>
+  </div>
+<% end %>

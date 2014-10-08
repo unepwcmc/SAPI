@@ -1,11 +1,11 @@
-class NomenclatureChange::StatusChange::Processor
+class NomenclatureChange::StatusSwap::Processor
+  include NomenclatureChange::StatusChange::ProcessorHelpers
 
   def initialize(nc)
     @nc = nc
     @input = nc.input
     @primary_output = nc.primary_output
     @secondary_output = nc.secondary_output
-    @swap = @nc.is_swap?
     @primary_old_status = @primary_output.taxon_concept.name_status.dup
     @primary_new_status = @primary_output.new_name_status
     @secondary_old_status = @secondary_output && @secondary_output.taxon_concept.name_status.dup
@@ -22,9 +22,7 @@ class NomenclatureChange::StatusChange::Processor
       @primary_output
     end
     chain << NomenclatureChange::OutputTaxonConceptProcessor.new(@primary_output)
-    if @swap
-      chain << NomenclatureChange::OutputTaxonConceptProcessor.new(@secondary_output)
-    end
+    chain << NomenclatureChange::OutputTaxonConceptProcessor.new(@secondary_output)
 
     if @input && output
       # if input is not one of outputs, that means it only acts as a template
@@ -40,10 +38,10 @@ class NomenclatureChange::StatusChange::Processor
       end
     end
     chain << if @primary_output.new_name_status == 'A'
-      linked_names = @swap && @secondary_output ? [@secondary_output] : []
+      linked_names = @secondary_output ? [@secondary_output] : []
       NomenclatureChange::StatusUpgradeProcessor.new(@primary_output, linked_names)
     elsif @primary_output.new_name_status == 'S'
-      if @swap && @secondary_output
+      if @secondary_output
         NomenclatureChange::StatusUpgradeProcessor.new(@secondary_output, [@primary_output])
       else
         accepted_names = @secondary_output ? [@secondary_output] : []
@@ -51,21 +49,6 @@ class NomenclatureChange::StatusChange::Processor
       end
     end
     chain
-  end
-
-
-  # Runs the subprocessors chain
-  def run
-    Rails.logger.warn("[#{@nc.type}] BEGIN")
-    @subprocessors.each{ |processor| processor.run }
-    Rails.logger.warn("[#{@nc.type}] END")
-  end
-
-  # Generate a summary based on the subprocessors chain
-  def summary
-    result = []
-    @subprocessors.each{ |processor| result << processor.summary }
-    result.flatten(1)
   end
 
 end
