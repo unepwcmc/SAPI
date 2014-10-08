@@ -7,6 +7,15 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
     admin_nomenclature_changes_path
   end
 
+  def create
+    @nomenclature_change = klass.new(:status => NomenclatureChange::NEW)
+    if @nomenclature_change.save
+      redirect_to wizard_path(steps.first, :nomenclature_change_id => @nomenclature_change.id)
+    else
+      redirect_to admin_nomenclature_changes_url, :alert => "Could not start a new nomenclature change"
+    end
+  end
+
   private
 
   def set_nomenclature_change
@@ -27,6 +36,11 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
     else
       skip_step
     end
+  end
+
+  private
+  def klass
+    NomenclatureChange
   end
 
 end

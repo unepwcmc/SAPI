@@ -2,15 +2,6 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
 
   steps *NomenclatureChange::StatusChange::STEPS
 
-  def create
-    @nomenclature_change = NomenclatureChange::StatusChange.new(:status => NomenclatureChange::NEW)
-    if @nomenclature_change.save
-      redirect_to wizard_path(steps.first, :nomenclature_change_id => @nomenclature_change.id)
-    else
-      redirect_to admin_nomenclature_changes_url, :alert => "Could not start a new nomenclature change"
-    end
-  end
-
   def show
     builder = NomenclatureChange::StatusChange::Constructor.new(@nomenclature_change)
     case step
@@ -72,6 +63,11 @@ class Admin::NomenclatureChanges::StatusChangeController < Admin::NomenclatureCh
       set_taxonomy unless success
     end
     render_wizard @nomenclature_change
+  end
+
+  private
+  def klass
+    NomenclatureChange::StatusChange
   end
 
 end
