@@ -98,7 +98,8 @@ module Admin::NomenclatureChangesHelper
       )
       concat " from #{@nomenclature_change.primary_output.taxon_concept.name_status}"
       concat " to #{@nomenclature_change.primary_output.new_name_status}"
-      if @nomenclature_change.is_swap?
+      if @nomenclature_change.is_a?(NomenclatureChange::StatusSwap) &&
+        @nomenclature_change.secondary_output.taxon_concept
         concat ' (status swap with '
         concat link_to(
           @nomenclature_change.secondary_output.taxon_concept.full_name,
