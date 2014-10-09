@@ -3,11 +3,18 @@ h1 span{
   font-weight: normal;
 }
 
+
 .header {
   margin-bottom: 10px;
 
   h1 {
-    margin: 0;
+    margin: 0 0 15px;
+    &.cites_eu {
+      border-bottom: 5px solid #7EAC44;
+    }
+    &.cms {
+      border-bottom: 5px solid #1637D7;
+    }
   }
 }
 
