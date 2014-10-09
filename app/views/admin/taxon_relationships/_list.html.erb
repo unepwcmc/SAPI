@@ -8,14 +8,14 @@
   <% collection.each do |taxon_relationship| -%>
     <tr>
       <td>
-        <%= link_to taxon_relationship.taxon_concept.full_name, edit_admin_taxon_concept_path(taxon_relationship.taxon_concept) %>
+        <%= link_to taxon_relationship.taxon_concept.full_name, admin_taxon_concept_taxon_relationships_path(taxon_relationship.taxon_concept) %>
         (<%= link_to taxon_relationship.taxon_concept.taxonomy.name, admin_taxonomy_path(taxon_relationship.taxon_concept.taxonomy) %>)
       </td>
       <td>
         <%= taxon_relationship.taxon_relationship_type.name %>
       </td>
       <td>
-        <%= link_to taxon_relationship.other_taxon_concept.full_name, edit_admin_taxon_concept_path(taxon_relationship.other_taxon_concept) %>
+        <%= link_to taxon_relationship.other_taxon_concept.full_name, admin_taxon_concept_taxon_relationships_path(taxon_relationship.other_taxon_concept) %>
         (<%= link_to taxon_relationship.other_taxon_concept.taxonomy.name, admin_taxonomy_path(taxon_relationship.other_taxon_concept.taxonomy) %>)
       </td>
       <td>
