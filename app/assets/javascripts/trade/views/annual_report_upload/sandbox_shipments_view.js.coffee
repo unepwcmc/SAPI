@@ -45,7 +45,7 @@ Trade.SandboxShipmentsView = Ember.View.extend
     },
     {
       header: 'Origin Permit'
-      displayProperty: 'countryOfOriginPermit'
+      displayProperty: 'originPermit'
     },
     {
       header: 'Purpose'
