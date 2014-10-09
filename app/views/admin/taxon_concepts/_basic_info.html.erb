@@ -1,5 +1,5 @@
 <div class="row-fluid header">
-  <h1 title="<%= @taxon_concept.rank.name %>">
+  <h1 class="<%= @taxon_concept.taxonomy.name.downcase %>" title="<%= @taxon_concept.rank.name %>">
     <%= @taxon_concept.full_name %>
     <span>
       <%= link_to 'in Species+', speciesplus_taxon_concept_url(@taxon_concept),
