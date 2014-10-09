@@ -49,5 +49,41 @@ class CmsMappingManager
         mapping.save
       end
     end
+
+    # Finds CITES' taxon concepts that match the CMS Species or Subspecies and
+    # copies the distributions and distribution references from the CITES to the CMS taxon concept.
+    # It also creates a taxon_relationship of EQUAL_TO between both taxon concepts
+    def fill_cms_distributions
+      species = Rank.where(:name => Rank::SPECIES).first
+      subspecies = Rank.where(:name => Rank::SUBSPECIES).first
+      cms = Taxonomy.where(:name => Taxonomy::CMS).first
+      cites = Taxonomy.where(:name => Taxonomy::CITES_EU).first
+      equal_to = TaxonRelationshipType.where(:name => TaxonRelationshipType::EQUAL_TO).first
+      TaxonConcept.where(:rank_id => [species.id, subspecies.id],
+                         :taxonomy_id => cms.id).each do |taxon|
+        matching_cites_taxon = TaxonConcept.where(:rank_id => taxon.rank_id,
+                                                  :full_name => taxon.full_name,
+                                                  :author_year => taxon.author_year,
+                                                  :taxonomy_id => cites.id).first
+        next unless matching_cites_taxon
+        puts "found a match for #{taxon.full_name} #{taxon.id} matches #{matching_cites_taxon.id}"
+        matching_cites_taxon.distributions.each do |dist|
+          distribution = Distribution.find_or_initialize_by_taxon_concept_id_and_geo_entity_id(
+            taxon.id, dist.geo_entity_id)
+          if distribution.new_record?
+            distribution.tag_list = dist.tag_list
+            distribution.save
+          end
+          dist.distribution_references.each do |reference|
+            DistributionReference.find_or_create_by_distribution_id_and_reference_id(
+              distribution.id, reference.reference_id)
+          end
+        end
+        puts "creating taxon relationship"
+        TaxonRelationship.create(:taxon_concept_id => matching_cites_taxon.id,
+                                 :other_taxon_concept_id => taxon.id,
+                                 :taxon_relationship_type_id => equal_to.id)
+      end
+    end
   end
 end
