@@ -4,4 +4,5 @@ Allow: /about
 Allow: /terms-of-use
 Allow: /cites-trade
 Allow: /species
+Allow: /eu_legislation
 
