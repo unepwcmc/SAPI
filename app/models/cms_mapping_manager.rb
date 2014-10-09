@@ -70,10 +70,8 @@ class CmsMappingManager
         matching_cites_taxon.distributions.each do |dist|
           distribution = Distribution.find_or_initialize_by_taxon_concept_id_and_geo_entity_id(
             taxon.id, dist.geo_entity_id)
-          if distribution.new_record?
-            distribution.tag_list = dist.tag_list
-            distribution.save
-          end
+          distribution.tag_list = dist.tag_list
+          distribution.save
           dist.distribution_references.each do |reference|
             DistributionReference.find_or_create_by_distribution_id_and_reference_id(
               distribution.id, reference.reference_id)
