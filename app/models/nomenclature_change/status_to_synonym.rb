@@ -22,7 +22,7 @@
 class NomenclatureChange::StatusToSynonym < NomenclatureChange
   include NomenclatureChange::StatusChangeHelpers
   build_steps(
-    :primary_output, :relay, :notes, :legislation, :summary
+    :primary_output, :relay, :accepted_name, :notes, :legislation, :summary
   )
   validates :status, inclusion: {
     in: self.status_dict,
@@ -39,7 +39,8 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
   # we only need two outputs if we need a target for reassignments
   # (which happens when one of the outputs is an A / N name turning S)
   def required_secondary_output
-    if needs_to_relay_associations? && secondary_output.nil?
+    if (needs_to_relay_associations? || requires_accepted_name_assignment?) &&
+      secondary_output.nil?
       errors.add(:secondary_output, "Must have a secondary output")
       return false
     end

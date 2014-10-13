@@ -39,6 +39,9 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
     if needs_to_receive_associations? && (
       input.nil? || input.taxon_concept_id.blank?)
       build_input(taxon_concept_id: secondary_output.taxon_concept_id)
+    elsif needs_to_relay_associations? && (
+      input.nil? || input.taxon_concept_id.blank?)
+      build_input(taxon_concept_id: primary_output.taxon_concept_id)
     end
   end
 
