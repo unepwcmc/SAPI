@@ -17,7 +17,7 @@ module NomenclatureChange::StatusChange::ProcessorHelpers
       @input.taxon_concept
     )
     if transfer
-      NomenclatureChange::ReassignmentProcessor.new(@input, output)
+      NomenclatureChange::ReassignmentTransferProcessor.new(@input, output)
     else
       NomenclatureChange::ReassignmentCopyProcessor.new(@input, output)
     end
