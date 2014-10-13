@@ -74,14 +74,14 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
     end
   end
 
-  def status_change_from_to(output, lng)
+  def status_change_note(locale_key, output, lng)
     output_html = taxon_concept_html(
       output.display_full_name,
       output.display_rank_name
     )
     I18n.with_locale(lng) do
       I18n.translate(
-        'status_change.status_change_from_to',
+        "status_change.#{locale_key}",
         output_taxon: output_html,
         old_status: output.taxon_concept.name_status,
         new_status: output.new_name_status,
@@ -91,21 +91,12 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
     end
   end
 
+  def status_change_from_to(output, lng)
+    status_change_note('status_change_from_to', output, lng)
+  end
+
   def status_elevated_to_accepted_name(output, lng)
-    output_html = taxon_concept_html(
-      output.display_full_name,
-      output.display_rank_name
-    )
-    I18n.with_locale(lng) do
-      I18n.translate(
-        'status_change.status_elevated_to_accepted_name',
-        output_taxon: output_html,
-        old_status: output.taxon_concept.name_status,
-        new_status: output.new_name_status,
-        year: Date.today.year,
-        default: 'Translation missing'
-      )
-    end
+    status_change_note('status_elevated_to_accepted_name', output, lng)
   end
 
   def multi_lingual_public_output_note(output, event)
