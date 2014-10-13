@@ -31,7 +31,7 @@ class NomenclatureChange::Split::Processor
         # transfer the associations rather than copy them
         transfer = !input_is_one_of_outputs && (idx == (@outputs.length - 1))
         chain << if transfer
-          NomenclatureChange::ReassignmentProcessor.new(@input, output)
+          NomenclatureChange::ReassignmentTransferProcessor.new(@input, output)
         else
           NomenclatureChange::ReassignmentCopyProcessor.new(@input, output)
         end
