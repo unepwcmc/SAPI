@@ -56,6 +56,10 @@ class NomenclatureChange::Reassignment < ActiveRecord::Base
     note_with_resolved_placeholders(note_fr, input, output)
   end
 
+  def internal_note_with_resolved_placeholders(input, output)
+    note_with_resolved_placeholders(internal_note, input, output)
+  end
+
   private
 
   def note_with_resolved_placeholders(note, input, output)

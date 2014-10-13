@@ -1,42 +1,6 @@
-class NomenclatureChange::ReassignmentCopyProcessor
+class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::ReassignmentProcessor
 
-  def initialize(input, output)
-    @input = input
-    @output = output
-  end
-
-  def run
-    @input.reassignments.each do |reassignment|
-      process_reassignment(reassignment)
-    end
-  end
-
-  def process_reassignment(reassignment)
-    Rails.logger.debug("Processing #{reassignment.reassignable_type} reassignment from #{@input.taxon_concept.full_name}")
-    reassignment.reassignment_targets.select do |target|
-      @output.new_taxon_concept_id &&
-        @output.new_taxon_concept_id != @input.taxon_concept.id ||
-        @output.taxon_concept_id != @input.taxon_concept.id
-    end.each do |target|
-      if reassignment.reassignable_id.blank?
-        if reassignment.reassignable_type == 'Trade::Shipment'
-          new_taxon_concept = @output.taxon_concept || @output.new_taxon_concept
-          Trade::Shipment.update_all(
-            {taxon_concept_id: new_taxon_concept.id},
-            {taxon_concept_id: reassignment.input.taxon_concept_id}
-          )
-        else
-          @input.reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
-            process_copy_to_target(target, reassignable)
-          end
-        end
-      else
-        process_copy_to_target(target, reassignment.reassignable)
-      end
-    end
-  end
-
-  def process_copy_to_target(target, reassignable)
+  def process_reassignment_to_target(target, reassignable)
     new_taxon_concept = @output.taxon_concept || @output.new_taxon_concept
     Rails.logger.debug("Processing #{reassignable.class} #{reassignable.id} copy to #{new_taxon_concept.full_name}")
 
@@ -52,12 +16,7 @@ class NomenclatureChange::ReassignmentCopyProcessor
       if reassignable.kind_of? ListingChange ||
         reassignable.kind_of?(CitesSuspension) || reassignable.kind_of?(Quota) ||
         reassignable.kind_of?(EuSuspension) || reassignable.kind_of?(EuOpinion)
-        copied_object.nomenclature_note_en = (copied_object.nomenclature_note_en || '') +
-          target.reassignment.note_with_resolved_placeholders_en(@input, @output)
-        copied_object.nomenclature_note_es = (copied_object.nomenclature_note_es || '') +
-          target.reassignment.note_with_resolved_placeholders_es(@input, @output)
-        copied_object.nomenclature_note_fr = (copied_object.nomenclature_note_fr || '') +
-          target.reassignment.note_with_resolved_placeholders_fr(@input, @output)
+        copied_object.assign_attributes(notes(copied_object, target))
       end
       if reassignable.kind_of? Distribution
         build_distribution_associations(reassignable, copied_object)
