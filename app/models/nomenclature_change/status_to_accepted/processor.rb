@@ -16,21 +16,10 @@ class NomenclatureChange::StatusToAccepted::Processor
     output = @primary_output if @nc.needs_to_receive_associations?
     chain << NomenclatureChange::OutputTaxonConceptProcessor.new(@primary_output)
 
-    if @input && output
-      # if input is not one of outputs, that means it only acts as a template
-      # for associations and reassignment processor should copy rather than
-      # transfer associations
-      transfer = [@primary_output, @secondary_output].compact.map(&:taxon_concept).include?(
-        @input.taxon_concept
-      )
-      chain << if transfer
-        NomenclatureChange::ReassignmentProcessor.new(@input, output)
-      else
-        NomenclatureChange::ReassignmentCopyProcessor.new(@input, output)
-      end
-    end
+    chain << reassignment_processor(output)
+
     chain << NomenclatureChange::StatusUpgradeProcessor.new(@primary_output, [])
-    chain
+    chain.compact
   end
 
 end
