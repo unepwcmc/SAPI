@@ -13,6 +13,10 @@ class Admin::NomenclatureChanges::StatusToSynonymController < Admin::Nomenclatur
       skip_or_previous_step unless @nomenclature_change.needs_to_relay_associations?
       set_taxonomy
       builder.build_secondary_output
+    when :accepted_name
+      skip_or_previous_step unless @nomenclature_change.requires_accepted_name_assignment?
+      set_taxonomy
+      builder.build_secondary_output
     when :notes
       builder.build_output_notes
     when :legislation
@@ -38,7 +42,7 @@ class Admin::NomenclatureChanges::StatusToSynonymController < Admin::Nomenclatur
         set_events
         set_taxonomy
       end
-    when :relay
+    when :relay, :accepted_name
       set_taxonomy unless success
     end
     render_wizard @nomenclature_change
