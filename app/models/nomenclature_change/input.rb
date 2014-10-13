@@ -21,7 +21,6 @@ class NomenclatureChange::Input < ActiveRecord::Base
   track_who_does_it
   attr_accessible :nomenclature_change_id, :taxon_concept_id,
     :note_en, :note_es, :note_fr, :internal_note,
-    :created_by_id, :updated_by_id,
     :parent_reassignments_attributes,
     :name_reassignments_attributes,
     :distribution_reassignments_attributes,
