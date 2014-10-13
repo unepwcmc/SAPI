@@ -5,7 +5,7 @@
   <%= f.fields_for :secondary_output do |ff| %>
     <div class="control-group">
       <label class="control-label">Swap status with another <%= f.object.primary_output.new_name_status %> name:</label>
-      <div id="secondary_output" class="controls">
+      <div class="controls">
         <%= ff.text_field :taxon_concept_id, {
           :class => 'taxon-concept clear-others',
           :'data-name' => ff.object.taxon_concept.try(:full_name),
