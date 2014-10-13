@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe NomenclatureChange::ReassignmentProcessor do
+describe NomenclatureChange::ReassignmentTransferProcessor do
   include_context 'split_definitions'
   describe :run do
     let(:split){ split_with_input_and_output }
     let(:input){ split.input }
     let(:output){ split.outputs.first }
     let(:processor){
-      NomenclatureChange::ReassignmentProcessor.new(input, output)
+      NomenclatureChange::ReassignmentTransferProcessor.new(input, output)
     }
 
     context "when children" do

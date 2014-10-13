@@ -17,7 +17,7 @@ class NomenclatureChange::Lump::Processor
     end
     @inputs.each do |input|
       unless input.taxon_concept_id == @output.taxon_concept_id && !@output.will_create_taxon?
-        chain << NomenclatureChange::ReassignmentProcessor.new(input, @output)
+        chain << NomenclatureChange::ReassignmentTransferProcessor.new(input, @output)
         chain << NomenclatureChange::StatusDowngradeProcessor.new(input, [@output])
         chain << NomenclatureChange::InputTaxonConceptProcessor.new(input)
       end
