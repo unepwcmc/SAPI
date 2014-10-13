@@ -40,13 +40,9 @@ class NomenclatureChange::StatusSwap::Processor
     chain << if @primary_output.new_name_status == 'A'
       linked_names = @secondary_output ? [@secondary_output] : []
       NomenclatureChange::StatusUpgradeProcessor.new(@primary_output, linked_names)
-    elsif @primary_output.new_name_status == 'S'
-      if @secondary_output
-        NomenclatureChange::StatusUpgradeProcessor.new(@secondary_output, [@primary_output])
-      else
-        accepted_names = @secondary_output ? [@secondary_output] : []
-        NomenclatureChange::StatusDowngradeProcessor.new(@primary_output, accepted_names)
-      end
+    else
+      accepted_names = @secondary_output ? [@secondary_output] : []
+      NomenclatureChange::StatusDowngradeProcessor.new(@primary_output, accepted_names)
     end
     chain
   end
