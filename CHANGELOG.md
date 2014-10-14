@@ -1,3 +1,16 @@
+### 0.8.7 (2014-10-15)
+**Species+:**
+* link to EU legislation page
+
+**Species+ Admin:**
+* CITES / CMS taxa mapping
+
+**CITES Trade Admin:**
+* fix upload issue for files with a great many permit numbers
+
+**General:**
+* task to trim down / sanitize the database for use by collaborators
+
 ### 0.8.6 (2014-10-08)
 * fixed issue in serializer
 
