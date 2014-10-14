@@ -32,9 +32,9 @@ namespace :db do
     puts 'Dropping sandboxes'
     ActiveRecord::Base.connection.execute 'SELECT * FROM drop_trade_sandboxes()'
     puts 'Truncating annual reports'
-    ActiveRecord::Base.connection.execute 'TRUNCATE trade_annual_report_uploads CASCADE'
+    ActiveRecord::Base.connection.execute 'DELETE FROM trade_annual_report_uploads'
     puts 'Truncating permits'
-    ActiveRecord::Base.connection.execute 'TRUNCATE trade_permits CASCADE'
+    ActiveRecord::Base.connection.execute 'TRUNCATE trade_permits'
   end
 
   task :trim_listing_changes => :environment do
