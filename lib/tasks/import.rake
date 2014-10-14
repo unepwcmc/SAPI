@@ -1,5 +1,9 @@
 namespace :import do
 
+  task :drop_import_tables => :environment do
+    ActiveRecord::Base.connection.execute 'SELECT * FROM drop_import_tables()'
+  end
+
   namespace :cleaned do
     task :species => :environment do
       Rake::Task["import:species"].invoke(
