@@ -183,12 +183,27 @@ Drops all trade_sandbox_n tables. Used in specs only, you need to know what
 you''re doing. If you''re looking to drop all sandboxes in the live system,
 use the rake db:drop_sandboxes task instead.';
 
-CREATE OR REPLACE FUNCTION refresh_trade_sandbox_views() RETURNS void
+CREATE OR REPLACE FUNCTION drop_trade_sandbox_views() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  DECLARE
+    current_view_name TEXT;
+  BEGIN
+    FOR current_view_name IN SELECT table_name FROM information_schema.tables
+    WHERE table_name LIKE 'trade_sandbox%_view'
+      AND table_type = 'VIEW'
+    LOOP
+      EXECUTE 'DROP VIEW IF EXISTS ' || current_view_name || ' CASCADE';
+    END LOOP;
+    RETURN;
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION create_trade_sandbox_views() RETURNS void
   LANGUAGE plpgsql
   AS $$
   DECLARE
     current_table_name TEXT;
-    current_view_name TEXT;
     aru_id INT;
   BEGIN
     FOR current_table_name IN SELECT table_name FROM information_schema.tables
@@ -198,12 +213,21 @@ CREATE OR REPLACE FUNCTION refresh_trade_sandbox_views() RETURNS void
     LOOP
       aru_id := SUBSTRING(current_table_name, E'trade_sandbox_(\\\\d+)')::INT;
       IF aru_id IS NULL THEN
-        RAISE WARNING 'Unable to determine annual report upload id from %', current_table_name;
+  RAISE WARNING 'Unable to determine annual report upload id from %', current_table_name;
+      ELSE
+  PERFORM create_trade_sandbox_view(current_table_name, aru_id);
       END IF;
-      current_view_name := current_table_name || '_view';
-      EXECUTE 'DROP VIEW IF EXISTS ' || current_view_name || ' CASCADE';
-      PERFORM create_trade_sandbox_view(current_table_name, aru_id);
     END LOOP;
+    RETURN;
+  END;
+  $$;
+
+CREATE OR REPLACE FUNCTION refresh_trade_sandbox_views() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  BEGIN
+    PERFORM drop_trade_sandbox_views();
+    PERFORM create_trade_sandbox_views();
     RETURN;
   END;
   $$;
