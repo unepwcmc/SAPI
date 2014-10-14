@@ -71,6 +71,8 @@ end
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
 group :staging, :production do
+  gem 'exception_notification', :git => 'https://github.com/smartinez87/exception_notification.git'
+  gem 'slack-notifier'
 end
 
 group :production do
@@ -117,9 +119,6 @@ group :test do
   gem 'simplecov', :require => false
   gem 'coveralls', :require => false
 end
-
-gem 'exception_notification', :git => 'https://github.com/smartinez87/exception_notification.git'
-gem 'slack-notifier'
 
 gem 'rake', '~> 10.0.3'
 
