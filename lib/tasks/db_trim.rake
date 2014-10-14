@@ -11,7 +11,8 @@ namespace :db do
     'db:trim_eu_decisions',
     'db:trim_users',
     'import:drop_import_tables',
-    'db:migrate:rebuild'
+    'db:migrate:rebuild',
+    'db:drop_temporary_tables'
   ]
 
   task :trim_trade => :environment do
@@ -68,8 +69,6 @@ namespace :db do
     SQL
     puts 'Deleting old listing changes'
     ActiveRecord::Base.connection.execute sql
-    puts 'Dropping temporary tables'
-    ActiveRecord::Base.connection.execute 'SELECT * FROM drop_eu_lc_mviews()'
   end
 
   task :trim_trade_restrictions => :environment do
@@ -116,6 +115,11 @@ namespace :db do
         name = 'user ' || users.id,
         email = 'user.' || users.id || '@test.org'
     SQL
+  end
+
+  task :drop_temporary_tables => :environment do
+    puts 'Dropping temporary tables'
+    ActiveRecord::Base.connection.execute 'SELECT * FROM drop_eu_lc_mviews()'
   end
 
 end
