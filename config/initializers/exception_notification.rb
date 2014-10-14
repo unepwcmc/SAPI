@@ -9,9 +9,9 @@ ExceptionNotification.configure do |config|
 
   # Adds a condition to decide when an exception must be ignored or not.
   # The ignore_if method can be invoked multiple times to add extra conditions.
-  # config.ignore_if do |exception, options|
-  #   not Rails.env.production?
-  # end
+  config.ignore_if do |exception, options|
+    not Rails.env.production? || Rails.env.staging?
+  end
 
   # Notifiers =================================================================
 
@@ -40,13 +40,13 @@ ExceptionNotification.configure do |config|
   #   :url => 'http://example.com:5555/hubot/path',
   #   :http_method => :post
   # }
- 
+
   secrets = YAML.load(File.open('config/secrets.yml'))
 
   config.add_notifier :slack, {
     :team => "wcmc",
     :token => secrets["slack_exception_notification_token"],
     :channel => "#speciesplus",
-    :username => "TheTormentingBotOfSpeciesPlus"
+    :username => "TheTormentingBotOfSpeciesPlus-#{Rails.env}"
   }
 end
