@@ -16,8 +16,9 @@ namespace :db do
   ]
 
   task :trim_trade => :environment do
-    puts 'Deleting pre-2010 shipments'
-    ActiveRecord::Base.connection.execute 'DELETE FROM trade_shipments WHERE year < 2010'
+    puts 'Deleting old shipments'
+    year = Date.today.year - 5
+    ActiveRecord::Base.connection.execute "DELETE FROM trade_shipments WHERE year <= #{year}"
     puts 'Clearing permit and annual report data'
     ActiveRecord::Base.connection.execute 'UPDATE trade_shipments SET
         import_permit_number = NULL,
