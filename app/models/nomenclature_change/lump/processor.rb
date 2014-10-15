@@ -2,9 +2,13 @@ class NomenclatureChange::Lump::Processor
 
   def initialize(nc)
     @nc = nc
-    @inputs = nc.inputs
-    @output = nc.output
+    initialize_inputs_and_outputs
     @subprocessors = prepare_chain
+  end
+
+  def initialize_inputs_and_outputs
+    @inputs = @nc.inputs
+    @output = @nc.output
   end
 
   # Constructs an array of subprocessors which will be run in sequence
@@ -12,9 +16,6 @@ class NomenclatureChange::Lump::Processor
   def prepare_chain
     chain = []
     chain << NomenclatureChange::OutputTaxonConceptProcessor.new(@output)
-    if @output.will_create_taxon? && ['A', 'N'].include?(@output.name_status)
-      chain << NomenclatureChange::StatusDowngradeProcessor.new(@output)
-    end
     @inputs.each do |input|
       unless input.taxon_concept_id == @output.taxon_concept_id && !@output.will_create_taxon?
         chain << NomenclatureChange::ReassignmentTransferProcessor.new(input, @output)
