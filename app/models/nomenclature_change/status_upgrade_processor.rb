@@ -1,76 +1,62 @@
-class NomenclatureChange::StatusUpgradeProcessor
-
-  def initialize(input_or_output, linked_names = [])
-    @input_or_output = input_or_output
-    @linked_names = linked_names
-    @old_status = if @input_or_output.kind_of? NomenclatureChange::Output
-      @input_or_output.name_status.dup
-    else
-      @input_or_output.taxon_concept.name_status.dup
-    end
-  end
+class NomenclatureChange::StatusUpgradeProcessor < NomenclatureChange::StatusChangeProcessor
 
   def run
     Rails.logger.debug "#{@input_or_output.taxon_concept.full_name} status upgrade from #{@old_status}"
+    @linked_names = @linked_inputs_or_outputs.map do |an|
+      an.new_taxon_concept || an.taxon_concept
+    end.compact
     unless @input_or_output.taxon_concept.name_status == 'A'
       @input_or_output.taxon_concept.update_column(:name_status, 'A')
     end
-
     if @old_status == 'S'
-      # if was S and now is A
-      # remove has_synonym associations
-      @input_or_output.taxon_concept.inverse_synonym_relationships.
-        includes(:taxon_concept).each do |rel|
-        Rails.logger.debug "Removing HAS_SYNONYM relationship with #{rel.taxon_concept.full_name}"
-        rel.destroy
-      end
-      has_synonym_rel_type = TaxonRelationshipType.
-        find_by_name(TaxonRelationshipType::HAS_SYNONYM)
-      # set input_or_input_or_output as accepted name of synonyms
-      @linked_names.each do |linked_name|
-        @input_or_output.taxon_concept.synonym_relationships << TaxonRelationship.new(
-          :taxon_relationship_type_id => has_synonym_rel_type.id,
-          :other_taxon_concept_id => linked_name.taxon_concept.id
-        )
-      end
-      Rails.logger.debug "Updating shipments where reported taxon concept = #{@input_or_output.taxon_concept.full_name} to have taxon concept = #{@input_or_output.taxon_concept.full_name}"
-      Trade::Shipment.update_all(
-        {taxon_concept_id: @input_or_output.taxon_concept_id},
-        {reported_taxon_concept_id: @input_or_output.taxon_concept_id}
-      )
+      run_s_to_a
     elsif @old_status == 'T'
-      # if was T and now is A
-      # remove has_trade_name associations
-      @input_or_output.taxon_concept.inverse_trade_name_relationships.
-        includes(:taxon_concept).each do |rel|
-        Rails.logger.debug "Removing HAS_TRADE_NAME relationship with #{rel.taxon_concept.full_name}"
-        rel.destroy
-      end
-      has_trade_name_rel_type = TaxonRelationshipType.
-        find_by_name(TaxonRelationshipType::HAS_TRADE_NAME)
-      # set input_or_input_or_output as accepted name of trade_names
-      @linked_names.each do |linked_name|
-        @input_or_output.taxon_concept.synonym_relationships << TaxonRelationship.new(
-          :taxon_relationship_type_id => has_trade_name_rel_type.id,
-          :other_taxon_concept_id => linked_name.taxon_concept.id
-        )
-      end
-      Rails.logger.debug "Updating shipments where reported taxon concept = #{@input_or_output.taxon_concept.full_name} to have taxon concept = #{@input_or_output.taxon_concept.full_name}"
-      Trade::Shipment.update_all(
-        {taxon_concept_id: @input_or_output.taxon_concept_id},
-        {reported_taxon_concept_id: @input_or_output.taxon_concept_id}
-      )
+      run_t_to_a
     end
   end
 
-  def summary
-    txt = "#{@input_or_output.taxon_concept.full_name} will be promoted to accepted name"
-    unless @linked_names.empty?
-      [
-        txt + " with the following linked names:",
-        @linked_names.map(&:taxon_concept).map(&:full_name)
-      ]
-    end
+  private
+
+  def summary_line
+    "#{@input_or_output.taxon_concept.full_name} will be promoted to accepted name"
+  end
+
+  def summary_line_long
+    summary_line + " with the following linked names:"
+  end
+
+  def run_s_to_a
+    # if was S and now is A
+    # remove has_synonym associations
+    destroy_relationships(
+      @input_or_output.taxon_concept.inverse_synonym_relationships
+    )
+    rel_type = TaxonRelationshipType.
+      find_by_name(TaxonRelationshipType::HAS_SYNONYM)
+    # set input_or_input_or_output as accepted name of synonyms
+    create_relationships(@input_or_output.taxon_concept, rel_type)
+    Rails.logger.debug "Updating shipments where reported taxon concept = #{@input_or_output.taxon_concept.full_name} to have taxon concept = #{@input_or_output.taxon_concept.full_name}"
+    Trade::Shipment.update_all(
+      {taxon_concept_id: @input_or_output.taxon_concept_id},
+      {reported_taxon_concept_id: @input_or_output.taxon_concept_id}
+    )
+  end
+
+  def run_t_to_a
+    # if was T and now is A
+    # remove has_trade_name associations
+    destroy_relationships(
+      @input_or_output.taxon_concept.inverse_trade_name_relationships
+    )
+    rel_type = TaxonRelationshipType.
+      find_by_name(TaxonRelationshipType::HAS_TRADE_NAME)
+    # set input_or_input_or_output as accepted name of trade_names
+    create_relationships(@input_or_output.taxon_concept, rel_type)
+    Rails.logger.debug "Updating shipments where reported taxon concept = #{@input_or_output.taxon_concept.full_name} to have taxon concept = #{@input_or_output.taxon_concept.full_name}"
+    Trade::Shipment.update_all(
+      {taxon_concept_id: @input_or_output.taxon_concept_id},
+      {reported_taxon_concept_id: @input_or_output.taxon_concept_id}
+    )
   end
 
 end
