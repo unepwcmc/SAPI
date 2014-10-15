@@ -2,9 +2,13 @@ class NomenclatureChange::Split::Processor
 
   def initialize(nc)
     @nc = nc
-    @input = nc.input
-    @outputs = nc.outputs
+    initialize_inputs_and_outputs
     @subprocessors = prepare_chain
+  end
+
+  def initialize_inputs_and_outputs
+    @input = @nc.input
+    @outputs = @nc.outputs
   end
 
   # Constructs an array of subprocessors which will be run in sequence
