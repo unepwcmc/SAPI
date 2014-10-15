@@ -3,10 +3,14 @@ class NomenclatureChange::StatusToSynonym::Processor
 
   def initialize(nc)
     @nc = nc
-    @input = nc.input
-    @primary_output = nc.primary_output
-    @secondary_output = nc.secondary_output
+    initialize_inputs_and_outputs
     @subprocessors = prepare_chain
+  end
+
+  def initialize_inputs_and_outputs
+    @input = @nc.input
+    @primary_output = @nc.primary_output
+    @secondary_output = @nc.secondary_output
   end
 
   # Constructs an array of subprocessors which will be run in sequence
@@ -18,7 +22,6 @@ class NomenclatureChange::StatusToSynonym::Processor
 
     chain << reassignment_processor(output)
 
-    # TODO this might need to be an explicit setting
     accepted_names = @secondary_output ? [@secondary_output] : []
     chain << NomenclatureChange::StatusDowngradeProcessor.new(@primary_output, accepted_names)
     chain.compact
