@@ -14,14 +14,14 @@ describe NomenclatureChange::StatusSwap::Constructor do
       specify{ expect(status_change.primary_output).not_to be_nil }
     end
     context "when previously primary output in place" do
-      let(:status_change){ status_downgrade_with_swap }
+      let(:status_change){ a_to_s_with_swap }
       specify{ expect(status_change.primary_output).to eq(@old_output) }
     end
   end
 
   describe :build_secondary_output do
     context :downgrade do
-      let(:status_change){ status_downgrade_with_primary_output }
+      let(:status_change){ a_to_s_with_primary_output }
       before(:each) do
         @old_output = status_change.secondary_output
         constructor.build_secondary_output
@@ -30,7 +30,7 @@ describe NomenclatureChange::StatusSwap::Constructor do
         specify{ expect(status_change.secondary_output).not_to be_nil }
       end
       context "when previously secondary output in place" do
-        let(:status_change){ status_downgrade_with_swap }
+        let(:status_change){ a_to_s_with_swap }
         specify{ expect(status_change.secondary_output).to eq(@old_output) }
       end
     end
@@ -44,7 +44,7 @@ describe NomenclatureChange::StatusSwap::Constructor do
       @old_secondary_output_note = secondary_output.note_en
       constructor.build_output_notes
     end
-    let(:status_change){ status_downgrade_with_swap }
+    let(:status_change){ a_to_s_with_swap }
     context "when previously no notes in place" do
       specify{ expect(primary_output.internal_note).not_to be_blank }
       specify{ expect(secondary_output.note_en).not_to be_blank }

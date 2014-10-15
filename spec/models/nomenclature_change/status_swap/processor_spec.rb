@@ -22,7 +22,7 @@ describe NomenclatureChange::StatusSwap::Processor do
 
   describe :run do
     context "from accepted name" do
-      let(:status_change){ status_downgrade_with_swap }
+      let(:status_change){ a_to_s_with_swap }
       before(:each){
         @shipment = create(:shipment,
           taxon_concept: primary_output_taxon_concept,
@@ -36,7 +36,7 @@ describe NomenclatureChange::StatusSwap::Processor do
     end
     context "from synonym" do
       let(:output_species){ secondary_output_taxon_concept }
-      let(:status_change){ status_upgrade_with_swap }
+      let(:status_change){ s_to_a_with_swap }
       before(:each){
         @shipment = create(:shipment,
           taxon_concept: accepted_name,
@@ -53,7 +53,7 @@ describe NomenclatureChange::StatusSwap::Processor do
 
 
   describe :summary do
-    let(:status_change){ status_downgrade_with_input_and_secondary_output }
+    let(:status_change){ a_to_s_with_input_and_secondary_output }
     specify { expect(processor.summary).to be_kind_of(Array) }
   end
 end
