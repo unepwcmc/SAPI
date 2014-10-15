@@ -16,7 +16,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
     end
     context :swap do
       before(:each) do
-        @status_change = status_upgrade_with_swap
+        @status_change = s_to_a_with_swap
       end
       it 'renders the swap template' do
         get :show, id: :swap, nomenclature_change_id: @status_change.id
@@ -25,7 +25,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
     end
     context :notes do
       before(:each) do
-        @status_change = status_upgrade_with_swap
+        @status_change = s_to_a_with_swap
       end
       it 'renders the notes template' do
         get :show, id: :notes, nomenclature_change_id: @status_change.id
@@ -34,7 +34,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
     end
     context :reassignments do
       before(:each) do
-        @status_change = status_upgrade_with_swap
+        @status_change = s_to_a_with_swap
       end
       context "when legislation present" do
         before(:each) do
@@ -56,7 +56,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
     end
     context :summary do
       before(:each) do
-        @status_change = status_upgrade_with_swap
+        @status_change = s_to_a_with_swap
       end
       it 'renders the summary template' do
         get :show, id: :summary, nomenclature_change_id: @status_change.id
