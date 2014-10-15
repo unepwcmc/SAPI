@@ -6,7 +6,7 @@ describe NomenclatureChange::StatusToAccepted::Constructor do
   let(:constructor){ NomenclatureChange::StatusToAccepted::Constructor.new(status_change) }
 
   describe :build_input do
-    let(:status_change){ status_upgrade_with_primary_output }
+    let(:status_change){ s_to_a_with_primary_output }
     before(:each) do
       @old_input = status_change.input
       constructor.build_input
@@ -15,13 +15,13 @@ describe NomenclatureChange::StatusToAccepted::Constructor do
       specify{ expect(status_change.input).not_to be_nil }
     end
     context "when previously input in place" do
-      let(:status_change){ status_upgrade_with_input }
+      let(:status_change){ s_to_a_with_input }
       specify{ expect(status_change.input).to eq(@old_input) }
     end
   end
 
   context "reassignments" do
-    let(:nc){ status_upgrade_with_input }
+    let(:nc){ s_to_a_with_input }
     let(:status_change){ nc }
     let(:input){ nc.input }
     describe :build_parent_reassignments do

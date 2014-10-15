@@ -12,7 +12,7 @@ describe NomenclatureChange::OutputTaxonConceptProcessor do
       processor.run
     end
     context "when output is existing taxon" do
-      let(:primary_output){ status_downgrade_with_input_and_secondary_output.primary_output }
+      let(:primary_output){ a_to_s_with_input_and_secondary_output.primary_output }
       specify{ expect(primary_output.new_taxon_concept).to be_nil }
     end
   end
