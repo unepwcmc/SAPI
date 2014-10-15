@@ -16,7 +16,7 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
     end
     context :relay do
       before(:each) do
-        @status_change = status_downgrade_with_primary_output
+        @status_change = a_to_s_with_primary_output
       end
       it 'renders the relay template' do
         get :show, id: :relay, nomenclature_change_id: @status_change.id
@@ -25,7 +25,7 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
     end
     context :notes do
       before(:each) do
-        @status_change = status_downgrade_with_primary_output
+        @status_change = a_to_s_with_primary_output
       end
       it 'renders the notes template' do
         get :show, id: :notes, nomenclature_change_id: @status_change.id
@@ -34,7 +34,7 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
     end
     context :reassignments do
       before(:each) do
-        @status_change = status_downgrade_with_input_and_secondary_output
+        @status_change = a_to_s_with_input_and_secondary_output
       end
       context "when legislation present" do
         before(:each) do
@@ -56,7 +56,7 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
     end
     context :summary do
       before(:each) do
-        @status_change = status_downgrade_with_input_and_secondary_output
+        @status_change = a_to_s_with_input_and_secondary_output
       end
       it 'renders the summary template' do
         get :show, id: :summary, nomenclature_change_id: @status_change.id
