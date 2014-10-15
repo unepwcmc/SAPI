@@ -3,13 +3,14 @@ class NomenclatureChange::StatusSwap::Processor
 
   def initialize(nc)
     @nc = nc
-    @input = nc.input
-    @primary_output = nc.primary_output
-    @secondary_output = nc.secondary_output
-    @primary_old_status = @primary_output.taxon_concept.name_status.dup
-    @primary_new_status = @primary_output.new_name_status
-    @secondary_old_status = @secondary_output && @secondary_output.taxon_concept.name_status.dup
+    initialize_inputs_and_outputs
     @subprocessors = prepare_chain
+  end
+
+  def initialize_inputs_and_outputs
+    @input = @nc.input
+    @primary_output = @nc.primary_output
+    @secondary_output = @nc.secondary_output
   end
 
   # Constructs an array of subprocessors which will be run in sequence
