@@ -71,7 +71,8 @@ end
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
 group :staging, :production do
-  gem 'exception_notification', '~>4.0'
+  gem 'exception_notification', :git => 'https://github.com/smartinez87/exception_notification.git'
+  gem 'slack-notifier'
 end
 
 group :production do
@@ -91,7 +92,6 @@ group :development do
   gem "guard-bundler"
   gem 'annotate', ">=2.5.0"
   gem 'sextant'
-  gem 'debugger'
   # Deploy with Capistrano
   gem 'capistrano'
   gem 'capistrano-ext'

@@ -2,6 +2,7 @@ User-Agent: *
 Disallow: /
 Allow: /about
 Allow: /terms-of-use
-Allow: /cites-trade
+Allow: /cites_trade
 Allow: /species
+Allow: /eu_legislation
 

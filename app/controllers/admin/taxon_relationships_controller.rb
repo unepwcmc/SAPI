@@ -7,7 +7,7 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
 
   def index
     index! do
-      @taxonomies = Taxonomy.order(:name). #for Inter-taxonomic relationships
+      @form_taxonomies = Taxonomy.order(:name). #for Inter-taxonomic relationships
         where('id <> ?', @taxon_concept.taxonomy_id)
       @inverse_taxon_relationships = TaxonRelationship.
         where(:other_taxon_concept_id => @taxon_concept.id,
