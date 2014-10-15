@@ -84,7 +84,7 @@ Trade.SearchResultsView = Ember.View.extend
     },
     {
       header: 'Origin Permit'
-      displayProperty: 'countryOfOriginPermitNumber'
+      displayProperty: 'originPermitNumber'
     },
     {
       header: 'Legacy ID'
