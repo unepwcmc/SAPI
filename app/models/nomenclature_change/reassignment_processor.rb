@@ -61,4 +61,11 @@ class NomenclatureChange::ReassignmentProcessor
     }
   end
 
+  def summary
+    [
+      summary_line,
+      NomenclatureChange::ReassignmentSummarizer.new(@input, @output).summary
+    ]
+  end
+
 end
