@@ -33,7 +33,7 @@ describe NomenclatureChange::StatusToAccepted::Processor do
   describe :run do
     context "from synonym" do
       let(:output_species){ secondary_output_taxon_concept }
-      let(:status_upgrade_with_input){
+      let(:s_to_a_with_input){
         create(:nomenclature_change_status_to_accepted,
           primary_output_attributes: {
             is_primary_output: true,
@@ -44,7 +44,7 @@ describe NomenclatureChange::StatusToAccepted::Processor do
           status: NomenclatureChange::StatusToAccepted::RECEIVE
         ).reload
       }
-      let(:status_change){ status_upgrade_with_input }
+      let(:status_change){ s_to_a_with_input }
       before(:each){
         @shipment = create(:shipment,
           taxon_concept: accepted_name,
@@ -60,7 +60,7 @@ describe NomenclatureChange::StatusToAccepted::Processor do
     end
     context "from trade name" do
       let(:output_species){ secondary_output_taxon_concept }
-      let(:status_upgrade_with_input){
+      let(:s_to_a_with_input){
         create(:nomenclature_change_status_to_accepted,
           primary_output_attributes: {
             is_primary_output: true,
@@ -71,7 +71,7 @@ describe NomenclatureChange::StatusToAccepted::Processor do
           status: NomenclatureChange::StatusToAccepted::RECEIVE
         ).reload
       }
-      let(:status_change){ status_upgrade_with_input }
+      let(:status_change){ s_to_a_with_input }
       before(:each){
         @shipment = create(:shipment,
           taxon_concept: accepted_name,

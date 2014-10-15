@@ -3,28 +3,6 @@ require 'spec_helper'
 describe NomenclatureChange::StatusToSynonym::Processor do
   include_context 'status_change_definitions'
 
-  let(:accepted_name){ create_cites_eu_species }
-
-  let(:trade_name){
-    tc = create_cites_eu_species(name_status: 'T')
-    create(:taxon_relationship,
-      taxon_concept: accepted_name,
-      other_taxon_concept: tc,
-      taxon_relationship_type: trade_name_relationship_type
-    )
-    tc
-  }
-
-  let(:synonym){
-    tc = create_cites_eu_species(name_status: 'S')
-    create(:taxon_relationship,
-      taxon_concept: accepted_name,
-      other_taxon_concept: tc,
-      taxon_relationship_type: synonym_relationship_type
-    )
-    tc
-  }
-
   before(:each){ synonym_relationship_type }
   let(:processor){ NomenclatureChange::StatusToSynonym::Processor.new(status_change) }
   let(:primary_output_taxon_concept){ status_change.primary_output.taxon_concept }
@@ -32,7 +10,7 @@ describe NomenclatureChange::StatusToSynonym::Processor do
 
   describe :run do
     context "from accepted name" do
-      let(:status_change){ status_downgrade_with_input_and_secondary_output }
+      let(:status_change){ a_to_s_with_input_and_secondary_output }
       before(:each){
         @shipment = create(:shipment,
           taxon_concept: primary_output_taxon_concept,
@@ -48,7 +26,7 @@ describe NomenclatureChange::StatusToSynonym::Processor do
     end
     context "from trade name" do
       let(:input_species){ trade_name }
-      let(:status_change){ status_downgrade_with_primary_output }
+      let(:status_change){ t_to_s_with_primary_and_secondary_output }
       before(:each){
         @shipment = create(:shipment,
           taxon_concept: accepted_name,
