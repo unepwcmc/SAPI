@@ -9,6 +9,9 @@ class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::Nomenclatu
       set_events
       set_taxonomy
       builder.build_primary_output
+    when :parent
+      skip_or_previous_step unless @nomenclature_change.needs_to_set_parent?
+      set_taxonomy
     when :receive
       skip_or_previous_step unless @nomenclature_change.needs_to_receive_associations?
       set_taxonomy
@@ -39,7 +42,7 @@ class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::Nomenclatu
         set_events
         set_taxonomy
       end
-    when :receive
+    when :parent, :receive
       set_taxonomy unless success
     end
     render_wizard @nomenclature_change
