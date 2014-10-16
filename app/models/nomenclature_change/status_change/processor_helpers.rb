@@ -1,12 +1,5 @@
 module NomenclatureChange::StatusChange::ProcessorHelpers
 
-  # Runs the subprocessors chain
-  def run
-    Rails.logger.warn("[#{@nc.type}] BEGIN")
-    @subprocessors.each{ |processor| processor.run }
-    Rails.logger.warn("[#{@nc.type}] END")
-  end
-
   def reassignment_processor(output)
     return nil unless @input && output
 

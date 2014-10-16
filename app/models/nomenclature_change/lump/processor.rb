@@ -1,15 +1,4 @@
-class NomenclatureChange::Lump::Processor
-
-  def initialize(nc)
-    @nc = nc
-    initialize_inputs_and_outputs
-    @subprocessors = prepare_chain
-  end
-
-  def initialize_inputs_and_outputs
-    @inputs = @nc.inputs
-    @output = @nc.output
-  end
+class NomenclatureChange::Lump::Processor < NomenclatureChange::Processor
 
   # Constructs an array of subprocessors which will be run in sequence
   # A subprocessor needs to respond to #run
@@ -26,13 +15,6 @@ class NomenclatureChange::Lump::Processor
     chain
   end
 
-  # Runs the subprocessors chain
-  def run
-    Rails.logger.warn("[#{@nc.type}] BEGIN")
-    @subprocessors.each{ |processor| processor.run }
-    Rails.logger.warn("[#{@nc.type}] END")
-  end
-
   # Generate a summary based on the subprocessors chain
   def summary
     result = [[
@@ -41,6 +23,13 @@ class NomenclatureChange::Lump::Processor
     ]]
     @subprocessors.each{ |processor| result << processor.summary }
     result.flatten(1)
+  end
+
+  private
+
+  def initialize_inputs_and_outputs
+    @inputs = @nc.inputs
+    @output = @nc.output
   end
 
 end
