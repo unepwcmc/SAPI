@@ -36,11 +36,11 @@ class NomenclatureChange::OutputTaxonConceptProcessor
         res << "#{@output.taxon_concept.full_name} will be turned into a synonym of #{@output.display_full_name}"
       end
     else
-      if @output.new_rank
+      if @output.new_rank && @output.new_rank_id != @output.rank_id
         res << "#{@output.taxon_concept.full_name} rank changed from #{@output.taxon_concept.rank.name} to #{@output.new_rank.name}"
       end
       if @output.new_parent
-        res << "#{@output.taxon_concept.full_name} parent changed from #{@output.taxon_concept.parent.full_name} to #{@output.new_parent.full_name}"
+        res << "#{@output.taxon_concept.full_name} parent changed from #{@output.taxon_concept.parent.try(:full_name)} to #{@output.new_parent.full_name}"
       end
       if @output.new_name_status.present?
         res << "#{@output.taxon_concept.full_name} name status changed from #{@output.taxon_concept.name_status} to #{@output.new_name_status}"

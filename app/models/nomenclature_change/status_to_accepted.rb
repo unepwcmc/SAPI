@@ -16,24 +16,41 @@
 class NomenclatureChange::StatusToAccepted < NomenclatureChange
   include NomenclatureChange::StatusChangeHelpers
   build_steps(
-    :primary_output, :receive, :notes, :legislation, :summary
+    :primary_output, :parent, :receive, :notes, :legislation, :summary
   )
   validates :status, inclusion: {
     in: self.status_dict,
     message: "%{value} is not a valid status"
   }
-  before_validation :ensure_new_name_status, if: :primary_output?
+  before_validation :set_output_name_status, if: :primary_output_or_submitting?
+  before_validation :set_output_rank_id, if: :primary_output_or_submitting?
+  before_validation :set_output_parent_id, if: :primary_output_or_submitting?
 
-  def ensure_new_name_status
+  def set_output_name_status
     primary_output && primary_output.new_name_status = 'A'
   end
 
+  def set_output_rank_id
+    primary_output && primary_output.taxon_concept &&
+      primary_output.new_rank_id = primary_output.taxon_concept.rank_id
+  end
+
+  def set_output_parent_id
+    return true unless needs_to_set_parent?
+    primary_output && primary_output.taxon_concept &&
+      primary_output.new_parent_id = primary_output.taxon_concept.parent_id
+  end
+
   def needs_to_receive_associations?
-    ['S', 'T'].include?(primary_output.try(:name_status))
+    primary_output.try(:name_status) == 'S'
   end
 
   def needs_to_relay_associations?
     false
+  end
+
+  def needs_to_set_parent?
+    ['S', 'T'].include? primary_output.try(:name_status)
   end
 
   def build_auto_reassignments
