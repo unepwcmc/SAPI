@@ -20,6 +20,7 @@
           :class => 'taxon-concept',
           :'data-name' => ff.object.taxon_concept.try(:full_name),
           :'data-taxonomy-id' => @taxonomy.id,
+          :'data-name-status' => ff.object.taxon_concept.try(:name_status),
           :'data-name-status-filter' => ['A', 'N', 'S', 'T'].to_json
         } %>
         <%= ff.link_to_remove 'Remove output' %>
