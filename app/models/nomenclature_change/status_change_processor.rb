@@ -14,7 +14,7 @@ class NomenclatureChange::StatusChangeProcessor
     unless @linked_inputs_or_outputs.empty?
       [
         summary_line_long,
-        @linked_inputs_or_outputs.each do |l|
+        @linked_inputs_or_outputs.map do |l|
           if l.taxon_concept
             l.taxon_concept.full_name
           elsif l.new_taxon_concept
