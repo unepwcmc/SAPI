@@ -1,5 +1,15 @@
 module NomenclatureChange::ConstructorHelpers
 
+  def _build_single_target(reassignment, output)
+    reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
+  end
+
+  def _build_multiple_targets(reassignment, outputs)
+    outputs.each do |output|
+      reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
+    end
+  end
+
   def taxon_concept_html(full_name, rank_name)
     if [Rank::GENUS, Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY].
       include?(rank_name)
@@ -63,14 +73,9 @@ module NomenclatureChange::ConstructorHelpers
       reassignment = NomenclatureChange::NameReassignment.new(
         reassignment_attrs
       )
-      outputs.each do |output|
-        unless reassignment.reassignable_type == 'TaxonRelationship' &&
-          output.taxon_concept_id == reassignment.reassignable.other_taxon_concept_id
-          reassignment.reassignment_targets.build(
-            nomenclature_change_output_id: output.id
-          )
-        end
-      end
+      _build_multiple_targets(reassignment, outputs.select do |o|
+        o.taxon_concept_id != reassignment.reassignable.other_taxon_concept_id
+      end)
     end
     reassignment
   end
@@ -112,9 +117,7 @@ module NomenclatureChange::ConstructorHelpers
       _build_eu_opinions_reassignments(input, outputs)
     ].compact
     input.legislation_reassignments.each do |reassignment|
-      outputs.each do |output|
-        reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
-      end
+      _build_multiple_targets(reassignment, outputs)
     end
   end
 
@@ -159,32 +162,28 @@ module NomenclatureChange::ConstructorHelpers
     )
   end
 
+  # reassignable_type is a string
+  def _build_reassignable_type_reassignment(reassignable_type)
+    NomenclatureChange::Reassignment.new(
+      reassignable_type: reassignable_type,
+      type: 'NomenclatureChange::Reassignment'
+    )
+  end
+
   def _build_common_names_reassignments(input, outputs)
-    unless input.reassignments.where(
-      reassignable_type: 'TaxonCommon'
-    ).first || input.taxon_concept.taxon_commons.limit(1).count == 0
-      reassignment = NomenclatureChange::Reassignment.new(
-        reassignable_type: 'TaxonCommon',
-        type: 'NomenclatureChange::Reassignment'
-      )
-      outputs.each do |output|
-        reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
-      end
+    unless input.taxon_commons_reassignments.first ||
+      input.taxon_concept.taxon_commons.limit(1).count == 0
+      reassignment = _build_reassignable_type_reassignment('TaxonCommon')
+      _build_multiple_targets(reassignment, outputs)
       input.reassignments << reassignment
     end
   end
 
   def _build_references_reassignments(input, outputs)
-    unless input.reassignments.where(
-      reassignable_type: 'TaxonConceptReference'
-    ).first || input.taxon_concept.taxon_concept_references.limit(1).count == 0
-      reassignment = NomenclatureChange::Reassignment.new(
-        reassignable_type: 'TaxonConceptReference',
-        type: 'NomenclatureChange::Reassignment'
-      )
-      outputs.each do |output|
-        reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
-      end
+    unless input.taxon_concept_references_reassignments.first ||
+      input.taxon_concept.taxon_concept_references.limit(1).count == 0
+      reassignment = _build_reassignable_type_reassignment('TaxonConceptReference')
+      _build_multiple_targets(reassignment, outputs)
       input.reassignments << reassignment
     end
   end
@@ -193,11 +192,8 @@ module NomenclatureChange::ConstructorHelpers
     unless input.reassignments.where(
       reassignable_type: 'Trade::Shipment'
     ).first || input.taxon_concept.shipments.limit(1).count == 0
-      reassignment = NomenclatureChange::Reassignment.new(
-        reassignable_type: 'Trade::Shipment',
-        type: 'NomenclatureChange::Reassignment'
-      )
-      reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
+      reassignment = _build_reassignable_type_reassignment('Trade::Shipment')
+      _build_single_targets(reassignment, output)
       input.reassignments << reassignment
     end
   end
