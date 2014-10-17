@@ -5,17 +5,21 @@ module Admin::NomenclatureChangesHelper
       html: {class: 'form-horizontal'} do |f|
       html = error_messages_for(@nomenclature_change)
       html += capture { block.yield(f) } if block_given?
-      html += content_tag(:div, class: 'clearfix') do
-        concat link_to('Cancel', admin_nomenclature_changes_path,
-          class: 'pull-left btn btn-link')
-        concat ' '
-        concat f.submit(submit_label, class: 'pull-right btn btn-primary')
-        concat ' '
-        concat link_to('Previous ', previous_wizard_path(:back => true),
-          class: 'pull-right btn btn-link')
-      end
+      html += nomenclature_change_form_buttons(f, submit_label)
       html += progress_bar
       html.html_safe
+    end
+  end
+
+  def nomenclature_change_form_buttons(f, submit_label)
+    content_tag(:div, class: 'clearfix') do
+      concat link_to('Cancel', admin_nomenclature_changes_path,
+        class: 'pull-left btn btn-link')
+      concat ' '
+      concat f.submit(submit_label, class: 'pull-right btn btn-primary')
+      concat ' '
+      concat link_to('Previous ', previous_wizard_path(:back => true),
+        class: 'pull-right btn btn-link')
     end
   end
 
@@ -44,22 +48,27 @@ module Admin::NomenclatureChangesHelper
         @nomenclature_change.input.taxon_concept.full_name,
         admin_taxon_concept_names_path(@nomenclature_change.input.taxon_concept)
       )
-      unless @nomenclature_change.outputs.empty?
-        concat ' into '
-        total = @nomenclature_change.outputs.size
-        @nomenclature_change.outputs.each_with_index do |output, idx|
-          if output.taxon_concept && !output.new_full_name
-            concat link_to(
-              output.taxon_concept.full_name,
-              admin_taxon_concept_names_path(output.taxon_concept)
-            )
-          else
-            concat output.display_full_name
-          end
-          concat ', ' if idx < (total - 1)
-        end
-      end
+      concat split_outputs_blurb
     end
+  end
+
+  def split_outputs_blurb
+    return '' if @nomenclature_change.outputs.empty? ||
+      @nomenclature_change.outputs.map(&:display_full_name).compact.empty?
+    html = ' into '
+    total = @nomenclature_change.outputs.size
+    @nomenclature_change.outputs.each_with_index do |output, idx|
+      if output.taxon_concept && !output.new_full_name
+        html += link_to(
+          output.taxon_concept.full_name,
+          admin_taxon_concept_names_path(output.taxon_concept)
+        )
+      else
+        html += content_tag(:span, output.display_full_name)
+      end
+      html += ', ' if idx < (total - 1)
+    end
+    html.html_safe
   end
 
   def lump_blurb
@@ -75,18 +84,23 @@ module Admin::NomenclatureChangesHelper
         end
         concat ', ' if idx < (total - 1)
       end
-      if @nomenclature_change.output
-        concat ' into '
-        if @nomenclature_change.output.taxon_concept && !@nomenclature_change.output.new_full_name
-          concat link_to(
-            @nomenclature_change.output.taxon_concept.full_name,
-            admin_taxon_concept_names_path(@nomenclature_change.output.taxon_concept)
-          )
-        else
-          concat @nomenclature_change.output.display_full_name
-        end
-      end
+      concat lump_outputs_blurb
     end
+  end
+
+  def lump_outputs_blurb
+    return '' if @nomenclature_change.output.nil? ||
+      @nomenclature_change.output.display_full_name.blank?
+    html = ' into '
+    if @nomenclature_change.output.taxon_concept && !@nomenclature_change.output.new_full_name
+      html += link_to(
+        @nomenclature_change.output.taxon_concept.full_name,
+        admin_taxon_concept_names_path(@nomenclature_change.output.taxon_concept)
+      )
+    else
+      html += content_tag(:span, @nomenclature_change.output.display_full_name)
+    end
+    html.html_safe
   end
 
   def status_change_blurb
@@ -98,16 +112,20 @@ module Admin::NomenclatureChangesHelper
       )
       concat " from #{@nomenclature_change.primary_output.taxon_concept.name_status}"
       concat " to #{@nomenclature_change.primary_output.new_name_status}"
-      if @nomenclature_change.is_a?(NomenclatureChange::StatusSwap) &&
-        @nomenclature_change.secondary_output.taxon_concept
-        concat ' (status swap with '
-        concat link_to(
-          @nomenclature_change.secondary_output.taxon_concept.full_name,
-          admin_taxon_concept_names_path(@nomenclature_change.secondary_output.taxon_concept)
-        )
-        concat ')'
-      end
+      concat status_change_swap_blurb
     end
+  end
+
+  def status_change_swap_blurb
+    return '' unless @nomenclature_change.is_a?(NomenclatureChange::StatusSwap) &&
+      @nomenclature_change.secondary_output.taxon_concept
+    html = ' (status swap with '
+    html += link_to(
+      @nomenclature_change.secondary_output.taxon_concept.full_name,
+      admin_taxon_concept_names_path(@nomenclature_change.secondary_output.taxon_concept)
+    )
+    html += ')'
+    html.html_safe
   end
 
 end
