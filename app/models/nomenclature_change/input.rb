@@ -61,4 +61,33 @@ class NomenclatureChange::Input < ActiveRecord::Base
     )
   end
 
+  def listing_changes_reassignments
+    legislation_reassignments.where(
+      reassignable_type: 'ListingChange'
+    )
+  end
+
+  def cites_suspensions_reassignments
+    legislation_reassignments.where(
+      reassignable_type: 'CitesSuspension'
+    )
+  end
+
+  def quotas_reassignments
+    legislation_reassignments.where(
+      reassignable_type: 'Quota'
+    )
+  end
+
+  def eu_suspensions_reassignments
+    legislation_reassignments.where(
+      reassignable_type: 'EuSuspension'
+    )
+  end
+
+  def eu_opinions_reassignments
+    legislation_reassignments.where(
+      reassignable_type: 'EuOpinion'
+    )
+  end
 end
