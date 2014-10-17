@@ -87,7 +87,7 @@ describe Admin::NomenclatureChanges::StatusToAcceptedController do
           }
         }, nomenclature_change_id: @status_change.id, id: 'primary_output'
         response.should redirect_to(admin_nomenclature_change_status_to_accepted_url(
-          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'receive'
+          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'parent'
         ))
       end
     end
