@@ -119,73 +119,44 @@ module NomenclatureChange::ConstructorHelpers
   end
 
   def _build_listing_changes_reassignments(input, outputs)
-    input.legislation_reassignments.where(
-      reassignable_type: 'ListingChange'
-    ).first || input.taxon_concept.listing_changes.limit(1).count > 0 &&
+    input.listing_changes_reassignments.first || input.taxon_concept.listing_changes.limit(1).count > 0 &&
     # multi_lingual_listing_change_note defined in constructor
-    (note = multi_lingual_listing_change_note) &&
-    NomenclatureChange::LegislationReassignment.new(
-      reassignable_type: 'ListingChange',
-      note_en: note[:en],
-      note_es: note[:es],
-      note_fr: note[:fr]
-    ) || nil
+    _build_legislation_type_reassignment('ListingChange', multi_lingual_listing_change_note) || nil
   end
 
   def _build_cites_suspensions_reassignments(input, outputs)
-    input.legislation_reassignments.where(
-      reassignable_type: 'CitesSuspension'
-    ).first || input.taxon_concept.cites_suspensions.limit(1).count > 0 &&
+    input.cites_suspensions_reassignments.first || input.taxon_concept.cites_suspensions.limit(1).count > 0 &&
     # multi_lingual_suspension_note defined in constructor
-    (note = multi_lingual_suspension_note) &&
-    NomenclatureChange::LegislationReassignment.new(
-      reassignable_type: 'CitesSuspension',
-      note_en: note[:en],
-      note_es: note[:es],
-      note_fr: note[:fr]
-    ) || nil
+    _build_legislation_type_reassignment('CitesSuspension', multi_lingual_suspension_note) || nil
   end
 
   def _build_cites_quotas_reassignments(input, outputs)
-    input.legislation_reassignments.where(
-      reassignable_type: 'Quota'
-    ).first || input.taxon_concept.quotas.limit(1).count > 0 &&
+    input.quotas_reassignments.first || input.taxon_concept.quotas.limit(1).count > 0 &&
     # multi_lingual_quota_note defined in constructor
-    (note = multi_lingual_quota_note) &&
-    NomenclatureChange::LegislationReassignment.new(
-      reassignable_type: 'Quota',
-      note_en: note[:en],
-      note_es: note[:es],
-      note_fr: note[:fr]
-    ) || nil
+    _build_legislation_type_reassignment('Quota', multi_lingual_quota_note) || nil
   end
 
   def _build_eu_suspensions_reassignments(input, outputs)
-    input.legislation_reassignments.where(
-      reassignable_type: 'EuSuspension'
-    ).first || input.taxon_concept.eu_suspensions.limit(1).count > 0 &&
+    input.eu_suspensions_reassignments.first || input.taxon_concept.eu_suspensions.limit(1).count > 0 &&
     # multi_lingual_suspension_note defined in constructor
-    (note = multi_lingual_suspension_note) &&
-    NomenclatureChange::LegislationReassignment.new(
-      reassignable_type: 'EuSuspension',
-      note_en: note[:en],
-      note_es: note[:es],
-      note_fr: note[:fr]
-    ) || nil
+    _build_legislation_type_reassignment('EuSuspension', multi_lingual_suspension_note) || nil
   end
 
   def _build_eu_opinions_reassignments(input, outputs)
-    input.legislation_reassignments.where(
-      reassignable_type: 'EuOpinion'
-    ).first || input.taxon_concept.eu_opinions.limit(1).count > 0 &&
+    input.eu_opinions_reassignments.first || input.taxon_concept.eu_opinions.limit(1).count > 0 &&
     # multi_lingual_opinion_note defined in constructor
-    (note = multi_lingual_opinion_note) &&
+    _build_legislation_type_reassignment('EuOpinion', multi_lingual_opinion_note) || nil
+  end
+
+  # legislation_type is a string
+  def _build_legislation_type_reassignment(legislation_type, public_note, internal_note=nil)
     NomenclatureChange::LegislationReassignment.new(
-      reassignable_type: 'EuOpinion',
-      note_en: note[:en],
-      note_es: note[:es],
-      note_fr: note[:fr]
-    ) || nil
+      reassignable_type: legislation_type,
+      note_en: public_note[:en],
+      note_es: public_note[:es],
+      note_fr: public_note[:fr],
+      internal_note: internal_note
+    )
   end
 
   def _build_common_names_reassignments(input, outputs)
