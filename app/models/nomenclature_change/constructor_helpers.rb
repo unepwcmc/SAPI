@@ -13,21 +13,25 @@ module NomenclatureChange::ConstructorHelpers
   def _build_parent_reassignments(input, output, children = nil)
     children ||= input.taxon_concept.children
     input.parent_reassignments = children.map do |child|
-      reassignment_attrs = {
-        reassignable_type: 'TaxonConcept',
-        reassignable_id: child.id
-      }
-      reassignment = input.parent_reassignments.where(
-        reassignment_attrs
-      ).first
-      unless reassignment
-        reassignment = NomenclatureChange::ParentReassignment.new(
-          reassignment_attrs
-        )
-        reassignment.build_reassignment_target(nomenclature_change_output_id: output.id)
-      end
-      reassignment
+      _build_parent_reassignment(child, input, output)
     end
+  end
+
+  def _build_parent_reassignment(child, input, output)
+    reassignment_attrs = {
+      reassignable_type: 'TaxonConcept',
+      reassignable_id: child.id
+    }
+    reassignment = input.parent_reassignments.where(
+      reassignment_attrs
+    ).first
+    unless reassignment
+      reassignment = NomenclatureChange::ParentReassignment.new(
+        reassignment_attrs
+      )
+      reassignment.build_reassignment_target(nomenclature_change_output_id: output.id)
+    end
+    reassignment
   end
 
   def _build_names_reassignments(input, outputs, all_outputs = nil)
@@ -43,117 +47,145 @@ module NomenclatureChange::ConstructorHelpers
       end
     end
     input.name_reassignments = relationships.map do |relationship|
-      reassignment_attrs = {
-        reassignable_type: 'TaxonRelationship',
-        reassignable_id: relationship.id
-      }
-      reassignment = input.name_reassignments.where(
+      _build_name_reassignment(relationship, input, outputs)
+    end
+  end
+
+  def _build_name_reassignment(relationship, input, outputs)
+    reassignment_attrs = {
+      reassignable_type: 'TaxonRelationship',
+      reassignable_id: relationship.id
+    }
+    reassignment = input.name_reassignments.where(
+      reassignment_attrs
+    ).first
+    if reassignment.nil?
+      reassignment = NomenclatureChange::NameReassignment.new(
         reassignment_attrs
-      ).first
-      if reassignment.nil?
-        reassignment = NomenclatureChange::NameReassignment.new(
-          reassignment_attrs
-        )
-        outputs.each do |output|
-          unless reassignment.reassignable_type == 'TaxonRelationship' &&
-            output.taxon_concept_id == reassignment.reassignable.other_taxon_concept_id
-            reassignment.reassignment_targets.build(
-              nomenclature_change_output_id: output.id
-            )
-          end
+      )
+      outputs.each do |output|
+        unless reassignment.reassignable_type == 'TaxonRelationship' &&
+          output.taxon_concept_id == reassignment.reassignable.other_taxon_concept_id
+          reassignment.reassignment_targets.build(
+            nomenclature_change_output_id: output.id
+          )
         end
       end
-      reassignment
     end
+    reassignment
   end
 
   def _build_distribution_reassignments(input, outputs)
     distributions = input.taxon_concept.
       distributions.includes(:geo_entity).order('geo_entities.name_en')
-    input.distribution_reassignments = distributions.map do |distr|
-      reassignment_attrs = {
-        reassignable_type: 'Distribution',
-        reassignable_id: distr.id
-      }
-      reassignment = input.distribution_reassignments.where(
-        reassignment_attrs
-      ).first
-      if reassignment.nil?
-        reassignment = NomenclatureChange::DistributionReassignment.new(
-          reassignment_attrs
-        )
-        outputs.map do |output|
-          reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
-        end
-      end
-      reassignment
+    input.distribution_reassignments = distributions.map do |distribution|
+      _build_distribution_reassignment(distribution, input, outputs)
     end
+  end
+
+  def _build_distribution_reassignment(distribution, input, outputs)
+    reassignment_attrs = {
+      reassignable_type: 'Distribution',
+      reassignable_id: distribution.id
+    }
+    reassignment = input.distribution_reassignments.where(
+      reassignment_attrs
+    ).first
+    if reassignment.nil?
+      reassignment = NomenclatureChange::DistributionReassignment.new(
+        reassignment_attrs
+      )
+      outputs.map do |output|
+        reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
+      end
+    end
+    reassignment
   end
 
   def _build_legislation_reassignments(input, outputs)
     event = @nomenclature_change.event
     input.legislation_reassignments = [
-      input.legislation_reassignments.where(
-        reassignable_type: 'ListingChange'
-      ).first || input.taxon_concept.listing_changes.limit(1).count > 0 &&
-      # multi_lingual_listing_change_note defined in constructor
-      (note = multi_lingual_listing_change_note) &&
-      NomenclatureChange::LegislationReassignment.new(
-        reassignable_type: 'ListingChange',
-        note_en: note[:en],
-        note_es: note[:es],
-        note_fr: note[:fr]
-      ) || nil,
-      input.legislation_reassignments.where(
-        reassignable_type: 'CitesSuspension'
-      ).first || input.taxon_concept.cites_suspensions.limit(1).count > 0 &&
-      # multi_lingual_suspension_note defined in constructor
-      (note = multi_lingual_suspension_note) &&
-      NomenclatureChange::LegislationReassignment.new(
-        reassignable_type: 'CitesSuspension',
-        note_en: note[:en],
-        note_es: note[:es],
-        note_fr: note[:fr]
-      ) || nil,
-      input.legislation_reassignments.where(
-        reassignable_type: 'Quota'
-      ).first || input.taxon_concept.quotas.limit(1).count > 0 &&
-      # multi_lingual_quota_note defined in constructor
-      (note = multi_lingual_quota_note) &&
-      NomenclatureChange::LegislationReassignment.new(
-        reassignable_type: 'Quota',
-        note_en: note[:en],
-        note_es: note[:es],
-        note_fr: note[:fr]
-      ) || nil,
-      input.legislation_reassignments.where(
-        reassignable_type: 'EuSuspension'
-      ).first || input.taxon_concept.eu_suspensions.limit(1).count > 0 &&
-      # multi_lingual_suspension_note defined in constructor
-      (note = multi_lingual_suspension_note) &&
-      NomenclatureChange::LegislationReassignment.new(
-        reassignable_type: 'EuSuspension',
-        note_en: note[:en],
-        note_es: note[:es],
-        note_fr: note[:fr]
-      ) || nil,
-      input.legislation_reassignments.where(
-        reassignable_type: 'EuOpinion'
-      ).first || input.taxon_concept.eu_opinions.limit(1).count > 0 &&
-      # multi_lingual_opinion_note defined in constructor
-      (note = multi_lingual_opinion_note) &&
-      NomenclatureChange::LegislationReassignment.new(
-        reassignable_type: 'EuOpinion',
-        note_en: note[:en],
-        note_es: note[:es],
-        note_fr: note[:fr]
-      ) || nil
+      _build_listing_changes_reassignments(input, outputs),
+      _build_cites_suspensions_reassignments(input, outputs),
+      _build_cites_quotas_reassignments(input, outputs),
+      _build_eu_suspensions_reassignments(input, outputs),
+      _build_eu_opinions_reassignments(input, outputs)
     ].compact
     input.legislation_reassignments.each do |reassignment|
       outputs.each do |output|
         reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
       end
     end
+  end
+
+  def _build_listing_changes_reassignments(input, outputs)
+    input.legislation_reassignments.where(
+      reassignable_type: 'ListingChange'
+    ).first || input.taxon_concept.listing_changes.limit(1).count > 0 &&
+    # multi_lingual_listing_change_note defined in constructor
+    (note = multi_lingual_listing_change_note) &&
+    NomenclatureChange::LegislationReassignment.new(
+      reassignable_type: 'ListingChange',
+      note_en: note[:en],
+      note_es: note[:es],
+      note_fr: note[:fr]
+    ) || nil
+  end
+
+  def _build_cites_suspensions_reassignments(input, outputs)
+    input.legislation_reassignments.where(
+      reassignable_type: 'CitesSuspension'
+    ).first || input.taxon_concept.cites_suspensions.limit(1).count > 0 &&
+    # multi_lingual_suspension_note defined in constructor
+    (note = multi_lingual_suspension_note) &&
+    NomenclatureChange::LegislationReassignment.new(
+      reassignable_type: 'CitesSuspension',
+      note_en: note[:en],
+      note_es: note[:es],
+      note_fr: note[:fr]
+    ) || nil
+  end
+
+  def _build_cites_quotas_reassignments(input, outputs)
+    input.legislation_reassignments.where(
+      reassignable_type: 'Quota'
+    ).first || input.taxon_concept.quotas.limit(1).count > 0 &&
+    # multi_lingual_quota_note defined in constructor
+    (note = multi_lingual_quota_note) &&
+    NomenclatureChange::LegislationReassignment.new(
+      reassignable_type: 'Quota',
+      note_en: note[:en],
+      note_es: note[:es],
+      note_fr: note[:fr]
+    ) || nil
+  end
+
+  def _build_eu_suspensions_reassignments(input, outputs)
+    input.legislation_reassignments.where(
+      reassignable_type: 'EuSuspension'
+    ).first || input.taxon_concept.eu_suspensions.limit(1).count > 0 &&
+    # multi_lingual_suspension_note defined in constructor
+    (note = multi_lingual_suspension_note) &&
+    NomenclatureChange::LegislationReassignment.new(
+      reassignable_type: 'EuSuspension',
+      note_en: note[:en],
+      note_es: note[:es],
+      note_fr: note[:fr]
+    ) || nil
+  end
+
+  def _build_eu_opinions_reassignments(input, outputs)
+    input.legislation_reassignments.where(
+      reassignable_type: 'EuOpinion'
+    ).first || input.taxon_concept.eu_opinions.limit(1).count > 0 &&
+    # multi_lingual_opinion_note defined in constructor
+    (note = multi_lingual_opinion_note) &&
+    NomenclatureChange::LegislationReassignment.new(
+      reassignable_type: 'EuOpinion',
+      note_en: note[:en],
+      note_es: note[:es],
+      note_fr: note[:fr]
+    ) || nil
   end
 
   def _build_common_names_reassignments(input, outputs)
