@@ -1,5 +1,17 @@
 class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
 
+  # Generate a summary based on the subprocessors chain
+  def summary
+    result = [[
+      "#{@nc.input.taxon_concept.full_name} will be split into:",
+      @nc.outputs.map(&:display_full_name)
+    ]]
+    @subprocessors.each{ |processor| result << processor.summary }
+    result.flatten(1)
+  end
+
+  private
+
   # Constructs an array of subprocessors which will be run in sequence
   # A subprocessor needs to respond to #run
   def prepare_chain
@@ -35,18 +47,6 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
     end
     chain
   end
-
-  # Generate a summary based on the subprocessors chain
-  def summary
-    result = [[
-      "#{@nc.input.taxon_concept.full_name} will be split into:",
-      @nc.outputs.map(&:display_full_name)
-    ]]
-    @subprocessors.each{ |processor| result << processor.summary }
-    result.flatten(1)
-  end
-
-  private
 
   def initialize_inputs_and_outputs
     @input = @nc.input

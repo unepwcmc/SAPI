@@ -1,6 +1,8 @@
 class NomenclatureChange::StatusToSynonym::Processor < NomenclatureChange::Processor
   include NomenclatureChange::StatusChange::ProcessorHelpers
 
+  private
+
   # Constructs an array of subprocessors which will be run in sequence
   # A subprocessor needs to respond to #run
   def prepare_chain
@@ -14,8 +16,6 @@ class NomenclatureChange::StatusToSynonym::Processor < NomenclatureChange::Proce
     chain << NomenclatureChange::StatusDowngradeProcessor.new(@primary_output, accepted_names)
     chain.compact
   end
-
-  private
 
   def initialize_inputs_and_outputs
     @input = @nc.input
