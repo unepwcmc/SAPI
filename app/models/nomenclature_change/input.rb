@@ -90,4 +90,16 @@ class NomenclatureChange::Input < ActiveRecord::Base
       reassignable_type: 'EuOpinion'
     )
   end
+
+  def taxon_commons_reassignments
+    reassignments.where(
+      reassignable_type: 'TaxonCommon'
+    )
+  end
+
+  def taxon_concept_references_reassignments
+    reassignments.where(
+      reassignable_type: 'TaxonConceptReference'
+    )
+  end
 end
