@@ -6,12 +6,19 @@ class NomenclatureChange::Processor
     @subprocessors = prepare_chain
   end
 
-
   # Runs the subprocessors chain
   def run
     Rails.logger.warn("[#{@nc.type}] BEGIN")
     @subprocessors.each{ |processor| processor.run }
     Rails.logger.warn("[#{@nc.type}] END")
+  end
+
+  private
+
+  def initialize_inputs_and_outputs; end
+
+  def prepare_chain
+    @subprocessors = []
   end
 
 end
