@@ -1,5 +1,17 @@
 class NomenclatureChange::Lump::Processor < NomenclatureChange::Processor
 
+  # Generate a summary based on the subprocessors chain
+  def summary
+    result = [[
+      "The following taxa will be lumped into #{@nc.output.taxon_concept.full_name}",
+      @nc.inputs.map(&:taxon_concept).map(&:full_name)
+    ]]
+    @subprocessors.each{ |processor| result << processor.summary }
+    result.flatten(1)
+  end
+
+  private
+
   # Constructs an array of subprocessors which will be run in sequence
   # A subprocessor needs to respond to #run
   def prepare_chain
@@ -14,18 +26,6 @@ class NomenclatureChange::Lump::Processor < NomenclatureChange::Processor
     end
     chain
   end
-
-  # Generate a summary based on the subprocessors chain
-  def summary
-    result = [[
-      "The following taxa will be lumped into #{@nc.output.taxon_concept.full_name}",
-      @nc.inputs.map(&:taxon_concept).map(&:full_name)
-    ]]
-    @subprocessors.each{ |processor| result << processor.summary }
-    result.flatten(1)
-  end
-
-  private
 
   def initialize_inputs_and_outputs
     @inputs = @nc.inputs
