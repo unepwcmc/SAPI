@@ -110,79 +110,49 @@ module NomenclatureChange::ConstructorHelpers
   def _build_legislation_reassignments(input, outputs)
     event = @nomenclature_change.event
     input.legislation_reassignments = [
-      _build_listing_changes_reassignments(input, outputs),
-      _build_cites_suspensions_reassignments(input, outputs),
-      _build_cites_quotas_reassignments(input, outputs),
-      _build_eu_suspensions_reassignments(input, outputs),
-      _build_eu_opinions_reassignments(input, outputs)
-    ].compact
+      :listing_changes, :cites_suspensions, :quotas, :eu_suspensions, :eu_opinions
+    ].map do |legislation_collection_name|
+      _build_legislation_type_reassignment(legislation_collection_name, input)
+    end.compact
     input.legislation_reassignments.each do |reassignment|
       _build_multiple_targets(reassignment, outputs)
     end
   end
 
-  def _build_listing_changes_reassignments(input, outputs)
-    input.listing_changes_reassignments.first || input.taxon_concept.listing_changes.limit(1).count > 0 &&
-    # multi_lingual_listing_change_note defined in constructor
-    _build_legislation_type_reassignment('ListingChange', multi_lingual_listing_change_note) || nil
+  def _build_legislation_type_reassignment(legislation_collection_name, input)
+    legislation_type = legislation_collection_name.to_s.singularize.camelize
+    public_note = send(:"multi_lingual_#{legislation_collection_name.to_s.singularize}_note")
+    input.send(:"#{legislation_collection_name}_reassignments").first ||
+      input.taxon_concept.send(legislation_collection_name).limit(1).count > 0 &&
+      NomenclatureChange::LegislationReassignment.new(
+        reassignable_type: legislation_type,
+        note_en: public_note[:en],
+        note_es: public_note[:es],
+        note_fr: public_note[:fr]
+      ) || nil
   end
 
-  def _build_cites_suspensions_reassignments(input, outputs)
-    input.cites_suspensions_reassignments.first || input.taxon_concept.cites_suspensions.limit(1).count > 0 &&
-    # multi_lingual_suspension_note defined in constructor
-    _build_legislation_type_reassignment('CitesSuspension', multi_lingual_suspension_note) || nil
-  end
-
-  def _build_cites_quotas_reassignments(input, outputs)
-    input.quotas_reassignments.first || input.taxon_concept.quotas.limit(1).count > 0 &&
-    # multi_lingual_quota_note defined in constructor
-    _build_legislation_type_reassignment('Quota', multi_lingual_quota_note) || nil
-  end
-
-  def _build_eu_suspensions_reassignments(input, outputs)
-    input.eu_suspensions_reassignments.first || input.taxon_concept.eu_suspensions.limit(1).count > 0 &&
-    # multi_lingual_suspension_note defined in constructor
-    _build_legislation_type_reassignment('EuSuspension', multi_lingual_suspension_note) || nil
-  end
-
-  def _build_eu_opinions_reassignments(input, outputs)
-    input.eu_opinions_reassignments.first || input.taxon_concept.eu_opinions.limit(1).count > 0 &&
-    # multi_lingual_opinion_note defined in constructor
-    _build_legislation_type_reassignment('EuOpinion', multi_lingual_opinion_note) || nil
-  end
-
-  # legislation_type is a string
-  def _build_legislation_type_reassignment(legislation_type, public_note, internal_note=nil)
-    NomenclatureChange::LegislationReassignment.new(
-      reassignable_type: legislation_type,
-      note_en: public_note[:en],
-      note_es: public_note[:es],
-      note_fr: public_note[:fr],
-      internal_note: internal_note
-    )
-  end
-
-  # reassignable_type is a string
-  def _build_reassignable_type_reassignment(reassignable_type)
-    NomenclatureChange::Reassignment.new(
-      reassignable_type: reassignable_type,
-      type: 'NomenclatureChange::Reassignment'
-    )
+  def _build_reassignable_type_reassignment(reassignable_collection_name, input)
+    reassignable_type = reassignable_collection_name.to_s.singularize.camelize
+    input.send(:"#{reassignable_collection_name}_reassignments").first ||
+      input.taxon_concept.send(reassignable_collection_name).limit(1).count > 0 &&
+      NomenclatureChange::Reassignment.new(
+        reassignable_type: reassignable_type,
+        type: 'NomenclatureChange::Reassignment'
+      ) || nil
   end
 
   def _build_common_names_reassignments(input, outputs)
-    unless input.taxon_commons_reassignments.first ||
-      input.taxon_concept.taxon_commons.limit(1).count == 0
-      reassignment = _build_reassignable_type_reassignment('TaxonCommon')
+    reassignment = _build_reassignable_type_reassignment(:taxon_commons, input)
+    if reassignment
       _build_multiple_targets(reassignment, outputs)
       input.reassignments << reassignment
     end
   end
 
   def _build_references_reassignments(input, outputs)
-    unless input.taxon_concept_references_reassignments.first ||
-      input.taxon_concept.taxon_concept_references.limit(1).count == 0
-      reassignment = _build_reassignable_type_reassignment('TaxonConceptReference')
+    reassignment = _build_reassignable_type_reassignment(:taxon_concept_references, input)
+    if reassignment
       _build_multiple_targets(reassignment, outputs)
       input.reassignments << reassignment
     end
