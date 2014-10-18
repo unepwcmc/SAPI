@@ -140,7 +140,10 @@ class NomenclatureChange::Split::Constructor
     multi_lingual_legislation_note('split.suspension')
   end
 
-  def multi_lingual_opinion_note
+  alias :multi_lingual_cites_suspension_note :multi_lingual_suspension_note
+  alias :multi_lingual_eu_suspension_note :multi_lingual_suspension_note
+
+  def multi_lingual_eu_opinion_note
     multi_lingual_legislation_note('split.opinion')
   end
 
