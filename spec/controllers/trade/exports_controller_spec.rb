@@ -23,8 +23,14 @@ describe Trade::ExportsController do
         end.should_not change(Trade::TradeDataDownload, :count).by(1)
       end
     end
-
-
-
+    context 'when shipments cannot be retrieved' do
+      before(:each) do
+        Trade::ShipmentsExport.any_instance.stub(:export).and_return(false)
+      end
+      it "redirects to home page" do
+        get :download, :filters => {:report_type => :comptab}
+        expect(response).to redirect_to(trade_root_url)
+      end
+    end
   end
 end

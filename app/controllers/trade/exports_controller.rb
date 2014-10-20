@@ -6,7 +6,11 @@ class Trade::ExportsController < TradeController
     respond_to do |format|
       format.html {
         result = search.export
-        send_file Pathname.new(result[0]).realpath, result[1]
+        if result.is_a?(Array)
+          send_file Pathname.new(result[0]).realpath, result[1]
+        else
+          redirect_to trade_root_url
+        end
       }
       format.json {
         render :json => { :total => search.total_cnt }
