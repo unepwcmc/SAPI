@@ -162,8 +162,11 @@ module NomenclatureChange::ConstructorHelpers
     unless input.reassignments.where(
       reassignable_type: 'Trade::Shipment'
     ).first || input.taxon_concept.shipments.limit(1).count == 0
-      reassignment = _build_reassignable_type_reassignment('Trade::Shipment')
-      _build_single_targets(reassignment, output)
+      reassignment = NomenclatureChange::Reassignment.new(
+        reassignable_type: 'Trade::Shipment',
+        type: 'NomenclatureChange::Reassignment'
+      )
+      _build_single_target(reassignment, output)
       input.reassignments << reassignment
     end
   end
