@@ -10,7 +10,12 @@ class NomenclatureChange::Split::Constructor
   end
 
   def build_outputs
-    @nomenclature_change.outputs.build() if @nomenclature_change.outputs.empty?
+    if @nomenclature_change.outputs.empty?
+      @nomenclature_change.outputs.build(
+        taxon_concept_id: @nomenclature_change.input.taxon_concept_id
+      )
+      @nomenclature_change.outputs.build()
+    end
   end
 
   def build_parent_reassignments
