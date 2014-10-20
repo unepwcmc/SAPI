@@ -1,5 +1,9 @@
 <h2>New split: handle children</h2>
 <%= split_blurb %>
+<p>
+  <i class="icon-info-sign"></i>
+  Assign subspecies of <%= @nomenclature_change.input.taxon_concept.full_name %> to the appropriate taxon concept:
+</p>
 <%= nomenclature_change_form do |f| %>
   <%= f.fields_for :input do |ff| %>
 
