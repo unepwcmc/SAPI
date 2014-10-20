@@ -2,7 +2,7 @@
 <%= split_blurb %>
 <p>
   <i class="icon-info-sign"></i>
-  Names can be assigned to multiple split outputs.
+  Assign Synonyms and Trade Names to the appropriate taxa. These names can be assigned to multiple split outputs.
 </p>
 <%= nomenclature_change_form do |f| %>
   <%= f.fields_for :input do |ff| %>
@@ -10,8 +10,9 @@
     <%= ff.fields_for :name_reassignments do |fff| %>
       <div class="control-group">
         <label class="control-label">
-          <%= fff.object.reassignable.other_taxon_concept.name_status %>
-          <%= fff.object.reassignable.other_taxon_concept.full_name %>
+          <%= fff.object.reassignable.other_taxon_concept.full_name %><br>
+          <%= fff.object.reassignable.other_taxon_concept.author_year %>
+          (<%= fff.object.reassignable.other_taxon_concept.name_status %>)
         </label>
         <div class="controls">
           <%= fff.select :output_ids,
