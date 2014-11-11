@@ -63,7 +63,6 @@ class CmsMappingManager
                          :taxonomy_id => cms.id).each do |taxon|
         matching_cites_taxon = TaxonConcept.where(:rank_id => taxon.rank_id,
                                                   :full_name => taxon.full_name,
-                                                  :author_year => taxon.author_year,
                                                   :taxonomy_id => cites.id).first
         next unless matching_cites_taxon
         puts "found a match for #{taxon.full_name} #{taxon.id} matches #{matching_cites_taxon.id}"

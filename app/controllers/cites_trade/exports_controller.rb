@@ -8,8 +8,12 @@ class CitesTrade::ExportsController < CitesTradeController
           :per_page => Trade::ShipmentsExport::PUBLIC_CSV_LIMIT
         }))
         result = search.export
-        send_file Pathname.new(result[0]).realpath, result[1]
-        Trade::TradeDataDownloadLogger.log_download request, search_params, search.total_cnt
+        if result.is_a?(Array)
+          send_file Pathname.new(result[0]).realpath, result[1]
+          Trade::TradeDataDownloadLogger.log_download request, search_params, search.total_cnt
+        else
+          redirect_to cites_trade_root_url
+        end
       }
       format.json {
         search = Trade::ShipmentsExportFactory.new(search_params.merge({
