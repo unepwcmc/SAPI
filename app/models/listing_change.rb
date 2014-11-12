@@ -127,7 +127,8 @@ class ListingChange < ActiveRecord::Base
   end
 
   def comparison_attributes
-    res = super().except(:annotation_id)
+    res = super().except("annotation_id", "import_row_id", "internal_notes",
+      "nomenclature_note_en", "nomenclature_note_es", "nomenclature_note_fr")
     res = res.merge(
       listing_distributions: party_listing_distribution.comparison_attributes,
     ) if party_listing_distribution
@@ -138,7 +139,7 @@ class ListingChange < ActiveRecord::Base
   end
 
   def duplicates(comparison_attributes_override = {})
-    ListingChange.includes(:party_listing_distribution, :annotation).
+    relation = ListingChange.includes(:party_listing_distribution, :annotation).
       where(
         comparison_attributes.merge(comparison_attributes_override)
       )

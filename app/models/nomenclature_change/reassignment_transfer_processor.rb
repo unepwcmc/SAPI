@@ -12,7 +12,7 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
       reassignable.save
     else
       transferred_object = reassignable.duplicates({
-        taxon_concept_id: new_taxon_concept.id
+        "taxon_concept_id" => new_taxon_concept.id
       }).first || reassignable
       transferred_object.taxon_concept_id = new_taxon_concept.id
       if reassignable.kind_of? ListingChange ||
