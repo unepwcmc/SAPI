@@ -35,10 +35,10 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
         # if input is not one of outputs and this is the last output
         # transfer the associations rather than copy them
         transfer = !input_is_one_of_outputs && (idx == (@outputs.length - 1))
-        chain << if transfer
-          NomenclatureChange::ReassignmentTransferProcessor.new(@input, output)
+        if transfer
+          chain << NomenclatureChange::ReassignmentTransferProcessor.new(@input, output)
         else
-          NomenclatureChange::ReassignmentCopyProcessor.new(@input, output)
+          chain << NomenclatureChange::ReassignmentCopyProcessor.new(@input, output)
         end
       end
     end
