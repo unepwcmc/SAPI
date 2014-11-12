@@ -86,6 +86,9 @@ GEM
       capistrano (>= 2.5)
     browser (0.6.0)
     builder (3.0.4)
+    byebug (3.2.0)
+      columnize (~> 0.8)
+      debugger-linecache (~> 1.2)
     cancan (1.6.10)
     capistrano (2.15.4)
       highline
@@ -127,6 +130,7 @@ GEM
       execjs
     coffee-script-source (1.4.0)
     colorize (0.5.8)
+    columnize (0.8.9)
     compass (0.12.2)
       chunky_png (~> 1.2)
       fssm (>= 0.2.7)
@@ -144,6 +148,7 @@ GEM
       rails (>= 3.0.0)
     database_cleaner (1.2.0)
     debug_inspector (0.0.2)
+    debugger-linecache (1.2.0)
     devise (3.2.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -426,6 +431,7 @@ DEPENDENCIES
   binding_of_caller (>= 0.7.2)
   bootstrap-sass (~> 2.3.1.0)
   brightbox (>= 2.3.9)
+  byebug
   cancan
   capistrano
   capistrano-ext
