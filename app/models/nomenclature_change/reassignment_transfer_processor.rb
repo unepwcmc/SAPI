@@ -3,7 +3,7 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
   # Each reassignable object implements find_duplicate,
   # which is called from here to make sure we're not adding a duplicate.
   def process_reassignment_to_target(target, reassignable)
-    new_taxon_concept = @output.taxon_concept || @output.new_taxon_concept
+    new_taxon_concept = @output.new_taxon_concept || @output.taxon_concept
     Rails.logger.debug("Processing #{reassignable.class} #{reassignable.id} transfer to #{new_taxon_concept.full_name}")
 
     if target.reassignment.kind_of?(NomenclatureChange::ParentReassignment) ||
@@ -12,7 +12,7 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
       reassignable.save
     else
       transferred_object = reassignable.duplicates({
-        taxon_concept_id: new_taxon_concept.id
+        "taxon_concept_id" => new_taxon_concept.id
       }).first || reassignable
       transferred_object.taxon_concept_id = new_taxon_concept.id
       if reassignable.kind_of? ListingChange ||
