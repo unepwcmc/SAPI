@@ -127,8 +127,7 @@ class ListingChange < ActiveRecord::Base
   end
 
   def comparison_attributes
-    res = super().except("annotation_id", "import_row_id", "internal_notes",
-      "nomenclature_note_en", "nomenclature_note_es", "nomenclature_note_fr")
+    res = super().except("annotation_id", "import_row_id")
     res = res.merge(
       listing_distributions: party_listing_distribution.comparison_attributes,
     ) if party_listing_distribution
