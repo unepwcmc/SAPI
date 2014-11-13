@@ -40,7 +40,7 @@ class Species::ExportsController < ApplicationController
     if cookies[:default_separator].present?
       default_separator = cookies[:default_separator]
     else
-      ip = Sapi::GeoIP.instance.resolve(request.remote_ip)
+      ip = Sapi::GeoIP.instance.resolve(request.remote_ip) # handle when nil
       separator = DEFAULT_COUNTRY_SEPARATORS[ip[:country].to_sym]
       cookies[:default_separator] = separator
       separator
