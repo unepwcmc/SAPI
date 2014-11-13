@@ -1,6 +1,9 @@
 class Species::ExportsController < ApplicationController
+  require 'sapi/geoip'
 
   def download
+    set_default_separator
+
     filters = params[:filters].merge({
       :csv_separator => if params[:filters] && params[:filters][:csv_separator] &&
         params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
@@ -30,6 +33,17 @@ class Species::ExportsController < ApplicationController
       format.json {
         render :json => {:total => result.is_a?(Array) ? 1 : 0}
       }
+    end
+  end
+
+  def set_default_separator
+    if cookies[:default_separator].present?
+      default_separator = cookies[:default_separator]
+    else
+      ip = Sapi::GeoIP.instance.resolve(request.remote_ip)
+      separator = DEFAULT_COUNTRY_SEPARATORS[ip[:country].to_sym]
+      cookies[:default_separator] = separator
+      separator
     end
   end
 end
