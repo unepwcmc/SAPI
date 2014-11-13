@@ -7,6 +7,14 @@ class Species::RestrictionsExport
     :full_name, :rank_name
   ]
 
+  TAXONOMY_COLUMN_NAMES = [
+    'kingdom', 'phylum',
+    'class', 'order',
+    'family', 'genus',
+    'species', 'subspecies',
+    'full', 'rank'
+  ]
+
   def self.fill_taxon_columns restriction
     columns = []
     remark = ""
