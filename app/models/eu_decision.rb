@@ -78,15 +78,24 @@ class EuDecision < ActiveRecord::Base
     term.try(:name_en)
   end
 
+  def is_valid_for_display
+    is_current ? "Valid" : "Not Valid"
+  end
+
+  def decision_type_for_display
+    eu_decision_type.name_for_display
+  end
+
   def self.csv_columns_headers
-    ['Date', 'Party', 'EU Decision', 'Source',
-      'Term', 'Notes', 'Document', 'Valid']
+    ['Date of Decision', 'Party', 'EU Decision', 'Source',
+      'Term', 'Notes', 'Document', "Valid on Date: #{DateTime.now.strftime('%d/%m/%Y')}"]
   end
 
   def self.csv_columns
-    [:start_date_formatted, :party, :decision_type,
+    [:start_date_formatted, :party, :decision_type_for_display,
       :source_name, :term_name, :notes, :start_event_name,
-      :is_current]
+      :is_valid_for_display
+    ]
   end
 
   def self.export filters
@@ -142,8 +151,8 @@ class EuDecision < ActiveRecord::Base
       else ','
     end
     CSV.open(file_path, 'wb', {:col_sep => csv_separator_char}) do |csv|
-      csv << Species::RestrictionsExport::TAXONOMY_COLUMNS +
-        ['Remarks'] + self.csv_columns_headers
+      csv << Species::RestrictionsExport::TAXONOMY_COLUMN_NAMES +
+        self.csv_columns_headers
       ids = []
       until (objs = export_query(filters).limit(limit).
              offset(offset)).empty? do

@@ -127,7 +127,7 @@ class TradeRestriction < ActiveRecord::Base
       else ','
     end
     CSV.open(file_path, 'wb', {:col_sep => csv_separator_char}) do |csv|
-      csv << Species::RestrictionsExport::TAXONOMY_COLUMNS + 
+      csv << Species::RestrictionsExport::TAXONOMY_COLUMN_NAMES + 
         ['Remarks'] + self.csv_columns_headers
       ids = []
       until (objs = export_query(filters).limit(limit).
