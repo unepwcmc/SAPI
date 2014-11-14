@@ -8,16 +8,15 @@ class Species::RestrictionsExport
   ]
 
   TAXONOMY_COLUMN_NAMES = [
-    'kingdom', 'phylum',
-    'class', 'order',
-    'family', 'genus',
-    'species', 'subspecies',
-    'full', 'rank'
+    'Kingdom', 'Phylum',
+    'Class', 'Order',
+    'Family', 'Genus',
+    'Species', 'Subspecies',
+    'Full Name', 'Rank'
   ]
 
   def self.fill_taxon_columns restriction
     columns = []
-    remark = ""
     case restriction.taxon_concept.try(:name_status)
       when "A"
         taxon = restriction.taxon_concept.try(:m_taxon_concept)
@@ -25,12 +24,10 @@ class Species::RestrictionsExport
         taxon = restriction.taxon_concept.hybrid_parents.
           first.try(:m_taxon_concept) ||
           restriction.taxon_concept.m_taxon_concept
-        remark = "Issued for hybrid #{restriction.taxon_concept.full_name}"
       when "S"
         taxon = restriction.taxon_concept.accepted_names.
           first.try(:m_taxon_concept) ||
           restriction.taxon_concept.m_taxon_concept
-        remark = "Issued for synonym #{restriction.taxon_concept.full_name}"
       else
         taxon = nil
     end
@@ -38,7 +35,6 @@ class Species::RestrictionsExport
     TAXONOMY_COLUMNS.each do |c|
       columns << taxon.send(c)
     end
-    columns << remark
     columns
   end
 end
