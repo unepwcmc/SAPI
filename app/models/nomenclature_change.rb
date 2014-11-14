@@ -55,7 +55,7 @@ class NomenclatureChange < ActiveRecord::Base
     if status == NomenclatureChange::NEW
       steps.first
     elsif self.summary?
-      NomenclatureChange::SUMMARY.to_sym
+      self.class::SUMMARY.to_sym
     elsif !in_progress?
       nil
     else
