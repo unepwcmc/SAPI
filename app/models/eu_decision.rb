@@ -82,9 +82,8 @@ class EuDecision < ActiveRecord::Base
     is_current ? "Valid" : "Not Valid"
   end
 
-  def decision_type_with_opinion
-    eu_decision_type.name.start_with?('i)', 'ii)', 'iii)', 'i) removed', 'ii) removed', 'iii) removed') ? 
-      "No opinion #{eu_decision_type.name}" : eu_decision_type.name
+  def decision_type_for_display
+    eu_decision_type.name_for_display
   end
 
   def self.csv_columns_headers
@@ -93,7 +92,7 @@ class EuDecision < ActiveRecord::Base
   end
 
   def self.csv_columns
-    [:start_date_formatted, :party, :decision_type_with_opinion,
+    [:start_date_formatted, :party, :decision_type_for_display,
       :source_name, :term_name, :notes, :start_event_name,
       :is_valid_for_display
     ]
