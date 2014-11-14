@@ -17,7 +17,7 @@ class Species::ExportsController < ApplicationController
       when 'Listings'
         result = Species::ListingsExportFactory.new(filters).export
       when 'EuDecisions'
-        result = EuDecision.export filters
+        result = Species::EuDecisionsExport.new(filters).export
     end
     respond_to do |format|
       format.html {
