@@ -102,4 +102,24 @@ class NomenclatureChange::Input < ActiveRecord::Base
       reassignable_type: 'TaxonConceptReference'
     )
   end
+
+  def reassignment_class
+    NomenclatureChange::Reassignment
+  end
+
+  def parent_reassignment_class
+    NomenclatureChange::ParentReassignment
+  end
+
+  def name_reassignment_class
+    NomenclatureChange::NameReassignment
+  end
+
+  def distribution_reassignment_class
+    NomenclatureChange::DistributionReassignment
+  end
+
+  def legislation_reassignment_class
+    NomenclatureChange::LegislationReassignment
+  end
 end

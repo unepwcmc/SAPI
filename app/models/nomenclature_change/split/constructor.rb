@@ -20,36 +20,82 @@ class NomenclatureChange::Split::Constructor
 
   def build_parent_reassignments
     input = @nomenclature_change.input
+    outputs = @nomenclature_change.outputs.select{ |out|
+      !out.new_scientific_name.empty? if out.new_scientific_name != nil
+    }
+
     default_output = @nomenclature_change.outputs_intersect_inputs.first
     default_output ||= @nomenclature_change.outputs.first
     children = input.taxon_concept.children - @nomenclature_change.
       outputs.map(&:taxon_concept).compact
     _build_parent_reassignments(input, default_output, children)
+
+    outputs.each do |output|
+      _build_parent_reassignments(output, output)
+    end
   end
 
   def build_name_reassignments
     input = @nomenclature_change.input
+    outputs = @nomenclature_change.outputs.select{ |out|
+      !out.new_scientific_name.empty? if out.new_scientific_name != nil
+    }
     default_output = @nomenclature_change.outputs_intersect_inputs.first
     default_output ||= @nomenclature_change.outputs.first
     _build_names_reassignments(input, [default_output], @nomenclature_change.outputs)
+
+    outputs.each do |output|
+      _build_names_reassignments(output, [output], @nomenclature_change.outputs)
+    end
   end
 
   def build_distribution_reassignments
     input = @nomenclature_change.input
+    outputs = @nomenclature_change.outputs.select{ |out|
+      !out.new_scientific_name.empty? if out.new_scientific_name != nil
+    }
     default_outputs = @nomenclature_change.outputs
     _build_distribution_reassignments(input, default_outputs)
+
+    outputs.each do |output|
+      _build_distribution_reassignments(output, [output])
+    end
   end
 
   def build_legislation_reassignments
+    input = @nomenclature_change.input
+    outputs = @nomenclature_change.outputs.select{ |out|
+      !out.new_scientific_name.empty? if out.new_scientific_name != nil
+    }
     _build_legislation_reassignments(@nomenclature_change.input, @nomenclature_change.outputs)
+
+    outputs.each do |output|
+      _build_legislation_reassignments(output, [output])
+    end
   end
 
   def build_common_names_reassignments
+    input = @nomenclature_change.input
+    outputs = @nomenclature_change.outputs.select{ |out|
+      !out.new_scientific_name.empty? if out.new_scientific_name != nil
+    }
     _build_common_names_reassignments(@nomenclature_change.input, @nomenclature_change.outputs)
+
+    outputs.each do |output|
+      _build_common_names_reassignments(output, [output])
+    end
   end
 
   def build_references_reassignments
+    input = @nomenclature_change.input
+    outputs = @nomenclature_change.outputs.select{ |out|
+      !out.new_scientific_name.empty? if out.new_scientific_name != nil
+    }
     _build_references_reassignments(@nomenclature_change.input, @nomenclature_change.outputs)
+
+    outputs.each do |output|
+      _build_references_reassignments(output, [output])
+    end
   end
 
   def input_split_into(input, outputs, lng)

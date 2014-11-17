@@ -3,7 +3,7 @@
 # Table name: nomenclature_change_reassignments
 #
 #  id                           :integer          not null, primary key
-#  nomenclature_change_input_id :integer          not null
+#  nomenclature_change_output_id :integer          not null
 #  type                         :string(255)      not null
 #  reassignable_type            :string(255)
 #  reassignable_id              :integer
@@ -27,11 +27,12 @@
 # A polymorphic association is in place that links this object to the entitity
 # that gets reassigned.
 # For example the reassignable_type might be 'ListingChange'
-class NomenclatureChange::Reassignment < ActiveRecord::Base
+class NomenclatureChange::OutputReassignment < ActiveRecord::Base
   include NomenclatureChange::ReassignmentHelpers
 
-  belongs_to :input, :class_name => NomenclatureChange::Input,
-    :foreign_key => :nomenclature_change_input_id
+  belongs_to :output, :class_name => NomenclatureChange::Output,
+    :foreign_key => :nomenclature_change_output_id
 
-  validates :input, :presence => true
+  validates :output, :presence => true
+
 end
