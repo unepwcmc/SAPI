@@ -90,7 +90,7 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
     }
   ).property(
     'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 
-    'timeScope', 'years.@each', 'positiveOpinions', 'negativeOpinions',
+    'timeScope', 'selectedYears.@each', 'positiveOpinions', 'negativeOpinions',
     'noOpinions', 'suspensions', 'controllers.downloads.csvSeparator'
   )
 
