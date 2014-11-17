@@ -40,7 +40,9 @@ class Species::ExportsController < ApplicationController
     #Merge this all into one cookie
     #If cookie exists (set by user BEFORE they click download), use that
     #if not set then we'll get the ip and set a cookie
-    if cookies['speciesplus.csv_separator'].present?
+    if params[:filters][:csv_separator].present?
+      cookies.permanent['speciesplus.csv_separator'] = params[:filters][:csv_separator]
+    elsif cookies['speciesplus.csv_separator'].present?
       separator = cookies['speciesplus.csv_separator']
     else
       ip = request.remote_ip

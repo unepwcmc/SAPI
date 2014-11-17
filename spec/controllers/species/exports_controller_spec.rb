@@ -7,10 +7,9 @@ describe Species::ExportsController do
     it 'sets separator to comma with local ip address' do
       ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("127.0.0.1")
       get :download, :filters => {:designation => 'EU'}
-      puts response.cookies.inspect
       expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq(',')
-      # Assert it gets passed in params?
+      #expect(request.params.[:filters][:csv_separator]).to eq(',')
     end
 
     it 'sets separator to comma with UK ip address' do
