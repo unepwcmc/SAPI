@@ -4,23 +4,18 @@ class Species::ExportsController < ApplicationController
   def download
     set_default_separator
 
-    filters = params[:filters].merge({
-      :csv_separator => if params[:filters] && params[:filters][:csv_separator] &&
-        params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
-        :semicolon
-      else
-        :comma
-      end
+    @filters = params[:filters].merge({
+      :csv_separator => cookies['speciesplus.csv_separator']
     })
     case params[:data_type]
       when 'Quotas'
-        result = Quota.export filters
+        result = Quota.export @filters
       when 'CitesSuspensions'
-        result = CitesSuspension.export filters
+        result = CitesSuspension.export @filters
       when 'Listings'
-        result = Species::ListingsExportFactory.new(filters).export
+        result = Species::ListingsExportFactory.new(@filters).export
       when 'EuDecisions'
-        result = Species::EuDecisionsExport.new(filters).export
+        result = Species::EuDecisionsExport.new(@filters).export
     end
     respond_to do |format|
       format.html {
