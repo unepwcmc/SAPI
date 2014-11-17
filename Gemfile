@@ -104,7 +104,6 @@ group :development do
   gem 'jslint_on_rails'
   gem 'git_pretty_accept'
   gem 'capistrano-slack', :git => 'https://github.com/nextupdate/capistrano-slack.git'
-  gem 'byebug'
 end
 
 group :test, :development do
@@ -112,6 +111,7 @@ group :test, :development do
   gem "json_spec"
   gem "database_cleaner", ">=1.2.0"
   gem "timecop"
+  gem 'byebug'
 end
 
 group :test do
