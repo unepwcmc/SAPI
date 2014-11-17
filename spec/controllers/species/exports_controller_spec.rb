@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 describe Species::ExportsController do
+  context 'when data type and filters not given' do
+    it 'returns unprocessable entity status' do
+      get :download
+      expect(response.status).to eq(422)
+    end
+  end
   context 'with ip address to csv separator conversion' do
     it 'sets separator to comma with local ip address' do
       ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("127.0.0.1")

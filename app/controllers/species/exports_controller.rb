@@ -1,4 +1,5 @@
 class Species::ExportsController < ApplicationController
+  before_filter :ensure_data_type_and_filters, :only => [:download]
 
   def download
     set_csv_separator
@@ -46,4 +47,9 @@ class Species::ExportsController < ApplicationController
     end
   end
 
+  def ensure_data_type_and_filters
+    unless params[:data_type] && params[:filters]
+      render :nothing => true, :status => :unprocessable_entity and return false
+    end
+  end
 end
