@@ -459,6 +459,7 @@ DEPENDENCIES
   rails (= 3.2.20)
   rake (~> 10.0.3)
   rest_client
+  rspec-mocks
   rspec-rails
   rvm-capistrano
   sass-rails (~> 3.2.3)
