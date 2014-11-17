@@ -63,9 +63,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     # if it is, check if it has a match in valid values view
     v = Arel::Table.new(valid_values_view)
     arel_nodes = shipments_columns.map { |c| v[c].eq(shipment.send(c)) }
-    conditions = arel_nodes.shift
-    arel_nodes.each{ |n| conditions = conditions.and(n) }
-    return nil if Trade::Shipment.find_by_sql(v.project('*').where(conditions)).any?
+    return nil if Trade::Shipment.find_by_sql(v.project('*').where(arel_nodes.inject(&:and))).any?
     error_message
   end
 
@@ -142,9 +140,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
         v[c].eq(s[c]).or(v[c].eq(nil).and(s[c].eq(nil)))
       end
     end
-    join_conditions = arel_nodes.shift
-    arel_nodes.each{ |n| join_conditions = join_conditions.and(n) }
-    valid_values = s.project(s['*']).join(v).on(join_conditions)
+    valid_values = s.project(s['*']).join(v).on(arel_nodes.inject(&:and))
     scoped_records_arel(s).except(valid_values)
   end
 

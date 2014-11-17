@@ -30,8 +30,6 @@ class Trade::PresenceValidationRule < Trade::ValidationRule
     arel_nodes = column_names.map do |c|
       s[c].eq(nil)
     end
-    conditions = arel_nodes.shift
-    arel_nodes.each{ |n| conditions = conditions.and(n) }
-    Trade::SandboxTemplate.select('*').from(table_name).where(conditions)
+    Trade::SandboxTemplate.select('*').from(table_name).where(arel_nodes.inject(&:and))
   end
 end
