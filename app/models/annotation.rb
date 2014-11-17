@@ -61,6 +61,18 @@ class Annotation < ActiveRecord::Base
     "#{parent_symbol}#{symbol}"
   end
 
+  def self.ignored_attributes
+    super() + [:import_row_id, :original_id]
+  end
+
+  def self.text_attributes
+    [
+      :short_note_en, :short_note_es, :short_note_fr,
+      :full_note_en, :full_note_es, :full_note_fr,
+      :symbol, :parent_symbol
+    ]
+  end
+
   private
 
   def dependent_objects_map

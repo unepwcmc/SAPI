@@ -114,4 +114,18 @@ describe ListingChange do
     let(:listing_change){ create_cites_I_addition(:effective_at => '2012-05-10') }
     specify {listing_change.effective_at_formatted.should == '10/05/2012' }
   end
+
+  describe :duplicates do
+    let(:lc1){
+      lc = create_cites_I_addition(effective_at: '2014-11-17')
+      lc.annotation = create(:annotation, full_note_en: ' ')
+      lc
+    }
+    let(:lc2){
+      lc = create_cites_I_addition(effective_at: '2014-11-17')
+      lc.annotation = create(:annotation, full_note_en: nil)
+      lc
+    }
+    specify { lc1.duplicates(taxon_concept_id: lc2.taxon_concept_id) }
+  end
 end

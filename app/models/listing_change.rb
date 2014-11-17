@@ -123,25 +123,30 @@ class ListingChange < ActiveRecord::Base
   end
 
   def self.ignored_attributes
-    super() + [:source_id]
+    super() + [:source_id, :annotation_id, :import_row_id]
   end
 
-  def comparison_attributes
-    res = super().except("annotation_id", "import_row_id")
-    res = res.merge(
-      listing_distributions: party_listing_distribution.comparison_attributes,
-    ) if party_listing_distribution
-    res = res.merge(
-      annotations: annotation.comparison_attributes
-    ) if annotation
-    res
+  def self.text_attributes
+    [:internal_notes, :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr]
   end
 
   def duplicates(comparison_attributes_override = {})
-    relation = ListingChange.includes(:party_listing_distribution, :annotation).
-      where(
+    relation = ListingChange.where(
+      comparison_conditions(
         comparison_attributes.merge(comparison_attributes_override)
       )
+    )
+    if party_listing_distribution
+      relation = relation.includes(:party_listing_distribution).where(
+        party_listing_distribution.comparison_conditions
+      )
+    end
+    if annotation
+      relation = relation.includes(:annotation).where(
+        annotation.comparison_conditions
+      )
+    end
+    relation
   end
 
   private
