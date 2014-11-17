@@ -35,12 +35,34 @@ class NomenclatureChange::Output < ActiveRecord::Base
   attr_accessible :nomenclature_change_id, :taxon_concept_id,
     :new_taxon_concept_id, :new_scientific_name, :new_author_year,
     :new_name_status, :new_parent_id, :new_rank_id,
-    :note_en, :note_es, :note_fr, :internal_note, :is_primary_output
+    :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
+    :parent_reassignments_attributes, :name_reassignments_attributes,
+    :distribution_reassignments_attributes, :legislation_reassignments_attributes
   belongs_to :nomenclature_change
   belongs_to :taxon_concept
   belongs_to :parent, :class_name => TaxonConcept, :foreign_key => :parent_id
   belongs_to :rank
   belongs_to :new_taxon_concept, :class_name => TaxonConcept, :foreign_key => :new_taxon_concept_id
+  has_many :reassignments, :inverse_of => :output,
+    :class_name => NomenclatureChange::OutputReassignment,
+    :foreign_key => :nomenclature_change_output_id, :dependent => :destroy,
+    :autosave => true
+  has_many :parent_reassignments, :inverse_of => :output,
+    :class_name => NomenclatureChange::OutputParentReassignment,
+    :foreign_key => :nomenclature_change_output_id, :dependent => :destroy,
+    :autosave => true
+  has_many :name_reassignments, :inverse_of => :output,
+    :class_name => NomenclatureChange::OutputNameReassignment,
+    :foreign_key => :nomenclature_change_output_id, :dependent => :destroy,
+    :autosave => true
+  has_many :distribution_reassignments, :inverse_of => :output,
+    :class_name => NomenclatureChange::OutputDistributionReassignment,
+    :foreign_key => :nomenclature_change_output_id, :dependent => :destroy,
+    :autosave => true
+  has_many :legislation_reassignments, :inverse_of => :output,
+    :class_name => NomenclatureChange::OutputLegislationReassignment,
+    :foreign_key => :nomenclature_change_output_id, :dependent => :destroy,
+    :autosave => true
   has_many :reassignment_targets, :inverse_of => :output,
     :class_name => NomenclatureChange::ReassignmentTarget,
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy
@@ -142,4 +164,71 @@ class NomenclatureChange::Output < ActiveRecord::Base
     end
   end
 
+  def reassignables_by_class(reassignable_type)
+    reassignable_type.constantize.where(
+      :taxon_concept_id => taxon_concept.id
+    )
+  end
+
+  def listing_changes_reassignments
+    legislation_reassignments.where(
+      reassignable_type: 'ListingChange'
+    )
+  end
+
+  def cites_suspensions_reassignments
+    legislation_reassignments.where(
+      reassignable_type: 'CitesSuspension'
+    )
+  end
+
+  def quotas_reassignments
+    legislation_reassignments.where(
+      reassignable_type: 'Quota'
+    )
+  end
+
+  def eu_suspensions_reassignments
+    legislation_reassignments.where(
+      reassignable_type: 'EuSuspension'
+    )
+  end
+
+  def eu_opinions_reassignments
+    legislation_reassignments.where(
+      reassignable_type: 'EuOpinion'
+    )
+  end
+
+  def taxon_commons_reassignments
+    reassignments.where(
+      reassignable_type: 'TaxonCommon'
+    )
+  end
+
+  def taxon_concept_references_reassignments
+    reassignments.where(
+      reassignable_type: 'TaxonConceptReference'
+    )
+  end
+
+  def reassignment_class
+    NomenclatureChange::OutputReassignment
+  end
+
+  def parent_reassignment_class
+    NomenclatureChange::OutputParentReassignment
+  end
+
+  def name_reassignment_class
+    NomenclatureChange::OutputameReassignment
+  end
+
+  def distribution_reassignment_class
+    NomenclatureChange::OutputDistributionReassignment
+  end
+
+  def legislation_reassignment_class
+    NomenclatureChange::OutputLegislationReassignment
+  end
 end

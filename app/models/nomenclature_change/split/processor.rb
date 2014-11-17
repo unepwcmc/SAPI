@@ -27,6 +27,8 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
       if output.will_create_taxon?
         if ['A', 'N'].include?(output.name_status)
           chain << NomenclatureChange::StatusDowngradeProcessor.new(output)
+
+          chain << NomenclatureChange::ReassignmentTransferProcessor.new(output, output)
         end
       elsif !output.will_create_taxon? && ['S', 'T'].include?(output.name_status)
         chain << NomenclatureChange::StatusUpgradeProcessor.new(output)

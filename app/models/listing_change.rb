@@ -131,7 +131,7 @@ class ListingChange < ActiveRecord::Base
   end
 
   def duplicates(comparison_attributes_override = {})
-    relation = ListingChange.where(
+    ListingChange.where(
       comparison_conditions(
         comparison_attributes.merge(comparison_attributes_override)
       )
