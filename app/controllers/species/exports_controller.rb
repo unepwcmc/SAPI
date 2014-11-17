@@ -37,24 +37,22 @@ class Species::ExportsController < ApplicationController
   end
 
   def set_default_separator
-    #Merge this all into one cookie
-    #If cookie exists (set by user BEFORE they click download), use that
-    #if not set then we'll get the ip and set a cookie
-    if params[:filters][:csv_separator].present?
-      cookies.permanent['speciesplus.csv_separator'] = params[:filters][:csv_separator]
-    elsif cookies['speciesplus.csv_separator'].present?
-      separator = cookies['speciesplus.csv_separator']
+    separator_params = params[:filters][:csv_separator]
+    separator_cookie = cookies['speciesplus.csv_separator']
+
+    if separator_params.present?
+      cookies.permanent['speciesplus.csv_separator'] = separator_params
+    elsif separator_cookie.present?
+      return
     else
       ip = request.remote_ip
       if ip == '127.0.0.1' || nil
         separator = ','
       else
         ip_data = Sapi::GeoIP.instance.resolve(ip)
-        separator = DEFAULT_COUNTRY_SEPARATORS[ip_data[:country].to_sym]
+        separator = DEFAULT_COUNTRY_SEPARATORS[ip_data[:country].to_sym] || ','
       end
       cookies.permanent['speciesplus.csv_separator'] = separator
-
-      separator # Not sure if we need this, depends on if reading from cookie or method
     end
   end
 end

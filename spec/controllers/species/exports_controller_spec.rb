@@ -9,7 +9,6 @@ describe Species::ExportsController do
       get :download, :filters => {:designation => 'EU'}
       expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq(',')
-      #expect(request.params.[:filters][:csv_separator]).to eq(',')
     end
 
     it 'sets separator to comma with UK ip address' do
@@ -17,7 +16,6 @@ describe Species::ExportsController do
       get :download, :filters => {:designation => 'EU'}
       expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq(',')
-      # Assert it gets passed in params?
     end
 
     it 'sets separator to semicolon with AF ip address' do
@@ -25,7 +23,6 @@ describe Species::ExportsController do
       get :download, :filters => {:designation => 'EU'}
       expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq(';')
-      # Assert it gets passed in params?
     end
 
     it 'sets separator back to comma when a user overrides the encoded default' do
@@ -36,7 +33,7 @@ describe Species::ExportsController do
       }
       expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq(',')
-      # Assert it gets passed in params?
+      expect(request.params[:filters][:csv_separator]).to eq(',')
     end
   end
 end
