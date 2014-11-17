@@ -1,11 +1,10 @@
 class Species::ExportsController < ApplicationController
-  require 'sapi/geoip'
 
   def download
-    set_default_separator
+    set_csv_separator
 
     @filters = params[:filters].merge({
-      :csv_separator => cookies['speciesplus.csv_separator']
+      :csv_separator => cookies['speciesplus.csv_separator'].try(:to_sym)
     })
     case params[:data_type]
       when 'Quotas'
@@ -31,23 +30,20 @@ class Species::ExportsController < ApplicationController
     end
   end
 
-  def set_default_separator
+  private
+
+  def set_csv_separator
     separator_params = params[:filters][:csv_separator]
     separator_cookie = cookies['speciesplus.csv_separator']
-
     if separator_params.present?
       cookies.permanent['speciesplus.csv_separator'] = separator_params
     elsif separator_cookie.present?
       return
     else
       ip = request.remote_ip
-      if ip == '127.0.0.1' || nil
-        separator = ','
-      else
-        ip_data = Sapi::GeoIP.instance.resolve(ip)
-        separator = DEFAULT_COUNTRY_SEPARATORS[ip_data[:country].to_sym] || ','
-      end
+      separator = Sapi::GeoIP.instance.default_separator(ip)
       cookies.permanent['speciesplus.csv_separator'] = separator
     end
   end
+
 end

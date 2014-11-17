@@ -1,43 +1,53 @@
-# I have no clue why this is stalling the build
-
 require 'spec_helper'
 
 describe Species::ExportsController do
   context 'with ip address to csv separator conversion' do
     it 'sets separator to comma with local ip address' do
       ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("127.0.0.1")
-      get :download, data_type: 'EuDecisions', :filters => {'set' => 'current', 'decision_types' => {}}
+      get :download, data_type: 'EuDecisions', :filters => {
+        'set' => 'current', 'decision_types' => {}, :csv_separator => ''
+      }
+
       expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
-      expect(response.cookies['speciesplus.csv_separator']).to eq(',')
-      expect(assigns(:filters)[:csv_separator]).to eq(',')
+      expect(response.cookies['speciesplus.csv_separator']).to eq('comma')
+      expect(assigns(:filters)[:csv_separator]).to eq(:comma)
     end
 
     it 'sets separator to comma with UK ip address' do
       ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("194.59.188.126")
-      get :download, data_type: 'EuDecisions', :filters => {'set' => 'current', 'decision_types' => {}}
+      Sapi::GeoIP.any_instance.stub(:country_and_city).and_return({:country=>"GB", :city=>"Cambridge"})
+      get :download, data_type: 'EuDecisions', :filters => {
+        'set' => 'current', 'decision_types' => {}, :csv_separator => ''
+      }
       expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
-      expect(response.cookies['speciesplus.csv_separator']).to eq(',')
-      expect(assigns(:filters)[:csv_separator]).to eq(',')
+      expect(response.cookies['speciesplus.csv_separator']).to eq('comma')
+      expect(assigns(:filters)[:csv_separator]).to eq(:comma)
     end
 
     it 'sets separator to semicolon with AF ip address' do
       ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("175.106.59.78")
-      get :download, data_type: 'EuDecisions', :filters => {'set' => 'current', 'decision_types' => {}}
+      Sapi::GeoIP.any_instance.stub(:country_and_city).and_return({:country=>"AF", :city=>"Kabul"})
+      get :download, data_type: 'EuDecisions', :filters => {
+        'set' => 'current', 'decision_types' => {}, :csv_separator => ''
+      }
       expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
-      expect(response.cookies['speciesplus.csv_separator']).to eq(';')
-      expect(assigns(:filters)[:csv_separator]).to eq(';')
+      expect(response.cookies['speciesplus.csv_separator']).to eq('semicolon')
+      expect(assigns(:filters)[:csv_separator]).to eq(:semicolon)
     end
 
     it 'sets separator back to comma when a user overrides the encoded default' do
       ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("175.106.59.78")
-      get :download, data_type: 'EuDecisions', :filters => {'set' => 'current', 'decision_types' => {}, :csv_separator => ','}
+      get :download, data_type: 'EuDecisions', :filters => {
+        'set' => 'current', 'decision_types' => {}, :csv_separator => 'comma'
+      }
       expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
-      expect(response.cookies['speciesplus.csv_separator']).to eq(',')
-      expect(assigns(:filters)[:csv_separator]).to eq(',')
+      expect(response.cookies['speciesplus.csv_separator']).to eq('comma')
+      expect(assigns(:filters)[:csv_separator]).to eq(:comma)
     end
   end
 end
 
+# I have no clue why this is stalling the build
 #   describe "GET download" do
 #     context "CITES listings" do
 #       after(:each){ DownloadsCache.clear_cites_listings }
