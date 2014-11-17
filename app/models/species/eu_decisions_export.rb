@@ -5,7 +5,9 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     @taxon_concepts_ids = filters[:taxon_concepts_ids]
     @geo_entities_ids = filters[:geo_entities_ids]
     @years = filters[:years]
-    initialize_csv_separator(@filters[:csv_separator])
+    @decision_types = filters[:decision_types]
+    @set = filters[:current]
+    initialize_csv_separator(filters[:csv_separator])
     initialize_file_name
   end
 
@@ -13,7 +15,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     rel = EuDecision.from("#{table_name} AS eu_decisions").
       select(sql_columns).
       order(:taxonomic_position, :party, :ordering_date)
-    if @filters['set'] == 'current'
+    if @set == 'current'
       rel = rel.where(is_valid: true)
     end
     unless @geo_entities_ids.nil? || @geo_entities_ids.empty?
@@ -37,17 +39,16 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
         'EXTRACT(YEAR FROM start_date) IN (?)', @years
       )
     end
-    decision_types = @filters['decision_types']
-    if decision_types['negativeOpinions'] == 'false'
+    if @decision_types['negativeOpinions'] == 'false'
       rel = rel.where('decision_type <> ?', EuDecisionType::NEGATIVE_OPINION)
     end
-    if decision_types['positiveOpinions'] == 'false'
+    if @decision_types['positiveOpinions'] == 'false'
       rel = rel.where('decision_type <> ?', EuDecisionType::POSITIVE_OPINION)
     end
-    if decision_types['noOpinions'] == 'false'
+    if @decision_types['noOpinions'] == 'false'
       rel = rel.where('decision_type <> ?', EuDecisionType::NO_OPINION)
     end
-    if decision_types['suspensions'] == 'false'
+    if @decision_types['suspensions'] == 'false'
       rel = rel.where('decision_type <> ?', EuDecisionType::SUSPENSION)
     end
     rel
