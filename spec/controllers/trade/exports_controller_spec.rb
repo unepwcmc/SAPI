@@ -32,41 +32,5 @@ describe Trade::ExportsController do
         expect(response).to redirect_to(trade_root_url)
       end
     end
-
-    context 'with ip address to csv separator conversion' do
-      it 'sets separator to comma with local ip address' do
-        ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("127.0.0.1")
-        get :download
-        expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
-        expect(response.cookies['speciesplus.csv_separator']).to eq(',')
-        # Assert it gets passed in params?
-      end
-
-      it 'sets separator to comma with UK ip address' do
-        ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("194.59.188.126")
-        get :download
-        expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
-        expect(response.cookies['speciesplus.csv_separator']).to eq(',')
-        # Assert it gets passed in params?
-      end
-
-      it 'sets separator to semicolon with AF ip address' do
-        ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("175.106.59.78")
-        get :download
-        expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
-        expect(response.cookies['speciesplus.csv_separator']).to eq(';')
-        # Assert it gets passed in params?
-      end
-
-      it 'sets separator back to comma when a user overrides the encoded default' do
-        ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("175.106.59.78")
-        get :download, :filters => {
-          :csv_separator => ','
-        }
-        expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
-        expect(response.cookies['speciesplus.csv_separator']).to eq(',')
-        # Assert it gets passed in params?
-      end
-    end
   end
 end
