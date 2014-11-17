@@ -5,6 +5,9 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
     if target.output.will_create_taxon?
       new_taxon_concept = @output.new_taxon_concept
     end
+    if new_taxon_concept.nil?
+      new_taxon_concept = @output.new_taxon_concept
+    end
     Rails.logger.debug("Processing #{reassignable.class} #{reassignable.id} copy to #{new_taxon_concept.full_name}")
     if target.reassignment.kind_of?(NomenclatureChange::ParentReassignment) ||
       reassignable.kind_of?(Trade::Shipment)

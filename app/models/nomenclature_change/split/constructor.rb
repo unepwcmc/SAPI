@@ -21,7 +21,9 @@ class NomenclatureChange::Split::Constructor
   def build_parent_reassignments
     input = @nomenclature_change.input
     outputs = @nomenclature_change.outputs.select{ |out|
-      !out.new_scientific_name.empty? if out.new_scientific_name != nil
+      if !out.new_scientific_name.nil? && !out.scientific_name.nil?
+        !out.new_scientific_name.empty? && !out.scientific_name.empty?
+      end
     }
 
     default_output = @nomenclature_change.outputs_intersect_inputs.first
@@ -38,7 +40,9 @@ class NomenclatureChange::Split::Constructor
   def build_name_reassignments
     input = @nomenclature_change.input
     outputs = @nomenclature_change.outputs.select{ |out|
-      !out.new_scientific_name.empty? if out.new_scientific_name != nil
+      if !out.new_scientific_name.nil? && !out.scientific_name.nil?
+        !out.new_scientific_name.empty? && !out.scientific_name.empty?
+      end
     }
     default_output = @nomenclature_change.outputs_intersect_inputs.first
     default_output ||= @nomenclature_change.outputs.first
@@ -52,7 +56,9 @@ class NomenclatureChange::Split::Constructor
   def build_distribution_reassignments
     input = @nomenclature_change.input
     outputs = @nomenclature_change.outputs.select{ |out|
-      !out.new_scientific_name.empty? if out.new_scientific_name != nil
+      if !out.new_scientific_name.nil? && !out.scientific_name.nil?
+        !out.new_scientific_name.empty? && !out.scientific_name.empty?
+      end
     }
     default_outputs = @nomenclature_change.outputs
     _build_distribution_reassignments(input, default_outputs)
@@ -65,7 +71,9 @@ class NomenclatureChange::Split::Constructor
   def build_legislation_reassignments
     input = @nomenclature_change.input
     outputs = @nomenclature_change.outputs.select{ |out|
-      !out.new_scientific_name.empty? if out.new_scientific_name != nil
+      if !out.new_scientific_name.nil? && !out.scientific_name.nil?
+        !out.new_scientific_name.empty? && !out.scientific_name.empty?
+      end
     }
     _build_legislation_reassignments(@nomenclature_change.input, @nomenclature_change.outputs)
 
@@ -77,7 +85,9 @@ class NomenclatureChange::Split::Constructor
   def build_common_names_reassignments
     input = @nomenclature_change.input
     outputs = @nomenclature_change.outputs.select{ |out|
-      !out.new_scientific_name.empty? if out.new_scientific_name != nil
+      if !out.new_scientific_name.nil? && !out.scientific_name.nil?
+        !out.new_scientific_name.empty? && !out.scientific_name.empty?
+      end
     }
     _build_common_names_reassignments(@nomenclature_change.input, @nomenclature_change.outputs)
 
@@ -89,7 +99,9 @@ class NomenclatureChange::Split::Constructor
   def build_references_reassignments
     input = @nomenclature_change.input
     outputs = @nomenclature_change.outputs.select{ |out|
-      !out.new_scientific_name.empty? if out.new_scientific_name != nil
+      if !out.new_scientific_name.nil? && !out.scientific_name.nil?
+        !out.new_scientific_name.empty? && !out.scientific_name.empty?
+      end
     }
     _build_references_reassignments(@nomenclature_change.input, @nomenclature_change.outputs)
 
