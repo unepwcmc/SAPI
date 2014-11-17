@@ -30,7 +30,6 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
   end
 
   def process_reassignment_to_output(reassignment, reassignable)
-    byebug
     new_taxon_concept = @output.new_taxon_concept || @output.taxon_concept
     Rails.logger.debug("Processing #{reassignable.class} #{reassignable.id} transfer to #{new_taxon_concept.full_name}")
 
