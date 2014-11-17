@@ -35,7 +35,7 @@ describe EuDecision do
       before(:each) do
         DownloadsCache.clear_eu_decisions
         create(:eu_decision, :start_date => Time.utc(2013), :type => 'EuOpinion')
-        EuDecision.export('set' => 'current', 'decision_types' => {})
+        Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
       end
       subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
       specify { subject.should_not be_empty }
@@ -47,9 +47,9 @@ describe EuDecision do
       before(:each) do
         DownloadsCache.clear_eu_decisions
         d = create(:eu_decision, :start_date => Time.utc(2013))
-        EuDecision.export('set' => 'current', 'decision_types' => {})
+        Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
         d.destroy
-        EuDecision.export('set' => 'current', 'decision_types' => {})
+        Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
       end
       subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
       specify { subject.should be_empty }
