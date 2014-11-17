@@ -16,8 +16,12 @@ class NomenclatureChange::ReassignmentProcessor
     if reassignment.reassignable_id.blank?
       process_reassignment_of_anonymous_reassignable(reassignment)
     else
-      available_targets(reassignment).each do |target|
-        process_reassignment_to_target(target, reassignment.reassignable)
+      if reassignment.is_a?(NomenclatureChange::Reassignment)
+        available_targets(reassignment).each do |target|
+          process_reassignment_to_target(target, reassignment.reassignable)
+        end
+      else
+        process_reassignment_to_output(reassignment, reassignment.reassignable)
       end
     end
   end
@@ -30,15 +34,22 @@ class NomenclatureChange::ReassignmentProcessor
         {taxon_concept_id: reassignment.input.taxon_concept_id}
       )
     else
-      @input.reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
-        available_targets(reassignment).each do |target|
-          process_reassignment_to_target(target, reassignable)
+      if reassignment.is_a?(NomenclatureChange::Reassignment)
+        @input.reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
+          available_targets(reassignment).each do |target|
+            process_reassignment_to_target(target, reassignable)
+          end
+        end
+      else
+        @input.reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
+          process_reassignment_to_output(reassignment, reassignable)
         end
       end
     end
   end
 
   def process_reassignment_to_target(target, reassignable); end
+  def process_reassignment_to_output(reassignment, reassignable); end
 
   def available_targets(reassignment)
     reassignment.reassignment_targets.select do |target|
@@ -48,16 +59,16 @@ class NomenclatureChange::ReassignmentProcessor
     end
   end
 
-  def notes(reassigned_object, target)
+  def notes(reassigned_object, reassignment)
     {
       nomenclature_note_en: (reassigned_object.nomenclature_note_en || '') +
-        target.reassignment.note_with_resolved_placeholders_en(@input, @output),
+        reassignment.note_with_resolved_placeholders_en(@input, @output),
       nomenclature_note_es: (reassigned_object.nomenclature_note_es || '') +
-        target.reassignment.note_with_resolved_placeholders_es(@input, @output),
+        reassignment.note_with_resolved_placeholders_es(@input, @output),
       nomenclature_note_fr: (reassigned_object.nomenclature_note_fr || '') +
-        target.reassignment.note_with_resolved_placeholders_fr(@input, @output),
+        reassignment.note_with_resolved_placeholders_fr(@input, @output),
       internal_notes: (reassigned_object.internal_notes || '') +
-        target.reassignment.internal_note_with_resolved_placeholders(@input, @output)
+        reassignment.internal_note_with_resolved_placeholders(@input, @output)
     }
   end
 

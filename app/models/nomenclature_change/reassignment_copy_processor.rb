@@ -1,7 +1,10 @@
 class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::ReassignmentProcessor
 
   def process_reassignment_to_target(target, reassignable)
-    new_taxon_concept = @output.new_taxon_concept || @output.taxon_concept
+    new_taxon_concept = @output.taxon_concept
+    if target.output.will_create_taxon?
+      new_taxon_concept = @output.new_taxon_concept
+    end
     Rails.logger.debug("Processing #{reassignable.class} #{reassignable.id} copy to #{new_taxon_concept.full_name}")
     if target.reassignment.kind_of?(NomenclatureChange::ParentReassignment) ||
       reassignable.kind_of?(Trade::Shipment)
@@ -12,10 +15,12 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
         "taxon_concept_id" => new_taxon_concept.id
       }).first || reassignable.dup
       copied_object.taxon_concept_id = new_taxon_concept.id
-      if reassignable.kind_of? ListingChange ||
-        reassignable.kind_of?(CitesSuspension) || reassignable.kind_of?(Quota) ||
+      if reassignable.kind_of? ListingChange
+        copied_object.inclusion_taxon_concept_id = nil
+        copied_object.assign_attributes(notes(copied_object, target.reassignment))
+      elsif reassignable.kind_of?(CitesSuspension) || reassignable.kind_of?(Quota) ||
         reassignable.kind_of?(EuSuspension) || reassignable.kind_of?(EuOpinion)
-        copied_object.assign_attributes(notes(copied_object, target))
+        copied_object.assign_attributes(notes(copied_object, target.reassignment))
       end
       if reassignable.kind_of? Distribution
         build_distribution_associations(reassignable, copied_object)
