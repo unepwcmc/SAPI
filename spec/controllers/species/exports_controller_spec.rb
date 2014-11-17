@@ -6,34 +6,34 @@ describe Species::ExportsController do
   context 'with ip address to csv separator conversion' do
     it 'sets separator to comma with local ip address' do
       ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("127.0.0.1")
-      get :download, :filters => {:designation => 'EU'}
+      get :download, data_type: 'EuDecisions', :filters => {'set' => 'current', 'decision_types' => {}}
       expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq(',')
+      expect(assigns(:filters)[:csv_separator]).to eq(',')
     end
 
     it 'sets separator to comma with UK ip address' do
       ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("194.59.188.126")
-      get :download, :filters => {:designation => 'EU'}
+      get :download, data_type: 'EuDecisions', :filters => {'set' => 'current', 'decision_types' => {}}
       expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq(',')
+      expect(assigns(:filters)[:csv_separator]).to eq(',')
     end
 
     it 'sets separator to semicolon with AF ip address' do
       ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("175.106.59.78")
-      get :download, :filters => {:designation => 'EU'}
+      get :download, data_type: 'EuDecisions', :filters => {'set' => 'current', 'decision_types' => {}}
       expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq(';')
+      expect(assigns(:filters)[:csv_separator]).to eq(';')
     end
 
     it 'sets separator back to comma when a user overrides the encoded default' do
       ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("175.106.59.78")
-      get :download, :filters => {
-        :designation => 'CITES',
-        :csv_separator => ','
-      }
+      get :download, data_type: 'EuDecisions', :filters => {'set' => 'current', 'decision_types' => {}, :csv_separator => ','}
       expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq(',')
-      expect(request.params[:filters][:csv_separator]).to eq(',')
+      expect(assigns(:filters)[:csv_separator]).to eq(',')
     end
   end
 end
