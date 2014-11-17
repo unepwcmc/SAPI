@@ -5,7 +5,6 @@ class Species::ExportsController < ApplicationController
     set_default_separator
 
     filters = params[:filters].merge({
-      #:csv_separator => :semicolon
       :csv_separator => if params[:filters] && params[:filters][:csv_separator] &&
         params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
         :semicolon
