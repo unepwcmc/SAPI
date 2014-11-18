@@ -36,7 +36,9 @@ SAPI::Application.routes.draw do
     resources :geo_relationship_types, :only => [:index]
 
     namespace :v2 do
-      resources :taxon_concepts, :only => [:index]
+      resources :taxon_concepts, :only => [:index] do
+        resources :distributions, :only => [:index]
+      end
     end
   end
   namespace :admin do
