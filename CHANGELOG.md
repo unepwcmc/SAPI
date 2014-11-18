@@ -1,3 +1,10 @@
+### 0.8.10 (unreleased)
+**Species+:**
+* automatically discover default csv separator from IP
+* fixes a bug in EU Decisions download box year selector
+* fixes to column headers in EU Decisions download
+* rewrite of EU Decisions csv download (using PostgreSQL COPY)
+
 ### 0.8.7 (2014-10-15)
 **Species+:**
 * link to EU legislation page
