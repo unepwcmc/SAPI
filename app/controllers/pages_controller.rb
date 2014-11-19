@@ -33,4 +33,7 @@ class PagesController < ApplicationController
       ]).
       order('effective_at DESC')
   end
+
+  def api
+  end
 end
