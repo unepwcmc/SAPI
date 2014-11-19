@@ -1,23 +1,21 @@
 class Species::ExportsController < ApplicationController
+  before_filter :ensure_data_type_and_filters, :only => [:download]
 
   def download
-    filters = params[:filters].merge({
-      :csv_separator => if params[:filters] && params[:filters][:csv_separator] &&
-        params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
-        :semicolon
-      else
-        :comma
-      end
+    set_csv_separator
+
+    @filters = params[:filters].merge({
+      :csv_separator => cookies['speciesplus.csv_separator'].try(:to_sym)
     })
     case params[:data_type]
       when 'Quotas'
-        result = Quota.export filters
+        result = Quota.export @filters
       when 'CitesSuspensions'
-        result = CitesSuspension.export filters
+        result = CitesSuspension.export @filters
       when 'Listings'
-        result = Species::ListingsExportFactory.new(filters).export
+        result = Species::ListingsExportFactory.new(@filters).export
       when 'EuDecisions'
-        result = EuDecision.export filters
+        result = Species::EuDecisionsExport.new(@filters).export
     end
     respond_to do |format|
       format.html {
@@ -30,6 +28,28 @@ class Species::ExportsController < ApplicationController
       format.json {
         render :json => {:total => result.is_a?(Array) ? 1 : 0}
       }
+    end
+  end
+
+  private
+
+  def set_csv_separator
+    separator_params = params[:filters][:csv_separator]
+    separator_cookie = cookies['speciesplus.csv_separator']
+    if separator_params.present?
+      cookies.permanent['speciesplus.csv_separator'] = separator_params
+    elsif separator_cookie.present?
+      return
+    else
+      ip = request.remote_ip
+      separator = Sapi::GeoIP.instance.default_separator(ip)
+      cookies.permanent['speciesplus.csv_separator'] = separator
+    end
+  end
+
+  def ensure_data_type_and_filters
+    unless params[:data_type] && params[:filters]
+      render :nothing => true, :status => :unprocessable_entity and return false
     end
   end
 end

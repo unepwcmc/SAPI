@@ -584,6 +584,9 @@ body.inner #footer .holder{
 	text-align: center;
 	line-height: 180%;
 }
+.dwonload-block .csv_options_holder a {
+  cursor: pointer;
+}
 #csv_options{ display: none; }
 .btn-holder {
 	border-top: 1px solid #d6d7d7;

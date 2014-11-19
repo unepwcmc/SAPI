@@ -27,5 +27,4 @@ class CitesTrade::ExportsController < CitesTradeController
       }
     end
   end
-
 end

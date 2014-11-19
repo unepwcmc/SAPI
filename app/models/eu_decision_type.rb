@@ -26,6 +26,10 @@ class EuDecisionType < ActiveRecord::Base
 
   has_many :eu_decisions
 
+  def name_for_display
+    !!(self.name =~ /^i+\)/) ? "(No opinion) #{self.name}" : self.name
+  end
+
   private
 
   def dependent_objects_map
@@ -33,5 +37,4 @@ class EuDecisionType < ActiveRecord::Base
       'EU decisions' => eu_decisions
     }
   end
-
 end

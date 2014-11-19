@@ -42,4 +42,15 @@ class Sapi::GeoIP
     { organization: org }
   end
 
+  def default_separator(ip)
+    if ip == '127.0.0.1' || nil
+      :comma
+    else
+      ip_data = country_and_city(ip)
+      country = ip_data[:country]
+      separator_char = (country ? DEFAULT_COUNTRY_SEPARATORS[country.to_sym] : ',')
+      (separator_char == ';' ? :semicolon : :comma)
+    end
+  end
+
 end

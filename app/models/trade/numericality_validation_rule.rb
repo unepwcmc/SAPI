@@ -31,8 +31,6 @@ class Trade::NumericalityValidationRule < Trade::ValidationRule
       Arel::Nodes::NamedFunction.new 'isnumeric', [a]
     end
     arel_nodes = isnumeric_columns.map{ |c| c.eq(false) }
-    conditions = arel_nodes.shift
-    arel_nodes.each{ |n| conditions = conditions.or(n) }
-    Trade::SandboxTemplate.select('*').from(table_name).where(conditions)
+    Trade::SandboxTemplate.select('*').from(table_name).where(arel_nodes.inject(&:or))
   end
 end
