@@ -53,9 +53,7 @@ class NomenclatureChange::ReassignmentProcessor
 
   def available_targets(reassignment)
     reassignment.reassignment_targets.select do |target|
-      @output.new_taxon_concept_id &&
-        @output.new_taxon_concept_id != @input.taxon_concept.id ||
-        @output.taxon_concept_id != @input.taxon_concept.id
+      @output.new_taxon_concept_id  == target.output.new_taxon_concept_id
     end
   end
 

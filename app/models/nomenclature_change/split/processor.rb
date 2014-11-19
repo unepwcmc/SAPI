@@ -24,6 +24,8 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
       if @input.taxon_concept_id != output.taxon_concept_id
         chain << NomenclatureChange::OutputTaxonConceptProcessor.new(output)
       end
+    end
+    @outputs.each_with_index do |output, idx|
       if output.will_create_taxon?
         if ['A', 'N'].include?(output.name_status)
           chain << NomenclatureChange::StatusDowngradeProcessor.new(output)
