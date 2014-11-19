@@ -24,10 +24,12 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable
   attr_accessible :email, :name, :password, :password_confirmation,
-    :remember_me, :is_manager
+    :remember_me, :is_manager, :role
 
   validates :email, :uniqueness => true, :presence => true
   validates :name, :presence => true
+  validates :role, inclusion: { in: ['default', 'admin', 'api'] }, 
+                   presence: true
 
 
   def is_contributor?
