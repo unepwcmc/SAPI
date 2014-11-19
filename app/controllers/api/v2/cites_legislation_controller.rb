@@ -1,10 +1,10 @@
-class Api::V2::DistributionsController < ApplicationController
+class Api::V2::CitesLegislationController < ApplicationController
   resource_description do
     formats ['json']
     api_base_url 'api/v2/taxon_concepts'
   end
 
-  api :GET, '/:id/distributions', "Lists distributions for a given taxon concept"
+  api :GET, '/:id/cites_legislation', "Lists current listings, quotas, and suspensions for a given taxon concept"
   param :id, Integer, :desc => "Taxon Concept ID", :required => true
   
   def index
