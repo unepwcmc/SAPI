@@ -103,8 +103,14 @@ FactoryGirl.define do
 
   factory :eu_decision do
     taxon_concept
+    geo_entity
     eu_decision_type
-    start_date Date.new(2013,1,1)
+
+    factory :eu_opinion, class: EuOpinion do
+      start_date Date.new(2013,1,1)
+    end
+
+    factory :eu_suspension, class: EuSuspension
   end
 
   factory :eu_decision_type do
@@ -112,15 +118,4 @@ FactoryGirl.define do
     decision_type "NO_OPINION"
   end
 
-  factory :eu_opinion do
-    taxon_concept
-    eu_decision_type
-    start_date Date.new(2013,1,1)
-  end
-
-  factory :eu_suspension do
-    taxon_concept
-    eu_decision_type
-    start_date Date.new(2013,1,1)
-  end
 end

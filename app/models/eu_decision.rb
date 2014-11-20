@@ -44,6 +44,7 @@ class EuDecision < ActiveRecord::Base
     :dependent => :destroy
 
   validates :taxon_concept, presence: true
+  validates :geo_entity, presence: true
   validates :eu_decision_type, presence: true
 
   def year
