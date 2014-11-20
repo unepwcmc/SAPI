@@ -1,24 +1,52 @@
 <div class="page">
   <div class="row-header">
-    <h2>Species+ API Sign Up</h2>
-    <p><%= link_to 'Documentation', '/api/documentation' %></p>
+    <h2>Species+ API</h2>
   </div>
 
-  <%= form_for(@user, url: user_registration_path) do |f| %>
-    <%= f.label :name %>
-    <%= f.text_field :name %><br>
+  <h3 class="first">About the API</h3>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tincidunt iaculis magna sed mollis. Nullam in tempus augue. Quisque porttitor urna vitae convallis ornare. Sed viverra nunc metus, a pretium mi hendrerit eu. Duis imperdiet, augue id interdum volutpat, turpis velit mollis libero, nec sodales massa risus sed dui. Praesent at urna venenatis, lacinia sapien non, auctor tortor. Fusce consequat malesuada fermentum. Donec elit mauris, sollicitudin sed sem eu, imperdiet rhoncus mi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur aliquam ex nisl, in malesuada neque venenatis a. Quisque dignissim diam vel arcu laoreet consequat. Proin eget tempor ex. Praesent eros magna, tincidunt ac quam a, vehicula tincidunt metus.</p>
 
-    <%= f.label :email %>
-    <%= f.email_field :email %><br>
+  <h3 class="first">Terms of Use</h3>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tincidunt iaculis magna sed mollis. Nullam in tempus augue. Quisque porttitor urna vitae convallis ornare. Sed viverra nunc metus, a pretium mi hendrerit eu. Duis imperdiet, augue id interdum volutpat, turpis velit mollis libero, nec sodales massa risus sed dui. Praesent at urna venenatis, lacinia sapien non, auctor tortor. Fusce consequat malesuada fermentum. Donec elit mauris, sollicitudin sed sem eu, imperdiet rhoncus mi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur aliquam ex nisl, in malesuada neque venenatis a. Quisque dignissim diam vel arcu laoreet consequat. Proin eget tempor ex. Praesent eros magna, tincidunt ac quam a, vehicula tincidunt metus.</p>
 
-    <%= f.label :password %>
-    <%= f.password_field :password %><br>
+  <h3 class="first">Documentation and Examples</h3>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tincidunt iaculis magna sed mollis. Nullam in tempus augue. Quisque porttitor urna vitae convallis ornare. Sed viverra nunc metus, a pretium mi hendrerit eu. Duis imperdiet, augue id interdum volutpat, turpis velit mollis libero, nec sodales massa risus sed dui.</p>
 
-    <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation %><br>
+  <h4><%= link_to 'Read the documentation', '/api/documentation' %></h4>
 
-    <%= f.hidden_field :role, value: @user.role %>
+  <h3 class="first">Sign Up</h3>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tincidunt iaculis magna sed mollis. Nullam in tempus augue. Quisque porttitor urna vitae convallis ornare. Sed viverra nunc metus, a pretium mi hendrerit eu. Duis imperdiet, augue id interdum volutpat, turpis velit mollis libero, nec sodales massa risus sed dui.</p>
+  <br>
 
-    <%= f.submit "Sign up" %>
-  <% end %>
+  <div class="well">
+    <h3 class="first">Sign up for an API account</h3>
+    <%= form_for @user, url: user_registration_path, html: {class: "form-horizontal", id: "registration-form"} do |f| %>
+      <div class="form-group">
+        <%= f.label :name, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10"><%= f.text_field :name, class: "form-control" %></div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :email, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10"><%= f.email_field :email, class: "form-control" %></div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10"><%= f.password_field :password, class: "form-control" %></div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password_confirmation, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10"><%= f.password_field :password_confirmation, class: "form-control" %></div>
+      </div>
+
+      <%= f.hidden_field :role, value: @user.role %>
+
+      <div class="col-sm-offset-2"><%= f.submit "Sign up", class: "btn btn-default" %></div>
+    <% end %>
+  </div>
+
+
+
 </div>
