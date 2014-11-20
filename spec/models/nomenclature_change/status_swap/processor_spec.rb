@@ -47,7 +47,7 @@ describe NomenclatureChange::StatusSwap::Processor do
 
       specify{ expect(primary_output_taxon_concept.name_status).to eq('A') }
       specify{ expect(secondary_output_taxon_concept).to be_is_synonym }
-      specify{ expect(secondary_output_taxon_concept.accepted_names).to include(primary_output_taxon_concept) }
+      specify{ expect(primary_output_taxon_concept.accepted_names).to include(secondary_output_taxon_concept) }
     end
   end
 
