@@ -27,7 +27,6 @@ describe NomenclatureChange::OutputTaxonConceptProcessor do
     context "when output is existing taxon with new name" do
       let(:output){ split_with_input_and_outputs_name_change.outputs.last }
       specify{ expect(output.taxon_concept.full_name).to eq('Errorus fatalus fatalus') }
-      pending{ expect(output.taxon_concept.reload.name_status).to eq('S') }
       specify{ expect(output.new_taxon_concept.name_status).to eq('A') }
       specify{ expect(output.new_taxon_concept.full_name).to eq('Errorus lolcatus') }
     end
