@@ -31,6 +31,8 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
           chain << NomenclatureChange::StatusDowngradeProcessor.new(output)
 
           chain << NomenclatureChange::ReassignmentTransferProcessor.new(output, output)
+        elsif ['S', 'T'].include?(output.name_status)
+          chain << NomenclatureChange::StatusUpgradeProcessor.new(output, [output])
         end
       elsif !output.will_create_taxon? && ['S', 'T'].include?(output.name_status)
         chain << NomenclatureChange::StatusUpgradeProcessor.new(output)
@@ -48,6 +50,8 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
     end
     unless input_is_one_of_outputs
       chain << NomenclatureChange::StatusDowngradeProcessor.new(@input, @outputs)
+    else
+      chain << NomenclatureChange::DeleteUnreassignedProcessor.new(@input)
     end
     chain
   end
