@@ -55,6 +55,7 @@ describe NomenclatureChange::Lump::Processor do
       context "relationships and trade" do
         before(:each){ processor.run }
         specify{ expect(input_species1.reload).to be_is_synonym }
+        specify{ expect(input_species1.reload.parent_id).to be_nil }
         specify{ expect(input_species1.accepted_names).to include(lump.output.new_taxon_concept) }
         specify{ expect(lump.output.new_taxon_concept.shipments).to include(@shipment) }
       end
