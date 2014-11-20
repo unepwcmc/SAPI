@@ -1,49 +1,81 @@
-<ul class='breadcrumb'>
-  <li class='active'><a href='<%= @doc[:doc_url] %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= @doc[:resources].values.first && @doc[:resources].values.first[:version] %></a></li>
-  <%= render(:partial => "languages", :locals => {:doc_url => @doc[:doc_url]}) %>
-  <% if @versions && @versions.size > 1 %>
-  <li class='pull-right'>
-    <%= @versions.collect { |v| link_to v, Apipie.full_url(v+@doc[:link_extension]) }.join(' / ').html_safe %>
-  </li>
-  <% end %>
-</ul>
+<div class="page">
 
-<div><%= raw @doc[:info] %></div>
 
-<h1 class='page-header'><%= t('apipie.resources') %></h1>
+<div>
+  <h2>Species+ API Documentation</h2>
+
+  <p>Application Programming Interface (API) to support CITES Parties to increase the accuracy and efficiency of curating CITES species data for permitting purposes.</p>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">Version Specific Documentation</div>
+    <ul class="list-group">
+      <li class='list-group-item'><a href='<%= @doc[:doc_url] %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= @doc[:resources].values.first && @doc[:resources].values.first[:version] %></a></li>
+      <%= render(:partial => "languages", :locals => {:doc_url => @doc[:doc_url]}) %>
+      <% if @versions && @versions.size > 1 %>
+      <li class='pull-right'>
+        <%= @versions.collect { |v| link_to v, Apipie.full_url(v+@doc[:link_extension]) }.join(' / ').html_safe %>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <h3 class="first">Getting Started</h3>
+  <h4>Authenticating your requests</h4>
+  <p>You can sign up for an API account here ???. Once you have signed up, visit ???? wj9402u9 an-jkgj and get your token. This token will need to be passed in to all requests as the value of a key named 'token' in the query string as below:</p>
+
+  <div class="well"><pre>http://www.speciesplus.net/api/v2/taxon_concepts/?token="abcd1234"</pre></div>
+
+  <h4>Pagination</h4>
+  <p>Where the request returns more than 100 objects, the request is paginated, showing 100 objects at a time. To fetch the remaining objects, you will need to make a new request and pass the optional ‘page’ parameter like as below:</p>
+
+  <div class="well"><pre>http://www.speciesplus.net/api/v2/taxon_concepts/?token=abcd1234&page=2</pre></div>
+
+  <h4>Terms of Use</h4>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam in arcu suscipit, egestas eros nec, scelerisque purus. Aenean venenatis lacus placerat euismod auctor. Sed vitae dui metus. Ut id ex quis tortor suscipit semper vel non nisl. Aliquam erat volutpat. Donec mattis consequat felis, lobortis pharetra justo faucibus sed.</p>
+
+  <h4>Contact</h4>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam in arcu suscipit, egestas eros nec, scelerisque purus. Aenean venenatis lacus placerat euismod auctor. Sed vitae dui metus. Ut id ex quis tortor suscipit semper vel non nisl. Aliquam erat volutpat. Donec mattis consequat felis, lobortis pharetra justo faucibus sed.</p>
+</div>
+
+<h4 class='page-header'>API Calls</h4>
 
 <% @doc[:resources].sort_by(&:first).each do |key, api| %>
-  <h2>
-    <a href='<%= api[:doc_url] %><%= @doc[:link_extension] %>'>
-      <%= api[:name] %>
-    </a><br>
-    <small><%= api[:short_description] %></small>
-  </h2>
-  <table class='table'>
-    <thead>
-      <tr>
-        <th><%= t('apipie.resource') %></th>
-        <th><%= t('apipie.description') %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% api[:methods].each do |m| %>
-        <% m[:apis].each do |a| %>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <h4>
+        <a href='<%= api[:doc_url] %><%= @doc[:link_extension] %>'>
+          <%= api[:name] %>
+        </a><br>
+        <small><%= api[:short_description] %></small>
+      </h4>
+      <table class='table'>
+        <thead>
           <tr>
-            <td>
-              <a href='<%= m[:doc_url] %><%= @doc[:link_extension] %>'><%= a[:http_method] %> <%= a[:api_url] %></a>
-              <% if a[:deprecated] %>
-                <code>DEPRECATED</code>
-              <% end %>
-            </td>
-            <td width='60%'><%= a[:short_description] %></td>
+            <th>HTTP Verb / Endpoint</th>
+            <th><%= t('apipie.description') %></th>
           </tr>
-        <% end %>
-      <% end %>
-    </tbody>
-  </table>
+        </thead>
+        <tbody>
+          <% api[:methods].each do |m| %>
+            <% m[:apis].each do |a| %>
+              <tr>
+                <td>
+                  <a href='<%= m[:doc_url] %><%= @doc[:link_extension] %>'><%= a[:http_method] %> <%= a[:api_url] %></a>
+                  <% if a[:deprecated] %>
+                    <code>DEPRECATED</code>
+                  <% end %>
+                </td>
+                <td width='60%'><%= a[:short_description] %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 <% end %>
 
 <% unless content_for(:apipie_footer) == @doc[:copyright] %>
   <%= content_for :apipie_footer, raw(@doc[:copyright]) %>
 <% end %>
+</div>
