@@ -35,5 +35,6 @@ class PagesController < ApplicationController
   end
 
   def api
+    @user = User.new(role: 'api')
   end
 end
