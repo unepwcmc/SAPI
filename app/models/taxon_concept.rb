@@ -37,7 +37,7 @@ class TaxonConcept < ActiveRecord::Base
     :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
     :tag_list, :legacy_trade_code,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-    :created_by_id, :updated_by_id, :dependents_updated_at
+    :created_by_id, :updated_by_id, :dependents_updated_at, :distributions
 
   attr_writer :parent_scientific_name
   attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
