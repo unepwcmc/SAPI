@@ -3,4 +3,22 @@
     <h2>Species+ API Sign Up</h2>
     <p><%= link_to 'Documentation', '/api/documentation' %></p>
   </div>
+
+  <%= form_for(@user, url: user_registration_path) do |f| %>
+    <%= f.label :name %>
+    <%= f.text_field :name %><br>
+
+    <%= f.label :email %>
+    <%= f.email_field :email %><br>
+
+    <%= f.label :password %>
+    <%= f.password_field :password %><br>
+
+    <%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation %><br>
+
+    <%= f.hidden_field :role, value: @user.role %>
+
+    <%= f.submit "Sign up" %>
+  <% end %>
 </div>
