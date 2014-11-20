@@ -6,6 +6,7 @@ SAPI::Application.routes.draw do
   as :user do
     get 'users/edit' => 'registrations#edit', :as => 'edit_user_registration'
     put 'users' => 'registrations#update', :as => 'user_registration'
+    post 'users' => 'registrations#create', :as => 'user_registration'
   end
 
   match 'about' => 'pages#about'
