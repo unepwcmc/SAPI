@@ -1,5 +1,4 @@
 class RegistrationsController < Devise::RegistrationsController
-  before_filter :configure_permitted_parameters
   
   def update
     @user = User.find(current_user.id)
@@ -21,12 +20,6 @@ class RegistrationsController < Devise::RegistrationsController
     else
       render "edit"
     end
-  end
-  
-  protected
-  
-  def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up).push(:role, :name)
   end
 
   private
