@@ -38,8 +38,7 @@ class Admin::EuOpinionsController < Admin::StandardAuthorizationController
     @terms = Term.order(:code)
     @sources = Source.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(:is_current => true,
-            :geo_entity_types => {:name => GeoEntityType::SETS[GeoEntityType::DEFAULT_SET]})
+      where(:geo_entity_types => {:name => GeoEntityType::SETS[GeoEntityType::DEFAULT_SET]})
     @eu_regulations = EuRegulation.order("effective_at DESC")
     @eu_decision_types = EuDecisionType.opinions
   end
