@@ -26,21 +26,25 @@
 <% unless method[:examples].blank? %>
   <%= heading(t('apipie.examples'), h_level) %>
   <% method[:examples].each do |example| %>
-    <pre class="prettyprint"><%= example %></pre>
+    <div class="well"><pre class="prettyprint"><%= example %></pre></div>
   <% end %>
 <% end %>
 
 <% unless method[:params].blank? %>
   <%= heading(t('apipie.params'), h_level) %>
-  <table class='table'>
-    <thead>
-      <tr>
-        <th><%= t('apipie.param_name') %></th>
-        <th><%= t('apipie.description') %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <%= render(:partial => "params", :locals => {:params => method[:params]}) %>
-    </tbody>
-  </table>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <table class='table'>
+        <thead>
+          <tr>
+            <th><%= t('apipie.param_name') %></th>
+            <th><%= t('apipie.description') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= render(:partial => "params", :locals => {:params => method[:params]}) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 <% end %>

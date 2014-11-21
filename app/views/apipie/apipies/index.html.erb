@@ -33,7 +33,7 @@
   <h4>Terms of Use</h4>
   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam in arcu suscipit, egestas eros nec, scelerisque purus. Aenean venenatis lacus placerat euismod auctor. Sed vitae dui metus. Ut id ex quis tortor suscipit semper vel non nisl. Aliquam erat volutpat. Donec mattis consequat felis, lobortis pharetra justo faucibus sed.</p>
 
-  <h4>Contact</h4>
+  <h4>Contact and Support</h4>
   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam in arcu suscipit, egestas eros nec, scelerisque purus. Aenean venenatis lacus placerat euismod auctor. Sed vitae dui metus. Ut id ex quis tortor suscipit semper vel non nisl. Aliquam erat volutpat. Donec mattis consequat felis, lobortis pharetra justo faucibus sed.</p>
 </div>
 
@@ -60,7 +60,7 @@
             <% m[:apis].each do |a| %>
               <tr>
                 <td>
-                  <a href='<%= m[:doc_url] %><%= @doc[:link_extension] %>'><%= a[:http_method] %> <%= a[:api_url] %></a>
+                  <a href='<%= m[:doc_url] %><%= @doc[:link_extension] %>'><strong>[<%= a[:http_method] %>]</strong> <%= a[:api_url] %></a>
                   <% if a[:deprecated] %>
                     <code>DEPRECATED</code>
                   <% end %>
