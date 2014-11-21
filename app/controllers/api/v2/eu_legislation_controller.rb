@@ -1,6 +1,6 @@
 class Api::V2::EuLegislationController < ApplicationController
   resource_description do
-    formats ['json']
+    formats ['JSON']
     api_base_url 'api/v2/taxon_concepts'
     name 'EU Legislation'
   end
