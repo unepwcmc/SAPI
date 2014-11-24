@@ -73,7 +73,7 @@ SAPI::Application.configure do
     :email => {
       :email_prefix => "[SAPI STAGING] ",
       :sender_address => %{"SAPI Exception Notifier" <no-reply@unep-wcmc.org>},
-      :exception_recipients => %w{simao.belchior@unep-wcmc.org agnieszka.figiel@unep-wcmc.org}
+      :exception_recipients => %w{SpeciesPlusDevs@wcmc.org.uk}
     }
 
   config.ember.variant = :production
