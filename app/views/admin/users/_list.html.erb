@@ -23,7 +23,7 @@
           </a>
       </td>
       <td>
-        <%= user.is_manager? ? "Manager" : "Contributor" %>
+        <%= user.is_admin? ? "Manager" : "Contributor" %>
       </td>
       <td>
         <% if can?(:update, user) %>
