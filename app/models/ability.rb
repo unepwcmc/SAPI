@@ -31,7 +31,7 @@ class Ability
 
     user ||= User.new
 
-    if user.is_manager?
+    if user.is_admin?
       can :manage, :all
     elsif user.is_contributor?
       can [:autocomplete, :read], :all
