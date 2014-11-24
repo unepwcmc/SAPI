@@ -15,6 +15,9 @@
 #  parent_id                  :integer
 #  party_id                   :integer
 #  party_iso_code             :string(255)
+#  party_full_name_en         :string(255)
+#  party_full_name_es         :string(255)
+#  party_full_name_fr         :string(255)
 #  ann_symbol                 :string(255)
 #  full_note_en               :text
 #  full_note_es               :text
@@ -32,7 +35,13 @@
 #  inclusion_taxon_concept_id :integer
 #  inherited_short_note_en    :text
 #  inherited_full_note_en     :text
-#  auto_note                  :text
+#  inherited_short_note_es    :text
+#  inherited_full_note_es     :text
+#  inherited_short_note_fr    :text
+#  inherited_full_note_fr     :text
+#  auto_note_en               :text
+#  auto_note_es               :text
+#  auto_note_fr               :text
 #  is_current                 :boolean
 #  explicit_change            :boolean
 #  updated_at                 :datetime
@@ -44,9 +53,6 @@
 #  excluded_taxon_concept_ids :string
 #  dirty                      :boolean
 #  expiry                     :datetime
-#  party_full_name_en         :text
-#  party_full_name_es         :text
-#  party_full_name_fr         :text
 #
 
 class MCmsListingChange < ActiveRecord::Base
