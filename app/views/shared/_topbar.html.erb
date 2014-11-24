@@ -162,7 +162,7 @@
             <li><%= link_to 'Species+ Activity Page', activities_path %></li>
           </ul>
         </li>
-        <% if current_user.role == 'api' %>
+        <% if user_signed_in? and current_user.role == 'api' %>
           <li><a href="#">API Token</a></li>
         <% end %>
         <% if user_signed_in? %>

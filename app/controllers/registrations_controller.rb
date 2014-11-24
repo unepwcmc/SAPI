@@ -1,4 +1,9 @@
 class RegistrationsController < Devise::RegistrationsController
+  def create
+    super
+    resource.role = 'api'
+    resource.save
+  end
   
   def update
     @user = User.find(current_user.id)
