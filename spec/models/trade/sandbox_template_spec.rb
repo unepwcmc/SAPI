@@ -10,12 +10,12 @@
 #  unit_code                 :string(255)
 #  trading_partner           :string(255)
 #  country_of_origin         :string(255)
-#  export_permit             :string(255)
-#  origin_permit             :string(255)
+#  export_permit             :text
+#  origin_permit             :text
 #  purpose_code              :string(255)
 #  source_code               :string(255)
 #  year                      :string(255)
-#  import_permit             :string(255)
+#  import_permit             :text
 #  reported_taxon_concept_id :integer
 #  taxon_concept_id          :integer
 #
