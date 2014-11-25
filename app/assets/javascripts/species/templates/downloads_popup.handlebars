@@ -25,7 +25,7 @@
     {{view Species.DownloadsForCms isVisibleBinding="controller.designationIsCms" controllerBinding="controllers.downloadsForCmsListings"}}
 
     <div class="csv_options_holder">
-      <a {{action 'showHideCsvOptions'}}>Trouble viewing outputs?</a>
+      <a {{action 'showHideCsvOptions'}} title="The csv files can be downloaded using commas or semicolons as separators. The default separator is, when possible, automatically based on the computer's default regional settings. Users can change that setting here.">Trouble viewing outputs?</a>
 
       <div id="csv_options">
         {{view Ember.RadioButton name="csv_separator" selectionBinding="csvSeparator" value="comma"}} Comma Separated
