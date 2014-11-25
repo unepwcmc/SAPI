@@ -36,10 +36,12 @@ module NomenclatureChange::ConstructorHelpers
       reassignment_attrs
     ).first
     unless reassignment
-      reassignment = NomenclatureChange::ParentReassignment.new(
+      reassignment = input.parent_reassignment_class.new(
         reassignment_attrs
       )
-      reassignment.build_reassignment_target(nomenclature_change_output_id: output.id)
+      if reassignment.respond_to?(:build_reassignment_target)
+        reassignment.build_reassignment_target(nomenclature_change_output_id: output.id)
+      end
     end
     reassignment
   end
@@ -70,7 +72,7 @@ module NomenclatureChange::ConstructorHelpers
       reassignment_attrs
     ).first
     if reassignment.nil?
-      reassignment = NomenclatureChange::NameReassignment.new(
+      reassignment = input.name_reassignment_class.new(
         reassignment_attrs
       )
       _build_multiple_targets(reassignment, outputs.select do |o|
@@ -97,11 +99,13 @@ module NomenclatureChange::ConstructorHelpers
       reassignment_attrs
     ).first
     if reassignment.nil?
-      reassignment = NomenclatureChange::DistributionReassignment.new(
+      reassignment = input.distribution_reassignment_class.new(
         reassignment_attrs
       )
-      outputs.map do |output|
-        reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
+      if input.is_a?(NomenclatureChange::Input)
+        outputs.map do |output|
+          reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
+        end
       end
     end
     reassignment
@@ -115,7 +119,10 @@ module NomenclatureChange::ConstructorHelpers
       _build_legislation_type_reassignment(legislation_collection_name, input)
     end.compact
     input.legislation_reassignments.each do |reassignment|
-      _build_multiple_targets(reassignment, outputs)
+      if input.is_a?(NomenclatureChange::Input)
+        _build_multiple_targets(reassignment, outputs)
+        #input.reassignments << reassignment
+      end
     end
   end
 
@@ -124,7 +131,7 @@ module NomenclatureChange::ConstructorHelpers
     public_note = send(:"multi_lingual_#{legislation_collection_name.to_s.singularize}_note")
     input.send(:"#{legislation_collection_name}_reassignments").first ||
       input.taxon_concept.send(legislation_collection_name).limit(1).count > 0 &&
-      NomenclatureChange::LegislationReassignment.new(
+      input.legislation_reassignment_class.new(
         reassignable_type: legislation_type,
         note_en: public_note[:en],
         note_es: public_note[:es],
@@ -134,18 +141,21 @@ module NomenclatureChange::ConstructorHelpers
 
   def _build_reassignable_type_reassignment(reassignable_collection_name, input)
     reassignable_type = reassignable_collection_name.to_s.singularize.camelize
+    input_class = input.reassignment_class
     input.send(:"#{reassignable_collection_name}_reassignments").first ||
       input.taxon_concept.send(reassignable_collection_name).limit(1).count > 0 &&
-      NomenclatureChange::Reassignment.new(
+      input.reassignment_class.new(
         reassignable_type: reassignable_type,
-        type: 'NomenclatureChange::Reassignment'
+        type: input_class.to_s
       ) || nil
   end
 
   def _build_common_names_reassignments(input, outputs)
     reassignment = _build_reassignable_type_reassignment(:taxon_commons, input)
     if reassignment
-      _build_multiple_targets(reassignment, outputs)
+      if input.is_a?(NomenclatureChange::Input)
+        _build_multiple_targets(reassignment, outputs)
+      end
       input.reassignments << reassignment
     end
   end
@@ -153,20 +163,25 @@ module NomenclatureChange::ConstructorHelpers
   def _build_references_reassignments(input, outputs)
     reassignment = _build_reassignable_type_reassignment(:taxon_concept_references, input)
     if reassignment
-      _build_multiple_targets(reassignment, outputs)
+      if input.is_a?(NomenclatureChange::Input)
+        _build_multiple_targets(reassignment, outputs)
+      end
       input.reassignments << reassignment
     end
   end
 
   def _build_trade_reassignments(input, output)
+    input_class = input.reassignment_class
     unless input.reassignments.where(
       reassignable_type: 'Trade::Shipment'
     ).first || input.taxon_concept.shipments.limit(1).count == 0
-      reassignment = NomenclatureChange::Reassignment.new(
+      reassignment = input.reassignment_class.new(
         reassignable_type: 'Trade::Shipment',
-        type: 'NomenclatureChange::Reassignment'
+        type: input_class.to_s
       )
-      _build_single_target(reassignment, output)
+      if input.is_a?(NomenclatureChange::Input)
+        _build_single_target(reassignment, output)
+      end
       input.reassignments << reassignment
     end
   end

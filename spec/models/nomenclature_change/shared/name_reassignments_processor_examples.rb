@@ -1,6 +1,6 @@
 shared_context 'name_reassignments_processor_examples' do
   let(:input_species_synonym){
-    create_cites_eu_species
+    create_cites_eu_species(name_status: 'S')
   }
   let(:input_species_synonym_rel){
     create(:taxon_relationship,
