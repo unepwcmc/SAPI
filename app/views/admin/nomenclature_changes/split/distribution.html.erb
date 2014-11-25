@@ -5,7 +5,22 @@
   Please check distribution assignments for newly split species. Distribution can be assigned to multiple split outputs.
 </p>
 <%= nomenclature_change_form do |f| %>
+  <p>
+    <i class="icon-info-sign"></i>
+    Gloabal selection
+  </p>
+  <% @nomenclature_change.outputs.map do |output| %>
+    <div class='species-checkbox'>
+      <input type="checkbox" class="select-partial-checkbox" checked>
+      <span class="species-name"><%= output.display_full_name %></span>
+    </div>
+  <% end %>
+
   <%= f.fields_for :input do |ff| %>
+    <p>
+      <i class="icon-info-sign"></i>
+      Local selection
+    </p>
 
     <%= ff.fields_for :distribution_reassignments do |fff| %>
       <div class="control-group">
@@ -23,7 +38,7 @@
             ),
             {}, {:class => 'simple-taxon-concept', :multiple => ''}
           %>
-          <input type="checkbox" class="select-all-checkbox">Select All
+          <input type="checkbox" class="select-all-checkbox" checked>Select All
         </div>
       </div>
     <% end %>
