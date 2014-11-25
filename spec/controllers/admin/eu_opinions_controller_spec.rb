@@ -24,8 +24,7 @@ describe Admin::EuOpinionsController do
       response.should render_template('new')
     end
     it "assigns @geo_entities (country and territory) with two objects" do
-      geo_entity_type_t = create(:geo_entity_type, :name => "TERRITORY")
-      territory = create(:geo_entity, :geo_entity_type_id => geo_entity_type_t.id)
+      territory = create(:geo_entity, :geo_entity_type_id => territory_geo_entity_type.id)
       country = create(:geo_entity)
       get :new, :taxon_concept_id => @taxon_concept.id
       assigns(:geo_entities).size.should == 2
@@ -39,7 +38,11 @@ describe Admin::EuOpinionsController do
       end
       it "redirects to the EU Opinions index" do
         post :create, :eu_opinion => {
-            :eu_decision_type_id => @eu_decision_type.id, :start_date => Date.today
+            :eu_decision_type_id => @eu_decision_type.id,
+            :start_date => Date.today,
+            :geo_entity_id => create(
+              :geo_entity, :geo_entity_type_id => country_geo_entity_type.id
+            )
           },
           :taxon_concept_id => @taxon_concept.id
           response.should redirect_to(admin_taxon_concept_eu_opinions_url(@taxon_concept.id))
@@ -66,12 +69,10 @@ describe Admin::EuOpinionsController do
       get :edit, :id => @eu_opinion.id, :taxon_concept_id => @taxon_concept.id
       response.should render_template('edit')
     end
-    it "assigns @geo_entities (country and territory) with two objects" do
-      geo_entity_type_t = create(:geo_entity_type, :name => "TERRITORY")
-      territory = create(:geo_entity, :geo_entity_type_id => geo_entity_type_t.id)
-      country = create(:geo_entity)
+    it "assigns @geo_entities" do
+      territory = create(:geo_entity, :geo_entity_type_id => territory_geo_entity_type.id)
       get :edit, :id => @eu_opinion.id, :taxon_concept_id => @taxon_concept.id
-      assigns(:geo_entities).size.should == 2
+      assigns(:geo_entities).should include(territory)
     end
   end
 
