@@ -56,6 +56,28 @@ FactoryGirl.define do
     end
   end
 
+  factory :nomenclature_change_output_reassignment, class: NomenclatureChange::OutputReassignment,
+    aliases: [:output_reassignment] do
+    output
+    type 'NomenclatureChange::OutputReassignment'
+    reassignable_type 'TaxonConcept'
+
+    factory :nomenclature_change_output_parent_reassignment do
+      type 'NomenclatureChange::OutputParentReassignment'
+    end
+    factory :nomenclature_change_output_name_reassignment do
+      type 'NomenclatureChange::OutputNameReassignment'
+      reassignable_type 'TaxonRelationship'
+    end
+    factory :nomenclature_change_output_distribution_reassignment do
+      type 'NomenclatureChange::OutputDistributionReassignment'
+      reassignable_type 'Distribution'
+    end
+    factory :nomenclature_change_output_legislation_reassignment do
+      type 'NomenclatureChange::OutputLegislationReassignment'
+    end
+  end
+
   factory :nomenclature_change_reassignment_target, class: NomenclatureChange::ReassignmentTarget do
     reassignment
     output
