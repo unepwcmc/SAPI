@@ -82,3 +82,13 @@ $(document).ready ->
       else
         selectElement.find('option').removeAttr("selected")
       selectElement.trigger("change")
+
+  $('.select-partial-checkbox').click (e) ->
+      checkboxElement = $(e.target)
+      species = $(checkboxElement).parent().find('span').text()
+      selectElement = checkboxElement.parent().parent().find('select')
+      if checkboxElement.is(':checked')
+        selectElement.find('option:contains('+species+')').prop("selected","selected")
+      else
+        selectElement.find('option:contains('+species+')').removeAttr("selected")
+      selectElement.trigger("change")
