@@ -86,4 +86,58 @@ shared_context 'split_definitions' do
       status: NomenclatureChange::Split::OUTPUTS
     )
   }
+  let(:split_with_input_with_reassignments){
+    3.times { create(:distribution, taxon_concept: input_species) }
+    distribution = create(:distribution, taxon_concept: input_species)
+
+    2.times { create(:taxon_relationship,
+      taxon_concept: input_species,
+      other_taxon_concept: create_cites_eu_species(name_status: 'S'),
+      taxon_relationship_type: synonym_relationship_type
+    )}
+    name1 = create(:taxon_relationship,
+      taxon_concept: input_species,
+      other_taxon_concept: create_cites_eu_species(name_status: 'S'),
+      taxon_relationship_type: synonym_relationship_type
+    )
+    name2 = create(:taxon_relationship,
+      taxon_concept: input_species,
+      other_taxon_concept: create_cites_eu_species(name_status: 'T'),
+      taxon_relationship_type: trade_name_relationship_type
+    )
+
+    nc = create(:nomenclature_change_split,
+      input_attributes: {taxon_concept_id: input_species.id},
+      outputs_attributes: {
+        0 => { taxon_concept_id: output_species1.id },
+        1 => { taxon_concept_id: input_species.id }
+      }
+    )
+    distribution_reassignment = create(:nomenclature_change_distribution_reassignment,
+      input: nc.input,
+      reassignable: distribution
+    )
+    name_reassignment1 = create(:nomenclature_change_name_reassignment,
+      input: nc.input,
+      reassignable: name1
+    )
+    name_reassignment2 = create(:nomenclature_change_name_reassignment,
+      input: nc.input,
+      reassignable: name2
+    )
+
+    create(:nomenclature_change_reassignment_target,
+      reassignment: distribution_reassignment,
+      output: nc.outputs.last
+    )
+    create(:nomenclature_change_reassignment_target,
+      reassignment: name_reassignment1,
+      output: nc.outputs.last
+    )
+    create(:nomenclature_change_reassignment_target,
+      reassignment: name_reassignment2,
+      output: nc.outputs.last
+    )
+    nc
+  }
 end
