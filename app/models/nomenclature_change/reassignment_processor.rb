@@ -28,10 +28,10 @@ class NomenclatureChange::ReassignmentProcessor
 
   def process_reassignment_of_anonymous_reassignable(reassignment)
     if reassignment.reassignable_type == 'Trade::Shipment'
-      new_taxon_concept = @output.taxon_concept || @output.new_taxon_concept
+      new_taxon_concept = @output.new_taxon_concept || @output.taxon_concept
       Trade::Shipment.update_all(
         {taxon_concept_id: new_taxon_concept.id},
-        {taxon_concept_id: reassignment.input.taxon_concept_id}
+        {taxon_concept_id: @input.taxon_concept_id}
       )
     else
       if reassignment.is_a?(NomenclatureChange::Reassignment)
