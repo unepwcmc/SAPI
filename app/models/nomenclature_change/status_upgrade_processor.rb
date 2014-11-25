@@ -5,7 +5,8 @@ class NomenclatureChange::StatusUpgradeProcessor < NomenclatureChange::StatusCha
     @linked_names = @linked_inputs_or_outputs.map do |an|
       an.new_taxon_concept || an.taxon_concept
     end.compact
-    unless @input_or_output.taxon_concept.name_status == 'A'
+    if !@input_or_output.taxon_concept.name_status == 'A' &&
+      @input_or_output.new_taxon_concept.nil?
       @input_or_output.taxon_concept.update_column(:name_status, 'A')
     end
     if @old_status == 'S'
