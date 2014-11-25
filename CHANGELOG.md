@@ -1,4 +1,9 @@
-### 0.8.10 (unreleased)
+### 0.8.11 (2014-11-25)
+**Species+ Admin:**
+* fix for phantom opinions
+* update of About page
+
+### 0.8.10 (2014-11-20)
 **Species+:**
 * automatically discover default csv separator from IP
 * fixes a bug in EU Decisions download box year selector
