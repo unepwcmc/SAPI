@@ -6,6 +6,14 @@ class NomenclatureChange::ReassignmentProcessor
   end
 
   def run
+    if @input.is_a?(NomenclatureChange::Input)
+      process_input_reassignments
+    else
+      process_output_reassignments
+    end
+  end
+
+  def process_input_reassignments
     @input.reassignments.select do |r|
       # only consider reassignments that target this output
       r.reassignment_targets.map(&:nomenclature_change_output_id).include?(@output.id)
@@ -15,15 +23,19 @@ class NomenclatureChange::ReassignmentProcessor
     end
   end
 
+  def process_output_reassignments
+    @input.reassignments.each do |reassignment|
+      process_reassignment(reassignment, nil)
+    end
+  end
+
   def process_reassignment(reassignment, target)
     Rails.logger.debug("Processing #{reassignment.reassignable_type} reassignment from #{@input.taxon_concept.full_name}")
     if reassignment.reassignable_id.blank?
       process_reassignment_of_anonymous_reassignable(reassignment, target)
     else
       if reassignment.is_a?(NomenclatureChange::Reassignment)
-        available_targets(reassignment).each do |target|
-          process_reassignment_to_target(target, reassignment.reassignable)
-        end
+        process_reassignment_to_target(target, reassignment.reassignable)
       else
         process_reassignment_to_output(reassignment, reassignment.reassignable)
       end
@@ -40,9 +52,7 @@ class NomenclatureChange::ReassignmentProcessor
     else
       if reassignment.is_a?(NomenclatureChange::Reassignment)
         @input.reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
-          available_targets(reassignment).each do |target|
-            process_reassignment_to_target(target, reassignable)
-          end
+          process_reassignment_to_target(target, reassignable)
         end
       else
         @input.reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
@@ -54,14 +64,6 @@ class NomenclatureChange::ReassignmentProcessor
 
   def process_reassignment_to_target(target, reassignable); end
   def process_reassignment_to_output(reassignment, reassignable); end
-
-  def available_targets(reassignment)
-    reassignment.reassignment_targets.select do |target|
-      @output.new_taxon_concept_id &&
-        @output.new_taxon_concept_id != @input.taxon_concept.id ||
-        @output.taxon_concept_id != @input.taxon_concept.id
-    end
-  end
 
   def notes(reassigned_object, reassignment)
     {
