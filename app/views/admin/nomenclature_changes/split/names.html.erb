@@ -5,16 +5,8 @@
   Assign Synonyms and Trade Names to the appropriate taxa. These names can be assigned to multiple split outputs.
 </p>
 <%= nomenclature_change_form do |f| %>
-  <p>
-    <i class="icon-info-sign"></i>
-    Global selection
-  </p>
-  <% @nomenclature_change.outputs.map do |output| %>
-    <div class='species-checkbox'>
-      <input type="checkbox" class="select-partial-checkbox">
-      <span class="species-name"><%= output.display_full_name %></span>
-    </div>
-  <% end %>
+
+  <%= global_selection false %>
 
   <%= f.fields_for :input do |ff| %>
     <p>
