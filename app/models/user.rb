@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable
   attr_accessible :email, :name, :password, :password_confirmation,
-    :remember_me, :role
+    :remember_me, :role, :terms_and_conditions
 
   has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit' 
 
@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   validates :name, :presence => true
   validates :role, inclusion: { in: ['default', 'admin', 'api'] }, 
                    presence: true
-
+  validates :terms_and_conditions, acceptance: true
 
   def is_contributor?
     self.role == 'default'
