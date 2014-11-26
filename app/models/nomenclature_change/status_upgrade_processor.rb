@@ -5,8 +5,7 @@ class NomenclatureChange::StatusUpgradeProcessor < NomenclatureChange::StatusCha
     @linked_names = @linked_inputs_or_outputs.map do |an|
       an.new_taxon_concept || an.taxon_concept
     end.compact
-    if !@input_or_output.taxon_concept.name_status == 'A' &&
-      @input_or_output.new_taxon_concept.nil?
+    unless @input_or_output.taxon_concept.name_status == 'A'
       @input_or_output.taxon_concept.update_column(:name_status, 'A')
     end
     if @old_status == 'S'
@@ -35,7 +34,7 @@ class NomenclatureChange::StatusUpgradeProcessor < NomenclatureChange::StatusCha
     rel_type = TaxonRelationshipType.
       find_by_name(TaxonRelationshipType::HAS_SYNONYM)
     # set input_or_input_or_output as accepted name of synonyms
-    create_inverse_relationships(@input_or_output.taxon_concept, rel_type)
+    create_relationships(@input_or_output.taxon_concept, rel_type)
     Rails.logger.debug "Updating shipments where reported taxon concept = #{@input_or_output.taxon_concept.full_name} to have taxon concept = #{@input_or_output.taxon_concept.full_name}"
     Trade::Shipment.update_all(
       {taxon_concept_id: @input_or_output.taxon_concept_id},
