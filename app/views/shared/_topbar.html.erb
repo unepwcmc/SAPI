@@ -5,13 +5,19 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </a>
-    <%= link_to "Species+ Admin", admin_root_path, :class => "brand" %>
+    <% if current_user && current_user.is_api? %>
+      <%= link_to "Species+ Admin", api_dashboard_path, :class => "brand" %>
+    <% else %>
+      <%= link_to "Species+ Admin", admin_root_path, :class => "brand" %>
+    <% end %>
     <div class="nav-collapse">
       <ul class="nav">
-
-
-
-        <li class="<%= if controller_name == 'taxon_concepts' then 'active' end%>"><a href="/admin">Home</a></li>
+        <% if current_user && current_user.is_api? %>
+          <li class="<%= if controller_name == 'taxon_concepts' then 'active' end%>"><a href="/api/dashboard">Home</a></li>
+        <% else %>
+          <li class="<%= if controller_name == 'taxon_concepts' then 'active' end%>"><a href="/admin">Home</a></li>
+        <% end %>
+        
         <% if current_user && current_user.is_admin? %>
           <% controller_matches = ["taxonomies", "ranks", "designations", "change_types",
               "species_listings", "geo_entities", "languages", "tags", "purposes", "sources",
@@ -121,7 +127,11 @@
             </ul>
           </li>
         <% end %>
-        <li class="<%= if controller_name == 'references' then 'active' end%>"><%= link_to 'References', admin_references_path %></li>
+
+        <% if current_user && !current_user.is_api? %>
+          <li class="<%= if controller_name == 'references' then 'active' end%>"><%= link_to 'References', admin_references_path %></li>
+        <% end %>
+
         <% if current_user && current_user.is_admin? %>
           <% controller_matches = ["cites_suspensions"] %>
           <li class="dropdown <%= if controller_matches.include?(controller_name) then 'active' end %>">
@@ -148,6 +158,7 @@
             </ul>
           </li>
         <% end %>
+
         <% controller_matches = ["exports"] %>
         <li class="dropdown <%= if controller_matches.include?(controller_name) then 'active' end %>">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -163,10 +174,14 @@
             <li><%= link_to 'Species+ Events Tracking', admin_ahoy_events_path %></li>
             <li><%= link_to 'Species+ Visits Tracking', admin_ahoy_visits_path %></li>
             <li><%= link_to 'Species+ Activity Page', activities_path %></li>
+
+            <% if current_user && current_user.is_api? %>
+              <li><a href="#">API Usage</a></li>
+            <% end %>
           </ul>
         </li>
-        <% if user_signed_in? and current_user.role == 'api' %>
-          <li><a href="#">API Documentation</a></li>
+        <% if user_signed_in? and current_user.is_api? %>
+          <li><%= link_to 'API Documentation', apipie_apipie_path %></li>
           <li><a href="#">API Tokens</a></li>
         <% end %>
         <% if user_signed_in? %>
