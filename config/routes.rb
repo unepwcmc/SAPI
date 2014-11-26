@@ -41,6 +41,7 @@ SAPI::Application.routes.draw do
       resources :taxon_concepts, :only => [:index] do
         resources :distributions, :only => [:index]
       end
+      match 'api/dashboard' => 'dashboard#index', as: 'dashboard'
     end
   end
   namespace :admin do
