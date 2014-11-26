@@ -8,6 +8,9 @@
     <%= link_to "Species+ Admin", admin_root_path, :class => "brand" %>
     <div class="nav-collapse">
       <ul class="nav">
+
+
+
         <li class="<%= if controller_name == 'taxon_concepts' then 'active' end%>"><a href="/admin">Home</a></li>
         <% if current_user && current_user.is_admin? %>
           <% controller_matches = ["taxonomies", "ranks", "designations", "change_types",
@@ -163,7 +166,8 @@
           </ul>
         </li>
         <% if user_signed_in? and current_user.role == 'api' %>
-          <li><a href="#">API Token</a></li>
+          <li><a href="#">API Documentation</a></li>
+          <li><a href="#">API Tokens</a></li>
         <% end %>
         <% if user_signed_in? %>
           <li class="dropdown">
