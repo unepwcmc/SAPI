@@ -128,4 +128,15 @@ module Admin::NomenclatureChangesHelper
     html.html_safe
   end
 
+  def global_selection(checked = true)
+    html = content_tag(:p, content_tag(:i, nil, class: "icon-info-sign") + " Global selection")
+    @nomenclature_change.outputs.map do |output|
+      html += content_tag(:div, class: 'species-checkbox') do
+        tag("input", {type: "checkbox", class: 'select-partial-checkbox', checked: checked}) +
+        content_tag(:span, output.display_full_name, class: 'species-name')
+      end
+    end
+    html.html_safe
+  end
+
 end
