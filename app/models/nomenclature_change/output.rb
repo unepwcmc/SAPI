@@ -112,6 +112,10 @@ class NomenclatureChange::Output < ActiveRecord::Base
       taxon_concept.full_name != display_full_name
   end
 
+  def will_create_taxon_from_another_taxon?
+    !taxon_concept.nil? && will_create_taxon?
+  end
+
   # Returns true when the new taxon has the same name as old one
   def will_update_taxon?
     !will_create_taxon? &&
