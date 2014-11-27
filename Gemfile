@@ -111,6 +111,7 @@ group :test, :development do
   gem "json_spec"
   gem "database_cleaner", ">=1.2.0"
   gem "timecop"
+  gem "launchy"
 end
 
 group :test do
@@ -118,6 +119,7 @@ group :test do
   gem "factory_girl_rails", "~> 4.0"
   gem 'simplecov', :require => false
   gem 'coveralls', :require => false
+  gem 'capybara'
 end
 
 gem 'rake', '~> 10.0.3'
