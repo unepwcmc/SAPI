@@ -1,6 +1,7 @@
 require 'codeclimate-test-reporter' if ENV['CI']
 require 'simplecov'
 require 'coveralls'
+require 'capybara/rspec'
 
 formatters = [Coveralls::SimpleCov::Formatter, SimpleCov::Formatter::HTMLFormatter]
 formatters.push CodeClimate::TestReporter::Formatter if ENV['CI']
@@ -86,4 +87,20 @@ def build_tc_attributes(*args)
   build_attributes(*args).delete_if do |k, v|
     %w(data listing notes).include? k
   end
+end
+
+def sign_up(user, opts = {})
+  options = {
+    terms_and_conditions: true
+  }.merge(opts)
+  visit api_path
+  within('#registration-form') do
+    fill_in 'Name', :with => user.name
+    fill_in 'Email', :with => user.email
+    fill_in 'Password', :with => 'test1234'
+    fill_in 'Password confirmation', :with => 'test1234'
+    find(:css, "#user_terms_and_conditions").set(options[:terms_and_conditions])
+  end
+
+  click_button 'Sign up'
 end
