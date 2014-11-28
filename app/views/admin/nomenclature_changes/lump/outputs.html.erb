@@ -11,11 +11,14 @@
 
 <%= nomenclature_change_form do |f| %>
   <%= f.fields_for :output do |ff| %>
+
+    <%= outputs_selection ff %>
+
     <div class="control-group">
       <label class="control-label">Taxon concept:</label>
       <div class="controls">
         <%= ff.text_field :taxon_concept_id, {
-          :class => 'taxon-concept',
+          :class => 'taxon-concept input-taxon',
           :'data-name' => ff.object.taxon_concept.try(:full_name),
           :'data-name-status' => ff.object.taxon_concept.try(:name_status),
           :'data-taxonomy-id' => @taxonomy.id,
@@ -23,16 +26,14 @@
         } %>
       </div>
     </div>
-    <div class="well">
-      <p>
-        <i class="icon-info-sign"></i>Please provide additional details if required.
-      </p>
+
+    <div class="upgrade-info">
       <div class="control-group">
         <label class="control-label">Parent:</label>
         <div class="controls">
           <!-- TODO figure out the restrictions on the auto complete here, none for now -->
           <%= ff.text_field :new_parent_id, {
-            :class => 'taxon-concept',
+            :class => 'taxon-concept parent-taxon',
             :'data-name' => ff.object.new_parent.try(:full_name),
             :'data-name-status' => ff.object.new_parent.try(:name_status),
             :'data-name-status-filter' => ['A'].to_json,
@@ -43,13 +44,17 @@
       <div class="control-group">
         <label class="control-label">Name:</label>
         <div class="controls">
-          <%= ff.text_field :new_scientific_name %>
+          <%= ff.text_field :new_scientific_name, {
+            :class => 'new-scientific-name'
+          } %>
         </div>
       </div>
       <div class="control-group">
         <label class="control-label">Author & year:</label>
         <div class="controls">
-          <%= ff.text_field :new_author_year %>
+          <%= ff.text_field :new_author_year, {
+            :class => 'new-author-year'
+          } %>
         </div>
       </div>
     </div>
