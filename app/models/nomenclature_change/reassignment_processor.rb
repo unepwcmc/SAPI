@@ -6,43 +6,32 @@ class NomenclatureChange::ReassignmentProcessor
   end
 
   def run
+    process_reassignments(reassignments_to_process)
+  end
+
+  def reassignments_to_process
     if @input.is_a?(NomenclatureChange::Input)
-      process_input_reassignments
+      @input.reassignments.select do |r|
+        # only consider reassignments that target this output
+        r.reassignment_targets.map(&:nomenclature_change_output_id).include?(@output.id)
+      end
     else
-      process_output_reassignments
+      @input.reassignments
     end
   end
 
-  def process_input_reassignments
-    @input.reassignments.select do |r|
-      # only consider reassignments that target this output
-      r.reassignment_targets.map(&:nomenclature_change_output_id).include?(@output.id)
-    end.each do |reassignment|
-      target = reassignment.reassignment_targets.find{ |t| t.nomenclature_change_output_id == @output.id }
-      process_reassignment(reassignment, target)
-    end
-  end
-
-  def process_output_reassignments
-    @input.reassignments.each do |reassignment|
-      process_reassignment(reassignment, nil)
-    end
-  end
-
-  def process_reassignment(reassignment, target)
-    Rails.logger.debug("Processing #{reassignment.reassignable_type} reassignment from #{@input.taxon_concept.full_name}")
-    if reassignment.reassignable_id.blank?
-      process_reassignment_of_anonymous_reassignable(reassignment, target)
-    else
-      if reassignment.is_a?(NomenclatureChange::Reassignment)
-        process_reassignment_to_target(target, reassignment.reassignable)
+  def process_reassignments(reassignments)
+    reassignments.each do |reassignment|
+      Rails.logger.debug("Processing #{reassignment.reassignable_type} reassignment from #{@input.taxon_concept.full_name}")
+      if reassignment.reassignable_id.blank?
+        process_reassignment_of_anonymous_reassignable(reassignment)
       else
-        process_reassignment_to_output(reassignment, reassignment.reassignable)
+        process_reassignment(reassignment, reassignment.reassignable)
       end
     end
   end
 
-  def process_reassignment_of_anonymous_reassignable(reassignment, target)
+  def process_reassignment_of_anonymous_reassignable(reassignment)
     if reassignment.reassignable_type == 'Trade::Shipment'
       new_taxon_concept = @output.new_taxon_concept || @output.taxon_concept
       Trade::Shipment.update_all(
@@ -50,14 +39,8 @@ class NomenclatureChange::ReassignmentProcessor
         {taxon_concept_id: @input.taxon_concept_id}
       )
     else
-      if reassignment.is_a?(NomenclatureChange::Reassignment)
-        @input.reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
-          process_reassignment_to_target(target, reassignable)
-        end
-      else
-        @input.reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
-          process_reassignment_to_output(reassignment, reassignable)
-        end
+      @input.reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
+        process_reassignment(reassignment, reassignable)
       end
     end
   end
