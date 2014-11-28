@@ -1,15 +1,19 @@
 SAPI::Application.routes.draw do
 
+  apipie
+
   devise_for :users, :skip => [:registrations]
   as :user do
     get 'users/edit' => 'registrations#edit', :as => 'edit_user_registration'
     put 'users' => 'registrations#update', :as => 'user_registration'
+    post 'users' => 'registrations#create', :as => 'user_registration'
   end
 
   match 'about' => 'pages#about'
   match 'terms-of-use' => 'pages#terms_of_use'
   match 'eu_legislation' => 'pages#eu_legislation'
   match 'activities(/:start_week)' => 'activities#activities', as: :activities
+  match 'api' => 'pages#api'
 
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
@@ -32,6 +36,14 @@ SAPI::Application.routes.draw do
     resources :ranks, :only => [:index]
     resources :geo_entities, :only => [:index]
     resources :geo_relationship_types, :only => [:index]
+
+    namespace :v2 do
+      resources :taxon_concepts, :only => [:index] do
+        resources :distributions, :only => [:index]
+      end
+    end
+     
+    match 'dashboard' => 'dashboard#index', as: 'dashboard'
   end
   namespace :admin do
     resources :taxonomies, :only => [:index, :create, :update, :destroy]

@@ -33,4 +33,8 @@ class PagesController < ApplicationController
       ]).
       order('effective_at DESC')
   end
+
+  def api
+    @user = User.new(role: 'api')
+  end
 end

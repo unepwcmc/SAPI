@@ -20,9 +20,9 @@
 #  updated_at                    :datetime         not null
 #  sandbox_id                    :integer
 #  reported_taxon_concept_id     :integer
-#  import_permit_number          :string(255)
-#  export_permit_number          :string(255)
-#  origin_permit_number          :string(255)
+#  import_permit_number          :text
+#  export_permit_number          :text
+#  origin_permit_number          :text
 #  legacy_shipment_number        :integer
 #  import_permits_ids            :string
 #  export_permits_ids            :string

@@ -16,7 +16,7 @@
 #  last_sign_in_at        :datetime
 #  current_sign_in_ip     :string(255)
 #  last_sign_in_ip        :string(255)
-#  is_manager             :boolean          default(FALSE), not null
+#  role                   :string(255)      default("default")
 #
 
 class User < ActiveRecord::Base
@@ -24,14 +24,26 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable
   attr_accessible :email, :name, :password, :password_confirmation,
-    :remember_me, :is_manager
+    :remember_me, :role, :terms_and_conditions
+
+  has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit' 
 
   validates :email, :uniqueness => true, :presence => true
   validates :name, :presence => true
-
+  validates :role, inclusion: { in: ['default', 'admin', 'api'] }, 
+                   presence: true
+  validates :terms_and_conditions, acceptance: true
 
   def is_contributor?
-    !is_manager?
+    self.role == 'default'
+  end
+
+  def is_admin?
+    self.role == 'admin'
+  end
+
+  def is_api?
+    self.role == 'api'
   end
 
   def can_be_deleted?
