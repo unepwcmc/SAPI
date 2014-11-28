@@ -94,7 +94,7 @@ $(document).ready ->
       selectElement.trigger("change")
 
   $('form').on('click', '.output-radio', (e) ->
-    value = $(this).attr("value")
+    value = $(this).val()
     switch value
       when "New taxon"
         NewTaxonForm(this)
@@ -105,18 +105,21 @@ $(document).ready ->
   )
 
   HideInputTaxon = (obj) ->
-    $(obj).closest('.fields').find('.input-taxon').select2('data',null)
-    $(obj).closest('.fields').find('.input-taxon').hide()
-    $(obj).closest('.fields').find('.input-taxon').closest('.control-group').find('label').hide()
+    input_taxon = $(obj).closest('.fields').find('.input-taxon')
+    input_taxon.select2('data',null)
+    input_taxon.hide()
+    input_taxon.closest('.control-group').find('label').hide()
 
   ShowInputTaxon = (obj) ->
-    $(obj).closest('.fields').find('.input-taxon').show()
-    $(obj).closest('.fields').find('.input-taxon').closest('.control-group').find('label').show()
+    input_taxon = $(obj).closest('.fields').find('.input-taxon')
+    input_taxon.show()
+    input_taxon.closest('.control-group').find('label').show()
 
   HideUpgradeInfo = (obj) ->
-    $(obj).closest('.fields').find('.upgrade-info').first().hide()
+    upgrade_info = $(obj).closest('.fields').find('.upgrade-info')
+    upgrade_info.first().hide()
+    upgrade_info.find('input').prop("value", '')
     $(obj).closest('.fields').find('.parent-taxon').select2('data',null)
-    $(obj).closest('.fields').find('.upgrade-info').find('input').prop("value", '')
 
   NewTaxonForm = (obj) ->
     HideInputTaxon(obj)
