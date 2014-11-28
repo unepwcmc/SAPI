@@ -33,7 +33,7 @@ module ComparisonAttributes
   def duplicates(comparison_attributes_override)
     self.class.where(
       comparison_conditions(
-        comparison_attributes.merge(comparison_attributes_override)
+        comparison_attributes.merge(comparison_attributes_override.symbolize_keys)
       )
     )
   end
