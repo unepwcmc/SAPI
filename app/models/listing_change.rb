@@ -137,12 +137,14 @@ class ListingChange < ActiveRecord::Base
       )
     )
     if party_listing_distribution
-      relation = relation.includes(:party_listing_distribution).where(
-        party_listing_distribution.comparison_conditions
+      relation = relation.joins(:party_listing_distribution).where(
+        party_listing_distribution.comparison_conditions(
+          party_listing_distribution.comparison_attributes.except(:listing_change_id)
+        )
       )
     end
     if annotation
-      relation = relation.includes(:annotation).where(
+      relation = relation.joins(:annotation).where(
         annotation.comparison_conditions
       )
     end
