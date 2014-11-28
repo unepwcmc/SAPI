@@ -1,26 +1,35 @@
 class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::ReassignmentProcessor
 
-  def process_reassignment_to_target(target, reassignable)
-    new_taxon_concept = @output.taxon_concept
-    if target.output.will_create_taxon?
-      new_taxon_concept = @output.new_taxon_concept
-    end
+  def process_reassignment(reassignment, reassignable)
+    o = copied_object_before_save(reassignment, reassignable)
+    o if o.save # hope that saves the duplicated associations as well
+  end
+
+  def copied_object_before_save(reassignment, reassignable)
+    new_taxon_concept = @output.new_taxon_concept || @output.taxon_concept
     Rails.logger.debug("Processing #{reassignable.class} #{reassignable.id} copy to #{new_taxon_concept.full_name}")
-    if target.reassignment.kind_of?(NomenclatureChange::ParentReassignment) ||
-      reassignable.kind_of?(Trade::Shipment)
+    if reassignment.kind_of?(NomenclatureChange::ParentReassignment)
       reassignable.parent_id = new_taxon_concept.id
-      reassignable.save
+      reassignable
+    elsif reassignable.kind_of?(Trade::Shipment)
+      reassignable.taxon_concept_id = new_taxon_concept.id
+      reassignable
     else
+      # Each reassignable object implements find_duplicate,
+      # which is called from here to make sure we're not adding a duplicate.
       copied_object = reassignable.duplicates({
         taxon_concept_id: new_taxon_concept.id
       }).first || reassignable.dup
       copied_object.taxon_concept_id = new_taxon_concept.id
       if reassignable.kind_of? ListingChange
         copied_object.inclusion_taxon_concept_id = nil
-        copied_object.assign_attributes(notes(copied_object, target.reassignment))
-      elsif reassignable.kind_of?(CitesSuspension) || reassignable.kind_of?(Quota) ||
-        reassignable.kind_of?(EuSuspension) || reassignable.kind_of?(EuOpinion)
-        copied_object.assign_attributes(notes(copied_object, target.reassignment))
+      end
+      if reassignment.is_a?(NomenclatureChange::Reassignment) && (
+        reassignable.is_a?(ListingChange) ||
+        reassignable.is_a?(CitesSuspension) || reassignable.is_a?(Quota) ||
+        reassignable.is_a?(EuSuspension) || reassignable.is_a?(EuOpinion)
+        )
+        copied_object.assign_attributes(notes(copied_object, reassignment))
       end
       if reassignable.kind_of? Distribution
         build_distribution_associations(reassignable, copied_object)
@@ -29,7 +38,7 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
       elsif reassignable.kind_of?(Quota) || reassignable.kind_of?(CitesSuspension)
         build_trade_restriction_associations(reassignable, copied_object)
       end
-      copied_object.save # hope that saves the duplicated associations as well
+      copied_object
     end
   end
 
