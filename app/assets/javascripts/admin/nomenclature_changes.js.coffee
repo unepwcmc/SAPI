@@ -92,3 +92,65 @@ $(document).ready ->
       else
         selectElement.find('option:contains('+species+')').removeAttr("selected")
       selectElement.trigger("change")
+
+  $('form').on('click', '.output-radio', (e) ->
+    value = $(this).attr("value")
+    switch value
+      when "New taxon"
+        NewTaxonForm(this)
+      when "Existing taxon"
+        ExistingTaxonForm(this)
+      when "Upgraded taxon"
+        UpgradedTaxonForm(this)
+  )
+
+  HideInputTaxon = (obj) ->
+    $(obj).closest('.fields').find('.input-taxon').select2('data',null)
+    $(obj).closest('.fields').find('.input-taxon').hide()
+    $(obj).closest('.fields').find('.input-taxon').closest('.control-group').find('label').hide()
+
+  ShowInputTaxon = (obj) ->
+    $(obj).closest('.fields').find('.input-taxon').show()
+    $(obj).closest('.fields').find('.input-taxon').closest('.control-group').find('label').show()
+
+  HideUpgradeInfo = (obj) ->
+    $(obj).closest('.fields').find('.upgrade-info').first().hide()
+    $(obj).closest('.fields').find('.parent-taxon').select2('data',null)
+    $(obj).closest('.fields').find('.upgrade-info').find('input').prop("value", '')
+
+  NewTaxonForm = (obj) ->
+    HideInputTaxon(obj)
+    $(obj).closest('.fields').find('.upgrade-info').first().show()
+
+  ExistingTaxonForm = (obj) ->
+    ShowInputTaxon(obj)
+    HideUpgradeInfo(obj)
+
+  UpgradedTaxonForm = (obj) ->
+    ShowInputTaxon(obj)
+    $(obj).closest('.fields').find('.upgrade-info').first().show()
+
+  DefaultExistingTaxon = (obj) ->
+    $(obj).find('.output-radio[value="Existing taxon"]').attr("checked","checked")
+    ExistingTaxonForm(obj)
+
+  OutputsDefaultConfiguration = ->
+    $('.fields').each (index) ->
+      taxon_concept = $(this).find('.input-taxon')
+      parent = $(this).find('.parent-taxon')
+
+      if index == 0
+        DefaultExistingTaxon('.outputs_selection:first')
+
+      if index > 0
+        if typeof taxon_concept.attr("data-name") == 'undefined'
+          $(this).find('.output-radio[value="New taxon"]').attr("checked","checked")
+          NewTaxonForm(this)
+        else if typeof parent.attr("data-name") == 'undefined'
+          $(this).find('.output-radio[value="Existing taxon"]').attr("checked","checked")
+          ExistingTaxonForm(this)
+        else
+          $(this).find('.output-radio[value="Upgraded taxon"]').attr("checked","checked")
+          UpgradedTaxonForm(this)
+
+  OutputsDefaultConfiguration()
