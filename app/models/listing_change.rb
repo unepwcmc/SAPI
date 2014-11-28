@@ -133,7 +133,7 @@ class ListingChange < ActiveRecord::Base
   def duplicates(comparison_attributes_override = {})
     relation = ListingChange.where(
       comparison_conditions(
-        comparison_attributes.merge(comparison_attributes_override)
+        comparison_attributes.merge(comparison_attributes_override.symbolize_keys)
       )
     )
     if party_listing_distribution
