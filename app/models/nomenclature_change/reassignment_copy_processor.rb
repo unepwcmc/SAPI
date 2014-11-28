@@ -12,7 +12,7 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
       reassignable.save
     else
       copied_object = reassignable.duplicates({
-        "taxon_concept_id" => new_taxon_concept.id
+        taxon_concept_id: new_taxon_concept.id
       }).first || reassignable.dup
       copied_object.taxon_concept_id = new_taxon_concept.id
       if reassignable.kind_of? ListingChange
@@ -44,13 +44,13 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
     # for distributions this needs to copy distribution references and tags
     reassignable.distribution_references.each do |distr_ref|
       !copied_object.new_record? && distr_ref.duplicates({
-        "distribution_id" => copied_object.id
+        distribution_id: copied_object.id
       }).first || copied_object.distribution_references.build(distr_ref.comparison_attributes)
     end
     # taggings
     reassignable.taggings.each do |tagging|
       !copied_object.new_record? && tagging.duplicates({
-        "taggable_id" => copied_object.id
+        taggable_id: copied_object.id
       }).first || copied_object.taggings.build(tagging.comparison_attributes)
     end
   end
@@ -59,14 +59,14 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
     # for listing changes this needs to copy listing distributions and exceptions
     reassignable.listing_distributions.each do |listing_distr|
       !copied_object.new_record? && listing_distr.duplicates({
-        "listing_change_id" => copied_object.id
+        listing_change_id: copied_object.id
       }).first || copied_object.listing_distributions.build(listing_distr.comparison_attributes)
     end
     # party distribution
     party_listing_distribution = reassignable.party_listing_distribution
     !copied_object.new_record? && party_listing_distribution &&
       party_listing_distribution.duplicates({
-        "listing_change_id" => copied_object.id
+        listing_change_id: copied_object.id
       }).first || party_listing_distribution &&
         copied_object.build_party_listing_distribution(
         party_listing_distribution.comparison_attributes
@@ -74,7 +74,7 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
     # taxonomic exclusions (population exclusions already duplicated)
     reassignable.exclusions.where('taxon_concept_id IS NOT NULL').each do |exclusion|
       !copied_object.new_record? && exclusion.duplicates({
-        "listing_change_id" => copied_object.id
+        parent_id: copied_object.id
       }).first || copied_object.exclusions.build(
         exclusion.comparison_attributes, :without_protection => true
       )
@@ -90,7 +90,7 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
     ].each do |trade_restriction_codes|
       reassignable.send(trade_restriction_codes).each do |trade_restr_code|
         !copied_object.new_record? && trade_restr_code.duplicates({
-          "trade_restriction_id" => copied_object.id
+          trade_restriction_id: copied_object.id
         }).first || copied_object.send(trade_restriction_codes).build(
           trade_restr_code.comparison_attributes, :without_protection => true
         )
