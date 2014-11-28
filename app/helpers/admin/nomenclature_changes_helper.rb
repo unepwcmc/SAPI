@@ -139,4 +139,15 @@ module Admin::NomenclatureChangesHelper
     html.html_safe
   end
 
+  def outputs_selection ff
+    content_tag(:div, class: 'outputs_selection') do
+      [ 'New taxon', 'Upgraded taxon', 'Existing taxon'].each do |opt|
+        concat content_tag(:span,
+          radio_button_tag(ff.object.taxon_concept.try(:full_name) || 'output'+ff.object.id.to_s,
+          opt, false, class: 'output-radio') + ' ' + opt)
+      end
+      concat ff.link_to_remove 'Remove output'
+    end
+  end
+
 end
