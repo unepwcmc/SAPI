@@ -46,7 +46,6 @@ class NomenclatureChange::ReassignmentProcessor
   end
 
   def process_reassignment_to_target(target, reassignable); end
-  def process_reassignment_to_output(reassignment, reassignable); end
 
   def notes(reassigned_object, reassignment)
     {
