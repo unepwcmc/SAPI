@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
     rescue_path = if request.referrer && request.referrer != request.url
               request.referer
             else
-              admin_root_path
+              signed_in_root_path(current_user)
             end
     redirect_to rescue_path, :alert => case exception.action
       when :destroy
@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
   end
 
   def signed_in_root_path(resource_or_scope)
-    if resource.is_api?
+    if resource_or_scope.is_api?
       api_dashboard_path
     else
       admin_root_path
@@ -61,7 +61,7 @@ class ApplicationController < ActionController::Base
   end
 
   def verify_manager
-    redirect_to admin_root_path,
+    redirect_to signed_in_root_path(current_user),
       :alert => "You are not authorized to access the trade admin page" unless current_user.is_admin?
   end
 end
