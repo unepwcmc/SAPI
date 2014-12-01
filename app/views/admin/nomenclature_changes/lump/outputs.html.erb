@@ -1,0 +1,62 @@
+<h2>New lump: outputs</h2>
+<%= lump_blurb %>
+
+<h3>Select taxa to lump into:</h3>
+
+<i class="icon-info-sign"></i>You may need to provide additional information if:
+<ul>
+  <li>output is a new taxon concept</li>
+  <li>output is a new name of an existing taxon concept</li>
+</ul>
+
+<%= nomenclature_change_form do |f| %>
+  <%= f.fields_for :output do |ff| %>
+
+    <%= outputs_selection ff %>
+
+    <div class="control-group">
+      <label class="control-label">Taxon concept:</label>
+      <div class="controls">
+        <%= ff.text_field :taxon_concept_id, {
+          :class => 'taxon-concept input-taxon',
+          :'data-name' => ff.object.taxon_concept.try(:full_name),
+          :'data-name-status' => ff.object.taxon_concept.try(:name_status),
+          :'data-taxonomy-id' => @taxonomy.id,
+          :'data-name-status-filter' => ['A', 'N', 'S', 'T'].to_json
+        } %>
+      </div>
+    </div>
+
+    <div class="upgrade-info">
+      <div class="control-group">
+        <label class="control-label">Parent:</label>
+        <div class="controls">
+          <!-- TODO figure out the restrictions on the auto complete here, none for now -->
+          <%= ff.text_field :new_parent_id, {
+            :class => 'taxon-concept parent-taxon',
+            :'data-name' => ff.object.new_parent.try(:full_name),
+            :'data-name-status' => ff.object.new_parent.try(:name_status),
+            :'data-name-status-filter' => ['A'].to_json,
+            :'data-taxonomy-id' => @taxonomy.id
+          } %>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Name:</label>
+        <div class="controls">
+          <%= ff.text_field :new_scientific_name, {
+            :class => 'new-scientific-name'
+          } %>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">Author & year:</label>
+        <div class="controls">
+          <%= ff.text_field :new_author_year, {
+            :class => 'new-author-year'
+          } %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

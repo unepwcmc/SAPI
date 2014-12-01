@@ -1,0 +1,33 @@
+<h2>New lump: nomenclature change notes</h2>
+<%= lump_blurb %>
+<%= nomenclature_change_form do |f| %>
+<h3>Inputs</h3>
+  <% @nomenclature_change.inputs_except_outputs.each do |input| %>
+    <%= f.fields_for :inputs, input do |ff| %>
+      <div class="control-group">
+        <label class="control-label">
+          <%= ff.object.taxon_concept.try(:full_name) %>
+        </label>
+        <div class="controls">
+          <%= render partial: 'admin/nomenclature_changes/build/nomenclature_notes',
+            locals: {ff: ff}
+          %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+
+<h3>Output</h3>
+  <%= f.fields_for :output do |ff| %>
+    <div class="control-group">
+      <label class="control-label">
+        <%= ff.object.display_full_name %>
+      </label>
+      <div class="controls">
+        <%= render partial: 'admin/nomenclature_changes/build/nomenclature_notes',
+          locals: {ff: ff}
+        %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

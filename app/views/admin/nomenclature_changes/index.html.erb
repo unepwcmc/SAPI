@@ -1,0 +1,103 @@
+<h1>Nomenclature changes</h1>
+<h3>New change:</h3>
+<p>
+  <i class="icon-info-sign"></i>
+  To make editorial changes to taxon concept properties (such as correcting misspellings) please use the edit function on a taxon concept's page.
+</p>
+<table id="nomenclature-changes-start">
+  <tr>
+    <td width="25%"><button class="btn btn-block disabled">New name</button></td>
+    <td>Create a new name</td>
+  </tr>
+  <tr>
+    <td><button class="btn btn-block disabled">Name change</button></td>
+    <td>Create a new name and turn the old name into a synonym</td>
+  </tr>
+  <tr>
+    <td>
+      <%= link_to admin_nomenclature_change_status_to_accepted_index_path(:nomenclature_change_id => :new),
+        :method => :post do
+      %>
+        <button class="btn btn-block">Change into an accepted name</button>
+      <% end %>
+    </td>
+    <td>Change name status to accepted (e.g. N -> A, S -> A, T -> A)</td>
+  </tr>
+  <tr>
+    <td>
+      <%= link_to admin_nomenclature_change_status_to_synonym_index_path(:nomenclature_change_id => :new),
+        :method => :post do
+      %>
+        <button class="btn btn-block">Change into a synonym</button>
+      <% end %>
+    </td>
+    <td>Change the name status to synonym (e.g. A -> S, N -> S, T -> S)</td>
+  </tr>
+  <tr>
+    <td>
+      <%= link_to admin_nomenclature_change_status_swap_index_path(:nomenclature_change_id => :new),
+        :method => :post do
+      %>
+        <button class="btn btn-block">Swap between accepted name and synonym</button>
+      <% end %>
+    </td>
+    <td>Swap the name status of two taxon concepts</td>
+  </tr>
+  <tr>
+    <td>
+      <%= link_to admin_nomenclature_change_split_index_path(:nomenclature_change_id => :new),
+        :method => :post do
+      %>
+        <button class="btn btn-block">Split</button>
+      <% end %>
+    </td>
+    <td>Split a taxon concept (including higher taxa) and distribute associated objects among new taxon concepts</td>
+  </tr>
+  <tr>
+    <td>
+      <%= link_to admin_nomenclature_change_lump_index_path(:nomenclature_change_id => :new),
+        :method => :post do
+      %>
+        <button class="btn btn-block">Lump</button>
+      <% end %>
+    </td>
+    <td>
+      Lump multiple taxon concepts into one and transfer any associated objects
+    </td>
+  </tr>
+</table>
+
+<h3>List of changes:</h3>
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Type</th>
+      <th>Created at</th>
+      <th>Created by</th>
+      <th>Status</th>
+      <th>Actions</th>
+  </thead>
+  <tbody>
+  <% @nomenclature_changes.each do |nc| %>
+    <tr>
+      <td><%= nc.event.try(:name) %></td>
+      <td><%= nc.type %></td>
+      <td><%= nc.created_at %></td>
+      <td><%= nc.creator.try(:name) %></td>
+      <td><%= nc.status %></td>
+      <td>
+        <% if nc.in_progress? %>
+          <%= link_to edit_icon, polymorphic_url([:admin, nc],
+            :id => nc.next_step
+          ) %>
+          <%= link_to delete_icon, admin_nomenclature_change_path(nc),
+            :confirm => "Warning: you are about to delete data. Are you sure?",
+            :method => :delete
+          %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

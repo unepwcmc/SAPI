@@ -1,0 +1,11 @@
+<h2>New lump: handle legislation</h2>
+<%= lump_blurb %>
+<p>
+  <i class="icon-info-sign"></i> Legislation will be copied to the output of the lump. The following notes will be appended to copied objects.
+</p>
+<%= nomenclature_change_form do |f| %>
+  <%= f.fields_for :inputs do |ff| %>
+    <%= render partial: 'admin/nomenclature_changes/build/legislation_reassignments',
+      locals: {ff: ff} %>
+  <% end %>
+<% end %>

@@ -217,6 +217,15 @@
       <% end %>
   <% end %>
 
+  <div>
+    <%= render :partial => 'admin/shared/nomenclature_notes_form',
+      locals: {
+        f: f,
+        locale_columns: ListingChange.locale_columns(:nomenclature_note)
+      }
+    %>
+  </div>
+
   <p class="pull-right">
     <%= link_to 'Cancel', admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation),
       :class => "btn" %>

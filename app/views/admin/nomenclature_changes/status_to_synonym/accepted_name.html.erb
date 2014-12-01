@@ -1,0 +1,23 @@
+<h2>New status change to synonym</h2>
+<%= status_change_blurb %>
+
+<%= nomenclature_change_form do |f| %>
+
+  <%= f.fields_for 'secondary_output', @nomenclature_change.secondary_output do |ff| %>
+    <div class="control-group">
+      <label class="control-label">Set accepted name:</label>
+      <div class="controls">
+        <%= ff.text_field :taxon_concept_id, {
+          :class => 'taxon-concept clear-others',
+          :'data-name' => ff.object.taxon_concept.try(:full_name) || '',
+          :'data-name-status' => ff.object.taxon_concept.try(:name_status) || '',
+          :'data-name-status-filter' => ['A'].to_json,
+          :'data-taxonomy-id' => @taxonomy.id,
+          :value => ff.object.taxon_concept_id || ''
+        } %>
+        <%= ff.hidden_field :is_primary_output %>
+      </div>
+    </div>
+  <% end %>
+
+<% end %>

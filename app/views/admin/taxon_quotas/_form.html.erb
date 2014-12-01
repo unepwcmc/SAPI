@@ -109,6 +109,13 @@
     </div>
   </div>
 
+  <%= render :partial => 'admin/shared/nomenclature_notes_form',
+    locals: {
+      f: f,
+      locale_columns: Quota.locale_columns(:nomenclature_note)
+    }
+  %>
+
   <p class="pull-right">
     <%= link_to 'Cancel', admin_taxon_concept_quotas_path(@taxon_concept),
       :class => "btn" %>
