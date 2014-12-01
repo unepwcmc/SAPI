@@ -1,5 +1,6 @@
 <div class="page">
   <%= render 'shared/alerts' %>
+  <%= link_to "Log out #{current_user.name}", destroy_user_session_path, :method => :delete %>
 
   <div class="well">
     <p>Logged in as: <%= current_user.name %> (Some sort of menu here?)</p>
