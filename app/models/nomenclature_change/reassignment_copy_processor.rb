@@ -14,6 +14,11 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
     elsif reassignable.kind_of?(Trade::Shipment)
       reassignable.taxon_concept_id = new_taxon_concept.id
       reassignable
+    elsif reassignable.is_a?(TaxonRelationship) &&
+      reassignable.taxon_relationship_type.name == TaxonRelationshipType::HAS_TRADE_NAME
+
+      reassignable.taxon_concept_id = new_taxon_concept.id
+      reassignable
     else
       # Each reassignable object implements find_duplicate,
       # which is called from here to make sure we're not adding a duplicate.
