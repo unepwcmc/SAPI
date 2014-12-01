@@ -1,4 +1,5 @@
 class Admin::NomenclatureChangesController < Admin::AdminController
+  before_filter :redirect_in_production
   def index
     @nomenclature_changes = NomenclatureChange.includes([:event, :creator]).
       order('created_at DESC')
