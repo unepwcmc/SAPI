@@ -3,7 +3,7 @@ class NomenclatureChange::Lump::Processor < NomenclatureChange::Processor
   # Generate a summary based on the subprocessors chain
   def summary
     result = [[
-      "The following taxa will be lumped into #{@nc.output.taxon_concept.full_name}",
+      "The following taxa will be lumped into #{@nc.output.display_full_name}",
       @nc.inputs.map(&:taxon_concept).map(&:full_name)
     ]]
     @subprocessors.each{ |processor| result << processor.summary }
