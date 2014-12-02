@@ -118,4 +118,13 @@ FactoryGirl.define do
     decision_type "NO_OPINION"
   end
 
+  factory :ahoy_event, :class => Ahoy::Event do
+    id { SecureRandom.uuid }
+    user
+  end
+
+  factory :ahoy_visit, :class => Ahoy::Visit do
+    id { SecureRandom.uuid }
+    user
+  end
 end
