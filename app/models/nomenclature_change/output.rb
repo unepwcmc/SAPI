@@ -225,7 +225,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
   end
 
   def name_reassignment_class
-    NomenclatureChange::OutputameReassignment
+    NomenclatureChange::OutputNameReassignment
   end
 
   def distribution_reassignment_class
