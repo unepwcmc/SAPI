@@ -168,6 +168,10 @@ class NomenclatureChange::Output < ActiveRecord::Base
     end
   end
 
+  def taxon_name_already_existing?
+    return !TaxonConcept.where("lower(full_name) = ?", display_full_name.downcase).empty?
+  end
+
   def reassignables_by_class(reassignable_type)
     reassignable_type.constantize.where(
       :taxon_concept_id => taxon_concept.id
