@@ -139,21 +139,17 @@ $(document).ready ->
 
   OutputsDefaultConfiguration = ->
     $('.fields').each (index) ->
-      taxon_concept = $(this).find('.input-taxon')
-      parent = $(this).find('.parent-taxon')
+      taxon_concept = $(this).find('input.input-taxon')
+      parent = $(this).find('input.parent-taxon')
 
-      if index == 0
-        DefaultExistingTaxon('.outputs_selection:first')
-
-      if index > 0
-        if typeof taxon_concept.attr("data-name") == 'undefined'
-          $(this).find('.output-radio[value="New taxon"]').attr("checked","checked")
-          NewTaxonForm(this)
-        else if typeof parent.attr("data-name") == 'undefined'
-          $(this).find('.output-radio[value="Existing taxon"]').attr("checked","checked")
-          ExistingTaxonForm(this)
-        else
-          $(this).find('.output-radio[value="Upgraded taxon"]').attr("checked","checked")
-          UpgradedTaxonForm(this)
+      if typeof taxon_concept.attr("data-name") == 'undefined'
+        $(this).find('.output-radio[value="New taxon"]').attr("checked","checked")
+        NewTaxonForm(this)
+      else if typeof parent.attr("data-name") == 'undefined'
+        $(this).find('.output-radio[value="Existing taxon"]').attr("checked","checked")
+        ExistingTaxonForm(this)
+      else
+        $(this).find('.output-radio[value="Upgraded taxon"]').attr("checked","checked")
+        UpgradedTaxonForm(this)
 
   OutputsDefaultConfiguration()
