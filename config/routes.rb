@@ -36,14 +36,6 @@ SAPI::Application.routes.draw do
     resources :ranks, :only => [:index]
     resources :geo_entities, :only => [:index]
     resources :geo_relationship_types, :only => [:index]
-
-    namespace :v2 do
-      resources :taxon_concepts, :only => [:index] do
-        resources :distributions, :only => [:index]
-      end
-    end
-     
-    match 'dashboard' => 'dashboard#index', as: 'dashboard'
   end
   namespace :admin do
     resources :taxonomies, :only => [:index, :create, :update, :destroy]

@@ -16,13 +16,4 @@ describe PagesController do
       assigns(:eu_suspension_regulations).should_not be_nil
     end
   end
-
-  describe "GET api" do
-    it "returns api sign up page" do
-      get :api
-      expect(assigns(:user)).to be_a_new(User)
-      expect(response).to render_template("api")
-    end
-  end
-
 end

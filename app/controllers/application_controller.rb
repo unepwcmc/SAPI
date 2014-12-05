@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up).push(:name, :terms_and_conditions)
+    devise_parameter_sanitizer.for(:sign_up).push(:name)
     devise_parameter_sanitizer.for(:account_update) << :name
   end
 
@@ -45,19 +45,7 @@ class ApplicationController < ActionController::Base
   end
 
   def signed_in_root_path(resource_or_scope)
-    if resource_or_scope.is_api?
-      api_dashboard_path
-    else
-      admin_root_path
-    end
-  end
-
-  def after_sign_in_path_for(resource)
-    if resource.is_api?
-      api_dashboard_path
-    else
-      super
-    end
+    admin_root_path
   end
 
   def verify_manager

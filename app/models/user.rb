@@ -32,7 +32,6 @@ class User < ActiveRecord::Base
   validates :name, :presence => true
   validates :role, inclusion: { in: ['default', 'admin', 'api'] }, 
                    presence: true
-  validates :terms_and_conditions, acceptance: true
 
   def is_contributor?
     self.role == 'default'
