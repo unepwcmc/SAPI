@@ -1,7 +1,4 @@
 SAPI::Application.routes.draw do
-
-  apipie
-
   devise_for :users, :skip => [:registrations]
   as :user do
     get 'users/edit' => 'registrations#edit', :as => 'edit_user_registration'
