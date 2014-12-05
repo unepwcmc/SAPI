@@ -14,7 +14,7 @@ describe TaxonConceptPrefixMatcher do
   }
   let!(:taxon_concept2){
     create(:taxon_concept, :rank => rank2, :taxonomy => taxonomy,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Aaa'),
+      :taxon_name => create(:taxon_name, :scientific_name => 'Aac'),
       :parent => taxon_concept1
     )
   }
@@ -73,7 +73,7 @@ describe TaxonConceptPrefixMatcher do
     }
 
     specify{ parent_matcher.taxon_concepts.map(&:full_name).should ==
-      ['Aaa', 'Aab'] }
+      ['Aab', 'Aac'] }
 
     let(:ancestor_matcher_params){
       SearchParams.new(
@@ -87,7 +87,7 @@ describe TaxonConceptPrefixMatcher do
     }
   
     specify{ ancestor_matcher.taxon_concepts.map(&:full_name).should ==
-      ['Aaa', 'Aaa'] }
+      ['Aaa'] }
   end
   context "when taxon concept scope applied" do
     let(:ancestor_matcher_params){
@@ -102,7 +102,7 @@ describe TaxonConceptPrefixMatcher do
     }
 
     specify{ ancestor_matcher.taxon_concepts.map(&:full_name).should ==
-      ['Aaa', 'Aaa'] }
+      ['Aaa', 'Aac'] }
 
     let(:descendant_matcher_params){
       SearchParams.new(
