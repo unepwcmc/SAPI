@@ -2,14 +2,16 @@ shared_context 'split_definitions' do
   let(:input_species){ create_cites_eu_species }
   let(:output_species1){ create_cites_eu_species }
   let(:output_species2){ create_cites_eu_species }
+  let(:errorus_genus){ create_cites_eu_genus(
+        taxon_name: create(:taxon_name, scientific_name: 'Errorus')
+      )
+  }
   let(:output_subspecies2){
     create_cites_eu_subspecies(
       taxon_name: create(:taxon_name, scientific_name: 'fatalus'),
       parent: create_cites_eu_species(
         taxon_name: create(:taxon_name, scientific_name: 'fatalus'),
-        parent: create_cites_eu_genus(
-          taxon_name: create(:taxon_name, scientific_name: 'Errorus')
-        )
+        parent: errorus_genus
       )
     )
   }
@@ -48,9 +50,7 @@ shared_context 'split_definitions' do
         0 => { taxon_concept_id: output_species1.id },
         1 => {
           new_scientific_name: 'fatalus',
-          new_parent_id: create_cites_eu_genus(
-            taxon_name: create(:taxon_name, scientific_name: 'Errorus')
-          ).id,
+          new_parent_id: errorus_genus.id,
           new_rank_id: species_rank.id,
           new_name_status: 'A'
         }
@@ -76,9 +76,7 @@ shared_context 'split_definitions' do
         1 => {
           taxon_concept_id: output_subspecies2.id,
           new_scientific_name: 'lolcatus',
-          new_parent_id: create_cites_eu_genus(
-            taxon_name: create(:taxon_name, scientific_name: 'Errorus')
-          ).id,
+          new_parent_id: errorus_genus.id,
           new_rank_id: species_rank.id,
           new_name_status: 'A'
         }
