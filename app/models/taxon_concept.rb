@@ -154,7 +154,7 @@ class TaxonConcept < ActiveRecord::Base
   validate :parent_at_immediately_higher_rank, :if => lambda { |tc| tc.parent }
   validates :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
-  validates :taxon_name_id, :uniqueness => { :scope => [:taxonomy_id, :parent_id, :name_status, :author_year] }
+  validates :full_name, :uniqueness => { :scope => [:taxonomy_id, :author_year] }
   validates :taxonomic_position,
     :presence => true,
     :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" },

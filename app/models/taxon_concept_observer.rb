@@ -1,7 +1,7 @@
 class TaxonConceptObserver < ActiveRecord::Observer
 
   #initializes data and full name with values from parent
-  def before_create(taxon_concept)
+  def before_validation(taxon_concept)
     data = taxon_concept.data || {}
     data['rank_name'] = taxon_concept.rank && taxon_concept.rank.name
     if taxon_concept.parent
