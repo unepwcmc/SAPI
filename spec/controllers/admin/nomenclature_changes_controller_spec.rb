@@ -8,7 +8,7 @@ describe Admin::NomenclatureChangesController do
       nomenclature_change1 = create(:nomenclature_change)
       nomenclature_change2 = create(:nomenclature_change)
       get :index
-      assigns(:nomenclature_changes).should eq([nomenclature_change2, nomenclature_change1])
+      assigns(:collection).should eq([nomenclature_change2, nomenclature_change1])
     end
     it "renders the index template" do
       get :index

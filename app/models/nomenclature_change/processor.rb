@@ -21,4 +21,7 @@ class NomenclatureChange::Processor
     @subprocessors = []
   end
 
+  def summary
+  end
+
 end
