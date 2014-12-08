@@ -135,6 +135,3 @@ gem 'geoip'
 
 #track who created or edited a given object
 gem 'clerk'
-
-#document Species+ API
-gem 'apipie-rails'

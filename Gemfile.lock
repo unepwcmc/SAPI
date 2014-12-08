@@ -67,8 +67,6 @@ GEM
       uuidtools
     annotate (2.5.0)
       rake
-    apipie-rails (0.2.6)
-      json
     arel (3.0.3)
     barber (0.4.2)
       ember-source
@@ -263,10 +261,10 @@ GEM
     net-ssh (2.6.7)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
-    netrc (0.7.7)
-    nokogiri (1.6.3.1)
-      mini_portile (= 0.6.0)
-    oj (2.1.4)
+    netrc (0.7.9)
+    nokogiri (1.6.5)
+      mini_portile (~> 0.6.0)
+    oj (2.11.1)
     orm_adapter (0.5.0)
     pg (0.17.1)
     pg-hstore (1.2.0)
@@ -425,7 +423,6 @@ DEPENDENCIES
   acts-as-taggable-on (~> 2.3.1)
   ahoy_matey
   annotate (>= 2.5.0)
-  apipie-rails
   better_errors (~> 1.1.0)
   binding_of_caller (>= 0.7.2)
   bootstrap-sass (~> 2.3.1.0)
