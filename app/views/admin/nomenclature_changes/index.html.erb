@@ -79,7 +79,7 @@
       <th>Actions</th>
   </thead>
   <tbody>
-  <% @nomenclature_changes.each do |nc| %>
+  <% collection.each do |nc| %>
     <tr>
       <td><%= nc.event.try(:name) %></td>
       <td><%= nc.type %></td>
@@ -95,9 +95,13 @@
             :confirm => "Warning: you are about to delete data. Are you sure?",
             :method => :delete
           %>
+        <% else %>
+          <%= link_to "Show", admin_nomenclature_change_path(nc) %>
         <% end %>
       </td>
     </tr>
   <% end %>
   </tbody>
 </table>
+
+<%= paginate collection %>
