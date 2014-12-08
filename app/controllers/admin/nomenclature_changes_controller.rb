@@ -1,9 +1,5 @@
 class Admin::NomenclatureChangesController < Admin::StandardAuthorizationController
   before_filter :redirect_in_production
-  def index
-    @nomenclature_changes = NomenclatureChange.includes([:event, :creator]).
-      order('created_at DESC')
-  end
 
   def show
     @nc = NomenclatureChange.find(params[:id])

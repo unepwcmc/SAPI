@@ -5,11 +5,11 @@
 </div>
 
 <h4>
-  Event: <i> <%= Event.find(@nc.event_id).name %> </i>
+  Event: <i> <%= @nc.event.try(:name) %> </i>
 </h4>
 
 <h4>
-  Created by: <i> <%= User.find(@nc.created_by_id).name %> </i>
+  Created by: <i> <%= @nc.creator.try(:name) %> </i>
 </h4>
 
 <h4>
@@ -17,7 +17,7 @@
 </h4>
 
 <h4>
-  Updated by: <i> <%= User.find(@nc.updated_by_id).name %> </i>
+  Updated by: <i> <%= @nc.updater.try(:name) %> </i>
 </h4>
 
 <h4>
