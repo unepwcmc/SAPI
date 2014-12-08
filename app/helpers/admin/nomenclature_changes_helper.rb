@@ -150,4 +150,130 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
+  def show_header
+    if @nc.is_a?(NomenclatureChange::Split)
+        @nc.input.note_en.html_safe
+    else
+        @nc.output.note_en.html_safe
+    end
+  end
+
+  def generate_input_content
+    if @nc.is_a?(NomenclatureChange::Split)
+      split_input_tag + split_input_content
+    else
+      lump_inputs_tags + lump_inputs_content
+    end
+  end
+
+  def generate_output_content
+    if @nc.is_a?(NomenclatureChange::Split)
+      split_outputs_tags + split_outputs_content
+    else
+      lump_output_tag + lump_output_content
+    end
+  end
+
+  def lump_inputs_content
+    content_tag(:div, class: 'tab-content') do
+      @nc.inputs.each_with_index do |input, idx|
+        tc = input.taxon_concept
+        if idx == 0
+          concat content_tag(:div, inner_content(input,tc),
+            {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade in active"})
+        else
+          concat content_tag(:div, inner_content(input,tc),
+            {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade"})
+        end
+      end
+    end
+  end
+
+  def lump_inputs_tags
+    content_tag(:ul, class: 'nav nav-tabs') do
+      @nc.inputs.each_with_index do |input, idx|
+        tc = input.taxon_concept
+        if idx == 0
+          concat content_tag(:li, link_to("#{tc.full_name}",
+            "##{tc.full_name.downcase.tr(' ', '_')}", "data-toggle" => "tab"), class: "active")
+        else
+          concat content_tag(:li, link_to("#{tc.full_name}",
+            "##{tc.full_name.downcase.tr(' ', '_')}", "data-toggle" => "tab"))
+        end
+      end
+    end
+  end
+
+  def lump_output_content
+    tc = @nc.output.new_taxon_concept || @nc.output.taxon_concept
+    content_tag(:div, class: 'tab-content') do
+      content_tag(:div, inner_content(@nc.output, tc),
+        {id: "output_#{tc.full_name.downcase.tr(" ", "_")}", class: 'tab-pane fade in active'})
+    end
+  end
+
+  def lump_output_tag
+    content_tag(:ul, class: 'nav nav-tabs') do
+      content_tag(:li, class: 'active') do
+        concat link_to("#{@nc.output.taxon_concept.full_name}",
+          "#output_#{@nc.output.taxon_concept.full_name.downcase.tr(' ', '_')}")
+      end
+    end
+  end
+
+  def split_input_tag
+    content_tag(:ul, class: 'nav nav-tabs') do
+      content_tag(:li, class: 'active') do
+        concat link_to("#{@nc.input.taxon_concept.full_name}",
+          "#input_#{@nc.input.taxon_concept.full_name.downcase.tr(' ', '_')}")
+      end
+    end
+  end
+
+  def split_input_content
+    content_tag(:div, class: 'tab-content') do
+      content_tag(:div, inner_content(@nc.input, @nc.input.taxon_concept),
+        {id: "input_#{@nc.input.taxon_concept.full_name.downcase.tr(" ", "_")}",
+        class: 'tab-pane fade in active'})
+    end
+  end
+
+  def split_outputs_tags
+    content_tag(:ul, class: 'nav nav-tabs') do
+      @nc.outputs.each_with_index do |output, idx|
+        tc = output.new_taxon_concept || output.taxon_concept
+        if idx == 0
+          concat content_tag(:li, link_to("#{tc.full_name}",
+            "##{tc.full_name.downcase.tr(' ', '_')}", "data-toggle" => "tab"), class: "active")
+        else
+          concat content_tag(:li, link_to("#{tc.full_name}",
+            "##{tc.full_name.downcase.tr(' ', '_')}", "data-toggle" => "tab"))
+        end
+      end
+    end
+  end
+
+  def split_outputs_content
+    content_tag(:div, class: 'tab-content') do
+      @nc.outputs.each_with_index do |output, idx|
+        tc = output.new_taxon_concept || output.taxon_concept
+        if idx == 0
+          concat content_tag(:div, inner_content(output,tc),
+            {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade in active"})
+        else
+          concat content_tag(:div, inner_content(output,tc),
+            {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade"})
+        end
+      end
+    end
+  end
+
+  def inner_content(input_or_output,tc)
+    content_tag(:p, content_tag(:i, link_to(tc.full_name,
+      admin_taxon_concept_names_path(tc)), nil)
+    ) +
+    content_tag(:p, "Author: #{tc.author_year || tc.new_author_year}") +
+    content_tag(:p, "Internal note: #{input_or_output.internal_note}")
+  end
+
 end
