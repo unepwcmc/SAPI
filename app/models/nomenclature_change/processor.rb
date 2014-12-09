@@ -13,15 +13,15 @@ class NomenclatureChange::Processor
     Rails.logger.warn("[#{@nc.type}] END")
   end
 
+  def summary
+  end
+
   private
 
   def initialize_inputs_and_outputs; end
 
   def prepare_chain
     @subprocessors = []
-  end
-
-  def summary
   end
 
 end

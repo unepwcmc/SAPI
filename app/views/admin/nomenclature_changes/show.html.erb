@@ -1,8 +1,4 @@
-<h1>Nomenclature change <%= @nc.id %> </h1>
-
-<div class="well well-small">
-  <%= show_header %>
-</div>
+<%= nomenclature_change_header %>
 
 <h4>
   Event: <i> <%= @nc.event.try(:name) %> </i>
@@ -34,10 +30,10 @@
     </th>
   </thead>
   <tbody>
-    <td>
+    <td class="nc-tag">
       <%= generate_input_content %>
     </td>
-    <td>
+    <td class="nc-tag">
       <%= generate_output_content %>
     </td>
   </tbody>
