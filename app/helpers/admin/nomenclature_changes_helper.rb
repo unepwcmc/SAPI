@@ -150,27 +150,50 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
-  def show_header
-    if @nc.is_a?(NomenclatureChange::Split)
-        @nc.input.note_en.html_safe
-    else
-        @nc.output.note_en.html_safe
+  def nomenclature_change_header
+    case
+      when @nc.is_a?(NomenclatureChange::Split)
+        concat content_tag(:h1, "NomenclatureChange #{@nc.id} - SPLIT", nil)
+        content_tag(:div, @nc.input.note_en.html_safe, class: 'well well-small')
+      when @nc.is_a?(NomenclatureChange::Lump)
+        concat content_tag(:h1, "NomenclatureChange #{@nc.id} - LUMP", nil)
+        content_tag(:div, @nc.output.note_en.html_safe, class: 'well well-small')
+      when @nc.is_a?(NomenclatureChange::StatusSwap)
+        content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS SWAP", nil) +
+        content_tag(:div, @nc.primary_output.internal_note.html_safe, class: 'well well-small') +
+        content_tag(:div, @nc.secondary_output.note_en.html_safe, class: 'well well-small')
+      when @nc.is_a?(NomenclatureChange::StatusToSynonym)
+        content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS TO SYNONYM", nil) +
+        content_tag(:div, @nc.primary_output.internal_note.html_safe, class: 'well well-small')
+      when @nc.is_a?(NomenclatureChange::StatusToAccepted)
+        content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS TO ACCEPTED", nil) +
+        content_tag(:div, @nc.primary_output.note_en.html_safe, class: 'well well-small')
     end
   end
 
   def generate_input_content
-    if @nc.is_a?(NomenclatureChange::Split)
-      split_input_tag + split_input_content
-    else
+    if @nc.is_a?(NomenclatureChange::Lump)
       lump_inputs_tags + lump_inputs_content
+    else
+      split_input_tag + split_input_content
     end
   end
 
   def generate_output_content
-    if @nc.is_a?(NomenclatureChange::Split)
-      split_outputs_tags + split_outputs_content
-    else
+    if @nc.is_a?(NomenclatureChange::Lump)
       lump_output_tag + lump_output_content
+    else
+      split_outputs_tags + split_outputs_content
+    end
+  end
+
+  def generate_tags(tc, idx)
+    if idx == 0
+      concat content_tag(:li, link_to("#{tc.full_name}",
+        "##{tc.full_name.downcase.tr(' ', '_')}", "data-toggle" => "tab"), class: "active")
+    else
+      concat content_tag(:li, link_to("#{tc.full_name}",
+        "##{tc.full_name.downcase.tr(' ', '_')}", "data-toggle" => "tab"))
     end
   end
 
@@ -193,13 +216,7 @@ module Admin::NomenclatureChangesHelper
     content_tag(:ul, class: 'nav nav-tabs') do
       @nc.inputs.each_with_index do |input, idx|
         tc = input.taxon_concept
-        if idx == 0
-          concat content_tag(:li, link_to("#{tc.full_name}",
-            "##{tc.full_name.downcase.tr(' ', '_')}", "data-toggle" => "tab"), class: "active")
-        else
-          concat content_tag(:li, link_to("#{tc.full_name}",
-            "##{tc.full_name.downcase.tr(' ', '_')}", "data-toggle" => "tab"))
-        end
+        generate_tags(tc, idx)
       end
     end
   end
@@ -239,23 +256,19 @@ module Admin::NomenclatureChangesHelper
   end
 
   def split_outputs_tags
+    outputs = select_outputs
     content_tag(:ul, class: 'nav nav-tabs') do
-      @nc.outputs.each_with_index do |output, idx|
+      outputs.each_with_index do |output, idx|
         tc = output.new_taxon_concept || output.taxon_concept
-        if idx == 0
-          concat content_tag(:li, link_to("#{tc.full_name}",
-            "##{tc.full_name.downcase.tr(' ', '_')}", "data-toggle" => "tab"), class: "active")
-        else
-          concat content_tag(:li, link_to("#{tc.full_name}",
-            "##{tc.full_name.downcase.tr(' ', '_')}", "data-toggle" => "tab"))
-        end
+        generate_tags(tc, idx)
       end
     end
   end
 
   def split_outputs_content
+    outputs = select_outputs
     content_tag(:div, class: 'tab-content') do
-      @nc.outputs.each_with_index do |output, idx|
+      outputs.each_with_index do |output, idx|
         tc = output.new_taxon_concept || output.taxon_concept
         if idx == 0
           concat content_tag(:div, inner_content(output,tc),
@@ -274,6 +287,14 @@ module Admin::NomenclatureChangesHelper
     ) +
     content_tag(:p, "Author: #{tc.author_year || tc.new_author_year}") +
     content_tag(:p, "Internal note: #{input_or_output.internal_note}")
+  end
+
+  def select_outputs
+    if @nc.is_a?(NomenclatureChange::Split)
+      @nc.outputs
+    else
+      [@nc.primary_output, @nc.secondary_output].compact
+    end
   end
 
 end
