@@ -72,3 +72,16 @@ form.documents {
 .nc-tag{
   width: 50%;
 }
+
+ol {
+  counter-reset: listCounter;
+  list-style-type: none;
+}
+
+ol li {
+  counter-increment: listCounter;
+}
+
+ol li:before {
+  content: "Taxon " counter(listCounter) ".";
+}
