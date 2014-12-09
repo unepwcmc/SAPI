@@ -146,6 +146,10 @@ class TaxonConcept < ActiveRecord::Base
   has_one :distribution_comment, class_name: 'Comment', as: 'commentable',
     conditions: {comment_type: 'Distribution'}
   has_many :nomenclature_change_reassignments, :as => :reassignable
+  has_many :nomenclature_change_inputs, class_name: 'NomenclatureChange::Input'
+  has_many :nomenclature_change_outputs, class_name: 'NomenclatureChange::Output'
+  has_many :nomenclature_change_outputs_as_new, class_name: 'NomenclatureChange::Output',
+    foreign_key: :new_taxon_concept_id
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
@@ -314,7 +318,10 @@ class TaxonConcept < ActiveRecord::Base
       'EU opinions' => eu_opinions,
       'instruments' => taxon_instruments,
       'shipments' => shipments,
-      'shipments (reported as)' => reported_shipments
+      'shipments (reported as)' => reported_shipments,
+      'nomenclature changes (as input)' => nomenclature_change_inputs,
+      'nomenclature changes (as output)' => nomenclature_change_outputs,
+      'nomenclature changes (as new output)' => nomenclature_change_outputs_as_new
     }
   end
 
