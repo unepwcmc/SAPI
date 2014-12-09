@@ -10,13 +10,29 @@ module NomenclatureChange::ConstructorHelpers
     end
   end
 
-  def taxon_concept_html(full_name, rank_name)
+  def taxon_concept_html(full_name, rank_name, existing_name = "", existing_rank_name = "")
     if [Rank::GENUS, Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY].
       include?(rank_name)
-      "<i>#{full_name}</i>"
+      if existing_name.empty?
+        "<i>#{full_name}</i>"
+      elsif [Rank::GENUS, Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY].
+        include?(existing_rank_name) && !existing_name.empty?
+        "<i>#{full_name}</i> (formerly <i>#{existing_name}</i>)"
+      elsif [Rank::CLASS, Rank::ORDER, Rank::FAMILY, Rank::SUBFAMILY].
+      include?(existing_rank_name)
+        "<i>#{full_name}</i> (formerly #{existing_name.upcase})"
+      end
     elsif [Rank::CLASS, Rank::ORDER, Rank::FAMILY, Rank::SUBFAMILY].
-      include?(rank_name)
-      full_name.upcase
+      include?(existing_rank_name)
+      if existing_name.empty?
+        full_name.upcase
+      elsif [Rank::GENUS, Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY].
+        include?(existing_rank_name) && !existing_name.empty?
+        "#{full_name.upcase} (formerly <i>#{existing_name}</i>)"
+      elsif [Rank::CLASS, Rank::ORDER, Rank::FAMILY, Rank::SUBFAMILY].
+      include?(existing_rank_name)
+        "#{full_name.upcase} (formerly #{existing_name.upcase})"
+      end
     end
   end
 

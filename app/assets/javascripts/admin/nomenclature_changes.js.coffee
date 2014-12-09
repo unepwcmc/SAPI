@@ -100,7 +100,7 @@ $(document).ready ->
         NewTaxonForm(this)
       when "Existing taxon"
         ExistingTaxonForm(this)
-      when "Upgraded taxon"
+      when "Existing subspecies"
         UpgradedTaxonForm(this)
   )
 
@@ -149,7 +149,7 @@ $(document).ready ->
         $(this).find('.output-radio[value="Existing taxon"]').attr("checked","checked")
         ExistingTaxonForm(this)
       else
-        $(this).find('.output-radio[value="Upgraded taxon"]').attr("checked","checked")
+        $(this).find('.output-radio[value="Existing subspecies"]').attr("checked","checked")
         UpgradedTaxonForm(this)
 
   OutputsDefaultConfiguration()
