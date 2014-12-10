@@ -2,12 +2,12 @@
 <%= split_blurb %>
 <p>
   <i class="icon-info-sign"></i>
-  Assign subspecies of <%= @nomenclature_change.input.taxon_concept.full_name %> to the appropriate taxon concept:
+  Assign children of <%= @nomenclature_change.input.taxon_concept.full_name %> to the appropriate taxon concept:
 </p>
 <%= nomenclature_change_form do |f| %>
   <%= f.fields_for :input do |ff| %>
 
-    <%= ff.fields_for :parent_reassignments do |fff| %>
+    <%= ff.fields_for :parent_reassignments, sorted_parent_reassignments(ff) do |fff| %>
       <div class="control-group">
         <label class="control-label">
           <%= fff.object.reassignable.full_name %>

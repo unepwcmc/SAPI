@@ -129,7 +129,8 @@ module Admin::NomenclatureChangesHelper
   end
 
   def global_selection(checked = true)
-    html = content_tag(:p, content_tag(:i, nil, class: "icon-info-sign") + " Global selection")
+    html = content_tag(:p, content_tag(:i, nil, class: "icon-info-sign") +
+      "Select a taxon below to populate all fields with that taxon.")
     @nomenclature_change.outputs.map do |output|
       html += content_tag(:div, class: 'species-checkbox') do
         tag("input", {type: "checkbox", class: 'select-partial-checkbox', checked: checked}) +
@@ -141,7 +142,7 @@ module Admin::NomenclatureChangesHelper
 
   def outputs_selection ff
     content_tag(:div, class: 'outputs_selection') do
-      [ 'New taxon', 'Upgraded taxon', 'Existing taxon'].each do |opt|
+      [ 'New taxon', 'Existing subspecies', 'Existing taxon'].each do |opt|
         concat content_tag(:span,
           radio_button_tag(ff.object.taxon_concept.try(:full_name) || 'output'+ff.object.id.to_s,
           opt, false, class: 'output-radio') + ' ' + opt)
@@ -295,6 +296,9 @@ module Admin::NomenclatureChangesHelper
     else
       [@nc.primary_output, @nc.secondary_output].compact
     end
+
+  def sorted_parent_reassignments ff
+    ff.object.parent_reassignments.sort_by{ |reassignment| reassignment.reassignable.full_name }
   end
 
 end

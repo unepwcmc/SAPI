@@ -23,8 +23,8 @@ class NomenclatureChange::Split::Constructor
 
     default_output = @nomenclature_change.outputs_intersect_inputs.first
     default_output ||= @nomenclature_change.outputs.first
-    children = input.taxon_concept.children - @nomenclature_change.
-      outputs.map(&:taxon_concept).compact
+    children = input.taxon_concept.children.where(:name_status => 'A') -
+      @nomenclature_change.outputs.map(&:taxon_concept).compact
     _build_parent_reassignments(input, default_output, children)
     outputs_for_reassignments.each do |output|
       _build_parent_reassignments(output, output)
@@ -77,7 +77,12 @@ class NomenclatureChange::Split::Constructor
   def input_split_into(input, outputs, lng)
     input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     outputs_html = @nomenclature_change.outputs.map do |output|
-      taxon_concept_html(output.display_full_name, output.display_rank_name)
+      if output.scientific_name.present? && output.new_scientific_name.present?
+        taxon_concept_html(output.display_full_name, output.display_rank_name,
+          output.scientific_name, output.rank.name)
+      else
+        taxon_concept_html(output.display_full_name, output.display_rank_name)
+      end
     end.join(', ')
     I18n.with_locale(lng) do
       I18n.translate(
@@ -97,7 +102,13 @@ class NomenclatureChange::Split::Constructor
   end
 
   def output_split_from(output, input, lng)
-    output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
+    output_html =
+    if output.scientific_name.present? && output.new_scientific_name.present?
+      taxon_concept_html(output.display_full_name, output.display_rank_name,
+        output.scientific_name, output.rank.name)
+    else
+      taxon_concept_html(output.display_full_name, output.display_rank_name)
+    end
     input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     I18n.with_locale(lng) do
       I18n.translate(

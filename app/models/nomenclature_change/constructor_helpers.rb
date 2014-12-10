@@ -1,4 +1,6 @@
 module NomenclatureChange::ConstructorHelpers
+  LOWER_RANKS = [Rank::GENUS, Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY]
+  HIGHER_RANKS = [Rank::CLASS, Rank::ORDER, Rank::FAMILY, Rank::SUBFAMILY]
 
   def _build_single_target(reassignment, output)
     reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
@@ -10,13 +12,11 @@ module NomenclatureChange::ConstructorHelpers
     end
   end
 
-  def taxon_concept_html(full_name, rank_name)
-    if [Rank::GENUS, Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY].
-      include?(rank_name)
-      "<i>#{full_name}</i>"
-    elsif [Rank::CLASS, Rank::ORDER, Rank::FAMILY, Rank::SUBFAMILY].
-      include?(rank_name)
-      full_name.upcase
+  def taxon_concept_html(full_name, rank_name, existing_name = "", existing_rank_name = "")
+    if LOWER_RANKS.include?(rank_name)
+      lower_ranks_cases(full_name, existing_name, existing_rank_name)
+    elsif HIGHER_RANKS.include?(existing_rank_name)
+      higher_ranks_cases(full_name, existing_name, existing_rank_name)
     end
   end
 
@@ -212,4 +212,23 @@ module NomenclatureChange::ConstructorHelpers
     result
   end
 
+  def lower_ranks_cases full_name, existing_name, existing_rank_name
+    if existing_name.blank?
+      "<i>#{full_name}</i>"
+    elsif LOWER_RANKS.include?(existing_rank_name) && existing_name.present?
+      "<i>#{full_name}</i> (formerly <i>#{existing_name}</i>)"
+    elsif HIGHER_RANKS.include?(existing_rank_name)
+      "<i>#{full_name}</i> (formerly #{existing_name.upcase})"
+    end
+  end
+
+  def higher_ranks_cases full_name, existing_name, existing_rank_name
+    if existing_name.blank?
+      full_name.upcase
+    elsif LOWER_RANKS.include?(existing_rank_name) && existing_name.present?
+      "#{full_name.upcase} (formerly <i>#{existing_name}</i>)"
+    elsif HIGHER_RANKS.include?(existing_rank_name)
+      "#{full_name.upcase} (formerly #{existing_name.upcase})"
+    end
+  end
 end

@@ -10,7 +10,7 @@
     <li>
     <%= outputs_selection ff %>
     <div class="control-group">
-      <label class="control-label">Taxon concept:</label>
+      <label class="control-label">Existing taxon concept:</label>
       <div class="controls">
         <%= ff.text_field :taxon_concept_id, {
           :class => 'taxon-concept input-taxon',
@@ -23,7 +23,7 @@
     </div>
     <div class="upgrade-info">
       <div class="control-group">
-        <label class="control-label">Parent:</label>
+        <label class="control-label">New taxon parent:</label>
         <div class="controls">
           <!-- TODO figure out the restrictions on the auto complete here, none for now -->
           <%= ff.text_field :new_parent_id, {
@@ -36,15 +36,16 @@
         </div>
       </div>
       <div class="control-group">
-        <label class="control-label">Name:</label>
+        <label class="control-label">New taxon name:</label>
         <div class="controls">
           <%= ff.text_field :new_scientific_name, {
             :class => 'new-scientific-name'
           } %>
+          <label class="new-scientific-name-eg">e.g. 'africana' for Loxodonta africana</label>
         </div>
       </div>
       <div class="control-group">
-        <label class="control-label">Author & year:</label>
+        <label class="control-label">New taxon author & year:</label>
         <div class="controls">
           <%= ff.text_field :new_author_year, {
             :class => 'new-author-year'
