@@ -25,8 +25,7 @@
               @nomenclature_change.outputs.map do |o|
                 [o.display_full_name, o.id]
               end,
-              ff.object.distribution_reassignments.map(&:reassignment_targets).flatten.
-              map(&:output).compact.map(&:id)
+              fff.object.output_ids
             ),
             {}, {:class => 'simple-taxon-concept', :multiple => ''}
           %>
