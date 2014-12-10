@@ -296,6 +296,7 @@ module Admin::NomenclatureChangesHelper
     else
       [@nc.primary_output, @nc.secondary_output].compact
     end
+  end
 
   def sorted_parent_reassignments ff
     ff.object.parent_reassignments.sort_by{ |reassignment| reassignment.reassignable.full_name }
