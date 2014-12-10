@@ -85,3 +85,7 @@ ol li {
 ol li:before {
   content: "Taxon " counter(listCounter) ".";
 }
+
+.new-scientific-name-eg {
+  display: inline-block;
+}
