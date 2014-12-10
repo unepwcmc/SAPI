@@ -51,6 +51,9 @@ class Ability
         Trade::Shipment, Trade::Permit, Trade::AnnualReportUpload,
         Trade::ValidationRule
       ]
+    elsif user.is_api?
+      cannot :manage, :all
     end
+    
   end
 end

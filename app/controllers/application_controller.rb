@@ -6,16 +6,24 @@ class ApplicationController < ActionController::Base
 
   rescue_from CanCan::AccessDenied do |exception|
     rescue_path = if request.referrer && request.referrer != request.url
-              request.referer
-            else
-              signed_in_root_path(current_user)
-            end
-    redirect_to rescue_path, :alert => case exception.action
-      when :destroy
-        "You are not authorized to destroy that record"
-      else
-        exception.message
-      end
+                    request.referer
+                  elsif current_user.is_api?
+                    root_path
+                  else
+                    signed_in_root_path(current_user)
+                  end
+
+    redirect_to rescue_path, 
+      :alert => if current_user.is_api?
+                  "You must log out of Species+ API before you can log into this site"
+                else
+                  case exception.action
+                    when :destroy
+                      "You are not authorized to destroy that record"
+                    else
+                      exception.message
+                  end
+                end
   end
 
   protected
