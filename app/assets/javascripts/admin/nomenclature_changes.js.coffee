@@ -73,6 +73,12 @@ $(document).ready ->
     width: '200px'
   }
   $('.simple-taxon-concept').select2(simpleTaxonSelect2Options)
+  .on('select2-removed', (event) ->
+    $(this).closest('.controls').find('.select-all-checkbox').prop('checked', false)
+
+    $('.species-checkbox:contains('+event.choice.text+')')
+    .find('.select-partial-checkbox').prop('checked', false)
+  )
 
   $('.select-all-checkbox').click (e) ->
       checkboxElement = $(e.target)
