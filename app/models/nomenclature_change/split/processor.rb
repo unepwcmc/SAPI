@@ -25,12 +25,14 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
         chain << NomenclatureChange::OutputTaxonConceptProcessor.new(output)
       end
       if output.will_create_taxon?
+        # for the case when an existing accepted subspecies is turned into a species
         if ['A', 'N'].include?(output.name_status)
           chain << NomenclatureChange::ReassignmentTransferProcessor.new(output, output)
 
           chain << NomenclatureChange::StatusDowngradeProcessor.new(output)
+        # for the case when an existing synonym subspecies is turned into a species
         elsif ['S', 'T'].include?(output.name_status)
-          chain << NomenclatureChange::StatusUpgradeProcessor.new(output, [output])
+          chain << NomenclatureChange::StatusDowngradeProcessor.new(output, [output])
         end
       elsif !output.will_create_taxon? && ['S', 'T'].include?(output.name_status)
         chain << NomenclatureChange::StatusUpgradeProcessor.new(output)
