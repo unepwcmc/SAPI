@@ -45,6 +45,17 @@ class User < ActiveRecord::Base
     self.role == 'api'
   end
 
+  def role_for_display
+    case self.role
+    when 'default'
+      "Default"
+    when 'admin'
+      "Admin"
+    when 'api'
+      "API User"
+    end
+  end
+
   def can_be_deleted?
     tracked_objects = [
       TaxonConcept, TaxonRelationship, CommonName, TaxonCommon,
