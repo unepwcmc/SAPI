@@ -38,17 +38,14 @@ class NomenclatureChange::ReassignmentSummarizer
         @input.taxon_concept.taxon_concept_references,
         'TaxonConceptReference', 'references'
       ),
-      output_generic_summary(
-        @input.taxon_concept.shipments,
-        'Trade::Shipment', 'shipments'
-      )
+      output_shipments_summary
     ].compact
   end
 
   private
 
   def output_children_summary
-    children_cnt = @input.taxon_concept.children.count
+    children_cnt = @input.taxon_concept.children.where(:name_status => 'A').count
     return nil unless children_cnt > 0
     cnt = @input.parent_reassignments.includes(:reassignment_targets).
       where(
@@ -98,6 +95,17 @@ class NomenclatureChange::ReassignmentSummarizer
         'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
       ).where(:reassignable_type => reassignable_type).count
     "#{(cnt == 1 ? objects_cnt : 0)} (of #{objects_cnt}) #{title}"
+  end
+
+  def output_shipments_summary
+    shipments_cnt = @input.taxon_concept.shipments.count
+    return nil unless shipments_cnt > 0
+    default_output = if @output.nomenclature_change.respond_to?(:outputs)
+                      @output.nomenclature_change.outputs.first
+                    else
+                      @output
+                    end
+    "#{(default_output.id == @output.id ? shipments_cnt : 0)} (of #{shipments_cnt} shipments)"
   end
 
 end
