@@ -7,6 +7,6 @@
     <label>Password confirmation</label> <%= f.password_field :password_confirmation %><br />
   <% end %>
   <% if current_user.is_admin? %>
-    <label>Is manager</label> <%= f.check_box :is_admin %>
+         <label>Role</label> <%= f.select :role, [["Default", "default"],["Admin", "admin"],["API User", "api"]] %>
   <% end %>
 <% end %>
