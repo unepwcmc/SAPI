@@ -26,11 +26,12 @@ class User < ActiveRecord::Base
   attr_accessible :email, :name, :password, :password_confirmation,
     :remember_me, :role, :terms_and_conditions
 
-  has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit' 
+  has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit'
+  has_many :ahoy_events, dependent: :nullify, class_name: 'Ahoy::Event'
 
   validates :email, :uniqueness => true, :presence => true
   validates :name, :presence => true
-  validates :role, inclusion: { in: ['default', 'admin', 'api'] }, 
+  validates :role, inclusion: { in: ['default', 'admin', 'api'] },
                    presence: true
 
   def is_contributor?
@@ -43,6 +44,17 @@ class User < ActiveRecord::Base
 
   def is_api?
     self.role == 'api'
+  end
+
+  def role_for_display
+    case self.role
+    when 'default'
+      "Contributor"
+    when 'admin'
+      "Manager"
+    when 'api'
+      "API User"
+    end
   end
 
   def can_be_deleted?
