@@ -99,8 +99,12 @@ class NomenclatureChange::ReassignmentSummarizer
 
   def output_shipments_summary
     shipments_cnt = @input.taxon_concept.shipments.count
-    default_output = @output.nomenclature_change.outputs.first
     return nil unless shipments_cnt > 0
+    default_output = if @output.nomenclature_change.respond_to?(:outputs)
+                      @output.nomenclature_change.outputs.first
+                    else
+                      @output
+                    end
     "#{(default_output.id == @output.id ? shipments_cnt : 0)} (of #{shipments_cnt} shipments)"
   end
 
