@@ -26,7 +26,8 @@ class User < ActiveRecord::Base
   attr_accessible :email, :name, :password, :password_confirmation,
     :remember_me, :role, :terms_and_conditions
 
-  has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit' 
+  has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit'
+  has_many :ahoy_events, dependent: :nullify, class_name: 'Ahoy::Event'
 
   validates :email, :uniqueness => true, :presence => true
   validates :name, :presence => true
