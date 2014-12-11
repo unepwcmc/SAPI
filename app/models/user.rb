@@ -49,9 +49,9 @@ class User < ActiveRecord::Base
   def role_for_display
     case self.role
     when 'default'
-      "Default"
+      "Contributor"
     when 'admin'
-      "Admin"
+      "Manager"
     when 'api'
       "API User"
     end
