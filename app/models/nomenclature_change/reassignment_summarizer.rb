@@ -45,7 +45,7 @@ class NomenclatureChange::ReassignmentSummarizer
   private
 
   def output_children_summary
-    children_cnt = @input.taxon_concept.children.where(:name_status => 'A').count
+    children_cnt = @input.taxon_concept.children.count
     return nil unless children_cnt > 0
     cnt = @input.parent_reassignments.includes(:reassignment_targets).
       where(

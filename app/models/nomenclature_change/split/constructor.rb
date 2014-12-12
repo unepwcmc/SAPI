@@ -23,7 +23,7 @@ class NomenclatureChange::Split::Constructor
 
     default_output = @nomenclature_change.outputs_intersect_inputs.first
     default_output ||= @nomenclature_change.outputs.first
-    children = input.taxon_concept.children.where(:name_status => 'A') -
+    children = input.taxon_concept.children -
       @nomenclature_change.outputs.map(&:taxon_concept).compact
     _build_parent_reassignments(input, default_output, children)
     outputs_for_reassignments.each do |output|
