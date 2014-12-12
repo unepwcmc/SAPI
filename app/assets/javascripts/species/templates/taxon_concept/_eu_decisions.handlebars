@@ -36,7 +36,11 @@
               {{{decision.subspecies_info}}}<br />
             {{/if}}
             {{decision.term.name}} {{#if decision.source.code}}{{decision.source.code}} - {{decision.source.name}}{{/if}} <br />
-            {{{decision.notes}}}
+            {{#if decision.notes}}
+              {{{decision.notes}}}
+              <br /><br />
+            {{/if}}
+            {{{decision.nomenclature_note_en}}}
           </td>
           <td class="last">
             <a class="legal-links" href="{{unbound decision.start_event.url}}">
@@ -87,7 +91,11 @@
                   {{{decision.subspecies_info}}}<br />
                 {{/if}}
                 {{decision.term.name}} {{#if decision.source.code}}{{decision.source.code}} - {{decision.source.name}}{{/if}} <br />
-                {{{decision.notes}}}
+                {{#if decision.notes}}
+                  {{{decision.notes}}}
+                  <br /><br />
+                {{/if}}
+                {{{decision.nomenclature_note_en}}}
               </td>
               <td class="last">
                 <a class="legal-links" href="{{unbound decision.start_event.url}}">

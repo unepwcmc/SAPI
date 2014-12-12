@@ -18,9 +18,14 @@ Species.TaxonConceptLegalController = Ember.ArrayController.extend
       $('#'+id).
         find('.historic').slideUp('slow')
 
-    showFullNote: (title, fullNote) ->
+    showFullNote: (title, fullNote, nomenclatureNote) ->
       $("#full-note-legal .title").text(title)
-      $("#full-note-legal .content").html(fullNote)
+      note = fullNote
+
+      if(!Ember.isNone(nomenclatureNote) && nomenclatureNote.length > 0)
+        note = note  + '<br/><br/>' + nomenclatureNote
+
+      $("#full-note-legal .content").html(note)
       $("#full-note-legal").show()
     close: () ->
       $("#full-note-legal").hide()

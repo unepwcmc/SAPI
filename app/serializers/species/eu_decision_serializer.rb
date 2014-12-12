@@ -1,6 +1,7 @@
 class Species::EuDecisionSerializer < ActiveModel::Serializer
   attributes :notes, {:start_date_formatted => :start_date},
-    :is_current, :subspecies_info
+    :is_current, :subspecies_info, :nomenclature_note_en, :nomenclature_note_fr,
+    :nomenclature_note_es
 
   has_one :eu_decision_type, :serializer => Species::EuDecisionTypeSerializer
   has_one :geo_entity, :serializer => Species::GeoEntitySerializer
