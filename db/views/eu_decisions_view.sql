@@ -30,6 +30,7 @@ SELECT
   END AS decision_type_for_display,
   eu_decision_types.decision_type AS decision_type,
   sources.name_en AS source_name,
+  sources.code || ' - ' || sources.name_en AS source_code_and_name,
   terms.name_en AS term_name,
   eu_decisions.notes,
   start_event.name AS start_event_name,
