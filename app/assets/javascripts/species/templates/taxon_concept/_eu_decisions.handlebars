@@ -35,7 +35,7 @@
             {{#if decision.subspecies_info}}
               {{{decision.subspecies_info}}}<br />
             {{/if}}
-            {{decision.term.name}} {{decision.source.code}} - {{decision.source.name}} <br />
+            {{decision.term.name}} {{#if decision.source.code}}{{decision.source.code}} - {{decision.source.name}}{{/if}} <br />
             {{{decision.notes}}}
           </td>
           <td class="last">
@@ -86,7 +86,7 @@
                 {{#if decision.subspecies_info}}
                   {{{decision.subspecies_info}}}<br />
                 {{/if}}
-                {{decision.term.name}} {{decision.source.code}} - {{decision.source.name}} <br />
+                {{decision.term.name}} {{#if decision.source.code}}{{decision.source.code}} - {{decision.source.name}}{{/if}} <br />
                 {{{decision.notes}}}
               </td>
               <td class="last">
