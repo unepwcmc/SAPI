@@ -26,6 +26,9 @@ Species.TaxonConcept = DS.Model.extend
   euDecisions: DS.attr("array")
   distributionReferences: DS.attr("array")
   taxonomy: DS.attr("string")
+  nomenclatureNoteEn: DS.attr("string")
+  nomenclatureNoteFr: DS.attr("string")
+  nomenclatureNoteEs: DS.attr("string")
 
   searchResultDisplay: ( ->
     baseDisplay = @get('fullName') + ' <span class="author-year">' + @get('authorYear') + '</span>'

@@ -4,7 +4,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   attributes :id, :parent_id, :full_name, :author_year, :standard_references,
     :common_names, :distributions, :subspecies, :distribution_references,
     :taxonomy, :kingdom_name, :phylum_name, :order_name, :class_name, :family_name,
-    :genus_name, :species_name, :rank_name, :name_status
+    :genus_name, :species_name, :rank_name, :name_status, :nomenclature_note_en
 
   has_many :synonyms, :serializer => Species::SynonymSerializer
   has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,

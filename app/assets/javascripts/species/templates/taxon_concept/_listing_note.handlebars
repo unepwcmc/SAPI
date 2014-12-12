@@ -3,7 +3,7 @@
   [{{unbound listing.auto_note}}]<br /><br />
 {{/if}}
 {{#if listing.hash_full_note_en}}
-  <a class="legal-links" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en}}>
+  <a class="legal-links" {{action 'showFullNote' listing.hash_display listing.hash_full_note_en listing.nomenclature_note_en}}>
     {{unbound listing.hash_display}}
   </a><br /><br />
 {{/if}}
@@ -11,11 +11,17 @@
 {{#if listing.full_note_en}}
   {{#sizeGt listing.full_note_en max=800}}
     {{{ unbound listing.short_note_en}}}<br />
-    <a class="legal-links" {{action 'showFullNote' "Full note" listing.full_note_en}}>See full note</a>
+    <a class="legal-links" {{action 'showFullNote' "Full note" listing.full_note_en
+    listing.nomenclature_note_en}}>See full note</a>
   {{else}}
     {{{unbound listing.full_note_en}}}
+    <br /><br />
+    {{{unbound listing.nomenclature_note_en}}}
   {{/sizeGt}}
 {{else}}
-  {{{unbound listing.short_note_en}}}
+  {{#if listing.short_note_en}}
+    {{{unbound listing.short_note_en}}}
+    <br /><br />
+  {{/if}}
+  {{{unbound listing.nomenclature_note_en}}}
 {{/if}}
-
