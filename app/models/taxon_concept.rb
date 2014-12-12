@@ -51,7 +51,7 @@ class TaxonConcept < ActiveRecord::Base
   has_one :m_taxon_concept, :foreign_key => :id
 
   belongs_to :parent, :class_name => 'TaxonConcept'
-  has_many :children, :class_name => 'TaxonConcept', :foreign_key => :parent_id
+  has_many :children, class_name: 'TaxonConcept', foreign_key: :parent_id, conditions: {name_status: ['A', 'N']}
   belongs_to :rank
   belongs_to :taxonomy
   has_many :designations, :through => :taxonomy
