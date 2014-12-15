@@ -30,6 +30,9 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.unit_id,
               trade_restrictions.quota,
               trade_restrictions.public_display,
+              trade_restrictions.nomenclature_note_en,
+              trade_restrictions.nomenclature_note_fr,
+              trade_restrictions.nomenclature_note_es,
               CASE
                 WHEN taxon_concepts_mview.rank_name = '#{object.rank_name}'
                 THEN NULL
@@ -66,6 +69,9 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.geo_entity_id,
               trade_restrictions.start_notification_id,
               trade_restrictions.end_notification_id,
+              trade_restrictions.nomenclature_note_en,
+              trade_restrictions.nomenclature_note_fr,
+              trade_restrictions.nomenclature_note_es,
               CASE
                 WHEN taxon_concepts_mview.rank_name = '#{object.rank_name}'
                 THEN NULL
@@ -123,6 +129,9 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               eu_decisions.eu_decision_type_id,
               eu_decisions.term_id,
               eu_decisions.source_id,
+              eu_decisions.nomenclature_note_en,
+              eu_decisions.nomenclature_note_fr,
+              eu_decisions.nomenclature_note_es,
               CASE
                 WHEN taxon_concepts_mview.rank_name = '#{object.rank_name}'
                 THEN NULL
@@ -191,6 +200,9 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.inclusion_taxon_concept_id,
               listing_changes_mview.inherited_full_note_en,
               listing_changes_mview.inherited_short_note_en,
+              listing_changes_mview.nomenclature_note_en,
+              listing_changes_mview.nomenclature_note_fr,
+              listing_changes_mview.nomenclature_note_es,
               CASE
                 WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'} 
                 AND taxon_concepts_mview.rank_name = 'SUBSPECIES'
@@ -259,6 +271,9 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.inclusion_taxon_concept_id,
               listing_changes_mview.inherited_full_note_en,
               listing_changes_mview.inherited_short_note_en,
+              listing_changes_mview.nomenclature_note_en,
+              listing_changes_mview.nomenclature_note_fr,
+              listing_changes_mview.nomenclature_note_es,
               events.description AS event_name,
               events.url AS event_url,
               CASE

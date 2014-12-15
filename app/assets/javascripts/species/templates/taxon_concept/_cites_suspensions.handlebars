@@ -31,7 +31,11 @@
             {{#if suspension.subspecies_info}}
               {{{suspension.subspecies_info}}}<br />
             {{/if}}
-            {{{suspension.notes}}}
+            {{#if suspension.notes}}
+              {{{suspension.notes}}}
+              <br /><br />
+            {{/if}}
+            {{{suspension.nomenclature_note_en}}}
           </td> 
         </tr>
       {{else}}
@@ -68,7 +72,11 @@
                 {{#if suspension.subspecies_info}}
                   {{{suspension.subspecies_info}}}<br />
                 {{/if}}
-                {{{suspension.notes}}}
+                {{#if suspension.notes}}
+                  {{{suspension.notes}}}
+                  <br /><br />
+                {{/if}}
+                {{{suspension.nomenclature_note_en}}}
               </td>
             </tr>
           {{/each}}
