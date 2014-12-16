@@ -6,22 +6,30 @@ class ApplicationController < ActionController::Base
 
   rescue_from CanCan::AccessDenied do |exception|
     rescue_path = if request.referrer && request.referrer != request.url
-              request.referer
-            else
-              admin_root_path
-            end
-    redirect_to rescue_path, :alert => case exception.action
-      when :destroy
-        "You are not authorized to destroy that record"
-      else
-        exception.message
-      end
+                    request.referer
+                  elsif current_user.is_api?
+                    root_path
+                  else
+                    signed_in_root_path(current_user)
+                  end
+
+    redirect_to rescue_path, 
+      :alert => if current_user.is_api?
+                  "You must log out of Species+ API before you can log into this site"
+                else
+                  case exception.action
+                    when :destroy
+                      "You are not authorized to destroy that record"
+                    else
+                      exception.message
+                  end
+                end
   end
 
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) << :name
+    devise_parameter_sanitizer.for(:sign_up).push(:name)
     devise_parameter_sanitizer.for(:account_update) << :name
   end
 
@@ -49,7 +57,7 @@ class ApplicationController < ActionController::Base
   end
 
   def verify_manager
-    redirect_to admin_root_path,
-      :alert => "You are not authorized to access the trade admin page" unless current_user.is_manager?
+    redirect_to signed_in_root_path(current_user),
+      :alert => "You are not authorized to access the trade admin page" unless current_user.is_admin?
   end
 end

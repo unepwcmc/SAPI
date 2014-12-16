@@ -43,7 +43,9 @@ class Sapi::GeoIP
   end
 
   def default_separator(ip)
-    if ip == '127.0.0.1' || nil
+    invalid_addresses = ['127.0.0.1', nil, 'localhost', 'nil', '', 'unknown']
+
+    if invalid_addresses.include?(ip)
       :comma
     else
       ip_data = country_and_city(ip)

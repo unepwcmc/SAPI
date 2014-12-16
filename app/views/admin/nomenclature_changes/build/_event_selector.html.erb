@@ -1,0 +1,14 @@
+<div class="control-group">
+  <label for="nomenclature_change_split_event_id" class="control-label">
+    Select event:
+  </label>
+  <div class="controls">
+    <%= f.select :event_id,
+      options_from_collection_for_select(
+        @events, :id, :name,
+        @nomenclature_change.event_id
+      ),
+      { :selected => @nomenclature_change.event_id, :include_blank => true }
+    %>
+  </div>
+</div>

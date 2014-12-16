@@ -50,6 +50,26 @@ describe Species::ExportsController do
       expect(response.cookies['speciesplus.csv_separator']).to eq('comma')
       expect(assigns(:filters)[:csv_separator]).to eq(:comma)
     end
+
+    it 'sets separator to comma when IP address is nil' do
+      ActionDispatch::Request.any_instance.stub(:remote_ip).and_return(nil)
+      get :download, data_type: 'EuDecisions', :filters => {
+        'set' => 'current', 'decision_types' => {}, :csv_separator => ''
+      }
+      expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
+      expect(response.cookies['speciesplus.csv_separator']).to eq('comma')
+      expect(assigns(:filters)[:csv_separator]).to eq(:comma)
+    end
+
+    it 'sets separator to comma when IP address is unknown' do
+      ActionDispatch::Request.any_instance.stub(:remote_ip).and_return('unknown')
+      get :download, data_type: 'EuDecisions', :filters => {
+        'set' => 'current', 'decision_types' => {}, :csv_separator => ''
+      }
+      expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
+      expect(response.cookies['speciesplus.csv_separator']).to eq('comma')
+      expect(assigns(:filters)[:csv_separator]).to eq(:comma)
+    end
   end
 end
 

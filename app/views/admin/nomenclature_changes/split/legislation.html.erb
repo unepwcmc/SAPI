@@ -1,0 +1,11 @@
+<h2>New split: handle legislation</h2>
+<%= split_blurb %>
+<p>
+  <i class="icon-info-sign"></i>Legislation from the original taxon will be copied to all outputs of the split. Only legislation types that the taxon has are shown below. The following notes will be appended to copied objects:
+</p>
+<%= nomenclature_change_form do |f| %>
+  <%= f.fields_for :input do |ff| %>
+    <%= render partial: 'admin/nomenclature_changes/build/legislation_reassignments',
+      locals: {ff: ff} %>
+  <% end %>
+<% end %>

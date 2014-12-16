@@ -14,11 +14,14 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
 require 'sidekiq/testing'
+require 'capybara/rspec'
+require 'capybara/rails'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 Dir[Rails.root.join("spec/shared/*.rb")].each {|f| require f}
+Dir[Rails.root.join("spec/models/nomenclature_change/shared/*.rb")].each {|f| require f}
 RSpec.configure do |config|
   # ## Mock Framework
   #
@@ -86,4 +89,19 @@ def build_tc_attributes(*args)
   build_attributes(*args).delete_if do |k, v|
     %w(data listing notes).include? k
   end
+end
+
+def sign_up(user, opts = {})
+  options = {
+    terms_and_conditions: true
+  }.merge(opts)
+  visit api_path
+  within('#registration-form') do
+    fill_in 'user_name', :with => user.name
+    fill_in 'user_email', :with => user.email
+    fill_in 'Password', :with => user.password
+    fill_in 'Password confirmation', :with => user.password
+    find(:css, "#user_terms_and_conditions").set(options[:terms_and_conditions])
+  end
+  click_button 'Sign up'
 end

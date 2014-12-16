@@ -23,7 +23,10 @@
 #  original_id                 :integer
 #  updated_by_id               :integer
 #  created_by_id               :integer
+#  nomenclature_note_en        :text
 #  internal_notes              :text
+#  nomenclature_note_es        :text
+#  nomenclature_note_fr        :text
 #
 
 require 'spec_helper'

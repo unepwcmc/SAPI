@@ -16,5 +16,4 @@ describe PagesController do
       assigns(:eu_suspension_regulations).should_not be_nil
     end
   end
-
 end

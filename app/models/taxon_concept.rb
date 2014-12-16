@@ -2,27 +2,30 @@
 #
 # Table name: taxon_concepts
 #
-#  id                         :integer          not null, primary key
-#  taxonomy_id                :integer          default(1), not null
-#  parent_id                  :integer
-#  rank_id                    :integer          not null
-#  taxon_name_id              :integer          not null
-#  author_year                :string(255)
-#  legacy_id                  :integer
-#  legacy_type                :string(255)
-#  data                       :hstore
-#  listing                    :hstore
-#  notes                      :text
-#  taxonomic_position         :string(255)      default("0"), not null
-#  full_name                  :string(255)
-#  name_status                :string(255)      default("A"), not null
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  touched_at                 :datetime
-#  legacy_trade_code          :string(255)
-#  updated_by_id              :integer
-#  created_by_id              :integer
-#  dependents_updated_at      :datetime
+#  id                    :integer          not null, primary key
+#  taxonomy_id           :integer          default(1), not null
+#  parent_id             :integer
+#  rank_id               :integer          not null
+#  taxon_name_id         :integer          not null
+#  author_year           :string(255)
+#  legacy_id             :integer
+#  legacy_type           :string(255)
+#  data                  :hstore
+#  listing               :hstore
+#  notes                 :text
+#  taxonomic_position    :string(255)      default("0"), not null
+#  full_name             :string(255)
+#  name_status           :string(255)      default("A"), not null
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  touched_at            :datetime
+#  legacy_trade_code     :string(255)
+#  updated_by_id         :integer
+#  created_by_id         :integer
+#  dependents_updated_at :datetime
+#  nomenclature_note_en  :text
+#  nomenclature_note_es  :text
+#  nomenclature_note_fr  :text
 #
 
 class TaxonConcept < ActiveRecord::Base
@@ -33,7 +36,9 @@ class TaxonConcept < ActiveRecord::Base
     :accepted_scientific_name, :parent_scientific_name,
     :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
     :tag_list, :legacy_trade_code,
+    :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
     :created_by_id, :updated_by_id, :dependents_updated_at
+
   attr_writer :parent_scientific_name
   attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
     :other_hybrid_parent_scientific_name
@@ -46,7 +51,7 @@ class TaxonConcept < ActiveRecord::Base
   has_one :m_taxon_concept, :foreign_key => :id
 
   belongs_to :parent, :class_name => 'TaxonConcept'
-  has_many :children, :class_name => 'TaxonConcept', :foreign_key => :parent_id
+  has_many :children, class_name: 'TaxonConcept', foreign_key: :parent_id, conditions: {name_status: ['A', 'N']}
   belongs_to :rank
   belongs_to :taxonomy
   has_many :designations, :through => :taxonomy
@@ -140,14 +145,20 @@ class TaxonConcept < ActiveRecord::Base
     conditions: {comment_type: 'Nomenclature'}
   has_one :distribution_comment, class_name: 'Comment', as: 'commentable',
     conditions: {comment_type: 'Distribution'}
+  has_many :nomenclature_change_reassignments, :as => :reassignable
+  has_many :nomenclature_change_inputs, class_name: 'NomenclatureChange::Input'
+  has_many :nomenclature_change_outputs, class_name: 'NomenclatureChange::Output'
+  has_many :nomenclature_change_outputs_as_new, class_name: 'NomenclatureChange::Output',
+    foreign_key: :new_taxon_concept_id
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
+  validates :name_status, :presence => true
   validate :parent_in_same_taxonomy, :if => lambda { |tc| tc.parent }
   validate :parent_at_immediately_higher_rank, :if => lambda { |tc| tc.parent }
   validates :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
-  validates :taxon_name_id, :uniqueness => { :scope => [:taxonomy_id, :parent_id, :name_status, :author_year] }
+  validates :full_name, :uniqueness => { :scope => [:taxonomy_id, :author_year] }
   validates :taxonomic_position,
     :presence => true,
     :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" },
@@ -156,12 +167,21 @@ class TaxonConcept < ActiveRecord::Base
     tc.taxonomy && tc.taxonomy_id_changed?
   }
 
-  before_validation :check_taxon_name_exists
-  before_validation :check_parent_taxon_concept_exists
-  before_validation :check_hybrid_parent_taxon_concept_exists
-  before_validation :check_other_hybrid_parent_taxon_concept_exists
-  before_validation :check_accepted_taxon_concept_exists
+  before_validation :check_taxon_name_exists,
+    :if => lambda { |tc| tc.full_name }
+  before_validation :check_parent_taxon_concept_exists,
+    :if => lambda { |tc| tc.parent_scientific_name }
+  before_validation :check_hybrid_parent_taxon_concept_exists,
+    :if => lambda { |tc| tc.is_hybrid? && tc.hybrid_parent_scientific_name }
+  before_validation :check_other_hybrid_parent_taxon_concept_exists,
+    :if => lambda { |tc| tc.is_hybrid? && tc.other_hybrid_parent_scientific_name }
+  before_validation :check_accepted_taxon_concept_exists,
+    :if => lambda { |tc| tc.is_synonym? && tc.accepted_scientific_name }
+  before_validation :check_accepted_taxon_concept_for_trade_name_exists,
+    :if => lambda { |tc| tc.is_trade_name? && tc.accepted_scientific_name }
   before_validation :ensure_taxonomic_position
+
+  translates :nomenclature_note
 
   scope :at_parent_ranks, lambda{ |rank|
     joins_sql = <<-SQL
@@ -298,7 +318,10 @@ class TaxonConcept < ActiveRecord::Base
       'EU opinions' => eu_opinions,
       'instruments' => taxon_instruments,
       'shipments' => shipments,
-      'shipments (reported as)' => reported_shipments
+      'shipments (reported as)' => reported_shipments,
+      'nomenclature changes (as input)' => nomenclature_change_inputs,
+      'nomenclature changes (as output)' => nomenclature_change_outputs,
+      'nomenclature changes (as new output)' => nomenclature_change_outputs_as_new
     }
   end
 
@@ -335,7 +358,6 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def check_taxon_name_exists
-    return true unless full_name
     self.full_name = TaxonConcept.sanitize_full_name(full_name)
     scientific_name = if is_synonym? || is_trade_name? || is_hybrid?
       full_name
@@ -355,7 +377,6 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def check_hybrid_parent_taxon_concept_exists
-    return true unless is_hybrid?
     check_associated_taxon_concept_exists(:hybrid_parent_scientific_name) do |tc|
       inverse_taxon_relationships.build(
         :taxon_concept_id => tc.id,
@@ -366,7 +387,6 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def check_other_hybrid_parent_taxon_concept_exists
-    return true unless is_hybrid?
     check_associated_taxon_concept_exists(:other_hybrid_parent_scientific_name) do |tc|
       inverse_taxon_relationships.build(
         :taxon_concept_id => tc.id,
@@ -377,12 +397,21 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def check_accepted_taxon_concept_exists
-    return true unless is_synonym?
     check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
       inverse_taxon_relationships.build(
         :taxon_concept_id => tc.id,
         :taxon_relationship_type_id => TaxonRelationshipType.
           find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
+      )
+    end
+  end
+
+  def check_accepted_taxon_concept_for_trade_name_exists
+    check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
+      inverse_taxon_relationships.build(
+        :taxon_concept_id => tc.id,
+        :taxon_relationship_type_id => TaxonRelationshipType.
+          find_by_name(TaxonRelationshipType::HAS_TRADE_NAME).id
       )
     end
   end

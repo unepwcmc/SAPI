@@ -1,0 +1,31 @@
+<h2>New split: handle children</h2>
+<%= split_blurb %>
+<p>
+  <i class="icon-info-sign"></i>
+  Assign children of <%= @nomenclature_change.input.taxon_concept.full_name %> to the appropriate taxon concept:
+</p>
+<%= nomenclature_change_form do |f| %>
+  <%= f.fields_for :input do |ff| %>
+
+    <%= ff.fields_for :parent_reassignments, sorted_parent_reassignments(ff) do |fff| %>
+      <div class="control-group">
+        <label class="control-label">
+          <%= fff.object.reassignable.full_name %>
+        </label>
+        <div class="controls">
+          <%= fff.fields_for :reassignment_target do |ffff| %>
+            <%= ffff.select :nomenclature_change_output_id,
+              options_for_select(
+                @nomenclature_change.outputs.map do |o|
+                  [o.display_full_name, o.id]
+                end,
+                ffff.object.nomenclature_change_output_id
+              )
+            %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+  <% end %>
+<% end %>

@@ -1,9 +1,9 @@
 SAPI::Application.routes.draw do
-
   devise_for :users, :skip => [:registrations]
   as :user do
     get 'users/edit' => 'registrations#edit', :as => 'edit_user_registration'
     put 'users' => 'registrations#update', :as => 'user_registration'
+    post 'users' => 'registrations#create', :as => 'user_registration'
   end
 
   match 'about' => 'pages#about'
@@ -101,7 +101,7 @@ SAPI::Application.routes.draw do
     resources :ahoy_visits, :only => [:index, :show]
     resources :ahoy_events, :only => [:index, :show]
 
-    resources :taxon_concepts, :only => [:index, :create, :edit, :update, :destroy] do
+    resources :taxon_concepts do
       get :autocomplete, :on => :collection
       resources :children, :only => [:index]
       resources :taxon_relationships, :only => [:index, :create, :destroy]
@@ -122,14 +122,23 @@ SAPI::Application.routes.draw do
       resources :taxon_quotas, :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :quotas
 
-      resources :taxon_eu_suspensions,
-        :only => [:index, :new, :create, :edit, :update, :destroy],
+      resources :taxon_eu_suspensions, 
+        :only => [:index, :new, :create, :edit, :update, :destroy], 
         :as => :eu_suspensions
 
       resources :taxon_cites_suspensions,
         :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :cites_suspensions
       resources :taxon_instruments, :only => [ :index, :new, :create, :edit, :update, :destroy ]
+    end
+    resources :nomenclature_changes do
+      resources :split, controller: 'nomenclature_changes/split'
+      resources :lump, controller: 'nomenclature_changes/lump'
+      resources :status_to_accepted,
+        controller: 'nomenclature_changes/status_to_accepted'
+      resources :status_to_synonym,
+        controller: 'nomenclature_changes/status_to_synonym'
+      resources :status_swap, controller: 'nomenclature_changes/status_swap'
     end
     match 'exports' => 'exports#index'
     match 'exports/download' => 'exports#download'

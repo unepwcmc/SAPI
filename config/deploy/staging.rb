@@ -9,7 +9,7 @@ set :server_name, "sapi.unepwcmc-012.vm.brightbox.net"
 set :sudo_user, "rails"
 set :app_port, "80"
 
-set :branch, :'develop'
+set :branch, :develop
 
 set :default_environment, {
   'PATH' => "/home/rails/.rvm/gems/ruby-2.0.0-p481/bin:/home/rails/.rvm/bin:/home/rails/.rvm/rubies/ruby-2.0.0-p481/bin:$PATH",

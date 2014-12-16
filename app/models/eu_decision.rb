@@ -2,25 +2,28 @@
 #
 # Table name: eu_decisions
 #
-#  id                  :integer          not null, primary key
-#  is_current          :boolean          default(TRUE)
-#  notes               :text
-#  internal_notes      :text
-#  taxon_concept_id    :integer
-#  geo_entity_id       :integer
-#  start_date          :datetime
-#  start_event_id      :integer
-#  end_date            :datetime
-#  end_event_id        :integer
-#  type                :string(255)
-#  conditions_apply    :boolean
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  eu_decision_type_id :integer
-#  term_id             :integer
-#  source_id           :integer
-#  created_by_id       :integer
-#  updated_by_id       :integer
+#  id                   :integer          not null, primary key
+#  is_current           :boolean          default(TRUE)
+#  notes                :text
+#  internal_notes       :text
+#  taxon_concept_id     :integer
+#  geo_entity_id        :integer
+#  start_date           :datetime
+#  start_event_id       :integer
+#  end_date             :datetime
+#  end_event_id         :integer
+#  type                 :string(255)
+#  conditions_apply     :boolean
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  eu_decision_type_id  :integer
+#  term_id              :integer
+#  source_id            :integer
+#  created_by_id        :integer
+#  updated_by_id        :integer
+#  nomenclature_note_en :text
+#  nomenclature_note_es :text
+#  nomenclature_note_fr :text
 #
 
 require 'digest/sha1'
@@ -30,6 +33,7 @@ class EuDecision < ActiveRecord::Base
   attr_accessible :end_date, :end_event_id, :geo_entity_id, :internal_notes,
     :is_current, :notes, :start_date, :start_event_id, :eu_decision_type_id,
     :taxon_concept_id, :type, :conditions_apply, :term_id, :source_id,
+    :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
     :created_by_id, :updated_by_id
 
   belongs_to :taxon_concept
@@ -46,6 +50,8 @@ class EuDecision < ActiveRecord::Base
   validates :taxon_concept, presence: true
   validates :geo_entity, presence: true
   validates :eu_decision_type, presence: true
+
+  translates :nomenclature_note
 
   def year
     start_date ? start_date.strftime('%Y') : ''

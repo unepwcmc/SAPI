@@ -1,3 +1,11 @@
+### 0.9.0 (2014-12-16)
+**Species+ Admin:**
+* nomenclature management (temporarily disabled)
+* changes to user roles (adding API users)
+
+**Species+:**
+* fixes to CITES Suspensions downloads and wording of sources
+
 ### 0.8.11 (2014-11-25)
 **Species+ Admin:**
 * fix for phantom opinions

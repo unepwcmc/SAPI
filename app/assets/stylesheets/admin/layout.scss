@@ -68,3 +68,24 @@ form.documents {
 .align-on-select {
   padding-left: 10px !important;
 }
+
+.nc-tag{
+  width: 50%;
+}
+
+ol {
+  counter-reset: listCounter;
+  list-style-type: none;
+}
+
+ol li {
+  counter-increment: listCounter;
+}
+
+ol li:before {
+  content: "Taxon " counter(listCounter) ".";
+}
+
+.new-scientific-name-eg {
+  display: inline-block;
+}

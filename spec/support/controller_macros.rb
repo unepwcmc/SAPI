@@ -9,7 +9,7 @@ module ControllerMacros
   def login_contributor
     before(:each) do
       @request.env["devise.mapping"] = Devise.mappings[:user]
-      sign_in FactoryGirl.create(:user, :is_manager => false)
+      sign_in FactoryGirl.create(:user, role: 'default')
     end
   end
 end

@@ -1,0 +1,41 @@
+<h2>New split: nomenclature change notes</h2>
+<%= split_blurb %>
+<%= nomenclature_change_form do |f| %>
+<h3>Input</h3>
+  <p>
+    <i class="icon-info-sign"></i>
+    Original taxon concept being split
+  </p>
+  <%= f.fields_for :input do |ff| %>
+    <div class="control-group">
+      <label class="control-label">
+        <%= ff.object.taxon_concept.try(:full_name) %>
+      </label>
+      <div class="controls">
+        <%= render partial: 'admin/nomenclature_changes/build/nomenclature_notes',
+          locals: {ff: ff}
+        %>
+      </div>
+    </div>
+  <% end %>
+
+<h3>Outputs</h3>
+  <p>
+    <i class="icon-info-sign"></i>
+    Taxa resulting from the split
+  </p>
+  <% @nomenclature_change.outputs_except_inputs.each do |output| %>
+    <%= f.fields_for :outputs, output do |ff| %>
+      <div class="control-group">
+        <label class="control-label">
+          <%= ff.object.display_full_name %>
+        </label>
+        <div class="controls">
+          <%= render partial: 'admin/nomenclature_changes/build/nomenclature_notes',
+            locals: {ff: ff}
+          %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

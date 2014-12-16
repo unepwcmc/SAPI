@@ -42,4 +42,10 @@
     <label>Author & year</label>
     <%= f.text_field :author_year %>
   </div>
+  <%= render :partial => 'admin/shared/nomenclature_notes_form',
+    locals: {
+      f: f,
+      locale_columns: TaxonConcept.locale_columns(:nomenclature_note)
+    }
+  %>
 <% end %>

@@ -1,0 +1,11 @@
+<h2>New status swap: handle legislation</h2>
+<%= status_change_blurb %>
+<p>
+  <i class="icon-info-sign"></i> The following notes will be appended to reassigned legislation.
+</p>
+<%= nomenclature_change_form do |f| %>
+  <%= f.fields_for :input do |ff| %>
+    <%= render partial: 'admin/nomenclature_changes/build/legislation_reassignments',
+      locals: {ff: ff} %>
+  <% end %>
+<% end %>

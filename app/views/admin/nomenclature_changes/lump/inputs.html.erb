@@ -1,0 +1,24 @@
+<h2>New lump</h2>
+<%= nomenclature_change_form do |f| %>
+  <%= render 'admin/nomenclature_changes/build/event_selector', :f => f %>
+  <ol>
+    <%= f.fields_for :inputs do |ff| %>
+      <li>
+        <div class="control-group">
+          <label class="control-label">Select taxon to lump:</label>
+            <div class="controls">
+              <%= ff.text_field :taxon_concept_id, {
+                :class => 'taxon-concept',
+                :'data-name' => ff.object.taxon_concept.try(:full_name),
+                :'data-name-status' => ff.object.taxon_concept.try(:name_status),
+                :'data-name-status-filter' => ['A', 'N'].to_json,
+                :'data-taxonomy-id' => @taxonomy.id
+              } %>
+              <%= ff.link_to_remove 'Remove input' %>
+            </div>
+        </div>
+      </li>
+    <% end %>
+    <p><%= f.link_to_add 'Add another input', :inputs %></p>
+  </ol>
+<% end %>

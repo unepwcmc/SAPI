@@ -22,6 +22,7 @@ gem 'devise'
 gem 'cancan'
 gem 'ahoy_matey'
 gem 'gon'
+gem 'wicked'
 
 gem 'sidekiq'
 gem 'sidekiq-status'
@@ -35,8 +36,8 @@ gem 'jquery-mousewheel-rails'
 gem 'jquery-cookie-rails'
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'kaminari'
-gem 'select2-rails'
-gem 'nested_form', '~> 0.3.1'
+gem 'select2-rails', '~> 3.5.7'
+gem 'nested_form', '~> 0.3.2'
 gem 'acts-as-taggable-on', '~> 2.3.1'
 gem 'carrierwave'
 
@@ -107,6 +108,8 @@ group :test, :development do
   gem "json_spec"
   gem "database_cleaner", ">=1.2.0"
   gem "timecop"
+  gem "launchy"
+  gem 'byebug'
 end
 
 group :test do
@@ -114,6 +117,7 @@ group :test do
   gem "factory_girl_rails", "~> 4.0"
   gem 'simplecov', :require => false
   gem 'coveralls', :require => false
+  gem 'capybara'
 end
 
 gem 'rake', '~> 10.0.3'

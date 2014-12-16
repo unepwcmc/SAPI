@@ -18,4 +18,8 @@ class ListingDistribution < ActiveRecord::Base
   attr_accessible :geo_entity_id, :listing_change_id, :is_party
   belongs_to :geo_entity
   belongs_to :listing_change
+
+  def self.ignored_attributes
+    super() + [:source_id]
+  end
 end

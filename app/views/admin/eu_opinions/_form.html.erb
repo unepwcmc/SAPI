@@ -101,6 +101,13 @@
     </div>
   </div>
 
+  <%= render :partial => 'admin/shared/nomenclature_notes_form',
+    locals: {
+      f: f,
+      locale_columns: EuOpinion.locale_columns(:nomenclature_note)
+    }
+  %>
+
   <p class="pull-right">
     <%= link_to 'Cancel', admin_taxon_concept_eu_opinions_path(@taxon_concept),
       :class => "btn" %>

@@ -1,0 +1,61 @@
+<h2>New split: handle names</h2>
+<%= split_blurb %>
+<p>
+  <i class="icon-info-sign"></i>
+  Assign Synonyms and Trade Names to the appropriate taxa. Synonyms can be assigned to multiple split outputs, while Trade Names can only be assigned to one split output.
+</p>
+<%= nomenclature_change_form do |f| %>
+
+  <%= global_selection false %>
+
+  <%= f.fields_for :input do |ff| %>
+    <p>
+      <i class="icon-info-sign"></i>
+      Local selection
+    </p>
+    <%= ff.fields_for :name_reassignments do |fff| %>
+      <% if fff.object.reassignable.taxon_relationship_type.
+        name == TaxonRelationshipType::HAS_TRADE_NAME %>
+        <div class="control-group">
+          <label class="control-label">
+            <%= fff.object.reassignable.other_taxon_concept.full_name %><br>
+            <%= fff.object.reassignable.other_taxon_concept.author_year %>
+            (<%= fff.object.reassignable.other_taxon_concept.name_status %>)
+          </label>
+          <div class="controls">
+            <%= fff.select :output_ids,
+              options_for_select(
+                @nomenclature_change.outputs.map do |o|
+                  [o.display_full_name, o.id]
+                end,
+                fff.object.output_ids
+              ),
+              {}
+            %>
+          </div>
+        </div>
+      <% else %>
+        <div class="control-group">
+          <label class="control-label">
+            <%= fff.object.reassignable.other_taxon_concept.full_name %><br>
+            <%= fff.object.reassignable.other_taxon_concept.author_year %>
+            (<%= fff.object.reassignable.other_taxon_concept.name_status %>)
+          </label>
+          <div class="controls">
+            <%= fff.select :output_ids,
+              options_for_select(
+                @nomenclature_change.outputs.map do |o|
+                  [o.display_full_name, o.id]
+                end,
+                fff.object.output_ids
+              ),
+              {}, {:class => 'simple-taxon-concept', :multiple => ''}
+            %>
+            <input type="checkbox" class="select-all-checkbox">Select All
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+  <% end %>
+<% end %>

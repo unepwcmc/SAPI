@@ -20,6 +20,9 @@
 #  import_row_id              :integer
 #  created_by_id              :integer
 #  updated_by_id              :integer
+#  nomenclature_note_en       :text
+#  nomenclature_note_es       :text
+#  nomenclature_note_fr       :text
 #  internal_notes             :text
 #
 
@@ -28,9 +31,11 @@ class ListingChange < ActiveRecord::Base
   attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
     :effective_at, :is_current, :parent_id, :geo_entity_ids,
     :party_listing_distribution_attributes, :inclusion_taxon_concept_id,
-    :annotation_attributes, :hash_annotation_id,
-    :event_id, :excluded_geo_entities_ids, :excluded_taxon_concepts_ids,
-    :internal_notes, :created_by_id, :updated_by_id
+    :annotation_attributes, :hash_annotation_id, :event_id, 
+    :excluded_geo_entities_ids, :excluded_taxon_concepts_ids, :internal_notes,
+    :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+    :created_by_id, :updated_by_id
+
   attr_accessor :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
 
   belongs_to :event
@@ -60,6 +65,8 @@ class ListingChange < ActiveRecord::Base
     :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
 
   accepts_nested_attributes_for :annotation
+
+  translates :nomenclature_note
 
   scope :by_designation, lambda { |designation_id|
     joins(:change_type).where(:"change_types.designation_id" => designation_id)
@@ -113,6 +120,35 @@ class ListingChange < ActiveRecord::Base
     else
       scoped
     end
+  end
+
+  def self.ignored_attributes
+    super() + [:source_id, :annotation_id, :import_row_id]
+  end
+
+  def self.text_attributes
+    [:internal_notes, :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr]
+  end
+
+  def duplicates(comparison_attributes_override = {})
+    relation = ListingChange.where(
+      comparison_conditions(
+        comparison_attributes.merge(comparison_attributes_override.symbolize_keys)
+      )
+    )
+    if party_listing_distribution
+      relation = relation.joins(:party_listing_distribution).where(
+        party_listing_distribution.comparison_conditions(
+          party_listing_distribution.comparison_attributes.except(:listing_change_id)
+        )
+      )
+    end
+    if annotation
+      relation = relation.joins(:annotation).where(
+        annotation.comparison_conditions
+      )
+    end
+    relation
   end
 
   private

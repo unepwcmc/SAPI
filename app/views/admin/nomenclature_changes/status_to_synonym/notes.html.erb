@@ -1,0 +1,6 @@
+<h2>New status change to synonym: nomenclature change notes</h2>
+<%= status_change_blurb %>
+<%= nomenclature_change_form do |f| %>
+  <%= render partial: 'admin/nomenclature_changes/build/primary_output_notes',
+    locals: {f: f} %>
+<% end %>

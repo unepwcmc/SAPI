@@ -1,0 +1,18 @@
+<h4>
+  Nomenclature notes
+  <span class="formatting-info">
+    <a data-placement="right" data-toggle="tooltip" href="#" rel="tooltip"
+      data-original-title="The available formatting options are: <b>bold text</b>, <i>italicised text</i>, <p>paragraph</p>."
+    >
+      Formatting <i class="icon-info-sign"></i>
+    </a>
+  </span>
+</h4>
+<% locale_columns.each do |column| %>
+  <div class="control-group">
+    <%= f.label column, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area column, :class => :annotation %>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,40 @@
+<%= nomenclature_change_header %>
+
+<h4>
+  Event: <i> <%= @nc.event.try(:name) %> </i>
+</h4>
+
+<h4>
+  Created by: <i> <%= @nc.creator.try(:name) %> </i>
+</h4>
+
+<h4>
+  Created at: <i> <%= @nc.created_at.to_date %> </i>
+</h4>
+
+<h4>
+  Updated by: <i> <%= @nc.updater.try(:name) %> </i>
+</h4>
+
+<h4>
+  Updated at: <i> <%= @nc.updated_at.to_date %> </i>
+</h4>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <th>
+      Inputs
+    </th>
+    <th>
+      Outputs
+    </th>
+  </thead>
+  <tbody>
+    <td class="nc-tag">
+      <%= generate_input_content %>
+    </td>
+    <td class="nc-tag">
+      <%= generate_output_content %>
+    </td>
+  </tbody>
+</table>
