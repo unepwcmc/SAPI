@@ -15,8 +15,16 @@ shared_context 'parent_reassignments_processor_examples' do
     )
   }
   before(:each) do
+    synonym_relationship_type
     processor.run
+    input_species_child.reload
   end
-  specify{ expect(input_species_child.reload.parent).to eq(output_species1) }
+  specify{ expect(input_species_child.parent).to be_nil }
+  specify{ expect(input_species_child.name_status).to eq('S') }
   specify{ expect(input_species.children.count).to eq(0) }
+  specify do
+    old_subspecies = input_species_child.reload
+    new_subspecies = output.taxon_concept.children.first
+    expect(old_subspecies.accepted_names).to include(new_subspecies)
+  end
 end
