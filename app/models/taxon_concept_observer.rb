@@ -4,7 +4,7 @@ class TaxonConceptObserver < ActiveRecord::Observer
   def before_validation(taxon_concept)
     data = taxon_concept.data || {}
     data['rank_name'] = taxon_concept.rank && taxon_concept.rank.name
-    if taxon_concept.parent
+    if taxon_concept.new_record? && taxon_concept.parent
       data = data.merge taxon_concept.parent.data.slice(
         'kingdom_id', 'kingdom_name', 'phylum_id', 'phylum_name', 'class_id',
         'class_name', 'order_id', 'order_name', 'family_id', 'family_name',
@@ -13,6 +13,7 @@ class TaxonConceptObserver < ActiveRecord::Observer
       )
     end
     taxon_concept.data = data
+    return true unless taxon_concept.new_record?
     taxon_concept.full_name = if taxon_concept.rank && taxon_concept.parent &&
       taxon_concept.name_status == 'A'
       rank_name = taxon_concept.rank.name

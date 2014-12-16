@@ -2,7 +2,15 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
 
   def process_reassignment(reassignment, reassignable)
     o = transferred_object_before_save(reassignment, reassignable)
-    o if o.save # if save successful return the reassignmed object
+    if o.save # hope that saves the duplicated associations as well
+      if o.is_a?(TaxonConcept)
+        resolver = NomenclatureChange::TaxonomicTreeNameResolver.new(o)
+        resolver.process
+      end
+      o
+    else
+      nil
+    end
   end
 
   def transferred_object_before_save(reassignment, reassignable)
