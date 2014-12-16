@@ -2,6 +2,8 @@ require 'codeclimate-test-reporter' if ENV['CI']
 require 'simplecov'
 require 'coveralls'
 
+Coveralls::Output.no_color = true
+
 formatters = [Coveralls::SimpleCov::Formatter, SimpleCov::Formatter::HTMLFormatter]
 formatters.push CodeClimate::TestReporter::Formatter if ENV['CI']
 
