@@ -5,12 +5,14 @@ class NomenclatureChange::ToAcceptedNameTransformation
   end
 
   def process
-    relationships = if @non_accepted_taxon_concept.name_status == 'S'
-    elsif @non_accepted_taxon_concept.name_status == 'T'
-    else
-      []
-    end
-    destroy_relationships(relationships)
+    # destroy any synonym or trade name relationships
+    destroy_relationships(
+      @non_accepted_taxon_concept.inverse_synonym_relationships
+    )
+    destroy_relationships(
+      @non_accepted_taxon_concept.inverse_trade_name_relationships
+    )
+
     @non_accepted_taxon_concept.update_attributes(
       parent_id: @new_parent.id,
       name_status: 'A'
