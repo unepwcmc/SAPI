@@ -66,6 +66,9 @@ SELECT
         WHEN LENGTH(listing_changes_mview.full_note_en) > 0 THEN strip_tags(listing_changes_mview.full_note_en) 
         ELSE strip_tags(listing_changes_mview.short_note_en) 
       END
+      || CASE
+          WHEN LENGTH(listing_changes_mview.nomenclature_note_en) > 0 THEN strip_tags(listing_changes_mview.nomenclature_note_en)
+      END
       ORDER BY listing_changes_mview.species_listing_name
     ),
     E'\n'

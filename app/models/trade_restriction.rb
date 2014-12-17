@@ -144,6 +144,8 @@ class TradeRestriction < ActiveRecord::Base
           self::CSV_COLUMNS.each do |c|
             if c.is_a?(Array)
               row << q.send(c[1])
+            elsif c == :notes
+              row << "#{q.send(c)}. #{q.send(:nomenclature_note_en)}"
             else
               row << q.send(c)
             end
