@@ -1,7 +1,17 @@
 shared_context 'split_definitions' do
-  let(:input_species){ create_cites_eu_species }
-  let(:output_species1){ create_cites_eu_species }
-  let(:output_species2){ create_cites_eu_species }
+  let(:genus1){
+    create_cites_eu_genus(
+      taxon_name: create(:taxon_name, scientific_name: 'Genus1')
+    )
+  }
+  let(:genus2){
+    create_cites_eu_genus(
+      taxon_name: create(:taxon_name, scientific_name: 'Genus2')
+    )
+  }
+  let(:input_species){ create_cites_eu_species(parent: genus1) }
+  let(:output_species1){ create_cites_eu_species(parent: genus1) }
+  let(:output_species2){ create_cites_eu_species(parent: genus2) }
   let(:errorus_genus){ create_cites_eu_genus(
         taxon_name: create(:taxon_name, scientific_name: 'Errorus')
       )
