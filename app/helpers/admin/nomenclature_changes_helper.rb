@@ -302,4 +302,22 @@ module Admin::NomenclatureChangesHelper
     ff.object.parent_reassignments.sort_by{ |reassignment| reassignment.reassignable.full_name }
   end
 
+  def name_reassignment_label(reassignment)
+    taxon_relationship = reassignment.reassignable
+    other_taxon_concept = taxon_relationship.other_taxon_concept
+    content_tag(:label, class: 'control-label') do
+      content_tag(:span, taxon_relationship.taxon_relationship_type.name) +
+      tag(:br) +
+      link_to(
+        other_taxon_concept.full_name,
+        admin_taxon_concept_names_path(other_taxon_concept)
+      ) +
+      content_tag(:span) do
+        ' (' + (other_taxon_concept.name_status || '--') + ')'
+      end +
+      tag(:br) +
+      content_tag(:span, other_taxon_concept.author_year).html_safe
+    end
+  end
+
 end
