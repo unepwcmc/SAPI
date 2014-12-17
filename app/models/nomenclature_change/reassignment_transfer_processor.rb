@@ -2,8 +2,8 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
 
   def process_reassignment(reassignment, reassignable)
     o = transferred_object_before_save(reassignment, reassignable)
-    o.save(validate: false)
-    if o.is_a?(TaxonConcept)
+    o && o.save(validate: false)
+    if o && o.is_a?(TaxonConcept)
       resolver = NomenclatureChange::TaxonomicTreeNameResolver.new(o)
       resolver.process
     end
@@ -11,7 +11,9 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
   end
 
   def transferred_object_before_save(reassignment, reassignable)
+    return nil if conflicting_listing_change_reassignment?(reassignment, reassignable)
     new_taxon_concept = @output.new_taxon_concept || @output.taxon_concept
+
     Rails.logger.debug("Processing #{reassignable.class} #{reassignable.id} transfer to #{new_taxon_concept.full_name}")
     if reassignment.kind_of?(NomenclatureChange::ParentReassignment) ||
       reassignment.kind_of?(NomenclatureChange::OutputParentReassignment)

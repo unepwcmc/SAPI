@@ -151,6 +151,14 @@ class ListingChange < ActiveRecord::Base
     relation
   end
 
+  def is_cites?
+    change_type.try(:designation).try(:is_cites?)
+  end
+
+  def is_eu?
+    change_type.try(:designation).try(:is_eu?)
+  end
+
   private
 
   def inclusion_at_higher_rank
