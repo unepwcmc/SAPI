@@ -17,9 +17,9 @@ if Rails.env.production? || Rails.env.staging?
 
     # Email notifier sends notifications by email.
     config.add_notifier :email, {
-      :email_prefix         => "[ERROR] ",
-      :sender_address       => %{"Notifier" <notifier@example.com>},
-      :exception_recipients => %w{exceptions@example.com}
+      :email_prefix => "[SAPI #{Rails.env}] ",
+      :sender_address => %{"SAPI Exception Notifier" <no-reply@unep-wcmc.org>},
+      :exception_recipients => %w{SpeciesPlusDevs@wcmc.org.uk}
     }
 
     # Campfire notifier sends notifications to your Campfire room. Requires 'tinder' gem.
