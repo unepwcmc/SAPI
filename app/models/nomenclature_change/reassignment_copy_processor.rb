@@ -1,13 +1,13 @@
 class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::ReassignmentProcessor
 
   def process_reassignment(reassignment, reassignable)
-    o = copied_object_before_save(reassignment, reassignable)
-    o && o.save(validate: false) # hope that saves the duplicated associations as well
-    if o && o.is_a?(TaxonConcept)
-      resolver = NomenclatureChange::TaxonomicTreeNameResolver.new(o)
-      resolver.process
+    object_before_reassignment = reassignable.dup
+    reassigned_object = copied_object_before_save(reassignment, reassignable)
+    if reassigned_object
+      reassigned_object.save(validate: false) # hope that saves the duplicated associations as well
+      post_process(reassigned_object, object_before_reassignment)
     end
-    o
+    reassigned_object
   end
 
   def copied_object_before_save(reassignment, reassignable)
