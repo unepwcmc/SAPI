@@ -268,6 +268,14 @@ class TaxonConcept < ActiveRecord::Base
     data['cites_accepted']
   end
 
+  def cites_listed
+    listing['cites_status'] == 'LISTED' && listing['cites_level_of_listing']
+  end
+
+  def eu_listed
+    listing['eu_status'] == 'LISTED' && listing['eu_level_of_listing']
+  end
+
   def parent_scientific_name
     @parent_scientific_name ||
     parent && parent.full_name
