@@ -65,7 +65,15 @@ SELECT
       THEN eu_decisions.start_date
     WHEN eu_decisions.type = 'EuSuspension'
       THEN start_event.effective_at
-  END AS ordering_date
+  END AS ordering_date,
+  CASE
+    WHEN LENGTH(eu_decisions.notes) > 0 THEN strip_tags(eu_decisions.notes) || E'\n'
+    ELSE ''
+  END
+  || CASE
+    WHEN LENGTH(eu_decisions.nomenclature_note_en) > 0 THEN strip_tags(eu_decisions.nomenclature_note_en)
+    ELSE ''
+  END AS full_note_en
 FROM eu_decisions
 JOIN eu_decision_types ON eu_decision_types.id = eu_decisions.eu_decision_type_id
 JOIN taxon_concepts ON taxon_concepts.id = eu_decisions.taxon_concept_id
