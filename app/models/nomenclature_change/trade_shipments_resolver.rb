@@ -7,7 +7,6 @@ class NomenclatureChange::TradeShipmentsResolver
 
   # update all shipments where reported name now resolves to a new accepted name
   def process
-    taxon_relationship_type = @taxon_relationship.taxon_relationship_type
     Trade::Shipment.update_all(
       {taxon_concept_id: @taxon_relationship.taxon_concept_id},
       {
