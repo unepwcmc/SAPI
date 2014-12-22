@@ -21,11 +21,25 @@ SELECT
       geo_entities.id,
       geo_entities.iso_code2,
       geo_entities.name_en,
-      geo_entities.name_es,
-      geo_entities.name_fr,
-      ''
+      geo_entity_types.name
     )::api_geo_entity
-  ) AS geo_entity,
+  ) AS geo_entity_en,
+  ROW_TO_JSON(
+    ROW(
+      geo_entities.id,
+      geo_entities.iso_code2,
+      geo_entities.name_es,
+      geo_entity_types.name
+    )::api_geo_entity
+  ) AS geo_entity_es,
+  ROW_TO_JSON(
+    ROW(
+      geo_entities.id,
+      geo_entities.iso_code2,
+      geo_entities.name_fr,
+      geo_entity_types.name
+    )::api_geo_entity
+  ) AS geo_entity_fr,
   trade_restrictions.start_notification_id,
   ROW_TO_JSON(
     ROW(
@@ -40,6 +54,7 @@ SELECT
   trade_restrictions.nomenclature_note_es
 FROM trade_restrictions
 JOIN geo_entities ON geo_entities.id = trade_restrictions.geo_entity_id
+JOIN geo_entity_types ON geo_entities.geo_entity_type_id = geo_entity_types.id
 JOIN events ON events.id = trade_restrictions.start_notification_id
   AND events.type IN ('CitesSuspensionNotification')
 LEFT JOIN taxon_concepts ON taxon_concepts.id = trade_restrictions.taxon_concept_id
