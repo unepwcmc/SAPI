@@ -87,7 +87,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def eu_decisions
-    EuDecision.joins([:geo_entity]).
+    EuDecision.from('api_eu_decisions_view eu_decisions').
       where("
             eu_decisions.taxon_concept_id = ?
             OR (
@@ -96,30 +96,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
             )
       ", object.id, children_and_ancestors, object.id).
-      joins('INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = eu_decisions.taxon_concept_id').
-      joins('LEFT JOIN events AS start_event ON start_event.id = eu_decisions.start_event_id').
-      joins('LEFT JOIN events AS end_event ON end_event.id = eu_decisions.end_event_id').
       select(<<-SQL
               eu_decisions.notes,
-              CASE
-                WHEN eu_decisions.type = 'EuOpinion'
-                  THEN eu_decisions.start_date
-                WHEN eu_decisions.type = 'EuSuspension'
-                  THEN start_event.effective_at
-              END AS start_date,
-              CASE
-                WHEN eu_decisions.type = 'EuOpinion'
-                  THEN eu_decisions.is_current
-                WHEN eu_decisions.type = 'EuSuspension'
-                  THEN
-                    CASE
-                      WHEN start_event.effective_at <= current_date AND start_event.is_current = true
-                        AND (eu_decisions.end_event_id IS NULL OR end_event.effective_at > current_date)
-                        THEN TRUE
-                      ELSE
-                        FALSE
-                    END
-              END AS is_current,
+              eu_decisions.start_date,
+              eu_decisions.is_current,
               eu_decisions.geo_entity_id,
               eu_decisions.start_event_id,
               eu_decisions.term_id,
@@ -131,20 +111,20 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               eu_decisions.nomenclature_note_fr,
               eu_decisions.nomenclature_note_es,
               CASE
-                WHEN taxon_concepts_mview.rank_name = '#{object.rank_name}'
+                WHEN (taxon_concept->>'rank')::TEXT = '#{object.rank_name}'
                 THEN NULL
-                ELSE 
-                '[' || taxon_concepts_mview.rank_name || ' decision <i>' || taxon_concepts_mview.full_name || '</i>]'
+                ELSE
+                '[' || (taxon_concept->>'rank')::TEXT || ' decision <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
               END AS subspecies_info
              SQL
       ).
       order(<<-SQL
-            geo_entities.name_en ASC,
+            geo_entity->>'name_en' ASC,
             CASE
               WHEN eu_decisions.type = 'EuOpinion'
                 THEN eu_decisions.start_date
               WHEN eu_decisions.type = 'EuSuspension'
-                THEN start_event.effective_at
+                THEN (start_event->>'effective_at')::DATE
             END DESC,
             subspecies_info DESC
         SQL
