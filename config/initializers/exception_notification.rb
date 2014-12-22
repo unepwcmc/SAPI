@@ -45,7 +45,7 @@ if Rails.env.production? || Rails.env.staging?
 
     config.add_notifier :slack, {
       :team => "wcmc",
-      :token => secrets["slack_exception_notification_token"],
+      :webhook_url => secrets["slack_exception_notification_webhook_url"],
       :channel => "#speciesplus",
       :username => "TheTormentingBotOfSpeciesPlus-#{Rails.env}"
     }
