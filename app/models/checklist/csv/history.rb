@@ -44,7 +44,7 @@ class Checklist::Csv::History < Checklist::History
       "cites_listing_changes_mview.is_current",
       "cites_listing_changes_mview.hash_ann_symbol",
       "strip_tags(cites_listing_changes_mview.hash_full_note_en) AS hash_full_note_en",
-      "strip_tags(cites_listing_changes_mview.full_note_en) AS full_note_en",
+      "(strip_tags(cites_listing_changes_mview.full_note_en) || ' ' || strip_tags(cites_listing_changes_mview.nomenclature_note_en)) AS full_note_en",
       "strip_tags(cites_listing_changes_mview.short_note_en) AS short_note_en",
       "strip_tags(cites_listing_changes_mview.short_note_es) AS short_note_es",
       "strip_tags(cites_listing_changes_mview.short_note_fr) AS short_note_fr"
