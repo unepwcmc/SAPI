@@ -24,8 +24,8 @@ gem 'ahoy_matey'
 gem 'gon'
 gem 'wicked'
 
-gem 'sidekiq'
-gem 'sidekiq-status'
+gem 'sidekiq', '~> 3.3.0'
+gem 'sidekiq-status', '~> 0.5'
 
 gem 'whenever', :require => false
 
