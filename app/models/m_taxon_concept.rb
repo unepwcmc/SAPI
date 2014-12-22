@@ -246,7 +246,7 @@ class MTaxonConcept < ActiveRecord::Base
       define_method(method_name) do
         current_cites_additions.map do |lc|
           note = lc.send(method_name)
-          note && "Appendix #{lc.species_listing_name}:" + (note || '') + (" #{lc.nomenclature_note_en}" || '')
+          note && "Appendix #{lc.species_listing_name}:" + (note || '') + (" #{lc.nomenclature_note}" || '')
         end.join("\n")
       end
     end
