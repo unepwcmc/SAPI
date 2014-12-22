@@ -10,7 +10,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   has_many :eu_decisions, :serializer => Species::EuDecisionSerializer
 
   def quotas
-    Quota.joins(:geo_entity).
+    Quota.from('api_cites_quotas_view trade_restrictions').
       where("
             trade_restrictions.taxon_concept_id = ?
             OR (
@@ -19,7 +19,6 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
             )
       ", object.id, children_and_ancestors, object.id).
-      joins('LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id').
       select(<<-SQL
               trade_restrictions.notes,
               trade_restrictions.url,
@@ -28,29 +27,30 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.is_current,
               trade_restrictions.geo_entity_id,
               trade_restrictions.unit_id,
-              trade_restrictions.quota,
+              trade_restrictions.unit_name,
+              CASE WHEN quota IS NULL THEN 'in prep.' ELSE quota::TEXT END,
               trade_restrictions.public_display,
               trade_restrictions.nomenclature_note_en,
               trade_restrictions.nomenclature_note_fr,
               trade_restrictions.nomenclature_note_es,
               CASE
-                WHEN taxon_concepts_mview.rank_name = '#{object.rank_name}'
+                WHEN taxon_concept->>'rank' = '#{object.rank_name}'
                 THEN NULL
-                ELSE 
-                '[Quota for ' || taxon_concepts_mview.rank_name || ' <i>' || taxon_concepts_mview.full_name || '</i>]'
+                ELSE
+                '[Quota for ' || (taxon_concept->>'rank')::TEXT || ' <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
               END AS subspecies_info
-             SQL
+            SQL
       ).
       order(<<-SQL
               trade_restrictions.start_date DESC,
-              geo_entities.name_en ASC, trade_restrictions.notes ASC,
+              geo_entity->>'name_en' ASC, trade_restrictions.notes ASC,
               subspecies_info DESC
             SQL
       ).all
   end
 
   def cites_suspensions
-    CitesSuspension.joins(:geo_entity).
+    CitesSuspension.from('api_cites_suspensions_view trade_restrictions').
       where("
             trade_restrictions.taxon_concept_id = ?
             OR (
@@ -59,8 +59,6 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
             )
       ", object.id, children_and_ancestors, object.id).
-      joins(:start_notification).
-      joins('LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id').
       select(<<-SQL
               trade_restrictions.notes,
               trade_restrictions.start_date,
@@ -73,18 +71,18 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.nomenclature_note_fr,
               trade_restrictions.nomenclature_note_es,
               CASE
-                WHEN taxon_concepts_mview.rank_name = '#{object.rank_name}'
+                WHEN taxon_concept->>'rank' = '#{object.rank_name}'
                 THEN NULL
-                ELSE 
-                '[Suspension for ' || taxon_concepts_mview.rank_name || ' <i>' || taxon_concepts_mview.full_name || '</i>]'
+                ELSE
+                '[Suspension for ' || (taxon_concept->>'rank')::TEXT || ' <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
               END AS subspecies_info
-             SQL
+            SQL
       ).
       order(<<-SQL
-            trade_restrictions.is_current DESC,
-            trade_restrictions.start_date DESC, geo_entities.name_en ASC,
-            subspecies_info DESC
-        SQL
+              trade_restrictions.is_current DESC,
+              trade_restrictions.start_date DESC, geo_entity->>'name_en' ASC,
+              subspecies_info DESC
+            SQL
       ).all
   end
 
