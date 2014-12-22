@@ -27,12 +27,13 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.is_current,
               trade_restrictions.geo_entity_id,
               trade_restrictions.unit_id,
-              trade_restrictions.unit_name,
               CASE WHEN quota IS NULL THEN 'in prep.' ELSE quota::TEXT END,
               trade_restrictions.public_display,
               trade_restrictions.nomenclature_note_en,
               trade_restrictions.nomenclature_note_fr,
               trade_restrictions.nomenclature_note_es,
+              geo_entity_en,
+              unit_en,
               CASE
                 WHEN taxon_concept->>'rank' = '#{object.rank_name}'
                 THEN NULL
@@ -43,7 +44,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       ).
       order(<<-SQL
               trade_restrictions.start_date DESC,
-              geo_entity->>'name_en' ASC, trade_restrictions.notes ASC,
+              geo_entity_en->>'name' ASC, trade_restrictions.notes ASC,
               subspecies_info DESC
             SQL
       ).all
@@ -70,6 +71,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.nomenclature_note_en,
               trade_restrictions.nomenclature_note_fr,
               trade_restrictions.nomenclature_note_es,
+              trade_restrictions.geo_entity_en,
+              trade_restrictions.start_notification,
               CASE
                 WHEN taxon_concept->>'rank' = '#{object.rank_name}'
                 THEN NULL
@@ -80,7 +83,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       ).
       order(<<-SQL
               trade_restrictions.is_current DESC,
-              trade_restrictions.start_date DESC, geo_entity->>'name_en' ASC,
+              trade_restrictions.start_date DESC, geo_entity_en->>'name' ASC,
               subspecies_info DESC
             SQL
       ).all
@@ -110,6 +113,13 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               eu_decisions.nomenclature_note_en,
               eu_decisions.nomenclature_note_fr,
               eu_decisions.nomenclature_note_es,
+              eu_decision_type,
+              start_event,
+              end_event,
+              geo_entity_en,
+              taxon_concept,
+              term_en,
+              source_en,
               CASE
                 WHEN (taxon_concept->>'rank')::TEXT = '#{object.rank_name}'
                 THEN NULL
@@ -119,7 +129,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
              SQL
       ).
       order(<<-SQL
-            geo_entity->>'name_en' ASC,
+            geo_entity_en->>'name' ASC,
             CASE
               WHEN eu_decisions.type = 'EuOpinion'
                 THEN eu_decisions.start_date

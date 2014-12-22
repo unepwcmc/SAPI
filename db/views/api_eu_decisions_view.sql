@@ -37,11 +37,25 @@ ROW_TO_JSON(
     geo_entities.id,
     geo_entities.iso_code2,
     geo_entities.name_en,
-    geo_entities.name_es,
-    geo_entities.name_fr,
-    ''
+    geo_entity_types.name
   )::api_geo_entity
-) AS geo_entity,
+) AS geo_entity_en,
+ROW_TO_JSON(
+  ROW(
+    geo_entities.id,
+    geo_entities.iso_code2,
+    geo_entities.name_es,
+    geo_entity_types.name
+  )::api_geo_entity
+) AS geo_entity_es,
+ROW_TO_JSON(
+  ROW(
+    geo_entities.id,
+    geo_entities.iso_code2,
+    geo_entities.name_fr,
+    geo_entity_types.name
+  )::api_geo_entity
+) AS geo_entity_fr,
 eu_decisions.start_event_id,
 ROW_TO_JSON(
   ROW(
@@ -63,20 +77,44 @@ ROW_TO_JSON(
   ROW(
     terms.id,
     terms.code,
-    terms.name_en,
-    terms.name_es,
+    terms.name_en
+  )::api_trade_code
+) AS term_en,
+ROW_TO_JSON(
+  ROW(
+    terms.id,
+    terms.code,
+    terms.name_es
+  )::api_trade_code
+) AS term_es,
+ROW_TO_JSON(
+  ROW(
+    terms.id,
+    terms.code,
     terms.name_fr
   )::api_trade_code
-) AS term,
- ROW_TO_JSON(
+) AS term_fr,
+ROW_TO_JSON(
   ROW(
     sources.id,
     sources.code,
-    sources.name_en,
-    sources.name_es,
+    sources.name_en
+  )::api_trade_code
+) AS source_en,
+ROW_TO_JSON(
+  ROW(
+    sources.id,
+    sources.code,
+    sources.name_es
+  )::api_trade_code
+) AS source_es,
+ROW_TO_JSON(
+  ROW(
+    sources.id,
+    sources.code,
     sources.name_fr
   )::api_trade_code
-) AS source,
+) AS source_fr,
 eu_decisions.source_id,
 eu_decisions.eu_decision_type_id,
 ROW_TO_JSON(
@@ -92,6 +130,7 @@ eu_decisions.nomenclature_note_fr,
 eu_decisions.nomenclature_note_es
 FROM eu_decisions
 JOIN geo_entities ON geo_entities.id = eu_decisions.geo_entity_id
+JOIN geo_entity_types ON geo_entities.geo_entity_type_id = geo_entity_types.id
 JOIN taxon_concepts ON taxon_concepts.id = eu_decisions.taxon_concept_id
 LEFT JOIN events AS start_event ON start_event.id = eu_decisions.start_event_id
 LEFT JOIN events AS end_event ON end_event.id = eu_decisions.end_event_id

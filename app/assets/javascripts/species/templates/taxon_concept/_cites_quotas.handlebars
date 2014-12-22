@@ -21,7 +21,7 @@
           <tr class="current">
             <td>{{quota.year}}</td>
             <td>{{quota.geo_entity.name}}</td>
-            <td>{{quota.quota}} {{quota.unit_name}}</td>
+            <td>{{quota.quota}} {{quota.unit.name}}</td>
             <td class="last">
               {{#if quota.subspecies_info}}
                 {{{quota.subspecies_info}}}<br />
@@ -58,7 +58,7 @@
               <tr>
                 <td>{{quota.year}}</td>
                 <td>{{quota.geo_entity.name}}</td>
-                <td>{{quota.quota}} {{quota.unit_name}}</td>
+                <td>{{quota.quota}} {{quota.unit.name}}</td>
                 <td class="last">
                   {{#if quota.subspecies_info}}
                     {{{quota.subspecies_info}}}<br />
