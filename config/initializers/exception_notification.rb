@@ -1,4 +1,4 @@
-if Rails.env.production? || Rails.env.staging?
+if Rails.env.staging? || Rails.env.production?
   require 'exception_notification/rails'
   require 'exception_notification/sidekiq'
   require 'yaml'
@@ -45,7 +45,6 @@ if Rails.env.production? || Rails.env.staging?
     secrets = YAML.load(File.open('config/secrets.yml'))
 
     config.add_notifier :slack, {
-      :team => "wcmc",
       :webhook_url => secrets["slack_exception_notification_webhook_url"],
       :channel => "#speciesplus",
       :username => "TheTormentingBotOfSpeciesPlus-#{Rails.env}"
