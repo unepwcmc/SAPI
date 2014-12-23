@@ -1,31 +1,3 @@
-/*
-With reference to
-http://ejrh.wordpress.com/2011/09/27/denormalisation-aggregate-function-for-postgresql/
-*/
-CREATE OR REPLACE FUNCTION fn_array_agg_notnull (
-    a anyarray
-    , b anyelement
-) RETURNS ANYARRAY
-AS $$
-BEGIN
-
-    IF b IS NOT NULL THEN
-        a := array_append(a, b);
-    END IF;
-
-    RETURN a;
-
-END;
-$$ IMMUTABLE LANGUAGE 'plpgsql';
-
-DROP AGGREGATE IF EXISTS array_agg_notnull(ANYELEMENT) CASCADE;
-
-CREATE AGGREGATE array_agg_notnull(ANYELEMENT) (
-    SFUNC = fn_array_agg_notnull,
-    STYPE = ANYARRAY,
-    INITCOND = '{}'
-);
-
 CREATE OR REPLACE FUNCTION array_intersect(anyarray, anyarray)
   RETURNS anyarray
   language SQL
@@ -76,14 +48,7 @@ COMMENT ON FUNCTION squish_null(TEXT) IS
 --TODO remove in the future, after this has been ran on production
 DROP FUNCTION IF EXISTS sanitize_species_name(TEXT);
 
-CREATE OR REPLACE FUNCTION strip_tags(TEXT) RETURNS TEXT
-  LANGUAGE SQL IMMUTABLE
-  AS $$
-    SELECT regexp_replace(regexp_replace($1, E'(?x)<[^>]*?(\s alt \s* = \s* ([\'"]) ([^>]*?) \2) [^>]*? >', E'\3'), E'(?x)(< [^>]*? >)', '', 'g')
-  $$;
 
-COMMENT ON FUNCTION strip_tags(TEXT) IS
-  'Strips html tags from string using a regexp.';
 
 CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255)) RETURNS VARCHAR(255)
   LANGUAGE sql IMMUTABLE
