@@ -93,13 +93,14 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-ext'
   gem 'rvm-capistrano'
+  gem 'capistrano-sidekiq'
+  gem 'capistrano-slack', :git => 'https://github.com/nextupdate/capistrano-slack.git'
   gem 'brightbox', '>=2.3.9'
   gem 'rack-cors', :require => 'rack/cors'
   gem 'quiet_assets'
   gem 'webrick', '1.3.1'
   gem 'jslint_on_rails'
   gem 'git_pretty_accept'
-  gem 'capistrano-slack', :git => 'https://github.com/nextupdate/capistrano-slack.git'
 end
 
 group :test, :development do
