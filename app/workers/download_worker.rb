@@ -34,6 +34,7 @@ class DownloadWorker
 
       @download.save!
     rescue => msg
+      ExceptionNotifier.notify_exception(msg)
       puts "Failed: #{msg}"
       puts "### Backtrace ###"
       puts msg.backtrace
