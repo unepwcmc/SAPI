@@ -64,6 +64,7 @@ CREATE OR REPLACE FUNCTION rebuild_eu_listing_changes_mview() RETURNS void
     tmp_listing_changes_mview TEXT;
     tmp_current_listing_changes_mview TEXT;
     listing_changes_mview TEXT;
+    master_listing_changes_mview TEXT;
   BEGIN
     SELECT * INTO designation FROM designations WHERE name = 'EU';
     IF FOUND THEN
@@ -71,7 +72,7 @@ CREATE OR REPLACE FUNCTION rebuild_eu_listing_changes_mview() RETURNS void
       PERFORM drop_eu_lc_mviews();
       FOR eu_interval IN (SELECT * FROM eu_regulations_applicability_view) LOOP
         SELECT ARRAY_APPEND(mviews, 'SELECT * FROM ' ||
-          listing_changes_mview_name(NULL, designation.name, eu_interval.events_ids)
+          listing_changes_mview_name('child', designation.name, eu_interval.events_ids)
         ) INTO mviews;
         PERFORM rebuild_designation_all_listing_changes_mview(
           taxonomy, designation, eu_interval.events_ids
@@ -90,8 +91,10 @@ CREATE OR REPLACE FUNCTION rebuild_eu_listing_changes_mview() RETURNS void
       END LOOP;
       SELECT listing_changes_mview_name('tmp_cascaded', designation.name, NULL)
       INTO tmp_listing_changes_mview;
-      SELECT listing_changes_mview_name(NULL, designation.name, NULL)
+      SELECT listing_changes_mview_name('child', designation.name, NULL)
       INTO listing_changes_mview;
+      SELECT listing_changes_mview_name(NULL, designation.name, NULL)
+      INTO master_listing_changes_mview;
       IF ARRAY_UPPER(mviews, 1) IS NULL THEN
         RETURN;
       END IF;
@@ -112,6 +115,7 @@ CREATE OR REPLACE FUNCTION rebuild_eu_listing_changes_mview() RETURNS void
       RAISE INFO 'Swapping eu_listing_changes materialized view';
       EXECUTE 'DROP TABLE IF EXISTS ' || listing_changes_mview || ' CASCADE';
       EXECUTE 'ALTER TABLE ' || tmp_listing_changes_mview || ' RENAME TO ' || listing_changes_mview;
+      EXECUTE 'ALTER TABLE ' || listing_changes_mview || ' INHERIT ' || master_listing_changes_mview;
     END IF;
   END;
   $$;

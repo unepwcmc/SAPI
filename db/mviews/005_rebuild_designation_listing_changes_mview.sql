@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     tmp_lc_table_name TEXT;
     raw_lc_table_name TEXT;
     lc_table_name TEXT;
+    master_lc_table_name TEXT;
     sql TEXT;
     addition_id INT;
     deletion_id INT;
@@ -21,8 +22,10 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     INTO raw_lc_table_name;
     SELECT listing_changes_mview_name('tmp_cascaded', designation.name, events_ids)
     INTO tmp_lc_table_name;
-    SELECT listing_changes_mview_name(NULL, designation.name, events_ids)
+    SELECT listing_changes_mview_name('child', designation.name, events_ids)
     INTO lc_table_name;
+    SELECT listing_changes_mview_name(NULL, designation.name, events_ids)
+    INTO master_lc_table_name;
 
 
     RAISE INFO 'Creating %', tmp_lc_table_name;
@@ -41,6 +44,7 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     applicable_listing_changes.affected_taxon_concept_id AS taxon_concept_id,
     listing_changes.id AS id,
     listing_changes.taxon_concept_id AS original_taxon_concept_id,
+    listing_changes.event_id,
     listing_changes.effective_at,
     listing_changes.species_listing_id,
     species_listings.abbreviation AS species_listing_name,
@@ -358,6 +362,9 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     RAISE INFO 'Swapping %  materialized view', lc_table_name;
     EXECUTE 'DROP TABLE IF EXISTS ' || lc_table_name || ' CASCADE';
     EXECUTE 'ALTER TABLE ' || tmp_lc_table_name || ' RENAME TO ' || lc_table_name;
+    IF designation.name != 'EU' THEN
+      EXECUTE 'ALTER TABLE ' || lc_table_name || ' INHERIT ' || master_lc_table_name;
+    END IF;
   END;
   $$;
 
