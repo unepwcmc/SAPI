@@ -1,5 +1,3 @@
-DROP VIEW IF EXISTS api_cites_quotas_view;
-CREATE VIEW api_cites_quotas_view AS
 SELECT
   trade_restrictions.type,
   trade_restrictions.taxon_concept_id,

@@ -1,5 +1,3 @@
-DROP VIEW IF EXISTS api_eu_decisions_view;
-CREATE VIEW api_eu_decisions_view AS
 SELECT
 eu_decisions.type,
 eu_decisions.taxon_concept_id,
