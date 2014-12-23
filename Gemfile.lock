@@ -144,8 +144,6 @@ GEM
       simplecov (>= 0.7)
       term-ansicolor
       thor
-    dasboard_client (0.0.0)
-      rails (>= 3.0.0)
     database_cleaner (1.2.0)
     debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
@@ -450,7 +448,6 @@ DEPENDENCIES
   compass (>= 0.12.2)
   compass-rails (>= 1.0.3)
   coveralls
-  dasboard_client
   database_cleaner (>= 1.2.0)
   devise
   ember-rails
