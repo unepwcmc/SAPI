@@ -15,13 +15,13 @@ SELECT
       tc.data->'class_name',
       tc.data->'order_name',
       tc.data->'family_name'
-    )::higher_taxa
+    )::api_higher_taxa
   ) AS higher_taxa,
   ARRAY_TO_JSON(
     ARRAY_AGG_NOTNULL(
       ROW(
-        synonyms.id, synonyms.full_name, synonyms.author_year
-      )::simple_taxon_concept
+        synonyms.id, synonyms.full_name, synonyms.author_year, synonyms.data->'rank_name'
+      )::api_taxon_concept
     )
   ) AS synonyms,
   NULL AS accepted_names,
@@ -58,8 +58,8 @@ SELECT
   ARRAY_TO_JSON(
     ARRAY_AGG_NOTNULL(
       ROW(
-        accepted_names.id, accepted_names.full_name, accepted_names.author_year
-      )::simple_taxon_concept
+        accepted_names.id, accepted_names.full_name, accepted_names.author_year, accepted_names.data->'rank_name'
+      )::api_taxon_concept
     )
   ) AS accepted_names,
   tc.created_at,

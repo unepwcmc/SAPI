@@ -10,6 +10,8 @@ class TimestampApiViews < ActiveRecord::Migration
     execute "CREATE VIEW api_distributions_view AS #{view_sql('20141223160054', 'api_distributions_view')}"
     execute "DROP VIEW IF EXISTS api_eu_decisions_view"
     execute "CREATE VIEW api_eu_decisions_view AS #{view_sql('20141223160054', 'api_eu_decisions_view')}"
+    execute "DROP TYPE IF EXISTS higher_taxa"
+    execute "DROP TYPE IF EXISTS simple_taxon_concept"
     execute "DROP VIEW IF EXISTS api_taxon_concepts_view"
     execute "CREATE VIEW api_taxon_concepts_view AS #{view_sql('20141223160054', 'api_taxon_concepts_view')}"
   end

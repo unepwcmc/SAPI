@@ -142,10 +142,9 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def cites_listing_changes
-    rel = MCitesListingChange.from('cites_listing_changes_mview listing_changes_mview').
+    rel = MCitesListingChange.from('api_cites_listing_changes_view listing_changes_mview').
       where(
-        'listing_changes_mview.taxon_concept_id' => object_and_children,
-        'listing_changes_mview.show_in_history' => true
+        'listing_changes_mview.taxon_concept_id' => object_and_children
       )
     if object.rank_name == Rank::SPECIES
       rel = rel.
@@ -168,15 +167,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
             SQL
       ).
       select(<<-SQL
-              CASE
-                WHEN listing_changes_mview.change_type_name = 'DELETION'
-                  OR listing_changes_mview.change_type_name = 'RESERVATION_WITHDRAWAL'
-                  THEN 'f'
-                ELSE listing_changes_mview.is_current
-              END AS is_current,
+              listing_changes_mview.is_current,
               listing_changes_mview.species_listing_name,
               listing_changes_mview.party_id,
-              listing_changes_mview.party_full_name_en,
+              listing_changes_mview.party_en->>'name' AS party_full_name_en,
               listing_changes_mview.effective_at,
               listing_changes_mview.full_note_en,
               listing_changes_mview.short_note_en,
@@ -204,22 +198,17 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       ).
       order(<<-SQL
           effective_at DESC,
-          CASE
-            WHEN change_type_name = 'ADDITION' THEN 0
-            WHEN change_type_name = 'RESERVATION' THEN 1
-            WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
-            WHEN change_type_name = 'DELETION' THEN 3
-          END,
+          change_type_order ASC,
+          species_listing_name ASC,
           subspecies_info DESC
         SQL
       ).all
   end
 
   def eu_listing_changes
-    rel = MEuListingChange.from('eu_listing_changes_mview listing_changes_mview').
+    rel = MEuListingChange.from('api_eu_listing_changes_view listing_changes_mview').
       where(
-        'listing_changes_mview.taxon_concept_id' => object_and_children,
-        'listing_changes_mview.show_in_history' => true
+        'listing_changes_mview.taxon_concept_id' => object_and_children
       )
     if object.rank_name == Rank::SPECIES
       rel = rel.where(<<-SQL
@@ -237,10 +226,6 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
     rel.joins(<<-SQL
               INNER JOIN taxon_concepts_mview
                 ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id
-              INNER JOIN listing_changes
-                ON listing_changes.id = listing_changes_mview.id
-              INNER JOIN events
-                ON events.id = listing_changes.event_id
             SQL
       ).
       select(<<-SQL
@@ -248,7 +233,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.is_current,
               listing_changes_mview.species_listing_name,
               listing_changes_mview.party_id,
-              listing_changes_mview.party_full_name_en,
+              listing_changes_mview.party_en->>'name' AS party_full_name_en,
               listing_changes_mview.effective_at,
               listing_changes_mview.full_note_en,
               listing_changes_mview.short_note_en,
@@ -262,8 +247,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.nomenclature_note_en,
               listing_changes_mview.nomenclature_note_fr,
               listing_changes_mview.nomenclature_note_es,
-              events.description AS event_name,
-              events.url AS event_url,
+              eu_regulation->>'name' AS event_name,
+              eu_regulation->>'url' AS event_url,
               CASE
                 WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'}
                 AND taxon_concepts_mview.rank_name = 'SUBSPECIES'
@@ -277,12 +262,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       ).
       order(<<-SQL
           effective_at DESC,
-          CASE
-            WHEN change_type_name = 'ADDITION' THEN 3
-            WHEN change_type_name = 'RESERVATION' THEN 2
-            WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
-            WHEN change_type_name = 'DELETION' THEN 0
-          END,
+          change_type_order ASC,
+          species_listing_name ASC,
           subspecies_info DESC
         SQL
       ).all
