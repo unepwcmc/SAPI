@@ -74,7 +74,6 @@ end
 group :staging, :production do
   gem 'exception_notification', :git => 'https://github.com/smartinez87/exception_notification.git'
   gem 'slack-notifier', '~> 1.0'
-  gem 'rack-cors', :require => 'rack/cors'
 end
 
 gem 'rest_client', require: false
