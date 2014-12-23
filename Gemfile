@@ -77,7 +77,6 @@ group :staging, :production do
 end
 
 gem 'rest_client', require: false
-gem 'dasboard_client', require: false
 
 group :development do
   gem "better_errors", '~>1.1.0'
