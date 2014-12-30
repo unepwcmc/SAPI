@@ -61,6 +61,7 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     geo_entities.name_en AS party_full_name_en,
     geo_entities.name_es AS party_full_name_es,
     geo_entities.name_fr AS party_full_name_fr,
+    geo_entity_types.name AS geo_entity_type,
     annotations.symbol AS ann_symbol,
     annotations.full_note_en,
     annotations.full_note_es,
@@ -156,6 +157,8 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     ON listing_changes.species_listing_id = species_listings.id
     LEFT JOIN geo_entities ON
     geo_entities.id = tmp_lc.party_id
+    LEFT JOIN geo_entity_types ON
+    geo_entity_types.id = geo_entities.geo_entity_type_id
     LEFT JOIN annotations ON
     annotations.id = listing_changes.annotation_id
     LEFT JOIN annotations hash_annotations ON
