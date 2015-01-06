@@ -33,8 +33,8 @@
 class NomenclatureChange::Output < ActiveRecord::Base
   track_who_does_it
   attr_accessible :nomenclature_change_id, :taxon_concept_id,
-    :new_taxon_concept_id, :new_scientific_name, :new_author_year,
-    :new_name_status, :new_parent_id, :new_rank_id,
+    :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,
+    :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id,
     :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
     :parent_reassignments_attributes, :name_reassignments_attributes,
     :distribution_reassignments_attributes, :legislation_reassignments_attributes
@@ -70,11 +70,11 @@ class NomenclatureChange::Output < ActiveRecord::Base
   belongs_to :new_rank, :class_name => Rank, :foreign_key => :new_rank_id
   validates :nomenclature_change, :presence => true
   validates :new_scientific_name, :presence => true,
-    :if => Proc.new { |c| c.taxon_concept_id.blank? }
+    :if => Proc.new { |c| c.taxon_concept_id.blank? && !c.nomenclature_change.is_a?(NomenclatureChange::NewName) }
   validates :new_parent_id, :presence => true,
-    :if => Proc.new { |c| c.taxon_concept_id.blank? }
+    :if => Proc.new { |c| c.taxon_concept_id.blank? && !c.nomenclature_change.is_a?(NomenclatureChange::NewName) }
   validate :validate_tmp_taxon_concept,
-    :if => Proc.new { |c| c.will_create_taxon? || c.will_update_taxon? }
+    :if => Proc.new { |c| (c.will_create_taxon? || c.will_update_taxon?) && !c.nomenclature_change.is_a?(NomenclatureChange::NewName) }
   before_validation :populate_taxon_concept_fields,
     :if => Proc.new { |c| (c.new_record? || c.taxon_concept_id_changed?) && c.taxon_concept }
 
@@ -130,7 +130,9 @@ class NomenclatureChange::Output < ActiveRecord::Base
       :name_status => (new_name_status.present? ? new_name_status : name_status)
     }
     if will_create_taxon?
-      taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
+      taxonomy = (taxonomy_id.present? ? Taxonomy.find(taxonomy_id) :
+        Taxonomy.find_by_name(Taxonomy::CITES_EU)
+      )
       TaxonConcept.new(
         taxon_concept_attrs.merge({
           :taxonomy_id => taxonomy.id,
