@@ -1,4 +1,4 @@
-<% if @taxon_concept.taxon_concept_references || @taxon_concept.inherited_standard_references %>
+<% if @taxon_concept.taxon_concept_references || @taxon_concept.inherited_standard_taxon_concept_references %>
   <table class="table table-striped table-hover">
     <thead>
       <th>
@@ -12,14 +12,12 @@
       </th>
     </thead>
     <tbody>
-      <% @taxon_concept.standard_references.each do |ref| %>
+      <% @taxon_concept.standard_taxon_concept_references.each do |taxon_reference | %>
         <tr>
           <td>
-            <p class="reference-citation"><%= link_to ref.citation,
-            admin_references_url(:query => ref.citation) %></p>
+            <p class="reference-citation"><%= link_to taxon_reference .citation,
+            admin_references_url(:query => taxon_reference .citation) %></p>
           </td>
-          <% taxon_reference = ref.taxon_concept_references.
-            find_by_taxon_concept_id(ref[:taxon_concept_id]) %>
           <td>
             <a rel="tooltip" href="#"
               data-original-title="<%= excluded_taxon_concepts_tooltip(taxon_reference) %>">
