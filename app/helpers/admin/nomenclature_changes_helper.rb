@@ -320,4 +320,19 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
+  def select_taxonomy
+    select("taxonomy","taxonomy_id", Taxonomy.all.collect {|t| [t.name, t.id]})
+  end
+
+  def select_rank
+    select("rank", "rank_id", ranks_collection)
+  end
+
+  def ranks_collection
+    Rank.all.collect {|r| [r.name, r.id]}
+  end
+
+  def taxon_concepts_collection
+    TaxonConcept.where(:taxonomy_id => 1).collect {|t| [t.full_name, t.id]}
+  end
 end
