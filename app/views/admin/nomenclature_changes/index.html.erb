@@ -6,7 +6,14 @@
 </p>
 <table id="nomenclature-changes-start">
   <tr>
-    <td width="25%"><button class="btn btn-block disabled">New name</button></td>
+    <td>
+      <%= link_to admin_nomenclature_change_new_name_index_path(
+        :nomenclature_change_id => :new),
+        :method => :post do
+      %>
+        <button class="btn btn-block">New Name</button>
+      <% end %>
+    </td>
     <td>Create a new name</td>
   </tr>
   <tr>

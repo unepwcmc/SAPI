@@ -1,0 +1,20 @@
+<h2>New name: rank</h2>
+<p>
+  <i class="icon-info-sign"></i>
+  Assign rank
+</p>
+<%= nomenclature_change_form do |f| %>
+  <div class="control-group">
+    <%= f.fields_for :output do |ff| %>
+      <label class="control-label">Select rank:</label>
+      <div class="controls">
+        <%= ff.select :new_rank_id,
+            options_for_select(ranks_collection,
+              ff.object.new_rank_id),
+            {}
+        %>
+      </div>
+    <% end %>
+  </div>
+
+<% end %>

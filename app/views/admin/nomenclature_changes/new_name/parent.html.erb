@@ -1,0 +1,21 @@
+<h2>New name: parent</h2>
+<p>
+  <i class="icon-info-sign"></i>
+  Assign parent
+</p>
+<%= nomenclature_change_form do |f| %>
+  <div class="control-group">
+    <%= f.fields_for :output do |ff| %>
+      <label class="control-label">Select parent:</label>
+      <div class="controls">
+        <%= ff.text_field :new_parent_id, {
+            :class => 'taxon-concept parent-taxon',
+            :'data-name' => ff.object.new_parent.try(:full_name),
+            :'data-name-status' => ff.object.new_parent.try(:name_status),
+            :'data-name-status-filter' => ['A'].to_json,
+            :'data-taxonomy-id' => @taxonomy.id
+          } %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

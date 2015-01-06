@@ -1,0 +1,19 @@
+<h2>New name: scientific name</h2>
+<p>
+  <i class="icon-info-sign"></i>
+  Assign scientific name
+</p>
+<%= nomenclature_change_form do |f| %>
+
+  <div class="control-group">
+    <%= f.fields_for :output do |ff| %>
+      <label class="control-label">Scientific name:</label>
+        <div class="controls">
+          <%= ff.text_field :new_scientific_name, {
+            :class => 'new-scientific-name'
+          } %>
+        </div>
+    <% end %>
+  </div>
+
+<% end %>

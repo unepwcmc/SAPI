@@ -1,0 +1,19 @@
+<h2>New name: accepted names</h2>
+<p>
+  <i class="icon-info-sign"></i>
+  Assign accepted names
+</p>
+<%= nomenclature_change_form do |f| %>
+  <div class="control-group">
+    <%= f.fields_for :output do |ff| %>
+      <label class="control-label">Select accepted names:</label>
+      <div class="controls">
+        <!-- Find a solution in order to assign the taxon_relationship_ids to the taxon concept, which is nil at this stage -->
+        <%= ff.select :taxon_relationship_ids,
+          options_for_select(taxon_concepts_collection,''),
+          {}, {:class => 'simple-taxon-concept', :multiple => ''}
+        %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,19 @@
+<h2>New name: name status</h2>
+<p>
+  <i class="icon-info-sign"></i>
+  Assign name status
+</p>
+<%= nomenclature_change_form do |f| %>
+  <div class="control-group">
+    <%= f.fields_for :output do |ff| %>
+      <label class="control-label">Select name status</label>
+      <div class="controls">
+        <%= ff.select :new_name_status,
+            options_for_select(['A', 'N', 'S', 'T', 'H'],
+            ff.object.new_name_status),
+            {}
+        %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

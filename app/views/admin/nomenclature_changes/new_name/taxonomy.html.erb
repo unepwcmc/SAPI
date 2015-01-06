@@ -1,0 +1,19 @@
+<h2>New name: taxonomy</h2>
+<p>
+  <i class="icon-info-sign"></i>
+  Assign taxonomy
+</p>
+<%= nomenclature_change_form do |f| %>
+  <div class="control-group">
+    <%= f.fields_for :output do |ff| %>
+      <label class="control-label">Select taxonomy:</label>
+      <div class="controls">
+        <%= ff.select :taxonomy_id,
+            options_for_select([["CITES_EU",1],["CMS",2]],
+            ff.object.taxonomy_id),
+            {}
+        %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
