@@ -26,9 +26,9 @@ describe TaxonConcept do
           specify { @species1.cites_accepted.should == false }
         end
       end
-      describe :standard_references do
+      describe :standard_taxon_concept_references do
         context 'for species Caiman latirostris' do
-          specify { @species.taxon_concept.standard_references.map(&:id).should include @ref.id }
+          specify { @species.taxon_concept.standard_taxon_concept_references.map(&:reference_id).should include @ref.id }
         end
       end
     end

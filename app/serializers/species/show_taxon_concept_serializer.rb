@@ -101,6 +101,10 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       order(:full_name).all
   end
 
+  def standard_references
+    object.standard_taxon_concept_references
+  end
+
   def distribution_references
     distributions_with_tags_and_references
   end
