@@ -18,9 +18,9 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
     object['start_event'] && JSON.parse(object['start_event'])
   end
   def source
-    object['source'] && JSON.parse(object['source'])
+    object['source_en'] && JSON.parse(object['source_en'])
   end
   def term
-    object['term'] && JSON.parse(object['term'])
+    object['term_en'] && JSON.parse(object['term_en'])
   end
 end
