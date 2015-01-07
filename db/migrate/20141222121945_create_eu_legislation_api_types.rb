@@ -13,7 +13,7 @@ class CreateEuLegislationApiTypes < ActiveRecord::Migration
       name TEXT,
       description TEXT,
       type TEXT
-    )
+    );
     SQL
   end
 end
