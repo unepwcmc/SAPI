@@ -23,7 +23,7 @@ class RemoveIdFromApiTypes < ActiveRecord::Migration
         name TEXT,
         description TEXT,
         type TEXT
-      )
+      );
     SQL
 
     execute "CREATE VIEW api_cites_listing_changes_view AS #{view_sql('20141230193844', 'api_cites_listing_changes_view')}"
