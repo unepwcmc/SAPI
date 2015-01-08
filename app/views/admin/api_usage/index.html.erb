@@ -23,14 +23,14 @@
     <div class="page-header">
       <h4>All Requests by Response Status</h4>
     </div>
-    <%= pie_chart ApiRequest.order(:response_status).group(:response_status).count, library: { legend: 'none', colors: ['#4AC948', '#EE3B3B'] } %>
+    <%= pie_chart ApiRequest.order(:response_status).group(:response_status).count, library: { legend: 'left', colors: ['#4AC948', '#EE3B3B'] } %>
   </div>
 
   <div class="span6">
     <div class="page-header">
       <h4>All Requests by Endpoint</h4>
     </div>
-    <%= pie_chart ApiRequest.group(:controller).count, library: { legend: 'none' } %>
+    <%= pie_chart ApiRequest.group(:controller).count, library: { legend: 'left' } %>
   </div>
 </div>
 
@@ -57,8 +57,8 @@
             <tr>
               <th><%= user.try(:name) %></th>
               <th><%= user.try(:email) %></th>
-              <th>-organisation-</th>
-              <th>-country-</th>
+              <th><%= user.try(:geo_entity).try(:name_en) %></th>
+              <th><%= user.try(:organisation) %></th>
               <th><%= requests.select { |req| req.response_status == 200 }.count %></th>
               <th><%= requests.select { |req| req.response_status == 500 }.count %></th>
               <th><%= link_to 'View', admin_api_usage_path(user) %></th>
