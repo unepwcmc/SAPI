@@ -12,6 +12,7 @@ class NomenclatureChange::TaxonomicTreeNameResolver
 
   private
   def resolve(node)
+    Rails.logger.debug("Resolving node name: #{node.full_name} (expected: #{expected_name(node)})")
     unless name_compatible_with_parent?(node)
       compatible_node_attributes = {
         taxonomy_id: node.taxonomy_id,
@@ -24,7 +25,8 @@ class NomenclatureChange::TaxonomicTreeNameResolver
           compatible_node_attributes.merge({
             parent_id: node.parent_id,
             name_status: node.name_status,
-            rank_id: node.rank_id
+            rank_id: node.rank_id,
+            author_year: node.author_year
           })
         )
       else
@@ -33,13 +35,13 @@ class NomenclatureChange::TaxonomicTreeNameResolver
           t.process
         end
       end
-      # reassign everything to new name
       r = NomenclatureChange::FullReassignment.new(node, compatible_node)
       r.process
       t = NomenclatureChange::ToSynonymTransformation.new(node, compatible_node)
       t.process
-    else
-      compatible_node = node
+      node.children.each do |child|
+        child.update_attribute(:parent_id, compatible_node.id)
+      end
     end
 
     compatible_node.children.each do |child_node|
