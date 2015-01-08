@@ -180,8 +180,8 @@
             <li><%= link_to 'Species+ Visits Tracking', admin_ahoy_visits_path %></li>
             <li><%= link_to 'Species+ Activity Page', activities_path %></li>
 
-            <% if current_user && current_user.is_api? %>
-              <li><a href="#">API Usage</a></li>
+            <% if current_user && current_user.is_admin? %>
+              <li><%= link_to 'API Usage', admin_api_usage_index_path %></li>
             <% end %>
           </ul>
         </li>
