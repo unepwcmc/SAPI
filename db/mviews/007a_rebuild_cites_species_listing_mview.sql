@@ -68,6 +68,7 @@ SELECT
       END
       || CASE
           WHEN LENGTH(listing_changes_mview.nomenclature_note_en) > 0 THEN strip_tags(listing_changes_mview.nomenclature_note_en)
+          ELSE ''
       END
       ORDER BY listing_changes_mview.species_listing_name
     ),

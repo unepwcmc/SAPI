@@ -10,16 +10,14 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   has_many :eu_decisions, :serializer => Species::EuDecisionSerializer
 
   def quotas
-    Quota.joins(:geo_entity).
+    Quota.from('api_cites_quotas_view trade_restrictions').
       where("
             trade_restrictions.taxon_concept_id = ?
             OR (
               (trade_restrictions.taxon_concept_id IN (?) OR trade_restrictions.taxon_concept_id IS NULL)
-              AND trade_restrictions.geo_entity_id IN
-                (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
+              AND matching_taxon_concept_ids @> ARRAY[?]::INT[]
             )
       ", object.id, children_and_ancestors, object.id).
-      joins('LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id').
       select(<<-SQL
               trade_restrictions.notes,
               trade_restrictions.url,
@@ -28,39 +26,38 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.is_current,
               trade_restrictions.geo_entity_id,
               trade_restrictions.unit_id,
-              trade_restrictions.quota,
+              CASE WHEN quota IS NULL THEN 'in prep.' ELSE quota::TEXT END,
               trade_restrictions.public_display,
               trade_restrictions.nomenclature_note_en,
               trade_restrictions.nomenclature_note_fr,
               trade_restrictions.nomenclature_note_es,
+              geo_entity_en,
+              unit_en,
               CASE
-                WHEN taxon_concepts_mview.rank_name = '#{object.rank_name}'
+                WHEN taxon_concept->>'rank' = '#{object.rank_name}'
                 THEN NULL
-                ELSE 
-                '[Quota for ' || taxon_concepts_mview.rank_name || ' <i>' || taxon_concepts_mview.full_name || '</i>]'
+                ELSE
+                '[Quota for ' || (taxon_concept->>'rank')::TEXT || ' <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
               END AS subspecies_info
-             SQL
+            SQL
       ).
       order(<<-SQL
               trade_restrictions.start_date DESC,
-              geo_entities.name_en ASC, trade_restrictions.notes ASC,
+              geo_entity_en->>'name' ASC, trade_restrictions.notes ASC,
               subspecies_info DESC
             SQL
       ).all
   end
 
   def cites_suspensions
-    CitesSuspension.joins(:geo_entity).
+    CitesSuspension.from('api_cites_suspensions_view trade_restrictions').
       where("
             trade_restrictions.taxon_concept_id = ?
             OR (
               (trade_restrictions.taxon_concept_id IN (?) OR trade_restrictions.taxon_concept_id IS NULL)
-              AND trade_restrictions.geo_entity_id IN
-                (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
+              AND matching_taxon_concept_ids @> ARRAY[?]::INT[]
             )
       ", object.id, children_and_ancestors, object.id).
-      joins(:start_notification).
-      joins('LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id').
       select(<<-SQL
               trade_restrictions.notes,
               trade_restrictions.start_date,
@@ -72,24 +69,26 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.nomenclature_note_en,
               trade_restrictions.nomenclature_note_fr,
               trade_restrictions.nomenclature_note_es,
+              trade_restrictions.geo_entity_en,
+              trade_restrictions.start_notification,
               CASE
-                WHEN taxon_concepts_mview.rank_name = '#{object.rank_name}'
+                WHEN taxon_concept->>'rank' = '#{object.rank_name}'
                 THEN NULL
-                ELSE 
-                '[Suspension for ' || taxon_concepts_mview.rank_name || ' <i>' || taxon_concepts_mview.full_name || '</i>]'
+                ELSE
+                '[Suspension for ' || (taxon_concept->>'rank')::TEXT || ' <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
               END AS subspecies_info
-             SQL
+            SQL
       ).
       order(<<-SQL
-            trade_restrictions.is_current DESC,
-            trade_restrictions.start_date DESC, geo_entities.name_en ASC,
-            subspecies_info DESC
-        SQL
+              trade_restrictions.is_current DESC,
+              trade_restrictions.start_date DESC, geo_entity_en->>'name' ASC,
+              subspecies_info DESC
+            SQL
       ).all
   end
 
   def eu_decisions
-    EuDecision.joins([:geo_entity]).
+    EuDecision.from('api_eu_decisions_view eu_decisions').
       where("
             eu_decisions.taxon_concept_id = ?
             OR (
@@ -98,30 +97,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
             )
       ", object.id, children_and_ancestors, object.id).
-      joins('INNER JOIN taxon_concepts_mview ON taxon_concepts_mview.id = eu_decisions.taxon_concept_id').
-      joins('LEFT JOIN events AS start_event ON start_event.id = eu_decisions.start_event_id').
-      joins('LEFT JOIN events AS end_event ON end_event.id = eu_decisions.end_event_id').
       select(<<-SQL
               eu_decisions.notes,
-              CASE
-                WHEN eu_decisions.type = 'EuOpinion'
-                  THEN eu_decisions.start_date
-                WHEN eu_decisions.type = 'EuSuspension'
-                  THEN start_event.effective_at
-              END AS start_date,
-              CASE
-                WHEN eu_decisions.type = 'EuOpinion'
-                  THEN eu_decisions.is_current
-                WHEN eu_decisions.type = 'EuSuspension'
-                  THEN
-                    CASE
-                      WHEN start_event.effective_at <= current_date AND start_event.is_current = true
-                        AND (eu_decisions.end_event_id IS NULL OR end_event.effective_at > current_date)
-                        THEN TRUE
-                      ELSE
-                        FALSE
-                    END
-              END AS is_current,
+              eu_decisions.start_date,
+              eu_decisions.is_current,
               eu_decisions.geo_entity_id,
               eu_decisions.start_event_id,
               eu_decisions.term_id,
@@ -132,21 +111,28 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               eu_decisions.nomenclature_note_en,
               eu_decisions.nomenclature_note_fr,
               eu_decisions.nomenclature_note_es,
+              eu_decision_type,
+              start_event,
+              end_event,
+              geo_entity_en,
+              taxon_concept,
+              term_en,
+              source_en,
               CASE
-                WHEN taxon_concepts_mview.rank_name = '#{object.rank_name}'
+                WHEN (taxon_concept->>'rank')::TEXT = '#{object.rank_name}'
                 THEN NULL
-                ELSE 
-                '[' || taxon_concepts_mview.rank_name || ' decision <i>' || taxon_concepts_mview.full_name || '</i>]'
+                ELSE
+                '[' || (taxon_concept->>'rank')::TEXT || ' decision <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
               END AS subspecies_info
              SQL
       ).
       order(<<-SQL
-            geo_entities.name_en ASC,
+            geo_entity_en->>'name' ASC,
             CASE
               WHEN eu_decisions.type = 'EuOpinion'
                 THEN eu_decisions.start_date
               WHEN eu_decisions.type = 'EuSuspension'
-                THEN start_event.effective_at
+                THEN (start_event->>'effective_at')::DATE
             END DESC,
             subspecies_info DESC
         SQL
@@ -154,10 +140,9 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def cites_listing_changes
-    rel = MCitesListingChange.from('cites_listing_changes_mview listing_changes_mview').
+    rel = MCitesListingChange.from('api_cites_listing_changes_view listing_changes_mview').
       where(
-        'listing_changes_mview.taxon_concept_id' => object_and_children,
-        'listing_changes_mview.show_in_history' => true
+        'listing_changes_mview.taxon_concept_id' => object_and_children
       )
     if object.rank_name == Rank::SPECIES
       rel = rel.
@@ -180,15 +165,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
             SQL
       ).
       select(<<-SQL
-              CASE
-                WHEN listing_changes_mview.change_type_name = 'DELETION'
-                  OR listing_changes_mview.change_type_name = 'RESERVATION_WITHDRAWAL'
-                  THEN 'f'
-                ELSE listing_changes_mview.is_current
-              END AS is_current,
+              listing_changes_mview.is_current,
               listing_changes_mview.species_listing_name,
               listing_changes_mview.party_id,
-              listing_changes_mview.party_full_name_en,
+              listing_changes_mview.party_en->>'name' AS party_full_name_en,
               listing_changes_mview.effective_at,
               listing_changes_mview.full_note_en,
               listing_changes_mview.short_note_en,
@@ -216,22 +196,17 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       ).
       order(<<-SQL
           effective_at DESC,
-          CASE
-            WHEN change_type_name = 'ADDITION' THEN 0
-            WHEN change_type_name = 'RESERVATION' THEN 1
-            WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
-            WHEN change_type_name = 'DELETION' THEN 3
-          END,
+          change_type_order ASC,
+          species_listing_name ASC,
           subspecies_info DESC
         SQL
       ).all
   end
 
   def eu_listing_changes
-    rel = MEuListingChange.from('eu_listing_changes_mview listing_changes_mview').
+    rel = MEuListingChange.from('api_eu_listing_changes_view listing_changes_mview').
       where(
-        'listing_changes_mview.taxon_concept_id' => object_and_children,
-        'listing_changes_mview.show_in_history' => true
+        'listing_changes_mview.taxon_concept_id' => object_and_children
       )
     if object.rank_name == Rank::SPECIES
       rel = rel.where(<<-SQL
@@ -249,10 +224,6 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
     rel.joins(<<-SQL
               INNER JOIN taxon_concepts_mview
                 ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id
-              INNER JOIN listing_changes
-                ON listing_changes.id = listing_changes_mview.id
-              INNER JOIN events
-                ON events.id = listing_changes.event_id
             SQL
       ).
       select(<<-SQL
@@ -260,7 +231,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.is_current,
               listing_changes_mview.species_listing_name,
               listing_changes_mview.party_id,
-              listing_changes_mview.party_full_name_en,
+              listing_changes_mview.party_en->>'name' AS party_full_name_en,
               listing_changes_mview.effective_at,
               listing_changes_mview.full_note_en,
               listing_changes_mview.short_note_en,
@@ -274,8 +245,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.nomenclature_note_en,
               listing_changes_mview.nomenclature_note_fr,
               listing_changes_mview.nomenclature_note_es,
-              events.description AS event_name,
-              events.url AS event_url,
+              eu_regulation->>'name' AS event_name,
+              eu_regulation->>'url' AS event_url,
               CASE
                 WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'}
                 AND taxon_concepts_mview.rank_name = 'SUBSPECIES'
@@ -289,12 +260,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       ).
       order(<<-SQL
           effective_at DESC,
-          CASE
-            WHEN change_type_name = 'ADDITION' THEN 3
-            WHEN change_type_name = 'RESERVATION' THEN 2
-            WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 1
-            WHEN change_type_name = 'DELETION' THEN 0
-          END,
+          change_type_order ASC,
+          species_listing_name ASC,
           subspecies_info DESC
         SQL
       ).all

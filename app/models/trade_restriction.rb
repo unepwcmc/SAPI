@@ -145,7 +145,7 @@ class TradeRestriction < ActiveRecord::Base
             if c.is_a?(Array)
               row << q.send(c[1])
             elsif c == :notes
-              row << "#{q.send(c)}. #{q.send(:nomenclature_note_en)}"
+              row << [q.send(c), q.send(:nomenclature_note_en)].reject(&:blank?).join('; ')
             else
               row << q.send(c)
             end
