@@ -31,7 +31,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomy_taxon_concepts_and_ancestors_mview(t
     )::INT AS ancestor_taxon_concept_id,
     GENERATE_SUBSCRIPTS(higher_or_equal_ranks_names(data->''rank_name''), 1) - 1 AS tree_distance
     FROM taxon_concepts
-    WHERE taxonomy_id = ' || taxonomy.id;
+    WHERE name_status IN (''A'', ''N'') AND taxonomy_id = ' || taxonomy.id;
 
     EXECUTE sql;
 
