@@ -23,6 +23,8 @@ gem 'cancan'
 gem 'ahoy_matey'
 gem 'gon'
 gem 'wicked'
+gem 'groupdate'
+gem "chartkick"
 
 gem 'sidekiq', '~> 3.3.0'
 gem 'sidekiq-status', '~> 0.5'
