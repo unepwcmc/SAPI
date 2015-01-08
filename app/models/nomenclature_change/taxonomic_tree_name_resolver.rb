@@ -42,6 +42,8 @@ class NomenclatureChange::TaxonomicTreeNameResolver
       node.children.each do |child|
         child.update_attribute(:parent_id, compatible_node.id)
       end
+    else
+      compatible_node = node
     end
 
     compatible_node.children.each do |child_node|
