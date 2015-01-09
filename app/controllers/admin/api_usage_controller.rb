@@ -4,5 +4,7 @@ class Admin::ApiUsageController < Admin::AdminController
       .group_by_day(:created_at, range: 30.days.ago.midnight..Time.now).count
 
     @all_requests = ApiRequest.all
+
+    @users_by_activity = ApiRequest.where('created_at > ?', 30.days.ago).group_by(&:user).sort_by { |k,v| -v.count }[0..4]
   end
 end

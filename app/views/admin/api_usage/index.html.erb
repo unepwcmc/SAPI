@@ -1,13 +1,16 @@
-<h1>API Usage</h1>
-<h4>Last 30 Days Requests by Response Status</h4>
-
-<%= line_chart sanitise_hash_for_line_graph(@last_30_days_requests),
-  library: { 
-  title: 'Requests by HTTP Status', 
-  titlePosition: 'out',
-  colors: ["red", "#4DBD33"]
-  }
-%>
+<div class="row">
+  <div class="span12">
+    <h1>API Usage</h1>
+    <h4>Last 30 Days Requests by Response Status</h4>
+    <%= line_chart sanitise_hash_for_line_graph(@last_30_days_requests),
+      library: { 
+      title: 'Requests by HTTP Status', 
+      titlePosition: 'out',
+      colors: ["red", "#4DBD33"]
+      }
+    %>
+  </div>
+</div>
 
 <div class="row">
   <div class="span6">
@@ -18,5 +21,39 @@
   <div class="span6">
     <h4>All Requests by Endpoint</h4>
     <%= pie_chart ApiRequest.group(:controller).count, library: { legend: 'none' } %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+    <h4>Top 5 Most Active Users in the last 30 days</h4>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Organisation</th>
+          <th>Country</th>
+          <th>Successful Requests</th>
+          <th>Failed Requests</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% unless @users_by_activity.empty? %>
+          <% @users_by_activity.each do |user, requests| %>
+            <tr>
+              <th><%= user.try(:name) %></th>
+              <th><%= user.try(:email) %></th>
+              <th><%= user.try(:name) %></th>
+              <th><%= user.try(:name) %></th>
+              <th><%= requests.select { |req| req.response_status == 200 }.count %></th>
+              <th><%= requests.select { |req| req.response_status == 500 }.count %></th>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%= @users_by_activity %>
   </div>
 </div>
