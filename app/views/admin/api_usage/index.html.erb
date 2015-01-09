@@ -1,7 +1,13 @@
 <h1>API Usage</h1>
 <h4>Last 30 Days Requests by Response Status</h4>
 
-<%= area_chart @last_30_days_requests.group(:response_status).group_by_day(:created_at, range: 30.days.ago.midnight..Time.now).count %>
+<%= line_chart sanitise_hash_for_line_graph(@last_30_days_requests),
+  library: { 
+  title: 'Requests by HTTP Status', 
+  titlePosition: 'out',
+  colors: ["red", "#4DBD33"]
+  }
+%>
 
 <div class="row">
   <div class="span6">
@@ -10,7 +16,7 @@
   </div>
 
   <div class="span6">
-    <h4>All Requests by Controller</h4>
+    <h4>All Requests by Endpoint</h4>
     <%= pie_chart ApiRequest.group(:controller).count, library: { legend: 'none' } %>
   </div>
 </div>
