@@ -6,11 +6,11 @@
 <div class="row">
   <div class="span6">
     <h4>All Requests by Response Status</h4>
-    <%= pie_chart ApiRequest.group(:response_status).count %>
+    <%= pie_chart ApiRequest.group(:response_status).count, library: { legend: 'bottom' } %>
   </div>
 
   <div class="span6">
     <h4>All Requests by Controller</h4>
-    <%= pie_chart ApiRequest.group(:controller).count %>
+    <%= pie_chart ApiRequest.group(:controller).count, library: { legend: 'bottom' } %>
   </div>
 </div>
