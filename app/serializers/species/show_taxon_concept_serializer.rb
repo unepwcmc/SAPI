@@ -66,20 +66,21 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def common_names
-    object.common_names.joins(:language).
-      select("languages.name_en AS lang").
-      select("string_agg(common_names.name, ', ') AS names").
+    CommonName.from('api_common_names_view common_names').
+      where(taxon_concept_id: object.id).
+      select("language_name_en AS lang").
+      select("string_agg(name, ', ') AS names").
       select(<<-SQL
           CASE
-            WHEN UPPER(languages.name_en) = 'ENGLISH' OR
-              UPPER(languages.name_en) = 'FRENCH' OR
-              UPPER(languages.name_en) = 'SPANISH'
+            WHEN UPPER(language_name_en) = 'ENGLISH' OR
+              UPPER(language_name_en) = 'FRENCH' OR
+              UPPER(language_name_en) = 'SPANISH'
               THEN true
             ELSE false
           END AS convention_language
         SQL
       ).
-      group("languages.name_en").order("languages.name_en").all
+      group("language_name_en").order("language_name_en").all
   end
 
   def distributions
