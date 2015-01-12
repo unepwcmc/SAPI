@@ -29,6 +29,8 @@ class User < ActiveRecord::Base
   has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit'
   has_many :ahoy_events, dependent: :nullify, class_name: 'Ahoy::Event'
 
+  belongs_to :geo_entity
+
   validates :email, :uniqueness => true, :presence => true
   validates :name, :presence => true
   validates :role, inclusion: { in: ['default', 'admin', 'api'] },
