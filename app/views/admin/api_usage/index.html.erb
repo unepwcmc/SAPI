@@ -44,8 +44,8 @@
             <tr>
               <th><%= user.try(:name) %></th>
               <th><%= user.try(:email) %></th>
-              <th><%= user.try(:name) %></th>
-              <th><%= user.try(:name) %></th>
+              <th>-organisation-</th>
+              <th>-country-</th>
               <th><%= requests.select { |req| req.response_status == 200 }.count %></th>
               <th><%= requests.select { |req| req.response_status == 500 }.count %></th>
             </tr>
@@ -53,7 +53,5 @@
         <% end %>
       </tbody>
     </table>
-
-    <%= @users_by_activity %>
   </div>
 </div>
