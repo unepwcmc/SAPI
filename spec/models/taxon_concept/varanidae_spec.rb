@@ -11,19 +11,19 @@ describe TaxonConcept do
           specify { @species1.cites_accepted.should be_true }
         end
       end
-      describe :standard_references do
+      describe :standard_taxon_concept_references do
         context "for order Sauria" do
-          specify { @order.taxon_concept.standard_references.should be_empty }
+          specify { @order.taxon_concept.standard_taxon_concept_references.should be_empty }
         end
         context "for family Varanidae" do
-          specify { @family.taxon_concept.standard_references.map(&:id).should include @ref1.id }
+          specify { @family.taxon_concept.standard_taxon_concept_references.map(&:reference_id).should include @ref1.id }
         end
         context "for species Varanus bengalensis" do
-          specify { @species1.taxon_concept.standard_references.map(&:id).should include @ref1.id }
+          specify { @species1.taxon_concept.standard_taxon_concept_references.map(&:reference_id).should include @ref1.id }
         end
         context "for species Varanus bushi" do
-          specify { @species2.taxon_concept.standard_references.map(&:id).should include @ref1.id }
-          specify { @species2.taxon_concept.standard_references.map(&:id).should include @ref2.id }
+          specify { @species2.taxon_concept.standard_taxon_concept_references.map(&:reference_id).should include @ref1.id }
+          specify { @species2.taxon_concept.standard_taxon_concept_references.map(&:reference_id).should include @ref2.id }
         end
       end
     end
