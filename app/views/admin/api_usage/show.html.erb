@@ -1,0 +1,61 @@
+<div class="row">
+  <div class="span12">
+    <div class="page-header">
+      <h1>API Usage for <%= @user.name %></h1>
+      <%= link_to '&#8592; Back to Overview'.html_safe, admin_api_usage_index_path %>
+    </div>
+
+    <div class="page-header">
+      <h4>About this User</h4>
+    </div>
+
+    <dl class="dl-horizontal">
+      <dt>Email:<dt> 
+      <dd><%= @user.email %></dd>
+      <dt>Organisation:<dt> 
+      <dd><%= @user.name %></dd>
+      <dt>Country:<dt> 
+      <dd><%= @user.name %></dd>
+      <dt>Role:<dt> 
+      <dd><%= @user.role %></dd>
+      <dt>Total Successful Requests:<dt> 
+      <dd><%= number_with_delimiter @user.api_requests.where(response_status: 200).count, delimiter: ',' %></dd>
+      <dt>Total Failed Requests (to date):<dt>
+      <dd><%= number_with_delimiter @user.api_requests.where(response_status: 500).count, delimiter: ',' %></dd>
+      <dt>Date Joined:<dt> 
+      <dd><%= @user.created_at.to_s(:long) %></dd>
+    </dl>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+    <div class="page-header">
+      <h4>Last 30 Days Requests by Response Status</h4>
+    </div>
+
+    <%= line_chart sanitise_hash_for_line_graph(@last_30_days_requests),
+      library: { 
+      title: 'Requests by HTTP Status', 
+      titlePosition: 'out',
+      colors: ["red", "#4DBD33"]
+      }
+    %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span6">
+    <div class="page-header">
+      <h4>All Requests by Response Status</h4>
+    </div>
+    <%= pie_chart @user.api_requests.group(:response_status).count, library: { legend: 'none' } %>
+  </div>
+
+  <div class="span6">
+    <div class="page-header">
+      <h4>All Requests by Endpoint</h4>
+    </div>
+    <%= pie_chart @user.api_requests.group(:controller).count, library: { legend: 'none' } %>
+  </div>
+</div>
