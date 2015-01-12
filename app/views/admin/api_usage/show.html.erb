@@ -13,9 +13,9 @@
       <dt>Email:<dt> 
       <dd><%= @user.email %></dd>
       <dt>Organisation:<dt> 
-      <dd><%= @user.name %></dd>
+      <dd><%= @user.try(:organisation) %></dd>
       <dt>Country:<dt> 
-      <dd><%= @user.name %></dd>
+      <dd><%= @user.try(:geo_entity).try(:name_en) %></dd>
       <dt>Role:<dt> 
       <dd><%= @user.role %></dd>
       <dt>Total Successful Requests:<dt> 
