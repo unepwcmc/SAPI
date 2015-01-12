@@ -83,16 +83,15 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       group("language_name_en").order("language_name_en").all
   end
 
+  def distributions_with_tags_and_references
+    Distribution.from('api_distributions_view distributions').
+      where(taxon_concept_id: object.id).
+      select("name_en AS name, name_en AS country, ARRAY_TO_STRING(tags,  ',') AS tags_list, ARRAY_TO_STRING(citations, '; ') AS country_references").
+      order('name_en').all
+  end
+
   def distributions
-    object.distributions.joins(:geo_entity).
-      select('geo_entities.name_en AS name').
-      joins("LEFT JOIN taggings ON
-        taggings.taggable_id = distributions.id
-        AND taggings.taggable_type = 'Distribution'
-        LEFT JOIN tags ON tags.id = taggings.tag_id").
-      select("string_agg(tags.name, ', ') AS tags_list").
-      group('geo_entities.name_en').
-      order('geo_entities.name_en').all
+    distributions_with_tags_and_references
   end
 
   def subspecies
@@ -103,12 +102,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distribution_references
-    object.distributions.joins(:geo_entity).
-      joins(:distribution_references => :reference).
-      select("geo_entities.name_en AS country").
-      select("string_agg(\"references\".citation, '; ') AS country_references").
-      group('geo_entities.name_en').
-      order('geo_entities.name_en').all
+    distributions_with_tags_and_references
   end
 
   def cache_key  
