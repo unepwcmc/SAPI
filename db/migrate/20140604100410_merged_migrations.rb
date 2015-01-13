@@ -1,4 +1,3 @@
-NEWNEWNEW
 class MergedMigrations < ActiveRecord::Migration
   def change
   create_table "annotations", :force => true do |t|
@@ -16,6 +15,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.integer  "event_id"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   create_table "change_types", :force => true do |t|
@@ -63,6 +64,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.integer  "reference_id",    :null => false
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.integer  "updated_by_id"
+    t.integer  "created_by_id"
   end
 
   add_index "distribution_references", ["distribution_id", "reference_id"], :name => "index_distribution_refs_on_distribution_id_reference_id", :unique => true
@@ -74,6 +77,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.integer  "geo_entity_id",    :null => false
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   add_index "distributions", ["taxon_concept_id"], :name => "index_distributions_on_taxon_concept_id"
@@ -121,6 +126,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.integer  "eu_decision_type_id"
     t.integer  "term_id"
     t.integer  "source_id"
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   create_table "events", :force => true do |t|
@@ -137,6 +144,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.integer  "legacy_id"
     t.datetime "end_date"
     t.string   "subtype"
+    t.integer  "updated_by_id"
+    t.integer  "created_by_id"
   end
 
   create_table "geo_entities", :force => true do |t|
@@ -181,6 +190,18 @@ class MergedMigrations < ActiveRecord::Migration
     t.datetime "updated_at",     :null => false
   end
 
+  create_table "iucn_mappings", :force => true do |t|
+    t.integer  "taxon_concept_id"
+    t.integer  "iucn_taxon_id"
+    t.string   "iucn_taxon_name"
+    t.string   "iucn_author"
+    t.string   "iucn_category"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.hstore   "details"
+    t.integer  "synonym_id"
+  end
+
   create_table "languages", :force => true do |t|
     t.string   "name_en",    :null => false
     t.string   "name_fr"
@@ -206,6 +227,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.boolean  "explicit_change",            :default => true
     t.datetime "created_at",                                                    :null => false
     t.datetime "updated_at",                                                    :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   add_index "listing_changes", ["annotation_id"], :name => "index_listing_changes_on_annotation_id"
@@ -255,6 +278,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.integer  "source_id"
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   add_index "listing_distributions", ["geo_entity_id"], :name => "index_listing_distributions_on_geo_entity_id"
@@ -282,12 +307,14 @@ class MergedMigrations < ActiveRecord::Migration
     t.text     "title"
     t.string   "year"
     t.string   "author"
-    t.text     "citation",    :null => false
+    t.text     "citation",      :null => false
     t.text     "publisher"
     t.integer  "legacy_id"
     t.string   "legacy_type"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.integer  "updated_by_id"
+    t.integer  "created_by_id"
   end
 
   create_table "references_legacy_id_mapping", :force => true do |t|
@@ -326,6 +353,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.integer  "common_name_id",   :null => false
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   create_table "taxon_concept_references", :force => true do |t|
@@ -335,30 +364,35 @@ class MergedMigrations < ActiveRecord::Migration
     t.boolean  "is_cascaded",                                :default => false, :null => false
     t.datetime "created_at",                                                    :null => false
     t.datetime "updated_at",                                                    :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
-  add_column :taxon_concept_references, :excluded_taxon_concepts_ids, 'INTEGER[]'
+  add_column :taxon_concept_references, :excluded_taxon_concepts_ids, "INTEGER[]"
 
   add_index "taxon_concept_references", ["taxon_concept_id", "reference_id"], :name => "index_taxon_concept_references_on_taxon_concept_id_and_ref_id"
 
   create_table "taxon_concepts", :force => true do |t|
-    t.integer  "taxonomy_id",        :default => 1,   :null => false
+    t.integer  "taxonomy_id",           :default => 1,   :null => false
     t.integer  "parent_id"
-    t.integer  "rank_id",                             :null => false
-    t.integer  "taxon_name_id",                       :null => false
+    t.integer  "rank_id",                                :null => false
+    t.integer  "taxon_name_id",                          :null => false
     t.string   "author_year"
     t.integer  "legacy_id"
     t.string   "legacy_type"
     t.hstore   "data"
     t.hstore   "listing"
     t.text     "notes"
-    t.string   "taxonomic_position", :default => "0", :null => false
+    t.string   "taxonomic_position",    :default => "0", :null => false
     t.string   "full_name"
-    t.string   "name_status",        :default => "A", :null => false
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.string   "name_status",           :default => "A", :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.datetime "touched_at"
     t.string   "legacy_trade_code"
+    t.integer  "updated_by_id"
+    t.integer  "created_by_id"
+    t.datetime "dependents_updated_at"
   end
 
   add_index "taxon_concepts", ["name_status"], :name => "index_taxon_concepts_on_name_status"
@@ -439,6 +473,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.datetime "effective_from"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   add_index "taxon_instruments", ["taxon_concept_id"], :name => "index_taxon_instruments_on_taxon_concept_id"
@@ -463,6 +499,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.integer  "taxon_relationship_type_id", :null => false
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   create_table "taxonomies", :force => true do |t|
@@ -491,6 +529,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.text     "csv_source_file"
     t.integer  "trading_country_id",                    :null => false
     t.string   "point_of_view",      :default => "E",   :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   create_table "trade_codes", :force => true do |t|
@@ -516,6 +556,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.integer  "purpose_id"
     t.datetime "created_at",           :null => false
     t.datetime "updated_at",           :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   create_table "trade_restriction_sources", :force => true do |t|
@@ -523,6 +565,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.integer  "source_id"
     t.datetime "created_at",           :null => false
     t.datetime "updated_at",           :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   create_table "trade_restriction_terms", :force => true do |t|
@@ -530,6 +574,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.integer  "term_id"
     t.datetime "created_at",           :null => false
     t.datetime "updated_at",           :null => false
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
   end
 
   create_table "trade_restrictions", :force => true do |t|
@@ -550,15 +596,11 @@ class MergedMigrations < ActiveRecord::Migration
     t.integer  "start_notification_id"
     t.integer  "end_notification_id"
     t.integer  "original_id"
+    t.integer  "updated_by_id"
+    t.integer  "created_by_id"
   end
 
-  add_column :trade_restrictions, :excluded_taxon_concepts_ids, 'INTEGER[]'
-
-  execute <<-SQL
-    CREATE INDEX trade_restrictions_extract_year_from_start_date
-    ON trade_restrictions(EXTRACT(year from start_date))
-    WHERE type = 'Quota';
-  SQL
+  add_column :trade_restrictions, :excluded_taxon_concepts_ids, "INTEGER[]"
 
   create_table "trade_sandbox_template", :force => true do |t|
     t.string  "appendix"
@@ -600,6 +642,8 @@ class MergedMigrations < ActiveRecord::Migration
     t.string   "export_permit_number"
     t.string   "origin_permit_number"
     t.integer  "legacy_shipment_number"
+    t.integer  "updated_by_id"
+    t.integer  "created_by_id"
   end
 
   add_column :trade_shipments, :import_permits_ids, "INTEGER[]"
@@ -662,27 +706,27 @@ class MergedMigrations < ActiveRecord::Migration
     t.datetime "updated_at",                           :null => false
     t.string   "format_re"
     t.integer  "run_order",                            :null => false
+    t.string   "column_names"
     t.boolean  "is_primary",        :default => true,  :null => false
     t.hstore   "scope"
     t.boolean  "is_strict",         :default => false, :null => false
   end
 
-  add_column :trade_validation_rules, :column_names, 'varchar(255)[]'
-
   create_table "users", :force => true do |t|
-    t.string   "name",                                   :null => false
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
-    t.string   "email",                  :default => "", :null => false
-    t.string   "encrypted_password",     :default => "", :null => false
+    t.string   "name",                                      :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+    t.string   "email",                  :default => "",    :null => false
+    t.string   "encrypted_password",     :default => "",    :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          :default => 0,  :null => false
+    t.integer  "sign_in_count",          :default => 0,     :null => false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.boolean  "is_manager",             :default => false, :null => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
@@ -708,6 +752,8 @@ class MergedMigrations < ActiveRecord::Migration
 
   add_foreign_key "annotations", "annotations", name: "annotations_source_id_fk", column: "source_id"
   add_foreign_key "annotations", "events", name: "annotations_event_id_fk"
+  add_foreign_key "annotations", "users", name: "annotations_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "annotations", "users", name: "annotations_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "change_types", "designations", name: "change_types_designation_id_fk"
 
@@ -715,6 +761,8 @@ class MergedMigrations < ActiveRecord::Migration
   add_foreign_key "cites_suspension_confirmations", "trade_restrictions", name: "cites_suspension_confirmations_cites_suspension_id_fk", column: "cites_suspension_id"
 
   add_foreign_key "common_names", "languages", name: "common_names_language_id_fk"
+  add_foreign_key "common_names", "users", name: "common_names_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "common_names", "users", name: "common_names_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "designation_geo_entities", "designations", name: "designation_geo_entities_designation_id_fk"
   add_foreign_key "designation_geo_entities", "geo_entities", name: "designation_geo_entities_geo_entity_id_fk"
@@ -723,9 +771,13 @@ class MergedMigrations < ActiveRecord::Migration
 
   add_foreign_key "distribution_references", "distributions", name: "taxon_concept_geo_entity_references_taxon_concept_geo_entity_fk"
   add_foreign_key "distribution_references", "references", name: "taxon_concept_geo_entity_references_reference_id_fk"
+  add_foreign_key "distribution_references", "users", name: "distribution_references_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "distribution_references", "users", name: "distribution_references_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "distributions", "geo_entities", name: "taxon_concept_geo_entities_geo_entity_id_fk"
   add_foreign_key "distributions", "taxon_concepts", name: "taxon_concept_geo_entities_taxon_concept_id_fk"
+  add_foreign_key "distributions", "users", name: "distributions_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "distributions", "users", name: "distributions_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "eu_decision_confirmations", "eu_decisions", name: "eu_decision_confirmations_eu_decision_id_fk"
   add_foreign_key "eu_decision_confirmations", "events", name: "eu_decision_confirmations_event_id_fk"
@@ -737,8 +789,12 @@ class MergedMigrations < ActiveRecord::Migration
   add_foreign_key "eu_decisions", "taxon_concepts", name: "eu_decisions_taxon_concept_id_fk"
   add_foreign_key "eu_decisions", "trade_codes", name: "eu_decisions_source_id_fk", column: "source_id"
   add_foreign_key "eu_decisions", "trade_codes", name: "eu_decisions_term_id_fk", column: "term_id"
+  add_foreign_key "eu_decisions", "users", name: "eu_decisions_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "eu_decisions", "users", name: "eu_decisions_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "events", "designations", name: "events_designation_id_fk"
+  add_foreign_key "events", "users", name: "events_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "events", "users", name: "events_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "geo_entities", "geo_entity_types", name: "geo_entities_geo_entity_type_id_fk"
 
@@ -757,51 +813,78 @@ class MergedMigrations < ActiveRecord::Migration
   add_foreign_key "listing_changes", "species_listings", name: "listing_changes_species_listing_id_fk"
   add_foreign_key "listing_changes", "taxon_concepts", name: "listing_changes_inclusion_taxon_concept_id_fk", column: "inclusion_taxon_concept_id"
   add_foreign_key "listing_changes", "taxon_concepts", name: "listing_changes_taxon_concept_id_fk"
+  add_foreign_key "listing_changes", "users", name: "listing_changes_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "listing_changes", "users", name: "listing_changes_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "listing_distributions", "geo_entities", name: "listing_distributions_geo_entity_id_fk"
   add_foreign_key "listing_distributions", "listing_changes", name: "listing_distributions_listing_change_id_fk"
   add_foreign_key "listing_distributions", "listing_distributions", name: "listing_distributions_source_id_fk", column: "source_id"
+  add_foreign_key "listing_distributions", "users", name: "listing_distributions_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "listing_distributions", "users", name: "listing_distributions_updated_by_id_fk", column: "updated_by_id"
+
+  add_foreign_key "references", "users", name: "references_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "references", "users", name: "references_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "species_listings", "designations", name: "species_listings_designation_id_fk"
 
   add_foreign_key "taxon_commons", "common_names", name: "taxon_commons_common_name_id_fk"
   add_foreign_key "taxon_commons", "taxon_concepts", name: "taxon_commons_taxon_concept_id_fk"
+  add_foreign_key "taxon_commons", "users", name: "taxon_commons_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "taxon_commons", "users", name: "taxon_commons_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "taxon_concept_references", "references", name: "taxon_concept_references_reference_id_fk"
   add_foreign_key "taxon_concept_references", "taxon_concepts", name: "taxon_concept_references_taxon_concept_id_fk"
+  add_foreign_key "taxon_concept_references", "users", name: "taxon_concept_references_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "taxon_concept_references", "users", name: "taxon_concept_references_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "taxon_concepts", "ranks", name: "taxon_concepts_rank_id_fk"
   add_foreign_key "taxon_concepts", "taxon_concepts", name: "taxon_concepts_parent_id_fk", column: "parent_id"
   add_foreign_key "taxon_concepts", "taxon_names", name: "taxon_concepts_taxon_name_id_fk"
   add_foreign_key "taxon_concepts", "taxonomies", name: "taxon_concepts_taxonomy_id_fk"
+  add_foreign_key "taxon_concepts", "users", name: "taxon_concepts_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "taxon_concepts", "users", name: "taxon_concepts_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "taxon_instruments", "instruments", name: "taxon_instruments_instrument_id_fk"
   add_foreign_key "taxon_instruments", "taxon_concepts", name: "taxon_instruments_taxon_concept_id_fk"
+  add_foreign_key "taxon_instruments", "users", name: "taxon_instruments_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "taxon_instruments", "users", name: "taxon_instruments_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "taxon_relationships", "taxon_concepts", name: "taxon_relationships_taxon_concept_id_fk"
   add_foreign_key "taxon_relationships", "taxon_relationship_types", name: "taxon_relationships_taxon_relationship_type_id_fk"
+  add_foreign_key "taxon_relationships", "users", name: "taxon_relationships_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "taxon_relationships", "users", name: "taxon_relationships_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "term_trade_codes_pairs", "trade_codes", name: "term_trade_codes_pairs_term_id_fk", column: "term_id"
   add_foreign_key "term_trade_codes_pairs", "trade_codes", name: "term_trade_codes_pairs_trade_code_id_fk"
 
   add_foreign_key "trade_annual_report_uploads", "geo_entities", name: "trade_annual_report_uploads_trading_country_id_fk", column: "trading_country_id"
   add_foreign_key "trade_annual_report_uploads", "users", name: "trade_annual_report_uploads_created_by_fk", column: "created_by"
+  add_foreign_key "trade_annual_report_uploads", "users", name: "trade_annual_report_uploads_created_by_id_fk", column: "created_by_id"
   add_foreign_key "trade_annual_report_uploads", "users", name: "trade_annual_report_uploads_updated_by_fk", column: "updated_by"
+  add_foreign_key "trade_annual_report_uploads", "users", name: "trade_annual_report_uploads_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "trade_restriction_purposes", "trade_codes", name: "trade_restriction_purposes_purpose_id", column: "purpose_id"
   add_foreign_key "trade_restriction_purposes", "trade_restrictions", name: "trade_restriction_purposes_trade_restriction_id"
+  add_foreign_key "trade_restriction_purposes", "users", name: "trade_restriction_purposes_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "trade_restriction_purposes", "users", name: "trade_restriction_purposes_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "trade_restriction_sources", "trade_codes", name: "trade_restriction_sources_source_id", column: "source_id"
   add_foreign_key "trade_restriction_sources", "trade_restrictions", name: "trade_restriction_sources_trade_restriction_id"
+  add_foreign_key "trade_restriction_sources", "users", name: "trade_restriction_sources_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "trade_restriction_sources", "users", name: "trade_restriction_sources_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "trade_restriction_terms", "trade_codes", name: "trade_restriction_terms_term_id", column: "term_id"
   add_foreign_key "trade_restriction_terms", "trade_restrictions", name: "trade_restriction_terms_trade_restriction_id"
+  add_foreign_key "trade_restriction_terms", "users", name: "trade_restriction_terms_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "trade_restriction_terms", "users", name: "trade_restriction_terms_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "trade_restrictions", "events", name: "trade_restrictions_end_notification_id_fk", column: "end_notification_id"
   add_foreign_key "trade_restrictions", "events", name: "trade_restrictions_start_notification_id_fk", column: "start_notification_id"
   add_foreign_key "trade_restrictions", "geo_entities", name: "trade_restrictions_geo_entity_id_fk"
   add_foreign_key "trade_restrictions", "taxon_concepts", name: "trade_restrictions_taxon_concept_id_fk"
   add_foreign_key "trade_restrictions", "trade_codes", name: "trade_restrictions_unit_id_fk", column: "unit_id"
+  add_foreign_key "trade_restrictions", "users", name: "trade_restrictions_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "trade_restrictions", "users", name: "trade_restrictions_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "trade_shipments", "geo_entities", name: "trade_shipments_country_of_origin_id_fk", column: "country_of_origin_id"
   add_foreign_key "trade_shipments", "geo_entities", name: "trade_shipments_exporter_id_fk", column: "exporter_id"
@@ -813,10 +896,10 @@ class MergedMigrations < ActiveRecord::Migration
   add_foreign_key "trade_shipments", "trade_codes", name: "trade_shipments_source_id_fk", column: "source_id"
   add_foreign_key "trade_shipments", "trade_codes", name: "trade_shipments_term_id_fk", column: "term_id"
   add_foreign_key "trade_shipments", "trade_codes", name: "trade_shipments_unit_id_fk", column: "unit_id"
+  add_foreign_key "trade_shipments", "users", name: "trade_shipments_created_by_id_fk", column: "created_by_id"
+  add_foreign_key "trade_shipments", "users", name: "trade_shipments_updated_by_id_fk", column: "updated_by_id"
 
   add_foreign_key "trade_taxon_concept_term_pairs", "taxon_concepts", name: "trade_taxon_concept_code_pairs_taxon_concept_id_fk"
   add_foreign_key "trade_taxon_concept_term_pairs", "trade_codes", name: "trade_taxon_concept_code_pairs_term_id_fk", column: "term_id"
-
-
   end
 end
