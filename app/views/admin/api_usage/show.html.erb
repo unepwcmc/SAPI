@@ -38,7 +38,7 @@
       library: { 
       title: 'Requests by HTTP Status', 
       titlePosition: 'out',
-      colors: ["red", "#4DBD33"]
+      colors: ['#4AC948', '#EE3B3B']
       }
     %>
   </div>
@@ -49,7 +49,7 @@
     <div class="page-header">
       <h4>All Requests by Response Status</h4>
     </div>
-    <%= pie_chart @user.api_requests.group(:response_status).count, library: { legend: 'none' } %>
+    <%= pie_chart @user.api_requests.order(:response_status).group(:response_status).count, library: { legend: 'none', colors: ['#4AC948', '#EE3B3B'] } %>
   </div>
 
   <div class="span6">
