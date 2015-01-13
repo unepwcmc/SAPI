@@ -1,3 +1,11 @@
+### 0.9.1 (2015-01-14)
+**Species+ Admin:**
+* nomenclature management (temporarily disabled)
+
+**Species+**
+* Rails security upgrade
+* rework of queries to fetch data from views
+
 ### 0.9.0 (2014-12-16)
 **Species+ Admin:**
 * nomenclature management (temporarily disabled)
