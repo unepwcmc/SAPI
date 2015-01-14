@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/smartinez87/exception_notification.git
-  revision: f5dd6ebe508fe008a999790de348a9d69f073728
+  revision: f9dee5b5f6a1e1823bb274f719f1ae9c551e2f84
   specs:
     exception_notification (4.1.0.rc1)
       actionmailer (>= 3.0.4)
@@ -18,12 +18,12 @@ GEM
   remote: https://rubygems.org/
   remote: http://gems.github.com/
   specs:
-    actionmailer (3.2.20)
-      actionpack (= 3.2.20)
+    actionmailer (3.2.21)
+      actionpack (= 3.2.21)
       mail (~> 2.5.4)
-    actionpack (3.2.20)
-      activemodel (= 3.2.20)
-      activesupport (= 3.2.20)
+    actionpack (3.2.21)
+      activemodel (= 3.2.21)
+      activesupport (= 3.2.21)
       builder (~> 3.0.0)
       erubis (~> 2.7.0)
       journey (~> 1.0.4)
@@ -33,22 +33,22 @@ GEM
       sprockets (~> 2.2.1)
     active_model_serializers (0.8.1)
       activemodel (>= 3.0)
-    activemodel (3.2.20)
-      activesupport (= 3.2.20)
+    activemodel (3.2.21)
+      activesupport (= 3.2.21)
       builder (~> 3.0.0)
-    activerecord (3.2.20)
-      activemodel (= 3.2.20)
-      activesupport (= 3.2.20)
+    activerecord (3.2.21)
+      activemodel (= 3.2.21)
+      activesupport (= 3.2.21)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
     activerecord-postgres-hstore (0.7.6)
       activerecord (>= 3.1)
       pg-hstore (>= 1.1.5)
       rake
-    activeresource (3.2.20)
-      activemodel (= 3.2.20)
-      activesupport (= 3.2.20)
-    activesupport (3.2.20)
+    activeresource (3.2.21)
+      activemodel (= 3.2.21)
+      activesupport (= 3.2.21)
+    activesupport (3.2.21)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     activeuuid (0.5.0)
@@ -98,6 +98,9 @@ GEM
       capistrano (>= 1.0.0)
     capistrano-log_with_awesome (0.0.2)
       capistrano (>= 2.5.14)
+    capistrano-sidekiq (0.4.0)
+      capistrano
+      sidekiq
     capybara (2.4.4)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -109,8 +112,8 @@ GEM
       activesupport (>= 3.2.0)
       json (>= 1.7)
       mime-types (>= 1.16)
-    celluloid (0.15.2)
-      timers (~> 1.1.0)
+    celluloid (0.16.0)
+      timers (~> 4.0.0)
     chronic (0.10.2)
     chunky_png (1.2.8)
     clerk (0.2.2)
@@ -127,7 +130,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.4.0)
-    colorize (0.5.8)
     columnize (0.8.9)
     compass (0.12.2)
       chunky_png (~> 1.2)
@@ -135,15 +137,13 @@ GEM
       sass (~> 3.1)
     compass-rails (1.0.3)
       compass (>= 0.12.2, < 0.14)
-    connection_pool (2.0.0)
-    coveralls (0.6.4)
-      colorize
+    connection_pool (2.1.0)
+    coveralls (0.7.1)
       multi_json (~> 1.3)
       rest-client
       simplecov (>= 0.7)
+      term-ansicolor
       thor
-    dasboard_client (0.0.0)
-      rails (>= 3.0.0)
     database_cleaner (1.2.0)
     debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
@@ -154,6 +154,7 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     diff-lcs (1.1.3)
+    docile (1.1.5)
     em-websocket (0.4.0)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.5.3)
@@ -209,8 +210,9 @@ GEM
     has_scope (0.5.1)
     highline (1.6.19)
     hike (1.2.3)
+    hitimes (1.2.2)
     http_parser.rb (0.5.3)
-    i18n (0.6.11)
+    i18n (0.7.0)
     immigrant (0.1.4)
       activerecord (>= 3.0)
       foreigner (>= 1.2.1)
@@ -282,8 +284,7 @@ GEM
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
-    rack-cors (0.2.7)
-      rack
+    rack-cors (0.3.0)
     rack-livereload (0.3.11)
       rack
     rack-protection (1.4.0)
@@ -292,17 +293,17 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
-    rails (3.2.20)
-      actionmailer (= 3.2.20)
-      actionpack (= 3.2.20)
-      activerecord (= 3.2.20)
-      activeresource (= 3.2.20)
-      activesupport (= 3.2.20)
+    rails (3.2.21)
+      actionmailer (= 3.2.21)
+      actionpack (= 3.2.21)
+      activerecord (= 3.2.21)
+      activeresource (= 3.2.21)
+      activesupport (= 3.2.21)
       bundler (~> 1.0)
-      railties (= 3.2.20)
-    railties (3.2.20)
-      actionpack (= 3.2.20)
-      activesupport (= 3.2.20)
+      railties (= 3.2.21)
+    railties (3.2.21)
+      actionpack (= 3.2.21)
+      activesupport (= 3.2.21)
       rack-ssl (~> 1.3.2)
       rake (>= 0.8.7)
       rdoc (~> 3.4)
@@ -310,16 +311,17 @@ GEM
     rake (10.0.4)
     rdoc (3.12.2)
       json (~> 1.4)
-    redis (3.0.7)
-    redis-namespace (1.4.1)
-      redis (~> 3.0.4)
+    redis (3.2.0)
+    redis-namespace (1.5.1)
+      redis (~> 3.0, >= 3.0.4)
     referer-parser (0.2.2)
     request_store (1.0.6)
     responders (0.9.3)
       railties (~> 3.1)
-    rest-client (1.6.7)
-      mime-types (>= 1.16)
-    rest_client (1.7.3)
+    rest-client (1.7.2)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
+    rest_client (1.8.2)
       netrc (~> 0.7.7)
     rspec (2.12.0)
       rspec-core (~> 2.12.0)
@@ -349,23 +351,24 @@ GEM
       railties (>= 3.1)
     sextant (0.2.4)
       rails (>= 3.2)
-    sidekiq (2.17.7)
-      celluloid (>= 0.15.2)
-      connection_pool (>= 1.0.0)
+    sidekiq (3.3.0)
+      celluloid (>= 0.16.0)
+      connection_pool (>= 2.0.0)
       json
       redis (>= 3.0.6)
       redis-namespace (>= 1.3.1)
-    sidekiq-status (0.4.0)
-      sidekiq (~> 2.7)
-    simplecov (0.7.1)
+    sidekiq-status (0.5.1)
+      sidekiq (>= 2.7, < 3.4)
+    simplecov (0.9.1)
+      docile (~> 1.1.0)
       multi_json (~> 1.0)
-      simplecov-html (~> 0.7.1)
-    simplecov-html (0.7.1)
+      simplecov-html (~> 0.8.0)
+    simplecov-html (0.8.0)
     sinatra (1.3.5)
       rack (~> 1.4)
       rack-protection (~> 1.3)
       tilt (~> 1.3, >= 1.3.3)
-    slack-notifier (0.6.0)
+    slack-notifier (1.0.0)
     slim (1.3.6)
       temple (~> 0.5.5)
       tilt (~> 1.3.3)
@@ -384,12 +387,16 @@ GEM
       compass (>= 0.12.2)
       sass (>= 3.2.0)
     temple (0.5.5)
+    term-ansicolor (1.3.0)
+      tins (~> 1.0)
     terminal-table (1.4.5)
     thor (0.19.1)
     thread_safe (0.3.3)
     tilt (1.3.7)
     timecop (0.6.3)
-    timers (1.1.0)
+    timers (4.0.1)
+      hitimes
+    tins (1.3.3)
     traco (2.0.0)
       activerecord (>= 3.0)
     treetop (1.4.15)
@@ -431,6 +438,7 @@ DEPENDENCIES
   cancan
   capistrano
   capistrano-ext
+  capistrano-sidekiq
   capistrano-slack!
   capybara
   carrierwave
@@ -440,7 +448,6 @@ DEPENDENCIES
   compass (>= 0.12.2)
   compass-rails (>= 1.0.3)
   coveralls
-  dasboard_client
   database_cleaner (>= 1.2.0)
   devise
   ember-rails
@@ -474,7 +481,7 @@ DEPENDENCIES
   quiet_assets
   rack-cors
   rack-livereload
-  rails (= 3.2.20)
+  rails (= 3.2.21)
   rake (~> 10.0.3)
   rest_client
   rspec-mocks
@@ -483,11 +490,11 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   select2-rails (~> 3.5.7)
   sextant
-  sidekiq
-  sidekiq-status
+  sidekiq (~> 3.3.0)
+  sidekiq-status (~> 0.5)
   simplecov
   sinatra (>= 1.3.0)
-  slack-notifier
+  slack-notifier (~> 1.0)
   slim
   strong_parameters
   susy

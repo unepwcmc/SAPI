@@ -208,3 +208,7 @@ Species.TaxonConceptController = Ember.ObjectController.extend
         '</i>. You have been redirected to the species page for <i>' +
         @get('fullName') + '</i>.'
   ).property('matchedOnSelf', 'matchedOnSynonym', 'matchedOnSubspecies')
+
+  hasNomenclatureNote: ( ->
+    if @get('nomenclatureNoteEn') == null || @get('nomenclatureNoteEn').length <= 0 then no else yes
+  ).property('nomenclatureNoteEn')

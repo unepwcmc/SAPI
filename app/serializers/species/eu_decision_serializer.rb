@@ -1,10 +1,26 @@
 class Species::EuDecisionSerializer < ActiveModel::Serializer
   attributes :notes, {:start_date_formatted => :start_date},
-    :is_current, :subspecies_info
+    :is_current, :subspecies_info, :nomenclature_note_en, :nomenclature_note_fr,
+    :nomenclature_note_es,
+    :eu_decision_type,
+    :geo_entity,
+    :start_event,
+    :source,
+    :term
 
-  has_one :eu_decision_type, :serializer => Species::EuDecisionTypeSerializer
-  has_one :geo_entity, :serializer => Species::GeoEntitySerializer
-  has_one :start_event, :serializer => Species::EventSerializer
-  has_one :source, :serializer => Species::TradeCodeSerializer
-  has_one :term, :serializer => Species::TradeCodeSerializer
+  def eu_decision_type
+    object['eu_decision_type'] && JSON.parse(object['eu_decision_type'])
+  end
+  def geo_entity
+    object['geo_entity_en'] && JSON.parse(object['geo_entity_en'])
+  end
+  def start_event
+    object['start_event'] && JSON.parse(object['start_event'])
+  end
+  def source
+    object['source_en'] && JSON.parse(object['source_en'])
+  end
+  def term
+    object['term_en'] && JSON.parse(object['term_en'])
+  end
 end

@@ -18,12 +18,12 @@
           <td>{{decision.start_date}}</td>
           <td>{{decision.geo_entity.name}}</td>
           <td>
-              {{#if decision.eu_decision_type.tooltip}}
+              {{#if decision.eu_decision_type.description}}
                 <div class="link-holder">
                   <a class="legal-links">{{decision.eu_decision_type.name}}</a>
                   <div class="popup-holder">
                     <div class="popup">
-                      {{decision.eu_decision_type.tooltip}}
+                      {{decision.eu_decision_type.description}}
                     </div>
                   </div>
                 </div>
@@ -36,7 +36,11 @@
               {{{decision.subspecies_info}}}<br />
             {{/if}}
             {{decision.term.name}} {{#if decision.source.code}}{{decision.source.code}} - {{decision.source.name}}{{/if}} <br />
-            {{{decision.notes}}}
+            {{#if decision.notes}}
+              {{{decision.notes}}}
+              <br /><br />
+            {{/if}}
+            {{{decision.nomenclature_note_en}}}
           </td>
           <td class="last">
             <a class="legal-links" href="{{unbound decision.start_event.url}}">
@@ -69,12 +73,12 @@
               <td>{{decision.start_date}}</td>
               <td>{{decision.geo_entity.name}}</td>
               <td>
-                {{#if decision.eu_decision_type.tooltip}}
+                {{#if decision.eu_decision_type.description}}
                   <div class="link-holder">
                     <a class="legal-links">{{decision.eu_decision_type.name}}</a>
                     <div class="popup-holder">
                       <div class="popup">
-                        {{decision.eu_decision_type.tooltip}}
+                        {{decision.eu_decision_type.description}}
                       </div>
                     </div>
                   </div>
@@ -87,7 +91,11 @@
                   {{{decision.subspecies_info}}}<br />
                 {{/if}}
                 {{decision.term.name}} {{#if decision.source.code}}{{decision.source.code}} - {{decision.source.name}}{{/if}} <br />
-                {{{decision.notes}}}
+                {{#if decision.notes}}
+                  {{{decision.notes}}}
+                  <br /><br />
+                {{/if}}
+                {{{decision.nomenclature_note_en}}}
               </td>
               <td class="last">
                 <a class="legal-links" href="{{unbound decision.start_event.url}}">

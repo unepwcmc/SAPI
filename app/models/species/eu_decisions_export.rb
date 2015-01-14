@@ -80,7 +80,7 @@ private
       :genus_name, :species_name, :subspecies_name,
       :full_name, :rank_name, :start_date_formatted, :party,
       :decision_type_for_display, :source_code_and_name, :term_name,
-      :notes, :start_event_name, :is_valid_for_display
+      :full_note_en, :start_event_name, :is_valid_for_display
     ]
   end
 

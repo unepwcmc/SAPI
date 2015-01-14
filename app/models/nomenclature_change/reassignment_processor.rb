@@ -67,4 +67,31 @@ class NomenclatureChange::ReassignmentProcessor
     ]
   end
 
+  protected
+
+  def conflicting_listing_change_reassignment?(reassignment, reassignable)
+    # this amazing condition to ensure that in cases when there are listing changes
+    # coming from an upgraded taxon, they take precedence over any other
+    # listing changes reassignments
+    !reassignment.is_a?(NomenclatureChange::OutputReassignment) &&
+    reassignable.is_a?(ListingChange) &&
+    # if there is potential to reassign from upgraded taxon
+    @output.taxon_concept && @output.new_taxon_concept &&
+    reassignable.taxon_concept_id != @output.taxon_concept_id &&
+    (
+      reassignable.is_cites? && @output.taxon_concept.cites_listed ||
+      reassignable.is_eu? && @output.taxon_concept.eu_listed
+    )
+  end
+
+  def post_process(reassigned_object, object_before_reassignment)
+    if reassigned_object.is_a?(TaxonConcept)
+      resolver = NomenclatureChange::TaxonomicTreeNameResolver.new(reassigned_object)
+      resolver.process
+    elsif reassigned_object.is_a?(TaxonRelationship)
+      resolver = NomenclatureChange::TradeShipmentsResolver.new(reassigned_object, object_before_reassignment)
+      resolver.process
+    end
+  end
+
 end

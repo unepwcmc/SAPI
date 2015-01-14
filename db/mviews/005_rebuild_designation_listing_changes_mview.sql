@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     tmp_lc_table_name TEXT;
     raw_lc_table_name TEXT;
     lc_table_name TEXT;
+    master_lc_table_name TEXT;
     sql TEXT;
     addition_id INT;
     deletion_id INT;
@@ -21,8 +22,10 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     INTO raw_lc_table_name;
     SELECT listing_changes_mview_name('tmp_cascaded', designation.name, events_ids)
     INTO tmp_lc_table_name;
-    SELECT listing_changes_mview_name(NULL, designation.name, events_ids)
+    SELECT listing_changes_mview_name('child', designation.name, events_ids)
     INTO lc_table_name;
+    SELECT listing_changes_mview_name(NULL, designation.name, events_ids)
+    INTO master_lc_table_name;
 
 
     RAISE INFO 'Creating %', tmp_lc_table_name;
@@ -41,6 +44,7 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     applicable_listing_changes.affected_taxon_concept_id AS taxon_concept_id,
     listing_changes.id AS id,
     listing_changes.taxon_concept_id AS original_taxon_concept_id,
+    listing_changes.event_id,
     listing_changes.effective_at,
     listing_changes.species_listing_id,
     species_listings.abbreviation AS species_listing_name,
@@ -49,11 +53,15 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     change_types.designation_id AS designation_id,
     designations.name AS designation_name,
     listing_changes.parent_id,
+    listing_changes.nomenclature_note_en,
+    listing_changes.nomenclature_note_fr,
+    listing_changes.nomenclature_note_es,
     tmp_lc.party_id,
     geo_entities.iso_code2 AS party_iso_code,
     geo_entities.name_en AS party_full_name_en,
     geo_entities.name_es AS party_full_name_es,
     geo_entities.name_fr AS party_full_name_fr,
+    geo_entity_types.name AS geo_entity_type,
     annotations.symbol AS ann_symbol,
     annotations.full_note_en,
     annotations.full_note_es,
@@ -149,6 +157,8 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     ON listing_changes.species_listing_id = species_listings.id
     LEFT JOIN geo_entities ON
     geo_entities.id = tmp_lc.party_id
+    LEFT JOIN geo_entity_types ON
+    geo_entity_types.id = geo_entities.geo_entity_type_id
     LEFT JOIN annotations ON
     annotations.id = listing_changes.annotation_id
     LEFT JOIN annotations hash_annotations ON
@@ -355,6 +365,9 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     RAISE INFO 'Swapping %  materialized view', lc_table_name;
     EXECUTE 'DROP TABLE IF EXISTS ' || lc_table_name || ' CASCADE';
     EXECUTE 'ALTER TABLE ' || tmp_lc_table_name || ' RENAME TO ' || lc_table_name;
+    IF designation.name != 'EU' THEN
+      EXECUTE 'ALTER TABLE ' || lc_table_name || ' INHERIT ' || master_lc_table_name;
+    END IF;
   END;
   $$;
 

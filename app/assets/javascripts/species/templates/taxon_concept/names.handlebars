@@ -84,5 +84,12 @@
       </div>
     </div>
     {{/if}}
+
+    {{#if controllers.taxonConcept.hasNomenclatureNote }}
+      <div class="block04" id="synonyms">
+        <strong class="title">NOMENCLATURE NOTE</strong>
+        {{{controllers.taxonConcept.nomenclatureNoteEn}}}</li>
+      </div>
+    {{/if}}
   {{/if}}
 </div>

@@ -18,9 +18,7 @@
         name == TaxonRelationshipType::HAS_TRADE_NAME %>
         <div class="control-group">
           <label class="control-label">
-            <%= fff.object.reassignable.other_taxon_concept.full_name %><br>
-            <%= fff.object.reassignable.other_taxon_concept.author_year %>
-            (<%= fff.object.reassignable.other_taxon_concept.name_status %>)
+            <%= name_reassignment_label(fff.object) %>
           </label>
           <div class="controls">
             <%= fff.select :output_ids,
@@ -37,9 +35,7 @@
       <% else %>
         <div class="control-group">
           <label class="control-label">
-            <%= fff.object.reassignable.other_taxon_concept.full_name %><br>
-            <%= fff.object.reassignable.other_taxon_concept.author_year %>
-            (<%= fff.object.reassignable.other_taxon_concept.name_status %>)
+            <%= name_reassignment_label(fff.object) %>
           </label>
           <div class="controls">
             <%= fff.select :output_ids,

@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 source 'http://gems.github.com'
 
-gem 'rails', '3.2.20'
+gem 'rails', '3.2.21'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -24,8 +24,8 @@ gem 'ahoy_matey'
 gem 'gon'
 gem 'wicked'
 
-gem 'sidekiq'
-gem 'sidekiq-status'
+gem 'sidekiq', '~> 3.3.0'
+gem 'sidekiq-status', '~> 0.5'
 
 gem 'whenever', :require => false
 
@@ -73,11 +73,10 @@ end
 
 group :staging, :production do
   gem 'exception_notification', :git => 'https://github.com/smartinez87/exception_notification.git'
-  gem 'slack-notifier'
+  gem 'slack-notifier', '~> 1.0'
 end
 
 gem 'rest_client', require: false
-gem 'dasboard_client', require: false
 
 group :development do
   gem "better_errors", '~>1.1.0'
@@ -93,13 +92,14 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-ext'
   gem 'rvm-capistrano'
+  gem 'capistrano-sidekiq'
+  gem 'capistrano-slack', :git => 'https://github.com/nextupdate/capistrano-slack.git'
   gem 'brightbox', '>=2.3.9'
   gem 'rack-cors', :require => 'rack/cors'
   gem 'quiet_assets'
   gem 'webrick', '1.3.1'
   gem 'jslint_on_rails'
   gem 'git_pretty_accept'
-  gem 'capistrano-slack', :git => 'https://github.com/nextupdate/capistrano-slack.git'
 end
 
 group :test, :development do

@@ -4,7 +4,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   attributes :id, :parent_id, :full_name, :author_year, :standard_references,
     :common_names, :distributions, :subspecies, :distribution_references,
     :taxonomy, :kingdom_name, :phylum_name, :order_name, :class_name, :family_name,
-    :genus_name, :species_name, :rank_name, :name_status
+    :genus_name, :species_name, :rank_name, :name_status, :nomenclature_note_en
 
   has_many :synonyms, :serializer => Species::SynonymSerializer
   has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,
@@ -66,32 +66,32 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def common_names
-    object.common_names.joins(:language).
-      select("languages.name_en AS lang").
-      select("string_agg(common_names.name, ', ') AS names").
+    CommonName.from('api_common_names_view common_names').
+      where(taxon_concept_id: object.id).
+      select("language_name_en AS lang").
+      select("string_agg(name, ', ') AS names").
       select(<<-SQL
           CASE
-            WHEN UPPER(languages.name_en) = 'ENGLISH' OR
-              UPPER(languages.name_en) = 'FRENCH' OR
-              UPPER(languages.name_en) = 'SPANISH'
+            WHEN UPPER(language_name_en) = 'ENGLISH' OR
+              UPPER(language_name_en) = 'FRENCH' OR
+              UPPER(language_name_en) = 'SPANISH'
               THEN true
             ELSE false
           END AS convention_language
         SQL
       ).
-      group("languages.name_en").order("languages.name_en").all
+      group("language_name_en").order("language_name_en").all
+  end
+
+  def distributions_with_tags_and_references
+    Distribution.from('api_distributions_view distributions').
+      where(taxon_concept_id: object.id).
+      select("name_en AS name, name_en AS country, ARRAY_TO_STRING(tags,  ',') AS tags_list, ARRAY_TO_STRING(citations, '; ') AS country_references").
+      order('name_en').all
   end
 
   def distributions
-    object.distributions.joins(:geo_entity).
-      select('geo_entities.name_en AS name').
-      joins("LEFT JOIN taggings ON
-        taggings.taggable_id = distributions.id
-        AND taggings.taggable_type = 'Distribution'
-        LEFT JOIN tags ON tags.id = taggings.tag_id").
-      select("string_agg(tags.name, ', ') AS tags_list").
-      group('geo_entities.name_en').
-      order('geo_entities.name_en').all
+    distributions_with_tags_and_references
   end
 
   def subspecies
@@ -101,13 +101,12 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       order(:full_name).all
   end
 
+  def standard_references
+    object.standard_taxon_concept_references
+  end
+
   def distribution_references
-    object.distributions.joins(:geo_entity).
-      joins(:distribution_references => :reference).
-      select("geo_entities.name_en AS country").
-      select("string_agg(\"references\".citation, '; ') AS country_references").
-      group('geo_entities.name_en').
-      order('geo_entities.name_en').all
+    distributions_with_tags_and_references
   end
 
   def cache_key  

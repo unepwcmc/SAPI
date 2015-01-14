@@ -5,7 +5,7 @@ require 'capistrano/ext/multistage'
 gem 'brightbox', '>=2.3.9'
 require 'brightbox/recipes'
 require 'brightbox/passenger'
-require 'sidekiq/capistrano'
+require 'capistrano/sidekiq'
 
 require 'capistrano/slack'
 

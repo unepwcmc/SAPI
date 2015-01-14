@@ -1,12 +1,19 @@
 class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::ReassignmentProcessor
 
   def process_reassignment(reassignment, reassignable)
-    o = copied_object_before_save(reassignment, reassignable)
-    o if o.save # hope that saves the duplicated associations as well
+    object_before_reassignment = reassignable.dup
+    reassigned_object = copied_object_before_save(reassignment, reassignable)
+    if reassigned_object
+      reassigned_object.save(validate: false) # hope that saves the duplicated associations as well
+      post_process(reassigned_object, object_before_reassignment)
+    end
+    reassigned_object
   end
 
   def copied_object_before_save(reassignment, reassignable)
+    return nil if conflicting_listing_change_reassignment?(reassignment, reassignable)
     new_taxon_concept = @output.new_taxon_concept || @output.taxon_concept
+
     Rails.logger.debug("Processing #{reassignable.class} #{reassignable.id} copy to #{new_taxon_concept.full_name}")
     if reassignment.kind_of?(NomenclatureChange::ParentReassignment)
       reassignable.parent_id = new_taxon_concept.id
