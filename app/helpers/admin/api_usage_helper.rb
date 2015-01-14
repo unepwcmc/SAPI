@@ -4,7 +4,7 @@ module Admin::ApiUsageHelper
   def sanitise_hash_for_line_graph(hash)
     new_hash = {}
     hash.map { |k,v| 
-      n = k[0] == 200 ? 'Successful (200)' : 'Failed (500)'
+      n = k[0] == 200 ? 'Successful' : 'Failed'
       new_hash[[n, k[1]]] = v 
     }
     new_hash
