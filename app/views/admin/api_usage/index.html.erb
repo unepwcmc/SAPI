@@ -1,0 +1,71 @@
+<div class="row">
+  <div class="span12">
+    <div class="page-header">
+      <h1>API Usage</h1>
+    </div>
+
+    <div class="page-header">
+      <h4>Last 30 Days Requests by Response Status</h4>
+    </div>
+
+    <%= line_chart sanitise_hash_for_line_graph(@last_30_days_requests),
+      library: { 
+      title: 'Requests by HTTP Status', 
+      titlePosition: 'out',
+      colors: ['#4AC948', '#EE3B3B']
+      }
+    %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span6">
+    <div class="page-header">
+      <h4>All Requests by Response Status</h4>
+    </div>
+    <%= pie_chart ApiRequest.order(:response_status).group(:response_status).count, library: { legend: 'left', colors: ['#4AC948', '#EE3B3B'] } %>
+  </div>
+
+  <div class="span6">
+    <div class="page-header">
+      <h4>All Requests by Endpoint</h4>
+    </div>
+    <%= pie_chart ApiRequest.group(:controller).count, library: { legend: 'left' } %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+    <div class="page-header">
+      <h4>Top 5 Most Active Users in the last 30 days</h4>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Organisation</th>
+          <th>Country</th>
+          <th>Successful Requests</th>
+          <th>Failed Requests</th>
+          <th>View User Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% unless @users_by_activity.empty? %>
+          <% @users_by_activity.each do |user, requests| %>
+            <tr>
+              <th><%= user.try(:name) %></th>
+              <th><%= user.try(:email) %></th>
+              <th><%= user.try(:geo_entity).try(:name_en) %></th>
+              <th><%= user.try(:organisation) %></th>
+              <th><%= requests.select { |req| req.response_status == 200 }.count %></th>
+              <th><%= requests.select { |req| req.response_status == 500 }.count %></th>
+              <th><%= link_to 'View', admin_api_usage_path(user) %></th>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,3 +1,10 @@
+### 0.9.2 (2015-01-15)
+**Species+ Admin:**
+* API tracking
+
+**Species+:**
+* fix to order of EU Decisions
+
 ### 0.9.1 (2015-01-14)
 **Species+ Admin:**
 * nomenclature management (temporarily disabled)

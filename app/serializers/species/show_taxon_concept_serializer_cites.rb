@@ -132,7 +132,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               WHEN eu_decisions.type = 'EuOpinion'
                 THEN eu_decisions.start_date
               WHEN eu_decisions.type = 'EuSuspension'
-                THEN (start_event->>'effective_at')::DATE
+                THEN (start_event->>'date')::DATE
             END DESC,
             subspecies_info DESC
         SQL
