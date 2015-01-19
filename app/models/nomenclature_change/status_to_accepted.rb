@@ -16,7 +16,7 @@
 class NomenclatureChange::StatusToAccepted < NomenclatureChange
   include NomenclatureChange::StatusChangeHelpers
   build_steps(
-    :primary_output, :parent, :receive, :notes, :legislation, :summary
+    :primary_output, :parent, :notes, :legislation, :summary
   )
   validates :status, inclusion: {
     in: self.status_dict,
@@ -36,7 +36,7 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
   end
 
   def set_output_parent_id
-    return true unless needs_to_set_parent?
+    return true unless needs_to_set_parent? && primary_output.new_parent_id.nil?
     primary_output && primary_output.taxon_concept &&
       primary_output.new_parent_id = primary_output.taxon_concept.parent_id
   end
