@@ -25,7 +25,7 @@ module NomenclatureChange::StatusChangeHelpers
 
       validate :required_primary_output, if: :primary_output_or_submitting?
 
-      before_save :build_auto_reassignments, if: :notes?
+      before_save :build_auto_reassignments, if: :summary?
     end
   end
 

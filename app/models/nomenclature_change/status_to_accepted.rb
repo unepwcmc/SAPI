@@ -16,7 +16,7 @@
 class NomenclatureChange::StatusToAccepted < NomenclatureChange
   include NomenclatureChange::StatusChangeHelpers
   build_steps(
-    :primary_output, :parent, :notes, :legislation, :summary
+    :primary_output, :parent, :legislation, :summary
   )
   validates :status, inclusion: {
     in: self.status_dict,

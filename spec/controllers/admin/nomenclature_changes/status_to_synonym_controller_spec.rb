@@ -23,15 +23,6 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
         response.should render_template('relay')
       end
     end
-    context :notes do
-      before(:each) do
-        @status_change = a_to_s_with_primary_output
-      end
-      it 'renders the notes template' do
-        get :show, id: :notes, nomenclature_change_id: @status_change.id
-        response.should render_template('notes')
-      end
-    end
     context :reassignments do
       before(:each) do
         @status_change = a_to_s_with_input_and_secondary_output
