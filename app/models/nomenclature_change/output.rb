@@ -75,6 +75,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :if => Proc.new { |c| c.taxon_concept_id.blank? }
   validate :validate_tmp_taxon_concept,
     :if => Proc.new { |c| c.will_create_taxon? || c.will_update_taxon? }
+  validate :compatible_parent?, if: Proc.new { |c| c.parent_status?}
   before_validation :populate_taxon_concept_fields,
     :if => Proc.new { |c| (c.new_record? || c.taxon_concept_id_changed?) && c.taxon_concept }
 
@@ -170,6 +171,34 @@ class NomenclatureChange::Output < ActiveRecord::Base
 
   def taxon_name_already_existing?
     return !TaxonConcept.where("lower(full_name) = ?", display_full_name.downcase).empty?
+  end
+
+  def parent_status?
+    !nomenclature_change.nil? && nomenclature_change.status == "parent"
+  end
+
+  def compatible_parent?
+    unless new_parent.rank.name == rank.parent_rank &&
+      taxon_concept.full_name.include?(new_parent.full_name) && new_parent.name_status == 'A' &&
+      taxonomy_id = Taxonomy.find_by_name(Taxonomy::CITES_EU).id
+      errors.add('', "must have a compatible parent")
+      return false
+    end
+    return true
+  end
+
+  def default_parent
+    name = taxon_concept.full_name
+    if name_status == 'T' &&
+      Rank.in_range(Rank::VARIETY, Rank::SPECIES).include?(rank.name)
+
+      taxonomy_id = Taxonomy.find_by_name(Taxonomy::CITES_EU).id
+      TaxonConcept.where("data->'rank_name' = ? AND UPPER(full_name) = UPPER(?) AND
+        taxonomy_id = ? AND name_status = 'A'",
+        rank.parent_rank, name.split.first, taxonomy_id).first
+    else
+      new_parent
+    end
   end
 
   def reassignables_by_class(reassignable_type)
