@@ -14,15 +14,6 @@ describe Admin::NomenclatureChanges::StatusToAcceptedController do
         response.should render_template('primary_output')
       end
     end
-    context :receive do
-      before(:each) do
-        @status_change = s_to_a_with_primary_output
-      end
-      it 'renders the receive template' do
-        get :show, id: :receive, nomenclature_change_id: @status_change.id
-        response.should render_template('receive')
-      end
-    end
     context :notes do
       before(:each) do
         @status_change = s_to_a_with_primary_output
