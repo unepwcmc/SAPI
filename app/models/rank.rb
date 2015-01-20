@@ -48,6 +48,11 @@ class Rank < ActiveRecord::Base
     dict[higher_rank_idx..lower_rank_idx]
   end
 
+  def parent_rank
+    rank_index = self.class.dict.index(name)
+    self.class.dict[rank_index-1]
+  end
+
   private
 
   def dependent_objects_map

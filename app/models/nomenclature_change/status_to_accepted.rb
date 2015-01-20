@@ -22,7 +22,6 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
     in: self.status_dict,
     message: "%{value} is not a valid status"
   }
-  validate :compatible_parent, if: :parent?
   before_validation :set_output_name_status, if: :primary_output_or_submitting?
   before_validation :set_output_rank_id, if: :primary_output_or_submitting?
   before_validation :set_output_parent_id, if: :primary_output_or_submitting?
@@ -68,16 +67,6 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
       # no trade reassignments
     end
     true
-  end
-
-  def compatible_parent
-    parent = primary_output.new_parent
-    tc = primary_output.taxon_concept
-    unless parent.rank_id == tc.rank_id-1 && tc.full_name.include?(parent.full_name)
-      errors.add(:primary_output, "Must have a compatible parent")
-      return false
-    end
-    return true
   end
 
 end

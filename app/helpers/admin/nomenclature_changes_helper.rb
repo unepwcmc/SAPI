@@ -320,16 +320,4 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
-  def default_parent(primary_output)
-    output = primary_output.object
-    rank = output.rank_id
-    name = output.taxon_concept.full_name
-    if output.name_status == 'T' && rank > 7
-      TaxonConcept.where("rank_id = ? AND '" + name + "' LIKE '%' || full_name || '%'",
-        rank-1).first
-    else
-      output.new_parent
-    end
-  end
-
 end
