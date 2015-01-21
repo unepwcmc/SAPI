@@ -91,8 +91,7 @@ shared_context 'status_change_definitions' do
         taxon_concept_id: input_synonym.id,
         new_name_status: 'A'
       },
-      input_attributes: { taxon_concept_id: input_species.id },
-      status: NomenclatureChange::StatusToAccepted::RECEIVE
+      status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
     ).reload
   }
   let(:s_to_a_with_swap){

@@ -14,44 +14,13 @@ describe Admin::NomenclatureChanges::StatusToAcceptedController do
         response.should render_template('primary_output')
       end
     end
-    context :receive do
-      before(:each) do
-        @status_change = s_to_a_with_primary_output
-      end
-      it 'renders the receive template' do
-        get :show, id: :receive, nomenclature_change_id: @status_change.id
-        response.should render_template('receive')
-      end
-    end
-    context :notes do
-      before(:each) do
-        @status_change = s_to_a_with_primary_output
-      end
-      it 'renders the notes template' do
-        get :show, id: :notes, nomenclature_change_id: @status_change.id
-        response.should render_template('notes')
-      end
-    end
-    context :reassignments do
+    context :parent do
       before(:each) do
         @status_change = s_to_a_with_input
       end
-      context "when legislation present" do
-        before(:each) do
-          create_cites_I_addition(taxon_concept: input_species)
-        end
-        it 'renders the legislation template' do
-          get :show, id: :legislation, nomenclature_change_id: @status_change.id
-          response.should render_template('legislation')
-        end
-      end
-      context "when no legislation" do
-        it 'redirects to next step' do
-          get :show, id: :legislation, nomenclature_change_id: @status_change.id
-          response.should redirect_to(admin_nomenclature_change_status_to_accepted_url(
-            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
-          ))
-        end
+      it 'renders the parent template' do
+        get :show, id: :parent, nomenclature_change_id: @status_change.id
+        response.should render_template('parent')
       end
     end
     context :summary do

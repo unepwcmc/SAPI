@@ -12,16 +12,6 @@ class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::Nomenclatu
     when :parent
       skip_or_previous_step unless @nomenclature_change.needs_to_set_parent?
       set_taxonomy
-    when :receive
-      skip_or_previous_step unless @nomenclature_change.needs_to_receive_associations?
-      set_taxonomy
-      builder.build_secondary_output
-      builder.build_input
-    when :notes
-      builder.build_output_notes
-    when :legislation
-      builder.build_legislation_reassignments
-      skip_or_previous_step if @nomenclature_change.input.nil? || @nomenclature_change.input.legislation_reassignments.empty?
     when :summary
       processor = klass::Processor.new(@nomenclature_change)
       @summary = processor.summary
@@ -42,7 +32,7 @@ class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::Nomenclatu
         set_events
         set_taxonomy
       end
-    when :parent, :receive
+    when :parent
       set_taxonomy unless success
     end
     render_wizard @nomenclature_change

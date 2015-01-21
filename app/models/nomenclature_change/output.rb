@@ -172,6 +172,22 @@ class NomenclatureChange::Output < ActiveRecord::Base
     return !TaxonConcept.where("lower(full_name) = ?", display_full_name.downcase).empty?
   end
 
+  def default_parent
+    if name_status == 'T' &&
+      Rank.in_range(Rank::VARIETY, Rank::SPECIES).include?(rank.name)
+      TaxonConcept.where(
+        taxonomy_id: Taxonomy.find_by_name(Taxonomy::CITES_EU).try(:id),
+        rank_id: Rank.find_by_name(rank.parent_rank_name).try(:id),
+        name_status: 'A'
+      ).where(
+        'UPPER(SQUISH_NULL(full_name)) = UPPER(?)',
+        display_full_name.split.first
+      ).first
+    else
+      new_parent
+    end
+  end
+
   def reassignables_by_class(reassignable_type)
     reassignable_type.constantize.where(
       :taxon_concept_id => taxon_concept.id

@@ -16,7 +16,7 @@
 class NomenclatureChange::StatusToAccepted < NomenclatureChange
   include NomenclatureChange::StatusChangeHelpers
   build_steps(
-    :primary_output, :parent, :receive, :notes, :legislation, :summary
+    :primary_output, :parent, :summary
   )
   validates :status, inclusion: {
     in: self.status_dict,
@@ -36,13 +36,13 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
   end
 
   def set_output_parent_id
-    return true unless needs_to_set_parent?
+    return true unless needs_to_set_parent? && primary_output.new_parent_id.nil?
     primary_output && primary_output.taxon_concept &&
-      primary_output.new_parent_id = primary_output.taxon_concept.parent_id
+      primary_output.new_parent_id = primary_output.default_parent.try(:id)
   end
 
   def needs_to_receive_associations?
-    primary_output.try(:name_status) == 'S'
+    false
   end
 
   def needs_to_relay_associations?
@@ -54,18 +54,6 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
   end
 
   def build_auto_reassignments
-    # Reassignments will only be required when there is an input
-    # from which to reassign
-    if input
-      builder = NomenclatureChange::StatusToAccepted::Constructor.new(self)
-      builder.build_parent_reassignments
-      builder.build_name_reassignments
-      builder.build_distribution_reassignments
-      builder.build_legislation_reassignments
-      builder.build_common_names_reassignments
-      builder.build_references_reassignments
-      # no trade reassignments
-    end
     true
   end
 
