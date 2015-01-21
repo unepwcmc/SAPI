@@ -8,11 +8,10 @@
         <!-- TODO figure out the restrictions on the auto complete here, none for now -->
         <%= ff.text_field :new_parent_id, {
           :class => 'taxon-concept',
-          :'data-name' => ff.object.default_parent.try(:full_name),
-          :'data-name-status' => ff.object.default_parent.try(:name_status).to_s,
+          :'data-name' => ff.object.new_parent.try(:full_name),
+          :'data-name-status' => ff.object.new_parent.try(:name_status),
           :'data-name-status-filter' => ['A'].to_json,
-          :'data-taxonomy-id' => @taxonomy.id,
-          :'value' => ff.object.default_parent.try(:id)
+          :'data-taxonomy-id' => @taxonomy.id
         } %>
       </div>
     </div>

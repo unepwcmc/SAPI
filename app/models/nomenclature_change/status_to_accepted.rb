@@ -38,7 +38,7 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
   def set_output_parent_id
     return true unless needs_to_set_parent? && primary_output.new_parent_id.nil?
     primary_output && primary_output.taxon_concept &&
-      primary_output.new_parent_id = primary_output.taxon_concept.parent_id
+      primary_output.new_parent_id = primary_output.default_parent.try(:id)
   end
 
   def needs_to_receive_associations?
