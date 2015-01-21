@@ -42,7 +42,7 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
   end
 
   def needs_to_receive_associations?
-    primary_output.try(:name_status) == 'S'
+    false
   end
 
   def needs_to_relay_associations?
