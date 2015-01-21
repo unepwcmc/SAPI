@@ -12,9 +12,6 @@ class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::Nomenclatu
     when :parent
       skip_or_previous_step unless @nomenclature_change.needs_to_set_parent?
       set_taxonomy
-    when :legislation
-      builder.build_legislation_reassignments
-      skip_or_previous_step if @nomenclature_change.input.nil? || @nomenclature_change.input.legislation_reassignments.empty?
     when :summary
       processor = klass::Processor.new(@nomenclature_change)
       @summary = processor.summary

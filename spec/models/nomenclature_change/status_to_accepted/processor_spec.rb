@@ -41,7 +41,7 @@ describe NomenclatureChange::StatusToAccepted::Processor do
             new_name_status: 'A'
           },
           input_attributes: { taxon_concept_id: input_species.id },
-          status: NomenclatureChange::StatusToAccepted::LEGISLATION
+          status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
         ).reload
       }
       let(:status_change){ s_to_a_with_input }
@@ -68,7 +68,7 @@ describe NomenclatureChange::StatusToAccepted::Processor do
             new_name_status: 'A'
           },
           input_attributes: { taxon_concept_id: input_species.id },
-          status: NomenclatureChange::StatusToAccepted::LEGISLATION
+          status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
         ).reload
       }
       let(:status_change){ s_to_a_with_input }
