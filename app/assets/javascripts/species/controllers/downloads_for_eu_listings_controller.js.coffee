@@ -33,7 +33,7 @@ Species.DownloadsForEuListingsController = Ember.Controller.extend
 
   autoCompleteRegions: ( ->
     if @get('geoEntityQuery') && @get('geoEntityQuery').length > 0
-      re = new RegExp(@get('geoEntityQuery'),"i")
+      re = new RegExp("(^| )"+@get('geoEntityQuery'),"i")
       @get('controllers.geoEntities.regions')
         .filter (item, index, enumerable) =>
           re.test item.get('name')
@@ -43,7 +43,7 @@ Species.DownloadsForEuListingsController = Ember.Controller.extend
 
   autoCompleteCountries: ( ->
     if @get('geoEntityQuery') && @get('geoEntityQuery').length > 0
-      re = new RegExp(@get('geoEntityQuery'),"i")
+      re = new RegExp("(^| )"+@get('geoEntityQuery'),"i")
       @get('controllers.geoEntities.countries')
         .filter (item, index, enumerable) =>
           re.test item.get('name')
