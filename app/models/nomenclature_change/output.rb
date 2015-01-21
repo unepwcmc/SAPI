@@ -178,7 +178,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
   end
 
   def compatible_parent?
-    unless new_parent.rank.name == rank.parent_rank &&
+    unless new_parent.rank.name == rank.parent_rank_name &&
       taxon_concept.full_name.include?(new_parent.full_name) && new_parent.name_status == 'A' &&
       taxonomy_id = Taxonomy.find_by_name(Taxonomy::CITES_EU).id
       errors.add('', "must have a compatible parent")
@@ -195,7 +195,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
       taxonomy_id = Taxonomy.find_by_name(Taxonomy::CITES_EU).id
       TaxonConcept.where("data->'rank_name' = ? AND UPPER(full_name) = UPPER(?) AND
         taxonomy_id = ? AND name_status = 'A'",
-        rank.parent_rank, name.split.first, taxonomy_id).first
+        rank.parent_rank_name, name.split.first, taxonomy_id).first
     else
       new_parent
     end

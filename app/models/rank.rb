@@ -48,9 +48,15 @@ class Rank < ActiveRecord::Base
     dict[higher_rank_idx..lower_rank_idx]
   end
 
-  def parent_rank
-    rank_index = self.class.dict.index(name)
-    self.class.dict[rank_index-1]
+  def parent_rank_name
+    if [Rank::SUBSPECIES, Rank::VARIETY].include?(name)
+      Rank::SPECIES
+    elsif name != Rank::KINGDOM
+      rank_index = self.class.dict.index(name)
+      self.class.dict[rank_index-1]
+    else
+      nil
+    end
   end
 
   private
