@@ -27,7 +27,46 @@ describe TaxonConcept do
       }
       specify { tc.should have(1).error_on(:parent_id) }
     end
-    
+    context "parent name is incompatible" do
+      let(:genus_tc){
+        create_genus(
+          :taxonomy_id => cites_eu.id,
+          :taxon_name => build(:taxon_name, :scientific_name => 'Foobarus')
+        )
+      }
+      let(:another_genus_tc){
+        create_genus(
+          :taxonomy_id => cites_eu.id,
+          :taxon_name => build(:taxon_name, :scientific_name => 'Foobaria')
+        )
+      }
+      let(:tc) {
+        create_species(
+          :taxonomy_id => cites_eu.id,
+          :parent_id => genus_tc.id
+        )
+      }
+      let(:tc_with_incompatible_parent){
+        tc.parent = another_genus_tc
+        tc
+      }
+      specify { tc_with_incompatible_parent.should have(1).error_on(:parent_id) }
+    end
+    context "parent is not an accepted name" do
+      let(:genus_tc){
+        create_genus(
+          :taxonomy_id => cites_eu.id,
+          :name_status => 'S'
+        )
+      }
+      let(:tc) {
+        build_species(
+          :taxonomy_id => cites_eu.id,
+          :parent_id => genus_tc.id
+        )
+      }
+      specify { tc.should have(1).error_on(:parent_id) }
+    end
     context "parent rank is too high above child rank" do
       let(:tc) {
         build_class(
