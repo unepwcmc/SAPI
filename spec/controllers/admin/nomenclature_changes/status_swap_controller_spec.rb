@@ -23,15 +23,6 @@ describe Admin::NomenclatureChanges::StatusSwapController do
         response.should render_template('swap')
       end
     end
-    context :notes do
-      before(:each) do
-        @status_change = s_to_a_with_swap
-      end
-      it 'renders the notes template' do
-        get :show, id: :notes, nomenclature_change_id: @status_change.id
-        response.should render_template('notes')
-      end
-    end
     context :reassignments do
       before(:each) do
         @status_change = s_to_a_with_swap

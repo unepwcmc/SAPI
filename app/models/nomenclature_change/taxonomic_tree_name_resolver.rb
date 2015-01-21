@@ -12,11 +12,12 @@ class NomenclatureChange::TaxonomicTreeNameResolver
 
   private
   def resolve(node)
-    Rails.logger.debug("Resolving node name: #{node.full_name} (expected: #{expected_name(node)})")
+    expected_full_name = node.expected_full_name(node.parent)
+    Rails.logger.debug("Resolving node name: #{node.full_name} (expected: #{expected_full_name})")
     unless name_compatible_with_parent?(node)
       compatible_node_attributes = {
         taxonomy_id: node.taxonomy_id,
-        full_name: expected_name(node)
+        full_name: expected_full_name
       }
       # find or create a new accepted name compatible with this parent
       compatible_node = TaxonConcept.where(compatible_node_attributes).first
@@ -52,20 +53,7 @@ class NomenclatureChange::TaxonomicTreeNameResolver
   end
 
   def name_compatible_with_parent?(node)
-    expected_name(node) == node.full_name
-  end
-
-  def expected_name(node)
-    if node.rank &&
-      Rank.in_range(Rank::VARIETY, Rank::SPECIES).include?(node.rank.name)
-      node.parent.full_name + if node.rank.name == Rank::VARIETY
-        ' var. '
-      else
-        ' '
-      end + node.taxon_name.try(:scientific_name).try(:downcase)
-    else
-      node.full_name
-    end
+    node.expected_full_name(node.parent) == node.full_name
   end
 
 end

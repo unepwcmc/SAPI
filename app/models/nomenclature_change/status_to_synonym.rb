@@ -22,7 +22,7 @@
 class NomenclatureChange::StatusToSynonym < NomenclatureChange
   include NomenclatureChange::StatusChangeHelpers
   build_steps(
-    :primary_output, :relay, :accepted_name, :notes, :legislation, :summary
+    :primary_output, :relay, :accepted_name, :legislation, :summary
   )
   validates :status, inclusion: {
     in: self.status_dict,
