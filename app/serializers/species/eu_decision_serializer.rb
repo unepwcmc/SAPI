@@ -6,7 +6,8 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
     :geo_entity,
     :start_event,
     :source,
-    :term
+    :term,
+    {:original_start_date_formatted => :original_start_date}
 
   def eu_decision_type
     object['eu_decision_type'] && JSON.parse(object['eu_decision_type'])

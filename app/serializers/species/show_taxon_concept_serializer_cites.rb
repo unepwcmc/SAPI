@@ -100,6 +100,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       select(<<-SQL
               eu_decisions.notes,
               eu_decisions.start_date,
+              v.original_start_date_formatted,
               eu_decisions.is_current,
               eu_decisions.geo_entity_id,
               eu_decisions.start_event_id,
@@ -126,14 +127,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               END AS subspecies_info
              SQL
       ).
+      joins('LEFT JOIN eu_suspensions_applicability_view v ON eu_decisions.id = v.id').
       order(<<-SQL
             geo_entity_en->>'name' ASC,
-            CASE
-              WHEN eu_decisions.type = 'EuOpinion'
-                THEN eu_decisions.start_date
-              WHEN eu_decisions.type = 'EuSuspension'
-                THEN (start_event->>'date')::DATE
-            END DESC,
+            start_date DESC,
             subspecies_info DESC
         SQL
       ).all

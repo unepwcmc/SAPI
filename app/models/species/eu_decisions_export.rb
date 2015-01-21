@@ -68,7 +68,7 @@ private
     headers = [
       'Kingdom', 'Phylum', 'Class', 'Order', 'Family',
       'Genus', 'Species', 'Subspecies',
-      'Full Name', 'Rank', 'Date of Decision',  'Party',
+      'Full Name', 'Rank', 'Date of Decision',  'Valid since', 'Party',
       'EU Decision', 'Source',  'Term',
       'Notes', 'Document',  "Valid on Date: #{DateTime.now.strftime('%d/%m/%Y')}"
     ]
@@ -78,7 +78,7 @@ private
     columns = [
       :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
       :genus_name, :species_name, :subspecies_name,
-      :full_name, :rank_name, :start_date_formatted, :party,
+      :full_name, :rank_name, :start_date_formatted, :original_start_date_formatted, :party,
       :decision_type_for_display, :source_code_and_name, :term_name,
       :full_note_en, :start_event_name, :is_valid_for_display
     ]
