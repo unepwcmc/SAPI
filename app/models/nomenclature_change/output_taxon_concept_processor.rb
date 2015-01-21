@@ -53,7 +53,6 @@ class NomenclatureChange::OutputTaxonConceptProcessor
         res << "#{@output.taxon_concept.full_name} author year changed from #{@output.taxon_concept.author_year} to #{@output.new_author_year}"
       end
     end
-    res << ["Will add nomenclature note for output #{full_name}"]
     res
   end
 
