@@ -291,6 +291,19 @@ class TaxonConcept < ActiveRecord::Base
     standard_taxon_concept_references.keep_if{ |ref| !ref_ids.include? ref.id }
   end
 
+  def expected_full_name(parent)
+    if self.rank &&
+      Rank.in_range(Rank::VARIETY, Rank::SPECIES).include?(self.rank.name)
+      parent.full_name + if self.rank.name == Rank::VARIETY
+        ' var. '
+      else
+        ' '
+      end + self.taxon_name.try(:scientific_name).try(:downcase)
+    else
+      self.full_name
+    end
+  end
+
   private
 
   def dependent_objects_map
