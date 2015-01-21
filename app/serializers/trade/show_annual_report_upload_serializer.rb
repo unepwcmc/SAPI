@@ -4,6 +4,10 @@ class Trade::ShowAnnualReportUploadSerializer < ActiveModel::Serializer
   :file_name, :is_done, :has_primary_errors, :created_at, :updated_at,
   :created_by, :updated_by
   has_many :validation_errors
+
+  def validation_errors
+    object.validation_errors.sort_by(&:error_message)
+  end
   def file_name
     object.csv_source_file.try(:path) && File.basename(object.csv_source_file.path)
   end
