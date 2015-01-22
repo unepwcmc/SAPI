@@ -25,6 +25,7 @@ class Trade::SandboxShipmentsController < TradeController
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
     @sandbox_shipment = sandbox_klass.find(params[:id])
     @sandbox_shipment.delete
+    aru.update_attribute(:number_of_rows, aru.sandbox_shipments.size)
     head :no_content
   end
 
@@ -41,6 +42,7 @@ class Trade::SandboxShipmentsController < TradeController
     aru = Trade::AnnualReportUpload.find(params[:annual_report_upload_id])
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
     sandbox_klass.destroy_batch(destroy_batch_params[:sandbox_shipments_ids])
+    aru.update_attribute(:number_of_rows, aru.sandbox_shipments.size)
     head :no_content
   end
 
