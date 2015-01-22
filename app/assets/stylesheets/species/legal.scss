@@ -64,7 +64,9 @@ a.legal-links:hover {
 #full-note-legal {
 	width: 590px;
 	margin-left: -295px;
-	position: absolute;
+  margin-top: -250px;
+	position: fixed;
+  top: 50%;
 	left: 50%;
 	background: #f5f5f7;
 	-webkit-border-radius: 12px;
