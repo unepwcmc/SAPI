@@ -289,6 +289,10 @@ div.popup-holder01 {
       input {
         width: 175px;
       }
+      input[type="checkbox"] {
+        width: 50px;
+        margin: 0;
+      }
       select {
         width: 190px;
         margin: 0;
