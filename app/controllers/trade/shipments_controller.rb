@@ -91,6 +91,7 @@ private
       :updates => shipment_attributes
     )
     res = update_params && update_params.delete('updates') || {}
+    res.each { |k, v| res[k] = nil if v.blank? }
     reporter_type = res.delete(:reporter_type)
     unless reporter_type.blank?
       res[:reported_by_exporter] = Trade::Shipment.reporter_type_to_reported_by_exporter(reporter_type)
