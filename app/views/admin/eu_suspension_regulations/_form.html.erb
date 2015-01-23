@@ -20,6 +20,9 @@
       { :include_blank => true }
     %>
   <% end %>
+  <label>End date</label><%= f.text_field :end_date, :class => "datepicker",
+    :value => @eu_suspension_regulation.end_date_formatted
+  %>
   <label>URL</label><%= f.text_area :url %><br />
   <label>Multilingual URL</label><%= f.text_area :multilingual_url %><br />
   <label>Extended description</label><%= f.text_area :extended_description %><br />
