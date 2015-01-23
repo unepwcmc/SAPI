@@ -81,6 +81,10 @@
             optionLabelPath="content.code"
             selectionBinding="currentShipment.unit"
           }}
+          <label class="blank-checkbox">
+            {{view Ember.Checkbox checkedBinding="currentShipment.unitBlank"}}
+            blank
+          </label>
         </div>
         <div class="attribute-area left">
           <p>Purpose Code</p>
@@ -91,6 +95,10 @@
               optionLabelPath="content.code"
               selectionBinding="currentShipment.purpose"
             }}
+          <label class="blank-checkbox">
+            {{view Ember.Checkbox checkedBinding="currentShipment.purposeBlank"}}
+            blank
+          </label>
         </div>
         <div class="attribute-area left">
           <p>Source Code</p>
@@ -101,6 +109,10 @@
               optionLabelPath="content.code"
               selectionBinding="currentShipment.source"
             }}
+          <label class="blank-checkbox">
+            {{view Ember.Checkbox checkedBinding="currentShipment.sourceBlank"}}
+            blank
+          </label>
         </div>
       </div>
 
@@ -137,6 +149,10 @@
               optionLabelPath="content.name"
               selectionBinding="currentShipment.countryOfOrigin"
             }}
+          <label class="blank-checkbox">
+            {{view Ember.Checkbox checkedBinding="currentShipment.countryOfOriginBlank"}}
+            blank
+          </label>
         </div>
         <div class="attribute-area left">
           <p>Reporter type</p>
@@ -147,6 +163,34 @@
             }}
         </div>
       </div>
+
+      <div class="heading">
+        Permit numbers
+      </div>
+      <div class="inner">
+        <div class="attribute-area left">
+          <p>Import Permit</p>
+          <label class="blank-checkbox">
+            {{view Ember.Checkbox checkedBinding="currentShipment.importPermitNumberBlank"}}
+            blank
+          </label>
+        </div>
+        <div class="attribute-area left">
+          <p>Exporter Permit</p>
+          <label class="blank-checkbox">
+            {{view Ember.Checkbox checkedBinding="currentShipment.exportPermitNumberBlank"}}
+            blank
+          </label>
+        </div>
+        <div class="attribute-area left">
+          <p>Origin Permit</p>
+          <label class="blank-checkbox">
+            {{view Ember.Checkbox checkedBinding="currentShipment.originPermitNumberBlank"}}
+            blank
+          </label>
+        </div>
+      </div>
+
 
     </fieldset>
   </form>
