@@ -403,9 +403,13 @@ def drop_table(table_name)
 end
 
 def copy_data(path_to_file, table_name)
+  db_columns = db_columns_from_csv_headers(path_to_file, table_name, false)
+  copy_data_into_table(path_to_file, table_name, db_columns)
+end
+
+def copy_data_into_table(path_to_file, table_name, db_columns)
   require 'psql_command'
   puts "Copying data from #{path_to_file} into tmp table #{table_name}"
-  db_columns = db_columns_from_csv_headers(path_to_file, table_name, false)
   cmd = <<-PSQL
 SET DateStyle = \"ISO,DMY\";
 \\COPY #{table_name} (#{db_columns.join(', ')})
