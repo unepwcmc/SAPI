@@ -5,8 +5,8 @@ describe Admin::EuSuspensionRegulationsController do
 
   describe "index" do
     before(:each) do
-      @eu_suspension_regulation1 = create_eu_suspension_regulation(:name => 'BB')
-      @eu_suspension_regulation2 = create_eu_suspension_regulation(:name => 'AA')
+      @eu_suspension_regulation1 = create_eu_suspension_regulation(:name => 'BB', :is_current => true)
+      @eu_suspension_regulation2 = create_eu_suspension_regulation(:name => 'AA', :is_current => true)
     end
 
     describe "GET index" do
@@ -22,7 +22,7 @@ describe Admin::EuSuspensionRegulationsController do
   end
 
   describe "XHR POST activate" do
-    let(:eu_suspension_regulation){ create_eu_suspension_regulation }
+    let(:eu_suspension_regulation){ create_eu_suspension_regulation(:is_current => true) }
     it "renders create when successful" do
       xhr :post, :activate, :format => 'js', :id => eu_suspension_regulation.id
       response.should render_template("create")
