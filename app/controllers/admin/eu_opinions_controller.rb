@@ -41,6 +41,7 @@ class Admin::EuOpinionsController < Admin::StandardAuthorizationController
       where(:geo_entity_types => {:name => GeoEntityType::SETS[GeoEntityType::DEFAULT_SET]})
     @eu_regulations = EuRegulation.order("effective_at DESC")
     @eu_decision_types = EuDecisionType.opinions
+    @ec_srgs = EcSrg.order("effective_at DESC")
   end
 
   def collection

@@ -16,7 +16,7 @@
     <%= f.label :start_event_id, "Regulation", :class => 'control-label' %>
     <div class="controls">
       <%= f.select :start_event_id,
-        options_from_collection_for_select(@eu_regulations, :id, :name, @eu_opinion.start_event_id),
+        options_from_collection_for_select(@ec_srgs, :id, :name, @eu_opinion.start_event_id),
         { }, :class => "select2"
       %>
     </div>
