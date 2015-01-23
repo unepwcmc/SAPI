@@ -3,6 +3,7 @@
   <th>Description</th>
   <th>Effective from</th>
   <th>Current</th>
+  <th>End date</th>
   <th>URL</th>
   <th>No of EU Suspensions</th>
   <th width="10%">Actions</th>
@@ -29,6 +30,7 @@
       </td>
       <td><%= eu_suspension_regulation.effective_at_formatted %></td>
       <td><%= true_false_icon(eu_suspension_regulation.is_current) %></td>
+      <td><%= eu_suspension_regulation.end_date_formatted %></td>
       <td>
         <%= link_to_unless(
           eu_suspension_regulation.url.blank?,
