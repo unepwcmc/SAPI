@@ -29,7 +29,7 @@ task :map_eu_opinions_to_ec_srgs => :environment do
       FROM eu_decisions eu_opinions
       JOIN events ec_srgs ON ec_srgs.effective_at = eu_opinions.start_date AND ec_srgs.type = 'EcSrg'
       WHERE eu_opinions.type='EuOpinion'
-      AND eu_opinions.start_event_id != ec_srgs.id -- so that it does not re-update at next run
+      AND (eu_opinions.start_event_id IS NULL OR eu_opinions.start_event_id != ec_srgs.id) -- so that it does not re-update at next run
     )
     UPDATE eu_decisions
     SET start_event_id = ec_srg_id
