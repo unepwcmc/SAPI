@@ -27,7 +27,7 @@ task :map_eu_opinions_to_ec_srgs => :environment do
       ec_srgs.effective_at, ec_srgs.id AS ec_srg_id,
       eu_opinions.*
       FROM eu_decisions eu_opinions
-      JOIN events ec_srgs ON ec_srgs.effective_at = eu_opinions.start_date
+      JOIN events ec_srgs ON ec_srgs.effective_at = eu_opinions.start_date AND ec_srgs.type = 'EcSrg'
       WHERE eu_opinions.type='EuOpinion'
       AND eu_opinions.start_event_id != ec_srgs.id -- so that it does not re-update at next run
     )
@@ -38,5 +38,5 @@ task :map_eu_opinions_to_ec_srgs => :environment do
     RETURNING *;
   SQL
   res = ActiveRecord::Base.connection.execute update_query
-  puts "#{res.cmd_tuples()} rows updated"
+  puts "#{res.cmd_tuples()} rows linked to EC SRG meetings"
 end
