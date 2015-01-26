@@ -22,7 +22,7 @@ private
       :id, :legacy_id, :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
       :genus_name, :species_name, :full_name, :author_year, :rank_name, :name_status,
       :taxonomy_name, :internal_notes,
-      :created_at, :created_by, :updated_at, :updated_by
+      :created_at, :created_by, :updated_at, :dependents_updated_at, :updated_by
     ]
   end
 
@@ -31,7 +31,8 @@ private
       'Id', 'Legacy id', 'Kingdom', 'Phylum', 'Class', 'Order', 'Family',
       'Genus', 'Species', 'Scientific Name', 'Author', 'Rank', 'Name status',
       'Taxonomy', 'Internal notes',
-      'Date added', 'Added by', 'Date updated', 'Updated by'
+      'Date added', 'Added by', 'Taxon Concept updated date',
+      'Taxon Concept associations updated date', 'Updated by'
     ]
   end
 
