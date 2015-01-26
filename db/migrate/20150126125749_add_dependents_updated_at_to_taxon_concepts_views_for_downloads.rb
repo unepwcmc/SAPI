@@ -1,5 +1,5 @@
 class AddDependentsUpdatedAtToTaxonConceptsViewsForDownloads < ActiveRecord::Migration
-   def up
+  def up
     execute "DROP VIEW IF EXISTS taxon_concepts_names_view"
     execute "CREATE VIEW taxon_concepts_names_view AS #{view_sql('20150126125749', 'taxon_concepts_names_view')}"
     execute "DROP VIEW IF EXISTS synonyms_and_trade_names_view"
