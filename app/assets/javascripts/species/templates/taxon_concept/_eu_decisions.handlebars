@@ -47,9 +47,11 @@
             {{{decision.nomenclature_note_en}}}
           </td>
           <td class="last">
-            <a class="legal-links" href="{{unbound decision.start_event.url}}">
-              {{decision.start_event.name}}
-            </a>
+            {{#if decision.start_event.url}}
+              <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                {{decision.start_event.name}}
+              </a>
+            {{/if}}
           </td>
         </tr>
       {{else}}
@@ -102,9 +104,11 @@
                 {{{decision.nomenclature_note_en}}}
               </td>
               <td class="last">
-                <a class="legal-links" href="{{unbound decision.start_event.url}}">
-                  {{decision.start_event.name}}
-                </a>
+                {{#if decision.start_event.url}}
+                  <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                    {{decision.start_event.name}}
+                  </a>
+                {{/if}}
               </td>
             </tr>
           {{/each}}
