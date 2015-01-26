@@ -13,6 +13,7 @@ class Trade::BatchUpdate
   end
 
   def execute(update_params)
+    return 0 unless update_params.keys.size > 0
     affected_shipments = nil
     Trade::Shipment.transaction do
       affected_shipments = @shipments.count

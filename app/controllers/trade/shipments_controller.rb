@@ -71,25 +71,27 @@ private
       :country_of_origin_id,
       :purpose_id,
       :source_id,
-      :year
+      :year,
+      :import_permit_number,
+      :export_permit_number,
+      :origin_permit_number
     ]
   end
 
   def shipment_params
     params.require(:shipment).permit(
       *(shipment_attributes + [
-        :import_permit_number,
-        :export_permit_number,
-        :origin_permit_number,
         :ignore_warnings
       ])
     )
   end
 
   def batch_update_params
-    res = params.permit(
+    update_params = params.permit(
       :updates => shipment_attributes
-    ).delete(:updates)
+    )
+    res = update_params && update_params.delete('updates') || {}
+    res.each { |k, v| res[k] = nil if v.blank? }
     reporter_type = res.delete(:reporter_type)
     unless reporter_type.blank?
       res[:reported_by_exporter] = Trade::Shipment.reporter_type_to_reported_by_exporter(reporter_type)

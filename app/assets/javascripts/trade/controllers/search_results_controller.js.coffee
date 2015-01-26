@@ -161,13 +161,17 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
       )
 
     updateBatch: ->
+      updates = @get('batchUpdateParams').export()
+      if Object.keys(updates).length == 0
+        alert("No changes detected.")
+        return false
       if confirm("This will update " + @get('total') + " shipments. Are you sure?")
         $.ajax(
           url: '/trade/shipments/update_batch'
           type: 'POST'
           data:
             filters: @get('controllers.search.searchParams')
-            updates: @get('batchUpdateParams').export()
+            updates: updates
         )
         .done( (data) =>
           @flashSuccess(message: 'Successfully updated ' + data.rows + ' shipments.')

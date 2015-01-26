@@ -11,12 +11,37 @@ Trade.ShipmentBatchUpdate = Ember.Object.extend
   exporter: null
   countryOfOrigin: null
   reporterType: null
+  importPermitNumber: null
+  exportPermitNumber: null
+  originPermitNumber: null
+  countryOfOriginBlank: false
+  unitBlank: false
+  sourceBlank: false
+  purposeBlank: false
+  importPermitNumberBlank: false
+  exportPermitNumberBlank: false
+  originPermitNumberBlank: false
 
   columns: (->
     [
       'taxonConceptId', 'reportedTaxonConceptId', 'appendix', 'year',
       'term', 'unit', 'purpose', 'source',
-      'importer', 'exporter', 'countryOfOrigin', 'reporterType'
+      'importer', 'exporter', 'countryOfOrigin', 'reporterType',
+      'importPermitNumber', 'exportPermitNumber', 'originPermitNumber'
+    ]
+  ).property()
+
+  nullableColumns: (->
+    [
+      'countryOfOrigin', 'unit', 'source', 'purpose',
+      'importPermitNumber', 'exportPermitNumber', 'originPermitNumber'
+    ]
+  ).property()
+
+  columnsToExportAsIds: (->
+    [
+      'term', 'unit', 'purpose', 'source',
+      'importer', 'exporter', 'countryOfOrigin'
     ]
   ).property()
 
@@ -28,13 +53,18 @@ Trade.ShipmentBatchUpdate = Ember.Object.extend
   export: ->
     result = {}
     @get('columns').forEach( (c) =>
-      property_value = @get(c)
-      if property_value
-        property_name = c.decamelize()
-        if typeof property_value == 'object'
-          result[property_name + '_id'] = property_value.get('id')
-        else
-          result[property_name] = property_value
+      propertyValue = @get(c)
+      propertyNameForBackend = c.decamelize()
+      if @get('columnsToExportAsIds').contains(c)
+        propertyNameForBackend += '_id'
+      if propertyValue
+        if @get('columnsToExportAsIds').contains(c)
+          propertyValue = propertyValue.get('id')
+        result[propertyNameForBackend] = propertyValue
+      if @get('nullableColumns').contains(c)
+        blankPropertyName = c + 'Blank'
+        if @get(blankPropertyName)
+          result[propertyNameForBackend] = null
     )
     result
 
