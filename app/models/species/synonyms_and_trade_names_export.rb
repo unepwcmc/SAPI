@@ -26,7 +26,7 @@ private
       :accepted_kingdom_name, :accepted_phylum_name, :accepted_class_name,
       :accepted_order_name, :accepted_family_name, :accepted_genus_name,
       :taxonomy_name, :internal_notes,
-      :created_at, :created_by, :updated_at, :updated_by
+      :created_at, :created_by, :updated_at, :dependents_updated_at, :updated_by
     ]
   end
 
@@ -39,7 +39,8 @@ private
       'Kingdom_Accepted', 'Phylum_Accepted', 'Class_Accepted',
       'Order_Accepted', 'Family_Accepted', 'Genus_Accepted',
       'Taxonomy', 'Internal notes',
-      'Date added', 'Added by', 'Date updated', 'Updated by'
+      'Date added', 'Added by', 'Taxon Concept updated date',
+      'Taxon Concept associations updated date', 'Updated by'
     ]
   end
 
